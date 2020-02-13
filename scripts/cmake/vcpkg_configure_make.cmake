@@ -133,12 +133,12 @@ function(vcpkg_configure_make)
     set(LD_LIBRARY_PATH_BACKUP "$ENV{LD_LIBRARY_PATH}")
     set(LIBRARY_PATH_BACKUP "$ENV{LIBRARY_PATH}")
     set(LIBPATH_BACKUP "$ENV{LIBPATH}")
-    
+
     if(NOT VCPKG_PLATFORM_TOOLSET)
         message(FATAL_ERROR "Vcpkg has been updated with VS2017 support; "
             "however, vcpkg.exe must be rebuilt by re-running bootstrap-vcpkg.bat\n")
     endif()
-    
+
     if (_csc_OPTIONS_DEBUG STREQUAL _csc_OPTIONS_RELEASE OR NMAKE_OPTION_RELEASE STREQUAL NMAKE_OPTION_DEBUG)
         message(FATAL_ERROR "Detected debug configuration is equal to release configuration, please use NO_DEBUG for vcpkg_configure_make")
     endif()
@@ -229,11 +229,6 @@ function(vcpkg_configure_make)
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_PACKAGES_DIR_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         set(EXTRA_QUOTES)
-    endif()
-
-    if (_csc_AUTOCONFIG)
-        find_program(AUTORECONF autoreconf REQUIRED)
-        find_program(LIBTOOL libtool REQUIRED)
     endif()
 
     if(NOT ENV{PKG_CONFIG})
@@ -328,7 +323,14 @@ function(vcpkg_configure_make)
     endif()
 
     set(SRC_DIR "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
+    if(EXISTS "${SRC_DIR}/configure")
+        set(_csc_AUTOCONFIG FALSE)
+    elseif(EXISTS "${SRC_DIR}/configure.ac")
+        set(_csc_AUTOCONFIG TRUE)
+    endif()
     if (_csc_AUTOCONFIG)
+        find_program(AUTORECONF autoreconf REQUIRED)
+        find_program(LIBTOOL libtool REQUIRED)
         message(STATUS "Generating configure for ${TARGET_TRIPLET}")
         if (CMAKE_HOST_WIN32)
             vcpkg_execute_required_process(
@@ -409,6 +411,12 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${PRJ_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
+            if(EXISTS "${PRJ_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+                set(_file "${PRJ_DIR}/libtool")
+                file(READ "${_file}" _contents)
+                string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
+                file(WRITE "${_file}" "${_contents}")
+            endif()
         endif()
 
         if(_csc_PKG_CONFIG_PATHS_DEBUG)
@@ -466,6 +474,12 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${PRJ_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-rel                
             )
+            if(EXISTS "${PRJ_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+                set(_file "${PRJ_DIR}/libtool")
+                file(READ "${_file}" _contents)
+                string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
+                file(WRITE "${_file}" "${_contents}")
+            endif()
         endif()
 
         if(_csc_PKG_CONFIG_PATHS_RELEASE)
