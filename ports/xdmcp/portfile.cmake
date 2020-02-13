@@ -7,7 +7,7 @@ vcpkg_from_gitlab(
     REF 618b3ba5f826d930df2ca6a6a0ce212fa75cef42 # 1.1.3
     SHA512  f8b035fa95f6948cc6bac69bfcc33498cd65db73c62aadee714bce371d61c50f283c45d1a3f43397a96b3c956b41dfe94355e94e33764760b29bf98ba8dfebe2
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
+    PATCHES configure.ac.patch #patch name
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -30,7 +30,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig() #Todo: add -lws2_32 and maybe -lxau (only needed for static builds?)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
