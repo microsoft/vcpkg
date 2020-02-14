@@ -63,7 +63,6 @@ endif()
 if(VTK_WITH_QT)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_Group_Qt=ON
-        -DvtkGUISupportQtOpenGL=ON
         -DVTK_QT_VERSION=5
         -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF
     )
