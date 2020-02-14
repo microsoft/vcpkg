@@ -2,7 +2,7 @@ diff --git a/include/X11/Xwindows.h b/include/X11/Xwindows.h
 index 5eff8570f..736bbe4db 100644
 --- a/include/X11/Xwindows.h	
 +++ b/include/X11/Xwindows.h
-@@ -61,36 +61,276 @@ The Open Group.
+@@ -61,36 +61,278 @@ The Open Group.
   * ... so try to come up with something which works with both :-)
   */
  #define _NO_BOOL_TYPEDEF
