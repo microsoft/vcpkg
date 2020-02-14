@@ -73,6 +73,7 @@ function(vcpkg_build_make)
             set(MAKE_COMMAND "${MAKE}")
             message(STATUS ${MAKE_COMMAND})
             # Must use absolute path to call make in windows
+
             # set(VCPKG_CONCURRENCY 1)
             set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f makefile all)
             set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f makefile install)
