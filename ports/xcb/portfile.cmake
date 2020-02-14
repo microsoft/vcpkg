@@ -1,4 +1,8 @@
 ## requires AUTOCONF, LIBTOOL and PKCONF
+if(VCPKG_TARGET_IS_WINDOWS)
+    # this skips the check on the lib which will fail due to missing 2nd linker member
+    SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+endif()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -52,10 +56,10 @@ file(TO_NATIVE_PATH "${PYTHON3_DIR}" PYTHON3_DIR_NATIVE)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 set(ENV{PYTHONPATH} "$ENV{PYTHONPATH}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib/python3.7/site-packages/")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND VCPKG_LINKER_FLAGS_RELEASE " -lpthreadVC3")
-    string(APPEND VCPKG_LINKER_FLAGS_DEBUG " -lpthreadVC3d")
-endif()
+#if(VCPKG_TARGET_IS_WINDOWS)
+#    string(APPEND VCPKG_LINKER_FLAGS_RELEASE " -lpthreadVC3")
+#    string(APPEND VCPKG_LINKER_FLAGS_DEBUG " -lpthreadVC3d")
+#endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
