@@ -49,25 +49,23 @@ function(vcpkg_build_make)
     set(INSTALL_OPTS )
     if (_VCPKG_MAKE_GENERATOR STREQUAL "make")
         if (CMAKE_HOST_WIN32)
-            # _vcpkg_get_mingw_vars()
-
+            set(PATH_GLOBAL "$ENV{PATH}")
+            
             # Compiler requriements
             vcpkg_find_acquire_program(YASM)
-            vcpkg_find_acquire_program(PERL)
-            vcpkg_acquire_msys(MSYS_ROOT)
             get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-            get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-            
-            set(PATH_GLOBAL "$ENV{PATH}")
             vcpkg_add_to_path("${YASM_EXE_PATH}")
             
-            # if(HOST_ARCH MATCHES "x86|arm")
-                # vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw32/bin")
-            # elseif(HOST_ARCH STREQUAL "x64")
-                # vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw64/bin")
-            # endif()
-            vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+            vcpkg_find_acquire_program(PERL)
+            get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
             vcpkg_add_to_path("${PERL_EXE_PATH}")
+            
+
+
+            vcpkg_add_to_path("${YASM_EXE_PATH}")
+            vcpkg_acquire_msys(MSYS_ROOT)
+            vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
+            
             find_program(MAKE make REQUIRED) #mingw32-make
             set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
             # Set make command and install command
@@ -75,6 +73,7 @@ function(vcpkg_build_make)
             set(MAKE_COMMAND "${MAKE}")
             message(STATUS ${MAKE_COMMAND})
             # Must use absolute path to call make in windows
+            # set(VCPKG_CONCURRENCY 1)
             set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f makefile all)
             set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f makefile install)
         else()

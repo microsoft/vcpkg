@@ -193,7 +193,7 @@ function(vcpkg_configure_make)
         endif()
 
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
-        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+        vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
         set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
 
         vcpkg_find_acquire_program(YASM)
