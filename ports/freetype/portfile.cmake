@@ -31,28 +31,21 @@ else()
     set(ENABLE_DLL_EXPORT ON)
 endif()
 
-if(NOT WIN32)
-	vcpkg_configure_cmake(
-		SOURCE_PATH ${SOURCE_PATH}
-		PREFER_NINJA
-		OPTIONS
-			-DCONFIG_INSTALL_PATH=share/freetype
-			-DFT_WITH_ZLIB=ON # Force system zlib.
-			-DFT_DISABLE_FIND_PACKAGE_Harfbuzz=TRUE
-			${FEATURE_OPTIONS}
-			-DENABLE_DLL_EXPORT=${ENABLE_DLL_EXPORT}
-	)
-else()
-	vcpkg_configure_cmake(
-		SOURCE_PATH ${SOURCE_PATH}
-		PREFER_NINJA
-		OPTIONS
-			-DCONFIG_INSTALL_PATH=share/freetype
-			-DFT_WITH_ZLIB=ON # Force system zlib.
-			${FEATURE_OPTIONS}
-			-DENABLE_DLL_EXPORT=${ENABLE_DLL_EXPORT}
-	)
+set(OPTIONS)
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+  list(APPEND OPTIONS -DFT_DISABLE_FIND_PACKAGE_Harfbuzz=TRUE)
 endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DCONFIG_INSTALL_PATH=share/freetype
+        -DFT_WITH_ZLIB=ON # Force system zlib.
+        ${FEATURE_OPTIONS}
+        -DENABLE_DLL_EXPORT=${ENABLE_DLL_EXPORT}
+        ${OPTIONS}
+)
 
 vcpkg_install_cmake()
 
