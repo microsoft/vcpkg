@@ -103,22 +103,24 @@ function(vcpkg_execute_build_process)
             while (ITERATION LESS 3 AND (out_contents MATCHES "mt : general error c101008d: " OR out_contents MATCHES "mt.exe : general error c101008d: "))
                 MATH(EXPR ITERATION "${ITERATION}+1")
                 message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of mt.exe file locking issue. Iteration: ${ITERATION}")
+                set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out-${ITERATION}.log")
+                set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err-${ITERATION}.log")
                 execute_process(
                     COMMAND ${_ebp_COMMAND}
-                    OUTPUT_FILE "${_ebp_LOGNAME}-out-${ITERATION}.log"
-                    ERROR_FILE "${_ebp_LOGNAME}-err-${ITERATION}.log"
+                    WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
+                    OUTPUT_FILE ${LOG_OUT}
+                    ERROR_FILE ${LOG_ERR}
                     RESULT_VARIABLE error_code
-                    WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY})
-
+                )
                 if(error_code)
-                    file(READ "${_ebp_LOGNAME}-out-${ITERATION}.log" out_contents)
-                    file(READ "${_ebp_LOGNAME}-err-${ITERATION}.log" err_contents)
+                    file(READ ${LOG_OUT} out_contents)
+                    file(READ ${LOG_ERR} err_contents)
 
                     if(out_contents)
-                        list(APPEND LOGS "${_ebp_LOGNAME}-out-${ITERATION}.log")
+                        list(APPEND LOGS ${LOG_OUT})
                     endif()
                     if(err_contents)
-                        list(APPEND LOGS "${_ebp_LOGNAME}-err-${ITERATION}.log")
+                        list(APPEND LOGS ${LOG_ERR})
                     endif()
                 else()
                     break()
@@ -127,22 +129,25 @@ function(vcpkg_execute_build_process)
         elseif(out_contents MATCHES "FAILED: CMakeFiles/install.util")
             # Antivirus workaround - occasionally files are locked and cause cmake's copy+install to fail
             message(STATUS "cmake install has failed. This may be the result of anti-virus. Disabling anti-virus on the buildtree folder may improve build speed. Retrying.")
+            execute_process(COMMAND "${CMAKE_COMMAND}" -E sleep 3)
+            set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out-1.log")
+            set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err-1.log")
             execute_process(
                 COMMAND ${_ebp_COMMAND}
                 WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
-                OUTPUT_FILE "${_ebp_LOGNAME}-out-1.log"
-                ERROR_FILE "${_ebp_LOGNAME}-err-1.log"
+                OUTPUT_FILE ${LOG_OUT}
+                ERROR_FILE ${LOG_ERR}
                 RESULT_VARIABLE error_code
             )
             if(error_code)
-                file(READ "${_ebp_LOGNAME}-out-1.log" out_contents)
-                file(READ "${_ebp_LOGNAME}-err-1.log" err_contents)
+                file(READ ${LOG_OUT} out_contents)
+                file(READ ${LOG_ERR} err_contents)
 
                 if(out_contents)
-                    list(APPEND LOGS "${_ebp_LOGNAME}-out-1.log")
+                    list(APPEND LOGS ${LOG_OUT})
                 endif()
                 if(err_contents)
-                    list(APPEND LOGS "${_ebp_LOGNAME}-err-1.log")
+                    list(APPEND LOGS ${LOG_ERR})
                 endif()
             endif()
         endif()

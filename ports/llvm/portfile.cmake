@@ -112,10 +112,14 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/bin
     ${CURRENT_PACKAGES_DIR}/msbuild-bin
     ${CURRENT_PACKAGES_DIR}/tools/msbuild-bin
-    ${CURRENT_PACKAGES_DIR}/include/llvm/BinaryFormat/WasmRelocs
 )
 
-# Remove two empty include subdirectorys if they are indeed empty
+# Remove three empty include subdirectorys if they are indeed empty
+file(GLOB X ${CURRENT_PACKAGES_DIR}/include/llvm/BinaryFormat/WasmRelocs/*)
+if(NOT X)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/BinaryFormat/WasmRelocs)
+endif()
+
 file(GLOB MCANALYSISFILES ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis/*)
 if(NOT MCANALYSISFILES)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis)
