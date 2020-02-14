@@ -8,7 +8,7 @@ vcpkg_from_gitlab(
     REF  db7cca17ad7807e92a928da9d4c68a00f4836da2 #x11 v 1.6.9  
     SHA512 63106422bf74071f73e47a954607472a7df6f4094c197481a100fa10676a22e81ece0459108790d3ebda6a1664c5cba6809bdb80cd5bc4befa1a76bd87188616
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
+    PATCHES cl.build.patch #patch name
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -20,7 +20,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         --enable-ipv6=no
         --with-launchd=no
         --with-lint=no
-        --disable-selective-werror)
+        --disable-selective-werror
+        --enable-unix-transport=no)
         
         #https://gitlab.freedesktop.org/xorg/xserver/merge_requests/191/diffs
 endif()
