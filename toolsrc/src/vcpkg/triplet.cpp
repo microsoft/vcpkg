@@ -39,10 +39,6 @@ namespace vcpkg
     const Triplet Triplet::ARM_WINDOWS = from_canonical_name("arm-windows");
     const Triplet Triplet::ARM64_WINDOWS = from_canonical_name("arm64-windows");
 
-    bool Triplet::operator==(const Triplet& other) const { return this->m_instance == other.m_instance; }
-
-    bool operator!=(const Triplet& left, const Triplet& right) { return !(left == right); }
-
     Triplet Triplet::from_canonical_name(std::string&& triplet_as_string)
     {
         std::string s(Strings::ascii_to_lowercase(std::move(triplet_as_string)));

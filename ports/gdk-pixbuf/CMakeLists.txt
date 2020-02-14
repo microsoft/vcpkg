@@ -73,7 +73,7 @@ set(LIBS
     ${PNG_LIBRARIES} 
 )
 if(WIN32)
-    list(APPEND LIBS Gdiplus unofficial::gettext::libintl)
+    list(APPEND LIBS Gdiplus ole32 unofficial::gettext::libintl)
 else()
     list(APPEND LIBS m)
 endif()

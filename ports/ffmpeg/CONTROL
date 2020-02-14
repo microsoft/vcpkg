@@ -1,5 +1,5 @@
 Source: ffmpeg
-Version: 4.2-4
+Version: 4.2-5
 Build-Depends: zlib
 Homepage: https://ffmpeg.org
 Description: a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.
