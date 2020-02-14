@@ -105,25 +105,46 @@ function(vcpkg_execute_build_process)
                 message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of mt.exe file locking issue. Iteration: ${ITERATION}")
                 execute_process(
                     COMMAND ${_ebp_COMMAND}
-                    OUTPUT_FILE "${LOGPREFIX}-out-${ITERATION}.log"
-                    ERROR_FILE "${LOGPREFIX}-err-${ITERATION}.log"
+                    OUTPUT_FILE "${_ebp_LOGNAME}-out-${ITERATION}.log"
+                    ERROR_FILE "${_ebp_LOGNAME}-err-${ITERATION}.log"
                     RESULT_VARIABLE error_code
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
+                    WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY})
 
                 if(error_code)
-                    file(READ "${LOGPREFIX}-out-${ITERATION}.log" out_contents)
-                    file(READ "${LOGPREFIX}-err-${ITERATION}.log" err_contents)
+                    file(READ "${_ebp_LOGNAME}-out-${ITERATION}.log" out_contents)
+                    file(READ "${_ebp_LOGNAME}-err-${ITERATION}.log" err_contents)
 
                     if(out_contents)
-                        list(APPEND LOGS "${LOGPREFIX}-out-${ITERATION}.log")
+                        list(APPEND LOGS "${_ebp_LOGNAME}-out-${ITERATION}.log")
                     endif()
                     if(err_contents)
-                        list(APPEND LOGS "${LOGPREFIX}-err-${ITERATION}.log")
+                        list(APPEND LOGS "${_ebp_LOGNAME}-err-${ITERATION}.log")
                     endif()
                 else()
                     break()
                 endif()
             endwhile()
+        elseif(out_contents MATCHES "FAILED: CMakeFiles/install.util")
+            # Antivirus workaround - occasionally files are locked and cause cmake's copy+install to fail
+            message(STATUS "cmake install has failed. This may be the result of anti-virus. Disabling anti-virus on the buildtree folder may improve build speed. Retrying.")
+            execute_process(
+                COMMAND ${_ebp_COMMAND}
+                WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
+                OUTPUT_FILE "${_ebp_LOGNAME}-out-1.log"
+                ERROR_FILE "${_ebp_LOGNAME}-err-1.log"
+                RESULT_VARIABLE error_code
+            )
+            if(error_code)
+                file(READ "${_ebp_LOGNAME}-out-1.log" out_contents)
+                file(READ "${_ebp_LOGNAME}-err-1.log" err_contents)
+
+                if(out_contents)
+                    list(APPEND LOGS "${_ebp_LOGNAME}-out-1.log")
+                endif()
+                if(err_contents)
+                    list(APPEND LOGS "${_ebp_LOGNAME}-err-1.log")
+                endif()
+            endif()
         endif()
 
         if(error_code)
