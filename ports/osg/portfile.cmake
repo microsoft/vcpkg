@@ -34,6 +34,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DOSG_USE_UTF8_FILENAME=ON
+        ${OPTIONS}
 )
 
 vcpkg_install_cmake()
