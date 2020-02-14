@@ -1,13 +1,12 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF c6c1d5fffd0cf8dcb2ab969cde8fd170af44fdef
-    SHA512 3b9ce5d7dd70dd5ea56b70833c842068312a739e6131d956fd733e9893441e7e3340b6734bea0b799ac292533b0082975c08facd963961062dac821ccc44f9a9
+    REF 04f1c3b1e23677ce03bd16137e73089abd552175 # v1.6.0
+    SHA512 70c47b7d7ff860fdd2f6cbde514f82a6734529fa06de6bf84596b6b22c5f9768f0d3d23562a614b8be40d0a4d0743cb0eca0d0306814c14702462ac0cdcf29a6
     HEAD_REF master
     PATCHES
         fix-cmake.patch
+        fix_build_error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,6 +25,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DMI_INTERPOSE=ON
         -DMI_USE_CXX=OFF
+        -DMI_BUILD_TESTS=OFF
         ${FEATURE_OPTIONS}
 )
 
@@ -64,8 +64,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

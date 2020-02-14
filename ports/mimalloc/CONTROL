@@ -1,5 +1,5 @@
 Source: mimalloc
-Version: 2019-06-25-1
+Version: 1.6.0
 Description: Compact general purpose allocator with excellent performance
 Homepage: https://github.com/microsoft/mimalloc
 

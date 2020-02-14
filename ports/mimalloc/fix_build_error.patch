@@ -1,0 +1,13 @@
+diff --git a/src/page.c b/src/page.c
+index 23a04a8..4bfc346 100644
+--- a/src/page.c
++++ b/src/page.c
+@@ -105,7 +105,7 @@ static bool mi_page_is_valid_init(mi_page_t* page) {
+ bool _mi_page_is_valid(mi_page_t* page) {
+   mi_assert_internal(mi_page_is_valid_init(page));
+   #if MI_SECURE
+-  mi_assert_internal(page->key != 0);
++  mi_assert_internal(page->keys != 0);
+   #endif
+   if (mi_page_heap(page)!=NULL) {
+     mi_segment_t* segment = _mi_page_segment(page);
