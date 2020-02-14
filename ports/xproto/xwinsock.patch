@@ -2,7 +2,7 @@ diff --git a/include/X11/Xwinsock.h b/include/X11/Xwinsock.h
 index 543c8f332..82ac48cd4 100644
 --- a/include/X11/Xwinsock.h	
 +++ b/include/X11/Xwinsock.h
-@@ -45,29 +45,277 @@ The Open Group.
+@@ -45,29 +45,267 @@ The Open Group.
   * ... so try to come up with something which works with both :-)
   */
  #define _NO_BOOL_TYPEDEF
@@ -251,7 +251,7 @@ index 543c8f332..82ac48cd4 100644
 +#endif
 +#if defined(X_XWINDOWS_DEFINE_GUARD_Status_DEFINITION)
 +    #undef Status
-+    #define Status X_XWINDOWS_DEFINE_GUARD_Status_DEFINITION
++    #define Status int
 +    #undef X_XWINDOWS_DEFINE_GUARD_Status_DEFINITION
 +#else 
 +    #undef Status
@@ -270,23 +270,14 @@ index 543c8f332..82ac48cd4 100644
 +#else 
 +    #undef BYTE
 +#endif
-+#if defined(None)
-+    #define X_XWINDOWS_DEFINE_GUARD_None_DEFINITION None
-+    #if defined(wNone)
-+        #undef None
-+        #define None wNone 
-+    #else 
-+        #undef None
-+    #endif 
-+#endif
-+#if defined(ControlMask)
-+    #define X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION ControlMask
-+    #if defined(wControlMask)
-+        #undef ControlMask
-+        #define ControlMask wControlMask 
-+    #else 
-+        #undef ControlMask
-+    #endif 
++#undef None
++#if defined(X_XWINDOWS_DEFINE_GUARD_None_DEFINITION)
++    #define None 0L
++#endif 
++#undef ControlMask
++#if defined(X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION)
++    #define ControlMask X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION
++#endif 
 +#endif
 +#if defined(X_XWINDOWS_DEFINE_GUARD_FreeResource_DEFINITION)
 +    #undef FreeResource
