@@ -2,7 +2,7 @@ Source: osg
 Version: 3.6.4-2
 Homepage: https://github.com/openscenegraph/OpenSceneGraph
 Description:  The OpenSceneGraph is an open source high performance 3D graphics toolkit.
-Build-Depends: zlib, fontconfig, boost-asio (!windows), freeglut (windows), expat (windows), openimageio
+Build-Depends: zlib, fontconfig, boost-asio (!windows), freeglut (windows), expat (windows), openimageio (osx)
 
 Feature: collada
 Description: Support for Collada (.dae) files
@@ -18,7 +18,7 @@ Build-Depends: freetype, sdl1, sdl2, libiconv (windows)
 
 Feature: plugins
 Description: Build OSG Plugins - Disable for compile testing examples on a time limit
-Build-Depends: freetype, sdl1, nvtt, curl, openexr, ilmbase, gdal, giflib (windows), jasper, libjpeg-turbo, libpng, tiff, libxml2 (windows), libiconv (windows), libgta, liblas
+Build-Depends: freetype, sdl1, curl, openexr, ilmbase, gdal, giflib (windows), jasper, libjpeg-turbo, libpng, tiff, libxml2 (windows), libiconv (windows), libgta, liblas
 
 Feature: packages
 Description: Set to ON to generate CPack configuration files and packaging targets
