@@ -50,7 +50,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     docs BUILD_DOCUMENTATION
     docs BUILD_REF_DOCS_SEARCHENGINE
     docs BUILD_REF_DOCS_TAGFILE
-    report BUILD_DASHBOARD_REPORTS
 )
 
 vcpkg_configure_cmake(
