@@ -1,0 +1,5 @@
+Source: libphonenumber
+Version: 8.11.4
+Description: Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers.
+Homepage: https://github.com/google/libphonenumber
+Build-Depends: protobuf, gtest, icu, boost-thread, boost-smart-ptr, boost-utility
