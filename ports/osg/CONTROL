@@ -8,9 +8,18 @@ Feature: collada
 Description: Support for Collada (.dae) files
 Build-Depends: collada-dom
 
+Feature: tools
+Description: Enable to build OSG Applications (e.g. osgviewer)
+
 Feature: examples
-Description: Build osg examples
+Description: Enable to build OSG Examples
 
 Feature: plugins
-Description: Build osg examples
+Description: Build OSG Plugins - Disable for compile testing examples on a time limit
 Build-Depends: nvtt
+
+Feature: packages
+Description: Set to ON to generate CPack configuration files and packaging targets
+
+Feature: docs
+Description: Build OpenSceneGraph reference documentation using doxygen (use: make doc_openscenegraph doc_openthreads
