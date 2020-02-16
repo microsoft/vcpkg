@@ -1,3 +1,38 @@
+## # vcpkg_configure_meson
+##
+## Configure Meson for Debug and Release builds of a project.
+##
+## ## Usage
+## ```cmake
+## vcpkg_configure_meson(
+##     SOURCE_PATH <${SOURCE_PATH}>
+##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
+##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
+##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+## )
+## ```
+##
+## ## Parameters
+## ### SOURCE_PATH
+## Specifies the directory containing the `meson.build`.
+## By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+##
+## ### OPTIONS
+## Additional options passed to Meson during the configuration.
+##
+## ### OPTIONS_RELEASE
+## Additional options passed to Meson during the Release configuration. These are in addition to `OPTIONS`.
+##
+## ### OPTIONS_DEBUG
+## Additional options passed to Meson during the Debug configuration. These are in addition to `OPTIONS`.
+##
+## ## Notes
+## This command supplies many common arguments to Meson. To see the full list, examine the source.
+##
+## ## Examples
+##
+## * [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
+## * [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
 function(vcpkg_configure_meson)
     cmake_parse_arguments(_vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
     
@@ -5,21 +40,24 @@ function(vcpkg_configure_meson)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     
     # use the same compiler options as in vcpkg_configure_cmake
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "vcpkg_configure_meson() currently only supports windows targets.")
+    endif()
     set(MESON_COMMON_CFLAGS "${MESON_COMMON_CFLAGS} /DWIN32 /D_WINDOWS /W3 /utf-8")
     set(MESON_COMMON_CXXFLAGS "${MESON_COMMON_CXXFLAGS} /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc")
     
-    if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         set(MESON_DEBUG_CFLAGS "${MESON_DEBUG_CFLAGS} /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1")
         set(MESON_DEBUG_CXXFLAGS "${MESON_DEBUG_CXXFLAGS} /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1")
         
-        set(MESON_RELEASE_CFLAGS "${MESON_RELEASE_CFLAGS} /MD /O2 /Oi /Gy /DNDEBUG /Z7")
-        set(MESON_RELEASE_CXXFLAGS "${MESON_RELEASE_CXXFLAGS} /MD /O2 /Oi /Gy /DNDEBUG /Z7")
-    elseif(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
+        set(MESON_RELEASE_CFLAGS "${MESON_RELEASE_CFLAGS} /MD /O2 /Gy /DNDEBUG /Z7")
+        set(MESON_RELEASE_CXXFLAGS "${MESON_RELEASE_CXXFLAGS} /MD /O2 /Gy /DNDEBUG /Z7")
+    elseif(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL "static")
         set(MESON_DEBUG_CFLAGS "${MESON_DEBUG_CFLAGS} /D_DEBUG /MTd /Z7 /Ob0 /Od /RTC1")
         set(MESON_DEBUG_CXXFLAGS "${MESON_DEBUG_CXXFLAGS} /D_DEBUG /MTd /Z7 /Ob0 /Od /RTC1")
         
-        set(MESON_RELEASE_CFLAGS "${MESON_RELEASE_CFLAGS} /MT /O2 /Oi /Gy /DNDEBUG /Z7")
-        set(MESON_RELEASE_CXXFLAGS "${MESON_RELEASE_CXXFLAGS} /MT /O2 /Oi /Gy /DNDEBUG /Z7")
+        set(MESON_RELEASE_CFLAGS "${MESON_RELEASE_CFLAGS} /MT /O2 /Gy /DNDEBUG /Z7")
+        set(MESON_RELEASE_CXXFLAGS "${MESON_RELEASE_CXXFLAGS} /MT /O2 /Gy /DNDEBUG /Z7")
     endif()
     
     set(MESON_COMMON_LDFLAGS "${MESON_COMMON_LDFLAGS} /DEBUG")
@@ -28,7 +66,7 @@ function(vcpkg_configure_meson)
     # select meson cmd-line options
     list(APPEND _vcm_OPTIONS -Dcmake_prefix_path=${CURRENT_INSTALLED_DIR})
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(APPEND _vcm_OPTIONS --default-library shared)
     else()
         list(APPEND _vcm_OPTIONS --default-library static)

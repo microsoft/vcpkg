@@ -1,6 +1,6 @@
 ## # vcpkg_apply_patches
 ##
-## Apply a set of patches to a source tree.
+## Apply a set of patches to a source tree. This function is deprecated in favor of the `PATCHES` argument to `vcpkg_from_github()` et al.
 ##
 ## ## Usage
 ## ```cmake
@@ -27,10 +27,8 @@
 ##
 ## ## Examples
 ##
-## * [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
-## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
-## * [libpng](https://github.com/Microsoft/vcpkg/blob/master/ports/libpng/portfile.cmake)
-
+## * [libbson](https://github.com/Microsoft/vcpkg/blob/master/ports/libbson/portfile.cmake)
+## * [gdal](https://github.com/Microsoft/vcpkg/blob/master/ports/gdal/portfile.cmake)
 function(vcpkg_apply_patches)
     cmake_parse_arguments(_ap "QUIET" "SOURCE_PATH" "PATCHES" ${ARGN})
 

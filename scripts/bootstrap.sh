@@ -244,7 +244,7 @@ else
 fi
 if [ "$os" = "osx" ]; then
     if [ "$vcpkgAllowAppleClang" = "true" ] ; then
-        CXX=clang
+        CXX=clang++
     else
         selectCXX CXX || exit 1
     fi
@@ -262,3 +262,11 @@ mkdir -p "$buildDir"
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
+
+if ! [ "$vcpkgDisableMetrics" = "ON" ]; then
+    echo "Telemetry"
+    echo "---------"
+    echo "vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running bootstrap-vcpkg.sh with -disableMetrics"
+    echo "Read more about vcpkg telemetry at docs/about/privacy.md"
+    echo ""
+fi
