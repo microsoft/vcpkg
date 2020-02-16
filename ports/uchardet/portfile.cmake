@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://gitlab.freedesktop.org/uchardet/uchardet
@@ -56,4 +54,4 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/share/man
 )
 
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
