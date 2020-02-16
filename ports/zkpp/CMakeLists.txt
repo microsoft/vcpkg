@@ -33,6 +33,7 @@ include(BuildFunctions)
 include(CheckIncludeFileCXX)
 include(ConfigurationSetting)
 include(ListSplit)
+include(GNUInstallDirs)
 
 ################################################################################
 # Build Configuration                                                          #
@@ -89,18 +90,21 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 find_package(zookeeper REQUIRED)
 
-include_directories("${PROJECT_SOURCE_DIR}/src")
 
 build_module(NAME zkpp
              PATH src/zk
              NO_RECURSE
             )
 
-target_include_directories(zkpp INTERFACE 
-        "${CMAKE_INSTALL_PREFIX}/include")
+target_include_directories(zkpp PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 target_link_libraries(zkpp PRIVATE zookeeper::zookeeper)
 
-install(TARGETS zkpp EXPORT zkpp DESTINATION lib/)
+install(TARGETS zkpp
+    EXPORT zkpp
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
 
 install(FILES ${zkpp_LIBRARY_HEADERS} DESTINATION include/zk/)
 
