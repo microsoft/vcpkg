@@ -8,30 +8,13 @@ set(VTK_SHORT_VERSION "8.2")
 set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 # =============================================================================
 # Options:
-
-if ("qt" IN_LIST FEATURES)
-    set(VTK_WITH_QT                      ON )
-else()
-    set(VTK_WITH_QT                      OFF )
-endif()
-
-if ("mpi" IN_LIST FEATURES)
-    set(VTK_Group_MPI ON)
-else()
-    set(VTK_Group_MPI OFF)
-endif()
-
-if ("python" IN_LIST FEATURES)
-    set(VTK_WITH_PYTHON                  ON)
-else()
-    set(VTK_WITH_PYTHON                  OFF)
-endif()
-
-if("openvr" IN_LIST FEATURES)
-    set(Module_vtkRenderingOpenVR ON)
-else()
-    set(Module_vtkRenderingOpenVR OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    qt     VTK_WITH_QT
+    mpi    VTK_Group_MPI
+    python VTK_WITH_PYTHON
+    openvr Module_vtkRenderingOpenVR
+    atlmfc Module_vtkGUISupportMFC 
+)
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
@@ -50,6 +33,8 @@ vcpkg_from_github(
         fix-pugixml-link.patch
         hdf5_static.patch
         fix-find-lzma.patch
+        fix-proj4.patch
+        fix-VTKConfig-cmake.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -94,14 +79,12 @@ if(VTK_WITH_ALL_MODULES)
         # -DVTK_USE_SYSTEM_XDMF3=ON
         # -DVTK_USE_SYSTEM_ZFP=ON
         # -DVTK_USE_SYSTEM_ZOPE=ON
+        # -DVTK_USE_SYSTEM_LIBPROJ=ON
     )
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-    set(Module_vtkGUISupportMFC ON)
-else()
-    set(Module_vtkGUISupportMFC OFF)
-endif()
+set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
+set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
 
 # =============================================================================
 # Configure & Install
@@ -109,7 +92,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DVTK_INSTALL_INCLUDE_DIR=include
@@ -126,12 +109,13 @@ vcpkg_configure_cmake(
         # Select modules / groups to install
         -DVTK_Group_Imaging=ON
         -DVTK_Group_Views=ON
-        -DModule_vtkGUISupportMFC=${Module_vtkGUISupportMFC}
-        -DModule_vtkRenderingOpenVR=${Module_vtkRenderingOpenVR}
-        -DVTK_Group_MPI=${VTK_Group_MPI}
         -DPYTHON_EXECUTABLE=${PYTHON3}
 
         ${ADDITIONAL_OPTIONS}
+    OPTIONS_RELEASE
+        -DPROJ_LIBRARY=${PROJ_LIBRARY_REL}
+    OPTIONS_DEBUG
+        -DPROJ_LIBRARY=${PROJ_LIBRARY_DBG}
 )
 
 vcpkg_install_cmake()

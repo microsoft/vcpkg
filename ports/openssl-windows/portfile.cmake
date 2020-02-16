@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "This port is only for building openssl on Windows Desktop")
-endif()
+vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Desktop" ON_TARGET "UWP" "Linux" "OSX")
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
@@ -12,26 +8,20 @@ endif()
 
 vcpkg_find_acquire_program(PERL)
 
-set(OPENSSL_VERSION 1.0.2s)
+set(OPENSSL_VERSION 1.1.1d)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
+    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 9f745452c4f777df694158e95003cde78a2cf8199bc481a563ec36644664c3c1415a774779b9791dd18f2aeb57fa1721cb52b3db12d025955e970071d5b66d2a
+    SHA512 2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7
 )
 
 vcpkg_extract_source_archive_ex(
   OUT_SOURCE_PATH SOURCE_PATH
   ARCHIVE ${ARCHIVE}
-  PATCHES
-    ConfigureIncludeQuotesFix.patch
-    STRINGIFYPatch.patch
-    EnableWinARM32.patch
-    EmbedSymbolsInStaticLibsZ7.patch
-    EnableWinARM64.patch
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -40,42 +30,32 @@ set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
+set(OPENSSL_SHARED no-shared)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  set(OPENSSL_SHARED shared)
+endif()
+
 set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
     enable-capieng
     no-ssl2
     -utf-8
+    ${OPENSSL_SHARED}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
-    set(OPENSSL_DO "ms\\do_nasm.bat")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(OPENSSL_ARCH VC-WIN64A)
-    set(OPENSSL_DO "ms\\do_win64a.bat")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    set(OPENSSL_ARCH VC-WIN32)
-    set(OPENSSL_DO "ms\\do_ms.bat")
-    set(CONFIGURE_COMMAND ${CONFIGURE_COMMAND}
-        no-asm
-        -D_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE
-    )
+    set(OPENSSL_ARCH VC-WIN32-ARM)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    set(OPENSSL_ARCH VC-WIN32)
-    set(OPENSSL_DO "ms\\do_ms.bat")
-    set(CONFIGURE_COMMAND ${CONFIGURE_COMMAND}
-        no-asm
-        -D_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE
-    )
+    set(OPENSSL_ARCH VC-WIN64-ARM)
 else()
     message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OPENSSL_MAKEFILE "ms\\ntdll.mak")
-else()
-    set(OPENSSL_MAKEFILE "ms\\nt.mak")
-endif()
+set(OPENSSL_MAKEFILE "makefile")
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
@@ -97,12 +77,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     vcpkg_execute_required_process(
         COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
-    )
-    vcpkg_execute_required_process(
-        COMMAND ${OPENSSL_DO}
-        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
+        LOGNAME configure-perl-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}-rel
     )
     message(STATUS "Configure ${TARGET_TRIPLET}-rel done")
 
@@ -141,12 +116,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_execute_required_process(
         COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-        LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
-    )
-    vcpkg_execute_required_process(
-        COMMAND ${OPENSSL_DO}
-        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-        LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
+        LOGNAME configure-perl-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}-dbg
     )
     message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
 
@@ -166,16 +136,30 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 endif()
 
-
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/certs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/private)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/engines-1_1)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/certs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/private)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+
+
 file(REMOVE
+    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf
+    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf.dist
+    ${CURRENT_PACKAGES_DIR}/openssl.cnf.dist
     ${CURRENT_PACKAGES_DIR}/debug/bin/openssl.exe
+    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf
+    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf.dist
     ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf
-    ${CURRENT_PACKAGES_DIR}/openssl.cnf
+    ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist
 )
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/openssl/)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/openssl.exe ${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.exe)
+file(RENAME ${CURRENT_PACKAGES_DIR}/openssl.cnf ${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.cnf)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openssl)
 

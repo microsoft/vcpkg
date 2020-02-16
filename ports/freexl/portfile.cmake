@@ -6,6 +6,7 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "freexl-${FREEXL_VERSION_STR}.tar.gz"
     SHA512 d72561f7b82e0281cb211fbf249e5e45411a7cdd009cfb58da3696f0a0341ea7df210883bfde794be28738486aeb4ffc67ec2c98fd2acde5280e246e204ce788
 )
+
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_extract_source_archive_ex(
         ARCHIVE ${ARCHIVE}

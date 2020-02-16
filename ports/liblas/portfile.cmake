@@ -15,7 +15,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES fix-BuildError.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake) # remove outdated module. There are probably more
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindPROJ4.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -36,15 +37,13 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/cmake/liblas/liblas-depends.cmake)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/cmake/libLAS/liblas-depends.cmake)
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/share/cmake/liblas)
-	vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/liblas)
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libLAS)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblas RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,5 +1,5 @@
 Source: paho-mqttpp3
-Version: 1.0.1-2
+Version: 1.0.1-3
 Description: Paho project provides open-source C++ wrapper for Paho C library
 Build-Depends: paho-mqtt
 Default-Features: ssl

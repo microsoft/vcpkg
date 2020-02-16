@@ -7,8 +7,11 @@
 ## vcpkg_build_nmake(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [NO_DEBUG]
-##     PROJECT_SUBPATH <${SUBPATH}>
-##     PROJECT_NAME <${MAKEFILE_NAME}>
+##     [PROJECT_SUBPATH <${SUBPATH}>]
+##     [PROJECT_NAME <${MAKEFILE_NAME}>]
+##     [PRERUN_SHELL <${SHELL_PATH}>]
+##     [PRERUN_SHELL_DEBUG <${SHELL_PATH}>]
+##     [PRERUN_SHELL_RELEASE <${SHELL_PATH}>]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
 ##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
 ##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
@@ -32,6 +35,15 @@
 ##
 ## ### ENABLE_INSTALL
 ## Install binaries after build.
+##
+## ### PRERUN_SHELL
+## Script that needs to be called before build
+##
+## ### PRERUN_SHELL_DEBUG
+## Script that needs to be called before debug build
+##
+## ### PRERUN_SHELL_RELEASE
+## Script that needs to be called before release build
 ##
 ## ### OPTIONS
 ## Additional options passed to generate during the generation.
@@ -62,7 +74,7 @@ function(vcpkg_build_nmake)
     cmake_parse_arguments(_bn
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
         "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
         ${ARGN}
     )
     
@@ -164,6 +176,31 @@ function(vcpkg_build_nmake)
                 string(REPLACE "${_bn_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
                 file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
             endforeach()
+            
+            if (_bn_PRERUN_SHELL)
+                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
+                vcpkg_execute_required_process(
+                    COMMAND ${_bn_PRERUN_SHELL}
+                    WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
+                    LOGNAME "$prerun-${CURRENT_TRIPLET_NAME}"
+                )
+            endif()
+            if (BUILDTYPE STREQUAL "debug" AND _bn_PRERUN_SHELL_DEBUG)
+                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
+                vcpkg_execute_required_process(
+                    COMMAND "${_bn_PRERUN_SHELL_DEBUG}"
+                    WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
+                    LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-dbg"
+                )
+            endif()
+            if (BUILDTYPE STREQUAL "release" AND _bn_PRERUN_SHELL_RELEASE)
+                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
+                vcpkg_execute_required_process(
+                    COMMAND ${_bn_PRERUN_SHELL_RELEASE}
+                    WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
+                    LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-rel"
+                )
+            endif()
 
             if (NOT _bn_ENABLE_INSTALL)
                 message(STATUS "Building ${CURRENT_TRIPLET_NAME}")
@@ -171,8 +208,8 @@ function(vcpkg_build_nmake)
                 message(STATUS "Building and installing ${CURRENT_TRIPLET_NAME}")
             endif()
 
-            vcpkg_execute_required_process(
-                COMMAND ${MAKE} -j ${VCPKG_CONCURRENCY} ${MAKE_OPTS}
+            vcpkg_execute_build_process(
+                COMMAND ${MAKE} ${MAKE_OPTS}
                 WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
                 LOGNAME "${_bn_LOGFILE_ROOT}-${CURRENT_TRIPLET_NAME}"
             )
