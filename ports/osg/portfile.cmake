@@ -14,6 +14,7 @@ vcpkg_from_github(
         disable-present3d-staticview-in-linux.patch #Due to some link error we cannot solve yet, disable them in linux.
         fix-curl.patch
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
+        fix-liblas.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -73,31 +74,37 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 set(OSG_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(MAKE_DIRECTORY ${OSG_TOOL_PATH})
 
-if ("tools" IN_LIST FEATURES)
-    file(GLOB OSG_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(GLOB OSG_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+if (OSG_TOOLS)
     file(COPY ${OSG_TOOLS} DESTINATION ${OSG_TOOL_PATH})
     file(REMOVE_RECURSE ${OSG_TOOLS})
     file(GLOB OSG_TOOLS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    file(REMOVE_RECURSE ${OSG_TOOLS_DBG})
-else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools ${CURRENT_PACKAGES_DIR}/debug/tools)
+endif()
+file(REMOVE_RECURSE ${OSG_TOOLS_DBG})
+
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/*)
+    if (OSG_PLUGINS_DBG)
+        file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/osgPlugins-${OSG_VER})
+    endif()
+    file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/*)
+    if (OSG_PLUGINS_REL)
+        file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-${OSG_VER})
+    endif()
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/ ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/)
 endif()
 
-if ("plugins" IN_LIST FEATURES)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-        file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/osgPlugins-${OSG_VER})
-        file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-        file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-${OSG_VER})
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/ ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/)
-    endif()
-    
-    file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/osgPlugins-${OSG_VER}/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/*)
+if (OSG_PLUGINS_DBG)
     file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/osgPlugins-${OSG_VER})
-    file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/lib/osgPlugins-${OSG_VER}/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-    file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-${OSG_VER})
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/osgPlugins-${OSG_VER}/ ${CURRENT_PACKAGES_DIR}/debug/lib/osgPlugins-${OSG_VER}/)
 endif()
+
+file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/*)
+if (OSG_PLUGINS_REL)
+    file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-${OSG_VER})
+endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/ ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/)
 
 #Cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
