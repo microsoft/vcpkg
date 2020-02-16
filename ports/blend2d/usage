@@ -1,0 +1,1 @@
+Define BL_STATIC before any @PORT@ includes.

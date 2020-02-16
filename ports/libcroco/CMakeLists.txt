@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.11)
 project(libcroco C)
 
+find_package(unofficial-iconv REQUIRED)
+find_package(unofficial-gettext CONFIG REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
 find_package(LibXml2 REQUIRED)
 if(NOT WIN32)
     find_package(Threads REQUIRED)
-    find_package(unofficial-iconv REQUIRED)
 endif()
 find_path(GLIB_INCLUDE_DIR glib.h)
 
@@ -67,10 +68,10 @@ file(GLOB SOURCES
 
 set(CMAKE_DEBUG_POSTFIX "d")
 
-add_library(libcroco ${SOURCES})
+add_library(croco-0.6 ${SOURCES})
 
-target_include_directories(libcroco PRIVATE ${GLIB_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
-target_link_libraries(libcroco PRIVATE 
+target_include_directories(croco-0.6 PRIVATE ${GLIB_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
+target_link_libraries(croco-0.6 PRIVATE 
     unofficial::glib::gio
     unofficial::glib::glib
     unofficial::glib::gmodule
@@ -78,7 +79,7 @@ target_link_libraries(libcroco PRIVATE
     ${LIBXML2_LIBRARIES}
 )
 
-install(TARGETS libcroco
+install(TARGETS croco-0.6
     EXPORT libcroco-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
@@ -126,11 +127,12 @@ install(
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libcroco-config.cmake "
 include(CMakeFindDependencyMacro)
+find_dependency(unofficial-gettext)
+find_dependency(unofficial-iconv CONFIG)
 find_dependency(unofficial-glib CONFIG)
 find_dependency(LibXml2)
 if(NOT WIN32)
     find_dependency(Threads)
-    find_dependency(unofficial-iconv)
 endif()
 include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-libcroco-targets.cmake)
 ")

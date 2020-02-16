@@ -1,18 +1,15 @@
 include(vcpkg_common_functions)
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    message(FATAL_ERROR "openblas can only be built for x64 currently")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v0.3.6
-    SHA512 1ad980176a51f70d8b0b2d158da8c01f30f77b7cf385b24a6340d3c5feb1513bd04b9390487d05cc9557db7dc5f7c135b1688dec9f17ebef35dba884ef7ddee9
+    REF 5f36f18148603facb6c3540e673610d6b24cbfbb # v0.3.7
+    SHA512 c1abcfd6fbf6ae3efa28053523ffb3d72aefaa279594347bfd9910c40f25778421b8d1d2d4dc6c934c9def40642942bb74fe76e06c2d96b1898ea61204a95540
     HEAD_REF develop
     PATCHES
         uwp.patch
         fix-space-path.patch
+        fix-redefinition-function.patch
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -26,8 +23,7 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
 
-set(COMMON_OPTIONS
-    -DBUILD_WITHOUT_LAPACK=ON)
+set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 # for UWP version, must build non uwp first for helper
 # binaries.
@@ -68,16 +64,21 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
 elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_configure_cmake(
+        PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             ${COMMON_OPTIONS})
 else()
+    list(APPEND VCPKG_C_FLAGS "-DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
+    list(APPEND VCPKG_CXX_FLAGS "-DNEEDBUNDERSCORE")
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             ${COMMON_OPTIONS}
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
-            -DNOFORTRAN=ON)
+            -DNOFORTRAN=ON
+            -DBU=_  #required for all blas functions to append extra _ using NAME
+            )
 endif()
 
 
@@ -97,6 +98,9 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 # openblas is BSD
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DIR}/share/openblas/copyright)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindBLAS.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
 
 vcpkg_copy_pdbs()
 

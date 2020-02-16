@@ -1,0 +1,272 @@
+diff --git a/include/stxxl/bits/algo/ksort.h b/include/stxxl/bits/algo/ksort.h
+index 33ec8cf..4079a57 100644
+--- a/include/stxxl/bits/algo/ksort.h
++++ b/include/stxxl/bits/algo/ksort.h
+@@ -299,11 +299,7 @@ create_runs(
+ template <typename BlockType,
+           typename prefetcher_type,
+           typename KeyExtractor>
+-struct run_cursor2_cmp : public std::binary_function<
+-                             run_cursor2<BlockType, prefetcher_type>,
+-                             run_cursor2<BlockType, prefetcher_type>,
+-                             bool
+-                             >
++struct run_cursor2_cmp
+ {
+     typedef run_cursor2<BlockType, prefetcher_type> cursor_type;
+     KeyExtractor keyobj;
+@@ -327,7 +323,7 @@ private:
+ };
+ 
+ template <typename RecordType, typename KeyExtractor>
+-class key_comparison : public std::binary_function<RecordType, RecordType, bool>
++class key_comparison
+ {
+     KeyExtractor ke;
+ 
+diff --git a/include/stxxl/bits/algo/sort_helper.h b/include/stxxl/bits/algo/sort_helper.h
+index 524e40d..69234c4 100644
+--- a/include/stxxl/bits/algo/sort_helper.h
++++ b/include/stxxl/bits/algo/sort_helper.h
+@@ -51,7 +51,6 @@ struct trigger_entry
+ 
+ template <typename TriggerEntryType, typename ValueCmp>
+ struct trigger_entry_cmp
+-    : public std::binary_function<TriggerEntryType, TriggerEntryType, bool>
+ {
+     typedef TriggerEntryType trigger_entry_type;
+     ValueCmp cmp;
+@@ -67,11 +66,6 @@ template <typename BlockType,
+           typename PrefetcherType,
+           typename ValueCmp>
+ struct run_cursor2_cmp
+-    : public std::binary_function<
+-          run_cursor2<BlockType, PrefetcherType>,
+-          run_cursor2<BlockType, PrefetcherType>,
+-          bool
+-          >
+ {
+     typedef BlockType block_type;
+     typedef PrefetcherType prefetcher_type;
+diff --git a/include/stxxl/bits/compat/unique_ptr.h b/include/stxxl/bits/compat/unique_ptr.h
+index 9df12ff..7110246 100644
+--- a/include/stxxl/bits/compat/unique_ptr.h
++++ b/include/stxxl/bits/compat/unique_ptr.h
+@@ -22,12 +22,7 @@ STXXL_BEGIN_NAMESPACE
+ 
+ template <class Type>
+ struct compat_unique_ptr {
+-#if __cplusplus >= 201103L && ((__GNUC__ * 10000 + __GNUC_MINOR__ * 100) >= 40400)
+     typedef std::unique_ptr<Type> result;
+-#else
+-    // auto_ptr is inherently broken and is deprecated by unique_ptr in c++0x
+-    typedef std::auto_ptr<Type> result;
+-#endif
+ };
+ 
+ STXXL_END_NAMESPACE
+diff --git a/include/stxxl/bits/containers/btree/leaf.h b/include/stxxl/bits/containers/btree/leaf.h
+index d7c619f..c6b2fcc 100644
+--- a/include/stxxl/bits/containers/btree/leaf.h
++++ b/include/stxxl/bits/containers/btree/leaf.h
+@@ -66,7 +66,7 @@ public:
+     typedef node_cache<normal_leaf, btree_type> leaf_cache_type;
+ 
+ public:
+-    struct value_compare : public std::binary_function<value_type, value_type, bool>
++    struct value_compare
+     {
+         key_compare comp;
+ 
+diff --git a/include/stxxl/bits/containers/btree/node.h b/include/stxxl/bits/containers/btree/node.h
+index 13dec7b..a4c47d8 100644
+--- a/include/stxxl/bits/containers/btree/node.h
++++ b/include/stxxl/bits/containers/btree/node.h
+@@ -71,7 +71,7 @@ public:
+     typedef node_cache<normal_node, btree_type> node_cache_type;
+ 
+ private:
+-    struct value_compare : public std::binary_function<value_type, value_type, bool>
++    struct value_compare
+     {
+         key_compare comp;
+ 
+diff --git a/include/stxxl/bits/containers/hash_map/hash_map.h b/include/stxxl/bits/containers/hash_map/hash_map.h
+index 0759bd2..ecf19cd 100644
+--- a/include/stxxl/bits/containers/hash_map/hash_map.h
++++ b/include/stxxl/bits/containers/hash_map/hash_map.h
+@@ -1258,10 +1258,7 @@ protected:
+      * lexicographically by <hash-value, key> Note: the hash-value has already
+      * been computed.
+      */
+-    struct Cmp : public std::binary_function<
+-                     std::pair<internal_size_type, value_type>,
+-                     std::pair<internal_size_type, value_type>, bool
+-                     >
++    struct Cmp
+     {
+         self_type& map_;
+         Cmp(self_type& map) : map_(map) { }
+@@ -1520,7 +1517,7 @@ protected:
+ 
+ public:
+     //! Construct an equality predicate from the comparison operator
+-    struct equal_to : public std::binary_function<key_type, key_type, bool>
++    struct equal_to
+     {
+         //! reference to hash_map
+         const self_type& m_map;
+diff --git a/include/stxxl/bits/io/wbtl_file.h b/include/stxxl/bits/io/wbtl_file.h
+index 933a216..30828a0 100644
+--- a/include/stxxl/bits/io/wbtl_file.h
++++ b/include/stxxl/bits/io/wbtl_file.h
+@@ -65,7 +65,7 @@ class wbtl_file : public disk_queued_file
+     size_type curpos;
+     request_ptr backend_request;
+ 
+-    struct FirstFit : public std::binary_function<place, offset_type, bool>
++    struct FirstFit
+     {
+         bool operator () (
+             const place& entry,
+diff --git a/include/stxxl/bits/mng/block_alloc.h b/include/stxxl/bits/mng/block_alloc.h
+index 19ade8b..887f0e6 100644
+--- a/include/stxxl/bits/mng/block_alloc.h
++++ b/include/stxxl/bits/mng/block_alloc.h
+@@ -138,7 +138,7 @@ private:
+             perm[i] = i;
+ 
+         stxxl::random_number<random_uniform_fast> rnd;
+-        std::random_shuffle(perm.begin(), perm.end(), rnd _STXXL_FORCE_SEQUENTIAL);
++        std::shuffle(perm.begin(), perm.end(), std::mt19937(std::random_device()()));
+     }
+ 
+ public:
+diff --git a/include/stxxl/bits/mng/block_alloc_interleaved.h b/include/stxxl/bits/mng/block_alloc_interleaved.h
+index a82ee34..5aba23a 100644
+--- a/include/stxxl/bits/mng/block_alloc_interleaved.h
++++ b/include/stxxl/bits/mng/block_alloc_interleaved.h
+@@ -93,7 +93,7 @@ struct interleaved_RC : public interleaved_striping
+                 perms[i][j] = j;
+ 
+             random_number<random_uniform_fast> rnd;
+-            std::random_shuffle(perms[i].begin(), perms[i].end(), rnd _STXXL_FORCE_SEQUENTIAL);
++            std::shuffle(perms[i].begin(), perms[i].end(), std::mt19937(std::random_device()()));
+         }
+     }
+ 
+diff --git a/include/stxxl/bits/mng/disk_allocator.h b/include/stxxl/bits/mng/disk_allocator.h
+index 59ad085..c1e0f83 100644
+--- a/include/stxxl/bits/mng/disk_allocator.h
++++ b/include/stxxl/bits/mng/disk_allocator.h
+@@ -44,7 +44,7 @@ class disk_allocator : private noncopyable
+ {
+     typedef std::pair<stxxl::int64, stxxl::int64> place;
+ 
+-    struct first_fit : public std::binary_function<place, stxxl::int64, bool>
++    struct first_fit
+     {
+         bool operator () (
+             const place& entry,
+@@ -189,7 +189,7 @@ void disk_allocator::new_blocks(BID<BlockSize>* begin, BID<BlockSize>* end)
+ 
+     sortseq::iterator space;
+     space = std::find_if(free_space.begin(), free_space.end(),
+-                         bind2nd(first_fit(), requested_size) _STXXL_FORCE_SEQUENTIAL);
++                         std::bind(first_fit(), std::placeholders::_1, requested_size) _STXXL_FORCE_SEQUENTIAL);
+ 
+     if (space == free_space.end() && requested_size == BlockSize)
+     {
+@@ -207,7 +207,7 @@ void disk_allocator::new_blocks(BID<BlockSize>* begin, BID<BlockSize>* end)
+         grow_file(BlockSize);
+ 
+         space = std::find_if(free_space.begin(), free_space.end(),
+-                             bind2nd(first_fit(), requested_size) _STXXL_FORCE_SEQUENTIAL);
++                             std::bind(first_fit(), std::placeholders::_1, requested_size) _STXXL_FORCE_SEQUENTIAL);
+     }
+ 
+     if (space != free_space.end())
+diff --git a/include/stxxl/bits/parallel.h b/include/stxxl/bits/parallel.h
+index d973861..c858d87 100644
+--- a/include/stxxl/bits/parallel.h
++++ b/include/stxxl/bits/parallel.h
+@@ -121,7 +121,6 @@ using __gnu_parallel::random_shuffle;
+ #elif STXXL_PARALLEL
+ 
+ using std::sort;
+-using std::random_shuffle;
+ 
+ #else
+ 
+diff --git a/include/stxxl/bits/parallel/base.h b/include/stxxl/bits/parallel/base.h
+index 141d515..7dae74f 100644
+--- a/include/stxxl/bits/parallel/base.h
++++ b/include/stxxl/bits/parallel/base.h
+@@ -33,7 +33,6 @@ namespace parallel {
+  */
+ template <class Predicate, typename first_argument_type, typename second_argument_type>
+ class binary_negate
+-    : public std::binary_function<first_argument_type, second_argument_type, bool>
+ {
+ protected:
+     Predicate pred;
+@@ -80,7 +79,7 @@ static inline void decode2(lcas_t x, int& a, int& b)
+  * Constructs predicate for equality from strict weak ordering predicate
+  */
+ template <class Comparator, typename T1, typename T2>
+-class equal_from_less : public std::binary_function<T1, T2, bool>
++class equal_from_less
+ {
+ private:
+     Comparator& comp;
+@@ -126,7 +125,7 @@ median_of_three_iterators(RandomAccessIterator a, RandomAccessIterator b,
+ 
+ /** Similar to std::equal_to, but allows two different types. */
+ template <typename T1, typename T2>
+-struct equal_to : std::binary_function<T1, T2, bool>
++struct equal_to
+ {
+     bool operator () (const T1& t1, const T2& t2) const
+     {
+@@ -136,7 +135,7 @@ struct equal_to : std::binary_function<T1, T2, bool>
+ 
+ /** Similar to std::less, but allows two different types. */
+ template <typename T1, typename T2>
+-struct less : std::binary_function<T1, T2, bool>
++struct less
+ {
+     bool operator () (const T1& t1, const T2& t2) const
+     {
+diff --git a/include/stxxl/bits/parallel/multiseq_selection.h b/include/stxxl/bits/parallel/multiseq_selection.h
+index 57e7599..f41d9aa 100644
+--- a/include/stxxl/bits/parallel/multiseq_selection.h
++++ b/include/stxxl/bits/parallel/multiseq_selection.h
+@@ -35,7 +35,6 @@ namespace parallel {
+ //! Compare a pair of types lexcigraphically, ascending.
+ template <typename T1, typename T2, typename Comparator>
+ class lexicographic
+-    : public std::binary_function<std::pair<T1, T2>, std::pair<T1, T2>, bool>
+ {
+ protected:
+     Comparator& m_comp;
+@@ -60,7 +59,6 @@ public:
+ //! Compare a pair of types lexcigraphically, descending.
+ template <typename T1, typename T2, typename Comparator>
+ class lexicographic_rev
+-    : public std::binary_function<std::pair<T1, T2>, std::pair<T1, T2>, bool>
+ {
+ protected:
+     Comparator& m_comp;
+diff --git a/lib/io/wbtl_file.cpp b/lib/io/wbtl_file.cpp
+index 310d76a..6d52e2e 100644
+--- a/lib/io/wbtl_file.cpp
++++ b/lib/io/wbtl_file.cpp
+@@ -304,7 +304,7 @@ wbtl_file::offset_type wbtl_file::get_next_write_block()
+     // mapping_lock has to be aquired by caller
+     sortseq::iterator space =
+         std::find_if(free_space.begin(), free_space.end(),
+-                     bind2nd(FirstFit(), write_block_size) _STXXL_FORCE_SEQUENTIAL);
++                     std::bind(FirstFit(), std::placeholders::_1, write_block_size) _STXXL_FORCE_SEQUENTIAL);
+ 
+     if (space != free_space.end())
+     {

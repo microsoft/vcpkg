@@ -8,7 +8,7 @@ Field names are case-sensitive and start the line without leading whitespace.  P
 
 ## Source Paragraph
 
-The first paragraph in a `CONTROL` file is the Source paragraph.  It must have a `Source`, `Version`, and `Description` field.  It can optionally have a `Build-Depends` and `Default-Features` field.
+The first paragraph in a `CONTROL` file is the Source paragraph.  It must have a `Source`, `Version`, and `Description` field. The full set of fields is documented below.
 
 ### Examples:
 ```no-highlight
@@ -43,24 +43,35 @@ The port version.
 
 This field is an alphanumeric string that may also contain `.`, `_`, or `-`. No attempt at ordering versions is made; all versions are treated as bit strings and are only evaluated for equality.
 
-By convention, if a portfile is modified without incrementing the "upstream" version, a `-#` is appended to create a unique version string.
+For tagged-release ports, we follow the following convention:
 
-Some projects do not have named releases.  In these cases use the date of the version   do not have labeled releases, in these cases use the date of the last commit in `YYYY-MM-DD` format.  See the `abseil` port as an example.
+1. If the port follows a scheme like `va.b.c`, we remove the leading `v`. In this case, it becomes `a.b.c`.
+2. If the port includes its own name in the version like `curl-7_65_1`, we remove the leading name: `7_65_1`
+3. If the port has been modified, we append a `-N` to distinguish the versions: `1.2.1-4`
 
-Example:
+For rolling-release ports, we use the date that the _commit was accessed by you_, formatted as `YYYY-MM-DD`. Stated another way: if someone had a time machine and went to that date, they would see this commit as the latest master.
+
+For example, given:
+1. The latest commit was made on 2019-04-19
+2. The current version string is `2019-02-14-1`
+3. Today's date is 2019-06-01.
+
+Then if you update the source version today, you should give it version `2019-06-01`. If you need to make a change which doesn't adjust the source version, you should give it version `2019-02-14-2`.
+
+##### Examples:
 ```no-highlight
 Version: 1.0.5-2
 ```
 ```no-highlight
-Version: 2019-3-21
+Version: 2019-03-21
 ```
 
 #### Description
-A description of the library
+A description of the library.
 
 By convention the first line of the description is a summary of the library.  An optional detailed description follows.  The detailed description can be multiple lines, all starting with whitespace.
 
-Example:
+##### Examples:
 ```no-highlight
 Description: C++ header-only JSON library
 ```
@@ -70,6 +81,14 @@ Description: Mosquitto is an open source message broker that implements the MQ T
   to machine" messaging such as with low power sensors or mobile devices such as phones, embedded computers or microcontrollers like the Arduino.
 ````
 
+#### Homepage
+The URL of the homepage for the library where a user is able to find additional documentation or the original source code.
+
+Example:
+```no-highlight
+Homepage: https://github.com/Microsoft/vcpkg
+```
+
 #### Build-Depends
 Comma separated list of vcpkg ports the library has a dependency on.
 
@@ -77,26 +96,58 @@ Vcpkg does not distinguish between build-only dependencies and runtime dependenc
 
 *For example: websocketpp is a header only library, and thus does not require any dependencies at install time. However, downstream users need boost and openssl to make use of the library. Therefore, websocketpp lists boost and openssl as dependencies*
 
-Example:
-```no-highlight
-Build-Depends: zlib, libpng, libjpeg-turbo, tiff
-```
-If the port is dependent on optional features of another library those can be specified using the `portname[featurelist]` syntax.
+If the port is dependent on optional features of another library those can be specified using the `portname[featurelist]` syntax. If the port does not require any features from the dependency, this should be specifed as `portname[core]`.
 
-Dependencies can be filtered based on the target triplet to support different requirements on Windows Desktop versus the Universal Windows Platform. Currently, the string inside parentheses is substring-compared against the triplet name.  There must be a space between the name of the port and the filter. __This will change in a future version to not depend on the triplet name.__
+Dependencies can be filtered based on the target triplet to support differing requirements. These filters use the same syntax as the Supports field below and are surrounded in parentheses following the portname and feature list.
 
-Example:
+##### Example:
 ```no-highlight
-Build-Depends: curl[openssl] (!windows&!osx), curl[winssl] (windows), curl[darwinssl] (osx)
+Build-Depends: rapidjson, curl[core,openssl] (!windows), curl[core,winssl] (windows)
 ```
 
-#### Default-Feature
+#### Default-Features
 Comma separated list of optional port features to install by default.
 
 This field is optional.
 
+##### Example:
 ```no-highlight
 Default-Features: dynamodb, s3, kinesis
+```
+
+<a name="Supports"></a>
+#### Supports
+Expression that evaluates to true when the port is expected to build successfully for a triplet.
+
+Currently, this field is only used in the CI testing to skip ports. In the future, this mechanism is intended to warn users in advance that a given install tree is not expected to succeed. Therefore, this field should be used optimistically; in cases where a port is expected to succeed 10% of the time, it should still be marked "supported".
+
+The grammar for the supports expression uses standard operators:
+- `!expr` - negation
+- `expr|expr` - or (`||` is also supported)
+- `expr&expr` - and (`&&` is also supported)
+- `(expr)` - grouping/precedence
+
+The predefined expressions are computed from standard triplet settings:
+- `x64` - `VCPKG_TARGET_ARCHITECTURE` == `"x64"`
+- `x86` - `VCPKG_TARGET_ARCHITECTURE` == `"x86"`
+- `arm` - `VCPKG_TARGET_ARCHITECTURE` == `"arm"` or `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
+- `arm64` - `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
+- `windows` - `VCPKG_CMAKE_SYSTEM_NAME` == `""` or `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
+- `uwp` - `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
+- `linux` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Linux"`
+- `osx` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Darwin"`
+- `android` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Android"`
+- `static` - `VCPKG_LIBRARY_LINKAGE` == `"static"`
+
+These predefined expressions can be overridden in the triplet file via the [`VCPKG_DEP_INFO_OVERRIDE_VARS`](../users/triplets.md) option.
+
+This field is optional and defaults to true.
+
+> Implementers' Note: these terms are computed from the triplet via the `vcpkg_get_dep_info` mechanism.
+
+##### Example:
+```no-highlight
+Supports: !(uwp|arm)
 ```
 
 ## Feature Paragraphs

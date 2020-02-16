@@ -1,0 +1,308 @@
+diff --git a/cmake/FindBlosc.cmake b/cmake/FindBlosc.cmake
+index 3ead1b3..0522e4a 100644
+--- a/cmake/FindBlosc.cmake
++++ b/cmake/FindBlosc.cmake
+@@ -75,6 +75,7 @@ if(POLICY CMP0074)
+   cmake_policy(SET CMP0074 NEW)
+ endif()
+ 
++if(0)
+ mark_as_advanced(
+   Blosc_INCLUDE_DIR
+   Blosc_LIBRARY
+@@ -206,3 +207,30 @@ if(Blosc_FOUND)
+ elseif(Blosc_FIND_REQUIRED)
+   message(FATAL_ERROR "Unable to find Blosc")
+ endif()
++else()
++FIND_PACKAGE ( PackageHandleStandardArgs )
++FIND_PATH( BLOSC_LOCATION include/blosc.h)
++FIND_PACKAGE_HANDLE_STANDARD_ARGS ( Blosc
++  REQUIRED_VARS BLOSC_LOCATION
++  )
++IF ( BLOSC_FOUND )
++SET ( _blosc_library_name "blosc" )
++  # Static library setup
++  IF (Blosc_USE_STATIC_LIBS)
++    SET(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
++	IF (WIN32)
++	  SET ( _blosc_library_name "libblosc" )
++	ELSE ()
++	  SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
++	ENDIF ()
++  ENDIF()
++  FIND_LIBRARY ( BLOSC_blosc_LIBRARY ${_blosc_library_name}
++    NO_SYSTEM_ENVIRONMENT_PATH
++    )
++  # Static library tear down
++  IF (Blosc_USE_STATIC_LIBS)
++    SET( CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP} )
++  ENDIF()
++  SET( BLOSC_INCLUDE_DIR "${BLOSC_LOCATION}/include" CACHE STRING "Blosc include directory" )
++ENDIF ( BLOSC_FOUND )
++endif()
+\ No newline at end of file
+diff --git a/cmake/FindIlmBase.cmake b/cmake/FindIlmBase.cmake
+index 00a6d30..10322fd 100644
+--- a/cmake/FindIlmBase.cmake
++++ b/cmake/FindIlmBase.cmake
+@@ -84,6 +84,7 @@ may be provided to tell this module where to look.
+ 
+ cmake_minimum_required(VERSION 3.3)
+ 
++if(0)
+ # Monitoring <PackageName>_ROOT variables
+ if(POLICY CMP0074)
+   cmake_policy(SET CMP0074 NEW)
+@@ -320,3 +321,144 @@ if(IlmBase_FOUND)
+ elseif(IlmBase_FIND_REQUIRED)
+   message(FATAL_ERROR "Unable to find IlmBase")
+ endif()
++else()
++FIND_PACKAGE ( PackageHandleStandardArgs )
++FIND_PATH ( ILMBASE_LOCATION include/OpenEXR/IlmBaseConfig.h)
++FIND_PACKAGE_HANDLE_STANDARD_ARGS ( ILMBase
++  REQUIRED_VARS ILMBASE_LOCATION
++  )
++OPTION ( ILMBASE_NAMESPACE_VERSIONING "Namespace versioning of libraries" ON )
++
++IF ( ILMBASE_FOUND )
++
++  FILE ( STRINGS "${ILMBASE_LOCATION}/include/OpenEXR/IlmBaseConfig.h" _ilmbase_version_major_string REGEX "#define ILMBASE_VERSION_MAJOR ")
++  STRING ( REGEX REPLACE "#define ILMBASE_VERSION_MAJOR" "" _ilmbase_version_major_unstrip "${_ilmbase_version_major_string}")
++  STRING ( STRIP "${_ilmbase_version_major_unstrip}" ILMBASE_VERSION_MAJOR )
++
++  FILE ( STRINGS "${ILMBASE_LOCATION}/include/OpenEXR/IlmBaseConfig.h" _ilmbase_version_minor_string REGEX "#define ILMBASE_VERSION_MINOR ")
++  STRING ( REGEX REPLACE "#define ILMBASE_VERSION_MINOR" "" _ilmbase_version_minor_unstrip "${_ilmbase_version_minor_string}")
++  STRING ( STRIP "${_ilmbase_version_minor_unstrip}" ILMBASE_VERSION_MINOR )
++
++  IF ( ILMBASE_NAMESPACE_VERSIONING )
++    SET ( IEX_LIBRARY_NAME       Iex-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}       )
++    SET ( IEXMATH_LIBRARY_NAME   IexMath-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}   )
++    SET ( ILMTHREAD_LIBRARY_NAME IlmThread-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR} )
++    SET ( IMATH_LIBRARY_NAME     Imath-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}     )
++    SET ( HALF_LIBRARY_NAME      Half-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}      )
++  ELSE ( ILMBASE_NAMESPACE_VERSIONING )
++    SET ( IEX_LIBRARY_NAME       Iex       )
++    SET ( IEXMATH_LIBRARY_NAME   IexMath   )
++    SET ( ILMTHREAD_LIBRARY_NAME IlmThread )
++    SET ( IMATH_LIBRARY_NAME     Imath     )
++    SET ( HALF_LIBRARY_NAME      Half      )
++  ENDIF ( ILMBASE_NAMESPACE_VERSIONING )
++
++  SET ( ILMBASE_INCLUDE_DIRS
++    ${ILMBASE_LOCATION}/include
++    ${ILMBASE_LOCATION}/include/OpenEXR
++    CACHE STRING "ILMBase include directories")
++  SET ( ILMBASE_LIBRARYDIR ${ILMBASE_LOCATION}/lib
++    CACHE STRING "ILMBase library directories")
++  SET ( ILMBASE_FOUND TRUE )
++
++  SET ( ORIGINAL_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
++  IF (Ilmbase_USE_STATIC_LIBS)
++    IF (APPLE)
++      SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
++      FIND_LIBRARY ( Ilmbase_HALF_LIBRARY Half PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_IEX_LIBRARY Iex PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_ILMTHREAD_LIBRARY IlmThread PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_IMATH_LIBRARY Imath PATHS ${ILMBASE_LIBRARYDIR} )
++    ELSEIF (WIN32)
++      # Link library
++      SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
++      FIND_LIBRARY ( Ilmbase_HALF_LIBRARY Half_static PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_IEX_LIBRARY Iex_static PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_ILMTHREAD_LIBRARY IlmThread_static PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_IMATH_LIBRARY Imath_static PATHS ${ILMBASE_LIBRARYDIR} )
++    ELSE (APPLE)
++      SET ( CMAKE_FIND_LIBRARY_SUFFIXES ".a")
++      FIND_LIBRARY ( Ilmbase_HALF_LIBRARY Half PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_IEX_LIBRARY Iex PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_ILMTHREAD_LIBRARY IlmThread PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_IMATH_LIBRARY Imath PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++    ENDIF (APPLE)
++  ELSE (Ilmbase_USE_STATIC_LIBS)
++    IF (APPLE)
++      SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dylib")
++      FIND_LIBRARY ( Ilmbase_HALF_LIBRARY Half PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_IEX_LIBRARY Iex PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_ILMTHREAD_LIBRARY IlmThread PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_IMATH_LIBRARY Imath PATHS ${ILMBASE_LIBRARYDIR} )
++    ELSEIF (WIN32)
++      # Link library
++      SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
++      FIND_LIBRARY ( Ilmbase_HALF_LIBRARY ${HALF_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_IEX_LIBRARY ${IEX_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_IEXMATH_LIBRARY ${IEXMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_ILMTHREAD_LIBRARY ${ILMTHREAD_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR} )
++      FIND_LIBRARY ( Ilmbase_IMATH_LIBRARY ${IMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR} )
++      # Load library
++      SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dll")
++      FIND_LIBRARY ( Ilmbase_HALF_DLL ${HALF_LIBRARY_NAME} PATHS ${ILMBASE_LOCATION}/bin
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_IEX_DLL ${IEX_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_IEXMATH_DLL ${IEXMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_ILMTHREAD_DLL ${ILMTHREAD_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_IMATH_DLL ${IMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++    ELSE (APPLE)
++      FIND_LIBRARY ( Ilmbase_HALF_LIBRARY ${HALF_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_IEX_LIBRARY ${IEX_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_IEXMATH_LIBRARY ${IEXMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_ILMTHREAD_LIBRARY ${ILMTHREAD_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++      FIND_LIBRARY ( Ilmbase_IMATH_LIBRARY ${IMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
++    ENDIF (APPLE)
++  ENDIF ()
++  # MUST reset
++  SET(CMAKE_FIND_LIBRARY_SUFFIXES ${ORIGINAL_CMAKE_FIND_LIBRARY_SUFFIXES})
++
++ELSE ( ILMBASE_FOUND )
++  MESSAGE ( FATAL_ERROR "Unable to find ILMBase, ILMBASE_ROOT = $ENV{ILMBASE_ROOT}")
++ENDIF ( ILMBASE_FOUND )
++endif()
+\ No newline at end of file
+diff --git a/cmake/FindOpenEXR.cmake b/cmake/FindOpenEXR.cmake
+index 3d243d0..a3340da 100644
+--- a/cmake/FindOpenEXR.cmake
++++ b/cmake/FindOpenEXR.cmake
+@@ -80,6 +80,7 @@ may be provided to tell this module where to look.
+ 
+ cmake_minimum_required(VERSION 3.3)
+ 
++if(0)
+ # Monitoring <PackageName>_ROOT variables
+ if(POLICY CMP0074)
+   cmake_policy(SET CMP0074 NEW)
+@@ -312,3 +313,92 @@ if(OpenEXR_FOUND)
+ elseif(OpenEXR_FIND_REQUIRED)
+   message(FATAL_ERROR "Unable to find OpenEXR")
+ endif()
++else()
++include(FindPackageHandleStandardArgs)
++
++find_path(OpenEXR_INCLUDE_DIRS OpenEXR/OpenEXRConfig.h)
++find_path(OPENEXR_INCLUDE_PATHS NAMES ImfRgbaFile.h PATH_SUFFIXES OpenEXR)
++
++file(STRINGS "${OpenEXR_INCLUDE_DIRS}/OpenEXR/OpenEXRConfig.h" OPENEXR_CONFIG_H)
++
++string(REGEX REPLACE "^.*define OPENEXR_VERSION_MAJOR ([0-9]+).*$" "\\1" OpenEXR_VERSION_MAJOR "${OPENEXR_CONFIG_H}")
++string(REGEX REPLACE "^.*define OPENEXR_VERSION_MINOR ([0-9]+).*$" "\\1" OpenEXR_VERSION_MINOR "${OPENEXR_CONFIG_H}")
++set(OpenEXR_LIB_SUFFIX "${OpenEXR_VERSION_MAJOR}_${OpenEXR_VERSION_MINOR}")
++
++include(SelectLibraryConfigurations)
++
++if(NOT OpenEXR_BASE_LIBRARY)
++  find_library(OpenEXR_BASE_LIBRARY_RELEASE NAMES IlmImf-${OpenEXR_LIB_SUFFIX})
++  find_library(OpenEXR_BASE_LIBRARY_DEBUG NAMES IlmImf-${OpenEXR_LIB_SUFFIX}_d)
++  select_library_configurations(OpenEXR_BASE)
++endif()
++
++if(NOT OpenEXR_UTIL_LIBRARY)
++  find_library(OpenEXR_UTIL_LIBRARY_RELEASE NAMES IlmImfUtil-${OpenEXR_LIB_SUFFIX})
++  find_library(OpenEXR_UTIL_LIBRARY_DEBUG NAMES IlmImfUtil-${OpenEXR_LIB_SUFFIX}_d)
++  select_library_configurations(OpenEXR_UTIL)
++endif()
++
++if(NOT OpenEXR_HALF_LIBRARY)
++  find_library(OpenEXR_HALF_LIBRARY_RELEASE NAMES Half-${OpenEXR_LIB_SUFFIX})
++  find_library(OpenEXR_HALF_LIBRARY_DEBUG NAMES Half-${OpenEXR_LIB_SUFFIX}_d)
++  select_library_configurations(OpenEXR_HALF)
++endif()
++
++if(NOT OpenEXR_IEX_LIBRARY)
++  find_library(OpenEXR_IEX_LIBRARY_RELEASE NAMES Iex-${OpenEXR_LIB_SUFFIX})
++  find_library(OpenEXR_IEX_LIBRARY_DEBUG NAMES Iex-${OpenEXR_LIB_SUFFIX}_d)
++  select_library_configurations(OpenEXR_IEX)
++endif()
++
++if(NOT OpenEXR_MATH_LIBRARY)
++  find_library(OpenEXR_MATH_LIBRARY_RELEASE NAMES Imath-${OpenEXR_LIB_SUFFIX})
++  find_library(OpenEXR_MATH_LIBRARY_DEBUG NAMES Imath-${OpenEXR_LIB_SUFFIX}_d)
++  select_library_configurations(OpenEXR_MATH)
++endif()
++
++if(NOT OpenEXR_THREAD_LIBRARY)
++  find_library(OpenEXR_THREAD_LIBRARY_RELEASE NAMES IlmThread-${OpenEXR_LIB_SUFFIX})
++  find_library(OpenEXR_THREAD_LIBRARY_DEBUG NAMES IlmThread-${OpenEXR_LIB_SUFFIX}_d)
++  select_library_configurations(OpenEXR_THREAD)
++endif()
++
++if(NOT OpenEXR_IEXMATH_LIBRARY)
++  find_library(OpenEXR_IEXMATH_LIBRARY_RELEASE NAMES IexMath-${OpenEXR_LIB_SUFFIX})
++  find_library(OpenEXR_IEXMATH_LIBRARY_DEBUG NAMES IexMath-${OpenEXR_LIB_SUFFIX}d)
++  select_library_configurations(OpenEXR_IEXMATH)
++endif()
++
++set(OPENEXR_HALF_LIBRARY "${OpenEXR_HALF_LIBRARY}")
++set(OPENEXR_IEX_LIBRARY "${OpenEXR_IEX_LIBRARY}")
++set(OPENEXR_IMATH_LIBRARY "${OpenEXR_MATH_LIBRARY}")
++set(OPENEXR_ILMIMF_LIBRARY "${OpenEXR_BASE_LIBRARY}")
++set(OPENEXR_ILMIMFUTIL_LIBRARY "${OpenEXR_UTIL_LIBRARY}")
++set(OPENEXR_ILMTHREAD_LIBRARY "${OpenEXR_THREAD_LIBRARY}")
++
++set(OpenEXR_LIBRARY "${OpenEXR_BASE_LIBRARY}")
++
++set(OpenEXR_LIBRARIES
++    ${OpenEXR_LIBRARY}
++    ${OpenEXR_MATH_LIBRARY}
++    ${OpenEXR_IEXMATH_LIBRARY}
++    ${OpenEXR_UTIL_LIBRARY}
++    ${OpenEXR_HALF_LIBRARY}
++    ${OpenEXR_IEX_LIBRARY}
++    ${OpenEXR_THREAD_LIBRARY}
++)
++
++set(OPENEXR_LIBRARIES
++    ${OPENEXR_HALF_LIBRARY}
++    ${OPENEXR_IEX_LIBRARY}
++    ${OPENEXR_IMATH_LIBRARY}
++    ${OPENEXR_ILMIMF_LIBRARY}
++    ${OPENEXR_ILMTHREAD_LIBRARY}
++)
++
++FIND_PACKAGE_HANDLE_STANDARD_ARGS(OpenEXR REQUIRED_VARS OpenEXR_LIBRARIES OpenEXR_INCLUDE_DIRS)
++
++if(OpenEXR_FOUND)
++    set(OPENEXR_FOUND 1)
++endif()
++endif()
+\ No newline at end of file

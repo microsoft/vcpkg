@@ -7,13 +7,16 @@ endif()
 set(LIBUSB_VERSION 1.2.6.0)
 set(LIBUSB_HASH 972438b7465a22882bc91a1238291240ee3cdb09f374454a027d003b150656d4c262553104f74418bb49b4a7ca2f1a4f72d20e689fa3a7728881bafc876267f4)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libusb-win32-src-${LIBUSB_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/libusb-win32/files/libusb-win32-releases/${LIBUSB_VERSION}/libusb-win32-src-${LIBUSB_VERSION}.zip/download"
     FILENAME "libusb-win32-${LIBUSB_VERSION}.zip"
     SHA512 ${LIBUSB_HASH}
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

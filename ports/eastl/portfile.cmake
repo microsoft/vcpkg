@@ -1,28 +1,36 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/eastl)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO electronicarts/EASTL
-    REF 3.13.05
-    SHA512 2364554339203c972f10d58ebe8f14fb221a40451f4cd2c3c5acd6891e8580c1a0a5d4ba592c91349d3feca50d9880648bb37358820a1c9552dde3f7af400a82
+    REF 3.16.01
+    SHA512 c5c4b6637da5257e6dbbccd293a07691d509bf1310a67aa8b85777a1163f0034874e0638728a54deaa0839320fd919b67a8c9e22461fee6612a76637bb3086bc
     HEAD_REF master
-    PATCHES fixchar8_t.patch # can be removed after electronicarts/EASTL#274 is resolved
+    PATCHES 
+    fix_cmake_install.patch
 )
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/EASTLConfig.cmake.in DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+    -DEASTL_BUILD_TESTS=OFF
+    -DEASTL_BUILD_BENCHMARK=OFF
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/EASTL)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/eastl RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/3RDPARTYLICENSES.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/eastl)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/3RDPARTYLICENSES.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+# CommonCppFlags used by EAThread
+file(INSTALL ${SOURCE_PATH}/scripts/CMake/CommonCppFlags.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -1,34 +1,19 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "PDCurses only supports dynamic CRT linkage")
-endif()
-
-include(vcpkg_common_functions)
 find_program(NMAKE nmake)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wmcbrine/PDCurses
-    REF 3.6
-    SHA512 1ed34e7eb791c9e00aae60878339e79f6b3af086c45d88d2b59d9b2b4020481ff5a5c21e078e59ae24f2de3b4d412f0240f21a50eb743f7e172c832a7e17ed5e
+    REF 6c1f95c4fa9f9f105879c2d99dd72a5bf335c046 # 3.9
+    SHA512 2d682a3516baaa58a97854aca64d985768b7af76d998240b54afc57ddf2a44894835a1748888f8dd7c1cc8045ede77488284f8adf1b73878879b4b4d3391218d
     HEAD_REF master
 )
 
-file(REMOVE_RECURSE
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
-)
+set(PDC_NMAKE_CMD ${NMAKE} /A -f ${SOURCE_PATH}/wincon/Makefile.vc WIDE=Y UTF8=Y)
 
-file(GLOB SOURCES ${SOURCE_PATH}/*)
-
-file(COPY ${SOURCES} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
-
-set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-
-set(PDC_NMAKE_CMD ${NMAKE} /A -f ${SOURCE_PATH}/wincon/Makefile.vc WIDE=Y UTF8=Y)                                                          
-
-
-set(PDC_NMAKE_CWD ${SOURCE_PATH}/wincon)                                                                                                   
-set(PDC_PDCLIB ${SOURCE_PATH}/wincon/pdcurses)   
+set(PDC_NMAKE_CWD ${SOURCE_PATH}/wincon)
+set(PDC_PDCLIB ${SOURCE_PATH}/wincon/pdcurses)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
@@ -62,20 +47,27 @@ vcpkg_execute_required_process(
 message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 
 file (
-    COPY ${PDC_PDCLIB}.lib
+    INSTALL ${PDC_PDCLIB}.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file (
-        COPY ${PDC_PDCLIB}.dll
+        INSTALL ${PDC_PDCLIB}.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
 endif()
 
 file(
-    COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h ${SOURCE_PATH}/term.h
+    INSTALL ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(READ ${CURRENT_PACKAGES_DIR}/include/curses.h _contents)
+    string(REPLACE "#ifdef PDC_DLL_BUILD" "#if 1" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/curses.h "${_contents}")
+endif()
+
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdcurses RENAME copyright)
 
 vcpkg_copy_pdbs()

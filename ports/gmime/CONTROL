@@ -1,4 +1,5 @@
 Source: gmime
 Version: 3.2.3-1
 Build-Depends: zlib, glib, libiconv, libidn2
+Homepage: https://developer.gnome.org/gmime/
 Description: GMime is a C/C++ library which may be used for the creation and parsing of messages using the Multipurpose Internet Mail Extension (MIME).

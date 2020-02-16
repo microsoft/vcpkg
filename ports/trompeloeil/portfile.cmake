@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rollbear/trompeloeil
-    REF v34
-    SHA512 0fffdb38287699c413e35d541e14ddf2e355a0a3df3b3f7be3a56d02f012571af1f4cad3de0a23863ab9b70aa75d2a7ef0227f3896195a51c04ccf817fe1c9dc
+    REF 873a4f949578d0c77df5fce5c66aa836dbedd3ca # v36
+    SHA512 12c2b4df79a6b46fadf589771a47c0bf206c7d6e0eb6b1481d822075785711d424a4644ad8ba9f57be8b0b0f445f616bdab8f8decc2c38e5b731047e5e1a5960
     HEAD_REF master
     PATCHES disable_master_project.patch
 )
@@ -18,7 +18,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/trompeloeil TARGET_PATH share/trompeloeil)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/trompeloeil)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 

@@ -28,6 +28,7 @@ include_directories("magick")
 include_directories("Magick++")
 include_directories("Magick++/lib")
 include_directories("wand")
+include_directories("jbig/libjbig")
 
 file(READ "magick/magick_config.h.in" CONFIG_H)
 string(REPLACE "#undef HasBZLIB" "#define HasBZLIB" CONFIG_H "${CONFIG_H}")
@@ -38,6 +39,7 @@ string(REPLACE "#undef HasTTF" "#define HasTTF" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef HasTTF" "#define HasTTF" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef HAVE_FT2BUILD_H" "#define HAVE_FT2BUILD_H" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef HasZLIB" "#define HasZLIB" CONFIG_H "${CONFIG_H}")
+string(REPLACE "#undef HasJBIG" "#define HasJBIG" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef QuantumDepth" "#define QuantumDepth 16" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef restrict" "#define restrict" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef size_t" "/* #undef size_t */" CONFIG_H "${CONFIG_H}")
@@ -57,7 +59,7 @@ string(REPLACE "#undef size_t" "/* #undef size_t */" CONFIG_API_H "${CONFIG_API_
 file(WRITE "magick/magick_config_api.h" "${CONFIG_API_H}")
 
 add_library(graphicsmagick coders/art.c coders/avs.c
-		coders/bmp.c coders/cals.c coders/caption.c
+		coders/bmp.c coders/braille.c coders/cals.c coders/caption.c
 		coders/cineon.c coders/clipboard.c coders/cmyk.c
 		coders/cut.c coders/dcm.c coders/dcraw.c coders/dib.c
 		coders/dps.c coders/dpx.c coders/emf.c coders/ept.c
@@ -108,7 +110,8 @@ add_library(graphicsmagick coders/art.c coders/avs.c
 		Magick++/lib/ImageRef.cpp Magick++/lib/Montage.cpp Magick++/lib/Options.cpp
 		Magick++/lib/Pixels.cpp Magick++/lib/STL.cpp Magick++/lib/Thread.cpp
 		Magick++/lib/TypeMetric.cpp
-		wand/drawing_wand.c wand/magick_compat.c wand/magick_wand.c wand/pixel_wand.c)
+		wand/drawing_wand.c wand/magick_compat.c wand/magick_wand.c wand/pixel_wand.c
+		jbig/libjbig/jbig.c jbig/libjbig/jbig_ar.c jbig/libjbig/jbig85.c)
 
 TARGET_LINK_LIBRARIES(graphicsmagick PRIVATE
     ZLIB::ZLIB
@@ -158,7 +161,6 @@ option(INSTALL_HEADERS "Install development header files" ON)
 if (INSTALL_HEADERS)
     install(FILES magick/alpha_composite.h DESTINATION include/magick)
     install(FILES magick/analyze.h DESTINATION include/magick)
-    install(FILES magick/animate.h DESTINATION include/magick)
     install(FILES magick/api.h DESTINATION include/magick)
     install(FILES magick/attribute.h DESTINATION include/magick)
     install(FILES magick/average.h DESTINATION include/magick)
@@ -181,7 +183,6 @@ if (INSTALL_HEADERS)
     install(FILES magick/delegate.h DESTINATION include/magick)
     install(FILES magick/deprecate.h DESTINATION include/magick)
     install(FILES magick/describe.h DESTINATION include/magick)
-    install(FILES magick/display.h DESTINATION include/magick)
     install(FILES magick/draw.h DESTINATION include/magick)
     install(FILES magick/effect.h DESTINATION include/magick)
     install(FILES magick/enhance.h DESTINATION include/magick)
@@ -206,6 +207,7 @@ if (INSTALL_HEADERS)
     install(FILES magick/map.h DESTINATION include/magick)
     install(FILES magick/memory.h DESTINATION include/magick)
     install(FILES magick/module.h DESTINATION include/magick)
+    install(FILES magick/module_aliases.h DESTINATION include/magick)
     install(FILES magick/monitor.h DESTINATION include/magick)
     install(FILES magick/montage.h DESTINATION include/magick)
     install(FILES magick/nt_base.h DESTINATION include/magick)

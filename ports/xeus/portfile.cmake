@@ -1,11 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xeus
-    REF 0.19.1
-    SHA512 1f42cf3b5007fef957c259eee58bdc5d6b812dd32ca316823e33837d3802df0675f778a9c8f2fb97e9ff982c584229d3733e5894684e75498cc244e9c29df209
+    REF 8408f237f33514610a59d19a5ff045ee70dfa02b
+    SHA512 41282addbe5519b6d357e802c48483834cd951604bfeb8c99d96f02d03dec2fc66ea4c091f40ec09348bb60587e8a6efef5e6eb2bb950ba720fc8ceb7a107960
     HEAD_REF master
+    PATCHES Fix-TypeConversion.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
@@ -45,10 +44,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Install usage
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

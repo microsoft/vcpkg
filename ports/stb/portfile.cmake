@@ -1,17 +1,14 @@
-#header-only library
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nothings/stb
-    REF 1034f5e5c4809ea0a7f4387e0cd37c5184de3cdd
-    SHA512 efc3deedd687615a6706b0d315ded8d76edb28fcd6726531956fde9bba81cc62f25df0a1f998b56e16ab0c62989687c7d5b58875789470c2bf7fd457b1ff6535
+    REF c72a95d766b8cbf5514e68d3ddbf6437ac9425b1
+    SHA512 2be9b2d7848fca133d5733ebb0fdd1f357195f38a2f2b471af3657468f00a75cc94f029ace6127e748da80e0f86933c16a554593a21d8a9057b7691d39facf4b
     HEAD_REF master
 )
 
-# Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/stb/README.md)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/stb/README.md ${CURRENT_PACKAGES_DIR}/share/stb/copyright)
-
-# Copy the stb header files
 file(GLOB HEADER_FILES ${SOURCE_PATH}/*.h)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/FindStb.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

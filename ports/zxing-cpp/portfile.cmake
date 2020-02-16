@@ -20,15 +20,15 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/zxing/cmake" TARGET_PATH share/zxing)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/zxing/cmake TARGET_PATH share/zxing)
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/zxing)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/zxing.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/zxing)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/zxing.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 else()
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/zxing DESTINATION ${CURRENT_PACKAGES_DIR}/tools/zxing)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/zxing DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/zxing)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)

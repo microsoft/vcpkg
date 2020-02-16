@@ -1,3 +1,4 @@
 Source: pystring
 Version:  1.1.3-2
+Homepage: https://github.com/imageworks/pystring
 Description: Pystring is a collection of C++ functions which match the interface and behavior of python's string class methods using std::string

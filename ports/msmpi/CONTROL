@@ -1,3 +1,4 @@
 Source: msmpi
-Version: 10.0
+Version: 10.0-2
 Description: Microsoft MPI
+Supports: windows

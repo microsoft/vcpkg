@@ -2,36 +2,37 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-7.0.2)
-
-vcpkg_download_distfile(ARCHIVE
-  URLS "https://github.com/Microsoft/bond/archive/7.0.2.zip"
-  FILENAME "bond-7.0.2.zip"
-  SHA512 4ae3b88fafbede6c1433d171713bdbfcbed61a3d2a983d7df4e33af893a50f233be0e95c1ea8e5f30dafb017b2a8100a23721292b04184159e5fd796b1a43398
-)
-vcpkg_download_distfile(GBC_ARCHIVE
-  URLS "https://github.com/Microsoft/bond/releases/download/7.0.2/gbc-7.0.2-amd64.exe.zip"
-  FILENAME "gbc-7.0.2-amd64.exe.zip"
-  SHA512 069eafd7641ebd719425037cb8249d2d214eb09c6ce38fbf1d1811c01d1839b0a0987c55217075b6ae9f477f750d582250134387a530edb2aee407b21d973915
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO microsoft/bond
+    REF  8.1.0
+    SHA512 287a2d299036b57e0576903b1f5372bf8071243ada57153c4bf231cdc660faab1e70c60ddde57ac759d941b74af4ba25d81a5d58e8dbf391032b7b226c4cd18c
+    HEAD_REF master
+    PATCHES fix-install-path.patch
 )
 
-vcpkg_extract_source_archive(${ARCHIVE})
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    vcpkg_download_distfile(GBC_ARCHIVE
+    URLS "https://github.com/microsoft/bond/releases/download/8.1.0/gbc-8.1.0-amd64.zip"
+    FILENAME "gbc-8.1.0-amd64.zip"
+    SHA512 896c9a78fc714e0ea44c37ed36400ec8e5f52d495a8d81aa80834ff6cd6303c7c94e06129f7b2269416a9e0ffb61423e87406db798fb5be7ff00f14981530089
+    )
 
-# Extract the precompiled gbc
-vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-7.0.2-amd64.exe)
+    # Extract the precompiled gbc
+    vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
+    set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc.exe)
 
-if (NOT EXISTS "${FETCHED_GBC_PATH}")
-    message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
+    if (NOT EXISTS "${FETCHED_GBC_PATH}")
+        message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
+    endif()
+
+else()
+    # According to the readme on https://github.com/microsoft/bond/
+    # The build needs a version of the Haskel Tool stack that is newer than some distros ship with.
+    # For this reason the message is not guarded by checking to see if the tool is installed.
+    message("\nA recent version of Haskell Tool Stack is required to build.\n  For information on how to install see https://docs.haskellstack.org/en/stable/README/\n")
+
 endif()
-
-vcpkg_apply_patches(
-  SOURCE_PATH ${SOURCE_PATH}
-  PATCHES
-    # Don't install rapidjson from the (empty) submodule. With vcpkg, we get
-    # rapidjson from vcpkg
-    ${CMAKE_CURRENT_LIST_DIR}/0002_omit_rapidjson.patch
-)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -39,42 +40,23 @@ vcpkg_configure_cmake(
   OPTIONS
     -DBOND_LIBRARIES_ONLY=TRUE
     -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
+    -DBOND_SKIP_GBC_TESTS=TRUE
     -DBOND_ENABLE_COMM=FALSE
     -DBOND_ENABLE_GRPC=FALSE
+    -DBOND_FIND_RAPIDJSON=TRUE
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/bond TARGET_PATH share/bond)
 
 # Put the license file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bond)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/bond/LICENSE ${CURRENT_PACKAGES_DIR}/share/bond/copyright)
 
-# Drop a copy of gbc in tools/ so that it can be used
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/gbc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/)
-
-# vcpkg doesn't--as of version 0.0.30--like executables such as gbc.exe in
-# the output. Just delete the bin/ directories for now.
-file(REMOVE_RECURSE
-  ${CURRENT_PACKAGES_DIR}/bin/
-  ${CURRENT_PACKAGES_DIR}/debug/bin/)
-
 # There's no way to supress installation of the headers in the debug build,
 # so we just delete them.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# Bond's install target installs to lib/bond, but vcpkg expects the lib
-# files to end up in lib/, so move them up a directory.
-file(RENAME
-  ${CURRENT_PACKAGES_DIR}/lib/bond/bond.lib
-  ${CURRENT_PACKAGES_DIR}/lib/bond.lib)
-file(RENAME
-  ${CURRENT_PACKAGES_DIR}/lib/bond/bond_apply.lib
-  ${CURRENT_PACKAGES_DIR}/lib/bond_apply.lib)
-file(RENAME
-  ${CURRENT_PACKAGES_DIR}/debug/lib/bond/bond.lib
-  ${CURRENT_PACKAGES_DIR}/debug/lib/bond.lib)
-file(RENAME
-  ${CURRENT_PACKAGES_DIR}/debug/lib/bond/bond_apply.lib
-  ${CURRENT_PACKAGES_DIR}/debug/lib/bond_apply.lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()

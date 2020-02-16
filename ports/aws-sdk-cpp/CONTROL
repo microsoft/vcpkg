@@ -1,5 +1,6 @@
 Source: aws-sdk-cpp
-Version: 1.7.106
+Version: 1.7.270
+Homepage: https://github.com/aws/aws-sdk-cpp
 Description: AWS SDK for C++
 Build-Depends: openssl (!uwp&!windows), curl (!uwp&!windows), aws-c-event-stream
 Default-Features: dynamodb, s3, kinesis
@@ -50,7 +51,7 @@ Description: C++ SDK for the AWS autoscaling service
 Feature: autoscaling-plans
 Description: C++ SDK for the AWS autoscaling-plans service
 
-Feature: AWSMigrationHub
+Feature: awsmigrationhub
 Description: C++ SDK for the AWS AWSMigrationHub service
 
 Feature: awstransfer

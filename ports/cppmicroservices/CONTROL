@@ -1,0 +1,5 @@
+Source: cppmicroservices
+Version: 3.4.0-1
+Homepage: https://github.com/CppMicroServices/CppMicroServices
+Description: An OSGi-like C++ dynamic module system and service registry
+Build-Depends: gtest

@@ -1,3 +1,5 @@
 Source: opentracing
-Version: 1.5.1
-Description: C++ implementation of the OpenTracing API http://opentracing.io
+Version: 1.6.0
+Description: C++ implementation of the OpenTracing API
+Homepage: https://opentracing.io
+Supports: !uwp

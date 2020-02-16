@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cameron314/readerwriterqueue
-    REF v1.0.1
-    SHA512 cb1cc0add78ec6994799c5b3406d310bfcdad74756a6995404d9ea659b7fc6cb7f2b3667c2e3fc0cfcb7ad9c376744c6a3988cb9cc4e0ae0d59ff5dd818d7f11
+    REF 265ec3ca37fd530f4d042bc8a23c03382b0f954c # v1.0.2
+    SHA512 3fdeb0778fdb949b4110b6c829394e566eb24e07520df82a5d160a697b35d3e3da2daa09b7d239c1d1ffe471e60aaade9e3e2ce5ecc0a84f3fb4d2fc60d05c58
     HEAD_REF master
 )
 

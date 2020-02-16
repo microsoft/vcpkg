@@ -1,16 +1,15 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT) # This is a lie. mosquitto can be build staticlly it just must be implemented by vcpkg 
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
-    REF v1.5
-    SHA512 f6a5c8e71d642ef931176fe428fb79353933facc2db226d9e55b87d4ff9bd6610a1bd05d71159e30c8afb1fda542d233630ae164770e652baa7ea51117211489
+    REF e55f7facce7628b33e57d6b44cc8e9dd1042e624 # v1.6.8
+    SHA512 c192b53f52ce9dc8e02d31acd9e93c00cafbe543b038d7619e6b653f102126872bbd485c94604bca9287e71a5dfe0de2f4d8d3f51cdd5c37f90fd2a6535bd89b
     HEAD_REF master
     PATCHES
+        archive-dest.patch
         win64-cmake.patch
-        output_folders-cmake.patch
+        libwebsockets.patch
 )
 
 vcpkg_configure_cmake(
@@ -30,16 +29,25 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-# Remove debug/include
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-file(REMOVE ${EXE})
-file(REMOVE ${DEBUG_EXE})
-
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/mosquitto RENAME copyright)
-
-# Copy pdb
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_passwd${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_passwd${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_pub${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_pub${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_rr${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_rr${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_sub${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_sub${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+
+#if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+#endif()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

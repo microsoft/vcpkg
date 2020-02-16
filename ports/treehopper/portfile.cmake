@@ -16,8 +16,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/treehopper)
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL ${SOURCE_PATH}/C++/API/inc/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/Treehopper/)
 

@@ -1,0 +1,29 @@
+diff --git a/CMake/VTKConfig.cmake.in b/CMake/VTKConfig.cmake.in
+index 13e4db42..d28e0cc2 100644
+--- a/CMake/VTKConfig.cmake.in
++++ b/CMake/VTKConfig.cmake.in
+@@ -66,19 +66,11 @@ set(VTK_USE_FILE "${VTK_CMAKE_DIR}/UseVTK.cmake")
+ # The rendering backend VTK was configured to use.
+ set(VTK_RENDERING_BACKEND "@VTK_RENDERING_BACKEND@")
+ 
+-if (__vtk_install_tree)
+-  if (WIN32)
+-    set (VTK_RUNTIME_DIRS "@CMAKE_INSTALL_PREFIX@/@VTK_INSTALL_RUNTIME_DIR@")
+-  else ()
+-    set (VTK_RUNTIME_DIRS "@CMAKE_INSTALL_PREFIX@/@VTK_INSTALL_LIBRARY_DIR@")
+-  endif ()
+-else()
+-  if (WIN32)
+-    set (VTK_RUNTIME_DIRS "@CMAKE_BINARY_DIR@/bin")
+-  else ()
+-    set (VTK_RUNTIME_DIRS "@CMAKE_BINARY_DIR@/lib")
+-  endif ()
+-endif()
++if (WIN32)
++  set (VTK_RUNTIME_DIRS "@CMAKE_INSTALL_PREFIX@/@VTK_INSTALL_RUNTIME_DIR@")
++else ()
++  set (VTK_RUNTIME_DIRS "@CMAKE_INSTALL_PREFIX@/@VTK_INSTALL_LIBRARY_DIR@")
++endif ()
+ 
+ # Setup VTK-m if it was enabled
+ set(VTK_HAS_VTKM @VTK_HAS_VTKM@)

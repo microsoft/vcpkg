@@ -2,4 +2,4 @@ Source: minisat-master-keying
 Version: 2.2-mod-2
 Description: A minimalistic high-performance SAT solver
   This is a modernized, cross-platform, CMake-enabled fork of the original MiniSat. 
-  Since the original library is no longer under development, post issues and pull requests should be posted to https://github.com/master-keying/minisat
+Homepage: https://github.com/master-keying/minisat

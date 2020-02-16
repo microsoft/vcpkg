@@ -4,12 +4,11 @@ if(${VCPKG_TARGET_ARCHITECTURE} MATCHES x86)
     message(FATAL_ERROR "This library doesn't support x86 arch. Please use x64 instead. If it is critical, create an issue at the repo: github.com/luncliff/coroutine")
 endif()
 
-# changed to 1.4.2
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            luncliff/coroutine
-    REF             1.4.2
-    SHA512          fc2544116a5bee97b8ef1501fc7f1b805248f0a0c601111f1a317e813aa1d3f9a2e08ab1b140cc36e22d9c90249301110ec5b5e55a40fb39217cf5f40998920d
+    REF fcd970807e9a47c250c1a4e06c7dc6d93079b684
+    SHA512 517f1c1726e4adc36cd34379c545324c99861d7cb5ebd3cebe0b7132fe5b61969a00e405bc106bb8f089f37d3a7ca9b1bcdc665a5cd6dfcaaf6856be37bec5b0
     HEAD_REF        master
 )
 

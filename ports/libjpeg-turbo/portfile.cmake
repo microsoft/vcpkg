@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
-    REF 2.0.1
-    SHA512 d456515dcda7c5e2e257c9fd1441f3a5cff0d33281237fb9e3584bbec08a181c4b037947a6f87d805977ec7528df39b12a5d32f6e8db878a62bcc90482f86e0e
+    REF 166e34213e4f4e2363ce058a7bcc69fd03e38b76 # 2.0.4
+    SHA512 e4ac657cdb5df0b37e9429d21c2c49eed0c195408469597b49c06791fc5899a66f7f7dbb0b253f32eb28e63e5382fcf3afe68e5e30b04f76e145f6151d8f1112
     HEAD_REF master
     PATCHES
         add-options-for-exes-docs-headers.patch
@@ -54,6 +54,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
+    
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 else(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
@@ -66,12 +68,21 @@ file(COPY
     ${SOURCE_PATH}/LICENSE.md
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo
 )
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo/copyright)
-vcpkg_copy_pdbs()
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/jpeg)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
+
+file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+if(EXE OR DEBUG_EXE)
+    file(REMOVE ${EXE} ${DEBUG_EXE})
+endif()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/jpeg)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo/copyright)
+
+vcpkg_copy_pdbs()
 
 vcpkg_test_cmake(PACKAGE_NAME JPEG MODULE)

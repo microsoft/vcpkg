@@ -40,8 +40,10 @@
 #include <memory>
 #include <random>
 
+#if defined(_WIN32)
 #pragma comment(lib, "ole32")
 #pragma comment(lib, "shell32")
+#endif
 
 using namespace vcpkg;
 
@@ -51,7 +53,7 @@ static constexpr int SURVEY_INTERVAL_IN_HOURS = 24 * 30 * 6;
 // Initial survey appears after 10 days. Therefore, subtract 24 hours/day * 10 days
 static constexpr int SURVEY_INITIAL_OFFSET_IN_HOURS = SURVEY_INTERVAL_IN_HOURS - 24 * 10;
 
-void invalid_command(const std::string& cmd)
+static void invalid_command(const std::string& cmd)
 {
     System::print2(System::Color::error, "invalid command: ", cmd, '\n');
     Help::print_usage();
@@ -114,9 +116,17 @@ static void inner(const VcpkgCmdArguments& args)
 
     Debug::print("Using vcpkg-root: ", vcpkg_root_dir.u8string(), '\n');
 
+    Optional<fs::path> vcpkg_scripts_root_dir = nullopt;
+    if (nullptr != args.scripts_root_dir)
+    {
+        vcpkg_scripts_root_dir = fs::stdfs::canonical(fs::u8path(*args.scripts_root_dir));
+        Debug::print("Using scripts-root: ", vcpkg_scripts_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
+    }
+
     auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
-    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, default_vs_path);
+    const Expected<VcpkgPaths> expected_paths =
+        VcpkgPaths::create(vcpkg_root_dir, vcpkg_scripts_root_dir, default_vs_path, args.overlay_triplets.get());
     Checks::check_exit(VCPKG_LINE_INFO,
                        !expected_paths.error(),
                        "Error: Invalid vcpkg root directory %s: %s",
@@ -129,7 +139,11 @@ static void inner(const VcpkgCmdArguments& args)
 #else
     const int exit_code = chdir(paths.root.c_str());
 #endif
-    Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
+    Checks::check_exit(
+        VCPKG_LINE_INFO,
+        exit_code == 0,
+        "Changing the working directory to the vcpkg root directory failed. Did you incorrectly define the VCPKG_ROOT "
+        "environment variable, or did you mistakenly create a file named .vcpkg-root somewhere?");
 
     if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
     {
@@ -248,29 +262,19 @@ static void load_config()
 }
 
 #if defined(_WIN32)
-static std::string trim_path_from_command_line(const std::string& full_command_line)
+// note: this prevents a false positive for -Wmissing-prototypes on clang-cl
+int wmain(int, const wchar_t* const* const);
+
+#if !defined(_MSC_VER)
+#include <shellapi.h>
+int main(int argc, const char* const* const /*argv*/)
 {
-    Checks::check_exit(
-        VCPKG_LINE_INFO, !full_command_line.empty(), "Internal failure - cannot have empty command line");
-
-    if (full_command_line[0] == '"')
-    {
-        auto it = std::find(full_command_line.cbegin() + 1, full_command_line.cend(), '"');
-        if (it != full_command_line.cend()) // Skip over the quote
-            ++it;
-        while (it != full_command_line.cend() && *it == ' ') // Skip over a space
-            ++it;
-        return std::string(it, full_command_line.cend());
-    }
-
-    auto it = std::find(full_command_line.cbegin(), full_command_line.cend(), ' ');
-    while (it != full_command_line.cend() && *it == ' ')
-        ++it;
-    return std::string(it, full_command_line.cend());
+    wchar_t **wargv;
+    wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    return wmain(argc, wargv);
 }
 #endif
 
-#if defined(_WIN32)
 int wmain(const int argc, const wchar_t* const* const argv)
 #else
 int main(const int argc, const char* const* const argv)
@@ -288,7 +292,6 @@ int main(const int argc, const char* const* const argv)
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
 
-    const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
 #endif
 
     Checks::register_global_shutdown_handler([]() {
@@ -319,9 +322,6 @@ int main(const int argc, const char* const* const argv)
     {
         auto locked_metrics = Metrics::g_metrics.lock();
         locked_metrics->track_property("version", Commands::Version::version());
-#if defined(_WIN32)
-        locked_metrics->track_property("cmdline", trimmed_command_line);
-#endif
     }
 
     System::register_console_ctrl_handler();
@@ -388,6 +388,6 @@ int main(const int argc, const char* const* const argv)
     }
     fflush(stdout);
 
-    //It is expected that one of the sub-commands will exit cleanly before we get here.
+    // It is expected that one of the sub-commands will exit cleanly before we get here.
     Checks::exit_fail(VCPKG_LINE_INFO);
 }

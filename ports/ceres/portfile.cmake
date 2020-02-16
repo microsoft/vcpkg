@@ -1,3 +1,5 @@
+include(vcpkg_common_functions)
+
 set(MSVC_USE_STATIC_CRT_VALUE OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -6,7 +8,9 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(MSVC_USE_STATIC_CRT_VALUE ON)
 endif()
 
-include(vcpkg_common_functions)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(ADDITIONAL_PATCH "0004_blas_linux_fix.patch")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -15,10 +19,10 @@ vcpkg_from_github(
     SHA512 6dddddf5bd5834332a69add468578ad527e4d94fe85c9751ddf5fe9ad11a34918bdd9c994c49dd6ffc398333d0ac9752ac89aaef1293e2fe0a55524e303d415d
     HEAD_REF master
     PATCHES
-        0001_add_missing_include_path.patch
-        0002_cmakelists_fixes.patch
-        0003_use_glog_target.patch
-        0004_fix_exported_ceres_config.patch
+        0001_cmakelists_fixes.patch
+        0002_use_glog_target.patch
+        0003_fix_exported_ceres_config.patch
+        ${ADDITIONAL_PATCH}
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindGflags.cmake)
@@ -70,9 +74,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+  vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH "lib${LIB_SUFFIX}/cmake/Ceres")
+  vcpkg_fixup_cmake_targets(CONFIG_PATH lib${LIB_SUFFIX}/cmake/Ceres)
 endif()
 
 vcpkg_copy_pdbs()

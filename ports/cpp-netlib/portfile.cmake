@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -20,18 +16,17 @@ vcpkg_from_github(
 	  OPTIONS
       -DCPP-NETLIB_BUILD_TESTS=off
       -DCPP-NETLIB_BUILD_EXAMPLES=off
-	  
+
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(WIN32 AND NOT CYGWIN)
-  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/${PORT})
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/cppnetlib)
 else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cppnetlib)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cppnetlib TARGET_PATH share/cppnetlib)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-

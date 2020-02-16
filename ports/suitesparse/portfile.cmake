@@ -24,6 +24,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         suitesparse.patch
+        add-find-package-metis.patch
 )
 
 # Copy suitesparse sources.
@@ -34,6 +35,10 @@ foreach(SOURCE_FILE ${SUITESPARSE_SOURCE_FILES})
     file(COPY ${SOURCE_FILE} DESTINATION "${SUITESPARSEWIN_SOURCE_PATH}/SuiteSparse")
 endforeach()
 message(STATUS "Copying SuiteSparse source files... done")
+message(STATUS "Removing integrated lapack and metis libs...")
+file(REMOVE_RECURSE ${SUITESPARSEWIN_SOURCE_PATH}/lapack_windows)
+file(REMOVE_RECURSE ${SUITESPARSEWIN_SOURCE_PATH}/metis)
+message(STATUS "Removing integrated lapack and metis libs... done")
 
 set(USE_VCPKG_METIS OFF)
 if("metis" IN_LIST FEATURES)
@@ -56,14 +61,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/suitesparse-${SUITESPARSE_VER}" TARGET_PATH "share/suitesparse")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/suitesparse-${SUITESPARSE_VER})
 
-#clean folders
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright of suitesparse and suitesparse-metis-for-windows
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/suitesparse)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/suitesparse/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/suitesparse/copyright)
-
-file(COPY ${SUITESPARSEWIN_SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/suitesparse)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/suitesparse/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/suitesparse/copyright_suitesparse-metis-for-windows)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/suitesparse RENAME copyright)
+file(INSTALL ${SUITESPARSEWIN_SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/suitesparse RENAME copyright_suitesparse-metis-for-windows)

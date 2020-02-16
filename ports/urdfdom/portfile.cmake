@@ -5,16 +5,12 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ros/urdfdom
-  REF 1.0.3
-  SHA512 240181d9c61dd7544f16a79a400d9a2c4dc0a682bef165b46529efcb4b31e2a34e27896933b60b9ddbaa5c4a8d575ebda42752599ff3b0a98d1eeef8f9b0b7a7
+  REF 0da4b20675cdbe14b532d484a1c17df85b4e1584 # 1.0.4
+  SHA512 cad59307fef466e2bbe3769a4123571d48223ea25a80dde76cb25c9f6dfc961570090d188ddaf8fc93f41f355ffa240eb00abe20cdea4a5ee3e49f56d1258686
   HEAD_REF master
-)
-
-vcpkg_apply_patches(
-  SOURCE_PATH ${SOURCE_PATH}
   PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/0001_use_math_defines.patch
-    ${CMAKE_CURRENT_LIST_DIR}/0002_fix_exports.patch
+    0001_use_math_defines.patch
+    0002_fix_exports.patch
 )
 
 vcpkg_configure_cmake(
@@ -26,9 +22,9 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake" TARGET_PATH share/urdfdom)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/urdfdom/cmake" TARGET_PATH share/urdfdom)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/urdfdom/cmake)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/urdfdom)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom)
 endif()

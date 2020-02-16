@@ -1,7 +1,21 @@
 Source: libssh
-Version: 0.7.6-1
-Description: libssh is a multiplatform C library implementing the SSHv2 and SSHv1 protocol on client and server side
+Version: 0.9.3
+Homepage: https://www.libssh.org/
+Description: libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side
+Default-Features: crypto
+Supports: !uwp
+
+Feature: crypto
+Build-Depends: libssh[mbedtls]
+Description: Default crypto backend
+
+Feature: mbedtls
+Build-Depends: mbedtls
+Description: Crypto support (mbedTLS)
+
+Feature: openssl
 Build-Depends: openssl
+Description: Crypto support (OpenSSL)
 
 Feature: zlib
 Description: libssh with zlib

@@ -1,4 +1,5 @@
 Source: libvorbis
 Version: 1.3.6-9eadecc-3
+Homepage: https://github.com/xiph/vorbis
 Description: Ogg Vorbis is a fully open, non-proprietary, patent-and-royalty-free, general-purpose compressed audio format.
 Build-Depends: libogg

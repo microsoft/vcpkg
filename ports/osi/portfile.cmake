@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/Osi
-    REF releases/0.108.4
-    SHA512 43c4da11c7e8b83ef67b10b60fa0be9bd2302965a26447f85c4cf9e747b999710954948e041b7203ac69f5d3cb75ba9c383838184bee8399a95b9ba59eff3f06
+    REF dfa6449d6756fdd96912cf96e168d0be07b1d37c # releases/0.108.6
+    SHA512 8c23998a3f442766c515acd5549ed97608b972de61b9ef5b50b9e5d1d03b43fb5f77dc02d3562084fbf4f18f3397f9cd50c0f9bde4f576a4dff0dab795c04358
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -19,11 +19,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")  #on case-sensitive filesystems, it's necessary to rename and make it lowercase
-  vcpkg_fixup_cmake_targets(CONFIG_PATH "share/Osi")
-else()
-  vcpkg_fixup_cmake_targets()
-endif()
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

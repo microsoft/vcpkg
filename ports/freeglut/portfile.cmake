@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freeglut-3.0.0)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.0.0/freeglut-3.0.0.tar.gz"
     FILENAME "freeglut-3.0.0.tar.gz"
@@ -36,6 +36,7 @@ file(WRITE ${SOURCE_PATH}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DFREEGLUT_BUILD_STATIC_LIBS=${FREEGLUT_STATIC}
         -DFREEGLUT_BUILD_SHARED_LIBS=${FREEGLUT_DYNAMIC}
@@ -48,9 +49,19 @@ vcpkg_install_cmake()
 # Rename static lib (otherwise it's incompatible with FindGLUT.cmake)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglutd.lib)
+        if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
+        endif()
+        if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglutd.lib)
+        endif()
     endif()
+
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h"
+        "ifdef FREEGLUT_STATIC"
+        "if 1 //ifdef FREEGLUT_STATIC"
+    )
 endif()
 
 # Clean

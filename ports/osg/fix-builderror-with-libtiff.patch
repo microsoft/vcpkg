@@ -1,0 +1,26 @@
+diff --git a/CMakeModules/OsgAndroidMacroUtils.cmake b/CMakeModules/OsgAndroidMacroUtils.cmake
+index 50c22e0..8e79b09 100644
+--- a/CMakeModules/OsgAndroidMacroUtils.cmake
++++ b/CMakeModules/OsgAndroidMacroUtils.cmake
+@@ -118,7 +118,7 @@ MACRO(ANDROID_3RD_PARTY)
+     #set(ENV{AND_OSG_LIB_PATHS} "$ENV{AND_OSG_LIB_PATHS}include ${TIFF_INCLUDE_DIR}/Android.mk \n")
+     if(TIFF_INCLUDE_DIR)
+         message(STATUS "TIF found ${TIFF_INCLUDE_DIR}" )
+-        set(TIFF_FOUND "Yes")
++        #set(TIFF_FOUND "Yes")
+         install(DIRECTORY 3rdparty/build/libtiff/ DESTINATION ./ )
+     else(TIFF_INCLUDE_DIR)
+         message(STATUS "TIF missing" )
+diff --git a/src/osgPlugins/CMakeLists.txt b/src/osgPlugins/CMakeLists.txt
+index 77d66f8..1504bf9 100644
+--- a/src/osgPlugins/CMakeLists.txt
++++ b/src/osgPlugins/CMakeLists.txt
+@@ -115,7 +115,7 @@ IF(PNG_FOUND AND OSG_CPP_EXCEPTIONS_AVAILABLE)
+     ADD_PLUGIN_DIRECTORY(png)
+ ENDIF()
+ IF(TIFF_FOUND AND OSG_CPP_EXCEPTIONS_AVAILABLE)
+-    ADD_PLUGIN_DIRECTORY(tiff)
++    #ADD_PLUGIN_DIRECTORY(tiff)
+ ENDIF()
+ IF(GDAL_FOUND)
+     ADD_PLUGIN_DIRECTORY(gdal)

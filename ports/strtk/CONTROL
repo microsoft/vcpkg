@@ -1,4 +1,5 @@
 Source: strtk
 Version: 2019-01-09
+Homepage: https://github.com/ArashPartow/strtk
 Description: robust, optimized and portable string processing algorithms for the C++ language
 Build-Depends: boost

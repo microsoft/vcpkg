@@ -1,17 +1,15 @@
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fluidsynth-1.1.10)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
-    REF v2.0.5
-    SHA512 5344ac889d2927dc2465bae40096d756a9bf9b1100e287ba0621c55ffc76f9cb8fa763f6bc832d701cd0ad2997965cf344f58ae4b3dd445eb3491e3659c093d9
+    REF 37c9ae2bf431a764032f023b3b2c0c0b86b7c272 #v2.1.0
+    SHA512 1eea26b7d71fd09e748df0989f7df42ab57a74d8d853a835da734120ee1198c0b8d73a39b8640aef8ef0c1788c9a329671de899882601da55ec20ab6ca3ff778
     HEAD_REF master
+    PATCHES
+       force-x86-gentables.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS -Denable-pkgconfig=0
 )
 
@@ -31,4 +29,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/fluidsynth RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

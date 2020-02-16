@@ -1,7 +1,5 @@
-include(vcpkg_common_functions)
-
-set(SQLITE_VERSION 3270200)
-set(SQLITE_HASH f84a6a3101c989164f17b85a6c2674ae2728a75d70daf5e33627a6eaa399adaf763deb968d891ad0660f1ebe660d27fbd55ace379d807f3bb8af4e95c01b68c4)
+set(SQLITE_VERSION 3300100)
+set(SQLITE_HASH 030b53fe684e0fb8e9747b1f160e5e875807eabb0763caff66fe949ee6aa92f26f409b9b25034d8d1f5cee554a99e56a2bb92129287b0fe0671409babe9d18ea )
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2019/sqlite-amalgamation-${SQLITE_VERSION}.zip"
@@ -13,20 +11,20 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${SQLITE_VERSION}
+    PATCHES fix-arm-uwp.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-set(SQLITE3_SKIP_TOOLS ON)
-if("tool" IN_LIST FEATURES)
-    set(SQLITE3_SKIP_TOOLS OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+    tool SQLITE3_SKIP_TOOLS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DSQLITE3_SKIP_TOOLS=${SQLITE3_SKIP_TOOLS}
+    OPTIONS ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
 )
@@ -36,11 +34,15 @@ vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+if(NOT SQLITE3_SKIP_TOOLS AND EXISTS ${CURRENT_PACKAGES_DIR}/tools/sqlite3-bin${VCPKG_HOST_EXECUTABLE_SUFFIX})
+    file(RENAME ${CURRENT_PACKAGES_DIR}/tools/sqlite3-bin${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/sqlite3${VCPKG_HOST_EXECUTABLE_SUFFIX})
+endif()
+
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/sqlite3-config.in.cmake
     ${CURRENT_PACKAGES_DIR}/share/sqlite3/sqlite3-config.cmake
     @ONLY
 )
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/sqlite3/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
 vcpkg_copy_pdbs()

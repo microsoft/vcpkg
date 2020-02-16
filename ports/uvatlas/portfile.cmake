@@ -1,16 +1,14 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(FATAL_ERROR "UVAtlas only supports Windows Desktop")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF sept2016
-    SHA512 326af26c151620cd5082daf3913cf3fbe7bca7d1aaf5cc44cacff54319ffe79b728c24519187c3f9393a846430d0fb9493ffe9473f87d220f5c9ae7dab73f69f
+    REF 1a0a756e5ee4bc764ee89b1e30e6b73b24d2eb55 #dec2019
+    SHA512 810f320d51c11b79f211711d066873d4d082d88e0fdb662a15e105a05028b6e536f159730269865965b7eb33d8cdccb4622c5d945ab67df3e005569cb6df6e59
     HEAD_REF master
 )
 
@@ -48,5 +46,4 @@ file(INSTALL
 	DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
 	# Handle copyright
-file(COPY ${SOURCE_PATH}/MIT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/uvatlas/MIT.txt ${CURRENT_PACKAGES_DIR}/share/uvatlas/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

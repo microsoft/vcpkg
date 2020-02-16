@@ -1,9 +1,8 @@
 #pragma once
 
 #include <vcpkg/packagespec.h>
+#include <vcpkg/paragraphparser.h>
 #include <vcpkg/sourceparagraph.h>
-
-#include <unordered_map>
 
 namespace vcpkg
 {
@@ -13,9 +12,15 @@ namespace vcpkg
     struct BinaryParagraph
     {
         BinaryParagraph();
-        explicit BinaryParagraph(std::unordered_map<std::string, std::string> fields);
-        BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet, const std::string& abi_tag);
-        BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet);
+        explicit BinaryParagraph(Parse::Paragraph fields);
+        BinaryParagraph(const SourceParagraph& spgh,
+                        Triplet triplet,
+                        const std::string& abi_tag,
+                        const std::vector<FeatureSpec>& deps);
+        BinaryParagraph(const SourceParagraph& spgh,
+                        const FeatureParagraph& fpgh,
+                        Triplet triplet,
+                        const std::vector<FeatureSpec>& deps);
 
         std::string displayname() const;
 
@@ -31,6 +36,7 @@ namespace vcpkg
         std::vector<std::string> default_features;
         std::vector<std::string> depends;
         std::string abi;
+        Type type;
     };
 
     struct BinaryControlFile
