@@ -111,7 +111,7 @@ add_library(graphicsmagick coders/art.c coders/avs.c
 		Magick++/lib/Pixels.cpp Magick++/lib/STL.cpp Magick++/lib/Thread.cpp
 		Magick++/lib/TypeMetric.cpp
 		wand/drawing_wand.c wand/magick_compat.c wand/magick_wand.c wand/pixel_wand.c
-		jbig/libjbig/jbig.c jbig/libjbig/jbig_tab.c)
+		jbig/libjbig/jbig.c jbig/libjbig/jbig_ar.c jbig/libjbig/jbig85.c)
 
 TARGET_LINK_LIBRARIES(graphicsmagick PRIVATE
     ZLIB::ZLIB
