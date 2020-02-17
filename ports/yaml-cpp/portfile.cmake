@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         0001-noexcept.patch
         0002-fix-include-path.patch
+        0003-cxx-std-features.patch
 )
 
 vcpkg_configure_cmake(

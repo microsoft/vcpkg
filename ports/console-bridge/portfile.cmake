@@ -3,10 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/console_bridge
-    REF f0b423c0c2d02651db1776c96887c0a314908063
-    SHA512 f022341f06c4edf564b94305b7ce279a7a2a61d0323a7ccf374598011909d86b0a9c514b4d41fd1d523baecc1c320d16a931a8f0fbb3a3e4950720f84f0472e6
+    REF 3b5b110c224502acdfae621e790caca565173e91 # 0.4.4
+    SHA512 fd6439d3cd428d76b6ec34c9a5301fd06b5dcb9c5cafcd86c927e990ba75ebcde7aceca5d3ad1d0334e4fc48b825b6dc4a15116e4934a783dc16776540b4a90c
     HEAD_REF master
-    PATCHES static-macro.patch
 )
 
 vcpkg_configure_cmake(

@@ -1,4 +1,0 @@
-The package json5-parser provides CMake targets:
-
-    find_package(json5_parser CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE json5_parser)
