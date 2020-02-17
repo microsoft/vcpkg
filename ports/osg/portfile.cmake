@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-curl.patch
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
         fix-liblas.patch
+        fix-nvtt.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -42,6 +43,13 @@ list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GStreamer=ON)
 list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON)
 list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_SDL=ON)
 list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LIBLAS=ON)
+
+# Due to nvtt CRT linkage error, we can only enable static builds here
+set(ENABLE_NVTT ON)
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dymanic)
+    set(ENABLE_NVTT OFF)
+endif()
+list(APPEND OPTIONS -DENABLE_NVTT=${ENABLE_NVTT})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools BUILD_OSG_APPLICATIONS
@@ -84,7 +92,7 @@ endif()
 file(GLOB OSG_TOOLS ${CURRENT_PACKAGES_DIR}/share/OpenSceneGraph/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 if (OSG_TOOLS)
     file(COPY ${OSG_TOOLS} DESTINATION ${OSG_TOOL_PATH})
-    file(REMOVE_RECURSE ${OSG_TOOLS})
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/OpenSceneGraph)
 endif()
 
 

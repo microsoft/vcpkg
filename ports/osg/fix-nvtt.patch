@@ -1,0 +1,13 @@
+diff --git a/src/osgPlugins/CMakeLists.txt b/src/osgPlugins/CMakeLists.txt
+index 8125504..af94ea6 100644
+--- a/src/osgPlugins/CMakeLists.txt
++++ b/src/osgPlugins/CMakeLists.txt
+@@ -241,7 +241,7 @@ IF(QTKIT_FOUND)
+     ADD_PLUGIN_DIRECTORY(QTKit)
+ ENDIF()
+ 
+-IF(NVTT_FOUND)
++IF(NVTT_FOUND AND ENABLE_NVTT)
+     ADD_PLUGIN_DIRECTORY(nvtt)
+ ENDIF()
+ 
