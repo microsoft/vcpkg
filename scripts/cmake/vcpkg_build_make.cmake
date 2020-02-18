@@ -60,11 +60,11 @@ function(vcpkg_build_make)
             get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
             vcpkg_add_to_path("${PERL_EXE_PATH}")
             
-
-
-            vcpkg_add_to_path("${YASM_EXE_PATH}")
             vcpkg_acquire_msys(MSYS_ROOT)
-            vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
+            file(CREATE_LINK "${MSYS_ROOT}/usr/bin/sort.exe" "${SCRIPTS}/sort.exe" COPY_ON_ERROR)
+            file(CREATE_LINK "${MSYS_ROOT}/usr/bin/find.exe" "${SCRIPTS}/find.exe" COPY_ON_ERROR)
+            vcpkg_add_to_path(PREPEND "${SCRIPTS}")
+            #vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
             
             find_program(MAKE make REQUIRED) #mingw32-make
             set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")

@@ -182,6 +182,7 @@ function(vcpkg_configure_make)
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
     endif()
 
+    #set(ENV{V} 1)
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
         _vcpkg_get_mingw_vars() # rename to _vcpkg_determine_host
@@ -193,31 +194,44 @@ function(vcpkg_configure_make)
         endif()
 
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
-        vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
+        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
         set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
 
-        vcpkg_find_acquire_program(YASM)
-        get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-        vcpkg_add_to_path("${YASM_EXE_PATH}")
+        file(CREATE_LINK "${MSYS_ROOT}/usr/bin/sort.exe" "${SCRIPTS}/sort.exe" COPY_ON_ERROR)
+        file(CREATE_LINK "${MSYS_ROOT}/usr/bin/find.exe" "${SCRIPTS}/find.exe" COPY_ON_ERROR)
+        vcpkg_add_to_path(PREPEND "${SCRIPTS}")
+         
+        # vcpkg_find_acquire_program(YASM)
+        # get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
+        # vcpkg_add_to_path("${YASM_EXE_PATH}")
 
-        vcpkg_find_acquire_program(PERL)
-        get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-        vcpkg_add_to_path("${PERL_EXE_PATH}")
+        # vcpkg_find_acquire_program(PERL)
+        # get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+        # vcpkg_add_to_path("${PERL_EXE_PATH}")
 
         if (NOT _csc_DISABLE_AUTO_HOST)
                 # --build: the machine you are building on
                 # --host: the machine you are building for
                 # --target: the machine that CC will produce binaries for
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-msys --target=i686-pc-msys --host=i686-pc-msys")
+                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --target=i686-pc-mingw32 --host=i686-pc-mingw32")
             elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-msys --target=x86_64-pc-msys --host=x86_64-pc-msys")
+                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --target=x86_64-pc-mingw32 --host=x86_64-pc-mingw32")
             elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)            
-                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-msys --target=arm-pc-msys --host=i686-pc-msys")
+                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --target=arm-pc-mingw32 --host=i686-pc-mingw32")
             endif()
         endif()
+        #set(MSVCROOTPATH "$ENV{VCToolsInstallDir}bin\\Host$ENV{VSCMD_ARG_HOST_ARCH}\\$ENV{VSCMD_ARG_TGT_ARCH}")
+        #set(MSVCENVROOT "\$(VCToolsInstallDir)bin\\Host\$(VSCMD_ARG_HOST_ARCH)\\\$(VSCMD_ARG_TGT_ARCH)")
+        if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+            set(VCPKG_CRT_LINK_FLAG_PREFIX "/MD")
+        elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
+            set(VCPKG_CRT_LINK_FLAG_PREFIX "/MT")
+        else()
+            message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
+        endif()
 
-        set(COMPILER_CC "CC='cl -nologo' LD='cl -nologo -link' NM='nm'")
+        set(COMPILER_CC "CC='cl.exe -nologo' LD='link.exe -verbose' NM='dumpbin.exe -symbols' DLLTOOL='link.exe -verbose -dll' AR='ar_lib_wrapper' AR_FLAGS='--verbose /VERBOSE' RANLIB='echo' ")
 
         string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
@@ -232,7 +246,7 @@ function(vcpkg_configure_make)
     endif()
 
     if(NOT ENV{PKG_CONFIG})
-        find_program(PKGCONFIG pkg-config REQUIRED)
+        find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
         message(STATUS "Using pkg-config from: ${PKGCONFIG}")
     else()
         message(STATUS "PKG_CONF ENV found! Using: $ENV{PKG_CONFIG}")
@@ -289,10 +303,11 @@ function(vcpkg_configure_make)
         list(JOIN _csc_OPTIONS " " _csc_OPTIONS)
         list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
+        #set(PKG_CONFIG_PATH_DEBUG "PKG_CONFIG_PATH=${_VCPKG_INSTALLED}/debug/lib/pkgconfig")
         set(rel_command
-            ${base_cmd} -c "${COMPILER_CC} ./../${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
+            ${base_cmd} -c "echo $PATH & echo $MSVCENVROOT & ${COMPILER_CC} ./../${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
         set(dbg_command
-            ${base_cmd} -c "${COMPILER_CC} ./../${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
+            ${base_cmd} -c "echo $PATH & echo $MSVCENVROOT & ${COMPILER_CC} ./../${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
     else()
         set(rel_command /bin/sh "./../${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE})
         set(dbg_command /bin/sh "./../${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG})
@@ -314,7 +329,7 @@ function(vcpkg_configure_make)
     else()
         string(APPEND C_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
         string(APPEND CXX_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
-        string(APPEND LD_FLAGS_GLOBAL "")
+        string(APPEND LD_FLAGS_GLOBAL " /VERBOSE -no-undefined")
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
             string(APPEND LD_FLAGS_GLOBAL " /machine:x64")
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
@@ -353,6 +368,8 @@ function(vcpkg_configure_make)
     endif()
 
     # Configure debug
+    
+    
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
         if(_csc_PKG_CONFIG_PATHS_DEBUG)
             set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
@@ -365,14 +382,14 @@ function(vcpkg_configure_make)
                 endif()
             endforeach()
         endif()
-
+        message(STATUS "Config path $ENV{PKG_CONFIG_PATH}")
         # Setup debug enviromnent
         if (CMAKE_HOST_WIN32)
-            set(TMP_CFLAGS "${C_FLAGS_GLOBAL} /D_DEBUG /Ob0 /Od ${VCPKG_C_FLAGS_DEBUG}")
+            set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_C_FLAGS_DEBUG}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
             set(ENV{CFLAGS} ${TMP_CFLAGS})
             
-            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} /D_DEBUG /Ob0 /Od ${VCPKG_CXX_FLAGS_DEBUG}")
+            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_CXX_FLAGS_DEBUG}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
             set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
             
@@ -440,11 +457,11 @@ function(vcpkg_configure_make)
 
         # Setup release enviromnent
         if (CMAKE_HOST_WIN32)
-            set(TMP_CFLAGS "${C_FLAGS_GLOBAL}  /O2 /Oi /Gy /DNDEBUG ${VCPKG_C_FLAGS_RELEASE}")
+            set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_C_FLAGS_RELEASE}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
             set(ENV{CFLAGS} ${TMP_CFLAGS})
             
-            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} /O2 /Oi /Gy /DNDEBUG ${VCPKG_CXX_FLAGS_RELEASE}")
+            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_CXX_FLAGS_RELEASE}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
             set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
             

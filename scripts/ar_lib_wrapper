@@ -1,0 +1,162 @@
+#!/bin/bash
+
+# ar_lib_wrapper
+# Wrapper around MS's lib.exe to make it act more like Unix ar
+
+
+usage()
+{
+    cat <<EOF
+Usage: ar_lib_wrapper
+       [OPTIONS]
+ar_lib_wrapper is a wrapper around Microsoft's lib.exe.  It translates parameters
+given by [OPTIONS] that Unix ar understands into parameters that lib understands.
+EOF
+}
+
+case $MACHTYPE in
+    *-msys)
+        slash="-"
+        ;;
+    *)
+        slash="/"
+        ;;
+esac
+
+# prog specifies the program that should be run cl.exe
+prog=lib.exe
+libfile=
+debug=
+libopt=("${slash}nologo")
+# gotparam is 0 if we didn't ever see a param, in which case we show usage()
+gotparam=
+muffle=
+verbose=
+has_x=
+has_t=
+shared_index=-1
+
+processargs()
+{
+### Run through every option and convert it to the proper MS one
+while test $# -gt 0; do
+    case "$1" in
+    -D*) optarg= ;;
+    -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+    *) optarg= ;;
+    esac
+    gotparam=1
+    case "$1" in
+    --help)
+        usage
+        exit 0
+        ;;
+    --verbose)
+        verbose=1
+        ;;
+
+    x) # Extract archive
+        has_x=1
+        ;;
+
+    t) # List archive
+        has_t=1
+        ;;
+
+    -*)
+        # Remaining '-' options are passed to the compiler
+        if test x$optarg != x ; then
+            libopt+=("${slash}${1:1}=$optarg")
+        else
+            libopt+=("${slash}${1:1}")
+        fi
+        ;;
+
+    *.lib)
+        # library file
+        if test x$has_x$has_t = x ; then
+            libopt+=("${slash}OUT:$1")
+        else
+            libopt+=("$1")
+        fi
+        libfile=$1
+        ;;
+
+    /*)
+        # All '/' options are assumed to be for lib and are passed through
+        libopt+=("${slash}${1:1}")
+        ;;
+
+    *)
+        libopt+=("$1")
+        ;;
+
+    esac
+    shift
+done
+}
+
+# Whitespace in paths is dealt with by setting IFS and using bash arrays
+# Except additional arguments in arlib_OPTIONS need to be space separated
+
+processargs $arlib_OPTIONS
+IFS=""
+processargs $@
+
+if test x$gotparam = x ; then
+    usage
+    exit 1
+fi
+
+if test x$V = x1 ; then
+    verbose=1
+fi
+
+if test -n "$verbose" ; then
+  echo -n "$prog"
+  for opt in "${libopt[@]}" ; do
+    echo -n " \"$opt\""
+  done
+  echo ""
+fi
+
+if test x$has_x = x1 ; then
+    echo "Extracting $libfile with options ${libopt[@]}"
+    libopt+=("${slash}nologo")
+
+    if [ -f "$libfile" ]; then
+        IFS="
+        > "
+        files=($($prog -list ${libopt[@]} | grep -e "\.obj$"))
+        for file in ${files[*]}
+        do
+           echo "Extracting: $file"
+           folder=$(dirname "${file}")
+           mkdir -p ${folder}
+           $prog ${libopt[@]} -EXTRACT:$file -OUT:$file
+        done
+        IFS=""
+    else
+        echo "No Library found. Name: $libfile"
+    fi
+fi
+
+if test x$has_t = x1 ; then
+    # The output of t is directly feed into sort by configure
+    files=($($prog -list ${libopt[@]} | grep -e "\.obj$"))
+    IFS="
+    > "
+    for file in ${files[*]}
+    do
+        echo $(PWD)/$file
+    done
+    IFS=""
+fi
+
+if test -z "$muffle" ; then
+    exec $prog ${libopt[@]}
+else
+  # tr needed below for $ in regex to work (simple alternative to dos2unix)
+    exec $prog ${libopt[@]} | tr -d '\r' | grep -v -e "\.lib$" -e "\.cxx$" -e "\.cc$" -e "\.C$" -e "\.c$" -e "^   Creating library" -e "^Generating Code"
+    exit ${PIPESTATUS[0]}
+fi
