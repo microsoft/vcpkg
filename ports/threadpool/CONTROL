@@ -1,0 +1,4 @@
+Source: threadpool
+Version: 2019-03-13
+Homepage: https://github.com/jhasse/ThreadPool
+Description: A simple C++17 Thread Pool implementation
