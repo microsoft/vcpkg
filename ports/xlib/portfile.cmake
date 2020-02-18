@@ -1,6 +1,10 @@
 ## requires AUTOCONF, LIBTOOL and PKCONF
 message(STATUS "${PORT} requires autoconf, libtool and pkconf from the system package manager!")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(PATCHES dllimport.patch)
+endif()
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,6 +13,7 @@ vcpkg_from_gitlab(
     SHA512 63106422bf74071f73e47a954607472a7df6f4094c197481a100fa10676a22e81ece0459108790d3ebda6a1664c5cba6809bdb80cd5bc4befa1a76bd87188616
     HEAD_REF master # branch name
     PATCHES cl.build.patch #patch name
+            ${PATCHES}
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
