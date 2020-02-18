@@ -1,9 +1,15 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_git(
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://downloads.sourceforge.net/project/tinyfiledialogs/tinyfiledialogs.zip"
+    FILENAME "tinyfiledialogs.zip"
+    SHA512 b4a8c8fa5ff53a0972ce9dd1a4a473eaeb82689e5a47553b83e9220ea7e0ec582d87111728088ab6d314972e6531653b11fbd8c05c5e46fbe5bc4d29c7fe23fb
+)
+
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://git.code.sf.net/p/tinyfiledialogs/code
-    REF f7789c57db4269495a6702625351a15e5ee17542
+    ARCHIVE ${ARCHIVE} 
+    REF v3.4.3
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
