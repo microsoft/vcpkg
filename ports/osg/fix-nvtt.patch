@@ -1,13 +1,14 @@
-diff --git a/src/osgPlugins/CMakeLists.txt b/src/osgPlugins/CMakeLists.txt
-index 8125504..af94ea6 100644
---- a/src/osgPlugins/CMakeLists.txt
-+++ b/src/osgPlugins/CMakeLists.txt
-@@ -241,7 +241,7 @@ IF(QTKIT_FOUND)
-     ADD_PLUGIN_DIRECTORY(QTKit)
- ENDIF()
- 
--IF(NVTT_FOUND)
-+IF(NVTT_FOUND AND ENABLE_NVTT)
-     ADD_PLUGIN_DIRECTORY(nvtt)
- ENDIF()
- 
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a991670..5b530c5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -759,7 +759,9 @@ ELSE()
+     FIND_PACKAGE(RSVG)
+     FIND_PACKAGE(GtkGl)
+     FIND_PACKAGE(DirectInput)
++    if (ENABLE_NVTT)
+     FIND_PACKAGE(NVTT)
++    endif()
+     IF (NOT WIN32)
+         FIND_PACKAGE(Asio)
+     ENDIF()
