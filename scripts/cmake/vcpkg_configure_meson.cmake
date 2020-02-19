@@ -77,18 +77,18 @@ function(vcpkg_configure_meson)
         endforeach()
     endif()
     
-    set(MESON_COMMON_CFLAGS "${MESON_COMMON_CFLAGS} -I${CURRENT_INSTALLED_DIR}/include ${CMAKE_C_FLAGS${_MESON_FLAG_SUFFIX}}")
-    set(MESON_COMMON_CXXFLAGS "${MESON_COMMON_CXXFLAGS} -I${CURRENT_INSTALLED_DIR}/include ${CMAKE_CXX_FLAGS${_MESON_FLAG_SUFFIX}}")
-    
-    set(MESON_DEBUG_CFLAGS "${MESON_DEBUG_CFLAGS} ${CMAKE_C_FLAGS_DEBUG${_MESON_FLAG_SUFFIX}}")
-    set(MESON_DEBUG_CXXFLAGS "${MESON_DEBUG_CXXFLAGS} ${CMAKE_CXX_FLAGS_DEBUG${_MESON_FLAG_SUFFIX}}")
+    string(APPEND MESON_COMMON_CFLAGS " ${CMAKE_C_FLAGS${_MESON_FLAG_SUFFIX}}") #-I\"${CURRENT_INSTALLED_DIR}/include\"
+    string(APPEND MESON_COMMON_CXXFLAGS " ${CMAKE_CXX_FLAGS${_MESON_FLAG_SUFFIX}}") #-I\"${CURRENT_INSTALLED_DIR}/include\"
 
-    set(MESON_RELEASE_CFLAGS "${MESON_RELEASE_CFLAGS} ${CMAKE_C_FLAGS_RELEASE${_MESON_FLAG_SUFFIX}}")
-    set(MESON_RELEASE_CXXFLAGS "${MESON_RELEASE_CXXFLAGS} ${CMAKE_CXX_FLAGS_RELEASE${_MESON_FLAG_SUFFIX}}")
+    string(APPEND MESON_DEBUG_CFLAGS " ${CMAKE_C_FLAGS_DEBUG${_MESON_FLAG_SUFFIX}}")
+    string(APPEND MESON_DEBUG_CXXFLAGS " ${CMAKE_CXX_FLAGS_DEBUG${_MESON_FLAG_SUFFIX}}")
+
+    string(APPEND MESON_RELEASE_CFLAGS " ${CMAKE_C_FLAGS_RELEASE${_MESON_FLAG_SUFFIX}}")
+    string(APPEND MESON_RELEASE_CXXFLAGS " ${CMAKE_CXX_FLAGS_RELEASE${_MESON_FLAG_SUFFIX}}")
     
     if(VCPKG_TARGET_IS_WINDOWS)
-        set(MESON_COMMON_LDFLAGS "${MESON_COMMON_LDFLAGS} /DEBUG")
-        set(MESON_RELEASE_LDFLAGS "${MESON_RELEASE_LDFLAGS} /INCREMENTAL:NO /OPT:REF /OPT:ICF")
+        string(APPEND MESON_COMMON_LDFLAGS " /DEBUG")
+        string(APPEND MESON_RELEASE_LDFLAGS " /INCREMENTAL:NO /OPT:REF /OPT:ICF")
     endif()
     
     # select meson cmd-line options
@@ -101,16 +101,21 @@ function(vcpkg_configure_meson)
     endif()
     
     list(APPEND _vcm_OPTIONS_DEBUG --prefix ${CURRENT_PACKAGES_DIR}/debug --includedir ../include --libdir lib)
-    list(APPEND _vcm_OPTIONS_RELEASE --prefix  ${CURRENT_PACKAGES_DIR} --libdir lib)
+    list(APPEND _vcm_OPTIONS_RELEASE --prefix  ${CURRENT_PACKAGES_DIR} --libdir lib --optimization 3 )
     
     vcpkg_find_acquire_program(MESON)
+    
     vcpkg_find_acquire_program(NINJA)
     get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-
     vcpkg_add_to_path("${NINJA_PATH}")
     
     if(NOT ENV{PKG_CONFIG})
         find_program(PKGCONFIG pkg-config)
+        if(NOT PKGCONFIG AND CMAKE_HOST_WIN32)
+            vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
+            vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+        endif()
+        find_program(PKGCONFIG pkg-config REQUIRED)
     else()
         message(STATUS "PKG_CONF ENV found: $ENV{PKG_CONFIG}")
         set(PKGCONFIG $ENV{PKG_CONFIG})
@@ -131,12 +136,26 @@ function(vcpkg_configure_meson)
         endif()
 
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        set(ENV{CFLAGS} "${MESON_COMMON_CFLAGS} ${MESON_RELEASE_CFLAGS}")
-        set(ENV{CXXFLAGS} "${MESON_COMMON_CXXFLAGS} ${MESON_RELEASE_CXXFLAGS}")
-        set(ENV{LDFLAGS} "${MESON_COMMON_LDFLAGS} -L${CURRENT_INSTALLED_DIR}/lib -L${CURRENT_INSTALLED_DIR}/lib/manual-link ${MESON_RELEASE_LDFLAGS}")
-        #set(ENV{CPPFLAGS} "${MESON_COMMON_CPPFLAGS} ${MESON_RELEASE_CPPFLAGS}")
+
+        #set(ENV{LDFLAGS} "${MESON_COMMON_LDFLAGS} ${MESON_RELEASE_LDFLAGS}") #-L${CURRENT_INSTALLED_DIR}/lib -L${CURRENT_INSTALLED_DIR}/lib/manual-link 
+        
+        set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_RELEASE_CFLAGS}]")
+        string(REGEX REPLACE " +/" "','-" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE "\\\[\'," "[" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" CFLAGS ${CFLAGS})
+        set(CXXFLAGS "-Dcpp_args=[${MESON_COMMON_CXXFLAGS} ${MESON_RELEASE_CXXFLAGS}]")
+        string(REGEX REPLACE " +/" "','-" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE "\\\['," "[" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" CXXFLAGS ${CXXFLAGS})
+        set(LDFLAGS "[${MESON_COMMON_LDFLAGS} ${MESON_RELEASE_LDFLAGS}]")
+        string(REGEX REPLACE " +/" "','-" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE "\\\['," "[" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" LDFLAGS ${LDFLAGS})
+        set(CLDFLAGS "-Dc_link_args=${LDFLAGS}")
+        set(CXXLDFLAGS "-Dcpp_link_args=${LDFLAGS}")
+        #message(STATUS "C:${CFLAGS}\nCXX:${CXXFLAGS}\nCLD:${CLDFLAGS}\nCXXLD:${CXXLDFLAGS}")
         vcpkg_execute_required_process(
-            COMMAND ${MESON} ${_vcm_OPTIONS} ${_vcm_OPTIONS_RELEASE} ${_vcm_SOURCE_PATH}
+            COMMAND ${MESON} ${_vcm_OPTIONS} ${_vcm_OPTIONS_RELEASE} ${_vcm_SOURCE_PATH} ${CFLAGS} ${CXXFLAGS} ${CLDFLAGS} ${CXXLDFLAGS}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME config-${TARGET_TRIPLET}-rel
         )
@@ -161,12 +180,22 @@ function(vcpkg_configure_meson)
         endif()
         
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        set(ENV{CFLAGS} "${MESON_COMMON_CFLAGS} ${MESON_DEBUG_CFLAGS}")
-        set(ENV{CXXFLAGS} "${MESON_COMMON_CXXFLAGS} ${MESON_DEBUG_CXXFLAGS}")
-        set(ENV{LDFLAGS} "${MESON_COMMON_LDFLAGS} -L${CURRENT_INSTALLED_DIR}/debug/lib -L${CURRENT_INSTALLED_DIR}/debug/lib/manual-link ${MESON_DEBUG_LDFLAGS}")
-        set(ENV{CPPFLAGS} "${MESON_COMMON_CPPFLAGS} ${MESON_DEBUG_CPPFLAGS}")
+        set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_DEBUG_CFLAGS}]")
+        string(REGEX REPLACE " +/" "','-" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE "\\\[\'," "[" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" CFLAGS ${CFLAGS})
+        set(CXXFLAGS "-Dcpp_args=[${MESON_COMMON_CXXFLAGS} ${MESON_DEBUG_CXXFLAGS}]")
+        string(REGEX REPLACE " +/" "','-" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE "\\\['," "[" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" CXXFLAGS ${CXXFLAGS})
+        set(LDFLAGS "[${MESON_COMMON_LDFLAGS} ${MESON_DEBUG_LDFLAGS}]")
+        string(REGEX REPLACE " +/" "','-" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE "\\\['," "[" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" LDFLAGS ${LDFLAGS})
+        set(CLDFLAGS "-Dc_link_args=${LDFLAGS}")
+        set(CXXLDFLAGS "-Dcpp_link_args=${LDFLAGS}")
         vcpkg_execute_required_process(
-            COMMAND ${MESON} ${_vcm_OPTIONS} ${_vcm_OPTIONS_DEBUG} ${_vcm_SOURCE_PATH}
+            COMMAND ${MESON} ${_vcm_OPTIONS} ${_vcm_OPTIONS_DEBUG} ${_vcm_SOURCE_PATH} ${CFLAGS} ${CXXFLAGS} ${CLDFLAGS} ${CXXLDFLAGS}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
             LOGNAME config-${TARGET_TRIPLET}-dbg
         )
