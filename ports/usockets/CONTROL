@@ -1,4 +1,4 @@
 Source: usockets
-Version: 0.3.4
+Version: 0.3.5
 Build-Depends:libuv
 Description: Miniscule cross-platform eventing, networking & crypto for async applications

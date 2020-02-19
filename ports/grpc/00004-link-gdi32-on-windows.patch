@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f6c4a340fc..22054eedd0 100644
+index c4057b3..a6a0f23 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -164,7 +164,7 @@ elseif(UNIX)
+@@ -220,7 +220,7 @@ elseif(UNIX)
  endif()
  
  if(WIN32 AND MSVC)
--  set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32)
-+  set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32 gdi32)
+-  set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32 crypt32)
++  set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32 crypt32 gdi32)
  endif()
  
  # Create directory for generated .proto files

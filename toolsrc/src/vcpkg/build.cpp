@@ -521,11 +521,24 @@ namespace vcpkg::Build
             else
                 return System::cmd_execute_modify_env(build_env_cmd, clean_env);
         });
-
-        const int return_code = System::cmd_execute(command, env);
 #else
-        const int return_code = System::cmd_execute_clean(command);
+        const auto& env = System::get_clean_environment();
 #endif
+        auto stdoutlog =
+            paths.buildtrees / action.spec.name() / ("stdout-" + action.spec.triplet().canonical_name() + ".log");
+        std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
+        Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", stdoutlog.u8string());
+        const int return_code = System::cmd_execute_and_stream_data(
+            command,
+            [&](StringView sv) {
+                System::print2(sv);
+                out_file.write(sv.data(), sv.size());
+                Checks::check_exit(
+                    VCPKG_LINE_INFO, out_file, "Error occurred while writing '%s'", stdoutlog.u8string());
+            },
+            env);
+        out_file.close();
+
         // With the exception of empty packages, builds in "Download Mode" always result in failure.
         if (action.build_options.only_downloads == Build::OnlyDownloads::YES)
         {
