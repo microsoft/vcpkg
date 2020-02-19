@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e5945f9..e84df06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -252,7 +252,7 @@ endif()
+ 
+ 
+ if(CLI11_BUILD_TESTS)
+-  add_subdirectory(tests)
++  find_package(GTest CONFIG REQUIRED)
+ endif()
+ 
+ if(CLI11_BUILD_EXAMPLES)
