@@ -2,4 +2,4 @@ Source: xkbcommon
 Version: 0.10.0
 Homepage: https://xkbcommon.org/
 Description: keymap handling library for toolkits and window systems 
-Build-Depends: xcb, xlib, xcb-render-util
+Build-Depends: xcb, xlib, xcb-render-util, wayland
