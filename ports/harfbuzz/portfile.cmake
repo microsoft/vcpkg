@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 2.5.3
-    SHA512 d541463b3647fc2c7ddaa29aedcea1c3bde5e26e0d529384d66d630af3aaf2a4befb3c4d47c93833f099339a0f951fb132011a02c57fc00ba543bd1b17026ffa
+    REF 3a74ee528255cc027d84b204a87b5c25e47bff79 # 2.6.4
+    SHA512 4662634546b64dd21cb25ccf47dc56a6274a389cb0801791a34b5088833d033bb665ce10e88d06baefc54cdd471c4107da9bac974382abf1cb4ed991b7e83c7f
     HEAD_REF master
     PATCHES
         0001-fix-cmake-export.patch
@@ -26,32 +24,15 @@ if("${_contents}" MATCHES "find_library\\(GLIB_LIBRARIES")
     message(FATAL_ERROR "Harfbuzz's cmake must not directly find_library() glib.")
 endif()
 
-SET(HB_HAVE_ICU "OFF")
-if("icu" IN_LIST FEATURES)
-    SET(HB_HAVE_ICU "ON")
-endif()
-
-SET(HB_HAVE_GRAPHITE2 "OFF")
-if("graphite2" IN_LIST FEATURES)
-    SET(HB_HAVE_GRAPHITE2 "ON")
-endif()
-
-## Unicode callbacks
-
-# Builtin (UCDN)
-set(BUILTIN_UCDN OFF)
-if("ucdn" IN_LIST FEATURES)
-    set(BUILTIN_UCDN ON)
-endif()
-
-# Glib
-set(HAVE_GLIB OFF)
-if("glib" IN_LIST FEATURES)
-    set(HAVE_GLIB ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    icu        HB_HAVE_ICU
+    graphite2  HB_HAVE_GRAPHITE2
+    ucdn       BUILTIN_UCDN
+    glib       HAVE_GLIB
+)
 
 # At least one Unicode callback must be specified, or harfbuzz compilation fails
-if(NOT (BUILTIN_UCDN OR HAVE_GLIB))
+if(NOT ("ucdn" IN_LIST FEATURES OR "glib" IN_LIST FEATURES))
     message(FATAL_ERROR "Error: At least one Unicode callback must be specified (ucdn, glib).")
 endif()
 
@@ -65,6 +46,7 @@ vcpkg_configure_cmake(
         -DHB_HAVE_GLIB=${HAVE_GLIB}
         -DHB_HAVE_GRAPHITE2=${HB_HAVE_GRAPHITE2}
         -DHB_BUILD_TESTS=OFF
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
@@ -85,7 +67,5 @@ ${_contents}
 ")
 endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
