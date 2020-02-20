@@ -1,0 +1,10 @@
+
+The package @PORT@:@TARGET_TRIPLET@ provides CMake targets:
+
+    find_library(CHIMERA_LIBRARY NAMES chimera)
+    find_library(HS_LIBRARY NAMES hs)
+    find_path(CHIMERA_INCLUDE_DIR hs)
+    find_library(PCRE_LIBRARY NAMES pcre)
+
+    target_include_directories(main PUBLIC ${CHIMERA_INCLUDE_DIR})
+    target_link_libraries(main ${CHIMERA_LIBRARY} ${HS_LIBRARY} ${PCRE_LIBRARY}) 
