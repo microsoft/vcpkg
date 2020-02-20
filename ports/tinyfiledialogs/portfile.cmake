@@ -3,7 +3,7 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/tinyfiledialogs/v3.4/tinyfiledialogs-v3.4.3.zip"
+    URLS "https://sourceforge.net/projects/tinyfiledialogs/files/v3.4/tinyfiledialogs-3.4.3.zip/download"
     FILENAME "tinyfiledialogs.zip"
     SHA512 b4a8c8fa5ff53a0972ce9dd1a4a473eaeb82689e5a47553b83e9220ea7e0ec582d87111728088ab6d314972e6531653b11fbd8c05c5e46fbe5bc4d29c7fe23fb
 )
