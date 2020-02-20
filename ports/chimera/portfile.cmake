@@ -1,8 +1,8 @@
 
-include(vcpkg_common_functions)
-
 set(CHIMERA_VERSION "5.2.1")
 set(PCRE_VERSION "8.41")
+
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR})
 
 # download hyperscan source code which is required by and also contains chimera
 vcpkg_download_distfile(ARCHIVE_HYPERSCAN
@@ -48,4 +48,4 @@ message(STATUS "Cmake install done.")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
-file(INSTALL ${CHIMERA_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/chimera RENAME copyright)
+file(INSTALL ${CHIMERA_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
