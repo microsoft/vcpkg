@@ -1063,6 +1063,7 @@ metis:arm-uwp=fail
 metis:x64-uwp=fail
 metrohash:arm-uwp=fail
 metrohash:x64-uwp=fail
+metrohash:x86-windows=fail
 mhook:arm64-windows=fail
 mhook:arm-uwp=fail
 mhook:x64-linux=fail
