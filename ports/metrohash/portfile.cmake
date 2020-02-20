@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_TARGET "x86" "arm")
+vcpkg_fail_port_install(ON_TARGET "UWP" ON_TARGET "x86" "arm" "aarch64")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
