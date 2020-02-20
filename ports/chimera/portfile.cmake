@@ -2,8 +2,6 @@
 set(CHIMERA_VERSION "5.2.1")
 set(PCRE_VERSION "8.41")
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR})
-
 # download hyperscan source code which is required by and also contains chimera
 vcpkg_download_distfile(ARCHIVE_HYPERSCAN
     URLS "https://github.com/intel/hyperscan/archive/d79973efb1fcf5ed338122882c1f896829767fb6.zip"
@@ -32,6 +30,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 # rename the pcre source code folder to pcre-8.41 which is required by chimera
+file(REMOVE_RECURSE "${CHIMERA_SOURCE_PATH}/pcre-${PCRE_VERSION}")
 file(RENAME "${PCRE_SOURCE_PATH}" "${CHIMERA_SOURCE_PATH}/pcre-${PCRE_VERSION}")
 message(STATUS "Source code copy done.")
 
@@ -45,7 +44,8 @@ vcpkg_install_cmake()
 message(STATUS "Cmake install done.")
 
 # remove debug dir
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL ${CHIMERA_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
