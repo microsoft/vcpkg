@@ -1,0 +1,90 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5f7d0d886..96455dbad 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,6 +7,7 @@ endif()
+ 
+ option(USE_PKCS11_HELPER_LIBRARY "Build mbed TLS with the pkcs11-helper library." OFF)
+ option(ENABLE_ZLIB_SUPPORT "Build mbed TLS with zlib library." OFF)
++option(ENABLE_PTHREADS4W "Build mbed TLS with PThreads4W" OFF)
+ 
+ option(ENABLE_PROGRAMS "Build mbed TLS programs." ON)
+ 
+@@ -174,6 +175,7 @@ else()
+ endif()
+ 
+ include_directories(include/)
++include_directories(${CMAKE_CURRENT_BINARY_DIR}/include/)
+ 
+ if(ENABLE_ZLIB_SUPPORT)
+     find_package(ZLIB)
+@@ -183,6 +185,11 @@ if(ENABLE_ZLIB_SUPPORT)
+     endif(ZLIB_FOUND)
+ endif(ENABLE_ZLIB_SUPPORT)
+ 
++if(ENABLE_PTHREADS4W)
++    find_package(pthreads_windows REQUIRED)
++    include_directories(${PThreads4W_INCLUDE_DIR})
++endif()
++
+ add_subdirectory(library)
+ add_subdirectory(include)
+ 
+diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
+index c2f2bd4e6..e110cd50c 100644
+--- a/include/CMakeLists.txt
++++ b/include/CMakeLists.txt
+@@ -1,9 +1,13 @@
+ option(INSTALL_MBEDTLS_HEADERS "Install mbed TLS headers." ON)
+ 
++configure_file(mbedtls/config_threading.h.in mbedtls/config_threading.h)
++
+ if(INSTALL_MBEDTLS_HEADERS)
+ 
+     file(GLOB headers "mbedtls/*.h")
+ 
++    set(headers ${headers} ${CMAKE_CURRENT_BINARY_DIR}/mbedtls/config_threading.h)
++
+     install(FILES ${headers}
+         DESTINATION include/mbedtls
+         PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+diff --git a/include/mbedtls/config.h b/include/mbedtls/config.h
+index 5df962ef6..f205bf599 100644
+--- a/include/mbedtls/config.h
++++ b/include/mbedtls/config.h
+@@ -26,6 +26,8 @@
+  *  This file is part of mbed TLS (https://tls.mbed.org)
+  */
+ 
++#include "mbedtls/config_threading.h"
++
+ #ifndef MBEDTLS_CONFIG_H
+ #define MBEDTLS_CONFIG_H
+ 
+diff --git a/include/mbedtls/config_threading.h.in b/include/mbedtls/config_threading.h.in
+new file mode 100644
+index 000000000..c08ebf07a
+--- /dev/null
++++ b/include/mbedtls/config_threading.h.in
+@@ -0,0 +1,6 @@
++#cmakedefine ENABLE_PTHREADS4W
++
++#ifdef ENABLE_PTHREADS4W
++#define MBEDTLS_THREADING_C
++#define MBEDTLS_THREADING_PTHREAD
++#endif
+diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
+index 9330cff9b..838b774ac 100644
+--- a/library/CMakeLists.txt
++++ b/library/CMakeLists.txt
+@@ -127,6 +127,10 @@ if(ENABLE_ZLIB_SUPPORT)
+     set(libs ${libs} ${ZLIB_LIBRARIES})
+ endif(ENABLE_ZLIB_SUPPORT)
+ 
++if(ENABLE_PTHREADS4W)
++    set(libs ${libs} ${PThreads4W_LIBRARY})
++endif()
++
+ if(LINK_WITH_PTHREAD)
+     set(libs ${libs} pthread)
+ endif()
