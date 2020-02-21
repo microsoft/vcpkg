@@ -1,5 +1,3 @@
-#vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "Building with a gcc version less than 6.1 is not supported.")
 endif()
