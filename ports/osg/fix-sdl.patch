@@ -32,7 +32,7 @@ index 9de15b1..ae96e11 100644
  #if USE_SDL || USE_SDL2
  
 -#include "SDL.h"
-+#include <SDL/SDL.h>
++#include <SDL2/SDL.h>
  
  static void soundReadCallback(void * user_data, uint8_t * data, int datalen)
  {
