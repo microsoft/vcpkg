@@ -27,8 +27,8 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     icu        HB_HAVE_ICU
     graphite2  HB_HAVE_GRAPHITE2
-    ucdn       BUILTIN_UCDN
-    glib       HAVE_GLIB
+    ucdn       HB_BUILTIN_UCDN
+    glib       HB_HAVE_GLIB
 )
 
 # At least one Unicode callback must be specified, or harfbuzz compilation fails
