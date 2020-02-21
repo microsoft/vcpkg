@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO githubuser0xFFFF/Qt-Advanced-Docking-System
-    REF a2b07fd97f0fac63fd7a0ed7b1eb0692b3efab71
-    SHA512 a44babd6100f299aea7fcf2d730874e204151ce363e1f58a2be938f70d28b07f3cb39adfbf46527fdacc3b12a630e7d97851e4a6fcd04e750a007ee06d06d3b5
+    REF 3ffbbfb6d01ff211d8349027221a19b1419296b5
+    SHA512 0f71a9015f6f500ef5749d6ea3e1d5311d7e892fe5d21fc59f65736484c95d37eb7a03354ab34f8c3801813fa6bcbdcc1746cdbdc262b3870f5b323dc3acca5d
     HEAD_REF master
     PATCHES
         config_changes.patch
@@ -18,7 +18,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt-advanced-docking-system RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt-advanced-docking-system RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/license)
 vcpkg_fixup_cmake_targets()
