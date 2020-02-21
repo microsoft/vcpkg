@@ -177,14 +177,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND RELEASE_OPTIONS
             "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
             "SQLITE_LIBS=${SQLITE_RELEASE}"
-            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE}"
+            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} ${FREETYPE_RELEASE} ${ZLIB_RELEASE}"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
         
     list(APPEND DEBUG_OPTIONS
             "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
             "SQLITE_LIBS=${SQLITE_DEBUG}"
-            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG}"
+            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} ${FREETYPE_DEBUG} ${ZLIB_DEBUG}"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -195,14 +195,14 @@ elseif(VCPKG_TARGET_IS_LINUX)
     list(APPEND RELEASE_OPTIONS
             "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
-            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE}"
+            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} ${FREETYPE_RELEASE} ${ZLIB_RELEASE}"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE}"
         )
     list(APPEND DEBUG_OPTIONS
             "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
-            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG}"
+            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} ${FREETYPE_DEBUG} ${ZLIB_DEBUG}"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG}"
         )
@@ -233,14 +233,14 @@ elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND RELEASE_OPTIONS
             "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
-            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} -framework ApplicationServices"
+            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} ${FREETYPE_RELEASE} ${ZLIB_RELEASE} -framework ApplicationServices"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE}"
         )
     list(APPEND DEBUG_OPTIONS
             "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
-            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} -framework ApplicationServices"
+            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} ${FREETYPE_DEBUG} ${ZLIB_DEBUG} -framework ApplicationServices"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG}"
         )
