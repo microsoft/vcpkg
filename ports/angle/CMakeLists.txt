@@ -430,7 +430,7 @@ SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
 SET_TARGET_PROPERTIES(libGLESv2 PROPERTIES PREFIX "")
 SET_TARGET_PROPERTIES(libEGL PROPERTIES PREFIX "")
 
-install(TARGETS libEGL libGLESv2 libANGLE angle_common angle_image_util angle_gpu_info_util angle_translator angle_preprocessor  EXPORT ANGLEExport
+install(TARGETS libEGL libGLESv2 libANGLE angle_common angle_image_util angle_gpu_info_util angle_translator angle_preprocessor GL_VISIBILITY EXPORT ANGLEExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
