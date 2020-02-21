@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5f7d0d886..96455dbad 100644
+index 5f7d0d886..d65cfeb2b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -7,6 +7,7 @@ endif()
  
  option(USE_PKCS11_HELPER_LIBRARY "Build mbed TLS with the pkcs11-helper library." OFF)
  option(ENABLE_ZLIB_SUPPORT "Build mbed TLS with zlib library." OFF)
-+option(ENABLE_PTHREADS4W "Build mbed TLS with PThreads4W" OFF)
++option(ENABLE_PTHREAD "Build mbed TLS with pthread" OFF)
  
  option(ENABLE_PROGRAMS "Build mbed TLS programs." ON)
  
@@ -18,13 +18,19 @@ index 5f7d0d886..96455dbad 100644
  
  if(ENABLE_ZLIB_SUPPORT)
      find_package(ZLIB)
-@@ -183,6 +185,11 @@ if(ENABLE_ZLIB_SUPPORT)
+@@ -183,6 +185,17 @@ if(ENABLE_ZLIB_SUPPORT)
      endif(ZLIB_FOUND)
  endif(ENABLE_ZLIB_SUPPORT)
  
-+if(ENABLE_PTHREADS4W)
-+    find_package(pthreads_windows REQUIRED)
-+    include_directories(${PThreads4W_INCLUDE_DIR})
++if(ENABLE_PTHREAD)
++    if(WIN32)
++        find_package(pthreads_windows REQUIRED)
++        include_directories(${PThreads4W_INCLUDE_DIR})
++    else()
++        set(CMAKE_THREAD_PREFER_PTHREAD ON)
++        find_package(Threads REQUIRED)
++    endif()
++    set(LINK_WITH_PTHREAD ON)
 +endif()
 +
  add_subdirectory(library)
@@ -63,28 +69,30 @@ index 5df962ef6..f205bf599 100644
  
 diff --git a/include/mbedtls/config_threading.h.in b/include/mbedtls/config_threading.h.in
 new file mode 100644
-index 000000000..c08ebf07a
+index 000000000..f6286ed9c
 --- /dev/null
 +++ b/include/mbedtls/config_threading.h.in
 @@ -0,0 +1,6 @@
-+#cmakedefine ENABLE_PTHREADS4W
++#cmakedefine ENABLE_PTHREAD
 +
-+#ifdef ENABLE_PTHREADS4W
++#ifdef ENABLE_PTHREAD
 +#define MBEDTLS_THREADING_C
 +#define MBEDTLS_THREADING_PTHREAD
 +#endif
 diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
-index 9330cff9b..838b774ac 100644
+index 9330cff9b..54a815ee7 100644
 --- a/library/CMakeLists.txt
 +++ b/library/CMakeLists.txt
-@@ -127,6 +127,10 @@ if(ENABLE_ZLIB_SUPPORT)
-     set(libs ${libs} ${ZLIB_LIBRARIES})
+@@ -128,7 +128,11 @@ if(ENABLE_ZLIB_SUPPORT)
  endif(ENABLE_ZLIB_SUPPORT)
  
-+if(ENABLE_PTHREADS4W)
-+    set(libs ${libs} ${PThreads4W_LIBRARY})
-+endif()
-+
  if(LINK_WITH_PTHREAD)
-     set(libs ${libs} pthread)
+-    set(libs ${libs} pthread)
++    if(WIN32)
++        set(libs ${libs} ${PThreads4W_LIBRARY})
++    else()
++        set(libs ${libs} pthread)
++    endif()
  endif()
+ 
+ if (NOT USE_STATIC_MBEDTLS_LIBRARY AND NOT USE_SHARED_MBEDTLS_LIBRARY)
