@@ -32,16 +32,13 @@ vcpkg_extract_source_archive_ex(
 # rename the pcre source code folder to pcre-8.41 which is required by chimera
 file(REMOVE_RECURSE "${CHIMERA_SOURCE_PATH}/pcre-${PCRE_VERSION}")
 file(RENAME "${PCRE_SOURCE_PATH}" "${CHIMERA_SOURCE_PATH}/pcre-${PCRE_VERSION}")
-message(STATUS "Source code copy done.")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${CHIMERA_SOURCE_PATH}
     PREFER_NINJA
 )
 
-message(STATUS "Cmake install starts ...")
 vcpkg_install_cmake()
-message(STATUS "Cmake install done.")
 
 # remove debug dir
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
