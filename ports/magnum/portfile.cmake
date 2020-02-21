@@ -1,4 +1,17 @@
 include(vcpkg_common_functions)
+
+# Patches that are independent of --head flag
+set(_PATCHES 002-tools-path.patch)
+
+# Patches that are only applied to --head builds
+if(VCPKG_USE_HEAD_VERSION)
+    list(APPEND _PATCHES 001-sdl-includes-head.patch)
+
+# Patches that are only applied to release builds
+else()
+    list(APPEND _PATCHES 001-sdl-includes.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum
@@ -6,8 +19,7 @@ vcpkg_from_github(
     SHA512 b1c991199fa9b09b780ea822de4b2251c70fcc95e7f28bb14a6184861d92fcd4c6e6fe43ad21acfbfd191cd46e79bf58b867240ad6f706b07cd1fbe145b8eaff
     HEAD_REF master
     PATCHES
-        001-sdl-includes.patch
-        002-tools-path.patch
+        ${_PATCHES}
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
