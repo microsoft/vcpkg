@@ -399,21 +399,31 @@ target_compile_definitions(libEGL
         "-DEGL_EGL_PROTOTYPES=1"
         "-DEGL_EGLEXT_PROTOTYPES"
 )
-if(BUILD_SHARED_LIBS)
-else()
-    if(WIN32)
-        target_compile_definitions(libEGL PRIVATE
+add_library(GL_VISIBILITY INTERFACE)
+if(WIN32)
+    target_compile_definitions(GL_VISIBILITY INTERFACE
                 "-DGL_API="
-                "-DGL_APICALL="
-                "-DEGLAPI="
-        )
-    else()
-        target_compile_definitions(libEGL PRIVATE
+                "-DGL_APICALL=")
+else()
+    target_compile_definitions(GL_VISIBILITY INTERFACE
                 "-DGL_API=__attribute__((visibility(\"default\")))"
-                "-DGL_APICALL=__attribute__((visibility(\"default\")))"
-                "-DEGLAPI=__attribute__((visibility(\"default\")))"
-        )
-    endif()
+                "-DGL_APICALL=__attribute__((visibility(\"default\")))")
+endif()
+target_link_libraries(libEGL PRIVATE GL_VISIBILITY)
+target_link_libraries(libGLESv2 PRIVATE GL_VISIBILITY)
+
+if(WIN32)
+    target_compile_definitions(libEGL PRIVATE
+            "-DEGLAPI="
+    )
+else()
+    target_compile_definitions(libEGL PRIVATE
+            "-DEGLAPI=__attribute__((visibility(\"default\")))"
+    )
+endif()
+
+if(NOT BUILD_SHARED_LIBS)
+    add_definitions("-DANGLE_EXPORT=" "-DANGLE_UTIL_EXPORT=" "-DEGLAPI=" "-DGL_APICALL=" "-DGL_API=")
 endif()
 
 SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
