@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VCPKG_LIBRARY_LINKAGE static)
 
 vcpkg_from_github(
@@ -17,7 +15,6 @@ vcpkg_check_features(
     FEATURES
         pthreads ENABLE_PTHREADS4W
 )
-
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
