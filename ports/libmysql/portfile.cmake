@@ -75,7 +75,8 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/bin
     ${CURRENT_PACKAGES_DIR}/docs
     ${CURRENT_PACKAGES_DIR}/debug/docs
-    ${CURRENT_PACKAGES_DIR}/lib/debug)
+    ${CURRENT_PACKAGES_DIR}/lib/debug
+    ${CURRENT_PACKAGES_DIR}/lib/plugin/debug)
 
 # remove misc files
 file(REMOVE
