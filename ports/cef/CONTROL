@@ -1,0 +1,4 @@
+Source: cef
+Version: 79.1.36
+Homepage: https://bitbucket.org/chromiumembedded/cef
+Description: Chromium Embedded Framework (CEF). A simple framework for embedding Chromium-based browsers in other applications.

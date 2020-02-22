@@ -1,0 +1,169 @@
+diff --git a/cmake/FindCEF.cmake b/cmake/FindCEF.cmake
+index cd33a7d..e0f09ef 100644
+--- a/cmake/FindCEF.cmake
++++ b/cmake/FindCEF.cmake
+@@ -8,32 +8,5 @@
+ # included with the CEF binary distribution for usage information.
+ #
+ 
+-# Find the CEF binary distribution root directory.
+-set(_CEF_ROOT "")
+-if(CEF_ROOT AND IS_DIRECTORY "${CEF_ROOT}")
+-  set(_CEF_ROOT "${CEF_ROOT}")
+-  set(_CEF_ROOT_EXPLICIT 1)
+-else()
+-  set(_ENV_CEF_ROOT "")
+-  if(DEFINED ENV{CEF_ROOT})
+-    file(TO_CMAKE_PATH "$ENV{CEF_ROOT}" _ENV_CEF_ROOT)
+-  endif()
+-  if(_ENV_CEF_ROOT AND IS_DIRECTORY "${_ENV_CEF_ROOT}")
+-    set(_CEF_ROOT "${_ENV_CEF_ROOT}")
+-    set(_CEF_ROOT_EXPLICIT 1)
+-  endif()
+-  unset(_ENV_CEF_ROOT)
+-endif()
+-
+-if(NOT DEFINED _CEF_ROOT_EXPLICIT)
+-  message(FATAL_ERROR "Must specify a CEF_ROOT value via CMake or environment variable.")
+-endif()
+-
+-if(NOT IS_DIRECTORY "${_CEF_ROOT}/cmake")
+-  message(FATAL_ERROR "No CMake bootstrap found for CEF binary distribution at: ${CEF_ROOT}.")
+-endif()
+-
+-# Execute additional cmake files from the CEF binary distribution.
+-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${_CEF_ROOT}/cmake")
+-include("cef_variables")
+-include("cef_macros")
++include(${CMAKE_CURRENT_LIST_DIR}/cef_variables.cmake)
++include(${CMAKE_CURRENT_LIST_DIR}/cef_macros.cmake)
+diff --git a/cmake/cef_macros.cmake b/cmake/cef_macros.cmake
+index 1b667e1..194420e 100644
+--- a/cmake/cef_macros.cmake
++++ b/cmake/cef_macros.cmake
+@@ -2,11 +2,6 @@
+ # reserved. Use of this source code is governed by a BSD-style license that
+ # can be found in the LICENSE file.
+ 
+-# Must be loaded via FindCEF.cmake.
+-if(NOT DEFINED _CEF_ROOT_EXPLICIT)
+-  message(FATAL_ERROR "Use find_package(CEF) to load this file.")
+-endif()
+-
+ 
+ #
+ # Shared macros.
+@@ -122,6 +117,15 @@ macro(COPY_FILES target file_list source_dir target_dir)
+         VERBATIM
+         )
+     else()
++      get_filename_component(source_file_name ${source_file} NAME)
++      if (${source_file_name} STREQUAL d3dcompiler_47.dll)
++        set(sys SysWOW64)
++        if (NOT EXISTS $ENV{SystemRoot}/${sys}/d3dcompiler_47.dll)
++          message(FATAL_ERROR "Unable to find d3dcompiler_47.dll on your system ${var}")
++        endif()
++        set(source_file $ENV{SystemRoot}/${sys}/d3dcompiler_47.dll)
++      endif()
++
+       add_custom_command(
+         TARGET ${target}
+         POST_BUILD
+@@ -282,7 +286,11 @@ macro(SET_COMMON_TARGET_PROPERTIES target)
+   target_compile_definitions(${target} PRIVATE $<$<CONFIG:Release>:${CEF_COMPILER_DEFINES_RELEASE}>)
+ 
+   # Include directories.
+-  target_include_directories(${target} PRIVATE ${CEF_INCLUDE_PATH})
++  target_include_directories(${target} PRIVATE
++    ${CEF_INCLUDE_PATH}
++    ${CEF_INCLUDE_PATH}/include
++    ${CMAKE_SOURCE_DIR}
++  )
+ 
+   # Linker flags.
+   if(CEF_LINKER_FLAGS)
+diff --git a/cmake/cef_variables.cmake b/cmake/cef_variables.cmake
+index cb3399c..f8b8b88 100644
+--- a/cmake/cef_variables.cmake
++++ b/cmake/cef_variables.cmake
+@@ -2,11 +2,6 @@
+ # reserved. Use of this source code is governed by a BSD-style license that
+ # can be found in the LICENSE file.
+ 
+-# Must be loaded via FindCEF.cmake.
+-if(NOT DEFINED _CEF_ROOT_EXPLICIT)
+-  message(FATAL_ERROR "Use find_package(CEF) to load this file.")
+-endif()
+-
+ 
+ #
+ # Shared configuration.
+@@ -50,17 +45,21 @@ if(NOT CMAKE_BUILD_TYPE AND (GEN_NINJA OR GEN_MAKEFILES))
+   message(WARNING "No CMAKE_BUILD_TYPE value selected, using ${CMAKE_BUILD_TYPE}")
+ endif()
+ 
++set(CURRENT_PACKAGES_DIR "${CMAKE_CURRENT_LIST_DIR}")
++foreach(i 1 2)
++  get_filename_component(CURRENT_PACKAGES_DIR ${CURRENT_PACKAGES_DIR} DIRECTORY)
++endforeach()
+ 
+ # Path to the include directory.
+-set(CEF_INCLUDE_PATH "${_CEF_ROOT}")
++set(CEF_INCLUDE_PATH "${CURRENT_PACKAGES_DIR}")
+ 
+ # Path to the libcef_dll_wrapper target.
+-set(CEF_LIBCEF_DLL_WRAPPER_PATH "${_CEF_ROOT}/libcef_dll")
++set(CEF_LIBCEF_DLL_WRAPPER_PATH "${CURRENT_PACKAGES_DIR}/share/cef/libcef_dll")
+ 
+ 
+ # Shared compiler/linker flags.
+ list(APPEND CEF_COMPILER_DEFINES
+-  # Allow C++ programs to use stdint.h macros specified in the C99 standard that aren't 
++  # Allow C++ programs to use stdint.h macros specified in the C99 standard that aren't
+   # in the C++ standard (e.g. UINT8_MAX, INT64_MIN, etc)
+   __STDC_CONSTANT_MACROS __STDC_FORMAT_MACROS
+   )
+@@ -203,10 +202,15 @@ if(OS_LINUX)
+     )
+ 
+   # CEF directory paths.
+-  set(CEF_RESOURCE_DIR        "${_CEF_ROOT}/Resources")
+-  set(CEF_BINARY_DIR          "${_CEF_ROOT}/${CMAKE_BUILD_TYPE}")
+-  set(CEF_BINARY_DIR_DEBUG    "${_CEF_ROOT}/Debug")
+-  set(CEF_BINARY_DIR_RELEASE  "${_CEF_ROOT}/Release")
++  set(CEF_RESOURCE_DIR        "${CURRENT_PACKAGES_DIR}/share/cef/Resources")
++  set(CEF_BINARY_DIR_DEBUG    "${CURRENT_PACKAGES_DIR}/debug/bin/cef")
++  set(CEF_BINARY_DIR_RELEASE  "${CURRENT_PACKAGES_DIR}/bin/cef")
++
++  if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
++    set(CEF_BINARY_DIR ${CEF_BINARY_DIR_DEBUG})
++  elseif (${CMAKE_BUILD_TYPE} STREQUAL "Release")
++    set(CEF_BINARY_DIR ${CEF_BINARY_DIR_RELEASE})
++  endif()
+ 
+   # CEF library paths.
+   set(CEF_LIB_DEBUG   "${CEF_BINARY_DIR_DEBUG}/libcef.so")
+@@ -340,6 +344,8 @@ if(OS_MACOSX)
+   set(CEF_BINARY_DIR_DEBUG    "${_CEF_ROOT}/Debug")
+   set(CEF_BINARY_DIR_RELEASE  "${_CEF_ROOT}/Release")
+ 
++  message(FATAL_ERROR "Not supported")
++
+   if(USE_SANDBOX)
+     list(APPEND CEF_COMPILER_DEFINES
+       CEF_USE_SANDBOX   # Used by apps to test if the sandbox is enabled
+@@ -465,10 +471,10 @@ if(OS_WINDOWS)
+     )
+ 
+   # CEF directory paths.
+-  set(CEF_RESOURCE_DIR        "${_CEF_ROOT}/Resources")
+-  set(CEF_BINARY_DIR          "${_CEF_ROOT}/$<CONFIGURATION>")
+-  set(CEF_BINARY_DIR_DEBUG    "${_CEF_ROOT}/Debug")
+-  set(CEF_BINARY_DIR_RELEASE  "${_CEF_ROOT}/Release")
++  set(CEF_RESOURCE_DIR        "${CURRENT_PACKAGES_DIR}/share/cef/Resources")
++  set(CEF_BINARY_DIR_DEBUG    "${CURRENT_PACKAGES_DIR}/debug/bin/cef")
++  set(CEF_BINARY_DIR_RELEASE  "${CURRENT_PACKAGES_DIR}/bin/cef")
++  set(CEF_BINARY_DIR          "${CURRENT_PACKAGES_DIR}/$<$<CONFIG:Debug>:debug/>bin/cef")
+ 
+   # CEF library paths.
+   set(CEF_LIB_DEBUG   "${CEF_BINARY_DIR_DEBUG}/libcef.lib")

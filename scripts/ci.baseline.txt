@@ -7,10 +7,10 @@
 ##   fail - the port does not build in the CI system.
 ##          This is not necessarily the same as if a port is expected to build
 ##          on a developers machine because it may fail due to the machine
-##          configuration.  When set to fail the CI system will still attempt 
+##          configuration.  When set to fail the CI system will still attempt
 ##          to build the port and will report a CI failure until this file is updated.
 ##   skip - Do not build this port in the CI system.
-##          This is added to ports that may be flaky or conflict with other 
+##          This is added to ports that may be flaky or conflict with other
 ##          ports.  Please comment for why a port is skipped so it can be
 ##          removed when the issue is resolved.
 ##   ignore - attempt to build the port, but do not fail the CI test if the
@@ -27,7 +27,7 @@
 ##    x64-windows
 ##    x64-windows-static
 ##    x86-windows
-##   
+##
 
 
 # Add new items alphabetically
@@ -217,6 +217,13 @@ catch-classic:x64-windows-static = skip
 catch-classic:x86-windows        = skip
 ccd:arm-uwp=fail
 ccd:x64-uwp=fail
+cef:arm-uwp=fail
+cef:arm64-windows=fail
+cef:x64-uwp=fail
+cef:x64-windows=fail
+cef:x64-windows-static=fail
+cef:x64-linux=fail
+cef:x64-osx=fail
 cello:arm-uwp=fail
 cello:x64-uwp=fail
 cfitsio:arm-uwp=fail
@@ -1543,7 +1550,7 @@ rpclib:x86-windows=ignore
 rpclib:x64-windows-static=ignore
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
-rxspencer:x64-uwp=fail  
+rxspencer:x64-uwp=fail
 rxspencer:arm-uwp=fail
 scintilla:arm-uwp=fail
 scintilla:x64-linux=fail

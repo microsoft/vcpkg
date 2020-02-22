@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cc82aa5..f228ddc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -702,7 +702,7 @@ set(LIBCEF_WRAPPER_SRCS_MACOSX
+ LIBCEF_APPEND_PLATFORM_SOURCES(LIBCEF_WRAPPER_SRCS)
+ source_group(libcef_dll\\\\wrapper FILES ${LIBCEF_WRAPPER_SRCS})
+ 
+-add_library(${CEF_TARGET}
++add_library(${CEF_TARGET} STATIC
+   ${LIBCEF_SRCS}
+   ${LIBCEF_BASE_SRCS}
+   ${LIBCEF_CPPTOC_SRCS}
