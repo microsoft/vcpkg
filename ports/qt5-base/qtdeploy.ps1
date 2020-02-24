@@ -44,10 +44,10 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
         deployPlugins "styles"
     } elseif ($targetBinaryName -match "Qt5Networkd?.dll") {
         deployPlugins "bearer"
-        if (Test-Path "$binDir\libeay32.dll")
+        if (Test-Path "$binDir\libcrypto-1_1.dll")
         {
-            deployBinary "$targetBinaryDir" "$binDir" "libeay32.dll"
-            deployBinary "$targetBinaryDir" "$binDir" "ssleay32.dll"
+            deployBinary "$targetBinaryDir" "$binDir" "libcrypto-1_1.dll"
+            deployBinary "$targetBinaryDir" "$binDir" "libssl-1_1.dll"
         }
     } elseif ($targetBinaryName -match "Qt5Sqld?.dll") {
         deployPlugins "sqldrivers"
@@ -69,7 +69,7 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
             }
         }
     } elseif ($targetBinaryName -match "Qt5Quickd?.dll") {
-        foreach ($a in @("Qt5QuickControls2", "Qt5QuickControls2d", "Qt5QuickTemplates2", "Qt5QuickTemplates2d"))
+        foreach ($a in @("Qt5QuickControls2", "Qt5QuickControls2d", "Qt5QuickShapes", "Qt5QuickShapesd", "Qt5QuickTemplates2", "Qt5QuickTemplates2d"))
         {
             if (Test-Path "$binDir\$a.dll")
             {

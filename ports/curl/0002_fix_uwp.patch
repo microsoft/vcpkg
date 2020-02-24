@@ -56,19 +56,6 @@ index e7060eb..9cd76f7 100644
  #endif
      tw = ((curl_off_t)time(NULL) + CURL_OFF_T_C(11644473600)) * 10000000;
  
-diff --git a/lib/ftp.c b/lib/ftp.c
-index 825aaaa..3b96670 100644
---- a/lib/ftp.c
-+++ b/lib/ftp.c
-@@ -4262,7 +4262,7 @@ CURLcode ftp_parse_url_path(struct connectdata *conn)
-     /* prevpath is "raw" so we convert the input path before we compare the
-        strings */
-     size_t dlen;
--    char *path;
-+    char *path = NULL;
-     CURLcode result =
-       Curl_urldecode(conn->data, ftp->path, 0, &path, &dlen, TRUE);
-     if(result) {
 diff --git a/lib/rand.c b/lib/rand.c
 index 6ee45fe..b2d712d 100644
 --- a/lib/rand.c
