@@ -1,15 +1,13 @@
-include(vcpkg_common_functions)
-
 # Patches that are independent of --head flag
-set(_PATCHES 002-tools-path.patch)
+set(_PATCHES 001-tools-path.patch)
 
 # Patches that are only applied to --head builds
 if(VCPKG_USE_HEAD_VERSION)
-    list(APPEND _PATCHES 001-sdl-includes-head.patch)
+    list(APPEND _PATCHES 002-sdl-includes-head.patch)
 
 # Patches that are only applied to release builds
 else()
-    list(APPEND _PATCHES 001-sdl-includes.patch)
+    list(APPEND _PATCHES 002-sdl-includes.patch)
 endif()
 
 vcpkg_from_github(
