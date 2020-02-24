@@ -5,7 +5,9 @@ vcpkg_from_github(
     REF 99d422877c5b5ea52006c13ee3b48297251b2b2d # debian/1.16.1-1
     SHA512 e2f129439ff3697981774e0de35586a6afe98838acfc52d8a115bcb298350f2779b886dc6b27130e78b3b81f9b0a85b2bc6bcef246f9685c05f6789747c4739d
     HEAD_REF master
-    PATCHES fix-dependency-libbson.patch
+    PATCHES
+        fix-dependency-libbson.patch
+        disable-static-when-dynamic-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
