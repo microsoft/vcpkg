@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(HYPERSCAN_VERSION 5.1.0)
@@ -13,11 +11,8 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(PREPEND ${PYTHON_PATH})
-vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/bin)
-vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/debug/bin)
-vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
+vcpkg_add_to_path(${PYTHON3_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -26,5 +21,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

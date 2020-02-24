@@ -10,7 +10,7 @@
 namespace vcpkg
 {
     PackageSpec Input::check_and_get_package_spec(std::string&& spec_string,
-                                                  const Triplet& default_triplet,
+                                                  Triplet default_triplet,
                                                   CStringView example_text)
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(std::move(spec_string));
@@ -21,12 +21,12 @@ namespace vcpkg
         }
 
         // Intentionally show the lowercased string
-        System::print2(System::Color::error, "Error: ", expected_spec.error(), ": ", as_lowercase, '\n');
+        System::print2(System::Color::error, expected_spec.error());
         System::print2(example_text);
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    void Input::check_triplet(const Triplet& t, const VcpkgPaths& paths)
+    void Input::check_triplet(Triplet t, const VcpkgPaths& paths)
     {
         if (!paths.is_valid_triplet(t))
         {
@@ -38,7 +38,7 @@ namespace vcpkg
     }
 
     FullPackageSpec Input::check_and_get_full_package_spec(std::string&& full_package_spec_as_string,
-                                                           const Triplet& default_triplet,
+                                                           Triplet default_triplet,
                                                            CStringView example_text)
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(std::move(full_package_spec_as_string));
@@ -49,7 +49,7 @@ namespace vcpkg
         }
 
         // Intentionally show the lowercased string
-        System::print2(System::Color::error, "Error: ", expected_spec.error(), ": ", as_lowercase, '\n');
+        System::print2(System::Color::error, expected_spec.error());
         System::print2(example_text);
         Checks::exit_fail(VCPKG_LINE_INFO);
     }

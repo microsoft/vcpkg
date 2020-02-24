@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 6.2.1
-    SHA512 43f0356a1f4df871e09a738fb8ac386c0fbe543b35c3c1b9c9685469ca7a2a540427edb9b17d4c010c06a4818d17d0421dfcdca9af9d091854da71690fddfbf3
+    REF 6.3.0
+    SHA512 603256c27fb73b82e9af245ad09b46e6bc6e1934cb6375bf476f8b63177e933fb210b932b6890c425722c509189a0323755e311466f226d64694013c6c4a52de
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
         disable-export-namespace.patch
-        disable-export-for-static-lib.patch
         disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
         fix-sqlite-dependency-export.patch
@@ -23,22 +22,19 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     database BUILD_PROJ_DATABASE
 )
-
 if ("database" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         set(BIN_SUFFIX .exe)
-        if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3.exe)
-                message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x86-windows first.")
-            endif()
+        if (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3.exe)
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools)
-        elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic))
-            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3.exe)
-                message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x64-windows first.")
-            endif()
+        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows-static/tools/sqlite3.exe)
+            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows-static/tools)
+        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3.exe AND (NOT CMAKE_HOST_SYSTEM_PROCESSOR OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64"))
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows/tools)
+        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools/sqlite3.exe AND (NOT CMAKE_HOST_SYSTEM_PROCESSOR OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64"))
+            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools)
         else()
-            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/tools)
+            message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x86-windows first.")
         endif()
     else()
         set(BIN_SUFFIX)

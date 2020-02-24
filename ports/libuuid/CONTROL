@@ -1,3 +1,4 @@
 Source: libuuid
 Version: 1.0.3-4
 Description: Universally unique id library
+Supports: linux|osx

@@ -12,6 +12,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH 
     ARCHIVE ${ARCHIVE}
     REF ${VERSION}
+    PATCHES
+        001-lrint-arm64.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

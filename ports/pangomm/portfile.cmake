@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/pangomm/2.40/pangomm-2.40.1.tar.xz"
@@ -62,4 +62,4 @@ file(
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pangomm RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

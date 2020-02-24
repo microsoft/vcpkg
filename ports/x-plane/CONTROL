@@ -2,3 +2,4 @@ Source: x-plane
 Version: 3.0.1-2
 Homepage: https://developer.x-plane.com
 Description: The X-Plane Plugin SDK.
+Supports: !x86
