@@ -1,3 +1,4 @@
+vcpkg_fail_port_install(ON_TARGET "Windows")
 
 set(CHIMERA_VERSION "5.2.1")
 set(PCRE_VERSION "8.41")
