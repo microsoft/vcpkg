@@ -83,7 +83,7 @@ index 1b667e1..194420e 100644
    # Linker flags.
    if(CEF_LINKER_FLAGS)
 diff --git a/cmake/cef_variables.cmake b/cmake/cef_variables.cmake
-index cb3399c..f8b8b88 100644
+index cb3399c..d54d6f8 100644
 --- a/cmake/cef_variables.cmake
 +++ b/cmake/cef_variables.cmake
 @@ -2,11 +2,6 @@
@@ -152,7 +152,7 @@ index cb3399c..f8b8b88 100644
    if(USE_SANDBOX)
      list(APPEND CEF_COMPILER_DEFINES
        CEF_USE_SANDBOX   # Used by apps to test if the sandbox is enabled
-@@ -465,10 +471,10 @@ if(OS_WINDOWS)
+@@ -465,14 +471,14 @@ if(OS_WINDOWS)
      )
  
    # CEF directory paths.
@@ -166,4 +166,21 @@ index cb3399c..f8b8b88 100644
 +  set(CEF_BINARY_DIR          "${CURRENT_PACKAGES_DIR}/$<$<CONFIG:Debug>:debug/>bin/cef")
  
    # CEF library paths.
-   set(CEF_LIB_DEBUG   "${CEF_BINARY_DIR_DEBUG}/libcef.lib")
+-  set(CEF_LIB_DEBUG   "${CEF_BINARY_DIR_DEBUG}/libcef.lib")
+-  set(CEF_LIB_RELEASE "${CEF_BINARY_DIR_RELEASE}/libcef.lib")
++  set(CEF_LIB_DEBUG   "${CURRENT_PACKAGES_DIR}/debug/lib/cef/libcef.lib")
++  set(CEF_LIB_RELEASE "${CURRENT_PACKAGES_DIR}/lib/cef/libcef.lib")
+ 
+   # List of CEF binary files.
+   set(CEF_BINARY_FILES
+@@ -518,8 +524,8 @@ if(OS_WINDOWS)
+       )
+ 
+     # CEF sandbox library paths.
+-    set(CEF_SANDBOX_LIB_DEBUG "${CEF_BINARY_DIR_DEBUG}/cef_sandbox.lib")
+-    set(CEF_SANDBOX_LIB_RELEASE "${CEF_BINARY_DIR_RELEASE}/cef_sandbox.lib")
++    set(CEF_SANDBOX_LIB_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/cef/cef_sandbox.lib")
++    set(CEF_SANDBOX_LIB_RELEASE "${CURRENT_PACKAGES_DIR}/lib/cef/cef_sandbox.lib")
+   endif()
+ 
+   # Configure use of ATL.

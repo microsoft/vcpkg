@@ -82,6 +82,12 @@ file(INSTALL ${CEF_PATH}/Resources DESTINATION ${CURRENT_PACKAGES_DIR}/share/${P
 file(INSTALL ${CEF_PATH}/Release DESTINATION ${CURRENT_PACKAGES_DIR}/bin RENAME ${PORT})
 file(INSTALL ${CEF_PATH}/Debug DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin RENAME ${PORT})
 
+foreach(cfg_prefix "" "/debug")
+    file(GLOB libs ${CURRENT_PACKAGES_DIR}${cfg_prefix}/bin/${PORT}/*.lib)
+    file(INSTALL ${libs} DESTINATION ${CURRENT_PACKAGES_DIR}${cfg_prefix}/lib)
+    file(REMOVE ${libs})
+endforeach()
+
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/libcef_dll DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${CEF_PATH}/libcef_dll DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(GLOB_RECURSE cc
