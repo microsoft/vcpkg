@@ -6,11 +6,11 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-set(GLIB_VERSION 2.52.3)
+set(GLIB_VERSION 2.57.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
+    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.57/glib-${GLIB_VERSION}.tar.xz"
     FILENAME "glib-${GLIB_VERSION}.tar.xz"
-    SHA512 a068f2519cfb82de8d4b7f004e7c1f15e841cad4046430a83b02b359d011e0c4077cdff447a1687ed7c68f1a11b4cf66b9ed9fc23ab5f0c7c6be84eb0ddc3017)
+    SHA512 fad52b079731338d2a573c460750cdbc757e249f5276f57a4cb5e1833e65e3fc353da78c3253db820a69af2e1444f6d32874d862580e199570a64965401388b1)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -18,8 +18,8 @@ vcpkg_extract_source_archive_ex(
     REF ${GLIB_VERSION}
     PATCHES
         use-libiconv-on-windows.patch
-        arm64-defines.patch
-        fix-arm-builds.patch
+        #arm64-defines.patch
+        #fix-arm-builds.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

@@ -230,7 +230,7 @@ if(NOT WIN32)
     list(APPEND GIO_SOURCES
         "gio/gcontenttype.c"
         "gio/gfiledescriptorbased.c"
-	#"gio/gnetworkmonitornm.c"
+	    "gio/gnetworkmonitornm.c"
         "gio/xdp-dbus.c"
     )
     list(FILTER GIO_SOURCES EXCLUDE REGEX "/gwin32[^/]+\$|win32/[^/]+\$|win32.c\$|gregistrysettingsbackend.c\$")
