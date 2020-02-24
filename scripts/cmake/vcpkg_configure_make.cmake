@@ -230,8 +230,11 @@ function(vcpkg_configure_make)
         else()
             message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
         endif()
-
-        set(COMPILER_CC "CC='cl.exe -nologo' LD='link.exe -verbose' NM='dumpbin.exe -symbols' DLLTOOL='link.exe -verbose -dll' AR='ar_lib_wrapper' AR_FLAGS='--verbose /VERBOSE' RANLIB='echo' ")
+        
+        set(ENV{V} "1")
+        #set(ENV{CPP} "cl_cp_wrapper")
+        #set(ENV{RAWCPP} "cl_cp_wrapper")
+        set(COMPILER_CC "CC='cl.exe -nologo' CPP='cl_cpp_wrapper' LD='link.exe -verbose' NM='dumpbin.exe -symbols' DLLTOOL='link.exe -verbose -dll' AR='ar_lib_wrapper' AR_FLAGS='--verbose /VERBOSE' RANLIB='echo' ")
 
         string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")

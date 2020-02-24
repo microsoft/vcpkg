@@ -3,6 +3,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # this patch is not 100% correct since xcb and xcb-xkb can be build dynamically in a custom triplet
     # However, VCPKG currently is limited by the possibilities of meson and they have to fix their lib dependency detection
 endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Meson is not able to automatically export symbols for DLLs
+endif()
 # Get source code:
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

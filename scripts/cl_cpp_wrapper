@@ -1,0 +1,83 @@
+#!/bin/bash
+# cl_cpp_wrapper
+# Wrapper around MS's cl.exe to make it act more like Unix cpp
+case $MACHTYPE in
+    *-msys)
+        slash="-"
+        ;;
+    *)
+        slash="/"
+        ;;
+esac
+
+# prog specifies the program that should be run cl.exe
+prog=cl.exe
+debug=
+libopt=("${slash}nologo")
+libopt+=("${slash}E")
+verbose=
+shared_index=-1
+
+processargs()
+{
+### Run through every option and convert it to the proper MS one
+while test $# -gt 0; do
+    case "$1" in
+    -D*) optarg= ;;
+    -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+    *) optarg= ;;
+    esac
+    gotparam=1
+    case "$1" in
+    --help)
+        usage
+        exit 0
+        ;;
+    --verbose)
+        verbose=1
+        ;;
+    -*)
+        # Remaining '-' options are passed to the compiler
+        if test x$optarg != x ; then
+            libopt+=("${slash}${1:1}=$optarg")
+        else
+            libopt+=("${slash}${1:1}")
+        fi
+        ;;
+
+    /*)
+        # All '/' options are assumed to be for lib and are passed through
+        libopt+=("${slash}${1:1}")
+        ;;
+
+    *)
+        file=${1:--}
+        libopt+=("$1")
+        ;;
+
+    esac
+    shift
+done
+}
+
+# Whitespace in paths is dealt with by setting IFS and using bash arrays
+
+IFS=""
+processargs $@
+
+if test x$V = x1 ; then
+    verbose=1
+fi
+
+if test -n "$verbose" ; then
+  echo -n "$prog"
+  for opt in "${libopt[@]}" ; do
+    echo -n " \"$opt\""
+  done
+  echo ""
+fi
+realfile=${file:-/dev/stdin}
+cp $realfile  cpptmp.h
+exec $prog ${libopt[@]} cpptmp.h
+rm -f cpptmp.h
+ 
