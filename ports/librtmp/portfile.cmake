@@ -5,6 +5,9 @@ vcpkg_from_git(
     URL https://git.ffmpeg.org/rtmpdump
     REF ${RTMPDUMP_REVISION}
     PATCHES
+        dh.patch                #Openssl 1.1.1 patch
+        handshake.patch         #Openssl 1.1.1 patch
+        hashswf.patch           #Openssl 1.1.1 patch
         fix_strncasecmp.patch
         hide_netstackdump.patch
 )

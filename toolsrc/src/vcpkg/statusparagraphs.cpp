@@ -11,8 +11,7 @@ namespace vcpkg
     {
     }
 
-    std::vector<std::unique_ptr<StatusParagraph>*> StatusParagraphs::find_all(const std::string& name,
-                                                                              const Triplet& triplet)
+    std::vector<std::unique_ptr<StatusParagraph>*> StatusParagraphs::find_all(const std::string& name, Triplet triplet)
     {
         std::vector<std::unique_ptr<StatusParagraph>*> spghs;
         for (auto&& p : *this)
@@ -46,13 +45,13 @@ namespace vcpkg
             }
         }
         if (ipv.core != nullptr)
-            return std::move(ipv);
+            return ipv;
         else
             return nullopt;
     }
 
     StatusParagraphs::iterator StatusParagraphs::find(const std::string& name,
-                                                      const Triplet& triplet,
+                                                      Triplet triplet,
                                                       const std::string& feature)
     {
         if (feature == "core")
@@ -67,7 +66,7 @@ namespace vcpkg
     }
 
     StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name,
-                                                            const Triplet& triplet,
+                                                            Triplet triplet,
                                                             const std::string& feature) const
     {
         if (feature == "core")

@@ -1,5 +1,5 @@
 Source: proj4
-Version: 6.2.1-1
+Version: 6.3.0-1
 Homepage: https://github.com/OSGeo/PROJ
 Description: PROJ.4 library for cartographic projections
 Build-Depends: sqlite3[core]

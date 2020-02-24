@@ -1,9 +1,9 @@
-set(OTL_VERSION 40448)
+set(OTL_VERSION 40451)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://otl.sourceforge.net/otlv4_${OTL_VERSION}.zip"
-    FILENAME "otl-v${OTL_VERSION}.zip"
-    SHA512 285bf8bb0fa38ab3030af09a2939fd8e2eaadd14e65d05c6e18f4bc12070ba4e112c41e2d38c546338d51bdf09748b158b1799599f5ed9a7959a7799869b1305
+    FILENAME "otlv4_${OTL_VERSION}.zip"
+    SHA512 add1e54fae20175461d5f09cbe324e98b6f6a3839356136811109cf3251ca96541c101816870c6cc15d7611ad6bf9d576ac8dfce4274419b30866955c5892d15
 )
 
 vcpkg_extract_source_archive_ex(
@@ -13,9 +13,9 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(INSTALL "${SOURCE_PATH}/otlv${OTL_VERSION}.h" 
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/otl" 
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}" 
     RENAME otlv4.h)
 
 file(INSTALL "${SOURCE_PATH}/otlv${OTL_VERSION}.h" 
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/otl" 
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" 
     RENAME copyright)
