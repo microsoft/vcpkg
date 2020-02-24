@@ -223,7 +223,7 @@ namespace vcpkg::Commands::CI
         std::map<PackageSpec, std::string> abi_tag_map;
     };
 
-    static bool supported_for_triplet(const CMakeVars::TripletCMakeVarProvider& var_provider,
+    static bool supported_for_triplet(const CMakeVars::CMakeVarProvider& var_provider,
                                       const InstallPlanAction* install_plan)
     {
         auto&& scfl = install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
@@ -253,7 +253,7 @@ namespace vcpkg::Commands::CI
         const VcpkgPaths& paths,
         const std::set<std::string>& exclusions,
         const PortFileProvider::PortFileProvider& provider,
-        const CMakeVars::TripletCMakeVarProvider& var_provider,
+        const CMakeVars::CMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
         const bool purge_tombstones)
     {
@@ -449,7 +449,8 @@ namespace vcpkg::Commands::CI
         StatusParagraphs status_db = database_load_check(paths);
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        CMakeVars::TripletCMakeVarProvider var_provider(paths);
+        auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
+        auto& var_provider = *var_provider_storage;
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
