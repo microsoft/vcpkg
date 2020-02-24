@@ -1,7 +1,5 @@
 # libgit2 uses winapi functions not available in WindowsStore
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are not supported.")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
