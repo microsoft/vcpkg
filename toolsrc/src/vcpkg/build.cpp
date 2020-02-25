@@ -43,7 +43,8 @@ namespace vcpkg::Build::Command
     {
         vcpkg::Util::unused(options);
 
-        CMakeVars::TripletCMakeVarProvider var_provider(paths);
+        auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
+        auto& var_provider = *var_provider_storage;
         var_provider.load_dep_info_vars(std::array<PackageSpec, 1>{full_spec.package_spec});
         var_provider.load_tag_vars(std::array<FullPackageSpec, 1>{full_spec}, provider);
 
