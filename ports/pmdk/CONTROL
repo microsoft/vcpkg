@@ -1,4 +1,5 @@
 Source: pmdk
-Version: 1.7
+Version: 1.7-1
 Homepage: https://github.com/pmem/pmdk
 Description: Persistent Memory Development Kit
+Supports: !(arm|x86)

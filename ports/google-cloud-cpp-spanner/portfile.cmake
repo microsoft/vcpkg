@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp-spanner
-    REF v0.3.0
-    SHA512 8148a78b83770d38d4ad9ce3c4e7229920b731c2150214bdd0e89a94d1d0d618322f36cb7e8cd0cb0281ee3dae328b87cac5ccd25cb36bef5762cc5c93921616
+    REF v0.7.0
+    SHA512 f3fea6ebe3431102c23737822d17e90d4d301f5854ec17834ee379013c92b1997ff10421ee5f82e35b651cd930dbb8d73e9aad50b754b3fe1395257fa4199dfb
     HEAD_REF master
 )
 
@@ -26,6 +24,6 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/share)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/google-cloud-cpp-spanner RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

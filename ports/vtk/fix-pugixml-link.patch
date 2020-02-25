@@ -10,5 +10,5 @@ index ce979ba..322e2de 100644
 -  get_target_property(pugixml_LIBRARIES pugixml LOCATION)
 -  include_directories(${pugixml_INCLUDE_DIRS})
 -  vtk_module_link_libraries(vtkIOCityGML LINK_PRIVATE ${pugixml_LIBRARIES})
-+  vtk_module_link_libraries(vtkIOCityGML LINK_PRIVATE pugixml)
++  vtk_module_link_libraries(vtkIOCityGML LINK_PUBLIC pugixml)
  endif()
