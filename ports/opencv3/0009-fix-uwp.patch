@@ -1,0 +1,67 @@
+diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
+index c2fda8f..3f7dfdc 100644
+--- a/cmake/OpenCVModule.cmake
++++ b/cmake/OpenCVModule.cmake
+@@ -850,7 +850,7 @@ macro(ocv_create_module)
+     set(the_module_target ${the_module})
+   endif()
+ 
+-  if(WINRT)
++  if(WINRT AND BUILD_TESTS)
+     # removing APPCONTAINER from modules to run from console
+     # in case of usual starting of WinRT test apps output is missing
+     # so starting of console version w/o APPCONTAINER is required to get test results
+diff --git a/modules/core/src/utils/datafile.cpp b/modules/core/src/utils/datafile.cpp
+index f1107b0..c613ca2 100644
+--- a/modules/core/src/utils/datafile.cpp
++++ b/modules/core/src/utils/datafile.cpp
+@@ -108,7 +108,7 @@ static cv::String getModuleLocation(const void* addr)
+     CV_UNUSED(addr);
+ #ifdef _WIN32
+     HMODULE m = 0;
+-#if _WIN32_WINNT >= 0x0501
++#if (_WIN32_WINNT >= 0x0501) && (!WINRT_STORE)
+     ::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+         reinterpret_cast<LPCTSTR>(addr),
+         &m);
+diff --git a/modules/highgui/include/opencv2/highgui/highgui_winrt.hpp b/modules/highgui/include/opencv2/highgui/highgui_winrt.hpp
+index f4147f3..b92efdd 100644
+--- a/modules/highgui/include/opencv2/highgui/highgui_winrt.hpp
++++ b/modules/highgui/include/opencv2/highgui/highgui_winrt.hpp
+@@ -24,6 +24,7 @@
+ // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ // POSSIBILITY OF SUCH DAMAGE.
+ 
++#include "opencv2/core/cvdef.h"
+ using namespace Windows::UI::Xaml::Controls;
+ 
+ namespace cv
+diff --git a/modules/highgui/src/window_winrt_bridge.hpp b/modules/highgui/src/window_winrt_bridge.hpp
+index 25f4aef..5429f0b 100644
+--- a/modules/highgui/src/window_winrt_bridge.hpp
++++ b/modules/highgui/src/window_winrt_bridge.hpp
+@@ -28,6 +28,7 @@
+ 
+ #include <map>
+ #include <opencv2\core.hpp>
++#include "opencv2/highgui/highgui_c.h"
+ 
+ using namespace Windows::UI::Xaml::Controls;
+ 
+diff --git a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
+index 236e227..e2417dc 100644
+--- a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
++++ b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
+@@ -94,10 +94,10 @@ Media::CaptureFrameGrabber::~CaptureFrameGrabber()
+ 
+ void Media::CaptureFrameGrabber::ShowCameraSettings()
+ {
+-#if WINAPI_FAMILY!=WINAPI_FAMILY_PHONE_APP
++#if (WINAPI_FAMILY!=WINAPI_FAMILY_PHONE_APP) && (WINAPI_FAMILY!=WINAPI_FAMILY_APP)
+     if (_state == State::Started)
+     {
+-        CameraOptionsUI::Show(_capture.Get());
++        CameraOptionsUI::Show(_capture.Get()); // TODO: Turn it on again in UWP mode by adding reference to UWP Desktop Extensions
+     }
+ #endif
+ }

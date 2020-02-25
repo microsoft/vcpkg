@@ -1,4 +1,4 @@
 Source: xeus
-Version: 2019-02-13-1
+Version: 0.20.0-1
 Description: C++ implementation of the Jupyter kernel protocol
-Build-Depends: cppzmq, cryptopp, libuuid (linux), nlohmann-json, xtl, zeromq
+Build-Depends: cppzmq, libuuid (linux), nlohmann-json, openssl, xtl, zeromq

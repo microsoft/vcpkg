@@ -12,6 +12,11 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(CAIRO_LIB_SUFFIX d)
 endif()
 
+if (WIN32)
+  # Set utf-8 charset to avoid compile error C2001
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+endif()
+
 # find dependencies
 # glib
 find_path(GLIB_INCLUDE_DIR glib.h)

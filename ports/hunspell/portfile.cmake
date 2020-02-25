@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hunspell/hunspell
-    REF v1.6.1
-    SHA512 39b096ec1f5226f13eaf241647fc9b49a6dad04945ae0bcdc61ba845d66d67d64a72ba4287b6f376b5ad053b5d0e1d42a42415c30521c50693f0544718029458
+    REF v1.7.0
+    SHA512 8149b2e8b703a0610c9ca5160c2dfad3cf3b85b16b3f0f5cfcb7ebb802473b2d499e8e2d0a637a97a37a24d62424e82d3880809210d3f043fa17a4970d47c903
     HEAD_REF master
     PATCHES 0001_fix_unistd.patch
 )

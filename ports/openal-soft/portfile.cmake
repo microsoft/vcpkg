@@ -1,17 +1,14 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
-    REF openal-soft-1.19.1
-    SHA512 4a64cc90ddeaa3773610b0bc8023d231100f3396f3fc5bd079db81600f80a789c75e6af03391bfc78a903c96bb71f8052a9ae802ea81422028e5b12b7eb6c47b
+    REF f5e0eef34db3a3ab94b61a2f99f84f078ba947e7 # openal-soft-1.20.1
+    SHA512 3b05e67406e594215bc5a5e684feafa05ae3b6c898f5b91ab923c59688d7bc4f37f7a9f3bbc8ae252f8997d2588dc2766f44866eb095f0f53cb42030596d26a5
     HEAD_REF master
     PATCHES
         dont-export-symbols-in-static-build.patch
-        cmake-3-11.patch
+        fix-arm-builds.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -20,17 +17,18 @@ else()
     set(OPENAL_LIBTYPE "STATIC")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_LINUX)
     set(ALSOFT_REQUIRE_WINDOWS OFF)
     set(ALSOFT_REQUIRE_LINUX ON)
-else()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
     set(ALSOFT_REQUIRE_WINDOWS ON)
     set(ALSOFT_REQUIRE_LINUX OFF)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DLIBTYPE=${OPENAL_LIBTYPE}
         -DALSOFT_UTILS=OFF
@@ -54,6 +52,7 @@ vcpkg_configure_cmake(
         -DALSOFT_REQUIRE_WINMM=${ALSOFT_REQUIRE_WINDOWS}
         -DALSOFT_REQUIRE_DSOUND=${ALSOFT_REQUIRE_WINDOWS}
         -DALSOFT_REQUIRE_MMDEVAPI=${ALSOFT_REQUIRE_WINDOWS}
+        -DALSOFT_CPUEXT_NEON=OFF
 )
 
 vcpkg_install_cmake()
@@ -69,9 +68,7 @@ foreach(HEADER al.h alc.h)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/AL/${HEADER} "${AL_H}")
 endforeach()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/openal-soft)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/openal-soft/COPYING ${CURRENT_PACKAGES_DIR}/share/openal-soft/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
 vcpkg_copy_pdbs()

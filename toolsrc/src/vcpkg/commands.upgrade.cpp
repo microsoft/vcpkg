@@ -10,6 +10,7 @@
 #include <vcpkg/update.h>
 #include <vcpkg/vcpkglib.h>
 
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
 namespace vcpkg::Commands::Upgrade
@@ -33,7 +34,7 @@ namespace vcpkg::Commands::Upgrade
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -42,12 +43,14 @@ namespace vcpkg::Commands::Upgrade
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        Dependencies::PathsPortFileProvider provider(paths);
-        Dependencies::PackageGraph graph(provider, status_db);
+        // Load ports from ports dirs
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
+        auto& var_provider = *var_provider_storage;
 
         // input sanitization
         const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_package_spec(arg, default_triplet, COMMAND_STRUCTURE.example_text);
+            return Input::check_and_get_package_spec(std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
         });
 
         for (auto&& spec : specs)
@@ -55,6 +58,7 @@ namespace vcpkg::Commands::Upgrade
             Input::check_triplet(spec.triplet(), paths);
         }
 
+        Dependencies::ActionPlan action_plan;
         if (specs.empty())
         {
             // If no packages specified, upgrade all outdated packages.
@@ -62,12 +66,15 @@ namespace vcpkg::Commands::Upgrade
 
             if (outdated_packages.empty())
             {
-                System::println("All installed packages are up-to-date with the local portfiles.");
+                System::print2("All installed packages are up-to-date with the local portfiles.\n");
                 Checks::exit_success(VCPKG_LINE_INFO);
             }
 
-            for (auto&& outdated_package : outdated_packages)
-                graph.upgrade(outdated_package.spec);
+            action_plan = Dependencies::create_upgrade_plan(
+                provider,
+                var_provider,
+                Util::fmap(outdated_packages, [](const Update::OutdatedPackage& package) { return package.spec; }),
+                status_db);
         }
         else
         {
@@ -84,12 +91,12 @@ namespace vcpkg::Commands::Upgrade
                     not_installed.push_back(spec);
                 }
 
-                auto maybe_scf = provider.get_control_file(spec.name());
-                if (auto p_scf = maybe_scf.get())
+                auto maybe_scfl = provider.get_control_file(spec.name());
+                if (auto p_scfl = maybe_scfl.get())
                 {
                     if (it != status_db.end())
                     {
-                        if (p_scf->core_paragraph->version != (*it)->package.version)
+                        if (p_scfl->source_control_file->core_paragraph->version != (*it)->package.version)
                         {
                             to_upgrade.push_back(spec);
                         }
@@ -112,69 +119,74 @@ namespace vcpkg::Commands::Upgrade
 
             if (!up_to_date.empty())
             {
-                System::println(System::Color::success, "The following packages are up-to-date:");
-                System::println(Strings::join(
-                    "", up_to_date, [](const PackageSpec& spec) { return "    " + spec.to_string() + "\n"; }));
+                System::print2(System::Color::success, "The following packages are up-to-date:\n");
+                System::print2(Strings::join("",
+                                             up_to_date,
+                                             [](const PackageSpec& spec) { return "    " + spec.to_string() + "\n"; }),
+                               '\n');
             }
 
             if (!not_installed.empty())
             {
-                System::println(System::Color::error, "The following packages are not installed:");
-                System::println(Strings::join(
-                    "", not_installed, [](const PackageSpec& spec) { return "    " + spec.to_string() + "\n"; }));
+                System::print2(System::Color::error, "The following packages are not installed:\n");
+                System::print2(Strings::join("",
+                                             not_installed,
+                                             [](const PackageSpec& spec) { return "    " + spec.to_string() + "\n"; }),
+                               '\n');
             }
 
             if (!no_portfile.empty())
             {
-                System::println(System::Color::error, "The following packages do not have a valid portfile:");
-                System::println(Strings::join(
-                    "", no_portfile, [](const PackageSpec& spec) { return "    " + spec.to_string() + "\n"; }));
+                System::print2(System::Color::error, "The following packages do not have a valid portfile:\n");
+                System::print2(Strings::join("",
+                                             no_portfile,
+                                             [](const PackageSpec& spec) { return "    " + spec.to_string() + "\n"; }),
+                               '\n');
             }
 
             Checks::check_exit(VCPKG_LINE_INFO, not_installed.empty() && no_portfile.empty());
 
             if (to_upgrade.empty()) Checks::exit_success(VCPKG_LINE_INFO);
 
-            for (auto&& spec : to_upgrade)
-                graph.upgrade(spec);
+            action_plan = Dependencies::create_upgrade_plan(provider, var_provider, to_upgrade, status_db);
         }
 
-        auto plan = graph.serialize();
-
-        Checks::check_exit(VCPKG_LINE_INFO, !plan.empty());
+        Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty());
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
         // Set build settings for all install actions
-        for (auto&& action : plan)
+        for (auto&& action : action_plan.install_actions)
         {
-            if (auto p_install = action.install_action.get())
-            {
-                p_install->build_options = install_plan_options;
-            }
+            action.build_options = install_plan_options;
         }
 
-        Dependencies::print_plan(plan, true);
+        Dependencies::print_plan(action_plan, true, paths.ports);
 
         if (!no_dry_run)
         {
-            System::println(System::Color::warning,
-                            "If you are sure you want to rebuild the above packages, run this command with the "
-                            "--no-dry-run option.");
+            System::print2(System::Color::warning,
+                           "If you are sure you want to rebuild the above packages, run this command with the "
+                           "--no-dry-run option.\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        const Install::InstallSummary summary = Install::perform(plan, keep_going, paths, status_db);
+        var_provider.load_tag_vars(action_plan, provider);
 
-        System::println("\nTotal elapsed time: %s\n", summary.total_elapsed_time);
+        const Install::InstallSummary summary =
+            Install::perform(action_plan, keep_going, paths, status_db, var_provider);
+
+        System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 
         if (keep_going == KeepGoing::YES)
         {

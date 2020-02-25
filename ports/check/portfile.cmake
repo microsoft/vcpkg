@@ -1,10 +1,10 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcheck/check
-    REF 0.12.0
-    SHA512 f7b6452b69f999a90e86a8582d980c0c1b74ba5629ee34455724463ba62bfe3501ad0415aa771170f5c638a7a253f123bf87cbef25aadc6569a7a3a4d10fce90
+    REF d86594e5b29d50ddbd6276ab2d2cf5c278f7656c # 0.14.0
+    SHA512 db9c27fdce5c238b6327dd43dec3aa0321e2a1af49d17218db8a7fb96e8f07750cbc51cf8a07504700d878d97334c1703b165a17da1c070d43aa2c15a67e977d
     HEAD_REF master
+    PATCHES fix-lib-path.patch
 )
 
 vcpkg_configure_cmake(
@@ -14,13 +14,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/check.cmake ${CURRENT_PACKAGES_DIR}/cmake/check-config.cmake)
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/check)
+
+vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING.LESSER DESTINATION ${CURRENT_PACKAGES_DIR}/share/check RENAME copyright)
-
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/COPYING.LESSER DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

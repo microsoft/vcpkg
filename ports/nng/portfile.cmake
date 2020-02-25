@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF v1.1.0
-    SHA512 79f8d66cdf1d8f0f50f888edf59b46671ca7439d1da0f25e5f729bd1365b4bc2969c90a377bbd25c41f84eeb231d03fb0bc7c2d5435e3e55f4cf80ae62f9b934
+    REF 53ae1a5ab37fdfc9ad5c236df3eaf4dd63f0fee9
+    SHA512 f5532c0b0287df52ddae173dc92eff06d1f4b2b42a2f7afaf28a7736bf70618ae29ccd51fb9743795a8004918a2a2f55233e6ced58829561c745eafa6118b762
     HEAD_REF master
 )
 
@@ -34,7 +32,27 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nng)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/include/nng/nng.h
+    "defined(NNG_SHARED_LIB)"
+    "0 /* defined(NNG_SHARED_LIB) */"
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_replace_string(
+        ${CURRENT_PACKAGES_DIR}/include/nng/nng.h
+        "!defined(NNG_STATIC_LIB)"
+        "1 /* !defined(NNG_STATIC_LIB) */"
+    )
+else()
+    vcpkg_replace_string(
+        ${CURRENT_PACKAGES_DIR}/include/nng/nng.h
+        "!defined(NNG_STATIC_LIB)"
+        "0 /* !defined(NNG_STATIC_LIB) */"
+    )
+endif()
+
 # Put the licence file where vcpkg expects it
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/nng/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()

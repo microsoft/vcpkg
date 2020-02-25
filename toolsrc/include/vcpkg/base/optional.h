@@ -1,6 +1,9 @@
 #pragma once
 
-#include <vcpkg/base/checks.h>
+#include <vcpkg/base/lineinfo.h>
+
+#include <type_traits>
+#include <utility>
 
 namespace vcpkg
 {
@@ -13,12 +16,75 @@ namespace vcpkg
 
     namespace details
     {
-        template<class T>
+        template<class T, bool B = std::is_copy_constructible<T>::value>
         struct OptionalStorage
         {
-            constexpr OptionalStorage() noexcept : m_is_present(false), m_t() {}
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
+            constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() {}
             constexpr OptionalStorage(const T& t) : m_is_present(true), m_t(t) {}
             constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) {}
+
+            ~OptionalStorage() noexcept
+            {
+                if (m_is_present) m_t.~T();
+            }
+
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
+            OptionalStorage(const OptionalStorage& o) : m_is_present(o.m_is_present), m_inactive()
+            {
+                if (m_is_present) new (&m_t) T(o.m_t);
+            }
+
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
+            OptionalStorage(OptionalStorage&& o) noexcept : m_is_present(o.m_is_present), m_inactive()
+            {
+                if (m_is_present)
+                {
+                    new (&m_t) T(std::move(o.m_t));
+                }
+            }
+
+            OptionalStorage& operator=(const OptionalStorage& o)
+            {
+                if (m_is_present && o.m_is_present)
+                {
+                    m_t = o.m_t;
+                }
+                else if (!m_is_present && o.m_is_present)
+                {
+                    m_is_present = true;
+                    new (&m_t) T(o.m_t);
+                }
+                else if (m_is_present && !o.m_is_present)
+                {
+                    clear();
+                }
+                return *this;
+            }
+
+            OptionalStorage& operator=(OptionalStorage&& o) noexcept
+            {
+                if (m_is_present && o.m_is_present)
+                {
+                    m_t = std::move(o.m_t);
+                }
+                else if (!m_is_present && o.m_is_present)
+                {
+                    m_is_present = true;
+                    new (&m_t) T(std::move(o.m_t));
+                }
+                else if (m_is_present && !o.m_is_present)
+                {
+                    clear();
+                }
+                return *this;
+            }
 
             constexpr bool has_value() const { return m_is_present; }
 
@@ -26,12 +92,85 @@ namespace vcpkg
             T& value() { return this->m_t; }
 
         private:
+            void clear()
+            {
+                m_is_present = false;
+                m_t.~T();
+                m_inactive = '\0';
+            }
+
             bool m_is_present;
-            T m_t;
+            union {
+                char m_inactive;
+                T m_t;
+            };
         };
 
         template<class T>
-        struct OptionalStorage<T&>
+        struct OptionalStorage<T, false>
+        {
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
+            constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() {}
+            constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) {}
+
+            ~OptionalStorage() noexcept
+            {
+                if (m_is_present) m_t.~T();
+            }
+
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
+            OptionalStorage(OptionalStorage&& o) noexcept : m_is_present(o.m_is_present), m_inactive()
+            {
+                if (m_is_present)
+                {
+                    new (&m_t) T(std::move(o.m_t));
+                }
+            }
+
+            OptionalStorage& operator=(OptionalStorage&& o) noexcept
+            {
+                if (m_is_present && o.m_is_present)
+                {
+                    m_t = std::move(o.m_t);
+                }
+                else if (!m_is_present && o.m_is_present)
+                {
+                    m_is_present = true;
+                    new (&m_t) T(std::move(o.m_t));
+                }
+                else if (m_is_present && !o.m_is_present)
+                {
+                    clear();
+                }
+                return *this;
+            }
+
+            constexpr bool has_value() const { return m_is_present; }
+
+            const T& value() const { return this->m_t; }
+            T& value() { return this->m_t; }
+
+        private:
+            void clear()
+            {
+                m_is_present = false;
+                m_t.~T();
+                m_inactive = '\0';
+            }
+
+            bool m_is_present;
+            union {
+                char m_inactive;
+                T m_t;
+            };
+        };
+
+        template<class T, bool B>
+        struct OptionalStorage<T&, B>
         {
             constexpr OptionalStorage() noexcept : m_t(nullptr) {}
             constexpr OptionalStorage(T& t) : m_t(&t) {}
@@ -43,6 +182,9 @@ namespace vcpkg
         private:
             T* m_t;
         };
+
+        // Note: implemented in checks.cpp to cut the header dependency
+        void exit_if_null(bool b, const LineInfo& line_info);
     }
 
     template<class T>
@@ -53,26 +195,26 @@ namespace vcpkg
         // Constructors are intentionally implicit
         constexpr Optional(NullOpt) {}
 
-        template<class U>
-        Optional(U&& t) : m_base(std::forward<U>(t))
+        template<class U, class = std::enable_if_t<!std::is_same<std::decay_t<U>, Optional>::value>>
+        constexpr Optional(U&& t) : m_base(std::forward<U>(t))
         {
         }
 
         T&& value_or_exit(const LineInfo& line_info) &&
         {
-            this->exit_if_null(line_info);
+            details::exit_if_null(this->m_base.has_value(), line_info);
             return std::move(this->m_base.value());
         }
 
         T& value_or_exit(const LineInfo& line_info) &
         {
-            this->exit_if_null(line_info);
+            details::exit_if_null(this->m_base.has_value(), line_info);
             return this->m_base.value();
         }
 
         const T& value_or_exit(const LineInfo& line_info) const&
         {
-            this->exit_if_null(line_info);
+            details::exit_if_null(this->m_base.has_value(), line_info);
             return this->m_base.value();
         }
 
@@ -86,11 +228,20 @@ namespace vcpkg
             return this->m_base.has_value() ? this->m_base.value() : static_cast<T>(std::forward<U>(default_value));
         }
 
+        T value_or(T&& default_value) const&
+        {
+            return this->m_base.has_value() ? this->m_base.value() : static_cast<T&&>(default_value);
+        }
+
         template<class U>
         T value_or(U&& default_value) &&
         {
             return this->m_base.has_value() ? std::move(this->m_base.value())
                                             : static_cast<T>(std::forward<U>(default_value));
+        }
+        T value_or(T&& default_value) &&
+        {
+            return this->m_base.has_value() ? std::move(this->m_base.value()) : static_cast<T&&>(default_value);
         }
 
         typename std::add_pointer<const T>::type get() const
@@ -100,12 +251,39 @@ namespace vcpkg
 
         typename std::add_pointer<T>::type get() { return this->m_base.has_value() ? &this->m_base.value() : nullptr; }
 
-    private:
-        void exit_if_null(const LineInfo& line_info) const
+        template<class F>
+        using map_t = decltype(std::declval<F&>()(std::declval<const T&>()));
+
+        template<class F, class U = map_t<F>>
+        U then(F f) const&
         {
-            Checks::check_exit(line_info, this->m_base.has_value(), "Value was null");
+            if (has_value())
+            {
+                return f(this->m_base.value());
+            }
+            else
+            {
+                return nullopt;
+            }
         }
 
+        template<class F>
+        using move_map_t = decltype(std::declval<F&>()(std::declval<T&&>()));
+
+        template<class F, class U = move_map_t<F>>
+        U then(F f) &&
+        {
+            if (has_value())
+            {
+                return f(std::move(this->m_base.value()));
+            }
+            else
+            {
+                return nullopt;
+            }
+        }
+
+    private:
         details::OptionalStorage<T> m_base;
     };
 

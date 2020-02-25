@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8125a28..8daee28 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,9 +34,9 @@ install(TARGETS bitsery
+ install(EXPORT bitseryTargets
+         FILE "BitseryConfig.cmake"
+         NAMESPACE Bitsery::
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bitsery)
++        DESTINATION share/bitsery)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/BitseryConfigVersion.cmake
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bitsery)
++        DESTINATION share/bitsery)
+ install(DIRECTORY include/bitsery
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 

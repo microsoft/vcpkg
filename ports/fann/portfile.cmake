@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libfann/fann
@@ -14,12 +16,7 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "FANN does not support static linkage. Building dynamically.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     # Finish Directories
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
     file(RENAME ${CURRENT_PACKAGES_DIR}/fann.dll ${CURRENT_PACKAGES_DIR}/bin/fann.dll)

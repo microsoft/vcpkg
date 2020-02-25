@@ -3,14 +3,18 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fribidi/fribidi
-    REF v1.0.5
-    SHA512 c51b67cc3e7610bef9a66f2456f7602fe010164c2c01e7d91026cefa4a08fdce5165b6eb3814e76cd89e766356fb71adc08bf75d9b2f5802f71c18b5d0476887
-HEAD_REF master)
+    REF 58c6cb390a9a18c98b2cbaac555d8ea9352a9e4f
+    SHA512 1ec9c19faa87886786ce1589e2c66cab173b48e34d0e43487becc8606001f21f6ed17d0abd1c322fbbcaeb96a47ed882cad228be2e9beb019020ca2a475fc298
+    HEAD_REF master
+    PATCHES fix-win-static-suffix.patch
+)
 
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH}
+vcpkg_configure_meson(
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -Ddocs=false
-        --backend=ninja)
+        --backend=ninja
+)
 
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
@@ -21,6 +25,10 @@ file(GLOB EXE_FILES
 )
 if (EXE_FILES)
     file(REMOVE ${EXE_FILES})
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 # Handle copyright

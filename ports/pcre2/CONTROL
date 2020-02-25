@@ -1,3 +1,4 @@
 Source: pcre2
-Version: 10.30-2
+Version: 10.30-6
+Homepage: https://pcre.org/
 Description: PCRE2 is a re-working of the original Perl Compatible Regular Expressions library

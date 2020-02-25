@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kthohr/gcem
-    REF v1.8.1
-    SHA512 dd82a917822ffdfb3f224599340d2a0499e47db8d469d9febf3d37cd796fae3c8186a4fc05cc727d3ef82655359166caafbb5ddee3b79ba7becf1a53cce20e4a
+    REF v1.12.0
+    SHA512 cb28dce44e8aac2a4369bc1dd796243f0f9ff25bdd2effcff198b6e4ad1161ed4d33d2fdc7aca0ca9b538c769c1ae36ebfd7fcfbefd289bb1a62cdbea1957f74
     HEAD_REF master
 )
 

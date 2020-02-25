@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(libpqxx VERSION 6.0.0 LANGUAGES CXX)
+project(libpqxx VERSION 6.4.3 LANGUAGES CXX)
 
 set(CMAKE_DEBUG_POSTFIX "d")
 set(CMAKE_CXX_STANDARD 14)
@@ -40,6 +40,10 @@ else()
     set(SHARED_DEFINITION "")
 endif()
 
+IF(UNIX)
+    set(TARGET pqxx_static)
+ENDIF()
+
 add_library(${TARGET} ${SRCS})
 target_compile_definitions(${TARGET} PRIVATE -DPQXX_INTERNAL -DNOMINMAX ${SHARED_DEFINITION})
 target_include_directories(${TARGET} PRIVATE include ${LIBPQ_FE_H} ${POSTGRES_EXT_H} ${CMAKE_BINARY_DIR})
@@ -63,6 +67,7 @@ install(DIRECTORY include/ DESTINATION include
     PATTERN "*.am" EXCLUDE
     PATTERN "*.in" EXCLUDE
     PATTERN "*.template" EXCLUDE
+    PATTERN "CMakeLists.txt" EXCLUDE
     )
 install(DIRECTORY ${CMAKE_BINARY_DIR}/pqxx/ DESTINATION include/pqxx
     CONFIGURATIONS Release

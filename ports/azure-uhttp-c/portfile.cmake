@@ -6,16 +6,16 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uhttp-c
-        REF 3a81e598caf2bd37077b7cd20bb45aaa9e694df7
-        SHA512 6f12efdd2f02adb2414e10daa0604f5351f7731b997d69a9ca2923b6246c7a628bd859c6dca2503e51eeece851421b7739ffbf31a3f3d34dca4dcbadb54411d2
+        REF d84a20609a2b5a555920389451fb3c9a2ed3656c
+        SHA512 4eadd7e120082cc3bcf696d6cd16bc7ee8e1082380dd7583fba7fad1bb95109f3456890495e25ae7675e656ef721fa12eff22eeb96d8a4cf359be5c96889cbd6
         HEAD_REF master
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uhttp-c
-        REF 2e838f1587d7493f3bb0470b7e21b39c3f7c84ab
-        SHA512 30114e995bfdfa73dc43d016588290ef886e3c24d586f443d7f82d9c577f7274b5fc4b2ca40c9dd39883262cab30bf5b3e3eb560c27191ec4e9bb893e468bb54
+        REF b67a6bfa0d018a8a23176ee214e46c208fc323c3
+        SHA512 75fafe242324bb2fc72befdd06427350e6f99aec9496fdf38b9660e7965fad89276ee543f36c3ba3360fc99b8301e74e2c1723d17f39e8471beee3e32cacb348
         HEAD_REF master
     )
 endif()
@@ -41,3 +41,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-uhttp-c/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
+

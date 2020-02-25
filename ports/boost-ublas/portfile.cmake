@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/ublas
-    REF boost-1.69.0
-    SHA512 ef39748840ebdb19dfab07f51120c771e08d82edcd526952d15db105b3779c17a8c6742c73a55b0427ad84b7dfa30d08337f331d915fed09b0de30b3606c2385
+    REF boost-1.72.0
+    SHA512 08419b9e3c0ee29a59080a0c901fcc80265c6bd5c1f2bebd2f2c54609e276fe0da2429fa1dc3b5f42bead8ab55cea1e41fd86b74f05b7ce4ee12fa507e5e6240
     HEAD_REF master
 )
 

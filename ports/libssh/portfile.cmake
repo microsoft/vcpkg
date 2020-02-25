@@ -1,56 +1,40 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
-set(VERSION 0.7.6)
+set(VERSION 0.9.3)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libssh.org/files/0.7/libssh-${VERSION}.tar.xz"
+    URLS "https://www.libssh.org/files/0.9/libssh-${VERSION}.tar.xz"
     FILENAME "libssh-${VERSION}.tar.xz"
-    SHA512 2a01402b5a9fab9ecc29200544ed45d3f2c40871ed1c8241ca793f8dc7fdb3ad2150f6a522c4321affa9b8778e280dc7ed10f76adfc4a73f0751ae735a42f56c
-)
-
-vcpkg_download_distfile(WINPATCH
-    URLS "https://bugs.libssh.org/rLIBSSHf81ca6161223e3566ce78a427571235fb6848fe9?diff=1"
-    FILENAME "libssh-f81ca616.patch"
-    SHA512 f3f6088f8f1bf8fe6226c1aa7b355d877be7f2aa9482c5e3de74b6a35fc5b28d8f89221d3afa5a5d3a5900519a86e5906516667ed22ad98f058616a8120999cd
+    SHA512 6e59718565daeca6d224426cc1095a112deff9af8e0b021917e04f08bb7409263c35724de95f591f38e26f0fb3bbbbc69b679b6775edc21dec158d241b076c6f
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${VERSION}
-    PATCHES
-        build-one-flavor.patch
-        only-one-flavor-threads.patch
-        "${WINPATCH}"
-        missing-includes.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" WITH_STATIC_LIB)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+                     FEATURES
+                         mbedtls WITH_MBEDTLS
+                         zlib WITH_ZLIB
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DWITH_STATIC_LIB=${WITH_STATIC_LIB}
+        ${FEATURE_OPTIONS}
         -DWITH_EXAMPLES=OFF
-        -DWITH_TESTING=OFF
-        -DWITH_NACL=OFF
-        -DWITH_GSSAPI=OFF
-)
+        -DUNIT_TESTING=OFF
+        -DCLIENT_TESTING=OFF
+        -DSERVER_TESTING=OFF
+        -DWITH_NACL=OFF)
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/static/ssh.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/static/ssh.lib ${CURRENT_PACKAGES_DIR}/lib/ssh.lib)
-    endif()
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/static/ssh.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/static/ssh.lib ${CURRENT_PACKAGES_DIR}/debug/lib/ssh.lib)
-    endif()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
     file(READ ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h _contents)
@@ -58,11 +42,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h "${_contents}")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/static ${CURRENT_PACKAGES_DIR}/debug/lib/static)
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(READ ${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake _contents)
+    string(REPLACE ".dll" ".lib" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake "${_contents}")
+endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# The installed cmake config files are nonfunctional (0.7.5)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake ${CURRENT_PACKAGES_DIR}/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake ${CURRENT_PACKAGES_DIR}/lib/cmake)
-
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh RENAME copyright)
+file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh)

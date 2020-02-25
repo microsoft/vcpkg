@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fa51e2c..3e07396 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,6 +39,7 @@ SET( Sophus_INCLUDE_DIR ${PROJECT_SOURCE_DIR} )
+
+ ################################################################################
+ FIND_PACKAGE( Eigen3 REQUIRED )
++FIND_PACKAGE( suitesparse REQUIRED )
+ LIST( APPEND Sophus_INCLUDE_DIR ${EIGEN3_INCLUDE_DIR} )
+
+ ################################################################################

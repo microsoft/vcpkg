@@ -3,12 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgd/libgd
-    REF gd-2.2.4
-    SHA512 02ce40c45f31cf1645ad1d3fd9b9b498323b2709d40b0681cd403c11072a1f2149f5af844a6bf9e695c29e3247013bb94c57c0225a54189d728f64caf0a938ee
+    REF gd-2.2.5
+    SHA512 e4ee4c0d1064c93640c29b5741f710872297f42bcc883026a63124807b6ff23bd79ae66bb9148a30811907756c4566ba8f1c0560673ccafc20fee38d82ca838f
     HEAD_REF master
     PATCHES
         0001-fix-cmake.patch
         no-write-source-dir.patch
+        intrin.patch
 )
 
 #delete CMake builtins modules
@@ -17,6 +18,36 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindFreetype.cmake)
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindJPEG.cmake)
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindPackageHandleStandardArgs.cmake)
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindPNG.cmake)
+
+set(ENABLE_PNG OFF)
+if("png" IN_LIST FEATURES)
+    set(ENABLE_PNG ON)
+endif()
+
+set(ENABLE_JPEG OFF)
+if("jpeg" IN_LIST FEATURES)
+    set(ENABLE_JPEG ON)
+endif()
+
+set(ENABLE_TIFF OFF)
+if("tiff" IN_LIST FEATURES)
+    set(ENABLE_TIFF ON)
+endif()
+
+set(ENABLE_FREETYPE OFF)
+if("freetype" IN_LIST FEATURES)
+    set(ENABLE_FREETYPE ON)
+endif()
+
+set(ENABLE_WEBP OFF)
+if("webp" IN_LIST FEATURES)
+    set(ENABLE_WEBP ON)
+endif()
+
+set(ENABLE_FONTCONFIG OFF)
+if("fontconfig" IN_LIST FEATURES)
+    set(ENABLE_FONTCONFIG ON)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(LIBGD_SHARED_LIBS ON)
@@ -29,17 +60,15 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DENABLE_PNG=ON
-            -DENABLE_JPEG=ON
-            -DENABLE_TIFF=ON
-            -DENABLE_FREETYPE=ON
-            -DENABLE_WEBP=ON
-            -DENABLE_FONTCONFIG=ON
-            -DBUILD_SHARED_LIBS=${LIBGD_SHARED_LIBS}
+    OPTIONS -DENABLE_PNG=${ENABLE_PNG}
+            -DENABLE_JPEG=${ENABLE_JPEG}
+            -DENABLE_TIFF=${ENABLE_TIFF}
+            -DENABLE_FREETYPE=${ENABLE_FREETYPE}
+            -DENABLE_WEBP=${ENABLE_WEBP}
+            -DENABLE_FONTCONFIG=${ENABLE_FONTCONFIG}
             -DBUILD_STATIC_LIBS=${LIBGD_STATIC_LIBS}
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 

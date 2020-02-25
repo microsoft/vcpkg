@@ -1,0 +1,5 @@
+Source: gppanel
+Version: 2018-04-06
+Build-Depends: wxwidgets
+Homepage: https://github.com/woollybah/gppanel
+Description: gpPanel is chart libary for wxWidget. It inheritance from wxPanel and use modified wxMathPlot library at chart engine. 

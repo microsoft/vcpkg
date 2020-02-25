@@ -102,7 +102,7 @@ if(BUILD_SHARED_LIBS)
 endif()
 add_definitions("-DBUILDING_LIBINTL -DIN_LIBINTL -DENABLE_RELOCATABLE=1 -DIN_LIBRARY")
 
-add_definitions("-DNO_XMALLOC -Dset_relocation_prefix=libintl_set_relocation_prefix -Drelocate=libintl_relocate -DDEPENDS_ON_LIBICONV=1 -DHAVE_CONFIG_H -D_CRT_SECURE_NO_WARNINGS")
+add_definitions("-DNO_XMALLOC -Dset_relocation_prefix=libintl_set_relocation_prefix -Drelocate=libintl_relocate -DDEPENDS_ON_LIBICONV=1 -DHAVE_CONFIG_H -DHAVE_ICONV -DHAVE_ICONV_H -DICONV_CONST=const -D_CRT_SECURE_NO_WARNINGS")
 
 add_library(libintl ${SOURCES})
 target_link_libraries(libintl PRIVATE unofficial::iconv::libcharset unofficial::iconv::libiconv)
@@ -119,11 +119,14 @@ endif()
 if(NOT WIN32)
     target_link_libraries(libintl PRIVATE Threads::Threads)
 endif()
+if (WIN32)
+    target_link_libraries(libintl PRIVATE kernel32.lib Advapi32.lib)
+endif()
 
 install(TARGETS libintl
   EXPORT unofficial-gettext-targets
   RUNTIME DESTINATION bin
-  LIBRARY DESTINATION bin
+  LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 

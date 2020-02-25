@@ -1,24 +1,13 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/00d9a4ac58a52b52495736be614cb06ba102663c)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbry/WavPack
-    REF 00d9a4ac58a52b52495736be614cb06ba102663c
-    SHA512 a0d08ac2ff46bd4cc606626c8e0da18a83392722a2e40df18f9e40710e5e147c0a24800174bfdf42ed7a12be4d9679f6302c51d8409724d31ca2a29ab4972481
+    REF e158df5353b57ac7002d5cac4b3a040eba4c0c9f # 5.2.0
+    SHA512 a144c6a05ddef0c6f4c436b5e45fe1d56893587d983eda49067fbe93059ed7d910d98b82ee5fc8e4a935904bc2ff5596cbee59ed6a5fe81be4717e53cdfc44c0
     HEAD_REF master
+    PATCHES
+        OpenSSL.patch
 )
 
 vcpkg_configure_cmake(
@@ -41,8 +30,7 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wavpack RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Post-build test for cmake libraries
 # vcpkg_test_cmake(PACKAGE_NAME wavpack)

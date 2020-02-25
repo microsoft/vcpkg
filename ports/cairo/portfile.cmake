@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
-set(CAIRO_VERSION 1.15.8)
+set(CAIRO_VERSION 1.16.0)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://cairographics.org/snapshots/cairo-${CAIRO_VERSION}.tar.xz"
+    URLS "https://www.cairographics.org/releases/cairo-${CAIRO_VERSION}.tar.xz"
     FILENAME "cairo-${CAIRO_VERSION}.tar.xz"
-    SHA512 5af1eebf432201dae0efaa5b6766b151d8273ea00dae48e104d56477005b4d423d64b5d11c512736a4cb076632fb2a572ec35becd922825a68d933bb5ff96ca1
+    SHA512 9eb27c4cf01c0b8b56f2e15e651f6d4e52c99d0005875546405b64f1132aed12fbf84727273f493d84056a13105e065009d89e94a8bfaf2be2649e232b82377f
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -18,9 +18,21 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
 file(COPY ${CURRENT_PORT_DIR}/cairo-features.h DESTINATION ${SOURCE_PATH}/src)
 
+if ("x11" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Feature x11 only support UNIX.")
+    endif()
+    message(WARNING "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    x11 WITH_X11
+)
+
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}/src
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

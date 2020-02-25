@@ -1,29 +1,35 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xeus
-    REF f78c60c7ce28baecb2479f2b82e4e8d1a6c35188
-    SHA512 9d83f32f641bcad4ac96e263c465d46bdfa7d18d41f1e201309244c95587ce08ff2426f7cdd3a4399563d46064ed9bedd4d0babf4840f65e95c6a2c6f23ac9bb
+    REF 8408f237f33514610a59d19a5ff045ee70dfa02b
+    SHA512 41282addbe5519b6d357e802c48483834cd951604bfeb8c99d96f02d03dec2fc66ea4c091f40ec09348bb60587e8a6efef5e6eb2bb950ba720fc8ceb7a107960
     HEAD_REF master
-    PATCHES
-        static-lib.patch
+    PATCHES Fix-TypeConversion.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_EXAMPLES=OFF
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
         -DBUILD_TESTS=OFF
         -DDOWNLOAD_GTEST=OFF
-        -DXEUS_USE_SHARED_CRYPTOPP=OFF # `cryptopp` port currently only supports static linkage.
         -DDISABLE_ARCH_NATIVE=OFF
 )
 
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
@@ -38,10 +44,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Install usage
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-# CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})

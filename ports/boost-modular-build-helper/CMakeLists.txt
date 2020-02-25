@@ -36,8 +36,16 @@ endif()
 
 if(APPLE)
     list(APPEND B2_OPTIONS target-os=darwin toolset=clang)
+elseif(WIN32)
+    list(APPEND B2_OPTIONS target-os=windows toolset=gcc)
 else()
     list(APPEND B2_OPTIONS target-os=linux toolset=gcc)
+endif()
+
+if(WIN32)
+    list(APPEND B2_OPTIONS threadapi=win32)
+else()
+    list(APPEND B2_OPTIONS threadapi=pthread)
 endif()
 
 # Properly handle compiler and linker flags passed by VCPKG
@@ -156,11 +164,13 @@ add_custom_target(boost ALL
 
         architecture=x86
         threading=multi
-        threadapi=pthread
         debug-symbols=on
+
+        stage
     WORKING_DIRECTORY ${SOURCE_PATH}/build
 )
 
+set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/stage/lib)
 install(
-    CODE "file(GLOB LIBS ${CMAKE_CURRENT_BINARY_DIR}/boost/build/*/*.a)\nif(LIBS)\nfile(INSTALL \${LIBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")\nendif()"
+    CODE "file(GLOB LIBS ${SUBDIR}/*.so.* ${SUBDIR}/*.so ${SUBDIR}/*.a ${SUBDIR}/*.dylib ${SUBDIR}/*.dylib.*)\nif(LIBS)\nfile(INSTALL \${LIBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")\nendif()"
 )

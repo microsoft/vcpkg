@@ -1,0 +1,4 @@
+Source: spscqueue
+Version: 2019-07-26
+Description: A bounded single-producer single-consumer wait-free and lock-free queue written in C++11
+Homepage: https://github.com/rigtorp/SPSCQueue

@@ -1,0 +1,29 @@
+diff --git a/src/server/opc_tcp_async.cpp b/src/server/opc_tcp_async.cpp
+index 9c34d72..9e68d9b 100644
+--- a/src/server/opc_tcp_async.cpp
++++ b/src/server/opc_tcp_async.cpp
+@@ -106,7 +106,11 @@ public:
+      */
+     typedef std::promise<void> Promise;
+     Promise promise;
++#if BOOST_VERSION >= 107000
++    boost::asio::post(Socket.get_executor(), bind(&Promise::set_value, &promise));
++#else
+     Socket.get_io_service().post(bind(&Promise::set_value, &promise));
++#endif
+     promise.get_future().wait();
+   }
+ 
+@@ -372,7 +376,11 @@ void OpcTcpServer::Shutdown()
+    */
+   typedef std::promise<void> Promise;
+   Promise promise;
+-  acceptor.get_io_service().post(bind(&Promise::set_value, &promise));
++#if BOOST_VERSION >= 107000
++    boost::asio::post(acceptor.get_executor(), bind(&Promise::set_value, &promise));
++#else
++    acceptor.get_io_service().post(bind(&Promise::set_value, &promise));
++#endif
+   promise.get_future().wait();
+ }
+ 

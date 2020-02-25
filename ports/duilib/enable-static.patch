@@ -1,0 +1,20 @@
+diff --git a/DuiLib/CMakeLists.txt b/DuiLib/CMakeLists.txt
+index 96b8fe4..99dc314 100644
+--- a/DuiLib/CMakeLists.txt
++++ b/DuiLib/CMakeLists.txt
+@@ -19,8 +19,14 @@ if (MSVC)
+   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:.936")
+ endif()
+ 
++if (BUILD_SHARED_LIBS STREQUAL ON)
++  SET(LINKAGE SHARED)
++else()
++  SET(LINKAGE STATIC)
++endif()
++
+ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+-add_library(duilib SHARED ${Control_src} ${Core_src} ${Layout_src} ${Utils_src} ${Root_src})
++add_library(duilib ${LINKAGE} ${Control_src} ${Core_src} ${Layout_src} ${Utils_src} ${Root_src})
+ 
+ add_definitions(-DUILIB_EXPORTS)
+ target_link_libraries(duilib comctl32 gdi32 user32)

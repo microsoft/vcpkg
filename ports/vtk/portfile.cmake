@@ -4,40 +4,17 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(VTK_SHORT_VERSION "8.1")
+set(VTK_SHORT_VERSION "8.2")
 set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 # =============================================================================
 # Options:
-
-if ("qt" IN_LIST FEATURES)
-    set(VTK_WITH_QT                      ON )
-else()
-    set(VTK_WITH_QT                      OFF )
-endif()
-
-if ("mpi" IN_LIST FEATURES)
-    set(VTK_WITH_MPI                     ON )
-else()
-    set(VTK_WITH_MPI                     OFF )
-endif()
-
-if ("python" IN_LIST FEATURES)
-    set(VTK_WITH_PYTHON                  ON)
-else()
-    set(VTK_WITH_PYTHON                  OFF)
-endif()
-
-if("openvr" IN_LIST FEATURES)
-    set(VTK_WITH_OPENVR                  ON)
-else()
-    set(VTK_WITH_OPENVR                  OFF)
-endif()
-
-if("libharu" IN_LIST FEATURES)
-    set(VTK_WITH_LIBHARU                  ON)
-else()
-    set(VTK_WITH_LIBHARU                  OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    qt     VTK_WITH_QT
+    mpi    VTK_Group_MPI
+    python VTK_WITH_PYTHON
+    openvr Module_vtkRenderingOpenVR
+    atlmfc Module_vtkGUISupportMFC 
+)
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
@@ -46,32 +23,18 @@ set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`
 # Clone & patch
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO "Kitware/VTK"
+    REPO Kitware/VTK
     REF "v${VTK_LONG_VERSION}"
-    SHA512 09e110cba4ad9a6684e9b2af0cbb5b9053e3596ccb62aab96cd9e71aa4a96c809d96e13153ff44c28ad83015a61ba5195f7d34056707b62654c1bc057f9b9edf
-    HEAD_REF "master"
+    SHA512 fd1d9c2872baa6eca7f8105b0057b56ec554e9d5eaf25985302e7fc032bdce72255d79e3f5f16ca50504151bda49cb3a148272ba32e0f410b4bdb70959b8f3f4
+    HEAD_REF master
     PATCHES
-        # Disable ssize_t because this can conflict with ssize_t that is defined on windows.
-        dont-define-ssize_t.patch
-
-        # We force CMake to use it's own version of the FindHDF5 module since newer versions
-        # shipped with CMake behave differently. E.g. the one shipped with CMake 3.9 always
-        # only finds the release libraries, but not the debug libraries.
-        # The file shipped with CMake allows us to set the libraries explicitly as it is done below.
-        # Maybe in the future we can disable the patch and use the new version shipped with CMake
-        # together with the hdf5-config.cmake that is written by HDF5 itself, but currently VTK
-        # disables taking the config into account explicitly.
-        use-fixed-find-hdf5.patch
-
-        # We disable a workaround in the VTK CMake scripts that can lead to the fact that a dependency
-        # will link to both, the debug and the release library.
-        disable-workaround-findhdf5.patch
-
-        fix-find-libproj4.patch
-        fix-find-libharu.patch
-        fix-find-mysql.patch
-        fix-find-odbc.patch
         fix-find-lz4.patch
+        fix_ogg_linkage.patch
+        fix-pugixml-link.patch
+        hdf5_static.patch
+        fix-find-lzma.patch
+        fix-proj4.patch
+        fix-VTKConfig-cmake.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -81,8 +44,8 @@ vcpkg_from_github(
 # so we provide an own one.
 file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindHDF5.cmake DESTINATION ${SOURCE_PATH}/CMake/NewCMake)
 
 # =============================================================================
 # Collect CMake options for optional components
@@ -94,28 +57,11 @@ if(VTK_WITH_QT)
     )
 endif()
 
-if(VTK_WITH_MPI)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_Group_MPI=ON
-    )
-endif()
-
 if(VTK_WITH_PYTHON)
+    vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
-    )
-endif()
-
-if(VTK_WITH_OPENVR)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DModule_vtkRenderingOpenVR=ON
-    )
-endif()
-
-if(VTK_WITH_LIBHARU)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_USE_SYSTEM_LIBHARU=ON
     )
 endif()
 
@@ -133,42 +79,43 @@ if(VTK_WITH_ALL_MODULES)
         # -DVTK_USE_SYSTEM_XDMF3=ON
         # -DVTK_USE_SYSTEM_ZFP=ON
         # -DVTK_USE_SYSTEM_ZOPE=ON
+        # -DVTK_USE_SYSTEM_LIBPROJ=ON
     )
 endif()
 
+set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
+set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
+
 # =============================================================================
 # Configure & Install
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DVTK_Group_Imaging=ON
-        -DVTK_Group_Views=ON
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
-        -DVTK_USE_SYSTEM_EXPAT=ON
-        -DVTK_USE_SYSTEM_FREETYPE=ON
-        # -DVTK_USE_SYSTEM_GL2PS=ON
-        -DVTK_USE_SYSTEM_JPEG=ON
-        -DVTK_USE_SYSTEM_GLEW=ON
-        -DVTK_USE_SYSTEM_HDF5=ON
-        -DVTK_USE_SYSTEM_JSONCPP=ON
-        -DVTK_USE_SYSTEM_LIBPROJ4=ON
-        -DVTK_USE_SYSTEM_LIBXML2=ON
-        -DVTK_USE_SYSTEM_LZ4=ON
-        # -DVTK_USE_SYSTEM_NETCDF=ON
-        # -DVTK_USE_SYSTEM_NETCDFCPP=ON
-        -DVTK_USE_SYSTEM_OGGTHEORA=ON
-        -DVTK_USE_SYSTEM_PNG=ON
-        -DVTK_USE_SYSTEM_TIFF=ON
-        -DVTK_USE_SYSTEM_ZLIB=ON
         -DVTK_INSTALL_INCLUDE_DIR=include
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
+
+        # We set all libraries to "system" and explicitly list the ones that should use embedded copies
+        -DVTK_USE_SYSTEM_LIBRARIES=ON
+        -DVTK_USE_SYSTEM_GL2PS=OFF
+
+        # Select modules / groups to install
+        -DVTK_Group_Imaging=ON
+        -DVTK_Group_Views=ON
+        -DPYTHON_EXECUTABLE=${PYTHON3}
+
         ${ADDITIONAL_OPTIONS}
+    OPTIONS_RELEASE
+        -DPROJ_LIBRARY=${PROJ_LIBRARY_REL}
+    OPTIONS_DEBUG
+        -DPROJ_LIBRARY=${PROJ_LIBRARY_DBG}
 )
 
 vcpkg_install_cmake()
@@ -196,110 +143,25 @@ if(VTK_WITH_ALL_MODULES)
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake "${VTK_TARGETS_DEBUG_CONTENT}")
 endif()
 
-# For VTK `vcpkg_fixup_cmake_targets` is not enough:
-# Files for system third party dependencies are written to modules that
-# are located in the paths `share/vtk/Modules` and `debug/share/vtk/Modules`.
-# In the release folder, only the release libraries are referenced (e.g. "C:/vcpkg/installed/x64-windows/lib/zlib.lib").
-# But in the debug folder both libraries (e.g. "optimized;C:/vcpkg/installed/x64-windows/lib/zlib.lib;debug;C:/vcpkg/installed/x64-windows/debug/lib/zlibd.lib")
-# or only the debug library (e.g. "C:/vcpkg/installed/x64-windows/debug/lib/hdf5_D.lib") is referenced.
-# This is because VCPKG appends only the release library prefix (.../x64-windows/lib)
-# when configuring release but both (.../x64-windows/lib and .../x64-windows/debug/lib)
-# when configuring debug.
-# Now if we delete the debug/share/Modules folder and just leave share/Modules, a library
-# that links to VTK will always use the release third party dependencies, even if
-# debug VTK is used.
-# 
-# The following code merges the libraries from both release and debug:
+#file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" VTK_TARGETS_CONTENT)
+# Remove unset of _IMPORT_PREFIX in VTKTargets.cmake
+#_IMPORT_PREFIX is required by vtkModules due to vcpkg_fixup_cmake_targets changing all cmake files (to use _IMPORT_PREFIX). 
+#STRING(REPLACE [[set(_IMPORT_PREFIX)]] 
+#[[
+# VCPKG: The value of _IMPORT_PREFIX should not be unset.
+#set(_IMPORT_PREFIX)
+#]]
+#VTK_TARGETS_CONTENT "${VTK_TARGETS_CONTENT}")
+#file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" "${VTK_TARGETS_CONTENT}")
 
-include(${CMAKE_CURRENT_LIST_DIR}/SplitLibraryConfigurations.cmake)
+#file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" VTK_TARGETS_CONTENT)
 
-function(_vtk_combine_third_party_libraries MODULE_NAME)
-    set(MODULE_LIBRARIES_REGEX "set\\(${MODULE_NAME}_LIBRARIES \"([^\"]*)\"\\)")
-
-    # Read release libraries
-    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/${MODULE_NAME}.cmake" RELEASE_MODULE_CONTENT)
-    if("${RELEASE_MODULE_CONTENT}" MATCHES "${MODULE_LIBRARIES_REGEX}")
-        set(RELEASE_LIBRARY_LIST "${CMAKE_MATCH_1}")
-    else()
-        message(FATAL_ERROR "Could not extract module libraries for ${MODULE_NAME}")
-    endif()
-
-    # Read debug libraries
-    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/vtk/Modules/${MODULE_NAME}.cmake" DEBUG_MODULE_CONTENT)
-    if("${DEBUG_MODULE_CONTENT}" MATCHES "${MODULE_LIBRARIES_REGEX}")
-        set(DEBUG_LIBRARY_LIST "${CMAKE_MATCH_1}")
-    else()
-        message(FATAL_ERROR "Could not extract module libraries for ${MODULE_NAME}")
-    endif()
-    
-    split_library_configurations("${RELEASE_LIBRARY_LIST}" OPTIMIZED_RELEASE_LIBRARIES DEBUG_RELEASE_LIBRARIES GENERAL_RELEASE_LIBRARIES)
-    split_library_configurations("${DEBUG_LIBRARY_LIST}" OPTIMIZED_DEBUG_LIBRARIES DEBUG_DEBUG_LIBRARIES GENERAL_DEBUG_LIBRARIES)
-
-    # Combine libraries and wrap them in generator expressions
-    foreach(LIBRARY ${OPTIMIZED_RELEASE_LIBRARIES} ${GENERAL_RELEASE_LIBRARIES})
-        list(APPEND LIBRARY_LIST "$<$<NOT:$<CONFIG:Debug>>:${LIBRARY}>")
-    endforeach()
-    foreach(LIBRARY ${DEBUG_DEBUG_LIBRARIES} ${GENERAL_DEBUG_LIBRARIES})
-        list(APPEND LIBRARY_LIST "$<$<CONFIG:Debug>:${LIBRARY}>")
-    endforeach()
-
-    # Write combined libraries back
-    string(REGEX REPLACE "${MODULE_LIBRARIES_REGEX}"
-        "set(${MODULE_NAME}_LIBRARIES \"${LIBRARY_LIST}\")"
-        RELEASE_MODULE_CONTENT
-        "${RELEASE_MODULE_CONTENT}"
-    )
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/${MODULE_NAME}.cmake" "${RELEASE_MODULE_CONTENT}")
-endfunction()
-
-# IMPORTANT: Please make sure to extend this list whenever a new library is marked `USE_SYSTEM` in the configure step above!
-set(SYSTEM_THIRD_PARTY_MODULES
-    vtkexpat
-    vtkfreetype
-    vtkjpeg
-    vtkglew
-    vtkhdf5
-    vtkjsoncpp
-    vtklibproj4
-    vtklibxml2
-    vtklz4
-    vtkoggtheora
-    vtkpng
-    vtktiff
-    vtkzlib
-    # vtkgl2ps
-    vtklibharu
-)
-
-if(VTK_WITH_PYTHON OR VTK_WITH_ALL_MODULES)
-    list(APPEND SYSTEM_THIRD_PARTY_MODULES
-        vtkPython
-    )
-endif()
-
-if(VTK_WITH_ALL_MODULES)
-    list(APPEND SYSTEM_THIRD_PARTY_MODULES
-        AutobahnPython
-    )
-endif()
-
-foreach(MODULE IN LISTS SYSTEM_THIRD_PARTY_MODULES)
-    _vtk_combine_third_party_libraries("${MODULE}")
-endforeach()
-
-# Remove all explicit references to vcpkg system libraries in the general VTKTargets.cmake file
-# since these references always point to the release libraries, even in the debug case.
-# The dependencies should be handled by the explicit modules we fixed above, so removing
-# them here shouldn't cause any problems.
-file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" VTK_TARGETS_CONTENT)
-string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}/lib/[^\\.]*\\.lib" "" VTK_TARGETS_CONTENT "${VTK_TARGETS_CONTENT}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" "${VTK_TARGETS_CONTENT}")
-
-# Remove any remaining stray absolute references to the installed directory.
-file(GLOB_RECURSE CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/vtk/*.cmake)
+# Fix _IMPORT_PREFIX. It is not set within the Modules cmake (only set in VTKTargets.cmake).
+# Since for VCPKG _IMPORT_PREFIX == VTK_INSTALL_PREFIX we just replace it with that.
+file(GLOB_RECURSE CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/vtk/Modules/*.cmake)
 foreach(FILE IN LISTS CMAKE_FILES)
     file(READ "${FILE}" _contents)
-    string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${VTK_INSTALL_PREFIX}" _contents "${_contents}")
+    string(REPLACE "\${_IMPORT_PREFIX}" "\${VTK_INSTALL_PREFIX}" _contents "${_contents}")
     file(WRITE "${FILE}" "${_contents}")
 endforeach()
 
@@ -378,7 +240,7 @@ if(VTK_WITH_ALL_MODULES)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/XdmfConfig.cmake)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()

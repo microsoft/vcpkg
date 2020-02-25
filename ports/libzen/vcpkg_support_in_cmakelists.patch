@@ -1,0 +1,31 @@
+diff --git a/Project/CMake/CMakeLists.txt b/Project/CMake/CMakeLists.txt
+index cb96dc8..8b05a25 100644
+--- a/Project/CMake/CMakeLists.txt
++++ b/Project/CMake/CMakeLists.txt
+@@ -33,10 +33,12 @@ set(BIN_INSTALL_DIR "${CMAKE_INSTALL_FULL_BINDIR}" CACHE STRING "Directory where
+ set(LIB_INSTALL_DIR "${CMAKE_INSTALL_FULL_LIBDIR}" CACHE STRING "Directory where library will install")
+ set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_FULL_INCLUDEDIR}" CACHE PATH "The directory the headers are installed in")
+ 
+-if(NOT MSVC)
+-  set(ZenLib_CONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/zenlib")
++if(VCPKG_TARGET_TRIPLET)
++    set(ZenLib_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/zenlib")
++elseif(MSVC)
++    set(ZenLib_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/cmake")
+ else()
+-  set(ZenLib_CONFIG_INSTALL_DIR "cmake")
++    set(ZenLib_CONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/zenlib")
+ endif()
+ 
+ set(ZenLib_HDRS
+@@ -136,10 +138,6 @@ set_target_properties(zen PROPERTIES
+   PUBLIC_HEADER "${ZenLib_HDRS}"
+   )
+ 
+-if(MSVC)
+-  install(FILES $<TARGET_PDB_FILE:zen> DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS "Debug;RelWithDebInfo" OPTIONAL)
+-endif()
+-
+ install(TARGETS zen EXPORT zen-export
+   PUBLIC_HEADER DESTINATION ${INCLUDE_INSTALL_DIR}/ZenLib
+   RUNTIME DESTINATION ${BIN_INSTALL_DIR}

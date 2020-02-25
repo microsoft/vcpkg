@@ -1,18 +1,3 @@
-diff --git a/gettext-runtime/intl/printf-parse.c b/gettext-runtime/intl/printf-parse.c
-index 0e2d2c7..e1dc39b 100644
---- a/gettext-runtime/intl/printf-parse.c
-+++ b/gettext-runtime/intl/printf-parse.c
-@@ -48,7 +48,9 @@
- #include <stddef.h>
- 
- /* Get intmax_t.  */
--#if defined IN_LIBINTL || defined IN_LIBASPRINTF
-+#if defined _MSC_VER
-+# define intmax_t long int
-+#elif defined IN_LIBINTL || defined IN_LIBASPRINTF
- # if HAVE_STDINT_H_WITH_UINTMAX
- #  include <stdint.h>
- # endif
 diff --git a/gettext-runtime/intl/xsize.h b/gettext-runtime/intl/xsize.h
 index c256665..7400ea1 100644
 --- a/gettext-runtime/intl/xsize.h

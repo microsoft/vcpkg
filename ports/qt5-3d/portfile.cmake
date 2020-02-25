@@ -1,5 +1,2 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
-
-qt_modular_library(qt3d 4c054b1075e976043fca5033a27be8a3f0d2df5dde5da4a536a9e7d61cdfd91007a2bf687bc19ad59724a2d53a9730b5d2446238bb7c6289d6a5dd3bf220a409)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

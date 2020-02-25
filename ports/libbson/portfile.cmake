@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mongodb/libbson
-    REF 1.9.5
-    SHA512 14bc75989baac550f42939ea161fa7872b950e5b669dc8f19e897f0783b04e0212e5e722b3fcdf946308b9a68bc066502ed8238dad92e342e5f49b8b2cc8f484
+    REPO mongodb/mongo-c-driver
+    REF 541086adcf1eecf88ac09fda47d9a8ec1598015d # debian/1.15.1-1
+    SHA512 a57438dfae9d0993ae04b7a76677f79331699898f21e7645db5edd2c91014f33b738a0af67b58234d1ee03aab2ae3b58c183bbd043fc2bde5cc1a4e111755b70
     HEAD_REF master
     PATCHES fix-uwp.patch
 )
@@ -15,20 +13,30 @@ else()
     set(ENABLE_STATIC OFF)
 endif()
 
+file(READ ${CMAKE_CURRENT_LIST_DIR}/CONTROL _contents)
+string(REGEX MATCH "\nVersion:[ ]*[^ \n]+" _contents "${_contents}")
+string(REGEX REPLACE ".+Version:[ ]*([\\.0-9]+).*" "\\1" BUILD_VERSION "${_contents}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DENABLE_MONGOC=OFF
+        -DENABLE_BSON=ON
         -DENABLE_TESTS=OFF
+        -DENABLE_EXAMPLES=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
+        -DBUILD_VERSION=${BUILD_VERSION}
 )
 
 vcpkg_install_cmake()
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libbson-static-1.0")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libbson-static-1.0)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libbson-1.0")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libbson-1.0)
 endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver)
 
 # This rename is needed because the official examples expect to use #include <bson.h>
 # See Microsoft/vcpkg#904
@@ -58,10 +66,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     endif()
 
     # drop the __declspec(dllimport) when building static
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-        PATCHES static.patch
-    )
+    file(READ ${CURRENT_PACKAGES_DIR}/include/bson/bson-macros.h LIBBSON_MACROS_H)
+    string(REPLACE "define BSON_API __declspec(dllimport)" "define BSON_API" LIBBSON_MACROS_H "${LIBBSON_MACROS_H}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/bson/bson-macros.h "${LIBBSON_MACROS_H}")
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()

@@ -1,3 +1,6 @@
+#ifdef __linux__
+#define EH_FRAME_FLAGS "a"
+#endif
 #define HAVE_ALLOCA 1
 #ifndef _WIN64
 #define HAVE_AS_ASCII_PSEUDO_OP 1
@@ -8,6 +11,9 @@
 #ifndef _WIN64
 #define HAVE_AS_X86_PCREL 1
 #endif
+#ifdef __linux__
+#define HAVE_HIDDEN_VISIBILITY_ATTRIBUTE 1
+#endif
 #define HAVE_INTTYPES_H 1
 #define HAVE_MEMORY_H 1
 #define HAVE_STDINT_H 1
@@ -17,12 +23,12 @@
 #define HAVE_SYS_TYPES_H 1
 #define LT_OBJDIR ".libs/"
 #define PACKAGE "libffi"
-#define PACKAGE_BUGREPORT "http://github.com/atgreen/libffi/issues"
+#define PACKAGE_BUGREPORT "http://github.com/libffi/libffi/issues"
 #define PACKAGE_NAME "libffi"
-#define PACKAGE_STRING "libffi 3.1"
+#define PACKAGE_STRING "libffi 3.3"
 #define PACKAGE_TARNAME "libffi"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "3.1"
+#define PACKAGE_VERSION "3.3"
 #define SIZEOF_DOUBLE 8
 #define SIZEOF_LONG_DOUBLE 8
 #ifndef _WIN64
@@ -31,10 +37,12 @@
 #define SIZEOF_SIZE_T 8
 #endif
 #define STDC_HEADERS 1
+#ifndef __linux__
 #ifndef _WIN64
 #define SYMBOL_UNDERSCORE 1
 #endif
-#define VERSION "3.1"
+#endif
+#define VERSION "3.3"
 #if defined AC_APPLE_UNIVERSAL_BUILD
 # if defined __BIG_ENDIAN__
 #  define WORDS_BIGENDIAN 1

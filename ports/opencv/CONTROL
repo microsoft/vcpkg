@@ -1,82 +1,102 @@
 Source: opencv
-Version: 3.4.3-6
-Build-Depends: zlib
-Description: computer vision library
-Default-Features: opengl, jpeg, png, tiff, eigen, flann
+Version: 4.1.1-1
+Homepage: https://github.com/opencv/opencv
+Description: Computer vision library
+Build-Depends: opencv4[core]
+Default-Features: dnn, jpeg, opengl, png, tiff, webp
 
-Feature: opengl
-Build-Depends: opengl
-Description: opengl support for opencv
+Feature: nonfree
+Build-Depends: opencv4[nonfree]
+Description: opencv nonfree module
 
-Feature: dnn
-Build-Depends: protobuf
-Description: opencv_dnn module
-
-Feature: ovis
-Build-Depends: ogre
-Description: opencv_ovis module
-
-Feature: flann
-Description: opencv_flann module
-
-Feature: sfm
-Build-Depends: eigen3, glog, gflags, ceres
-Description: opencv_sfm module
+Feature: ade
+Build-Depends: opencv4[ade]
+Description: graph api
 
 Feature: contrib
-Build-Depends: opencv[flann]
+Build-Depends: opencv4[contrib]
 Description: opencv_contrib module
 
 Feature: cuda
-Build-Depends: cuda
+Build-Depends: opencv4[cuda]
 Description: CUDA support for opencv
 
-Feature: ffmpeg
-Description: prebuilt ffmpeg support for opencv
-
-Feature: ipp
-Description: Enable Intel Integrated Performance Primitives
-
-Feature: tbb
-Build-Depends: tbb
-Description: Enable Intel Threading Building Blocks
-
-Feature: qt
-Build-Depends: qt5
-Description: Qt GUI support for opencv
-
-Feature: vtk
-Build-Depends: vtk
-Description: vtk support for opencv
-
-Feature: gdcm
-Build-Depends: gdcm2
-Description: GDCM support for opencv
-
-Feature: webp
-Build-Depends: libwebp
-Description: WebP support for opencv
-
-Feature: openexr
-Build-Depends: openexr
-Description: OpenEXR support for opencv
-
-Feature: tiff
-Build-Depends: tiff
-Description: TIFF support for opencv
-
-Feature: png
-Build-Depends: libpng
-Description: PNG support for opencv
-
-Feature: jpeg
-Build-Depends: libjpeg-turbo
-Description: JPEG support for opencv
-
-Feature: jasper
-Build-Depends: jasper
-Description: JPEG 2000 support for opencv
+Feature: dnn
+Build-Depends: opencv4[dnn]
+Description: Enable dnn module
 
 Feature: eigen
-Build-Depends: eigen3
+Build-Depends: opencv4[eigen]
 Description: Eigen support for opencv
+
+Feature: ffmpeg
+Build-Depends: opencv4[ffmpeg]
+Description: ffmpeg support for opencv
+
+Feature: gdcm
+Build-Depends: opencv4[gdcm]
+Description: GDCM support for opencv
+
+Feature: ipp
+Build-Depends: opencv4[ipp]
+Description: Enable Intel Integrated Performance Primitives
+
+Feature: jasper
+Build-Depends: opencv4[jasper]
+Description: JPEG 2000 support for opencv
+
+Feature: jpeg
+Build-Depends: opencv4[jpeg]
+Description: JPEG support for opencv
+
+Feature: openexr
+Build-Depends: opencv4[openexr]
+Description: OpenEXR support for opencv
+
+Feature: opengl
+Build-Depends: opencv4[opengl]
+Description: opengl support for opencv
+
+Feature: openmp
+Build-Depends: opencv4[openmp]
+Description: Enable openmp support for opencv
+
+Feature: ovis
+Build-Depends: opencv4[ovis]
+Description: opencv_ovis module
+
+Feature: png
+Build-Depends: opencv4[png]
+Description: PNG support for opencv
+
+Feature: qt
+Build-Depends: opencv4[qt]
+Description: Qt GUI support for opencv
+
+Feature: sfm
+Build-Depends: opencv4[sfm]
+Description: opencv_sfm module
+
+Feature: tbb
+Build-Depends: opencv4[tbb]
+Description: Enable Intel Threading Building Blocks
+
+Feature: tiff
+Build-Depends: opencv4[tiff]
+Description: TIFF support for opencv
+
+Feature: vtk
+Build-Depends: opencv4[vtk]
+Description: vtk support for opencv
+
+Feature: webp
+Build-Depends: opencv4[webp]
+Description: WebP support for opencv
+
+Feature: halide
+Build-Depends: opencv4[halide]
+Description: Halide support for opencv
+
+Feature: world
+Build-Depends: opencv4[world]
+Description: Compile to a single package support for opencv

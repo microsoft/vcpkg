@@ -1,14 +1,10 @@
 include(vcpkg_common_functions)
-set(UNRAR_VERSION "5.5.8")
-set(UNRAR_SHA512 9eac83707fa47a03925e5f3e8adf47889064d748304b732d12a2d379ab525b441f1aa33216377d4ef445f45c4e8ad73d2cd0b560601ceac344c60571b77fd6aa)
+set(UNRAR_VERSION "5.8.1")
+set(UNRAR_SHA512 31303df575e8a5ed9fc03e20d0482306536c3496894a39788052c5c9dfde61eb7f5ca29b8c48354581622a020aa446f108af956ab43024a48731a12233155612)
 set(UNRAR_FILENAME unrarsrc-${UNRAR_VERSION}.tar.gz)
-set(UNRAR_URL http://www.rarlab.com/rar/${UNRAR_FILENAME})
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/unrar)
+set(UNRAR_URL https://www.rarlab.com/rar/${UNRAR_FILENAME})
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Unrar buildsystem doesn't support static building. Building dynamic instead.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 #SRC
 vcpkg_download_distfile(ARCHIVE
@@ -16,7 +12,12 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME ${UNRAR_FILENAME}
     SHA512 ${UNRAR_SHA512}
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${UNRAR_VERSION}
+    PATCHES msbuild-use-default-sma.patch
+)
 
 vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/UnRARDll.vcxproj"

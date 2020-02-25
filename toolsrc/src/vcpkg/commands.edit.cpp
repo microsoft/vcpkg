@@ -1,38 +1,50 @@
 #include "pch.h"
 
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 
 namespace vcpkg::Commands::Edit
 {
+#if defined(_WIN32)
     static std::vector<fs::path> find_from_registry()
     {
         std::vector<fs::path> output;
 
-#if defined(_WIN32)
-        static const std::array<const char*, 3> REGKEYS = {
-            R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
-            R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)",
-            R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
+        struct RegKey
+        {
+            HKEY root;
+            StringLiteral subkey;
+        } REGKEYS[] = {
+            {HKEY_LOCAL_MACHINE,
+             R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)"},
+            {HKEY_LOCAL_MACHINE,
+             R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)"},
+            {HKEY_LOCAL_MACHINE,
+             R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)"},
+            {HKEY_CURRENT_USER,
+             R"(Software\Microsoft\Windows\CurrentVersion\Uninstall\{771FD6B0-FA20-440A-A002-3B3BAC16DC50}_is1)"},
+            {HKEY_LOCAL_MACHINE,
+             R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{EA457B21-F73E-494C-ACAB-524FDE069978}_is1)"},
         };
 
         for (auto&& keypath : REGKEYS)
         {
             const Optional<std::string> code_installpath =
-                System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, "InstallLocation");
+                System::get_registry_string(keypath.root, keypath.subkey, "InstallLocation");
             if (const auto c = code_installpath.get())
             {
-                const fs::path install_path = fs::path(*c);
+                const fs::path install_path = fs::u8path(*c);
                 output.push_back(install_path / "Code - Insiders.exe");
                 output.push_back(install_path / "Code.exe");
             }
         }
-#endif
         return output;
     }
+#endif
 
     static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
 
@@ -67,6 +79,7 @@ namespace vcpkg::Commands::Edit
             const auto& fs = paths.get_filesystem();
             auto packages = fs.get_files_non_recursive(paths.packages);
 
+            // TODO: Support edit for --overlay-ports
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
                 const auto portpath = paths.ports / port_name;
                 const auto portfile = portpath / "portfile.cmake";
@@ -154,23 +167,59 @@ namespace vcpkg::Commands::Edit
 
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
+
+        const auto txt_default = System::get_registry_string(HKEY_CLASSES_ROOT, R"(.txt\ShellNew)", "ItemName");
+        if (const auto entry = txt_default.get())
+        {
+#ifdef UNICODE
+            LPWSTR dst = new wchar_t[MAX_PATH];
+            ExpandEnvironmentStrings(Strings::to_utf16(*entry).c_str(), dst, MAX_PATH);
+            auto full_path = Strings::to_utf8(dst);
+#else
+            LPSTR dst = new char[MAX_PATH];
+            ExpandEnvironmentStrings(entry->c_str(), dst, MAX_PATH);
+            auto full_path = std::string(dst);
+#endif
+            auto begin = full_path.find_first_not_of('@');
+            candidate_paths.push_back(fs::u8path(full_path.substr(begin, full_path.find_first_of(',') - begin)));
+        }
 #elif defined(__APPLE__)
-        candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
+        candidate_paths.push_back(
+            fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
         candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"});
 #elif defined(__linux__)
         candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
         candidate_paths.push_back(fs::path{"/usr/bin/code"});
+
+        if (System::cmd_execute("command -v xdg-mime") == 0)
+        {
+            auto mime_qry = Strings::format(R"(xdg-mime query default text/plain)");
+            auto execute_result = System::cmd_execute_and_capture_output(mime_qry);
+            if (execute_result.exit_code == 0 && !execute_result.output.empty())
+            {
+                mime_qry = Strings::format(R"(command -v %s)",
+                                           execute_result.output.substr(0, execute_result.output.find('.')));
+                execute_result = System::cmd_execute_and_capture_output(mime_qry);
+                if (execute_result.exit_code == 0 && !execute_result.output.empty())
+                {
+                    execute_result.output.erase(
+                        std::remove(std::begin(execute_result.output), std::end(execute_result.output), '\n'),
+                        std::end(execute_result.output));
+                    candidate_paths.push_back(fs::path{execute_result.output});
+                }
+            }
+        }
 #endif
 
         const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
         if (it == candidate_paths.cend())
         {
-            System::println(
+            System::print2(
                 System::Color::error,
-                "Error: Visual Studio Code was not found and the environment variable EDITOR is not set or invalid.");
-            System::println("The following paths were examined:");
+                "Error: Visual Studio Code was not found and the environment variable EDITOR is not set or invalid.\n");
+            System::print2("The following paths were examined:\n");
             Files::print_paths(candidate_paths);
-            System::println("You can also set the environmental variable EDITOR to your editor of choice.");
+            System::print2("You can also set the environmental variable EDITOR to your editor of choice.\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
@@ -184,7 +233,7 @@ namespace vcpkg::Commands::Edit
 #ifdef _WIN32
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
-            System::cmd_execute_no_wait(cmd_line + " <NUL");
+            System::cmd_execute_no_wait(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif

@@ -1,11 +1,11 @@
 #pragma once
 
+#include <string>
 #include <unordered_map>
-#include <unordered_set>
+#include <vector>
 
 #include <vcpkg/base/checks.h>
-#include <vcpkg/base/span.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 
 namespace vcpkg::Graphs
 {
@@ -43,9 +43,9 @@ namespace vcpkg::Graphs
         void shuffle(Container& c, Randomizer* r)
         {
             if (!r) return;
-            for (int i = static_cast<int>(c.size()); i > 1; --i)
+            for (auto i = c.size(); i > 1; --i)
             {
-                auto j = r->random(i);
+                std::size_t j = r->random(static_cast<int>(i));
                 if (j != i - 1)
                 {
                     std::swap(c[i - 1], c[j]);
@@ -66,12 +66,12 @@ namespace vcpkg::Graphs
                 case ExplorationStatus::FULLY_EXPLORED: return;
                 case ExplorationStatus::PARTIALLY_EXPLORED:
                 {
-                    System::println("Cycle detected within graph at %s:", f.to_string(vertex));
+                    System::print2("Cycle detected within graph at ", f.to_string(vertex), ":\n");
                     for (auto&& node : exploration_status)
                     {
                         if (node.second == ExplorationStatus::PARTIALLY_EXPLORED)
                         {
-                            System::println("    %s", f.to_string(node.first));
+                            System::print2("    ", f.to_string(node.first), '\n');
                         }
                     }
                     Checks::exit_fail(VCPKG_LINE_INFO);
@@ -94,10 +94,8 @@ namespace vcpkg::Graphs
         }
     }
 
-    template<class VertexContainer, class V, class U>
-    std::vector<U> topological_sort(VertexContainer starting_vertices,
-                                    const AdjacencyProvider<V, U>& f,
-                                    Randomizer* randomizer)
+    template<class Range, class V, class U>
+    std::vector<U> topological_sort(Range starting_vertices, const AdjacencyProvider<V, U>& f, Randomizer* randomizer)
     {
         std::vector<U> sorted;
         std::unordered_map<V, ExplorationStatus> exploration_status;
@@ -111,40 +109,4 @@ namespace vcpkg::Graphs
 
         return sorted;
     }
-
-    template<class V>
-    struct Graph final : AdjacencyProvider<V, V>
-    {
-    public:
-        void add_vertex(const V& v) { this->m_edges[v]; }
-
-        void add_edge(const V& u, const V& v)
-        {
-            this->m_edges[v];
-            this->m_edges[u].insert(v);
-        }
-
-        std::vector<V> vertex_list() const
-        {
-            std::vector<V> vertex_list;
-            for (auto&& vertex : this->m_edges)
-                vertex_list.emplace_back(vertex.first);
-            return vertex_list;
-        }
-
-        std::vector<V> adjacency_list(const V& vertex) const override
-        {
-            const std::unordered_set<V>& as_set = this->m_edges.at(vertex);
-            return std::vector<V>(as_set.cbegin(), as_set.cend()); // TODO: Avoid redundant copy
-        }
-
-        V load_vertex_data(const V& vertex) const override { return vertex; }
-
-        // Note: this function indicates how tied this template is to the exact type it will be templated upon.
-        // Possible fix: This type shouldn't implement to_string() and should instead be derived from?
-        std::string to_string(const V& spec) const override { return spec->spec.to_string(); }
-
-    private:
-        std::unordered_map<V, std::unordered_set<V>> m_edges;
-    };
 }

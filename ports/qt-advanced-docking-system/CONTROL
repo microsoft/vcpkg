@@ -1,0 +1,4 @@
+Source: qt-advanced-docking-system
+Version: 2019-08-14
+Build-Depends: qt5-base, zlib, bzip2
+Description: Create customizable layouts using an advanced window docking system similar to what is found in many popular IDEs such as Visual Studio

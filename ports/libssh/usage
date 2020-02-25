@@ -1,0 +1,4 @@
+The package libssh is compatible with built-in CMake targets:
+
+    find_package(libssh CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE ssh)

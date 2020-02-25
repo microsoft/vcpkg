@@ -1,11 +1,13 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
-    REF 1.9.5
-    SHA512 bee584c83bb317802eb855fececc98f2013d7c3134f063c3146521ab535c8a89c2dfe89ccfa6ebbe2d7c64edec0e53105ead361da83b885c7778b40e4801de62
+    REF 541086adcf1eecf88ac09fda47d9a8ec1598015d # debian/1.15.1-1
+    SHA512 a57438dfae9d0993ae04b7a76677f79331699898f21e7645db5edd2c91014f33b738a0af67b58234d1ee03aab2ae3b58c183bbd043fc2bde5cc1a4e111755b70
     HEAD_REF master
-    PATCHES fix-uwp.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "snappy" ENABLE_SNAPPY
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -14,29 +16,40 @@ else()
     set(ENABLE_STATIC OFF)
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_WINDOWS)
     set(ENABLE_SSL "WINDOWS")
 else()
     set(ENABLE_SSL "OPENSSL")
 endif()
+
+file(READ ${CMAKE_CURRENT_LIST_DIR}/CONTROL _contents)
+string(REGEX MATCH "\nVersion:[ ]*[^ \n]+" _contents "${_contents}")
+string(REGEX REPLACE ".+Version:[ ]*([\\.0-9]+).*" "\\1" BUILD_VERSION "${_contents}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBSON_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DENABLE_MONGOC=ON
+        -DENABLE_BSON=ON
         -DENABLE_TESTS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_SSL=${ENABLE_SSL}
+        -DENABLE_ZLIB=SYSTEM
         -DENABLE_STATIC=${ENABLE_STATIC}
+        -DBUILD_VERSION=${BUILD_VERSION}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libmongoc-static-1.0")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libmongoc-static-1.0)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libmongoc-1.0")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libmongoc-1.0)
 endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # This rename is needed because the official examples expect to use #include <mongoc.h>
 # See Microsoft/vcpkg#904
@@ -49,8 +62,8 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/temp ${CURRENT_PACKAGES_DIR}/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-	    file(RENAME
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_TARGET_IS_UWP)
+        file(RENAME
             ${CURRENT_PACKAGES_DIR}/lib/libmongoc-static-1.0.a
             ${CURRENT_PACKAGES_DIR}/lib/libmongoc-1.0.a)
         file(RENAME
@@ -66,11 +79,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     endif()
 
     # drop the __declspec(dllimport) when building static
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-        PATCHES
-            static.patch
-    )
+    file(READ ${CURRENT_PACKAGES_DIR}/include/mongoc/mongoc-macros.h MONGOC_MACROS_H)
+    string(REPLACE "define MONGOC_API __declspec(dllimport)" "define MONGOC_API" MONGOC_MACROS_H "${MONGOC_MACROS_H}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/mongoc/mongoc-macros.h "${MONGOC_MACROS_H}")
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
@@ -86,8 +97,31 @@ endif()
 
 # Create cmake files for _both_ find_package(mongo-c-driver) and find_package(libmongoc-static-1.0)/find_package(libmongoc-1.0)
 file(READ ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFIX}-config.cmake LIBMONGOC_CONFIG_CMAKE)
+
+# Patch: Set _IMPORT_PREFIX and replace PACKAGE_PREFIX_DIR
+string(REPLACE
+[[
+get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
+]]
+[[
+# VCPKG PATCH SET IMPORT_PREFIX
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+if(_IMPORT_PREFIX STREQUAL "/")
+  set(_IMPORT_PREFIX "")
+endif()
+]]
+    LIBMONGOC_CONFIG_CMAKE "${LIBMONGOC_CONFIG_CMAKE}")
+string(REPLACE [[PACKAGE_PREFIX_DIR]] [[_IMPORT_PREFIX]] LIBMONGOC_CONFIG_CMAKE "${LIBMONGOC_CONFIG_CMAKE}")
+
 string(REPLACE "/include/libmongoc-1.0" "/include" LIBMONGOC_CONFIG_CMAKE "${LIBMONGOC_CONFIG_CMAKE}")
 string(REPLACE "mongoc-static-1.0" "mongoc-1.0" LIBMONGOC_CONFIG_CMAKE "${LIBMONGOC_CONFIG_CMAKE}")
+#Something similar is probably required for windows too!
+string(REPLACE "/lib/libssl.a" "\$<\$<CONFIG:DEBUG>:/debug>/lib/libssl.a" LIBMONGOC_CONFIG_CMAKE "${LIBMONGOC_CONFIG_CMAKE}")
+string(REPLACE "/lib/libcrypto.a" "\$<\$<CONFIG:DEBUG>:/debug>/lib/libcrypto.a" LIBMONGOC_CONFIG_CMAKE "${LIBMONGOC_CONFIG_CMAKE}")
+string(REPLACE "/lib/libz.a" "\$<\$<CONFIG:DEBUG>:/debug>/lib/libz.a" LIBMONGOC_CONFIG_CMAKE "${LIBMONGOC_CONFIG_CMAKE}")
+
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFIX}-config.cmake "${LIBMONGOC_CONFIG_CMAKE}")
 file(COPY ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFIX}-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmongoc-${PORT_POSTFIX})
 file(COPY ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFIX}-config-version.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmongoc-${PORT_POSTFIX})
@@ -95,3 +129,12 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFI
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFIX}-config-version.cmake ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/mongo-c-driver-config-version.cmake)
 
 vcpkg_copy_pdbs()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libbson-1.0.pc ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libbson-1.0.pc)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libbson-static-1.0.pc ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libbson-static-1.0.pc)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/bson-1.0.lib ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/bson-static-1.0.lib ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libbson-1.0.dll ${CURRENT_PACKAGES_DIR}/bin/libbson-1.0.dll)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libbson-1.0.pdb ${CURRENT_PACKAGES_DIR}/bin/libbson-1.0.pdb)

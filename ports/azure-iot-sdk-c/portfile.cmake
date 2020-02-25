@@ -6,8 +6,8 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF 6633c5b18710febf1af7713cf1a336fd38f623ed
-        SHA512 17787aa4ef52d4cf39f939fee05555fcef85cde63620036f6715b699902fd3fd766250c26ea6065f5f36572ac2b9d5293e79ba17ea9d8f4cbce267322269e7e4
+        REF cb2e8d390df56ffa31d08ca0a79ab58ff96160cc
+        SHA512 6798b17d6768b3ccbd0eb66719b50f364cd951736eb71110e2dc9deca054a1566ff88b9e8c5e9b52536e4308cad6cd3cbebff3282c123083e3afaee5535e724b
         HEAD_REF public-preview
         PATCHES improve-external-deps.patch
     )
@@ -15,14 +15,23 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF a46d038a9151ff1fc7d9b70f2d7fcca03c19b972
-        SHA512 bcd9c656ab721ab15da3cb690772c84e58e09d8785b975b046d4986b5fa16fb9e74a06af00acbe91fd8d4b897cd12dba9b2318ea5465865bff98f5429d2ee618
+        REF c8b6a108fd7e01c1d89d9150b5d209f17e54fc4e
+        SHA512 43d7bb9696c9f5d64ec38b017b3b9fcbf86a8a3e8f21b129546b822fe00640f775ca362ec124a8cc37c4c9634de50d88d38952f04a7f4cfc08ad7c25463770ef
         HEAD_REF master
         PATCHES improve-external-deps.patch
     )
 endif()
 
+if("use_prov_client" IN_LIST FEATURES)
+    message(STATUS "use prov_client")
+    set(USE_PROV_CLIENT 1)
+else()
+    message(STATUS "NO prov_client")
+    set(USE_PROV_CLIENT 0)
+endif()
+
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
+file(COPY ${SOURCE_PATH}/configs/azure_iot_sdksFunctions.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/cmake/azure_iot_sdks/)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -33,6 +42,8 @@ vcpkg_configure_cmake(
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
+        -Duse_prov_client=${USE_PROV_CLIENT}
+        -Dhsm_type_symm_key=${USE_PROV_CLIENT}
 )
 
 vcpkg_install_cmake()
@@ -44,3 +55,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-iot-sdk-c/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
+

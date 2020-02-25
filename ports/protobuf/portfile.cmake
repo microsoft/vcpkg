@@ -1,15 +1,11 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO google/protobuf
-    REF v3.6.1.3
-    SHA512 9eadb46c7daa19e612516958169bc90943b38b429a4b2cf2171b66b57f50a2f8a9b66cbf58bdd44517af414b78e0f3ab2e1361891dc60ecd098185da2638d37e
+    REPO protocolbuffers/protobuf
+    REF v3.11.3
+    SHA512 beac21d495bfd8e9b40120d1db9fd82251958f954533fc6f76cd0b9c28f92533ac35368a4c298ebb1d8e09047b670ed3bd948bb7da6eb5cca7fdc0c1c44aa39b
     HEAD_REF master
     PATCHES
         fix-uwp.patch
-        disable-lite.patch
-        version-rc-msvc.patch
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
@@ -25,15 +21,15 @@ if(NOT protobuf_BUILD_PROTOC_BINARIES AND NOT EXISTS ${CURRENT_INSTALLED_DIR}/..
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(protobuf_BUILD_SHARED_LIBS ON)
+  set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
-    set(protobuf_BUILD_SHARED_LIBS OFF)
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
 endif()
 
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(protobuf_MSVC_STATIC_RUNTIME ON)
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_STATIC_CRT OFF)
 else()
-    set(protobuf_MSVC_STATIC_RUNTIME OFF)
+  set(VCPKG_BUILD_STATIC_CRT ON)
 endif()
 
 if("zlib" IN_LIST FEATURES)
@@ -46,8 +42,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
     PREFER_NINJA
     OPTIONS
-        -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
-        -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
+        -Dprotobuf_BUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
+        -Dprotobuf_MSVC_STATIC_RUNTIME=${VCPKG_BUILD_STATIC_CRT}
         -Dprotobuf_WITH_ZLIB=${protobuf_WITH_ZLIB}
         -Dprotobuf_BUILD_TESTS=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
@@ -92,10 +88,10 @@ protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(CMAKE_HOST_WIN32)
     if(protobuf_BUILD_PROTOC_BINARIES)
-        file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/protobuf)
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/protobuf)
+        file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     else()
-        file(COPY ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/protobuf DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+        file(COPY ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -108,15 +104,11 @@ if(CMAKE_HOST_WIN32)
 else()
     file(GLOB EXECUTABLES ${CURRENT_PACKAGES_DIR}/bin/protoc*)
     foreach(E IN LISTS EXECUTABLES)
-        file(INSTALL ${E} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/protobuf
+        file(INSTALL ${E} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
     endforeach()
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
-endif()
-
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libprotobuf-lite.lib)
-    message(FATAL_ERROR "Expected to not build the lite runtime because it contains some of the same symbols as the full runtime.")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -125,5 +117,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h "${_contents}")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 vcpkg_copy_pdbs()

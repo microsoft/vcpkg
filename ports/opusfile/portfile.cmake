@@ -1,8 +1,11 @@
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "UWP builds not supported")
 endif()
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opusfile
@@ -18,11 +21,11 @@ else()
     set(BUILD_OPUSURL OFF)
 endif()
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} 
+vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_OPUSURL=${BUILD_OPUSURL} 
-    OPTIONS_DEBUG 
+        -DBUILD_OPUSURL=${BUILD_OPUSURL}
+    OPTIONS_DEBUG
         -DOPUSFILE_SKIP_HEADERS=ON)
 
 vcpkg_install_cmake()

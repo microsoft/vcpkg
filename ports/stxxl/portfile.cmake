@@ -1,10 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("stxxl currently only supports static library linkage.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-    set(VCPKG_CRT_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -15,10 +11,12 @@ vcpkg_from_github(
     PATCHES
         # This patch can be removed when stxxl/stxxl/#95 is accepted
         fix-include-dir.patch
+        0001-fix-visual-studio.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DBUILD_STATIC_LIBS=ON
         -DBUILD_EXAMPLES=OFF
@@ -35,7 +33,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DSTXXL_DEBUG_ASSERTIONS=ON
     OPTIONS_RELEASE
-        -DSTXXL_DEBUG_ASSERTIONS=OFF    
+        -DSTXXL_DEBUG_ASSERTIONS=OFF
 )
 
 vcpkg_install_cmake()

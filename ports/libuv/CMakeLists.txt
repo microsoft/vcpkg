@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(libuv C)
 
+find_package(Threads REQUIRED)
+
 file(GLOB UV_SOURCES_COMMON src/*.c)
 
 file(GLOB UV_SOURCES_UNIX
@@ -51,7 +53,7 @@ file(GLOB UV_SOURCES_WIN src/win/*.c)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     add_library(libuv ${UV_SOURCES_COMMON} ${UV_SOURCES_WIN})
     target_compile_definitions(libuv PRIVATE WIN32_LEAN_AND_MEAN "_WIN32_WINNT=0x0600")
-    target_link_libraries(libuv iphlpapi psapi shell32 userenv ws2_32)
+    target_link_libraries(libuv PRIVATE iphlpapi psapi shell32 userenv ws2_32)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     add_library(libuv ${UV_SOURCES_COMMON} ${UV_SOURCES_UNIX} ${UV_SOURCES_DARWIN})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
@@ -60,6 +62,7 @@ else() # Assume some Linux variant
     add_library(libuv ${UV_SOURCES_COMMON} ${UV_SOURCES_UNIX} ${UV_SOURCES_LINUX})
 endif()
 
+target_link_libraries(libuv PRIVATE Threads::Threads)
 target_include_directories(libuv PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 set_target_properties(libuv PROPERTIES DEFINE_SYMBOL BUILDING_UV_SHARED)
 

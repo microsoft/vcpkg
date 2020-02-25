@@ -20,10 +20,6 @@ if(MSVC)
   add_compile_options(/W4 -D_CRT_SECURE_NO_WARNINGS -DTARGET_OS_WIN32)
 endif()
 
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
 include_directories(.)
 
 add_library(libalac_decoder ${SRCS})

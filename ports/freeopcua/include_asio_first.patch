@@ -1,0 +1,138 @@
+diff --git a/src/core/subscription.cpp b/src/core/subscription.cpp
+index b690d3a..fdac2f3 100644
+--- a/src/core/subscription.cpp
++++ b/src/core/subscription.cpp
+@@ -17,11 +17,10 @@
+  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.        *
+  ******************************************************************************/
+ 
+-
+-#include <opc/ua/subscription.h>
++#include <boost/asio.hpp>
+ #include <opc/ua/protocol/string_utils.h>
++#include <opc/ua/subscription.h>
+ 
+-#include <boost/asio.hpp>
+ #include <iostream>
+ 
+ namespace OpcUa
+diff --git a/src/server/asio_addon.cpp b/src/server/asio_addon.cpp
+index 795a6b2..532ac3c 100644
+--- a/src/server/asio_addon.cpp
++++ b/src/server/asio_addon.cpp
+@@ -17,9 +17,9 @@
+  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
+  ******************************************************************************/
+ 
++#include <boost/asio.hpp>
+ #include <opc/ua/server/addons/asio_addon.h>
+ 
+-#include <boost/asio.hpp>
+ #include <iostream>
+ #include <thread>
+ 
+diff --git a/src/server/internal_subscription.h b/src/server/internal_subscription.h
+index d42aa65..dd193a9 100644
+--- a/src/server/internal_subscription.h
++++ b/src/server/internal_subscription.h
+@@ -1,6 +1,7 @@
+ 
+ #pragma once
+ 
++#include <boost/asio.hpp>
+ //#include "address_space_internal.h"
+ #include "subscription_service_internal.h"
+ 
+@@ -11,7 +12,6 @@
+ #include <opc/ua/protocol/string_utils.h>
+ #include <opc/ua/services/attributes.h>
+ 
+-#include <boost/asio.hpp>
+ #include <boost/thread/shared_mutex.hpp>
+ #include <chrono>
+ #include <iostream>
+@@ -115,5 +115,3 @@ private:
+ 
+ }
+ }
+-
+-
+diff --git a/src/server/opc_tcp_async.cpp b/src/server/opc_tcp_async.cpp
+index dc700c2..f3a66b8 100644
+--- a/src/server/opc_tcp_async.cpp
++++ b/src/server/opc_tcp_async.cpp
+@@ -17,6 +17,7 @@
+  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
+  ******************************************************************************/
+ 
++#include <boost/asio.hpp>
+ #include "opc_tcp_processor.h"
+ 
+ #include <opc/ua/server/opc_tcp_async.h>
+@@ -29,7 +30,6 @@
+ #include <opc/ua/protocol/input_from_buffer.h>
+ 
+ #include <array>
+-#include <boost/asio.hpp>
+ #include <future>
+ #include <iostream>
+ #include <set>
+diff --git a/src/server/subscription_service_internal.h b/src/server/subscription_service_internal.h
+index 6b16e1d..f7e5dfe 100644
+--- a/src/server/subscription_service_internal.h
++++ b/src/server/subscription_service_internal.h
+@@ -9,6 +9,7 @@
+ 
+ #pragma once
+ 
++#include <boost/asio.hpp>
+ #include "address_space_addon.h"
+ #include "internal_subscription.h"
+ 
+@@ -20,7 +21,6 @@
+ #include <opc/ua/protocol/strings.h>
+ #include <opc/ua/protocol/string_utils.h>
+ 
+-#include <boost/asio.hpp>
+ #include <boost/thread/shared_mutex.hpp>
+ #include <ctime>
+ #include <limits>
+@@ -76,4 +76,3 @@ private:
+ }
+ 
+ }
+-
+diff --git a/src/server/tcp_server.cpp b/src/server/tcp_server.cpp
+index b4f2000..2430820 100644
+--- a/src/server/tcp_server.cpp
++++ b/src/server/tcp_server.cpp
+@@ -8,9 +8,6 @@
+ /// http://www.gnu.org/licenses/lgpl.html)
+ ///
+ 
+-#ifdef _WIN32
+-#include <windows.h>
+-#endif
+ 
+ #include "tcp_server.h"
+ 
+@@ -34,8 +31,18 @@
+ #include <string.h>
+ #include <sys/types.h>
+ 
+-
+ #ifdef _WIN32
++#include <WinSock2.h>
++#include <windows.h>
++#if !defined SHUT_RD && defined SD_RECEIVE
++#define SHUT_RD SD_RECEIVE
++#endif
++#if !defined SHUT_WR && defined SD_SEND
++#define SHUT_WR SD_SEND
++#endif
++#if !defined SHUT_RDWR && defined SD_BOTH
++#define SHUT_RDWR SD_BOTH
++#endif
+ #else
+ #include <arpa/inet.h>
+ #include <netdb.h>

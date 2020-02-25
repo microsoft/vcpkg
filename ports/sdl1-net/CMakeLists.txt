@@ -5,8 +5,7 @@ if (MSVC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4996")
 endif()
 
-find_path(SDL_INCLUDE_DIR SDL.h)
-find_library(SDL_LIBRARY NAMES SDLd SDL)
+find_package(SDL)
 
 add_library(SDL_net SDLnet.c SDLnetselect.c SDLnetTCP.c SDLnetUDP.c version.rc)
 

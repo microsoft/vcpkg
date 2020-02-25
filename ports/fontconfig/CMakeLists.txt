@@ -37,7 +37,11 @@ add_library(fontconfig
     src/fcxml.c
     src/ftglue.c)
 
-set_target_properties(fontconfig PROPERTIES DEFINE_SYMBOL "FcPublic=__declspec(dllexport)")
+if(WIN32)
+    set_target_properties(fontconfig PROPERTIES DEFINE_SYMBOL "FcPublic=__declspec(dllexport)")
+else()
+    set_target_properties(fontconfig PROPERTIES DEFINE_SYMBOL "FcPublic=__attribute__((visibility(\"default\")))")
+endif()
 
 target_include_directories(fontconfig PRIVATE .
     ${FC_INCLUDE_DIR}/alias

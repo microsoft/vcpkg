@@ -1,1350 +1,177 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4448b98..d6aa484 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -743,10 +743,10 @@ elseif (PTHREAD_LIBRARY)
-   # linking order.
-   set(ARROW_LINK_LIBS
-     ${ARROW_LINK_LIBS}
--    ${PTHREAD_LIBRARY})
-+    pthreadshared)
-   set(ARROW_STATIC_LINK_LIBS
-     ${ARROW_STATIC_LINK_LIBS}
--    ${PTHREAD_LIBRARY})
-+    pthreadshared)
- endif()
- 
- ############################################################
-@@ -780,3 +780,4 @@ endif()
- if(ARROW_GANDIVA)
-   add_subdirectory(src/gandiva)
- endif()
-+
-diff --git a/cmake_modules/FindBrotli.cmake b/cmake_modules/FindBrotli.cmake
-index ea971f0..e8dfb3c 100644
---- a/cmake_modules/FindBrotli.cmake
-+++ b/cmake_modules/FindBrotli.cmake
-@@ -39,57 +39,27 @@ elseif ( Brotli_HOME )
- endif()
- 
- find_path( BROTLI_INCLUDE_DIR NAMES brotli/decode.h
--  PATHS ${_brotli_roots}
--  NO_DEFAULT_PATH
-   PATH_SUFFIXES "include" )
- 
--find_library( BROTLI_LIBRARY_ENC NAMES libbrotlienc.a libbrotlienc-static.a brotlienc
--  PATHS ${_brotli_roots}
--  NO_DEFAULT_PATH
--  PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib" )
-+find_library( BROTLI_LIBRARY_ENC NAMES libbrotlienc libbrotlienc-static brotlienc brotlienc-static
-+  PATH_SUFFIXES "lib" )
- 
--find_library( BROTLI_LIBRARY_DEC NAMES libbrotlidec.a libbrotlidec-static.a brotlidec
--  PATHS ${_brotli_roots}
--  NO_DEFAULT_PATH
--  PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib" )
-+find_library( BROTLI_LIBRARY_DEC NAMES libbrotlidec libbrotlidec-static brotlidec brotlidec-static
-+  PATH_SUFFIXES "lib" )
- 
--find_library( BROTLI_LIBRARY_COMMON NAMES libbrotlicommon.a libbrotlicommon-static.a brotlicommon
--  PATHS ${_brotli_roots}
--  NO_DEFAULT_PATH
--  PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib" )
-+find_library( BROTLI_LIBRARY_COMMON NAMES libbrotlicommon libbrotlicommon-static brotlicommon brotlicommon-static
-+  PATH_SUFFIXES "lib" )
- 
- set(BROTLI_LIBRARIES ${BROTLI_LIBRARY_ENC} ${BROTLI_LIBRARY_DEC}
-     ${BROTLI_LIBRARY_COMMON})
--
-+	
- if (BROTLI_INCLUDE_DIR AND (PARQUET_MINIMAL_DEPENDENCY OR BROTLI_LIBRARIES))
-   set(BROTLI_FOUND TRUE)
--  get_filename_component( BROTLI_LIBS ${BROTLI_LIBRARY_ENC} PATH )
--  set(BROTLI_LIB_NAME brotli)
--  if (BROTLI_MSVC_STATIC_LIB_SUFFIX)
--    set(BROTLI_STATIC_LIB_SUFFIX "${BROTLI_MSVC_STATIC_LIB_SUFFIX}")
--  endif()
--  if (NOT BROTLI_STATIC_LIB_SUFFIX)
--    if (EXISTS "${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}enc-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
--      set(BROTLI_STATIC_LIB_SUFFIX -static)
--    else()
--      if (MSVC)
--        set(BROTLI_STATIC_LIB_SUFFIX _static)
--      else()
--        set(BROTLI_STATIC_LIB_SUFFIX "")
--      endif()
--    endif()
--  endif()
--  set(BROTLI_STATIC_LIB
--      ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}enc${BROTLI_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}
--      ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}dec${BROTLI_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}
--      ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}common${BROTLI_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
--  set(BROTLI_STATIC_LIBRARY_ENC ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}enc${BROTLI_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
--  set(BROTLI_STATIC_LIBRARY_DEC ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}dec${BROTLI_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
--  set(BROTLI_STATIC_LIBRARY_COMMON ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}common${BROTLI_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
--  set(BROTLI_SHARED_LIB
--      ${BROTLI_LIBS}/${CMAKE_SHARED_LIBRARY_PREFIX}${BROTLI_LIB_NAME}enc${CMAKE_SHARED_LIBRARY_SUFFIX}
--      ${BROTLI_LIBS}/${CMAKE_SHARED_LIBRARY_PREFIX}${BROTLI_LIB_NAME}dec${CMAKE_SHARED_LIBRARY_SUFFIX}
--      ${BROTLI_LIBS}/${CMAKE_SHARED_LIBRARY_PREFIX}${BROTLI_LIB_NAME}common${CMAKE_SHARED_LIBRARY_SUFFIX})
-+  set(BROTLI_STATIC_LIB ${BROTLI_LIBRARIES})
-+  set(BROTLI_STATIC_LIBRARY_ENC ${BROTLI_LIBRARY_ENC})
-+  set(BROTLI_STATIC_LIBRARY_DEC ${BROTLI_LIBRARY_DEC})
-+  set(BROTLI_STATIC_LIBRARY_COMMON ${BROTLI_LIBRARY_COMMON})
-+  set(BROTLI_SHARED_LIB ${BROTLI_LIBRARIES})
- else ()
-   set(BROTLI_FOUND FALSE)
- endif ()
-diff --git a/cmake_modules/FindFlatbuffers.cmake b/cmake_modules/FindFlatbuffers.cmake
-index 975c869..9cee8a0 100644
---- a/cmake_modules/FindFlatbuffers.cmake
-+++ b/cmake_modules/FindFlatbuffers.cmake
-@@ -31,31 +31,26 @@
- #  FLATBUFFERS_STATIC_LIB, path to libflatbuffers.a
- #  FLATBUFFERS_FOUND, whether flatbuffers has been found
- 
--if( NOT "${FLATBUFFERS_HOME}" STREQUAL "")
--    file( TO_CMAKE_PATH "${FLATBUFFERS_HOME}" _native_path )
--    list( APPEND _flatbuffers_roots "${_native_path}" )
--elseif ( Flatbuffers_HOME )
--    list( APPEND _flatbuffers_roots "${Flatbuffers_HOME}" )
-+if(WIN32)
-+  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+    set(FLATBUFFERS_LIB_SUFFIX mdd)
-+  else()
-+    set(FLATBUFFERS_LIB_SUFFIX md)
-+  endif()
-+else()
-+  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+    set(FLATBUFFERS_LIB_SUFFIX "d")
-+  else()
-+    set(FLATBUFFERS_LIB_SUFFIX "")
-+  endif()
- endif()
- 
--# Try the parameterized roots, if they exist
--if ( _flatbuffers_roots )
--    find_path( FLATBUFFERS_INCLUDE_DIR NAMES flatbuffers/flatbuffers.h
--        PATHS "${_flatbuffers_roots}" NO_DEFAULT_PATH
--        PATH_SUFFIXES "include" )
--    find_library( FLATBUFFERS_LIBRARIES NAMES flatbuffers
--        PATHS "${_flatbuffers_roots}" NO_DEFAULT_PATH
--        PATH_SUFFIXES "lib" "lib64")
--else ()
--    find_path( FLATBUFFERS_INCLUDE_DIR NAMES flatbuffers/flatbuffers.h )
--    find_library( FLATBUFFERS_LIBRARIES NAMES flatbuffers )
--endif ()
-+find_path( FLATBUFFERS_INCLUDE_DIR NAMES flatbuffers/flatbuffers.h )
-+find_library( FLATBUFFERS_LIBRARIES NAMES flatbuffers )
- 
- find_program(FLATBUFFERS_COMPILER flatc
--  "${FLATBUFFERS_HOME}/bin"
--  /usr/local/bin
--  /usr/bin
--  NO_DEFAULT_PATH
-+  PATH_SUFFIXES
-+  "${FLATBUFFERS_HOME}/tools/flatbuffers"
- )
- 
- if (FLATBUFFERS_INCLUDE_DIR AND FLATBUFFERS_LIBRARIES)
-diff --git a/cmake_modules/FindGLOG.cmake b/cmake_modules/FindGLOG.cmake
-index f22e4df..53e545b 100644
---- a/cmake_modules/FindGLOG.cmake
-+++ b/cmake_modules/FindGLOG.cmake
-@@ -29,11 +29,6 @@
- #  GLOG_STATIC_LIB, path to libglog.a
- #  GLOG_FOUND, whether glog has been found
- 
--if( NOT "${GLOG_HOME}" STREQUAL "")
--    file( TO_CMAKE_PATH "${GLOG_HOME}" _native_path )
--    list( APPEND _glog_roots ${_native_path} )
--endif()
--
- message(STATUS "GLOG_HOME: ${GLOG_HOME}")
- # Try the parameterized roots, if they exist
- if ( _glog_roots )
-@@ -43,10 +38,10 @@ if ( _glog_roots )
-     endif ()
- 
-     find_path( GLOG_INCLUDE_DIR NAMES glog/logging.h
--        PATHS ${_glog_roots} NO_DEFAULT_PATH
-+        PATHS ${_glog_roots}
-         PATH_SUFFIXES "include" )
-     find_library( GLOG_LIBRARIES NAMES glog
--        PATHS ${_glog_roots} NO_DEFAULT_PATH
-+        PATHS ${_glog_roots}
-         PATH_SUFFIXES ${lib_dirs})
- else ()
-     find_path( GLOG_INCLUDE_DIR NAMES glog/logging.h )
-diff --git a/cmake_modules/FindLz4.cmake b/cmake_modules/FindLz4.cmake
-index 3a89c8d..1e068b4 100644
---- a/cmake_modules/FindLz4.cmake
-+++ b/cmake_modules/FindLz4.cmake
-@@ -29,23 +29,16 @@ elseif ( Lz4_HOME )
-     list( APPEND _lz4_roots ${Lz4_HOME} )
- endif()
- 
--if (MSVC AND NOT DEFINED LZ4_MSVC_STATIC_LIB_SUFFIX)
--  set(LZ4_MSVC_STATIC_LIB_SUFFIX "_static")
-+if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+  set(LZ4_LIB_NAME lz4d)
-+else()
-+  set(LZ4_LIB_NAME lz4)
- endif()
- 
--set(LZ4_STATIC_LIB_SUFFIX
--  "${LZ4_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
--
--set(LZ4_STATIC_LIB_NAME
--  ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_STATIC_LIB_SUFFIX})
--
- find_path(LZ4_INCLUDE_DIR NAMES lz4.h
--  PATHS ${_lz4_roots}
--  NO_DEFAULT_PATH
-   PATH_SUFFIXES "include" )
--find_library(LZ4_STATIC_LIB NAMES ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
--  PATHS ${_lz4_roots}
--  NO_DEFAULT_PATH
-+
-+find_library(LZ4_STATIC_LIB NAMES ${LZ4_LIB_NAME}
-   PATH_SUFFIXES "lib" )
- 
- include(FindPackageHandleStandardArgs)
-diff --git a/cmake_modules/FindSnappy.cmake b/cmake_modules/FindSnappy.cmake
-index 867963c..fd45321 100644
---- a/cmake_modules/FindSnappy.cmake
-+++ b/cmake_modules/FindSnappy.cmake
-@@ -31,31 +31,23 @@
- #  SNAPPY_SHARED_LIB, path to libsnappy's shared library
- #  SNAPPY_FOUND, whether snappy has been found
- 
--if( NOT "${SNAPPY_HOME}" STREQUAL "")
--    file( TO_CMAKE_PATH "${SNAPPY_HOME}" _native_path )
--    list( APPEND _snappy_roots ${_native_path} )
--elseif ( Snappy_HOME )
--    list( APPEND _snappy_roots ${Snappy_HOME} )
--endif()
--
--message(STATUS "SNAPPY_HOME: ${SNAPPY_HOME}")
--find_path(SNAPPY_INCLUDE_DIR snappy.h HINTS
--  ${_snappy_roots}
--  NO_DEFAULT_PATH
-+find_path(SNAPPY_INCLUDE_DIR snappy.h 
-   PATH_SUFFIXES "include")
- 
--find_library( SNAPPY_LIBRARIES NAMES snappy PATHS
--  ${_snappy_roots}
--  NO_DEFAULT_PATH
--  PATH_SUFFIXES "lib")
-+if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+  set(SNAPPY_LIB_NAME snappyd)
-+else()
-+  set(SNAPPY_LIB_NAME snappy)
-+endif()
-+
-+find_library( SNAPPY_LIBRARIES NAMES ${SNAPPY_LIB_NAME} PATH_SUFFIXES "lib")
- 
- if (SNAPPY_INCLUDE_DIR AND (PARQUET_MINIMAL_DEPENDENCY OR SNAPPY_LIBRARIES))
-   set(SNAPPY_FOUND TRUE)
-   get_filename_component( SNAPPY_LIBS ${SNAPPY_LIBRARIES} PATH )
-   set(SNAPPY_HEADER_NAME snappy.h)
-   set(SNAPPY_HEADER ${SNAPPY_INCLUDE_DIR}/${SNAPPY_HEADER_NAME})
--  set(SNAPPY_LIB_NAME snappy)
--  set(SNAPPY_STATIC_LIB ${SNAPPY_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${SNAPPY_LIB_NAME}${SNAPPY_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
-+  set(SNAPPY_STATIC_LIB ${SNAPPY_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${SNAPPY_LIB_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX})
-   set(SNAPPY_SHARED_LIB ${SNAPPY_LIBS}/${CMAKE_SHARED_LIBRARY_PREFIX}${SNAPPY_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
- else ()
-   set(SNAPPY_FOUND FALSE)
-diff --git a/cmake_modules/FindThrift.cmake b/cmake_modules/FindThrift.cmake
-index 5402766..6cff9fa 100644
---- a/cmake_modules/FindThrift.cmake
-+++ b/cmake_modules/FindThrift.cmake
-@@ -28,41 +28,31 @@
- #  THRIFT_STATIC_LIB, THRIFT static library
- #  THRIFT_FOUND, If false, do not try to use ant
- 
--# prefer the thrift version supplied in THRIFT_HOME
--if( NOT "${THRIFT_HOME}" STREQUAL "")
--    file( TO_CMAKE_PATH "${THRIFT_HOME}" _native_path )
--    list( APPEND _thrift_roots ${_native_path} )
--elseif ( Thrift_HOME )
--    list( APPEND _thrift_roots ${Thrift_HOME} )
--endif()
--
--message(STATUS "THRIFT_HOME: ${THRIFT_HOME}")
--find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h HINTS
--  ${_thrift_roots}
--  NO_DEFAULT_PATH
-+find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h
-   PATH_SUFFIXES "include"
- )
- 
--find_path(THRIFT_CONTRIB_DIR share/fb303/if/fb303.thrift HINTS
--  ${_thrift_roots}
--  NO_DEFAULT_PATH
--)
--
--if (MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
--  set(THRIFT_MSVC_STATIC_LIB_SUFFIX md)
-+if(WIN32)
-+  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+    set(THRIFT_LIB_SUFFIX mdd)
-+  else()
-+    set(THRIFT_LIB_SUFFIX md)
-+  endif()
-+else()
-+  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+    set(THRIFT_LIB_SUFFIX "d")
-+  else()
-+    set(THRIFT_LIB_SUFFIX "")
-+  endif()
- endif()
- 
- find_library(THRIFT_STATIC_LIB NAMES
--  ${CMAKE_STATIC_LIBRARY_PREFIX}thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}
--  HINTS ${_thrift_roots}
--  NO_DEFAULT_PATH
--  PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib"
-+  thrift${THRIFT_LIB_SUFFIX}
-+  PATH_SUFFIXES lib
- )
- 
- find_program(THRIFT_COMPILER thrift HINTS
--  ${_thrift_roots}
--  NO_DEFAULT_PATH
--  PATH_SUFFIXES "bin"
-+  PATH_SUFFIXES "tools"
- )
- 
- function(EXTRACT_THRIFT_VERSION)
-@@ -111,7 +101,6 @@ else ()
-   endif ()
- endif ()
- 
--
- mark_as_advanced(
-   THRIFT_STATIC_LIB
-   THRIFT_COMPILER
-diff --git a/cmake_modules/FindZLIB.cmake b/cmake_modules/FindZLIB.cmake
-index ca6060b..85a4585 100644
---- a/cmake_modules/FindZLIB.cmake
-+++ b/cmake_modules/FindZLIB.cmake
-@@ -30,43 +30,15 @@
- #  ZLIB_SHARED_LIB, path to libz's shared library
- #  ZLIB_FOUND, whether zlib has been found
- 
--if( NOT "${ZLIB_HOME}" STREQUAL "")
--    file( TO_CMAKE_PATH "${ZLIB_HOME}" _native_path )
--    list( APPEND _zlib_roots ${_native_path} )
--elseif ( ZLIB_HOME )
--    list( APPEND _zlib_roots ${ZLIB_HOME} )
-+if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+  set(ZLIB_LIB_NAME_SUFFIX "d")
-+else()
-+  set(ZLIB_LIB_NAME_SUFFIX "")
- endif()
- 
--if (MSVC)
--  # zlib uses zlib.lib for Windows.
--  set(ZLIB_LIB_NAME zlib.lib)
--else ()
--  # zlib uses libz.so for non Windows.
--  set(ZLIB_LIB_NAME
--    ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX})
--endif ()
--
- # Try the parameterized roots, if they exist
--if (_zlib_roots)
--  find_path(ZLIB_INCLUDE_DIR NAMES zlib.h
--    PATHS ${_zlib_roots} NO_DEFAULT_PATH
--    PATH_SUFFIXES "include")
--  find_library(ZLIB_SHARED_LIB
--    NAMES ${ZLIB_LIB_NAME}
--    PATHS ${_zlib_roots} NO_DEFAULT_PATH
--    PATH_SUFFIXES "lib")
--else ()
--  pkg_check_modules(PKG_ZLIB zlib)
--  if (PKG_ZLIB_FOUND)
--    set(ZLIB_INCLUDE_DIR ${PKG_ZLIB_INCLUDEDIR})
--    find_library(ZLIB_SHARED_LIB
--      NAMES ${ZLIB_LIB_NAME}
--      PATHS ${PKG_ZLIB_LIBDIR} NO_DEFAULT_PATH)
--  else ()
--    find_path(ZLIB_INCLUDE_DIR NAMES zlib.h)
--    find_library(ZLIB_SHARED_LIB NAMES ${ZLIB_LIB_NAME})
--  endif ()
--endif ()
-+find_path(ZLIB_INCLUDE_DIR NAMES zlib.h PATH_SUFFIXES "include")
-+find_library(ZLIB_SHARED_LIB NAMES z zlib${ZLIB_LIB_NAME_SUFFIX} PATH_SUFFIXES "lib")
- 
- if (ZLIB_INCLUDE_DIR AND ZLIB_SHARED_LIB)
-   set(ZLIB_FOUND TRUE)
-diff --git a/cmake_modules/FindZSTD.cmake b/cmake_modules/FindZSTD.cmake
-index 810e5c0..d272d8f 100644
---- a/cmake_modules/FindZSTD.cmake
-+++ b/cmake_modules/FindZSTD.cmake
-@@ -22,30 +22,16 @@
- #  ZSTD_STATIC_LIB, path to libzstd static library
- #  ZSTD_FOUND, whether zstd has been found
- 
--if( NOT "${ZSTD_HOME}" STREQUAL "")
--    file( TO_CMAKE_PATH "${ZSTD_HOME}" _native_path )
--    list( APPEND _zstd_roots ${_native_path} )
--elseif ( ZStd_HOME )
--    list( APPEND _zstd_roots ${ZStd_HOME} )
--endif()
-+find_path(ZSTD_INCLUDE_DIR NAMES zstd.h
-+  PATH_SUFFIXES "include" )
- 
--if (MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
--  set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
-+if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+  set(ZSTD_LIB_NAME_SUFFIX "d")
-+else()
-+  set(ZSTD_LIB_NAME_SUFFIX "")
- endif()
- 
--set(ZSTD_STATIC_LIB_SUFFIX
--  "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
--
--set(ZSTD_STATIC_LIB_NAME
--  ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
--
--find_path(ZSTD_INCLUDE_DIR NAMES zstd.h
--  PATHS ${_zstd_roots}
--  NO_DEFAULT_PATH
--  PATH_SUFFIXES "include" )
--find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_STATIC_LIB_NAME} lib${ZSTD_STATIC_LIB_NAME}
--  PATHS ${_zstd_roots}
--  NO_DEFAULT_PATH
-+find_library(ZSTD_STATIC_LIB NAMES zstd${ZSTD_LIB_NAME_SUFFIX} zstd_static${ZSTD_LIB_NAME_SUFFIX}
-   PATH_SUFFIXES "lib" )
- 
- include(FindPackageHandleStandardArgs)
-diff --git a/cmake_modules/Finddouble-conversion.cmake b/cmake_modules/Finddouble-conversion.cmake
-new file mode 100644
-index 0000000..4fa0995
---- /dev/null
-+++ b/cmake_modules/Finddouble-conversion.cmake
-@@ -0,0 +1,23 @@
-+# Licensed to the Apache Software Foundation (ASF) under one
-+# or more contributor license agreements.  See the NOTICE file
-+# distributed with this work for additional information
-+# regarding copyright ownership.  The ASF licenses this file
-+# to you under the Apache License, Version 2.0 (the
-+# "License"); you may not use this file except in compliance
-+# with the License.  You may obtain a copy of the License at
-+#
-+#   http://www.apache.org/licenses/LICENSE-2.0
-+#
-+# Unless required by applicable law or agreed to in writing,
-+# software distributed under the License is distributed on an
-+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-+# KIND, either express or implied.  See the License for the
-+# specific language governing permissions and limitations
-+# under the License.
-+
-+find_path(DOUBLE_CONVERSION_INCLUDE_DIR NAMES double-conversion.h PATH_SUFFIXES "include/double-conversion" )
-+
-+find_library(DOUBLE_CONVERSION_STATIC_LIB NAMES double-conversion PATH_SUFFIXES "lib" )
-+
-+include(FindPackageHandleStandardArgs)
-+find_package_handle_standard_args(DOUBLE_CONVERSION REQUIRED_VARS DOUBLE_CONVERSION_STATIC_LIB DOUBLE_CONVERSION_INCLUDE_DIR)
-diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index 1c7cd62..572f6e1 100644
---- a/cmake_modules/ThirdpartyToolchain.cmake
-+++ b/cmake_modules/ThirdpartyToolchain.cmake
-@@ -302,6 +302,8 @@ if (WIN32)
- else()
-   find_library(PTHREAD_LIBRARY pthread)
-   message(STATUS "Found pthread: ${PTHREAD_LIBRARY}")
-+  add_library(pthreadshared SHARED IMPORTED)
-+  set_target_properties(pthreadshared PROPERTIES IMPORTED_LOCATION ${PTHREAD_LIBRARY})
- endif()
- 
- # ----------------------------------------------------------------------
-@@ -322,106 +324,56 @@ set(Boost_ADDITIONAL_VERSIONS
-   "1.61.0" "1.62"
-   "1.60.0" "1.60")
- 
--if (ARROW_BOOST_VENDORED)
--  set(BOOST_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/boost_ep-prefix/src/boost_ep")
--  set(BOOST_LIB_DIR "${BOOST_PREFIX}/stage/lib")
--  set(BOOST_BUILD_LINK "static")
--  set(BOOST_STATIC_SYSTEM_LIBRARY
--    "${BOOST_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}boost_system${CMAKE_STATIC_LIBRARY_SUFFIX}")
--  set(BOOST_STATIC_FILESYSTEM_LIBRARY
--    "${BOOST_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}boost_filesystem${CMAKE_STATIC_LIBRARY_SUFFIX}")
--  set(BOOST_STATIC_REGEX_LIBRARY
--    "${BOOST_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}boost_regex${CMAKE_STATIC_LIBRARY_SUFFIX}")
--  set(BOOST_SYSTEM_LIBRARY "${BOOST_STATIC_SYSTEM_LIBRARY}")
--  set(BOOST_FILESYSTEM_LIBRARY "${BOOST_STATIC_FILESYSTEM_LIBRARY}")
--  set(BOOST_REGEX_LIBRARY "${BOOST_STATIC_REGEX_LIBRARY}")
-+if (MSVC)
-+  # disable autolinking in boost
-+  add_definitions(-DBOOST_ALL_NO_LIB)
-+endif()
-+if (ARROW_BOOST_USE_SHARED)
-+  # Find shared Boost libraries.
-+  set(Boost_USE_STATIC_LIBS OFF)
-+
-+  if (MSVC)
-+    # force all boost libraries to dynamic link
-+    add_definitions(-DBOOST_ALL_DYN_LINK)
-+  endif()
-+
-   if (ARROW_BOOST_HEADER_ONLY)
--    set(BOOST_BUILD_PRODUCTS)
--    set(BOOST_CONFIGURE_COMMAND "")
--    set(BOOST_BUILD_COMMAND "")
-+    find_package(Boost REQUIRED)
-   else()
--    set(BOOST_BUILD_PRODUCTS
--      ${BOOST_SYSTEM_LIBRARY}
--      ${BOOST_FILESYSTEM_LIBRARY}
--      ${BOOST_REGEX_LIBRARY})
--    set(BOOST_CONFIGURE_COMMAND
--      "./bootstrap.sh"
--      "--prefix=${BOOST_PREFIX}"
--      "--with-libraries=filesystem,regex,system")
-+    find_package(Boost COMPONENTS regex system filesystem REQUIRED)
-     if ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
--      set(BOOST_BUILD_VARIANT "debug")
-+      set(BOOST_SHARED_SYSTEM_LIBRARY ${Boost_SYSTEM_LIBRARY_DEBUG})
-+      set(BOOST_SHARED_FILESYSTEM_LIBRARY ${Boost_FILESYSTEM_LIBRARY_DEBUG})
-+      set(BOOST_SHARED_REGEX_LIBRARY ${Boost_REGEX_LIBRARY_DEBUG})
-     else()
--      set(BOOST_BUILD_VARIANT "release")
-+      set(BOOST_SHARED_SYSTEM_LIBRARY ${Boost_SYSTEM_LIBRARY_RELEASE})
-+      set(BOOST_SHARED_FILESYSTEM_LIBRARY ${Boost_FILESYSTEM_LIBRARY_RELEASE})
-+      set(BOOST_SHARED_REGEX_LIBRARY ${Boost_REGEX_LIBRARY_RELEASE})
+diff --git a/cpp/cmake_modules/BuildUtils.cmake b/cpp/cmake_modules/BuildUtils.cmake
+index f5f0ad7..3dca82e 100644
+--- a/cpp/cmake_modules/BuildUtils.cmake
++++ b/cpp/cmake_modules/BuildUtils.cmake
+@@ -305,7 +305,7 @@ function(ADD_ARROW_LIB LIB_NAME)
+       target_include_directories(${LIB_NAME}_static PRIVATE ${ARG_PRIVATE_INCLUDES})
      endif()
--    set(BOOST_BUILD_COMMAND
--      "./b2"
--      "link=${BOOST_BUILD_LINK}"
--      "variant=${BOOST_BUILD_VARIANT}"
--      "cxxflags=-fPIC")
-+    set(BOOST_SYSTEM_LIBRARY boost_system_shared)
-+    set(BOOST_FILESYSTEM_LIBRARY boost_filesystem_shared)
-+    set(BOOST_REGEX_LIBRARY boost_regex_shared)
-   endif()
--  ExternalProject_Add(boost_ep
--    URL ${BOOST_SOURCE_URL}
--    BUILD_BYPRODUCTS ${BOOST_BUILD_PRODUCTS}
--    BUILD_IN_SOURCE 1
--    CONFIGURE_COMMAND ${BOOST_CONFIGURE_COMMAND}
--    BUILD_COMMAND ${BOOST_BUILD_COMMAND}
--    INSTALL_COMMAND ""
--    ${EP_LOG_OPTIONS})
--  set(Boost_INCLUDE_DIR "${BOOST_PREFIX}")
--  set(Boost_INCLUDE_DIRS "${BOOST_INCLUDE_DIR}")
--  add_dependencies(arrow_dependencies boost_ep)
- else()
--  if (MSVC)
--    # disable autolinking in boost
--    add_definitions(-DBOOST_ALL_NO_LIB)
--  endif()
--  if (ARROW_BOOST_USE_SHARED)
--    # Find shared Boost libraries.
--    set(Boost_USE_STATIC_LIBS OFF)
--
--    if (MSVC)
--      # force all boost libraries to dynamic link
--      add_definitions(-DBOOST_ALL_DYN_LINK)
--    endif()
--
--    if (ARROW_BOOST_HEADER_ONLY)
--      find_package(Boost REQUIRED)
--    else()
--      find_package(Boost COMPONENTS regex system filesystem REQUIRED)
--      if ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
--        set(BOOST_SHARED_SYSTEM_LIBRARY ${Boost_SYSTEM_LIBRARY_DEBUG})
--        set(BOOST_SHARED_FILESYSTEM_LIBRARY ${Boost_FILESYSTEM_LIBRARY_DEBUG})
--        set(BOOST_SHARED_REGEX_LIBRARY ${Boost_REGEX_LIBRARY_DEBUG})
--      else()
--        set(BOOST_SHARED_SYSTEM_LIBRARY ${Boost_SYSTEM_LIBRARY_RELEASE})
--        set(BOOST_SHARED_FILESYSTEM_LIBRARY ${Boost_FILESYSTEM_LIBRARY_RELEASE})
--        set(BOOST_SHARED_REGEX_LIBRARY ${Boost_REGEX_LIBRARY_RELEASE})
--      endif()
--      set(BOOST_SYSTEM_LIBRARY boost_system_shared)
--      set(BOOST_FILESYSTEM_LIBRARY boost_filesystem_shared)
--      set(BOOST_REGEX_LIBRARY boost_regex_shared)
--    endif()
-+  # Find static boost headers and libs
-+  # TODO Differentiate here between release and debug builds
-+  set(Boost_USE_STATIC_LIBS ON)
-+  if (ARROW_BOOST_HEADER_ONLY)
-+    find_package(Boost REQUIRED)
-   else()
--    # Find static boost headers and libs
--    # TODO Differentiate here between release and debug builds
--    set(Boost_USE_STATIC_LIBS ON)
--    if (ARROW_BOOST_HEADER_ONLY)
--      find_package(Boost REQUIRED)
-+    find_package(Boost COMPONENTS regex system filesystem REQUIRED)
-+    if ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
-+      set(BOOST_STATIC_SYSTEM_LIBRARY ${Boost_SYSTEM_LIBRARY_DEBUG})
-+      set(BOOST_STATIC_FILESYSTEM_LIBRARY ${Boost_FILESYSTEM_LIBRARY_DEBUG})
-+      set(BOOST_STATIC_REGEX_LIBRARY ${Boost_REGEX_LIBRARY_DEBUG})
-     else()
--      find_package(Boost COMPONENTS regex system filesystem REQUIRED)
--      if ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
--        set(BOOST_STATIC_SYSTEM_LIBRARY ${Boost_SYSTEM_LIBRARY_DEBUG})
--        set(BOOST_STATIC_FILESYSTEM_LIBRARY ${Boost_FILESYSTEM_LIBRARY_DEBUG})
--        set(BOOST_STATIC_REGEX_LIBRARY ${Boost_REGEX_LIBRARY_DEBUG})
--      else()
--        set(BOOST_STATIC_SYSTEM_LIBRARY ${Boost_SYSTEM_LIBRARY_RELEASE})
--        set(BOOST_STATIC_FILESYSTEM_LIBRARY ${Boost_FILESYSTEM_LIBRARY_RELEASE})
--        set(BOOST_STATIC_REGEX_LIBRARY ${Boost_REGEX_LIBRARY_RELEASE})
--      endif()
--      set(BOOST_SYSTEM_LIBRARY boost_system_static)
--      set(BOOST_FILESYSTEM_LIBRARY boost_filesystem_static)
--      set(BOOST_REGEX_LIBRARY boost_regex_static)
-+      set(BOOST_STATIC_SYSTEM_LIBRARY ${Boost_SYSTEM_LIBRARY_RELEASE})
-+      set(BOOST_STATIC_FILESYSTEM_LIBRARY ${Boost_FILESYSTEM_LIBRARY_RELEASE})
-+      set(BOOST_STATIC_REGEX_LIBRARY ${Boost_REGEX_LIBRARY_RELEASE})
-     endif()
-+    set(BOOST_SYSTEM_LIBRARY boost_system_static)
-+    set(BOOST_FILESYSTEM_LIBRARY boost_filesystem_static)
-+    set(BOOST_REGEX_LIBRARY boost_regex_static)
-   endif()
- endif()
  
-@@ -449,28 +401,8 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIR})
- # ----------------------------------------------------------------------
- # Google double-conversion
- 
--if("${DOUBLE_CONVERSION_HOME}" STREQUAL "")
--  set(DOUBLE_CONVERSION_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/double-conversion_ep/src/double-conversion_ep")
--  set(DOUBLE_CONVERSION_HOME "${DOUBLE_CONVERSION_PREFIX}")
--  set(DOUBLE_CONVERSION_INCLUDE_DIR "${DOUBLE_CONVERSION_PREFIX}/include")
--  set(DOUBLE_CONVERSION_STATIC_LIB "${DOUBLE_CONVERSION_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}double-conversion${CMAKE_STATIC_LIBRARY_SUFFIX}")
--
--  set(DOUBLE_CONVERSION_CMAKE_ARGS
--        "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
--        "-DCMAKE_CXX_FLAGS=${EP_CXX_FLAGS}"
--        "-DCMAKE_CXX_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_CXX_FLAGS}"
--        "-DCMAKE_INSTALL_PREFIX=${DOUBLE_CONVERSION_PREFIX}")
--  ExternalProject_Add(double-conversion_ep
--    ${EP_LOG_OPTIONS}
--    INSTALL_DIR ${DOUBLE_CONVERSION_PREFIX}
--    URL ${DOUBLE_CONVERSION_SOURCE_URL}
--    CMAKE_ARGS ${DOUBLE_CONVERSION_CMAKE_ARGS}
--    BUILD_BYPRODUCTS "${DOUBLE_CONVERSION_STATIC_LIB}")
--  set(DOUBLE_CONVERSION_VENDORED 1)
--else()
--  find_package(double-conversion REQUIRED)
--  set(DOUBLE_CONVERSION_VENDORED 0)
--endif()
-+find_package(double-conversion REQUIRED)
-+set(DOUBLE_CONVERSION_VENDORED 0)
- 
- include_directories(SYSTEM ${DOUBLE_CONVERSION_INCLUDE_DIR})
- ADD_THIRDPARTY_LIB(double-conversion
-@@ -486,38 +418,8 @@ endif()
- if(ARROW_BUILD_TESTS OR ARROW_BUILD_BENCHMARKS)
-   add_custom_target(unittest ctest -L unittest)
- 
--  if("${GTEST_HOME}" STREQUAL "")
--    if(APPLE)
--      set(GTEST_CMAKE_CXX_FLAGS "-fPIC -DGTEST_USE_OWN_TR1_TUPLE=1 -Wno-unused-value -Wno-ignored-attributes")
--    elseif(NOT MSVC)
--      set(GTEST_CMAKE_CXX_FLAGS "-fPIC")
--    endif()
--    string(TOUPPER ${CMAKE_BUILD_TYPE} UPPERCASE_BUILD_TYPE)
--    set(GTEST_CMAKE_CXX_FLAGS "${EP_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPERCASE_BUILD_TYPE}} ${GTEST_CMAKE_CXX_FLAGS}")
--
--    set(GTEST_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/googletest_ep-prefix/src/googletest_ep")
--    set(GTEST_INCLUDE_DIR "${GTEST_PREFIX}/include")
--    set(GTEST_STATIC_LIB
--      "${GTEST_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(GTEST_MAIN_STATIC_LIB
--      "${GTEST_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(GTEST_VENDORED 1)
--    set(GTEST_CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
--                         -DCMAKE_INSTALL_PREFIX=${GTEST_PREFIX}
--                         -DCMAKE_CXX_FLAGS=${GTEST_CMAKE_CXX_FLAGS})
--    if (MSVC AND NOT ARROW_USE_STATIC_CRT)
--      set(GTEST_CMAKE_ARGS ${GTEST_CMAKE_ARGS} -Dgtest_force_shared_crt=ON)
--    endif()
--
--    ExternalProject_Add(googletest_ep
--      URL ${GTEST_SOURCE_URL}
--      BUILD_BYPRODUCTS ${GTEST_STATIC_LIB} ${GTEST_MAIN_STATIC_LIB}
--      CMAKE_ARGS ${GTEST_CMAKE_ARGS}
--      ${EP_LOG_OPTIONS})
--  else()
--    find_package(GTest REQUIRED)
--    set(GTEST_VENDORED 0)
--  endif()
-+  find_package(GTest REQUIRED)
-+  set(GTEST_VENDORED 0)
- 
-   message(STATUS "GTest include dir: ${GTEST_INCLUDE_DIR}")
-   message(STATUS "GTest static library: ${GTEST_STATIC_LIB}")
-@@ -533,40 +435,8 @@ if(ARROW_BUILD_TESTS OR ARROW_BUILD_BENCHMARKS)
-   endif()
- 
-   # gflags (formerly Googleflags) command line parsing
--  if("${GFLAGS_HOME}" STREQUAL "")
--    set(GFLAGS_CMAKE_CXX_FLAGS ${EP_CXX_FLAGS})
--
--    set(GFLAGS_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/gflags_ep-prefix/src/gflags_ep")
--    set(GFLAGS_HOME "${GFLAGS_PREFIX}")
--    set(GFLAGS_INCLUDE_DIR "${GFLAGS_PREFIX}/include")
 -    if(MSVC)
--      set(GFLAGS_STATIC_LIB "${GFLAGS_PREFIX}/lib/gflags_static.lib")
--    else()
--      set(GFLAGS_STATIC_LIB "${GFLAGS_PREFIX}/lib/libgflags.a")
--    endif()
--    set(GFLAGS_VENDORED 1)
--    set(GFLAGS_CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
--                          -DCMAKE_INSTALL_PREFIX=${GFLAGS_PREFIX}
--                          -DBUILD_SHARED_LIBS=OFF
--                          -DBUILD_STATIC_LIBS=ON
--                          -DBUILD_PACKAGING=OFF
--                          -DBUILD_TESTING=OFF
--                          -BUILD_CONFIG_TESTS=OFF
--                          -DINSTALL_HEADERS=ON
--                          -DCMAKE_CXX_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_CXX_FLAGS}
--                          -DCMAKE_C_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_C_FLAGS}
--                          -DCMAKE_CXX_FLAGS=${GFLAGS_CMAKE_CXX_FLAGS})
--
--    ExternalProject_Add(gflags_ep
--      URL ${GFLAGS_SOURCE_URL}
--      ${EP_LOG_OPTIONS}
--      BUILD_IN_SOURCE 1
--      BUILD_BYPRODUCTS "${GFLAGS_STATIC_LIB}"
--      CMAKE_ARGS ${GFLAGS_CMAKE_ARGS})
--  else()
--    set(GFLAGS_VENDORED 0)
--    find_package(GFlags REQUIRED)
--  endif()
-+  set(GFLAGS_VENDORED 0)
-+  find_package(GFlags REQUIRED)
- 
-   message(STATUS "GFlags include dir: ${GFLAGS_INCLUDE_DIR}")
-   message(STATUS "GFlags static library: ${GFLAGS_STATIC_LIB}")
-@@ -587,37 +457,8 @@ endif()
- if(ARROW_BUILD_BENCHMARKS)
-   add_custom_target(runbenchmark ctest -L benchmark)
- 
--  if("$ENV{GBENCHMARK_HOME}" STREQUAL "")
--    if(NOT MSVC)
--      set(GBENCHMARK_CMAKE_CXX_FLAGS "-fPIC -std=c++11 ${EP_CXX_FLAGS}")
--    endif()
--
--    if(APPLE)
--      set(GBENCHMARK_CMAKE_CXX_FLAGS "${GBENCHMARK_CMAKE_CXX_FLAGS} -stdlib=libc++")
--    endif()
--
--    set(GBENCHMARK_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/gbenchmark_ep/src/gbenchmark_ep-install")
--    set(GBENCHMARK_INCLUDE_DIR "${GBENCHMARK_PREFIX}/include")
--    set(GBENCHMARK_STATIC_LIB "${GBENCHMARK_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}benchmark${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(GBENCHMARK_VENDORED 1)
--    set(GBENCHMARK_CMAKE_ARGS
--          "-DCMAKE_BUILD_TYPE=Release"
--          "-DCMAKE_INSTALL_PREFIX:PATH=${GBENCHMARK_PREFIX}"
--          "-DBENCHMARK_ENABLE_TESTING=OFF"
--          "-DCMAKE_CXX_FLAGS=${GBENCHMARK_CMAKE_CXX_FLAGS}")
--    if (APPLE)
--      set(GBENCHMARK_CMAKE_ARGS ${GBENCHMARK_CMAKE_ARGS} "-DBENCHMARK_USE_LIBCXX=ON")
--    endif()
--
--    ExternalProject_Add(gbenchmark_ep
--      URL ${GBENCHMARK_SOURCE_URL}
--      BUILD_BYPRODUCTS "${GBENCHMARK_STATIC_LIB}"
--      CMAKE_ARGS ${GBENCHMARK_CMAKE_ARGS}
--      ${EP_LOG_OPTIONS})
--  else()
--    find_package(GBenchmark REQUIRED)
--    set(GBENCHMARK_VENDORED 0)
--  endif()
-+  find_package(GBenchmark REQUIRED)
-+  set(GBENCHMARK_VENDORED 0)
- 
-   message(STATUS "GBenchmark include dir: ${GBENCHMARK_INCLUDE_DIR}")
-   message(STATUS "GBenchmark static library: ${GBENCHMARK_STATIC_LIB}")
-@@ -632,24 +473,8 @@ endif()
- 
- if (ARROW_IPC)
-   # RapidJSON, header only dependency
--  if("${RAPIDJSON_HOME}" STREQUAL "")
--    ExternalProject_Add(rapidjson_ep
--      PREFIX "${CMAKE_BINARY_DIR}"
--      URL ${RAPIDJSON_SOURCE_URL}
--      URL_MD5 ${RAPIDJSON_SOURCE_MD5}
--      CONFIGURE_COMMAND ""
--      BUILD_COMMAND ""
--      BUILD_IN_SOURCE 1
--      ${EP_LOG_OPTIONS}
--      INSTALL_COMMAND "")
--
--    ExternalProject_Get_Property(rapidjson_ep SOURCE_DIR)
--    set(RAPIDJSON_INCLUDE_DIR "${SOURCE_DIR}/include")
--    set(RAPIDJSON_VENDORED 1)
--  else()
--    set(RAPIDJSON_INCLUDE_DIR "${RAPIDJSON_HOME}/include")
--    set(RAPIDJSON_VENDORED 0)
--  endif()
-+  set(RAPIDJSON_INCLUDE_DIR "${RAPIDJSON_HOME}/include")
-+  set(RAPIDJSON_VENDORED 0)
-   message(STATUS "RapidJSON include dir: ${RAPIDJSON_INCLUDE_DIR}")
-   include_directories(SYSTEM ${RAPIDJSON_INCLUDE_DIR})
- 
-@@ -658,32 +483,8 @@ if (ARROW_IPC)
-   endif()
- 
-   ## Flatbuffers
--  if("${FLATBUFFERS_HOME}" STREQUAL "")
--    set(FLATBUFFERS_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/flatbuffers_ep-prefix/src/flatbuffers_ep-install")
--    if (MSVC)
--      set(FLATBUFFERS_CMAKE_CXX_FLAGS /EHsc)
--    else()
--      set(FLATBUFFERS_CMAKE_CXX_FLAGS -fPIC)
--    endif()
--    # We always need to do release builds, otherwise flatc will not be installed.
--    ExternalProject_Add(flatbuffers_ep
--      URL ${FLATBUFFERS_SOURCE_URL}
--      CMAKE_ARGS
--      "-DCMAKE_CXX_FLAGS=${FLATBUFFERS_CMAKE_CXX_FLAGS}"
--      "-DCMAKE_INSTALL_PREFIX:PATH=${FLATBUFFERS_PREFIX}"
--      "-DFLATBUFFERS_BUILD_TESTS=OFF"
--      "-DCMAKE_BUILD_TYPE=RELEASE"
--      "-DCMAKE_CXX_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_CXX_FLAGS}"
--      "-DCMAKE_C_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_C_FLAGS}"
--      ${EP_LOG_OPTIONS})
--
--    set(FLATBUFFERS_INCLUDE_DIR "${FLATBUFFERS_PREFIX}/include")
--    set(FLATBUFFERS_COMPILER "${FLATBUFFERS_PREFIX}/bin/flatc")
--    set(FLATBUFFERS_VENDORED 1)
--  else()
--    find_package(Flatbuffers REQUIRED)
--    set(FLATBUFFERS_VENDORED 0)
--  endif()
-+  find_package(Flatbuffers REQUIRED)
-+  set(FLATBUFFERS_VENDORED 0)
- 
-   if(FLATBUFFERS_VENDORED)
-     add_dependencies(arrow_dependencies flatbuffers_ep)
-@@ -787,34 +588,7 @@ if (ARROW_WITH_ZLIB)
-   if(ZLIB_FOUND)
-     ADD_THIRDPARTY_LIB(zlib SHARED_LIB ${ZLIB_SHARED_LIB})
-   else()
--    set(ZLIB_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/zlib_ep/src/zlib_ep-install")
--    set(ZLIB_HOME "${ZLIB_PREFIX}")
--    set(ZLIB_INCLUDE_DIR "${ZLIB_PREFIX}/include")
--    if (MSVC)
--      if (${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
--        set(ZLIB_STATIC_LIB_NAME zlibstaticd.lib)
--      else()
--        set(ZLIB_STATIC_LIB_NAME zlibstatic.lib)
--      endif()
--    else()
--      set(ZLIB_STATIC_LIB_NAME libz.a)
--    endif()
--    set(ZLIB_STATIC_LIB "${ZLIB_PREFIX}/lib/${ZLIB_STATIC_LIB_NAME}")
--    set(ZLIB_CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
--                        -DCMAKE_INSTALL_PREFIX=${ZLIB_PREFIX}
--                        -DCMAKE_C_FLAGS=${EP_C_FLAGS}
--                        -DCMAKE_CXX_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_CXX_FLAGS}
--                        -DCMAKE_C_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_C_FLAGS}
--                        -DBUILD_SHARED_LIBS=OFF)
--    ADD_THIRDPARTY_LIB(zlib
--      STATIC_LIB ${ZLIB_STATIC_LIB})
--
--    ExternalProject_Add(zlib_ep
--      URL ${ZLIB_SOURCE_URL}
--      ${EP_LOG_OPTIONS}
--      BUILD_BYPRODUCTS "${ZLIB_STATIC_LIB}"
--      CMAKE_ARGS ${ZLIB_CMAKE_ARGS})
--    add_dependencies(zlib zlib_ep)
-+    message(FATAL_ERROR "zlib not found.")
-   endif()
- 
-   include_directories(SYSTEM ${ZLIB_INCLUDE_DIR})
-@@ -824,62 +598,8 @@ if (ARROW_WITH_SNAPPY)
- # ----------------------------------------------------------------------
- # Snappy
- 
--  if("${SNAPPY_HOME}" STREQUAL "")
--    set(SNAPPY_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/snappy_ep/src/snappy_ep-install")
--    set(SNAPPY_HOME "${SNAPPY_PREFIX}")
--    set(SNAPPY_INCLUDE_DIR "${SNAPPY_PREFIX}/include")
--    if (MSVC)
--      set(SNAPPY_STATIC_LIB_NAME snappy_static)
--    else()
--      set(SNAPPY_STATIC_LIB_NAME snappy)
--    endif()
--    set(SNAPPY_STATIC_LIB "${SNAPPY_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}${SNAPPY_STATIC_LIB_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}")
--
--    if (${UPPERCASE_BUILD_TYPE} EQUAL "RELEASE")
--      if (APPLE)
--        set(SNAPPY_CXXFLAGS "CXXFLAGS='-DNDEBUG -O1'")
--      else()
--        set(SNAPPY_CXXFLAGS "CXXFLAGS='-DNDEBUG -O2'")
--      endif()
--    endif()
--
--    if (WIN32)
--      set(SNAPPY_CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
--                            "-DCMAKE_CXX_FLAGS=${EP_CXX_FLAGS}"
--                            "-DCMAKE_CXX_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_CXX_FLAGS}"
--                            "-DCMAKE_C_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_C_FLAGS}"
--                            "-DCMAKE_C_FLAGS=${EP_C_FLAGS}"
--                            "-DCMAKE_INSTALL_PREFIX=${SNAPPY_PREFIX}")
--      set(SNAPPY_UPDATE_COMMAND ${CMAKE_COMMAND} -E copy
--                        ${CMAKE_SOURCE_DIR}/cmake_modules/SnappyCMakeLists.txt
--                        ./CMakeLists.txt &&
--                        ${CMAKE_COMMAND} -E copy
--                        ${CMAKE_SOURCE_DIR}/cmake_modules/SnappyConfig.h
--                        ./config.h)
--      ExternalProject_Add(snappy_ep
--        UPDATE_COMMAND ${SNAPPY_UPDATE_COMMAND}
--        ${EP_LOG_OPTIONS}
--        BUILD_IN_SOURCE 1
--        BUILD_COMMAND ${MAKE}
--        INSTALL_DIR ${SNAPPY_PREFIX}
--        URL ${SNAPPY_SOURCE_URL}
--        CMAKE_ARGS ${SNAPPY_CMAKE_ARGS}
--        BUILD_BYPRODUCTS "${SNAPPY_STATIC_LIB}")
--    else()
--      ExternalProject_Add(snappy_ep
--        CONFIGURE_COMMAND ./configure --with-pic "--prefix=${SNAPPY_PREFIX}" ${SNAPPY_CXXFLAGS}
--        ${EP_LOG_OPTIONS}
--        BUILD_IN_SOURCE 1
--        BUILD_COMMAND ${MAKE}
--        INSTALL_DIR ${SNAPPY_PREFIX}
--        URL ${SNAPPY_SOURCE_URL}
--        BUILD_BYPRODUCTS "${SNAPPY_STATIC_LIB}")
--    endif()
--    set(SNAPPY_VENDORED 1)
--  else()
--    find_package(Snappy REQUIRED)
--    set(SNAPPY_VENDORED 0)
--  endif()
-+  find_package(Snappy REQUIRED)
-+  set(SNAPPY_VENDORED 0)
- 
-   include_directories(SYSTEM ${SNAPPY_INCLUDE_DIR})
-   ADD_THIRDPARTY_LIB(snappy
-@@ -894,47 +614,8 @@ if (ARROW_WITH_BROTLI)
- # ----------------------------------------------------------------------
- # Brotli
- 
--  if("${BROTLI_HOME}" STREQUAL "")
--    set(BROTLI_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/brotli_ep/src/brotli_ep-install")
--    set(BROTLI_HOME "${BROTLI_PREFIX}")
--    set(BROTLI_INCLUDE_DIR "${BROTLI_PREFIX}/include")
--    if (MSVC)
--      set(BROTLI_LIB_DIR bin)
--    else()
--      set(BROTLI_LIB_DIR lib)
--    endif()
--    set(BROTLI_STATIC_LIBRARY_ENC "${BROTLI_PREFIX}/${BROTLI_LIB_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/${CMAKE_STATIC_LIBRARY_PREFIX}brotlienc${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(BROTLI_STATIC_LIBRARY_DEC "${BROTLI_PREFIX}/${BROTLI_LIB_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/${CMAKE_STATIC_LIBRARY_PREFIX}brotlidec${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(BROTLI_STATIC_LIBRARY_COMMON "${BROTLI_PREFIX}/${BROTLI_LIB_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/${CMAKE_STATIC_LIBRARY_PREFIX}brotlicommon${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(BROTLI_CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
--                          "-DCMAKE_CXX_FLAGS=${EP_CXX_FLAGS}"
--                          "-DCMAKE_C_FLAGS=${EP_C_FLAGS}"
--                          "-DCMAKE_CXX_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_CXX_FLAGS}"
--                          "-DCMAKE_C_FLAGS_${UPPERCASE_BUILD_TYPE}=${EP_C_FLAGS}"
--                          -DCMAKE_INSTALL_PREFIX=${BROTLI_PREFIX}
--                          -DCMAKE_INSTALL_LIBDIR=lib/${CMAKE_LIBRARY_ARCHITECTURE}
--                          -DBUILD_SHARED_LIBS=OFF)
--
--    ExternalProject_Add(brotli_ep
--      URL ${BROTLI_SOURCE_URL}
--      BUILD_BYPRODUCTS "${BROTLI_STATIC_LIBRARY_ENC}" "${BROTLI_STATIC_LIBRARY_DEC}" "${BROTLI_STATIC_LIBRARY_COMMON}"
--      ${BROTLI_BUILD_BYPRODUCTS}
--      ${EP_LOG_OPTIONS}
--      CMAKE_ARGS ${BROTLI_CMAKE_ARGS}
--      STEP_TARGETS headers_copy)
--    if (MSVC)
--      ExternalProject_Get_Property(brotli_ep SOURCE_DIR)
--
--      ExternalProject_Add_Step(brotli_ep headers_copy
--        COMMAND xcopy /E /I include ..\\..\\..\\brotli_ep\\src\\brotli_ep-install\\include /Y
--        DEPENDEES build
--        WORKING_DIRECTORY ${SOURCE_DIR})
--    endif()
--    set(BROTLI_VENDORED 1)
--  else()
--    find_package(Brotli REQUIRED)
--    set(BROTLI_VENDORED 0)
--  endif()
-+  find_package(Brotli REQUIRED)
-+  set(BROTLI_VENDORED 0)
- 
-   include_directories(SYSTEM ${BROTLI_INCLUDE_DIR})
-   ADD_THIRDPARTY_LIB(brotli_enc
-@@ -955,45 +636,8 @@ if (ARROW_WITH_LZ4)
- # ----------------------------------------------------------------------
- # Lz4
- 
--  if("${LZ4_HOME}" STREQUAL "")
--    set(LZ4_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/lz4_ep-prefix/src/lz4_ep")
--    set(LZ4_HOME "${LZ4_BUILD_DIR}")
--    set(LZ4_INCLUDE_DIR "${LZ4_BUILD_DIR}/lib")
--
--    if (MSVC)
--      if (ARROW_USE_STATIC_CRT)
--        if (${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
--          set(LZ4_RUNTIME_LIBRARY_LINKAGE "/p:RuntimeLibrary=MultiThreadedDebug")
--        else()
--          set(LZ4_RUNTIME_LIBRARY_LINKAGE "/p:RuntimeLibrary=MultiThreaded")
--        endif()
--      endif()
--      set(LZ4_STATIC_LIB "${LZ4_BUILD_DIR}/visual/VS2010/bin/x64_${CMAKE_BUILD_TYPE}/liblz4_static.lib")
--      set(LZ4_BUILD_COMMAND BUILD_COMMAND msbuild.exe /m /p:Configuration=${CMAKE_BUILD_TYPE} /p:Platform=x64 /p:PlatformToolset=v140
--                                          ${LZ4_RUNTIME_LIBRARY_LINKAGE} /t:Build ${LZ4_BUILD_DIR}/visual/VS2010/lz4.sln)
--      set(LZ4_PATCH_COMMAND PATCH_COMMAND git --git-dir=. apply --verbose --whitespace=fix ${CMAKE_SOURCE_DIR}/build-support/lz4_msbuild_gl_runtimelibrary_params.patch)
--    else()
--      set(LZ4_STATIC_LIB "${LZ4_BUILD_DIR}/lib/liblz4.a")
--      set(LZ4_BUILD_COMMAND BUILD_COMMAND ${CMAKE_SOURCE_DIR}/build-support/build-lz4-lib.sh)
--    endif()
--
--    ExternalProject_Add(lz4_ep
--        URL ${LZ4_SOURCE_URL}
--        ${EP_LOG_OPTIONS}
--        UPDATE_COMMAND ""
--        ${LZ4_PATCH_COMMAND}
--        CONFIGURE_COMMAND ""
--        INSTALL_COMMAND ""
--        BINARY_DIR ${LZ4_BUILD_DIR}
--        BUILD_BYPRODUCTS ${LZ4_STATIC_LIB}
--        ${LZ4_BUILD_COMMAND}
--        )
--
--    set(LZ4_VENDORED 1)
--  else()
--    find_package(Lz4 REQUIRED)
--    set(LZ4_VENDORED 0)
--  endif()
-+  find_package(Lz4 REQUIRED)
-+  set(LZ4_VENDORED 0)
- 
-   include_directories(SYSTEM ${LZ4_INCLUDE_DIR})
-   ADD_THIRDPARTY_LIB(lz4_static
-@@ -1008,45 +652,8 @@ if (ARROW_WITH_ZSTD)
- # ----------------------------------------------------------------------
- # ZSTD
- 
--  if("${ZSTD_HOME}" STREQUAL "")
--    set(ZSTD_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/zstd_ep-prefix/src/zstd_ep")
--    set(ZSTD_INCLUDE_DIR "${ZSTD_BUILD_DIR}/lib")
--
--    if (MSVC)
--      if (ARROW_USE_STATIC_CRT)
--        if (${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
--          set(ZSTD_RUNTIME_LIBRARY_LINKAGE "/p:RuntimeLibrary=MultiThreadedDebug")
--        else()
--          set(ZSTD_RUNTIME_LIBRARY_LINKAGE "/p:RuntimeLibrary=MultiThreaded")
--        endif()
--      endif()
--      set(ZSTD_STATIC_LIB "${ZSTD_BUILD_DIR}/build/VS2010/bin/x64_${CMAKE_BUILD_TYPE}/libzstd_static.lib")
--      set(ZSTD_BUILD_COMMAND BUILD_COMMAND msbuild ${ZSTD_BUILD_DIR}/build/VS2010/zstd.sln /t:Build /v:minimal /p:Configuration=${CMAKE_BUILD_TYPE}
--                             ${ZSTD_RUNTIME_LIBRARY_LINKAGE} /p:Platform=x64 /p:PlatformToolset=v140
--                             /p:OutDir=${ZSTD_BUILD_DIR}/build/VS2010/bin/x64_${CMAKE_BUILD_TYPE}/ /p:SolutionDir=${ZSTD_BUILD_DIR}/build/VS2010/ )
--      set(ZSTD_PATCH_COMMAND PATCH_COMMAND git --git-dir=. apply --verbose --whitespace=fix ${CMAKE_SOURCE_DIR}/build-support/zstd_msbuild_gl_runtimelibrary_params.patch)
--    else()
--      set(ZSTD_STATIC_LIB "${ZSTD_BUILD_DIR}/lib/libzstd.a")
--      set(ZSTD_BUILD_COMMAND BUILD_COMMAND ${CMAKE_SOURCE_DIR}/build-support/build-zstd-lib.sh)
--    endif()
--
--    ExternalProject_Add(zstd_ep
--        URL ${ZSTD_SOURCE_URL}
--        ${EP_LOG_OPTIONS}
--        UPDATE_COMMAND ""
--        ${ZSTD_PATCH_COMMAND}
--        CONFIGURE_COMMAND ""
--        INSTALL_COMMAND ""
--        BINARY_DIR ${ZSTD_BUILD_DIR}
--        BUILD_BYPRODUCTS ${ZSTD_STATIC_LIB}
--        ${ZSTD_BUILD_COMMAND}
--        )
--
--    set(ZSTD_VENDORED 1)
--  else()
--    find_package(ZSTD REQUIRED)
--    set(ZSTD_VENDORED 0)
--  endif()
-+  find_package(ZSTD REQUIRED)
-+  set(ZSTD_VENDORED 0)
- 
-   include_directories(SYSTEM ${ZSTD_INCLUDE_DIR})
-   ADD_THIRDPARTY_LIB(zstd_static
-@@ -1063,24 +670,8 @@ endif()
- 
- if (ARROW_ORC OR ARROW_FLIGHT)
-   # protobuf
--  if ("${PROTOBUF_HOME}" STREQUAL "")
--    set (PROTOBUF_PREFIX "${THIRDPARTY_DIR}/protobuf_ep-install")
--    set (PROTOBUF_HOME "${PROTOBUF_PREFIX}")
--    set (PROTOBUF_INCLUDE_DIR "${PROTOBUF_PREFIX}/include")
--    set (PROTOBUF_STATIC_LIB "${PROTOBUF_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}protobuf${CMAKE_STATIC_LIBRARY_SUFFIX}")
--
--    ExternalProject_Add(protobuf_ep
--      CONFIGURE_COMMAND "./configure" "--disable-shared" "--prefix=${PROTOBUF_PREFIX}" "CXXFLAGS=${EP_CXX_FLAGS}"
--      BUILD_IN_SOURCE 1
--      URL ${PROTOBUF_SOURCE_URL}
--      BUILD_BYPRODUCTS "${PROTOBUF_STATIC_LIB}"
--      ${EP_LOG_OPTIONS})
--
--    set (PROTOBUF_VENDORED 1)
--  else ()
--    find_package (Protobuf REQUIRED)
--    set (PROTOBUF_VENDORED 0)
--  endif ()
-+  find_package (Protobuf REQUIRED)
-+  set (PROTOBUF_VENDORED 0)
- 
-   include_directories (SYSTEM ${PROTOBUF_INCLUDE_DIR})
-   if (ARROW_PROTOBUF_USE_SHARED)
-@@ -1100,34 +691,8 @@ endif()
- # Dependencies for Arrow Flight RPC
- 
- if (ARROW_FLIGHT)
--  if ("${GRPC_HOME}" STREQUAL "")
--    set(GRPC_VENDORED 1)
--    set(GRPC_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/grpc_ep-prefix/src/grpc_ep-build")
--    set(GRPC_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/grpc_ep/src/grpc_ep-install")
--    set(GRPC_HOME "${GRPC_PREFIX}")
--    set(GRPC_INCLUDE_DIR "${GRPC_PREFIX}/include")
--    set(GRPC_STATIC_LIBRARY_GPR "${GRPC_BUILD_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gpr${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(GRPC_STATIC_LIBRARY_GRPC "${GRPC_BUILD_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}grpc${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(GRPC_STATIC_LIBRARY_GRPCPP "${GRPC_BUILD_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}grpcpp${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(GRPC_CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
--                        "-DCMAKE_CXX_FLAGS=${EP_CXX_FLAGS}"
--                        "-DCMAKE_C_FLAGS=${EP_C_FLAGS}"
--                        -DCMAKE_INSTALL_PREFIX=${GRPC_PREFIX}
--                        -DBUILD_SHARED_LIBS=OFF)
--
--    ExternalProject_Add(grpc_ep
--      GIT_REPOSITORY "https://github.com/grpc/grpc"
--      GIT_TAG ${GRPC_VERSION}
--      BUILD_BYPRODUCTS "${GRPC_STATIC_LIBRARY_GPR}" "${GRPC_STATIC_LIBRARY_GRPC}" "${GRPC_STATIC_LIBRARY_GRPCPP}"
--      ${GRPC_BUILD_BYPRODUCTS}
--      ${EP_LOG_OPTIONS}
--      CMAKE_ARGS ${GRPC_CMAKE_ARGS}
--      ${EP_LOG_OPTIONS})
--    include_directories(SYSTEM ${GRPC_INCLUDE_DIR})
--  else()
--    find_package(gRPC CONFIG REQUIRED)
--    set(GRPC_VENDORED 0)
--  endif()
-+  find_package(gRPC CONFIG REQUIRED)
-+  set(GRPC_VENDORED 0)
- 
-   get_property(GPR_STATIC_LIB TARGET gRPC::gpr PROPERTY LOCATION)
-   ADD_THIRDPARTY_LIB(grpc_gpr
-@@ -1157,60 +722,9 @@ endif()
- 
- if (ARROW_ORC)
-   # orc
--  if ("${ORC_HOME}" STREQUAL "")
--    set(ORC_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/orc_ep-install")
--    set(ORC_HOME "${ORC_PREFIX}")
--    set(ORC_INCLUDE_DIR "${ORC_PREFIX}/include")
--    set(ORC_STATIC_LIB "${ORC_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}orc${CMAKE_STATIC_LIBRARY_SUFFIX}")
--
--    if ("${COMPILER_FAMILY}" STREQUAL "clang")
--      if ("${COMPILER_VERSION}" VERSION_GREATER "4.0")
--        set(ORC_CMAKE_CXX_FLAGS " -Wno-zero-as-null-pointer-constant \
--  -Wno-inconsistent-missing-destructor-override ")
--      endif()
--    endif()
--
--    set(ORC_CMAKE_CXX_FLAGS "${EP_CXX_FLAGS} ${ORC_CMAKE_CXX_FLAGS}")
--
--    # Since LZ4 isn't installed, the header file is in ${LZ4_HOME}/lib instead of
--    # ${LZ4_HOME}/include, which forces us to specify the include directory
--    # manually as well.
--    set (ORC_CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
--                        -DCMAKE_INSTALL_PREFIX=${ORC_PREFIX}
--                        -DCMAKE_CXX_FLAGS=${ORC_CMAKE_CXX_FLAGS}
--                        -DBUILD_LIBHDFSPP=OFF
--                        -DBUILD_JAVA=OFF
--                        -DBUILD_TOOLS=OFF
--                        -DBUILD_CPP_TESTS=OFF
--                        -DINSTALL_VENDORED_LIBS=OFF
--                        -DPROTOBUF_HOME=${PROTOBUF_HOME}
--                        -DLZ4_HOME=${LZ4_HOME}
--                        -DLZ4_INCLUDE_DIR=${LZ4_INCLUDE_DIR}
--                        -DSNAPPY_HOME=${SNAPPY_HOME}
--                        -DZLIB_HOME=${ZLIB_HOME})
--
--    ExternalProject_Add(orc_ep
--      URL ${ORC_SOURCE_URL}
--      BUILD_BYPRODUCTS ${ORC_STATIC_LIB}
--      CMAKE_ARGS ${ORC_CMAKE_ARGS}
--      ${EP_LOG_OPTIONS})
--
--    set(ORC_VENDORED 1)
--    add_dependencies(orc_ep zlib)
--    if (LZ4_VENDORED)
--      add_dependencies(orc_ep lz4_static)
--    endif()
--    if (SNAPPY_VENDORED)
--      add_dependencies(orc_ep snappy)
--    endif()
--    if (PROTOBUF_VENDORED)
--      add_dependencies(orc_ep protobuf_ep)
--    endif()
--  else()
--     set(ORC_INCLUDE_DIR "${ORC_HOME}/include")
--     set(ORC_STATIC_LIB "${ORC_HOME}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}orc${CMAKE_STATIC_LIBRARY_SUFFIX}")
--     set(ORC_VENDORED 0)
--  endif()
-+  set(ORC_INCLUDE_DIR "${ORC_HOME}/include")
-+  set(ORC_STATIC_LIB "${ORC_HOME}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}orc${CMAKE_STATIC_LIBRARY_SUFFIX}")
-+  set(ORC_VENDORED 0)
- 
-   include_directories(SYSTEM ${ORC_INCLUDE_DIR})
-   ADD_THIRDPARTY_LIB(orc
-@@ -1231,97 +745,7 @@ if (ARROW_WITH_THRIFT)
- # find thrift headers and libs
- find_package(Thrift)
- 
--if (NOT THRIFT_FOUND)
--  set(THRIFT_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thrift_ep/src/thrift_ep-install")
--  set(THRIFT_HOME "${THRIFT_PREFIX}")
--  set(THRIFT_INCLUDE_DIR "${THRIFT_PREFIX}/include")
--  set(THRIFT_COMPILER "${THRIFT_PREFIX}/bin/thrift")
--  set(THRIFT_CMAKE_ARGS "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
--                        "-DCMAKE_CXX_FLAGS=${EP_CXX_FLAGS}"
--                        "-DCMAKE_C_FLAGS=${EP_C_FLAGS}"
--                        "-DCMAKE_INSTALL_PREFIX=${THRIFT_PREFIX}"
--                        "-DCMAKE_INSTALL_RPATH=${THRIFT_PREFIX}/lib"
--                        "-DBUILD_SHARED_LIBS=OFF"
--                        "-DBUILD_TESTING=OFF"
--                        "-DBUILD_EXAMPLES=OFF"
--                        "-DBUILD_TUTORIALS=OFF"
--                        "-DWITH_QT4=OFF"
--                        "-DWITH_C_GLIB=OFF"
--                        "-DWITH_JAVA=OFF"
--                        "-DWITH_PYTHON=OFF"
--                        "-DWITH_HASKELL=OFF"
--                        "-DWITH_CPP=ON"
--                        "-DWITH_STATIC_LIB=ON"
--                        "-DWITH_LIBEVENT=OFF"
--                        )
--
--  # Thrift also uses boost. Forward important boost settings if there were ones passed.
--  if (DEFINED BOOST_ROOT)
--    set(THRIFT_CMAKE_ARGS ${THRIFT_CMAKE_ARGS} "-DBOOST_ROOT=${BOOST_ROOT}")
--  endif()
--  if (DEFINED Boost_NAMESPACE)
--    set(THRIFT_CMAKE_ARGS ${THRIFT_CMAKE_ARGS} "-DBoost_NAMESPACE=${Boost_NAMESPACE}")
--  endif()
--
--  set(THRIFT_STATIC_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}thrift")
--  if (MSVC)
--    if (ARROW_USE_STATIC_CRT)
--      set(THRIFT_STATIC_LIB_NAME "${THRIFT_STATIC_LIB_NAME}mt")
--      set(THRIFT_CMAKE_ARGS ${THRIFT_CMAKE_ARGS} "-DWITH_MT=ON")
--    else()
--      set(THRIFT_STATIC_LIB_NAME "${THRIFT_STATIC_LIB_NAME}md")
--      set(THRIFT_CMAKE_ARGS ${THRIFT_CMAKE_ARGS} "-DWITH_MT=OFF")
--    endif()
--  endif()
--  if (${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
--    set(THRIFT_STATIC_LIB_NAME "${THRIFT_STATIC_LIB_NAME}d")
--  endif()
--  set(THRIFT_STATIC_LIB "${THRIFT_PREFIX}/lib/${THRIFT_STATIC_LIB_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}")
--
--  if (ZLIB_SHARED_LIB)
--    set(THRIFT_CMAKE_ARGS "-DZLIB_LIBRARY=${ZLIB_SHARED_LIB}"
--                          ${THRIFT_CMAKE_ARGS})
--  else()
--    set(THRIFT_CMAKE_ARGS "-DZLIB_LIBRARY=${ZLIB_STATIC_LIB}"
--                          ${THRIFT_CMAKE_ARGS})
--  endif()
--  set(THRIFT_DEPENDENCIES ${THRIFT_DEPENDENCIES} zlib)
--
--  if (MSVC)
--    set(WINFLEXBISON_VERSION 2.4.9)
--    set(WINFLEXBISON_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/winflexbison_ep/src/winflexbison_ep-install")
--    ExternalProject_Add(winflexbison_ep
--      URL https://github.com/lexxmark/winflexbison/releases/download/v.${WINFLEXBISON_VERSION}/win_flex_bison-${WINFLEXBISON_VERSION}.zip
--      URL_HASH MD5=a2e979ea9928fbf8567e995e9c0df765
--      SOURCE_DIR ${WINFLEXBISON_PREFIX}
--      CONFIGURE_COMMAND ""
--      BUILD_COMMAND ""
--      INSTALL_COMMAND ""
--      ${EP_LOG_OPTIONS})
--    set(THRIFT_DEPENDENCIES ${THRIFT_DEPENDENCIES} winflexbison_ep)
--
--    set(THRIFT_CMAKE_ARGS "-DFLEX_EXECUTABLE=${WINFLEXBISON_PREFIX}/win_flex.exe"
--                          "-DBISON_EXECUTABLE=${WINFLEXBISON_PREFIX}/win_bison.exe"
--                          "-DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}"
--                          "-DWITH_SHARED_LIB=OFF"
--                          "-DWITH_PLUGIN=OFF"
--                          ${THRIFT_CMAKE_ARGS})
--  elseif (APPLE)
--    if (DEFINED BISON_EXECUTABLE)
--      set(THRIFT_CMAKE_ARGS "-DBISON_EXECUTABLE=${BISON_EXECUTABLE}"
--                            ${THRIFT_CMAKE_ARGS})
--    endif()
--  endif()
--
--  ExternalProject_Add(thrift_ep
--    URL ${THRIFT_SOURCE_URL}
--    BUILD_BYPRODUCTS "${THRIFT_STATIC_LIB}" "${THRIFT_COMPILER}"
--    CMAKE_ARGS ${THRIFT_CMAKE_ARGS}
--    DEPENDS ${THRIFT_DEPENDENCIES}
--    ${EP_LOG_OPTIONS})
--
--  set(THRIFT_VENDORED 1)
--else()
-+if (THRIFT_FOUND)
-   set(THRIFT_VENDORED 0)
++    if(MSVC AND 0)
+       set(LIB_NAME_STATIC ${LIB_NAME}_static)
+     else()
+       set(LIB_NAME_STATIC ${LIB_NAME})
+diff --git a/cpp/cmake_modules/FindLz4.cmake b/cpp/cmake_modules/FindLz4.cmake
+index 8410916..a196b25 100644
+--- a/cpp/cmake_modules/FindLz4.cmake
++++ b/cpp/cmake_modules/FindLz4.cmake
+@@ -19,14 +19,16 @@ if(MSVC AND NOT DEFINED LZ4_MSVC_STATIC_LIB_SUFFIX)
+   set(LZ4_MSVC_STATIC_LIB_SUFFIX "_static")
  endif()
  
-@@ -1347,45 +771,8 @@ endif()  # ARROW_HIVESERVER2
- # GLOG
+-set(LZ4_STATIC_LIB_SUFFIX "${LZ4_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(LZ4_LIB_NAME_DEBUG_SUFFIX d)
++endif()
  
- if (ARROW_USE_GLOG)
--  if("${GLOG_HOME}" STREQUAL "")
--    set(GLOG_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/glog_ep-prefix/src/glog_ep")
--    set(GLOG_INCLUDE_DIR "${GLOG_BUILD_DIR}/include")
--    set(GLOG_STATIC_LIB "${GLOG_BUILD_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}glog${CMAKE_STATIC_LIBRARY_SUFFIX}")
--    set(GLOG_CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
--    set(GLOG_CMAKE_C_FLAGS "${EP_C_FLAGS} -fPIC")
--    if (PTHREAD_LIBRARY)
--      set(GLOG_CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread")
--      set(GLOG_CMAKE_C_FLAGS "${EP_C_FLAGS} -fPIC -pthread")
--    endif()
--    message(STATUS "GLOG_CMAKE_CXX_FLAGS: ${GLOG_CMAKE_CXX_FLAGS}")
--    message(STATUS "CMAKE_CXX_FLAGS in glog: ${GLOG_CMAKE_CXX_FLAGS}")
--
--    if(APPLE)
--      # If we don't set this flag, the binary built with 10.13 cannot be used in 10.12.
--      set(GLOG_CMAKE_CXX_FLAGS "${GLOG_CMAKE_CXX_FLAGS} -mmacosx-version-min=10.9")
--    endif()
--
--    set(GLOG_CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
--                        -DCMAKE_INSTALL_PREFIX=${GLOG_BUILD_DIR}
--                        -DBUILD_SHARED_LIBS=OFF
--                        -DBUILD_TESTING=OFF
--                        -DWITH_GFLAGS=OFF
--                        -DCMAKE_CXX_FLAGS_${UPPERCASE_BUILD_TYPE}=${GLOG_CMAKE_CXX_FLAGS}
--                        -DCMAKE_C_FLAGS_${UPPERCASE_BUILD_TYPE}=${GLOG_CMAKE_C_FLAGS}
--                        -DCMAKE_CXX_FLAGS=${GLOG_CMAKE_CXX_FLAGS})
--    message(STATUS "Glog version: ${GLOG_VERSION}")
--    ExternalProject_Add(glog_ep
--      URL ${GLOG_SOURCE_URL}
--      BUILD_IN_SOURCE 1
--      BUILD_BYPRODUCTS "${GLOG_STATIC_LIB}"
--      CMAKE_ARGS ${GLOG_CMAKE_ARGS}
--      ${EP_LOG_OPTIONS})
--
--    set(GLOG_VENDORED 1)
--  else()
--    find_package(GLOG REQUIRED)
--    set(GLOG_VENDORED 0)
--  endif()
-+  find_package(GLOG REQUIRED)
-+  set(GLOG_VENDORED 0)
+-set(LZ4_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_STATIC_LIB_SUFFIX})
++set(LZ4_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_MSVC_STATIC_LIB_SUFFIX}${LZ4_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
  
-   message(STATUS "Glog include dir: ${GLOG_INCLUDE_DIR}")
-   message(STATUS "Glog static library: ${GLOG_STATIC_LIB}")
+ if(LZ4_ROOT)
+   find_library(
+     LZ4_LIB
+-    NAMES lz4 ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
++    NAMES lz4${LZ4_LIB_NAME_DEBUG_SUFFIX} ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
+           "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}"
+     PATHS ${LZ4_ROOT}
+     PATH_SUFFIXES ${LIB_PATH_SUFFIXES}
+@@ -43,14 +45,14 @@ else()
+     set(LZ4_INCLUDE_DIR "${LZ4_PC_INCLUDEDIR}")
+ 
+     list(APPEND LZ4_PC_LIBRARY_DIRS "${LZ4_PC_LIBDIR}")
+-    find_library(LZ4_LIB lz4
++    find_library(LZ4_LIB lz4${LZ4_LIB_NAME_DEBUG_SUFFIX} ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
+                  PATHS ${LZ4_PC_LIBRARY_DIRS}
+                  NO_DEFAULT_PATH
+                  PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
+   else()
+     find_library(
+       LZ4_LIB
+-      NAMES lz4 ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
++      NAMES lz4${LZ4_LIB_NAME_DEBUG_SUFFIX} ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
+             "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}"
+       PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
+     find_path(LZ4_INCLUDE_DIR NAMES lz4.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
+index f9d6296..82b8d22 100644
+--- a/cpp/cmake_modules/FindThrift.cmake
++++ b/cpp/cmake_modules/FindThrift.cmake
+@@ -54,6 +54,10 @@ if(MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
+   set(THRIFT_MSVC_STATIC_LIB_SUFFIX md)
+ endif()
+ 
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(THRIFT_LIB_NAME_DEBUG_SUFFIX d)
++endif()
++
+ if(Thrift_ROOT)
+   find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
+                PATHS ${Thrift_ROOT}
+@@ -74,16 +78,14 @@ else()
+ 
+     list(APPEND THRIFT_PC_LIBRARY_DIRS "${THRIFT_PC_LIBDIR}")
+ 
+-    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
+-                 PATHS ${THRIFT_PC_LIBRARY_DIRS}
+-                 NO_DEFAULT_PATH)
++    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}${THRIFT_LIB_NAME_DEBUG_SUFFIX}
++                 PATHS ${THRIFT_PC_LIBRARY_DIRS})
+     find_program(THRIFT_COMPILER thrift
+                  HINTS ${THRIFT_PC_PREFIX}
+-                 NO_DEFAULT_PATH
+                  PATH_SUFFIXES "bin")
+     set(THRIFT_VERSION ${THRIFT_PC_VERSION})
+   else()
+-    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
++    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}${THRIFT_LIB_NAME_DEBUG_SUFFIX}
+                  PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib")
+     find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h PATH_SUFFIXES "include")
+     find_program(THRIFT_COMPILER thrift PATH_SUFFIXES "bin")
+diff --git a/cpp/cmake_modules/FindZSTD.cmake b/cpp/cmake_modules/FindZSTD.cmake
+index 8e47086..d7ce559 100644
+--- a/cpp/cmake_modules/FindZSTD.cmake
++++ b/cpp/cmake_modules/FindZSTD.cmake
+@@ -19,14 +19,18 @@ if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+   set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
+ endif()
+ 
+-set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(ZSTD_LIB_NAME_DEBUG_SUFFIX d)
++endif()
++
++set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+ set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
+ 
+ # First, find via if specified ZTD_ROOT
+ if(ZSTD_ROOT)
+   message(STATUS "Using ZSTD_ROOT: ${ZSTD_ROOT}")
+   find_library(ZSTD_LIB
+-               NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
++               NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
+                      "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
+                PATHS ${ZSTD_ROOT}
+                PATH_SUFFIXES ${LIB_PATH_SUFFIXES}
+@@ -44,14 +48,14 @@ else()
+     set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
+ 
+     list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
+-    find_library(ZSTD_LIB zstd
++    find_library(ZSTD_LIB zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}
+                  PATHS ${ZSTD_PC_LIBRARY_DIRS}
+                  NO_DEFAULT_PATH
+                  PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
+     # Third, check all other CMake paths
+   else()
+     find_library(ZSTD_LIB
+-                 NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
++                 NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
+                        "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
+                  PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
+     find_path(ZSTD_INCLUDE_DIR NAMES zstd.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+diff --git a/cpp/cmake_modules/SetupCxxFlags.cmake b/cpp/cmake_modules/SetupCxxFlags.cmake
+index 75b33c2..80cac9a 100644
+--- a/cpp/cmake_modules/SetupCxxFlags.cmake
++++ b/cpp/cmake_modules/SetupCxxFlags.cmake
+@@ -128,7 +128,9 @@ macro(arrow_add_werror_if_debug)
+   if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
+     # Treat all compiler warnings as errors
+     if(MSVC)
+-      set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
++      if(MSVC_VERSION VERSION_LESS 1900)
++        set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
++      endif()
+     else()
+       set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} -Werror")
+     endif()
+diff --git a/cpp/src/arrow/stl.h b/cpp/src/arrow/stl.h
+index 7ae9eaf..b9efdcb 100644
+--- a/cpp/src/arrow/stl.h
++++ b/cpp/src/arrow/stl.h
+@@ -518,6 +518,9 @@ class allocator {
+ 
+  private:
+   MemoryPool* pool_;
++
++  template <class U>
++  friend class allocator;
+ };
+ 
+ /// \brief A MemoryPool implementation delegating allocations to a STL allocator
+diff --git a/cpp/src/parquet/schema.h b/cpp/src/parquet/schema.h
+index 87db4de..095ef9a 100644
+--- a/cpp/src/parquet/schema.h
++++ b/cpp/src/parquet/schema.h
+@@ -460,7 +460,11 @@ class PARQUET_EXPORT SchemaDescriptor {
+   // -- -- b     |
+   // -- -- -- c  |
+   // -- -- -- -- d
+-  std::unordered_map<int, const schema::NodePtr> leaf_to_base_;
++#if _MSC_VER >= 1900
++  std::unordered_map<int, schema::NodePtr> leaf_to_base_;
++#else
++   std::unordered_map<int, const schema::NodePtr> leaf_to_base_;
++#endif
+ 
+   // Mapping between ColumnPath DotString to the leaf index
+   std::unordered_multimap<std::string, int> leaf_to_idx_;

@@ -71,10 +71,6 @@ file(GLOB  meschach_headers "*.h")
 
 include_directories(".")
 
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
 add_library(meschach ${meschach_srcs})
 target_compile_definitions(meschach PRIVATE -DHAVE_MEMORY_H -DHAVE_COMPLEX_H)
 

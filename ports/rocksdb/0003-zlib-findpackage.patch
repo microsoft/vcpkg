@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5b0405f4a..43256fc04 100644
+index 6916fcd..a52c53f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -88,7 +88,7 @@ else()
+@@ -92,7 +92,7 @@ else()
    endif()
  
    if(WITH_ZLIB)
 -    find_package(zlib REQUIRED)
 +    find_package(ZLIB REQUIRED)
      add_definitions(-DZLIB)
-     include_directories(${ZLIB_INCLUDE_DIR})
-     list(APPEND THIRDPARTY_LIBS ${ZLIB_LIBRARIES})
+     if(ZLIB_INCLUDE_DIRS)
+       # CMake 3

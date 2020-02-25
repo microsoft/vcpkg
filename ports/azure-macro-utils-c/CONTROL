@@ -1,0 +1,7 @@
+Source: azure-macro-utils-c
+Version: 2020-02-04.1
+Description: A library of macros for the Azure IoT SDK Suite
+Build-Depends: 
+
+Feature: public-preview
+Description: A library of macros for the Azure IoT SDK Suite (public-preview)

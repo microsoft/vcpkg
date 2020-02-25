@@ -8,8 +8,8 @@ endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     set(PLATFORM android)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
-        set(PLATFORM linux-generic64)
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        set(PLATFORM linux-x86_64)
     else()
         set(PLATFORM linux-generic32)
     endif()
@@ -76,9 +76,27 @@ file(WRITE "${BUILDDIR}/Configure" "${_contents}")
 
 if(BUILD_SHARED_LIBS)
     set(SHARED shared)
+    file(STRINGS "${BUILDDIR}/crypto/opensslv.h" SHLIB_VERSION
+        REGEX "^#[\t ]*define[\t ]+SHLIB_VERSION_NUMBER[\t ]+\".*\".*")
+    string(REGEX REPLACE "^.*SHLIB_VERSION_NUMBER[\t ]+\"([^\"]*)\".*$" "\\1"
+        SHLIB_VERSION "${SHLIB_VERSION}")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        set(LIB_EXT dylib)
+        set(LIB_EXTS ${SHLIB_VERSION}.${LIB_EXT})
+    else()
+        set(LIB_EXT so)
+        set(LIB_EXTS ${LIB_EXT}.${SHLIB_VERSION})
+    endif()
+    list(APPEND LIB_EXTS ${LIB_EXT})
 else()
     set(SHARED no-shared)
+    set(LIB_EXTS a)
 endif()
+foreach(lib ssl crypto)
+    foreach(ext ${LIB_EXTS})
+        list(APPEND INSTALL_LIBS "${BUILDDIR}/lib${lib}.${ext}")
+    endforeach()
+endforeach()
 
 if(CMAKE_HOST_WIN32)
     set(ENV_COMMAND set)
@@ -100,8 +118,8 @@ add_custom_command(
     COMMAND "${PERL}" Configure
         ${SHARED}
         enable-static-engine
+        no-zlib
         no-ssl2
-        no-krb5
         no-idea
         no-bf
         no-cast
@@ -116,24 +134,17 @@ add_custom_command(
     WORKING_DIRECTORY "${BUILDDIR}"
 )
 
-add_custom_target(depend
-    COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
-    COMMAND "${MAKE}" links # depend MAKEDEPPROG=${CMAKE_C_COMPILER}
-    VERBATIM
-    WORKING_DIRECTORY "${BUILDDIR}"
-    DEPENDS "${BUILDDIR}/Makefile"
-)
 add_custom_target(build_libs ALL
     COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
     COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
     COMMAND "${MAKE}" build_libs
     VERBATIM
     WORKING_DIRECTORY "${BUILDDIR}"
-    DEPENDS depend
-    BYPRODUCTS "${BUILDDIR}/libssl.a" "${BUILDDIR}/libcrypto.a"
+    DEPENDS "${BUILDDIR}/Makefile"
+    BYPRODUCTS ${INSTALL_LIBS}
 )
 
 install(
-    FILES "${BUILDDIR}/libssl.a" "${BUILDDIR}/libcrypto.a"
+    FILES ${INSTALL_LIBS}
     DESTINATION lib
 )

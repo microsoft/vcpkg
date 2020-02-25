@@ -1,7 +1,37 @@
-include(vcpkg_common_functions)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
 
-qt_modular_library(qtimageformats 1514c5d7a285d718fdf1f3ba11f00029551af70e8b7bd927e061c55a35fca6978164da2846f26b6d57a4c81af2a75eb3f8358f46fa74bd70ba3407aa3bbcb0e5)
+list(APPEND CORE_OPTIONS
+    -system-tiff
+    -system-webp
+    -jasper 
+    -no-mng # must be explicitly disabled to not automatically pick up mng
+    -verbose)
 
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+find_library(TIFF_RELEASE NAMES tiff PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on lzma
+find_library(TIFF_DEBUG NAMES tiffd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
+find_library(JASPER_RELEASE NAMES jasper PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(JASPER_DEBUG NAMES jasperd jasper libjasperd libjasper PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(FREEGLUT_RELEASE NAMES freeglut glut PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(FREEGLUT_DEBUG NAMES freeglutd freeglut glutd glut PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
+find_library(WEBP_RELEASE NAMES webp PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(WEBP_DEBUG NAMES webpd webp PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(WEBPDEMUX_RELEASE NAMES webpdemux PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(WEBPDEMUX_DEBUG NAMES webpdemuxd webpdemux PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+# Depends on opengl in default build but might depend on giflib, libjpeg-turbo, zlib, libpng, tiff, freeglut (!osx), sdl1 (windows) 
+# which would require extra libraries to be linked e.g. giflib freeglut sdl1 other ones are already linked
+
+#Dependent libraries
+find_library(LZMA_RELEASE lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(LZMA_DEBUG lzmad lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
+set(OPT_REL "TIFF_LIBS=${TIFF_RELEASE} ${LZMA_RELEASE}"
+            "WEBP_LIBS=${WEBP_RELEASE} ${WEBPDEMUX_RELEASE}" 
+            "JASPER_LIBS=${JASPER_RELEASE} ${FREEGLUT_RELEASE}") # This will still fail if LIBWEBP is installed with all available features due to the missing additional dependencies
+set(OPT_DBG "TIFF_LIBS=${TIFF_DEBUG} ${LZMA_DEBUG}"
+            "WEBP_LIBS=${WEBP_DEBUG} ${WEBPDEMUX_DEBUG}"
+            "JASPER_LIBS=${JASPER_DEBUG} ${FREEGLUT_DEBUG}")
+qt_submodule_installation(BUILD_OPTIONS ${CORE_OPTIONS} BUILD_OPTIONS_RELEASE ${OPT_REL} BUILD_OPTIONS_DEBUG ${OPT_DBG})

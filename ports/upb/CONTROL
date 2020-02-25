@@ -1,0 +1,4 @@
+Source: upb
+Version: 2019-10-21-1
+Homepage: https://github.com/protocolbuffers/upb/
+Description: μpb (often written 'upb') is a small protobuf implementation written in C.

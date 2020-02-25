@@ -1,6 +1,6 @@
 # Proposal: Features / Feature packages (Feb 23 2017)
 
-**Note: this is the proposal as it was initially accepted and does not neccessarily reflect the current behavior.**
+**Note: this is the proposal as it was initially accepted and does not necessarily reflect the current behavior.**
 
 ## 1. Motivation
 
@@ -14,7 +14,7 @@ Therefore, there is significant value in enabling users to choose whether they f
 
 The community around [OpenCV][] has built up a library of extensions called [OpenCV_contrib][]. However, these extensions are a source-level patch onto the main OpenCV codebase and therefore must be applied _during_ the core OpenCV build. Further confounding the problem, it is the author's understanding that these community extensions have only been developed with [CUDA][] enabled and cannot be built without that dependency.
 
-Therefore, if CUDA is disabled, OpenCV\_contrib must also be disabled. Likewise, when a user requests OpenCV\_contrib, CUDA must be enabled. It would be convienent, but not a requirement, to enable CUDA without enabling the community extensions.
+Therefore, if CUDA is disabled, OpenCV\_contrib must also be disabled. Likewise, when a user requests OpenCV\_contrib, CUDA must be enabled. It would be convenient, but not a requirement, to enable CUDA without enabling the community extensions.
 
 Finally, these extensions add additional exports and headers which could be depended upon by other libraries. For maintainers, there must be a way to specify this requirement such that `vcpkg install mylib-depends-ocv-contrib` will verify/build/rebuild OpenCV with the community extensions enabled.
 

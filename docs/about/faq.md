@@ -1,7 +1,7 @@
 # Frequently Asked Questions
 
 ## Can I contribute a new library?
-Yes! Start out by reading our [contribution guidelines](https://github.com/Microsoft/vcpkg/blob/master/CONTRIBUTING.md).
+Yes! Start out by reading our [contribution guidelines](https://github.com/Microsoft/vcpkg/blob/master/CONTRIBUTING.md).  If you want to contribute but don't have a particular library in mind then take a look at the list of [new port requests](https://github.com/Microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+label%3A%22new+port+request+-+consider+making+a+PR%21%22).
 
 ## Can Vcpkg create pre-built binary packages? What is the binary format used by Vcpkg?
 Yes! See [the `export` command](../users/integration.md#export).
@@ -26,7 +26,7 @@ To see an example of this, look at [`ports\opengl\portfile.cmake`](https://githu
 We currently target Windows Desktop (x86 and x64) as well as the Universal Windows Platform (x86, x64, and ARM). See `vcpkg help triplet` for the current list.
 
 ## Does Vcpkg run on Linux/OSX?
-Yes! We continously test on OSX and Ubuntu 16.04, however we know users have been successful with Arch, Fedora, and FreeBSD. If you have trouble with your favorite Linux distribution, let us know in an issue and we'd be happy to help!
+Yes! We continuously test on OSX and Ubuntu 16.04, however we know users have been successful with Arch, Fedora, and FreeBSD. If you have trouble with your favorite Linux distribution, let us know in an issue and we'd be happy to help!
 
 ## How do I use different versions of a library on one machine?
 Within a single instance of Vcpkg (e.g. one set of `installed\`, `packages\`, `ports\` and so forth), you can only have one version of a library installed (otherwise, the headers would conflict with each other!). For those with experience with system-wide package managers, packages in Vcpkg correspond to the `X-dev` or `X-devel` packages.
@@ -52,11 +52,12 @@ Yes. While Vcpkg will only produce the standard "Release" and "Debug" configurat
 
 First of all, Vcpkg will automatically assume any custom configuration starting with "Release" (resp. "Debug") as a configuration that is compatible with the standard "Release" (resp. "Debug") configuration and will act accordingly.
 
-For other configurations, you only need to override the MSBuild `$(VcpkgConfiguration)` macro in your project file (.vcxproj) to declare the compatibility between your configuration, and the target standard configuration.
+For other configurations, you only need to override the MSBuild `$(VcpkgConfiguration)` macro in your project file (.vcxproj) to declare the compatibility between your configuration, and the target standard configuration. Unfortunately, due to the sequential nature of MSBuild, you'll need to add those settings much higher in your vcxproj so that it is declared before the Vcpk integration is loaded. It is recommend that the `$(VcpkgConfiguration)` macro is added to the "Globals" PropertyGroup.
 
 For example, you can add support for your "MyRelease" configuration by adding in your project file:
 ```
-<PropertyGroup>
+<PropertyGroup Label="Globals">
+  ...
   <VcpkgConfiguration Condition="'$(Configuration)' == 'MyRelease'">Release</VcpkgConfiguration>
 </PropertyGroup>
 ```

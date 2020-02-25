@@ -1,0 +1,7 @@
+Source: libressl
+Version: 2.9.1-2
+Description: LibreSSL is a version of the TLS/crypto stack forked from OpenSSL in 2014, with goals of modernizing the codebase, improving security, and applying best practice development processes.
+Supports: !(uwp|arm)
+
+Feature: tools
+Description: Build openssl and ocspcheck executables

@@ -1,45 +1,49 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkglib.h>
 
+using vcpkg::PortFileProvider::PathsPortFileProvider;
+
 namespace vcpkg::Commands::Search
 {
     static constexpr StringLiteral OPTION_FULLDESC =
         "--x-full-desc"; // TODO: This should find a better home, eventually
-    
+
     static void do_print(const SourceParagraph& source_paragraph, bool full_desc)
     {
         if (full_desc)
         {
-            System::println(
-                "%-20s %-16s %s", source_paragraph.name, source_paragraph.version, source_paragraph.description);
+            System::printf(
+                "%-20s %-16s %s\n", source_paragraph.name, source_paragraph.version, source_paragraph.description);
         }
         else
         {
-            System::println("%-20s %-16s %s",
-                            vcpkg::shorten_text(source_paragraph.name, 20),
-                            vcpkg::shorten_text(source_paragraph.version, 16),
-                            vcpkg::shorten_text(source_paragraph.description, 81));
+            System::printf("%-20s %-16s %s\n",
+                           vcpkg::shorten_text(source_paragraph.name, 20),
+                           vcpkg::shorten_text(source_paragraph.version, 16),
+                           vcpkg::shorten_text(source_paragraph.description, 81));
         }
     }
 
     static void do_print(const std::string& name, const FeatureParagraph& feature_paragraph, bool full_desc)
     {
+        auto full_feature_name = Strings::concat(name, "[", feature_paragraph.name, "]");
         if (full_desc)
         {
-            System::println("%-37s %s", name + "[" + feature_paragraph.name + "]", feature_paragraph.description);
+            System::printf("%-37s %s\n", full_feature_name, feature_paragraph.description);
         }
         else
         {
-            System::println("%-37s %s",
-                            vcpkg::shorten_text(name + "[" + feature_paragraph.name + "]", 37),
-                            vcpkg::shorten_text(feature_paragraph.description, 81));
+            System::printf("%-37s %s\n",
+                           vcpkg::shorten_text(full_feature_name, 37),
+                           vcpkg::shorten_text(feature_paragraph.description, 81));
         }
     }
 
@@ -62,7 +66,10 @@ namespace vcpkg::Commands::Search
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const bool full_description = Util::Sets::contains(options.switches, OPTION_FULLDESC);
 
-        auto source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        auto source_paragraphs =
+            Util::fmap(provider.load_all_control_files(),
+                       [](auto&& port) -> const SourceControlFile* { return port->source_control_file.get(); });
 
         if (args.command_arguments.empty())
         {
@@ -102,9 +109,9 @@ namespace vcpkg::Commands::Search
             }
         }
 
-        System::println(
+        System::print2(
             "\nIf your library is not listed, please open an issue at and/or consider making a pull request:\n"
-            "    https://github.com/Microsoft/vcpkg/issues");
+            "    https://github.com/Microsoft/vcpkg/issues\n");
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }

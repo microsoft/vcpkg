@@ -2,7 +2,8 @@
 
 #include <vcpkg/base/cofffilereader.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
 #include <vcpkg/packagespec.h>
@@ -38,7 +39,7 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
+    static Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
     {
         static const std::vector<OutdatedDynamicCrt> V_NO_120 = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
@@ -88,9 +89,96 @@ namespace vcpkg::PostBuildLint
         const fs::path include_dir = package_dir / "include";
         if (!fs.exists(include_dir) || fs.is_empty(include_dir))
         {
-            System::println(
-                System::Color::warning,
-                "The folder /include is empty or not present. This indicates the library was not correctly installed.");
+            System::print2(System::Color::warning,
+                           "The folder /include is empty or not present. This indicates the library was not correctly "
+                           "installed.\n");
+            return LintStatus::ERROR_DETECTED;
+        }
+
+        return LintStatus::SUCCESS;
+    }
+
+    static LintStatus check_for_restricted_include_files(const Files::Filesystem& fs,
+                                                         const Build::BuildPolicies& policies,
+                                                         const fs::path& package_dir)
+    {
+        if (policies.is_enabled(BuildPolicy::ALLOW_RESTRICTED_HEADERS))
+        {
+            return LintStatus::SUCCESS;
+        }
+
+        // These files are taken from the libc6-dev package on Ubuntu inside /usr/include/x86_64-linux-gnu/sys/
+        static constexpr StringLiteral restricted_sys_filenames[] = {
+            "acct.h",      "auxv.h",        "bitypes.h",  "cdefs.h",    "debugreg.h",  "dir.h",         "elf.h",
+            "epoll.h",     "errno.h",       "eventfd.h",  "fanotify.h", "fcntl.h",     "file.h",        "fsuid.h",
+            "gmon.h",      "gmon_out.h",    "inotify.h",  "io.h",       "ioctl.h",     "ipc.h",         "kd.h",
+            "klog.h",      "mman.h",        "mount.h",    "msg.h",      "mtio.h",      "param.h",       "pci.h",
+            "perm.h",      "personality.h", "poll.h",     "prctl.h",    "procfs.h",    "profil.h",      "ptrace.h",
+            "queue.h",     "quota.h",       "random.h",   "raw.h",      "reboot.h",    "reg.h",         "resource.h",
+            "select.h",    "sem.h",         "sendfile.h", "shm.h",      "signal.h",    "signalfd.h",    "socket.h",
+            "socketvar.h", "soundcard.h",   "stat.h",     "statfs.h",   "statvfs.h",   "stropts.h",     "swap.h",
+            "syscall.h",   "sysctl.h",      "sysinfo.h",  "syslog.h",   "sysmacros.h", "termios.h",     "time.h",
+            "timeb.h",     "timerfd.h",     "times.h",    "timex.h",    "ttychars.h",  "ttydefaults.h", "types.h",
+            "ucontext.h",  "uio.h",         "un.h",       "unistd.h",   "user.h",      "ustat.h",       "utsname.h",
+            "vfs.h",       "vlimit.h",      "vm86.h",     "vt.h",       "vtimes.h",    "wait.h",        "xattr.h",
+        };
+        // These files are taken from the libc6-dev package on Ubuntu inside the /usr/include/ folder
+        static constexpr StringLiteral restricted_crt_filenames[] = {
+            "_G_config.h", "aio.h",         "aliases.h",      "alloca.h",       "ar.h",        "argp.h",
+            "argz.h",      "assert.h",      "byteswap.h",     "complex.h",      "cpio.h",      "crypt.h",
+            "ctype.h",     "dirent.h",      "dlfcn.h",        "elf.h",          "endian.h",    "envz.h",
+            "err.h",       "errno.h",       "error.h",        "execinfo.h",     "fcntl.h",     "features.h",
+            "fenv.h",      "fmtmsg.h",      "fnmatch.h",      "fstab.h",        "fts.h",       "ftw.h",
+            "gconv.h",     "getopt.h",      "glob.h",         "gnu-versions.h", "grp.h",       "gshadow.h",
+            "iconv.h",     "ifaddrs.h",     "inttypes.h",     "langinfo.h",     "lastlog.h",   "libgen.h",
+            "libintl.h",   "libio.h",       "limits.h",       "link.h",         "locale.h",    "malloc.h",
+            "math.h",      "mcheck.h",      "memory.h",       "mntent.h",       "monetary.h",  "mqueue.h",
+            "netash",      "netdb.h",       "nl_types.h",     "nss.h",          "obstack.h",   "paths.h",
+            "poll.h",      "printf.h",      "proc_service.h", "pthread.h",      "pty.h",       "pwd.h",
+            "re_comp.h",   "regex.h",       "regexp.h",       "resolv.h",       "sched.h",     "search.h",
+            "semaphore.h", "setjmp.h",      "sgtty.h",        "shadow.h",       "signal.h",    "spawn.h",
+            "stab.h",      "stdc-predef.h", "stdint.h",       "stdio.h",        "stdio_ext.h", "stdlib.h",
+            "string.h",    "strings.h",     "stropts.h",      "syscall.h",      "sysexits.h",  "syslog.h",
+            "tar.h",       "termio.h",      "termios.h",      "tgmath.h",       "thread_db.h", "time.h",
+            "ttyent.h",    "uchar.h",       "ucontext.h",     "ulimit.h",       "unistd.h",    "ustat.h",
+            "utime.h",     "utmp.h",        "utmpx.h",        "values.h",       "wait.h",      "wchar.h",
+            "wctype.h",    "wordexp.h",
+        };
+        // These files are general names that have shown to be problematic in the past
+        static constexpr StringLiteral restricted_general_filenames[] = {
+            "json.h",
+            "parser.h",
+            "lexer.h",
+            "config.h",
+            "local.h",
+            "slice.h",
+        };
+        static constexpr Span<const StringLiteral> restricted_lists[] = {
+            restricted_sys_filenames, restricted_crt_filenames, restricted_general_filenames};
+        const fs::path include_dir = package_dir / "include";
+        auto files = fs.get_files_non_recursive(include_dir);
+        auto filenames_v = Util::fmap(files, [](const auto& file) { return file.filename().u8string(); });
+        std::set<std::string> filenames_s(filenames_v.begin(), filenames_v.end());
+
+        std::vector<fs::path> violations;
+        for (auto&& flist : restricted_lists)
+            for (auto&& f : flist)
+            {
+                if (Util::Sets::contains(filenames_s, f))
+                {
+                    violations.push_back(fs::u8path("include") / fs::u8path(f.c_str()));
+                }
+            }
+
+        if (!violations.empty())
+        {
+            System::print2(System::Color::warning,
+                           "Restricted headers paths are present. These files can prevent the core C++ runtime and "
+                           "other packages from compiling correctly:\n");
+            Files::print_paths(violations);
+            System::print2("In exceptional circumstances, this policy can be disabled via ",
+                           Build::to_cmake_variable(BuildPolicy::ALLOW_RESTRICTED_HEADERS),
+                           "\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -109,10 +197,10 @@ namespace vcpkg::PostBuildLint
 
         if (!files_found.empty())
         {
-            System::println(System::Color::warning,
-                            "Include files should not be duplicated into the /debug/include directory. If this cannot "
-                            "be disabled in the project cmake, use\n"
-                            "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)");
+            System::print2(System::Color::warning,
+                           "Include files should not be duplicated into the /debug/include directory. If this cannot "
+                           "be disabled in the project cmake, use\n"
+                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/include\")\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -125,9 +213,9 @@ namespace vcpkg::PostBuildLint
 
         if (fs.exists(debug_share))
         {
-            System::println(System::Color::warning,
-                            "/debug/share should not exist. Please reorganize any important files, then use\n"
-                            "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)");
+            System::print2(System::Color::warning,
+                           "/debug/share should not exist. Please reorganize any important files, then use\n"
+                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/share\")\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -141,10 +229,10 @@ namespace vcpkg::PostBuildLint
         const fs::path lib_cmake = package_dir / "lib" / "cmake";
         if (fs.exists(lib_cmake))
         {
-            System::println(
-                System::Color::warning,
-                "The /lib/cmake folder should be merged with /debug/lib/cmake and moved to /share/%s/cmake.",
-                spec.name());
+            System::printf(System::Color::warning,
+                           "The /lib/cmake folder should be merged with /debug/lib/cmake and moved to "
+                           "/share/%s/cmake.\nPlease use the helper function `vcpkg_fixup_cmake_targets()`\n",
+                           spec.name());
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -175,9 +263,9 @@ namespace vcpkg::PostBuildLint
 
         if (!misplaced_cmake_files.empty())
         {
-            System::println(
+            System::printf(
                 System::Color::warning,
-                "The following cmake files were found outside /share/%s. Please place cmake files in /share/%s.",
+                "The following cmake files were found outside /share/%s. Please place cmake files in /share/%s.\n",
                 spec.name(),
                 spec.name());
             Files::print_paths(misplaced_cmake_files);
@@ -194,9 +282,9 @@ namespace vcpkg::PostBuildLint
         const fs::path lib_cmake_debug = package_dir / "debug" / "lib" / "cmake";
         if (fs.exists(lib_cmake_debug))
         {
-            System::println(System::Color::warning,
-                            "The /debug/lib/cmake folder should be merged with /lib/cmake into /share/%s",
-                            spec.name());
+            System::printf(System::Color::warning,
+                           "The /debug/lib/cmake folder should be merged with /lib/cmake into /share/%s\n",
+                           spec.name());
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -210,9 +298,9 @@ namespace vcpkg::PostBuildLint
 
         if (!dlls.empty())
         {
-            System::println(System::Color::warning,
-                            "\nThe following dlls were found in /lib or /debug/lib. Please move them to /bin or "
-                            "/debug/bin, respectively.");
+            System::print2(System::Color::warning,
+                           "\nThe following dlls were found in /lib or /debug/lib. Please move them to /bin or "
+                           "/debug/bin, respectively.\n");
             Files::print_paths(dlls);
             return LintStatus::ERROR_DETECTED;
         }
@@ -251,27 +339,24 @@ namespace vcpkg::PostBuildLint
             }
         }
 
-        System::println(System::Color::warning,
-                        "The software license must be available at ${CURRENT_PACKAGES_DIR}/share/%s/copyright",
-                        spec.name());
+        System::printf(System::Color::warning,
+                       "The software license must be available at ${CURRENT_PACKAGES_DIR}/share/%s/copyright\n",
+                       spec.name());
         if (potential_copyright_files.size() ==
             1) // if there is only one candidate, provide the cmake lines needed to place it in the proper location
         {
             const fs::path found_file = potential_copyright_files[0];
             const fs::path relative_path = found_file.string().erase(
                 0, current_buildtrees_dir.string().size() + 1); // The +1 is needed to remove the "/"
-            System::println(
-                "\n    file(COPY ${CURRENT_BUILDTREES_DIR}/%s DESTINATION ${CURRENT_PACKAGES_DIR}/share/%s)\n"
-                "    file(RENAME ${CURRENT_PACKAGES_DIR}/share/%s/%s ${CURRENT_PACKAGES_DIR}/share/%s/copyright)",
+            System::printf(
+                "\n    configure_file(\"${CURRENT_BUILDTREES_DIR}/%s/%s\" \"${CURRENT_PACKAGES_DIR}/share/%s/copyright\" COPYONLY)\n",
                 relative_path.generic_string(),
-                spec.name(),
-                spec.name(),
                 found_file.filename().generic_string(),
                 spec.name());
         }
         else if (potential_copyright_files.size() > 1)
         {
-            System::println(System::Color::warning, "The following files are potential copyright files:");
+            System::print2(System::Color::warning, "The following files are potential copyright files:\n");
             Files::print_paths(potential_copyright_files);
         }
         return LintStatus::ERROR_DETECTED;
@@ -284,9 +369,9 @@ namespace vcpkg::PostBuildLint
 
         if (!exes.empty())
         {
-            System::println(
+            System::print2(
                 System::Color::warning,
-                "The following EXEs were found in /bin or /debug/bin. EXEs are not valid distribution targets.");
+                "The following EXEs were found in /bin or /debug/bin. EXEs are not valid distribution targets.\n");
             Files::print_paths(exes);
             return LintStatus::ERROR_DETECTED;
         }
@@ -294,8 +379,12 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    static LintStatus check_exports_of_dlls(const std::vector<fs::path>& dlls, const fs::path& dumpbin_exe)
+    static LintStatus check_exports_of_dlls(const Build::BuildPolicies& policies,
+                                            const std::vector<fs::path>& dlls,
+                                            const fs::path& dumpbin_exe)
     {
+        if (policies.is_enabled(BuildPolicy::DLLS_WITHOUT_EXPORTS)) return LintStatus::SUCCESS;
+
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
@@ -312,9 +401,13 @@ namespace vcpkg::PostBuildLint
 
         if (!dlls_with_no_exports.empty())
         {
-            System::println(System::Color::warning, "The following DLLs have no exports:");
+            System::print2(System::Color::warning, "The following DLLs have no exports:\n");
             Files::print_paths(dlls_with_no_exports);
-            System::println(System::Color::warning, "DLLs without any exports are likely a bug in the build script.");
+            System::print2(System::Color::warning, "DLLs without any exports are likely a bug in the build script.\n");
+            System::printf(System::Color::warning,
+                           "If this is intended, add the following line in the portfile:\n"
+                           "    SET(%s enabled)\n",
+                           to_cmake_variable(BuildPolicy::DLLS_WITHOUT_EXPORTS));
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -346,9 +439,9 @@ namespace vcpkg::PostBuildLint
 
         if (!dlls_with_improper_uwp_bit.empty())
         {
-            System::println(System::Color::warning, "The following DLLs do not have the App Container bit set:");
+            System::print2(System::Color::warning, "The following DLLs do not have the App Container bit set:\n");
             Files::print_paths(dlls_with_improper_uwp_bit);
-            System::println(System::Color::warning, "This bit is required for Windows Store apps.");
+            System::print2(System::Color::warning, "This bit is required for Windows Store apps.\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -381,13 +474,17 @@ namespace vcpkg::PostBuildLint
     static void print_invalid_architecture_files(const std::string& expected_architecture,
                                                  std::vector<FileAndArch> binaries_with_invalid_architecture)
     {
-        System::println(System::Color::warning, "The following files were built for an incorrect architecture:");
-        System::println();
+        System::print2(System::Color::warning, "The following files were built for an incorrect architecture:\n\n");
         for (const FileAndArch& b : binaries_with_invalid_architecture)
         {
-            System::println("    %s", b.file.generic_string());
-            System::println("Expected %s, but was: %s", expected_architecture, b.actual_arch);
-            System::println();
+            System::print2("    ",
+                           b.file.u8string(),
+                           "\n"
+                           "Expected ",
+                           expected_architecture,
+                           ", but was: ",
+                           b.actual_arch,
+                           "\n\n");
         }
     }
 
@@ -457,7 +554,7 @@ namespace vcpkg::PostBuildLint
             return LintStatus::ERROR_DETECTED;
         }
 #endif
-
+        Util::unused(expected_architecture, files);
         return LintStatus::SUCCESS;
     }
 
@@ -468,8 +565,8 @@ namespace vcpkg::PostBuildLint
             return LintStatus::SUCCESS;
         }
 
-        System::println(System::Color::warning,
-                        "DLLs should not be present in a static build, but the following DLLs were found:");
+        System::print2(System::Color::warning,
+                       "DLLs should not be present in a static build, but the following DLLs were found:\n");
         Files::print_paths(dlls);
         return LintStatus::ERROR_DETECTED;
     }
@@ -484,26 +581,26 @@ namespace vcpkg::PostBuildLint
             return LintStatus::SUCCESS;
         }
 
-        System::println(System::Color::warning,
-                        "Mismatching number of debug and release binaries. Found %zd for debug but %zd for release.",
-                        debug_count,
-                        release_count);
-        System::println("Debug binaries");
+        System::printf(System::Color::warning,
+                       "Mismatching number of debug and release binaries. Found %zd for debug but %zd for release.\n",
+                       debug_count,
+                       release_count);
+        System::print2("Debug binaries\n");
         Files::print_paths(debug_binaries);
 
-        System::println("Release binaries");
+        System::print2("Release binaries\n");
         Files::print_paths(release_binaries);
 
         if (debug_count == 0)
         {
-            System::println(System::Color::warning, "Debug binaries were not found");
+            System::print2(System::Color::warning, "Debug binaries were not found\n");
         }
         if (release_count == 0)
         {
-            System::println(System::Color::warning, "Release binaries were not found");
+            System::print2(System::Color::warning, "Release binaries were not found\n");
         }
 
-        System::println();
+        System::print2("\n");
 
         return LintStatus::ERROR_DETECTED;
     }
@@ -517,11 +614,11 @@ namespace vcpkg::PostBuildLint
 
         if (lib_count == 0 && dll_count != 0)
         {
-            System::println(System::Color::warning, "Import libs were not present in %s", lib_dir.u8string());
-            System::println(System::Color::warning,
-                            "If this is intended, add the following line in the portfile:\n"
-                            "    SET(%s enabled)",
-                            to_cmake_variable(BuildPolicy::DLLS_WITHOUT_LIBS));
+            System::print2(System::Color::warning, "Import libs were not present in ", lib_dir.u8string(), "\n");
+            System::printf(System::Color::warning,
+                           "If this is intended, add the following line in the portfile:\n"
+                           "    SET(%s enabled)\n",
+                           to_cmake_variable(BuildPolicy::DLLS_WITHOUT_LIBS));
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -541,29 +638,31 @@ namespace vcpkg::PostBuildLint
 
         if (fs.exists(bin))
         {
-            System::println(System::Color::warning,
-                            R"(There should be no bin\ directory in a static build, but %s is present.)",
-                            bin.u8string());
+            System::printf(System::Color::warning,
+                           R"(There should be no bin\ directory in a static build, but %s is present.)"
+                           "\n",
+                           bin.u8string());
         }
 
         if (fs.exists(debug_bin))
         {
-            System::println(System::Color::warning,
-                            R"(There should be no debug\bin\ directory in a static build, but %s is present.)",
-                            debug_bin.u8string());
+            System::printf(System::Color::warning,
+                           R"(There should be no debug\bin\ directory in a static build, but %s is present.)"
+                           "\n",
+                           debug_bin.u8string());
         }
 
-        System::println(
+        System::print2(
             System::Color::warning,
             R"(If the creation of bin\ and/or debug\bin\ cannot be disabled, use this in the portfile to remove them)"
             "\n"
             "\n"
-            R"###(    if(VCPKG_LIBRARY_LINKAGE STREQUAL static))###"
+            R"###(    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static"))###"
             "\n"
-            R"###(        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin))###"
+            R"###(        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin"))###"
             "\n"
             R"###(    endif())###"
-            "\n");
+            "\n\n");
 
         return LintStatus::ERROR_DETECTED;
     }
@@ -578,16 +677,17 @@ namespace vcpkg::PostBuildLint
 
         if (!empty_directories.empty())
         {
-            System::println(System::Color::warning, "There should be no empty directories in %s", dir.generic_string());
-            System::println("The following empty directories were found: ");
+            System::print2(System::Color::warning, "There should be no empty directories in ", dir.u8string(), "\n");
+            System::print2("The following empty directories were found:\n");
             Files::print_paths(empty_directories);
-            System::println(
+            System::print2(
                 System::Color::warning,
                 "If a directory should be populated but is not, this might indicate an error in the portfile.\n"
                 "If the directories are not needed and their creation cannot be disabled, use something like this in "
                 "the portfile to remove them:\n"
                 "\n"
-                R"###(    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/a/dir ${CURRENT_PACKAGES_DIR}/some/other/dir))###"
+                R"###(    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/a/dir" "${CURRENT_PACKAGES_DIR}/some/other/dir"))###"
+                "\n"
                 "\n"
                 "\n");
             return LintStatus::ERROR_DETECTED;
@@ -635,18 +735,17 @@ namespace vcpkg::PostBuildLint
 
         if (!libs_with_invalid_crt.empty())
         {
-            System::println(System::Color::warning,
-                            "Expected %s crt linkage, but the following libs had invalid crt linkage:",
-                            expected_build_type.to_string());
-            System::println();
+            System::printf(System::Color::warning,
+                           "Expected %s crt linkage, but the following libs had invalid crt linkage:\n\n",
+                           expected_build_type.to_string());
             for (const BuildTypeAndFile btf : libs_with_invalid_crt)
             {
-                System::println("    %s: %s", btf.file.generic_string(), btf.build_type.to_string());
+                System::printf("    %s: %s\n", btf.file.generic_string(), btf.build_type.to_string());
             }
-            System::println();
+            System::print2("\n");
 
-            System::println(System::Color::warning,
-                            "To inspect the lib files, use:\n    dumpbin.exe /directives mylibfile.lib");
+            System::print2(System::Color::warning,
+                           "To inspect the lib files, use:\n    dumpbin.exe /directives mylibfile.lib\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -686,16 +785,15 @@ namespace vcpkg::PostBuildLint
 
         if (!dlls_with_outdated_crt.empty())
         {
-            System::println(System::Color::warning, "Detected outdated dynamic CRT in the following files:");
-            System::println();
+            System::print2(System::Color::warning, "Detected outdated dynamic CRT in the following files:\n\n");
             for (const OutdatedDynamicCrtAndFile btf : dlls_with_outdated_crt)
             {
-                System::println("    %s: %s", btf.file.generic_string(), btf.outdated_crt.name);
+                System::print2("    ", btf.file.u8string(), ": ", btf.outdated_crt.name, "\n");
             }
-            System::println();
+            System::print2("\n");
 
-            System::println(System::Color::warning,
-                            "To inspect the dll files, use:\n    dumpbin.exe /dependents mydllfile.dll");
+            System::print2(System::Color::warning,
+                           "To inspect the dll files, use:\n    dumpbin.exe /dependents mydllfile.dll\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -707,8 +805,8 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> misplaced_files = fs.get_files_non_recursive(dir);
         Util::erase_remove_if(misplaced_files, [&fs](const fs::path& path) {
             const std::string filename = path.filename().generic_string();
-            if (Strings::case_insensitive_ascii_equals(filename.c_str(), "CONTROL") ||
-                Strings::case_insensitive_ascii_equals(filename.c_str(), "BUILD_INFO"))
+            if (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
+                Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO"))
             {
                 return true;
             }
@@ -718,9 +816,9 @@ namespace vcpkg::PostBuildLint
 
         if (!misplaced_files.empty())
         {
-            System::println(System::Color::warning, "The following files are placed in\n%s: ", dir.u8string());
+            System::print2(System::Color::warning, "The following files are placed in\n", dir.u8string(), ":\n");
             Files::print_paths(misplaced_files);
-            System::println(System::Color::warning, "Files cannot be present in those directories.\n");
+            System::print2(System::Color::warning, "Files cannot be present in those directories.\n\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -748,6 +846,7 @@ namespace vcpkg::PostBuildLint
         }
 
         error_count += check_for_files_in_include_directory(fs, build_info.policies, package_dir);
+        error_count += check_for_restricted_include_files(fs, build_info.policies, package_dir);
         error_count += check_for_files_in_debug_include_directory(fs, package_dir);
         error_count += check_for_files_in_debug_share_directory(fs, package_dir);
         error_count += check_folder_lib_cmake(fs, package_dir, spec);
@@ -801,9 +900,9 @@ namespace vcpkg::PostBuildLint
                 dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
                 dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
-                if (!toolset.dumpbin.empty())
+                if (!toolset.dumpbin.empty() && !build_info.policies.is_enabled(BuildPolicy::SKIP_DUMPBIN_CHECKS))
                 {
-                    error_count += check_exports_of_dlls(dlls, toolset.dumpbin);
+                    error_count += check_exports_of_dlls(build_info.policies, dlls, toolset.dumpbin);
                     error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
                     error_count +=
                         check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info, pre_build_info);
@@ -822,7 +921,7 @@ namespace vcpkg::PostBuildLint
 
                 error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
 
-                if (!toolset.dumpbin.empty())
+                if (!toolset.dumpbin.empty() && !build_info.policies.is_enabled(BuildPolicy::SKIP_DUMPBIN_CHECKS))
                 {
                     if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
                     {
@@ -851,21 +950,24 @@ namespace vcpkg::PostBuildLint
     size_t perform_all_checks(const PackageSpec& spec,
                               const VcpkgPaths& paths,
                               const PreBuildInfo& pre_build_info,
-                              const BuildInfo& build_info)
+                              const BuildInfo& build_info,
+                              const fs::path& port_dir)
     {
-        System::println("-- Performing post-build validation");
+        System::print2("-- Performing post-build validation\n");
         const size_t error_count = perform_all_checks_and_return_error_count(spec, paths, pre_build_info, build_info);
 
         if (error_count != 0)
         {
-            const fs::path portfile = paths.ports / spec.name() / "portfile.cmake";
-            System::println(System::Color::error,
-                            "Found %u error(s). Please correct the portfile:\n    %s",
-                            error_count,
-                            portfile.string());
+            const fs::path portfile = port_dir / "portfile.cmake";
+            System::print2(System::Color::error,
+                           "Found ",
+                           error_count,
+                           " error(s). Please correct the portfile:\n    ",
+                           portfile.u8string(),
+                           "\n");
         }
 
-        System::println("-- Performing post-build validation done");
+        System::print2("-- Performing post-build validation done\n");
 
         return error_count;
     }

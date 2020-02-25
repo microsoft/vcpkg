@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/karchive
-    REF v5.50.0
-    SHA512 519dd69ef76c9655cdf9d8f16484244469a6d5d2185c1d588bad325a401dd11f35699e3c115dfd52e5db38aa26aea3d9b35c7e83b76a36bda926574a7d3ce50f
+    REF v5.64.0
+    SHA512 006cd9117eec02e1471b3b0082ee5f21161dc9c52855b6e4be7f3f3614bde9e22a3392f4a90be23654b648a003761bfa70a5497974577da43807eaf56fa126ba
     HEAD_REF master
 )
 

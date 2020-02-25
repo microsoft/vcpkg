@@ -1,0 +1,5 @@
+Source: google-cloud-cpp-spanner
+Version: 0.7.0
+Build-Depends: grpc, googleapis, google-cloud-cpp-common
+Description: C++ Client Library for Google Cloud Spanner.
+Homepage: https://github.com/googleapis/google-cloud-cpp-spanner

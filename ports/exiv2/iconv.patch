@@ -1,28 +1,38 @@
 diff --git a/cmake/findDependencies.cmake b/cmake/findDependencies.cmake
-index e220e2f..992b887 100644
+index a458a0c..9caffcf 100644
 --- a/cmake/findDependencies.cmake
 +++ b/cmake/findDependencies.cmake
-@@ -50,7 +50,7 @@ if( EXIV2_ENABLE_NLS )
-     # the manual check in cmake/generateConfigFile.cmake
+@@ -40,7 +40,7 @@ else()
+ endif()
+ 
+ if (EXIV2_ENABLE_NLS)
+-    find_package(Intl REQUIRED)
++    find_package(unofficial-gettext CONFIG)
  endif( )
  
--find_package(Iconv)
-+find_package(unofficial-iconv CONFIG REQUIRED)
- if( ICONV_FOUND )
-     message ( "-- ICONV_INCLUDE_DIR : " ${Iconv_INCLUDE_DIR} )
-     message ( "-- ICONV_LIBRARIES : " ${Iconv_LIBRARY} )
+ find_package(Iconv)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 91469b6..4c51068 100644
+index 76eaabc..68d29de 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -274,8 +274,8 @@ if( EXIV2_ENABLE_NLS )
-     target_link_libraries( exiv2lib PRIVATE  ${LIBINTL_LIBRARIES} )
+@@ -214,16 +214,15 @@ if( EXIV2_ENABLE_PNG )
+ endif()
+ 
+ if( EXIV2_ENABLE_NLS )
+-    target_link_libraries(exiv2lib PRIVATE ${Intl_LIBRARIES})
+-    target_include_directories(exiv2lib PRIVATE ${Intl_INCLUDE_DIRS})
+-    target_include_directories(exiv2lib_int PRIVATE ${Intl_INCLUDE_DIRS})
++    target_link_libraries(exiv2lib PRIVATE unofficial::gettext::libintl)
+     # Definition needed for translations
+     target_compile_definitions(exiv2lib PUBLIC EXV_LOCALEDIR="/../${CMAKE_INSTALL_LOCALEDIR}")
  endif()
  
 -if( ICONV_FOUND )
 -    target_link_libraries( exiv2lib PRIVATE Iconv::Iconv )
-+if( ICONV_FOUND OR 1 )
-+    target_link_libraries( exiv2lib PRIVATE unofficial::iconv::libiconv )
++if(NOT TARGET unofficial::iconv::libiconv)
++    find_package(unofficial-iconv CONFIG)
  endif()
++target_link_libraries( exiv2lib PRIVATE unofficial::iconv::libiconv )
  
+ write_basic_package_version_file(exiv2ConfigVersion.cmake COMPATIBILITY ExactVersion)
  

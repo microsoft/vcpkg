@@ -13,12 +13,21 @@ vcpkg_from_github(
   REF v${OPENEXR_VERSION}
   SHA512 ${OPENEXR_HASH}
   HEAD_REF master
+  PATCHES
+    fix_clang_not_setting_modern_cplusplus.patch
+    fix_install_ilmimf.patch
+    fix_linux_static_library_names.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OPENEXR_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENEXR_BUILD_SHARED)
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
     -DOPENEXR_BUILD_PYTHON_LIBS:BOOL=FALSE
+    -DOPENEXR_BUILD_STATIC=${OPENEXR_BUILD_STATIC}
+    -DOPENEXR_BUILD_SHARED=${OPENEXR_BUILD_SHARED}
   OPTIONS_DEBUG
     -DILMBASE_PACKAGE_PREFIX=${CURRENT_INSTALLED_DIR}/debug
   OPTIONS_RELEASE
@@ -31,7 +40,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # NOTE: Only use ".exe" extension on Windows executables.
 # Is there a cleaner way to do this?
-if(WIN32)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(EXECUTABLE_SUFFIX ".exe")
 else()
     set(EXECUTABLE_SUFFIX "")
@@ -55,17 +64,10 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openexr)
 
 vcpkg_copy_pdbs()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if (VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(OPENEXR_PORT_DIR "openexr")
-else()
-  set(OPENEXR_PORT_DIR "OpenEXR")
-endif()
-
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${OPENEXR_PORT_DIR})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${OPENEXR_PORT_DIR}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${OPENEXR_PORT_DIR}/copyright)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindOpenEXR.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${OPENEXR_PORT_DIR})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindOpenEXR.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

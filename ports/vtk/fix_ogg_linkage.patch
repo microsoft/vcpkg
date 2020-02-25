@@ -1,0 +1,12 @@
+diff --git a/IO/Movie/module.cmake b/IO/Movie/module.cmake
+index 4275171..88204ad 100644
+--- a/IO/Movie/module.cmake
++++ b/IO/Movie/module.cmake
+@@ -14,6 +14,7 @@ vtk_module(vtkIOMovie
+     vtkIO
+   DEPENDS
+     ${vtkIOMovie_vtkoggtheora}
++    vtkogg
+     vtkCommonExecutionModel
+   PRIVATE_DEPENDS
+     vtkCommonCore

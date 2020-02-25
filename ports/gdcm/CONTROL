@@ -1,0 +1,4 @@
+Source: gdcm
+Version: 3.0.4
+Description: Grassroots DICOM library
+Build-Depends: zlib, expat, openjpeg

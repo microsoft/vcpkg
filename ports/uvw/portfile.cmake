@@ -4,19 +4,21 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/uvw
-    REF v1.11.2_libuv-v1.23
-    SHA512 0125233645351b94acb1b42f1632365a60892c64f00b27f04ae76fa523c4ee32c9910f0fcfb160b15269bfb0b5ae0c0f8b46d83a1ca9f9fc661b75eecb7a04d3
+    REF da3b5f00f574df447dc0ff69af280a9eadc95333 # v2.3.1_libuv-v1.34
+    SHA512 a1a00838b909ef41157911851e48581b70a9a06da8507357567208d205e709f50f891246708f33683aca2aaf7fde8b36147539152727c782604442e385b4e080
 )
 
-file(INSTALL
-    ${SOURCE_PATH}/src/uvw
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
-file(INSTALL
-    ${SOURCE_PATH}/src/uvw.hpp
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/uvw-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvw/)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright/readme/package files
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvw RENAME copyright)

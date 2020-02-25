@@ -1,8 +1,10 @@
 #pragma once
 
 #include <algorithm>
+#include <functional>
 #include <map>
 #include <mutex>
+#include <type_traits>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -10,12 +12,13 @@
 namespace vcpkg::Util
 {
     template<class Container>
-    using ElementT = std::remove_reference_t<decltype(*begin(std::declval<Container>()))>;
+    using ElementT =
+        std::remove_reference_t<decltype(*std::declval<typename std::remove_reference_t<Container>::iterator>())>;
 
     namespace Vectors
     {
         template<class Container, class T = ElementT<Container>>
-        void concatenate(std::vector<T>* augend, const Container& addend)
+        void append(std::vector<T>* augend, const Container& addend)
         {
             augend->insert(augend->end(), addend.begin(), addend.end());
         }
@@ -41,11 +44,11 @@ namespace vcpkg::Util
         }
     }
 
-    template<class Cont, class Func>
-    using FmapOut = decltype(std::declval<Func&>()(*begin(std::declval<Cont&>())));
+    template<class Range, class Func>
+    using FmapOut = std::remove_reference_t<decltype(std::declval<Func&>()(*std::declval<Range>().begin()))>;
 
-    template<class Cont, class Func, class Out = FmapOut<Cont, Func>>
-    std::vector<Out> fmap(Cont&& xs, Func&& f)
+    template<class Range, class Func, class Out = FmapOut<Range, Func>>
+    std::vector<Out> fmap(Range&& xs, Func&& f)
     {
         std::vector<Out> ret;
         ret.reserve(xs.size());
@@ -93,12 +96,6 @@ namespace vcpkg::Util
         return std::find_if(begin(cont), end(cont), pred);
     }
 
-    template<class Container, class T = ElementT<Container>>
-    std::vector<T*> element_pointers(Container&& cont)
-    {
-        return fmap(cont, [](auto&& x) { return &x; });
-    }
-
     template<class Container, class Pred>
     auto find_if_not(Container&& cont, Pred pred)
     {
@@ -117,21 +114,29 @@ namespace vcpkg::Util
         }
     }
 
-    template<class Range>
-    void sort(Range& cont)
+    template<class Range, class Comp = std::less<typename Range::value_type>>
+    void sort(Range& cont, Comp comp = Comp())
     {
         using std::begin;
         using std::end;
-        std::sort(begin(cont), end(cont));
+        std::sort(begin(cont), end(cont), comp);
+    }
+
+    template<class Range, class Pred>
+    bool any_of(Range&& rng, Pred pred)
+    {
+        return std::any_of(rng.begin(), rng.end(), std::move(pred));
     }
 
     template<class Range>
-    void sort_unique_erase(Range& cont)
+    Range&& sort_unique_erase(Range&& cont)
     {
         using std::begin;
         using std::end;
         std::sort(begin(cont), end(cont));
         cont.erase(std::unique(begin(cont), end(cont)), end(cont));
+
+        return std::forward<Range>(cont);
     }
 
     template<class Range1, class Range2>
@@ -217,9 +222,14 @@ namespace vcpkg::Util
         }
     }
 
-    template<class T>
-    void unused(T&& param)
+    template<class... Ts>
+    void unused(const Ts&...)
     {
-        (void)param;
+    }
+
+    template<class T>
+    T copy(const T& t)
+    {
+        return t;
     }
 }

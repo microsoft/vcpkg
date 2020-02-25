@@ -1,5 +1,5 @@
 Source: think-cell-range
-Maintainer: jfrederich@gmail.com
-Version: 498839d
-Description: think-cell's range library <https://think-cell.com>, <https://github.com/think-cell/range>, <https://www.think-cell.com/en/career/talks/ranges/#1>
+Version: 498839d-1
+Description: think-cell's range library
+Homepage: https://github.com/think-cell/range
 Build-Depends: boost

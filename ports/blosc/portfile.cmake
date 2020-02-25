@@ -3,9 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc
-    REF v1.13.5
-    SHA512 3ddc83c16c91d87959179f58bd23fe8e4bbd07c17312cdfdd0bc238a743e695f2914baf0b69efd923e8e54e8455699c8e528d3966d9126e15a8897d3c529db25
+    REF 30c55d6544613c846368de1faee420e56e992ffe # v1.17.1
+    SHA512 c4ed1492fd8733c6acabc973c58d6763e2a3a2bd7965fbf4d267169f5b03055eccdbe2723bc5d98636b039625a55609a092ed65de45d7a2b361347513cc83a98
     HEAD_REF master
+    PATCHES
+      0001-find-deps.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -20,6 +22,7 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/internal-complibs)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -DPREFER_EXTERNAL_LZ4=ON
             -DPREFER_EXTERNAL_SNAPPY=ON
             -DPREFER_EXTERNAL_ZLIB=ON
@@ -32,14 +35,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_copy_pdbs()
-
 if (BLOSC_SHARED)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/debug/bin/blosc.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/bin/blosc.dll)
+vcpkg_copy_pdbs()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/blosc.dll")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/bin/blosc.dll)
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/blosc.dll")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/debug/bin/blosc.dll)
+    endif()
 endif()
 
 # cleanup
@@ -48,3 +53,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSES/BLOSC.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/blosc RENAME copyright)
 
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/FindBlosc.cmake"
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)

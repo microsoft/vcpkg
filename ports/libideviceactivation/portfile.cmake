@@ -1,22 +1,22 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/libideviceactivation
-    REF 1.0.38
-    SHA512 2fd2d5636e83a6740251dca58c04429628f47661a56e573fc14f45ef68c54990717515305902cf04759a7c8fd19e66a30c8eb2ea20e6257d2c5405b690ea25a6
+    REF de6008a6bd66a96bb11468b8b137704f0fef2c54 # v1.2.137
+    SHA512 cdf72702c465cb3e405db067fa96e2979b8c32e7798bcdb9e7286c4bc9392639cb0d31622c321453f635ef5212e645d300f3b420a847fb16fa05425c4882be95
     HEAD_REF msvc-master
 )
 
-vcpkg_install_msbuild(
+configure_file(${CURRENT_PORT_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
+
+vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PROJECT_SUBPATH libideviceactivation.sln
-    INCLUDES_SUBPATH include
-    LICENSE_SUBPATH COPYING
-    USE_VCPKG_INTEGRATION
-    ALLOW_ROOT_INCLUDES
+    PREFER_NINJA
 )
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/Makefile.am)
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -2,19 +2,6 @@ diff --git a/wangle/CMakeLists.txt b/wangle/CMakeLists.txt
 index 15dc8b6..ed8c79b 100644
 --- a/wangle/CMakeLists.txt
 +++ b/wangle/CMakeLists.txt
-@@ -39,9 +39,9 @@ endif()
- find_package(fizz CONFIG REQUIRED)
- find_package(Boost REQUIRED COMPONENTS system thread filesystem regex context)
- find_package(OpenSSL REQUIRED)
--find_package(Glog REQUIRED)
--find_package(Gflags REQUIRED)
--find_package(Libevent REQUIRED)
-+find_package(Glog CONFIG REQUIRED)
-+find_package(Gflags CONFIG REQUIRED)
-+find_package(Libevent CONFIG REQUIRED)
- find_package(DoubleConversion REQUIRED)
- find_package(Threads REQUIRED)
- if (UNIX AND NOT APPLE)
 @@ -123,6 +123,7 @@ target_include_directories(
    PUBLIC
      $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/..>

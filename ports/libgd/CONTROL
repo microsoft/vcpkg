@@ -1,4 +1,29 @@
 Source: libgd
-Version: 2.2.4-5
+Version: 2.2.5-4
+Homepage: https://github.com/libgd/libgd
 Description: Open source code library for the dynamic creation of images by programmers.
-Build-Depends: freetype, libjpeg-turbo, libpng, libwebp, tiff, fontconfig
+Default-Features: fontconfig, freetype, jpeg, png, tiff, webp
+
+Feature: fontconfig
+Description: Support for fontconfig
+Build-Depends: fontconfig
+
+Feature: freetype
+Description: Support for freetype
+Build-Depends: freetype
+
+Feature: jpeg
+Description: Support for jpeg
+Build-Depends: libjpeg-turbo
+
+Feature: png
+Description: Support for png
+Build-Depends: libpng
+
+Feature: tiff
+Description: Support for tiff
+Build-Depends: tiff
+
+Feature: webp
+Description: Support for webp
+Build-Depends: libwebp

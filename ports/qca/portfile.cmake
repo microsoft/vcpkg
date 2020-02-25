@@ -20,9 +20,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
-    REF 19ec49f89a0a560590ec733c549b92e199792837
-    SHA512 6a83ee6715a9a922f4fde5af571e2aad043ac5cbd522f57365038dd31879b44eb57a099ff797793d7ee19e320e0a151e5beacdff3bed525d39ea0b8e46efca9a
-    PATCHES 0001-fix-path-for-vcpkg.patch
+    REF v2.2.1
+    SHA512 6b10f9bbf9ebf136655d1c6464f3849c8581b3cd5ef07b0697ddd5f32611dce301af5148e8e6fe91e763301e68994957a62a278334ee7a78559101f411f27d49
+    PATCHES
+            0001-fix-path-for-vcpkg.patch
+            0002-fix-build-error.patch
 )
 
 # According to:
@@ -33,12 +35,12 @@ message(STATUS "Importing certstore")
 file(REMOVE ${SOURCE_PATH}/certs/rootcerts.pem)
 # Using file(DOWNLOAD) to use https
 file(DOWNLOAD https://raw.githubusercontent.com/mozilla/gecko-dev/master/security/nss/lib/ckfw/builtins/certdata.txt
-    ${CMAKE_CURRENT_LIST_DIR}/certdata.txt
+    ${CURRENT_BUILDTREES_DIR}/cert/certdata.txt
     TLS_VERIFY ON
 )
 vcpkg_execute_required_process(
     COMMAND ${PERL} ${CMAKE_CURRENT_LIST_DIR}/mk-ca-bundle.pl -n ${SOURCE_PATH}/certs/rootcerts.pem
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/cert
     LOGNAME ca-bundle
 )
 message(STATUS "Importing certstore done")

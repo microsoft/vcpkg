@@ -40,3 +40,10 @@ This environment variable can be set to a triplet name which will be used for un
 #### VCPKG_FORCE_SYSTEM_BINARIES
 
 This environment variable, if set, suppresses the downloading of CMake and Ninja and forces the use of the system binaries.
+
+### VCPKG_KEEP_ENV_VARS
+
+This environment variable can be set to a list of environment variables, separated by `;`, which will be propagated to
+the build environment.
+
+Example: `FOO_SDK_DIR;BAR_SDK_DIR`

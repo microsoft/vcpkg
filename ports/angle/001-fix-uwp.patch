@@ -1,113 +1,77 @@
-diff --git "a//src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp" "b/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp"
-index dd37ace8..9116b9e6 100644
---- "a/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp"
-+++ "b/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp"
-@@ -141,6 +141,7 @@ HRESULT CoreWindowNativeWindow::createSwapChain(ID3D11Device *device,
-                                                 unsigned int width,
-                                                 unsigned int height,
-                                                 bool containsAlpha,
-+												unsigned int samples,
-                                                 IDXGISwapChain1 **swapChain)
+diff --git a/src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp b/src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp
+index 0c9698450..3e37ad0ab 100644
+--- a/src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp
++++ b/src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp
+@@ -2364,6 +2364,11 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
+     bool isIvyBridge               = false;
+     bool isAMD                     = IsAMD(adapterDesc.VendorId);
+     bool isFeatureLevel9_3         = (deviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
++#if defined(ANGLE_ENABLE_WINDOWS_UWP)
++    bool isWin10                   = true;
++#else
++    bool isWin10                   = IsWindows10OrGreater();
++#endif
+     IntelDriverVersion capsVersion = IntelDriverVersion(0);
+     if (isIntel)
+     {
+@@ -2448,7 +2453,7 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
+     // Don't translate uniform block to StructuredBuffer on Windows 7 and earlier. This is targeted
+     // to work around a bug that fails to allocate ShaderResourceView for StructuredBuffer.
+     ANGLE_FEATURE_CONDITION(features, dontTranslateUniformBlockToStructuredBuffer,
+-                            !IsWindows10OrGreater());
++                            !isWin10);
+ 
+     // Call platform hooks for testing overrides.
+     auto *platform = ANGLEPlatformCurrent();
+diff --git a/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp b/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp
+index 7d3f078d6..fac057dd6 100644
+--- a/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp
++++ b/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp
+@@ -213,16 +213,20 @@ HRESULT GetCoreWindowSizeInPixels(const ComPtr<ABI::Windows::UI::Core::ICoreWind
+ 
+ static float GetLogicalDpi()
  {
-     if (device == nullptr || factory == nullptr || swapChain == nullptr || width == 0 ||
-@@ -154,7 +155,7 @@ HRESULT CoreWindowNativeWindow::createSwapChain(ID3D11Device *device,
-     swapChainDesc.Height = height;
-     swapChainDesc.Format = format;
-     swapChainDesc.Stereo = FALSE;
--    swapChainDesc.SampleDesc.Count = 1;
-+    swapChainDesc.SampleDesc.Count = samples;
-     swapChainDesc.SampleDesc.Quality = 0;
-     swapChainDesc.BufferUsage =
-         DXGI_USAGE_SHADER_INPUT | DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_BACK_BUFFER;
-diff --git "a/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.h" "b/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.h"
-index d43bf0ba..77b4ae95 100644
---- "a/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.h"
-+++ "b/src/libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.h"
-@@ -32,7 +32,8 @@ class CoreWindowNativeWindow : public InspectableNativeWindow, public std::enabl
-                             DXGI_FORMAT format,
-                             unsigned int width,
-                             unsigned int height,
--                            bool containsAlpha,
-+                            bool containsAlpha, 
-+						    unsigned int samples,
-                             IDXGISwapChain1 **swapChain) override;
+-    ComPtr<ABI::Windows::Graphics::Display::IDisplayPropertiesStatics> displayProperties;
++    ComPtr<ABI::Windows::Graphics::Display::IDisplayInformationStatics> displayInformationStatics;
++    ComPtr<ABI::Windows::Graphics::Display::IDisplayInformation> displayInformation;
  
-   protected:
-diff --git "a/src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h" "b/src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h"
-index 3e67269f..a66935ce 100644
---- "a/src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h"
-+++ "b/src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h"
-@@ -53,6 +53,7 @@ class InspectableNativeWindow
-                                     unsigned int width,
-                                     unsigned int height,
-                                     bool containsAlpha,
-+		                            unsigned int samples,
-                                     IDXGISwapChain1 **swapChain) = 0;
+     if (SUCCEEDED(GetActivationFactory(
+-            HStringReference(RuntimeClass_Windows_Graphics_Display_DisplayProperties).Get(),
+-            displayProperties.GetAddressOf())))
++            HStringReference(RuntimeClass_Windows_Graphics_Display_DisplayInformation).Get(),
++            displayInformationStatics.GetAddressOf())))
+     {
+         float dpi = 96.0f;
+-        if (SUCCEEDED(displayProperties->get_LogicalDpi(&dpi)))
++        if (SUCCEEDED(displayInformationStatics->GetForCurrentView(&displayInformation)))
+         {
+-            return dpi;
++            if (SUCCEEDED(displayInformation->get_LogicalDpi(&dpi)))
++            {
++                return dpi;
++            }
+         }
+     }
  
-     bool getClientRect(RECT *rect)
-diff --git "a/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.cpp" "b/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.cpp"
-index 2ef2235c..284fccbb 100644
---- "a/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.cpp"
-+++ "b/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.cpp"
-@@ -89,6 +89,7 @@ HRESULT NativeWindow11WinRT::createSwapChain(ID3D11Device *device,
-                                              DXGI_FORMAT format,
-                                              UINT width,
-                                              UINT height,
-+										     UINT samples,
-                                              IDXGISwapChain **swapChain)
+diff --git a/src/libGLESv2/global_state.cpp b/src/libGLESv2/global_state.cpp
+index 8c2c61f53..7725106a4 100644
+--- a/src/libGLESv2/global_state.cpp
++++ b/src/libGLESv2/global_state.cpp
+@@ -214,7 +214,7 @@ namespace
  {
-     if (mImpl)
-@@ -96,7 +97,7 @@ HRESULT NativeWindow11WinRT::createSwapChain(ID3D11Device *device,
-         IDXGIFactory2 *factory2     = d3d11::DynamicCastComObject<IDXGIFactory2>(factory);
-         IDXGISwapChain1 *swapChain1 = nullptr;
-         HRESULT result =
--            mImpl->createSwapChain(device, factory2, format, width, height, mHasAlpha, &swapChain1);
-+            mImpl->createSwapChain(device, factory2, format, width, height, mHasAlpha, samples, &swapChain1);
-         SafeRelease(factory2);
-         *swapChain = static_cast<IDXGISwapChain *>(swapChain1);
-         return result;
-diff --git "a/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h" "b/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h"
-index 996fd3a1..97a2c2c4 100644
---- "a/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h"
-+++ "b/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h"
-@@ -34,6 +34,7 @@ class NativeWindow11WinRT : public NativeWindow11
-                             DXGI_FORMAT format,
-                             UINT width,
-                             UINT height,
-+						    UINT samples,
-                             IDXGISwapChain **swapChain) override;
- 
-     void commitChange() override;
-diff --git "a/src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp" "b/src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp"
-index c6d07fc8..89d9f870 100644
---- "a/src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp"
-+++ "b/src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp"
-@@ -246,6 +246,7 @@ HRESULT SwapChainPanelNativeWindow::createSwapChain(ID3D11Device *device,
-                                                     unsigned int width,
-                                                     unsigned int height,
-                                                     bool containsAlpha,
-+													unsigned int samples,
-                                                     IDXGISwapChain1 **swapChain)
+ // The following WaitForDebugger code is based on SwiftShader. See:
+ // https://cs.chromium.org/chromium/src/third_party/swiftshader/src/Vulkan/main.cpp
+-#    if defined(ANGLE_ENABLE_ASSERTS)
++#    if defined(ANGLE_ENABLE_ASSERTS) && !defined(ANGLE_ENABLE_WINDOWS_UWP)
+ INT_PTR CALLBACK DebuggerWaitDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
  {
-     if (device == nullptr || factory == nullptr || swapChain == nullptr || width == 0 ||
-@@ -259,7 +260,7 @@ HRESULT SwapChainPanelNativeWindow::createSwapChain(ID3D11Device *device,
-     swapChainDesc.Height = height;
-     swapChainDesc.Format = format;
-     swapChainDesc.Stereo = FALSE;
--    swapChainDesc.SampleDesc.Count = 1;
-+    swapChainDesc.SampleDesc.Count = samples;
-     swapChainDesc.SampleDesc.Quality = 0;
-     swapChainDesc.BufferUsage =
-         DXGI_USAGE_SHADER_INPUT | DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_BACK_BUFFER;
-diff --git "a/src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.h" "b/src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.h"
-index f9a2fc0e..dc5c804e 100644
---- "a/src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.h"
-+++ "b/src/libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.h"
-@@ -27,6 +27,7 @@ class SwapChainPanelNativeWindow : public InspectableNativeWindow, public std::e
-                             unsigned int width,
-                             unsigned int height,
-                             bool containsAlpha,
-+						    unsigned int samples,
-                             IDXGISwapChain1 **swapChain) override;
+     RECT rect;
+@@ -259,7 +259,7 @@ void WaitForDebugger(HINSTANCE instance)
+ }
+ #    else
+ void WaitForDebugger(HINSTANCE instance) {}
+-#    endif  // defined(ANGLE_ENABLE_ASSERTS)
++#    endif  // defined(ANGLE_ENABLE_ASSERTS) && !defined(ANGLE_ENABLE_WINDOWS_UWP)
+ }  // namespace
  
-   protected:
+ extern "C" BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID)

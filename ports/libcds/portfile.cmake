@@ -3,16 +3,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO khizmax/libcds
-    REF v2.3.2
-    SHA512 f8313f85ae2950a008245603296b63bdbb2f58ead1a453fb287a8ecb96b79edc5b2f8fe33d6027dbc7ead6ccd1bb7ca8dd830091a86760358bb812a39b4ba83f
+    REF v2.3.3
+    SHA512 95e67da4336d622d47bdf124d76827ca3e82e65ab5f725ccf58c2d7957960e7d17ee1ebb2126eed70f7a3ca1c97f840d9f59c1ae2eb80215d10abf70b215e510
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake-install.patch
-        ${CMAKE_CURRENT_LIST_DIR}/lib-suffix-option.patch
+        001-cmake-install.patch
+        002-lib-suffix-option.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DISABLE_INSTALL_STATIC)

@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.4)
 project(opusfile C)
 
+if(MSVC)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4267 /wd4244 /wd4090")
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
 find_path(OGG_INCLUDE_DIR ogg/ogg.h)
 find_library(OGG_LIBRARY ogg)
@@ -34,7 +35,7 @@ if(BUILD_OPUSURL)
     target_compile_definitions(opusurl PRIVATE OP_ENABLE_HTTP)
     target_include_directories(opusurl PRIVATE include)
     target_link_libraries(opusurl PRIVATE opusfile OpenSSL::SSL ws2_32.lib crypt32.lib)
-	
+
     install(TARGETS opusurl
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
@@ -42,6 +43,6 @@ if(BUILD_OPUSURL)
 endif()
 
 if(NOT OPUSFILE_SKIP_HEADERS)
-    install(FILES include/opusfile.h 
+    install(FILES include/opusfile.h
         DESTINATION include/opus)
 endif()

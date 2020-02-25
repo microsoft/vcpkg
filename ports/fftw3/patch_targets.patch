@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 335808a..90772b4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -358,7 +358,7 @@ foreach(subtarget ${subtargets})
+           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endforeach ()
+ install(TARGETS ${fftw3_lib}
+-          EXPORT FFTW3LibraryDepends
++          EXPORT FFTW3${PREC_SUFFIX}LibraryDepends
+           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+@@ -419,11 +419,11 @@ configure_file (FFTW3ConfigVersion.cmake.in FFTW3${PREC_SUFFIX}ConfigVersion.cma
+ install (FILES
+           ${CMAKE_CURRENT_BINARY_DIR}/FFTW3${PREC_SUFFIX}Config.cmake
+           ${CMAKE_CURRENT_BINARY_DIR}/FFTW3${PREC_SUFFIX}ConfigVersion.cmake
+-	  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/fftw3${PREC_SUFFIX}
++	  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+          COMPONENT Development)
+ 
+-export (TARGETS ${fftw3_lib} NAMESPACE FFTW3:: FILE ${PROJECT_BINARY_DIR}/FFTW3LibraryDepends.cmake)
+-install(EXPORT FFTW3LibraryDepends
++export (TARGETS ${fftw3_lib} NAMESPACE FFTW3:: FILE ${PROJECT_BINARY_DIR}/FFTW3${PREC_SUFFIX}LibraryDepends.cmake)
++install(EXPORT FFTW3${PREC_SUFFIX}LibraryDepends
+         NAMESPACE FFTW3::
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/fftw3${PREC_SUFFIX}
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+         COMPONENT Development)
+--- a/FFTW3Config.cmake.in
++++ b/FFTW3Config.cmake.in
+@@ -10,7 +10,7 @@ set (FFTW3@PREC_SUFFIX@_LIBRARIES fftw3@PREC_SUFFIX@)
+ set (FFTW3@PREC_SUFFIX@_LIBRARY_DIRS @CMAKE_INSTALL_FULL_LIBDIR@)
+ set (FFTW3@PREC_SUFFIX@_INCLUDE_DIRS @CMAKE_INSTALL_FULL_INCLUDEDIR@)
+ 
+-include ("${CMAKE_CURRENT_LIST_DIR}/FFTW3LibraryDepends.cmake")
++include ("${CMAKE_CURRENT_LIST_DIR}/FFTW3@PREC_SUFFIX@LibraryDepends.cmake")
+ 
+ if (CMAKE_VERSION VERSION_LESS 2.8.3)
+   set (CMAKE_CURRENT_LIST_DIR)
+ 

@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graeme-hill/crossguid
@@ -6,11 +9,6 @@ vcpkg_from_github(
     SHA512 38876f410d0014ad930b720312cecc99be1361b9810a21d5ffc1deba6221ea0e2aebd0da332adb18fd314d0477fd33410403120629b8df405bb64a9884e3d0b0
     HEAD_REF master
 )
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(STATUS "Warning: Dynamic building not supported. Building static instead")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

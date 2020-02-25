@@ -1,18 +1,42 @@
-#.rst:
-# .. command:: vcpkg_fixup_cmake_targets
-#
-#  Transform all /debug/share/<port>/*targets-debug.cmake files and move them to /share/<port>.
-#  Removes all /debug/share/<port>/*targets.cmake and /debug/share/<port>/*config.cmake
-#
-#  Transform all references matching /bin/*.exe to /tools/<port>/*.exe
-#
-#  ::
-#  vcpkg_fixup_cmake_targets([CONFIG_PATH <config_path>])
-#
-#  ``CONFIG_PATH``
-#    *.cmake files subdirectory (like "lib/cmake/${PORT}").
-#
-
+## # vcpkg_fixup_cmake_targets
+##
+## Merge release and debug CMake targets and configs to support multiconfig generators.
+##
+## Additionally corrects common issues with targets, such as absolute paths and incorrectly placed binaries.
+##
+## ## Usage
+## ```cmake
+## vcpkg_fixup_cmake_targets([CONFIG_PATH <share/${PORT}>] [TARGET_PATH <share/${PORT}>])
+## ```
+##
+## ## Parameters
+##
+## ### CONFIG_PATH
+## Subpath currently containing `*.cmake` files subdirectory (like `lib/cmake/${PORT}`). Should be relative to `${CURRENT_PACKAGES_DIR}`.
+##
+## Defaults to `share/${PORT}`.
+##
+## ### TARGET_PATH
+## Subpath to which the above `*.cmake` files should be moved. Should be relative to `${CURRENT_PACKAGES_DIR}`.
+## This needs to be specified if the port name differs from the `find_package()` name.
+##
+## Defaults to `share/${PORT}`.
+##
+## ## Notes
+## Transform all `/debug/<CONFIG_PATH>/*targets-debug.cmake` files and move them to `/<TARGET_PATH>`.
+## Removes all `/debug/<CONFIG_PATH>/*targets.cmake` and `/debug/<CONFIG_PATH>/*config.cmake`.
+##
+## Transform all references matching `/bin/*.exe` to `/tools/<port>/*.exe` on Windows.
+## Transform all references matching `/bin/*` to `/tools/<port>/*` on other platforms.
+##
+## Fix `${_IMPORT_PREFIX}` in auto generated targets to be one folder deeper.
+## Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targets.
+##
+## ## Examples
+##
+## * [concurrentqueue](https://github.com/Microsoft/vcpkg/blob/master/ports/concurrentqueue/portfile.cmake)
+## * [curl](https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake)
+## * [nlohmann-json](https://github.com/Microsoft/vcpkg/blob/master/ports/nlohmann-json/portfile.cmake)
 function(vcpkg_fixup_cmake_targets)
     cmake_parse_arguments(_vfct "" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
 
@@ -22,6 +46,12 @@ function(vcpkg_fixup_cmake_targets)
 
     if(NOT _vfct_TARGET_PATH)
         set(_vfct_TARGET_PATH share/${PORT})
+    endif()
+
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(EXECUTABLE_SUFFIX "\\.exe")
+    else()
+        set(EXECUTABLE_SUFFIX)
     endif()
 
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/${_vfct_TARGET_PATH})
@@ -36,7 +66,6 @@ function(vcpkg_fixup_cmake_targets)
 
         set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
         set(RELEASE_CONFIG ${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH})
-
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             if(NOT EXISTS ${DEBUG_CONFIG})
                 message(FATAL_ERROR "'${DEBUG_CONFIG}' does not exist.")
@@ -104,7 +133,7 @@ function(vcpkg_fixup_cmake_targets)
     foreach(RELEASE_TARGET IN LISTS RELEASE_TARGETS)
         file(READ ${RELEASE_TARGET} _contents)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
-        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+\\.exe)" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
+        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
         file(WRITE ${RELEASE_TARGET} "${_contents}")
     endforeach()
 
@@ -117,7 +146,7 @@ function(vcpkg_fixup_cmake_targets)
 
             file(READ ${DEBUG_TARGET} _contents)
             string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
-            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+\\.exe)" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
+            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
             file(WRITE ${RELEASE_SHARE}/${DEBUG_TARGET_REL} "${_contents}")
@@ -126,32 +155,22 @@ function(vcpkg_fixup_cmake_targets)
         endforeach()
     endif()
 
-    file(GLOB_RECURSE MAIN_TARGETS "${RELEASE_SHARE}/*[Tt]argets.cmake")
-    foreach(MAIN_TARGET IN LISTS MAIN_TARGETS)
-        file(READ ${MAIN_TARGET} _contents)
+    #Fix ${_IMPORT_PREFIX} in cmake generated targets and configs; 
+    #Since those can be renamed we have to check in every *.cmake
+    file(GLOB_RECURSE MAIN_CMAKES "${RELEASE_SHARE}/*.cmake")
+    foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
+        file(READ ${MAIN_CMAKE} _contents)
         string(REGEX REPLACE
             "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
             "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-            _contents "${_contents}")
-        string(REPLACE "${CURRENT_INSTALLED_DIR}" "_INVALID_ROOT_" _contents "${_contents}")
-        string(REGEX REPLACE "_INVALID_ROOT_/[^\";>]*" "" _contents "${_contents}")
-        string(REGEX REPLACE ";;+" ";" _contents "${_contents}")
-        string(REGEX REPLACE "\";\"" "\"\"" _contents "${_contents}")
-        file(WRITE ${MAIN_TARGET} "${_contents}")
-    endforeach()
-
-    file(GLOB_RECURSE MAIN_CONFIGS "${RELEASE_SHARE}/*[Cc]onfig.cmake")
-    foreach(MAIN_CONFIG IN LISTS MAIN_CONFIGS)
-        file(READ ${MAIN_CONFIG} _contents)
-        string(REGEX REPLACE
-            "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
-            "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-            _contents "${_contents}")
-        string(REGEX REPLACE
+            _contents "${_contents}") # see #1044 for details why this replacement is necessary. See #4782 why it must be a regex.
+         string(REGEX REPLACE
             "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
             "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
             _contents "${_contents}")
-        file(WRITE ${MAIN_CONFIG} "${_contents}")
+        #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
+        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
+        file(WRITE ${MAIN_CMAKE} "${_contents}")
     endforeach()
 
     # Remove /debug/<target_path>/ if it's empty.
@@ -175,3 +194,5 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${CMAKE_FILE} "${_contents}")
     endforeach()
 endfunction()
+
+ 

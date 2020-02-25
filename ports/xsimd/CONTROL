@@ -1,6 +1,7 @@
 Source: xsimd
-Version: 7.1.3
+Version: 7.4.6
 Description: Modern, portable C++ wrappers for SIMD intrinsics
+Homepage: https://github.com/xtensor-stack/xsimd
 
 Feature: xcomplex
 Description: xtl complex support

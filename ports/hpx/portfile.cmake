@@ -1,16 +1,12 @@
-include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building of HPX not supported yet. Building dynamic.") 
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
-    REF 1.2.1
-    SHA512 46e9e36cbd9bec935b2a1efce8167c641de88aca8e4dd9c2e3269a1d82ab2965812b5483b6dff4465634f454757b19ad4f73ddcc5ddd73d6efbf28d0819f7dc7
-    HEAD_REF master
+    REF 1.4.0
+    SHA512 501dbea384f8daa725f752f78198ba8af7b41bf0da432655fb0eaf588ccb1cec40528e28c6dc898230090d04e3dd2c50f7cadd753a13d15b51cea0ac881c3ffd
+    HEAD_REF stable
 )
 
 vcpkg_configure_cmake(
