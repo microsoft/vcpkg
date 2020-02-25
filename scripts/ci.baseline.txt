@@ -1473,8 +1473,12 @@ qt5-macextras:x64-windows-static=skip
 qt5-macextras:x86-windows=skip
 # Can only be build as dynamic library
 qt5-webengine:x64-windows-static=skip
-# Empty include folder? Need to check Qt sources to check if this even builds on OSX
-qt5-webengine:x64-osx=fail
+# Fails in CI due to space constrains
+qt5-webengine:x64-windows=skip
+qt5-webengine:x86-windows=skip
+# Not all requirements yet met in CI
+qt5-webengine:x64-osx=skip
+qt5-webengine:x64-linux=skip
 qt5-winextras:x64-linux=skip
 qt5-winextras:x64-osx=skip
 qt5-x11extras:x64-windows=skip
