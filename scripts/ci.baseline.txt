@@ -673,7 +673,6 @@ jemalloc:x64-uwp=fail
 jemalloc:x64-windows-static=fail
 jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
-kd-soap:x64-osx=fail
 keystone:arm64-windows=fail
 keystone:arm-uwp=fail
 keystone:x64-uwp=fail
