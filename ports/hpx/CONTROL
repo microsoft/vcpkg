@@ -1,5 +1,5 @@
 Source: hpx
-Version: 1.4.1-1
+Version: 1.4.1
 Build-Depends: hwloc, boost-accumulators, boost-algorithm, boost-asio, boost-assign, boost-bimap, boost-config, boost-context, boost-dynamic-bitset, boost-exception, boost-filesystem, boost-iostreams, boost-lockfree, boost-program-options, boost-range, boost-spirit, boost-system, boost-throw-exception, boost-variant, boost-winapi
 Homepage: https://github.com/STEllAR-GROUP/hpx
 Description: The C++ Standards Library for Concurrency and Parallelism

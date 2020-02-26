@@ -41,13 +41,14 @@ foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
     file(WRITE ${CMAKE_FILE} "${_contents}")
 endforeach()
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/hpx/HPXMacros.cmake" _contents)
-string(REPLACE "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \"\${CMAKE_CURRENT_LIST_DIR}/../../lib/cmake/HPX\")" "list(APPEND CMAKE_MODULE_PATH \"\${CMAKE_CURRENT_LIST_DIR}\")" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/hpx/HPXMacros.cmake" "${_contents}")
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/HPXMacros.cmake"
+    "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \"\${CMAKE_CURRENT_LIST_DIR}\")"
+    "list(APPEND CMAKE_MODULE_PATH \"\${CMAKE_CURRENT_LIST_DIR}\")")
 
 file(INSTALL
     ${SOURCE_PATH}/LICENSE_1_0.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/hpx RENAME copyright)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll)
 if(DLLS)
