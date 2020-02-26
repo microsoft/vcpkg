@@ -14,8 +14,6 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(WARNING "libmysql needs ncurses on LINUX, please install ncurses first.\nOn Debian/Ubuntu, package name is libncurses5-dev, on Redhat and derivates it is ncurses-devel.")
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
