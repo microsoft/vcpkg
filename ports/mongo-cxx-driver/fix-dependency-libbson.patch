@@ -16,7 +16,7 @@ index 69b53b3..655b33a 100644
 -    set(libbson_libraries ${BSON_STATIC_LIBRARIES})
 -    set(libbson_include_directories ${BSON_STATIC_INCLUDE_DIRS})
 -    set(libbson_definitions ${BSON_STATIC_DEFINITIONS})
-+    find_package(bson-static-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} CONFIG REQUIRED)
++    find_package(bson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} CONFIG REQUIRED)
 +    set(libbson_libraries ${BSON_LIBRARIES})
 +    set(libbson_include_directories ${BSON_INCLUDE_DIRS})
 +    set(libbson_definitions ${BSON_DEFINITIONS})
