@@ -10,7 +10,7 @@ index 5f59d19..a0b6e4f 100644
  	find_package(GLUT ${JAS_REQUIRED})
 +    else()
 +    find_package(FreeGLUT CONFIG REQUIRED)
-+    set(GLUT_FOUND FreeGLUT_FOUND)
++    set(GLUT_FOUND ${FreeGLUT_FOUND})
 +    set(GLUT_LIBRARIES FreeGLUT::freeglut)
 +    endif()
  	message("GLUT library found: ${GLUT_FOUND}")

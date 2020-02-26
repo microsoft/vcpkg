@@ -8,7 +8,7 @@ index ab356d1..3b5a73d 100644
  
 -find_package(GLUT REQUIRED)
 +find_package(FreeGLUT CONFIG REQUIRED)
-+set(GLUT_FOUND FreeGLUT_FOUND)
++set(GLUT_FOUND ${FreeGLUT_FOUND})
 +get_target_property(GLUT_INCLUDE_DIR FreeGLUT::freeglut INTERFACE_INCLUDE_DIRECTORIES)
 +set(GLUT_LIBRARIES FreeGLUT::freeglut)
 +add_definitions(-DGLUI_FREEGLUT)
