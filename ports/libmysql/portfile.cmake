@@ -1,13 +1,7 @@
+vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
+
 if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
-endif()
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "libmysql cannot currently be cross-compiled for UWP")
-endif()
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT CMAKE_SYSTEM_NAME OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "Oracle has dropped support in libmysql for 32-bit Windows.")
 endif()
 
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
