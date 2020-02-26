@@ -63,3 +63,25 @@ index feeca02..62aa21a 100644
  
  @PACKAGE_INIT@
  
+diff --git a/src/libmongoc/build/cmake/libmongoc-static-1.0-config.cmake.in b/src/libmongoc/build/cmake/libmongoc-static-1.0-config.cmake.in
+index 6f05b0c..113804e 100644
+--- a/src/libmongoc/build/cmake/libmongoc-static-1.0-config.cmake.in
++++ b/src/libmongoc/build/cmake/libmongoc-static-1.0-config.cmake.in
+@@ -19,7 +19,7 @@ set (MONGOC_STATIC_MINOR_VERSION @MONGOC_MINOR_VERSION@)
+ set (MONGOC_STATIC_MICRO_VERSION @MONGOC_MICRO_VERSION@)
+ set (MONGOC_STATIC_VERSION @MONGOC_VERSION@)
+ 
+-find_package (libbson-static-1.0 "@MONGOC_MAJOR_VERSION@.@MONGOC_MINOR_VERSION@" REQUIRED)
++find_package (bson-1.0 "@MONGOC_MAJOR_VERSION@.@MONGOC_MINOR_VERSION@" REQUIRED)
+ 
+ @PACKAGE_INIT@
+ 
+@@ -57,3 +57,7 @@ foreach (LIB @SASL_LIBRARIES@ @SSL_LIBRARIES@ @SHM_LIBRARIES@ @ZLIB_LIBRARIES@
+ endforeach ()
+ 
+ set (MONGOC_STATIC_DEFINITIONS MONGOC_STATIC ${BSON_STATIC_DEFINITIONS})
++
++set (MONGOC_INCLUDE_DIRS ${MONGOC_STATIC_INCLUDE_DIRS})
++set (MONGOC_LIBRARIES ${MONGOC_STATIC_LIBRARIES})
++set (MONGOC_DEFINITIONS ${MONGOC_STATIC_DEFINITIONS})
+\ No newline at end of file
