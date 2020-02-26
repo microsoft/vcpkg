@@ -50,3 +50,16 @@ index 0f9e50c..797aaec 100644
  target_link_libraries (mongoc-stat mongoc_shared ${LIBRARIES})
  
  # mongoc-stat works if shared memory performance counters are enabled.
+diff --git a/src/libmongoc/build/cmake/libmongoc-1.0-config.cmake.in b/src/libmongoc/build/cmake/libmongoc-1.0-config.cmake.in
+index feeca02..62aa21a 100644
+--- a/src/libmongoc/build/cmake/libmongoc-1.0-config.cmake.in
++++ b/src/libmongoc/build/cmake/libmongoc-1.0-config.cmake.in
+@@ -19,7 +19,7 @@ set (MONGOC_MINOR_VERSION @MONGOC_MINOR_VERSION@)
+ set (MONGOC_MICRO_VERSION @MONGOC_MICRO_VERSION@)
+ set (MONGOC_VERSION @MONGOC_VERSION@)
+ 
+-find_package (libbson-1.0 "@MONGOC_MAJOR_VERSION@.@MONGOC_MINOR_VERSION@" REQUIRED)
++find_package (bson-1.0 "@MONGOC_MAJOR_VERSION@.@MONGOC_MINOR_VERSION@" REQUIRED)
+ 
+ @PACKAGE_INIT@
+ 
