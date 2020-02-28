@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         dont-export-symbols-in-static-build.patch
         fix-arm-builds.patch
+        Fix-CmakeConfig.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

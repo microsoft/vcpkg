@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5fbb253..2d1d156 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1304,11 +1304,11 @@ IF(ALSOFT_INSTALL)
+         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} ${CMAKE_INSTALL_INCLUDEDIR}/AL)
+     EXPORT(TARGETS OpenAL
+         NAMESPACE OpenAL::
+-        FILE OpenALConfig.cmake)
++        FILE openal-softConfig.cmake)
+     INSTALL(EXPORT OpenAL
+         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OpenAL
+         NAMESPACE OpenAL::
+-        FILE OpenALConfig.cmake)
++        FILE openal-softConfig.cmake)
+     INSTALL(FILES
+         include/AL/al.h
+         include/AL/alc.h
