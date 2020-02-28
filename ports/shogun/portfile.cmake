@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -16,6 +14,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.patch
+        cmake-config.in.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/external)
@@ -52,7 +51,6 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=${CMAKE_DISABLE_FIND_PACKAGE_BLAS}
-
         -DINSTALL_TARGETS=shogun-static
 )
 
@@ -67,5 +65,4 @@ file(REMOVE_RECURSE
 )
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/shogun)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/shogun/COPYING ${CURRENT_PACKAGES_DIR}/share/shogun/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
