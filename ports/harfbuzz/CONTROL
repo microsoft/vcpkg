@@ -3,7 +3,6 @@ Version: 2.6.4
 Description: HarfBuzz OpenType text shaping engine
 Homepage: https://github.com/behdad/harfbuzz
 Build-Depends: freetype, ragel, gettext (osx)
-Default-Features: ucdn
 
 Feature: graphite2
 Build-Depends: graphite2
@@ -12,9 +11,6 @@ Description: Graphite2 shaper support
 Feature: icu
 Build-Depends: icu
 Description: icu support for harfbuzz
-
-Feature: ucdn
-Description: Builtin (UCDN) Unicode callbacks support
 
 Feature: glib
 Build-Depends: glib

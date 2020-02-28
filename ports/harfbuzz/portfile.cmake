@@ -27,14 +27,8 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     icu        HB_HAVE_ICU
     graphite2  HB_HAVE_GRAPHITE2
-    ucdn       HB_BUILTIN_UCDN
     glib       HB_HAVE_GLIB
 )
-
-# At least one Unicode callback must be specified, or harfbuzz compilation fails
-if(NOT ("ucdn" IN_LIST FEATURES OR "glib" IN_LIST FEATURES))
-    message(FATAL_ERROR "Error: At least one Unicode callback must be specified (ucdn, glib).")
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
