@@ -25,7 +25,7 @@ Description: SSH support via libssh2
 
 # SSL backends
 Feature: openssl
-Build-Depends: openssl (!uwp), openssl-uwp (uwp)
+Build-Depends: openssl-windows (windows&!uwp), openssl-uwp (uwp), openssl-unix (!uwp&!windows)
 Description: SSL support (OpenSSL)
 
 Feature: winssl
