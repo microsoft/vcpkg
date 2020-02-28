@@ -15,6 +15,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 if ("python" IN_LIST FEATURES)
+    vcpkg_check_linkage(ONLY_STATIC_CRT)
+    
     vcpkg_find_acquire_program(PYTHON2)
     get_filename_component(PYTHON2_DIR ${PYTHON2} DIRECTORY)
     set(ENV{PATH} "$ENV{PATH};${PYTHON2_DIR}")
@@ -32,12 +34,17 @@ if ("test" IN_LIST FEATURES AND NOT EXISTS ${SOURCE_PATH}/tests/data)
     )
 endif()
 
+if ("imgui" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    # Remove this after add port libigl-imgui
+    message(FATAL_ERROR "Feature imgui does not support static build currentlly")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     embree LIBIGL_WITH_EMBREE
     opengl LIBIGL_WITH_OPENGL
     glfw LIBIGL_WITH_OPENGL_GLFW
     imgui LIBIGL_WITH_OPENGL_GLFW_IMGUI
-    png LIBIGL_WITH_PNG
+    #png LIBIGL_WITH_PNG# Disable this feature due to issue https://github.com/libigl/libigl/issues/1199
     xml LIBIGL_WITH_XML
     python LIBIGL_WITH_PYTHON
     test LIBIGL_BUILD_TESTS
@@ -54,6 +61,7 @@ vcpkg_configure_cmake(
         -DLIBIGL_WITH_TETGEN=OFF
         -DLIBIGL_WITH_TRIANGLE=OFF
         -DLIBIGL_WITH_PREDICATES=OFF
+        -DLIBIGL_WITH_PNG=OFF
         -DLIBIGL_BUILD_TUTORIALS=OFF
 		-DPYTHON_EXECUTABLE=${PYTHON2}
 )

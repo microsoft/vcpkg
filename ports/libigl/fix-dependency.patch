@@ -1,5 +1,5 @@
 diff --git a/cmake/libigl.cmake b/cmake/libigl.cmake
-index 7016cbf..3a6b4dd 100644
+index 7016cbf..d9ae101 100644
 --- a/cmake/libigl.cmake
 +++ b/cmake/libigl.cmake
 @@ -96,8 +96,9 @@ if(UNIX)
@@ -32,15 +32,17 @@ index 7016cbf..3a6b4dd 100644
      # TODO: Should probably save/restore the CMAKE_CXX_FLAGS_*, since embree seems to be
      # overriding them on Windows. But well... it works for now.
      igl_download_embree()
-@@ -289,7 +291,7 @@ if(LIBIGL_WITH_EMBREE)
+@@ -289,8 +291,8 @@ if(LIBIGL_WITH_EMBREE)
    endif()
  
    compile_igl_module("embree")
 -  target_link_libraries(igl_embree ${IGL_SCOPE} embree)
-+  target_link_libraries(igl_embree ${IGL_SCOPE} sys math simd embree)
-   target_include_directories(igl_embree ${IGL_SCOPE} ${EMBREE_DIR}/include)
+-  target_include_directories(igl_embree ${IGL_SCOPE} ${EMBREE_DIR}/include)
++  target_link_libraries(igl_embree ${IGL_SCOPE} ${EMBREE_LIBRARIES})
++  target_include_directories(igl_embree ${IGL_SCOPE} ${EMBREE_INCLUDE_DIRS})
    target_compile_definitions(igl_embree ${IGL_SCOPE} -DEMBREE_STATIC_LIB)
  endif()
+ 
 @@ -332,11 +334,12 @@ if(LIBIGL_WITH_OPENGL)
    endif()
  
@@ -98,7 +100,7 @@ index 7016cbf..3a6b4dd 100644
      endif()
      compile_igl_module("png" "")
 -    target_link_libraries(igl_png ${IGL_SCOPE} igl_stb_image igl_opengl)
-+    target_include_directories(igl_png PUBLIC ${stb_include_dir})
++    target_include_directories(igl_png INTERFACE ${stb_include_dir})
 +    target_link_libraries(igl_png ${IGL_SCOPE} OpenGL::GL ${libpng_LIBRARIES})
    endif()
  endif()
@@ -162,7 +164,7 @@ index fbc892f..e8828b1 100644
  // Extend ImGui by populating its namespace directly
  namespace ImGui
 diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
-index 7a14775..f5c84a8 100644
+index 7a14775..1615bd0 100644
 --- a/python/CMakeLists.txt
 +++ b/python/CMakeLists.txt
 @@ -23,8 +23,8 @@ endif()
@@ -176,6 +178,32 @@ index 7a14775..f5c84a8 100644
  
  ## libigl
  if(NOT TARGET igl::core)
+@@ -39,9 +39,8 @@ if(UNIX)
+   endif()
+ endif()
+ 
+-## include pybind
+-set(PYBIND11_DIR ${PROJECT_SOURCE_DIR}/../external/pybind11 CACHE PATH "Path to pybind11")
+-add_subdirectory(${PYBIND11_DIR} pybind11)
++## find pybind
++find_package(pybind11 CONFIG REQUIRED)
+ 
+ ## Prepare the python library
+ pybind11_add_module(pyigl
+@@ -97,9 +96,12 @@ if(NOT LIBIGL_WITHOUT_COPYLEFT)
+ endif()
+ 
+ if(LIBIGL_WITH_PNG)
++  find_library(igl_stb igl_stb_image REQUIRED)
++  find_path(igl_stb_include stb_image.h PATH_SUFFIXES igl_stb_image)
+   target_sources(pyigl PRIVATE "modules/py_igl_png.cpp")
+   target_compile_definitions(pyigl PUBLIC -DPY_PNG)
+-  target_link_libraries(pyigl PUBLIC igl::png)
++  target_link_libraries(pyigl PUBLIC igl::png ${igl_stb})
++  target_include_directories(pyigl PRIVATE ${igl_stb_include})
+ endif()
+ 
+ set_target_properties(pyigl PROPERTIES PREFIX "")
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
 index 8a0af13..5c6a350 100644
 --- a/tests/CMakeLists.txt
@@ -199,7 +227,7 @@ index 8a0af13..5c6a350 100644
  
  # Create test executable
 diff --git a/tutorial/106_ViewerMenu/main.cpp b/tutorial/106_ViewerMenu/main.cpp
-index 09f3272..9e1a19d 100644
+index cc514e5..f1be538 100644
 --- a/tutorial/106_ViewerMenu/main.cpp
 +++ b/tutorial/106_ViewerMenu/main.cpp
 @@ -2,7 +2,7 @@
