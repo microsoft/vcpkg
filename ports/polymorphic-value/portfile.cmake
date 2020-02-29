@@ -15,10 +15,14 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/polymorphic_value)
+if(VCPKG_HEAD_VERSION)
+	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/polymorphic_value TARGET_PATH share/polymorphic_value)
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+else()
+	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/polymorphic_value)
+	file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE.txt")
+endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE.txt")
 file(
 	INSTALL ${SOURCE_PATH}/LICENSE.txt 
 	DESTINATION ${CURRENT_PACKAGES_DIR}/share/polymorphic-value
