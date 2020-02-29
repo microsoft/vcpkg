@@ -1274,7 +1274,17 @@ openmpi:x64-windows=fail
 openmpi:x64-windows-static=fail
 openmpi:x86-windows=fail
 openmvg:x64-linux=ignore
-openmvs:x64-linux=fail
+
+# openmvs installs headers into Common, which conflicts with eastl
+openmvs:arm64-windows=skip
+openmvs:arm-uwp=skip
+openmvs:x64-linux=skip
+openmvs:x64-osx=skip
+openmvs:x64-uwp=skip
+openmvs:x64-windows=skip
+openmvs:x64-windows-static=skip
+openmvs:x86-windows=skip
+
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
 openscap:x64-linux=fail
