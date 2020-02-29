@@ -56,7 +56,7 @@ index b8171cd..44120cc 100644
 +
 +write_basic_package_version_file(
 +  "${CMAKE_CURRENT_BINARY_DIR}/EASTLConfigVersion.cmake"
-+  VERSION 3.16.01
++  VERSION 3.16.05
 +  COMPATIBILITY SameMajorVersion
 +)
 +
