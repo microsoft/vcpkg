@@ -1,3 +1,14 @@
+#[[ Patch Notes
+001_no_catch_submodule.patch
+	disables the catch(1) submodule that is required for version 1.3.0,
+	master has since updated to catch2 and made it possible to not
+	require it by just not passing BUILD_TESTING=ON
+002_fixed_config.patch
+	the config file that comes with version 1.3.0 is totally broken, and
+	results in never being able to "find_package" on the library, this
+	fixes it. It has since been fixed upstream in master
+]]
+
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO jbcoe/polymorphic_value
@@ -5,6 +16,7 @@ vcpkg_from_github(
 	SHA512 67d49933c46d2a2bccb68c65c6f28b92603e193c68ff434b2c6b1602a573855a176fc98227d85cd24a64ae9299461adb42e792b4f165482bb250488620161742
 	HEAD_REF master
 	PATCHES 001_no_catch_submodule.patch
+		002_fixed_config.patch
 )
 
 vcpkg_configure_cmake(
