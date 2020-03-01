@@ -39,6 +39,12 @@ namespace vcpkg
     const Triplet Triplet::ARM_WINDOWS = from_canonical_name("arm-windows");
     const Triplet Triplet::ARM64_WINDOWS = from_canonical_name("arm64-windows");
 
+    //
+    const Triplet Triplet::ARM_ANDROID = from_canonical_name("arm-android");
+    const Triplet Triplet::ARM64_ANDROID = from_canonical_name("arm64-android");
+    const Triplet Triplet::X86_ANDROID = from_canonical_name("x86-android");
+    const Triplet Triplet::X64_ANDROID = from_canonical_name("x64-android");
+
     Triplet Triplet::from_canonical_name(std::string&& triplet_as_string)
     {
         std::string s(Strings::ascii_to_lowercase(std::move(triplet_as_string)));
