@@ -14,28 +14,25 @@ vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
 set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
 
 if (CMAKE_HOST_WIN32)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git)
-    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-    set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
-
     set(ENV{BAZEL_VS} $ENV{VSInstallDir})
     set(ENV{BAZEL_VC} $ENV{VCInstallDir})
-
-    vcpkg_execute_build_process(
-            COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ///ryu"
-            WORKING_DIRECTORY ${SOURCE_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-rel
-    )
-else ()
-    vcpkg_execute_build_process(
-            COMMAND bazel build --verbose_failures //ryu
-            WORKING_DIRECTORY ${SOURCE_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-rel
-    )
 endif ()
+
+vcpkg_execute_build_process(
+            COMMAND ${BAZEL} build --verbose_failures //ryu
+            WORKING_DIRECTORY ${SOURCE_PATH}
+            LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+
+if (CMAKE_HOST_WIN32)
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)    
+else()
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
+endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE-Boost DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/ryu/ryu.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/ryuConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
+

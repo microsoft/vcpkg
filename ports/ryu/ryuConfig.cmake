@@ -13,4 +13,8 @@ get_filename_component(ROOT "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(ROOT "${ROOT}" PATH)
 get_filename_component(ROOT "${ROOT}" PATH)
 
+if (CMAKE_HOST_WIN32)
+set_library_target("RYU" "ryu" "${ROOT}/debug/lib/ryu.lib" "${ROOT}/lib/ryu.lib" "${ROOT}/include/")
+else()
 set_library_target("RYU" "ryu" "${ROOT}/debug/lib/libryu.a" "${ROOT}/lib/libryu.a" "${ROOT}/include/")
+endif()
