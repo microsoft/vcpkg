@@ -15,8 +15,7 @@ namespace vcpkg::Export::Prefab
     using Dependencies::ExportPlanType;
     using Install::InstallDir;
 
-    static std::string POM = R"(
-<?xml version="1.0" encoding="UTF-8"?>
+    static std::string POM = R"(<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -81,6 +80,34 @@ namespace vcpkg::Export::Prefab
         return Strings::join(",", deps);
     }
 
+    std::string null_if_empty(const std::string& str)
+    {
+        std::string copy = str;
+        if (copy.size() == 0)
+        {
+            copy = "null";
+        }
+        else
+        {
+            copy = "\"" + copy + "\"";
+        }
+        return copy;
+    }
+
+    std::string null_if_empty_array(const std::string& str)
+    {
+        std::string copy = str;
+        if (copy.size() == 0)
+        {
+            copy = "null";
+        }
+        else
+        {
+            copy = "[" + copy + "]";
+        }
+        return copy;
+    }
+
     std::string ABIMetadata::to_string()
     {
         std::string TEMPLATE = R"({
@@ -99,22 +126,24 @@ namespace vcpkg::Export::Prefab
     std::string PlatformModuleMetadata::to_json()
     {
         std::string TEMPLATE = R"({
-    "export_libraries":[@LIBRARIES@],
-    "library_name": "@LIBRARY_NAME@"
+    "export_libraries": @LIBRARIES@,
+    "library_name": @LIBRARY_NAME@
 })";
-        std::string json = Strings::replace_all(std::move(TEMPLATE), "@LIBRARY_NAME@", library_name);
-        json = Strings::replace_all(std::move(json), "@LIBRARIES@", jsonify(export_libraries));
+
+        std::string json = Strings::replace_all(std::move(TEMPLATE), "@LIBRARY_NAME@", null_if_empty(library_name));
+        json = Strings::replace_all(std::move(json), "@LIBRARIES@", null_if_empty_array(jsonify(export_libraries)));
         return json;
     }
 
     std::string ModuleMetadata::to_json()
     {
         std::string TEMPLATE = R"({
-    "export_libraries":[@LIBRARIES@],
-    "library_name":[@LIBRARY_NAME@],
+    "export_libraries": [@LIBRARIES@],
+    "library_name":@LIBRARY_NAME@,
     "android": @ANDROID_METADATA@
 })";
-        std::string json = Strings::replace_all(std::move(TEMPLATE), "@LIBRARY_NAME@", library_name);
+
+        std::string json = Strings::replace_all(std::move(TEMPLATE), "@LIBRARY_NAME@", null_if_empty(library_name));
         json = Strings::replace_all(std::move(json), "@LIBRARIES@", jsonify(export_libraries));
         json = Strings::replace_all(std::move(json), "@ANDROID_METADATA@", android.to_json());
         return json;
@@ -201,14 +230,12 @@ namespace vcpkg::Export::Prefab
 #endif
     }
 
-    void maven_install(const fs::path& aar, const fs::path& pom){
-        const auto cmd_line = Strings::format(R"("%s" "install:install-file" "-Dfile=%s" "-DpomFile=%s")",
-                                                    Tools::MAVEN,
-                                                    aar.u8string(),
-                                                    pom.u8string());
+    void maven_install(const fs::path& aar, const fs::path& pom)
+    {
+        const auto cmd_line = Strings::format(
+            R"("%s" "install:install-file" "-Dfile=%s" "-DpomFile=%s")", Tools::MAVEN, aar.u8string(), pom.u8string());
         const int exit_code = System::cmd_execute_clean(cmd_line);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, exit_code == 0, "Error: %s installing maven file", aar.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: %s installing maven file", aar.generic_string());
     }
 
     void do_export(const std::vector<ExportPlanAction>& export_plan,
@@ -378,7 +405,6 @@ namespace vcpkg::Export::Prefab
                 raw_exported_dir_path / name / Strings::format("%s-%s.aar", name, norm_version);
             fs::path pom_path = raw_exported_dir_path / name / "pom.xml";
 
-    
             compress_directory(paths, package_directory, exported_archive_path);
 
             std::string pom = Strings::replace_all(std::move(POM), "@GROUP_ID@", group_id);
@@ -387,11 +413,10 @@ namespace vcpkg::Export::Prefab
             pom = Strings::replace_all(std::move(pom), "@VERSION@", norm_version);
 
             utils.write_contents(pom_path, pom, VCPKG_LINE_INFO);
-            
-            maven_install(exported_archive_path, pom_path); 
+
+            maven_install(exported_archive_path, pom_path);
 
             System::print2(Strings::format("Successfuly installed %s. Checkout %s  \n", name, raw_exported_dir_path));
-
         }
     }
 }
