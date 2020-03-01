@@ -9,11 +9,30 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(BAZEL)
-vcpkg_execute_build_process(
-        COMMAND bazel build //ryu
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME build-${TARGET_TRIPLET}-rel
-)
+get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
+vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
+set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
+
+if (CMAKE_HOST_WIN32)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git)
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
+
+    set(ENV{BAZEL_VS} $ENV{VSInstallDir})
+    set(ENV{BAZEL_VC} $ENV{VCInstallDir})
+
+    vcpkg_execute_build_process(
+            COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ///ryu"
+            WORKING_DIRECTORY ${SOURCE_PATH}
+            LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+else ()
+    vcpkg_execute_build_process(
+            COMMAND bazel build --verbose_failures //ryu
+            WORKING_DIRECTORY ${SOURCE_PATH}
+            LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+endif ()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE-Boost DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/ryu/ryu.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
