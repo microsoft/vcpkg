@@ -1550,6 +1550,7 @@ ryu:arm-uwp=fail
 ryu:x64-uwp=fail
 ryu:x64-windows-static=fail
 ryu:x86-windows=fail
+ryu::arm64-windows=fail
 scintilla:arm-uwp=fail
 scintilla:x64-linux=fail
 scintilla:x64-osx=fail
