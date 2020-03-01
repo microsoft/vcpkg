@@ -311,6 +311,10 @@ __pycache__/
 !triplets/arm64-windows.cmake
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
+!triplets/x64-android.cmake
+!triplets/x86-android.cmake
+!triplets/arm-android.cmake
+!triplets/arm64-android.cmake
 #ignore custom triplets
 *.exe
 *.zip
@@ -319,3 +323,5 @@ __pycache__/
 # vcpkg - End
 ############################################################
 archives
+.DS_Store
+prefab/
