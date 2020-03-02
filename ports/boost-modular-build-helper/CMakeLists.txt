@@ -122,17 +122,8 @@ endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
 
-set(NUMBER_OF_PROCESSORS 1)
-if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-    set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-elseif(CMAKE_HOST_LINUX)
-    execute_process(
-        COMMAND nproc
-        OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-    )
-    string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-    string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-endif()
+include(ProcessorCount)
+ProcessorCount(NUMBER_OF_PROCESSORS)
 if(NOT NUMBER_OF_PROCESSORS)
     set(NUMBER_OF_PROCESSORS 1)
 endif()
