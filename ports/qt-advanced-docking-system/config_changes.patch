@@ -1,7 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 578dfc1..a4c9460 100644
 --- a/CMakeLists.txt
-+++ b/CMakeLists.txt   
++++ b/CMakeLists.txt
 @@ -70,7 +70,7 @@ if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
  else()
      set(ads_PlatformDir "x64")
