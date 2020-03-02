@@ -173,7 +173,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             /p:UseIntelMKL=No
             /p:WindowsTargetPlatformVersion=${VCPKG_TARGET_PLATFORM_VERSION}
             /m
-            /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
+            /p:ForceImportBeforeCppTargets=\"${SCRIPTS}/buildsystems/msbuild/vcpkg.targets\"
             /p:VcpkgTriplet=${TARGET_TRIPLET}"
             )
         if(HAS_TOOLS)
