@@ -1,4 +1,5 @@
 Source: openmvs
 Version: 1.1-1
 Description: OpenMVS: open Multi-View Stereo reconstruction library
+Homepage: https://cdcseacave.github.io/openMVS
 Build-Depends: zlib, boost-iostreams, boost-program-options, boost-system, boost-serialization, eigen3, ceres, opencv, cgal[core], glew, glfw3, vcglib
