@@ -525,8 +525,14 @@ namespace vcpkg::Build
 #else
         const auto& env = System::get_clean_environment();
 #endif
-        auto stdoutlog =
-            paths.buildtrees / action.spec.name() / ("stdout-" + action.spec.triplet().canonical_name() + ".log");
+        auto buildpath = paths.buildtrees / action.spec.name();
+        if (!fs.exists(buildpath))
+        {
+            std::error_code err;
+            fs.create_directory(buildpath, err);
+            Checks::check_exit(VCPKG_LINE_INFO, !err.value(), "Failed to create directory '%s', code: %d", buildpath.u8string(), err.value());
+        }
+        auto stdoutlog = buildpath / ("stdout-" + action.spec.triplet().canonical_name() + ".log");
         std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
         Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", stdoutlog.u8string());
         const int return_code = System::cmd_execute_and_stream_data(
