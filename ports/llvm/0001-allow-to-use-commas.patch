@@ -1,0 +1,19 @@
+diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
+index 567396870a5..59944d3a99f 100644
+--- a/llvm/CMakeLists.txt
++++ b/llvm/CMakeLists.txt
+@@ -70,6 +70,12 @@ if( LLVM_ENABLE_PROJECTS STREQUAL "all" )
+   set( LLVM_ENABLE_PROJECTS ${LLVM_ALL_PROJECTS})
+ endif()
+ 
++# Allow to use commas in LLVM_ENABLE_PROJECTS ("llvm,clang,...")
++string(REPLACE "," ";" fixed_LLVM_ENABLE_PROJECTS "${LLVM_ENABLE_PROJECTS}")
++if(NOT fixed_LLVM_ENABLE_PROJECTS STREQUAL LLVM_ENABLE_PROJECTS)
++  set(LLVM_ENABLE_PROJECTS "${fixed_LLVM_ENABLE_PROJECTS}" CACHE STRING "" FORCE)
++endif()
++
+ # LLVM_ENABLE_PROJECTS_USED is `ON` if the user has ever used the
+ # `LLVM_ENABLE_PROJECTS` CMake cache variable.  This exists for
+ # several reasons:
+
+

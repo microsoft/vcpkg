@@ -1,19 +1,33 @@
 Source: llvm
-Version: 8.0.0-4
+Version: 10.0.0
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
-Build-Depends: atlmfc (windows)
 Supports: !uwp
-Default-Features: tools, utils
+Default-Features: tools, enable-rtti, clang, clang-tools-extra, lld
 
 Feature: tools
-Description: Generate build targets for the LLVM tools.
+Description: Build LLVM tools.
 
-Feature: utils
-Description: Generate build targets for the LLVM utils.
+Feature: enable-rtti
+Description: Build LLVM with run-time type information.
 
-Feature: example
-Description: Generate build targets for the LLVM examples
+Feature: clang
+Description: Build C Language Family Front-end.
 
-Feature: test
-Description: Generate build targets for the LLVM unit tests.
+Feature: clang-tools-extra
+Description: Build Clang tools.
+
+Feature: compiler-rt
+Description: Build compiler's runtime libraries.
+
+Feature: lld
+Description: Build LLVM linker.
+
+Feature: openmp
+Description: Build LLVM OpenMP libraries.
+
+Feature: lldb
+Description: Build LLDB debugger.
+
+Feature: polly
+Description: Build polyhedral optimizations for LLVM.
