@@ -34,6 +34,9 @@ skia_use_system_icu=false \
 skia_use_system_expat=false \
 skia_use_system_zlib=false")
 
+# used for passing feature-specific definitions to the config file
+set(SKIA_PUBLIC_DEFINITIONS "")
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPTIONS "${OPTIONS} is_component_build=true")
 else()
@@ -42,6 +45,7 @@ endif()
 
 if("metal" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} skia_use_metal=true")
+    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_METAL)
 endif()
 
 set(OPTIONS_REL "${OPTIONS} is_official_build=true")

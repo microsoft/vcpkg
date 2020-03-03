@@ -7,6 +7,8 @@ set(SKIA_LIBRARY_NAME_REL @SKIA_LIBRARY_NAME_REL@)
 set(SKIA_LIBRARY_IMPLIB_DBG @SKIA_LIBRARY_IMPLIB_DBG@)
 set(SKIA_LIBRARY_IMPLIB_REL @SKIA_LIBRARY_IMPLIB_REL@)
 
+set(SKIA_PUBLIC_DEFINITIONS @SKIA_PUBLIC_DEFINITIONS@)
+
 # Compute the installation prefix relative to this file.
 get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
@@ -73,3 +75,4 @@ foreach(LIB ${SKIA_DEP_REL})
 endforeach()
 
 target_include_directories(skia::skia INTERFACE ${_IMPORT_PREFIX}/include)
+target_compile_definitions(skia::skia INTERFACE ${SKIA_PUBLIC_DEFINITIONS})
