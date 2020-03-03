@@ -19,7 +19,6 @@ vcpkg_configure_cmake(
         -DINSTALL_CMAKE_DIR:STRING=share/openmvs
         -DINSTALL_BIN_DIR:STRING=bin
         -DINSTALL_LIB_DIR:STRING=lib
-        -DINSTALL_INCLUDE_DIR:STRING=include
 )
 
 vcpkg_install_cmake()
