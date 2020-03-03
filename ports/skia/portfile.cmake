@@ -78,19 +78,18 @@ if(CMAKE_HOST_WIN32)
 
     # turn a space delimited string into a gn list:
     # "a b c" -> ["a","b","c"]
-    function(to_gn_list INPUT_ OUTPUT_)
+    function(to_gn_list OUTPUT_ INPUT_)
         string(STRIP "${INPUT_}" TEMP)
         string(REPLACE "  " " " TEMP "${TEMP}")
         string(REPLACE " " "\",\"" TEMP "${TEMP}")
         set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)
     endfunction()
 
-    to_gn_list("${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}" SKIA_C_FLAGS_DBG)
-    to_gn_list("${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}" SKIA_C_FLAGS_REL)
+    to_gn_list(SKIA_C_FLAGS_DBG "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
+    to_gn_list(SKIA_C_FLAGS_REL "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
 
-    to_gn_list("${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}" SKIA_CXX_FLAGS_DBG)
-    to_gn_list("${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}" 
-        SKIA_CXX_FLAGS_REL)
+    to_gn_list(SKIA_CXX_FLAGS_DBG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+    to_gn_list(SKIA_CXX_FLAGS_REL "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
 
     set(OPTIONS_DBG "${OPTIONS_DBG} extra_cflags_c=${SKIA_C_FLAGS_DBG} \
         extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
@@ -123,25 +122,18 @@ vcpkg_execute_required_process(
 )
 
 message(STATUS "Building Skia (debug)...")
-vcpkg_execute_required_process(
+vcpkg_execute_build_process(
     COMMAND "${NINJA}" -C "${BUILD_DIR_DBG}" skia
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME build-${TARGET_TRIPLET}-dbg
 )
 
 message(STATUS "Building Skia (release)...")
-vcpkg_execute_required_process(
+vcpkg_execute_build_process(
     COMMAND "${NINJA}" -C "${BUILD_DIR_REL}" skia
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
-
-function(file_regex_replace match_regex replace_expr file_)
-    file(READ "${file_}" file_data)
-    string(REGEX REPLACE "${match_regex}" "${replace_expr}" 
-        file_data "${file_data}")
-    file(WRITE "${file_}" "${file_data}")
-endfunction()
 
 message(STATUS "Installing: ${CURRENT_PACKAGES_DIR}/include/${PORT}")
 file(COPY "${SOURCE_PATH}/include" 
@@ -151,20 +143,19 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/include/include"
 file(GLOB_RECURSE SKIA_INCLUDE_FILES LIST_DIRECTORIES false 
     "${CURRENT_PACKAGES_DIR}/include/${PORT}/*")
 foreach(file_ ${SKIA_INCLUDE_FILES})
-    file_regex_replace("#include \"include/" "#include \"${PORT}/" "${file_}")
+    vcpkg_replace_string("${file_}" "#include \"include/" "#include \"${PORT}/")
 endforeach()
-
-file(GLOB SKIA_LIBRARY_TEST LIST_DIRECTORIES false
-    "${BUILD_DIR_DBG}/skia*.lib")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB SKIA_LIBRARY_DBG LIST_DIRECTORIES false
         "${BUILD_DIR_DBG}/skia*.lib")
+    list(GET SKIA_LIBRARY_DBG 0 SKIA_LIBRARY_DBG)
     file(INSTALL "${SKIA_LIBRARY_DBG}" 
         DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
     file(GLOB SKIA_LIBRARY_REL LIST_DIRECTORIES false
         "${BUILD_DIR_REL}/skia*.lib")
+    list(GET SKIA_LIBRARY_REL 0 SKIA_LIBRARY_REL)
     file(INSTALL "${SKIA_LIBRARY_REL}" 
         DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
@@ -176,17 +167,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
         file(GLOB SKIA_LIBRARY_DBG LIST_DIRECTORIES false
             "${BUILD_DIR_DBG}/skia*.dll")
+        list(GET SKIA_LIBRARY_DBG 0 SKIA_LIBRARY_DBG)
         file(INSTALL "${SKIA_LIBRARY_DBG}" 
             DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
         get_filename_component(SKIA_LIBRARY_NAME_DBG "${SKIA_LIBRARY_DBG}" NAME)
 
         file(GLOB SKIA_LIBRARY_DBG LIST_DIRECTORIES false
             "${BUILD_DIR_DBG}/skia*.pdb")
+        list(GET SKIA_LIBRARY_DBG 0 SKIA_LIBRARY_DBG)
         file(INSTALL "${SKIA_LIBRARY_DBG}" 
             DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
 
         file(GLOB SKIA_LIBRARY_REL LIST_DIRECTORIES false
             "${BUILD_DIR_REL}/skia*.dll")
+        list(GET SKIA_LIBRARY_REL 0 SKIA_LIBRARY_REL)
         file(INSTALL "${SKIA_LIBRARY_REL}" 
             DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         get_filename_component(SKIA_LIBRARY_NAME_REL "${SKIA_LIBRARY_REL}" NAME)
