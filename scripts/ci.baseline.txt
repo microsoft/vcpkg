@@ -41,10 +41,11 @@
 3fd:x86-windows=ignore
 7zip:arm64-windows=fail
 7zip:arm-uwp=fail
-abseil:arm-uwp=fail
 7zip:x64-linux=fail
 7zip:x64-osx=fail
 7zip:x64-uwp=fail
+abseil:arm-uwp=fail
+abseil:arm64-windows=fail
 ace:arm64-windows=fail
 ace:arm-uwp=fail
 ace:x64-osx=fail
