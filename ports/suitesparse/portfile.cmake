@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 set(SUITESPARSE_VER 5.4.0)
 set(SUITESPARSEWIN_VER 1.4.0)
 
