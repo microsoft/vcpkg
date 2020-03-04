@@ -1238,6 +1238,7 @@ opencensus-cpp:arm64-windows=fail
 opencensus-cpp:x64-windows=fail
 opencensus-cpp:x64-windows-static=fail
 opencensus-cpp:x86-windows=fail
+opencensus-cpp:x64-uwp=fail
 opencl:arm64-windows=fail
 opencl:arm-uwp=fail
 opencl:x64-uwp=fail
