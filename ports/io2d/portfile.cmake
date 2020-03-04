@@ -1,5 +1,9 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if (VCPKG_TARGET_IS_OSX)
+    message(WARNING "Building with a macOS version less than 10.14 is not supported.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cpp-io2d/P0267_RefImpl
@@ -43,5 +47,3 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME io2d)
