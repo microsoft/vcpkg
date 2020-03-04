@@ -1,5 +1,5 @@
 Source: xorg-macros
-Version: 1.19.2-1
+Version: 1.19.2-2
 Homepage: https://xcb.freedesktop.org/
 Description: X.org macros utilities. 
 Supports: !uwp
