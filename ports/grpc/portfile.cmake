@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.27.1
-    SHA512 00a5e1e0f94e441b3406f821943d1775a7ab0580fd22d604ba29f56dc424ccc8f27c476077e39f24ddd7f1bada4eba9a38456fb4ac546e27ae239f43e431d988
+    REF 84a7b8d702df83ae321f252b9ebfdaff89205109 #v1.28.0-pre2
+    SHA512 d3c934f161ddaa17345ec058c0bfe3ba671d219ac74dde8e8b5e5a9f000acac3beed6b4b3a89da7ec0c031dfa6cf0e9ec46fcb97a7b2e8867e72ba5cbacb5df1
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -15,6 +15,7 @@ vcpkg_from_github(
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
         00009-use-system-upb.patch
+        00010-add-feature-absl-sync.patch
 )
 
 if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -32,10 +33,14 @@ else()
     set(cares_CARES_PROVIDER "package")
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    absl-sync gRPC_ABSL_SYNC_ENABLE
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DgRPC_INSTALL=ON
         -DgRPC_BUILD_TESTS=OFF
         -DgRPC_STATIC_LINKING=${gRPC_STATIC_LINKING}
@@ -52,13 +57,13 @@ vcpkg_configure_cmake(
         -DgRPC_INSTALL_BINDIR:STRING=tools/grpc
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
-        -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
+        -DgRPC_INSTALL_CMAKEDIR:STRING=share/gRPC
         -DgRPC_BUILD_CODEGEN=${gRPC_BUILD_CODEGEN}
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/gRPC TARGET_PATH share/gRPC)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
 
