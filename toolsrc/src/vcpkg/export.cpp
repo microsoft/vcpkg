@@ -260,6 +260,7 @@ namespace vcpkg::Export
         bool zip = false;
         bool seven_zip = false;
         bool chocolatey = false;
+        bool all_installed = false;
 
         Optional<std::string> maybe_output;
 
@@ -288,8 +289,9 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_CHOCOLATEY = "--x-chocolatey";
     static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "--x-maintainer";
     static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--x-version-suffix";
+    static constexpr StringLiteral OPTION_ALL_INSTALLED = "--all-installed";
 
-    static constexpr std::array<CommandSwitch, 7> EXPORT_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 8> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
         {OPTION_NUGET, "Export a NuGet package"},
@@ -297,6 +299,7 @@ namespace vcpkg::Export
         {OPTION_ZIP, "Export to a zip file"},
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
         {OPTION_CHOCOLATEY, "Export a Chocolatey package (experimental feature)"},
+        {OPTION_ALL_INSTALLED, "Export all installed packages"},
     }};
 
     static constexpr std::array<CommandSetting, 10> EXPORT_SETTINGS = {{
@@ -322,16 +325,12 @@ namespace vcpkg::Export
         nullptr,
     };
 
-    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args, Triplet default_triplet)
+    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args, Triplet default_triplet, const StatusParagraphs& status_db)
     {
         ExportArguments ret;
 
         const auto options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        // input sanitization
-        ret.specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_package_spec(std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-        });
         ret.dry_run = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
         ret.raw = options.switches.find(OPTION_RAW) != options.switches.cend();
         ret.nuget = options.switches.find(OPTION_NUGET) != options.switches.cend();
@@ -339,8 +338,21 @@ namespace vcpkg::Export
         ret.zip = options.switches.find(OPTION_ZIP) != options.switches.cend();
         ret.seven_zip = options.switches.find(OPTION_SEVEN_ZIP) != options.switches.cend();
         ret.chocolatey = options.switches.find(OPTION_CHOCOLATEY) != options.switches.cend();
-
+        ret.all_installed = options.switches.find(OPTION_ALL_INSTALLED) != options.switches.end();
         ret.maybe_output = maybe_lookup(options.settings, OPTION_OUTPUT);
+
+        if (ret.all_installed)
+        {
+  	  auto installed_ipv = get_installed_ports(status_db);
+	  std::transform(installed_ipv.begin(), installed_ipv.end(), std::back_inserter(ret.specs),[](const auto& ipv){ return ipv.spec(); } );
+        }
+        else
+        {
+          // input sanitization
+          ret.specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+              return Input::check_and_get_package_spec(std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+          });
+        }
 
         if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey)
         {
@@ -515,16 +527,15 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
-        const auto opts = handle_export_command_arguments(args, default_triplet);
+        const StatusParagraphs status_db = database_load_check(paths);
+        const auto opts = handle_export_command_arguments(args, default_triplet, status_db);
         for (auto&& spec : opts.specs)
             Input::check_triplet(spec.triplet(), paths);
-
-        // create the plan
-        const StatusParagraphs status_db = database_load_check(paths);
 
         // Load ports from ports dirs
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
+        // create the plan
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(opts.specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
 
