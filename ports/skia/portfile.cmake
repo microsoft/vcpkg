@@ -52,13 +52,7 @@ set(OPTIONS_REL "${OPTIONS} is_official_build=true")
 set(OPTIONS_DBG "${OPTIONS} is_debug=true")
 
 function(find_msvc_path PATH)
-    set(PROGRAM_FILES "$ENV{ProgramFiles\(x86\)}")
-    if(NOT PROGRAM_FILES)
-        # CMake reports both as the x86 DIRECTORY
-        # https://cmake.org/pipermail/cmake/2008-November/025230.html
-        set(PROGRAM_FILES "$ENV{ProgramFiles}")
-    endif()
-
+    vcpkg_get_program_files_32_bit(PROGRAM_FILES)
     file(TO_CMAKE_PATH "${PROGRAM_FILES}" PROGRAM_FILES)
     set(VSWHERE "${PROGRAM_FILES}/Microsoft Visual Studio/Installer/vswhere.exe")
     execute_process(
