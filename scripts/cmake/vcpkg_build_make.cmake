@@ -76,7 +76,11 @@ function(vcpkg_build_make)
 
             # set(VCPKG_CONCURRENCY 1)
             set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f makefile all)
-            set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f makefile install)
+            
+            string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
+            string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
+            set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f makefile install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
+            #TODO: optimize for install-data (release) and install-exec (release/debug)
         else()
             # Compiler requriements
             set(MAKE_BASH)
@@ -84,7 +88,8 @@ function(vcpkg_build_make)
             set(MAKE_COMMAND ${MAKE})
             # Set make command and install command
             set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f makefile all)
-            set(INSTALL_OPTS V=1 -j ${VCPKG_CONCURRENCY} --trace install)
+            set(INSTALL_OPTS V=1 -j ${VCPKG_CONCURRENCY} --trace install DESTDIR=${CURRENT_PACKAGES_DIR})
+            
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         set(MAKE_BASH)
@@ -277,6 +282,9 @@ function(vcpkg_build_make)
         set(ENV{PATH} "${PATH_GLOBAL}")
     endif()
     
-
-    
+    string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALL_PREFIX "${CURRENT_INSTALLED_DIR}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+    file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
+    file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
 endfunction()

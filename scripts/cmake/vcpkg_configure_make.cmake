@@ -236,14 +236,14 @@ function(vcpkg_configure_make)
         #set(ENV{RAWCPP} "cl_cp_wrapper")
         set(COMPILER_CC "CC='cl.exe -nologo' CPP='cl_cpp_wrapper' LD='link.exe -verbose' NM='dumpbin.exe -symbols -headers -all' DLLTOOL='link.exe -verbose -dll' AR='ar_lib_wrapper' AR_FLAGS='--verbose /VERBOSE' RANLIB='echo' ")
 
-        string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
+        string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF ${CURRENT_INSTALLED_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
         string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
     else()
-        string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_PACKAGES_DIR_DIR})
+        string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         set(EXTRA_QUOTES)
     endif()
@@ -263,18 +263,18 @@ function(vcpkg_configure_make)
     if (NOT _csc_DISABLE_AUTO_DST)
         set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
                                 "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}${EXTRA_QUOTES}"
-                                "--bindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/tools/${PORT}/bin${EXTRA_QUOTES}"
-                                "--sbindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/tools/${PORT}/sbin${EXTRA_QUOTES}"
-                                "--libdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/lib${EXTRA_QUOTES}"
-                                "--includedir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/include${EXTRA_QUOTES}"
-                                "--mandir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/share/${PORT}${EXTRA_QUOTES}"
-                                "--docdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/share/${PORT}${EXTRA_QUOTES}")
+                                "--bindir='\${prefix}'/tools/${PORT}/bin"
+                                "--sbindir='\${prefix}'/tools/${PORT}/sbin"
+                                #"--libdir='\${prefix}'/lib"
+                                #"--includedir='\${prefix}'/include"
+                                "--mandir='\${prefix}'/share/${PORT}"
+                                "--docdir='\${prefix}'/share/${PORT}")
         set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                                 "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}"
-                                "--bindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/../tools/${PORT}/debug/bin${EXTRA_QUOTES}"
-                                "--sbindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/../tools/${PORT}/debug/sbin${EXTRA_QUOTES}"
-                                "--libdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/lib${EXTRA_QUOTES}"
-                                "--includedir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/include${EXTRA_QUOTES}")
+                                "--bindir='\${prefix}'/debug/../tools/${PORT}/debug/bin"
+                                "--sbindir='\${prefix}'/debug/../tools/${PORT}/debug/sbin"
+                                #"--libdir='\${prefix}'/lib"
+                                "--includedir='\${prefix}'/../include")
     endif()
 
     set(base_cmd)
