@@ -2,7 +2,7 @@ diff --git a/include/X11/Xwindows.h b/include/X11/Xwindows.h
 index 5eff8570f..736bbe4db 100644
 --- a/include/X11/Xwindows.h	
 +++ b/include/X11/Xwindows.h
-@@ -61,36 +61,286 @@ The Open Group.
+@@ -61,36 +61,299 @@ The Open Group.
   * ... so try to come up with something which works with both :-)
   */
  #define _NO_BOOL_TYPEDEF
@@ -17,6 +17,15 @@ index 5eff8570f..736bbe4db 100644
 -#define ATOM wATOM
 -#define BYTE wBYTE
 -#define FreeResource wFreeResource
++#if defined(ERROR)
++    #define X_XWINDOWS_DEFINE_GUARD_ERROR_DEFINITION ERROR
++    #if defined(wERROR)
++        #undef ERROR
++        #define ERROR wERROR 
++    #else 
++        #undef ERROR
++    #endif 
++#endif
 +#if defined(ControlMask)
 +    #define X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION ControlMask
 +    #if defined(wControlMask)
@@ -305,6 +314,10 @@ index 5eff8570f..736bbe4db 100644
 +#undef ControlMask
 +#if defined(X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION)
 +    #define ControlMask X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION
++#endif 
++#undef ERROR
++#if defined(X_XWINDOWS_DEFINE_GUARD_ERROR_DEFINITION)
++    #define ERROR X_XWINDOWS_DEFINE_GUARD_ERROR_DEFINITION
 +#endif 
  #undef CreateWindowA
  
