@@ -44,8 +44,6 @@
 7zip:x64-linux=fail
 7zip:x64-osx=fail
 7zip:x64-uwp=fail
-abseil:arm-uwp=fail
-abseil:x64-uwp=fail
 ace:arm64-windows=fail
 ace:arm-uwp=fail
 ace:x64-osx=fail
@@ -577,8 +575,6 @@ graphite2:arm-uwp=fail
 graphite2:x64-uwp=fail
 graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
-grpc:arm-uwp=fail
-grpc:x64-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
 gsoap:arm-uwp=ignore
