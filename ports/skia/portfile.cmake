@@ -144,16 +144,24 @@ foreach(file_ ${SKIA_INCLUDE_FILES})
     vcpkg_replace_string("${file_}" "#include \"include/" "#include \"${PORT}/")
 endforeach()
 
+# Finds and stores a single file that matches GLOBBING_EXPR
+# into the OUT_VAR or fails otherwise
+function(glob_single_file OUT_VAR GLOBBING_EXPR)
+    file(GLOB RESULTS LIST_DIRECTORIES false "${GLOBBING_EXPR}")
+    list(LENGTH RESULTS RESULTS_LENGTH)
+    if(NOT RESULTS_LENGTH EQUAL 1)
+        message(FATAL_ERROR "Expected one file to match glob: '${GLOBBING_EXPR}'; found: '${RESULTS}'")
+    endif()
+    list(GET RESULTS 0 FIRST_RESULT)
+    set(${OUT_VAR} "${FIRST_RESULT}" PARENT_SCOPE)
+endfunction()
+
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB SKIA_LIBRARY_DBG LIST_DIRECTORIES false
-        "${BUILD_DIR_DBG}/skia*.lib")
-    list(GET SKIA_LIBRARY_DBG 0 SKIA_LIBRARY_DBG)
+    glob_single_file(SKIA_LIBRARY_DBG "${BUILD_DIR_DBG}/skia*.lib")
     file(INSTALL "${SKIA_LIBRARY_DBG}" 
         DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-    file(GLOB SKIA_LIBRARY_REL LIST_DIRECTORIES false
-        "${BUILD_DIR_REL}/skia*.lib")
-    list(GET SKIA_LIBRARY_REL 0 SKIA_LIBRARY_REL)
+    glob_single_file(SKIA_LIBRARY_REL "${BUILD_DIR_REL}/skia*.lib")
     file(INSTALL "${SKIA_LIBRARY_REL}" 
         DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
@@ -163,22 +171,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
         get_filename_component(SKIA_LIBRARY_IMPLIB_REL 
             "${SKIA_LIBRARY_REL}" NAME)
 
-        file(GLOB SKIA_LIBRARY_DBG LIST_DIRECTORIES false
-            "${BUILD_DIR_DBG}/skia*.dll")
-        list(GET SKIA_LIBRARY_DBG 0 SKIA_LIBRARY_DBG)
+        glob_single_file(SKIA_LIBRARY_DBG "${BUILD_DIR_DBG}/skia*.dll")
         file(INSTALL "${SKIA_LIBRARY_DBG}" 
             DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
         get_filename_component(SKIA_LIBRARY_NAME_DBG "${SKIA_LIBRARY_DBG}" NAME)
 
-        file(GLOB SKIA_LIBRARY_DBG LIST_DIRECTORIES false
-            "${BUILD_DIR_DBG}/skia*.pdb")
-        list(GET SKIA_LIBRARY_DBG 0 SKIA_LIBRARY_DBG)
+        glob_single_file(SKIA_LIBRARY_DBG "${BUILD_DIR_DBG}/skia*.pdb")
         file(INSTALL "${SKIA_LIBRARY_DBG}" 
             DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-        file(GLOB SKIA_LIBRARY_REL LIST_DIRECTORIES false
-            "${BUILD_DIR_REL}/skia*.dll")
-        list(GET SKIA_LIBRARY_REL 0 SKIA_LIBRARY_REL)
+        glob_single_file(SKIA_LIBRARY_REL "${BUILD_DIR_REL}/skia*.dll")
         file(INSTALL "${SKIA_LIBRARY_REL}" 
             DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         get_filename_component(SKIA_LIBRARY_NAME_REL "${SKIA_LIBRARY_REL}" NAME)
