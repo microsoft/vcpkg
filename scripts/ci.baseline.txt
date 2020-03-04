@@ -7,10 +7,10 @@
 ##   fail - the port does not build in the CI system.
 ##          This is not necessarily the same as if a port is expected to build
 ##          on a developers machine because it may fail due to the machine
-##          configuration.  When set to fail the CI system will still attempt 
+##          configuration.  When set to fail the CI system will still attempt
 ##          to build the port and will report a CI failure until this file is updated.
 ##   skip - Do not build this port in the CI system.
-##          This is added to ports that may be flaky or conflict with other 
+##          This is added to ports that may be flaky or conflict with other
 ##          ports.  Please comment for why a port is skipped so it can be
 ##          removed when the issue is resolved.
 ##   ignore - attempt to build the port, but do not fail the CI test if the
@@ -27,7 +27,7 @@
 ##    x64-windows
 ##    x64-windows-static
 ##    x86-windows
-##   
+##
 
 
 # Add new items alphabetically
@@ -171,8 +171,6 @@ boost-locale:arm-uwp=fail
 boost-locale:x64-uwp=fail
 boost-log:arm-uwp=fail
 boost-log:x64-uwp=fail
-boost-python:x64-linux=ignore
-boost-mpi:x64-linux=fail
 boost-mpi:x64-osx=fail
 boost-stacktrace:arm-uwp=fail
 boost-stacktrace:x64-uwp=fail
@@ -187,8 +185,6 @@ box2d:x64-uwp=fail
 box2d:arm-uwp=fail
 breakpad:arm64-windows=fail
 breakpad:x64-osx=fail
-brotli:arm-uwp=fail
-brotli:x64-uwp=fail
 bullet3:arm64-windows=fail
 bullet3:arm-uwp=fail
 bullet3:x64-uwp=fail
@@ -293,8 +289,6 @@ cppmicroservices:x64-uwp=fail
 cpp-netlib:arm-uwp=fail
 cpp-netlib:x64-uwp=fail
 cpp-netlib:x64-linux=ignore
-cpprestsdk:arm-uwp=fail
-cpprestsdk:x64-uwp=fail
 cpp-taskflow:x64-osx=fail
 cppunit:arm64-windows=fail
 cppunit:arm-uwp=fail
@@ -320,8 +314,6 @@ cudnn:x64-uwp=fail
 cudnn:x64-windows-static=fail
 cudnn:x86-windows=fail
 cutelyst2:x64-osx=fail
-darknet:arm-uwp=fail
-darknet:x64-uwp=fail
 date:arm64-windows=fail
 dbow2:x64-osx=fail
 dcmtk:arm64-windows=fail
@@ -603,6 +595,13 @@ halide:x64-windows-static=fail
 hdf5:arm64-windows=fail
 hdf5:arm-uwp=fail
 hdf5:x64-uwp=fail
+healpix:x86-windows=fail
+healpix:x64-windows=fail
+healpix:x64-windows-static=fail
+healpix:x64-uwp=fail
+healpix:arm64-windows=fail
+healpix:arm-uwp=fail
+healpix:x64-osx=fail
 hidapi:arm64-windows=fail
 hidapi:arm-uwp=fail
 hidapi:x64-linux=fail
@@ -777,6 +776,7 @@ libhdfs3:x64-uwp=fail
 libhdfs3:x64-windows=fail
 libhdfs3:x64-windows-static=fail
 libhdfs3:x86-windows=fail
+libhdfs3:x64-linux=fail
 libhydrogen:arm64-windows=fail
 libics:arm-uwp=fail
 libics:x64-uwp=fail
@@ -837,7 +837,6 @@ libmodplug:arm-uwp=fail
 libmodplug:x64-uwp=fail
 libmupdf:x64-linux=fail
 libmupdf:x64-osx=fail
-libmysql:x64-osx=fail
 libmysql:x86-windows=fail
 libnice:x64-linux=fail
 libnice:x64-osx=fail
@@ -1327,9 +1326,13 @@ opusfile:x64-uwp=fail
 orc:x64-linux=ignore
 orocos-kdl:arm-uwp=fail
 orocos-kdl:x64-uwp=fail
-osg:x64-linux=fail
-osg:x64-osx=fail
-osg:x64-windows-static=fail
+osg:x86-windows=skip
+osg:x64-windows=skip
+osgearth:x64-osx=fail
+osgearth:x64-linux=fail
+osgearth:x64-windows-static=fail
+osg-qt:x64-windows-static=fail
+osg-qt:x64-linux=fail
 otl:x64-windows=ignore
 otl:x64-windows-static=ignore
 otl:x64-uwp=ignore
@@ -1541,6 +1544,8 @@ rpclib:x86-windows=ignore
 rpclib:x64-windows-static=ignore
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
+rxspencer:x64-uwp=fail
+rxspencer:arm-uwp=fail
 scintilla:arm-uwp=fail
 scintilla:x64-linux=fail
 scintilla:x64-osx=fail
@@ -1606,6 +1611,11 @@ shogun:x86-windows        = skip
 simdjson:arm64-windows=fail
 simdjson:arm-uwp=fail
 simdjson:x86-windows=fail
+skia:arm64-windows=fail
+skia:arm-uwp=fail
+skia:x64-linux=fail
+skia:x64-uwp=fail
+skia:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
 smpeg2:arm-uwp=fail
@@ -1746,6 +1756,12 @@ torch-th:x64-uwp=fail
 torch-th:x64-windows-static=fail
 tre:x64-osx=fail
 treehopper:x64-windows-static=fail
+turbobase64:arm64-windows=fail
+turbobase64:arm-uwp=fail
+turbobase64:x64-uwp=fail
+turbobase64:x64-windows=fail
+turbobase64:x64-windows-static=fail
+turbobase64:x86-windows=fail
 unicorn:arm64-windows=fail
 unicorn:arm-uwp=fail
 unicorn:x64-linux=fail
