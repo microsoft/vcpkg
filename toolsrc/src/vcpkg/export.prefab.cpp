@@ -393,7 +393,7 @@ namespace vcpkg::Export::Prefab
 
                 for (auto module : modules)
                 {
-                    std::string module_name = module.stem();
+                    std::string module_name = module.stem().generic_string();
                     module_name = Strings::trim(std::move(module_name));
 
                     if (Strings::starts_with(module_name, "lib"))
