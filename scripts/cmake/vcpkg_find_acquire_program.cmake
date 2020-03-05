@@ -24,6 +24,7 @@
 ## - PERL
 ## - PYTHON2
 ## - PYTHON3
+## - GIT
 ## - GO
 ## - JOM
 ## - MESON
@@ -86,6 +87,20 @@ function(vcpkg_find_acquire_program VAR)
     set(_vfa_RENAME "yasm.exe")
     set(NOEXTRACT ON)
     set(HASH c1945669d983b632a10c5ff31e86d6ecbff143c3d8b2c433c0d3d18f84356d2b351f71ac05fd44e5403651b00c31db0d14615d7f9a6ecce5750438d37105c55b)
+  elseif(VAR MATCHES "GIT")
+    set(PROGNAME git)
+    if(CMAKE_HOST_WIN32)
+      set(SUBDIR "git-2.25.1-1-windows")
+      set(URL "https://github.com/git-for-windows/git/releases/download/v2.25.1.windows.1/PortableGit-2.25.1-32-bit.7z.exe")
+      set(ARCHIVE "PortableGit-2.25.1-32-bit.7z.exe")
+      set(HASH 222d6e384ecae5841cb02dc004c4b3f56659d19b662bc93ab531df844c9477c9717c4a1adfb8bc2d3159678238fa4c79ccbdcb5c116eea5eccd652f4b483359e)
+      set(PATHS 
+        "${DOWNLOADS}/tools/${SUBDIR}/mingw32/bin"
+        "${DOWNLOADS}/tools/git/${SUBDIR}/mingw32/bin")
+    else()
+      set(BREW_PACKAGE_NAME "git")
+      set(APT_PACKAGE_NAME "git")
+    endif()
   elseif(VAR MATCHES "GO")
     set(PROGNAME go)
     set(PATHS ${DOWNLOADS}/tools/go/go/bin)
@@ -342,6 +357,12 @@ function(vcpkg_find_acquire_program VAR)
         _execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
+        )
+      elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
+        vcpkg_find_acquire_program(7Z)
+        _execute_process(
+          COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )
       else()
         _execute_process(
