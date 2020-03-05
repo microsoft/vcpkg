@@ -37,6 +37,7 @@ vcpkg_from_github(
         use_abort.patch
         cmake.patch
         pkgconfig.patch
+        pkgconfig.2.patch
         ${APNG_EXTRA_PATCH}
 )
 
