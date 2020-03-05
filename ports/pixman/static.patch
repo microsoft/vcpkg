@@ -1,0 +1,13 @@
+diff --git a/pixman/meson.build b/pixman/meson.build
+index 6ce87e7ad..a391bb09f 100644
+--- a/pixman/meson.build	
++++ b/pixman/meson.build
+@@ -97,7 +97,7 @@ pixman_files = files(
+   'pixman-utils.c',
+ )
+ 
+-libpixman = shared_library(
++libpixman = static_library(
+   'pixman-1',
+   [pixman_files, config_h, version_h],
+   link_with : [pixman_simd_libs],

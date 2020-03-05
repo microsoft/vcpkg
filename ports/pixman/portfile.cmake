@@ -1,6 +1,19 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Meson is not able to automatically export symbols for DLLs
+    # Insert in the beginning to make it overwriteable
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        list(INSERT VCPKG_CXX_FLAGS 0 /arch:SSE2)
+        list(INSERT VCPKG_C_FLAGS 0 /arch:SSE2)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        list(APPEND OPTIONS -Dmmx=disabled)
+    endif()
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND PATCHES static.patch)
+endif()
 
 set(PIXMAN_VERSION 0.38.4)
 vcpkg_download_distfile(ARCHIVE
@@ -12,12 +25,13 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PIXMAN_VERSION}
+    PATCHES meson.build.patch
+            ${PATCHES}
 )
-
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS ${OPTIONS}
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )

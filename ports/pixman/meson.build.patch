@@ -1,0 +1,51 @@
+diff --git a/meson.build b/meson.build
+index fad22eea9..a623e63aa 100644
+--- a/meson.build	
++++ b/meson.build
+@@ -84,7 +84,7 @@ endif
+ 
+ use_mmx = get_option('mmx')
+ have_mmx = false
+-mmx_flags = ['-mmmx', '-Winline']
++mmx_flags = ['-mmmx']
+ if not use_mmx.disabled()
+   if host_machine.cpu_family() == 'x86_64'
+     have_mmx = true
+@@ -134,7 +134,7 @@ endif
+ 
+ use_sse2 = get_option('sse2')
+ have_sse2 = false
+-sse2_flags = ['-msse2', '-Winline']
++sse2_flags = ['-msse2']
+ if not use_sse2.disabled()
+   if host_machine.cpu_family() == 'x86'
+     if cc.compiles('''
+@@ -169,7 +169,7 @@ endif
+ 
+ use_ssse3 = get_option('ssse3')
+ have_ssse3 = false
+-ssse3_flags =['-mssse3', '-Winline']
++ssse3_flags =['-mssse3']
+ if not use_ssse3.disabled()
+   if host_machine.cpu_family().startswith('x86')
+     if cc.compiles('''
+@@ -254,7 +254,7 @@ endif
+ 
+ use_iwmmxt = get_option('iwmmxt')
+ have_iwmmxt = false
+-iwmmxt_flags = ['-flax-vector-conversions', '-Winline']
++iwmmxt_flags = ['-flax-vector-conversions']
+ if not use_iwmmxt.disabled()
+   if get_option('iwmmxt2')
+     iwmmxt_flags += '-march=iwmmxt2'
+@@ -457,8 +457,8 @@ version_conf.set('PIXMAN_VERSION_MICRO', split[2])
+ add_project_arguments('-DHAVE_CONFIG_H', language : ['c'])
+ 
+ subdir('pixman')
+-subdir('test')
+-subdir('demos')
++# subdir('test')
++# subdir('demos')
+ 
+ pkg = import('pkgconfig')
+ pkg.generate(
