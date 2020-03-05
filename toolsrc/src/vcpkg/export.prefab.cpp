@@ -448,7 +448,7 @@ namespace vcpkg::Export::Prefab
             {
                 maven_install(exported_archive_path, pom_path);
             }
-            System::print2(Strings::format("Successfuly installed %s. Checkout %s  \n", name, raw_exported_dir_path));
+            System::print2(System::Color::success, Strings::format("Successfuly installed %s. Checkout %s  \n", name, raw_exported_dir_path.generic_string()));
         }
     }
 }
