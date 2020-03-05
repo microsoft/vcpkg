@@ -47,6 +47,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
 
 file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb-proto.pc" _contents)
 string(REPLACE "libdir=${CURRENT_PACKAGES_DIR}/lib" "libdir=\${prefix}/lib" _contents "${_contents}")
