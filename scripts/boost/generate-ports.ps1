@@ -46,9 +46,9 @@ function Generate()
     $controlDeps = ($Depends | sort) -join ", "
 
     $versionSuffix = ""
-    if ($Name -eq "iostreams")
+    if ($PortName -eq "iostreams" -or $PortName -eq "python")
     {
-        $versionsuffix = "-1"
+        $versionSuffix = "-1"
     }
 
     mkdir "$portsDir/boost-$PortName" -erroraction SilentlyContinue | out-null
@@ -363,7 +363,7 @@ foreach ($library in $libraries)
 
         if ($library -eq "python")
         {
-            $deps += @("python3 (!osx&!linux)")
+            $deps += @("python3")
             $needsBuild = $true
         }
         elseif ($library -eq "iostreams")
