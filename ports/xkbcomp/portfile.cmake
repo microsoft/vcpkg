@@ -39,7 +39,6 @@ vcpkg_configure_make(
     #AUTO_DST
     #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
     OPTIONS
-       #"XKBCOMP_LIBS=\"-L${CURRENT_INSTALLED_DIR}/debug/lib -lX11 -lX11-xcb -lxkbfile\""
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
@@ -55,6 +54,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/xkbcomp${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/xkbcomp${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
