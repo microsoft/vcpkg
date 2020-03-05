@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
         0002-Add-CONFIG_INSTALL_PATH-option.patch
         0003-Fix-UWP.patch
         0005-Fix-DLL-EXPORTS.patch
+        install_pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
