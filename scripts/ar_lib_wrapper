@@ -54,7 +54,10 @@ while test $# -gt 0; do
     --verbose)
         verbose=1
         ;;
-
+    
+    cru) #Eat; No similar option for lib
+        ;;
+    
     x) # Extract archive
         has_x=1
         ;;
@@ -72,6 +75,15 @@ while test $# -gt 0; do
         fi
         ;;
 
+    *.a)
+        # library file
+        if test x$has_x$has_t = x ; then
+            libopt+=("${slash}OUT:${1/%.a/.lib}")
+        else
+            libopt+=("${1/%.a/.lib}")
+        fi
+        libfile=$1
+        ;;
     *.lib)
         # library file
         if test x$has_x$has_t = x ; then
