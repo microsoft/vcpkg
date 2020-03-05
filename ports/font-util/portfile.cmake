@@ -1,4 +1,4 @@
-#set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 # requires AUTOCONF, LIBTOOL and PKCONF
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
@@ -7,7 +7,7 @@ vcpkg_from_gitlab(
     REF  d45011b8324fecebb4fc79e57491d341dd96e325 #1.3.2
     SHA512 d783cbb5b8b0975891a247f98b78c2afadfd33e1d26ee8bcf7ab7ccc11615b0150d07345c719182b0929afc3c54dc3288a01a789b5374e18aff883ac23d15b04
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
+    PATCHES build.patch #patch name
 ) 
 #file(TOUCH ${SOURCE_PATH}/m4/dummy)
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -45,10 +45,10 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/share/fonts/" "${CURRENT_PACKAGES_DIR}/shar
 #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/man")
 #file(RENAME "${CURRENT_PACKAGES_DIR}/share/man/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/man")
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+#file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/")
+#file(RENAME "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
+#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/debug")
 
 set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/fontutil.pc")
 file(READ "${_file}" _contents)
