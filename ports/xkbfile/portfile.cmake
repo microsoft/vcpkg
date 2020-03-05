@@ -1,4 +1,10 @@
 ## requires AUTOCONF, LIBTOOL and PKCONF
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(PATCHES symbol_visibility.patch)
+    list(APPEND VCPKG_C_FLAGS /DXKBFILE_BUILD)
+    list(APPEND VCPKG_CXX_FLAGS /DXKBFILE_BUILD)
+endif()
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,10 +12,13 @@ vcpkg_from_gitlab(
     REF  261992d42905f209cd5bf6afcf8a7ae3aa30b3ff #1.1.0
     SHA512 5be520e408d25331c9a97648f2a6fa832f0d4f49f93f71490b89746da0fbbda404eaab3797c5fbe195287dc94581a6703fa4ecc2511e046127af057eab60378f
     HEAD_REF master # branch name
-    PATCHES fix_u_char.patch #patch name
+    PATCHES fix_u_char.patch 
+            ${PATCHES}#patch name
 ) 
 #file(TOUCH ${SOURCE_PATH}/m4/dummy)
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
+
+
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
