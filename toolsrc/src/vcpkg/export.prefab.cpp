@@ -267,20 +267,20 @@ namespace vcpkg::Export::Prefab
         Checks::check_exit(VCPKG_LINE_INFO,
                            fs::stdfs::exists(ndk_location),
                            "Error: ANDROID_NDK_HOME Directory does not exists %s",
-                           ndk_location.c_str());
+                           ndk_location.generic_string());
         const fs::path source_properties_location = ndk_location / "source.properties";
 
         Checks::check_exit(VCPKG_LINE_INFO,
                            fs::stdfs::exists(ndk_location),
                            "Error: source.properties missing in ANDROID_NDK_HOME directory %s",
-                           source_properties_location);
+                           source_properties_location.generic_string());
 
         std::string content = utils.read_contents(source_properties_location, VCPKG_LINE_INFO);
 
         Optional<std::string> version_opt = find_ndk_version(content);
 
         Checks::check_exit(
-            VCPKG_LINE_INFO, version_opt.has_value(), "Error: NDK version missing %s", source_properties_location);
+            VCPKG_LINE_INFO, version_opt.has_value(), "Error: NDK version missing %s", source_properties_location.generic_string());
 
         NdkVersion version = to_version(version_opt.value_or_exit(VCPKG_LINE_INFO)).value_or_exit(VCPKG_LINE_INFO);
 
@@ -385,7 +385,7 @@ namespace vcpkg::Export::Prefab
                                    "Error: Packages not installed %s:%s %s",
                                    name,
                                    triplet,
-                                   listfile);
+                                   listfile.generic_string());
 
                 fs::path libs = installed_dir / "lib";
 
