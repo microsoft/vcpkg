@@ -190,7 +190,7 @@ function(vcpkg_configure_make)
         set(MSYS_REQUIRE_PACKAGES diffutils pkg-config binutils libtool make)
 
         if (_csc_AUTOCONFIG)
-            list(APPEND MSYS_REQUIRE_PACKAGES autoconf automake m4)
+            list(APPEND MSYS_REQUIRE_PACKAGES autoconf automake m4 autoconf-archive)
         endif()
 
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})

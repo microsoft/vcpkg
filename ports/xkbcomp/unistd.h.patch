@@ -1,0 +1,14 @@
+diff --git a/xkbcomp.c b/xkbcomp.c
+index 23acddc5a..8e597ba6b 100644
+--- a/xkbcomp.c	
++++ b/xkbcomp.c
+@@ -31,7 +31,9 @@
+ /* for symlink attack security fix -- Branden Robinson */
+ #include <sys/stat.h>
+ #include <sys/types.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ /* end BR */
+ 
+ #if defined(sgi)

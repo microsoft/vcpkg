@@ -1,0 +1,14 @@
+diff --git a/src/xshmfenceint.h b/src/xshmfenceint.h
+index 178cbdd5e..e29f46c59 100644
+--- a/src/xshmfenceint.h	
++++ b/src/xshmfenceint.h
+@@ -24,7 +24,9 @@
+ #define _XSHMFENCEINT_H_
+ 
+ #include <stdlib.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <sys/mman.h>
+ #include "xshmfence.h"
+ 

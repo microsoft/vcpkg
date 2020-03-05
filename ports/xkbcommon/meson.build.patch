@@ -13,3 +13,33 @@ index ac706633e..9b1214bda 100644
      if not xcb_dep.found() or not xcb_xkb_dep.found()
          error('''X11 support requires xcb-xkb >= 1.10 which was not found.
  You can disable X11 support with -Denable-x11=false.''')
+@@ -412,18 +412,19 @@ test(
+     find_program('test/symbols-leak-test.bash'),
+     env: test_env,
+ )
+-if get_option('enable-x11')
+-    test(
+-        'x11',
+-        executable('test-x11', 'test/x11.c', dependencies: x11_test_dep),
+-        env: test_env,
+-    )
+-    # test/x11comp is meant to be run, but it is (temporarily?) disabled.
+-    # See: https://github.com/xkbcommon/libxkbcommon/issues/30
+-    executable('test-x11comp', 'test/x11comp.c', dependencies: x11_test_dep)
++if cc.get_id() != 'msvc'
++    if get_option('enable-x11')
++        test(
++            'x11',
++            executable('test-x11', 'test/x11.c', dependencies: x11_test_dep),
++            env: test_env,
++        )
++        # test/x11comp is meant to be run, but it is (temporarily?) disabled.
++        # See: https://github.com/xkbcommon/libxkbcommon/issues/30
++        executable('test-x11comp', 'test/x11comp.c', dependencies: x11_test_dep)
++    endif
+ endif
+ 
+-
+ # Fuzzing target programs.
+ executable('fuzz-keymap', 'fuzz/keymap/target.c', dependencies: test_dep)
+ executable('fuzz-compose', 'fuzz/compose/target.c', dependencies: test_dep)

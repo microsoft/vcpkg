@@ -8,7 +8,8 @@ vcpkg_from_gitlab(
     REF 2abe23d23d3755335c10ff573e4e1f93b682e9d9 # 1.4.2 
     SHA512  43b47775afa0be884ec66446d3f12728225e83bbacdf56b6a00790672f783a351c779bbbf2482bd0276dc48347adca8db2e3dc061e56d262713e32a8251c66a7
     HEAD_REF master # branch name
-    PATCHES configure.patch #patch name
+    PATCHES configure.patch 
+            unistd.h.patch#patch name
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
