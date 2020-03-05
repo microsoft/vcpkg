@@ -271,8 +271,8 @@ function(vcpkg_configure_make)
                                 "--docdir='\${prefix}'/share/${PORT}")
         set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                                 "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}"
-                                "--bindir='\${prefix}'/debug/../tools/${PORT}/debug/bin"
-                                "--sbindir='\${prefix}'/debug/../tools/${PORT}/debug/sbin"
+                                "--bindir='\${prefix}'././tools/${PORT}/debug/bin"
+                                "--sbindir='\${prefix}'/../tools/${PORT}/debug/sbin"
                                 #"--libdir='\${prefix}'/lib"
                                 "--includedir='\${prefix}'/../include")
     endif()
