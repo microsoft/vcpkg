@@ -1,4 +1,4 @@
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+#set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 # requires AUTOCONF, LIBTOOL and PKCONF
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
@@ -11,6 +11,11 @@ vcpkg_from_gitlab(
 ) 
 #file(TOUCH ${SOURCE_PATH}/m4/dummy)
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND VCPKG_C_FLAGS /DNEED_BASENAME)
+    list(APPEND VCPKG_CXX_FLAGS /DNEED_BASENAME)
+endif()
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
