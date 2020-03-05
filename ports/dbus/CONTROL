@@ -2,4 +2,4 @@ Source: dbus
 Version: 1.13.10
 Homepage: https://gitlab.freedesktop.org/dbus/dbus
 Description: D-Bus specification and reference implementation, including libdbus and dbus-daemon
-Build-Depends: x11
+Build-Depends: x11, expat, glib
