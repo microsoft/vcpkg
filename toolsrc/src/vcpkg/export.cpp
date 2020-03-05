@@ -300,10 +300,11 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_PREFAB_VERSION = "--prefab-version";
     static constexpr StringLiteral OPTION_PREFAB_SDK_MIN_VERSION = "--prefab-min-sdk";
     static constexpr StringLiteral OPTION_PREFAB_SDK_TARGET_VERSION = "--prefab-target-sdk";
-    static constexpr StringLiteral OPTION_PREFAB_NDK_VERSION = "--prefab-ndk";
+    static constexpr StringLiteral OPTION_PREFAB_ENABLE_MAVEN = "--prefab-maven";
+    
 
 
-    static constexpr std::array<CommandSwitch, 8> EXPORT_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 9> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
         {OPTION_NUGET, "Export a NuGet package"},
@@ -312,9 +313,10 @@ namespace vcpkg::Export
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
         {OPTION_CHOCOLATEY, "Export a Chocolatey package (experimental feature)"},
         {OPTION_PREFAB, "Export to Prefab format"},
+        {OPTION_PREFAB_ENABLE_MAVEN, "Enable maven"}
     }};
 
-    static constexpr std::array<CommandSetting, 16> EXPORT_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 15> EXPORT_SETTINGS = {{
         {OPTION_OUTPUT, "Specify the output name (used to construct filename)"},
         {OPTION_NUGET_ID, "Specify the id for the exported NuGet package (overrides --output)"},
         {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
@@ -332,8 +334,6 @@ namespace vcpkg::Export
         {OPTION_PREFAB_VERSION, "Version is the name of the project according maven specifications"},
         {OPTION_PREFAB_SDK_MIN_VERSION, "Android minimum supported sdk version"},
         {OPTION_PREFAB_SDK_TARGET_VERSION, "Android target sdk version"},
-        {OPTION_PREFAB_NDK_VERSION, "Ndk version"},
-
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -362,6 +362,7 @@ namespace vcpkg::Export
         ret.seven_zip = options.switches.find(OPTION_SEVEN_ZIP) != options.switches.cend();
         ret.chocolatey = options.switches.find(OPTION_CHOCOLATEY) != options.switches.cend();
         ret.prefab = options.switches.find(OPTION_PREFAB) != options.switches.cend();
+        ret.prefab_options.enable_maven = options.switches.find(OPTION_PREFAB_ENABLE_MAVEN) != options.switches.cend();
 
         ret.maybe_output = maybe_lookup(options.settings, OPTION_OUTPUT);
 
@@ -425,7 +426,6 @@ namespace vcpkg::Export
                         {
                             {OPTION_PREFAB_ARTIFACT_ID, ret.prefab_options.maybe_artifact_id},
                             {OPTION_PREFAB_GROUP_ID, ret.prefab_options.maybe_group_id},
-                            {OPTION_PREFAB_NDK_VERSION, ret.prefab_options.maybe_ndk},
                             {OPTION_PREFAB_SDK_MIN_VERSION, ret.prefab_options.maybe_min_sdk},
                             {OPTION_PREFAB_SDK_TARGET_VERSION, ret.prefab_options.maybe_target_sdk},
                             {OPTION_PREFAB_VERSION, ret.prefab_options.maybe_version},

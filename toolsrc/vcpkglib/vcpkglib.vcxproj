@@ -177,6 +177,7 @@
     <ClInclude Include="..\include\vcpkg\export.chocolatey.h" />
     <ClInclude Include="..\include\vcpkg\export.h" />
     <ClInclude Include="..\include\vcpkg\export.ifw.h" />
+    <ClInclude Include="..\include\vcpkg\export.prefab.h" />
     <ClInclude Include="..\include\vcpkg\globalstate.h" />
     <ClInclude Include="..\include\vcpkg\help.h" />
     <ClInclude Include="..\include\vcpkg\input.h" />
@@ -255,6 +256,7 @@
     <ClCompile Include="..\src\vcpkg\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg\export.cpp" />
     <ClCompile Include="..\src\vcpkg\export.chocolatey.cpp" />
+    <ClCompile Include="..\src\vcpkg\export..pre.cpp" />
     <ClCompile Include="..\src\vcpkg\globalstate.cpp" />
     <ClCompile Include="..\src\vcpkg\help.cpp" />
     <ClCompile Include="..\src\vcpkg\input.cpp" />

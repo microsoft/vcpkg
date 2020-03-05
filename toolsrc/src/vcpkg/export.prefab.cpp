@@ -289,6 +289,36 @@ namespace vcpkg::Export::Prefab
 
         fs::stdfs::remove_all(raw_exported_dir_path);
 
+        /*
+        prefab
+        └── <name>
+            ├── aar
+            │   ├── AndroidManifest.xml
+            │   ├── META-INF
+            │   │   └── LICENCE
+            │   └── prefab
+            │       ├── modules
+            │       │   └── <module>
+            │       │       ├── include
+            │       │       ├── libs
+            │       │       │   ├── android.arm64-v8a
+            │       │       │   │   ├── abi.json
+            │       │       │   │   └── lib<module>.so
+            │       │       │   ├── android.armeabi-v7a
+            │       │       │   │   ├── abi.json
+            │       │       │   │   └── lib<module>.so
+            │       │       │   ├── android.x86
+            │       │       │   │   ├── abi.json
+            │       │       │   │   └── lib<module>.so
+            │       │       │   └── android.x86_64
+            │       │       │       ├── abi.json
+            │       │       │       └── lib<module>.so
+            │       │       └── module.json
+            │       └── prefab.json
+            ├── <name>-<version>.aar
+            └── pom.xml
+        */
+
         for (const ExportPlanAction& action : export_plan)
         {
             const std::string name = action.spec.name();
@@ -299,7 +329,7 @@ namespace vcpkg::Export::Prefab
 
             System::print2("Exporting package ", name, "...\n");
 
-            fs::path package_directory = (raw_exported_dir_path / name) / "aar";
+            fs::path package_directory = per_package_dir_path / "aar";
             fs::path prefab_directory = package_directory / "prefab";
             fs::path modules_directory = prefab_directory / "modules";
 
@@ -381,23 +411,23 @@ namespace vcpkg::Export::Prefab
                     ab.ndk = version.major();
 
                     fs::path abi_path = module_libs_dir / "abi.json";
-                    fs::path old_path = libs / module;
-                    fs::path new_path = module_libs_dir / module.filename();
                     utils.write_contents(abi_path, ab.to_string(), VCPKG_LINE_INFO);
 
-                    fs::path headers_dir = module_dir / "include";
-                    if (!fs::stdfs::exists(headers_dir))
-                    {
-                        fs::path old_headers = installed_dir / "include";
-                        fs::stdfs::copy(old_headers, headers_dir, fs::stdfs::copy_options::recursive);
-                    }
+                    fs::path installed_module_path = libs / module.filename();
+                    fs::path exported_module_path = module_libs_dir / module.filename();
 
-                    fs::stdfs::copy(old_path, new_path);
+                    fs::stdfs::copy(installed_module_path, exported_module_path);
+
+                    fs::path installed_headers_dir = installed_dir / "include";
+                    fs::path exported_headers_dir = module_libs_dir / "include";
+
+                    fs::stdfs::copy(installed_headers_dir, exported_headers_dir, fs::stdfs::copy_options::recursive);
+
                     ModuleMetadata meta;
-                    meta.library_name = "";
-                    meta.library_name = "";
 
-                    utils.write_contents(module_dir / "module.json", meta.to_json(), VCPKG_LINE_INFO);
+                    fs::path module_meta_path = module_dir / "module.json";
+
+                    utils.write_contents(module_meta_path, meta.to_json(), VCPKG_LINE_INFO);
                 }
             }
 
@@ -414,8 +444,10 @@ namespace vcpkg::Export::Prefab
 
             utils.write_contents(pom_path, pom, VCPKG_LINE_INFO);
 
-            maven_install(exported_archive_path, pom_path);
-
+            if (prefab_options.enable_maven)
+            {
+                maven_install(exported_archive_path, pom_path);
+            }
             System::print2(Strings::format("Successfuly installed %s. Checkout %s  \n", name, raw_exported_dir_path));
         }
     }
