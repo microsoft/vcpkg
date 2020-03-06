@@ -1,22 +1,29 @@
 diff --git a/cmake/FindPCRE.cmake b/cmake/FindPCRE.cmake
-index 41a99cb..b1acb32 100644
+index c5bb73c..ab5ada7 100644
 --- a/cmake/FindPCRE.cmake
 +++ b/cmake/FindPCRE.cmake
-@@ -14,9 +14,15 @@ ENDIF (PCRE_INCLUDE_DIRS)
+@@ -66,15 +66,15 @@ find_path(PCRE_INCLUDE_DIR
+   DOC "Specify the include directory containing pcre.h"
+ )
  
- FIND_PATH(PCRE_INCLUDE_DIR pcre.h)
- 
--SET(PCRE_NAMES pcre)
-+if (WIN32)
-+include(SelectLibraryConfigurations)
-+find_library(PCRE_LIBRARY_RELEASE NAMES pcre)
-+find_library(PCRE_LIBRARY_DEBUG NAMES pcred)
-+select_library_configurations(PCRE)
+-find_library(PCRE_LIBRARY
+-  NAMES pcre
+-  HINTS
+-        ${PCRE_ROOT_DIR}/lib
+-        ${PCRE_ROOT_LIBRARY_DIRS}
+-  PATHS
+-        ${PC_PCRE_LIBRARY_DIRS}
+-  DOC "Specify the lib directory containing pcre"
+-)
++if(WIN32)
++  include(SelectLibraryConfigurations)
++  find_library(PCRE_LIBRARY_RELEASE NAMES pcre)
++  find_library(PCRE_LIBRARY_DEBUG NAMES pcred)
++  select_library_configurations(PCRE)
 +else()
-+SET(PCRE_NAMES pcred pcre)
- FIND_LIBRARY(PCRE_LIBRARY NAMES ${PCRE_NAMES} )
--
++  SET(PCRE_NAMES pcred pcre)
++  find_library(PCRE_LIBRARY NAMES ${PCRE_NAMES})
 +endif()
- # handle the QUIETLY and REQUIRED arguments and set PCRE_FOUND to TRUE if
- # all listed variables are TRUE
- INCLUDE(FindPackageHandleStandardArgs)
+ 
+ set(PCRE_VERSION ${PC_PCRE_VERSION})
+ 

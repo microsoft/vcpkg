@@ -1,12 +1,20 @@
 diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
-index 26a2365..0b8f7bc 100644
+index 6b276be..0a3c63b 100644
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
-@@ -168,6 +168,7 @@ target_link_libraries( "${LIBNAME}" ${SYSLIBS})
- target_include_directories( "${LIBNAME}"
+@@ -101,13 +101,14 @@ set_target_properties(Foundation
+ )
+ 
+ if(POCO_UNBUNDLED)
+-	target_link_libraries(Foundation PUBLIC Pcre::Pcre ZLIB::ZLIB)
++	target_link_libraries(Foundation PUBLIC ${PCRE_LIBRARY} ZLIB::ZLIB)
+ 	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
+ endif(POCO_UNBUNDLED)
+ 
+ target_include_directories(Foundation
  	PUBLIC
  		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-+        $<BUILD_INTERFACE:${PCRE_INCLUDE_DIRS}>
++		$<BUILD_INTERFACE:${PCRE_INCLUDE_DIRS}>
  		$<INSTALL_INTERFACE:include>
  	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
- 	)
+ )

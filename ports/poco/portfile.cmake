@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF 8a127d6f16795d914cadc342d3f4f3b9b7999e3b #1.9.2
-    SHA512 282097ee2118ac55320ebdde05bb53ed27d68af49c201b0b26027706ef935ae08f8090abb8aab1cafe84c72520ea73b01263b439d32bd2d0bd55319b0634b168
+    REF 3fc3e5f5b8462f7666952b43381383a79b8b5d92 # poco-1.10.1-release
+    SHA512 4c53a24a2ab9c57f4bf94e233da65cbb144c101b7d8d422d7e687d6c90ce0b53cb7bcfae63205ff30cade0fd07319e44a32035c1b15637ea2958986efc4ad5df
     HEAD_REF master
     PATCHES
         # Find pcre in debug
@@ -17,7 +15,7 @@ vcpkg_from_github(
         use-vcpkg-libharu.patch
         # Add the support of arm64-windows
         arm64_pcre.patch
-        fix_foundation_link.patch
+        #fix_foundation_link.patch
 )
 
 # define Poco linkage type
@@ -104,7 +102,6 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
     file(COPY ${SOURCE_PATH}/Data/SQLite/include DESTINATION ${CURRENT_PACKAGES_DIR})
 endif()
 
-
 # Move apps to the tools folder
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cpspc.exe")
@@ -119,8 +116,6 @@ else()
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/tec ${CURRENT_PACKAGES_DIR}/tools/tec)
 endif()
 
-
-#
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin
@@ -141,18 +136,15 @@ else()
         ${CURRENT_PACKAGES_DIR}/debug/bin/tec.pdb)
 endif()
 
-#
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
   vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/Poco")
   vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Poco)
 endif()
 
-# remove unused files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# copy license
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+ 
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

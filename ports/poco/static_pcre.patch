@@ -1,11 +1,11 @@
 diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
-index 0b8f7bc..c362890 100644
+index f7aca2b..6a3c120 100644
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
-@@ -53,6 +53,21 @@ if (POCO_UNBUNDLED)
- 	include_directories(${ZLIB_INCLUDE_DIRS})
- 
- 	add_definitions(-DPOCO_UNBUNDLED)
+@@ -103,6 +103,22 @@ set_target_properties(Foundation
+ if(POCO_UNBUNDLED)
+ 	target_link_libraries(Foundation PUBLIC ${PCRE_LIBRARY} ZLIB::ZLIB)
+ 	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
 +    add_definitions(
 +        -D_pcre_utf8_table1=_poco_pcre_utf8_table1
 +        -D_pcre_utf8_table1_size=_poco_pcre_utf8_table1_size
@@ -21,6 +21,7 @@ index 0b8f7bc..c362890 100644
 +        -D_pcre_ucp_gentype=_poco_pcre_ucp_gentype
 +        -D_pcre_ucp_gbtable=_poco_pcre_ucp_gbtable
 +    )
++
+ endif(POCO_UNBUNDLED)
  
- else()
- 	# pcre
+ target_include_directories(Foundation
