@@ -2,19 +2,20 @@
 
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
+    #vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
     #set(OPTIONS --disable-assembler)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "----- ${PORT} requires Visual Studio YASM integration which can be downloaded from https://github.com/ShiftMediaProject/VSYASM/releases/latest -----")
     vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH_WINDOWS
+        OUT_SOURCE_PATH SOURCE_PATH
         REPO ShiftMediaProject/nettle
         REF 1d0a6e64e01458fdf37eaf5d90975deb52c3da41 #v3.5.1 
         SHA512 6124fbd223e6519d88290c3f4e3b8cc399e038c9c77cfec38e6ab17b075846e662fd0360d62c132c882536489c8a865795f64059e2d2b21467f65d90320e5c39
         HEAD_REF master
-        PATCHES remove.gmp.patch
+        PATCHES gmp.patch
+                name.dir.patch
     )
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
@@ -26,24 +27,52 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(NETTLE_CONFIGURATION_RELEASE ReleaseDLL)
-        set(NETTLE_CONFIGURATION_DEBUG DebugDLL)
+        set(CONFIGURATION_RELEASE ReleaseDLL)
+        set(CONFIGURATION_DEBUG DebugDLL)
     else()
-        set(NETTLE_CONFIGURATION_RELEASE Release)
-        set(NETTLE_CONFIGURATION_DEBUG Debug)
+        set(CONFIGURATION_RELEASE Release)
+        set(CONFIGURATION_DEBUG Debug)
     endif()
 
+    if(VCPKG_TARGET_IS_UWP)
+        string(APPEND CONFIGURATION_RELEASE WinRT)
+        string(APPEND CONFIGURATION_DEBUG WinRT)
+    endif()
+    
     vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH_WINDOWS}
+        USE_VCPKG_INTEGRATION
+        SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH SMP/libnettle.sln
         PLATFORM ${PLATFORM}
-        LICENSE_SUBPATH COPYINGv3
-        TARGET libnettle libhogweed
-        OPTIONS "/p:OutDir='..\\..\\msvc\\'"
-        RELEASE_CONFIGURATION ${NETTLE_CONFIGURATION_RELEASE}
-        DEBUG_CONFIGURATION ${NETTLE_CONFIGURATION_DEBUG}
+        LICENSE_SUBPATH COPYING.LESSERv3
+        TARGET Rebuild
+        RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
+        DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
+        SKIP_CLEAN
     )
-    file(INSTALL "${CURRENT_BUIL}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+    get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
+    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
+    set(PACKAGE_VERSION 3.5.1)
+    set(prefix "${CURRENT_INSTALLED_DIR}")
+    set(exec_prefix "\${prefix}")
+    set(libdir "\${prefix}/lib")
+    set(includedir "\${prefix}/include")
+    set(LIBS -lnettle -lgmp)
+    configure_file("${SOURCE_PATH}/nettle.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/nettle.pc" @ONLY)
+    set(HOGWEED -lhogweed)
+    set(LIBS -lnettle)
+    configure_file("${SOURCE_PATH}/hogweed.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libhogweed.pc" @ONLY)
+    set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+    set(exec_prefix "\${prefix}")
+    set(libdir "\${prefix}/lib")
+    set(includedir "\${prefix}/../include")
+    set(LIBS -lnettled -lgmpd)
+    configure_file("${SOURCE_PATH}/nettle.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/nettle.pc" @ONLY)
+    set(LIBS -lnettled)
+    set(HOGWEED -lhogweedd)
+    configure_file("${SOURCE_PATH}/hogweed.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libhogweed.pc" @ONLY)
+    vcpkg_fixup_pkgconfig()
 else()
     message(STATUS "----- ${PORT} requires autoconf, libtool and pkconf from the system package manager! \n ----- sudo apt-get install autogen autoconf libtool-----")
     vcpkg_find_acquire_program(YASM)
