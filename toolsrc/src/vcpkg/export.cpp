@@ -289,7 +289,7 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_CHOCOLATEY = "--x-chocolatey";
     static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "--x-maintainer";
     static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--x-version-suffix";
-    static constexpr StringLiteral OPTION_ALL_INSTALLED = "--all-installed";
+    static constexpr StringLiteral OPTION_ALL_INSTALLED = "--x-all-installed";
 
     static constexpr std::array<CommandSwitch, 8> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
