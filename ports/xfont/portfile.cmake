@@ -12,6 +12,9 @@ vcpkg_from_gitlab(
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 if(VCPKG_TARGET_IS_WINDOWS)
+    #set(OPTIONS --enable-ipv6=no)
+    string(APPEND VCPKG_CXX_FLAGS " /D_WILLWINSOCK_")
+    string(APPEND VCPKG_C_FLAGS " /D_WILLWINSOCK_")
     set(DEPS_DEBUG
                 "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/debug/lib/ -lfreetype -lpng16d -lzlib -lbz2d\"")
     set(DEPS_RELEASE
@@ -30,7 +33,7 @@ vcpkg_configure_make(
     #AUTO_HOST
     #AUTO_DST
     #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    #OPTIONS 
+    OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${DEPS_DEBUG}
     OPTIONS_RELEASE ${DEPS_RELEASE}
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
