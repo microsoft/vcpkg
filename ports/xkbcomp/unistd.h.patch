@@ -2,12 +2,16 @@ diff --git a/xkbcomp.c b/xkbcomp.c
 index 23acddc5a..8e597ba6b 100644
 --- a/xkbcomp.c	
 +++ b/xkbcomp.c
-@@ -31,7 +31,9 @@
+@@ -31,7 +31,13 @@
  /* for symlink attack security fix -- Branden Robinson */
  #include <sys/stat.h>
  #include <sys/types.h>
 +#ifdef HAVE_UNISTD_H
  #include <unistd.h>
++#endif
++#if defined(_MSC_VER)
++#define S_IRUSR S_IREAD
++#define S_IWUSR S_IWRITE
 +#endif
  /* end BR */
  

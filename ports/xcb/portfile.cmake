@@ -86,6 +86,7 @@ file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 set(_file "${CURRENT_PACKAGES_DIR}/include/xcb/xcb.h")
-file(READ ${_file} _contents)
-string(REPLACE "extern xcb_extension_t xcb_xkb_id;" "__declspec(dllimport) extern xcb_extension_t xcb_xkb_id;" _contents "${contents}")
-file(WRITE ${_file} "${_contents}")
+    file(READ ${_file} _contents)
+    string(REPLACE "extern xcb_extension_t xcb_xkb_id;" "__declspec(dllimport) extern xcb_extension_t xcb_xkb_id;" _contents "${contents}")
+    file(WRITE ${_file} "${_contents}")
+endif()

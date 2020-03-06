@@ -1,0 +1,13 @@
+diff --git a/xkbscan.c b/xkbscan.c
+index 237f52084..24c7f4d24 100644
+--- a/xkbscan.c	
++++ b/xkbscan.c
+@@ -616,7 +616,7 @@ yyGetNumber(int ch)
+ {
+     const int nMaxBuffSize = 1024;
+     int isFloat = 0;
+-    char buf[nMaxBuffSize];
++    char buf[1024];
+     int nInBuf = 0;
+ 
+     buf[0] = ch;
