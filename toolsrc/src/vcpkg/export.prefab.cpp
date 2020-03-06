@@ -15,25 +15,6 @@ namespace vcpkg::Export::Prefab
     using Dependencies::ExportPlanType;
     using Install::InstallDir;
 
-    static std::string POM = R"(<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-
-    <groupId>@GROUP_ID@</groupId>
-    <artifactId>@ARTIFACT_ID@</artifactId>
-    <version>@VERSION@</version>
-    <packaging>aar</packaging>
-    <description>The Vcpkg AAR for @ARTIFACT_ID@</description>
-    <url>https://github.com/microsoft/vcpkg.git</url>
-
-    <dependencies>
-     @DEPENDENCIES@
-    </dependencies>
-</project>)";
-
     std::vector<fs::path> find_modules(const fs::path& root, const std::string& ext)
     {
         std::vector<fs::path> paths;
@@ -232,8 +213,10 @@ namespace vcpkg::Export::Prefab
 
     void maven_install(const fs::path& aar, const fs::path& pom)
     {
-        const auto cmd_line = Strings::format(
-            R"("%s" "install:install-file" "-Dfile=%s" "-DpomFile=%s")", Tools::MAVEN, aar.u8string(), pom.u8string());
+        const auto cmd_line = Strings::format(R"("%s" "-q" "install:install-file" "-Dfile=%s" "-DpomFile=%s")",
+                                              Tools::MAVEN,
+                                              aar.u8string(),
+                                              pom.u8string());
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: %s installing maven file", aar.generic_string());
     }
@@ -279,8 +262,10 @@ namespace vcpkg::Export::Prefab
 
         Optional<std::string> version_opt = find_ndk_version(content);
 
-        Checks::check_exit(
-            VCPKG_LINE_INFO, version_opt.has_value(), "Error: NDK version missing %s", source_properties_location.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           version_opt.has_value(),
+                           "Error: NDK version missing %s",
+                           source_properties_location.generic_string());
 
         NdkVersion version = to_version(version_opt.value_or_exit(VCPKG_LINE_INFO)).value_or_exit(VCPKG_LINE_INFO);
 
@@ -319,6 +304,8 @@ namespace vcpkg::Export::Prefab
             └── pom.xml
         */
 
+        std::unordered_map<std::string, std::string> version_map;
+
         for (const ExportPlanAction& action : export_plan)
         {
             const std::string name = action.spec.name();
@@ -327,7 +314,9 @@ namespace vcpkg::Export::Prefab
             const BinaryParagraph& binary_paragraph = action.core_paragraph().value_or_exit(VCPKG_LINE_INFO);
             const std::string norm_version = binary_paragraph.version;
 
-            System::print2("Exporting package ", name, "...\n");
+            version_map[name] = norm_version;
+
+            System::print2("\nExporting package ", name, "...\n");
 
             fs::path package_directory = per_package_dir_path / "aar";
             fs::path prefab_directory = package_directory / "prefab";
@@ -367,9 +356,32 @@ namespace vcpkg::Export::Prefab
             pm.version = norm_version;
 
             auto dependencies = action.dependencies(Triplet::ARM64_ANDROID);
+            std::vector<std::string> pom_dependencies;
+
+            if (dependencies.size() > 0)
+            {
+                pom_dependencies.push_back("\n<dependencies>");
+            }
+
             for (auto it = dependencies.begin(); it != dependencies.end(); ++it)
             {
+                std::string maven_pom = R"(    <dependency>
+        <groupId>@GROUP_ID@</groupId>
+        <artifactId>@ARTIFACT_ID@</artifactId>
+        <version>@VERSION@</version>
+        <type>aar</type>
+        <scope>runtime</scope>
+    </dependency>)";
+                std::string pom = Strings::replace_all(std::move(maven_pom), "@GROUP_ID@", group_id);
+                pom = Strings::replace_all(std::move(pom), "@ARTIFACT_ID@", it->name());
+                pom = Strings::replace_all(std::move(pom), "@VERSION@", version_map[it->name()]);
+                pom_dependencies.push_back(pom);
                 pm.dependencies.push_back(it->name());
+            }
+
+            if (dependencies.size() > 0)
+            {
+                pom_dependencies.push_back("</dependencies>\n");
             }
 
             utils.write_contents(manifest_path, manifest, VCPKG_LINE_INFO);
@@ -391,55 +403,90 @@ namespace vcpkg::Export::Prefab
 
                 std::vector<fs::path> modules = find_modules(libs, ".so");
 
-                for (auto module : modules)
+                // header only libs
+                if (modules.empty())
                 {
-                    std::string module_name = module.stem().generic_string();
-                    module_name = Strings::trim(std::move(module_name));
-
-                    if (Strings::starts_with(module_name, "lib"))
-                    {
-                        module_name = module_name.substr(3);
-                    }
-                    fs::path module_dir = (modules_directory / module_name);
-                    fs::path module_libs_dir =
-                        module_dir / "libs" / Strings::format("android.%s", triplet_abi_map[triplet]);
+                    fs::path module_dir = modules_directory / name;
+                    fs::path module_libs_dir = module_dir / "libs";
                     fs::stdfs::create_directories(module_libs_dir);
-                    ABIMetadata ab;
-                    ab.abi = triplet_abi_map[triplet];
-                    ab.api = triplet_api_map[triplet];
-                    ab.stl = "c++_shared";
-                    ab.ndk = version.major();
-
-                    fs::path abi_path = module_libs_dir / "abi.json";
-                    utils.write_contents(abi_path, ab.to_string(), VCPKG_LINE_INFO);
-
-                    fs::path installed_module_path = libs / module.filename();
-                    fs::path exported_module_path = module_libs_dir / module.filename();
-
-                    fs::stdfs::copy(installed_module_path, exported_module_path);
-
                     fs::path installed_headers_dir = installed_dir / "include";
-                    fs::path exported_headers_dir = module_libs_dir / "include";
-
-                    fs::stdfs::copy(installed_headers_dir, exported_headers_dir, fs::stdfs::copy_options::recursive);
+                    fs::path exported_headers_dir = module_dir / "include";
 
                     ModuleMetadata meta;
-
                     fs::path module_meta_path = module_dir / "module.json";
-
                     utils.write_contents(module_meta_path, meta.to_json(), VCPKG_LINE_INFO);
+
+                    fs::stdfs::copy(installed_headers_dir, exported_headers_dir, fs::stdfs::copy_options::recursive);
+                    break;
+                }
+                else
+                {
+                    for (auto module : modules)
+                    {
+                        std::string module_name = module.stem().generic_string();
+                        module_name = Strings::trim(std::move(module_name));
+
+                        if (Strings::starts_with(module_name, "lib"))
+                        {
+                            module_name = module_name.substr(3);
+                        }
+                        fs::path module_dir = (modules_directory / module_name);
+                        fs::path module_libs_dir =
+                            module_dir / "libs" / Strings::format("android.%s", triplet_abi_map[triplet]);
+                        fs::stdfs::create_directories(module_libs_dir);
+                        ABIMetadata ab;
+                        ab.abi = triplet_abi_map[triplet];
+                        ab.api = triplet_api_map[triplet];
+                        ab.stl = "c++_shared";
+                        ab.ndk = version.major();
+
+                        fs::path abi_path = module_libs_dir / "abi.json";
+                        utils.write_contents(abi_path, ab.to_string(), VCPKG_LINE_INFO);
+
+                        fs::path installed_module_path = libs / module.filename();
+                        fs::path exported_module_path = module_libs_dir / module.filename();
+
+                        fs::stdfs::copy(installed_module_path, exported_module_path);
+
+                        fs::path installed_headers_dir = installed_dir / "include";
+                        fs::path exported_headers_dir = module_libs_dir / "include";
+
+                        fs::stdfs::copy(
+                            installed_headers_dir, exported_headers_dir, fs::stdfs::copy_options::recursive);
+
+                        ModuleMetadata meta;
+
+                        fs::path module_meta_path = module_dir / "module.json";
+
+                        utils.write_contents(module_meta_path, meta.to_json(), VCPKG_LINE_INFO);
+                    }
                 }
             }
 
-            fs::path exported_archive_path =
-                raw_exported_dir_path / name / Strings::format("%s-%s.aar", name, norm_version);
-            fs::path pom_path = raw_exported_dir_path / name / "pom.xml";
+            fs::path exported_archive_path = per_package_dir_path / Strings::format("%s-%s.aar", name, norm_version);
+            fs::path pom_path = per_package_dir_path / "pom.xml";
 
             compress_directory(paths, package_directory, exported_archive_path);
 
+            std::string POM = R"(<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>@GROUP_ID@</groupId>
+    <artifactId>@ARTIFACT_ID@</artifactId>
+    <version>@VERSION@</version>
+    <packaging>aar</packaging>
+    <description>The Vcpkg AAR for @ARTIFACT_ID@</description>
+    <url>https://github.com/microsoft/vcpkg.git</url>
+    @DEPENDENCIES@
+</project>)";
+
             std::string pom = Strings::replace_all(std::move(POM), "@GROUP_ID@", group_id);
             pom = Strings::replace_all(std::move(pom), "@ARTIFACT_ID@", artifact_id);
-            pom = Strings::replace_all(std::move(pom), "@DEPENDENCIES@", "");
+            pom = Strings::replace_all(std::move(pom), "@DEPENDENCIES@", Strings::join("\n", pom_dependencies));
             pom = Strings::replace_all(std::move(pom), "@VERSION@", norm_version);
 
             utils.write_contents(pom_path, pom, VCPKG_LINE_INFO);
@@ -447,8 +494,32 @@ namespace vcpkg::Export::Prefab
             if (prefab_options.enable_maven)
             {
                 maven_install(exported_archive_path, pom_path);
+                System::print2(
+                    Strings::format("\nIn app/build.gradle\n\n\t%s:%s:%s\n\n", group_id, artifact_id, norm_version));
+
+                System::print2(R"(And cmake flags
+
+    externalNativeBuild {
+                cmake {
+                    arguments '-DANDROID_STL=c++_shared'
+                    cppFlags "-std=c++17"
+                }
             }
-            System::print2(System::Color::success, Strings::format("Successfuly installed %s. Checkout %s  \n", name, raw_exported_dir_path.generic_string()));
+
+)");
+
+                System::print2(R"(In gradle.properties
+
+    android.enablePrefab=true
+    android.enableParallelJsonGen=false
+    android.prefabVersion=${prefab.version}
+
+)");
+            }
+            System::print2(System::Color::success,
+                           Strings::format("Successfuly exported %s. Checkout %s  \n",
+                                           name,
+                                           raw_exported_dir_path.generic_string()));
         }
     }
 }
