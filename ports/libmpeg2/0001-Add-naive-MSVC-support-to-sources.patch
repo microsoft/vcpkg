@@ -1,4 +1,4 @@
-From 848fe44d0e3fe9ad9e1358986def6cdc55166daf Mon Sep 17 00:00:00 2001
+From ed3b6e4bca1fe5211e3d7ca06bbbf9b161c8bc19 Mon Sep 17 00:00:00 2001
 From: Michal Janiszewski <janisozaur@gmail.com>
 Date: Sat, 2 Nov 2019 14:50:53 -0700
 Subject: [PATCH] Add naive MSVC support to sources
@@ -9,9 +9,9 @@ Subject: [PATCH] Add naive MSVC support to sources
  libmpeg2/cpu_state.c   | 4 ++--
  libmpeg2/idct.c        | 2 +-
  libmpeg2/motion_comp.c | 2 +-
- libvo/video_out_dx.c   | 7 ++++---
+ libvo/video_out_dx.c   | 6 +++---
  vc++/config.h          | 2 ++
- 7 files changed, 13 insertions(+), 10 deletions(-)
+ 7 files changed, 12 insertions(+), 10 deletions(-)
 
 diff --git a/libmpeg2/convert/rgb.c b/libmpeg2/convert/rgb.c
 index 8863b0b..db6f4e3 100644
@@ -97,18 +97,10 @@ index 7aed113..b00a32d 100644
  	mpeg2_mc = mpeg2_mc_mmxext;
      else if (accel & MPEG2_ACCEL_X86_3DNOW)
 diff --git a/libvo/video_out_dx.c b/libvo/video_out_dx.c
-index 36de68a..d41a5a6 100644
+index 36de68a..0797cdc 100644
 --- a/libvo/video_out_dx.c
 +++ b/libvo/video_out_dx.c
-@@ -37,6 +37,7 @@
- 
- #include <ddraw.h>
- #include <initguid.h>
-+//#include <windows.h>
- 
- #define USE_OVERLAY_TRIPLE_BUFFERING 0
- 
-@@ -82,7 +83,7 @@ static void update_overlay (dx_instance_t * instance)
+@@ -82,7 +82,7 @@ static void update_overlay (dx_instance_t * instance)
  				       dwFlags, &ddofx);
  }
  
@@ -117,7 +109,7 @@ index 36de68a..d41a5a6 100644
  					WPARAM wParam, LPARAM lParam)
  {
      RECT rect_window;
-@@ -92,7 +93,7 @@ static long FAR PASCAL event_procedure (HWND hwnd, UINT message,
+@@ -92,7 +92,7 @@ static long FAR PASCAL event_procedure (HWND hwnd, UINT message,
      switch (message) {
  
      case WM_WINDOWPOSCHANGED:
@@ -126,7 +118,7 @@ index 36de68a..d41a5a6 100644
  
  	/* update the window position and size */
  	point_window.x = 0;
-@@ -173,7 +174,7 @@ static int create_window (dx_instance_t * instance)
+@@ -173,7 +173,7 @@ static int create_window (dx_instance_t * instance)
      /* store a directx_instance pointer into the window local storage
       * (for later use in event_handler).
       * We need to use SetWindowLongPtr when it is available in mingw */
@@ -150,5 +142,5 @@ index 93719f0..a03cce6 100644
  /* maximum supported data alignment */
  /* #undef ATTRIBUTE_ALIGNED_MAX */
 -- 
-2.23.0.windows.1
+2.25.0
 

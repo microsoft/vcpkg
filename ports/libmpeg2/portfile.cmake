@@ -1,4 +1,7 @@
 vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Windows Desktop platform." ON_TARGET "Linux" "OSX" "uwp")
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+# There is archived version of releases available at https://github.com/janisozaur/libmpeg2
 vcpkg_download_distfile(ARCHIVE
     URLS "http://libmpeg2.sourceforge.net/files/libmpeg2-0.5.1.tar.gz"
     FILENAME "libmpeg2-0.5.1.tar.gz"
@@ -10,14 +13,13 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
         0001-Add-naive-MSVC-support-to-sources.patch
-        0002-Mark-functions-as-exported.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    build_binaries   BUILD_BINARIES
+    tools   TOOLS
 )
 
 vcpkg_configure_cmake(

@@ -1,10 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 project(libmpeg2)
 
-option(BUILD_BINARIES "Build libmpeg2 binaries" OFF)
-if (BUILD_SHARED_LIBS)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif ()
+option(TOOLS "Build libmpeg2 tools" OFF)
 
 set(MPEG2_SOURCE_FILES
     libmpeg2/alloc.c
@@ -74,7 +71,7 @@ target_include_directories(mpeg2 INTERFACE
 target_compile_definitions(getopt PUBLIC HAVE_CONFIG_H)
 target_link_libraries(vo mpeg2convert)
 
-if (BUILD_BINARIES)
+if (TOOLS)
     add_executable(mpeg2dec src/mpeg2dec.c src/dump_state.c src/gettimeofday.c)
     add_executable(extract_mpeg2 src/extract_mpeg2.c)
     add_executable(corrupt_mpeg2 src/corrupt_mpeg2.c)
@@ -101,7 +98,7 @@ if (BUILD_BINARIES)
         "${CMAKE_SOURCE_DIR}/include"
         "${CMAKE_SOURCE_DIR}/src"
         )
-endif (BUILD_BINARIES)
+endif (TOOLS)
 
 install(TARGETS mpeg2
     EXPORT libmpeg2
