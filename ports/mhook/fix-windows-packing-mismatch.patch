@@ -11,10 +11,3 @@ index 6e1df9f..e1e6ced 100644
  
  file(GLOB DisasmSrc disasm-lib/*.c disasm-lib/*.h)
  file(GLOB MhookSrc mhook-lib/*.cpp mhook-lib/*.h)
-@@ -33,4 +33,4 @@ include(GNUInstallDirs)
- install(TARGETS mhook
-     ARCHIVE DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
-     LIBRARY DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}")
--install(FILES mhook-lib/mhook.h DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}/mhook-lib")
-\ No newline at end of file
-+install(FILES mhook-lib/mhook.h DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}/mhook-lib")
