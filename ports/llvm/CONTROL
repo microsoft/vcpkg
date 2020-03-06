@@ -3,10 +3,13 @@ Version: 10.0.0
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Supports: !uwp
-Default-Features: tools, enable-rtti, clang, clang-tools-extra, lld
+Default-Features: tools, utils, enable-rtti, clang, clang-tools-extra, lld
 
 Feature: tools
 Description: Build LLVM tools.
+
+Feature: utils
+Description: Build LLVM utils.
 
 Feature: enable-rtti
 Description: Build LLVM with run-time type information.

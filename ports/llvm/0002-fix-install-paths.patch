@@ -1,22 +1,3 @@
-diff --git a/clang/cmake/modules/AddClang.cmake b/clang/cmake/modules/AddClang.cmake
-index 577cc11ab01..d57bcf7473e 100644
---- a/clang/cmake/modules/AddClang.cmake
-+++ b/clang/cmake/modules/AddClang.cmake
-@@ -158,9 +158,13 @@ macro(add_clang_tool name)
-       set_property(GLOBAL PROPERTY CLANG_HAS_EXPORTS True)
-     endif()
- 
-+    if(NOT CLANG_TOOLS_INSTALL_DIR)
-+      set(CLANG_TOOLS_INSTALL_DIR bin)
-+    endif()
-+
-     install(TARGETS ${name}
-       ${export_to_clangtargets}
--      RUNTIME DESTINATION bin
-+      RUNTIME DESTINATION ${CLANG_TOOLS_INSTALL_DIR}
-       COMPONENT ${name})
- 
-     if(NOT LLVM_ENABLE_IDE)
 diff --git a/clang/cmake/modules/CMakeLists.txt b/clang/cmake/modules/CMakeLists.txt
 index d233f552f01..26f502ad2d2 100644
 --- a/clang/cmake/modules/CMakeLists.txt
@@ -35,41 +16,6 @@ index d233f552f01..26f502ad2d2 100644
  set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
  
  get_property(CLANG_EXPORTS GLOBAL PROPERTY CLANG_EXPORTS)
-diff --git a/lld/cmake/modules/AddLLD.cmake b/lld/cmake/modules/AddLLD.cmake
-index fa48b428d26..57fdc6e90fd 100644
---- a/lld/cmake/modules/AddLLD.cmake
-+++ b/lld/cmake/modules/AddLLD.cmake
-@@ -52,9 +52,13 @@ macro(add_lld_tool name)
-       set_property(GLOBAL PROPERTY LLD_HAS_EXPORTS True)
-     endif()
- 
-+    if(NOT LLD_TOOLS_INSTALL_DIR)
-+      set(LLD_TOOLS_INSTALL_DIR bin)
-+    endif()
-+
-     install(TARGETS ${name}
-       ${export_to_lldtargets}
--      RUNTIME DESTINATION bin
-+      RUNTIME DESTINATION ${LLD_TOOLS_INSTALL_DIR}
-       COMPONENT ${name})
- 
-     if(NOT CMAKE_CONFIGURATION_TYPES)
-diff --git a/lldb/cmake/modules/AddLLDB.cmake b/lldb/cmake/modules/AddLLDB.cmake
-index ecf0b66a41a..b2505bdf2d0 100644
---- a/lldb/cmake/modules/AddLLDB.cmake
-+++ b/lldb/cmake/modules/AddLLDB.cmake
-@@ -187,7 +187,10 @@ function(add_lldb_executable name)
-   endif()
- 
-   if(ARG_GENERATE_INSTALL)
--    set(install_dest bin)
-+    if(NOT LLDB_TOOLS_INSTALL_DIR)
-+      set(LLDB_TOOLS_INSTALL_DIR bin)
-+    endif() 
-+    set(install_dest ${LLDB_TOOLS_INSTALL_DIR})
-     if(ARG_INSTALL_PREFIX)
-       set(install_dest ${ARG_INSTALL_PREFIX})
-     endif()
 diff --git a/llvm/cmake/modules/CMakeLists.txt b/llvm/cmake/modules/CMakeLists.txt
 index 9cf22b436fa..8eeb27d1794 100644
 --- a/llvm/cmake/modules/CMakeLists.txt
