@@ -4,3 +4,11 @@ Homepage: https://github.com/libgit2/libgit2
 Build-Depends: openssl (!windows&&!uwp)
 Description: Git linkable library
 Supports: !uwp
+
+Feature: pcre
+Description: Build against external libpcre
+Build-Depends: pcre
+
+Feature: pcre2
+Description: Build against external libpcre2
+Build-Depends: pcre2
