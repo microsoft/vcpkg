@@ -39,9 +39,34 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools       OIIO_BUILD_TOOLS
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
+if(VCPKG_TARGET_IS_LINUX)
+    # Because pybind11 dependency relies on system python, it will match python 2.7 by default
+    # At least make sure it is present
+    vcpkg_find_acquire_program(PYTHON2)
+    get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON2_DIR}")
+
+    find_library(LIBPYTHON2.7
+        NAMES
+            libpython2.7.so
+        PATHS
+            "/usr/lib"
+        PATH_SUFFIXES
+            "x86_64-linux-gnu"
+    )
+    message(STATUS "Building on Linux, Python shared library located at ${LIBPYTHON2.7}")
+    if(NOT LIBPYTHON2.7)
+        message(FATAL_ERROR
+            "Python shared library required on Linux systems, build or install it with your package manager"
+            "\ne.g. apt-get install libpython2.7"
+        )
+    endif()
+    set(OPTIONS_PYTHON_LIBRARY "-DPYTHON_LIBRARY:FILEPATH=${LIBPYTHON2.7}")
+else()
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON3_DIR}")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -57,6 +82,7 @@ vcpkg_configure_cmake(
         -DBUILD_MISSING_PYBIND11=OFF
         -DBUILD_MISSING_DEPS=OFF
         -DVERBOSE=ON
+        ${OPTIONS_PYTHON_LIBRARY}
 )
 
 vcpkg_install_cmake()
