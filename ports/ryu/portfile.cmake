@@ -19,7 +19,7 @@ if (CMAKE_HOST_WIN32)
 endif ()
 
 vcpkg_execute_build_process(
-            COMMAND ${BAZEL} build --verbose_failures //ryu
+            COMMAND ${BAZEL} build --verbose_failures --strategy=CppCompile=standalone //ryu
             WORKING_DIRECTORY ${SOURCE_PATH}
             LOGNAME build-${TARGET_TRIPLET}-rel
     )
