@@ -15,7 +15,9 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
     PATCHES ${PATCHES} #patch name
 ) 
-
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
