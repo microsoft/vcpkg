@@ -2,9 +2,9 @@
 
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/export.chocolatey.h>
 #include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
-#include <vcpkg/export.chocolatey.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
@@ -151,12 +151,13 @@ namespace vcpkg::Export
         fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
+        const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)",
                                               nuget_exe.u8string(),
                                               output_dir.u8string(),
                                               nuspec_file_path.u8string());
 
-        const int exit_code = System::cmd_execute_clean(cmd_line);
+        const int exit_code =
+            System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
         const fs::path output_path = output_dir / (nuget_id + "." + nuget_version + ".nupkg");
@@ -307,8 +308,10 @@ namespace vcpkg::Export
         {OPTION_IFW_REPOSITORY_DIR_PATH, "Specify the directory path for the exported repository"},
         {OPTION_IFW_CONFIG_FILE_PATH, "Specify the temporary file path for the installer configuration"},
         {OPTION_IFW_INSTALLER_FILE_PATH, "Specify the file path for the exported installer"},
-        {OPTION_CHOCOLATEY_MAINTAINER, "Specify the maintainer for the exported Chocolatey package (experimental feature)"},
-        {OPTION_CHOCOLATEY_VERSION_SUFFIX, "Specify the version suffix to add for the exported Chocolatey package (experimental feature)"},
+        {OPTION_CHOCOLATEY_MAINTAINER,
+         "Specify the maintainer for the exported Chocolatey package (experimental feature)"},
+        {OPTION_CHOCOLATEY_VERSION_SUFFIX,
+         "Specify the version suffix to add for the exported Chocolatey package (experimental feature)"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -319,8 +322,7 @@ namespace vcpkg::Export
         nullptr,
     };
 
-    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args,
-                                                           const Triplet& default_triplet)
+    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args, Triplet default_triplet)
     {
         ExportArguments ret;
 
@@ -511,7 +513,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         }
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const auto opts = handle_export_command_arguments(args, default_triplet);
         for (auto&& spec : opts.specs)
@@ -521,7 +523,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         const StatusParagraphs status_db = database_load_check(paths);
 
         // Load ports from ports dirs
-        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(opts.specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
