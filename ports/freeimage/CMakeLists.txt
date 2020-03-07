@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 3.4)
 
 include(GNUInstallDirs)
 
-project(FreeImage C CXX)
+project(FreeImage
+    VERSION 3.18.0
+    DESCRIPTION "Support library for graphics image formats"
+    HOMEPAGE_URL "https://sourceforge.net/projects/freeimage/"
+    LANGUAGES C CXX
+)
 
 if(MSVC)
   add_definitions("-D_CRT_SECURE_NO_WARNINGS")
@@ -17,7 +22,7 @@ find_package(ZLIB     REQUIRED)
 find_package(PNG      REQUIRED)
 find_package(JPEG     REQUIRED)
 find_package(TIFF     REQUIRED)
-find_package(OpenJPEG REQUIRED)
+find_package(OpenJPEG CONFIG REQUIRED)
 find_package(WebP     REQUIRED)
 find_package(JXR      REQUIRED)
 find_package(LibRaw   REQUIRED)
@@ -91,30 +96,40 @@ else()
     target_compile_definitions(FreeImage PRIVATE -DFREEIMAGE_LIB)
 endif()
 
-target_include_directories(FreeImage PRIVATE ${REAL_SOURCE_DIR}
-                                             ${ZLIB_INCLUDE_DIRS}
-                                             ${JPEG_INCLUDE_DIRS}
-                                             ${TIFF_INCLUDE_DIRS}
-                                             ${PNG_INCLUDE_DIRS}
-                                             ${OPENJPEG_INCLUDE_DIRS}
-                                             ${WEBP_INCLUDE_DIRS}
-                                             ${JXR_INCLUDE_DIRS}
-                                             ${LibRaw_INCLUDE_DIRS}
-                                             ${OpenEXR_INCLUDE_DIRS}
-                                             ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(FreeImage
+    INTERFACE
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        ${REAL_SOURCE_DIR}
+        ${ZLIB_INCLUDE_DIRS}
+        ${JPEG_INCLUDE_DIRS}
+        ${TIFF_INCLUDE_DIRS}
+        ${PNG_INCLUDE_DIRS}
+        ${OPENJPEG_INCLUDE_DIRS}
+        ${WEBP_INCLUDE_DIRS}
+        ${JXR_INCLUDE_DIRS}
+        ${LibRaw_INCLUDE_DIRS}
+        ${OpenEXR_INCLUDE_DIRS}
+        ${CMAKE_CURRENT_BINARY_DIR}
+)
 
+target_link_libraries(FreeImage
+    PRIVATE
+        ${ZLIB_LIBRARIES}
+        ${JPEG_LIBRARIES}
+        ${TIFF_LIBRARIES}
+        ${PNG_LIBRARIES}
+        ${OPENJPEG_LIBRARIES}
+        ${WEBP_LIBRARIES}
+        ${JXR_LIBRARIES}
+        ${LibRaw_LIBRARIES}
+        ${OpenEXR_LIBRARIES}
+)
 
-target_link_libraries(FreeImage ${ZLIB_LIBRARIES}
-                                ${JPEG_LIBRARIES}
-                                ${TIFF_LIBRARIES}
-                                ${PNG_LIBRARIES}
-                                ${OPENJPEG_LIBRARIES}
-                                ${WEBP_LIBRARIES}
-                                ${JXR_LIBRARIES}
-                                ${LibRaw_LIBRARIES}
-                                ${OpenEXR_LIBRARIES})
-
-target_compile_definitions(FreeImage PRIVATE ${PNG_DEFINITIONS})
+target_compile_definitions(FreeImage
+    PRIVATE
+        ${PNG_DEFINITIONS}
+)
 
 # FreeImagePlus
 file(GLOB FREEIMAGEPLUS_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus/src/*.cpp)
@@ -129,25 +144,69 @@ else()
     target_compile_definitions(FreeImagePlus PRIVATE -DFREEIMAGE_LIB)
 endif()
 
-target_include_directories(FreeImagePlus PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus
-                                                 ${CMAKE_CURRENT_BINARY_DIR}
-                                                 ${REAL_SOURCE_DIR})
+target_include_directories(FreeImagePlus
+    INTERFACE
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus
+        ${CMAKE_CURRENT_BINARY_DIR}
+        ${REAL_SOURCE_DIR}
+)
 
-target_link_libraries(FreeImagePlus PUBLIC FreeImage)
+target_link_libraries(FreeImagePlus
+    PUBLIC
+        FreeImage
+)
 
 list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus/FreeImagePlus.h)
 
 install(TARGETS FreeImage
+        EXPORT unofficial-FreeImageTargets
         COMPONENT runtime
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
 
 install(TARGETS FreeImagePlus
+        EXPORT unofficial-FreeImageTargets
         COMPONENT runtime-cpp
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
+
+install(EXPORT unofficial-FreeImageTargets
+    NAMESPACE unofficial-FreeImage::
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-freeimage"
+)
+
+include(CMakePackageConfigHelpers)
+
+file(WRITE "${CMAKE_BINARY_DIR}/unofficial-FreeImageConfig.cmake.in" [=[
+    @PACKAGE_INIT@
+    include("@PACKAGE_PATH_EXPORT_TARGETS@")
+]=])
+
+set(PATH_EXPORT_TARGETS "${CMAKE_INSTALL_DATADIR}/unofficial-freeimage/unofficial-FreeImageTargets.cmake")
+configure_package_config_file(
+    "${CMAKE_BINARY_DIR}/unofficial-FreeImageConfig.cmake.in"
+    "${CMAKE_BINARY_DIR}/unofficial-FreeImageConfig.cmake"
+    PATH_VARS
+        PATH_EXPORT_TARGETS
+    INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/unofficial-freeimage
+)
+
+write_basic_package_version_file("${CMAKE_BINARY_DIR}/unofficial-FreeImageConfigVersion.cmake"
+  COMPATIBILITY AnyNewerVersion
+)
+
+install(
+    FILES
+        "${CMAKE_BINARY_DIR}/unofficial-FreeImageConfig.cmake"
+        "${CMAKE_BINARY_DIR}/unofficial-FreeImageConfigVersion.cmake"
+    DESTINATION
+        "${CMAKE_INSTALL_DATADIR}/unofficial-freeimage"
+)
+
 
 if(INSTALL_HEADERS)
     install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

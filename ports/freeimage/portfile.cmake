@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/freeimage/FreeImage3180.zip"
     FILENAME "FreeImage3180.zip"
@@ -53,5 +51,14 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
+
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/share/unofficial-freeimage)
+endif()
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/unofficial-freeimage)
+endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-freeimage TARGET_PATH share/unofficial-freeimage)
+
 file(INSTALL ${SOURCE_PATH}/license-fi.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
