@@ -14,6 +14,47 @@ vcpkg_from_gitlab(
 #fix freetype pkgconfig
 #fix libpngs
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
+vcpkg_find_acquire_program(FLEX)
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
+vcpkg_find_acquire_program(BISON)
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${BISON_DIR}")
+
+if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
+    if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
+    if(NOT EXISTS "${BISON_DIR}/BISON${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
+endif()
+
+if("xwayland" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dxwayland=true)
+else()
+    list(APPEND OPTIONS -Dxwayland=false)
+endif()
+if("xnest" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dxnest=true)
+else()
+    list(APPEND OPTIONS -Dxnest=false)
+endif()
+if("xwin" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dxwin=true)
+else()
+    list(APPEND OPTIONS -Dxwin=false)
+endif()
+if("xorg" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dxorg=true)
+else()
+    list(APPEND OPTIONS -Dxorg=false)
+endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -Dglx=false) #Requires Mesa3D for gl.pc
+    list(APPEND OPTIONS -Dsecure-rpc=false) #Problem encountered: secure-rpc requested, but neither libtirpc or libc RPC support were found
+    list(APPEND OPTIONS -Dxvfb=false) #hw\vfb\meson.build:7:0: ERROR: '' is not a target.
+endif()
 
 if(WIN32)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
@@ -22,9 +63,7 @@ endif()
 #export LDFLAGS="-Wl,--copy-dt-needed-entries"
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -Dxnest=false # multiple definition error with it. 
-#    /mnt/d/xlinux/installed/x64-linux/lib/libX11.a(XKBGAlloc.o): In function `XkbFreeGeomOverlayKeys':
-#   XKBGAlloc.c:(.text+0x5f4): multiple definition of `XkbFreeGeomOverlayKeys'
+    OPTIONS ${OPTIONS}
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )

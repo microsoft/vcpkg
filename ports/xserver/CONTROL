@@ -2,4 +2,20 @@ Source: xserver
 Version: 1.20.7
 Homepage: https://gitlab.freedesktop.org/xorg/xserver
 Description: C interface to the X Window System protocol, which replaces the traditional Xlib interface.
-Build-Depends: opengl-registry (windows), pthread, pciaccess (!windows), xcb-proto, xcb-keysyms, xcb-util, xcb-util-m4, xorg-macros, xproto, xtrans, x11, pixman, xkbcommon, xkbcomp, xkbfile, xfont, xcb, xcb-image, xcb-render-util, nettle, xkbcomp, xdmcp, libepoxy, xv, xau, dbus, drm (osx), wayland (osx), xxf86dga (!windows), xshmfence (!windows)
+Build-Depends: opengl-registry (windows), pthread, pciaccess (!windows), xcb-proto, xcb-keysyms, xcb-util, xcb-util-m4, xorg-macros, xproto, xtrans, x11, pixman, xkbcommon, xkbcomp, xkbfile, xfont, xcb, xcb-image, xcb-render-util, nettle, xkbcomp, xdmcp, xv, xau, dbus, xxf86dga (!windows), xshmfence (!windows)
+
+Feature: xwayland
+Description: Build xwayland server
+Build-Depends: wayland-scanner, wayland, drm, libepoxy
+
+Feature: xnest
+Description: Build xnest server
+Build-Depends: xext, xau, x11
+
+Feature: xwin
+Description: Build xwin server
+Build-Depends: xfixes, xcb-wm, mesa
+
+Feature: xorg
+Description: Build xorg server
+Build-Depends: 
