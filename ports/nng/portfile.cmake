@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF ddeac617c9914284038241870cb99ae174fb3755
-    SHA512 c45f322dfa3fba42db0561d95546159cc5e0768345d27f0bee53bdb71e77d5892e2e9bea50a625094ebf3c67b0c3fe0a8edea2660ebcb4fd0991fb0602055bc1
+    REF 53ae1a5ab37fdfc9ad5c236df3eaf4dd63f0fee9
+    SHA512 f5532c0b0287df52ddae173dc92eff06d1f4b2b42a2f7afaf28a7736bf70618ae29ccd51fb9743795a8004918a2a2f55233e6ced58829561c745eafa6118b762
     HEAD_REF master
 )
 
@@ -55,6 +53,6 @@ else()
 endif()
 
 # Put the licence file where vcpkg expects it
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/nng/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
