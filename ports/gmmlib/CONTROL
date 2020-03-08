@@ -1,3 +1,4 @@
 Source: gmmlib
-Version: 19.2.3
+Version: 19.4.1
 Description: intel's graphics memory management library
+Supports: linux

@@ -1,4 +1,4 @@
 Source: kf5holidays
-Version: 5.58.0-1
+Version: 5.64.0
 Description: Holiday calculation library
-Build-Depends: ecm, qt5-base, qt5-declarative, qt5-tools
+Build-Depends: ecm, qt5-base, qt5-tools

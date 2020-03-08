@@ -9,22 +9,22 @@ endif()
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION c926703b2cce972875e7f6379c525eef66c95986)
-set(SCITER_SHA 9a87ce12db9b2ef1e3abce3e475a9413a8a9301bab3d17341c94d4281e3bf616347ba8a4089f756ec38fed311bb4ee9045c8f85d0c40039ed3c0b96413aceeb4)
+set(SCITER_REVISION 507dce1bed69d6ef7a0d5c7628cb7eb8680e0438)
+set(SCITER_SHA 24ccc7d09247ea84a5a3e3c479dc6eb99b4115a89fec8e766874f706addee163b327f5380632b554b02074423f97097f993f8d361d8948800f6477de2b4ab5b5)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    set(SCITER_ARCH 64)
+    set(SCITER_ARCH x64)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-    set(SCITER_ARCH 32)
+    set(SCITER_ARCH x32)
 endif()
 
+# check out the `https://github.com/c-smile/sciter-sdk/archive/${SCITER_REVISION}.tar.gz`
+# hash checksum can be obtained with `curl -L -o tmp.tgz ${URL} && vcpkg hash tmp.tgz`
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-smile/sciter-sdk
     REF ${SCITER_REVISION}
     SHA512 ${SCITER_SHA}
-    PATCHES
-        0001_patch_stdafx.patch
 )
 
 # install include directory
@@ -51,9 +51,11 @@ file(COPY ${SOURCE_PATH}/widgets DESTINATION ${SCITER_SHARE})
 
 # tools
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux AND VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    set(SCITER_BIN ${SOURCE_PATH}/bin.gtk/x64)
+    set(SCITER_BIN ${SOURCE_PATH}/bin.lnx/x64)
 
-    file(INSTALL ${SCITER_BIN}/packfolder DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SOURCE_PATH}/bin.lnx/packfolder DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SOURCE_PATH}/bin.lnx/tiscript DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+
     file(INSTALL ${SCITER_BIN}/usciter DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/inspector DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${SCITER_TOOLS})
@@ -65,6 +67,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
     set(SCITER_BIN ${SOURCE_PATH}/bin.osx)
 
     file(INSTALL ${SCITER_BIN}/packfolder DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SCITER_BIN}/tiscript DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+
     file(INSTALL ${SCITER_BIN}/inspector.app DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.app DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${SCITER_TOOLS})
@@ -73,14 +77,15 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 else()
-    set(SCITER_BIN ${SOURCE_PATH}/bin/${SCITER_ARCH})
+    set(SCITER_BIN ${SOURCE_PATH}/bin.win/${SCITER_ARCH})
+    set(SCITER_BIN32 ${SOURCE_PATH}/bin.win/x32)
 
-    file(INSTALL ${SOURCE_PATH}/bin/packfolder.exe DESTINATION ${SCITER_TOOLS})
-    file(INSTALL ${SOURCE_PATH}/bin/tiscript.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SOURCE_PATH}/bin.win/packfolder.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SOURCE_PATH}/bin.win/tiscript.exe DESTINATION ${SCITER_TOOLS})
 
-    file(INSTALL ${SCITER_BIN}/sciter.exe DESTINATION ${SCITER_TOOLS})
-    file(INSTALL ${SCITER_BIN}/inspector.exe DESTINATION ${SCITER_TOOLS})
-    file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN32}/wsciter.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN32}/inspector.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN32}/sciter.dll DESTINATION ${SCITER_TOOLS})
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)

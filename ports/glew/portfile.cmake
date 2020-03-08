@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glew)
 
+if(VCPKG_TARGET_IS_WINDOWS)
 set(_targets_cmake_files)
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     list(APPEND _targets_cmake_files "${CURRENT_PACKAGES_DIR}/share/glew/glew-targets-debug.cmake")
@@ -45,6 +46,7 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libglew32.lib)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/glew32d.lib)
+endif()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
