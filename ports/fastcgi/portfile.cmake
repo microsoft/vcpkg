@@ -51,9 +51,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
   
   # Begin build process
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    ################
-    # Release build
-    ################
 	file(COPY ${CMAKE_CURRENT_LIST_DIR}/Makefile.nt DESTINATION ${SOURCE_PATH_RELEASE})
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
@@ -74,9 +71,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
   endif()
 
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    ################
-    # Debug build
-    ################
 	file(COPY ${CMAKE_CURRENT_LIST_DIR}/Makefile.nt DESTINATION ${SOURCE_PATH_DEBUG})
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
@@ -142,9 +136,6 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   endif()
 
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    ################
-    # Release build
-    ################
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
     set(OUT_PATH_RELEASE ${SOURCE_PATH_RELEASE}/../../make-build-${TARGET_TRIPLET}-release)
     file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
@@ -180,9 +171,6 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   endif()
 
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    ################
-    # Debug build
-    ################
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
     set(OUT_PATH_DEBUG ${SOURCE_PATH_DEBUG}/../../make-build-${TARGET_TRIPLET}-debug)
     file(MAKE_DIRECTORY ${OUT_PATH_DEBUG})
