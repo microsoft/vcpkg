@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(FASTCGI_VERSION_STR "2.4.2")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/FastCGI-Archives/fcgi2/archive/${FASTCGI_VERSION_STR}.tar.gz"
@@ -25,16 +23,14 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
 	if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 		vcpkg_apply_patches(
 		  SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/fcgi2-${FASTCGI_VERSION_STR}
-		  PATCHES
-		  # from fastcgi.com patched for win64 by hoshino, the patch supporting x64 is made according to the contents of fcgi-2.4.0-x64.patch.	  
-		  ${CMAKE_CURRENT_LIST_DIR}/fastcgi-x64-uwp.patch
+		  PATCHES		  
+		  ${CMAKE_CURRENT_LIST_DIR}/fastcgi-uwp.patch
 		)
 	else()
 		vcpkg_apply_patches(
 		  SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/fcgi2-${FASTCGI_VERSION_STR}
-		  PATCHES
-		  # from fastcgi.com patched for win64 by hoshino, the patch supporting x64 is made according to the contents of fcgi-2.4.0-x64.patch.	  
-		  ${CMAKE_CURRENT_LIST_DIR}/fastcgi-x64.patch
+		  PATCHES		  
+		  ${CMAKE_CURRENT_LIST_DIR}/fastcgi.patch
 		)
 	endif()	
 endforeach()
@@ -58,6 +54,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     ################
     # Release build
     ################
+	file(COPY ${CMAKE_CURRENT_LIST_DIR}/Makefile.nt DESTINATION ${SOURCE_PATH_RELEASE})
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} -f Makefile.nt
@@ -71,13 +68,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	file(COPY ${FCGI_INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/fastcgi)
 	
 	if (NOT VCPKG_CRT_LINKAGE STREQUAL static)
-		file(COPY ${SOURCE_PATH_RELEASE}/libfcgi/Release/libfcgi.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)	
-		file(COPY ${SOURCE_PATH_RELEASE}/cgi-fcgi/Release/cgi-fcgi.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_RELEASE}/examples/authorizer/Release/authorizer.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_RELEASE}/examples/echo/Release/echo.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_RELEASE}/examples/echo-cpp/Release/echo-cpp.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_RELEASE}/examples/echo-x/Release/echo-x.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_RELEASE}/examples/size/Release/size.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fastcgi)
+		file(COPY ${SOURCE_PATH_RELEASE}/libfcgi/Release/libfcgi.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 	endif()
     message(STATUS "Building ${TARGET_TRIPLET}-rel done")
   endif()
@@ -86,7 +77,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     ################
     # Debug build
     ################
-
+	file(COPY ${CMAKE_CURRENT_LIST_DIR}/Makefile.nt DESTINATION ${SOURCE_PATH_DEBUG})
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} /G -f Makefile.nt
@@ -98,12 +89,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	file(COPY ${SOURCE_PATH_DEBUG}/libfcgi/Debug/libfcgi.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 	if (NOT VCPKG_CRT_LINKAGE STREQUAL static)
 		file(COPY ${SOURCE_PATH_DEBUG}/libfcgi/Debug/libfcgi.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-		file(COPY ${SOURCE_PATH_DEBUG}/cgi-fcgi/Debug/cgi-fcgi.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_DEBUG}/examples/authorizer/Debug/authorizer.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_DEBUG}/examples/echo/Debug/echo.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_DEBUG}/examples/echo-cpp/Debug/echo-cpp.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_DEBUG}/examples/echo-x/Debug/echo-x.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/fastcgi)
-		file(COPY ${SOURCE_PATH_DEBUG}/examples/size/Debug/size.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/fastcgi)
+		file(COPY ${SOURCE_PATH_DEBUG}/libfcgi/Debug/libfcgi.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 	endif()
     message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
   endif()
@@ -234,4 +220,4 @@ else() # Other build system
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH_RELEASE}/LICENSE.TERMS ${CURRENT_PACKAGES_DIR}/share/fastcgi/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH_RELEASE}/LICENSE.TERMS DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
