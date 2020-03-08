@@ -2,7 +2,3 @@ Source: kf5sonnet
 Version: 5.51.0
 Description: Spelling framework for Qt5
 Build-Depends: ecm, qt5-base, qt5-tools
-
-Feature: hunspell
-Description: Spell checking via hunspell
-Build-Depends: hunspell
