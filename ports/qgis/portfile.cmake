@@ -196,8 +196,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
                     set(PYQT3D_VERSION "5.13.1")
                     vcpkg_download_distfile(
                         PYQT3D_PATH
-                        URLS https://www.riverbankcomputing.com/static/Downloads/PYQT3D/${PYQT3D_VERSION}/PYQT3D-${PYQT3D_VERSION}.tar.gz
-                        FILENAME PYQT3D-${PYQT3D_VERSION}.tar.gz
+                        URLS https://www.riverbankcomputing.com/static/Downloads/PyQt3D/${PYQT3D_VERSION}/PyQt3D-${PYQT3D_VERSION}.tar.gz
+                        FILENAME PyQt3D-${PYQT3D_VERSION}.tar.gz
                         SHA512  5361ab1a475b28ae37145e9caa35b2cbabec789d974c0442b93be5fa291607c79f0a4e50a52b757c2c7277f518e7f889c1edcdde1050effd7a61dc801b85f412
                     )
                     
