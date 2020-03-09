@@ -325,7 +325,9 @@ namespace vcpkg::Export
         nullptr,
     };
 
-    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args, Triplet default_triplet, const StatusParagraphs& status_db)
+    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args,
+                                                           Triplet default_triplet,
+                                                           const StatusParagraphs& status_db)
     {
         ExportArguments ret;
 
@@ -343,15 +345,19 @@ namespace vcpkg::Export
 
         if (ret.all_installed)
         {
-  	  auto installed_ipv = get_installed_ports(status_db);
-	  std::transform(installed_ipv.begin(), installed_ipv.end(), std::back_inserter(ret.specs),[](const auto& ipv){ return ipv.spec(); } );
+            auto installed_ipv = get_installed_ports(status_db);
+            std::transform(installed_ipv.begin(),
+                           installed_ipv.end(),
+                           std::back_inserter(ret.specs),
+                           [](const auto& ipv) { return ipv.spec(); });
         }
         else
         {
-          // input sanitization
-          ret.specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-              return Input::check_and_get_package_spec(std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-          });
+            // input sanitization
+            ret.specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+                return Input::check_and_get_package_spec(
+                    std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+            });
         }
 
         if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey)
