@@ -1,7 +1,9 @@
 Source: qgis
-Version: final-3_8_2
+Version: final-3_12_0
+Homepage: https://qgis.org
 Description:  QGIS is a free, open source, cross platform (lin/win/mac) geographical information system (GIS) 
-Build-Depends: expat, hdf5, libxml2, libzip, zlib, libspatialindex, libspatialite, gdal, opencl, exiv2, gsl, qt5, qwt, qca, qscintilla, qtkeychain, python3
+Build-Depends: expat, hdf5, libxml2, libzip, zlib, libspatialindex, libspatialite, glib, gdal, opencl, exiv2, gsl, qt5-base, qt5-declarative, qt5-svg, qt5-location, qt5-tools, qt5-macextras (osx), qt5-winextras (windows), qwt, qca, qscintilla, qtkeychain
+Default-Features: bindings, 3d
 
 Feature: utf8bom
 Description: Fix UTF-8 to UTF-8-BOM For Chinese
@@ -12,6 +14,11 @@ Build-Depends: fastcgi
 
 Feature: bindings
 Description: Determines whether python bindings should be built
+Build-Depends: python3
 
 Feature: 3d
 Description: Determines whether QGIS 3D library should be built
+Build-Depends: qt5-3d
+
+Feature: quick
+Description: Determines whether QGIS Quick library should be built
