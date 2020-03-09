@@ -1,8 +1,23 @@
 #!/bin/sh
 
+# Find .vcpkg-root, which indicates the root of this repo
+vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
+while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
+    vcpkgRootDir="$(dirname "$vcpkgRootDir")"
+done
+
+# Enable using this entry point on windows from git bash by redirecting to the .bat file.
+unixName=$(uname -s | sed 's/MINGW.*_NT.*/MINGW_NT/')
+if [ "$unixName" = "MINGW_NT" ]; then
+  vcpkgRootDir=$(cygpath -aw "$vcpkgRootDir")
+  cmd "/C $vcpkgRootDir\\bootstrap-vcpkg.bat" || exit 1
+  exit 0
+fi
+
+# Argument parsing
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
-vcpkgAllowAppleClang=OFF
+vcpkgAllowAppleClang=false
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
@@ -10,7 +25,7 @@ do
     elif [ "$var" = "-useSystemBinaries" -o "$var" = "--useSystemBinaries" ]; then
         vcpkgUseSystem=true
     elif [ "$var" = "-allowAppleClang" -o "$var" = "--allowAppleClang" ]; then
-        vcpkgAllowAppleClang=ON
+        vcpkgAllowAppleClang=true
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
@@ -24,12 +39,6 @@ do
         echo "Unknown argument $var. Use '-help' for help."
         exit 1
     fi
-done
-
-# Find vcpkg-root
-vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
-while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
-    vcpkgRootDir="$(dirname "$vcpkgRootDir")"
 done
 
 if [ -z ${VCPKG_DOWNLOADS+x} ]; then
@@ -91,7 +100,7 @@ vcpkgDownloadFile()
     url=$1; downloadPath=$2 sha512=$3
     vcpkgCheckRepoTool "curl"
     rm -rf "$downloadPath.part"
-    curl -L $url --create-dirs --output "$downloadPath.part" || exit 1
+    curl -L $url --create-dirs --retry 3 --output "$downloadPath.part" || exit 1
 
     vcpkgCheckEqualFileHash $url "$downloadPath.part" $sha512
     mv "$downloadPath.part" "$downloadPath"
@@ -194,7 +203,9 @@ selectCXX()
 
     if [ "x$CXX" = "x" ]; then
         CXX=g++
-        if which g++-8 >/dev/null 2>&1; then
+        if which g++-9 >/dev/null 2>&1; then
+            CXX=g++-9
+        elif which g++-8 >/dev/null 2>&1; then
             CXX=g++-8
         elif which g++-7 >/dev/null 2>&1; then
             CXX=g++-7
@@ -231,15 +242,31 @@ else
     fetchTool "cmake" "$UNAME" cmakeExe || exit 1
     fetchTool "ninja" "$UNAME" ninjaExe || exit 1
 fi
-selectCXX CXX || exit 1
+if [ "$os" = "osx" ]; then
+    if [ "$vcpkgAllowAppleClang" = "true" ] ; then
+        CXX=clang++
+    else
+        selectCXX CXX || exit 1
+    fi
+else
+    selectCXX CXX || exit 1
+fi
 
 # Do the build
 buildDir="$vcpkgRootDir/toolsrc/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=OFF" "-DVCPKG_DEVELOPMENT_WARNINGS=Off" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
+
+if ! [ "$vcpkgDisableMetrics" = "ON" ]; then
+    echo "Telemetry"
+    echo "---------"
+    echo "vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running bootstrap-vcpkg.sh with -disableMetrics"
+    echo "Read more about vcpkg telemetry at docs/about/privacy.md"
+    echo ""
+fi

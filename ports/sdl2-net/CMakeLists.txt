@@ -6,7 +6,7 @@ if (MSVC)
 endif()
 
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY NAMES SDL2d SDL2)
+find_package(SDL2 CONFIG REQUIRED)
 
 add_library(SDL2_net SDLnet.c SDLnetselect.c SDLnetTCP.c SDLnetUDP.c version.rc)
 
@@ -15,7 +15,7 @@ target_compile_definitions(SDL2_net PRIVATE _WINSOCK_DEPRECATED_NO_WARNINGS)
 target_include_directories(SDL2_net PRIVATE ${SDL_INCLUDE_DIR}/SDL2)
 
 if (WIN32)
-    target_link_libraries(SDL2_net ${SDL_LIBRARY} ws2_32 iphlpapi)
+    target_link_libraries(SDL2_net SDL2::SDL2 ws2_32 iphlpapi)
 endif()
 
 install(TARGETS SDL2_net
@@ -35,4 +35,4 @@ if(NOT DEFINED SDL_NET_SKIP_HEADERS)
 endif()
 
 message(STATUS "Link-time dependencies:")
-message(STATUS "  " ${SDL_LIBRARY})
+message(STATUS "  " SDL2::SDL2)

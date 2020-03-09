@@ -1,16 +1,12 @@
+vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
+
 if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "libmysql cannot currently be cross-compiled for UWP")
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(WARNING "libmysql needs ncurses on LINUX, please install ncurses first.\nOn Debian/Ubuntu, package name is libncurses5-dev, on Redhat and derivates it is ncurses-devel.")
 endif()
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT CMAKE_SYSTEM_NAME OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "Oracle has dropped support in libmysql for 32-bit Windows.")
-endif()
-
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -18,13 +14,11 @@ vcpkg_from_github(
     REF mysql-8.0.4
     SHA512 8d9129e7670e88df14238299052a5fe6d4f3e40bf27ef7a3ca8f4f91fb40507b13463e9bd24435b34e5d06c5d056dfb259fb04e77cc251b188eea734db5642be
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/ignore-boost-version.patch
-        ${CMAKE_CURRENT_LIST_DIR}/system-libs.patch
+        ignore-boost-version.patch
+        system-libs.patch
+        linux_libmysql.patch
+        re2_add_compile_flags.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_65_0)
@@ -73,7 +67,8 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/bin
     ${CURRENT_PACKAGES_DIR}/docs
     ${CURRENT_PACKAGES_DIR}/debug/docs
-    ${CURRENT_PACKAGES_DIR}/lib/debug)
+    ${CURRENT_PACKAGES_DIR}/lib/debug
+    ${CURRENT_PACKAGES_DIR}/lib/plugin/debug)
 
 # remove misc files
 file(REMOVE
@@ -119,5 +114,4 @@ string(REPLACE "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h "${_contents}")
 
 # copy license
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmysql)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmysql/LICENSE ${CURRENT_PACKAGES_DIR}/share/libmysql/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

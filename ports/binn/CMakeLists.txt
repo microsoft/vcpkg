@@ -6,12 +6,10 @@ project(binn
   HOMEPAGE_URL "https://github.com/liteserver/binn"
 )
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 add_library (binn src/binn.h src/binn.c)
 
 target_include_directories(binn
-    PUBLIC 
+    PUBLIC
     ${PROJECT_SOURCE_DIR}/src
 )
 

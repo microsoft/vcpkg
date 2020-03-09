@@ -5,6 +5,7 @@ Extract an archive into the source directory. Replaces [`vcpkg_extract_source_ar
 ## Usage
 ```cmake
 vcpkg_extract_source_archive_ex(
+    SKIP_PATCH_CHECK
     OUT_SOURCE_PATH <SOURCE_PATH>
     ARCHIVE <${ARCHIVE}>
     [REF <1.0.0>]
@@ -14,6 +15,9 @@ vcpkg_extract_source_archive_ex(
 )
 ```
 ## Parameters
+### SKIP_PATCH_CHECK
+If this option is set the failure to apply a patch is ignored.
+
 ### OUT_SOURCE_PATH
 Specifies the out-variable that will contain the extracted location.
 
@@ -25,7 +29,7 @@ The full path to the archive to be extracted.
 This is usually obtained from calling [`vcpkg_download_distfile`](vcpkg_download_distfile.md).
 
 ### REF
-A friendly name that will be used instead of the filename of the archive.
+A friendly name that will be used instead of the filename of the archive.  If more than 10 characters it will be truncated.
 
 By convention, this is set to the version number or tag fetched
 

@@ -25,10 +25,31 @@ if(WIN32)
   string(REPLACE "#undef ICONV_CONST" "#define ICONV_CONST const" _contents "${_contents}")
   string(REPLACE "#undef EILSEQ" "" _contents "${_contents}")
   string(REPLACE "#undef WORDS_LITTLEENDIAN" "#define WORDS_LITTLEENDIAN 1" _contents "${_contents}")
+  string(REPLACE "#undef ENABLE_RELOCATABLE" "#define ENABLE_RELOCATABLE 1" _contents "${_contents}")
   file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/config.h" "${_contents}")
 
   configure_file(libcharset/include/localcharset.h.build.in localcharset.h)
+  configure_file(libcharset/include/libcharset.h.in libcharset.h)
   configure_file(include/iconv.h.build.in iconv.h)
+
+  if(MSVC)
+    add_compile_options(/wd4018)
+  endif()
+
+  add_definitions(
+    -D_CRT_SECURE_NO_WARNINGS
+    -DLIBDIR=${LIBDIR}
+    -DINSTALLDIR=${INSTALLDIR}
+    -DNO_XMALLOC=1
+    -DENABLE_RELOCATABLE=1
+    -DIN_LIBRARY=1
+  )
+  if(BUILD_SHARED_LIBS)
+    add_definitions(
+      -DBUILDING_LIBCHARSET=1
+      -DBUILDING_LIBICONV=1
+      -DBUILDING_DLL=1)
+  endif()
 else()
   if(BUILD_SHARED_LIBS)
     set(STATIC_SHARED --enable-shared --disable-static)
@@ -43,19 +64,23 @@ else()
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/autoconf
   )
 
-  configure_file(${CMAKE_CURRENT_BINARY_DIR}/autoconf/config.h config.h @ONLY)
+  configure_file(${CMAKE_CURRENT_BINARY_DIR}/autoconf/lib/config.h config.h @ONLY)
   configure_file(${CMAKE_CURRENT_BINARY_DIR}/autoconf/include/iconv.h iconv.h @ONLY)
   configure_file(${CMAKE_CURRENT_BINARY_DIR}/autoconf/libcharset/include/localcharset.h localcharset.h @ONLY)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
-add_definitions(-DLIBDIR -D_CRT_SECURE_NO_WARNINGS)
-
-add_library(libcharset libcharset/lib/localcharset.c)
+add_library(libcharset libcharset/lib/localcharset.c libcharset/lib/relocatable-stub.c)
 target_include_directories(libcharset PUBLIC $<INSTALL_INTERFACE:include>)
 
-add_library(libiconv lib/iconv.c)
+add_library(libiconv lib/iconv.c lib/relocatable.c)
+if(WIN32)
+  target_compile_definitions(libiconv PRIVATE
+                                          -Dset_relocation_prefix=libiconv_set_relocation_prefix
+                                          -Drelocate=libiconv_relocate -Drelocate2=libiconv_relocate2
+  )
+endif()
 target_link_libraries(libiconv PRIVATE libcharset)
 target_include_directories(libiconv PUBLIC $<INSTALL_INTERFACE:include>)
 

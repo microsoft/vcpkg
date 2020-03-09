@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cginternals/cppfs
-    REF v1.2.0
-    SHA512 2e831978dd87bd40d14e5b6f5089f3a962481d41959bfd62db543339d05e306315a1167c3bc06b372517357cc314f7d06ac19605f9a2d5b4edddc9a1f3fa8d03
+    REF 156d72e2cf0a9b12bdce369fc5b5d98fb5dffe2d # v1.3.0
+    SHA512 da1e09f79d9e65e7676784f47196645aabe1e1284f0ea5e48e845a244f5d49f5ea4b032f9e2e38c8e6a29657ebe636c9b1c9a4601c4bbc7637e7f592c52a8961
     HEAD_REF master
     PATCHES
         LibCrypto-fix.patch
@@ -13,11 +13,6 @@ vcpkg_from_github(
 
 if(${TARGET_TRIPLET} MATCHES "uwp")
     message(FATAL_ERROR "cppfs does not support uwp")
-endif()
-
-set(SHARED_LIBS Off)
-if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
-    set(SHARED_LIBS On)
 endif()
 
 set(SSH_BACKEND OFF)
@@ -31,10 +26,9 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DOPTION_BUILD_SSH_BACKEND=${SSH_BACKEND}
         -DOPTION_BUILD_TESTS=Off
-        -DBUILD_SHARED_LIBS=${SHARED_LIBS}
         -DOPTION_FORCE_SYSTEM_DIR_INSTALL=On
 )
 

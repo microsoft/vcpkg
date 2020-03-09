@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 2.8)
 
 project(libmad)
 
- IF(MSVC)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
- ENDIF(MSVC)
- 
 set(SOURCES
     bit.c
     bit.h
@@ -38,7 +34,7 @@ add_library(
     mad
     ${SOURCES}
 )
- 
+
 target_compile_definitions(mad
     PRIVATE _LIB _MBCS ASO_ZEROCHECK HAVE_CONFIG_H FPM_DEFAULT
     PRIVATE _CRT_SECURE_NO_WARNINGS

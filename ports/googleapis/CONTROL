@@ -1,0 +1,6 @@
+Source: googleapis
+Version: 0.5.0
+Build-Depends: grpc, protobuf
+Description: C++ Proto Libraries for Google APIs.
+Homepage: https://github.com/googleapis/cpp-cmakefiles
+Supports: !uwp

@@ -1,3 +1,5 @@
 Source: benchmark
-Version: 1.4.1
+Version: 1.5
+Homepage: https://github.com/google/benchmark
 Description: A library to support the benchmarking of functions, similar to unit-tests.
+Supports: !uwp

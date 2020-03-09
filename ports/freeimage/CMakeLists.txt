@@ -4,9 +4,6 @@ include(GNUInstallDirs)
 
 project(FreeImage C CXX)
 
-set(CMAKE_MODULE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/share/JXR" ${CMAKE_MODULE_PATH})
-set(CMAKE_MODULE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/share/OpenEXR" ${CMAKE_MODULE_PATH})
-
 if(MSVC)
   add_definitions("-D_CRT_SECURE_NO_WARNINGS")
   set(CMAKE_CXX_FLAGS "/wd4828 ${CMAKE_CXX_FLAGS}")
@@ -16,7 +13,7 @@ if(BUILD_SHARED_LIBS)
   add_definitions("-DOPENEXR_DLL")
 endif()
 
-find_package(zlib     REQUIRED)
+find_package(ZLIB     REQUIRED)
 find_package(PNG      REQUIRED)
 find_package(JPEG     REQUIRED)
 find_package(TIFF     REQUIRED)

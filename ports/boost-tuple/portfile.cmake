@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/tuple
-    REF boost-1.69.0
-    SHA512 b298a179fd103f8da526315cab50bcbc1d2b6f63ad753add05353a943ab6ae1044412eddaafec760809a6ccb881dee6302c5014283eda20bc7563f3eea47c4a8
+    REF boost-1.72.0
+    SHA512 fd330e0796021bc4f358ab57cacf9feb47a729d15bb4ca86e97b87d6ba605ff118f56d53ae1ed1c230045dd1b04110be6705ea969ca94cd956947282ed199131
     HEAD_REF master
 )
 

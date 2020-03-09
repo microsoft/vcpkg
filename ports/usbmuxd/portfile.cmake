@@ -1,13 +1,12 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/usbmuxd
-    REF 1.1.1.133
-    SHA512 1a5f9abc239deeb15e2aab419ba9e88ef41ffa80396546fb65bc06b0f419cbabc80cdf95995caf71d5628d1537fb0329a73d923202e91ea43fcc7c32b840d047
+    REF v1.2.76
+    SHA512 b1bb479bf4ba0a71d7b70f55db4d01b68e024fe559265947e096d85cd736e4cc23c9ddbe07360641b63a5e1276c243e7fe2aa557323d1f5d22058c9a45de4f1a
     HEAD_REF master-msvc
     PATCHES
         fix-dependence-pthreads.patch
+        fix-dependence-libimobiledevice.patch
 )
 
 vcpkg_install_msbuild(

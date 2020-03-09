@@ -1,72 +1,57 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
+vcpkg_buildpath_length_warning(37)
 
-include(vcpkg_common_functions)
-
-string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
-if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
-    message(WARNING "Openmvg's buildsystem uses very long paths and may fail on your system.\n"
-        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
-    )
-endif()
+#the port produces some empty dlls when building shared libraries, since some components do not export anything, breaking the internal build itself
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH 
+    OUT_SOURCE_PATH SOURCE_PATH
     REPO openMVG/openMVG
-    REF v1.4
-    SHA512 949cf3680375c87b06db0f4713c846422c98d1979d49e9db65761f63f6f3212f0fcd8425f23c6112f04fbbb90b241638c2fd9329bb6b8b612c1d073aac55759a
+    REF 606d1c9e82123dd50de282128151a50bf42262fc # v1.5
+    SHA512 eddcf4c5f86541112840a6d89bbf360d30b085c2b3ff3e39b357030a465163b465e89d01474f8dbd65b66f8bccfc1f54a58963324f622482e2960f00214b2b75
+    PATCHES
+        fixcmake.patch
+        fix-config-cmake.patch
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR} fixcmake.patch)
-
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    openmp OpenMVG_USE_OPENMP
+    openmp ENABLE_OPENMP
+    opencv OpenMVG_USE_OPENCV
+    opencv OpenMVG_USE_OCVSIFT
+    opencv ENABLE_OPENCV
+)
 
 # remove some deps to prevent conflict
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/ceres-solver)
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/cxsparse)
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/eigen)
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/flann)
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/jpeg)
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/lemon)
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/png)
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/tiff)
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/zlib)
+file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/ceres-solver
+                    ${SOURCE_PATH}/src/third_party/cxsparse
+                    ${SOURCE_PATH}/src/third_party/eigen
+                    ${SOURCE_PATH}/src/third_party/flann
+                    ${SOURCE_PATH}/src/third_party/jpeg
+                    ${SOURCE_PATH}/src/third_party/lemon
+                    ${SOURCE_PATH}/src/third_party/png
+                    ${SOURCE_PATH}/src/third_party/tiff
+                    ${SOURCE_PATH}/src/third_party/zlib)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OpenMVG_BUILD_SHARED ON)
-else()
-    set(OpenMVG_BUILD_SHARED OFF)
-endif()
-
+# remove some cmake modules to force using our configs
+file(REMOVE_RECURSE ${SOURCE_PATH}/src/cmakeFindModules/FindEigen.cmake
+                    ${SOURCE_PATH}/src/cmakeFindModules/FindLemon.cmake
+                    ${SOURCE_PATH}/src/cmakeFindModules/FindFlann.cmake
+                    ${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
+                    ${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
+                    ${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src
-    # PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    OPTIONS
-        -DOpenMVG_BUILD_SHARED=${OpenMVG_BUILD_SHARED}
+    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
+        -DOpenMVG_BUILD_SHARED=OFF
+        -DOpenMVG_BUILD_TESTS=OFF
         -DOpenMVG_BUILD_DOC=OFF
         -DOpenMVG_BUILD_EXAMPLES=OFF
+        -DOpenMVG_BUILD_OPENGL_EXAMPLES=OFF
         -DOpenMVG_BUILD_SOFTWARES=OFF
         -DOpenMVG_BUILD_GUI_SOFTWARES=OFF
-        # TODO, use packgeconfig.cmake file instead
-        -DEIGEN_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/
-        -DCERES_DIR_HINTS=${CURRENT_INSTALLED_DIR}/ceres
-        -DFLANN_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/flann
-        -DLEMON_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/lemon
-        -DCOINUTILS_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin
-        -DCLP_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin
-        -DOSI_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin
+        -DOpenMVG_BUILD_COVERAGE=OFF
         -DOpenMVG_USE_INTERNAL_CLP=OFF
         -DOpenMVG_USE_INTERNAL_COINUTILS=OFF
         -DOpenMVG_USE_INTERNAL_OSI=OFF
@@ -74,22 +59,22 @@ vcpkg_configure_cmake(
         -DOpenMVG_USE_INTERNAL_CEREAL=OFF
         -DOpenMVG_USE_INTERNAL_CERES=OFF
         -DOpenMVG_USE_INTERNAL_FLANN=OFF
-        -DTARGET_ARCHITECTURE=core # disable instruction like avx
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    OPTIONS_RELEASE
-        -DFLANN_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/flann_cpp.lib
-    OPTIONS_DEBUG 
-        -DFLANN_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/flann_cpp-gd.lib
+        -DOpenMVG_USE_INTERNAL_LEMON=OFF
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/openMVG/cmake")
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/openMVG/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+#remove extra deprecated cmake target files left in unappropriate folders
 file(GLOB REMOVE_CMAKE ${CURRENT_PACKAGES_DIR}/lib/*.cmake)
 file(REMOVE_RECURSE ${REMOVE_CMAKE})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(GLOB REMOVE_CMAKE ${CURRENT_PACKAGES_DIR}/debug/lib/*.cmake)
+file(REMOVE_RECURSE ${REMOVE_CMAKE})
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test
+                    ${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data)
+
 if(OpenMVG_BUILD_SHARED)
     # release
     file(GLOB DLL_FILES  ${CURRENT_PACKAGES_DIR}/lib/*.dll)
@@ -103,7 +88,4 @@ endif()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openmvg RENAME copyright)
-
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME openmvg)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

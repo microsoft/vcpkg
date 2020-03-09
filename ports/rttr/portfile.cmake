@@ -1,12 +1,3 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message("Rttr only supports dynamic library linkage")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Rttr only supports dynamic library linkage, so cannot be built with static CRT")
-endif()
-
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rttrorg/rttr
@@ -15,30 +6,43 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-directory-output.patch
+        Fix-depends.patch
         remove-owner-read-perms.patch
 )
 
+#Handle static lib
+set(BUILD_STATIC_LIB OFF) 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	set(BUILD_STATIC_LIB ON) 
+else()
+	set(BUILD_STATIC_LIB OFF) 
+endif()
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DBUILD_BENCHMARKS=OFF
-        -DBUILD_UNIT_TESTS=OFF
+	SOURCE_PATH ${SOURCE_PATH}
+	PREFER_NINJA
+	OPTIONS
+		-DBUILD_BENCHMARKS=OFF
+		-DBUILD_UNIT_TESTS=OFF
+		-DBUILD_STATIC=${BUILD_STATIC_LIB}
 )
 
 vcpkg_install_cmake()
 
-if(UNIX)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 	vcpkg_fixup_cmake_targets(CONFIG_PATH share/rttr/cmake)
-elseif(WIN32)
+elseif(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
 	message(FATAL_ERROR "RTTR does not support this platform")
 endif()
 
+#Handle static lib
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
 #Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rttr)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/rttr/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/rttr/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share

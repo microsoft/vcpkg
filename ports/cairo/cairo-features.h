@@ -5,8 +5,10 @@
 */
 
 /* Always for Win32 */
+#ifdef _WIN32
 #define CAIRO_HAS_WIN32_SURFACE 1
 #define CAIRO_HAS_WIN32_FONT 1
+#endif
 
 /* Require libpng */
 #define CAIRO_HAS_PNG_FUNCTIONS 1

@@ -1,11 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/spirit-po-1.1.2)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/cbeck88/spirit-po/archive/v1.1.2.zip"
-    FILENAME "spirit-po-1.1.2.zip"
-    SHA512 8a33126c199765b91e832c64e546f240d532858e051b217189778ad01ef584c67f0f4b2f9674cb7b4a877ec2a2b21b5eda35dc24a12da8eb7a7990bf63a4a774
+
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO cbeck88/spirit-po
+  REF v1.1.2
+  SHA512 990e26e041607fe81cc2df673bd9e5e2647537d7e121b2300e631874dcd4ccdb084159fa4f635b128c39143c9423d67c494af05206b665541124a0447b8f4a3f
+  HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(INSTALL ${SOURCE_PATH}/include/spirit_po
   DESTINATION ${CURRENT_PACKAGES_DIR}/include)

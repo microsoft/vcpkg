@@ -21,20 +21,12 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${LIBWEBM_CRT_LINKAGE}
+    -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME) AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libwebm.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libwebmd.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/webm.lib ${CURRENT_PACKAGES_DIR}/debug/lib/webmd.lib)
-endif()
-
 vcpkg_copy_pdbs()
-
-if((NOT VCPKG_CMAKE_SYSTEM_NAME) AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libwebm.pdb ${CURRENT_PACKAGES_DIR}/debug/bin/libwebmd.pdb)
-endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

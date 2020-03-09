@@ -1,27 +1,27 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kkos/oniguruma
-    REF 502b1f416746ed8700498229bbfceb180e400fbc
-    SHA512 0faf12f415de59716d8faa4d3dc026874c3bd6a3624f75f2a184843025294eb885d57164ae6dcb916cba5c7d1a4da4bcb0dc23fce3ceae5b34b7320e8f0e2c02
+    REF e03900b038a274ee2f1341039e9003875c11e47d # v6.9.4
+    SHA512 77772e3994acbdde86a7405d24423fff101061e24cc8cd85975d3ab092935fc91c0c3b991fe2fa9e9a857b5254db7d923256cdb29a2e2d8a3cdd41837ed690f6
     HEAD_REF master
+    PATCHES fix-uwp.patch
 )
 
-if("non-posix" IN_LIST FEATURES)
-    set(ENABLE_POSIX_API OFF)
-else()
-    set(ENABLE_POSIX_API ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        "non-posix" ENABLE_POSIX_API
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DENABLE_POSIX_API=${ENABLE_POSIX_API}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
+
+vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
@@ -44,7 +44,4 @@ else()
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

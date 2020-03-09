@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 70e1043f..d8cb8b10 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -208,7 +208,7 @@ target_include_directories(wavpack
+ target_link_libraries(wavpack
+     PRIVATE
+         $<$<BOOL:${HAVE_LIBM}>:m>
+-        $<$<BOOL:${WAVPACK_ENABLE_LIBCRYPTO}>:${OPENSSL_CRYPTO_LIBRARY}>
++        $<$<BOOL:${WAVPACK_ENABLE_LIBCRYPTO}>:OpenSSL::Crypto>
+ )
+ target_compile_definitions(wavpack
+     PRIVATE

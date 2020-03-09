@@ -1,4 +1,4 @@
-﻿diff --git a/CMake/config.cmake b/CMake/config.cmake
+diff --git a/CMake/config.cmake b/CMake/config.cmake
 index a718199..eab64c2 100644
 --- a/CMake/config.cmake
 +++ b/CMake/config.cmake

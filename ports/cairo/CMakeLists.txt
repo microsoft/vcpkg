@@ -167,9 +167,6 @@ find_package(Freetype REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
 find_package(unofficial-fontconfig CONFIG REQUIRED)
 find_package(unofficial-pixman CONFIG REQUIRED)
-if(APPLE)
-  find_package(Threads REQUIRED)
-endif()
 
 # Cairo needs to be told which features of FreeType are availible
 add_definitions(
@@ -193,7 +190,15 @@ endif()
 
 add_library(cairo ${SOURCES})
 
-target_link_libraries(cairo PRIVATE gdi32 msimg32 user32 ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
+if (WITH_X11)
+    target_compile_definitions(cairo PUBLIC -DCAIRO_HAS_XLIB_SURFACE=1)
+endif()
+
+target_link_libraries(cairo PRIVATE ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(cairo PRIVATE gdi32 msimg32 user32)
+endif()
 
 # GObject support module
 
@@ -203,10 +208,17 @@ set(CAIRO_GOBJECT_SOURCES
 
 # GObject support sources do not include header with export macro
 if(BUILD_SHARED_LIBS)
-    set_source_files_properties(
-        "../util/cairo-gobject/cairo-gobject-enums.c"
+    if(MSVC)
+        set_source_files_properties(
+              "../util/cairo-gobject/cairo-gobject-enums.c"
         "../util/cairo-gobject/cairo-gobject-structs.c"
         PROPERTIES COMPILE_DEFINITIONS "cairo_public=__declspec(dllexport)")
+    else()
+        set_source_files_properties(
+              "../util/cairo-gobject/cairo-gobject-enums.c"
+        "../util/cairo-gobject/cairo-gobject-structs.c"
+        PROPERTIES COMPILE_DEFINITIONS "cairo_public=__attribute__((visibility(\"default\")))")
+    endif()
 endif()
 
 add_library(cairo-gobject ${CAIRO_GOBJECT_SOURCES}) 
@@ -221,6 +233,10 @@ if(MSVC)
     target_compile_options(cairo-gobject PRIVATE
         "/wd4244" "/wd4146" "/wd4312" "/wd4267" "/wd4996" "/wd4311" "/wd4334" "/wd4101"
     )
+endif()
+
+if (CAIRO_HAS_XLIB_SURFACE)
+    file(INSTALL cairo-xlib.h DESTINATION include)
 endif()
 
 install(TARGETS cairo cairo-gobject

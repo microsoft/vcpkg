@@ -13,6 +13,7 @@ vcpkg_from_github(
         uri_facade_win.patch
         serverObj.patch
         include_asio_first.patch
+        boost-1.70.patch
 )
 
 vcpkg_configure_cmake(

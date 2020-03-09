@@ -1,8 +1,10 @@
 #pragma once
 
 #include <algorithm>
+#include <functional>
 #include <map>
 #include <mutex>
+#include <type_traits>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -16,7 +18,7 @@ namespace vcpkg::Util
     namespace Vectors
     {
         template<class Container, class T = ElementT<Container>>
-        void concatenate(std::vector<T>* augend, const Container& addend)
+        void append(std::vector<T>* augend, const Container& addend)
         {
             augend->insert(augend->end(), addend.begin(), addend.end());
         }
@@ -112,21 +114,29 @@ namespace vcpkg::Util
         }
     }
 
-    template<class Range>
-    void sort(Range& cont)
+    template<class Range, class Comp = std::less<typename Range::value_type>>
+    void sort(Range& cont, Comp comp = Comp())
     {
         using std::begin;
         using std::end;
-        std::sort(begin(cont), end(cont));
+        std::sort(begin(cont), end(cont), comp);
+    }
+
+    template<class Range, class Pred>
+    bool any_of(Range&& rng, Pred pred)
+    {
+        return std::any_of(rng.begin(), rng.end(), std::move(pred));
     }
 
     template<class Range>
-    void sort_unique_erase(Range& cont)
+    Range&& sort_unique_erase(Range&& cont)
     {
         using std::begin;
         using std::end;
         std::sort(begin(cont), end(cont));
         cont.erase(std::unique(begin(cont), end(cont)), end(cont));
+
+        return std::forward<Range>(cont);
     }
 
     template<class Range1, class Range2>
@@ -212,9 +222,14 @@ namespace vcpkg::Util
         }
     }
 
-    template<class T>
-    void unused(T&& param)
+    template<class... Ts>
+    void unused(const Ts&...)
     {
-        (void)param;
+    }
+
+    template<class T>
+    T copy(const T& t)
+    {
+        return t;
     }
 }

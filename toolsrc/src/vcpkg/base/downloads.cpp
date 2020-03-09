@@ -2,13 +2,12 @@
 
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 #if defined(_WIN32)
 #include <VersionHelpers.h>
-#else
-#include <vcpkg/base/system.h>
 #endif
 
 namespace vcpkg::Downloads
@@ -43,24 +42,43 @@ namespace vcpkg::Downloads
                                     0);
         Checks::check_exit(VCPKG_LINE_INFO, hSession, "WinHttpOpen() failed: %d", GetLastError());
 
+        // If the environment variable HTTPS_PROXY is set
+        // use that variable as proxy. This situation might exist when user is in a company network
+        // with restricted network/proxy settings
+        auto maybe_https_proxy_env = System::get_environment_variable("HTTPS_PROXY");
+        if (auto p_https_proxy = maybe_https_proxy_env.get())
+        {
+            std::wstring env_proxy_settings = Strings::to_utf16(*p_https_proxy);
+            WINHTTP_PROXY_INFO proxy;
+            proxy.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+            proxy.lpszProxy = env_proxy_settings.data();
+            proxy.lpszProxyBypass = nullptr;
+
+            WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxy, sizeof(proxy));
+        }
         // Win7 IE Proxy fallback
-        if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater()) {
+        else if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater())
+        {
             // First check if any proxy has been found automatically
             WINHTTP_PROXY_INFO proxyInfo;
             DWORD proxyInfoSize = sizeof(WINHTTP_PROXY_INFO);
-            auto noProxyFound = 
-                !WinHttpQueryOption(hSession, WINHTTP_OPTION_PROXY, &proxyInfo, &proxyInfoSize) 
-                || proxyInfo.dwAccessType == WINHTTP_ACCESS_TYPE_NO_PROXY;
+            auto noProxyFound = !WinHttpQueryOption(hSession, WINHTTP_OPTION_PROXY, &proxyInfo, &proxyInfoSize) ||
+                                proxyInfo.dwAccessType == WINHTTP_ACCESS_TYPE_NO_PROXY;
 
             // If no proxy was found automatically, use IE's proxy settings, if any
-            if (noProxyFound) {
+            if (noProxyFound)
+            {
                 WINHTTP_CURRENT_USER_IE_PROXY_CONFIG ieProxy;
-                if (WinHttpGetIEProxyConfigForCurrentUser(&ieProxy) && ieProxy.lpszProxy != nullptr) {
+                if (WinHttpGetIEProxyConfigForCurrentUser(&ieProxy) && ieProxy.lpszProxy != nullptr)
+                {
                     WINHTTP_PROXY_INFO proxy;
                     proxy.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
                     proxy.lpszProxy = ieProxy.lpszProxy;
                     proxy.lpszProxyBypass = ieProxy.lpszProxyBypass;
                     WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxy, sizeof(proxy));
+                    GlobalFree(ieProxy.lpszProxy);
+                    GlobalFree(ieProxy.lpszProxyBypass);
+                    GlobalFree(ieProxy.lpszAutoConfigUrl);
                 }
             }
         }
@@ -87,6 +105,7 @@ namespace vcpkg::Downloads
         // Send a request.
         auto bResults =
             WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
+
         Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpSendRequest() failed: %d", GetLastError());
 
         // End the request.
@@ -103,7 +122,7 @@ namespace vcpkg::Downloads
             bResults = WinHttpQueryDataAvailable(hRequest, &dwSize);
             Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpQueryDataAvailable() failed: %d", GetLastError());
 
-            if (buf.size() < dwSize) buf.resize(dwSize * 2);
+            if (buf.size() < dwSize) buf.resize(static_cast<size_t>(dwSize) * 2);
 
             bResults = WinHttpReadData(hRequest, (LPVOID)buf.data(), dwSize, &downloaded_size);
             Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpReadData() failed: %d", GetLastError());
@@ -125,7 +144,7 @@ namespace vcpkg::Downloads
                                      const fs::path& path,
                                      const std::string& sha512)
     {
-        std::string actual_hash = vcpkg::Hash::get_file_hash(fs, path, "SHA512");
+        std::string actual_hash = vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, fs, path, Hash::Algorithm::Sha512);
 
         // <HACK to handle NuGet.org changing nupkg hashes.>
         // This is the NEW hash for 7zip
@@ -155,9 +174,10 @@ namespace vcpkg::Downloads
                        const std::string& sha512)
     {
         const std::string download_path_part = download_path.u8string() + ".part";
+        auto download_path_part_path = fs::u8path(download_path_part);
         std::error_code ec;
         fs.remove(download_path, ec);
-        fs.remove(download_path_part, ec);
+        fs.remove(download_path_part_path, ec);
 #if defined(_WIN32)
         auto url_no_proto = url.substr(8); // drop https://
         auto path_begin = Util::find(url_no_proto, '/');
@@ -171,14 +191,7 @@ namespace vcpkg::Downloads
         Checks::check_exit(VCPKG_LINE_INFO, code == 0, "Could not download %s", url);
 #endif
 
-        verify_downloaded_file_hash(fs, url, download_path_part, sha512);
-        fs.rename(download_path_part, download_path, ec);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !ec,
-                           "Failed to do post-download rename-in-place.\n"
-                           "fs.rename(%s, %s, %s)",
-                           download_path_part,
-                           download_path.u8string(),
-                           ec.message());
+        verify_downloaded_file_hash(fs, url, download_path_part_path, sha512);
+        fs.rename(download_path_part_path, download_path, VCPKG_LINE_INFO);
     }
 }

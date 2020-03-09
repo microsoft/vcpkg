@@ -89,12 +89,11 @@ namespace vcpkg::Commands::Import
         place_library_files_in(paths.get_filesystem(), include_directory, project_directory, library_destination_path);
 
         const fs::path control_file_path = library_destination_path / "CONTROL";
-        fs.write_contents(control_file_path, Strings::serialize(control_file_data));
+        fs.write_contents(control_file_path, Strings::serialize(control_file_data), VCPKG_LINE_INFO);
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string(
-            R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)"),
+        Help::create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)"),
         3,
         3,
         {},
@@ -109,12 +108,13 @@ namespace vcpkg::Commands::Import
         const fs::path include_directory(args.command_arguments[1]);
         const fs::path project_directory(args.command_arguments[2]);
 
-        const Expected<std::unordered_map<std::string, std::string>> pghs =
-            Paragraphs::get_single_paragraph(paths.get_filesystem(), control_file_path);
+        const auto pghs = Paragraphs::get_single_paragraph(paths.get_filesystem(), control_file_path);
         Checks::check_exit(VCPKG_LINE_INFO,
                            pghs.get() != nullptr,
                            "Invalid control file %s for package",
-                           control_file_path.generic_u8string());
+                           control_file_path.generic_u8string(),
+                           "\n",
+                           pghs.error());
 
         StatusParagraph spgh;
         spgh.package = BinaryParagraph(*pghs.get());

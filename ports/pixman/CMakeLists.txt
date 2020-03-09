@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(pixman VERSION 0.34.0 LANGUAGES C)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_DEBUG_POSTFIX "d")
 
 if(UNIX)
@@ -51,7 +50,7 @@ set(PIXMAN_DEFS
     PACKAGE_BUGREPORT=""
 )
 
-if(VCPKG_TARGET_TRIPLET STREQUAL arm64-windows OR VCPKG_TARGET_TRIPLET STREQUAL arm-windows)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
     # don't enable SSE2 for arm64-windows and arm-windows
 else()
     # The USE_SSE2 definition lets it use SSE2 instructions for speed. Every x86/64 target machine should have SSE2 these days.

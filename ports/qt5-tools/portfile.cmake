@@ -1,7 +1,7 @@
-include(vcpkg_common_functions)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
+qt_submodule_installation()
 
-qt_modular_library(qttools e3ae1974f0b20bad1b86d038c3585753183b8c24c133393e3ecf65a0487402ad8dcf8147bf263e9a4c2d3abef1b706981943fcf5268726e424f1b61f69ce4f2e)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/qt5-tools/plugins/platforminputcontexts)
+if(EXISTS "${CURRENT_INSTALLED_DIR}/plugins/platforms/qminimal${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
+    file(INSTALL "${CURRENT_INSTALLED_DIR}/plugins/platforms/qminimal${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/plugins/platforms")
+endif()

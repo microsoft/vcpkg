@@ -1,24 +1,24 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stlab/libraries
-    REF v1.3.3
-    SHA512 2c0eec5638b40f8285cc3b0d756df619b53ba44421c47713aaf45196100765a31a6aea3c5bedba4fcc44494b74e3f0a919271601e717e7f274fe15beb93f8889
-    HEAD_REF master
+    REF 2e411dd5c8b7eb096e9eb04c46b569c775b126c6 # V1.5.2
+    SHA512 c0e3f8b7b44a6da9734b44e5693d28b84e75a9d4844e30d26dbc65cbd6673fe7e7a45f329aadf5ac3d1e7ec9b939230d179ed150bcf4c3f3e96a3a96ed04fadb
+    HEAD_REF develop
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/stlab)
+vcpkg_copy_pdbs()
 
 # cleanup
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cmake/stlab ${CURRENT_PACKAGES_DIR}/share/stlab)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/share/cmake)
 
 # handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/stlab RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

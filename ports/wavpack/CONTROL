@@ -1,3 +1,4 @@
 Source: wavpack
-Version: 5.1.0-00d9a4a
+Version: 5.2.0
+Homepage: https://github.com/dbry/WavPack
 Description: WavPack encode/decode library, command-line programs, and several plugins

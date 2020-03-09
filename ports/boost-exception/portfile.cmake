@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/exception
-    REF boost-1.69.0
-    SHA512 25dd5e1721e6c4668530a90c7bcd4d0adf7312562dbb62dc3a34ac88cb8d4206072dbd365608cd5fb1b3f5eab82686035bd4fba1f4e76b603b95e6d51b090e7d
+    REF boost-1.72.0
+    SHA512 506ee9bec68a169b60e438bf29ed673aa8be2f745ab64dc8381a6ad1b9ca7e674a1b3009a828893c7451fd34de302fdb41d75018e1986a64543fe27ea5c7903b
     HEAD_REF master
 )
 

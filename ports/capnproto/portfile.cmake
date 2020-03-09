@@ -2,17 +2,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP build is not supported.")
 endif()
 
-if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
-    # Undefined VCPKG_CMAKE_SYSTEM_NAME means Windows
-    message(FATAL_ERROR "Error: CapnProto only build on Windows for now. See #5630 and #5635")
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("Building DLLs not supported. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO capnproto/capnproto
@@ -22,11 +15,14 @@ vcpkg_from_github(
 	PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-capnpc-extension-handling-on-Windows.patch"
 )
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/CapnProto")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CapnProto)
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/capnproto")

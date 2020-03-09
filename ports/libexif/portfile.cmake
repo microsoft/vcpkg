@@ -4,15 +4,14 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "libexif currently only supports being built for desktop")
 endif()
 
-set(LIBEXIF_VERSION 0.6.21)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libexif-${LIBEXIF_VERSION})
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://freefr.dl.sourceforge.net/project/libexif/libexif/${LIBEXIF_VERSION}/libexif-${LIBEXIF_VERSION}.tar.bz2"
-    FILENAME "libexif-${LIBEXIF_VERSION}.tar.bz2"
-    SHA512 4e0fe2abe85d1c95b41cb3abe1f6333dc3a9eb69dba106a674a78d74a4d5b9c5a19647118fa1cc2d72b98a29853394f1519eda9e2889eb28d3be26b21c7cfc35
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libexif/libexif
+    REF libexif-0_6_21-release
+    SHA512 aecba54eb9c8b4ce29d11985a547074b381d72027b563c7aef865852b661a6f18a258c748fca6b16198344f4a86568b658071ac95cc1d332f576c6160e1f257d
+    HEAD_REF master
+    PATCHES add-missing-_stdint-h.patch
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.cmake DESTINATION ${SOURCE_PATH})

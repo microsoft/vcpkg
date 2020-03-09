@@ -1,28 +1,34 @@
-include(vcpkg_common_functions)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
-    REF 4.0.0
-    SHA512 69e57d4ba1fc43d212fd0fff69a2b5d48a3b37cfee7054fdc083cbb7e04d92317609a32e457229661d70ce8d9b16c9d25e81bfc3861db660dd2c8f292202d447
-    HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+    REF 4.1.1
+    SHA512 017723a2268be789fe98978eed02fd294968cc8050dde376dee026f56f2b99df42db935049ae5e72c4519a920e263b40af1a6a40d9942e66608145b3131a71a2
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/use-vcpkg-icu.patch
-        ${CMAKE_CURRENT_LIST_DIR}/ws2-32.patch
-        ${CMAKE_CURRENT_LIST_DIR}/leptonica.patch
+        fix-tiff-linkage.patch
+        fix-text2image.patch
 )
 
 # The built-in cmake FindICU is better
 file(REMOVE ${SOURCE_PATH}/cmake/FindICU.cmake)
+
+# Handle Static Library Output
+if(VCPKG_LIBRARY_LINKAGE EQUAL "static")
+    list(APPEND OPTIONS_LIST -DSTATIC=ON)
+endif()
+
+# Handle CONTROL
+if("training_tools" IN_LIST FEATURES)
+    list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=ON)
+else()
+    list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=OFF)
+endif()
+if("cpu_independed" IN_LIST FEATURES)
+    list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=none)
+else()
+    list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=auto)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -30,15 +36,43 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSTATIC=ON
         -DUSE_SYSTEM_ICU=True
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibArchive=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
+        -DLeptonica_DIR=YES
+        ${OPTIONS_LIST}
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 # Install tool
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/tesseract)
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/tesseract.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract)
+set(EXTENSION)
+if(WIN32)
+    set(EXTENSION ".exe")
+endif()
+
+# copy training tools
+set(TRAINING_TOOLS_DIR ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+if("training_tools" IN_LIST FEATURES)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/ambiguous_words${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/classifier_tester${EXTENSION} 	DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/combine_tessdata${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/cntraining${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/dawg2wordlist${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/mftraining${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/shapeclustering${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/wordlist2dawg${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/combine_lang_model${EXTENSION} 	DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/lstmeval${EXTENSION} 			DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/lstmtraining${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/set_unicharset_properties${EXTENSION} DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/unicharset_extractor${EXTENSION} 	DESTINATION ${TRAINING_TOOLS_DIR})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/text2image${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
+endif()
+
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/tesseract${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/tesseract)
 
 vcpkg_copy_pdbs()
@@ -46,9 +80,6 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tesseract)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tesseract/LICENSE ${CURRENT_PACKAGES_DIR}/share/tesseract/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

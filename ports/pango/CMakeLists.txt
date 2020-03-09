@@ -11,6 +11,11 @@ else()
   configure_file(./config.h.unix ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
 endif()
 
+if (WIN32)
+  # Set utf-8 charset to avoid compile error C2001
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+endif()
+
 add_definitions(-DHAVE_CONFIG_H)
 include_directories(. ./pango ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -53,6 +58,11 @@ find_library(FREETYPE_LIBRARY freetype${FT_SUFFIX})
 # find harfbuzz
 find_path(HARFBUZZ_INCLUDE_DIR harfbuzz/hb.h)
 find_library(HARFBUZZ_LIBRARY harfbuzz)
+
+if (APPLE)
+    find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+    link_libraries(${COREFOUNDATION_LIBRARY})
+endif()
 
 set(FONT_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIR} ${FONTCONFIG_INCLUDE_DIR} ${HARFBUZZ_INCLUDE_DIR}/harfbuzz)
 set(FONT_LIBRARIES ${FREETYPE_LIBRARY} ${FONTCONFIG_LIBRARY} ${HARFBUZZ_LIBRARY})
@@ -113,7 +123,7 @@ pango_add_module(pangowin32
     pango/pangowin32-fontcache.c
     pango/pangowin32-fontmap.c
     pango/pangowin32-shape.c)
-target_link_libraries(pangowin32 usp10 pango)
+target_link_libraries(pangowin32 usp10 pango gdi32)
 endif()
 
 pango_add_module(pangoft2
@@ -146,7 +156,11 @@ if(WIN32)
 endif()
 
 pango_add_module(pangocairo ${PANGO_CAIRO_SOURCES})
-target_link_libraries(pangocairo ${CAIRO_LIBRARIES} pango pangowin32 pangoft2 ${FONT_LIBRARIES})
+list(APPEND PANGO_CAIRO_LIBRARIES  ${CAIRO_LIBRARIES} pango pangoft2 ${FONT_LIBRARIES})
+if (WIN32)
+    list(APPEND PANGO_CAIRO_LIBRARIES pangowin32)
+endif()
+target_link_libraries(pangocairo ${PANGO_CAIRO_LIBRARIES}) 
 target_include_directories(pangocairo PRIVATE ${CAIRO_INCLUDE_DIR} ${FONT_INCLUDE_DIRS})
 
 

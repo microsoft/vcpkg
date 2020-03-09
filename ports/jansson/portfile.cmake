@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO akheron/jansson
-  REF v2.11
-  SHA512 5dd94951e1aedd3f3a9ab6a43170d2395ec70c5a00e6da58538816b2dcd98835fc4ca43ab1e9b78864c01e48075505573f4f8d1da5c9d2c094622518d19525e8
+  REF 71c4e8ec215afa225ac20eed269a14963cd37b50
+  SHA512 cdb955996768d6c7ed15b9f1bb7ddf4905f881c4e604d9e7a863f42c513eaaa9fb8799dacfa392424fbf725aac125d4716e10c44c3415449b5c5edd38a87b290
   HEAD_REF master
 )
 
@@ -42,8 +42,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/jansson)
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jansson RENAME copyright)

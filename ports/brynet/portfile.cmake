@@ -1,23 +1,13 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+#header-only library
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IronsDu/brynet
-    REF v1.0.2
-    SHA512 b07ceb858ed125959b3901415d6099939acf51a194950de8c65f063b6462a0ab424494659aedd889378bd4388cc9e71a0aedcb30108b6c2eef4d5e6ebea2cce8
+    REF v1.0.5
+    SHA512 2c625a6dc6f7b1b578d74f97b0ccec90856caaedb0725db4c5892cfaa33e77cd502b01ee26b1789017c459f4b0a03eaf16ae859dc51ad4e6f362aca7c5833995
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-)
+file(INSTALL ${SOURCE_PATH}/include/brynet DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-vcpkg_install_cmake()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/brynet)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/brynet/LICENSE ${CURRENT_PACKAGES_DIR}/share/brynet/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

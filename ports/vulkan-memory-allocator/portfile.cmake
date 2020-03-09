@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
-    REF v2.1.0
-    SHA512 4d7d431d52503d4d448a8b571935678a8a04d8f4a7eceb6ad49cde4f78954e7a2a0a91e48c75382699a62d81cf00601aaa0a358d979ed8e14741a9956484b51e
+    REF v2.3.0+vs2017
+    SHA512 57113c52dcccc4df79ebf36f091f1232f68ee45c48934a5b91c2d87b5599d8c176ca7a47e285ddf146ec0b3c83db5808c2e6c3f6e1b453e20a8525f73211bf8d
     HEAD_REF master
 )
 

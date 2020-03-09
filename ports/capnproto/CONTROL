@@ -1,4 +1,6 @@
 Source: capnproto
-Version: 0.7.0
-Description: Data interchange format and capability-based RPC system https://capnproto.org/
+Version: 0.7.0-3
+Description: Data interchange format and capability-based RPC system
+Homepage: https://capnproto.org/
 Build-Depends: zlib
+Supports: !uwp

@@ -1,11 +1,13 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-common
-    REF v0.3.0
-    SHA512 604b4289f19be662f15dc5ba80c20b78856975332b485796f979580e45f8d778eb8ce0cc2c02dcbaf27bc1159f473e02676cd951b674b7c8478ed26438a04541
+    REF e3e7ccd35a85f9cd38c67cb1988251f1543b6632 # v0.4.15
+    SHA512 f8be12628bb7503921bf64956697ad60ba1dc10099482515be7157a1f75b14fad716eadcf69af1d77a5f1bbdaf298a7913e678dd143c5b409dd37ce3bf57f023
     HEAD_REF master
+    PATCHES
+        disable-error-4068.patch # This patch fixes dependency port compilation failure
+        disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
+        fix-cmake-target-path.patch # Shared libraries and static libraries are not built at the same time
 )
 
 vcpkg_configure_cmake(
@@ -16,7 +18,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-c-common/cmake)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
 file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/include
@@ -26,9 +28,7 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aws-c-common RENAME copyright)
+file(REMOVE_RECURSE	${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(REMOVE_RECURSE
-	${CURRENT_PACKAGES_DIR}/debug/share
-)
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

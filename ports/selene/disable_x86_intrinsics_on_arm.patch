@@ -1,0 +1,13 @@
+diff --git a/selene/base/Bitcount.hpp b/selene/base/Bitcount.hpp
+index a4d69e4..709f650 100755
+--- a/selene/base/Bitcount.hpp
++++ b/selene/base/Bitcount.hpp
+@@ -69,7 +69,7 @@ inline std::size_t bit_count(unsigned long long x)
+   return static_cast<std::size_t>(__builtin_popcountll(x));
+ }
+ 
+-#elif defined(_MSC_VER)
++#elif defined(_MSC_VER) && !defined(_M_ARM) && !defined(_M_ARM64)
+ 
+ /** \brief Performs a bit count on the supplied value.
+  *

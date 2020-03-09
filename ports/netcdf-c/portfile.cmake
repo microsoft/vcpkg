@@ -1,30 +1,41 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
-    REF v4.6.2
-    SHA512 7c7084e80cf2fb86cd05101f5be7b74797ee96bf49afadfae6ab32ceed6cd9a049bfa90175e7cc0742806bcd2f61156e33fe7930c7b646661d9c89be6b20dea3
+    REF b7cd387bee8c661141fabb490f4969587c008c55 # v4.7.3
+    SHA512 a55391620fac61e4975fe62907ca21049911afce6190fc12d183d24133a32aae8cd223b97a3fe57fc82d8bdca1a7db451046e3be3c379051624d48b1f56c0332
     HEAD_REF master
     PATCHES
         no-install-deps.patch
         config-pkg-location.patch
-        transitive-hdf5.patch
-        fix_curl_linkage.patch
+        use_targets.patch
+        mpi.patch
 )
+
+#Remove outdated find modules
+file(REMOVE "${SOURCE_PATH}/cmake/modules/FindSZIP.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/FindZLIB.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/windows/FindHDF5.cmake")
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(NC_USE_STATIC_CRT ON)
+else()
+    set(NC_USE_STATIC_CRT OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
+    DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
     PREFER_NINJA
     OPTIONS
         -DBUILD_UTILITIES=OFF
         -DBUILD_TESTING=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTS=OFF
+        -DENABLE_FILTER_TESTING=OFF
         -DUSE_HDF5=ON
         -DENABLE_DAP_REMOTE_TESTS=OFF
         -DDISABLE_INSTALL_DEPENDENCIES=ON
+        -DNC_USE_STATIC_CRT=${NC_USE_STATIC_CRT}
         -DConfigPackageLocation=share/netcdf
 )
 
@@ -38,10 +49,5 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/netcdf-c)
-file(
-    RENAME
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/COPYRIGHT
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/copyright
-)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

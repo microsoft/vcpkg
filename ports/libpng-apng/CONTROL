@@ -1,4 +1,0 @@
-Source: libpng-apng
-Version: 1.6.36-1
-Build-Depends: zlib
-Description: libpng-apng is a library implementing an interface for reading and writing (A)PNG ((Animated) Portable Network Graphics) format files. This is backward compatible with the regular libpng, both in library usage and format.

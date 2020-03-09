@@ -19,6 +19,9 @@ namespace vcpkg
         template<class T, bool B = std::is_copy_constructible<T>::value>
         struct OptionalStorage
         {
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
             constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() {}
             constexpr OptionalStorage(const T& t) : m_is_present(true), m_t(t) {}
             constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) {}
@@ -28,12 +31,18 @@ namespace vcpkg
                 if (m_is_present) m_t.~T();
             }
 
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
             OptionalStorage(const OptionalStorage& o) : m_is_present(o.m_is_present), m_inactive()
             {
                 if (m_is_present) new (&m_t) T(o.m_t);
             }
 
-            OptionalStorage(OptionalStorage&& o) : m_is_present(o.m_is_present), m_inactive()
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
+            OptionalStorage(OptionalStorage&& o) noexcept : m_is_present(o.m_is_present), m_inactive()
             {
                 if (m_is_present)
                 {
@@ -59,7 +68,7 @@ namespace vcpkg
                 return *this;
             }
 
-            OptionalStorage& operator=(OptionalStorage&& o)
+            OptionalStorage& operator=(OptionalStorage&& o) noexcept
             {
                 if (m_is_present && o.m_is_present)
                 {
@@ -100,6 +109,9 @@ namespace vcpkg
         template<class T>
         struct OptionalStorage<T, false>
         {
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
             constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() {}
             constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) {}
 
@@ -108,7 +120,10 @@ namespace vcpkg
                 if (m_is_present) m_t.~T();
             }
 
-            OptionalStorage(OptionalStorage&& o) : m_is_present(o.m_is_present), m_inactive()
+#if defined(_WIN32)
+#pragma warning(suppress : 26495)
+#endif
+            OptionalStorage(OptionalStorage&& o) noexcept : m_is_present(o.m_is_present), m_inactive()
             {
                 if (m_is_present)
                 {
@@ -116,7 +131,7 @@ namespace vcpkg
                 }
             }
 
-            OptionalStorage& operator=(OptionalStorage&& o)
+            OptionalStorage& operator=(OptionalStorage&& o) noexcept
             {
                 if (m_is_present && o.m_is_present)
                 {
@@ -213,11 +228,20 @@ namespace vcpkg
             return this->m_base.has_value() ? this->m_base.value() : static_cast<T>(std::forward<U>(default_value));
         }
 
+        T value_or(T&& default_value) const&
+        {
+            return this->m_base.has_value() ? this->m_base.value() : static_cast<T&&>(default_value);
+        }
+
         template<class U>
         T value_or(U&& default_value) &&
         {
             return this->m_base.has_value() ? std::move(this->m_base.value())
                                             : static_cast<T>(std::forward<U>(default_value));
+        }
+        T value_or(T&& default_value) &&
+        {
+            return this->m_base.has_value() ? std::move(this->m_base.value()) : static_cast<T&&>(default_value);
         }
 
         typename std::add_pointer<const T>::type get() const
@@ -226,6 +250,38 @@ namespace vcpkg
         }
 
         typename std::add_pointer<T>::type get() { return this->m_base.has_value() ? &this->m_base.value() : nullptr; }
+
+        template<class F>
+        using map_t = decltype(std::declval<F&>()(std::declval<const T&>()));
+
+        template<class F, class U = map_t<F>>
+        U then(F f) const&
+        {
+            if (has_value())
+            {
+                return f(this->m_base.value());
+            }
+            else
+            {
+                return nullopt;
+            }
+        }
+
+        template<class F>
+        using move_map_t = decltype(std::declval<F&>()(std::declval<T&&>()));
+
+        template<class F, class U = move_map_t<F>>
+        U then(F f) &&
+        {
+            if (has_value())
+            {
+                return f(std::move(this->m_base.value()));
+            }
+            else
+            {
+                return nullopt;
+            }
+        }
 
     private:
         details::OptionalStorage<T> m_base;

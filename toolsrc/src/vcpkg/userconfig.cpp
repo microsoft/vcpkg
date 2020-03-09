@@ -39,10 +39,7 @@ namespace vcpkg
 #endif
     }
 
-    static fs::path get_config_path()
-    {
-        return get_user_dir() / "config";
-    }
+    static fs::path get_config_path() { return get_user_dir() / "config"; }
 
     UserConfig UserConfig::try_read_data(const Files::Filesystem& fs)
     {
@@ -54,7 +51,7 @@ namespace vcpkg
             {
                 const auto& pghs = *p_pghs;
 
-                std::unordered_map<std::string, std::string> keys;
+                Parse::Paragraph keys;
                 if (pghs.size() > 0) keys = pghs[0];
 
                 for (size_t x = 1; x < pghs.size(); ++x)
@@ -63,10 +60,10 @@ namespace vcpkg
                         keys.insert(p);
                 }
 
-                ret.user_id = keys["User-Id"];
-                ret.user_time = keys["User-Since"];
-                ret.user_mac = keys["Mac-Hash"];
-                ret.last_completed_survey = keys["Survey-Completed"];
+                ret.user_id = keys["User-Id"].first;
+                ret.user_time = keys["User-Since"].first;
+                ret.user_mac = keys["Mac-Hash"].first;
+                ret.last_completed_survey = keys["Survey-Completed"].first;
             }
         }
         catch (...)

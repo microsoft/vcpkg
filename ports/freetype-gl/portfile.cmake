@@ -1,9 +1,4 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,7 +6,6 @@ vcpkg_from_github(
     REF a91a3dda326ceaf66b7279bf64ba07014d3f81b8
     SHA512 8e04573dfb400e14e2c1d3a2cd851a66f8218ccfdaa4f701ed9369d7f040d7028582e72af9b236af42d9d3c6c128014670e8ae0261c6f4770affd1aea1454b1e
     HEAD_REF master
-    PATCHES 0001-Use-external-Glew-and-Freetype.patch
 )
 
 # make sure that no "internal" libraries are used by removing them
@@ -43,15 +37,16 @@ file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/freetyp
 
 # LIB
 file(GLOB LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.lib"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
 )
 file(GLOB DEBUG_LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.lib"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
 )
+
 file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 

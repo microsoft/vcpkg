@@ -39,7 +39,7 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
+    static Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
     {
         static const std::vector<OutdatedDynamicCrt> V_NO_120 = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
@@ -98,6 +98,93 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
+    static LintStatus check_for_restricted_include_files(const Files::Filesystem& fs,
+                                                         const Build::BuildPolicies& policies,
+                                                         const fs::path& package_dir)
+    {
+        if (policies.is_enabled(BuildPolicy::ALLOW_RESTRICTED_HEADERS))
+        {
+            return LintStatus::SUCCESS;
+        }
+
+        // These files are taken from the libc6-dev package on Ubuntu inside /usr/include/x86_64-linux-gnu/sys/
+        static constexpr StringLiteral restricted_sys_filenames[] = {
+            "acct.h",      "auxv.h",        "bitypes.h",  "cdefs.h",    "debugreg.h",  "dir.h",         "elf.h",
+            "epoll.h",     "errno.h",       "eventfd.h",  "fanotify.h", "fcntl.h",     "file.h",        "fsuid.h",
+            "gmon.h",      "gmon_out.h",    "inotify.h",  "io.h",       "ioctl.h",     "ipc.h",         "kd.h",
+            "klog.h",      "mman.h",        "mount.h",    "msg.h",      "mtio.h",      "param.h",       "pci.h",
+            "perm.h",      "personality.h", "poll.h",     "prctl.h",    "procfs.h",    "profil.h",      "ptrace.h",
+            "queue.h",     "quota.h",       "random.h",   "raw.h",      "reboot.h",    "reg.h",         "resource.h",
+            "select.h",    "sem.h",         "sendfile.h", "shm.h",      "signal.h",    "signalfd.h",    "socket.h",
+            "socketvar.h", "soundcard.h",   "stat.h",     "statfs.h",   "statvfs.h",   "stropts.h",     "swap.h",
+            "syscall.h",   "sysctl.h",      "sysinfo.h",  "syslog.h",   "sysmacros.h", "termios.h",     "time.h",
+            "timeb.h",     "timerfd.h",     "times.h",    "timex.h",    "ttychars.h",  "ttydefaults.h", "types.h",
+            "ucontext.h",  "uio.h",         "un.h",       "unistd.h",   "user.h",      "ustat.h",       "utsname.h",
+            "vfs.h",       "vlimit.h",      "vm86.h",     "vt.h",       "vtimes.h",    "wait.h",        "xattr.h",
+        };
+        // These files are taken from the libc6-dev package on Ubuntu inside the /usr/include/ folder
+        static constexpr StringLiteral restricted_crt_filenames[] = {
+            "_G_config.h", "aio.h",         "aliases.h",      "alloca.h",       "ar.h",        "argp.h",
+            "argz.h",      "assert.h",      "byteswap.h",     "complex.h",      "cpio.h",      "crypt.h",
+            "ctype.h",     "dirent.h",      "dlfcn.h",        "elf.h",          "endian.h",    "envz.h",
+            "err.h",       "errno.h",       "error.h",        "execinfo.h",     "fcntl.h",     "features.h",
+            "fenv.h",      "fmtmsg.h",      "fnmatch.h",      "fstab.h",        "fts.h",       "ftw.h",
+            "gconv.h",     "getopt.h",      "glob.h",         "gnu-versions.h", "grp.h",       "gshadow.h",
+            "iconv.h",     "ifaddrs.h",     "inttypes.h",     "langinfo.h",     "lastlog.h",   "libgen.h",
+            "libintl.h",   "libio.h",       "limits.h",       "link.h",         "locale.h",    "malloc.h",
+            "math.h",      "mcheck.h",      "memory.h",       "mntent.h",       "monetary.h",  "mqueue.h",
+            "netash",      "netdb.h",       "nl_types.h",     "nss.h",          "obstack.h",   "paths.h",
+            "poll.h",      "printf.h",      "proc_service.h", "pthread.h",      "pty.h",       "pwd.h",
+            "re_comp.h",   "regex.h",       "regexp.h",       "resolv.h",       "sched.h",     "search.h",
+            "semaphore.h", "setjmp.h",      "sgtty.h",        "shadow.h",       "signal.h",    "spawn.h",
+            "stab.h",      "stdc-predef.h", "stdint.h",       "stdio.h",        "stdio_ext.h", "stdlib.h",
+            "string.h",    "strings.h",     "stropts.h",      "syscall.h",      "sysexits.h",  "syslog.h",
+            "tar.h",       "termio.h",      "termios.h",      "tgmath.h",       "thread_db.h", "time.h",
+            "ttyent.h",    "uchar.h",       "ucontext.h",     "ulimit.h",       "unistd.h",    "ustat.h",
+            "utime.h",     "utmp.h",        "utmpx.h",        "values.h",       "wait.h",      "wchar.h",
+            "wctype.h",    "wordexp.h",
+        };
+        // These files are general names that have shown to be problematic in the past
+        static constexpr StringLiteral restricted_general_filenames[] = {
+            "json.h",
+            "parser.h",
+            "lexer.h",
+            "config.h",
+            "local.h",
+            "slice.h",
+        };
+        static constexpr Span<const StringLiteral> restricted_lists[] = {
+            restricted_sys_filenames, restricted_crt_filenames, restricted_general_filenames};
+        const fs::path include_dir = package_dir / "include";
+        auto files = fs.get_files_non_recursive(include_dir);
+        auto filenames_v = Util::fmap(files, [](const auto& file) { return file.filename().u8string(); });
+        std::set<std::string> filenames_s(filenames_v.begin(), filenames_v.end());
+
+        std::vector<fs::path> violations;
+        for (auto&& flist : restricted_lists)
+            for (auto&& f : flist)
+            {
+                if (Util::Sets::contains(filenames_s, f))
+                {
+                    violations.push_back(fs::u8path("include") / fs::u8path(f.c_str()));
+                }
+            }
+
+        if (!violations.empty())
+        {
+            System::print2(System::Color::warning,
+                           "Restricted headers paths are present. These files can prevent the core C++ runtime and "
+                           "other packages from compiling correctly:\n");
+            Files::print_paths(violations);
+            System::print2("In exceptional circumstances, this policy can be disabled via ",
+                           Build::to_cmake_variable(BuildPolicy::ALLOW_RESTRICTED_HEADERS),
+                           "\n");
+            return LintStatus::ERROR_DETECTED;
+        }
+
+        return LintStatus::SUCCESS;
+    }
+
     static LintStatus check_for_files_in_debug_include_directory(const Files::Filesystem& fs,
                                                                  const fs::path& package_dir)
     {
@@ -113,7 +200,7 @@ namespace vcpkg::PostBuildLint
             System::print2(System::Color::warning,
                            "Include files should not be duplicated into the /debug/include directory. If this cannot "
                            "be disabled in the project cmake, use\n"
-                           "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)\n");
+                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/include\")\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -128,7 +215,7 @@ namespace vcpkg::PostBuildLint
         {
             System::print2(System::Color::warning,
                            "/debug/share should not exist. Please reorganize any important files, then use\n"
-                           "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)\n");
+                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/share\")\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -142,10 +229,10 @@ namespace vcpkg::PostBuildLint
         const fs::path lib_cmake = package_dir / "lib" / "cmake";
         if (fs.exists(lib_cmake))
         {
-            System::printf(
-                System::Color::warning,
-                "The /lib/cmake folder should be merged with /debug/lib/cmake and moved to /share/%s/cmake.\n",
-                spec.name());
+            System::printf(System::Color::warning,
+                           "The /lib/cmake folder should be merged with /debug/lib/cmake and moved to "
+                           "/share/%s/cmake.\nPlease use the helper function `vcpkg_fixup_cmake_targets()`\n",
+                           spec.name());
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -262,11 +349,8 @@ namespace vcpkg::PostBuildLint
             const fs::path relative_path = found_file.string().erase(
                 0, current_buildtrees_dir.string().size() + 1); // The +1 is needed to remove the "/"
             System::printf(
-                "\n    file(COPY ${CURRENT_BUILDTREES_DIR}/%s DESTINATION ${CURRENT_PACKAGES_DIR}/share/%s)\n"
-                "    file(RENAME ${CURRENT_PACKAGES_DIR}/share/%s/%s ${CURRENT_PACKAGES_DIR}/share/%s/copyright)\n",
+                "\n    configure_file(\"${CURRENT_BUILDTREES_DIR}/%s/%s\" \"${CURRENT_PACKAGES_DIR}/share/%s/copyright\" COPYONLY)\n",
                 relative_path.generic_string(),
-                spec.name(),
-                spec.name(),
                 found_file.filename().generic_string(),
                 spec.name());
         }
@@ -295,8 +379,12 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    static LintStatus check_exports_of_dlls(const std::vector<fs::path>& dlls, const fs::path& dumpbin_exe)
+    static LintStatus check_exports_of_dlls(const Build::BuildPolicies& policies,
+                                            const std::vector<fs::path>& dlls,
+                                            const fs::path& dumpbin_exe)
     {
+        if (policies.is_enabled(BuildPolicy::DLLS_WITHOUT_EXPORTS)) return LintStatus::SUCCESS;
+
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
@@ -316,6 +404,10 @@ namespace vcpkg::PostBuildLint
             System::print2(System::Color::warning, "The following DLLs have no exports:\n");
             Files::print_paths(dlls_with_no_exports);
             System::print2(System::Color::warning, "DLLs without any exports are likely a bug in the build script.\n");
+            System::printf(System::Color::warning,
+                           "If this is intended, add the following line in the portfile:\n"
+                           "    SET(%s enabled)\n",
+                           to_cmake_variable(BuildPolicy::DLLS_WITHOUT_EXPORTS));
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -462,7 +554,7 @@ namespace vcpkg::PostBuildLint
             return LintStatus::ERROR_DETECTED;
         }
 #endif
-
+        Util::unused(expected_architecture, files);
         return LintStatus::SUCCESS;
     }
 
@@ -565,9 +657,9 @@ namespace vcpkg::PostBuildLint
             R"(If the creation of bin\ and/or debug\bin\ cannot be disabled, use this in the portfile to remove them)"
             "\n"
             "\n"
-            R"###(    if(VCPKG_LIBRARY_LINKAGE STREQUAL static))###"
+            R"###(    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static"))###"
             "\n"
-            R"###(        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin))###"
+            R"###(        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin"))###"
             "\n"
             R"###(    endif())###"
             "\n\n");
@@ -594,7 +686,7 @@ namespace vcpkg::PostBuildLint
                 "If the directories are not needed and their creation cannot be disabled, use something like this in "
                 "the portfile to remove them:\n"
                 "\n"
-                R"###(    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/a/dir ${CURRENT_PACKAGES_DIR}/some/other/dir))###"
+                R"###(    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/a/dir" "${CURRENT_PACKAGES_DIR}/some/other/dir"))###"
                 "\n"
                 "\n"
                 "\n");
@@ -754,6 +846,7 @@ namespace vcpkg::PostBuildLint
         }
 
         error_count += check_for_files_in_include_directory(fs, build_info.policies, package_dir);
+        error_count += check_for_restricted_include_files(fs, build_info.policies, package_dir);
         error_count += check_for_files_in_debug_include_directory(fs, package_dir);
         error_count += check_for_files_in_debug_share_directory(fs, package_dir);
         error_count += check_folder_lib_cmake(fs, package_dir, spec);
@@ -807,9 +900,9 @@ namespace vcpkg::PostBuildLint
                 dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
                 dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
-                if (!toolset.dumpbin.empty())
+                if (!toolset.dumpbin.empty() && !build_info.policies.is_enabled(BuildPolicy::SKIP_DUMPBIN_CHECKS))
                 {
-                    error_count += check_exports_of_dlls(dlls, toolset.dumpbin);
+                    error_count += check_exports_of_dlls(build_info.policies, dlls, toolset.dumpbin);
                     error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
                     error_count +=
                         check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info, pre_build_info);
@@ -828,7 +921,7 @@ namespace vcpkg::PostBuildLint
 
                 error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
 
-                if (!toolset.dumpbin.empty())
+                if (!toolset.dumpbin.empty() && !build_info.policies.is_enabled(BuildPolicy::SKIP_DUMPBIN_CHECKS))
                 {
                     if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
                     {
@@ -857,14 +950,15 @@ namespace vcpkg::PostBuildLint
     size_t perform_all_checks(const PackageSpec& spec,
                               const VcpkgPaths& paths,
                               const PreBuildInfo& pre_build_info,
-                              const BuildInfo& build_info)
+                              const BuildInfo& build_info,
+                              const fs::path& port_dir)
     {
         System::print2("-- Performing post-build validation\n");
         const size_t error_count = perform_all_checks_and_return_error_count(spec, paths, pre_build_info, build_info);
 
         if (error_count != 0)
         {
-            const fs::path portfile = paths.ports / spec.name() / "portfile.cmake";
+            const fs::path portfile = port_dir / "portfile.cmake";
             System::print2(System::Color::error,
                            "Found ",
                            error_count,

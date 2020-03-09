@@ -1,0 +1,5 @@
+Source: winreg
+Version: 1.2.1-1
+Homepage: https://github.com/GiovanniDicanio/WinReg
+Description: High-level C++ wrapper around the Windows Registry C API.
+Supports: windows || uwp

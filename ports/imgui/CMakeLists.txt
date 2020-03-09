@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.8)
 project(imgui CXX)
 
 set(CMAKE_DEBUG_POSTFIX d)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 set(IMGUI_INCLUDES_PUBLIC
     imgui.h

@@ -1,4 +1,0 @@
-The package tiff is compatible with built-in CMake targets:
-
-    find_package(TIFF REQUIRED)
-    target_link_libraries(main PRIVATE TIFF::TIFF)

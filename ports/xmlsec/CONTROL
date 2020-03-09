@@ -1,0 +1,5 @@
+Source: xmlsec
+Version: 1.2.29-2
+Homepage: https://www.aleksey.com/xmlsec/
+Description: XML Security Library is a C library based on LibXML2. The library supports major XML security standards.
+Build-Depends: libxml2, openssl

@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f82bfd2..a062170 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -375,7 +375,10 @@ else()
+ endif()
+ 
+ if(GDCM_USE_SYSTEM_OPENJPEG)
+-  find_package(OpenJPEG 2.0.0 REQUIRED)
++  find_package(OpenJPEG REQUIRED)
++  if(OPENJPEG_MAJOR_VERSION VERSION_LESS 2)
++    message( FATAL_ERROR "You need at least OpenJPEG 2")
++  endif()
+   set(GDCM_OPENJPEG_LIBRARIES ${OPENJPEG_LIBRARIES})
+ else()
+   set(GDCM_OPENJPEG_LIBRARIES gdcmopenjp2)

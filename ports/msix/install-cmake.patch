@@ -1,35 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 20098bf..38c3c95 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -190,3 +190,5 @@ message(STATUS "src processed")
+ add_subdirectory(sample)
+ message(STATUS "sample processed")
+ message(STATUS "DONE!")
++
++install(TARGETS msix)
+\ No newline at end of file
 diff --git a/src/msix/CMakeLists.txt b/src/msix/CMakeLists.txt
-index 586c140..41a24ae 100644
+index 296eda4..cf87993 100644
 --- a/src/msix/CMakeLists.txt
 +++ b/src/msix/CMakeLists.txt
-@@ -129,6 +129,17 @@ set(LIB_SOURCES
- # Define the library
- add_library(${LIBRARY_NAME} SHARED ${LIB_SOURCES} ${LIB_PUBLIC_HEADERS} ${LIB_PRIVATE_HEADERS})
+@@ -87,9 +87,9 @@ endif()
+ include(msix_resources) # Handles all the certificates and schemas we are going to use.
  
-+if(INSTALL_LIBMSIX)
-+    install(TARGETS ${LIBRARY_NAME}
-+        RUNTIME DESTINATION bin
-+        LIBRARY DESTINATION lib
-+        ARCHIVE DESTINATION lib
-+    )
-+    if(INSTALL_HEADERS)
-+        install(FILES ${LIB_PUBLIC_HEADERS} DESTINATION include)
-+    endif()
-+endif()
-+
- # specify that this library is to be built with C++14
- set_property(TARGET ${LIBRARY_NAME} PROPERTY CXX_STANDARD 14)
- 
-@@ -149,8 +160,10 @@ include_directories(
- 	${CMAKE_PROJECT_ROOT}/lib/xerces/src
+ set(LIB_PUBLIC_HEADERS
+-    ../inc/AppxPackaging.hpp
+-    ../inc/MSIXWindows.hpp
+-    ../inc/MsixErrors.hpp
++    ${CMAKE_CURRENT_SOURCE_DIR}/../inc/AppxPackaging.hpp
++    ${CMAKE_CURRENT_SOURCE_DIR}/../inc/MSIXWindows.hpp
++    ${CMAKE_CURRENT_SOURCE_DIR}/../inc/MsixErrors.hpp
  )
  
--target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic)
--target_link_libraries(${PROJECT_NAME} PRIVATE xerces-c)
-+find_package(ZLIB REQUIRED)
-+find_package(XercesC REQUIRED)
-+target_link_libraries(${PROJECT_NAME} PRIVATE ZLIB::ZLIB)
-+target_link_libraries(${PROJECT_NAME} PRIVATE XercesC::XercesC)
- 
- IF(AOSP)
-     target_link_libraries(${PROJECT_NAME} PRIVATE -latomic)
+ set(MsixSrc) # list with all the files we are going to use
+@@ -260,7 +260,7 @@ if(WIN32)
+             "/DELAYLOAD:api-ms-win-core-winrt-l1-1-0.dll")
+     string(REPLACE ";" " " DELAYFLAGS "${DELAYFLAGS}")
+     set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS "${DELAYFLAGS} /LTCG")
+-    set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS " /DEF:windowsexports.def")
++    set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS " /DEF:${CMAKE_CURRENT_BINARY_DIR}/windowsexports.def")
+     if(USE_STATIC_MSVC)
+         if(CMAKE_BUILD_TYPE MATCHES Debug)
+             set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS " /NODEFAULTLIB:MSVCRTD")

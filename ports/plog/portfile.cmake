@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SergiusTheBest/plog
-    REF 1.1.4
-    SHA512 7af75af8343460d62e04cc0c27d4cf86373b136df73d2312d19a2e57fa309e916cef8625b8eed1b7270b93aa5d1ff27aee6edb74beb138e3a21c06a3c3debb41
+    REF 1.1.5
+    SHA512 c16b428e1855c905c486130c8610d043962bedc2b40d1d986c250c8f7fd7139540164a3cbb408ed08298370aa150d5937f358c13ccae2728ce8ea47fa897fd0b
     HEAD_REF master
 )
 

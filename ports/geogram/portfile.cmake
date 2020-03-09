@@ -12,7 +12,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${GEOGRAM_VERSION}
-    PATCHES fix-cmake-config-and-install.patch
+    PATCHES
+        fix-cmake-config-and-install.patch
 )
 
 file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)
@@ -24,10 +25,30 @@ endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VORPALINE_BUILD_DYNAMIC FALSE)
-    set(VORPALINE_PLATFORM Win-vs-generic)
+    if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+        set(VORPALINE_PLATFORM Win-vs-generic)
+    endif()
+    if (VCPKG_CMAKE_SYSTEM_NAME MATCHES "Linux")
+        message("geogram on Linux only supports dynamic library linkage. Building dynamic.")
+        set(VCPKG_LIBRARY_LINKAGE dynamic)
+        set(VORPALINE_PLATFORM Linux64-gcc-dynamic )
+    endif()
+    if (VCPKG_CMAKE_SYSTEM_NAME MATCHES "Darwin")
+        message("geogram on Darwin only supports dynamic library linkage. Building dynamic.")
+        set(VCPKG_LIBRARY_LINKAGE dynamic)
+        set(VORPALINE_PLATFORM Darwin-clang-dynamic)
+    endif()
 else()
     set(VORPALINE_BUILD_DYNAMIC TRUE)
-    set(VORPALINE_PLATFORM Win-vs-dynamic-generic)
+    if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+        set(VORPALINE_PLATFORM Win-vs-generic)
+    endif()
+    if (VCPKG_CMAKE_SYSTEM_NAME MATCHES "Linux")
+        set(VORPALINE_PLATFORM Linux64-gcc-dynamic )
+    endif()
+    if (VCPKG_CMAKE_SYSTEM_NAME MATCHES "Darwin")
+        set(VORPALINE_PLATFORM Darwin-clang-dynamic)
+    endif()
 endif()
 
 vcpkg_configure_cmake(
@@ -45,12 +66,17 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/geogram")
+vcpkg_fixup_cmake_targets()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake TARGET_CONFIG)
+string(REPLACE [[INTERFACE_INCLUDE_DIRECTORIES "/src/lib;${_IMPORT_PREFIX}/include"]]
+               [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]] TARGET_CONFIG "${TARGET_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake "${TARGET_CONFIG}")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/doc/devkit/license.dox DESTINATION ${CURRENT_PACKAGES_DIR}/share/geogram)
