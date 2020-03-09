@@ -151,11 +151,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
     #Install pyqt5 pyqt3d qscintilla
     if(NOT EXISTS "${PYTHON3_PATH}/Scripts/pyuic5.exe")
         MESSAGE(STATUS  "Install PyQt5 for Python Begin ...")
-        vcpkg_execute_required_process(
-            COMMAND "${PYTHON_EXECUTABLE}" -m pip install PyQt5 PyQt5-sip QScintilla PyQt3D
-            WORKING_DIRECTORY ${PYTHON3_PATH}
-            LOGNAME pip
-        )
+        if("qt-latest" IN_LIST FEATURES)
+            vcpkg_execute_required_process(
+                COMMAND "${PYTHON_EXECUTABLE}" -m pip install PyQt5 PyQt5-sip QScintilla PyQt3D
+                WORKING_DIRECTORY ${PYTHON3_PATH}
+                LOGNAME pip
+            )
+        else()
+            vcpkg_execute_required_process(
+                COMMAND "${PYTHON_EXECUTABLE}" -m pip install PyQt5==5.12.3 PyQt5-sip==4.19.19 QScintilla==2.11.4 PyQt3D==5.12
+                WORKING_DIRECTORY ${PYTHON3_PATH}
+                LOGNAME pip
+            )
+        endif()
         MESSAGE(STATUS  "Install PyQt5 for Python End")
     endif (NOT EXISTS "${PYTHON3_PATH}/Scripts/pyuic5.exe")
 
@@ -169,23 +177,31 @@ if(VCPKG_TARGET_IS_WINDOWS)
         if( SIP_DEFAULT_SIP_DIR )
             if(NOT EXISTS "${SIP_DEFAULT_SIP_DIR}/QtCore/QtCoremod.sip")
                 MESSAGE(STATUS  "Install PyQt5 sip for Python Begin ...")
-                set(PYQT5_VERSION "5.13.2")
+                if("qt-latest" IN_LIST FEATURES)
+                    set(PYQT5_VERSION "5.13.2")
+                    set(PYQT5_FILENAME "PyQt5")
+                    set(PYQT5_SHA512 9a16450d8fe2a7e94e182ebb03cc785c6de516e356251753abfb79af3958230043f2db59750cde0a6f1fd6cf5568eb8b7ae76d5a3fbcfe9f7807e02867973b55)
+                else()
+                    set(PYQT5_VERSION "5.12.3")
+                    set(PYQT5_FILENAME "PyQt5_gpl")
+                    set(PYQT5_SHA512 ef07605ac5d53ecabc2f4223b5bfd39f87e5aa41aa4c11cd9bd7cb652ad8d4f6bfcd7f8e931210a0f65b586e2aa32e0862df9ba08c103948a50bfeb207416e8b)
+                endif()
                 vcpkg_download_distfile(
                     PYQT5_PATH
-                    URLS https://www.riverbankcomputing.com/static/Downloads/PyQt5/${PYQT5_VERSION}/PyQt5-${PYQT5_VERSION}.tar.gz
-                    FILENAME PyQt5-${PYQT5_VERSION}.tar.gz
-                    SHA512  9a16450d8fe2a7e94e182ebb03cc785c6de516e356251753abfb79af3958230043f2db59750cde0a6f1fd6cf5568eb8b7ae76d5a3fbcfe9f7807e02867973b55
+                    URLS https://www.riverbankcomputing.com/static/Downloads/PyQt5/${PYQT5_VERSION}/${PYQT5_FILENAME}-${PYQT5_VERSION}.tar.gz
+                    FILENAME ${PYQT5_FILENAME}-${PYQT5_VERSION}.tar.gz
+                    SHA512  ${PYQT5_SHA512}
                 )
 
                 vcpkg_extract_source_archive(
                      ${PYQT5_PATH} ${PYTHON3_PATH}
                 )
 
-                set(PYQT5_PATH ${PYTHON3_PATH}/PyQt5_gpl-${PYQT5_VERSION})
+                set(PYQT5_PATH ${PYTHON3_PATH}/${PYQT5_FILENAME}-${PYQT5_VERSION})
                 file(GLOB PYQT5_SIP ${PYQT5_PATH}/sip/*)
                 file(COPY ${PYQT5_SIP} DESTINATION "${SIP_DEFAULT_SIP_DIR}" )
 
-                file(REMOVE_RECURSE ${PYTHON3_PATH}/PyQt5_gpl-${PYQT5_VERSION}.tar.gz.extracted)
+                file(REMOVE_RECURSE ${PYTHON3_PATH}/${PYQT5_FILENAME}-${PYQT5_VERSION}.tar.gz.extracted)
                 file(REMOVE_RECURSE ${PYQT5_PATH})
                 MESSAGE(STATUS  "Install PyQt5 sip for Python End")
             endif (NOT EXISTS "${SIP_DEFAULT_SIP_DIR}/QtCore/QtCoremod.sip")
@@ -193,23 +209,31 @@ if(VCPKG_TARGET_IS_WINDOWS)
             if("3d" IN_LIST FEATURES)
                 if(NOT EXISTS "${SIP_DEFAULT_SIP_DIR}/Qt3DCore/Qt3DCoremod.sip")
                     MESSAGE(STATUS  "Install PyQt3D sip for Python Begin ...")
-                    set(PYQT3D_VERSION "5.13.1")
+                    if("qt-latest" IN_LIST FEATURES)
+                        set(PYQT3D_VERSION "5.13.1")
+                        set(PYQT3D_FILENAME "PyQt3D")
+                        set(PYQT3D_SHA512 5361ab1a475b28ae37145e9caa35b2cbabec789d974c0442b93be5fa291607c79f0a4e50a52b757c2c7277f518e7f889c1edcdde1050effd7a61dc801b85f412)
+                    else()
+                        set(PYQT3D_VERSION "5.12")
+                        set(PYQT3D_FILENAME "PyQt3D_gpl")
+                        set(PYQT3D_SHA512 89890143cf70830f28ba29c5e49508e60ff07ae0622378f96f9c4e3503760136add28d4f94a90a8a7859ac83579457466afb878edb194285e98b37dd37ff59ff)
+                    endif()
                     vcpkg_download_distfile(
                         PYQT3D_PATH
-                        URLS https://www.riverbankcomputing.com/static/Downloads/PyQt3D/${PYQT3D_VERSION}/PyQt3D-${PYQT3D_VERSION}.tar.gz
-                        FILENAME PyQt3D-${PYQT3D_VERSION}.tar.gz
-                        SHA512  5361ab1a475b28ae37145e9caa35b2cbabec789d974c0442b93be5fa291607c79f0a4e50a52b757c2c7277f518e7f889c1edcdde1050effd7a61dc801b85f412
+                        URLS https://www.riverbankcomputing.com/static/Downloads/PyQt3D/${PYQT3D_VERSION}/${PYQT3D_FILENAME}-${PYQT3D_VERSION}.tar.gz
+                        FILENAME ${PYQT3D_FILENAME}-${PYQT3D_VERSION}.tar.gz
+                        SHA512  ${PYQT3D_SHA512}
                     )
                     
                     vcpkg_extract_source_archive(
                          ${PYQT3D_PATH} ${PYTHON3_PATH}
                     )
 
-                    set(PYQT3D_PATH ${PYTHON3_PATH}/PYQT3D_gpl-${PYQT3D_VERSION})
+                    set(PYQT3D_PATH ${PYTHON3_PATH}/${PYQT3D_FILENAME}-${PYQT3D_VERSION})
                     file(GLOB PYQT3D_SIP ${PYQT3D_PATH}/sip/*)
                     file(COPY ${PYQT3D_SIP} DESTINATION "${SIP_DEFAULT_SIP_DIR}" )
                         
-                    file(REMOVE_RECURSE ${PYTHON3_PATH}/PYQT3D_gpl-${PYQT3D_VERSION}.tar.gz.extracted)
+                    file(REMOVE_RECURSE ${PYTHON3_PATH}/${PYQT3D_FILENAME}-${PYQT3D_VERSION}.tar.gz.extracted)
                     file(REMOVE_RECURSE ${PYQT3D_PATH})
                     MESSAGE(STATUS  "Install PyQt3D sip for Python End")
                 endif (NOT EXISTS "${SIP_DEFAULT_SIP_DIR}/Qt3DCore/Qt3DCoremod.sip")

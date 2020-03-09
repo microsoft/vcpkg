@@ -22,3 +22,7 @@ Build-Depends: qt5-3d
 
 Feature: quick
 Description: Determines whether QGIS Quick library should be built
+
+Feature: qt-latest
+Build-Depends: qt5-base[latest]
+Description: Build latest qt version (5.14.1) instead of qt LTS
