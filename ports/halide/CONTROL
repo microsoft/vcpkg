@@ -1,5 +1,5 @@
 Source: halide
-Version: release_2019_08_27-1
+Version: master_2020_03_07
 Homepage: https://github.com/halide/Halide
 Description: Halide is a programming language designed to make it easier to write high-performance image processing code on modern machines.
 Build-Depends: llvm, openblas
