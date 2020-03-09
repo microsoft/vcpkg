@@ -83,6 +83,29 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
 
+set(_release_targets)
+set(_debug_targets)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(GLOB_RECURSE _release_targets
+        "${CURRENT_PACKAGES_DIR}/share/llvm/*-release.cmake"
+        "${CURRENT_PACKAGES_DIR}/share/clang/*-release.cmake"
+    )
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(GLOB_RECURSE _debug_targets
+        "${CURRENT_PACKAGES_DIR}/share/llvm/*-debug.cmake"
+        "${CURRENT_PACKAGES_DIR}/share/clang/*-debug.cmake"
+        )
+endif()
+
+# All LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
+# So, rename subfolder `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
+foreach(_target IN LISTS _release_targets _debug_targets)
+    file(READ ${_target} _contents)
+    string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/bin" _contents "${_contents}")
+    file(WRITE ${_target} "${_contents}")
+endforeach()
+
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/bin
     ${CURRENT_PACKAGES_DIR}/debug/include
@@ -96,5 +119,4 @@ if("clang" IN_LIST FEATURES)
 endif()
 
 # Don't fail if the bin folder exists.
-# LLVM tools must be located in bin folder (llvm-config expects to be inside a bin dir).
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
