@@ -67,7 +67,7 @@ namespace vcpkg::Export
 </Project>
 )###",
                                target_path,
-                               target_path);                 
+                               target_path);
     }
 
     static void print_plan(const std::map<ExportPlanType, std::vector<const ExportPlanAction*>>& group_by_plan_type)
