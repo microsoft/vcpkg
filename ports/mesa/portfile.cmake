@@ -18,12 +18,65 @@ vcpkg_from_gitlab(
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
+vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
+
+if (WIN32)
+    set(PYTHON_OPTION "")
+else()
+    set(PYTHON_OPTION "--user")
+endif()
+
+if(NOT EXISTS ${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX})
+    if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX})
+        vcpkg_from_github(
+            OUT_SOURCE_PATH PYFILE_PATH
+            REPO pypa/get-pip
+            REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
+            SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
+            HEAD_REF master
+        )
+        execute_process(COMMAND ${PYTHON3_DIR}/python${VCPKG_HOST_EXECUTABLE_SUFFIX} ${PYFILE_PATH}/get-pip.py ${PYTHON_OPTION})
+    endif()
+    execute_process(COMMAND ${PYTHON3_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX} install mako ${PYTHON_OPTION})
+else()
+    execute_process(COMMAND ${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX} mako)
+endif()
+
+
+vcpkg_find_acquire_program(FLEX)
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
+vcpkg_find_acquire_program(BISON)
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${BISON_DIR}")
+
+if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
+    if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
+    if(NOT EXISTS "${BISON_DIR}/BISON${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND MESA_OPTIONS -D shared-glapi=false
+                             -D opengl=false
+                             -D gles2=false
+                             -D glvnd=false
+                             -D gallium-drivers=swrast
+                             -D osmesa=gallium)
+else()
+    list(APPEND MESA_OPTIONS -D shared-glapi=true
+                             -D opengl=true
+                             -D egl=true
+                             -D gles1=true
+                             -D gles2=true)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-        -D gles1=true 
-        -D gles2=true 
-        -D shared-glapi=true
         -D gles-lib-suffix=_mesa
         -D egl-lib-suffix=_mesa
         "${MESA_OPTIONS}"

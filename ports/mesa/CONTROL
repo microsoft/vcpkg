@@ -2,4 +2,4 @@ Source: mesa
 Version: 19.3.3
 Homepage: https://www.mesa3d.org/
 Description: Mesa - The 3D Graphics Library
-Build-Depends: drm (!windows), elfutils, wayland, wayland-protocols, xdamage, xshmfence, x11, xcb, xfixes, xext, xxf86vm, xrandr, egl-registry, opengl-registry
+Build-Depends: drm (!windows), elfutils (!windows), wayland (!windows), wayland-protocols (!windows), xdamage, xshmfence (!windows), x11, xcb, xfixes, xext, xxf86vm, xrandr, egl-registry, opengl-registry

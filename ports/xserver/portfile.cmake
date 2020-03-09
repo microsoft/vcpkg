@@ -14,6 +14,29 @@ vcpkg_from_gitlab(
 #fix freetype pkgconfig
 #fix libpngs
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
+file(TO_NATIVE_PATH "${PYTHON3}" PYTHON3_NATIVE)
+set(ENV{PYTHON3} "${PYTHON3_NATIVE}")
+
+vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
+
+set(PYTHON_OPTION "--user")
+if(NOT EXISTS ${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX})
+    if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX})
+        vcpkg_from_github(
+            OUT_SOURCE_PATH PYFILE_PATH
+            REPO pypa/get-pip
+            REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
+            SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
+            HEAD_REF master
+        )
+        execute_process(COMMAND ${PYTHON3_DIR}/python${VCPKG_HOST_EXECUTABLE_SUFFIX} ${PYFILE_PATH}/get-pip.py ${PYTHON_OPTION})
+    endif()
+    execute_process(COMMAND ${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX} lxml)
+endif()
+
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
@@ -30,50 +53,77 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
-if("xwayland" IN_LIST FEATURES)
-    list(APPEND OPTIONS -Dxwayland=true)
-else()
-    list(APPEND OPTIONS -Dxwayland=false)
-endif()
-if("xnest" IN_LIST FEATURES)
-    list(APPEND OPTIONS -Dxnest=true)
-else()
-    list(APPEND OPTIONS -Dxnest=false)
-endif()
-if("xwin" IN_LIST FEATURES)
-    list(APPEND OPTIONS -Dxwin=true)
-else()
-    list(APPEND OPTIONS -Dxwin=false)
-endif()
-if("xorg" IN_LIST FEATURES)
-    list(APPEND OPTIONS -Dxorg=true)
-else()
-    list(APPEND OPTIONS -Dxorg=false)
-endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS -Dglx=false) #Requires Mesa3D for gl.pc
-    list(APPEND OPTIONS -Dsecure-rpc=false) #Problem encountered: secure-rpc requested, but neither libtirpc or libc RPC support were found
-    list(APPEND OPTIONS -Dxvfb=false) #hw\vfb\meson.build:7:0: ERROR: '' is not a target.
+    set(OPTIONS 
+        --enable-windowsdri=no
+        --enable-windowswm=no
+        --enable-libdrm=no
+        --enable-pciaccess=no
+        )
 endif()
 
-if(WIN32)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
-    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-endif()
-#export LDFLAGS="-Wl,--copy-dt-needed-entries"
-vcpkg_configure_meson(
-    SOURCE_PATH "${SOURCE_PATH}"
+vcpkg_configure_make(
+    SOURCE_PATH ${SOURCE_PATH}
+    AUTOCONFIG
+    #SKIP_CONFIGURE
+    #NO_DEBUG
+    #AUTO_HOST
+    #AUTO_DST
+    #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
     OPTIONS ${OPTIONS}
+    #OPTIONS_DEBUG
+    #OPTIONS_RELEASE
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
-vcpkg_install_meson()
+
+vcpkg_install_make()
+
+# if("xwayland" IN_LIST FEATURES)
+    # list(APPEND OPTIONS -Dxwayland=true)
+# else()
+    # list(APPEND OPTIONS -Dxwayland=false)
+# endif()
+# if("xnest" IN_LIST FEATURES)
+    # list(APPEND OPTIONS -Dxnest=true)
+# else()
+    # list(APPEND OPTIONS -Dxnest=false)
+# endif()
+# if("xwin" IN_LIST FEATURES)
+    # list(APPEND OPTIONS -Dxwin=true)
+# else()
+    # list(APPEND OPTIONS -Dxwin=false)
+# endif()
+# if("xorg" IN_LIST FEATURES)
+    # list(APPEND OPTIONS -Dxorg=true)
+# else()
+    # list(APPEND OPTIONS -Dxorg=false)
+# endif()
+# if(VCPKG_TARGET_IS_WINDOWS)
+    # list(APPEND OPTIONS -Dglx=false) #Requires Mesa3D for gl.pc
+    # list(APPEND OPTIONS -Dsecure-rpc=false) #Problem encountered: secure-rpc requested, but neither libtirpc or libc RPC support were found
+    # list(APPEND OPTIONS -Dxvfb=false) #hw\vfb\meson.build:7:0: ERROR: '' is not a target.
+# endif()
+
+# if(WIN32)
+    # vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
+    # vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+# endif()
+# #export LDFLAGS="-Wl,--copy-dt-needed-entries"
+# vcpkg_configure_meson(
+    # SOURCE_PATH "${SOURCE_PATH}"
+    # OPTIONS ${OPTIONS}
+    # PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
+    # PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
+# )
+# vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# # Handle copyright
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
