@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bd59d89b2..85ebe5f7b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1789,7 +1789,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
+ 
+ # Always build SDLmain
+ add_library(SDL2main STATIC ${SDLMAIN_SOURCES})
+-target_include_directories(SDL2main PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include/SDL2>)
++target_include_directories(SDL2main PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include> $<INSTALL_INTERFACE:include/SDL2>)
+ set(_INSTALL_LIBS "SDL2main")
+ if (NOT ANDROID)
+   set_target_properties(SDL2main PROPERTIES DEBUG_POSTFIX ${SDL_CMAKE_DEBUG_POSTFIX})
+@@ -1820,7 +1820,7 @@ if(SDL_SHARED)
+   endif()
+   set(_INSTALL_LIBS "SDL2" ${_INSTALL_LIBS})
+   target_link_libraries(SDL2 ${EXTRA_LIBS} ${EXTRA_LDFLAGS})
+-  target_include_directories(SDL2 PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include/SDL2>)
++  target_include_directories(SDL2 PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include> $<INSTALL_INTERFACE:include/SDL2>)
+   if (NOT ANDROID)
+     set_target_properties(SDL2 PROPERTIES DEBUG_POSTFIX ${SDL_CMAKE_DEBUG_POSTFIX})
+   endif()
+@@ -1860,7 +1860,7 @@ if(SDL_STATIC)
+   # libraries - do we need to consider this?
+   set(_INSTALL_LIBS "SDL2-static" ${_INSTALL_LIBS})
+   target_link_libraries(SDL2-static ${EXTRA_LIBS} ${EXTRA_LDFLAGS})
+-  target_include_directories(SDL2-static PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include/SDL2>)
++  target_include_directories(SDL2-static PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include> $<INSTALL_INTERFACE:include/SDL2>)
+   if (NOT ANDROID)
+     set_target_properties(SDL2-static PROPERTIES DEBUG_POSTFIX ${SDL_CMAKE_DEBUG_POSTFIX})
+   endif()

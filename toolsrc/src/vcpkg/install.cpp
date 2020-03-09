@@ -681,22 +681,20 @@ namespace vcpkg::Install
 
         //// Load ports from ports dirs
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        CMakeVars::TripletCMakeVarProvider var_provider(paths);
+        auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
+        auto& var_provider = *var_provider_storage;
 
         // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db);
 
-        std::vector<FullPackageSpec> install_package_specs;
         for (auto&& action : action_plan.install_actions)
         {
             action.build_options = install_plan_options;
             if (action.request_type != RequestType::USER_REQUESTED)
                 action.build_options.use_head_version = Build::UseHeadVersion::NO;
-
-            install_package_specs.emplace_back(FullPackageSpec{action.spec, action.feature_list});
         }
 
-        var_provider.load_tag_vars(install_package_specs, provider);
+        var_provider.load_tag_vars(action_plan, provider);
 
         // install plan will be empty if it is already installed - need to change this at status paragraph part
         Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty(), "Install plan cannot be empty");
