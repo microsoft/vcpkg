@@ -29,4 +29,6 @@ vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
 
-qt_submodule_installation()
+qt_submodule_installation(PATCHES 
+                                common.pri.patch
+                                gl.patch)

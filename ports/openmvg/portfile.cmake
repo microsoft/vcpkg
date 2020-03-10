@@ -6,8 +6,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openMVG/openMVG
-    REF v1.4
-    SHA512 949cf3680375c87b06db0f4713c846422c98d1979d49e9db65761f63f6f3212f0fcd8425f23c6112f04fbbb90b241638c2fd9329bb6b8b612c1d073aac55759a
+    REF 606d1c9e82123dd50de282128151a50bf42262fc # v1.5
+    SHA512 eddcf4c5f86541112840a6d89bbf360d30b085c2b3ff3e39b357030a465163b465e89d01474f8dbd65b66f8bccfc1f54a58963324f622482e2960f00214b2b75
     PATCHES
         fixcmake.patch
         fix-config-cmake.patch
@@ -15,19 +15,11 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     openmp OpenMVG_USE_OPENMP
+    openmp ENABLE_OPENMP
     opencv OpenMVG_USE_OPENCV
     opencv OpenMVG_USE_OCVSIFT
+    opencv ENABLE_OPENCV
 )
-
-set(ENABLE_OPENCV OFF)
-if("opencv" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-
-set(ENABLE_OPENMP OFF)
-if("openmp" IN_LIST FEATURES)
-  set(ENABLE_OPENMP ON)
-endif()
 
 # remove some deps to prevent conflict
 file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/ceres-solver
@@ -96,4 +88,4 @@ endif()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openmvg RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

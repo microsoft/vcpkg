@@ -1,11 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kkos/oniguruma
-    REF v6.9.3
-    SHA512 a0f4da26ba08de516c05b5e4b803a9cf8013489c3743ecf27fbc3f66f835eef8fca81b9ed2bd68729a470fe897994046843a4fd31d44a9584ff8dabd1748df21
+    REF e03900b038a274ee2f1341039e9003875c11e47d # v6.9.4
+    SHA512 77772e3994acbdde86a7405d24423fff101061e24cc8cd85975d3ab092935fc91c0c3b991fe2fa9e9a857b5254db7d923256cdb29a2e2d8a3cdd41837ed690f6
     HEAD_REF master
+    PATCHES fix-uwp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -45,7 +44,4 @@ else()
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

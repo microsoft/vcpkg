@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embree/embree
-    REF v3.6.1
-    SHA512 9da44dc658cb96cfbcd9b77417a2f30249aa089dd31efd52e8b2763aa25b3f1c04924ad2b7b43097e2bae9905f73b1412e7e95c029a7385991ccc6b41871f976
+    REF 539d4eec716085484f957d7b0d697b1891dafec4 # v3.8.0
+    SHA512 77ab07cc7283f1a0c50d7cec07d1cbe4a24a41482b8b043f79a045953fccfa41a854bbc29a76beb67385d1bbb6d43097287ccfd3e1d2c84c1a5d55a2696d0815
     HEAD_REF master
     PATCHES
         fix-InstallPath.patch

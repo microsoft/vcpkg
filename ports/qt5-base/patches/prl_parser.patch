@@ -41,12 +41,12 @@ index 81db0d92c..51016f3fa 100644
 +         set(_parsed_prl \"${_qt_prl_PRL_FILE}\")
 +    endif()
 +
-+    message(STATUS \"Reading file: ${_parsed_prl}\")
++    #message(STATUS \"Reading file: ${_parsed_prl}\")
 +    if(NOT EXISTS \"${_parsed_prl}\")
 +         message(FATAL_ERROR \"Could not find PRL file: ${_parsed_prl}\")
 +    endif()
 +    file(STRINGS \"${_parsed_prl}\" _static_depends REGEX \"^QMAKE_PRL_LIBS[ \\t]+=[ \\t]+.+$\")
-+    message(STATUS \"QMAKE_PRL_LIBS as read : ${_static_depends}\n\n\")
++    #message(STATUS \"QMAKE_PRL_LIBS as read : ${_static_depends}\n\n\")
 +    string(REGEX REPLACE \"QMAKE_PRL_LIBS[ \\t]+=[ \\t]+\" \"\" _static_depends \"${_static_depends}\")
 +    string(REGEX REPLACE \" -L\\\\$\\\\$([^ ]+)\" [[ ;-L\$\$\\1; ]] _static_depends \"${_static_depends}\") # - L Normal Case
 +    if(WIN32)
@@ -61,7 +61,7 @@ index 81db0d92c..51016f3fa 100644
 +    string(REGEX REPLACE \"[\\t ]*;[\\t ]*\" \";\" _static_depends \"${_static_depends}\")      # remove unnecessary whitespaces 
 +    string(REGEX REPLACE \"(;[\\t ]*;)+\" \";\" _static_depends \"${_static_depends}\")    # remove empty elements from the list
 +    #string(REGEX REPLACE \" [\\"]\" \";\\\\\\\"\" _static_depends \"${_static_depends}\")
-+    message(STATUS \"QMAKE_PRL_LIBS as a list : ${_static_depends}\n\n\")
++    #message(STATUS \"QMAKE_PRL_LIBS as a list : ${_static_depends}\n\n\")
 +
 +    #Logic Backported from Qt 5.14
 +    set(_search_paths)
@@ -137,8 +137,8 @@ index 81db0d92c..51016f3fa 100644
 +      endif()
 +    endforeach()
 +    
-+    message(STATUS \"${_qt_prl_TARGET} links (via PRL ${_qt_prl_CONFIGURATION}): ${_lib_deps}\")
-+    message(STATUS \"${_qt_prl_TARGET} has linker flags (via PRL): ${_lib_flags}\")
++    #message(STATUS \"${_qt_prl_TARGET} links (via PRL ${_qt_prl_CONFIGURATION}): ${_lib_deps}\")
++    #message(STATUS \"${_qt_prl_TARGET} has linker flags (via PRL): ${_lib_flags}\")
 +    #get_target_property(_test_interface ${_qt_prl_TARGET} INTERFACE_LINK_LIBRARIES)
 +    #message(STATUS \"INTERFACE_LINK_LIBRARIES of target before ${_qt_prl_TARGET}: ${_test_interface} \")
 +    set(_prl_out_libs)
