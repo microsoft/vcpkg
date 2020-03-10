@@ -23,6 +23,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     enable-rtti LLVM_ENABLE_RTTI
 )
 
+# By default in LLVM assertions are enabled for Debug configuration only.
+# `enable-assertions` explicitly enabled assertions for all configurations.
+if("enable-assertions" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS
+        -DLLVM_ENABLE_ASSERTIONS=ON
+    )
+endif()
+
 set(LLVM_ENABLE_PROJECTS)
 if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang")

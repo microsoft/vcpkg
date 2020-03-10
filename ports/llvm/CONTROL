@@ -14,6 +14,9 @@ Description: Build LLVM utils.
 Feature: enable-rtti
 Description: Build LLVM with run-time type information.
 
+Feature: enable-assertions
+Description: Build LLVM with assertions.
+
 Feature: clang
 Description: Build C Language Family Front-end.
 
