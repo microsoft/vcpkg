@@ -1,15 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6eb8bb5..1506a64 100644
+index 577000a..759e35b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -13,6 +13,10 @@ cmake_policy(SET CMP0048 NEW)
+@@ -58,6 +58,10 @@ elseif(UNIX)
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
+ endif()
  
- project(upb)
- 
-+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-+if(MSVC)
-+  add_compile_options(/wd4146)
++if (MSVC)
++  add_compile_options(/wd4146 -D_CRT_SECURE_NO_WARNINGS)
 +endif()
- 
- # Prevent CMake from setting -rdynamic on Linux (!!).
- SET(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
++
+ enable_testing()
+ add_library(descriptor_upbproto INTERFACE)
+ add_library(upb
