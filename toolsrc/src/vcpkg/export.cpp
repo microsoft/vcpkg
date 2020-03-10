@@ -60,6 +60,9 @@ namespace vcpkg::Export
     {
         return Strings::format(R"###(
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <VcpkgRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
+  </PropertyGroup>
   <Import Condition="Exists('%s')" Project="%s" />
 </Project>
 )###",
@@ -137,7 +140,7 @@ namespace vcpkg::Export
 
         // This file will be placed in "build\native" in the nuget package. Therefore, go up two dirs.
         const std::string targets_redirect_content =
-            create_targets_redirect("../../scripts/buildsystems/msbuild/vcpkg.targets");
+            create_targets_redirect("$(MSBuildThisFileDirectory)../../scripts/buildsystems/msbuild/vcpkg.targets");
         const fs::path targets_redirect = paths.buildsystems / "tmp" / "vcpkg.export.nuget.targets";
 
         std::error_code ec;
