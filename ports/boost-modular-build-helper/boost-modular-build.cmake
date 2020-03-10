@@ -75,17 +75,35 @@ function(boost_modular_build)
     # endif()
 
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(configure_option)
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
-            set(fragment_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+            list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_EXECUTABLE)
+            list(APPEND configure_option "-DVCPKG_PYTHON_EXECUTABLE=${VCPKG_PYTHON_EXECUTABLE}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_INCLUDE)
+            list(APPEND configure_option "-DVCPKG_PYTHON_INCLUDE=${VCPKG_PYTHON_INCLUDE}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_LIBS_RELEASE)
+            list(APPEND configure_option "-DVCPKG_PYTHON_LIBS_RELEASE=${VCPKG_PYTHON_LIBS_RELEASE}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_LIBS_DEBUG)
+            list(APPEND configure_option "-DVCPKG_PYTHON_LIBS_DEBUG=${VCPKG_PYTHON_LIBS_DEBUG}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_VERSION)
+            list(APPEND configure_option "-DVCPKG_PYTHON_VERSION=${VCPKG_PYTHON_VERSION}")
         endif()
         vcpkg_configure_cmake(
             SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
             PREFER_NINJA
             OPTIONS
+                "-DPORT=${PORT}"
+                "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
                 "-DB2_EXE=${B2_EXE}"
                 "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
                 "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
-                ${fragment_option}
+                ${configure_option}
         )
         vcpkg_install_cmake()
 
@@ -126,15 +144,10 @@ function(boost_modular_build)
         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     )
 
-    if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-        set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-    else()
-        execute_process(
-            COMMAND nproc
-            OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-        )
-        string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-        string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
+    include(ProcessorCount)
+    ProcessorCount(NUMBER_OF_PROCESSORS)
+    if(NOT NUMBER_OF_PROCESSORS)
+        set(NUMBER_OF_PROCESSORS 1)
     endif()
 
     ######################
@@ -151,6 +164,8 @@ function(boost_modular_build)
         -q
         "-sZLIB_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
         "-sBZIP2_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
+        "-sLZMA_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
+        "-sZSTD_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
         threading=multi
     )
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -163,6 +178,10 @@ function(boost_modular_build)
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
          "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
+         -sLZMA_BINARY=lzmad
+         "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
+         -sZSTD_BINARY=zstdd
+         "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
  
     set(_bm_OPTIONS_REL
@@ -170,6 +189,10 @@ function(boost_modular_build)
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
          "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
+         -sLZMA_BINARY=lzma
+         "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
+         -sZSTD_BINARY=zstd
+         "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
     )
 
     # Properly handle compiler and linker flags passed by VCPKG
@@ -185,7 +208,6 @@ function(boost_modular_build)
         list(APPEND _bm_OPTIONS_DBG "cxxflags=${VCPKG_CXX_FLAGS_DEBUG}")
     endif()
 
-
     if(VCPKG_C_FLAGS)
         list(APPEND _bm_OPTIONS "cflags=${VCPKG_C_FLAGS}")
     endif()
@@ -198,7 +220,6 @@ function(boost_modular_build)
         list(APPEND _bm_OPTIONS_DBG "cflags=${VCPKG_C_FLAGS_DEBUG}")
     endif()
 
-
     if(VCPKG_LINKER_FLAGS)
         list(APPEND _bm_OPTIONS "linkflags=${VCPKG_LINKER_FLAGS}")
     endif()
@@ -210,7 +231,6 @@ function(boost_modular_build)
     if(VCPKG_LINKER_FLAGS_DEBUG)
         list(APPEND _bm_OPTIONS_DBG "linkflags=${VCPKG_LINKER_FLAGS_DEBUG}")
     endif()
-
 
     # Add build type specific options
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -236,7 +256,7 @@ function(boost_modular_build)
     endif()
 
     file(TO_CMAKE_PATH "${_bm_DIR}/nothing.bat" NOTHING_BAT)
-    set(TOOLSET_OPTIONS " <cxxflags>/EHsc <compileflags>-Zm800 <compileflags>-nologo")
+    set(TOOLSET_OPTIONS "<cxxflags>/EHsc <compileflags>-Zm800 <compileflags>-nologo")
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         if(NOT VCPKG_PLATFORM_TOOLSET MATCHES "v140")
             find_path(PATH_TO_CL cl.exe)
@@ -254,8 +274,6 @@ function(boost_modular_build)
         string(REPLACE "\\" "/" PLATFORM_WINMD_DIR ${PLATFORM_WINMD_DIR}) # escape backslashes
 
         set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags> /AI\"${PLATFORM_WINMD_DIR}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
-    else()
-        set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <compileflags>-D_WIN32_WINNT=0x0602")
     endif()
 
     configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
@@ -357,8 +375,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_71" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
-        string(REPLACE "_python3-" "_python-" NEW_FILENAME ${NEW_FILENAME})
+        string(REPLACE "-1_72" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
