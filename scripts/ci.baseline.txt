@@ -1130,11 +1130,11 @@ mpir:arm64-windows=fail
 mpir:arm-uwp=fail
 mpir:x64-uwp=fail
 
-#Conflicts with angle and qt-5base
+#Conflicts with angle
 ms-angle:arm64-windows      = skip
 ms-angle:arm-uwp            = skip
-ms-angle:x64-linux          = fail
-ms-angle:x64-osx            = fail
+ms-angle:x64-linux          = skip
+ms-angle:x64-osx            = skip
 ms-angle:x64-uwp            = skip
 ms-angle:x64-windows        = skip
 ms-angle:x64-windows-static = skip
