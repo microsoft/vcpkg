@@ -1,13 +1,14 @@
-include(vcpkg_common_functions)
-
-set(BOTAN_VERSION 2.11.0)
+set(BOTAN_VERSION 2.12.1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF 16a726c3ad10316bd8d37b6118a5cc52894e8e8f
-    SHA512 3d759fb262d65f7d325a1e888f74cb1c372ef687b0fcc6fc6ba041b83e3dc65c2928b343c65a89e73ea00c09d11cdda3a161ca98dbabe426903c4cbaf030767c
+    REF 1a6ad661ce64287ccbe26460ccc3aa4247d86ba8 # 2.12.1
+    SHA512 7a774f325c85761e2d076847f1fc8bc67592d696c4ebde839928591f7c85352e2df6032c122bdcc603adf84d76f5a1897c7118aa3859d38f79e474f27bc3b588
     HEAD_REF master
+    PATCHES
+        fix-generate-build-path.patch
+        fix-msvc-build.patch # Remove this patch on next update
 )
 
 if(CMAKE_HOST_WIN32)
@@ -95,7 +96,11 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
     vcpkg_execute_required_process(
         COMMAND "${PYTHON3}" "${SOURCE_PATH}/src/scripts/install.py"
             --prefix=${BOTAN_FLAG_PREFIX}
-            --docdir=share
+            --bindir=${BOTAN_FLAG_PREFIX}/bin
+            --libdir=${BOTAN_FLAG_PREFIX}/lib
+            --pkgconfigdir=${BOTAN_FLAG_PREFIX}/lib
+            --includedir=${BOTAN_FLAG_PREFIX}/include
+            --docdir=${BOTAN_FLAG_PREFIX}/share
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 

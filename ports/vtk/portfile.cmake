@@ -1,8 +1,6 @@
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
-
-include(vcpkg_common_functions)
 
 set(VTK_SHORT_VERSION "8.2")
 set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
@@ -34,6 +32,7 @@ vcpkg_from_github(
         hdf5_static.patch
         fix-find-lzma.patch
         fix-proj4.patch
+        fix-VTKConfig-cmake.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -82,9 +81,13 @@ if(VTK_WITH_ALL_MODULES)
     )
 endif()
 
-set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
-set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
-
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
+    set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
+else()
+    set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libproj.a")
+    set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libproj.a")
+endif()
 # =============================================================================
 # Configure & Install
 
@@ -249,7 +252,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # =============================================================================
 # Handle copyright
-file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/vtk/copyright)
+file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)

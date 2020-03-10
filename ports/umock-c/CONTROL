@@ -1,5 +1,8 @@
 Source: umock-c
-Version: 2019-07-01-LTS-1
+Version: 2020-02-04.1
 Description: A pure C mocking library
 Build-Depends: azure-macro-utils-c
 
+Feature: public-preview
+Description: A pure C mocking library (public-preview)
+Build-Depends: azure-macro-utils-c[public-preview]

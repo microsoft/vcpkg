@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SDL-Mirror/SDL
@@ -8,27 +6,27 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         export-symbols-only-in-shared-build.patch
+        fix-cmake-include-dir.patch
         enable-winrt-cmake.patch
         fix-arm64-headers.patch
         disable-hidapi-for-uwp.patch
+        fix-space-in-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL_SHARED)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
-set(VULKAN_VIDEO OFF)
-if("vulkan" IN_LIST FEATURES)
-    set(VULKAN_VIDEO ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    vulkan  VIDEO_VULKAN
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DSDL_STATIC=${SDL_STATIC}
         -DSDL_SHARED=${SDL_SHARED}
-        -DVIDEO_VULKAN=${VULKAN_VIDEO}
         -DFORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DLIBC=ON
 )

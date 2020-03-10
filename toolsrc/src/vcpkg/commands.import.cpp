@@ -108,12 +108,13 @@ namespace vcpkg::Commands::Import
         const fs::path include_directory(args.command_arguments[1]);
         const fs::path project_directory(args.command_arguments[2]);
 
-        const Expected<Parse::RawParagraph> pghs =
-            Paragraphs::get_single_paragraph(paths.get_filesystem(), control_file_path);
+        const auto pghs = Paragraphs::get_single_paragraph(paths.get_filesystem(), control_file_path);
         Checks::check_exit(VCPKG_LINE_INFO,
                            pghs.get() != nullptr,
                            "Invalid control file %s for package",
-                           control_file_path.generic_u8string());
+                           control_file_path.generic_u8string(),
+                           "\n",
+                           pghs.error());
 
         StatusParagraph spgh;
         spgh.package = BinaryParagraph(*pghs.get());

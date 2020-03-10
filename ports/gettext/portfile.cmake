@@ -12,9 +12,10 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0001-Fix-macro-definitions.patch
         0002-Fix-uwp-build.patch
+        0003-Fix-win-unicode-paths.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_LINUX)
     file(COPY
         ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
         ${CMAKE_CURRENT_LIST_DIR}/config.win32.h

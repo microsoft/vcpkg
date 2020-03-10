@@ -184,7 +184,7 @@ namespace vcpkg::Metrics
             if (buildtime_names.size() > 0)
             {
                 if (props_plus_buildtimes.size() > 0) props_plus_buildtimes.push_back(',');
-                props_plus_buildtimes.append(Strings::format(R"("buildnames": [%s], "buildtimes": [%s])",
+                props_plus_buildtimes.append(Strings::format(R"("buildnames_1": [%s], "buildtimes": [%s])",
                                                              Strings::join(",", buildtime_names, to_json_string),
                                                              Strings::join(",", buildtime_times)));
             }
@@ -441,7 +441,7 @@ namespace vcpkg::Metrics
         if (ec) return;
 
 #if defined(_WIN32)
-        const std::string cmd_line = Strings::format("start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"",
+        const std::string cmd_line = Strings::format("cmd /c \"start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"\"",
                                                      temp_folder_path_exe.u8string(),
                                                      vcpkg_metrics_txt_path.u8string());
         System::cmd_execute_no_wait(cmd_line);
