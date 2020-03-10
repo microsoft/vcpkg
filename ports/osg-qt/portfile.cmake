@@ -12,6 +12,7 @@ vcpkg_from_github(
 if(VCPKG_TARGET_IS_OSX)
     string(APPEND VCPKG_CXX_FLAGS " -stdlib=libc++")
     string(APPEND VCPKG_C_FLAGS "") # both must be set
+    string(APPEND VCPKG_LINKER_FLAGS " -lfontconfig")
 endif()
 
 vcpkg_configure_cmake(
