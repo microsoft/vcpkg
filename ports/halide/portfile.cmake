@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF 0cbe65bdae34acfc64ec7edfa43b3f72316d8b47
-    SHA512 ca05d8f6a87dcc170b8cab3a7a5e36893f0ec21454c8c3d557389c1e3b054e304023565c02a34f00580719d4eb0fb8fcd803d78d1a1bbd0f0a358212eba4fbef
+    REF f43293be3725bb959941e38c1b1fa9ae925f7389
+    SHA512 f223185e208acf6c5b73353a6b5be815db5f2598f568596e800c35ea40b0babe4630da44229e14a5607e9d5e78298d07e7b36a9cbc7b71bf3e665bc12caff68e
     HEAD_REF master
     PATCHES
         fix-install-path.patch
