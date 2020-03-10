@@ -77,6 +77,7 @@ anyrpc:x86-windows=ignore
 anyrpc:x64-windows-static=ignore
 apr:arm-uwp=fail
 apr:x64-uwp=fail
+apr:arm64-windows=fail # CI machine cannot run gen_test_char
 argtable2:arm-uwp=fail
 argtable2:x64-uwp=fail
 arrow:arm64-windows=fail
