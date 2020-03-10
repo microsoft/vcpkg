@@ -24,7 +24,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # By default in LLVM assertions are enabled for Debug configuration only.
-# `enable-assertions` explicitly enabled assertions for all configurations.
+# `enable-assertions` explicitly enables assertions for all configurations.
 if("enable-assertions" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS
         -DLLVM_ENABLE_ASSERTIONS=ON
