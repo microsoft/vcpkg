@@ -1,6 +1,7 @@
 include(vcpkg_common_functions)
 
 vcpkg_buildpath_length_warning(37)
+vcpkg_fail_port_install(ON_TARGET "uwp" "linux" "osx")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -27,5 +28,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(COPY ${SOURCE_PATH}/lang/c/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/avro-c)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/avro-c/LICENSE ${CURRENT_PACKAGES_DIR}/share/avro-c/copyright)
+file(INSTALL ${SOURCE_PATH}/lang/c/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
