@@ -383,7 +383,7 @@ endif()
 #Code to get generated CMake files from CI 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
 file(GLOB_RECURSE CMAKE_GUI_FILES "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/*.cmake" )
-foreach(cmake_file "${CMAKE_GUI_FILES}")
+foreach(cmake_file ${CMAKE_GUI_FILES})
     get_filename_component(cmake_filename "${cmake_file}" NAME)
     file(COPY "${cmake_file}" DESTINATION "${CURRENT_BUILDTREES_DIR}")
     file(RENAME "${CURRENT_BUILDTREES_DIR}/${cmake_filename}" "${CURRENT_BUILDTREES_DIR}/${cmake_filename}.log")
