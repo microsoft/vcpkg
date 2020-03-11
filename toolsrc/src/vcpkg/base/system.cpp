@@ -22,6 +22,18 @@ namespace vcpkg
         return nullopt;
     }
 
+    ZStringView System::to_zstring_view(CPUArchitecture arch) noexcept
+    {
+        switch (arch)
+        {
+            case CPUArchitecture::X86: return "x86";
+            case CPUArchitecture::X64: return "x64";
+            case CPUArchitecture::ARM: return "arm";
+            case CPUArchitecture::ARM64: return "arm64";
+            default: Checks::exit_with_message(VCPKG_LINE_INFO, "unexpected vcpkg::System::CPUArchitecture");
+        }
+    }
+
     CPUArchitecture System::get_host_processor()
     {
 #if defined(_WIN32)
@@ -30,7 +42,7 @@ namespace vcpkg
 
         const auto procarch = get_environment_variable("PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
         return to_cpu_architecture(procarch).value_or_exit(VCPKG_LINE_INFO);
-#else
+#else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
 #if defined(__x86_64__) || defined(_M_X64)
         return CPUArchitecture::X64;
 #elif defined(__x86__) || defined(_M_X86)
@@ -39,10 +51,10 @@ namespace vcpkg
         return CPUArchitecture::ARM;
 #elif defined(__aarch64__) || defined(_M_ARM64)
         return CPUArchitecture::ARM64;
-#else
+#else // choose architecture
 #error "Unknown host architecture"
-#endif
-#endif
+#endif // choose architecture
+#endif // defined(_WIN32)
     }
 
     std::vector<CPUArchitecture> System::get_supported_host_architectures()
@@ -67,7 +79,7 @@ namespace vcpkg
         {
             supported_architectures.push_back(CPUArchitecture::X86);
         }
-#endif
+#endif // defined(_WIN32)
 
         return supported_architectures;
     }
@@ -86,11 +98,11 @@ namespace vcpkg
         Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret.pop_back();
         return Strings::to_utf8(ret.c_str());
-#else
+#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
         auto v = getenv(varname.c_str());
         if (!v) return nullopt;
         return std::string(v);
-#endif
+#endif // defined(_WIN32)
     }
 
 #if defined(_WIN32)
@@ -125,13 +137,13 @@ namespace vcpkg
         ret.pop_back(); // remove extra trailing null byte
         return Strings::to_utf8(ret);
     }
-#else
+#else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
     Optional<std::string> System::get_registry_string(void*, StringView, StringView) { return nullopt; }
-#endif
+#endif // defined(_WIN32)
 
     static const Optional<fs::path>& get_program_files()
     {
-        static const auto PATH = []() -> Optional<fs::path> {
+        static const auto PROGRAMFILES = []() -> Optional<fs::path> {
             auto value = System::get_environment_variable("PROGRAMFILES");
             if (auto v = value.get())
             {
@@ -141,12 +153,12 @@ namespace vcpkg
             return nullopt;
         }();
 
-        return PATH;
+        return PROGRAMFILES;
     }
 
     const Optional<fs::path>& System::get_program_files_32_bit()
     {
-        static const auto PATH = []() -> Optional<fs::path> {
+        static const auto PROGRAMFILES_x86 = []() -> Optional<fs::path> {
             auto value = System::get_environment_variable("ProgramFiles(x86)");
             if (auto v = value.get())
             {
@@ -154,12 +166,12 @@ namespace vcpkg
             }
             return get_program_files();
         }();
-        return PATH;
+        return PROGRAMFILES_x86;
     }
 
     const Optional<fs::path>& System::get_program_files_platform_bitness()
     {
-        static const auto PATH = []() -> Optional<fs::path> {
+        static const auto ProgramW6432 = []() -> Optional<fs::path> {
             auto value = System::get_environment_variable("ProgramW6432");
             if (auto v = value.get())
             {
@@ -167,10 +179,22 @@ namespace vcpkg
             }
             return get_program_files();
         }();
-        return PATH;
+        return ProgramW6432;
     }
 
     int System::get_num_logical_cores() { return std::thread::hardware_concurrency(); }
+
+    Optional<CPUArchitecture> System::guess_visual_studio_prompt_target_architecture()
+    {
+        // Check for the "vsdevcmd" infrastructure used by Visual Studio 2017 and later
+        const auto VSCMD_ARG_TGT_ARCH = System::get_environment_variable("VSCMD_ARG_TGT_ARCH");
+        if (VSCMD_ARG_TGT_ARCH)
+        {
+            return to_cpu_architecture(VSCMD_ARG_TGT_ARCH.value_or_exit(VCPKG_LINE_INFO));
+        }
+
+        return nullopt;
+    }
 }
 
 namespace vcpkg::Debug
