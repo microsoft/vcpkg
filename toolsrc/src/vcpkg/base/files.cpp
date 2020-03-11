@@ -376,12 +376,6 @@ namespace vcpkg::Files
             for (const std::string& line : lines)
             {
                 output << line << "\n";
-                if (!output)
-                {
-                    output.close();
-                    ec.assign(errno, std::generic_category());
-                    return;
-                }
             }
             output.close();
         }
