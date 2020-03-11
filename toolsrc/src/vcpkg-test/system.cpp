@@ -122,6 +122,11 @@ TEST_CASE ("[from_cpu_architecture]", "system")
 TEST_CASE ("[guess_visual_studio_prompt]", "system")
 {
     environment_variable_resetter reset_VSCMD_ARG_TGT_ARCH{"VSCMD_ARG_TGT_ARCH"};
+    environment_variable_resetter reset_VCINSTALLDIR{"VCINSTALLDIR"};
+    environment_variable_resetter reset_Platform{"Platform"};
+
+    set_environment_variable("Platform", "x86"); // ignored if VCINSTALLDIR unset
+    set_environment_variable("VCINSTALLDIR", nullopt);
     set_environment_variable("VSCMD_ARG_TGT_ARCH", nullopt);
     CHECK(!guess_visual_studio_prompt_target_architecture().has_value());
     set_environment_variable("VSCMD_ARG_TGT_ARCH", "x86");
@@ -134,6 +139,21 @@ TEST_CASE ("[guess_visual_studio_prompt]", "system")
     CHECK(guess_visual_studio_prompt_target_architecture()
         .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::ARM);
     set_environment_variable("VSCMD_ARG_TGT_ARCH", "arm64");
-    CHECK(guess_visual_studio_prompt_target_architecture().value_or_exit(VCPKG_LINE_INFO)
-        == CPUArchitecture::ARM64);
+    CHECK(guess_visual_studio_prompt_target_architecture()
+        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::ARM64);
+
+    // check that apparent "nested" prompts defer to "vsdevcmd"
+    set_environment_variable("VCINSTALLDIR", "anything");
+    CHECK(guess_visual_studio_prompt_target_architecture()
+        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::ARM64);
+    set_environment_variable("VSCMD_ARG_TGT_ARCH", nullopt);
+    set_environment_variable("Platform", nullopt);
+    CHECK(guess_visual_studio_prompt_target_architecture()
+        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X86);
+    set_environment_variable("Platform", "x86");
+    CHECK(guess_visual_studio_prompt_target_architecture()
+        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X86);
+    set_environment_variable("Platform", "x64");
+    CHECK(guess_visual_studio_prompt_target_architecture()
+        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X64);
 }

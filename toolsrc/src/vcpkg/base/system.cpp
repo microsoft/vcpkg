@@ -193,6 +193,20 @@ namespace vcpkg
             return to_cpu_architecture(VSCMD_ARG_TGT_ARCH.value_or_exit(VCPKG_LINE_INFO));
         }
 
+        // Check for the "vcvarsall" infrastructure used by Visual Studio 2015
+        if (System::get_environment_variable("VCINSTALLDIR"))
+        {
+            const auto Platform = System::get_environment_variable("Platform");
+            if (Platform)
+            {
+                return to_cpu_architecture(Platform.value_or_exit(VCPKG_LINE_INFO));
+            }
+            else
+            {
+                return CPUArchitecture::X86;
+            }
+        }
+
         return nullopt;
     }
 }
