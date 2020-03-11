@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
+
 set(GETTEXT_VERSION 0.19)
 
 vcpkg_download_distfile(ARCHIVE
