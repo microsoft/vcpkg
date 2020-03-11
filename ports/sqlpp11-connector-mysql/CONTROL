@@ -2,3 +2,4 @@ Source: sqlpp11-connector-mysql
 Version: 0.26
 Description: A C++ wrapper for MySQL meant to be used in combination with sqlpp11.
 Build-Depends: date, libmariadb, sqlpp11
+Homepage: https://github.com/rbock/sqlpp11-connector-mysql
