@@ -1,3 +1,4 @@
+Source: ixwebsocket
 Version: 8.0.5
 Build-Depends: zlib
 Homepage: https://github.com/machinezone/IXWebSocket
