@@ -38,34 +38,45 @@ function(vcpkg_configure_meson)
     
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    
-    # use the same compiler options as in vcpkg_configure_cmake
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "vcpkg_configure_meson() currently only supports windows targets.")
+
+    #Extract compiler flags
+    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+        set(MESON_CMAKE_FLAG_SUFFIX "_INIT")
+        if(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR _TARGETTING_UWP)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
+            set(MESON_CMAKE_FLAG_SUFFIX "")
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
+        endif()
     endif()
-    set(MESON_COMMON_CFLAGS "${MESON_COMMON_CFLAGS} /DWIN32 /D_WINDOWS /W3 /utf-8")
-    set(MESON_COMMON_CXXFLAGS "${MESON_COMMON_CXXFLAGS} /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc")
+
+    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
     
-    if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        set(MESON_DEBUG_CFLAGS "${MESON_DEBUG_CFLAGS} /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1")
-        set(MESON_DEBUG_CXXFLAGS "${MESON_DEBUG_CXXFLAGS} /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1")
-        
-        set(MESON_RELEASE_CFLAGS "${MESON_RELEASE_CFLAGS} /MD /O2 /Gy /DNDEBUG /Z7")
-        set(MESON_RELEASE_CXXFLAGS "${MESON_RELEASE_CXXFLAGS} /MD /O2 /Gy /DNDEBUG /Z7")
-    elseif(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL "static")
-        set(MESON_DEBUG_CFLAGS "${MESON_DEBUG_CFLAGS} /D_DEBUG /MTd /Z7 /Ob0 /Od /RTC1")
-        set(MESON_DEBUG_CXXFLAGS "${MESON_DEBUG_CXXFLAGS} /D_DEBUG /MTd /Z7 /Ob0 /Od /RTC1")
-        
-        set(MESON_RELEASE_CFLAGS "${MESON_RELEASE_CFLAGS} /MT /O2 /Gy /DNDEBUG /Z7")
-        set(MESON_RELEASE_CXXFLAGS "${MESON_RELEASE_CXXFLAGS} /MT /O2 /Gy /DNDEBUG /Z7")
-    endif()
-    
-    set(MESON_COMMON_LDFLAGS "${MESON_COMMON_LDFLAGS} /DEBUG")
-    set(MESON_RELEASE_LDFLAGS "${MESON_RELEASE_LDFLAGS} /INCREMENTAL:NO /OPT:REF /OPT:ICF")
+    string(APPEND MESON_COMMON_CFLAGS " ${CMAKE_C_FLAGS${MESON_CMAKE_FLAG_SUFFIX}}")
+    string(APPEND MESON_COMMON_CXXFLAGS " ${CMAKE_CXX_FLAGS${MESON_CMAKE_FLAG_SUFFIX}}")
+
+    string(APPEND MESON_DEBUG_CFLAGS " ${CMAKE_C_FLAGS_DEBUG${MESON_CMAKE_FLAG_SUFFIX}}")
+    string(APPEND MESON_DEBUG_CXXFLAGS " ${CMAKE_CXX_FLAGS_DEBUG${MESON_CMAKE_FLAG_SUFFIX}}")
+
+    string(APPEND MESON_RELEASE_CFLAGS " ${CMAKE_C_FLAGS_RELEASE${MESON_CMAKE_FLAG_SUFFIX}}")
+    string(APPEND MESON_RELEASE_CXXFLAGS " ${CMAKE_CXX_FLAGS_RELEASE${MESON_CMAKE_FLAG_SUFFIX}}")
+
+    string(APPEND MESON_COMMON_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS${MESON_CMAKE_FLAG_SUFFIX}}")
+    string(APPEND MESON_DEBUG_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS_DEBUG${MESON_CMAKE_FLAG_SUFFIX}}")
+    string(APPEND MESON_RELEASE_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS_RELEASE${MESON_CMAKE_FLAG_SUFFIX}}")
     
     # select meson cmd-line options
     list(APPEND _vcm_OPTIONS -Dcmake_prefix_path=${CURRENT_INSTALLED_DIR})
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
+    
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(APPEND _vcm_OPTIONS --default-library shared)
     else()
@@ -76,45 +87,119 @@ function(vcpkg_configure_meson)
     list(APPEND _vcm_OPTIONS_RELEASE --prefix  ${CURRENT_PACKAGES_DIR})
     
     vcpkg_find_acquire_program(MESON)
+    
     vcpkg_find_acquire_program(NINJA)
     get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-    if(CMAKE_HOST_WIN32)
-        set(_PATHSEP ";")
-    else()
-        set(_PATHSEP ":")
-    endif()
-    set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
+    vcpkg_add_to_path("${NINJA_PATH}")
 
+    if(NOT ENV{PKG_CONFIG})
+        find_program(PKGCONFIG pkg-config)
+        if(NOT PKGCONFIG AND CMAKE_HOST_WIN32)
+            vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
+            vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+        endif()
+        find_program(PKGCONFIG pkg-config REQUIRED)
+    else()
+        debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
+        set(PKGCONFIG $ENV{PKG_CONFIG})
+    endif()
+
+    # configure debug
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")        
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        
+        #setting up PKGCONFIG
+        if(NOT PKGCONFIG MATCHES "--define-variable=prefix")
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${CURRENT_INSTALLED_DIR}/debug")
+        endif()
+        if(ENV{PKG_CONFIG_PATH})
+            set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
+            set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+        else()
+            set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib")
+        endif()
+        
+        set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_DEBUG_CFLAGS}]")
+        string(REGEX REPLACE " +/" "','-" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE "\\\[\'," "[" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" CFLAGS ${CFLAGS})
+        set(CXXFLAGS "-Dcpp_args=[${MESON_COMMON_CXXFLAGS} ${MESON_DEBUG_CXXFLAGS}]")
+        string(REGEX REPLACE " +/" "','-" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE "\\\['," "[" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" CXXFLAGS ${CXXFLAGS})
+        set(LDFLAGS "[${MESON_COMMON_LDFLAGS} ${MESON_DEBUG_LDFLAGS}]")
+        string(REGEX REPLACE " +/" "','-" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE "\\\['," "[" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" LDFLAGS ${LDFLAGS})
+        set(CLDFLAGS "-Dc_link_args=${LDFLAGS}")
+        set(CXXLDFLAGS "-Dcpp_link_args=${LDFLAGS}")
+        vcpkg_execute_required_process(
+            COMMAND ${MESON} ${_vcm_OPTIONS} ${_vcm_OPTIONS_DEBUG} ${_vcm_SOURCE_PATH} ${CFLAGS} ${CXXFLAGS} ${CLDFLAGS} ${CXXLDFLAGS}
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+            LOGNAME config-${TARGET_TRIPLET}-dbg
+        )
+        
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+        
+        #Restore PKG_CONFIG_PATH
+        if(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG)
+            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_DEBUG}")
+            unset(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG)
+        else()
+            unset(ENV{PKG_CONFIG_PATH})
+        endif()
+    endif()
+    
     # configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        set(ENV{CFLAGS} "${MESON_COMMON_CFLAGS} ${MESON_RELEASE_CFLAGS}")
-        set(ENV{CXXFLAGS} "${MESON_COMMON_CXXFLAGS} ${MESON_RELEASE_CXXFLAGS}")
-        set(ENV{LDFLAGS} "${MESON_COMMON_LDFLAGS} ${MESON_RELEASE_LDFLAGS}")
-        set(ENV{CPPFLAGS} "${MESON_COMMON_CPPFLAGS} ${MESON_RELEASE_CPPFLAGS}")
+        
+        #setting up PKGCONFIG
+        if(NOT PKGCONFIG MATCHES "--define-variable=prefix")
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${CURRENT_INSTALLED_DIR}")
+        endif()
+        if(ENV{PKG_CONFIG_PATH})
+            set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
+            set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+        else()
+            set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib")
+        endif()
+        
+        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+        
+        # Normalize flags for meson (i.e. " /string /with /flags " -> ['/string', '/with', '/flags'])
+        set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_RELEASE_CFLAGS}]")
+        string(REGEX REPLACE " +/" "','/" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE "\\\[\'," "[" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" CFLAGS ${CFLAGS})
+        set(CXXFLAGS "-Dcpp_args=[${MESON_COMMON_CXXFLAGS} ${MESON_RELEASE_CXXFLAGS}]")
+        string(REGEX REPLACE " +/" "','/" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE "\\\['," "[" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" CXXFLAGS ${CXXFLAGS})
+        set(LDFLAGS "[${MESON_COMMON_LDFLAGS} ${MESON_RELEASE_LDFLAGS}]")
+        string(REGEX REPLACE " +/" "','/" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE "\\\['," "[" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE " *\\\]" "']" LDFLAGS ${LDFLAGS})
+        set(CLDFLAGS "-Dc_link_args=${LDFLAGS}")
+        set(CXXLDFLAGS "-Dcpp_link_args=${LDFLAGS}")
+        
         vcpkg_execute_required_process(
-            COMMAND ${MESON} ${_vcm_OPTIONS} ${_vcm_OPTIONS_RELEASE} ${_vcm_SOURCE_PATH}
+            COMMAND ${MESON} ${_vcm_OPTIONS} ${_vcm_OPTIONS_RELEASE} ${_vcm_SOURCE_PATH} ${CFLAGS} ${CXXFLAGS} ${CLDFLAGS} ${CXXLDFLAGS}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME config-${TARGET_TRIPLET}-rel
         )
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        # configure debug
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        set(ENV{CFLAGS} "${MESON_COMMON_CFLAGS} ${MESON_DEBUG_CFLAGS}")
-        set(ENV{CXXFLAGS} "${MESON_COMMON_CXXFLAGS} ${MESON_DEBUG_CXXFLAGS}")
-        set(ENV{LDFLAGS} "${MESON_COMMON_LDFLAGS} ${MESON_DEBUG_LDFLAGS}")
-        set(ENV{CPPFLAGS} "${MESON_COMMON_CPPFLAGS} ${MESON_DEBUG_CPPFLAGS}")
-        vcpkg_execute_required_process(
-            COMMAND ${MESON} ${_vcm_OPTIONS} ${_vcm_OPTIONS_DEBUG} ${_vcm_SOURCE_PATH}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-            LOGNAME config-${TARGET_TRIPLET}-dbg
-        )
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+        
+        #Restore PKG_CONFIG_PATH
+        if(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE)
+            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_RELEASE}")
+            unset(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE)
+        else()
+            unset(ENV{PKG_CONFIG_PATH})
+        endif()
+        
     endif()
 
 endfunction()
