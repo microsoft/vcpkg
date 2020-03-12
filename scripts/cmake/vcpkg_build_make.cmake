@@ -36,49 +36,82 @@ function(vcpkg_build_make)
         set(_VCPKG_PROJECT_SUBPATH /${_VCPKG_PROJECT_SUBPATH}/)
     endif()
     
+    if(WIN32)
+        set(_VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
+        set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
+    else()
+        string(REPLACE " " "\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
+        string(REPLACE " " "\ " _VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
+    endif()
+    
     set(MAKE )
     set(MAKE_OPTS )
     set(INSTALL_OPTS )
-    if (_VCPKG_MAKE_GENERATOR STREQUAL "make")
-        if (CMAKE_HOST_WIN32)
-            # Compiler requriements
-            vcpkg_find_acquire_program(YASM)
-            vcpkg_find_acquire_program(PERL)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-            get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-            get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-            
-            set(PATH_GLOBAL "$ENV{PATH}")
-            set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
-            set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-            # Set make command and install command
-            set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
-            # Must use absolute path to call make in windows
-            set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
-        else()
-            # Compiler requriements
-            find_program(MAKE make REQUIRED)
-            set(MAKE make;)
-            # Set make command and install command
-            set(MAKE_OPTS -j;${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS install;-j;${VCPKG_CONCURRENCY})
-        endif()
-    elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
-        find_program(NMAKE nmake REQUIRED)
-        get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
+    if (CMAKE_HOST_WIN32)
         set(PATH_GLOBAL "$ENV{PATH}")
-        set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
-        set(ENV{CL} "$ENV{CL} /MP")
-        # Set make command and install command
-        set(MAKE ${NMAKE} /NOLOGO /G /U)
-        set(MAKE_OPTS -f makefile all)
-        set(INSTALL_OPTS install)
+        # These should be moved into the portfile!
+        # vcpkg_find_acquire_program(YASM)
+        # get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
+        # vcpkg_add_to_path("${YASM_EXE_PATH}")
+        # vcpkg_find_acquire_program(PERL)
+        # get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+        # vcpkg_add_to_path("${PERL_EXE_PATH}")
+        
+        vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper")
+        vcpkg_acquire_msys(MSYS_ROOT)
+        find_program(MAKE make REQUIRED) #mingw32-make
+        set(MAKE_COMMAND "${MAKE}")
+        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f makefile all)
+
+        string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
+        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f makefile install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
+        #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
-        message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
+        # Compiler requriements
+        # set(MAKE_BASH)
+        find_program(MAKE make REQUIRED)
+        set(MAKE_COMMAND "${MAKE}")
+        # Set make command and install command
+        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f makefile all)
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
     
-    set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
+    # Backup enviromnent variables
+    set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
+    set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
+    set(LD_FLAGS_BACKUP "$ENV{LDFLAGS}")
+    set(INCLUDE_PATH_BACKUP "$ENV{INCLUDE_PATH}")
+    set(INCLUDE_BACKUP "$ENV{INCLUDE}")
+    set(C_INCLUDE_PATH_BACKUP "$ENV{C_INCLUDE_PATH}")
+    set(CPLUS_INCLUDE_PATH_BACKUP "$ENV{CPLUS_INCLUDE_PATH}")
+    set(LD_LIBRARY_PATH_BACKUP "$ENV{LD_LIBRARY_PATH}")
+    set(LIBRARY_PATH_BACKUP "$ENV{LIBRARY_PATH}")
+    set(LIBPATH_BACKUP "$ENV{LIBPATH}")
+    
+    # Setup include enviromnent
+    set(ENV{INCLUDE} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_BACKUP}")
+    set(ENV{INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_PATH_BACKUP}")
+    set(ENV{C_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${C_INCLUDE_PATH_BACKUP}")
+    set(ENV{CPLUS_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${CPLUS_INCLUDE_PATH_BACKUP}")
+
+    # Setup global flags
+    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
+    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
+    set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        string(APPEND C_FLAGS_GLOBAL " -fPIC")
+        string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
+    else()
+        string(APPEND C_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
+        string(APPEND CXX_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
+        string(APPEND LD_FLAGS_GLOBAL " /VERBOSE -no-undefined")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+            string(APPEND LD_FLAGS_GLOBAL " /machine:x64")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+            string(APPEND LD_FLAGS_GLOBAL " /machine:x86")
+        endif()
+    endif()
     
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
@@ -88,6 +121,7 @@ function(vcpkg_build_make)
                     continue()
                 endif()
                 set(SHORT_BUILDTYPE "-dbg")
+                set(CMAKE_BUILDTYPE "DEBUG")
             else()
                 # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                 if (_VCPKG_NO_DEBUG)
@@ -95,52 +129,82 @@ function(vcpkg_build_make)
                 else()
                     set(SHORT_BUILDTYPE "-rel")
                 endif()
+                set(CMAKE_BUILDTYPE "RELEASE")
             endif()
             
             if (CMAKE_HOST_WIN32)
                 # In windows we can remotely call make
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+                set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
             else()
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+                set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH}")
             endif()
     
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             if(_bc_ADD_BIN_TO_PATH)
                 set(_BACKUP_ENV_PATH "$ENV{PATH}")
-                if(CMAKE_HOST_WIN32)
-                    set(_PATHSEP ";")
-                else()
-                    set(_PATHSEP ":")
-                endif()
                 if(BUILDTYPE STREQUAL "debug")
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin${_PATHSEP}$ENV{PATH}")
+                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin")
                 else()
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin${_PATHSEP}$ENV{PATH}")
+                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
                 endif()
             endif()
 
             if (CMAKE_HOST_WIN32)
-                vcpkg_execute_build_process(
-                    COMMAND "${MAKE} ${MAKE_OPTS}"
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                )
+                set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_${CMAKE_BUILDTYPE}}")
+                string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
+                set(ENV{CFLAGS} ${TMP_CFLAGS})
+                
+                set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_${CMAKE_BUILDTYPE}}")
+                string(REGEX REPLACE "[ \t]+/" " -" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
+                set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
+                
+                set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+                string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
+                set(ENV{LDFLAGS} ${TMP_LDFLAGS})
+                
+                string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
+                string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF "${_VCPKG_INSTALLED_PKGCONF}")
+                string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF "${_VCPKG_INSTALLED_PKGCONF}")
+                if(BUILDTYPE STREQUAL "debug")
+                    set(ENV{VCPKG_PKG_PREFIX} ${_VCPKG_INSTALLED_PKGCONF}/debug)
+                else()
+                    set(ENV{VCPKG_PKG_PREFIX} ${_VCPKG_INSTALLED_PKGCONF})
+                endif()
+                
             else()
-                vcpkg_execute_build_process(
-                    COMMAND "${MAKE};${MAKE_OPTS}"
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_${CMAKE_BUILDTYPE}}")
+                set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_${CMAKE_BUILDTYPE}}")
+
+                if(BUILDTYPE STREQUAL "debug")
+                    set(ENV{LDFLAGS} "-L${_VCPKG_INSTALLED}/debug/lib/ -L${_VCPKG_INSTALLED}/debug/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+                    set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/${VCPKG_HOST_PATH_SEPARATOR}${LIBRARY_PATH_BACKUP}")
+                    set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/${VCPKG_HOST_PATH_SEPARATOR}${LD_LIBRARY_PATH_BACKUP}")
+                else()
+                    set(ENV{LDFLAGS} "-L${_VCPKG_INSTALLED}/lib/ -L${_VCPKG_INSTALLED}/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+                    set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/${VCPKG_HOST_PATH_SEPARATOR}${LIBRARY_PATH_BACKUP}")
+                    set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/${VCPKG_HOST_PATH_SEPARATOR}${LD_LIBRARY_PATH_BACKUP}")
+                endif()
+            endif()
+            
+            if(MAKE_BASH)
+                set(MAKE_CMD_LINE "${MAKE_COMMAND} ${MAKE_OPTS}")
+            else()
+                set(MAKE_CMD_LINE ${MAKE_COMMAND} ${MAKE_OPTS})
+            endif()
+            vcpkg_execute_build_process(
+                    COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
+                    WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
-            endif()
-    
+
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
             endif()
         endif()
     endforeach()
-    
-    if (_bc_ENABLE_INSTALL)
+
+    if (_bc_ENABLE_INSTALL OR TRUE)
         foreach(BUILDTYPE "debug" "release")
             if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
                 if(BUILDTYPE STREQUAL "debug")
@@ -159,27 +223,43 @@ function(vcpkg_build_make)
                 endif()
             
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-                if (CMAKE_HOST_WIN32)
-                    # In windows we can remotely call make
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
-                    vcpkg_execute_build_process(
-                        COMMAND "${MAKE} ${INSTALL_OPTS}"
-                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                    )
+                
+                if(MAKE_BASH)
+                    set(MAKE_CMD_LINE "${MAKE_COMMAND} ${INSTALL_OPTS}")
                 else()
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
-                    vcpkg_execute_build_process(
-                        COMMAND "${MAKE};${INSTALL_OPTS}"
-                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                    )
+                    set(MAKE_CMD_LINE ${MAKE_COMMAND} ${INSTALL_OPTS})
                 endif()
+                
+                set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+                vcpkg_execute_build_process(
+                    COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
+                    WORKING_DIRECTORY "${WORKING_DIRECTORY}"
+                    LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                )
+
             endif()
         endforeach()
     endif()
-    
+
+    # Restore enviromnent
+    set(ENV{CFLAGS} "${C_FLAGS_BACKUP}")
+    set(ENV{CXXFLAGS} "${CXX_FLAGS_BACKUP}")
+    set(ENV{LDFLAGS} "${LD_FLAGS_BACKUP}")
+
+    set(ENV{INCLUDE} "${INCLUDE_BACKUP}")
+    set(ENV{INCLUDE_PATH} "${INCLUDE_PATH_BACKUP}")
+    set(ENV{C_INCLUDE_PATH} "${C_INCLUDE_PATH_BACKUP}")
+    set(ENV{CPLUS_INCLUDE_PATH} "${CPLUS_INCLUDE_PATH_BACKUP}")
+    set(ENV{LIBRARY_PATH} "${LIBRARY_PATH_BACKUP}")
+    set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}")
+
     if (CMAKE_HOST_WIN32)
         set(ENV{PATH} "${PATH_GLOBAL}")
     endif()
+    
+    string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALL_PREFIX "${CURRENT_INSTALLED_DIR}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+    file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
+    file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
 endfunction()
