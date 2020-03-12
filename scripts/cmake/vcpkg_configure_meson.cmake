@@ -145,6 +145,15 @@ function(vcpkg_configure_meson)
             LOGNAME config-${TARGET_TRIPLET}-dbg
         )
         
+        #Copy meson log files into buildtree for CI
+        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/meson-logs/meson-log.txt")
+            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/meson-logs/meson-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
+            file(RENAME "${CURRENT_BUILDTREES_DIR}/meson-log.txt" "${CURRENT_BUILDTREES_DIR}/meson-log-dbg.txt")
+        endif()
+        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/meson-logs/install-log.txt")
+            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/meson-logs/install-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
+            file(RENAME "${CURRENT_BUILDTREES_DIR}/install-log.txt" "${CURRENT_BUILDTREES_DIR}/install-log-dbg.txt")
+        endif()
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
         
         #Restore PKG_CONFIG_PATH
@@ -198,6 +207,15 @@ function(vcpkg_configure_meson)
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME config-${TARGET_TRIPLET}-rel
         )
+        #Copy meson log files into buildtree for CI
+        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/meson-logs/meson-log.txt")
+            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/meson-logs/meson-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
+            file(RENAME "${CURRENT_BUILDTREES_DIR}/meson-log.txt" "${CURRENT_BUILDTREES_DIR}/meson-log-rel.txt")
+        endif()
+        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/meson-logs/install-log.txt")
+            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/meson-logs/install-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
+            file(RENAME "${CURRENT_BUILDTREES_DIR}/install-log.txt" "${CURRENT_BUILDTREES_DIR}/install-log-rel.txt")
+        endif()
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
         
         #Restore PKG_CONFIG_PATH
