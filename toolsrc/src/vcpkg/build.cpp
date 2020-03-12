@@ -276,7 +276,7 @@ namespace vcpkg::Build
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
-        if (pre_build_info.external_toolchain_file.has_value()) return "";
+        if (pre_build_info.external_toolchain_file.has_value() && !pre_build_info.load_vcvars_env) return "";
         if (!pre_build_info.cmake_system_name.empty() && pre_build_info.cmake_system_name != "WindowsStore") return "";
 
         const char* tonull = " >nul";
@@ -1128,6 +1128,25 @@ namespace vcpkg::Build
                 case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE:
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                     break;
+                case VcpkgTripletVar::LOAD_VCVARS_ENV:
+                        if (variable_value.empty()) 
+                        {
+                            load_vcvars_env = true;
+                            if(external_toolchain_file)
+                                load_vcvars_env = false;
+                        }
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "1") ||
+                                 Strings::case_insensitive_ascii_equals(variable_value, "on") ||
+                                 Strings::case_insensitive_ascii_equals(variable_value, "true"))
+                            load_vcvars_env = true;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "0") ||
+                                 Strings::case_insensitive_ascii_equals(variable_value, "off") ||
+                                 Strings::case_insensitive_ascii_equals(variable_value, "false"))
+                            load_vcvars_env = false;
+                        else
+                            Checks::exit_with_message(
+                                VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s", variable_value);
+                        break;
             }
         }
 
