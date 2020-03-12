@@ -1,16 +1,11 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flexible-collision-library/fcl
-    REF 54e9619bc2b084ee50e986ac3308160d663481c4
-    SHA512 11bfa3fdeeda6766769a34d2248ca32b6b13ecb32b412c068aa1c7aa3495d55b3f7a82a93621965904f9813c3fd0f128a84f796ae5731d2ff15b85935a0e1261
-    HEAD_REF fcl-0.5
-    PATCHES
-        0001_fix_package_detection.patch
-        0002-fix_dependencies.patch
+    REF a13c681e41eb8180cba7d4fd32637511f588cb82 #v0.6.0
+    SHA512 b0fe70f411871ff50b6e5978c01e5849099bec7b68983c6d1ff1afa1628980eaabafd59748ee06e4337efeb77dba6c65af93868a5fc5df980a133a3f667ddccf
+    HEAD_REF master
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -42,6 +37,6 @@ string(REPLACE "unset(_expectedTargets)"
                "unset(_expectedTargets)\n\nfind_package(octomap REQUIRED)\nfind_package(ccd REQUIRED)" FCL_CONFIG "${FCL_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/fcl/fclConfig.cmake "${FCL_CONFIG}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/fcl RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

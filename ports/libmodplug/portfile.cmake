@@ -11,6 +11,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
         PATCHES
             "001-automagically-define-modplug-static.patch"
             "002-detect_sinf.patch"
+            "003-use-static-cast-for-ctype.patch"
     )
 else()
     vcpkg_from_github(ARCHIVE
@@ -20,6 +21,7 @@ else()
         SHA512 c43bb3190b62c3a4e3636bba121b5593bbf8e6577ca9f2aa04d90b03730ea7fb590e640cdadeb565758b92e81187bc456e693fe37f1f4deace9b9f37556e3ba1
         PATCHES
             "002-detect_sinf.patch"
+            "003-use-static-cast-for-ctype.patch"
     )
 endif()
 

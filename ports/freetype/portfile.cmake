@@ -19,11 +19,9 @@ vcpkg_extract_source_archive_ex(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         bzip2       FT_WITH_BZIP2
-        harfbuzz    FT_WITH_HARFBUZZ
         png         FT_WITH_PNG
     INVERTED_FEATURES
         bzip2       CMAKE_DISABLE_FIND_PACKAGE_BZip2
-        harfbuzz    CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz
         png         CMAKE_DISABLE_FIND_PACKAGE_PNG
 )
 
@@ -31,6 +29,11 @@ if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
     set(ENABLE_DLL_EXPORT OFF)
 else()
     set(ENABLE_DLL_EXPORT ON)
+endif()
+
+set(OPTIONS)
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+  list(APPEND OPTIONS -DFT_DISABLE_FIND_PACKAGE_Harfbuzz=TRUE)
 endif()
 
 vcpkg_configure_cmake(
@@ -41,6 +44,7 @@ vcpkg_configure_cmake(
         -DFT_WITH_ZLIB=ON # Force system zlib.
         ${FEATURE_OPTIONS}
         -DENABLE_DLL_EXPORT=${ENABLE_DLL_EXPORT}
+        ${OPTIONS}
 )
 
 vcpkg_install_cmake()

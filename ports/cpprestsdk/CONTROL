@@ -1,8 +1,8 @@
 Source: cpprestsdk
-Version: 2.10.14-1
-Build-Depends: openssl (!uwp&!windows), boost-system (!uwp&!windows), 
+Version: 2.10.15
+Build-Depends: openssl (!uwp&!windows), boost-system (!uwp&!windows),
   boost-date-time (!uwp&!windows), boost-regex (!uwp&!windows), boost-thread (!uwp&!windows),
-  boost-filesystem (!uwp&!windows), boost-random (!uwp&!windows), boost-chrono (!uwp&!windows), 
+  boost-filesystem (!uwp&!windows), boost-random (!uwp&!windows), boost-chrono (!uwp&!windows),
   boost-asio (!uwp&!windows)
 Homepage: https://github.com/Microsoft/cpprestsdk
 Description: C++11 JSON, REST, and OAuth library
