@@ -121,17 +121,22 @@ function(vcpkg_configure_meson)
         endif()
         
         set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_DEBUG_CFLAGS}]")
-        string(REGEX REPLACE " +/" "','-" CFLAGS ${CFLAGS})
-        string(REGEX REPLACE "\\\[\'," "[" CFLAGS ${CFLAGS})
-        string(REGEX REPLACE " *\\\]" "']" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE " +(/|-)" "','\\1" CFLAGS ${CFLAGS}) # Seperate compiler arguments with comma and enclose in '
+        string(REGEX REPLACE " *\\\]" "']" CFLAGS ${CFLAGS}) # Add trailing ' at end
+        string(REGEX REPLACE "\\\['," "[" CFLAGS ${CFLAGS}) # Remove prepended ', introduced in #1
+        string(REGEX REPLACE "\\\['\\\]" "[]" CFLAGS ${CFLAGS}) # Remove trailing ' introduced in #2 if no elements
+
         set(CXXFLAGS "-Dcpp_args=[${MESON_COMMON_CXXFLAGS} ${MESON_DEBUG_CXXFLAGS}]")
         string(REGEX REPLACE " +/" "','-" CXXFLAGS ${CXXFLAGS})
-        string(REGEX REPLACE "\\\['," "[" CXXFLAGS ${CXXFLAGS})
         string(REGEX REPLACE " *\\\]" "']" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE "\\\['," "[" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE "\\\['\\\]" "[]" CXXFLAGS ${CXXFLAGS})
+
         set(LDFLAGS "[${MESON_COMMON_LDFLAGS} ${MESON_DEBUG_LDFLAGS}]")
         string(REGEX REPLACE " +/" "','-" LDFLAGS ${LDFLAGS})
-        string(REGEX REPLACE "\\\['," "[" LDFLAGS ${LDFLAGS})
         string(REGEX REPLACE " *\\\]" "']" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE "\\\['," "[" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE "\\\['\\\]" "[]" LDFLAGS ${LDFLAGS})
         set(CLDFLAGS "-Dc_link_args=${LDFLAGS}")
         set(CXXLDFLAGS "-Dcpp_link_args=${LDFLAGS}")
         vcpkg_execute_required_process(
@@ -171,17 +176,20 @@ function(vcpkg_configure_meson)
         
         # Normalize flags for meson (i.e. " /string /with /flags " -> ['/string', '/with', '/flags'])
         set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_RELEASE_CFLAGS}]")
-        string(REGEX REPLACE " +/" "','/" CFLAGS ${CFLAGS})
-        string(REGEX REPLACE "\\\[\'," "[" CFLAGS ${CFLAGS})
-        string(REGEX REPLACE " *\\\]" "']" CFLAGS ${CFLAGS})
+        string(REGEX REPLACE " +(/|-)" "','\\1" CFLAGS ${CFLAGS}) # Seperate compiler arguments with comma and enclose in '
+        string(REGEX REPLACE " *\\\]" "']" CFLAGS ${CFLAGS}) # Add trailing ' at end
+        string(REGEX REPLACE "\\\['," "[" CFLAGS ${CFLAGS}) # Remove prepended ', introduced in #1
+        string(REGEX REPLACE "\\\['\\\]" "[]" CFLAGS ${CFLAGS}) # Remove trailing ' introduced in #2 if no elements
         set(CXXFLAGS "-Dcpp_args=[${MESON_COMMON_CXXFLAGS} ${MESON_RELEASE_CXXFLAGS}]")
-        string(REGEX REPLACE " +/" "','/" CXXFLAGS ${CXXFLAGS})
-        string(REGEX REPLACE "\\\['," "[" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE " +/" "','-" CXXFLAGS ${CXXFLAGS})
         string(REGEX REPLACE " *\\\]" "']" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE "\\\['," "[" CXXFLAGS ${CXXFLAGS})
+        string(REGEX REPLACE "\\\['\\\]" "[]" CXXFLAGS ${CXXFLAGS})
         set(LDFLAGS "[${MESON_COMMON_LDFLAGS} ${MESON_RELEASE_LDFLAGS}]")
-        string(REGEX REPLACE " +/" "','/" LDFLAGS ${LDFLAGS})
-        string(REGEX REPLACE "\\\['," "[" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE " +/" "','-" LDFLAGS ${LDFLAGS})
         string(REGEX REPLACE " *\\\]" "']" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE "\\\['," "[" LDFLAGS ${LDFLAGS})
+        string(REGEX REPLACE "\\\['\\\]" "[]" LDFLAGS ${LDFLAGS})
         set(CLDFLAGS "-Dc_link_args=${LDFLAGS}")
         set(CXXLDFLAGS "-Dcpp_link_args=${LDFLAGS}")
         
