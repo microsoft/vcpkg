@@ -61,16 +61,16 @@ else()
         set(BUILD_STATIC yes)
     endif()
 
-    file(REMOVE_RECURSE ${SOURCE_PATH}/m4)
-    file(MAKE_DIRECTORY ${SOURCE_PATH}/m4)
+    #file(REMOVE_RECURSE ${SOURCE_PATH}/m4)
+    #file(MAKE_DIRECTORY ${SOURCE_PATH}/m4)
     
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         NO_DEBUG
         PRERUN_SHELL autogen.sh
         OPTIONS
-            --enable-shared=${BUILD_SHARED}
-            --enable-static=${BUILD_STATIC}
+            --enable-shared=${BUILD_SHARED} 
+            --enable-static=${BUILD_STATIC} 
     )
     
     vcpkg_install_make()

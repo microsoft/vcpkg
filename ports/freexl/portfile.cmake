@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(FREEXL_VERSION_STR "1.0.4")
 
 vcpkg_download_distfile(ARCHIVE

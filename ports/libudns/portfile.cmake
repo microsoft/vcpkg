@@ -13,7 +13,7 @@ vcpkg_configure_make(
     DISABLE_AUTO_DST
 )
 
-vcpkg_build_make()
+vcpkg_install_make()
 
 # Install
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)

@@ -17,7 +17,7 @@ vcpkg_configure_make(
 
 set(ENV{VCPKG_LIBPCAP_DIR} "${CURRENT_INSTALLED_DIR}")
 
-vcpkg_build_make()
+vcpkg_install_make()
 vcpkg_copy_pdbs()
 
 # Install manually because pfring cannot set prefix

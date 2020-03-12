@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
+#vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
 
 set(HEALPIX_VER 3.50)
 set(HEALPIX_PACK_NAME  ${HEALPIX_VER}_2018Dec10)
@@ -18,7 +18,7 @@ vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH src/cxx
     AUTOCONFIG
-    NO_DEBUG
+    #NO_DEBUG
     OPTIONS
         --with-libcfitsio-include=${CURRENT_INSTALLED_DIR}/include/cfitsio
         --with-libcfitsio-lib=${CURRENT_INSTALLED_DIR}/lib

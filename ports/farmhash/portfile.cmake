@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "Windows")
+#vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "Windows")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -9,12 +9,12 @@ vcpkg_from_github(
         HEAD_REF master
 )
 
-set(FLAGS "-g -mavx -maes -O3")
+#set(FLAGS "-g -mavx -maes -O3")
 vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
         OPTIONS
-        CXXFLAGS=${FLAGS}
+        #CXXFLAGS=${FLAGS}
 )
 
 vcpkg_install_make()
