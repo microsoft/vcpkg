@@ -98,7 +98,7 @@ TEST_CASE ("[to_cpu_architecture]", "system")
     }
 }
 
-TEST_CASE ("[from_cpu_architecture]", "system")
+TEST_CASE ("from_cpu_architecture", "[system]")
 {
     struct test_case
     {
@@ -119,7 +119,7 @@ TEST_CASE ("[from_cpu_architecture]", "system")
     }
 }
 
-TEST_CASE ("[guess_visual_studio_prompt]", "system")
+TEST_CASE ("guess_visual_studio_prompt", "[system]")
 {
     environment_variable_resetter reset_VSCMD_ARG_TGT_ARCH{"VSCMD_ARG_TGT_ARCH"};
     environment_variable_resetter reset_VCINSTALLDIR{"VCINSTALLDIR"};
