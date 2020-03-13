@@ -74,7 +74,7 @@ function(vcpkg_build_make)
         set(MAKE_COMMAND "${MAKE}")
         # Set make command and install command
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f makefile all)
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace install DESTDIR=${CURRENT_PACKAGES_DIR})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
     
     # Backup enviromnent variables
