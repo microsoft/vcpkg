@@ -5,4 +5,4 @@ Description: mlpack is a fast, flexible machine learning library, written in C++
 Build-Depends: openblas (!osx), clapack (!osx), boost, armadillo, ensmallen
 
 Feature: tools
-Description: Build command-line executables and tests.
+Description: Build command-line executables.
