@@ -31,12 +31,11 @@ function(vcpkg_build_make)
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
     endif()
-    
+
     if(NOT _bc_BUILD_TARGET)
         set(_bc_BUILD_TARGET "all")
     endif()
-    message(STATUS "BLD TARGET: ${_bc_BUILD_TARGET}")
-    
+
     if(WIN32)
         set(_VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
@@ -44,7 +43,7 @@ function(vcpkg_build_make)
         string(REPLACE " " "\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
         string(REPLACE " " "\ " _VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     endif()
-    
+
     set(MAKE )
     set(MAKE_OPTS )
     set(INSTALL_OPTS )
@@ -57,7 +56,7 @@ function(vcpkg_build_make)
         # vcpkg_find_acquire_program(PERL)
         # get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
         # vcpkg_add_to_path("${PERL_EXE_PATH}")
-        
+
         vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper")
         vcpkg_acquire_msys(MSYS_ROOT)
         find_program(MAKE make REQUIRED) #mingw32-make
@@ -113,7 +112,7 @@ function(vcpkg_build_make)
             string(APPEND LD_FLAGS_GLOBAL " /machine:x86")
         endif()
     endif()
-    
+
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
             if(BUILDTYPE STREQUAL "debug")
@@ -182,7 +181,7 @@ function(vcpkg_build_make)
                     set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/${VCPKG_HOST_PATH_SEPARATOR}${LD_LIBRARY_PATH_BACKUP}")
                 endif()
             endif()
-            
+
             if(MAKE_BASH)
                 set(MAKE_CMD_LINE "${MAKE_COMMAND} ${MAKE_OPTS}")
             else()
