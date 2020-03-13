@@ -183,10 +183,12 @@ function(vcpkg_configure_make)
         string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF ${CURRENT_INSTALLED_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
         string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
+        set(prefix_var "'\${prefix}'") # Windows needs extra quotes or else the variable gets expanded in the makefile!
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         set(EXTRA_QUOTES)
+        set(prefix_var "\${prefix}")
     endif()
 
     # Cleanup previous build dirs
@@ -200,19 +202,21 @@ function(vcpkg_configure_make)
     set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
                             "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}${EXTRA_QUOTES}"
                             # Important: These should all be relative to prefix!
-                            "--bindir='\${prefix}'/tools/${PORT}/bin"
-                            "--sbindir='\${prefix}'/tools/${PORT}/sbin"
+                            "--bindir=${prefix_var}/tools/${PORT}/bin"
+                            "--sbindir=${prefix_var}/tools/${PORT}/sbin"
                             #"--libdir='\${prefix}'/lib" # already the default!
                             #"--includedir='\${prefix}'/include" # already the default!
-                            "--mandir='\${prefix}'/share/${PORT}"
-                            "--docdir='\${prefix}'/share/${PORT}")
+                            "--mandir=${prefix_var}/share/${PORT}"
+                            "--docdir=${prefix_var}/share/${PORT}"
+                            "--datarootdir=${prefix_var}/share/${PORT}")
     set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                             "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}"
                             # Important: These should all be relative to prefix!
-                            "--bindir='\${prefix}'/../tools/${PORT}/debug/bin"
-                            "--sbindir='\${prefix}'/../tools/${PORT}/debug/sbin"
+                            "--bindir=${prefix_var}/../tools/${PORT}/debug/bin"
+                            "--sbindir=${prefix_var}/../tools/${PORT}/debug/sbin"
                             #"--libdir='\${prefix}'/lib" # already the default!
-                            "--includedir='\${prefix}'/../include")
+                            "--includedir=${prefix_var}/../include"
+                            "--datarootdir=${prefix_var}/share/${PORT}")
     
     # Setup common options
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -282,10 +286,16 @@ function(vcpkg_configure_make)
 
     # Run autoconf if necessary
     if(EXISTS "${SRC_DIR}/configure" AND NOT _csc_SKIP_CONFIGURE)
-        set(REQUIRES_AUTOCONFIG FALSE)
+        set(REQUIRES_AUTOCONFIG FALSE) # use autotools and configure.ac
+        set(REQUIRES_AUTOGEN FALSE) # use autogen.sh
     elseif(EXISTS "${SRC_DIR}/configure.ac")
         set(REQUIRES_AUTOCONFIG TRUE)
+        set(REQUIRES_AUTOGEN FALSE)
+    elseif(EXISTS "${SRC_DIR}/autogen.sh")
+        set(REQUIRES_AUTOGEN TRUE)
+        set(REQUIRES_AUTOCONFIG FALSE)
     endif()
+    set(_GENERATED_CONFIGURE FALSE)
     if (_csc_AUTOCONFIG OR REQUIRES_AUTOCONFIG)
         find_program(AUTORECONF autoreconf REQUIRED)
         find_program(LIBTOOL libtool REQUIRED)
@@ -299,6 +309,23 @@ function(vcpkg_configure_make)
         else()
             vcpkg_execute_required_process(
                 COMMAND autoreconf -vfi
+                WORKING_DIRECTORY "${SRC_DIR}"
+                LOGNAME autoconf-${TARGET_TRIPLET}
+            )
+        endif()
+        message(STATUS "Finished generating configure for ${TARGET_TRIPLET}")
+    endif()
+    if(REQUIRES_AUTOGEN)
+        message(STATUS "Generating configure for ${TARGET_TRIPLET} via autogen.sh")
+        if (CMAKE_HOST_WIN32)
+            vcpkg_execute_required_process(
+                COMMAND ${base_cmd} -c "./autogen.sh"
+                WORKING_DIRECTORY "${SRC_DIR}"
+                LOGNAME autoconf-${TARGET_TRIPLET}
+            )
+        else()
+            vcpkg_execute_required_process(
+                COMMAND "./autogen.sh"
                 WORKING_DIRECTORY "${SRC_DIR}"
                 LOGNAME autoconf-${TARGET_TRIPLET}
             )
