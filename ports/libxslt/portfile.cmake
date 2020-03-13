@@ -104,6 +104,7 @@ else()
     )
     
     vcpkg_install_make()
+    #vcpkg_fixup_pkgconfig()?
     
     if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
         file(COPY ${CURRENT_PACKAGES_DIR}/bin/xslt-config DESTINATION ${CURRENT_PACKAGES_DIR}/tools)

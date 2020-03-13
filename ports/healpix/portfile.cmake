@@ -17,25 +17,24 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH src/cxx
-    AUTOCONFIG
-    #NO_DEBUG
     OPTIONS
         --with-libcfitsio-include=${CURRENT_INSTALLED_DIR}/include/cfitsio
         --with-libcfitsio-lib=${CURRENT_INSTALLED_DIR}/lib
 )
 
-vcpkg_build_make()
+vcpkg_install_make()
+#vcpkg_fixup_pkgconfig()
 
 # Install manually
-set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/src/cxx/auto)
-file(GLOB_RECURSE HEALPIX_LIBS ${OBJ_DIR}/lib/*)
-file(INSTALL ${HEALPIX_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+#set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/src/cxx/auto)
+#file(GLOB_RECURSE HEALPIX_LIBS ${OBJ_DIR}/lib/*)
+#file(INSTALL ${HEALPIX_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-file(GLOB_RECURSE HEALPIX_INCLUDES ${OBJ_DIR}/include/*)
-file(INSTALL ${HEALPIX_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+#file(GLOB_RECURSE HEALPIX_INCLUDES ${OBJ_DIR}/include/*)
+#file(INSTALL ${HEALPIX_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-file(GLOB_RECURSE HEALPIX_TOOLS ${OBJ_DIR}/bin/*)
-file(INSTALL ${HEALPIX_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+#file(GLOB_RECURSE HEALPIX_TOOLS ${OBJ_DIR}/bin/*)
+#file(INSTALL ${HEALPIX_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

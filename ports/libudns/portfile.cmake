@@ -14,7 +14,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-
+#vcpkg_fixup_pkgconfig()?
 # Install
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libudns.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)

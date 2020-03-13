@@ -11,7 +11,6 @@ vcpkg_from_github(
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
     PROJECT_SUBPATH libcrafter
     OPTIONS
         --with-libpcap=${CURRENT_INSTALLED_DIR}

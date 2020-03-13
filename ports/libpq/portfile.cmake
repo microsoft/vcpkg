@@ -247,17 +247,14 @@ else()
             ${BUILD_OPTS}
             --with-includes=${CURRENT_INSTALLED_DIR}/include
         OPTIONS_RELEASE
-            #--exec-prefix=${CURRENT_PACKAGES_DIR}/tools/${PORT}
-            #--datarootdir=${CURRENT_PACKAGES_DIR}/share/${PORT}
             --with-libraries=${CURRENT_INSTALLED_DIR}/lib
         OPTIONS_DEBUG
-            #--exec-prefix=${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}
-            #--datarootdir=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}
             --with-libraries=${CURRENT_INSTALLED_DIR}/debug/lib
             --enable-debug
     )
     
-    vcpkg_install_make()    
+    vcpkg_install_make()
+    #vcpkg_fixup_pkgconfig()?
     # instead?
     #    make -C src/include install
     #    make -C src/interfaces install

@@ -10,8 +10,8 @@ vcpkg_from_github(
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
 )
+#vcpkg_fixup_pkgconfig()
 
 vcpkg_install_make()
 
