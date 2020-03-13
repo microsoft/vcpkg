@@ -775,7 +775,6 @@ libhdfs3:x64-uwp=fail
 libhdfs3:x64-windows=fail
 libhdfs3:x64-windows-static=fail
 libhdfs3:x86-windows=fail
-libhdfs3:x64-linux=fail
 libhydrogen:arm64-windows=fail
 libics:arm-uwp=fail
 libics:x64-uwp=fail
