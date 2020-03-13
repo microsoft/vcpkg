@@ -61,7 +61,7 @@ function(vcpkg_build_make)
 
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f makefile install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f Makefile install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
         # Compiler requriements
@@ -69,7 +69,7 @@ function(vcpkg_build_make)
         find_program(MAKE make REQUIRED)
         set(MAKE_COMMAND "${MAKE}")
         # Set make command and install command
-        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f makefile all)
+        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f Makefile all)
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
     
