@@ -13,7 +13,7 @@ vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH libcrafter
     OPTIONS
-        --with-libpcap=${CURRENT_INSTALLED_DIR}
+        "--with-libpcap=${CURRENT_INSTALLED_DIR}"
 )
 
 vcpkg_install_make()
