@@ -65,26 +65,20 @@ else(VCPKG_TARGET_IS_WINDOWS)
         message(STATUS "Configuring apr-util")
     endif()
 
-    vcpkg_execute_required_process(
-        COMMAND "./configure" --prefix=${CURRENT_INSTALLED_DIR} ${CONFIGURE_PARAMETER_1} ${CONFIGURE_PARAMETER_2} ${CONFIGURE_PARAMETER_3} --with-apr=${CURRENT_INSTALLED_DIR} --with-openssl=${CURRENT_INSTALLED_DIR} --with-expat=${CURRENT_INSTALLED_DIR}
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME "autotools-config-${TARGET_TRIPLET}"
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        NO_DEBUG
+        OPTIONS 
+            "--prefix=${CURRENT_INSTALLED_DIR}"
+            "--with-apr=${CURRENT_INSTALLED_DIR}"
+            "--with-openssl=${CURRENT_INSTALLED_DIR}"
+            "-with-expat=${CURRENT_INSTALLED_DIR}"
+            "${CONFIGURE_PARAMETER_1}"
+            "${CONFIGURE_PARAMETER_2}"
+            "${CONFIGURE_PARAMETER_3}"
     )
 
-    message(STATUS "Building ${TARGET_TRIPLET}")
-    vcpkg_execute_required_process(
-        COMMAND make
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME build-${TARGET_TRIPLET}-release
-    )
-
-    message(STATUS "Installing ${TARGET_TRIPLET}")
-    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # Installs include files to apr-util-1 sub-directory
-    vcpkg_execute_required_process(
-        COMMAND make install
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME install-${TARGET_TRIPLET}-release
-    )
+    vcpkg_install_make()
 
 endif()
 
