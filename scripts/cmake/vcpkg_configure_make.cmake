@@ -97,7 +97,7 @@ endmacro()
 
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;DISABLE_AUTO_DST;SKIP_CONFIGURE"
+        "AUTOCONFIG;DISABLE_AUTO_DST;SKIP_CONFIGURE;COPY_SOURCE"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
@@ -337,8 +337,13 @@ function(vcpkg_configure_make)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
         set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         file(MAKE_DIRECTORY "${TAR_DIR}")
-        file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
+        file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${SRC_DIR}")
 
+        if(_csc_COPY_SOURCE)
+            file(COPY "${SRC_DIR}/" DESTINATION "${TAR_DIR}")
+            set(RELATIVE_BUILD_PATH .)
+        endif()
+    
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
             set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
@@ -414,8 +419,13 @@ function(vcpkg_configure_make)
         endif()
         set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
         file(MAKE_DIRECTORY "${TAR_DIR}")
-        file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
+        file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${SRC_DIR}")
 
+        if(_csc_COPY_SOURCE)
+            file(COPY "${SRC_DIR}/" DESTINATION "${TAR_DIR}")
+             set(RELATIVE_BUILD_PATH .)
+        endif()
+        
         # Setup release enviromnent
         if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
             set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_C_FLAGS_RELEASE}")
@@ -450,7 +460,7 @@ function(vcpkg_configure_make)
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY "${TAR_DIR}"
-                LOGNAME config-${TARGET_TRIPLET}-rel                
+                LOGNAME config-${TARGET_TRIPLET}-rel
             )
             if(EXISTS "${TAR_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
                 set(_file "${TAR_DIR}/libtool")

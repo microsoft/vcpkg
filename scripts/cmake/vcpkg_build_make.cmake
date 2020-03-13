@@ -26,11 +26,16 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT" "" ${ARGN})
+    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT;BUILD_TARGET" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
     endif()
+    
+    if(NOT _bc_BUILD_TARGET)
+        set(_bc_BUILD_TARGET "all")
+    endif()
+    message(STATUS "BLD TARGET: ${_bc_BUILD_TARGET}")
     
     if(WIN32)
         set(_VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
@@ -57,7 +62,7 @@ function(vcpkg_build_make)
         vcpkg_acquire_msys(MSYS_ROOT)
         find_program(MAKE make REQUIRED) #mingw32-make
         set(MAKE_COMMAND "${MAKE}")
-        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f makefile all)
+        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f Makefile ${_bc_BUILD_TARGET})
 
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
@@ -69,7 +74,7 @@ function(vcpkg_build_make)
         find_program(MAKE make REQUIRED)
         set(MAKE_COMMAND "${MAKE}")
         # Set make command and install command
-        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f Makefile all)
+        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f Makefile ${_bc_BUILD_TARGET})
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
     
@@ -195,7 +200,7 @@ function(vcpkg_build_make)
         endif()
     endforeach()
 
-    if (_bc_ENABLE_INSTALL OR TRUE)
+    if (_bc_ENABLE_INSTALL)
         foreach(BUILDTYPE "debug" "release")
             if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
                 if(BUILDTYPE STREQUAL "debug")
@@ -230,6 +235,11 @@ function(vcpkg_build_make)
 
             endif()
         endforeach()
+        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALL_PREFIX "${CURRENT_INSTALLED_DIR}")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+        file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
+        file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
     endif()
 
     # Restore enviromnent
@@ -248,9 +258,5 @@ function(vcpkg_build_make)
         set(ENV{PATH} "${PATH_GLOBAL}")
     endif()
     
-    string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALL_PREFIX "${CURRENT_INSTALLED_DIR}")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
-    file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
-    file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+
 endfunction()
