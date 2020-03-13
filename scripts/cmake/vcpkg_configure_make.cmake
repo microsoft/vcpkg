@@ -227,35 +227,26 @@ function(vcpkg_configure_make)
     else()
         list(APPEND _csc_OPTIONS --disable-silent-rules --verbose --enable-static --disable-shared)
     endif()
-    file(RELATIVE_PATH RELATIVE_BUILD_PATH "${CURRENT_BUILDTREES_DIR}" "${_csc_SOURCE_PATH}")
     
+    file(RELATIVE_PATH RELATIVE_BUILD_PATH "${CURRENT_BUILDTREES_DIR}" "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
+
     set(base_cmd)
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc --debug)
-        
         # Load toolchains
         if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
         endif()
         include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-
         if(VCPKG_TARGET_IS_UWP)
+            # Flags should be set in the toolchain instead
             set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
             set(_csc_OPTIONS ${_csc_OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
         endif()
-        
         #Join the options list as a string with spaces between options
         list(JOIN _csc_OPTIONS " " _csc_OPTIONS)
         list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
-        
-        set(rel_command
-            ${base_cmd} -c "${CONFIGURE_ENV} ./../${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
-        set(dbg_command
-            ${base_cmd} -c "${CONFIGURE_ENV} ./../${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
-    else()
-        set(rel_command /bin/sh "./../${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE})
-        set(dbg_command /bin/sh "./../${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG})
     endif()
     
     # Setup include enviromnent
@@ -268,6 +259,7 @@ function(vcpkg_configure_make)
     set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
     set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
     set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
+    # Flags should be set in the toolchain instead
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         string(APPEND C_FLAGS_GLOBAL " -fPIC")
         string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
@@ -343,6 +335,10 @@ function(vcpkg_configure_make)
 
     # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
+        set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        file(MAKE_DIRECTORY "${TAR_DIR}")
+        file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
+
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
             set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
@@ -350,7 +346,7 @@ function(vcpkg_configure_make)
             set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
         endif()
         # Setup debug enviromnent
-        if (CMAKE_HOST_WIN32)
+        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
             set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_C_FLAGS_DEBUG}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
             set(ENV{CFLAGS} ${TMP_CFLAGS})
@@ -363,6 +359,9 @@ function(vcpkg_configure_make)
             string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
+            
+            set(dbg_command
+                ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
             set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
@@ -371,17 +370,14 @@ function(vcpkg_configure_make)
             set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/${VCPKG_HOST_PATH_SEPARATOR}${LD_LIBRARY_PATH_BACKUP}")
             # endif()
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
+            set(dbg_command /bin/sh "./${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG})
         endif()
-        
-        set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        set(PRJ_DIR "${TAR_DIR}/${_csc_PROJECT_SUBPATH}")
-        file(MAKE_DIRECTORY "${TAR_DIR}")
-        
+
         if (_csc_PRERUN_SHELL)
             message(STATUS "Prerun shell with ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
                 COMMAND ${base_cmd} -c "${_csc_PRERUN_SHELL}"
-                WORKING_DIRECTORY "${PRJ_DIR}"
+                WORKING_DIRECTORY "${TAR_DIR}"
                 LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
         endif()
@@ -390,11 +386,11 @@ function(vcpkg_configure_make)
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
-                WORKING_DIRECTORY "${PRJ_DIR}"
+                WORKING_DIRECTORY "${TAR_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
-            if(EXISTS "${PRJ_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-                set(_file "${PRJ_DIR}/libtool")
+            if(EXISTS "${TAR_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+                set(_file "${TAR_DIR}/libtool")
                 file(READ "${_file}" _contents)
                 string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
                 file(WRITE "${_file}" "${_contents}")
@@ -416,9 +412,12 @@ function(vcpkg_configure_make)
         else()
             set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
         endif()
+        set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        file(MAKE_DIRECTORY "${TAR_DIR}")
+        file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
 
         # Setup release enviromnent
-        if (CMAKE_HOST_WIN32)
+        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
             set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_C_FLAGS_RELEASE}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
             set(ENV{CFLAGS} ${TMP_CFLAGS})
@@ -431,6 +430,8 @@ function(vcpkg_configure_make)
             string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
+            set(rel_command
+                ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
             set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_RELEASE}")
@@ -439,22 +440,20 @@ function(vcpkg_configure_make)
             set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/${VCPKG_HOST_PATH_SEPARATOR}${LD_LIBRARY_PATH_BACKUP}")
             # endif()
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
+            set(rel_command /bin/sh "./${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE})
         endif()
         
-        set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        set(PRJ_DIR "${TAR_DIR}/${_csc_PROJECT_SUBPATH}")
-        
-        file(MAKE_DIRECTORY ${TAR_DIR})
+
 
         if (NOT _csc_SKIP_CONFIGURE)
             message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
-                WORKING_DIRECTORY "${PRJ_DIR}"
+                WORKING_DIRECTORY "${TAR_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-rel                
             )
-            if(EXISTS "${PRJ_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-                set(_file "${PRJ_DIR}/libtool")
+            if(EXISTS "${TAR_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+                set(_file "${TAR_DIR}/libtool")
                 file(READ "${_file}" _contents)
                 string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
                 file(WRITE "${_file}" "${_contents}")

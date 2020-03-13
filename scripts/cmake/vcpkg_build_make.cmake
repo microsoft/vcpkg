@@ -32,10 +32,6 @@ function(vcpkg_build_make)
         set(_bc_LOGFILE_ROOT "build")
     endif()
     
-    if (_VCPKG_PROJECT_SUBPATH)
-        set(_VCPKG_PROJECT_SUBPATH /${_VCPKG_PROJECT_SUBPATH}/)
-    endif()
-    
     if(WIN32)
         set(_VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
@@ -132,13 +128,8 @@ function(vcpkg_build_make)
                 set(CMAKE_BUILDTYPE "RELEASE")
             endif()
             
-            if (CMAKE_HOST_WIN32)
-                # In windows we can remotely call make
-                set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-            else()
-                set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH}")
-            endif()
-    
+            set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             if(_bc_ADD_BIN_TO_PATH)
