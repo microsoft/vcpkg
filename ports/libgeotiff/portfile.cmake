@@ -1,28 +1,19 @@
-include(vcpkg_common_functions)
-
-set(LIBGEOTIFF_VERSION 1.4.2)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/geotiff/libgeotiff/libgeotiff-${LIBGEOTIFF_VERSION}.tar.gz"
-    FILENAME "libgeotiff-${LIBGEOTIFF_VERSION}.tar.gz"
-    SHA512 059c6e05eb0c47f17b102c7217a2e1636e76d622c4d1bdcf0bd89fb3505f3130bffa881e21c73cfd2ca0d6863b81322f85784658ba3539b53b63c3a8f38d1deb
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${LIBGEOTIFF_VERSION}
+    REPO OSGeo/libgeotiff
+    REF 6bcf43890db46ba0b77cc011030e110d894a6690 #v1.5.1
+    SHA512 1df1647566eeba2d123da4d240bd7474b4dc5e72a96a009bd02a17befa3c3807984475f08fa80e0b14e3db2743cc2f3f4078b52b01cbdfddd268c77034f98c73
+    HEAD_REF master
     PATCHES
         cmakelists.patch
         geotiff-config.patch
-        fix-proj4.patch
 )
 
 # Delete FindPROJ4.cmake
-file(REMOVE ${SOURCE_PATH}/cmake/FindPROJ4.cmake)
+file(REMOVE ${SOURCE_PATH}/libgeotiff/cmake/FindPROJ4.cmake)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/libgeotiff
     PREFER_NINJA
     OPTIONS
         -DWITH_TIFF=1
@@ -57,13 +48,13 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF)
 
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-config-version.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-depends-release.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-depends-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-depends.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-config-version.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-depends-release.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-depends-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-depends.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgeotiff RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/libgeotiff/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/doc ${CURRENT_PACKAGES_DIR}/share/libgeotiff/doc)
+file(RENAME ${CURRENT_PACKAGES_DIR}/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)

@@ -1,7 +1,7 @@
-diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
-index 0dd376aca..0615081bd 100644
---- a/cmake/project-config.cmake.in	
-+++ b/cmake/project-config.cmake.in
+diff --git a/libgeotiff/cmake/project-config.cmake.in b/libgeotiff/cmake/project-config.cmake.in
+index dc5b999..ad4ef3f 100644
+--- a/libgeotiff/cmake/project-config.cmake.in
++++ b/libgeotiff/cmake/project-config.cmake.in
 @@ -23,6 +23,12 @@ message (STATUS "Reading ${CMAKE_CURRENT_LIST_FILE}")
  message (STATUS
    "@PROJECT_NAME@ configuration, version ${@PROJECT_NAME@_VERSION}")
