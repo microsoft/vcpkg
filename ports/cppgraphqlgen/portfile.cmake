@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/cppgraphqlgen
-    REF v3.1.1
-    SHA512 c6ebffcfd6f563b2a4ba1822ca173c73fd41b6f1dfbd4f94e64bee4bff626c64d88b2a35fa4c38189ba16852945f53d1f60dd68dc0ea85eb036ec31c94e7bdf4
+    REF v3.2.0
+    SHA512 21b0ea4b7bcdfa8107018e3a53413f7242dfd3fe5f66c4c7f2b351b5aa7227281eb78b47462fae3e0ba203ad028e98d6d0ec6bbd93c90be56ab657007953e522
     HEAD_REF master
 )
 
