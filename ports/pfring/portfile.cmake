@@ -10,15 +10,17 @@ vcpkg_from_github(
         use-vcpkg-libpcap.patch
 )
 
-vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    SKIP_CONFIGURE
-)
-
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(COPY "${SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(COPY "${SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+endif()
 set(ENV{VCPKG_LIBPCAP_DIR} "${CURRENT_INSTALLED_DIR}")
-
-vcpkg_install_make()
+vcpkg_build_make()
 #vcpkg_fixup_pkgconfig()?
+
 vcpkg_copy_pdbs()
 
 # Install manually because pfring cannot set prefix
