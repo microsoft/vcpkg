@@ -190,7 +190,7 @@ namespace vcpkg
 
 #if defined(_WIN32)
     Environment System::get_modified_clean_environment(const std::unordered_map<std::string, std::string>& extra_env,
-                                                       const std::string& prepend_to_path)
+                                                       const std::string& prepend_to_path, const std::string& append_to_path)
     {
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
@@ -291,6 +291,10 @@ namespace vcpkg
 
         if (extra_env.find("PATH") != extra_env.end())
             new_path += Strings::format(";%s", extra_env.find("PATH")->second);
+
+        if(!append_to_path.empty())
+            new_path += Strings::format(";%s", append_to_path);
+
         env_cstr.append(Strings::to_utf16(new_path));
         env_cstr.push_back(L'\0');
         env_cstr.append(L"VSLANG=1033");

@@ -40,7 +40,7 @@ namespace vcpkg::System
 
     const Environment& get_clean_environment();
     Environment get_modified_clean_environment(const std::unordered_map<std::string, std::string>& extra_env,
-                                               const std::string& prepend_to_path = {});
+                                               const std::string& prepend_to_path = {}, const std::string& append_to_path = {});
 
     int cmd_execute(const ZStringView cmd_line, const Environment& env = {});
     int cmd_execute_clean(const ZStringView cmd_line);
