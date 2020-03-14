@@ -1,0 +1,12 @@
+diff --git a/include/bx/bx.h b/include/bx/bx.h
+index 86449a2..0f6a469 100644
+--- a/include/bx/bx.h
++++ b/include/bx/bx.h
+@@ -6,7 +6,6 @@
+ #ifndef BX_H_HEADER_GUARD
+ #define BX_H_HEADER_GUARD
+ 
+-#include <alloca.h> // alloca
+ #include <stdarg.h> // va_list
+ #include <stdint.h> // uint32_t
+ #include <stdlib.h> // size_t
