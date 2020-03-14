@@ -79,7 +79,14 @@ namespace vcpkg::Commands::Env
             if (build_env_cmd.empty())
                 return clean_env;
             else
+            {
+#ifdef _WIN32
                 return System::cmd_execute_modify_env(build_env_cmd, clean_env);
+#else
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "Build environment commands are not supported on this platform");
+#endif
+            }
         }();
 
         std::string cmd = args.command_arguments.empty() ? "cmd" : args.command_arguments.at(0);
