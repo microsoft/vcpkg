@@ -25,7 +25,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+# Moves all .cmake files from /debug/share/lodepng/ to /share/lodepng/
+vcpkg_fixup_cmake_targets()
+
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lodepng)
 
 
 file(INSTALL ${SOURCE_PATH}/lodepng.h DESTINATION ${CURRENT_PACKAGES_DIR}/share/lodepng RENAME copyright)
+
+vcpkg_test_cmake(PACKAGE_NAME lodepng)
