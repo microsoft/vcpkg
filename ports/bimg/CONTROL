@@ -1,0 +1,10 @@
+Source: bimg
+Version: 2020-03-15
+Homepage: https://github.com/bkaradzic/bimg
+Description: bkaradzic's image codec
+Build-Depends: bx, libsquish, lodepng, stb, tinyexr
+Default-Features:
+
+Feature:
+Description:
+Build-Depends:

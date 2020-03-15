@@ -1,0 +1,26 @@
+diff --git a/src/image_decode.cpp b/src/image_decode.cpp
+index 443453a..9b7ef92 100644
+--- a/src/image_decode.cpp
++++ b/src/image_decode.cpp
+@@ -64,7 +64,7 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_GCC("-Wimplicit-fallthrough");
+ #define STBI_REALLOC(_ptr, _size) lodepng_realloc(_ptr, _size)
+ #define STBI_FREE(_ptr)           lodepng_free(_ptr)
+ #define STB_IMAGE_IMPLEMENTATION
+-#include <stb/stb_image.h>
++#include <stb_image.h>
+ BX_PRAGMA_DIAGNOSTIC_POP();
+ 
+ namespace bimg
+diff --git a/src/image_encode.cpp b/src/image_encode.cpp
+index 770ab5f..e1acd45 100644
+--- a/src/image_encode.cpp
++++ b/src/image_encode.cpp
+@@ -19,7 +19,7 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4100) // warning C4100: 'alloc_context': unref
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4702) // warning C4702: unreachable code
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wunused-parameter") // warning: unused parameter ‘alloc_context’ [-Wunused-parameter]
+ #define STB_IMAGE_RESIZE_IMPLEMENTATION
+-#include <stb/stb_image_resize.h>
++#include <stb_image_resize.h>
+ BX_PRAGMA_DIAGNOSTIC_POP();
+ 
+ extern "C" {

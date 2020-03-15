@@ -1,0 +1,13 @@
+diff --git a/src/image_encode.cpp b/src/image_encode.cpp
+index 5748a5e..770ab5f 100644
+--- a/src/image_encode.cpp
++++ b/src/image_encode.cpp
+@@ -6,7 +6,7 @@
+ #include <bimg/encode.h>
+ #include "bimg_p.h"
+ 
+-#include <libsquish/squish.h>
++#include <squish.h>
+ #include <etc1/etc1.h>
+ #include <etc2/ProcessRGB.hpp>
+ #include <nvtt/nvtt.h>

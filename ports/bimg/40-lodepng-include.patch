@@ -1,0 +1,54 @@
+diff --git a/src/image_decode.cpp b/src/image_decode.cpp
+index 9b7ef92..9a496f6 100644
+--- a/src/image_decode.cpp
++++ b/src/image_decode.cpp
+@@ -25,29 +25,9 @@ BX_PRAGMA_DIAGNOSTIC_POP()
+ 
+ BX_PRAGMA_DIAGNOSTIC_PUSH();
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4127) // warning C4127: conditional expression is constant
+-#define LODEPNG_NO_COMPILE_ENCODER
+-#define LODEPNG_NO_COMPILE_DISK
+-#define LODEPNG_NO_COMPILE_ANCILLARY_CHUNKS
+-#define LODEPNG_NO_COMPILE_ALLOCATORS
+-#define LODEPNG_NO_COMPILE_CPP
+-#include <lodepng/lodepng.cpp>
++#include <lodepng.h>
+ BX_PRAGMA_DIAGNOSTIC_POP();
+ 
+-void* lodepng_malloc(size_t _size)
+-{
+-	return ::malloc(_size);
+-}
+-
+-void* lodepng_realloc(void* _ptr, size_t _size)
+-{
+-	return ::realloc(_ptr, _size);
+-}
+-
+-void lodepng_free(void* _ptr)
+-{
+-	::free(_ptr);
+-}
+-
+ BX_PRAGMA_DIAGNOSTIC_PUSH();
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wmissing-field-initializers");
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow");
+@@ -60,9 +40,6 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_GCC("-Wshift-negative-value");
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_GCC("-Wimplicit-fallthrough");
+ #	endif // BX_COMPILER_GCC >= 70000
+ #endif // BX_COMPILER_GCC >= 60000_
+-#define STBI_MALLOC(_size)        lodepng_malloc(_size)
+-#define STBI_REALLOC(_ptr, _size) lodepng_realloc(_ptr, _size)
+-#define STBI_FREE(_ptr)           lodepng_free(_ptr)
+ #define STB_IMAGE_IMPLEMENTATION
+ #include <stb_image.h>
+ BX_PRAGMA_DIAGNOSTIC_POP();
+@@ -311,7 +288,7 @@ namespace bimg
+ 		}
+ 
+ 		lodepng_state_cleanup(&state);
+-		lodepng_free(data);
++		free(data);
+ 
+ 		return output;
+ 	}
