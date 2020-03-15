@@ -111,15 +111,17 @@ function(vcpkg_configure_meson)
         
         #setting up PKGCONFIG
         if(NOT PKGCONFIG MATCHES "--define-variable=prefix")
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${CURRENT_INSTALLED_DIR}/debug")
+            file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug" PKGCONFIG_PREFIX)
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${PKGCONFIG_PREFIX}")
         endif()
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig" PKGCONFIG_INSTALLED_DIR)
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}")
         endif()
-        
+
         set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_DEBUG_CFLAGS}]")
         string(REGEX REPLACE " +(/|-)" "','\\1" CFLAGS ${CFLAGS}) # Seperate compiler arguments with comma and enclose in '
         string(REGEX REPLACE " *\\\]" "']" CFLAGS ${CFLAGS}) # Add trailing ' at end
@@ -168,17 +170,18 @@ function(vcpkg_configure_meson)
     # configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)        
         #setting up PKGCONFIG
         if(NOT PKGCONFIG MATCHES "--define-variable=prefix")
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${CURRENT_INSTALLED_DIR}")
+            file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" PKGCONFIG_PREFIX)
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${PKGCONFIG_PREFIX}")
         endif()
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/pkgconfig" PKGCONFIG_INSTALLED_DIR)
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}")
         endif()
         
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
