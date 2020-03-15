@@ -63,9 +63,11 @@ namespace vcpkg
         SourceControlFile(const SourceControlFile& scf)
             : core_paragraph(std::make_unique<SourceParagraph>(*scf.core_paragraph))
         {
+            features.emplace_back("core");
             for (const auto& feat_ptr : scf.feature_paragraphs)
             {
                 feature_paragraphs.emplace_back(std::make_unique<FeatureParagraph>(*feat_ptr));
+                features.emplace_back(feature_paragraphs.back()->name);
             }
         }
 
@@ -74,6 +76,7 @@ namespace vcpkg
 
         std::unique_ptr<SourceParagraph> core_paragraph;
         std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
+        std::vector<std::string> features;
 
         Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
         Optional<const std::vector<Dependency>&> find_dependencies_for_feature(const std::string& featurename) const;

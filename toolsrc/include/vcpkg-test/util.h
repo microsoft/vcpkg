@@ -35,6 +35,17 @@ namespace vcpkg::Test
         return vcpkg::SourceControlFile::parse_control_file("", std::move(pghs));
     }
 
+    inline auto test_make_binary_paragraph(const std::unordered_map<std::string, std::string>& v)
+    {
+        using vcpkg::Parse::Paragraph;
+
+        Paragraph pgh;
+        for (auto&& kv : v)
+            pgh.emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
+    
+        return vcpkg::BinaryParagraph(std::move(pgh));
+    }
+
     std::unique_ptr<vcpkg::StatusParagraph> make_status_pgh(const char* name,
                                                             const char* depends = "",
                                                             const char* default_features = "",

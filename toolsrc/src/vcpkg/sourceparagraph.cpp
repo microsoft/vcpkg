@@ -185,13 +185,20 @@ namespace vcpkg
 
         control_paragraphs.erase(control_paragraphs.begin());
 
+        control_file->features.emplace_back("core");
         for (auto&& feature_pgh : control_paragraphs)
         {
             auto maybe_feature = parse_feature_paragraph(path_to_control, std::move(feature_pgh));
             if (const auto feature = maybe_feature.get())
+            {
                 control_file->feature_paragraphs.emplace_back(std::move(*feature));
+                control_file->features.emplace_back(
+                    control_file->feature_paragraphs.back()->name);
+            }
             else
+            {
                 return std::move(maybe_feature).error();
+            }
         }
 
         return control_file;
@@ -206,6 +213,7 @@ namespace vcpkg
         else
             return nullopt;
     }
+
     Optional<const std::vector<Dependency>&> SourceControlFile::find_dependencies_for_feature(
         const std::string& featurename) const
     {

@@ -50,7 +50,7 @@ namespace vcpkg::Dependencies
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFileLocation& scfl,
                           const RequestType& request_type,
-                          std::unordered_map<std::string, std::vector<FeatureSpec>>&& dependencies);
+                          const std::unordered_map<std::string, std::vector<FeatureSpec>>& dependencies);
 
         std::string displayname() const;
 

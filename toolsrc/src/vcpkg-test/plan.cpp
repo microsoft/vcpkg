@@ -370,8 +370,8 @@ TEST_CASE ("basic feature test 7", "[plan]")
     remove_plan_check(plan.remove_actions.at(1), "b");
 
     // TODO: order here may change but A < X, and B anywhere
-    features_check(plan.install_actions.at(0), "b", {"core", "b1"});
-    features_check(plan.install_actions.at(1), "a", {"core"});
+    features_check(plan.install_actions.at(0), "a", {"core"});
+    features_check(plan.install_actions.at(1), "b", {"core", "b1"});
     features_check(plan.install_actions.at(2), "x", {"core"});
 }
 
@@ -402,13 +402,14 @@ TEST_CASE ("basic feature test 8", "[plan]")
 
     remove_plan_check(plan.remove_actions.at(0), "a", Triplet::X64_WINDOWS);
     remove_plan_check(plan.remove_actions.at(1), "a");
+
     auto& install_plan = plan.install_actions;
     features_check(install_plan.at(0), "b", {"core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.at(1), "a", {"a1", "core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.at(2), "b", {"core"});
-    features_check(install_plan.at(3), "a", {"a1", "core"});
-    features_check(install_plan.at(4), "c", {"core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.at(5), "c", {"core"});
+    features_check(install_plan.at(1), "b", {"core"});
+    features_check(install_plan.at(2), "a", {"a1", "core"});
+    features_check(install_plan.at(3), "c", {"core"});
+    features_check(install_plan.at(4), "a", {"a1", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.at(5), "c", {"core"}, Triplet::X64_WINDOWS);
 }
 
 TEST_CASE ("install all features test", "[plan]")

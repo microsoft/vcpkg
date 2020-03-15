@@ -6,32 +6,10 @@
 #include <vcpkg/paragraphs.h>
 
 namespace Strings = vcpkg::Strings;
-using vcpkg::Parse::Paragraph;
-
-auto test_parse_control_file(const std::vector<std::unordered_map<std::string, std::string>>& v)
-{
-    std::vector<Paragraph> pghs;
-    for (auto&& p : v)
-    {
-        pghs.emplace_back();
-        for (auto&& kv : p)
-            pghs.back().emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
-    }
-    return vcpkg::SourceControlFile::parse_control_file("", std::move(pghs));
-}
-
-auto test_make_binary_paragraph(const std::unordered_map<std::string, std::string>& v)
-{
-    Paragraph pgh;
-    for (auto&& kv : v)
-        pgh.emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
-
-    return vcpkg::BinaryParagraph(std::move(pgh));
-}
 
 TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
 {
-    auto m_pgh = test_parse_control_file({{
+    auto m_pgh = vcpkg::Test::test_parse_control_file({{
         {"Source", "zlib"},
         {"Version", "1.2.8"},
     }});
@@ -48,7 +26,7 @@ TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
 
 TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
 {
-    auto m_pgh = test_parse_control_file({{
+    auto m_pgh = vcpkg::Test::test_parse_control_file({{
         {"Source", "s"},
         {"Version", "v"},
         {"Maintainer", "m"},
@@ -71,7 +49,7 @@ TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
 
 TEST_CASE ("SourceParagraph two depends", "[paragraph]")
 {
-    auto m_pgh = test_parse_control_file({{
+    auto m_pgh = vcpkg::Test::test_parse_control_file({{
         {"Source", "zlib"},
         {"Version", "1.2.8"},
         {"Build-Depends", "z, openssl"},
@@ -86,7 +64,7 @@ TEST_CASE ("SourceParagraph two depends", "[paragraph]")
 
 TEST_CASE ("SourceParagraph three depends", "[paragraph]")
 {
-    auto m_pgh = test_parse_control_file({{
+    auto m_pgh = vcpkg::Test::test_parse_control_file({{
         {"Source", "zlib"},
         {"Version", "1.2.8"},
         {"Build-Depends", "z, openssl, xyz"},
@@ -102,7 +80,7 @@ TEST_CASE ("SourceParagraph three depends", "[paragraph]")
 
 TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
 {
-    auto m_pgh = test_parse_control_file({{
+    auto m_pgh = vcpkg::Test::test_parse_control_file({{
         {"Source", "zlib"},
         {"Version", "1.2.8"},
         {"Build-Depends", "liba (windows), libb (uwp)"},
@@ -123,7 +101,7 @@ TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
 
 TEST_CASE ("SourceParagraph default features", "[paragraph]")
 {
-    auto m_pgh = test_parse_control_file({{
+    auto m_pgh = vcpkg::Test::test_parse_control_file({{
         {"Source", "a"},
         {"Version", "1.0"},
         {"Default-Features", "a1"},
@@ -137,7 +115,7 @@ TEST_CASE ("SourceParagraph default features", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph construct minimum", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
+    auto pgh = vcpkg::Test::test_make_binary_paragraph({
         {"Package", "zlib"},
         {"Version", "1.2.8"},
         {"Architecture", "x86-windows"},
@@ -154,7 +132,7 @@ TEST_CASE ("BinaryParagraph construct minimum", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph construct maximum", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
+    auto pgh = vcpkg::Test::test_make_binary_paragraph({
         {"Package", "s"},
         {"Version", "v"},
         {"Architecture", "x86-windows"},
@@ -174,7 +152,7 @@ TEST_CASE ("BinaryParagraph construct maximum", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph three depends", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
+    auto pgh = vcpkg::Test::test_make_binary_paragraph({
         {"Package", "zlib"},
         {"Version", "1.2.8"},
         {"Architecture", "x86-windows"},
@@ -190,7 +168,7 @@ TEST_CASE ("BinaryParagraph three depends", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph abi", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
+    auto pgh = vcpkg::Test::test_make_binary_paragraph({
         {"Package", "zlib"},
         {"Version", "1.2.8"},
         {"Architecture", "x86-windows"},
@@ -204,7 +182,7 @@ TEST_CASE ("BinaryParagraph abi", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph default features", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
+    auto pgh = vcpkg::Test::test_make_binary_paragraph({
         {"Package", "a"},
         {"Version", "1.0"},
         {"Architecture", "x86-windows"},
@@ -366,7 +344,7 @@ TEST_CASE ("parse comment before single line feed", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph serialize min", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
+    auto pgh = vcpkg::Test::test_make_binary_paragraph({
         {"Package", "zlib"},
         {"Version", "1.2.8"},
         {"Architecture", "x86-windows"},
@@ -386,7 +364,7 @@ TEST_CASE ("BinaryParagraph serialize min", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
+    auto pgh = vcpkg::Test::test_make_binary_paragraph({
         {"Package", "zlib"},
         {"Version", "1.2.8"},
         {"Architecture", "x86-windows"},
@@ -411,7 +389,7 @@ TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph serialize multiple deps", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
+    auto pgh = vcpkg::Test::test_make_binary_paragraph({
         {"Package", "zlib"},
         {"Version", "1.2.8"},
         {"Architecture", "x86-windows"},
@@ -427,7 +405,7 @@ TEST_CASE ("BinaryParagraph serialize multiple deps", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph serialize abi", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
+    auto pgh = vcpkg::Test::test_make_binary_paragraph({
         {"Package", "zlib"},
         {"Version", "1.2.8"},
         {"Architecture", "x86-windows"},

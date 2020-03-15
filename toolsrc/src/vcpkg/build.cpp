@@ -254,6 +254,7 @@ namespace vcpkg::Build
                                   }));
     }
 
+#if defined(_WIN32)
     static const std::unordered_map<std::string, std::string>& make_env_passthrough(const PreBuildInfo& pre_build_info)
     {
         static Cache<std::vector<std::string>, std::unordered_map<std::string, std::string>> envs;
@@ -273,6 +274,7 @@ namespace vcpkg::Build
             return env;
         });
     }
+#endif
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {

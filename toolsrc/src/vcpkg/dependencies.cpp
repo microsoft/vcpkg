@@ -48,12 +48,11 @@ namespace vcpkg::Dependencies
         /// </summary>
         struct Cluster : Util::MoveOnlyBase
         {
-            Cluster(const InstalledPackageView& ipv, const SourceControlFileLocation& scfl)
-                : m_spec(ipv.spec()), m_scfl(scfl), m_installed(ipv)
-            {
-            }
+            Cluster(const InstalledPackageView& ipv, const SourceControlFileLocation& scfl, ClusterGraph& parent)
+                : m_spec(ipv.spec()), m_parent(parent), m_scfl(scfl), m_installed(ipv) {}
 
-            Cluster(const PackageSpec& spec, const SourceControlFileLocation& scfl) : m_spec(spec), m_scfl(scfl) {}
+            Cluster(const PackageSpec& spec, const SourceControlFileLocation& scfl, ClusterGraph& parent)
+                : m_spec(spec), m_parent(parent), m_scfl(scfl) {}
 
             bool has_feature_installed(const std::string& feature) const
             {
@@ -78,74 +77,9 @@ namespace vcpkg::Dependencies
                 return false;
             }
 
-            // Returns dependencies which were added as a result of this call.
-            // Precondition: must have called "mark_for_reinstall()" or "create_install_info()" on this cluster
             void add_feature(const std::string& feature,
                              const CMakeVars::CMakeVarProvider& var_provider,
-                             std::vector<FeatureSpec>& out_new_dependencies)
-            {
-                ClusterInstallInfo& info = m_install_info.value_or_exit(VCPKG_LINE_INFO);
-                if (feature == "default")
-                {
-                    if (!info.defaults_requested)
-                    {
-                        info.defaults_requested = true;
-                        for (auto&& f : m_scfl.source_control_file->core_paragraph->default_features)
-                            out_new_dependencies.emplace_back(m_spec, f);
-                    }
-                    return;
-                }
-
-                if (Util::Sets::contains(info.build_edges, feature))
-                {
-                    // This feature has already been completely handled
-                    return;
-                }
-                auto maybe_vars = var_provider.get_dep_info_vars(m_spec);
-                const std::vector<Dependency>* qualified_deps =
-                    &m_scfl.source_control_file->find_dependencies_for_feature(feature).value_or_exit(VCPKG_LINE_INFO);
-
-                std::vector<FeatureSpec> dep_list;
-                if (maybe_vars)
-                {
-                    // Qualified dependency resolution is available
-                    auto fullspec_list = filter_dependencies(
-                        *qualified_deps, m_spec.triplet(), maybe_vars.value_or_exit(VCPKG_LINE_INFO));
-
-                    for (auto&& fspec : fullspec_list)
-                    {
-                        // TODO: this is incorrect and does not handle default features nor "*"
-                        Util::Vectors::append(&dep_list, fspec.to_feature_specs({"default"}, {"default"}));
-                    }
-
-                    Util::sort_unique_erase(dep_list);
-                    info.build_edges.emplace(feature, dep_list);
-                }
-                else
-                {
-                    bool requires_qualified_resolution = false;
-                    for (const Dependency& dep : *qualified_deps)
-                    {
-                        if (dep.qualifier.empty())
-                        {
-                            Util::Vectors::append(
-                                &dep_list,
-                                FullPackageSpec({dep.depend.name, m_spec.triplet()}, dep.depend.features)
-                                    .to_feature_specs({"default"}, {"default"}));
-                        }
-                        else
-                        {
-                            requires_qualified_resolution = true;
-                        }
-                    }
-                    Util::sort_unique_erase(dep_list);
-                    if (!requires_qualified_resolution)
-                    {
-                        info.build_edges.emplace(feature, dep_list);
-                    }
-                }
-                Util::Vectors::append(&out_new_dependencies, dep_list);
-            }
+                             std::vector<FeatureSpec>& out_new_dependencies);
 
             void create_install_info(std::vector<FeatureSpec>& out_reinstall_requirements)
             {
@@ -191,7 +125,8 @@ namespace vcpkg::Dependencies
                 }
             }
 
-            PackageSpec m_spec;
+            const PackageSpec m_spec;
+            ClusterGraph& m_parent;
             const SourceControlFileLocation& m_scfl;
 
             Optional<ClusterInstalled> m_installed;
@@ -218,7 +153,6 @@ namespace vcpkg::Dependencies
 
             std::unique_ptr<ClusterGraph> m_graph;
         };
-
     }
 
     /// <summary>
@@ -246,7 +180,9 @@ namespace vcpkg::Dependencies
                     VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.name());
 
                 return m_graph
-                    .emplace(std::piecewise_construct, std::forward_as_tuple(spec), std::forward_as_tuple(spec, *scfl))
+                    .emplace(std::piecewise_construct,
+                             std::forward_as_tuple(spec),
+                             std::forward_as_tuple(spec, *scfl, *this))
                     .first->second;
             }
 
@@ -273,7 +209,7 @@ namespace vcpkg::Dependencies
                 return m_graph
                     .emplace(std::piecewise_construct,
                              std::forward_as_tuple(ipv.spec()),
-                             std::forward_as_tuple(ipv, *maybe_scfl.get()))
+                             std::forward_as_tuple(ipv, *maybe_scfl.get(), *this))
                     .first->second;
             }
 
@@ -299,6 +235,72 @@ namespace vcpkg::Dependencies
         std::unordered_map<PackageSpec, Cluster> m_graph;
         const PortFileProvider::PortFileProvider& m_port_provider;
     };
+
+    // Returns dependencies which were added as a result of this call.
+    // Precondition: must have called "mark_for_reinstall()" or "create_install_info()" on this cluster
+    void Cluster::add_feature(const std::string& feature,
+                              const CMakeVars::CMakeVarProvider& var_provider,
+                              std::vector<FeatureSpec>& out_new_dependencies)
+    {
+        ClusterInstallInfo& info = m_install_info.value_or_exit(VCPKG_LINE_INFO);
+
+        if (Util::Sets::contains(info.build_edges, feature))
+        {
+            // This feature has already been completely handled
+            return;
+        }
+        auto maybe_vars = var_provider.get_dep_info_vars(m_spec);
+        const std::vector<Dependency>* qualified_deps =
+            &m_scfl.source_control_file->find_dependencies_for_feature(feature).value_or_exit(VCPKG_LINE_INFO);
+
+        std::vector<FeatureSpec> dep_list;
+        if (maybe_vars)
+        {
+            // Qualified dependency resolution is available
+            auto fullspec_list = filter_dependencies(
+                *qualified_deps, m_spec.triplet(), maybe_vars.value_or_exit(VCPKG_LINE_INFO));
+
+            for (auto&& fspec : fullspec_list)
+            {
+                const Cluster& dep = m_parent.get(fspec.package_spec);
+                auto&& defaults = dep.m_scfl.source_control_file->core_paragraph->default_features;
+                auto&& all_features = dep.m_scfl.source_control_file->features;
+
+                Util::Vectors::append(&dep_list,
+                                      fspec.to_feature_specs(defaults, all_features));
+            }
+
+            Util::sort_unique_erase(dep_list);
+            info.build_edges.emplace(feature, dep_list);
+        }
+        else
+        {
+            bool requires_qualified_resolution = false;
+            for (const Dependency& dep : *qualified_deps)
+            {
+                if (dep.qualifier.empty())
+                {
+                    FullPackageSpec fspec({dep.depend.name, m_spec.triplet()}, dep.depend.features);
+                    const Cluster& dep = m_parent.get(fspec.package_spec);
+                    auto&& defaults = dep.m_scfl.source_control_file->core_paragraph->default_features;
+                    auto&& all_features = dep.m_scfl.source_control_file->features;
+
+                    Util::Vectors::append(&dep_list,
+                                          fspec.to_feature_specs(defaults, all_features));
+                }
+                else
+                {
+                    requires_qualified_resolution = true;
+                }
+            }
+            Util::sort_unique_erase(dep_list);
+            if (!requires_qualified_resolution)
+            {
+                info.build_edges.emplace(feature, dep_list);
+            }
+        }
+        Util::Vectors::append(&out_new_dependencies, dep_list);
+    }
 
     static std::string to_output_string(RequestType request_type,
                                         const CStringView s,
@@ -354,13 +356,13 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFileLocation& scfl,
                                          const RequestType& request_type,
-                                         std::unordered_map<std::string, std::vector<FeatureSpec>>&& dependencies)
+                                         const std::unordered_map<std::string, std::vector<FeatureSpec>>& dependencies)
         : spec(spec)
         , source_control_file_location(scfl)
         , plan_type(InstallPlanType::BUILD_AND_INSTALL)
         , request_type(request_type)
         , build_options{}
-        , feature_dependencies(std::move(dependencies))
+        , feature_dependencies(dependencies)
     {
         for (const auto& kv : feature_dependencies)
         {
@@ -591,12 +593,9 @@ namespace vcpkg::Dependencies
             Checks::check_exit(
                 VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.package_spec.name());
 
-            const std::vector<std::string> all_features =
-                Util::fmap(scfl->source_control_file->feature_paragraphs,
-                           [](auto&& feature_paragraph) { return feature_paragraph->name; });
-
             auto fspecs =
-                spec.to_feature_specs(scfl->source_control_file->core_paragraph->default_features, all_features);
+                spec.to_feature_specs(scfl->source_control_file->core_paragraph->default_features,
+                                      scfl->source_control_file->features);
             feature_specs.insert(
                 feature_specs.end(), std::make_move_iterator(fspecs.begin()), std::make_move_iterator(fspecs.end()));
         }
@@ -667,9 +666,6 @@ namespace vcpkg::Dependencies
                     {
                         paragraph_depends = &clust.m_scfl.source_control_file->core_paragraph->depends;
                     }
-                    else if (spec.feature() == "default")
-                    {
-                    }
                     else
                     {
                         auto maybe_paragraph = clust.m_scfl.source_control_file->find_feature(spec.feature());
@@ -701,27 +697,13 @@ namespace vcpkg::Dependencies
                         clust.create_install_info(next_dependencies);
                         clust.add_feature(spec.feature(), m_var_provider, next_dependencies);
                     }
-                    else
+                    else if (!clust.has_feature_installed(spec.feature()))
                     {
-                        if (spec.feature() == "default")
-                        {
-                            if (!clust.m_installed.get()->defaults_requested)
-                            {
-                                clust.m_installed.get()->defaults_requested = true;
-                                if (!clust.has_defaults_installed())
-                                {
-                                    mark_for_reinstall(spec.spec(), next_dependencies);
-                                }
-                            }
-                        }
-                        else if (!clust.has_feature_installed(spec.feature()))
-                        {
-                            // If install_info is not present and it is already installed, we have never added a feature
-                            // which hasn't already been installed to this cluster. In this case, we need to reinstall
-                            // the port if the feature isn't already present.
-                            mark_for_reinstall(spec.spec(), next_dependencies);
-                            clust.add_feature(spec.feature(), m_var_provider, next_dependencies);
-                        }
+                        // If install_info is not present and it is already installed, we have never added a feature
+                        // which hasn't already been installed to this cluster. In this case, we need to reinstall
+                        // the port if the feature isn't already present.
+                        mark_for_reinstall(spec.spec(), next_dependencies);
+                        clust.add_feature(spec.feature(), m_var_provider, next_dependencies);
                     }
                 }
             }
@@ -848,34 +830,8 @@ namespace vcpkg::Dependencies
             // If a cluster only has an installed object and is marked as user requested we should still report it.
             if (auto info_ptr = p_cluster->m_install_info.get())
             {
-                auto&& scfl = p_cluster->m_scfl;
-
-                std::unordered_map<std::string, std::vector<FeatureSpec>> computed_edges;
-                for (auto&& kv : info_ptr->build_edges)
-                {
-                    std::set<FeatureSpec> fspecs;
-                    for (auto&& fspec : kv.second)
-                    {
-                        if (fspec.feature() != "default")
-                        {
-                            fspecs.insert(fspec);
-                            continue;
-                        }
-                        auto&& dep_clust = m_graph->get(fspec.spec());
-                        const auto& default_features = [&] {
-                            if (dep_clust.m_install_info.has_value())
-                                return dep_clust.m_scfl.source_control_file->core_paragraph->default_features;
-                            if (auto p = dep_clust.m_installed.get()) return p->ipv.core->package.default_features;
-                            Checks::unreachable(VCPKG_LINE_INFO);
-                        }();
-                        for (auto&& default_feature : default_features)
-                            fspecs.emplace(fspec.spec(), default_feature);
-                    }
-                    computed_edges[kv.first].assign(fspecs.begin(), fspecs.end());
-                }
-
                 plan.install_actions.emplace_back(
-                    p_cluster->m_spec, scfl, p_cluster->request_type, std::move(computed_edges));
+                    p_cluster->m_spec, p_cluster->m_scfl, p_cluster->request_type, std::move(info_ptr->build_edges));
             }
             else if (p_cluster->request_type == RequestType::USER_REQUESTED && p_cluster->m_installed.has_value())
             {
