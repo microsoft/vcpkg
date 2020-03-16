@@ -77,6 +77,9 @@ anyrpc:x86-windows=ignore
 anyrpc:x64-windows-static=ignore
 apr:arm-uwp=fail
 apr:x64-uwp=fail
+# Static builds fail beacuase apr-1-config is installed in bin
+apr:x64-linux=fail
+apr:x64-osx=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
 argtable2:arm-uwp=fail
