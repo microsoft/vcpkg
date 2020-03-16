@@ -1,5 +1,19 @@
+diff --git a/CMake/VTKConfig.cmake.in b/CMake/VTKConfig.cmake.in
+index d28e0cc..7ed48bc 100644
+--- a/CMake/VTKConfig.cmake.in
++++ b/CMake/VTKConfig.cmake.in
+@@ -88,6 +88,9 @@ if(VTK_HAS_VTKM AND NOT TARGET vtkm_cont)
+                )
+ endif()
+ 
++# Find dependencies
++include(CMakeFindDependencyMacro)
++find_dependency(pugixml REQUIRED)
+ 
+ #-----------------------------------------------------------------------------
+ # Load requested modules.
 diff --git a/IO/CityGML/CMakeLists.txt b/IO/CityGML/CMakeLists.txt
-index ce979ba..322e2de 100644
+index ce979ba..744c6f1 100644
 --- a/IO/CityGML/CMakeLists.txt
 +++ b/IO/CityGML/CMakeLists.txt
 @@ -4,8 +4,5 @@ vtk_module_library(vtkIOCityGML ${Module_SRCS})
@@ -12,18 +26,3 @@ index ce979ba..322e2de 100644
 -  vtk_module_link_libraries(vtkIOCityGML LINK_PRIVATE ${pugixml_LIBRARIES})
 +  vtk_module_link_libraries(vtkIOCityGML LINK_PUBLIC pugixml)
  endif()
-diff --git a/CMake/VTKConfig.cmake.in b/CMake/VTKConfig.cmake.in
-index d28e0cc..1158db5 100644
---- a/CMake/VTKConfig.cmake.in
-+++ b/CMake/VTKConfig.cmake.in
-@@ -88,7 +88,9 @@ if(VTK_HAS_VTKM AND NOT TARGET vtkm_cont)
-                )
- endif()
- 
--
-+# Find dependencies
-+include(CMakeFindDependencyMacro)
-+find_dependency(pugixml REQUIRED)
- #-----------------------------------------------------------------------------
- # Load requested modules.
- 
