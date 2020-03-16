@@ -133,8 +133,8 @@ if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
 endif()
 
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in UNIX
+if (VCPKG_TARGET_IS_OSX)
+    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
 endif()
 
 set(OPTIONS_CROSS "")
