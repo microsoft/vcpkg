@@ -56,7 +56,7 @@ function(find_msvc_path PATH)
     file(TO_CMAKE_PATH "${PROGRAM_FILES}" PROGRAM_FILES)
     set(VSWHERE "${PROGRAM_FILES}/Microsoft Visual Studio/Installer/vswhere.exe")
     execute_process(
-        COMMAND "${VSWHERE}" -prerelease -legacy -products * -sort -utf8 -property installationPath
+        COMMAND "${VSWHERE}" -prerelease -legacy -products * -utf8 -property installationPath
         WORKING_DIRECTORY "${SOURCE_PATH}"
         OUTPUT_VARIABLE OUTPUT_
         OUTPUT_STRIP_TRAILING_WHITESPACE
