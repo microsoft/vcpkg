@@ -1,4 +1,4 @@
 Source: anyrpc
-Version: 2020-01-13-1
+Version: 2020-01-13-2
 Homepage: https://github.com/sgieseking/anyrpc
 Description: A multiprotocol remote procedure call system for C++.
