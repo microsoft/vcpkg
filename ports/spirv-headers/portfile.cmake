@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Headers
-    REF c4f8f65792d4bf2657ca751904c511bbcf2ac77b
-    SHA512 750af53a70f6f890657735ab0e2db5ae3dd8d612480efc2247753993752f687e22a0bdd65296c5751daf284604fe3dc9ee0a94feae88761a0e64adc64e6d17a4
+    REF 1.5.1.corrected
+    SHA512 92447b1b1eca6f0253265f36d67b00c0c79e93f6a707e27bd8239bd2f693c468a92b7f7c3bb3fde6bb091383baaff42d3b0bbfeb9ff5f952d8a0b9626b03848e
     HEAD_REF master
 )
 
