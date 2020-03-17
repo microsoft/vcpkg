@@ -7,9 +7,6 @@
 ## vcpkg_configure_make(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [AUTOCONFIG]
-##     [DISABLE_AUTO_HOST]
-##     [DISABLE_AUTO_DST]
-##     [GENERATOR]
 ##     [NO_DEBUG]
 ##     [SKIP_CONFIGURE]
 ##     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
@@ -34,10 +31,6 @@
 ##
 ## ### AUTOCONFIG
 ## Need to use autoconfig to generate configure file.
-##
-## ### DISABLE_AUTO_DST
-## Don't set installation path automatically, the default value is `${CURRENT_PACKAGES_DIR}` and `${CURRENT_PACKAGES_DIR}/debug`
-## If use this option, you will need to set dst path manually.
 ##
 ## ### PRERUN_SHELL
 ## Script that needs to be called before configuration
@@ -114,7 +107,7 @@ endmacro()
 
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;DISABLE_AUTO_DST;SKIP_CONFIGURE;COPY_SOURCE"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
@@ -344,6 +337,15 @@ function(vcpkg_configure_make)
         message(STATUS "Finished generating configure for ${TARGET_TRIPLET}")
     endif()
 
+    if (_csc_PRERUN_SHELL)
+        message(STATUS "Prerun shell with ${TARGET_TRIPLET}")
+        vcpkg_execute_required_process(
+            COMMAND ${base_cmd} -c "${_csc_PRERUN_SHELL}"
+            WORKING_DIRECTORY "${TAR_DIR}"
+            LOGNAME prerun-${TARGET_TRIPLET}
+        )
+    endif()
+
     if(NOT ENV{PKG_CONFIG})
         find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
         debug_message("Using pkg-config from: ${PKGCONFIG}")
@@ -395,15 +397,6 @@ function(vcpkg_configure_make)
             # endif()
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
             set(dbg_command /bin/sh "./${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG})
-        endif()
-
-        if (_csc_PRERUN_SHELL)
-            message(STATUS "Prerun shell with ${TARGET_TRIPLET}-dbg")
-            vcpkg_execute_required_process(
-                COMMAND ${base_cmd} -c "${_csc_PRERUN_SHELL}"
-                WORKING_DIRECTORY "${TAR_DIR}"
-                LOGNAME prerun-${TARGET_TRIPLET}-dbg
-            )
         endif()
 
         if (NOT _csc_SKIP_CONFIGURE)
@@ -507,8 +500,6 @@ function(vcpkg_configure_make)
     set(ENV{CPLUS_INCLUDE_PATH} "${CPLUS_INCLUDE_PATH_BACKUP}")
     _vcpkg_restore_env_variable(LIBRARY_PATH)
     _vcpkg_restore_env_variable(LD_LIBRARY_PATH)
-    set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
-    set(_VCPKG_NO_DEBUG ${_csc_NO_DEBUG} PARENT_SCOPE)
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
 endfunction()
