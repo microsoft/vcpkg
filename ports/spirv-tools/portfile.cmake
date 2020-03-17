@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         "comment-distutils.patch"
         "cmake-install.patch"
+        "install-config-typo.patch"
 )
 
 vcpkg_find_acquire_program(PYTHON3)
