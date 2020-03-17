@@ -89,7 +89,7 @@ namespace vcpkg::Commands::Env
             }
         }();
 
-        std::string cmd = args.command_arguments.empty() ? "cmd" : args.command_arguments.at(0);
+        std::string cmd = args.command_arguments.empty() ? "cmd" : ("cmd /c " + args.command_arguments.at(0));
 #ifdef _WIN32
         System::enter_interactive_subprocess();
 #endif
