@@ -6,14 +6,15 @@ vcpkg_from_github(
     REF udns_0_4
     SHA512 4df8def718c75872536d42a757237d6c8e0afce8a53aedd7fea73814dc5cf8b5d6c9ae8f01a8cfc76864aa8293c172f08953a6750a66749ba19a3721bb4cf2ec
     HEAD_REF master
+    PATCHES ignore_unknown_options.patch
 )
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_AUTO_DST
+    COPY_SOURCE
 )
 
-vcpkg_install_make()
+vcpkg_build_make()
 #vcpkg_fixup_pkgconfig()?
 # Install
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
