@@ -243,6 +243,7 @@ else()
     endif()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
+        COPY_SOURCE
         OPTIONS
             ${BUILD_OPTS}
             --with-includes=${CURRENT_INSTALLED_DIR}/include
