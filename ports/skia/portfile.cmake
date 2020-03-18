@@ -51,22 +51,6 @@ endif()
 set(OPTIONS_REL "${OPTIONS} is_official_build=true")
 set(OPTIONS_DBG "${OPTIONS} is_debug=true")
 
-function(find_msvc_path PATH)
-    vcpkg_get_program_files_32_bit(PROGRAM_FILES)
-    file(TO_CMAKE_PATH "${PROGRAM_FILES}" PROGRAM_FILES)
-    set(VSWHERE "${PROGRAM_FILES}/Microsoft Visual Studio/Installer/vswhere.exe")
-    execute_process(
-        COMMAND "${VSWHERE}" -prerelease -legacy -products * -utf8 -property installationPath
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        OUTPUT_VARIABLE OUTPUT_
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    string(REGEX REPLACE "\n|(\r\n)" ";" OUTPUT_ "${OUTPUT_}")
-    list(GET OUTPUT_ 0 OUTPUT_)
-    
-    set(${PATH} "${OUTPUT_}" PARENT_SCOPE)
-endfunction()
-
 if(CMAKE_HOST_WIN32)
     # Load toolchains
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
@@ -95,8 +79,8 @@ if(CMAKE_HOST_WIN32)
     set(OPTIONS_REL "${OPTIONS_REL} extra_cflags_c=${SKIA_C_FLAGS_REL} \
         extra_cflags_cc=${SKIA_CXX_FLAGS_REL}")
 
-    find_msvc_path(WIN_VC)
-    set(WIN_VC "${WIN_VC}\\VC")
+    set(WIN_VC "$ENV{VCINSTALLDIR}")
+    string(REPLACE "\\VC\\" "\\VC" WIN_VC "${WIN_VC}")
     set(OPTIONS_DBG "${OPTIONS_DBG} win_vc=\"${WIN_VC}\"")
     set(OPTIONS_REL "${OPTIONS_REL} win_vc=\"${WIN_VC}\"")
 
