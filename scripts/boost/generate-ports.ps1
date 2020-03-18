@@ -50,7 +50,7 @@ function Generate()
     $controlDeps = ($Depends | sort) -join ", "
 
     $versionSuffix = ""
-    if ($PortName -eq "iostreams" -or $PortName -eq "python")
+    if ($PortName -eq "iostreams" -or $PortName -eq "process" -or $PortName -eq "python")
     {
         $versionSuffix = "-1"
     }
