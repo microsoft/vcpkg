@@ -221,6 +221,7 @@ namespace vcpkg::Commands::CI
         std::map<PackageSpec, Build::BuildResult> known;
         std::map<PackageSpec, std::vector<std::string>> features;
         std::unordered_map<std::string, SourceControlFileLocation> default_feature_provider;
+        std::map<PackageSpec, std::string> abi_map;
     };
 
     static bool supported_for_triplet(const CMakeVars::CMakeVarProvider& var_provider,
@@ -295,6 +296,7 @@ namespace vcpkg::Commands::CI
             install_specs.emplace_back(FullPackageSpec{
                 install_action.spec,
                 std::vector<std::string>{install_action.feature_list.begin(), install_action.feature_list.end()}});
+            ret->abi_map.emplace(install_action.spec, install_action.package_abi.value_or_exit(VCPKG_LINE_INFO));
         }
 
         var_provider.load_tag_vars(install_specs, provider);
@@ -365,10 +367,12 @@ namespace vcpkg::Commands::CI
                 b_will_build = true;
             }
 
-            Strings::append(
-                stdout_buffer,
-                Strings::format(
-                    "%40s: %1s %8s: %s\n", p->spec, (b_will_build ? "*" : " "), state, action.public_abi()));
+            Strings::append(stdout_buffer,
+                            Strings::format("%40s: %1s %8s: %s\n",
+                                            p->spec,
+                                            (b_will_build ? "*" : " "),
+                                            state,
+                                            action.package_abi.value_or_exit(VCPKG_LINE_INFO)));
             if (stdout_buffer.size() > 2048)
             {
                 System::print2(stdout_buffer);
@@ -506,18 +510,24 @@ namespace vcpkg::Commands::CI
                 // Adding results for ports that were built or pulled from an archive
                 for (auto&& result : summary.results)
                 {
-                    auto& port_features = split_specs->features[result.spec];
+                    auto& port_features = split_specs->features.at(result.spec);
                     split_specs->known.erase(result.spec);
-                    xunitTestResults.add_test_results(
-                        result.spec.to_string(), result.build_result.code, result.timing, "", port_features);
+                    xunitTestResults.add_test_results(result.spec.to_string(),
+                                                      result.build_result.code,
+                                                      result.timing,
+                                                      split_specs->abi_map.at(result.spec),
+                                                      port_features);
                 }
 
                 // Adding results for ports that were not built because they have known states
                 for (auto&& port : split_specs->known)
                 {
-                    auto& port_features = split_specs->features[port.first];
-                    xunitTestResults.add_test_results(
-                        port.first.to_string(), port.second, Chrono::ElapsedTime{}, "", port_features);
+                    auto& port_features = split_specs->features.at(port.first);
+                    xunitTestResults.add_test_results(port.first.to_string(),
+                                                      port.second,
+                                                      Chrono::ElapsedTime{},
+                                                      split_specs->abi_map.at(port.first),
+                                                      port_features);
                 }
 
                 all_known_results.emplace_back(std::move(split_specs->known));
