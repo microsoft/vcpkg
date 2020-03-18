@@ -27,6 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda        BUILD_GPU
     tools       BUILD_tools
     opengl      WITH_OPENGL
+    vtk         WITH_VTK
 )
 
 vcpkg_configure_cmake(
@@ -44,7 +45,6 @@ vcpkg_configure_cmake(
         -DWITH_LIBUSB=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_VTK=ON
         # FEATURES
         ${FEATURE_OPTIONS}
 )
