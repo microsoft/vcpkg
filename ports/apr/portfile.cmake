@@ -2,8 +2,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
 
-include(vcpkg_common_functions)
-
 set(VERSION 1.7.0)
 
 vcpkg_download_distfile(ARCHIVE
@@ -31,9 +29,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
             -DAPR_HAVE_IPV6=ON
             -DAPR_INSTALL_PRIVATE_H=${INSTALL_PRIVATE_H}
             ${FEATURE_OPTIONS}
-        # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-        # OPTIONS_RELEASE -DOPTIMIZE=1
-        # OPTIONS_DEBUG -DDEBUGGABLE=1
     )
 
     vcpkg_install_cmake()
