@@ -21,13 +21,6 @@ vcpkg_install_make()
 #vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-# file(GLOB_RECURSE LIBOSIP2_BINARIES ${CURRENT_PACKAGES_DIR}/lib *.so)
-# foreach(LIBOSIP2_BINARY LIBOSIP2_BINARIES)
-    # if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        # file(COPY ${LIBOSIP2_BINARY} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    # endif()
-    # file(REMOVE ${LIBOSIP2_BINARY})
-# endforeach()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
