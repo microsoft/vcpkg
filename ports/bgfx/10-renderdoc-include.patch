@@ -1,0 +1,13 @@
+diff --git a/src/debug_renderdoc.cpp b/src/debug_renderdoc.cpp
+index 37c4e27..e2e2c97 100644
+--- a/src/debug_renderdoc.cpp
++++ b/src/debug_renderdoc.cpp
+@@ -9,7 +9,7 @@
+ #	if BX_PLATFORM_WINDOWS
+ #		include <psapi.h>
+ #	endif // BX_PLATFORM_WINDOWS
+-#	include <renderdoc/renderdoc_app.h>
++#	include <renderdoc_app.h>
+ 
+ namespace bgfx
+ {

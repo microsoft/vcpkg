@@ -1,0 +1,13 @@
+diff --git a/tools/geometryc/geometryc.cpp b/tools/geometryc/geometryc.cpp
+index 23eed3f..88da534 100644
+--- a/tools/geometryc/geometryc.cpp
++++ b/tools/geometryc/geometryc.cpp
+@@ -17,7 +17,7 @@ namespace stl = tinystl;
+ #include <meshoptimizer/src/meshoptimizer.h>
+ 
+ #define CGLTF_IMPLEMENTATION
+-#include <cgltf/cgltf.h>
++#include <cgltf.h>
+ 
+ #define BGFX_GEOMETRYC_VERSION_MAJOR 1
+ #define BGFX_GEOMETRYC_VERSION_MINOR 0

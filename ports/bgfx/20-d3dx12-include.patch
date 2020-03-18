@@ -1,0 +1,22 @@
+diff --git a/src/renderer_d3d12.h b/src/renderer_d3d12.h
+index 2e5a5b2..08fb386 100644
+--- a/src/renderer_d3d12.h
++++ b/src/renderer_d3d12.h
+@@ -37,7 +37,7 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wmissing-field-initializers");
+ #if BX_PLATFORM_XBOXONE
+ #	include <d3dx12_x.h>
+ #else
+-#	include <d3dx12.h>
++#	include "d3dx12.h"
+ #endif // BX_PLATFORM_XBOXONE
+ BX_PRAGMA_DIAGNOSTIC_POP();
+ 
+@@ -67,7 +67,7 @@ extern "C" struct PIXEventsThreadInfo* WINAPI bgfx_PIXGetThreadInfo();
+ extern "C" uint64_t                    WINAPI bgfx_PIXEventsReplaceBlock(bool _getEarliestTime);
+ #	endif // BX_PLATFORM_WINDOWS
+ 
+-#	include <pix3.h>
++#	include "pix3.h"
+ 
+ #	define _PIX3_BEGINEVENT(_commandList, _color, _name) PIXBeginEvent(_commandList, _color, _name)
+ #	define _PIX3_SETMARKER(_commandList, _color, _name)  PIXSetMarker(_commandList, _color, _name)

@@ -1,0 +1,30 @@
+diff --git a/tools/shaderc/shaderc_metal.cpp b/tools/shaderc/shaderc_metal.cpp
+index 4adf739..cd78b2a 100644
+--- a/tools/shaderc/shaderc_metal.cpp
++++ b/tools/shaderc/shaderc_metal.cpp
+@@ -10,8 +10,8 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4100) // error C4100: 'inclusionDepth' : unref
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4265) // error C4265: 'spv::spirvbin_t': class has virtual functions, but destructor is not virtual
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'userData' shadows a member of 'glslang::TShader::Includer::IncludeResult'
+ #define ENABLE_OPT 1
+-#include <ShaderLang.h>
+-#include <ResourceLimits.h>
++#include <glslang/Public/ShaderLang.h>
++#include <glslang/Include/ResourceLimits.h>
+ #include <SPIRV/SPVRemapper.h>
+ #include <SPIRV/GlslangToSpv.h>
+ #define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
+diff --git a/tools/shaderc/shaderc_spirv.cpp b/tools/shaderc/shaderc_spirv.cpp
+index 23b8831..db3cda1 100644
+--- a/tools/shaderc/shaderc_spirv.cpp
++++ b/tools/shaderc/shaderc_spirv.cpp
+@@ -10,8 +10,8 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4100) // error C4100: 'inclusionDepth' : unref
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4265) // error C4265: 'spv::spirvbin_t': class has virtual functions, but destructor is not virtual
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'userData' shadows a member of 'glslang::TShader::Includer::IncludeResult'
+ #define ENABLE_OPT 1
+-#include <ShaderLang.h>
+-#include <ResourceLimits.h>
++#include <glslang/Public/ShaderLang.h>
++#include <glslang/Include/ResourceLimits.h>
+ #include <SPIRV/SPVRemapper.h>
+ #include <SPIRV/GlslangToSpv.h>
+ #define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS

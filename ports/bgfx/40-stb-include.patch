@@ -1,0 +1,69 @@
+diff --git a/3rdparty/dear-imgui/imstb_rectpack.h b/3rdparty/dear-imgui/imstb_rectpack.h
+index 1562c5a..bf9e307 100644
+--- a/3rdparty/dear-imgui/imstb_rectpack.h
++++ b/3rdparty/dear-imgui/imstb_rectpack.h
+@@ -1 +1 @@
+-#include <stb/stb_rect_pack.h>
++#include <stb_rect_pack.h>
+diff --git a/3rdparty/dear-imgui/imstb_textedit.h b/3rdparty/dear-imgui/imstb_textedit.h
+index f1ea098..24051c0 100644
+--- a/3rdparty/dear-imgui/imstb_textedit.h
++++ b/3rdparty/dear-imgui/imstb_textedit.h
+@@ -1 +1 @@
+-#include <stb/stb_textedit.h>
++#include <stb_textedit.h>
+diff --git a/3rdparty/dear-imgui/imstb_truetype.h b/3rdparty/dear-imgui/imstb_truetype.h
+index 9b6a811..a84325d 100644
+--- a/3rdparty/dear-imgui/imstb_truetype.h
++++ b/3rdparty/dear-imgui/imstb_truetype.h
+@@ -1 +1 @@
+-#include <stb/stb_truetype.h>
++#include <stb_truetype.h>
+diff --git a/3rdparty/dear-imgui/stb_rect_pack.h b/3rdparty/dear-imgui/stb_rect_pack.h
+index 1562c5a..bf9e307 100644
+--- a/3rdparty/dear-imgui/stb_rect_pack.h
++++ b/3rdparty/dear-imgui/stb_rect_pack.h
+@@ -1 +1 @@
+-#include <stb/stb_rect_pack.h>
++#include <stb_rect_pack.h>
+diff --git a/3rdparty/dear-imgui/stb_textedit.h b/3rdparty/dear-imgui/stb_textedit.h
+index f1ea098..24051c0 100644
+--- a/3rdparty/dear-imgui/stb_textedit.h
++++ b/3rdparty/dear-imgui/stb_textedit.h
+@@ -1 +1 @@
+-#include <stb/stb_textedit.h>
++#include <stb_textedit.h>
+diff --git a/3rdparty/dear-imgui/stb_truetype.h b/3rdparty/dear-imgui/stb_truetype.h
+index 9b6a811..a84325d 100644
+--- a/3rdparty/dear-imgui/stb_truetype.h
++++ b/3rdparty/dear-imgui/stb_truetype.h
+@@ -1 +1 @@
+-#include <stb/stb_truetype.h>
++#include <stb_truetype.h>
+diff --git a/examples/common/imgui/imgui.cpp b/examples/common/imgui/imgui.cpp
+index 3455832..c4b001f 100644
+--- a/examples/common/imgui/imgui.cpp
++++ b/examples/common/imgui/imgui.cpp
+@@ -453,7 +453,7 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wtype-limits"); // warning: comparison
+ #define STBTT_malloc(_size, _userData) memAlloc(_size, _userData)
+ #define STBTT_free(_ptr, _userData) memFree(_ptr, _userData)
+ #define STB_RECT_PACK_IMPLEMENTATION
+-#include <stb/stb_rect_pack.h>
++#include <stb_rect_pack.h>
+ #define STB_TRUETYPE_IMPLEMENTATION
+-#include <stb/stb_truetype.h>
++#include <stb_truetype.h>
+ BX_PRAGMA_DIAGNOSTIC_POP();
+diff --git a/examples/common/nanovg/fontstash.h b/examples/common/nanovg/fontstash.h
+index 7285d7e..bd19e15 100644
+--- a/examples/common/nanovg/fontstash.h
++++ b/examples/common/nanovg/fontstash.h
+@@ -266,7 +266,7 @@ static void fons__tmpfree(void* ptr, void* up);
+ #endif // 0
+ 
+ #define STBTT_DEF extern
+-#include <stb/stb_truetype.h>
++#include <stb_truetype.h>
+ 
+ struct FONSttFontImpl {
+ 	stbtt_fontinfo font;

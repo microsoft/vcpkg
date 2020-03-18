@@ -1,0 +1,35 @@
+Source: bgfx
+Version: 2020-03-15
+Homepage: https://github.com/bkaradzic/bgfx
+Description: Cross-platform, graphics API agnostic, "Bring Your Own Engine/Framework" style rendering library.
+Build-Depends: bx
+Default-Features: opengl, d3d11, tools
+Supports: (windows|linux|static)
+
+Feature: opengl
+Description:
+Build-Depends: opengl, opengl-registry
+
+Feature: opengl-core
+Description: opengl 3.2+ core profile
+Build-Depends: bgfx[opengl]
+
+Feature: vulkan
+Description:
+Build-Depends: vulkan
+
+Feature: d3d11
+Description:
+Build-Depends:
+
+Feature: d3d12
+Description:
+Build-Depends:
+
+Feature: examples
+Description:
+Build-Depends: bimg, freetype
+
+Feature: tools
+Description:
+Build-Depends: bimg, freetype, cgltf, glslang, spirv-cross, spirv-headers, spirv-tools, stb, vulkan
