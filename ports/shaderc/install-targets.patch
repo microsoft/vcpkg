@@ -1,0 +1,91 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 12915d1..4f20fdc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -143,3 +143,5 @@ endif()
+ define_pkg_config_file(shaderc -lshaderc_shared)
+ define_pkg_config_file(shaderc_static "-lshaderc ${EXTRA_STATIC_PKGCONFIG_LIBS} -lshaderc_util")
+ define_pkg_config_file(shaderc_combined -lshaderc_combined)
++
++install(EXPORT shaderc-targets DESTINATION "${CMAKE_INSTALL_DATADIR}/shaderc/")
+diff --git a/glslc/CMakeLists.txt b/glslc/CMakeLists.txt
+index 1f14a5b..dc84749 100644
+--- a/glslc/CMakeLists.txt
++++ b/glslc/CMakeLists.txt
+@@ -38,7 +38,7 @@ shaderc_add_tests(
+ shaderc_add_asciidoc(glslc_doc_README README)
+ 
+ if(SHADERC_ENABLE_INSTALL)
+-  install(TARGETS glslc_exe
++  install(TARGETS glslc_exe EXPORT shaderc-targets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ endif(SHADERC_ENABLE_INSTALL)
+ 
+diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
+index f4a80d8..18f2e61 100644
+--- a/libshaderc/CMakeLists.txt
++++ b/libshaderc/CMakeLists.txt
+@@ -13,7 +13,8 @@ set(SHADERC_SOURCES
+ add_library(shaderc STATIC ${SHADERC_SOURCES})
+ shaderc_default_compile_options(shaderc)
+ target_include_directories(shaderc
+-    PUBLIC include
++    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++           $<INSTALL_INTERFACE:include>
+     PRIVATE ${glslang_SOURCE_DIR}
+             ${SPIRV-Headers_SOURCE_DIR}/include)
+ 
+@@ -40,10 +41,7 @@ if(SHADERC_ENABLE_INSTALL)
+     DESTINATION
+       ${CMAKE_INSTALL_INCLUDEDIR}/shaderc)
+ 
+-  install(TARGETS shaderc shaderc_shared
+-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++  install(TARGETS shaderc EXPORT shaderc-targets)
+ endif(SHADERC_ENABLE_INSTALL)
+ 
+ find_package(Threads)
+@@ -54,7 +52,7 @@ set(SHADERC_LIBS
+   SPIRV-Tools
+ )
+ 
+-target_link_libraries(shaderc PRIVATE ${SHADERC_LIBS})
++target_link_libraries(shaderc PUBLIC ${SHADERC_LIBS})
+ target_link_libraries(shaderc_shared PRIVATE ${SHADERC_LIBS})
+ 
+ shaderc_add_tests(
+@@ -81,7 +79,7 @@ shaderc_add_tests(
+ 
+ shaderc_combine_static_lib(shaderc_combined shaderc)
+ 
+-if(SHADERC_ENABLE_INSTALL)
++if(SHADERC_ENABLE_INSTALL AND FALSE)
+   # Since shaderc_combined is defined as an imported library, we cannot use the
+   # install() directive to install it. Install it like a normal file.
+   get_target_property(generated_location shaderc_combined LOCATION)
+diff --git a/libshaderc_util/CMakeLists.txt b/libshaderc_util/CMakeLists.txt
+index f8ae95d..d31a732 100644
+--- a/libshaderc_util/CMakeLists.txt
++++ b/libshaderc_util/CMakeLists.txt
+@@ -23,15 +23,17 @@ add_library(shaderc_util STATIC
+   src/version_profile.cc
+ )
+ 
++install(TARGETS shaderc_util EXPORT shaderc-targets)
++
+ shaderc_default_compile_options(shaderc_util)
+ target_include_directories(shaderc_util
+-  PUBLIC include PRIVATE ${glslang_SOURCE_DIR})
++  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+ # We use parts of Glslang's HLSL compilation interface, which
+ # now requires this preprocessor definition.
+ add_definitions(-DENABLE_HLSL)
+ 
+ find_package(Threads)
+-target_link_libraries(shaderc_util PRIVATE
++target_link_libraries(shaderc_util PUBLIC
+   glslang OSDependent OGLCompiler HLSL glslang SPIRV
+   SPIRV-Tools-opt ${CMAKE_THREAD_LIBS_INIT})
+ 

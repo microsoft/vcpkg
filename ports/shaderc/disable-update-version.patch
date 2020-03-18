@@ -1,15 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a4e779b..dc5f1a9 100644
+index 225c30d..a6831d3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -81,12 +81,6 @@ add_subdirectory(libshaderc)
+@@ -113,12 +113,6 @@ add_subdirectory(libshaderc)
  add_subdirectory(glslc)
  add_subdirectory(examples)
  
 -add_custom_target(build-version
 -  ${PYTHON_EXECUTABLE}
 -  ${CMAKE_CURRENT_SOURCE_DIR}/utils/update_build_version.py
--  ${shaderc_SOURCE_DIR} ${spirv-tools_SOURCE_DIR} ${glslang_SOURCE_DIR}
+-  ${shaderc_SOURCE_DIR} ${spirv-tools_SOURCE_DIR} ${glslang_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/build-version.inc
 -  COMMENT "Update build-version.inc in the Shaderc build directory (if necessary).")
 -
  function(define_pkg_config_file NAME LIBS)
