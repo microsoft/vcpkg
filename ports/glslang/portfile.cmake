@@ -1,37 +1,40 @@
-include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  optimizer GLSLANG_WITH_OPT
+)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/glslang
-  REF f88e5824d2cfca5edc58c7c2101ec9a4ec36afac
-  SHA512 92dc287e8930db6e00bde23b770f763dc3cf8a405a37b682bbd65e1dbde1f1f5161543fcc70b09eef07a5ce8bbe8f368ef84ac75003c122f42d1f6b9eaa8bd50
+  REF 8.13.3559
+  SHA512 d2f09888dd1b6edb4f324502627aeca0c78411f61ab50e672fa2a6d9ae46611849e1d13b9c6069b77f31092d843abcf3d74ed7cfc3c9144ced80e65876f4b781
   HEAD_REF master
   PATCHES
-    CMakeLists-targets.patch
-    CMakeLists-windows.patch
+    disable-msvccrt-check.patch
+    find-spirv-tools.patch
 )
 
 vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
+  SOURCE_PATH "${SOURCE_PATH}"
   PREFER_NINJA
   OPTIONS
+    ${FEATURE_OPTIONS}
     -DCMAKE_DEBUG_POSTFIX=d
     -DSKIP_GLSLANG_INSTALL=OFF
 )
 
 vcpkg_install_cmake()
+file(INSTALL "${CURRENT_PORT_DIR}/glslangConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glslang)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
 vcpkg_copy_pdbs()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools")
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-# Handle copyright
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/glslang)
-
-vcpkg_test_cmake(PACKAGE_NAME glslang)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

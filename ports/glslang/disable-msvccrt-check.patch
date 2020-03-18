@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d6fc8d4..f2db2ee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,7 +87,7 @@ endif(ENABLE_GLSLANG_WEB)
+ if(WIN32)
+     set(CMAKE_DEBUG_POSTFIX "d")
+     if(MSVC)
+-        include(ChooseMSVCCRT.cmake)
++        #include(ChooseMSVCCRT.cmake)
+     endif(MSVC)
+     add_definitions(-DGLSLANG_OSINCLUDE_WIN32)
+ elseif(UNIX)

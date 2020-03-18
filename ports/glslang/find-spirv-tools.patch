@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f2db2ee..0591fd7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -163,6 +163,10 @@ if(BUILD_EXTERNAL AND IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/External)
+ 	add_subdirectory(External)
+ endif()
+ 
++if (GLSLANG_WITH_OPT)
++    find_package(SPIRV-Tools)
++    find_package(SPIRV-Tools-opt)
++endif()
+ if(NOT TARGET SPIRV-Tools-opt)
+     set(ENABLE_OPT OFF)
+ endif()
+diff --git a/SPIRV/CMakeLists.txt b/SPIRV/CMakeLists.txt
+index 439b991..f665bae 100644
+--- a/SPIRV/CMakeLists.txt
++++ b/SPIRV/CMakeLists.txt
+@@ -54,14 +54,14 @@ if(WIN32 AND BUILD_SHARED_LIBS)
+ endif()
+ 
+ if(ENABLE_OPT)
+-    target_include_directories(SPIRV
+-        PRIVATE ${spirv-tools_SOURCE_DIR}/include
+-        PRIVATE ${spirv-tools_SOURCE_DIR}/source
+-    )
++    # target_include_directories(SPIRV
++    #     PRIVATE ${spirv-tools_SOURCE_DIR}/include
++    #     PRIVATE ${spirv-tools_SOURCE_DIR}/source
++    # )
+     target_link_libraries(SPIRV glslang SPIRV-Tools-opt)
+-    target_include_directories(SPIRV PUBLIC
+-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../External>
+-		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/External>)
++    # target_include_directories(SPIRV PUBLIC
++	# 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../External>
++	# 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/External>)
+ else()
+     target_link_libraries(SPIRV glslang)
+ endif(ENABLE_OPT)
