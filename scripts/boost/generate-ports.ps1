@@ -115,6 +115,10 @@ function Generate()
     {
         $portfileLines += @("    PATCHES Removeseekpos.patch")
     }
+    if ($PortName -eq "process")
+    {
+        $portfileLines += @("    PATCHES async_pipe_header.patch")
+    }
     $portfileLines += @(
         ")"
         ""
