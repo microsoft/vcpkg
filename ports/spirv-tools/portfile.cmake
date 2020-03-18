@@ -7,9 +7,9 @@ vcpkg_from_github(
     REF v2020.1
     SHA512 edd434e06cba44c402900684b8fea16c394f80951ff993b3962617a21630d2d8ff9be9a5203bc8eb9b402e9cafe8c68f13099cbc1eaf66a546df08cb43668c46
     PATCHES
-        "comment-distutils.patch"
-        "cmake-install.patch"
-        "install-config-typo.patch"
+        comment-distutils.patch
+        cmake-install.patch
+        install-config-typo.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
