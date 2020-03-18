@@ -1,0 +1,30 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO cpp-netlib/url
+        REF v1.4.3
+        SHA512 b76157d91d4fb0d53ef03dbaa18e898a77c75afaa5bf1aea1aae71ef2506ba3d11ee1df9f2ca5420e79b4a572841e2e4cfac4f3a7fb7ecc36ab086ce5a027380
+        HEAD_REF master
+)
+
+vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+        -DSkyr_BUILD_TESTS=OFF
+)
+
+vcpkg_install_cmake()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+## Moves all .cmake files from /debug/share/skyr-url/ to /share/skyr-url/
+## See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
+#vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/skyr-url)
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/skyr-url RENAME copyright)
+
+# Post-build test for cmake libraries
+vcpkg_test_cmake(PACKAGE_NAME skyr-url)

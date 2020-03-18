@@ -1,0 +1,4 @@
+Source: skyr-url
+Version: 1.4.2
+Homepage: https://github.com/cpp-netlib/url
+Description: A C++ library that implements the WhatWG URL specification
