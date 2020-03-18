@@ -293,9 +293,7 @@ namespace vcpkg::Commands::CI
         std::vector<FullPackageSpec> install_specs;
         for (auto&& install_action : action_plan.install_actions)
         {
-            install_specs.emplace_back(FullPackageSpec{
-                install_action.spec,
-                std::vector<std::string>{install_action.feature_list.begin(), install_action.feature_list.end()}});
+            install_specs.emplace_back(FullPackageSpec{install_action.spec, install_action.feature_list});
         }
 
         var_provider.load_tag_vars(install_specs, provider);
@@ -315,6 +313,7 @@ namespace vcpkg::Commands::CI
         {
             auto p = &action;
             ret->abi_map.emplace(action.spec, action.package_abi.value_or_exit(VCPKG_LINE_INFO));
+            ret->features.emplace(action.spec, action.feature_list);
             if (auto scfl = p->source_control_file_location.get())
             {
                 auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
