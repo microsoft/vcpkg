@@ -527,7 +527,11 @@ namespace vcpkg::Build
         {
             std::error_code err;
             fs.create_directory(buildpath, err);
-            Checks::check_exit(VCPKG_LINE_INFO, !err.value(), "Failed to create directory '%s', code: %d", buildpath.u8string(), err.value());
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !err.value(),
+                               "Failed to create directory '%s', code: %d",
+                               buildpath.u8string(),
+                               err.value());
         }
         auto stdoutlog = buildpath / ("stdout-" + action.spec.triplet().canonical_name() + ".log");
         std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
@@ -865,9 +869,9 @@ namespace vcpkg::Build
         if (binary_caching_enabled)
         {
             auto restore = binaries_provider->try_restore(paths, action);
-            if (restore == RestoreResult::BUILD_FAILED)
+            if (restore == RestoreResult::build_failed)
                 return BuildResult::BUILD_FAILED;
-            else if (restore == RestoreResult::SUCCESS)
+            else if (restore == RestoreResult::success)
             {
                 auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
                 auto bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));

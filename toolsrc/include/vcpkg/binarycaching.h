@@ -16,11 +16,11 @@ namespace vcpkg::Build
 
 namespace vcpkg
 {
-    enum RestoreResult
+    enum class RestoreResult
     {
-        MISSING,
-        SUCCESS,
-        BUILD_FAILED,
+        missing,
+        success,
+        build_failed,
     };
 
     struct IBinaryProvider

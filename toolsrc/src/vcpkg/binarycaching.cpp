@@ -84,7 +84,7 @@ namespace
                     System::print2("Failed to decompress archive package\n");
                     if (action.build_options.purge_decompress_failure == Build::PurgeDecompressFailure::NO)
                     {
-                        return RestoreResult::BUILD_FAILED;
+                        return RestoreResult::build_failed;
                     }
                     else
                     {
@@ -94,7 +94,7 @@ namespace
                 }
                 else
                 {
-                    return RestoreResult::SUCCESS;
+                    return RestoreResult::success;
                 }
             }
 
@@ -103,7 +103,7 @@ namespace
                 if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
                 {
                     System::print2("Found failure tombstone: ", archive_tombstone_path.u8string(), "\n");
-                    return RestoreResult::BUILD_FAILED;
+                    return RestoreResult::build_failed;
                 }
                 else
                 {
@@ -116,7 +116,7 @@ namespace
                 System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
             }
 
-            return RestoreResult::MISSING;
+            return RestoreResult::missing;
         }
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
@@ -200,7 +200,7 @@ namespace
 
             if (fs.exists(archive_path))
             {
-                return RestoreResult::SUCCESS;
+                return RestoreResult::success;
             }
 
             if (purge_tombstones)
@@ -211,11 +211,11 @@ namespace
             {
                 if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
                 {
-                    return RestoreResult::BUILD_FAILED;
+                    return RestoreResult::build_failed;
                 }
             }
 
-            return RestoreResult::MISSING;
+            return RestoreResult::missing;
         }
     };
 }

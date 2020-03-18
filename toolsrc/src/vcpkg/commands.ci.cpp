@@ -348,12 +348,12 @@ namespace vcpkg::Commands::CI
                 ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
                 will_fail.emplace(p->spec);
             }
-            else if (precheck_result == RestoreResult::SUCCESS)
+            else if (precheck_result == RestoreResult::success)
             {
                 state = "pass";
                 ret->known.emplace(p->spec, BuildResult::SUCCEEDED);
             }
-            else if (precheck_result == RestoreResult::BUILD_FAILED)
+            else if (precheck_result == RestoreResult::build_failed)
             {
                 state = "fail";
                 ret->known.emplace(p->spec, BuildResult::BUILD_FAILED);
