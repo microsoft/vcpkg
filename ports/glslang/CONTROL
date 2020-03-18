@@ -1,5 +1,5 @@
 Source: glslang
-Version: 8.13.3559
+Version: 2020-03-18
 Homepage: https://github.com/KhronosGroup/glslang
 Description: Khronos reference front-end for GLSL and ESSL, and sample SPIR-V generator
 Default-Features: optimizer
