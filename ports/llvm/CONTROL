@@ -3,7 +3,7 @@ Version: 10.0.0
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Supports: !uwp
-Default-Features: tools, utils, enable-rtti, clang, clang-tools-extra, lld
+Default-Features: tools, utils, enable-rtti, disable-assertions, disable-abi-breaking-checks, clang, clang-tools-extra, lld
 
 Feature: tools
 Description: Build LLVM tools.
@@ -16,6 +16,15 @@ Description: Build LLVM with run-time type information.
 
 Feature: enable-assertions
 Description: Build LLVM with assertions.
+
+Feature: disable-assertions
+Description: Build LLVM without assertions.
+
+Feature: enable-abi-breaking-checks
+Description: Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_ON.
+
+Feature: disable-abi-breaking-checks
+Description: Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_OFF.
 
 Feature: clang
 Description: Build C Language Family Front-end.

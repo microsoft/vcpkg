@@ -7,8 +7,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
-    REF llvmorg-10.0.0-rc3
-    SHA512 aad1df86063612d20c48ea7046940330fe2ac572a146be22ff71d9e65fa3438184cb39a2533fc6afd1e74df26909a9f0d24ebcd7d62e74728cfd81e447f2ffbf
+    REF llvmorg-10.0.0-rc5
+    SHA512 d1fd91663e76474cd375670b7bcadede45dc0b4ffa7b02bad541f22c861f8fd1995f793332cd8df3b56eb40f8947b18ba29e72c064bf8022f8bd4914da63a31b
     HEAD_REF master
     PATCHES
         0001-allow-to-use-commas.patch
@@ -23,11 +23,30 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     enable-rtti LLVM_ENABLE_RTTI
 )
 
-# By default in LLVM assertions are enabled for Debug configuration only.
-# `enable-assertions` explicitly enables assertions for all configurations.
+# By default assertions are enabled for Debug configuration only.
 if("enable-assertions" IN_LIST FEATURES)
+    # Force enable assertions for all configurations.
     list(APPEND FEATURE_OPTIONS
         -DLLVM_ENABLE_ASSERTIONS=ON
+    )
+elseif("disable-assertions" IN_LIST FEATURES)
+    # Force disable assertions for all configurations.
+    list(APPEND FEATURE_OPTIONS
+        -DLLVM_ENABLE_ASSERTIONS=OFF
+    )
+endif()
+
+# LLVM_ABI_BREAKING_CHECKS can be WITH_ASSERTS (default), FORCE_ON or FORCE_OFF.
+# By default abi-breaking checks are enabled if assertions are enabled.
+if("enable-abi-breaking-checks" IN_LIST FEATURES)
+    # Force enable abi-breaking checks.
+    list(APPEND FEATURE_OPTIONS
+        -DLLVM_ABI_BREAKING_CHECKS=FORCE_ON
+    )
+elseif("disable-abi-breaking-checks" IN_LIST FEATURES)
+    # Force disable abi-breaking checks.
+    list(APPEND FEATURE_OPTIONS
+        -DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF
     )
 endif()
 
@@ -85,6 +104,9 @@ vcpkg_configure_cmake(
         -DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}
         -DPACKAGE_VERSION=${VERSION}
         -DPYTHON_EXECUTABLE=${PYTHON3}
+        # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
+        -DLLVM_PARALLEL_LINK_JOBS=1
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
@@ -106,11 +128,17 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         )
 endif()
 
+# Install all debug shared libraries in the `/bin` directory
+file(GLOB _debug_shared_libs ${CURRENT_PACKAGES_DIR}/debug/bin/*${CMAKE_SHARED_LIBRARY_SUFFIX}) 
+file(INSTALL ${_debug_shared_libs} DESTINATION ${CURRENT_PACKAGES_DIR}/bin FOLLOW_SYMLINK_CHAIN)
+
 # All LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
-# So, rename subfolder `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
 foreach(_target IN LISTS _release_targets _debug_targets)
     file(READ ${_target} _contents)
+    # Rename `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
     string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/bin" _contents "${_contents}")
+    # Rename `/debug/bin/` to `/bin/` because all debug shared libraries are installed in the `/bin/` directory.
+    string(REPLACE "{_IMPORT_PREFIX}/debug/bin/" "{_IMPORT_PREFIX}/bin/" _contents "${_contents}")
     file(WRITE ${_target} "${_contents}")
 endforeach()
 
