@@ -134,8 +134,8 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
     foreach(_target IN LISTS _debug_targets)
         file(READ ${_target} _contents)
-        # Rename `/tools/${PORT}` to `debug/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
-        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
+        # Rename `/debug/tools/${PORT}` to `debug/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
+        string(REPLACE "{_IMPORT_PREFIX}/debug/tools/${PORT}" "{_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
         file(WRITE ${_target} "${_contents}")
     endforeach()
 endif()
