@@ -1,15 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
-    REF 1549ff12f1aa61ffc4d9a8727c519034724392a0 #v1.4.2
-    SHA512 c159aea475baecad0a5a9eef965856203c96aa855b0480e82d751bcc050c6e08bb0aa458544da061f5d744e17dcd27bd9b6e31a62d502834f02d3591f29febec
+    REF cf6f1dd01e660d5865d68bf5fa78f6376b89470a #v1.5.0
+    SHA512 eafe7e12f9be9f5be48d66ca6f7253a7de34ae29e35887249bc447c7d5e97322bfe64ca68fc1b2ff1e9e36f703fb467b0bd14e19ce48844924dd42844b9209a4
     HEAD_REF v1.x
     PATCHES
         disable-master-project-check.patch
         fix-feature-export.patch
-        fix-error-4275.patch
-        fix-uwp.patch
-        fix-include.patch
+        fix-error-4275.patch # Actually a defect in fmtlib
 )
 
 set(SPDLOG_USE_BENCHMARK OFF)
@@ -38,16 +36,6 @@ vcpkg_copy_pdbs()
 
 # use vcpkg-provided fmt library (see also option SPDLOG_FMT_EXTERNAL above)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled)
-
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/fmt.h
-    "#if !defined(SPDLOG_FMT_EXTERNAL)"
-    "#if 0 // !defined(SPDLOG_FMT_EXTERNAL)"
-)
-
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/ostr.h
-    "#if !defined(SPDLOG_FMT_EXTERNAL)"
-    "#if 0 // !defined(SPDLOG_FMT_EXTERNAL)"
-)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/spdlog
                     ${CURRENT_PACKAGES_DIR}/debug/lib/spdlog

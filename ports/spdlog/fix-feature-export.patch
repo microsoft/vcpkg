@@ -1,14 +1,11 @@
 diff --git a/bench/CMakeLists.txt b/bench/CMakeLists.txt
-index d087cf6..86483db 100644
+index 0ea88423..9913ae64 100644
 --- a/bench/CMakeLists.txt
 +++ b/bench/CMakeLists.txt
-@@ -26,3 +26,8 @@ add_executable(formatter-bench formatter-bench.cpp)
+@@ -26 +26,6 @@ add_executable(formatter-bench formatter-bench.cpp)
  target_link_libraries(formatter-bench PRIVATE benchmark::benchmark spdlog::spdlog)
- 
- file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/logs")
 +
 +install(TARGETS bench async_bench latency
 +        RUNTIME DESTINATION tools/spdlog
 +        LIBRARY DESTINATION lib
 +        ARCHIVE DESTINATION lib)
-\ No newline at end of file
