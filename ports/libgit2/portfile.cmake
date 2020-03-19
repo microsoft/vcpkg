@@ -11,11 +11,20 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
+if ("pcre" IN_LIST FEATURES)
+    set(REGEX_BACKEND pcre)
+elseif ("pcre2" IN_LIST FEATURES)
+    set(REGEX_BACKEND pcre2)
+else()
+    set(REGEX_BACKEND builtin)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_CLAR=OFF
+        -DREGEX_BACKEND=${REGEX_BACKEND}
         -DSTATIC_CRT=${STATIC_CRT}
 )
 

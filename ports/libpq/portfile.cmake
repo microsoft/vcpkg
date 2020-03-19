@@ -1,7 +1,3 @@
-if(VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "${PORT} currently only supports being built for desktop")
-endif()
-
 macro(feature_unsupported)
     foreach(_feat ${ARGN})
         if("${FEATURES}" MATCHES "${_feat}")
@@ -36,7 +32,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 231a0b5c181c33cb01c3f39de1802319b79eceec6997935ab8605dea1f4583a52d0d16e5a70fcdeea313462f062503361d543433ee03d858ba332c72a665f696
 )
 
-set(PATCHES  
+set(PATCHES
         patches/windows/install.patch
         patches/windows/win_bison_flex.patch
         patches/windows/openssl_exe_path.patch
@@ -62,7 +58,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES ${PATCHES}
-
 )
 unset(buildenv_contents)
 # Get paths to required programs
@@ -104,7 +99,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
-        message(STATUS "Copying libpq source files to ${BUILDPATH_${_buildtype}}...")            
+        message(STATUS "Copying libpq source files to ${BUILDPATH_${_buildtype}}...")
         foreach(SOURCE_FILE ${SOURCE_FILES})
             file(COPY ${SOURCE_FILE} DESTINATION "${BUILDPATH_${_buildtype}}")
         endforeach()
@@ -208,8 +203,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         )
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}... done")
     endforeach()
-    
-    
+
+
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}...")
     #Cleanup
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -256,8 +251,8 @@ else()
             --with-libraries=${CURRENT_INSTALLED_DIR}/debug/lib
             --enable-debug
     )
-    
-    vcpkg_install_make()    
+
+    vcpkg_install_make()
     # instead?
     #    make -C src/include install
     #    make -C src/interfaces install

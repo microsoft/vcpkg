@@ -16,7 +16,7 @@ index 63351523..c078de3f 100644
 +# endif
 +# undef NOMINMAX
 +# define NOMINMAX
-+# include <Windows.h>	// For: MultiByteToWideChar
++# include <windows.h>	// For: MultiByteToWideChar
 +# include <io.h>
 +# include <wchar.h>
 +
