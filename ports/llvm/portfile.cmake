@@ -106,44 +106,41 @@ vcpkg_configure_cmake(
         -DPYTHON_EXECUTABLE=${PYTHON3}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         -DLLVM_PARALLEL_LINK_JOBS=1
-        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
 
-set(_release_targets)
-set(_debug_targets)
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(GLOB_RECURSE _release_targets
         "${CURRENT_PACKAGES_DIR}/share/llvm/*-release.cmake"
         "${CURRENT_PACKAGES_DIR}/share/clang/*-release.cmake"
     )
+    # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
+    foreach(_target IN LISTS _release_targets)
+        file(READ ${_target} _contents)
+        # Rename `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
+        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/bin" _contents "${_contents}")
+        file(WRITE ${_target} "${_contents}")
+    endforeach()
 endif()
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(GLOB_RECURSE _debug_targets
         "${CURRENT_PACKAGES_DIR}/share/llvm/*-debug.cmake"
         "${CURRENT_PACKAGES_DIR}/share/clang/*-debug.cmake"
         )
+    # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
+    foreach(_target IN LISTS _debug_targets)
+        file(READ ${_target} _contents)
+        # Rename `/tools/${PORT}` to `debug/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
+        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
+        file(WRITE ${_target} "${_contents}")
+    endforeach()
 endif()
 
-# Install all debug shared libraries in the `/bin` directory
-file(GLOB _debug_shared_libs ${CURRENT_PACKAGES_DIR}/debug/bin/*${CMAKE_SHARED_LIBRARY_SUFFIX}) 
-file(INSTALL ${_debug_shared_libs} DESTINATION ${CURRENT_PACKAGES_DIR}/bin FOLLOW_SYMLINK_CHAIN)
-
-# All LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
-foreach(_target IN LISTS _release_targets _debug_targets)
-    file(READ ${_target} _contents)
-    # Rename `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
-    string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/bin" _contents "${_contents}")
-    # Rename `/debug/bin/` to `/bin/` because all debug shared libraries are installed in the `/bin/` directory.
-    string(REPLACE "{_IMPORT_PREFIX}/debug/bin/" "{_IMPORT_PREFIX}/bin/" _contents "${_contents}")
-    file(WRITE ${_target} "${_contents}")
-endforeach()
-
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/bin
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
 )
