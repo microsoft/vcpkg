@@ -33,6 +33,6 @@ namespace vcpkg::Commands::BuildExternal
         Checks::check_exit(
             VCPKG_LINE_INFO, maybe_scfl.has_value(), "could not load control file for %s", spec.package_spec.name());
 
-        Build::Command::perform_and_exit_ex(spec, maybe_scfl.value_or_exit(VCPKG_LINE_INFO), provider, options, paths);
+        Build::Command::perform_and_exit_ex(spec, maybe_scfl.value_or_exit(VCPKG_LINE_INFO), provider, paths);
     }
 }
