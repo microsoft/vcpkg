@@ -305,6 +305,9 @@ if(NOT GLIB_SKIP_TOOLS)
     configure_file(gobject/glib-mkenums.in ${CMAKE_SOURCE_DIR}/gobject/glib-mkenums @ONLY) # uses GLIB_VERSION
     install(FILES gobject/glib-mkenums DESTINATION tools/glib)
 
+    #configure_file(gobject/glib-genmarshal.in ${CMAKE_SOURCE_DIR}/gobject/glib-genmarshal @ONLY) # uses GLIB_VERSION
+    #install(FILES gobject/glib-genmarshal DESTINATION tools/glib)
+
     configure_file(gio/gdbus-2.0/codegen/gdbus-codegen.in ${CMAKE_SOURCE_DIR}/gio/gdbus-2.0/codegen/gdbus-codegen COPYONLY)
     install(FILES gio/gdbus-2.0/codegen/gdbus-codegen DESTINATION tools/glib)
     file(GLOB CODEGEN_SOURCES gio/gdbus-2.0/codegen/*.py)
@@ -326,7 +329,7 @@ if(NOT GLIB_SKIP_TOOLS)
         set(WIN win64)
     endif()
 
-    add_glib_tool(glib-genmarshal gobject/glib-genmarshal.c)
+    #add_glib_tool(glib-genmarshal gobject/glib-genmarshal.c)
     if(WIN32)
         add_glib_tool(gspawn-${WIN}-helper WIN32 glib/gspawn-win32-helper.c)
         add_glib_tool(gspawn-${WIN}-helper-console glib/gspawn-win32-helper-console.c)
