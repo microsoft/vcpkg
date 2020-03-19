@@ -1,5 +1,5 @@
 diff --git a/lang/c/src/CMakeLists.txt b/lang/c/src/CMakeLists.txt
-index c21f1ce..accb0e3 100644
+index 6f56597..e1e41cd 100644
 --- a/lang/c/src/CMakeLists.txt
 +++ b/lang/c/src/CMakeLists.txt
 @@ -85,13 +85,13 @@ source_group(Avro FILES ${AVRO_SRC})
@@ -11,10 +11,10 @@ index c21f1ce..accb0e3 100644
  set_target_properties(avro-static PROPERTIES OUTPUT_NAME avro)
  
  if (NOT WIN32)
- # TODO: Create Windows DLLs. See http://www.cmake.org/Wiki/BuildingWinDLL
+ # TODO: Create Windows DLLs. See https://www.cmake.org/Wiki/BuildingWinDLL
  add_library(avro-shared SHARED ${AVRO_SRC})
 -target_link_libraries(avro-shared ${JANSSON_LIBRARIES} ${CODEC_LIBRARIES} ${THREADS_LIBRARIES})
 +target_link_libraries(avro-shared jansson::jansson ${CODEC_LIBRARIES} ${THREADS_LIBRARIES})
  set_target_properties(avro-shared PROPERTIES
          OUTPUT_NAME avro
-         SOVERSION ${LIBAVRO_DOT_VERSION})
+         VERSION ${LIBAVRO_DOT_VERSION}

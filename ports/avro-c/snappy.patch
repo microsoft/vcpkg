@@ -1,17 +1,18 @@
-diff -ru b/c/src/codec.c a/lang/c/src/codec.c
---- b/lang/c/src/codec.c	2020-01-23 16:18:15.119970300 +0200
-+++ a/lang/c/src/codec.c	2020-01-23 19:31:41.679834300 +0200
-@@ -21,6 +21,9 @@
- #  if defined(__APPLE__)
- #    include <libkern/OSByteOrder.h>
- #    define __bswap_32 OSSwapInt32
+diff --git a/lang/c/src/codec.c b/lang/c/src/codec.c
+index 56a6515..a527db1 100644
+--- a/lang/c/src/codec.c
++++ b/lang/c/src/codec.c
+@@ -24,6 +24,9 @@
+ #  elif defined(__FreeBSD__)
+ #    include <sys/endian.h>
+ #    define __bswap_32 bswap32
 +#  elif defined(_WIN32)
 +#    include <stdlib.h>
 +#    define __bswap_32 _byteswap_ulong
  #  else
  #    include <byteswap.h>
  #  endif
-@@ -115,14 +118,14 @@
+@@ -118,14 +121,14 @@ static int encode_snappy(avro_codec_t c, void * data, int64_t len)
  		return 1;
  	}
  
@@ -29,7 +30,7 @@ diff -ru b/c/src/codec.c a/lang/c/src/codec.c
          c->used_size = outlen+4;
  
  	return 0;
-@@ -133,7 +136,7 @@
+@@ -136,7 +139,7 @@ static int decode_snappy(avro_codec_t c, void * data, int64_t len)
          uint32_t crc;
          size_t outlen;
  
@@ -38,7 +39,7 @@ diff -ru b/c/src/codec.c a/lang/c/src/codec.c
  		avro_set_error("Uncompressed length error in snappy");
  		return 1;
          }
-@@ -152,13 +155,13 @@
+@@ -155,13 +158,13 @@ static int decode_snappy(avro_codec_t c, void * data, int64_t len)
  		return 1;
  	}
  

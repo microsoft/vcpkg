@@ -1,0 +1,51 @@
+diff --git a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
+index a98fa43..99cc410 100644
+--- a/lang/c/CMakeLists.txt
++++ b/lang/c/CMakeLists.txt
+@@ -161,7 +161,7 @@ else (SNAPPY_FOUND AND ZLIB_FOUND)
+     message("Disabled snappy codec. libsnappy not found or zlib not found.")
+ endif (SNAPPY_FOUND AND ZLIB_FOUND)
+ 
+-find_package(LIBLZMA)
++find_package(LibLZMA)
+ if (LIBLZMA_FOUND)
+     set(LZMA_PKG liblzma)
+     add_definitions(-DLZMA_CODEC)
+@@ -178,7 +178,8 @@ set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LIBLZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
+ set(CODEC_PKG "@ZLIB_PKG@ @LZMA_PKG@ @SNAPPY_PKG@")
+ 
+ # Jansson JSON library
+-find_package(JANSSON REQUIRED)
++find_package(jansson REQUIRED)
++set(JANSSON_FOUND ${jansson_FOUND})
+ if (JANSSON_FOUND)
+     set(JANSSON_PKG libjansson)
+     include_directories(${JANSSON_INCLUDE_DIRS})
+diff --git a/lang/c/src/generic.c b/lang/c/src/generic.c
+index e614eb3..51a79b3 100644
+--- a/lang/c/src/generic.c
++++ b/lang/c/src/generic.c
+@@ -18,7 +18,11 @@
+ #include <avro/platform.h>
+ #include <stdlib.h>
+ #include <string.h>
+-
++#ifndef _WIN32
++#include <sys/types.h>
++#else
++#include <BaseTsd.h>
++#endif
+ #include "avro/allocation.h"
+ #include "avro/data.h"
+ #include "avro/errors.h"
+@@ -29,6 +33,10 @@
+ #include "avro_generic_internal.h"
+ #include "avro_private.h"
+ 
++#ifdef _WIN32
++#include <intsafe.h>
++typedef SSIZE_T ssize_t;
++#endif
+ 
+ /*-----------------------------------------------------------------------
+  * Forward definitions

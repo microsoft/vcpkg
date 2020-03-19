@@ -3,15 +3,14 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO apache/avro
-  REF release-1.8.2
-  SHA512 a48cc353aadd45ad2c8593bf89ec3f1ddb0fcd364b79dd002a60a54d49cab714b46eee8bd6dc47b13588b9eead49c754dfe05f6aff735752fca8d2cd35ae8649
+  REF bf20128ca6138a830b2ea13e0490f3df6b035639 #version release-1.9.2
+  SHA512 23db13fc71997cde8e7b897171a72d09bedec156496acff1d75b92ff54f0149dfae374a0067d1dbd0c9d5008f9e302457bc1999987848a97b5c0a407377ea438
   HEAD_REF master
   PATCHES
         avro.patch
-        avro-pr-217.patch
         fix-build-error.patch # Since jansson updated, use jansson::jansson instead of the macro ${JANSSON_LIBRARIES}
         snappy.patch # https://github.com/apache/avro/pull/793
-		fix-dependency.patch
+        fix-finddependency.patch
 )
 
 vcpkg_configure_cmake(
