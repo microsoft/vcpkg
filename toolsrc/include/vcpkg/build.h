@@ -34,6 +34,7 @@ namespace vcpkg::Build
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
+                                 IBinaryProvider& binaryprovider,
                                  const VcpkgPaths& paths);
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
@@ -206,7 +207,7 @@ namespace vcpkg::Build
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
-                                      IBinaryProvider* binaries_provider,
+                                      IBinaryProvider& binaries_provider,
                                       const StatusParagraphs& status_db);
 
     enum class BuildPolicy

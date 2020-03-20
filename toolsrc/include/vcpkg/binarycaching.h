@@ -35,5 +35,6 @@ namespace vcpkg
                                        bool purge_tombstones) = 0;
     };
 
-    std::unique_ptr<IBinaryProvider> create_archives_provider();
+    std::unique_ptr<IBinaryProvider> create_binary_provider_from_configs(const VcpkgPaths& paths,
+                                                                         View<std::string> args);
 }

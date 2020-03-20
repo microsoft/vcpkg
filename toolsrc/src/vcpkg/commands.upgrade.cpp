@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/binarycaching.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
@@ -40,6 +41,8 @@ namespace vcpkg::Commands::Upgrade
 
         const bool no_dry_run = Util::Sets::contains(options.switches, OPTION_NO_DRY_RUN);
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
+
+        auto binaryprovider = create_binary_provider_from_configs(paths, args.binarysources);
 
         StatusParagraphs status_db = database_load_check(paths);
 
@@ -184,7 +187,7 @@ namespace vcpkg::Commands::Upgrade
         var_provider.load_tag_vars(action_plan, provider);
 
         const Install::InstallSummary summary =
-            Install::perform(action_plan, keep_going, paths, status_db, var_provider);
+            Install::perform(action_plan, keep_going, paths, status_db, *binaryprovider, var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 

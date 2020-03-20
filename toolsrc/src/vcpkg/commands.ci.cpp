@@ -256,7 +256,8 @@ namespace vcpkg::Commands::CI
         const PortFileProvider::PortFileProvider& provider,
         const CMakeVars::CMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
-        const bool purge_tombstones)
+        const bool purge_tombstones,
+        IBinaryProvider& binaryprovider)
     {
         auto ret = std::make_unique<UnknownCIPortsResults>();
 
@@ -306,8 +307,6 @@ namespace vcpkg::Commands::CI
 
         Build::compute_all_abis(paths, action_plan, var_provider, {});
 
-        auto binaryprovider = create_archives_provider();
-
         std::string stdout_buffer;
         for (auto&& action : action_plan.install_actions)
         {
@@ -322,7 +321,7 @@ namespace vcpkg::Commands::CI
                 p->build_options = build_options;
             }
 
-            auto precheck_result = binaryprovider->precheck(paths, action, purge_tombstones);
+            auto precheck_result = binaryprovider.precheck(paths, action, purge_tombstones);
             bool b_will_build = false;
 
             std::string state;
@@ -393,6 +392,8 @@ namespace vcpkg::Commands::CI
             System::print2(System::Color::warning, "Warning: Running ci without binary caching!\n");
         }
 
+        auto binaryprovider = create_binary_provider_from_configs(paths, args.binarysources);
+
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         std::set<std::string> exclusions_set;
@@ -458,8 +459,13 @@ namespace vcpkg::Commands::CI
                 return FullPackageSpec{spec, std::move(default_features)};
             });
 
-            auto split_specs = find_unknown_ports_for_ci(
-                paths, exclusions_set, provider, var_provider, all_default_full_specs, purge_tombstones);
+            auto split_specs = find_unknown_ports_for_ci(paths,
+                                                         exclusions_set,
+                                                         provider,
+                                                         var_provider,
+                                                         all_default_full_specs,
+                                                         purge_tombstones,
+                                                         *binaryprovider);
             PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
 
             Dependencies::CreateInstallPlanOptions serialize_options;
@@ -503,7 +509,8 @@ namespace vcpkg::Commands::CI
             else
             {
                 auto collection_timer = Chrono::ElapsedTimer::create_started();
-                auto summary = Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db, var_provider);
+                auto summary = Install::perform(
+                    action_plan, Install::KeepGoing::YES, paths, status_db, *binaryprovider, var_provider);
                 auto collection_time_elapsed = collection_timer.elapsed();
 
                 // Adding results for ports that were built or pulled from an archive
