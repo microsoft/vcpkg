@@ -40,17 +40,28 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+if (VCPKG_TARGET_IS_LINUX)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT} TARGET_PATH share/${PORT})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid)
+elseif (VCPKG_TARGET_IS_OSX)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.app DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.app)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.app)
+else() 
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
+endif()
+
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/CMAKE
-    ${CURRENT_PACKAGES_DIR}/debug/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
-
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
 
 vcpkg_copy_pdbs()
