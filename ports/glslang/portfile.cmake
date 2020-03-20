@@ -23,6 +23,7 @@ vcpkg_configure_cmake(
     ${FEATURE_OPTIONS}
     -DCMAKE_DEBUG_POSTFIX=d
     -DSKIP_GLSLANG_INSTALL=OFF
+    -DBUILD_EXTERNAL=OFF
 )
 
 vcpkg_install_cmake()
