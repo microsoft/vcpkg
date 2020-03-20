@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1bae9a7..0303186 100644
+index eebda35e9..cf48c7ad5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -53,7 +53,7 @@ option(WITH_WINDOWS_UTF8_FILENAMES "use UTF8 as characterset for opening files,
- if (WITH_WINDOWS_UTF8_FILENAMES)
-   add_definitions(-DROCKSDB_WINDOWS_UTF8_FILENAMES)
+@@ -67,7 +67,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "Windows")
+ else()
+   option(WITH_FOLLY_DISTRIBUTED_MUTEX "build with folly::DistributedMutex" OFF)
  endif()
 -if(MSVC)
 +if(MSVC AND NOT VCPKG_TOOLCHAIN)

@@ -666,6 +666,10 @@ namespace vcpkg::Files
 #if defined(_WIN32)
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
             auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ";");
+#else
+            static constexpr StringLiteral EXTS[] = {""};
+            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ":");
+#endif
 
             std::vector<fs::path> ret;
             std::error_code ec;
@@ -684,16 +688,6 @@ namespace vcpkg::Files
             }
 
             return ret;
-#else
-            const std::string cmd = Strings::concat("which ", name);
-            auto out = System::cmd_execute_and_capture_output(cmd);
-            if (out.exit_code != 0)
-            {
-                return {};
-            }
-
-            return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
-#endif
         }
     };
 

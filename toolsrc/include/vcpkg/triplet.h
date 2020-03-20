@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <vcpkg/base/system.h>
+#include <vcpkg/base/optional.h>
 
 namespace vcpkg
 {
@@ -15,17 +17,18 @@ namespace vcpkg
 
         static const Triplet X86_WINDOWS;
         static const Triplet X64_WINDOWS;
+        static const Triplet ARM_WINDOWS;
+        static const Triplet ARM64_WINDOWS;
         static const Triplet X86_UWP;
         static const Triplet X64_UWP;
         static const Triplet ARM_UWP;
         static const Triplet ARM64_UWP;
-        static const Triplet ARM_WINDOWS;
-        static const Triplet ARM64_WINDOWS;
 
         const std::string& canonical_name() const;
         const std::string& to_string() const;
         void to_string(std::string& out) const;
         size_t hash_code() const;
+        Optional<System::CPUArchitecture> guess_architecture() const noexcept;
 
         bool operator==(Triplet other) const { return this->m_instance == other.m_instance; }
         bool operator<(Triplet other) const { return canonical_name() < other.canonical_name(); }
