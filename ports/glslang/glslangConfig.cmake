@@ -1,4 +1,5 @@
 include(CMakeFindDependencyMacro)
+find_dependency(Threads)
 find_dependency(SPIRV-Tools)
 find_dependency(SPIRV-Tools-opt)
 # libraries
