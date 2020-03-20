@@ -9,11 +9,18 @@ vcpkg_from_github(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in DESTINATION ${SOURCE_PATH})
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  set(ARCH_NAME "ARM")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  set(ARCH_NAME "ARM64")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h
+        -DARCH_NAME=${ARCH_NAME}
     OPTIONS_DEBUG
         -DFFI_SKIP_HEADERS=ON
 )
@@ -23,13 +30,13 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-file(READ ${CURRENT_PACKAGES_DIR}/include/ffi.h FFI_H)
-string(REPLACE "   *know* they are going to link with the static library.  */"
-"   *know* they are going to link with the static library.  */
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/ffi.h
+        "   *know* they are going to link with the static library.  */"
+        "   *know* they are going to link with the static library.  */
 
 #define FFI_BUILDING
-" FFI_H "${FFI_H}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
+"
+    )
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
