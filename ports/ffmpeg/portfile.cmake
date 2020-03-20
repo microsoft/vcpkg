@@ -183,7 +183,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
-set(ENV{PKG_CONFIG_PATH} "${CURRENT_PACKAGES_DIR}/../ffnvcodec_${TARGET_TRIPLET}/lib/pkgconfig")
+set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 message(STATUS "Building Options: ${OPTIONS}")
 
