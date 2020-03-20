@@ -17,6 +17,10 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/third_party")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/build-version.inc" DESTINATION "${SOURCE_PATH}/glslc/src")
 
+if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    set(SHADERC_CRT_OPTIONS -DSHADERC_ENABLE_SHARED_CRT:BOOL=ON)
+endif()
+
 # shaderc uses python to manipulate copyright information
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
@@ -27,6 +31,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DSHADERC_SKIP_TESTS=true
+        ${SHADERC_CRT_OPTIONS}
         -Dglslang_SOURCE_DIR=""
         -Dspirv-tools_SOURCE_DIR=""
 )
