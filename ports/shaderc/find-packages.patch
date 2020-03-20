@@ -2,11 +2,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index a6831d3..12915d1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -102,7 +102,9 @@ endif(MSVC)
+@@ -102,7 +102,10 @@ endif(MSVC)
  
  # Configure subdirectories.
  # We depend on these for later projects, so they should come first.
 -add_subdirectory(third_party)
++find_package(Threads REQUIRED)
 +find_package(SPIRV-Tools CONFIG REQUIRED)
 +find_package(SPIRV-Tools-opt CONFIG REQUIRED)
 +find_package(glslang CONFIG REQUIRED)
