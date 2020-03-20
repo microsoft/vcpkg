@@ -242,7 +242,7 @@ function(vcpkg_fixup_pkgconfig)
     endforeach()
     message(STATUS "Fixing pkgconfig --- finished")
     
-    set(VCPKG_FIXUP_PKGCONFIG_CALLED TRUE CACHE INTERNAL FORCE) 
+    set(VCPKG_FIXUP_PKGCONFIG_CALLED TRUE CACHE INTERNAL "See below" FORCE) 
     # Variable to check if this function has been called! 
     # Theoreotically vcpkg could look for *.pc files and automatically call this function
     # or check if this function has been called if *.pc files are detected. 
