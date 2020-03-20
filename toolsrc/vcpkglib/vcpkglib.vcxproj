@@ -169,6 +169,7 @@
     <ClInclude Include="..\include\vcpkg\base\util.h" />
     <ClInclude Include="..\include\vcpkg\base\view.h" />
     <ClInclude Include="..\include\vcpkg\base\zstringview.h" />
+    <ClInclude Include="..\include\vcpkg\binarycaching.h" />
     <ClInclude Include="..\include\vcpkg\binaryparagraph.h" />
     <ClInclude Include="..\include\vcpkg\build.h" />
     <ClInclude Include="..\include\vcpkg\cmakevars.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.process.cpp" />
+    <ClCompile Include="..\src\vcpkg\binarycaching.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
     <ClCompile Include="..\src\vcpkg\cmakevars.cpp" />
