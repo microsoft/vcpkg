@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF v3.2.0
-    SHA512 afc1c9e259d6d48000b09da111af4129680d50474cdfedbad197ee22260d57a837b67cc6a3f8e6b1aa7ce7dc5d3fd900569783631540501709868125c6d1e4da
+    REF v3.2.2
+    SHA512 be6cd57ae1d15de059c277ce56e9ccc87f7918811b40a427c96978397f2b1d446e1b5ed6ae62a6aa82c6d775871d6a15885d283d74d7887e98205ab61d206fc0
     HEAD_REF master
     PATCHES
         CMakeLists.patch
@@ -141,6 +139,7 @@ vcpkg_configure_cmake(
         -DLWS_IPV6=ON
         -DLWS_HTTP2=ON
         -DLWS_WITH_HTTP_STREAM_COMPRESSION=ON # Since zlib is already a dependency
+        -DLWS_WITH_LIBUV=ON
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )

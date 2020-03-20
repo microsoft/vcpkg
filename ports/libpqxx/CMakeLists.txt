@@ -67,6 +67,7 @@ install(DIRECTORY include/ DESTINATION include
     PATTERN "*.am" EXCLUDE
     PATTERN "*.in" EXCLUDE
     PATTERN "*.template" EXCLUDE
+    PATTERN "CMakeLists.txt" EXCLUDE
     )
 install(DIRECTORY ${CMAKE_BINARY_DIR}/pqxx/ DESTINATION include/pqxx
     CONFIGURATIONS Release

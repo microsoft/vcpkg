@@ -1,13 +1,97 @@
 #include "pch.h"
 
-#include <vcpkg/parse.h>
-
+#include <utility>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/packagespec.h>
+#include <vcpkg/paragraphparser.h>
+#include <vcpkg/parse.h>
+
+using namespace vcpkg;
 
 namespace vcpkg::Parse
 {
-    static Optional<std::string> remove_field(RawParagraph* fields, const std::string& fieldname)
+    static void advance_rowcol(char ch, int& row, int& column)
+    {
+        if (ch == '\t')
+            column = (column + 7) / 8 * 8 + 1; // round to next 8-width tab stop
+        else if (ch == '\n')
+        {
+            row++;
+            column = 1;
+        }
+        else
+        {
+            ++column;
+        }
+    }
+
+    std::string ParseError::format() const
+    {
+        int ignore_row = 1;
+        int spacing = 20;
+        for (int i = 0; i < caret_col; ++i)
+            advance_rowcol(line[i], ignore_row, spacing);
+
+        return Strings::concat("Error: ",
+                               origin,
+                               ":",
+                               row,
+                               ":",
+                               column,
+                               ": ",
+                               message,
+                               "\n"
+                               "   on expression: \"", // 9 columns
+                               line,
+                               "\"\n",
+                               std::string(spacing - 1, ' '),
+                               "^\n");
+    }
+
+    char ParserBase::next()
+    {
+        char ch = *m_it;
+        // See https://www.gnu.org/prep/standards/standards.html#Errors
+        if (ch == '\0')
+        {
+            return '\0';
+        }
+        else
+            advance_rowcol(ch, row, column);
+        return *++m_it;
+    }
+
+    void ParserBase::add_error(std::string message, const ParserBase::SourceLoc& loc)
+    {
+        // avoid cascading errors by only saving the first
+        if (!m_err)
+        {
+            // find beginning of line
+            auto linestart = loc.it;
+            while (linestart != m_text.c_str())
+            {
+                if (linestart[-1] == '\n') break;
+                --linestart;
+            }
+
+            // find end of line
+            auto lineend = loc.it;
+            while (*lineend != '\n' && *lineend != '\r' && *lineend != '\0')
+                ++lineend;
+            m_err.reset(new ParseError(m_origin.c_str(),
+                                       loc.row,
+                                       loc.column,
+                                       static_cast<int>(loc.it - linestart),
+                                       {linestart, lineend},
+                                       std::move(message)));
+        }
+
+        // Avoid error loops by skipping to the end
+        skip_to_eof();
+    }
+
+    static Optional<std::pair<std::string, TextRowCol>> remove_field(Paragraph* fields, const std::string& fieldname)
     {
         auto it = fields->find(fieldname);
         if (it == fields->end())
@@ -15,12 +99,12 @@ namespace vcpkg::Parse
             return nullopt;
         }
 
-        const std::string value = std::move(it->second);
+        auto value = std::move(it->second);
         fields->erase(it);
         return value;
     }
 
-    void ParagraphParser::required_field(const std::string& fieldname, std::string& out)
+    void ParagraphParser::required_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
     {
         auto maybe_field = remove_field(&fields, fieldname);
         if (const auto field = maybe_field.get())
@@ -28,10 +112,24 @@ namespace vcpkg::Parse
         else
             missing_fields.push_back(fieldname);
     }
-    std::string ParagraphParser::optional_field(const std::string& fieldname) const
+    void ParagraphParser::optional_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
     {
-        return remove_field(&fields, fieldname).value_or("");
+        auto maybe_field = remove_field(&fields, fieldname);
+        if (auto field = maybe_field.get()) out = std::move(*field);
     }
+    void ParagraphParser::required_field(const std::string& fieldname, std::string& out)
+    {
+        TextRowCol ignore;
+        required_field(fieldname, {out, ignore});
+    }
+    std::string ParagraphParser::optional_field(const std::string& fieldname)
+    {
+        std::string out;
+        TextRowCol ignore;
+        optional_field(fieldname, {out, ignore});
+        return out;
+    }
+
     std::unique_ptr<ParseControlErrorInfo> ParagraphParser::error_info(const std::string& name) const
     {
         if (!fields.empty() || !missing_fields.empty())
@@ -45,105 +143,70 @@ namespace vcpkg::Parse
         return nullptr;
     }
 
-    static bool is_whitespace(char c) { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
-
-    std::vector<std::string> parse_comma_list(const std::string& str)
+    template<class T, class F>
+    static Optional<std::vector<T>> parse_list_until_eof(StringLiteral plural_item_name, Parse::ParserBase& parser, F f)
     {
-        if (str.empty())
-        {
-            return {};
-        }
-
-        std::vector<std::string> out;
-
-        auto iter = str.cbegin();
-
+        std::vector<T> ret;
+        parser.skip_whitespace();
+        if (parser.at_eof()) return std::vector<T>{};
         do
         {
-            // Trim leading whitespace of each element
-            while (iter != str.cend() && is_whitespace(*iter))
+            auto item = f(parser);
+            if (!item) return nullopt;
+            ret.push_back(std::move(item).value_or_exit(VCPKG_LINE_INFO));
+            parser.skip_whitespace();
+            if (parser.at_eof()) return {std::move(ret)};
+            if (parser.cur() != ',')
             {
-                ++iter;
+                parser.add_error(Strings::concat("expected ',' or end of text in ", plural_item_name, " list"));
+                return nullopt;
             }
+            parser.next();
+            parser.skip_whitespace();
+        } while (true);
+    }
 
-            // Allow commas inside of [].
-            bool bracket_nesting = false;
+    ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str,
+                                                                    CStringView origin,
+                                                                    TextRowCol textrowcol)
+    {
+        Parse::ParserBase parser;
+        parser.init(str, origin, textrowcol);
+        auto opt = parse_list_until_eof<std::string>("default features", parser, &parse_feature_name);
+        if (!opt) return {parser.get_error()->format(), expected_right_tag};
+        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
+    }
+    ExpectedS<std::vector<ParsedQualifiedSpecifier>> parse_qualified_specifier_list(const std::string& str,
+                                                                                    CStringView origin,
+                                                                                    TextRowCol textrowcol)
+    {
+        Parse::ParserBase parser;
+        parser.init(str, origin, textrowcol);
+        auto opt = parse_list_until_eof<ParsedQualifiedSpecifier>(
+            "dependencies", parser, [](ParserBase& parser) { return parse_qualified_specifier(parser); });
+        if (!opt) return {parser.get_error()->format(), expected_right_tag};
 
-            auto element_begin = iter;
-            auto element_end = iter;
-            while (iter != str.cend() && (*iter != ',' || bracket_nesting))
-            {
-                char value = *iter;
-
-                // do not support nested []
-                if (value == '[')
+        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
+    }
+    ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
+                                                               CStringView origin,
+                                                               TextRowCol textrowcol)
+    {
+        Parse::ParserBase parser;
+        parser.init(str, origin, textrowcol);
+        auto opt = parse_list_until_eof<Dependency>("dependencies", parser, [](ParserBase& parser) {
+            auto loc = parser.cur_loc();
+            return parse_qualified_specifier(parser).then([&](ParsedQualifiedSpecifier&& pqs) -> Optional<Dependency> {
+                if (pqs.triplet)
                 {
-                    if (bracket_nesting)
-                    {
-                        Checks::exit_with_message(VCPKG_LINE_INFO,
-                                                  "Lists do not support nested brackets, Did you forget a ']'?\n"
-                                                  ">    '%s'\n"
-                                                  ">     %s^\n",
-                                                  str,
-                                                  std::string(static_cast<int>(iter - str.cbegin()), ' '));
-                    }
-                    bracket_nesting = true;
+                    parser.add_error("triplet specifier not allowed in this context", loc);
+                    return nullopt;
                 }
-                else if (value == ']')
-                {
-                    if (!bracket_nesting)
-                    {
-                        Checks::exit_with_message(VCPKG_LINE_INFO,
-                                                  "Found unmatched ']'.  Did you forget a '['?\n"
-                                                  ">    '%s'\n"
-                                                  ">     %s^\n",
-                                                  str,
-                                                  std::string(static_cast<int>(iter - str.cbegin()), ' '));
-                    }
-                    bracket_nesting = false;
-                }
+                return Dependency{{pqs.name, pqs.features.value_or({})}, pqs.qualifier.value_or({})};
+            });
+        });
+        if (!opt) return {parser.get_error()->format(), expected_right_tag};
 
-                ++iter;
-
-                // Trim ending whitespace
-                if (!is_whitespace(value))
-                {
-                    // Update element_end after iter is incremented so it will be one past.
-                    element_end = iter;
-                }
-            }
-
-            if (element_begin == element_end)
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          "Empty element in list\n"
-                                          ">    '%s'\n"
-                                          ">     %s^\n",
-                                          str,
-                                          std::string(static_cast<int>(element_begin - str.cbegin()), ' '));
-            }
-            out.push_back({element_begin, element_end});
-
-            if (iter != str.cend())
-            {
-                Checks::check_exit(VCPKG_LINE_INFO, *iter == ',', "Internal parsing error - expected comma");
-
-                // Not at the end, must be at a comma that needs to be stepped over
-                ++iter;
-
-                if (iter == str.end())
-                {
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Empty element in list\n"
-                                              ">    '%s'\n"
-                                              ">     %s^\n",
-                                              str,
-                                              std::string(str.length(), ' '));
-                }
-            }
-
-        } while (iter != str.cend());
-
-        return out;
+        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
     }
 }

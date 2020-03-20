@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_buildpath_length_warning(37)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF d3ee022fea02e8e7e02f3cdd77904dc4c39ab79a
-    SHA512 6f146830f15864bb3770ad50a6ebcbc478235e9c2c59aa044353bbfc297bf26437e07b77b970974cc294782809aaa837a3407cbc846426b04e97447cd7f9e3cf
+    REF ad6c51d8c9e52eb74418d40b0a78021e890ef27f # 1.7.270
+    SHA512 a636c60bc07a58860dfd53a786edbc47b7974084c5b65dd1fca663f9521a92871e4830c71880498583e6e372ee141a6550cd88fd9649ab1017dd712e4c8ccb23
     HEAD_REF master
 )
 
@@ -16,14 +14,11 @@ set(BUILD_ONLY core)
 
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
-if(CMAKE_HOST_WIN32)
-    string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
-else()
-    string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
-endif()
+string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DENABLE_UNITY_BUILD=ON
@@ -83,4 +78,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aws-sdk-cpp RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
