@@ -1,0 +1,5 @@
+Source: metrohash
+Version: 1.1.3
+Homepage: https://github.com/jandrewrogers/MetroHash
+Description: MetroHash is a set of state-of-the-art hash functions for non-cryptographic use cases.
+Supports: !(uwp|arm|x86)
