@@ -1,5 +1,4 @@
 #header-only library
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -29,6 +28,3 @@ file(REMOVE_RECURSE
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 file(COPY ${SOURCE_PATH}/NOTICE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

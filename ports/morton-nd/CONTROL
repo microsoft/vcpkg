@@ -1,3 +1,4 @@
 Source: morton-nd
 Version: 3.0.0
+Homepage: https://github.com/kevinhartman/morton-nd
 Description: header-only constexpr library for fast Morton encoding/decoding in N dimensions.
