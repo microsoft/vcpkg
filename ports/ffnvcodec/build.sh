@@ -14,9 +14,5 @@ pushd ${SOURCE_PATH}
 make PREFIX=${CURRENT_PACKAGES_DIR}
 make install PREFIX=${CURRENT_PACKAGES_DIR}
 
-# Copy ffnvcodec.pc to the location in the MSYS environment where pkgconfig
-# expects to find it.
-mkdir -p /usr/lib/pkgconfig
-cp ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ffnvcodec.pc /usr/lib/pkgconfig
 
 popd
