@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -e
 export PATH=/usr/bin:$PATH
-export PKG_CONFIG_PATH="`cygpath ${PKG_CONFIG_PATH}`"
+export PKG_CONFIG_PATH="`cygpath -p ${PKG_CONFIG_PATH}`"
 # Export HTTP(S)_PROXY as http(s)_proxy:
 if [ "$HTTP_PROXY" ]; then
     export http_proxy=$HTTP_PROXY
