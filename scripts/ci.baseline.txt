@@ -1524,6 +1524,7 @@ redis-plus-plus:arm64-windows=fail
 replxx:arm-uwp=fail
 replxx:x64-uwp=fail
 replxx:arm64-windows=fail
+replxx:x86-windows=fail
 reproc:arm-uwp=fail
 reproc:x64-uwp=fail
 restbed:arm-uwp=fail
