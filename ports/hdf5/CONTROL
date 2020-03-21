@@ -24,6 +24,6 @@ Description: Build with zlib
 Build-Depends: zlib
 
 Feature: fortran
-Description: Build with fortran (not implemented yet)
+Description: Build with fortran
 Build-Depends: 
 
