@@ -44,11 +44,14 @@ target_compile_features(bx PUBLIC cxx_std_14)
 target_sources(bx
     PRIVATE
         "src/amalgamated.cpp"
-
-    PUBLIC
-        $<$<PLATFORM_ID:Windows>:$<INSTALL_INTERFACE:${CMAKE_INSTALL_DATADIR}/bx/bx.natvis>>
-        $<$<PLATFORM_ID:Windows>:$<INSTALL_INTERFACE:${CMAKE_INSTALL_DATADIR}/bx/tinystl.natvis>>
 )
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_sources(bx
+        PUBLIC
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_DATADIR}/bx/bx.natvis>
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_DATADIR}/bx/tinystl.natvis>
+    )
+endif()
 
 target_include_directories(bx
     PUBLIC
@@ -67,11 +70,16 @@ target_link_libraries(bx
     PUBLIC
         Threads::Threads
         ${CMAKE_DL_LIBS}
-        $<$<PLATFORM_ID:Windows>:psapi>
 
     PRIVATE
         Bx::compat
 )
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(bx
+        PUBLIC
+            psapi
+    )
+endif()
 
 # bin2c tool
 add_executable(bin2c)
@@ -103,9 +111,6 @@ if (BUILD_TESTING)
 endif()
 
 # installation logic
-file(WRITE "${CMAKE_BINARY_DIR}/bx-config.cmake" "include(\"\${CMAKE_CURRENT_LIST_DIR}/bx-targets.cmake\")\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/tool-targets.cmake\")")
-install(FILES "${CMAKE_BINARY_DIR}/bx-config.cmake" DESTINATION "${CMAKE_INSTALL_DATADIR}/bx/")
-
 if (BX_INSTALL_TOOLING)
     install(TARGETS bin2c lemon EXPORT tool-targets)
     install(FILES tools/lemon/lempar.c DESTINATION "${CMAKE_INSTALL_BINDIR}")
@@ -124,7 +129,7 @@ if (NOT BX_DISABLE_HEADER_INSTALL)
         install(DIRECTORY include/compat/osx/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/bx/compat")
     endif()
     install(DIRECTORY include/tinystl/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tinystl/")
-    if (WIN32)
+    if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         install(FILES
             scripts/bx.natvis
             scripts/tinystl.natvis
