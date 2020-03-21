@@ -3,21 +3,20 @@ vcpkg_fail_port_install(ON_TARGET "OSX" "UWP" "ANDROID" ON_LIBRARY_LINKAGE "dyna
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO "bkaradzic/bgfx"
+    REPO bkaradzic/bgfx
     REF 78675e238da3c690916f33064e69cfe4167b866d
     SHA512 90971bf89bafb84bf49235409b43cbf64537035bd272ed15c3a797e3e89f414cb82b86d642ce9f7184d492f0c6e1d5e21c2ca3710d3e47726c06bf7242f3b112
     HEAD_REF master
     PATCHES
         10-renderdoc-include.patch
         20-d3dx12-include.patch
-        30-gl-include.patch
         40-stb-include.patch
         50-cgltf-include.patch
         60-freetype-include.patch
         70-glslang-include.patch
-        80-shaderc-vulkan-include.patch
 )
-file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/")
+file(COPY "${CURRENT_PORT_DIR}/bgfx-config.cmake.in" DESTINATION "${SOURCE_PATH}/")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -49,7 +48,6 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/3rdparty/dxsdk"
     "${SOURCE_PATH}/3rdparty/freetype"
     "${SOURCE_PATH}/3rdparty/glslang"
-    "${SOURCE_PATH}/3rdparty/khronos"
     "${SOURCE_PATH}/3rdparty/spirv-cross"
     "${SOURCE_PATH}/3rdparty/spirv-headers"
     "${SOURCE_PATH}/3rdparty/spirv-tools"
@@ -67,8 +65,11 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
-    OPTIONS_DEBUG -DBGFX_CONFIG_DEBUG=1 -DBGFX_DISABLE_HEADER_INSTALL=ON
-    OPTIONS_RELEASE -DBGFX_INSTALL_TOOLING=1
+    OPTIONS_DEBUG
+        -DBGFX_CONFIG_DEBUG=1
+        -DBGFX_DISABLE_HEADER_INSTALL=ON
+    OPTIONS_RELEASE
+        -DBGFX_INSTALL_TOOLING=1
 )
 
 vcpkg_install_cmake()

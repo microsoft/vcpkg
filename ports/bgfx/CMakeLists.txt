@@ -10,9 +10,6 @@ find_package(Threads)
 
 find_package(bx CONFIG REQUIRED)
 
-if (BGFX_WITH_VULKAN OR BGFX_WITH_TOOLING)
-    find_package(Vulkan REQUIRED)
-endif()
 if (BGFX_WITH_TOOLING OR BGFX_WITH_EXAMPLES)
     find_package(bimg CONFIG REQUIRED)
     find_package(freetype CONFIG REQUIRED)
@@ -40,10 +37,10 @@ add_library(bgfx::bgfx ALIAS bgfx)
 target_sources(bgfx
     PRIVATE
         src/amalgamated.$<IF:$<PLATFORM_ID:Darwin>,mm,cpp>
-
-    PUBLIC
-        $<$<PLATFORM_ID:Windows>:$<INSTALL_INTERFACE:${CMAKE_INSTALL_DATADIR}/bgfx/bgfx.natvis>>
 )
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_sources(bgfx PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_DATADIR}/bgfx/bgfx.natvis>)
+endif ()
 
 target_include_directories(bgfx
     PUBLIC
@@ -51,7 +48,8 @@ target_include_directories(bgfx
         $<INSTALL_INTERFACE:include>
 
     PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/renderdoc>
+        ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/renderdoc
+        ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/khronos
 )
 
 target_compile_definitions(bgfx
@@ -65,10 +63,8 @@ target_link_libraries(bgfx PUBLIC
 )
 if (BGFX_WITH_VULKAN)
     target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_RENDERER_VULKAN=1)
-    target_link_libraries(bgfx PUBLIC Vulkan::Vulkan)
 endif()
 if (BGFX_WITH_OPENGL)
-    find_package(OpenGL REQUIRED)
     if (BGFX_WITH_OPENGL_CORE)
         set(BGFX_WITH_OPENGL 32)
     else()
@@ -78,16 +74,13 @@ if (BGFX_WITH_OPENGL)
 endif()
 
 if (WIN32)
-    target_link_libraries(bgfx PUBLIC gdi32 psapi)
+    target_link_libraries(bgfx PUBLIC gdi32)
 
     if (BGFX_WITH_D3D11)
         target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_RENDERER_DIRECT3D11=1)
     endif()
     if (BGFX_WITH_D3D12)
         target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_RENDERER_DIRECT3D12=1)
-    endif()
-    if (BGFX_WITH_OPENGL)
-        target_link_libraries(bgfx PUBLIC OpenGL::GL)
     endif()
 
 elseif (APPLE)
@@ -99,10 +92,7 @@ elseif (UNIX)
     if (BGFX_WITH_OPENGL)
 
         find_package(X11 REQUIRED)
-        target_link_libraries(bgfx PUBLIC OpenGL::OpenGL)
-
         target_include_directories(bgfx PRIVATE ${X11_INCLUDE_DIR})
-        target_link_libraries(bgfx PUBLIC ${X11_LIBRARIES} OpenGL::GLX)
 
     endif()
 
@@ -248,8 +238,6 @@ if (BGFX_WITH_TOOLING)
         SPIRV-Tools
         SPIRV-Tools-opt
 
-        Vulkan::Vulkan
-
         Bx::bx
         Bx::compat
 
@@ -259,12 +247,14 @@ if (BGFX_WITH_TOOLING)
 endif()
 
 # installation logic
-file(WRITE "${CMAKE_BINARY_DIR}/bgfx-config.cmake" "include(\"\${CMAKE_CURRENT_LIST_DIR}/bgfx-targets.cmake\")")
+if (BGFX_WITH_TOOLING)
+    set(BGFX_INSTALL_TOOLING_INCLUDE "include(\"\${CMAKE_CURRENT_LIST_DIR}/tool-targets.cmake\")")
+endif()
+configure_file(bgfx-config.cmake.in bgfx-config.cmake @ONLY)
 
 if (BGFX_INSTALL_TOOLING AND BGFX_WITH_TOOLING)
     install(TARGETS geometryc geometryv shaderc texturev EXPORT tool-targets)
 
-    file(APPEND "${CMAKE_BINARY_DIR}/bgfx-config.cmake" "\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/tool-targets.cmake\"")
     install(EXPORT tool-targets NAMESPACE bgfx:: DESTINATION "${CMAKE_INSTALL_DATADIR}/bgfx/")
 endif()
 
