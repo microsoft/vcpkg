@@ -119,10 +119,12 @@ target_link_libraries(bimg_encode PUBLIC
     Bx::bx
     Bimg::bimg
 
-    $<$<BOOL:${OpenMP_CXX_FOUND}>:OpenMP::OpenMP_CXX>
     optimized "${BIMG_SQUISH_LIBRARY_RELEASE}"
     debug "${BIMG_SQUISH_LIBRARY_DEBUG}"
 )
+if (OpenMP_CXX_FOUND)
+    target_link_libraries(bimg_encode PUBLIC OpenMP::OpenMP_CXX)
+endif()
 
 # texturec executable
 add_executable(texturec)
@@ -138,7 +140,10 @@ target_link_libraries(texturec PRIVATE
 )
 
 # installation logic
-file(WRITE "${CMAKE_BINARY_DIR}/bimg-config.cmake" "include(\"\${CMAKE_CURRENT_LIST_DIR}/bimg-targets.cmake\")\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/tool-targets.cmake\")")
+if (OpenMP_CXX_FOUND)
+    set(BIMG_DEPENDS_OPENMP "find_dependency(OpenMP)")
+endif()
+configure_file(bimg-config.cmake.in bimg-config.cmake @ONLY)
 install(FILES "${CMAKE_BINARY_DIR}/bimg-config.cmake" DESTINATION "${CMAKE_INSTALL_DATADIR}/bimg/")
 
 if (BIMG_INSTALL_TOOLING)

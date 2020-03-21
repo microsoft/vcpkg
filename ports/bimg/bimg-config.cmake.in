@@ -1,0 +1,9 @@
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+find_dependency(bx)
+find_dependency(Stb)
+find_dependency(lodepng)
+@BIMG_DEPENDS_OPENMP@
+
+include("${CMAKE_CURRENT_LIST_DIR}/bimg-targets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/tool-targets.cmake")

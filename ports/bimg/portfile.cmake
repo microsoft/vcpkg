@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO "bkaradzic/bimg"
+    REPO bkaradzic/bimg
     REF f27d884d8974d7d3b9459bae3ec23c667d8c16f8
     SHA512 f5d6f0ac35ee0a3e232d7b374634fbbbd47d808756c44f40b228b703f9069820beb76dfc22dd817dd83cf129ff4b6efd3f1fa77bedd8513422016a5f007da128
     HEAD_REF master
@@ -14,6 +14,7 @@ vcpkg_from_github(
         40-lodepng-include.patch
 )
 file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/")
+file(COPY "${CURRENT_PORT_DIR}/bimg-config.cmake.in" DESTINATION "${SOURCE_PATH}/")
 
 # remove all 3rdparty libraries provided by vcpkg
 # because the upstream project requires the `3rdparty` directory to be added to the include path
@@ -36,8 +37,10 @@ file(REMOVE_RECURSE
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
-    OPTIONS_DEBUG -DBIMG_DISABLE_HEADER_INSTALL=1
-    OPTIONS_RELEASE -DBIMG_INSTALL_TOOLING=1
+    OPTIONS_DEBUG
+        -DBIMG_DISABLE_HEADER_INSTALL=1
+    OPTIONS_RELEASE
+        -DBIMG_INSTALL_TOOLING=1
 )
 
 vcpkg_install_cmake()
