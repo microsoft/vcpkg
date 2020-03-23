@@ -1,0 +1,15 @@
+diff --git a/CMake/vtkModuleAPI.cmake b/CMake/vtkModuleAPI.cmake
+index d8211eca..d67f65c3 100644
+--- a/CMake/vtkModuleAPI.cmake
++++ b/CMake/vtkModuleAPI.cmake
+@@ -159,7 +159,9 @@ macro(vtk_module_config ns)
+   foreach(v ${ns}_LIBRARIES ${ns}_INCLUDE_DIRS ${ns}_LIBRARY_DIRS
+             ${ns}_RUNTIME_LIBRARY_DIRS _${ns}_AUTOINIT)
+     if(${v})
+-      list(REMOVE_DUPLICATES ${v})
++      if(NOT "${v}" STREQUAL "VTK_LIBRARIES")
++        list(REMOVE_DUPLICATES ${v})
++      endif()
+     endif()
+   endforeach()
+ 
