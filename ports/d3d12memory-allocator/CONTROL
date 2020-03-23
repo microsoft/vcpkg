@@ -1,0 +1,4 @@
+Source: d3d12memory-allocator
+Version: v1.0.0
+Homepage: https://gpuopen.com/gaming-product/d3d12-memory-allocator/
+Description: Easy to integrate memory allocation library for Direct3D 12.
