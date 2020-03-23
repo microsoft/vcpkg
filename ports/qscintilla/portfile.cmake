@@ -1,9 +1,7 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/pyqt/files/QScintilla2/QScintilla-2.10/QScintilla_gpl-2.10.zip"
-    FILENAME "QScintilla_gpl-2.10.zip"
-    SHA512 7c580cfee03af1056f530af756a0ff9cc2396a5419fa23aecc66a6bc8809a4fb154788956220bb0b068a5c214d571c053271c3906d6d541196fbbf7c6dbec917
+    URLS "https://www.riverbankcomputing.com/static/Downloads/QScintilla/2.11.4/QScintilla-2.11.4.tar.gz"
+    FILENAME "QScintilla-2.11.4.tar.gz"
+    SHA512 90fc2427121ca9ae55e34cf636460099bbdadd844318d9ef05f86790a36e25fb64528264bb7bb99e46b7add96378eff0cc69bb692940c6a1bddfadf86a9abdbd
 )
 
 vcpkg_extract_source_archive_ex(
@@ -14,10 +12,8 @@ vcpkg_extract_source_archive_ex(
 vcpkg_find_acquire_program(PYTHON3)
 
 # Add python3 to path
-get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(PREPEND ${PYTHON_PATH})
-vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/bin)
-vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/debug/bin)
+get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
+vcpkg_add_to_path(${PYTHON3_PATH})
 
 vcpkg_configure_qmake(
     SOURCE_PATH ${SOURCE_PATH}/Qt4Qt5
@@ -40,7 +36,5 @@ file(GLOB HEADER_FILES ${SOURCE_PATH}/Qt4Qt5/Qsci/*)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/Qsci)
 
 vcpkg_copy_pdbs()
-
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/qscintilla)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/qscintilla/LICENSE ${CURRENT_PACKAGES_DIR}/share/qscintilla/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
