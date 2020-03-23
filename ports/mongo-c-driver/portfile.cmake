@@ -8,6 +8,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "snappy" ENABLE_SNAPPY
+    "icu"    ENABLE_ICU
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
