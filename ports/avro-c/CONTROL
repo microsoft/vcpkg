@@ -1,5 +1,5 @@
 Source: avro-c
-Version: 1.9.2
+Version: 1.9.2-1
 Supports: !(uwp|linux|osx)
 Homepage: https://github.com/apache/avro
 Description: Apache Avro is a data serialization system
