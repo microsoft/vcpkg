@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://bitbucket.org/chchrsc/kealib/downloads/kealib-1.4.11.tar.gz"
     FILENAME "kealib-1.4.11.tar.gz"
@@ -36,9 +34,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/python/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/kealib RENAME copyright)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(INSTALL ${SOURCE_PATH}/python/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

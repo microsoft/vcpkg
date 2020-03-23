@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # LLVM documentation recommends always using static library linkage when
 # building with Microsoft toolchain; it's also the default on other platforms
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
