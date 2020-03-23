@@ -185,10 +185,10 @@ namespace vcpkg
                         arg.substr(sizeof("--overlay-triplets=") - 1), "--overlay-triplets", args.overlay_triplets);
                     continue;
                 }
-                if (Strings::starts_with(arg, "--binarysource="))
+                if (Strings::starts_with(arg, "--x-binarysource="))
                 {
                     parse_cojoined_multivalue(
-                        arg.substr(sizeof("--binarysource=") - 1), "--binarysource", args.binarysources);
+                        arg.substr(sizeof("--x-binarysource=") - 1), "--x-binarysource", args.binarysources);
                     continue;
                 }
                 if (arg == "--debug")
