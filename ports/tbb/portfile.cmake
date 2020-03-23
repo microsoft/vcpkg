@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO intel/tbb
+    REPO oneapi-src/oneTBB
     REF 4bdba61bafc6ba2d636f31564f1de5702d365cf7
-    SHA512 0b00c9deefdac5dc1f4fbae314e91eb3513b54b47ff6dec08ed2460486fc7d211ab36d6130e5787bfd50523cb613c65f03f9217d967292ca9056e2d3f5010bf8
+    SHA512 f2a8d7e0476f846039390f4a79af3fe13770e23b01bf4741e738136f7ddb401357a0e50f35212e8d0fa5fc4cf1563418337309227d7243fc3676edd406ae652d
     HEAD_REF tbb_2019
     PATCHES fix-static-build.patch
 )
