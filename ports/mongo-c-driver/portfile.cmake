@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 541086adcf1eecf88ac09fda47d9a8ec1598015d # debian/1.15.1-1
     SHA512 a57438dfae9d0993ae04b7a76677f79331699898f21e7645db5edd2c91014f33b738a0af67b58234d1ee03aab2ae3b58c183bbd043fc2bde5cc1a4e111755b70
     HEAD_REF master
+    PATCHES fix-arm-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

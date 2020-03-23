@@ -1,0 +1,14 @@
+diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
+index 91d97dc..c70480a 100644
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -698,6 +698,9 @@ if (NOT MONGOC_ENABLE_STATIC)
+ add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+ set_target_properties (mongoc_shared PROPERTIES CMAKE_CXX_VISIBILITY_PRESET hidden)
+ target_link_libraries (mongoc_shared PRIVATE ${LIBRARIES} PUBLIC ${BSON_LIBRARIES})
++if (WIN32)
++    target_link_libraries (mongoc_shared PRIVATE ${LIBRARIES} PRIVATE Advapi32)
++endif()
+ target_include_directories (mongoc_shared BEFORE PUBLIC ${MONGOC_INTERNAL_INCLUDE_DIRS})
+ target_include_directories (mongoc_shared PRIVATE ${PRIVATE_ZLIB_INCLUDES})
+ target_include_directories (mongoc_shared PRIVATE ${LIBMONGOCRYPT_INCLUDE_DIRECTORIES})
