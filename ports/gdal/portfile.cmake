@@ -1,12 +1,18 @@
 # vcpkg portfile.cmake for GDAL
 #
 # NOTE: update the version and checksum for new GDAL release
-include(vcpkg_common_functions)
 
-set(GDAL_VERSION_STR "2.4.1")
-set(GDAL_VERSION_PKG "241")
-set(GDAL_VERSION_LIB "204")
-set(GDAL_PACKAGE_SUM "edb9679ee6788334cf18971c803615ac9b1c72bc0c96af8fd4852cb7e8f58e9c4f3d9cb66406bc8654419612e1a7e9d0e62f361712215f4a50120f646bb0a738")
+if (NOT "latest" IN_LIST FEATURES)
+    set(GDAL_VERSION_STR "2.4.4")
+    set(GDAL_VERSION_PKG "244")
+    set(GDAL_VERSION_LIB "204")
+    set(GDAL_PACKAGE_SUM "649924f26427912cd9286392b002e99a5ace85efac7c1e64a3137ed96796c65b4143218ebe6d0ee886051ee4c242e33f1fd4f8e6403cc7bde9a5cadf8319971f")
+else()
+    set(GDAL_VERSION_STR "3.0.4")
+    set(GDAL_VERSION_PKG "304")
+    set(GDAL_VERSION_LIB "300")
+    set(GDAL_PACKAGE_SUM "1df4b0cfdaf89cb7c571841e08881a0a91d4200b46229d8c50b253bf74e85c05dd0ee8383f2489cdac7ba939c88c34cfbd06129f9093a985acb1476df3f32de8")
+endif()
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported.")
@@ -47,11 +53,14 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
                 0001-Fix-debug-crt-flags.patch
       )
     endif()
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}/ogr
-        PATCHES
-              0003-Fix-std-fabs.patch
-    )
+
+    if (NOT "latest" IN_LIST FEATURES)
+        vcpkg_apply_patches(
+            SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}/ogr
+            PATCHES
+                  0003-Fix-std-fabs.patch
+        )
+    endif()
 endforeach()
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -321,6 +330,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     file(GLOB GDAL_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(COPY ${GDAL_TOOLS} DESTINATION ${GDAL_TOOL_PATH})
     file(REMOVE_RECURSE ${GDAL_TOOLS})
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
 
@@ -338,7 +348,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   vcpkg_copy_pdbs()
   
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal${GDAL_VERSION_LIB}.pdb)
   endif()
 
 elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin") # Build in UNIX
@@ -423,4 +433,4 @@ else() # Other build system
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH_RELEASE}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/gdal/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH_RELEASE}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
