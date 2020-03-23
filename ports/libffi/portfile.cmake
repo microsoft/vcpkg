@@ -14,7 +14,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h
-        -DARCH_NAME=${VCPKG_TARGET_ARCHITECTURE}
     OPTIONS_DEBUG
         -DFFI_SKIP_HEADERS=ON
 )
