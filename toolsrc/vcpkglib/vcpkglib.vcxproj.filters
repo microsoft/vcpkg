@@ -126,9 +126,6 @@
     <ClCompile Include="..\src\vcpkg\paragraphs.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\parse.cpp">
-      <Filter>Source Files\vcpkg</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\vcpkg\postbuildlint.buildtype.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
@@ -183,6 +180,9 @@
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\parse.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\base\strings.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
@@ -233,6 +233,12 @@
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\binarycaching.cpp">
       <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\json.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\unicode.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -329,7 +335,7 @@
     <ClInclude Include="..\include\vcpkg\paragraphs.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg\parse.h">
+    <ClInclude Include="..\include\vcpkg\base\parse.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\postbuildlint.h">
@@ -439,6 +445,12 @@
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\binarycaching.h">
       <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\json.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\unicode.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
