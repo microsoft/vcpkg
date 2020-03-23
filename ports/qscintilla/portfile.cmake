@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "linux" "osx")
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.riverbankcomputing.com/static/Downloads/QScintilla/2.11.4/QScintilla-2.11.4.tar.gz"
     FILENAME "QScintilla-2.11.4.tar.gz"
