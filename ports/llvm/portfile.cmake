@@ -1,3 +1,5 @@
+include(vcpkg_common_functions)
+
 # LLVM documentation recommends always using static library linkage when
 # building with Microsoft toolchain; it's also the default on other platforms
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -61,13 +63,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+if((NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release") AND "tools" IN_LIST FEATURES)
     file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*)
     file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
     file(REMOVE ${EXE})
 endif()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if((NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug") AND "tools" IN_LIST FEATURES)
     file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
     file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/llvm)
     file(REMOVE ${DEBUG_EXE})
