@@ -1,13 +1,25 @@
 #pragma once
 
+#include <vcpkg/base/system.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgpaths.h>
+
 
 #include <vector>
 
 namespace vcpkg::Export::Prefab
 {
     constexpr int kFragmentSize = 3;
+    using  System::CPUArchitecture;
+
+    static std::unordered_map<CPUArchitecture, std::string>  target_arch_map  = {
+        {CPUArchitecture::ARM, "armeabi-v7a"},
+        {CPUArchitecture::ARM64, "arm64-v8a"},
+        {CPUArchitecture::X86, "x86"},
+        {CPUArchitecture::X64, "x86_64"}
+    };
+
+
     struct Options
     {
         Optional<std::string> maybe_group_id;

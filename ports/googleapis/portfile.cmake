@@ -1,14 +1,12 @@
-if (VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "Package `googleapis` doesn't support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/cpp-cmakefiles
-    REF v0.4.1
-    SHA512 b854833b74ae10aa249ee3926f0faa766a2d9dc82283a33d21b6e933a6b1feee0b0ba711f258b2a9face0de0f4f5e7bb87230fb8dd45ba7be279903ee00c1d8a
+    REF v0.6.0
+    SHA512 93f3b061ad9e20b31d597f48b476c1fdef09e822e556e9253318f0d387b2d6c143920658844690c7ea710be7b157e7a1473e1e2f0fdd3bf0e3e6fcb6b69a9e9d
     HEAD_REF master
 )
 

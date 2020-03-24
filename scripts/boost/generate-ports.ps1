@@ -1,11 +1,15 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.72.0"
+    $version = "1.72.0",
+    $portsDir = $null
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
-$portsDir = "$scriptsDir/../../ports"
+if ($null -eq $portsDir)
+{
+    $portsDir = "$scriptsDir/../../ports"
+}
 
 function TransformReference()
 {
@@ -46,9 +50,9 @@ function Generate()
     $controlDeps = ($Depends | sort) -join ", "
 
     $versionSuffix = ""
-    if ($Name -eq "iostreams")
+    if ($PortName -eq "iostreams" -or $PortName -eq "python")
     {
-        $versionsuffix = "-1"
+        $versionSuffix = "-1"
     }
 
     mkdir "$portsDir/boost-$PortName" -erroraction SilentlyContinue | out-null
@@ -363,7 +367,7 @@ foreach ($library in $libraries)
 
         if ($library -eq "python")
         {
-            $deps += @("python3 (!osx&!linux)")
+            $deps += @("python3")
             $needsBuild = $true
         }
         elseif ($library -eq "iostreams")

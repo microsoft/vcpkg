@@ -61,6 +61,9 @@ namespace vcpkg::Export
     {
         return Strings::format(R"###(
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <VcpkgRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
+  </PropertyGroup>
   <Import Condition="Exists('%s')" Project="%s" />
 </Project>
 )###",
@@ -138,7 +141,7 @@ namespace vcpkg::Export
 
         // This file will be placed in "build\native" in the nuget package. Therefore, go up two dirs.
         const std::string targets_redirect_content =
-            create_targets_redirect("../../scripts/buildsystems/msbuild/vcpkg.targets");
+            create_targets_redirect("$(MSBuildThisFileDirectory)../../scripts/buildsystems/msbuild/vcpkg.targets");
         const fs::path targets_redirect = paths.buildsystems / "tmp" / "vcpkg.export.nuget.targets";
 
         std::error_code ec;
@@ -263,6 +266,7 @@ namespace vcpkg::Export
         bool seven_zip = false;
         bool chocolatey = false;
         bool prefab = false;
+        bool all_installed = false;
 
         Optional<std::string> maybe_output;
 
@@ -292,8 +296,8 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_CHOCOLATEY = "--x-chocolatey";
     static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "--x-maintainer";
     static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--x-version-suffix";
-
-    //prefab
+    static constexpr StringLiteral OPTION_ALL_INSTALLED = "--x-all-installed";
+    
     static constexpr StringLiteral OPTION_PREFAB = "--prefab";
     static constexpr StringLiteral OPTION_PREFAB_GROUP_ID = "--prefab-group-id";
     static constexpr StringLiteral OPTION_PREFAB_ARTIFACT_ID = "--prefab-artifact-id";
@@ -304,7 +308,8 @@ namespace vcpkg::Export
     
 
 
-    static constexpr std::array<CommandSwitch, 9> EXPORT_SWITCHES = {{
+
+    static constexpr std::array<CommandSwitch, 10> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
         {OPTION_NUGET, "Export a NuGet package"},
@@ -313,7 +318,8 @@ namespace vcpkg::Export
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
         {OPTION_CHOCOLATEY, "Export a Chocolatey package (experimental feature)"},
         {OPTION_PREFAB, "Export to Prefab format"},
-        {OPTION_PREFAB_ENABLE_MAVEN, "Enable maven"}
+        {OPTION_PREFAB_ENABLE_MAVEN, "Enable maven"},
+        {OPTION_ALL_INSTALLED, "Export all installed packages"},
     }};
 
     static constexpr std::array<CommandSetting, 15> EXPORT_SETTINGS = {{
@@ -344,16 +350,14 @@ namespace vcpkg::Export
         nullptr,
     };
 
-    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args, Triplet default_triplet)
+    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args,
+                                                           Triplet default_triplet,
+                                                           const StatusParagraphs& status_db)
     {
         ExportArguments ret;
 
         const auto options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        // input sanitization
-        ret.specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_package_spec(std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-        });
         ret.dry_run = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
         ret.raw = options.switches.find(OPTION_RAW) != options.switches.cend();
         ret.nuget = options.switches.find(OPTION_NUGET) != options.switches.cend();
@@ -363,8 +367,25 @@ namespace vcpkg::Export
         ret.chocolatey = options.switches.find(OPTION_CHOCOLATEY) != options.switches.cend();
         ret.prefab = options.switches.find(OPTION_PREFAB) != options.switches.cend();
         ret.prefab_options.enable_maven = options.switches.find(OPTION_PREFAB_ENABLE_MAVEN) != options.switches.cend();
-
         ret.maybe_output = maybe_lookup(options.settings, OPTION_OUTPUT);
+        ret.all_installed = options.switches.find(OPTION_ALL_INSTALLED) != options.switches.end();
+
+        if (ret.all_installed)
+        {
+            auto installed_ipv = get_installed_ports(status_db);
+            std::transform(installed_ipv.begin(),
+                           installed_ipv.end(),
+                           std::back_inserter(ret.specs),
+                           [](const auto& ipv) { return ipv.spec(); });
+        }
+        else
+        {
+            // input sanitization
+            ret.specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+                return Input::check_and_get_package_spec(
+                    std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+            });
+        }
 
         if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey && !ret.prefab)
         {
@@ -549,16 +570,15 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
-        const auto opts = handle_export_command_arguments(args, default_triplet);
+        const StatusParagraphs status_db = database_load_check(paths);
+        const auto opts = handle_export_command_arguments(args, default_triplet, status_db);
         for (auto&& spec : opts.specs)
             Input::check_triplet(spec.triplet(), paths);
-
-        // create the plan
-        const StatusParagraphs status_db = database_load_check(paths);
 
         // Load ports from ports dirs
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
+        // create the plan
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(opts.specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
 
@@ -620,6 +640,11 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         }
 
         if(opts.prefab){
+            bool unsupported_platform = !Strings::contains(default_triplet.canonical_name(), "android");
+            if(unsupported_platform){
+                 System::print2("prefab exports currently supported for android triplets\n");
+                 Checks::exit_fail(VCPKG_LINE_INFO);
+            }
             Prefab::do_export(export_plan, paths, opts.prefab_options);
         }
 
