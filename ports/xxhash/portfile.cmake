@@ -11,8 +11,6 @@ vcpkg_from_github(
     PATCHES fix-arm-uwp.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake_unofficial
     PREFER_NINJA
