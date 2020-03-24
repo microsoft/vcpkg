@@ -75,7 +75,10 @@ if((NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug") AND "tool
     file(REMOVE ${DEBUG_EXE})
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
+endif()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/llvm)
 
