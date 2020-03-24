@@ -7,3 +7,6 @@ Build-Depends: fmt
 Feature: benchmark
 Description: Use google benchmark
 Build-Depends: benchmark
+
+Feature: wchar
+Description: Enable support for wide character log messages and file names

@@ -13,6 +13,8 @@ vcpkg_from_github(
 vcpkg_check_features(
 	OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	benchmark SPDLOG_BUILD_BENCH
+    wchar SPDLOG_WCHAR_SUPPORT
+    wchar SPDLOG_WCHAR_FILENAMES
 )
 
 vcpkg_configure_cmake(
