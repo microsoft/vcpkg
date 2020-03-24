@@ -25,6 +25,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/skyr-url RENAME copyright)
-
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME skyr-url)
