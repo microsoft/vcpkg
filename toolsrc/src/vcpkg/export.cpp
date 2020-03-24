@@ -640,12 +640,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         }
 
         if(opts.prefab){
-            bool unsupported_platform = !Strings::contains(default_triplet.canonical_name(), "android");
-            if(unsupported_platform){
-                 System::print2("prefab exports currently supported for android triplets\n");
-                 Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-            Prefab::do_export(export_plan, paths, opts.prefab_options);
+            Prefab::do_export(export_plan, paths, opts.prefab_options, default_triplet);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

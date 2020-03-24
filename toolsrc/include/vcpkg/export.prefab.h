@@ -10,15 +10,6 @@
 namespace vcpkg::Export::Prefab
 {
     constexpr int kFragmentSize = 3;
-    using  System::CPUArchitecture;
-
-    static std::unordered_map<CPUArchitecture, std::string>  target_arch_map  = {
-        {CPUArchitecture::ARM, "armeabi-v7a"},
-        {CPUArchitecture::ARM64, "arm64-v8a"},
-        {CPUArchitecture::X86, "x86"},
-        {CPUArchitecture::X64, "x86_64"}
-    };
-
 
     struct Options
     {
@@ -84,7 +75,7 @@ namespace vcpkg::Export::Prefab
 
     void do_export(const std::vector<Dependencies::ExportPlanAction>& export_plan,
                    const VcpkgPaths& paths,
-                   const Options& prefab_options);
+                   const Options& prefab_options, const Triplet& triplet);
     Optional<std::string> find_ndk_version(const std::string &content);
     Optional<NdkVersion> to_version(const std::string &version);
 }
