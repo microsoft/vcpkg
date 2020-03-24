@@ -14,7 +14,7 @@ vcpkg_from_github(
         0007_disable_tool_export_curl_target.patch
         0008_fix_tools_path.patch
         0009_fix_openssl_config.patch
-		0010_fix_ZlibFeature.patch
+        0010_fix_ZlibFeature.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
