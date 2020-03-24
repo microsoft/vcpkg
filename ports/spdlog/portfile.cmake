@@ -10,17 +10,17 @@ vcpkg_from_github(
         fix-error-4275.patch # Actually a defect in fmtlib
 )
 
-set(SPDLOG_USE_BENCHMARK OFF)
-if("benchmark" IN_LIST FEATURES)
-    set(SPDLOG_USE_BENCHMARK ON)
-endif()
+vcpkg_check_features(
+	OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	benchmark SPDLOG_BUILD_BENCH
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DSPDLOG_FMT_EXTERNAL=ON
-        -DSPDLOG_BUILD_BENCH=${SPDLOG_USE_BENCHMARK}
+        ${FEATURE_OPTIONS}
         -DSPDLOG_INSTALL=ON
 )
 
