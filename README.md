@@ -32,13 +32,13 @@ Linux:~/$ ./bootstrap-vcpkg.sh
 
 Then, to hook up user-wide [integration](docs/users/integration.md), run (note: requires admin on first use)
 ```
-PS> .\vcpkg integrate install
+PS> .\vcpkg.exe integrate install
 Linux:~/$ ./vcpkg integrate install
 ```
 
 Install any packages with
 ```
-PS> .\vcpkg install sdl2 curl
+PS> .\vcpkg.exe install sdl2 curl
 Linux:~/$ ./vcpkg install sdl2 curl
 ```
 
@@ -53,7 +53,7 @@ Additional notes on macOS and Linux support can be found in the [official announ
 ## Tab-Completion / Auto-Completion
 `vcpkg` supports auto-completion of commands, package names, options etc in Powershell and bash. To enable tab-completion, use one of the following:
 ```
-PS> .\vcpkg integrate powershell
+PS> .\vcpkg.exe integrate powershell
 Linux:~/$ ./vcpkg integrate bash
 ```
 and restart your console.
