@@ -58,7 +58,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-list(APPEND IGNORED_PACKAGES xau)
+list(APPEND IGNORED_PACKAGES xau xt)
 # xproto install a few .pc files with not yet available packages. 
 vcpkg_fixup_pkgconfig(SYSTEM_PACKAGES ${IGNORED_PACKAGES}) 
 
