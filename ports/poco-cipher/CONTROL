@@ -1,0 +1,21 @@
+Source: poco-cipher
+Version: 1.9.2-2
+Build-Depends: expat, libpq, pcre, sqlite3, zlib, libpng
+Description: Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.
+Homepage: https://github.com/pocoproject/poco
+
+Feature: mysql
+Build-Depends: libmysql
+Description: Mysql support for POCO
+
+Feature: mariadb
+Build-Depends: libmariadb
+Description: MariaDB support for POCO
+
+Feature: postgresql
+Build-Depends: libpqxx
+Description: PostgreSQL support for POCO
+
+Feature: pdf
+Build-Depends: libharu
+Description: Haru support for POCO
