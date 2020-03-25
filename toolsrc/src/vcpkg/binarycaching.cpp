@@ -278,11 +278,11 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
             {
                 std::vector<std::pair<SourceLoc, std::string>> segments;
 
-                do
+                for (;;)
                 {
                     SourceLoc loc = cur_loc();
                     std::string segment;
-                    do
+                    for (;;)
                     {
                         auto n = match_until([](char ch) { return ch == ',' || ch == '`' || ch == ';'; });
                         Strings::append(segment, n);
@@ -300,7 +300,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                         }
                         else
                             Checks::unreachable(VCPKG_LINE_INFO);
-                    } while (1);
+                    }
                     segments.emplace_back(std::move(loc), std::move(segment));
 
                     auto ch = cur();
@@ -313,7 +313,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     }
                     else
                         Checks::unreachable(VCPKG_LINE_INFO);
-                } while (1);
+                }
 
                 if (segments.size() != 1 || !segments[0].second.empty()) handle_segments(std::move(segments));
                 segments.clear();
