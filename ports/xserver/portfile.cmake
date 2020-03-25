@@ -53,71 +53,87 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
+if(1)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(OPTIONS 
+            --enable-windowsdri=no
+            --enable-windowswm=no
+            --enable-libdrm=no
+            --enable-pciaccess=no
+            
+            )
+    endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(OPTIONS 
-        --enable-windowsdri=no
-        --enable-windowswm=no
-        --enable-libdrm=no
-        --enable-pciaccess=no
-        )
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+        #SKIP_CONFIGURE
+        #NO_DEBUG
+        #AUTO_HOST
+        #AUTO_DST
+        #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
+        OPTIONS ${OPTIONS}
+        #OPTIONS_DEBUG
+        #OPTIONS_RELEASE
+        PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
+        PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
+    )
+
+    vcpkg_install_make()
+else()
+   
+    if("xwayland" IN_LIST FEATURES)
+        list(APPEND OPTIONS -Dxwayland=true)
+    else()
+        list(APPEND OPTIONS -Dxwayland=false)
+    endif()
+    if("xnest" IN_LIST FEATURES)
+        list(APPEND OPTIONS -Dxnest=true)
+    else()
+        list(APPEND OPTIONS -Dxnest=false)
+    endif()
+    if("xephyr" IN_LIST FEATURES)
+        list(APPEND OPTIONS -Dxephyr=true)
+    else()
+        list(APPEND OPTIONS -Dxephyr=false)
+    endif()
+    if("xorg" IN_LIST FEATURES)
+        list(APPEND OPTIONS -Dxorg=true)
+    else()
+        list(APPEND OPTIONS -Dxorg=false)
+    endif()
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND OPTIONS -Dglx=false) #Requires Mesa3D for gl.pc
+        list(APPEND OPTIONS -Dsecure-rpc=false) #Problem encountered: secure-rpc requested, but neither libtirpc or libc RPC support were found
+        list(APPEND OPTIONS -Dxvfb=false) #hw\vfb\meson.build:7:0: ERROR: '' is not a target.
+        list(APPEND OPTIONS -Dglamor=false)
+        list(APPEND OPTIONS -Dlinux_apm=false)
+        list(APPEND OPTIONS -Dlinux_acpi=false)
+        list(APPEND OPTIONS -Dlinux_acpi=false)
+        list(APPEND OPTIONS -Dxwin=true)
+        set(ENV{INCLUDE} "$ENV{INCLUDE};${CURRENT_INSTALLED_DIR}/include")
+    else()
+        if("xwin" IN_LIST FEATURES)
+            list(APPEND OPTIONS -Dxwin=true)
+        else()
+            list(APPEND OPTIONS -Dxwin=false)
+        endif()
+    endif()
+
+    if(WIN32)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
+        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+    endif()
+    #export LDFLAGS="-Wl,--copy-dt-needed-entries"
+    vcpkg_configure_meson(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS ${OPTIONS}
+        PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
+        PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
+    )
+    vcpkg_install_meson()
 endif()
 
-vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    OPTIONS ${OPTIONS}
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
-)
-
-vcpkg_install_make()
-
-# if("xwayland" IN_LIST FEATURES)
-    # list(APPEND OPTIONS -Dxwayland=true)
-# else()
-    # list(APPEND OPTIONS -Dxwayland=false)
-# endif()
-# if("xnest" IN_LIST FEATURES)
-    # list(APPEND OPTIONS -Dxnest=true)
-# else()
-    # list(APPEND OPTIONS -Dxnest=false)
-# endif()
-# if("xwin" IN_LIST FEATURES)
-    # list(APPEND OPTIONS -Dxwin=true)
-# else()
-    # list(APPEND OPTIONS -Dxwin=false)
-# endif()
-# if("xorg" IN_LIST FEATURES)
-    # list(APPEND OPTIONS -Dxorg=true)
-# else()
-    # list(APPEND OPTIONS -Dxorg=false)
-# endif()
-# if(VCPKG_TARGET_IS_WINDOWS)
-    # list(APPEND OPTIONS -Dglx=false) #Requires Mesa3D for gl.pc
-    # list(APPEND OPTIONS -Dsecure-rpc=false) #Problem encountered: secure-rpc requested, but neither libtirpc or libc RPC support were found
-    # list(APPEND OPTIONS -Dxvfb=false) #hw\vfb\meson.build:7:0: ERROR: '' is not a target.
-# endif()
-
-# if(WIN32)
-    # vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
-    # vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-# endif()
-# #export LDFLAGS="-Wl,--copy-dt-needed-entries"
-# vcpkg_configure_meson(
-    # SOURCE_PATH "${SOURCE_PATH}"
-    # OPTIONS ${OPTIONS}
-    # PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    # PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
-# )
-# vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
