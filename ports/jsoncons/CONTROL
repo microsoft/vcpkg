@@ -1,4 +1,4 @@
 Source: jsoncons
-Version: 0.147.0
+Version: 0.148.0
 Description: A C++, header-only library for constructing JSON and JSON-like text and binary data formats, with JSON Pointer, JSON Patch, JSONPath, CSV, MessagePack, CBOR, BSON, UBJSON
 Homepage: https://github.com/danielaparker/jsoncons

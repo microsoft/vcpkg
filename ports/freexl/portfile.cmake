@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(FREEXL_VERSION_STR "1.0.4")
 
 vcpkg_download_distfile(ARCHIVE
@@ -80,6 +79,7 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
     )
     
     vcpkg_install_make()
+    #vcpkg_fixup_pkgconfig()
     
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freexl RENAME copyright)

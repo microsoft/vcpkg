@@ -1,6 +1,6 @@
 set(X264_VERSION 157)
 
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX")
+#vcpkg_fail_port_install(ON_TARGET "Linux" "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -27,7 +27,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-
+#vcpkg_fixup_pkgconfig()?
 if(NOT VCPKG_TARGET_IS_UWP)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x264)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x264.exe ${CURRENT_PACKAGES_DIR}/tools/x264/x264.exe)

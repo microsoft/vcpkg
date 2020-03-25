@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} only supports Unix currently." ON_TARGET "Windows")
+#vcpkg_fail_port_install(MESSAGE "${PORT} only supports Unix currently." ON_TARGET "Windows")
 
 set(LIBOSIP2_VER "5.1.0")
 
@@ -15,22 +15,12 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    NO_DEBUG
-    AUTO_HOST
-    AUTO_DST
-    PRERUN_SHELL autogen.sh
 )
 
 vcpkg_install_make()
-
+#vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(GLOB_RECURSE LIBOSIP2_BINARIES ${CURRENT_PACKAGES_DIR}/lib *.so)
-foreach(LIBOSIP2_BINARY LIBOSIP2_BINARIES)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(COPY ${LIBOSIP2_BINARY} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    endif()
-    file(REMOVE ${LIBOSIP2_BINARY})
-endforeach()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

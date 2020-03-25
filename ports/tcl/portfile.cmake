@@ -1,3 +1,4 @@
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcltk/tcl
@@ -99,6 +100,7 @@ else()
     )
     
     vcpkg_install_make()
+    #vcpkg_fixup_pkgconfig()?
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
