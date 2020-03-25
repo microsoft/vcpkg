@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES configure.dep.patch
+    PATCHES configure.ac.patch
 )
 
 vcpkg_configure_make(
@@ -22,23 +22,10 @@ vcpkg_configure_make(
             --with-zlib
             --with-bzlib
             --with-lzma
-    CONFIGURE_PATCHES configure.dep.patch # todo PATCH configure.ac instead
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    #zlib patch required 
-    #zlibd patch required
-    #bz2d patch required
-    #lzmad patch required
-else()
-    #bz2d patch required
-    #lzmad patch required
-endif()
-#vcpkg_apply_patches()
-
 vcpkg_install_make()
-
-
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libdebuginfod.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libdebuginfod.pc") #--disable-debuginfod 
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
