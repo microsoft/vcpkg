@@ -7,7 +7,7 @@ index 0d1953d..0e538ef 100644
  LIBS = wsock32.lib libiconv.lib libcharset.lib
  !if "$(DEBUG)" == "1"
 -LIBS = $(LIBS) zlibd.lib
-+LIBS = $(LIBS) zlibd.lib lzmad.lib
++LIBS = $(LIBS) zlibd.lib lzma.lib
  !else
 -LIBS = $(LIBS) zlib.lib
 +LIBS = $(LIBS) zlib.lib lzma.lib

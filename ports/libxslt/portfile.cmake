@@ -94,7 +94,7 @@ else()
             --with-mem-debug
             --with-debug
             --with-debugger
-            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/debug/lib -lxml2 -lz -llzmad"
+            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/debug/lib -lxml2 -lz -llzma"
             --with-html-dir=${CURRENT_INSTALLED_DIR}/debug/tools
             --with-html-subdir=${CURRENT_INSTALLED_DIR}/debug/tools
         OPTIONS_RELEASE
