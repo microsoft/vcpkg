@@ -88,6 +88,9 @@ function(vcpkg_configure_meson)
     
     vcpkg_find_acquire_program(MESON)
     
+    get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
+    vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
+
     vcpkg_find_acquire_program(NINJA)
     get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
     vcpkg_add_to_path("${NINJA_PATH}")
