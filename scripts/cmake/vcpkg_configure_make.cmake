@@ -303,6 +303,7 @@ function(vcpkg_configure_make)
     if (_csc_AUTOCONFIG OR REQUIRES_AUTOCONFIG)
         find_program(AUTORECONF autoreconf REQUIRED)
         find_program(LIBTOOL libtool REQUIRED)
+        message(STATUS "${PORT} requires autoconf from the system package manager (example: \"sudo apt get autoconf\")")
         message(STATUS "Generating configure for ${TARGET_TRIPLET}")
         if (CMAKE_HOST_WIN32)
             vcpkg_execute_required_process(
