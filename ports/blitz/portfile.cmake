@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO blitzpp/blitz
-    REF 0e373f7c3478b10bd8ad8d699a291c57d9cb1e72
-    SHA512 9ea0ba652b93fb3b159340b25bdef10c05662b2da23a3bd2e29ddd12d394b96513c0e5d9f348c0cc8fc767890f52d122a1b0fb8ac6adb77f1a8b4bc2beeac5d7
+    REF 8916547a50d940ef81b9a758a54e1fa95727662c
+    SHA512 8223638e1f5f3b3f2c40b4d3c7c605b03df3793d07b1e355f298fefe8b2614179bac61ea2d720bdec9534534270bbf98fca6da414a9a5d37a25f6e1f11e4ee3b
     HEAD_REF master
 )
 
@@ -14,12 +14,20 @@ vcpkg_add_to_path(${PYTHON2_DIR})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA   
+    PREFER_NINJA
+        -DBUILD_DOC=OFF
+        -DBUILD_TESTING=OFF    
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
+vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
