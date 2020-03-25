@@ -285,7 +285,18 @@ function(vcpkg_configure_make)
             string(APPEND LD_FLAGS_GLOBAL " /machine:x86")
         endif()
     endif()
-
+    
+    if(NOT ENV{PKG_CONFIG})
+        find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
+        debug_message("Using pkg-config from: ${PKGCONFIG}")
+        if(NOT PKGCONFIG)
+            message(STATUS "${PORT} requires pkg-config from the system package manager (example: \"sudo apt-get install pkg-config\")")
+        endif()
+    else()
+        debug_message("ENV{PKG_CONFIG} found! Using: $ENV{PKG_CONFIG}")
+        set(PKGCONFIG $ENV{PKG_CONFIG})
+    endif()
+    
     set(SRC_DIR "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
 
     # Run autoconf if necessary
@@ -350,14 +361,6 @@ function(vcpkg_configure_make)
             WORKING_DIRECTORY "${TAR_DIR}"
             LOGNAME prerun-${TARGET_TRIPLET}
         )
-    endif()
-
-    if(NOT ENV{PKG_CONFIG})
-        find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
-        debug_message("Using pkg-config from: ${PKGCONFIG}")
-    else()
-        debug_message("ENV{PKG_CONFIG} found! Using: $ENV{PKG_CONFIG}")
-        set(PKGCONFIG $ENV{PKG_CONFIG})
     endif()
 
     # Configure debug
