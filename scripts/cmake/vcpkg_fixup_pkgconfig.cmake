@@ -159,7 +159,7 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
     debug_message("Required packages: ${_pkg_list_tmp}")
     debug_message("Required private packages: ${_pkg_private_list_tmp}")
     
-    message(STATUS "System packages: ${_system_packages}")
+    #message(STATUS "System packages: ${_system_packages}")
     foreach(_package  ${_pkg_list_tmp} ${_pkg_private_list_tmp})
         debug_message("Searching for package: ${_package}")
         set(PKG_CHECK ON)
