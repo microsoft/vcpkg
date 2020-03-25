@@ -60,9 +60,9 @@ namespace vcpkg::Export::Prefab
     std::string jsonify(const std::vector<std::string>& dependencies)
     {
         std::vector<std::string> deps;
-        for (auto it = dependencies.begin(); it != dependencies.end(); ++it)
+        for (const auto& dep : dependencies)
         {
-            deps.push_back("\"" + *it + "\"");
+            deps.push_back("\"" + dep + "\"");
         }
         return Strings::join(",", deps);
     }
@@ -160,10 +160,10 @@ namespace vcpkg::Export::Prefab
 
         if (std::regex_search(content, pkg_match, pkg_regex))
         {
-            for (auto p = pkg_match.begin(); p != pkg_match.end(); ++p)
+            for (const auto& p :  pkg_match)
             {
                 std::string delimiter = "=";
-                std::string s = p->str();
+                std::string s = p.str();
                 auto it = s.find(delimiter);
                 if (it != std::string::npos)
                 {
@@ -217,9 +217,15 @@ namespace vcpkg::Export::Prefab
 #endif
     }
 
-    void maven_install(const fs::path& aar, const fs::path& pom)
+    void maven_install(const fs::path& aar, const fs::path& pom, const Options& prefab_options)
     {
-        const auto cmd_line = Strings::format(R"("%s" "-q" "install:install-file" "-Dfile=%s" "-DpomFile=%s")",
+        if(prefab_options.enable_debug){
+            System::print2("\n[DEBUG] Installing POM and AAR file to ~/.m2\n\n");
+        }
+        const char* cmd_line_format = prefab_options.enable_debug ? R"("%s" "install:install-file" "-Dfile=%s" "-DpomFile=%s")"
+        : R"("%s" "-q" "install:install-file" "-Dfile=%s" "-DpomFile=%s")";
+
+        const auto cmd_line = Strings::format(cmd_line_format,
                                               Tools::MAVEN,
                                               aar.u8string(),
                                               pom.u8string());
@@ -228,7 +234,7 @@ namespace vcpkg::Export::Prefab
     }
 
     Build::PreBuildInfo build_info_from_triplet(const VcpkgPaths& paths,
-                                                std::unique_ptr<CMakeVars::CMakeVarProvider>& provider,
+                                                const std::unique_ptr<CMakeVars::CMakeVarProvider>& provider,
                                                 const Triplet& triplet)
     {
         provider->load_generic_triplet_vars(triplet);
@@ -270,18 +276,18 @@ namespace vcpkg::Export::Prefab
         std::unordered_map<Triplet, std::string> triplet_abi_map;
         std::unordered_map<Triplet, int> triplet_api_map;
 
-        for (auto triplet_file : available_triplets){
+        for (auto& triplet_file : available_triplets){
             if (triplet_file.name.size() > 0){
                 Triplet triplet = Triplet::from_canonical_name(std::move(triplet_file.name));
                 auto build_info = build_info_from_triplet(paths, provider, triplet);
                 if (is_supported(build_info)){
-                    auto cpu_architecture = triplet.guess_architecture().value_or_exit(VCPKG_LINE_INFO);
+                    auto cpu_architecture =System::to_cpu_architecture(build_info.target_architecture).value_or_exit(VCPKG_LINE_INFO);
                     auto required_arch = required_archs.find(cpu_architecture);
                     if (required_arch != required_archs.end()){
                         triplets.push_back(triplet);
                         triplet_abi_map[triplet] = required_archs[cpu_architecture];
                         triplet_api_map[triplet] = cpu_architecture_api_map[cpu_architecture];
-                        required_archs.erase(required_arch, required_archs.end());
+                        required_archs.erase(required_arch);
                     }
                 }
             }
@@ -363,12 +369,12 @@ namespace vcpkg::Export::Prefab
 
         //
 
-        for (const ExportPlanAction& action : export_plan)
+        for (const auto& action : export_plan)
         {
             const std::string name = action.spec.name();
             const fs::path per_package_dir_path = raw_exported_dir_path / name;
 
-            const BinaryParagraph& binary_paragraph = action.core_paragraph().value_or_exit(VCPKG_LINE_INFO);
+            const auto& binary_paragraph = action.core_paragraph().value_or_exit(VCPKG_LINE_INFO);
             const std::string norm_version = binary_paragraph.version;
 
             version_map[name] = norm_version;
@@ -415,7 +421,7 @@ namespace vcpkg::Export::Prefab
             pm.schema = 1;
             pm.version = norm_version;
 
-            auto dependencies = action.dependencies(Triplet::ARM64_ANDROID);
+            auto dependencies = action.dependencies(default_triplet);
             std::vector<std::string> pom_dependencies;
 
             if (dependencies.size() > 0)
@@ -423,7 +429,7 @@ namespace vcpkg::Export::Prefab
                 pom_dependencies.push_back("\n<dependencies>");
             }
 
-            for (auto it = dependencies.begin(); it != dependencies.end(); ++it)
+            for (const auto& it : dependencies)
             {
                 std::string maven_pom = R"(    <dependency>
         <groupId>@GROUP_ID@</groupId>
@@ -433,10 +439,10 @@ namespace vcpkg::Export::Prefab
         <scope>runtime</scope>
     </dependency>)";
                 std::string pom = Strings::replace_all(std::move(maven_pom), "@GROUP_ID@", group_id);
-                pom = Strings::replace_all(std::move(pom), "@ARTIFACT_ID@", it->name());
-                pom = Strings::replace_all(std::move(pom), "@VERSION@", version_map[it->name()]);
+                pom = Strings::replace_all(std::move(pom), "@ARTIFACT_ID@", it.name());
+                pom = Strings::replace_all(std::move(pom), "@VERSION@", version_map[it.name()]);
                 pom_dependencies.push_back(pom);
-                pm.dependencies.push_back(it->name());
+                pm.dependencies.push_back(it.name());
             }
 
             if (dependencies.size() > 0)
@@ -444,10 +450,23 @@ namespace vcpkg::Export::Prefab
                 pom_dependencies.push_back("</dependencies>\n");
             }
 
+            System::print2(Strings::format(
+                "[DEBUG]\n\tWriting manifest\n\tTo %s\n\tWriting prefab meta data\n\tTo %s\n\n",
+                                manifest_path.generic_u8string(), prefab_path.generic_u8string()));
+
             utils.write_contents(manifest_path, manifest, VCPKG_LINE_INFO);
             utils.write_contents(prefab_path, pm.to_json(), VCPKG_LINE_INFO);
 
-            for (auto triplet : triplets)
+            if(prefab_options.enable_debug){
+                 std::vector<std::string> triplet_names;
+                for(auto triplet: triplets){
+                    triplet_names.push_back(triplet.canonical_name());
+                }
+                System::print2(Strings::format("[DEBUG] Found %d triplets\n\t%s\n\n", triplets.size(), 
+                    Strings::join("\n\t", triplet_names)));
+            }
+
+            for (const auto& triplet : triplets)
             {
                 const fs::path listfile = vcpkg_root_path / "installed" / "vcpkg" / "info" /
                                           (Strings::format("%s_%s_%s", name, norm_version, triplet) + ".list");
@@ -465,15 +484,15 @@ namespace vcpkg::Export::Prefab
 
                 std::vector<fs::path> modules_shared = find_modules(paths, libs, ".so");
 
-                for (auto it : modules_shared)
+                for (const auto& module : modules_shared)
                 {
-                    modules.push_back(it);
+                    modules.push_back(module);
                 }
 
                 std::vector<fs::path> modules_static = find_modules(paths, libs, ".a");
-                for (auto it : modules_static)
+                for (const auto& module : modules_static)
                 {
-                    modules.push_back(it);
+                    modules.push_back(module);
                 }
 
                 // header only libs
@@ -494,10 +513,22 @@ namespace vcpkg::Export::Prefab
                 }
                 else
                 {
-                    for (auto module : modules)
+                    for (const auto& module : modules)
                     {
                         std::string module_name = module.stem().generic_u8string();
                         std::string extension = module.extension().generic_u8string();
+
+                        ABIMetadata ab;
+                        ab.abi = triplet_abi_map[triplet];
+                        ab.api =  triplet_api_map[triplet];
+                        
+                        ab.stl = Strings::contains(extension, "a") ?"c++_static": "c++_shared";
+                        ab.ndk = version.major();
+
+                        if(prefab_options.enable_debug){
+                            System::print2(Strings::format("[DEBUG] Found module %s:%s\n", module_name, ab.abi));
+                        }
+                       
                         module_name = Strings::trim(std::move(module_name));
 
                         if (Strings::starts_with(module_name, "lib"))
@@ -506,16 +537,15 @@ namespace vcpkg::Export::Prefab
                         }
                         fs::path module_dir = (modules_directory / module_name);
                         fs::path module_libs_dir =
-                            module_dir / "libs" / Strings::format("android.%s", triplet_abi_map[triplet]);
+                            module_dir / "libs" / Strings::format("android.%s", ab.abi);
                         utils.create_directories(module_libs_dir, error_code);
-                        ABIMetadata ab;
-                        ab.abi = triplet_abi_map[triplet];
-                        ab.api =  triplet_api_map[triplet];
-                        
-                        ab.stl = Strings::contains(extension, "a") ?"c++_static": "c++_shared";
-                        ab.ndk = version.major();
-
+                      
                         fs::path abi_path = module_libs_dir / "abi.json";
+
+                        if(prefab_options.enable_debug){
+                            System::print2(Strings::format("\tWriting abi metadata\n\tTo %s\n",
+                                abi_path.generic_u8string()));
+                        }
                         utils.write_contents(abi_path, ab.to_string(), VCPKG_LINE_INFO);
 
                         fs::path installed_module_path = libs / module.filename();
@@ -525,15 +555,29 @@ namespace vcpkg::Export::Prefab
                                         exported_module_path,
                                         fs::copy_options::overwrite_existing,
                                         error_code);
-
+                        if(prefab_options.enable_debug){
+                            System::print2(Strings::format("\tCopying libs\n\tFrom %s\n\tTo %s\n", 
+                                installed_module_path.generic_u8string(), exported_module_path.generic_u8string()));
+                        }
                         fs::path installed_headers_dir = installed_dir / "include";
                         fs::path exported_headers_dir = module_libs_dir / "include";
+
+
+                        if(prefab_options.enable_debug){
+                            System::print2(Strings::format("\tCopying headers\n\tFrom %s\n\tTo %s\n",
+                                installed_headers_dir.generic_u8string(), exported_headers_dir.generic_u8string()));
+                        }
 
                         utils.copy(installed_headers_dir, exported_headers_dir, fs::copy_options::recursive);
 
                         ModuleMetadata meta;
 
                         fs::path module_meta_path = module_dir / "module.json";
+
+                        if(prefab_options.enable_debug){
+                            System::print2(Strings::format("\tWriting module metadata\n\tTo %s\n\n",
+                                module_meta_path.generic_u8string()));
+                        }
 
                         utils.write_contents(module_meta_path, meta.to_json(), VCPKG_LINE_INFO);
                     }
@@ -542,6 +586,11 @@ namespace vcpkg::Export::Prefab
 
             fs::path exported_archive_path = per_package_dir_path / Strings::format("%s-%s.aar", name, norm_version);
             fs::path pom_path = per_package_dir_path / "pom.xml";
+
+            if(prefab_options.enable_debug){
+                System::print2(Strings::format("[DEBUG] Exporting AAR And POM\n\tAAR Path %s\n\tPOM Path %s\n", 
+                    exported_archive_path.generic_u8string(), pom_path.generic_u8string()));
+            }
 
             compress_directory(paths, package_directory, exported_archive_path);
 
@@ -570,9 +619,12 @@ namespace vcpkg::Export::Prefab
 
             if (prefab_options.enable_maven)
             {
-                maven_install(exported_archive_path, pom_path);
-                System::print2(
-                    Strings::format("\nIn app/build.gradle\n\n\t%s:%s:%s\n\n", group_id, artifact_id, norm_version));
+
+                maven_install(exported_archive_path, pom_path, prefab_options);
+                if(prefab_options.enable_debug){
+                    System::print2(
+                    Strings::format("\n\n[DEBUG] Configuration properties in Android Studio\nIn app/build.gradle\n\n\t%s:%s:%s\n\n",
+                     group_id, artifact_id, norm_version));
 
                 System::print2(R"(And cmake flags
 
@@ -591,7 +643,7 @@ namespace vcpkg::Export::Prefab
     android.enableParallelJsonGen=false
     android.prefabVersion=${prefab.version}
 
-)");
+)");}
             }
             System::print2(System::Color::success,
                            Strings::format("Successfuly exported %s. Checkout %s  \n",

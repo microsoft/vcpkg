@@ -305,11 +305,12 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_PREFAB_SDK_MIN_VERSION = "--prefab-min-sdk";
     static constexpr StringLiteral OPTION_PREFAB_SDK_TARGET_VERSION = "--prefab-target-sdk";
     static constexpr StringLiteral OPTION_PREFAB_ENABLE_MAVEN = "--prefab-maven";
+    static constexpr StringLiteral OPTION_PREFAB_ENABLE_DEBUG = "--prefab-debug";
     
 
 
 
-    static constexpr std::array<CommandSwitch, 10> EXPORT_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 11> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
         {OPTION_NUGET, "Export a NuGet package"},
@@ -319,6 +320,7 @@ namespace vcpkg::Export
         {OPTION_CHOCOLATEY, "Export a Chocolatey package (experimental feature)"},
         {OPTION_PREFAB, "Export to Prefab format"},
         {OPTION_PREFAB_ENABLE_MAVEN, "Enable maven"},
+        {OPTION_PREFAB_ENABLE_DEBUG, "Enable prefab debug"},
         {OPTION_ALL_INSTALLED, "Export all installed packages"},
     }};
 
@@ -367,6 +369,7 @@ namespace vcpkg::Export
         ret.chocolatey = options.switches.find(OPTION_CHOCOLATEY) != options.switches.cend();
         ret.prefab = options.switches.find(OPTION_PREFAB) != options.switches.cend();
         ret.prefab_options.enable_maven = options.switches.find(OPTION_PREFAB_ENABLE_MAVEN) != options.switches.cend();
+        ret.prefab_options.enable_debug = options.switches.find(OPTION_PREFAB_ENABLE_DEBUG) != options.switches.cend();
         ret.maybe_output = maybe_lookup(options.settings, OPTION_OUTPUT);
         ret.all_installed = options.switches.find(OPTION_ALL_INSTALLED) != options.switches.end();
 

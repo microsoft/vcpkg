@@ -19,6 +19,7 @@ namespace vcpkg::Export::Prefab
         Optional<std::string> maybe_min_sdk;
         Optional<std::string> maybe_target_sdk;
         bool enable_maven;
+        bool enable_debug;
     };
     struct NdkVersion
     {
