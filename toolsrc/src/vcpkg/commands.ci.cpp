@@ -392,7 +392,8 @@ namespace vcpkg::Commands::CI
             System::print2(System::Color::warning, "Warning: Running ci without binary caching!\n");
         }
 
-        auto binaryprovider = create_binary_provider_from_configs(paths, args.binarysources);
+        auto binaryprovider =
+            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 

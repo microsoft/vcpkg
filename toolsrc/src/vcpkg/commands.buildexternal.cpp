@@ -21,7 +21,8 @@ namespace vcpkg::Commands::BuildExternal
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        auto binaryprovider = create_binary_provider_from_configs(paths, args.binarysources);
+        auto binaryprovider =
+            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
 
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(
             std::string(args.command_arguments.at(0)), default_triplet, COMMAND_STRUCTURE.example_text);

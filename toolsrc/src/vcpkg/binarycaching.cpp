@@ -175,11 +175,7 @@ namespace
                 const fs::path& archives_root_dir = m_directory;
                 const std::string archive_name = abi_tag + ".zip";
                 const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
-                const fs::path archive_path = archives_root_dir / archive_subpath;
                 const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
-                const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
-                const fs::path abi_file_in_package =
-                    paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
 
                 if (!fs.exists(archive_tombstone_path))
                 {
@@ -253,8 +249,8 @@ namespace
     };
 }
 
-std::unique_ptr<IBinaryProvider> vcpkg::create_binary_provider_from_configs(const VcpkgPaths& paths,
-                                                                            View<std::string> args)
+ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(const VcpkgPaths& paths,
+                                                                                       View<std::string> args)
 {
     std::string env_string = System::get_environment_variable("VCPKG_BINARY_SOURCES").value_or("");
 
@@ -263,9 +259,14 @@ std::unique_ptr<IBinaryProvider> vcpkg::create_binary_provider_from_configs(cons
     if (args.size() == 0 && env_string.empty())
     {
         auto p = paths.root / fs::u8path("archives");
-        return std::make_unique<ArchivesBinaryProvider>(std::vector<fs::path>{p}, std::vector<fs::path>{p});
+        return {std::make_unique<ArchivesBinaryProvider>(std::vector<fs::path>{p}, std::vector<fs::path>{p})};
     }
 
+    return create_binary_provider_from_configs_pure(env_string, args);
+}
+ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs_pure(
+    const std::string& env_string, View<std::string> args)
+{
     struct BinaryConfigParser : Parse::ParserBase
     {
         std::vector<fs::path> archives_to_read;
@@ -314,7 +315,7 @@ std::unique_ptr<IBinaryProvider> vcpkg::create_binary_provider_from_configs(cons
                         Checks::unreachable(VCPKG_LINE_INFO);
                 } while (1);
 
-                handle_segments(std::move(segments));
+                if (segments.size() != 1 || !segments[0].second.empty()) handle_segments(std::move(segments));
                 segments.clear();
                 if (get_error()) return;
                 if (cur() == ';') next();
@@ -369,13 +370,9 @@ std::unique_ptr<IBinaryProvider> vcpkg::create_binary_provider_from_configs(cons
                     return add_error("unexpected arguments: binary config 'default' does not take more than 1 argument",
                                      segments[0].first);
 
-#ifdef _WIN32
-                auto maybe_home = System::get_environment_variable("USERPROFILE");
-                if (!maybe_home.has_value()) return add_error("unable to read %USERPROFILE%", segments[0].first);
-#else
-                auto maybe_home = System::get_environment_variable("HOME");
-                if (!maybe_home.has_value()) return add_error("unable to read $HOME", segments[0].first);
-#endif
+                auto maybe_home = System::get_home_dir();
+                if (!maybe_home.has_value()) return add_error(maybe_home.error(), segments[0].first);
+
                 auto p = fs::u8path(maybe_home.value_or_exit(VCPKG_LINE_INFO)) / fs::u8path(".vcpkg/archives");
                 if (!p.is_absolute())
                     return add_error("default path was not absolute: " + p.u8string(), segments[0].first);
@@ -411,8 +408,8 @@ std::unique_ptr<IBinaryProvider> vcpkg::create_binary_provider_from_configs(cons
     }
     if (auto err = parser.get_error())
     {
-        Checks::exit_with_message(VCPKG_LINE_INFO, "%s", err->format());
+        return err->format();
     }
-    return std::make_unique<ArchivesBinaryProvider>(std::move(parser.archives_to_read),
-                                                    std::move(parser.archives_to_write));
+    return {std::make_unique<ArchivesBinaryProvider>(std::move(parser.archives_to_read),
+                                                     std::move(parser.archives_to_write))};
 }

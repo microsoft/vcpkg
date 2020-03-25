@@ -638,7 +638,8 @@ namespace vcpkg::Install
         // input sanitization
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        auto binaryprovider = create_binary_provider_from_configs(paths, args.binarysources);
+        auto binaryprovider =
+            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
             return Input::check_and_get_full_package_spec(
@@ -733,7 +734,7 @@ namespace vcpkg::Install
                     {
                         const auto vs_prompt_view = to_zstring_view(vs_prompt);
                         System::print2(vcpkg::System::Color::warning,
-                                        "warning: vcpkg appears to be in a Visual Studio prompt targeting ",
+                                       "warning: vcpkg appears to be in a Visual Studio prompt targeting ",
                                        vs_prompt_view,
                                        " but is installing packages for ",
                                        common_triplet.to_string(),

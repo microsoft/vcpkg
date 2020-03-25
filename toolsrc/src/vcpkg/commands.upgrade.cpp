@@ -42,7 +42,8 @@ namespace vcpkg::Commands::Upgrade
         const bool no_dry_run = Util::Sets::contains(options.switches, OPTION_NO_DRY_RUN);
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
-        auto binaryprovider = create_binary_provider_from_configs(paths, args.binarysources);
+        auto binaryprovider =
+            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
 
         StatusParagraphs status_db = database_load_check(paths);
 
