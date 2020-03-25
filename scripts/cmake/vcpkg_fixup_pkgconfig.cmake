@@ -28,14 +28,16 @@
 ## If the *.pc file contains system libraries outside vcpkg these need to be listed here.
 ## VCPKG checks every -l flag for the existence of the required library within vcpkg. 
 ##
+## ### IGNORE_FLAGS
+## If the *.pc file contains flags in the lib field which are not libraries. These can be listed here
+##
 ## ## Notes
 ## Still work in progress. If there are more cases which can be handled here feel free to add them
 ##
 ## ## Examples
 ##
 ## Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files. 
-
-function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_libs _system_packages)
+function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_libs _system_packages _ignore_flags)
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
     list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".lib;.dll.a;.a")
     #message(STATUS "Checking configuration: ${_config}")
@@ -54,6 +56,7 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
     else()
         message(FATAL_ERROR "Unknown configuration in vcpkg_fixup_pkgconfig_check_libraries!")
     endif()
+    debug_message("Default library search paths: ${libprefix} --- ${installlibprefix} --- ${PKG_LIB_SEARCH_PATH}")
     set(_contents "${${_contents_var}}")
     #message(STATUS "Contents: ${_contents}")
     set(_system_lib_normalized)
@@ -67,11 +70,11 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
     #message(STATUS "LIB LINE: ${_libs}")
     # The path to the library is either quoted and can not contain a quote or it is unqouted and cannot contain a single unescaped space
     string(REGEX REPLACE "Libs:" "" _libs_list_tmp "${_libs}")
-    string(REGEX REPLACE [[[\t ]+(-(l|L)("[^"]+"|(\\ |[^ ]+)+))]] ";\\1" _libs_list_tmp "${_libs_list_tmp}")
+    string(REGEX REPLACE [[[\t ]+(-(l|L)?("[^"]+"|(\\ |[^ ]+)+))]] ";\\1" _libs_list_tmp "${_libs_list_tmp}")
 
     string(REGEX MATCH "Libs.private:[^\n]+" _libs_private "${_contents}")
     string(REGEX REPLACE "Libs.private:" "" _libs_private_list_tmp "${_libs_private}")
-    string(REGEX REPLACE [[[\t ]+(-(l|L)("[^"]+"|(\\ |[^ ]+)+))]] ";\\1" _libs_private_list_tmp "${_libs_private_list_tmp}")
+    string(REGEX REPLACE [[[\t ]+(-(l|L)?("[^"]+"|(\\ |[^ ]+)+))]] ";\\1" _libs_private_list_tmp "${_libs_private_list_tmp}")
 
     #message(STATUS "Found libraries: ${_libs_list_tmp}")
     #message(STATUS "Found private libraries: ${_libs_private_list_tmp}")
@@ -86,34 +89,35 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
         unset(NO_CHECK_LIB)
         #message(STATUS "CHECKING: x${_lib}z")
         if("${_lib}" MATCHES "^-L((\\ |[^ ]+)+)$")
-            message(STATUS "Search path for libraries ${CMAKE_MATCH_1}") # not used yet we assume everything can be found in libprefix
+            debug_message("Search path for libraries (unused): ${CMAKE_MATCH_1}") # not used yet we assume everything can be found in libprefix
             continue()
         elseif("${_lib}" MATCHES [[^-l("[^"]+"|(\\ |[^ ]+)+)$]] )
             set(_libname ${CMAKE_MATCH_1})
-            #message(STATUS "CHECKING LIB: ${_libname}")
-            foreach(_system_lib "${_system_libs}")
-                #message(STATUS "AGAINST: ${_system_lib}")
+            debug_message("Searching for library: ${_libname}")
+            #debug_message("System libraries: ${_system_libs}")
+            foreach(_system_lib ${_system_libs})
                 string(REPLACE "^[\t ]*-l" "" _libname_norm "${_libname}")
                 string(REGEX REPLACE "[\t ]+$" "" _libname_norm "${_libname_norm}")
-                if("${_libname_norm}" MATCHES "${_system_lib}")
+                #debug_message("${_libname_norm} vs ${_system_lib}")
+                if("${_libname_norm}" MATCHES "${_system_lib}" OR "-l${_libname_norm}" MATCHES "${_system_lib}")
                     set(NO_CHECK_LIB ON)
-                    #message(STATUS "FOUND SYSTEM LIB")
+                    debug_message("${_libname} is SYSTEM_LIBRARY")
                     break()
                 endif()
             endforeach()
             if(NO_CHECK_LIB)
                 break()
             endif()
-            debug_message("Searching for library ${_libname} in ${libprefix}")
+            #debug_message("Searching for library ${_libname} in ${libprefix}")
             if(EXISTS "${_libname}") #full path
                 set(CHECK_LIB_${_libname} "${_libname}" CACHE INTERNAL FORCE)
             endif()
-            find_library(CHECK_LIB_${_libname} NAMES "${_libname}" PATHS "${libprefix}" "${installlibprefix}" NO_DEFAULT_PATH)
+            find_library(CHECK_LIB_${_libname} NAMES "${_libname}" PATHS "${libprefix}" "${installlibprefix}" "${PKG_LIB_SEARCH_PATH}" NO_DEFAULT_PATH)
             if(NOT CHECK_LIB_${_libname} AND "${_config}" STREQUAL "DEBUG")
                 #message(STATUS "Unable to locate ${_libname}. Trying with debug suffix")
                 foreach(_lib_suffix ${lib_suffixes})
                     string(REPLACE ".dll.a|.a|.lib|.so" "" _name_without_extension "${_libname}")
-                    find_library(CHECK_LIB_${_libname} NAMES ${_name_without_extension}${_lib_suffix} PATHS "${libprefix}" "${installlibprefix}")
+                    find_library(CHECK_LIB_${_libname} NAMES ${_name_without_extension}${_lib_suffix} PATHS "${libprefix}" "${installlibprefix}" "${PKG_LIB_SEARCH_PATH}")
                     if(CHECK_LIB_${_libname})
                         message(FATAL_ERROR "Found ${CHECK_LIB_${_libname}} with additional debug suffix! Please correct the *.pc file!")
                         string(REGEX REPLACE "(-l${_name_without_extension})(\.dll\.a|\.a|\.lib|\.so)" "\\1${_lib_suffix}\\2" _contents ${_contents})
@@ -122,6 +126,10 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
                 if(NOT CHECK_LIB_${_libname})
                     message(FATAL_ERROR "Library ${_libname} was not found! If it is a system library use the SYSTEM_LIBRARIES parameter for the vcpkg_fixup_pkgconfig call! Otherwise, corret the *.pc file")
                 endif()
+            elseif(NOT CHECK_LIB_${_libname})
+                message(FATAL_ERROR "Library ${_libname} was not found! If it is a system library use the SYSTEM_LIBRARIES parameter for the vcpkg_fixup_pkgconfig call! Otherwise, corret the *.pc file")
+            else()
+                debug_message("Found ${_libname} at ${CHECK_LIB_${_libname}}")
             endif()
         else()
             #handle special cases
@@ -145,7 +153,7 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
     endforeach()
 
     ## Packages:
-    string(REGEX MATCH "Requires:[^\n]+" _pkg "${_contents}")
+    string(REGEX MATCH "Requires:[^\n]+" _pkg_list_tmp "${_contents}")
     string(REGEX REPLACE "Requires:[\t ]" "" _pkg_list_tmp "${_pkg_list_tmp}")
     string(REGEX REPLACE "[\t ]*,[\t ]*" ";" _pkg_list_tmp "${_pkg_list_tmp}")
     string(REGEX REPLACE "[\t ]*(>|=)+[\t ]*([0-9]+|\\.)+" "" _pkg_list_tmp "${_pkg_list_tmp}")
@@ -159,7 +167,7 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
     debug_message("Required packages: ${_pkg_list_tmp}")
     debug_message("Required private packages: ${_pkg_private_list_tmp}")
     
-    message(STATUS "System packages: ${_system_packages}")
+    #message(STATUS "System packages: ${_system_packages}")
     foreach(_package  ${_pkg_list_tmp} ${_pkg_private_list_tmp})
         debug_message("Searching for package: ${_package}")
         set(PKG_CHECK ON)
@@ -170,7 +178,7 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
                 set(PKG_CHECK OFF)
             endif()
         endif()
-        if(PKG_CHECK AND NOT (EXISTS "${libprefix}/pkgconfig/${_package}.pc" OR EXISTS "${installlibprefix}/pkgconfig/${_package}.pc"))
+        if(PKG_CHECK AND NOT (EXISTS "${libprefix}/pkgconfig/${_package}.pc" OR EXISTS "${installlibprefix}/pkgconfig/${_package}.pc" OR EXISTS "${PKG_LIB_SEARCH_PATH}/pkgconfig/${_package}.pc"))
             message(FATAL_ERROR "Package ${_package} not found! If it is a system package add it to the SYSTEM_PACKAGES parameter for the vcpkg_fixup_pkgconfig call! Otherwise, corret the *.pc file")
         else()
             debug_message("Found package ${_package}!")
@@ -182,7 +190,7 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
 endfunction()
 
 function(vcpkg_fixup_pkgconfig)
-    cmake_parse_arguments(_vfpkg "" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES" ${ARGN})
+    cmake_parse_arguments(_vfpkg "" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS" ${ARGN})
     
     if(VCPKG_TARGET_IS_LINUX)
         list(APPEND _vfpkg_SYSTEM_LIBRARIES -ldl -lm)
@@ -209,19 +217,26 @@ function(vcpkg_fixup_pkgconfig)
     message(STATUS "Fixing pkgconfig - release")
     debug_message("Files: ${_vfpkg_RELEASE_FILES}")
     foreach(_file ${_vfpkg_RELEASE_FILES})
+        message(STATUS "Checking file: ${_file}")
+        get_filename_component(PKG_LIB_SEARCH_PATH "${_file}" DIRECTORY)
+        string(REGEX REPLACE "/pkgconfig/?" "" PKG_LIB_SEARCH_PATH "${PKG_LIB_SEARCH_PATH}")
         file(READ "${_file}" _contents)
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REGEX REPLACE "^prefix=\\\${prefix}" "#prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}") # Comment out prefix
-        vcpkg_fixup_pkgconfig_check_libraries("RELEASE" _contents "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_SYSTEM_PACKAGES}")
+        vcpkg_fixup_pkgconfig_check_libraries("RELEASE" _contents "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_SYSTEM_PACKAGES}" "${_vfpkg_IGNORE_FLAGS}")
         file(WRITE "${_file}" "${_contents}")
+        unset(PKG_LIB_SEARCH_PATH)
     endforeach()
     
     message(STATUS "Fixing pkgconfig - debug")
     debug_message("Files: ${_vfpkg_DEBUG_FILES}")
     foreach(_file ${_vfpkg_DEBUG_FILES})
+        message(STATUS "Checking file: ${_file}")
+        get_filename_component(PKG_LIB_SEARCH_PATH "${_file}" DIRECTORY)
+        string(REGEX REPLACE "/pkgconfig/?" "" PKG_LIB_SEARCH_PATH "${PKG_LIB_SEARCH_PATH}")
         file(READ "${_file}" _contents)
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
@@ -237,8 +252,9 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
         string(REGEX REPLACE "^prefix=\\\${prefix}/debug" "#prefix=${CURRENT_INSTALLED_DIR}/debug" _contents "${_contents}") # Comment out prefix
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
-        vcpkg_fixup_pkgconfig_check_libraries("DEBUG" _contents "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_SYSTEM_PACKAGES}")
+        vcpkg_fixup_pkgconfig_check_libraries("DEBUG" _contents "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_SYSTEM_PACKAGES}" "${_vfpkg_IGNORE_FLAGS}")
         file(WRITE "${_file}" "${_contents}")
+        unset(PKG_LIB_SEARCH_PATH)
     endforeach()
     message(STATUS "Fixing pkgconfig --- finished")
     
