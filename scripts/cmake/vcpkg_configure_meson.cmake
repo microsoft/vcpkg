@@ -187,9 +187,7 @@ function(vcpkg_configure_meson)
         else()
             set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}")
         endif()
-        
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        
+
         # Normalize flags for meson (i.e. " /string /with /flags " -> ['/string', '/with', '/flags'])
         set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_RELEASE_CFLAGS}]")
         string(REGEX REPLACE " +(/|-)" "','\\1" CFLAGS ${CFLAGS}) # Seperate compiler arguments with comma and enclose in '
