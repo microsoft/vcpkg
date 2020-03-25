@@ -18,8 +18,6 @@ vcpkg_from_gitlab(
 #file(TOUCH ${SOURCE_PATH}/m4/dummy)
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
-
-
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
@@ -31,8 +29,6 @@ vcpkg_configure_make(
     #OPTIONS
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
 
 vcpkg_install_make()

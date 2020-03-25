@@ -1,5 +1,4 @@
 ## requires AUTOCONF, LIBTOOL and PKCONF
-message(STATUS "${PORT} requires autoconf, libtool and pkconf from the system package manager!")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PATCHES dllimport.patch)
@@ -65,8 +64,6 @@ vcpkg_configure_make(
     OPTIONS ${OPTIONS}
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
 
 vcpkg_install_make()

@@ -1,8 +1,3 @@
-## vcpkg_from_git(
-##     OUT_SOURCE_PATH <SOURCE_PATH>
-##     URL <https://android.googlesource.com/platform/external/fdlibm>
-##     REF <59f7335e4d...>
-##     [PATCHES <patch1.patch> <patch2.patch>...]
 vcpkg_download_distfile(ARCHIVE
     URLS "ftp://sourceware.org/pub/elfutils/0.178/elfutils-0.178.tar.bz2"
     FILENAME "elfutils.tar.bz2"
@@ -27,9 +22,7 @@ vcpkg_configure_make(
             --with-zlib
             --with-bzlib
             --with-lzma
-    CONFIGURE_PATCHES configure.dep.patch
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
+    CONFIGURE_PATCHES configure.dep.patch # todo PATCH configure.ac instead
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)

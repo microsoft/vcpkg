@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Meson is not able to automatically export symbols for DLLs
     # Insert in the beginning to make it overwriteable
@@ -32,8 +30,6 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${OPTIONS}
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()

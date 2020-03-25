@@ -43,8 +43,6 @@ vcpkg_configure_make(
     OPTIONS
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
 
 vcpkg_install_make()

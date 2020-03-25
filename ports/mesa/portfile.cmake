@@ -80,8 +80,6 @@ vcpkg_configure_meson(
         -D gles-lib-suffix=_mesa
         -D egl-lib-suffix=_mesa
         "${MESA_OPTIONS}"
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
 vcpkg_install_meson()
 

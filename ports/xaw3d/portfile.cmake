@@ -1,5 +1,3 @@
-message(STATUS "----- ${PORT} requires autoconf, libtool, Yacc, lex and pkconf from the system package manager! -----") #Lex and Yacc
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -23,8 +21,6 @@ vcpkg_configure_make(
     #OPTIONS
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
 
 vcpkg_install_make()

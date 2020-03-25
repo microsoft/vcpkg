@@ -121,8 +121,6 @@ else()
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libxslt-plugins ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt-plugins)
     endif()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt.so)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/xsltproc" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/xsltproc")
 endif()
 #
 # Cleanup

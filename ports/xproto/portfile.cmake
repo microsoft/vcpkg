@@ -1,6 +1,3 @@
-## requires AUTOCONF, LIBTOOL and PKCONF
-message(STATUS "${PORT} requires autoconf, libtool and pkconf from the system package manager!")
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,8 +11,8 @@ vcpkg_from_gitlab(
         windows_mean_and_lean.patch
         #winsock2.patch # include winsock2.h before windows.h
         configure_msys.patch
-        xwindows.patch
-        xwinsock.patch 
+        xwindows.patch #TODO: Redo these patches to be less intrusive
+        xwinsock.patch #TODO: Redo these patches to be less intrusive
         xmd_bool.patch
 ) 
 
@@ -58,12 +55,12 @@ vcpkg_configure_make(
     OPTIONS ${OPTIONS} --with-xmlto=no --with-fop=no
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig()
+list(APPEND IGNORED_PACKAGES xau)
+# xproto install a few .pc files with not yet available packages. 
+vcpkg_fixup_pkgconfig(SYSTEM_PACKAGES ${IGNORED_PACKAGES}) 
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/")
 file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")

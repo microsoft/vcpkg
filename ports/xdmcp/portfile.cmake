@@ -1,5 +1,4 @@
-message(STATUS "----- ${PORT} requires autoconf, libtool and pkconf from the system package manager! -----")
-SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled) # this is a lie but the lib has a different name than the dll
+#SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled) # this is a lie but the lib has a different name than the dll
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -25,8 +24,6 @@ vcpkg_configure_make(
     OPTIONS ${OPTIONS} --enable-unit-tests=no
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
 
 vcpkg_install_make()

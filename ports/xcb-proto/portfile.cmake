@@ -1,6 +1,3 @@
-## requires AUTOCONF, LIBTOOL and PKCONF
-message(STATUS "----- ${PORT} requires autoconf, libtool, pkconf and xmllint from the system package manager! -----")
-
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) 
 
 find_program(XMLLINT_PATH NAMES xmllint PATHS "${CURRENT_INSTALLED_DIR}/tools/libxml2")
@@ -42,8 +39,7 @@ vcpkg_configure_make(
     #OPTIONS
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
+
 )
 
 vcpkg_install_make()
