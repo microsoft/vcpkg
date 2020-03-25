@@ -1,0 +1,18 @@
+diff --git a/include/spdlog/fmt/fmt.h b/include/spdlog/fmt/fmt.h
+index 289979aa..9dd69c4c 100644
+--- a/include/spdlog/fmt/fmt.h
++++ b/include/spdlog/fmt/fmt.h
+@@ -12,3 +12,3 @@
+
+-#if !defined(SPDLOG_FMT_EXTERNAL)
++#if 0 // !defined(SPDLOG_FMT_EXTERNAL)
+ #ifdef SPDLOG_HEADER_ONLY
+diff --git a/include/spdlog/fmt/ostr.h b/include/spdlog/fmt/ostr.h
+index f82eb679..71032b98 100644
+--- a/include/spdlog/fmt/ostr.h
++++ b/include/spdlog/fmt/ostr.h
+@@ -10,3 +10,3 @@
+
+-#if !defined(SPDLOG_FMT_EXTERNAL)
++#if 0 // !defined(SPDLOG_FMT_EXTERNAL)
+ #ifdef SPDLOG_HEADER_ONLY

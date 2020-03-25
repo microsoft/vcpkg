@@ -8,6 +8,7 @@ vcpkg_from_github(
         disable-master-project-check.patch
         fix-feature-export.patch
         fix-error-4275.patch # Actually a defect in fmtlib
+        fix-includes-external-fmt.patch
 )
 
 vcpkg_check_features(
