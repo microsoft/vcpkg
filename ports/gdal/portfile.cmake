@@ -189,6 +189,26 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     set(HAVE_SPATIALITE "-DHAVE_SPATIALITE")
   endif()
 
+  # to support kmz format
+  if ("kmz" IN_LIST FEATURES OR EXISTS "${CURRENT_INSTALLED_DIR}/include/kml")
+    # Setup libkml libraries + include path
+    file(TO_NATIVE_PATH "-I${CURRENT_INSTALLED_DIR}/include/kml -I${CURRENT_INSTALLED_DIR}/include" LIBKML_INCLUDE_DIR)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/kmlbase.lib ${CURRENT_INSTALLED_DIR}/lib/kmlconvenience.lib ${CURRENT_INSTALLED_DIR}/lib/kmldom.lib ${CURRENT_INSTALLED_DIR}/lib/kmlengine.lib ${CURRENT_INSTALLED_DIR}/lib/kmlregionator.lib ${CURRENT_INSTALLED_DIR}/lib/kmlxsd.lib ${CURRENT_INSTALLED_DIR}/lib/minizip.lib ${CURRENT_INSTALLED_DIR}/lib/expat.lib ${CURRENT_INSTALLED_DIR}/lib/uriparser.lib ${CURRENT_INSTALLED_DIR}/lib/zlib.lib" LIBKML_LIBRARY_REL)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/kmlbase.lib ${CURRENT_INSTALLED_DIR}/debug/lib/kmlconvenience.lib ${CURRENT_INSTALLED_DIR}/debug/lib/kmldom.lib ${CURRENT_INSTALLED_DIR}/debug/lib/kmlengine.lib ${CURRENT_INSTALLED_DIR}/debug/lib/kmlregionator.lib ${CURRENT_INSTALLED_DIR}/debug/lib/kmlxsd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/minizip.lib ${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib ${CURRENT_INSTALLED_DIR}/debug/lib/uriparser.lib ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib" LIBKML_LIBRARY_DBG)
+
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/bz2.lib")
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/bz2.lib" BZIP2_LIBRARY_REL)
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/bz2d.lib" BZIP2_LIBRARY_DBG)
+        set(LIBKML_LIBRARY_REL "${LIBKML_LIBRARY_REL} ${BZIP2_LIBRARY_REL}")
+        set(LIBKML_LIBRARY_DBG "${LIBKML_LIBRARY_DBG} ${BZIP2_LIBRARY_DBG}")
+    endif()
+
+    list(APPEND NMAKE_OPTIONS LIBKML_DIR=${CURRENT_INSTALLED_DIR})
+    list(APPEND NMAKE_OPTIONS LIBKML_INCLUDE=${LIBKML_INCLUDE_DIR})
+    list(APPEND NMAKE_OPTIONS_REL LIBKML_LIBS=${LIBKML_LIBRARY_REL})
+    list(APPEND NMAKE_OPTIONS_DBG LIBKML_LIBS=${LIBKML_LIBRARY_DBG})
+  endif()
+
   list(APPEND NMAKE_OPTIONS
       GDAL_HOME=${NATIVE_PACKAGES_DIR}
       DATADIR=${NATIVE_DATA_DIR}
