@@ -131,6 +131,12 @@ if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
 endif()
 
+if("nvcodec" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
+else()
+    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
+endif()
+
 set(OPTIONS_CROSS "")
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -177,6 +183,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
+set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 message(STATUS "Building Options: ${OPTIONS}")
 

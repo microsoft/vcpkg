@@ -30,7 +30,7 @@ namespace vcpkg
     {
         struct CtrlCStateMachine
         {
-            CtrlCStateMachine() : m_number_of_external_processes(0) {}
+            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) {}
 
             void transition_to_spawn_process() noexcept
             {
@@ -91,17 +91,47 @@ namespace vcpkg
                 }
                 else
                 {
-                    // We are currently blocked on a child process. Upon return, transition_from_spawn_process()
-                    // will be called and exit.
+                    // We are currently blocked on a child process.
+                    // If none of the child processes are interactive, use the Job Object to terminate the tree.
+                    if (m_in_interactive.load() == 0)
+                    {
+                        auto job = m_global_job.exchange(NULL);
+                        if (job != NULL)
+                        {
+                            ::CloseHandle(job);
+                        }
+                    }
                 }
             }
 
+            void initialize_job()
+            {
+                m_global_job = CreateJobObjectW(NULL, NULL);
+                if (m_global_job != NULL)
+                {
+                    JOBOBJECT_EXTENDED_LIMIT_INFORMATION info = {};
+                    info.BasicLimitInformation.LimitFlags =
+                        JOB_OBJECT_LIMIT_BREAKAWAY_OK | JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+                    ::SetInformationJobObject(m_global_job, JobObjectExtendedLimitInformation, &info, sizeof(info));
+                    ::AssignProcessToJobObject(m_global_job, ::GetCurrentProcess());
+                }
+            }
+
+            void enter_interactive() { ++m_in_interactive; }
+            void exit_interactive() { --m_in_interactive; }
+
         private:
             std::atomic<int> m_number_of_external_processes;
+            std::atomic<HANDLE> m_global_job;
+            std::atomic<int> m_in_interactive;
         };
 
         static CtrlCStateMachine g_ctrl_c_state;
     }
+
+    void System::initialize_global_job_object() { g_ctrl_c_state.initialize_job(); }
+    void System::enter_interactive_subprocess() { g_ctrl_c_state.enter_interactive(); }
+    void System::exit_interactive_subprocess() { g_ctrl_c_state.exit_interactive(); }
 #endif
 
     fs::path System::get_exe_path_of_current_process()
@@ -428,7 +458,7 @@ namespace vcpkg
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto process_info = windows_create_process(cmd_line, {}, DETACHED_PROCESS);
+        auto process_info = windows_create_process(cmd_line, {}, DETACHED_PROCESS | CREATE_BREAKAWAY_FROM_JOB);
         if (auto p = process_info.get())
         {
             p->close_handles();
