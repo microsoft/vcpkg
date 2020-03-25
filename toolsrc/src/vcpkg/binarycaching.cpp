@@ -84,7 +84,11 @@ namespace
 
                     int archive_result = decompress_archive(paths, spec, archive_path).exit_code;
 
-                    if (archive_result != 0)
+                    if (archive_result == 0)
+                    {
+                        return RestoreResult::success;
+                    }
+                    else
                     {
                         System::print2("Failed to decompress archive package\n");
                         if (action.build_options.purge_decompress_failure == Build::PurgeDecompressFailure::NO)
@@ -96,10 +100,6 @@ namespace
                             System::print2("Purging bad archive\n");
                             fs.remove(archive_path, ec);
                         }
-                    }
-                    else
-                    {
-                        return RestoreResult::success;
                     }
                 }
             }
