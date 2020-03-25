@@ -22,7 +22,19 @@ vcpkg_configure_meson(
 )
 vcpkg_install_meson()
 
-vcpkg_fixup_pkgconfig()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/" AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}wayland-private${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
+                 DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}wayland-util${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
+             DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/" AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}wayland-private${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
+                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}wayland-util${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
+                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES "-pthread")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -39,12 +51,16 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static OR NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wayland-scanner.pc")
-file(READ "${_file}" _contents)
-string(REPLACE "bindir=\${prefix}/bin" "bindir=\${prefix}/tools/${PORT}" _contents "${_contents}")
-file(WRITE "${_file}" "${_contents}")
+if(EXISTS "$_file")
+    file(READ "${_file}" _contents)
+    string(REPLACE "bindir=\${prefix}/bin" "bindir=\${prefix}/tools/${PORT}" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
 
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wayland-scanner.pc")
-file(READ "${_file}" _contents)
-string(REPLACE "bindir=\${prefix}/bin" "bindir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
-file(WRITE "${_file}" "${_contents}")
+if(EXISTS "$_file")
+    file(READ "${_file}" _contents)
+    string(REPLACE "bindir=\${prefix}/bin" "bindir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
 
