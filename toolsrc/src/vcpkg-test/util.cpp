@@ -114,21 +114,21 @@ namespace vcpkg::Test
 #elif !defined(_WIN32) // FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_STD
         return AllowSymlinks::Yes;
 #else
-        HKEY key;
-        bool allow_symlinks = true;
+        constexpr const wchar_t regkey[] =
+            LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)";
+        constexpr const wchar_t regkey_member[] = LR"(AllowDevelopmentWithoutDevLicense)";
 
-        const auto status = RegOpenKeyExW(
-            HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)", 0, 0, &key);
+        DWORD data;
+        DWORD dataSize = sizeof(data);
+        const auto status = RegGetValueW(
+            HKEY_LOCAL_MACHINE, regkey, regkey_member, RRF_RT_DWORD, nullptr, &data, &dataSize);;
 
-        if (status == ERROR_FILE_NOT_FOUND)
-        {
-            allow_symlinks = false;
+        if (status == ERROR_SUCCESS && data == 1) {
+            return AllowSymlinks::Yes;
+        } else {
             std::clog << "Symlinks are not allowed on this system\n";
+            return AllowSymlinks::No;
         }
-
-        if (status == ERROR_SUCCESS) RegCloseKey(key);
-
-        return allow_symlinks ? AllowSymlinks::Yes : AllowSymlinks::No;
 #endif
     }
     const static AllowSymlinks CAN_CREATE_SYMLINKS = internal_can_create_symlinks();
