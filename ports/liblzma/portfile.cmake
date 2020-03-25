@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xz-mirror/xz
@@ -10,17 +8,31 @@ vcpkg_from_github(
         enable-uwp-builds.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+#maybe need to keep CMake for UWP builds?
+#file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    #SKIP_CONFIGURE
+    #NO_DEBUG
+    #AUTO_HOST
+    #AUTO_DST
+    #PRERUN_SHELL ${SHELL_PATH}
+    #OPTIONS 
 )
 
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_install_make()
 
+# vcpkg_configure_cmake(
+    # SOURCE_PATH ${SOURCE_PATH}
+    # PREFER_NINJA
+# )
+# vcpkg_install_cmake()
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
+#vcpkg_fixup_cmake_targets()
+
+#Move this out of the portfile
 file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake
 "
 include(\${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
@@ -30,7 +42,7 @@ find_path(LibLZMA_INCLUDE_DIR
 )
 if(NOT LibLZMA_LIBRARY)
     find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma LZMA LibLZMA PATHS \${_IMPORT_PREFIX}/lib/)
-    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd PATHS \${_IMPORT_PREFIX}/debug/lib/)
+    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd lzma LZMA LibLZMA PATHS \${_IMPORT_PREFIX}/debug/lib/)
     select_library_configurations(LibLZMA)
 endif()
 set(LibLZMA_INCLUDE_DIRS \${LibLZMA_INCLUDE_DIR} CACHE PATH \"\")
@@ -71,7 +83,7 @@ set(LIBLZMA_FOUND TRUE CACHE BOOL \"\")
 ")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake "add_definitions(-DLZMA_API_STATIC)")
+  file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake "add_definitions(-DLZMA_API_STATIC)") # should also be added to the lzma.h for correct VS integration 
 endif()
 
 if (VCPKG_BUILD_TYPE STREQUAL debug)
@@ -80,6 +92,10 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/locale/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
 
-file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
