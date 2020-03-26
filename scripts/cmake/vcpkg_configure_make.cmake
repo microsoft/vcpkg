@@ -152,6 +152,7 @@ function(vcpkg_configure_make)
             list(APPEND MSYS_REQUIRE_PACKAGES autoconf 
                                               autoconf-archive
                                               automake
+                                              autopoint
                                               m4
                 )
         endif()
@@ -313,12 +314,16 @@ function(vcpkg_configure_make)
     set(_GENERATED_CONFIGURE FALSE)
     if (_csc_AUTOCONFIG OR REQUIRES_AUTOCONFIG)
         find_program(AUTORECONF autoreconf REQUIRED)
-        find_program(LIBTOOL libtool REQUIRED)
         if(NOT AUTORECONF)
             message(STATUS "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
         endif()
+        find_program(LIBTOOL libtool REQUIRED)
         if(NOT LIBTOOL)
             message(STATUS "${PORT} requires libtool from the system package manager (example: \"sudo apt-get install libtool libtool-bin\")")
+        endif()
+        find_program(AUTOPOINT autopoint REQUIRED)
+        if(NOT AUTOPOINT)
+            message(STATUS "${PORT} requires autopoint from the system package manager (example: \"sudo apt-get install autopoint\")")
         endif()
         message(STATUS "Generating configure for ${TARGET_TRIPLET}")
         if (CMAKE_HOST_WIN32)
