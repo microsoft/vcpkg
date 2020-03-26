@@ -78,4 +78,5 @@ file(GLOB_RECURSE _files "${SOURCE_PATH}/COPYING*")
 file(INSTALL ${_files} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/X11/extensions/vldXvMC.h") #duplicate with xmvc
 

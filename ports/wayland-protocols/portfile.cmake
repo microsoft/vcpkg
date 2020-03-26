@@ -29,18 +29,13 @@ vcpkg_install_make()
 
 vcpkg_fixup_pkgconfig()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig")
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/pkgconfig/")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
