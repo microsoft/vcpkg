@@ -363,7 +363,7 @@ function(vcpkg_configure_make)
         message(STATUS "Prerun shell with ${TARGET_TRIPLET}")
         vcpkg_execute_required_process(
             COMMAND ${base_cmd} -c "${_csc_PRERUN_SHELL}"
-            WORKING_DIRECTORY "${TAR_DIR}"
+            WORKING_DIRECTORY "${SRC_DIR}"
             LOGNAME prerun-${TARGET_TRIPLET}
         )
     endif()
