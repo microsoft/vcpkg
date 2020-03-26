@@ -58,6 +58,9 @@ while test $# -gt 0; do
     cru) #Eat; No similar option for lib
         ;;
     
+    rc) #Eat; No similar option for lib
+        ;;
+    
     x) # Extract archive
         has_x=1
         ;;
