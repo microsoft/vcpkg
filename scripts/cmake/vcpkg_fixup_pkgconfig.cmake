@@ -161,7 +161,7 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
     string(REGEX MATCH "Requires.private:[^\n]+" _pkg_private_list_tmp "${_contents}")
     string(REGEX REPLACE "Requires.private:[\t ]" "" _pkg_private_list_tmp "${_pkg_private_list_tmp}")
     string(REGEX REPLACE "[\t ]*,[\t ]*" ";" _pkg_private_list_tmp "${_pkg_private_list_tmp}")
-    string(REGEX REPLACE "[\t ]*(>|=)+[\t ]]*([0-9]+|\\.)+" " " _pkg_private_list_tmp "${_pkg_private_list_tmp}")
+    string(REGEX REPLACE "[\t ]*(>|=)+[\t ]*([0-9]+|\\.)+" " " _pkg_private_list_tmp "${_pkg_private_list_tmp}")
     string(REGEX REPLACE "[\t ]+" ";" _pkg_private_list_tmp "${_pkg_private_list_tmp}")
     
     debug_message("Required packages: ${_pkg_list_tmp}")
