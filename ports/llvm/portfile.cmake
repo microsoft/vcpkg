@@ -7,8 +7,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
-    REF llvmorg-10.0.0-rc5
-    SHA512 d1fd91663e76474cd375670b7bcadede45dc0b4ffa7b02bad541f22c861f8fd1995f793332cd8df3b56eb40f8947b18ba29e72c064bf8022f8bd4914da63a31b
+    REF llvmorg-10.0.0
+    SHA512 baa182d62fef1851836013ae8a1a00861ea89769778d67fb97b407a9de664e6c85da2af9c5b3f75d2bf34ff6b00004e531ca7e4b3115a26c0e61c575cf2303a0
     HEAD_REF master
     PATCHES
         0001-allow-to-use-commas.patch
@@ -85,7 +85,7 @@ if("polly" IN_LIST FEATURES)
 endif()
 
 # Use comma-separated string for enabled projects instead of semicolon-separated string.
-# See issue https://github.com/microsoft/vcpkg/issues/4320
+# See https://github.com/microsoft/vcpkg/issues/4320
 string(REPLACE ";" "," LLVM_ENABLE_PROJECTS "${LLVM_ENABLE_PROJECTS}")
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -106,6 +106,9 @@ vcpkg_configure_cmake(
         -DPYTHON_EXECUTABLE=${PYTHON3}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         -DLLVM_PARALLEL_LINK_JOBS=1
+        # Disable build LLVM-C.dll (Windows only) due to doesn't compile with CMAKE_DEBUG_POSTFIX
+        -DLLVM_BUILD_LLVM_C_DYLIB=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
@@ -117,9 +120,9 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         "${CURRENT_PACKAGES_DIR}/share/llvm/*-release.cmake"
         "${CURRENT_PACKAGES_DIR}/share/clang/*-release.cmake"
     )
-    # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
     foreach(_target IN LISTS _release_targets)
         file(READ ${_target} _contents)
+        # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
         # Rename `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
         string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/bin" _contents "${_contents}")
         file(WRITE ${_target} "${_contents}")
@@ -130,20 +133,28 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(GLOB_RECURSE _debug_targets
         "${CURRENT_PACKAGES_DIR}/share/llvm/*-debug.cmake"
         "${CURRENT_PACKAGES_DIR}/share/clang/*-debug.cmake"
-        )
-    # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
+    )
     foreach(_target IN LISTS _debug_targets)
         file(READ ${_target} _contents)
-        # Rename `/debug/tools/${PORT}` to `debug/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
-        string(REPLACE "{_IMPORT_PREFIX}/debug/tools/${PORT}" "{_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
+        # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
+        # Rename `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
+        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/bin" _contents "${_contents}")
+        # Debug shared libraries should have `d` suffix and should be installed in the `/bin` directory.
+        # Rename `/debug/bin/` to `/bin`
+        string(REPLACE "{_IMPORT_PREFIX}/debug/bin/" "{_IMPORT_PREFIX}/bin/" _contents "${_contents}")
         file(WRITE ${_target} "${_contents}")
     endforeach()
-endif()
 
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-)
+    # Install debug shared libraries in the `/bin` directory
+    file(GLOB _debug_shared_libs ${CURRENT_PACKAGES_DIR}/debug/bin/*${CMAKE_SHARED_LIBRARY_SUFFIX})
+    file(INSTALL ${_debug_shared_libs} DESTINATION ${CURRENT_PACKAGES_DIR}/bin FOLLOW_SYMLINK_CHAIN)
+
+    file(REMOVE_RECURSE
+        ${CURRENT_PACKAGES_DIR}/debug/bin
+        ${CURRENT_PACKAGES_DIR}/debug/include
+        ${CURRENT_PACKAGES_DIR}/debug/share
+    )
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)
