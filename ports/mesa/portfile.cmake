@@ -71,22 +71,24 @@ else()
                              -D opengl=true
                              -D egl=true
                              -D gles1=true
-                             -D gles2=true)
+                             -D gles2=true
+    )
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-        -D gles-lib-suffix=_mesa
-        -D egl-lib-suffix=_mesa
+        #-D gles-lib-suffix=_mesa
+        #-D egl-lib-suffix=_mesa
         "${MESA_OPTIONS}"
 )
 vcpkg_install_meson()
-
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+
 
 #installed by egl-registry
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR)

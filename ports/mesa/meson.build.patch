@@ -2,6 +2,17 @@ diff --git a/meson.build b/meson.build
 index 7e2295b59..8dabf2054 100644
 --- a/meson.build
 +++ b/meson.build
+@@ -521,8 +521,8 @@ dep_xvmc = null_dep
+ dep_xv = null_dep
+ with_gallium_xvmc = false
+ if _xvmc != 'false'
+-  dep_xvmc = dependency('xvmc', version : '>= 1.0.6', required : _xvmc == 'true')
+-  dep_xv = dependency('xv', required : _xvmc == 'true')
++  dep_xvmc = dependency('xvmc', version : '>= 1.0.6', required : _xvmc == 'true', static: true)
++  dep_xv = dependency('xv', required : _xvmc == 'true', static: true)
+   with_gallium_xvmc = dep_xvmc.found() and dep_xv.found()
+ endif
+ 
 @@ -1577,21 +1577,21 @@ dep_xcb_xrandr = null_dep
  dep_xlib_xrandr = null_dep
  if with_platform_x11
