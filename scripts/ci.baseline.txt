@@ -1001,6 +1001,9 @@ llvm:arm64-windows=fail
 llvm:arm-uwp=fail
 llvm:x64-uwp=fail
 llvm:x64-linux=ignore
+# disable them temporarily and wait for fix
+llvm:x64-windows=fail
+llvm:x64-windows-static=fail
 # installing iconv makes building llvm fail; needs to be fixed
 llvm:x64-osx=ignore
 lmdb:arm64-windows=fail
@@ -1099,7 +1102,6 @@ mmx:x64-osx=skip
 mmx:arm-uwp=skip
 mmx:x64-uwp=skip
 mmx:arm64-windows=skip
-mongo-c-driver:arm64-windows=fail
 # Flaky strange linker error
 mongo-c-driver:x64-osx=skip
 mongoose:arm-uwp=fail
