@@ -83,6 +83,7 @@ function(vcpkg_configure_meson)
         list(APPEND _vcm_OPTIONS --default-library static)
     endif()
     
+    list(APPEND _vcm_OPTIONS --libdir lib) # else meson install into an architecture describing folder
     list(APPEND _vcm_OPTIONS_DEBUG --prefix ${CURRENT_PACKAGES_DIR}/debug --includedir ../include)
     list(APPEND _vcm_OPTIONS_RELEASE --prefix  ${CURRENT_PACKAGES_DIR})
     
