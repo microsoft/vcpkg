@@ -303,6 +303,7 @@ __pycache__/
 !triplets/community/x86-uwp.cmake
 !triplets/community/x86-windows-static.cmake
 !triplets/community/x86-windows-static-md.cmake
+!triplets/community/x64-osx-dynamic.cmake
 !triplets/arm-uwp.cmake
 !triplets/x64-uwp.cmake
 !triplets/x64-windows.cmake

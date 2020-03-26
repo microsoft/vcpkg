@@ -31,6 +31,11 @@ else()
     set(ENABLE_DLL_EXPORT ON)
 endif()
 
+set(OPTIONS)
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+  list(APPEND OPTIONS -DFT_DISABLE_FIND_PACKAGE_Harfbuzz=TRUE)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -39,6 +44,7 @@ vcpkg_configure_cmake(
         -DFT_WITH_ZLIB=ON # Force system zlib.
         ${FEATURE_OPTIONS}
         -DENABLE_DLL_EXPORT=${ENABLE_DLL_EXPORT}
+        ${OPTIONS}
 )
 
 vcpkg_install_cmake()

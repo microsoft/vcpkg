@@ -152,6 +152,7 @@
     <ClInclude Include="..\include\vcpkg\base\files.h" />
     <ClInclude Include="..\include\vcpkg\base\graphs.h" />
     <ClInclude Include="..\include\vcpkg\base\hash.h" />
+    <ClInclude Include="..\include\vcpkg\base\ignore_errors.h" />
     <ClInclude Include="..\include\vcpkg\base\lazy.h" />
     <ClInclude Include="..\include\vcpkg\base\lineinfo.h" />
     <ClInclude Include="..\include\vcpkg\base\machinetype.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="..\include\vcpkg\base\util.h" />
     <ClInclude Include="..\include\vcpkg\base\view.h" />
     <ClInclude Include="..\include\vcpkg\base\zstringview.h" />
+    <ClInclude Include="..\include\vcpkg\binarycaching.h" />
     <ClInclude Include="..\include\vcpkg\binaryparagraph.h" />
     <ClInclude Include="..\include\vcpkg\build.h" />
     <ClInclude Include="..\include\vcpkg\cmakevars.h" />
@@ -228,6 +230,7 @@
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.process.cpp" />
+    <ClCompile Include="..\src\vcpkg\binarycaching.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
     <ClCompile Include="..\src\vcpkg\cmakevars.cpp" />

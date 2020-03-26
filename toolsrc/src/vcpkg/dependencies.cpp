@@ -403,6 +403,15 @@ namespace vcpkg::Dependencies
         const std::string features = Strings::join(",", feature_list);
         return Strings::format("%s[%s]:%s", this->spec.name(), features, this->spec.triplet());
     }
+    const std::string& InstallPlanAction::public_abi() const
+    {
+        if (auto p = pre_build_info.get())
+        {
+            if (auto q = p->get()->public_abi_override.get()) return *q;
+        }
+        if (auto p = installed_package.get()) return p->core->package.abi;
+        return package_abi.value_or_exit(VCPKG_LINE_INFO);
+    }
 
     bool InstallPlanAction::compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right)
     {
