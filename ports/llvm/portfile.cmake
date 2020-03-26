@@ -147,7 +147,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
     # Install debug shared libraries in the `/bin` directory
     file(GLOB _debug_shared_libs ${CURRENT_PACKAGES_DIR}/debug/bin/*${CMAKE_SHARED_LIBRARY_SUFFIX})
-    file(INSTALL ${_debug_shared_libs} DESTINATION ${CURRENT_PACKAGES_DIR}/bin FOLLOW_SYMLINK_CHAIN)
+    file(INSTALL ${_debug_shared_libs} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/debug/bin
