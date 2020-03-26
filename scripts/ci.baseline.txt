@@ -1467,7 +1467,6 @@ qhull:x64-uwp=ignore
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
-qscintilla:x64-linux=fail
 qscintilla:x64-osx=fail
 qt5-activeqt:x64-linux=fail
 qt5-activeqt:x64-osx=fail
