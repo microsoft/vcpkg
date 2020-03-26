@@ -74,7 +74,11 @@ function(vcpkg_configure_meson)
     string(APPEND MESON_RELEASE_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS_RELEASE${MESON_CMAKE_FLAG_SUFFIX}}")
     
     # select meson cmd-line options
-    list(APPEND _vcm_OPTIONS "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/share']")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND _vcm_OPTIONS "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/share']")
+    else()
+        list(APPEND _vcm_OPTIONS "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}']")
+    endif()
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
