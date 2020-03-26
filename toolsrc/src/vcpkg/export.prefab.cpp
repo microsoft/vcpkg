@@ -4,6 +4,7 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/export.h>
@@ -367,11 +368,37 @@ namespace vcpkg::Export::Prefab
 
         std::error_code error_code;
 
+        std::unordered_map<std::string, std::set<PackageSpec>> empty_package_dependencies;
+
         //
 
         for (const auto& action : export_plan)
         {
+
             const std::string name = action.spec.name();
+            auto dependencies = action.dependencies(default_triplet);
+
+            const auto build_info = Build::read_build_info(utils, paths.build_info_file_path(action.spec));
+            const bool is_empty_package  = build_info.policies.is_enabled(Build::BuildPolicy::EMPTY_PACKAGE);
+
+
+            if(is_empty_package){
+                empty_package_dependencies[name] = std::set<PackageSpec>();
+                for(auto dependency : dependencies){
+                    if(empty_package_dependencies.find(dependency.name()) != empty_package_dependencies.end()){
+                        auto& child_deps  = empty_package_dependencies[name];
+                        auto& parent_deps = empty_package_dependencies[dependency.name()];
+                        for(auto parent_dep: parent_deps){
+                             child_deps.insert(parent_dep);
+                        }
+                    }
+                    else {
+                        empty_package_dependencies[name].insert(dependency);
+                    }
+                }
+                continue;
+            }
+
             const fs::path per_package_dir_path = raw_exported_dir_path / name;
 
             const auto& binary_paragraph = action.core_paragraph().value_or_exit(VCPKG_LINE_INFO);
@@ -421,15 +448,27 @@ namespace vcpkg::Export::Prefab
             pm.schema = 1;
             pm.version = norm_version;
 
-            auto dependencies = action.dependencies(default_triplet);
+            std::set<PackageSpec> dependencies_minus_empty_packages;
+
+            for(auto dependency: dependencies){
+                if(empty_package_dependencies.find(dependency.name()) != empty_package_dependencies.end()){
+                    for(auto& empty_package_dep: empty_package_dependencies[dependency.name()]){
+                        dependencies_minus_empty_packages.insert(empty_package_dep);
+                    }
+                }
+                else {
+                    dependencies_minus_empty_packages.insert(dependency);
+                }
+            }
+
             std::vector<std::string> pom_dependencies;
 
-            if (dependencies.size() > 0)
+            if (dependencies_minus_empty_packages.size() > 0)
             {
                 pom_dependencies.push_back("\n<dependencies>");
             }
 
-            for (const auto& it : dependencies)
+            for (const auto& it : dependencies_minus_empty_packages)
             {
                 std::string maven_pom = R"(    <dependency>
         <groupId>@GROUP_ID@</groupId>
@@ -445,14 +484,16 @@ namespace vcpkg::Export::Prefab
                 pm.dependencies.push_back(it.name());
             }
 
-            if (dependencies.size() > 0)
+            if (dependencies_minus_empty_packages.size() > 0)
             {
                 pom_dependencies.push_back("</dependencies>\n");
             }
 
-            System::print2(Strings::format(
+            if(prefab_options.enable_debug){
+                System::print2(Strings::format(
                 "[DEBUG]\n\tWriting manifest\n\tTo %s\n\tWriting prefab meta data\n\tTo %s\n\n",
                                 manifest_path.generic_u8string(), prefab_path.generic_u8string()));
+            }
 
             utils.write_contents(manifest_path, manifest, VCPKG_LINE_INFO);
             utils.write_contents(prefab_path, pm.to_json(), VCPKG_LINE_INFO);
