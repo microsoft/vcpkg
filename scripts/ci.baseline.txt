@@ -1001,6 +1001,9 @@ llvm:arm64-windows=fail
 llvm:arm-uwp=fail
 llvm:x64-uwp=fail
 llvm:x64-linux=ignore
+# disable them temporarily and wait for fix
+llvm:x64-windows=fail
+llvm:x64-windows-static=fail
 # installing iconv makes building llvm fail; needs to be fixed
 llvm:x64-osx=ignore
 lmdb:arm64-windows=fail
