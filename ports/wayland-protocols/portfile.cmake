@@ -26,16 +26,16 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-
+if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig")
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/")
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
+endif()
 vcpkg_fixup_pkgconfig()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig")
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/pkgconfig/")
-endif()
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

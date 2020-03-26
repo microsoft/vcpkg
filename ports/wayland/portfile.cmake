@@ -50,15 +50,16 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static OR NOT VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+#TODO: Check this again!
 set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wayland-scanner.pc")
-if(EXISTS "$_file")
+if(EXISTS "${_file}")
     file(READ "${_file}" _contents)
     string(REPLACE "bindir=\${prefix}/bin" "bindir=\${prefix}/tools/${PORT}" _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
 endif()
 
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wayland-scanner.pc")
-if(EXISTS "$_file")
+if(EXISTS "${_file}")
     file(READ "${_file}" _contents)
     string(REPLACE "bindir=\${prefix}/bin" "bindir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
