@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.mpfr.org/mpfr-4.0.2/mpfr-4.0.2.tar.xz" "https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz"
     FILENAME "mpfr-4.0.2.tar.xz"
