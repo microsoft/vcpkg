@@ -6,7 +6,7 @@ vcpkg_from_gitlab(
     REF 99f0821bfbff1f23d19b8f316f2c559744b28e51 #1.13.10
     SHA512  abbe1290eb93a23f113a8e878d077a5b2d1b4b89750e53b71ce389cee9931155d6bb858d3757f74505b6f6b3f2cea6654c3bb2dd0ebe3415277d05eaa296d4a8
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
+    PATCHES cmake.dep.patch #patch name
 ) 
 
 # vcpkg_configure_make(
@@ -23,6 +23,7 @@ vcpkg_from_gitlab(
     # PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
     # PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 # )
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
