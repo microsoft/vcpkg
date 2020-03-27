@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" "arm" "arm64")
+
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
