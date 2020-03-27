@@ -10,8 +10,8 @@ vcpkg_from_github(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.in DESTINATION ${SOURCE_PATH})
 
-if ("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_OSX)
-    message(FATAL_ERROR "Feture tools only support Windows and Linux platform.")
+if ("tools" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feture tools only support Windows platform.")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
