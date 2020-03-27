@@ -68,6 +68,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng16.pc")
+if(EXISTS ${_file})
+    file(READ "${_file}" _contents)
+    string(REPLACE "-lpng16" "-lpng16d" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
