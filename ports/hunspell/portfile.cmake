@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hunspell/hunspell
@@ -12,9 +10,18 @@ vcpkg_from_github(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.in DESTINATION ${SOURCE_PATH})
 
+if ("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_OSX)
+    message(FATAL_ERROR "Feture tools only support Windows and Linux platform.")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tools BUILD_TOOLS
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -24,11 +31,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/hunspell)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/hunspell/COPYING ${CURRENT_PACKAGES_DIR}/share/hunspell/copyright)
-
-file(COPY ${SOURCE_PATH}/COPYING.LESSER DESTINATION ${CURRENT_PACKAGES_DIR}/share/hunspell)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/hunspell/COPYING.LESSER ${CURRENT_PACKAGES_DIR}/share/hunspell/copyright-lgpl)
-
-file(COPY ${SOURCE_PATH}/COPYING.MPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/hunspell)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/hunspell/COPYING.MPL ${CURRENT_PACKAGES_DIR}/share/hunspell/copyright-mpl)
+file(INSTALL ${SOURCE_PATH}/COPYING.LESSER DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright-lgpl)
+file(INSTALL ${SOURCE_PATH}/COPYING.MPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright-mpl)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
