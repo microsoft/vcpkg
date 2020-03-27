@@ -1,7 +1,8 @@
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(PATCHES meson.build.patch)
+    set(PATCHES meson.build.patch 
+                dependency.patch)
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        set(ENV{LDFLAGS} "$ENV{LDFLAGS} -lxau -lxdmcp -lx11-xcb")
+       #set(VCPKG_LINKER_FLAGS "-lxau -lxdmcp -lx11-xcb")
     endif()
 endif()
 
@@ -10,8 +11,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO anholt/libepoxy
-    REF 1.5.3
-    SHA512 e831f4f918f08fd5f799501efc0e23b8d404478651634f5e7b35f8ebcc29d91abc447ab20da062dde5be75e18cb39ffea708688e6534f7ab257b949f9c53ddc8
+    REF 09edbe01d901c0f01e866aa08455c6d9ee6fd0ac # 1.5.4
+    SHA512 cbe9fb1db2c03874c10632b572990e313d8ffdbbb1155b10e8d6f530c7c5117e7382f0c3777df91fe4ae201a6ff3ada98c793e8bcda017344885e5b7cee3ddcb
     HEAD_REF master
     PATCHES ${PATCHES})
 

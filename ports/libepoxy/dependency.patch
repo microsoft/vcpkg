@@ -1,0 +1,57 @@
+diff --git a/meson.build b/meson.build
+index 33a1477b8..99ae1c1a6 100644
+--- a/meson.build	
++++ b/meson.build
+@@ -164,20 +164,34 @@ endif
+ # Dependencies
+ dl_dep = cc.find_library('dl', required: false)
+ gl_dep = dependency('gl', required: false, static:'true')
++if not gl_dep.found()
++    gl_dep = dependency('gl', required: false)
++endif
+ egl_dep = dependency('egl', required: false, static:'true')
++if not egl_dep.found()
++    egl_dep = dependency('egl', required: false)
++endif
+ 
+ # Optional dependencies for tests
+ x11_dep = dependency('x11', required: false, static:'true')
+-
++if not x11_dep.found()
++    x11_dep = dependency('x11', required: false)
++endif
+ # GLES v2 and v1 may have pkg-config files, courtesy of downstream
+ # packagers; let's check those first, and fall back to find_library()
+ # if we fail
+ gles2_dep = dependency('glesv2', required: false, static:'true')
++if not gles2_dep.found()
++    gles2_dep = dependency('glesv2', required: false)
++endif
+ if not gles2_dep.found()
+   gles2_dep = cc.find_library('libGLESv2', required: false)
+ endif
+ 
+ gles1_dep = dependency('glesv1_cm', required: false, static:'true')
++if not gles1_dep.found()
++    gles1_dep = dependency('glesv1_cm', required: false)
++endif
+ if not gles1_dep.found()
+   gles1_dep = cc.find_library('libGLESv1_CM', required: false)
+ endif
+diff --git a/src/meson.build b/src/meson.build
+index fe092d1d0..bf8ab43b0 100644
+--- a/src/meson.build	
++++ b/src/meson.build
+@@ -63,6 +63,12 @@ if host_system == 'windows'
+   epoxy_deps += [ opengl32_dep, gdi32_dep ]
+ endif
+ 
++if x11_dep.found()
++    epoxy_deps += [ x11_dep ]
++else
++    error('X11 not found')
++endif
++
+ libepoxy = library(
+   'epoxy',
+   sources: epoxy_sources + epoxy_headers,
