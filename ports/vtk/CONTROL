@@ -21,10 +21,11 @@ Description: Python functionality for VTK
 Build-Depends: python3
 
 Feature: atlmfc
-Description: Mfc functionality for vtk on Windows
+Description: Mfc functionality for VTK on Windows
 Build-Depends: atlmfc (windows)
 
 Feature: qtopengl
 Description: OpenGL with Qt for vtk on Windows
-Build-Depends: qt5-base, qt5-tools, vtk[core]
+Build-Depends: qt5-tools, qt5-base, vtk[core]
+
 
