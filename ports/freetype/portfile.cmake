@@ -49,7 +49,15 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc")
+if(EXISTS "${_file}")
+    file(READ "${_file}" _contents)
+    string(REPLACE "-lfreetype" "-lfreetyped" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
 vcpkg_fixup_pkgconfig()
+
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/freetype2/freetype ${CURRENT_PACKAGES_DIR}/include/freetype)
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/freetype2/ft2build.h ${CURRENT_PACKAGES_DIR}/include/ft2build.h)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/freetype2)
