@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-dependency-glfw3.patch
 )
 
+file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
 
 set(BUILD_TOOLS OFF)
