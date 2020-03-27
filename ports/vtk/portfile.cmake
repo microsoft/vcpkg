@@ -8,6 +8,7 @@ set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 # Options:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     qt     VTK_WITH_QT
+    qtopengl VTK_WITH_QT_OPENGL
     mpi    VTK_Group_MPI
     python VTK_WITH_PYTHON
     openvr Module_vtkRenderingOpenVR
@@ -47,9 +48,20 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CM
 
 # =============================================================================
 # Collect CMake options for optional components
+if(VTK_WITH_QT_OPENGL)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_Group_Qt=ON
+        -DvtkGUISupportQtOpenGL=ON
+        -DModule_vtkGUISupportQtOpenGL=ON
+        -DVTK_QT_VERSION=5
+        -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF
+    )
+endif()
+
 if(VTK_WITH_QT)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_Group_Qt=ON
+        -DvtkGUISupportQtOpenGL=ON
         -DVTK_QT_VERSION=5
         -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF
     )
@@ -110,6 +122,9 @@ vcpkg_configure_cmake(
 
         # Select modules / groups to install
         -DVTK_Group_Imaging=ON
+	-DVTK_LEGACY_SILENT=ON
+	-DModule_vtkGUISupportQt=ON
+	-DModule_vtkGUISupportQtOpenGL=ON
         -DVTK_Group_Views=ON
         -DPYTHON_EXECUTABLE=${PYTHON3}
 
