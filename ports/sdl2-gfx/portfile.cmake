@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "linux" "osx")
 
 set(VERSION 1.0.4)
 
@@ -28,7 +28,6 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2-gfx)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/sdl2-gfx/COPYING ${CURRENT_PACKAGES_DIR}/share/sdl2-gfx/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
