@@ -104,6 +104,7 @@ atlmfc:x64-linux=fail
 atlmfc:x64-osx=fail
 aubio:x64-linux=fail
 aubio:x64-osx=fail
+avisynthplus:x64-windows-static=fail
 avro-c:arm-uwp=fail
 avro-c:x64-linux=fail
 avro-c:x64-osx=fail
