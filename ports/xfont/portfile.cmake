@@ -15,12 +15,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(APPEND VCPKG_CXX_FLAGS " /D_WILLWINSOCK_")
     string(APPEND VCPKG_C_FLAGS " /D_WILLWINSOCK_")
     set(DEPS_DEBUG
-                "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/debug/lib/ -lfreetype -lpng16d -lzlib -lbz2d\"")
+                "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/debug/lib/ -lfreetyped -lpng16d -lzlib -lbz2d\"")
     set(DEPS_RELEASE
                 "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/lib/ -lfreetype -lpng16 -lzlibd -lbz2\"")
 else()
     set(DEPS_DEBUG
-                "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/debug/lib/ -lfreetype -lpng16d -lz -lbz2d\"")
+                "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/debug/lib/ -lfreetyped -lpng16d -lz -lbz2d\"")
     set(DEPS_RELEASE
                 "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/lib/ -lfreetype -lpng16 -lz -lbz2\"")
 endif()
