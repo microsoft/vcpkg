@@ -5,7 +5,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(INSERT VCPKG_CXX_FLAGS 0 /arch:SSE2)
         list(INSERT VCPKG_C_FLAGS 0 /arch:SSE2)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        list(APPEND OPTIONS -Dmmx=disabled)
+        #list(APPEND OPTIONS -Dmmx=disabled)
     endif()
 endif()
 
@@ -26,12 +26,20 @@ vcpkg_extract_source_archive_ex(
     PATCHES meson.build.patch
             ${PATCHES}
 )
+# Meson install wrongly pkgconfig file!
+# vcpkg_configure_meson(
+    # SOURCE_PATH "${SOURCE_PATH}"
+    # OPTIONS ${OPTIONS}
+            # -Dmmx=enabled
+            # -Dsse2=enabled
+            # -Dssse3=enabled
+# )
+# vcpkg_install_meson()
 
-vcpkg_configure_meson(
+vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${OPTIONS}
 )
-vcpkg_install_meson()
+vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
