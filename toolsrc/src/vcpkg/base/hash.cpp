@@ -78,6 +78,7 @@ namespace vcpkg::Hash
                 {
                     top = bottom;
                     top <<= (by - 64);
+                    bottom = 0;
                 }
 
                 return *this;
@@ -101,6 +102,7 @@ namespace vcpkg::Hash
                 {
                     bottom = top;
                     bottom >>= (by - 64);
+                    top = 0;
                 }
 
                 return *this;
