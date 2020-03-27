@@ -22,9 +22,5 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-## Moves all .cmake files from /debug/share/skyr-url/ to /share/skyr-url/
-## See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
-#vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/skyr-url)
-
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/skyr-url RENAME copyright)
