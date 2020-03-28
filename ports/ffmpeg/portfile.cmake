@@ -131,6 +131,10 @@ if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
 endif()
 
+if (VCPKG_TARGET_IS_OSX)
+    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
+endif()
+
 if("nvcodec" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
 else()
@@ -152,7 +156,7 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
     set(OPTIONS "${OPTIONS} --disable-programs")
     set(OPTIONS "${OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
@@ -166,7 +170,7 @@ set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
-    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if (VCPKG_TARGET_IS_UWP)
         set(OPTIONS "${OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
     endif()
 endif()
