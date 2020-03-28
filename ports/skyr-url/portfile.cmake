@@ -15,6 +15,7 @@ vcpkg_configure_cmake(
             -DSkyr_BUILD_TESTS=OFF
             -DSkyr_BUILD_DOCS=OFF
             -DSkyr_BUILD_EXAMPLES=OFF
+            -DSkyr_WARNINGS_AS_ERRORS=OFF
 )
 
 vcpkg_install_cmake()
