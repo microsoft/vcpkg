@@ -1009,7 +1009,6 @@ llvm:x64-osx=ignore
 lmdb:arm64-windows=fail
 lmdb:arm-uwp=fail
 lmdb:x64-uwp=fail
-lodepng:x64-osx=fail
 log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:arm-uwp=fail
