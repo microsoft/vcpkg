@@ -470,7 +470,6 @@ namespace vcpkg::Build
         auto&& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
 
         std::string prepend_to_path;
-        std::string append_to_path;
 
 #if defined(_WIN32)
         const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
@@ -490,7 +489,7 @@ namespace vcpkg::Build
             fs::path git_ssh_exe_path = git_ssh_search_path / "usr" / "bin" / "ssh.exe";
             if (fs.exists(git_ssh_exe_path))
             {
-                append_to_path += git_ssh_exe_path.parent_path().u8string() + ";";
+                prepend_to_path += git_ssh_exe_path.parent_path().u8string() + ";";
                 break;
             }
         }
@@ -533,7 +532,7 @@ namespace vcpkg::Build
 
         const auto& env = build_env_cache.get_lazy({&base_env, build_env_cmd}, [&]() {
             auto clean_env =
-                System::get_modified_clean_environment(base_env, prepend_to_path, append_to_path);
+                System::get_modified_clean_environment(base_env, prepend_to_path);
             if (build_env_cmd.empty())
                 return clean_env;
             else
