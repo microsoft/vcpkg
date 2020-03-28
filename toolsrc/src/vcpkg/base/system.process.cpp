@@ -313,7 +313,7 @@ namespace vcpkg
     }
 #else
     Environment System::get_modified_clean_environment(const std::unordered_map<std::string, std::string>&,
-                                                       const std::string&, const std::string&)
+                                                       const std::string&)
     {
         return {};
     }
