@@ -16,9 +16,15 @@
 #include <set>
 #include <vector>
 
+namespace vcpkg
+{
+    struct IBinaryProvider;
+}
+
 namespace vcpkg::Dependencies
 {
     struct InstallPlanAction;
+    struct ActionPlan;
 }
 
 namespace vcpkg::Build
@@ -28,7 +34,6 @@ namespace vcpkg::Build
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
-                                 const ParsedArguments& options,
                                  const VcpkgPaths& paths);
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
@@ -148,6 +153,7 @@ namespace vcpkg::Build
                      Triplet triplet,
                      const std::unordered_map<std::string, std::string>& cmakevars);
 
+        bool load_vcvars_env;
         std::string triplet_abi_tag;
         std::string target_architecture;
         std::string cmake_system_name;
@@ -174,6 +180,7 @@ namespace vcpkg::Build
         BUILD_TYPE,
         ENV_PASSTHROUGH,
         PUBLIC_ABI_OVERRIDE,
+        LOAD_VCVARS_ENV,
     };
 
     const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
@@ -186,6 +193,7 @@ namespace vcpkg::Build
         {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
         {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
         {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
+        {"VCPKG_LOAD_VCVARS_ENV", VcpkgTripletVar::LOAD_VCVARS_ENV},
     };
 
     struct ExtendedBuildResult
@@ -201,7 +209,7 @@ namespace vcpkg::Build
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
-                                      const CMakeVars::CMakeVarProvider& var_provider,
+                                      IBinaryProvider* binaries_provider,
                                       const StatusParagraphs& status_db);
 
     enum class BuildPolicy
@@ -288,8 +296,12 @@ namespace vcpkg::Build
         fs::path tag_file;
     };
 
+    void compute_all_abis(const VcpkgPaths& paths,
+                          Dependencies::ActionPlan& action_plan,
+                          const CMakeVars::CMakeVarProvider& var_provider,
+                          const StatusParagraphs& status_db);
+
     Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
                                             const Dependencies::InstallPlanAction& config,
-                                            const PreBuildInfo& pre_build_info,
                                             Span<const AbiEntry> dependency_abis);
 }
