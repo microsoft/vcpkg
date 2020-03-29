@@ -1,5 +1,5 @@
 Source: azure-kinect-sensor-sdk
-Version: 1.4.0-alpha.0-1
+Version: 1.4.0-alpha.0-2
 Homepage: https://github.com/microsoft/Azure-Kinect-Sensor-SDK
 Description: Azure Kinect SDK is a cross platform (Linux and Windows) user mode SDK to read data from your Azure Kinect device.
 Build-Depends: azure-c-shared-utility, glfw3, gtest, imgui, libusb, spdlog, cjson, ebml, libjpeg-turbo, matroska, libsoundio, libyuv

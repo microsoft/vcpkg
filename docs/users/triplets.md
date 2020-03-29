@@ -2,20 +2,17 @@
 
 Triplet is a standard term used in cross compiling as a way to completely capture the target environment (cpu, os, compiler, runtime, etc) in a single convenient name.
 
-In Vcpkg, we use triplets to describe self-consistent builds of library sets. This means every library will be built using the same target cpu, OS, and compiler toolchain, but also CRT linkage and preferred library type.
+In Vcpkg, we use triplets to describe an imaginary "target configuration set" for every library. Within a triplet, libraries are generally built with the same configuration, but it is not a requirement. For example, you could have one triplet that builds `openssl` statically and `zlib` dynamically, one that builds them both statically, and one that builds them both dynamically (all for the same target OS and architecture). A single build will consume files from a single triplet.
 
 We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily add your own by creating a new file in the `triplets\` directory. The new triplet will immediately be available for use in commands, such as `vcpkg install boost:x86-windows-custom`.
 
 To change the triplet used by your project, such as to enable static linking, see our [Integration Document](integration.md#triplet-selection).
 
-
 ## Community triplets
 
-Triplets contained in the `triplets\community` folder are not tested by continuous integration.
+Triplets contained in the `triplets\community` folder are not tested by continuous integration, but are commonly requested by the community.
 
-These triplets contain configurations commonly requested by the community, but for which we lack the resources to properly test.
-
-Port updates may break compatibility with community triplets, such regressions won't get caught by our testing pipelines. Because of this, community involvement is paramount!
+Because we do not have continuous coverage, port updates may break compatibility with community triplets. Because of this, community involvement is paramount!
 
 We will gladly accept and review contributions that aim to solve issues with these triplets.
 
@@ -23,7 +20,7 @@ We will gladly accept and review contributions that aim to solve issues with the
 
 Community Triplets are enabled by default, when using a community triplet a message like the following one will be printed during a package install:
 
-```bash
+```no-highlight
 -- Using community triplet x86-uwp. This triplet configuration is not guaranteed to succeed.
 -- [COMMUNITY] Loading triplet configuration from: D:\src\viromer\vcpkg\triplets\community\x86-uwp.cmake
 ```
@@ -78,7 +75,28 @@ This option also has forms for configuration-specific and C flags:
 - `VCPKG_C_FLAGS_DEBUG`
 - `VCPKG_C_FLAGS_RELEASE`
 
+<a name="VCPKG_DEP_INFO_OVERRIDE_VARS"></a>
+### VCPKG_DEP_INFO_OVERRIDE_VARS
+Replaces the default computed list of triplet "Supports" terms.
+
+This option (if set) will override the default set of terms used for qualified dependency resolution and "Supports" field evaluation.
+
+See the [`Supports`](../maintainers/control-files.md#Supports) control file field documentation for more details.
+
+> Implementers' Note: this list is extracted via the `vcpkg_get_dep_info` mechanism.
+
 ## Windows Variables
+
+### VCPKG_ENV_PASSTHROUGH
+Instructs vcpkg to allow additional environment variables into the build process.
+
+On Windows, vcpkg builds packages in a special clean environment that is isolated from the current command prompt to ensure build reliability and consistency.
+
+This triplet option can be set to a list of additional environment variables that will be added to the clean environment.
+
+See also the `vcpkg env` command for how you can inspect the precise environment that will be used.
+
+> Implementers' Note: this list is extracted via the `vcpkg_get_tags` mechanism.
 
 <a name="VCPKG_VISUAL_STUDIO_PATH"></a>
 ### VCPKG_VISUAL_STUDIO_PATH
@@ -106,6 +124,10 @@ Valid settings:
 * The Visual Studio 2019 platform toolset is `v142`.
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.
+
+### VCPKG_LOAD_VCVARS_ENV
+If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment. 
+Setting `VCPKG_LOAD_VCVARS_ENV` to (true|1|on) changes this behavior so that the Visual Studio environment is setup following the same rules as if `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` was not set.
 
 ## MacOS Variables
 

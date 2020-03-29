@@ -1,11 +1,15 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.72.0"
+    $version = "1.72.0",
+    $portsDir = $null
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
-$portsDir = "$scriptsDir/../../ports"
+if ($null -eq $portsDir)
+{
+    $portsDir = "$scriptsDir/../../ports"
+}
 
 function TransformReference()
 {
@@ -46,6 +50,10 @@ function Generate()
     $controlDeps = ($Depends | sort) -join ", "
 
     $versionSuffix = ""
+    if ($PortName -eq "iostreams" -or $PortName -eq "process" -or $PortName -eq "python")
+    {
+        $versionSuffix = "-1"
+    }
 
     mkdir "$portsDir/boost-$PortName" -erroraction SilentlyContinue | out-null
     $controlLines = @(
@@ -107,6 +115,10 @@ function Generate()
     {
         $portfileLines += @("    PATCHES Removeseekpos.patch")
     }
+    if ($PortName -eq "process")
+    {
+        $portfileLines += @("    PATCHES async_pipe_header.patch")
+    }
     $portfileLines += @(
         ")"
         ""
@@ -165,9 +177,6 @@ function Generate()
                 ")"
             )
         }
-        elseif ($PortName -eq "iostreams")
-        {
-        }
         else
         {
             $portfileLines += @(
@@ -176,13 +185,11 @@ function Generate()
                 )
         }
     }
-    if ($PortName -ne "iostreams")
-    {
-        $portfileLines += @(
-            "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
-            "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
-        )
-    }
+
+    $portfileLines += @(
+        "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
+        "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
+    )
 
     if (Test-Path "$scriptsDir/post-build-stubs/$PortName.cmake")
     {
@@ -364,7 +371,7 @@ foreach ($library in $libraries)
 
         if ($library -eq "python")
         {
-            $deps += @("python3 (!osx&!linux)")
+            $deps += @("python3")
             $needsBuild = $true
         }
         elseif ($library -eq "iostreams")
