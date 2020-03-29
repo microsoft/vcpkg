@@ -1,12 +1,12 @@
 diff --git a/include/fmt/format.h b/include/fmt/format.h
-index efec5d6..9b15b48 100644
+index 01f41f5c..208a58d0 100644
 --- a/include/fmt/format.h
 +++ b/include/fmt/format.h
-@@ -33,6 +33,7 @@
- #ifndef FMT_FORMAT_H_
- #define FMT_FORMAT_H_
- 
+@@ -35,6 +35,7 @@
+
+ #include "core.h"
+
 +#pragma warning(disable:4189)
  #include <algorithm>
- #include <cassert>
+ #include <cerrno>
  #include <cmath>

@@ -193,7 +193,7 @@ namespace vcpkg
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
-        if (prebuildinfo.external_toolchain_file ||
+        if ((prebuildinfo.external_toolchain_file && !prebuildinfo.load_vcvars_env) ||
             (!prebuildinfo.cmake_system_name.empty() && prebuildinfo.cmake_system_name != "WindowsStore"))
         {
             static Toolset external_toolset = []() -> Toolset {
