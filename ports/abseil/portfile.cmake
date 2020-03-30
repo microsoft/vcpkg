@@ -11,9 +11,16 @@ vcpkg_from_github(
         fix-uwp-build.patch
 )
 
+set(CMAKE_CXX_STANDARD  )
+if("c++17" IN_LIST FEATURES)
+    set(CMAKE_CXX_STANDARD 17)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
 )
 
 vcpkg_install_cmake()

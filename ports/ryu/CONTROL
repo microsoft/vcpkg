@@ -1,4 +1,5 @@
 Source: ryu
-Version: 2.0
+Version: 2.0-1
 Homepage: https://github.com/ulfjack/ryu
 Description: Ryu generates the shortest decimal representation of a floating point number that maintains round-trip safety.
+Supports: !(uwp|arm|x86)
