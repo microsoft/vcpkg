@@ -17,7 +17,7 @@ index 91d97dc..ccebc2a 100644
     add_library (mongoc_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
     target_link_libraries (mongoc_static ${STATIC_LIBRARIES} ${BSON_LIBRARIES})
 +    if (WIN32)
-+        target_link_libraries (mongoc_shared PRIVATE Advapi32)
++        target_link_libraries (mongoc_static Advapi32)
 +    endif()
     target_include_directories (mongoc_static BEFORE PUBLIC ${MONGOC_INTERNAL_INCLUDE_DIRS})
     target_include_directories (mongoc_static PRIVATE ${PRIVATE_ZLIB_INCLUDES})
