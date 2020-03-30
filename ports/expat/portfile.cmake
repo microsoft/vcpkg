@@ -27,17 +27,16 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+# CMake's FindExpat currently doesn't look for expatd.lib
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/expatd.lib) # should use a wrapper instead!
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/expatd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/expat.lib)
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/expat/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/expat RENAME copyright)
 
 vcpkg_copy_pdbs()
-
-# CMake's FindExpat currently doesn't look for expatd.lib
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/expatd.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/expatd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/expat.lib)
-endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/expat_external.h EXPAT_EXTERNAL_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
