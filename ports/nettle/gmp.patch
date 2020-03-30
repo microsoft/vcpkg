@@ -1,0 +1,273 @@
+diff --git a/SMP/config.h b/SMP/config.h
+index 5e59a1daa..c5a658954 100644
+--- a/SMP/config.h	
++++ b/SMP/config.h
+@@ -101,7 +101,7 @@
+ #define HAVE_SYS_TYPES_H 1
+ 
+ /* Define to 1 if you have the <unistd.h> header file. */
+-#define HAVE_UNISTD_H 1
++//#define HAVE_UNISTD_H 1
+ 
+ /* Define to 1 if you have the <valgrind/memcheck.h> header file. */
+ /* #undef HAVE_VALGRIND_MEMCHECK_H */
+diff --git a/SMP/libhogweed.vcxproj b/SMP/libhogweed.vcxproj
+index cdf309639..9d37146a4 100644
+--- a/SMP/libhogweed.vcxproj	
++++ b/SMP/libhogweed.vcxproj
+@@ -1325,7 +1325,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <LargeAddressAware>true</LargeAddressAware>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;gmpd.lib%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -1457,7 +1457,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettled_winrt.lib;gmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;gmpd.lib%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+@@ -1585,7 +1585,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;gmpd.lib%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -1715,7 +1715,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettled_winrt.lib;gmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;gmpd.lib%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+@@ -2368,7 +2368,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <LargeAddressAware>true</LargeAddressAware>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;gmp.lib%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -2641,7 +2641,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettle_winrt.lib;gmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;gmp.lib%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+@@ -2915,7 +2915,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;gmp.lib%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -3186,7 +3186,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettle_winrt.lib;gmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;gmp.lib%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+diff --git a/SMP/libnettle.vcxproj b/SMP/libnettle.vcxproj
+index 9ea0d8ea7..56583e10f 100644
+--- a/SMP/libnettle.vcxproj	
++++ b/SMP/libnettle.vcxproj
+@@ -968,7 +968,7 @@
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Lib>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -1091,7 +1091,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Lib>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -1212,7 +1212,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Lib>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -1335,7 +1335,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Lib>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -1463,7 +1463,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -1595,7 +1595,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+       <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>gmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -1721,7 +1721,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -1851,7 +1851,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+       <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>gmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -1979,7 +1979,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Lib>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -2108,7 +2108,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Lib>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -2235,7 +2235,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Lib>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -2364,7 +2364,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Lib>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -2498,7 +2498,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -2632,7 +2632,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -2770,7 +2770,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+       <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>gmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -2908,7 +2908,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+       <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -3041,7 +3041,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -3174,7 +3174,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -3311,7 +3311,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+       <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>gmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
+@@ -3448,7 +3448,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+       <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libgmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+     <PostBuildEvent>
+       <Command>mkdir "$(OutDir)"\include
