@@ -1,8 +1,6 @@
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
     message(FATAL_ERROR "getopt-win32 only supports building on Windows Desktop")
 endif()
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -12,10 +10,27 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    list(APPEND OPTIONS "/p:ConfigurationType=StaticLibrary")
+else()
+    list(APPEND OPTIONS "/p:ConfigurationType=DynamicLibrary")
+endif()
+
+set(_file "${SOURCE_PATH}/getopt.vcxproj")
+file(READ "${_file}" _contents)
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    string(REPLACE "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" _contents "${_contents}")
+    string(REPLACE "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" _contents "${_contents}")
+else()
+    string(REPLACE "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" _contents "${_contents}")
+    string(REPLACE "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"  "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" _contents "${_contents}")
+endif()
+file(WRITE "${_file}" "${_contents}")
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH getopt.vcxproj
     LICENSE_SUBPATH LICENSE
+    OPTIONS ${OPTIONS}
 )
 
 # Copy header
