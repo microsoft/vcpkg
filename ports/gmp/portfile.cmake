@@ -1,6 +1,5 @@
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    message(STATUS "----- ${PORT} requires Visual Studio YASM integration which can be downloaded from https://github.com/ShiftMediaProject/VSYASM/releases/latest -----")
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ShiftMediaProject/gmp
@@ -12,6 +11,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
     vcpkg_add_to_path(${YASM_DIR})
+    set(ENV{YASMPATH} ${YASM_DIR}/)
     if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
         set(PLATFORM "Win32")
     else ()
@@ -30,6 +30,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
         string(APPEND CONFIGURATION_RELEASE WinRT)
         string(APPEND CONFIGURATION_DEBUG WinRT)
     endif()
+    #<Import Project="${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props" />
+    set(_file "${SOURCE_PATH}/SMP/libgmp.vcxproj")
+    file(READ "${_file}" _contents)
+    string(REPLACE
+[[<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">]]
+"<Project DefaultTargets=\"Build\" ToolsVersion=\"12.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n \
+  <Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />\n \
+  <ItemGroup Label=\"ProjectConfigurations\">"
+  _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
     
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}

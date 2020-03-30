@@ -7,7 +7,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    message(STATUS "----- ${PORT} requires Visual Studio YASM integration which can be downloaded from https://github.com/ShiftMediaProject/VSYASM/releases/latest -----")
+    set(ENV{YASMPATH})
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ShiftMediaProject/nettle
@@ -20,6 +20,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
     vcpkg_add_to_path(${YASM_DIR})
+    set(ENV{YASMPATH} ${YASM_DIR}/)
+    
     if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
         set(PLATFORM "Win32")
     else ()
@@ -38,6 +40,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
         string(APPEND CONFIGURATION_RELEASE WinRT)
         string(APPEND CONFIGURATION_DEBUG WinRT)
     endif()
+    #<Import Project="${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props" />
+    set(_file "${SOURCE_PATH}/SMP/libnettle.vcxproj")
+    file(READ "${_file}" _contents)
+    string(REPLACE
+[[<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">]]
+"<Project DefaultTargets=\"Build\" ToolsVersion=\"12.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n \
+  <Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />\n \
+  <ItemGroup Label=\"ProjectConfigurations\">"
+  _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
     
     vcpkg_install_msbuild(
         USE_VCPKG_INTEGRATION
@@ -102,19 +115,12 @@ else()
     )
 
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-    # # Handle copyright
-    
+    # # Handle copyright    
     file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-    # # Post-build test for cmake libraries
-    # vcpkg_test_cmake(PACKAGE_NAME Xlib)
 
-    # set(TOOLS nettle-hash nettle-lfib-stream nettle-pbkdf2 sexp-conv)
-    # file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    # foreach(tool ${TOOLS})
-        # file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    # endforeach()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
