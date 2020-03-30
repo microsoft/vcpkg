@@ -1,9 +1,9 @@
 Source: curl
-Version: 7.68.0
+Version: 7.68.0-2
 Build-Depends: zlib
 Homepage: https://github.com/curl/curl
 Description: A library for transferring data with URLs
-Default-Features: ssl
+Default-Features: ssl, non-http
 
 Feature: tool
 Description: Builds curl executable
@@ -12,15 +12,15 @@ Feature: non-http
 Description: Enables protocols beyond HTTP/HTTPS/HTTP2
 
 Feature: http2
-Build-Depends: nghttp2, curl[ssl]
+Build-Depends: nghttp2, curl[core,ssl]
 Description: HTTP2 support
 
 Feature: ssl
-Build-Depends: curl[openssl] (!windows&!osx), curl[winssl] (windows), curl[sectransp] (osx)
+Build-Depends: curl[core,openssl] ((uwp|!windows)&!osx), curl[core,winssl] (windows&!uwp), curl[core,sectransp] (osx)
 Description: Default SSL backend
 
 Feature: ssh
-Build-Depends: curl[openssl], libssh2, curl[non-http]
+Build-Depends: curl[core,openssl], libssh2, curl[core,non-http]
 Description: SSH support via libssh2
 
 # SSL backends
@@ -30,6 +30,7 @@ Description: SSL support (OpenSSL)
 
 Feature: winssl
 Description: SSL support (Secure Channel / "WinSSL")
+Build-Depends: curl[core,sspi]
 
 Feature: mbedtls
 Build-Depends: mbedtls
@@ -42,7 +43,7 @@ Feature: c-ares
 Build-Depends: c-ares
 Description: c-ares support
 
-Feature:sspi
+Feature: sspi
 Description: SSPI support 
 
 Feature: brotli

@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         fix-feature-example.patch
         support-static-in-win.patch
+        fix-timeval.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

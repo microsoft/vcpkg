@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc
-    REF v1.17.0
-    SHA512 7fe517e9d050a36839ddf963e718881533cc10a7c8963222b3167fd48ec84455614206c1cc2c248f52042a019262fa0419c4c1a828eb1ae64294c55bbaf56f6e
+    REF 30c55d6544613c846368de1faee420e56e992ffe # v1.17.1
+    SHA512 c4ed1492fd8733c6acabc973c58d6763e2a3a2bd7965fbf4d267169f5b03055eccdbe2723bc5d98636b039625a55609a092ed65de45d7a2b361347513cc83a98
     HEAD_REF master
     PATCHES
       0001-find-deps.patch
