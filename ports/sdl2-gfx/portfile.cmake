@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "osx")
-
 set(VERSION 1.0.4)
 
 vcpkg_download_distfile(ARCHIVE
