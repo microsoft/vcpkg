@@ -2,6 +2,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "Building with a gcc version less than 6.1 is not supported.")
+    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev\n    libmesa-dev\n    libxi-dev\n    libxext-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libmesa-dev libxi-dev libxext-dev.")
 endif()
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")

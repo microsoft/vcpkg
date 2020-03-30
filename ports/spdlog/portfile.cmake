@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-feature-export.patch
         fix-error-4275.patch
         fix-uwp.patch
+        fix-include.patch
 )
 
 set(SPDLOG_USE_BENCHMARK OFF)

@@ -8,6 +8,7 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${SOURCE_PATH}/loguru.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/loguru)
+    file(INSTALL ${SOURCE_PATH}/loguru.cpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/loguru)
 endif()
 
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
