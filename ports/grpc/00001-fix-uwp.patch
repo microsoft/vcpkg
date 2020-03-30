@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3d4418a..a2f23d5 100644
+index 3f9d19e..25d96ab 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -104,6 +104,9 @@ if(UNIX)
+@@ -144,6 +144,9 @@ if(UNIX)
  endif()
  if(WIN32)
    set(_gRPC_PLATFORM_WINDOWS ON)
@@ -12,7 +12,7 @@ index 3d4418a..a2f23d5 100644
  endif()
  
  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-@@ -119,6 +122,9 @@ if(MSVC)
+@@ -160,6 +163,9 @@ if(MSVC)
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4267")
    # TODO(jtattermusch): needed to build boringssl with VS2017, revisit later
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4987 /wd4774 /wd4819 /wd4996 /wd4619")
@@ -22,7 +22,7 @@ index 3d4418a..a2f23d5 100644
  endif()
  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_gRPC_C_CXX_FLAGS}")
  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_gRPC_C_CXX_FLAGS}")
-@@ -186,6 +192,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
+@@ -228,6 +234,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
  #     ``.proto`` files
  #
  function(protobuf_generate_grpc_cpp)
@@ -33,7 +33,7 @@ index 3d4418a..a2f23d5 100644
    if(NOT ARGN)
      message(SEND_ERROR "Error: PROTOBUF_GENERATE_GRPC_CPP() called without any proto files")
      return()
-@@ -258,6 +268,7 @@ if (gRPC_BUILD_GRPC_RUBY_PLUGIN)
+@@ -300,6 +310,7 @@ if (gRPC_BUILD_GRPC_RUBY_PLUGIN)
    list(APPEND _gRPC_PLUGIN_LIST grpc_ruby_plugin)
  endif ()
  
@@ -41,7 +41,7 @@ index 3d4418a..a2f23d5 100644
  add_custom_target(plugins
    DEPENDS ${_gRPC_PLUGIN_LIST}
  )
-@@ -279,6 +290,7 @@ add_custom_target(tools_cxx
+@@ -321,6 +332,7 @@ add_custom_target(tools_cxx
  
  add_custom_target(tools
    DEPENDS tools_c tools_cxx)

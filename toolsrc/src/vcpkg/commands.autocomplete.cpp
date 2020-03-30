@@ -159,7 +159,7 @@ namespace vcpkg::Commands::Autocomplete
                 {
                     const auto port_at_each_triplet =
                         combine_port_with_triplets(results[0], paths.get_available_triplets_names());
-                    Util::Vectors::concatenate(&results, port_at_each_triplet);
+                    Util::Vectors::append(&results, port_at_each_triplet);
                 }
 
                 output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(results));

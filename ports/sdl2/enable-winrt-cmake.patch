@@ -135,7 +135,7 @@ index 0128c7a..bd534e4 100644
  # Always build SDLmain
 +if(NOT WINDOWS_STORE)
  add_library(SDL2main STATIC ${SDLMAIN_SOURCES})
- target_include_directories(SDL2main PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include/SDL2>)
+ target_include_directories(SDL2main PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include> $<INSTALL_INTERFACE:include/SDL2>)
  set(_INSTALL_LIBS "SDL2main")
  if (NOT ANDROID)
    set_target_properties(SDL2main PROPERTIES DEBUG_POSTFIX ${SDL_CMAKE_DEBUG_POSTFIX})

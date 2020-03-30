@@ -1,5 +1,5 @@
 diff --git a/cpp/cmake_modules/BuildUtils.cmake b/cpp/cmake_modules/BuildUtils.cmake
-index 4ef2948..9c3c121 100644
+index f5f0ad7..3dca82e 100644
 --- a/cpp/cmake_modules/BuildUtils.cmake
 +++ b/cpp/cmake_modules/BuildUtils.cmake
 @@ -305,7 +305,7 @@ function(ADD_ARROW_LIB LIB_NAME)
@@ -53,7 +53,7 @@ index 8410916..a196b25 100644
        PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
      find_path(LZ4_INCLUDE_DIR NAMES lz4.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
 diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
-index 87cc24e..4de0760 100644
+index f9d6296..82b8d22 100644
 --- a/cpp/cmake_modules/FindThrift.cmake
 +++ b/cpp/cmake_modules/FindThrift.cmake
 @@ -54,6 +54,10 @@ if(MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
@@ -67,7 +67,7 @@ index 87cc24e..4de0760 100644
  if(Thrift_ROOT)
    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
                 PATHS ${Thrift_ROOT}
-@@ -71,15 +75,13 @@ else()
+@@ -74,16 +78,14 @@ else()
  
      list(APPEND THRIFT_PC_LIBRARY_DIRS "${THRIFT_PC_LIBDIR}")
  
@@ -80,6 +80,7 @@ index 87cc24e..4de0760 100644
                   HINTS ${THRIFT_PC_PREFIX}
 -                 NO_DEFAULT_PATH
                   PATH_SUFFIXES "bin")
+     set(THRIFT_VERSION ${THRIFT_PC_VERSION})
    else()
 -    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
 +    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}${THRIFT_LIB_NAME_DEBUG_SUFFIX}
@@ -128,3 +129,49 @@ index 8e47086..d7ce559 100644
                         "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
                   PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
      find_path(ZSTD_INCLUDE_DIR NAMES zstd.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+diff --git a/cpp/cmake_modules/SetupCxxFlags.cmake b/cpp/cmake_modules/SetupCxxFlags.cmake
+index 75b33c2..80cac9a 100644
+--- a/cpp/cmake_modules/SetupCxxFlags.cmake
++++ b/cpp/cmake_modules/SetupCxxFlags.cmake
+@@ -128,7 +128,9 @@ macro(arrow_add_werror_if_debug)
+   if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
+     # Treat all compiler warnings as errors
+     if(MSVC)
+-      set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
++      if(MSVC_VERSION VERSION_LESS 1900)
++        set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
++      endif()
+     else()
+       set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} -Werror")
+     endif()
+diff --git a/cpp/src/arrow/stl.h b/cpp/src/arrow/stl.h
+index 7ae9eaf..b9efdcb 100644
+--- a/cpp/src/arrow/stl.h
++++ b/cpp/src/arrow/stl.h
+@@ -518,6 +518,9 @@ class allocator {
+ 
+  private:
+   MemoryPool* pool_;
++
++  template <class U>
++  friend class allocator;
+ };
+ 
+ /// \brief A MemoryPool implementation delegating allocations to a STL allocator
+diff --git a/cpp/src/parquet/schema.h b/cpp/src/parquet/schema.h
+index 87db4de..095ef9a 100644
+--- a/cpp/src/parquet/schema.h
++++ b/cpp/src/parquet/schema.h
+@@ -460,7 +460,11 @@ class PARQUET_EXPORT SchemaDescriptor {
+   // -- -- b     |
+   // -- -- -- c  |
+   // -- -- -- -- d
+-  std::unordered_map<int, const schema::NodePtr> leaf_to_base_;
++#if _MSC_VER >= 1900
++  std::unordered_map<int, schema::NodePtr> leaf_to_base_;
++#else
++   std::unordered_map<int, const schema::NodePtr> leaf_to_base_;
++#endif
+ 
+   // Mapping between ColumnPath DotString to the leaf index
+   std::unordered_multimap<std::string, int> leaf_to_idx_;

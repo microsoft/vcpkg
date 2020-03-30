@@ -1,7 +1,3 @@
-# header-only library
-
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ryanhaining/cppitertools
@@ -13,8 +9,8 @@ vcpkg_from_github(
 file(GLOB INCLUDE_FILES ${SOURCE_PATH}/*.hpp)
 file(GLOB INCLUDE_INTERNAL_FILES ${SOURCE_PATH}/internal/*.hpp)
 
-file(COPY ${INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${INCLUDE_INTERNAL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/internal)
+file(COPY ${INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cppitertools)
+file(COPY ${INCLUDE_INTERNAL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cppitertools/internal)
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
