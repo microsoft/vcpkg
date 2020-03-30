@@ -11,15 +11,16 @@ vcpkg_from_gitlab(
         windows_mean_and_lean.patch
         #winsock2.patch # include winsock2.h before windows.h
         configure_msys.patch
-        xwindows.patch #TODO: Redo these patches to be less intrusive
-        xwinsock.patch #TODO: Redo these patches to be less intrusive
+        #xwindows.patch #TODO: Redo these patches to be less intrusive
+        #xwinsock.patch #TODO: Redo these patches to be less intrusive
+        xwin.patch # REDID the above two but a bit more minimal
         xmd_bool.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(OPTIONS --enable-legacy) # has an build error on windows so I assume it is unsupported. 
+    set(OPTIONS --enable-legacy) # has an build error on windows so I assume it is unsupported on windows. 
 endif()
 
 if(NOT XLSTPROC)
@@ -31,7 +32,7 @@ if(NOT XLSTPROC)
         set(HOST_TRIPLETS x64-linux)
     endif()
         foreach(HOST_TRIPLET ${HOST_TRIPLETS})
-            find_program(XLSTPROC NAMES xsltproc${VCPKG_HOST_EXECUTABLE_SUFFIX} PATHS "${CURRENT_INSTALLED_DIR}/../${HOST_TRIPLET}/tools/libxslt/bin")
+            find_program(XLSTPROC NAMES xsltproc${VCPKG_HOST_EXECUTABLE_SUFFIX} PATHS "${CURRENT_INSTALLED_DIR}/../${HOST_TRIPLET}/tools/libxslt" "${CURRENT_INSTALLED_DIR}/../${HOST_TRIPLET}/tools/libxslt/bin")
             if(XLSTPROC)
                 break()
             endif()

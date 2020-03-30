@@ -1,0 +1,250 @@
+diff --git a/include/X11/Xwindows.h b/include/X11/Xwindows.h
+index 1c893abd7..04c479c5e 100644
+--- a/include/X11/Xwindows.h	
++++ b/include/X11/Xwindows.h
+@@ -55,13 +55,51 @@ The Open Group.
+  */
+ #define NOMINMAX
+ 
++
++/** Added in by VCPKG
++ */
++#if defined(ERROR)
++    #define X_XWINDOWS_DEFINE_GUARD_ERROR_DEFINITION ERROR
++    #if defined(wERROR)
++        #undef ERROR
++        #define ERROR wERROR 
++    #else 
++        #undef ERROR
++    #endif 
++#endif
++#if defined(ControlMask)
++    #define X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION ControlMask
++    #if defined(wControlMask)
++        #undef ControlMask
++        #define ControlMask wControlMask 
++    #else 
++        #undef ControlMask
++    #endif 
++#endif
++#if defined(None)
++    #define X_XWINDOWS_DEFINE_GUARD_None_DEFINITION None
++    #if defined(wNone)
++        #undef None
++        #define None wNone 
++    #else 
++        #undef None
++    #endif 
++#endif
+ /*
+  * mingw-w64 headers define BOOL as a typedef, protecting against macros
+  * mingw.org headers define BOOL in terms of WINBOOL
+  * ... so try to come up with something which works with both :-)
+  */
+ #define _NO_BOOL_TYPEDEF
+-#define BOOL WINBOOL
++#if defined(BOOL)
++    #define X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION BOOL
++    #if defined(WINBOOL)
++        #undef BOOL
++        #define BOOL WINBOOL 
++    #else 
++        #undef BOOL
++    #endif 
++#endif
+ #define INT32 wINT32
+ #ifdef __x86_64__
+ #define INT64 wINT64
+@@ -70,14 +108,24 @@ The Open Group.
+ #undef Status
+ #define Status wStatus
+ #define ATOM wATOM
+-#define BYTE wBYTE
++#if defined(BYTE)
++    #define X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION BYTE
++    #if defined(wBYTE)
++        #undef BYTE
++        #define BYTE wBYTE 
++    #else 
++        #undef BYTE
++    #endif 
++#endif
+ #define FreeResource wFreeResource
+ #ifdef WIN32_LEAN_AND_MEAN 
+ #define GUARD_WIN32_LEAN_AND_MEAN_NOUNDEF
+ #else
+ #define WIN32_LEAN_AND_MEAN 
+ #endif
++#define _WINSOCKAPI_ // To avoid including winsocks.h with windows.h (same trick as winsock2.h)
+ #include <windows.h>
++#undef _WINSOCKAPI_
+ #ifndef GUARD_WIN32_LEAN_AND_MEAN_NOUNDEF 
+ #undef WIN32_LEAN_AND_MEAN 
+ #endif
+@@ -85,7 +133,15 @@ The Open Group.
+ #undef Status
+ #define Status int
+ #undef BYTE
++#if defined(X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION)
++    #define BYTE X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION
++#endif
+ #undef BOOL
++#if defined(X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION)
++    #define BOOL X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION
++#endif
+ #undef INT32
+ #undef INT64
+ #undef LONG64
+@@ -93,6 +149,24 @@ The Open Group.
+ #undef FreeResource
+ #undef CreateWindowA
+ 
++/** Added in by VCPKG
++ */
++#ifndef GUARD_WIN32_LEAN_AND_MEAN_NOUNDEF 
++#undef WIN32_LEAN_AND_MEAN 
++#endif
++#undef None
++#if defined(X_XWINDOWS_DEFINE_GUARD_None_DEFINITION)
++    #define None 0L
++#endif 
++#undef ControlMask
++#if defined(X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION)
++    #define ControlMask X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION
++#endif 
++#undef ERROR
++#if defined(X_XWINDOWS_DEFINE_GUARD_ERROR_DEFINITION)
++    #define ERROR X_XWINDOWS_DEFINE_GUARD_ERROR_DEFINITION
++#endif 
++
+ /*
+  * Older version of this header used to name the windows API bool type wBOOL,
+  * rather than more standard name WINBOOL
+diff --git a/include/X11/Xwinsock.h b/include/X11/Xwinsock.h
+index e8d5653c0..b13b54d4b 100644
+--- a/include/X11/Xwinsock.h	
++++ b/include/X11/Xwinsock.h
+@@ -39,13 +39,56 @@ The Open Group.
+ # undef XFree86Server
+ #endif
+ 
++/** Added in by VCPKG
++ */
++#if defined(ERROR)
++    #define X_XWINDOWS_DEFINE_GUARD_ERROR_DEFINITION ERROR
++    #if defined(wERROR)
++        #undef ERROR
++        #define ERROR wERROR 
++    #else 
++        #undef ERROR
++    #endif 
++#endif
++#if defined(ControlMask)
++    #define X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION ControlMask
++    #if defined(wControlMask)
++        #undef ControlMask
++        #define ControlMask wControlMask 
++    #else 
++        #undef ControlMask
++    #endif 
++#endif
++#if defined(None)
++    #define X_XWINDOWS_DEFINE_GUARD_None_DEFINITION None
++    #if defined(wNone)
++        #undef None
++        #define None wNone 
++    #else 
++        #undef None
++    #endif 
++#endif
++#ifdef WIN32_LEAN_AND_MEAN 
++    #define GUARD_WIN32_LEAN_AND_MEAN_NOUNDEF
++#else
++    #define WIN32_LEAN_AND_MEAN // To avoid including winsocks.h with windows.h
++#endif
++
+ /*
+  * mingw-w64 headers define BOOL as a typedef, protecting against macros
+  * mingw.org headers define BOOL in terms of WINBOOL
+  * ... so try to come up with something which works with both :-)
+  */
+ #define _NO_BOOL_TYPEDEF
+-#define BOOL WINBOOL
++#if defined(BOOL)
++    #define X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION BOOL
++    #if defined(WINBOOL)
++        #undef BOOL
++        #define BOOL WINBOOL 
++    #else 
++        #undef BOOL
++    #endif 
++#endif
+ #define INT32 wINT32
+ #ifdef __x86_64__
+ #define INT64 wINT64
+@@ -54,13 +97,29 @@ The Open Group.
+ #undef Status
+ #define Status wStatus
+ #define ATOM wATOM
+-#define BYTE wBYTE
++#if defined(BYTE)
++    #define X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION BYTE
++    #if defined(wBYTE)
++        #undef BYTE
++        #define BYTE wBYTE 
++    #else 
++        #undef BYTE
++    #endif 
++#endif
+ #define FreeResource wFreeResource
+ #include <winsock2.h>
+ #undef Status
+ #define Status int
+ #undef BYTE
++#if defined(X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION)
++    #define BYTE X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION
++#endif
+ #undef BOOL
++#if defined(X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION)
++    #define BOOL X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION
++#endif
+ #undef INT32
+ #undef INT64
+ #undef LONG64
+@@ -70,11 +129,31 @@ The Open Group.
+ #undef RT_FONT
+ #undef RT_CURSOR
+ 
++/** Added in by VCPKG
++ */
++#ifndef GUARD_WIN32_LEAN_AND_MEAN_NOUNDEF 
++#undef WIN32_LEAN_AND_MEAN 
++#endif
++#undef None
++#if defined(X_XWINDOWS_DEFINE_GUARD_None_DEFINITION)
++    #define None 0L
++#endif 
++#undef ControlMask
++#if defined(X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION)
++    #define ControlMask X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION
++#endif 
++#undef ERROR
++#if defined(X_XWINDOWS_DEFINE_GUARD_ERROR_DEFINITION)
++    #define ERROR X_XWINDOWS_DEFINE_GUARD_ERROR_DEFINITION
++#endif 
++
+ /*
+  * Older version of this header used to name the windows API bool type wBOOL,
+  * rather than more standard name WINBOOL
+  */
+-#define wBOOL WINBOOL
++#ifdef WINBOOL
++    #define wBOOL WINBOOL
++#endif
+ 
+ #ifdef _XFree86Server
+ # define XFree86Server
