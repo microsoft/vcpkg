@@ -24,6 +24,7 @@
 ## - PERL
 ## - PYTHON2
 ## - PYTHON3
+## - GIT
 ## - GO
 ## - JOM
 ## - MESON
@@ -86,6 +87,20 @@ function(vcpkg_find_acquire_program VAR)
     set(_vfa_RENAME "yasm.exe")
     set(NOEXTRACT ON)
     set(HASH c1945669d983b632a10c5ff31e86d6ecbff143c3d8b2c433c0d3d18f84356d2b351f71ac05fd44e5403651b00c31db0d14615d7f9a6ecce5750438d37105c55b)
+  elseif(VAR MATCHES "GIT")
+    set(PROGNAME git)
+    if(CMAKE_HOST_WIN32)
+      set(SUBDIR "git-2.25.1-1-windows")
+      set(URL "https://github.com/git-for-windows/git/releases/download/v2.25.1.windows.1/PortableGit-2.25.1-32-bit.7z.exe")
+      set(ARCHIVE "PortableGit-2.25.1-32-bit.7z.exe")
+      set(HASH 222d6e384ecae5841cb02dc004c4b3f56659d19b662bc93ab531df844c9477c9717c4a1adfb8bc2d3159678238fa4c79ccbdcb5c116eea5eccd652f4b483359e)
+      set(PATHS 
+        "${DOWNLOADS}/tools/${SUBDIR}/mingw32/bin"
+        "${DOWNLOADS}/tools/git/${SUBDIR}/mingw32/bin")
+    else()
+      set(BREW_PACKAGE_NAME "git")
+      set(APT_PACKAGE_NAME "git")
+    endif()
   elseif(VAR MATCHES "GO")
     set(PROGNAME go)
     set(PATHS ${DOWNLOADS}/tools/go/go/bin)
@@ -192,10 +207,10 @@ function(vcpkg_find_acquire_program VAR)
     else()
       set(SCRIPTNAME meson)
     endif()
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.52.0)
-    set(URL "https://github.com/mesonbuild/meson/archive/0.52.0.zip")
-    set(ARCHIVE "meson-0.52.0.zip")
-    set(HASH 2f2657599f19933c02be2a1faa508d5b2d137fba1ccc9d68a6b6d04b8d21163c33220c673643fa444fa86e94ba010cf8a851b9e6abc096559a7c735f5099a180)
+    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.53.2)
+    set(URL "https://github.com/mesonbuild/meson/archive/0.53.2.zip")
+    set(ARCHIVE "meson-0.53.2.zip")
+    set(HASH 86c3347395528d2358c9514a76ec8a60908f8abadece5ecb9bac633ea735d4b40a27683002db017f06fa48ec68ea1bfe64d216fa17a54d6d42c8bc45f55606b2)
   elseif(VAR MATCHES "FLEX")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME win_flex)
@@ -281,6 +296,12 @@ function(vcpkg_find_acquire_program VAR)
       set(ARCHIVE "bazel-${BAZEL_VERSION}-linux-x86_64")
       set(NOEXTRACT ON)
       set(HASH db4a583cf2996aeb29fd008261b12fe39a4a5faf0fbf96f7124e6d3ffeccf6d9655d391378e68dd0915bc91c9e146a51fd9661963743857ca25179547feceab1)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+      set(_vfa_SUPPORTED ON)
+      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-darwin-x86_64") 
+      set(ARCHIVE "bazel-${BAZEL_VERSION}-darwin-x86_64")
+      set(NOEXTRACT ON)
+      set(HASH 420a37081e6ee76441b0d92ff26d1715ce647737ce888877980d0665197b5a619d6afe6102f2e7edfb5062c9b40630a10b2539585e35479b780074ada978d23c)
     else()
       set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-windows-x86_64.zip") 
       set(ARCHIVE "bazel-${BAZEL_VERSION}-windows-x86_64.zip")
@@ -342,6 +363,12 @@ function(vcpkg_find_acquire_program VAR)
         _execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
+        )
+      elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
+        vcpkg_find_acquire_program(7Z)
+        _execute_process(
+          COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )
       else()
         _execute_process(

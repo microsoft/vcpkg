@@ -23,6 +23,7 @@ set(MYSQL_LIB "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib")
 set(MYSQL_LIB_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DMYSQL_INCLUDE_DIR=${MYSQL_INCLUDE_DIR}
