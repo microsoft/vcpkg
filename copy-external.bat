@@ -1,0 +1,1 @@
+XCOPY "external\x86-windows\*" "installed\x86-windows\"  /s /i /Y
