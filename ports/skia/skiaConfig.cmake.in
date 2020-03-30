@@ -1,0 +1,78 @@
+add_library(skia::skia SHARED IMPORTED)
+set(SKIA_DEP_DBG @SKIA_DEP_DBG@)
+set(SKIA_DEP_REL @SKIA_DEP_REL@)
+
+set(SKIA_LIBRARY_NAME_DBG @SKIA_LIBRARY_NAME_DBG@)
+set(SKIA_LIBRARY_NAME_REL @SKIA_LIBRARY_NAME_REL@)
+set(SKIA_LIBRARY_IMPLIB_DBG @SKIA_LIBRARY_IMPLIB_DBG@)
+set(SKIA_LIBRARY_IMPLIB_REL @SKIA_LIBRARY_IMPLIB_REL@)
+
+set(SKIA_PUBLIC_DEFINITIONS @SKIA_PUBLIC_DEFINITIONS@)
+
+# Compute the installation prefix relative to this file.
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+if(_IMPORT_PREFIX STREQUAL "/")
+  set(_IMPORT_PREFIX "")
+endif()
+
+if(WIN32)
+    if(SKIA_LIBRARY_IMPLIB_DBG)
+        set_property(TARGET skia::skia PROPERTY
+            IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/${SKIA_LIBRARY_IMPLIB_DBG}"
+        )
+        set_property(TARGET skia::skia PROPERTY
+            IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/${SKIA_LIBRARY_NAME_DBG}"
+        )
+    else()
+        set_property(TARGET skia::skia PROPERTY
+            IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/${SKIA_LIBRARY_NAME_DBG}"
+        )
+    endif()
+
+    if(SKIA_LIBRARY_IMPLIB_REL)
+        set_property(TARGET skia::skia PROPERTY
+            IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/${SKIA_LIBRARY_IMPLIB_REL}"
+        )
+        set_property(TARGET skia::skia PROPERTY
+            IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/${SKIA_LIBRARY_NAME_REL}"
+        )
+    else()
+        set_property(TARGET skia::skia PROPERTY
+            IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/${SKIA_LIBRARY_NAME_REL}"
+        )
+    endif()
+else()
+    set_property(TARGET skia::skia PROPERTY
+        IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/${SKIA_LIBRARY_NAME_DBG}"
+    )
+    set_property(TARGET skia::skia PROPERTY
+        IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/${SKIA_LIBRARY_NAME_REL}"
+    )
+endif()
+
+foreach(LIB ${SKIA_DEP_DBG})
+    string(REGEX REPLACE "\\.framework" "" LIB ${LIB})
+    string(REGEX REPLACE "[^a-zA-Z]" "_" LIB_NAME ${LIB})
+    string(TOUPPER ${LIB_NAME} LIB_NAME)
+    set(LIB_NAME SKIA_${LIB_NAME}_LIBRARY)
+    find_library(${LIB_NAME} ${LIB})
+    set_property(TARGET skia::skia
+            APPEND PROPERTY INTERFACE_LINK_LIBRARIES
+            "$<$<CONFIG:Debug>:${${LIB_NAME}}>")
+endforeach()
+
+foreach(LIB ${SKIA_DEP_REL})
+    string(REGEX REPLACE "\\.framework" "" LIB ${LIB})
+    string(REGEX REPLACE "[^a-zA-Z]" "_" LIB_NAME ${LIB})
+    string(TOUPPER ${LIB_NAME} LIB_NAME)
+    set(LIB_NAME SKIA_${LIB_NAME}_LIBRARY)
+    find_library(${LIB_NAME} ${LIB})
+    set_property(TARGET skia::skia
+            APPEND PROPERTY INTERFACE_LINK_LIBRARIES
+            "$<$<CONFIG:Release>:${${LIB_NAME}}>")
+endforeach()
+
+target_include_directories(skia::skia INTERFACE ${_IMPORT_PREFIX}/include)
+target_compile_definitions(skia::skia INTERFACE ${SKIA_PUBLIC_DEFINITIONS})

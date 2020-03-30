@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
-    REF v7.4.0
-    SHA512 ea78f42a8cf1dfaafe7bf3a849e62a8e039e10cc8d93add7bf2d5283f53311dac449f86c5f22496b55ad6e22597b2842cba85936170d2d0e720389a88d87268c
+    REF v8.0.5
+    SHA512 9dcc20d9a0629b92c62a68a8bd7c8206f18dbd9e93289b0b687ec13c478ce9ad1f3563b38c399c8277b0d3812cc78ca725786ba1dedbc3445b9bdb9b689e8add
 )
 
 vcpkg_configure_cmake(
@@ -18,7 +16,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ixwebsocket RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Post-build test for cmake libraries
 # vcpkg_test_cmake(PACKAGE_NAME ixwebsocket)

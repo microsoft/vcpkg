@@ -1,9 +1,10 @@
 Source: folly
-Version: 2019.10.21.00
+Version: 2019.10.21.00-1
 Homepage: https://github.com/facebook/folly
 Description: An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows
 Build-Depends: openssl, libevent, double-conversion, glog, gflags, boost-chrono, boost-context, boost-conversion, boost-crc, boost-date-time, boost-filesystem, boost-multi-index, boost-program-options, boost-regex, boost-system, boost-thread, boost-smart-ptr
 Default-Features: zlib
+Supports: x64
 
 Feature: zlib
 Build-Depends: zlib

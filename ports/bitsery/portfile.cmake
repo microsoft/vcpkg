@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO fraillt/bitsery
-	REF v5.0.1
-	SHA512 b4bb0cdec177b2b3e02f66bd313e4742345c5d928d862be3a3cf1b726006741cf6db2258bb7078bb42f46ed6247838c553bbb9c95b42566d9b05397554676696
+ REF d24dfe14f5a756c0f8ad3d56ae6949ecc2c99b2e # v5.0.3
+	SHA512 0bd4c80632640b74387587f85ca6e174aed2efd1dc1d83dd682e26e10aa9ef9a98b5477cfb78aa9cbb1a4112fc12468d7072b5c237f32f6738158ba21cf2ea39
 	HEAD_REF master
 	PATCHES fix-install-paths.patch
 )
