@@ -147,12 +147,13 @@ function(vcpkg_configure_make)
                                           pkg-config 
                                           binutils 
                                           libtool 
+                                          gettext 
+                                          gettext-devel
                                           make)
         if (_csc_AUTOCONFIG)
             list(APPEND MSYS_REQUIRE_PACKAGES autoconf 
                                               autoconf-archive
                                               automake
-                                              autopoint
                                               m4
                 )
         endif()
@@ -400,6 +401,8 @@ function(vcpkg_configure_make)
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
             
+            set(ENV{LIBPATH} "${_VCPKG_INSTALLED}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${LIBPATH_BACKUP}")
+            
             set(dbg_command
                 ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
         else()
@@ -465,6 +468,7 @@ function(vcpkg_configure_make)
             set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} -L${_VCPKG_INSTALLED}/lib ${VCPKG_LINKER_FLAGS_RELEASE}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
+            set(ENV{LIBPATH} "${_VCPKG_INSTALLED}/lib${VCPKG_HOST_PATH_SEPARATOR}${LIBPATH_BACKUP}")
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
             set(rel_command
                 ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
@@ -514,6 +518,7 @@ function(vcpkg_configure_make)
     set(ENV{CPLUS_INCLUDE_PATH} "${CPLUS_INCLUDE_PATH_BACKUP}")
     _vcpkg_restore_env_variable(LIBRARY_PATH)
     _vcpkg_restore_env_variable(LD_LIBRARY_PATH)
+    set(ENV{LIBPATH} "${LIBPATH_BACKUP}")
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
 endfunction()
