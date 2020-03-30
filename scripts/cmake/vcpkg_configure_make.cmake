@@ -478,8 +478,8 @@ function(vcpkg_configure_make)
             string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
             set(ENV{LIBPATH} "${_VCPKG_INSTALLED}/lib${VCPKG_HOST_PATH_SEPARATOR}${LIBPATH_BACKUP}")
-            file(TO_NATIVE_PATH "${_VCPKG_INSTALLED}" PKGCONFIG_PREFIX)
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${PKGCONFIG_PREFIX}")
+
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
             set(rel_command
                 ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
         else()
