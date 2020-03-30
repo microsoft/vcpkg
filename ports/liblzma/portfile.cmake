@@ -1,36 +1,44 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xz-mirror/xz
-    REF v5.2.4
-    SHA512 fce7dc65e77a9b89dbdd6192cb37efc39e3f2cf343f79b54d2dfcd845025dab0e1d5b0f59c264eab04e5cbaf914eeb4818d14cdaac3ae0c1c5de24418656a4b7
+    REF v5.2.5
+    SHA512 686f01cfe33e2194766a856c48668c661b25eee194a443524f87ce3f866e0eb54914075b4e00185921516c5211db8cd5d2658f4b91f4a3580508656f776f468e
     HEAD_REF master
     PATCHES
         enable-uwp-builds.patch
+        configure.cl.patch # Because CL is not C99 compatible
 )
-
-#maybe need to keep CMake for UWP builds?
-#file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(EXISTS "${SOURCE_PATH}/m4/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(_file "${SOURCE_PATH}/m4/libtool")
+        file(READ "${_file}" _contents)
+        string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
+    endif()
+endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL ${SHELL_PATH}
-    #OPTIONS 
+    OPTIONS 
+    --disable-xz
+    --disable-xzdec
+    --disable-lzmadec
+    --disable-lzmainfo
+    --disable-lzma-links
+    --disable-scripts
+    --disable-doc
+    --disable-nls
 )
-
 vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
 
 # vcpkg_configure_cmake(
     # SOURCE_PATH ${SOURCE_PATH}
     # PREFER_NINJA
 # )
 # vcpkg_install_cmake()
-vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 #vcpkg_fixup_cmake_targets()
+
+vcpkg_copy_pdbs()
 
 #Move this out of the portfile
 file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake
@@ -84,6 +92,11 @@ set(LIBLZMA_FOUND TRUE CACHE BOOL \"\")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake "add_definitions(-DLZMA_API_STATIC)") # should also be added to the lzma.h for correct VS integration 
+  #define LZMA_H
+  set(_file "${CURRENT_PACKAGES_DIR}/include/lzma.h")
+  file(READ "${_file}" _contents)
+  string(REPLACE "#define LZMA_H" "#define LZMA_H\n#define LZMA_API_STATIC" _contents "${_contents}")
+  file(WRITE "${_file}" "${_contents}")
 endif()
 
 if (VCPKG_BUILD_TYPE STREQUAL debug)
@@ -99,3 +112,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/)

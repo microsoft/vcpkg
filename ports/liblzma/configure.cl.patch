@@ -1,0 +1,91 @@
+diff --git a/configure.ac b/configure.ac
+index c4f8a4ccc..06e4c0867 100644
+--- a/configure.ac	
++++ b/configure.ac
+@@ -539,7 +539,7 @@ AC_PROG_LN_S
+ 
+ AC_PROG_CC_C99
+-if test x$ac_cv_prog_cc_c99 = xno ; then
+-	AC_MSG_ERROR([No C99 compiler was found.])
+-fi
++# if test x$ac_cv_prog_cc_c99 = xno ; then
++	# AC_MSG_ERROR([No C99 compiler was found.])
++# fi
+ 
+ AM_PROG_CC_C_O
+diff --git a/configure.ac b/configure.ac
+index c90de61bd..fa091f074 100644
+--- a/configure.ac	
++++ b/configure.ac
+@@ -664,7 +664,7 @@ echo "System headers and functions:"
+ # these headers are missing.
+ AC_CHECK_HEADERS([fcntl.h limits.h sys/time.h],
+ 	[],
+-	[AC_MSG_ERROR([Required header file(s) are missing.])])
++	[]) #[AC_MSG_ERROR([Required header file(s) are missing.])])
+ 
+ # This allows the use of the intrinsic functions if they are available.
+ AC_CHECK_HEADERS([immintrin.h])
+diff --git a/m4/getopt.m4 b/m4/getopt.m4
+index cfbe40f25..80bfcc4d4 100644
+--- a/m4/getopt.m4	
++++ b/m4/getopt.m4
+@@ -31,7 +31,11 @@ AC_DEFUN([gl_GETOPT_CHECK_HEADERS],
+   fi
+ 
+   if test -z "$GETOPT_H"; then
+-    AC_CHECK_FUNCS([getopt_long], [], [GETOPT_H=getopt.h])
++    AC_SEARCH_LIBS([getopt_long],[getopt], [LIBS="$ac_cv_search_getopt_long $LIBS"], [
++    AC_SEARCH_LIBS([getopt_long_w],[getopt], [LIBS="$ac_cv_search_getopt_long_w $LIBS"], [
++    GETOPT_H=getopt.h
++    ],[])
++    ],[])
+   fi
+ 
+   dnl BSD getopt_long uses a way to reset option processing, that is different
+diff --git a/src/liblzma/Makefile.am b/src/liblzma/Makefile.am
+index f9efbf6e1..cb174e70c 100644
+--- a/src/liblzma/Makefile.am	
++++ b/src/liblzma/Makefile.am
+@@ -77,21 +77,23 @@ endif
+ 
+ # Remove ordinals from the generated .def file. People must link by name,
+ # not by ordinal, because no one is going to track the ordinal numbers.
+-liblzma.def: liblzma.la liblzma.def.in
+-	sed 's/ \+@ *[0-9]\+//' liblzma.def.in > liblzma.def
++#liblzma.def: liblzma.la liblzma.def.in
++#	sed 's/ \+@ *[0-9]\+//' liblzma.def.in > liblzma.def
+ 
+ # Creating liblzma.def.in is a side effect of linking the library.
+-liblzma.def.in: liblzma.la
++#liblzma.def.in: liblzma.la
+ 
+ if COND_W32
+ CLEANFILES += liblzma.def liblzma.def.in empty.c
+ liblzma_la_SOURCES += liblzma_w32res.rc
+-liblzma_la_LDFLAGS += -Xlinker --output-def -Xlinker liblzma.def.in
++#liblzma_la_LDFLAGS += -Xlinker --output-def -Xlinker liblzma.def.in
++#liblzma_la_LDFLAGS += -Wl,--output-def,liblzma.def.in
++#liblzma_la_LDFLAGS += -export-symbols
+ 
+ ## liblzma.def.in is created only when building shared liblzma, so don't
+ ## try to create liblzma.def when not building shared liblzma.
+ if COND_SHARED
+-doc_DATA += liblzma.def
++#doc_DATA += liblzma.def
+ endif
+ endif
+ 
+diff --git a/lib/getopt.in.h b/lib/getopt.in.h
+index ea77e3d74..471417cf4 100644
+--- a/lib/getopt.in.h	
++++ b/lib/getopt.in.h
+@@ -34,7 +34,7 @@
+ #if defined __GETOPT_PREFIX && !defined __need_getopt
+ # include <stdlib.h>
+ # include <stdio.h>
+-# include <unistd.h>
++// # include <unistd.h>
+ # undef __need_getopt
+ # undef getopt
+ # undef getopt_long
