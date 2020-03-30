@@ -1584,7 +1584,6 @@ sdformat6:x64-linux=ignore
 sdl1:arm-uwp=fail
 sdl1:x64-uwp=fail
 sdl1:x64-osx=fail
-sdl2-gfx:x64-linux=fail
 sdl2-gfx:x64-osx=fail
 sdl2-image:arm-uwp=fail
 sdl2-image:x64-uwp=fail

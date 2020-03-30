@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "linux" "osx")
+vcpkg_fail_port_install(ON_TARGET "osx")
 
 set(VERSION 1.0.4)
 
