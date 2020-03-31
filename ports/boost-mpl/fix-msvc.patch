@@ -1,0 +1,64 @@
+From 71b47fab791a6d64addb42f61112b50a84467ff1 Mon Sep 17 00:00:00 2001
+From: romanszterg <rmscastle@gmail.com>
+Date: Tue, 31 Mar 2020 12:56:53 +0200
+Subject: [PATCH] fix msvc
+
+---
+ include/boost/mpl/and.hpp    | 2 +-
+ include/boost/mpl/bitand.hpp | 2 +-
+ include/boost/mpl/bitor.hpp  | 2 +-
+ include/boost/mpl/or.hpp     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/boost/mpl/and.hpp b/include/boost/mpl/and.hpp
+index 454aaf2e9..be01bd0d7 100644
+--- a/include/boost/mpl/and.hpp
++++ b/include/boost/mpl/and.hpp
+@@ -28,7 +28,7 @@
+ // 'or' and 'and' macros, see http://tinyurl.com/3et69; 'defined(and)'
+ // has to be checked in a separate condition, otherwise GCC complains 
+ // about 'and' being an alternative token
+-#if defined(_MSC_VER) && !defined(__clang__)
++#if defined(_MSC_VER) /*&& !defined(__clang__)*/
+ #ifndef __GCCXML__
+ #if defined(and) 
+ #   pragma push_macro("and")
+diff --git a/include/boost/mpl/bitand.hpp b/include/boost/mpl/bitand.hpp
+index 9c31c7929..8b7d9c0a1 100644
+--- a/include/boost/mpl/bitand.hpp
++++ b/include/boost/mpl/bitand.hpp
+@@ -19,7 +19,7 @@
+ // macros, see http://tinyurl.com/ycwdxco; 'defined(bitand)'
+ // has to be checked in a separate condition, otherwise GCC complains 
+ // about 'bitand' being an alternative token
+-#if defined(_MSC_VER) && !defined(__clang__)
++#if defined(_MSC_VER) /*&& !defined(__clang__)*/
+ #ifndef __GCCXML__
+ #if defined(bitand)
+ #   pragma push_macro("bitand")
+diff --git a/include/boost/mpl/bitor.hpp b/include/boost/mpl/bitor.hpp
+index f00974377..c768a05fc 100644
+--- a/include/boost/mpl/bitor.hpp
++++ b/include/boost/mpl/bitor.hpp
+@@ -19,7 +19,7 @@
+ // macros, see http://tinyurl.com/ycwdxco; 'defined(bitor)'
+ // has to be checked in a separate condition, otherwise GCC complains 
+ // about 'bitor' being an alternative token
+-#if defined(_MSC_VER) && !defined(__clang__)
++#if defined(_MSC_VER) /*&& !defined(__clang__)*/
+ #ifndef __GCCXML__
+ #if defined(bitor)
+ #   pragma push_macro("bitor")
+diff --git a/include/boost/mpl/or.hpp b/include/boost/mpl/or.hpp
+index f9704d516..a0f20bd82 100644
+--- a/include/boost/mpl/or.hpp
++++ b/include/boost/mpl/or.hpp
+@@ -29,7 +29,7 @@
+ // 'or' and 'and' macros, see http://tinyurl.com/3et69; 'defined(or)'
+ // has to be checked in a separate condition, otherwise GCC complains 
+ // about 'or' being an alternative token
+-#if defined(_MSC_VER) && !defined(__clang__)
++#if defined(_MSC_VER) /*&& !defined(__clang__)*/
+ #ifndef __GCCXML__
+ #if defined(or)
+ #   pragma push_macro("or")
