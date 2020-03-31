@@ -10,6 +10,21 @@ index 8a05bf1aa..1f57cc688 100644
  
  # Require xorg-macros minimum of 1.18 - Initial version
  m4_ifndef([XORG_MACROS_VERSION],
+@@ -88,11 +88,11 @@ AC_MSG_RESULT($XCBPROTO_XCBPYTHONDIR)
+ AC_SUBST(XCBPROTO_XCBPYTHONDIR)
+ 
+ AC_HEADER_STDC
+-AC_SEARCH_LIBS(getaddrinfo, socket)
+-AC_SEARCH_LIBS(connect, socket)
++AC_SEARCH_LIBS(getaddrinfo, [socket Ws2_32])
++AC_SEARCH_LIBS(connect, [socket Ws2_32])
+ 
+ # Find support for sending a message from a socket
+-AC_SEARCH_LIBS(sendmsg, socket, [have_sendmsg="yes"], [have_sendmsg="no"])
++AC_SEARCH_LIBS(sendmsg, [socket Ws2_32], [have_sendmsg="yes"], [have_sendmsg="no"])
+ 
+ # XPG4v2/UNIX95 added msg_control - check to see if we need to define
+ # _XOPEN_SOURCE to get it (such as on Solaris)
 @@ -140,6 +141,10 @@ mingw*)
          have_win32="yes"
          lt_enable_auto_import="-Wl,--enable-auto-import"
