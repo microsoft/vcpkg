@@ -2,4 +2,4 @@ Source: vs-yasm
 Version: 0.5.0
 Homepage: https://github.com/ShiftMediaProject/VSYASM
 Description: Provides Visual Studio integration for the YASM assembler. 
-Supports: windows
+Supports: windows & !arm
