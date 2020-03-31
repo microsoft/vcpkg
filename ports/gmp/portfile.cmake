@@ -12,12 +12,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
     vcpkg_add_to_path(${YASM_DIR})
     set(ENV{YASMPATH} ${YASM_DIR}/)
-    if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-        set(PLATFORM "Win32")
-    else ()
-        set(PLATFORM ${TRIPLET_SYSTEM_ARCH})
-    endif()
-    
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(CONFIGURATION_RELEASE ReleaseDLL)
         set(CONFIGURATION_DEBUG DebugDLL)
@@ -44,7 +39,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH SMP/libgmp.sln
-        PLATFORM ${PLATFORM}
+        PLATFORM ${TRIPLET_SYSTEM_ARCH}
         LICENSE_SUBPATH COPYING.LESSERv3
         TARGET Rebuild
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
