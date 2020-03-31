@@ -44,7 +44,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
                      "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                     _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
-    
+    set(_file "${SOURCE_PATH}/SMP/libhogweed.vcxproj")
+    file(READ "${_file}" _contents)
+    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
+                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
+                    _contents "${_contents}")
+    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
+                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
+                    _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
     vcpkg_install_msbuild(
         USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
