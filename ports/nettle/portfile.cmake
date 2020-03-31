@@ -70,10 +70,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     file(WRITE "${_file}" "${_contents}")
     
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        set(OPTIONS_RELASE "/p:AdditionalLibraryDirectories=${CURRENT_INSTALLED_DIR}/lib;$(AdditionalLibraryDirectories)")
-        set(OPTIONS_DEBUG "/p:AdditionalLibraryDirectories=${CURRENT_INSTALLED_DIR}/debug/lib;$(AdditionalLibraryDirectories)")
-    endif()
     vcpkg_install_msbuild(
         USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
