@@ -18,10 +18,11 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(FLEX)
-vcpkg_find_acquire_program(BISON)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
-get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
+
+vcpkg_find_acquire_program(BISON)
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 
