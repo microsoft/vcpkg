@@ -9,6 +9,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PATCHES vs.build.patch
     )
     vcpkg_find_acquire_program(YASM)
+    message(STATUS "YASM:${YASM}")
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
     vcpkg_add_to_path(${YASM_DIR})
     set(ENV{YASMPATH} ${YASM_DIR}/)
