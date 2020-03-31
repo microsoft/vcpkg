@@ -5,8 +5,8 @@ vcpkg_from_gitlab(
     REF ed8b8e9fe544ec51ab1b1dfaea6fced35470ad6c # 2.0.4
     SHA512  abea04d57a951434f1cb88005d0651b5cd67ce27c4581e9688c52bbb3a5e7771e0aa9af3a108250e137125b454dbb382b45b8b75d107e7b1eec670ac61a898f2
     HEAD_REF master # branch name
-    #PATCHES build.patch #patch name
-             #configure.patch
+    PATCHES build.patch #patch name
+            configure.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -38,6 +38,16 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xfont2.pc")
+    file(READ "${_file}" _contents)
+    string(REPLACE "-lm" "" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+    set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xfont2.pc")
+    file(READ "${_file}" _contents)
+    string(REPLACE "-lm" "" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
