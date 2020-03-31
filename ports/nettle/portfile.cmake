@@ -43,13 +43,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     #<Import Project="${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props" />
     set(_file "${SOURCE_PATH}/SMP/libnettle.vcxproj")
     file(READ "${_file}" _contents)
-    string(REPLACE
-[[<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup Label="ProjectConfigurations">]]
-"<Project DefaultTargets=\"Build\" ToolsVersion=\"12.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n \
-  <Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />\n \
-  <ItemGroup Label=\"ProjectConfigurations\">"
-  _contents "${_contents}")
+    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
+                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
+                    _contents "${_contents}")
+    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
+                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
+                    _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
     
     vcpkg_install_msbuild(
