@@ -7,6 +7,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         SHA512 3b646c142447946bb4556db01214ff130da917bc149946b8cf086f3b01e1cc3d664b941a30a42608799c14461b2f29e4b894b72915d723bd736513c8914729b7
         HEAD_REF master
         PATCHES vs.build.patch
+                runtime.patch
+                prefix.patch
     )
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
@@ -34,6 +36,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
                      "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                     _contents "${_contents}")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
+        STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
+    else()
+        STRING(REPLACE ">MultiThreadedDebug<" ">MultiThreadedDebugDLL<" _contents "${_contents}")
+        STRING(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" _contents "${_contents}")
+    endif()
     file(WRITE "${_file}" "${_contents}")
     
     vcpkg_install_msbuild(

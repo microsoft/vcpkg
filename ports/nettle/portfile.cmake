@@ -16,6 +16,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         HEAD_REF master
         PATCHES gmp.patch
                 name.dir.patch
+                runtime.nettle.patch
+                runtime.hogweed.patch
     )
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
@@ -43,6 +45,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
                      "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                     _contents "${_contents}")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
+        STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
+    else()
+        STRING(REPLACE ">MultiThreadedDebug<" ">MultiThreadedDebugDLL<" _contents "${_contents}")
+        STRING(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" _contents "${_contents}")
+    endif()
     file(WRITE "${_file}" "${_contents}")
     set(_file "${SOURCE_PATH}/SMP/libhogweed.vcxproj")
     file(READ "${_file}" _contents)
@@ -52,7 +61,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
                      "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                     _contents "${_contents}")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
+        STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
+    else()
+        STRING(REPLACE ">MultiThreadedDebug<" ">MultiThreadedDebugDLL<" _contents "${_contents}")
+        STRING(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" _contents "${_contents}")
+    endif()
     file(WRITE "${_file}" "${_contents}")
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        set(OPTIONS_RELASE "/p:AdditionalLibraryDirectories=${CURRENT_INSTALLED_DIR}/lib;$(AdditionalLibraryDirectories)")
+        set(OPTIONS_DEBUG "/p:AdditionalLibraryDirectories=${CURRENT_INSTALLED_DIR}/debug/lib;$(AdditionalLibraryDirectories)")
+    endif()
     vcpkg_install_msbuild(
         USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
@@ -62,6 +83,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         TARGET Rebuild
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
+        OPTIONS_DEBUG ${OPTIONS_DEBUG}
+        OPTIONS_RELASE ${OPTIONS_RELASE}
         SKIP_CLEAN
     )
 
