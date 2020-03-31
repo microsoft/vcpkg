@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fribidi/fribidi
-    REF 58c6cb390a9a18c98b2cbaac555d8ea9352a9e4f
-    SHA512 1ec9c19faa87886786ce1589e2c66cab173b48e34d0e43487becc8606001f21f6ed17d0abd1c322fbbcaeb96a47ed882cad228be2e9beb019020ca2a475fc298
+    REF abea9f626732a9b10499d76c1cd69ce5457950cc # v1.0.9
+    SHA512 5cb28f9e35d0df205c9fb88a56776d371fdd8bca12c211cec282334cfbf12a05e3324cd14a3ae71bcc06e15ce07b06cbe97eaafe1c7368e517a4ce5a4c3a2bcc
     HEAD_REF master
     PATCHES fix-win-static-suffix.patch
 )
