@@ -315,9 +315,9 @@ else()
     endif()
 
     ## Fix location of qtmain(d).lib. Has been moved into manual-link. Add debug version
+    set(cmakefile "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfigExtras.cmake")
+    file(READ "${cmakefile}" _contents)
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
-        set(cmakefile "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfigExtras.cmake")
-        file(READ "${cmakefile}" _contents)
         string(REPLACE "set_property(TARGET Qt5::WinMain APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)" "set_property(TARGET Qt5::WinMain APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE DEBUG)" _contents "${_contents}")
         string(REPLACE 
         [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmain.lib")]] 
@@ -333,9 +333,24 @@ else()
         IMPORTED_LOCATION_DEBUG ${imported_location_debug}
     )]] 
     _contents "${_contents}")
-        file(WRITE "${cmakefile}" "${_contents}")
+    else() # Single configuration build (either debug or release)
+        # Release case
+        string(REPLACE 
+            [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmain.lib")]]
+            [[set(imported_location "${_qt5Core_install_prefix}/lib/manual-link/qtmain.lib")]]
+            _contents "${_contents}")
+        # Debug case (whichever will match)
+        string(REPLACE 
+            [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmaind.lib")]]
+            [[set(imported_location "${_qt5Core_install_prefix}/debug/lib/manual-link/qtmaind.lib")]]
+            _contents "${_contents}")
+        string(REPLACE 
+            [[set(imported_location "${_qt5Core_install_prefix}/debug/lib/qtmaind.lib")]]
+            [[set(imported_location "${_qt5Core_install_prefix}/debug/lib/manual-link/qtmaind.lib")]]
+            _contents "${_contents}")
     endif()
-    
+    file(WRITE "${cmakefile}" "${_contents}")
+
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
         file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
