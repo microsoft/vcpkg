@@ -2,12 +2,15 @@ diff --git a/mkspecs/features/create_cmake.prf b/mkspecs/features/create_cmake.p
 index 4aa5dad46..cee6d2882 100644
 --- a/mkspecs/features/create_cmake.prf
 +++ b/mkspecs/features/create_cmake.prf
-@@ -212,7 +212,7 @@ contains(CONFIG, plugin) {
+@@ -212,10 +212,10 @@ contains(CONFIG, plugin) {
      CMAKE_PLUGIN_TYPE_ESCAPED = $$replace(PLUGIN_TYPE, [-/], _)
  
      win32 {
 -        !mingw|qtConfig(debug_and_release): debug_suffix="d"
 +        debug_suffix="d"
+ 
+         CMAKE_PRL_FILE_LOCATION_RELEASE = $$PLUGIN_TYPE/$${CMAKE_QT_STEM}.prl
+         CMAKE_PRL_FILE_LOCATION_DEBUG = $$PLUGIN_TYPE/$${CMAKE_QT_STEM}$${debug_suffix}.prl
  
          isEmpty(CMAKE_STATIC_TYPE) {
              CMAKE_PLUGIN_LOCATION_RELEASE = $$PLUGIN_TYPE/$${CMAKE_QT_STEM}.dll
@@ -26,10 +29,10 @@ index 4aa5dad46..cee6d2882 100644
 -    !mingw|qtConfig(debug_and_release): debug_suffix="d"
 +    debug_suffix="d"
  
-     mingw {
-         CMAKE_LIB_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}$${debug_suffix}.dll
-@@ -355,6 +356,7 @@ mac {
-         }
+     CMAKE_LIB_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}$${debug_suffix}.dll
+     CMAKE_LIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.dll
+@@ -340,6 +340,7 @@ mac {
+         CMAKE_IMPLIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.lib
      }
  } else {
 +    CMAKE_FIND_OTHER_LIBRARY_BUILD = "true"
