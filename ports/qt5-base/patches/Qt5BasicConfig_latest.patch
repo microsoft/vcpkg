@@ -65,7 +65,7 @@ index c72989288..a88234dca 100644
          set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} APPEND PROPERTY INTERFACE_LINK_LIBRARIES
                       \"${_static_deps_genex}\"
          )
-+        message(STATUS \"Target Qt5::$${CMAKE_MODULE_NAME} static links: ${_static_dep} through ${_static_dep_genex}\") # Added for debugging
++        #message(STATUS \"Target Qt5::$${CMAKE_MODULE_NAME} static links: ${_static_dep} through ${_static_dep_genex}\") # Added for debugging
      endif()
  
      set(_static_link_flags \"${_Qt5$${CMAKE_MODULE_NAME}_STATIC_${Configuration}_LINK_FLAGS}\")
@@ -73,7 +73,7 @@ index c72989288..a88234dca 100644
              set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} APPEND PROPERTY INTERFACE_LINK_LIBRARIES
                  \"${_static_link_flags_genex}\"
              )
-+            message(STATUS \"Target Qt5::$${CMAKE_MODULE_NAME} static link flags: ${_static_link_flags} through ${_static_link_flags_genex}\")
++            #message(STATUS \"Target Qt5::$${CMAKE_MODULE_NAME} static link flags: ${_static_link_flags} through ${_static_link_flags_genex}\")
          endif()
      endif()
  !!ENDIF
