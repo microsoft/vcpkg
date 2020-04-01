@@ -1,5 +1,4 @@
 
-include(vcpkg_common_functions)
 
 set(ACE_ROOT ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers)
 set(TAO_ROOT ${ACE_ROOT}/tao)
@@ -20,19 +19,33 @@ endif()
 #
 ###################################################
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_6/ACE+TAO-src-6.5.6.tar.gz"
-    FILENAME ACE+TAO-src-6.5.6.tar.gz
-    SHA512 7d1e6bafee3ecb831105e4815822cf9d87b400ea26d73aea6eeaab7d7c68599da91dc62718f5840eaebd8f29c6e3a32c9d2f768a0e8686ca7265dc97a4026c52
-)
+# Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
+# when invoking `prj_install.pl`.
+# So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
+if(VCPKG_TARGET_IS_WINDOWS)
+  # Don't change to vcpkg_from_github! This points to a release and not an archive
+  vcpkg_download_distfile(ARCHIVE
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE+TAO-src-6.5.8.zip"
+      FILENAME ACE+TAO-src-6.5.8.zip
+      SHA512 847621bdd72b5a6909cbdef1d6e3c8792aa29f0b44e64c49c64c5d87df4fe703c6a27b15465d655e97ca8cc0df7449ac012f90f6de5d82b8e30bfbeb2e7057c2
+  )
+else(VCPKG_TARGET_IS_WINDOWS)
+  # VCPKG_TARGET_IS_LINUX
+  vcpkg_download_distfile(ARCHIVE
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE+TAO-src-6.5.8.tar.gz"
+      FILENAME ACE+TAO-src-6.5.8.tar.gz
+      SHA512 4440975cac5baaa1d6fce869fbac73f15cf86942df3dab0f06c2309d9e20f6a79d826690138baf2ce5b232a1255d9e09cae0e40bd0cddae3d26ca9eb937871db
+  )
+endif()
+
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/qtcoreapplication.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/bzip2.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/mpc-arm.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/stacktrace-arm.patch"
+        #"${CMAKE_CURRENT_LIST_DIR}/qtcoreapplication.patch"
+        #"${CMAKE_CURRENT_LIST_DIR}/bzip2.patch"
+        #"${CMAKE_CURRENT_LIST_DIR}/mpc-arm.patch"
+        #"${CMAKE_CURRENT_LIST_DIR}/stacktrace-arm.patch"
         "${CMAKE_CURRENT_LIST_DIR}/arm_prevent_amd64_definition.patch"
 )
 
@@ -85,10 +98,10 @@ if("xml" IN_LIST FEATURES)
 else()
     list(APPEND ACE_FEATURE_LIST "xml=0")
 endif()
-
 if("ssl" IN_LIST FEATURES)
     set(ENV{SSL_ROOT} ${INSTALLED_PATH})
     list(APPEND ACE_FEATURE_LIST "ssl=1")
+    list(APPEND ACE_FEATURE_LIST "openssl11=1")
 else()
     list(APPEND ACE_FEATURE_LIST "ssl=0")
 endif()
