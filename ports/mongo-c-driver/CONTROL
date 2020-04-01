@@ -7,3 +7,7 @@ Homepage: https://github.com/mongodb/mongo-c-driver
 Feature: snappy
 Description: Enables snappy compressor support
 Build-Depends: snappy
+
+Feature: icu
+Description: Enable ICU support, necessary to use non-ASCII usernames or passwords
+Build-Depends: icu
