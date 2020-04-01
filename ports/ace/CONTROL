@@ -8,26 +8,27 @@ Feature: wchar
 Description: Enable extra wide char functions
 
 Feature: ssl
-Description: Enable SSL/TLS features
 Build-Depends: openssl
+Description: Enable SSL/TLS features
 
 Feature: xml
+Build-Depends: xerces-c
 Description: Enable XML features
 
 Feature: qt5
 Build-Depends: qt5-base
 Description: Enable Qt5 support
 
+Feature: zlib
+Build-Depends: zlib
+Description: Enable zlib support
+
+Feature: bzip2
+Build-Depends: bzip2
+Description: Enable bzip2 support
+
 Feature: tao
 Description: The ACE ORB
-
-Feature: tao-zlib
-Build-Depends: zlib, ace[tao]
-Description: Enable zlib support for TAO
-
-Feature: tao-bzip2
-Build-Depends: bzip2, ace[tao]
-Description: Enable bzip2 support for TAO
 
 
 

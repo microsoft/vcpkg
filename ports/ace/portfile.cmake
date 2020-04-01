@@ -42,13 +42,9 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers
     PATCHES
-        #"${CMAKE_CURRENT_LIST_DIR}/qtcoreapplication.patch"
-        #"${CMAKE_CURRENT_LIST_DIR}/bzip2.patch"
-        #"${CMAKE_CURRENT_LIST_DIR}/mpc-arm.patch"
-        #"${CMAKE_CURRENT_LIST_DIR}/stacktrace-arm.patch"
         "${CMAKE_CURRENT_LIST_DIR}/arm_prevent_amd64_definition.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/bzip2.patch"
 )
-
 
 ###################################################
 #
@@ -101,7 +97,7 @@ endif()
 if("ssl" IN_LIST FEATURES)
     set(ENV{SSL_ROOT} ${INSTALLED_PATH})
     list(APPEND ACE_FEATURE_LIST "ssl=1")
-    list(APPEND ACE_FEATURE_LIST "openssl11=1")
+    # list(APPEND ACE_FEATURE_LIST "openssl11=1") # use for new lib names (i.e. libcrypto)
 else()
     list(APPEND ACE_FEATURE_LIST "ssl=0")
 endif()
@@ -117,22 +113,22 @@ if("qt5" IN_LIST FEATURES)
 else()
     list(APPEND ACE_FEATURE_LIST "qt5=0")
 endif()
-if("tao" IN_LIST FEATURES)
-    set(BUILD_TAO 1)
-else()
-    set(BUILD_TAO 0)    
-endif()
-if("tao-bzip2" IN_LIST FEATURES)
+if("bzip2" IN_LIST FEATURES)
     set(ENV{BZIP2_ROOT} ${INSTALLED_PATH})
     list(APPEND ACE_FEATURE_LIST "bzip2=1")
 else()
     list(APPEND ACE_FEATURE_LIST "bzip2=0")
 endif()
-if("tao-zlib" IN_LIST FEATURES)
+if("zlib" IN_LIST FEATURES)
     set(ENV{ZLIB_ROOT} ${INSTALLED_PATH})
     list(APPEND ACE_FEATURE_LIST "zlib=1")
 else()
     list(APPEND ACE_FEATURE_LIST "zlib=0")
+endif()
+if("tao" IN_LIST FEATURES)
+    set(BUILD_TAO 1)
+else()
+    set(BUILD_TAO 0)    
 endif()
 list(JOIN ACE_FEATURE_LIST "," ACE_FEATURES)
 string(PREPEND ACE_FEATURES ",")
@@ -170,7 +166,6 @@ vcpkg_execute_required_process(
     LOGNAME mwc-tao-${TARGET_TRIPLET}
 )
 
-
 ###################################################
 #
 #   Build
@@ -179,7 +174,7 @@ vcpkg_execute_required_process(
 
 # Build for Windows
 if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL VCPKG_CMAKE_SYSTEM_NAME))
-    vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" PLATFORM ${MSBUILD_PLATFORM} USE_VCPKG_INTEGRATION)
+    vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" PLATFORM ${MSBUILD_PLATFORM} OPTIONS /m USE_VCPKG_INTEGRATION)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
