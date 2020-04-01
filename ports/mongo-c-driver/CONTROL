@@ -1,5 +1,5 @@
 Source: mongo-c-driver
-Version: 1.14.0-5
+Version: 1.15.1-1
 Build-Depends: libbson, openssl (!windows), zlib
 Description: Client library written in C for MongoDB.
 Homepage: https://github.com/mongodb/mongo-c-driver
@@ -7,3 +7,7 @@ Homepage: https://github.com/mongodb/mongo-c-driver
 Feature: snappy
 Description: Enables snappy compressor support
 Build-Depends: snappy
+
+Feature: icu
+Description: Enable ICU support, necessary to use non-ASCII usernames or passwords
+Build-Depends: icu

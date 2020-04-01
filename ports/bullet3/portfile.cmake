@@ -1,19 +1,19 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bulletphysics/bullet3
-    REF 2.88
-    SHA512 15face1940d496c96fd19a44139d11d2cbb629526c40432be4a0eef5fa9a532c842ec7318248c0359a080f2034111bf1a3c2d3a6fd789bec675bd368fac7bd93
+    REF 2.89
+    SHA512 3c4ba6a3b3623ef44dd4a23e0bc2e90dec1f2b7af463edcb886e110feac1dfb4a91945f0ed640052cac228318539e275976d37238102fb10a0f78aef065a730b
     HEAD_REF master
+    PATCHES cmake-fix.patch
 )
 
-set(BULLET_MULTITHREADING OFF)
-if ("multithreading" IN_LIST FEATURES)
-    set(BULLET_MULTITHREADING ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    multithreading       BULLET2_MULTITHREADING
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -27,17 +27,19 @@ vcpkg_configure_cmake(
         -DBUILD_EXTRAS=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DINSTALL_LIBS=ON
-        -DBULLET2_MULTITHREADING=${BULLET_MULTITHREADING}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/bullet3")
+
+# Clean up unneeded files
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/bullet/BulletInverseDynamics/details)
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/bullet3 RENAME copyright)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

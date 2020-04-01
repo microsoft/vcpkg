@@ -1,6 +1,7 @@
 Source: openxr-loader
-Version: 2019-09-25
+Version: 1.0.3.0
 Description: Khronos API for abstracting VR/MR/AR hardware
+Supports: !(arm|uwp)
 
 Feature: vulkan
 Description: Vulkan functionality for OpenXR

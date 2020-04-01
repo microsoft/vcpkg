@@ -52,17 +52,17 @@ function(vcpkg_build_make)
             set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
             # Set make command and install command
-            set(MAKE ${BASH} --noprofile --norc -c)
+            set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
             # Must use absolute path to call make in windows
-            set(MAKE_OPTS "${_VCPKG_PROJECT_SUBPATH}make")
-            set(INSTALL_OPTS "${_VCPKG_PROJECT_SUBPATH}make install")
+            set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
+            set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
         else()
             # Compiler requriements
             find_program(MAKE make REQUIRED)
-            set(MAKE make)
+            set(MAKE make;)
             # Set make command and install command
-            set(MAKE_OPTS)
-            set(INSTALL_OPTS install)
+            set(MAKE_OPTS -j;${VCPKG_CONCURRENCY})
+            set(INSTALL_OPTS install;-j;${VCPKG_CONCURRENCY})
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         find_program(NMAKE nmake REQUIRED)
@@ -120,11 +120,19 @@ function(vcpkg_build_make)
                 endif()
             endif()
 
-            vcpkg_execute_build_process(
-                COMMAND ${MAKE} -j ${VCPKG_CONCURRENCY} ${MAKE_OPTS}
-                WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-            )
+            if (CMAKE_HOST_WIN32)
+                vcpkg_execute_build_process(
+                    COMMAND "${MAKE} ${MAKE_OPTS}"
+                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                )
+            else()
+                vcpkg_execute_build_process(
+                    COMMAND "${MAKE};${MAKE_OPTS}"
+                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                )
+            endif()
     
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
@@ -134,34 +142,40 @@ function(vcpkg_build_make)
     
     if (_bc_ENABLE_INSTALL)
         foreach(BUILDTYPE "debug" "release")
-            if(BUILDTYPE STREQUAL "debug")
-                # Skip debug generate
-                if (_VCPKG_NO_DEBUG)
-                    continue()
-                endif()
-                set(SHORT_BUILDTYPE "-dbg")
-            else()
-                # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
-                if (_VCPKG_NO_DEBUG)
-                    set(SHORT_BUILDTYPE "")
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
+                if(BUILDTYPE STREQUAL "debug")
+                    # Skip debug generate
+                    if (_VCPKG_NO_DEBUG)
+                        continue()
+                    endif()
+                    set(SHORT_BUILDTYPE "-dbg")
                 else()
-                    set(SHORT_BUILDTYPE "-rel")
+                    # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
+                    if (_VCPKG_NO_DEBUG)
+                        set(SHORT_BUILDTYPE "")
+                    else()
+                        set(SHORT_BUILDTYPE "-rel")
+                    endif()
+                endif()
+            
+                message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+                if (CMAKE_HOST_WIN32)
+                    # In windows we can remotely call make
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+                    vcpkg_execute_build_process(
+                        COMMAND "${MAKE} ${INSTALL_OPTS}"
+                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                    )
+                else()
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+                    vcpkg_execute_build_process(
+                        COMMAND "${MAKE};${INSTALL_OPTS}"
+                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                    )
                 endif()
             endif()
-            
-            if (CMAKE_HOST_WIN32)
-                # In windows we can remotely call make
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
-            else()
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
-            endif()
-            
-            message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-            vcpkg_execute_required_process(
-                COMMAND ${MAKE} ${INSTALL_OPTS}
-                WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-            )
         endforeach()
     endif()
     

@@ -1,16 +1,15 @@
-include(vcpkg_common_functions)
-set(BUILD_VERSION 1.14.0)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
-    REF ${BUILD_VERSION}
-    SHA512 bf2bb835543dd2a445aac6cafa7bbbf90921ec41014534779924a5eb7cbd9fd532acd8146ce81dfcf1bcac33a78d8fce22b962ed7f776449e4357eccab8d6110
+    REF 541086adcf1eecf88ac09fda47d9a8ec1598015d # debian/1.15.1-1
+    SHA512 a57438dfae9d0993ae04b7a76677f79331699898f21e7645db5edd2c91014f33b738a0af67b58234d1ee03aab2ae3b58c183bbd043fc2bde5cc1a4e111755b70
     HEAD_REF master
+    PATCHES fix-arm-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "snappy" ENABLE_SNAPPY
+    "icu"    ENABLE_ICU
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -24,6 +23,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     set(ENABLE_SSL "OPENSSL")
 endif()
+
+file(READ ${CMAKE_CURRENT_LIST_DIR}/CONTROL _contents)
+string(REGEX MATCH "\nVersion:[ ]*[^ \n]+" _contents "${_contents}")
+string(REGEX REPLACE ".+Version:[ ]*([\\.0-9]+).*" "\\1" BUILD_VERSION "${_contents}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

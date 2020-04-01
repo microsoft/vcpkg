@@ -8,23 +8,21 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
 
     vcpkg_install_cmake()
 
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${CMAKE_PACKAGE_NAME}" TARGET_PATH "share/${CMAKE_PACKAGE_NAME}")
+    # If necessary, move the CMake config files
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake")
+        vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${CMAKE_PACKAGE_NAME}" TARGET_PATH "share/${CMAKE_PACKAGE_NAME}")
 
-    file(GLOB_RECURSE CMAKE_RELEASE_FILES 
-                      "${CURRENT_PACKAGES_DIR}/lib/cmake/${CMAKE_PACKAGE_NAME}/*")
+        file(GLOB_RECURSE CMAKE_RELEASE_FILES
+                          "${CURRENT_PACKAGES_DIR}/lib/cmake/${CMAKE_PACKAGE_NAME}/*")
 
-    file(COPY ${CMAKE_RELEASE_FILES} DESTINATION 
-              "${CURRENT_PACKAGES_DIR}/share/${CMAKE_PACKAGE_NAME}/")
+        file(COPY ${CMAKE_RELEASE_FILES} DESTINATION
+                  "${CURRENT_PACKAGES_DIR}/share/${CMAKE_PACKAGE_NAME}/")
 
-    # Remove debug files
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include 
-                        ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
-                        ${CURRENT_PACKAGES_DIR}/debug/share)
-
-
-
-    # Post-build test for cmake libraries 
-    vcpkg_test_cmake(PACKAGE_NAME ${CMAKE_PACKAGE_NAME})
+        # Remove debug files
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
+                            ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
+                            ${CURRENT_PACKAGES_DIR}/debug/share)
+    endif()
 
     # Find the relevant license file and install it
     if(EXISTS "${SOURCE_PATH}/LICENSE")
