@@ -1,8 +1,7 @@
 Source: ace
-Version: 6.5.6
+Version: 6.5.8
 Description: The ADAPTIVE Communication Environment
-Homepage: http://www.dre.vanderbilt.edu/~schmidt/TAO.html
-Maintainer: Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>
+Homepage: https://www.dre.vanderbilt.edu/~schmidt/TAO.html
 
 Feature: wchar
 Description: Enable extra wide char functions
