@@ -1,5 +1,5 @@
 [cmdletbinding()]
-param([string]$targetBinary, [string]$installedDir, [string]$tlogFile, [string]$copiedFilesLog)
+param([string]$targetBinary, [string]$installedDir, [string]$tlogFile, [string]$copiedFilesLog, [string]$outputDir)
 
 $g_searched = @{}
 # Note: installedDir is actually the bin\ directory.
@@ -38,6 +38,11 @@ try
 {
     $baseBinaryPath = Resolve-Path $targetBinary -erroraction stop
     $baseTargetBinaryDir = Split-Path $baseBinaryPath -parent
+    if ($outputDir) {
+        if (Test-Path "$outputDir\$_"){
+            $baseTargetBinaryDir = $outputDir
+        }
+    }
 }
 catch [System.Management.Automation.ItemNotFoundException]
 {
