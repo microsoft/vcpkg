@@ -36,6 +36,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
                      "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                     _contents "${_contents}")
+    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already replaced by another triplet
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
         STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
@@ -46,6 +47,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(WRITE "${_file}" "${_contents}")
     
     vcpkg_install_msbuild(
+        USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH SMP/libgmp.sln
         PLATFORM ${TRIPLET_SYSTEM_ARCH}
