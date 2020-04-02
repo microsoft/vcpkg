@@ -10,7 +10,7 @@ Feature: ssl
 Build-Depends: openssl
 Description: Enable SSL/TLS features
 
-Feature: xml
+Feature: xerces-c
 Build-Depends: xerces-c
 Description: Enable XML features
 
