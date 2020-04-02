@@ -21,7 +21,7 @@ index c72989288..a88234dca 100644
              elseif(EXISTS \"${_flag}\")
                  # The flag is an absolute path to an existing library
                  list(APPEND _lib_deps \"${_flag}\")
-+            elseif(_flag MATCHES \"\\\\\\.lib$\") #Library name only. No -l. Probably missing some cases
++            elseif(_flag MATCHES \"\\\\.lib$\") #Library name only. No -l. Probably missing some cases
 +                list(APPEND _lib_deps \"${_flag}\") 
              elseif(_flag MATCHES \"^-L(.*)$\")
                  # Handle -Lfoo flags by putting their paths in the search path used by find_library above
