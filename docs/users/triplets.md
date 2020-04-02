@@ -125,6 +125,10 @@ Valid settings:
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.
 
+### VCPKG_LOAD_VCVARS_ENV
+If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment. 
+Setting `VCPKG_LOAD_VCVARS_ENV` to (true|1|on) changes this behavior so that the Visual Studio environment is setup following the same rules as if `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` was not set.
+
 ## MacOS Variables
 
 ### VCPKG_INSTALL_NAME_DIR
