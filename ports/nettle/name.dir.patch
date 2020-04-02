@@ -219,7 +219,7 @@ index 9f741e240..5bb05b359 100644
        <LargeAddressAware>true</LargeAddressAware>
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
--      <AdditionalDependencies>nettled.lib;gmpd.lib%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
@@ -228,7 +228,7 @@ index 9f741e240..5bb05b359 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
--      <AdditionalDependencies>nettled.lib;gmpd.lib%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
@@ -237,7 +237,7 @@ index 9f741e240..5bb05b359 100644
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
--      <AdditionalDependencies>nettled.lib;gmpd.lib%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
@@ -246,7 +246,7 @@ index 9f741e240..5bb05b359 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
--      <AdditionalDependencies>nettled.lib;gmpd.lib%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
@@ -291,7 +291,7 @@ index 9f741e240..5bb05b359 100644
        <LargeAddressAware>true</LargeAddressAware>
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
--      <AdditionalDependencies>nettle.lib;gmp.lib%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
@@ -309,7 +309,7 @@ index 9f741e240..5bb05b359 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
--      <AdditionalDependencies>nettle.lib;gmp.lib%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
@@ -327,7 +327,7 @@ index 9f741e240..5bb05b359 100644
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
--      <AdditionalDependencies>nettle.lib;gmp.lib%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
@@ -345,7 +345,7 @@ index 9f741e240..5bb05b359 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
--      <AdditionalDependencies>nettle.lib;gmp.lib%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
