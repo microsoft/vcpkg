@@ -24,6 +24,11 @@ vcpkg_extract_source_archive_ex(
         ${CMAKE_CURRENT_LIST_DIR}/fix-extra.patch
 )
 
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
+set(ENV{PYTHON} "${PYTHON3}")
+
 set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
