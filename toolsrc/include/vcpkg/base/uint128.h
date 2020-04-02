@@ -12,10 +12,10 @@ struct UInt128 {
     UInt128& operator>>=(int by) noexcept;
     UInt128& operator+=(uint64_t lhs) noexcept;
 
-    inline uint64_t bottom_64_bits() const noexcept {
+    constexpr uint64_t bottom_64_bits() const noexcept {
         return bottom;
     }
-    inline uint64_t top_64_bits() const noexcept {
+    constexpr uint64_t top_64_bits() const noexcept {
         return top;
     }
 private:
