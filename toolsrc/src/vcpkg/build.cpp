@@ -831,7 +831,7 @@ namespace vcpkg::Build
         {
             for (const FeatureSpec& fspec : kv.second)
             {
-                if (!(status_db.is_installed(fspec) || spec.name() == name))
+                if (!(status_db.is_installed(fspec) || fspec.name() == name))
                 {
                     missing_fspecs.emplace_back(fspec);
                 }
