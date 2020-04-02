@@ -96,7 +96,7 @@ index 9ea0d8ea7..56583e10f 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Lib>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -105,7 +105,7 @@ index 9ea0d8ea7..56583e10f 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Lib>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -114,7 +114,7 @@ index 9ea0d8ea7..56583e10f 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Lib>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -123,7 +123,7 @@ index 9ea0d8ea7..56583e10f 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Lib>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -168,7 +168,7 @@ index 9ea0d8ea7..56583e10f 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Lib>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -177,7 +177,7 @@ index 9ea0d8ea7..56583e10f 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Lib>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -186,7 +186,7 @@ index 9ea0d8ea7..56583e10f 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Lib>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -195,7 +195,7 @@ index 9ea0d8ea7..56583e10f 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Lib>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -213,7 +213,7 @@ index 9ea0d8ea7..56583e10f 100644
        <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -231,7 +231,7 @@ index 9ea0d8ea7..56583e10f 100644
        <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -249,7 +249,7 @@ index 9ea0d8ea7..56583e10f 100644
        <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -267,7 +267,7 @@ index 9ea0d8ea7..56583e10f 100644
        <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libgmp_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include

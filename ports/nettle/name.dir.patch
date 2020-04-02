@@ -184,7 +184,7 @@ index 9f741e240..5bb05b359 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libnettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Lib>
      <PostBuildEvent>
@@ -193,7 +193,7 @@ index 9f741e240..5bb05b359 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libnettled_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Lib>
      <PostBuildEvent>
@@ -202,7 +202,7 @@ index 9f741e240..5bb05b359 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libnettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Lib>
      <PostBuildEvent>
@@ -211,7 +211,7 @@ index 9f741e240..5bb05b359 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libnettled_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Lib>
      <PostBuildEvent>
@@ -256,7 +256,7 @@ index 9f741e240..5bb05b359 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Lib>
      <PostBuildEvent>
@@ -265,7 +265,7 @@ index 9f741e240..5bb05b359 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libnettle_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Lib>
      <PostBuildEvent>
@@ -274,7 +274,7 @@ index 9f741e240..5bb05b359 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Lib>
      <PostBuildEvent>
@@ -283,7 +283,7 @@ index 9f741e240..5bb05b359 100644
        <SubSystem>Windows</SubSystem>
        <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 -      <AdditionalDependencies>libnettle_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Lib>
      <PostBuildEvent>
@@ -301,7 +301,7 @@ index 9f741e240..5bb05b359 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
 -      <AdditionalDependencies>libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
      <PostBuildEvent>
@@ -319,7 +319,7 @@ index 9f741e240..5bb05b359 100644
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
 -      <AdditionalDependencies>libnettle_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
@@ -337,7 +337,7 @@ index 9f741e240..5bb05b359 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
 -      <AdditionalDependencies>libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
      <PostBuildEvent>
@@ -355,7 +355,7 @@ index 9f741e240..5bb05b359 100644
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
        <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
 -      <AdditionalDependencies>libnettle_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
