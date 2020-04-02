@@ -97,6 +97,8 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_BUILD_EXAMPLES=OFF
+        # Force TableGen to be built with optimization. This will significantly improve build time.
+        -DLLVM_OPTIMIZED_TABLEGEN=ON
         # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
         # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
         # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
