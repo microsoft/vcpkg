@@ -20,10 +20,10 @@ build-windows:
     - $Env:VCPKG_DEFAULT_TRIPLET=$TRIPLET
     - .\vcpkg remove ace-tao
     - .\vcpkg.exe upgrade --no-dry-run
-    - .\vcpkg.exe install openssl boost jsoncpp libgit2 libpq libpqxx soci[boost,odbc,postgresql,sqlite3] graphicsmagick libharu wt curl[ssl,brotli,http2] curlpp cpprestsdk thrift google-cloud-cpp icu json-spirit qt5 --recurse # libmariadb grpc 7zip capnproto cppcodec platform-folders podofo
+    - .\vcpkg.exe install openssl boost jsoncpp libgit2 libpq libpqxx soci[boost,odbc,postgresql,sqlite3] graphicsmagick libharu wt curl[ssl,brotli,http2] curlpp cpprestsdk thrift google-cloud-cpp icu json-spirit qt5 ace[*] --recurse # libmariadb grpc 7zip capnproto cppcodec platform-folders podofo
 #    - .\vcpkg.exe install openssl boost jsoncpp libgit2 libpq libpqxx soci[boost,odbc,postgresql,sqlite3] graphicsmagick libharu wt curl[ssl,brotli,http2] curlpp cpprestsdk thrift google-cloud-cpp icu json-spirit qt5 --recurse
     - Set-Location $physicalBuildPath
-    - .\vcpkg.exe export openssl boost jsoncpp libgit2 libpq libpqxx soci[boost,odbc,postgresql,sqlite3] graphicsmagick libharu wt curl[ssl,brotli,http2] curlpp cpprestsdk thrift google-cloud-cpp icu json-spirit qt5 --zip --output=vcpkg-$TRIPLET
+    - .\vcpkg.exe export openssl boost jsoncpp libgit2 libpq libpqxx soci[boost,odbc,postgresql,sqlite3] graphicsmagick libharu wt curl[ssl,brotli,http2] curlpp cpprestsdk thrift google-cloud-cpp icu json-spirit qt5 ace[*] --zip --output=vcpkg-$TRIPLET
     - 'net use J: \\FILESRV\Shared /user:jenkins_user 3Edcft67; echo ok'
     #- Copy-Item "vcpkg-$TRIPLET-ifw-installer.exe" -Destination "J:\vcpkg" -Force
     - Copy-Item "vcpkg-x64-windows.zip" -Destination "J:\vcpkg" -Force
