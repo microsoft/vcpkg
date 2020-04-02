@@ -1,0 +1,65 @@
+stages:
+  - build
+build-windows:
+  tags:
+    - msvc142
+  variables:
+    GIT_STRATEGY: fetch
+    TRIPLET: "x64-windows"
+    #PACKAGES: "boost curl[ssl,openssl,winssl,non-http,ssh,brotli] curlpp jsoncpp libgit2 libpq libpqxx soci[odbc,postgresql,sqlite3]" # libmariadb thrift grpc 7zip capnproto cppcodec platform-folders podofo qt5
+    PACKAGES: jsoncpp zlib
+  stage: build
+  before_script:
+    - 'subst Q: (Get-Location); echo ok'
+  script:
+    - Invoke-BatchFile "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Community\Common7\Tools\VsMSBuildCmd.bat"
+    - $physicalBuildPath = Get-Location
+    #- 'subst Q: $physicalBuildPath; echo ok'
+    - Set-Location Q:\
+    - .\bootstrap-vcpkg.bat -disableMetrics
+    - $Env:VCPKG_DEFAULT_TRIPLET=$TRIPLET
+    - .\vcpkg remove ace-tao
+    - .\vcpkg.exe upgrade --no-dry-run
+    - .\vcpkg.exe install openssl boost jsoncpp libgit2 libpq libpqxx soci[boost,odbc,postgresql,sqlite3] graphicsmagick libharu wt curl[ssl,brotli,http2] curlpp cpprestsdk thrift google-cloud-cpp icu json-spirit qt5 --recurse # libmariadb grpc 7zip capnproto cppcodec platform-folders podofo
+#    - .\vcpkg.exe install openssl boost jsoncpp libgit2 libpq libpqxx soci[boost,odbc,postgresql,sqlite3] graphicsmagick libharu wt curl[ssl,brotli,http2] curlpp cpprestsdk thrift google-cloud-cpp icu json-spirit qt5 --recurse
+    - Set-Location $physicalBuildPath
+    - .\vcpkg.exe export openssl boost jsoncpp libgit2 libpq libpqxx soci[boost,odbc,postgresql,sqlite3] graphicsmagick libharu wt curl[ssl,brotli,http2] curlpp cpprestsdk thrift google-cloud-cpp icu json-spirit qt5 --zip --output=vcpkg-$TRIPLET
+    - 'net use J: \\FILESRV\Shared /user:jenkins_user 3Edcft67; echo ok'
+    #- Copy-Item "vcpkg-$TRIPLET-ifw-installer.exe" -Destination "J:\vcpkg" -Force
+    - Copy-Item "vcpkg-x64-windows.zip" -Destination "J:\vcpkg" -Force
+    - 'net use /delete J:'
+  after_script:
+    - 'subst /d Q:'
+  cache:
+    key: vcpkg_msvc142_$TRIPLET
+    paths:
+    - packages
+    - downloads
+    - installed
+  except:
+    - tags
+
+
+build-linux:
+  tags:
+    - gcc
+    - linux
+  variables:
+    GIT_STRATEGY: fetch
+    TRIPLET: "x64-linux"
+  stage: build
+  script:
+  - ./bootstrap-vcpkg.sh
+  - export VCPKG_DEFAULT_TRIPLET=$TRIPLET
+  - ./vcpkg upgrade --no-dry-run
+  - ./vcpkg install boost curl[ssl,brotli] curlpp jsoncpp libgit2 libpq libpqxx soci[odbc,postgresql,sqlite3] thrift grpc wt cpprestsdk freetds[openssl] google-cloud-cpp icu json-spirit pugixml libharu qt5 ace[tao-zlib,tao-bzip2,ssl,qt5,xml] --recurse
+  - ./vcpkg export boost curl[ssl,brotli] curlpp jsoncpp libgit2 libpq libpqxx soci[odbc,postgresql,sqlite3] thrift grpc wt cpprestsdk freetds[openssl] google-cloud-cpp icu json-spirit pugixml libharu qt5 qwt x-plane ace[tao-zlib,tao-bzip2,ssl,qt5,xml] --zip --output=vcpkg-$TRIPLET
+  cache:
+    key: vcpkg_gcc_$TRIPLET
+    paths:
+    - packages
+    - downloads
+    - installed
+  after_script:
+  except:
+    - tags
