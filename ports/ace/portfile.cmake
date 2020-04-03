@@ -176,11 +176,7 @@ vcpkg_execute_required_process(
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" PLATFORM ${MSBUILD_PLATFORM} OPTIONS /m USE_VCPKG_INTEGRATION)
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-  FIND_PROGRAM(MAKE make)
-  IF (NOT MAKE)
-    MESSAGE(FATAL_ERROR "MAKE not found")
-  ENDIF ()
-  vcpkg_execute_required_process(COMMAND make WORKING_DIRECTORY ${WORKING_DIR} LOGNAME make-${TARGET_TRIPLET})
+  vcpkg_build_make(SOURCE_PATH ${SOURCE_PATH})
 endif()
 
 ###################################################
