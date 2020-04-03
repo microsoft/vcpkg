@@ -1,4 +1,3 @@
-
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -27,7 +26,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         string(APPEND CONFIGURATION_RELEASE WinRT)
         string(APPEND CONFIGURATION_DEBUG WinRT)
     endif()
-    #<Import Project="${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props" />
+
+    #Setup YASM integration
     set(_file "${SOURCE_PATH}/SMP/libgmp.vcxproj")
     file(READ "${_file}" _contents)
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
@@ -92,20 +92,14 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
-        #SKIP_CONFIGURE
-        #NO_DEBUG
-        #AUTO_HOST
-        #AUTO_DST
-        #PRERUN_SHELL ${SHELL_PATH}
         OPTIONS ${OPTIONS}
-        #OPTIONS_DEBUG
-        #OPTIONS_RELEASE
     )
 
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
     # # Handle copyright
     file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
