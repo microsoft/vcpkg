@@ -13,7 +13,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
 )
-#set(ENV{CFITSIO_EXT_INC} ${CURRENT_INSTALLED_DIR}/include/cfitsio)
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH src/cxx
