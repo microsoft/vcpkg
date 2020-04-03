@@ -28,14 +28,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
       URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE+TAO-src-6.5.8.zip"
       FILENAME ACE+TAO-src-6.5.8.zip
       SHA512 847621bdd72b5a6909cbdef1d6e3c8792aa29f0b44e64c49c64c5d87df4fe703c6a27b15465d655e97ca8cc0df7449ac012f90f6de5d82b8e30bfbeb2e7057c2
-  )
+)
 else(VCPKG_TARGET_IS_WINDOWS)
   # VCPKG_TARGET_IS_LINUX
   vcpkg_download_distfile(ARCHIVE
       URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE+TAO-src-6.5.8.tar.gz"
       FILENAME ACE+TAO-src-6.5.8.tar.gz
       SHA512 4440975cac5baaa1d6fce869fbac73f15cf86942df3dab0f06c2309d9e20f6a79d826690138baf2ce5b232a1255d9e09cae0e40bd0cddae3d26ca9eb937871db
-  )
+)
 endif()
 
 vcpkg_extract_source_archive(${ARCHIVE})
@@ -53,19 +53,19 @@ vcpkg_apply_patches(
 ###################################################
 
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_WINDOWS)
     file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"\n#define ACE_NO_INLINE")
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+elseif(VCPKG_TARGET_IS_LINUX)
     file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-linux.h\"")
     file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_linux.GNU")
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif(VCPKG_TARGET_IS_OSX)
     file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-macosx.h\"")
     file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+elseif(VCPKG_TARGET_IS_UWP)
     file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"\n#define ACE_NO_INLINE")
 endif()
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL VCPKG_CMAKE_SYSTEM_NAME))
+if((VCPKG_TARGET_IS_WINDOWS) OR (VCPKG_TARGET_IS_UWP))
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(DLL_DECORATOR s)
   endif()
@@ -76,7 +76,7 @@ if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL VCPKG_CMAKE_SYSTEM_
   else()
     set(SOLUTION_TYPE vc14)
   endif()
-elseif((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux") OR (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
+elseif((VCPKG_TARGET_IS_LINUX) OR (VCPKG_TARGET_IS_OSX))
   set(SOLUTION_TYPE gnuace)
 endif()
 
@@ -173,9 +173,9 @@ vcpkg_execute_required_process(
 ###################################################
 
 # Build for Windows
-if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL VCPKG_CMAKE_SYSTEM_NAME))
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" PLATFORM ${MSBUILD_PLATFORM} OPTIONS /m USE_VCPKG_INTEGRATION)
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")
@@ -189,7 +189,7 @@ endif()
 #
 ###################################################
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   set(LIB_RELEASE_SUFFIX .lib)
   set(LIB_DEBUG_SUFFIX d.lib)
   set(DLL_RELEASE_SUFFIX .dll)
@@ -198,14 +198,14 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(DLL_DECORATOR s)
   endif()
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+elseif(VCPKG_TARGET_IS_LINUX)
   set(DLL_DECORATOR)
   set(LIB_RELEASE_SUFFIX .a)
   set(LIB_DEBUG_SUFFIX .a)
   set(DLL_RELEASE_SUFFIX)
   set(DLL_DEBUG_SUFFIX)
   set(LIB_PREFIX lib)
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif(VCPKG_TARGET_IS_OSX)
   set(DLL_DECORATOR)
   set(LIB_RELEASE_SUFFIX .a)
   set(LIB_DEBUG_SUFFIX .a)
@@ -290,7 +290,7 @@ install_libraries(${ACE_ROOT} "${ACE_TAO_LIBRARIES}")
 # Install executables
 function(install_tao_executables SOURCE_PATH EXE_FILE)
     set(EXECUTABLE_SUFFIX ".exe")
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(VCPKG_TARGET_IS_LINUX)
         set(EXECUTABLE_SUFFIX "")
     endif()
     if(EXISTS "${ACE_ROOT}/bin/${EXE_FILE}${EXECUTABLE_SUFFIX}")
