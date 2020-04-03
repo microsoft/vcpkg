@@ -1314,7 +1314,6 @@ openvdb:x64-windows-static=fail
 openvpn3:x64-osx=fail
 openvr:arm64-windows=fail
 openvr:arm-uwp=fail
-openvr:x64-linux=fail
 openvr:x64-osx=fail
 openvr:x64-uwp=fail
 openxr-loader:arm64-windows=fail
