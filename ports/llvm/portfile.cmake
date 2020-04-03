@@ -59,6 +59,14 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
         # Disable install the scan-view tool
         -DCLANG_INSTALL_SCANVIEW=OFF
     )
+    if("disable-clang-static-analyzer" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS
+            # Disable ARCMT
+            -DCLANG_ENABLE_ARCMT=OFF
+            # Disable static analyzer
+            -DCLANG_ENABLE_STATIC_ANALYZER=OFF
+        )
+    endif()
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
