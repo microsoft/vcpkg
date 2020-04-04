@@ -4,7 +4,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO cpp-netlib/url
         REF v1.5.1
-        SHA512 0259b6eed43e480779d35990bdebd32bdbd3c30a548fba46a6b03afd742c3fd862d2a2cba6f49a6baf669763e7701c12b457530e424f2b7175533911e911ae3b
+        SHA512 1d1efab8f41467c15b194acfb10610892c61e6bd786f9c5480e39498849d7fe0801e4e41aa194e780eb597dba57048efec75d042c4c6fb72422a3a704bd61824
         HEAD_REF master
 )
 
@@ -12,10 +12,10 @@ vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
         OPTIONS
-            -DSkyr_BUILD_TESTS=OFF
-            -DSkyr_BUILD_DOCS=OFF
-            -DSkyr_BUILD_EXAMPLES=OFF
-            -DSkyr_WARNINGS_AS_ERRORS=OFF
+            -Dskyr_BUILD_TESTS=OFF
+            -Dskyr_BUILD_DOCS=OFF
+            -Dskyr_BUILD_EXAMPLES=OFF
+            -Dskyr_WARNINGS_AS_ERRORS=OFF
 )
 
 vcpkg_install_cmake()
