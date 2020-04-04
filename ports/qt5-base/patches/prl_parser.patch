@@ -46,7 +46,7 @@ index 81db0d92c..51016f3fa 100644
 +         message(FATAL_ERROR \"Could not find PRL file: ${_parsed_prl}\")
 +    endif()
 +    file(STRINGS \"${_parsed_prl}\" _static_depends REGEX \"^QMAKE_PRL_LIBS[ \\t]+=[ \\t]+.+$\")
-+    #message(STATUS \"QMAKE_PRL_LIBS as read : ${_static_depends}\n\n\")
++    message(STATUS \"QMAKE_PRL_LIBS from ${_parsed_prl} as read : ${_static_depends}\n\n\")
 +    string(REGEX REPLACE \"QMAKE_PRL_LIBS[ \\t]+=[ \\t]+\" \"\" _static_depends \"${_static_depends}\")
 +    string(REGEX REPLACE \" -L\\\\$\\\\$([^ ]+)\" [[ ;-L\$\$\\1; ]] _static_depends \"${_static_depends}\") # - L Normal Case
 +    if(WIN32)
@@ -61,7 +61,7 @@ index 81db0d92c..51016f3fa 100644
 +    string(REGEX REPLACE \"[\\t ]*;[\\t ]*\" \";\" _static_depends \"${_static_depends}\")      # remove unnecessary whitespaces 
 +    string(REGEX REPLACE \"(;[\\t ]*;)+\" \";\" _static_depends \"${_static_depends}\")    # remove empty elements from the list
 +    #string(REGEX REPLACE \" [\\"]\" \";\\\\\\\"\" _static_depends \"${_static_depends}\")
-+    #message(STATUS \"QMAKE_PRL_LIBS as a list : ${_static_depends}\n\n\")
++    message(STATUS \"QMAKE_PRL_LIBS as a list : ${_static_depends}\n\n\")
 +
 +    #Logic Backported from Qt 5.14
 +    set(_search_paths)
@@ -128,27 +128,27 @@ index 81db0d92c..51016f3fa 100644
 +          # Handle -Lfoo flags by putting their paths in the search path used by find_library above
 +          list(APPEND _search_paths \"${CMAKE_MATCH_1}\")
 +      elseif(_flag MATCHES \"\\\.(lib|a|so)$\") #Library name only. No -l. Probably missing some cases
-+          #message(STATUS \"Added to link deps (${Configuration}): ${_flag}\")
++          message(STATUS \"Added to link deps (${Configuration}): ${_flag}\")
 +          list(APPEND _lib_deps ${_flag}) # changed from _link_flags
 +      else()
 +          # Handle all remaining flags by simply passing them to the linker
-+          #message(STATUS \"Added to link flags (${Configuration}): ${_flag}\")
++          message(STATUS \"Added to link flags (${Configuration}): ${_flag}\")
 +          list(APPEND _lib_flags ${_flag}) # changed from _link_flags
 +      endif()
 +    endforeach()
 +    
-+    #message(STATUS \"${_qt_prl_TARGET} links (via PRL ${_qt_prl_CONFIGURATION}): ${_lib_deps}\")
-+    #message(STATUS \"${_qt_prl_TARGET} has linker flags (via PRL): ${_lib_flags}\")
++    message(STATUS \"${_qt_prl_TARGET} links (via PRL ${_qt_prl_CONFIGURATION}): ${_lib_deps}\")
++    message(STATUS \"${_qt_prl_TARGET} has linker flags (via PRL): ${_lib_flags}\")
 +    #get_target_property(_test_interface ${_qt_prl_TARGET} INTERFACE_LINK_LIBRARIES)
 +    #message(STATUS \"INTERFACE_LINK_LIBRARIES of target before ${_qt_prl_TARGET}: ${_test_interface} \")
 +    set(_prl_out_libs)
 +    foreach(_prl_lib IN LISTS _lib_deps)
 +        if(\"${_qt_prl_CONFIGURATION}\" STREQUAL \"DEBUG\")
-+            #message(STATUS \"DEBUG: ${_prl_lib}\")
++            message(STATUS \"DEBUG: ${_prl_lib}\")
 +            #set_property(TARGET ${_qt_prl_TARGET} APPEND PROPERTY INTERFACE_LINK_LIBRARIES \"\\$<\\$<CONFIG:DEBUG>:${_prl_lib}>\")
 +            list(APPEND _prl_out_libs \"\\$<\\$<CONFIG:DEBUG>:${_prl_lib}>\")
 +        else()
-+            #message(STATUS \"RELEASE: ${_prl_lib}\")
++            message(STATUS \"RELEASE: ${_prl_lib}\")
 +            #set_property(TARGET ${_qt_prl_TARGET} APPEND PROPERTY INTERFACE_LINK_LIBRARIES \"\\$<\\$<NOT:\\$<CONFIG:DEBUG>>:${_prl_lib}>\")
 +            list(APPEND _prl_out_libs \"\\$<\\$<NOT:\\$<CONFIG:DEBUG>>:${_prl_lib}>\")
 +        endif()
