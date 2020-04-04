@@ -1,0 +1,4 @@
+Source: cppcoro
+Version: 2020.04
+Description: A library of C++ coroutine abstractions for the coroutines TS
+Supports: !uwp
