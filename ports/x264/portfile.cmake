@@ -28,10 +28,6 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 #vcpkg_fixup_pkgconfig()?
-if(NOT VCPKG_TARGET_IS_UWP)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x264)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x264.exe ${CURRENT_PACKAGES_DIR}/tools/x264/x264.exe)
-endif()
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
