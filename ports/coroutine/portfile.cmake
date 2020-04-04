@@ -1,28 +1,29 @@
 include(vcpkg_common_functions)
 
 if(${VCPKG_TARGET_ARCHITECTURE} MATCHES x86)
-    message(FATAL_ERROR "This library doesn't support x86 arch. Please use x64 instead. If it is critical, create an issue at the repo: github.com/luncliff/coroutine")
+    message(WARNING "This library may not work correctly in x86 arch. Please consider using x64 instead")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            luncliff/coroutine
-    REF fcd970807e9a47c250c1a4e06c7dc6d93079b684
-    SHA512 517f1c1726e4adc36cd34379c545324c99861d7cb5ebd3cebe0b7132fe5b61969a00e405bc106bb8f089f37d3a7ca9b1bcdc665a5cd6dfcaaf6856be37bec5b0
+    # will be changed to 1.5.0
+    REF             674e6626a41d142d90a4a0f8b5282ac28957990d
+    SHA512          3289b6a3cc0e6379bf1a8eb1c9a281fd275c5fde13c0d0de22a21aa61cf94c13e4997e76534619e13fa5cee864b5cb8e23e1b8e80bf3eda97d10b7a16e3fb0e6
     HEAD_REF        master
 )
 
 # package: 'ms-gsl'
 set(GSL_INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include
     CACHE PATH "path to include C++ core guideline support library" FORCE)
-message(STATUS "Using ms-gsl at ${GSL_INCLUDE_DIR}")
+message(STATUS "using ms-gsl(vcpkg): ${GSL_INCLUDE_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DGSL_INCLUDE_DIR=${GSL_INCLUDE_DIR}
-        -DTEST_DISABLED=True
+        -DBUILD_TESTING=False
 )
 
 vcpkg_install_cmake()
