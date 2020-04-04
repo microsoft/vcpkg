@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
         use-vcpkg-libpcap.patch
+        makefile.patch
 )
  
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
