@@ -4,10 +4,15 @@ project(libmupdf C)
 set(CMAKE_DEBUG_POSTFIX d)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/mupdf/pdf/name-table.h")
+  find_program(MAKE_EXE NAMES gmake nmake make)
   execute_process(
-    COMMAND "cmd.exe" "/c" "platform\\win32\\generate.bat"
+    COMMAND ${MAKE_EXE} "generate"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
   )
+    #execute_process(
+  #  COMMAND "cmd.exe" "/c" "platform\\win32\\generate.bat"
+  #  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+  #)
 endif()
 
 find_package(freetype NO_MODULE REQUIRED)
@@ -15,14 +20,16 @@ find_package(JPEG REQUIRED)
 find_path(HARFBUZZ_INCLUDE hb.h PATH_SUFFIXES harfbuzz)
 find_library(HARFBUZZ_LIBRARIES harfbuzz)
 find_package(ZLIB REQUIRED)
-find_package(openjpeg REQUIRED)
+find_package(OpenJPEG REQUIRED)
 find_library(JBIG2DEC_LIB NAMES jbig2decd jbig2dec)
 
 file(GLOB_RECURSE SOURCES "source/*.c" "generated/*.c")
 list(FILTER SOURCES EXCLUDE REGEX "source/tools/[a-z]*\\.c$")
+list(FILTER SOURCES EXCLUDE REGEX "source/tests/.*.c$")
+
 add_library(libmupdf ${SOURCES})
 
-target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DFZ_ENABLE_ICC=0)
+target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DFZ_ENABLE_ICC=0 -DHAVE_PTHREAD=1)
 target_include_directories(libmupdf
   PUBLIC
     include
