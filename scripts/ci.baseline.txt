@@ -1474,8 +1474,6 @@ qt5-macextras:x64-linux=fail
 qt5-macextras:x64-windows=fail
 qt5-macextras:x64-windows-static=fail
 qt5-macextras:x86-windows=fail
-# in theory this should not be true, but something is wrong.
-qt5-tools:x64-linux=fail
 qt5-winextras:x64-linux=fail
 qt5-winextras:x64-osx=fail
 quickfast:x64-linux=ignore
