@@ -253,6 +253,7 @@
     <ClCompile Include="..\src\vcpkg\commands.porthistory.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.portsdiff.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.search.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.setinstalled.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.upgrade.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.version.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.xvsinstances.cpp" />

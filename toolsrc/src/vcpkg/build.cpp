@@ -889,7 +889,7 @@ namespace vcpkg::Build
         ExtendedBuildResult result = do_build_package_and_clean_buildtrees(paths, action);
 
         fs.create_directories(abi_package_dir, ec);
-        fs.copy_file(abi_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
+        fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
 
         if (binary_caching_enabled && result.code == BuildResult::SUCCEEDED)
@@ -1056,7 +1056,7 @@ namespace vcpkg::Build
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                     break;
                 case VcpkgTripletVar::LOAD_VCVARS_ENV:
-                        if (variable_value.empty()) 
+                        if (variable_value.empty())
                         {
                             load_vcvars_env = true;
                             if(external_toolchain_file)
