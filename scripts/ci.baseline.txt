@@ -1150,6 +1150,9 @@ msmpi:arm-uwp=fail
 msmpi:x64-linux=fail
 msmpi:x64-osx=fail
 msmpi:x64-uwp=fail
+# `vcpkg_configure_meson` currently only supports windows targets.
+munit:x64-linux=fail
+munit:x64-osx=fail
 muparser:arm-uwp=fail
 muparser:x64-uwp=fail
 murmurhash:arm-uwp=fail
