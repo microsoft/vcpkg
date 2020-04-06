@@ -28,26 +28,26 @@ index 959470c0f..e35ca8de7 100644
  
  libpfring: config
 -	cd lib; make
-+	$(MAKE) -c lib
++	$(MAKE) -C lib
  
  build_nbpf: config
 -	cd nbpf; make
-+	$(MAKE) -c nbpf
++	$(MAKE) -C nbpf
  
  build_c++: libpfring
 -	cd c++; make
-+	$(MAKE) -c c++
++	$(MAKE) -C c++
  
  tcpdump/Makefile:
  	cd tcpdump; ./configure --with_system_libpcap=yes
  
  build_tcpdump: libpfring tcpdump/Makefile
 -	cd tcpdump; make
-+	$(MAKE) -c tcpdump
++	$(MAKE) -C tcpdump
  
  build_extcap: libpfring
 -	cd wireshark/extcap; make
-+	$(MAKE) -c wireshark/extcap
++	$(MAKE) -C wireshark/extcap
  
  ###################
  
@@ -56,4 +56,4 @@ index 959470c0f..e35ca8de7 100644
  
  install: libpfring
 -	cd lib; make install
-+	$(MAKE) -c lib install
++	$(MAKE) -C lib install
