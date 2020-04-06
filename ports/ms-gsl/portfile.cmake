@@ -1,11 +1,9 @@
 #header-only library
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/GSL
-    REF 1212beae777dba02c230ece8c0c0ec12790047ea
-    SHA512 754d0adf32cea1da759be9adb8a64c301ae1cb8556853411bcea4c400079e8e310f1fb8d03f1f26f81553eab24b75fea24a67b9b51d8d92bb4f266e155938230
+    REF 7e99e76c9761d0d0b0848b91f8648830670ee872
+    SHA512 9a5ea7d22497a56918a83c248d9f707e98544dce90835cf9bf877213df8751cdb350b6343d0205e7b17fc27e234a17906876aff99c177d5f2b96df96d15a215c
     HEAD_REF master
 )
 

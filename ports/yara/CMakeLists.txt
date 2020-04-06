@@ -101,6 +101,9 @@ set(
   ${JANSSON_LIBRARY}
 )
 
+IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+list(APPEND libyara_dependencies Crypt32.lib Ws2_32.lib)
+endif()
 if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
   list(APPEND libyara_dependencies m)
 endif()

@@ -1,9 +1,10 @@
 Source: llvm
-Version: 8.0.0-3
+Version: 8.0.0-5
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Build-Depends: atlmfc (windows)
-Default-Features: tools, utils
+Supports: !uwp
+Default-Features: utils
 
 Feature: tools
 Description: Generate build targets for the LLVM tools.

@@ -1,17 +1,11 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-storage-cpp
-    REF v7.0.0
-    SHA512 2187bd4d640ff1630f4f20d2717ea0219f7835e524b1db5b89563b5b525a34200a33693030d9e004db9cfe1df905b6c76ffd709f9e6cb2e2861ba1c1f8d062db
+    REF v7.3.0
+    SHA512 4297fa9e70fc4f4dde63f78f21714c2f9f6a9a63529cc3595f61e08659ea86a3590dbf9e99ee67572099c6bb7cc5b376bba6f29fbf59c5a1b705d841bb9a32e4
     HEAD_REF master
-    PATCHES
-        remove-gcov-dependency.patch
 )
 
 vcpkg_configure_cmake(
@@ -21,7 +15,10 @@ vcpkg_configure_cmake(
         -DCMAKE_FIND_FRAMEWORK=LAST
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
-        -DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/include
+    OPTIONS_RELEASE
+        -DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/lib
+    OPTIONS_DEBUG
+        -DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/debug/lib
 )
 
 vcpkg_install_cmake()

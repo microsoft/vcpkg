@@ -1,13 +1,13 @@
 diff --git a/src/lib_proj.cmake b/src/lib_proj.cmake
-index 5a0a807..f7bfffd 100644
+index 2e90f98f..dc171e91 100644
 --- a/src/lib_proj.cmake
 +++ b/src/lib_proj.cmake
-@@ -439,7 +439,7 @@ if(USE_THREAD AND Threads_FOUND AND CMAKE_USE_PTHREADS_INIT)
+@@ -441,7 +441,7 @@ if(USE_THREAD AND Threads_FOUND AND CMAKE_USE_PTHREADS_INIT)
  endif()
  
  include_directories(${SQLITE3_INCLUDE_DIR})
 -target_link_libraries(${PROJ_CORE_TARGET} ${SQLITE3_LIBRARY})
 +target_link_libraries(${PROJ_CORE_TARGET} PUBLIC ${SQLITE3_LIBRARY})
  
- if(MSVC)
+ if(MSVC AND BUILD_LIBPROJ_SHARED)
    target_compile_definitions(${PROJ_CORE_TARGET}
