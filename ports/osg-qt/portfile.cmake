@@ -1,4 +1,3 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openscenegraph/osgQt
@@ -14,9 +13,19 @@ if(VCPKG_TARGET_IS_OSX)
     string(APPEND VCPKG_C_FLAGS "") # both must be set
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(OPTIONS -DDYNAMIC_OPENSCENEGRAPH=ON)
+else()
+    set(OPTIONS -DDYNAMIC_OPENSCENEGRAPH=OFF)
+    #might need additional linkage against Qt plugins like Qt5::QMinimalIntegrationPlugin or Qt5::QCocoaIntegrationPlugin which both link fontconfig
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS ${OPTIONS}
+            -DBUILD_OSG_EXAMPLES=OFF
+            -DOSG_BUILD_APPLICATION_BUNDLES=OFF
 )
 
 vcpkg_install_cmake()
