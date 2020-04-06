@@ -2,6 +2,7 @@ list(REMOVE_ITEM ARGS "NO_MODULE")
 list(REMOVE_ITEM ARGS "CONFIG")
 list(REMOVE_ITEM ARGS "MODULE")
 
+_find_package(ZLIB)
 _find_package(${ARGS} CONFIG)
 
 if(TARGET CURL::libcurl)
