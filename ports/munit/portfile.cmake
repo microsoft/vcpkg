@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nemequ/munit
-    REF 439de4a9b136bc3b5163e73d4caf37c590bef875
-    SHA512 28fbe29636fd3ecb675f2e823165ac88be10adfbb2d4155fee43a4b2747c8dd4f24808ed9ddedd9a2ec60d96367e60fce8ca82c54b0eb605ed9b4bb05392a872
+    REF da8f73412998e4f1adf1100dc187533a51af77fd
+    SHA512 cd08c1291a73487f15fdba7bf8675fea9177f0ec9766900f65efb5f00c662532a16499447e9087d304de34ff9138f47d04ebf18713f5aa8aacede22c5e23b98b
     HEAD_REF master
     PATCHES
         fix-install.patch
