@@ -269,7 +269,7 @@ int wmain(int, const wchar_t* const* const);
 #include <shellapi.h>
 int main(int argc, const char* const* const /*argv*/)
 {
-    wchar_t **wargv;
+    wchar_t** wargv;
     wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
     return wmain(argc, wargv);
 }
@@ -292,6 +292,7 @@ int main(const int argc, const char* const* const argv)
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
 
+    System::initialize_global_job_object();
 #endif
 
     Checks::register_global_shutdown_handler([]() {
