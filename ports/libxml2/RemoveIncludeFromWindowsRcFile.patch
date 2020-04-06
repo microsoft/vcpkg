@@ -1,0 +1,10 @@
+diff --git a/win32/libxml2.rc b/win32/libxml2.rc
+index c774a5ee..08e2da1e 100644
+--- a/win32/libxml2.rc
++++ b/win32/libxml2.rc
+@@ -1,5 +1,4 @@
+ #include <winver.h>
+-#include "rcVersion.h"
+ 
+ VS_VERSION_INFO		VERSIONINFO
+   FILEVERSION		LIBXML_MAJOR_VERSION,LIBXML_MINOR_VERSION,LIBXML_MICRO_VERSION,0

@@ -8,9 +8,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
     
 # Irrlicht directories
 # -------------------------------------------------------------------------------------------------
-set(IRR_ROOT_DIR "")
 set(IRR_SRC_DIR "source/Irrlicht")
 set(IRR_INC_DIR "include")
+set(IRR_TOOL_DIR "tools")
 
 # Options
 # -------------------------------------------------------------------------------------------------
@@ -19,6 +19,7 @@ if(DEFINED ENV{DXSDK_DIR})
     set(DXSDK "ENV{DXSDK_DIR}")
 endif()
 
+set(IRR_UNICODE_PATH 0 CACHE BOOL "Whether to enable unicode path support on windows")
 set(IRR_FAST_MATH 0 CACHE BOOL "Whether to enable fast maths (at the expense of precision)")
 set(IRR_SHARED_LIB 1 CACHE BOOL "Whether to generate shared libraries instead of static libraries")
 set(IRR_DIRECTX_SDK ${DXSDK} CACHE PATH "Path to the DirectX SDK (for DirectX 9, this folder should contain /Include, /Lib)")
@@ -43,10 +44,10 @@ glob_c_cpp_sources(IRR_SRC_FILES_INTERFACE          ${IRR_INC_DIR})
 glob_c_cpp_sources(IRR_SRC_FILES_AESGLADMAN         ${IRR_SRC_DIR}/aesGladman)
 glob_c_cpp_sources(IRR_SRC_FILES_LZMA               ${IRR_SRC_DIR}/lzma)
 
-glob_c_cpp_sources(IRR_TOOL_FILES_FILE_TO_HEADER    ${IRR_ROOT_DIR}/tools/FileToHeader/)
-glob_c_cpp_sources(IRR_TOOL_FILES_GUI_EDITOR        ${IRR_ROOT_DIR}/tools/GUIEditor/)
-glob_c_cpp_sources(IRR_TOOL_FILES_FONT_TOOL         ${IRR_ROOT_DIR}/tools/IrrFontTool/newFontTool/)
-glob_c_cpp_sources(IRR_TOOL_FILES_MESH_CONVERTER    ${IRR_ROOT_DIR}/tools/MeshConverter/)
+glob_c_cpp_sources(IRR_TOOL_FILES_FILE_TO_HEADER    ${IRR_TOOL_DIR}/FileToHeader/)
+glob_c_cpp_sources(IRR_TOOL_FILES_GUI_EDITOR        ${IRR_TOOL_DIR}/GUIEditor/)
+glob_c_cpp_sources(IRR_TOOL_FILES_FONT_TOOL         ${IRR_TOOL_DIR}/IrrFontTool/newFontTool/)
+glob_c_cpp_sources(IRR_TOOL_FILES_MESH_CONVERTER    ${IRR_TOOL_DIR}/MeshConverter/)
     
 # Group files
 # -------------------------------------------------------------------------------------------------
@@ -79,9 +80,9 @@ else()
 endif()
 
 target_link_libraries(Irrlicht PRIVATE 
-    ${ZLIB_LIBRARY} 
     ${PNG_LIBRARY} 
     ${JPEG_LIBRARY} 
+    ${ZLIB_LIBRARY}
     ${BZIP2_LIBRARY}
     )
 
@@ -137,6 +138,14 @@ if(NOT ${IRR_SHARED_LIB})
     target_compile_definitions(Irrlicht PUBLIC _IRR_STATIC_LIB_)
 endif()
 
+# Disable Irrlicht building already provided dependencies
+target_compile_definitions(Irrlicht
+    PRIVATE NO_IRR_USE_NON_SYSTEM_ZLIB_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_LIB_PNG_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_BZLIB_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_JPEG_LIB_
+    )
+
 # Per platform config
 # -------------------------------------------------------------------------------------------------
 
@@ -152,6 +161,12 @@ if(WIN32)
 
     # Multi processor compilation
     target_compile_options(Irrlicht PRIVATE /MP)
+
+    # Unicode
+    if(${IRR_UNICODE_PATH})
+        target_compile_definitions(Irrlicht PRIVATE UNICODE _UNICODE)
+        target_compile_definitions(Irrlicht PUBLIC _IRR_WCHAR_FILESYSTEM)
+    endif()
 
     # Fast math options
     if(${IRR_FAST_MATH})

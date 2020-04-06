@@ -2,8 +2,6 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KazDragon/telnetpp
@@ -20,6 +18,7 @@ endif()
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
+  DISABLE_PARALLEL_CONFIGURE
   PREFER_NINJA
   OPTIONS
     -DGSL_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/include
