@@ -1857,7 +1857,6 @@ wxwidgets:x64-linux=fail
 x264:arm64-windows=fail
 x264:arm-uwp=fail
 x264:x64-uwp=ignore
-x264:x64-linux=fail
 x264:x64-osx=fail
 x264:x86-windows=ignore
 x264:x64-windows=ignore
