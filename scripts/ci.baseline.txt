@@ -749,7 +749,6 @@ libfabric:x64-linux=fail
 libfabric:x64-osx=fail
 libfabric:x64-uwp=fail
 libfabric:x64-windows=ignore
-libffi:arm-uwp=fail
 libfreenect2:arm64-windows=fail
 libgd:x64-linux=ignore
 libgit2:arm64-windows=fail
