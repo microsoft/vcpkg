@@ -29,6 +29,11 @@ target_include_directories(iniparser
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+target_compile_definitions(iniparser
+    PRIVATE
+        $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+
 install(TARGETS iniparser EXPORT unofficial-iniparser-config)
 
 install(
