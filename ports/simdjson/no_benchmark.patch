@@ -1,20 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9668819..cf5e89f 100644
+index 1e25a3d..1ee5d9a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -51,7 +51,6 @@ include(include/CMakeLists.txt)
+@@ -64,7 +64,6 @@ include(include/CMakeLists.txt)
  add_subdirectory(src)
  add_subdirectory(tools)
  add_subdirectory(tests)
 -add_subdirectory(benchmark)
-
- # for fuzzing, read the comments in the fuzz/CMakeLists.txt file
- option(ENABLE_FUZZING "enable building the fuzzers" ON)
-@@ -73,5 +72,3 @@ set(CPACK_RPM_PACKAGE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
- set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
-
- include(CPack)
--
--
---
-2.20.1.windows.1
+ 
+ if (SIMDJSON_GOOGLE_BENCHMARKS)
+   if(NOT EXISTS dependencies/benchmark/CMakeLists.txt)
