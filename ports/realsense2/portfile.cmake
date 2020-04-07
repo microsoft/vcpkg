@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix_openni2.patch
         fix-dependency-glfw3.patch
+        fix-tools-compile-on-vs2019.patch
 )
 
 file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
