@@ -316,7 +316,7 @@ __pycache__/
 !triplets/arm64-windows.cmake
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
-!triplets/community/x86-linux.cmake
+!triplets/community/x86-uwp.cmake
 #ignore custom triplets
 *.exe
 *.zip
