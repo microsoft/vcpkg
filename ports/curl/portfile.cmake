@@ -14,7 +14,6 @@ vcpkg_from_github(
         0007_disable_tool_export_curl_target.patch
         0008_fix_tools_path.patch
         0009_fix_openssl_config.patch
-        0010_fix_ZlibFeature.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -41,7 +40,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     brotli  CURL_BROTLI
     winssl  CMAKE_USE_WINSSL
     sectransp   CMAKE_USE_SECTRANSP
-    zlib    CURL_ZLIB
+    
     INVERTED_FEATURES
     non-http HTTP_ONLY
 )

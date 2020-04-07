@@ -1,12 +1,9 @@
 Source: curl
-Version: 7.68.0-3
+Version: 7.68.0-2
 Build-Depends: zlib
 Homepage: https://github.com/curl/curl
 Description: A library for transferring data with URLs
-Default-Features: ssl, non-http, zlib
-
-Feature: zlib
-Description: Enable building curl with zlib support
+Default-Features: ssl, non-http
 
 Feature: tool
 Description: Builds curl executable
