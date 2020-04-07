@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 set(ICU_VERSION_MAJOR 65)
 set(ICU_VERSION_MINOR 1)
@@ -36,7 +36,7 @@ endif()
 set(CONFIGURE_OPTIONS_RELEASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
 set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_TARGET_IS_UWP)
     set(BASH bash)
     set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -fPIC")
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -fPIC")
@@ -189,7 +189,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 else()
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_UWP)
         # rename static libraries to match import libs
         # see https://gitlab.kitware.com/cmake/cmake/issues/16617
         foreach(MODULE dt in io tu uc)
