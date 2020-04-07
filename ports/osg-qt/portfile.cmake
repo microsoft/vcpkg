@@ -17,7 +17,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPTIONS -DDYNAMIC_OPENSCENEGRAPH=ON)
 else()
     set(OPTIONS -DDYNAMIC_OPENSCENEGRAPH=OFF)
-    #might need additional linkage against Qt plugins like Qt5::QMinimalIntegrationPlugin or Qt5::QCocoaIntegrationPlugin which both link fontconfig
 endif()
 
 vcpkg_configure_cmake(
