@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jherico/basis_universal
-    REF 11aa181a4bbf051475a01a1e73e39bf388819215
-    SHA512 62d7de6c6ca5e6235c8a377767389a7d5393e05bb5d0c024ce756e77d235132efa48280c9d529b6a91eddf0c906c3c84b6b78fdf339b1a47039b28d04161d2fe
+    REF 497875f756ed0e3eb62e0ff08d55c62242f4be74
+    SHA512 2293b78620a7ed510dbecf48bcae5f4b8524fe9020f864c8e79cf94ea9d95d51dddf83a5b4ea29cc95db19f87137bfef1cb68b7fbc6387e08bb42898d81c9303
     HEAD_REF master
 )
 
@@ -24,9 +22,8 @@ else()
     set(TOOL_NAME basisu_tool)
 endif()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/basisu)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(COPY ${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/basisu)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/basisu/LICENSE ${CURRENT_PACKAGES_DIR}/share/basisu/copyright)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/basisu)
 

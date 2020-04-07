@@ -1,16 +1,12 @@
-include(vcpkg_common_functions)
-
-if (VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "Package `googleapis` doesn't support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/cpp-cmakefiles
-    REF v0.1.1
-    SHA512 e23af2d0d36d4e13da761473b78b958326b9c7fd4aaf0c4b6742ae498b65aafe73976f7c858365b041aa667f280c10eca6df7e87644c260fc022ec4eee7a7bc6
+    REF v0.7.0
+    SHA512 45a9c8934c82a3e8c5c91e24c9879cbe9d928f5276b1e20d1fa51fde6a7e6711212ac7d298b4f07942e3538e2b99e8101906f509697c9aad26b8fba09c292a13
     HEAD_REF master
 )
 
@@ -25,7 +21,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/googleapis RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
 

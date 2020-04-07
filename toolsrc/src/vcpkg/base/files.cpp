@@ -8,9 +8,8 @@
 #include <vcpkg/base/util.h>
 #include <vcpkg/base/work_queue.h>
 
-#if defined(__linux__) || defined(__APPLE__)
+#if !defined(_WIN32)
 #include <fcntl.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -21,114 +20,87 @@
 #include <copyfile.h>
 #endif
 
-namespace fs::detail
-{
-    static file_status status_implementation(bool follow_symlinks, const path& p, std::error_code& ec)
-    {
-#if defined(_WIN32)
-        WIN32_FILE_ATTRIBUTE_DATA file_attributes;
-        file_type ft = file_type::unknown;
-        perms permissions = perms::unknown;
-        if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
-        {
-            const auto err = GetLastError();
-            if (err == ERROR_FILE_NOT_FOUND || err == ERROR_PATH_NOT_FOUND)
-            {
-                ft = file_type::not_found;
-            }
-            else
-            {
-                ec.assign(err, std::system_category());
-            }
-        }
-        else if (!follow_symlinks && file_attributes.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
-        {
-            // this also gives junctions file_type::directory_symlink
-            if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            {
-                ft = file_type::directory_symlink;
-            }
-            else
-            {
-                ft = file_type::symlink;
-            }
-        }
-        else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-        {
-            ft = file_type::directory;
-        }
-        else
-        {
-            // otherwise, the file is a regular file
-            ft = file_type::regular;
-        }
-
-        if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
-        {
-            constexpr auto all_write = perms::group_write | perms::owner_write | perms::others_write;
-            permissions = perms::all & ~all_write;
-        }
-        else if (ft != file_type::none && ft != file_type::none)
-        {
-            permissions = perms::all;
-        }
-
-        return file_status(ft, permissions);
-
-#else
-        auto result = symlink ? stdfs::symlink_status(p, ec) : stdfs::status(p, ec);
-        // libstdc++ doesn't correctly not-set ec on nonexistent paths
-        if (ec.value() == ENOENT || ec.value() == ENOTDIR)
-        {
-            ec.clear();
-            result = file_status(file_type::not_found, perms::unknown);
-        }
-        return result;
-#endif
-    }
-
-    file_status status_t::operator()(const path& p, std::error_code& ec) const noexcept
-    {
-        return status_implementation(false, p, ec);
-    }
-    file_status status_t::operator()(vcpkg::LineInfo li, const path& p) const noexcept
-    {
-        std::error_code ec;
-        auto result = (*this)(p, ec);
-        if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
-
-        return result;
-    }
-    file_status status_t::operator()(const path& p) const
-    {
-#if defined(_WIN32)
-        return (*this)(VCPKG_LINE_INFO, p);
-#else
-        return fs::stdfs::status(p);
-#endif
-    }
-
-    file_status symlink_status_t::operator()(const path& p, std::error_code& ec) const noexcept
-    {
-        return status_implementation(true, p, ec);
-    }
-
-    file_status symlink_status_t::operator()(vcpkg::LineInfo li, const path& p) const noexcept
-    {
-        std::error_code ec;
-        auto result = (*this)(p, ec);
-        if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
-
-        return result;
-    }
-}
-
 namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
     namespace
     {
+        fs::file_status status_implementation(bool follow_symlinks, const fs::path& p, std::error_code& ec) noexcept
+        {
+            using fs::file_type;
+            using fs::perms;
+#if defined(_WIN32)
+            WIN32_FILE_ATTRIBUTE_DATA file_attributes;
+            auto ft = file_type::unknown;
+            auto permissions = perms::unknown;
+            if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
+            {
+                const auto err = GetLastError();
+                if (err == ERROR_FILE_NOT_FOUND || err == ERROR_PATH_NOT_FOUND)
+                {
+                    ft = file_type::not_found;
+                }
+                else
+                {
+                    ec.assign(err, std::system_category());
+                }
+            }
+            else if (!follow_symlinks && file_attributes.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+            {
+                // this also gives junctions file_type::directory_symlink
+                if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                {
+                    ft = file_type::directory_symlink;
+                }
+                else
+                {
+                    ft = file_type::symlink;
+                }
+            }
+            else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            {
+                ft = file_type::directory;
+            }
+            else
+            {
+                // otherwise, the file is a regular file
+                ft = file_type::regular;
+            }
+
+            if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
+            {
+                constexpr auto all_write = perms::group_write | perms::owner_write | perms::others_write;
+                permissions = perms::all & ~all_write;
+            }
+            else if (ft != file_type::none && ft != file_type::none)
+            {
+                permissions = perms::all;
+            }
+
+            return fs::file_status(ft, permissions);
+
+#else
+            auto result = follow_symlinks ? fs::stdfs::status(p, ec) : fs::stdfs::symlink_status(p, ec);
+            // libstdc++ doesn't correctly not-set ec on nonexistent paths
+            if (ec.value() == ENOENT || ec.value() == ENOTDIR)
+            {
+                ec.clear();
+                return fs::file_status(file_type::not_found, perms::unknown);
+            }
+            return fs::file_status(result.type(), result.permissions());
+#endif
+        }
+
+        fs::file_status status(const fs::path& p, std::error_code& ec) noexcept
+        {
+            return status_implementation(true, p, ec);
+        }
+        fs::file_status symlink_status(const fs::path& p, std::error_code& ec) noexcept
+        {
+            return status_implementation(false, p, ec);
+        }
+
         // does _not_ follow symlinks
         void set_writeable(const fs::path& path, std::error_code& ec) noexcept
         {
@@ -201,6 +173,12 @@ namespace vcpkg::Files
         return r;
     }
 
+    bool Filesystem::remove(const fs::path& path, ignore_errors_t)
+    {
+        std::error_code ec;
+        return this->remove(path, ec);
+    }
+
     bool Filesystem::exists(const fs::path& path, std::error_code& ec) const
     {
         return fs::exists(this->symlink_status(path, ec));
@@ -213,11 +191,53 @@ namespace vcpkg::Files
         if (ec) Checks::exit_with_message(li, "error checking existence of file %s: %s", path.u8string(), ec.message());
         return result;
     }
-    bool Filesystem::exists(const fs::path& path) const
+
+    bool Filesystem::exists(const fs::path& path, ignore_errors_t) const
     {
         std::error_code ec;
-        // drop this on the floor, for compatibility with existing code
-        return exists(path, ec);
+        return this->exists(path, ec);
+    }
+
+    bool Filesystem::create_directory(const fs::path& path, ignore_errors_t)
+    {
+        std::error_code ec;
+        return this->create_directory(path, ec);
+    }
+
+    bool Filesystem::create_directories(const fs::path& path, ignore_errors_t)
+    {
+        std::error_code ec;
+        return this->create_directories(path, ec);
+    }
+
+    fs::file_status Filesystem::status(vcpkg::LineInfo li, const fs::path& p) const noexcept
+    {
+        std::error_code ec;
+        auto result = this->status(p, ec);
+        if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
+
+        return result;
+    }
+
+    fs::file_status Filesystem::status(const fs::path& p, ignore_errors_t) const noexcept
+    {
+        std::error_code ec;
+        return this->status(p, ec);
+    }
+
+    fs::file_status Filesystem::symlink_status(vcpkg::LineInfo li, const fs::path& p) const noexcept
+    {
+        std::error_code ec;
+        auto result = this->symlink_status(p, ec);
+        if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
+
+        return result;
+    }
+
+    fs::file_status Filesystem::symlink_status(const fs::path& p, ignore_errors_t) const noexcept
+    {
+        std::error_code ec;
+        return this->symlink_status(p, ec);
     }
 
     void Filesystem::write_lines(const fs::path& path, const std::vector<std::string>& lines, LineInfo linfo)
@@ -242,6 +262,29 @@ namespace vcpkg::Files
                                       failure_point.string(),
                                       ec.message());
         }
+    }
+
+    void Filesystem::remove_all(const fs::path& path, ignore_errors_t)
+    {
+        std::error_code ec;
+        fs::path failure_point;
+
+        this->remove_all(path, ec, failure_point);
+    }
+
+    fs::path Filesystem::canonical(LineInfo li, const fs::path& path) const
+    {
+        std::error_code ec;
+
+        const auto result = this->canonical(path, ec);
+
+        if (ec) Checks::exit_with_message(li, "Error getting canonicalization of %s: %s", path.string(), ec.message());
+        return result;
+    }
+    fs::path Filesystem::canonical(const fs::path& path, ignore_errors_t) const
+    {
+        std::error_code ec;
+        return this->canonical(path, ec);
     }
 
     struct RealFilesystem final : Filesystem
@@ -395,7 +438,7 @@ namespace vcpkg::Files
         {
             this->rename(oldpath, newpath, ec);
             Util::unused(temp_suffix);
-#if defined(__linux__) || defined(__APPLE__)
+#if !defined(_WIN32)
             if (ec)
             {
                 auto dst = newpath;
@@ -418,6 +461,34 @@ namespace vcpkg::Files
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
 #elif defined(__APPLE__)
                 auto written_bytes = fcopyfile(i_fd, o_fd, 0, COPYFILE_ALL);
+#else
+                ssize_t written_bytes = 0;
+                {
+                    constexpr std::size_t buffer_length = 4096;
+                    auto buffer = std::make_unique<unsigned char[]>(buffer_length);
+                    while (auto read_bytes = read(i_fd, buffer.get(), buffer_length))
+                    {
+                        if (read_bytes == -1)
+                        {
+                            written_bytes = -1;
+                            break;
+                        }
+                        auto remaining = read_bytes;
+                        while (remaining > 0)
+                        {
+                            auto read_result = write(o_fd, buffer.get(), remaining);
+                            if (read_result == -1)
+                            {
+                                written_bytes = -1;
+                                // break two loops
+                                goto copy_failure;
+                            }
+                            remaining -= read_result;
+                        }
+                    }
+
+                copy_failure:;
+                }
 #endif
                 if (written_bytes == -1)
                 {
@@ -463,7 +534,7 @@ namespace vcpkg::Files
                 static void do_remove(const fs::path& current_path, ErrorInfo& err)
                 {
                     std::error_code ec;
-                    const auto path_status = fs::symlink_status(current_path, ec);
+                    const auto path_status = Files::symlink_status(current_path, ec);
                     if (check_ec(ec, current_path, err)) return;
                     if (!fs::exists(path_status)) return;
 
@@ -593,11 +664,11 @@ namespace vcpkg::Files
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
         {
-            return fs::status(path, ec);
+            return Files::status(path, ec);
         }
         virtual fs::file_status symlink_status(const fs::path& path, std::error_code& ec) const override
         {
-            return fs::symlink_status(path, ec);
+            return Files::symlink_status(path, ec);
         }
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) override
         {
@@ -628,20 +699,30 @@ namespace vcpkg::Files
             }
         }
 
+        virtual fs::path canonical(const fs::path& path, std::error_code& ec) const override
+        {
+            return fs::stdfs::canonical(path, ec);
+        }
+
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
 #if defined(_WIN32)
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
             auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ";");
+#else
+            static constexpr StringLiteral EXTS[] = {""};
+            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ":");
+#endif
 
             std::vector<fs::path> ret;
+            std::error_code ec;
             for (auto&& path : paths)
             {
                 auto base = path + "/" + name;
                 for (auto&& ext : EXTS)
                 {
                     auto p = fs::u8path(base + ext.c_str());
-                    if (Util::find(ret, p) == ret.end() && this->exists(VCPKG_LINE_INFO, p))
+                    if (Util::find(ret, p) == ret.end() && this->exists(p, ec))
                     {
                         ret.push_back(p);
                         Debug::print("Found path: ", p.u8string(), '\n');
@@ -650,16 +731,6 @@ namespace vcpkg::Files
             }
 
             return ret;
-#else
-            const std::string cmd = Strings::concat("which ", name);
-            auto out = System::cmd_execute_and_capture_output(cmd);
-            if (out.exit_code != 0)
-            {
-                return {};
-            }
-
-            return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
-#endif
         }
     };
 

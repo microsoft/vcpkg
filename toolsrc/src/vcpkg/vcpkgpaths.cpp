@@ -18,8 +18,9 @@ namespace vcpkg
                                             const std::string& default_vs_path,
                                             const std::vector<std::string>* triplets_dirs)
     {
+        auto& fs = Files::get_real_filesystem();
         std::error_code ec;
-        const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
+        const fs::path canonical_vcpkg_root_dir = fs.canonical(vcpkg_root_dir, ec);
         if (ec)
         {
             return ec;
@@ -42,7 +43,7 @@ namespace vcpkg
         if (auto odp = overriddenDownloadsPath.get())
         {
             auto asPath = fs::u8path(*odp);
-            if (!fs::is_directory(status(asPath)))
+            if (!fs::is_directory(fs.status(VCPKG_LINE_INFO, asPath)))
             {
                 Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_DOWNLOADS override directory.");
                 Checks::exit_with_message(
@@ -66,6 +67,7 @@ namespace vcpkg
         paths.ports = paths.root / "ports";
         paths.installed = paths.root / "installed";
         paths.triplets = paths.root / "triplets";
+        paths.community_triplets = paths.triplets / "community";
 
         if (auto scripts_dir = vcpkg_scripts_root_dir.get())
         {
@@ -75,7 +77,7 @@ namespace vcpkg
                 Checks::exit_with_message(
                     VCPKG_LINE_INFO,
                     "Invalid scripts override directory: %s; "
-                    "create that directory or unset --scripts-root to use the default scripts location.",
+                    "create that directory or unset --x-scripts-root to use the default scripts location.",
                     scripts_dir->u8string());
             }
 
@@ -109,7 +111,8 @@ namespace vcpkg
                 paths.triplets_dirs.emplace_back(fs::stdfs::canonical(path));
             }
         }
-        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.root / "triplets"));
+        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.triplets));
+        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.community_triplets));
 
         return paths;
     }
@@ -126,37 +129,46 @@ namespace vcpkg
         return this->vcpkg_dir_info / (pgh.fullstem() + ".list");
     }
 
-    bool VcpkgPaths::is_valid_triplet(const Triplet& t) const
+    bool VcpkgPaths::is_valid_triplet(Triplet t) const
     {
         const auto it = Util::find_if(this->get_available_triplets(), [&](auto&& available_triplet) {
-            return t.canonical_name() == available_triplet;
+            return t.canonical_name() == available_triplet.name;
         });
         return it != this->get_available_triplets().cend();
     }
 
-    const std::vector<std::string>& VcpkgPaths::get_available_triplets() const
+    const std::vector<std::string> VcpkgPaths::get_available_triplets_names() const
     {
-        return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
-            std::vector<std::string> output;
+        return vcpkg::Util::fmap(this->get_available_triplets(),
+                                 [](auto&& triplet_file) -> std::string { return triplet_file.name; });
+    }
+
+    const std::vector<VcpkgPaths::TripletFile>& VcpkgPaths::get_available_triplets() const
+    {
+        return this->available_triplets.get_lazy([this]() -> std::vector<TripletFile> {
+            std::vector<TripletFile> output;
+            Files::Filesystem& fs = this->get_filesystem();
             for (auto&& triplets_dir : triplets_dirs)
             {
-                for (auto&& path : this->get_filesystem().get_files_non_recursive(triplets_dir))
+                for (auto&& path : fs.get_files_non_recursive(triplets_dir))
                 {
-                    output.push_back(path.stem().filename().string());
+                    if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, path)))
+                    {
+                        output.emplace_back(TripletFile(path.stem().filename().u8string(), triplets_dir));
+                    }
                 }
             }
-            Util::sort_unique_erase(output);
             return output;
         });
     }
 
-    const fs::path VcpkgPaths::get_triplet_file_path(const Triplet& triplet) const
+    const fs::path VcpkgPaths::get_triplet_file_path(Triplet triplet) const
     {
         return m_triplets_cache.get_lazy(
             triplet, [&]() -> auto {
-                for (auto&& triplet_dir : triplets_dirs)
+                for (const auto& triplet_dir : triplets_dirs)
                 {
-                    auto&& path = triplet_dir / (triplet.canonical_name() + ".cmake");
+                    auto path = triplet_dir / (triplet.canonical_name() + ".cmake");
                     if (this->get_filesystem().exists(path))
                     {
                         return path;
@@ -181,7 +193,7 @@ namespace vcpkg
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
-        if (prebuildinfo.external_toolchain_file ||
+        if ((prebuildinfo.external_toolchain_file && !prebuildinfo.load_vcvars_env) ||
             (!prebuildinfo.cmake_system_name.empty() && prebuildinfo.cmake_system_name != "WindowsStore"))
         {
             static Toolset external_toolset = []() -> Toolset {

@@ -13,16 +13,17 @@ vcpkg_from_github(
         boost-168.patch
 )
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/XBased/xhook/archive/e18c450541892212ca4f11dc91fa269fabf9646f.tar.gz"
-    FILENAME "xhook-e18c450541892212ca4f11dc91fa269fabf9646f.tar.gz"
+vcpkg_from_github(
+    OUT_SOURCE_PATH XHOOK_SOURCE_PATH
+    REPO XBased/xhook
+    REF e18c450541892212ca4f11dc91fa269fabf9646f
     SHA512 1bcf320f50cff13d92013a9f0ab5c818c2b6b63e9c1ac18c5dd69189e448d7a848f1678389d8b2c08c65f907afb3909e743f6c593d9cfb21e2bb67d5c294a166
+    HEAD_REF master
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/third_party)
-
-vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH}/third_party)
-file(RENAME ${SOURCE_PATH}/third_party/xhook-e18c450541892212ca4f11dc91fa269fabf9646f ${SOURCE_PATH}/third_party/xhook)
+file(MAKE_DIRECTORY ${SOURCE_PATH}/third_party)
+file(RENAME ${XHOOK_SOURCE_PATH} ${SOURCE_PATH}/third_party/xhook)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

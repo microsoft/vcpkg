@@ -1,15 +1,13 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
-    REF 4.1.0
-    SHA512 d617f5c5b826640b2871dbe3d7973bcc5e66fafd837921a20e009d683806ed50f0f258aa455019d99fc54f5cb65c2fa0380e3a3c92b39ab0684b8799c730b09d
+    REF 4.1.1
+    SHA512 017723a2268be789fe98978eed02fd294968cc8050dde376dee026f56f2b99df42db935049ae5e72c4519a920e263b40af1a6a40d9942e66608145b3131a71a2
     PATCHES
         fix-tiff-linkage.patch
-		fix-text2image.patch
+        fix-text2image.patch
 )
 
 # The built-in cmake FindICU is better
@@ -26,7 +24,7 @@ if("training_tools" IN_LIST FEATURES)
 else()
     list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=OFF)
 endif()
-if("independed_architecture" IN_LIST FEATURES)
+if("cpu_independed" IN_LIST FEATURES)
     list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=none)
 else()
     list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=auto)
@@ -38,9 +36,10 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSTATIC=ON
         -DUSE_SYSTEM_ICU=True
-	#any value for vcpkg leptonica link cmake branch select
-	-DLeptonica_DIR=YES
-	${OPTIONS_LIST}
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibArchive=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
+        -DLeptonica_DIR=YES
+        ${OPTIONS_LIST}
 )
 
 vcpkg_install_cmake()
@@ -81,9 +80,6 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tesseract)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tesseract/LICENSE ${CURRENT_PACKAGES_DIR}/share/tesseract/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

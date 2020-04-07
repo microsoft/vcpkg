@@ -1,11 +1,18 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.14)
 
 project(vcpkg C CXX)
 
-OPTION(BUILD_TESTING "Option for enabling testing" ON)
-OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF)
 OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
 OPTION(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang" OFF)
+OPTION(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings, and making them errors" ON)
+OPTION(BUILD_TESTING "Option for enabling testing" ON)
+OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF)
+
+# for backwards compatibility with existing code
+if (WERROR)
+    set(VCPKG_DEVELOPMENT_WARNINGS On)
+endif()
+
 
 if (DEFINE_DISABLE_METRICS)
     set(DISABLE_METRICS_VALUE "1")
@@ -16,20 +23,26 @@ endif()
 if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(GCC 1)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
-    if(NOT VCPKG_ALLOW_APPLE_CLANG)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "11.0.0")
+        set(CLANG 1)
+        # Disable linking with libc++fs because this features are added in libc++ library
+        set(NO_LIBCXXFS 1)
+    elseif(NOT VCPKG_ALLOW_APPLE_CLANG)
         message(FATAL_ERROR
 "Building the vcpkg tool requires support for the C++ Filesystem TS.
 Apple clang versions 10.01 and below do not have support for it.
-Please install gcc6 or newer from homebrew (brew install gcc6).
+Please install gcc6 or newer from homebrew (brew install gcc@6).
 If you would like to try anyway, pass --allowAppleClang to bootstrap.sh.")
     else()
         set(CLANG 1)
     endif()
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "[Cc]lang")
     set(CLANG 1)
-elseif(MSVC)
-    add_compile_options(/std:c++17 /FC)
-else()
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "9.0.0")
+        set(NO_LIBCXXFS 1)
+        add_compile_definitions(_LIBCPP_NO_EXPERIMENTAL_DEPRECATION_WARNING_FILESYSTEM=1)
+    endif()
+elseif(NOT MSVC)
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
@@ -40,7 +53,7 @@ add_definitions(-DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 include_directories(include)
 link_libraries(Threads::Threads)
 
-if(CLANG)
+if(CLANG AND NOT MSVC)
     include(CheckCXXSourceCompiles)
     check_cxx_source_compiles("#include <iostream>
                                int main() { return __GLIBCXX__; }" USES_LIBSTDCXX)
@@ -52,40 +65,81 @@ if(CLANG)
 endif()
 
 if(GCC OR (CLANG AND USES_LIBSTDCXX))
-    link_libraries(stdc++fs)
-elseif(CLANG)
+    include(CheckCXXSourceCompiles)
+    set(CMAKE_REQUIRED_LIBRARIES stdc++fs)
+    check_cxx_source_compiles("#include <experimental/filesystem>
+                               int main() { return 0; }" LINKS_TO_STDCXX_FS)
+    unset(CMAKE_REQUIRED_LIBRARIES)
+    if (LINKS_TO_STDCXX_FS)
+        link_libraries(stdc++fs)
+    endif()
+elseif(CLANG AND NOT MSVC AND NOT NO_LIBCXXFS)
     link_libraries(c++fs)
 endif()
 
-if(GCC OR CLANG)
+if(MSVC)
+    # either MSVC, or clang-cl
+    add_compile_options(-FC)
+
+    if (MSVC_VERSION GREATER 1900)
+        # Visual Studio 2017 or later
+        add_compile_options(-std:c++17 -permissive-)
+    else()
+        # Visual Studio 2015
+        add_compile_options(-std:c++latest)
+    endif()
+
+    if(VCPKG_DEVELOPMENT_WARNINGS)
+        string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        add_compile_options(-W4 -WX)
+
+        if (CLANG)
+            add_compile_options(-Wmissing-prototypes -Wno-missing-field-initializers)
+        endif()
+    endif()
+elseif(GCC OR CLANG)
     add_compile_options(-std=c++1z)
-    if(WERROR)
-        add_compile_options(-Wall -Wno-unknown-pragmas -Werror)
+
+    if(VCPKG_DEVELOPMENT_WARNINGS)
+        add_compile_options(-Wall -Wextra -Wpedantic -Wno-unknown-pragmas -Wno-missing-field-initializers -Wno-redundant-move -Werror)
+
+        # GCC and clang have different names for the same warning
+        if (GCC)
+            add_compile_options(-Wmissing-declarations)
+        elseif(CLANG)
+            add_compile_options(-Wmissing-prototypes)
+        endif()
     endif()
 endif()
 
-file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
+file(GLOB_RECURSE VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 
 add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
 add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
 
 if (BUILD_TESTING)
-    file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
+    file(GLOB_RECURSE VCPKGTEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
 
     enable_testing()
     add_executable(vcpkg-test
         ${VCPKGTEST_SOURCES}
         $<TARGET_OBJECTS:vcpkglib>)
 
-    add_test(NAME default COMMAND vcpkg-test [${TEST_NAME}])
+    add_test(NAME default COMMAND vcpkg-test)
 
     if (VCPKG_BUILD_BENCHMARKING)
         target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
     endif()
+
+    find_program(CLANG_FORMAT clang-format)
+    if (CLANG_FORMAT)
+        file(GLOB_RECURSE VCPKG_FORMAT_SOURCES CONFIGURE_DEPENDS src/*.cpp include/pch.h include/vcpkg/*.h include/vcpkg-test/*.h)
+        add_custom_target(format COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FORMAT_SOURCES})
+    endif()
 endif()
 
 if(MSVC)
-  get_target_property(_srcs vcpkg SOURCES)
+  get_target_property(_srcs vcpkglib SOURCES)
 
   if(NOT CMAKE_GENERATOR MATCHES "Visual Studio .*")
     set_property(SOURCE src/pch.cpp APPEND PROPERTY OBJECT_OUTPUTS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
@@ -93,6 +147,25 @@ if(MSVC)
   endif()
 
   set_source_files_properties(src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
-  target_sources(vcpkg PRIVATE src/pch.cpp)
-  target_compile_options(vcpkg PRIVATE /Yupch.h /FIpch.h /Zm200)
+  target_sources(vcpkglib PRIVATE src/pch.cpp)
+  target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
+endif()
+
+if (MINGW)
+  include(CheckCXXSourceCompiles)
+    check_cxx_source_compiles("#include <experimental/filesystem>
+                               int main() { return 0; }" USES_EXPERIMENTAL_FS)
+
+  if (NOT USES_EXPERIMENTAL_FS)
+    add_compile_definitions(USE_STD_FILESYSTEM)
+  endif()
+
+  add_compile_definitions(
+    UNICODE
+    _WIN32_WINNT=0x0601
+    WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY=4
+    __fastfail=exit)
+  foreach(tgt vcpkg vcpkg-test)
+    target_link_libraries(${tgt} PRIVATE winhttp bcrypt version ole32 uuid)
+  endforeach()
 endif()

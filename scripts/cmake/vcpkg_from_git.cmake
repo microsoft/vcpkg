@@ -19,7 +19,7 @@
 ## This should be set to `SOURCE_PATH` by convention.
 ##
 ## ### URL
-## The url of the git repository.  Must start with `https`.
+## The url of the git repository.
 ##
 ## ### REF
 ## The git sha of the commit to download.
@@ -49,13 +49,6 @@ function(vcpkg_from_git)
     message(FATAL_ERROR "The git url must be specified")
   endif()
 
-  if( NOT _vdud_URL MATCHES "^https:")
-    # vcpkg_from_git does not support a SHA256 parameter because hashing the git archive is
-    # not stable across all supported platforms.  The tradeoff is to require https to download
-    # and the ref to be the git sha (i.e. not things that can change like a label)
-    message(FATAL_ERROR "The git url must be https")
-  endif()
-
   if(NOT DEFINED _vdud_REF)
     message(FATAL_ERROR "The git ref must be specified.")
   endif()
@@ -74,16 +67,18 @@ function(vcpkg_from_git)
     find_program(GIT NAMES git git.cmd)
     # Note: git init is safe to run multiple times
     vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${GIT} init git-tmp
       WORKING_DIRECTORY ${DOWNLOADS}
       LOGNAME git-init-${TARGET_TRIPLET}
     )
     vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_REF} --depth 1 -n
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-fetch-${TARGET_TRIPLET}
     )
-    execute_process(
+    _execute_process(
       COMMAND ${GIT} rev-parse FETCH_HEAD
       OUTPUT_VARIABLE REV_PARSE_HEAD
       ERROR_VARIABLE REV_PARSE_HEAD
@@ -100,6 +95,7 @@ function(vcpkg_from_git)
 
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
     vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${GIT} archive FETCH_HEAD -o "${TEMP_ARCHIVE}"
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-archive

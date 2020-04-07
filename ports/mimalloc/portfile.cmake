@@ -1,19 +1,19 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF c6c1d5fffd0cf8dcb2ab969cde8fd170af44fdef
-    SHA512 3b9ce5d7dd70dd5ea56b70833c842068312a739e6131d956fd733e9893441e7e3340b6734bea0b799ac292533b0082975c08facd963961062dac821ccc44f9a9
+    REF 82684042be1be44d34caecc915fb51755278d843 # v1.6.1
+    SHA512 82477501a5fafa4df22c911039b74943275d0932404526692419b5c49d6ccfdd95c1c5a3689211db5cc2a845af039fda4892262b538ac7cdfb5bb35787dd355c
     HEAD_REF master
     PATCHES
         fix-cmake.patch
 )
 
-vcpkg_check_features(
-    asm MI_SEE_ASM
-    secure MI_SECURE
-    override MI_OVERRIDE
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    asm         MI_SEE_ASM
+    secure      MI_SECURE
+    override    MI_OVERRIDE
 )
 
 vcpkg_configure_cmake(
@@ -24,11 +24,10 @@ vcpkg_configure_cmake(
     OPTIONS_RELEASE
         -DMI_CHECK_FULL=OFF
     OPTIONS
-        -DMI_OVERRIDE=${MI_OVERRIDE}
         -DMI_INTERPOSE=ON
-        -DMI_SEE_ASM=${MI_SEE_ASM}
         -DMI_USE_CXX=OFF
-        -DMI_SECURE=${MI_SECURE}
+        -DMI_BUILD_TESTS=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -66,8 +65,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

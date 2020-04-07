@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 83edb3a..f634094 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -540,7 +540,11 @@ if(WEBP_BUILD_EXTRAS)
+   find_package(SDL)
+   if(SDL_FOUND)
+     add_executable(vwebp_sdl ${VWEBP_SDL_SRCS})
+-    target_link_libraries(vwebp_sdl ${SDL_LIBRARY} imageioutil webp)
++    target_link_libraries(vwebp_sdl ${SDL_LIBRARY} imageioutil webp)
++    if (MSVC)
++        target_link_libraries(vwebp_sdl dxguid winmm)
++    endif()
++    target_compile_definitions(vwebp_sdl PRIVATE WEBP_HAVE_JUST_SDL_H)
+     target_include_directories(vwebp_sdl
+                                PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/src

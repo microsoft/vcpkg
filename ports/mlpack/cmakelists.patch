@@ -1,48 +1,80 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 26757a5..c200b40 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -283,25 +283,8 @@
+@@ -288,6 +288,7 @@ endif()
  # and find LAPACK and BLAS ourselves, using a slightly modified variant of the
  # script Armadillo uses to find these.
  if (WIN32)
--  find_library(LAPACK_LIBRARY
--      NAMES lapack liblapack lapack_win32_MT lapack_win32
--      PATHS "C:/Program Files/Armadillo"
--      PATH_SUFFIXES "examples/lib_win32/")
--
--  if (NOT LAPACK_LIBRARY)
--    message(FATAL_ERROR "Cannot find LAPACK library (.lib)!")
--  endif ()
--
--  find_library(BLAS_LIBRARY
--      NAMES blas libblas blas_win32_MT blas_win32
--      PATHS "C:/Program Files/Armadillo"
--      PATH_SUFFIXES "examples/lib_win32/")
--
--  if (NOT BLAS_LIBRARY)
--    message(FATAL_ERROR "Cannot find BLAS library (.lib)!")
--  endif ()
--
--  # Piggyback LAPACK and BLAS linking into Armadillo link.
-+  find_package(LAPACK)
-+  find_package(BLAS)
++ if(0)
+   find_library(LAPACK_LIBRARY
+       NAMES lapack liblapack lapack_win32_MT lapack_win32
+       PATHS "C:/Program Files/Armadillo"
+@@ -305,24 +306,31 @@ if (WIN32)
+   if (NOT BLAS_LIBRARY)
+     message(FATAL_ERROR "Cannot find BLAS library (.lib)!")
+   endif ()
++ endif()
+ 
++  find_package(clapack CONFIG REQUIRED)
++  set(LAPACK_LIBRARIES lapack)
++  find_package(OpenBLAS CONFIG REQUIRED)
++  set(BLAS_LIBRARIES OpenBLAS::OpenBLAS)
+   # Piggyback LAPACK and BLAS linking into Armadillo link.
    set(ARMADILLO_LIBRARIES
-        ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARY} ${LAPACK_LIBRARY})
+-      ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARY} ${LAPACK_LIBRARY})
++      ${ARMADILLO_LIBRARIES} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+ 
+   # Ensure that the libraries are added to the MSVC IDE runtime path.
+-  get_filename_component(BLAS_DIR ${BLAS_LIBRARY} DIRECTORY)
+-  get_filename_component(LAPACK_DIR ${LAPACK_LIBRARY} DIRECTORY)
++  get_property(BLAS_DIR TARGET OpenBLAS::OpenBLAS PROPERTY IMPORTED_LOCATION_RELEASE)
++  get_filename_component(BLAS_DIR ${BLAS_DIR} DIRECTORY)
++  get_property(LAPACK_DIR TARGET lapack PROPERTY IMPORTED_LOCATION_RELEASE)
++  get_filename_component(LAPACK_DIR ${LAPACK_DIR} DIRECTORY)
+ 
+   # Sometimes, especially with an OpenBLAS install via nuget, the DLLs are
+   # actually in ../../bin/x64/.  Automatically add these.
+-  if (EXISTS "${BLAS_DIR}/../../bin/x64/")
+-    get_filename_component(BLAS_DLL_DIR "${BLAS_DIR}/../../bin/x64" ABSOLUTE)
++  if (EXISTS "${BLAS_DIR}")
++    get_filename_component(BLAS_DLL_DIR "${BLAS_DIR}" ABSOLUTE)
+     set(DLL_COPY_DIRS ${DLL_COPY_DIRS} "${BLAS_DLL_DIR}")
+   endif ()
+ 
+-  if (EXISTS "${LAPACK_DIR}/../../bin/x64/")
+-    get_filename_component(LAPACK_DLL_DIR "${LAPACK_DIR}/../../bin/x64" ABSOLUTE)
++  if (EXISTS "${LAPACK_DIR}")
++    get_filename_component(LAPACK_DLL_DIR "${LAPACK_DIR}" ABSOLUTE)
+     set(DLL_COPY_DIRS ${DLL_COPY_DIRS} "${BLAS_DLL_DIR}")
+   endif ()
  endif ()
-@@ -395,19 +378,11 @@
+@@ -415,8 +423,8 @@ if (NOT ENSMALLEN_FOUND)
+             "Successfully downloaded ensmallen into ${CMAKE_BINARY_DIR}/deps/${ENSMALLEN_INCLUDE_DIR}/")
+ 
+         # Now we have to also ensure these header files get installed.
+-        install(DIRECTORY "${CMAKE_BINARY_DIR}/deps/${ENSMALLEN_INCLUDE_DIR}/include/ensmallen_bits/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ensmallen_bits")
+-        install(FILES "${CMAKE_BINARY_DIR}/deps/${ENSMALLEN_INCLUDE_DIR}/include/ensmallen.hpp" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++        #install(DIRECTORY "${CMAKE_BINARY_DIR}/deps/${ENSMALLEN_INCLUDE_DIR}/include/ensmallen_bits/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ensmallen_bits")
++        #install(FILES "${CMAKE_BINARY_DIR}/deps/${ENSMALLEN_INCLUDE_DIR}/include/ensmallen.hpp" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+       else ()
+         message(FATAL_ERROR "Problem unpacking ensmallen!  Expected only one directory ensmallen-x.y.z/; found ${ENS_DIRECTORIES}. Try removing the directory ${CMAKE_BINARY_DIR}/deps and reconfiguring.")
+       endif ()
+@@ -472,6 +480,7 @@ find_package(Boost 1.49
      REQUIRED
  )
  
--link_directories(${Boost_LIBRARY_DIRS})
--
--# In Visual Studio, automatic linking is performed, so we don't need to worry
--# about it.  Clear the list of libraries to link against and let Visual Studio
--# handle it.
--if (MSVC)
--  link_directories(${Boost_LIBRARY_DIRS})
--  set(Boost_LIBRARIES "")
--endif ()
-+link_directories(${Boost_LIBRARIES})
++if(0)
+ link_directories(${Boost_LIBRARY_DIRS})
  
+ # In Visual Studio, automatic linking is performed, so we don't need to worry
+@@ -483,10 +492,12 @@ if (MSVC)
+   message("boost lib dirs ${Boost_LIBRARY_DIRS}")
+   set(Boost_LIBRARIES "")
+ endif ()
++endif()
+ 
++link_directories(${Boost_LIBRARIES})
  set(MLPACK_INCLUDE_DIRS ${MLPACK_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
  set(MLPACK_LIBRARIES ${MLPACK_LIBRARIES} ${Boost_LIBRARIES})
 -set(MLPACK_LIBRARY_DIRS ${MLPACK_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})

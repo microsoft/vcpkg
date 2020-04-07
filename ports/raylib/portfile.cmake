@@ -1,9 +1,7 @@
 # https://github.com/raysan5/raylib/issues/388
-if(TARGET_TRIPLET MATCHES "^arm" OR TARGET_TRIPLET MATCHES "uwp$")
-    message(FATAL_ERROR "raylib doesn't support ARM or UWP.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     message(
     "raylib currently requires the following libraries from the system package manager:
     libgl1-mesa-dev
@@ -15,24 +13,21 @@ These can be installed on Ubuntu systems via sudo apt install libgl1-mesa-dev li
     )
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF f37e55a77bd6177dbaea4d7f484961c09104e104
-    SHA512 57146ebc7ab22a4e60c1d9eecd4c7a8f1930d6709f45761af809da9ea4f161e9fd450fa1042252a80bd7952ed9571a5d8dee4d454c8903a778e3e1328300b2bd
+    REF 6f3c99a295533e41de3049db5e683d15fd5c6e1a # 2.6.0
+    SHA512 358ebcffb7e11f319f82ecf791480eb23c40a53b764cad1d2109064bb06575c7af0325bf06ec86bbb2c43b70b12f52b5b6d1318d8857e07ff8e965a1dadbd8e2
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 
-if("non-audio" IN_LIST FEATURES)
-    set(USE_AUDIO OFF)
-else()
-    set(USE_AUDIO ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+    non-audio USE_AUDIO
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -83,7 +78,4 @@ endif()
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

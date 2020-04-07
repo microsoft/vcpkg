@@ -1,7 +1,8 @@
 Source: ixwebsocket
-Version: 4.0.3
+Version: 9.1.9
 Build-Depends: zlib
-Description: Lightweight WebSocket Client and Server + HTTP Client
+Homepage: https://github.com/machinezone/IXWebSocket
+Description: Lightweight WebSocket Client and Server + HTTP Client and Server
 Default-Features: ssl
 
 Feature: ssl

@@ -1,24 +1,20 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
-    REF v4.7.0
-    SHA512 6602799780105c60ac8c873ed4055c1512dc8bebf98de01e1cce572d113ffb3bf3ca522475b93255c415340f672c55dc6785e0bdbcc39055314683da1d02141a
+    REF b7cd387bee8c661141fabb490f4969587c008c55 # v4.7.3
+    SHA512 a55391620fac61e4975fe62907ca21049911afce6190fc12d183d24133a32aae8cd223b97a3fe57fc82d8bdca1a7db451046e3be3c379051624d48b1f56c0332
     HEAD_REF master
     PATCHES
         no-install-deps.patch
         config-pkg-location.patch
-        transitive-hdf5.patch
-        hdf5.patch
-        hdf5_2.patch
-        fix-build-error-on-linux.patch
-        hdf5_3.patch
+        use_targets.patch
+        mpi.patch
 )
 
 #Remove outdated find modules
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindSZIP.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindZLIB.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/windows/FindHDF5.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(NC_USE_STATIC_CRT ON)
@@ -28,7 +24,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
+    DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
     PREFER_NINJA
     OPTIONS
         -DBUILD_UTILITIES=OFF
@@ -53,10 +49,5 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/netcdf-c)
-file(
-    RENAME
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/COPYRIGHT
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/copyright
-)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -274,6 +274,9 @@ namespace vcpkg
             const auto& program_files_32_bit = System::get_program_files_32_bit();
             if (const auto pf = program_files_32_bit.get())
                 out_candidate_paths.push_back(*pf / "CMake" / "bin" / "cmake.exe");
+#else
+            // TODO: figure out if this should do anything on non-Windows
+            Util::unused(out_candidate_paths);
 #endif
         }
         virtual Optional<std::string> get_version(const fs::path& path_to_exe) const override
@@ -362,6 +365,9 @@ Type 'NuGet help <command>' for help on a specific command.
             const auto& program_files_32_bit = System::get_program_files_32_bit();
             if (const auto pf = program_files_32_bit.get())
                 out_candidate_paths.push_back(*pf / "git" / "cmd" / "git.exe");
+#else
+            // TODO: figure out if this should do anything on non-windows
+            Util::unused(out_candidate_paths);
 #endif
         }
 

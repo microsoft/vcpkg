@@ -1,7 +1,7 @@
 Source: raylib
-Version: 2019-04-27-2
+Version: 2.6.0
 Description: A simple and easy-to-use library to enjoy videogames programming
-#Build-Depends: glfw3
+Supports: !(arm|uwp)
 
 Feature: non-audio
 Description: Build raylib without audio module
