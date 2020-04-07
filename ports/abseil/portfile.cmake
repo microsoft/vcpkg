@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES 
         fix-lnk2019-error.patch
         fix-uwp-build.patch
+        fix-MSVCbuildfail.patch
 )
 
 set(CMAKE_CXX_STANDARD  )
