@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         fix-file_path.patch
         fix-crt_linkage.patch
+        fix-LibeventConfig_cmake_in_path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

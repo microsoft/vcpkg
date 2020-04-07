@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
@@ -69,5 +67,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/halide)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/halide_config.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/halide-config.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/halide_config.make ${CURRENT_PACKAGES_DIR}/share/${PORT}/halide-config.make)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -19,6 +19,7 @@ find_library(GOBJECT_LIBRARY gobject-2.0)
 find_library(GIO_LIBRARY gio-2.0)
 find_library(IPHLPAPI_LIBRARY iphlpapi)
 find_library(WS2_32_LIB ws2_32)
+find_library(ADVAPI32_LIB advapi32)
 find_package(OpenSSL REQUIRED)
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR} 
@@ -121,7 +122,7 @@ SET(HEADERS
 	)
 add_library(libnice ${SRCS} ${HEADERS})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4244 /wd4005 /wd4391 /wd4142 /wd4267")
-target_link_libraries(libnice ${IPHLPAPI_LIBRARY} ${WS2_32_LIB} ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
+target_link_libraries(libnice ${IPHLPAPI_LIBRARY} ${WS2_32_LIB} ${ADVAPI32_LIB} ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
 install(TARGETS libnice
 RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib

@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/mupdf
-    REF bc5f2b43dfbf05ef560ec094149c868227f58496
-    SHA512 a15af0dff1395edc683abcf12f770de95f55b7ccd276925cfb92ef5282dc94ab7d3a1da7276a90f33cdf44c4245f954d386ddd0a48f4330f17619db9eafe54b9
+    REF c35d29bf873744d2e74f20444eb6dbef6acfe21c # 1.16.1
+    SHA512 e21780283666224f2e5b8e70ff9dee7f6a43468fa4ed295301d5a97f6ecbf56870a07a3fe509a816dc5c1453e6532d27d27a46a1c2381c30770d0ebf45222ee9
     HEAD_REF master
     PATCHES
         fix-win-build.patch

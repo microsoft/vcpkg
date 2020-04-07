@@ -1,11 +1,17 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_git(
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://sourceforge.net/projects/tinyfiledialogs/files/v3.4/tinyfiledialogs-3.4.3.zip/download"
+    FILENAME "tinyfiledialogs-3.4.3.zip"
+    SHA512 b4a8c8fa5ff53a0972ce9dd1a4a473eaeb82689e5a47553b83e9220ea7e0ec582d87111728088ab6d314972e6531653b11fbd8c05c5e46fbe5bc4d29c7fe23fb
+)
+
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://git.code.sf.net/p/tinyfiledialogs/code
-    REF 331f93e903e0555399bf81479114dda978a77d7c
+    ARCHIVE ${ARCHIVE} 
+    REF v3.4.3
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

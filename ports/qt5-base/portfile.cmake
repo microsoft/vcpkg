@@ -37,10 +37,12 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/winmain_pro.patch   #Moves qtmain to manual-link
                             patches/windows_prf.patch   #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
-                            patches/gui_configure.patch #Patches the gui configure.json to break freetype autodetection because it does not include its dependencies.
+                            patches/gui_configure.patch #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
+                            patches/icu.patch           #Help configure find static icu builds in vcpkg on windows
                             #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
                                                          #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
                                                          #the windows supplied gl.h header and the angle gl.h otherwise. 
+                            patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -67,7 +69,7 @@ set(CORE_OPTIONS
     # ENV ANGLE_DIR to external angle source dir. (Will always be compiled with Qt)
     #-optimized-tools
     #-force-debug-info
-    #-verbose
+    -verbose
 )
 
 ## 3rd Party Libs
@@ -79,7 +81,9 @@ list(APPEND CORE_OPTIONS
     -system-pcre
     -system-doubleconversion
     -system-sqlite
-    -system-harfbuzz)
+    -system-harfbuzz
+    -icu
+    -no-angle)      # Qt does not need to build angle. VCPKG will build angle!
 
 if(QT_OPENSSL_LINK)
     list(APPEND CORE_OPTIONS -openssl-linked)
@@ -103,6 +107,35 @@ find_library(HARFBUZZ_RELEASE NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/lib
 find_library(HARFBUZZ_DEBUG NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
 find_library(SQLITE_DEBUG NAMES sqlite3 sqlite3d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
+find_library(ICUUC_RELEASE NAMES icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ICUUC_DEBUG NAMES icuucd libicuucd icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(ICUTU_RELEASE NAMES icutu libicutu PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ICUTU_DEBUG NAMES icutud libicutud icutu libicutu PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
+# Was installed in WSL but not on CI machine
+#    find_library(ICULX_RELEASE NAMES iculx libiculx PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+#    find_library(ICULX_DEBUG NAMES iculxd libiculxd iculx libiculx PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
+find_library(ICUIO_RELEASE NAMES icuio libicuio PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ICUIO_DEBUG NAMES icuiod libicuiod icuio libicuio PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(ICUIN_RELEASE NAMES icui18n libicui18n icuin PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ICUIN_DEBUG NAMES icui18nd libicui18nd icui18n libicui18n icuin icuind PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(ICUDATA_RELEASE NAMES icudata libicudata icudt PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ICUDATA_DEBUG NAMES icudatad libicudatad icudata libicudata icudtd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+set(ICU_RELEASE "${ICUIN_RELEASE} ${ICUTU_RELEASE} ${ICULX_RELEASE} ${ICUUC_RELEASE} ${ICUIO_RELEASE} ${ICUDATA_RELEASE}")
+set(ICU_DEBUG "${ICUIN_DEBUG} ${ICUTU_DEBUG} ${ICULX_DEBUG} ${ICUUC_DEBUG} ${ICUIO_DEBUG} ${ICUDATA_DEBUG}")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ICU_RELEASE "${ICU_RELEASE} Advapi32.lib")
+    set(ICU_DEBUG "${ICU_DEBUG} Advapi32.lib" )
+endif()
+
+
+find_library(FONTCONFIG_RELEASE NAMES fontconfig PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(FONTCONFIG_DEBUG NAMES fontconfig PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(EXPAT_RELEASE NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(EXPAT_DEBUG NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
 #Dependent libraries
 find_library(BZ2_RELEASE bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(BZ2_DEBUG bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -117,8 +150,9 @@ set(RELEASE_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
             "FREETYPE_LIBS=${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
+            "ICU_LIBS=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"            
             )
 set(DEBUG_OPTIONS
             "LIBJPEG_LIBS=${JPEG_DEBUG}"
@@ -126,6 +160,7 @@ set(DEBUG_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
             "FREETYPE_LIBS=${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
+            "ICU_LIBS=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
             )
@@ -144,14 +179,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
             "SQLITE_LIBS=${SQLITE_RELEASE}"
             "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE}"
+            "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
         
     list(APPEND DEBUG_OPTIONS
             "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
             "SQLITE_LIBS=${SQLITE_DEBUG}"
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG}"
+            "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
 elseif(VCPKG_TARGET_IS_LINUX)
+    list(APPEND CORE_OPTIONS -fontconfig)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
     endif()
@@ -159,13 +197,18 @@ elseif(VCPKG_TARGET_IS_LINUX)
             "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE}"
+            "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
+            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE}"
         )
     list(APPEND DEBUG_OPTIONS
             "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG}"
+            "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
+            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG}"
         )
 elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND CORE_OPTIONS -fontconfig)
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     else()
@@ -192,11 +235,15 @@ elseif(VCPKG_TARGET_IS_OSX)
             "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} -framework ApplicationServices"
+            "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
+            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE}"
         )
     list(APPEND DEBUG_OPTIONS
             "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} -framework ApplicationServices"
+            "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
+            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG}"
         )
 endif()
 
@@ -243,11 +290,13 @@ else()
     #This needs a new VCPKG policy. 
     if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static") # Move angle dll libraries 
         message(STATUS "Moving ANGLE dlls from /bin to /tools/qt5-angle/bin. In static builds dlls are not allowed in /bin")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/bin)
-        if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug/bin)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin")
+            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/bin)
+            if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
+                file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug)
+                file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug/bin)
+            endif()
         endif()
     endif()
 
@@ -285,6 +334,14 @@ file(COPY
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/qt5
 )
+
+# Fix Qt5GuiConfigExtras EGL path
+if(VCPKG_TARGET_IS_LINUX)
+    set(_file "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake")
+    file(READ "${_file}" _contents)
+    string(REGEX REPLACE "_qt5gui_find_extra_libs\\\(EGL[^\\\n]+" "_qt5gui_find_extra_libs(EGL \"EGL\" \"\" \"\${_qt5Gui_install_prefix}/include\")\n" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
 
 if(QT_BUILD_LATEST)
     file(COPY

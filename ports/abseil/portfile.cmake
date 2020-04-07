@@ -1,35 +1,36 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "Abseil currently only supports being built for desktop")
-endif()
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF aa468ad75539619b47979911297efbb629c52e44
-    SHA512 4254d8599103d8f06b03f60a0386eba07f314184217d0bca404d41fc0bd0a8df287fe6d07158d10cde096af3097aff2ecc1a5e8f7c3046ecf956b5fde709ad1d
+    REF 06f0e767d13d4d68071c4fc51e25724e0fc8bc74 #commit 2020-03-03
+    SHA512 f6e2302676ddae39d84d8ec92dbd13520ae214013b43455f14ced3ae6938b94cedb06cfc40eb1781dac48f02cd35ed80673ed2d871541ef4438c282a9a4133b9
     HEAD_REF master
     PATCHES 
-        fix-usage-lnk-error.patch
-        fix-config.patch
+        fix-lnk2019-error.patch
+        fix-uwp-build.patch
 )
+
+set(CMAKE_CXX_STANDARD  )
+if("cxx17" IN_LIST FEATURES)
+    set(CMAKE_CXX_STANDARD 17)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/absl TARGET_PATH share/absl)
 
 vcpkg_copy_pdbs()
-
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/abseil RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/include/absl/copts
                     ${CURRENT_PACKAGES_DIR}/include/absl/strings/testdata
                     ${CURRENT_PACKAGES_DIR}/include/absl/time/internal/cctz/testdata)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

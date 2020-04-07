@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/cppgraphqlgen
-    REF v3.0.2
-    SHA512 ae2e94e7cb8853c88d2dbf226dec52e30fb16d1889f14f94d2a585dd2be1985e58ac8c16765b970c4417c08d519b32514080d90bfab7e34b66dc7c32b9f9caa6
+    REF 82763064a0551be86fa63f320206e863beef47c0 # v3.2.0
+    SHA512 7c88cf95c0aa09eed18c8a807e4ee3ae7a74958e0bb95714f6e725d54bf4fadbce5438150e653d142aadcbeb2f167d5faad94b90728fd13c3fe54730fec559f0
     HEAD_REF master
 )
 
@@ -24,6 +22,6 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/cppgraphqlgen)
 
 vcpkg_copy_pdbs()
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/cppgraphqlgen/copyright COPYONLY)
-
-vcpkg_test_cmake(PACKAGE_NAME cppgraphqlgen)
+file(INSTALL ${SOURCE_PATH}/LICENSE
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    RENAME copyright)
