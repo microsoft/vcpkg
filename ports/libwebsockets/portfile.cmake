@@ -1,8 +1,10 @@
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF v3.2.2
-    SHA512 be6cd57ae1d15de059c277ce56e9ccc87f7918811b40a427c96978397f2b1d446e1b5ed6ae62a6aa82c6d775871d6a15885d283d74d7887e98205ab61d206fc0
+    REF 6eb39388f43f6e2a27f0efcbf8cb2391e38824e9 # v4.0.1
+    SHA512 2317ab66cd642280dc5cc7c47b8efa562731cc5b4a4eda83f34b6a7b60f02df6444a818c36e84f5cf118c79d6d62a9aa2e486d18f434199abd9812e7b88941e4
     HEAD_REF master
     PATCHES
         CMakeLists.patch
@@ -137,7 +139,7 @@ vcpkg_configure_cmake(
         -DLWS_WITH_BUNDLED_ZLIB=OFF
         -DLWS_WITHOUT_TESTAPPS=ON
         -DLWS_IPV6=ON
-        -DLWS_HTTP2=ON
+        -DLWS_WITH_HTTP2=ON
         -DLWS_WITH_HTTP_STREAM_COMPRESSION=ON # Since zlib is already a dependency
         -DLWS_WITH_LIBUV=ON
     # OPTIONS_RELEASE -DOPTIMIZE=1
@@ -164,10 +166,9 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debu
 file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake LIBWEBSOCKETSTARGETSRELEASE_CMAKE)
 string(REPLACE "websockets_static.lib" "websockets.lib" LIBWEBSOCKETSTARGETSRELEASE_CMAKE "${LIBWEBSOCKETSTARGETSRELEASE_CMAKE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake "${LIBWEBSOCKETSTARGETSRELEASE_CMAKE}")
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebsockets)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LICENSE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if (VCPKG_TARGET_IS_WINDOWS)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/websockets_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/websockets.lib)
         file(RENAME ${CURRENT_PACKAGES_DIR}/lib/websockets_static.lib ${CURRENT_PACKAGES_DIR}/lib/websockets.lib)
     endif()
