@@ -1,0 +1,5 @@
+Source: openslide
+Version: 3.4.1
+Homepage: https://openslide.org/
+Description: OpenSlide is a C library that provides a simple interface to read whole-slide images (also known as virtual slides).
+Build-Depends: libjpeg-turbo
