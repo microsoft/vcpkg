@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmake.patch
-		fix-findzliberror.patch
+        fix-findzliberror.patch
 )
 
 vcpkg_configure_cmake(
