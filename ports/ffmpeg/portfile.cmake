@@ -276,13 +276,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE ${FILES_TO_REMOVE})
     endif()
 endif()
-<<<<<<< HEAD
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-=======
 
->>>>>>> 6c4e822611324de4af9c8bb0ef8094e4a9b30a6e
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
