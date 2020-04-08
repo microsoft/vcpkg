@@ -35,8 +35,8 @@ index cfbe40f25..80bfcc4d4 100644
  
    if test -z "$GETOPT_H"; then
 -    AC_CHECK_FUNCS([getopt_long], [], [GETOPT_H=getopt.h])
-+    AC_SEARCH_LIBS([getopt_long],[getopt], [LIBS="$ac_cv_search_getopt_long $LIBS"], [
-+    AC_SEARCH_LIBS([getopt_long_w],[getopt], [LIBS="$ac_cv_search_getopt_long_w $LIBS"], [
++    AC_SEARCH_LIBS([getopt_long],[getopt], [if test "$ac_cv_search_getopt_long" != "none required"; then LIBS="$LIBS $ac_cv_search_getopt_long"; fi], [
++    AC_SEARCH_LIBS([getopt_long_w],[getopt], [if test "$ac_cv_search_getopt_long_w" != "none required"; then LIBS="$LIBS $ac_cv_search_getopt_long_w"; fi], [
 +    GETOPT_H=getopt.h
 +    ],[])
 +    ],[])

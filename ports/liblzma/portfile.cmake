@@ -29,7 +29,7 @@ vcpkg_configure_make(
     --disable-nls
 )
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 # vcpkg_configure_cmake(
     # SOURCE_PATH ${SOURCE_PATH}
@@ -95,7 +95,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   #define LZMA_H
   set(_file "${CURRENT_PACKAGES_DIR}/include/lzma.h")
   file(READ "${_file}" _contents)
-  string(REPLACE "#define LZMA_H" "#define LZMA_H\n#define LZMA_API_STATIC" _contents "${_contents}")
+  string(REPLACE "#define LZMA_H\n" "#define LZMA_H\n#define LZMA_API_STATIC" _contents "${_contents}")
   file(WRITE "${_file}" "${_contents}")
 endif()
 
