@@ -14,7 +14,7 @@ Build-Depends: qt5-base[core, latest]
 Description: Build latest qt version (5.14.1) instead of LTS
 
 Feature: default
-Build-Depends: qt5[core, 3d, webchannel, websockets, extras, sensors, serialport, speech, virtualkeyboard, purchasing, scxml, charts, datavis3d, gamepad, graphicaleffects, location, webglplugin, webview, translations, remoteobjects, connectivity, canvas3d]
+Build-Depends: qt5[core, 3d, webchannel, websockets, extras, sensors, serialport, speech, virtualkeyboard, purchasing, scxml, charts, datavis3d, gamepad, graphicaleffects, location, webglplugin, webview, translations, remoteobjects, connectivity]
 Description: Build the essential qt modules
 
 Feature: all
