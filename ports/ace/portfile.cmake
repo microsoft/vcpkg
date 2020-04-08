@@ -66,9 +66,6 @@ elseif(VCPKG_TARGET_IS_UWP)
 endif()
 
 if((VCPKG_TARGET_IS_WINDOWS) OR (VCPKG_TARGET_IS_UWP))
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(DLL_DECORATOR s)
-  endif()
   if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
     set(SOLUTION_TYPE vs2019)
   elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
@@ -140,13 +137,6 @@ string(PREPEND ACE_FEATURES ",")
 ###################################################
 
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(MSBUILD_PLATFORM "Win32")
-else ()
-    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
-endif()
-
-
 # Acquire Perl and add it to PATH (for execution of MPC)
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
@@ -174,7 +164,7 @@ vcpkg_execute_required_process(
 
 # Build for Windows
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-    vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" PLATFORM ${MSBUILD_PLATFORM} OPTIONS /m USE_VCPKG_INTEGRATION)
+    vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" USE_VCPKG_INTEGRATION)
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   vcpkg_build_make(SOURCE_PATH ${SOURCE_PATH})
 endif()
