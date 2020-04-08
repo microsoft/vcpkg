@@ -2,7 +2,7 @@
 #So it is probably better to have a central location for these hashes and let the ports update via a script
 set(QT_MAJOR_MINOR_VER 5.12)
 set(QT_PATCH_VER 8)
-set(QT_UPDATE_VERSION 1) # Switch to update qt and not build qt. Creates a file cmake/qt_new_hashes.cmake in qt5-base with the new hashes.
+set(QT_UPDATE_VERSION 0) # Switch to update qt and not build qt. Creates a file cmake/qt_new_hashes.cmake in qt5-base with the new hashes.
 
 set(QT_PORT_LIST base 3d activeqt charts connectivity datavis3d declarative gamepad graphicaleffects imageformats location macextras mqtt multimedia networkauth
                  purchasing quickcontrols quickcontrols2 remoteobjects script scxml sensors serialport speech svg tools virtualkeyboard webchannel websockets
