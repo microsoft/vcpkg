@@ -14,10 +14,6 @@ Feature: xerces-c
 Build-Depends: xerces-c
 Description: Enable XML features
 
-Feature: qt5
-Build-Depends: qt5-base
-Description: Enable Qt5 support
-
 Feature: zlib
 Build-Depends: zlib
 Description: Enable zlib support
