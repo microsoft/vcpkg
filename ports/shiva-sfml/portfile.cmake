@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_find_acquire_program(PYTHON2)
 
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -12,11 +12,14 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-          -DSHIVA_BUILD_TESTS=OFF -DSHIVA_USE_SFML_AS_RENDERER=ON -DSHIVA_INSTALL_PLUGINS=ON -DSHIVA_BUILD_EXAMPLES=OFF     
+          -DSHIVA_BUILD_TESTS=OFF
+          -DSHIVA_USE_SFML_AS_RENDERER=ON
+          -DSHIVA_INSTALL_PLUGINS=ON
+          -DSHIVA_BUILD_EXAMPLES=OFF
+          -DPYTHON_EXECUTABLE=${PYTHON2}
 )
 
 vcpkg_install_cmake()
-
 
 if (VCPKG_CMAKE_SYSTEM_NAME)
   file(GLOB PLUGINS_RELEASE ${SOURCE_PATH}/bin/Release/systems/*)
@@ -29,7 +32,6 @@ endif()
 message(STATUS "PLUGINS_RELEASE -> ${PLUGINS_RELEASE}")
 message(STATUS "PLUGINS_DEBUG -> ${PLUGINS_DEBUG}")
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/shiva-sfml)
-
 
 if (VCPKG_CMAKE_SYSTEM_NAME)
   set(SUFFIX_BINARY lib)

@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+#header-only library
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -25,5 +25,6 @@ file(
 )
 
 file(INSTALL ${SOURCE_PATH}/single/include/sol DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
+file(INSTALL ${SOURCE_PATH}/include/sol DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
