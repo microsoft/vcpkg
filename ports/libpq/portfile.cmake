@@ -168,7 +168,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             /p:UseIntelMKL=No
             /p:WindowsTargetPlatformVersion=${VCPKG_TARGET_PLATFORM_VERSION}
             /m
-            /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
+            /p:ForceImportBeforeCppTargets=\"${SCRIPTS}/buildsystems/msbuild/vcpkg.targets\"
             /p:VcpkgTriplet=${TARGET_TRIPLET}"
             )
         if(HAS_TOOLS)
@@ -223,8 +223,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     else()
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     endif()
-    #file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
-    #vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
 else()
     if("${FEATURES}" MATCHES "openssl")

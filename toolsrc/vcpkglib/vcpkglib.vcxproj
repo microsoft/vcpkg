@@ -152,6 +152,7 @@
     <ClInclude Include="..\include\vcpkg\base\files.h" />
     <ClInclude Include="..\include\vcpkg\base\graphs.h" />
     <ClInclude Include="..\include\vcpkg\base\hash.h" />
+    <ClInclude Include="..\include\vcpkg\base\ignore_errors.h" />
     <ClInclude Include="..\include\vcpkg\base\lazy.h" />
     <ClInclude Include="..\include\vcpkg\base\lineinfo.h" />
     <ClInclude Include="..\include\vcpkg\base\machinetype.h" />

@@ -9,8 +9,8 @@ endif()
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION 507dce1bed69d6ef7a0d5c7628cb7eb8680e0438)
-set(SCITER_SHA 24ccc7d09247ea84a5a3e3c479dc6eb99b4115a89fec8e766874f706addee163b327f5380632b554b02074423f97097f993f8d361d8948800f6477de2b4ab5b5)
+set(SCITER_REVISION e0f293ebfb59b9fbef058626bcaeafc38dad5fb8)
+set(SCITER_SHA 30b163c478db0c749464de1f18ce249f90018490c737c3d740cebeab0963f5f76d04b907d6cd93952953a7a0ee139fc1ecfa28f6100ada210a6a9ff0e4ff12d5)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -72,6 +72,12 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
     file(INSTALL ${SCITER_BIN}/inspector.app DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.app DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${SCITER_TOOLS})
+
+    # not sure whether there is a better way to do this, because
+    # `file(INSTALL sciter.app FILE_PERMISSIONS EXECUTE)`
+    # would mark everything as executable which is no go.
+    execute_process(COMMAND sh -c "chmod +x sciter.app/Contents/MacOS/sciter" WORKING_DIRECTORY ${SCITER_TOOLS})
+    execute_process(COMMAND sh -c "chmod +x inspector.app/Contents/MacOS/inspector" WORKING_DIRECTORY ${SCITER_TOOLS})
 
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)

@@ -1,4 +1,4 @@
-#vcpkg_fail_port_install(MESSAGE "${PORT} only supports Unix currently." ON_TARGET "Windows")
+#vcpkg_fail_port_install(MESSAGE "${PORT} only supports Unix currently." ON_TARGET "Windows") 
 
 set(LIBOSIP2_VER "5.1.0")
 
