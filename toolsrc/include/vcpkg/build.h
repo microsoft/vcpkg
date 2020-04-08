@@ -75,6 +75,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class NoClean
+    {
+        NO = 0,
+        YES
+    };
+
     enum class ConfigurationType
     {
         DEBUG,
@@ -114,6 +120,7 @@ namespace vcpkg::Build
         CleanBuildtrees clean_buildtrees;
         CleanPackages clean_packages;
         CleanDownloads clean_downloads;
+        NoClean no_clean;
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;

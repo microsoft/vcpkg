@@ -485,17 +485,19 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "--head";
     static constexpr StringLiteral OPTION_NO_DOWNLOADS = "--no-downloads";
     static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "--only-downloads";
+    static constexpr StringLiteral OPTION_NO_CLEAN = "--no-clean";
     static constexpr StringLiteral OPTION_RECURSE = "--recurse";
     static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
 
-    static constexpr std::array<CommandSwitch, 8> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 9> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_ONLY_DOWNLOADS, "Download sources but don't build packages"},
+        {OPTION_NO_CLEAN, "Skips cleaning of directory after build"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
@@ -652,6 +654,7 @@ namespace vcpkg::Install
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
         const bool only_downloads = Util::Sets::contains(options.switches, (OPTION_ONLY_DOWNLOADS));
+        const bool no_clean = Util::Sets::contains(options.switches, (OPTION_NO_CLEAN));
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
@@ -674,6 +677,7 @@ namespace vcpkg::Install
             clean_after_build ? Build::CleanBuildtrees::YES : Build::CleanBuildtrees::NO,
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
+            Util::Enum::to_enum<Build::NoClean>(no_clean),
             download_tool,
             (GlobalState::g_binary_caching && !only_downloads) ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,

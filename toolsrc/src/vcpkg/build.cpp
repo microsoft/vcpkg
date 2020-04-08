@@ -67,6 +67,7 @@ namespace vcpkg::Build::Command
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
+            Build::NoClean::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
@@ -380,6 +381,12 @@ namespace vcpkg::Build
         if (Util::Enum::to_bool(action.build_options.only_downloads))
         {
             variables.push_back({"VCPKG_DOWNLOAD_MODE", "true"});
+        }
+
+        if (Util::Enum::to_bool(action.build_options.no_clean) 
+            || System::get_environment_variable("VCPKG_NO_CLEAN").has_value())
+        {
+            variables.push_back({"VCPKG_NO_CLEAN", "true"});
         }
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())

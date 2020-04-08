@@ -81,19 +81,29 @@ function(vcpkg_build_cmake)
                 endif()
             endif()
 
+            set(WORKING_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
             if (_bc_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
                     COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
+                    WORKING_DIRECTORY ${WORKING_DIR}
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
                 )
             else()
                 vcpkg_execute_build_process(
                     COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
                     NO_PARALLEL_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
+                    WORKING_DIRECTORY ${WORKING_DIR}
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
                 )
+            endif()
+
+            if(NOT DEFINED VCPKG_NO_CLEAN)
+                if(EXISTS ${WORKING_DIR})
+                    file(GLOB_RECURSE DEBUG_FILES LIST_DIRECTORIES false ${WORKING_DIR}/*.pdb)
+                    file(GLOB_RECURSE BUILD_OBJS LIST_DIRECTORIES false ${WORKING_DIR}/*)
+                    list(REMOVE_ITEM BUILD_OBJS ${DEBUG_FILES})
+                    file(REMOVE ${BUILD_OBJS})
+                endif()
             endif()
 
             if(_bc_ADD_BIN_TO_PATH)
