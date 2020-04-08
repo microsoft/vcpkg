@@ -162,7 +162,7 @@ namespace vcpkg::Build
     static const std::string NAME_ALLOW_OBSOLETE_MSVCRT = "PolicyAllowObsoleteMsvcrt";
     static const std::string NAME_ALLOW_RESTRICTED_HEADERS = "PolicyAllowRestrictedHeaders";
     static const std::string NAME_SKIP_DUMPBIN_CHECKS = "PolicySkipDumpbinChecks";
-    static const std::string NAME_SKIP_DLL_ARCHITECTURE_CHECK = "PolicySkipDLLArchitectureCheck";
+    static const std::string NAME_SKIP_ARCHITECTURE_CHECK = "PolicySkipArchitectureCheck";
 
     const std::string& to_string(BuildPolicy policy)
     {
@@ -176,7 +176,7 @@ namespace vcpkg::Build
             case BuildPolicy::ALLOW_OBSOLETE_MSVCRT: return NAME_ALLOW_OBSOLETE_MSVCRT;
             case BuildPolicy::ALLOW_RESTRICTED_HEADERS: return NAME_ALLOW_RESTRICTED_HEADERS;
             case BuildPolicy::SKIP_DUMPBIN_CHECKS: return NAME_SKIP_DUMPBIN_CHECKS;
-            case BuildPolicy::SKIP_DLL_ARCHITECTURE_CHECK: return NAME_SKIP_DLL_ARCHITECTURE_CHECK;
+            case BuildPolicy::SKIP_ARCHITECTURE_CHECK: return NAME_SKIP_ARCHITECTURE_CHECK;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
@@ -193,7 +193,7 @@ namespace vcpkg::Build
             case BuildPolicy::ALLOW_OBSOLETE_MSVCRT: return "VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT";
             case BuildPolicy::ALLOW_RESTRICTED_HEADERS: return "VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS";
             case BuildPolicy::SKIP_DUMPBIN_CHECKS: return "VCPKG_POLICY_SKIP_DUMPBIN_CHECKS";
-            case BuildPolicy::SKIP_DLL_ARCHITECTURE_CHECK: return "VCPKG_POLICY_SKIP_DLL_ARCHITECTURE_CHECK";
+            case BuildPolicy::SKIP_ARCHITECTURE_CHECK: return "VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK";
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
