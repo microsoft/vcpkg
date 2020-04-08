@@ -911,10 +911,7 @@ namespace vcpkg::PostBuildLint
                 }
 
 #if defined(_WIN32)
-
-                    error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
-
-
+                error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
 #endif
                 break;
             }
