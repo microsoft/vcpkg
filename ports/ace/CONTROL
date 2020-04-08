@@ -10,8 +10,8 @@ Feature: ssl
 Build-Depends: openssl
 Description: Enable SSL/TLS features
 
-Feature: xml
-Build-Depends: xml
+Feature: xerces-c
+Build-Depends: xerces-c
 Description: Enable XML features
 
 Feature: qt5
