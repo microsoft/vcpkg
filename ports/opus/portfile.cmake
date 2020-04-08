@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH
   SOURCE_PATH
@@ -12,7 +10,14 @@ vcpkg_from_github(
   HEAD_REF
   master)
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} PREFER_NINJA)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  avx AVX_SUPPORTED
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${FEATURE_OPTIONS}
+    PREFER_NINJA)
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Opus)
 vcpkg_copy_pdbs()

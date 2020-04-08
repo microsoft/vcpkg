@@ -45,6 +45,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             #CMake fixes
                             patches/Qt5BasicConfig.patch
                             patches/Qt5PluginTarget.patch
+                            patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -354,6 +355,14 @@ file(COPY
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/qt5
 )
+
+# Fix Qt5GuiConfigExtras EGL path
+if(VCPKG_TARGET_IS_LINUX)
+    set(_file "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake")
+    file(READ "${_file}" _contents)
+    string(REGEX REPLACE "_qt5gui_find_extra_libs\\\(EGL[^\\\n]+" "_qt5gui_find_extra_libs(EGL \"EGL\" \"\" \"\${_qt5Gui_install_prefix}/include\")\n" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
 
 if(QT_BUILD_LATEST)
     file(COPY
