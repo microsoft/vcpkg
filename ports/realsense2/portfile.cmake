@@ -1,14 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF 9f99fa9a509555f85bffc15ce27531aaa6db6f7e#v2.30.0
-    SHA512 72d9e0b48a6cd0b056b6d039487431d0097e5151930a2dbb072d09a13fccee1f166ca339fe7f0ab4aae1edc5669de5e8336f0b6d87d1c4ea01ec0c5d4032c728
+    REF 842ee1e1e5c4bb96d63582a7fde061dbc1bebf69#v2.33.1
+    SHA512 70f6f9c2f1c5925532b2ff22779579b3610a7f616d66ac92e8e85c6f30df334bf8fb125355a0706bacef0be8370acc62bb7623f3f200326e71fe53e07726fa6a
     HEAD_REF master
     PATCHES
         fix_openni2.patch
         fix-dependency-glfw3.patch
 )
 
+file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
 
 set(BUILD_TOOLS OFF)
@@ -46,7 +47,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/realsense2)
 
 vcpkg_copy_pdbs()
 
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
@@ -73,7 +73,6 @@ if(BUILD_TOOLS)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/realsense2-gl.dll)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/realsense2-gl.pdb)
 endif()
-
 
 if(BUILD_OPENNI2_BINDINGS)
     file(GLOB RS2DRIVER ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_out/rs2driver*)
