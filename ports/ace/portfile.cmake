@@ -162,9 +162,15 @@ vcpkg_execute_required_process(
 #
 ###################################################
 
+if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+    set(MSBUILD_PLATFORM "Win32")
+else ()
+    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
+endif()
+
 # Build for Windows
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-    vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" USE_VCPKG_INTEGRATION)
+    vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" PLATFORM ${MSBUILD_PLATFORM} USE_VCPKG_INTEGRATION)
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   vcpkg_build_make(SOURCE_PATH ${SOURCE_PATH})
 endif()
