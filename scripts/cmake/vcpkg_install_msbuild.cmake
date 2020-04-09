@@ -89,8 +89,6 @@
 ## * [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
 ## * [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
 
-include(vcpkg_clean_msbuild)
-
 function(vcpkg_install_msbuild)
     cmake_parse_arguments(
         _csc
@@ -179,6 +177,10 @@ function(vcpkg_install_msbuild)
         endif()
     endif()
 
+    if(NOT _csc_SKIP_CLEAN)
+        vcpkg_clean_working_dir(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    endif()
+
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Debug")
         file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -206,7 +208,7 @@ function(vcpkg_install_msbuild)
     vcpkg_copy_pdbs()
 
     if(NOT _csc_SKIP_CLEAN)
-        vcpkg_clean_msbuild()
+        vcpkg_clean_working_dir(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     endif()
 
     if(DEFINED _csc_INCLUDES_SUBPATH)

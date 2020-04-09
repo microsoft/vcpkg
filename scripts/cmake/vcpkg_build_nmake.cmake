@@ -214,6 +214,8 @@ function(vcpkg_build_nmake)
                 LOGNAME "${_bn_LOGFILE_ROOT}-${CURRENT_TRIPLET_NAME}"
             )
 
+            vcpkg_clean_working_dir(${OBJ_DIR}${_bn_PROJECT_SUBPATH})
+
             if(_bn_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
             endif()

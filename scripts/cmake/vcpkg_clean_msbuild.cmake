@@ -7,9 +7,7 @@
 ## vcpkg_clean_msbuild()
 ## ```
 ##
-## ## Examples
-##
-## * [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
+## Deprecated in favor of `vcpkg_clean_working_dir`
 
 function(vcpkg_clean_msbuild)
     file(REMOVE_RECURSE

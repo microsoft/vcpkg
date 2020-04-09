@@ -61,4 +61,8 @@ function(vcpkg_install_qmake)
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
         file(COPY ${DEBUG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
+
+    vcpkg_clean_working_dir(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    vcpkg_clean_working_dir(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+
 endfunction()

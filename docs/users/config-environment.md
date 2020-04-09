@@ -47,3 +47,7 @@ This environment variable can be set to a list of environment variables, separat
 the build environment.
 
 Example: `FOO_SDK_DIR;BAR_SDK_DIR`
+
+### VCPKG_NO_CLEAN
+
+Vcpkg cleans buildtree objects and intermediate files by default. This environment variable (if set) will disable that option.
