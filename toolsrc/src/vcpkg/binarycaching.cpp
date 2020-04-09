@@ -140,7 +140,6 @@ namespace
             const auto tmp_archive_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".zip");
             compress_directory(paths, paths.package_dir(spec), tmp_archive_path);
 
-            std::error_code ec;
             for (auto&& m_directory : m_write_dirs)
             {
                 const fs::path& archives_root_dir = m_directory;
@@ -148,7 +147,8 @@ namespace
                 const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
                 const fs::path archive_path = archives_root_dir / archive_subpath;
 
-                fs.create_directories(archive_path.parent_path(), ec);
+                fs.create_directories(archive_path.parent_path(), ignore_errors);
+                std::error_code ec;
                 if (m_write_dirs.size() > 1)
                     fs.copy_file(tmp_archive_path, archive_path, fs::copy_options::overwrite_existing, ec);
                 else
@@ -163,32 +163,31 @@ namespace
                 else
                     System::printf("Stored binary cache: %s\n", archive_path.u8string());
             }
-            if (m_write_dirs.size() > 1) fs.remove(tmp_archive_path, ec);
+            if (m_write_dirs.size() > 1) fs.remove(tmp_archive_path, ignore_errors);
         }
         void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) override
         {
             if (m_write_dirs.empty()) return;
             auto& fs = paths.get_filesystem();
-            std::error_code ec;
             for (auto&& m_directory : m_write_dirs)
             {
                 const fs::path& archives_root_dir = m_directory;
                 const std::string archive_name = abi_tag + ".zip";
                 const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
                 const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
-
                 if (!fs.exists(archive_tombstone_path))
                 {
                     // Build failed, store all failure logs in the tombstone.
                     const auto tmp_log_path = paths.buildtrees / spec.name() / "tmp_failure_logs";
                     const auto tmp_log_path_destination = tmp_log_path / spec.name();
                     const auto tmp_failure_zip = paths.buildtrees / spec.name() / "failure_logs.zip";
-                    fs.create_directories(tmp_log_path_destination, ec);
+                    fs.create_directories(tmp_log_path_destination, ignore_errors);
 
                     for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
                     {
                         if (log_file.path().extension() == ".log")
                         {
+                            std::error_code ec;
                             fs.copy_file(log_file.path(),
                                          tmp_log_path_destination / log_file.path().filename(),
                                          fs::stdfs::copy_options::none,
@@ -198,7 +197,8 @@ namespace
 
                     compress_directory(paths, tmp_log_path, paths.buildtrees / spec.name() / "failure_logs.zip");
 
-                    fs.create_directories(archive_tombstone_path.parent_path(), ec);
+                    fs.create_directories(archive_tombstone_path.parent_path(), ignore_errors);
+                    std::error_code ec;
                     fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
 
                     // clean up temporary directory
