@@ -27,8 +27,6 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig()
-
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
 #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal/")
@@ -48,6 +46,8 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/" "${CURRENT_PACKAGES_DIR}/share/xorg/debug")
 endif()
+
+vcpkg_fixup_pkgconfig() # must be called after files have been moved 
 
 set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xtrans.pc" )
 file(READ "${_file}" _contents)

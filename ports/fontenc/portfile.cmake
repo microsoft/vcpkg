@@ -1,5 +1,3 @@
-set(PATCHES )
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH

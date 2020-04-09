@@ -43,6 +43,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCONFIG_INSTALL_PATH=share/freetype
         -DFT_WITH_ZLIB=ON # Force system zlib.
+        -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE
         ${FEATURE_OPTIONS}
         -DENABLE_DLL_EXPORT=${ENABLE_DLL_EXPORT}
         ${OPTIONS}

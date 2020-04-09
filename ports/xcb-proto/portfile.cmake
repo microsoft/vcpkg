@@ -31,28 +31,10 @@ set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL ${SHELL_PATH}
-    #OPTIONS
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
-
 )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
-
-file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb-proto.pc" _contents)
-string(REPLACE "libdir=${CURRENT_PACKAGES_DIR}/lib" "libdir=\${prefix}/lib" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb-proto.pc" "${_contents}")
-
-file(READ "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb-proto.pc" _contents)
-string(REPLACE "libdir=${CURRENT_PACKAGES_DIR}/debug/lib" "libdir=\${prefix}/lib" _contents "${_contents}")
-string(REPLACE "datarootdir=\${prefix}/share" "datarootdir=\${prefix}/../share" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb-proto.pc" "${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
