@@ -114,14 +114,14 @@ namespace vcpkg::Test
 #elif !defined(_WIN32) // FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_STD
         return AllowSymlinks::Yes;
 #else
-        constexpr const wchar_t regkey[] =
+        constexpr static const wchar_t regkey[] =
             LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)";
-        constexpr const wchar_t regkey_member[] = LR"(AllowDevelopmentWithoutDevLicense)";
+        constexpr static const wchar_t regkey_member[] = LR"(AllowDevelopmentWithoutDevLicense)";
 
         DWORD data;
         DWORD dataSize = sizeof(data);
         const auto status = RegGetValueW(
-            HKEY_LOCAL_MACHINE, regkey, regkey_member, RRF_RT_DWORD, nullptr, &data, &dataSize);;
+            HKEY_LOCAL_MACHINE, regkey, regkey_member, RRF_RT_DWORD, nullptr, &data, &dataSize);
 
         if (status == ERROR_SUCCESS && data == 1) {
             return AllowSymlinks::Yes;
