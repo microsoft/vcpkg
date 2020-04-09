@@ -48,6 +48,7 @@ abseil:arm-uwp=fail
 ace:x64-osx=fail
 ace:x64-uwp=fail
 ace:arm-uwp=fail
+ace:x64-linux=fail
 activemq-cpp:x64-windows-static=fail
 akali:x64-uwp=fail
 akali:arm-uwp=fail
