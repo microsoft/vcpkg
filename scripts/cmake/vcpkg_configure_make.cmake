@@ -219,8 +219,8 @@ function(vcpkg_configure_make)
                             # Important: These should all be relative to prefix!
                             "--bindir=${prefix_var}/tools/${PORT}/bin"
                             "--sbindir=${prefix_var}/tools/${PORT}/sbin"
-                            #"--libdir='\${prefix}'/lib" # already the default!
-                            #"--includedir='\${prefix}'/include" # already the default!
+                            #"--libdir=\${prefix_var}/lib" # already the default!
+                            #"--includedir=\${prefix_var}/include" # already the default!
                             "--mandir=${prefix_var}/share/${PORT}"
                             "--docdir=${prefix_var}/share/${PORT}"
                             "--datarootdir=${prefix_var}/share/${PORT}")
@@ -229,7 +229,7 @@ function(vcpkg_configure_make)
                             # Important: These should all be relative to prefix!
                             "--bindir=${prefix_var}/../tools/${PORT}/debug/bin"
                             "--sbindir=${prefix_var}/../tools/${PORT}/debug/sbin"
-                            #"--libdir='\${prefix}'/lib" # already the default!
+                            #"--libdir=\${prefix_var}/lib" # already the default!
                             "--includedir=${prefix_var}/../include"
                             "--datarootdir=${prefix_var}/share/${PORT}")
     
@@ -295,11 +295,12 @@ function(vcpkg_configure_make)
         if(NOT PKGCONFIG)
             message(STATUS "${PORT} requires pkg-config from the system package manager (example: \"sudo apt-get install pkg-config\")")
         endif()
+        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     else()
         debug_message("ENV{PKG_CONFIG} found! Using: $ENV{PKG_CONFIG}")
         set(PKGCONFIG $ENV{PKG_CONFIG})
     endif()
-    
+
     set(SRC_DIR "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
 
     # Run autoconf if necessary
@@ -370,6 +371,7 @@ function(vcpkg_configure_make)
         )
     endif()
 
+    set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
     # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
         set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
@@ -382,7 +384,6 @@ function(vcpkg_configure_make)
         endif()
 
         set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}/debug/lib/pkgconfig")
-        set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
 
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
@@ -404,7 +405,7 @@ function(vcpkg_configure_make)
             string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
 
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
+            #set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
             
             set(ENV{LIBPATH} "${_VCPKG_INSTALLED}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${LIBPATH_BACKUP}")
             
@@ -417,7 +418,7 @@ function(vcpkg_configure_make)
             set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
             set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
             # endif()
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
+            #set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
             set(dbg_command /bin/sh "./${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG})
         endif()
 
@@ -446,7 +447,6 @@ function(vcpkg_configure_make)
     # Configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}/lib/pkgconfig")
-        set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
 
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
@@ -479,7 +479,7 @@ function(vcpkg_configure_make)
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
             set(ENV{LIBPATH} "${_VCPKG_INSTALLED}/lib${VCPKG_HOST_PATH_SEPARATOR}${LIBPATH_BACKUP}")
 
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
+            #set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
             set(rel_command
                 ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
         else()
@@ -489,11 +489,9 @@ function(vcpkg_configure_make)
             set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/${LIBRARY_PATH_PATHLIKE_CONCAT}")
             set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
             # endif()
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
+            #set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
             set(rel_command /bin/sh "./${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE})
         endif()
-        
-
 
         if (NOT _csc_SKIP_CONFIGURE)
             message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
