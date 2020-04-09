@@ -25,7 +25,5 @@ Description: Mfc functionality for VTK on Windows
 Build-Depends: atlmfc (windows)
 
 Feature: qtopengl
-Description: OpenGL with Qt for vtk on Windows
-Build-Depends: qt5-tools, qt5-base, vtk[core]
-
-
+Description: OpenGL with Qt for VTK on Windows
+Build-Depends: qt5,vtk[core]
