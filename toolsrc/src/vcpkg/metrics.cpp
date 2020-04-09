@@ -441,7 +441,7 @@ namespace vcpkg::Metrics
         if (ec) return;
 
 #if defined(_WIN32)
-        const std::string cmd_line = Strings::format("start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"",
+        const std::string cmd_line = Strings::format("cmd /c \"start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"\"",
                                                      temp_folder_path_exe.u8string(),
                                                      vcpkg_metrics_txt_path.u8string());
         System::cmd_execute_no_wait(cmd_line);

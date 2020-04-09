@@ -6,6 +6,7 @@
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
@@ -220,16 +221,14 @@ namespace vcpkg::Commands::CI
         std::map<PackageSpec, Build::BuildResult> known;
         std::map<PackageSpec, std::vector<std::string>> features;
         std::unordered_map<std::string, SourceControlFileLocation> default_feature_provider;
-        std::map<PackageSpec, std::string> abi_tag_map;
+        std::map<PackageSpec, std::string> abi_map;
     };
 
-    static bool supported_for_triplet(const CMakeVars::TripletCMakeVarProvider& var_provider,
-
+    static bool supported_for_triplet(const CMakeVars::CMakeVarProvider& var_provider,
                                       const InstallPlanAction* install_plan)
     {
-        const std::string& supports_expression =
-            install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
-                .source_control_file->core_paragraph->supports_expression;
+        auto&& scfl = install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
+        const std::string& supports_expression = scfl.source_control_file->core_paragraph->supports_expression;
         if (supports_expression.empty())
         {
             return true; // default to 'supported'
@@ -255,13 +254,11 @@ namespace vcpkg::Commands::CI
         const VcpkgPaths& paths,
         const std::set<std::string>& exclusions,
         const PortFileProvider::PortFileProvider& provider,
-        const CMakeVars::TripletCMakeVarProvider& var_provider,
+        const CMakeVars::CMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
         const bool purge_tombstones)
     {
         auto ret = std::make_unique<UnknownCIPortsResults>();
-
-        auto& fs = paths.get_filesystem();
 
         std::set<PackageSpec> will_fail;
 
@@ -296,9 +293,7 @@ namespace vcpkg::Commands::CI
         std::vector<FullPackageSpec> install_specs;
         for (auto&& install_action : action_plan.install_actions)
         {
-            install_specs.emplace_back(FullPackageSpec{
-                install_action.spec,
-                std::vector<std::string>{install_action.feature_list.begin(), install_action.feature_list.end()}});
+            install_specs.emplace_back(FullPackageSpec{install_action.spec, install_action.feature_list});
         }
 
         var_provider.load_tag_vars(install_specs, provider);
@@ -308,65 +303,26 @@ namespace vcpkg::Commands::CI
         Checks::check_exit(VCPKG_LINE_INFO,
                            action_plan.already_installed.empty(),
                            "Cannot use CI command with packages already installed.");
+
+        Build::compute_all_abis(paths, action_plan, var_provider, {});
+
+        auto binaryprovider = create_archives_provider();
+
         std::string stdout_buffer;
         for (auto&& action : action_plan.install_actions)
         {
             auto p = &action;
-            // determine abi tag
-            std::string abi;
+            ret->abi_map.emplace(action.spec, action.package_abi.value_or_exit(VCPKG_LINE_INFO));
+            ret->features.emplace(action.spec, action.feature_list);
             if (auto scfl = p->source_control_file_location.get())
             {
                 auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
                 emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
-                auto triplet = p->spec.triplet();
-
-                const Build::BuildPackageConfig build_config{*scfl,
-                                                             triplet,
-                                                             build_options,
-                                                             var_provider,
-                                                             p->feature_dependencies,
-                                                             p->package_dependencies,
-                                                             p->feature_list};
-
-                auto dependency_abis =
-                    Util::fmap(build_config.package_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
-                        auto it = ret->abi_tag_map.find(spec);
-
-                        if (it == ret->abi_tag_map.end())
-                            return {spec.name(), ""};
-                        else
-                            return {spec.name(), it->second};
-                    });
-
-                const auto pre_build_info = Build::PreBuildInfo(
-                    paths, triplet, var_provider.get_tag_vars(p->spec).value_or_exit(VCPKG_LINE_INFO));
-
-                auto maybe_tag_and_file = Build::compute_abi_tag(paths, build_config, pre_build_info, dependency_abis);
-                if (auto tag_and_file = maybe_tag_and_file.get())
-                {
-                    abi = tag_and_file->tag;
-                    ret->abi_tag_map.emplace(p->spec, abi);
-                }
-            }
-            else if (auto ipv = p->installed_package.get())
-            {
-                abi = ipv->core->package.abi;
-                if (!abi.empty()) ret->abi_tag_map.emplace(p->spec, abi);
+                p->build_options = build_options;
             }
 
-            auto archives_root_dir = paths.root / "archives";
-            auto archive_name = abi + ".zip";
-            auto archive_subpath = fs::u8path(abi.substr(0, 2)) / archive_name;
-            auto archive_path = archives_root_dir / archive_subpath;
-            auto archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
-
-            if (purge_tombstones)
-            {
-                std::error_code ec;
-                fs.remove(archive_tombstone_path, ec); // Ignore error
-            }
-
+            auto precheck_result = binaryprovider->precheck(paths, action, purge_tombstones);
             bool b_will_build = false;
 
             std::string state;
@@ -393,12 +349,12 @@ namespace vcpkg::Commands::CI
                 ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
                 will_fail.emplace(p->spec);
             }
-            else if (fs.exists(archive_path))
+            else if (precheck_result == RestoreResult::success)
             {
                 state = "pass";
                 ret->known.emplace(p->spec, BuildResult::SUCCEEDED);
             }
-            else if (fs.exists(archive_tombstone_path))
+            else if (precheck_result == RestoreResult::build_failed)
             {
                 state = "fail";
                 ret->known.emplace(p->spec, BuildResult::BUILD_FAILED);
@@ -411,7 +367,11 @@ namespace vcpkg::Commands::CI
             }
 
             Strings::append(stdout_buffer,
-                            Strings::format("%40s: %1s %8s: %s\n", p->spec, (b_will_build ? "*" : " "), state, abi));
+                            Strings::format("%40s: %1s %8s: %s\n",
+                                            p->spec,
+                                            (b_will_build ? "*" : " "),
+                                            state,
+                                            action.package_abi.value_or_exit(VCPKG_LINE_INFO)));
             if (stdout_buffer.size() > 2048)
             {
                 System::print2(stdout_buffer);
@@ -457,7 +417,8 @@ namespace vcpkg::Commands::CI
         StatusParagraphs status_db = database_load_check(paths);
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        CMakeVars::TripletCMakeVarProvider var_provider(paths);
+        auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
+        auto& var_provider = *var_provider_storage;
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
@@ -473,7 +434,6 @@ namespace vcpkg::Commands::CI
         };
 
         std::vector<std::map<PackageSpec, BuildResult>> all_known_results;
-        std::map<PackageSpec, std::string> abi_tag_map;
 
         XunitTestResults xunitTestResults;
 
@@ -549,28 +509,27 @@ namespace vcpkg::Commands::CI
                 // Adding results for ports that were built or pulled from an archive
                 for (auto&& result : summary.results)
                 {
-                    auto& port_features = split_specs->features[result.spec];
+                    auto& port_features = split_specs->features.at(result.spec);
                     split_specs->known.erase(result.spec);
                     xunitTestResults.add_test_results(result.spec.to_string(),
                                                       result.build_result.code,
                                                       result.timing,
-                                                      split_specs->abi_tag_map.at(result.spec),
+                                                      split_specs->abi_map.at(result.spec),
                                                       port_features);
                 }
 
                 // Adding results for ports that were not built because they have known states
                 for (auto&& port : split_specs->known)
                 {
-                    auto& port_features = split_specs->features[port.first];
+                    auto& port_features = split_specs->features.at(port.first);
                     xunitTestResults.add_test_results(port.first.to_string(),
                                                       port.second,
                                                       Chrono::ElapsedTime{},
-                                                      split_specs->abi_tag_map.at(port.first),
+                                                      split_specs->abi_map.at(port.first),
                                                       port_features);
                 }
 
                 all_known_results.emplace_back(std::move(split_specs->known));
-                abi_tag_map.insert(split_specs->abi_tag_map.begin(), split_specs->abi_tag_map.end());
 
                 results.push_back({triplet, std::move(summary)});
 

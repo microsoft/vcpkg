@@ -30,7 +30,7 @@ namespace vcpkg
 
     BinaryParagraph::BinaryParagraph() = default;
 
-    BinaryParagraph::BinaryParagraph(Parse::RawParagraph fields)
+    BinaryParagraph::BinaryParagraph(Parse::Paragraph fields)
     {
         using namespace vcpkg::Parse;
 

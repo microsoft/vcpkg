@@ -26,21 +26,19 @@ if(VCPKG_TOOLCHAIN)
     return()
 endif()
 
-if(DEFINED CMAKE_CONFIGURATION_TYPES) #Generating with a multi config generator
-    #If CMake does not have a mapping for MinSizeRel and RelWithDebInfo in imported targets
-    #it will map those configuration to the first valid configuration in CMAKE_CONFIGURATION_TYPES.
-    #By default this is the debug configuration which is wrong. 
-    if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
-        set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;")
-        if(VCPKG_VERBOSE)
-            message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;")
-        endif()
+#If CMake does not have a mapping for MinSizeRel and RelWithDebInfo in imported targets
+#it will map those configuration to the first valid configuration in CMAKE_CONFIGURATION_TYPES or the targets IMPORTED_CONFIGURATIONS.
+#In most cases this is the debug configuration which is wrong. 
+if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
+    set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;")
+    if(VCPKG_VERBOSE)
+        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;")
     endif()
-    if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
-        set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;")
-        if(VCPKG_VERBOSE)
-            message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;")
-        endif()
+endif()
+if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
+    set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;")
+    if(VCPKG_VERBOSE)
+        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;")
     endif()
 endif()
 
@@ -122,7 +120,7 @@ if(NOT DEFINED _VCPKG_ROOT_DIR)
 endif()
 set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
 
-if(NOT EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" AND NOT _CMAKE_IN_TRY_COMPILE)
+if(NOT EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" AND NOT _CMAKE_IN_TRY_COMPILE AND NOT VCPKG_SUPPRESS_INSTALLED_LIBRARIES_WARNING)
     message(WARNING "There are no libraries installed for the Vcpkg triplet ${VCPKG_TARGET_TRIPLET}.")
 endif()
 
@@ -233,7 +231,10 @@ function(add_library name)
     endif()
 endfunction()
 
-macro(find_package name)
+if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
+    set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
+endif()
+macro(${VCPKG_OVERRIDE_FIND_PACKAGE_NAME} name)
     string(TOLOWER "${name}" _vcpkg_lowercase_name)
     if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${_vcpkg_lowercase_name}/vcpkg-cmake-wrapper.cmake")
         set(ARGS "${ARGV}")

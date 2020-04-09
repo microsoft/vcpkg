@@ -40,7 +40,7 @@ namespace vcpkg::Paragraphs
             if (fieldname.empty()) return add_error("expected fieldname");
         }
 
-        void get_paragraph(RawParagraph& fields)
+        void get_paragraph(Paragraph& fields)
         {
             fields.clear();
             std::string fieldname;
@@ -59,17 +59,17 @@ namespace vcpkg::Paragraphs
                 if (Util::Sets::contains(fields, fieldname)) return add_error("duplicate field", loc);
                 next();
                 skip_tabs_spaces();
-
+                auto rowcol = cur_rowcol();
                 get_fieldvalue(fieldvalue);
 
-                fields.emplace(fieldname, fieldvalue);
+                fields.emplace(fieldname, std::make_pair(fieldvalue, rowcol));
             } while (!is_lineend(cur()));
         }
 
     public:
-        ExpectedS<std::vector<RawParagraph>> get_paragraphs(CStringView text, CStringView origin)
+        ExpectedS<std::vector<Paragraph>> get_paragraphs(CStringView text, CStringView origin)
         {
-            std::vector<RawParagraph> paragraphs;
+            std::vector<Paragraph> paragraphs;
 
             init(text, origin);
 
@@ -86,7 +86,7 @@ namespace vcpkg::Paragraphs
         }
     };
 
-    static ExpectedS<RawParagraph> parse_single_paragraph(const std::string& str, const std::string& origin)
+    static ExpectedS<Paragraph> parse_single_paragraph(const std::string& str, const std::string& origin)
     {
         PghParser parser;
         auto pghs = parser.get_paragraphs(str, origin);
@@ -102,7 +102,7 @@ namespace vcpkg::Paragraphs
         }
     }
 
-    ExpectedS<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
+    ExpectedS<Paragraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -113,7 +113,7 @@ namespace vcpkg::Paragraphs
         return contents.error().message();
     }
 
-    ExpectedS<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
+    ExpectedS<std::vector<Paragraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -124,7 +124,7 @@ namespace vcpkg::Paragraphs
         return contents.error().message();
     }
 
-    ExpectedS<std::vector<RawParagraph>> parse_paragraphs(const std::string& str, const std::string& origin)
+    ExpectedS<std::vector<Paragraph>> parse_paragraphs(const std::string& str, const std::string& origin)
     {
         PghParser parser;
         return parser.get_paragraphs(str, origin);
@@ -133,7 +133,7 @@ namespace vcpkg::Paragraphs
     ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
         const auto path_to_control = path / "CONTROL";
-        ExpectedS<std::vector<RawParagraph>> pghs = get_paragraphs(fs, path_to_control);
+        ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
         if (auto vector_pghs = pghs.get())
         {
             return SourceControlFile::parse_control_file(path_to_control, std::move(*vector_pghs));
@@ -146,7 +146,7 @@ namespace vcpkg::Paragraphs
 
     ExpectedS<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
-        ExpectedS<std::vector<RawParagraph>> pghs =
+        ExpectedS<std::vector<Paragraph>> pghs =
             get_paragraphs(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
 
         if (auto p = pghs.get())

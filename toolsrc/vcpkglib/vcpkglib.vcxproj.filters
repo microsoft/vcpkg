@@ -228,6 +228,12 @@
     <ClCompile Include="..\src\vcpkg\portfileprovider.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\system.process.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\binarycaching.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\pch.h">
@@ -429,6 +435,9 @@
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\textrowcol.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\binarycaching.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
   </ItemGroup>

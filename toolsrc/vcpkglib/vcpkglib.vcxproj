@@ -152,6 +152,7 @@
     <ClInclude Include="..\include\vcpkg\base\files.h" />
     <ClInclude Include="..\include\vcpkg\base\graphs.h" />
     <ClInclude Include="..\include\vcpkg\base\hash.h" />
+    <ClInclude Include="..\include\vcpkg\base\ignore_errors.h" />
     <ClInclude Include="..\include\vcpkg\base\lazy.h" />
     <ClInclude Include="..\include\vcpkg\base\lineinfo.h" />
     <ClInclude Include="..\include\vcpkg\base\machinetype.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="..\include\vcpkg\base\util.h" />
     <ClInclude Include="..\include\vcpkg\base\view.h" />
     <ClInclude Include="..\include\vcpkg\base\zstringview.h" />
+    <ClInclude Include="..\include\vcpkg\binarycaching.h" />
     <ClInclude Include="..\include\vcpkg\binaryparagraph.h" />
     <ClInclude Include="..\include\vcpkg\build.h" />
     <ClInclude Include="..\include\vcpkg\cmakevars.h" />
@@ -177,6 +179,7 @@
     <ClInclude Include="..\include\vcpkg\export.chocolatey.h" />
     <ClInclude Include="..\include\vcpkg\export.h" />
     <ClInclude Include="..\include\vcpkg\export.ifw.h" />
+    <ClInclude Include="..\include\vcpkg\export.prefab.h" />
     <ClInclude Include="..\include\vcpkg\globalstate.h" />
     <ClInclude Include="..\include\vcpkg\help.h" />
     <ClInclude Include="..\include\vcpkg\input.h" />
@@ -227,6 +230,8 @@
     <ClCompile Include="..\src\vcpkg\base\stringview.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\system.process.cpp" />
+    <ClCompile Include="..\src\vcpkg\binarycaching.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
     <ClCompile Include="..\src\vcpkg\cmakevars.cpp" />
@@ -254,6 +259,7 @@
     <ClCompile Include="..\src\vcpkg\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg\export.cpp" />
     <ClCompile Include="..\src\vcpkg\export.chocolatey.cpp" />
+    <ClCompile Include="..\src\vcpkg\export.prefab.cpp" />
     <ClCompile Include="..\src\vcpkg\globalstate.cpp" />
     <ClCompile Include="..\src\vcpkg\help.cpp" />
     <ClCompile Include="..\src\vcpkg\input.cpp" />

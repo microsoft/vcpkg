@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/textrowcol.h>
 
 #include <memory>
 #include <string>
@@ -21,25 +22,30 @@ namespace vcpkg::Parse
     template<class P>
     using ParseExpected = vcpkg::ExpectedT<std::unique_ptr<P>, std::unique_ptr<ParseControlErrorInfo>>;
 
-    using RawParagraph = std::unordered_map<std::string, std::string>;
+    using Paragraph = std::unordered_map<std::string, std::pair<std::string, TextRowCol>>;
 
     struct ParagraphParser
     {
-        ParagraphParser(RawParagraph&& fields) : fields(std::move(fields)) {}
+        ParagraphParser(Paragraph&& fields) : fields(std::move(fields)) {}
 
         void required_field(const std::string& fieldname, std::string& out);
-        std::string optional_field(const std::string& fieldname) const;
+        std::string optional_field(const std::string& fieldname);
+        void required_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out);
+        void optional_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out);
         std::unique_ptr<ParseControlErrorInfo> error_info(const std::string& name) const;
 
     private:
-        RawParagraph&& fields;
+        Paragraph&& fields;
         std::vector<std::string> missing_fields;
     };
 
     ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str,
-                                                                    CStringView origin = "<unknown>");
+                                                                    CStringView origin = "<unknown>",
+                                                                    TextRowCol textrowcol = {});
     ExpectedS<std::vector<ParsedQualifiedSpecifier>> parse_qualified_specifier_list(const std::string& str,
-                                                                                    CStringView origin = "<unknown>");
+                                                                                    CStringView origin = "<unknown>",
+                                                                                    TextRowCol textrowcol = {});
     ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
-                                                               CStringView origin = "<unknown>");
+                                                               CStringView origin = "<unknown>",
+                                                               TextRowCol textrowcol = {});
 }

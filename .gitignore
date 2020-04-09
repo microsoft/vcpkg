@@ -291,7 +291,6 @@ __pycache__/
 /toolsrc/msbuild.x86.release/
 /toolsrc/msbuild.x64.debug/
 /toolsrc/msbuild.x64.release/
-#ignore custom triplets
 /triplets/*
 #add vcpkg-designed triplets back in
 !triplets/community/arm64-mingw.cmake
@@ -299,9 +298,16 @@ __pycache__/
 !triplets/community/arm-mingw.cmake
 !triplets/community/arm-windows.cmake
 !triplets/community/x64-mingw.cmake
+!triplets/community/x64-windows-static-md.cmake
 !triplets/community/x86-mingw.cmake
 !triplets/community/x86-uwp.cmake
 !triplets/community/x86-windows-static.cmake
+!triplets/community/x86-windows-static-md.cmake
+!triplets/community/x64-osx-dynamic.cmake
+!triplets/community/x64-android.cmake
+!triplets/community/x86-android.cmake
+!triplets/community/arm-android.cmake
+!triplets/community/arm64-android.cmake
 !triplets/arm-uwp.cmake
 !triplets/x64-uwp.cmake
 !triplets/x64-windows.cmake
@@ -310,6 +316,7 @@ __pycache__/
 !triplets/arm64-windows.cmake
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
+#ignore custom triplets
 *.exe
 *.zip
 
@@ -317,3 +324,5 @@ __pycache__/
 # vcpkg - End
 ############################################################
 archives
+.DS_Store
+prefab/
