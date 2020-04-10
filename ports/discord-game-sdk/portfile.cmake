@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "android" "uwp")
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fail_port_install(MESSAGE "The GameSDK only supports x86 on Windows." ALWAYS)
@@ -49,4 +47,4 @@ elseif(VCPKG_TARGET_IS_LINUX)
     file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.so" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
     file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.so" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/discord-game-sdk" RENAME "copyright")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
