@@ -21,7 +21,24 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     lzma    ENABLE_LZMA
     lzo     ENABLE_LZO
     openssl ENABLE_OPENSSL
+    # The below features should be added to CONTROL
+    #pcre    ENABLE_PCREPOSIX
+    #nettle  ENABLE_NETTLE
+    #expat   ENABLE_EXPAT
+    #libgcc  ENABLE_LibGCC
+    #cng     ENABLE_CNG
+    #tar     ENABLE_TAR 
+    #cpio    ENABLE_CPIO
+    #cat     ENABLE_CAT
+    #xattr   ENABLE_XATTR
+    #acl     ENABLE_ACL
+    #iconv   ENABLE_ICONV
 )
+
+if(FEATURES MATCHES "pcre")
+else()
+    list(APPEND FEATURE_OPTIONS -DPOSIX_REGEX_LIB=NONE)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -38,8 +55,8 @@ vcpkg_configure_cmake(
         -DENABLE_CAT=OFF
         -DENABLE_XATTR=OFF
         -DENABLE_ACL=OFF
-        -DENABLE_TEST=OFF
         -DENABLE_ICONV=OFF
+        -DENABLE_TEST=OFF
         -DPOSIX_REGEX_LIB=NONE
         -DENABLE_WERROR=OFF
 )
@@ -47,6 +64,17 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+foreach(_feature IN LISTS FEATURE_OPTIONS)
+    string(REPLACE "-D" "" _feature "${_feature}")
+    string(REPLACE "=" ";" _feature "${_feature}")
+    string(REPLACE "ON" "1" _feature "${_feature}")
+    string(REPLACE "OFF" "0" _feature "${_feature}")
+    list(GET _feature 0 _feature_name)
+    list(GET _feature 1 _feature_status)
+    message(STATUS ${_feature_name} status ${_feature_status})
+    set(${_feature_name} ${_feature_status})
+endforeach()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 foreach(HEADER ${CURRENT_PACKAGES_DIR}/include/archive.h ${CURRENT_PACKAGES_DIR}/include/archive_entry.h)
     file(READ ${HEADER} CONTENTS)
