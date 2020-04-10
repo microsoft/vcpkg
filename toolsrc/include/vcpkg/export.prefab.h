@@ -7,6 +7,14 @@
 
 #include <vector>
 
+#ifdef minor
+#undef minor
+#endif
+
+#ifdef major
+#undef major
+#endif
+
 namespace vcpkg::Export::Prefab
 {
     constexpr int kFragmentSize = 3;
