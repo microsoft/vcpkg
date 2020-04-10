@@ -1,5 +1,5 @@
 Source: cppcoro
-Homepage: https://github.com/luncliff/cppcoro
-Version: 2020.04
-Description: A library of C++ coroutine abstractions for the coroutines TS
-Supports: !uwp
+Homepage: https://github.com/lewissbaker/cppcoro
+Version: 2020.2
+Description: A library of C++ coroutine abstractions for the Coroutines TS
+Supports: !(uwp|linux)

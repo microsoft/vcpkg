@@ -1,12 +1,14 @@
-#
-# the repo is fork of https://github.com/lewissbaker/cppcoro to support CMake / VcPkg
-#
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO            luncliff/cppcoro
-    REF             2020.04
-    SHA512          bd60a97911f4ee6c692e99817e9691cc5063be816c3a09a6100bc8f590f5b1e7b13a372a87e1710993b1bc177bbd99d779b2ebf16a367851b256e396bfd038da
+    REPO            lewissbaker/cppcoro
+    REF             92892f31d0c41b8e34e6292d7c9d99228da5c501
+    SHA512          d1997b7449f1c5c0790575d0755ffbb5f9eef13a7610f3ec666a585bdbb93bb1553f79214c1023a1ef23aaeef64078ca6ee3784107645d7a75c7bba943c10b84
     HEAD_REF        master
+)
+
+file(COPY           ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
+     DESTINATION    ${SOURCE_PATH}
 )
 
 vcpkg_configure_cmake(
