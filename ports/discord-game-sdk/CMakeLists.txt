@@ -3,10 +3,9 @@ cmake_minimum_required(VERSION 3.5)
 project(discord_game_sdk_cpp)
 
 find_library(SDK_LIB
-    discord_game_sdk
-    NO_DEFAULT_PATH
-    NAMES "discord_game_sdk.dll"
+    NAMES "discord_game_sdk" "discord_game_sdk.dll"
     PATHS "${PROJECT_SOURCE_DIR}/lib/${ARCH_FOLDER}"
+    NO_DEFAULT_PATH
 )
 
 file(GLOB SRC_FILES "${PROJECT_SOURCE_DIR}/cpp/*.cpp")
