@@ -3,7 +3,7 @@ _find_package(${ARGS})
 function(add_qt_library _target)
     foreach(_lib IN LISTS ARGN)
         #The fact that we are within this file means we are using the VCPKG toolchain. Has such we only need to search in VCPKG paths!
-        find_library(${_lib}_LIBRARY_DEBUG NAMES ${_lib}d ${_lib} NAMES_PER_DIR PATH_SUFFIXES lib plugins/platforms PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH)
+        find_library(${_lib}_LIBRARY_DEBUG NAMES ${_lib}_debug ${_lib}d ${_lib} NAMES_PER_DIR PATH_SUFFIXES lib plugins/platforms PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH)
         find_library(${_lib}_LIBRARY_RELEASE NAMES ${_lib} NAMES_PER_DIR PATH_SUFFIXES lib plugins/platforms PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
         if(${_lib}_LIBRARY_RELEASE)
             list(APPEND interface_lib \$<\$<NOT:\$<CONFIG:DEBUG>>:${${_lib}_LIBRARY_RELEASE}>)
