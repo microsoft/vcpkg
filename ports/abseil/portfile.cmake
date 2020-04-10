@@ -12,7 +12,7 @@ vcpkg_from_github(
 )
 
 set(CMAKE_CXX_STANDARD  )
-if("c++17" IN_LIST FEATURES)
+if("cxx17" IN_LIST FEATURES)
     set(CMAKE_CXX_STANDARD 17)
 endif()
 
