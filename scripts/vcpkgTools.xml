@@ -1,25 +1,25 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="cmake" os="windows">
-        <version>3.14.0</version>
+        <version>3.17.1</version>
         <exeRelativePath>cmake-3.14.0-win32-x86\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-win32-x86.zip</url>
-        <sha512>60eb6a0790883da4152a957bd1133405f620f4b7a073af3bea97695b3ef8c22c41d9b90e45815f2a896df5be0cd6dedb73a6df5f17a42761ca8f457c9f3b708c</sha512>
-        <archiveName>cmake-3.14.0-win32-x86.zip</archiveName>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.17.1/cmake-3.17.1-win32-x86.zip</url>
+        <sha512>4ff6057edffc778fa2969a8ddbb0368ae2120a35d4554534d2b7601ef27a33d63e05b6902702aecd34f25044ae37d9fc93b7add10dd9d0e5a4c2b22f4633f44d</sha512>
+        <archiveName>cmake-3.17.1-win32-x86.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.14.0</version>
+        <version>3.17.1</version>
         <exeRelativePath>cmake-3.14.0-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Darwin-x86_64.tar.gz</url>
-        <sha512>a5a7217a049be3bb2ef5c93292b1d92eb4dd5ec6ab2dd04984aae01d2732eb343cea4f9741b333a5e21a27eb7934f568f780f3558e7ff870150c3309fc4656b3</sha512>
-        <archiveName>cmake-3.14.0-Darwin-x86_64.tar.gz</archiveName>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.17.1/cmake-3.17.1-Darwin-x86_64.tar.gz</url>
+        <sha512>4466fd877a6c1800a7c95b1d8ea4df00fa1fb4fe64ebe735cc7cafacfaf22bea0cbc40d24a9af1cfce5041a8f491f23034bf05d106aaedd476db560cf235dafd</sha512>
+        <archiveName>cmake-3.17.1-Darwin-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.14.0</version>
+        <version>3.17.1</version>
         <exeRelativePath>cmake-3.14.0-Linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Linux-x86_64.tar.gz</url>
-        <sha512>e687c0f3acfb15c880ddac67e2821907f833cb900c6ecedb4ab5df5102604d82753c948e3c7dca6e5bcce6278a09b7d577b1afade2e133aec5b2057ac48d3c74</sha512>
-        <archiveName>cmake-3.14.0-Linux-x86_64.tar.gz</archiveName>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.17.1/cmake-3.17.1-Linux-x86_64.tar.gz</url>
+        <sha512>76288753098b392edcafd541d3527fc08f1e61e014ca876cd07f5e47d8d5cc372302a26583d663de26f1a49008ba7d46a179f7b234dc28302a44f8c691861d8e</sha512>
+        <archiveName>cmake-3.17.1-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.12.4</version>
