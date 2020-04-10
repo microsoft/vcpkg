@@ -42,7 +42,6 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/arm_prevent_amd64_definition.patch"
         "${CMAKE_CURRENT_LIST_DIR}/bzip2.patch"
 )
 
