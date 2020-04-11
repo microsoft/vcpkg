@@ -74,7 +74,7 @@ function(vcpkg_from_git)
     )
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_REF} --depth 1 -n
+      COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_REF} --recurse-submodules --depth 1 -n
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-fetch-${TARGET_TRIPLET}
     )
