@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/OpenGL-Registry
@@ -9,6 +7,11 @@ vcpkg_from_github(
 )
 
 file(COPY ${SOURCE_PATH}/api/GL DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/api/GLES DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/api/GLES2 DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/api/GLES3 DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/api/GLSC DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/api/GLSC2 DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(COPY
   ${SOURCE_PATH}/xml/gl.xml
   ${SOURCE_PATH}/xml/glx.xml
