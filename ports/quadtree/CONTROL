@@ -1,0 +1,4 @@
+Source: quadtree
+Version: 1.0.0
+Description: A simple and modern C++ quadtree implementation
+Homepage: https://github.com/pvigier/Quadtree
