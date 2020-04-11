@@ -8,6 +8,7 @@
 ##     OUT_SOURCE_PATH <SOURCE_PATH>
 ##     URL <https://android.googlesource.com/platform/external/fdlibm>
 ##     REF <59f7335e4d...>
+##     [OPTIONS --recurse-submodules]
 ##     [PATCHES <patch1.patch> <patch2.patch>...]
 ## )
 ## ```
@@ -24,6 +25,9 @@
 ## ### REF
 ## The git sha of the commit to download.
 ##
+## ## OPTIONS
+## additional options, example `--recurse-submodules` `--no-recurse-submodules`
+##
 ## ### PATCHES
 ## A list of patches to be applied to the extracted sources.
 ##
@@ -38,7 +42,7 @@
 
 function(vcpkg_from_git)
   set(oneValueArgs OUT_SOURCE_PATH URL REF)
-  set(multipleValuesArgs PATCHES)
+  set(multipleValuesArgs OPTIONS PATCHES)
   cmake_parse_arguments(_vdud "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
   if(NOT DEFINED _vdud_OUT_SOURCE_PATH)
@@ -74,7 +78,7 @@ function(vcpkg_from_git)
     )
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_REF} --recurse-submodules --depth 1 -n
+      COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_REF} ${_vdud_OPTIONS} --depth 1 -n
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-fetch-${TARGET_TRIPLET}
     )
