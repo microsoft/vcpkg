@@ -25,16 +25,6 @@ else(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(ARCH_FOLDER "x86_64")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        "-DARCH_FOLDER=${ARCH_FOLDER}"
-)
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
     file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -44,7 +34,18 @@ elseif(VCPKG_TARGET_IS_OSX)
     file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.dylib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
     file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.dylib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 elseif(VCPKG_TARGET_IS_LINUX)
-    file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.so" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.so" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.so" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" RENAME "libdiscord_game_sdk.so")
+    file(INSTALL "${SOURCE_PATH}/lib/${ARCH_FOLDER}/discord_game_sdk.so" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" RENAME "libdiscord_game_sdk.so")
 endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        "-DSDK_LIB_FOLDER=${CURRENT_PACKAGES_DIR}/lib"
+)
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
