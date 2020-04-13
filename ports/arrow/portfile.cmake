@@ -17,6 +17,12 @@ vcpkg_from_github(
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+ "csv"      ARROW_CSV
+ "json"     ARROW_JSON
+ "parquet"  ARROW_PARQUET
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
@@ -24,9 +30,7 @@ vcpkg_configure_cmake(
         -DARROW_DEPENDENCY_SOURCE=SYSTEM
         -Duriparser_SOURCE=SYSTEM
         -DARROW_BUILD_TESTS=off
-        -DARROW_CSV=ON
-        -DARROW_JSON=ON
-        -DARROW_PARQUET=ON
+        ${FEATURE_OPTIONS}
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
         -DARROW_GFLAGS_USE_SHARED=off
