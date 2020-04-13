@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm64")
 set(PHYSFS_VERSION 3.0.2)
 
 vcpkg_download_distfile(ARCHIVE
