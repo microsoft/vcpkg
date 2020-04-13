@@ -1,5 +1,5 @@
 Source: ryml
-Version: 0.1.0
+Version: 2020-04-12
 Homepage: https://github.com/biojppm/rapidyaml 
 Description: Rapid YAML library
 Build-Depends: c4core[core]
