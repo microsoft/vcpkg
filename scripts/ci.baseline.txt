@@ -1900,3 +1900,7 @@ zkpp:x64-windows-static=fail
 zkpp:arm64-windows=fail
 zkpp:x64-uwp=fail
 zkpp:arm-uwp=fail
+boost-asio:x86-windows=ignore
+argumentum:x86-windows=ignore
+c4core:arm-uwp=fail
+c4core:arm64-windows=fail
