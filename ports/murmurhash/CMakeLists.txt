@@ -50,7 +50,7 @@ install(TARGETS murmurhash
         EXPORT "${TARGETS_EXPORT_NAME}"
         LIBRARY DESTINATION "lib"
         ARCHIVE DESTINATION "lib"
-        INCLUDES DESTINATION "include")
+        PUBLIC_HEADER DESTINATION "include")
 
 install(FILES "${project_config}" "${version_config}"
         DESTINATION "${config_install_dir}"
