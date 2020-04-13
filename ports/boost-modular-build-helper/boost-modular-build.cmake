@@ -18,7 +18,7 @@ function(boost_modular_build)
 
     if(NOT EXISTS "${BOOST_BUILD_PATH}")
 	if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-            message(FATAL_ERROR "The x64 boost-build tools must be installed to build arm64-64 for Linux. Please run `vcpkg install boost-build:x64-linux`.") 
+            message(FATAL_ERROR "The x64 boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:x64-linux`.") 
 	else()
             message(FATAL_ERROR "The x86 boost-build tools must be installed to build for non-x86/x64 platforms. Please run `vcpkg install boost-build:x86-windows`.")
 	endif()
