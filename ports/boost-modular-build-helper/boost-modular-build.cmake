@@ -21,6 +21,7 @@ function(boost_modular_build)
             message(FATAL_ERROR "The x64 boost-build tools must be installed to build arm64-64 for Linux. Please run `vcpkg install boost-build:x64-linux`.") 
 	else()
             message(FATAL_ERROR "The x86 boost-build tools must be installed to build for non-x86/x64 platforms. Please run `vcpkg install boost-build:x86-windows`.")
+	endif()
     endif()
 
     if(EXISTS "${BOOST_BUILD_PATH}/b2.exe")
