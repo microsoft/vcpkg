@@ -36,7 +36,7 @@ install(TARGETS metrohash
         EXPORT "${TARGETS_EXPORT_NAME}"
         LIBRARY DESTINATION "lib"
         ARCHIVE DESTINATION "lib"
-        INCLUDES DESTINATION "include")
+        PUBLIC_HEADER DESTINATION "include")
 
 install(EXPORT "${TARGETS_EXPORT_NAME}"
         NAMESPACE "${namespace}"
