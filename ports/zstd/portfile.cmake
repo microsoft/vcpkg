@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF 10f0e6993f9d2f682da6d04aa2385b7d53cbb4ee # v1.4.4
     SHA512 869eb031d2f8cfd9d93502835a373f6f2ec39dc1f41dd5fd0463d3d442c153915987d00bc862ae66bded5c5697e1803a1e68491803bd1a7b358397e6eba58f64
     HEAD_REF dev
+    PATCHES
+      0001-export-zstd-config.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -37,6 +39,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/zstd)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME) AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
