@@ -3,3 +3,4 @@ Version: 3.0.2-2
 Homepage: https://icculus.org/physfs/
 Description: a library to provide abstract access to various archives
 Build-Depends: zlib
+Supports: !arm64
