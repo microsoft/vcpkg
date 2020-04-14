@@ -44,7 +44,7 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
 
     if(MSVC)
        set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
-           Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib Imm32.lib)
+           Crypt32.lib Dnsapi.lib Netapi32.lib Userenv.lib UxTheme.lib Version.lib Ws2_32.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib Imm32.lib)
 
       add_qt_library(Qt5::Core Qt5WindowsUIAutomationSupport qwindows qdirect2d)
     elseif(UNIX AND NOT APPLE)
