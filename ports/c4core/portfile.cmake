@@ -68,8 +68,8 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/c4core/c4coreConfig.cmake" _contents)
 string(REGEX REPLACE [[[ \t\r\n]*"\${PACKAGE_PREFIX_DIR}[\./\\]*"]] [["${PACKAGE_PREFIX_DIR}/../.."]] _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/c4core/c4coreConfig.cmake" "${_contents}")
 
-# Fix missing header (see c4/error.hpp)
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/c4/extern/debugbreak" "${CURRENT_PACKAGES_DIR}/include/debugbreak")
+# Fix path to header
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/c4/error.hpp" "<debugbreak/debugbreak.h>" "\"extern/debugbreak/debugbreak.h\"")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
