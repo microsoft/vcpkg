@@ -19,6 +19,12 @@ download_src(nlohmann_json.natvis 9bce6758db0e54777394a4e718e60a281952b15f0c6dc6
 download_src(cmake/config.cmake.in 7caab6166baa891f77f5b632ac4a920e548610ec41777b885ec51fe68d3665ffe91984dd2881caf22298b5392dfbd84b526fda252467bb66de9eb90e6e6ade5a)
 download_src(single_include/nlohmann/json.hpp 4ecbbdd2c5e88c897096670cfdaa7ec00483ac9ed6e8ac33be23b05f4da70f213e10c4b381f5e8799619a24a58f417f04dd442d1d59a2e0bfca3385007e620d5)
 
+vcpkg_replace_string(
+    ${SOURCE_PATH}/CMakeLists.txt
+    "project(nlohmann_json"
+    "project(nlohmann-json"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -27,12 +33,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nlohmann_json TARGET_PATH share/nlohmann_json)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nlohmann-json TARGET_PATH share/nlohmann-json)
 
 vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/share/nlohmann_json/nlohmann_jsonTargets.cmake
+    ${CURRENT_PACKAGES_DIR}/share/nlohmann-json/nlohmann-jsonTargets.cmake
     "{_IMPORT_PREFIX}/nlohmann_json.natvis"
-    "{_IMPORT_PREFIX}/share/nlohmann_json/nlohmann_json.natvis"
+    "{_IMPORT_PREFIX}/share/nlohmann-json/nlohmann_json.natvis"
 )
 
 file(REMOVE_RECURSE
@@ -43,9 +49,9 @@ file(REMOVE_RECURSE
 if(EXISTS ${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis)
     file(RENAME
         ${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis
-        ${CURRENT_PACKAGES_DIR}/share/nlohmann_json/nlohmann_json.natvis
+        ${CURRENT_PACKAGES_DIR}/share/nlohmann-json/nlohmann_json.natvis
     )
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/nlohmann-json RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
