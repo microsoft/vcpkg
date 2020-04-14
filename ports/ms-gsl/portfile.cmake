@@ -1,13 +1,29 @@
-#header-only library
+#header-only library with an install target
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/GSL
-    REF 7e99e76c9761d0d0b0848b91f8648830670ee872
-    SHA512 9a5ea7d22497a56918a83c248d9f707e98544dce90835cf9bf877213df8751cdb350b6343d0205e7b17fc27e234a17906876aff99c177d5f2b96df96d15a215c
+    REF 044849d6fa0cdeb47a3ea51ee02f557b7684e312
+    SHA512 084e4995d4b19e421da3bcaddae5296e8557a01a785f2ba4a75e13708411a744c82517e888f0d6d97ac7b2adefe415e6accd62fe8cce8ff2f7034e8d1ea96f9a
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DGSL_TEST=OFF
+)
+
+vcpkg_install_cmake()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ms-gsl RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+# Move package config file (temporary fix)
+file(GLOB GSLFILEFOUND "${CURRENT_PACKAGES_DIR}/share/Microsoft.GSL/cmake/*.cmake")
+if(GSLFILEFOUND)
+    file(INSTALL ${GSLFILEFOUND} DESTINATION "${CURRENT_PACKAGES_DIR}/share/Microsoft.GSL")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Microsoft.GSL/cmake")
+endif()
