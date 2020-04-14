@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/zopfli
-    REF ef109ddf164911cf1e5612e90b4a619839a1e3ca
-    SHA512 9067d14c3ca7f5f07a0c4913ae1804128cf928770359618eab3c655ccbfa7260a11ec1db871a7e5be7d92098c2dda5a55b948eb779c9c64647bddfd1e9ace1f5
+    REF bd64b2f0553d4f1ef4e6627647c5d9fc8c71ffc0 # zopfli-1.0.3
+    SHA512 3c99a4cdf3b2f0b619944bf2173ded8e10a89271fc4b2c713378b85d976a8580d15a473d5b0e6229f2911908fb1cc7397e516d618e61831c3becd65623214d94
     HEAD_REF master
 )
 
@@ -68,8 +66,4 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
