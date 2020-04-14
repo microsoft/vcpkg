@@ -871,11 +871,11 @@ namespace vcpkg::PostBuildLint
         if (!pre_build_info.build_type)
             error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
+        if (!build_info.policies.is_enabled(BuildPolicy::SKIP_ARCHITECTURE_CHECK))
         {
             std::vector<fs::path> libs;
             libs.insert(libs.cend(), debug_libs.cbegin(), debug_libs.cend());
             libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
-
             error_count += check_lib_architecture(pre_build_info.target_architecture, libs);
         }
 

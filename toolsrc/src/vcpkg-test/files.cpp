@@ -65,8 +65,6 @@ namespace
                                Width width = Width{5},
                                CurrentDepth current_depth = CurrentDepth{0})
     {
-        std::random_device rd;
-
         // we want ~70% of our "files" to be directories, and then a third
         // each of the remaining ~30% to be regular files, directory symlinks,
         // and regular symlinks
@@ -132,7 +130,7 @@ namespace
             CHECK_EC_ON_FILE(base_link, ec);
             vcpkg::Test::create_symlink(base_link, base, ec);
         }
-        else // type == directory_symlink_tag
+        else // file_type == directory_symlink_tag
         {
             // directory symlink
             auto parent = base;
