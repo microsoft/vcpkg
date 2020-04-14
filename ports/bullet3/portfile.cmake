@@ -13,6 +13,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     multithreading       BULLET2_MULTITHREADING
+    extras               BUILD_EXTRAS
 )
 
 vcpkg_configure_cmake(
@@ -24,7 +25,6 @@ vcpkg_configure_cmake(
         -DBUILD_CPU_DEMOS=OFF
         -DBUILD_BULLET2_DEMOS=OFF
         -DBUILD_BULLET3=OFF
-        -DBUILD_EXTRAS=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DINSTALL_LIBS=ON
         ${FEATURE_OPTIONS}
