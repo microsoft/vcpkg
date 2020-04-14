@@ -8,8 +8,9 @@ vcpkg_from_github(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openssl OPENSSL
-    bzip2 BZIP2
+    openssl ENABLE_OPENSSL
+    bzip2 ENABLE_BZIP2
+    windows_crypto ENABLE_WINDOWS_CRYPTO
 )
 
 vcpkg_configure_cmake(
