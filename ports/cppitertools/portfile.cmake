@@ -16,10 +16,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug 
+    ${CURRENT_PACKAGES_DIR}/debug
     ${CURRENT_PACKAGES_DIR}/share/cppitertools-config-version.cmake)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md 
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppitertools 
+file(INSTALL ${SOURCE_PATH}/LICENSE.md
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppitertools
     RENAME copyright)
