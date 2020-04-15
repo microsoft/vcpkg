@@ -1,6 +1,3 @@
-#header-only library
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ryanhaining/cppitertools
@@ -12,13 +9,17 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -Dcppitertools_INSTALL_CMAKE_DIR=share
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib 
-                    ${CURRENT_PACKAGES_DIR}/debug 
-                    ${CURRENT_PACKAGES_DIR}/share/doc)
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug 
+    ${CURRENT_PACKAGES_DIR}/share/cppitertools-config-version.cmake)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppitertools RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md 
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppitertools 
+    RENAME copyright)
