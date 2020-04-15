@@ -297,7 +297,6 @@ ctemplate:arm64-windows=fail
 ctemplate:arm-uwp=fail
 ctemplate:x64-linux=fail
 ctemplate:x64-osx=fail
-cuda:x64-linux=fail
 cuda:x64-osx=fail
 cudnn:arm64-windows=fail
 cudnn:arm-uwp=fail
