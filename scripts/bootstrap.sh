@@ -236,11 +236,12 @@ else
 fi
 
 # Do the build
-buildDir="$vcpkgRootDir/toolsrc/build.rel"
+srcDir="$vcpkgRootDir/toolsrc"
+buildDir="$srcDir/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-("$cmakeExe" -B "$buildDir" -S toolsrc -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=OFF" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_WARNINGS_AS_ERRORS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+("$cmakeExe" -B "$buildDir" -S "$srcDir" -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=OFF" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_WARNINGS_AS_ERRORS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 ("$cmakeExe" --build "$buildDir") || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
