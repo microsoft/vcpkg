@@ -13,16 +13,57 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build_windows.sh)
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+else() 
+    set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build.sh)
+    set(BASH /bin/bash)
+endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
-)
+set(OPTIONS_DEBUG "")
+set(OPTIONS_RELEASE "")
 
-vcpkg_install_cmake()
+# Release build
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
+    message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
+    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
+    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
+    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
+    message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
+            "${SOURCE_PATH}" # SOURCE DIR
+            "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
+            "${OPTIONS} ${OPTIONS_RELEASE}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+endif()
 
-vcpkg_copy_pdbs()
+# Debug build
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+    message(STATUS "Building Debug Options: ${OPTIONS_DEBUG}")
+    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIB_PATH}")
+    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
+    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
+    message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
+            "${SOURCE_PATH}" # SOURCE DIR
+            "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
+            "${OPTIONS} ${OPTIONS_DEBUG}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+        LOGNAME build-${TARGET_TRIPLET}-dbg
+    )
+
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmicrohttpd RENAME copyright)
