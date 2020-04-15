@@ -19,7 +19,7 @@ Specifies the out-variable that will contain the extracted location.
 This should be set to `SOURCE_PATH` by convention.
 
 ### URL
-The url of the git repository.  Must start with `https`.
+The url of the git repository.
 
 ### REF
 The git sha of the commit to download.

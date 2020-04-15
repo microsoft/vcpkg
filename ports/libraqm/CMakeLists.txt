@@ -13,10 +13,11 @@ find_path(HARFBUZZ_INCLUDE_DIRS
           PATH_SUFFIXES harfbuzz)
 find_path(FREETYPE_ADDITIONAL_INCLUDE_DIRS NAMES ft2build.h)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/raqm-version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm-version.h)
+configure_file(src/raqm-version.h.in src/raqm-version.h)
 
-add_library(raqm ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm.c ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm.h ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm-version.h)
+add_library(raqm src/raqm.c src/raqm.h src/raqm-version.h)
 
+target_include_directories(raqm PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/src)
 target_include_directories(raqm SYSTEM PUBLIC ${FREETYPE_ADDITIONAL_INCLUDE_DIRS})
 target_include_directories(raqm SYSTEM PUBLIC ${FREETYPE_INCLUDE_DIRS})
 target_include_directories(raqm SYSTEM PUBLIC ${HARFBUZZ_INCLUDE_DIRS})
@@ -34,4 +35,4 @@ install(TARGETS raqm
 set(RAQM_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(RAQM_LIBRARY raqm)
 set(RAQM_LIBRARIES ${HARFBUZZ_LIBRARY} ${FRIBIDI_LIBRARY} ${RAQM_LIBRARY})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm.h ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm-version.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm.h ${CMAKE_CURRENT_BINARY_DIR}/src/raqm-version.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)

@@ -1,0 +1,16 @@
+diff --git a/async_private.h b/async_private.h
+index d0133ae..7760b60 100644
+--- a/async_private.h
++++ b/async_private.h
+@@ -32,6 +32,11 @@
+ #ifndef __HIREDIS_ASYNC_PRIVATE_H
+ #define __HIREDIS_ASYNC_PRIVATE_H
+ 
++#ifdef _WIN32
++#include <time.h>
++#include <windows.h>
++#endif
++
+ #define _EL_ADD_READ(ctx)                                         \
+     do {                                                          \
+         refreshTimeout(ctx);                                      \

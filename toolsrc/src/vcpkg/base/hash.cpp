@@ -3,6 +3,7 @@
 #include <vcpkg/base/hash.h>
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/uint128.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
@@ -50,82 +51,14 @@ namespace vcpkg::Hash
         }
     }
 
-    namespace
-    {
-        struct UInt128
-        {
-            std::uint64_t top;
-            std::uint64_t bottom;
-
-            UInt128() = default;
-            UInt128(std::uint64_t value) : top(0), bottom(value) {}
-
-            UInt128& operator<<=(int by) noexcept
-            {
-                if (by == 0)
-                {
-                    return *this;
-                }
-
-                if (by < 64)
-                {
-                    top <<= by;
-                    const auto shift_up = bottom >> (64 - by);
-                    top |= shift_up;
-                    bottom <<= by;
-                }
-                else
-                {
-                    top = bottom;
-                    top <<= (by - 64);
-                }
-
-                return *this;
-            }
-
-            UInt128& operator>>=(int by) noexcept
-            {
-                if (by == 0)
-                {
-                    return *this;
-                }
-
-                if (by < 64)
-                {
-                    bottom >>= by;
-                    const auto shift_down = top << (64 - by);
-                    bottom |= shift_down;
-                    top >>= by;
-                }
-                else
-                {
-                    bottom = top;
-                    bottom >>= (by - 64);
-                }
-
-                return *this;
-            }
-
-            UInt128& operator+=(std::size_t lhs) noexcept
-            {
-                // bottom + lhs > uint64::max
-                if (bottom > std::numeric_limits<std::uint64_t>::max() - lhs)
-                {
-                    top += 1;
-                }
-                bottom += lhs;
-                return *this;
-            }
-        };
-
+    template <class UIntTy>
+    auto top_bits(UIntTy x) -> std::enable_if_t<std::is_unsigned<UIntTy>::value, uchar> {
+        return static_cast<uchar>(x >> ((sizeof(x) - 1) * 8));
     }
-    template<class T>
-    void top_bits(T) = delete;
-
-    static constexpr uchar top_bits(uchar x) noexcept { return x; }
-    static constexpr uchar top_bits(std::uint32_t x) noexcept { return (x >> 24) & 0xFF; }
-    static constexpr uchar top_bits(std::uint64_t x) noexcept { return (x >> 56) & 0xFF; }
-    static constexpr uchar top_bits(UInt128 x) noexcept { return top_bits(x.top); }
+    template <class UIntTy>
+    auto top_bits(UIntTy x) -> decltype(top_bits(x.top_64_bits())) {
+        return top_bits(x.top_64_bits());
+    }
 
     // treats UIntTy as big endian for the purpose of this mapping
     template<class UIntTy>
@@ -145,7 +78,7 @@ namespace vcpkg::Hash
             for (uchar& ch : buff)
             {
                 ch = top_bits(tmp);
-                tmp <<= 8;
+                tmp = UIntTy(tmp << 8);
             }
 
             for (const auto byte : buff)
@@ -746,7 +679,7 @@ namespace vcpkg::Hash
         }
 
         return do_hash(algo, [&file, &ec](Hasher& hasher) {
-            constexpr std::size_t buffer_size = 4096;
+            constexpr std::size_t buffer_size = 1024 * 32;
             auto buffer = std::make_unique<char[]>(buffer_size);
             for (;;)
             {

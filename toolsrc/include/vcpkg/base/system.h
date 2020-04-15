@@ -21,6 +21,8 @@ namespace vcpkg::System
 
     Optional<CPUArchitecture> to_cpu_architecture(StringView arch);
 
+    ZStringView to_zstring_view(CPUArchitecture arch) noexcept;
+
     CPUArchitecture get_host_processor();
 
     std::vector<CPUArchitecture> get_supported_host_architectures();
@@ -30,4 +32,6 @@ namespace vcpkg::System
     const Optional<fs::path>& get_program_files_platform_bitness();
 
     int get_num_logical_cores();
+
+    Optional<CPUArchitecture> guess_visual_studio_prompt_target_architecture();
 }
