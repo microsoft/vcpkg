@@ -1468,6 +1468,12 @@ qt5-wayland:x64-windows=fail
 qt5-wayland:x64-windows-static=fail
 qt5-winextras:x64-linux=fail
 qt5-winextras:x64-osx=fail
+# Too big for CI
+qt5-webengine:x64-windows=skip
+qt5-webengine:x64-windows-static=skip
+qt5-webengine:x86-windows=skip
+qt5-webengine:x64-linux=skip
+qt5-webengine:x64-osx=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=fail
 # Missing libraries
