@@ -1,5 +1,0 @@
-Source: gettext
-Version: 0.19-15
-Homepage: https://www.gnu.org/software/gettext/
-Description: The GNU gettext utilities are a set of tools that provides a framework to help other GNU packages produce multi-lingual messages. Provides libintl.
-Build-Depends: libiconv

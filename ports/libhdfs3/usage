@@ -1,4 +1,0 @@
-The package libhdfs3 is compatible with built-in CMake targets:
-
-    FIND_PACKAGE(libhdfs3 REQUIRED)
-    TARGET_LINK_LIBRARIES(main PRIVATE HDFS::hdfs3)

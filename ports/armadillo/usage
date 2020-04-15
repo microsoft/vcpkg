@@ -1,4 +1,0 @@
-The package armadillo provides CMake targets:
-
-    find_package(Armadillo CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE ${ARMADILLO_LIBRARIES})

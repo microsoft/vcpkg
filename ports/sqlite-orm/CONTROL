@@ -1,4 +1,0 @@
-Source: sqlite-orm
-Version: 1.5
-Build-Depends: sqlite3
-Description: SQLite ORM light header only library for modern C++

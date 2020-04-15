@@ -1,8 +1,0 @@
-Source: vtk-dicom
-Version: 0.8.12
-Description: DICOM for VTK
-Build-Depends: vtk, zlib
-
-Feature: gdcm
-Description: Use gdcm for decompressing DICOM files.
-Build-Depends: gdcm

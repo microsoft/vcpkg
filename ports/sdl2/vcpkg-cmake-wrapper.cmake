@@ -1,8 +1,0 @@
-_find_package(${ARGS})
-if(TARGET SDL2::SDL2 AND NOT TARGET SDL2::SDL2-static)
-    add_library( SDL2::SDL2-static INTERFACE IMPORTED)
-    set_target_properties(SDL2::SDL2-static PROPERTIES INTERFACE_LINK_LIBRARIES "SDL2::SDL2")
-elseif(TARGET SDL2::SDL2-static AND NOT TARGET SDL2::SDL2)
-    add_library( SDL2::SDL2 INTERFACE IMPORTED)
-    set_target_properties(SDL2::SDL2 PROPERTIES INTERFACE_LINK_LIBRARIES "SDL2::SDL2-static")
-endif()

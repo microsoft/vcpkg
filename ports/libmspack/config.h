@@ -1,4 +1,0 @@
-#define HAVE_LIMITS_H 1
-#define HAVE_INTTYPES_H 1
-
-#define HAVE_TOWLOWER 1

@@ -1,4 +1,0 @@
-Source: milerius-sfml-imgui
-Version: 1.1-2
-Description: imgui dll for sfml usage
-Build-Depends: sfml, imgui

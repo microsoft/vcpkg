@@ -1,4 +1,0 @@
-Source: openssl-unix
-Version: 1.1.1d-2
-Description: OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols. It is also a general-purpose cryptography library.
-Supports: !(windows|uwp)

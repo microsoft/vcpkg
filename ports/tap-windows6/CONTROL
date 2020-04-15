@@ -1,3 +1,0 @@
-Source: tap-windows6
-Version: 9.21.2-0e30f5c
-Description: an NDIS 6 implementation of the TAP-Windows driver, used by OpenVPN and other apps. Note: This package only contains the headers for the driver.

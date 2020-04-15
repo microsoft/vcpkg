@@ -1,4 +1,0 @@
-Source: plf-nanotimer
-Version: 2019-08-10
-Description: A simple C++ 03/11/etc timer class for ~microsecond-precision cross-platform benchmarking
-Homepage: https://www.plflib.org/

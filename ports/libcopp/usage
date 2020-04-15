@@ -1,5 +1,0 @@
-The package libcopp provides CMake integration:
-
-    find_package(Libcopp CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${Libcopp_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${Libcotask_LIBRARIES} ${Libcopp_LIBRARIES})

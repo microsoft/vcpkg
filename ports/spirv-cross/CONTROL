@@ -1,4 +1,0 @@
-Source: spirv-cross
-Version: 2020-02-26
-Homepage: https://github.com/KhronosGroup/SPIRV-Cross
-Description: SPIRV-Cross is a practical tool and library for performing reflection on SPIR-V and disassembling SPIR-V back to high level languages.

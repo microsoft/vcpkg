@@ -1,4 +1,0 @@
-Source: plustache
-Version: 0.4.0-1
-Description: {{mustaches}} for C++
-Build-Depends: boost-regex, boost-algorithm

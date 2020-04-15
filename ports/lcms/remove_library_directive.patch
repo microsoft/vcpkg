@@ -1,8 +1,0 @@
---- a/src/lcms2.def	2016-07-20 09:46:01.000000000 +0200
-+++ b/src/lcms2.def	2018-06-02 02:11:04.135781600 +0200
-@@ -1,5 +1,3 @@
--LIBRARY     LCMS2.DLL
--
- EXPORTS
- 
- _cms15Fixed16toDouble                    =   _cms15Fixed16toDouble

@@ -1,4 +1,0 @@
-LIBRARY   libmodpbase64
-EXPORTS
-   modp_b64_encode   @1
-   modp_b64_decode   @2

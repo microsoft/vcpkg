@@ -1,7 +1,0 @@
-Source: nuspell
-Version: 3.0.0
-Description: Nuspell is a free and open source spell checker library and
-  command-line program designed for languages with rich morphology and complex
-  word compounding.
-Homepage: https://nuspell.github.io/
-Build-Depends: icu, boost-locale, boost-container, boost-range

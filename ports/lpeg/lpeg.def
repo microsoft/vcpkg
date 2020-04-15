@@ -1,3 +1,0 @@
-LIBRARY lpeg
-EXPORTS
-    luaopen_lpeg

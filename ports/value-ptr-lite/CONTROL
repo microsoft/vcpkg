@@ -1,7 +1,0 @@
-Source: value-ptr-lite
-Version: 0.2.1
-Homepage: https://github.com/martinmoene/value-ptr-lite
-Description: A C++ smart-pointer with value semantics for C++98, C++11 and later in a single-file header-only library. 
-
-Feature: test
-Description: Build with test

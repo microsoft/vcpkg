@@ -1,4 +1,0 @@
-The package farmhash is compatible with built-in CMake targets:
-
-    FIND_PACKAGE(farmhash REQUIRED)
-    TARGET_LINK_LIBRARIES(main PRIVATE GOOGLE::farmhash) for linkage

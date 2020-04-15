@@ -1,4 +1,0 @@
-Source: nonius
-Version: 2019-04-20-1
-Description: A C++ micro-benchmarking framework
-Build-Depends: boost-algorithm, boost-lexical-cast, boost-math

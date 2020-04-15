@@ -1,5 +1,0 @@
-Source: clickhouse-cpp
-Version: 2019-05-22
-Build-Depends: lz4, cityhash
-Homepage: https://github.com/artpaul/clickhouse-cpp
-Description: C++ client for Yandex ClickHouse.

@@ -1,6 +1,0 @@
-@PACKAGE_INIT@
-include(CMakeFindDependencyMacro)
-
-set_and_check(leveldb_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
-
-include("${CMAKE_CURRENT_LIST_DIR}/leveldbTargets.cmake")

@@ -1,5 +1,0 @@
-The package libmodman provides CMake targets:
-
-    find_package(libmodman CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${LIBMODMAN_INCLUDE_DIR})
-    target_link_libraries(main PRIVATE ${LIBMODMAN_LIBRARIES})

@@ -1,4 +1,0 @@
-Source: crossguid
-Version: 0.2.2-2018-06-16-1
-Build-Depends: libuuid (!windows&!uwp&!osx&!android)
-Description: CrossGuid is a minimal, cross platform, C++ GUID library.

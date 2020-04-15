@@ -1,7 +1,0 @@
-The package sfml provides CMake targets:
-
-    find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
-    # Windows
-    target_link_libraries(main PRIVATE FLAC OpenAL OpenGL Vorbis)
-    # Linux/MacOS
-    target_link_libraries(main PRIVATE X11 FLAC UDev OpenAL)

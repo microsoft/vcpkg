@@ -1,3 +1,0 @@
-Source: bitserializer
-Version: 0.8
-Description: The core part of library for serialization of arbitrary C++ types to various output formats.
