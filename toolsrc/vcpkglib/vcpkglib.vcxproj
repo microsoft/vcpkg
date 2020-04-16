@@ -74,11 +74,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -108,7 +108,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -127,7 +127,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -179,6 +179,7 @@
     <ClInclude Include="..\include\vcpkg\export.chocolatey.h" />
     <ClInclude Include="..\include\vcpkg\export.h" />
     <ClInclude Include="..\include\vcpkg\export.ifw.h" />
+    <ClInclude Include="..\include\vcpkg\export.prefab.h" />
     <ClInclude Include="..\include\vcpkg\globalstate.h" />
     <ClInclude Include="..\include\vcpkg\help.h" />
     <ClInclude Include="..\include\vcpkg\input.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="..\src\vcpkg\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg\export.cpp" />
     <ClCompile Include="..\src\vcpkg\export.chocolatey.cpp" />
+    <ClCompile Include="..\src\vcpkg\export.prefab.cpp" />
     <ClCompile Include="..\src\vcpkg\globalstate.cpp" />
     <ClCompile Include="..\src\vcpkg\help.cpp" />
     <ClCompile Include="..\src\vcpkg\input.cpp" />
