@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8a7d3ef..4e06331 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,6 +82,7 @@ option(JSONCPP_WITH_WARNING_AS_ERROR "Force compilation to fail if a warning occ
+ option(JSONCPP_WITH_STRICT_ISO "Issue all the warnings demanded by strict ISO C and ISO C++" ON)
+ option(JSONCPP_WITH_PKGCONFIG_SUPPORT "Generate and install .pc files" ON)
+ option(JSONCPP_WITH_CMAKE_PACKAGE "Generate and install cmake package files" ON)
++option(JSONCPP_WITH_EXAMPLE "Compile JsonCpp example" OFF)
+ option(BUILD_SHARED_LIBS "Build jsoncpp_lib as a shared library." OFF)
+ 
+ # Enable runtime search path support for dynamic libraries on OSX
+@@ -228,4 +229,6 @@ add_subdirectory( src )
+ add_subdirectory( include )
+ 
+ #install the example
+-add_subdirectory( example )
++if(JSONCPP_WITH_EXAMPLE)
++  add_subdirectory( example )
++endif()

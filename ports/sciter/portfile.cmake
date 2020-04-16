@@ -9,22 +9,22 @@ endif()
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION c926703b2cce972875e7f6379c525eef66c95986)
-set(SCITER_SHA 9a87ce12db9b2ef1e3abce3e475a9413a8a9301bab3d17341c94d4281e3bf616347ba8a4089f756ec38fed311bb4ee9045c8f85d0c40039ed3c0b96413aceeb4)
+set(SCITER_REVISION e0f293ebfb59b9fbef058626bcaeafc38dad5fb8)
+set(SCITER_SHA 30b163c478db0c749464de1f18ce249f90018490c737c3d740cebeab0963f5f76d04b907d6cd93952953a7a0ee139fc1ecfa28f6100ada210a6a9ff0e4ff12d5)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    set(SCITER_ARCH 64)
+    set(SCITER_ARCH x64)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-    set(SCITER_ARCH 32)
+    set(SCITER_ARCH x32)
 endif()
 
+# check out the `https://github.com/c-smile/sciter-sdk/archive/${SCITER_REVISION}.tar.gz`
+# hash checksum can be obtained with `curl -L -o tmp.tgz ${URL} && vcpkg hash tmp.tgz`
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-smile/sciter-sdk
     REF ${SCITER_REVISION}
     SHA512 ${SCITER_SHA}
-    PATCHES
-        0001_patch_stdafx.patch
 )
 
 # install include directory
@@ -51,9 +51,11 @@ file(COPY ${SOURCE_PATH}/widgets DESTINATION ${SCITER_SHARE})
 
 # tools
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux AND VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    set(SCITER_BIN ${SOURCE_PATH}/bin.gtk/x64)
+    set(SCITER_BIN ${SOURCE_PATH}/bin.lnx/x64)
 
-    file(INSTALL ${SCITER_BIN}/packfolder DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SOURCE_PATH}/bin.lnx/packfolder DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SOURCE_PATH}/bin.lnx/tiscript DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+
     file(INSTALL ${SCITER_BIN}/usciter DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/inspector DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${SCITER_TOOLS})
@@ -65,22 +67,31 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
     set(SCITER_BIN ${SOURCE_PATH}/bin.osx)
 
     file(INSTALL ${SCITER_BIN}/packfolder DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SCITER_BIN}/tiscript DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+
     file(INSTALL ${SCITER_BIN}/inspector.app DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.app DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${SCITER_TOOLS})
+
+    # not sure whether there is a better way to do this, because
+    # `file(INSTALL sciter.app FILE_PERMISSIONS EXECUTE)`
+    # would mark everything as executable which is no go.
+    execute_process(COMMAND sh -c "chmod +x sciter.app/Contents/MacOS/sciter" WORKING_DIRECTORY ${SCITER_TOOLS})
+    execute_process(COMMAND sh -c "chmod +x inspector.app/Contents/MacOS/inspector" WORKING_DIRECTORY ${SCITER_TOOLS})
 
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 else()
-    set(SCITER_BIN ${SOURCE_PATH}/bin/${SCITER_ARCH})
+    set(SCITER_BIN ${SOURCE_PATH}/bin.win/${SCITER_ARCH})
+    set(SCITER_BIN32 ${SOURCE_PATH}/bin.win/x32)
 
-    file(INSTALL ${SOURCE_PATH}/bin/packfolder.exe DESTINATION ${SCITER_TOOLS})
-    file(INSTALL ${SOURCE_PATH}/bin/tiscript.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SOURCE_PATH}/bin.win/packfolder.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SOURCE_PATH}/bin.win/tiscript.exe DESTINATION ${SCITER_TOOLS})
 
-    file(INSTALL ${SCITER_BIN}/sciter.exe DESTINATION ${SCITER_TOOLS})
-    file(INSTALL ${SCITER_BIN}/inspector.exe DESTINATION ${SCITER_TOOLS})
-    file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN32}/wsciter.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN32}/inspector.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN32}/sciter.dll DESTINATION ${SCITER_TOOLS})
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)

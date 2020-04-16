@@ -1,0 +1,1749 @@
+diff --git a/hdf5-1.10.5/CMakeFilters.cmake b/hdf5-1.10.5/CMakeFilters.cmake
+index 5a89564..3b636b9 100644
+--- a/hdf5-1.10.5/CMakeFilters.cmake
++++ b/hdf5-1.10.5/CMakeFilters.cmake
+@@ -51,8 +51,9 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
+     if (NOT ZLIB_USE_EXTERNAL)
+       find_package (ZLIB NAMES ${ZLIB_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
+       if (NOT ZLIB_FOUND)
+-        find_package (ZLIB) # Legacy find
++        find_package (ZLIB REQUIRED) # Legacy find
+         if (ZLIB_FOUND)
++          set (ZLIB_LIBRARIES ZLIB::ZLIB)
+           set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${ZLIB_LIBRARIES})
+           set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${ZLIB_LIBRARIES})
+         endif ()
+@@ -86,9 +87,10 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
+     set (EXTERNAL_FILTERS "${EXTERNAL_FILTERS} DEFLATE")
+   endif ()
+   if (BUILD_SHARED_LIBS)
+-    set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${ZLIB_SHARED_LIBRARY})
+-  endif ()
+-  set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${ZLIB_STATIC_LIBRARY})
++    set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${ZLIB_LIBRARIES})
++  else ()
++  set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${ZLIB_LIBRARIES})
++  endif()
+   INCLUDE_DIRECTORIES (${ZLIB_INCLUDE_DIRS})
+   message (STATUS "Filter ZLIB is ON")
+ endif ()
+@@ -100,7 +102,17 @@ option (HDF5_ENABLE_SZIP_SUPPORT "Use SZip Filter" OFF)
+ if (HDF5_ENABLE_SZIP_SUPPORT)
+   option (HDF5_ENABLE_SZIP_ENCODING "Use SZip Encoding" OFF)
+   if (NOT SZIP_USE_EXTERNAL)
+-    find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
++    find_package (szip CONFIG REQUIRED)
++    set(SZIP_FOUND ${szip_FOUND})
++    if (TARGET szip-shared)
++      set(SZIP_LIBRARIES szip-shared)
++      set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_LIBRARIES})
++    elseif (TARGET szip-static)
++      set(SZIP_LIBRARIES szip-static)
++      set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${SZIP_LIBRARIES})
++    else()
++      message(FATAL_ERROR "Could not found szip target!")
++    endif()
+     if (NOT SZIP_FOUND)
+       find_package (SZIP) # Legacy find
+       if (SZIP_FOUND)
+@@ -128,8 +140,9 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+   endif ()
+   if (BUILD_SHARED_LIBS)
+     set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${SZIP_SHARED_LIBRARY})
+-  endif ()
++  else ()
+   set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_STATIC_LIBRARY})
++  endif()
+   INCLUDE_DIRECTORIES (${SZIP_INCLUDE_DIRS})
+   message (STATUS "Filter SZIP is ON")
+   if (H5_HAVE_FILTER_SZIP)
+diff --git a/hdf5-1.10.5/CMakeLists.txt b/hdf5-1.10.5/CMakeLists.txt
+index 8e93231..a1fed03 100644
+--- a/hdf5-1.10.5/CMakeLists.txt
++++ b/hdf5-1.10.5/CMakeLists.txt
+@@ -424,10 +424,12 @@ endif ()
+ #-----------------------------------------------------------------------------
+ option (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
+ set (H5_ENABLE_SHARED_LIB NO)
++set (H5_ENABLE_STATIC_LIB NO)
+ if (BUILD_SHARED_LIBS)
+   set (H5_ENABLE_SHARED_LIB YES)
+-endif ()
++else()
+ set (H5_ENABLE_STATIC_LIB YES)
++endif()
+ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ #-----------------------------------------------------------------------------
+@@ -725,14 +727,16 @@ add_subdirectory (src)
+ 
+ if (HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "GIT" OR HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "TGZ")
+   if (ZLIB_FOUND AND ZLIB_USE_EXTERNAL)
++    if (NOT BUILD_SHARED_LIBS)
+     add_dependencies (${HDF5_LIB_TARGET} ZLIB)
+-    if (BUILD_SHARED_LIBS)
++    else()
+       add_dependencies (${HDF5_LIBSH_TARGET} ZLIB)
+     endif ()
+   endif ()
+   if (SZIP_FOUND AND SZIP_USE_EXTERNAL)
++    if (NOT BUILD_SHARED_LIBS)
+     add_dependencies (${HDF5_LIB_TARGET} SZIP)
+-    if (BUILD_SHARED_LIBS)
++    else()
+       add_dependencies (${HDF5_LIBSH_TARGET} SZIP)
+     endif ()
+   endif ()
+diff --git a/hdf5-1.10.5/c++/src/CMakeLists.txt b/hdf5-1.10.5/c++/src/CMakeLists.txt
+index 945b352..8741e61 100644
+--- a/hdf5-1.10.5/c++/src/CMakeLists.txt
++++ b/hdf5-1.10.5/c++/src/CMakeLists.txt
+@@ -84,6 +84,7 @@ set (CPP_HDRS
+     ${HDF5_CPP_SRC_SOURCE_DIR}/H5VarLenType.h
+ )
+ 
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_CPP_LIB_TARGET} STATIC ${CPP_SOURCES} ${CPP_HDRS})
+ target_include_directories(${HDF5_CPP_LIB_TARGET}
+     PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -99,7 +100,7 @@ H5_SET_LIB_OPTIONS (${HDF5_CPP_LIB_TARGET} ${HDF5_CPP_LIB_NAME} STATIC 0)
+ set_target_properties (${HDF5_CPP_LIB_TARGET} PROPERTIES FOLDER libraries/cpp)
+ set (install_targets ${HDF5_CPP_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_CPP_LIBSH_TARGET} SHARED ${CPP_SOURCES} ${CPP_HDRS})
+   target_include_directories(${HDF5_CPP_LIBSH_TARGET}
+       PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -135,9 +136,10 @@ install (
+ if (HDF5_EXPORTED_TARGETS)
+   if (BUILD_SHARED_LIBS)
+     INSTALL_TARGET_PDB (${HDF5_CPP_LIBSH_TARGET} ${HDF5_INSTALL_BIN_DIR} cpplibraries)
+-  endif ()
++  else ()
+   INSTALL_TARGET_PDB (${HDF5_CPP_LIB_TARGET} ${HDF5_INSTALL_BIN_DIR} cpplibraries)
+-
++  endif()
++  
+   install (
+       TARGETS
+           ${install_targets}
+@@ -163,8 +165,9 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
+ 
+ set (_PKG_CONFIG_LIBS_PRIVATE)
+ 
++if (NOT BUILD_SHARED_LIBS)
+ set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_CPP_LIB_CORENAME}")
+-if (BUILD_SHARED_LIBS)
++else()
+   set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${HDF5_CPP_LIB_CORENAME}")
+ endif ()
+ 
+diff --git a/hdf5-1.10.5/config/cmake_ext_mod/HDFLibMacros.cmake b/hdf5-1.10.5/config/cmake_ext_mod/HDFLibMacros.cmake
+index 2eda66c..e143672 100644
+--- a/hdf5-1.10.5/config/cmake_ext_mod/HDFLibMacros.cmake
++++ b/hdf5-1.10.5/config/cmake_ext_mod/HDFLibMacros.cmake
+@@ -73,12 +73,13 @@ macro (EXTERNAL_JPEG_LIBRARY compress_type jpeg_pic)
+ 
+ ##include (${BINARY_DIR}/${JPEG_PACKAGE_NAME}${HDF_PACKAGE_EXT}-targets.cmake)
+ # Create imported target jpeg-static
++  if (NOT BUILD_SHARED_LIBS)
+   add_library(jpeg-static STATIC IMPORTED)
+   HDF_IMPORT_SET_LIB_OPTIONS (jpeg-static "jpeg" STATIC "")
+   add_dependencies (jpeg-static JPEG)
+   set (JPEG_STATIC_LIBRARY "jpeg-static")
+   set (JPEG_LIBRARIES ${JPEG_STATIC_LIBRARY})
+-  if (BUILD_SHARED_LIBS)
++  else()
+     # Create imported target jpeg-shared
+     add_library(jpeg-shared SHARED IMPORTED)
+     HDF_IMPORT_SET_LIB_OPTIONS (jpeg-shared "jpeg" SHARED "")
+@@ -169,12 +170,13 @@ macro (EXTERNAL_SZIP_LIBRARY compress_type encoding)
+ 
+ ##include (${BINARY_DIR}/${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT}-targets.cmake)
+ # Create imported target szip-static
++  if (NOT BUILD_SHARED_LIBS)
+   add_library(szip-static STATIC IMPORTED)
+   HDF_IMPORT_SET_LIB_OPTIONS (szip-static "szip" STATIC "")
+   add_dependencies (szip-static SZIP)
+   set (SZIP_STATIC_LIBRARY "szip-static")
+   set (SZIP_LIBRARIES ${SZIP_STATIC_LIBRARY})
+-  if (BUILD_SHARED_LIBS)
++  else()
+     # Create imported target szip-shared
+     add_library(szip-shared SHARED IMPORTED)
+     HDF_IMPORT_SET_LIB_OPTIONS (szip-shared "szip" SHARED "")
+@@ -267,12 +269,13 @@ macro (EXTERNAL_ZLIB_LIBRARY compress_type)
+   endif ()
+ ##include (${BINARY_DIR}/${ZLIB_PACKAGE_NAME}${HDF_PACKAGE_EXT}-targets.cmake)
+ # Create imported target zlib-static
++  if (NOT BUILD_SHARED_LIBS)
+   add_library(zlib-static STATIC IMPORTED)
+   HDF_IMPORT_SET_LIB_OPTIONS (zlib-static ${ZLIB_LIB_NAME} STATIC "")
+   add_dependencies (zlib-static ZLIB)
+   set (ZLIB_STATIC_LIBRARY "zlib-static")
+   set (ZLIB_LIBRARIES ${ZLIB_STATIC_LIBRARY})
+-  if (BUILD_SHARED_LIBS)
++  else()
+     # Create imported target zlib-shared
+     add_library(zlib-shared SHARED IMPORTED)
+     HDF_IMPORT_SET_LIB_OPTIONS (zlib-shared ${ZLIB_LIB_NAME} SHARED "")
+diff --git a/hdf5-1.10.5/config/cmake_ext_mod/HDFMacros.cmake b/hdf5-1.10.5/config/cmake_ext_mod/HDFMacros.cmake
+index 2f4ce52..277a373 100644
+--- a/hdf5-1.10.5/config/cmake_ext_mod/HDFMacros.cmake
++++ b/hdf5-1.10.5/config/cmake_ext_mod/HDFMacros.cmake
+@@ -295,7 +295,7 @@ macro (HDF_README_PROPERTIES target_fortran)
+   endif ()
+ 
+   if (BUILD_SHARED_LIBS)
+-    set (LIB_TYPE "Static and Shared")
++    set (LIB_TYPE "Shared")
+   else ()
+     set (LIB_TYPE "Static")
+   endif ()
+diff --git a/hdf5-1.10.5/examples/CMakeLists.txt b/hdf5-1.10.5/examples/CMakeLists.txt
+index 2239d64..d853cdb 100644
+--- a/hdf5-1.10.5/examples/CMakeLists.txt
++++ b/hdf5-1.10.5/examples/CMakeLists.txt
+@@ -40,12 +40,13 @@ set (examples
+ )
+ 
+ foreach (example ${examples})
++  if (NOT BUILD_SHARED_LIBS)
+   add_executable (${example} ${HDF5_EXAMPLES_SOURCE_DIR}/${example}.c)
+   target_include_directories(${example} PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (${example} STATIC)
+   target_link_libraries (${example} PRIVATE ${HDF5_LIB_TARGET})
+   set_target_properties (${example} PROPERTIES FOLDER examples)
+-  if (BUILD_SHARED_LIBS)
++  else()
+     add_executable (${example}-shared ${HDF5_EXAMPLES_SOURCE_DIR}/${example}.c)
+     target_include_directories(${example}-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+     TARGET_C_PROPERTIES (${example}-shared SHARED)
+@@ -55,12 +56,13 @@ foreach (example ${examples})
+ endforeach ()
+ 
+ if (H5_HAVE_PARALLEL)
++  if (NOT BUILD_SHARED_LIBS)
+   add_executable (ph5example ${HDF5_EXAMPLES_SOURCE_DIR}/ph5example.c)
+   target_include_directories(ph5example PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (ph5example STATIC)
+   target_link_libraries (ph5example PRIVATE ${HDF5_LIB_TARGET} ${MPI_C_LIBRARIES})
+   set_target_properties (ph5example PROPERTIES FOLDER examples)
+-  if (BUILD_SHARED_LIBS)
++  else()
+     add_executable (ph5example-shared ${HDF5_EXAMPLES_SOURCE_DIR}/ph5example.c)
+     target_include_directories(ph5example-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+     TARGET_C_PROPERTIES (ph5example-shared SHARED)
+diff --git a/hdf5-1.10.5/examples/CMakeTests.cmake b/hdf5-1.10.5/examples/CMakeTests.cmake
+index cb47c78..dc635cd 100644
+--- a/hdf5-1.10.5/examples/CMakeTests.cmake
++++ b/hdf5-1.10.5/examples/CMakeTests.cmake
+@@ -15,13 +15,15 @@
+ ###           T E S T I N G                                                ###
+ ##############################################################################
+ ##############################################################################
++  if (NOT BUILD_SHARED_LIBS)
+   file (MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/red ${PROJECT_BINARY_DIR}/blue ${PROJECT_BINARY_DIR}/u2w)
+-  if (BUILD_SHARED_LIBS)
++  else()
+     file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/H5EX-shared")
+     file (MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/H5EX-shared/red ${PROJECT_BINARY_DIR}/H5EX-shared/blue ${PROJECT_BINARY_DIR}/H5EX-shared/u2w)
+   endif ()
+ 
+   # Remove any output file left over from previous test run
++  if (NOT BUILD_SHARED_LIBS)
+   add_test (
+       NAME EXAMPLES-clear-objects
+       COMMAND    ${CMAKE_COMMAND}
+@@ -97,7 +99,7 @@
+     set (last_test "EXAMPLES-${example}")
+   endforeach ()
+ 
+-  if (BUILD_SHARED_LIBS)
++  else()
+     # Remove any output file left over from previous test run
+     add_test (
+         NAME EXAMPLES-shared-clear-objects
+@@ -180,6 +182,7 @@
+ 
+ ### Windows pops up a modal permission dialog on this test
+   if (H5_HAVE_PARALLEL AND NOT WIN32)
++    if (NOT BUILD_SHARED_LIBS)
+     if (HDF5_ENABLE_USING_MEMCHECKER)
+       add_test (NAME MPI_TEST_EXAMPLES-ph5example COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS} $<TARGET_FILE:ph5example> ${MPIEXEC_POSTFLAGS})
+     else ()
+@@ -198,7 +201,7 @@
+       set_tests_properties (MPI_TEST_EXAMPLES-ph5example PROPERTIES DEPENDS ${last_test})
+     endif ()
+     set (last_test "MPI_TEST_EXAMPLES-ph5example")
+-    if (BUILD_SHARED_LIBS)
++    else()
+       if (HDF5_ENABLE_USING_MEMCHECKER)
+         add_test (NAME MPI_TEST_EXAMPLES-shared-ph5example COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS} $<TARGET_FILE:ph5example-shared> ${MPIEXEC_POSTFLAGS})
+       else ()
+diff --git a/hdf5-1.10.5/fortran/examples/CMakeLists.txt b/hdf5-1.10.5/fortran/examples/CMakeLists.txt
+index 0c570c6..4941021 100644
+--- a/hdf5-1.10.5/fortran/examples/CMakeLists.txt
++++ b/hdf5-1.10.5/fortran/examples/CMakeLists.txt
+@@ -34,6 +34,7 @@ set (F2003_examples
+ )
+ 
+ foreach (example ${examples})
++  if (NOT BUILD_SHARED_LIBS)
+   add_executable (f90_ex_${example} ${HDF5_F90_EXAMPLES_SOURCE_DIR}/${example}.f90)
+   target_include_directories (f90_ex_${example}
+       PRIVATE
+@@ -61,7 +62,7 @@ foreach (example ${examples})
+       FOLDER examples/fortran
+       Fortran_MODULE_DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/static
+   )
+-  if (BUILD_SHARED_LIBS)
++  else()
+     add_executable (f90_ex_${example}-shared ${HDF5_F90_EXAMPLES_SOURCE_DIR}/${example}.f90)
+     target_include_directories (f90_ex_${example}-shared
+         PRIVATE
+@@ -93,6 +94,7 @@ foreach (example ${examples})
+ endforeach ()
+ 
+ foreach (example ${F2003_examples})
++  if (NOT BUILD_SHARED_LIBS)
+   add_executable (f03_ex_${example} ${HDF5_F90_EXAMPLES_SOURCE_DIR}/${example}.f90)
+   target_include_directories (f03_ex_${example}
+       PRIVATE
+@@ -120,7 +122,7 @@ foreach (example ${F2003_examples})
+       FOLDER examples/fortran03
+       Fortran_MODULE_DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/static
+   )
+-  if (BUILD_SHARED_LIBS)
++  else()
+     add_executable (f03_ex_${example}-shared ${HDF5_F90_EXAMPLES_SOURCE_DIR}/${example}.f90)
+     target_include_directories (f03_ex_${example}-shared
+         PRIVATE
+@@ -152,6 +154,7 @@ foreach (example ${F2003_examples})
+ endforeach ()
+ 
+ if (H5_HAVE_PARALLEL AND MPI_Fortran_FOUND)
++  if (NOT BUILD_SHARED_LIBS)
+   add_executable (f90_ex_ph5example ${HDF5_F90_EXAMPLES_SOURCE_DIR}/ph5example.f90)
+   target_include_directories (f90_ex_ph5example
+       PRIVATE
+@@ -180,7 +183,7 @@ if (H5_HAVE_PARALLEL AND MPI_Fortran_FOUND)
+       FOLDER examples/fortran
+       Fortran_MODULE_DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/static
+   )
+-  if (BUILD_SHARED_LIBS)
++  else()
+     add_executable (f90_ex_ph5example-shared ${HDF5_F90_EXAMPLES_SOURCE_DIR}/ph5example.f90)
+     target_include_directories (f90_ex_ph5example-shared
+         PRIVATE
+diff --git a/hdf5-1.10.5/fortran/examples/CMakeTests.cmake b/hdf5-1.10.5/fortran/examples/CMakeTests.cmake
+index face086..53ee619 100644
+--- a/hdf5-1.10.5/fortran/examples/CMakeTests.cmake
++++ b/hdf5-1.10.5/fortran/examples/CMakeTests.cmake
+@@ -17,6 +17,7 @@
+ ##############################################################################
+ 
+   # Remove any output file left over from previous test run
++  if (NOT BUILD_SHARED_LIBS)
+   add_test (
+       NAME f90_ex-clear-objects
+       COMMAND    ${CMAKE_COMMAND}
+@@ -41,7 +42,7 @@
+     set_tests_properties (f90_ex-clear-objects PROPERTIES DEPENDS ${last_test})
+   endif ()
+   set (last_test "f90_ex-clear-objects")
+-  if (BUILD_SHARED_LIBS)
++  else()
+     add_test (
+         NAME f90_ex-shared-clear-objects
+         COMMAND    ${CMAKE_COMMAND}
+@@ -69,6 +70,7 @@
+   endif ()
+ 
+ foreach (example ${examples})
++  if (NOT BUILD_SHARED_LIBS)
+   if (HDF5_ENABLE_USING_MEMCHECKER)
+     add_test (NAME f90_ex_${example} COMMAND $<TARGET_FILE:f90_ex_${example}>)
+   else ()
+@@ -87,7 +89,7 @@ foreach (example ${examples})
+     set_tests_properties (f90_ex_${example} PROPERTIES DEPENDS ${last_test})
+   endif ()
+   set (last_test "f90_ex_${example}")
+-  if (BUILD_SHARED_LIBS)
++  else()
+     if (HDF5_ENABLE_USING_MEMCHECKER)
+       add_test (NAME f90_ex-shared_${example} COMMAND $<TARGET_FILE:f90_ex_${example}-shared>)
+     else ()
+@@ -110,6 +112,7 @@ foreach (example ${examples})
+ endforeach ()
+ 
+ foreach (example ${F2003_examples})
++  if (NOT BUILD_SHARED_LIBS)
+   if (HDF5_ENABLE_USING_MEMCHECKER)
+     add_test (NAME f03_ex_${example} COMMAND $<TARGET_FILE:f03_ex_${example}>)
+   else ()
+@@ -128,7 +131,7 @@ foreach (example ${F2003_examples})
+     set_tests_properties (f03_ex_${example} PROPERTIES DEPENDS ${last_test})
+   endif ()
+   set (last_test "f03_ex_${example}")
+-  if (BUILD_SHARED_LIBS)
++  else()
+     if (HDF5_ENABLE_USING_MEMCHECKER)
+       add_test (NAME f03_ex-shared_${example} COMMAND $<TARGET_FILE:f03_ex_${example}-shared>)
+     else ()
+@@ -151,8 +154,9 @@ foreach (example ${F2003_examples})
+ endforeach ()
+ 
+ if (H5_HAVE_PARALLEL AND MPI_Fortran_FOUND)
++  if (NOT BUILD_SHARED_LIBS)
+   add_test (NAME MPI_TEST_f90_ex_ph5example COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS} $<TARGET_FILE:f90_ex_ph5example> ${MPIEXEC_POSTFLAGS})
+-  if (BUILD_SHARED_LIBS)
++  else()
+     add_test (NAME MPI_TEST_f90_ex-shared_ph5example COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS} $<TARGET_FILE:f90_ex_ph5example> ${MPIEXEC_POSTFLAGS})
+   endif ()
+ endif ()
+diff --git a/hdf5-1.10.5/fortran/src/CMakeLists.txt b/hdf5-1.10.5/fortran/src/CMakeLists.txt
+index f71e820..873f36d 100644
+--- a/hdf5-1.10.5/fortran/src/CMakeLists.txt
++++ b/hdf5-1.10.5/fortran/src/CMakeLists.txt
+@@ -68,16 +68,17 @@ set_target_properties (H5_buildiface PROPERTIES
+ if (BUILD_SHARED_LIBS)
+   file (MAKE_DIRECTORY "${HDF5_F90_BINARY_DIR}/shared")
+   set (MODSH_BUILD_DIR ${CMAKE_Fortran_MODULE_DIRECTORY}/shared/${HDF_CFG_BUILD_TYPE})
+-endif ()
++else ()
+ file (MAKE_DIRECTORY "${HDF5_F90_BINARY_DIR}/static")
+ set (MOD_BUILD_DIR ${CMAKE_Fortran_MODULE_DIRECTORY}/static/${HDF_CFG_BUILD_TYPE})
+-
++endif()
+ #-----------------------------------------------------------------------------
+ add_executable (H5match_types
+     ${HDF5_F90_BINARY_DIR}/H5fort_type_defines.h
+     ${HDF5_F90_SRC_SOURCE_DIR}/H5match_types.c
+ )
+ target_include_directories(H5match_types PRIVATE "${HDF5_BINARY_DIR};${HDF5_SRC_DIR};${HDF5_F90_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
++if (NOT BUILD_SHARED_LIBS)
+ add_custom_command (
+     OUTPUT ${HDF5_F90_BINARY_DIR}/static/H5f90i_gen.h
+            ${HDF5_F90_BINARY_DIR}/static/H5fortran_types.F90
+@@ -87,7 +88,7 @@ add_custom_command (
+ )
+ set_source_files_properties (${HDF5_F90_BINARY_DIR}/static/H5f90i_gen.h PROPERTIES GENERATED TRUE)
+ set_source_files_properties (${HDF5_F90_BINARY_DIR}/static/H5fortran_types.F90 PROPERTIES GENERATED TRUE)
+-if (BUILD_SHARED_LIBS)
++else()
+   add_custom_command (
+       OUTPUT ${HDF5_F90_BINARY_DIR}/shared/H5f90i_gen.h
+              ${HDF5_F90_BINARY_DIR}/shared/H5fortran_types.F90
+@@ -130,7 +131,7 @@ set (f90CStub_C_SHHDRS
+     # generated files
+     ${HDF5_F90_BINARY_DIR}/shared/H5f90i_gen.h
+ )
+-
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_F90_C_LIB_TARGET} STATIC ${f90CStub_C_SOURCES} ${f90CStub_C_HDRS})
+ target_include_directories(${HDF5_F90_C_LIB_TARGET}
+     PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_F90_BINARY_DIR};${HDF5_F90_BINARY_DIR}/static;$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -146,7 +147,7 @@ set_target_properties (${HDF5_F90_C_LIB_TARGET} PROPERTIES
+ )
+ set (install_targets ${HDF5_F90_C_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_F90_C_LIBSH_TARGET} SHARED ${f90CStub_C_SOURCES} ${f90CStub_C_SHHDRS})
+   target_include_directories(${HDF5_F90_C_LIBSH_TARGET}
+       PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_F90_BINARY_DIR};${HDF5_F90_BINARY_DIR}/shared;$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -174,6 +175,7 @@ set (f90_F_GEN_SOURCES
+     ${HDF5_F90_SRC_SOURCE_DIR}/H5Dff.F90
+     ${HDF5_F90_SRC_SOURCE_DIR}/H5Pff.F90
+ )
++if (NOT BUILD_SHARED_LIBS)
+ add_custom_command (
+     OUTPUT ${HDF5_F90_BINARY_DIR}/static/H5_gen.F90
+     COMMAND $<TARGET_FILE:H5_buildiface>
+@@ -186,7 +188,7 @@ add_custom_target (H5gen ALL
+ )
+ set_source_files_properties (${HDF5_F90_BINARY_DIR}/static/H5_gen.F90 PROPERTIES GENERATED TRUE)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_custom_command (
+       OUTPUT ${HDF5_F90_BINARY_DIR}/shared/H5_gen.F90
+       COMMAND $<TARGET_FILE:H5_buildiface>
+@@ -219,7 +221,7 @@ set (f90_F_BASE_SOURCES
+     ${HDF5_F90_SRC_SOURCE_DIR}/H5Tff.F90
+     ${HDF5_F90_SRC_SOURCE_DIR}/H5Zff.F90
+ )
+-
++if (NOT BUILD_SHARED_LIBS)
+ set (f90_F_SOURCES
+     # generated file
+     ${HDF5_F90_BINARY_DIR}/static/H5fortran_types.F90
+@@ -232,7 +234,7 @@ set (f90_F_SOURCES
+     # normal distribution
+     ${HDF5_F90_SRC_SOURCE_DIR}/HDF5.F90
+ )
+-if (BUILD_SHARED_LIBS)
++else()
+   set (f90_F_SOURCES_SHARED
+       # generated file
+       ${HDF5_F90_BINARY_DIR}/shared/H5fortran_types.F90
+@@ -250,6 +252,7 @@ endif ()
+ #-----------------------------------------------------------------------------
+ # Add Main fortran library
+ #-----------------------------------------------------------------------------
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_F90_LIB_TARGET} STATIC ${f90_F_SOURCES})
+ target_include_directories (${HDF5_F90_LIB_TARGET}
+     PRIVATE
+@@ -288,7 +291,7 @@ set_global_variable (HDF5_LIBRARIES_TO_EXPORT "${HDF5_LIBRARIES_TO_EXPORT};${HDF
+ set (install_targets ${install_targets} ${HDF5_F90_LIB_TARGET})
+ add_dependencies(${HDF5_F90_LIB_TARGET} H5gen)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_F90_LIBSH_TARGET} SHARED ${f90_F_SOURCES_SHARED})
+   target_include_directories (${HDF5_F90_LIBSH_TARGET}
+       PRIVATE
+@@ -350,7 +353,7 @@ install (
+     COMPONENT
+         fortheaders
+ )
+-
++if (NOT BUILD_SHARED_LIBS)
+ set (mod_files
+     ${MOD_BUILD_DIR}/h5fortran_types.mod
+     ${MOD_BUILD_DIR}/hdf5.mod
+@@ -381,7 +384,7 @@ install (
+         fortheaders
+ )
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   set (modsh_files
+       ${MODSH_BUILD_DIR}/h5fortran_types.mod
+       ${MODSH_BUILD_DIR}/hdf5.mod
+@@ -420,10 +423,11 @@ if (HDF5_EXPORTED_TARGETS)
+   if (BUILD_SHARED_LIBS)
+     INSTALL_TARGET_PDB (${HDF5_F90_C_LIBSH_TARGET} ${HDF5_INSTALL_BIN_DIR} fortlibraries)
+     #INSTALL_TARGET_PDB (${HDF5_F90_LIBSH_TARGET} ${HDF5_INSTALL_BIN_DIR} fortlibraries)
+-  endif ()
++  else ()
+   INSTALL_TARGET_PDB (${HDF5_F90_C_LIB_TARGET} ${HDF5_INSTALL_BIN_DIR} fortlibraries)
+   #INSTALL_TARGET_PDB (${HDF5_F90_LIB_TARGET} ${HDF5_INSTALL_BIN_DIR} fortlibraries)
+-
++  endif()
++  
+   install (
+       TARGETS
+           ${install_targets}
+diff --git a/hdf5-1.10.5/fortran/test/CMakeLists.txt b/hdf5-1.10.5/fortran/test/CMakeLists.txt
+index b862fcd..6f557b7 100644
+--- a/hdf5-1.10.5/fortran/test/CMakeLists.txt
++++ b/hdf5-1.10.5/fortran/test/CMakeLists.txt
+@@ -34,13 +34,14 @@ set_target_properties (H5_test_buildiface PROPERTIES
+ if (BUILD_SHARED_LIBS)
+   file (MAKE_DIRECTORY "${HDF5_FORTRAN_TESTS_BINARY_DIR}/shared")
+   set (MODSH_BUILD_DIR ${CMAKE_Fortran_MODULE_DIRECTORY}/shared/${HDF_CFG_BUILD_TYPE})
+-endif ()
++else ()
+ file (MAKE_DIRECTORY "${HDF5_FORTRAN_TESTS_BINARY_DIR}/static")
+ set (MOD_BUILD_DIR ${CMAKE_Fortran_MODULE_DIRECTORY}/static/${HDF_CFG_BUILD_TYPE})
+-
++endif()
+ #-----------------------------------------------------------------------------
+ # Add Test Lib
+ #-----------------------------------------------------------------------------
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_F90_C_TEST_LIB_TARGET} STATIC t.c)
+ set_source_files_properties (t.c PROPERTIES LANGUAGE C)
+ target_include_directories(${HDF5_F90_C_TEST_LIB_TARGET}
+@@ -57,7 +58,7 @@ set_target_properties (${HDF5_F90_C_TEST_LIB_TARGET} PROPERTIES
+     FOLDER libraries/test/fortran
+     LINKER_LANGUAGE C
+ )
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_F90_C_TEST_LIBSH_TARGET} SHARED t.c)
+   target_include_directories(${HDF5_F90_C_TEST_LIBSH_TARGET}
+       PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_F90_BINARY_DIR};${HDF5_F90_BINARY_DIR}/shared;$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -77,7 +78,7 @@ if (BUILD_SHARED_LIBS)
+       LINKER_LANGUAGE C
+   )
+ endif ()
+-
++if (NOT BUILD_SHARED_LIBS)
+ add_custom_command (
+     OUTPUT ${HDF5_FORTRAN_TESTS_BINARY_DIR}/static/tf_gen.F90
+     COMMAND $<TARGET_FILE:H5_test_buildiface>
+@@ -90,7 +91,7 @@ add_custom_target (H5testgen ALL
+ )
+ set_source_files_properties (${HDF5_FORTRAN_TESTS_BINARY_DIR}/static/tf_gen.F90 PROPERTIES GENERATED TRUE)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_custom_command (
+       OUTPUT ${HDF5_FORTRAN_TESTS_BINARY_DIR}/shared/tf_gen.F90
+       COMMAND $<TARGET_FILE:H5_test_buildiface>
+@@ -103,7 +104,7 @@ if (BUILD_SHARED_LIBS)
+   )
+   set_source_files_properties (${HDF5_FORTRAN_TESTS_BINARY_DIR}/shared/tf_gen.F90 PROPERTIES GENERATED TRUE)
+ endif ()
+-
++if (NOT BUILD_SHARED_LIBS)
+ set (HDF5_F90_TF_SOURCES
+     # generated files
+     ${HDF5_FORTRAN_TESTS_BINARY_DIR}/static/tf_gen.F90
+@@ -112,7 +113,7 @@ set (HDF5_F90_TF_SOURCES
+     tf.F90
+ )
+ set_source_files_properties (${HDF5_F90_TF_SOURCES} PROPERTIES LANGUAGE Fortran)
+-if (BUILD_SHARED_LIBS)
++else()
+   set (HDF5_F90_TF_SOURCES_SHARED
+       # generated file
+       ${HDF5_FORTRAN_TESTS_BINARY_DIR}/shared/tf_gen.F90
+@@ -122,7 +123,7 @@ if (BUILD_SHARED_LIBS)
+   )
+   set_source_files_properties (${HDF5_F90_TF_SOURCES_SHARED} PROPERTIES LANGUAGE Fortran)
+ endif ()
+-
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_F90_TEST_LIB_TARGET} STATIC ${HDF5_F90_TF_SOURCES})
+ target_include_directories (${HDF5_F90_TEST_LIB_TARGET}
+     PRIVATE
+@@ -156,7 +157,7 @@ set_target_properties (${HDF5_F90_TEST_LIB_TARGET} PROPERTIES
+ H5_SET_LIB_OPTIONS (${HDF5_F90_TEST_LIB_TARGET} ${HDF5_F90_TEST_LIB_NAME} STATIC 0)
+ add_dependencies(${HDF5_F90_TEST_LIB_TARGET} H5testgen)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_F90_TEST_LIBSH_TARGET} SHARED ${HDF5_F90_TF_SOURCES_SHARED})
+   target_include_directories (${HDF5_F90_TEST_LIBSH_TARGET}
+       PRIVATE
+@@ -201,6 +202,7 @@ endif ()
+ #-----------------------------------------------------------------------------
+ 
+ #-- Adding test for testhdf5_fortran
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (testhdf5_fortran
+     fortranlib_test.F90
+     tH5A.F90
+@@ -246,7 +248,7 @@ set_target_properties (testhdf5_fortran PROPERTIES
+ )
+ add_dependencies (testhdf5_fortran ${HDF5_F90_TEST_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (testhdf5_fortran-shared
+       fortranlib_test.F90
+       tH5A.F90
+@@ -294,6 +296,7 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ #-- Adding test for testhdf5_fortran_1_8
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (testhdf5_fortran_1_8
+     fortranlib_test_1_8.F90
+     tH5O.F90
+@@ -330,7 +333,7 @@ set_target_properties (testhdf5_fortran_1_8 PROPERTIES
+ )
+ add_dependencies (testhdf5_fortran_1_8 ${HDF5_F90_TEST_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (testhdf5_fortran_1_8-shared
+       fortranlib_test_1_8.F90
+       tH5O.F90
+@@ -369,6 +372,7 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ #-- Adding test for fortranlib_test_F03
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (fortranlib_test_F03
+     fortranlib_test_F03.F90
+     tH5E_F03.F90
+@@ -407,7 +411,7 @@ set_target_properties (fortranlib_test_F03 PROPERTIES
+ )
+ add_dependencies (fortranlib_test_F03 ${HDF5_F90_TEST_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (fortranlib_test_F03-shared
+       fortranlib_test_F03.F90
+       tH5E_F03.F90
+@@ -448,6 +452,7 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ #-- Adding test for fflush1
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (fflush1 fflush1.F90)
+ target_include_directories (fflush1
+     PRIVATE
+@@ -477,7 +482,7 @@ set_target_properties (fflush1 PROPERTIES
+ )
+ add_dependencies (fflush1 ${HDF5_F90_TEST_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (fflush1-shared fflush1.F90)
+   target_include_directories (fflush1-shared
+       PRIVATE
+@@ -509,6 +514,7 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ #-- Adding test for fflush2
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (fflush2 fflush2.F90)
+ target_include_directories (fflush2
+     PRIVATE
+@@ -538,7 +544,7 @@ set_target_properties (fflush2 PROPERTIES
+ )
+ add_dependencies (fflush2 ${HDF5_F90_TEST_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (fflush2-shared fflush2.F90)
+   target_include_directories (fflush2-shared
+       PRIVATE
+diff --git a/hdf5-1.10.5/fortran/test/CMakeTests.cmake b/hdf5-1.10.5/fortran/test/CMakeTests.cmake
+index 2824ef7..482345a 100644
+--- a/hdf5-1.10.5/fortran/test/CMakeTests.cmake
++++ b/hdf5-1.10.5/fortran/test/CMakeTests.cmake
+@@ -20,6 +20,7 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ # Remove any output file left over from previous test run
++if (NOT BUILD_SHARED_LIBS)
+ add_test (
+     NAME FORTRAN_testhdf5-clear-objects
+     COMMAND    ${CMAKE_COMMAND}
+@@ -130,7 +131,7 @@ set_tests_properties (FORTRAN_fflush1 PROPERTIES DEPENDS FORTRAN_testhdf5-clear-
+ add_test (NAME FORTRAN_fflush2 COMMAND $<TARGET_FILE:fflush2>)
+ set_tests_properties (FORTRAN_fflush2 PROPERTIES DEPENDS FORTRAN_fflush1)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_test (
+     NAME FORTRAN_testhdf5-shared-clear-objects
+     COMMAND    ${CMAKE_COMMAND}
+diff --git a/hdf5-1.10.5/hl/c++/src/CMakeLists.txt b/hdf5-1.10.5/hl/c++/src/CMakeLists.txt
+index 77419c6..1556374 100644
+--- a/hdf5-1.10.5/hl/c++/src/CMakeLists.txt
++++ b/hdf5-1.10.5/hl/c++/src/CMakeLists.txt
+@@ -7,7 +7,7 @@ project (HDF5_HL_CPP_SRC CXX)
+ 
+ set (HDF5_HL_CPP_SOURCES ${HDF5_HL_CPP_SRC_SOURCE_DIR}/H5PacketTable.cpp)
+ set (HDF5_HL_CPP_HDRS ${HDF5_HL_CPP_SRC_SOURCE_DIR}/H5PacketTable.h)
+-
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_HL_CPP_LIB_TARGET} STATIC ${HDF5_HL_CPP_SOURCES})
+ target_include_directories(${HDF5_HL_CPP_LIB_TARGET}
+     PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -20,7 +20,7 @@ H5_SET_LIB_OPTIONS (${HDF5_HL_CPP_LIB_TARGET} ${HDF5_HL_CPP_LIB_NAME} STATIC 0)
+ set_target_properties (${HDF5_HL_CPP_LIB_TARGET} PROPERTIES FOLDER libraries/hl)
+ set (install_targets ${HDF5_HL_CPP_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_HL_CPP_LIBSH_TARGET} SHARED ${HDF5_HL_CPP_SOURCES})
+   target_include_directories(${HDF5_HL_CPP_LIBSH_TARGET}
+       PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -55,9 +55,10 @@ install (
+ if (HDF5_EXPORTED_TARGETS)
+   if (BUILD_SHARED_LIBS)
+     INSTALL_TARGET_PDB (${HDF5_HL_CPP_LIBSH_TARGET} ${HDF5_INSTALL_BIN_DIR} hlcpplibraries)
+-  endif ()
++  else ()
+   INSTALL_TARGET_PDB (${HDF5_HL_CPP_LIB_TARGET} ${HDF5_INSTALL_BIN_DIR} hlcpplibraries)
+-
++  endif()
++  
+   install (
+       TARGETS
+           ${install_targets}
+@@ -83,8 +84,9 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
+ 
+ set (_PKG_CONFIG_LIBS_PRIVATE)
+ 
++if (NOT BUILD_SHARED_LIBS)
+ set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_HL_CPP_LIB_CORENAME}")
+-if (BUILD_SHARED_LIBS)
++else()
+   set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${HDF5_HL_CPP_LIB_CORENAME}")
+ endif ()
+ 
+diff --git a/hdf5-1.10.5/hl/fortran/src/CMakeLists.txt b/hdf5-1.10.5/hl/fortran/src/CMakeLists.txt
+index 7ec3b63..9f9693f 100644
+--- a/hdf5-1.10.5/hl/fortran/src/CMakeLists.txt
++++ b/hdf5-1.10.5/hl/fortran/src/CMakeLists.txt
+@@ -36,10 +36,10 @@ set_target_properties (H5HL_buildiface PROPERTIES
+ if (BUILD_SHARED_LIBS)
+   file (MAKE_DIRECTORY "${HDF5_HL_F90_BINARY_DIR}/shared")
+   set (MODSH_BUILD_DIR ${CMAKE_Fortran_MODULE_DIRECTORY}/shared/${HDF_CFG_BUILD_TYPE})
+-endif ()
++else ()
+ file (MAKE_DIRECTORY "${HDF5_HL_F90_BINARY_DIR}/static")
+ set (MOD_BUILD_DIR ${CMAKE_Fortran_MODULE_DIRECTORY}/static/${HDF_CFG_BUILD_TYPE})
+-
++endif()
+ #-----------------------------------------------------------------------------
+ # hl_f90CStub lib
+ #-----------------------------------------------------------------------------
+@@ -53,7 +53,7 @@ set (HDF5_HL_F90_C_SOURCES
+ set_source_files_properties (${HDF5_HL_F90_C_SOURCES} PROPERTIES LANGUAGE C)
+ 
+ set (HDF5_HL_F90_HEADERS ${HDF5_HL_F90_SRC_SOURCE_DIR}/H5LTf90proto.h)
+-
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_HL_F90_C_LIB_TARGET} STATIC ${HDF5_HL_F90_C_SOURCES} ${HDF5_HL_F90_HEADERS})
+ target_include_directories(${HDF5_HL_F90_C_LIB_TARGET}
+     PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_F90_BINARY_DIR}/static;$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -69,7 +69,7 @@ set_target_properties (${HDF5_HL_F90_C_LIB_TARGET} PROPERTIES
+ )
+ set (install_targets ${HDF5_HL_F90_C_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_HL_F90_C_LIBSH_TARGET} SHARED ${HDF5_HL_F90_C_SOURCES} ${HDF5_HL_F90_HEADERS})
+   target_include_directories(${HDF5_HL_F90_C_LIBSH_TARGET}
+       PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_F90_BINARY_DIR}/shared;$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -98,7 +98,7 @@ set (HDF5_HL_F90_F_BASE_SOURCES
+     ${HDF5_HL_F90_SRC_SOURCE_DIR}/H5LTff.F90
+     ${HDF5_HL_F90_SRC_SOURCE_DIR}/H5IMff.F90
+ )
+-
++if (NOT BUILD_SHARED_LIBS)
+ add_custom_command (
+     OUTPUT ${HDF5_HL_F90_BINARY_DIR}/static/H5LTff_gen.F90 ${HDF5_HL_F90_BINARY_DIR}/static/H5TBff_gen.F90
+     COMMAND $<TARGET_FILE:H5HL_buildiface>
+@@ -114,7 +114,7 @@ set_source_files_properties (
+     ${HDF5_HL_F90_BINARY_DIR}/static/H5TBff_gen.F90
+     PROPERTIES GENERATED TRUE
+ )
+-if (BUILD_SHARED_LIBS)
++else()
+   add_custom_command (
+       OUTPUT ${HDF5_HL_F90_BINARY_DIR}/shared/H5LTff_gen.F90 ${HDF5_HL_F90_BINARY_DIR}/shared/H5TBff_gen.F90
+       COMMAND $<TARGET_FILE:H5HL_buildiface>
+@@ -131,7 +131,7 @@ if (BUILD_SHARED_LIBS)
+       PROPERTIES GENERATED TRUE
+   )
+ endif ()
+-
++if (NOT BUILD_SHARED_LIBS)
+ set (HDF5_HL_F90_F_SOURCES
+     ${HDF5_HL_F90_F_BASE_SOURCES}
+ 
+@@ -141,7 +141,7 @@ set (HDF5_HL_F90_F_SOURCES
+ )
+ set_source_files_properties (${HDF5_HL_F90_F_SOURCES} PROPERTIES LANGUAGE Fortran)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   set (HDF5_HL_F90_F_SOURCES_SHARED
+       ${HDF5_HL_F90_F_BASE_SOURCES}
+ 
+@@ -152,6 +152,7 @@ if (BUILD_SHARED_LIBS)
+   set_source_files_properties (${HDF5_HL_F90_F_SOURCES_SHARED} PROPERTIES LANGUAGE Fortran)
+ endif ()
+ 
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_HL_F90_LIB_TARGET} STATIC ${HDF5_HL_F90_F_SOURCES})
+ target_include_directories (${HDF5_HL_F90_LIB_TARGET}
+     PRIVATE
+@@ -188,7 +189,7 @@ set_global_variable (HDF5_LIBRARIES_TO_EXPORT "${HDF5_LIBRARIES_TO_EXPORT};${HDF
+ set (install_targets ${install_targets} ${HDF5_HL_F90_LIB_TARGET})
+ add_dependencies(${HDF5_HL_F90_LIB_TARGET} H5HLgen)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_HL_F90_LIBSH_TARGET} SHARED ${HDF5_HL_F90_F_SOURCES_SHARED})
+   target_include_directories (${HDF5_HL_F90_LIBSH_TARGET}
+       PRIVATE
+@@ -239,7 +240,7 @@ endif ()
+ # Add file(s) to CMake Install
+ #-----------------------------------------------------------------------------
+ 
+-
++if (NOT BUILD_SHARED_LIBS)
+ set (mod_files
+     ${MOD_BUILD_DIR}/h5ds.mod
+     ${MOD_BUILD_DIR}/h5tb.mod
+@@ -258,7 +259,7 @@ install (
+         fortheaders
+ )
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   set (modsh_files
+       ${MODSH_BUILD_DIR}/h5ds.mod
+       ${MODSH_BUILD_DIR}/h5tb.mod
+@@ -284,10 +285,11 @@ if (HDF5_EXPORTED_TARGETS)
+   if (BUILD_SHARED_LIBS)
+     INSTALL_TARGET_PDB (${HDF5_HL_F90_C_LIBSH_TARGET} ${HDF5_INSTALL_BIN_DIR} hlfortlibraries)
+     #INSTALL_TARGET_PDB (${HDF5_HL_F90_LIBSH_TARGET} ${HDF5_INSTALL_BIN_DIR} hlfortlibraries)
+-  endif ()
++  else ()
+   INSTALL_TARGET_PDB (${HDF5_HL_F90_C_LIB_TARGET} ${HDF5_INSTALL_BIN_DIR} hlfortlibraries)
+   #INSTALL_TARGET_PDB (${HDF5_HL_F90_LIB_TARGET} ${HDF5_INSTALL_BIN_DIR} hlfortlibraries)
+-
++  endif()
++  
+   install (
+       TARGETS
+           ${install_targets}
+diff --git a/hdf5-1.10.5/hl/fortran/test/CMakeLists.txt b/hdf5-1.10.5/hl/fortran/test/CMakeLists.txt
+index 923989d..74e7ae2 100644
+--- a/hdf5-1.10.5/hl/fortran/test/CMakeLists.txt
++++ b/hdf5-1.10.5/hl/fortran/test/CMakeLists.txt
+@@ -12,6 +12,7 @@ set (H5_TESTS
+ )
+ 
+ macro (ADD_H5_FORTRAN_EXE file)
++  if (NOT BUILD_SHARED_LIBS)
+   add_executable (hl_f90_${file} ${file}.F90)
+   target_include_directories (hl_f90_${file}
+       PRIVATE
+@@ -39,7 +40,7 @@ macro (ADD_H5_FORTRAN_EXE file)
+       FOLDER test/hl/fortran
+       Fortran_MODULE_DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/static
+   )
+-  if (BUILD_SHARED_LIBS)
++  else()
+     add_executable (hl_f90_${file}-shared ${file}.F90)
+     target_include_directories (hl_f90_${file}-shared
+         PRIVATE
+diff --git a/hdf5-1.10.5/hl/fortran/test/CMakeTests.cmake b/hdf5-1.10.5/hl/fortran/test/CMakeTests.cmake
+index 04a49dc..9b4436c 100644
+--- a/hdf5-1.10.5/hl/fortran/test/CMakeTests.cmake
++++ b/hdf5-1.10.5/hl/fortran/test/CMakeTests.cmake
+@@ -17,6 +17,7 @@
+ ##############################################################################
+ 
+ macro (ADD_H5_FORTRAN_TEST file)
++  if (NOT BUILD_SHARED_LIBS)
+   if (HDF5_ENABLE_USING_MEMCHECKER)
+     add_test (NAME HL_FORTRAN_f90_${file} COMMAND $<TARGET_FILE:hl_f90_${file}>)
+   else ()
+@@ -32,7 +33,7 @@ macro (ADD_H5_FORTRAN_TEST file)
+     )
+   endif ()
+   set_tests_properties (HL_FORTRAN_f90_${file} PROPERTIES DEPENDS HL_FORTRAN_test-clear-objects)
+-  if (BUILD_SHARED_LIBS)
++  else()
+     if (HDF5_ENABLE_USING_MEMCHECKER)
+       add_test (NAME HL_FORTRAN_f90_${file}-shared COMMAND $<TARGET_FILE:hl_f90_${file}-shared>)
+     else ()
+@@ -52,6 +53,7 @@ macro (ADD_H5_FORTRAN_TEST file)
+ endmacro ()
+ 
+ # Remove any output file left over from previous test run
++if (NOT BUILD_SHARED_LIBS)
+ add_test (
+     NAME HL_FORTRAN_test-clear-objects
+     COMMAND    ${CMAKE_COMMAND}
+@@ -67,7 +69,7 @@ add_test (
+         tstds.h5
+ )
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_test (
+       NAME HL_FORTRAN_test-shared-clear-objects
+       COMMAND    ${CMAKE_COMMAND}
+diff --git a/hdf5-1.10.5/hl/src/CMakeLists.txt b/hdf5-1.10.5/hl/src/CMakeLists.txt
+index bf0f6ff..d4ad35e 100644
+--- a/hdf5-1.10.5/hl/src/CMakeLists.txt
++++ b/hdf5-1.10.5/hl/src/CMakeLists.txt
+@@ -31,7 +31,7 @@ set (HL_HEADERS
+ set (HL_PRIVATE_HEADERS
+     ${HDF5_HL_SRC_SOURCE_DIR}/H5LTparse.h
+ )
+-
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_HL_LIB_TARGET} STATIC ${HL_SOURCES} ${HL_HEADERS} ${HL_PRIVATE_HEADERS})
+ target_include_directories(${HDF5_HL_LIB_TARGET}
+     PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -44,7 +44,7 @@ set_target_properties (${HDF5_HL_LIB_TARGET} PROPERTIES FOLDER libraries/hl)
+ set_global_variable (HDF5_LIBRARIES_TO_EXPORT "${HDF5_LIBRARIES_TO_EXPORT};${HDF5_HL_LIB_TARGET}")
+ set (install_targets ${HDF5_HL_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_HL_LIBSH_TARGET} SHARED ${HL_SOURCES} ${HL_HEADERS} ${HL_PRIVATE_HEADERS})
+   target_include_directories(${HDF5_HL_LIBSH_TARGET}
+       PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -79,9 +79,10 @@ install (
+ if (HDF5_EXPORTED_TARGETS)
+   if (BUILD_SHARED_LIBS)
+     INSTALL_TARGET_PDB (${HDF5_HL_LIBSH_TARGET} ${HDF5_INSTALL_BIN_DIR} hllibraries)
+-  endif ()
++  else ()
+   INSTALL_TARGET_PDB (${HDF5_HL_LIB_TARGET} ${HDF5_INSTALL_BIN_DIR} hllibraries)
+-
++  endif()
++  
+   install (
+       TARGETS
+           ${install_targets}
+@@ -107,8 +108,9 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
+ 
+ set (_PKG_CONFIG_LIBS_PRIVATE)
+ 
++if (NOT BUILD_SHARED_LIBS)
+ set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_HL_LIB_CORENAME}")
+-if (BUILD_SHARED_LIBS)
++else()
+   set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${HDF5_HL_LIB_CORENAME}")
+ endif ()
+ 
+diff --git a/hdf5-1.10.5/src/CMakeLists.txt b/hdf5-1.10.5/src/CMakeLists.txt
+index 01434ba..6445c22 100644
+--- a/hdf5-1.10.5/src/CMakeLists.txt
++++ b/hdf5-1.10.5/src/CMakeLists.txt
+@@ -1060,6 +1060,7 @@ option (HDF5_ENABLE_DEBUG_APIS "Turn on extra debug output in all packages" OFF)
+ #-----------------------------------------------------------------------------
+ # Add H5Tinit source to build - generated by H5detect/CMake at configure time
+ #-----------------------------------------------------------------------------
++if (NOT BUILD_SHARED_LIBS)
+ set (gen_SRCS ${HDF5_GENERATED_SOURCE_DIR}/H5Tinit.c ${HDF5_BINARY_DIR}/H5lib_settings.c)
+ add_custom_target (gen_${HDF5_LIB_TARGET} ALL DEPENDS ${HDF5_GENERATED_SOURCE_DIR}/gen_SRCS.stamp1 ${HDF5_GENERATED_SOURCE_DIR}/gen_SRCS.stamp2)
+ 
+@@ -1088,8 +1089,7 @@ set_target_properties (${HDF5_LIB_TARGET} PROPERTIES FOLDER libraries)
+ add_dependencies (${HDF5_LIB_TARGET} gen_${HDF5_LIB_TARGET})
+ 
+ set (install_targets ${HDF5_LIB_TARGET})
+-
+-if (BUILD_SHARED_LIBS)
++else()
+   set (shared_gen_SRCS ${HDF5_GENERATED_SOURCE_DIR}/shared/H5Tinit.c ${HDF5_BINARY_DIR}/shared/H5lib_settings.c)
+   add_custom_target (gen_${HDF5_LIBSH_TARGET} ALL DEPENDS ${HDF5_GENERATED_SOURCE_DIR}/shared/shared_gen_SRCS.stamp1 ${HDF5_GENERATED_SOURCE_DIR}/shared/shared_gen_SRCS.stamp2)
+ 
+@@ -1144,9 +1144,10 @@ endif ()
+ if (HDF5_EXPORTED_TARGETS)
+   if (BUILD_SHARED_LIBS)
+     INSTALL_TARGET_PDB (${HDF5_LIBSH_TARGET} ${HDF5_INSTALL_BIN_DIR} libraries)
+-  endif ()
++  else ()
+   INSTALL_TARGET_PDB (${HDF5_LIB_TARGET} ${HDF5_INSTALL_BIN_DIR} libraries)
+-
++  endif()
++  
+   install (
+       TARGETS
+           ${install_targets}
+@@ -1174,8 +1175,9 @@ foreach (libs ${LINK_LIBS} ${LINK_COMP_LIBS})
+   set (_PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE} -l${libs}")
+ endforeach ()
+ 
++if (NOT BUILD_SHARED_LIBS)
+ set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_LIB_CORENAME}")
+-if (BUILD_SHARED_LIBS)
++else()
+   set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${HDF5_LIB_CORENAME}")
+ endif ()
+ 
+diff --git a/hdf5-1.10.5/test/CMakeLists.txt b/hdf5-1.10.5/test/CMakeLists.txt
+index fa303ed..784a86e 100644
+--- a/hdf5-1.10.5/test/CMakeLists.txt
++++ b/hdf5-1.10.5/test/CMakeLists.txt
+@@ -23,6 +23,7 @@ set (TEST_LIB_HEADERS
+     ${HDF5_TEST_SOURCE_DIR}/swmr_common.h
+ )
+ 
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_TEST_LIB_TARGET} STATIC ${TEST_LIB_SOURCES} ${TEST_LIB_HEADERS})
+ target_include_directories(${HDF5_TEST_LIB_TARGET}
+     PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_TEST_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -38,7 +39,7 @@ if (MINGW)
+ endif ()
+ H5_SET_LIB_OPTIONS (${HDF5_TEST_LIB_TARGET} ${HDF5_TEST_LIB_NAME} STATIC 0)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_TEST_LIBSH_TARGET} SHARED ${TEST_LIB_SOURCES} ${TEST_LIB_HEADERS})
+   target_include_directories(${HDF5_TEST_LIBSH_TARGET}
+       PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_TEST_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -240,12 +241,13 @@ set (H5_TESTS
+ )
+ 
+ macro (ADD_H5_EXE file)
++  if (NOT BUILD_SHARED_LIBS)
+   add_executable (${file} ${HDF5_TEST_SOURCE_DIR}/${file}.c)
+   target_include_directories(${file} PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_TEST_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (${file} STATIC)
+   target_link_libraries (${file} PRIVATE ${HDF5_TEST_LIB_TARGET})
+   set_target_properties (${file} PROPERTIES FOLDER test)
+-  if (BUILD_SHARED_LIBS)
++  else()
+     add_executable (${file}-shared ${HDF5_TEST_SOURCE_DIR}/${file}.c)
+     target_include_directories(${file}-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_TEST_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+     TARGET_C_PROPERTIES (${file}-shared SHARED)
+@@ -272,12 +274,13 @@ endforeach ()
+ ##############################################################################
+ ######### Also special handling of link libs #############
+ #-- Adding test for direct_chunk
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (direct_chunk ${HDF5_TEST_SOURCE_DIR}/direct_chunk.c)
+ target_include_directories(direct_chunk PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_TEST_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (direct_chunk STATIC)
+ target_link_libraries (direct_chunk PRIVATE ${HDF5_TEST_LIB_TARGET} ${LINK_COMP_LIBS})
+ set_target_properties (direct_chunk PROPERTIES FOLDER test)
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (direct_chunk-shared ${HDF5_TEST_SOURCE_DIR}/direct_chunk.c)
+   target_include_directories(direct_chunk-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};${HDF5_TEST_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (direct_chunk-shared SHARED)
+@@ -288,12 +291,13 @@ endif ()
+ 
+ ######### Special handling for multiple sources #############
+ #-- Adding test for testhdf5
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (testhdf5 ${testhdf5_SOURCES})
+ target_include_directories(testhdf5 PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (testhdf5 STATIC)
+ target_link_libraries (testhdf5 PRIVATE ${HDF5_TEST_LIB_TARGET})
+ set_target_properties (testhdf5 PROPERTIES FOLDER test)
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (testhdf5-shared ${testhdf5_SOURCES})
+   target_include_directories(testhdf5-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (testhdf5-shared SHARED)
+@@ -302,12 +306,13 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ #-- Adding test for cache_image
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (cache_image ${cache_image_SOURCES})
+ target_include_directories(cache_image PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (cache_image STATIC)
+ target_link_libraries (cache_image PRIVATE ${HDF5_LIB_TARGET} ${HDF5_TEST_LIB_TARGET})
+ set_target_properties (cache_image PROPERTIES FOLDER test)
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (cache_image-shared ${cache_image_SOURCES})
+   target_include_directories(cache_image-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (cache_image-shared SHARED)
+@@ -316,12 +321,13 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ #-- Adding test for ttsafe
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (ttsafe ${ttsafe_SOURCES})
+ target_include_directories(ttsafe PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (ttsafe STATIC)
+ target_link_libraries (ttsafe PRIVATE ${HDF5_LIB_TARGET} ${HDF5_TEST_LIB_TARGET})
+ set_target_properties (ttsafe PROPERTIES FOLDER test)
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (ttsafe-shared ${ttsafe_SOURCES})
+   target_include_directories(ttsafe-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (ttsafe-shared SHARED)
+@@ -403,8 +409,9 @@ target_link_libraries (accum_swmr_reader PRIVATE ${HDF5_LIB_TARGET} ${HDF5_TEST_
+ set_target_properties (accum_swmr_reader PROPERTIES FOLDER test)
+ 
+ #-- Set accum dependencies
++if (NOT BUILD_SHARED_LIBS)
+ set_target_properties (accum PROPERTIES DEPENDS accum_swmr_reader)
+-if (BUILD_SHARED_LIBS)
++else()
+   set_target_properties (accum-shared PROPERTIES DEPENDS accum_swmr_reader)
+ endif ()
+ 
+@@ -429,12 +436,13 @@ endif ()
+ ###    U S E  C A S E S  T E S T S
+ ##############################################################################
+ set (use_append_chunk_SOURCES ${HDF5_TEST_SOURCE_DIR}/use_append_chunk.c ${HDF5_TEST_SOURCE_DIR}/use_common.c)
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (use_append_chunk ${use_append_chunk_SOURCES})
+ target_include_directories(use_append_chunk PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (use_append_chunk STATIC)
+ target_link_libraries (use_append_chunk PRIVATE ${HDF5_LIB_TARGET} ${HDF5_TEST_LIB_TARGET})
+ set_target_properties (use_append_chunk PROPERTIES FOLDER test)
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (use_append_chunk-shared ${use_append_chunk_SOURCES})
+   target_include_directories(use_append_chunk-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (use_append_chunk-shared SHARED)
+@@ -443,12 +451,13 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ set (use_append_mchunks_SOURCES ${HDF5_TEST_SOURCE_DIR}/use_append_mchunks.c ${HDF5_TEST_SOURCE_DIR}/use_common.c)
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (use_append_mchunks ${use_append_mchunks_SOURCES})
+ target_include_directories(use_append_mchunks PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (use_append_mchunks STATIC)
+ target_link_libraries (use_append_mchunks PRIVATE ${HDF5_LIB_TARGET} ${HDF5_TEST_LIB_TARGET})
+ set_target_properties (use_append_mchunks PROPERTIES FOLDER test)
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (use_append_mchunks-shared ${use_append_mchunks_SOURCES})
+   target_include_directories(use_append_mchunks-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (use_append_mchunks-shared SHARED)
+@@ -457,12 +466,13 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ set (use_disable_mdc_flushes_SOURCES ${HDF5_TEST_SOURCE_DIR}/use_disable_mdc_flushes.c)
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (use_disable_mdc_flushes ${use_disable_mdc_flushes_SOURCES})
+ target_include_directories(use_disable_mdc_flushes PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (use_disable_mdc_flushes STATIC)
+ target_link_libraries (use_disable_mdc_flushes PRIVATE ${HDF5_LIB_TARGET} ${HDF5_TEST_LIB_TARGET})
+ set_target_properties (use_disable_mdc_flushes PROPERTIES FOLDER test)
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (use_disable_mdc_flushes-shared ${use_disable_mdc_flushes_SOURCES})
+   target_include_directories(use_disable_mdc_flushes-shared PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (use_disable_mdc_flushes-shared SHARED)
+diff --git a/hdf5-1.10.5/test/CMakeTests.cmake b/hdf5-1.10.5/test/CMakeTests.cmake
+index a8dd647..2501ff4 100644
+--- a/hdf5-1.10.5/test/CMakeTests.cmake
++++ b/hdf5-1.10.5/test/CMakeTests.cmake
+@@ -17,10 +17,11 @@
+ ##############################################################################
+ 
+ # make test dir
++if (NOT BUILD_SHARED_LIBS)
+ file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/H5TEST")
+ file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/H5TEST/testfiles")
+ file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/H5TEST/testfiles/plist_files")
+-if (BUILD_SHARED_LIBS)
++else()
+   file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/H5TEST-shared")
+   file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/H5TEST-shared/testfiles")
+   file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/H5TEST-shared/testfiles/plist_files")
+@@ -33,13 +34,14 @@ set (HDF5_TEST_FILES
+   tnullspace.h5
+ )
+ 
++if (NOT BUILD_SHARED_LIBS)
+ add_custom_command (
+     TARGET     accum_swmr_reader
+     POST_BUILD
+     COMMAND    ${CMAKE_COMMAND}
+     ARGS       -E copy_if_different "$<TARGET_FILE:accum_swmr_reader>" "${PROJECT_BINARY_DIR}/H5TEST/accum_swmr_reader"
+ )
+-if (BUILD_SHARED_LIBS)
++else()
+   add_custom_command (
+       TARGET     accum_swmr_reader
+       POST_BUILD
+@@ -49,8 +51,9 @@ if (BUILD_SHARED_LIBS)
+ endif ()
+ 
+ foreach (h5_tfile ${HDF5_TEST_FILES})
++  if (NOT BUILD_SHARED_LIBS)
+   HDFTEST_COPY_FILE("${HDF5_TOOLS_DIR}/testfiles/${h5_tfile}" "${PROJECT_BINARY_DIR}/H5TEST/${h5_tfile}" "HDF5_TEST_LIB_files")
+-  if (BUILD_SHARED_LIBS)
++  else()
+     HDFTEST_COPY_FILE("${HDF5_TOOLS_DIR}/testfiles/${h5_tfile}" "${PROJECT_BINARY_DIR}/H5TEST-shared/${h5_tfile}" "HDF5_TEST_LIBSH_files")
+   endif ()
+ endforeach ()
+@@ -67,8 +70,9 @@ set (HDF5_REFERENCE_FILES
+ )
+ 
+ foreach (ref_file ${HDF5_REFERENCE_FILES})
++  if (NOT BUILD_SHARED_LIBS)
+   HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/${ref_file}" "${PROJECT_BINARY_DIR}/H5TEST/${ref_file}" "HDF5_TEST_LIB_files")
+-  if (BUILD_SHARED_LIBS)
++  else()
+     HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/${ref_file}" "${PROJECT_BINARY_DIR}/H5TEST-shared/${ref_file}" "HDF5_TEST_LIBSH_files")
+   endif ()
+ endforeach ()
+@@ -128,9 +132,10 @@ set (HDF5_REFERENCE_PLIST_FILES
+ )
+ 
+ foreach (plistfile ${HDF5_REFERENCE_PLIST_FILES})
++  if (NOT BUILD_SHARED_LIBS)
+   HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/plist_files/${plistfile}" "${PROJECT_BINARY_DIR}/H5TEST/testfiles/plist_files/${plistfile}" "HDF5_TEST_LIB_files")
+   HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/plist_files/def_${plistfile}" "${PROJECT_BINARY_DIR}/H5TEST/testfiles/plist_files/def_${plistfile}" "HDF5_TEST_LIB_files")
+-  if (BUILD_SHARED_LIBS)
++  else()
+     HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/plist_files/${plistfile}" "${PROJECT_BINARY_DIR}/H5TEST-shared/testfiles/plist_files/${plistfile}" "HDF5_TEST_LIBSH_files")
+     HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/plist_files/def_${plistfile}" "${PROJECT_BINARY_DIR}/H5TEST-shared/testfiles/plist_files/def_${plistfile}" "HDF5_TEST_LIBSH_files")
+   endif ()
+@@ -193,18 +198,21 @@ set (HDF5_REFERENCE_TEST_FILES
+ )
+ 
+ foreach (h5_file ${HDF5_REFERENCE_TEST_FILES})
++  if (NOT BUILD_SHARED_LIBS)
+   HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/${h5_file}" "${HDF5_TEST_BINARY_DIR}/H5TEST/${h5_file}" "HDF5_TEST_LIB_files")
+-  if (BUILD_SHARED_LIBS)
++  else()
+     HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/${h5_file}" "${HDF5_TEST_BINARY_DIR}/H5TEST-shared/${h5_file}" "HDF5_TEST_LIBSH_files")
+   endif ()
+ endforeach ()
+ 
++if (NOT BUILD_SHARED_LIBS)
+ add_custom_target(HDF5_TEST_LIB_files ALL COMMENT "Copying files needed by HDF5_TEST_LIB tests" DEPENDS ${HDF5_TEST_LIB_files_list})
+-if (BUILD_SHARED_LIBS)
++else()
+   add_custom_target(HDF5_TEST_LIBSH_files ALL COMMENT "Copying files needed by HDF5_TEST_LIBSH tests" DEPENDS ${HDF5_TEST_LIBSH_files_list})
+ endif ()
+ 
+ # Remove any output file left over from previous test run
++if (NOT BUILD_SHARED_LIBS)
+ add_test (NAME H5TEST-clear-testhdf5-objects
+     COMMAND    ${CMAKE_COMMAND}
+         -E remove
+@@ -255,6 +263,7 @@ set_tests_properties (H5TEST-testhdf5-select PROPERTIES
+     ENVIRONMENT "HDF5_ALARM_SECONDS=3600;srcdir=${HDF5_TEST_BINARY_DIR}/H5TEST"
+     WORKING_DIRECTORY ${HDF5_TEST_BINARY_DIR}/H5TEST
+ )
++else()
+ if (NOT HDF5_ENABLE_USING_MEMCHECKER)
+   if (BUILD_SHARED_LIBS)
+     add_test (NAME H5TEST-shared-clear-testhdf5-objects
+@@ -528,6 +537,7 @@ set (test_CLEANFILES
+ )
+ 
+ # Remove any output file left over from previous test run
++if (NOT BUILD_SHARED_LIBS)
+ add_test (NAME H5TEST-clear-objects
+     COMMAND    ${CMAKE_COMMAND}
+         -E remove
+@@ -584,7 +594,7 @@ set_tests_properties (H5TEST-big PROPERTIES TIMEOUT ${CTEST_VERY_LONG_TIMEOUT})
+ set_tests_properties (H5TEST-btree2 PROPERTIES TIMEOUT ${CTEST_VERY_LONG_TIMEOUT})
+ set_tests_properties (H5TEST-objcopy PROPERTIES TIMEOUT ${CTEST_VERY_LONG_TIMEOUT})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   # Remove any output file left over from previous test run
+   add_test (NAME H5TEST-shared-clear-objects
+       COMMAND    ${CMAKE_COMMAND}
+@@ -661,6 +671,7 @@ endif ()
+ 
+ if (TEST_CACHE_IMAGE)
+ #-- Adding test for cache_image
++if (NOT BUILD_SHARED_LIBS)
+ add_test (
+     NAME H5TEST-clear-cache_image-objects
+     COMMAND    ${CMAKE_COMMAND}
+@@ -678,7 +689,7 @@ set_tests_properties (H5TEST-cache_image PROPERTIES
+ )
+ endif ()
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   #-- Adding test for cache
+   if (NOT CYGWIN AND NOT WIN32)
+     add_test (NAME H5TEST-shared-clear-cache-objects
+@@ -845,6 +856,7 @@ set_tests_properties (H5TEST-del_many_dense_attrs PROPERTIES
+ )
+ 
+ #-- Adding test for err_compat
++if (NOT BUILD_SHARED_LIBS)
+ if (HDF5_ENABLE_DEPRECATED_SYMBOLS)
+   add_test (NAME H5TEST-clear-err_compat-objects
+       COMMAND    ${CMAKE_COMMAND}
+@@ -945,7 +957,7 @@ add_test (NAME H5TEST-testlibinfo
+         ${HDF5_TEST_BINARY_DIR}/H5TEST
+ )
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   #-- Adding test for err_compat
+   if (HDF5_ENABLE_DEPRECATED_SYMBOLS)
+     add_test (NAME H5TEST-shared-clear-err_compat-objects
+@@ -1093,8 +1105,9 @@ if (ENABLE_EXTENDED_TESTS)
+ #  add_test (NAME H5Test-swmr_check_compat_vfd COMMAND $<TARGET_FILE:swmr_check_compat_vfd>)
+ 
+ #-- Adding test for flushrefresh
++  if (NOT BUILD_SHARED_LIBS)
+   file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/H5TEST/flushrefresh_test")
+-  if (BUILD_SHARED_LIBS)
++  else()
+     file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/H5TEST-shared/flushrefresh_test")
+   endif ()
+   find_package (Perl)
+diff --git a/hdf5-1.10.5/test/CMakeVFDTests.cmake b/hdf5-1.10.5/test/CMakeVFDTests.cmake
+index 569f215..a445c1d 100644
+--- a/hdf5-1.10.5/test/CMakeVFDTests.cmake
++++ b/hdf5-1.10.5/test/CMakeVFDTests.cmake
+@@ -31,10 +31,11 @@ if (DIRECT_VFD)
+ endif ()
+ 
+ foreach (vfdtest ${VFD_LIST})
++  if (NOT BUILD_SHARED_LIBS)
+   file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/${vfdtest}")
+   file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/${vfdtest}/testfiles")
+   file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/${vfdtest}/testfiles/plist_files")
+-  if (BUILD_SHARED_LIBS)
++  else()
+     file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/${vfdtest}-shared")
+     file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/${vfdtest}-shared/testfiles")
+     file (MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/${vfdtest}-shared/testfiles/plist_files")
+@@ -43,8 +44,9 @@ endforeach ()
+ 
+ foreach (vfdtest ${VFD_LIST})
+   foreach (h5_tfile ${HDF5_TEST_FILES})
++    if (NOT BUILD_SHARED_LIBS)
+     HDFTEST_COPY_FILE("${HDF5_TOOLS_DIR}/testfiles/${h5_tfile}" "${PROJECT_BINARY_DIR}/${vfdtest}/${h5_tfile}" "HDF5_VFDTEST_LIB_files")
+-    if (BUILD_SHARED_LIBS)
++    else()
+       HDFTEST_COPY_FILE("${HDF5_TOOLS_DIR}/testfiles/${h5_tfile}" "${PROJECT_BINARY_DIR}/${vfdtest}-shared/${h5_tfile}" "HDF5_VFDTEST_LIBSH_files")
+     endif ()
+   endforeach ()
+@@ -52,8 +54,9 @@ endforeach ()
+ 
+ foreach (vfdtest ${VFD_LIST})
+   foreach (ref_file ${HDF5_REFERENCE_FILES})
++    if (NOT BUILD_SHARED_LIBS)
+     HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/${ref_file}" "${PROJECT_BINARY_DIR}/${vfdtest}/${ref_file}" "HDF5_VFDTEST_LIB_files")
+-    if (BUILD_SHARED_LIBS)
++    else()
+       HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/${ref_file}" "${PROJECT_BINARY_DIR}/${vfdtest}-shared/${ref_file}" "HDF5_VFDTEST_LIBSH_files")
+     endif ()
+   endforeach ()
+@@ -61,8 +64,9 @@ endforeach ()
+ 
+ foreach (vfdtest ${VFD_LIST})
+   foreach (h5_file ${HDF5_REFERENCE_TEST_FILES})
++    if (NOT BUILD_SHARED_LIBS)
+     HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/${h5_file}" "${HDF5_TEST_BINARY_DIR}/${vfdtest}/${h5_file}" "HDF5_VFDTEST_LIB_files")
+-    if (BUILD_SHARED_LIBS)
++    else()
+       HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/${h5_file}" "${HDF5_TEST_BINARY_DIR}/${vfdtest}-shared/${h5_file}" "HDF5_VFDTEST_LIBSH_files")
+     endif ()
+   endforeach ()
+@@ -70,17 +74,19 @@ endforeach ()
+ 
+ foreach (vfdtest ${VFD_LIST})
+   foreach (plistfile ${HDF5_REFERENCE_PLIST_FILES})
++    if (NOT BUILD_SHARED_LIBS)
+     HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/plist_files/${plistfile}" "${PROJECT_BINARY_DIR}/${vfdtest}/testfiles/plist_files/${plistfile}" "HDF5_VFDTEST_LIB_files")
+     HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/plist_files/def_${plistfile}" "${PROJECT_BINARY_DIR}/${vfdtest}/testfiles/plist_files/def_${plistfile}" "HDF5_VFDTEST_LIB_files")
+-    if (BUILD_SHARED_LIBS)
++    else()
+       HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/plist_files/${plistfile}" "${PROJECT_BINARY_DIR}/${vfdtest}-shared/testfiles/plist_files/${plistfile}" "HDF5_VFDTEST_LIBSH_files")
+       HDFTEST_COPY_FILE("${HDF5_TEST_SOURCE_DIR}/testfiles/plist_files/def_${plistfile}" "${PROJECT_BINARY_DIR}/${vfdtest}-shared/testfiles/plist_files/def_${plistfile}" "HDF5_VFDTEST_LIBSH_files")
+     endif ()
+   endforeach ()
+ endforeach ()
+ 
++if (NOT BUILD_SHARED_LIBS)
+ add_custom_target(HDF5_VFDTEST_LIB_files ALL COMMENT "Copying files needed by HDF5_VFDTEST_LIB tests" DEPENDS ${HDF5_VFDTEST_LIB_files_list})
+-if (BUILD_SHARED_LIBS)
++else()
+   add_custom_target(HDF5_VFDTEST_LIBSH_files ALL COMMENT "Copying files needed by HDF5_VFDTEST_LIBSH tests" DEPENDS ${HDF5_VFDTEST_LIBSH_files_list})
+ endif ()
+ 
+@@ -159,16 +165,18 @@ endif ()
+             )
+           endif ()
+         else ()
++          if (NOT BUILD_SHARED_LIBS)
+           add_test (NAME VFD-${vfdname}-${vfdtest}
+               COMMAND ${CMAKE_COMMAND} -E echo "SKIP VFD-${vfdname}-${vfdtest}"
+           )
+-          if (BUILD_SHARED_LIBS)
++          else()
+             add_test (NAME VFD-${vfdname}-${test}-shared
+                 COMMAND ${CMAKE_COMMAND} -E echo "SKIP VFD-${vfdname}-${vfdtest}-shared"
+             )
+           endif ()
+         endif ()
+       else ()
++        if (NOT BUILD_SHARED_LIBS)
+         add_test (
+             NAME VFD-${vfdname}-${vfdtest}-clear-objects
+             COMMAND    ${CMAKE_COMMAND}
+@@ -191,7 +199,7 @@ endif ()
+             ENVIRONMENT "srcdir=${HDF5_TEST_BINARY_DIR}/${vfdname}"
+             WORKING_DIRECTORY ${HDF5_TEST_BINARY_DIR}/${vfdname}
+         )
+-        if (BUILD_SHARED_LIBS)
++        else()
+           add_test (
+               NAME VFD-${vfdname}-${vfdtest}-shared-clear-objects
+               COMMAND    ${CMAKE_COMMAND}
+@@ -217,6 +225,7 @@ endif ()
+         endif ()
+       endif ()
+     else ()
++      if (NOT BUILD_SHARED_LIBS)
+       add_test (
+           NAME VFD-${vfdname}-${vfdtest}-clear-objects
+           COMMAND    ${CMAKE_COMMAND}
+@@ -239,7 +248,7 @@ endif ()
+           ENVIRONMENT "srcdir=${HDF5_TEST_BINARY_DIR}/${vfdname};HDF5TestExpress=${HDF_TEST_EXPRESS}"
+           WORKING_DIRECTORY ${HDF5_TEST_BINARY_DIR}/${vfdname}
+       )
+-      if (BUILD_SHARED_LIBS AND NOT "${vfdtest}" STREQUAL "cache")
++      elseif (BUILD_SHARED_LIBS AND NOT "${vfdtest}" STREQUAL "cache")
+         add_test (
+             NAME VFD-${vfdname}-${vfdtest}-shared-clear-objects
+             COMMAND    ${CMAKE_COMMAND}
+@@ -267,6 +276,7 @@ endif ()
+   endmacro ()
+ 
+   macro (DO_VFD_TEST vfdtest vfdname resultcode)
++      if (NOT BUILD_SHARED_LIBS)
+       add_test (
+           NAME VFD-${vfdname}-${vfdtest}-clear-objects
+           COMMAND    ${CMAKE_COMMAND}
+@@ -289,7 +299,7 @@ endif ()
+           ENVIRONMENT "srcdir=${HDF5_TEST_BINARY_DIR}/${vfdname}"
+           WORKING_DIRECTORY ${HDF5_TEST_BINARY_DIR}/${vfdname}
+       )
+-      if (BUILD_SHARED_LIBS)
++      else()
+         add_test (
+             NAME VFD-${vfdname}-${vfdtest}-shared-clear-objects
+             COMMAND    ${CMAKE_COMMAND}
+@@ -325,6 +335,7 @@ endif ()
+         endif ()
+       endif ()
+     endforeach ()
++    if (NOT BUILD_SHARED_LIBS)
+     set_tests_properties (VFD-${vfdname}-flush2 PROPERTIES DEPENDS VFD-${vfdname}-flush1)
+     set_tests_properties (VFD-${vfdname}-flush1 PROPERTIES TIMEOUT 10)
+     set_tests_properties (VFD-${vfdname}-flush2 PROPERTIES TIMEOUT 10)
+@@ -332,7 +343,7 @@ endif ()
+     if (NOT CYGWIN)
+       set_tests_properties (VFD-${vfdname}-cache PROPERTIES TIMEOUT ${CTEST_VERY_LONG_TIMEOUT})
+     endif ()
+-    if (BUILD_SHARED_LIBS)
++    else()
+       set_tests_properties (VFD-${vfdname}-flush2-shared PROPERTIES DEPENDS VFD-${vfdname}-flush1-shared)
+       set_tests_properties (VFD-${vfdname}-flush1-shared PROPERTIES TIMEOUT 10)
+       set_tests_properties (VFD-${vfdname}-flush2-shared PROPERTIES TIMEOUT 10)
+@@ -342,6 +353,7 @@ endif ()
+       endif ()
+     endif ()
+     if (HDF5_TEST_FHEAP_VFD)
++      if (NOT BUILD_SHARED_LIBS)
+       add_test (
+           NAME VFD-${vfdname}-fheap-clear-objects
+           COMMAND    ${CMAKE_COMMAND}
+@@ -365,7 +377,7 @@ endif ()
+           ENVIRONMENT "srcdir=${HDF5_TEST_BINARY_DIR}/${vfdname};HDF5TestExpress=${HDF_TEST_EXPRESS}"
+           WORKING_DIRECTORY ${HDF5_TEST_BINARY_DIR}/${vfdname}
+       )
+-      if (BUILD_SHARED_LIBS)
++      else()
+         add_test (
+             NAME VFD-${vfdname}-fheap-shared-clear-objects
+             COMMAND    ${CMAKE_COMMAND}
+diff --git a/hdf5-1.10.5/tools/lib/CMakeLists.txt b/hdf5-1.10.5/tools/lib/CMakeLists.txt
+index 1596ea7..ae5c2d2 100644
+--- a/hdf5-1.10.5/tools/lib/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/lib/CMakeLists.txt
+@@ -32,6 +32,7 @@ set (H5_TOOLS_LIB_HDRS
+     ${HDF5_TOOLS_LIB_SOURCE_DIR}/h5diff.h
+ )
+ 
++if (NOT BUILD_SHARED_LIBS)
+ add_library (${HDF5_TOOLS_LIB_TARGET} STATIC ${H5_TOOLS_LIB_SOURCES} ${H5_TOOLS_LIB_HDRS})
+ target_include_directories(${HDF5_TOOLS_LIB_TARGET}
+     PRIVATE "${HDF5_TOOLS_LIB_SOURCE_DIR};${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -48,7 +49,7 @@ H5_SET_LIB_OPTIONS (${HDF5_TOOLS_LIB_TARGET} ${HDF5_TOOLS_LIB_NAME} STATIC 0)
+ set_target_properties (${HDF5_TOOLS_LIB_TARGET} PROPERTIES FOLDER libraries/tools)
+ set (install_targets ${HDF5_TOOLS_LIB_TARGET})
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_library (${HDF5_TOOLS_LIBSH_TARGET} SHARED ${H5_TOOLS_LIB_SOURCES} ${H5_TOOLS_LIB_HDRS})
+   target_include_directories(${HDF5_TOOLS_LIBSH_TARGET}
+       PRIVATE "${HDF5_TOOLS_LIB_SOURCE_DIR};${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -81,9 +82,10 @@ endif ()
+ if (HDF5_EXPORTED_TARGETS)
+   if (BUILD_SHARED_LIBS)
+     INSTALL_TARGET_PDB (${HDF5_TOOLS_LIBSH_TARGET} ${HDF5_INSTALL_BIN_DIR} toolslibraries)
+-  endif ()
++  else ()
+   INSTALL_TARGET_PDB (${HDF5_TOOLS_LIB_TARGET} ${HDF5_INSTALL_BIN_DIR} toolslibraries)
+-
++  endif()
++  
+   install (
+       TARGETS
+           ${install_targets}
+diff --git a/hdf5-1.10.5/tools/src/h5copy/CMakeLists.txt b/hdf5-1.10.5/tools/src/h5copy/CMakeLists.txt
+index 10b3f3d..d801ffc 100644
+--- a/hdf5-1.10.5/tools/src/h5copy/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/src/h5copy/CMakeLists.txt
+@@ -4,6 +4,7 @@ project (HDF5_TOOLS_SRC_H5COPY C)
+ # --------------------------------------------------------------------
+ # Add the h5copy and test executables
+ # --------------------------------------------------------------------
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (h5copy ${HDF5_TOOLS_SRC_H5COPY_SOURCE_DIR}/h5copy.c)
+ target_include_directories(h5copy PRIVATE "${HDF5_TOOLS_DIR}/lib;${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (h5copy STATIC)
+@@ -13,7 +14,7 @@ set_global_variable (HDF5_UTILS_TO_EXPORT "${HDF5_UTILS_TO_EXPORT};h5copy")
+ 
+ set (H5_DEP_EXECUTABLES h5copy)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (h5copy-shared ${HDF5_TOOLS_SRC_H5COPY_SOURCE_DIR}/h5copy.c)
+   target_include_directories(h5copy-shared PRIVATE "${HDF5_TOOLS_DIR}/lib;${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (h5copy-shared SHARED)
+diff --git a/hdf5-1.10.5/tools/src/h5diff/CMakeLists.txt b/hdf5-1.10.5/tools/src/h5diff/CMakeLists.txt
+index 671e6b6..2ab5a3a 100644
+--- a/hdf5-1.10.5/tools/src/h5diff/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/src/h5diff/CMakeLists.txt
+@@ -4,6 +4,7 @@ project (HDF5_TOOLS_SRC_H5DIFF C)
+ # --------------------------------------------------------------------
+ # Add the h5diff executables
+ # --------------------------------------------------------------------
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (h5diff
+     ${HDF5_TOOLS_SRC_H5DIFF_SOURCE_DIR}/h5diff_common.c
+     ${HDF5_TOOLS_SRC_H5DIFF_SOURCE_DIR}/h5diff_main.c
+@@ -16,7 +17,7 @@ set_global_variable (HDF5_UTILS_TO_EXPORT "${HDF5_UTILS_TO_EXPORT};h5diff")
+ 
+ set (H5_DEP_EXECUTABLES h5diff)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (h5diff-shared
+       ${HDF5_TOOLS_SRC_H5DIFF_SOURCE_DIR}/h5diff_common.c
+       ${HDF5_TOOLS_SRC_H5DIFF_SOURCE_DIR}/h5diff_main.c
+diff --git a/hdf5-1.10.5/tools/src/h5dump/CMakeLists.txt b/hdf5-1.10.5/tools/src/h5dump/CMakeLists.txt
+index 25166c7..4038ecd 100644
+--- a/hdf5-1.10.5/tools/src/h5dump/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/src/h5dump/CMakeLists.txt
+@@ -4,6 +4,7 @@ project (HDF5_TOOLS_SRC_H5DUMP C)
+ # --------------------------------------------------------------------
+ # Add the h5dump executables
+ # --------------------------------------------------------------------
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (h5dump
+     ${HDF5_TOOLS_SRC_H5DUMP_SOURCE_DIR}/h5dump.c
+     ${HDF5_TOOLS_SRC_H5DUMP_SOURCE_DIR}/h5dump_ddl.c
+@@ -17,7 +18,7 @@ set_global_variable (HDF5_UTILS_TO_EXPORT "${HDF5_UTILS_TO_EXPORT};h5dump")
+ 
+ set (H5_DEP_EXECUTABLES h5dump)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (h5dump-shared
+       ${HDF5_TOOLS_SRC_H5DUMP_SOURCE_DIR}/h5dump.c
+       ${HDF5_TOOLS_SRC_H5DUMP_SOURCE_DIR}/h5dump_ddl.c
+diff --git a/hdf5-1.10.5/tools/src/h5ls/CMakeLists.txt b/hdf5-1.10.5/tools/src/h5ls/CMakeLists.txt
+index 5b31b84..b9d7fc2 100644
+--- a/hdf5-1.10.5/tools/src/h5ls/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/src/h5ls/CMakeLists.txt
+@@ -4,6 +4,7 @@ project (HDF5_TOOLS_SRC_H5LS C)
+ #-----------------------------------------------------------------------------
+ # Add the h5ls executable
+ #-----------------------------------------------------------------------------
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (h5ls ${HDF5_TOOLS_SRC_H5LS_SOURCE_DIR}/h5ls.c)
+ target_include_directories(h5ls PRIVATE "${HDF5_TOOLS_DIR}/lib;${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (h5ls STATIC)
+@@ -13,7 +14,7 @@ set_global_variable (HDF5_UTILS_TO_EXPORT "${HDF5_UTILS_TO_EXPORT};h5ls")
+ 
+ set (H5_DEP_EXECUTABLES h5ls)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (h5ls-shared ${HDF5_TOOLS_SRC_H5LS_SOURCE_DIR}/h5ls.c)
+   target_include_directories(h5ls-shared PRIVATE "${HDF5_TOOLS_DIR}/lib;${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (h5ls-shared SHARED)
+diff --git a/hdf5-1.10.5/tools/src/h5repack/CMakeLists.txt b/hdf5-1.10.5/tools/src/h5repack/CMakeLists.txt
+index c0cd558..8106221 100644
+--- a/hdf5-1.10.5/tools/src/h5repack/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/src/h5repack/CMakeLists.txt
+@@ -14,6 +14,7 @@ set (REPACK_COMMON_SOURCES
+     ${HDF5_TOOLS_SRC_H5REPACK_SOURCE_DIR}/h5repack.c
+ )
+ 
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (h5repack ${REPACK_COMMON_SOURCES} ${HDF5_TOOLS_SRC_H5REPACK_SOURCE_DIR}/h5repack_main.c)
+ target_include_directories(h5repack PRIVATE "${HDF5_TOOLS_DIR}/lib;${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (h5repack STATIC)
+@@ -23,7 +24,7 @@ set_global_variable (HDF5_UTILS_TO_EXPORT "${HDF5_UTILS_TO_EXPORT};h5repack")
+ 
+ set (H5_DEP_EXECUTABLES h5repack)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (h5repack-shared ${REPACK_COMMON_SOURCES} ${HDF5_TOOLS_SRC_H5REPACK_SOURCE_DIR}/h5repack_main.c)
+   target_include_directories(h5repack-shared PRIVATE "${HDF5_TOOLS_DIR}/lib;${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (h5repack-shared SHARED)
+diff --git a/hdf5-1.10.5/tools/src/h5stat/CMakeLists.txt b/hdf5-1.10.5/tools/src/h5stat/CMakeLists.txt
+index 56c172c..f38b217 100644
+--- a/hdf5-1.10.5/tools/src/h5stat/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/src/h5stat/CMakeLists.txt
+@@ -4,6 +4,7 @@ project (HDF5_TOOLS_SRC_H5STAT C)
+ # --------------------------------------------------------------------
+ # Add the h5stat executables
+ # --------------------------------------------------------------------
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (h5stat ${HDF5_TOOLS_SRC_H5STAT_SOURCE_DIR}/h5stat.c)
+ target_include_directories(h5stat PRIVATE "${HDF5_TOOLS_DIR}/lib;${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+ TARGET_C_PROPERTIES (h5stat STATIC)
+@@ -13,7 +14,7 @@ set_global_variable (HDF5_UTILS_TO_EXPORT "${HDF5_UTILS_TO_EXPORT};h5stat")
+ 
+ set (H5_DEP_EXECUTABLES h5stat)
+ 
+-if (BUILD_SHARED_LIBS)
++else()
+   add_executable (h5stat-shared ${HDF5_TOOLS_SRC_H5STAT_SOURCE_DIR}/h5stat.c)
+   target_include_directories(h5stat-shared PRIVATE "${HDF5_TOOLS_DIR}/lib;${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (h5stat-shared SHARED)
+diff --git a/hdf5-1.10.5/tools/test/h5copy/CMakeLists.txt b/hdf5-1.10.5/tools/test/h5copy/CMakeLists.txt
+index a71a12a..26dc455 100644
+--- a/hdf5-1.10.5/tools/test/h5copy/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/test/h5copy/CMakeLists.txt
+@@ -4,7 +4,7 @@ project (HDF5_TOOLS_TEST_H5COPY C)
+ # --------------------------------------------------------------------
+ # Add the h5copy test executables
+ # --------------------------------------------------------------------
+-if (HDF5_BUILD_GENERATORS)
++if (HDF5_BUILD_GENERATORS AND NOT BUILD_SHARED_LIBS)
+   add_executable (h5copygentest ${HDF5_TOOLS_TEST_H5COPY_SOURCE_DIR}/h5copygentest.c)
+   target_include_directories(h5copygentest PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (h5copygentest STATIC)
+diff --git a/hdf5-1.10.5/tools/test/h5diff/CMakeLists.txt b/hdf5-1.10.5/tools/test/h5diff/CMakeLists.txt
+index c0aac36..e4e8c4f 100644
+--- a/hdf5-1.10.5/tools/test/h5diff/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/test/h5diff/CMakeLists.txt
+@@ -4,7 +4,7 @@ project (HDF5_TOOLS_TEST_H5DIFF C)
+ # --------------------------------------------------------------------
+ # Add the h5diff and test executables
+ # --------------------------------------------------------------------
+-if (HDF5_BUILD_GENERATORS)
++if (HDF5_BUILD_GENERATORS AND NOT BUILD_SHARED_LIBS)
+   add_executable (h5diffgentest ${HDF5_TOOLS_TEST_H5DIFF_SOURCE_DIR}/h5diffgentest.c)
+   target_include_directories(h5diffgentest PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (h5diffgentest STATIC)
+diff --git a/hdf5-1.10.5/tools/test/h5dump/CMakeLists.txt b/hdf5-1.10.5/tools/test/h5dump/CMakeLists.txt
+index 51938ae..9ae9477 100644
+--- a/hdf5-1.10.5/tools/test/h5dump/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/test/h5dump/CMakeLists.txt
+@@ -33,7 +33,7 @@ endif ()
+ # --------------------------------------------------------------------
+ # Add the h5dump test executable
+ # --------------------------------------------------------------------
+-if (HDF5_BUILD_GENERATORS)
++if (HDF5_BUILD_GENERATORS AND NOT BUILD_SHARED_LIBS)
+   add_executable (h5dumpgentest ${HDF5_TOOLS_TEST_H5DUMP_SOURCE_DIR}/h5dumpgentest.c)
+   target_include_directories(h5dumpgentest PRIVATE "${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
+   TARGET_C_PROPERTIES (h5dumpgentest STATIC)
+diff --git a/hdf5-1.10.5/tools/test/h5repack/CMakeLists.txt b/hdf5-1.10.5/tools/test/h5repack/CMakeLists.txt
+index 890d5d2..3c25afe 100644
+--- a/hdf5-1.10.5/tools/test/h5repack/CMakeLists.txt
++++ b/hdf5-1.10.5/tools/test/h5repack/CMakeLists.txt
+@@ -4,6 +4,7 @@ project (HDF5_TOOLS_TEST_H5REPACK C)
+ # --------------------------------------------------------------------
+ # Add h5Repack test executables
+ # --------------------------------------------------------------------
++if (NOT BUILD_SHARED_LIBS)
+ add_executable (testh5repack_detect_szip ${HDF5_TOOLS_TEST_H5REPACK_SOURCE_DIR}/testh5repack_detect_szip.c)
+ target_include_directories(testh5repack_detect_szip
+     PRIVATE "${HDF5_TOOLS_SRC_H5REPACK_SOURCE_DIR};${HDF5_TOOLS_DIR}/lib;${HDF5_SRC_DIR};${HDF5_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
+@@ -32,7 +33,7 @@ set_target_properties (h5repacktest PROPERTIES FOLDER tools)
+ #-----------------------------------------------------------------------------
+ # If plugin library tests can be tested
+ #-----------------------------------------------------------------------------
+-if (BUILD_SHARED_LIBS)
++else()
+   set (HDF5_TOOL_PLUGIN_LIB_CORENAME         "dynlibadd")
+   set (HDF5_TOOL_PLUGIN_LIB_NAME             "${HDF5_EXTERNAL_LIB_PREFIX}${HDF5_TOOL_PLUGIN_LIB_CORENAME}")
+   set (HDF5_TOOL_PLUGIN_LIB_TARGET           ${HDF5_TOOL_PLUGIN_LIB_CORENAME})

@@ -1,5 +1,5 @@
 Source: ffmpeg
-Version: 4.2-2
+Version: 4.2-7
 Build-Depends: zlib
 Homepage: https://ffmpeg.org
 Description: a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.
@@ -53,3 +53,7 @@ Description: upgrade (L)GPL to version 3
 
 Feature: avresample
 Description: Libav audio resampling library support in ffmpeg
+
+Feature: nvcodec
+Build-Depends: ffnvcodec, cuda
+Description: Hardware accelerated codecs
