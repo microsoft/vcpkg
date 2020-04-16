@@ -160,6 +160,7 @@ namespace vcpkg::Build
     static const std::string NAME_ALLOW_OBSOLETE_MSVCRT = "PolicyAllowObsoleteMsvcrt";
     static const std::string NAME_ALLOW_RESTRICTED_HEADERS = "PolicyAllowRestrictedHeaders";
     static const std::string NAME_SKIP_DUMPBIN_CHECKS = "PolicySkipDumpbinChecks";
+    static const std::string NAME_SKIP_ARCHITECTURE_CHECK = "PolicySkipArchitectureCheck";
 
     const std::string& to_string(BuildPolicy policy)
     {
@@ -173,6 +174,7 @@ namespace vcpkg::Build
             case BuildPolicy::ALLOW_OBSOLETE_MSVCRT: return NAME_ALLOW_OBSOLETE_MSVCRT;
             case BuildPolicy::ALLOW_RESTRICTED_HEADERS: return NAME_ALLOW_RESTRICTED_HEADERS;
             case BuildPolicy::SKIP_DUMPBIN_CHECKS: return NAME_SKIP_DUMPBIN_CHECKS;
+            case BuildPolicy::SKIP_ARCHITECTURE_CHECK: return NAME_SKIP_ARCHITECTURE_CHECK;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
@@ -189,6 +191,7 @@ namespace vcpkg::Build
             case BuildPolicy::ALLOW_OBSOLETE_MSVCRT: return "VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT";
             case BuildPolicy::ALLOW_RESTRICTED_HEADERS: return "VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS";
             case BuildPolicy::SKIP_DUMPBIN_CHECKS: return "VCPKG_POLICY_SKIP_DUMPBIN_CHECKS";
+            case BuildPolicy::SKIP_ARCHITECTURE_CHECK: return "VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK";
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
@@ -252,6 +255,7 @@ namespace vcpkg::Build
                                   }));
     }
 
+#if defined(_WIN32)
     static const std::unordered_map<std::string, std::string>& make_env_passthrough(const PreBuildInfo& pre_build_info)
     {
         static Cache<std::vector<std::string>, std::unordered_map<std::string, std::string>> envs;
@@ -271,10 +275,11 @@ namespace vcpkg::Build
             return env;
         });
     }
+#endif
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
-        if (pre_build_info.external_toolchain_file.has_value()) return "";
+        if (pre_build_info.external_toolchain_file.has_value() && !pre_build_info.load_vcvars_env) return "";
         if (!pre_build_info.cmake_system_name.empty() && pre_build_info.cmake_system_name != "WindowsStore") return "";
 
         const char* tonull = " >nul";
@@ -821,7 +826,6 @@ namespace vcpkg::Build
         auto binary_caching_enabled = binaries_provider && action.build_options.binary_caching == BinaryCaching::YES;
 
         auto& fs = paths.get_filesystem();
-        Triplet triplet = action.spec.triplet();
         auto& spec = action.spec;
         const std::string& name = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
                                       .source_control_file->core_paragraph->name;
@@ -831,7 +835,7 @@ namespace vcpkg::Build
         {
             for (const FeatureSpec& fspec : kv.second)
             {
-                if (!(status_db.is_installed(fspec) || spec.name() == name))
+                if (!(status_db.is_installed(fspec) || fspec.name() == name))
                 {
                     missing_fspecs.emplace_back(fspec);
                 }
@@ -1052,6 +1056,25 @@ namespace vcpkg::Build
                 case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE:
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                     break;
+                case VcpkgTripletVar::LOAD_VCVARS_ENV:
+                        if (variable_value.empty())
+                        {
+                            load_vcvars_env = true;
+                            if(external_toolchain_file)
+                                load_vcvars_env = false;
+                        }
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "1") ||
+                                 Strings::case_insensitive_ascii_equals(variable_value, "on") ||
+                                 Strings::case_insensitive_ascii_equals(variable_value, "true"))
+                            load_vcvars_env = true;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "0") ||
+                                 Strings::case_insensitive_ascii_equals(variable_value, "off") ||
+                                 Strings::case_insensitive_ascii_equals(variable_value, "false"))
+                            load_vcvars_env = false;
+                        else
+                            Checks::exit_with_message(
+                                VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s", variable_value);
+                        break;
             }
         }
 

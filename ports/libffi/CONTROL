@@ -1,5 +1,4 @@
 Source: libffi
-Version: 3.3
+Version: 3.3-1
 Homepage: https://github.com/libffi/libffi
 Description: Portable, high level programming interface to various calling conventions
-Supports: !arm

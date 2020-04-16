@@ -123,7 +123,6 @@ namespace
             const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
             auto& spec = action.spec;
             auto& fs = paths.get_filesystem();
-            std::error_code ec;
             const fs::path archives_root_dir = paths.root / "archives";
             const std::string archive_name = abi_tag + ".zip";
             const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
@@ -133,7 +132,8 @@ namespace
 
             compress_directory(paths, paths.package_dir(spec), tmp_archive_path);
 
-            fs.create_directories(archive_path.parent_path(), ec);
+            fs.create_directories(archive_path.parent_path(), ignore_errors);
+            std::error_code ec;
             fs.rename_or_copy(tmp_archive_path, archive_path, ".tmp", ec);
             if (ec)
             {
@@ -163,7 +163,7 @@ namespace
                 const auto tmp_log_path = paths.buildtrees / spec.name() / "tmp_failure_logs";
                 const auto tmp_log_path_destination = tmp_log_path / spec.name();
                 const auto tmp_failure_zip = paths.buildtrees / spec.name() / "failure_logs.zip";
-                fs.create_directories(tmp_log_path_destination, ec);
+                fs.create_directories(tmp_log_path_destination, ignore_errors);
 
                 for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
                 {
@@ -178,7 +178,7 @@ namespace
 
                 compress_directory(paths, tmp_log_path, paths.buildtrees / spec.name() / "failure_logs.zip");
 
-                fs.create_directories(archive_tombstone_path.parent_path(), ec);
+                fs.create_directories(archive_tombstone_path.parent_path(), ignore_errors);
                 fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
 
                 // clean up temporary directory

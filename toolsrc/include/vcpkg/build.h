@@ -153,6 +153,7 @@ namespace vcpkg::Build
                      Triplet triplet,
                      const std::unordered_map<std::string, std::string>& cmakevars);
 
+        bool load_vcvars_env;
         std::string triplet_abi_tag;
         std::string target_architecture;
         std::string cmake_system_name;
@@ -179,6 +180,7 @@ namespace vcpkg::Build
         BUILD_TYPE,
         ENV_PASSTHROUGH,
         PUBLIC_ABI_OVERRIDE,
+        LOAD_VCVARS_ENV,
     };
 
     const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
@@ -191,6 +193,7 @@ namespace vcpkg::Build
         {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
         {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
         {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
+        {"VCPKG_LOAD_VCVARS_ENV", VcpkgTripletVar::LOAD_VCVARS_ENV},
     };
 
     struct ExtendedBuildResult
@@ -219,6 +222,7 @@ namespace vcpkg::Build
         ALLOW_OBSOLETE_MSVCRT,
         ALLOW_RESTRICTED_HEADERS,
         SKIP_DUMPBIN_CHECKS,
+        SKIP_ARCHITECTURE_CHECK,
         // Must be last
         COUNT,
     };
@@ -232,6 +236,7 @@ namespace vcpkg::Build
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
         BuildPolicy::ALLOW_RESTRICTED_HEADERS,
         BuildPolicy::SKIP_DUMPBIN_CHECKS,
+        BuildPolicy::SKIP_ARCHITECTURE_CHECK
     };
 
     const std::string& to_string(BuildPolicy policy);
