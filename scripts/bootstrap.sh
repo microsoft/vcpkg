@@ -199,10 +199,11 @@ fetchTool()
 
 selectCXX()
 {
+    __output=$1
+
     if [ "x$CXX" = "x" ]; then
-        if which g++ >/dev/null 2>&1; then
-            CXX=g++
-        elif which g++-9 >/dev/null 2>&1; then
+        CXX=g++
+        if which g++-9 >/dev/null 2>&1; then
             CXX=g++-9
         elif which g++-8 >/dev/null 2>&1; then
             CXX=g++-8
@@ -211,8 +212,24 @@ selectCXX()
         elif which g++-6 >/dev/null 2>&1; then
             CXX=g++-6
         fi
-        # If we can't find g++, allow CMake to do the look-up
     fi
+
+    gccversion="$("$CXX" -v 2>&1)"
+    gccversion="$(extractStringBetweenDelimiters "$gccversion" "gcc version " ".")"
+    if [ "$gccversion" -lt "6" ]; then
+        echo "CXX ($CXX) is too old; please install a newer compiler such as g++-7."
+        echo "On Ubuntu try the following:"
+        echo "  sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y"
+        echo "  sudo apt-get update -y"
+        echo "  sudo apt-get install g++-7 -y"
+        echo "On CentOS try the following:"
+        echo "  sudo yum install centos-release-scl"
+        echo "  sudo yum install devtoolset-7"
+        echo "  scl enable devtoolset-7 bash"
+        return 1
+    fi
+
+    eval $__output="'$CXX'"
 }
 
 # Preparation
@@ -229,20 +246,19 @@ if [ "$os" = "osx" ]; then
     if [ "$vcpkgAllowAppleClang" = "true" ] ; then
         CXX=clang++
     else
-        selectCXX
+        selectCXX CXX || exit 1
     fi
 else
-    selectCXX
+    selectCXX CXX || exit 1
 fi
 
 # Do the build
-srcDir="$vcpkgRootDir/toolsrc"
-buildDir="$srcDir/build.rel"
+buildDir="$vcpkgRootDir/toolsrc/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-("$cmakeExe" -B "$buildDir" -S "$srcDir" -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=OFF" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_WARNINGS_AS_ERRORS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
-("$cmakeExe" --build "$buildDir") || exit 1
+(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=OFF" "-DVCPKG_DEVELOPMENT_WARNINGS=Off" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+(cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
