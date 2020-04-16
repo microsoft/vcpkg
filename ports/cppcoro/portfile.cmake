@@ -1,6 +1,7 @@
 
 # for Linux, the port requires libc++ and Clang. see #10693
 vcpkg_fail_port_install(ON_TARGET "uwp" "linux")
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

@@ -75,10 +75,6 @@ elseif(WIN32)
         include/cppcoro/net/socket_send_operation.hpp
         include/cppcoro/net/socket_send_to_operation.hpp
     )
-    set_target_properties(cppcoro
-    PROPERTIES
-        WINDOWS_EXPORT_ALL_SYMBOLS true
-    )
 
 elseif(CMAKE_SYSTEM_NAME MATCHES Linux)
     message(STATUS "using system: ${CMAKE_HOST_SYSTEM_VERSION}")
@@ -163,16 +159,7 @@ PUBLIC
 
 if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     if(WIN32)
-        target_compile_options(cppcoro
-        PUBLIC
-            /std:c++latest
-            -fms-compatibility -Xclang -fcoroutines-ts
-        )
-        target_compile_definitions(cppcoro
-        PUBLIC
-            _RESUMABLE_FUNCTIONS_SUPPORTED
-        )
-
+        message(FATAL_ERROR "<experimental/resumable> doesn't support clang-cl compiler")
     else()
         target_compile_options(cppcoro
         PUBLIC
