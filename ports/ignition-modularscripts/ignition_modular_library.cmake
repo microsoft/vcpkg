@@ -55,19 +55,19 @@ endfunction()
 ## The complete version number.
 ##
 ## ### SHA512
-## The SHA512 hash that should match the downloaded  archive. This is forwarded to the `vcpkg_from_bitbucket` command.
+## The SHA512 hash that should match the downloaded  archive. This is forwarded to the `vcpkg_from_github` command.
 ##
 ## ### REF
-## Reference to the tag of the desired release. This is forwarded to the `vcpkg_from_bitbucket` command.
+## Reference to the tag of the desired release. This is forwarded to the `vcpkg_from_github` command.
 ## If not specified, defaults to `ignition-${NAME}${MAJOR_VERSION}_${VERSION}`.
 ##
 ## ### HEAD_REF
-## Reference (tag) to the desired release. This is forwarded to the `vcpkg_from_bitbucket` command.
+## Reference (tag) to the desired release. This is forwarded to the `vcpkg_from_github` command.
 ## If not specified, defaults to `ign-${NAME}${MAJOR_VERSION}`.
 ##
 ## ### PATCHES
 ## A list of patches to be applied to the extracted sources.
-## This is forwarded to the `vcpkg_from_bitbucket` command.
+## This is forwarded to the `vcpkg_from_github` command.
 ##
 ## ### CMAKE_PACKAGE_NAME
 ## The name of the CMake package for the port.
@@ -102,8 +102,8 @@ function(ignition_modular_library)
         set(IML_CMAKE_PACKAGE_NAME ${DEFAULT_CMAKE_PACKAGE_NAME})
     endif()
     
-    # Download library from bitbucket, to support also the --head option
-    vcpkg_from_bitbucket(
+    # Download library from github, to support also the --head option
+    vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ignitionrobotics/ign-${IML_NAME}
         REF ${IML_REF}

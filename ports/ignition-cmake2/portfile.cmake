@@ -4,7 +4,7 @@ set(PACKAGE_VERSION "2.1.1")
 
 ignition_modular_library(NAME cmake
                          VERSION ${PACKAGE_VERSION}
-                         SHA512 4d22a45ccc9582c7e4b370b884511782d1629fa3e257dd92300388b5050d22fa63dd4a6ef8942abb9ebbc300df4cd526d1d8a7088a92b0073e152c16c7b97e2b)
+                         SHA512 4dce0ef477b737a217179478262ef9c9eafffbd6933023b43a3506ea76502955ab5ae8a94d779c13ad4ca15849cdfbe9f9d696af2ccc102522239040b9540fd9)
 
 # Permit empty include folder
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
