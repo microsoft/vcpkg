@@ -14,9 +14,13 @@ file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DE
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools BUILD_TOOLS
     tm2   BUILD_WITH_TM2
 )
+
+set(BUILD_TOOLS OFF)
+if("tools" IN_LIST FEATURES)
+    set(BUILD_TOOLS ON)
+endif()
 
 set(BUILD_OPENNI2_BINDINGS OFF)
 if(("openni2" IN_LIST FEATURES) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
