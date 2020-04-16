@@ -200,9 +200,7 @@ fetchTool()
 selectCXX()
 {
     if [ "x$CXX" = "x" ]; then
-        if which g++ >/dev/null 2>&1; then
-            CXX=g++
-        elif which g++-9 >/dev/null 2>&1; then
+        if which g++-9 >/dev/null 2>&1; then
             CXX=g++-9
         elif which g++-8 >/dev/null 2>&1; then
             CXX=g++-8
@@ -210,6 +208,8 @@ selectCXX()
             CXX=g++-7
         elif which g++-6 >/dev/null 2>&1; then
             CXX=g++-6
+        elif which g++ >/dev/null 2>&1; then
+            CXX=g++
         fi
         # If we can't find g++, allow CMake to do the look-up
     fi
@@ -236,13 +236,12 @@ else
 fi
 
 # Do the build
-srcDir="$vcpkgRootDir/toolsrc"
-buildDir="$srcDir/build.rel"
+buildDir="$vcpkgRootDir/toolsrc/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-("$cmakeExe" -B "$buildDir" -S "$srcDir" -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=OFF" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_WARNINGS_AS_ERRORS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
-("$cmakeExe" --build "$buildDir") || exit 1
+(cd "$buildDir" && CXX="$CXX" "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=OFF" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+(cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
