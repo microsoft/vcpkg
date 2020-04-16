@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
 
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osrf/sdformat
     REF sdformat6_6.2.0
-    SHA512 3e3934010438bffbf10c1df29bd486c098e3c1bdf2b0349b69a53fb6f4d2bd3b3c8c4b4a8dfb413da13a638c0794f41c1bff4adb11a889b1552d90ba8b94c495
+    SHA512 3d139ec4b4c9fbfd547ed8bfca0adb5cdca92c1b7cc4d4b554a7c51ccf755b9079c26a006ebfedc5bc5b1ba5e16ad950bb38c47ea97bf97e59a2fd7d12d60620
     HEAD_REF sdf6
 )
 
