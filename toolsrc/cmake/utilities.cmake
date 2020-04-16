@@ -51,21 +51,21 @@ function(vcpkg_detect_standard_library)
         check_cxx_source_compiles(
             "#include <ciso646>
             #if !defined(__GLIBCXX__)
-            #error not libstdc++
+            #error \"not libstdc++\"
             #endif
             int main() {}"
             _VCPKG_STANDARD_LIBRARY_LIBSTDCXX)
         check_cxx_source_compiles(
             "#include <ciso646>
             #if !defined(_LIBCPP_VERSION)
-            #error not libc++
+            #error \"not libc++\"
             #endif
             int main() {}"
             _VCPKG_STANDARD_LIBRARY_LIBCXX)
         check_cxx_source_compiles(
             "#include <ciso646>
             #if !defined(_MSVC_STL_VERSION)
-            #error not MSVC stl
+            #error \"not MSVC stl\"
             #endif
             int main() {}"
             _VCPKG_STANDARD_LIBRARY_MSVC_STL)
@@ -101,7 +101,7 @@ function(vcpkg_detect_std_filesystem)
             check_cxx_source_compiles(
                 "#include <ciso646>
                 #if defined(_GLIBCXX_RELEASE) && _GLIBCXX_RELEASE >= 9
-                #error libstdc++ after version 9 does not require -lstdc++fs
+                #error \"libstdc++ after version 9 does not require -lstdc++fs\"
                 #endif
                 int main() {}"
                 _VCPKG_REQUIRE_LINK_CXXFS)
@@ -109,7 +109,7 @@ function(vcpkg_detect_std_filesystem)
             check_cxx_source_compiles(
                 "#include <ciso646>
                 #if !defined(_GLIBCXX_RELEASE) || _GLIBCXX_RELEASE < 8
-                #error libstdc++ before version 8 doesn't support <filesystem>
+                #error \"libstdc++ before version 8 does not support <filesystem>\"
                 #endif
                 int main() {}"
                 _VCPKG_USE_STD_FILESYSTEM)
@@ -121,7 +121,7 @@ function(vcpkg_detect_std_filesystem)
                 check_cxx_source_compiles(
                     "#include <ciso646>
                     #if _LIBCPP_VERSION >= 9000
-                    #error libc++ after version 9 does not require -lc++fs
+                    #error \"libc++ after version 9 does not require -lc++fs\"
                     #endif
                     int main() {}"
                     _VCPKG_REQUIRE_LINK_CXXFS)
@@ -133,7 +133,7 @@ function(vcpkg_detect_std_filesystem)
             check_cxx_source_compiles(
                 "#include <ciso646>
                 #if !defined(_MSVC_STL_UPDATE) || _MSVC_STL_UPDATE < 201803
-                #error MSVC STL before 15.7 doesn't support <filesystem>
+                #error \"MSVC STL before 15.7 does not support <filesystem>\"
                 #endif
                 int main() {}"
                 _VCPKG_USE_STD_FILESYSTEM)
