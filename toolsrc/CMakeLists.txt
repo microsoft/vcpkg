@@ -49,7 +49,7 @@ endif()
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-add_definitions(-DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
+add_definitions(-DVCPKG_DISABLE_METRICS=${DISABLE_METRICS_VALUE})
 include_directories(include)
 link_libraries(Threads::Threads)
 
@@ -157,7 +157,7 @@ if (MINGW)
                                int main() { return 0; }" USES_EXPERIMENTAL_FS)
 
   if (NOT USES_EXPERIMENTAL_FS)
-    add_compile_definitions(USE_STD_FILESYSTEM)
+    add_compile_definitions(VCPKG_USE_STD_FILESYSTEM)
   endif()
 
   add_compile_definitions(
