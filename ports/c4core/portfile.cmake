@@ -16,21 +16,21 @@ vcpkg_from_github(
 
 set(COMMIT_HASH a0f0c17bfc9a9a91cc72891539b513c129c6d122)
 
-# Get cmake scripts for c4core & rapidyaml
+# Get cmake scripts for c4core
 vcpkg_download_distfile(CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${COMMIT_HASH}.zip"
     FILENAME "cmake-${COMMIT_HASH}.zip"
     SHA512 4fbc711f3120501fa40733c3b66e34cd6a7e1b598b1378fbb59d1a87c88290a03d021f5176634089da41682fd918d7e27c6c146052dec54d7e956be15f12744f
 )
 
-vcpkg_extract_source_archive(
-    ${CMAKE_ARCHIVE}
-    "${CURRENT_BUILDTREES_DIR}/src/deps" 	
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH_CMAKE
+    ARCHIVE ${CMAKE_ARCHIVE}
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
-file(COPY "${CURRENT_BUILDTREES_DIR}/src/deps/cmake-${COMMIT_HASH}" DESTINATION ${SOURCE_PATH})
-file(RENAME "${SOURCE_PATH}/cmake-${COMMIT_HASH}" "${SOURCE_PATH}/cmake")
+file(RENAME ${SOURCE_PATH_CMAKE} "${SOURCE_PATH}/cmake")
 
 set(COMMIT_HASH 78e525c6e74df6d62d782864a52c0d279dcee24f)
 
@@ -40,17 +40,18 @@ vcpkg_download_distfile(DEBUGBREAK_ARCHIVE
     SHA512 25f3d45b09ce362f736fac0f6d6a6c7f2053fec4975b32b0565288893e4658fd0648a7988c3a5fe0e373e92705d7a3970eaa7cfc053f375ffb75e80772d0df64
 )
 
-vcpkg_extract_source_archive(
-    ${DEBUGBREAK_ARCHIVE}
-    "${CURRENT_BUILDTREES_DIR}/src/deps" 	
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH_DEBUGBREAK
+    ARCHIVE ${DEBUGBREAK_ARCHIVE}
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext/debugbreak")
-file(COPY "${CURRENT_BUILDTREES_DIR}/src/deps/debugbreak-${COMMIT_HASH}" DESTINATION "${SOURCE_PATH}/ext")
-file(RENAME "${SOURCE_PATH}/ext/debugbreak-${COMMIT_HASH}" "${SOURCE_PATH}/ext/debugbreak")
+file(RENAME ${SOURCE_PATH_DEBUGBREAK} "${SOURCE_PATH}/ext/debugbreak")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
