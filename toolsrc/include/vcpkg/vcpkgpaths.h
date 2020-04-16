@@ -14,6 +14,8 @@ namespace vcpkg
     namespace Tools
     {
         static const std::string SEVEN_ZIP = "7zip";
+        static const std::string SEVEN_ZIP_ALT = "7z";
+        static const std::string MAVEN = "mvn";
         static const std::string CMAKE = "cmake";
         static const std::string GIT = "git";
         static const std::string NINJA = "ninja";
