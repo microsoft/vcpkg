@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aspnet/SignalR-Client-Cpp
@@ -27,9 +25,7 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/microsoft-signalr)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/microsoft-signalr/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/microsoft-signalr/copyright)
-
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(COPY ${SOURCE_PATH}/third-party-notices.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/microsoft-signalr)
 
 vcpkg_copy_pdbs()
