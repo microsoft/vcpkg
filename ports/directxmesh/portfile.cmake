@@ -1,10 +1,4 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "DirectXMesh only supports dynamic CRT linkage")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -37,6 +31,16 @@ else()
         set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
     else()
         set(SLN_NAME "Desktop_${VS_VERSION}")
+        
+        # fix solution file to include DirectX 12 in build
+        file(READ ${SOURCE_PATH}/DirectXMesh/DirectXMesh_${SLN_NAME}.vcxproj _contents)
+        string(REPLACE "_WIN32_WINNT=0x0601" "_WIN32_WINNT=0x0A00" _contents "${_contents}")
+        file(WRITE ${SOURCE_PATH}/DirectXMesh/DirectXMesh_${SLN_NAME}.vcxproj "${_contents}")
+        
+        # fix solution file to include DirectX 12 in build
+        file(READ ${SOURCE_PATH}/Meshconvert/Meshconvert_${SLN_NAME}.vcxproj _contents)
+        string(REPLACE "_WIN32_WINNT=0x0601" "_WIN32_WINNT=0x0A00" _contents "${_contents}")
+        file(WRITE ${SOURCE_PATH}/Meshconvert/Meshconvert_${SLN_NAME}.vcxproj "${_contents}")
     endif()
 endif()
 
