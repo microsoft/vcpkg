@@ -24,17 +24,18 @@ vcpkg_download_distfile(CMAKE_ARCHIVE
     SHA512 4fbc711f3120501fa40733c3b66e34cd6a7e1b598b1378fbb59d1a87c88290a03d021f5176634089da41682fd918d7e27c6c146052dec54d7e956be15f12744f
 )
 
-vcpkg_extract_source_archive(
-    ${CMAKE_ARCHIVE}
-    "${CURRENT_BUILDTREES_DIR}/src/deps" 	
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH_CMAKE
+    ARCHIVE ${CMAKE_ARCHIVE}
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext/c4core/cmake")
-file(COPY "${CURRENT_BUILDTREES_DIR}/src/deps/cmake-${COMMIT_HASH}" DESTINATION "${SOURCE_PATH}/ext/c4core")
-file(RENAME "${SOURCE_PATH}/ext/c4core/cmake-${COMMIT_HASH}" "${SOURCE_PATH}/ext/c4core/cmake")
+file(RENAME ${SOURCE_PATH_CMAKE} "${SOURCE_PATH}/ext/c4core/cmake")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
