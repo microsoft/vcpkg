@@ -1,5 +1,3 @@
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SFML_STATIC)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -14,6 +12,18 @@ vcpkg_from_github(
         0003-fix_osx.patch
         004-fix-find-sfml.patch
 )
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB SFML_DYNAMIC_LIBS "${CURRENT_INSTALLED_DIR}/bin/sfml-*")
+else()
+    file(GLOB SFML_DYNAMIC_LIBS "${CURRENT_INSTALLED_DIR}/bin/libsfml-*")
+endif()
+
+if (SFML_DYNAMIC_LIBS)
+    set(SFML_STATIC OFF)
+else()
+    set(SFML_STATIC ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
