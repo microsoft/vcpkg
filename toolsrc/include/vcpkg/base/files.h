@@ -3,7 +3,7 @@
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/ignore_errors.h>
 
-#if USE_STD_FILESYSTEM
+#if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
 #else
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
@@ -12,7 +12,7 @@
 
 namespace fs
 {
-#if USE_STD_FILESYSTEM
+#if VCPKG_USE_STD_FILESYSTEM
     namespace stdfs = std::filesystem;
 #else
     namespace stdfs = std::experimental::filesystem;
