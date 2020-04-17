@@ -16,14 +16,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(
+    CONFIG_PATH share/Microsoft.GSL/cmake
+    TARGET_PATH share/Microsoft.GSL
+)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-# Move package config file (temporary fix)
-file(GLOB GSLFILEFOUND "${CURRENT_PACKAGES_DIR}/share/Microsoft.GSL/cmake/*.cmake")
-if(GSLFILEFOUND)
-    file(INSTALL ${GSLFILEFOUND} DESTINATION "${CURRENT_PACKAGES_DIR}/share/Microsoft.GSL")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Microsoft.GSL/cmake")
-endif()
