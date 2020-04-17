@@ -144,34 +144,3 @@ index 75b33c2..80cac9a 100644
      else()
        set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} -Werror")
      endif()
-diff --git a/cpp/src/arrow/stl.h b/cpp/src/arrow/stl.h
-index 7ae9eaf..b9efdcb 100644
---- a/cpp/src/arrow/stl.h
-+++ b/cpp/src/arrow/stl.h
-@@ -518,6 +518,9 @@ class allocator {
- 
-  private:
-   MemoryPool* pool_;
-+
-+  template <class U>
-+  friend class allocator;
- };
- 
- /// \brief A MemoryPool implementation delegating allocations to a STL allocator
-diff --git a/cpp/src/parquet/schema.h b/cpp/src/parquet/schema.h
-index 87db4de..095ef9a 100644
---- a/cpp/src/parquet/schema.h
-+++ b/cpp/src/parquet/schema.h
-@@ -460,7 +460,11 @@ class PARQUET_EXPORT SchemaDescriptor {
-   // -- -- b     |
-   // -- -- -- c  |
-   // -- -- -- -- d
--  std::unordered_map<int, const schema::NodePtr> leaf_to_base_;
-+#if _MSC_VER >= 1900
-+  std::unordered_map<int, schema::NodePtr> leaf_to_base_;
-+#else
-+   std::unordered_map<int, const schema::NodePtr> leaf_to_base_;
-+#endif
- 
-   // Mapping between ColumnPath DotString to the leaf index
-   std::unordered_multimap<std::string, int> leaf_to_idx_;
