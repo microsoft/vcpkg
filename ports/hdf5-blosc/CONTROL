@@ -1,0 +1,5 @@
+Source: hdf5-blosc
+Version: v1.0.0
+Build-Depends: hdf5, blosc
+Homepage: https://github.com/Blosc/hdf5-blosc
+Description: This is a filter for HDF5 that uses the Blosc compressor.
