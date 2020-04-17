@@ -4,6 +4,7 @@
 #include <vcpkg/base/system.print.h>
 
 #include <iostream>
+#include <sstream>
 #include <string.h>
 #include <utility>
 
@@ -75,32 +76,13 @@ namespace
         // skips preceding `-`s
         std::pair<StringView, StringView> split_arg(StringView arg)
         {
-            auto start = arg.begin();
-            const auto last = arg.end();
-
-            // skip preceding `-`s
-            while (start != last)
-            {
-                if (*start == '-')
-                {
-                    ++start;
-                }
-                else
-                {
-                    break;
-                }
+            auto first = std::find_if(arg.begin(), arg.end(), [](char c) { return c != '-'; });
+            auto division = std::find(first, arg.end(), '=');
+            if (division == arg.end()) {
+                return {StringView(first, arg.end()), StringView(arg.end(), arg.end())};
+            } else {
+                return {StringView(first, division), StringView(division + 1, arg.end())};
             }
-
-            auto it = start;
-            for (; it != last; ++it)
-            {
-                if (*it == '=')
-                {
-                    return std::make_pair(StringView(start, it), StringView(it + 1, last));
-                }
-            }
-
-            return std::make_pair(StringView(start, last), StringView(last, last));
         }
 
         [[noreturn]] void print_help_and_exit(bool invalid = false)
@@ -133,22 +115,9 @@ Options:
 
     std::string read_all_of_stdin()
     {
-        constexpr std::size_t block_size = 1000;
-        std::string res;
-        std::size_t current_size = 0;
-        for (;;)
-        {
-            res.resize(current_size + block_size);
-            std::cin.read(&res[current_size], block_size);
-            current_size += std::cin.gcount();
-            if (std::cin.eof())
-            {
-                break;
-            }
-        }
-        res.resize(current_size);
-
-        return res;
+        std::stringstream ss;
+        ss << std::cin.rdbuf();
+        return std::move(ss).str();
     }
 
 }

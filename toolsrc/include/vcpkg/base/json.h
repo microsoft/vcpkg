@@ -22,7 +22,7 @@ namespace vcpkg::Json
             CrLf
         } newline_kind = Newline::Lf;
 
-        constexpr JsonStyle() noexcept { }
+        constexpr JsonStyle() noexcept = default;
 
         static JsonStyle with_tabs() noexcept { return JsonStyle{-1}; }
         static JsonStyle with_spaces(int indent) noexcept

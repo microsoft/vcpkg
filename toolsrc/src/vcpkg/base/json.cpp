@@ -593,6 +593,7 @@ namespace vcpkg::Json
                         next();
                         return Value::array(std::move(arr));
                     }
+
                     if (first)
                     {
                         first = false;
