@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8ca5db1..8be0bee 100644
+index fbde81b..c31c6ee 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -121,7 +121,7 @@ endif()
+@@ -110,7 +110,7 @@ endif()
  set_package_properties(Eigen3 PROPERTIES
      URL "http://eigen.tuxfamily.org"
      PURPOSE "A linear algebra library used throughout OMPL.")
 -find_package(Eigen3 REQUIRED)
 +find_package(Eigen3 CONFIG REQUIRED)
- set_package_properties(Triangle PROPERTIES
-     URL "http://www.cs.cmu.edu/~quake/triangle.html"
-     PURPOSE "Used to create triangular decompositions of polygonal 2D environments.")
+ include_directories("${EIGEN3_INCLUDE_DIR}")
+ 
+ set_package_properties(MORSE PROPERTIES
