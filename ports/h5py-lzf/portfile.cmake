@@ -13,7 +13,7 @@ vcpkg_from_github(
     SHA512 c789abdc563f8d2535f0a2ef5e233eb862281559a9cdc3ec560dd69b4d403b6f923f5390390da54851e1bfef1be8de7f80999c25a7f3ac4962ee0620179c6420
     HEAD_REF master
     PATCHES
-		0001-hide-H5PLget_plugin_-api.patch
+		0001-disable-H5PLget_plugin-api.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/lzf)
@@ -27,9 +27,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/h5py-lzf)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/${PORT})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-configure_file(${SOURCE_PATH}/lzf/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/h5py-lzf/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/lzf/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
