@@ -87,6 +87,9 @@
     <ClCompile Include="..\src\vcpkg\commands.search.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.setinstalled.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.version.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
