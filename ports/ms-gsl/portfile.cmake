@@ -1,4 +1,4 @@
-#header-only library
+#header-only library with an install target
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/GSL
@@ -7,7 +7,21 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DGSL_TEST=OFF
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(
+    CONFIG_PATH share/Microsoft.GSL/cmake
+    TARGET_PATH share/Microsoft.GSL
+)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ms-gsl RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
