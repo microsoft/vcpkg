@@ -32,11 +32,10 @@ else()
   set(VCPKG_BUILD_STATIC_CRT ON)
 endif()
 
-if("zlib" IN_LIST FEATURES)
-    set(protobuf_WITH_ZLIB ON)
-else()
-    set(protobuf_WITH_ZLIB OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	zlib	protobuf_WITH_ZLIB
+)
+
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
@@ -48,6 +47,7 @@ vcpkg_configure_cmake(
         -Dprotobuf_BUILD_TESTS=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
+		${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
