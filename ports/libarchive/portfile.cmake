@@ -57,7 +57,6 @@ vcpkg_configure_cmake(
         -DENABLE_ACL=OFF
         -DENABLE_ICONV=OFF
         -DENABLE_TEST=OFF
-        -DPOSIX_REGEX_LIB=NONE
         -DENABLE_WERROR=OFF
 )
 
