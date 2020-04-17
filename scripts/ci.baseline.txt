@@ -1905,3 +1905,7 @@ zkpp:x64-windows-static=fail
 zkpp:arm64-windows=fail
 zkpp:x64-uwp=fail
 zkpp:arm-uwp=fail
+c4core:arm-uwp=fail
+c4core:arm64-windows=fail
+c4core:x64-osx=fail
+
