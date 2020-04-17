@@ -24,7 +24,7 @@ index 82fb7c2..a94b4ff 100644
  endif()
 +
 +
-+install(FILES ${LIBJSONNET_HEADERS} DESTINATION include)
++install(FILES ${LIB_HEADER} DESTINATION include)
 \ No newline at end of file
 diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
 index bf349df..6ed1442 100644

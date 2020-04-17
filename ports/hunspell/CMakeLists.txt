@@ -98,7 +98,7 @@ set(TESTPARSER_SRCS
     src/parsers/odfparser.cxx
 )
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND CMAKE_BUILD_TYPE STREQUAL "Release")
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND CMAKE_BUILD_TYPE STREQUAL "Release" AND BUILD_TOOLS)
     add_executable(testparser ${TESTPARSER_SRCS})
     target_link_libraries(testparser libhunspell)
 

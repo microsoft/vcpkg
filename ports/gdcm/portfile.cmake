@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO malaterre/GDCM
-    REF v3.0.3
-    SHA512 d1b95ec342341f026f03ead569c20d4482611b6ba1616fab2aaeec617675c678db7e7d9d14820364231b1319ece284f0cd3c35f356b20ef22f7e8ccf8a3fbc21
+    REF 511c0ff28500ea0a0eda510dcd36a378ac4d8647 # v3.0.4
+    SHA512 f9b1442bb0714a958ff477219cb8ad8e1686ffb4b92ad4e2a3b48d7d16e1d340d4d9b150e9fa5c6a55d98512698192d5e3e81b865c0acabb975fc4e5193c37c0
     HEAD_REF master
     PATCHES
         use-openjpeg-config.patch

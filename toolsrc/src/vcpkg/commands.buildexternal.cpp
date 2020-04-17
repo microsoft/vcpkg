@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/build.h>
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
@@ -15,7 +16,7 @@ namespace vcpkg::Commands::BuildExternal
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -25,10 +26,13 @@ namespace vcpkg::Commands::BuildExternal
 
         auto overlays = args.overlay_ports ? *args.overlay_ports : std::vector<std::string>();
         overlays.insert(overlays.begin(), args.command_arguments.at(1));
-        Dependencies::PathsPortFileProvider provider(paths, &overlays);
+
+        PortFileProvider::PathsPortFileProvider provider(paths, &overlays);
         auto maybe_scfl = provider.get_control_file(spec.package_spec.name());
+
         Checks::check_exit(
             VCPKG_LINE_INFO, maybe_scfl.has_value(), "could not load control file for %s", spec.package_spec.name());
-        Build::Command::perform_and_exit_ex(spec, maybe_scfl.value_or_exit(VCPKG_LINE_INFO), options, paths);
+
+        Build::Command::perform_and_exit_ex(spec, maybe_scfl.value_or_exit(VCPKG_LINE_INFO), provider, paths);
     }
 }

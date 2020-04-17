@@ -14,6 +14,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    ssl CIVETWEB_ENABLE_SSL
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -23,8 +27,9 @@ vcpkg_configure_cmake(
         -DCIVETWEB_ENABLE_CXX=ON
         -DCIVETWEB_ENABLE_IPV6=ON
         -DCIVETWEB_ENABLE_SERVER_EXECUTABLE=OFF
-        -DCIVETWEB_ENABLE_SSL=OFF
+        -DCIVETWEB_ENABLE_SSL_DYNAMIC_LOADING=OFF
         -DCIVETWEB_ENABLE_WEBSOCKETS=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
