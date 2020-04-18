@@ -148,8 +148,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         endif()
 
         if("${FEATURES}" MATCHES "xml")
-           string(REPLACE "xml      => undef" "xml      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
-           string(REPLACE "iconv      => undef" "iconv      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+           string(REPLACE "xml       => undef" "xml      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+           string(REPLACE "iconv     => undef" "iconv      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
 
         if("${FEATURES}" MATCHES "xslt")
