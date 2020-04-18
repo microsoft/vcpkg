@@ -18,8 +18,6 @@ namespace vcpkg::Export::Prefab
     using Install::InstallDir;
     using System::CPUArchitecture;
 
-
-
     static std::vector<fs::path> find_modules(const VcpkgPaths& system, const fs::path& root, const std::string& ext)
     {
         std::vector<fs::path> paths;

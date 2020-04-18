@@ -14,6 +14,7 @@ option(VCPKG_DISABLE_METRICS "Option for disabling metrics" OFF)
 option(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang, even versions that we don't know will work" OFF)
 option(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings" ON)
 option(VCPKG_WARNINGS_AS_ERRORS "Set warnings to be errors" ${VCPKG_DEVELOPMENT_WARNINGS})
+option(VCPKG_BUILD_FUZZING "Option for enabling vcpkg-fuzz support" OFF)
 
 CMAKE_DEPENDENT_OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF
     "BUILD_TESTING" OFF)
@@ -44,7 +45,7 @@ if(MSVC)
 
     if (MSVC_VERSION GREATER 1900)
         # Visual Studio 2017 or later
-        add_compile_options(-permissive-)
+        add_compile_options(-permissive- -utf-8)
     endif()
 
     if(VCPKG_DEVELOPMENT_WARNINGS)
@@ -124,6 +125,11 @@ if (BUILD_TESTING)
     if (VCPKG_BUILD_BENCHMARKING)
         target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
     endif()
+endif()
+
+if(VCPKG_BUILD_FUZZING)
+    file(GLOB_RECURSE VCPKGFUZZ_SOURCES src/vcpkg-fuzz/*.cpp)
+    add_executable(vcpkg-fuzz ${VCPKGFUZZ_SOURCES} $<TARGET_OBJECTS:vcpkglib>)
 endif()
 
 find_program(CLANG_FORMAT clang-format)

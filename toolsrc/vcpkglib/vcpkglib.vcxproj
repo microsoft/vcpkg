@@ -153,9 +153,11 @@
     <ClInclude Include="..\include\vcpkg\base\graphs.h" />
     <ClInclude Include="..\include\vcpkg\base\hash.h" />
     <ClInclude Include="..\include\vcpkg\base\ignore_errors.h" />
+    <ClInclude Include="..\include\vcpkg\base\json.h" />
     <ClInclude Include="..\include\vcpkg\base\lazy.h" />
     <ClInclude Include="..\include\vcpkg\base\lineinfo.h" />
     <ClInclude Include="..\include\vcpkg\base\machinetype.h" />
+    <ClInclude Include="..\include\vcpkg\base\parse.h" />
     <ClInclude Include="..\include\vcpkg\base\optional.h" />
     <ClInclude Include="..\include\vcpkg\base\sortedvector.h" />
     <ClInclude Include="..\include\vcpkg\base\span.h" />
@@ -167,6 +169,7 @@
     <ClInclude Include="..\include\vcpkg\base\system.h" />
     <ClInclude Include="..\include\vcpkg\base\system.print.h" />
     <ClInclude Include="..\include\vcpkg\base\system.process.h" />
+    <ClInclude Include="..\include\vcpkg\base\unicode.h" />
     <ClInclude Include="..\include\vcpkg\base\util.h" />
     <ClInclude Include="..\include\vcpkg\base\view.h" />
     <ClInclude Include="..\include\vcpkg\base\zstringview.h" />
@@ -190,7 +193,6 @@
     <ClInclude Include="..\include\vcpkg\paragraphparser.h" />
     <ClInclude Include="..\include\vcpkg\paragraphparseresult.h" />
     <ClInclude Include="..\include\vcpkg\paragraphs.h" />
-    <ClInclude Include="..\include\vcpkg\parse.h" />
     <ClInclude Include="..\include\vcpkg\portfileprovider.h" />
     <ClInclude Include="..\include\vcpkg\postbuildlint.h" />
     <ClInclude Include="..\include\vcpkg\postbuildlint.buildtype.h" />
@@ -225,12 +227,15 @@
     <ClCompile Include="..\src\vcpkg\base\enums.cpp" />
     <ClCompile Include="..\src\vcpkg\base\files.cpp" />
     <ClCompile Include="..\src\vcpkg\base\hash.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\json.cpp" />
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\parse.cpp" />
     <ClCompile Include="..\src\vcpkg\base\strings.cpp" />
     <ClCompile Include="..\src\vcpkg\base\stringview.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.process.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\unicode.cpp" />
     <ClCompile Include="..\src\vcpkg\binarycaching.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
@@ -270,7 +275,6 @@
     <ClCompile Include="..\src\vcpkg\packagespec.cpp" />
     <ClCompile Include="..\src\vcpkg\paragraphparseresult.cpp" />
     <ClCompile Include="..\src\vcpkg\paragraphs.cpp" />
-    <ClCompile Include="..\src\vcpkg\parse.cpp" />
     <ClCompile Include="..\src\vcpkg\portfileprovider.cpp" />
     <ClCompile Include="..\src\vcpkg\postbuildlint.buildtype.cpp" />
     <ClCompile Include="..\src\vcpkg\postbuildlint.cpp" />
