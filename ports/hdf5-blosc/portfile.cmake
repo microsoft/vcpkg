@@ -25,7 +25,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/${PORT})
 
-file(INSTALL ${CURRENT_PACKAGES_DIR}/plugin/H5Zblosc.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(INSTALL ${CURRENT_PACKAGES_DIR}/plugin/H5Zblosc${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(REMOVE_RECURSE 
