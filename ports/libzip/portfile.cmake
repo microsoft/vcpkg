@@ -8,9 +8,11 @@ vcpkg_from_github(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openssl ENABLE_OPENSSL
     bzip2 ENABLE_BZIP2
-    windows_crypto ENABLE_WINDOWS_CRYPTO
+    liblzma ENABLE_LZMA
+    openssl ENABLE_OPENSSL
+    wincrypto ENABLE_WINDOWS_CRYPTO
+    mbedtls ENABLE_MBEDTLS
 )
 
 vcpkg_configure_cmake(
@@ -22,6 +24,8 @@ vcpkg_configure_cmake(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_REGRESS=OFF
         -DBUILD_TOOLS=OFF
+        -DENABLE_GNUTLS=OFF
+        -DENABLE_COMMONCRYPTO=OFF
 )
 
 vcpkg_install_cmake()
