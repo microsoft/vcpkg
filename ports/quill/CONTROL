@@ -1,0 +1,10 @@
+Source: quill
+Version: 1.2.0
+Homepage: https://github.com/odygrd/quill/
+Description: C++14 Asynchronous Low Latency Logging Library
+Build-Depends:
+Default-Features:
+
+Feature: external_lib_fmt
+Description: Use external fmt library
+Build-Depends: fmt
