@@ -11,7 +11,7 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO facebook/folly
+    REPO KomodoPlatform/folly
     REF 8874256376d2f8a32867f17c9472a446d6707604 #2019.10.21.00
     SHA512 96dfdde34697b72e8eb88431d742fffa337fc9146677d63cf0331dc5e4cd341fb00b88edf3781488e3194fa41525e70a6729e1bb6657f224cd1969deea9b468c
     HEAD_REF master
