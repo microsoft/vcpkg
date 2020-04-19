@@ -13,11 +13,22 @@ vcpkg_from_github(
         fix-find-openexr-ilmbase.patch
 )
 
+# In debug mode with g++, alembic defines -Werror
+# so we need to disable some warning to avoid build errors
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND GXX_DEBUG_FLAGS
+        -DCMAKE_CXX_FLAGS_DEBUG=-Wno-deprecated
+        -DCMAKE_CXX_FLAGS_DEBUG=-Wno-error=implicit-fallthrough
+    )
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-    -DUSE_HDF5=ON
+        -DUSE_HDF5=ON
+    OPTIONS_DEBUG
+        ${GXX_DEBUG_FLAGS}
 )
 
 vcpkg_install_cmake()
