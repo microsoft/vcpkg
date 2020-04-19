@@ -1476,7 +1476,6 @@ quickfix:x64-windows-static=ignore
 quickfix:x86-windows=ignore
 quickfix:x64-uwp=fail
 quickfix:arm-uwp=fail
-quickfix:arm-uwp=fail
 quill:arm64-windows=ignore
 quill:arm-uwp=ignore
 quill:x64-uwp=ignore
