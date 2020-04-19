@@ -5,7 +5,7 @@ file(MAKE_DIRECTORY ${SOURCE_PATH})
 
 function(download_src SUBPATH SHA512)
     vcpkg_download_distfile(FILE
-        URLS "https://github.com/nlohmann/json/raw/v${SOURCE_VERSION}/${SUBPATH}"
+        URLS "https://github.com/KomodoPlatform/json/raw/v${SOURCE_VERSION}/${SUBPATH}"
         FILENAME "nlohmann-json-v${SOURCE_VERSION}/${SUBPATH}"
         SHA512 ${SHA512}
     )
