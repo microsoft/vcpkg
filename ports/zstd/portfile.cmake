@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO facebook/zstd
+    REPO KomodoPlatform/zstd
     REF 10f0e6993f9d2f682da6d04aa2385b7d53cbb4ee # v1.4.4
     SHA512 869eb031d2f8cfd9d93502835a373f6f2ec39dc1f41dd5fd0463d3d442c153915987d00bc862ae66bded5c5697e1803a1e68491803bd1a7b358397e6eba58f64
     HEAD_REF dev
