@@ -2,7 +2,7 @@ vcpkg_fail_port_install(MESSAGE "${PORT} does not currently support UWP" ON_TARG
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO libevent/libevent
+    REPO KomodoPlatform/libevent
     REF release-2.1.11-stable
     SHA512 a34ca4ad4d55a989a4f485f929d0ed2438d070d0e12a19d90c2b12783a562419c64db6a2603b093d958a75246d14ffefc8730c69c90b1b2f48339bde947f0e02
     PATCHES

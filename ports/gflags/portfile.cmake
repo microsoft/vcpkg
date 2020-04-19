@@ -6,7 +6,7 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO gflags/gflags
+    REPO KomodoPlatform/gflags
     REF v2.2.2
     SHA512 98c4703aab24e81fe551f7831ab797fb73d0f7dfc516addb34b9ff6d0914e5fd398207889b1ae555bac039537b1d4677067dae403b64903577078d99c1bdb447
     HEAD_REF master

@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO google/glog
+    REPO KomodoPlatform/glog
     REF v0.4.0
     SHA512 b585f1819ade2075f6b61dc5aaca5c3f9d25601dba2bd08b6c49b96ac5f79db23c6b7f2042df003f7130497dd7241fcaa8b107d1f97385cb66ce52d3c554b176
     HEAD_REF master
