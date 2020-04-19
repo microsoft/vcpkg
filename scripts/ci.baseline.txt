@@ -1550,6 +1550,9 @@ rttr:arm-uwp=fail
 rttr:x64-uwp=fail
 rxspencer:x64-uwp=fail
 rxspencer:arm-uwp=fail
+ryml:arm-uwp=fail
+ryml:arm64-windows=fail
+ryml:x64-osx=fail
 ryu:arm-uwp=fail
 ryu:x64-uwp=fail
 ryu:x64-windows-static=fail
@@ -1907,6 +1910,4 @@ zkpp:x64-windows-static=fail
 zkpp:arm64-windows=fail
 zkpp:x64-uwp=fail
 zkpp:arm-uwp=fail
-ryml:arm-uwp=fail
-ryml:arm64-windows=fail
-ryml:x64-osx=fail
+
