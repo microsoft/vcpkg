@@ -69,6 +69,4 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/alembic/AlembicTargets-release.cmake "${RELEASE_CONFIG}")
 
 
-# Put the license file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/alembic/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/alembic/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/alembic/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/alembic RENAME copyright)
