@@ -4,13 +4,13 @@ project(libmupdf C)
 set(CMAKE_DEBUG_POSTFIX d)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/mupdf/pdf/name-table.h")
-  find_program(MAKE_EXE NAMES gmake nmake make)
   if(WIN32)
     execute_process(
       COMMAND "cmd.exe" "/c" "platform\\win32\\generate.bat"
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
   else()
+    find_program(MAKE_EXE NAMES gmake nmake make REQUIRED)
     execute_process(
       COMMAND ${MAKE_EXE} "generate"
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
