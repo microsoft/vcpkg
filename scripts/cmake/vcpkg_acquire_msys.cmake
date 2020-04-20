@@ -174,13 +174,17 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     message(STATUS "Acquiring MSYS Packages... OK")
   endif()
 
-  # Deal with a stale process created by MSYS
+  # Deal with stale processes (GnuPG daemons) created by MSYS' package manager
   if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+      set(_ENV_ORIGINAL $ENV{PATH})
+      set(ENV{PATH} ${PATH_TO_ROOT}/usr/bin)
       vcpkg_execute_required_process(
           ALLOW_IN_DOWNLOAD_MODE
-          COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage gt 2"
+          COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "gpgconf --homedir /etc/pacman.d/gnupg --kill all"
           WORKING_DIRECTORY ${TOOLPATH}
+          LOGNAME msys-gpg-${TARGET_TRIPLET}
       )
+      set(ENV{PATH} "${_ENV_ORIGINAL}")
   endif()
 
   set(${PATH_TO_ROOT_OUT} ${PATH_TO_ROOT} PARENT_SCOPE)
