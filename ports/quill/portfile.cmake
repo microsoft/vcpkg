@@ -31,10 +31,6 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/quill)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/quill
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/quill
-                    ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 					
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/quill RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME quill)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
