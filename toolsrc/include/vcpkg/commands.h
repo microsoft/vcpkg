@@ -139,6 +139,12 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
+    namespace SetInstalled
+    {
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
+    }
+
     template<class T>
     struct PackageNameAndFunction
     {
