@@ -33,7 +33,7 @@ endif()
 
 set(OPTIONS)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
-  list(APPEND OPTIONS -DFT_DISABLE_FIND_PACKAGE_Harfbuzz=TRUE)
+  list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=ON)
 endif()
 
 vcpkg_configure_cmake(

@@ -255,6 +255,7 @@ namespace vcpkg::Build
                                   }));
     }
 
+#if defined(_WIN32)
     static const std::unordered_map<std::string, std::string>& make_env_passthrough(const PreBuildInfo& pre_build_info)
     {
         static Cache<std::vector<std::string>, std::unordered_map<std::string, std::string>> envs;
@@ -274,6 +275,7 @@ namespace vcpkg::Build
             return env;
         });
     }
+#endif
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
@@ -824,7 +826,6 @@ namespace vcpkg::Build
         auto binary_caching_enabled = binaries_provider && action.build_options.binary_caching == BinaryCaching::YES;
 
         auto& fs = paths.get_filesystem();
-        Triplet triplet = action.spec.triplet();
         auto& spec = action.spec;
         const std::string& name = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
                                       .source_control_file->core_paragraph->name;
@@ -889,7 +890,7 @@ namespace vcpkg::Build
         ExtendedBuildResult result = do_build_package_and_clean_buildtrees(paths, action);
 
         fs.create_directories(abi_package_dir, ec);
-        fs.copy_file(abi_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
+        fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
 
         if (binary_caching_enabled && result.code == BuildResult::SUCCEEDED)
@@ -1056,7 +1057,7 @@ namespace vcpkg::Build
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                     break;
                 case VcpkgTripletVar::LOAD_VCVARS_ENV:
-                        if (variable_value.empty()) 
+                        if (variable_value.empty())
                         {
                             load_vcvars_env = true;
                             if(external_toolchain_file)
