@@ -93,7 +93,7 @@ function(vcpkg_build_msbuild)
         /t:${_csc_TARGET}
         /p:Platform=${_csc_PLATFORM}
         /p:PlatformToolset=${_csc_PLATFORM_TOOLSET}
-        /p:BasePlatformToolset=${_csc_PLATFORM_TOOLSET}
+#        /p:BasePlatformToolset=${_csc_PLATFORM_TOOLSET}
         /p:UseEnv=True
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
