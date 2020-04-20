@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(MPG123_VERSION 1.25.8)
 set(MPG123_HASH f226317dddb07841a13753603fa13c0a867605a5a051626cb30d45cfba266d3d4296f5b8254f65b403bb5eef6addce1784ae8829b671a746854785cda1bad203)
 
