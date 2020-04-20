@@ -50,6 +50,7 @@ if(VCPKG_CRT_LINKAGE STREQUAL static)
 endif()
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
     list(APPEND PATCHES patches/windows/arm.patch)
+    list(APPEND PATCHES patches/windows/host_skip_openssl.patch) # Skip openssl.exe version check since it cannot be executed by the host
 endif()
 if(NOT "${FEATURES}" MATCHES "client")
     list(APPEND PATCHES patches/windows/minimize_install.patch)
