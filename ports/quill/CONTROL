@@ -4,6 +4,6 @@ Homepage: https://github.com/odygrd/quill/
 Description: C++14 Asynchronous Low Latency Logging Library
 Supports: !(arm|arm64|uwp|android)
 
-Feature: external_lib_fmt
+Feature: fmt
 Description: Use external fmt library
 Build-Depends: fmt
