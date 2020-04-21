@@ -1456,7 +1456,6 @@ quickfix:x64-linux=ignore
 quickfix:x64-windows=ignore
 quickfix:x64-windows-static=ignore
 quickfix:x86-windows=ignore
-quickfix:arm64-windows=fail
 quickfix:x64-uwp=fail
 quickfix:arm-uwp=fail
 quirc:arm64-windows      = skip
