@@ -1,3 +1,5 @@
+set(PORT_VERSION 12.2)
+
 macro(feature_unsupported)
     foreach(_feat ${ARGN})
         if("${FEATURES}" MATCHES "${_feat}")
@@ -27,8 +29,8 @@ endif()
 
 ## Download and extract sources
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.postgresql.org/pub/source/v12.2/postgresql-12.2.tar.bz2"
-    FILENAME "postgresql-12.2.tar.bz2"
+    URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
+    FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
     SHA512 0e0ce8e21856e8f43e58b840c10c4e3ffae6d5207e0d778e9176e36f8e20e34633cbb06f0030a7c963c3491bb7e941456d91b55444c561cfc6f283fba76f33ee
 )
 
