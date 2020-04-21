@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/odygrd/quill/archive/v1.2.0.tar.gz"
     FILENAME "v1.2.0.tar.gz"
