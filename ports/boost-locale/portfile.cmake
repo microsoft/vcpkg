@@ -10,6 +10,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES 0001-Fix-boost-ICU-support.patch
+)
+
 if("icu" IN_LIST FEATURES)
     set(BOOST_LOCALE_ICU on)
 else()
