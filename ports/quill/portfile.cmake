@@ -9,9 +9,9 @@ vcpkg_from_github(
 )
 
 if("fmt" IN_LIST FEATURES)
-    # use vcpkg-provided fmt library (see also option QUILL_FMT_EXTERNAL)
+    # remove bundled fmt
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/quill/quill/include/quill/bundled/fmt)
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/quill/quill/src/bundled/fmt)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/quill/quill/src/bundled/fmt)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
