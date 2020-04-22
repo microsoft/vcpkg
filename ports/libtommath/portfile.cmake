@@ -6,43 +6,73 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Make sure we start from a clean slate
-vcpkg_execute_build_process(
-    COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc clean
-    WORKING_DIRECTORY ${SOURCE_PATH}
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Make sure we start from a clean slate
+    vcpkg_execute_build_process(
+        COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc clean
+        WORKING_DIRECTORY ${SOURCE_PATH}
+    )
 
-#Debug Build
-vcpkg_execute_build_process(
-    COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc CFLAGS="/MTd"
-    WORKING_DIRECTORY ${SOURCE_PATH}/
-)
+    #Debug Build
+    vcpkg_execute_build_process(
+        COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc CFLAGS="/MTd"
+        WORKING_DIRECTORY ${SOURCE_PATH}/
+    )
 
-file(INSTALL
-    ${SOURCE_PATH}/tommath.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/Debug/lib
-)
+    file(INSTALL
+        ${SOURCE_PATH}/tommath.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/Debug/lib
+    )
 
-# Clean up necessary to rebuild without debug symbols
-vcpkg_execute_build_process(
-    COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc clean
-    WORKING_DIRECTORY ${SOURCE_PATH}
-)
+    # Clean up necessary to rebuild without debug symbols
+    vcpkg_execute_build_process(
+        COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc clean
+        WORKING_DIRECTORY ${SOURCE_PATH}
+    )
 
-vcpkg_execute_build_process(
-    COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc
-    WORKING_DIRECTORY ${SOURCE_PATH}/
-)
+    vcpkg_execute_build_process(
+        COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc
+        WORKING_DIRECTORY ${SOURCE_PATH}/
+    )
 
-file(INSTALL
-    ${SOURCE_PATH}/tommath.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
+    file(INSTALL
+        ${SOURCE_PATH}/tommath.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    )
 
-file(INSTALL
-    ${SOURCE_PATH}/tommath.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
+    file(INSTALL
+        ${SOURCE_PATH}/tommath.h
+        DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    )
+else()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        set(MAKE_FILE "makefile.shared")
+    else()
+        set(MAKE_FILE "makefile")
+    endif()
+
+    vcpkg_execute_build_process(
+        COMMAND make -f ${MAKE_FILE} clean
+        WORKING_DIRECTORY ${SOURCE_PATH}
+    )
+
+    vcpkg_execute_build_process(
+        COMMAND make -j4 -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR}/Debug COMPILE_DEBUG=1 install
+        WORKING_DIRECTORY ${SOURCE_PATH}
+    )
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/Debug/include")
+
+    vcpkg_execute_build_process(
+        COMMAND make -f ${MAKE_FILE} clean
+        WORKING_DIRECTORY ${SOURCE_PATH}
+    )
+
+    vcpkg_execute_build_process(
+        COMMAND make -j4 -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR} install
+        WORKING_DIRECTORY ${SOURCE_PATH}
+    )
+endif()
 
 file(INSTALL
     ${SOURCE_PATH}/LICENSE
