@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF boost-1.72.0
     SHA512 efd234d24692a484b3bb4fdf9790d6e0014ba87ba628768dc2710c9999da14ea4ec6fef2e55a6283d8c3cb22894bd737cadb61f788d9f5e1408785e8c32892a0
     HEAD_REF master
+    PATCHES
+        0001-revert-cease-dependence-on-range.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
