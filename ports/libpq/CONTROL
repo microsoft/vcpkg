@@ -23,15 +23,15 @@ Build-Depends: libedit
 Description: prefer libedit (--with-libedit-preferred)
 
 Feature: perl
-Build-Depends: perl
+Build-Depends: perl, libpq[core,client]
 Description: build the server programming language PL/Perl (dynamic only?) (--with-perl)
 
 Feature: python
-Build-Depends: python
+Build-Depends: python3, libpq[core,client]
 Description: build the PL/Python server programming language (dynamic only?) (--with-python)
 
 Feature: tcl
-Build-Depends: tcl
+Build-Depends: tcl, libpq[core,client]
 Description: build the PL/Tcl procedural language(dynamic only?) (--with-tcl)
 
 Feature: nls

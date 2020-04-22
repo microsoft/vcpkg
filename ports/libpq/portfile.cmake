@@ -20,7 +20,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
     # the configuration header depends on zlib, nls, ldap, uuid, xml, xlst,gss,openssl,icu
     feature_unsupported(readline bonjour libedit kerberos bsd systemd llvm pam)
-    feature_not_implemented_yet(perl python tcl uuid)
+    feature_not_implemented_yet(perl uuid)
 elseif(VCPKG_TARGET_IS_OSX)
     feature_not_implemented_yet(readline libedit kerberos bsd systemd llvm pam perl python tcl uuid)
 else()
@@ -41,6 +41,7 @@ set(PATCHES
         patches/windows/Solution.patch
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
+        patches/windows/python_lib.patch
         patches/linux/configure.patch)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -114,6 +115,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_apply_patches(
             SOURCE_PATH "${BUILDPATH_${_buildtype}}"
             PATCHES patches/windows/Solution_${_buildtype}.patch
+                    patches/windows/python3_build_${_buildtype}.patch
         )
         message(STATUS "Patches applied!")
         file(COPY "${CURRENT_PORT_DIR}/config.pl" DESTINATION "${BUILDPATH_${_buildtype}}/src/tools/msvc")
@@ -132,9 +134,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ##	icu       => undef,    # --with-icu=<path>                      ##done
         ##	nls       => undef,    # --enable-nls=<path>                    ##done
         ##	tap_tests => undef,    # --enable-tap-tests
-        ##	tcl       => undef,    # --with-tcl=<path>
-        ##	perl      => undef,    # --with-perl
-        ##	python    => undef,    # --with-python=<path>
+        ##	tcl       => undef,    # --with-tcl=<path>                      #done
+        ##	perl      => undef,    # --with-perl                            # requires a patch to the lib path and a port for it
+        ##	python    => undef,    # --with-python=<path>                   ##done
         ##	openssl   => undef,    # --with-openssl=<path>                  ##done
         ##	uuid      => undef,    # --with-ossp-uuid
         ##	xml       => undef,    # --with-libxml=<path>                   ##done
@@ -160,7 +162,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
             #set(_contents "${_contents}\n\$ENV{PATH}=\$ENV{PATH} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
             string(REPLACE "openssl   => undef" "openssl   => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
-
+        if("${FEATURES}" MATCHES "python")
+           #vcpkg_find_acquire_program(PYTHON3)
+           #get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
+           #vcpkg_add_to_path("${PYTHON3_EXE_PATH}")
+           string(REPLACE "python    => undef" "python    => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
+        if("${FEATURES}" MATCHES "tcl")
+           string(REPLACE "tcl       => undef" "tcl       => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
         if("${FEATURES}" MATCHES "xml")
            string(REPLACE "xml       => undef" "xml      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
            string(REPLACE "iconv     => undef" "iconv      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
