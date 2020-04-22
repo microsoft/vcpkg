@@ -958,15 +958,10 @@ libuuid:x86-windows=fail
 libuv:arm64-windows=fail
 libuv:arm-uwp=fail
 libuv:x64-uwp=fail
-# libvpx is failing because the port's attempt to make yasm available is not succeeding
 libvpx:arm-uwp=fail
 libvpx:arm64-windows=fail
 libvpx:x64-linux=fail
 libvpx:x64-osx=fail
-libvpx:x64-uwp=fail
-libvpx:x64-windows-static=fail
-libvpx:x64-windows=fail
-libvpx:x86-windows=fail
 libwandio:x86-windows=fail
 libwandio:x64-windows=fail
 libwandio:x64-windows-static=fail
