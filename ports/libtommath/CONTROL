@@ -1,3 +1,4 @@
 Source: libtommath
 Version: 1.2.0
-Description: LibTomMath is a free open source portable number theoretic multiple-precision integer library written entirely in C. https://www.libtom.net
+Description: LibTomMath is a free open source portable number theoretic multiple-precision integer library written entirely in C.
+Homepage: https://www.libtom.net/LibTomMath/
