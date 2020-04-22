@@ -5,7 +5,7 @@
 jobs:
 - job: ${{ parameters.jobName }}
   pool:
-    name: PrWin-2020-04-21-1
+    name: PrWin-2020-04-22
 
   variables:
     triplet: '${{ parameters.triplet }}'

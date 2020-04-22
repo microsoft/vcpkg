@@ -7,11 +7,11 @@ variables:
 stages:
   - stage: Clean_Tombstones
     displayName: 'Clean Tombstones'
-    pool:
-      name: PrWin-2020-04-21-1
     jobs:
       - job:
         displayName: 'Clean Tombstones'
+        pool:
+          name: PrWin-2020-04-22
         condition: eq(variables['clean-tombstones'], 'true')
         timeoutInMinutes: 10
         steps:
