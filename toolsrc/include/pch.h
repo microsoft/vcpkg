@@ -31,7 +31,11 @@
 #include <cstdint>
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <cstring>
+#if VCPKG_USE_STD_FILESYSTEM
+#include <filesystem>
+#else
 #include <experimental/filesystem>
+#endif
 #include <fstream>
 #include <functional>
 #include <iomanip>
@@ -50,7 +54,12 @@
 #else
 #include <sys/time.h>
 #endif
+
 #include <sys/types.h>
+// glibc defines major and minor in sys/types.h, and should not
+#undef major
+#undef minor
+
 #include <system_error>
 #include <thread>
 #include <time.h>

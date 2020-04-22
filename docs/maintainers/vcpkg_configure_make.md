@@ -1,6 +1,6 @@
 # vcpkg_configure_make
 
-Configure `configure` for Debug and Release builds of a project.
+Configure configure for Debug and Release builds of a project.
 
 ## Usage
 ```cmake

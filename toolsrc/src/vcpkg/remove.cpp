@@ -21,7 +21,7 @@ namespace vcpkg::Remove
     void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         auto& fs = paths.get_filesystem();
-        auto maybe_ipv = status_db->find_all_installed(spec);
+        auto maybe_ipv = status_db->get_installed_package_view(spec);
 
         Checks::check_exit(
             VCPKG_LINE_INFO, maybe_ipv.has_value(), "unable to remove package %s: already removed", spec);
@@ -72,6 +72,7 @@ namespace vcpkg::Remove
                     fs.remove(target, ec);
                     if (ec)
                     {
+                        // TODO: this is racy; should we ignore this error?
 #if defined(_WIN32)
                         fs::stdfs::permissions(target, fs::perms::owner_all | fs::perms::group_all, ec);
                         fs.remove(target, ec);
@@ -214,7 +215,7 @@ namespace vcpkg::Remove
         &valid_arguments,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -229,7 +230,7 @@ namespace vcpkg::Remove
             }
 
             // Load ports from ports dirs
-            Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
             specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });

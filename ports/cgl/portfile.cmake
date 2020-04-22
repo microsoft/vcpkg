@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/Cgl
-    REF releases/0.60.2
-    SHA512 86db94638d586d2fb64cb55f72197f847731c710351168189647686c5229555c79bc411044ab1cc789a520577de2be3c2e8611221d743f9dbaabb71544d0fa66
+    REF 6377b88754fafacf24baac28bb27c0623cc14457
+    SHA512 7579a89f945fd3b88cc1f0dd95906c385b5c730b58bd620ea8b820926096256f9083f50dd4e70f71d69432e4d0ffc60b4ec8fa517893a549621d8373f944a1bb
     PATCHES fix-c1083-error.patch
 )
 
@@ -19,6 +17,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
 
