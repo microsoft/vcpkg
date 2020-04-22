@@ -55,7 +55,6 @@ akali:arm-uwp=fail
 akali:arm64-windows=fail
 alac:arm-uwp=fail
 alac:x64-uwp=fail
-alembic:x64-linux=fail
 alembic:x64-osx=fail
 alembic:x64-windows-static=fail
 ampl-mp:arm64-windows=fail
