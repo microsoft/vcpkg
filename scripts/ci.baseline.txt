@@ -1120,12 +1120,8 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
-# mpg123 is failing because the port's attempt to make yasm available is not succeeding
 mpg123:arm-uwp=fail
 mpg123:x64-uwp=fail
-mpg123:x64-windows-static=fail
-mpg123:x64-windows=fail
-mpg123:x86-windows=fail
 mpir:arm64-windows=fail
 mpir:arm-uwp=fail
 mpir:x64-uwp=fail

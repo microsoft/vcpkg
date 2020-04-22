@@ -21,7 +21,7 @@ else()
 endif()
 
 #linking
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(MPG123_CONFIGURATION_SUFFIX _Dll)
 endif()
 
@@ -33,6 +33,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
+    REF ${MPG123_VERSION}
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         0001-fix-crt-linking.patch
@@ -42,46 +43,20 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
+vcpkg_add_to_path("${YASM_EXE_PATH}")
+
+file(REMOVE_RECURSE ${SOURCE_PATH}/build/debug)
+file(REMOVE_RECURSE ${SOURCE_PATH}/build/release)
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
+        OPTIONS /p:UseEnv=True
         RELEASE_CONFIGURATION Release${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
         DEBUG_CONFIGURATION Debug${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
     )
 
-    message(STATUS "Installing")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.dll
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        )
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.dll
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-        )
-    else()
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug_x86/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        )
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release_x86/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        )
-    endif()
-
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    )
     file(INSTALL
         ${SOURCE_PATH}/ports/MSVC++/mpg123.h
         ${SOURCE_PATH}/src/libmpg123/fmt123.h
@@ -89,9 +64,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    file(REMOVE_RECURSE ${SOURCE_PATH}/build/debug)
-    file(REMOVE_RECURSE ${SOURCE_PATH}/build/release)
-
     ################
     # Debug build
     ################
