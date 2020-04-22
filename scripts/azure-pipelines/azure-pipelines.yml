@@ -1,0 +1,56 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+variables:
+  clean-tombstones: 'false'
+stages:
+  - stage: Clean_Tombstones
+    displayName: 'Clean Tombstones'
+    pool:
+      name: PrWin-2020-04-21-1
+    jobs:
+      - job:
+        displayName: 'Clean Tombstones'
+        condition: eq(variables['clean-tombstones'], 'true')
+        timeoutInMinutes: 10
+        steps:
+        - task: PowerShell@2
+          displayName: 'Initialize Environment'
+          inputs:
+            filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
+        - powershell: |
+            Remove-Item archives\fail -Force -Recurse
+          displayName: 'Delete archives\fail'
+
+  - stage: Build
+    jobs:
+      - template: windows/azure-pipelines.yml
+        parameters:
+          triplet: x86-windows
+          jobName: x86_windows
+
+      - template: windows/azure-pipelines.yml
+        parameters:
+          triplet: x64-windows
+          jobName: x64_windows
+
+      - template: windows/azure-pipelines.yml
+        parameters:
+          triplet: x64-windows-static
+          jobName: x64_windows_static
+
+      - template: windows/azure-pipelines.yml
+        parameters:
+          triplet: x64-uwp
+          jobName: x64_uwp
+
+      - template: windows/azure-pipelines.yml
+        parameters:
+          triplet: arm64-windows
+          jobName: arm64_windows
+
+      - template: windows/azure-pipelines.yml
+        parameters:
+          triplet: arm-uwp
+          jobName: arm_uwp

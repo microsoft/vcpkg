@@ -1,0 +1,66 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+jobs:
+- job: ${{ parameters.jobName }}
+  pool:
+    name: PrWin-2020-04-21-1
+
+  variables:
+    triplet: '${{ parameters.triplet }}'
+
+  timeoutInMinutes: 1440 # 1 day
+
+  steps:
+  - task: PowerShell@2
+    displayName: 'Initialize Environment'
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
+
+  - powershell: |
+      $baselineFile = "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
+      $skipList = $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\generate-skip-list.ps1 -Triplet "$(triplet)" -BaselineFile $baselineFile
+      Write-Host "baseline file: $baselineFile"
+      Write-Host "skip list: $skipList"
+      $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\windows\ci-step.ps1 -Triplet "$(triplet)" -ExcludePorts $skipList
+      Write-Host "CI test script is complete"
+    errorActionPreference: continue
+    displayName: '** Build vcpkg and test ports **'
+
+  - powershell: |
+      $baseName = "$(triplet)"
+      $outputPathRoot = "$(System.ArtifactsDirectory)\raw xml results"
+      if(-not (Test-Path $outputPathRoot))
+      {
+          Write-Host "creating $outputPathRoot"
+          mkdir $outputPathRoot | Out-Null
+      }
+
+      $xmlPath = "$(System.DefaultWorkingDirectory)\test-full-ci.xml"
+      $outputXmlPath = "$outputPathRoot\$baseName.xml"
+
+      cp $xmlPath $(Build.ArtifactStagingDirectory)
+      Move-Item $xmlPath -Destination $outputXmlPath
+
+      # already in DevOps, no need for extra copies
+      rm $(System.DefaultWorkingDirectory)\console-out.txt -ErrorAction Ignore
+
+      Remove-Item "$(System.DefaultWorkingDirectory)\buildtrees\*" -Recurse -errorAction silentlycontinue
+      Remove-Item "$(System.DefaultWorkingDirectory)\packages\*" -Recurse -errorAction silentlycontinue
+      Remove-Item "$(System.DefaultWorkingDirectory)\installed\*" -Recurse -errorAction silentlycontinue
+    displayName: 'Collect logs and cleanup build'
+
+  - task: PowerShell@2
+    displayName: 'Analyze results and prepare test logs'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
+      arguments: '-baselineFile ''$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt'' -logDir ''$(System.ArtifactsDirectory)\raw xml results'' -failurelogDir ''archives\fail'' -outputDir ''$(Build.ArtifactStagingDirectory)'' -errorOnRegression -triplets ''$(triplet)'''
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: $(triplet) port build failure logs'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
+      ArtifactName: '$(triplet) port build failure logs'
+    condition: failed()
