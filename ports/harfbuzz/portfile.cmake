@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 2.5.3
-    SHA512 d541463b3647fc2c7ddaa29aedcea1c3bde5e26e0d529384d66d630af3aaf2a4befb3c4d47c93833f099339a0f951fb132011a02c57fc00ba543bd1b17026ffa
+    REF f9bc373381ddf8553f943b774596ae5a53bf2641# Version 2.6.5
+    SHA512 203c16361ec4b6e0ab9a6b87dd9ca5ee72201a8df91595154438d1fcf9e6d0ca03aa80c4fcbdf159828153319a0e36555fd9e34e010c6d17be63512a5368c2b9
     HEAD_REF master
     PATCHES
         0001-fix-cmake-export.patch
@@ -26,15 +24,10 @@ if("${_contents}" MATCHES "find_library\\(GLIB_LIBRARIES")
     message(FATAL_ERROR "Harfbuzz's cmake must not directly find_library() glib.")
 endif()
 
-SET(HB_HAVE_ICU "OFF")
-if("icu" IN_LIST FEATURES)
-    SET(HB_HAVE_ICU "ON")
-endif()
-
-SET(HB_HAVE_GRAPHITE2 "OFF")
-if("graphite2" IN_LIST FEATURES)
-    SET(HB_HAVE_GRAPHITE2 "ON")
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    icu       HB_HAVE_ICU
+    graphite2 HB_HAVE_GRAPHITE2
+)
 
 ## Unicode callbacks
 
@@ -58,12 +51,10 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DHB_HAVE_FREETYPE=ON
         -DHB_BUILTIN_UCDN=${BUILTIN_UCDN}
-        -DHB_HAVE_ICU=${HB_HAVE_ICU}
         -DHB_HAVE_GLIB=${HAVE_GLIB}
-        -DHB_HAVE_GRAPHITE2=${HB_HAVE_GRAPHITE2}
         -DHB_BUILD_TESTS=OFF
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
@@ -86,6 +77,4 @@ ${_contents}
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
