@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" "uwp" "arm64" ON_TARGET "Linux" "OSX")
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(LIBVPX_VERSION 1.8.1)
