@@ -8,21 +8,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if("fmt" IN_LIST FEATURES)
-    # remove bundled fmt
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/quill/quill/include/quill/bundled/fmt)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/quill/quill/src/bundled/fmt)
-endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    fmt QUILL_FMT_EXTERNAL
-)
+# remove bundled fmt
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/quill/quill/include/quill/bundled/fmt)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/quill/quill/src/bundled/fmt)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-	  ${FEATURE_OPTIONS}
+	  -DQUILL_FMT_EXTERNAL=ON
 )
 
 vcpkg_install_cmake()
