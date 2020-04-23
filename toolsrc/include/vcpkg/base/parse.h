@@ -3,6 +3,7 @@
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringview.h>
+#include <vcpkg/base/unicode.h>
 #include <vcpkg/textrowcol.h>
 
 #include <memory>
@@ -42,41 +43,31 @@ namespace vcpkg::Parse
     {
         struct SourceLoc
         {
-            const char* it;
+            Unicode::Utf8Decoder it;
+            Unicode::Utf8Decoder start_of_line;
             int row;
             int column;
         };
 
-        void init(CStringView text, CStringView origin, TextRowCol init_rowcol = {})
-        {
-            m_text = text;
-            m_origin = origin;
-            m_it = text.c_str();
-            row = init_rowcol.row ? init_rowcol.row : 1;
-            column = init_rowcol.column ? init_rowcol.column : 1;
-        }
+        ParserBase(StringView text, StringView origin, TextRowCol init_rowcol = {});
 
-        static constexpr bool is_whitespace(char ch) { return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n'; }
-        static constexpr bool is_lower_alpha(char ch) { return ch >= 'a' && ch <= 'z'; }
-        static constexpr bool is_upper_alpha(char ch) { return ch >= 'A' && ch <= 'Z'; }
-        static constexpr bool is_ascii_digit(char ch) { return ch >= '0' && ch <= '9'; }
-        static constexpr bool is_lineend(char ch) { return ch == '\r' || ch == '\n' || ch == '\0'; }
-        static constexpr bool is_alphanum(char ch)
+        static constexpr bool is_whitespace(char32_t ch) { return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n'; }
+        static constexpr bool is_lower_alpha(char32_t ch) { return ch >= 'a' && ch <= 'z'; }
+        static constexpr bool is_upper_alpha(char32_t ch) { return ch >= 'A' && ch <= 'Z'; }
+        static constexpr bool is_ascii_digit(char32_t ch) { return ch >= '0' && ch <= '9'; }
+        static constexpr bool is_lineend(char32_t ch) { return ch == '\r' || ch == '\n' || ch == Unicode::end_of_file; }
+        static constexpr bool is_alphanum(char32_t ch)
         {
             return is_upper_alpha(ch) || is_lower_alpha(ch) || is_ascii_digit(ch);
         }
-        static constexpr bool is_alphanumdash(char ch) { return is_alphanum(ch) || ch == '-'; }
+        static constexpr bool is_alphanumdash(char32_t ch) { return is_alphanum(ch) || ch == '-'; }
 
         StringView skip_whitespace() { return match_zero_or_more(is_whitespace); }
         StringView skip_tabs_spaces()
         {
-            return match_zero_or_more([](char ch) { return ch == ' ' || ch == '\t'; });
+            return match_zero_or_more([](char32_t ch) { return ch == ' ' || ch == '\t'; });
         }
-        void skip_to_eof()
-        {
-            while (cur())
-                ++m_it;
-        }
+        void skip_to_eof() { m_it = m_it.end(); }
         void skip_newline()
         {
             if (cur() == '\r') next();
@@ -91,29 +82,29 @@ namespace vcpkg::Parse
         template<class Pred>
         StringView match_zero_or_more(Pred p)
         {
-            const char* start = m_it;
+            const char* start = m_it.pointer_to_current();
             auto ch = cur();
-            while (ch != '\0' && p(ch))
+            while (ch != Unicode::end_of_file && p(ch))
                 ch = next();
-            return {start, m_it};
+            return {start, m_it.pointer_to_current()};
         }
         template<class Pred>
         StringView match_until(Pred p)
         {
-            const char* start = m_it;
+            const char* start = m_it.pointer_to_current();
             auto ch = cur();
-            while (ch != '\0' && !p(ch))
+            while (ch != Unicode::end_of_file && !p(ch))
                 ch = next();
-            return {start, m_it};
+            return {start, m_it.pointer_to_current()};
         }
 
-        CStringView text() const { return m_text; }
-        const char* it() const { return m_it; }
-        char cur() const { return *m_it; }
-        SourceLoc cur_loc() const { return {m_it, row, column}; }
-        TextRowCol cur_rowcol() const { return {row, column}; }
-        char next();
-        bool at_eof() const { return *m_it == 0; }
+        StringView text() const { return m_text; }
+        Unicode::Utf8Decoder it() const { return m_it; }
+        char32_t cur() const { return m_it == m_it.end() ? Unicode::end_of_file : *m_it; }
+        SourceLoc cur_loc() const { return {m_it, m_start_of_line, m_row, m_column}; }
+        TextRowCol cur_rowcol() const { return {m_row, m_column}; }
+        char32_t next();
+        bool at_eof() const { return m_it == m_it.end(); }
 
         void add_error(std::string message) { add_error(std::move(message), cur_loc()); }
         void add_error(std::string message, const SourceLoc& loc);
@@ -122,12 +113,13 @@ namespace vcpkg::Parse
         std::unique_ptr<Parse::IParseError> extract_error() { return std::move(m_err); }
 
     private:
-        const char* m_it;
-        int row;
-        int column;
+        Unicode::Utf8Decoder m_it;
+        Unicode::Utf8Decoder m_start_of_line;
+        int m_row;
+        int m_column;
 
-        CStringView m_text;
-        CStringView m_origin;
+        StringView m_text;
+        StringView m_origin;
 
         std::unique_ptr<IParseError> m_err;
     };
