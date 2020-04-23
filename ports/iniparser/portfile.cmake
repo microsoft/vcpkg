@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ndevilla/iniparser
@@ -7,8 +9,6 @@ vcpkg_from_github(
     PATCHES
         win32_ssize_t.patch
 )
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
