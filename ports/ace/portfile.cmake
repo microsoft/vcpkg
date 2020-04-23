@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
