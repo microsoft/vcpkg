@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO libtom/libtommath
     REF v1.2.0
     SHA512 500bce4467d6cdb0b014e6c66d3b994a8d63b51475db6c3cd77c15c8368fbab4e3b5c458fcd5b35838b74c457a33c15b42d2356964f5ef2a0bd31fd544735c9a
-    HEAD_REF master
+    HEAD_REF develop
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
