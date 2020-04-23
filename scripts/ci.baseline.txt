@@ -958,6 +958,7 @@ libuuid:x86-windows=fail
 libuv:arm64-windows=fail
 libuv:arm-uwp=fail
 libuv:x64-uwp=fail
+libvpx:arm-uwp=fail
 libvpx:arm64-windows=fail
 libvpx:x64-linux=fail
 libvpx:x64-osx=fail
