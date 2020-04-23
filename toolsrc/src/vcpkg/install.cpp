@@ -297,7 +297,7 @@ namespace vcpkg::Install
     using Build::BuildResult;
     using Build::ExtendedBuildResult;
 
-    ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+    static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
                                                     InstallPlanAction& action,
                                                     StatusParagraphs& status_db,
                                                     IBinaryProvider* binaries_provider)

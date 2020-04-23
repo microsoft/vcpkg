@@ -120,7 +120,12 @@ macro(add_assembly ASMFILE)
             COMMAND ${CMAKE_C_COMPILER} /nologo /EP /I. /Iinclude /I${CMAKE_CURRENT_SOURCE_DIR}/include "${ASMFILE_FULL}"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
             OUTPUT_FILE ${ARCH_ASM_NAME}.asm
+            RESULT_VARIABLE retcode
         )
+
+        if(NOT ${retcode} STREQUAL "0")
+            message(FATAL_ERROR "Unable to assemble, exit code: '${retcode}'.")
+        endif()
 
         # Produced *.asm file could be just added to sources.
         # It works in x64 mode, but for some strange reason MASM returns error code when in x86,
@@ -129,7 +134,12 @@ macro(add_assembly ASMFILE)
         execute_process(
             COMMAND ${ARCH_ASSEMBLER} ${ARCH_ASM_NAME}.asm
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            RESULT_VARIABLE retcode
         )
+
+        if(NOT ${retcode} STREQUAL "0")
+            message(FATAL_ERROR "Unable to compile assembly, exit code: '${retcode}'.")
+        endif()
 
         list(APPEND FFI_SOURCES ${CMAKE_BINARY_DIR}/${ARCH_ASM_NAME}.obj)
     else()
