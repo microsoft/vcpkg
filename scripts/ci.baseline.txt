@@ -1420,13 +1420,9 @@ polyhook2:x64-linux=fail
 polyhook2:x64-uwp=fail
 polyhook2:x64-osx=fail
 portable-snippets:arm-uwp=fail
-# Portaudio was broken by Ninja 1.9.0 https://github.com/ninja-build/ninja/pull/1406
 portaudio:arm-uwp=fail
 portaudio:arm64-windows=fail
 portaudio:x64-uwp=fail
-portaudio:x64-windows-static=fail
-portaudio:x64-windows=fail
-portaudio:x86-windows=fail
 portmidi:arm64-windows=fail
 portmidi:arm-uwp=fail
 portmidi:x64-linux=fail
@@ -1726,10 +1722,6 @@ stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-uwp=fail
 stxxl:x64-uwp=fail
-# Sundials was broken by Ninja 1.9.0 https://github.com/ninja-build/ninja/pull/1406
-sundials:arm64-windows=fail
-sundials:x64-windows=fail
-sundials:x86-windows=fail
 # Conflicts between ports:
 #The following files are already installed in C:/agent/_work/1/s/installed/x64-windows-static
 # and are in conflict with superlu:x64-windows-static
