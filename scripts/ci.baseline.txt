@@ -1570,6 +1570,7 @@ redis-plus-plus:x64-windows-static=fail
 redis-plus-plus:arm64-windows=fail
 replxx:arm-uwp=fail
 replxx:x64-uwp=fail
+replxx:x64-windows-static=fail
 reproc:arm-uwp=fail
 reproc:x64-uwp=fail
 restbed:arm-uwp=fail
