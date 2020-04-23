@@ -1,26 +1,31 @@
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
+set(ACE_VERSION 6.5.8)
+string(REPLACE "." "_" ACE_VERSION_USCORE "${ACE_VERSION}")
+
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
 if(VCPKG_TARGET_IS_WINDOWS)
   # Don't change to vcpkg_from_github! This points to a release and not an archive
   vcpkg_download_distfile(ARCHIVE
-      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE-src-6.5.8.zip"
-      FILENAME ACE-src-6.5.8.zip
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_USCORE}/ACE-src-${ACE_VERSION}.zip"
+      FILENAME ACE-src-${ACE_VERSION}.zip
       SHA512 e0fd30de81f0d6e629394fc9cb814ecb786c67fccd7e975a3d64cf0859d5a03ba5a5ae4bb0a6ce5e6d16395a48ffa28f5a1a92758e08a3fd7d55582680f94d82
   )
 else(VCPKG_TARGET_IS_WINDOWS)
   # VCPKG_TARGET_IS_LINUX
   vcpkg_download_distfile(ARCHIVE
-      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE-src-6.5.8.tar.gz"
-      FILENAME ACE-src-6.5.8.tar.gz
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_USCORE}/ACE-src-${ACE_VERSION}.tar.gz"
+      FILENAME ACE-src-${ACE_VERSION}.tar.gz
       SHA512 45ee6cf4302892ac9de305f8454109fa17a8b703187cc76555ce3641b621909e0cfedf3cc4a7fe1a8f01454637279cc9c4afe9d67466d5253e0ba1f34431d97f
   )
 endif()
 
 vcpkg_extract_source_archive_ex(
+    CLEAN
     OUT_SOURCE_PATH SOURCE_PATH
+    REF ${ACE_VERSION}
     ARCHIVE ${ARCHIVE}
 )
 
@@ -105,8 +110,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # headers are public and which not. For the moment we install everything
   # that is in the source path and ends in .h, .inl
   function(install_ace_headers_subdirectory ORIGINAL_PATH RELATIVE_PATH)
-  file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.inl)
-  file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/${RELATIVE_PATH})
+    file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.inl)
+    file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/${RELATIVE_PATH})
   endfunction()
 
   # We manually install header found in the ace directory because in that case

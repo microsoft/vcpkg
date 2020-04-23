@@ -45,7 +45,7 @@
 7zip:x64-osx=fail
 7zip:x64-uwp=fail
 abseil:arm-uwp=fail
-# ace is failing because the port's attempt to make yasm available is not succeeding
+# ace is failing due to a compiler ICE https://dev.azure.com/docgroup/ACE_TAO/_build/results?buildId=1617&view=results
 ace:arm-uwp=fail
 ace:arm64-windows=fail
 ace:x64-osx=fail

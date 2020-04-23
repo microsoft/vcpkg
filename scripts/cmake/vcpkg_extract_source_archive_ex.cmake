@@ -5,7 +5,8 @@
 ## ## Usage
 ## ```cmake
 ## vcpkg_extract_source_archive_ex(
-##     SKIP_PATCH_CHECK
+##     [SKIP_PATCH_CHECK]
+##     [CLEAN]
 ##     OUT_SOURCE_PATH <SOURCE_PATH>
 ##     ARCHIVE <${ARCHIVE}>
 ##     [REF <1.0.0>]
@@ -17,6 +18,9 @@
 ## ## Parameters
 ## ### SKIP_PATCH_CHECK
 ## If this option is set the failure to apply a patch is ignored.
+##
+## ### CLEAN
+## If set, any existing sources will be deleted before extraction. This should be used if the project performs an in-source build.
 ##
 ## ### OUT_SOURCE_PATH
 ## Specifies the out-variable that will contain the extracted location.
@@ -57,7 +61,7 @@ include(vcpkg_extract_source_archive)
 function(vcpkg_extract_source_archive_ex)
     cmake_parse_arguments(
         _vesae
-        "NO_REMOVE_ONE_LEVEL;SKIP_PATCH_CHECK"
+        "NO_REMOVE_ONE_LEVEL;SKIP_PATCH_CHECK;CLEAN"
         "OUT_SOURCE_PATH;ARCHIVE;REF;WORKING_DIRECTORY"
         "PATCHES"
         ${ARGN}
@@ -101,6 +105,13 @@ function(vcpkg_extract_source_archive_ex)
     string(SHA512 PATCHSET_HASH ${PATCHSET_HASH})
     string(SUBSTRING ${PATCHSET_HASH} 0 10 PATCHSET_HASH)
     set(SOURCE_PATH "${_vesae_WORKING_DIRECTORY}/${SHORTENED_SANITIZED_REF}-${PATCHSET_HASH}")
+
+    if(_vesae_CLEAN)
+        file(REMOVE_RECURSE ${SOURCE_PATH})
+        if(EXISTS "${SOURCE_PATH}")
+            message(FATAL_ERROR "Unable to fully clean ${SOURCE_PATH}")
+        endif()
+    endif()
 
     if(NOT EXISTS ${SOURCE_PATH})
         set(TEMP_DIR "${_vesae_WORKING_DIRECTORY}/TEMP")
