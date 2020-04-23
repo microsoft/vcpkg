@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO cpp-netlib/url
-        REF v1.5.2
-        SHA512 7679aae7eefe46e957409271f766d41282d038216f80bdee8239da79456ca091394d17134913224c1fda915c12aae83af9aea4b2bc634cd4853ced43c9c08b9e
+        REF v1.7.0
+        SHA512 ea1f4cd0d42ef024f68a5b8f97da8a862b091c15162af71748a44175d5795492e0a358995ae04bfa8e75f5d92a65e9f9063b25b85cebd47f191f6352a559416f
         HEAD_REF master
 )
 
@@ -25,4 +25,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/skyr-url RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
