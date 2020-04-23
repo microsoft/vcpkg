@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT) # This is a lie. mosquitto can be build staticlly it just must be implemented by vcpkg 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
@@ -10,6 +8,7 @@ vcpkg_from_github(
         archive-dest.patch
         win64-cmake.patch
         libwebsockets.patch
+        support-static-build.patch
 )
 
 vcpkg_configure_cmake(
@@ -43,11 +42,8 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_rr${VCPKG_TARGET_EXECUTABLE_SU
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_sub${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_sub${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 
-#if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    endif()
-#endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

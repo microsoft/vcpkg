@@ -1,17 +1,18 @@
 #include "pch.h"
 
+#include <vcpkg/base/parse.h>
+
 #include <utility>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphparser.h>
-#include <vcpkg/parse.h>
 
 using namespace vcpkg;
 
 namespace vcpkg::Parse
 {
-    static void advance_rowcol(char ch, int& row, int& column)
+    static void advance_rowcol(char32_t ch, int& row, int& column)
     {
         if (ch == '\t')
             column = (column + 7) / 8 * 8 + 1; // round to next 8-width tab stop
@@ -28,10 +29,14 @@ namespace vcpkg::Parse
 
     std::string ParseError::format() const
     {
-        int ignore_row = 1;
-        int spacing = 20;
-        for (int i = 0; i < caret_col; ++i)
-            advance_rowcol(line[i], ignore_row, spacing);
+        auto caret_spacing = std::string(18, ' ');
+        auto decoder = Unicode::Utf8Decoder(line.data(), line.data() + line.size());
+        for (int i = 0; i < caret_col; ++i, ++decoder)
+        {
+            const char32_t cp = *decoder;
+            // this may eventually want to check for full-width characters and grapheme clusters as well
+            caret_spacing.push_back(cp == '\t' ? '\t' : ' ');
+        }
 
         return Strings::concat("Error: ",
                                origin,
@@ -42,49 +47,59 @@ namespace vcpkg::Parse
                                ": ",
                                message,
                                "\n"
-                               "   on expression: \"", // 9 columns
+                               "   on expression: ", // 18 columns
                                line,
-                               "\"\n",
-                               std::string(spacing - 1, ' '),
+                               "\n",
+                               caret_spacing,
                                "^\n");
     }
 
-    char ParserBase::next()
+    ParserBase::ParserBase(StringView text, StringView origin, TextRowCol init_rowcol)
+        : m_it(text.begin(), text.end())
+        , m_start_of_line(m_it)
+        , m_row(init_rowcol.row_or(1))
+        , m_column(init_rowcol.column_or(1))
+        , m_text(text)
+        , m_origin(origin)
     {
-        char ch = *m_it;
-        // See https://www.gnu.org/prep/standards/standards.html#Errors
-        if (ch == '\0')
-        {
-            return '\0';
-        }
-        else
-            advance_rowcol(ch, row, column);
-        return *++m_it;
     }
 
-    void ParserBase::add_error(std::string message, const ParserBase::SourceLoc& loc)
+    char32_t ParserBase::next()
+    {
+        if (m_it == m_it.end())
+        {
+            return Unicode::end_of_file;
+        }
+        // See https://www.gnu.org/prep/standards/standards.html#Errors
+        advance_rowcol(*m_it, m_row, m_column);
+
+        ++m_it;
+        if (m_it != m_it.end() && Unicode::utf16_is_surrogate_code_point(*m_it))
+        {
+            m_it = m_it.end();
+        }
+
+        return cur();
+    }
+
+    void ParserBase::add_error(std::string message, const SourceLoc& loc)
     {
         // avoid cascading errors by only saving the first
         if (!m_err)
         {
-            // find beginning of line
-            auto linestart = loc.it;
-            while (linestart != m_text.c_str())
-            {
-                if (linestart[-1] == '\n') break;
-                --linestart;
-            }
-
             // find end of line
-            auto lineend = loc.it;
-            while (*lineend != '\n' && *lineend != '\r' && *lineend != '\0')
-                ++lineend;
-            m_err.reset(new ParseError(m_origin.c_str(),
-                                       loc.row,
-                                       loc.column,
-                                       static_cast<int>(loc.it - linestart),
-                                       {linestart, lineend},
-                                       std::move(message)));
+            auto line_end = loc.it;
+            while (line_end != line_end.end() && *line_end != '\n' && *line_end != '\r')
+            {
+                ++line_end;
+            }
+            m_err = std::make_unique<ParseError>(
+                m_origin.to_string(),
+                loc.row,
+                loc.column,
+                static_cast<int>(std::distance(loc.start_of_line, loc.it)),
+                std::string(loc.start_of_line.pointer_to_current(), line_end.pointer_to_current()),
+                std::move(message));
         }
 
         // Avoid error loops by skipping to the end
@@ -167,21 +182,19 @@ namespace vcpkg::Parse
     }
 
     ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str,
-                                                                    CStringView origin,
+                                                                    StringView origin,
                                                                     TextRowCol textrowcol)
     {
-        Parse::ParserBase parser;
-        parser.init(str, origin, textrowcol);
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
         auto opt = parse_list_until_eof<std::string>("default features", parser, &parse_feature_name);
         if (!opt) return {parser.get_error()->format(), expected_right_tag};
         return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
     }
     ExpectedS<std::vector<ParsedQualifiedSpecifier>> parse_qualified_specifier_list(const std::string& str,
-                                                                                    CStringView origin,
+                                                                                    StringView origin,
                                                                                     TextRowCol textrowcol)
     {
-        Parse::ParserBase parser;
-        parser.init(str, origin, textrowcol);
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
         auto opt = parse_list_until_eof<ParsedQualifiedSpecifier>(
             "dependencies", parser, [](ParserBase& parser) { return parse_qualified_specifier(parser); });
         if (!opt) return {parser.get_error()->format(), expected_right_tag};
@@ -189,11 +202,10 @@ namespace vcpkg::Parse
         return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
     }
     ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
-                                                               CStringView origin,
+                                                               StringView origin,
                                                                TextRowCol textrowcol)
     {
-        Parse::ParserBase parser;
-        parser.init(str, origin, textrowcol);
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
         auto opt = parse_list_until_eof<Dependency>("dependencies", parser, [](ParserBase& parser) {
             auto loc = parser.cur_loc();
             return parse_qualified_specifier(parser).then([&](ParsedQualifiedSpecifier&& pqs) -> Optional<Dependency> {

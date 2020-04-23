@@ -62,7 +62,7 @@ namespace vcpkg
                 // for compatibility with previous vcpkg versions, we discard all irrelevant information
                 return dep.name;
             });
-        if (this->feature.empty())
+        if (!this->is_feature())
         {
             this->default_features = parse_default_features_list(parser.optional_field(Fields::DEFAULTFEATURES))
                                          .value_or_exit(VCPKG_LINE_INFO);
@@ -109,7 +109,7 @@ namespace vcpkg
 
     std::string BinaryParagraph::displayname() const
     {
-        if (this->feature.empty() || this->feature == "core")
+        if (!this->is_feature() || this->feature == "core")
             return Strings::format("%s:%s", this->spec.name(), this->spec.triplet());
         return Strings::format("%s[%s]:%s", this->spec.name(), this->feature, this->spec.triplet());
     }
@@ -126,7 +126,7 @@ namespace vcpkg
         out_str.append("Package: ").append(pgh.spec.name()).push_back('\n');
         if (!pgh.version.empty())
             out_str.append("Version: ").append(pgh.version).push_back('\n');
-        else if (!pgh.feature.empty())
+        else if (pgh.is_feature())
             out_str.append("Feature: ").append(pgh.feature).push_back('\n');
         if (!pgh.depends.empty())
         {
