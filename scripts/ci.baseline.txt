@@ -48,7 +48,6 @@ abseil:arm-uwp=fail
 # ace is failing because the port's attempt to make yasm available is not succeeding
 ace:arm-uwp=fail
 ace:arm64-windows=fail
-ace:x64-osx=fail
 ace:x64-uwp=fail
 ace:x64-windows-static=fail
 ace:x64-windows=fail
