@@ -12,6 +12,7 @@ vcpkg_check_features(
     liblzma ENABLE_LZMA
     openssl ENABLE_OPENSSL
     wincrypto ENABLE_WINDOWS_CRYPTO
+    commoncrypto ENABLE_COMMONCRYPTO
     mbedtls ENABLE_MBEDTLS
 )
 
@@ -25,7 +26,6 @@ vcpkg_configure_cmake(
         -DBUILD_REGRESS=OFF
         -DBUILD_TOOLS=OFF
         -DENABLE_GNUTLS=OFF
-        -DENABLE_COMMONCRYPTO=OFF
 )
 
 vcpkg_install_cmake()

@@ -3,7 +3,7 @@ Version: rel-1-6-1
 Homepage: https://github.com/nih-at/libzip
 Build-Depends: zlib
 Default-Features: bzip2,default-aes
-Description: A library for reading, creating, and modifying zip archives.
+Description: A library for reading, creating, and modifying zip archives
 
 Feature: bzip2
 Build-Depends: bzip2
@@ -14,7 +14,7 @@ Build-Depends: liblzma
 Description: Support XZ compressed zip archives using liblzma
 
 Feature: default-aes
-Build-Depends: libzip[core,openssl](!windows),libzip[core,wincrypto](windows)
+Build-Depends: libzip[core,openssl](!(windows|osx)),libzip[core,wincrypto](windows),libzip[core,commoncrypto](osx)
 Description: Use default AES
 
 Feature: openssl
@@ -23,6 +23,9 @@ Description: AES (encryption) support using OpenSSL
 
 Feature: wincrypto
 Description: AES (encryption) support using Windows Crypto API
+
+Feature: commoncrypto
+Description: AES( encryption) support using Apple's Common Crypto API
 
 Feature: mbedtls
 Build-Depends: mbedtls
