@@ -9,7 +9,7 @@ if(WIN32)
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
   )
 else()
-  find_program(MAKE_EXE NAMES gmake nmake make REQUIRED)
+  find_program(MAKE_EXE NAMES make REQUIRED)
   execute_process(
     COMMAND ${MAKE_EXE} "generate"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
