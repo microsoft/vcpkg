@@ -52,13 +52,14 @@ else()
         set(MAKE_FILE "makefile")
     endif()
 
+    set(ENV{CFLAGS} "-DUSE_LTM -DLTM_DESC -I${CURRENT_INSTALLED_DIR}/include")
+
     vcpkg_execute_build_process(
         COMMAND make -f ${MAKE_FILE} clean
         WORKING_DIRECTORY ${SOURCE_PATH}
     )
-
     vcpkg_execute_build_process(
-        COMMAND make -j4 -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR}/Debug LTC_DEBUG=1 CFLAGS="-DUSE_LTM -DLTM_DESC " install
+        COMMAND make -j4 -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR}/Debug LTC_DEBUG=1 install
         WORKING_DIRECTORY ${SOURCE_PATH}
     )
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/Debug/include")
@@ -67,9 +68,8 @@ else()
         COMMAND make -f ${MAKE_FILE} clean
         WORKING_DIRECTORY ${SOURCE_PATH}
     )
-
     vcpkg_execute_build_process(
-        COMMAND make -j4 -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR} CFLAGS="-DUSE_LTM -DLTM_DESC " install
+        COMMAND make -j4 -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR} install
         WORKING_DIRECTORY ${SOURCE_PATH}
     )
     
