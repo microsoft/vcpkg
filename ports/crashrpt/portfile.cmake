@@ -14,7 +14,15 @@ vcpkg_from_git(
     REF 4616504670be5a425a525376648d912a72ce18f2
     PATCHES
         001-cmake-install.patch
+        002-find-minizip-png-zlib.patch
 )
+
+# Remove vendored dependencies to ensure they are not picked up by the build
+foreach(DEPENDENCY libpng minizip zlib)
+    if(EXISTS ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
+        file(REMOVE_RECURSE ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
+    endif()
+endforeach()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CRASHRPT_BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" CRASHRPT_LINK_CRT_AS_DLL)
@@ -28,7 +36,6 @@ vcpkg_configure_cmake(
         -DCRASHRPT_BUILD_SHARED_LIBS=${CRASHRPT_BUILD_SHARED_LIBS}
         -DCRASHRPT_LINK_CRT_AS_DLL=${CRASHRPT_LINK_CRT_AS_DLL}
         -DCRASHRPT_BUILD_DEMOS=OFF
-        -DCRASHRPT_BUILD_PROBE=OFF
         -DCRASHRPT_BUILD_TESTS=OFF
 )
 

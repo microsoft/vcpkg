@@ -2,3 +2,4 @@ Source: crashrpt
 Version: 1.4.3
 Description: A crash reporting system for Windows applications
 Homepage: http://crashrpt.sourceforge.net/
+Build-Depends: libpng, minizip, zlib

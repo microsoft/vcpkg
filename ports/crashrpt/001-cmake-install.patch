@@ -1,18 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 44d7df0..e416a74 100644
+index 44d7df0..daf8352 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -17,6 +17,9 @@ set (CRASHRPT_VER 1403)
+@@ -17,6 +17,8 @@ set (CRASHRPT_VER 1403)
  # Build options
  option(CRASHRPT_BUILD_SHARED_LIBS "If set (default), CrashRpt modules are built as dynamic-link libraries, otherwise as static libs." ON)
  option(CRASHRPT_LINK_CRT_AS_DLL "If set (default), CrashRpt modules link C run-time (CRT) as multi-threaded dynamic libraries, otherwise as multi-threaded static libs." ON)
 +option(CRASHRPT_BUILD_DEMOS "If set (default), CrashRpt builds the demo projects." ON)
 +option(CRASHRPT_BUILD_TESTS "If set (default), CrashRpt builds the test projects." ON)
-+option(CRASHRPT_BUILD_PROBE "If set (default), CrashRpt builds the CrashRptProbe projects." ON)
  
  # Set output directory for executable files
  if(CMAKE_CL_64)
-@@ -96,17 +99,23 @@ endmacro()
+@@ -96,9 +98,11 @@ endmacro()
  
  # Other CMakeLists are located in project subdirectories 
  
@@ -24,11 +23,9 @@ index 44d7df0..e416a74 100644
  
  add_subdirectory("reporting/crashrpt")
  add_subdirectory("reporting/crashsender")
- 
-+if(CRASHRPT_BUILD_PROBE)
+@@ -106,7 +110,9 @@ add_subdirectory("reporting/crashsender")
  add_subdirectory("processing/crashrptprobe")
  add_subdirectory("processing/crprober")
-+endif()
  
 +if(CRASHRPT_BUILD_TESTS)
  add_subdirectory("tests")
@@ -36,6 +33,22 @@ index 44d7df0..e416a74 100644
  
  # Set output directory for LIB files
  if(CMAKE_CL_64)
+diff --git a/processing/crashrptprobe/CMakeLists.txt b/processing/crashrptprobe/CMakeLists.txt
+index a6c692a..35e06bb 100644
+--- a/processing/crashrptprobe/CMakeLists.txt
++++ b/processing/crashrptprobe/CMakeLists.txt
+@@ -58,4 +58,11 @@ else(CRASHRPT_BUILD_SHARED_LIBS)
+ 
+ endif(CRASHRPT_BUILD_SHARED_LIBS)
+ 
++set_target_properties(CrashRptProbe PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/CrashRptProbe.h)
+ 
++INSTALL(TARGETS CrashRptProbe
++  PUBLIC_HEADER DESTINATION include/crashrpt
++  LIBRARY
++  ARCHIVE
++  RUNTIME
++)
 diff --git a/reporting/crashrpt/CMakeLists.txt b/reporting/crashrpt/CMakeLists.txt
 index 42d40e2..a335ca9 100644
 --- a/reporting/crashrpt/CMakeLists.txt
@@ -70,3 +83,15 @@ index 9b444c5..5b4b895 100644
 +
 +file(GLOB LANG_FILES "${CMAKE_SOURCE_DIR}/lang_files/crashrpt_lang_*.ini")
 +install(FILES ${LANG_FILES} DESTINATION tools/crashrpt)
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index f7bfede..402b024 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -42,3 +42,7 @@ target_link_libraries(Tests CrashRpt CrashRptProbe)
+ 
+ set_target_properties(Tests PROPERTIES DEBUG_POSTFIX d )
+ #set_target_properties(Tests PROPERTIES COMPILE_FLAGS "/Zi" LINK_FLAGS "/DEBUG")
++
++install(TARGETS Tests 
++  RUNTIME DESTINATION tools/crashrpt
++)
