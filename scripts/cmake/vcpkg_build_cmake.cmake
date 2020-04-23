@@ -40,7 +40,7 @@ function(vcpkg_build_cmake)
     set(NO_PARALLEL_ARG)
 
     if(_VCPKG_CMAKE_GENERATOR MATCHES "Ninja")
-        set(BUILD_ARGS "-v") # verbose output
+        set(BUILD_ARGS "-v" "-wdupbuild=warn") # verbose output
         set(NO_PARALLEL_ARG "-j1")
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "Visual Studio")
         set(BUILD_ARGS
