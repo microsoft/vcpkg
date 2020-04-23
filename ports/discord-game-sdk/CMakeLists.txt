@@ -13,6 +13,7 @@ file(GLOB_RECURSE HDR_FILES "${PROJECT_SOURCE_DIR}/*.h")
 
 add_library(discord_game_sdk_cpp STATIC ${SRC_FILES})
 target_link_libraries(discord_game_sdk_cpp PUBLIC ${SDK_LIB})
+set_property(TARGET discord_game_sdk_cpp PROPERTY CXX_STANDARD 11)
 
 install(TARGETS discord_game_sdk_cpp ARCHIVE)
 install(FILES ${HDR_FILES} DESTINATION "include/discord-game-sdk")
