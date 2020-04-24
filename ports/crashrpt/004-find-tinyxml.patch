@@ -1,0 +1,87 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 42a55fc..281f66b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -111,6 +111,16 @@ if(NOT THEORA_INCLUDE_DIR)
+   message(FATAL_ERROR "theora include dir not found")
+ endif()
+ 
++find_library(TINYXML_LIBRARY NAMES tinyxml)
++if(NOT TINYXML_LIBRARY)
++  message(FATAL_ERROR "tinyxml library not found")
++endif()
++
++find_path(TINYXML_INCLUDE_DIR tinyxml.h)
++if(NOT TINYXML_INCLUDE_DIR)
++  message(FATAL_ERROR "tinyxml include dir not found")
++endif()
++
+ # Other CMakeLists are located in project subdirectories 
+ 
+ if(CRASHRPT_BUILD_DEMOS)
+@@ -138,7 +148,7 @@ else(CMAKE_CL_64)
+ 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/thirdparty/lib)
+ endif(CMAKE_CL_64)
+ 
+-add_subdirectory("thirdparty/tinyxml")
++#add_subdirectory("thirdparty/tinyxml")
+ add_subdirectory("thirdparty/jpeg")
+ #add_subdirectory("thirdparty/libpng")
+ #add_subdirectory("thirdparty/minizip")
+diff --git a/processing/crashrptprobe/CMakeLists.txt b/processing/crashrptprobe/CMakeLists.txt
+index 4a54302..2aeb395 100644
+--- a/processing/crashrptprobe/CMakeLists.txt
++++ b/processing/crashrptprobe/CMakeLists.txt
+@@ -24,7 +24,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/include
+ 			${CMAKE_SOURCE_DIR}/thirdparty/wtl
+ 			${ZLIB_INCLUDE_DIRS}
+ 			${MINIZIP_INCLUDE_DIR}
+-			${CMAKE_SOURCE_DIR}/thirdparty/tinyxml
++			${TINYXML_INCLUDE_DIR}
+ 			${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/include)
+ 			
+ # Add library build target
+@@ -42,7 +42,7 @@ else(CMAKE_CL_64)
+ 	target_link_libraries(CrashRptProbe ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/dbghelp.lib)
+ endif(CMAKE_CL_64)
+ 
+-target_link_libraries(CrashRptProbe ZLIB::ZLIB minizip::minizip tinyxml Rpcrt4.lib shell32.lib gdi32.lib version.lib psapi.lib)
++target_link_libraries(CrashRptProbe ZLIB::ZLIB minizip::minizip ${TINYXML_LIBRARY} Rpcrt4.lib shell32.lib gdi32.lib version.lib psapi.lib)
+ 
+ if(CRASHRPT_BUILD_SHARED_LIBS)
+ 
+diff --git a/reporting/crashsender/CMakeLists.txt b/reporting/crashsender/CMakeLists.txt
+index 9e191c4..780b756 100644
+--- a/reporting/crashsender/CMakeLists.txt
++++ b/reporting/crashsender/CMakeLists.txt
+@@ -28,7 +28,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/include
+                             ${MINIZIP_INCLUDE_DIR}
+                             ${CMAKE_SOURCE_DIR}/thirdparty/jpeg 
+                             ${PNG_INCLUDE_DIRS}
+-                            ${CMAKE_SOURCE_DIR}/thirdparty/tinyxml
++                            ${TINYXML_INCLUDE_DIR}
+                             ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/include 
+ 							${OGG_INCLUDE_DIRS}
+ 							${THEORA_INCLUDE_DIR})
+@@ -43,7 +43,7 @@ endif(NOT CMAKE_CL_64)
+ add_executable(CrashSender WIN32 ${source_files} ${header_files})
+ 
+ # Add input link libraries
+-target_link_libraries(CrashSender ZLIB::ZLIB minizip::minizip libjpeg PNG::PNG tinyxml Ogg::ogg ${THEORA_LIBRARY} WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib psapi.lib)
++target_link_libraries(CrashSender ZLIB::ZLIB minizip::minizip libjpeg PNG::PNG ${TINYXML_LIBRARY} Ogg::ogg ${THEORA_LIBRARY} WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib psapi.lib)
+ 
+ # Add compiler flags (/MP for multi-processor compilation, /Os to favor small code)
+ set_target_properties(CrashRpt PROPERTIES COMPILE_FLAGS "/Os")
+diff --git a/reporting/crashsender/ErrorReportSender.cpp b/reporting/crashsender/ErrorReportSender.cpp
+index 369fd4d..46d6d12 100644
+--- a/reporting/crashsender/ErrorReportSender.cpp
++++ b/reporting/crashsender/ErrorReportSender.cpp
+@@ -1086,7 +1086,7 @@ BOOL CErrorReportSender::CreateCrashDescriptionXML(CErrorReportInfo& eri)
+         goto cleanup;
+     }
+ 
+-    doc.useMicrosoftBOM = true;
++    //doc.useMicrosoftBOM = true;
+     bool bSave = doc.SaveFile(f); 
+     if(!bSave)
+     {
