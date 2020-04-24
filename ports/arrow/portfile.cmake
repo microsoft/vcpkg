@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   message(FATAL_ERROR "Apache Arrow only supports x64")
 endif()
@@ -17,6 +15,12 @@ vcpkg_from_github(
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "csv"      ARROW_CSV
+    "json"     ARROW_JSON
+    "parquet"  ARROW_PARQUET
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
@@ -24,7 +28,7 @@ vcpkg_configure_cmake(
         -DARROW_DEPENDENCY_SOURCE=SYSTEM
         -Duriparser_SOURCE=SYSTEM
         -DARROW_BUILD_TESTS=off
-        -DARROW_PARQUET=ON
+        ${FEATURE_OPTIONS}
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
         -DARROW_GFLAGS_USE_SHARED=off
@@ -52,7 +56,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/arrow RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

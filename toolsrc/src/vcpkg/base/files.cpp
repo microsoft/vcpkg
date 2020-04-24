@@ -717,9 +717,9 @@ namespace vcpkg::Files
 
         virtual fs::path absolute(const fs::path& path, std::error_code& ec) const override
         {
-#if USE_STD_FILESYSTEM
+#if VCPKG_USE_STD_FILESYSTEM 
             return fs::stdfs::absolute(path, ec);
-#else // ^^^ USE_STD_FILESYSTEM / !USE_STD_FILESYSTEM vvv
+#else // ^^^ VCPKG_USE_STD_FILESYSTEM  / !VCPKG_USE_STD_FILESYSTEM  vvv
 #if _WIN32
             // absolute was called system_complete in experimental filesystem
             return fs::stdfs::system_complete(path, ec);
