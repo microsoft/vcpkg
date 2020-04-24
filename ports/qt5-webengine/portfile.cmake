@@ -1,5 +1,13 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
+#set(VCPKG_BUILD_TYPE release) #You probably want to set this to reduce build type and space requirements
+message(STATUS "${PORT} requires a lot of free disk space (>300GB), ram (>32 GB) and time (>4h per configuration) to be successfully build.\n\
+-- As such ${PORT} is not properly tested.\n\
+-- If ${PORT} fails post build validation please open up an issue. \n\
+-- If it fails due to post validation the successfully installed files can be found in <vcpkgroot>/packages/${PORT}_${TARGET_TRIPLET} \n\
+-- and just need to be copied into <vcpkgroot>/installed/${TARGaET_TRIPLET}")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    message(STATUS "If ${PORT} directly fails ${PORT} might require additional prerequisites on Linux and OSX. Please check the configure logs.\n")
+endif()
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
 vcpkg_find_acquire_program(FLEX)
@@ -27,7 +35,6 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
 vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
-
 
 qt_submodule_installation(PATCHES 
                                 common.pri.patch
