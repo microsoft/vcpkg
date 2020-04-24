@@ -10,12 +10,25 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
 if("latest" IN_LIST FEATURES)
-  set(QT_BUILD_LATEST ON)
+    set(QT_BUILD_LATEST ON)
+    set(PATCHES 
+        patches/Qt5BasicConfig_latest.patch
+        patches/Qt5PluginTarget_latest.patch
+        patches/create_cmake.patch
+        )
+else()
+    set(PATCHES 
+        patches/Qt5BasicConfig.patch
+        patches/Qt5PluginTarget.patch
+        patches/prl_parser.patch # Modified backport of the prl parser from Qt5.14.1 without using QMAKE_PRL_LIBS_FOR_CMAKE
+        patches/qt_moc.patch # Already merged upstream https://codereview.qt-project.org/c/qt/qtbase/+/288359
+    )
 endif()
 
 include(qt_port_functions)
 include(configure_qt)
 include(install_qt)
+
 
 #########################
 ## Find Host and Target mkspec name for configure
@@ -39,12 +52,12 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
                             patches/gui_configure.patch #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
                             patches/icu.patch           #Help configure find static icu builds in vcpkg on windows
+                            patches/xlib.patch          #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
                             #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
                                                          #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
                                                          #the windows supplied gl.h header and the angle gl.h otherwise. 
                             #CMake fixes
-                            patches/Qt5BasicConfig.patch
-                            patches/Qt5PluginTarget.patch
+                            ${PATCHES}
                             patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
                     )
 
@@ -191,7 +204,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
 elseif(VCPKG_TARGET_IS_LINUX)
-    list(APPEND CORE_OPTIONS -fontconfig)
+    list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -linuxfb) #-system-xcb
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
     endif()
@@ -264,7 +277,6 @@ else()
         OPTIONS_RELEASE ${RELEASE_OPTIONS}
         OPTIONS_DEBUG ${DEBUG_OPTIONS}
         )
-
     install_qt()
 
     #########################
@@ -291,8 +303,8 @@ else()
 
     #This needs a new VCPKG policy or a static angle build (ANGLE needs to be fixed in VCPKG!) 
     if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static") # Move angle dll libraries 
-        message(STATUS "Moving ANGLE dlls from /bin to /tools/qt5-angle/bin. In static builds dlls are not allowed in /bin")
         if(EXISTS "${CURRENT_PACKAGES_DIR}/bin")
+            message(STATUS "Moving ANGLE dlls from /bin to /tools/qt5-angle/bin. In static builds dlls are not allowed in /bin")
             file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle)
             file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/bin)
             if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -303,9 +315,9 @@ else()
     endif()
 
     ## Fix location of qtmain(d).lib. Has been moved into manual-link. Add debug version
+    set(cmakefile "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfigExtras.cmake")
+    file(READ "${cmakefile}" _contents)
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
-        set(cmakefile "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfigExtras.cmake")
-        file(READ "${cmakefile}" _contents)
         string(REPLACE "set_property(TARGET Qt5::WinMain APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)" "set_property(TARGET Qt5::WinMain APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE DEBUG)" _contents "${_contents}")
         string(REPLACE 
         [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmain.lib")]] 
@@ -321,14 +333,33 @@ else()
         IMPORTED_LOCATION_DEBUG ${imported_location_debug}
     )]] 
     _contents "${_contents}")
-        file(WRITE "${cmakefile}" "${_contents}")
+    else() # Single configuration build (either debug or release)
+        # Release case
+        string(REPLACE 
+            [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmain.lib")]]
+            [[set(imported_location "${_qt5Core_install_prefix}/lib/manual-link/qtmain.lib")]]
+            _contents "${_contents}")
+        # Debug case (whichever will match)
+        string(REPLACE 
+            [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmaind.lib")]]
+            [[set(imported_location "${_qt5Core_install_prefix}/debug/lib/manual-link/qtmaind.lib")]]
+            _contents "${_contents}")
+        string(REPLACE 
+            [[set(imported_location "${_qt5Core_install_prefix}/debug/lib/qtmaind.lib")]]
+            [[set(imported_location "${_qt5Core_install_prefix}/debug/lib/manual-link/qtmaind.lib")]]
+            _contents "${_contents}")
     endif()
-    
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
+    file(WRITE "${cmakefile}" "${_contents}")
+
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
         file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
+    endif()
+    # This should be removed if possible! (Currently debug build of qt5-translations requires it.)
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/tools/qt5/bin)
+        file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5/debug)
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5/debug/bin)
     endif()
     
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf)
@@ -371,3 +402,20 @@ if(QT_BUILD_LATEST)
             ${CURRENT_PACKAGES_DIR}/share/qt5
     )
 endif()
+
+# #Code to get generated CMake files from CI 
+# file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
+# file(GLOB_RECURSE CMAKE_GUI_FILES "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/*.cmake" )
+# foreach(cmake_file ${CMAKE_GUI_FILES})
+    # get_filename_component(cmake_filename "${cmake_file}" NAME)
+    # file(COPY "${cmake_file}" DESTINATION "${CURRENT_BUILDTREES_DIR}")
+    # file(RENAME "${CURRENT_BUILDTREES_DIR}/${cmake_filename}" "${CURRENT_BUILDTREES_DIR}/${cmake_filename}.log")
+# endforeach()
+# #Copy config.log from buildtree/triplet to buildtree to get the log in CI in case of failure
+# if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.log")
+    # file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.log" "${CURRENT_BUILDTREES_DIR}/config-rel.log")
+# endif()
+# if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.log")
+    # file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.log" "${CURRENT_BUILDTREES_DIR}/config-dbg.log")
+# endif()
+# message(FATAL_ERROR "Need Info from CI!")

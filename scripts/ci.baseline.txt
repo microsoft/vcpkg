@@ -1125,7 +1125,7 @@ mpir:arm64-windows=fail
 mpir:arm-uwp=fail
 mpir:x64-uwp=fail
 
-#Conflicts with angle
+#Conflicts with angle and qt-5base
 ms-angle:arm64-windows      = skip
 ms-angle:arm-uwp            = skip
 ms-angle:x64-linux          = skip
@@ -1327,9 +1327,6 @@ osgearth:x64-osx=fail
 osgearth:x64-linux=fail
 osgearth:x64-windows-static=fail
 osg-qt:x64-windows-static=fail
-# Missing Fontconfig linkage in vcpkg_cmake_wrapper. Will be fixed by #9860 with the removal of the wrapper.
-osg-qt:x64-osx=fail
-osg-qt:x64-linux=ignore
 otl:x64-windows=ignore
 otl:x64-windows-static=ignore
 otl:x64-uwp=ignore
@@ -1501,8 +1498,28 @@ qt5-macextras:x64-linux=fail
 qt5-macextras:x64-windows=fail
 qt5-macextras:x64-windows-static=fail
 qt5-macextras:x86-windows=fail
+# Missing system libraries
+qt5-wayland:x64-osx=fail
+# Missing libraries
+qt5-wayland:x86-windows=fail
+qt5-wayland:x64-windows=fail
+qt5-wayland:x64-windows-static=fail
 qt5-winextras:x64-linux=fail
 qt5-winextras:x64-osx=fail
+# Too big for CI. 
+qt5-webengine:x64-windows=skip
+qt5-webengine:x86-windows=skip
+# Missing prerequisites for CI success
+qt5-webengine:x64-linux=fail
+qt5-webengine:x64-osx=fail
+# Static builds of qt5-webengine are not supported by the port itself
+qt5-webengine:x64-windows-static=skip
+# Missing system libraries
+qt5-x11extras:x64-osx=fail
+# Missing libraries
+qt5-x11extras:x86-windows=fail
+qt5-x11extras:x64-windows=fail
+qt5-x11extras:x64-windows-static=fail
 quickfast:x64-linux=ignore
 quickfix:x64-linux=ignore
 quickfix:x64-windows=ignore
