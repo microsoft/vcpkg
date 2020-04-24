@@ -3,9 +3,9 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/export.chocolatey.h>
-#include <vcpkg/export.prefab.h>
 #include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
+#include <vcpkg/export.prefab.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
@@ -306,9 +306,6 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_PREFAB_ENABLE_MAVEN = "--prefab-maven";
     static constexpr StringLiteral OPTION_PREFAB_ENABLE_DEBUG = "--prefab-debug";
 
-
-
-
     static constexpr std::array<CommandSwitch, 11> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
@@ -336,7 +333,7 @@ namespace vcpkg::Export
          "Specify the maintainer for the exported Chocolatey package (experimental feature)"},
         {OPTION_CHOCOLATEY_VERSION_SUFFIX,
          "Specify the version suffix to add for the exported Chocolatey package (experimental feature)"},
-        {OPTION_PREFAB_GROUP_ID,  "GroupId uniquely identifies your project according maven specifications"},
+        {OPTION_PREFAB_GROUP_ID, "GroupId uniquely identifies your project according maven specifications"},
         {OPTION_PREFAB_ARTIFACT_ID, "Artifact Id is the name of the project according maven specifications"},
         {OPTION_PREFAB_VERSION, "Version is the name of the project according maven specifications"},
         {OPTION_PREFAB_SDK_MIN_VERSION, "Android minimum supported sdk version"},
@@ -389,10 +386,12 @@ namespace vcpkg::Export
             });
         }
 
-        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey && !ret.prefab)
+        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey &&
+            !ret.prefab)
         {
-            System::print2(System::Color::error,
-                           "Must provide at least one export type: --raw --nuget --ifw --zip --7zip --chocolatey --prefab\n");
+            System::print2(
+                System::Color::error,
+                "Must provide at least one export type: --raw --nuget --ifw --zip --7zip --chocolatey --prefab\n");
             System::print2(COMMAND_STRUCTURE.example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -512,7 +511,15 @@ namespace vcpkg::Export
                 action.spec.triplet().to_string(),
                 raw_exported_dir_path / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
-            Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
+            auto lines = fs.read_lines(paths.listfile_path(binary_paragraph)).value_or_exit(VCPKG_LINE_INFO);
+            std::vector<fs::path> files;
+            for (auto&& suffix : lines)
+            {
+                if (!suffix.empty() && suffix.back() == '\r') suffix.pop_back();
+                files.push_back(paths.installed / suffix);
+            }
+
+            Install::install_files_and_write_listfile(fs, paths.installed, files, dirs);
         }
 
         // Copy files needed for integration
@@ -641,7 +648,8 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             Chocolatey::do_export(export_plan, paths, opts.chocolatey_options);
         }
 
-        if(opts.prefab){
+        if (opts.prefab)
+        {
             Prefab::do_export(export_plan, paths, opts.prefab_options, default_triplet);
         }
 

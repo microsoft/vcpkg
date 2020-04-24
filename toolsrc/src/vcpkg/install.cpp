@@ -46,16 +46,24 @@ namespace vcpkg::Install
                                           const fs::path& source_dir,
                                           const InstallDir& destination_dir)
     {
+        Checks::check_exit(
+            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.generic_string());
+        auto files = fs.get_files_recursive(source_dir);
+        install_files_and_write_listfile(fs, source_dir, files, destination_dir);
+    }
+    void install_files_and_write_listfile(Files::Filesystem& fs,
+                                          const fs::path& source_dir,
+                                          const std::vector<fs::path>& files,
+                                          const InstallDir& destination_dir)
+    {
         std::vector<std::string> output;
         std::error_code ec;
 
-        const size_t prefix_length = source_dir.native().size();
+        const size_t prefix_length = source_dir.generic_u8string().size();
         const fs::path& destination = destination_dir.destination();
         const std::string& destination_subdirectory = destination_dir.destination_subdirectory();
         const fs::path& listfile = destination_dir.listfile();
 
-        Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.generic_string());
         fs.create_directories(destination, ec);
         Checks::check_exit(
             VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.generic_string());
@@ -65,7 +73,6 @@ namespace vcpkg::Install
             VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.generic_string());
 
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
-        auto files = fs.get_files_recursive(source_dir);
         for (auto&& file : files)
         {
             const auto status = fs.symlink_status(file, ec);
@@ -298,9 +305,9 @@ namespace vcpkg::Install
     using Build::ExtendedBuildResult;
 
     static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                    InstallPlanAction& action,
-                                                    StatusParagraphs& status_db,
-                                                    IBinaryProvider* binaries_provider)
+                                                           InstallPlanAction& action,
+                                                           StatusParagraphs& status_db,
+                                                           IBinaryProvider* binaries_provider)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
@@ -731,7 +738,7 @@ namespace vcpkg::Install
                     {
                         const auto vs_prompt_view = to_zstring_view(vs_prompt);
                         System::print2(vcpkg::System::Color::warning,
-                                        "warning: vcpkg appears to be in a Visual Studio prompt targeting ",
+                                       "warning: vcpkg appears to be in a Visual Studio prompt targeting ",
                                        vs_prompt_view,
                                        " but is installing packages for ",
                                        common_triplet.to_string(),
