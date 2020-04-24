@@ -1624,7 +1624,6 @@ shogun:x64-windows-static = skip
 shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
-simdjson:arm-uwp=fail
 simdjson:x86-windows=fail
 skia:arm64-windows=fail
 skia:arm-uwp=fail
