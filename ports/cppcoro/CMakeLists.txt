@@ -1,6 +1,7 @@
-
 cmake_minimum_required(VERSION 3.8)
 project(cppcoro VERSION 2020.2 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
 
 add_library(cppcoro
     lib/async_mutex.cpp 
@@ -27,14 +28,8 @@ add_library(cppcoro
     lib/ipv6_endpoint.cpp
 )
 
-set_target_properties(cppcoro
-PROPERTIES
-    CXX_STANDARD 17 # expect C++ Coroutines TS <experimental/coroutine>
-)
-
 if(APPLE)
     message(STATUS "using sysroot: ${CMAKE_OSX_SYSROOT}")
-
 elseif(WIN32)
     message(STATUS "using platform: ${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}")
     # for now, build in single target
@@ -61,103 +56,17 @@ elseif(WIN32)
         lib/socket_recv_operation.cpp
         lib/io_service.cpp
     )
-    list(APPEND detail_headers
-        include/cppcoro/detail/win32.hpp
-        include/cppcoro/detail/win32_overlapped_operation.hpp
-    )
-    list(APPEND net_headers
-        include/cppcoro/net/socket.hpp
-        include/cppcoro/net/socket_accept_operation.hpp
-        include/cppcoro/net/socket_connect_operation.hpp
-        include/cppcoro/net/socket_disconnect_operation.hpp
-        include/cppcoro/net/socket_recv_operation.hpp
-        include/cppcoro/net/socket_recv_from_operation.hpp
-        include/cppcoro/net/socket_send_operation.hpp
-        include/cppcoro/net/socket_send_to_operation.hpp
-    )
-
-elseif(CMAKE_SYSTEM_NAME MATCHES Linux)
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
     message(STATUS "using system: ${CMAKE_HOST_SYSTEM_VERSION}")
-
 endif()
-
-list(APPEND headers
-    include/cppcoro/awaitable_traits.hpp
-    include/cppcoro/is_awaitable.hpp
-    include/cppcoro/async_auto_reset_event.hpp
-    include/cppcoro/async_manual_reset_event.hpp
-    include/cppcoro/async_generator.hpp
-    include/cppcoro/async_mutex.hpp
-    include/cppcoro/async_latch.hpp
-    include/cppcoro/async_scope.hpp
-    include/cppcoro/broken_promise.hpp
-    include/cppcoro/cancellation_registration.hpp
-    include/cppcoro/cancellation_source.hpp
-    include/cppcoro/cancellation_token.hpp
-    include/cppcoro/task.hpp
-    include/cppcoro/sequence_barrier.hpp
-    include/cppcoro/sequence_traits.hpp
-    include/cppcoro/single_producer_sequencer.hpp
-    include/cppcoro/multi_producer_sequencer.hpp
-    include/cppcoro/shared_task.hpp
-    include/cppcoro/single_consumer_event.hpp
-    include/cppcoro/single_consumer_async_auto_reset_event.hpp
-    include/cppcoro/sync_wait.hpp
-    include/cppcoro/task.hpp
-    include/cppcoro/io_service.hpp
-    include/cppcoro/config.hpp
-    include/cppcoro/on_scope_exit.hpp
-    include/cppcoro/file_share_mode.hpp
-    include/cppcoro/file_open_mode.hpp
-    include/cppcoro/file_buffering_mode.hpp
-    include/cppcoro/file.hpp
-    include/cppcoro/fmap.hpp
-    include/cppcoro/when_all.hpp
-    include/cppcoro/when_all_ready.hpp
-    include/cppcoro/resume_on.hpp
-    include/cppcoro/schedule_on.hpp
-    include/cppcoro/generator.hpp
-    include/cppcoro/readable_file.hpp
-    include/cppcoro/recursive_generator.hpp
-    include/cppcoro/writable_file.hpp
-    include/cppcoro/read_only_file.hpp
-    include/cppcoro/write_only_file.hpp
-    include/cppcoro/read_write_file.hpp
-    include/cppcoro/file_read_operation.hpp
-    include/cppcoro/file_write_operation.hpp
-    include/cppcoro/static_thread_pool.hpp
-)
-
-list(APPEND detail_headers
-    include/cppcoro/detail/void_value.hpp
-    include/cppcoro/detail/when_all_ready_awaitable.hpp
-    include/cppcoro/detail/when_all_counter.hpp
-    include/cppcoro/detail/when_all_task.hpp
-    include/cppcoro/detail/get_awaiter.hpp
-    include/cppcoro/detail/is_awaiter.hpp
-    include/cppcoro/detail/any.hpp
-    include/cppcoro/detail/sync_wait_task.hpp
-    include/cppcoro/detail/unwrap_reference.hpp
-    include/cppcoro/detail/lightweight_manual_reset_event.hpp
-)
-
-list(APPEND net_headers
-    include/cppcoro/net/ip_address.hpp
-    include/cppcoro/net/ip_endpoint.hpp
-    include/cppcoro/net/ipv4_address.hpp
-    include/cppcoro/net/ipv4_endpoint.hpp
-    include/cppcoro/net/ipv6_address.hpp
-    include/cppcoro/net/ipv6_endpoint.hpp
-    include/cppcoro/net/socket.hpp
-)
 
 target_include_directories(cppcoro
 PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+    $<INSTALL_INTERFACE:include>
 )
 
-if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     if(WIN32)
         message(FATAL_ERROR "<experimental/resumable> doesn't support clang-cl compiler")
     else()
@@ -165,24 +74,20 @@ if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
         PUBLIC
             -std=c++1z -fcoroutines-ts
             -stdlib=libc++
-        PRIVATE
-            -fPIC
         )
         target_link_libraries(cppcoro
         PUBLIC
             c++ pthread
-        PRIVATE
-            -Wall
         )
     endif()
 
 elseif(MSVC)
     target_compile_options(cppcoro
     PUBLIC
-        /std:c++latest /await
-        /W4
+        /await
     PRIVATE
         "/analyze:max_paths 512"
+        -D_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING=1
     )
     if(CMAKE_GENERATOR_PLATFORM STREQUAL x64)
         target_compile_options(cppcoro
@@ -194,11 +99,6 @@ elseif(MSVC)
 endif()
 
 if(WIN32)
-    set_target_properties(cppcoro
-    PROPERTIES
-        WINDOWS_EXPORT_ALL_SYMBOLS True
-    )
-
     target_link_libraries(cppcoro
     PUBLIC
         kernel32 synchronization ws2_32 mswsock
@@ -213,24 +113,19 @@ elseif(CMAKE_SYSTEM_NAME MATCHES Linux)
     )
 endif()
 
-install(FILES       ${headers}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/cppcoro
+install(DIRECTORY   include/cppcoro
+        DESTINATION include
 )
-install(FILES       ${detail_headers}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/cppcoro/details
-)
-install(FILES       ${net_headers}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/cppcoro/net
-)
+
 install(TARGETS     cppcoro
         EXPORT      ${PROJECT_NAME}-config
-        RUNTIME     DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-        LIBRARY     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-        ARCHIVE     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+        RUNTIME     DESTINATION bin
+        LIBRARY     DESTINATION lib
+        ARCHIVE     DESTINATION lib
 )
 
 install(EXPORT      ${PROJECT_NAME}-config
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}
+        DESTINATION share/${PROJECT_NAME}
 )
 
 include(CMakePackageConfigHelpers)
@@ -241,7 +136,7 @@ write_basic_package_version_file(${VERSION_FILE_PATH}
 )
 
 install(FILES           ${VERSION_FILE_PATH} 
-        DESTINATION     ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}
+        DESTINATION     share/${PROJECT_NAME}
 )
 
 if(NOT BUILD_TESTING)
@@ -278,54 +173,21 @@ add_executable(cppcoro_test
     test/static_thread_pool_tests.cpp
 )
 
-set_target_properties(cppcoro_test
-PROPERTIES
-    CXX_STANDARD 17 # follow that of `cppcoro` target
-)
-
 target_link_libraries(cppcoro_test
 PRIVATE
     cppcoro
     Threads::Threads
 )
 
-set(conan_path ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-if(EXISTS ${conan_path})
-    include(${conan_path})
-    conan_basic_setup()
-    message(STATUS "using conan: ${conan_path}")
-
-    target_include_directories(cppcoro_test
-    PRIVATE
-        ${CONAN_INCLUDE_DIRS}
-    )
-    target_compile_options(cppcoro_test
-    PRIVATE
-        ${CONAN_DEFINES}
-    )
-    #
-    #   'doctest' is header-only library. 
-    #   we don't need these functions (and it requires CMake 3.13+)
-    #
-    # target_link_directories(cppcoro_test 
-    # PRIVATE
-    #     ${CONAN_LIB_DIRS}
-    # )
-    target_link_libraries(cppcoro_test
-    PRIVATE
-        ${CONAN_LIBS}
-    )
-else()
-    find_package(doctest CONFIG REQUIRED)
-    get_target_property(DOCTEST_INCLUDE_DIR doctest::doctest
-        INTERFACE_INCLUDE_DIRECTORIES
-    )
-    message(STATUS "using doctest: ${DOCTEST_INCLUDE_DIR}")
-    target_link_libraries(cppcoro_test
-    PRIVATE
-        doctest::doctest
-    )
-endif()
+find_package(doctest CONFIG REQUIRED)
+get_target_property(DOCTEST_INCLUDE_DIR doctest::doctest
+    INTERFACE_INCLUDE_DIRECTORIES
+)
+message(STATUS "using doctest: ${DOCTEST_INCLUDE_DIR}")
+target_link_libraries(cppcoro_test
+PRIVATE
+    doctest::doctest
+)
 
 if(WIN32)
     target_sources(cppcoro_test
@@ -335,8 +197,6 @@ if(WIN32)
         test/file_tests.cpp
         test/socket_tests.cpp
     )
-else()
-
 endif()
 
 add_test(NAME test_all COMMAND cppcoro_test --duration=true )

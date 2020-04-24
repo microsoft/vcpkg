@@ -1,7 +1,9 @@
-
-# for Linux, the port requires libc++ and Clang. see #10693
-vcpkg_fail_port_install(ON_TARGET "uwp" "linux")
+vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+if(VCPKG_TARGET_IS_LINUX)
+    message("Warning: cppcoro requires libc++ and Clang on Linux. See https://github.com/microsoft/vcpkg/pull/10693#issuecomment-610394650.")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -22,6 +24,8 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=False
 )
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL     ${SOURCE_PATH}/LICENSE.txt
      DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
