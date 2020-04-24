@@ -597,10 +597,9 @@ hidapi:x64-uwp=fail
 hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
+hpx:x64-linux=fail
 hwloc:arm64-windows=fail
 hwloc:arm-uwp=fail
-hwloc:x64-linux=fail
-hwloc:x64-osx=fail
 hwloc:x64-uwp=fail
 hyperscan:x64-linux=ignore
 # hypre has a conflict with 'superlu' port
