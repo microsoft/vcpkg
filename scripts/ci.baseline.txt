@@ -820,7 +820,6 @@ libmodman:x64-uwp=fail
 libmodman:x64-windows-static=fail
 libmodplug:arm-uwp=fail
 libmodplug:x64-uwp=fail
-libmupdf:x64-linux=fail
 libmupdf:x64-osx=fail
 libmysql:x86-windows=fail
 libnice:x64-linux=fail
