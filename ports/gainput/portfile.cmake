@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v1.0.0
     SHA512 56fdc4c0613d7260861885b270ebe9e624e940175f41e3ac82516e2eb0d6d229e405fbcc2e54608e7d6751c1d8658b5b5e186153193badc6487274cb284a8cd6
     HEAD_REF master
+    PATCHES 
+        "install_as_cmake_package.patch"
 )
 
 vcpkg_configure_cmake(
@@ -17,6 +19,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
