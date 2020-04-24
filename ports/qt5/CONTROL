@@ -1,5 +1,5 @@
 Source: qt5
-Version: 5.12.7
+Version: 5.12.8
 Homepage: https://www.qt.io/
 Description: Qt5 Application Framework
 Build-Depends: qt5-base
@@ -11,7 +11,7 @@ Description: Build the essential qt modules
 
 Feature: latest
 Build-Depends: qt5-base[core, latest]
-Description: Build latest qt version (5.14.1) instead of LTS
+Description: Build latest qt version (5.14.2) instead of LTS
 
 Feature: default
 Build-Depends: qt5[core, 3d, webchannel, websockets, extras, sensors, serialport, speech, virtualkeyboard, purchasing, scxml, charts, datavis3d, gamepad, graphicaleffects, location, webglplugin, webview, translations, remoteobjects, connectivity]
