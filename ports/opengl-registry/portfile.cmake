@@ -16,12 +16,12 @@ file(COPY
   ${SOURCE_PATH}/xml/gl.xml
   ${SOURCE_PATH}/xml/glx.xml
   ${SOURCE_PATH}/xml/wgl.xml
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/opengl-registry
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
 # Using the Makefile because it is the smallest file with a complete copy of the license text
 file(
   INSTALL ${SOURCE_PATH}/xml/Makefile
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/opengl-registry
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
   RENAME copyright
 )
