@@ -264,7 +264,6 @@ coolprop:x64-uwp=fail
 coroutine:arm-uwp=fail
 coroutine:x64-linux=fail
 coroutine:x64-uwp=fail
-coroutine:x86-windows=fail
 corrade:arm64-windows=fail
 corrade:arm-uwp=fail
 corrade:x64-uwp=fail
