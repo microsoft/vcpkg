@@ -696,13 +696,12 @@ namespace vcpkg::Build
 #if defined(_WIN32)
         abi_tag_entries.emplace_back("powershell", paths.get_tool_version("powershell-core"));
 #endif
-
-        abi_tag_entries.emplace_back(
-            "vcpkg_fixup_cmake_targets",
-            vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO,
-                                       fs,
-                                       paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake",
-                                       Hash::Algorithm::Sha1));
+        static std::string s_hash_vcpkg_configure_cmake = vcpkg::Hash::get_file_hash(
+            VCPKG_LINE_INFO, fs, paths.scripts / "cmake" / "vcpkg_configure_cmake.cmake", Hash::Algorithm::Sha1);
+        static std::string s_hash_vcpkg_fixup_cmake_targets = vcpkg::Hash::get_file_hash(
+            VCPKG_LINE_INFO, fs, paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake", Hash::Algorithm::Sha1);
+        abi_tag_entries.emplace_back("vcpkg_configure_cmake", s_hash_vcpkg_configure_cmake);
+        abi_tag_entries.emplace_back("vcpkg_fixup_cmake_targets", s_hash_vcpkg_fixup_cmake_targets);
 
         abi_tag_entries.emplace_back("post_build_checks", "2");
         abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
@@ -1057,24 +1056,23 @@ namespace vcpkg::Build
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                     break;
                 case VcpkgTripletVar::LOAD_VCVARS_ENV:
-                        if (variable_value.empty())
-                        {
-                            load_vcvars_env = true;
-                            if(external_toolchain_file)
-                                load_vcvars_env = false;
-                        }
-                        else if (Strings::case_insensitive_ascii_equals(variable_value, "1") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "on") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "true"))
-                            load_vcvars_env = true;
-                        else if (Strings::case_insensitive_ascii_equals(variable_value, "0") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "off") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "false"))
-                            load_vcvars_env = false;
-                        else
-                            Checks::exit_with_message(
-                                VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s", variable_value);
-                        break;
+                    if (variable_value.empty())
+                    {
+                        load_vcvars_env = true;
+                        if (external_toolchain_file) load_vcvars_env = false;
+                    }
+                    else if (Strings::case_insensitive_ascii_equals(variable_value, "1") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "on") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "true"))
+                        load_vcvars_env = true;
+                    else if (Strings::case_insensitive_ascii_equals(variable_value, "0") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "off") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "false"))
+                        load_vcvars_env = false;
+                    else
+                        Checks::exit_with_message(
+                            VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s", variable_value);
+                    break;
             }
         }
 

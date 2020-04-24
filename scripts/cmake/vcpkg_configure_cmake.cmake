@@ -29,6 +29,8 @@
 ## Disables running the CMake configure step in parallel.
 ## This is needed for libraries which write back into their source directory during configure.
 ##
+## This also disables CMAKE_DISABLE_SOURCE_CHANGES.
+##
 ## ### NO_CHARSET_FLAG
 ## Disables passing `utf-8` as the default character set to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`.
 ##
@@ -263,6 +265,7 @@ function(vcpkg_configure_cmake)
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
 
     if(NINJA_HOST AND CMAKE_HOST_WIN32 AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
+        list(APPEND _csc_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
