@@ -1,4 +1,3 @@
 Source: pe-parse
-Version: 1.1.0
+Version: 1.2.0
 Description: pe-parse is a principled, lightweight C/C++ PE parser
-Build-Depends: icu
