@@ -49,6 +49,21 @@ index a6c692a..35e06bb 100644
 +  ARCHIVE
 +  RUNTIME
 +)
+diff --git a/processing/crprober/CMakeLists.txt b/processing/crprober/CMakeLists.txt
+index 046ba57..255e200 100644
+--- a/processing/crprober/CMakeLists.txt
++++ b/processing/crprober/CMakeLists.txt
+@@ -18,4 +18,8 @@ add_executable(crprober ${source_files} ${header_files})
+ # Add input link libraries
+ target_link_libraries(crprober CrashRptProbe)
+ 
+-set_target_properties(crprober PROPERTIES DEBUG_POSTFIX d )
+\ No newline at end of file
++set_target_properties(crprober PROPERTIES DEBUG_POSTFIX d )
++
++install(TARGETS crprober 
++  RUNTIME DESTINATION tools/crashrpt
++)
 diff --git a/reporting/crashrpt/CMakeLists.txt b/reporting/crashrpt/CMakeLists.txt
 index 42d40e2..a335ca9 100644
 --- a/reporting/crashrpt/CMakeLists.txt
