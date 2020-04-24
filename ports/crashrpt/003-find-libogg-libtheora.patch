@@ -1,0 +1,57 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7a20e49..42a55fc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -99,6 +99,17 @@ endmacro()
+ find_package(ZLIB REQUIRED)
+ find_package(MINIZIP REQUIRED)
+ find_package(PNG REQUIRED)
++find_package(Ogg REQUIRED)
++
++find_library(THEORA_LIBRARY theora)
++if(NOT THEORA_LIBRARY)
++  message(FATAL_ERROR "theora library not found")
++endif()
++
++find_path(THEORA_INCLUDE_DIR theora/theora.h)
++if(NOT THEORA_INCLUDE_DIR)
++  message(FATAL_ERROR "theora include dir not found")
++endif()
+ 
+ # Other CMakeLists are located in project subdirectories 
+ 
+@@ -132,8 +143,8 @@ add_subdirectory("thirdparty/jpeg")
+ #add_subdirectory("thirdparty/libpng")
+ #add_subdirectory("thirdparty/minizip")
+ #add_subdirectory("thirdparty/zlib")
+-add_subdirectory("thirdparty/libogg")
+-add_subdirectory("thirdparty/libtheora")
++#add_subdirectory("thirdparty/libogg")
++#add_subdirectory("thirdparty/libtheora")
+ 
+ 
+ 
+diff --git a/reporting/crashsender/CMakeLists.txt b/reporting/crashsender/CMakeLists.txt
+index 25cd467..9e191c4 100644
+--- a/reporting/crashsender/CMakeLists.txt
++++ b/reporting/crashsender/CMakeLists.txt
+@@ -30,8 +30,8 @@ include_directories( ${CMAKE_SOURCE_DIR}/include
+                             ${PNG_INCLUDE_DIRS}
+                             ${CMAKE_SOURCE_DIR}/thirdparty/tinyxml
+                             ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/include 
+-							${CMAKE_SOURCE_DIR}/thirdparty/libogg/include
+-							${CMAKE_SOURCE_DIR}/thirdparty/libtheora/include)
++							${OGG_INCLUDE_DIRS}
++							${THEORA_INCLUDE_DIR})
+ 
+ if(NOT CMAKE_CL_64)
+ 	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib )
+@@ -43,7 +43,7 @@ endif(NOT CMAKE_CL_64)
+ add_executable(CrashSender WIN32 ${source_files} ${header_files})
+ 
+ # Add input link libraries
+-target_link_libraries(CrashSender ZLIB::ZLIB minizip::minizip libjpeg PNG::PNG tinyxml libogg libtheora WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib psapi.lib)
++target_link_libraries(CrashSender ZLIB::ZLIB minizip::minizip libjpeg PNG::PNG tinyxml Ogg::ogg ${THEORA_LIBRARY} WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib psapi.lib)
+ 
+ # Add compiler flags (/MP for multi-processor compilation, /Os to favor small code)
+ set_target_properties(CrashRpt PROPERTIES COMPILE_FLAGS "/Os")

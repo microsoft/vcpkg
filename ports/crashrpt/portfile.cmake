@@ -15,10 +15,11 @@ vcpkg_from_git(
     PATCHES
         001-cmake-install.patch
         002-find-minizip-png-zlib.patch
+        003-find-libogg-libtheora.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY libpng minizip zlib)
+foreach(DEPENDENCY libogg libpng libtheora minizip zlib)
     if(EXISTS ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
     endif()
