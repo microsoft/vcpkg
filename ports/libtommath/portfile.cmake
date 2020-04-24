@@ -7,32 +7,44 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(CRTFLAG "/MD")
+    else()
+        set(CRTFLAG "/MT")
+    endif()
+
     # Make sure we start from a clean slate
     vcpkg_execute_build_process(
         COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc clean
         WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME clean-${TARGET_TRIPLET}-dbg
     )
 
     #Debug Build
     vcpkg_execute_build_process(
-        COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc CFLAGS="/MTd"
-        WORKING_DIRECTORY ${SOURCE_PATH}/
+        COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc CFLAGS="${CRTFLAG}d"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}-dbg
     )
 
     file(INSTALL
         ${SOURCE_PATH}/tommath.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/Debug/lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
 
     # Clean up necessary to rebuild without debug symbols
     vcpkg_execute_build_process(
         COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc clean
         WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME clean-${TARGET_TRIPLET}-rel
     )
 
     vcpkg_execute_build_process(
-        COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc
-        WORKING_DIRECTORY ${SOURCE_PATH}/
+        COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc CFLAGS="${CRTFLAG}"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}-rel
     )
 
     file(INSTALL
@@ -45,7 +57,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
 else()
-
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(MAKE_FILE "makefile.shared")
     else()
@@ -58,10 +69,10 @@ else()
     )
 
     vcpkg_execute_build_process(
-        COMMAND make -j4 -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR}/Debug COMPILE_DEBUG=1 install
+        COMMAND make -j${VCPKG_CONCURRENCY} -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR}/debug COMPILE_DEBUG=1 install
         WORKING_DIRECTORY ${SOURCE_PATH}
     )
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/Debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
     vcpkg_execute_build_process(
         COMMAND make -f ${MAKE_FILE} clean
@@ -69,7 +80,7 @@ else()
     )
 
     vcpkg_execute_build_process(
-        COMMAND make -j4 -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR} install
+        COMMAND make -j${VCPKG_CONCURRENCY} -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR} install
         WORKING_DIRECTORY ${SOURCE_PATH}
     )
 endif()
