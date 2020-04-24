@@ -3,4 +3,4 @@ Homepage: https://github.com/luncliff/coroutine
 Version: 1.5.0
 Build-Depends: ms-gsl
 Description: C++ 20 Coroutines helper/example library
-Supports: !(uwp|linux)
+Supports: !uwp

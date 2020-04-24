@@ -1,6 +1,8 @@
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-# for Linux, the port requires libc++ and Clang or GCC 10+
-vcpkg_fail_port_install(ON_TARGET "uwp" "linux")
+if(VCPKG_TARGET_IS_LINUX)
+    message("Warning: `coroutine` requires libc++ and Clang or GCC 10+ on Linux")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,19 +12,15 @@ vcpkg_from_github(
     HEAD_REF        master
 )
 
-# package: 'ms-gsl'
-set(GSL_INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include
-    CACHE PATH "path to include C++ core guideline support library" FORCE)
-message(STATUS "Using ms-gsl(vcpkg): ${GSL_INCLUDE_DIR}")
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DGSL_INCLUDE_DIR=${GSL_INCLUDE_DIR}
+        -DGSL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
         -DBUILD_TESTING=False
 )
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL        ${SOURCE_PATH}/LICENSE
      DESTINATION    ${CURRENT_PACKAGES_DIR}/share/${PORT}
@@ -31,4 +29,3 @@ file(INSTALL        ${SOURCE_PATH}/LICENSE
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
