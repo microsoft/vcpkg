@@ -26,10 +26,10 @@ index 3c4299d264..99fcb1f713 100644
          inherit_from     => [ "VC-noCE-common", asm("x86_asm"),
 -                              sub { $disabled{shared} ? () : "uplink_common" } ],
 +                              sub { $disabled{uplink} ? () : "uplink_common" } ],
-         CFLAGS           => add("/WX"),
          AS               => sub { vc_win32_info()->{AS} },
          ASFLAGS          => sub { vc_win32_info()->{ASFLAGS} },
-@@ -1375,7 +1375,7 @@ my %targets = (
+         asoutflag        => sub { vc_win32_info()->{asoutflag} },
+@@ -1374,7 +1374,7 @@ my %targets = (
  #### MinGW
      "mingw" => {
          inherit_from     => [ "BASE_unix", asm("x86_asm"),
@@ -139,7 +139,7 @@ index 5a699836f3..de45f1e299 100755
  #! /usr/bin/env perl
 +#! /usr/bin/env perl
  # -*- mode: perl; -*-
- # Copyright 2016-2019 The OpenSSL Project Authors. All Rights Reserved.
+ # Copyright 2016-2020 The OpenSSL Project Authors. All Rights Reserved.
  #
 @@ -407,6 +408,7 @@ my @disablables = (
      "ubsan",
@@ -149,12 +149,13 @@ index 5a699836f3..de45f1e299 100755
      "whirlpool",
      "weak-ssl-ciphers",
      "zlib",
-@@ -479,7 +481,7 @@ my @disable_cascades = (
+@@ -491,8 +493,8 @@ my @disable_cascades = (
  
      # Without position independent code, there can be no shared libraries or DSOs
      "pic"               => [ "shared" ],
 -    "shared"            => [ "dynamic-engine" ],
 +    "shared"            => [ "dynamic-engine", "uplink" ],
+     "dso"               => [ "dynamic-engine" ],
      "engine"            => [ "afalgeng", "devcryptoeng" ],
  
      # no-autoalginit is only useful when building non-shared
