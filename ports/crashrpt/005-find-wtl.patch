@@ -1,0 +1,185 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 281f66b..b95a781 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -121,6 +121,11 @@ if(NOT TINYXML_INCLUDE_DIR)
+   message(FATAL_ERROR "tinyxml include dir not found")
+ endif()
+ 
++find_path(WTL_INCLUDE_DIR wtl/atlapp.h)
++if(NOT WTL_INCLUDE_DIR)
++  message(FATAL_ERROR "WTL include dir not found")
++endif()
++
+ # Other CMakeLists are located in project subdirectories 
+ 
+ if(CRASHRPT_BUILD_DEMOS)
+diff --git a/processing/crashrptprobe/CMakeLists.txt b/processing/crashrptprobe/CMakeLists.txt
+index 2aeb395..dafb007 100644
+--- a/processing/crashrptprobe/CMakeLists.txt
++++ b/processing/crashrptprobe/CMakeLists.txt
+@@ -21,7 +21,7 @@ fix_default_compiler_settings_()
+ include_directories( ${CMAKE_SOURCE_DIR}/include 
+ 			${CMAKE_SOURCE_DIR}/reporting/crashrpt
+ 			${CMAKE_SOURCE_DIR}/reporting/crashsender
+-			${CMAKE_SOURCE_DIR}/thirdparty/wtl
++			${WTL_INCLUDE_DIR}
+ 			${ZLIB_INCLUDE_DIRS}
+ 			${MINIZIP_INCLUDE_DIR}
+ 			${TINYXML_INCLUDE_DIR}
+diff --git a/processing/crashrptprobe/CrashRptProbe.rc b/processing/crashrptprobe/CrashRptProbe.rc
+index a08f63e..1d2abea 100644
+--- a/processing/crashrptprobe/CrashRptProbe.rc
++++ b/processing/crashrptprobe/CrashRptProbe.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "atlres.h"
++#include "wtl/atlres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+diff --git a/processing/crashrptprobe/stdafx.h b/processing/crashrptprobe/stdafx.h
+index 2b027b2..0b60659 100644
+--- a/processing/crashrptprobe/stdafx.h
++++ b/processing/crashrptprobe/stdafx.h
+@@ -70,13 +70,13 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ extern CAppModule _Module;
+ #include <atlwin.h>
+ 
+ // CString-related includes
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ 
+ #if _MSC_VER<1400
+ #define WCSNCPY_S(strDest, sizeInBytes, strSource, count) wcsncpy(strDest, strSource, count)
+diff --git a/reporting/crashrpt/CMakeLists.txt b/reporting/crashrpt/CMakeLists.txt
+index a335ca9..c7e4fd6 100644
+--- a/reporting/crashrpt/CMakeLists.txt
++++ b/reporting/crashrpt/CMakeLists.txt
+@@ -18,7 +18,7 @@ add_definitions(-D_UNICODE -D_CRT_SECURE_NO_DEPRECATE)
+ fix_default_compiler_settings_()
+ 
+ # Add include dir
+-include_directories( ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/thirdparty/wtl)
++include_directories( ${CMAKE_SOURCE_DIR}/include ${WTL_INCLUDE_DIR})
+ 
+ # Add library build target
+ if(CRASHRPT_BUILD_SHARED_LIBS)
+diff --git a/reporting/crashrpt/CrashRpt.rc b/reporting/crashrpt/CrashRpt.rc
+index 95e7502..2a13940 100644
+--- a/reporting/crashrpt/CrashRpt.rc
++++ b/reporting/crashrpt/CrashRpt.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "atlres.h"
++#include "wtl/atlres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+diff --git a/reporting/crashrpt/StdAfx.h b/reporting/crashrpt/StdAfx.h
+index 77d8c36..f6a9b6e 100644
+--- a/reporting/crashrpt/StdAfx.h
++++ b/reporting/crashrpt/StdAfx.h
+@@ -54,12 +54,12 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ extern CAppModule _Module;
+ #include <atlwin.h>
+ // CString-related includes
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ #include <new.h>
+ #include <map>
+ #include <set>
+diff --git a/reporting/crashsender/CMakeLists.txt b/reporting/crashsender/CMakeLists.txt
+index 780b756..23f3ae7 100644
+--- a/reporting/crashsender/CMakeLists.txt
++++ b/reporting/crashsender/CMakeLists.txt
+@@ -23,7 +23,7 @@ fix_default_compiler_settings_()
+ # Add include dir
+ include_directories( ${CMAKE_SOURCE_DIR}/include 
+                             ${CMAKE_SOURCE_DIR}/reporting/CrashRpt
+-                            ${CMAKE_SOURCE_DIR}/thirdparty/wtl 
++                            ${WTL_INCLUDE_DIR}
+                             ${ZLIB_INCLUDE_DIRS}
+                             ${MINIZIP_INCLUDE_DIR}
+                             ${CMAKE_SOURCE_DIR}/thirdparty/jpeg 
+diff --git a/reporting/crashsender/CrashSender.rc b/reporting/crashsender/CrashSender.rc
+index 0502962..1731869 100644
+--- a/reporting/crashsender/CrashSender.rc
++++ b/reporting/crashsender/CrashSender.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "atlres.h"
++#include "wtl/atlres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+diff --git a/reporting/crashsender/stdafx.h b/reporting/crashsender/stdafx.h
+index f087ff4..4494d3a 100644
+--- a/reporting/crashsender/stdafx.h
++++ b/reporting/crashsender/stdafx.h
+@@ -19,7 +19,7 @@ be found in the Authors.txt file in the root of the source tree.
+ #define WINVER		0x0501
+ #define _WIN32_WINNT	0x0501
+ #define _WIN32_IE	0x0600
+-#define _RICHEDIT_VER	0x0200
++#define _RICHEDIT_VER	0x0300
+ 
+ typedef __int64 off_t, _off_t;
+ #define _OFF_T_DEFINED
+@@ -61,19 +61,19 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ 
+ extern CAppModule _Module;
+ 
+ #include <atlwin.h>
+ 
+-#include <atlframe.h>
+-#include <atlctrls.h>
+-#include <atldlgs.h>
+-#include <atlctrlx.h>
++#include <wtl/atlframe.h>
++#include <wtl/atlctrls.h>
++#include <wtl/atldlgs.h>
++#include <wtl/atlctrlx.h>
+ 
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ 
+ #include <string>
+ #include <vector>
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 402b024..e2b61be 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -32,7 +32,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /DEBUG")
+ # Add include dir
+ include_directories( ${CMAKE_SOURCE_DIR}/include 
+                      ${CMAKE_SOURCE_DIR}/reporting/CrashRpt
+-					 ${CMAKE_SOURCE_DIR}/thirdparty/wtl )
++					 ${WTL_INCLUDE_DIR} )
+ 
+ # Add executable build target
+ add_executable(Tests ${source_files} ${header_files})
