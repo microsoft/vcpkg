@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(
-    CONFIG_PATH share/Microsoft.GSL/cmake
+    CONFIG_PATH share/cmake/Microsoft.GSL
     TARGET_PATH share/Microsoft.GSL
 )
 
