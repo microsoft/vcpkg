@@ -14,6 +14,12 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     benchmark SPDLOG_BUILD_BENCH
+    coarse-clock SPDLOG_CLOCK_COARSE
+    no-atomic-levels SPDLOG_NO_ATOMIC_LEVELS
+    no-child-fd SPDLOG_PREVENT_CHILD_FD
+    no-exceptions SPDLOG_NO_EXCEPTIONS
+    no-local-storage SPDLOG_NO_TLS
+    no-thread-id SPDLOG_NO_THREAD_ID
     wchar SPDLOG_WCHAR_SUPPORT
     wchar SPDLOG_WCHAR_FILENAMES
 )

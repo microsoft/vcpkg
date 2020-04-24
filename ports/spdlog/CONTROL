@@ -8,5 +8,23 @@ Feature: benchmark
 Description: Use google benchmark
 Build-Depends: benchmark
 
+Feature: coarse-clock
+Description: [Linux only] Use the much faster (but much less accurate) CLOCK_REALTIME_COARSE instead of regular clock
+
+Feature: no-atomic-levels
+Description: Prevent spdlog from using std::atomic log levels (use only if your code never modifies log levels concurrently)
+
+Feature: no-child-fd
+Description: Prevent child processes from inheriting file descriptors
+
+Feature: no-exceptions
+Description: Compile with -fno-exceptions. Calls abort() on any spdlog exceptions
+
+Feature: no-local-storage
+Description: Prevent spdlog from using thread local storage
+
+Feature: no-thread-id
+Description: Prevent spdlog from querying the thread id on each log call if thread id is not needed
+
 Feature: wchar
-Description: Enable support for wide character log messages and file names
+Description: [Windows only] Enable support for wide character log messages and file names
