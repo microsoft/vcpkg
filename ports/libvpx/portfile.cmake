@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "Linux" "OSX")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -23,7 +23,6 @@ vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 
-message(STATUS "PERL_EXE_PATH ; ${PERL_EXE_PATH}")
 set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
