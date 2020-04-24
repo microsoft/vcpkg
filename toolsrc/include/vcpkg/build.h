@@ -222,6 +222,7 @@ namespace vcpkg::Build
         ALLOW_OBSOLETE_MSVCRT,
         ALLOW_RESTRICTED_HEADERS,
         SKIP_DUMPBIN_CHECKS,
+        SKIP_ARCHITECTURE_CHECK,
         // Must be last
         COUNT,
     };
@@ -235,6 +236,7 @@ namespace vcpkg::Build
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
         BuildPolicy::ALLOW_RESTRICTED_HEADERS,
         BuildPolicy::SKIP_DUMPBIN_CHECKS,
+        BuildPolicy::SKIP_ARCHITECTURE_CHECK
     };
 
     const std::string& to_string(BuildPolicy policy);

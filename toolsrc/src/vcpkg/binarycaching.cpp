@@ -171,7 +171,7 @@ namespace
                     {
                         fs.copy_file(log_file.path(),
                                      tmp_log_path_destination / log_file.path().filename(),
-                                     fs::stdfs::copy_options::none,
+                                     fs::copy_options::none,
                                      ec);
                     }
                 }

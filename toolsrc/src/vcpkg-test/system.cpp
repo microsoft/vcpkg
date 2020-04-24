@@ -1,12 +1,19 @@
 #include <catch2/catch.hpp>
 
-#include <Windows.h>
 #include <string>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/zstringview.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.h>
+
+#if defined(_WIN32)
+#define _NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#include <stdlib.h>
+#endif
 
 using vcpkg::Optional;
 using vcpkg::StringView;
@@ -39,16 +46,17 @@ namespace
         check_exit(VCPKG_LINE_INFO, exit_code != 0);
 #else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
         std::string tmp;
-        tmp.reserve(varname.size() + value.size() + 1);
         tmp.append(varname.data(), varname.size());
         tmp.push_back('=');
-        if (value)
+        if (auto v = value.get())
         {
-            const auto& unpacked = value.value_or_exit(VCPKG_LINE_INFO);
-            tmp.append(unpacked);
+            tmp.append(*v);
         }
 
-        const int exit_code = putenv(tmp.c_str());
+        // putenv expects the string to never go out of scope
+        char* env_string = new char[tmp.size() + 1]; // overflow checked by tmp's null allocation
+        memcpy(env_string, tmp.data(), tmp.size());
+        const int exit_code = putenv(env_string);
         check_exit(VCPKG_LINE_INFO, exit_code == 0);
 #endif // defined(_WIN32)
     }
