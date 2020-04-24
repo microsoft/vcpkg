@@ -56,6 +56,7 @@ set(CONFIGURE_COMMAND ${PERL} Configure
     no-ssl2
     no-asm
     no-uplink
+    no-tests
     -utf-8
     shared
 )

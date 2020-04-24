@@ -39,6 +39,7 @@ set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
     enable-capieng
     no-ssl2
+    no-tests
     -utf-8
     ${OPENSSL_SHARED}
 )

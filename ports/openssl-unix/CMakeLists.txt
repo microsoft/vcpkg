@@ -125,6 +125,7 @@ add_custom_command(
         no-cast
         no-seed
         no-md2
+        no-tests
         ${PLATFORM}
         "--prefix=${CMAKE_INSTALL_PREFIX}"
         "--openssldir=/etc/ssl"
