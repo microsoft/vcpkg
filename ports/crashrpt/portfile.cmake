@@ -18,10 +18,11 @@ vcpkg_from_git(
         003-find-libogg-libtheora.patch
         004-find-tinyxml.patch
         005-find-wtl.patch
+        006-find-libjpeg-turbo.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY libogg libpng libtheora minizip tinyxml wtl zlib)
+foreach(DEPENDENCY jpeg libogg libpng libtheora minizip tinyxml wtl zlib)
     if(EXISTS ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
     endif()
