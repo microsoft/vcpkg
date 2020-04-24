@@ -1,6 +1,5 @@
-if (NOT VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "${PORT} only supports UWP")
-endif()
+vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Universal Platform" ON_TARGET "Linux" "OSX")
+
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
@@ -9,18 +8,6 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
 endif()
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    set(UWP_PLATFORM  "arm")
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    set(UWP_PLATFORM  "arm64")
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(UWP_PLATFORM  "x64")
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(UWP_PLATFORM  "Win32")
-else ()
-    message(FATAL_ERROR "Unsupported architecture")
-endif()
 
 vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(JOM)
