@@ -18,7 +18,7 @@ else()
         REF c8b6a108fd7e01c1d89d9150b5d209f17e54fc4e
         SHA512 43d7bb9696c9f5d64ec38b017b3b9fcbf86a8a3e8f21b129546b822fe00640f775ca362ec124a8cc37c4c9634de50d88d38952f04a7f4cfc08ad7c25463770ef
         HEAD_REF master
-        PATCHES improve-external-deps.patch
+        PATCHES improve-external-deps.patch fix-cmake.patch
     )
 endif()
 
