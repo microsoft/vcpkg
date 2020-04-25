@@ -1152,6 +1152,7 @@ msmpi:arm-uwp=fail
 msmpi:x64-linux=fail
 msmpi:x64-osx=fail
 msmpi:x64-uwp=fail
+mstch:x64-windows-static=fail
 muparser:arm-uwp=fail
 muparser:x64-uwp=fail
 murmurhash:arm-uwp=fail
