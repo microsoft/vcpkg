@@ -1,0 +1,5 @@
+Source: rsocket
+Version: 1.0.2
+Homepage: https://github.com/rsocket/rsocket-cpp
+Description: C++ implementation of RSocket http://rsocket.io
+Build-Depends: folly
