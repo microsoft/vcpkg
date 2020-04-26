@@ -105,6 +105,7 @@ macro(_vcpkg_restore_env_variable envvar)
     endif()
 endmacro()
 
+
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
         "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE"
@@ -178,17 +179,32 @@ function(vcpkg_configure_make)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
             set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --target=arm-pc-mingw32 --host=i686-pc-mingw32")
         endif()
+        
+        macro(_vcpkg_append_to_configure_enviromnent inoutstring var defaultval)
+            # Allows to overwrite settings in custom triplets via the enviromnent
+            if(ENV{${var}})
+                string(APPEND ${inoutstring} " ${var}='$ENV{${var}}'")
+            else()
+                string(APPEND ${inoutstring} " ${var}='${defaultval}'")
+            endif()
+        endmacro()
 
-        set(CONFIGURE_ENV "CC='cl.exe -nologo'")
-        string(APPEND CONFIGURE_ENV " CXX='cl.exe -nologo'") 
-        string(APPEND CONFIGURE_ENV " CPP='cl_cpp_wrapper'") 
-        string(APPEND CONFIGURE_ENV " LD='link.exe -verbose'")
-        string(APPEND CONFIGURE_ENV " NM='dumpbin.exe -symbols -headers -all'") 
-        # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm and require __declspec(dllimport) for some reason
-        string(APPEND CONFIGURE_ENV " DLLTOOL='link.exe -verbose -dll'")
-        string(APPEND CONFIGURE_ENV " AR='ar_lib_wrapper' AR_FLAGS='--verbose /VERBOSE'") #Transforms ar arguments to lib arguments
-        string(APPEND CONFIGURE_ENV " RANLIB='echo'") #Silly trick to ignore the RANLIB calls
-        # Also set CCAS/AS ? Maybe add a parameter to the function call which allows to modify CONFIGURE_ENV
+        set(CONFIGURE_ENV "")
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CC "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CXX "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV LD "link.exe -verbose")
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV AR "${MSYS_ROOT}/usr/share/automake-1.16/ar-lib lib.exe -verbose")
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV RANLIB ":") # Trick to ignore the RANLIB call
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV NM "dumpbin.exe -symbols -headers -all") 
+        # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
+        
+        # Other maybe interesting variables to control
+        # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
+        # LINK This is the command used to actually link a C program.
+        # CXXCOMPILE The command used to actually compile a C++ source file. The file name is appended to form the complete command line. 
+        # CXXLINK  The command used to actually link a C++ program. 
     
         #Some PATH handling for dealing with spaces....some tools will still fail with that!
         string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
