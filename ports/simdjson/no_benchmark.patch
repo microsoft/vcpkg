@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1e25a3d..1ee5d9a 100644
+index 42640bc..7a621a8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -64,7 +64,6 @@ include(include/CMakeLists.txt)
- add_subdirectory(src)
- add_subdirectory(tools)
+@@ -42,7 +42,6 @@ add_subdirectory(singleheader)
+ add_subdirectory(dependencies)
  add_subdirectory(tests)
+ add_subdirectory(examples)
 -add_subdirectory(benchmark)
+ add_subdirectory(fuzz)
  
- if (SIMDJSON_GOOGLE_BENCHMARKS)
-   if(NOT EXISTS dependencies/benchmark/CMakeLists.txt)
+ #

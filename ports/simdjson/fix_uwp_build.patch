@@ -1,0 +1,18 @@
+diff --git a/windows/toni_ronnko_dirent.h b/windows/toni_ronnko_dirent.h
+index f118712..a935664 100644
+--- a/windows/toni_ronnko_dirent.h
++++ b/windows/toni_ronnko_dirent.h
+@@ -339,7 +339,13 @@ static void dirent_set_errno(int error);
+  */
+ static _WDIR *_wopendir(const wchar_t *dirname) {
+   _WDIR *dirp;
++#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
++  /* Desktop */
+   DWORD n;
++#else
++  /* WinRT */
++  size_t n;
++#endif
+   wchar_t *p;
+ 
+   /* Must have directory name */
