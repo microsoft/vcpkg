@@ -1,17 +1,8 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://gitlab.freedesktop.org/uchardet/uchardet
-    REF bdfd6116a965fd210ef563613763e724424728b7
-    PATCHES
-        fix-string-no-output-variable.patch
-        fix-tool-build-error.patch
-        win32-getopt.patch
+    REF 8681fc060ea07f646434cd2d324e4a5aa7c495c4
 )
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    # On Windows, we can get a uchardet.dll, but it exports no symbols.
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
