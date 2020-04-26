@@ -34,7 +34,7 @@ index 14d5e85..040ac71 100644
 +    VERSION ${GAINPUT_VERSION}
 +    COMPATIBILITY SameMajorVersion
 +)
-+file(WRITE "${PROJECT_NAME}Config.cmake.in" 
++file(WRITE "unofficial-${PROJECT_NAME}Config.cmake.in" 
 +"@PACKAGE_INIT@
 +
 +  include(\"\${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake\")
