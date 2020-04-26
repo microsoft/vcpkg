@@ -1,0 +1,206 @@
+diff --git a/demos/ConsoleDemo/CMakeLists.txt b/demos/ConsoleDemo/CMakeLists.txt
+index e47ef4c..944fbf5 100644
+--- a/demos/ConsoleDemo/CMakeLists.txt
++++ b/demos/ConsoleDemo/CMakeLists.txt
+@@ -12,12 +12,12 @@ fix_default_compiler_settings_()
+ # Add include dir
+ include_directories(${CMAKE_SOURCE_DIR}/include 
+ 					${CMAKE_SOURCE_DIR}/reporting/CrashRpt
+-					${CMAKE_SOURCE_DIR}/thirdparty/wtl 
+-					${CMAKE_SOURCE_DIR}/thirdparty/zlib
+-					${CMAKE_SOURCE_DIR}/thirdparty/minizip  
+-					${CMAKE_SOURCE_DIR}/thirdparty/jpeg 
+-					${CMAKE_SOURCE_DIR}/thirdparty/libpng 
+-					${CMAKE_SOURCE_DIR}/thirdparty/tinyxml )
++					${WTL_INCLUDE_DIR}
++					${ZLIB_INCLUDE_DIRS}
++					${MINIZIP_INCLUDE_DIR}
++					${JPEG_INCLUDE_DIR}
++					${PNG_INCLUDE_DIRS}
++					${TINYXML_INCLUDE_DIR} )
+ 
+ # Add executable build target
+ add_executable(ConsoleDemo ${source_files} ${header_files})
+@@ -26,3 +26,7 @@ add_executable(ConsoleDemo ${source_files} ${header_files})
+ target_link_libraries(ConsoleDemo CrashRpt)
+ 
+ set_target_properties(ConsoleDemo PROPERTIES DEBUG_POSTFIX d )
++
++install(TARGETS ConsoleDemo 
++  RUNTIME DESTINATION tools/crashrpt
++)
+diff --git a/demos/MFCDemo/CMakeLists.txt b/demos/MFCDemo/CMakeLists.txt
+index a250ecc..ac68c85 100644
+--- a/demos/MFCDemo/CMakeLists.txt
++++ b/demos/MFCDemo/CMakeLists.txt
+@@ -58,4 +58,8 @@ ADD_CUSTOM_COMMAND(
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\crashrpt_lang.ini\""
+ )
+-endif(CMAKE_CL_64)
+\ No newline at end of file
++endif(CMAKE_CL_64)
++
++install(TARGETS MFCDemo 
++  RUNTIME DESTINATION tools/crashrpt
++)
+diff --git a/demos/WTLDemo/AboutDlg.h b/demos/WTLDemo/AboutDlg.h
+index 83eaac0..e96d1c2 100644
+--- a/demos/WTLDemo/AboutDlg.h
++++ b/demos/WTLDemo/AboutDlg.h
+@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #pragma once
+ #include "stdafx.h"
+ #include <shellapi.h>
+-#include <atlctrlx.h>
++#include <wtl/atlctrlx.h>
+ #include "CrashRpt.h"
+ 
+ class CAboutDlg : public CDialogImpl<CAboutDlg>
+diff --git a/demos/WTLDemo/CMakeLists.txt b/demos/WTLDemo/CMakeLists.txt
+index 40aaefb..969e813 100644
+--- a/demos/WTLDemo/CMakeLists.txt
++++ b/demos/WTLDemo/CMakeLists.txt
+@@ -19,7 +19,7 @@ fix_default_compiler_settings_()
+ 
+ # Add include dir
+ include_directories(${CMAKE_SOURCE_DIR}/include
+-					${CMAKE_SOURCE_DIR}/thirdparty/wtl)
++					${WTL_INCLUDE_DIR})
+ 
+ # Add executable build target
+ add_executable(WTLDemo WIN32 ${source_files} ${header_files})
+@@ -50,4 +50,8 @@ ADD_CUSTOM_COMMAND(
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\crashrpt_lang.ini\""
+ )
+-endif(CMAKE_CL_64)
+\ No newline at end of file
++endif(CMAKE_CL_64)
++
++install(TARGETS WTLDemo 
++  RUNTIME DESTINATION tools/crashrpt
++)
+diff --git a/demos/WTLDemo/DocumentDlg.h b/demos/WTLDemo/DocumentDlg.h
+index afce8fe..9b47728 100644
+--- a/demos/WTLDemo/DocumentDlg.h
++++ b/demos/WTLDemo/DocumentDlg.h
+@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #pragma once
+ #include "stdafx.h"
+ #include <shellapi.h>
+-#include <atlctrlx.h>
++#include <wtl/atlctrlx.h>
+ #include "CrashRpt.h"
+ 
+ class CDocumentDlg : public CDialogImpl<CDocumentDlg>
+diff --git a/demos/WTLDemo/WTLDemo.rc b/demos/WTLDemo/WTLDemo.rc
+index c651841..a056bb6 100644
+--- a/demos/WTLDemo/WTLDemo.rc
++++ b/demos/WTLDemo/WTLDemo.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "atlres.h"
++#include "wtl/atlres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+diff --git a/demos/WTLDemo/stdafx.h b/demos/WTLDemo/stdafx.h
+index a601446..658d9e5 100644
+--- a/demos/WTLDemo/stdafx.h
++++ b/demos/WTLDemo/stdafx.h
+@@ -16,10 +16,10 @@ be found in the Authors.txt file in the root of the source tree.
+ #pragma once
+ 
+ // Change these values to use different versions
+-#define WINVER		0x0500
++#define WINVER		0x0501
+ #define _WIN32_WINNT	0x0501
+-#define _WIN32_IE	0x0501
+-#define _RICHEDIT_VER	0x0200
++#define _WIN32_IE	0x0600
++#define _RICHEDIT_VER	0x0300
+ 
+ #include <atldef.h>
+ #if ( _ATL_VER < 0x0800 )
+@@ -52,18 +52,18 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ 
+ extern CAppModule _Module;
+ 
+ #include <atlwin.h>
+ 
+-#include <atlframe.h>
+-#include <atlctrls.h>
+-#include <atldlgs.h>
++#include <wtl/atlframe.h>
++#include <wtl/atlctrls.h>
++#include <wtl/atldlgs.h>
+ 
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ 
+ #if _MSC_VER>=1400
+ #if defined _M_IX86
+diff --git a/reporting/crashrpt/StdAfx.h b/reporting/crashrpt/StdAfx.h
+index f6a9b6e..13bbe50 100644
+--- a/reporting/crashrpt/StdAfx.h
++++ b/reporting/crashrpt/StdAfx.h
+@@ -19,7 +19,7 @@ be found in the Authors.txt file in the root of the source tree.
+ #define WINVER		0x0501
+ #define _WIN32_WINNT	0x0501
+ #define _WIN32_IE	0x0600
+-#define _RICHEDIT_VER	0x0200
++#define _RICHEDIT_VER	0x0300
+ 
+ #include <errno.h>
+ #include <atldef.h>
+diff --git a/tests/stdafx.h b/tests/stdafx.h
+index f12675b..0ec2117 100644
+--- a/tests/stdafx.h
++++ b/tests/stdafx.h
+@@ -19,7 +19,7 @@ be found in the Authors.txt file in the root of the source tree.
+ #define WINVER		0x0501
+ #define _WIN32_WINNT	0x0501
+ #define _WIN32_IE	0x0600
+-#define _RICHEDIT_VER	0x0200
++#define _RICHEDIT_VER	0x0300
+ 
+ #include <errno.h>
+ #include <winsock2.h>
+@@ -58,15 +58,15 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ 
+ extern CAppModule _Module;
+ 
+ #include <atlwin.h>
+ 
+-#include <atlframe.h>
+-#include <atlctrls.h>
+-#include <atldlgs.h>
++#include <wtl/atlframe.h>
++#include <wtl/atlctrls.h>
++#include <wtl/atldlgs.h>
+ #include <set>
+ #include <map>
+ #include <string>
+@@ -75,7 +75,7 @@ extern CAppModule _Module;
+ #include <conio.h>
+ 
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ 
+ #if _MSC_VER<1400
+ #define _TCSCPY_S(strDestination, numberOfElements, strSource) _tcscpy(strDestination, strSource)

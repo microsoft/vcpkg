@@ -3,3 +3,10 @@ Version: 1.4.3
 Description: A crash reporting system for Windows applications
 Homepage: http://crashrpt.sourceforge.net/
 Build-Depends: libjpeg-turbo, libogg, libpng, libtheora, minizip, tinyxml, wtl, zlib
+Default-Features:
+
+Feature: tests
+Description: Test application for crashrpt
+
+Feature: demos
+Description: Demo applications for crashrpt

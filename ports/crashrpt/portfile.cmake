@@ -19,6 +19,7 @@ vcpkg_from_git(
         004-find-tinyxml.patch
         005-find-wtl.patch
         006-find-libjpeg-turbo.patch
+        007-fix-tests-and-demos-dependencies-and-install.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -31,6 +32,11 @@ endforeach()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CRASHRPT_BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" CRASHRPT_LINK_CRT_AS_DLL)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tests CRASHRPT_BUILD_TESTS
+    demos CRASHRPT_BUILD_DEMOS
+)
+
 # PREFER_NINJA is not used below since CrashSender fails to build with errors like this one:
 # C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.23.28105\ATLMFC\include\atlconv.h(788): error C2440: 'return': cannot convert from 'LPCTSTR' to 'LPCOLESTR'
 vcpkg_configure_cmake(
@@ -39,8 +45,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCRASHRPT_BUILD_SHARED_LIBS=${CRASHRPT_BUILD_SHARED_LIBS}
         -DCRASHRPT_LINK_CRT_AS_DLL=${CRASHRPT_LINK_CRT_AS_DLL}
-        -DCRASHRPT_BUILD_DEMOS=OFF
-        -DCRASHRPT_BUILD_TESTS=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
