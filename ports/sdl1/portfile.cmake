@@ -16,11 +16,11 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDL1_2017.sln DESTINATION ${SOURCE_PATH}/VisualC/ )
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDL_static.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDL RENAME SDL.vcxproj)
-        file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDLmain_static.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDLmain RENAME SDLmain.vcxproj)
+        configure_file(${CMAKE_CURRENT_LIST_DIR}/SDL_static.vcxproj  ${SOURCE_PATH}/VisualC/SDL/SDL.vcxproj COPYONLY)
+        configure_file(${CMAKE_CURRENT_LIST_DIR}/SDLmain_static.vcxproj ${SOURCE_PATH}/VisualC/SDLmain/SDLmain.vcxproj COPYONLY)
     else()
-        file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDL_dynamic.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDL RENAME SDL.vcxproj)
-        file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDLmain_dynamic.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDLmain RENAME SDLmain.vcxproj)
+        configure_file(${CMAKE_CURRENT_LIST_DIR}/SDL_dynamic.vcxproj ${SOURCE_PATH}/VisualC/SDL/SDL.vcxproj COPYONLY)
+        configure_file(${CMAKE_CURRENT_LIST_DIR}/SDLmain_dynamic.vcxproj ${SOURCE_PATH}/VisualC/SDLmain/SDLmain.vcxproj COPYONLY)
     endif()
     
     # This text file gets copied as a library, and included as one in the package 

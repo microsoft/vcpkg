@@ -1,9 +1,9 @@
 #include "pch.h"
 
+#include <vcpkg/base/parse.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/logicexpression.h>
-#include <vcpkg/parse.h>
 
 #include <string>
 #include <vector>
@@ -48,9 +48,9 @@ namespace vcpkg
     class ExpressionParser : public Parse::ParserBase
     {
     public:
-        ExpressionParser(const std::string& str, const ExpressionContext& context) : evaluation_context(context)
+        ExpressionParser(const std::string& str, const ExpressionContext& context) :
+            Parse::ParserBase(str, "CONTROL"), evaluation_context(context)
         {
-            this->init(str, "CONTROL");
             {
                 auto override_vars = evaluation_context.cmake_context.find("VCPKG_DEP_INFO_OVERRIDE_VARS");
                 if (override_vars != evaluation_context.cmake_context.end())
@@ -90,7 +90,7 @@ namespace vcpkg
 
         bool final_result;
 
-        static bool is_identifier_char(char ch)
+        static bool is_identifier_char(char32_t ch)
         {
             return is_upper_alpha(ch) || is_lower_alpha(ch) || is_ascii_digit(ch) || ch == '-';
         }

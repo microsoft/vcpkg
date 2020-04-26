@@ -7,10 +7,10 @@
 ##   fail - the port does not build in the CI system.
 ##          This is not necessarily the same as if a port is expected to build
 ##          on a developers machine because it may fail due to the machine
-##          configuration.  When set to fail the CI system will still attempt 
+##          configuration.  When set to fail the CI system will still attempt
 ##          to build the port and will report a CI failure until this file is updated.
 ##   skip - Do not build this port in the CI system.
-##          This is added to ports that may be flaky or conflict with other 
+##          This is added to ports that may be flaky or conflict with other
 ##          ports.  Please comment for why a port is skipped so it can be
 ##          removed when the issue is resolved.
 ##   ignore - attempt to build the port, but do not fail the CI test if the
@@ -27,7 +27,7 @@
 ##    x64-windows
 ##    x64-windows-static
 ##    x86-windows
-##   
+##
 
 
 # Add new items alphabetically
@@ -45,11 +45,13 @@
 7zip:x64-osx=fail
 7zip:x64-uwp=fail
 abseil:arm-uwp=fail
-abseil:x64-uwp=fail
-ace:arm64-windows=fail
+# ace is failing because the port's attempt to make yasm available is not succeeding
 ace:arm-uwp=fail
-ace:x64-osx=fail
+ace:arm64-windows=fail
 ace:x64-uwp=fail
+ace:x64-windows-static=fail
+ace:x64-windows=fail
+ace:x86-windows=fail
 activemq-cpp:x64-windows-static=fail
 akali:x64-uwp=fail
 akali:arm-uwp=fail
@@ -64,19 +66,11 @@ ampl-mp:arm-uwp=fail
 ampl-mp:x64-uwp=fail
 angelscript:arm64-windows=fail
 angelscript:arm-uwp=fail
-
-# Conflicts with qt5-base and ms-angle
-angle:arm64-windows      = skip
-angle:arm-uwp            = skip
-angle:x64-uwp            = skip
-angle:x64-windows        = skip
-angle:x64-windows-static = skip
-angle:x86-windows        = skip
 antlr4:arm64-windows=fail
 antlr4:arm-uwp=fail
 antlr4:x64-uwp=fail
 anyrpc:arm-uwp=ignore
-anyrpg:x64-uwp=ignore
+anyrpc:x86-windows=ignore
 anyrpc:x64-windows-static=ignore
 apr:arm64-windows=fail
 apr:arm-uwp=fail
@@ -105,8 +99,8 @@ atlmfc:x64-linux=fail
 atlmfc:x64-osx=fail
 aubio:x64-linux=fail
 aubio:x64-osx=fail
+avisynthplus:x64-windows-static=fail
 avro-c:arm-uwp=fail
-avro-c:x64-linux=fail
 avro-c:x64-osx=fail
 avro-c:x64-uwp=fail
 aws-c-common:arm64-windows=fail
@@ -171,9 +165,6 @@ boost-locale:arm-uwp=fail
 boost-locale:x64-uwp=fail
 boost-log:arm-uwp=fail
 boost-log:x64-uwp=fail
-boost-python:x64-linux=ignore
-boost-mpi:x64-linux=fail
-boost-mpi:x64-osx=fail
 boost-stacktrace:arm-uwp=fail
 boost-stacktrace:x64-uwp=fail
 boost-test:arm-uwp=fail
@@ -187,8 +178,6 @@ box2d:x64-uwp=fail
 box2d:arm-uwp=fail
 breakpad:arm64-windows=fail
 breakpad:x64-osx=fail
-brotli:arm-uwp=fail
-brotli:x64-uwp=fail
 bullet3:arm64-windows=fail
 bullet3:arm-uwp=fail
 bullet3:x64-uwp=fail
@@ -275,7 +264,6 @@ coolprop:x64-uwp=fail
 coroutine:arm-uwp=fail
 coroutine:x64-linux=fail
 coroutine:x64-uwp=fail
-coroutine:x86-windows=fail
 corrade:arm64-windows=fail
 corrade:arm-uwp=fail
 corrade:x64-uwp=fail
@@ -284,7 +272,7 @@ cppcms:x64-osx=fail
 cppcms:x64-windows-static=fail
 cppfs:arm-uwp=fail
 cppfs:x64-uwp=fail
-cppgraphqlgen:arm-uwp=fail
+cppgraphqlgen:arm-uwp=ignore
 cppgraphqlgen:x64-uwp=ignore
 cppkafka:x64-linux=ignore
 cppmicroservices:arm64-windows=fail
@@ -293,9 +281,10 @@ cppmicroservices:x64-uwp=fail
 cpp-netlib:arm-uwp=fail
 cpp-netlib:x64-uwp=fail
 cpp-netlib:x64-linux=ignore
-cpprestsdk:arm-uwp=fail
-cpprestsdk:x64-uwp=fail
 cpp-taskflow:x64-osx=fail
+cppcoro:x64-linux=fail
+cppcoro:arm-uwp=fail
+cppcoro:x64-uwp=fail
 cppunit:arm64-windows=fail
 cppunit:arm-uwp=fail
 cppunit:x64-linux=fail
@@ -319,13 +308,10 @@ cudnn:arm-uwp=fail
 cudnn:x64-uwp=fail
 cudnn:x64-windows-static=fail
 cudnn:x86-windows=fail
-cutelyst2:x64-osx=fail
-darknet:arm-uwp=fail
-darknet:x64-uwp=fail
 date:arm64-windows=fail
 dbow2:x64-osx=fail
-dcmtk:arm64-windows=fail
 dcmtk:arm-uwp=fail
+dcmtk:arm64-windows=fail
 dcmtk:x64-uwp=fail
 detours:x64-linux=fail
 detours:x64-osx=fail
@@ -356,6 +342,7 @@ dlfcn-win32:x64-linux=fail
 dlfcn-win32:x64-osx=fail
 dlfcn-win32:x64-uwp=fail
 dmlc:arm-uwp=fail
+dmlc:arm64-windows=ignore
 dmlc:x64-uwp=fail
 dmlc:x64-windows-static=ignore
 dmlc:x86-windows=ignore
@@ -454,16 +441,14 @@ fdlibm:arm-uwp=fail
 fdlibm:x64-uwp=fail
 fftw3:arm-uwp=fail
 fftw3:x64-uwp=fail
+# ffmpeg on arm64 is currently failing due to an internal compiler error
+ffmpeg:arm64-windows=fail
 field3d:x64-windows=fail
 field3d:x64-windows-static=fail
 field3d:x86-windows=fail
-fizz:x64-windows=fail
-fizz:x64-windows-static=fail
 flint:x64-linux=fail
 flint:x64-osx=fail
 fltk:arm-uwp=fail
-fltk:x64-linux=fail
-fltk:x64-osx=fail
 fltk:x64-uwp=fail
 fluidsynth:x64-linux=fail
 fluidsynth:x64-osx=fail
@@ -478,11 +463,6 @@ fmilib:x64-uwp=fail
 fmilib:x64-windows=ignore
 fmilib:x64-windows-static=ignore
 fmilib:x86-windows=ignore
-# Folly fails due to a compiler bug in MSVC 19.22.27905, fixed in newer releases
-folly:arm64-windows=fail
-folly:x86-windows=fail
-folly:x64-windows=fail
-folly:x64-windows-static=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-uwp=fail
@@ -587,7 +567,6 @@ graphite2:x64-uwp=fail
 graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
 grpc:arm-uwp=fail
-grpc:x64-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
 gsoap:arm-uwp=ignore
@@ -606,6 +585,13 @@ halide:x64-windows-static=fail
 hdf5:arm64-windows=fail
 hdf5:arm-uwp=fail
 hdf5:x64-uwp=fail
+healpix:x86-windows=fail
+healpix:x64-windows=fail
+healpix:x64-windows-static=fail
+healpix:x64-uwp=fail
+healpix:arm64-windows=fail
+healpix:arm-uwp=fail
+healpix:x64-osx=fail
 hidapi:arm64-windows=fail
 hidapi:arm-uwp=fail
 hidapi:x64-linux=fail
@@ -614,14 +600,12 @@ hidapi:x64-uwp=fail
 hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
-hunspell:x64-linux=fail
-hunspell:x64-osx=fail
+hpx:x64-linux=fail
 hwloc:arm64-windows=fail
 hwloc:arm-uwp=fail
-hwloc:x64-linux=fail
-hwloc:x64-osx=fail
 hwloc:x64-uwp=fail
 hyperscan:x64-linux=ignore
+# hypre has a conflict with 'superlu' port
 hypre:x64-linux=fail
 hypre:x64-osx=fail
 icu:arm64-windows=fail
@@ -677,7 +661,6 @@ jemalloc:x64-uwp=fail
 jemalloc:x64-windows-static=fail
 jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
-kd-soap:x64-osx=fail
 keystone:arm64-windows=fail
 keystone:arm-uwp=fail
 keystone:x64-uwp=fail
@@ -727,6 +710,9 @@ libconfig:x64-osx=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 libcopp:x64-windows-static=fail
+cpuid:arm-uwp=fail
+cpuid:x64-uwp=fail
+cpuid:arm64-windows=fail
 libdatrie:x64-linux=fail
 libdatrie:x64-osx=fail
 libdisasm:arm-uwp=fail
@@ -756,7 +742,6 @@ libfabric:x64-linux=fail
 libfabric:x64-osx=fail
 libfabric:x64-uwp=fail
 libfabric:x64-windows=ignore
-libffi:arm-uwp=fail
 libfreenect2:arm64-windows=fail
 libgd:x64-linux=ignore
 libgit2:arm64-windows=fail
@@ -780,6 +765,7 @@ libhdfs3:x64-uwp=fail
 libhdfs3:x64-windows=fail
 libhdfs3:x64-windows-static=fail
 libhdfs3:x86-windows=fail
+libhdfs3:x64-linux=fail
 libhydrogen:arm64-windows=fail
 libics:arm-uwp=fail
 libics:x64-uwp=fail
@@ -838,9 +824,7 @@ libmodman:x64-uwp=fail
 libmodman:x64-windows-static=fail
 libmodplug:arm-uwp=fail
 libmodplug:x64-uwp=fail
-libmupdf:x64-linux=fail
 libmupdf:x64-osx=fail
-libmysql:x64-osx=fail
 libmysql:x86-windows=fail
 libnice:x64-linux=fail
 libnice:x64-osx=fail
@@ -901,6 +885,14 @@ librdkafka:arm-uwp=fail
 librdkafka:x64-uwp=fail
 
 # Conflicts with openssl
+boringssl:arm64-windows      = skip
+boringssl:arm-uwp            = skip
+boringssl:x64-linux          = skip
+boringssl:x64-osx            = skip
+boringssl:x64-uwp            = skip
+boringssl:x64-windows        = skip
+boringssl:x64-windows-static = skip
+boringssl:x86-windows        = skip
 libressl:arm64-windows      = skip
 libressl:arm-uwp            = skip
 libressl:x64-linux          = skip
@@ -968,8 +960,8 @@ libuuid:x86-windows=fail
 libuv:arm64-windows=fail
 libuv:arm-uwp=fail
 libuv:x64-uwp=fail
-libvpx:arm64-windows=fail
 libvpx:arm-uwp=fail
+libvpx:arm64-windows=fail
 libvpx:x64-linux=fail
 libvpx:x64-osx=fail
 libwandio:x86-windows=fail
@@ -1011,7 +1003,6 @@ llvm:x64-osx=ignore
 lmdb:arm64-windows=fail
 lmdb:arm-uwp=fail
 lmdb:x64-uwp=fail
-lodepng:x64-osx=fail
 log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:arm-uwp=fail
@@ -1064,17 +1055,21 @@ meschach:x64-osx=fail
 meschach:x64-uwp=fail
 metis:arm-uwp=fail
 metis:x64-uwp=fail
+metrohash:arm-uwp=fail
+metrohash:x64-uwp=fail
+metrohash:x86-windows=fail
+metrohash:arm64-windows=fail
 mhook:arm64-windows=fail
 mhook:arm-uwp=fail
 mhook:x64-linux=fail
 mhook:x64-osx=fail
 mhook:x64-uwp=fail
-mhook:x64-windows=fail
-mhook:x64-windows-static=fail
-mhook:x86-windows=fail
 milerius-sfml-imgui:x64-osx=fail
 milerius-sfml-imgui:x64-windows-static=fail
 milerius-sfml-imgui:x64-linux=ignore
+mimalloc:arm64-windows=fail
+mimalloc:arm-uwp=fail
+mimalloc:x64-uwp=fail
 minhook:arm64-windows=fail
 minhook:arm-uwp=fail
 minhook:x64-linux=fail
@@ -1100,7 +1095,6 @@ mmx:x64-osx=skip
 mmx:arm-uwp=skip
 mmx:x64-uwp=skip
 mmx:arm64-windows=skip
-mongo-c-driver:arm64-windows=fail
 # Flaky strange linker error
 mongo-c-driver:x64-osx=skip
 mongoose:arm-uwp=fail
@@ -1120,7 +1114,6 @@ moos-essential:arm64-windows=fail
 moos-essential:x64-windows=fail
 moos-essential:x86-windows=fail
 moos-essential:x64-linux=ignore
-mosquitto:x64-windows-static=fail
 mozjpeg:arm64-windows      = skip
 mozjpeg:arm-uwp            = skip
 mozjpeg:x64-linux          = skip
@@ -1138,8 +1131,8 @@ mpir:x64-uwp=fail
 #Conflicts with angle and qt-5base
 ms-angle:arm64-windows      = skip
 ms-angle:arm-uwp            = skip
-ms-angle:x64-linux          = fail
-ms-angle:x64-osx            = fail
+ms-angle:x64-linux          = skip
+ms-angle:x64-osx            = skip
 ms-angle:x64-uwp            = skip
 ms-angle:x64-windows        = skip
 ms-angle:x64-windows-static = skip
@@ -1154,6 +1147,9 @@ msmpi:x64-osx=fail
 msmpi:x64-uwp=fail
 muparser:arm-uwp=fail
 muparser:x64-uwp=fail
+murmurhash:arm-uwp=fail
+murmurhash:x64-uwp=fail
+murmurhash:arm64-windows=fail
 nana:arm-uwp=fail
 nana:x64-linux=fail
 nana:x64-osx=fail
@@ -1237,8 +1233,6 @@ ogre-next:x86-windows        = skip
 ois:arm64-windows=fail
 ois:arm-uwp=fail
 ois:x64-uwp=fail
-ompl:x64-osx=fail
-ompl:x64-linux=ignore
 open62541:arm-uwp=fail
 open62541:x64-uwp=fail
 openal-soft:arm-uwp=fail
@@ -1249,6 +1243,7 @@ opencensus-cpp:arm64-windows=fail
 opencensus-cpp:x64-windows=fail
 opencensus-cpp:x64-windows-static=fail
 opencensus-cpp:x86-windows=fail
+opencensus-cpp:x64-uwp=fail
 opencl:arm64-windows=fail
 opencl:arm-uwp=fail
 opencl:x64-uwp=fail
@@ -1306,11 +1301,10 @@ opentracing:arm-uwp=fail
 opentracing:x64-uwp=fail
 openvdb:x64-linux=ignore
 openvdb:x64-osx=fail
-openvdb:x64-windows-static=fail
+#openvdb:x64-windows-static=fail # https://github.com/microsoft/vcpkg/pull/10816#issuecomment-613784827
 openvpn3:x64-osx=fail
 openvr:arm64-windows=fail
 openvr:arm-uwp=fail
-openvr:x64-linux=fail
 openvr:x64-osx=fail
 openvr:x64-uwp=fail
 openxr-loader:arm64-windows=fail
@@ -1330,10 +1324,11 @@ opusfile:x64-uwp=fail
 orc:x64-linux=ignore
 orocos-kdl:arm-uwp=fail
 orocos-kdl:x64-uwp=fail
+osg:x86-windows=skip
+osg:x64-windows=skip
 osgearth:x64-osx=fail
 osgearth:x64-linux=fail
 osgearth:x64-windows-static=fail
-osg-qt:x64-linux=fail
 osg-qt:x64-windows-static=fail
 otl:x64-windows=ignore
 otl:x64-windows-static=ignore
@@ -1415,9 +1410,13 @@ polyhook2:x64-linux=fail
 polyhook2:x64-uwp=fail
 polyhook2:x64-osx=fail
 portable-snippets:arm-uwp=fail
-portaudio:arm64-windows=fail
+# Portaudio was broken by Ninja 1.9.0 https://github.com/ninja-build/ninja/pull/1406
 portaudio:arm-uwp=fail
+portaudio:arm64-windows=fail
 portaudio:x64-uwp=fail
+portaudio:x64-windows-static=fail
+portaudio:x64-windows=fail
+portaudio:x86-windows=fail
 portmidi:arm64-windows=fail
 portmidi:arm-uwp=fail
 portmidi:x64-linux=fail
@@ -1437,6 +1436,9 @@ protobuf-c:x64-windows-static=fail
 protobuf-c:x64-uwp=fail
 protobuf-c:arm64-windows=fail
 protobuf-c:arm-uwp=fail
+# proxygen fails with "Target 'Windows' not supported by proxygen!"
+proxygen:x64-windows=fail
+proxygen:x64-windows-static=fail
 ptex:arm-uwp=fail
 ptex:x64-linux=fail
 ptex:x64-osx=fail
@@ -1451,28 +1453,76 @@ python2:x64-osx=fail
 python2:x64-uwp=fail
 python3:arm64-windows=fail
 python3:arm-uwp=fail
-python3:x64-osx=fail
 python3:x64-uwp=fail
 qca:x64-linux=fail
 qca:x64-osx=fail
 qca:x64-windows-static=fail
-qcustomplot:x64-osx=fail
 qhull:arm-uwp=ignore
 qhull:x64-windows-static=ignore
 qhull:x64-uwp=ignore
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
-qscintilla:x64-linux=fail
-qscintilla:x64-osx=fail
+#qt5-activeqt is skipped because it conflicts with qt5-declarative:
+# Starting package 142/820: qt5-declarative:x86-windows
+# Building package qt5-declarative[core]:x86-windows...
+# Using cached binary package: C:\agent\_work\1\s\archives\94\9428e63fede20a51ac0631a9d94d8773e593dd06.zip
+# Building package qt5-declarative[core]:x86-windows... done
+# Installing package qt5-declarative[core]:x86-windows...
+#     The following files are already installed in C:/agent/_work/1/s/installed/x86-windows and are in conflict with qt5-declarative:x86-windows
+#
+# Installed by qt5-activeqt:x86-windows
+#     tools/qt5/bin/Qt5Gui.dll
+#     tools/qt5/bin/Qt5Widgets.dll
+#     tools/qt5/bin/bz2.dll
+#     tools/qt5/bin/freetype.dll
+#     tools/qt5/bin/glib-2.dll
+#     tools/qt5/bin/harfbuzz.dll
+#     tools/qt5/bin/jpeg62.dll
+#     tools/qt5/bin/libcharset.dll
+#     tools/qt5/bin/libiconv.dll
+#     tools/qt5/bin/libintl.dll
+#     tools/qt5/bin/libpng16.dll
+#     tools/qt5/bin/pcre.dll
+#     tools/qt5/bin/plugins/imageformats/qgif.dll
+#     tools/qt5/bin/plugins/imageformats/qico.dll
+#     tools/qt5/bin/plugins/imageformats/qjpeg.dll
+#     tools/qt5/bin/plugins/platforms/qwindows.dll
+#     tools/qt5/bin/plugins/styles/qwindowsvistastyle.dll
+qt5-activeqt:arm-uwp=skip
+qt5-activeqt:arm64-windows=skip
 qt5-activeqt:x64-linux=fail
 qt5-activeqt:x64-osx=fail
+qt5-activeqt:x64-uwp=skip
+qt5-activeqt:x64-windows-static=skip
+qt5-activeqt:x64-windows=skip
+qt5-activeqt:x86-windows=skip
 qt5-macextras:x64-linux=fail
 qt5-macextras:x64-windows=fail
 qt5-macextras:x64-windows-static=fail
 qt5-macextras:x86-windows=fail
+# Missing system libraries
+qt5-wayland:x64-osx=fail
+# Missing libraries
+qt5-wayland:x86-windows=fail
+qt5-wayland:x64-windows=fail
+qt5-wayland:x64-windows-static=fail
 qt5-winextras:x64-linux=fail
 qt5-winextras:x64-osx=fail
+# Too big for CI. 
+qt5-webengine:x64-windows=skip
+qt5-webengine:x86-windows=skip
+# Missing prerequisites for CI success
+qt5-webengine:x64-linux=fail
+qt5-webengine:x64-osx=fail
+# Static builds of qt5-webengine are not supported by the port itself
+qt5-webengine:x64-windows-static=skip
+# Missing system libraries
+qt5-x11extras:x64-osx=fail
+# Missing libraries
+qt5-x11extras:x86-windows=fail
+qt5-x11extras:x64-windows=fail
+qt5-x11extras:x64-windows-static=fail
 quickfast:x64-linux=ignore
 quickfix:x64-linux=ignore
 quickfix:x64-windows=ignore
@@ -1480,6 +1530,9 @@ quickfix:x64-windows-static=ignore
 quickfix:x86-windows=ignore
 quickfix:x64-uwp=fail
 quickfix:arm-uwp=fail
+quill:arm64-windows=fail
+quill:arm-uwp=fail
+quill:x64-uwp=fail
 quirc:arm64-windows      = skip
 quirc:arm-uwp            = skip
 quirc:x64-linux          = skip
@@ -1528,6 +1581,9 @@ redis-plus-plus:x86-windows=fail
 redis-plus-plus:x64-windows=fail
 redis-plus-plus:x64-windows-static=fail
 redis-plus-plus:arm64-windows=fail
+replxx:arm-uwp=fail
+replxx:x64-uwp=fail
+replxx:x64-windows-static=fail
 reproc:arm-uwp=fail
 reproc:x64-uwp=fail
 restbed:arm-uwp=fail
@@ -1546,8 +1602,16 @@ rpclib:x86-windows=ignore
 rpclib:x64-windows-static=ignore
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
-rxspencer:x64-uwp=fail  
+rxspencer:x64-uwp=fail
 rxspencer:arm-uwp=fail
+ryml:arm-uwp=fail
+ryml:arm64-windows=fail
+ryml:x64-osx=fail
+ryu:arm-uwp=fail
+ryu:x64-uwp=fail
+ryu:x64-windows-static=fail
+ryu:x86-windows=fail
+ryu::arm64-windows=fail
 scintilla:arm-uwp=fail
 scintilla:x64-linux=fail
 scintilla:x64-osx=fail
@@ -1559,7 +1623,6 @@ sciter:x64-uwp=fail
 sciter:x64-windows-static=fail
 scnlib:arm-uwp=fail
 scnlib:x64-uwp=fail
-scnlib:x86-windows=fail
 scylla-wrapper:arm64-windows=fail
 scylla-wrapper:arm-uwp=fail
 scylla-wrapper:x64-linux=fail
@@ -1573,16 +1636,19 @@ sdformat6:x64-linux=ignore
 sdl1:arm-uwp=fail
 sdl1:x64-uwp=fail
 sdl1:x64-osx=fail
-sdl2-gfx:x64-linux=fail
-sdl2-gfx:x64-osx=fail
 sdl2-image:arm-uwp=fail
 sdl2-image:x64-uwp=fail
 sdl2-mixer:arm-uwp=fail
 sdl2-mixer:x64-uwp=fail
 sdl2-net:arm-uwp=fail
 sdl2-net:x64-uwp=fail
+# https://github.com/microsoft/vcpkg/issues/10918
 seal:arm-uwp=fail
+seal:arm64-windows=fail
 seal:x64-uwp=fail
+seal:x64-windows-static=fail
+seal:x64-windows=fail
+seal:x86-windows=fail
 secp256k1:x64-linux=fail
 secp256k1:x64-osx=fail
 selene:x64-linux=ignore
@@ -1610,9 +1676,16 @@ shogun:x64-uwp            = skip
 shogun:x64-windows        = skip
 shogun:x64-windows-static = skip
 shogun:x86-windows        = skip
+signalrclient:x64-uwp=fail
+signalrclient:arm-uwp=fail
 simdjson:arm64-windows=fail
 simdjson:arm-uwp=fail
 simdjson:x86-windows=fail
+skia:arm64-windows=fail
+skia:arm-uwp=fail
+skia:x64-linux=fail
+skia:x64-uwp=fail
+skia:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
 smpeg2:arm-uwp=fail
@@ -1667,6 +1740,30 @@ stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-uwp=fail
 stxxl:x64-uwp=fail
+# Sundials was broken by Ninja 1.9.0 https://github.com/ninja-build/ninja/pull/1406
+sundials:arm64-windows=fail
+sundials:x64-windows=fail
+sundials:x86-windows=fail
+# Conflicts between ports:
+#The following files are already installed in C:/agent/_work/1/s/installed/x64-windows-static
+# and are in conflict with superlu:x64-windows-static
+#
+#Installed by hypre:x64-windows-static
+#    include/slu_Cnames.h
+#    include/slu_cdefs.h
+#    include/slu_dcomplex.h
+#    include/slu_ddefs.h
+#    include/slu_scomplex.h
+#    include/slu_sdefs.h
+#    include/slu_util.h
+#    include/slu_zdefs.h
+#    include/supermatrix.h
+superlu:arm-uwp=skip
+superlu:arm-windows=skip
+superlu:arm64-windows=skip
+superlu:x64-uwp=skip
+superlu:x64-windows-static=skip
+superlu:x64-windows=skip
 systemc:arm64-windows=fail
 systemc:arm-uwp=fail
 systemc:x64-uwp=fail
@@ -1686,8 +1783,8 @@ teemo:x64-osx=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
 tensorflow-cc:arm64-windows=fail
-tensorflow-cc:x64-linux = skip
-tensorflow-cc:x64-osx=fail
+tensorflow-cc:x64-linux=skip
+tensorflow-cc:x64-osx=skip
 tensorflow-cc:x64-windows=fail
 tensorflow-cc:x64-windows-static=fail
 tensorflow-cc:x86-windows=fail
@@ -1710,21 +1807,13 @@ thor:x64-linux=fail
 thor:x64-osx=fail
 thrift:x64-osx=fail
 tidy-html5:arm-uwp=fail
-tidy-html5:x64-linux=fail
-tidy-html5:x64-osx=fail
 tidy-html5:x64-uwp=fail
 tinkerforge:arm-uwp=fail
 tinkerforge:x64-uwp=fail
 tinyexif:arm-uwp=fail
 tinyexif:x64-uwp=fail
-tinyfiledialogs:arm64-windows=fail
 tinyfiledialogs:arm-uwp=fail
-tinyfiledialogs:x64-linux=fail
 tinyfiledialogs:x64-uwp=fail
-tinyfiledialogs:x64-windows=fail
-tinyfiledialogs:x64-windows-static=fail
-tinyfiledialogs:x86-windows=fail
-tinyfiledialogs:x64-osx=fail
 tinynpy:x64-linux=ignore
 tiny-process-library:arm-uwp=fail
 tiny-process-library:x64-uwp=fail
@@ -1753,6 +1842,12 @@ torch-th:x64-uwp=fail
 torch-th:x64-windows-static=fail
 tre:x64-osx=fail
 treehopper:x64-windows-static=fail
+turbobase64:arm64-windows=fail
+turbobase64:arm-uwp=fail
+turbobase64:x64-uwp=fail
+turbobase64:x64-windows=fail
+turbobase64:x64-windows-static=fail
+turbobase64:x86-windows=fail
 unicorn:arm64-windows=fail
 unicorn:arm-uwp=fail
 unicorn:x64-linux=fail
@@ -1762,14 +1857,18 @@ unicorn-lib:x64-uwp=fail
 unittest-cpp:arm64-windows=fail
 unittest-cpp:arm-uwp=fail
 unittest-cpp:x64-uwp=fail
+unixodbc:arm64-windows=fail
+unixodbc:arm-uwp=fail
+unixodbc:x64-uwp=fail
+unixodbc:x64-windows=fail
+unixodbc:x64-windows-static=fail
+unixodbc:x86-windows=fail
 unrar:arm64-windows=fail
 unrar:arm-uwp=fail
 unrar:x64-linux=fail
 unrar:x64-osx=fail
 unrar:x64-uwp=fail
 unrar:x64-windows-static=fail
-upb:arm-uwp=fail
-upb:x64-uwp=fail
 urdfdom:x64-windows-static=fail
 usd:x64-linux=ignore
 usd:x86-windows=fail
@@ -1821,6 +1920,8 @@ winpcap:x64-uwp            = skip
 winpcap:x64-windows        = skip
 winpcap:x64-windows-static = skip
 winpcap:x86-windows        = skip
+winreg:x64-linux=fail
+winreg:x64-osx=fail
 winsock2:x64-linux=fail
 winsock2:x64-osx=fail
 wintoast:arm-uwp=fail
@@ -1882,3 +1983,12 @@ z3:x64-uwp=fail
 zeromq:arm64-windows=fail
 zeromq:arm-uwp=fail
 zeromq:x64-uwp=fail
+zkpp:x86-windows=fail
+zkpp:x64-windows=fail
+zkpp:x64-windows-static=fail
+zkpp:arm64-windows=fail
+zkpp:x64-uwp=fail
+zkpp:arm-uwp=fail
+c4core:arm-uwp=fail
+c4core:arm64-windows=fail
+c4core:x64-osx=fail

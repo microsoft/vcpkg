@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "osx")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -18,6 +18,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
+    OPTIONS
+        -DBUILD_EXAMPLES=OFF
 )
 
 vcpkg_install_cmake()
