@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp-spanner
-    REF v0.7.0
-    SHA512 f3fea6ebe3431102c23737822d17e90d4d301f5854ec17834ee379013c92b1997ff10421ee5f82e35b651cd930dbb8d73e9aad50b754b3fe1395257fa4199dfb
+    REF v1.1.0
+    SHA512 00141418a01ff55cf2228e3f59a49e49bc35e28da958a7817964976196bb6019e5f04e2d9ceacc758d649c8cc91d35df14aec23f9e8fa4044cfaa67115dc6e69
     HEAD_REF master
 )
 

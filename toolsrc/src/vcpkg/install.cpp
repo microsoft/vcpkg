@@ -4,6 +4,7 @@
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.h>
@@ -296,10 +297,10 @@ namespace vcpkg::Install
     using Build::BuildResult;
     using Build::ExtendedBuildResult;
 
-    ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+    static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
                                                     InstallPlanAction& action,
                                                     StatusParagraphs& status_db,
-                                                    const CMakeVars::CMakeVarProvider& var_provider)
+                                                    IBinaryProvider* binaries_provider)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
@@ -339,7 +340,7 @@ namespace vcpkg::Install
             else
                 System::printf("Building package %s...\n", display_name_with_features);
 
-            auto result = Build::build_package(paths, action, var_provider, status_db);
+            auto result = Build::build_package(paths, action, binaries_provider, status_db);
 
             if (BuildResult::DOWNLOADED == result.code)
             {
@@ -456,13 +457,16 @@ namespace vcpkg::Install
         for (auto&& action : action_plan.already_installed)
         {
             results.emplace_back(action.spec, &action);
-            results.back().build_result = perform_install_plan_action(paths, action, status_db, var_provider);
+            results.back().build_result = perform_install_plan_action(paths, action, status_db, nullptr);
         }
 
+        Build::compute_all_abis(paths, action_plan, var_provider, status_db);
+
+        auto binary_provider = create_archives_provider();
         for (auto&& action : action_plan.install_actions)
         {
             with_tracking(action.spec, [&]() {
-                auto result = perform_install_plan_action(paths, action, status_db, var_provider);
+                auto result = perform_install_plan_action(paths, action, status_db, binary_provider.get());
 
                 if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {
@@ -699,14 +703,48 @@ namespace vcpkg::Install
         std::string specs_string;
         for (auto&& remove_action : action_plan.remove_actions)
         {
-            if (!specs_string.empty()) specs_string += ",";
+            if (!specs_string.empty()) specs_string.push_back(',');
             specs_string += "R$" + Hash::get_string_hash(remove_action.spec.to_string(), Hash::Algorithm::Sha256);
         }
+
         for (auto&& install_action : action_plan.install_actions)
         {
-            if (!specs_string.empty()) specs_string += ",";
+            if (!specs_string.empty()) specs_string.push_back(',');
             specs_string += Hash::get_string_hash(install_action.spec.to_string(), Hash::Algorithm::Sha256);
         }
+
+#if defined(_WIN32)
+        const auto maybe_common_triplet = common_projection(
+            action_plan.install_actions, [](const InstallPlanAction& to_install) { return to_install.spec.triplet(); });
+        if (maybe_common_triplet)
+        {
+            const auto& common_triplet = maybe_common_triplet.value_or_exit(VCPKG_LINE_INFO);
+            const auto maybe_common_arch = common_triplet.guess_architecture();
+            if (maybe_common_arch)
+            {
+                const auto maybe_vs_prompt = System::guess_visual_studio_prompt_target_architecture();
+                if (maybe_vs_prompt)
+                {
+                    const auto common_arch = maybe_common_arch.value_or_exit(VCPKG_LINE_INFO);
+                    const auto vs_prompt = maybe_vs_prompt.value_or_exit(VCPKG_LINE_INFO);
+                    if (common_arch != vs_prompt)
+                    {
+                        const auto vs_prompt_view = to_zstring_view(vs_prompt);
+                        System::print2(vcpkg::System::Color::warning,
+                                        "warning: vcpkg appears to be in a Visual Studio prompt targeting ",
+                                       vs_prompt_view,
+                                       " but is installing packages for ",
+                                       common_triplet.to_string(),
+                                       ". Consider using --triplet ",
+                                       vs_prompt_view,
+                                       "-windows or --triplet ",
+                                       vs_prompt_view,
+                                       "-uwp.\n");
+                    }
+                }
+            }
+        }
+#endif // defined(_WIN32)
 
         Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 

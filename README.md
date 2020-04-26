@@ -6,7 +6,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 For short description of available commands, run `vcpkg help`.
 
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
-* Slack: [https://cpplang.now.sh/](https://cpplang.now.sh/), the #vcpkg channel
+* Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Docs: [Documentation](docs/index.md)
 
 | Windows (x86, x64, arm, uwp)  | MacOS | Linux |
