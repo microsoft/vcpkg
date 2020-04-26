@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if("cpprestsdk" IN_LIST FEATURES)
+if("cpprestsdk" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP)
     set(USE_CPPRESTSDK true)
 else()
     set(USE_CPPRESTSDK false)
