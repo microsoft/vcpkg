@@ -6,4 +6,4 @@ Homepage: https://github.com/aspnet/SignalR-Client-Cpp
 
 Feature: cpprestsdk
 Description: Add default Http and WebSocket implementations using CppRestSDK
-Build-Depends: cpprestsdk[default-features,websockets]
+Build-Depends: cpprestsdk[default-features,websockets] (!uwp)
