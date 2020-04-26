@@ -41,7 +41,7 @@ index 14d5e85..040ac71 100644
 +  check_required_components(${PROJECT_NAME})"
 +)
 +configure_package_config_file(
-+    "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in"
++    "${PROJECT_SOURCE_DIR}/unofficial-${PROJECT_NAME}Config.cmake.in"
 +    "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
 +    INSTALL_DESTINATION
 +        ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
