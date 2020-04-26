@@ -9,6 +9,8 @@ vcpkg_check_features(
     tool BUILD_BINARY
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -17,7 +19,7 @@ vcpkg_configure_cmake(
     OPTIONS_RELEASE
         ${FEATURE_OPTIONS}
     OPTIONS
-        -DBUILD_STATIC=ON
+        -DBUILD_STATIC=${BUILD_STATIC}
 )
 
 vcpkg_install_cmake()
