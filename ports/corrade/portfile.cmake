@@ -25,16 +25,6 @@ foreach(_feature IN LISTS ALL_FEATURES)
     endif()
 endforeach()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-  # building for Windows desktop
-  if (VCPKG_PLATFORM_TOOLSET STREQUAL "v142" AND NOT VCPKG_USE_HEAD_VERSION)
-    message("**********")
-    message("WARNING: Visual Studio 2019 is not official supported by Corrade/Magnum team. Please use --head version if you intend to have upstream support.")
-    message("**********")
-    set(_CUSTOM_BUILD_FLAGS "-DCORRADE_MSVC2017_COMPATIBILITY=ON")
-  endif()
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja

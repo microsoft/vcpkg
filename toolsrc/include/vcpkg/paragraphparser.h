@@ -40,12 +40,12 @@ namespace vcpkg::Parse
     };
 
     ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str,
-                                                                    CStringView origin = "<unknown>",
+                                                                    StringView origin = "<unknown>",
                                                                     TextRowCol textrowcol = {});
     ExpectedS<std::vector<ParsedQualifiedSpecifier>> parse_qualified_specifier_list(const std::string& str,
-                                                                                    CStringView origin = "<unknown>",
+                                                                                    StringView origin = "<unknown>",
                                                                                     TextRowCol textrowcol = {});
     ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
-                                                               CStringView origin = "<unknown>",
+                                                               StringView origin = "<unknown>",
                                                                TextRowCol textrowcol = {});
 }
