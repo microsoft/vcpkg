@@ -1,0 +1,128 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5a14f12..491f3aa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -127,6 +127,16 @@ if(NOT WTL_INCLUDE_DIR)
+   message(FATAL_ERROR "WTL include dir not found")
+ endif()
+ 
++find_library(DBGHELP_LIBRARY dbghelp)
++if(NOT DBGHELP_LIBRARY)
++  message(FATAL_ERROR "dbghelp library not found")
++endif()
++
++find_path(DBGHELP_INCLUDE_DIR dbghelp.h)
++if(NOT DBGHELP_INCLUDE_DIR)
++  message(FATAL_ERROR "dbghelp include dir not found")
++endif()
++
+ # Other CMakeLists are located in project subdirectories 
+ 
+ if(CRASHRPT_BUILD_DEMOS)
+diff --git a/demos/MFCDemo/CMakeLists.txt b/demos/MFCDemo/CMakeLists.txt
+index ac68c85..3483a79 100644
+--- a/demos/MFCDemo/CMakeLists.txt
++++ b/demos/MFCDemo/CMakeLists.txt
+@@ -44,7 +44,7 @@ if(CMAKE_CL_64)
+ ADD_CUSTOM_COMMAND(
+     TARGET WTLDemo
+     POST_BUILD
+-    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
++#    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.ini\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\x64\\crashrpt_lang.ini\""
+@@ -53,7 +53,7 @@ else(CMAKE_CL_64)
+ ADD_CUSTOM_COMMAND(
+     TARGET WTLDemo
+     POST_BUILD
+-    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\""
++#    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.ini\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\crashrpt_lang.ini\""
+diff --git a/demos/WTLDemo/CMakeLists.txt b/demos/WTLDemo/CMakeLists.txt
+index 969e813..ce69e23 100644
+--- a/demos/WTLDemo/CMakeLists.txt
++++ b/demos/WTLDemo/CMakeLists.txt
+@@ -36,7 +36,7 @@ if(CMAKE_CL_64)
+ ADD_CUSTOM_COMMAND(
+     TARGET WTLDemo
+     POST_BUILD
+-    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
++#    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.ini\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\x64\\crashrpt_lang.ini\""
+@@ -45,7 +45,7 @@ else(CMAKE_CL_64)
+ ADD_CUSTOM_COMMAND(
+     TARGET WTLDemo
+     POST_BUILD
+-    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\""
++#    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.ini\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\crashrpt_lang.ini\""
+diff --git a/processing/crashrptprobe/CMakeLists.txt b/processing/crashrptprobe/CMakeLists.txt
+index dafb007..71e5a43 100644
+--- a/processing/crashrptprobe/CMakeLists.txt
++++ b/processing/crashrptprobe/CMakeLists.txt
+@@ -25,7 +25,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/include
+ 			${ZLIB_INCLUDE_DIRS}
+ 			${MINIZIP_INCLUDE_DIR}
+ 			${TINYXML_INCLUDE_DIR}
+-			${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/include)
++			${DBGHELP_INCLUDE_DIR})
+ 			
+ # Add library build target
+ if(CRASHRPT_BUILD_SHARED_LIBS)	
+@@ -34,15 +34,15 @@ else(CRASHRPT_BUILD_SHARED_LIBS)
+ 	add_library(CrashRptProbe STATIC ${source_files} ${header_files})	
+ endif(CRASHRPT_BUILD_SHARED_LIBS)
+ 
+-if(CMAKE_CL_64)
+-	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64 )	
+-	target_link_libraries(CrashRptProbe ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64/dbghelp.lib)
+-else(CMAKE_CL_64)
+-	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib )
+-	target_link_libraries(CrashRptProbe ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/dbghelp.lib)
+-endif(CMAKE_CL_64)
++#if(CMAKE_CL_64)
++#	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64 )	
++#	target_link_libraries(CrashRptProbe ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64/dbghelp.lib)
++#else(CMAKE_CL_64)
++#	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib )
++#	target_link_libraries(CrashRptProbe ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/dbghelp.lib)
++#endif(CMAKE_CL_64)
+ 
+-target_link_libraries(CrashRptProbe ZLIB::ZLIB minizip::minizip ${TINYXML_LIBRARY} Rpcrt4.lib shell32.lib gdi32.lib version.lib psapi.lib)
++target_link_libraries(CrashRptProbe ZLIB::ZLIB minizip::minizip ${TINYXML_LIBRARY} ${DBGHELP_LIBRARY} Rpcrt4.lib shell32.lib gdi32.lib version.lib psapi.lib)
+ 
+ if(CRASHRPT_BUILD_SHARED_LIBS)
+ 
+diff --git a/reporting/crashsender/CMakeLists.txt b/reporting/crashsender/CMakeLists.txt
+index 088365f..8577452 100644
+--- a/reporting/crashsender/CMakeLists.txt
++++ b/reporting/crashsender/CMakeLists.txt
+@@ -29,15 +29,15 @@ include_directories( ${CMAKE_SOURCE_DIR}/include
+                             ${JPEG_INCLUDE_DIR}
+                             ${PNG_INCLUDE_DIRS}
+                             ${TINYXML_INCLUDE_DIR}
+-                            ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/include 
++                            ${DBGHELP_INCLUDE_DIR}
+ 							${OGG_INCLUDE_DIRS}
+ 							${THEORA_INCLUDE_DIR})
+ 
+-if(NOT CMAKE_CL_64)
+-	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib )
+-else(NOT CMAKE_CL_64)
+-	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64 )
+-endif(NOT CMAKE_CL_64)
++#if(NOT CMAKE_CL_64)
++#	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib )
++#else(NOT CMAKE_CL_64)
++#	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64 )
++#endif(NOT CMAKE_CL_64)
+ 
+ # Add executable build target
+ add_executable(CrashSender WIN32 ${source_files} ${header_files})
