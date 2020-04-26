@@ -1,61 +1,36 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 14d5e85..040ac71 100644
+index 14d5e85..7e46870 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -65,6 +65,15 @@ if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+@@ -65,6 +65,14 @@ if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
  endif(NOT DEFINED CMAKE_INSTALL_LIBDIR)
  set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
  
-+include(GNUInstallDirs)
 +foreach(t ${install_libs})
 +    target_include_directories(
 +        ${t}
-+        INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-+                  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++        INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
++                  $<INSTALL_INTERFACE:include>
 +    )
 +endforeach()
 +
  install(
      DIRECTORY "include/gainput"
      DESTINATION "include"
-@@ -73,7 +82,40 @@ install(
+@@ -73,7 +81,15 @@ install(
  
  install(
      TARGETS ${install_libs}
-+    EXPORT ${PROJECT_NAME}_Targets
++    EXPORT  unofficial-${PROJECT_NAME}-Targets
      LIBRARY DESTINATION "${libdir}"
      ARCHIVE DESTINATION "${libdir}"
      RUNTIME DESTINATION "bin"
  )
 +
-+include(CMakePackageConfigHelpers)
-+write_basic_package_version_file(
-+    "${PROJECT_NAME}ConfigVersion.cmake"
-+    VERSION ${GAINPUT_VERSION}
-+    COMPATIBILITY SameMajorVersion
-+)
-+file(WRITE  "unofficial-${PROJECT_NAME}Config.cmake.in" 
-+"@PACKAGE_INIT@
-+
-+  include(\"\${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake\")
-+  check_required_components(${PROJECT_NAME})"
-+)
-+configure_package_config_file(
-+    "${PROJECT_SOURCE_DIR}/unofficial-${PROJECT_NAME}Config.cmake.in"
-+    "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-+    INSTALL_DESTINATION
-+        ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
-+)
 +install(
-+    EXPORT ${PROJECT_NAME}_Targets
-+    FILE ${PROJECT_NAME}Targets.cmake
-+    NAMESPACE ${PROJECT_NAME}::
-+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
++    EXPORT unofficial-${PROJECT_NAME}-Targets
++    FILE unofficial-${PROJECT_NAME}Config.cmake
++    NAMESPACE unofficial::${PROJECT_NAME}::
++    DESTINATION share/unofficial-${PROJECT_NAME}
 +)
-+
-+install(
-+    FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-+          "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
-+)
-+
+\ No newline at end of file
