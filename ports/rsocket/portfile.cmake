@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "x64")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -17,12 +17,28 @@ vcpkg_configure_cmake(
     -DBUILD_EXAMPLES=OFF
     -DBUILD_TESTS=OFF
     -DBUILD_BENCHMARKS=OFF
-    -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
 
-# rsocket-cpp install two package rsocket and yarpl
+# rsocket-cpp will install two package rsocket and yarpl.
+# if we use `vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)`,
+# the result may be not what we want.
+# - x64-linux
+#    └── share
+#         └── rsocket
+#               ├─ rsocket
+#               │   └── rsocket-config.cmake
+#               └── yarpl
+#                   └── yarpl-config.cmake
+# so we need `TARGET_PATH share` to avoid redundant subdirectory.
+# - x64-linux
+#    └── share
+#         ├── rsocket
+#         │   └── rsocket-config.cmake
+#         └── yarpl
+#             └── yarpl-config.cmake
+# we can't call `vcpkg_fixup_cmake_targets` twice at least for now.
 # vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/rsocket)
 # vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/yarpl)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
