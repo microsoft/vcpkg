@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 81290b07376c5abb4988a492dda70913bb90133d
-  SHA512 094197cde851dfdd1e102a3ffaed34d67a789dd75dc288bde611144dc9aa484ca0b9e3468abc297d075d3753553f7f09a214be279af9e58ccb642aa757909f79
+  REF 6033baabc9d646b23d8dbdb21cf84663910dca60
+  SHA512 d55c9f4d95cdf6af422f8e6b9e4c08007ba388e092abd69ce10fb10df36894ef17c7a84aa65a3477931ca4069835856a9fc0eb9adaaa43d866808746bbb24db3
   HEAD_REF master
 )
 
@@ -45,15 +45,31 @@ if ("cuda" IN_LIST FEATURES)
 endif()
 
 if("weights" IN_LIST FEATURES)
+  ## GDrive prevents large downloads from CLI
+  #vcpkg_download_distfile(YOLOV4_WEIGHTS
+  #  URLS "https://drive.google.com/u/0/uc?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT&export=download"
+  #  FILENAME "darknet-cache/yolov4.weights"
+  #  SHA512 77f779c58df67975b187cfead99c1e62d72c57e76c3715e35b97a1c7aba1c7b092be97ffb17907099543ac3957085a0fe9688df4a653ea62dfe8322afca53e40
+  #)
   vcpkg_download_distfile(YOLOV3_WEIGHTS
     URLS "https://pjreddie.com/media/files/yolov3.weights"
     FILENAME "darknet-cache/yolov3.weights"
     SHA512 293c70e404ff0250d7c04ca1e5e053fc21a78547e69b5b329d34f25981613e59b982d93fff2c352915ef7531d6c3b02a9b0b38346d05c51d6636878d8883f2c1
   )
+  vcpkg_download_distfile(YOLOV3-OPENIMAGES_WEIGHTS
+    URLS "https://pjreddie.com/media/files/yolov3-openimages.weights"
+    FILENAME "darknet-cache/yolov3-openimages.weights"
+    SHA512 616e90057946c9588d045cff6ec36b63254660af4377201dc02642e798d62f392e8f3cdb5b10a1c4bcbe5c056e690275dca35b68db7fd802783a0c6bbd959ba8
+  )
   vcpkg_download_distfile(YOLOV2_WEIGHTS
     URLS "https://pjreddie.com/media/files/yolov2.weights"
     FILENAME "darknet-cache/yolov2.weights"
     SHA512 5271da2dd2da915172ddd034c8e894877e7066051f105ae82e25e185a2b4e4157d2b9514653c23780e87346f2b20df6363018b7e688aba422e2dacf1d2fbf6ab
+  )
+  vcpkg_download_distfile(YOLOV3-TINY-PRN_WEIGHTS
+    URLS "https://drive.google.com/u/0/uc?id=18yYZWyKbo4XSDVyztmsEcF9B_6bxrhUY&export=download"
+    FILENAME "darknet-cache/yolov3-tiny-prn.weights"
+    SHA512 0be26786103866868751bb8c5cc0b5147b3e8528d0cf5b387f5aefc72807fd7f1bf8049d5b0a47e9b4445d34e773ea8e3abc95330edb2a3ecd6103e158df2677
   )
   vcpkg_download_distfile(YOLOV3-TINY_WEIGHTS
     URLS "https://pjreddie.com/media/files/yolov3-tiny.weights"
@@ -64,6 +80,11 @@ if("weights" IN_LIST FEATURES)
     URLS "https://pjreddie.com/media/files/yolov2-tiny.weights"
     FILENAME "darknet-cache/yolov2-tiny.weights"
     SHA512 f0857a7a02cf4322354d288c9afa0b87321b23082b719bc84ea64e2f3556cc1fafeb836ee5bf9fb6dcf448839061b93623a067dfde7afa1338636865ea88989a
+  )
+  vcpkg_download_distfile(ENETB0-COCO-FINAL_WEIGHTS
+    URLS "https://drive.google.com/u/0/uc?id=1FlHeQjWEQVJt0ay1PVsiuuMzmtNyv36m&export=download"
+    FILENAME "darknet-cache/enetb0-coco_final.weights"
+    SHA512 696d335d639ee92d0527d6cfb1cfa9a8cdc6549304312b9447200f43ecc19a1185d1650fb70659477a7c5925338fbd55bc7ba820a3a161c4fc2d8690191317a2
   )
 endif()
 
@@ -127,10 +148,14 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if("weights" IN_LIST FEATURES)
+  #file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-openimages.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov2.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-tiny.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-tiny-prn.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov2-tiny.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/enetb0-coco_final.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
 if("weights-train" IN_LIST FEATURES)
