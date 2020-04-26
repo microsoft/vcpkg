@@ -876,6 +876,9 @@ libpng-apng:x64-windows-static = skip
 libpng-apng:x86-windows        = skip
 libpq:arm-uwp=fail
 libpq:x64-uwp=fail
+libqcow:arm-uwp=fail
+libqcow:x64-uwp=fail
+libqcow:x64-windows-static=fail
 librabbitmq:x64-linux=ignore
 libraqm:x64-windows-static=fail
 librdkafka:arm-uwp=fail
@@ -1506,7 +1509,7 @@ qt5-wayland:x64-windows=fail
 qt5-wayland:x64-windows-static=fail
 qt5-winextras:x64-linux=fail
 qt5-winextras:x64-osx=fail
-# Too big for CI. 
+# Too big for CI.
 qt5-webengine:x64-windows=skip
 qt5-webengine:x86-windows=skip
 # Missing prerequisites for CI success

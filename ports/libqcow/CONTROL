@@ -1,5 +1,6 @@
 Source: libqcow
-Version: 2018-12-27
+Version: 20191221
 Homepage: https://github.com/libyal/libqcow
-Build-Depends: openssl,zlib
+Build-Depends: gettext,openssl,zlib
 Description: Library and tools to access the QEMU Copy-On-Write (QCOW) image format.
+Supports: !uwp
