@@ -2,4 +2,4 @@ Source: rsocket
 Version: 1.0.2
 Homepage: https://github.com/rsocket/rsocket-cpp
 Description: C++ implementation of RSocket http://rsocket.io
-Build-Depends: folly
+Build-Depends: double-conversion, openssl, gflags, glog, fmt, boost-system, boost-thread, boost-filesystem, boost-regex, boost-context, boost-program-options
