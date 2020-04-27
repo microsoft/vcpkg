@@ -48,7 +48,6 @@ abseil:arm-uwp=fail
 # ace is failing because the port's attempt to make yasm available is not succeeding
 ace:arm-uwp=fail
 ace:arm64-windows=fail
-ace:x64-osx=fail
 ace:x64-uwp=fail
 ace:x64-windows-static=fail
 ace:x64-windows=fail
@@ -265,7 +264,6 @@ coolprop:x64-uwp=fail
 coroutine:arm-uwp=fail
 coroutine:x64-linux=fail
 coroutine:x64-uwp=fail
-coroutine:x86-windows=fail
 corrade:arm64-windows=fail
 corrade:arm-uwp=fail
 corrade:x64-uwp=fail
@@ -284,6 +282,9 @@ cpp-netlib:arm-uwp=fail
 cpp-netlib:x64-uwp=fail
 cpp-netlib:x64-linux=ignore
 cpp-taskflow:x64-osx=fail
+cppcoro:x64-linux=fail
+cppcoro:arm-uwp=fail
+cppcoro:x64-uwp=fail
 cppunit:arm64-windows=fail
 cppunit:arm-uwp=fail
 cppunit:x64-linux=fail
@@ -596,10 +597,9 @@ hidapi:x64-uwp=fail
 hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
+hpx:x64-linux=fail
 hwloc:arm64-windows=fail
 hwloc:arm-uwp=fail
-hwloc:x64-linux=fail
-hwloc:x64-osx=fail
 hwloc:x64-uwp=fail
 hyperscan:x64-linux=ignore
 # hypre has a conflict with 'superlu' port
@@ -821,7 +821,6 @@ libmodman:x64-uwp=fail
 libmodman:x64-windows-static=fail
 libmodplug:arm-uwp=fail
 libmodplug:x64-uwp=fail
-libmupdf:x64-linux=fail
 libmupdf:x64-osx=fail
 libmysql:x86-windows=fail
 libnice:x64-linux=fail
@@ -958,15 +957,10 @@ libuuid:x86-windows=fail
 libuv:arm64-windows=fail
 libuv:arm-uwp=fail
 libuv:x64-uwp=fail
-# libvpx is failing because the port's attempt to make yasm available is not succeeding
 libvpx:arm-uwp=fail
 libvpx:arm64-windows=fail
 libvpx:x64-linux=fail
 libvpx:x64-osx=fail
-libvpx:x64-uwp=fail
-libvpx:x64-windows-static=fail
-libvpx:x64-windows=fail
-libvpx:x86-windows=fail
 libwandio:x86-windows=fail
 libwandio:x64-windows=fail
 libwandio:x64-windows-static=fail
@@ -1125,17 +1119,13 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
-# mpg123 is failing because the port's attempt to make yasm available is not succeeding
 mpg123:arm-uwp=fail
 mpg123:x64-uwp=fail
-mpg123:x64-windows-static=fail
-mpg123:x64-windows=fail
-mpg123:x86-windows=fail
 mpir:arm64-windows=fail
 mpir:arm-uwp=fail
 mpir:x64-uwp=fail
 
-#Conflicts with angle
+#Conflicts with angle and qt-5base
 ms-angle:arm64-windows      = skip
 ms-angle:arm-uwp            = skip
 ms-angle:x64-linux          = skip
@@ -1337,9 +1327,6 @@ osgearth:x64-osx=fail
 osgearth:x64-linux=fail
 osgearth:x64-windows-static=fail
 osg-qt:x64-windows-static=fail
-# Missing Fontconfig linkage in vcpkg_cmake_wrapper. Will be fixed by #9860 with the removal of the wrapper.
-osg-qt:x64-osx=fail
-osg-qt:x64-linux=ignore
 otl:x64-windows=ignore
 otl:x64-windows-static=ignore
 otl:x64-uwp=ignore
@@ -1511,8 +1498,28 @@ qt5-macextras:x64-linux=fail
 qt5-macextras:x64-windows=fail
 qt5-macextras:x64-windows-static=fail
 qt5-macextras:x86-windows=fail
+# Missing system libraries
+qt5-wayland:x64-osx=fail
+# Missing libraries
+qt5-wayland:x86-windows=fail
+qt5-wayland:x64-windows=fail
+qt5-wayland:x64-windows-static=fail
 qt5-winextras:x64-linux=fail
 qt5-winextras:x64-osx=fail
+# Too big for CI. 
+qt5-webengine:x64-windows=skip
+qt5-webengine:x86-windows=skip
+# Missing prerequisites for CI success
+qt5-webengine:x64-linux=fail
+qt5-webengine:x64-osx=fail
+# Static builds of qt5-webengine are not supported by the port itself
+qt5-webengine:x64-windows-static=skip
+# Missing system libraries
+qt5-x11extras:x64-osx=fail
+# Missing libraries
+qt5-x11extras:x86-windows=fail
+qt5-x11extras:x64-windows=fail
+qt5-x11extras:x64-windows-static=fail
 quickfast:x64-linux=ignore
 quickfix:x64-linux=ignore
 quickfix:x64-windows=ignore
@@ -1520,6 +1527,9 @@ quickfix:x64-windows-static=ignore
 quickfix:x86-windows=ignore
 quickfix:x64-uwp=fail
 quickfix:arm-uwp=fail
+quill:arm64-windows=fail
+quill:arm-uwp=fail
+quill:x64-uwp=fail
 quirc:arm64-windows      = skip
 quirc:arm-uwp            = skip
 quirc:x64-linux          = skip
@@ -1591,6 +1601,9 @@ rttr:arm-uwp=fail
 rttr:x64-uwp=fail
 rxspencer:x64-uwp=fail
 rxspencer:arm-uwp=fail
+ryml:arm-uwp=fail
+ryml:arm64-windows=fail
+ryml:x64-osx=fail
 ryu:arm-uwp=fail
 ryu:x64-uwp=fail
 ryu:x64-windows-static=fail
@@ -1620,8 +1633,6 @@ sdformat6:x64-linux=ignore
 sdl1:arm-uwp=fail
 sdl1:x64-uwp=fail
 sdl1:x64-osx=fail
-sdl2-gfx:x64-linux=fail
-sdl2-gfx:x64-osx=fail
 sdl2-image:arm-uwp=fail
 sdl2-image:x64-uwp=fail
 sdl2-mixer:arm-uwp=fail
