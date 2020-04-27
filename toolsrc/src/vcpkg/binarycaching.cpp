@@ -169,6 +169,7 @@ namespace
         {
             if (m_write_dirs.empty()) return;
             auto& fs = paths.get_filesystem();
+            std::error_code ec;
             for (auto&& m_directory : m_write_dirs)
             {
                 const fs::path& archives_root_dir = m_directory;
@@ -187,10 +188,9 @@ namespace
                     {
                         if (log_file.path().extension() == ".log")
                         {
-                            std::error_code ec;
                             fs.copy_file(log_file.path(),
                                          tmp_log_path_destination / log_file.path().filename(),
-                                         fs::stdfs::copy_options::none,
+                                         fs::copy_options::none,
                                          ec);
                         }
                     }

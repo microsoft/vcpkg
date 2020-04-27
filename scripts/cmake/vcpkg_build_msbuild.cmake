@@ -91,6 +91,7 @@ function(vcpkg_build_msbuild)
 
     list(APPEND _csc_OPTIONS
         /t:${_csc_TARGET}
+        /p:UseEnv=True
         /p:Platform=${_csc_PLATFORM}
         /p:PlatformToolset=${_csc_PLATFORM_TOOLSET}
         /p:VCPkgLocalAppDataDisabled=true

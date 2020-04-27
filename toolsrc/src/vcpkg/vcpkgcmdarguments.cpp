@@ -167,6 +167,12 @@ namespace vcpkg
                         arg.substr(sizeof("--x-scripts-root=") - 1), "--x-scripts-root", args.scripts_root_dir);
                     continue;
                 }
+                if (Strings::starts_with(arg, "--x-install-root="))
+                {
+                    parse_cojoined_value(
+                        arg.substr(sizeof("--x-install-root=") - 1), "--x-install-root=", args.install_root_dir);
+                    continue;
+                }
                 if (arg == "--triplet")
                 {
                     ++arg_begin;

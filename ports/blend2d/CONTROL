@@ -1,5 +1,5 @@
 Source: blend2d
-Version: beta_2020-03-29
+Version: beta_2020-04-19
 Description: Beta 2D Vector Graphics Powered by a JIT Compiler
 Default-Features: jit, logging
 Supports: !(arm|uwp)
