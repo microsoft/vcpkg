@@ -547,7 +547,13 @@ namespace vcpkg::Export::Prefab
                     fs::path module_meta_path = module_dir / "module.json";
                     utils.write_contents(module_meta_path, meta.to_json(), VCPKG_LINE_INFO);
 
-                    utils.copy(installed_headers_dir, exported_headers_dir, fs::copy_options::recursive);
+
+                    if (utils.exists(installed_headers_dir)) {
+                        ignore_errors_t dummy;
+                        if (!utils.exists(exported_headers_dir))
+                            utils.create_directory(exported_headers_dir, dummy);
+                        utils.copy(installed_headers_dir, exported_headers_dir, fs::copy_options::recursive);
+                    }
                     break;
                 }
                 else
@@ -607,7 +613,12 @@ namespace vcpkg::Export::Prefab
                                 installed_headers_dir.generic_u8string(), exported_headers_dir.generic_u8string()));
                         }
 
-                        utils.copy(installed_headers_dir, exported_headers_dir, fs::copy_options::recursive);
+                        if (utils.exists(installed_headers_dir)) {
+                            ignore_errors_t dummy;
+                            if (!utils.exists(exported_headers_dir))
+                                utils.create_directory(exported_headers_dir, dummy);
+                            utils.copy(installed_headers_dir, exported_headers_dir, fs::copy_options::recursive);
+                        }
 
                         ModuleMetadata meta;
 
