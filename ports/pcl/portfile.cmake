@@ -12,6 +12,7 @@ vcpkg_from_github(
         cuda_10_1.patch
 		# Patch for https://github.com/microsoft/vcpkg/issues/7660
 		use_target_link_libraries_in_pclconfig.patch
+        fix-link-libpng.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
