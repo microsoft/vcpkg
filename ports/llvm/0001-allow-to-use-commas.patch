@@ -1,5 +1,5 @@
 diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
-index 567396870a5..59944d3a99f 100644
+index a02c2a5a23f..bdbf0b1303c 100644
 --- a/llvm/CMakeLists.txt
 +++ b/llvm/CMakeLists.txt
 @@ -70,6 +70,12 @@ if( LLVM_ENABLE_PROJECTS STREQUAL "all" )
@@ -15,5 +15,16 @@ index 567396870a5..59944d3a99f 100644
  # LLVM_ENABLE_PROJECTS_USED is `ON` if the user has ever used the
  # `LLVM_ENABLE_PROJECTS` CMake cache variable.  This exists for
  # several reasons:
-
-
+@@ -383,6 +389,12 @@ set(LLVM_TARGETS_TO_BUILD
+    ${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD})
+ list(REMOVE_DUPLICATES LLVM_TARGETS_TO_BUILD)
+ 
++# Allow to use commas in the LLVM_TARGETS_TO_BUILD ("X86,AArch64,...")
++string(REPLACE "," ";" fixed_LLVM_TARGETS_TO_BUILD "${LLVM_TARGETS_TO_BUILD}")
++if(NOT fixed_LLVM_TARGETS_TO_BUILD STREQUAL LLVM_TARGETS_TO_BUILD)
++  set(LLVM_TARGETS_TO_BUILD "${fixed_LLVM_TARGETS_TO_BUILD}" CACHE STRING "" FORCE)
++endif()
++
+ option(LLVM_ENABLE_PIC "Build Position-Independent Code" ON)
+ option(LLVM_ENABLE_WARNINGS "Enable compiler warnings." ON)
+ option(LLVM_ENABLE_MODULES "Compile with C++ modules enabled." OFF)
