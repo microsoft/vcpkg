@@ -197,7 +197,6 @@ namespace vcpkg::Export
     {
         constexpr const ArchiveFormat ZIP(ArchiveFormat::BackingEnum::ZIP, "zip", "zip");
         constexpr const ArchiveFormat SEVEN_ZIP(ArchiveFormat::BackingEnum::SEVEN_ZIP, "7z", "7zip");
-        constexpr const ArchiveFormat AAR(ArchiveFormat::BackingEnum::ZIP, "aar", "zip");
     }
 
     static fs::path do_archive_export(const VcpkgPaths& paths,
@@ -297,7 +296,7 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "--x-maintainer";
     static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--x-version-suffix";
     static constexpr StringLiteral OPTION_ALL_INSTALLED = "--x-all-installed";
-    
+
     static constexpr StringLiteral OPTION_PREFAB = "--prefab";
     static constexpr StringLiteral OPTION_PREFAB_GROUP_ID = "--prefab-group-id";
     static constexpr StringLiteral OPTION_PREFAB_ARTIFACT_ID = "--prefab-artifact-id";
@@ -306,7 +305,7 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_PREFAB_SDK_TARGET_VERSION = "--prefab-target-sdk";
     static constexpr StringLiteral OPTION_PREFAB_ENABLE_MAVEN = "--prefab-maven";
     static constexpr StringLiteral OPTION_PREFAB_ENABLE_DEBUG = "--prefab-debug";
-    
+
 
 
 
@@ -444,7 +443,7 @@ namespace vcpkg::Export
                             {OPTION_IFW_CONFIG_FILE_PATH, ret.ifw_options.maybe_config_file_path},
                             {OPTION_IFW_INSTALLER_FILE_PATH, ret.ifw_options.maybe_installer_file_path},
                         });
-        
+
         options_implies(OPTION_PREFAB,
                         ret.prefab,
                         {

@@ -560,7 +560,7 @@ namespace vcpkg::Dependencies
                                                      ? RequestType::USER_REQUESTED
                                                      : RequestType::AUTO_SELECTED;
 
-                auto maybe_ipv = status_db.find_all_installed(spec);
+                auto maybe_ipv = status_db.get_installed_package_view(spec);
 
                 if (auto p_ipv = maybe_ipv.get())
                 {
