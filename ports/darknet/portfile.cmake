@@ -45,22 +45,15 @@ if ("cuda" IN_LIST FEATURES)
 endif()
 
 if("weights" IN_LIST FEATURES)
-  ## GDrive prevents large downloads from CLI
-  #vcpkg_download_distfile(YOLOV4_WEIGHTS
-  #  URLS "https://drive.google.com/u/0/uc?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT&export=download"
-  #  FILENAME "darknet-cache/yolov4.weights"
-  #  SHA512 77f779c58df67975b187cfead99c1e62d72c57e76c3715e35b97a1c7aba1c7b092be97ffb17907099543ac3957085a0fe9688df4a653ea62dfe8322afca53e40
-  #)
-  ## GDrive allows easily to perform small downloads from CLI
+  vcpkg_download_distfile(YOLOV4_WEIGHTS
+    URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights"
+    FILENAME "darknet-cache/yolov4.weights"
+    SHA512 77f779c58df67975b187cfead99c1e62d72c57e76c3715e35b97a1c7aba1c7b092be97ffb17907099543ac3957085a0fe9688df4a653ea62dfe8322afca53e40
+  )
   vcpkg_download_distfile(YOLOV3-TINY-PRN_WEIGHTS
     URLS "https://drive.google.com/u/0/uc?id=18yYZWyKbo4XSDVyztmsEcF9B_6bxrhUY&export=download"
     FILENAME "darknet-cache/yolov3-tiny-prn.weights"
     SHA512 0be26786103866868751bb8c5cc0b5147b3e8528d0cf5b387f5aefc72807fd7f1bf8049d5b0a47e9b4445d34e773ea8e3abc95330edb2a3ecd6103e158df2677
-  )
-  vcpkg_download_distfile(ENETB0-COCO-FINAL_WEIGHTS
-    URLS "https://drive.google.com/u/0/uc?id=1FlHeQjWEQVJt0ay1PVsiuuMzmtNyv36m&export=download"
-    FILENAME "darknet-cache/enetb0-coco_final.weights"
-    SHA512 696d335d639ee92d0527d6cfb1cfa9a8cdc6549304312b9447200f43ecc19a1185d1650fb70659477a7c5925338fbd55bc7ba820a3a161c4fc2d8690191317a2
   )
   vcpkg_download_distfile(YOLOV3_WEIGHTS
     URLS "https://pjreddie.com/media/files/yolov3.weights"
@@ -90,27 +83,11 @@ if("weights" IN_LIST FEATURES)
 endif()
 
 if("weights-train" IN_LIST FEATURES)
-  ## GDrive prevents large downloads from CLI
-  #vcpkg_download_distfile(YOLOV4-CONV-137
-  #  URLS "https://drive.google.com/u/0/uc?id=1JKF-bdIklxOOVy-2Cr5qdvjgGpmGfcbp&export=download"
-  #  FILENAME "darknet-cache/yolov4.conv.137"
-  #  SHA512 d146a61762bf6ef91deb6c627ede475f63b3975fbeeb1ff5e0949470b29be8fc28ee81280041937e7ded49679276fbabacdb92d02fa246cc622853633fd3d992
-  #)
-  #vcpkg_download_distfile(CSRESNETXT50-PANET-SPP-CONV-112
-  #  URLS "https://drive.google.com/u/0/uc?id=16yMYCLQTY_oDlCIZPfn_sab6KD3zgzGq&export=download"
-  #  FILENAME "darknet-cache/csresnext50-panet-spp.conv.112"
-  #  SHA512 730e8e763a250472de4dc8a2733be8e3769f12e59ef43b65dbaab1ba2769884906eba72fb6831e2f92b392c8b5f4c0f776015fb026d6101d260326efdde7e0da
-  #)
-  #vcpkg_download_distfile(YOLOV3-TINY-CONV-11
-  #  URLS "https://drive.google.com/u/0/uc?id=18v36esoXCh-PsOKwyP2GWrpYDptDY8Zf&export=download"
-  #  FILENAME "darknet-cache/yolov3-tiny.conv.11"
-  #  SHA512 11f4f0dd6a4e9aaab89969039b559bc5c5bba5c433a121bddda67208af1f42ae270164cb9f2b3e213ab43cfd8c729189f2f69103c36e5da563d8b5f663090a43
-  #)
-  #vcpkg_download_distfile(ENETB0-COCO-CONV-132
-  #  URLS "https://drive.google.com/u/0/uc?id=1uhh3D6RSn0ekgmsaTcl-ZW53WBaUDo6j&export=download"
-  #  FILENAME "darknet-cache/enetb0-coco.conv.132"
-  #  SHA512 79799e36043891be8df09c2505da2b5cd8e6664da345c1faa14a60c5c1b64fb8854871585c728f0e0f6b53ef93012cadc1739d9a40319158dfc86a75260f5f81
-  #)
+  vcpkg_download_distfile(YOLOV4-CONV-137
+    URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.conv.137"
+    FILENAME "darknet-cache/yolov4.conv.137"
+    SHA512 d146a61762bf6ef91deb6c627ede475f63b3975fbeeb1ff5e0949470b29be8fc28ee81280041937e7ded49679276fbabacdb92d02fa246cc622853633fd3d992
+  )
   vcpkg_download_distfile(DARKNET53-CONV-74
     URLS "https://pjreddie.com/media/files/darknet53.conv.74"
     FILENAME "darknet-cache/darknet53.conv.74"
@@ -170,9 +147,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if("weights" IN_LIST FEATURES)
-  #file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-tiny-prn.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/enetb0-coco_final.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-openimages.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov2.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
@@ -181,10 +157,7 @@ if("weights" IN_LIST FEATURES)
 endif()
 
 if("weights-train" IN_LIST FEATURES)
-  #file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4.conv.137 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-  #file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/csresnext50-panet-spp.conv.112 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-  #file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-tiny.conv.11 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-  #file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/enetb0-coco.conv.132 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4.conv.137 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet53.conv.74 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet19_448.conv.23 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
