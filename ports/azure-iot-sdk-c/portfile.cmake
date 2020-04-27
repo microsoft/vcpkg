@@ -9,7 +9,9 @@ if("public-preview" IN_LIST FEATURES)
         REF cb2e8d390df56ffa31d08ca0a79ab58ff96160cc
         SHA512 6798b17d6768b3ccbd0eb66719b50f364cd951736eb71110e2dc9deca054a1566ff88b9e8c5e9b52536e4308cad6cd3cbebff3282c123083e3afaee5535e724b
         HEAD_REF public-preview
-        PATCHES improve-external-deps.patch
+        PATCHES
+            improve-external-deps.patch
+            fix-cmake.patch
     )
 else()
     vcpkg_from_github(
@@ -18,7 +20,9 @@ else()
         REF c8b6a108fd7e01c1d89d9150b5d209f17e54fc4e
         SHA512 43d7bb9696c9f5d64ec38b017b3b9fcbf86a8a3e8f21b129546b822fe00640f775ca362ec124a8cc37c4c9634de50d88d38952f04a7f4cfc08ad7c25463770ef
         HEAD_REF master
-        PATCHES improve-external-deps.patch fix-cmake.patch
+        PATCHES
+            improve-external-deps.patch
+            fix-cmake.patch
     )
 endif()
 
