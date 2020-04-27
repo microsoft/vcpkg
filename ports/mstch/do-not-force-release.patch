@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 8d8e0c7..4304ad7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -5,17 +5,16 @@ option(WITH_UNIT_TESTS "enable building unit test executable" OFF)
+@@ -5,17 +5,17 @@ option(WITH_UNIT_TESTS "enable building unit test executable" OFF)
  option(WITH_BENCHMARK "enable building benchmark executable" OFF)
  
  set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -13,6 +13,7 @@ index 8d8e0c7..4304ad7 100644
  
  if(NOT MSVC)
 -  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -O3")
++  set(CMAKE_CXX_STANDARD 11)
  endif()
  
  add_subdirectory(src)
