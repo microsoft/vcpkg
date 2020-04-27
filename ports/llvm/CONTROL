@@ -3,13 +3,37 @@ Version: 10.0.0
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Supports: !uwp
-Default-Features: tools, utils, enable-rtti, disable-assertions, disable-abi-breaking-checks, clang, disable-clang-static-analyzer, clang-tools-extra, lld
+Default-Features: tools, enable-rtti, disable-assertions, disable-abi-breaking-checks, clang, disable-clang-static-analyzer, lld
 
 Feature: tools
 Description: Build LLVM tools.
 
 Feature: utils
 Description: Build LLVM utils.
+
+Feature: target-all
+Description: Build all targets.
+
+Feature: target-aarch64
+Description: Build AArch64 target.
+
+Feature: target-arm
+Description: Build ARM target.
+
+Feature: target-mips
+Description: Build Mips target.
+
+Feature: target-powerpc
+Description: Build PowerPC target.
+
+Feature: target-systemz
+Description: Build SystemZ target.
+
+Feature: target-webassembly
+Description: Build WebAssembly target.
+
+Feature: target-x86
+Description: Build X86 target.
 
 Feature: enable-rtti
 Description: Build LLVM with run-time type information.

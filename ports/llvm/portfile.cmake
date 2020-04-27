@@ -53,12 +53,6 @@ endif()
 set(LLVM_ENABLE_PROJECTS)
 if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang")
-    list(APPEND FEATURE_OPTIONS
-        # Disable install the scan-build tool
-        -DCLANG_INSTALL_SCANBUILD=OFF
-        # Disable install the scan-view tool
-        -DCLANG_INSTALL_SCANVIEW=OFF
-    )
     if("disable-clang-static-analyzer" IN_LIST FEATURES)
         list(APPEND FEATURE_OPTIONS
             # Disable ARCMT
@@ -92,9 +86,50 @@ if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
 endif()
 
+set(LLVM_TARGETS_TO_BUILD)
+if("target-all" IN_LIST FEATURES)
+    set(LLVM_TARGETS_TO_BUILD "all")
+else()
+    if("target-aarch64" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "AArch64")
+    endif()
+    if("target-arm" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "ARM")
+    endif()
+    if("target-mips" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "Mips")
+    endif()
+    if("target-powerpc" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "PowerPC")
+    endif()
+    if("target-systemz" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "SystemZ")
+    endif()
+    if("target-webassembly" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "WebAssembly")
+    endif()
+    if("target-x86" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "X86")
+    endif()
+endif()
+
+# Detect target to build if not specified
+if("${LLVM_TARGETS_TO_BUILD}" STREQUAL "")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(LLVM_TARGETS_TO_BUILD "X86")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(LLVM_TARGETS_TO_BUILD "ARM")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(LLVM_TARGETS_TO_BUILD "AArch64")
+    else()
+        set(LLVM_TARGETS_TO_BUILD "all")
+    endif()
+endif()
+
 # Use comma-separated string for enabled projects instead of semicolon-separated string.
 # See https://github.com/microsoft/vcpkg/issues/4320
 string(REPLACE ";" "," LLVM_ENABLE_PROJECTS "${LLVM_ENABLE_PROJECTS}")
+string(REPLACE ";" "," LLVM_TARGETS_TO_BUILD "${LLVM_TARGETS_TO_BUILD}")
 
 vcpkg_find_acquire_program(PYTHON3)
 
@@ -105,6 +140,8 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_BUILD_EXAMPLES=OFF
+        -DLLVM_INCLUDE_TESTS=OFF
+        -DLLVM_BUILD_TESTS=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
@@ -112,6 +149,7 @@ vcpkg_configure_cmake(
         # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
         -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
         -DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}
+        -DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}
         -DPACKAGE_VERSION=${VERSION}
         -DPYTHON_EXECUTABLE=${PYTHON3}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
