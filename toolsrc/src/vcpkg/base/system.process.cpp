@@ -241,6 +241,12 @@ namespace vcpkg
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"http_proxy",
             L"https_proxy",
+            // Environment variables to tell git to use custom SSH executable or command
+            L"GIT_SSH",
+            L"GIT_SSH_COMMAND",
+            // Environment variables needed for ssh-agent based authentication
+            L"SSH_AUTH_SOCK",
+            L"SSH_AGENT_PID",
             // Enables find_package(CUDA) and enable_language(CUDA) in CMake
             L"CUDA_PATH",
             L"CUDA_PATH_V9_0",
@@ -526,6 +532,7 @@ namespace vcpkg
         Debug::print(
             "cmd_execute() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
 #else
+        (void)env;
         Debug::print("system(", cmd_line, ")\n");
         fflush(nullptr);
         int exit_code = system(cmd_line.c_str());
@@ -581,6 +588,7 @@ namespace vcpkg
         }();
         g_ctrl_c_state.transition_from_spawn_process();
 #else
+        (void)env;
         const auto actual_cmd_line = Strings::format(R"###(%s 2>&1)###", cmd_line);
 
         Debug::print("popen(", actual_cmd_line, ")\n");

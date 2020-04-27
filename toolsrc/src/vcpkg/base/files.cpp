@@ -272,6 +272,14 @@ namespace vcpkg::Files
         this->remove_all(path, ec, failure_point);
     }
 
+    fs::path Filesystem::absolute(LineInfo li, const fs::path& path) const
+    {
+        std::error_code ec;
+        const auto result = this->absolute(path, ec);
+        if (ec) Checks::exit_with_message(li, "Error getting absolute path of %s: %s", path.string(), ec.message());
+        return result;
+    }
+
     fs::path Filesystem::canonical(LineInfo li, const fs::path& path) const
     {
         std::error_code ec;
@@ -285,6 +293,14 @@ namespace vcpkg::Files
     {
         std::error_code ec;
         return this->canonical(path, ec);
+    }
+    fs::path Filesystem::current_path(LineInfo li) const
+    {
+        std::error_code ec;
+        const auto result = this->current_path(ec);
+
+        if (ec) Checks::exit_with_message(li, "Error getting current path: %s", ec.message());
+        return result;
     }
 
     struct RealFilesystem final : Filesystem
@@ -699,9 +715,34 @@ namespace vcpkg::Files
             }
         }
 
+        virtual fs::path absolute(const fs::path& path, std::error_code& ec) const override
+        {
+#if VCPKG_USE_STD_FILESYSTEM 
+            return fs::stdfs::absolute(path, ec);
+#else // ^^^ VCPKG_USE_STD_FILESYSTEM  / !VCPKG_USE_STD_FILESYSTEM  vvv
+#if _WIN32
+            // absolute was called system_complete in experimental filesystem
+            return fs::stdfs::system_complete(path, ec);
+#else // ^^^ _WIN32 / !_WIN32 vvv
+            if (path.is_absolute()) {
+                auto current_path = this->current_path(ec);
+                if (ec) return fs::path();
+                return std::move(current_path) / path;
+            } else {
+                return path;
+            }
+#endif
+#endif
+        }
+
         virtual fs::path canonical(const fs::path& path, std::error_code& ec) const override
         {
             return fs::stdfs::canonical(path, ec);
+        }
+
+        virtual fs::path current_path(std::error_code& ec) const override
+        {
+            return fs::stdfs::current_path(ec);
         }
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override

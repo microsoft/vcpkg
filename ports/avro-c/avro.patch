@@ -1,46 +1,71 @@
 diff --git a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
-index 11cbf018..1bef3ba2 100644
+index 11cbf01..620490d 100644
 --- a/lang/c/CMakeLists.txt
 +++ b/lang/c/CMakeLists.txt
-@@ -161,27 +161,27 @@ else (SNAPPY_FOUND AND ZLIB_FOUND)
+@@ -149,7 +149,10 @@ else (ZLIB_FOUND)
+     message("Disabled deflate codec. zlib not found.")
+ endif (ZLIB_FOUND)
+ 
+-find_package(Snappy)
++find_library(SNAPPY_LIBRARY_RELEASE NAMES snappy PATH_SUFFIXES lib)
++find_library(SNAPPY_LIBRARY_DEBUG NAMES snappyd PATH_SUFFIXES debug/lib)
++find_path(SNAPPY_INCLUDE_DIR snappy-c.h)
++select_library_configurations(SNAPPY)
+ if (SNAPPY_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
+     set(SNAPPY_PKG libsnappy)
+     add_definitions(-DSNAPPY_CODEC)
+@@ -161,32 +164,36 @@ else (SNAPPY_FOUND AND ZLIB_FOUND)
      message("Disabled snappy codec. libsnappy not found or zlib not found.")
  endif (SNAPPY_FOUND AND ZLIB_FOUND)
  
 -find_package(PkgConfig)
 -pkg_check_modules(LZMA liblzma)
 -if (LZMA_FOUND)
-+find_package(LIBLZMA)
-+if (LIBLZMA_FOUND)
++find_package(LibLZMA)
++if (LibLZMA_FOUND)
++    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++        set(SNAPPY_LIBRARIES ${SNAPPY_LIBRARIES} -lstdc++)
++    endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      set(LZMA_PKG liblzma)
      add_definitions(-DLZMA_CODEC)
 -    include_directories(${LZMA_INCLUDE_DIRS})
 -    link_directories(${LZMA_LIBRARY_DIRS})
-+    include_directories(${LIBLZMA_INCLUDE_DIRS})
-+    link_directories(${LIBLZMA_LIBRARY_DIRS})
++    include_directories(${LibLZMA_INCLUDE_DIRS})
++    link_directories(${LibLZMA_LIBRARY_DIRS})
      message("Enabled lzma codec")
 -else (LZMA_FOUND)
-+else (LIBLZMA_FOUND)
++else (LibLZMA_FOUND)
      set(LZMA_PKG "")
-     set(LZMA_LIBRARIES "")
+-    set(LZMA_LIBRARIES "")
++    set(LibLZMA_LIBRARIES "")
      message("Disabled lzma codec. liblzma not found.")
 -endif (LZMA_FOUND)
 +endif (LIBLZMA_FOUND)
  
 -set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
-+set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LIBLZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
++set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LibLZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
  set(CODEC_PKG "@ZLIB_PKG@ @LZMA_PKG@ @SNAPPY_PKG@")
  
  # Jansson JSON library
 -pkg_check_modules(JANSSON jansson>=2.3)
-+find_package(JANSSON REQUIRED)
- if (JANSSON_FOUND)
+-if (JANSSON_FOUND)
++find_path(JANSSON_INCLUDE_DIR NAMES jansson.h)
++find_library(JANSSON_LIBRARY NAMES jansson)
++if (JANSSON_LIBRARY)
      set(JANSSON_PKG libjansson)
-+    set(JANSSON_LIBRARIES jansson::jansson)
++    set(JANSSON_LIBRARIES ${JANSSON_LIBRARY})
      include_directories(${JANSSON_INCLUDE_DIRS})
      link_directories(${JANSSON_LIBRARY_DIRS})
- else (JANSSON_FOUND)
+-else (JANSSON_FOUND)
++else (JANSSON_LIBRARY)
+     message(FATAL_ERROR "libjansson >=2.3 not found")
+-endif (JANSSON_FOUND)
++endif (JANSSON_LIBRARY)
+ 
+ 
+ add_subdirectory(src)
 diff --git a/lang/c/examples/quickstop.c b/lang/c/examples/quickstop.c
-index f18225b7..78e2b1b8 100644
+index f18225b..78e2b1b 100644
 --- a/lang/c/examples/quickstop.c
 +++ b/lang/c/examples/quickstop.c
 @@ -16,6 +16,7 @@
@@ -61,7 +86,7 @@ index f18225b7..78e2b1b8 100644
  		if (avro_record_get(person, "First", &first_datum) == 0) {
  			avro_string_get(first_datum, &p);
 diff --git a/lang/c/src/avro/msinttypes.h b/lang/c/src/avro/msinttypes.h
-index 29be14b9..7efc7026 100644
+index 29be14b..7efc702 100644
 --- a/lang/c/src/avro/msinttypes.h
 +++ b/lang/c/src/avro/msinttypes.h
 @@ -54,6 +54,10 @@
@@ -83,7 +108,7 @@ index 29be14b9..7efc7026 100644
  
  #endif // _MSC_INTTYPES_H_ ]
 diff --git a/lang/c/src/avro/msstdint.h b/lang/c/src/avro/msstdint.h
-index d02608a5..54e8972c 100644
+index d02608a..54e8972 100644
 --- a/lang/c/src/avro/msstdint.h
 +++ b/lang/c/src/avro/msstdint.h
 @@ -42,6 +42,10 @@
@@ -105,7 +130,7 @@ index d02608a5..54e8972c 100644
  
  #endif // _MSC_STDINT_H_ ]
 diff --git a/lang/c/src/avro/platform.h b/lang/c/src/avro/platform.h
-index 92930550..edfe1e05 100644
+index 9293055..edfe1e0 100644
 --- a/lang/c/src/avro/platform.h
 +++ b/lang/c/src/avro/platform.h
 @@ -35,8 +35,10 @@ extern "C" {
@@ -120,7 +145,7 @@ index 92930550..edfe1e05 100644
    #define PRIsz "zu"
  #endif
 diff --git a/lang/c/src/avro_private.h b/lang/c/src/avro_private.h
-index f97ef6b5..6b291048 100644
+index f97ef6b..6b29104 100644
 --- a/lang/c/src/avro_private.h
 +++ b/lang/c/src/avro_private.h
 @@ -34,7 +34,7 @@ extern "C" {
@@ -133,7 +158,7 @@ index f97ef6b5..6b291048 100644
  
  /* Note that AVRO_PLATFORM_IS_BIG_ENDIAN is *always* defined. It is
 diff --git a/lang/c/src/avroappend.c b/lang/c/src/avroappend.c
-index 7243c600..39656ff4 100644
+index 7243c60..39656ff 100644
 --- a/lang/c/src/avroappend.c
 +++ b/lang/c/src/avroappend.c
 @@ -20,7 +20,7 @@
@@ -146,7 +171,7 @@ index 7243c600..39656ff4 100644
  
  #include "avro.h"
 diff --git a/lang/c/src/codec.c b/lang/c/src/codec.c
-index 5b55b351..49789f2b 100644
+index 5b55b35..49789f2 100644
 --- a/lang/c/src/codec.c
 +++ b/lang/c/src/codec.c
 @@ -269,7 +269,7 @@ static int encode_deflate(avro_codec_t c, void * data, int64_t len)
@@ -201,7 +226,7 @@ index 5b55b351..49789f2b 100644
  
  		codec->used_size = write_pos;
 diff --git a/lang/c/src/schema.c b/lang/c/src/schema.c
-index 7b389002..50fa0db6 100644
+index 7b38900..50fa0db 100644
 --- a/lang/c/src/schema.c
 +++ b/lang/c/src/schema.c
 @@ -74,7 +74,7 @@ static int is_avro_id(const char *name)
@@ -360,10 +385,21 @@ index 7b389002..50fa0db6 100644
  	}
  	check(rval, avro_write_str(out, avro_schema_name(link->to)));
 diff --git a/lang/c/tests/test_avro_data.c b/lang/c/tests/test_avro_data.c
-index 1da09e6d..7ef26013 100644
+index 1da09e6..714d5d8 100644
 --- a/lang/c/tests/test_avro_data.c
 +++ b/lang/c/tests/test_avro_data.c
-@@ -112,7 +112,7 @@ write_read_check(avro_schema_t writers_schema, avro_datum_t datum,
+@@ -28,6 +28,10 @@ avro_writer_t writer;
+ 
+ typedef int (*avro_test) (void);
+ 
++#ifdef _WIN32
++# define strcasecmp stricmp
++#endif
++
+ /*
+  * Use a custom allocator that verifies that the size that we use to
+  * free an object matches the size that we use to allocate it.
+@@ -112,7 +116,7 @@ write_read_check(avro_schema_t writers_schema, avro_datum_t datum,
  		if (size != avro_writer_tell(writer)) {
  			fprintf(stderr,
  				"Unable to calculate size %s validate=%d "
@@ -372,12 +408,3 @@ index 1da09e6d..7ef26013 100644
  				type, validate, size, avro_writer_tell(writer),
  				avro_strerror());
  			exit(EXIT_FAILURE);
-@@ -142,7 +142,7 @@ static void test_json(avro_datum_t datum, const char *expected)
- {
- 	char  *json = NULL;
- 	avro_datum_to_json(datum, 1, &json);
--	if (strcasecmp(json, expected) != 0) {
-+	if (stricmp(json, expected) != 0) {
- 		fprintf(stderr, "Unexpected JSON encoding: %s\n", json);
- 		exit(EXIT_FAILURE);
- 	}

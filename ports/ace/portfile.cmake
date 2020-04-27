@@ -65,6 +65,8 @@ endif()
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 if(VCPKG_TARGET_IS_WINDOWS)
+  set(DLL_RELEASE_SUFFIX .dll)
+  set(DLL_DEBUG_SUFFIX d.dll)
   set(LIB_RELEASE_SUFFIX .lib)
   set(LIB_DEBUG_SUFFIX d.lib)
   if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
@@ -75,16 +77,25 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(SOLUTION_TYPE vc14)
   endif()
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
-endif()
-
-if(VCPKG_TARGET_IS_LINUX)
+elseif(VCPKG_TARGET_IS_LINUX)
   set(DLL_DECORATOR)
+  set(DLL_RELEASE_SUFFIX .so)
+  set(DLL_DEBUG_SUFFIX .so)
   set(LIB_RELEASE_SUFFIX .a)
   set(LIB_DEBUG_SUFFIX .a)
   set(LIB_PREFIX lib)
   set(SOLUTION_TYPE gnuace)
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-linux.h\"")
   file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_linux.GNU")
+elseif(VCPKG_TARGET_IS_OSX)
+  set(DLL_DECORATOR)
+  set(DLL_RELEASE_SUFFIX .dylib)
+  set(DLL_DEBUG_SUFFIX .dylib)
+  set(LIB_RELEASE_SUFFIX .a)
+  set(LIB_DEBUG_SUFFIX .a)
+  set(SOLUTION_TYPE gnuace)
+  file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-macosx.h\"")
+  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
 endif()
 
 # Invoke mwc.pl to generate the necessary solution and project files
@@ -135,11 +146,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       # Install the DLL files
       file(INSTALL
-          ${LIB_PATH}/${ACE_LIBRARY}d.dll
+          ${LIB_PATH}/${ACE_LIBRARY}${DLL_DEBUG_SUFFIX}
           DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
       )
       file(INSTALL
-          ${LIB_PATH}/${ACE_LIBRARY}.dll
+          ${LIB_PATH}/${ACE_LIBRARY}${DLL_RELEASE_SUFFIX}
           DESTINATION ${CURRENT_PACKAGES_DIR}/bin
       )
   endif()
@@ -174,8 +185,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # Handle copyright
   file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
   file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-else(VCPKG_TARGET_IS_WINDOWS)
-  # VCPKG_TARGTE_IS_LINUX
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")

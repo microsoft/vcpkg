@@ -1,0 +1,13 @@
+diff --git a/common/rs-config.cpp b/common/rs-config.cpp
+index ff3a757..c9efa1a 100644
+--- a/common/rs-config.cpp
++++ b/common/rs-config.cpp
+@@ -97,7 +97,7 @@ config_file::config_file(std::string filename)
+         auto j = json::parse(str);
+         for (json::iterator it = j.begin(); it != j.end(); ++it) 
+         {
+-            _values[it.key()] = it.value();
++            _values[it.key()] = it.value().get<std::string>();
+         }
+     }
+     catch(...)

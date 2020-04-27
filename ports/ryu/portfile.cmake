@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "uwp")
 
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -19,7 +19,7 @@ if (CMAKE_HOST_WIN32)
 endif ()
 
 vcpkg_execute_build_process(
-            COMMAND ${BAZEL} build --verbose_failures //ryu
+            COMMAND ${BAZEL} build --verbose_failures --strategy=CppCompile=standalone //ryu
             WORKING_DIRECTORY ${SOURCE_PATH}
             LOGNAME build-${TARGET_TRIPLET}-rel
     )
@@ -33,6 +33,6 @@ else()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE-Boost DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/ryu/ryu.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
+file(INSTALL ${SOURCE_PATH}/ryu/ryu.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/ryu/)
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/ryuConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
