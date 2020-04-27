@@ -2,12 +2,12 @@
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/parse.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
-#include <vcpkg/parse.h>
 
 using namespace vcpkg;
 
@@ -198,7 +198,6 @@ namespace
                     compress_directory(paths, tmp_log_path, paths.buildtrees / spec.name() / "failure_logs.zip");
 
                     fs.create_directories(archive_tombstone_path.parent_path(), ignore_errors);
-                    std::error_code ec;
                     fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
 
                     // clean up temporary directory
@@ -269,6 +268,8 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
 {
     struct BinaryConfigParser : Parse::ParserBase
     {
+        using Parse::ParserBase::ParserBase;
+
         std::vector<fs::path> archives_to_read;
         std::vector<fs::path> archives_to_write;
 
@@ -284,7 +285,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     std::string segment;
                     for (;;)
                     {
-                        auto n = match_until([](char ch) { return ch == ',' || ch == '`' || ch == ';'; });
+                        auto n = match_until([](char32_t ch) { return ch == ',' || ch == '`' || ch == ';'; });
                         Strings::append(segment, n);
                         auto ch = cur();
                         if (ch == '\0' || ch == ',' || ch == ';')
@@ -295,7 +296,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                             if (ch == '\0')
                                 add_error("unexpected eof: trailing unescaped backticks (`) are not allowed");
                             else
-                                segment.push_back(ch);
+                                Unicode::utf8_append_code_point(segment, ch);
                             next();
                         }
                         else
@@ -397,19 +398,19 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                                  segments[0].first);
             }
         }
-    } parser;
+    };
 
-    parser.init(env_string, "VCPKG_BINARY_SOURCES");
-    parser.parse();
+    BinaryConfigParser env_parser(env_string, "VCPKG_BINARY_SOURCES");
+    env_parser.parse();
+    if (auto err = env_parser.get_error()) return err->format();
     for (auto&& arg : args)
     {
-        parser.init(arg, "<command>");
-        parser.parse();
+        BinaryConfigParser arg_parser(arg, "<command>");
+        arg_parser.parse();
+        if (auto err = arg_parser.get_error()) return err->format();
+        Util::Vectors::append(&env_parser.archives_to_read, arg_parser.archives_to_read);
+        Util::Vectors::append(&env_parser.archives_to_write, arg_parser.archives_to_write);
     }
-    if (auto err = parser.get_error())
-    {
-        return err->format();
-    }
-    return {std::make_unique<ArchivesBinaryProvider>(std::move(parser.archives_to_read),
-                                                     std::move(parser.archives_to_write))};
+    return {std::make_unique<ArchivesBinaryProvider>(std::move(env_parser.archives_to_read),
+                                                     std::move(env_parser.archives_to_write))};
 }
