@@ -1,18 +1,5 @@
 Source: ixwebsocket
-Version: 9.5.0
-Build-Depends: zlib
+Version: 9.5.2
 Homepage: https://github.com/machinezone/IXWebSocket
 Description: Lightweight WebSocket Client and Server + HTTP Client and Server
-Default-Features: ssl
-
-Feature: ssl
-Build-Depends: ixwebsocket[openssl] (!osx), ixwebsocket[sectransp] (osx)
-Description: Default SSL backend
-
-# SSL backends
-Feature: openssl
-Build-Depends: openssl
-Description: SSL support (OpenSSL)
-
-Feature: sectransp
-Description: SSL support (sectransp)
+Build-Depends: zlib, openssl (!osx)
