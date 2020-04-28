@@ -502,7 +502,6 @@ g3log:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
-gainput:x64-windows-static=fail
 gamma:x64-linux=fail
 gamma:x64-osx=fail
 gdcm:arm64-windows=fail
