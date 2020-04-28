@@ -1237,6 +1237,11 @@ openal-soft:arm-uwp=fail
 openal-soft:x64-uwp=fail
 openblas:arm64-windows=fail
 openblas:arm-uwp=fail
+# opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
+opencc:arm64-windows=fail
+# opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
+opencc:arm-uwp=fail
+opencc:x64-uwp=fail
 opencensus-cpp:arm64-windows=fail
 opencensus-cpp:x64-windows=fail
 opencensus-cpp:x64-windows-static=fail
