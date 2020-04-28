@@ -10,14 +10,15 @@ vcpkg_from_github(
         "install_as_cmake_package.patch"
 )
 
-set(GAINPUT_BUILD_SHARED ON)
-set(GAINPUT_BUILD_STATIC ON)
-if(WIN32)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        set(GAINPUT_BUILD_SHARED OFF)
-    else()
-        set(GAINPUT_BUILD_STATIC OFF)
-    endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(GAINPUT_BUILD_SHARED OFF)
+    set(GAINPUT_BUILD_STATIC ON)
+else()
+    set(GAINPUT_BUILD_SHARED ON)
+    set(GAINPUT_BUILD_STATIC OFF)
+endif()
+if(APPLE)
+    set(GAINPUT_BUILD_SHARED ON)
 endif()
 
 vcpkg_configure_cmake(
