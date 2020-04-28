@@ -19,6 +19,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS_RELEASE -DCMAKE_BUILD_TYPE:STRING=Release
+    OPTIONS_DEBUG -DCMAKE_BUILD_TYPE:STRING=Debug
 )
 
 vcpkg_install_cmake()
@@ -34,6 +36,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin" ${CURRENT_PACKAGES_DIR}/tools/popsift)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+#    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin" ${CURRENT_PACKAGES_DIR}/tools/popsift/debug)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/popsift)
  endif()
 
