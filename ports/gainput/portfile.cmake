@@ -10,10 +10,21 @@ vcpkg_from_github(
         "install_as_cmake_package.patch"
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(GAINPUT_BUILD_SHARED ON)
+    set(GAINPUT_BUILD_STATIC OFF)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(GAINPUT_BUILD_SHARED OFF)
+    set(GAINPUT_BUILD_STATIC ON)
+endif()
+
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DGAINPUT_BUILD_SHARED=${GAINPUT_BUILD_SHARED}
+        -DGAINPUT_BUILD_STATIC=${GAINPUT_BUILD_STATIC}
         -DGAINPUT_TESTS=OFF
         -DGAINPUT_SAMPLES=OFF
 )
@@ -23,12 +34,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-gainput TARGET_PATH share
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/gainputstatic.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gainputstatic.lib ${CURRENT_PACKAGES_DIR}/lib/gainput.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gainputstaticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gainputd.lib)
-    endif()
-endif()
-
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

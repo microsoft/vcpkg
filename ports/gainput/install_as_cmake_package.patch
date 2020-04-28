@@ -1,8 +1,68 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 14d5e85..7e46870 100644
+index 14d5e85..e49e93b 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -65,6 +65,14 @@ if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+@@ -21,7 +21,7 @@ if (GAINPUT_BUILD_SHARED)
+   add_library(gainput SHARED ${sources} ${mmsources})
+   set_target_properties(gainput PROPERTIES
+     OUTPUT_NAME gainput
+-    DEBUG_POSTFIX -d
++    DEBUG_POSTFIX d
+     VERSION ${GAINPUT_VERSION}
+     SOVERSION ${GAINPUT_MAJOR_VERSION}
+     FOLDER gainput
+@@ -30,19 +30,27 @@ if (GAINPUT_BUILD_SHARED)
+ endif (GAINPUT_BUILD_SHARED)
+ 
+ if (GAINPUT_BUILD_STATIC)
+-  message(STATUS "..Building shared libraries (-DGAINPUT_BUILD_STATIC=OFF to disable)")
++  message(STATUS "..Building static libraries (-DGAINPUT_BUILD_STATIC=OFF to disable)")
+   add_library(gainputstatic STATIC ${sources} ${mmsources})
+-  set_target_properties(gainputstatic PROPERTIES DEBUG_POSTFIX -d FOLDER gainput)
++  set_target_properties(gainputstatic PROPERTIES DEBUG_POSTFIX d FOLDER gainput)
+   set(install_libs ${install_libs} gainputstatic)
+ endif (GAINPUT_BUILD_STATIC)
+ 
+ if(WIN32)
+-	target_link_libraries(gainput ${XINPUT} ws2_32)
+-	target_link_libraries(gainputstatic ${XINPUT} ws2_32)
++  if (GAINPUT_BUILD_SHARED)
++    target_link_libraries(gainput ${XINPUT} ws2_32)
++  endif(GAINPUT_BUILD_SHARED)
++  if(GAINPUT_BUILD_STATIC)
++    target_link_libraries(gainputstatic ${XINPUT} ws2_32)
++  endif(GAINPUT_BUILD_STATIC)
+ 	add_definitions(-DGAINPUT_LIB_DYNAMIC=1)
+ elseif(ANDROID)
+-	target_link_libraries(gainputstatic native_app_glue log android)
+-	target_link_libraries(gainput native_app_glue log android)
++  if (GAINPUT_BUILD_SHARED)
++    target_link_libraries(gainput native_app_glue log android)
++  endif(GAINPUT_BUILD_SHARED)
++  if(GAINPUT_BUILD_STATIC)
++    target_link_libraries(gainputstatic native_app_glue log android)
++  endif(GAINPUT_BUILD_STATIC)
+ elseif(APPLE)
+ 	find_library(FOUNDATION Foundation)
+ 	find_library(IOKIT IOKit)
+@@ -52,10 +60,14 @@ elseif(APPLE)
+       find_library(UIKIT UIKit)
+       find_library(COREMOTION CoreMotion)
+       find_library(QUARTZCORE QuartzCore)
+-      target_link_libraries(gainput ${UIKIT} ${COREMOTION})
++      if (GAINPUT_BUILD_SHARED)
++        target_link_libraries(gainput ${UIKIT} ${COREMOTION})
++      endif(GAINPUT_BUILD_SHARED)
+   else()
+       find_library(APPKIT AppKit)
+-      target_link_libraries(gainput ${APPKIT})
++      if (GAINPUT_BUILD_SHARED)
++        target_link_libraries(gainput ${APPKIT})
++      endif(GAINPUT_BUILD_SHARED)
+   endif()
+ endif()
+ 
+@@ -65,6 +77,14 @@ if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
  endif(NOT DEFINED CMAKE_INSTALL_LIBDIR)
  set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
  
@@ -17,7 +77,7 @@ index 14d5e85..7e46870 100644
  install(
      DIRECTORY "include/gainput"
      DESTINATION "include"
-@@ -73,7 +81,15 @@ install(
+@@ -73,7 +93,15 @@ install(
  
  install(
      TARGETS ${install_libs}
@@ -33,4 +93,3 @@ index 14d5e85..7e46870 100644
 +    NAMESPACE unofficial::${PROJECT_NAME}::
 +    DESTINATION share/unofficial-${PROJECT_NAME}
 +)
-\ No newline at end of file
