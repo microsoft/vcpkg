@@ -30,8 +30,8 @@ set(IDL_SOURCE_DIR "${SOURCE_PATH}/data/gen-cpp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jaegertracing/jaeger-client-cpp
-    REF 68be4e2d0416bc7b7262ff7111efa9cc1c5a2d08
-    SHA512 028e403c57415ffecbcb8d41fff03bfe3392cc8810e65887e3e6debfcafe53b2c6f62aaf152f9955ddc382e4481366c047450ad7ce6527e98dbe66e8856b636f
+    REF 47fbf19aae2e48d59dd8335b6f2a1e1a99abba7f
+    SHA512 a07e4d3e585c0f3e99aff6a662229f6beed8aef80fc6f7188629da38421bc49ab9effea479398e0d94e0a127bd931054ab332b38b73c2191bf75d4adfe5f6928
     HEAD_REF master
     PATCHES 
        "fix-CMakeLists.patch"
