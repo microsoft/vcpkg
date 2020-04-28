@@ -13,6 +13,12 @@ vcpkg_extract_source_archive_ex(
        "${CMAKE_CURRENT_LIST_DIR}/fix-build-in-windows.patch"
 )
 
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(BUILD_ARCH "Win32")
+else()
+    set(BUILD_ARCH "Win32")
+endif()
+
 # Handle binary files and includes
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/gsoap ${CURRENT_PACKAGES_DIR}/debug/tools)
 
