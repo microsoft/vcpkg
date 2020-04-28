@@ -12,28 +12,28 @@ Feature: utils
 Description: Build LLVM utils.
 
 Feature: target-all
-Description: Build all targets.
+Description: Build with all backends.
 
 Feature: target-aarch64
-Description: Build AArch64 target.
+Description: Build with AArch64 backend.
 
 Feature: target-arm
-Description: Build ARM target.
+Description: Build with ARM backend.
 
 Feature: target-mips
-Description: Build Mips target.
+Description: Build with Mips backend.
 
 Feature: target-powerpc
-Description: Build PowerPC target.
+Description: Build with PowerPC backend.
 
 Feature: target-systemz
-Description: Build SystemZ target.
+Description: Build with SystemZ backend.
 
 Feature: target-webassembly
-Description: Build WebAssembly target.
+Description: Build with WebAssembly backend.
 
 Feature: target-x86
-Description: Build X86 target.
+Description: Build with X86 backend.
 
 Feature: enable-rtti
 Description: Build LLVM with run-time type information.
