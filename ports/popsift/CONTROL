@@ -2,6 +2,8 @@ Source: popsift
 Version: 1.0.0
 Description: PopSift is an implementation of the SIFT algorithm in CUDA.
 Build-Depends: cuda
+Homepage: https://github.com/alicevision/popsift
+Supports: !(uwp|arm|arm64|android|x86)
 
 Feature: apps
 Description: Application programs for popsift (detection and matching)
