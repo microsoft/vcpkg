@@ -1082,6 +1082,7 @@ miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
 minizip:x64-uwp=fail
 mlpack:x64-linux=ignore
+mlpack:x64-osx=fail
 mman:x64-linux=fail
 mman:x64-osx=fail
 # mmx installs many problematic headers, such as `json.h` and `sched.h`
