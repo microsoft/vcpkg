@@ -9,10 +9,11 @@ vcpkg_from_github(
     PATCHES 
         fix-lnk2019-error.patch
         fix-uwp-build.patch
+        fix-MSVCbuildfail.patch #This patch is an upstream commit, the related PR: https://github.com/abseil/abseil-cpp/pull/637
 )
 
 set(CMAKE_CXX_STANDARD  )
-if("c++17" IN_LIST FEATURES)
+if("cxx17" IN_LIST FEATURES)
     set(CMAKE_CXX_STANDARD 17)
 endif()
 

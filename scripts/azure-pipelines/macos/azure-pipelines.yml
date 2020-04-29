@@ -1,0 +1,70 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+jobs:
+- job: x64_osx
+  pool:
+    name: vcpkgAgentPool
+    demands: Agent.OS -equals Darwin
+
+  steps:
+  - bash: |
+      rm -rf installed || true
+      mkdir -p ~/Data/installed || true
+      ln -s ~/Data/installed
+      rm -rf ~/Data/installed/* || true
+
+      rm -rf buildtrees || true
+      mkdir -p ~/Data/buildtrees || true
+      ln -s ~/Data/buildtrees
+      rm -rf ~/Data/buildtrees/* || true
+
+      rm -rf packages || true
+      mkdir -p ~/Data/packages || true
+      ln -s ~/Data/packages
+      rm -rf ~/Data/packages/* || true
+
+      rm archives || rm -rf archives || true
+      ln -s ~/Data/archives
+
+      rm -rf downloads || true
+      mkdir -p ~/Data/downloads || true
+      ln -s ~/Data/downloads
+
+      if [ -d downloads/ ]; then
+        #delete downloaded files that have not been used in 7 days
+        find downloads/  -maxdepth 1 -type f ! -atime 7  -exec rm -f {} \;
+      fi
+
+    displayName: 'Setup Environment'
+
+  - bash: |
+      brew list autoconf || brew install autoconf
+      brew list automake || brew install automake
+      brew list libtool || brew install libtool
+    displayName: 'Install brew dependencies'
+
+  - bash: |
+      ./bootstrap-vcpkg.sh -allowAppleClang
+    displayName: 'Build vcpkg'
+
+  - powershell: |
+      $skip_list = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-osx" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
+      mkdir $(System.ArtifactsDirectory)/xml-results
+      ./vcpkg ci x64-osx --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-osx.xml" --exclude=$skip_list --binarycaching
+    displayName: '** Test Modified Ports **'
+
+  - task: PowerShell@2
+    displayName: 'Analyze results and prepare test logs'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
+      arguments: '-baselineFile $(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt -logDir "$(System.ArtifactsDirectory)/xml-results" -outputDir "$(Build.ArtifactStagingDirectory)" -failurelogDir ~/Data/archives/fail -triplets "x64-osx" -errorOnRegression'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: x64-osx port build failure logs'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/failureLogs'
+      ArtifactName: 'Port build failure logs'
+    condition: failed()
