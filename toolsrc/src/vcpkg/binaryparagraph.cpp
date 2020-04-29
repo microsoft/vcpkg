@@ -149,5 +149,7 @@ namespace vcpkg
         if (!pgh.description.empty()) out_str.append("Description: ").append(pgh.description).push_back('\n');
 
         out_str.append("Type: ").append(Type::to_string(pgh.type)).push_back('\n');
+        if (!pgh.default_features.empty())
+            out_str.append("Default-Features: ").append(Strings::join(", ", pgh.default_features)).push_back('\n');
     }
 }
