@@ -47,10 +47,11 @@ jobs:
       brew list libtool || brew install libtool
     displayName: 'Install brew dependencies'
 
-  - bash: |
-      ./bootstrap-vcpkg.sh -allowAppleClang
+  - task: Bash@3
     displayName: 'Build vcpkg'
-
+    inputs:
+      filePath: bootstrap-vcpkg.sh
+      arguments: '-allowAppleClang'
   - powershell: |
       $skip_list = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-osx" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results
@@ -68,5 +69,5 @@ jobs:
     displayName: 'Publish Artifact: x64-osx port build failure logs'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/failureLogs'
-      ArtifactName: 'Port build failure logs'
+      ArtifactName: 'x64-osx port build failure logs'
     condition: failed()
