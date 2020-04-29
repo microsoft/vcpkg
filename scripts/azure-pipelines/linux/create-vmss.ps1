@@ -4,10 +4,10 @@
 
 <#
 .SYNOPSIS
-Creates a Windows virtual machine scale set, set up for vcpkg's CI.
+Creates a Linux virtual machine scale set, set up for vcpkg's CI.
 
 .DESCRIPTION
-create-vmss.ps1 creates an Azure Windows VM scale set, set up for vcpkg's CI
+create-vmss.ps1 creates an Azure Linux VM scale set, set up for vcpkg's CI
 system. See https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview
 for more information.
 
@@ -17,16 +17,15 @@ or are running from Azure Cloud Shell.
 #>
 
 $Location = 'westus2'
-$Prefix = 'PrWin-' + (Get-Date -Format 'yyyy-MM-dd')
+$Prefix = 'PrLin-' + (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_F16s_v2'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
-$WindowsServerSku = '2019-Datacenter'
 $InstalledDiskSizeInGB = 1024
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
-$TotalProgress = 12
+$TotalProgress = 10
 $CurrentProgress = 1
 
 <#
@@ -105,40 +104,6 @@ function New-Password {
   }
 
   return $result
-}
-
-<#
-.SYNOPSIS
-Waits for the shutdown of the specified resource.
-
-.DESCRIPTION
-Wait-Shutdown takes a VM, and checks if there's a 'PowerState/stopped'
-code; if there is, it returns. If there isn't, it waits ten seconds and
-tries again.
-
-.PARAMETER ResourceGroupName
-The name of the resource group to look up the VM in.
-
-.PARAMETER Name
-The name of the virtual machine to wait on.
-#>
-function Wait-Shutdown {
-  [CmdletBinding()]
-  Param([string]$ResourceGroupName, [string]$Name)
-
-  Write-Host "Waiting for $Name to stop..."
-  while ($true) {
-    $Vm = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $Name -Status
-    $highestStatus = $Vm.Statuses.Count
-    for ($idx = 0; $idx -lt $highestStatus; $idx++) {
-      if ($Vm.Statuses[$idx].Code -eq 'PowerState/stopped') {
-        return
-      }
-    }
-
-    Write-Host "... not stopped yet, sleeping for 10 seconds"
-    Start-Sleep -Seconds 10
-  }
 }
 
 <#
@@ -311,28 +276,17 @@ $Nic = New-AzNetworkInterface `
 $VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize
 $VM = Set-AzVMOperatingSystem `
   -VM $VM `
-  -Windows `
+  -Linux `
   -ComputerName $ProtoVMName `
-  -Credential $Credential `
-  -ProvisionVMAgent
+  -Credential $Credential
 
 $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
 $VM = Set-AzVMSourceImage `
   -VM $VM `
-  -PublisherName 'MicrosoftWindowsServer' `
-  -Offer 'WindowsServer' `
-  -Skus $WindowsServerSku `
+  -PublisherName 'Canonical' `
+  -Offer 'UbuntuServer' `
+  -Skus '18.04-LTS' `
   -Version latest
-
-$InstallDiskName = $ProtoVMName + "InstallDisk"
-$VM = Add-AzVMDataDisk `
-  -Vm $VM `
-  -Name $InstallDiskName `
-  -Lun 0 `
-  -Caching ReadWrite `
-  -CreateOption Empty `
-  -DiskSizeInGB $InstalledDiskSizeInGB `
-  -StorageAccountType 'StandardSSD_LRS'
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
 New-AzVm `
@@ -343,16 +297,15 @@ New-AzVm `
 ####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
-  -Status 'Running provisioning script provision-image.ps1 in VM' `
+  -Status 'Running provisioning script provision-image.sh in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 Invoke-AzVMRunCommand `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
-  -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\provision-image.ps1" `
-  -Parameter @{AdminUserPassword = $AdminPW; `
-    StorageAccountName=$StorageAccountName; `
+  -CommandId 'RunShellScript' `
+  -ScriptPath "$PSScriptRoot\provision-image.sh" `
+  -Parameter @{StorageAccountName=$StorageAccountName; `
     StorageAccountKey=$StorageAccountKey;}
 
 ####################################################################################################
@@ -362,26 +315,6 @@ Write-Progress `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
-
-####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Running provisioning script sysprep.ps1 in VM' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-Invoke-AzVMRunCommand `
-  -ResourceGroupName $ResourceGroupName `
-  -VMName $ProtoVMName `
-  -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\sysprep.ps1"
-
-####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Waiting for VM to shut down' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-Wait-Shutdown -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 
 ####################################################################################################
 Write-Progress `
@@ -412,7 +345,6 @@ Write-Progress `
 
 Remove-AzVM -Id $VM.ID -Force
 Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $PrototypeOSDiskName -Force
-Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $InstallDiskName -Force
 
 ####################################################################################################
 Write-Progress `
@@ -444,16 +376,23 @@ $Vmss = Add-AzVmssNetworkInterfaceConfiguration `
 $Vmss = Set-AzVmssOsProfile `
   -VirtualMachineScaleSet $Vmss `
   -ComputerNamePrefix $LiveVMPrefix `
-  -AdminUsername 'AdminUser' `
+  -AdminUsername AdminUser `
   -AdminPassword $AdminPW `
-  -WindowsConfigurationProvisionVMAgent $true `
-  -WindowsConfigurationEnableAutomaticUpdate $true
+  -CustomData ([Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("#!/bin/bash`n/etc/provision-disks.sh`n")))
 
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `
   -OsDiskCreateOption 'FromImage' `
   -OsDiskCaching ReadWrite `
   -ImageReferenceId $Image.Id
+
+$Vmss = Add-AzVmssDataDisk `
+  -VirtualMachineScaleSet $Vmss `
+  -Lun 0 `
+  -Caching 'ReadWrite' `
+  -CreateOption Empty `
+  -DiskSizeGB 1024 `
+  -StorageAccountType 'StandardSSD_LRS'
 
 New-AzVmss `
   -ResourceGroupName $ResourceGroupName `
