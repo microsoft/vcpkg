@@ -72,7 +72,6 @@ function(boost_modular_build)
         file(WRITE ${_bm_SOURCE_PATH}/build/Jamfile.v2 "${_contents}")
     endif()
 
-    configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
     # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-config/checks")
     #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${_bm_SOURCE_PATH}/build/config")
     # endif()
@@ -298,6 +297,10 @@ function(boost_modular_build)
     ######################
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${TARGET_TRIPLET}-rel")
+        set(BOOST_LIB_SUFFIX ${BOOST_LIB_RELEASE_SUFFIX})
+        set(VARIANT "release")
+        set(BUILD_LIB_PATH "lib/")
+        configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
         set(ENV{BOOST_BUILD_PATH} "${BOOST_BUILD_PATH}")
         vcpkg_execute_required_process(
             COMMAND "${B2_EXE}"
@@ -316,6 +319,10 @@ function(boost_modular_build)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+        set(BOOST_LIB_SUFFIX ${BOOST_LIB_DEBUG_SUFFIX})
+        set(VARIANT debug)
+        set(BUILD_LIB_PATH "debug/lib/")
+        configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
         set(ENV{BOOST_BUILD_PATH} "${BOOST_BUILD_PATH}")
         vcpkg_execute_required_process(
             COMMAND "${B2_EXE}"
