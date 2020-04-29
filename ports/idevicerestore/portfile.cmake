@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "linux" "osx")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF 1.0.12
     SHA512 ba623be56c2f37853516d7d4c32e16f1ec72f33d512f18aa812ce6830af4b9e389f7af5321888dd0ddd168e282b652e379b60f90970680e213eabf489f406915
     HEAD_REF msvc-master
-    PATCHES libcurl_d.patch
+    PATCHES 
+        libcurl_d.patch
+        fix-libgen.h-cannot-be-found.patch
 )
 
 vcpkg_install_msbuild(
