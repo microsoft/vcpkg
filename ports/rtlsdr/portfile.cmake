@@ -3,10 +3,12 @@ vcpkg_fail_port_install(
     ON_ARCH "arm" "arm64"
 )
 
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL git://git.osmocom.org/rtl-sdr
+    REPO osmocom/rtl-sdr
     REF d794155ba65796a76cd0a436f9709f4601509320
+    SHA512 21fe10f1dbecca651650f03d1008560930fac439d220c33b4a23acce98d78d8476ff200765eed8cfa6cddde761d45f7ba36c8b5bc3662aa85819172830ea4938
+    HEAD_REF master
     PATCHES Compile-with-msvc.patch
 )
 
