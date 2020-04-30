@@ -624,6 +624,34 @@ TEST_CASE ("do not install default features of existing dependency", "[plan]")
     features_check(install_plan.install_actions.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
 }
 
+TEST_CASE ("install default features of existing dependency", "[plan]")
+{
+    // Add a port "a" which depends on the default features of "b"
+    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    spec_map.emplace("a", "b");
+    // "b" has a default feature
+    spec_map.emplace("b", "", {{"b1", ""}}, {"b1"});
+
+    std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+    // "b[core]" is already installed
+    status_paragraphs.push_back(make_status_pgh("b", "", "b1"));
+    status_paragraphs.back()->package.spec = PackageSpec("b", Triplet::X64_WINDOWS);
+
+    // Install "a" (without explicit feature specification)
+    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    PortFileProvider::MapPortFileProvider map_port{spec_map.map};
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = Dependencies::create_feature_install_plan(map_port,
+                                                                  var_provider,
+                                                                  {install_specs.value_or_exit(VCPKG_LINE_INFO)},
+                                                                  StatusParagraphs(std::move(status_paragraphs)));
+
+    // Expect "b" to be rebuilt
+    REQUIRE(install_plan.install_actions.size() == 2);
+    features_check(install_plan.install_actions.at(0), "b", {"core", "b1"}, Triplet::X64_WINDOWS);
+}
+
 TEST_CASE ("install default features of dependency test 3", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
