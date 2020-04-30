@@ -5,7 +5,7 @@
 jobs:
 - job: ${{ parameters.jobName }}
   pool:
-    name: PrWin-2020-04-22
+    name: ${{ parameters.poolName }}
 
   variables:
     triplet: '${{ parameters.triplet }}'
@@ -26,7 +26,7 @@ jobs:
       $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\windows\ci-step.ps1 -Triplet "$(triplet)" -ExcludePorts $skipList
       Write-Host "CI test script is complete"
     errorActionPreference: continue
-    displayName: '** Build vcpkg and test ports **'
+    displayName: '** Build vcpkg and Test Modified Ports **'
 
   - powershell: |
       $baseName = "$(triplet)"
