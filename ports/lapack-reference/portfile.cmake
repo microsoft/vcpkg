@@ -15,7 +15,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(VCPKG_ENABLE_Fortran ON)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES "mingw-w64-x86_64-gcc-fortran")
-    set(NINJA "${CMAKE_CURRENT_LIST_DIR}/ninja.exe")
+    #set(NINJA "${CMAKE_CURRENT_LIST_DIR}/ninja.exe")
     set(ENV{CC} "cl.exe") # CMake will try using gcc
     set(ENV{RC} "rc.exe") # CMake will try to use windres else
     vcpkg_add_to_path("${MSYS_ROOT}/mingw64/bin/")
