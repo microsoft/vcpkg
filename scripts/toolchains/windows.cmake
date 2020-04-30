@@ -1,7 +1,22 @@
 if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     set(_VCPKG_WINDOWS_TOOLCHAIN 1)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")
-
+    
+    message("WINDOWS TOOLCHAIN")
+    
+    #IF(VCPKG_ENABLE_Fortran)
+        #message(STATUS "VCPKG Fortran enabled!")
+        #set(CMAKE_AR="${MSYS_ROOT}/usr/bin/bash.exe;--noprofile;--norc;-c;${MSYS_ROOT}/usr/share/automake-1.16/ar-lib;${VS_LIBPATH}")
+        #set(CMAKE_AR=${VS_LIBPATH} CACHE INTERNAL "" FORCE)
+        #set(CMAKE_LINKER=link.exe)
+        
+        #set(ENV{FFLAGS} "$ENV{FFLAGS} -names:lowercase -assume:underscore")
+        #set(CMAKE_Fortran_ARCHIVE_CREATE "<CMAKE_LINKER> /lib ${CMAKE_CL_NOLOGO} <LINK_FLAGS> /out:<TARGET> <OBJECTS> ")
+        #set(CMAKE_${lang}_CREATE_STATIC_LIBRARY  "<CMAKE_LINKER> /lib ${CMAKE_CL_NOLOGO} <LINK_FLAGS> /out:<TARGET> <OBJECTS> ")
+        #set(CMAKE_Fortran_ARCHIVE_APPEND "")
+        #set(CMAKE_Fortran_ARCHIVE_FINISH "")
+    #ENDIF()
+    
     get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
     if(NOT _CMAKE_IN_TRY_COMPILE)
 
@@ -18,7 +33,7 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
             # VS 2013 does not support /utf-8
             set(CHARSET_FLAG)
         endif()
-
+        
         set(CMAKE_CXX_FLAGS " /DWIN32 /D_WINDOWS /W3 ${CHARSET_FLAG} /GR /EHsc /MP ${VCPKG_CXX_FLAGS}" CACHE STRING "")
         set(CMAKE_C_FLAGS " /DWIN32 /D_WINDOWS /W3 ${CHARSET_FLAG} /MP ${VCPKG_C_FLAGS}" CACHE STRING "")
         set(CMAKE_RC_FLAGS "-c65001 /DWIN32" CACHE STRING "")
@@ -33,33 +48,9 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
         set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}" CACHE STRING "")
         set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}" CACHE STRING "")
         
-    
+        list(APPEND CMAKE_Fortran_FLAGS_INIT -mabi=ms ${VCPKG_Fortran_FLAGS})
+        list(APPEND CMAKE_Fortran_FLAGS_RELEASE_INIT ${VCPKG_Fortran_FLAGS_RELEASE})
+        list(APPEND CMAKE_Fortran_FLAGS_DEBUG_INIT ${VCPKG_Fortran_FLAGS_DEBUG})
     endif()
-    
-    if(VCPKG_ENABLED_Fortran)
-         set(ENV{FFLAGS} "$ENV{FFLAGS} -mabi=ms /names:lowercase /assume:underscore") 
-         include(Compiler/GNU)
-        __compiler_gnu(Fortran)
-
-        set(CMAKE_Fortran_SUBMODULE_SEP "@")
-        set(CMAKE_Fortran_SUBMODULE_EXT ".smod")
-
-        set(CMAKE_Fortran_PREPROCESS_SOURCE
-          "<CMAKE_Fortran_COMPILER> -cpp <DEFINES> <INCLUDES> <FLAGS> -E <SOURCE> -o <PREPROCESSED_SOURCE>")
-
-        set(CMAKE_Fortran_FORMAT_FIXED_FLAG "-ffixed-form")
-        set(CMAKE_Fortran_FORMAT_FREE_FLAG "-ffree-form")
-
-        set(CMAKE_Fortran_POSTPROCESS_FLAG "-fpreprocessed")
-
-        # No -DNDEBUG for Fortran.
-        string(APPEND CMAKE_Fortran_FLAGS_MINSIZEREL_INIT " -Os")
-        string(APPEND CMAKE_Fortran_FLAGS_RELEASE_INIT " -O3")
-
-        # No -isystem for Fortran because it will not find .mod files.
-        unset(CMAKE_INCLUDE_SYSTEM_FLAG_Fortran)
-
-        # Fortran-specific feature flags.
-        set(CMAKE_Fortran_MODDIR_FLAG -J)
-    endif()   
+   
 endif()
