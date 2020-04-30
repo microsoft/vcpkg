@@ -121,7 +121,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       vcpkg_execute_required_process(
           ALLOW_IN_DOWNLOAD_MODE
           COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage gt 2"
-          WORKING_DIRECTORY ${SOURCE_PATH}
+          WORKING_DIRECTORY "${TOOLPATH}"
       )
   endif()
 
