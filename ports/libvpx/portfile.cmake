@@ -71,6 +71,7 @@ vcpkg_execute_required_process(
 
 vcpkg_build_msbuild(
     PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
+    OPTIONS /p:UseEnv=True
 )
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
