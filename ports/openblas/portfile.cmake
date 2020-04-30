@@ -85,9 +85,9 @@ endif()
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES openblas${libsuffix}) # should probably use pkg-config to do the lib check.....
-file(COPY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/")
-    file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc")
+    file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc")
 endif()
 #maybe we need also to write a wrapper inside share/blas to search implicitly for openblas, whenever we feel it's ready for its own -config.cmake file
 
