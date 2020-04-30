@@ -16,15 +16,9 @@ set(VCPKG_ENABLE_Fortran ON)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES "mingw-w64-x86_64-gcc-fortran")
     set(NINJA "${CMAKE_CURRENT_LIST_DIR}/ninja.exe")
-    #vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")${MSYS_ROOT}/mingw64/bin/
-    set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
-    set(base_cmd ${BASH} --noprofile --norc -c ${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe)
-    set(ENV{CC} "cl.exe")
-    set(ENV{RC} "rc.exe")
-    set(ENV{LD} "link.exe")
-    set(ENV{AR} "link.exe")
+    set(ENV{CC} "cl.exe") # CMake will try using gcc
+    set(ENV{RC} "rc.exe") # CMake will try to use windres else
     vcpkg_add_to_path("${MSYS_ROOT}/mingw64/bin/")
-    #set(ENV{FC} "${MSYS_ROOT}/mingw64/bin/gfortran.exe")
 endif()
 #vcpkg_enable_fortran()
 
@@ -55,13 +49,20 @@ vcpkg_configure_cmake(
             #"-DCMAKE_SYSTEM_NAME=Windows-GNU"
             #"-DCMAKE_C_COMPILER=${base_cmd}"
             #"-DCMAKE_Fortran_COMPILER=${MSYS_ROOT}/mingw64/bin/gfortran.exe"
-            "-DCMAKE_LINKER=link.exe"
+            "-DCMAKE_LINKER=link"
+            "-DCMAKE_Fortran_CREATE_STATIC_LIBRARY=<CMAKE_LINKER> /lib <LINK_FLAGS> /out:<TARGET> <OBJECTS> "
+            "-DCMAKE_STATIC_LIBRARY_SUFFIX_Fortran=.lib"
+            "-DCMAKE_STATIC_LIBRARY_PREFIX_Fortran="
+            "-DCMAKE_RANLIB="
             "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
             "-DCBLAS=${CBLAS}"
+            "-DVCPKG_ENABLE_Fortran=ON"
+            "-DCMAKE_GNUtoMS=ON"
         )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 # Handle copyright
