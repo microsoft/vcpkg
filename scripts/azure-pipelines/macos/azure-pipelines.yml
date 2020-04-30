@@ -8,6 +8,8 @@ jobs:
     name: vcpkgAgentPool
     demands: Agent.OS -equals Darwin
 
+  timeoutInMinutes: 1440 # 1 day
+
   steps:
   - bash: |
       rm -rf installed || true
