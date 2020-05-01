@@ -1,11 +1,15 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.72.0"
+    $version = "1.72.0",
+    $portsDir = $null
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
-$portsDir = "$scriptsDir/../../ports"
+if ($null -eq $portsDir)
+{
+    $portsDir = "$scriptsDir/../../ports"
+}
 
 function TransformReference()
 {
@@ -46,7 +50,7 @@ function Generate()
     $controlDeps = ($Depends | sort) -join ", "
 
     $versionSuffix = ""
-    if ($PortName -eq "iostreams" -or $PortName -eq "python")
+    if ($PortName -eq "iostreams" -or $PortName -eq "process" -or $PortName -eq "python")
     {
         $versionSuffix = "-1"
     }
@@ -110,6 +114,10 @@ function Generate()
     if ($PortName -eq "iostreams")
     {
         $portfileLines += @("    PATCHES Removeseekpos.patch")
+    }
+    if ($PortName -eq "process")
+    {
+        $portfileLines += @("    PATCHES async_pipe_header.patch")
     }
     $portfileLines += @(
         ")"

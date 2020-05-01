@@ -21,7 +21,7 @@ namespace vcpkg::Remove
     void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         auto& fs = paths.get_filesystem();
-        auto maybe_ipv = status_db->find_all_installed(spec);
+        auto maybe_ipv = status_db->get_installed_package_view(spec);
 
         Checks::check_exit(
             VCPKG_LINE_INFO, maybe_ipv.has_value(), "unable to remove package %s: already removed", spec);
@@ -72,6 +72,7 @@ namespace vcpkg::Remove
                     fs.remove(target, ec);
                     if (ec)
                     {
+                        // TODO: this is racy; should we ignore this error?
 #if defined(_WIN32)
                         fs::stdfs::permissions(target, fs::perms::owner_all | fs::perms::group_all, ec);
                         fs.remove(target, ec);
@@ -177,10 +178,8 @@ namespace vcpkg::Remove
 
         if (purge == Purge::YES)
         {
-            System::printf("Purging package %s...\n", display_name);
             Files::Filesystem& fs = paths.get_filesystem();
             fs.remove_all(paths.packages / action.spec.dir(), VCPKG_LINE_INFO);
-            System::printf(System::Color::success, "Purging package %s... done\n", display_name);
         }
     }
 
@@ -192,7 +191,7 @@ namespace vcpkg::Remove
 
     static constexpr std::array<CommandSwitch, 5> SWITCHES = {{
         {OPTION_PURGE, "Remove the cached copy of the package (default)"},
-        {OPTION_NO_PURGE, "Do not remove the cached copy of the package"},
+        {OPTION_NO_PURGE, "Do not remove the cached copy of the package (deprecated)"},
         {OPTION_RECURSE, "Allow removal of packages not explicitly specified on the command line"},
         {OPTION_DRY_RUN, "Print the packages to be removed, but do not remove them"},
         {OPTION_OUTDATED, "Select all packages with versions that do not match the portfiles"},
@@ -290,6 +289,27 @@ namespace vcpkg::Remove
                 System::print2(System::Color::warning,
                                "If you are sure you want to remove them, run the command with the --recurse option\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+        }
+
+        for (const auto& action : remove_plan)
+        {
+            if (action.plan_type == RemovePlanType::NOT_INSTALLED && action.request_type == RequestType::USER_REQUESTED)
+            {
+                // The user requested removing a package that was not installed. If the port is installed for another
+                // triplet, warn the user that they may have meant that other package.
+                for (const auto& package : status_db)
+                {
+                    if (package->is_installed() && !package->package.is_feature() &&
+                        package->package.spec.name() == action.spec.name())
+                    {
+                        System::print2(
+                            System::Color::warning,
+                            "Another installed package matches the name of an unmatched request. Did you mean ",
+                            package->package.spec,
+                            "?\n");
+                    }
+                }
             }
         }
 

@@ -30,7 +30,7 @@ namespace vcpkg
     {
         struct CtrlCStateMachine
         {
-            CtrlCStateMachine() : m_number_of_external_processes(0) {}
+            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) {}
 
             void transition_to_spawn_process() noexcept
             {
@@ -91,17 +91,47 @@ namespace vcpkg
                 }
                 else
                 {
-                    // We are currently blocked on a child process. Upon return, transition_from_spawn_process()
-                    // will be called and exit.
+                    // We are currently blocked on a child process.
+                    // If none of the child processes are interactive, use the Job Object to terminate the tree.
+                    if (m_in_interactive.load() == 0)
+                    {
+                        auto job = m_global_job.exchange(NULL);
+                        if (job != NULL)
+                        {
+                            ::CloseHandle(job);
+                        }
+                    }
                 }
             }
 
+            void initialize_job()
+            {
+                m_global_job = CreateJobObjectW(NULL, NULL);
+                if (m_global_job != NULL)
+                {
+                    JOBOBJECT_EXTENDED_LIMIT_INFORMATION info = {};
+                    info.BasicLimitInformation.LimitFlags =
+                        JOB_OBJECT_LIMIT_BREAKAWAY_OK | JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+                    ::SetInformationJobObject(m_global_job, JobObjectExtendedLimitInformation, &info, sizeof(info));
+                    ::AssignProcessToJobObject(m_global_job, ::GetCurrentProcess());
+                }
+            }
+
+            void enter_interactive() { ++m_in_interactive; }
+            void exit_interactive() { --m_in_interactive; }
+
         private:
             std::atomic<int> m_number_of_external_processes;
+            std::atomic<HANDLE> m_global_job;
+            std::atomic<int> m_in_interactive;
         };
 
         static CtrlCStateMachine g_ctrl_c_state;
     }
+
+    void System::initialize_global_job_object() { g_ctrl_c_state.initialize_job(); }
+    void System::enter_interactive_subprocess() { g_ctrl_c_state.enter_interactive(); }
+    void System::exit_interactive_subprocess() { g_ctrl_c_state.exit_interactive(); }
 #endif
 
     fs::path System::get_exe_path_of_current_process()
@@ -211,6 +241,12 @@ namespace vcpkg
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"http_proxy",
             L"https_proxy",
+            // Environment variables to tell git to use custom SSH executable or command
+            L"GIT_SSH",
+            L"GIT_SSH_COMMAND",
+            // Environment variables needed for ssh-agent based authentication
+            L"SSH_AUTH_SOCK",
+            L"SSH_AGENT_PID",
             // Enables find_package(CUDA) and enable_language(CUDA) in CMake
             L"CUDA_PATH",
             L"CUDA_PATH_V9_0",
@@ -428,7 +464,7 @@ namespace vcpkg
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto process_info = windows_create_process(cmd_line, {}, DETACHED_PROCESS);
+        auto process_info = windows_create_process(cmd_line, {}, DETACHED_PROCESS | CREATE_BREAKAWAY_FROM_JOB);
         if (auto p = process_info.get())
         {
             p->close_handles();
@@ -456,7 +492,7 @@ namespace vcpkg
 
         std::wstring out_env;
 
-        while (1)
+        for (;;)
         {
             auto eq = std::find(it, e, '=');
             if (eq == e) break;
@@ -496,6 +532,7 @@ namespace vcpkg
         Debug::print(
             "cmd_execute() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
 #else
+        (void)env;
         Debug::print("system(", cmd_line, ")\n");
         fflush(nullptr);
         int exit_code = system(cmd_line.c_str());
@@ -551,6 +588,7 @@ namespace vcpkg
         }();
         g_ctrl_c_state.transition_from_spawn_process();
 #else
+        (void)env;
         const auto actual_cmd_line = Strings::format(R"###(%s 2>&1)###", cmd_line);
 
         Debug::print("popen(", actual_cmd_line, ")\n");
