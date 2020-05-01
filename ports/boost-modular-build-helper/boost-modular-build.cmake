@@ -6,7 +6,9 @@ function(boost_modular_build)
     endif()
 
     # Todo: this serves too similar a purpose as vcpkg_find_acquire_program()
-    if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x64-linux/tools/boost-build")
+    elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
     elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
@@ -15,7 +17,11 @@ function(boost_modular_build)
     endif()
 
     if(NOT EXISTS "${BOOST_BUILD_PATH}")
-        message(FATAL_ERROR "The x86 boost-build tools must be installed to build for non-x86/x64 platforms. Please run `vcpkg install boost-build:x86-windows`.")
+	if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            message(FATAL_ERROR "The x64 boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:x64-linux`.") 
+	else()
+            message(FATAL_ERROR "The x86 boost-build tools must be installed to build for non-x86/x64 platforms. Please run `vcpkg install boost-build:x86-windows`.")
+	endif()
     endif()
 
     if(EXISTS "${BOOST_BUILD_PATH}/b2.exe")
@@ -75,17 +81,35 @@ function(boost_modular_build)
     # endif()
 
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(configure_option)
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
-            set(fragment_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+            list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_EXECUTABLE)
+            list(APPEND configure_option "-DVCPKG_PYTHON_EXECUTABLE=${VCPKG_PYTHON_EXECUTABLE}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_INCLUDE)
+            list(APPEND configure_option "-DVCPKG_PYTHON_INCLUDE=${VCPKG_PYTHON_INCLUDE}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_LIBS_RELEASE)
+            list(APPEND configure_option "-DVCPKG_PYTHON_LIBS_RELEASE=${VCPKG_PYTHON_LIBS_RELEASE}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_LIBS_DEBUG)
+            list(APPEND configure_option "-DVCPKG_PYTHON_LIBS_DEBUG=${VCPKG_PYTHON_LIBS_DEBUG}")
+        endif()
+        if(DEFINED VCPKG_PYTHON_VERSION)
+            list(APPEND configure_option "-DVCPKG_PYTHON_VERSION=${VCPKG_PYTHON_VERSION}")
         endif()
         vcpkg_configure_cmake(
             SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
             PREFER_NINJA
             OPTIONS
+                "-DPORT=${PORT}"
+                "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
                 "-DB2_EXE=${B2_EXE}"
                 "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
                 "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
-                ${fragment_option}
+                ${configure_option}
         )
         vcpkg_install_cmake()
 
@@ -126,15 +150,10 @@ function(boost_modular_build)
         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     )
 
-    if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-        set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-    else()
-        execute_process(
-            COMMAND nproc
-            OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-        )
-        string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-        string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
+    include(ProcessorCount)
+    ProcessorCount(NUMBER_OF_PROCESSORS)
+    if(NOT NUMBER_OF_PROCESSORS)
+        set(NUMBER_OF_PROCESSORS 1)
     endif()
 
     ######################
@@ -195,7 +214,6 @@ function(boost_modular_build)
         list(APPEND _bm_OPTIONS_DBG "cxxflags=${VCPKG_CXX_FLAGS_DEBUG}")
     endif()
 
-
     if(VCPKG_C_FLAGS)
         list(APPEND _bm_OPTIONS "cflags=${VCPKG_C_FLAGS}")
     endif()
@@ -208,7 +226,6 @@ function(boost_modular_build)
         list(APPEND _bm_OPTIONS_DBG "cflags=${VCPKG_C_FLAGS_DEBUG}")
     endif()
 
-
     if(VCPKG_LINKER_FLAGS)
         list(APPEND _bm_OPTIONS "linkflags=${VCPKG_LINKER_FLAGS}")
     endif()
@@ -220,7 +237,6 @@ function(boost_modular_build)
     if(VCPKG_LINKER_FLAGS_DEBUG)
         list(APPEND _bm_OPTIONS_DBG "linkflags=${VCPKG_LINKER_FLAGS_DEBUG}")
     endif()
-
 
     # Add build type specific options
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -246,7 +262,7 @@ function(boost_modular_build)
     endif()
 
     file(TO_CMAKE_PATH "${_bm_DIR}/nothing.bat" NOTHING_BAT)
-    set(TOOLSET_OPTIONS " <cxxflags>/EHsc <compileflags>-Zm800 <compileflags>-nologo")
+    set(TOOLSET_OPTIONS "<cxxflags>/EHsc <compileflags>-Zm800 <compileflags>-nologo")
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         if(NOT VCPKG_PLATFORM_TOOLSET MATCHES "v140")
             find_path(PATH_TO_CL cl.exe)

@@ -1,5 +1,5 @@
 Source: cpprestsdk
-Version: 2.10.15
+Version: 2.10.16
 Build-Depends: openssl (!uwp&!windows), boost-system (!uwp&!windows),
   boost-date-time (!uwp&!windows), boost-regex (!uwp&!windows), boost-thread (!uwp&!windows),
   boost-filesystem (!uwp&!windows), boost-random (!uwp&!windows), boost-chrono (!uwp&!windows),
@@ -10,7 +10,7 @@ Description: C++11 JSON, REST, and OAuth library
 Default-Features: default-features
 
 Feature: default-features
-Build-Depends: cpprestsdk[brotli] (windows), cpprestsdk[core,compression,websockets]
+Build-Depends: cpprestsdk[brotli] (windows), cpprestsdk[core,compression]
 Description: Features installed by default
 
 Feature: compression

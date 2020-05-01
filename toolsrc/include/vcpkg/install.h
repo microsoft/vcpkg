@@ -79,6 +79,7 @@ namespace vcpkg::Install
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,
+                           IBinaryProvider& binaryprovider,
                            const CMakeVars::CMakeVarProvider& var_provider);
 
     extern const CommandStructure COMMAND_STRUCTURE;
