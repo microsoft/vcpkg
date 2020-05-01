@@ -515,8 +515,7 @@ namespace vcpkg::Export
             std::vector<fs::path> files;
             for (auto&& suffix : lines)
             {
-                if (!suffix.empty() && suffix.back() == '\r') suffix.pop_back();
-                files.push_back(paths.installed / suffix);
+                files.push_back(paths.installed / fs::u8path(suffix));
             }
 
             Install::install_files_and_write_listfile(fs, paths.installed, files, dirs);

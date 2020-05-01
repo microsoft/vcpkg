@@ -42,12 +42,14 @@ namespace vcpkg::Install
 
     const fs::path& InstallDir::listfile() const { return this->m_listfile; }
 
-    void install_files_and_write_listfile(Files::Filesystem& fs,
-                                          const fs::path& source_dir,
-                                          const InstallDir& destination_dir)
+    void install_package_and_write_listfile(const VcpkgPaths& paths,
+                                            const PackageSpec& spec,
+                                            const InstallDir& destination_dir)
     {
+        auto& fs = paths.get_filesystem();
+        auto source_dir = paths.package_dir(spec);
         Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.generic_string());
+            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.u8string());
         auto files = fs.get_files_recursive(source_dir);
         install_files_and_write_listfile(fs, source_dir, files, destination_dir);
     }
@@ -65,12 +67,10 @@ namespace vcpkg::Install
         const fs::path& listfile = destination_dir.listfile();
 
         fs.create_directories(destination, ec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.u8string());
         const fs::path listfile_parent = listfile.parent_path();
         fs.create_directories(listfile_parent, ec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.u8string());
 
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
         for (auto&& file : files)
@@ -82,7 +82,7 @@ namespace vcpkg::Install
                 continue;
             }
 
-            const std::string filename = file.filename().u8string();
+            const std::string filename = file.filename().generic_u8string();
             if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
             {
@@ -285,7 +285,7 @@ namespace vcpkg::Install
         const InstallDir install_dir = InstallDir::from_destination_root(
             paths.installed, triplet.to_string(), paths.listfile_path(bcf.core_paragraph));
 
-        install_files_and_write_listfile(paths.get_filesystem(), package_dir, install_dir);
+        install_package_and_write_listfile(paths, bcf.core_paragraph.spec, install_dir);
 
         source_paragraph.state = InstallState::INSTALLED;
         write_update(paths, source_paragraph);

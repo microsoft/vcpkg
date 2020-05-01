@@ -200,7 +200,7 @@ if (Test-Path $installedDir)
                 action.spec.triplet().to_string(),
                 per_package_dir_path / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
-            Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
+            Install::install_package_and_write_listfile(paths, action.spec, dirs);
 
             const std::string nuspec_file_content = create_nuspec_file_contents(
                 per_package_dir_path.string(), binary_paragraph, packages_version, chocolatey_options);
