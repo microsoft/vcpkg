@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/OpenGL-Registry
-  REF 2223f5bebde4aa6b170fb32cdaaf580703fddb67
-  SHA512 4e9b570f242942bd45a6601a6b0fcf1dc265c6ba03acaf782a639e7399842dd7350c2d4876236df80a070b2bd9ce7cee88cf2d85f2c50cfba7878d1f9379bbe9
+  REF 4594c03239fb76580bc5d5a13acb2a8f563f0158
+  SHA512 c005a4eb7e5c17002647e7762ae1a7ecba0d0780a62d66f1afd3b7f45c1ca49bd5a069ab0fabb94de3ec971604586457932941fa8eb924cf5ac3a959d8f5f146
   HEAD_REF master
 )
 
@@ -16,12 +16,12 @@ file(COPY
   ${SOURCE_PATH}/xml/gl.xml
   ${SOURCE_PATH}/xml/glx.xml
   ${SOURCE_PATH}/xml/wgl.xml
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/opengl-registry
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
 # Using the Makefile because it is the smallest file with a complete copy of the license text
 file(
   INSTALL ${SOURCE_PATH}/xml/Makefile
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/opengl-registry
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
   RENAME copyright
 )
