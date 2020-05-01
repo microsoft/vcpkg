@@ -10,6 +10,8 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
+
+
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(GPERF)
@@ -19,7 +21,7 @@ get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY )
 get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY )
-get_filename_component(NINJA_DIR "${GPERF}" DIRECTORY )
+get_filename_component(NINJA_DIR "${NINJA}" DIRECTORY )
 
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -37,9 +39,13 @@ vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
 if(QT_MAJOR_MINOR_VER STREQUAL "5.14")
-    set(PATCHES common.pri.latest.patch)
+    set(PATCHES common.pri.latest.patch gl.latest.patch)
 else()
     set(PATCHES common.pri.patch gl.patch)
 endif()
 
-qt_submodule_installation(PATCHES ${PATCHES} )
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND CORE_OPTIONS "BUILD_OPTIONS" "-webengine-system-libwebp" "-webengine-system-ffmpeg" "-webengine-system-icu")
+endif()
+
+qt_submodule_installation(${CORE_OPTIONS} PATCHES ${PATCHES})
