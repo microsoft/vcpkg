@@ -1,6 +1,6 @@
 Source: suitesparse
-Version: 5.4.0-5
-Build-Depends: clapack (!osx)
+Version: 5.4.0-6
+Build-Depends: lapack-reference (!osx)
 Homepage: http://faculty.cse.tamu.edu/davis/SuiteSparse
 Description: algebra library
 
