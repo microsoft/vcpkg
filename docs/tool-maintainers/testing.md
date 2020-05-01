@@ -77,7 +77,7 @@ First, we should create a file, `example.cpp`, in `toolsrc/src/vcpkg-test`:
 
 ```cpp
 // vcpkg-test/example.cpp
-#include <vcpkg-test/catch.h>
+#include <catch2/catch.hpp>
 ```
 
 This is the minimum file needed for tests; let's rebuild!
