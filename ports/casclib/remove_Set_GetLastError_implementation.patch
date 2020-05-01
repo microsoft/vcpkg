@@ -1,0 +1,23 @@
+diff --git a/src/common/Common.cpp b/src/common/Common.cpp
+index 2860671..42ca4bf 100644
+--- a/src/common/Common.cpp
++++ b/src/common/Common.cpp
+@@ -65,17 +65,7 @@ unsigned char IntToHexChar[] = "0123456789abcdef";
+ // GetLastError/SetLastError support for non-Windows platform
+ 
+ #ifndef PLATFORM_WINDOWS
+-static DWORD dwLastError = ERROR_SUCCESS;
+-
+-DWORD GetLastError()
+-{
+-    return dwLastError;
+-}
+-
+-void SetLastError(DWORD dwErrCode)
+-{
+-    dwLastError = dwErrCode;
+-}
++// use  stormlibs implementation
+ #endif
+ 
+ //-----------------------------------------------------------------------------

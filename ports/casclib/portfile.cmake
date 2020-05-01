@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         ctype_for_mac.patch
+        remove_Set_GetLastError_implementation.patch
 )
 
 file(COPY 
