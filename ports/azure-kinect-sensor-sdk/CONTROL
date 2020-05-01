@@ -9,4 +9,4 @@ Description: Build K4A doxygen documentation.
 
 Feature: tool
 Description: Build tools.
-Build-Depends: gl3w, imgui[example]
+Build-Depends: gl3w, glew, imgui[bindings]
