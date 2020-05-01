@@ -12,16 +12,6 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(VCPKG_ENABLE_Fortran ON)
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES "mingw-w64-x86_64-gcc-fortran")
-    #set(NINJA "${CMAKE_CURRENT_LIST_DIR}/ninja.exe")
-    set(ENV{CC} "cl.exe") # CMake will try using gcc
-    set(ENV{RC} "rc.exe") # CMake will try to use windres else
-    vcpkg_add_to_path("${MSYS_ROOT}/mingw64/bin/")
-endif()
-#vcpkg_enable_fortran()
-
 set(lapack_ver 3.8.0)
 
 vcpkg_from_github(
@@ -44,20 +34,11 @@ endif()
 
 vcpkg_configure_cmake(
         PREFER_NINJA
+        ENABLE_FORTRAN
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-            #"-DCMAKE_SYSTEM_NAME=Windows-GNU"
-            #"-DCMAKE_C_COMPILER=${base_cmd}"
-            #"-DCMAKE_Fortran_COMPILER=${MSYS_ROOT}/mingw64/bin/gfortran.exe"
-            "-DCMAKE_LINKER=link"
-            "-DCMAKE_Fortran_CREATE_STATIC_LIBRARY=<CMAKE_LINKER> /lib <LINK_FLAGS> /out:<TARGET> <OBJECTS> "
-            "-DCMAKE_STATIC_LIBRARY_SUFFIX_Fortran=.lib"
-            "-DCMAKE_STATIC_LIBRARY_PREFIX_Fortran="
-            "-DCMAKE_RANLIB="
             "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
             "-DCBLAS=${CBLAS}"
-            "-DVCPKG_ENABLE_Fortran=ON"
-            "-DCMAKE_GNUtoMS=ON"
         )
 
 vcpkg_install_cmake()
