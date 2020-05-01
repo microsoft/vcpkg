@@ -1,6 +1,5 @@
 Source: ixwebsocket
-Version: 9.5.2
+Version: 9.5.4
 Homepage: https://github.com/machinezone/IXWebSocket
 Description: Lightweight WebSocket Client and Server + HTTP Client and Server
 Build-Depends: zlib, openssl (!osx)
-Supports: !uwp
