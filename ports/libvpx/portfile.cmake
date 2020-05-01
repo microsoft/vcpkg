@@ -74,6 +74,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
 
     vcpkg_build_msbuild(
         PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
+        OPTIONS /p:UseEnv=True
     )
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -130,63 +131,67 @@ else()
 
     message(STATUS "Building Options: ${OPTIONS}")
 
-    message(STATUS "Configuring libvpx for Release")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    vcpkg_execute_required_process(
-    COMMAND
-        ${BASH} --noprofile --norc
-        "${SOURCE_PATH}/configure"
-        ${OPTIONS}
-        ${OPTIONS_RELEASE}
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-    LOGNAME configure-${TARGET_TRIPLET}-rel)
-
-    message(STATUS "Building libvpx for Release")
-    vcpkg_execute_required_process(
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        message(STATUS "Configuring libvpx for Release")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        vcpkg_execute_required_process(
         COMMAND
-            ${BASH} --noprofile --norc -c "make -j8"
+            ${BASH} --noprofile --norc
+            "${SOURCE_PATH}/configure"
+            ${OPTIONS}
+            ${OPTIONS_RELEASE}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        LOGNAME build-${TARGET_TRIPLET}-rel
-    )
+        LOGNAME configure-${TARGET_TRIPLET}-rel)
 
-    message(STATUS "Installing libvpx for Release")
-    vcpkg_execute_required_process(
-        COMMAND
-            ${BASH} --noprofile --norc -c "make install"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        LOGNAME install-${TARGET_TRIPLET}-rel
-    )
+        message(STATUS "Building libvpx for Release")
+        vcpkg_execute_required_process(
+            COMMAND
+                ${BASH} --noprofile --norc -c "make -j8"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+            LOGNAME build-${TARGET_TRIPLET}-rel
+        )
+
+        message(STATUS "Installing libvpx for Release")
+        vcpkg_execute_required_process(
+            COMMAND
+                ${BASH} --noprofile --norc -c "make install"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+            LOGNAME install-${TARGET_TRIPLET}-rel
+        )
+    endif()
 
     # --- --- ---
 
-    message(STATUS "Configuring libvpx for Debug")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    vcpkg_execute_required_process(
-    COMMAND
-        ${BASH} --noprofile --norc
-        "${SOURCE_PATH}/configure"
-        ${OPTIONS}
-        ${OPTIONS_DEBUG}
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-    LOGNAME configure-${TARGET_TRIPLET}-dbg)
-
-    message(STATUS "Building libvpx for Debug")
-    vcpkg_execute_required_process(
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        message(STATUS "Configuring libvpx for Debug")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        vcpkg_execute_required_process(
         COMMAND
-            ${BASH} --noprofile --norc -c "make -j8"
+            ${BASH} --noprofile --norc
+            "${SOURCE_PATH}/configure"
+            ${OPTIONS}
+            ${OPTIONS_DEBUG}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        LOGNAME build-${TARGET_TRIPLET}-dbg
-    )
+        LOGNAME configure-${TARGET_TRIPLET}-dbg)
 
-    message(STATUS "Installing libvpx for Debug")
-    vcpkg_execute_required_process(
-        COMMAND
-            ${BASH} --noprofile --norc -c "make install"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        LOGNAME install-${TARGET_TRIPLET}-dbg
-    )
+        message(STATUS "Building libvpx for Debug")
+        vcpkg_execute_required_process(
+            COMMAND
+                ${BASH} --noprofile --norc -c "make -j8"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+            LOGNAME build-${TARGET_TRIPLET}-dbg
+        )
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+        message(STATUS "Installing libvpx for Debug")
+        vcpkg_execute_required_process(
+            COMMAND
+                ${BASH} --noprofile --norc -c "make install"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+            LOGNAME install-${TARGET_TRIPLET}-dbg
+        )
+
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    endif()
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libvpx)

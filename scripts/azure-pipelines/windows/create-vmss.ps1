@@ -1,7 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 #
-#
 
 <#
 .SYNOPSIS
@@ -17,7 +16,7 @@ at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6
 or are running from Azure Cloud Shell.
 #>
 
-$Location = 'SouthCentralUS'
+$Location = 'westus2'
 $Prefix = 'PrWin-' + (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_F16s_v2'
 $ProtoVMName = 'PROTOTYPE'
@@ -212,13 +211,25 @@ $allowDns = New-AzNetworkSecurityRuleConfig `
   -DestinationAddressPrefix * `
   -DestinationPortRange 53
 
+$allowGit = New-AzNetworkSecurityRuleConfig `
+  -Name AllowGit `
+  -Description 'Allow git' `
+  -Access Allow `
+  -Protocol Tcp `
+  -Direction Outbound `
+  -Priority 1010 `
+  -SourceAddressPrefix * `
+  -SourcePortRange * `
+  -DestinationAddressPrefix * `
+  -DestinationPortRange 9418
+
 $allowStorage = New-AzNetworkSecurityRuleConfig `
   -Name AllowStorage `
   -Description 'Allow Storage' `
   -Access Allow `
   -Protocol * `
   -Direction Outbound `
-  -Priority 1010 `
+  -Priority 1011 `
   -SourceAddressPrefix VirtualNetwork `
   -SourcePortRange * `
   -DestinationAddressPrefix Storage `
@@ -230,7 +241,7 @@ $denyEverythingElse = New-AzNetworkSecurityRuleConfig `
   -Access Deny `
   -Protocol * `
   -Direction Outbound `
-  -Priority 1011 `
+  -Priority 1012 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
@@ -241,7 +252,7 @@ $NetworkSecurityGroup = New-AzNetworkSecurityGroup `
   -Name $NetworkSecurityGroupName `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
-  -SecurityRules @($allowHttp, $allowDns, $allowStorage, $denyEverythingElse)
+  -SecurityRules @($allowHttp, $allowDns, $allowGit, $allowStorage, $denyEverythingElse)
 
 $SubnetName = $ResourceGroupName + 'Subnet'
 $Subnet = New-AzVirtualNetworkSubnetConfig `
@@ -282,10 +293,8 @@ $StorageContext = New-AzStorageContext `
   -StorageAccountName $StorageAccountName `
   -StorageAccountKey $StorageAccountKey
 
-$ArchivesFiles = New-AzStorageShare -Name 'archives' -Context $StorageContext
+New-AzStorageShare -Name 'archives' -Context $StorageContext
 Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 5120
-$LogFiles = New-AzStorageShare -Name 'logs' -Context $StorageContext
-Set-AzStorageShareQuota -ShareName 'logs' -Context $StorageContext -Quota 64
 
 ####################################################################################################
 Write-Progress `
@@ -305,8 +314,7 @@ $VM = Set-AzVMOperatingSystem `
   -Windows `
   -ComputerName $ProtoVMName `
   -Credential $Credential `
-  -ProvisionVMAgent `
-  -EnableAutoUpdate
+  -ProvisionVMAgent
 
 $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
 $VM = Set-AzVMSourceImage `
@@ -417,11 +425,14 @@ $VmssIpConfig = New-AzVmssIpConfig -SubnetId $Nic.IpConfigurations[0].Subnet.Id 
 $VmssName = $ResourceGroupName + 'Vmss'
 $Vmss = New-AzVmssConfig `
   -Location $Location `
-  -SkuCapacity 6 `
+  -SkuCapacity 0 `
   -SkuName $VMSize `
   -SkuTier 'Standard' `
   -Overprovision $false `
-  -UpgradePolicyMode Manual
+  -UpgradePolicyMode Manual `
+  -EvictionPolicy Delete `
+  -Priority Spot `
+  -MaxPrice -1
 
 $Vmss = Add-AzVmssNetworkInterfaceConfiguration `
   -VirtualMachineScaleSet $Vmss `
