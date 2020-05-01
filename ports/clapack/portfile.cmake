@@ -1,5 +1,4 @@
-include(vcpkg_common_functions)
-
+message(FATAL_ERROR "Make CLAPACK FAIL IN CI")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
