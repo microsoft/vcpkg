@@ -14,6 +14,8 @@ namespace vcpkg
     namespace Tools
     {
         static const std::string SEVEN_ZIP = "7zip";
+        static const std::string SEVEN_ZIP_ALT = "7z";
+        static const std::string MAVEN = "mvn";
         static const std::string CMAKE = "cmake";
         static const std::string GIT = "git";
         static const std::string NINJA = "ninja";
@@ -52,10 +54,11 @@ namespace vcpkg
             std::string name;
             fs::path location;
 
-            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location){}
+            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) {}
         };
 
         static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
+                                           const Optional<fs::path>& install_root_dir,
                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
                                            const std::string& default_vs_path,
                                            const std::vector<std::string>* triplets_dirs);
@@ -64,10 +67,10 @@ namespace vcpkg
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
-        bool is_valid_triplet(const Triplet& t) const;
+        bool is_valid_triplet(Triplet t) const;
         const std::vector<std::string> get_available_triplets_names() const;
         const std::vector<TripletFile>& get_available_triplets() const;
-        const fs::path get_triplet_file_path(const Triplet& triplet) const;
+        const fs::path get_triplet_file_path(Triplet triplet) const;
 
         fs::path root;
         fs::path packages;

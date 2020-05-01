@@ -14,20 +14,25 @@
 ## The current list of programs includes:
 ##
 ## - 7Z
+## - ARIA2 (Downloader)
 ## - BISON
+## - DARK
+## - DOXYGEN
 ## - FLEX
 ## - GASPREPROCESSOR
+## - GPERF
 ## - PERL
 ## - PYTHON2
 ## - PYTHON3
+## - GIT
 ## - GO
 ## - JOM
 ## - MESON
 ## - NASM
 ## - NINJA
 ## - NUGET
+## - SCONS
 ## - YASM
-## - ARIA2 (Downloader)
 ##
 ## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 ##
@@ -89,6 +94,20 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://sourceforge.net/projects/gnuwin32/files/gettext/0.14.4/gettext-0.14.4-bin.zip")
     set(ARCHIVE "gettext-0.14.4-bin.zip")
     set(HASH fb6029f247646520fe8cc4cfaaa646b5685b4a1dd5f446f1c6163bbfc935e619b2d71c512ec5dc6d64a1fc537620765341859d2ae0c370a1695b1865035a20d9)
+  elseif(VAR MATCHES "GIT")
+    set(PROGNAME git)
+    if(CMAKE_HOST_WIN32)
+      set(SUBDIR "git-2.26.2-1-windows")
+      set(URL "https://github.com/git-for-windows/git/releases/download/v2.26.2.windows.1/PortableGit-2.26.2-32-bit.7z.exe")
+      set(ARCHIVE "PortableGit-2.26.2-32-bit.7z.exe")
+      set(HASH d3cb60d62ca7b5d05ab7fbed0fa7567bec951984568a6c1646842a798c4aaff74bf534cf79414a6275c1927081a11b541d09931c017bf304579746e24fe57b36)
+      set(PATHS
+        "${DOWNLOADS}/tools/${SUBDIR}/mingw32/bin"
+        "${DOWNLOADS}/tools/git/${SUBDIR}/mingw32/bin")
+    else()
+      set(BREW_PACKAGE_NAME "git")
+      set(APT_PACKAGE_NAME "git")
+    endif()
   elseif(VAR MATCHES "GO")
     set(PROGNAME go)
     set(PATHS ${DOWNLOADS}/tools/go/go/bin)
@@ -100,11 +119,18 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "PYTHON3")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME python)
-      set(SUBDIR "python-3.7.3")
+      if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+        set(SUBDIR "python-3.7.3-x86")
+        set(URL "https://www.python.org/ftp/python/3.7.3/python-3.7.3-embed-win32.zip")
+        set(ARCHIVE "python-3.7.3-embed-win32.zip")
+        set(HASH 2c1b1f0a29d40a91771ae21a5f733eedc10984cd182cb10c2793bbd24191a89f20612a3f23c34047f37fb06369016bfd4a52915ed1b4a56f8bd2b4ca6994eb31)
+      else()
+        set(SUBDIR "python-3.7.3-x64")
+        set(URL "https://www.python.org/ftp/python/3.7.3/python-3.7.3-embed-amd64.zip")
+        set(ARCHIVE "python-3.7.3-embed-amd64.zip")
+        set(HASH 4b3e0067b5e8d00b1cac5d556ab4fbd71df2a1852afb3354ee62363aabc8801aca84da09dbd26125527ae54b50488f808c1d82abf18969c23a51dcd57576885f)
+      endif()
       set(PATHS ${DOWNLOADS}/tools/python/${SUBDIR})
-      set(URL "https://www.python.org/ftp/python/3.7.3/python-3.7.3-embed-win32.zip")
-      set(ARCHIVE "python-3.7.3-embed-win32.zip")
-      set(HASH 2c1b1f0a29d40a91771ae21a5f733eedc10984cd182cb10c2793bbd24191a89f20612a3f23c34047f37fb06369016bfd4a52915ed1b4a56f8bd2b4ca6994eb31)
       set(POST_INSTALL_COMMAND ${CMAKE_COMMAND} -E remove python37._pth)
     else()
       set(PROGNAME python3)
@@ -114,11 +140,18 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "PYTHON2")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME python)
-      set(SUBDIR "python2")
+      if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+        set(SUBDIR "python-2.7.16-x86")
+        set(URL "https://www.python.org/ftp/python/2.7.16/python-2.7.16.msi")
+        set(ARCHIVE "python-2.7.16.msi")
+        set(HASH c34a6fa2438682104dccb53650a2bdb79eac7996deff075201a0f71bb835d60d3ed866652a1931f15a29510fe8e1009ac04e423b285122d2e5747fefc4c10254)
+      else()
+        set(SUBDIR "python-2.7.16-x64")
+        set(URL "https://www.python.org/ftp/python/2.7.16/python-2.7.16.amd64.msi")
+        set(ARCHIVE "python-2.7.16.amd64.msi")
+        set(HASH 47c1518d1da939e3ba6722c54747778b93a44c525bcb358b253c23b2510374a49a43739c8d0454cedade858f54efa6319763ba33316fdc721305bc457efe4ffb)
+      endif()
       set(PATHS ${DOWNLOADS}/tools/python/${SUBDIR})
-      set(URL "https://www.python.org/ftp/python/2.7.16/python-2.7.16.msi")
-      set(ARCHIVE "python2.msi")
-      set(HASH c34a6fa2438682104dccb53650a2bdb79eac7996deff075201a0f71bb835d60d3ed866652a1931f15a29510fe8e1009ac04e423b285122d2e5747fefc4c10254)
     else()
       set(PROGNAME python2)
       set(BREW_PACKAGE_NAME "python2")
@@ -134,7 +167,10 @@ function(vcpkg_find_acquire_program VAR)
     set(PROGNAME jom)
     set(SUBDIR "jom-1.1.3")
     set(PATHS ${DOWNLOADS}/tools/jom/${SUBDIR})
-    set(URL "http://download.qt.io/official_releases/jom/jom_1_1_3.zip")
+    set(URL
+      "http://download.qt.io/official_releases/jom/jom_1_1_3.zip"
+      "http://mirrors.ocf.berkeley.edu/qt/official_releases/jom/jom_1_1_3.zip"
+    )
     set(ARCHIVE "jom_1_1_3.zip")
     set(HASH 5b158ead86be4eb3a6780928d9163f8562372f30bde051d8c281d81027b766119a6e9241166b91de0aa6146836cea77e5121290e62e31b7a959407840fc57b33)
   elseif(VAR MATCHES "7Z")
@@ -145,7 +181,7 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH f73b04e2d9f29d4393fde572dcf3c3f0f6fa27e747e5df292294ab7536ae24c239bf917689d71eb10cc49f6b9a4ace26d7c122ee887d93cc935f268c404e9067)
   elseif(VAR MATCHES "NINJA")
     set(PROGNAME ninja)
-    set(SUBDIR "ninja-1.8.2")
+    set(SUBDIR "ninja-1.10.0")
     if(CMAKE_HOST_WIN32)
       set(PATHS "${DOWNLOADS}/tools/ninja/${SUBDIR}")
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
@@ -157,9 +193,9 @@ function(vcpkg_find_acquire_program VAR)
     endif()
     set(BREW_PACKAGE_NAME "ninja")
     set(APT_PACKAGE_NAME "ninja-build")
-    set(URL "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip")
-    set(ARCHIVE "ninja-1.8.2-win.zip")
-    set(HASH 9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5)
+    set(URL "https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip")
+    set(ARCHIVE "ninja-win-1.10.0.zip")
+    set(HASH a196e243c53daa1df9d287af658d6d38d6b830b614f2d5704e8c88ffc61f179a533ae71cdb6d0d383d1559d65dacccbaaab270fb2a33aa211e5dba42ff046f97)
   elseif(VAR MATCHES "NUGET")
     set(PROGNAME nuget)
     set(PATHS "${DOWNLOADS}/tools/nuget")
@@ -178,10 +214,10 @@ function(vcpkg_find_acquire_program VAR)
     else()
       set(SCRIPTNAME meson)
     endif()
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.52.0)
-    set(URL "https://github.com/mesonbuild/meson/archive/0.52.0.zip")
-    set(ARCHIVE "meson-0.52.0.zip")
-    set(HASH 2f2657599f19933c02be2a1faa508d5b2d137fba1ccc9d68a6b6d04b8d21163c33220c673643fa444fa86e94ba010cf8a851b9e6abc096559a7c735f5099a180)
+    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.53.2)
+    set(URL "https://github.com/mesonbuild/meson/archive/0.53.2.zip")
+    set(ARCHIVE "meson-0.53.2.zip")
+    set(HASH 86c3347395528d2358c9514a76ec8a60908f8abadece5ecb9bac633ea735d4b40a27683002db017f06fa48ec68ea1bfe64d216fa17a54d6d42c8bc45f55606b2)
   elseif(VAR MATCHES "FLEX")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME win_flex)
@@ -248,9 +284,12 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727)
   elseif(VAR MATCHES "DOXYGEN")
     set(PROGNAME doxygen)
+    set(DOXYGEN_VERSION 1.8.17)
     set(PATHS ${DOWNLOADS}/tools/doxygen)
-    set(URL "http://doxygen.nl/files/doxygen-1.8.17.windows.bin.zip")
-    set(ARCHIVE "doxygen-1.8.17.windows.bin.zip")
+    set(URL
+      "http://doxygen.nl/files/doxygen-${DOXYGEN_VERSION}.windows.bin.zip"
+      "https://sourceforge.net/projects/doxygen/files/rel-${DOXYGEN_VERSION}/doxygen-${DOXYGEN_VERSION}.windows.bin.zip")
+    set(ARCHIVE "doxygen-${DOXYGEN_VERSION}.windows.bin.zip")
     set(HASH 6bac47ec552486783a70cc73b44cf86b4ceda12aba6b52835c2221712bd0a6c845cecec178c9ddaa88237f5a781f797add528f47e4ed017c7888eb1dd2bc0b4b)
   elseif(VAR MATCHES "BAZEL")
     set(PROGNAME bazel)
@@ -264,6 +303,12 @@ function(vcpkg_find_acquire_program VAR)
       set(ARCHIVE "bazel-${BAZEL_VERSION}-linux-x86_64")
       set(NOEXTRACT ON)
       set(HASH db4a583cf2996aeb29fd008261b12fe39a4a5faf0fbf96f7124e6d3ffeccf6d9655d391378e68dd0915bc91c9e146a51fd9661963743857ca25179547feceab1)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+      set(_vfa_SUPPORTED ON)
+      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-darwin-x86_64")
+      set(ARCHIVE "bazel-${BAZEL_VERSION}-darwin-x86_64")
+      set(NOEXTRACT ON)
+      set(HASH 420a37081e6ee76441b0d92ff26d1715ce647737ce888877980d0665197b5a619d6afe6102f2e7edfb5062c9b40630a10b2539585e35479b780074ada978d23c)
     else()
       set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-windows-x86_64.zip")
       set(ARCHIVE "bazel-${BAZEL_VERSION}-windows-x86_64.zip")
@@ -285,8 +330,8 @@ function(vcpkg_find_acquire_program VAR)
       find_program(${VAR} ${PROGNAME} PATHS ${PATHS} PATH_SUFFIXES bin)
     else()
       vcpkg_find_acquire_program(${REQUIRED_INTERPRETER})
-      find_file(SCRIPT ${SCRIPTNAME} PATHS ${PATHS})
-      set(${VAR} ${${REQUIRED_INTERPRETER}} ${SCRIPT})
+      find_file(SCRIPT_${VAR} ${SCRIPTNAME} PATHS ${PATHS})
+      set(${VAR} ${${REQUIRED_INTERPRETER}} ${SCRIPT_${VAR}})
     endif()
   endmacro()
 
@@ -317,7 +362,7 @@ function(vcpkg_find_acquire_program VAR)
         file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
       endif()
     else()
-      get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
+      get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} LAST_EXT)
       string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
       if(ARCHIVE_EXTENSION STREQUAL ".msi")
         file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
@@ -325,6 +370,12 @@ function(vcpkg_find_acquire_program VAR)
         _execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
+        )
+      elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
+        vcpkg_find_acquire_program(7Z)
+        _execute_process(
+          COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )
       else()
         _execute_process(

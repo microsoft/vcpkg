@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xerces-c
-    REF 71cc0e831b522933ae58253fcaf4423a166e6bec #3.2.2
-    SHA512 5ddaf84552cd1f685068352c12651780a9f4becd961d8efd0f1f6a21006df00ffb1afe9b9dd86a169f8c57c4f8b651d5477e1accfd7140a7a52aea14b23c9aed
-    HEAD_REF trunk
+    REF v3.2.3
+    SHA512 aaafe2de4ea156d94e71e3631c79bd66660badf17bf2a19587a0ca34011f70bd1584a0beef909409a3ff05eecea9d37ffee6dbb267625f59217fd86705d2cd28
+    HEAD_REF master
     PATCHES
         disable-tests.patch
         remove-dll-export-macro.patch
-        no-symlinks-in-static-build.patch
 )
 
 set(DISABLE_ICU ON)

@@ -38,7 +38,7 @@
 ## Specifies the precise generator to use.
 ##
 ## This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build.
-## If used for this purpose, it should be set to "NMake Makefiles".
+## If used for this purpose, it should be set to `"NMake Makefiles"`.
 ##
 ## ### OPTIONS
 ## Additional options passed to CMake during the configuration.
@@ -204,6 +204,8 @@ function(vcpkg_configure_cmake)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
@@ -245,7 +247,7 @@ function(vcpkg_configure_cmake)
     endif()
 
     # Sets configuration variables for macOS builds
-    foreach(config_var  INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT)
+    foreach(config_var  INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED VCPKG_${config_var})
             list(APPEND _csc_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
         endif()

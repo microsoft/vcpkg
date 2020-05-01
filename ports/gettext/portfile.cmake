@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
         0001-Fix-macro-definitions.patch
         0002-Fix-uwp-build.patch
         0003-Fix-osx.patch
+        0004-Fix-win-unicode-paths.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)

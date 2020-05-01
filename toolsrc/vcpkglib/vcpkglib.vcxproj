@@ -74,11 +74,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -108,7 +108,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -127,7 +127,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -152,9 +152,12 @@
     <ClInclude Include="..\include\vcpkg\base\files.h" />
     <ClInclude Include="..\include\vcpkg\base\graphs.h" />
     <ClInclude Include="..\include\vcpkg\base\hash.h" />
+    <ClInclude Include="..\include\vcpkg\base\ignore_errors.h" />
+    <ClInclude Include="..\include\vcpkg\base\json.h" />
     <ClInclude Include="..\include\vcpkg\base\lazy.h" />
     <ClInclude Include="..\include\vcpkg\base\lineinfo.h" />
     <ClInclude Include="..\include\vcpkg\base\machinetype.h" />
+    <ClInclude Include="..\include\vcpkg\base\parse.h" />
     <ClInclude Include="..\include\vcpkg\base\optional.h" />
     <ClInclude Include="..\include\vcpkg\base\sortedvector.h" />
     <ClInclude Include="..\include\vcpkg\base\span.h" />
@@ -166,31 +169,39 @@
     <ClInclude Include="..\include\vcpkg\base\system.h" />
     <ClInclude Include="..\include\vcpkg\base\system.print.h" />
     <ClInclude Include="..\include\vcpkg\base\system.process.h" />
+    <ClInclude Include="..\include\vcpkg\base\unicode.h" />
     <ClInclude Include="..\include\vcpkg\base\util.h" />
     <ClInclude Include="..\include\vcpkg\base\view.h" />
     <ClInclude Include="..\include\vcpkg\base\zstringview.h" />
+    <ClInclude Include="..\include\vcpkg\binarycaching.h" />
     <ClInclude Include="..\include\vcpkg\binaryparagraph.h" />
     <ClInclude Include="..\include\vcpkg\build.h" />
+    <ClInclude Include="..\include\vcpkg\cmakevars.h" />
     <ClInclude Include="..\include\vcpkg\commands.h" />
     <ClInclude Include="..\include\vcpkg\dependencies.h" />
+    <ClInclude Include="..\include\vcpkg\export.chocolatey.h" />
     <ClInclude Include="..\include\vcpkg\export.h" />
     <ClInclude Include="..\include\vcpkg\export.ifw.h" />
+    <ClInclude Include="..\include\vcpkg\export.prefab.h" />
     <ClInclude Include="..\include\vcpkg\globalstate.h" />
     <ClInclude Include="..\include\vcpkg\help.h" />
     <ClInclude Include="..\include\vcpkg\input.h" />
     <ClInclude Include="..\include\vcpkg\install.h" />
+    <ClInclude Include="..\include\vcpkg\logicexpression.h" />
     <ClInclude Include="..\include\vcpkg\metrics.h" />
     <ClInclude Include="..\include\vcpkg\packagespec.h" />
-    <ClInclude Include="..\include\vcpkg\packagespecparseresult.h" />
+    <ClInclude Include="..\include\vcpkg\paragraphparser.h" />
     <ClInclude Include="..\include\vcpkg\paragraphparseresult.h" />
     <ClInclude Include="..\include\vcpkg\paragraphs.h" />
-    <ClInclude Include="..\include\vcpkg\parse.h" />
+    <ClInclude Include="..\include\vcpkg\portfileprovider.h" />
     <ClInclude Include="..\include\vcpkg\postbuildlint.h" />
     <ClInclude Include="..\include\vcpkg\postbuildlint.buildtype.h" />
+    <ClInclude Include="..\include\vcpkg\pragmas.h" />
     <ClInclude Include="..\include\vcpkg\remove.h" />
     <ClInclude Include="..\include\vcpkg\sourceparagraph.h" />
     <ClInclude Include="..\include\vcpkg\statusparagraph.h" />
     <ClInclude Include="..\include\vcpkg\statusparagraphs.h" />
+    <ClInclude Include="..\include\vcpkg\textrowcol.h" />
     <ClInclude Include="..\include\vcpkg\tools.h" />
     <ClInclude Include="..\include\vcpkg\triplet.h" />
     <ClInclude Include="..\include\vcpkg\update.h" />
@@ -216,13 +227,19 @@
     <ClCompile Include="..\src\vcpkg\base\enums.cpp" />
     <ClCompile Include="..\src\vcpkg\base\files.cpp" />
     <ClCompile Include="..\src\vcpkg\base\hash.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\json.cpp" />
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\parse.cpp" />
     <ClCompile Include="..\src\vcpkg\base\strings.cpp" />
     <ClCompile Include="..\src\vcpkg\base\stringview.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\system.process.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\unicode.cpp" />
+    <ClCompile Include="..\src\vcpkg\binarycaching.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
+    <ClCompile Include="..\src\vcpkg\cmakevars.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.autocomplete.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.buildexternal.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cache.cpp" />
@@ -241,12 +258,14 @@
     <ClCompile Include="..\src\vcpkg\commands.porthistory.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.portsdiff.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.search.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.setinstalled.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.upgrade.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.version.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.xvsinstances.cpp" />
     <ClCompile Include="..\src\vcpkg\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg\export.cpp" />
     <ClCompile Include="..\src\vcpkg\export.chocolatey.cpp" />
+    <ClCompile Include="..\src\vcpkg\export.prefab.cpp" />
     <ClCompile Include="..\src\vcpkg\globalstate.cpp" />
     <ClCompile Include="..\src\vcpkg\help.cpp" />
     <ClCompile Include="..\src\vcpkg\input.cpp" />
@@ -254,10 +273,9 @@
     <ClCompile Include="..\src\vcpkg\logicexpression.cpp" />
     <ClCompile Include="..\src\vcpkg\metrics.cpp" />
     <ClCompile Include="..\src\vcpkg\packagespec.cpp" />
-    <ClCompile Include="..\src\vcpkg\packagespecparseresult.cpp" />
     <ClCompile Include="..\src\vcpkg\paragraphparseresult.cpp" />
     <ClCompile Include="..\src\vcpkg\paragraphs.cpp" />
-    <ClCompile Include="..\src\vcpkg\parse.cpp" />
+    <ClCompile Include="..\src\vcpkg\portfileprovider.cpp" />
     <ClCompile Include="..\src\vcpkg\postbuildlint.buildtype.cpp" />
     <ClCompile Include="..\src\vcpkg\postbuildlint.cpp" />
     <ClCompile Include="..\src\vcpkg\remove.cpp" />
