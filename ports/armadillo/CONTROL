@@ -1,4 +1,4 @@
 Source: armadillo
-Version: 2019-04-16-8
+Version: 2019-04-16-9
 Description: Armadillo is a high quality linear algebra library (matrix maths) for the C++ language, aiming towards a good balance between speed and ease of use
-Build-Depends: openblas (!osx), clapack (!osx)
+Build-Depends: openblas (!osx), lapack-reference (!osx)
