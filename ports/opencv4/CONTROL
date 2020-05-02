@@ -1,6 +1,6 @@
 Source: opencv4
 Version: 4.1.1-4
-Build-Depends: protobuf, zlib
+Build-Depends: protobuf, python3, zlib
 Homepage: https://github.com/opencv/opencv
 Description: computer vision library
 Default-Features: dnn, jpeg, opengl, png, tiff, webp
@@ -13,7 +13,7 @@ Build-Depends: ade
 Description: graph api
 
 Feature: contrib
-Build-Depends: hdf5 (!uwp)
+Build-Depends: hdf5 (!uwp), tesseract
 Description: opencv_contrib module
 
 Feature: cuda
