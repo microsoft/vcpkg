@@ -1,14 +1,11 @@
 #TODO: Features to add:
 # USE_XBLAS??? extended precision blas. needs xblas
-
 # LAPACKE should be its own PORT
 # USE_OPTIMIZED_LAPACK (Probably not what we want. Does a find_package(LAPACK): probably for LAPACKE only builds _> own port?)
 # LAPACKE Builds LAPACKE
 # LAPACKE_WITH_TMG Build LAPACKE with tmglib routines
 
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
-include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
