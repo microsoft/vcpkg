@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(metrohash LANGUAGES CXX)
+project(MetroHash LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 add_library(metrohash
@@ -8,7 +8,8 @@ add_library(metrohash
             src/metrohash128crc.cpp
             )
 target_compile_options(metrohash PRIVATE -march=native)
-set(metro_headers src/metrohash.h src/metrohash64.h src/metrohash128.h src/metrohash128crc.h)
+target_include_directories(metrohash SYSTEM PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/src/)
+set (metro_headers src/metrohash64.h src/metrohash128.h src/metrohash128crc.h)
 set_target_properties(metrohash PROPERTIES
                       PUBLIC_HEADER "${metro_headers}"
                       )
@@ -21,6 +22,10 @@ set(config_install_dir "lib/cmake/${PROJECT_NAME}")
 set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
 set(namespace "${PROJECT_NAME}::")
 
+# Configure '<PROJECT-NAME>Config.cmake'
+# Use variables:
+#   * TARGETS_EXPORT_NAME
+#   * PROJECT_NAME
 configure_package_config_file(
         "${CMAKE_SOURCE_DIR}/cmake/Config.cmake.in"
         "${project_config}"
@@ -31,11 +36,8 @@ install(TARGETS metrohash
         EXPORT "${TARGETS_EXPORT_NAME}"
         LIBRARY DESTINATION "lib"
         ARCHIVE DESTINATION "lib"
-        INCLUDES DESTINATION "include")
-install(
-        FILES "${project_config}"
-        DESTINATION "${config_install_dir}"
-)
+        PUBLIC_HEADER DESTINATION "include")
+
 install(EXPORT "${TARGETS_EXPORT_NAME}"
         NAMESPACE "${namespace}"
         DESTINATION "${config_install_dir}"

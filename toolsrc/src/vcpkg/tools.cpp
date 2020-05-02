@@ -264,7 +264,7 @@ namespace vcpkg
 
         virtual const std::string& tool_data_name() const override { return m_exe; }
         virtual const std::string& exe_stem() const override { return m_exe; }
-        virtual std::array<int, 3> default_min_version() const override { return {3, 5, 1}; }
+        virtual std::array<int, 3> default_min_version() const override { return {3, 17, 1}; }
 
         virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
