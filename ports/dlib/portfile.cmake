@@ -1,15 +1,12 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.17
-    SHA512 8574f48d0cc55685d494b3933079c16526fc7cfa3df85a76d51a1f13bebeccf3b6d7247981b53bd1c9e6e664e42245e518cefadf3420be1ab25b5dd6b8d55441
+    REF v19.19
+    SHA512 013f0c37fa98b0b93824ef94f2c50cb7b41461906ddec1df3021b489e8a02d299b20802416e9dcd6483fd55197e3792119e7b7774ca8dd9c307e8be68a39fe6b
     HEAD_REF master
     PATCHES
-        fix-mac-jpeg.patch
         fix-sqlite3-fftw-linkage.patch
         force_finding_packages.patch
         find_blas.patch
@@ -67,6 +64,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cu
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cpp11)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_avx)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_sse4)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libjpeg)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libpng)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm)
 
 # Dlib encodes debug/release in its config.h. Patch it to respond to the NDEBUG macro instead.
@@ -76,6 +75,5 @@ string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if !defined(_DEBUG)\n#define DLI
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h "${_contents}")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/dlib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/dlib/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/dlib/copyright)
+file(INSTALL ${SOURCE_PATH}/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)

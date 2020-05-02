@@ -5,6 +5,7 @@
 ## ## Usage
 ## ```cmake
 ## vcpkg_extract_source_archive_ex(
+##     SKIP_PATCH_CHECK
 ##     OUT_SOURCE_PATH <SOURCE_PATH>
 ##     ARCHIVE <${ARCHIVE}>
 ##     [REF <1.0.0>]
@@ -14,6 +15,9 @@
 ## )
 ## ```
 ## ## Parameters
+## ### SKIP_PATCH_CHECK
+## If this option is set the failure to apply a patch is ignored.
+##
 ## ### OUT_SOURCE_PATH
 ## Specifies the out-variable that will contain the extracted location.
 ##
@@ -51,7 +55,13 @@ include(vcpkg_apply_patches)
 include(vcpkg_extract_source_archive)
 
 function(vcpkg_extract_source_archive_ex)
-    cmake_parse_arguments(_vesae "NO_REMOVE_ONE_LEVEL" "OUT_SOURCE_PATH;ARCHIVE;REF;WORKING_DIRECTORY" "PATCHES" ${ARGN})
+    cmake_parse_arguments(
+        _vesae
+        "NO_REMOVE_ONE_LEVEL;SKIP_PATCH_CHECK"
+        "OUT_SOURCE_PATH;ARCHIVE;REF;WORKING_DIRECTORY"
+        "PATCHES"
+        ${ARGN}
+    )
 
     if(NOT _vesae_ARCHIVE)
         message(FATAL_ERROR "Must specify ARCHIVE parameter to vcpkg_extract_source_archive_ex()")
@@ -115,7 +125,14 @@ function(vcpkg_extract_source_archive_ex)
             endif()
         endif()
 
+        if (_vesae_SKIP_PATCH_CHECK)
+            set (QUIET QUIET)
+        else()
+            set (QUIET)
+        endif()
+
         vcpkg_apply_patches(
+            ${QUIET}
             SOURCE_PATH ${TEMP_SOURCE_PATH}
             PATCHES ${_vesae_PATCHES}
         )

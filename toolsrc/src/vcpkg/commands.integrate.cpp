@@ -189,7 +189,7 @@ namespace vcpkg::Commands::Integrate
             if (fs.exists(old_system_wide_targets_file))
             {
                 const std::string param =
-                    Strings::format(R"(/c DEL "%s" /Q > nul)", old_system_wide_targets_file.string());
+                    Strings::format(R"(/c "DEL "%s" /Q > nul")", old_system_wide_targets_file.string());
                 const ElevationPromptChoice user_choice = elevated_cmd_execute(param);
                 switch (user_choice)
                 {
@@ -220,7 +220,7 @@ namespace vcpkg::Commands::Integrate
             const fs::path sys_src_path = tmp_dir / "vcpkg.system.targets";
             fs.write_contents(sys_src_path, create_system_targets_shortcut(), VCPKG_LINE_INFO);
 
-            const std::string param = Strings::format(R"(/c mkdir "%s" & copy "%s" "%s" /Y > nul)",
+            const std::string param = Strings::format(R"(/c "mkdir "%s" & copy "%s" "%s" /Y > nul")",
                                                       SYSTEM_WIDE_TARGETS_FILE.parent_path().string(),
                                                       sys_src_path.string(),
                                                       SYSTEM_WIDE_TARGETS_FILE.string());
@@ -380,12 +380,13 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
             nuspec_file_path, create_nuspec_file_contents(paths.root, nuget_id, nupkg_version), VCPKG_LINE_INFO);
 
         // Using all forward slashes for the command line
-        const std::string cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" > nul)",
+        const std::string cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s")",
                                                      nuget_exe.u8string(),
                                                      buildsystems_dir.u8string(),
                                                      nuspec_file_path.u8string());
 
-        const int exit_code = System::cmd_execute_clean(cmd_line);
+        const int exit_code =
+            System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
 
         const fs::path nuget_package = buildsystems_dir / Strings::format("%s.%s.nupkg", nuget_id, nupkg_version);
         Checks::check_exit(

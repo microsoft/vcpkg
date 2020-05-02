@@ -1,7 +1,8 @@
 Source: blend2d
-Version: beta_2019-07-16
+Version: beta_2020-04-19
 Description: Beta 2D Vector Graphics Powered by a JIT Compiler
 Default-Features: jit, logging
+Supports: !(arm|uwp)
 
 Feature: jit
 Description: Default feature. Enables jit pipeline compilation. Not supported for ARM and UWP.

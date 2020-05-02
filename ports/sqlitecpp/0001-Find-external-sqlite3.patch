@@ -1,14 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 00e058c..489b884 100644
+index 9363c0d..0f47f0f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -199,7 +199,8 @@ install(EXPORT ${PROJECT_NAME}Config DESTINATION lib/cmake/${PROJECT_NAME})
- ## Build provided copy of SQLite3 C library ##
- 
- # TODO 
--#find_package(sqlite3)
-+find_package(sqlite3 CONFIG)
-+target_link_libraries(SQLiteCpp PRIVATE sqlite3)
- #if(sqlite3_VERSION VERSION_LESS "3.19")
- #    set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
- #endif()
+@@ -227,9 +227,9 @@ if (SQLITECPP_INTERNAL_SQLITE)
+     add_subdirectory(sqlite3)
+     target_link_libraries(SQLiteCpp PUBLIC sqlite3)
+ else (SQLITECPP_INTERNAL_SQLITE)
+-    find_package (SQLite3 REQUIRED)
++    find_package(sqlite3 CONFIG)
+     message(STATUS "Link to sqlite3 system library")
+-    target_link_libraries(SQLiteCpp PUBLIC SQLite::SQLite3)
++    target_link_libraries(SQLiteCpp PRIVATE sqlite3)
+     if(SQLite3_VERSION VERSION_LESS "3.19")
+         set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
+     endif()

@@ -1,13 +1,12 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc
-    REF v1.17.0
-    SHA512 7fe517e9d050a36839ddf963e718881533cc10a7c8963222b3167fd48ec84455614206c1cc2c248f52042a019262fa0419c4c1a828eb1ae64294c55bbaf56f6e
+    REF 9fae1c9acb659159321aca69aefcdbce663e2374 # v1.18.1
+    SHA512 6cc77832100041aca8f320e44aa803adc0d3344b52742b995a3155b953e5d149534de65c8244d964448150b73715a81f54285d7d01f1b45d7b10fe07f5bdb141
     HEAD_REF master
     PATCHES
       0001-find-deps.patch
+      0002-export-blosc-config.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -34,26 +33,11 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-if (BLOSC_SHARED)
 vcpkg_copy_pdbs()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/blosc.dll")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/bin/blosc.dll)
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/blosc.dll")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/debug/bin/blosc.dll)
-    endif()
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/blosc)
 
 # cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSES/BLOSC.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/blosc RENAME copyright)
-
-file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/FindBlosc.cmake"
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-)

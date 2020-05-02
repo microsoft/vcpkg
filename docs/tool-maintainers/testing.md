@@ -1,13 +1,11 @@
-Testing
-=======
+# Testing
 
 Testing vcpkg is important whenever one makes changes to the tool itself, and
 writing new tests and keeping them up to date is also very important. If one's
 code is subtly broken, we'd rather find it out right away than a few weeks down
 the line when someone complains!
 
-Running Tests
--------------
+## Running Tests
 
 Before anything else, we should know whether you can actually run the tests!
 All you should need is a way to build vcpkg -- anything will do! All you have to
@@ -27,8 +25,7 @@ $ # i.e., ./vcpkg-test [arguments]
 If you make any modifications to `vcpkg`, you'll have to do the
 `cmake --build .` step again.
 
-Writing Tests
--------------
+## Writing Tests
 
 In your journey to write new tests, and to modify existing tests, reading the
 [Catch2 documentation] will be very helpful! Come back after reading those 😀
@@ -42,8 +39,8 @@ The layout of these tests is as follows:
 // ... includes
 
 TEST_CASE("Name of test", "[filename without the .cpp]") {
-  // setup and the like
-  REQUIRE(some boolean expression);
+    // setup and the like
+    REQUIRE(some boolean expression);
 }
 
 // etc.
@@ -67,12 +64,10 @@ Remember to check out the [Catch2 documentation]
 if you'd like to get more advanced with your tests,
 and good luck on your testing journey!
 
-Adding New Test Files
----------------------
+## Adding New Test Files
 
 Adding new test files should be easy and straightforward. All it requires is
-creating a new source file in `toolsrc/src/vcpkg-test`, and then rerunning
-`CMake` in order to pick up the glob changes.
+creating a new source file in `toolsrc/src/vcpkg-test`.
 
 ### Example
 
@@ -82,17 +77,12 @@ First, we should create a file, `example.cpp`, in `toolsrc/src/vcpkg-test`:
 
 ```cpp
 // vcpkg-test/example.cpp
-#include <vcpkg-test/catch.h>
+#include <catch2/catch.hpp>
 ```
 
-This is the minimum file needed for tests; let's rebuild our CMake directory.
-You'll have to clean out the existing `out` directory for CMake to rerun
-globbing.
+This is the minimum file needed for tests; let's rebuild!
 
 ```sh
-$ cmake .. -DCMAKE_BUILD_TYPE=Debug -G Ninja
-# ...
--- Build files have been written to: $VCPKG_DIRECTORY/toolsrc/out
 $ cmake --build .
 [80/80] Linking CXX executable vcpkg.exe
 ```
@@ -101,7 +91,7 @@ Okay, now let's make sure this worked; add a test case to `example.cpp`:
 
 ```cpp
 TEST_CASE("Example 1 - fail", "[example]") {
-  REQUIRE(false);
+    REQUIRE(false);
 }
 ```
 
@@ -123,7 +113,7 @@ $VCPKG_DIRECTORY/toolsrc/src/vcpkg-test/example.cpp(3)
 ...............................................................................
 
 $VCPKG_DIRECTORY/toolsrc/src/vcpkg-test/example.cpp(14): FAILED:
-  REQUIRE( false )
+    REQUIRE( false )
 
 ===============================================================================
 test cases:  102 |  101 passed | 1 failed
@@ -138,9 +128,9 @@ Now let's try a more complex test, after deleting the old one;
 namespace Strings = vcpkg::Strings;
 
 TEST_CASE("Example 2 - success", "[example]") {
-  std::string hello = "Hello";
-  REQUIRE(Strings::case_insensitive_ascii_equals(hello, "hELLo"));
-  REQUIRE_FALSE(Strings::case_insensitive_ascii_starts_with(hello, "E"));
+    std::string hello = "Hello";
+    REQUIRE(Strings::case_insensitive_ascii_equals(hello, "hELLo"));
+    REQUIRE_FALSE(Strings::case_insensitive_ascii_starts_with(hello, "E"));
 }
 ```
 

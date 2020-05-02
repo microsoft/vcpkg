@@ -1,0 +1,3 @@
+Source: ignition-modularscripts
+Version: 2020-02-10
+Description: Vcpkg helpers to package ignition libraries

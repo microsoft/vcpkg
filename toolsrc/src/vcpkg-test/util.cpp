@@ -1,8 +1,9 @@
-#include <vcpkg-test/catch.h>
+#include <catch2/catch.hpp>
 #include <vcpkg-test/util.h>
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/util.h>
 #include <vcpkg/statusparagraph.h>
 
 // used to get the implementation specific compiler flags (i.e., __cpp_lib_filesystem)
@@ -37,19 +38,43 @@
 
 namespace vcpkg::Test
 {
+    std::unique_ptr<SourceControlFile> make_control_file(
+        const char* name,
+        const char* depends,
+        const std::vector<std::pair<const char*, const char*>>& features,
+        const std::vector<const char*>& default_features)
+    {
+        using Pgh = std::unordered_map<std::string, std::string>;
+        std::vector<Pgh> scf_pghs;
+        scf_pghs.push_back(Pgh{{"Source", name},
+                               {"Version", "0"},
+                               {"Build-Depends", depends},
+                               {"Default-Features", Strings::join(", ", default_features)}});
+        for (auto&& feature : features)
+        {
+            scf_pghs.push_back(Pgh{
+                {"Feature", feature.first},
+                {"Description", "feature"},
+                {"Build-Depends", feature.second},
+            });
+        }
+        auto m_pgh = test_parse_control_file(std::move(scf_pghs));
+        REQUIRE(m_pgh.has_value());
+        return std::move(*m_pgh.get());
+    }
+
     std::unique_ptr<vcpkg::StatusParagraph> make_status_pgh(const char* name,
                                                             const char* depends,
                                                             const char* default_features,
                                                             const char* triplet)
     {
-        using Pgh = std::unordered_map<std::string, std::string>;
-        return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
-                                                     {"Version", "1"},
-                                                     {"Architecture", triplet},
-                                                     {"Multi-Arch", "same"},
-                                                     {"Depends", depends},
-                                                     {"Default-Features", default_features},
-                                                     {"Status", "install ok installed"}});
+        return std::make_unique<StatusParagraph>(Parse::Paragraph{{"Package", {name, {}}},
+                                                                  {"Version", {"1", {}}},
+                                                                  {"Architecture", {triplet, {}}},
+                                                                  {"Multi-Arch", {"same", {}}},
+                                                                  {"Depends", {depends, {}}},
+                                                                  {"Default-Features", {default_features, {}}},
+                                                                  {"Status", {"install ok installed", {}}}});
     }
 
     std::unique_ptr<StatusParagraph> make_status_feature_pgh(const char* name,
@@ -57,21 +82,27 @@ namespace vcpkg::Test
                                                              const char* depends,
                                                              const char* triplet)
     {
-        using Pgh = std::unordered_map<std::string, std::string>;
-        return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
-                                                     {"Version", "1"},
-                                                     {"Feature", feature},
-                                                     {"Architecture", triplet},
-                                                     {"Multi-Arch", "same"},
-                                                     {"Depends", depends},
-                                                     {"Status", "install ok installed"}});
+        return std::make_unique<StatusParagraph>(Parse::Paragraph{{"Package", {name, {}}},
+                                                                  {"Feature", {feature, {}}},
+                                                                  {"Architecture", {triplet, {}}},
+                                                                  {"Multi-Arch", {"same", {}}},
+                                                                  {"Depends", {depends, {}}},
+                                                                  {"Status", {"install ok installed", {}}}});
     }
 
-    PackageSpec unsafe_pspec(std::string name, Triplet t)
+    PackageSpec PackageSpecMap::emplace(const char* name,
+                                        const char* depends,
+                                        const std::vector<std::pair<const char*, const char*>>& features,
+                                        const std::vector<const char*>& default_features)
     {
-        auto m_ret = PackageSpec::from_name_and_triplet(name, t);
-        REQUIRE(m_ret.has_value());
-        return m_ret.value_or_exit(VCPKG_LINE_INFO);
+        auto scfl = SourceControlFileLocation{make_control_file(name, depends, features, default_features), ""};
+        return emplace(std::move(scfl));
+    }
+
+    PackageSpec PackageSpecMap::emplace(vcpkg::SourceControlFileLocation&& scfl)
+    {
+        map.emplace(scfl.source_control_file->core_paragraph->name, std::move(scfl));
+        return {scfl.source_control_file->core_paragraph->name, triplet};
     }
 
     static AllowSymlinks internal_can_create_symlinks() noexcept
@@ -83,21 +114,21 @@ namespace vcpkg::Test
 #elif !defined(_WIN32) // FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_STD
         return AllowSymlinks::Yes;
 #else
-        HKEY key;
-        bool allow_symlinks = true;
+        constexpr static const wchar_t regkey[] =
+            LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)";
+        constexpr static const wchar_t regkey_member[] = LR"(AllowDevelopmentWithoutDevLicense)";
 
-        const auto status = RegOpenKeyExW(
-            HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)", 0, 0, &key);
+        DWORD data;
+        DWORD dataSize = sizeof(data);
+        const auto status = RegGetValueW(
+            HKEY_LOCAL_MACHINE, regkey, regkey_member, RRF_RT_DWORD, nullptr, &data, &dataSize);
 
-        if (status == ERROR_FILE_NOT_FOUND)
-        {
-            allow_symlinks = false;
+        if (status == ERROR_SUCCESS && data == 1) {
+            return AllowSymlinks::Yes;
+        } else {
             std::clog << "Symlinks are not allowed on this system\n";
+            return AllowSymlinks::No;
         }
-
-        if (status == ERROR_SUCCESS) RegCloseKey(key);
-
-        return allow_symlinks ? AllowSymlinks::Yes : AllowSymlinks::No;
 #endif
     }
     const static AllowSymlinks CAN_CREATE_SYMLINKS = internal_can_create_symlinks();
@@ -153,7 +184,7 @@ namespace vcpkg::Test
             ec.assign(errno, std::system_category());
         }
 #else
-        static_cast<void>(ec);
+        Util::unused(target, file, ec);
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }
@@ -175,7 +206,7 @@ namespace vcpkg::Test
 #elif FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_UNIX
         ::vcpkg::Test::create_symlink(target, file, ec);
 #else
-        static_cast<void>(ec);
+        Util::unused(target, file, ec);
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }

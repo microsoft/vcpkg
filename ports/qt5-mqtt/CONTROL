@@ -1,4 +1,4 @@
 Source: qt5-mqtt
-Version: 5.12.3-1
+Version: 5.12.8
 Description: Qt5 MQTT module.
-Build-Depends: qt5-modularscripts, qt5-base
+Build-Depends:  qt5-base

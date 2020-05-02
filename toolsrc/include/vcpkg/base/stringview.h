@@ -23,8 +23,10 @@ namespace vcpkg
 
         constexpr StringView() = default;
         StringView(const std::string& s); // Implicit by design
+
+        // NOTE: we do this instead of the delegating constructor since delegating ctors are a perf footgun
         template<size_t Sz>
-        StringView(const char (&arr)[Sz]) : m_ptr(arr), m_size(Sz - 1)
+        constexpr StringView(const char (&arr)[Sz]) : m_ptr(arr), m_size(Sz - 1)
         {
         }
 
@@ -40,10 +42,11 @@ namespace vcpkg
         std::string to_string() const;
         void to_string(std::string& out) const;
 
-        bool operator==(StringView other) const;
-
     private:
         const char* m_ptr = 0;
         size_t m_size = 0;
     };
+
+    bool operator==(StringView lhs, StringView rhs) noexcept;
+    bool operator!=(StringView lhs, StringView rhs) noexcept;
 }

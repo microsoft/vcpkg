@@ -8,9 +8,8 @@
 #include <vcpkg/base/util.h>
 #include <vcpkg/base/work_queue.h>
 
-#if defined(__linux__) || defined(__APPLE__)
+#if !defined(_WIN32)
 #include <fcntl.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -174,6 +173,12 @@ namespace vcpkg::Files
         return r;
     }
 
+    bool Filesystem::remove(const fs::path& path, ignore_errors_t)
+    {
+        std::error_code ec;
+        return this->remove(path, ec);
+    }
+
     bool Filesystem::exists(const fs::path& path, std::error_code& ec) const
     {
         return fs::exists(this->symlink_status(path, ec));
@@ -186,11 +191,23 @@ namespace vcpkg::Files
         if (ec) Checks::exit_with_message(li, "error checking existence of file %s: %s", path.u8string(), ec.message());
         return result;
     }
-    bool Filesystem::exists(const fs::path& path) const
+
+    bool Filesystem::exists(const fs::path& path, ignore_errors_t) const
     {
         std::error_code ec;
-        // drop this on the floor, for compatibility with existing code
-        return exists(path, ec);
+        return this->exists(path, ec);
+    }
+
+    bool Filesystem::create_directory(const fs::path& path, ignore_errors_t)
+    {
+        std::error_code ec;
+        return this->create_directory(path, ec);
+    }
+
+    bool Filesystem::create_directories(const fs::path& path, ignore_errors_t)
+    {
+        std::error_code ec;
+        return this->create_directories(path, ec);
     }
 
     fs::file_status Filesystem::status(vcpkg::LineInfo li, const fs::path& p) const noexcept
@@ -202,6 +219,12 @@ namespace vcpkg::Files
         return result;
     }
 
+    fs::file_status Filesystem::status(const fs::path& p, ignore_errors_t) const noexcept
+    {
+        std::error_code ec;
+        return this->status(p, ec);
+    }
+
     fs::file_status Filesystem::symlink_status(vcpkg::LineInfo li, const fs::path& p) const noexcept
     {
         std::error_code ec;
@@ -209,6 +232,12 @@ namespace vcpkg::Files
         if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
 
         return result;
+    }
+
+    fs::file_status Filesystem::symlink_status(const fs::path& p, ignore_errors_t) const noexcept
+    {
+        std::error_code ec;
+        return this->symlink_status(p, ec);
     }
 
     void Filesystem::write_lines(const fs::path& path, const std::vector<std::string>& lines, LineInfo linfo)
@@ -235,6 +264,22 @@ namespace vcpkg::Files
         }
     }
 
+    void Filesystem::remove_all(const fs::path& path, ignore_errors_t)
+    {
+        std::error_code ec;
+        fs::path failure_point;
+
+        this->remove_all(path, ec, failure_point);
+    }
+
+    fs::path Filesystem::absolute(LineInfo li, const fs::path& path) const
+    {
+        std::error_code ec;
+        const auto result = this->absolute(path, ec);
+        if (ec) Checks::exit_with_message(li, "Error getting absolute path of %s: %s", path.string(), ec.message());
+        return result;
+    }
+
     fs::path Filesystem::canonical(LineInfo li, const fs::path& path) const
     {
         std::error_code ec;
@@ -242,6 +287,19 @@ namespace vcpkg::Files
         const auto result = this->canonical(path, ec);
 
         if (ec) Checks::exit_with_message(li, "Error getting canonicalization of %s: %s", path.string(), ec.message());
+        return result;
+    }
+    fs::path Filesystem::canonical(const fs::path& path, ignore_errors_t) const
+    {
+        std::error_code ec;
+        return this->canonical(path, ec);
+    }
+    fs::path Filesystem::current_path(LineInfo li) const
+    {
+        std::error_code ec;
+        const auto result = this->current_path(ec);
+
+        if (ec) Checks::exit_with_message(li, "Error getting current path: %s", ec.message());
         return result;
     }
 
@@ -396,7 +454,7 @@ namespace vcpkg::Files
         {
             this->rename(oldpath, newpath, ec);
             Util::unused(temp_suffix);
-#if defined(__linux__) || defined(__APPLE__)
+#if !defined(_WIN32)
             if (ec)
             {
                 auto dst = newpath;
@@ -419,6 +477,34 @@ namespace vcpkg::Files
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
 #elif defined(__APPLE__)
                 auto written_bytes = fcopyfile(i_fd, o_fd, 0, COPYFILE_ALL);
+#else
+                ssize_t written_bytes = 0;
+                {
+                    constexpr std::size_t buffer_length = 4096;
+                    auto buffer = std::make_unique<unsigned char[]>(buffer_length);
+                    while (auto read_bytes = read(i_fd, buffer.get(), buffer_length))
+                    {
+                        if (read_bytes == -1)
+                        {
+                            written_bytes = -1;
+                            break;
+                        }
+                        auto remaining = read_bytes;
+                        while (remaining > 0)
+                        {
+                            auto read_result = write(o_fd, buffer.get(), remaining);
+                            if (read_result == -1)
+                            {
+                                written_bytes = -1;
+                                // break two loops
+                                goto copy_failure;
+                            }
+                            remaining -= read_result;
+                        }
+                    }
+
+                copy_failure:;
+                }
 #endif
                 if (written_bytes == -1)
                 {
@@ -629,9 +715,34 @@ namespace vcpkg::Files
             }
         }
 
+        virtual fs::path absolute(const fs::path& path, std::error_code& ec) const override
+        {
+#if VCPKG_USE_STD_FILESYSTEM 
+            return fs::stdfs::absolute(path, ec);
+#else // ^^^ VCPKG_USE_STD_FILESYSTEM  / !VCPKG_USE_STD_FILESYSTEM  vvv
+#if _WIN32
+            // absolute was called system_complete in experimental filesystem
+            return fs::stdfs::system_complete(path, ec);
+#else // ^^^ _WIN32 / !_WIN32 vvv
+            if (path.is_absolute()) {
+                auto current_path = this->current_path(ec);
+                if (ec) return fs::path();
+                return std::move(current_path) / path;
+            } else {
+                return path;
+            }
+#endif
+#endif
+        }
+
         virtual fs::path canonical(const fs::path& path, std::error_code& ec) const override
         {
             return fs::stdfs::canonical(path, ec);
+        }
+
+        virtual fs::path current_path(std::error_code& ec) const override
+        {
+            return fs::stdfs::current_path(ec);
         }
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
@@ -639,15 +750,20 @@ namespace vcpkg::Files
 #if defined(_WIN32)
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
             auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ";");
+#else
+            static constexpr StringLiteral EXTS[] = {""};
+            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ":");
+#endif
 
             std::vector<fs::path> ret;
+            std::error_code ec;
             for (auto&& path : paths)
             {
                 auto base = path + "/" + name;
                 for (auto&& ext : EXTS)
                 {
                     auto p = fs::u8path(base + ext.c_str());
-                    if (Util::find(ret, p) == ret.end() && this->exists(VCPKG_LINE_INFO, p))
+                    if (Util::find(ret, p) == ret.end() && this->exists(p, ec))
                     {
                         ret.push_back(p);
                         Debug::print("Found path: ", p.u8string(), '\n');
@@ -656,16 +772,6 @@ namespace vcpkg::Files
             }
 
             return ret;
-#else
-            const std::string cmd = Strings::concat("which ", name);
-            auto out = System::cmd_execute_and_capture_output(cmd);
-            if (out.exit_code != 0)
-            {
-                return {};
-            }
-
-            return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
-#endif
         }
     };
 

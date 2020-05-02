@@ -1,0 +1,120 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09b4f9b..6f72c41 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,8 +22,8 @@ message("Building Telnet++ with zlib: ${TELNETPP_WITH_ZLIB}")
+ message("Building Telnet++ with code coverage: ${TELNETPP_COVERAGE}")
+ message("Building Telnet++ with sanitizers: ${TELNETPP_SANITIZE}")
+ 
+-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+-conan_basic_setup(TARGETS NO_OUTPUT_DIRS)
++find_package(gsl-lite REQUIRED)
++find_package(Boost REQUIRED COMPONENTS container)
+ 
+ # The required C++ Standard for Telnet++ is C++14.
+ set(CMAKE_CXX_STANDARD 14)
+@@ -154,18 +154,24 @@ add_library(telnetpp
+     ${TELNETPP_PRIVATE_INCLUDE_FILES}
+ )
+ 
++if (BUILD_SHARED_LIBS)
++    add_definitions(-Dtelnetpp_EXPORTS)
++else()
++    add_definitions(-DTELNETPP_STATIC_DEFINE)
++endif()
++
+ target_link_libraries(telnetpp
+     PUBLIC
+-        CONAN_PKG::gsl-lite
+-        CONAN_PKG::boost_container
+-        CONAN_PKG::boost_signals2
+-        CONAN_PKG::boost_variant
++        gsl::gsl-lite
++        Boost::boost
++        Boost::container
+ )
+ 
+ if (TELNETPP_WITH_ZLIB)
++    find_package(ZLIB REQUIRED)
+     target_link_libraries(telnetpp
+         PRIVATE
+-            CONAN_PKG::zlib
++            ZLIB::ZLIB
+     )
+ endif()
+ 
+@@ -179,8 +185,7 @@ set_target_properties(telnetpp
+ target_include_directories(telnetpp
+     PUBLIC
+         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+-        $<INSTALL_INTERFACE:include/telnetpp-${TELNETPP_VERSION}>
+-        "${Boost_INCLUDE_DIRS}"
++        $<INSTALL_INTERFACE:include>
+ )
+ 
+ generate_export_header(telnetpp
+@@ -197,17 +202,19 @@ install(
+         telnetpp
+     EXPORT
+         telnetpp-config
++    RUNTIME DESTINATION
++        bin
+     ARCHIVE DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        lib
+     LIBRARY DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        lib
+ )
+ 
+ install(
+     DIRECTORY
+         include/
+     DESTINATION
+-        include/telnetpp-${TELNETPP_VERSION}
++        include
+ )
+ 
+ export(
+@@ -221,7 +228,7 @@ install(
+     EXPORT
+         telnetpp-config
+     DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        share/telnetpp
+ )
+ 
+ include(CMakePackageConfigHelpers)
+@@ -236,7 +243,7 @@ install(
+     FILES
+         "${CMAKE_CURRENT_BINARY_DIR}/telnetpp-config-version.cmake"
+     DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        share/telnetpp
+ )
+ 
+ if (TELNETPP_WITH_TESTS)
+diff --git a/include/telnetpp/core.hpp b/include/telnetpp/core.hpp
+index 2362fac..8710d36 100644
+--- a/include/telnetpp/core.hpp
++++ b/include/telnetpp/core.hpp
+@@ -1,7 +1,7 @@
+ #pragma once
+ 
+ #include "telnetpp/detail/export.hpp"
+-#include <gsl-lite.h>
++#include <gsl/gsl-lite.hpp>
+ #include <string>
+ #include <cstdint>
+ 
+diff --git a/src/options/msdp/detail/decoder.cpp b/src/options/msdp/detail/decoder.cpp
+index c0b7906..e725693 100644
+--- a/src/options/msdp/detail/decoder.cpp
++++ b/src/options/msdp/detail/decoder.cpp
+@@ -1,5 +1,6 @@
+ #include "telnetpp/options/msdp/detail/decoder.hpp"
+ #include "telnetpp/options/msdp/detail/protocol.hpp"
++#include <vector>
+ #include <cassert>
+ #include <functional>
+ 

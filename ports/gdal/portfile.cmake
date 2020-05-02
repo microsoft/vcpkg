@@ -37,20 +37,20 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
       vcpkg_apply_patches(
           SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
           PATCHES
-          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
-          ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-static-build.patch
+                0001-Fix-debug-crt-flags.patch
+                0002-Fix-static-build.patch
       )
     else()
       vcpkg_apply_patches(
           SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
           PATCHES
-          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+                0001-Fix-debug-crt-flags.patch
       )
     endif()
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}/ogr
         PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-std-fabs.patch
+              0003-Fix-std-fabs.patch
     )
 endforeach()
 
@@ -65,7 +65,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   # Setup proj4 libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PROJ_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/proj.lib" PROJ_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/projd.lib" PROJ_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib" PROJ_LIBRARY_DBG)
 
   # Setup libpng libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PNG_INCLUDE_DIR)
@@ -80,8 +80,8 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   # Setup geos libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos_c.lib ${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
   else()
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
@@ -113,7 +113,17 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   # Setup PostgreSQL libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PGSQL_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpq.lib" PGSQL_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.lib" PGSQL_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpq.lib" PGSQL_LIBRARY_DBG)
+  
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpgcommon.lib" TMP_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpgcommon.lib" TMP_DBG)
+  set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
+  set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
+
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpgport.lib" TMP_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpgport.lib" TMP_DBG)
+  set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
+  set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
 
   # Setup OpenJPEG libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" OPENJPEG_INCLUDE_DIR)
@@ -133,7 +143,15 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   # Setup liblzma libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" LZMA_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/lzma.lib" LZMA_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/lzma.lib" LZMA_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib" LZMA_LIBRARY_DBG)
+
+  # Setup openssl libraries path
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcrypto.lib ${CURRENT_INSTALLED_DIR}/lib/libssl.lib" OPENSSL_LIBRARY_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.lib" OPENSSL_LIBRARY_DBG)
+
+  # Setup libiconv libraries path
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib" ICONV_LIBRARY_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib" ICONV_LIBRARY_DBG)
 
   if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
       # Setup MySQL libraries + include path
@@ -184,6 +202,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
       PNGDIR=${PNG_INCLUDE_DIR}
       ZLIB_INC=-I${ZLIB_INCLUDE_DIR}
       ZLIB_EXTERNAL_LIB=1
+      ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
       MSVC_VER=1900
   )
 
@@ -192,7 +211,6 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   endif()
 
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-      list(APPEND NMAKE_OPTIONS PROJ_FLAGS=-DPROJ_STATIC)
       list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
   else()
       # Enables PDBs for release and debug builds
@@ -210,39 +228,34 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
       CXX_CRT_FLAGS=${LINKAGE_FLAGS}
       PROJ_LIBRARY=${PROJ_LIBRARY_REL}
       PNG_LIB=${PNG_LIBRARY_REL}
-      GEOS_LIB=${GEOS_LIBRARY_REL}
+      "GEOS_LIB=${GEOS_LIBRARY_REL}"
       EXPAT_LIB=${EXPAT_LIBRARY_REL}
       "CURL_LIB=${CURL_LIBRARY_REL} wsock32.lib wldap32.lib winmm.lib"
       "SQLITE_LIB=${SQLITE_LIBRARY_REL} ${SPATIALITE_LIBRARY_REL}"
       OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL}
       WEBP_LIBS=${WEBP_LIBRARY_REL}
-      LIBXML2_LIB=${XML2_LIBRARY_REL}
+      "LIBXML2_LIB=${XML2_LIBRARY_REL} ${ICONV_LIBRARY_REL} ${LZMA_LIBRARY_REL}"
       ZLIB_LIB=${ZLIB_LIBRARY_REL}
+      "PG_LIB=${PGSQL_LIBRARY_REL} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_REL}"
   )
-  if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      # Static Build does not like PG_LIB
-      list(APPEND NMAKE_OPTIONS_REL PG_LIB=${PGSQL_LIBRARY_REL})
-  endif()
 
   list(APPEND NMAKE_OPTIONS_DBG
       ${NMAKE_OPTIONS}
       CXX_CRT_FLAGS="${LINKAGE_FLAGS}d"
       PROJ_LIBRARY=${PROJ_LIBRARY_DBG}
       PNG_LIB=${PNG_LIBRARY_DBG}
-      GEOS_LIB=${GEOS_LIBRARY_DBG}
+      "GEOS_LIB=${GEOS_LIBRARY_DBG}"
       EXPAT_LIB=${EXPAT_LIBRARY_DBG}
       "CURL_LIB=${CURL_LIBRARY_DBG} wsock32.lib wldap32.lib winmm.lib"
       "SQLITE_LIB=${SQLITE_LIBRARY_DBG} ${SPATIALITE_LIBRARY_DBG}"
       OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG}
       WEBP_LIBS=${WEBP_LIBRARY_DBG}
-      LIBXML2_LIB=${XML2_LIBRARY_DBG}
+      "LIBXML2_LIB=${XML2_LIBRARY_DBG} ${ICONV_LIBRARY_DBG} ${LZMA_LIBRARY_DBG}"
       ZLIB_LIB=${ZLIB_LIBRARY_DBG}
+      "PG_LIB=${PGSQL_LIBRARY_DBG} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_DBG}"
       DEBUG=1
   )
-  if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      # Static Build does not like PG_LIB
-      list(APPEND NMAKE_OPTIONS_DBG PG_LIB=${PGSQL_LIBRARY_DBG})
-  endif()
+  
   # Begin build process
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     ################
@@ -290,15 +303,14 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-      file(COPY ${SOURCE_PATH_RELEASE}/gdal.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+      file(COPY ${SOURCE_PATH_RELEASE}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      file(COPY ${SOURCE_PATH_DEBUG}/gdal.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
+      file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_id.lib)
     endif()
 
   else()
@@ -350,8 +362,9 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     )
 
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-      COMMAND make
+    vcpkg_execute_build_process(
+      COMMAND make -j ${VCPKG_CONCURRENCY}
+      NO_PARALLEL_COMMAND make
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME make-build-${TARGET_TRIPLET}-release
     )
@@ -386,8 +399,9 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     )
 
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-      COMMAND make
+    vcpkg_execute_build_process(
+      COMMAND make -j ${VCPKG_CONCURRENCY}
+      NO_PARALLEL_COMMAND make
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME make-build-${TARGET_TRIPLET}-debug
     )

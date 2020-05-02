@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
-    REF jun2019
-    SHA512 f635746ff92cf3b60b96f74f5ada5fb8409d1ac6e2729d24ebf0ebb275e26d373ec0ccdfbb66a3cb967267da86de4d70304d1f3326b738f94f5a8fc0d43a8c97
+    REF dec2019
+    SHA512 2144c7a51ea73efea5ad4db3b0b92bfc5a2ca57c38e7f6702ce82a09049266a3aaad4500856a964c4069aa711973d3a10cb3b133397ec93bda3a4a0328b9d81c
     HEAD_REF master
 )
 
@@ -30,7 +30,7 @@ else()
     message(FATAL_ERROR "Unsupported platform toolset.")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(SLN_NAME "Windows10_${VS_VERSION}")
 else()
     set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
@@ -47,11 +47,12 @@ file(INSTALL
 
 file(INSTALL
     ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK12.lib
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK12.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 file(INSTALL
     ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK12.lib
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK12.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxtk12 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

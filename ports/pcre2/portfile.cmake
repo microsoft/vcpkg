@@ -10,7 +10,15 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES fix-space.patch
-            fix-arm64-config.patch)
+            fix-arm64-config.patch
+            fix-uwp.patch
+)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    set(JIT OFF)
+else()
+    set(JIT ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -19,7 +27,7 @@ vcpkg_configure_cmake(
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
         -DPCRE2_BUILD_PCRE2_32=ON
-        -DPCRE2_SUPPORT_JIT=ON
+        -DPCRE2_SUPPORT_JIT=${JIT}
         -DPCRE2_SUPPORT_UNICODE=ON
         -DPCRE2_BUILD_TESTS=OFF
         -DPCRE2_BUILD_PCRE2GREP=OFF)
@@ -46,5 +54,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcre2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pcre2/COPYING ${CURRENT_PACKAGES_DIR}/share/pcre2/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -6,22 +6,32 @@ macro(debug_message)
     endif()
 endmacro()
 
-#Detect .vcpkg-root to figure VCPKG_ROOT_DIR
-SET(VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
-while(IS_DIRECTORY ${VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
-    get_filename_component(VCPKG_ROOT_DIR_TEMP ${VCPKG_ROOT_DIR_CANDIDATE} DIRECTORY)
-    if (VCPKG_ROOT_DIR_TEMP STREQUAL VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
-        message(FATAL_ERROR "Could not find .vcpkg-root")
-    else()
-        SET(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_DIR_TEMP})
-    endif()
-endwhile()
+#Detect .vcpkg-root to figure VCPKG_ROOT_DIR, starting from triplet folder.
+set(VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
+
+if(DEFINED VCPKG_ROOT_PATH)
+    set(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_PATH})
+else()
+    message(FATAL_ERROR [[
+        Your vcpkg executable is outdated and is not compatible with the current CMake scripts.
+        Please re-build vcpkg by running bootstrap-vcpkg.
+    ]])
+endif()
+
+# fixup Windows drive letter to uppercase.
+get_filename_component(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_DIR_CANDIDATE} ABSOLUTE)
+
+# Validate VCPKG_ROOT_DIR_CANDIDATE
+if (NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+    message(FATAL_ERROR "Could not find .vcpkg-root")
+endif()
 
 set(VCPKG_ROOT_DIR ${VCPKG_ROOT_DIR_CANDIDATE})
 
-list(APPEND CMAKE_MODULE_PATH ${VCPKG_ROOT_DIR}/scripts/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 set(CURRENT_INSTALLED_DIR ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET} CACHE PATH "Location to install final packages")
 set(DOWNLOADS ${VCPKG_ROOT_DIR}/downloads CACHE PATH "Location to download sources and tools")
+set(SCRIPTS ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "Location to stored scripts")
 set(PACKAGES_DIR ${VCPKG_ROOT_DIR}/packages CACHE PATH "Location to store package images")
 set(BUILDTREES_DIR ${VCPKG_ROOT_DIR}/buildtrees CACHE PATH "Location to perform actual extract+config+build")
 
@@ -67,34 +77,18 @@ if(CMD MATCHES "^BUILD$")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR} ${CURRENT_PACKAGES_DIR})
 
     include(${CMAKE_TRIPLET_FILE})
-    include(${ENV_OVERRIDES_FILE} OPTIONAL)
+
+    if (DEFINED VCPKG_PORT_CONFIGS)
+        foreach(VCPKG_PORT_CONFIG ${VCPKG_PORT_CONFIGS})
+            include(${VCPKG_PORT_CONFIG})
+        endforeach()
+    endif()
+
     set(TRIPLET_SYSTEM_ARCH ${VCPKG_TARGET_ARCHITECTURE})
-    include(${CMAKE_CURRENT_LIST_DIR}/cmake/vcpkg_common_definitions.cmake)
-    include(${CMAKE_CURRENT_LIST_DIR}/cmake/vcpkg_common_functions.cmake)
+    include(${SCRIPTS}/cmake/vcpkg_common_definitions.cmake)
+    include(${SCRIPTS}/cmake/vcpkg_common_functions.cmake)
     include(${CURRENT_PORT_DIR}/portfile.cmake)
-
-    set(BUILD_INFO_FILE_PATH ${CURRENT_PACKAGES_DIR}/BUILD_INFO)
-    file(WRITE  ${BUILD_INFO_FILE_PATH} "CRTLinkage: ${VCPKG_CRT_LINKAGE}\n")
-    file(APPEND ${BUILD_INFO_FILE_PATH} "LibraryLinkage: ${VCPKG_LIBRARY_LINKAGE}\n")
-
-    if (DEFINED VCPKG_POLICY_DLLS_WITHOUT_LIBS)
-        file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyDLLsWithoutLIBs: ${VCPKG_POLICY_DLLS_WITHOUT_LIBS}\n")
-    endif()
-    if (DEFINED VCPKG_POLICY_EMPTY_PACKAGE)
-        file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyEmptyPackage: ${VCPKG_POLICY_EMPTY_PACKAGE}\n")
-    endif()
-    if (DEFINED VCPKG_POLICY_ONLY_RELEASE_CRT)
-        file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyOnlyReleaseCRT: ${VCPKG_POLICY_ONLY_RELEASE_CRT}\n")
-    endif()
-    if (DEFINED VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT)
-        file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyAllowObsoleteMsvcrt: ${VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT}\n")
-    endif()
-    if (DEFINED VCPKG_POLICY_EMPTY_INCLUDE_FOLDER)
-        file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyEmptyIncludeFolder: ${VCPKG_POLICY_EMPTY_INCLUDE_FOLDER}\n")
-    endif()
-    if (DEFINED VCPKG_HEAD_VERSION)
-        file(APPEND ${BUILD_INFO_FILE_PATH} "Version: ${VCPKG_HEAD_VERSION}\n")
-    endif()
+    include(${SCRIPTS}/build_info.cmake)
 elseif(CMD MATCHES "^CREATE$")
     file(TO_NATIVE_PATH ${VCPKG_ROOT_DIR} NATIVE_VCPKG_ROOT_DIR)
     file(TO_NATIVE_PATH ${DOWNLOADS} NATIVE_DOWNLOADS)
@@ -120,8 +114,8 @@ elseif(CMD MATCHES "^CREATE$")
     file(SHA512 ${DOWNLOADS}/${FILENAME} SHA512)
 
     file(MAKE_DIRECTORY ports/${PORT})
-    configure_file(scripts/templates/portfile.in.cmake ports/${PORT}/portfile.cmake @ONLY)
-    configure_file(scripts/templates/CONTROL.in ports/${PORT}/CONTROL @ONLY)
+    configure_file(${SCRIPTS}/templates/portfile.in.cmake ports/${PORT}/portfile.cmake @ONLY)
+    configure_file(${SCRIPTS}/templates/CONTROL.in ports/${PORT}/CONTROL @ONLY)
 
     message(STATUS "Generated portfile: ${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}\\portfile.cmake")
     message(STATUS "Generated CONTROL: ${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}\\CONTROL")

@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF 6d26a1be8d7a20d8d89c374ee3dc5c452d18c18d
-    SHA512 bc6aa17a97fdfc53d0a247b876cbd1fea8214608b7e463dcf21e34df65015fe77e617c5a6c6bfa84b87e60e56b6aeb89aa2d8d774f97fc1f76f415869948a48a
+    REF c0bafd67140e8c6f4f585c1077f2fd89102e4582 # v2020.02.03.00
+    SHA512 7db706ffdd79f6d753c5530eb67646747d1e7b8b380387f34bd1fc7a06b289a68a6bb4c13faa74e108d4dede72bb2d993d7ad8f60fabcfb3b48abbf4326291c2
     HEAD_REF master
     PATCHES
         find-zlib.patch
@@ -46,4 +44,4 @@ file(REMOVE_RECURSE
 )
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/fizz RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

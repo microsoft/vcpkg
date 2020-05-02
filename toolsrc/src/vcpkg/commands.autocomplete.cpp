@@ -19,8 +19,8 @@ namespace vcpkg::Commands::Autocomplete
         Checks::exit_success(line_info);
     }
 
-    std::vector<std::string> combine_port_with_triplets(const std::string& port,
-                                                        const std::vector<std::string>& triplets)
+    static std::vector<std::string> combine_port_with_triplets(const std::string& port,
+                                                               const std::vector<std::string>& triplets)
     {
         return Util::fmap(triplets,
                           [&](const std::string& triplet) { return Strings::format("%s:%s", port, triplet); });
@@ -97,7 +97,7 @@ namespace vcpkg::Commands::Autocomplete
                 Checks::exit_success(VCPKG_LINE_INFO);
             }
 
-            std::vector<std::string> triplets = paths.get_available_triplets();
+            std::vector<std::string> triplets = paths.get_available_triplets_names();
             Util::erase_remove_if(triplets, [&](const std::string& s) {
                 return !Strings::case_insensitive_ascii_starts_with(s, triplet_prefix);
             });
@@ -158,8 +158,8 @@ namespace vcpkg::Commands::Autocomplete
                 if (command.name == "install" && results.size() == 1 && !is_option)
                 {
                     const auto port_at_each_triplet =
-                        combine_port_with_triplets(results[0], paths.get_available_triplets());
-                    Util::Vectors::concatenate(&results, port_at_each_triplet);
+                        combine_port_with_triplets(results[0], paths.get_available_triplets_names());
+                    Util::Vectors::append(&results, port_at_each_triplet);
                 }
 
                 output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(results));

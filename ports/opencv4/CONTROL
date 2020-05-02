@@ -1,11 +1,12 @@
 Source: opencv4
-Version: 4.1.1-1
+Version: 4.1.1-4
 Build-Depends: protobuf, zlib
+Homepage: https://github.com/opencv/opencv
 Description: computer vision library
 Default-Features: dnn, jpeg, opengl, png, tiff, webp
 
 Feature: nonfree
-Description: opencv nonfree module
+Description: allow nonfree and unredistributable libraries
 
 Feature: ade
 Build-Depends: ade
@@ -89,8 +90,12 @@ Build-Depends: libwebp
 Description: WebP support for opencv
 
 Feature: halide
-Build-Depends: halide, opencv4[dnn]
+Build-Depends: halide, opencv4[core], opencv4[dnn]
 Description: Halide support for opencv
 
 Feature: world
 Description: Compile to a single package support for opencv
+
+Feature: gtk
+Build-Depends: gtk
+Description: gtk support for opencv

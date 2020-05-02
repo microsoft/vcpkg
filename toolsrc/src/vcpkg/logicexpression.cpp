@@ -1,7 +1,7 @@
-
 #include "pch.h"
 
-#include <vcpkg/base/checks.h>
+#include <vcpkg/base/parse.h>
+#include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/logicexpression.h>
 
@@ -10,28 +10,23 @@
 
 namespace vcpkg
 {
-    struct ParseError
+    using vcpkg::Parse::ParseError;
+
+    enum class Identifier
     {
-        ParseError(int column, std::string line, std::string message) : column(column), line(line), message(message) {}
+        invalid, // not a recognized identifier
+        x64,
+        x86,
+        arm,
+        arm64,
 
-        const int column;
-        const std::string line;
-        const std::string message;
+        windows,
+        linux,
+        osx,
+        uwp,
+        android,
 
-        void print_error() const
-        {
-            System::print2(System::Color::error,
-                           "Error: ",
-                           message,
-                           "\n"
-                           "   on expression: \"",
-                           line,
-                           "\"\n",
-                           "                   ",
-                           std::string(column, ' '),
-                           "^\n");
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
+        static_link,
     };
 
     // logic expression supports the following :
@@ -50,129 +45,171 @@ namespace vcpkg
     //
     // | and & have equal precidence and cannot be used together at the same nesting level
     //   for example a|b&c is not allowd but (a|b)&c and a|(b&c) are allowed.
-    class ExpressionParser
+    class ExpressionParser : public Parse::ParserBase
     {
     public:
-        ExpressionParser(const std::string& str, const std::string& evaluation_context)
-            : raw_text(str), evaluation_context(evaluation_context)
+        ExpressionParser(const std::string& str, const ExpressionContext& context) :
+            Parse::ParserBase(str, "CONTROL"), evaluation_context(context)
         {
-            go_to_begin();
+            {
+                auto override_vars = evaluation_context.cmake_context.find("VCPKG_DEP_INFO_OVERRIDE_VARS");
+                if (override_vars != evaluation_context.cmake_context.end())
+                {
+                    auto cmake_list = Strings::split(override_vars->second, ";");
+                    for (auto& override_id : cmake_list)
+                    {
+                        if (!override_id.empty())
+                        {
+                            if (override_id[0] == '!')
+                            {
+                                context_override.insert({override_id.substr(1), false});
+                            }
+                            else
+                            {
+                                context_override.insert({override_id, true});
+                            }
+                        }
+                    }
+                }
+            }
+            skip_whitespace();
 
             final_result = logic_expression();
 
-            if (current_iter != raw_text.end())
+            if (!at_eof())
             {
-                add_error("Invalid logic expression");
-            }
-
-            if (err)
-            {
-                err->print_error();
-                final_result = false;
+                add_error("invalid logic expression, unexpected character");
             }
         }
 
         bool get_result() const { return final_result; }
 
-        bool has_error() const { return err == nullptr; }
-
     private:
+        const ExpressionContext& evaluation_context;
+        std::map<std::string, bool> context_override;
+
         bool final_result;
 
-        std::string::const_iterator current_iter;
-        const std::string& raw_text;
-        char current_char;
-
-        const std::string& evaluation_context;
-
-        std::unique_ptr<ParseError> err;
-
-        void add_error(std::string message, int column = -1)
+        static bool is_identifier_char(char32_t ch)
         {
-            // avoid castcading errors by only saving the first
-            if (!err)
+            return is_upper_alpha(ch) || is_lower_alpha(ch) || is_ascii_digit(ch) || ch == '-';
+        }
+
+        // Legacy evaluation only searches for substrings.  Use this only for diagnostic purposes.
+        bool evaluate_identifier_legacy(const std::string name) const
+        {
+            return evaluation_context.legacy_context.find(name) != std::string::npos;
+        }
+
+        static Identifier string2identifier(const std::string& name)
+        {
+            static const std::map<std::string, Identifier> id_map = {
+                {"x64", Identifier::x64},
+                {"x86", Identifier::x86},
+                {"arm", Identifier::arm},
+                {"arm64", Identifier::arm64},
+                {"windows", Identifier::windows},
+                {"linux", Identifier::linux},
+                {"osx", Identifier::osx},
+                {"uwp", Identifier::uwp},
+                {"android", Identifier::android},
+                {"static", Identifier::static_link},
+            };
+
+            auto id_pair = id_map.find(name);
+
+            if (id_pair == id_map.end())
             {
-                if (column < 0)
+                return Identifier::invalid;
+            }
+
+            return id_pair->second;
+        }
+
+        bool true_if_exists_and_equal(const std::string& variable_name, const std::string& value)
+        {
+            auto iter = evaluation_context.cmake_context.find(variable_name);
+            if (iter == evaluation_context.cmake_context.end())
+            {
+                return false;
+            }
+            return iter->second == value;
+        }
+
+        // If an identifier is on the explicit override list, return the override value
+        // Otherwise fall back to the built in logic to evaluate
+        // All unrecognized identifiers are an error
+        bool evaluate_identifier_cmake(const std::string name, const SourceLoc& loc)
+        {
+            auto id = string2identifier(name);
+
+            switch (id)
+            {
+                case Identifier::invalid:
+                    // Point out in the diagnostic that they should add to the override list because that is what
+                    // most users should do, however it is also valid to update the built in identifiers to recognize
+                    // the name.
+                    add_error("Unrecognized identifer name. Add to override list in triplet file.", loc);
+                    break;
+
+                case Identifier::x64: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "x64");
+                case Identifier::x86: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "x86");
+                case Identifier::arm:
+                    // For backwards compatability arm is also true for arm64.
+                    // This is because it previously was only checking for a substring.
+                    return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm") ||
+                           true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm64");
+                case Identifier::arm64: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm64");
+                case Identifier::windows: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "") || true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
+                case Identifier::linux: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
+                case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
+                case Identifier::uwp: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
+                case Identifier::android: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Android");
+                case Identifier::static_link: return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");
+            }
+
+            return evaluation_context.legacy_context.find(name) != std::string::npos;
+        }
+
+        bool evaluate_identifier(const std::string name, const SourceLoc& loc)
+        {
+            if (!context_override.empty())
+            {
+                auto override_id = context_override.find(name);
+                if (override_id != context_override.end())
                 {
-                    column = current_column();
+                    return override_id->second;
                 }
-                err = std::make_unique<ParseError>(column, raw_text, message);
+                // Fall through to use the cmake logic if the id does not have an override
             }
 
-            // Avoid error loops by skipping to the end
-            skip_to_end();
-        }
-
-        int current_column() const { return static_cast<int>(current_iter - raw_text.begin()); }
-
-        void go_to_begin()
-        {
-            current_iter = raw_text.begin();
-            current_char = (current_iter != raw_text.end() ? *current_iter : current_char);
-
-            if (current_char == ' ' || current_char == '\t')
+            bool legacy = evaluate_identifier_legacy(name);
+            bool cmake = evaluate_identifier_cmake(name, loc);
+            if (legacy != cmake)
             {
-                next_skip_whitespace();
+                // Legacy evaluation only used the name of the triplet, now we use the actual
+                // cmake variables. This has the potential to break custom triplets.
+                // For now just print a message, this will need to change once we start introducing
+                // new variables that did not exist previously (such as host-*)
+                System::print2("Warning: qualifier has changed meaning recently:\n   ", name, '\n');
             }
-        }
-        void skip_to_end()
-        {
-            current_iter = raw_text.end();
-            current_char = '\0';
-        }
-        char current() const { return current_char; }
-        char next()
-        {
-            if (current_char != '\0')
-            {
-                current_iter++;
-                current_char = (current_iter != raw_text.end() ? *current_iter : '\0');
-            }
-            return current();
-        }
-        void skip_whitespace()
-        {
-            while (current_char == ' ' || current_char == '\t')
-            {
-                current_char = next();
-            }
-        }
-        char next_skip_whitespace()
-        {
-            next();
-            skip_whitespace();
-            return current_char;
-        }
-
-        static bool is_alphanum(char ch)
-        {
-            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '-');
-        }
-
-        bool evaluate_identifier(const std::string name) const
-        {
-            return evaluation_context.find(name) != std::string::npos;
+            return cmake;
         }
 
         //  identifier:
         //    alpha-numeric string of characters
         bool identifier_expression()
         {
-            auto curr = current();
-            std::string name;
-
-            for (curr = current(); is_alphanum(curr); curr = next())
-            {
-                name += curr;
-            }
+            auto start_loc = cur_loc();
+            std::string name = match_zero_or_more(is_identifier_char).to_string();
 
             if (name.empty())
             {
-                add_error("Invalid logic expression, unexpected character");
+                add_error("unexpected character in logic expression");
                 return false;
             }
 
-            bool result = evaluate_identifier(name);
+            bool result = evaluate_identifier(name, start_loc);
             skip_whitespace();
             return result;
         }
@@ -182,9 +219,10 @@ namespace vcpkg
         //    primary-expression
         bool not_expression()
         {
-            if (current() == '!')
+            if (cur() == '!')
             {
-                next_skip_whitespace();
+                next();
+                skip_whitespace();
                 return !primary_expression();
             }
 
@@ -200,13 +238,14 @@ namespace vcpkg
                 while (next() == oper)
                 {
                 };
+                skip_whitespace();
                 seed = operation(not_expression(), seed);
 
-            } while (current() == oper);
+            } while (cur() == oper);
 
-            if (current() == other)
+            if (cur() == other)
             {
-                add_error("Mixing & and | is not allowed, Use () to specify order of operations.");
+                add_error("mixing & and | is not allowed, use () to specify order of operations");
             }
 
             skip_whitespace();
@@ -223,7 +262,7 @@ namespace vcpkg
         {
             auto result = not_expression();
 
-            switch (current())
+            switch (cur())
             {
                 case '|':
                 {
@@ -242,16 +281,18 @@ namespace vcpkg
         //    identifier
         bool primary_expression()
         {
-            if (current() == '(')
+            if (cur() == '(')
             {
-                next_skip_whitespace();
+                next();
+                skip_whitespace();
                 bool result = logic_expression();
-                if (current() != ')')
+                if (cur() != ')')
                 {
-                    add_error("Error: missing closing )");
+                    add_error("missing closing )");
                     return result;
                 }
-                next_skip_whitespace();
+                next();
+                skip_whitespace();
                 return result;
             }
 
@@ -259,9 +300,14 @@ namespace vcpkg
         }
     };
 
-    bool evaluate_expression(const std::string& expression, const std::string& evaluation_context)
+    ExpectedT<bool, std::string> evaluate_expression(const std::string& expression, const ExpressionContext& context)
     {
-        ExpressionParser parser(expression, evaluation_context);
+        ExpressionParser parser(expression, context);
+
+        if (auto err = parser.get_error())
+        {
+            return err->format();
+        }
 
         return parser.get_result();
     }

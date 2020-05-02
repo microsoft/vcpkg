@@ -1,20 +1,19 @@
-include(vcpkg_common_functions)
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO intel/tbb
-    REF 4233fef583b4f8cbf9f781311717600feaaa0694
-    SHA512 6eb239f16e0ecacb825264869aafad7fb39aa1b1f8a3c03c92344c4255d1c1a34ca0a47a366c471fd2da808f3be14262c7e2305294677f2f490c1a48f6f76ec3
+    REPO oneapi-src/oneTBB
+    REF 427c252e0bb9e191767a62d8a744b21950c343f6 # 2020_U1
+    SHA512 01307b689680c8d796357a65258257b0c54336aa2a5dc75746d65e169988b8cb353537ad480cc4b8970b32667ab7f965bfedee4a15186f2a3159c9f130667f26
     HEAD_REF tbb_2019
+    PATCHES
+        fix-static-build.patch
+        terminate-when-buildtool-notfound.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
@@ -33,6 +32,32 @@ else()
         set(RELEASE_CONFIGURATION Release)
         set(DEBUG_CONFIGURATION Debug)
     endif()
+    
+    macro(CONFIGURE_PROJ_FILE arg)
+        set(CONFIGURE_FILE_NAME ${arg})
+        set(CONFIGURE_BAK_FILE_NAME ${arg}.bak)
+        if (NOT EXISTS ${CONFIGURE_BAK_FILE_NAME})
+            configure_file(${CONFIGURE_FILE_NAME} ${CONFIGURE_BAK_FILE_NAME} COPYONLY)
+        endif()
+        configure_file(${CONFIGURE_BAK_FILE_NAME} ${CONFIGURE_FILE_NAME} COPYONLY)
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+            file(READ ${CONFIGURE_FILE_NAME} SLN_CONFIGURE)
+            string(REPLACE "<ConfigurationType>DynamicLibrary<\/ConfigurationType>"
+                        "<ConfigurationType>StaticLibrary<\/ConfigurationType>" SLN_CONFIGURE "${SLN_CONFIGURE}")
+            string(REPLACE "\/D_CRT_SECURE_NO_DEPRECATE"
+                        "\/D_CRT_SECURE_NO_DEPRECATE \/DIN_CILK_STATIC" SLN_CONFIGURE "${SLN_CONFIGURE}")
+            file(WRITE ${CONFIGURE_FILE_NAME} "${SLN_CONFIGURE}")
+        else()
+            file(READ ${CONFIGURE_FILE_NAME} SLN_CONFIGURE)
+            string(REPLACE "\/D_CRT_SECURE_NO_DEPRECATE"
+                        "\/D_CRT_SECURE_NO_DEPRECATE \/DIN_CILK_RUNTIME" SLN_CONFIGURE "${SLN_CONFIGURE}")
+            file(WRITE ${CONFIGURE_FILE_NAME} "${SLN_CONFIGURE}")
+        endif()
+    endmacro()
+    
+    CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbb.vcxproj)
+    CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbbmalloc.vcxproj)
+    CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbbmalloc_proxy.vcxproj)
 
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
@@ -92,9 +117,6 @@ string(REPLACE
 string(REPLACE "SHARED IMPORTED)" "UNKNOWN IMPORTED)" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake "${_contents}")
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb)
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tbb/LICENSE ${CURRENT_PACKAGES_DIR}/share/tbb/copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME TBB)
-#
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

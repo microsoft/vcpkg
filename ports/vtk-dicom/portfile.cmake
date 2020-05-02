@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dgobbi/vtk-dicom
-    REF v0.8.9
-    SHA512 f75295a25896b4d571e9d9bb04fbedbd8bcf5e12637d17b6eadceda296fc105decb44c6cb09f1d69daf17093bb61cdb8909fcde347137f30eb6b8b2b298ff065
+    REF 5034c68450de857b70fbe4a4b9f8dddb62badef3 # v0.8.12
+    SHA512 bad1ed6a4a412402a2cd69e5f85b2b73f1ee7ea46a6bbcac31c5f66d07ae006679ffbd9a3c70f9baa1b05b1af0a2d4ca0efc34ec0a85a92f5116b900e81635cd
     HEAD_REF master
 )
 
