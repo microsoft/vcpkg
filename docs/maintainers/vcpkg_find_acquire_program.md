@@ -25,6 +25,7 @@ The current list of programs includes:
 - PYTHON2
 - PYTHON3
 - GIT
+- GN
 - GO
 - JOM
 - MESON
