@@ -17,7 +17,7 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
-      #0009-fix-uwp.patch
+      0009-fix-uwp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
