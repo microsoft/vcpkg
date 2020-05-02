@@ -257,7 +257,7 @@ namespace vcpkg::Commands::Integrate
 
             const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
             fs.write_contents(appdata_src_path,
-                              create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.u8string()),
+                              create_appdata_shortcut(paths.buildsystems_msbuild_targets.u8string()),
                               VCPKG_LINE_INFO);
             auto appdata_dst_path = get_appdata_targets_path();
 
