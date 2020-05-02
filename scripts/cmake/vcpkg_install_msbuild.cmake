@@ -95,7 +95,7 @@ function(vcpkg_install_msbuild)
     cmake_parse_arguments(
         _csc
         "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN"
-        "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
+        "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;VS_PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
         ${ARGN}
     )
@@ -122,6 +122,9 @@ function(vcpkg_install_msbuild)
     if(NOT DEFINED _csc_PLATFORM_TOOLSET)
         set(_csc_PLATFORM_TOOLSET ${VCPKG_PLATFORM_TOOLSET})
     endif()
+    if(NOT DEFINED _csc_VS_PLATFORM_TOOLSET)
+        set(_csc_VS_PLATFORM_TOOLSET ${VS_PLATFORM_TOOLSET})
+    endif()
     if(NOT DEFINED _csc_TARGET_PLATFORM_VERSION)
         vcpkg_get_windows_sdk(_csc_TARGET_PLATFORM_VERSION)
     endif()
@@ -132,12 +135,41 @@ function(vcpkg_install_msbuild)
     list(APPEND _csc_OPTIONS
         /t:${_csc_TARGET}
         /p:Platform=${_csc_PLATFORM}
-        /p:PlatformToolset=${_csc_PLATFORM_TOOLSET}
+        /p:PreferredToolArchitecture=${_csc_PLATFORM}
         /p:VCPkgLocalAppDataDisabled=true
-        /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
+        /p:TargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
+        /verbosity:n ##q[uiet], m[inimal], n[ormal], d[etailed] e diag[nostic]
+        /nologo
+        /p:VcpkgTriplet=${TARGET_TRIPLET}
         /m
     )
+
+    if(DEFINED VS_PLATFORM_TOOLSET AND CMAKE_C_COMPILER_ID MATCHES "Clang")
+      list(APPEND _csc_OPTIONS
+        "/p:BasePlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
+        "/p:PlatformToolset=${VS_PLATFORM_TOOLSET}"
+        "/p:UseIntelMKL=No"
+        "/p:UseClangCl=true"
+        "/p:UseLldLink=true"
+        "/p:UseLlvmLib=false"
+        "/p:TrackFileAccess=false"
+        "/p:LibToolExe=lib.exe"
+        "/p:ClangClAdditionalOptions=-Wno-gcc-compat -Xclang -fopenmp -Xclang -flto=thin -Wextra -Wno-unused-variable -verbose"
+        "/p:LldLinkAdditionalOptions=-debug -force:multipleres -fuse-ld=lld-link -lib"
+      )
+    elseif(VS_PLATFORM_TOOLSET MATCHES "Intel" OR CMAKE_C_COMPILER_ID MATCHES "Intel")
+      list(APPEND _csc_OPTIONS
+        "/p:BasePlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
+        "/p:PlatformToolset=${VS_PLATFORM_TOOLSET}"
+        "/p:UseIntelMKL=Yes"
+      )
+    else()
+      list(APPEND _csc_OPTIONS
+        "/p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
+        "/p:UseIntelMKL=No"
+      )
+    endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
@@ -146,7 +178,11 @@ function(vcpkg_install_msbuild)
     endif()
 
     if(_csc_USE_VCPKG_INTEGRATION)
-        list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets /p:VcpkgApplocalDeps=false)
+      list(APPEND _csc_OPTIONS
+        "/p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets"
+        "/p:VcpkgApplocalDeps=false"
+        "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+        )
     endif()
 
     get_filename_component(SOURCE_PATH_SUFFIX "${_csc_SOURCE_PATH}" NAME)
