@@ -1,11 +1,10 @@
 #header-only library
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chriskohlhoff/asio
-    REF asio-1-12-2
-    SHA512 7c2e213ff154bb2e5776b37906d437a62206f973316c94706e6d42e3c2f0866e7d97f3e40225ab5f28bf2c4a33fa0b38a4b75421aef86ddf9f2da0811caa2d00
+    REF asio-1-16-1
+    SHA512 7e5f8a503b6e8e939b3e77921bea2a11312dbe2ec609669c387ff11ebb97c2fbba96a57d064b34946b3db2cd45de6524a39d3050fd5b7d5b7f4fb595848a27ed
     HEAD_REF master
 )
 
