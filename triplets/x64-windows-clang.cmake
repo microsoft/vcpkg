@@ -6,7 +6,7 @@ set(VCPKG_PLATFORM_TOOLSET v142)
 
 set(VS_PLATFORM_TOOLSET "ClangCL,host=x64")
 #or
-##set(VS_PLATFORM_TOOLSET "Intel C++ Compiler 19.1")#ClangCL #LLVM_v142,host=x64 #"v142,cuda=10.1,host=x64" #"v142,host=x64,v=14.16#version=14.11
+##set(VS_PLATFORM_TOOLSET "LLVM_v142,host=x64" #"v142,cuda=10.1,host=x64" #"v142,host=x64,v=14.16#version=14.11
 
 if(DEFINED VS_PLATFORM_TOOLSET)
     set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
