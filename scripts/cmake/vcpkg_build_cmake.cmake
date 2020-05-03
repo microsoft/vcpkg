@@ -39,6 +39,10 @@ function(vcpkg_build_cmake)
     set(PARALLEL_ARG)
     set(NO_PARALLEL_ARG)
 
+    if(NOT DEFINED _bc_VS_PLATFORM_TOOLSET)
+        set(_bc_VS_PLATFORM_TOOLSET ${VS_PLATFORM_TOOLSET})
+    endif()
+
     if(_VCPKG_CMAKE_GENERATOR MATCHES "Ninja")
         set(BUILD_ARGS "-v") # verbose output
         set(NO_PARALLEL_ARG "-j1")
