@@ -26,6 +26,8 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
+set(WITH_OPENJPEG OFF)  #this feature is broken on Windows and untested on others operating systems
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "ade"      WITH_ADE
  "contrib"  WITH_CONTRIB
@@ -37,10 +39,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gdcm"     WITH_GDCM
  "halide"   WITH_HALIDE
  "jasper"   WITH_JASPER
+ "jpeg"     WITH_JPEG
  "nonfree"  OPENCV_ENABLE_NONFREE
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
- "openmp"   WITH_OPENMP
  "png"      WITH_PNG
  "qt"       WITH_QT
  "sfm"      BUILD_opencv_sfm
@@ -49,29 +51,33 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"    BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "gtk", "ipp", "jpeg", "ovis", "tbb", and "vtk".
+if("halide" IN_LIST FEATURES)
+  message(WARNING "The Halide feature is currently untested")
+endif()
+
+# Cannot use vcpkg_check_features() for "gtk", "ipp", "openmp", "ovis", "tbb", and "vtk".
 # As the respective value of their variables can be unset conditionally.
 set(WITH_GTK OFF)
 if("gtk" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_LINUX)
     set(WITH_GTK ON)
   else()
-    message(WARNING "The GTK feature is supported only on Linux")
-  endif()
-endif()
-
-set(WITH_JPEG OFF)
-if("jpeg" IN_LIST FEATURES)
-  if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(WITH_GTK ON)
-  else()
-    message(WARNING "The jpeg feature is broken on Windows at the moment due to a bug with MSVC")
+    message(WARNING "The GTK feature can be enabled only on Linux")
   endif()
 endif()
 
 set(WITH_IPP OFF)
 if("ipp" IN_LIST FEATURES)
   set(WITH_IPP ON)
+endif()
+
+set(WITH_OPENMP OFF)
+if("openmp" IN_LIST FEATURES)
+  if(NOT VCPKG_TARGET_IS_OSX)
+    set(WITH_OPENMP ON)
+  else()
+    message(WARNING "The OpenMP feature is not supported on macOS")
+  endif()
 endif()
 
 set(BUILD_opencv_ovis OFF)
@@ -337,7 +343,6 @@ vcpkg_configure_cmake(
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_GTK=${WITH_GTK}
         -DWITH_IPP=${WITH_IPP}
-        -DWITH_JPEG=${WITH_JPEG}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_PROTOBUF=ON
         -DWITH_TBB=${WITH_TBB}
@@ -386,9 +391,10 @@ find_package(ade QUIET)
 find_package(VTK QUIET)
 find_package(OpenMP QUIET)
 find_package(Tesseract QUIET)
+find_package(Qt5 QUIET)
 find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
-  if("openmp" IN_LIST FEATURES)
+  if(WITH_OPENMP)
     string(REPLACE "set_target_properties(opencv_core PROPERTIES
   INTERFACE_LINK_LIBRARIES \""
                    "set_target_properties(opencv_core PROPERTIES
