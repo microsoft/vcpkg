@@ -1,8 +1,9 @@
+set(VERSION v1.4.0-alpha.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/Azure-Kinect-Sensor-SDK
-    REF 17b644560ce7b4ee7dd921dfff0ae811aa54ede6 #v1.4.0-alpha.0
-    SHA512 2746eebe5ef66c4b9d2215b6883723fca66dab77d405c662cc2af9364dc7fcd76aade396d23427db5797e0a534764eb2398890930ff3c792d0df8a681ce31462
+    REF ${VERSION}
+    SHA512 bf09ff92dc1b8621a941d838aef9c804bb5635f7984b7f86f01a38441d44935db764b69483d598e1f2c0aafb5c7ec196ef9c722967d92e6d075cb67ce781fea9
     HEAD_REF master
     PATCHES
         fix-builds.patch
@@ -58,6 +59,33 @@ endif()
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+
+# Install Depth Engine
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.Azure.Kinect.Sensor/${VERSION}"
+    FILENAME "azure-kinect-sensor-sdk.zip"
+    SHA512 087e89e4670d8b1491a2e24e6829fe1ebd633203f86abd42f7f1f24a6c58d0fd07e9979d281ea7ab48d4a565beb33a305db16c2f0633e7d63a9583b125d8639b
+)
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH PACKAGE_PATH
+    ARCHIVE ${ARCHIVE}
+    NO_REMOVE_ONE_LEVEL
+)
+
+set(ARCHITECTURE "")
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    set(ARCHITECTURE "x86")
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    set(ARCHITECTURE "amd64")
+else ()
+    message(FATAL_ERROR "this architecture is not supported.")
+endif ()
+
+file(COPY ${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+file(COPY ${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/bin/k4a)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/k4a)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
