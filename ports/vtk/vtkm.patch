@@ -15,6 +15,23 @@ index 4297575bd..643df6fd5 100644
  
  set(sources
    vtkmlib/ArrayConvertersReal.cxx
+diff --git a/Accelerators/Vtkm/CMakeLists.txt b/Accelerators/Vtkm/CMakeLists.txt
+index a01a6bda3..889c87ebb 100644
+--- a/Accelerators/Vtkm/CMakeLists.txt	
++++ b/Accelerators/Vtkm/CMakeLists.txt
+@@ -126,9 +126,9 @@ vtkm_add_target_information(${vtkm_accel_target}
+                             MODIFY_CUDA_FLAGS
+                             DEVICE_SOURCES ${sources})
+ 
+-vtk_module_set_property(VTK::AcceleratorsVTKm
+-  PROPERTY  JOB_POOL_COMPILE
+-  VALUE     vtkm_pool)
++#vtk_module_set_property(VTK::AcceleratorsVTKm
++#  PROPERTY  JOB_POOL_COMPILE
++#  VALUE     vtkm_pool)
+ vtk_module_link(VTK::AcceleratorsVTKm
+   PRIVATE
+     vtkm_worklet
 diff --git a/CMake/FindVTKm.cmake b/CMake/FindVTKm.cmake
 new file mode 100644
 index 000000000..c0fe00c0e

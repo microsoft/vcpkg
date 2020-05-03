@@ -147,7 +147,7 @@ vcpkg_copy_pdbs()
 
 # =============================================================================
 # Fixup target files
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtk-9.00)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtk-9.0)
 
 # For some reason the references to the XDMF libraries in the target files do not end up
 # correctly, so we fix them here.
@@ -206,7 +206,7 @@ function(_vtk_move_release_tool TOOL_NAME)
     endif()
 endfunction()
 
-set(VTK_SHORT_VERSION 9.00)
+set(VTK_SHORT_VERSION 9.0)
 set(VTK_TOOLS
     vtkEncodeString-${VTK_SHORT_VERSION}
     vtkHashSource-${VTK_SHORT_VERSION}
