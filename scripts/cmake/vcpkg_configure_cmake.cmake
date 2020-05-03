@@ -239,9 +239,14 @@ function(vcpkg_configure_cmake)
     )
 
     if(DEFINED ARCH)
-        list(APPEND _csc_OPTIONS
-            "-A${ARCH}"
-        )
+        list(APPEND _csc_OPTIONS -A ${ARCH})
+    endif()
+
+    if(NOT DEFINED PREFER_NINJA AND DEFINED VS_PLATFORM_TOOLSET)
+        list(APPEND _csc_OPTIONS -T ${VS_PLATFORM_TOOLSET})
+        set(NINJA_CAN_BE_USED OFF)
+    else()
+        set(NINJA_CAN_BE_USED ON)
     endif()
 
     # Sets configuration variables for macOS builds
