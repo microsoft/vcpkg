@@ -21,13 +21,14 @@ if(USE_GDCM)
         -DUSE_DCMTK=OFF
     )
 endif()
-
+vcpkg_find_acquire_program(PYTHON3)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
+        "-DPython3_EXECUTABLE=${PYTHON3}"
         ${ADDITIONAL_OPTIONS}
 )
 
