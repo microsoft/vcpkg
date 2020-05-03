@@ -1,8 +1,12 @@
 Source: vtk
-Version: 8.2.0-13
+Version: 9.0
 Description: Software system for 3D computer graphics, image processing, and visualization
 Homepage: https://github.com/Kitware/VTK
-Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora, eigen3, double-conversion, pugixml, libharu, sqlite3, netcdf-c
+Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, liblzma, libtheora, eigen3, double-conversion, pugixml, libharu[notiffsymbols], sqlite3, netcdf-c, utfcpp, libogg, pegtl
+
+Feature: vtkm
+Description: Build with vtk-m accelerator and module.
+Build-Depends:  vtk-m[core]
 
 Feature: openvr
 Description: OpenVR functionality for VTK
@@ -10,11 +14,11 @@ Build-Depends: sdl2, openvr
 
 Feature: qt
 Description: Qt functionality for VTK
-Build-Depends: qt5
+Build-Depends: qt5-xmlpatterns, qt5-tools, qt5-imageformats, qt5-x11extras (linux)
 
 Feature: mpi
 Description: MPI functionality for VTK
-Build-Depends: mpi, hdf5[parallel]
+Build-Depends: mpi, hdf5[parallel], vtk-m[core,mpi]
 
 Feature: python
 Description: Python functionality for VTK
@@ -23,3 +27,11 @@ Build-Depends: python3
 Feature: atlmfc
 Description: Mfc functionality for vtk on Windows
 Build-Depends: atlmfc (windows)
+
+Feature: paraview
+Description: Build vtk modules required by paraview
+Build-Depends: vtk[core, qt], vtk[core, atlmfc] (windows)
+
+Feature: all
+Description: Build vtk modules required by paraview
+Build-Depends: libmysql, ffmpeg, gdal, vtk[core, qt, python, mpi], vtk[atlmfc] (windows)
