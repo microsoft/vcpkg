@@ -1,0 +1,9 @@
+set(VCPKG_TARGET_ARCHITECTURE x64)
+set(VCPKG_CRT_LINKAGE dynamic)
+set(VCPKG_LIBRARY_LINKAGE dynamic)
+
+set(VS_PLATFORM_TOOLSET "Intel C++ Compiler 19.1")#example or "Intel C++ Compiler 17.0"
+
+if(DEFINED VS_PLATFORM_TOOLSET)
+    set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
+endif()
