@@ -17,7 +17,7 @@ Build-Depends: hdf5 (!uwp), tesseract
 Description: opencv_contrib module
 
 Feature: cuda
-Build-Depends: opencv4[contrib], cuda
+Build-Depends: opencv4[contrib], cuda, cudnn
 Description: CUDA support for opencv
 
 Feature: dnn
@@ -66,7 +66,7 @@ Build-Depends: libpng
 Description: PNG support for opencv
 
 Feature: qt
-Build-Depends: qt5
+Build-Depends: qt5-base
 Description: Qt GUI support for opencv
 
 Feature: sfm

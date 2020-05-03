@@ -1,3 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4c0b388..16c0ede 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -594,7 +594,7 @@ endif()
+ ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
+ 
+ # --- Python Support ---
+-if(NOT IOS)
++if(0)
+   include(cmake/OpenCVDetectPython.cmake)
+ endif()
+ 
 diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
 index 87b2161..5192875 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
