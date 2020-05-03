@@ -37,7 +37,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gdcm"     WITH_GDCM
  "halide"   WITH_HALIDE
  "jasper"   WITH_JASPER
- "jpeg"     WITH_JPEG
  "nonfree"  OPENCV_ENABLE_NONFREE
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
@@ -50,7 +49,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"    BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "gtk", "ipp", "ovis", "tbb", and "vtk".
+# Cannot use vcpkg_check_features() for "gtk", "ipp", "jpeg", "ovis", "tbb", and "vtk".
 # As the respective value of their variables can be unset conditionally.
 set(WITH_GTK OFF)
 if("gtk" IN_LIST FEATURES)
@@ -58,6 +57,15 @@ if("gtk" IN_LIST FEATURES)
     set(WITH_GTK ON)
   else()
     message(WARNING "The GTK feature is supported only on Linux")
+  endif()
+endif()
+
+set(WITH_JPEG OFF)
+if("jpeg" IN_LIST FEATURES)
+  if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(WITH_GTK ON)
+  else()
+    message(WARNING "The jpeg feature is broken on Windows at the moment due to a bug with MSVC")
   endif()
 endif()
 
@@ -327,7 +335,9 @@ vcpkg_configure_cmake(
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DWITH_GTK=${WITH_GTK}
         -DWITH_IPP=${WITH_IPP}
+        -DWITH_JPEG=${WITH_JPEG}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_PROTOBUF=ON
         -DWITH_TBB=${WITH_TBB}
