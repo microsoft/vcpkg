@@ -21,24 +21,28 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     lzma    ENABLE_LZMA
     lzo     ENABLE_LZO
     openssl ENABLE_OPENSSL
+    zstd    ENABLE_ZSTD
     # The below features should be added to CONTROL
     #pcre    ENABLE_PCREPOSIX
     #nettle  ENABLE_NETTLE
     #expat   ENABLE_EXPAT
     #libgcc  ENABLE_LibGCC
     #cng     ENABLE_CNG
-    #tar     ENABLE_TAR 
-    #cpio    ENABLE_CPIO
-    #cat     ENABLE_CAT
-    #xattr   ENABLE_XATTR
-    #acl     ENABLE_ACL
-    #iconv   ENABLE_ICONV
+    #tar     ENABLE_TAR # Tool build option?
+    #cpio    ENABLE_CPIO # Tool build option?
+    #cat     ENABLE_CAT # Tool build option?
+    #xattr   ENABLE_XATTR # Tool support option?
+    #acl     ENABLE_ACL # Tool support option?
+    #iconv   ENABLE_ICONV # iconv support option?
+    #libb2   ENABLE_LIBB2
 )
 
 if(FEATURES MATCHES "pcre")
 else()
     list(APPEND FEATURE_OPTIONS -DPOSIX_REGEX_LIB=NONE)
 endif()
+
+list(APPEND FEATURE_OPTIONS -DENABLE_ZLIB=ON)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

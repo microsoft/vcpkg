@@ -46,6 +46,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "tiff"     WITH_TIFF
  "webp"     WITH_WEBP
  "world"    BUILD_opencv_world
+ "gtk"      WITH_GTK
 )
 
 # Cannot use vcpkg_check_features() for "ipp", "ovis", "tbb", and "vtk".
