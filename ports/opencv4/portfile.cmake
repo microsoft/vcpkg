@@ -26,8 +26,6 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
-set(WITH_OPENJPEG OFF)  #this feature is broken on Windows and untested on others operating systems
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "ade"      WITH_ADE
  "contrib"  WITH_CONTRIB
@@ -344,15 +342,19 @@ vcpkg_configure_cmake(
         -DWITH_GTK=${WITH_GTK}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MSMF=${WITH_MSMF}
+        -DWITH_OPENMP=${WITH_OPENMP}
         -DWITH_PROTOBUF=ON
         -DWITH_TBB=${WITH_TBB}
         -DWITH_VTK=${WITH_VTK}
+        -DWITH_OPENJPEG=OFF
         ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
         -DWITH_LAPACK=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
+        ###### The following module is disabled because it's broken #https://github.com/opencv/opencv_contrib/issues/2307
+        -DBUILD_opencv_rgbd=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
 )
