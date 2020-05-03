@@ -391,7 +391,10 @@ find_package(ade QUIET)
 find_package(VTK QUIET)
 find_package(OpenMP QUIET)
 find_package(Tesseract QUIET)
-find_package(Qt5 QUIET)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
 find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
   if(WITH_OPENMP)
@@ -399,6 +402,11 @@ find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
   INTERFACE_LINK_LIBRARIES \""
                    "set_target_properties(opencv_core PROPERTIES
   INTERFACE_LINK_LIBRARIES \"\$<LINK_ONLY:OpenMP::OpenMP_CXX>;" OPENCV_MODULES "${OPENCV_MODULES}")
+  endif()
+
+  if(BUILD_opencv_ovis)
+    string(REPLACE "OgreGLSupportStatic"
+                   "OgreGLSupport" OPENCV_MODULES "${OPENCV_MODULES}")
   endif()
 
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
