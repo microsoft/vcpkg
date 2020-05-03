@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master)
 
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
     vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             -Denable-glx=no
@@ -20,7 +20,7 @@ else()
     if (NOT autoreconf OR NOT EXISTS "/usr/share/doc/libgles2/copyright")
         message(FATAL_ERROR "autoreconf and libgles2-mesa-dev must be installed before libepoxy can build. Install them with \"apt-get install dh-autoreconf libgles2-mesa-dev\".")
     endif()
-    
+
     find_program(MAKE make)
     if (NOT MAKE)
         message(FATAL_ERROR "MAKE not found")
@@ -28,34 +28,34 @@ else()
 
     file(REMOVE_RECURSE ${SOURCE_PATH}/m4)
     file(MAKE_DIRECTORY ${SOURCE_PATH}/m4)
-    
+
     set(LIBEPOXY_CONFIG_ARGS "--enable-x11=yes --enable-glx=yes --enable-egl=yes")
-    
+
     vcpkg_execute_required_process(
         COMMAND "autoreconf" -v --install
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME autoreconf-${TARGET_TRIPLET}
     )
-    
+
     message(STATUS "Configuring ${TARGET_TRIPLET}")
     set(OUT_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/make-build-${TARGET_TRIPLET}-release)
-    
+
     file(REMOVE_RECURSE ${OUT_PATH_RELEASE})
     file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
-    
+
     vcpkg_execute_required_process(
         COMMAND "./configure" --prefix=${OUT_PATH_RELEASE} "${LIBEPOXY_CONFIG_ARGS}"
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME config-${TARGET_TRIPLET}
     )
-    
+
     message(STATUS "Building ${TARGET_TRIPLET}")
     vcpkg_execute_required_process(
         COMMAND make
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME build-${TARGET_TRIPLET}-release
     )
-    
+
     message(STATUS "Installing ${TARGET_TRIPLET}")
     vcpkg_execute_required_process(
         COMMAND make install
