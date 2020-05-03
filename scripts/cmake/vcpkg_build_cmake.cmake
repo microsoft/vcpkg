@@ -50,24 +50,25 @@ function(vcpkg_build_cmake)
             "/nologo"
             "/p:VcpkgTriplet=${TARGET_TRIPLET}"
         )
+        if(DEFINED _bc_VS_PLATFORM_TOOLSET)
+          list(APPEND BUILD_ARGS
+            "/p:BasePlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
+            "/p:PlatformToolset=${VS_PLATFORM_TOOLSET}"
+#            "/p:UseIntelMKL=Yes"
+            "/p:UseInteloneMKL=No"
+          )
+        else()
+          list(APPEND BUILD_ARGS
+            "/p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
+            "/p:UseIntelMKL=No"
+            "/p:UseInteloneMKL=No"
+          )
+        endif()
         set(PARALLEL_ARG "/m")
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "NMake")
         # No options are currently added for nmake builds
     else()
         message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: Ninja, Visual Studio, and NMake Makefiles")
-    endif()
-
-    if(DEFINED _bc_VS_PLATFORM_TOOLSET)
-      list(APPEND BUILD_ARGS
-        "/p:BasePlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
-        "/p:PlatformToolset=${VS_PLATFORM_TOOLSET}"
-#        "/p:UseIntelMKL=Yes"
-      )
-    else()
-      list(APPEND BUILD_ARGS
-        "/p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
-        "/p:UseIntelMKL=No"
-      )
     endif()
 
     if(_bc_TARGET)
