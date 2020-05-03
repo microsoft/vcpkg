@@ -102,10 +102,11 @@ function(vcpkg_build_msbuild)
         /verbosity:n ##q[uiet], m[inimal], n[ormal], d[etailed] e diag[nostic]
         /nologo
         /p:VcpkgTriplet=${TARGET_TRIPLET}
+        "/p:UseInteloneMKL=No"
         /m
     )
 
-    if(DEFINED VS_PLATFORM_TOOLSET AND CMAKE_C_COMPILER_ID MATCHES "Clang")
+    if(VS_PLATFORM_TOOLSET MATCHES "Clang")
       list(APPEND _csc_OPTIONS
         "/p:BasePlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
         "/p:PlatformToolset=${VS_PLATFORM_TOOLSET}"
@@ -118,7 +119,7 @@ function(vcpkg_build_msbuild)
         "/p:ClangClAdditionalOptions=-Wno-gcc-compat -Xclang -fopenmp -Xclang -flto=thin -Wextra -Wno-unused-variable -verbose"
         "/p:LldLinkAdditionalOptions=-debug -force:multipleres -fuse-ld=lld-link -lib"
       )
-    elseif(VS_PLATFORM_TOOLSET MATCHES "Intel" OR CMAKE_C_COMPILER_ID MATCHES "Intel")
+    elseif(VS_PLATFORM_TOOLSET MATCHES "Intel")
       list(APPEND _csc_OPTIONS
         "/p:BasePlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
         "/p:PlatformToolset=${VS_PLATFORM_TOOLSET}"
