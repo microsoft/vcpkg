@@ -13,7 +13,7 @@ For short description of available commands, run `vcpkg help`.
 
 ## Quick Start
 Prerequisites:
-- Windows 10, 8.1, 7, Linux, or MacOS
+- Windows 10, 8.1, Linux, or MacOS
 - Visual Studio 2015 Update 3 or newer (on Windows)
 - Git
 - gcc >= 7 or equivalent clang (on Linux)
