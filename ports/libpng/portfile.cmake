@@ -58,6 +58,7 @@ vcpkg_configure_cmake(
     OPTIONS
         ${LIBPNG_APNG_OPTION}
         ${LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION}
+        -DPNG_ARM_NEON=on
         -DPNG_STATIC=${PNG_STATIC_LIBS}
         -DPNG_SHARED=${PNG_SHARED_LIBS}
         -DPNG_TESTS=OFF
