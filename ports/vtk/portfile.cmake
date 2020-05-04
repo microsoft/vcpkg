@@ -104,7 +104,7 @@ vcpkg_from_github(
 # =============================================================================
 #Overwrite outdated modules if they have not been patched:
 file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake")
-file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99")
+#file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99")
 # =============================================================================
 
 if(VTK_WITH_ALL_MODULES)
@@ -139,6 +139,7 @@ vcpkg_configure_cmake(
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
         #-DVTK_MODULE_ENABLE_VTK_IOMotionFX:STRING=NO  # currently buggy
+        -DHDF5_FIND_DEBUG=ON
         ${ADDITIONAL_OPTIONS}
 )
 
