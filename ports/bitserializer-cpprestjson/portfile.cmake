@@ -1,13 +1,19 @@
-include(vcpkg_common_functions)
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Pavel_Kisliak/BitSerializer
-	REF 0.8
-	SHA512 6df5b3f7a472a55ba0aace22c44cb2adaf178fbc7f920dcaf7d7015f81badde98d64911ddb620e99a708214140d7c29561775c1b0fe60fef6f24d465a4eac093
+	REF 0.9
+	SHA512 74515a1a8338935c52752200d96abc0c0ee2c2b0b42880b1d10c8f56b5f8eb30680bd96b64eb2b352764128ad6a1fcd59749f481883c48a06230d652bee05902
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/archives/bitserializer_cpprest_json DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}/archives/bitserializer_cpprest_json
+    PREFER_NINJA
+)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/bitserializer-cpprestjson/cmake)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/bitserializer-cpprestjson RENAME copyright)

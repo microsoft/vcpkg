@@ -1,4 +1,5 @@
 Source: bitserializer-cpprestjson
-Version: 0.8
+Version: 0.9
 Build-Depends: bitserializer, cpprestsdk
-Description: This is an implementation of the BitSerializer archive for serialization JSON (based on CppRestSDK library).
+Description: C++ 17 library for serialization, module for support JSON (implementation based on the CppRestSDK library)
+Homepage: https://bitbucket.org/Pavel_Kisliak/bitserializer
