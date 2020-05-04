@@ -13,6 +13,7 @@ jobs:
   - bash: |
       df -h
     displayName: 'Report on Disk Space Before Environment'
+    condition: always()
   - task: Bash@3
     displayName: 'Initialize Environment'
     inputs:
@@ -20,6 +21,7 @@ jobs:
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Environment'
+    condition: always()
   - task: Bash@3
     displayName: 'Build vcpkg'
     inputs:
@@ -40,6 +42,7 @@ jobs:
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'
+    condition: always()
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: x86-linux Build Failure Logs'
     inputs:
