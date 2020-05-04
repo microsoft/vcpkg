@@ -29,3 +29,4 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/pegtl-2/LICENSE ${CURRENT_PACKAGES_DIR
 
 # Handle collision with latest pegtl
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/pegtl-2/pegtl-config.cmake ${CURRENT_PACKAGES_DIR}/share/pegtl-2/pegtl-2-config.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/pegtl-2/pegtl-config-version.cmake ${CURRENT_PACKAGES_DIR}/share/pegtl-2/pegtl-2-config-version.cmake)
