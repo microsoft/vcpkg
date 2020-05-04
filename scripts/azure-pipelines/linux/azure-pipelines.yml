@@ -10,10 +10,16 @@ jobs:
   timeoutInMinutes: 1440 # 1 day
 
   steps:
+  - bash: |
+      df -h
+    displayName: 'Report on Disk Space Before Environment'
   - task: Bash@3
     displayName: 'Initialize Environment'
     inputs:
       filePath: scripts/azure-pipelines/linux/initialize-environment.sh
+  - bash: |
+      df -h
+    displayName: 'Report on Disk Space After Environment'
   - task: Bash@3
     displayName: 'Build vcpkg'
     inputs:
