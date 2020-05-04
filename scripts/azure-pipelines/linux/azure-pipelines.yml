@@ -39,7 +39,7 @@ jobs:
       arguments: '-baselineFile $(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt -logDir "$(System.ArtifactsDirectory)/xml-results" -outputDir "$(Build.ArtifactStagingDirectory)" -failurelogDir "archives/fail" -triplets "x64-linux" -errorOnRegression'
   - bash: |
       df -h
-    displayName: 'Report on Disk Space'
+    displayName: 'Report on Disk Space After Build'
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: x86-linux Build Failure Logs'
     inputs:
