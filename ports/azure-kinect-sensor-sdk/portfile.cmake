@@ -22,6 +22,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # .rc file needs windows.h, so do not use PREFER_NINJA here
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${FEATURE_OPTIONS}
     -DK4A_SOURCE_LINK=OFF
     -DK4A_MTE_VERSION=ON
