@@ -6,9 +6,7 @@ jobs:
 - job: x64_linux
   pool:
     name: ${{ parameters.poolName }}
-
   timeoutInMinutes: 1440 # 1 day
-
   steps:
   - bash: |
       df -h
