@@ -12,11 +12,9 @@ function(vcpkg_build_qmake)
     if(CMAKE_HOST_WIN32)
         vcpkg_find_acquire_program(JOM)
         set(INVOKE "${JOM}")
-        set(INVOKE_ARGS "")
     else()
         find_program(MAKE make)
         set(INVOKE "${MAKE}")
-        set(INVOKE_ARGS "-j;${VCPKG_CONCURRENCY}")
     endif()
 
     # Make sure that the linker finds the libraries used
@@ -30,10 +28,8 @@ function(vcpkg_build_qmake)
 
     function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
         message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
-        set(JOM_ARGS ${INVOKE_ARGS})
-        list(APPEND JOM_ARGS ${TARGETS})
         vcpkg_execute_required_process(
-            COMMAND ${INVOKE} ${JOM_ARGS}
+            COMMAND ${INVOKE} -j ${VCPKG_CONCURRENCY} ${TARGETS}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
             LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
         )
