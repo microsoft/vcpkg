@@ -1,7 +1,8 @@
 Source: blend2d
-Version: beta_2020-04-19
+Version: beta_2020-05-04
+Homepage: https://github.com/blend2d/blend2d
 Description: Beta 2D Vector Graphics Powered by a JIT Compiler
-Default-Features: jit, logging
+Default-Features: jit, logging, tls
 Supports: !(arm|uwp)
 
 Feature: jit
@@ -9,3 +10,6 @@ Description: Default feature. Enables jit pipeline compilation. Not supported fo
 
 Feature: logging
 Description: Default feature. Enables logging.
+
+Feature: tls
+Description: Default feature. Enables use of thread_local feature. Disable for platforms where thread local storage is expensive or not supported.
