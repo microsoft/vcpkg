@@ -283,6 +283,8 @@ vcpkg_configure_cmake(
     OPTIONS
         ###### ocv_options
         -DOpenCV_INSTALL_BINARIES_PREFIX=
+        -DOPENCV_BIN_INSTALL_PATH=bin
+        -DOPENCV_INCLUDE_INSTALL_PATH=include
         -DOPENCV_LIB_INSTALL_PATH=lib
         -DOPENCV_3P_LIB_INSTALL_PATH=lib
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
