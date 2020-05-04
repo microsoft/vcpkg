@@ -10,6 +10,7 @@ vcpkg_from_github(
         0004-fix-debug-build.patch
         0005-fix-libvpx-linking.patch
         0006-fix-StaticFeatures.patch
+        0007-fix-mp3lame-linking.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -38,7 +39,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
     else()
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make pkg-config)
     endif()
 
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
@@ -139,6 +140,18 @@ if("nvcodec" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
 else()
     set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
+endif()
+
+if("mp3lame" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmp3lame")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libmp3lame")
+endif()
+
+if("opus" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopus")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopus")
 endif()
 
 set(OPTIONS_CROSS "")
