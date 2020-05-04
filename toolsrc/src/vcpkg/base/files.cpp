@@ -724,12 +724,12 @@ namespace vcpkg::Files
             // absolute was called system_complete in experimental filesystem
             return fs::stdfs::system_complete(path, ec);
 #else // ^^^ _WIN32 / !_WIN32 vvv
-            if (!path.is_absolute()) {
+            if (path.is_absolute()) {
+                return path;
+            } else {
                 auto current_path = this->current_path(ec);
                 if (ec) return fs::path();
                 return std::move(current_path) / path;
-            } else {
-                return path;
             }
 #endif
 #endif
