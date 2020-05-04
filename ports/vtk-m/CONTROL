@@ -2,7 +2,7 @@ Source: vtk-m
 Version: 1.5.0
 Homepage: https://gitlab.kitware.com/vtk/vtk-m/
 Description: VTK-m is a toolkit of scientific visualization algorithms for emerging processor architectures.
-Supports: x64
+Supports: x64 & !uwp
 
 Feature: cuda
 Description: Use the NVIDIA CUDA device adapter.
