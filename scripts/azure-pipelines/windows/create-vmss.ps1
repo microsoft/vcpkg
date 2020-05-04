@@ -308,7 +308,7 @@ $Nic = New-AzNetworkInterface `
   -Location $Location `
   -Subnet $VirtualNetwork.Subnets[0]
 
-$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize
+$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -Priority 'Spot' -MaxPrice -1
 $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Windows `
