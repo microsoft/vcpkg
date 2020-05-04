@@ -1,0 +1,13 @@
+diff --git a/ThirdParty/pegtl/vtk_pegtl.h.in b/ThirdParty/pegtl/vtk_pegtl.h.in
+index 12e26962b..5af91e44f 100644
+--- a/ThirdParty/pegtl/vtk_pegtl.h.in	
++++ b/ThirdParty/pegtl/vtk_pegtl.h.in
+@@ -19,7 +19,7 @@
+ #cmakedefine01 VTK_MODULE_USE_EXTERNAL_vtkpegtl
+ 
+ #if VTK_MODULE_USE_EXTERNAL_vtkpegtl
+-# define VTK_PEGTL(x) <tao/x>
++# define VTK_PEGTL(x) <x>
+ #else
+ # include <vtkpegtl/include/tao/pegtl.hpp>
+ # define VTK_PEGTL(x) <vtkpegtl/include/tao/x>

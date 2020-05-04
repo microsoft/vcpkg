@@ -95,9 +95,9 @@ vcpkg_from_github(
         FindLZ4.patch
         Findproj.patch
         vtkm.patch # To include an external VTKm build (v.1.5 required)
+        pegtl.patch
         ##pythonwrapper.patch # needs checking
         ##NoUndefDebug.patch # needs checking
-
         # Last patch TODO: Patch out internal loguru
 )
 
@@ -138,7 +138,7 @@ vcpkg_configure_cmake(
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
-        -DVTK_MODULE_ENABLE_VTK_IOMotionFX:STRING=NO  # currently buggy
+        #-DVTK_MODULE_ENABLE_VTK_IOMotionFX:STRING=NO  # currently buggy
         ${ADDITIONAL_OPTIONS}
 )
 
