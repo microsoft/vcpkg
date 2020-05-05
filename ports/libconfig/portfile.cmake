@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hyperrealm/libconfig
@@ -19,6 +17,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 foreach(FILE ${CURRENT_PACKAGES_DIR}/include/libconfig.h++ ${CURRENT_PACKAGES_DIR}/include/libconfig.h)
   file(READ ${FILE} _contents)
   string(REPLACE "defined(LIBCONFIGXX_EXPORTS)" "0" _contents "${_contents}")
@@ -34,6 +34,4 @@ foreach(FILE ${CURRENT_PACKAGES_DIR}/include/libconfig.h++ ${CURRENT_PACKAGES_DI
   file(WRITE ${FILE} "${_contents}")
 endforeach()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libconfig RENAME copyright)
-
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

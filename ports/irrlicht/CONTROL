@@ -1,8 +1,11 @@
 Source: irrlicht
-Version: 1.8.4-2
+Version: 1.8.4-5
 Homepage: http://irrlicht.sourceforge.net
 Description: Irrlicht lightning fast 3d engine
 Build-Depends: zlib, libpng, bzip2, libjpeg-turbo
+
+Feature: unicode
+Description: Support unicode path on windows
 
 Feature: fast-fpu
 Description: Enable fast maths (at the expense of precision)

@@ -1,3 +1,4 @@
 Source: mecab
-Version:0.996
+Version: 1.0
 Description: A morphological analysis engine based on CRF
+Supports: !(uwp|arm|arm64)

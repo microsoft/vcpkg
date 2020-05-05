@@ -1,30 +1,25 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF ddeac617c9914284038241870cb99ae174fb3755
-    SHA512 c45f322dfa3fba42db0561d95546159cc5e0768345d27f0bee53bdb71e77d5892e2e9bea50a625094ebf3c67b0c3fe0a8edea2660ebcb4fd0991fb0602055bc1
+    REF 6ec4107907552db927be8601aed97b5a4b83d33d#version 1.3.0
+    SHA512 28b99d822d7be0348d4e367c2d92cd2bd4a5563806454388ad3c7d9817ef91fa7b4408d15ce4c77ac6a8ad2dd7db173899fdaf7881585282bf57f4c487909be6
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" NNG_STATIC_LIB)
 
-if("mbedtls" IN_LIST FEATURES)
-    set(NNG_ENABLE_TLS ON)
-else()
-    set(NNG_ENABLE_TLS OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    mbedtls NNG_ENABLE_TLS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
         -DNNG_STATIC_LIB=${NNG_STATIC_LIB}
         -DNNG_TESTS=OFF
         -DNNG_ENABLE_NNGCAT=OFF
-        -DNNG_ENABLE_TLS=${NNG_ENABLE_TLS}
 )
 
 vcpkg_install_cmake()
@@ -55,6 +50,6 @@ else()
 endif()
 
 # Put the licence file where vcpkg expects it
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/nng/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()

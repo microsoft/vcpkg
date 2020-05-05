@@ -47,10 +47,28 @@ function(configure_qt)
     list(APPEND _csc_OPTIONS_RELEASE -release)
     list(APPEND _csc_OPTIONS_DEBUG -debug)
 
-    foreach(_buildname ${VCPKG_BUILD_LIST})
-        set(_build_triplet ${VCPKG_BUILD_TRIPLET_${_buildname}})
+    #Replace with VCPKG variables if PR #7733 is merged
+    unset(BUILDTYPES)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
+        set(_buildname "DEBUG")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "dbg")
+        set(_path_suffix_${_buildname} "/debug")
+        set(_build_type_${_buildname} "debug")        
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
+        set(_buildname "RELEASE")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "rel")
+        set(_path_suffix_${_buildname} "")
+        set(_build_type_${_buildname} "release")        
+    endif()
+    unset(_buildname)
+    
+    foreach(_buildname ${BUILDTYPES})
+        set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
         message(STATUS "Configuring ${_build_triplet}")
-        set(_build_dir "${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}}")
+        set(_build_dir "${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         file(MAKE_DIRECTORY ${_build_dir})
         # These paths get hardcoded into qmake. So point them into the CURRENT_INSTALLED_DIR instead of CURRENT_PACKAGES_DIR
         # makefiles will be fixed to install into CURRENT_PACKAGES_DIR in install_qt
@@ -58,22 +76,24 @@ function(configure_qt)
                 -prefix ${CURRENT_INSTALLED_DIR}
                 -extprefix ${CURRENT_INSTALLED_DIR}
                 ${EXT_BIN_DIR}
-                -hostprefix ${CURRENT_INSTALLED_DIR}/tools/qt5${VCPKG_PATH_SUFFIX_${_buildname}}
-                -hostlibdir ${CURRENT_INSTALLED_DIR}/tools/qt5${VCPKG_PATH_SUFFIX_${_buildname}}/lib # could probably be move to manual-link
-                -hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5${VCPKG_PATH_SUFFIX_${_buildname}}/bin 
+                -hostprefix ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                #-hostprefix ${CURRENT_INSTALLED_DIR}/tools/qt5
+                -hostlibdir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib # could probably be move to manual-link
+                -hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin 
+                #-hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5/bin 
                 # Qt VS Plugin requires a /bin subfolder with the executables in the root dir. But to use the wizard a correctly setup lib folder is also required
                 # So with the vcpkg layout there is no way to make it work unless all dll are are copied to tools/qt5/bin and all libs to tools/qt5/lib
-                -archdatadir ${CURRENT_INSTALLED_DIR}/tools/qt5${VCPKG_PATH_SUFFIX_${_buildname}}
-                -datadir ${CURRENT_INSTALLED_DIR}${_path_suffix}/share/qt5${VCPKG_PATH_SUFFIX_${_buildname}}
-                -plugindir ${CURRENT_INSTALLED_DIR}${VCPKG_PATH_SUFFIX_${_buildname}}/plugins
-                -qmldir ${CURRENT_INSTALLED_DIR}${VCPKG_PATH_SUFFIX_${_buildname}}/qml
+                -archdatadir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                -datadir ${CURRENT_INSTALLED_DIR}${_path_suffix}/share/qt5${_path_suffix_${_buildname}}
+                -plugindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/plugins
+                -qmldir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/qml
                 -headerdir ${CURRENT_INSTALLED_DIR}/include
-                -libexecdir ${CURRENT_INSTALLED_DIR}/tools/qt5${VCPKG_PATH_SUFFIX_${_buildname}}
-                -bindir ${CURRENT_INSTALLED_DIR}${VCPKG_PATH_SUFFIX_${_buildname}}/bin
-                -libdir ${CURRENT_INSTALLED_DIR}${VCPKG_PATH_SUFFIX_${_buildname}}/lib
+                -libexecdir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                -bindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin
+                -libdir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include
-                -L ${CURRENT_INSTALLED_DIR}${VCPKG_PATH_SUFFIX_${_buildname}}/lib 
-                -L ${CURRENT_INSTALLED_DIR}${VCPKG_PATH_SUFFIX_${_buildname}}/lib/manual-link
+                -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib 
+                -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link
                 -xplatform ${_csc_TARGET_PLATFORM}
             )
         
@@ -83,7 +103,7 @@ function(configure_qt)
             endif()
             vcpkg_execute_required_process(
                 COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" "${INVOKE_OPTIONS}" -- ${BUILD_OPTIONS}
-                WORKING_DIRECTORY "${_build_dir}"
+                WORKING_DIRECTORY ${_build_dir}
                 LOGNAME config-${_build_triplet}
             )
         else()# call configure (builds qmake for triplet and calls it like above)
@@ -109,9 +129,6 @@ function(configure_qt)
         string(REPLACE "Sysroot=\n" "" _contents ${_contents})
         string(REPLACE "SysrootifyPrefix=false\n" "" _contents ${_contents})
         file(WRITE "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${_build_type_${_buildname}}.conf" "${_contents}")     
-        
-        unset(_build_triplet)
-        unset(_build_dir)
     endforeach()  
 
 endfunction()

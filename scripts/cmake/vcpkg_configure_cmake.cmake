@@ -38,7 +38,7 @@
 ## Specifies the precise generator to use.
 ##
 ## This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build.
-## If used for this purpose, it should be set to "NMake Makefiles".
+## If used for this purpose, it should be set to `"NMake Makefiles"`.
 ##
 ## ### OPTIONS
 ## Additional options passed to CMake during the configuration.
@@ -59,7 +59,7 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_configure_cmake)
-    cmake_parse_arguments(_csc 
+    cmake_parse_arguments(_csc
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
@@ -173,13 +173,13 @@ function(vcpkg_configure_cmake)
             "Invalid setting for VCPKG_LIBRARY_LINKAGE: \"${VCPKG_LIBRARY_LINKAGE}\". "
             "It must be \"static\" or \"dynamic\"")
     endif()
-    
+
     macro(check_both_vars_are_set var1 var2)
         if((NOT DEFINED ${var1} OR NOT DEFINED ${var2}) AND (DEFINED ${var1} OR DEFINED ${var2}))
             message(FATAL_ERROR "Both ${var1} and ${var2} must be set.")
         endif()
     endmacro()
-    
+
     check_both_vars_are_set(VCPKG_CXX_FLAGS_DEBUG VCPKG_C_FLAGS_DEBUG)
     check_both_vars_are_set(VCPKG_CXX_FLAGS_RELEASE VCPKG_C_FLAGS_RELEASE)
     check_both_vars_are_set(VCPKG_CXX_FLAGS VCPKG_C_FLAGS)
@@ -190,7 +190,9 @@ function(vcpkg_configure_cmake)
     endif()
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        if(VCPKG_TARGET_IS_WINDOWS)
+        if(VCPKG_TARGET_IS_MINGW) # MinGW also defines VCPKG_TARGET_IS_WINDOWS
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
+        elseif(VCPKG_TARGET_IS_WINDOWS)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
         elseif(VCPKG_TARGET_IS_LINUX)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
@@ -200,6 +202,8 @@ function(vcpkg_configure_cmake)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
         elseif(VCPKG_TARGET_IS_FREEBSD)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
         else()
             message(STATUS "Unknown VCPKG target. No VCPKG_CHAINLOAD_TOOLCHAIN_FILE set!")
         endif()
@@ -239,7 +243,7 @@ function(vcpkg_configure_cmake)
     endif()
 
     # Sets configuration variables for macOS builds
-    foreach(config_var  INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT)
+    foreach(config_var  INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED VCPKG_${config_var})
             list(APPEND _csc_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
         endif()

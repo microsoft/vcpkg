@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO danielaparker/jsoncons
-    REF v0.134.0
-    SHA512 2c075dd415796f25d24ba9a458893435b1b5b2155978c7722aa1e676e41c5ec53a47b60346c68d30e8c24cc7bb1fb32cd71f6c7be226283dde39de700c8b4f0d
+    REF 36c0fa7895da3adef6eab8aec1e9c2f5720fc110 # v0.150.0
+    SHA512 ef1379c40c31f3974a707edd133c1fcff544535f91680caee1f8616f04b1bb56bfdd2aedb46e89b73b34572296511557158d66ea1002a0499d68cacd23143d29
     HEAD_REF master
 )
 
@@ -20,5 +18,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jsoncons)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/jsoncons/LICENSE ${CURRENT_PACKAGES_DIR}/share/jsoncons/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

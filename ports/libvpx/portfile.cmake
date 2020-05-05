@@ -1,21 +1,20 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "Linux" "OSX")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(LIBVPX_VERSION 1.8.1)
 set(LIBVPX_HASH 615476a929e46befdd4782a39345ce55cd30176ecb2fcd8a875c31694ae2334b395dcab9c5ba58d53ceb572ed0c022d2a3748ca4bbd36092e22b01cf3c9b2e8e)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libvpx-${LIBVPX_VERSION})
-
-string(REGEX REPLACE "\\\\" "/" SOURCE_PATH_UNIX ${SOURCE_PATH})
-string(REGEX REPLACE "\\\\" "/" CURRENT_PACKAGES_DIR_UNIX ${CURRENT_PACKAGES_DIR})
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/webmproject/libvpx/archive/v${LIBVPX_VERSION}/libvpx-${LIBVPX_VERSION}.tar.gz"
     FILENAME "libvpx-${LIBVPX_VERSION}.tar.gz"
     SHA512 ${LIBVPX_HASH}
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 vcpkg_find_acquire_program(YASM)
 vcpkg_find_acquire_program(PERL)
@@ -24,7 +23,6 @@ vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 
-message(STATUS "PERL_EXE_PATH ; ${PERL_EXE_PATH}")
 set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
@@ -55,7 +53,7 @@ file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 vcpkg_execute_required_process(
     COMMAND
         ${BASH} --noprofile --norc
-        "${SOURCE_PATH_UNIX}/configure"
+        "${SOURCE_PATH}/configure"
         --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
         ${LIBVPX_CRT_LINKAGE}
         --disable-examples
@@ -73,6 +71,7 @@ vcpkg_execute_required_process(
 
 vcpkg_build_msbuild(
     PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
+    OPTIONS /p:UseEnv=True
 )
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
