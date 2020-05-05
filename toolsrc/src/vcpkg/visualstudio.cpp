@@ -119,6 +119,22 @@ namespace vcpkg::VisualStudio
             }
         }
 
+        // VS2019 instance from environment variable
+        auto maybe_vs160_comntools = System::get_environment_variable("vs160comntools");
+        if (const auto path_as_string = maybe_vs160_comntools.get())
+        {
+            // We want lexically_normal(), but it is not available
+            // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash.
+            auto common7_tools = fs::u8path(*path_as_string);
+            if (common7_tools.filename().empty())
+                instances.emplace_back(common7_tools.parent_path().parent_path().parent_path(),
+                                       "16.0",
+                                       VisualStudioInstance::ReleaseType::LEGACY);
+            else
+                instances.emplace_back(
+                    common7_tools.parent_path().parent_path(), "16.0", VisualStudioInstance::ReleaseType::LEGACY);
+        }
+
         const auto append_if_has_cl_vs140 = [&](fs::path&& path_root) {
             const auto cl_exe = path_root / "VC" / "bin" / "cl.exe";
             const auto vcvarsall_bat = path_root / "VC" / "vcvarsall.bat";
@@ -141,26 +157,7 @@ namespace vcpkg::VisualStudio
         }
 
         // VS2015 instance from Program Files
-        append_if_has_cl_vc140(program_files_32_bit / "Microsoft Visual Studio 14.0");
-
-        const auto append_if_has_cl_vc160 = [&](fs::path&& path_root) {
-            const auto cl_exe = path_root / "VC" / "Tools" / "MSVC" / "14.25.28610" / "bin" / "Hostx64" / "x64" / "cl.exe";
-            const auto vcvarsall_bat = path_root / "VC" / "Auxiliary"/ "Build" / "vcvarsall.bat";
-
-            if (fs.exists(cl_exe) && fs.exists(vcvarsall_bat))
-                instances.emplace_back(std::move(path_root), "16.0", VisualStudioInstance::ReleaseType::LEGACY);
-        };
-
-        // VS2019 instance from environment variable
-        auto maybe_vs160_comntools = System::get_environment_variable("vs160comntools");
-        if (const auto path_as_string = maybe_vs160_comntools.get())
-        {
-            // We want lexically_normal(), but it is not available
-            // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash. Try both.
-            auto common7_tools = fs::path{*path_as_string};
-            append_if_has_cl_vc160(fs::path{*path_as_string}.parent_path().parent_path());
-            append_if_has_cl_vc160(fs::path{*path_as_string}.parent_path().parent_path().parent_path());
-        }
+        append_if_has_cl_vs140(program_files_32_bit / "Microsoft Visual Studio 14.0");
 
         return instances;
     }
