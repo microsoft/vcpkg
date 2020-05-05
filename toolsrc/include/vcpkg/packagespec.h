@@ -139,7 +139,7 @@ namespace vcpkg
 
     Optional<std::string> parse_feature_name(Parse::ParserBase& parser);
     Optional<std::string> parse_package_name(Parse::ParserBase& parser);
-    ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(CStringView input);
+    ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(StringView input);
     Optional<ParsedQualifiedSpecifier> parse_qualified_specifier(Parse::ParserBase& parser);
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);

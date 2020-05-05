@@ -34,7 +34,7 @@ namespace vcpkg::PortFileProvider
             {
                 if (!overlay_path.empty())
                 {
-                    auto overlay = fs::stdfs::canonical(fs::u8path(overlay_path));
+                    auto overlay = fs.canonical(VCPKG_LINE_INFO, fs::u8path(overlay_path));
 
                     Checks::check_exit(VCPKG_LINE_INFO,
                                        filesystem.exists(overlay),
