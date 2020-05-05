@@ -33,7 +33,7 @@
 ## Need to use autoconfig to generate configure file.
 ##
 ## ### PRERUN_SHELL
-## Script that needs to be called before configuration
+## Script that needs to be called before configuration (do not use for batch files which simply call autoconf or configure)
 ##
 ## ### OPTIONS
 ## Additional options passed to configure during the configuration.
@@ -197,7 +197,8 @@ function(vcpkg_configure_make)
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV RANLIB ":") # Trick to ignore the RANLIB call
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV NM "dumpbin.exe -symbols -headers -all") 
-        # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
+        # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
+        # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
         
         # Other maybe interesting variables to control
@@ -386,9 +387,41 @@ function(vcpkg_configure_make)
         )
     endif()
 
-    # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
-        set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        set(_VAR_SUFFIX DEBUG)
+        set(PATH_SUFFIX_${_VAR_SUFFIX} "/debug")
+        set(SHORT_NAME_${_VAR_SUFFIX} "dbg")
+        list(APPEND _buildtypes ${_VAR_SUFFIX})
+        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
+            string(REGEX REPLACE "[ \t]+/" " -" CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_C_FLAGS_${_VAR_SUFFIX}}")
+            string(REGEX REPLACE "[ \t]+/" " -" CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_CXX_FLAGS_${_VAR_SUFFIX}}")
+            string(REGEX REPLACE "[ \t]+/" " -" LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
+        else()
+            set(CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
+            set(CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
+            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/ -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
+        endif()
+        unset(_VAR_SUFFIX)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(_VAR_SUFFIX RELEASE)
+        set(PATH_SUFFIX_${_VAR_SUFFIX} "")
+        set(SHORT_NAME_${_VAR_SUFFIX} "rel")
+        list(APPEND _buildtypes ${_VAR_SUFFIX})
+        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
+            string(REGEX REPLACE "[ \t]+/" " -" CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_C_FLAGS_${_VAR_SUFFIX}}")
+            string(REGEX REPLACE "[ \t]+/" " -" CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_CXX_FLAGS_${_VAR_SUFFIX}}")
+            string(REGEX REPLACE "[ \t]+/" " -" LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
+        else()
+            set(CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
+            set(CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
+            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/ -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
+        endif()
+        unset(_VAR_SUFFIX)
+    endif()
+
+    foreach(_buildtype IN LISTS _buildtypes)
+        set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}")
         file(MAKE_DIRECTORY "${TAR_DIR}")
         file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${SRC_DIR}")
 
@@ -397,52 +430,38 @@ function(vcpkg_configure_make)
             set(RELATIVE_BUILD_PATH .)
         endif()
 
-        set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}/debug/lib/pkgconfig")
+        set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_buildtype}}/lib/pkgconfig")
         set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
 
         if(ENV{PKG_CONFIG_PATH})
-            set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
+            set(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype} $ENV{PKG_CONFIG_PATH})
             set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_INSTALLED_SHARE_DIR}:$ENV{PKG_CONFIG_PATH}")
         else()
             set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_INSTALLED_SHARE_DIR}")
         endif()
-        # Setup debug enviromnent
-        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
-            set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_C_FLAGS_DEBUG}")
-            string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
-            set(ENV{CFLAGS} ${TMP_CFLAGS})
-            
-            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_CXX_FLAGS_DEBUG}")
-            string(REGEX REPLACE "[ \t]+/" " -" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
-            set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
-            
-            set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} -L${_VCPKG_INSTALLED}/debug/lib ${VCPKG_LINKER_FLAGS_DEBUG}")
-            string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
-            set(ENV{LDFLAGS} ${TMP_LDFLAGS})
 
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
-            
-            set(ENV{LIBPATH} "${_VCPKG_INSTALLED}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${LIBPATH_BACKUP}")
-            
-            set(dbg_command
-                ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
+        # Setup enviromnent
+        set(ENV{CFLAGS} ${CFLAGS_${_buildtype}})
+        set(ENV{CXXFLAGS} ${CXXFLAGS_${_buildtype}})
+        set(ENV{LDFLAGS} ${LDFLAGS_${_buildtype}})
+        set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}")
+        set(ENV{LIBPATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib${VCPKG_HOST_PATH_SEPARATOR}${LIBPATH_BACKUP}")
+ 
+        set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
+        set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
+
+        if (CMAKE_HOST_WIN32)   
+            set(command ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
         else()
-            set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
-            set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
-            set(ENV{LDFLAGS} "-L${_VCPKG_INSTALLED}/debug/lib/ -L${_VCPKG_INSTALLED}/debug/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_DEBUG}")
-            set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
-            set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
-            # endif()
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
-            set(dbg_command /bin/sh "./${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG})
+            set(command /bin/bash "./${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
         endif()
 
         if (NOT _csc_SKIP_CONFIGURE)
-            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+            message(STATUS "Configuring ${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}")
             vcpkg_execute_required_process(
-                COMMAND ${dbg_command}
+                COMMAND ${command}
                 WORKING_DIRECTORY "${TAR_DIR}"
-                LOGNAME config-${TARGET_TRIPLET}-dbg
+                LOGNAME config-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}
             )
             if(EXISTS "${TAR_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
                 set(_file "${TAR_DIR}/libtool")
@@ -452,87 +471,14 @@ function(vcpkg_configure_make)
             endif()
         endif()
 
-        if(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG)
-            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_DEBUG}")
+        if(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype})
+            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype}}")
         else()
             unset(ENV{PKG_CONFIG_PATH})
         endif()
-    endif()
-
-    # Configure release
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}/lib/pkgconfig")
-        set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
-
-        if(ENV{PKG_CONFIG_PATH})
-            set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_INSTALLED_SHARE_DIR}:$ENV{PKG_CONFIG_PATH}")
-        else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_INSTALLED_SHARE_DIR}")
-        endif()
-
-        set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        file(MAKE_DIRECTORY "${TAR_DIR}")
-        file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${SRC_DIR}")
-
-        if(_csc_COPY_SOURCE)
-            file(COPY "${SRC_DIR}/" DESTINATION "${TAR_DIR}")
-             set(RELATIVE_BUILD_PATH .)
-        endif()
+        unset(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype})
+    endforeach()
         
-        # Setup release enviromnent
-        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
-            set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_C_FLAGS_RELEASE}")
-            string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
-            set(ENV{CFLAGS} ${TMP_CFLAGS})
-            
-            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_CXX_FLAGS_RELEASE}")
-            string(REGEX REPLACE "[ \t]+/" " -" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
-            set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
-            
-            set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} -L${_VCPKG_INSTALLED}/lib ${VCPKG_LINKER_FLAGS_RELEASE}")
-            string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
-            set(ENV{LDFLAGS} ${TMP_LDFLAGS})
-            set(ENV{LIBPATH} "${_VCPKG_INSTALLED}/lib${VCPKG_HOST_PATH_SEPARATOR}${LIBPATH_BACKUP}")
-
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
-            set(rel_command
-                ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE}${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
-        else()
-            set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
-            set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_RELEASE}")
-            set(ENV{LDFLAGS} "-L${_VCPKG_INSTALLED}/lib/ -L${_VCPKG_INSTALLED}/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_RELEASE}")
-            set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/${LIBRARY_PATH_PATHLIKE_CONCAT}")
-            set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
-            # endif()
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
-            set(rel_command /bin/sh "./${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE})
-        endif()
-        
-
-
-        if (NOT _csc_SKIP_CONFIGURE)
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-            vcpkg_execute_required_process(
-                COMMAND ${rel_command}
-                WORKING_DIRECTORY "${TAR_DIR}"
-                LOGNAME config-${TARGET_TRIPLET}-rel
-            )
-            if(EXISTS "${TAR_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-                set(_file "${TAR_DIR}/libtool")
-                file(READ "${_file}" _contents)
-                string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
-                file(WRITE "${_file}" "${_contents}")
-            endif()
-        endif()
-
-        if(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE)
-            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_RELEASE}")
-        else()
-            unset(ENV{PKG_CONFIG_PATH})
-        endif()
-    endif()
-    
     # Restore enviromnent
     set(ENV{CFLAGS} "${C_FLAGS_BACKUP}")
     set(ENV{CXXFLAGS} "${CXX_FLAGS_BACKUP}")
