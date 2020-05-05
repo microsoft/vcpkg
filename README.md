@@ -77,3 +77,9 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 ## License
 
 Code licensed under the [MIT License](LICENSE.txt).
+
+## Telemetry
+
+vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by running `bootstrap-vcpkg.bat` or `bootstrap-vcpkg.sh` with `-disableMetrics`.
+
+Read more about vcpkg telemetry at docs/about/privacy.md
