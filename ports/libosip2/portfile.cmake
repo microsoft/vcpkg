@@ -1,5 +1,3 @@
-#vcpkg_fail_port_install(MESSAGE "${PORT} only supports Unix currently." ON_TARGET "Windows") 
-
 set(LIBOSIP2_VER "5.1.0")
 
 vcpkg_download_distfile(ARCHIVE
@@ -13,12 +11,16 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(OPTIONS --enable-mt=no)
+endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${OPTIONS}
 )
 
 vcpkg_install_make()
-#vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

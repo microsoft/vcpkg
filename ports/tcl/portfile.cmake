@@ -99,7 +99,7 @@ else()
     )
     
     vcpkg_install_make()
-    #vcpkg_fixup_pkgconfig()?
+    vcpkg_fixup_pkgconfig()?
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

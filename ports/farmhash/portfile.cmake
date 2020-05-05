@@ -1,3 +1,4 @@
+#Requires a compiler which understands '__builtin_unreachable': 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
 
 vcpkg_from_github(

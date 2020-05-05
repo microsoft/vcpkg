@@ -67,7 +67,7 @@ else()
     )
     
     vcpkg_install_make()
-    #vcpkg_fixup_pkgconfig() <- TODO! Needs merging of PR #9861 
+    vcpkg_fixup_pkgconfig()
     
     file(GLOB SDL1_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     foreach (SDL1_TOOL ${SDL1_TOOLS})
