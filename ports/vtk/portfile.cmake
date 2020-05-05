@@ -16,15 +16,6 @@ if("qt" IN_LIST FEATURES)
     )
 endif()
 
-#if("qtdesignerplugin" IN_LIST FEATURES)
-#    list(APPEND ADDITIONAL_OPTIONS
-#        -DVTK_BUILD_QT_DESIGNER_PLUGIN=ON
-#    )
-#else()
-#    list(APPEND ADDITIONAL_OPTIONS
-#        -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF)
-#endif()
-
 if("vtkm" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKm=YES
