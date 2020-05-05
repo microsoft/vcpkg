@@ -39,9 +39,6 @@ function(vcpkg_configure_qmake)
         list(APPEND _csc_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
     endif()
 
-    list(APPEND _csc_OPTIONS_RELEASE CONFIG+=release CONFIG-=debug)
-    list(APPEND _csc_OPTIONS_DEBUG CONFIG-=release CONFIG+=debug)
-
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
         list(APPEND _csc_OPTIONS "CONFIG*=static-runtime")
     endif()
@@ -67,6 +64,7 @@ function(vcpkg_configure_qmake)
             set(BUILD_OPT -- ${_csc_BUILD_OPTIONS} ${_csc_BUILD_OPTIONS_${buildtype}})
         endif()
         file(MAKE_DIRECTORY "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}")
+        list(APPEND _csc_OPTIONS ${VCPKG_BUILD_QMAKE_CONFIG_${_buildname}})
         vcpkg_execute_required_process(
             COMMAND ${QMAKE_COMMAND}
                     ${_csc_OPTIONS} ${_csc_OPTIONS_${buildtype}} ${_csc_SOURCE_PATH}
