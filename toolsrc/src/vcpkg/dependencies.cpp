@@ -106,15 +106,13 @@ namespace vcpkg::Dependencies
                     &m_scfl.source_control_file->find_dependencies_for_feature(feature).value_or_exit(VCPKG_LINE_INFO);
 
                 std::vector<FeatureSpec> dep_list;
-                if (maybe_vars)
+                if (auto vars = maybe_vars.get())
                 {
                     // Qualified dependency resolution is available
-                    auto fullspec_list = filter_dependencies(
-                        *qualified_deps, m_spec.triplet(), maybe_vars.value_or_exit(VCPKG_LINE_INFO));
+                    auto fullspec_list = filter_dependencies(*qualified_deps, m_spec.triplet(), *vars);
 
                     for (auto&& fspec : fullspec_list)
                     {
-                        // TODO: this is incorrect and does not handle default features nor "*"
                         Util::Vectors::append(&dep_list, fspec.to_feature_specs({"default"}, {"default"}));
                     }
 
@@ -560,7 +558,7 @@ namespace vcpkg::Dependencies
                                                      ? RequestType::USER_REQUESTED
                                                      : RequestType::AUTO_SELECTED;
 
-                auto maybe_ipv = status_db.find_all_installed(spec);
+                auto maybe_ipv = status_db.get_installed_package_view(spec);
 
                 if (auto p_ipv = maybe_ipv.get())
                 {

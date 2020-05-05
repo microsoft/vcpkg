@@ -50,25 +50,7 @@ file(COPY
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(EXECUTABLE_SUFFIX ".exe")
-else()
-    set(EXECUTABLE_SUFFIX "")
-endif()
-
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/zpinger${EXECUTABLE_SUFFIX}
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-if(ZYRE_BUILD_SHARED)
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/debug/bin/zpinger${EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/zpinger${EXECUTABLE_SUFFIX})
-else()
-    file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+vcpkg_copy_tools(TOOL_NAMES zpinger AUTO_CLEAN)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
