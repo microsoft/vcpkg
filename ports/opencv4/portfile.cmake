@@ -50,7 +50,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if("halide" IN_LIST FEATURES)
-  message(WARNING "The Halide feature is currently untested")
+  message(WARNING "The Halide feature is currently broken")
 endif()
 
 # Cannot use vcpkg_check_features() for "gtk", "ipp", "openmp", "ovis", "tbb", and "vtk".
