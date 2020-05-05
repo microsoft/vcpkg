@@ -142,6 +142,9 @@ vcpkg_configure_cmake(
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_BUILD_TESTS=OFF
+        # Disable optional dependencies to libxml2 and zlib
+        -DLLVM_ENABLE_LIBXML2=OFF
+        -DLLVM_ENABLE_ZLIB=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
