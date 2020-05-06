@@ -9,5 +9,13 @@ Description: Build ITKVtkGlue module.
 Build-Depends: vtk[core]
 
 Feature: python
-Description: Python functionality for VTK
+Description: Python functionality for ITK
 Build-Depends: python3
+
+Feature: cufftw
+Description: Use CUDA FFTW
+Build-Depends: cuda
+
+Feature: opencl
+Description: Use OpenCL
+Build-Depends: opencl

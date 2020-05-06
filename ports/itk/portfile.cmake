@@ -9,10 +9,13 @@ vcpkg_from_github(
     PATCHES
         #fix_openjpeg_search.patch
         #fix_libminc_config_path.patch
+        wip.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "vtk"         Module_ITKVtkGlue
+    "vtk"          Module_ITKVtkGlue
+    "cufftw"       ITK_USE_CUFFTW
+    "opencl"       ITK_USE_GPU
     #"test"        ITK_USE_SYSTEM_GOOGLETEST
 )
 
@@ -21,11 +24,17 @@ if("python" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
-        "-DPython3_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
-        "-DPython3_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/python3.7"
-        "-DPython3_EXECUTABLE=${PYTHON3}"
+        "-DPython3_FIND_ABI=ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY"
+        "-DPython3_VERSION=3.7"
+        #"-DPython3_FOUND=ON"
+        "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
+        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
+        -DPython3_LIBRARIES="debug\\\\\\\\\\\\\\\\\\\\\\\\;${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib\\\\\\\\\\\\\\\\\\\\\\\\;optimized\\\\\\\\\\\\\\\\\\\\\\\\;${CURRENT_INSTALLED_DIR}/lib/python37.lib"
+        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7"
+        "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
     )
+    list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib")
+    list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python37.lib")
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
@@ -41,6 +50,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
+        -DITK_DOXYGEN_HTML=OFF
         -DDO_NOT_INSTALL_ITK_TEST_DRIVER=ON
         -DITK_SKIP_PATH_LENGTH_CHECKS=ON
         -DITK_INSTALL_DATA_DIR=share/itk/data
@@ -56,12 +66,16 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_TIFF=ON
         -DITK_USE_SYSTEM_ZLIB=ON
         -DITK_USE_SYSTEM_EIGEN=ON
-        # Newly added
         -DITK_USE_SYSTEM_FFTW=ON
+        -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past
         # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break
         -DITK_FORBID_DOWNLOADS=OFF
-        -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past
 
+        
+        # TODO
+        #-DVXL_USE_GEOTIFF=ON
+        
+        
         #-DModule_IOSTL=ON # example how to turn on a non-default module
         #-DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
         #-DModule_RLEImage=ON # example how to turn on a remote module
@@ -72,6 +86,8 @@ vcpkg_configure_cmake(
         -DITK_WRAP_vector_double=ON
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
+    OPTIONS_DEBUG   ${OPTIONS_DEBUG}
+    OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
 
 vcpkg_install_cmake()

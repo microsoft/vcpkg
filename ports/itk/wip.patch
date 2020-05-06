@@ -1,0 +1,50 @@
+diff --git a/CMake/ITKModuleMacros.cmake b/CMake/ITKModuleMacros.cmake
+index da9f3a902..d2d30f906 100644
+--- a/CMake/ITKModuleMacros.cmake	
++++ b/CMake/ITKModuleMacros.cmake
+@@ -162,9 +162,6 @@ macro(itk_module_impl)
+     foreach(dep IN LISTS ITK_MODULE_${itk-module}_DEPENDS)
+       list(APPEND ${itk-module}_LIBRARIES "${${dep}_LIBRARIES}")
+     endforeach()
+-    if(${itk-module}_LIBRARIES)
+-      list(REMOVE_DUPLICATES ${itk-module}_LIBRARIES)
+-    endif()
+   endif()
+ 
+   if(EXISTS ${${itk-module}_SOURCE_DIR}/include)
+diff --git a/Modules/IO/HDF5/CMakeLists.txt b/Modules/IO/HDF5/CMakeLists.txt
+index ef153626e..f6c474584 100644
+--- a/Modules/IO/HDF5/CMakeLists.txt	
++++ b/Modules/IO/HDF5/CMakeLists.txt
+@@ -1,3 +1,3 @@
+ project(ITKIOHDF5)
+-set(ITKIOHDF5_LIBRARIES ITKIOHDF5)
++#set(ITKIOHDF5_LIBRARIES ITKIOHDF5)
+ itk_module_impl()
+diff --git a/Modules/ThirdParty/HDF5/CMakeLists.txt b/Modules/ThirdParty/HDF5/CMakeLists.txt
+index a700ecdfb..a66399be9 100644
+--- a/Modules/ThirdParty/HDF5/CMakeLists.txt	
++++ b/Modules/ThirdParty/HDF5/CMakeLists.txt
+@@ -25,11 +25,11 @@ endif()
+ ")
+   endif()
+ 
+-  set(ITKHDF5_LIBRARIES )
+-  if(BUILD_SHARED_LIBS)
+-    list(APPEND ITKHDF5_LIBRARIES ${HDF5_C_SHARED_LIBRARY} ${HDF5_CXX_SHARED_LIBRARY})
++  set(ITKHDF5_LIBRARIES)
++  if(HDF5_BUILD_SHARED_LIBS)
++    list(APPEND ITKHDF5_LIBRARIES hdf5::hdf5_cpp-shared hdf5::hdf5-shared)
+   else()
+-    list(APPEND ITKHDF5_LIBRARIES ${HDF5_C_STATIC_LIBRARY} ${HDF5_CXX_STATIC_LIBRARY})
++    list(APPEND ITKHDF5_LIBRARIES hdf5::hdf5_cpp-static hdf5::hdf5-static)
+   endif()
+ 
+   set(ITKHDF5_INCLUDE_DIRS
+@@ -67,3 +67,5 @@ install(FILES ${ITKHDF5_BINARY_DIR}/src/itk_hdf5.h
+   DESTINATION ${ITKHDF5_INSTALL_INCLUDE_DIR}
+   COMPONENT Development
+   )
++
++message(STATUS "ITKHDF5_LIBRARIES:${ITKHDF5_LIBRARIES}")
+\ No newline at end of file
