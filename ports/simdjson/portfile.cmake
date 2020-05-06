@@ -4,8 +4,8 @@ vcpkg_fail_port_install(ON_ARCH "x86")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lemire/simdjson
-    REF a64d2f467335f3aaa68e9737b66fa783d9a25d42
-    SHA512 0
+    REF 3c3a4db54e1775de6e1946e66d7524f2f38aa02a
+    SHA512 94f11fb18a8a17740693501f82353d502030789169bdc4e48f548208544e410fd89f6fdc93b44badba95f0f5e7c88f087dfcbbd264653715895ea8e8c73527e3
     HEAD_REF master
     PATCHES
         no_benchmark.patch # `_pclose` is not available on UWP
@@ -21,9 +21,9 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSIMDJSON_BUILD_STATIC=${SIMDJSON_BUILD_STATIC}
         -DSIMDJSON_IMPLEMENTATION_ARM64=${SIMDJSON_IMPLEMENTATION_ARM64}
+        -DSIMDJSON_GOOGLE_BENCHMARKS=OFF
         -DSIMDJSON_COMPETITION=OFF
-    OPTIONS_DEBUG
-        -DSIMDJSON_SANITIZE=OFF
+        -DSIMDJSON_SANITIZE=OFF # issue 10145
 )
 
 vcpkg_install_cmake()
@@ -32,9 +32,6 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
