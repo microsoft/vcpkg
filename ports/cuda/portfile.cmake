@@ -28,7 +28,6 @@ else()
         # Extract version number from end of string
         string(REGEX MATCH "[0-9][0-9]?\\.[0-9]$" p_version ${p})
         if (IS_DIRECTORY ${p} AND p_version)
-            message("FOUND_PATH : ${p}")
             if (p_version VERSION_GREATER_EQUAL CUDA_REQUIRED_VERSION)
                 set(FOUND_PATH ${p})
                 break()
