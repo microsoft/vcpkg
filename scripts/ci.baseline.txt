@@ -995,12 +995,10 @@ live555:x64-windows-static=fail
 live555:x86-windows=fail
 llgl:arm-uwp=fail
 llgl:x64-uwp=fail
-llvm:arm64-windows=fail
 llvm:arm-uwp=fail
+llvm:arm64-windows=fail
+llvm:x64-linux=fail
 llvm:x64-uwp=fail
-llvm:x64-linux=ignore
-# installing iconv makes building llvm fail; needs to be fixed
-llvm:x64-osx=ignore
 lmdb:arm64-windows=fail
 lmdb:arm-uwp=fail
 lmdb:x64-uwp=fail
