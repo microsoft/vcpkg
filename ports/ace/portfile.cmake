@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
@@ -6,16 +6,16 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 if(VCPKG_TARGET_IS_WINDOWS)
   # Don't change to vcpkg_from_github! This points to a release and not an archive
   vcpkg_download_distfile(ARCHIVE
-      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE-src-6.5.8.zip"
-      FILENAME ACE-src-6.5.8.zip
-      SHA512 e0fd30de81f0d6e629394fc9cb814ecb786c67fccd7e975a3d64cf0859d5a03ba5a5ae4bb0a6ce5e6d16395a48ffa28f5a1a92758e08a3fd7d55582680f94d82
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_9/ACE-src-6.5.9.zip"
+      FILENAME ACE-src-6.5.9.zip
+      SHA512 49e2e5f9d0a88ae1b8a75aacb962e4185a9f8c8aae6cde656026267524bcef8a673514fe35709896a1c4e356cb436b249ff5e3d487e8f3fa2e618e2fb813fa43
   )
 else(VCPKG_TARGET_IS_WINDOWS)
   # VCPKG_TARGET_IS_LINUX
   vcpkg_download_distfile(ARCHIVE
-      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE-src-6.5.8.tar.gz"
-      FILENAME ACE-src-6.5.8.tar.gz
-      SHA512 45ee6cf4302892ac9de305f8454109fa17a8b703187cc76555ce3641b621909e0cfedf3cc4a7fe1a8f01454637279cc9c4afe9d67466d5253e0ba1f34431d97f
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_9/ACE-src-6.5.9.tar.gz"
+      FILENAME ACE-src-6.5.9.tar.gz
+      SHA512 3e1655d4b215b5195a29b22f2e43d985d68367294df98da251dbbedecd6bdb5662a9921faac43be5756cb2fca7a840d58c6ec92637da7fb9d1b5e2bca766a1b4
   )
 endif()
 
