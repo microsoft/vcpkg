@@ -70,24 +70,23 @@ The simplest vcpkg.json looks like this:
 ```
 
 Additionally, it may contain the following properties:
-
 * `"port-version"`: A non-negative integer. If this field doesn't exist, it's assumed to be `0`.
   * Note that this is a change from existing CONTROL files, where versions were a part of the version string
-*	`"authors"`: An array of `string`s which contain the authors of a package
+* `"authors"`: An array of `string`s which contain the authors of a package
   * `"authors": [ "Nicole Mazzuca <nicole@example.com>", "שלום עליכם <shalom@example.com>" ]`
-*	`"description"`: A string or array of strings containing the description of a package
+* `"description"`: A string or array of strings containing the description of a package
   * `"description": "mypackage is a package of mine"`
-*	`"homepage"`: A url which points to the homepage of a package
+* `"homepage"`: A url which points to the homepage of a package
   * `"homepage": "https://github.com/strega-nil/mypackage"`
-*	`"documentation"`: A url which points to the documentation of a package
+* `"documentation"`: A url which points to the documentation of a package
   * `"documentation": "https://readthedocs.io/strega-nil/mypackage"`
-*	`"license"`: A `<license-string>`
+* `"license"`: A `<license-string>`
   * `"license": "MIT"`
-*	`"dependencies"`: An array of `<dependency>`s
-*	`"dev-dependencies"`: An array of `<dependency>`s which are required only for developers (testing and the like)
-*	`"features"`: An array of `<feature>`s that the package supports
-*	`"default-features"`: An array of `<identifier>`s that correspond to features, which will be used by default.
-*	`"supports"`: A `<platform-specification>`
+* `"dependencies"`: An array of `<dependency>`s
+* `"dev-dependencies"`: An array of `<dependency>`s which are required only for developers (testing and the like)
+* `"features"`: An array of `<feature>`s that the package supports
+* `"default-features"`: An array of `<identifier>`s that correspond to features, which will be used by default.
+* `"supports"`: A `<platform-specification>`
   * `"supports": { "and": [ "win", { "not": "arm" } ] }`
 
 Any properties which are not listed, and which do not start with a `$`,
@@ -278,35 +277,35 @@ Hello, world!
 
 ## Definitions
 
-*	`<identifier>`: A `string` which:
-  *	Is entirely ASCII
-  *	Contains only lowercase alphabetic characters, digits, and hyphen-minus
-  *	Does not have multiple consecutive hyphens
-  *	Does not begin nor end with a hyphen
-  *	Is not a Windows filesystem reserved name
-  *	Is not a vcpkg reserved name: "default".
-*	`<package-name>`: A `string` consisting of a non-zero number of `<identifier>`s, separated by `.`.
-  *	`a.b.c` is valid
-  *	`a` is valid
-  *	`a/b` is not valid
-  *	`Boost.Beast` is not valid, but `boost.beast` is
-*	`<dependency>`: Either a `<package-name>`, or an object:
-  *	A dependency always contains the following:
-    *	`"name"`: A `<package-name>`
-    *	Optionally, `"features"`: an array of `<identifier>`s corresponding to features in the package.
-    *	Optionally, `"default-features"`: a `boolean`. If this is false, then don't use the default features of the package; equivalent to core in existing CONTROL files. If this is true, do the default thing of including the default features.
-    *	Optionally, `"platform"`: a `<platform-specification>`
-  *	`<dependency.port>`: No extra fields are required.
-  *	`<dependency.git>`:
-    *	`"git"`: A url pointing to a git repository
-    *	Optionally, `"commit"`: A `<git-commit>` or `<git-branch-name>`. Defaults to `"master"`.
-*	`<license-string>`: An SPDX license expression at version 3.8.
-*	`<platform-specification>`: A specification of a set of platforms; used in platform-specific dependencies and supports fields. One of:
-  *	`<platform-specification.exact>`: A string denoting a triplet tag like “windows”, “osx”, etc.
-  *	`<platform-specification.not>`: An object containing a member with key "not" and value `<platform-specification>`.
-  *	`<platform-specification.and>`: An object containing a member with key "and" and value array of `<platform-specification>`s.
-  *	`<platform-specification.or>`: An object containing a member with key "or" and value array of `<platform-specification>`s.
-*	`<feature>`: An object containing the following:
-  *	`"name"`: An `<identifier>`, the name of the feature
-  *	`"description"`: A `string`, the description of the feature
-  *	Optionally, `"dependencies"`: An array of `<dependency>`s, the dependencies used by this feature
+* `<identifier>`: A `string` which:
+  * Is entirely ASCII
+  * Contains only lowercase alphabetic characters, digits, and hyphen-minus
+  * Does not have multiple consecutive hyphens
+  * Does not begin nor end with a hyphen
+  * Is not a Windows filesystem reserved name
+  * Is not a vcpkg reserved name: "default".
+* `<package-name>`: A `string` consisting of a non-zero number of `<identifier>`s, separated by `.`.
+  * `a.b.c` is valid
+  * `a` is valid
+  * `a/b` is not valid
+  * `Boost.Beast` is not valid, but `boost.beast` is
+* `<dependency>`: Either a `<package-name>`, or an object:
+  * A dependency always contains the following:
+    * `"name"`: A `<package-name>`
+    * Optionally, `"features"`: an array of `<identifier>`s corresponding to features in the package.
+    * Optionally, `"default-features"`: a `boolean`. If this is false, then don't use the default features of the package; equivalent to core in existing CONTROL files. If this is true, do the default thing of including the default features.
+    * Optionally, `"platform"`: a `<platform-specification>`
+  * `<dependency.port>`: No extra fields are required.
+  * `<dependency.git>`:
+    * `"git"`: A url pointing to a git repository
+    * Optionally, `"commit"`: A `<git-commit>` or `<git-branch-name>`. Defaults to `"master"`.
+* `<license-string>`: An SPDX license expression at version 3.8.
+* `<platform-specification>`: A specification of a set of platforms; used in platform-specific dependencies and supports fields. One of:
+  * `<platform-specification.exact>`: A string denoting a triplet tag like “windows”, “osx”, etc.
+  * `<platform-specification.not>`: An object containing a member with key "not" and value `<platform-specification>`.
+  * `<platform-specification.and>`: An object containing a member with key "and" and value array of `<platform-specification>`s.
+  * `<platform-specification.or>`: An object containing a member with key "or" and value array of `<platform-specification>`s.
+* `<feature>`: An object containing the following:
+  * `"name"`: An `<identifier>`, the name of the feature
+  * `"description"`: A `string`, the description of the feature
+  * Optionally, `"dependencies"`: An array of `<dependency>`s, the dependencies used by this feature
