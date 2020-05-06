@@ -13,14 +13,13 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "vtk"         Module_ITKVtkGlue
-    "test"        ITK_USE_SYSTEM_GOOGLETEST
+    #"test"        ITK_USE_SYSTEM_GOOGLETEST
 )
 
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_WRAP_PYTHON=ON
-        -DITK_PYTHON_VERSION=3
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
         "-DPython3_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
@@ -84,3 +83,36 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+# Without VTK
+
+# -- The following OPTIONAL packages have been found:
+
+ # * Git
+ # * Threads
+ # * HDF5
+ # * LibLZMA
+ # * Python3
+ # * Perl
+
+# -- The following REQUIRED packages have been found:
+
+ # * double-conversion
+ # * EXPAT
+ # * SZIP
+ # * TIFF
+ # * JPEG
+ # * ZLIB
+ # * PNG
+ # * Eigen3 (required version >= 3.3)
+ # * ITK
+
+# -- The following OPTIONAL packages have not been found:
+
+ # * KWStyle (required version >= 1.0.1)
+ # * cppcheck
+ # * PkgConfig
+
+# -- Configuring done
+# -- Generating done
+# -- Build files have been written to: D:/qt2/buildtrees/itk/x64-windows-dbg
