@@ -1,0 +1,14 @@
+diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
+index bf4c2eb..f79cc4b 100644
+--- a/cmake/CeresConfig.cmake.in
++++ b/cmake/CeresConfig.cmake.in
+@@ -240,6 +240,9 @@ list(APPEND CERES_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
+ include (CMakeFindDependencyMacro)
+ find_dependency (glog NO_MODULE)
+ 
++# SuiteSparse
++find_dependency(suitesparse CONFIG REQUIRED)
++
+ # Import exported Ceres targets, if they have not already been imported.
+ if (NOT TARGET ceres AND NOT Ceres_BINARY_DIR)
+   include(${CERES_CURRENT_CONFIG_DIR}/CeresTargets.cmake)

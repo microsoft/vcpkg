@@ -10,6 +10,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(ADDITIONAL_PATCH "0004_blas_linux_fix.patch")
 endif()
 
+if("suitesparse" IN_LIST FEATURES)
+    set(ADDITIONAL_PATCH "0005_add_suitesparse_to_ceres_config.patch")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ceres-solver/ceres-solver
@@ -21,6 +25,7 @@ vcpkg_from_github(
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
         ${ADDITIONAL_PATCH}
+        ${SUITESPARSE_PATCH}
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindGflags.cmake)
