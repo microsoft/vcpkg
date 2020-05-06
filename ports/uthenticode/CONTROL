@@ -3,4 +3,4 @@ Version: 1.0.0
 Description: A cross-platform library for verifying Authenticode signatures
 Homepage: https://github.com/trailofbits/uthenticode
 Supports: !uwp
-Build-Depends: pe-parse
+Build-Depends: pe-parse, openssl
