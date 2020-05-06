@@ -183,7 +183,7 @@ endfunction()
 function(_vtk_move_release_tool TOOL_NAME)
     set(old_filename "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     if(EXISTS ${old_filename})
-        file(INSTALL ${old_filename} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
+        file(INSTALL ${old_filename} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk" USE_SOURCE_PERMISSIONS)
         file(REMOVE ${old_filename})
     endif()
 
