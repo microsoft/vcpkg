@@ -21,33 +21,21 @@ file(READ "${SOURCE_PATH}/dlib/CMakeLists.txt" DLIB_CMAKE)
 string(REPLACE "PNG_LIBRARY" "PNG_LIBRARIES" DLIB_CMAKE "${DLIB_CMAKE}")
 file(WRITE "${SOURCE_PATH}/dlib/CMakeLists.txt" "${DLIB_CMAKE}")
 
-
-set(WITH_SQLITE3 OFF)
-if("sqlite3" IN_LIST FEATURES)
-set(WITH_SQLITE3 ON)
-endif()
-
-set(WITH_FFTW3 OFF)
-if("fftw3" IN_LIST FEATURES)
-set(WITH_FFTW3 ON)
-endif()
-
-set(WITH_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(WITH_CUDA ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  "sqlite3"   DLIB_LINK_WITH_SQLITE3
+  "fftw3"     DLIB_USE_FFTW
+  "cuda"      DLIB_USE_CUDA
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DDLIB_LINK_WITH_SQLITE3=${WITH_SQLITE3}
-        -DDLIB_USE_FFTW=${WITH_FFTW3}
+        ${FEATURE_OPTIONS}
         -DDLIB_PNG_SUPPORT=ON
         -DDLIB_JPEG_SUPPORT=ON
         -DDLIB_USE_BLAS=ON
         -DDLIB_USE_LAPACK=ON
-        -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
         -DCMAKE_DEBUG_POSTFIX=d
