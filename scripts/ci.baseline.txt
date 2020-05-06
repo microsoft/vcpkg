@@ -569,7 +569,6 @@ gsoap:x64-osx=fail
 gsoap:x64-uwp=fail
 gsoap:x64-windows-static=fail
 gsoap:x64-windows=fail
-gsoap:x86-windows=fail
 gtk:x64-linux=fail
 gtk:x86-windows=ignore
 guetzli:x64-osx=fail
