@@ -1,5 +1,5 @@
 Source: simdjson
-Version: 2020-04-24
+Version: 2020-05-06
 Description: A extremely fast JSON library that can parse gigabytes of JSON per second
 Homepage: https://github.com/lemire/simdjson
 Supports: !x86

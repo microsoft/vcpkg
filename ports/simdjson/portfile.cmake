@@ -4,13 +4,12 @@ vcpkg_fail_port_install(ON_ARCH "x86")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lemire/simdjson
-    REF c75009524150e105068a10c57f3ad4f1e241ada0
-    SHA512 03187bef8a0395719030c77b4435bb234e9659b05640caf42aeafb944f61b85d7fe7d59998ea4b5e83afa212bf263557ea5946ddf045c8698335bceedbbf0b1b
+    REF a64d2f467335f3aaa68e9737b66fa783d9a25d42
+    SHA512 0
     HEAD_REF master
     PATCHES
         no_benchmark.patch # `_pclose` is not available on UWP
         fix_uwp_build.patch # On x64-uwp, size_t -> unsigned long long, DWORD -> unsigned long
-        install_string_view_hpp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
@@ -24,7 +23,7 @@ vcpkg_configure_cmake(
         -DSIMDJSON_IMPLEMENTATION_ARM64=${SIMDJSON_IMPLEMENTATION_ARM64}
         -DSIMDJSON_COMPETITION=OFF
     OPTIONS_DEBUG
-        -DSIMDJSON_SANITIZE=ON
+        -DSIMDJSON_SANITIZE=OFF
 )
 
 vcpkg_install_cmake()
