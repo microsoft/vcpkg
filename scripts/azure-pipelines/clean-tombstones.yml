@@ -15,7 +15,7 @@ jobs:
       inputs:
         filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
     - script: rmdir /s /q archives\fail
-      displayName: 'Delete archives\\fail'
+      displayName: 'Delete archives\fail'
   - job: linux
     displayName: 'Clean Linux Tombstones'
     pool: $(linux-pool)
