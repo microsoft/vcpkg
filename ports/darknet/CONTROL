@@ -19,6 +19,14 @@ Feature: opencv-cuda
 Build-Depends: opencv[ffmpeg], opencv[cuda]
 Description: Build darknet with support for a CUDA-enabled OpenCV
 
+Feature: opencv2-base
+Build-Depends: opencv2[ffmpeg]
+Description: Build darknet with support for OpenCV3
+
+Feature: opencv2-cuda
+Build-Depends: opencv2[ffmpeg], opencv2[cuda]
+Description: Build darknet with support for a CUDA-enabled OpenCV3
+
 Feature: opencv3-base
 Build-Depends: opencv3[ffmpeg]
 Description: Build darknet with support for OpenCV3
