@@ -9,8 +9,8 @@ endif()
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION e0f293ebfb59b9fbef058626bcaeafc38dad5fb8)
-set(SCITER_SHA 30b163c478db0c749464de1f18ce249f90018490c737c3d740cebeab0963f5f76d04b907d6cd93952953a7a0ee139fc1ecfa28f6100ada210a6a9ff0e4ff12d5)
+set(SCITER_REVISION f66a119e0fa5c8b279ed782d850293c2ad5e9131)
+set(SCITER_SHA 46e6300f22da9a60095171af0a17ed2c28356f9f26dce833705deb6286992942c139a3363f7b2656285d1fc9fde50fafb624e4f60a128bab06d4b6f5a047e156)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -95,8 +95,6 @@ else()
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${SCITER_BIN}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 message(STATUS "Warning: Sciter requires manual deployment of the correct DLL files.")

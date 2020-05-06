@@ -285,9 +285,6 @@ cppunit:x64-linux=fail
 cppunit:x64-osx=fail
 cppunit:x64-uwp=fail
 cpr:x64-linux=ignore
-cpuid:arm-uwp=fail
-cpuid:x64-uwp=fail
-cpuid:arm64-windows=fail
 cpuinfo:arm64-windows=ignore
 crfsuite:arm-uwp=fail
 crfsuite:x64-uwp=fail
@@ -306,6 +303,7 @@ cudnn:x64-uwp=fail
 cudnn:x64-windows-static=fail
 cudnn:x86-windows=fail
 date:arm64-windows=fail
+dbow2:x64-osx=fail
 dcmtk:arm-uwp=fail
 dcmtk:arm64-windows=fail
 dcmtk:x64-uwp=fail
@@ -331,6 +329,7 @@ directxtk:x64-windows-static=fail
 directxtk12:x64-linux=fail
 directxtk12:x64-osx=fail
 directxtk12:x64-windows-static=fail
+discord-game-sdk:x64-windows-static=fail
 discord-rpc:arm-uwp=fail
 discord-rpc:x64-uwp=fail
 dlfcn-win32:arm-uwp=fail
@@ -362,9 +361,11 @@ duilib:arm-uwp=fail
 duilib:x64-linux=fail
 duilib:x64-osx=fail
 duilib:x64-uwp=fail
+
 # requires python@2 from brew, but that no longer exists
 # python2 EOL yay!
 duktape:x64-osx=skip
+
 dxut:arm64-windows=fail
 dxut:arm-uwp=fail
 dxut:x64-linux=fail
@@ -485,6 +486,7 @@ freexl:x64-windows-static=ignore
 fribidi:arm64-windows=fail
 fribidi:arm-uwp=fail
 fribidi:x64-linux=fail
+fribidi:x64-osx=fail
 fribidi:x64-uwp=fail
 ftgl:x64-uwp=fail
 fuzzylite:arm-uwp=fail
@@ -515,6 +517,7 @@ getopt-win32:x64-uwp=fail
 getopt-win32:x64-windows-static=fail
 gflags:arm-uwp=fail
 gflags:x64-uwp=fail
+
 # Conflicts with libevent
 gherkin-c:arm64-windows      = skip
 gherkin-c:arm-uwp            = skip
@@ -559,11 +562,9 @@ graphqlparser:x64-uwp=fail
 grpc:arm-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
-# https://github.com/microsoft/vcpkg/pull/11048/files
-gsoap:arm-uwp=fail
+# https://github.com/microsoft/vcpkg/pull/11048
 gsoap:x64-linux=fail
 gsoap:x64-osx=fail
-gsoap:x86-windows=fail
 gtk:x64-linux=fail
 gtk:x86-windows=ignore
 guetzli:x64-osx=fail
@@ -700,6 +701,9 @@ libconfig:x64-osx=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 libcopp:x64-windows-static=fail
+cpuid:arm-uwp=fail
+cpuid:x64-uwp=fail
+cpuid:arm64-windows=fail
 libdatrie:x64-linux=fail
 libdatrie:x64-osx=fail
 libdisasm:arm-uwp=fail
@@ -711,6 +715,7 @@ libdshowcapture:x64-osx=fail
 libdshowcapture:x64-uwp=fail
 libepoxy:arm64-windows=fail
 libepoxy:arm-uwp=fail
+libepoxy:x64-osx=fail
 libepoxy:x64-uwp=fail
 libepoxy:x64-windows-static=fail
 libevent:arm-uwp=fail
@@ -872,6 +877,7 @@ librabbitmq:x64-linux=ignore
 libraqm:x64-windows-static=fail
 librdkafka:arm-uwp=fail
 librdkafka:x64-uwp=fail
+
 # Conflicts with openssl
 boringssl:arm64-windows      = skip
 boringssl:arm-uwp            = skip
@@ -952,8 +958,6 @@ libuv:arm-uwp=fail
 libuv:x64-uwp=fail
 libvpx:arm-uwp=fail
 libvpx:arm64-windows=fail
-libvpx:x64-linux=fail
-libvpx:x64-osx=fail
 libwandio:x86-windows=fail
 libwandio:x64-windows=fail
 libwandio:x64-windows-static=fail
@@ -984,8 +988,9 @@ live555:x64-windows-static=fail
 live555:x86-windows=fail
 llgl:arm-uwp=fail
 llgl:x64-uwp=fail
-llvm:arm64-windows=fail
 llvm:arm-uwp=fail
+llvm:arm64-windows=fail
+llvm:x64-linux=fail
 llvm:x64-uwp=fail
 lmdb:arm64-windows=fail
 lmdb:arm-uwp=fail
@@ -1108,12 +1113,12 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
-mp3lame:arm64-uwp=fail
 mpg123:arm-uwp=fail
 mpg123:x64-uwp=fail
 mpir:arm64-windows=fail
 mpir:arm-uwp=fail
 mpir:x64-uwp=fail
+
 #Conflicts with angle and qt-5base
 ms-angle:arm64-windows      = skip
 ms-angle:arm-uwp            = skip
@@ -1338,9 +1343,6 @@ pangomm:x86-windows=ignore
 pangomm:arm64-windows=fail
 parmetis:x64-linux=fail
 parmetis:x64-osx=fail
-# https://github.com/microsoft/vcpkg/issues/11050
-pbc:arm-uwp=fail
-pbc:x64-uwp=fail
 pcre2:arm-uwp=fail
 pdal:x64-linux=fail
 pdal:x64-osx=fail
@@ -1606,7 +1608,6 @@ sdl2-net:arm-uwp=fail
 sdl2-net:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/issues/10918
 seal:arm-uwp=fail
-seal:arm64-windows=fail
 seal:x64-uwp=fail
 secp256k1:x64-linux=fail
 secp256k1:x64-osx=fail
@@ -1779,6 +1780,7 @@ tiny-process-library:x64-uwp=fail
 tinyutf8:arm64-windows=fail
 tinyutf8:arm-uwp=fail
 tinyutf8:x64-uwp=fail
+
 #Flaky on windows only due to error PRI210: 0x80070020 - File move failed
 tmx:arm64-windows      = skip
 tmx:arm-uwp            = skip
