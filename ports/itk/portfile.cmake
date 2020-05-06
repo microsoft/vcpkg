@@ -1,22 +1,33 @@
-include(vcpkg_common_functions)
-
 vcpkg_buildpath_length_warning(37)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
-    REF v5.0.1
-    SHA512 242ce66cf83f82d26f20d2099108295e28c8875e7679126ba023834bf0e94454460ba86452a94c8ddaea93d2314befc399f2b151d7294370d4b47f0e9798e77f
+    REF d3286c9cc04ba16cc8f73de9a98fbcd7c02f3c7b
+    SHA512 c358449870d580aeb10e32f8be0ca39e8a76d8dc06fda973788fafb5971333e546611c399190be49d40f5f3c18a1105d9699eef271a560aff25ce168a396926e
     HEAD_REF master
     PATCHES
-        fix_openjpeg_search.patch
-        fix_libminc_config_path.patch
+        #fix_openjpeg_search.patch
+        #fix_libminc_config_path.patch
 )
 
-if ("vtk" IN_LIST FEATURES)
-    set(ITKVtkGlue ON)
-else()
-    set(ITKVtkGlue OFF)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "vtk"         Module_ITKVtkGlue
+    "test"        ITK_USE_SYSTEM_GOOGLETEST
+)
+
+if("python" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DITK_WRAP_PYTHON=ON
+        -DITK_PYTHON_VERSION=3
+        -DPython3_FIND_REGISTRY=NEVER
+        "-DPython3_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
+        "-DPython3_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
+        "-DPython3_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/python3.7"
+        "-DPython3_EXECUTABLE=${PYTHON3}"
+    )
+    #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
 set(USE_64BITS_IDS OFF)
@@ -32,6 +43,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DDO_NOT_INSTALL_ITK_TEST_DRIVER=ON
+        -DITK_SKIP_PATH_LENGTH_CHECKS=ON
         -DITK_INSTALL_DATA_DIR=share/itk/data
         -DITK_INSTALL_DOC_DIR=share/itk/doc
         -DITK_INSTALL_PACKAGE_DIR=share/itk
@@ -45,22 +57,21 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_TIFF=ON
         -DITK_USE_SYSTEM_ZLIB=ON
         -DITK_USE_SYSTEM_EIGEN=ON
+        # Newly added
+        -DITK_USE_SYSTEM_FFTW=ON
         # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break
         -DITK_FORBID_DOWNLOADS=OFF
-
-        -DITK_SKIP_PATH_LENGTH_CHECKS=ON
-
-        # I haven't tried Python wrapping in vcpkg
-        #-DITK_WRAP_PYTHON=ON
-        #-DITK_PYTHON_VERSION=3
-
         -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past
-        -DModule_ITKVtkGlue=${ITKVtkGlue} # optional feature
 
-        -DModule_IOSTL=ON # example how to turn on a non-default module
-        -DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
-        -DModule_RLEImage=ON # example how to turn on a remote module
-        -DGDCM_USE_SYSTEM_OPENJPEG=ON #Use port openjpeg instead of own third-party
+        #-DModule_IOSTL=ON # example how to turn on a non-default module
+        #-DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
+        #-DModule_RLEImage=ON # example how to turn on a remote module
+        #-DGDCM_USE_SYSTEM_OPENJPEG=ON #Use port openjpeg instead of own third-party
+        -DITK_WRAP_double=ON
+        -DITK_WRAP_complex_double=ON
+        -DITK_WRAP_covariant_vector_double=ON
+        -DITK_WRAP_vector_double=ON
+        ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
 )
 
