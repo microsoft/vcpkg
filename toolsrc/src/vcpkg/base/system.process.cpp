@@ -492,7 +492,7 @@ namespace vcpkg
 
         std::wstring out_env;
 
-        while (1)
+        for (;;)
         {
             auto eq = std::find(it, e, '=');
             if (eq == e) break;

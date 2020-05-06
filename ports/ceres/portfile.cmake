@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(MSVC_USE_STATIC_CRT_VALUE OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -69,6 +67,7 @@ vcpkg_configure_cmake(
         -DLAPACK=${LAPACK}
         -DSUITESPARSE=${SUITESPARSE}
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
+        -DLIB_SUFFIX=${LIB_SUFFIX}
 )
 
 vcpkg_install_cmake()

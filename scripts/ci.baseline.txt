@@ -58,7 +58,6 @@ akali:arm-uwp=fail
 akali:arm64-windows=fail
 alac:arm-uwp=fail
 alac:x64-uwp=fail
-alembic:x64-linux=fail
 alembic:x64-osx=fail
 alembic:x64-windows-static=fail
 ampl-mp:arm64-windows=fail
@@ -234,12 +233,7 @@ chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
-civetweb:x64-linux          = skip
-civetweb:x64-osx            = skip
 civetweb:x64-uwp            = skip
-civetweb:x64-windows        = skip
-civetweb:x64-windows-static = skip
-civetweb:x86-windows        = skip
 clapack:x64-uwp=fail
 clblast:x64-osx=ignore
 clblast:x64-linux=fail
@@ -346,12 +340,13 @@ dmlc:arm64-windows=ignore
 dmlc:x64-uwp=fail
 dmlc:x64-windows-static=ignore
 dmlc:x86-windows=ignore
-dpdk:arm64-windows=fail
 dpdk:arm-uwp=fail
+dpdk:arm64-windows=fail
+dpdk:x64-linux=fail
 dpdk:x64-osx=fail
 dpdk:x64-uwp=fail
-dpdk:x64-windows=fail
 dpdk:x64-windows-static=fail
+dpdk:x64-windows=fail
 dpdk:x86-windows=fail
 duckx:arm64-windows      = skip
 duckx:arm-uwp            = skip
@@ -569,14 +564,17 @@ graphqlparser:x64-uwp=fail
 grpc:arm-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
-gsoap:arm-uwp=ignore
+# https://github.com/microsoft/vcpkg/pull/11048/files
+gsoap:arm-uwp=fail
+gsoap:arm64-windows=fail
 gsoap:x64-linux=fail
 gsoap:x64-osx=fail
-gsoap:x86-windows=ignore
+gsoap:x64-uwp=fail
+gsoap:x64-windows-static=fail
+gsoap:x64-windows=fail
+gsoap:x86-windows=fail
 gtk:x64-linux=fail
 gtk:x86-windows=ignore
-gts:x64-linux=fail
-gts:x64-osx=fail
 guetzli:x64-osx=fail
 h3:arm64-windows=fail
 h3:arm-uwp=fail
@@ -611,6 +609,7 @@ hypre:x64-osx=fail
 icu:arm64-windows=fail
 icu:arm-uwp=fail
 icu:x64-uwp=fail
+ignition-common1:x64-linux=fail
 ignition-msgs1:arm64-windows=fail
 ignition-msgs1:arm-uwp=fail
 ignition-msgs1:x64-uwp=fail
@@ -879,6 +878,9 @@ libpng-apng:x64-windows-static = skip
 libpng-apng:x86-windows        = skip
 libpq:arm-uwp=fail
 libpq:x64-uwp=fail
+libqcow:arm-uwp=fail
+libqcow:x64-uwp=fail
+libqcow:x64-windows-static=fail
 librabbitmq:x64-linux=ignore
 libraqm:x64-windows-static=fail
 librdkafka:arm-uwp=fail
@@ -918,6 +920,8 @@ libstk:arm-uwp=fail
 libstk:x64-uwp=fail
 libtins:arm-uwp=fail
 libtins:x64-uwp=fail
+libtomcrypt:arm64-windows=fail
+libtomcrypt:arm-uwp=fail
 libtorrent:arm-uwp=fail
 libtorrent:x64-uwp=fail
 libudis86:arm-uwp=fail
@@ -997,9 +1001,6 @@ llgl:x64-uwp=fail
 llvm:arm64-windows=fail
 llvm:arm-uwp=fail
 llvm:x64-uwp=fail
-llvm:x64-linux=ignore
-# installing iconv makes building llvm fail; needs to be fixed
-llvm:x64-osx=ignore
 lmdb:arm64-windows=fail
 lmdb:arm-uwp=fail
 lmdb:x64-uwp=fail
@@ -1083,7 +1084,6 @@ miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
 minizip:x64-uwp=fail
-mlpack:x64-linux=ignore
 mman:x64-linux=fail
 mman:x64-osx=fail
 # mmx installs many problematic headers, such as `json.h` and `sched.h`
@@ -1122,6 +1122,11 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
+# mp3lame emits error LNK2019: unresolved external symbol __imp_RoInitialize referenced in function
+# __scrt_initialize_winrt; likely missing an import library
+mp3lame:arm-uwp=fail
+mp3lame:arm64-uwp=fail
+mp3lame:x64-uwp=fail
 mpg123:arm-uwp=fail
 mpg123:x64-uwp=fail
 mpir:arm64-windows=fail
@@ -1239,6 +1244,11 @@ openal-soft:arm-uwp=fail
 openal-soft:x64-uwp=fail
 openblas:arm64-windows=fail
 openblas:arm-uwp=fail
+# opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
+opencc:arm64-windows=fail
+# opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
+opencc:arm-uwp=fail
+opencc:x64-uwp=fail
 opencensus-cpp:arm64-windows=fail
 opencensus-cpp:x64-windows=fail
 opencensus-cpp:x64-windows-static=fail
@@ -1347,8 +1357,12 @@ pangomm:x86-windows=ignore
 pangomm:arm64-windows=fail
 parmetis:x64-linux=fail
 parmetis:x64-osx=fail
+# https://github.com/microsoft/vcpkg/issues/11050
 pbc:arm-uwp=fail
+pbc:x86-windows=fail
+pbc:x64-windows=fail
 pbc:x64-uwp=fail
+pbc:x64-windows-static=fail
 pcre2:arm-uwp=fail
 pdal:x64-linux=fail
 pdal:x64-osx=fail
@@ -1365,6 +1379,9 @@ pfring:x64-windows=fail
 pfring:x64-windows-static=fail
 pfring:x86-windows=fail
 pfring:x64-osx=fail
+# pfring on Linux currently fails because its build scripts enable warnings as
+# errors, and warnings trigger with the Linux kernel headers in the Azure images.
+pfring:x64-linux=fail
 physfs:arm64-windows=fail
 physx:arm64-windows=fail
 physx:x64-linux=fail
@@ -1394,12 +1411,13 @@ plibsys:x64-uwp=fail
 plplot:arm64-windows=fail
 plplot:arm-uwp=fail
 plplot:x64-uwp=fail
-pmdk:arm64-windows=fail
 pmdk:arm-uwp=fail
+pmdk:arm64-windows=fail
 pmdk:x64-linux=fail
 pmdk:x64-osx=fail
 pmdk:x64-uwp=fail
 pmdk:x64-windows-static=fail
+pmdk:x64-windows=fail
 pmdk:x86-windows=fail
 pngwriter:arm-uwp=fail
 pngwriter:x64-uwp=fail
@@ -1463,40 +1481,8 @@ qhull:x64-uwp=ignore
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
-#qt5-activeqt is skipped because it conflicts with qt5-declarative:
-# Starting package 142/820: qt5-declarative:x86-windows
-# Building package qt5-declarative[core]:x86-windows...
-# Using cached binary package: C:\agent\_work\1\s\archives\94\9428e63fede20a51ac0631a9d94d8773e593dd06.zip
-# Building package qt5-declarative[core]:x86-windows... done
-# Installing package qt5-declarative[core]:x86-windows...
-#     The following files are already installed in C:/agent/_work/1/s/installed/x86-windows and are in conflict with qt5-declarative:x86-windows
-#
-# Installed by qt5-activeqt:x86-windows
-#     tools/qt5/bin/Qt5Gui.dll
-#     tools/qt5/bin/Qt5Widgets.dll
-#     tools/qt5/bin/bz2.dll
-#     tools/qt5/bin/freetype.dll
-#     tools/qt5/bin/glib-2.dll
-#     tools/qt5/bin/harfbuzz.dll
-#     tools/qt5/bin/jpeg62.dll
-#     tools/qt5/bin/libcharset.dll
-#     tools/qt5/bin/libiconv.dll
-#     tools/qt5/bin/libintl.dll
-#     tools/qt5/bin/libpng16.dll
-#     tools/qt5/bin/pcre.dll
-#     tools/qt5/bin/plugins/imageformats/qgif.dll
-#     tools/qt5/bin/plugins/imageformats/qico.dll
-#     tools/qt5/bin/plugins/imageformats/qjpeg.dll
-#     tools/qt5/bin/plugins/platforms/qwindows.dll
-#     tools/qt5/bin/plugins/styles/qwindowsvistastyle.dll
-qt5-activeqt:arm-uwp=skip
-qt5-activeqt:arm64-windows=skip
 qt5-activeqt:x64-linux=fail
 qt5-activeqt:x64-osx=fail
-qt5-activeqt:x64-uwp=skip
-qt5-activeqt:x64-windows-static=skip
-qt5-activeqt:x64-windows=skip
-qt5-activeqt:x86-windows=skip
 qt5-macextras:x64-linux=fail
 qt5-macextras:x64-windows=fail
 qt5-macextras:x64-windows-static=fail
@@ -1509,7 +1495,7 @@ qt5-wayland:x64-windows=fail
 qt5-wayland:x64-windows-static=fail
 qt5-winextras:x64-linux=fail
 qt5-winextras:x64-osx=fail
-# Too big for CI. 
+# Too big for CI.
 qt5-webengine:x64-windows=skip
 qt5-webengine:x86-windows=skip
 # Missing prerequisites for CI success
@@ -1583,7 +1569,6 @@ redis-plus-plus:x64-windows-static=fail
 redis-plus-plus:arm64-windows=fail
 replxx:arm-uwp=fail
 replxx:x64-uwp=fail
-replxx:x64-windows-static=fail
 reproc:arm-uwp=fail
 reproc:x64-uwp=fail
 restbed:arm-uwp=fail
