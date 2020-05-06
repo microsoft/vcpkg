@@ -21,4 +21,3 @@ Build-Depends: mpi
 
 Feature: double
 Description: Use double precision in floating point calculations
-Build-Depends:
