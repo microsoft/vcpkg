@@ -1177,7 +1177,7 @@ nanovg:x64-uwp=fail
 nanovg:x64-linux=ignore
 nanovg:x64-windows=ignore
 nanovg:x64-windows-static=ignore
-nanovg:x86-windows=ignore
+nanovg:x86-windows=skip
 nativefiledialog:arm-uwp=fail
 nativefiledialog:x64-uwp=fail
 netcdf-cxx4:x64-linux=ignore
@@ -1681,8 +1681,6 @@ speexdsp:x64-linux=fail
 speexdsp:x64-osx=fail
 spirv-tools:arm-uwp=fail
 spirv-tools:x64-uwp=fail
-# conflicts with nanovg
-stb:x86-windows=ignore
 stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-uwp=fail
