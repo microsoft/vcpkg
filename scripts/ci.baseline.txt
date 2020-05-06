@@ -329,6 +329,7 @@ directxtk:x64-windows-static=fail
 directxtk12:x64-linux=fail
 directxtk12:x64-osx=fail
 directxtk12:x64-windows-static=fail
+discord-game-sdk:x64-windows-static=fail
 discord-rpc:arm-uwp=fail
 discord-rpc:x64-uwp=fail
 dlfcn-win32:arm-uwp=fail
