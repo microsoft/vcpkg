@@ -120,7 +120,7 @@ if (BUILD_TESTING)
 
     enable_testing()
     add_executable(vcpkg-test ${VCPKGTEST_SOURCES} $<TARGET_OBJECTS:vcpkglib>)
-    add_test(NAME default COMMAND vcpkg-test)
+    add_test(NAME default COMMAND vcpkg-test --order rand --rng-seed time)
 
     if (VCPKG_BUILD_BENCHMARKING)
         target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)

@@ -254,8 +254,10 @@ namespace vcpkg::Export::Prefab
     {
         auto provider = CMakeVars::make_triplet_cmake_var_provider(paths);
 
-        auto build_info = build_info_from_triplet(paths, provider, default_triplet);
-        Checks::check_exit(VCPKG_LINE_INFO, is_supported(build_info), "Currenty supported on android triplets");
+        {
+            auto build_info = build_info_from_triplet(paths, provider, default_triplet);
+            Checks::check_exit(VCPKG_LINE_INFO, is_supported(build_info), "Currenty supported on android triplets");
+        }
 
         std::vector<VcpkgPaths::TripletFile> available_triplets = paths.get_available_triplets();
 

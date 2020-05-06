@@ -5,10 +5,7 @@
 jobs:
 - job: ${{ parameters.jobName }}
   pool:
-    name: PrWin-2020-04-22
-
-  variables:
-    triplet: '${{ parameters.triplet }}'
+    name: ${{ parameters.poolName }}
 
   timeoutInMinutes: 1440 # 1 day
 
@@ -20,17 +17,17 @@ jobs:
 
   - powershell: |
       $baselineFile = "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
-      $skipList = $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\generate-skip-list.ps1 -Triplet "$(triplet)" -BaselineFile $baselineFile
+      $skipList = $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile $baselineFile
       Write-Host "baseline file: $baselineFile"
       Write-Host "skip list: $skipList"
-      $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\windows\ci-step.ps1 -Triplet "$(triplet)" -ExcludePorts $skipList
+      $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\windows\ci-step.ps1 -Triplet "${{ parameters.triplet }}" -ExcludePorts $skipList
       Write-Host "CI test script is complete"
     errorActionPreference: continue
-    displayName: '** Build vcpkg and test ports **'
+    displayName: '** Build vcpkg and Test Modified Ports **'
 
   - powershell: |
-      $baseName = "$(triplet)"
-      $outputPathRoot = "$(System.ArtifactsDirectory)\raw xml results"
+      $baseName = "${{ parameters.triplet }}"
+      $outputPathRoot = "$(System.ArtifactsDirectory)\xml-results"
       if(-not (Test-Path $outputPathRoot))
       {
           Write-Host "creating $outputPathRoot"
@@ -56,11 +53,10 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
-      arguments: '-baselineFile ''$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt'' -logDir ''$(System.ArtifactsDirectory)\raw xml results'' -failurelogDir ''archives\fail'' -outputDir ''$(Build.ArtifactStagingDirectory)'' -errorOnRegression -triplets ''$(triplet)'''
-
+      arguments: '-baselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt" -logDir "$(System.ArtifactsDirectory)\xml-results" -failurelogDir "archives\fail" -outputDir "$(Build.ArtifactStagingDirectory)" -errorOnRegression -triplets "${{ parameters.triplet }}"'
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: $(triplet) port build failure logs'
+    displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
-      ArtifactName: '$(triplet) port build failure logs'
+      ArtifactName: '${{ parameters.triplet }} port build failure logs'
     condition: failed()

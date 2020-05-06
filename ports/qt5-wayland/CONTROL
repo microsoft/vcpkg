@@ -1,4 +1,4 @@
 Source: qt5-wayland
-Version: 5.12.7
+Version: 5.12.8
 Description: Qt5 wayland Module; 
 Build-Depends:  qt5-base
