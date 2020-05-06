@@ -4,21 +4,21 @@
         <version>3.17.2</version>
         <exeRelativePath>cmake-3.17.2-win32-x86\bin\cmake.exe</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-win32-x86.zip</url>
-        <sha512>4ff6057edffc778fa2969a8ddbb0368ae2120a35d4554534d2b7601ef27a33d63e05b6902702aecd34f25044ae37d9fc93b7add10dd9d0e5a4c2b22f4633f44d</sha512>
+        <sha512>63bb3dc5a8683ed193025450620a70b8dd675eccba4a83882c96f21eda8994dd5b21854036a0c17f978bf31f67d1d1b33b416c7f6ffb0470c9f48c2e495d44c1</sha512>
         <archiveName>cmake-3.17.2-win32-x86.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
         <version>3.17.2</version>
         <exeRelativePath>cmake-3.17.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Darwin-x86_64.tar.gz</url>
-        <sha512>4466fd877a6c1800a7c95b1d8ea4df00fa1fb4fe64ebe735cc7cafacfaf22bea0cbc40d24a9af1cfce5041a8f491f23034bf05d106aaedd476db560cf235dafd</sha512>
+        <sha512>804b06439c05b9cf36a988223b7dc47b06b8613cb4653989eff52aad5ab0fa312b8da1ac0c760ad101e74b2c9edaf5b119bd48617a5efb57dff9380ca74e54a9 </sha512>
         <archiveName>cmake-3.17.2-Darwin-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
         <version>3.17.2</version>
         <exeRelativePath>cmake-3.17.2-Linux-x86_64/bin/cmake</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.tar.gz</url>
-        <sha512>76288753098b392edcafd541d3527fc08f1e61e014ca876cd07f5e47d8d5cc372302a26583d663de26f1a49008ba7d46a179f7b234dc28302a44f8c691861d8e</sha512>
+        <sha512>2afc023363c40b110d97d871fb9a8917643bba308ca0c029ee8fe1164db1c168e32b2c9d7647475d84efa290c1242357f7cf260ea4d1f92f5a829cf418955490 </sha512>
         <archiveName>cmake-3.17.2-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
