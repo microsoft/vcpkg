@@ -1,12 +1,10 @@
-if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
-  message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
-endif()
-
 if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
 
-include(vcpkg_common_functions)
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
+  message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
+endif()
 
 if (VCPKG_TARGET_IS_UWP)
   # - opengl feature is broken on UWP
