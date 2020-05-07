@@ -1,3 +1,7 @@
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "this port does not support statical linkage.")
+endif()
+
 set(VERSION 1.4.0-alpha.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
