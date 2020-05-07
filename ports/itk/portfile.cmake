@@ -34,6 +34,7 @@ if("python" IN_LIST FEATURES)
         "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
         "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7"
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
+        "-DCMAKE_DISABLE_FIND_PACKAGE_HDF5=ON" # need to disable HDF5 for PythonWrapping for now. 
         )
         #"-DPython3_FIND_ABI=ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY"
         #"-DPython3_VERSION=3.7"
