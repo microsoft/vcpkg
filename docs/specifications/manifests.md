@@ -1,4 +1,4 @@
-# Manifest -- `vcpkg.json`
+# Manifests -- `vcpkg.json`
 
 For many other language package managers, there exists a way of writing one's dependencies in a declarative
 manifest format; we want something similar for vcpkg. What follows is the specification of that feature;
@@ -56,8 +56,8 @@ directives may include `"$schema"`, `"$comment"`, `"$reason"`.
 
 A manifest must be a top-level object, and must have at least the following properties:
 
-*	`"name"`: a `<package-name>`
-*	`"version"`: A `string`. This will be defined further later.
+* `"name"`: a `<package-name>`
+* `"version"`: A `string`. This will be defined further later.
   * [Semver](https://semver.org) is recommended but not required.
 
 The simplest vcpkg.json looks like this:
@@ -205,7 +205,7 @@ vcpkg_find_acquire_dependencies(
 This function first acquires, then `find_package`s, the
 dependencies.
 
-### Example Project
+### Example - CMake Integration
 
 An example of using the new vcpkg manifests feature for a new
 project follows:
@@ -251,8 +251,7 @@ project(example CXX)
 
 add_executable(example src/main.cxx)
 
-vcpkg_acquire_dependencies()
-find_package(fmt CONFIG REQUIRED)
+vcpkg_find_acquire_dependencies()
 target_link_libraries(example
   PRIVATE
     fmt::fmt)
@@ -262,7 +261,7 @@ And finally, to configure and build:
 
 ```sh
 $ cd example
-$ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
+$ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystem/vcpkg.cmake
 ... configuring and installing...
 $ cmake --build build
 ```
@@ -271,8 +270,47 @@ and we're done! `fmt` will get installed into
 `example/vcpkg_modules`, and we can run our executable with:
 
 ```sh
-$ build/example.exe
+$ build/example
 Hello, world!
+```
+
+### Example - No CMake Integration
+
+On the other hand, one may wish to _allow_ people to install dependencies with vcpkg, while not requiring them to do so.
+This is important if the project wants to support being installed with system package managers like `apt` - generally,
+the specific distros would like to control _all_ dependencies. They can do this with exactly the same structure as before,
+and the same code, except for in CMakeLists.txt:
+
+```cmake
+cmake_minimum_required(VERSION 3.14)
+
+project(example CXX)
+
+add_executable(example src/main.cxx)
+
+if(DEFINED VCPKG_TOOLCHAIN)
+  vcpkg_acquire_dependencies()
+endif()
+
+find_package(fmt REQUIRED)
+target_link_libraries(example
+  PRIVATE
+    fmt::fmt)
+```
+
+Then, one could build it either with vcpkg:
+
+```sh
+$ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystem/vcpkg.cmake
+$ cmake --build build
+```
+
+or without:
+
+```sh
+$ sudo apt install fmt # assuming ubuntu, for example
+$ cmake -B build -S .
+$ cmake --build build
 ```
 
 ## Definitions
