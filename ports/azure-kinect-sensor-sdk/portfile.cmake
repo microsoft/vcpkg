@@ -1,7 +1,3 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "this port does not support statical linkage.")
-endif()
-
 set(VERSION 1.4.0-alpha.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -86,10 +82,10 @@ else ()
     message(FATAL_ERROR "this architecture is not supported.")
 endif ()
 
-file(COPY ${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-file(COPY ${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/bin/k4a)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/k4a)
+file(COPY ${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/azure-kinect-sensor-sdk)
+file(COPY ${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/azure-kinect-sensor-sdk)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

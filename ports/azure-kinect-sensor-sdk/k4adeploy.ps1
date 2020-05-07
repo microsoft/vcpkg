@@ -2,9 +2,9 @@
 
 function deployAzureKinectSensorSDK([string]$targetBinaryDir, [string]$installedDir, [string]$targetBinaryName) {
     if ($targetBinaryName -like "k4a.dll") {
-        if(Test-Path "$installedDir\bin\depthengine_2_0.dll") {
+        if(Test-Path "$installedDir\tools\azure-kinect-sensor-sdk\depthengine_2_0.dll") {
             Write-Verbose "  Deploying Azure Kinect Sensor SDK Initialization"
-            deployBinary "$targetBinaryDir" "$installedDir\bin\" "depthengine_2_0.dll"
+            deployBinary "$targetBinaryDir" "$installedDir\tools\azure-kinect-sensor-sdk\" "depthengine_2_0.dll"
         }
     }
 }

@@ -109,8 +109,8 @@ if (Test-Path "$g_install_root\bin\magnum\magnumdeploy.ps1") {
 }
 
 # Note: This is a hack to make Azure Kinect Sensor SDK work.
-if (Test-Path "$g_install_root\bin\k4a\k4adeploy.ps1") {
-    . "$g_install_root\bin\k4a\k4adeploy.ps1"
+if (Test-Path "$g_install_root\tools\azure-kinect-sensor-sdk\k4adeploy.ps1") {
+    . "$g_install_root\tools\azure-kinect-sensor-sdk\k4adeploy.ps1"
 }
 
 resolve($targetBinary)
