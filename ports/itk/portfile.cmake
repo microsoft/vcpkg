@@ -16,6 +16,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "vtk"          Module_ITKVtkGlue
     "cufftw"       ITK_USE_CUFFTW
     "opencl"       ITK_USE_GPU
+    "tbb"          Module_ITKTBB
+    "rtk"          Module_RTK
 )
 if("vtk" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
@@ -54,6 +56,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
+        -DBUILD_PKGCONFIG_FILES=OFF 
         -DITK_DOXYGEN_HTML=OFF
         -DDO_NOT_INSTALL_ITK_TEST_DRIVER=ON
         -DITK_SKIP_PATH_LENGTH_CHECKS=ON
@@ -72,6 +75,10 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_EIGEN=ON
         -DITK_USE_SYSTEM_FFTW=ON
         -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past
+        -DITK_USE_SYSTEM_GDCM=ON
+        #-DITK_USE_SYSTEM_DCMTK=ON this option should exist but it does not!
+        -DDCMTK_USE_ICU=ON
+        -DITK_USE_SYSTEM_ICU=ON
         # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break
         -DITK_FORBID_DOWNLOADS=OFF
 

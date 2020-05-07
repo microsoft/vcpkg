@@ -2,7 +2,7 @@ Source: itk
 Version: 5.1.0
 Description: Insight Segmentation and Registration Toolkit (ITK) is used for image processing and analysis.
 Homepage: https://github.com/InsightSoftwareConsortium/ITK
-Build-Depends: double-conversion, libjpeg-turbo, zlib, libpng, tiff, expat, eigen3, hdf5[core,cpp], openjpeg, fftw3[core], gtest
+Build-Depends: double-conversion, libjpeg-turbo, zlib, libpng, tiff, expat, eigen3, hdf5[core,cpp], openjpeg, fftw3[core], gtest, gdcm, icu
 
 Feature: vtk
 Description: Build ITKVtkGlue module.
@@ -19,3 +19,12 @@ Build-Depends: cuda
 Feature: opencl
 Description: Use OpenCL
 Build-Depends: opencl
+
+Feature: tbb
+Description: Build TBB Module
+Build-Depends: tbb
+
+Feature: rtk
+Description: Build RTK Module
+
+
