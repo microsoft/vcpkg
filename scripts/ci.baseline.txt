@@ -1550,7 +1550,6 @@ raylib:arm-uwp=fail
 raylib:x64-uwp=fail
 readline:arm-uwp=fail
 readline:x64-uwp=fail
-readline-win32:arm64-windows=fail
 readline-win32:arm-uwp=fail
 readline-win32:x64-linux=fail
 readline-win32:x64-osx=fail
