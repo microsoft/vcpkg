@@ -294,7 +294,7 @@ $StorageContext = New-AzStorageContext `
   -StorageAccountKey $StorageAccountKey
 
 New-AzStorageShare -Name 'archives' -Context $StorageContext
-Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 5120
+Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 2048
 
 ####################################################################################################
 Write-Progress `
