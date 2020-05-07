@@ -5,9 +5,9 @@ endif()
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO rsocket/rsocket-cpp
-  REF b237f5dba44bd360ee8c24fb998af83606355116
-  SHA512 3d79f32177494cc7831df2b36a2cd2180f9059b862dae99bab59dedfb4020d2e1103ba4d71411fa653da5868abaa9e809b0847e66a7a0baa7b2fe6998f813a97
+  REPO rsocket/rsocket-cpp #v2020.05.04.00
+  REF 8038d05e741c3d3ecd6adb069b4a1b3daa230e14
+  SHA512 d7bc93af7b6130d73fa0823f534ad57a531dfa7d7aa990a2a1a1b72b6761db7eeb60573d0d38f55daa991554e3ab4ac507047f8051a4390b3343cd708a48efbb
   HEAD_REF master
   PATCHES
     fix-cmake-config.patch
