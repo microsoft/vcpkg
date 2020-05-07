@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF v2.3.1
     SHA512 339fbc899bddf2393d214df71ed5d6070a3a76b933b1e75576c8a0ae9dfcc4adec40bdc544f599e4b8d0bc173e4e9e7352408497b5b3c9356985605830c26c03
     HEAD_REF master
+    PATCHES dll.location.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,7 +27,19 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets()
+if("jpwl" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dec_server opj_dump)
+endif()  
+if("mj2" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES opj_mj2_compress opj_mj2_decompress opj_mj2_extract opj_mj2_wrap)
+endif()  
+if("jpip" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES opj_jpip_addxml opj_jpip_test opj_jpip_transcode)
+endif()
+if("jp3d" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES opj_jp3d_compress opj_jp3d_decompress)
+endif()
+vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/openjpeg.h OPENJPEG_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
