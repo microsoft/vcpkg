@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mrtazz/restclient-cpp
-    REF 6336cae5275c9aeddf99f13c49e8f9320f7ca4bc
-    SHA512 fbc638f82db8d0d101f4239152be67eb460659f3a7204db9523d3b5740b007b8fe434f78bf5d9f8059901aa639ba96c15b28b1e2fe5f09471accf64c2d577684 
+    REF 0.5.2
+    SHA512 f6acc6a3d5cb852d6e507463d94d2f6192a941f0c26fef7c674e9ff7753cf5474522052a2065774050d01af5c6d2a3b86398f43cd2e4f5d03abcaac9a21ef4b7
     HEAD_REF master
 )
 
@@ -12,7 +12,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_GTest=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_jsoncpp=TRUE
-        -DCOMPILE_TYPE=STATIC
 )
 
 vcpkg_install_cmake()
