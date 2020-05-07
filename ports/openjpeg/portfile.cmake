@@ -37,7 +37,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
 if(VCPKG_TARGET_IS_WINDOWS)
-    # TODO: remove m from *.pc files
+    # TODO: remove -lm from *.pc files
 endif()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
