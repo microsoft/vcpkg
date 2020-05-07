@@ -43,7 +43,7 @@ if("python" IN_LIST FEATURES)
         "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
         "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7"
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
-        "-DCMAKE_DISABLE_FIND_PACKAGE_HDF5=ON" # need to disable HDF5 for PythonWrapping for now. 
+        #"-DCMAKE_DISABLE_FIND_PACKAGE_HDF5=ON" # need to disable HDF5 for PythonWrapping for now. 
         )
         #"-DPython3_FIND_ABI=ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY"
         #"-DPython3_VERSION=3.7"
@@ -86,9 +86,18 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_FFTW=ON
         -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past
         -DITK_USE_SYSTEM_GDCM=ON
-        #-DITK_USE_SYSTEM_DCMTK=ON this option should exist but it does not!
+        #-DModule_ITKIOJPEG2000=OFF # does not build with openjpeg installed
+        -DGDCM_USE_SYSTEM_OPENJPEG=ON
+        -DITK_USE_SYSTEM_OpenJPEG=ON
+        
+        -DITK_USE_SYSTEM_DCMTK=ON 
         -DDCMTK_USE_ICU=ON
         -DITK_USE_SYSTEM_ICU=ON
+        
+        #-DITK_USE_SYSTEM_VXL=ON
+        #-DITK_USE_SYSTEM_CASTXML=ON
+        #-DITK_USE_SYSTEM_MINC=ON
+        #-DITK_USE_SYSTEM_SWIG=ON
         # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break
         -DITK_FORBID_DOWNLOADS=OFF
 
@@ -103,7 +112,7 @@ vcpkg_configure_cmake(
         #-DModule_IOSTL=ON # example how to turn on a non-default module
         #-DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
         #-DModule_RLEImage=ON # example how to turn on a remote module
-        #-DGDCM_USE_SYSTEM_OPENJPEG=ON #Use port openjpeg instead of own third-party
+
         -DITK_WRAP_double=ON
         -DITK_WRAP_complex_double=ON
         -DITK_WRAP_covariant_vector_double=ON
@@ -163,3 +172,55 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 # -- Configuring done
 # -- Generating done
 # -- Build files have been written to: D:/qt2/buildtrees/itk/x64-windows-dbg
+
+  # D:\qt2\buildtrees\itk\src\d7c02f3c7b-959337cec2\Modules\ThirdParty\GDCM\src\CMakeLists.txt (13 hits)
+	# Line 29: set(GDCM_USE_SYSTEM_EXPAT ON CACHE INTERNAL "")
+	# Line 33: set(GDCM_USE_SYSTEM_OPENJPEG OFF CACHE INTERNAL "")
+	# Line 36: set(GDCM_USE_SYSTEM_ZLIB ON CACHE INTERNAL "")
+	# Line 47: set(GDCM_USE_SYSTEM_LJPEG OFF CACHE INTERNAL "Use system ljpeg (ijg lib)")
+	# Line 48: set(GDCM_USE_SYSTEM_OPENSSL OFF CACHE INTERNAL "Use system OpenSSL")
+	# Line 49: set(GDCM_USE_SYSTEM_PODOFO OFF CACHE INTERNAL "Use system podofo (pdf)")
+	# Line 50: set(GDCM_USE_SYSTEM_POPPLER OFF CACHE INTERNAL "Use system poppler (pdf)")
+	# Line 51: set(GDCM_USE_SYSTEM_UUID OFF CACHE INTERNAL "Use system uuid")
+	# Line 54: set(GDCM_USE_SYSTEM_CHARLS OFF CACHE INTERNAL "")
+	# Line 55: set(GDCM_USE_SYSTEM_JSON OFF CACHE INTERNAL "")
+	# Line 56: set(GDCM_USE_SYSTEM_LIBXML2 OFF CACHE INTERNAL "")
+	# Line 57: set(GDCM_USE_SYSTEM_PAPYRUS3 OFF CACHE INTERNAL "")
+	# Line 58: set(GDCM_USE_SYSTEM_SOCKETXX OFF CACHE INTERNAL "")
+    
+    # D:\qt2\buildtrees\itk\src\d7c02f3c7b-959337cec2\Modules\ThirdParty\GDCM\src\gdcm\CMakeLists.txt (41 hits)
+	# Line 313: option(GDCM_USE_SYSTEM_ZLIB "Use system zlib" OFF)
+	# Line 314: option(GDCM_USE_SYSTEM_OPENSSL  "Use system OpenSSL" OFF)
+	# Line 318:   option(GDCM_USE_SYSTEM_UUID "Use system uuid" OFF)
+	# Line 320: option(GDCM_USE_SYSTEM_EXPAT "Use system expat" OFF)
+	# Line 321: option(GDCM_USE_SYSTEM_JSON "Use system json" OFF)
+	# Line 322: option(GDCM_USE_SYSTEM_PAPYRUS3 "Use system papyrus3" OFF)
+	# Line 323: option(GDCM_USE_SYSTEM_SOCKETXX "Use system socket++" OFF)
+	# Line 324: option(GDCM_USE_SYSTEM_LJPEG "Use system ljpeg (ijg lib)" OFF)
+	# Line 325: option(GDCM_USE_SYSTEM_OPENJPEG "Use system openjpeg" OFF)
+	# Line 326: option(GDCM_USE_SYSTEM_CHARLS "Use system CharLS" OFF)
+	# Line 328:   GDCM_USE_SYSTEM_ZLIB
+	# Line 329:   GDCM_USE_SYSTEM_OPENSSL
+	# Line 330:   GDCM_USE_SYSTEM_UUID
+	# Line 331:   GDCM_USE_SYSTEM_EXPAT
+	# Line 332:   GDCM_USE_SYSTEM_JSON
+	# Line 333:   GDCM_USE_SYSTEM_PAPYRUS3
+	# Line 334:   GDCM_USE_SYSTEM_SOCKETXX
+	# Line 335:   GDCM_USE_SYSTEM_LJPEG
+	# Line 336:   GDCM_USE_SYSTEM_OPENJPEG
+	# Line 337:   GDCM_USE_SYSTEM_CHARLS
+	# Line 339: option(GDCM_USE_SYSTEM_POPPLER "Use system poppler (pdf)" OFF)
+	# Line 340: if(GDCM_USE_SYSTEM_POPPLER)
+	# Line 343: mark_as_advanced(GDCM_USE_SYSTEM_POPPLER)
+	# Line 345: option(GDCM_USE_SYSTEM_LIBXML2 "Use LibXml2" OFF)
+	# Line 346: if(GDCM_USE_SYSTEM_LIBXML2)
+	# Line 349: mark_as_advanced(GDCM_USE_SYSTEM_LIBXML2)
+	# Line 351: if(GDCM_USE_SYSTEM_LJPEG)
+	# Line 358: if(GDCM_USE_SYSTEM_CHARLS)
+	# Line 365: if(GDCM_USE_SYSTEM_OPENJPEG)
+	# Line 381:   option(GDCM_USE_SYSTEM_PVRG "Use system PVRG" OFF)
+	# Line 382:   mark_as_advanced(GDCM_USE_SYSTEM_PVRG)
+	# Line 383:   if(GDCM_USE_SYSTEM_PVRG)
+	# Line 394:   option(GDCM_USE_SYSTEM_KAKADU "Use system KAKADU " ON)
+	# Line 395:   mark_as_advanced(GDCM_USE_SYSTEM_KAKADU)
+	# Line 396:   if(GDCM_USE_SYSTEM_KAKADU)
