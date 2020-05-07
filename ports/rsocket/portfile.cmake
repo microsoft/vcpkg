@@ -1,7 +1,4 @@
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-  # Because folly only supports the x64 architecture.
-  message(FATAL_ERROR "Rsocket only supports the x64 architecture.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "x86")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
