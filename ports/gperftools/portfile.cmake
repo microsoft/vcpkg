@@ -8,46 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-function(copy_tools)
-    cmake_parse_arguments(_vct "" "" "" ${ARGN})
-
-    set(_vct_SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin)
-    set(_vct_TOOL_NAMES ${ARGN})
-
-    foreach(tool_name ${_vct_TOOL_NAMES})
-        set(tool_path "${_vct_SEARCH_DIR}/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-
-        if(EXISTS ${tool_path})
-            file(COPY ${tool_path} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        endif()
-
-        file(REMOVE
-            ${CURRENT_PACKAGES_DIR}/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        )
-    endforeach()
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        if(VCPKG_TARGET_IS_WINDOWS)
-            file(GLOB exes_ignored
-                ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            )
-
-            foreach(ignored_exe ${exes_ignored})
-                file(REMOVE ${ignored_exe})
-            endforeach()
-        endif()
-    else()
-        file(REMOVE_RECURSE
-            ${CURRENT_PACKAGES_DIR}/bin
-            ${CURRENT_PACKAGES_DIR}/debug/bin
-        )
-    endif()
-
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-endfunction()
-
 if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
@@ -87,7 +47,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     if(tools IN_LIST FEATURES)
-        copy_tools(addr2line-pdb nm-pdb)
+        vcpkg_copy_tools(TOOL_NAMES addr2line-pdb nm-pdb AUTO_CLEAN)
     endif()
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -106,7 +66,7 @@ else()
     vcpkg_install_make()
 
     if(tools IN_LIST FEATURES)
-        copy_tools(pprof pprof-symbolize)
+        vcpkg_copy_tools(TOOL_NAMES pprof pprof-symbolize AUTO_CLEAN)
     endif()
 
     file(REMOVE_RECURSE
