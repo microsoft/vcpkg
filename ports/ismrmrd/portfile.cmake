@@ -1,22 +1,19 @@
-include(vcpkg_common_functions)
-
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(WIN32_INCLUDE_STDDEF_PATCH "x86-windows-include-stddef.patch")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(STATIC_PATCH "fix_static.patch")
-endif()
+
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ismrmrd/ismrmrd
-    REF 4d4004d91ccadd41ddb30b019f970a69bb23a1bc
-    SHA512 648901de4629c8b11574894763a5fa61a3cb0420c5aa62cdff02c4641ba702ca73efba12b403076301e44a4f0a7c915da1f2c7a34b24377d0385af92f2eda892
+    REF v1.4.2.1 
+    SHA512 8d3f3efb9fc52464c626d8a4b4328f92f69ea6a709aa1b4d4312c9740a342094cadecd028ac169b6c89df92503037a3156172d7955abcd616630f0a309b9e0b5
     HEAD_REF master
     PATCHES
         ${STATIC_PATCH}
         ${WIN32_INCLUDE_STDDEF_PATCH}
+        fix-depends-hdf5.patch
 )
 
 vcpkg_configure_cmake(
@@ -25,6 +22,10 @@ vcpkg_configure_cmake(
     OPTIONS
         -DUSE_SYSTEM_PUGIXML=ON
         -DUSE_HDF5_DATASET_SUPPORT=ON
+        -DVCPKG_TARGET_TRIPLET=ON
+        -DBUILD_TESTS=OFF
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_UTILITIES=OFF
 )
 
 vcpkg_install_cmake()
@@ -66,25 +67,12 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     set(EXECUTABLE_SUFFIX ".exe")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_c_example${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_c_example${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_generate_cartesian_shepp_logan${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_generate_cartesian_shepp_logan${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_info${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_info${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_read_timing_test${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_read_timing_test${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_recon_cartesian_2d${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_recon_cartesian_2d${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_test_xml${EXECUTABLE_SUFFIX})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_test_xml${EXECUTABLE_SUFFIX})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
 endif()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ismrmrd)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ismrmrd/LICENSE ${CURRENT_PACKAGES_DIR}/share/ismrmrd/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/ismrmrd)

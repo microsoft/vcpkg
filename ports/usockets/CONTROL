@@ -1,4 +1,15 @@
 Source: usockets
-Version: 0.3.1
+Version: 0.3.5-1
 Build-Depends:libuv
 Description: Miniscule cross-platform eventing, networking & crypto for async applications
+
+Feature: ssl
+Build-Depends: openssl
+Description: Build usockets with openssl support
+
+Feature: event
+Description: Build usockets with epoll support
+
+Feature: network
+Build-Depends: winsock2
+Description: Build usockets with winsock support

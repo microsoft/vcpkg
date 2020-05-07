@@ -1,0 +1,40 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+variables:
+  windows-pool: 'PrWin-2020-04-28'
+  linux-pool: 'PrLin-2020-04-30'
+
+jobs:
+  - job: windows
+    displayName: 'Clean Windows Tombstones'
+    pool: $(windows-pool)
+    steps:
+    - task: PowerShell@2
+      displayName: 'Initialize Environment'
+      inputs:
+        filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
+    - script: rmdir /s /q archives\fail
+      displayName: 'Delete archives\fail'
+  - job: linux
+    displayName: 'Clean Linux Tombstones'
+    pool: $(linux-pool)
+    steps:
+    - task: Bash@3
+      displayName: 'Initialize Environment'
+      inputs:
+        filePath: scripts/azure-pipelines/linux/initialize-environment.sh
+    - bash: rm -rf archives/fail
+      displayName: 'Delete archives/fail'
+  - job: osx
+    displayName: 'Clean MacOS Tombstones'
+    pool:
+      name: vcpkgAgentPool
+      demands: Agent.OS -equals Darwin
+    steps:
+    - task: Bash@3
+      displayName: 'Initialize Environment'
+      inputs:
+        filePath: 'scripts/azure-pipelines/osx/initialize-environment.sh'
+    - bash: rm -rf archives/fail
+      displayName: 'Delete archives/fail'

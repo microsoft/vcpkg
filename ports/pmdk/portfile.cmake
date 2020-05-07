@@ -1,27 +1,23 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM is currently not supported")
-elseif (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    message(FATAL_ERROR "x86 is not supported. Please use pmdk:x64-windows instead.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" "x86")
 
-set(PMDK_VERSION "1.7")
+set(PMDK_VERSION "1.8")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF d2f6f5b0032eb5678ec6c5c3dff03509caa4b817 #version 1.7 commit on 2019.10.10
-    SHA512 8ac50f9ea03e140eeb5fcd25ea34591b38cb76cfaa2a8622155d54b90c1cadb9fe046deeaa422163e2cd82a993a9b736523e932d66cb458ff1d2111649587e8a
+    REF 0245d75eaf0f6106c86a7926a45fdf2149e37eaa #Commit id corresponding to the version 1.8
+    SHA512 1628f1f6be9e70c28ed490cec2db27aa31a9c6d43e11755a4232686a8523df6dff768e75e64479e22aca52d72500e3a75b256e4ae4de1f518f33cc07c5c26d9b
     HEAD_REF master
+    PATCHES
+        remove-non-ascii-character.patch
 )
 
 # Build only the selected projects
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/src/PMDK.sln
-    TARGET "Solution Items\\libpmem,Solution Items\\libpmemlog,Solution Items\\libpmemblk,Solution Items\\libpmemobj,Solution Items\\libpmempool,Solution Items\\libvmem,Solution Items\\Tools\\pmempool"
+    TARGET "Solution Items\\libpmem,Solution Items\\libpmemlog,Solution Items\\libpmemblk,Solution Items\\libpmemobj,Solution Items\\libpmempool,Solution Items\\Tools\\pmempool"
     OPTIONS /p:SRCVERSION=${PMDK_VERSION}
 )
 
@@ -59,6 +55,4 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/pmdk)
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pmdk)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pmdk/LICENSE ${CURRENT_PACKAGES_DIR}/share/pmdk/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

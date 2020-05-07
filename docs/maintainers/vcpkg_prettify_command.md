@@ -4,7 +4,7 @@ Turns list of command arguments into a formatted string.
 
 ## Usage
 ```cmake
-vcpkg_prettify_command()
+vcpkg_prettify_command(<INPUT_VAR> <OUTPUT_VAR>)
 ```
 
 ## Examples

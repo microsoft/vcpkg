@@ -1,19 +1,17 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF 2b38e2dd6602a17a2010308580fd5d8c91dea650
-  SHA512 82e9c2417bd0325b2402a64a56cfff25346e277a8174a33727517ada59502fee4bdeea40b0d20f9c6a86c52b66d57340b898096e39ad91bccc4f3a2245bd49b0
+  REF v6.6.4
+  SHA512 22f5105244c55ca7030cc8d7ee06cb87f4afdfc85b3f44f7512a9c9c41c037c3b70fd291ec1b0df2553a93b770e11abc4ae2d7f984b2a0f1addd26d424c09539
   HEAD_REF master
   PATCHES
     0001-disable-gtest.patch
     0002-only-build-one-flavor.patch
-    0003-zlib-findpackage.patch
-    0004-use-find-package.patch
-    0005-static-linking-in-linux.patch
+    0003-use-find-package.patch
+    0004-static-linking-in-linux.patch
+    0005-add-config-to-findpackage.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/Findzlib.cmake")
@@ -65,7 +63,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/rocksdb)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb RENAME copyright)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb)
+file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 vcpkg_copy_pdbs()

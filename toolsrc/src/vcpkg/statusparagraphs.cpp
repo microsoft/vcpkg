@@ -11,24 +11,23 @@ namespace vcpkg
     {
     }
 
-    std::vector<std::unique_ptr<StatusParagraph>*> StatusParagraphs::find_all(const std::string& name,
-                                                                              const Triplet& triplet)
+    std::vector<std::unique_ptr<StatusParagraph>*> StatusParagraphs::find_all(const std::string& name, Triplet triplet)
     {
         std::vector<std::unique_ptr<StatusParagraph>*> spghs;
         for (auto&& p : *this)
         {
             if (p->package.spec.name() == name && p->package.spec.triplet() == triplet)
             {
-                if (p->package.feature.empty())
-                    spghs.emplace(spghs.begin(), &p);
-                else
+                if (p->package.is_feature())
                     spghs.emplace_back(&p);
+                else
+                    spghs.emplace(spghs.begin(), &p);
             }
         }
         return spghs;
     }
 
-    Optional<InstalledPackageView> StatusParagraphs::find_all_installed(const PackageSpec& spec) const
+    Optional<InstalledPackageView> StatusParagraphs::get_installed_package_view(const PackageSpec& spec) const
     {
         InstalledPackageView ipv;
         for (auto&& p : *this)
@@ -36,23 +35,22 @@ namespace vcpkg
             if (p->package.spec.name() == spec.name() && p->package.spec.triplet() == spec.triplet() &&
                 p->is_installed())
             {
-                if (p->package.feature.empty())
-                {
+                if (p->package.is_feature()) {
+                    ipv.features.emplace_back(p.get());
+                } else {
                     Checks::check_exit(VCPKG_LINE_INFO, ipv.core == nullptr);
                     ipv.core = p.get();
                 }
-                else
-                    ipv.features.emplace_back(p.get());
             }
         }
         if (ipv.core != nullptr)
-            return std::move(ipv);
+            return ipv;
         else
             return nullopt;
     }
 
     StatusParagraphs::iterator StatusParagraphs::find(const std::string& name,
-                                                      const Triplet& triplet,
+                                                      Triplet triplet,
                                                       const std::string& feature)
     {
         if (feature == "core")
@@ -67,7 +65,7 @@ namespace vcpkg
     }
 
     StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name,
-                                                            const Triplet& triplet,
+                                                            Triplet triplet,
                                                             const std::string& feature) const
     {
         if (feature == "core")
