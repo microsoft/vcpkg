@@ -7,6 +7,14 @@ vcpkg_from_github(
     PATCHES dll.location.patch
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND OPTIONS "-DBUILD_SHARED_LIBS=OFF"
+                        "-DBUILD_STATIC_LIBS=ON")
+else()
+    list(APPEND OPTIONS "-DBUILD_SHARED_LIBS=ON"
+                        "-DBUILD_STATIC_LIBS=OFF")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "jpwl"          BUILD_JPWL
     "mj2"           BUILD_MJ2
@@ -18,20 +26,28 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS -DBUILD_CODEC:BOOL=OFF
+            -DBUILD_DOC:BOOL=OFF
             -DOPENJPEG_INSTALL_PACKAGE_DIR=share/openjpeg
             -DOPENJPEG_INSTALL_INCLUDE_DIR=include
+            -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
+            -DBUILD_PKGCONFIG_FILES=ON
             ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
+if(VCPKG_TARGET_IS_WINDOWS)
+    # TODO: remove m from *.pc files
+endif()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if("jpwl" IN_LIST FEATURES)
-    list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dec_server opj_dump)
+    list(APPEND TOOL_NAMES  opj_dec_server opj_jpwl_compress opj_jpwl_decompress)
 endif()  
 if("mj2" IN_LIST FEATURES)
-    list(APPEND TOOL_NAMES opj_mj2_compress opj_mj2_decompress opj_mj2_extract opj_mj2_wrap)
+    list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dump opj_mj2_compress opj_mj2_decompress opj_mj2_extract opj_mj2_wrap)
 endif()  
 if("jpip" IN_LIST FEATURES)
     list(APPEND TOOL_NAMES opj_jpip_addxml opj_jpip_test opj_jpip_transcode)
