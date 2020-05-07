@@ -18,7 +18,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "opencl"       ITK_USE_GPU
     "tbb"          Module_ITKTBB
     "rtk"          Module_RTK
+    "rtkcuda"      Module_ITKCudaCommon     
+    "rtkcuda"      RTK_USE_CUDA               
+    "rtkcuda"      CUDA_HAVE_GPU           
 )
+if("rtk" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+         "-DREMOTE_GIT_TAG_RTK=v2.1" # Fix RTK version
+         #"-DRTK_BUILD_APPLICATIONS=OFF"
+         )
+endif()
 if("vtk" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
