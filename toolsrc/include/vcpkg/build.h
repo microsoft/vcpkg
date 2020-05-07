@@ -34,6 +34,7 @@ namespace vcpkg::Build
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
+                                 IBinaryProvider& binaryprovider,
                                  const VcpkgPaths& paths);
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
@@ -209,7 +210,7 @@ namespace vcpkg::Build
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
-                                      IBinaryProvider* binaries_provider,
+                                      IBinaryProvider& binaries_provider,
                                       const StatusParagraphs& status_db);
 
     enum class BuildPolicy
@@ -222,6 +223,7 @@ namespace vcpkg::Build
         ALLOW_OBSOLETE_MSVCRT,
         ALLOW_RESTRICTED_HEADERS,
         SKIP_DUMPBIN_CHECKS,
+        SKIP_ARCHITECTURE_CHECK,
         // Must be last
         COUNT,
     };
@@ -235,6 +237,7 @@ namespace vcpkg::Build
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
         BuildPolicy::ALLOW_RESTRICTED_HEADERS,
         BuildPolicy::SKIP_DUMPBIN_CHECKS,
+        BuildPolicy::SKIP_ARCHITECTURE_CHECK
     };
 
     const std::string& to_string(BuildPolicy policy);
