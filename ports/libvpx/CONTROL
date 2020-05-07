@@ -1,5 +1,5 @@
 Source: libvpx
-Version: 1.8.1-2
+Version: 1.8.1-3
 Homepage: https://github.com/webmproject/libvpx
 Description: The reference software implementation for the video coding formats VP8 and VP9.
-Supports: !(uwp|arm|arm64|linux|osx)
+Supports: !(uwp|arm|arm64)
