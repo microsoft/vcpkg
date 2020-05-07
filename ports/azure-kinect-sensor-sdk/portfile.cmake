@@ -64,7 +64,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Azure.Kinect.Sensor/${VERSION}"
     FILENAME "azure-kinect-sensor-sdk.zip"
-    SHA512 087e89e4670d8b1491a2e24e6829fe1ebd633203f86abd42f7f1f24a6c58d0fd07e9979d281ea7ab48d4a565beb33a305db16c2f0633e7d63a9583b125d8639b
+    SHA512 6c15975e7c834672de723b0c474fa4cd58f41c5bee6511dcbdbc22f1a58daa906c4f01a7e941af0e7d09f763ff886015c1f6b1e29b6bdfb333f10857edfec2ca
 )
 
 vcpkg_extract_source_archive_ex(
