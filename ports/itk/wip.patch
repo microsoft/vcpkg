@@ -49,26 +49,6 @@ index da9f3a902..60420bb0a 100644
      else()
        message(FATAL_ERROR "Dependency \"${dep}\" not found: could not find [${dep}] or [${dep}_LIBRARIES]")
      endif()
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 45307f42e..b00ffbf21 100644
---- a/CMakeLists.txt	
-+++ b/CMakeLists.txt
-@@ -114,7 +114,7 @@ if( CMAKE_HOST_WIN32 AND NOT ITK_SKIP_PATH_LENGTH_CHECKS )
-   endif()
- 
-   string( LENGTH "${CMAKE_CURRENT_BINARY_DIR}" n )
--  if( n GREATER 50 )
-+  if( n GREATER 60 )
-     message(
-       FATAL_ERROR
-       "ITK build directory path length is too long (${n} > 50)."
-@@ -577,6 +577,3 @@ add_subdirectory(Utilities/Doxygen)
- # all tests have been added that reference the group, so we put it last.
- include(ExternalData)
- ExternalData_Add_Target(ITKData)
--
--include(FeatureSummary)
--feature_summary(INCLUDE_QUIET_PACKAGES WHAT ALL)
 diff --git a/Modules/IO/JPEG2000/src/itkJPEG2000ImageIO.cxx b/Modules/IO/JPEG2000/src/itkJPEG2000ImageIO.cxx
 index 1b1fe9526..0da4aa0c4 100644
 --- a/Modules/IO/JPEG2000/src/itkJPEG2000ImageIO.cxx	
