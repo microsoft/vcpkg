@@ -1,8 +1,8 @@
-set(VERSION v1.4.0-alpha.0)
+set(VERSION 1.4.0-alpha.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/Azure-Kinect-Sensor-SDK
-    REF ${VERSION}
+    REF v${VERSION}
     SHA512 bf09ff92dc1b8621a941d838aef9c804bb5635f7984b7f86f01a38441d44935db764b69483d598e1f2c0aafb5c7ec196ef9c722967d92e6d075cb67ce781fea9
     HEAD_REF master
     PATCHES
