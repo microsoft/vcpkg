@@ -315,9 +315,15 @@ namespace vcpkg::Metrics
 
         const HINTERNET session = WinHttpOpen(
             L"vcpkg/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
-        if (session) connect = WinHttpConnect(session, L"dc.services.visualstudio.com", INTERNET_DEFAULT_HTTPS_PORT, 0);
+
+        unsigned long secure_protocols = WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2;
+        if (session && WinHttpSetOption(session, WINHTTP_OPTION_SECURE_PROTOCOLS, &secure_protocols, sizeof(DWORD)))
+        {
+            connect = WinHttpConnect(session, L"dc.services.visualstudio.com", INTERNET_DEFAULT_HTTPS_PORT, 0);
+        }
 
         if (connect)
+        {
             request = WinHttpOpenRequest(connect,
                                          L"POST",
                                          L"/v2/track",
@@ -325,6 +331,7 @@ namespace vcpkg::Metrics
                                          WINHTTP_NO_REFERER,
                                          WINHTTP_DEFAULT_ACCEPT_TYPES,
                                          WINHTTP_FLAG_SECURE);
+        }
 
         if (request)
         {
@@ -448,7 +455,7 @@ namespace vcpkg::Metrics
 #else
         auto escaped_path = Strings::escape_string(vcpkg_metrics_txt_path.u8string(), '\'', '\\');
         const std::string cmd_line = Strings::format(
-            R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --data '@%s' >/dev/null 2>&1; rm '%s') &)",
+            R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --tlsv1.2 --data '@%s' >/dev/null 2>&1; rm '%s') &)",
             escaped_path,
             escaped_path);
         System::cmd_execute_clean(cmd_line);
