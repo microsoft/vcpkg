@@ -16,23 +16,27 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "vtk"          Module_ITKVtkGlue
     "cufftw"       ITK_USE_CUFFTW
     "opencl"       ITK_USE_GPU
-    #"test"        ITK_USE_SYSTEM_GOOGLETEST
 )
-
+if("vtk" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND ADDITIONAL_OPTIONS
+         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by mvtk if vtk[python] was build
+         )
+endif()
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_FIND_ABI=ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY"
-        "-DPython3_VERSION=3.7"
-        #"-DPython3_FOUND=ON"
         "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
         "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
-        -DPython3_LIBRARIES="debug\\\\\\\\\\\\\\\\\\\\\\\\;${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib\\\\\\\\\\\\\\\\\\\\\\\\;optimized\\\\\\\\\\\\\\\\\\\\\\\\;${CURRENT_INSTALLED_DIR}/lib/python37.lib"
         "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7"
-        "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
-    )
+        "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
+        )
+        #"-DPython3_FIND_ABI=ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY"
+        #"-DPython3_VERSION=3.7"
+        #-DPython3_LIBRARIES="debug\\\\\\\\\\\\\\\\\\\\\\\\;${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib\\\\\\\\\\\\\\\\\\\\\\\\;optimized\\\\\\\\\\\\\\\\\\\\\\\\;${CURRENT_INSTALLED_DIR}/lib/python37.lib"
+
     list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib")
     list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python37.lib")
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
@@ -71,10 +75,13 @@ vcpkg_configure_cmake(
         # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break
         -DITK_FORBID_DOWNLOADS=OFF
 
+        -DINSTALL_GTEST=OFF
+        -DITK_USE_SYSTEM_GOOGLETEST=ON
+        -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
         
         # TODO
         #-DVXL_USE_GEOTIFF=ON
-        
+        -DVXL_USE_LFS=ON
         
         #-DModule_IOSTL=ON # example how to turn on a non-default module
         #-DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
@@ -86,6 +93,7 @@ vcpkg_configure_cmake(
         -DITK_WRAP_vector_double=ON
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
+        
     OPTIONS_DEBUG   ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
@@ -94,9 +102,15 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
+set(_files itkLIBMINCConfig UseitkLIBMINC)
+foreach(_file IN LISTS _files)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake/${_file}.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${_file}.cmake")
+endforeach()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
