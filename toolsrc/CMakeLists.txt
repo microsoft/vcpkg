@@ -114,7 +114,7 @@ file(GLOB_RECURSE VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
 
 add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
-if(WIN32)
+if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
     add_executable(vcpkgmetricsuploader WIN32 src/vcpkgmetricsuploader.cpp $<TARGET_OBJECTS:vcpkglib>)
 endif()
 
