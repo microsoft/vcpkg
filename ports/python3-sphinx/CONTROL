@@ -1,4 +1,4 @@
 Source: python3-sphinx
-Version:
+Version: 1-0
 Description: Sphinx is a tool that makes it easy to create intelligent and beautiful documentation
 Build-Depends: python3-setuptools
