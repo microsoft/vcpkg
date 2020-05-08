@@ -58,7 +58,7 @@ message(STATUS "Upgrading pip..")
 #    LOGNAME upgrade-pip-${TARGET_TRIPLET}-dbg
 #)
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON_EXECUTABLE} -m pip install --upgrade pip
+    COMMAND ${PYTHON_EXECUTABLE} -m pip install -U --force pip setuptools wheel pep517
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME upgrade-pip-${TARGET_TRIPLET}-rel
 )
