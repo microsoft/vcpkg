@@ -5,7 +5,7 @@ vcpkg_from_github(
     REF v3.1.3
     SHA512 4ecb5c2d13f9bda7aa3c12e887c351a0004509ec24bdd440542bec67e1b6dca20e7838a01236a71dd3cf2e1ba0653c40878047f406464cb2c9ee07c26d6f2599
     HEAD_REF master
-    PATCHES disable-platform-lib-dir.patch
+    PATCHES disable-platform-lib-dir.patch fix-macos-clipboard.patch
 )
 
 set(OPTIONS)
