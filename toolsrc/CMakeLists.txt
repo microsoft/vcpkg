@@ -114,13 +114,16 @@ file(GLOB_RECURSE VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
 
 add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
+    add_executable(vcpkgmetricsuploader WIN32 src/vcpkgmetricsuploader.cpp $<TARGET_OBJECTS:vcpkglib>)
+endif()
 
 if (BUILD_TESTING)
     file(GLOB_RECURSE VCPKGTEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
 
     enable_testing()
     add_executable(vcpkg-test ${VCPKGTEST_SOURCES} $<TARGET_OBJECTS:vcpkglib>)
-    add_test(NAME default COMMAND vcpkg-test)
+    add_test(NAME default COMMAND vcpkg-test --order rand --rng-seed time)
 
     if (VCPKG_BUILD_BENCHMARKING)
         target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
@@ -154,4 +157,3 @@ if(MSVC)
     target_sources(vcpkglib PRIVATE src/pch.cpp)
     target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
 endif()
-

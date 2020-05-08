@@ -76,7 +76,7 @@ file(WRITE "${BUILDDIR}/Configure" "${_contents}")
 
 if(BUILD_SHARED_LIBS)
     set(SHARED shared)
-    file(STRINGS "${BUILDDIR}/crypto/opensslv.h" SHLIB_VERSION
+    file(STRINGS "${BUILDDIR}/include/openssl/opensslv.h" SHLIB_VERSION
         REGEX "^#[\t ]*define[\t ]+SHLIB_VERSION_NUMBER[\t ]+\".*\".*")
     string(REGEX REPLACE "^.*SHLIB_VERSION_NUMBER[\t ]+\"([^\"]*)\".*$" "\\1"
         SHLIB_VERSION "${SHLIB_VERSION}")
