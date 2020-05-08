@@ -1,0 +1,44 @@
+[global]
+verbose=1
+
+[build]
+## icl 64
+#compiler=intelem
+#compiler=mingw32
+compiler=msvc
+force=1
+
+[build_ext]
+## icl 64
+#compiler=intelem
+#compiler=mingw32
+compiler=msvc
+include-dirs=${CURRENT_INSTALLED_DIR}/include/python3.7;${CURRENT_INSTALLED_DIR}/include${PYTHON_SEP_DIRS}
+library-dirs=${CURRENT_INSTALLED_DIR}/lib${PYTHON_SEP_DIRS}
+#${CURRENT_INSTALLED_DIR}/python3/libs;
+
+[build_clib]
+## icl 64
+#compiler=intelem
+#compiler=mingw32
+compiler=msvc
+
+#[config]
+## icl 64
+#compiler=intelem
+#compiler=mingw32
+#compiler=msvc
+
+[Paths]
+#home_dir: /Users
+#my_dir: ${home_dir}/lumberjack
+#my_pictures: ${my_dir}/Pictures
+#lib = ${CURRENT_INSTALLED_DIR}/lib;${lib};${library_dirs}
+#include = ${CURRENT_INSTALLED_DIR}/include;${include};${include_dirs}
+#path = C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/redist/intel64_win/compiler;C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/bin/intel64
+
+[Common]
+#home_dir: /Users
+#library_dir: /Library
+#system_dir: /System
+#macports_dir: /opt/local
