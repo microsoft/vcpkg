@@ -34,7 +34,6 @@ namespace vcpkg::Commands::CI
 
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
     static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
-    static constexpr StringLiteral OPTION_PURGE_TOMBSTONES = "--purge-tombstones";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
 
@@ -43,10 +42,9 @@ namespace vcpkg::Commands::CI
         {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
     }};
 
-    static constexpr std::array<CommandSwitch, 3> CI_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 2> CI_SWITCHES = {{
         {OPTION_DRY_RUN, "Print out plan without execution"},
         {OPTION_RANDOMIZE, "Randomize the install order"},
-        {OPTION_PURGE_TOMBSTONES, "Purge failure tombstones and retry building the ports"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -256,7 +254,6 @@ namespace vcpkg::Commands::CI
         const PortFileProvider::PortFileProvider& provider,
         const CMakeVars::CMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
-        const bool purge_tombstones,
         const bool binary_caching_enabled,
         IBinaryProvider& binaryprovider)
     {
@@ -295,7 +292,7 @@ namespace vcpkg::Commands::CI
         std::vector<FullPackageSpec> install_specs;
         for (auto&& install_action : action_plan.install_actions)
         {
-            install_specs.emplace_back(FullPackageSpec{install_action.spec, install_action.feature_list});
+            install_specs.emplace_back(install_action.spec, install_action.feature_list);
         }
 
         var_provider.load_tag_vars(install_specs, provider);
@@ -323,7 +320,7 @@ namespace vcpkg::Commands::CI
                     p->build_options = build_options;
                 }
 
-                auto precheck_result = binaryprovider.precheck(paths, action, purge_tombstones);
+                auto precheck_result = binaryprovider.precheck(paths, action);
                 bool b_will_build = false;
 
                 std::string state;
@@ -367,11 +364,11 @@ namespace vcpkg::Commands::CI
                     b_will_build = true;
                 }
 
-            stdout_print.append(Strings::format("%40s: %1s %8s: %s\n",
-                                            p->spec,
-                                            (b_will_build ? "*" : " "),
-                                            state,
-                                            action.package_abi.value_or_exit(VCPKG_LINE_INFO));
+                stdout_print.append(Strings::format("%40s: %1s %8s: %s\n",
+                                                    p->spec,
+                                                    (b_will_build ? "*" : " "),
+                                                    state,
+                                                    action.package_abi.value_or_exit(VCPKG_LINE_INFO)));
             }
         } // flush stdout_print
 
@@ -400,7 +397,6 @@ namespace vcpkg::Commands::CI
         }
 
         const auto is_dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
-        const auto purge_tombstones = Util::Sets::contains(options.switches, OPTION_PURGE_TOMBSTONES);
 
         std::vector<Triplet> triplets = Util::fmap(
             args.command_arguments, [](std::string s) { return Triplet::from_canonical_name(std::move(s)); });
@@ -459,7 +455,6 @@ namespace vcpkg::Commands::CI
                                                          provider,
                                                          var_provider,
                                                          all_default_full_specs,
-                                                         purge_tombstones,
                                                          args.binary_caching_enabled(),
                                                          *binaryprovider);
             PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);

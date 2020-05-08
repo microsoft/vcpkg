@@ -206,8 +206,7 @@ namespace
             }
         }
         RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action,
-                               bool purge_tombstones) override
+                               const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
             auto& fs = paths.get_filesystem();
@@ -229,11 +228,7 @@ namespace
                 const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
                 const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
 
-                if (purge_tombstones)
-                {
-                    fs.remove(archive_tombstone_path, ec); // Ignore error
-                }
-                else if (fs.exists(archive_tombstone_path))
+                if (fs.exists(archive_tombstone_path))
                 {
                     if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
                     {

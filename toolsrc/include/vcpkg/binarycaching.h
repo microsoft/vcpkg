@@ -32,8 +32,7 @@ namespace vcpkg
         virtual void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) = 0;
         virtual void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) = 0;
         virtual RestoreResult precheck(const VcpkgPaths& paths,
-                                       const Dependencies::InstallPlanAction& action,
-                                       bool purge_tombstones) = 0;
+                                       const Dependencies::InstallPlanAction& action) = 0;
     };
 
     ExpectedS<std::unique_ptr<IBinaryProvider>> create_binary_provider_from_configs(const VcpkgPaths& paths,
