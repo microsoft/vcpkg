@@ -466,6 +466,12 @@ namespace vcpkg::Build
                 hash += "-";
                 hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "android.cmake", algo);
             }
+            else if (pre_build_info.cmake_system_name.empty() || pre_build_info.cmake_system_name == "Windows" ||
+                     pre_build_info.cmake_system_name == "WindowsStore")
+            {
+                hash += "-";
+                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "windows.cmake", algo);
+            }
 
             s_hash_cache.emplace(triplet_file_path, hash);
         }
