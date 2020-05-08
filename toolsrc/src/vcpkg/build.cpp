@@ -649,6 +649,26 @@ namespace vcpkg::Build
         return result;
     }
 
+    static void abi_tags_from_pre_build_info(const PreBuildInfo& pre_build_info, std::vector<AbiEntry>& abi_tag_entries)
+    {
+        abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
+
+        if (pre_build_info.public_abi_override)
+        {
+            abi_tag_entries.emplace_back(
+                "public_abi_override",
+                Hash::get_string_hash(pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO),
+                                      Hash::Algorithm::Sha1));
+        }
+
+        for (const auto& env_var : pre_build_info.passthrough_env_vars)
+        {
+            abi_tag_entries.emplace_back(
+                "ENV:" + env_var,
+                Hash::get_string_hash(System::get_environment_variable(env_var).value_or(""), Hash::Algorithm::Sha1));
+        }
+    }
+
     Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
                                             const Dependencies::InstallPlanAction& action,
                                             Span<const AbiEntry> dependency_abis)
@@ -660,41 +680,30 @@ namespace vcpkg::Build
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
-        // Sorted here as the order of dependency_abis is the only
-        // non-deterministically ordered set of AbiEntries
-        Util::sort(abi_tag_entries);
+        abi_tags_from_pre_build_info(pre_build_info, abi_tag_entries);
 
         // If there is an unusually large number of files in the port then
         // something suspicious is going on.  Rather than hash all of them
         // just mark the port as no-hash
         const int max_port_file_count = 100;
 
-        // the order of recursive_directory_iterator is undefined so save the names to sort
         auto&& port_dir = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_location;
-        std::vector<AbiEntry> port_files;
+        size_t port_file_count = 0;
         for (auto& port_file : fs::stdfs::recursive_directory_iterator(port_dir))
         {
             if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, port_file)))
             {
-                port_files.emplace_back(
+                abi_tag_entries.emplace_back(
                     port_file.path().filename().u8string(),
                     vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, fs, port_file, Hash::Algorithm::Sha1));
 
-                if (port_files.size() > max_port_file_count)
+                ++port_file_count;
+                if (port_file_count > max_port_file_count)
                 {
                     abi_tag_entries.emplace_back("no_hash_max_portfile", "");
                     break;
                 }
             }
-        }
-
-        if (port_files.size() <= max_port_file_count)
-        {
-            Util::sort(port_files, [](const AbiEntry& l, const AbiEntry& r) {
-                return l.value < r.value || (l.value == r.value && l.key < r.key);
-            });
-
-            std::move(port_files.begin(), port_files.end(), std::back_inserter(abi_tag_entries));
         }
 
         abi_tag_entries.emplace_back("cmake", paths.get_tool_version(Tools::CMAKE));
@@ -711,28 +720,13 @@ namespace vcpkg::Build
                                        Hash::Algorithm::Sha1));
 
         abi_tag_entries.emplace_back("post_build_checks", "2");
-        abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
         std::vector<std::string> sorted_feature_list = action.feature_list;
         Util::sort(sorted_feature_list);
         abi_tag_entries.emplace_back("features", Strings::join(";", sorted_feature_list));
 
-        if (pre_build_info.public_abi_override)
-        {
-            abi_tag_entries.emplace_back(
-                "public_abi_override",
-                Hash::get_string_hash(pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO),
-                                      Hash::Algorithm::Sha1));
-        }
-
-        // No need to sort, the variables are stored in the same order they are written down in the abi-settings file
-        for (const auto& env_var : pre_build_info.passthrough_env_vars)
-        {
-            abi_tag_entries.emplace_back(
-                "ENV:" + env_var,
-                Hash::get_string_hash(System::get_environment_variable(env_var).value_or(""), Hash::Algorithm::Sha1));
-        }
-
         if (action.build_options.use_head_version == UseHeadVersion::YES) abi_tag_entries.emplace_back("head", "");
+
+        Util::sort(abi_tag_entries);
 
         const std::string full_abi_info =
             Strings::join("", abi_tag_entries, [](const AbiEntry& p) { return p.key + " " + p.value + "\n"; });
@@ -1063,24 +1057,23 @@ namespace vcpkg::Build
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                     break;
                 case VcpkgTripletVar::LOAD_VCVARS_ENV:
-                        if (variable_value.empty())
-                        {
-                            load_vcvars_env = true;
-                            if(external_toolchain_file)
-                                load_vcvars_env = false;
-                        }
-                        else if (Strings::case_insensitive_ascii_equals(variable_value, "1") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "on") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "true"))
-                            load_vcvars_env = true;
-                        else if (Strings::case_insensitive_ascii_equals(variable_value, "0") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "off") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "false"))
-                            load_vcvars_env = false;
-                        else
-                            Checks::exit_with_message(
-                                VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s", variable_value);
-                        break;
+                    if (variable_value.empty())
+                    {
+                        load_vcvars_env = true;
+                        if (external_toolchain_file) load_vcvars_env = false;
+                    }
+                    else if (Strings::case_insensitive_ascii_equals(variable_value, "1") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "on") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "true"))
+                        load_vcvars_env = true;
+                    else if (Strings::case_insensitive_ascii_equals(variable_value, "0") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "off") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "false"))
+                        load_vcvars_env = false;
+                    else
+                        Checks::exit_with_message(
+                            VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s", variable_value);
+                    break;
             }
         }
 
