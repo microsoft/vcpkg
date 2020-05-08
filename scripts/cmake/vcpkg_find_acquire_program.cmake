@@ -134,6 +134,7 @@ function(vcpkg_find_acquire_program VAR)
         find_package_handle_standard_args(Python3Interp DEFAULT_MSG Python3_EXECUTABLE)
       mark_as_advanced(Python3_EXECUTABLE)
       set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+      
     else()
       set(PROGNAME python3)
       set(BREW_PACKAGE_NAME "python")
