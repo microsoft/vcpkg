@@ -308,81 +308,74 @@ namespace vcpkg::Commands::CI
 
         Build::compute_all_abis(paths, action_plan, var_provider, {});
 
-        std::string stdout_buffer;
-        for (auto&& action : action_plan.install_actions)
         {
-            auto p = &action;
-            ret->abi_map.emplace(action.spec, action.package_abi.value_or_exit(VCPKG_LINE_INFO));
-            ret->features.emplace(action.spec, action.feature_list);
-            if (auto scfl = p->source_control_file_location.get())
+            vcpkg::System::buffered_print stdout_print;
+            for (auto&& action : action_plan.install_actions)
             {
-                auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
-                emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
+                auto p = &action;
+                ret->abi_map.emplace(action.spec, action.package_abi.value_or_exit(VCPKG_LINE_INFO));
+                ret->features.emplace(action.spec, action.feature_list);
+                if (auto scfl = p->source_control_file_location.get())
+                {
+                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
+                    emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
-                p->build_options = build_options;
-            }
+                    p->build_options = build_options;
+                }
 
-            auto precheck_result = binaryprovider.precheck(paths, action, purge_tombstones);
-            bool b_will_build = false;
+                auto precheck_result = binaryprovider.precheck(paths, action, purge_tombstones);
+                bool b_will_build = false;
 
-            std::string state;
+                std::string state;
 
-            if (Util::Sets::contains(exclusions, p->spec.name()))
-            {
-                state = "skip";
-                ret->known.emplace(p->spec, BuildResult::EXCLUDED);
-                will_fail.emplace(p->spec);
-            }
-            else if (!supported_for_triplet(var_provider, p))
-            {
-                // This treats unsupported ports as if they are excluded
-                // which means the ports dependent on it will be cascaded due to missing dependencies
-                // Should this be changed so instead it is a failure to depend on a unsupported port?
-                state = "n/a";
-                ret->known.emplace(p->spec, BuildResult::EXCLUDED);
-                will_fail.emplace(p->spec);
-            }
-            else if (Util::any_of(p->package_dependencies,
-                                  [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
-            {
-                state = "cascade";
-                ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
-                will_fail.emplace(p->spec);
-            }
-            else if (precheck_result == RestoreResult::success)
-            {
-                state = "pass";
-                ret->known.emplace(p->spec, BuildResult::SUCCEEDED);
-            }
-            else if (precheck_result == RestoreResult::build_failed)
-            {
-                state = "fail";
-                ret->known.emplace(p->spec, BuildResult::BUILD_FAILED);
-                will_fail.emplace(p->spec);
-            }
-            else
-            {
-                ret->unknown.push_back(FullPackageSpec{p->spec, {p->feature_list.begin(), p->feature_list.end()}});
-                b_will_build = true;
-            }
+                if (Util::Sets::contains(exclusions, p->spec.name()))
+                {
+                    state = "skip";
+                    ret->known.emplace(p->spec, BuildResult::EXCLUDED);
+                    will_fail.emplace(p->spec);
+                }
+                else if (!supported_for_triplet(var_provider, p))
+                {
+                    // This treats unsupported ports as if they are excluded
+                    // which means the ports dependent on it will be cascaded due to missing dependencies
+                    // Should this be changed so instead it is a failure to depend on a unsupported port?
+                    state = "n/a";
+                    ret->known.emplace(p->spec, BuildResult::EXCLUDED);
+                    will_fail.emplace(p->spec);
+                }
+                else if (Util::any_of(p->package_dependencies,
+                                      [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
+                {
+                    state = "cascade";
+                    ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
+                    will_fail.emplace(p->spec);
+                }
+                else if (precheck_result == RestoreResult::success)
+                {
+                    state = "pass";
+                    ret->known.emplace(p->spec, BuildResult::SUCCEEDED);
+                }
+                else if (precheck_result == RestoreResult::build_failed)
+                {
+                    state = "fail";
+                    ret->known.emplace(p->spec, BuildResult::BUILD_FAILED);
+                    will_fail.emplace(p->spec);
+                }
+                else
+                {
+                    ret->unknown.emplace_back(p->spec, p->feature_list);
+                    b_will_build = true;
+                }
 
-            Strings::append(stdout_buffer,
-                            Strings::format("%40s: %1s %8s: %s\n",
+            stdout_print.append(Strings::format("%40s: %1s %8s: %s\n",
                                             p->spec,
                                             (b_will_build ? "*" : " "),
                                             state,
-                                            action.package_abi.value_or_exit(VCPKG_LINE_INFO)));
-            if (stdout_buffer.size() > 2048)
-            {
-                System::print2(stdout_buffer);
-                stdout_buffer.clear();
+                                            action.package_abi.value_or_exit(VCPKG_LINE_INFO));
             }
-        }
-        System::print2(stdout_buffer);
-        stdout_buffer.clear();
+        } // flush stdout_print
 
         System::printf("Time to determine pass/fail: %s\n", timer.elapsed());
-
         return ret;
     }
 

@@ -41,4 +41,26 @@ namespace vcpkg::System
     {
         ::vcpkg::System::details::print(Strings::concat_or_view(args...));
     }
+
+    class buffered_print
+    {
+        ::std::string stdout_buffer;
+        static constexpr ::std::size_t buffer_size_target = 2048;
+        static constexpr ::std::size_t expected_maximum_print = 256;
+        static constexpr ::std::size_t alloc_size = buffer_size_target + expected_maximum_print;
+
+    public:
+        buffered_print() { stdout_buffer.reserve(alloc_size); }
+        void append(::vcpkg::StringView nextView)
+        {
+            stdout_buffer.append(nextView.data(), nextView.size());
+            if (stdout_buffer.size() > buffer_size_target)
+            {
+                ::vcpkg::System::details::print(stdout_buffer);
+                stdout_buffer.clear();
+            }
+        }
+
+        ~buffered_print() { ::vcpkg::System::details::print(stdout_buffer); }
+    };
 }
