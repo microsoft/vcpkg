@@ -3,6 +3,7 @@ function(vcpkg_build_python)
 
     vcpkg_find_acquire_program(PYTHON3)
     
+    set(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
     set(PYTHON_PREFIX "${PYTHONHOME}")
     set(Python3_ROOT_DIR "${PYTHONHOME}")
     set(PYTHONPATH "${PYTHONHOME}/Lib;${PYTHONHOME}/DLLs;${PYTHONHOME}/Lib/site-packages")#;${PYTHONHOME}/Lib/lib-tk
