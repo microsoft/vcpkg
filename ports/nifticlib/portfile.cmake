@@ -7,7 +7,9 @@ vcpkg_from_github(
     PATCHES zlib_include.patch
 )
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "cifti"         USE_CIFTI_CODE
@@ -25,20 +27,11 @@ if("tests" IN_LIST FEATURES)
     list(APPEND TOOL_NAMES nifit_test) 
 endif()
 
-set(OPTIONS)
-if(VCPKG_TARGET_IS_WINDOWS)
-    #list(APPEND OPTIONS "-DCMAKE_C_STANDARD_LIBRARIES_INIT=ws2_32") # should be patched upstream
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
-        ${ADDITIONAL_OPTIONS}
-        
-    OPTIONS_DEBUG   ${OPTIONS_DEBUG}
-    OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
 
 vcpkg_install_cmake()
