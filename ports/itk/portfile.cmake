@@ -7,9 +7,12 @@ vcpkg_from_github(
     SHA512 c358449870d580aeb10e32f8be0ca39e8a76d8dc06fda973788fafb5971333e546611c399190be49d40f5f3c18a1105d9699eef271a560aff25ce168a396926e
     HEAD_REF master
     PATCHES
-        #fix_openjpeg_search.patch
-        #fix_libminc_config_path.patch
-        wip.patch
+        #wip.patch
+        hdf5.patch
+        double-conversion.patch 
+        jpeg.patch
+        var_libraries.patch
+        wrapping.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -20,13 +23,46 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "rtk"          Module_RTK
     "rtkcuda"      Module_ITKCudaCommon     
     "rtkcuda"      RTK_USE_CUDA               
-    "rtkcuda"      CUDA_HAVE_GPU           
+    "rtkcuda"      CUDA_HAVE_GPU 
+    "rtktools"     RTK_BUILD_APPLICATIONS
 )
+
+if("cufftw" IN_LIST FEATURES)
+    message(STATUS "Warning: feature cufftw does currently not compile and requires and upstream fix!")
+    # Alternativly set CUFFT_LIB and CUFFTW_LIB
+    if(WIN32)
+        file(TO_CMAKE_PATH "$ENV{CUDA_PATH}" CUDA_PATH)
+        set(CUDA_LIB_PATH "${CUDA_PATH}")
+
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+            string(APPEND CUDA_LIB_PATH "/lib/x64")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+            string(APPEND CUDA_LIB_PATH "/lib/Win32")
+        else()
+            message(FATAL_ERROR "Architecture ${VCPKG_TARGET_ARCHITECTURE} not supported !")
+        endif()
+        
+        list(APPEND ADDITIONAL_OPTIONS
+             "-DFFTW_LIB_SEARCHPATH=${CUDA_LIB_PATH}"
+             "-DFFTW_INCLUDE_PATH=${CUDA_PATH}/include"
+             )
+    endif()
+endif()
 if("rtk" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
-         "-DREMOTE_GIT_TAG_RTK=v2.1" # Fix RTK version
-         #"-DRTK_BUILD_APPLICATIONS=OFF"
+         "-DModule_RTK_GIT_TAG=6c5d5c2a25a2dd15d3b5ae1d2b9e6f8360b2208d" # RTK latest versions (08.05.2020)
          )
+endif()
+if("rtktools" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES rtkadmmtotalvariation rtkadmmwavelets rtkamsterdamshroud rtkbackprojections rtkbioscangeometry rtkcheckimagequality rtkconjugategradient 
+                           rtkdigisensgeometry rtkdrawgeometricphantom rtkdrawshepploganphantom rtkdualenergysimplexdecomposition rtkelektasynergygeometry rtkextractphasesignal 
+                           rtkextractshroudsignal rtkfdk rtkfdktwodweights rtkfieldofview rtkforwardprojections rtkfourdconjugategradient rtkfourdfdk rtkfourdrooster rtkfourdsart 
+                           rtkgaincorrection rtki0estimation rtkimagxgeometry rtkiterativefdk rtklagcorrection rtklastdimensionl0gradientdenoising rtklut rtkmaskcollimation rtkmcrooster 
+                           rtkmotioncompensatedfourdconjugategradient rtkorageometry rtkosem rtkoverlayphaseandshroud rtkparkershortscanweighting rtkprojectgeometricphantom 
+                           rtkprojectionmatrix rtkprojections rtkprojectshepploganphantom rtkramp rtkrayboxintersection rtkrayquadricintersection rtkregularizedconjugategradient 
+                           rtksart rtkscatterglarecorrection rtksimulatedgeometry rtkspectraldenoiseprojections rtkspectralforwardmodel rtkspectralonestep rtkspectralrooster rtkspectralsimplexdecomposition 
+                           rtksubselect rtktotalnuclearvariationdenoising rtktotalvariationdenoising rtktutorialapplication rtkvarianobigeometry rtkvarianprobeamgeometry rtkvectorconjugategradient 
+                           rtkwangdisplaceddetectorweighting rtkwarpedbackprojectsequence rtkwarpedforwardprojectsequence rtkwaveletsdenoising rtkxradgeometry)
 endif()
 if("vtk" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
@@ -35,7 +71,11 @@ if("vtk" IN_LIST FEATURES)
          )
 endif()
 if("python" IN_LIST FEATURES)
+    message(STATUS "${PORT} builds a long time (>1h) with python wrappers enabled!")
     vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_find_acquire_program(SWIG) # Swig is only required for wrapping!
+    get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
+    vcpkg_add_to_path(${SWIG_DIR})
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
@@ -43,15 +83,14 @@ if("python" IN_LIST FEATURES)
         "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
         "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7"
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
-        #"-DCMAKE_DISABLE_FIND_PACKAGE_HDF5=ON" # need to disable HDF5 for PythonWrapping for now. 
+        "-DSWIG_EXECUTABLE=${SWIG}"
+        "-DSWIG_DIR=${SWIG_DIR}"
         )
-        #"-DPython3_FIND_ABI=ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY\\\\\\\\\\\\\\\\\\\\\\\\;ANY"
-        #"-DPython3_VERSION=3.7"
-        #-DPython3_LIBRARIES="debug\\\\\\\\\\\\\\\\\\\\\\\\;${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib\\\\\\\\\\\\\\\\\\\\\\\\;optimized\\\\\\\\\\\\\\\\\\\\\\\\;${CURRENT_INSTALLED_DIR}/lib/python37.lib"
 
+    # Due to ITKs internal shenanigans with the variables ......
     list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib")
     list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python37.lib")
-    #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
+    #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg 
 endif()
 
 set(USE_64BITS_IDS OFF)
@@ -84,23 +123,17 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_ZLIB=ON
         -DITK_USE_SYSTEM_EIGEN=ON
         -DITK_USE_SYSTEM_FFTW=ON
-        -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past
+        -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past and still is. ITK still has not figured out how to do it correctly!
         -DITK_USE_SYSTEM_GDCM=ON
-        #-DModule_ITKIOJPEG2000=OFF # does not build with openjpeg installed
-        -DGDCM_USE_SYSTEM_OPENJPEG=ON
-        -DITK_USE_SYSTEM_OpenJPEG=ON
-        
+        -DITK_USE_SYSTEM_OpenJPEG=ON # Added by VCPKG        
         -DITK_USE_SYSTEM_DCMTK=ON 
         -DDCMTK_USE_ICU=ON
-        -DITK_USE_SYSTEM_ICU=ON
-        
+        -DITK_USE_SYSTEM_ICU=ON        
         #-DITK_USE_SYSTEM_VXL=ON
-        #-DITK_USE_SYSTEM_CASTXML=ON
-        #-DITK_USE_SYSTEM_MINC=ON
-        #-DITK_USE_SYSTEM_SWIG=ON
-        # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break
-        -DITK_FORBID_DOWNLOADS=OFF
-
+        #-DITK_USE_SYSTEM_CASTXML=ON # needs to be added to vcpkg_find_acquire_program https://data.kitware.com/api/v1/file/hashsum/sha512/b8b6f0aff11fe89ab2fcd1949cc75f2c2378a7bc408827a004396deb5ff5a9976bffe8a597f8db1b74c886ea39eb905e610dce8f5bd7586a4d6c196d7349da8d/download
+        #-DITK_USE_SYSTEM_MINC=ON # port needs to be added to VCPKG
+        -DITK_USE_SYSTEM_SWIG=ON
+        -DITK_FORBID_DOWNLOADS=OFF # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break. Remote Modules would probably break with this!
         -DINSTALL_GTEST=OFF
         -DITK_USE_SYSTEM_GOOGLETEST=ON
         -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
@@ -127,6 +160,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
+
+if(TOOL_NAMES)
+    vcpkg_coyp_tools(TOOL_NAMES ${TOOL_NAMES})
+endif()
 
 set(_files itkLIBMINCConfig UseitkLIBMINC)
 foreach(_file IN LISTS _files)

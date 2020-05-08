@@ -27,6 +27,10 @@ Build-Depends: tbb
 Feature: rtk
 Description: Build RTK Module
 
+Feature: rtktools
+Description: Build RTK with tools
+Build-Depends: itk[core, rtk]
+
 Feature: rtkcuda
 Description: Build RTK Module with cuda
-Build-Depends: itk[core, rtk, opencl]
+Build-Depends: itk[core, rtk, opencl], cuda
