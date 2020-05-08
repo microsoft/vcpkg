@@ -543,8 +543,9 @@ namespace vcpkg::Commands::CI
             result.summary.print();
         }
 
-        auto it_xunit = options.settings.find(OPTION_XUNIT);
-        if (it_xunit != options.settings.end())
+        auto& settings = options.settings;
+        auto it_xunit = settings.find(OPTION_XUNIT);
+        if (it_xunit != settings.end())
         {
             paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }

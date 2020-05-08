@@ -60,7 +60,6 @@ namespace vcpkg::System
                 stdout_buffer.clear();
             }
         }
-
         ~buffered_print() { ::vcpkg::System::details::print(stdout_buffer); }
     };
 }
