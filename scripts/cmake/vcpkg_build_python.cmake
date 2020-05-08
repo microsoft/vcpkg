@@ -9,7 +9,7 @@ function(vcpkg_build_python)
       find_package_handle_standard_args(Python3 DEFAULT_MSG Python3_EXECUTABLE)
       find_package_handle_standard_args(Python3Interp DEFAULT_MSG Python3_EXECUTABLE)
     mark_as_advanced(Python3_EXECUTABLE)
-    set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+#    set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 #    set(Python3_ROOT_DIR ${PYTHON_PREFIX})
     set(PYTHONPATH "${PYTHON_PREFIX}/Lib;${PYTHON_PREFIX}/DLLs;${PYTHON_PREFIX}/Lib/site-packages")#;${PYTHON_PREFIX}/Lib/lib-tk
     set(PYTHONSCRIPT "${PYTHON_PREFIX}/Scripts")
