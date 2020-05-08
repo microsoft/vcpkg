@@ -15,9 +15,7 @@
 # Successfully installed certifi-2019.3.9 chardet-3.0.4 idna-2.8 requests-2.22.0 urllib3-1.25.3
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR ${PYTHON3} PATH)
-vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
-set(PYTHON_EXECUTABLE ${PYTHON3})
+#set(Python3_EXECUTABLE ${PYTHON3})
 
 #set(PYTHON_DEBUG_EXECUTABLE ${CURRENT_INSTALLED_DIR}/debug/python3/python_d.exe)
 
@@ -40,7 +38,7 @@ if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip)
 endif()
 
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON_EXECUTABLE} ${PYFILE_PATH}/get-pip.py
+    COMMAND ${Python3_EXECUTABLE} ${PYFILE_PATH}/get-pip.py
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME install-pip-${TARGET_TRIPLET}-rel
 )
@@ -58,7 +56,7 @@ message(STATUS "Upgrading pip..")
 #    LOGNAME upgrade-pip-${TARGET_TRIPLET}-dbg
 #)
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON_EXECUTABLE} -m pip install -U --force pip setuptools wheel pep517
+    COMMAND ${Python3_EXECUTABLE} -m pip install -U --force pip setuptools wheel pep517
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME upgrade-pip-${TARGET_TRIPLET}-rel
 )
