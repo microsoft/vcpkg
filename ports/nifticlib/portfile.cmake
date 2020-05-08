@@ -1,18 +1,39 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO   addisonElliott/nifticlib 
-    REF 8a301274a95a3124c4e945e353884c50460e8e40
-    SHA512 d6ce69fdd6926354f00e9cccbdab280dce77d69d02d9686be256cab18b81198a4682b8aeeaa82fe53a30b18142c695f9b7758a1cb4d847199b40c877466097a3
+    REPO    NIFTI-Imaging/nifti_clib 
+    REF 65f801b9c2f1f15f4de4a19d45e6595c25765632
+    SHA512 be03cdc6cf17fd9ff74c5ecc1f6b2132121bb4b7973a731da334af2a8428d1f0dbbf7b94b2511d1ff7e515b8cc4cf3316d62b189566fb6ffc88c6146eebd48ff
     HEAD_REF master
     PATCHES zlib_include.patch
 )
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "cifti"         USE_CIFTI_CODE
+    "fsl"           USE_FSL_CODE
+    "nifti2"        USE_NIFTI2_CODE
+    "nifticdf"      USE_NIFTICDF_CODE
+    "tools"         NIFTI_BUILD_APPLICATIONS
+    "tests"         BUILD_TESTING
+)
+set(TOOL_NAMES)
+if("tools" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES nifti_stats nifti_tool nifti1_tool)
+endif()
+if("tests" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES nifit_test) 
+endif()
+
+set(OPTIONS)
+if(VCPKG_TARGET_IS_WINDOWS)
+    #list(APPEND OPTIONS "-DCMAKE_C_STANDARD_LIBRARIES_INIT=ws2_32") # should be patched upstream
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        "-DBUILD_TESTING=OFF"
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
         
@@ -22,8 +43,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake TARGET_PATH share)
 
-vcpkg_copy_tools(TOOL_NAMES nifti_stats nifti_tool nifti1_test AUTO_CLEAN)
+if(TOOL_NAMES)
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

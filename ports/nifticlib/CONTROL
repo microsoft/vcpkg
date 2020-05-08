@@ -1,4 +1,23 @@
 Source: nifticlib
-Version: 2.0.0
+Version: 04-30-2020
 Description: Nifticlib is a C I/O library for reading and writing files in the nifti-1 data format. 
-Homepage: https://github.com/addisonElliott/nifticlib
+Homepage: NIFTI-Imaging/nifti_clib
+Default-Features: nifti2, nifticdf
+
+Feature: cifti
+Description: Build cifti libraries and tools
+
+Feature: fsl
+Description: Build fsl libraries and tools
+
+Feature: nifti2
+Description: Build nifti2 libraries and tools
+
+Feature: nifticdf
+Description: Build nifticdf libraries and tools
+
+Feature: tools
+Description: Build tools
+
+Feature: tests
+Description: Build tests

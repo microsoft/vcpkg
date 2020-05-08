@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca50af02c..6365b4a37 100644
+index 54150d739..c3ca8fe50 100644
 --- a/CMakeLists.txt	
 +++ b/CMakeLists.txt
-@@ -51,6 +51,7 @@ ELSE("${ITK_VERSION_MAJOR}" GREATER 0.0)
-   SET(CPACK_PACKAGE_VERSION_PATCH "0")
- ###  USE AS STAND ALONE PACKAGE
-    FIND_PACKAGE(ZLIB)
-+   include_directories(${ZLIB_INCLUDE_DIRS})
- #  MESSAGE(STATUS "---------------------SYSTEM ZLIB ${ZLIB_LIBRARY}")
-   SET(PACKAGE_PREFIX "")
-   # Set default shared library version
+@@ -77,6 +77,7 @@ set_if_not_defined(ZNZ_COMPILE_DEF "")
+ if(NOT NIFTI_ZLIB_LIBRARIES) # If using a custom zlib library, skip the find package
+   ###  USE AS STAND ALONE PACKAGE
+   find_package(ZLIB REQUIRED)
++  include_directories(${ZLIB_INCLUDE_DIRS})
+   set(NIFTI_ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
+ endif()
+ #message(STATUS "---------------------ZLIB -${NIFTI_ZLIB_LIBRARIES}--")
