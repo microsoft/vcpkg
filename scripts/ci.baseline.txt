@@ -1017,7 +1017,7 @@ mathgl:x64-uwp=fail
 mathgl:x64-linux=ignore
 matio:x64-linux=fail
 matio:x64-osx=fail
-magnum:arm64-windows
+magnum:arm64-windows=fail
 mbedtls:arm-uwp=fail
 mbedtls:x64-uwp=fail
 mdnsresponder:arm64-windows=fail
