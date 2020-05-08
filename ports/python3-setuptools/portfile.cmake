@@ -1,7 +1,7 @@
 vcpkg_find_acquire_program(PYTHON3)
 
 message(STATUS "Installing built-in pip wheel..")
-if(NOT EXISTS ${PYTHONHOME}/Scripts/pip)
+if(NOT EXISTS ${PYTHON_PREFIX}/Scripts/pip)
     vcpkg_from_github(
         OUT_SOURCE_PATH PYFILE_PATH
         REPO pypa/get-pip
