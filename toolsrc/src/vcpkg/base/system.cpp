@@ -105,6 +105,19 @@ namespace vcpkg
 #endif // defined(_WIN32)
     }
 
+    ExpectedS<std::string> System::get_home_dir() noexcept
+    {
+#ifdef _WIN32
+        auto maybe_home = System::get_environment_variable("USERPROFILE");
+        if (!maybe_home.has_value() || maybe_home.get()->empty())
+            return {"unable to read %USERPROFILE%", ExpectedRightTag{}};
+#else
+        auto maybe_home = System::get_environment_variable("HOME");
+        if (!maybe_home.has_value() || maybe_home.get()->empty()) return {"unable to read $HOME", ExpectedRightTag{}};
+#endif
+        return {std::move(*maybe_home.get()), ExpectedLeftTag{}};
+    }
+
 #if defined(_WIN32)
     static bool is_string_keytype(const DWORD hkey_type)
     {

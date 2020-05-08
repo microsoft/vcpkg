@@ -1,5 +1,6 @@
 Source: sdformat6
-Version: 6.2.0
+Version: 6.2.0-1
 Homepage: http://sdformat.org/
 Build-Depends: boost-any, boost-variant, ignition-math4, urdfdom, tinyxml
 Description: Simulation Description Format (SDF) parser and description files.
+Supports: !(arm|uwp)

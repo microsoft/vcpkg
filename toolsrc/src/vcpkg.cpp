@@ -62,6 +62,8 @@ static void invalid_command(const std::string& cmd)
 
 static void inner(const VcpkgCmdArguments& args)
 {
+    auto& fs = Files::get_real_filesystem();
+
     Metrics::g_metrics.lock()->track_property("command", args.command);
     if (args.command.empty())
     {
@@ -88,26 +90,26 @@ static void inner(const VcpkgCmdArguments& args)
     }
 
     fs::path vcpkg_root_dir;
-    if (args.vcpkg_root_dir != nullptr)
+    if (args.vcpkg_root_dir)
     {
-        vcpkg_root_dir = fs::stdfs::absolute(fs::u8path(*args.vcpkg_root_dir));
+        vcpkg_root_dir = fs.absolute(VCPKG_LINE_INFO, fs::u8path(*args.vcpkg_root_dir));
     }
     else
     {
         const auto vcpkg_root_dir_env = System::get_environment_variable("VCPKG_ROOT");
         if (const auto v = vcpkg_root_dir_env.get())
         {
-            vcpkg_root_dir = fs::stdfs::absolute(*v);
+            vcpkg_root_dir = fs.absolute(VCPKG_LINE_INFO, *v);
         }
         else
         {
-            const fs::path current_path = fs::stdfs::current_path();
-            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(current_path, ".vcpkg-root");
+            const fs::path current_path = fs.current_path(VCPKG_LINE_INFO);
+            vcpkg_root_dir = fs.find_file_recursively_up(current_path, ".vcpkg-root");
 
             if (vcpkg_root_dir.empty())
             {
-                vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(
-                    fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+                vcpkg_root_dir = fs.find_file_recursively_up(
+                    fs.absolute(VCPKG_LINE_INFO, System::get_exe_path_of_current_process()), ".vcpkg-root");
             }
         }
     }
@@ -116,17 +118,23 @@ static void inner(const VcpkgCmdArguments& args)
 
     Debug::print("Using vcpkg-root: ", vcpkg_root_dir.u8string(), '\n');
 
+    Optional<fs::path> install_root_dir;
+    if (args.install_root_dir) {
+        install_root_dir = Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.install_root_dir));
+        Debug::print("Using install-root: ", install_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
+    }
+
     Optional<fs::path> vcpkg_scripts_root_dir = nullopt;
-    if (nullptr != args.scripts_root_dir)
+    if (args.scripts_root_dir)
     {
-        vcpkg_scripts_root_dir = fs::stdfs::canonical(fs::u8path(*args.scripts_root_dir));
+        vcpkg_scripts_root_dir = Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.scripts_root_dir));
         Debug::print("Using scripts-root: ", vcpkg_scripts_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
     }
 
     auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
     const Expected<VcpkgPaths> expected_paths =
-        VcpkgPaths::create(vcpkg_root_dir, vcpkg_scripts_root_dir, default_vs_path, args.overlay_triplets.get());
+        VcpkgPaths::create(vcpkg_root_dir, install_root_dir, vcpkg_scripts_root_dir, default_vs_path, args.overlay_triplets.get());
     Checks::check_exit(VCPKG_LINE_INFO,
                        !expected_paths.error(),
                        "Error: Invalid vcpkg root directory %s: %s",

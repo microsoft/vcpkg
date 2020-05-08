@@ -3,6 +3,7 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/export.chocolatey.h>
+#include <vcpkg/export.prefab.h>
 #include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
 #include <vcpkg/help.h>
@@ -263,6 +264,7 @@ namespace vcpkg::Export
         bool zip = false;
         bool seven_zip = false;
         bool chocolatey = false;
+        bool prefab = false;
         bool all_installed = false;
 
         Optional<std::string> maybe_output;
@@ -271,6 +273,7 @@ namespace vcpkg::Export
         Optional<std::string> maybe_nuget_version;
 
         IFW::Options ifw_options;
+        Prefab::Options prefab_options;
         Chocolatey::Options chocolatey_options;
         std::vector<PackageSpec> specs;
     };
@@ -294,7 +297,19 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--x-version-suffix";
     static constexpr StringLiteral OPTION_ALL_INSTALLED = "--x-all-installed";
 
-    static constexpr std::array<CommandSwitch, 8> EXPORT_SWITCHES = {{
+    static constexpr StringLiteral OPTION_PREFAB = "--prefab";
+    static constexpr StringLiteral OPTION_PREFAB_GROUP_ID = "--prefab-group-id";
+    static constexpr StringLiteral OPTION_PREFAB_ARTIFACT_ID = "--prefab-artifact-id";
+    static constexpr StringLiteral OPTION_PREFAB_VERSION = "--prefab-version";
+    static constexpr StringLiteral OPTION_PREFAB_SDK_MIN_VERSION = "--prefab-min-sdk";
+    static constexpr StringLiteral OPTION_PREFAB_SDK_TARGET_VERSION = "--prefab-target-sdk";
+    static constexpr StringLiteral OPTION_PREFAB_ENABLE_MAVEN = "--prefab-maven";
+    static constexpr StringLiteral OPTION_PREFAB_ENABLE_DEBUG = "--prefab-debug";
+
+
+
+
+    static constexpr std::array<CommandSwitch, 11> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
         {OPTION_NUGET, "Export a NuGet package"},
@@ -302,10 +317,13 @@ namespace vcpkg::Export
         {OPTION_ZIP, "Export to a zip file"},
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
         {OPTION_CHOCOLATEY, "Export a Chocolatey package (experimental feature)"},
+        {OPTION_PREFAB, "Export to Prefab format"},
+        {OPTION_PREFAB_ENABLE_MAVEN, "Enable maven"},
+        {OPTION_PREFAB_ENABLE_DEBUG, "Enable prefab debug"},
         {OPTION_ALL_INSTALLED, "Export all installed packages"},
     }};
 
-    static constexpr std::array<CommandSetting, 10> EXPORT_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 15> EXPORT_SETTINGS = {{
         {OPTION_OUTPUT, "Specify the output name (used to construct filename)"},
         {OPTION_NUGET_ID, "Specify the id for the exported NuGet package (overrides --output)"},
         {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
@@ -318,6 +336,11 @@ namespace vcpkg::Export
          "Specify the maintainer for the exported Chocolatey package (experimental feature)"},
         {OPTION_CHOCOLATEY_VERSION_SUFFIX,
          "Specify the version suffix to add for the exported Chocolatey package (experimental feature)"},
+        {OPTION_PREFAB_GROUP_ID,  "GroupId uniquely identifies your project according maven specifications"},
+        {OPTION_PREFAB_ARTIFACT_ID, "Artifact Id is the name of the project according maven specifications"},
+        {OPTION_PREFAB_VERSION, "Version is the name of the project according maven specifications"},
+        {OPTION_PREFAB_SDK_MIN_VERSION, "Android minimum supported sdk version"},
+        {OPTION_PREFAB_SDK_TARGET_VERSION, "Android target sdk version"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -343,8 +366,11 @@ namespace vcpkg::Export
         ret.zip = options.switches.find(OPTION_ZIP) != options.switches.cend();
         ret.seven_zip = options.switches.find(OPTION_SEVEN_ZIP) != options.switches.cend();
         ret.chocolatey = options.switches.find(OPTION_CHOCOLATEY) != options.switches.cend();
-        ret.all_installed = options.switches.find(OPTION_ALL_INSTALLED) != options.switches.end();
+        ret.prefab = options.switches.find(OPTION_PREFAB) != options.switches.cend();
+        ret.prefab_options.enable_maven = options.switches.find(OPTION_PREFAB_ENABLE_MAVEN) != options.switches.cend();
+        ret.prefab_options.enable_debug = options.switches.find(OPTION_PREFAB_ENABLE_DEBUG) != options.switches.cend();
         ret.maybe_output = maybe_lookup(options.settings, OPTION_OUTPUT);
+        ret.all_installed = options.switches.find(OPTION_ALL_INSTALLED) != options.switches.end();
 
         if (ret.all_installed)
         {
@@ -363,10 +389,10 @@ namespace vcpkg::Export
             });
         }
 
-        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey)
+        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey && !ret.prefab)
         {
             System::print2(System::Color::error,
-                           "Must provide at least one export type: --raw --nuget --ifw --zip --7zip --chocolatey\n");
+                           "Must provide at least one export type: --raw --nuget --ifw --zip --7zip --chocolatey --prefab\n");
             System::print2(COMMAND_STRUCTURE.example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -416,6 +442,16 @@ namespace vcpkg::Export
                             {OPTION_IFW_REPOSITORY_DIR_PATH, ret.ifw_options.maybe_repository_dir_path},
                             {OPTION_IFW_CONFIG_FILE_PATH, ret.ifw_options.maybe_config_file_path},
                             {OPTION_IFW_INSTALLER_FILE_PATH, ret.ifw_options.maybe_installer_file_path},
+                        });
+
+        options_implies(OPTION_PREFAB,
+                        ret.prefab,
+                        {
+                            {OPTION_PREFAB_ARTIFACT_ID, ret.prefab_options.maybe_artifact_id},
+                            {OPTION_PREFAB_GROUP_ID, ret.prefab_options.maybe_group_id},
+                            {OPTION_PREFAB_SDK_MIN_VERSION, ret.prefab_options.maybe_min_sdk},
+                            {OPTION_PREFAB_SDK_TARGET_VERSION, ret.prefab_options.maybe_target_sdk},
+                            {OPTION_PREFAB_VERSION, ret.prefab_options.maybe_version},
                         });
 
         options_implies(OPTION_CHOCOLATEY,
@@ -603,6 +639,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         if (opts.chocolatey)
         {
             Chocolatey::do_export(export_plan, paths, opts.chocolatey_options);
+        }
+
+        if(opts.prefab){
+            Prefab::do_export(export_plan, paths, opts.prefab_options, default_triplet);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

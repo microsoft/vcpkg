@@ -1,5 +1,5 @@
 Source: googleapis
-Version: 0.6.0
+Version: 0.9.0
 Build-Depends: grpc, protobuf
 Description: C++ Proto Libraries for Google APIs.
 Homepage: https://github.com/googleapis/cpp-cmakefiles

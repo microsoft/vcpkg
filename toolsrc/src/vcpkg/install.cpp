@@ -297,10 +297,10 @@ namespace vcpkg::Install
     using Build::BuildResult;
     using Build::ExtendedBuildResult;
 
-    ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+    static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
                                                     InstallPlanAction& action,
                                                     StatusParagraphs& status_db,
-                                                    IBinaryProvider* binaries_provider)
+                                                    IBinaryProvider& binaries_provider)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
@@ -425,6 +425,7 @@ namespace vcpkg::Install
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,
+                           IBinaryProvider& binaryprovider,
                            const CMakeVars::CMakeVarProvider& var_provider)
     {
         std::vector<SpecSummary> results;
@@ -457,16 +458,15 @@ namespace vcpkg::Install
         for (auto&& action : action_plan.already_installed)
         {
             results.emplace_back(action.spec, &action);
-            results.back().build_result = perform_install_plan_action(paths, action, status_db, nullptr);
+            results.back().build_result = perform_install_plan_action(paths, action, status_db, binaryprovider);
         }
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
-        auto binary_provider = create_archives_provider();
         for (auto&& action : action_plan.install_actions)
         {
             with_tracking(action.spec, [&]() {
-                auto result = perform_install_plan_action(paths, action, status_db, binary_provider.get());
+                auto result = perform_install_plan_action(paths, action, status_db, binaryprovider);
 
                 if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {
@@ -638,6 +638,9 @@ namespace vcpkg::Install
         // input sanitization
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
+        auto binaryprovider =
+            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
             return Input::check_and_get_full_package_spec(
                 std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
@@ -731,7 +734,7 @@ namespace vcpkg::Install
                     {
                         const auto vs_prompt_view = to_zstring_view(vs_prompt);
                         System::print2(vcpkg::System::Color::warning,
-                                        "warning: vcpkg appears to be in a Visual Studio prompt targeting ",
+                                       "warning: vcpkg appears to be in a Visual Studio prompt targeting ",
                                        vs_prompt_view,
                                        " but is installing packages for ",
                                        common_triplet.to_string(),
@@ -755,7 +758,8 @@ namespace vcpkg::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const InstallSummary summary = perform(action_plan, keep_going, paths, status_db, var_provider);
+        const InstallSummary summary =
+            perform(action_plan, keep_going, paths, status_db, *binaryprovider, var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 

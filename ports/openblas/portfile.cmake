@@ -3,13 +3,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF 5f36f18148603facb6c3540e673610d6b24cbfbb # v0.3.7
-    SHA512 c1abcfd6fbf6ae3efa28053523ffb3d72aefaa279594347bfd9910c40f25778421b8d1d2d4dc6c934c9def40642942bb74fe76e06c2d96b1898ea61204a95540
+    REF v0.3.9
+    SHA512 e34da25b3aaf959ec12826ac68c81e739e453d44f2dba28b15e57d7a827edc4d5f42988e9b6d98ac07999940be7b5876246cb3a980e590ae87f77f4c2f12f40a
     HEAD_REF develop
     PATCHES
         uwp.patch
         fix-space-path.patch
         fix-redefinition-function.patch
+        github_2481.patch
 )
 
 find_program(GIT NAMES git git.cmd)
