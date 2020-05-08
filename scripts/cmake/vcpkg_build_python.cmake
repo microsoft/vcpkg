@@ -2,6 +2,8 @@ function(vcpkg_build_python)
     cmake_parse_arguments(_ppi "" "SOURCE_PATH" "" ${ARGN})
 
     vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON_PREFIX ${PYTHON3} DIRECTORY)
+    vcpkg_add_to_path(PREPEND ${PYTHON_PREFIX})
 #    set(Python3_EXECUTABLE ${PYTHON3})
 #    set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 #    set(Python3_ROOT_DIR "${PYTHON_PREFIX}")
@@ -26,8 +28,7 @@ function(vcpkg_build_python)
     endif()
 
     message(STATUS "Installing python module for Release..")
-    configure_file(${SCRIPTS}/templates/distutils-rel.cfg.in
-        ${PYTHON_PREFIX}/Lib/distutils/distutils.cfg)
+    configure_file(${SCRIPTS}/templates/distutils-rel.cfg.in ${PYTHON_PREFIX}/Lib/distutils/distutils.cfg)
     file(REMOVE ${CURRENT_BUILDTREES_DIR}/pip-install-${TARGET_TRIPLET}-rel-detailed.log)
     vcpkg_execute_required_process(
         COMMAND ${Python3_EXECUTABLE} -m pip install .
