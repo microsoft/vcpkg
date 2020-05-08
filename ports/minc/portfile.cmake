@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 744f879ac8f0594c310d1c1b7fe67543c5feeb3e5a0979035918dbb2bf1d0973fbd389e5357a75631e618cc614b648c21179f7467576bd68e3522e63f21451b0
     HEAD_REF master
     PATCHES build.patch
+            config.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,7 +36,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/libminc)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
