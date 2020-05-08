@@ -573,6 +573,9 @@ gsl:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/pull/11048
 gsoap:x64-linux=fail
 gsoap:x64-osx=fail
+gsoap:x64-uwp=fail
+gsoap:x64-windows-static=fail
+gsoap:x64-windows=fail
 gtk:x64-linux=fail
 gtk:x86-windows=ignore
 guetzli:x64-osx=fail
