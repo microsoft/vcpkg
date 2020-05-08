@@ -1,3 +1,4 @@
+include(FindPackageHandleStandardArgs)
 function(vcpkg_build_python)
     cmake_parse_arguments(_ppi "" "SOURCE_PATH" "" ${ARGN})
 
