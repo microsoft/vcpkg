@@ -74,22 +74,27 @@ if("python" IN_LIST FEATURES)
     message(STATUS "${PORT} builds a long time (>1h) with python wrappers enabled!")
     vcpkg_find_acquire_program(PYTHON3)
     vcpkg_find_acquire_program(SWIG) # Swig is only required for wrapping!
-    get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
-    vcpkg_add_to_path(${SWIG_DIR})
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
-        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
         "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7"
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
         "-DSWIG_EXECUTABLE=${SWIG}"
         "-DSWIG_DIR=${SWIG_DIR}"
         )
-
     # Due to ITKs internal shenanigans with the variables ......
-    list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib")
-    list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python37.lib")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
+                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib")
+        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib")
+        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python37.lib")
+    else()
+        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython37m.a"
+                                "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a")
+        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a")
+        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/linpython37m.a")
+    endif()
+    
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg 
 endif()
 
@@ -171,88 +176,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-# Without VTK
-
-# -- The following OPTIONAL packages have been found:
-
- # * Git
- # * Threads
- # * HDF5
- # * LibLZMA
- # * Python3
- # * Perl
-
-# -- The following REQUIRED packages have been found:
-
- # * double-conversion
- # * EXPAT
- # * SZIP
- # * TIFF
- # * JPEG
- # * ZLIB
- # * PNG
- # * Eigen3 (required version >= 3.3)
- # * ITK
-
-# -- The following OPTIONAL packages have not been found:
-
- # * KWStyle (required version >= 1.0.1)
- # * cppcheck
- # * PkgConfig
-
-# -- Configuring done
-# -- Generating done
-# -- Build files have been written to: D:/qt2/buildtrees/itk/x64-windows-dbg
-
-  # D:\qt2\buildtrees\itk\src\d7c02f3c7b-959337cec2\Modules\ThirdParty\GDCM\src\CMakeLists.txt (13 hits)
-	# Line 29: set(GDCM_USE_SYSTEM_EXPAT ON CACHE INTERNAL "")
-	# Line 33: set(GDCM_USE_SYSTEM_OPENJPEG OFF CACHE INTERNAL "")
-	# Line 36: set(GDCM_USE_SYSTEM_ZLIB ON CACHE INTERNAL "")
-	# Line 47: set(GDCM_USE_SYSTEM_LJPEG OFF CACHE INTERNAL "Use system ljpeg (ijg lib)")
-	# Line 48: set(GDCM_USE_SYSTEM_OPENSSL OFF CACHE INTERNAL "Use system OpenSSL")
-	# Line 49: set(GDCM_USE_SYSTEM_PODOFO OFF CACHE INTERNAL "Use system podofo (pdf)")
-	# Line 50: set(GDCM_USE_SYSTEM_POPPLER OFF CACHE INTERNAL "Use system poppler (pdf)")
-	# Line 51: set(GDCM_USE_SYSTEM_UUID OFF CACHE INTERNAL "Use system uuid")
-	# Line 54: set(GDCM_USE_SYSTEM_CHARLS OFF CACHE INTERNAL "")
-	# Line 55: set(GDCM_USE_SYSTEM_JSON OFF CACHE INTERNAL "")
-	# Line 56: set(GDCM_USE_SYSTEM_LIBXML2 OFF CACHE INTERNAL "")
-	# Line 57: set(GDCM_USE_SYSTEM_PAPYRUS3 OFF CACHE INTERNAL "")
-	# Line 58: set(GDCM_USE_SYSTEM_SOCKETXX OFF CACHE INTERNAL "")
-    
-    # D:\qt2\buildtrees\itk\src\d7c02f3c7b-959337cec2\Modules\ThirdParty\GDCM\src\gdcm\CMakeLists.txt (41 hits)
-	# Line 313: option(GDCM_USE_SYSTEM_ZLIB "Use system zlib" OFF)
-	# Line 314: option(GDCM_USE_SYSTEM_OPENSSL  "Use system OpenSSL" OFF)
-	# Line 318:   option(GDCM_USE_SYSTEM_UUID "Use system uuid" OFF)
-	# Line 320: option(GDCM_USE_SYSTEM_EXPAT "Use system expat" OFF)
-	# Line 321: option(GDCM_USE_SYSTEM_JSON "Use system json" OFF)
-	# Line 322: option(GDCM_USE_SYSTEM_PAPYRUS3 "Use system papyrus3" OFF)
-	# Line 323: option(GDCM_USE_SYSTEM_SOCKETXX "Use system socket++" OFF)
-	# Line 324: option(GDCM_USE_SYSTEM_LJPEG "Use system ljpeg (ijg lib)" OFF)
-	# Line 325: option(GDCM_USE_SYSTEM_OPENJPEG "Use system openjpeg" OFF)
-	# Line 326: option(GDCM_USE_SYSTEM_CHARLS "Use system CharLS" OFF)
-	# Line 328:   GDCM_USE_SYSTEM_ZLIB
-	# Line 329:   GDCM_USE_SYSTEM_OPENSSL
-	# Line 330:   GDCM_USE_SYSTEM_UUID
-	# Line 331:   GDCM_USE_SYSTEM_EXPAT
-	# Line 332:   GDCM_USE_SYSTEM_JSON
-	# Line 333:   GDCM_USE_SYSTEM_PAPYRUS3
-	# Line 334:   GDCM_USE_SYSTEM_SOCKETXX
-	# Line 335:   GDCM_USE_SYSTEM_LJPEG
-	# Line 336:   GDCM_USE_SYSTEM_OPENJPEG
-	# Line 337:   GDCM_USE_SYSTEM_CHARLS
-	# Line 339: option(GDCM_USE_SYSTEM_POPPLER "Use system poppler (pdf)" OFF)
-	# Line 340: if(GDCM_USE_SYSTEM_POPPLER)
-	# Line 343: mark_as_advanced(GDCM_USE_SYSTEM_POPPLER)
-	# Line 345: option(GDCM_USE_SYSTEM_LIBXML2 "Use LibXml2" OFF)
-	# Line 346: if(GDCM_USE_SYSTEM_LIBXML2)
-	# Line 349: mark_as_advanced(GDCM_USE_SYSTEM_LIBXML2)
-	# Line 351: if(GDCM_USE_SYSTEM_LJPEG)
-	# Line 358: if(GDCM_USE_SYSTEM_CHARLS)
-	# Line 365: if(GDCM_USE_SYSTEM_OPENJPEG)
-	# Line 381:   option(GDCM_USE_SYSTEM_PVRG "Use system PVRG" OFF)
-	# Line 382:   mark_as_advanced(GDCM_USE_SYSTEM_PVRG)
-	# Line 383:   if(GDCM_USE_SYSTEM_PVRG)
-	# Line 394:   option(GDCM_USE_SYSTEM_KAKADU "Use system KAKADU " ON)
-	# Line 395:   mark_as_advanced(GDCM_USE_SYSTEM_KAKADU)
-	# Line 396:   if(GDCM_USE_SYSTEM_KAKADU)
