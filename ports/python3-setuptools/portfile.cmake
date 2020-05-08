@@ -20,7 +20,7 @@ message(STATUS "Installing built-in pip wheel.. done")
 
 message(STATUS "Upgrading pip..")
 vcpkg_execute_required_process(
-    COMMAND ${Python3_EXECUTABLE} -m pip install -U --force pip setuptools wheel pep517
+    COMMAND ${Python3_EXECUTABLE} -m pip install -U --force pip setuptools wheel requests pep517 
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME upgrade-pip-${TARGET_TRIPLET}-rel
 )
