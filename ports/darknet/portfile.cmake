@@ -4,6 +4,8 @@ vcpkg_from_github(
   REF 37b62bc08c2db76eea18fb54b6f4f0f08fb3e115
   SHA512 6f4228dbf449efd0006d129b54480410d3fd1b1105748f379f8eeaee790a6144bd6d980c162131ffd2e545a5dabb354a6de0cc8b38a1cf986035f279e3cd276e
   HEAD_REF master
+  PATCHES
+      fix_shared_static.patch
 )
 
 # enable CUDA inside DARKNET
