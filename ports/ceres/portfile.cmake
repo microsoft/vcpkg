@@ -42,6 +42,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DEXPORT_BUILD_DIR=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
