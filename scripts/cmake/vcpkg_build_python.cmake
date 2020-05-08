@@ -91,7 +91,7 @@ function(vcpkg_build_python)
     file(REMOVE ${CURRENT_BUILDTREES_DIR}/pip-install-${TARGET_TRIPLET}-rel-detailed.log)
     vcpkg_execute_required_process(
         COMMAND ${PYTHON_EXECUTABLE} -m pip install .
-            --prefix ${CURRENT_PACKAGES_DIR}/python
+            --prefix ${PYTHONHOME}
             --ignore-installed --compile --no-deps
 #            compiler=msvc | compiler=bcpp | compiler=cygwin | compiler=mingw32
 ###            regulated in the file, #system 	prefix\Lib\distutils\distutils.cfg, #personal 	%HOME%\pydistutils.cfg, #local 	setup.cfg
