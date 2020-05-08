@@ -74,6 +74,7 @@ if("python" IN_LIST FEATURES)
     message(STATUS "${PORT} builds a long time (>1h) with python wrappers enabled!")
     vcpkg_find_acquire_program(PYTHON3)
     vcpkg_find_acquire_program(SWIG) # Swig is only required for wrapping!
+    get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
