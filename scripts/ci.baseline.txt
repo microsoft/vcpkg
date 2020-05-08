@@ -957,7 +957,7 @@ libusb-win32:x64-osx=fail
 libusb-win32:x64-uwp=fail
 libuuid:arm64-windows=fail
 libuuid:arm-uwp=fail
-libqcow:x64-linux=fail
+
 # Causes build failures in vxl and podofo on osx
 # Conflicts with Darwin kernel sdk uuid.h (has missing definitions)
 libuuid:x64-osx = skip
