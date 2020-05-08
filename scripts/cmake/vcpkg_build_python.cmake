@@ -1,4 +1,4 @@
-include(FindPackageHandleStandardArgs)
+#include(FindPackageHandleStandardArgs)
 function(vcpkg_build_python)
     cmake_parse_arguments(_ppi "" "SOURCE_PATH" "" ${ARGN})
 
@@ -36,8 +36,8 @@ function(vcpkg_build_python)
         set(PYTHON_LIBRARIES "${PYTHON_LIBRARY}")
         set(PYTHON_LIBRARY "${CURRENT_INSTALLED_DIR}/lib/python37.lib;${CURRENT_INSTALLED_DIR}/lib")#;${PYTHONHOME}/libs
         vcpkg_add_to_path(PREPEND ${PYTHONSCRIPT})
-        find_package_handle_standard_args(Python3 DEFAULT_MSG Python3_EXECUTABLE)
-        find_package_handle_standard_args(Python3Interp DEFAULT_MSG Python3_EXECUTABLE)
+#        find_package_handle_standard_args(Python3 DEFAULT_MSG Python3_EXECUTABLE)
+#        find_package_handle_standard_args(Python3Interp DEFAULT_MSG Python3_EXECUTABLE)
 #        if(Python3_EXECUTABLE)
 #          execute_process(COMMAND ${Python3_EXECUTABLE} --version
 #          OUTPUT_VARIABLE PYTHON_VERSION_STRING ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
