@@ -1,0 +1,4 @@
+Source: nifticlib
+Version: 2.0.0
+Description: Nifticlib is a C I/O library for reading and writing files in the nifti-1 data format. 
+Homepage: https://github.com/addisonElliott/nifticlib
