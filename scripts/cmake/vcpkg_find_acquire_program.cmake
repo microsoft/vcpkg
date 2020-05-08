@@ -41,6 +41,7 @@
 ## * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+include(FindPackageHandleStandardArgs)
 function(vcpkg_find_acquire_program VAR)
   set(EXPANDED_VAR ${${VAR}})
   if(EXPANDED_VAR)
