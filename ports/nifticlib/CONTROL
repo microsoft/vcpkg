@@ -4,6 +4,7 @@ Description: Nifticlib is a C I/O library for reading and writing files in the n
 Homepage: NIFTI-Imaging/nifti_clib
 Build-Depends: zlib
 Default-Features: nifti2, nifticdf
+Supports: !uwp
 
 Feature: cifti
 Description: Build cifti libraries and tools
