@@ -30,7 +30,7 @@ function(vcpkg_build_python)
         ${PYTHONHOME}/Lib/distutils/distutils.cfg)
     file(REMOVE ${CURRENT_BUILDTREES_DIR}/pip-install-${TARGET_TRIPLET}-rel-detailed.log)
     vcpkg_execute_required_process(
-        COMMAND ${PYTHON_EXECUTABLE} -m pip install .
+        COMMAND ${Python3_EXECUTABLE} -m pip install .
             --prefix ${PYTHONHOME}
             --ignore-installed --compile --no-deps
 #            compiler=msvc | compiler=bcpp | compiler=cygwin | compiler=mingw32
