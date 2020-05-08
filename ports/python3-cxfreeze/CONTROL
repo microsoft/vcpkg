@@ -1,5 +1,5 @@
 Source: python3-cxfreeze
-Version: 1-0
+Version: 1-1
 #Homepage: 
 Description: Z
 Build-Depends: python3-setuptools
