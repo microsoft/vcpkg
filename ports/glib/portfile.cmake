@@ -47,7 +47,7 @@ vcpkg_configure_meson(
 )
 
 vcpkg_install_meson()
-vcpkg_fixup_meson_targets(CONFIG_PATH share/unofficial-glib TARGET_PATH share/unofficial-glib)
+#vcpkg_fixup_meson_targets(CONFIG_PATH share/unofficial-glib TARGET_PATH share/unofficial-glib)
 
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
