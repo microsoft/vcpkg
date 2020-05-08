@@ -4,10 +4,5 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 27c1e8a3a083a63a41a5079565906d78d8ec8e2ef29d6f0b45173b17fe76ce49466c196c36c4ec966fcd92f51923e695ef74d20aed9aa20d10ce9cdc1ff25dc1
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-)
-
+vcpkg_extract_source_archive_ex(OUT_SOURCE_PATH SOURCE_PATH ARCHIVE ${ARCHIVE})
 vcpkg_build_python(SOURCE_PATH ${SOURCE_PATH})
-
