@@ -27,7 +27,7 @@ message(STATUS "Installing built-in pip wheel..")
 #    LOGNAME install-pip-${TARGET_TRIPLET}-dbg
 #)
 
-if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip)
+if(NOT EXISTS ${PYTHONHOME}/Scripts/pip)
     vcpkg_from_github(
         OUT_SOURCE_PATH PYFILE_PATH
         REPO pypa/get-pip
