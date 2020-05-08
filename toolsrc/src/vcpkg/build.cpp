@@ -1054,7 +1054,7 @@ namespace vcpkg::Build
                         build_type = ConfigurationType::RELEASE;
                     else
                         Checks::exit_with_message(
-                            VCPKG_LINE_INFO, "Unknown setting for VCPKG_BUILD_TYPE: %s", variable_value);
+                            VCPKG_LINE_INFO, "Unknown setting for VCPKG_BUILD_TYPE: %s. Valid settings are '', 'debug' and 'release'.", variable_value);
                     break;
                 case VcpkgTripletVar::ENV_PASSTHROUGH:
                     passthrough_env_vars = Strings::split(variable_value, ';');
@@ -1078,7 +1078,7 @@ namespace vcpkg::Build
                         load_vcvars_env = false;
                     else
                         Checks::exit_with_message(
-                            VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s", variable_value);
+                            VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s. Valid settings are '', '1', '0', 'on', 'off', 'true', and 'false'.", variable_value);
                     break;
             }
         }
