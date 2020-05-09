@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO trailofbits/uthenticode
-    REF v1.0.2
-    SHA512 0e92be1a1b918c03074a4c083c4bffeb318f348c76ba34c3244c2594f244f887819040e91b2e7d8bb5ac573007c7b3a2a72d4f71abeee0e252d7bfe60c68cb11
+    REF v1.0.3
+    SHA512 c4a4712aeadae34a74e8535b17af192013254edd322a4453fe567647c21ed8b10b81a5d9d9028fbe2eed7d124cb9e420b6ef516f77bcb8594250c7372a3eff0b
     HEAD_REF master
 )
 
