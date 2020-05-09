@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES
         use-openjpeg-config.patch
         fix-share-path.patch
-		Fix-Cmake_DIR.patch
+        Fix-Cmake_DIR.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMake/FindOpenJPEG.cmake)
