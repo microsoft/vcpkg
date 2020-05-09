@@ -116,6 +116,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
 find_package(PNG QUIET)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
 find_package(TIFF QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")

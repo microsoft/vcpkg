@@ -6,8 +6,6 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-include(vcpkg_common_functions)
-
 set(OPENCV_VERSION "3.4.7")
 
 vcpkg_from_github(
@@ -336,6 +334,11 @@ find_package(ade QUIET)
 find_package(VTK QUIET)
 find_package(OpenMP QUIET)
 find_package(Tesseract QUIET)
+find_package(OpenEXR QUIET)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
 find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")

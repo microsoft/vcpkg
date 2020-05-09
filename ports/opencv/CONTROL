@@ -1,5 +1,5 @@
 Source: opencv
-Version: 4.1.1-1
+Version: 4.3.0
 Homepage: https://github.com/opencv/opencv
 Description: Computer vision library
 Build-Depends: opencv4[core]
@@ -100,3 +100,7 @@ Description: Halide support for opencv
 Feature: world
 Build-Depends: opencv4[world]
 Description: Compile to a single package support for opencv
+
+Feature: gtk
+Build-Depends: opencv4[gtk]
+Description: gtk support for opencv

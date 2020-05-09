@@ -6,8 +6,6 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
 
-include(vcpkg_common_functions)
-
 set(OPENCV_VERSION "4.3.0")
 
 vcpkg_from_github(
@@ -399,6 +397,7 @@ find_package(ade QUIET)
 find_package(VTK QUIET)
 find_package(OpenMP QUIET)
 find_package(Tesseract QUIET)
+find_package(OpenEXR QUIET)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -429,7 +428,7 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/setup_vars_opencv4.cmd)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
 
-if(${VCPKG_CMAKE_SYSTEM_NAME} STREQUAL "Android")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/README.android)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/README.android)
 endif()
