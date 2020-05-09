@@ -7,4 +7,4 @@ Supports: !(uwp|arm|arm64|android|x86)
 
 Feature: apps
 Description: Application programs for popsift (detection and matching)
-Build-Depends: boost-program-options, boost-filesystem, boost-system
+Build-Depends: boost-algorithm, boost-program-options, boost-filesystem, boost-system
