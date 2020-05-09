@@ -1700,7 +1700,6 @@ spdk-isal:x64-windows-static=fail
 spdk-isal:x86-windows=fail
 speex:x64-linux=fail
 speex:x64-osx=fail
-speexdsp:arm-uwp=fail
 speexdsp:x64-linux=fail
 speexdsp:x64-osx=fail
 spirv-tools:arm-uwp=fail
