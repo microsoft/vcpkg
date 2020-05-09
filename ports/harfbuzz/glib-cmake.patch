@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index acb55c1..3363e4a 100644
+index acb55c1..ea3f592 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -217,21 +217,13 @@ endif ()
+@@ -217,21 +217,16 @@ endif ()
  if (HB_HAVE_GLIB)
    add_definitions(-DHAVE_GLIB)
  
@@ -21,9 +21,9 @@ index acb55c1..3363e4a 100644
  
    list(APPEND project_headers ${PROJECT_SOURCE_DIR}/src/hb-glib.h)
  
--  list(APPEND THIRD_PARTY_LIBS ${GLIB_LIBRARIES})
--
--  mark_as_advanced(GLIB_LIBRARIES GLIBCONFIG_INCLUDE_DIR GLIB_INCLUDE_DIR)
+   list(APPEND THIRD_PARTY_LIBS ${GLIB_LIBRARIES})
+ 
+   mark_as_advanced(GLIB_LIBRARIES GLIBCONFIG_INCLUDE_DIR GLIB_INCLUDE_DIR)
 +  list(APPEND THIRD_PARTY_LIBS unofficial::glib::glib)
  endif ()
  
