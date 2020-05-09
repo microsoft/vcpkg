@@ -7,24 +7,25 @@ vcpkg_from_github(
     SHA512 c358449870d580aeb10e32f8be0ca39e8a76d8dc06fda973788fafb5971333e546611c399190be49d40f5f3c18a1105d9699eef271a560aff25ce168a396926e
     HEAD_REF master
     PATCHES
-        #wip.patch
         hdf5.patch
         double-conversion.patch 
         jpeg.patch
         var_libraries.patch
         wrapping.patch
+        python_gpu_wrapping.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "vtk"          Module_ITKVtkGlue
+    "cuda"         Module_ITKCudaCommon
+    #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
     "cufftw"       ITK_USE_CUFFTW
     "opencl"       ITK_USE_GPU
     "tbb"          Module_ITKTBB
     "rtk"          Module_RTK
-    "rtkcuda"      Module_ITKCudaCommon     
-    "rtkcuda"      RTK_USE_CUDA               
-    "rtkcuda"      CUDA_HAVE_GPU 
-    "rtktools"     RTK_BUILD_APPLICATIONS
+    "tools"        RTK_BUILD_APPLICATIONS
+    # There are a lot of more (remote) modules and options in ITK 
+    # feel free to add those as a feature
 )
 
 if("cufftw" IN_LIST FEATURES)
@@ -52,17 +53,29 @@ if("rtk" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
          "-DModule_RTK_GIT_TAG=6c5d5c2a25a2dd15d3b5ae1d2b9e6f8360b2208d" # RTK latest versions (08.05.2020)
          )
+    if("cuda" IN_LIST FEATURES)
+        list(APPEND ADDITIONAL_OPTIONS "-DRTK_USE_CUDA=ON")
+    endif()
 endif()
-if("rtktools" IN_LIST FEATURES)
-    list(APPEND TOOL_NAMES rtkadmmtotalvariation rtkadmmwavelets rtkamsterdamshroud rtkbackprojections rtkbioscangeometry rtkcheckimagequality rtkconjugategradient 
-                           rtkdigisensgeometry rtkdrawgeometricphantom rtkdrawshepploganphantom rtkdualenergysimplexdecomposition rtkelektasynergygeometry rtkextractphasesignal 
-                           rtkextractshroudsignal rtkfdk rtkfdktwodweights rtkfieldofview rtkforwardprojections rtkfourdconjugategradient rtkfourdfdk rtkfourdrooster rtkfourdsart 
-                           rtkgaincorrection rtki0estimation rtkimagxgeometry rtkiterativefdk rtklagcorrection rtklastdimensionl0gradientdenoising rtklut rtkmaskcollimation rtkmcrooster 
-                           rtkmotioncompensatedfourdconjugategradient rtkorageometry rtkosem rtkoverlayphaseandshroud rtkparkershortscanweighting rtkprojectgeometricphantom 
-                           rtkprojectionmatrix rtkprojections rtkprojectshepploganphantom rtkramp rtkrayboxintersection rtkrayquadricintersection rtkregularizedconjugategradient 
-                           rtksart rtkscatterglarecorrection rtksimulatedgeometry rtkspectraldenoiseprojections rtkspectralforwardmodel rtkspectralonestep rtkspectralrooster rtkspectralsimplexdecomposition 
-                           rtksubselect rtktotalnuclearvariationdenoising rtktotalvariationdenoising rtktutorialapplication rtkvarianobigeometry rtkvarianprobeamgeometry rtkvectorconjugategradient 
-                           rtkwangdisplaceddetectorweighting rtkwarpedbackprojectsequence rtkwarpedforwardprojectsequence rtkwaveletsdenoising rtkxradgeometry)
+if("opencl" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS # Wrapping options required by OpenCL if build with Python Wrappers
+         -DITK_WRAP_unsigned_long_long=ON
+         -DITK_WRAP_signed_long_long=ON
+         )
+endif()
+if("tools" IN_LIST FEATURES)
+    
+    if("rtk" IN_LIST FEATURES)
+        list(APPEND TOOL_NAMES rtkadmmtotalvariation rtkadmmwavelets rtkamsterdamshroud rtkbackprojections rtkbioscangeometry rtkcheckimagequality rtkconjugategradient 
+                               rtkdigisensgeometry rtkdrawgeometricphantom rtkdrawshepploganphantom rtkdualenergysimplexdecomposition rtkelektasynergygeometry rtkextractphasesignal 
+                               rtkextractshroudsignal rtkfdk rtkfdktwodweights rtkfieldofview rtkforwardprojections rtkfourdconjugategradient rtkfourdfdk rtkfourdrooster rtkfourdsart 
+                               rtkgaincorrection rtki0estimation rtkimagxgeometry rtkiterativefdk rtklagcorrection rtklastdimensionl0gradientdenoising rtklut rtkmaskcollimation rtkmcrooster 
+                               rtkmotioncompensatedfourdconjugategradient rtkorageometry rtkosem rtkoverlayphaseandshroud rtkparkershortscanweighting rtkprojectgeometricphantom 
+                               rtkprojectionmatrix rtkprojections rtkprojectshepploganphantom rtkramp rtkrayboxintersection rtkrayquadricintersection rtkregularizedconjugategradient 
+                               rtksart rtkscatterglarecorrection rtksimulatedgeometry rtkspectraldenoiseprojections rtkspectralforwardmodel rtkspectralonestep rtkspectralrooster rtkspectralsimplexdecomposition 
+                               rtksubselect rtktotalnuclearvariationdenoising rtktotalvariationdenoising rtktutorialapplication rtkvarianobigeometry rtkvarianprobeamgeometry rtkvectorconjugategradient 
+                               rtkwangdisplaceddetectorweighting rtkwarpedbackprojectsequence rtkwarpedforwardprojectsequence rtkwaveletsdenoising rtkxradgeometry)
+    endif()
 endif()
 if("vtk" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
@@ -89,14 +102,15 @@ if("python" IN_LIST FEATURES)
                                         "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7")
         list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib")
         list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python37.lib")
-    else()
+    elseif(VCPKG_TARGET_IS_LINUX)
         list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython37m.a"
                                         "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a"
                                         "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7m")
         list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a")
         list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/linpython37m.a")
-    endif()
-    
+    elseif(VCPKG_TARGET_IS_OSX)
+        #Need Python3 information on OSX within VCPKG
+    endif()    
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg 
 endif()
 
@@ -149,14 +163,17 @@ vcpkg_configure_cmake(
         #-DVXL_USE_GEOTIFF=ON
         -DVXL_USE_LFS=ON
         
+        -DITK_MINIMUM_COMPLIANCE_LEVEL:STRING=1 # To Display all remote modules within cmake-gui
         #-DModule_IOSTL=ON # example how to turn on a non-default module
         #-DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
         #-DModule_RLEImage=ON # example how to turn on a remote module
+        
+        # Some additional wraping options
+        #-DITK_WRAP_double=ON
+        #-DITK_WRAP_complex_double=ON
+        #-DITK_WRAP_covariant_vector_double=ON
+        #-DITK_WRAP_vector_double=ON
 
-        -DITK_WRAP_double=ON
-        -DITK_WRAP_complex_double=ON
-        -DITK_WRAP_covariant_vector_double=ON
-        -DITK_WRAP_vector_double=ON
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
         
