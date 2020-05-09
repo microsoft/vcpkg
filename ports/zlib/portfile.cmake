@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
     PATCHES
         "cmake_dont_build_more_than_needed.patch"
+        "0001-Prevent-invalid-inclusions-when-HAVE_-is-set-to-0.patch"
 )
 
 # This is generated during the cmake build
