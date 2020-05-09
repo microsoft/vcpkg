@@ -2,7 +2,7 @@ diff --git a/CMake/FindPEGTL.cmake b/CMake/FindPEGTL.cmake
 index 73eee02f7..22d8bc159 100644
 --- a/CMake/FindPEGTL.cmake	
 +++ b/CMake/FindPEGTL.cmake
-@@ -19,31 +19,39 @@
+@@ -19,31 +19,40 @@
  # Copyright (c) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
  # Redistribution and use is allowed according to the terms of the 2-clause BSD license.
  
@@ -14,7 +14,7 @@ index 73eee02f7..22d8bc159 100644
 +message(STATUS "Searching for PEGTL")
 +find_package(PEGTL CONFIG NAMES PEGTL-2)
 +if(TARGET taocpp::pegtl)
-+message(STATUS "Searching for PEGTL - found target taocpp::pegtl")
++    message(STATUS "Searching for PEGTL - found target taocpp::pegtl")
 +    set_target_properties(taocpp::pegtl PROPERTIES IMPORTED_GLOBAL TRUE)
 +    add_library(PEGTL::PEGTL ALIAS taocpp::pegtl)
 +else()
@@ -65,6 +65,7 @@ index 73eee02f7..22d8bc159 100644
 +        set_target_properties(PEGTL::PEGTL PROPERTIES
 +          INTERFACE_INCLUDE_DIRECTORIES "${PEGTL_INCLUDE_DIR}")
 +      endif ()
++      message(STATUS "Searching for PEGTL - found")
 +    endif ()
 +endif ()
 \ No newline at end of file
