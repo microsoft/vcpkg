@@ -18,29 +18,8 @@ Description: ffplay appplication support in ffmpeg
 Feature: ffprobe
 Description: ffprobe appplication support in ffmpeg
 
-Feature: openssl
-Build-Depends: openssl, ffmpeg[nonfree]
-Description: openssl support in ffmpeg
-
-Feature: lzma
-Build-Depends: liblzma
-Description: lzma support in ffmpeg
-
-Feature: bzip2
-Build-Depends: bzip2
-Description: bzip2 support in ffmpeg
-
-Feature: vpx
-Build-Depends: libvpx
-Description: WebM VP8/VP9 support in ffmpeg
-
-Feature: x264
-Build-Depends: x264, ffmpeg[gpl]
-Description: x264 support in ffmpeg
-
-Feature: opencl
-Build-Depends: opencl
-Description: opencl support in ffmpeg
+Feature: avresample
+Description: Libav audio resampling library support in ffmpeg
 
 Feature: nonfree
 Description: allow nonfree and unredistributable libraries
@@ -51,16 +30,61 @@ Description: allow GPL licensed libraries
 Feature: version3
 Description: upgrade (L)GPL to version 3
 
-Feature: avresample
-Description: Libav audio resampling library support in ffmpeg
+Feature: avisynthplus
+Build-Depends: avisynthplus, ffmpeg[gpl]
+Description: avisynthplus support in ffmpeg
+
+Feature: bzip2
+Build-Depends: bzip2
+Description: bzip2 support in ffmpeg
+
+Feature: iconv
+Build-Depends: libiconv
+Description: iconv support in ffmpeg
+
+Feature: fdk-aac
+Build-Depends: fdk-aac, ffmpeg[nonfree]
+Description: AAC de/encoding via libfdk-aac support in ffmpeg
+
+Feature: lzma
+Build-Depends: liblzma
+Description: lzma support in ffmpeg
+
+Feature: mp3lame
+Build-Depends: mp3lame
+Description: MP3 encoding via libmp3lame support in ffmpeg
 
 Feature: nvcodec
 Build-Depends: ffnvcodec, cuda
 Description: Hardware accelerated codecs
 
-Feature: avisynthplus
-Build-Depends: avisynthplus, ffmpeg[gpl]
-Description: avisynthplus support in ffmpeg
+Feature: opencl
+Build-Depends: opencl
+Description: OpenCL processing support in ffmpeg
+
+Feature: openssl
+Build-Depends: openssl, ffmpeg[nonfree]
+Description: openssl support in ffmpeg
+
+Feature: opus
+Build-Depends: opus
+Description: Opus de/encoding via libopus support in ffmpeg
+
+Feature: soxr
+Build-Depends: soxr
+Description: libsoxr resampling support in ffmpeg
+
+Feature: theora
+Build-Depends: libtheora
+Description: Theora encoding via libtheora support in ffmpeg
+
+Feature: vpx
+Build-Depends: libvpx
+Description: VP8 and VP9 de/encoding via libvpx support in ffmpeg
+
+Feature: x264
+Build-Depends: x264, ffmpeg[gpl]
+Description: H.264 encoding via x264 support in ffmpeg
 
 Feature: zlib
 Build-Depends: zlib

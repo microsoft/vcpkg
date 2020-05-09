@@ -37,9 +37,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make pkg-config)
     else()
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make pkg-config)
     endif()
 
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
@@ -70,12 +70,6 @@ if("version3" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-version3")
 endif()
 
-if("openssl" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-openssl")
-else()
-    set(OPTIONS "${OPTIONS} --disable-openssl")
-endif()
-
 if("ffmpeg" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffmpeg")
 else()
@@ -94,6 +88,86 @@ else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
 endif()
 
+if("avresample" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avresample")
+endif()
+
+if("avisynthplus" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avisynth")
+else()
+    set(OPTIONS "${OPTIONS} --disable-avisynth")
+endif()
+
+set (ENABLE_BZIP2 OFF)
+if("bzip2" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-bzlib")
+    set (ENABLE_BZIP2 ON) #necessary for configuring FFMPEG CMake Module
+else()
+    set(OPTIONS "${OPTIONS} --disable-bzlib")
+endif()
+
+if("iconv" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-iconv")
+else()
+    set(OPTIONS "${OPTIONS} --disable-iconv")
+endif()
+
+if("fdk-aac" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfdk-aac")
+endif()
+
+set (ENABLE_LZMA OFF)
+if("lzma" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-lzma")
+    set (ENABLE_LZMA ON) #necessary for configuring FFMPEG CMake Module
+else()
+    set(OPTIONS "${OPTIONS} --disable-lzma")
+endif()
+
+if("mp3lame" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmp3lame")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libmp3lame")
+endif()
+
+if("nvcodec" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
+else()
+    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
+endif()
+
+if("opencl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-opencl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-opencl")
+endif()
+
+if("openssl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-openssl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-openssl")
+endif()
+
+if("opus" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopus")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopus")
+endif()
+
+if("soxr" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsoxr")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsoxr")
+endif()
+
+if("theora" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtheora")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtheora")
+endif()
+
 if("vpx" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvpx")
 else()
@@ -106,52 +180,14 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libx264")
 endif()
 
-if("opencl" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-opencl")
-else()
-    set(OPTIONS "${OPTIONS} --disable-opencl")
-endif()
-
-set (ENABLE_LZMA OFF)
-if("lzma" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-lzma")
-    set (ENABLE_LZMA ON) #necessary for configuring FFMPEG CMake Module
-else()
-    set(OPTIONS "${OPTIONS} --disable-lzma")
-endif()
-
-set (ENABLE_BZIP2 OFF)
-if("bzip2" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-bzlib")
-    set (ENABLE_BZIP2 ON) #necessary for configuring FFMPEG CMake Module
-else()
-    set(OPTIONS "${OPTIONS} --disable-bzlib")
-endif()
-
-if("avresample" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-avresample")
-endif()
-
-if (VCPKG_TARGET_IS_OSX)
-    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
-endif()
-
-if("nvcodec" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
-else()
-    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
-endif()
-
-if("avisynthplus" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-avisynth")
-else()
-    set(OPTIONS "${OPTIONS} --disable-avisynth")
-endif()
-
 if("zlib" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-zlib")
 else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
+endif()
+
+if (VCPKG_TARGET_IS_OSX)
+    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
 endif()
 
 set(OPTIONS_CROSS "")
