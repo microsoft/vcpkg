@@ -10,6 +10,7 @@ vcpkg_from_github(
         0004-fix-debug-build.patch
         0005-fix-libvpx-linking.patch
         0006-fix-StaticFeatures.patch
+        0007-fix-lib-naming.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -145,6 +146,12 @@ if("avisynthplus" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avisynth")
 else()
     set(OPTIONS "${OPTIONS} --disable-avisynth")
+endif()
+
+if("zlib" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-zlib")
+else()
+    set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
 
 set(OPTIONS_CROSS "")
