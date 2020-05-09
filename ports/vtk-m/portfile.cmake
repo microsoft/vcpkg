@@ -1,4 +1,5 @@
-# VENDORED DEPENDENCIES!
+# VENDORED DEPENDENCIES! 
+# TODO: Should be replaced in the future with VCPKG internal versions
 # add_subdirectory(thirdparty/diy)
 # add_subdirectory(thirdparty/lodepng)
 # if(VTKm_ENABLE_LOGGING)
@@ -29,16 +30,19 @@ list(APPEND OPTIONS -DVTKm_ENABLE_RENDERING=ON)
 list(APPEND OPTIONS -DVTKm_ENABLE_DEVELOPER_FLAGS=OFF)
 list(APPEND OPTIONS -DVTKm_ENABLE_CPACK=OFF)
 list(APPEND OPTIONS -DVTKm_USE_DEFAULT_TYPES_FOR_VTK=ON)
-#list(APPEND OPTIONS -DVTKm_ENABLE_GL_CONTEXT=ON) or
-#list(APPEND OPTIONS -DVTKm_ENABLE_EGL_CONTEXT=ON) or
+# For port customizations on unix systems. 
+# Please feel free to make these port features if it makes any sense
+#list(APPEND OPTIONS -DVTKm_ENABLE_GL_CONTEXT=ON) # or
+#list(APPEND OPTIONS -DVTKm_ENABLE_EGL_CONTEXT=ON) # or
 #list(APPEND OPTIONS -DVTKm_ENABLE_OSMESA_CONTEXT=ON)
 list(APPEND OPTIONS -DBUILD_TESTING=OFF)
 
 vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com" 
                   OUT_SOURCE_PATH SOURCE_PATH 
                   REPO vtk/vtk-m 
-                  REF f2aa6ad5be1a97e3fb41ef4680ee2c76c3434ac0 # v1.5.0 locked to VTK 9.0
+                  REF f2aa6ad5be1a97e3fb41ef4680ee2c76c3434ac0 # v1.5.0 Version is strongly locked to VTK 9.0. Upgrading will most likly brake the VTK build
                   SHA512 2f2a273f74d9a583df9e25a4792440d8d89652fa14b3153f2ea5afbd329b50970e7b9bd68e0ccd036baf5c1f3ad7a8302d95c01dbb30d9a46c045987eebf5370)
+                  # For people only wanting vtk-m and not VTK 
                   #REF 74ffad9bd0679d061bc87e544a728f1c3c926269 # v1.5.1
                   #SHA512 c9e1c18432b6c11ae086445255acf9477fe4c888122a2b2a9713dc63a40d2e4c2375742157526b5f0869f14c62a4ad66d81ee58d6cc75a1d53a1d615525a03c9)
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} 
