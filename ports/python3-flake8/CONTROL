@@ -1,0 +1,5 @@
+Source: python3-flake8
+Version: 3.7.9
+Homepage: https://gitlab.com/pycqa/flake8
+Description: Flake8 is a wrapper around these tools: PyFlakes, pycodestyle, Ned Batchelder’s McCabe script
+Build-Depends: python3-setuptools
