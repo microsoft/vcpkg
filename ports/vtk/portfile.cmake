@@ -256,7 +256,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/vtk/copyright)
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/vtk")
 
 ## Files Modules needed by ParaView
 if("paraview" IN_LIST FEATURES)
@@ -281,15 +281,15 @@ endif()
     
 #remove one get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY) from vtk-prefix.cmake and VTK-vtk-module-properties and vtk-python.cmake
 set(filenames_fix_prefix vtk-prefix VTK-vtk-module-properties vtk-python)
-foreach(name ${filenames_fix_prefix})
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake")
-        file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake" _contents)
-        string(REPLACE 
-    [[set(_vtk_module_import_prefix "${CMAKE_CURRENT_LIST_DIR}")
-    get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY)]]
-    [[set(_vtk_module_import_prefix "${CMAKE_CURRENT_LIST_DIR}")]] _contents "${_contents}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake" "${_contents}")
-    else()
-        debug_message("FILE:${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake does not exist! No prefix correction!")
-    endif()
+foreach(name IN LISTS filenames_fix_prefix)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake")
+    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake" _contents)
+    string(REPLACE 
+[[set(_vtk_module_import_prefix "${CMAKE_CURRENT_LIST_DIR}")
+get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY)]]
+[[set(_vtk_module_import_prefix "${CMAKE_CURRENT_LIST_DIR}")]] _contents "${_contents}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake" "${_contents}")
+else()
+    debug_message("FILE:${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake does not exist! No prefix correction!")
+endif()
 endforeach()
