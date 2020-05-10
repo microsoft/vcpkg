@@ -1,5 +1,5 @@
 Source: python3-numexpr
-Version: 2.6.9
+Version: 2.7.2
 Homepage: https://numexpr.readthedocs.io
 Description: Fast numerical array expression evaluator for Python, NumPy, PyTables, pandas, bcolz and more
 Build-Depends: python3-numpy
