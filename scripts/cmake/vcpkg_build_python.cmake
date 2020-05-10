@@ -2,6 +2,7 @@ include(FindPackageHandleStandardArgs)
 function(vcpkg_build_python)
     cmake_parse_arguments(_ppi "" "SOURCE_PATH" "" ${ARGN})
     
+    vcpkg_find_acquire_program(PYTHON3)
     find_program(Python3_EXECUTABLE NAMES python python3 python3.7 NAMES_PER_DIR HINTS ${PYTHON_PREFIX} NO_DEFAULT_PATHS)
 #    set(Python3_ROOT_DIR ${PYTHON_PREFIX})
       set(PYTHONPATH "${PYTHON_PREFIX}/DLLs;${PYTHON_PREFIX}/Lib;${PYTHON_PREFIX}/Lib/site-packages")#;${PYTHON_PREFIX}/Lib/lib-tk
