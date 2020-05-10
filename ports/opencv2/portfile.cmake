@@ -123,11 +123,6 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
 find_package(TIFF QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
-  if("openexr" IN_LIST FEATURES)
-    string(REPLACE "LINK_ONLY:OpenEXR::IlmImfConfig"
-                   "LINK_ONLY:OpenEXR::IlmImf" OPENCV_MODULES "${OPENCV_MODULES}")
-  endif()
-
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
 
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

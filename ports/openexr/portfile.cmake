@@ -11,6 +11,7 @@ vcpkg_from_github(
   PATCHES
     remove_find_package_macro.patch
     fixup_cmake_exports_path.patch
+    remove_symlinks.patch
 )
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
@@ -23,7 +24,6 @@ vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/IlmBase TARGET_PATH share/IlmBase)
-#vcpkg_fixup_cmake_targets(CONFIG_PATH share/PyIlmBase TARGET_PATH share/PyIlmBase)
 vcpkg_fixup_cmake_targets()
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrenvmap${VCPKG_HOST_EXECUTABLE_SUFFIX})
