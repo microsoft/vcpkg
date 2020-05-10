@@ -6,7 +6,7 @@ function(vcpkg_build_python)
     get_filename_component(PYTHON_PREFIX ${PYTHON3} DIRECTORY)
 #    set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 #    set(Python3_ROOT_DIR ${PYTHON_PREFIX})
-    set(PYTHONPATH "${PYTHON_PREFIX}/Lib;${PYTHON_PREFIX}/DLLs;${PYTHON_PREFIX}/Lib/site-packages")#;${PYTHON_PREFIX}/Lib/lib-tk
+    set(PYTHONPATH "${PYTHON_PREFIX}/Lib;${PYTHON_PREFIX}/Lib/site-packages")#;${PYTHON_PREFIX}/DLLs;${PYTHON_PREFIX}/Lib/lib-tk
     set(PYTHONSCRIPT "${PYTHON_PREFIX}/Scripts")
     set(PYTHON_PACKAGES_PATH "${PYTHON_PREFIX}/Lib/site-packages")
     set(PYTHON3_PACKAGES_PATH ${PYTHON_PACKAGES_PATH})
@@ -16,7 +16,7 @@ function(vcpkg_build_python)
     set(PYTHON3_LIBRARY ${PYTHON_LIBRARY})
     set(PYTHON_LIBRARIES ${PYTHON_LIBRARY})
     set(PYTHON_LIBRARY "${CURRENT_INSTALLED_DIR}/lib/python37.lib;${CURRENT_INSTALLED_DIR}/lib")#;${PYTHON_PREFIX}/libs
-    vcpkg_add_to_path(PREPEND ${PYTHONSCRIPT})
+    vcpkg_add_to_path(PREPEND ${PYTHON_PREFIX})
     vcpkg_add_to_path(PREPEND "${PYTHON_PREFIX}/DLLs")
 
     if(NOT DEFINED _ppi_SOURCE_PATH)
