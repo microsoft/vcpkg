@@ -4,18 +4,18 @@ set(GIT_REV v1.16.3)#intel/1.16.3)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT})
 if(NOT EXISTS "${SOURCE_PATH}/.git")
-	message(STATUS "Cloning and fetching submodules")
-	vcpkg_execute_required_process(
-	  COMMAND ${GIT} clone --recurse-submodules ${GIT_URL} ${SOURCE_PATH}
-	  WORKING_DIRECTORY ${SOURCE_PATH}
-	  LOGNAME clone
-	)
-	message(STATUS "Checkout revision ${GIT_REV}")
-	vcpkg_execute_required_process(
-	  COMMAND ${GIT} checkout ${GIT_REV}
-	  WORKING_DIRECTORY ${SOURCE_PATH}
-	  LOGNAME checkout
-	)
+    message(STATUS "Cloning")
+    vcpkg_execute_required_process(
+      COMMAND ${GIT} clone --recurse-submodules -q --depth=1 --branch=${GIT_REV} ${GIT_URL} ${SOURCE_PATH}
+      WORKING_DIRECTORY ${SOURCE_PATH}
+      LOGNAME clone
+    )
+    message(STATUS "Fetching submodules")
+    vcpkg_execute_required_process(
+      COMMAND ${GIT} submodule update --init --recursive
+      WORKING_DIRECTORY ${SOURCE_PATH}
+      LOGNAME submodules
+    )
 endif()
 
 file(REMOVE ${SOURCE_PATH}/site.cfg)
