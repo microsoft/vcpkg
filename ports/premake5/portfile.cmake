@@ -20,7 +20,8 @@ set(BUILD_CONFIG "release")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_install_msbuild(
-        PROJECT_SUBPATH ${SOURCE_PATH}/build/vs2015/Premake5.sln
+	SOURCE_PATH ${SOURCE_PATH}
+        PROJECT_SUBPATH build/vs2015/Premake5.vcxproj
     )
 elseif(VCPKG_TARGET_IS_OSX)
     find_program(MAKE make REQUIRED)
@@ -38,10 +39,10 @@ else()
     )
 endif()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/premake5)
-set(cli_exe_name "premake5")
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(cli_exe_name "premake5.exe")
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/premake5)
+    file(COPY ${SOURCE_PATH}/bin/${BUILD_CONFIG}/premake5 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
-file(COPY ${SOURCE_PATH}/bin/${BUILD_CONFIG}/${cli_exe_name} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
