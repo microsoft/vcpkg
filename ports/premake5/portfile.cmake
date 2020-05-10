@@ -18,18 +18,30 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 set(BUILD_CONFIG "release")
 
-find_program(MAKE make REQUIRED)
-vcpkg_execute_build_process(
-    COMMAND ${MAKE} config=${BUILD_CONFIG}
-    WORKING_DIRECTORY ${SOURCE_PATH}/build/gmake2.unix/
-    LOGNAME premake5
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_install_msbuild(
+        PROJECT_SUBPATH ${SOURCE_PATH}/build/vs2015/Premake5.sln
+    )
+elseif(VCPKG_TARGET_IS_OSX)
+    find_program(MAKE make REQUIRED)
+    vcpkg_execute_build_process(
+        COMMAND ${MAKE} config=${BUILD_CONFIG}
+        WORKING_DIRECTORY ${SOURCE_PATH}/build/gmake2.macosx/
+        LOGNAME premake5
+    )
+else()
+    find_program(MAKE make REQUIRED)
+    vcpkg_execute_build_process(
+        COMMAND ${MAKE} config=${BUILD_CONFIG}
+        WORKING_DIRECTORY ${SOURCE_PATH}/build/gmake2.unix/
+        LOGNAME premake5
+    )
+endif()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/premake5)
 set(cli_exe_name "premake5")
-if(CMAKE_HOST_WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     set(cli_exe_name "premake5.exe")
 endif()
 file(COPY ${SOURCE_PATH}/bin/${BUILD_CONFIG}/${cli_exe_name} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
