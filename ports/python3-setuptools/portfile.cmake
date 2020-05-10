@@ -12,7 +12,7 @@ if(NOT EXISTS ${PYTHON_PREFIX}/Scripts/pip)
 endif()
 
 vcpkg_execute_required_process(
-    COMMAND ${Python3_EXECUTABLE} ${PYFILE_PATH}/get-pip.py
+    COMMAND ${Python3_EXECUTABLE} "${PYFILE_PATH}/get-pip.py"
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME install-pip-${TARGET_TRIPLET}-rel
 )
