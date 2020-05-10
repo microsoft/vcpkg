@@ -1,0 +1,22 @@
+
+[ALL]
+include-dirs=${CURRENT_INSTALLED_DIR}/include;${CURRENT_INSTALLED_DIR}/include/python3.7${PYTHON_SEP_DIRS}
+library-dirs=${CURRENT_INSTALLED_DIR}/lib${PYTHON_SEP_DIRS}
+#Intel x64
+#library_dirs=C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64${PYTHON_SEP_DIRS}
+#include_dirs=C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/include${PYTHON_SEP_DIRS}
+
+[openblas]
+libraries=openblas
+library_dirs=${CURRENT_INSTALLED_DIR}/lib${PYTHON_SEP_DIRS}
+include_dirs=${CURRENT_INSTALLED_DIR}/include${PYTHON_SEP_DIRS}
+runtime-library-dirs=${CURRENT_INSTALLED_DIR}/bin${PYTHON_SEP_DIRS}
+
+#[mkl]
+###include_dirs = C:/Program Files (x86)/IntelSWTools/intelpython3/Library/include${PYTHON_SEP_DIRS}
+###library_dirs = C:/Program Files (x86)/IntelSWTools/intelpython3/Library/lib${PYTHON_SEP_DIRS}
+#library_dirs = C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/mkl/lib/intel64${PYTHON_SEP_DIRS}
+###library_dirs = C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/mkl/lib/ia32${PYTHON_SEP_DIRS}# = x86
+#include_dirs = C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/mkl/include${PYTHON_SEP_DIRS}
+#lapack_libs = mkl_rt
+#mkl_libs = mkl_rt
