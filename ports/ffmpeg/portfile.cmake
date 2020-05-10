@@ -168,6 +168,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libtheora")
 endif()
 
+if("vorbis" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libvorbis")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libvorbis")
+endif()
+
 if("vpx" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvpx")
 else()

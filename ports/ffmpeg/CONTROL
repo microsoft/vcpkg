@@ -78,6 +78,10 @@ Feature: theora
 Build-Depends: libtheora
 Description: Theora encoding via libtheora support in ffmpeg
 
+Feature: vorbis
+Build-Depends: libvorbis
+Description: Vorbis en/decoding via libvorbis support in ffmpeg
+
 Feature: vpx
 Build-Depends: libvpx
 Description: VP8 and VP9 de/encoding via libvpx support in ffmpeg
