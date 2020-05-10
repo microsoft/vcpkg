@@ -1,5 +1,5 @@
 Source: python3-setuptools
-Version: 1-2
+Version: 1-4
 Description: Install built-in setuptools and pip3 support to python3
 Build-Depends: python3 (windows)
 Supports: (windows)
