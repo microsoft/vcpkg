@@ -1,6 +1,6 @@
 Source: python3-mako
-Version: 1-0
-#Homepage: 
-Description: Z
+Version: 1.1.2
+Homepage: https://www.makotemplates.org/
+Description: Mako is a template library written in Python
 Build-Depends: python3-setuptools
 Supports: (windows)
