@@ -156,6 +156,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libopus")
 endif()
 
+if("snappy" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsnappy")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsnappy")
+endif()
+
 if("soxr" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsoxr")
 else()
