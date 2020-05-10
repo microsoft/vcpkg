@@ -12,7 +12,7 @@ if(NOT EXISTS ${PYTHON_PREFIX}/Scripts/pip)
 endif()
 
 vcpkg_execute_required_process(
-    COMMAND ${Python3_EXECUTABLE} "${PYFILE_PATH}/get-pip.py"
+    COMMAND ${PYTHON3} "${PYFILE_PATH}/get-pip.py"
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME install-pip-${TARGET_TRIPLET}-rel
 )
@@ -20,7 +20,7 @@ message(STATUS "Installing built-in pip wheel.. done")
 
 message(STATUS "Upgrading pip..")
 vcpkg_execute_required_process(
-    COMMAND ${Python3_EXECUTABLE} -m pip install -U --force pip setuptools wheel requests pep517 
+    COMMAND ${PYTHON3} -m pip install -U --force pip setuptools wheel requests pep517 
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME upgrade-pip-${TARGET_TRIPLET}-rel
 )
