@@ -1,6 +1,9 @@
 Source: python3-numexpr
-Version: 1-0
-#Homepage: 
-Description: Z
+Version: 2.6.9
+Homepage: https://numexpr.readthedocs.io
+Description: Fast numerical array expression evaluator for Python, NumPy, PyTables, pandas, bcolz and more
 Build-Depends: python3-numpy
 Supports: !(windows|linux|osx|uwp|arm|arm64)
+
+Feature: fortran
+Description: compiled fortran
