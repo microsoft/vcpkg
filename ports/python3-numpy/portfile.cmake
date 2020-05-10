@@ -42,3 +42,4 @@ if("mkl" IN_LIST FEATURES)
 endif()
 
 vcpkg_build_python(SOURCE_PATH ${SOURCE_PATH})
+configure_file(${CURRENT_PORT_DIR}/site.cfg.in ${PYTHON_PACKAGES_PATH}/numpy/distutils/site.cfg)
