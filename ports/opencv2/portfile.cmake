@@ -116,11 +116,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
 find_package(PNG QUIET)
+find_package(OpenEXR QUIET)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
 find_package(TIFF QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
+
+  if("openexr" IN_LIST FEATURES)
+    string(REPLACE "LINK_ONLY:OpenEXR::IlmImfConfig"
+                   "LINK_ONLY:OpenEXR::IlmImf" OPENCV_MODULES "${OPENCV_MODULES}")
+  endif()
 
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
 
