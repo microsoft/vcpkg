@@ -13,6 +13,7 @@ vcpkg_from_github(
         # Patch for https://github.com/microsoft/vcpkg/issues/7660
         use_target_link_libraries_in_pclconfig.patch
         fix-link-libpng.patch
+        boost-1.73.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
