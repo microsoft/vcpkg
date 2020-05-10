@@ -1,0 +1,6 @@
+Source: python3-pycparser
+Version: 
+#Homepage: 
+Description: 
+Build-Depends: python3-setuptools
+Supports: (windows)
