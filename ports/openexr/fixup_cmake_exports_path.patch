@@ -7,7 +7,7 @@ index d9c5ae4..45ee6cc 100644
  configure_package_config_file(IlmBaseConfig.cmake.in
    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
 -  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-+  INSTALL_DESTINATION share/${PROJECT_NAME}
++  INSTALL_DESTINATION share/ilmbase
  )
  write_basic_package_version_file("${PROJECT_NAME}ConfigVersion.cmake"
    VERSION ${ILMBASE_VERSION}
@@ -16,11 +16,11 @@ index d9c5ae4..45ee6cc 100644
  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
 -  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-+  DESTINATION share/${PROJECT_NAME}
++  DESTINATION share/ilmbase
  )
  install(EXPORT ${PROJECT_NAME}
 -  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-+  DESTINATION share/${PROJECT_NAME}
++  DESTINATION share/ilmbase
    FILE ${PROJECT_NAME}Targets.cmake
    NAMESPACE ${PROJECT_NAME}::
    EXPORT_LINK_INTERFACE_LIBRARIES
@@ -42,7 +42,7 @@ index b52ad0d..3dc6d22 100644
  configure_package_config_file(OpenEXRConfig.cmake.in
    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
 -  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-+  INSTALL_DESTINATION share/${PROJECT_NAME}
++  INSTALL_DESTINATION share/openexr
  )
  write_basic_package_version_file("${PROJECT_NAME}ConfigVersion.cmake"
    VERSION ${OPENEXR_VERSION}
@@ -51,11 +51,11 @@ index b52ad0d..3dc6d22 100644
  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
 -  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-+  DESTINATION share/${PROJECT_NAME}
++  DESTINATION share/openexr
  )
  install(EXPORT ${PROJECT_NAME}
 -  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-+  DESTINATION share/${PROJECT_NAME}
++  DESTINATION share/openexr
    FILE ${PROJECT_NAME}Targets.cmake
    NAMESPACE ${PROJECT_NAME}::
    EXPORT_LINK_INTERFACE_LIBRARIES
@@ -68,11 +68,11 @@ index 1872c89..bc61f43 100644
  )
  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
 -  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-+  DESTINATION share/${PROJECT_NAME}
++  DESTINATION share/pyilmbase
  )
  install(EXPORT ${PROJECT_NAME}
 -  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-+  DESTINATION share/${PROJECT_NAME}
++  DESTINATION share/pyilmbase
    FILE ${PROJECT_NAME}Config.cmake
    NAMESPACE ${PROJECT_NAME}::
    EXPORT_LINK_INTERFACE_LIBRARIES
