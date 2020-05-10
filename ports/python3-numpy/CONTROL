@@ -6,7 +6,6 @@ Default-Features: openblas
 #
 Feature: openblas
 Description: use openblas as numpy backend
-Build-Depends: openblas
 #
 #Feature: mkl
 #Description: use MKL as numpy backend
