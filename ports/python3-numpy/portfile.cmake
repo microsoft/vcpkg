@@ -1,6 +1,8 @@
 find_program(GIT NAMES git git.cmd)
-set(GIT_URL "https://github.com/IntelPython/numpy")
-set(GIT_REV v1.16.3)#intel/1.16.3)
+#set(GIT_URL "https://github.com/IntelPython/numpy")
+set(GIT_URL "https://github.com/numpy/numpy")
+#set(GIT_REV v1.16.3)#intel/1.16.3)
+set(GIT_REV v1.18.4)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT})
 if(NOT EXISTS "${SOURCE_PATH}/.git")
