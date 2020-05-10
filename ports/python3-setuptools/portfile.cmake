@@ -26,6 +26,4 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Upgrading pip.. done")
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/distutils-rel.cfg.in DESTINATION ${SCRIPTS}/templates)#${VCPKG_ROOT_DIR}
-
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
