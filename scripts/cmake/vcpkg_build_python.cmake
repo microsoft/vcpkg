@@ -4,10 +4,6 @@ function(vcpkg_build_python)
 
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON_PREFIX ${PYTHON3} DIRECTORY)
-      find_program(Python3_EXECUTABLE NAMES python python3 python3.7 NAMES_PER_DIR HINTS ${PYTHON_PREFIX} NO_DEFAULT_PATH)
-        find_package_handle_standard_args(Python3 DEFAULT_MSG Python3_EXECUTABLE)
-        find_package_handle_standard_args(Python3Interp DEFAULT_MSG Python3_EXECUTABLE)
-      mark_as_advanced(Python3_EXECUTABLE)
 #    set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 #    set(Python3_ROOT_DIR ${PYTHON_PREFIX})
     set(PYTHONPATH "${PYTHON_PREFIX}/Lib;${PYTHON_PREFIX}/DLLs;${PYTHON_PREFIX}/Lib/site-packages")#;${PYTHON_PREFIX}/Lib/lib-tk
