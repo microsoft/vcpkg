@@ -1,5 +1,5 @@
 Source: python3-numpy
-Version: 1.14.2
+Version: 1.18.4-1
 Description: NumPy is the fundamental package for scientific computing with Python.
 Build-Depends: python3-setuptools, python3-cython
 Default-Features: openblas
