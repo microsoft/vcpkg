@@ -5,7 +5,7 @@ function(vcpkg_build_python)
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON_PREFIX ${PYTHON3} DIRECTORY)
     vcpkg_add_to_path(PREPEND ${PYTHON_PREFIX})
-    find_program(Python3_EXECUTABLE NAMES python python3 python3.7 NAMES_PER_DIR HINTS ${PYTHON_PREFIX} NO_DEFAULT_PATHS)
+    find_program(Python3_EXECUTABLE NAMES python python3 python3.7 PATHS ${PYTHON_PREFIX} NO_DEFAULT_PATHS)
 #    set(Python3_ROOT_DIR ${PYTHON_PREFIX})
       set(PYTHONPATH "${PYTHON_PREFIX}/DLLs;${PYTHON_PREFIX}/Lib;${PYTHON_PREFIX}/Lib/site-packages")#;${PYTHON_PREFIX}/Lib/lib-tk
       set(PYTHONSCRIPT "${PYTHON_PREFIX}/Scripts")
