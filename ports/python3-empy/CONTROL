@@ -1,6 +1,6 @@
 Source: python3-empy
-Version: 1-0
-#Homepage: 
-Description: Z
+Version: 3.3.4
+Homepage: http://www.alcyone.com/software/empy
+Description: A powerful and robust templating system for Python.
 Build-Depends: python3-setuptools
 Supports: (windows)
