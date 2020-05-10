@@ -2,5 +2,5 @@ Source: python3-pyicu
 Version: 
 #Homepage: 
 Description: 
-Build-Depends: python3-setuptools
+Build-Depends: python3-setuptools, icu
 Supports: (windows)
