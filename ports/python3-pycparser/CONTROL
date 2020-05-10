@@ -1,6 +1,6 @@
 Source: python3-pycparser
-Version: 
+Version: 1-0
 #Homepage: 
-Description: 
+Description: Z
 Build-Depends: python3-setuptools
 Supports: (windows)
