@@ -6,14 +6,20 @@ jobs:
 - job: x64_linux
   pool:
     name: ${{ parameters.poolName }}
-
   timeoutInMinutes: 1440 # 1 day
-
   steps:
+  - bash: |
+      df -h
+    displayName: 'Report on Disk Space Before Environment'
+    condition: always()
   - task: Bash@3
     displayName: 'Initialize Environment'
     inputs:
       filePath: scripts/azure-pipelines/linux/initialize-environment.sh
+  - bash: |
+      df -h
+    displayName: 'Report on Disk Space After Environment'
+    condition: always()
   - task: Bash@3
     displayName: 'Build vcpkg'
     inputs:
@@ -31,6 +37,10 @@ jobs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
       arguments: '-baselineFile $(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt -logDir "$(System.ArtifactsDirectory)/xml-results" -outputDir "$(Build.ArtifactStagingDirectory)" -failurelogDir "archives/fail" -triplets "x64-linux" -errorOnRegression'
+  - bash: |
+      df -h
+    displayName: 'Report on Disk Space After Build'
+    condition: always()
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: x86-linux Build Failure Logs'
     inputs:
