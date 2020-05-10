@@ -17,6 +17,7 @@ function(vcpkg_build_python)
     set(PYTHON_LIBRARIES ${PYTHON_LIBRARY})
     set(PYTHON_LIBRARY "${CURRENT_INSTALLED_DIR}/lib/python37.lib;${CURRENT_INSTALLED_DIR}/lib")#;${PYTHON_PREFIX}/libs
     vcpkg_add_to_path(PREPEND ${PYTHONSCRIPT})
+    vcpkg_add_to_path(PREPEND "${PYTHON_PREFIX}/DLLs")
 
     if(NOT DEFINED _ppi_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH is a required argument to vcpkg_install_python.")
