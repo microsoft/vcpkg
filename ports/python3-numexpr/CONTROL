@@ -2,5 +2,5 @@ Source: python3-numexpr
 Version: 1-0
 #Homepage: 
 Description: Z
-Build-Depends: python3-setuptools
+Build-Depends: python3-setuptools, python3-numpy
 Supports: (windows)
