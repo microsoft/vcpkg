@@ -1,0 +1,5 @@
+Source: python3-pytz
+Version: 2020.1
+Homepage: http://pythonhosted.org/pytz
+Description: pytz brings the Olson tz database into Python
+Build-Depends: python3-setuptools
