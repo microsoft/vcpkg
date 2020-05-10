@@ -14,7 +14,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if(override IN_LIST FEATURES)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
             message(STATUS "${PORT}[override] only supports static library linkage. Building static library.")
-            set(VCPKG_LIBRARY_LINKAGE static)
+            vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
         endif()
     endif()
 
@@ -73,6 +73,11 @@ else()
         ${CURRENT_PACKAGES_DIR}/debug/include
         ${CURRENT_PACKAGES_DIR}/debug/share
     )
+
+    # https://github.com/microsoft/vcpkg/pull/8750#issuecomment-625590773
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
