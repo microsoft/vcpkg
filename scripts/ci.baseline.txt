@@ -1006,7 +1006,6 @@ llgl:arm-uwp=fail
 llgl:x64-uwp=fail
 llvm:arm-uwp=fail
 llvm:arm64-windows=fail
-llvm:x64-linux=fail
 llvm:x64-uwp=fail
 lmdb:arm64-windows=fail
 lmdb:arm-uwp=fail
@@ -1134,7 +1133,17 @@ mpg123:x64-uwp=fail
 mpir:arm64-windows=fail
 mpir:arm-uwp=fail
 mpir:x64-uwp=fail
-
+# Building package gmp[core]:x64-linux... done
+# Installing package gmp[core]:x64-linux...
+# The following files are already installed in /mnt/1/s/installed/x64-linux and are in conflict with gmp:x64-linux
+#
+# Installed by mpir:x64-linux
+#     debug/lib/libgmp.a
+#     debug/lib/libgmp.la
+#     include/gmp.h
+#     lib/libgmp.a
+#     lib/libgmp.la
+mpir:x64-linux=skip
 #Conflicts with angle and qt-5base
 ms-angle:arm64-windows      = skip
 ms-angle:arm-uwp            = skip
