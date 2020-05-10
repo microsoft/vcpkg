@@ -3,4 +3,4 @@ Version: 1-0
 #Homepage: 
 Description: Z
 Build-Depends: python3-setuptools, icu
-Supports: (windows)
+Supports: !(windows|linux|osx|uwp|arm|arm64)
