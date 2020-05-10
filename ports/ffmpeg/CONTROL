@@ -74,6 +74,10 @@ Feature: soxr
 Build-Depends: soxr
 Description: libsoxr resampling support in ffmpeg
 
+Feature: speex
+Build-Depends: speex
+Description: Speex de/encoding via libspeex support in ffmpeg
+
 Feature: theora
 Build-Depends: libtheora
 Description: Theora encoding via libtheora support in ffmpeg

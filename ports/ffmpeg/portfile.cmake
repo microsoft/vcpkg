@@ -162,6 +162,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libsoxr")
 endif()
 
+if("speex" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libspeex")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libspeex")
+endif()
+
 if("theora" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libtheora")
 else()
