@@ -3,7 +3,7 @@ function(vcpkg_build_python)
     cmake_parse_arguments(_ppi "" "SOURCE_PATH" "" ${ARGN})
 
     vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON_PREFIX ${PYTHON3} DIRECTORY)
+    get_filename_component(PYTHON_PREFIX ${PYTHON3} PATH)
 #    set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 #    set(Python3_ROOT_DIR ${PYTHON_PREFIX})
     set(PYTHONPATH "${PYTHON_PREFIX}/Lib;${PYTHON_PREFIX}/Lib/site-packages")#;${PYTHON_PREFIX}/DLLs;${PYTHON_PREFIX}/Lib/lib-tk
@@ -17,7 +17,7 @@ function(vcpkg_build_python)
     set(PYTHON_LIBRARIES ${PYTHON_LIBRARY})
     set(PYTHON_LIBRARY "${CURRENT_INSTALLED_DIR}/lib/python37.lib;${CURRENT_INSTALLED_DIR}/lib")#;${PYTHON_PREFIX}/libs
 
-    find_program(Python3_EXECUTABLE NAMES python python3 python3.7 NAMES_PER_DIR HINTS ${PYTHON3} NO_DEFAULT_PATH)
+    find_program(Python3_EXECUTABLE NAMES python python3 python3.7 PATHS ${PYTHON_PREFIX} NO_DEFAULT_PATHS)
       find_package_handle_standard_args(Python3 DEFAULT_MSG Python3_EXECUTABLE)
       find_package_handle_standard_args(Python3Interp DEFAULT_MSG Python3_EXECUTABLE)
     mark_as_advanced(Python3_EXECUTABLE)
