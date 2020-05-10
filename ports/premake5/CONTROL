@@ -1,0 +1,4 @@
+Source: premake5
+Version: 5.0 alpha 15
+Homepage: https://premake.github.io/
+Description: Premake is a project file generator based on simple Lua scripts. It can generate project files for Visual Studio, Xcode, GNU Make and other build systems.
