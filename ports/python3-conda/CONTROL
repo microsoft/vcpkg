@@ -1,5 +1,0 @@
-Source: python3-conda
-Version: 4.8.3
-Homepage: https://github.com/conda/conda
-Description: Conda is a cross-platform, language-agnostic binary package manager
-Build-Depends: python3-setuptools
