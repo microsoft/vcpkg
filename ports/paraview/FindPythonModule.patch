@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 22de78ec7..fa63031e3 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -440,7 +440,7 @@ endif()
+ 
+ set(paraview_web_default ON)
+ if (WIN32)
+-  include(VTK/CMake/FindPythonModules.cmake)
++  include(VTK/CMake/FindPythonModules)
+   find_python_module(win32api have_pywin32)
+   set(paraview_web_default "${have_pywin32}")
+ endif ()
