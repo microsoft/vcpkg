@@ -266,6 +266,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
+endif()
+
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
 set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
