@@ -21,7 +21,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS 
         -DBUILD_TESTING=OFF
-            -DUSE_EXTERNAL_URDF=ON
+       -DUSE_EXTERNAL_URDF=ON
             -DUSE_EXTERNAL_TINYXML=ON
 )
 
