@@ -16,9 +16,10 @@ string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "csv"      ARROW_CSV
-    "json"     ARROW_JSON
-    "parquet"  ARROW_PARQUET
+    "csv"         ARROW_CSV
+    "json"        ARROW_JSON
+    "parquet"     ARROW_PARQUET
+    "filesystem"  ARROW_FILESYSTEM
 )
 
 vcpkg_configure_cmake(

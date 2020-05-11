@@ -295,6 +295,8 @@ namespace vcpkg
         env_cstr.push_back(L'\0');
         env_cstr.append(L"VSLANG=1033");
         env_cstr.push_back(L'\0');
+        env_cstr.append(L"VSCMD_SKIP_SENDTELEMETRY=1");
+        env_cstr.push_back(L'\0');
 
         for (const auto& item : extra_env)
         {
@@ -492,7 +494,7 @@ namespace vcpkg
 
         std::wstring out_env;
 
-        while (1)
+        for (;;)
         {
             auto eq = std::find(it, e, '=');
             if (eq == e) break;
