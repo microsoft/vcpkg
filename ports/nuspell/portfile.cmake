@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nuspell/nuspell
-    REF v3.1.0
-    SHA512 a9bedfd6e2d77fd34d249cf7aa1fcb6bde5bced26f02f8a2dd860416a61488c9b7016a0df6015052fcccb272b342e6205db601107f46efa44c9d78ce261a826c
+    REF v3.1.1
+    SHA512 239855051d9f49ba16913283090c4214a8f6a6cc290d359ab54014ff76fc297c131b67c6748bd1d4cdcec43c00dccc7f0c1bf8b07e06c9c648bff52ff193e096
     HEAD_REF master
 
     PATCHES cmake-disable-cli-and-docs.patch
