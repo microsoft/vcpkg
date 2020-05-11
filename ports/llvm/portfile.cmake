@@ -215,12 +215,11 @@ endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(GLOB_RECURSE _llvm_debug_targets
         "${CURRENT_PACKAGES_DIR}/share/llvm/*-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/clang/*-debug.cmake"
     )
     set(_clang_debug_targets)
     if("clang" IN_LIST FEATURES)
         file(GLOB_RECURSE _clang_debug_targets
-            "${CURRENT_PACKAGES_DIR}/share/clang/*-release.cmake"
+            "${CURRENT_PACKAGES_DIR}/share/clang/*-debug.cmake"
         )
     endif()
     foreach(_target IN LISTS _llvm_debug_targets _clang_debug_targets)
