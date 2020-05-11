@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "x64" "arm" "arm64")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/gsoap2/gsoap-2.8/gsoap_2.8.93.zip"
@@ -13,12 +13,7 @@ vcpkg_extract_source_archive_ex(
        "${CMAKE_CURRENT_LIST_DIR}/fix-build-in-windows.patch"
 )
 
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(BUILD_ARCH "Win32")
-else()
-    message("gsoap only supported Win32")
-    set(BUILD_ARCH "Win32")
-endif()
+set(BUILD_ARCH "Win32")
 
 # Handle binary files and includes
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/gsoap ${CURRENT_PACKAGES_DIR}/debug/tools)
@@ -50,15 +45,14 @@ file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
 file(COPY ${SOURCE_PATH}/gsoap/stdsoap2.h ${SOURCE_PATH}/gsoap/stdsoap2.c ${SOURCE_PATH}/gsoap/stdsoap2.cpp ${SOURCE_PATH}/gsoap/dom.c ${SOURCE_PATH}/gsoap/dom.cpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # Handle import files
-file(COPY ${SOURCE_PATH}/gsoap/import DESTINATION ${CURRENT_PACKAGES_DIR}/share/gsoap)
+file(COPY ${SOURCE_PATH}/gsoap/import DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # Handle plugin files
-file(COPY ${SOURCE_PATH}/gsoap/plugin DESTINATION ${CURRENT_PACKAGES_DIR}/share/gsoap)
+file(COPY ${SOURCE_PATH}/gsoap/plugin DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt ${SOURCE_PATH}/INSTALL.txt ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/gsoap)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gsoap/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/gsoap/copyright)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gsoap/INSTALL.txt ${CURRENT_PACKAGES_DIR}/share/gsoap/install)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gsoap/README.txt ${CURRENT_PACKAGES_DIR}/share/gsoap/readme)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/INSTALL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME install)
+file(INSTALL ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME readme)
 
 vcpkg_copy_pdbs()

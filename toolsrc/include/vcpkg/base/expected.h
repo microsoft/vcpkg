@@ -187,7 +187,7 @@ namespace vcpkg
             }
             else
             {
-                return {std::move(error()), expected_right_tag};
+                return {std::move(*this).error(), expected_right_tag};
             }
         }
 

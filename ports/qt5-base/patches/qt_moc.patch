@@ -1,0 +1,20 @@
+diff --git a/src/corelib/Qt5CoreMacros.cmake b/src/corelib/Qt5CoreMacros.cmake
+index 7735e51..b3da640 100644 (file)
+--- a/src/corelib/Qt5CoreMacros.cmake
++++ b/src/corelib/Qt5CoreMacros.cmake
+@@ -59,7 +59,14 @@ macro(QT5_MAKE_OUTPUT_FILE infile prefix ext outfile )
+     set(_outfile "${CMAKE_CURRENT_BINARY_DIR}/${rel}")
+     string(REPLACE ".." "__" _outfile ${_outfile})
+     get_filename_component(outpath ${_outfile} PATH)
+-    string(REGEX REPLACE "\\.[^.]*$" "" _outfile ${_outfile})
++    if(CMAKE_VERSION VERSION_LESS "3.14")
++        get_filename_component(_outfile_ext ${_outfile} EXT)
++        get_filename_component(_outfile_ext ${_outfile_ext} NAME_WE)
++        get_filename_component(_outfile ${_outfile} NAME_WE)
++        string(APPEND _outfile ${_outfile_ext})
++    else()
++        get_filename_component(_outfile ${_outfile} NAME_WLE)
++    endif()
+     file(MAKE_DIRECTORY ${outpath})
+     set(${outfile} ${outpath}/${prefix}${_outfile}.${ext})
+ endmacro()
