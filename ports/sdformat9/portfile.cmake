@@ -19,7 +19,8 @@ vcpkg_add_to_path(${RUBY_PATH})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DBUILD_TESTING=OFF
+    OPTIONS 
+        -DBUILD_TESTING=OFF
             -DUSE_EXTERNAL_URDF=ON
             -DUSE_EXTERNAL_TINYXML=ON
 )
