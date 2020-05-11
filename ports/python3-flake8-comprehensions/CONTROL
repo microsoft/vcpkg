@@ -3,3 +3,4 @@ Version: 3.2.2
 Homepage: https://github.com/adamchainz/flake8-comprehensions
 Description: A flake8 plugin that helps you write better list/set/dict comprehensions.
 Build-Depends: python3-setuptools, python3-flake8
+Supports: (windows)
