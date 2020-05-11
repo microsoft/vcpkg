@@ -19,9 +19,9 @@ TEST_CASE ("equal", "[optional]")
     using vcpkg::Optional;
 
     CHECK(Optional<int>{} == Optional<int>{});
-    CHECK(!(Optional<int>{} == Optional<int>{42}));
-    CHECK(!(Optional<int>{42} == Optional<int>{}));
-    CHECK(!(Optional<int>{1729} == Optional<int>{42}));
+    CHECK_FALSE(Optional<int>{} == Optional<int>{42});
+    CHECK_FALSE(Optional<int>{42} == Optional<int>{});
+    CHECK_FALSE(Optional<int>{1729} == Optional<int>{42});
     CHECK(Optional<int>{42} == Optional<int>{42});
 }
 

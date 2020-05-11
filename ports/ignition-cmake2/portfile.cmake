@@ -1,10 +1,10 @@
 include(${CURRENT_INSTALLED_DIR}/share/ignitionmodularscripts/ignition_modular_library.cmake)
 
-set(PACKAGE_VERSION "2.1.1")
+set(PACKAGE_VERSION "2.2.0")
 
 ignition_modular_library(NAME cmake
                          VERSION ${PACKAGE_VERSION}
-                         SHA512 4d22a45ccc9582c7e4b370b884511782d1629fa3e257dd92300388b5050d22fa63dd4a6ef8942abb9ebbc300df4cd526d1d8a7088a92b0073e152c16c7b97e2b)
+                         SHA512 079b6d0cc5e2de83cf01f5731dd4e2e55e18e46c7506b6267a19a230fbbaa7b89053be4b42ca21584cf7fdd64de1d6305c7bc16fa3e0c5751b098fd0e5b98149)
 
 # Permit empty include folder
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

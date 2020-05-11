@@ -85,13 +85,14 @@ namespace vcpkg
                                      Triplet triplet,
                                      const std::string& abi_tag,
                                      const std::vector<FeatureSpec>& deps)
-        : version(spgh.version)
+        : spec(spgh.name, triplet)
+        , version(spgh.version)
         , description(spgh.description)
         , maintainer(spgh.maintainer)
         , abi(abi_tag)
         , type(spgh.type)
+        , default_features(spgh.default_features)
     {
-        this->spec = PackageSpec(spgh.name, triplet);
         this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
         Util::sort_unique_erase(this->depends);
     }
@@ -100,9 +101,14 @@ namespace vcpkg
                                      const FeatureParagraph& fpgh,
                                      Triplet triplet,
                                      const std ::vector<FeatureSpec>& deps)
-        : version(), description(fpgh.description), maintainer(), feature(fpgh.name), type(spgh.type)
+        : spec(spgh.name, triplet)
+        , version()
+        , description(fpgh.description)
+        , maintainer()
+        , feature(fpgh.name)
+        , type(spgh.type)
+        , default_features()
     {
-        this->spec = PackageSpec(spgh.name, triplet);
         this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
         Util::sort_unique_erase(this->depends);
     }
@@ -143,5 +149,7 @@ namespace vcpkg
         if (!pgh.description.empty()) out_str.append("Description: ").append(pgh.description).push_back('\n');
 
         out_str.append("Type: ").append(Type::to_string(pgh.type)).push_back('\n');
+        if (!pgh.default_features.empty())
+            out_str.append("Default-Features: ").append(Strings::join(", ", pgh.default_features)).push_back('\n');
     }
 }

@@ -34,11 +34,6 @@ if (-Not (Test-Path W:)) {
     net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
 }
 
-Write-Host 'Setting up logs mount'
-if (-Not (Test-Path L:)) {
-    net use L: "\\$StorageAccountName.file.core.windows.net\logs" /u:"AZURE\$StorageAccountName" $StorageAccountKey
-}
-
 Write-Host 'Creating downloads directory'
 mkdir D:\downloads -ErrorAction SilentlyContinue
 
