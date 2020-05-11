@@ -12,7 +12,7 @@ index bd2de34..fba948a 100755
          *)
              optname="${opt%%=*}"
              optname="${optname#--}"
-@@ -6150,10 +6153,17 @@
+@@ -6150,10 +6153,18 @@
      fi
  fi
  
@@ -22,7 +22,8 @@ index bd2de34..fba948a 100755
 -enabled  lzma && check_lib lzma   lzma.h lzma_version_number -llzma
 +if enabled debug_configure; then
 +    enabled  zlib && { check_pkg_config zlib zlib "zlib.h" zlibVersion ||
-+                   check_lib zlib   zlib.h      zlibVersion    -lzd; }
++                   check_lib zlib   zlib.h      zlibVersion    -lzd ||
++                   check_lib zlib   zlib.h      zlibVersion    -lz; }
 +    enabled bzlib && check_lib bzlib bzlib.h BZ2_bzlibVersion    -lbz2d
 +    enabled  lzma && check_lib lzma   lzma.h lzma_version_number -llzmad
 +else
