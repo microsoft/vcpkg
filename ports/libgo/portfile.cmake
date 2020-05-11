@@ -57,7 +57,7 @@ else()
     vcpkg_install_cmake()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/disable_hook)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix/static_hook)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix/static_hook)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
 
 # Handle copyright
