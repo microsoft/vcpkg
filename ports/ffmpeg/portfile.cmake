@@ -11,6 +11,7 @@ vcpkg_from_github(
         0005-fix-libvpx-linking.patch
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
+        0008-Fix-wavpack-detection.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -190,6 +191,12 @@ if("vpx" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvpx")
 else()
     set(OPTIONS "${OPTIONS} --disable-libvpx")
+endif()
+
+if("wavpack" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libwavpack")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libwavpack")
 endif()
 
 if("x264" IN_LIST FEATURES)

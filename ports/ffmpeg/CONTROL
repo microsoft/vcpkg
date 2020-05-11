@@ -94,6 +94,10 @@ Feature: vpx
 Build-Depends: libvpx
 Description: VP8 and VP9 de/encoding via libvpx support in ffmpeg
 
+Feature: wavpack
+Build-Depends: wavpack
+Description: wavpack encoding via libwavpack support in ffmpeg
+
 Feature: x264
 Build-Depends: x264, ffmpeg[gpl]
 Description: H.264 encoding via x264 support in ffmpeg
