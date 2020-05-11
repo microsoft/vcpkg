@@ -11,7 +11,7 @@ project boost : requirements
     <include>include&&"@CURRENT_INSTALLED_DIR@/include"
     <define>BOOST_ALL_NO_LIB=1
     <tag>@$(__name__).tag
-    @REQUIREMENTS@
+    @B2_REQUIREMENTS@
     ;
 
 rule boost-install ( libraries * )

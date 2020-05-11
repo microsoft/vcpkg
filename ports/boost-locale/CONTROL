@@ -6,5 +6,5 @@ Homepage: https://github.com/boostorg/locale
 Description: Boost locale module
 
 Feature: icu
-Description: ICU backend for Boost.Locale
 Build-Depends: icu
+Description: ICU backend for Boost.Locale

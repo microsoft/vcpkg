@@ -70,8 +70,17 @@ function Generate()
         $controlLines += @(
             ""
             "Feature: icu"
-            "Description: ICU backend for Boost.Locale"
             "Build-Depends: icu"
+            "Description: ICU backend for Boost.Locale"
+        )
+    }
+    if ($PortName -eq "python")
+    {
+        $controlLines += @(
+            ""
+            "Feature: python2"
+            "Build-Depends: python2 (windows)"
+            "Description: Build with Python2 support"
         )
     }
     if ($PortName -eq "regex")
@@ -79,8 +88,8 @@ function Generate()
         $controlLines += @(
             ""
             "Feature: icu"
-            "Description: ICU backend for Boost.Regex"
             "Build-Depends: icu"
+            "Description: ICU backend for Boost.Regex"
         )
     }
     $controlLines | out-file -enc ascii "$portsDir/boost-$PortName/CONTROL"
@@ -136,58 +145,24 @@ function Generate()
 
     if ($NeedsBuild)
     {
-        if ($PortName -eq "locale")
+        $portfileLines += @(
+            "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
+        )
+        # b2-options.cmake contains port-specific build options
+        if (Test-Path "$portsDir/boost-$PortName/b2-options.cmake")
         {
             $portfileLines += @(
-                "if(`"icu`" IN_LIST FEATURES)"
-                "    set(BOOST_LOCALE_ICU on)"
-                "else()"
-                "    set(BOOST_LOCALE_ICU off)"
-                "endif()"
-                ""
-                "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
                 "boost_modular_build("
                 "    SOURCE_PATH `${SOURCE_PATH}"
-                "    BOOST_CMAKE_FRAGMENT `"`${CMAKE_CURRENT_LIST_DIR}/cmake-fragment.cmake`""
-                "    OPTIONS"
-                "        boost.locale.iconv=off"
-                "        boost.locale.posix=off"
-                "        /boost/locale//boost_locale"
-                "        boost.locale.icu=`${BOOST_LOCALE_ICU}"
-                ")"
-            )
-        }
-        elseif ($PortName -eq "regex")
-        {
-            $portfileLines += @(
-                "if(`"icu`" IN_LIST FEATURES)"
-                "    set(REQUIREMENTS `"<library>/user-config//icuuc <library>/user-config//icudt <library>/user-config//icuin <define>BOOST_HAS_ICU=1`")"
-                "else()"
-                "    set(REQUIREMENTS)"
-                "endif()"
-                ""
-                "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
-                "boost_modular_build(SOURCE_PATH `${SOURCE_PATH} REQUIREMENTS `"`${REQUIREMENTS}`")"
-            )
-        }
-        elseif ($PortName -eq "thread")
-        {
-            $portfileLines += @(
-                "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
-                "boost_modular_build("
-                "    SOURCE_PATH `${SOURCE_PATH}"
-                "    REQUIREMENTS `"<library>/boost/date_time//boost_date_time`""
-                "    OPTIONS /boost/thread//boost_thread"
-                "    BOOST_CMAKE_FRAGMENT `${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+                "    BOOST_CMAKE_FRAGMENT `"`${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake`""
                 ")"
             )
         }
         else
         {
             $portfileLines += @(
-                "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
                 "boost_modular_build(SOURCE_PATH `${SOURCE_PATH})"
-                )
+            )
         }
     }
 

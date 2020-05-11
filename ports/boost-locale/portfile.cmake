@@ -8,21 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if("icu" IN_LIST FEATURES)
-    set(BOOST_LOCALE_ICU on)
-else()
-    set(BOOST_LOCALE_ICU off)
-endif()
-
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}
-    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/cmake-fragment.cmake"
-    OPTIONS
-        boost.locale.iconv=off
-        boost.locale.posix=off
-        /boost/locale//boost_locale
-        boost.locale.icu=${BOOST_LOCALE_ICU}
+    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
 )
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
