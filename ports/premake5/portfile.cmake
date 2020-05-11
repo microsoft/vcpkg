@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 vcpkg_download_distfile(ARCHIVE
