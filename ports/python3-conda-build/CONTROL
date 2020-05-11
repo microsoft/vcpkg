@@ -3,3 +3,4 @@ Version: 3.19.3
 Homepage: https://github.com/conda/conda-build
 Description: Commands and tools for building conda packages
 Build-Depends: python3-setuptools
+Supports: (windows)
