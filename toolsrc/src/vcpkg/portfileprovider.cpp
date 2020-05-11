@@ -35,7 +35,7 @@ namespace vcpkg::PortFileProvider
             {
                 if (!overlay_path.empty())
                 {
-                    fs::path overlay = fs::u8path(overlay_path);
+                    auto overlay = fs::u8path(overlay_path);
                     if (overlay.is_absolute())
                     {
                         overlay = fs.canonical(VCPKG_LINE_INFO, overlay);
