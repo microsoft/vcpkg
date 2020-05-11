@@ -6,9 +6,9 @@ include(GNUInstallDirs)
 
 option(GPERFTOOLS_BUILD_TOOLS "Build tools" ON)
 
-if (WIN32) # TODO: MINGW, MSYS
+if(WIN32) # TODO: MINGW, MSYS
     option(GPERFTOOLS_WIN32_OVERRIDE "Override allocators" OFF)
-endif ()
+endif()
 
 set(gperftools_public_headers
     src/gperftools/heap-checker.h
@@ -22,7 +22,7 @@ set(gperftools_public_headers
     src/gperftools/stacktrace.h
 )
 
-if (WIN32) # TODO: MINGW, MSYS
+if(WIN32) # TODO: MINGW, MSYS
     list(APPEND gperftools_public_headers
         src/windows/gperftools/tcmalloc.h
     )
@@ -118,28 +118,28 @@ if (WIN32) # TODO: MINGW, MSYS
         src/windows/system-alloc.cc
     )
 
-    if (GPERFTOOLS_WIN32_OVERRIDE)
+    if(GPERFTOOLS_WIN32_OVERRIDE)
         list(APPEND libtcmalloc_minimal_sources src/windows/override_functions.cc)
-    else ()
+    else()
         list(APPEND libtcmalloc_minimal_sources src/windows/patch_functions.cc)
-    endif ()
+    endif()
 
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
     source_group("Header Files" FILES ${libtcmalloc_minimal_headers})
     source_group("Source Files" FILES ${libtcmalloc_minimal_sources})
 
-    if (GPERFTOOLS_WIN32_OVERRIDE)
+    if(GPERFTOOLS_WIN32_OVERRIDE)
         add_library(libtcmalloc_minimal
             STATIC
             ${libtcmalloc_minimal_headers}
             ${libtcmalloc_minimal_sources}
         )
-    else ()
+    else()
         add_library(libtcmalloc_minimal
             ${libtcmalloc_minimal_headers}
             ${libtcmalloc_minimal_sources}
         )
-    endif ()
+    endif()
 
     target_compile_definitions(
         libtcmalloc_minimal
@@ -179,7 +179,7 @@ if (WIN32) # TODO: MINGW, MSYS
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
-    if (GPERFTOOLS_BUILD_TOOLS)
+    if(GPERFTOOLS_BUILD_TOOLS)
         add_executable(addr2line-pdb src/windows/addr2line-pdb.c)
         target_link_libraries(addr2line-pdb PRIVATE DbgHelp)
 
@@ -187,11 +187,6 @@ if (WIN32) # TODO: MINGW, MSYS
         target_link_libraries(nm-pdb PRIVATE DbgHelp)
 
         install(TARGETS addr2line-pdb nm-pdb DESTINATION ${CMAKE_INSTALL_BINDIR})
-    endif ()
-else ()
-endif ()
-
-
-# References:
-# wepoll
-# https://centos.pkgs.org/7/centos-x86_64/gperftools-devel-2.6.1-1.el7.x86_64.rpm.html
+    endif()
+else()
+endif()
