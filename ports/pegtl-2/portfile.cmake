@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taocpp/pegtl
@@ -25,7 +24,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/pegtl-2/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pegtl-2/LICENSE ${CURRENT_PACKAGES_DIR}/share/pegtl-2/copyright)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 
 # Handle collision with latest pegtl
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pegtl-2/pegtl-config.cmake ${CURRENT_PACKAGES_DIR}/share/pegtl-2/pegtl-2-config.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/pegtl-config.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/pegtl-config-version.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config-version.cmake)
