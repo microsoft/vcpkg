@@ -100,7 +100,7 @@ vcpkgDownloadFile()
     url=$1; downloadPath=$2 sha512=$3
     vcpkgCheckRepoTool "curl"
     rm -rf "$downloadPath.part"
-    curl -L $url --create-dirs --retry 3 --output "$downloadPath.part" || exit 1
+    curl -L $url --tlsv1.2 --create-dirs --retry 3 --output "$downloadPath.part" || exit 1
 
     vcpkgCheckEqualFileHash $url "$downloadPath.part" $sha512
     mv "$downloadPath.part" "$downloadPath"
