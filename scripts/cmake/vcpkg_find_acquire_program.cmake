@@ -25,6 +25,7 @@
 ## - PYTHON2
 ## - PYTHON3
 ## - GIT
+## - GN
 ## - GO
 ## - JOM
 ## - MESON
@@ -101,6 +102,29 @@ function(vcpkg_find_acquire_program VAR)
       set(BREW_PACKAGE_NAME "git")
       set(APT_PACKAGE_NAME "git")
     endif()
+  elseif(VAR MATCHES "GN")
+    set(PROGNAME gn)
+    set(_vfa_RENAME "gn")
+    set(CIPD_DOWNLOAD_GN "https://chrome-infra-packages.appspot.com/dl/gn/gn")
+    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+      set(_vfa_SUPPORTED ON)
+      set(GN_VERSION "xus7xtaPhpv5vCmKFOnsBVoB-PKmhZvRsSTjbQAuF0MC")
+      set(GN_PLATFORM "linux-amd64")
+      set(HASH "871e75d7f3597b74fb99e36bb41fe5a9f8ce8a4d9f167f4729fc6e444807a59f35ec8aca70c2274a99c79d70a1108272be1ad991678a8ceb39e30f77abb13135")
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+      set(_vfa_SUPPORTED ON)
+      set(GN_VERSION "qhxILDNcJ2H44HfHmfiU-XIY3E_SIXvFqLd2wvbIgOoC")
+      set(GN_PLATFORM "mac-amd64")
+      set(HASH "03ee64cb15bae7fceb412900d470601090bce147cfd45eb9b46683ac1a5dca848465a5d74c55a47df7f0e334d708151249a6d37bb021de74dd48b97ed4a07937")
+    else()
+      set(GN_VERSION "qUkAhy9J0P7c5racy-9wB6AHNK_btS18im8S06_ehhwC")
+      set(GN_PLATFORM "windows-amd64")
+      set(HASH "263e02bd79eee0cb7b664831b7898565c5656a046328d8f187ef7ae2a4d766991d477b190c9b425fcc960ab76f381cd3e396afb85cba7408ca9e74eb32c175db")
+    endif()
+    set(SUBDIR "${GN_VERSION}")
+    set(PATHS "${DOWNLOADS}/tools/gn/${SUBDIR}")
+    set(URL "${CIPD_DOWNLOAD_GN}/${GN_PLATFORM}/+/${GN_VERSION}")
+    set(ARCHIVE "gn-${GN_PLATFORM}.zip")
   elseif(VAR MATCHES "GO")
     set(PROGNAME go)
     set(PATHS ${DOWNLOADS}/tools/go/go/bin)
