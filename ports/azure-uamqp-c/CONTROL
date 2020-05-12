@@ -1,8 +1,8 @@
 Source: azure-uamqp-c
-Version: 2019-10-07.2
+Version: 2020-02-04.1
 Build-Depends: azure-c-shared-utility, azure-macro-utils-c, umock-c
 Description: AMQP library for C
 
 Feature: public-preview
 Description: AMQP library for C (public preview)
-Build-Depends: azure-c-shared-utility[public-preview], azure-macro-utils-c, umock-c
+Build-Depends: azure-c-shared-utility[public-preview], azure-macro-utils-c[public-preview], umock-c[public-preview]

@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF 1a6ad661ce64287ccbe26460ccc3aa4247d86ba8 # 2.12.1
     SHA512 7a774f325c85761e2d076847f1fc8bc67592d696c4ebde839928591f7c85352e2df6032c122bdcc603adf84d76f5a1897c7118aa3859d38f79e474f27bc3b588
     HEAD_REF master
-    PATCHES fix-generate-build-path.patch
+    PATCHES
+        fix-generate-build-path.patch
+        fix-msvc-build.patch # Remove this patch on next update
 )
 
 if(CMAKE_HOST_WIN32)

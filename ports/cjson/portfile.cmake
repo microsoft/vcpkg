@@ -3,18 +3,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaveGamble/cJSON
-    REF v1.7.12
-    SHA512 d767b7261eff3a1a50ea46cc5573f9504f5734a891ea211ad348835bfb4b80acf7f744da2d34bb1fa270cd4d44576c21bc6f52c0604b7e6ffdeb61ecb396b376
+    REF 95368da1a13c1ced5507bb5b0a457729af34837c
+    SHA512 e50fb7857573fac39bc9659004bd71483156677b4b1c7dd801470469162d1af2b1e3803fb4f1291b2b5defefb005ddd78b0efb01965626eecc00bc78b5f98c72
     HEAD_REF master
-    PATCHES
-        fix-install-path.patch
 )
 
-if("utils" IN_LIST FEATURES)
-    set(ENABLE_CJSON_UTILS ON)
-else()
-    set(ENABLE_CJSON_UTILS OFF)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    utils ENABLE_CJSON_UTILS
+)
 
 if(CMAKE_HOST_WIN32)
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_PUBLIC_SYMBOLS)
@@ -30,9 +27,9 @@ vcpkg_configure_cmake(
         -DCJSON_OVERRIDE_BUILD_SHARED_LIBS=OFF
         -DENABLE_PUBLIC_SYMBOLS=${ENABLE_PUBLIC_SYMBOLS}
         -DENABLE_TARGET_EXPORT=ON # Export CMake config files
-        -DENABLE_CJSON_UTILS=${ENABLE_CJSON_UTILS}
         -DENABLE_CJSON_TEST=OFF
         -DENABLE_FUZZING=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

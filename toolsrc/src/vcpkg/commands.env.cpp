@@ -2,7 +2,9 @@
 
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/build.h>
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 
@@ -30,15 +32,23 @@ namespace vcpkg::Commands::Env
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& triplet)
+    // This command should probably optionally take a port
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet triplet)
     {
         const auto& fs = paths.get_filesystem();
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, triplet);
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
+        auto& var_provider = *var_provider_storage;
+
+        var_provider.load_generic_triplet_vars(triplet);
+
+        const Build::PreBuildInfo pre_build_info(
+            paths, triplet, var_provider.get_generic_triplet_vars(triplet).value_or_exit(VCPKG_LINE_INFO));
         const Toolset& toolset = paths.get_toolset(pre_build_info);
-        auto env_cmd = Build::make_build_env_cmd(pre_build_info, toolset);
+        auto build_env_cmd = Build::make_build_env_cmd(pre_build_info, toolset);
 
         std::unordered_map<std::string, std::string> extra_env = {};
         const bool add_bin = Util::Sets::contains(options.switches, OPTION_BIN);
@@ -64,12 +74,29 @@ namespace vcpkg::Commands::Env
         if (add_python) extra_env.emplace("PYTHONPATH", (paths.installed / triplet.to_string() / "python").u8string());
         if (path_vars.size() > 0) extra_env.emplace("PATH", Strings::join(";", path_vars));
 
-        std::string env_cmd_prefix = env_cmd.empty() ? "" : Strings::format("%s && ", env_cmd);
-        std::string env_cmd_suffix =
-            args.command_arguments.empty() ? "cmd" : Strings::format("cmd /c %s", args.command_arguments.at(0));
+        auto env = [&] {
+            auto clean_env = System::get_modified_clean_environment(extra_env);
+            if (build_env_cmd.empty())
+                return clean_env;
+            else
+            {
+#ifdef _WIN32
+                return System::cmd_execute_modify_env(build_env_cmd, clean_env);
+#else
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "Build environment commands are not supported on this platform");
+#endif
+            }
+        }();
 
-        const std::string cmd = Strings::format("%s%s", env_cmd_prefix, env_cmd_suffix);
-        System::cmd_execute_clean(cmd, extra_env);
-        Checks::exit_success(VCPKG_LINE_INFO);
+        std::string cmd = args.command_arguments.empty() ? "cmd" : ("cmd /c " + args.command_arguments.at(0));
+#ifdef _WIN32
+        System::enter_interactive_subprocess();
+#endif
+        auto rc = System::cmd_execute(cmd, env);
+#ifdef _WIN32
+        System::exit_interactive_subprocess();
+#endif
+        Checks::exit_with_code(VCPKG_LINE_INFO, rc);
     }
 }

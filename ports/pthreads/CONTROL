@@ -2,3 +2,4 @@ Source: pthreads
 Version: 3.0.0-4
 Homepage: https://sourceware.org/pub/pthreads-win32/
 Description: pthreads for windows
+Supports: !(uwp|arm|arm64)

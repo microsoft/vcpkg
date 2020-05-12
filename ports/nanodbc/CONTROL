@@ -1,4 +1,4 @@
 Source: nanodbc
-Version: 2.12.4-4
+Version: 2.12.4-5
 Homepage: https://github.com/lexicalunit/nanodbc
 Description: A small C++ wrapper for the native C ODBC API.

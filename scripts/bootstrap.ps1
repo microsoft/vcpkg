@@ -412,13 +412,16 @@ if ($ec -ne 0)
 }
 Write-Host "`nBuilding vcpkg.exe... done.`n"
 
-Write-Host @"
+if (-not $disableMetrics)
+{
+    Write-Host @"
 Telemetry
 ---------
 vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running bootstrap-vcpkg.bat with -disableMetrics.
 Read more about vcpkg telemetry at docs/about/privacy.md
 
 "@
+}
 
 Write-Verbose "Placing vcpkg.exe in the correct location"
 

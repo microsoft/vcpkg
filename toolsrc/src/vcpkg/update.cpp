@@ -14,7 +14,7 @@ namespace vcpkg::Update
         return left.spec.name() < right.spec.name();
     }
 
-    std::vector<OutdatedPackage> find_outdated_packages(const Dependencies::PortFileProvider& provider,
+    std::vector<OutdatedPackage> find_outdated_packages(const PortFileProvider::PortFileProvider& provider,
                                                         const StatusParagraphs& status_db)
     {
         auto installed_packages = get_installed_ports(status_db);
@@ -57,7 +57,7 @@ namespace vcpkg::Update
 
         const StatusParagraphs status_db = database_load_check(paths);
 
-        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         const auto outdated_packages = SortedVector<OutdatedPackage>(find_outdated_packages(provider, status_db),
                                                                      &OutdatedPackage::compare_by_name);

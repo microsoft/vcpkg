@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.codesynthesis.com/download/odb/2.4/libodb-boost-2.4.0.tar.gz"
     FILENAME "libodb-boost-2.4.0.tar.gz"
@@ -24,11 +22,12 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
 file(READ ${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_boostConfig-debug.cmake LIBODB_DEBUG_TARGETS)
 string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/odb/odb_boostConfig-debug.cmake "${LIBODB_DEBUG_TARGETS}")
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libodb-boost)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libodb-boost/LICENSE ${CURRENT_PACKAGES_DIR}/share/libodb-boost/copyright)
-vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

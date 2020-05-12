@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VCPKG_LIBRARY_LINKAGE "dynamic")
 
 # We specify the Linux URL, but the only difference between the Windows/Linux packages are the included libraries
@@ -27,7 +25,7 @@ vcpkg_install_cmake()
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/geotrans-config.in.cmake
-    ${CURRENT_PACKAGES_DIR}/share/geotrans/geotrans-config.cmake
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotrans-config.cmake
     @ONLY
 )
 
@@ -35,7 +33,7 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${P
 
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/GEOTRANS3/docs/MSP_Geotrans_Terms_Of_Use.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotrans RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/GEOTRANS3/docs/MSP_Geotrans_Terms_Of_Use.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Install the geo model data
-file(COPY ${SOURCE_PATH}/data DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotrans)
+file(COPY ${SOURCE_PATH}/data DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

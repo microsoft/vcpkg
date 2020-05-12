@@ -17,6 +17,24 @@
 
 namespace vcpkg::Test
 {
+    std::unique_ptr<SourceControlFile> make_control_file(
+        const char* name,
+        const char* depends,
+        const std::vector<std::pair<const char*, const char*>>& features = {},
+        const std::vector<const char*>& default_features = {});
+
+    inline auto test_parse_control_file(const std::vector<std::unordered_map<std::string, std::string>>& v)
+    {
+        std::vector<vcpkg::Parse::Paragraph> pghs;
+        for (auto&& p : v)
+        {
+            pghs.emplace_back();
+            for (auto&& kv : p)
+                pghs.back().emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
+        }
+        return vcpkg::SourceControlFile::parse_control_file("", std::move(pghs));
+    }
+
     std::unique_ptr<vcpkg::StatusParagraph> make_status_pgh(const char* name,
                                                             const char* depends = "",
                                                             const char* default_features = "",
@@ -27,7 +45,22 @@ namespace vcpkg::Test
                                                                     const char* depends = "",
                                                                     const char* triplet = "x86-windows");
 
-    vcpkg::PackageSpec unsafe_pspec(std::string name, vcpkg::Triplet t = vcpkg::Triplet::X86_WINDOWS);
+    /// <summary>
+    /// Map of source control files by their package name.
+    /// </summary>
+    struct PackageSpecMap
+    {
+        std::unordered_map<std::string, SourceControlFileLocation> map;
+        Triplet triplet;
+        PackageSpecMap(Triplet t = Triplet::X86_WINDOWS) noexcept : triplet(t) {}
+
+        PackageSpec emplace(const char* name,
+                            const char* depends = "",
+                            const std::vector<std::pair<const char*, const char*>>& features = {},
+                            const std::vector<const char*>& default_features = {});
+
+        PackageSpec emplace(vcpkg::SourceControlFileLocation&& scfl);
+    };
 
     template<class T, class S>
     T&& unwrap(vcpkg::ExpectedT<T, S>&& p)

@@ -1,0 +1,24 @@
+diff --git a/src/xkernel_configuration.cpp b/src/xkernel_configuration.cpp
+index 681b45d..b5a68eb 100644
+--- a/src/xkernel_configuration.cpp
++++ b/src/xkernel_configuration.cpp
+@@ -25,8 +25,8 @@ namespace xeus
+         ifs >> doc;
+ 
+         xconfiguration res;
+-        res.m_transport = doc["transport"];
+-        res.m_ip = doc["ip"];
++        res.m_transport = doc["transport"].get<std::string>();
++        res.m_ip = doc["ip"].get<std::string>();
+         res.m_control_port = std::to_string(doc["control_port"].get<int>());
+         res.m_shell_port = std::to_string(doc["shell_port"].get<int>());
+         res.m_stdin_port = std::to_string(doc["stdin_port"].get<int>());
+@@ -35,7 +35,7 @@ namespace xeus
+         res.m_signature_scheme = doc.value("signature_scheme", "");
+         if (res.m_signature_scheme != "")
+         {
+-            res.m_key = doc["key"];
++            res.m_key = doc["key"].get<std::string>();
+         }
+         else
+         {

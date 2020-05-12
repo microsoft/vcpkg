@@ -2,7 +2,7 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 
 # Enable static build in UNIX
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static")
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
 set(LIBMODMAN_VER 2.0.1)
@@ -11,6 +11,10 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/libmodman/libmodman-${LIBMODMAN_VER}.zip"
     FILENAME "libmodman-${LIBMODMAN_VER}.zip"
     SHA512 1fecc0fa3637c4aa86d114f5bc991605172d39183fa0f39d8c7858ef5d0d894152025bd426de4dd017a41372d800bf73f53b2328c57b77352a508e12792729fa
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
+    tests BUILD_TESTING
 )
 
 vcpkg_extract_source_archive_ex(
@@ -24,6 +28,7 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
