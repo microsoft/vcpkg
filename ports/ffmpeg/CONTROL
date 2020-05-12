@@ -13,6 +13,7 @@ Feature: ffserver
 Description: ffserver appplication support in ffmpeg
 
 Feature: ffplay
+Build-Depends: ffmpeg[sdl2]
 Description: ffplay appplication support in ffmpeg
 
 Feature: ffprobe
@@ -69,6 +70,10 @@ Description: openssl support in ffmpeg
 Feature: opus
 Build-Depends: opus
 Description: Opus de/encoding via libopus support in ffmpeg
+
+Feature: sdl2
+Build-Depends: sdl2
+Description: sdl2 support in ffmpeg
 
 Feature: snappy
 Build-Depends: snappy
