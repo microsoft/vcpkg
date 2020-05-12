@@ -68,3 +68,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+
+#ifndef _Analysis_assume_
+#define _Analysis_assume_(...)
+#endif
