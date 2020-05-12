@@ -14,6 +14,7 @@ option(VCPKG_DISABLE_METRICS "Option for disabling metrics" OFF)
 option(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang, even versions that we don't know will work" OFF)
 option(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings" ON)
 option(VCPKG_WARNINGS_AS_ERRORS "Set warnings to be errors" ${VCPKG_DEVELOPMENT_WARNINGS})
+option(VCPKG_BUILD_FUZZING "Option for enabling vcpkg-fuzz support" OFF)
 
 CMAKE_DEPENDENT_OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF
     "BUILD_TESTING" OFF)
@@ -44,7 +45,7 @@ if(MSVC)
 
     if (MSVC_VERSION GREATER 1900)
         # Visual Studio 2017 or later
-        add_compile_options(-permissive-)
+        add_compile_options(-permissive- -utf-8)
     endif()
 
     if(VCPKG_DEVELOPMENT_WARNINGS)
@@ -113,17 +114,25 @@ file(GLOB_RECURSE VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
 
 add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
+    add_executable(vcpkgmetricsuploader WIN32 src/vcpkgmetricsuploader.cpp $<TARGET_OBJECTS:vcpkglib>)
+endif()
 
 if (BUILD_TESTING)
     file(GLOB_RECURSE VCPKGTEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
 
     enable_testing()
     add_executable(vcpkg-test ${VCPKGTEST_SOURCES} $<TARGET_OBJECTS:vcpkglib>)
-    add_test(NAME default COMMAND vcpkg-test)
+    add_test(NAME default COMMAND vcpkg-test --order rand --rng-seed time)
 
     if (VCPKG_BUILD_BENCHMARKING)
         target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
     endif()
+endif()
+
+if(VCPKG_BUILD_FUZZING)
+    file(GLOB_RECURSE VCPKGFUZZ_SOURCES src/vcpkg-fuzz/*.cpp)
+    add_executable(vcpkg-fuzz ${VCPKGFUZZ_SOURCES} $<TARGET_OBJECTS:vcpkglib>)
 endif()
 
 find_program(CLANG_FORMAT clang-format)
@@ -148,4 +157,3 @@ if(MSVC)
     target_sources(vcpkglib PRIVATE src/pch.cpp)
     target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
 endif()
-

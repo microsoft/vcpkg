@@ -14,9 +14,11 @@
 namespace vcpkg
 {
     Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir,
+                                            const Optional<fs::path>& install_root_dir,
                                             const Optional<fs::path>& vcpkg_scripts_root_dir,
                                             const std::string& default_vs_path,
-                                            const std::vector<std::string>* triplets_dirs)
+                                            const std::vector<std::string>* triplets_dirs,
+                                            fs::path original_cwd)
     {
         auto& fs = Files::get_real_filesystem();
         std::error_code ec;
@@ -29,6 +31,7 @@ namespace vcpkg
         VcpkgPaths paths;
         paths.root = canonical_vcpkg_root_dir;
         paths.default_vs_path = default_vs_path;
+        paths.original_cwd = original_cwd;
 
         if (paths.root.empty())
         {
@@ -53,7 +56,7 @@ namespace vcpkg
                     asPath.u8string());
             }
 
-            paths.downloads = fs::stdfs::canonical(std::move(asPath), ec);
+            paths.downloads = fs.canonical(std::move(asPath), ec);
             if (ec)
             {
                 return ec;
@@ -65,13 +68,20 @@ namespace vcpkg
         }
 
         paths.ports = paths.root / "ports";
-        paths.installed = paths.root / "installed";
+        if (auto d = install_root_dir.get())
+        {
+            paths.installed = fs.absolute(VCPKG_LINE_INFO, *d);
+        }
+        else
+        {
+            paths.installed = paths.root / "installed";
+        }
         paths.triplets = paths.root / "triplets";
         paths.community_triplets = paths.triplets / "community";
 
         if (auto scripts_dir = vcpkg_scripts_root_dir.get())
         {
-            if (scripts_dir->empty() || !fs::stdfs::is_directory(*scripts_dir))
+            if (scripts_dir->empty() || !fs::is_directory(fs.status(VCPKG_LINE_INFO, *scripts_dir)))
             {
                 Metrics::g_metrics.lock()->track_property("error", "Invalid scripts override directory.");
                 Checks::exit_with_message(
@@ -108,11 +118,11 @@ namespace vcpkg
                                    paths.get_filesystem().exists(path),
                                    "Error: Path does not exist '%s'",
                                    triplets_dir);
-                paths.triplets_dirs.emplace_back(fs::stdfs::canonical(path));
+                paths.triplets_dirs.emplace_back(fs.canonical(VCPKG_LINE_INFO, path));
             }
         }
-        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.triplets));
-        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.community_triplets));
+        paths.triplets_dirs.emplace_back(fs.canonical(VCPKG_LINE_INFO, paths.triplets));
+        paths.triplets_dirs.emplace_back(fs.canonical(VCPKG_LINE_INFO, paths.community_triplets));
 
         return paths;
     }

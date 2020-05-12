@@ -7,10 +7,15 @@ vcpkg_from_github(
     PATCHES
         fix_openni2.patch
         fix-dependency-glfw3.patch
+        fix-tools-compile-on-vs2019.patch
 )
 
 file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tm2   BUILD_WITH_TM2
+)
 
 set(BUILD_TOOLS OFF)
 if("tools" IN_LIST FEATURES)
@@ -25,9 +30,8 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DENFORCE_METADATA=ON
-        -DBUILD_WITH_TM2=OFF
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_WITH_STATIC_CRT=${BUILD_CRT_LINKAGE}

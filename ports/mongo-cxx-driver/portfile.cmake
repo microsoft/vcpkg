@@ -13,11 +13,17 @@ vcpkg_from_github(
         fix-uwp.patch
         disable-c2338-mongo-cxx-driver.patch
         disable_test_and_example.patch
+        fix-dependency-libbson.patch
+        fix-dependency-mongocdriver.patch
 )
 
 if ("mnmlstc" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Feature mnmlstc only support UNIX")
+    endif()
     set(BSONCXX_POLY MNMLSTC)
 elseif ("system-mnmlstc" IN_LIST FEATURES)
+    message("Please make sure you have mnmlstc installed via the package manager")
     set(BSONCXX_POLY SYSTEM_MNMLSTC)
 elseif ("boost" IN_LIST FEATURES)
     set(BSONCXX_POLY BOOST)
