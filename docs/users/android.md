@@ -11,18 +11,20 @@ However, some packages can compile to Android, and the situation is improving: s
 
 2. Set environment variable `ANDROID_NDK_HOME` to your android ndk installation. 
    For example:
-````
+
+````bash
 export ANDROID_NDK_HOME=/home/your-account/Android/Sdk/ndk-bundle
 ````
-    Or:
-````
+
+Or:
+````bash
 export ANDROID_NDK_HOME=/home/your-account/Android/android-ndk-r21b
 ````
 
 3. Install [vcpkg](https://github.com/microsoft/vcpkg)
 
 4. Set environment variable `VCPKG_ROOT` to your vcpkg installation.
-````
+````bash
 export VCPKG_ROOT=/path/to/vcpkg
 ````
 
@@ -44,7 +46,7 @@ a vcpkg triplet. The following table outlines the mapping from vcpkg architectur
 ### Create the android triplets
 You can copy-paste the script below to populate them, and adjust them to your needs if required.
 
-````
+````bash
 cd $VCPKG_ROOT
 
 echo "
@@ -141,6 +143,25 @@ The folder [docs/examples/vcpkg_android_example_cmake](../examples/vcpkg_android
 * The dummy [my_lib.cpp](../examples/vcpkg_android_example_cmake/my_lib.cpp) file uses the jsoncpp library
 
 *Note*: this example only compiles an Android library, as the compilation of a full fledged Android App is beyond the scope of this document.
+
+### Test on an example, using [vcpkg_android.cmake](../examples/vcpkg_android_example_cmake_script/cmake/vcpkg_android.cmake)
+
+The folder [docs/examples/vcpkg_android_example_cmake_script](../examples/vcpkg_android_example_cmake_script) provides the same example, and uses a cmake script in order to simplify the usage.
+
+*Details*
+
+* The main [CMakeLists](../examples/vcpkg_android_example_cmake_script/CMakeLists.txt) loads [vcpkg_android.cmake](../examples/vcpkg_android_example_cmake_script/cmake/vcpkg_android.cmake) if the flag `VCPKG_TARGET_ANDROID` is set:
+````cmake
+if (VCPKG_TARGET_ANDROID)
+    include("cmake/vcpkg_android.cmake")
+endif()
+````
+*Important: place these lines before calling project() !*
+
+* The [compile.sh](../examples/vcpkg_android_example_cmake_script/compile.sh) script shows that it is then possible to compile for android using a simple cmake invocation, for example:
+````bash
+cmake .. -DVCPKG_TARGET_ANDROID=ON -DANDROID_ABI=armeabi-v7a
+````
 
 
 ## Consume libraries using vpckg, and Android prefab Archives (AAR files)
