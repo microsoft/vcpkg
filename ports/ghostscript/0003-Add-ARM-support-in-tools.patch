@@ -1,0 +1,94 @@
+From 07e5d44a4ae27b02317a53d6f53ec1588b682c0e Mon Sep 17 00:00:00 2001
+From: driver1998 <driver1998@foxmail.com>
+Date: Tue, 12 May 2020 19:33:45 +0800
+Subject: [PATCH 3/4] Add ARM support in tools
+
+---
+ psi/dwdll.c  | 16 ++++++++++++++++
+ psi/dwmain.c | 10 ++++++++++
+ psi/msvc.mak |  4 ++++
+ 3 files changed, 30 insertions(+)
+
+diff --git a/psi/dwdll.c b/psi/dwdll.c
+index 2224a0e..54d684d 100644
+--- a/psi/dwdll.c
++++ b/psi/dwdll.c
+@@ -35,17 +35,33 @@
+ 
+ #ifdef METRO
+ #ifdef _WIN64
++#ifdef ARM
++static const char name[] = "gsdllARM64metro.dll";
++#else
+ static const char name[] = "gsdll64metro.dll";
++#endif
++#else
++#ifdef ARM
++static const char name[] = "gsdllARM32metro.dll";
+ #else
+ static const char name[] = "gsdll32metro.dll";
+ #endif
++#endif
+ #else
+ #ifdef _WIN64
++#ifdef ARM
++static const char name[] = "gsdllARM64.dll";
++#else
+ static const char name[] = "gsdll64.dll";
++#endif
++#else
++#ifdef ARM
++static const char name[] = "gsdllARM32.dll";
+ #else
+ static const char name[] = "gsdll32.dll";
+ #endif
+ #endif
++#endif
+ 
+ int load_dll(GSDLL *gsdll, char *last_error, int len)
+ {
+diff --git a/psi/dwmain.c b/psi/dwmain.c
+index de9f61c..eea74c9 100644
+--- a/psi/dwmain.c
++++ b/psi/dwmain.c
+@@ -42,12 +42,22 @@ TW *tw;
+ static const LPSTR szAppName = "Ghostscript";
+ 
+ #ifdef _WIN64
++#ifdef ARM
++const LPSTR szIniName = "gswinARM64.ini";
++const char *szDllName = "gsdllARM64.dll";
++#else
+ const LPSTR szIniName = "gswin64.ini";
+ const char *szDllName = "gsdll64.dll";
++#endif
++#else
++#ifdef ARM
++const LPSTR szIniName = "gswinARM32.ini";
++const char *szDllName = "gsdllARM32.dll";
+ #else
+ const LPSTR szIniName = "gswin32.ini";
+ const char *szDllName = "gsdll32.dll";
+ #endif
++#endif
+ const LPSTR szIniSection = "Text";
+ 
+ GSDLL gsdll;
+diff --git a/psi/msvc.mak b/psi/msvc.mak
+index 7494024..ca0052e 100644
+--- a/psi/msvc.mak
++++ b/psi/msvc.mak
+@@ -891,6 +891,10 @@ CFLAGS=$(CFLAGS) -DMETRO -DWINAPI_FAMILY=WINAPI_PARTITION_APP -DTIF_PLATFORM_CON
+ PNG_CFLAGS=/DExitProcess=exit
+ !endif
+ 
++!ifdef ARM
++CFLAGS=$(CFLAGS) -DARM
++!endif
++
+ CFLAGS=$(CFLAGS) $(XCFLAGS)
+ 
+ # 1 --> Use 64 bits for gx_color_index.  This is required only for
+-- 
+2.26.2.windows.1
+

@@ -1,0 +1,235 @@
+From fe25947d6b7d6eb5c8d79a20a4770cfd2faed2d5 Mon Sep 17 00:00:00 2001
+From: driver1998 <driver1998@foxmail.com>
+Date: Tue, 12 May 2020 19:33:21 +0800
+Subject: [PATCH 2/4] Fix ARM build
+
+---
+ psi/msvc.mak | 93 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 91 insertions(+), 2 deletions(-)
+
+diff --git a/psi/msvc.mak b/psi/msvc.mak
+index c5c3b46..7494024 100644
+--- a/psi/msvc.mak
++++ b/psi/msvc.mak
+@@ -58,7 +58,11 @@ DEBUGSYM=1
+ # Pick the target architecture file
+ !if "$(TARGET_ARCH_FILE)"==""
+ !ifdef WIN64
++!ifdef ARM
++TARGET_ARCH_FILE=$(GLSRCDIR)\..\arch\windows-arm64-msvc.h
++!else
+ TARGET_ARCH_FILE=$(GLSRCDIR)\..\arch\windows-x64-msvc.h
++!endif
+ !else
+ !ifdef ARM
+ TARGET_ARCH_FILE=$(GLSRCDIR)\..\arch\windows-arm-msvc.h
+@@ -449,10 +453,17 @@ XPSPRINT=1
+ 
+ !ifndef GS
+ !ifdef WIN64
++!ifdef ARM
++GS=gswinARM64
++PCL=gpcl6winARM64
++XPS=gxpswinARM64
++GPDL=gpdlwinARM64
++!else
+ GS=gswin64
+ PCL=gpcl6win64
+ XPS=gxpswin64
+ GPDL=gpdlwin64
++!endif
+ !else
+ !ifdef ARM
+ GS=gswinARM
+@@ -474,7 +485,11 @@ GSCONSOLE=$(GS)c
+ !ifndef GSDLL
+ !ifdef METRO
+ !ifdef WIN64
++!ifdef ARM
++GSDLL=gsdllARM64metro
++!else
+ GSDLL=gsdll64metro
++!endif
+ !else
+ !ifdef ARM
+ GSDLL=gsdllARM32metro
+@@ -484,17 +499,29 @@ GSDLL=gsdll32metro
+ !endif
+ !else
+ !ifdef WIN64
++!ifdef ARM
++GSDLL=gsdllARM64
++!else
+ GSDLL=gsdll64
++!endif
++!else
++!ifdef ARM
++GSDLL=gsdllARM32
+ !else
+ GSDLL=gsdll32
+ !endif
+ !endif
+ !endif
++!endif
+ 
+ !ifndef GPCL6DLL
+ !ifdef METRO
+ !ifdef WIN64
++!ifdef ARM
++GPCL6DLL=gpcl6dllARM64metro
++!else
+ GPCL6DLL=gpcl6dll64metro
++!endif
+ !else
+ !ifdef ARM
+ GPCL6DLL=gpcl6dllARM32metro
+@@ -504,17 +531,29 @@ GPCL6DLL=gpcl6dll32metro
+ !endif
+ !else
+ !ifdef WIN64
++!ifdef ARM
++GPCL6DLL=gpcl6dllARM64
++!else
+ GPCL6DLL=gpcl6dll64
++!endif
++!else
++!ifdef ARM
++GPCL6DLL=gpcl6dllARM32
+ !else
+ GPCL6DLL=gpcl6dll32
+ !endif
+ !endif
+ !endif
++!endif
+ 
+ !ifndef GXPSDLL
+ !ifdef METRO
+ !ifdef WIN64
++!ifdef ARM
++GXPSDLL=gxpsdllARM64metro
++!else
+ GXPSDLL=gxpsdll64metro
++!endif
+ !else
+ !ifdef ARM
+ GXPSDLL=gxpsdllARM32metro
+@@ -524,17 +563,29 @@ GXPSDLL=gxpsdll32metro
+ !endif
+ !else
+ !ifdef WIN64
++!ifdef ARM
++GXPSDLL=gxpsdllARM64
++!else
+ GXPSDLL=gxpsdll64
++!endif
++!else
++!ifdef ARM
++GXPSDLL=gxpsdllARM32
+ !else
+ GXPSDLL=gxpsdll32
+ !endif
+ !endif
+ !endif
++!endif
+ 
+ !ifndef GPDLDLL
+ !ifdef METRO
+ !ifdef WIN64
++!ifdef ARM
++GPDLDLL=gpdldllARM64metro
++!else
+ GPDLDLL=gpdldll64metro
++!endif
+ !else
+ !ifdef ARM
+ GPDLDLL=gpdldllARM32metro
+@@ -544,12 +595,20 @@ GPDLDLL=gpdldll32metro
+ !endif
+ !else
+ !ifdef WIN64
++!ifdef ARM
++GPDLDLL=gpdldllARM64
++!else
+ GPDLDLL=gpdldll64
++!endif
++!else
++!ifdef ARM
++GPDLDLL=gpdldllARM32
+ !else
+ GPDLDLL=gpdldll32
+ !endif
+ !endif
+ !endif
++!endif
+ 
+ # To build two small executables and a large DLL use MAKEDLL=1
+ # To build two large executables use MAKEDLL=0
+@@ -1292,9 +1351,9 @@ LINKLIBPATH=/LIBPATH:"$(DEVSTUDIO)\lib\$(DEVSTUDIO_TARGET)"
+ !if $(MSVC_VERSION) == 16
+ ! ifndef DEVSTUDIO
+ !  if exist("C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional")
+-DEVSTUDIO_VARIANT="Professional"
++DEVSTUDIO_VARIANT=Professional
+ !  else
+-DEVSTUDIO_VARIANT="Community"
++DEVSTUDIO_VARIANT=Community
+ !  endif
+ DEVSTUDIO=C:\Program Files (x86)\Microsoft Visual Studio\2019\$(DEVSTUDIO_VARIANT)\VC\Tools\MSVC\$(MS_TOOLSET_VERSION)
+ ! endif
+@@ -1308,9 +1367,17 @@ DEVSTUDIO_HOST=Hostx64
+ DEVSTUDIO_HOST=Hostx86
+ !  endif
+ !  ifdef WIN64
++!    ifdef ARM
++DEVSTUDIO_TARGET=arm64
++!    else
+ DEVSTUDIO_TARGET=x64
++!    endif
+ !  else
++!    ifdef ARM
++DEVSTUDIO_TARGET=arm
++!    else
+ DEVSTUDIO_TARGET=x86
++!    endif
+ !  endif
+ COMPDIR=$(DEVSTUDIO)\bin\$(DEVSTUDIO_HOST)\$(DEVSTUDIO_TARGET)
+ RCDIR=
+@@ -1319,6 +1386,26 @@ LINKLIBPATH=/LIBPATH:"$(DEVSTUDIO)\lib\$(DEVSTUDIO_TARGET)"
+ !endif
+ 
+ !if "$(ARM)"=="1"
++
++!if $(MSVC_VERSION) == 16 || $(MSVC_VERSION) == 15
++
++!ifndef WINSDKVER
++WINSDKVER=10.0.18362.0
++!endif
++
++!ifndef WINSDKDIR
++WINSDKDIR=$(DEVSTUDIO)\..\..\..\..\..\..\..\Windows Kits\10\
++!endif
++
++COMPAUX__="$(DEVSTUDIO)\bin\$(DEVSTUDIO_HOST)\x86\cl.exe"
++
++COMPAUXLDFLAGS=/LIBPATH:"$(DEVSTUDIO)\lib\x86" \
++/LIBPATH:"$(WINSDKDIR)\lib\$(WINSDKVER)\um\x86" \
++/LIBPATH:"$(WINSDKDIR)\lib\$(WINSDKVER)\ucrt\x86"
++
++COMPAUX=$(COMPAUX__) $(COMPAUXCFLAGS)
++
++!else
+ VCINSTDIR=$(VS110COMNTOOLS)..\..\VC\
+ 
+ !ifndef WINSDKVER
+@@ -1340,6 +1427,8 @@ COMPAUXLDFLAGS=/LIBPATH:"$(VCINSTDIR)\LIB" \
+ 
+ COMPAUX=$(COMPAUX__) $(COMPAUXCFLAGS)
+ 
++!endif
++
+ !else
+ 
+ COMPAUXLDFLAGS=""
+-- 
+2.26.2.windows.1
+

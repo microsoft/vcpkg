@@ -1,0 +1,179 @@
+From 8db75734b0eedd012ba79fd7d2b64c00ef8f9bba Mon Sep 17 00:00:00 2001
+From: driver1998 <driver1998@foxmail.com>
+Date: Tue, 12 May 2020 19:32:38 +0800
+Subject: [PATCH 1/4] Add ARM definition
+
+---
+ arch/windows-arm64-msvc.h | 62 +++++++++++++++++++++++++++++++++++++++
+ psi/gsdllARM32.def        | 41 ++++++++++++++++++++++++++
+ psi/gsdllARM64.def        | 41 ++++++++++++++++++++++++++
+ 3 files changed, 144 insertions(+)
+ create mode 100644 arch/windows-arm64-msvc.h
+ create mode 100644 psi/gsdllARM32.def
+ create mode 100644 psi/gsdllARM64.def
+
+diff --git a/arch/windows-arm64-msvc.h b/arch/windows-arm64-msvc.h
+new file mode 100644
+index 0000000..d9d6fc7
+--- /dev/null
++++ b/arch/windows-arm64-msvc.h
+@@ -0,0 +1,62 @@
++/* Copyright (C) 2001-2019 Artifex Software, Inc.
++   All Rights Reserved.
++
++   This software is provided AS-IS with no warranty, either express or
++   implied.
++
++   This software is distributed under license and may not be copied,
++   modified or distributed except as expressly authorized under the terms
++   of the license contained in the file LICENSE in this distribution.
++
++   Refer to licensing information at http://www.artifex.com or contact
++   Artifex Software, Inc.,  1305 Grant Avenue - Suite 200, Novato,
++   CA 94945, U.S.A., +1(415)492-9861, for further information.
++*/
++/* Parameters derived from machine and compiler architecture. */
++/* This file was generated mechanically by genarch.c, for a 64bit */
++/* Microsoft Windows ARM machine, compiling with MSVC. */
++
++	 /* ---------------- Scalar alignments ---------------- */
++
++#define ARCH_ALIGN_SHORT_MOD 2
++#define ARCH_ALIGN_INT_MOD 4
++#define ARCH_ALIGN_LONG_MOD 4
++#define ARCH_ALIGN_SIZE_T_MOD 8
++#define ARCH_ALIGN_PTR_MOD 8
++#define ARCH_ALIGN_FLOAT_MOD 4
++#define ARCH_ALIGN_DOUBLE_MOD 8
++
++	 /* ---------------- Scalar sizes ---------------- */
++
++#define ARCH_LOG2_SIZEOF_CHAR 0
++#define ARCH_LOG2_SIZEOF_SHORT 1
++#define ARCH_LOG2_SIZEOF_INT 2
++#define ARCH_LOG2_SIZEOF_LONG 2
++#define ARCH_LOG2_SIZEOF_SIZE_T 3
++#define ARCH_SIZEOF_SIZE_T 8
++
++#ifndef ARCH_SIZEOF_GX_COLOR_INDEX
++#define ARCH_SIZEOF_GX_COLOR_INDEX 8
++#endif
++
++#define ARCH_SIZEOF_PTR 8
++#define ARCH_SIZEOF_FLOAT 4
++#define ARCH_SIZEOF_DOUBLE 8
++#define ARCH_FLOAT_MANTISSA_BITS 24
++#define ARCH_DOUBLE_MANTISSA_BITS 53
++
++	 /* ---------------- Unsigned max values ---------------- */
++
++#define ARCH_MAX_UCHAR ((unsigned char)0xff + (unsigned char)0)
++#define ARCH_MAX_USHORT ((unsigned short)0xffff + (unsigned short)0)
++#define ARCH_MAX_UINT ((unsigned int)~0 + (unsigned int)0)
++#define ARCH_MAX_ULONG ((unsigned long)~0L + (unsigned long)0)
++#define ARCH_MAX_SIZE_T ((size_t)~0L + (size_t)0)
++
++	 /* ---------------- Miscellaneous ---------------- */
++
++#define ARCH_IS_BIG_ENDIAN 0
++#define ARCH_PTRS_ARE_SIGNED 0
++#define ARCH_FLOATS_ARE_IEEE 1
++#define ARCH_ARITH_RSHIFT 2
++#define ARCH_DIV_NEG_POS_TRUNCATES 1
+diff --git a/psi/gsdllARM32.def b/psi/gsdllARM32.def
+new file mode 100644
+index 0000000..41395fb
+--- /dev/null
++++ b/psi/gsdllARM32.def
+@@ -0,0 +1,41 @@
++;	'Ghostscript Interpreter DLL'
++LIBRARY		GSDLLARM32
++EXPORTS	
++		DllEntryPoint
++		DllMain
++		gsdll_revision		@1
++		gsdll_init		@2
++		gsdll_execute_begin	@3
++		gsdll_execute_cont	@4
++		gsdll_execute_end	@5
++		gsdll_exit		@6
++		gsdll_init_with_encoding
++		gsdll_initA
++		gsdll_initW
++		gsapi_revision
++		gsapi_new_instance
++		gsapi_delete_instance
++		gsapi_init_with_args
++		gsapi_init_with_argsA
++		gsapi_init_with_argsW
++		gsapi_run_string_begin
++		gsapi_run_string_continue
++		gsapi_run_string_end
++		gsapi_run_string_with_length
++		gsapi_run_string
++		gsapi_run_file
++		gsapi_exit
++		gsapi_set_stdio
++		gsapi_set_poll
++		gsapi_set_display_callback
++		gsapi_set_arg_encoding
++                gsapi_set_default_device_list
++                gsapi_get_default_device_list
++                gsapi_set_param
++                gsapi_add_control_path
++                gsapi_remove_control_path
++                gsapi_purge_control_paths
++                gsapi_activate_path_control
++                gsapi_is_path_control_active
++                gsapi_add_fs
++                gsapi_remove_fs
+diff --git a/psi/gsdllARM64.def b/psi/gsdllARM64.def
+new file mode 100644
+index 0000000..88f07b8
+--- /dev/null
++++ b/psi/gsdllARM64.def
+@@ -0,0 +1,41 @@
++;	'Ghostscript Interpreter DLL'
++LIBRARY		GSDLLARM64
++EXPORTS	
++		DllEntryPoint
++		DllMain
++		gsdll_revision		@1
++		gsdll_init		@2
++		gsdll_execute_begin	@3
++		gsdll_execute_cont	@4
++		gsdll_execute_end	@5
++		gsdll_exit		@6
++		gsdll_init_with_encoding
++		gsdll_initA
++		gsdll_initW
++		gsapi_revision
++		gsapi_new_instance
++		gsapi_delete_instance
++		gsapi_init_with_args
++		gsapi_init_with_argsA
++		gsapi_init_with_argsW
++		gsapi_run_string_begin
++		gsapi_run_string_continue
++		gsapi_run_string_end
++		gsapi_run_string_with_length
++		gsapi_run_string
++		gsapi_run_file
++		gsapi_exit
++		gsapi_set_stdio
++		gsapi_set_poll
++		gsapi_set_display_callback
++		gsapi_set_arg_encoding
++                gsapi_set_default_device_list
++                gsapi_get_default_device_list
++                gsapi_set_param
++                gsapi_add_control_path
++                gsapi_remove_control_path
++                gsapi_purge_control_paths
++                gsapi_activate_path_control
++                gsapi_is_path_control_active
++                gsapi_add_fs
++                gsapi_remove_fs
+-- 
+2.26.2.windows.1
+
