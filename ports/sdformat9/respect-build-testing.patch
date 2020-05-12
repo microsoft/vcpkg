@@ -1,0 +1,182 @@
+From f31b1d65e0cc550d37ff9f67a01af055534282d0 Mon Sep 17 00:00:00 2001
+From: Silvio <silvio.traversaro@iit.it>
+Date: Sat, 2 May 2020 12:39:02 +0200
+Subject: [PATCH] If defined observe the CMake variable BUILD_TESTING
+
+For backward compatibility if it is not defined compile the tests
+
+Signed-off-by: Silvio <silvio.traversaro@iit.it>
+---
+ CMakeLists.txt     |  10 +++-
+ src/CMakeLists.txt | 136 +++++++++++++++++++++++----------------------
+ 2 files changed, 78 insertions(+), 68 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c0b934f9..38a71649 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -265,7 +265,15 @@ else (build_errors)
+ 
+     link_directories(${PROJECT_BINARY_DIR}/src)
+ 
+-    add_subdirectory(test)
++    if (NOT DEFINED BUILD_TESTING OR BUILD_TESTING)
++      set(BUILD_SDF_TEST TRUE)
++    else()
++      set(BUILD_SDF_TEST FALSE)
++    endif()
++
++    if (BUILD_SDF_TEST)
++      add_subdirectory(test)
++    endif()
+     add_subdirectory(src)
+     add_subdirectory(include/sdf)
+     add_subdirectory(sdf)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 7dbb9536..c283a00a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -91,74 +91,76 @@ else()
+   include_directories(${URDF_INCLUDE_DIRS})
+ endif()
+ 
+-set (gtest_sources
+-  Actor_TEST.cc
+-  AirPressure_TEST.cc
+-  Altimeter_TEST.cc
+-  Atmosphere_TEST.cc
+-  Box_TEST.cc
+-  Camera_TEST.cc
+-  Collision_TEST.cc
+-  Console_TEST.cc
+-  Cylinder_TEST.cc
+-  Element_TEST.cc
+-  Error_TEST.cc
+-  Exception_TEST.cc
+-  Frame_TEST.cc
+-  Filesystem_TEST.cc
+-  Geometry_TEST.cc
+-  Gui_TEST.cc
+-  Imu_TEST.cc
+-  Joint_TEST.cc
+-  JointAxis_TEST.cc
+-  Lidar_TEST.cc
+-  Light_TEST.cc
+-  Link_TEST.cc
+-  Magnetometer_TEST.cc
+-  Material_TEST.cc
+-  Mesh_TEST.cc
+-  Model_TEST.cc
+-  Noise_TEST.cc
+-  parser_urdf_TEST.cc
+-  Param_TEST.cc
+-  parser_TEST.cc
+-  Pbr_TEST.cc
+-  Physics_TEST.cc
+-  Plane_TEST.cc
+-  Root_TEST.cc
+-  Scene_TEST.cc
+-  SemanticPose_TEST.cc
+-  SDF_TEST.cc
+-  Sensor_TEST.cc
+-  Sphere_TEST.cc
+-  Surface_TEST.cc
+-  Types_TEST.cc
+-  Visual_TEST.cc
+-  World_TEST.cc
+-)
+-
+-# Build this test file only if Ignition Tools is installed.
+-if (IGNITION-TOOLS_BINARY_DIRS)
+-  set (gtest_sources ${gtest_sources}
+-    ign_TEST.cc
++if (BUILD_SDF_TEST)
++  set (gtest_sources
++    Actor_TEST.cc
++    AirPressure_TEST.cc
++    Altimeter_TEST.cc
++    Atmosphere_TEST.cc
++    Box_TEST.cc
++    Camera_TEST.cc
++    Collision_TEST.cc
++    Console_TEST.cc
++    Cylinder_TEST.cc
++    Element_TEST.cc
++    Error_TEST.cc
++    Exception_TEST.cc
++    Frame_TEST.cc
++    Filesystem_TEST.cc
++    Geometry_TEST.cc
++    Gui_TEST.cc
++    Imu_TEST.cc
++    Joint_TEST.cc
++    JointAxis_TEST.cc
++    Lidar_TEST.cc
++    Light_TEST.cc
++    Link_TEST.cc
++    Magnetometer_TEST.cc
++    Material_TEST.cc
++    Mesh_TEST.cc
++    Model_TEST.cc
++    Noise_TEST.cc
++    parser_urdf_TEST.cc
++    Param_TEST.cc
++    parser_TEST.cc
++    Pbr_TEST.cc
++    Physics_TEST.cc
++    Plane_TEST.cc
++    Root_TEST.cc
++    Scene_TEST.cc
++    SemanticPose_TEST.cc
++    SDF_TEST.cc
++    Sensor_TEST.cc
++    Sphere_TEST.cc
++    Surface_TEST.cc
++    Types_TEST.cc
++    Visual_TEST.cc
++    World_TEST.cc
+   )
+-endif()
+-
+-sdf_build_tests(${gtest_sources})
+-
+-if (NOT WIN32)
+-  set(SDF_BUILD_TESTS_EXTRA_EXE_SRCS Utils.cc)
+-  sdf_build_tests(Utils_TEST.cc)
+-endif()
+-
+-if (NOT WIN32)
+-  set(SDF_BUILD_TESTS_EXTRA_EXE_SRCS FrameSemantics.cc)
+-  sdf_build_tests(FrameSemantics_TEST.cc)
+-endif()
+-
+-if (NOT WIN32)
+-  set(SDF_BUILD_TESTS_EXTRA_EXE_SRCS Converter.cc)
+-  sdf_build_tests(Converter_TEST.cc)
++  
++  # Build this test file only if Ignition Tools is installed.
++  if (IGNITION-TOOLS_BINARY_DIRS)
++    set (gtest_sources ${gtest_sources}
++      ign_TEST.cc
++    )
++  endif()
++  
++  sdf_build_tests(${gtest_sources})
++  
++  if (NOT WIN32)
++    set(SDF_BUILD_TESTS_EXTRA_EXE_SRCS Utils.cc)
++    sdf_build_tests(Utils_TEST.cc)
++  endif()
++  
++  if (NOT WIN32)
++    set(SDF_BUILD_TESTS_EXTRA_EXE_SRCS FrameSemantics.cc)
++    sdf_build_tests(FrameSemantics_TEST.cc)
++  endif()
++  
++  if (NOT WIN32)
++    set(SDF_BUILD_TESTS_EXTRA_EXE_SRCS Converter.cc)
++    sdf_build_tests(Converter_TEST.cc)
++  endif()
+ endif()
+ 
+ sdf_add_library(${sdf_target} ${sources})
