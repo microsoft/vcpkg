@@ -13,6 +13,8 @@ vcpkg_download_distfile(SDK_ARCHIVE
     SHA512 330fad53c1979dfae786abed228d82c82207f0d61148e2efc1f37c8931838b806eb50554e7f006a56962f748a21f7017c540bd70444b7a93a72c313a64e9254c
 )
 
+
+#to enable CI, you should modify the following URL also in ${VCPKG_ROOT}/scripts/azure-pipelines/windows/provision-image.ps1
 macro(download_msmpi_redistributable_package)
     vcpkg_download_distfile(REDIST_ARCHIVE
         URLS "https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe"
