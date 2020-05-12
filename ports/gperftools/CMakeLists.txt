@@ -10,6 +10,17 @@ if(WIN32) # TODO: MINGW, MSYS
     option(GPERFTOOLS_WIN32_OVERRIDE "Override allocators" OFF)
 endif()
 
+set(deprecated_public_headers
+    src/google/heap-checker.h
+    src/google/heap-profiler.h
+    src/google/malloc_extension.h
+    src/google/malloc_extension_c.h
+    src/google/malloc_hook.h
+    src/google/malloc_hook_c.h
+    src/google/profiler.h
+    src/google/stacktrace.h
+)
+
 set(gperftools_public_headers
     src/gperftools/heap-checker.h
     src/gperftools/heap-profiler.h
@@ -23,6 +34,10 @@ set(gperftools_public_headers
 )
 
 if(WIN32) # TODO: MINGW, MSYS
+    list(APPEND deprecated_public_headers
+        src/windows/google/tcmalloc.h
+    )
+
     list(APPEND gperftools_public_headers
         src/windows/gperftools/tcmalloc.h
     )
@@ -166,6 +181,10 @@ if(WIN32) # TODO: MINGW, MSYS
                 ${CMAKE_CURRENT_LIST_DIR}/src
                 ${CMAKE_CURRENT_LIST_DIR}/src/windows
             >
+    )
+
+    install(FILES ${deprecated_public_headers}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/google
     )
 
     install(FILES ${gperftools_public_headers}
