@@ -294,7 +294,7 @@ $StorageContext = New-AzStorageContext `
   -StorageAccountKey $StorageAccountKey
 
 New-AzStorageShare -Name 'archives' -Context $StorageContext
-Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 5120
+Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 2048
 
 ####################################################################################################
 Write-Progress `
@@ -308,7 +308,7 @@ $Nic = New-AzNetworkInterface `
   -Location $Location `
   -Subnet $VirtualNetwork.Subnets[0]
 
-$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize
+$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -Priority 'Spot' -MaxPrice -1
 $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Windows `

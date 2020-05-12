@@ -119,22 +119,30 @@ static void inner(const VcpkgCmdArguments& args)
     Debug::print("Using vcpkg-root: ", vcpkg_root_dir.u8string(), '\n');
 
     Optional<fs::path> install_root_dir;
-    if (args.install_root_dir) {
+    if (args.install_root_dir)
+    {
         install_root_dir = Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.install_root_dir));
         Debug::print("Using install-root: ", install_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
     }
 
-    Optional<fs::path> vcpkg_scripts_root_dir = nullopt;
+    Optional<fs::path> vcpkg_scripts_root_dir;
     if (args.scripts_root_dir)
     {
-        vcpkg_scripts_root_dir = Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.scripts_root_dir));
+        vcpkg_scripts_root_dir =
+            Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.scripts_root_dir));
         Debug::print("Using scripts-root: ", vcpkg_scripts_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
     }
 
     auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
-    const Expected<VcpkgPaths> expected_paths =
-        VcpkgPaths::create(vcpkg_root_dir, install_root_dir, vcpkg_scripts_root_dir, default_vs_path, args.overlay_triplets.get());
+    auto original_cwd = Files::get_real_filesystem().current_path(VCPKG_LINE_INFO);
+
+    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir,
+                                                                   install_root_dir,
+                                                                   vcpkg_scripts_root_dir,
+                                                                   default_vs_path,
+                                                                   args.overlay_triplets.get(),
+                                                                   original_cwd);
     Checks::check_exit(VCPKG_LINE_INFO,
                        !expected_paths.error(),
                        "Error: Invalid vcpkg root directory %s: %s",

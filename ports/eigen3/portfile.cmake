@@ -16,19 +16,24 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DEIGEN_BUILD_PKGCONFIG=ON
     OPTIONS_RELEASE
         -DCMAKEPACKAGE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/eigen3
+        -DPKGCONFIG_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib/pkgconfig
     OPTIONS_DEBUG
         -DCMAKEPACKAGE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/share/eigen3
+        -DPKGCONFIG_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/eigen3/Eigen3Targets.cmake" EIGEN_TARGETS)
 string(REPLACE "set(_IMPORT_PREFIX " "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}/../..\" ABSOLUTE) #" EIGEN_TARGETS "${EIGEN_TARGETS}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/eigen3/Eigen3Targets.cmake" "${EIGEN_TARGETS}")
+
+vcpkg_fixup_pkgconfig()
 
 file(GLOB INCLUDES ${CURRENT_PACKAGES_DIR}/include/eigen3/*)
 # Copy the eigen header files to conventional location for user-wide MSBuild integration

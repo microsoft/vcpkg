@@ -17,7 +17,8 @@ namespace vcpkg
                                             const Optional<fs::path>& install_root_dir,
                                             const Optional<fs::path>& vcpkg_scripts_root_dir,
                                             const std::string& default_vs_path,
-                                            const std::vector<std::string>* triplets_dirs)
+                                            const std::vector<std::string>* triplets_dirs,
+                                            fs::path original_cwd)
     {
         auto& fs = Files::get_real_filesystem();
         std::error_code ec;
@@ -30,6 +31,7 @@ namespace vcpkg
         VcpkgPaths paths;
         paths.root = canonical_vcpkg_root_dir;
         paths.default_vs_path = default_vs_path;
+        paths.original_cwd = original_cwd;
 
         if (paths.root.empty())
         {
@@ -66,9 +68,12 @@ namespace vcpkg
         }
 
         paths.ports = paths.root / "ports";
-        if (auto d = install_root_dir.get()) {
-            paths.installed = fs.absolute(VCPKG_LINE_INFO, std::move(*d));
-        } else {
+        if (auto d = install_root_dir.get())
+        {
+            paths.installed = fs.absolute(VCPKG_LINE_INFO, *d);
+        }
+        else
+        {
             paths.installed = paths.root / "installed";
         }
         paths.triplets = paths.root / "triplets";
