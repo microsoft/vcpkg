@@ -6,10 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if("cpprestsdk" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP)
-    set(USE_CPPRESTSDK true)
-else()
-    set(USE_CPPRESTSDK false)
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cpprestsdk USE_CPPRESTSDK
+)
+
+if("cpprestsdk" IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
+    message(FATAL_ERROR "microsoft-signalr[cpprestsdk] is not supported on UWP, use microsoft-signalr[core] instead")
 endif()
 
 vcpkg_configure_cmake(
@@ -17,7 +21,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DUSE_CPPRESTSDK=${USE_CPPRESTSDK}
+        ${FEATURE_OPTIONS}
         -DWALL=OFF
 )
 
