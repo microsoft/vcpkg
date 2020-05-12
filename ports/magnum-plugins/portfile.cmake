@@ -17,7 +17,6 @@ vcpkg_from_github(
     PATCHES
         001-tools-path.patch
         ${_RELEASE_ONLY_PATCHES}
-        003-use-outdated-basisu.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

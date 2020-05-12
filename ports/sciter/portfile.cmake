@@ -9,8 +9,8 @@ endif()
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION 507dce1bed69d6ef7a0d5c7628cb7eb8680e0438)
-set(SCITER_SHA 24ccc7d09247ea84a5a3e3c479dc6eb99b4115a89fec8e766874f706addee163b327f5380632b554b02074423f97097f993f8d361d8948800f6477de2b4ab5b5)
+set(SCITER_REVISION f66a119e0fa5c8b279ed782d850293c2ad5e9131)
+set(SCITER_SHA 46e6300f22da9a60095171af0a17ed2c28356f9f26dce833705deb6286992942c139a3363f7b2656285d1fc9fde50fafb624e4f60a128bab06d4b6f5a047e156)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -73,6 +73,12 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
     file(INSTALL ${SCITER_BIN}/sciter.app DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${SCITER_TOOLS})
 
+    # not sure whether there is a better way to do this, because
+    # `file(INSTALL sciter.app FILE_PERMISSIONS EXECUTE)`
+    # would mark everything as executable which is no go.
+    execute_process(COMMAND sh -c "chmod +x sciter.app/Contents/MacOS/sciter" WORKING_DIRECTORY ${SCITER_TOOLS})
+    execute_process(COMMAND sh -c "chmod +x inspector.app/Contents/MacOS/inspector" WORKING_DIRECTORY ${SCITER_TOOLS})
+
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
@@ -89,8 +95,6 @@ else()
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${SCITER_BIN}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 message(STATUS "Warning: Sciter requires manual deployment of the correct DLL files.")

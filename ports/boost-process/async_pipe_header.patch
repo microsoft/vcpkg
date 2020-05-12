@@ -1,0 +1,37 @@
+diff --git a/include/boost/process/async_pipe.hpp b/include/boost/process/async_pipe.hpp
+index 101fe1d59..a562432c0 100644
+--- a/include/boost/process/async_pipe.hpp
++++ b/include/boost/process/async_pipe.hpp
+@@ -47,6 +47,8 @@ class async_pipe
+      */
+     typedef platform_specific handle_type;
+ 
++    typedef typename handle_type::executor_type executor_type;
++
+     /** Construct a new async_pipe, does automatically open the pipe.
+      * Initializes source and sink with the same io_context.
+      * @note Windows creates a named pipe here, where the name is automatically generated.
+diff --git a/include/boost/process/detail/posix/async_pipe.hpp b/include/boost/process/detail/posix/async_pipe.hpp
+index 725a07890..a82c057b9 100644
+--- a/include/boost/process/detail/posix/async_pipe.hpp
++++ b/include/boost/process/detail/posix/async_pipe.hpp
+@@ -23,6 +23,7 @@ class async_pipe
+ public:
+     typedef int native_handle_type;
+     typedef ::boost::asio::posix::stream_descriptor handle_type;
++    typedef typename handle_type::executor_type executor_type;
+ 
+     inline async_pipe(boost::asio::io_context & ios) : async_pipe(ios, ios) {}
+ 
+diff --git a/include/boost/process/detail/windows/async_pipe.hpp b/include/boost/process/detail/windows/async_pipe.hpp
+index 06d5f2d85..0b447f9b8 100644
+--- a/include/boost/process/detail/windows/async_pipe.hpp
++++ b/include/boost/process/detail/windows/async_pipe.hpp
+@@ -48,6 +48,7 @@ class async_pipe
+ public:
+     typedef ::boost::winapi::HANDLE_ native_handle_type;
+     typedef ::boost::asio::windows::stream_handle   handle_type;
++    typedef typename handle_type::executor_type executor_type;
+ 
+     async_pipe(boost::asio::io_context & ios) : async_pipe(ios, ios, make_pipe_name(), true) {}
+     async_pipe(boost::asio::io_context & ios_source, boost::asio::io_context & ios_sink)

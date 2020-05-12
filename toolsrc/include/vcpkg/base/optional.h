@@ -283,6 +283,21 @@ namespace vcpkg
             }
         }
 
+        friend bool operator==(const Optional& lhs, const Optional& rhs)
+        {
+            if (lhs.m_base.has_value())
+            {
+                if (rhs.m_base.has_value())
+                {
+                    return lhs.m_base.value() == rhs.m_base.value();
+                }
+
+                return false;
+            }
+
+            return !rhs.m_base.has_value();
+        }
+
     private:
         details::OptionalStorage<T> m_base;
     };
@@ -316,5 +331,28 @@ namespace vcpkg
     {
         if (auto p = o.get()) return t != *p;
         return true;
+    }
+
+    template<class Container, class Projection>
+    auto common_projection(const Container& input, Projection proj)
+        -> Optional<std::decay_t<decltype(proj(*(input.begin())))>>
+    {
+        const auto last = input.end();
+        auto first = input.begin();
+        if (first == last)
+        {
+            return nullopt;
+        }
+
+        const auto& prototype = proj(*first);
+        while (++first != last)
+        {
+            if (prototype != proj(*first))
+            {
+                return nullopt;
+            }
+        }
+
+        return prototype;
     }
 }

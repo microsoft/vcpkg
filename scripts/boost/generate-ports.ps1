@@ -50,7 +50,7 @@ function Generate()
     $controlDeps = ($Depends | sort) -join ", "
 
     $versionSuffix = ""
-    if ($PortName -eq "iostreams" -or $PortName -eq "python")
+    if ($PortName -eq "iostreams" -or $PortName -eq "process" -or $PortName -eq "python")
     {
         $versionSuffix = "-1"
     }
@@ -114,6 +114,10 @@ function Generate()
     if ($PortName -eq "iostreams")
     {
         $portfileLines += @("    PATCHES Removeseekpos.patch")
+    }
+    if ($PortName -eq "process")
+    {
+        $portfileLines += @("    PATCHES async_pipe_header.patch")
     }
     $portfileLines += @(
         ")"

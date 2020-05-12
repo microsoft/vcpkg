@@ -1,10 +1,10 @@
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/parse.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphparser.h>
-#include <vcpkg/parse.h>
 
 namespace vcpkg
 {
@@ -102,21 +102,20 @@ namespace vcpkg
         });
     }
 
-    static bool is_package_name_char(char ch)
+    static bool is_package_name_char(char32_t ch)
     {
         return Parse::ParserBase::is_lower_alpha(ch) || Parse::ParserBase::is_ascii_digit(ch) || ch == '-';
     }
 
-    static bool is_feature_name_char(char ch) {
+    static bool is_feature_name_char(char32_t ch) {
         // TODO: we do not intend underscores to be valid, however there is currently a feature using them (libwebp[vwebp_sdl]).
         // TODO: we need to rename this feature, then remove underscores from this list.
         return is_package_name_char(ch) || ch == '_';
     }
 
-    ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(CStringView input)
+    ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(StringView input)
     {
-        Parse::ParserBase parser;
-        parser.init(input, "<unknown>");
+        auto parser = Parse::ParserBase(input, "<unknown>");
         auto maybe_pqs = parse_qualified_specifier(parser);
         if (!parser.at_eof()) parser.add_error("expected eof");
         if (auto e = parser.get_error()) return e->format();
@@ -236,7 +235,9 @@ namespace vcpkg
                 parser.add_error("unmatched open braces in qualifier", loc);
                 return nullopt;
             }
-            ret.qualifier = StringView(loc.it + 1, parser.it()).to_string();
+            ret.qualifier = std::string(
+                (++loc.it).pointer_to_current(),
+                parser.it().pointer_to_current());
             parser.next();
         }
         // This makes the behavior of the parser more consistent -- otherwise, it will skip tabs and spaces only if

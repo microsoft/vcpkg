@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/cpp-cmakefiles
-    REF v0.5.0
-    SHA512 8c552e9d2ad8341036464945c37a663a1135c97044fa9e70e372e9179515232d14725352c8c4b171d6b845c3a9273cecdbedc11e8e5cc08361ef03a608e3c025
+    REF v0.9.0
+    SHA512 74791d0ae2fcac0a1acdc255e65f7ca46de8b5129f5b9b066efd0d83c5b3bf61e41b9c3ec6924cfbfb77e5496fa9e2db113f8d17dcc0740058bb19f4d1115f18
     HEAD_REF master
 )
 
