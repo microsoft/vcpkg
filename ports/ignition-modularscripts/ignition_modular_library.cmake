@@ -1,5 +1,5 @@
 
-function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PACKAGE_NAME DEFAULT_CMAKE_PACKAGE_NAME)
+function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PACKAGE_NAME DEFAULT_CMAKE_PACKAGE_NAME IML_DISABLE_PKGCONFIG_INSTALL)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
@@ -17,11 +17,19 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
 
         file(COPY ${CMAKE_RELEASE_FILES} DESTINATION
                   "${CURRENT_PACKAGES_DIR}/share/${CMAKE_PACKAGE_NAME}/")
-
-        # Remove debug files
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
-                            ${CURRENT_PACKAGES_DIR}/debug/share)
+    endif()
+    
+    # Remove debug files
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
+                        ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
+                        ${CURRENT_PACKAGES_DIR}/debug/share)
+    
+    # Make pkg-config files relocatable
+    if(NOT IML_DISABLE_PKGCONFIG_INSTALL)
+        vcpkg_fixup_pkgconfig()
+    else()
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
+                            ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
     endif()
 
     # Find the relevant license file and install it
@@ -44,7 +52,9 @@ endfunction()
 ##                          SHA512 <sha512>
 ##                          [REF <ref>]
 ##                          [HEAD_REF <head_ref>]
-##                          [PATCHES <patches>])
+##                          [PATCHES <patches>]
+##                          [CMAKE_PACKAGE_NAME <cmake_package_name>]
+##                          [DISABLE_PKGCONFIG_INSTALL])
 ## ```
 ##
 ## ## Parameters:
@@ -72,6 +82,10 @@ endfunction()
 ## ### CMAKE_PACKAGE_NAME
 ## The name of the CMake package for the port.
 ## If not specified, defaults to `ignition-${NAME}${MAJOR_VERSION}`.
+## 
+## ### DISABLE_PKGCONFIG_INSTALL
+## If present, disable installation of .pc pkg-config configuration files.
+##
 ##
 ## ## Examples:
 ##
@@ -79,9 +93,10 @@ endfunction()
 ## * [ignition-math4](https://github.com/Microsoft/vcpkg/blob/master/ports/ignition-math4/portfile.cmake)
 ## * [ignition-fuel-tools1](https://github.com/Microsoft/vcpkg/blob/master/ports/ignition-fuel-tools1/portfile.cmake)
 function(ignition_modular_library)
+    set(options DISABLE_PKGCONFIG_INSTALL)
     set(oneValueArgs NAME VERSION SHA512 REF HEAD_REF CMAKE_PACKAGE_NAME)
 	set(multiValueArgs PATCHES)
-    cmake_parse_arguments(IML "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     
     string(REPLACE "." ";" IML_VERSION_LIST ${IML_VERSION})
     list(GET IML_VERSION_LIST 0 IML_MAJOR_VERSION)
@@ -101,7 +116,7 @@ function(ignition_modular_library)
     if(NOT DEFINED IML_CMAKE_PACKAGE_NAME)
         set(IML_CMAKE_PACKAGE_NAME ${DEFAULT_CMAKE_PACKAGE_NAME})
     endif()
-    
+
     # Download library from github, to support also the --head option
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -113,5 +128,5 @@ function(ignition_modular_library)
     )
     
     # Build library
-    ignition_modular_build_library(${IML_NAME} ${IML_MAJOR_VERSION} ${SOURCE_PATH} ${IML_CMAKE_PACKAGE_NAME} ${DEFAULT_CMAKE_PACKAGE_NAME})
+    ignition_modular_build_library(${IML_NAME} ${IML_MAJOR_VERSION} ${SOURCE_PATH} ${IML_CMAKE_PACKAGE_NAME} ${DEFAULT_CMAKE_PACKAGE_NAME} ${IML_DISABLE_PKGCONFIG_INSTALL})
 endfunction()

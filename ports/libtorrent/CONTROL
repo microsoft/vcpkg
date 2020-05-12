@@ -11,6 +11,10 @@ Description: build with deprecated functions enabled
 Feature: examples
 Description: build the examples in the examples directory
 
+Feature: iconv
+Build-Depends: libiconv (windows)
+Description: build with libiconv on Windows
+
 Feature: python
 Build-Depends: boost-python, libtorrent[deprfun]
 Description: build the python bindings in bindings/python directory
