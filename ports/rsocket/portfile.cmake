@@ -1,4 +1,7 @@
-vcpkg_fail_port_install(ON_ARCH "x86")
+# yarpl only support static build in Windows
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -8,6 +11,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     fix-cmake-config.patch
+    fix-find-dependencies.patch
 )
 
 vcpkg_configure_cmake(
@@ -21,32 +25,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# rsocket-cpp will install two package rsocket and yarpl.
-# if we use `vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)`,
-# the result may be not what we want.
-# - x64-linux
-#    └── share
-#         └── rsocket
-#               ├─ rsocket
-#               │   └── rsocket-config.cmake
-#               └── yarpl
-#                   └── yarpl-config.cmake
-# so we need `TARGET_PATH share` to avoid redundant subdirectory.
-# - x64-linux
-#    └── share
-#         ├── rsocket
-#         │   └── rsocket-config.cmake
-#         └── yarpl
-#             └── yarpl-config.cmake
-# we can't call `vcpkg_fixup_cmake_targets` twice at least for now.
-# vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/rsocket)
-# vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/yarpl)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# There should be no empty directories in /home/vcpkg/vcpkg/packages/rsocket-cpp_x64-linux
 file(REMOVE_RECURSE
   ${CURRENT_PACKAGES_DIR}/include/yarpl/perf
   ${CURRENT_PACKAGES_DIR}/include/yarpl/cmake
