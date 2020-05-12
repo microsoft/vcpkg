@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
         fix-space-in-path.patch
         disable-wcslcpy-and-wcslcat-for-windows.patch
         fix-EventToken-header-reference.patch
+        0006-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
