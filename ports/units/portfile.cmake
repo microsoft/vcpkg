@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nholthaus/units
@@ -16,8 +14,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Handle copyright/readme/package files
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/units RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/units)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # remove uneeded directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
