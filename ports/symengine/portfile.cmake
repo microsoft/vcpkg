@@ -1,17 +1,17 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO symengine/symengine
-    REF 0139a82d23625f6dde437b25a2e4f43f5a6945fd
-    SHA512 5eee76ed21527532ab2bd50740c3a034479da3c8a23905f8c8f93bda0ab126211b54644d8e7d814cd60d99a523504843102ad5db0c14d97fda00d5aaeb2c4cae
-    HEAD_REF master
-)
-
 if(VCPKG_TARGET_IS_WINDOWS)
     # Though SymEngine supports dynamic library on Windows, it doesn't work correctly sometimes.
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO symengine/symengine
+    REF 7b39028f5d642f4c81e4e4a0cf918326d12d13d6
+    SHA512 34628babb3b7c977c27eaac062f1f56db079acba5ea30c7c6ef77a68ebac252b01c0703662ca40f44404564f4fc00a4b0665457b74fb1f88b56e2ccc17e3a4a0
+    HEAD_REF master
+)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
