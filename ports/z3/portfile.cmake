@@ -15,7 +15,7 @@ vcpkg_from_github(
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  set(BUILD_STATIC "-DBUILD_LIBZ3_SHARED=OFF")
+  set(BUILD_STATIC "-DZ3_BUILD_LIBZ3_SHARED=OFF")
 endif()
 
 vcpkg_configure_cmake(
