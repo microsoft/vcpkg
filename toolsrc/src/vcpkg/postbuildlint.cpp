@@ -738,7 +738,7 @@ namespace vcpkg::PostBuildLint
             System::printf(System::Color::warning,
                            "Expected %s crt linkage, but the following libs had invalid crt linkage:\n\n",
                            expected_build_type.to_string());
-            for (const BuildTypeAndFile btf : libs_with_invalid_crt)
+            for (const BuildTypeAndFile& btf : libs_with_invalid_crt)
             {
                 System::printf("    %s: %s\n", btf.file.generic_string(), btf.build_type.to_string());
             }
@@ -786,7 +786,7 @@ namespace vcpkg::PostBuildLint
         if (!dlls_with_outdated_crt.empty())
         {
             System::print2(System::Color::warning, "Detected outdated dynamic CRT in the following files:\n\n");
-            for (const OutdatedDynamicCrtAndFile btf : dlls_with_outdated_crt)
+            for (const OutdatedDynamicCrtAndFile& btf : dlls_with_outdated_crt)
             {
                 System::print2("    ", btf.file.u8string(), ": ", btf.outdated_crt.name, "\n");
             }

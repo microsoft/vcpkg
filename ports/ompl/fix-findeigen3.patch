@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fbde81b..c31c6ee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -110,7 +110,7 @@ endif()
+ set_package_properties(Eigen3 PROPERTIES
+     URL "http://eigen.tuxfamily.org"
+     PURPOSE "A linear algebra library used throughout OMPL.")
+-find_package(Eigen3 REQUIRED)
++find_package(Eigen3 CONFIG REQUIRED)
+ include_directories("${EIGEN3_INCLUDE_DIR}")
+ 
+ set_package_properties(MORSE PROPERTIES
