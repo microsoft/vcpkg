@@ -10,8 +10,13 @@ However, some packages can compile to Android, and the situation is improving: s
 1. Download the [android ndk](https://developer.android.com/ndk/downloads/)
 
 2. Set environment variable `ANDROID_NDK_HOME` to your android ndk installation. 
+   For example:
 ````
 export ANDROID_NDK_HOME=/home/your-account/Android/Sdk/ndk-bundle
+````
+    Or:
+````
+export ANDROID_NDK_HOME=/home/your-account/Android/android-ndk-r21b
 ````
 
 3. Install [vcpkg](https://github.com/microsoft/vcpkg)
@@ -134,7 +139,6 @@ The folder [docs/examples/vcpkg_android_example_cmake](../examples/vcpkg_android
 * The [compile.sh](../examples/vcpkg_android_example_cmake/compile.sh) script enables you to select any matching pair of "android abi" /  "vcpkg triplet" and to test the compilation
 
 * The dummy [my_lib.cpp](../examples/vcpkg_android_example_cmake/my_lib.cpp) file uses the jsoncpp library
-
 
 *Note*: this example only compiles an Android library, as the compilation of a full fledged Android App is beyond the scope of this document.
 
