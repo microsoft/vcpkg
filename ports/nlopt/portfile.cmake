@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevengj/nlopt
-    REF v2.6.1
-    SHA512 e9b8ee75536a568e75150dc0a169d951b670d54ca9d2797f9db6f2751811d9d21be367fa6794a0bc76370715caf5356b368c9c12ad416f3cfb74ae8fa8eabd5c
+    REF v2.6.2
+    SHA512 61e5c01140a57c0ad2a0acd82ad50dce1b5679dc281e55cbbc332e876b19a689013100617545a42b721d8c487df37d6ccd67859171243433fe29468f259b556b
     HEAD_REF master
 )
 

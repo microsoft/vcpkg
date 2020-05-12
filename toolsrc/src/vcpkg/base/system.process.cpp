@@ -295,6 +295,8 @@ namespace vcpkg
         env_cstr.push_back(L'\0');
         env_cstr.append(L"VSLANG=1033");
         env_cstr.push_back(L'\0');
+        env_cstr.append(L"VSCMD_SKIP_SENDTELEMETRY=1");
+        env_cstr.push_back(L'\0');
 
         for (const auto& item : extra_env)
         {
@@ -492,7 +494,7 @@ namespace vcpkg
 
         std::wstring out_env;
 
-        while (1)
+        for (;;)
         {
             auto eq = std::find(it, e, '=');
             if (eq == e) break;
@@ -532,6 +534,7 @@ namespace vcpkg
         Debug::print(
             "cmd_execute() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
 #else
+        (void)env;
         Debug::print("system(", cmd_line, ")\n");
         fflush(nullptr);
         int exit_code = system(cmd_line.c_str());
@@ -587,6 +590,7 @@ namespace vcpkg
         }();
         g_ctrl_c_state.transition_from_spawn_process();
 #else
+        (void)env;
         const auto actual_cmd_line = Strings::format(R"###(%s 2>&1)###", cmd_line);
 
         Debug::print("popen(", actual_cmd_line, ")\n");

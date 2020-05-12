@@ -308,6 +308,10 @@ __pycache__/
 !triplets/community/x86-android.cmake
 !triplets/community/arm-android.cmake
 !triplets/community/arm64-android.cmake
+!triplets/community/arm64-ios.cmake
+!triplets/community/arm-ios.cmake
+!triplets/community/x64-ios.cmake
+!triplets/community/x86-ios.cmake
 !triplets/arm-uwp.cmake
 !triplets/x64-uwp.cmake
 !triplets/x64-windows.cmake
