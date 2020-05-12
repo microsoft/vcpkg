@@ -61,6 +61,12 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
             -DCLANG_ENABLE_STATIC_ANALYZER=OFF
         )
     endif()
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND FEATURE_OPTIONS
+            # Disable dl library on Windows
+            -DDL_LIBRARY_PATH:FILEPATH=
+        )
+    endif()
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
