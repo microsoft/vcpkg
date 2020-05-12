@@ -50,8 +50,9 @@ if("cufftw" IN_LIST FEATURES)
     endif()
 endif()
 if("rtk" IN_LIST FEATURES)
+    SET(BUILD_RTK ON)
     list(APPEND ADDITIONAL_OPTIONS
-         "-DModule_RTK_GIT_TAG=6c5d5c2a25a2dd15d3b5ae1d2b9e6f8360b2208d" # RTK latest versions (08.05.2020)
+         "-DModule_RTK_GIT_TAG=8099212f715231d093f7d6a1114daecf45d871ed" # RTK latest versions (11.05.2020)
          )
     if("cuda" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS "-DRTK_USE_CUDA=ON")
@@ -180,7 +181,9 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG   ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
-
+if(BUILD_RTK) # Remote Modules are only downloaded on configure. already_defined.patch
+    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUITE PATCHES rtk/already_defined.patch rtk/unresolved.patch)
+endif()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
