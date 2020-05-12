@@ -34,15 +34,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
-    REF 0d5c94ac254a1eb1e55b3a0db291d97acd25790d # v5.7.0
-    SHA512 df3490c463c96e2b7445e416067f0be469eca86ee655690fd8acdbcda8189c192909981dbb36b043d0e7ccd06f9eb6cf0a2c25a48d23d92c47b061a6ee39b2db
+    REF 56631fdd9a31f4acdfe5fce2c3be3c4fb6e6800f # v5.8.0
+    SHA512  1cdf4065428debc301c98422233524cdafc843495c54569b0854bf53f6ffeba1e83acf60497450779d493e56051557cd377902325d6ece89ad1b98ae6ba831be
     HEAD_REF master
     PATCHES
-        paraview.patch
-        second.patch
-        protobuf.patch
+        paraview_build.patch
         #qt_plugin.patch
-        qt_static_plugins.patch
+        #qt_static_plugins.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -53,20 +51,21 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH VISITIT_SOURCE_PATH
     GITLAB_URL https://gitlab.kitware.com/
     REPO paraview/visitbridge
-    REF 4e5fd802e83fcc8601b7a75d318ac277514cb736
-    SHA512 49ab6e32051a9cb328f5694bca7445610d80bdedddc7ac3d48970f57be1c5969578a0501b12f48a2fb332f109f79f8df189e78530bb4af75e73b0d48d7124884
+    REF c2605b5c3115bc4869c76a0d8bfdd8939b59f283
+    SHA512 6d2c1d6e1cd345547926938451755e7a8be5dabd89e18a2ceb419db16c5b29f354554a5130eb365b7e522d655370fd4766953813ff530c06e4851fe26104ce58
     PATCHES 
-        VisIt.patch
-        removeunusedsymbols.patch # These also get remove in master of ParaView
-        ${VisItPatches}
+        VisIt_Build.patch
+        
+        #removeunusedsymbols.patch # These also get remove in master of ParaView
+        #${VisItPatches}
 )
 #Get QtTesting Plugin
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH QTTESTING_SOURCE_PATH
     GITLAB_URL https://gitlab.kitware.com/
     REPO paraview/qttesting
-    REF a17c15627db0852242d83460e032a021571669df
-    SHA512  34ad7c97720366dd66c011aecbaf7103ebcc128223673140d42db32c6eb419c805da204ac9afe73dae4c9b2ef9acfc4ec1b927271351fde51c9df7c44d09bf6e
+    REF f2429588feb839e0d8f9f3ee73bfa8a032a3f178
+    SHA512  752b13ff79095a14faa2edc134a64497ff0426da3aa6b1a5951624816fb4f113a26fbe559cedf495ebb775d782c9a1851421a88dd299a79f27cbebb730ea227e
 )
 
 file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBridge)
@@ -85,7 +84,7 @@ file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTest
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
-        -DPARAVIEW_ENABLE_PYTHON:BOOL=ON
+        -DPARAVIEW_USE_PYTHON:BOOL=ON
         -DVTK_PYTHON_VERSION=3
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_FOUND=YES"
@@ -102,7 +101,7 @@ if("python" IN_LIST FEATURES)
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 else()
     list(APPEND ADDITIONAL_OPTIONS
-        -DPARAVIEW_ENABLE_PYTHON:BOOL=OFF
+        -DPARAVIEW_USE_PYTHON:BOOL=OFF
     )
 endif()
 
@@ -115,15 +114,14 @@ else()
         -DPARAVIEW_USE_VTKM:BOOL=OFF # VTK-m port is missing but this is a requirement to build VisItLib
     )
 endif()
-
+message(STATUS "ADDITIONAL_OPTIONS;${ADDITIONAL_OPTIONS}")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
      OPTIONS 
-        -DPARAVIEW_USE_EXTERNAL:BOOL=ON
+        -DPARAVIEW_BUILD_WITH_EXTERNAL:BOOL=ON
         -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
         -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=ON
-        -DPARAVIEW_ENABLE_CATALYST:BOOL=OFF # Requires Python?
         -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
         -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION=OFF
         -DPARAVIEW_USE_QTHELP=OFF
@@ -143,12 +141,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH) # Bin to path required since paraview will use some self build tools
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/paraview-5.7)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/paraview-5.8)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-set(TOOLVER pv5.7)
+set(TOOLVER pv5.8)
 set(TOOLS   paraview
             pvbatch
             pvdataserver
@@ -204,7 +202,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         endif()
     endmacro()
     
-    set(to_move Lib paraview-5.7 paraview-config)
+    set(to_move Lib paraview-5.8 paraview-config)
     foreach(name ${to_move})
         move_bin_to_lib(${name})
     endforeach()
