@@ -4,12 +4,9 @@
 
 # Cleans up the environment to prevent contamination across builds.
 if [ ! -d "archives" ]; then
-    ln -s /ci/archives archives
-fi
-if [ ! -d "installed" ]; then
-    ln -s /ci/installed installed
+    ln -s /archives archives
 fi
 
-rm -rf installed/*
+rm -rf installed
 rm -rf buildtrees
-rm -rf packages
+rm -rf packages/*
