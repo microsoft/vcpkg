@@ -28,9 +28,10 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(CMAKE_HOST_WIN32)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     set(MAKE ${MSYS_ROOT}/usr/bin/make.exe)
+    set(PERL ${MSYS_ROOT}/usr/bin/perl.exe)
 else()
     find_program(MAKE make)
     if(NOT MAKE)
