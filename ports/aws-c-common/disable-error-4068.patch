@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 79c66c3..f6639d7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -127,6 +127,10 @@ if (UNIX AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} MATCHES FreeBSD)
+     #this only gets applied to aws-c-common (not its consumers).
+     target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=500)
+ endif()
++ 
++if (WIN32)
++    add_compile_options(/wd4068)
++endif()
+ 
+ aws_add_sanitizers(${CMAKE_PROJECT_NAME} BLACKLIST "sanitizer-blacklist.txt")
+ target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${PLATFORM_LIBS})

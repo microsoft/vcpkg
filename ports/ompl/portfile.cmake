@@ -1,11 +1,4 @@
-include(vcpkg_common_functions)
-
-string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
-if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
-    message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
-        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
-    )
-endif()
+vcpkg_buildpath_length_warning(37)
 
 set(OMPL_VERSION 1.4.2)
 set(OMPL_DISTNAME "ompl")
@@ -26,6 +19,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${OMPL_VERSION}
+    PATCHES fix-findeigen3.patch
 )
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -63,8 +57,9 @@ if ("app" IN_LIST FEATURES)
     )
 endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ompl RENAME copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME ompl)
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

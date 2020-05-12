@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if (VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "Error: the port is unsupported on your platform. Please open an issue on github.com/Microsoft/vcpkg to request a fix")
 endif()
@@ -11,14 +9,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/libusb
-    REF v1.0.22
-    SHA512 b1fed66aafa82490889ee488832c6884a95d38ce7b28fb7c3234b9bce1f749455d7b91cde397a0abc25101410edb13ab2f9832c59aa7b0ea8c19ba2cf4c63b00
+    REF e782eeb2514266f6738e242cdcb18e3ae1ed06fa # v1.0.23
+    SHA512 27cfff4bbf64d5ec5014acac0871ace74b6af76141bd951309206f4806e3e3f2c7ed32416f5b55fd18d033ca5494052eb2e50ed3cc0be10839be2bd4168a9d4c
     HEAD_REF master
-    PATCHES
-        fix_c2001.patch
 )
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
   if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
     set(MSVS_VERSION 2017)  #they are abi compatible, so it should work
   elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
@@ -29,8 +25,20 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
 
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
       set(LIBUSB_PROJECT_TYPE dll)
+      if (VCPKG_CRT_LINKAGE STREQUAL static)
+        file(READ "${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj" PROJ_FILE)
+        string(REPLACE "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" PROJ_FILE "${PROJ_FILE}")
+        string(REPLACE "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" PROJ_FILE "${PROJ_FILE}")
+        file(WRITE "${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj" "${PROJ_FILE}")
+      endif()
   else()
       set(LIBUSB_PROJECT_TYPE static)
+      if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+        file(READ "${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj" PROJ_FILE)
+        string(REPLACE "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" PROJ_FILE "${PROJ_FILE}")
+        string(REPLACE "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" PROJ_FILE "${PROJ_FILE}")
+        file(WRITE "${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj" "${PROJ_FILE}")
+      endif()
   endif()
 
   vcpkg_install_msbuild(

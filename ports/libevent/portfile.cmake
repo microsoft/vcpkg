@@ -1,17 +1,20 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(MESSAGE "${PORT} does not currently support UWP" ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libevent/libevent
-    REF release-2.1.10-stable
-    SHA512 8c336df258f7a12164da739b0ea68bebcc8b2ea4f4a839300aa1c5edfb673ac5d6517f882ba04ab35d406489ddd682a319e39fa6784ac0cab73227d42e503a55
+    REF release-2.1.11-stable
+    SHA512 a34ca4ad4d55a989a4f485f929d0ed2438d070d0e12a19d90c2b12783a562419c64db6a2603b093d958a75246d14ffefc8730c69c90b1b2f48339bde947f0e02
     PATCHES
         fix-file_path.patch
-        fix-arm_build.patch
+        fix-crt_linkage.patch
+        fix-LibeventConfig_cmake_in_path.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+    openssl EVENT__DISABLE_OPENSSL
+    thread  EVENT__DISABLE_THREAD_SUPPORT
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -23,9 +26,10 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DEVENT_INSTALL_CMAKE_DIR:PATH=share/libevent
         -DEVENT__LIBRARY_TYPE=${LIBEVENT_LIB_TYPE}
+        -DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}
         -DEVENT__DISABLE_BENCHMARK=ON
         -DEVENT__DISABLE_TESTS=ON
         -DEVENT__DISABLE_REGRESS=ON
@@ -34,17 +38,21 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/libevent)
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+else ()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+endif()
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/libevent/)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/event_rpcgen.py ${CURRENT_PACKAGES_DIR}/tools/libevent/event_rpcgen.py)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libevent)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libevent/LICENSE ${CURRENT_PACKAGES_DIR}/share/libevent/copyright)
+#Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,10 +1,10 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wpilibsuite/allwpilib
-    REF 3dfb01d45b971ffdfeea50ce58653eff592807d9
-    SHA512 188923cbe166f5812a24a06d8af56bda289aaed38231d45583d423e51e9cd23bb257ade02fdc26e8d0fdd6cdcb793282c04ac80ebad76f29fdbd0a3c1a10f05c
+    REF e874ba9313a8243aa18eefb13e1d88a3999dd80e
+    SHA512 9a2e7abb3739008ed59e716d241a4ec8f0848c655ae8bb7e5bd98090109d6d86115c97ef16ea8881cc28715b691d873ab7be77b515efed8c361cb1f47745697f
 )
 
 set(WITHOUT_JAVA ON)
@@ -28,6 +28,7 @@ vcpkg_configure_cmake(
       -DWITHOUT_CSCORE=${WITHOUT_CSCORE}
       -DWITHOUT_ALLWPILIB=${WITHOUT_ALLWPILIB}
       -DUSE_VCPKG_LIBUV=ON
+      -DUSE_VCPKG_EIGEN=ON
       -DFLAT_INSTALL_WPILIB=ON
 )
 vcpkg_install_cmake()

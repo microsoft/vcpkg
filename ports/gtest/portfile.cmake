@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if (EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
@@ -7,11 +5,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF b6cd405286ed8635ece71c72f118e659f4ade3fb
-    SHA512 1642a9cf1923d00c52c346399941517787431dad3e6d3a5da07bc02243a231a95e30e0a9568ffd29bb9b9757f15c1c47d2d811c2bedb301f2d27cf912be0a534
+    REF release-1.10.0
+    SHA512 bd52abe938c3722adc2347afad52ea3a17ecc76730d8d16b065e165bc7477d762bce0997a427131866a89f1001e3f3315198204ffa5d643a9355f1f4d0d7b1a9
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-z7-override.patch
+        0002-Fix-z7-override.patch
+        fix-main-lib-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
@@ -47,7 +46,6 @@ file(
 )
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtest RENAME copyright)
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_maind.lib)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
@@ -77,4 +75,5 @@ endif()
 
 vcpkg_copy_pdbs()
 
+file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -13,7 +13,7 @@ if(BUILD_SHARED_LIBS)
   add_definitions("-DOPENEXR_DLL")
 endif()
 
-find_package(zlib     REQUIRED)
+find_package(ZLIB     REQUIRED)
 find_package(PNG      REQUIRED)
 find_package(JPEG     REQUIRED)
 find_package(TIFF     REQUIRED)

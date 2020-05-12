@@ -13,19 +13,9 @@ vcpkg_extract_source_archive_ex(
     REF ${ITPP_VERSION}
     PATCHES 
        msvc2013.patch
+       fix-uwp.patch
+       fix-linux.patch
 )
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES fix-uwp.patch
-    )
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES fix-linux.patch
-    )
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

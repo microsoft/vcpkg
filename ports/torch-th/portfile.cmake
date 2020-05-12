@@ -8,11 +8,8 @@ vcpkg_from_github(
     REF dde9e56fb61eee040d7f3dba2331c6d6c095aee8
     SHA512 ef813e6f583f26019da362be1e5d9886ecf3306a2b41e5f7a73d432872eacd2745e0cf26bfcc691452f87611e02e302c54f07b2f3a3288744535e57d154a73db
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/debug.patch"
+    PATCHES
+        debug.patch
 )
 
 vcpkg_configure_cmake(

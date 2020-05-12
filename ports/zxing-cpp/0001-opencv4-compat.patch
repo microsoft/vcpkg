@@ -1,5 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ccb2ba9..5ade734 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ cmake_minimum_required(VERSION 3.0)
+ 
+ project(zxing)
+-
++set(CMAKE_CXX_STANDARD 11)
+ option(BUILD_TESTING "Enable generation of test targets" OFF)
+ 
+ set(CMAKE_LIBRARY_PATH /opt/local/lib ${CMAKE_LIBRARY_PATH})
 diff --git a/opencv-cli/src/main.cpp b/opencv-cli/src/main.cpp
-index 63b6fd3..430dda6 100755
+index 63b6fd3..5900c4f 100644
 --- a/opencv-cli/src/main.cpp
 +++ b/opencv-cli/src/main.cpp
 @@ -135,14 +135,14 @@ int main(int argc, char** argv) {

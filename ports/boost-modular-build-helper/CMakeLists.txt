@@ -36,8 +36,16 @@ endif()
 
 if(APPLE)
     list(APPEND B2_OPTIONS target-os=darwin toolset=clang)
+elseif(WIN32)
+    list(APPEND B2_OPTIONS target-os=windows toolset=gcc)
 else()
     list(APPEND B2_OPTIONS target-os=linux toolset=gcc)
+endif()
+
+if(WIN32)
+    list(APPEND B2_OPTIONS threadapi=win32)
+else()
+    list(APPEND B2_OPTIONS threadapi=pthread)
 endif()
 
 # Properly handle compiler and linker flags passed by VCPKG
@@ -75,7 +83,11 @@ endif()
 
 #set(CXXFLAGS "${CXXFLAGS} <compileflags>-Wno-error=unused-command-line-argument")
 if(CMAKE_CXX_COMPILER_TARGET)
-    set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET} <compileflags>${CMAKE_CXX_COMPILER_TARGET}")
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET}${CMAKE_CXX_COMPILER_TARGET}")
+    else()
+        set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET} <compileflags>${CMAKE_CXX_COMPILER_TARGET}")
+    endif()
 endif()
 if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
     set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} <compileflags>${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
@@ -114,17 +126,8 @@ endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
 
-set(NUMBER_OF_PROCESSORS 1)
-if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-    set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-elseif(CMAKE_HOST_LINUX)
-    execute_process(
-        COMMAND nproc
-        OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-    )
-    string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-    string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-endif()
+include(ProcessorCount)
+ProcessorCount(NUMBER_OF_PROCESSORS)
 if(NOT NUMBER_OF_PROCESSORS)
     set(NUMBER_OF_PROCESSORS 1)
 endif()
@@ -156,7 +159,6 @@ add_custom_target(boost ALL
 
         architecture=x86
         threading=multi
-        threadapi=pthread
         debug-symbols=on
 
         stage

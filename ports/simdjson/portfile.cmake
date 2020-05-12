@@ -1,18 +1,13 @@
-include(vcpkg_common_functions)
-
 # https://github.com/Microsoft/vcpkg/issues/5418#issuecomment-470519894
-if(TARGET_TRIPLET MATCHES "^(x86|arm-)")
-    message(FATAL_ERROR "simdjson doesn't support x86 or 32-bit ARM architecture.")
-elseif(TARGET_TRIPLET MATCHES "^arm64")
-    message(FATAL_ERROR "simdjson doesn't support ARM64 architecture currently.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" "x86")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lemire/simdjson
-    REF d2fa086198b77df44e7fa48b25200e118fa81eb0
-    SHA512 fe92b65e44502381d286b6a7c949055d185e56e7c244a5ab3086b2fe7da76ce81a966daa2d8459794ff0a911b426b1c77e1fc9ef0d616e20868621b1bb30cf67
+    REF 4da06830f1389c8cd33171f5ab3558e79f0ece04
+    SHA512 ffb11ee91f97d975fba2946653c9c847565933380f94e334d15e627f77a7a750702c539ca55d17e077b2ed0a79006f56a3b9a202d888bb7e2e3f0484237cb537
     HEAD_REF master
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/no_benchmark.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
@@ -22,6 +17,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DSIMDJSON_BUILD_STATIC=${SIMDJSON_BUILD_STATIC}
+    OPTIONS_DEBUG
+        -DSIMDJSON_SANITIZE=ON
 )
 
 vcpkg_install_cmake()
@@ -35,7 +32,4 @@ file(REMOVE_RECURSE
 )
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

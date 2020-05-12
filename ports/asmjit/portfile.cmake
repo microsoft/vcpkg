@@ -1,13 +1,12 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO asmjit/asmjit
-  REF fc251c914e77cd079e58982cdab00a47539d7fc5
-  SHA512 3db4ed97ded545994ab2e75df5bb027832c3b7adf44bdabfb89a98af4cc51f5e48d4a353b9e99f205702258dfcec70257d6d6c08db78cec941019b3f8a48232a
+  REF 80645e66a8ae85749937bda3b329388c8a76ea4c
+  SHA512 8e7b0aed14e8ce05e6e6b2eed77be23a81b9548a146aef187ac6beced3bc2a6cba92835718adb901a1ab983fab32f3e9f18061b157b2276bb1451a71ca1195b8
   HEAD_REF master
 )
-
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   vcpkg_configure_cmake(
@@ -22,19 +21,10 @@ else()
   )
 endif()
 
-
-
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
-
-
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/asmjit RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

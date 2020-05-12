@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/dynamic_bitset
-    REF boost-1.70.0
-    SHA512 a646b54f6c85f0810da3b7346919c8b04b8e993773d42ba866909e932682989e9a31f23c590c84ec64e9fe19ff377586b8487822c9e48234643dc021e5d51c62
+    REF boost-1.72.0
+    SHA512 b4c84d194e71fc73be9071840caf1c9ab3a1887ab1d9aa6af63e5121783d450749b435af2f0f2545ebac9c86057b15a537926172e55255805b256d0d992bf0b5
     HEAD_REF master
 )
 

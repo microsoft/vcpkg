@@ -1,15 +1,14 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
-    REF v4.1.0
-    SHA512 5f1292de873ae16c9921d1d44f2871474d74c0ddfd76cc928a7d9b3e03aa6eca4cc72af0513da20a86d09c55d48646e610fd4a4f2b05364f08ad09cf27cbc67a
+    REF 8f0c6b04b2257a520aaab38421b2e090204b69df # v5.0.1
+    SHA512 59b213428e2f7494cb5da423e6b2d51556318f948b00cea420090d74d4f5f0f8970d38dba70cd47b2ef35a1f57f9e15df8597411b6cd8732b233395080147c0f
     HEAD_REF master
     PATCHES
-        dont-overwrite-prefix-path.patch
         uninitialized-variable.patch
-        remove-useless-path.patch
+        fix-static-build-error.patch
+        cmake-policy.patch
+        fix_minizip.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)
@@ -67,6 +66,4 @@ endif()
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/assimp/assimp-config.cmake "${ASSIMP_CONFIG}")
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/assimp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/assimp/LICENSE ${CURRENT_PACKAGES_DIR}/share/assimp/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

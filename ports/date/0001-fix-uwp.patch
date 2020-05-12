@@ -1,0 +1,13 @@
+diff --git i/include/date/date.h w/include/date/date.h
+index fce6200..6a77ad4 100644
+--- i/include/date/date.h
++++ w/include/date/date.h
+@@ -82,7 +82,7 @@
+ #ifdef _MSC_VER
+ #   pragma warning(push)
+ // warning C4127: conditional expression is constant
+-#   pragma warning(disable : 4127)
++#   pragma warning(disable : 4127 4996)
+ #endif
+ 
+ namespace date

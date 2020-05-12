@@ -1,10 +1,10 @@
 diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
-index 5ceb11c..9d0aa12 100644
+index 42d146e..813f56d 100644
 --- a/cmake/AwsCFlags.cmake
 +++ b/cmake/AwsCFlags.cmake
-@@ -38,15 +38,6 @@ function(aws_set_common_properties target)
-         # Disable unknown pragma warnings
-         list(APPEND AWS_C_FLAGS /wd4068)
+@@ -39,15 +39,6 @@ function(aws_set_common_properties target)
+         # Since we want to be compatible with user builds using /volatile:iso, use it for the tests.
+         list(APPEND AWS_C_FLAGS /volatile:iso)
  
 -        string(TOUPPER "${CMAKE_BUILD_TYPE}" _CMAKE_BUILD_TYPE)
 -        if(STATIC_CRT)

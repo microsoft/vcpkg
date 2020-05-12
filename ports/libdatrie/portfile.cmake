@@ -2,17 +2,16 @@ set(LIBDATRIE_VERSION 0.2.10)
 
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libdatrie-${LIBDATRIE_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://linux.thai.net/pub/ThaiLinux/software/libthai/libdatrie-${LIBDATRIE_VERSION}.tar.xz"
     FILENAME "libdatrie-${LIBDATRIE_VERSION}.tar.xz"
     SHA512 ee68ded9d6e06c562da462d42e7e56098a82478d7b8547506200c3018b72536c4037a4e518924f779dc77d3ab139d93216bdb29ab4116b9dc9efd1a5d1eb9e31
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES 
+vcpkg_extract_source_archive_ex(
+    ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/fix-exports.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-trietool.patch"
 )

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jpbarrette/curlpp
@@ -8,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmake.patch
+        fix-findzliberror.patch
 )
 
 vcpkg_configure_cmake(
@@ -17,10 +16,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(
-    CONFIG_PATH lib/cmake/${PORT}
-    TARGET_PATH share/unofficial-${PORT}
-)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT} TARGET_PATH share/unofficial-${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
@@ -29,19 +25,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/debug/bin
     )
-
-    configure_file(
-        ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-        ${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}
-        @ONLY
-    )
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/doc/LICENSE
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
 vcpkg_copy_pdbs()
+vcpkg_test_cmake(PACKAGE_NAME unofficial-${PORT})
 
-# CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/doc/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT})
+

@@ -1,0 +1,4 @@
+Source: outcome
+Version: 2.1
+Homepage: https://github.com/ned14/outcome
+Description: Provides very lightweight outcome<T> and result<T> (non-Boost edition)

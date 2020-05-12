@@ -2,26 +2,26 @@ include(vcpkg_common_functions)
 
 option(BUILD_DEBUG_TOOLS "Build debug version of tools" OFF)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/spatialite-tools-4.3.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-4.3.0.tar.gz"
     FILENAME "spatialite-tools-4.3.0.tar.gz"
     SHA512 e1de27c1c65ff2ff0b08583113517bea74edf33fff59ad6e9c77492ea3ae87d9c0f17d7670ee6602b32eea73ad3678bb5410ef2c6fac6e213bf2e341a907db88
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+        fix-makefiles.patch
+)
 
 find_program(NMAKE nmake)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-makefiles.patch
-)
 
 set(LDIR "\"${CURRENT_INSTALLED_DIR}\"")
 
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(CL_FLAGS_DBG "/MDd /Zi")
-    set(CL_FLAGS_REL "/MD /Ox")
+    set(CL_FLAGS_DBG "/MDd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
+    set(CL_FLAGS_REL "/MD /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
     set(GEOS_LIBS_REL "${LDIR}/lib/geos_c.lib")
     set(GEOS_LIBS_DBG "${LDIR}/debug/lib/geos_cd.lib")
     set(LIBXML2_LIBS_REL "${LDIR}/lib/libxml2.lib")
@@ -31,8 +31,8 @@ if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
     set(ICONV_LIBS_REL "${LDIR}/lib/libiconv.lib")
     set(ICONV_LIBS_DBG "${LDIR}/debug/lib/libiconv.lib")
 else()
-    set(CL_FLAGS_DBG "/MTd /Zi")
-    set(CL_FLAGS_REL "/MT /Ox")
+    set(CL_FLAGS_DBG "/MTd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
+    set(CL_FLAGS_REL "/MT /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
     set(GEOS_LIBS_REL "${LDIR}/lib/libgeos_c.lib ${LDIR}/lib/libgeos.lib")
     set(GEOS_LIBS_DBG "${LDIR}/debug/lib/libgeos_c.lib ${LDIR}/debug/lib/libgeos.lib")
     set(LIBXML2_LIBS_REL "${LDIR}/lib/libxml2.lib ${LDIR}/lib/lzma.lib ws2_32.lib")
@@ -52,7 +52,7 @@ set(LIBS_ALL_DBG
     ${LDIR}/debug/lib/readosm.lib \
     ${LDIR}/debug/lib/expat.lib \
     ${LDIR}/debug/lib/zlibd.lib \
-    ${LDIR}/debug/lib/projd.lib"
+    ${LDIR}/debug/lib/proj_d.lib"
    )
 set(LIBS_ALL_REL
     "${ICONV_LIBS_REL} \

@@ -1,0 +1,34 @@
+diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
+index 51711c2bf..d33fdc3b0 100644
+--- a/src/tools/msvc/Solution.pm	
++++ b/src/tools/msvc/Solution.pm
+@@ -127,19 +127,19 @@ sub GetOpenSSLVersion
+        # openssl.exe is in the specified directory.
+        my $opensslcmd =
+          $self->{options}->{openssl} . "\\bin\\openssl.exe version 2>&1";
+-       my $sslout = `$opensslcmd`;
++       #my $sslout = `$opensslcmd`;
+ 
+-       $? >> 8 == 0
+-         or croak
+-         "Unable to determine OpenSSL version: The openssl.exe command wasn't found.";
++       #$? >> 8 == 0
++       #  or croak
++       #  "Unable to determine OpenSSL version: The openssl.exe command wasn't found.";
+ 
+-       if ($sslout =~ /(\d+)\.(\d+)\.(\d+)(\D)/m)
+-       {
+-               return ($1, $2, $3);
+-       }
++       #if ($sslout =~ /(\d+)\.(\d+)\.(\d+)(\D)/m)
++       #{
++               return (1, 1, 1);
++       #}
+ 
+-       croak
+-         "Unable to determine OpenSSL version: The openssl.exe version could not be determined.";
++       #croak
++       #  "Unable to determine OpenSSL version: The openssl.exe version could not be determined.";
+ }
+ 
+ sub GenerateFiles

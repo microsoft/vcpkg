@@ -1,0 +1,133 @@
+diff --git a/cuda/common/include/pcl/cuda/thrust.h b/cuda/common/include/pcl/cuda/thrust.h
+index 57586ab..af073d7 100644
+--- a/cuda/common/include/pcl/cuda/thrust.h
++++ b/cuda/common/include/pcl/cuda/thrust.h
+@@ -42,6 +42,7 @@
+
+ #include <thrust/host_vector.h>
+ #include <thrust/device_vector.h>
++#include <thrust/device_malloc.h>
+ #include <thrust/copy.h>
+ #include <thrust/device_ptr.h>
+ #include <thrust/sequence.h>
+diff --git a/gpu/features/src/fpfh.cu b/gpu/features/src/fpfh.cu
+index 8d34f76..59a5f0c 100644
+--- a/gpu/features/src/fpfh.cu
++++ b/gpu/features/src/fpfh.cu
+@@ -231,12 +231,12 @@ namespace pcl
+                 int *sinds = sindices + Warp::WARP_SIZE * warp_idx;
+                 int size = sizes[idx];
+ 
+-                for(int i = lane; __any(i < size); i += Warp::STRIDE)                
++                for(int i = lane; __any_sync(0xFFFFFFFF, i < size); i += Warp::STRIDE)                
+                 {
+                     if (i < size)
+                         sinds[lane] = ginds[i];
+ 
+-                    int inds_num = __popc(__ballot(i < size));
++                    int inds_num = __popc(__ballot_sync(0xFFFFFFFF, i < size));
+ 
+                     for(int j = 0; j < inds_num; ++j)
+                     {
+diff --git a/gpu/octree/src/cuda/approx_nsearch.cu b/gpu/octree/src/cuda/approx_nsearch.cu
+index e457255..3e1adfe 100644
+--- a/gpu/octree/src/cuda/approx_nsearch.cu
++++ b/gpu/octree/src/cuda/approx_nsearch.cu
+@@ -141,7 +141,7 @@ namespace pcl { namespace device { namespace appnearest_search
+ 		{   
+             __shared__ volatile int  per_warp_buffer[KernelPolicy::WARPS_COUNT];
+ 
+-			int mask = __ballot(node_idx != -1);                        
++			int mask = __ballot_sync(0xFFFFFFFF, node_idx != -1);                        
+ 
+ 			while(mask)
+ 			{                
+@@ -275,7 +275,7 @@ namespace pcl { namespace device { namespace appnearest_search
+ 
+ 		bool active = query_index < batch.queries_num;
+ 
+-		if (__all(active == false)) 
++		if (__all_sync(0xFFFFFFFF, active == false)) 
+ 			return;
+ 
+ 		Warp_appNearestSearch search(batch, query_index);
+diff --git a/gpu/octree/src/cuda/knn_search.cu b/gpu/octree/src/cuda/knn_search.cu
+index a99655d..b55e3c1 100644
+--- a/gpu/octree/src/cuda/knn_search.cu
++++ b/gpu/octree/src/cuda/knn_search.cu
+@@ -106,7 +106,7 @@ namespace pcl { namespace device { namespace knn_search
+             else                
+                 query_index = -1;    
+ 
+-            while(__any(active))
++            while(__any_sync(0xFFFFFFFF, active))
+             {                
+                 int leaf = -1;
+            
+@@ -163,7 +163,7 @@ namespace pcl { namespace device { namespace knn_search
+ 
+         __device__ __forceinline__ void processLeaf(int node_idx)
+         {   
+-            int mask = __ballot(node_idx != -1);            
++            int mask = __ballot_sync(0xFFFFFFFF, node_idx != -1);            
+ 
+             unsigned int laneId = Warp::laneId();
+             unsigned int warpId = Warp::id();
+@@ -310,7 +310,7 @@ namespace pcl { namespace device { namespace knn_search
+                                 
+         bool active = query_index < batch.queries_num;
+ 
+-        if (__all(active == false)) 
++        if (__all_sync(0xFFFFFFFF, active == false)) 
+             return;
+ 
+         Warp_knnSearch search(batch, query_index);
+diff --git a/gpu/octree/src/cuda/radius_search.cu b/gpu/octree/src/cuda/radius_search.cu
+index f90273f..8ae84e7 100644
+--- a/gpu/octree/src/cuda/radius_search.cu
++++ b/gpu/octree/src/cuda/radius_search.cu
+@@ -155,7 +155,7 @@ namespace pcl
+                 else                
+                     query_index = -1;
+ 
+-                while(__any(active))
++                while(__any_sync(0xFFFFFFFF, active))
+                 {                
+                     int leaf = -1;                
+ 
+@@ -217,7 +217,7 @@ namespace pcl
+ 
+             __device__ __forceinline__ void processLeaf(int leaf)
+             {   
+-                int mask = __ballot(leaf != -1);            
++                int mask = __ballot_sync(0xFFFFFFFF, leaf != -1);            
+ 
+                 while(mask)
+                 {                
+@@ -255,7 +255,7 @@ namespace pcl
+                     int *out = batch.output + active_query_index * batch.max_results + active_found_count;                    
+                     int length_left = batch.max_results - active_found_count;
+ 
+-                    int test = __any(active_lane == laneId && (leaf & KernelPolicy::CHECK_FLAG));
++                    int test = __any_sync(0xFFFFFFFF, active_lane == laneId && (leaf & KernelPolicy::CHECK_FLAG));
+ 
+                     if (test)
+                     {                                        
+@@ -329,7 +329,7 @@ namespace pcl
+                     total_new += new_nodes;
+                     out += new_nodes;                
+ 
+-                    if (__all(idx >= length) || __any(out_of_bounds) || total_new == length_left)
++                    if (__all_sync(0xFFFFFFFF, idx >= length) || __any_sync(0xFFFFFFFF, out_of_bounds) || total_new == length_left)
+                         break;
+                 }
+                 return min(total_new, length_left);
+@@ -343,7 +343,7 @@ namespace pcl
+ 
+             bool active = query_index < batch.queries.size;
+ 
+-            if (__all(active == false)) 
++            if (__all_sync(0xFFFFFFFF, active == false)) 
+                 return;
+ 
+             Warp_radiusSearch<BatchType> search(batch, query_index);

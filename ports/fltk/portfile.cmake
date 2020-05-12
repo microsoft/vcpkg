@@ -1,25 +1,15 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fltk-1.3.4-1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz"
-    FILENAME "fltk.tar.gz"
-    SHA512 0be1c8e6bb7a8c7ef484941a73868d5e40b90e97a8e5dc747bac2be53a350621975406ecfd4a9bcee8eeb7afd886e75bf7a6d6478fd6c56d16e54059f22f0891
+    URLS "https://fltk.org/pub/fltk/1.3.5/fltk-1.3.5-source.tar.gz"
+    FILENAME "fltk-1.3.5.tar.gz"
+    SHA512 db7ea7c5f3489195a48216037b9371a50f1119ae7692d66f71b6711e5ccf78814670581bae015e408dee15c4bba921728309372c1cffc90113cdc092e8540821
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fltk-1.3.4-1
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/findlibsfix.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/add-link-libraries.patch"
+        findlibsfix.patch
+        add-link-libraries.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -31,7 +21,7 @@ endif()
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
     set(OPTION_USE_GL "-DOPTION_USE_GL=OFF")
 else()
-    set(OPTION_USE_GL)
+    set(OPTION_USE_GL "-DOPTION_USE_GL=ON")
 endif()
 
 vcpkg_configure_cmake(
@@ -39,6 +29,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DOPTION_BUILD_EXAMPLES=OFF
+        -DOPTION_LARGE_FILE=ON
+        -DOPTION_USE_THREADS=ON
         -DOPTION_USE_SYSTEM_ZLIB=ON
         -DOPTION_USE_SYSTEM_LIBPNG=ON
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
@@ -48,17 +40,28 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+if (VCPKG_TARGET_IS_LINUX)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT} TARGET_PATH share/${PORT})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid)
+elseif (VCPKG_TARGET_IS_OSX)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.app DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.app)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.app)
+else() 
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
+endif()
+
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/CMAKE
-    ${CURRENT_PACKAGES_DIR}/debug/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
-
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
 
 vcpkg_copy_pdbs()
@@ -91,8 +94,4 @@ foreach(FILE Fl_Export.H fl_utf8.h)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/FL/${FILE} "${FLTK_HEADER}")
 endforeach()
 
-file(INSTALL
-    ${SOURCE_PATH}/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/fltk
-    RENAME copyright
-)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

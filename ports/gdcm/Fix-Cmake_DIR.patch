@@ -1,0 +1,41 @@
+diff --git a/CMake/ExportConfiguration/GDCMConfig.cmake.in b/CMake/ExportConfiguration/GDCMConfig.cmake.in
+index f8e9d0b..ab28546 100644
+--- a/CMake/ExportConfiguration/GDCMConfig.cmake.in
++++ b/CMake/ExportConfiguration/GDCMConfig.cmake.in
+@@ -33,28 +33,28 @@ if(GDCM_USE_VTK)
+   set(GDCM_VTK_DIR "@GDCM_VTK_DIR_CONFIG@")
+ endif()
+ 
+-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-if(EXISTS ${SELF_DIR}/GDCMTargets.cmake)
++get_filename_component(GDCM_SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
++if(EXISTS ${GDCM_SELF_DIR}/GDCMTargets.cmake)
+   # This is an install tree
+-  include(${SELF_DIR}/GDCMTargets.cmake)
+-  get_filename_component(GDCM_INCLUDE_ROOT "${SELF_DIR}/../../@GDCM_INSTALL_INCLUDE_DIR@" ABSOLUTE)
++  include(${GDCM_SELF_DIR}/GDCMTargets.cmake)
++  get_filename_component(GDCM_INCLUDE_ROOT "${GDCM_SELF_DIR}/../../@GDCM_INSTALL_INCLUDE_DIR@" ABSOLUTE)
+   set(GDCM_INCLUDE_DIRS ${GDCM_INCLUDE_ROOT})
+-  get_filename_component(GDCM_LIB_ROOT "${SELF_DIR}/../../@GDCM_INSTALL_LIB_DIR@" ABSOLUTE)
++  get_filename_component(GDCM_LIB_ROOT "${GDCM_SELF_DIR}/../../@GDCM_INSTALL_LIB_DIR@" ABSOLUTE)
+   set(GDCM_LIBRARY_DIRS ${GDCM_LIB_ROOT})
+ else()
+-  if(EXISTS ${SELF_DIR}/GDCMExports.cmake)
++  if(EXISTS ${GDCM_SELF_DIR}/GDCMExports.cmake)
+     # This is a build tree
+     set( GDCM_INCLUDE_DIRS "@GDCM_INCLUDE_PATH@")
+     set(GDCM_LIBRARY_DIRS "@GDCM_LIBRARY_DIR@")
+ 
+-    include(${SELF_DIR}/GDCMExports.cmake)
++    include(${GDCM_SELF_DIR}/GDCMExports.cmake)
+ 
+   else()
+     message(FATAL_ERROR "ooops")
+   endif()
+ endif()
+ 
+-set(GDCM_USE_FILE ${SELF_DIR}/UseGDCM.cmake)
++set(GDCM_USE_FILE ${GDCM_SELF_DIR}/UseGDCM.cmake)
+ 
+ # Backward compatible part:
+ set(GDCM_FOUND       TRUE)

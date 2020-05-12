@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CopernicaMarketingSoftware/AMQP-CPP
-    REF v4.1.4
-    SHA512 d589756ad8e27ce6b6772128479083293c4dbb8c7aa79b7b08f0036ced9ab76ecb75e55458f04de8e2745c9732a6322f4e910f3f8611633c5cd5c35fb7dcaed1
+    REF v4.1.5
+    SHA512 71c54ddf43230fb3e9726257b073d117a329030052f768f985c2e9ebde5a320f0042d2ef67604b87940bfa1ed61339c334af0362238d10f30845521dff8ce43c
     HEAD_REF master
     PATCHES
         find-openssl.patch

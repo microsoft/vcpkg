@@ -3,14 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO multicoreware/x265
-    REF 3.0
-    SHA512 698fd31bf30c65896717225de69714523bcbd3d835474f777bf32c3a6d6dbbf941a09db076e13e76917a5ca014c89fca924fcb0ea3d15bc09748b6fc834a4ba2
+    REF 3.2
+    SHA512 e98e26a9d3c2eb7f147ba052d9d8009e1c47e54905375b29e813f33ffddf8b7fac55ea455ae6d28ed1ade2d90f887c7cafe374873cd48b6c5e2560ddd21ccb84
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-install-pdb.patch
+    PATCHES
+        disable-install-pdb.patch
 )
 
 set(ENABLE_ASSEMBLY OFF)

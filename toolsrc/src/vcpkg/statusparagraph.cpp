@@ -24,12 +24,12 @@ namespace vcpkg
             .push_back('\n');
     }
 
-    StatusParagraph::StatusParagraph(std::unordered_map<std::string, std::string>&& fields)
+    StatusParagraph::StatusParagraph(Parse::Paragraph&& fields)
         : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE)
     {
         auto status_it = fields.find(BinaryParagraphRequiredField::STATUS);
         Checks::check_exit(VCPKG_LINE_INFO, status_it != fields.end(), "Expected 'Status' field in status paragraph");
-        std::string status_field = std::move(status_it->second);
+        std::string status_field = std::move(status_it->second.first);
         fields.erase(status_it);
 
         this->package = BinaryParagraph(std::move(fields));
@@ -85,44 +85,37 @@ namespace vcpkg
             default: return "error";
         }
     }
+
+    std::unordered_map<std::string, std::vector<FeatureSpec>> InstalledPackageView::feature_dependencies() const
+    {
+        auto extract_deps = [&](const std::string& name) { return FeatureSpec{{name, spec().triplet()}, "core"}; };
+
+        std::unordered_map<std::string, std::vector<FeatureSpec>> deps;
+
+        deps.emplace("core", Util::fmap(core->package.depends, extract_deps));
+
+        for (const StatusParagraph* const& feature : features)
+            deps.emplace(feature->package.feature, Util::fmap(feature->package.depends, extract_deps));
+
+        return deps;
+    }
+
     std::vector<PackageSpec> InstalledPackageView::dependencies() const
     {
         // accumulate all features in installed dependencies
         // Todo: make this unneeded by collapsing all package dependencies into the core package
-        auto deps = Util::fmap_flatten(features, [](const StatusParagraph* pgh) -> std::vector<std::string> const& {
-            return pgh->package.depends;
-        });
+        std::vector<std::string> deps;
+        for (auto&& feature : features)
+            for (auto&& dep : feature->package.depends)
+                deps.push_back(dep);
 
         // Add the core paragraph dependencies to the list
-        deps.insert(deps.end(), core->package.depends.begin(), core->package.depends.end());
+        for (auto&& dep : core->package.depends)
+            deps.push_back(dep);
 
-        auto&& l_spec = spec();
-
-        // <hack>
-        // This is a hack to work around existing installations that put featurespecs into binary packages
-        // (example: curl[core])
-        for (auto&& dep : deps)
-        {
-            dep.erase(std::find(dep.begin(), dep.end(), '['), dep.end());
-        }
-        Util::erase_remove_if(deps, [&](auto&& e) { return e == l_spec.name(); });
-        // </hack>
+        Util::erase_remove_if(deps, [&](const std::string& pspec) { return pspec == spec().name(); });
         Util::sort_unique_erase(deps);
 
-        return Util::fmap(deps, [&](const std::string& dep) -> PackageSpec {
-            auto maybe_dependency_spec = PackageSpec::from_name_and_triplet(dep, l_spec.triplet());
-            if (auto dependency_spec = maybe_dependency_spec.get())
-            {
-                return std::move(*dependency_spec);
-            }
-
-            const PackageSpecParseResult error_type = maybe_dependency_spec.error();
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Invalid dependency [%s] in package [%s]\n"
-                                      "%s",
-                                      dep,
-                                      l_spec.name(),
-                                      vcpkg::to_string(error_type));
-        });
+        return PackageSpec::to_package_specs(deps, spec().triplet());
     }
 }

@@ -9,7 +9,7 @@ index 9c15f36a..e1475cd6 100644
 +
 +find_dependency(ZeroMQ)
 +
-+if (@CZMQ_WITH_LIBCURL@ AND @LIBCURL_FOUND@)
++if ("@CZMQ_WITH_LIBCURL@" AND "@LIBCURL_FOUND@")
 +    find_dependency(OpenSSL)
 +    find_dependency(ZLIB)
 +endif ()

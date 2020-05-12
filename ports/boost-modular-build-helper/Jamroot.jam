@@ -1,5 +1,5 @@
-constant BOOST_VERSION : 1.70.0 ;
-constant BOOST_VERSION_ABI_TAG : 1_70 ;
+constant BOOST_VERSION : 1.72.0 ;
+constant BOOST_VERSION_ABI_TAG : 1_72 ;
 constant BOOST_JAMROOT_MODULE : $(__name__) ;
 
 import boostcpp ;

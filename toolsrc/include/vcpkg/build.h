@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/triplet.h>
@@ -15,16 +16,28 @@
 #include <set>
 #include <vector>
 
+namespace vcpkg
+{
+    struct IBinaryProvider;
+}
+
+namespace vcpkg::Dependencies
+{
+    struct InstallPlanAction;
+    struct ActionPlan;
+}
+
 namespace vcpkg::Build
 {
     namespace Command
     {
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
-                                 const ParsedArguments& options,
+                                 const PortFileProvider::PathsPortFileProvider& provider,
+                                 IBinaryProvider& binaryprovider,
                                  const VcpkgPaths& paths);
 
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 
     enum class UseHeadVersion
@@ -34,6 +47,12 @@ namespace vcpkg::Build
     };
 
     enum class AllowDownloads
+    {
+        NO = 0,
+        YES
+    };
+
+    enum class OnlyDownloads
     {
         NO = 0,
         YES
@@ -82,16 +101,24 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class PurgeDecompressFailure
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
+        OnlyDownloads only_downloads;
         CleanBuildtrees clean_buildtrees;
         CleanPackages clean_packages;
         CleanDownloads clean_downloads;
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;
+        PurgeDecompressFailure purge_decompress_failure;
     };
 
     enum class BuildResult
@@ -103,6 +130,7 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
+        DOWNLOADED
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
@@ -122,11 +150,11 @@ namespace vcpkg::Build
     /// </summary>
     struct PreBuildInfo
     {
-        /// <summary>
-        /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
-        /// </summary>
-        static PreBuildInfo from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet);
+        PreBuildInfo(const VcpkgPaths& paths,
+                     Triplet triplet,
+                     const std::unordered_map<std::string, std::string>& cmakevars);
 
+        bool load_vcvars_env;
         std::string triplet_abi_tag;
         std::string target_architecture;
         std::string cmake_system_name;
@@ -135,9 +163,39 @@ namespace vcpkg::Build
         Optional<fs::path> visual_studio_path;
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
+        Optional<std::string> public_abi_override;
+        Optional<const SourceControlFileLocation&> port;
+        std::vector<std::string> passthrough_env_vars;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
+
+    enum class VcpkgTripletVar
+    {
+        TARGET_ARCHITECTURE = 0,
+        CMAKE_SYSTEM_NAME,
+        CMAKE_SYSTEM_VERSION,
+        PLATFORM_TOOLSET,
+        VISUAL_STUDIO_PATH,
+        CHAINLOAD_TOOLCHAIN_FILE,
+        BUILD_TYPE,
+        ENV_PASSTHROUGH,
+        PUBLIC_ABI_OVERRIDE,
+        LOAD_VCVARS_ENV,
+    };
+
+    const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
+        {"VCPKG_TARGET_ARCHITECTURE", VcpkgTripletVar::TARGET_ARCHITECTURE},
+        {"VCPKG_CMAKE_SYSTEM_NAME", VcpkgTripletVar::CMAKE_SYSTEM_NAME},
+        {"VCPKG_CMAKE_SYSTEM_VERSION", VcpkgTripletVar::CMAKE_SYSTEM_VERSION},
+        {"VCPKG_PLATFORM_TOOLSET", VcpkgTripletVar::PLATFORM_TOOLSET},
+        {"VCPKG_VISUAL_STUDIO_PATH", VcpkgTripletVar::VISUAL_STUDIO_PATH},
+        {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
+        {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
+        {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
+        {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
+        {"VCPKG_LOAD_VCVARS_ENV", VcpkgTripletVar::LOAD_VCVARS_ENV},
+    };
 
     struct ExtendedBuildResult
     {
@@ -150,39 +208,22 @@ namespace vcpkg::Build
         std::unique_ptr<BinaryControlFile> binary_control_file;
     };
 
-    struct BuildPackageConfig
-    {
-        BuildPackageConfig(const SourceControlFile& src,
-                           const Triplet& triplet,
-                           fs::path&& port_dir,
-                           const BuildPackageOptions& build_package_options,
-                           const std::set<std::string>& feature_list)
-            : scf(src)
-            , triplet(triplet)
-            , port_dir(std::move(port_dir))
-            , build_package_options(build_package_options)
-            , feature_list(feature_list)
-        {
-        }
-
-        const SourceControlFile& scf;
-        const Triplet& triplet;
-        fs::path port_dir;
-        const BuildPackageOptions& build_package_options;
-        const std::set<std::string>& feature_list;
-    };
-
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
-                                      const BuildPackageConfig& config,
+                                      const Dependencies::InstallPlanAction& config,
+                                      IBinaryProvider& binaries_provider,
                                       const StatusParagraphs& status_db);
 
     enum class BuildPolicy
     {
         EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS,
+        DLLS_WITHOUT_EXPORTS,
         ONLY_RELEASE_CRT,
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
+        ALLOW_RESTRICTED_HEADERS,
+        SKIP_DUMPBIN_CHECKS,
+        SKIP_ARCHITECTURE_CHECK,
         // Must be last
         COUNT,
     };
@@ -190,9 +231,13 @@ namespace vcpkg::Build
     constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> G_ALL_POLICIES = {
         BuildPolicy::EMPTY_PACKAGE,
         BuildPolicy::DLLS_WITHOUT_LIBS,
+        BuildPolicy::DLLS_WITHOUT_EXPORTS,
         BuildPolicy::ONLY_RELEASE_CRT,
         BuildPolicy::EMPTY_INCLUDE_FOLDER,
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
+        BuildPolicy::ALLOW_RESTRICTED_HEADERS,
+        BuildPolicy::SKIP_DUMPBIN_CHECKS,
+        BuildPolicy::SKIP_ARCHITECTURE_CHECK
     };
 
     const std::string& to_string(BuildPolicy policy);
@@ -239,6 +284,9 @@ namespace vcpkg::Build
         std::string key;
         std::string value;
 
+        AbiEntry() = default;
+        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) {}
+
         bool operator<(const AbiEntry& other) const
         {
             return key < other.key || (key == other.key && value < other.value);
@@ -251,8 +299,12 @@ namespace vcpkg::Build
         fs::path tag_file;
     };
 
+    void compute_all_abis(const VcpkgPaths& paths,
+                          Dependencies::ActionPlan& action_plan,
+                          const CMakeVars::CMakeVarProvider& var_provider,
+                          const StatusParagraphs& status_db);
+
     Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
-                                            const BuildPackageConfig& config,
-                                            const PreBuildInfo& pre_build_info,
+                                            const Dependencies::InstallPlanAction& config,
                                             Span<const AbiEntry> dependency_abis);
 }

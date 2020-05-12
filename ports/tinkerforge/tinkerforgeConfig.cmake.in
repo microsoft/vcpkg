@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+
+include ("@PACKAGE_TARGET_INSTALL_DIR@/@PROJECT_NAME@Targets.cmake")
+set_and_check(TINKERFORGE_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+check_required_components("@PROJECT_NAME@")

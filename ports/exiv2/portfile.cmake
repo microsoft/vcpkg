@@ -3,11 +3,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
-    REF 0.27.1
-    SHA512 1b637138cee019122d98ae3c54e84416ba1a90531b3f541748697c9f1a8faee18699f10cef5a63bf60b8588e8c670925cbac3ad6c82e41160442f8a66380d407
+    REF v0.27.2
+    SHA512 349063fd8ef6c44b5b2f3f68aad839271a9cb8ff206af237d28d9e9d05dcdf43b61f3232d4566780b2898d62c20134e8ea65d588a19a664c0224750e4ea1340d
     HEAD_REF master
     PATCHES
         iconv.patch
+        1059-Add-missing-library-link-on-Windows.patch # https://github.com/Exiv2/exiv2/pull/1059
 )
 
 if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND ("unicode" IN_LIST FEATURES))
@@ -24,11 +25,10 @@ vcpkg_configure_cmake(
         -DEXIV2_BUILD_EXIV2_COMMAND:BOOL=FALSE
         -DEXIV2_BUILD_UNIT_TESTS:BOOL=FALSE
         -DEXIV2_BUILD_SAMPLES:BOOL=FALSE
-#        -DEXIV2_ENABLE_NLS:BOOL=OFF
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/exiv2/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/exiv2)
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
@@ -47,5 +47,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/ABOUT-NLS DESTINATION ${CURRENT_PACKAGES_DIR}/share/exiv2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/exiv2/ABOUT-NLS ${CURRENT_PACKAGES_DIR}/share/exiv2/copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/exiv2)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/exiv2/COPYING ${CURRENT_PACKAGES_DIR}/share/exiv2/copyright)

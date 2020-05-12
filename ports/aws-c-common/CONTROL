@@ -1,3 +1,4 @@
 Source: aws-c-common
-Version: 0.3.11-1
+Version: 0.4.15
+Homepage: https://github.com/awslabs/aws-c-common
 Description: AWS common library for C

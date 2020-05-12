@@ -1,5 +1,5 @@
 Source: spectra
-Version: 0.8.0
+Version: 0.8.1
 Description: A header-only C++ library for large scale eigenvalue problems
 Homepage: https://spectralib.org
 Build-Depends: eigen3

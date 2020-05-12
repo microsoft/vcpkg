@@ -19,19 +19,16 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/MOOS)
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/uPoke")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPoke ${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/iRemoteLite ${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite)
+if (VCPKG_TARGET_IS_WINDOWS)
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPoke.exe ${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke.exe)
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/iRemoteLite.exe ${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite.exe)
+else()
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPoke ${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke)
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/iRemoteLite ${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite)
 endif()
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/MOOS) 
 
-#    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uMS ${CURRENT_PACKAGES_DIR}/tools/uMS)
-#    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPlayback ${CURRENT_PACKAGES_DIR}/tools/uPlayback)
-#    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pShare ${CURRENT_PACKAGES_DIR}/tools/pShare)
-#endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug)
-endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug)
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/fake_header_ui.h "// fake header to pass vcpkg post install check \n")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "see moos-core for copyright\n" )

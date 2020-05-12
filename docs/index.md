@@ -21,6 +21,13 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Portfile functions](maintainers/portfile-functions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
 
+### Tool Maintainer Help
+
+- [Testing](tool-maintainers/testing.md)
+- [Benchmarking](tool-maintainers/benchmarking.md)
+- [Layout of the vcpkg source tree](tool-maintainers/layout.md)
+- [Maintainer Guidelines](maintainers/maintainer-guide.md)
+
 ### Specifications
 
 - [Export](specifications/export-command.md)

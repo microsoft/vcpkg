@@ -3,16 +3,16 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LMDB/lmdb
-    REF LMDB_0.9.23
-    SHA512 47466a96ce288d18d489acf1abf811aa973649848a4cac31f71e1f25ea781a055ebd6616d2d630214b2df2f146f12609c82d65be0196f49d6b46a6c96464e120
+    REF 0c357cc88a00bda03aa4a982fc227a5872707df2 # LMDB_0.9.24
+    SHA512 a4d4ff96078eaf608eff08014d56561903f113a32617d3c9327dcdedfb7b261e03a80bf705f9d7159bb065eb1ab3c95af49d42525b75de0c2953223377042dec
     HEAD_REF master
-    PATCHES lmdb_45a88275d2a410e683bae4ef44881e0f55fa3c4d.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake/ DESTINATION ${SOURCE_PATH}/libraries/liblmdb)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/libraries/liblmdb
+    PREFER_NINJA
     OPTIONS_DEBUG
         -DLMDB_INSTALL_HEADERS=OFF
 )

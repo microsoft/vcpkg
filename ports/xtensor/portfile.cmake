@@ -1,16 +1,14 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO QuantStack/xtensor
-    REF 0.20.7
-    SHA512 de09900d0934f9b10453f16e43d1c3af28503f365224f9c6789b88a0cf00db820ca31e12099df1a2e3aafa73d7d83223df82f01b7611c1addb48367f936e5122
+    REPO xtensor-stack/xtensor
+    REF 31acec1e90bbea6d4bc17af0710a123bd5da6689 # 0.21.3
+    SHA512 007059e20e6feddc281f322a6907279e9a2935f5e28b7c50dc1b0f1d80ad303e84abf9759d9c50ab0916fdf75a5861b4bfc5dac8dd21de751808c420a161d0ef
     HEAD_REF master
 )
 
-vcpkg_check_features(
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     xsimd XTENSOR_USE_XSIMD
     tbb XTENSOR_USE_TBB
 )
@@ -36,8 +34,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

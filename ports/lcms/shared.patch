@@ -1,5 +1,5 @@
---- lcms2.h	Wed Jul 20 08:46:01 2016
-+++ lcms2.h	Mon Jan 30 15:01:12 2017
+--- a/include/lcms2.h	Wed Jul 20 08:46:01 2016
++++ b/include/lcms2.h	Mon Jan 30 15:01:12 2017
 @@ -212,6 +212,7 @@
  
  #endif  // CMS_USE_BIG_ENDIAN

@@ -18,10 +18,18 @@ string(REPLACE "(WIN32)"
                "(WIN32_DISABLE)" EXAMPLECMAKE "${EXAMPLECMAKE}")
 file(WRITE ${SOURCE_PATH}/examples/CMakeLists.txt "${EXAMPLECMAKE}")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    opengl     ENABLE_OPENGL
+    opencl     ENABLE_OPENCL
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DENABLE_CUDA=OFF
+        # FEATURES
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

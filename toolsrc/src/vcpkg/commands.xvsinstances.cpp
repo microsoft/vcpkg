@@ -28,6 +28,7 @@ namespace vcpkg::Commands::X_VSInstances
 
         Checks::exit_success(VCPKG_LINE_INFO);
 #else
+        Util::unused(args, paths);
         Checks::exit_with_message(VCPKG_LINE_INFO, "This command is not supported on non-windows platforms.");
 #endif
     }

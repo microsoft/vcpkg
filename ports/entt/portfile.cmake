@@ -1,11 +1,8 @@
-#header-only library
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/entt
-    REF v3.0.0
-    SHA512 4c68d202bf00cb3f317bcf6e3c0d281e97718f6e4e198b2e280ec8bbfb7d1493e369ec30d2aea40aec3dbb5715a03bf445d1ea4f033621531e63998800bf2564
+    REF v3.3.2
+    SHA512 4c4b49ed6057c8e0f779a0972d1a1633a9c7f110fbfe9feb3496f7825f10f8f9ab57c76a0a8a4172f31c450489733798ac1fb4e5b9660fac6c39dfc3b16feba4
     HEAD_REF master
 )
 

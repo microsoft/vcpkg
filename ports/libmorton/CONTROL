@@ -1,3 +1,3 @@
 Source: libmorton
-Version: 2018-19-07
+Version: 0.2
 Description: header-only library for encoding/decoding Morton codes in/from 2D/3D coordinates

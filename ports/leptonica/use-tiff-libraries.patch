@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 3af7e30..55e17da 100644
+index 6daad98..5119895 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -44,7 +44,7 @@ if (PNG_LIBRARY)
+@@ -48,7 +48,7 @@ if (PNG_LIBRARY)
  endif()
  if (TIFF_LIBRARY)
      target_include_directories  (leptonica PUBLIC ${TIFF_INCLUDE_DIR})
@@ -10,4 +10,4 @@ index 3af7e30..55e17da 100644
 +    target_link_libraries       (leptonica ${TIFF_LIBRARIES})
  endif()
  if (WEBP_FOUND)
-     target_include_directories  (leptonica PUBLIC ${WEBP_INCLUDE_DIR})
+     target_include_directories  (leptonica PUBLIC ${WEBP_INCLUDE_DIRS})

@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO texus/TGUI
-    REF v0.8.5
-    SHA512 36d8c29f246ca4d79d791f0368441762de0609d5cc0e507520ae0648ed3dc0bf47891582f283de241892bf9810f4d5049df46f566916d0bfffc383319d953002
+    REF 5ee202f93a280744a2bbf92c12f693510f69dbcf # v0.8.7
+    SHA512 cc1e360add00fa6b6a2b44b83b82715dcbfa3f47768dd465acbd7df9fac1fc5283d63468cdf60557360448c07fb6ba36eb24c53f53883b04495f478c62b80718
     HEAD_REF 0.8
 )
 
@@ -13,7 +11,7 @@ set(TGUI_TOOLS_PATH ${CURRENT_PACKAGES_DIR}/tools/tgui)
 
 # Enable static build
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindSFML.cmake")
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" TGUI_SHARED_LIBS)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" TGUI_SHARED_LIBS)
 
 # gui-builder
 set(BUILD_GUI_BUILDER OFF)
@@ -23,6 +21,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DTGUI_BUILD_GUI_BUILDER=${BUILD_GUI_BUILDER}
@@ -54,8 +53,8 @@ if(BUILD_GUI_BUILDER)
     endif()
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/TGUI/nanosvg")
 
 # Handle copyright
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/tgui/license.txt" "${CURRENT_PACKAGES_DIR}/share/tgui/copyright")
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

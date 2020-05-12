@@ -1,14 +1,17 @@
-include(vcpkg_common_functions)
+set(MICROHTTPD_VERSION 0.9.63)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libmicrohttpd-0.9.63)
 vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.63.tar.gz"
-    FILENAME "libmicrohttpd-0.9.63.tar.gz"
+    URLS "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${MICROHTTPD_VERSION}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${MICROHTTPD_VERSION}.tar.gz"
+    FILENAME "libmicrohttpd-${MICROHTTPD_VERSION}.tar.gz"
     SHA512 cb99e7af84fb6d7c0fd3894a9dc0fbff14959b35347506bd3211a65bbfad36455007b9e67493e97c9d8394834408df10eeabdc7758573e6aae0ba6f5f87afe17
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

@@ -1,19 +1,18 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gl2ps-gl2ps_1_4_0-e7b16f8f80382e45b681651e6381de09250243a6)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://gitlab.onelab.info/gl2ps/gl2ps/repository/archive.tar.gz?ref=gl2ps_1_4_0"
-    FILENAME "gl2ps_1_4_0.tar.gz"
-    SHA512 6ec18debdf94e8de22ca7084fe6fef72fb858fc6295a35fa3c98c3c45211f9f72e23a14224a85877f64031077da4978b8d5d81f24dfe18de8c2ec32a680eba60
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/separate-static-dynamic-build.patch"
+vcpkg_from_gitlab(
+    GITLAB_URL http://gitlab.onelab.info
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO gl2ps/gl2ps
+    REF gl2ps_1_4_0
+    SHA512 ee10e3fd312eae896934c39b8d115f28017874f918e4dd3350ca8f7cbf47dfc44101a5c6eb8826707620fcc336ca51ddc4eb7bf653af4b27651277625bac3cce
+    HEAD_REF master
+    PATCHES separate-static-dynamic-build.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 

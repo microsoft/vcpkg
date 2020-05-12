@@ -1,7 +1,16 @@
-The package opencl is compatible with built-in CMake targets:
+The package opencl is compatible with built-in CMake targets via CMake v3.6 and prior syntax
 
     find_package(OpenCL REQUIRED)
     target_link_libraries(main PRIVATE ${OpenCL_LIBRARIES})
     target_include_directories(main PRIVATE ${OpenCL_INCLUDE_DIRS})
 
-You will also need to install an appropriate driver package from your CPU/GPU manufacturer.
+and the CMake v3.7 and beyond imported target syntax
+
+    find_package(OpenCL REQUIRED)
+    target_link_libraries(main PRIVATE OpenCL::OpenCL)
+
+This package is only an OpenCL SDK. To actually run OpenCL code you also need to install an implementation.
+
+    WINDOWS: implementations typically ship with the drivers of you CPU/GPU vendors.
+    LINUX: implementations may be installed from your distro's repo or manually. There are too many to count.
+    APPLE: consult your distribution vendor on the state of OpenCL support: https://support.apple.com/en-us/HT202823

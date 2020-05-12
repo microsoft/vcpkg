@@ -76,8 +76,10 @@ namespace vcpkg
     std::string StringView::to_string() const { return std::string(m_ptr, m_size); }
     void StringView::to_string(std::string& s) const { s.append(m_ptr, m_size); }
 
-    bool StringView::operator==(StringView other) const
+    bool operator==(StringView lhs, StringView rhs) noexcept
     {
-        return other.size() == size() && memcmp(data(), other.data(), size()) == 0;
+        return lhs.size() == rhs.size() && memcmp(lhs.data(), rhs.data(), lhs.size()) == 0;
     }
+
+    bool operator!=(StringView lhs, StringView rhs) noexcept { return !(lhs == rhs); }
 }

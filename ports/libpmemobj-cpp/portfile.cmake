@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/libpmemobj-cpp
-    REF 1.6
-    SHA512 c9a90ebc6e3231b9fcc86c9c55cc8dc219b663b39828680fb58ad7229dba1d60428c34824445f627350013bf32b83e5f0f9c2d4c17054f2321d5200832e6fea0
+    REF 1.8
+    SHA512 275d5ec3081ccbc76c57205cc366e213386ff56e5c05fe39e8b980c507967e9f32a31e02d074f554e65cb68509a43c39d143f0443816a89da4a334bd6242ba85
     HEAD_REF master
 )
 

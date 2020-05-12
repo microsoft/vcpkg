@@ -11,3 +11,17 @@ index 05e6002..99e3a07 100644
  
        typedef boost::ptr_list<SupervoxelHelper> HelperListT;
        HelperListT supervoxel_helpers_;
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 68cc438..8cfa1c6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -416,6 +416,9 @@ endif()
+ 
+ # Boost (required)
+ include("${PCL_SOURCE_DIR}/cmake/pcl_find_boost.cmake")
++if (NOT APPLE)
++    add_definitions(-fext-numeric-literals)
++endif()
+ 
+ ### ---[ Create the config.h file
+ set(pcl_config_h_in "${CMAKE_CURRENT_SOURCE_DIR}/pcl_config.h.in")

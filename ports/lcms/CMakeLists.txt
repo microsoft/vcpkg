@@ -1,66 +1,67 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(lcms)
+option(CMAKE_VERBOSE_MAKEFILE "Create verbose makefile" OFF)
+option(BUILD_SHARED_LIBS "Create lcms as a shared library" ON)
 
-set(SRCS
-"src/cmstypes.c"
-"src/cmsvirt.c"
-"src/cmswtpnt.c"
-"src/cmsxform.c"
-"src/lcms2.def"
-"src/lcms2_internal.h"
-"src/cmsalpha.c"
-"src/cmscam02.c"
-"src/cmscgats.c"
-"src/cmscnvrt.c"
-"src/cmserr.c"
-"src/cmsgamma.c"
-"src/cmsgmt.c"
-"src/cmshalf.c"
-"src/cmsintrp.c"
-"src/cmsio0.c"
-"src/cmsio1.c"
-"src/cmslut.c"
-"src/cmsmd5.c"
-"src/cmsmtrx.c"
-"src/cmsnamed.c"
-"src/cmsopt.c"
-"src/cmspack.c"
-"src/cmspcs.c"
-"src/cmsplugin.c"
-"src/cmsps2.c"
-"src/cmssamp.c"
-"src/cmssm.c"
-)
+project(little-cms)
 
 set(CMAKE_DEBUG_POSTFIX d)
 
-add_definitions(-DUNICODE -D_UNICODE)
-
-if(BUILD_SHARED_LIBS)
-    add_definitions(-DCMS_DLL_BUILD)
-endif()
-
-string(REPLACE "/utf-8" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-
-include_directories(
-"./include"
+add_library(lcms
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmstypes.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsvirt.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmswtpnt.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsxform.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/lcms2.def"
+    "${CMAKE_CURRENT_LIST_DIR}/src/lcms2_internal.h"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsalpha.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmscam02.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmscgats.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmscnvrt.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmserr.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsgamma.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsgmt.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmshalf.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsintrp.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsio0.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsio1.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmslut.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsmd5.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsmtrx.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsnamed.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsopt.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmspack.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmspcs.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsplugin.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmsps2.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmssamp.c"
+    "${CMAKE_CURRENT_LIST_DIR}/src/cmssm.c"
 )
 
-add_library(lcms2 ${SRCS})
+if(BUILD_SHARED_LIBS)
+    target_compile_options(lcms PRIVATE -DCMS_DLL_BUILD)
+    target_compile_options(lcms PUBLIC -DCMS_DLL)
+endif()
+target_compile_options(lcms PRIVATE -DUNICODE -D_UNICODE)
 
-if(NOT SKIP_INSTALL_HEADERS )
+target_include_directories(lcms PRIVATE "${CMAKE_CURRENT_LIST_DIR}/include")
+set_target_properties(lcms PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_LIST_DIR}/include/lcms2.h;${CMAKE_CURRENT_LIST_DIR}/include/lcms2_plugin.h")
 
-  install(FILES 
-    "./include/lcms2.h" 
-    "./include/lcms2_plugin.h"
-    DESTINATION include
-	)
+install(TARGETS lcms
+    EXPORT lcmsConfig
+    RUNTIME DESTINATION "bin"
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+    PUBLIC_HEADER DESTINATION "include"
+    COMPONENT dev
+)
 
-endif(NOT SKIP_INSTALL_HEADERS )
+export(TARGETS lcms
+    NAMESPACE lcms::
+    FILE "share/lcms/lcmsConfig.cmake"
+)
 
-install(TARGETS lcms2 EXPORT lcms_EXPORT    
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+install(EXPORT lcmsConfig
+    DESTINATION "share/lcms"
+    NAMESPACE lcms::
 )

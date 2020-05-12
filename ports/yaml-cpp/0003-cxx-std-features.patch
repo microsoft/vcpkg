@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c4d4be1..174264d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -279,6 +279,11 @@ set_target_properties(yaml-cpp PROPERTIES
+   COMPILE_FLAGS "${yaml_c_flags} ${yaml_cxx_flags}"
+ )
+ 
++target_compile_features(yaml-cpp
++	PUBLIC
++		cxx_std_11
++)
++
+ set_target_properties(yaml-cpp PROPERTIES
+ 	VERSION "${YAML_CPP_VERSION}"
+ 	SOVERSION "${YAML_CPP_VERSION_MAJOR}.${YAML_CPP_VERSION_MINOR}"

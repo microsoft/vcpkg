@@ -1,8 +1,6 @@
 #header-only library
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/jwt-cpp)
-
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO Thalhammer/jwt-cpp
     REF 1d2b1bac13e54f99df4f890cd674ec149c135762

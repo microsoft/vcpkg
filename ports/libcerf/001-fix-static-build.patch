@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f79581f..4fc9457 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,6 +56,8 @@ if(MSVC)
+     # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin/$<CONFIG>)
+     if(BUILD_SHARED_LIBS)
+         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
++    else()
++        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+     endif()
+ else()
+     add_compile_options(-O2 -Wno-sign-compare -fno-omit-frame-pointer)

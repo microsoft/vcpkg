@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 414ac8e..db58b4e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,7 +19,7 @@ include_directories(${CLAPACK_SOURCE_DIR}/INCLUDE)
+ add_subdirectory(F2CLIBS)
+ add_subdirectory(SRC)
+ set(CLAPACK_VERSION 3.2.1)
+-export(TARGETS f2c lapack FILE ${CMAKE_INSTALL_PREFIX}/share/clapack/clapack-targets.cmake)
++install(EXPORT clapack-targets FILE clapack-targets.cmake DESTINATION share/clapack)
+ configure_file(${CLAPACK_SOURCE_DIR}/clapack-config-version.cmake.in
+ 	${CMAKE_INSTALL_PREFIX}/share/clapack/clapack-config-version.cmake @ONLY)
+ configure_file(${CLAPACK_SOURCE_DIR}/clapack-config.cmake.in
+diff --git a/F2CLIBS/libf2c/CMakeLists.txt b/F2CLIBS/libf2c/CMakeLists.txt
+index 6fa3598..c855e38 100644
+--- a/F2CLIBS/libf2c/CMakeLists.txt
++++ b/F2CLIBS/libf2c/CMakeLists.txt
+@@ -63,8 +63,9 @@ set_property(TARGET f2c PROPERTY PREFIX lib)
+ if(UNIX)
+   target_link_libraries(f2c m)
+ endif()
+-install(TARGETS f2c
++install(TARGETS f2c EXPORT clapack-targets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
+-        ARCHIVE DESTINATION lib)
++        ARCHIVE DESTINATION lib
++        INCLUDES DESTINATION include)
+ 
+diff --git a/SRC/CMakeLists.txt b/SRC/CMakeLists.txt
+index 07dc8c7..2355225 100644
+--- a/SRC/CMakeLists.txt
++++ b/SRC/CMakeLists.txt
+@@ -377,8 +377,9 @@ if(BUILD_COMPLEX16)
+ endif()
+ add_library(lapack ${ALLOBJ} ${ALLXOBJ})
+ target_link_libraries(lapack ${BLAS_LIBRARIES} f2c)
+-install(TARGETS lapack
++install(TARGETS lapack EXPORT clapack-targets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
+-        ARCHIVE DESTINATION lib)
++        ARCHIVE DESTINATION lib
++        INCLUDES DESTINATION include)
+ 

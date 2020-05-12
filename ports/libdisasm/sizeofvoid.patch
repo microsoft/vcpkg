@@ -1,7 +1,5 @@
-diff --git a/x86_disasm.c b/x86_disasm.c
-index 04574fa..177bfb8 100644
---- a/x86_disasm.c
-+++ b/x86_disasm.c
+--- a/libdisasm/x86_disasm.c
++++ b/libdisasm/x86_disasm.c
 @@ -35,7 +35,7 @@ unsigned int x86_disasm( unsigned char *buf, unsigned int buf_len,
  
          if ( offset >= buf_len ) {

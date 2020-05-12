@@ -41,6 +41,7 @@ function(vcpkg_extract_source_archive ARCHIVE)
         message(STATUS "Extracting source ${ARCHIVE}")
         file(MAKE_DIRECTORY ${WORKING_DIRECTORY})
         vcpkg_execute_required_process(
+            ALLOW_IN_DOWNLOAD_MODE
             COMMAND ${CMAKE_COMMAND} -E tar xjf ${ARCHIVE}
             WORKING_DIRECTORY ${WORKING_DIRECTORY}
             LOGNAME extract

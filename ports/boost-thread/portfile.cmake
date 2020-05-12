@@ -5,10 +5,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/thread
-    REF boost-1.70.0
-    SHA512 2c29fc8f1ff805f126f162865c8bad51f8aa56942d54999fe0191bcf4bf8f472c070d7977e731ceb6d46ff9d0e6d39013a3df79bfe8f4ed4631906cd26c8537a
+    REF boost-1.72.0
+    SHA512 2a149952bea4bf58b571de69fd81f9b0fbded75c762883f8611e9478ac853d9ba229f8fbb2168b8194f897465e77fd06bdcf75b140ad5d64defdadaccf56ce5a
     HEAD_REF master
-    PATCHES avoid-winapi.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)

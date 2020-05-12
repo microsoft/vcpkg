@@ -5,16 +5,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nmslib/nmslib
-    REF 1eda05dccd5ed34df50a243dfc64c5e9187388f8
-    SHA512 e4518c8dd84867bd0ac5dbc5d3b57d8053d1f73588fc0cf1d7c91cc4819f22dc7888d6be587691ebc1fd12b67de16de63b5e0a24847b6f7b49b57d1e6b457ebd
+    REF c9fc0b862f09260b558cf81e94e0d58aca15d9e9
+    SHA512 ac9c79e3ac991dd58f239f7e0b2bd6c3185907aa283bc42098aadddac87b361867f002664cc14853822f92a491d95269578bea01aa00477e39a40424320000a1
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-headers.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-cmake-order.patch
+        fix-headers.patch
+        fix-cmake-order.patch
 )
 
 set(WITH_EXTRAS OFF)
@@ -25,6 +21,7 @@ endif()
 # TODO: check SSE and AVX avability and set corresponding tags
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/similarity_search
+    PREFER_NINJA
     OPTIONS
         -DWITH_EXTRAS=${WITH_EXTRAS}
 )

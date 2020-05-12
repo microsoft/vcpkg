@@ -3,12 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tessil/sparse-map
-    REF v0.6.1
-    SHA512 c77e7625a0ff13a538f1a8c96d3f70a178e9bedfb22592d6ca848e6d1e6b1566c9a216b2df68592c27308156b776677d52e0d75cf09254acb62f60a00a4bc054
+    REF d71e6fd75f4970f07f4f1fe67438055be70d0945 # v0.6.2
+    SHA512 ad270be66b3d5f96cb0305f0e086807aee1c909dd022c19ca99e5f7a72d5116f2ecb4b67fcb80e8bdb4f98925387d95bdc0bcc450a10b97c61f9b92c681f95b5
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()

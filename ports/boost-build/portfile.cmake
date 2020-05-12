@@ -8,17 +8,14 @@ elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_N
     return()
 endif()
 
-set(BOOST_VERSION 1.70.0)
+set(BOOST_VERSION 1.72.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${BOOST_VERSION}
-    SHA512 be4e410a9656313519e089977a24da8f633db2182985f5d60e07e489f9eac8c887e8cab7e3cbd13f2b747bc3d9dab2899f174be1eaac73cfd7895015fb6b9b58
+    SHA512 744816ba805013a49029373a4d2aa5b5f543275a1cdef2812c2120c868c55bf36a0bb0fb891cd955ad7319e582fd5212bd52ff071703a8654b345c478e810a19
     HEAD_REF master
-	PATCHES
-	    # Add the support of arm64-windows
-        arm64msvc.patch
 )
 
 vcpkg_download_distfile(ARCHIVE

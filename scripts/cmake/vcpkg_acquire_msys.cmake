@@ -53,18 +53,20 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   if(_vam_HOST_ARCHITECTURE STREQUAL "AMD64")
     set(TOOLSUBPATH msys64)
     set(URLS
-      "http://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20181211.tar.xz"
+      "https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20190524.tar.xz/download"
+      "http://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20190524.tar.xz"
     )
-    set(ARCHIVE "msys2-base-x86_64-20181211.tar.xz")
-    set(HASH 1efb9a7ff1daa2d3147ac0fda8e9a645696dbd19a33c986b844bc037d946dddb3353db5a52794ac668718812854400d918e4db13b4a2d0e6f5a9dfe716b48056)
+    set(ARCHIVE "msys2-base-x86_64-20190524.tar.xz")
+    set(HASH 50796072d01d30cc4a02df0f9dafb70e2584462e1341ef0eff94e2542d3f5173f20f81e8f743e9641b7528ea1492edff20ce83cb40c6e292904905abe2a91ccc)
     set(STAMP "initialized-msys2_64.stamp")
   else()
     set(TOOLSUBPATH msys32)
     set(URLS
-      "http://repo.msys2.org/distrib/i686/msys2-base-i686-20181211.tar.xz"
+      "https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20190524.tar.xz/download"
+      "http://repo.msys2.org/distrib/i686/msys2-base-i686-20190524.tar.xz"
     )
-    set(ARCHIVE "msys2-base-i686-20181211.tar.xz")
-    set(HASH a9b9680a511bb205b87811b303eb29d62e2fd851000304f8b087c5893a3891c2aa2d46217ae989e31b5d52a6ba34ac5e6a5e624d9c917df00a752ade4debc20f)
+    set(ARCHIVE "msys2-base-i686-20190524.tar.xz")
+    set(HASH b26d7d432e1eabe2138c4caac5f0a62670f9dab833b9e91ca94b9e13d29a763323b0d30160f09a381ac442b473482dac799be0fea5dd7b28ea2ddd3ba3cd3c25)
     set(STAMP "initialized-msys2_32.stamp")
   endif()
 
@@ -81,15 +83,15 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 
     file(REMOVE_RECURSE ${TOOLPATH}/${TOOLSUBPATH})
     file(MAKE_DIRECTORY ${TOOLPATH})
-    execute_process(
+    _execute_process(
       COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
       WORKING_DIRECTORY ${TOOLPATH}
     )
-    execute_process(
+    _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate"
       WORKING_DIRECTORY ${TOOLPATH}
     )
-    execute_process(
+    _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syu --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}
     )
@@ -104,6 +106,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     set(_ENV_ORIGINAL $ENV{PATH})
     set(ENV{PATH} ${PATH_TO_ROOT}/usr/bin)
     vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -Sy --noconfirm --needed ${_am_PACKAGES}"
       WORKING_DIRECTORY ${TOOLPATH}
       LOGNAME msys-pacman-${TARGET_TRIPLET}
@@ -116,8 +119,9 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   # Deal with a stale process created by MSYS
   if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
       vcpkg_execute_required_process(
+          ALLOW_IN_DOWNLOAD_MODE
           COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage gt 2"
-          WORKING_DIRECTORY ${SOURCE_PATH}
+          WORKING_DIRECTORY ${TOOLPATH}
       )
   endif()
 

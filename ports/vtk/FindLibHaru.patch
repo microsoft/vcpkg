@@ -1,0 +1,37 @@
+diff --git a/CMake/FindLibHaru.cmake b/CMake/FindLibHaru.cmake
+index 7ef877a49..2a18e0694 100644
+--- a/CMake/FindLibHaru.cmake
++++ b/CMake/FindLibHaru.cmake
+@@ -43,6 +43,31 @@ if (LibHaru_FOUND)
+   set(LibHaru_INCLUDE_DIRS "${LibHaru_INCLUDE_DIR}")
+   set(LibHaru_LIBRARIES "${LibHaru_LIBRARY}")
+ 
++  add_library(LibHaru::LibHaru UNKNOWN IMPORTED)
++    set_target_properties(LibHaru::LibHaru PROPERTIES
++      INTERFACE_INCLUDE_DIRECTORIES "${LibHaru_INCLUDE_DIR}")
++  if(LZMA_LIBRARY_RELEASE)
++    set_target_properties(LibHaru::LibHaru PROPERTIES
++        IMPORTED_LOCATION_RELEASE "${LibHaru_LIBRARY_RELEASE}"
++        IMPORTED_IMPLIB_RELEASE "${LibHaru_LIBRARY_RELEASE}")
++  endif()
++  if(LZMA_LIBRARY_DEBUG)
++    set_target_properties(LibHaru::LibHaru PROPERTIES
++        IMPORTED_LOCATION_DEBUG "${LibHaru_LIBRARY_DEBUG}"
++        IMPORTED_IMPLIB_DEBUG "${LibHaru_LIBRARY_DEBUG}")
++  endif()
++  
++  # Guard against possible stupidity of VTK reading only LOCATION without configuration
++  if(CMAKE_BUILD_TYPE MATCHES "Debug") 
++    set_target_properties(LibHaru::LibHaru PROPERTIES
++        IMPORTED_LOCATION "${LibHaru_LIBRARY_DEBUG}"
++        IMPORTED_IMPLIB "${LibHaru_LIBRARY_DEBUG}")
++  else()
++    set_target_properties(LibHaru::LibHaru PROPERTIES
++        IMPORTED_LOCATION "${LibHaru_LIBRARY_RELEASE}"
++        IMPORTED_IMPLIB "${LibHaru_LIBRARY_RELEASE}")
++  endif()
++  
+   if (NOT TARGET LibHaru::LibHaru)
+     include(vtkDetectLibraryType)
+     vtk_detect_library_type(libharu_library_type
+ 
