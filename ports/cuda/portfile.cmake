@@ -3,7 +3,11 @@
 # If this package is installed, we assume that CUDA is properly installed.
 
 #note: this port must be kept in sync with CUDNN port: every time one is upgraded, the other must be too
-set(CUDA_REQUIRED_VERSION "10.1.0")
+set(CUDA_REQUIRED_VERSION "10.2.89")
+
+# note: in order to keep CI happy, it is necessary to update also:
+# ${VCPKG_ROOT}/scripts/azure-pipelines/windows/provision-image.ps1
+# ${VCPKG_ROOT}/scripts/azure-pipelines/linux/provision-image.sh
 
 if (VCPKG_TARGET_IS_WINDOWS)
     find_program(NVCC
@@ -21,7 +25,7 @@ else()
     else()
         set(platform_base "/Developer/NVIDIA/CUDA-")
     endif()
-    
+
     file(GLOB possible_paths "${platform_base}*")
     set(FOUND_PATH )
     foreach (p ${possible_paths})
@@ -34,7 +38,7 @@ else()
             endif()
         endif()
     endforeach()
-    
+
     find_program(NVCC
         NAMES nvcc
         PATHS
@@ -66,14 +70,11 @@ endif()
 # Copyright (c) 2005-2016 NVIDIA Corporation
 # Built on Sat_Sep__3_19:05:48_CDT_2016
 # Cuda compilation tools, release 8.0, V8.0.44
-string(REGEX MATCH "V([0-9]+)\\.([0-9]+)\\.([0-9]+)" CUDA_VERSION ${NVCC_OUTPUT})
-message(STATUS "Found CUDA ${CUDA_VERSION}")
-set(CUDA_VERSION_MAJOR ${CMAKE_MATCH_1})
-set(CUDA_VERSION_MINOR ${CMAKE_MATCH_2})
-set(CUDA_VERSION_PATCH ${CMAKE_MATCH_3})
+string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" CUDA_VERSION ${NVCC_OUTPUT})
+message(STATUS "Found CUDA v${CUDA_VERSION}")
 
-if (CUDA_VERSION_MAJOR LESS 10 AND CUDA_VERSION_MINOR LESS 1)
-    message(FATAL_ERROR "CUDA ${CUDA_VERSION} found, but v${CUDA_REQUIRED_VERSION} is required. Please download and install a more recent version of CUDA from:"
+if (CUDA_VERSION VERSION_LESS ${CUDA_REQUIRED_VERSION})
+    message(FATAL_ERROR "CUDA v${CUDA_VERSION} found, but v${CUDA_REQUIRED_VERSION} is required. Please download and install a more recent version of CUDA from:"
                         "\n    https://developer.nvidia.com/cuda-downloads\n")
 endif()
 

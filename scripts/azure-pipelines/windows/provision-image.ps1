@@ -114,12 +114,12 @@ $Workloads = @(
 
 $MpiUrl = 'https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe'
 
-$CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
-$CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_advisor_10.1 memcheck_10.1 ' + `
-  'nvdisasm_10.1 nvprof_10.1 visual_profiler_10.1 visual_studio_integration_10.1 cublas_10.1 cublas_dev_10.1 ' + `
-  'cudart_10.1 cufft_10.1 cufft_dev_10.1 curand_10.1 curand_dev_10.1 cusolver_10.1 cusolver_dev_10.1 cusparse_10.1 ' + `
-  'cusparse_dev_10.1 nvgraph_10.1 nvgraph_dev_10.1 npp_10.1 npp_dev_10.1 nvrtc_10.1 nvrtc_dev_10.1 nvml_dev_10.1 ' + `
-  'occupancy_calculator_10.1 fortran_examples_10.1'
+$CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_441.22_win10.exe'
+$CudaFeatures = 'nvcc_10.2 cuobjdump_10.2 nvprune_10.2 cupti_10.2 gpu_library_advisor_10.2 memcheck_10.2 ' + `
+  'nvdisasm_10.2 nvprof_10.2 visual_profiler_10.2 visual_studio_integration_10.2 cublas_10.2 cublas_dev_10.2 ' + `
+  'cudart_10.2 cufft_10.2 cufft_dev_10.2 curand_10.2 curand_dev_10.2 cusolver_10.2 cusolver_dev_10.2 cusparse_10.2 ' + `
+  'cusparse_dev_10.2 nvgraph_10.2 nvgraph_dev_10.2 npp_10.2 npp_dev_10.2 nvrtc_10.2 nvrtc_dev_10.2 nvml_dev_10.2 ' + `
+  'occupancy_calculator_10.2 fortran_examples_10.2'
 
 $BinSkimUrl = 'https://www.nuget.org/api/v2/package/Microsoft.CodeAnalysis.BinSkim/1.6.0'
 
