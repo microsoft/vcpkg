@@ -1,9 +1,6 @@
 set(BUILD_PYTHON_VERSIONS)
 
 if("python2" IN_LIST FEATURES)
-    # Find Python2 executable
-    vcpkg_find_acquire_program(PYTHON2)
-    set(VCPKG_PYTHON2_EXECUTABLE "${PYTHON2}")
     # Find Python2 libraries. Can't use find_package here, but we already know where everything is
     file(GLOB VCPKG_PYTHON2_INCLUDE "${CURRENT_INSTALLED_DIR}/include/python2.*")
     set(VCPKG_PYTHON2_LIBS_RELEASE "${CURRENT_INSTALLED_DIR}/lib")
@@ -12,9 +9,6 @@ if("python2" IN_LIST FEATURES)
     list(APPEND BUILD_PYTHON_VERSIONS "${VCPKG_PYTHON2_VERSION}")
 endif()
 
-# Find Python3 executable
-vcpkg_find_acquire_program(PYTHON3)
-set(VCPKG_PYTHON3_EXECUTABLE "${PYTHON3}")
 # Find Python3 libraries. Can't use find_package here, but we already know where everything is
 file(GLOB VCPKG_PYTHON3_INCLUDE "${CURRENT_INSTALLED_DIR}/include/python3.*")
 set(VCPKG_PYTHON3_LIBS_RELEASE "${CURRENT_INSTALLED_DIR}/lib")
