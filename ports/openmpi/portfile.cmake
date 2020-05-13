@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
-  message(FATAL_ERROR "This port is only for openmpi on Unix-like systems")
-endif()
+vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 

@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "This port is only for building msmpi on Windows Desktop")
-endif()
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
 
 set(MSMPI_VERSION "10.1.12498")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION})
