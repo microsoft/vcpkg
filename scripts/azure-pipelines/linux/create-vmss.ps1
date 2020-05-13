@@ -18,10 +18,9 @@ or are running from Azure Cloud Shell.
 
 $Location = 'westus2'
 $Prefix = 'PrLin-' + (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_F16s_v2'
+$VMSize = 'Standard_D16a_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
-$InstalledDiskSizeInGB = 1024
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
@@ -259,7 +258,7 @@ $StorageContext = New-AzStorageContext `
   -StorageAccountKey $StorageAccountKey
 
 New-AzStorageShare -Name 'archives' -Context $StorageContext
-Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 5120
+Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 1024
 
 ####################################################################################################
 Write-Progress `
@@ -273,7 +272,7 @@ $Nic = New-AzNetworkInterface `
   -Location $Location `
   -Subnet $VirtualNetwork.Subnets[0]
 
-$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize
+$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -Priority 'Spot' -MaxPrice -1
 $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Linux `
@@ -377,22 +376,13 @@ $Vmss = Set-AzVmssOsProfile `
   -VirtualMachineScaleSet $Vmss `
   -ComputerNamePrefix $LiveVMPrefix `
   -AdminUsername AdminUser `
-  -AdminPassword $AdminPW `
-  -CustomData ([Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("#!/bin/bash`n/etc/provision-disks.sh`n")))
+  -AdminPassword $AdminPW
 
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `
   -OsDiskCreateOption 'FromImage' `
   -OsDiskCaching ReadWrite `
   -ImageReferenceId $Image.Id
-
-$Vmss = Add-AzVmssDataDisk `
-  -VirtualMachineScaleSet $Vmss `
-  -Lun 0 `
-  -Caching 'ReadWrite' `
-  -CreateOption Empty `
-  -DiskSizeGB 1024 `
-  -StorageAccountType 'StandardSSD_LRS'
 
 New-AzVmss `
   -ResourceGroupName $ResourceGroupName `

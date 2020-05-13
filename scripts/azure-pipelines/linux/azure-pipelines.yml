@@ -27,8 +27,7 @@ jobs:
   - powershell: |
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-linux" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results
-      mkdir /ci/home
-      $env:HOME = '/ci/home'
+      $env:HOME = '/home/root'
       ./vcpkg ci x64-linux --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-linux.xml" --exclude=$skipList --binarycaching
     displayName: '** Test Modified Ports **'
   - task: PowerShell@2
