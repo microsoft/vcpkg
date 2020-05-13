@@ -13,6 +13,14 @@ Feature: python
 Description: enables the build of python wrappers
 Build-Depends: vtk[core,python]
 
+Feature: cuda
+Description: enables cuda within paraview
+Build-Depends: cuda, vtk[core, cuda]
+
+Feature: mpi
+Description: enables cuda within paraview
+Build-Depends: hdf5[core,parallel], vtk[core, mpi]
+
 Feature: all_modules
 Description: enables the build of all paraview modules
 Build-Depends: gdal, pdal, ffmpeg, laszip

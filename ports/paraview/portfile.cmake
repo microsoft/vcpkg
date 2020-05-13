@@ -30,7 +30,13 @@
 
 # # Specifies if the port install should fail immediately given a condition
 # vcpkg_fail_port_install(MESSAGE "paraview currently only supports Linux and Mac platforms" ON_TARGET "Windows")
-
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
+    "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
+    "mpi"          PARAVIEW_USE_MPI             #untested
+    "vtkm"         PARAVIEW_USE_VTKM
+    "python"       PARAVIEW_USE_PYTHON
+)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
@@ -73,53 +79,36 @@ file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBrid
 file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting)
 #file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf)
 #file(REMOVE_RECURSE "${SOURCE_PATH}/ThirdParty/QtTesting")
-# # Check if one or more features are a part of a package installation.
-# # See /docs/maintainers/vcpkg_check_features.md for more details
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
-#     tbb   WITH_TBB
-#   INVERTED_FEATURES
-#     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
-# )
 
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
-        -DPARAVIEW_USE_PYTHON:BOOL=ON
-        -DVTK_PYTHON_VERSION=3
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_FOUND=YES"
-        "-DPYTHON3_FOUND=YES"
-        "-DPYTHON_FOUND=YES"
-        "-DPython3_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
-        "-DPython3_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
-        "-DPython3_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/python3.7"
-        "-DPython3_EXECUTABLE=${PYTHON3}"
-        "-DPYTHON3_EXECUTABLE=${PYTHON3}"
-        "-DPython_EXECUTABLE=${PYTHON3}"
-        "-DPYTHON_EXECUTABLE=${PYTHON3}"
-    )
+        "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
+        )
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
+                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
+                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7")
+        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib")
+        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python37.lib")
+    elseif(VCPKG_TARGET_IS_LINUX)
+        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython37m.a"
+                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a"
+                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7m")
+        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a")
+        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/linpython37m.a")
+    elseif(VCPKG_TARGET_IS_OSX)
+        #Need Python3 information on OSX within VCPKG
+    endif()    
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
-else()
-    list(APPEND ADDITIONAL_OPTIONS
-        -DPARAVIEW_USE_PYTHON:BOOL=OFF
-    )
 endif()
 
-if("vtkm" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DPARAVIEW_USE_VTKM:BOOL=ON # VTK-m port is missing but this is a requirement to build VisItLib
-    )
-else()
-    list(APPEND ADDITIONAL_OPTIONS
-        -DPARAVIEW_USE_VTKM:BOOL=OFF # VTK-m port is missing but this is a requirement to build VisItLib
-    )
-endif()
 message(STATUS "ADDITIONAL_OPTIONS;${ADDITIONAL_OPTIONS}")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-     OPTIONS 
+     OPTIONS ${FEATURE_OPTIONS}
         -DPARAVIEW_BUILD_WITH_EXTERNAL:BOOL=ON
         -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
         -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=ON
