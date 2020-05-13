@@ -66,13 +66,11 @@ endif()
 # Copyright (c) 2005-2016 NVIDIA Corporation
 # Built on Sat_Sep__3_19:05:48_CDT_2016
 # Cuda compilation tools, release 8.0, V8.0.44
-string(REGEX MATCH "V([0-9]+)\\.([0-9]+)\\.([0-9]+)" CUDA_VERSION ${NVCC_OUTPUT})
+string(REGEX MATCH "V(([0-9]+)\\.([0-9]+)\\.([0-9]+))" CUDA_MATCH ${NVCC_OUTPUT})
+set(CUDA_VERSION ${CMAKE_MATCH_1})
 message(STATUS "Found CUDA ${CUDA_VERSION}")
-set(CUDA_VERSION_MAJOR ${CMAKE_MATCH_1})
-set(CUDA_VERSION_MINOR ${CMAKE_MATCH_2})
-set(CUDA_VERSION_PATCH ${CMAKE_MATCH_3})
 
-if (CUDA_VERSION_MAJOR LESS 10 AND CUDA_VERSION_MINOR LESS 1)
+if (CUDA_VERSION VERSION_LESS ${CUDA_REQUIRED_VERSION})
     message(FATAL_ERROR "CUDA ${CUDA_VERSION} found, but v${CUDA_REQUIRED_VERSION} is required. Please download and install a more recent version of CUDA from:"
                         "\n    https://developer.nvidia.com/cuda-downloads\n")
 endif()
