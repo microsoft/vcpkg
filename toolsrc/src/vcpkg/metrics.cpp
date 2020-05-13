@@ -248,10 +248,7 @@ namespace vcpkg::Metrics
         ;
     static bool g_should_print_metrics = false;
 
-#if defined(_MSC_VER)
-#pragma warning(suppress : 6326) // Potential comparison of a constant with another constant.
-#endif // _MSC_VER
-    bool get_compiled_metrics_enabled() { return VCPKG_DISABLE_METRICS == 0; }
+    bool get_compiled_metrics_enabled() { return !VCPKG_DISABLE_METRICS; }
 
     std::string get_MAC_user()
     {

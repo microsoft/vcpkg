@@ -14,3 +14,15 @@
 // [[nodiscard]] is not recognized before GCC version 7
 #pragma GCC diagnostic ignored "-Wattributes"
 #endif
+
+#ifndef _Analysis_assume_
+#define _Analysis_assume_(...)
+#endif
+
+#ifdef _MSC_VER
+#define VCPKG_MSVC_WARNING(...) __pragma(warning(__VA_ARGS__))
+#define GCC_DIAGNOSTIC(...)
+#else
+#define VCPKG_MSVC_WARNING(...)
+#define GCC_DIAGNOSTIC(...) _Pragma("diagnostic " #__VA_ARGS__)
+#endif

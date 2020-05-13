@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vcpkg/pragmas.h>
+#include <vcpkg/base/pragmas.h>
 
 #if defined(_WIN32)
 #define NOMINMAX
@@ -68,7 +68,3 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
-
-#ifndef _Analysis_assume_
-#define _Analysis_assume_(...)
-#endif

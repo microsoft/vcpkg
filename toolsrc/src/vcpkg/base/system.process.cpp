@@ -384,10 +384,8 @@ namespace vcpkg
         // Flush stdout before launching external process
         fflush(nullptr);
 
-#if defined(_MSC_VER)
-#pragma warning(suppress : 6335) // Leaking process information handle 'process_info.proc_info.hProcess'
-                                 // /analyze can't tell that we transferred ownership here
-#endif
+VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'process_info.proc_info.hProcess'
+                            // /analyze can't tell that we transferred ownership here
         bool succeeded =
             TRUE == CreateProcessW(nullptr,
                                    Strings::to_utf16(cmd_line).data(),
