@@ -290,10 +290,12 @@ vcpkg_configure_cmake(
         -DOPENCV_LIB_INSTALL_PATH=lib
         -DOPENCV_3P_LIB_INSTALL_PATH=lib
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
+        -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         -DCMAKE_DEBUG_POSTFIX=d
         -DOPENCV_DLLVERSION=
         -DOPENCV_DEBUG_POSTFIX=d
+        -DOPENCV_GENERATE_SETUPVARS=OFF
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
@@ -423,8 +425,6 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/setup_vars_opencv4.cmd)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/setup_vars_opencv4.cmd)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
 
