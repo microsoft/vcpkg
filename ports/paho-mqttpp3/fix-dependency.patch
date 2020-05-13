@@ -23,7 +23,7 @@ index aff9472..275655c 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/@package_name@Targets.cmake")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 4e9b7c4..dea6e07 100644
+index 4e9b7c4..bd1e0a5 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -23,7 +23,7 @@
@@ -35,20 +35,24 @@ index 4e9b7c4..dea6e07 100644
  
  # --- The headers ---
  
-@@ -76,6 +76,12 @@ target_include_directories(paho-cpp-objs
+@@ -76,17 +76,23 @@ target_include_directories(paho-cpp-objs
          src
  )
  
-+## set PAHO_C_LIB
-+if(PAHO_WITH_SSL)
-+    set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs)
-+else()
-+    set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c)
-+endif()
- 
+-
  ## --- Build the shared library, if requested ---
  
-@@ -86,7 +92,7 @@ if(PAHO_BUILD_SHARED)
+ if(PAHO_BUILD_SHARED)
++    ## set PAHO_C_LIB
++    if(PAHO_WITH_SSL)
++        set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs)
++    else()
++        set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c)
++    endif()
++
+     ## create the shared library
+     add_library(paho-mqttpp3 SHARED $<TARGET_OBJECTS:paho-cpp-objs>)
+ 
      ## add dependencies to the shared library
      target_link_libraries(paho-mqttpp3
          PRIVATE ${LIBS_SYSTEM}
@@ -57,7 +61,21 @@ index 4e9b7c4..dea6e07 100644
  
      # It would be nice to exort the include paths from the obj lib, but we
      # get an export error. Perhaps in a future version?
-@@ -124,7 +130,7 @@ if(PAHO_BUILD_STATIC)
+@@ -118,13 +124,21 @@ endif()
+ ## --- Build static version of the library, if requested ---
+ 
+ if(PAHO_BUILD_STATIC)
++
++    ## set PAHO_C_LIB
++    if(PAHO_WITH_SSL)
++        set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3as-static eclipse-paho-mqtt-c::paho-mqtt3cs-static)
++    else()
++        set(_PAHO_MQTT_C_LIB_NAME  eclipse-paho-mqtt-c::paho-mqtt3a-static eclipse-paho-mqtt-c::paho-mqtt3c-static)
++    endif()
++
+     ## create the static library
+     add_library(paho-mqttpp3-static STATIC $<TARGET_OBJECTS:paho-cpp-objs>)
+ 
      ## add dependencies to the shared library
      target_link_libraries(paho-mqttpp3-static
          PRIVATE ${LIBS_SYSTEM}
