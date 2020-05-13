@@ -1,17 +1,6 @@
 #include <vcpkg/base/pragmas.h>
 
-#if defined(_WIN32)
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
-#pragma warning(push)
-#pragma warning(disable : 4768)
-#include <ShlObj.h>
-#pragma warning(pop)
-#else
-#include <unistd.h>
-#endif
+#include <vcpkg/base/system_headers.h>
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>

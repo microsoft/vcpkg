@@ -11,8 +11,6 @@
 #if !defined(_WIN32)
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
 #endif
 #if defined(__linux__)
 #include <sys/sendfile.h>
