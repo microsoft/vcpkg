@@ -89,3 +89,4 @@ endif()
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
+vcpkg_pkgconfig(REQUIRES freetype2)

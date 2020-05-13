@@ -445,3 +445,22 @@ TEST_CASE ("BinaryParagraph serialize abi", "[paragraph]")
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0]["Abi"].first == "123abc");
 }
+
+TEST_CASE ("to_port_version", "[paragraph]")
+{
+    REQUIRE(vcpkg::to_port_version("1.2.3-1") == "1.2.3");
+    REQUIRE(vcpkg::to_port_version("1.2.3-") == "1.2.3");
+    REQUIRE(vcpkg::to_port_version("1.2.3") == "1.2.3");
+    REQUIRE(vcpkg::to_port_version("").empty());
+    REQUIRE(vcpkg::to_port_version("-1").empty());
+}
+
+TEST_CASE("to_cmake_version", "[paragraph]")
+{
+    REQUIRE(vcpkg::to_cmake_version("1.2.3-1") == "1.2.3");
+    REQUIRE(vcpkg::to_cmake_version("1.2.3a-1") == "1.2.3");
+    REQUIRE(vcpkg::to_cmake_version("1.2.3.4.5") == "1.2.3.4");
+    REQUIRE(vcpkg::to_cmake_version("1.2.3") == "1.2.3");
+    REQUIRE(vcpkg::to_cmake_version("").empty());
+    REQUIRE(vcpkg::to_cmake_version("-1").empty());
+}

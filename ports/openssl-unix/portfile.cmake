@@ -66,3 +66,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)
+vcpkg_pkgconfig(NAME libcrypto COMMON -lcrypto -ldl REQUIRES zlib)
+vcpkg_pkgconfig(NAME libssl COMMON -lssl REQUIRES libcrypto)
+vcpkg_pkgconfig(NAME openssl COMMON -lssl REQUIRES libcrypto)

@@ -33,3 +33,4 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_pkgconfig()

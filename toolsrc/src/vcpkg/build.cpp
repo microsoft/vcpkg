@@ -369,31 +369,35 @@ namespace vcpkg::Build
             all_features.append(feature->name + ";");
         }
 
-        std::vector<System::CMakeVariable> variables{
-            {"CMD", "BUILD"},
-            {"PORT", scf.core_paragraph->name},
-            {"CURRENT_PORT_DIR", scfl.source_location},
-            {"VCPKG_ROOT_PATH", paths.root},
-            {"TARGET_TRIPLET", triplet.canonical_name()},
-            {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
-            {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-            {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(action.build_options.use_head_version) ? "1" : "0"},
-            {"DOWNLOADS", paths.downloads},
-            {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(action.build_options.allow_downloads) ? "1" : "0"},
-            {"_VCPKG_DOWNLOAD_TOOL", to_string(action.build_options.download_tool)},
-            {"FEATURES", Strings::join(";", action.feature_list)},
-            {"ALL_FEATURES", all_features},
-            {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
-        };
+        std::unordered_map<std::string, std::string> variables;
+        variables.emplace("CMD", "BUILD");
+        variables.emplace("PORT", scf.core_paragraph->name);
+        variables.emplace("CURRENT_PORT_DIR", scfl.source_location.generic_u8string());
+        variables.emplace("VCPKG_ROOT_PATH", paths.root.generic_u8string());
+        variables.emplace("TARGET_TRIPLET", triplet.canonical_name());
+        variables.emplace("TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string());
+        variables.emplace("VCPKG_PLATFORM_TOOLSET", toolset.version.c_str());
+        variables.emplace("VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(action.build_options.use_head_version) ? "1" : "0");
+        variables.emplace("DOWNLOADS", paths.downloads.generic_u8string());
+        variables.emplace("_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(action.build_options.allow_downloads) ? "1" : "0");
+        variables.emplace("_VCPKG_DOWNLOAD_TOOL", to_string(action.build_options.download_tool));
+        variables.emplace("FEATURES", Strings::join(";", action.feature_list));
+        variables.emplace("ALL_FEATURES", all_features);
+        variables.emplace("VCPKG_CONCURRENCY", std::to_string(get_concurrency()));
+        variables.emplace("PORT_FULL_VERSION", scf.core_paragraph->version);
+        variables.emplace("PORT_VERSION", to_port_version(scf.core_paragraph->version));
+        variables.emplace("PORT_CMAKE_VERSION", to_cmake_version(scf.core_paragraph->version));
+        variables.emplace("PORT_DESCRIPTION", Strings::clean_shell_string(scf.core_paragraph->description));
+        variables.emplace("PORT_HOMEPAGE", scf.core_paragraph->homepage);
 
         if (Util::Enum::to_bool(action.build_options.only_downloads))
         {
-            variables.push_back({"VCPKG_DOWNLOAD_MODE", "true"});
+            variables.emplace("VCPKG_DOWNLOAD_MODE", "true");
         }
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
         {
-            variables.push_back({"GIT", git_exe_path});
+            variables.emplace("GIT", git_exe_path.generic_u8string());
         }
 
         const Files::Filesystem& fs = paths.get_filesystem();
@@ -412,10 +416,21 @@ namespace vcpkg::Build
 
         if (!port_configs.empty())
         {
-            variables.emplace_back("VCPKG_PORT_CONFIGS", Strings::join(";", port_configs));
+            variables.emplace("VCPKG_PORT_CONFIGS", Strings::join(";", port_configs));
         }
 
-        return variables;
+        std::vector<std::string> sdeps; 
+        for (const auto& dep : filter_dependencies(scf.core_paragraph->depends, triplet, variables))
+        {
+            sdeps.push_back(dep.package_spec.name());
+        }
+        variables.emplace("PORT_DEPENDENCIES", Strings::join(";", sdeps));
+        std::vector<System::CMakeVariable> cvars; 
+        for (const auto& kv : variables)
+        {
+            cvars.emplace_back(kv.first, kv.second);
+        }
+        return cvars;
     }
 
     static std::string get_triplet_abi(const VcpkgPaths& paths, const PreBuildInfo& pre_build_info, Triplet triplet)

@@ -223,3 +223,5 @@ vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_pkgconfig(NAME icu-uc COMMON -licuuc -licudata -lpthread -pthread -ldl -lm)
+vcpkg_pkgconfig(NAME icu-i18n COMMON -licui18n REQUIRES icu-uc)

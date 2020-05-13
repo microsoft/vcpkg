@@ -1,0 +1,12 @@
+prefix=@CURRENT_INSTALLED_DIR@
+exec_prefix=${prefix}
+libdir=${prefix}/debug/lib
+includedir=${prefix}/include
+
+Name: @PORT@
+URL: @PORT_HOMEPAGE@
+Description: @PORT_DESCRIPTION@
+Version: @PORT_VERSION@
+Requires: @PORT_REQUIRES_DEBUG@
+Libs: -L${libdir} @PORT_LIBS_DEBUG@
+Cflags: -I${includedir}

@@ -77,3 +77,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_pkgconfig(COMMON -lpng)

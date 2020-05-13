@@ -86,3 +86,5 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo/LICENSE.md ${CURRENT_PAC
 vcpkg_copy_pdbs()
 
 vcpkg_test_cmake(PACKAGE_NAME JPEG MODULE)
+vcpkg_pkgconfig(NAME libjpeg COMMON -ljpeg)
+vcpkg_pkgconfig(NAME libturbojpeg COMMON -lturbojpeg)

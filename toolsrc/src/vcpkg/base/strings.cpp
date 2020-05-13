@@ -328,3 +328,20 @@ namespace vcpkg::Strings
     std::string b32_encode(std::uint64_t x) noexcept { return b32_encode_implementation(x); }
 
 }
+
+std::string Strings::clean_shell_string(std::string s)
+{
+    for (int pos = static_cast<int>(s.size()); pos >= 0; --pos)
+    {
+        auto c = s[pos];
+        if (c == '\n')
+        {
+            s[pos] = ' ';
+        }
+        else if (c == '\r' || c == '\\' || c == '`' || c == '"' || c == '$')
+        {
+            s.erase(pos, 1);
+        }
+    }
+    return std::move(s);
+}

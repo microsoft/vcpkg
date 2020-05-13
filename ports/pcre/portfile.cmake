@@ -60,3 +60,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
+vcpkg_pkgconfig(NAME libpcre COMMON -lpcre -lpthread -pthread)
+vcpkg_pkgconfig(NAME libpcre-16 COMMON -lpcre-16 -pthread)
+vcpkg_pkgconfig(NAME libpcre-32 COMMON -lpcre-32 -pthread)
+vcpkg_pkgconfig(NAME libpcre-cpp COMMON -lpcre-cpp REQUIRES libpcre-8)
+vcpkg_pkgconfig(NAME libpcre-posix COMMON -lpcre-posix REQUIRES libpcre-8)

@@ -98,3 +98,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 
     configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/freetype/vcpkg-cmake-wrapper.cmake @ONLY)
 endif()
+vcpkg_pkgconfig(NAME freetype2 RELEASE -lfreetype DEBUG -lfreetyped)
