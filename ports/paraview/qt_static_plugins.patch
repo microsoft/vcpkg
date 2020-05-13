@@ -8,7 +8,7 @@ index 31beb7e20..d4bb36844 100644
    include("${_ParaViewClient_cmake_dir}/paraview-find-package-helpers.cmake" OPTIONAL)
 -  find_package(Qt5 REQUIRED QUIET COMPONENTS Core Widgets)
 +  find_package(Qt5 REQUIRED QUIET COMPONENTS Core Widgets Svg Network Sql DBus OpenGL OpenGLExtensions)
-+  if(UNIX)
++  if(UNIX AND NOT APPLE)
 +    find_package(Qt5 REQUIRED QUIET COMPONENTS X11Extras)
 +    list(APPEND qt_additional_libs Qt5::X11Extras)
 +  endif()
