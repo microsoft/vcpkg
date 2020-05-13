@@ -40,8 +40,8 @@ vcpkg_from_github(
     PATCHES
         paraview_build.patch
         cgns.patch
-        #qt_plugin.patch
-        #qt_static_plugins.patch
+        qt_plugin.patch # Remove with Qt version > 5.14 
+        qt_static_plugins.patch # Remove with Qt version > 5.14 
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
