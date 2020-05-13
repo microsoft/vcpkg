@@ -194,5 +194,3 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${CMAKE_FILE} "${_contents}")
     endforeach()
 endfunction()
-
- 
