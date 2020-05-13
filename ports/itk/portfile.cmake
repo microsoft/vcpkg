@@ -13,6 +13,7 @@ vcpkg_from_github(
         var_libraries.patch
         wrapping.patch
         python_gpu_wrapping.patch
+		opencl.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -56,6 +57,7 @@ if("rtk" IN_LIST FEATURES)
          )
     if("cuda" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS "-DRTK_USE_CUDA=ON")
+		#RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes. 
     endif()
 	file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/RTK")
 endif()
@@ -121,6 +123,7 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL
     set(USE_64BITS_IDS ON)
 endif()
 
+file(REMOVE_RECURSE "${SOURCE_PATH}/CMake/FindOpenCL.cmake")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
