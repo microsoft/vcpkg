@@ -19,22 +19,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     apps       PopSift_BUILD_EXAMPLES
 )
 
-# if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-#    set(PopSift_USE_STATIC_LIBS ON) 
-#    # set(POPSIFT_PIC OFF)
-# else()
-#     set(PopSift_USE_STATIC_LIBS OFF) 
-#    # set(POPSIFT_PIC ON)
-# endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS} 
-#     -DPopSift_BOOST_USE_STATIC_LIBS:BOOL=${PopSift_USE_STATIC_LIBS}
-# #        -DPopSift_USE_POSITION_INDEPENDENT_CODE:BOOL=${POPSIFT_PIC}
-#    OPTIONS_RELEASE -DCMAKE_BUILD_TYPE:STRING=Release
-#    OPTIONS_DEBUG -DCMAKE_BUILD_TYPE:STRING=Debug
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
