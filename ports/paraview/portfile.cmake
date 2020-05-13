@@ -39,6 +39,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         paraview_build.patch
+        cgns.patch
         #qt_plugin.patch
         #qt_static_plugins.patch
 )
