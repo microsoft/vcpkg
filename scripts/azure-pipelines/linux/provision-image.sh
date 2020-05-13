@@ -50,19 +50,12 @@ echo "username=$StorageAccountName" | sudo tee $smbCredentialFile > /dev/null
 echo "password=$StorageAccountKey" | sudo tee -a $smbCredentialFile > /dev/null
 sudo chmod 600 $smbCredentialFile
 
-# Write script to provision disks used by cloud-init
-echo "if [ ! -d \"/ci\" ]; then" > /etc/provision-disks.sh
-echo "sudo parted /dev/sdc mklabel gpt" >> /etc/provision-disks.sh
-echo "sudo parted /dev/sdc mkpart cidisk ext4 0% 100%" >> /etc/provision-disks.sh
-echo "sudo mkfs -t ext4 /dev/sdc1" >> /etc/provision-disks.sh
-echo "sudo mkdir /ci -m=777" >> /etc/provision-disks.sh
-echo "sudo mkdir /ci/installed -m=777" >> /etc/provision-disks.sh
-echo "sudo mkdir /ci/archives -m=777" >> /etc/provision-disks.sh
-echo "echo \"/dev/sdc1 /ci/installed ext4 barrier=0 0 0\" | sudo tee -a /etc/fstab" >> /etc/provision-disks.sh
-echo "echo \"//$StorageAccountName.file.core.windows.net/archives /ci/archives cifs nofail,vers=3.0,credentials=$smbCredentialFile,serverino,dir_mode=0777,file_mode=0777 0 0\" | sudo tee -a /etc/fstab" >> /etc/provision-disks.sh
-echo "sudo mount -a" >> /etc/provision-disks.sh
-echo "fi" >> /etc/provision-disks.sh
-sudo chmod 700 /etc/provision-disks.sh
+# Mount the archives SMB share to /archives
+sudo mkdir /archives -m=777
+echo "//$StorageAccountName.file.core.windows.net/archives /archives cifs nofail,vers=3.0,credentials=$smbCredentialFile,serverino,dir_mode=0777,file_mode=0777 0 0" | sudo tee -a /etc/fstab
+
+# Create 'home' directory for haskell stack bits that want this
+sudo mkdir -p /home/root -m=777
 
 # Delete /etc/debian_version to prevent Azure Pipelines Scale Set Agents from removing some of the above
 sudo rm /etc/debian_version
@@ -71,3 +64,8 @@ sudo rm /etc/debian_version
 # https://docs.microsoft.com/en-us/dotnet/core/install/dependencies?tabs=netcore31&pivots=os-linux
 # (we assume libssl1.0.0 or equivalent is already installed to not accidentially change SSL certs)
 apt install -y liblttng-ust0 libkrb5-3 zlib1g libicu60
+
+# Create work trees for the Azure Pipelines agent so that it puts its work tree into temporary storage.
+sudo chmod 777 /mnt
+sudo mkdir /agent -m=777
+sudo ln -s /mnt /agent/_work

@@ -45,7 +45,7 @@ vcpkg_configure_cmake(
         -DWITH_LIBUSB=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_VTK=ON
+        -DWITH_VTK=OFF # disabled due to API changes in 9.0
         # FEATURES
         ${FEATURE_OPTIONS}
 )
