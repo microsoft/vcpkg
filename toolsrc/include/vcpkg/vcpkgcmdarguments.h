@@ -91,6 +91,7 @@ namespace vcpkg
         std::unique_ptr<std::string> triplet;
         std::unique_ptr<std::vector<std::string>> overlay_ports;
         std::unique_ptr<std::vector<std::string>> overlay_triplets;
+        std::vector<std::string> binarysources;
         Optional<bool> debug = nullopt;
         Optional<bool> sendmetrics = nullopt;
         Optional<bool> printmetrics = nullopt;

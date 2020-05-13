@@ -9,6 +9,8 @@ namespace vcpkg::System
 {
     Optional<std::string> get_environment_variable(ZStringView varname) noexcept;
 
+    ExpectedS<std::string> get_home_dir() noexcept;
+
     Optional<std::string> get_registry_string(void* base_hkey, StringView subkey, StringView valuename);
 
     enum class CPUArchitecture

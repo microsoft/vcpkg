@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/GSL
-    REF b43855631afdb9f7ccd4b56ed05330a8e3817af1
-    SHA512 fe770217f9ced6fbacfb57ab2f57a33ff2c150cdbadb1e4fc4f0bfe39e98b3940f9f22786a5d30ff7967063caadf7c3cf884a398a7eb6b1d0e219577782fc776
+    REF 1999b48a519196711f0d03af3b7eedd49fcc6db3
+    SHA512 4daa5cefdd910391c97428c6de4d7f93a8e112c59f296a9dec448ff409dae0d94f99b1389897f4ec34598dd33f82c21eb47463a394f5ea8a8c00a9cca366a1ea
     HEAD_REF master
 )
 
@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(
-    CONFIG_PATH share/Microsoft.GSL/cmake
+    CONFIG_PATH share/cmake/Microsoft.GSL
     TARGET_PATH share/Microsoft.GSL
 )
 
