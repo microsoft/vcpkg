@@ -57,6 +57,7 @@ if("rtk" IN_LIST FEATURES)
     if("cuda" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS "-DRTK_USE_CUDA=ON")
     endif()
+	file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/RTK")
 endif()
 if("opencl" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS # Wrapping options required by OpenCL if build with Python Wrappers
