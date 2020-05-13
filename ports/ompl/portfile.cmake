@@ -21,6 +21,7 @@ vcpkg_extract_source_archive_ex(
     REF ${OMPL_VERSION}
 )
 
+#Due to there are URL before the change text, using patch modify this change failed, so use the following command instead of patch.
 file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
 string(REPLACE "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 CONFIG REQUIRED)" _contents "${_contents}")
 file(WRITE ${SOURCE_PATH}/CMakeLists.txt "${_contents}")
