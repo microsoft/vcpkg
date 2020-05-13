@@ -29,43 +29,23 @@ file(REMOVE ${SOURCE_PATH}/cmake/FindGlog.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
 #file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
 
-set(SUITESPARSE OFF)
-if("suitesparse" IN_LIST FEATURES)
-    set(SUITESPARSE ON)
-endif()
 
-set(CXSPARSE OFF)
-if("cxsparse" IN_LIST FEATURES)
-    set(CXSPARSE ON)
-endif()
-
-set(LAPACK OFF)
-if("lapack" IN_LIST FEATURES)
-    set(LAPACK ON)
-endif()
-
-set(EIGENSPARSE OFF)
-if("eigensparse" IN_LIST FEATURES)
-    set(EIGENSPARSE ON)
-endif()
-
-set(GFLAGS OFF)
-if("tools" IN_LIST FEATURES)
-    set(GFLAGS ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "suitesparse"       SUITESPARSE
+    "cxsparse"          CXSPARSE
+    "lapack"            LAPACK
+    "eigensparse"       EIGENSPARSE
+    "tools"             GFLAGS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DEXPORT_BUILD_DIR=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
-        -DGFLAGS=${GFLAGS}
-        -DCXSPARSE=${CXSPARSE}
-        -DEIGENSPARSE=${EIGENSPARSE}
-        -DLAPACK=${LAPACK}
-        -DSUITESPARSE=${SUITESPARSE}
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
         -DLIB_SUFFIX=${LIB_SUFFIX}
 )
