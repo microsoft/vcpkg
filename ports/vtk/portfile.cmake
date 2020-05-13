@@ -36,10 +36,8 @@ if("python" IN_LIST FEATURES)
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
         -DPython3_FIND_REGISTRY=NEVER
-        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=TRUE
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
     )
-
     if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
                                         "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
