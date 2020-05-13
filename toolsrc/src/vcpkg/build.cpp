@@ -387,7 +387,7 @@ namespace vcpkg::Build
         variables.emplace("PORT_FULL_VERSION", scf.core_paragraph->version);
         variables.emplace("PORT_VERSION", to_port_version(scf.core_paragraph->version));
         variables.emplace("PORT_CMAKE_VERSION", to_cmake_version(scf.core_paragraph->version));
-        variables.emplace("PORT_DESCRIPTION", scf.core_paragraph->description);
+        variables.emplace("PORT_DESCRIPTION", Strings::clean_shell_string(scf.core_paragraph->description));
         variables.emplace("PORT_HOMEPAGE", scf.core_paragraph->homepage);
 
         if (Util::Enum::to_bool(action.build_options.only_downloads))

@@ -31,3 +31,13 @@ TEST_CASE ("b32 encoding", "[strings]")
         REQUIRE(vcpkg::Strings::b32_encode(pr.first) == pr.second);
     }
 }
+
+TEST_CASE ("clean_shell_string", "[strings]")
+{
+    REQUIRE(vcpkg::Strings::clean_shell_string("") == "");
+    REQUIRE(vcpkg::Strings::clean_shell_string("\n") == " ");
+    REQUIRE(vcpkg::Strings::clean_shell_string("\r\\\"`$") == "");
+    REQUIRE(vcpkg::Strings::clean_shell_string("`123") == "123");
+    REQUIRE(vcpkg::Strings::clean_shell_string("123`") == "123");
+    REQUIRE(vcpkg::Strings::clean_shell_string("`1`2`3`") == "123");
+}

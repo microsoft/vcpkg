@@ -198,4 +198,6 @@ namespace vcpkg::Strings
 
     // base 32 encoding, following IETC RFC 4648
     std::string b32_encode(std::uint64_t x) noexcept;
+
+    std::string clean_shell_string(std::string s);
 }

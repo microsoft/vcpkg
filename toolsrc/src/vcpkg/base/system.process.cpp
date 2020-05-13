@@ -166,22 +166,12 @@ namespace vcpkg
 #endif
     }
 
-    std::string clean_shell_string(std::string s)
-    {
-        s = Strings::replace_all(std::move(s), "\\", StringView());
-        s = Strings::replace_all(std::move(s), "`", StringView());
-        s = Strings::replace_all(std::move(s), "'", StringView());
-        s = Strings::replace_all(std::move(s), "\"", StringView());
-        s = Strings::replace_all(std::move(s), "$", StringView());
-        return s;
-    }
-
-    System::CMakeVariable::CMakeVariable(const StringView varname, const std::string& varvalue)
-        : s(Strings::format(R"("-D%s=%s")", varname, clean_shell_string(varvalue)))
-    {
-    }
     System::CMakeVariable::CMakeVariable(const StringView varname, const char* varvalue)
-        : CMakeVariable(varname, std::string(varvalue))
+        : s(Strings::format(R"("-D%s=%s")", varname, varvalue))
+    {
+    }
+    System::CMakeVariable::CMakeVariable(const StringView varname, const std::string& varvalue)
+        : CMakeVariable(varname, varvalue.c_str())
     {
     }
     System::CMakeVariable::CMakeVariable(const StringView varname, const fs::path& path)
