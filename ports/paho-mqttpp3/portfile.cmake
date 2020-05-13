@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO eclipse/paho.mqtt.cpp
-  REF v1.0.1
-  SHA512 be612197fae387b9f1d8f10944d451ec9e7ebec6045beed365e642089c0a5fde882ed5c734f2b46a5008f98b8445a51114492f0f36fdc684b8a8fe4b71fe31a4
+  REF 0e44dd31ff725d66df4a928d50a26309626dcfd5
+  SHA512 b61850f4c146c520ceb9632137b0c172fc9225e73ed3b45e34b406aa38b943fcaa09df675e5bee05176b34522d9c67fcc2694552623b4c4ee01bd06a52b3c397
   HEAD_REF master
   PATCHES
     fix-include-path.patch
