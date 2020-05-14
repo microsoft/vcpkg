@@ -359,7 +359,7 @@ namespace vcpkg
 
         friend void swap(ProcessInfo& lhs, ProcessInfo& rhs) noexcept { lhs.swap(rhs); }
 
-        unsigned int wait_and_close_handles()
+        unsigned int wait()
         {
             const DWORD result = WaitForSingleObject(proc_info.hProcess, INFINITE);
             Checks::check_exit(VCPKG_LINE_INFO, result != WAIT_FAILED, "WaitForSingleObject failed");
@@ -438,7 +438,7 @@ VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'proce
 
             CloseHandle(child_stdout);
 
-            return proc_info.wait_and_close_handles();
+            return proc_info.wait();
         }
     };
 
@@ -544,7 +544,7 @@ VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'proce
         auto proc_info = windows_create_process(cmd_line, env, NULL);
         auto long_exit_code = [&]() -> unsigned long {
             if (auto p = proc_info.get())
-                return p->wait_and_close_handles();
+                return p->wait();
             else
                 return proc_info.error();
         }();
