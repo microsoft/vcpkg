@@ -6,7 +6,7 @@ index 7dadad937..dd271739d 100644
      NAMES xmlpatterns-qt5 xmlpatterns
      HINTS "${Qt5_DIR}/../../../bin"
            "${Qt5_DIR}/../../../libexec/qt5/bin"
-+          "${Qt5_DIR}/../../../tools/qt5-xmlpatterns/bin"
++          "${Qt5_DIR}/../../../tools/qt5/bin"
      DOC   "Path to xmlpatterns")
    mark_as_advanced(qt_xmlpatterns_executable)
  
@@ -152,14 +152,14 @@ index d7e8f1dfe..8b0e7a8c6 100644
  vtk_module_wrap_client_server(
    MODULES   ${paraview_modules}
 -            ${vtk_modules}
-+            #${vtk_modules}
++            ${vtk_modules}
    TARGET    paraview_client_server
    INSTALL_EXPORT ParaView)
  
  paraview_server_manager_process(
    MODULES   ${paraview_modules}
 -            ${vtk_modules}
-+            #${vtk_modules}
++            ${vtk_modules}
    TARGET    paraview_server_manager
    XML_FILES paraview_server_manager_files
    INSTALL_EXPORT ParaView)

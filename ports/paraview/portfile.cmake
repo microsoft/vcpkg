@@ -45,9 +45,12 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         paraview_build.patch
+        remove_duplicates.patch # Missed something in the above patch
         cgns.patch
         qt_plugin.patch # Remove with Qt version > 5.14 
         qt_static_plugins.patch # Remove with Qt version > 5.14 
+        python_include.patch
+        python_wrapper.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -61,10 +64,9 @@ vcpkg_from_gitlab(
     REF c2605b5c3115bc4869c76a0d8bfdd8939b59f283
     SHA512 6d2c1d6e1cd345547926938451755e7a8be5dabd89e18a2ceb419db16c5b29f354554a5130eb365b7e522d655370fd4766953813ff530c06e4851fe26104ce58
     PATCHES 
-        VisIt_Build.patch
-        
+        VisIt_Build.patch        
         #removeunusedsymbols.patch # These also get remove in master of ParaView
-        #${VisItPatches}
+        ${VisItPatches}
 )
 #Get QtTesting Plugin
 vcpkg_from_gitlab(
@@ -86,21 +88,7 @@ if("python" IN_LIST FEATURES)
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
         )
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7")
-        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib")
-        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python37.lib")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython37m.a"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7m")
-        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a")
-        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/linpython37m.a")
-    elseif(VCPKG_TARGET_IS_OSX)
-        #Need Python3 information on OSX within VCPKG
-    endif()    
+  
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
@@ -113,8 +101,8 @@ vcpkg_configure_cmake(
         -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
         -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=ON
         -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
-        -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION=OFF
-        -DPARAVIEW_USE_QTHELP=OFF
+        -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION:BOOL=OFF
+        -DPARAVIEW_USE_QTHELP:BOOL=OFF
         
         #A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
