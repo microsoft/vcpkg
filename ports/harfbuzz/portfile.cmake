@@ -27,8 +27,12 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     icu       HB_HAVE_ICU
     graphite2 HB_HAVE_GRAPHITE2
-    glib      HB_HAVE_GLIB
 )
+if("glib" IN_LIST FEATURES)
+    set(HB_HAVE_GLIB ON)
+else()
+    set(HB_HAVE_GLIB OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -36,6 +40,7 @@ vcpkg_configure_cmake(
     OPTIONS ${FEATURE_OPTIONS}
         -DHB_HAVE_FREETYPE=ON
         -DHB_BUILD_TESTS=OFF
+        -DHB_HAVE_GLIB=${HB_HAVE_GLIB}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
@@ -45,7 +50,7 @@ vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
 
-if (HAVE_GLIB)
+if (HB_HAVE_GLIB)
     # Propagate dependency on glib downstream
     file(READ "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" _contents)
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" "

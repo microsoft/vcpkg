@@ -3,6 +3,7 @@ Version: 2.6.5
 Description: HarfBuzz OpenType text shaping engine
 Homepage: https://github.com/harfbuzz/harfbuzz
 Build-Depends: freetype, ragel, gettext (osx)
+Default-Features: glib
 
 Feature: graphite2
 Build-Depends: graphite2
