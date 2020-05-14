@@ -27,9 +27,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/disable_hook)
 
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/disable_hook)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix/static_hook)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/windows)
 else()
