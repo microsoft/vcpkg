@@ -147,22 +147,6 @@ index d7e8f1dfe..8b0e7a8c6 100644
  vtk_module_json(
    MODULES "${paraview_modules}"
    OUTPUT "paraview-modules.json")
-@@ -573,13 +642,13 @@ set(CMAKE_INSTALL_RPATH
- 
- vtk_module_wrap_client_server(
-   MODULES   ${paraview_modules}
--            ${vtk_modules}
-+            ${vtk_modules}
-   TARGET    paraview_client_server
-   INSTALL_EXPORT ParaView)
- 
- paraview_server_manager_process(
-   MODULES   ${paraview_modules}
--            ${vtk_modules}
-+            ${vtk_modules}
-   TARGET    paraview_server_manager
-   XML_FILES paraview_server_manager_files
-   INSTALL_EXPORT ParaView)
 diff --git a/Plugins/AnalyzeNIfTIReaderWriter/NIfTIIO/vtkAnalyzeReader.cxx b/Plugins/AnalyzeNIfTIReaderWriter/NIfTIIO/vtkAnalyzeReader.cxx
 index be318d6d4..80187dd69 100644
 --- a/Plugins/AnalyzeNIfTIReaderWriter/NIfTIIO/vtkAnalyzeReader.cxx
