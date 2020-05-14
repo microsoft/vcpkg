@@ -9,9 +9,11 @@ vcpkg_from_github(
         HEAD_REF master
 )
 
+if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) AND NOT ENV{CXX_FLAGS}) # This should be a compiler check
+    set(ENV{CXXFLAGS} "-maes -msse4.2")
+endif()
 vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
 )
 
 vcpkg_install_make()
