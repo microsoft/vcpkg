@@ -27,7 +27,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES -lpthread -lm -ldl)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
