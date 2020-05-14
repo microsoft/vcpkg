@@ -15,6 +15,10 @@
 #pragma GCC diagnostic ignored "-Wattributes"
 #endif
 
+#if defined(_MSC_VER)
+#include <sal.h>
+#endif
+
 #ifndef _Analysis_assume_
 #define _Analysis_assume_(...)
 #endif
