@@ -1,0 +1,28 @@
+diff --git a/cmake/libprotobuf-lite.cmake b/cmake/libprotobuf-lite.cmake
+index 6bf86a277..424854798 100644
+--- a/cmake/libprotobuf-lite.cmake
++++ b/cmake/libprotobuf-lite.cmake
+@@ -67,6 +67,9 @@ target_link_libraries(libprotobuf-lite ${CMAKE_THREAD_LIBS_INIT})
+ if(protobuf_LINK_LIBATOMIC)
+   target_link_libraries(libprotobuf-lite atomic)
+ endif()
++if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
++       target_link_libraries(libprotobuf-lite log)
++endif()
+ target_include_directories(libprotobuf-lite PUBLIC ${protobuf_source_dir}/src)
+ if(MSVC AND protobuf_BUILD_SHARED_LIBS)
+   target_compile_definitions(libprotobuf-lite
+diff --git a/cmake/libprotobuf.cmake b/cmake/libprotobuf.cmake
+index 0c12596c2..a5be494fb 100644
+--- a/cmake/libprotobuf.cmake
++++ b/cmake/libprotobuf.cmake
+@@ -121,6 +121,9 @@ endif()
+ if(protobuf_LINK_LIBATOMIC)
+   target_link_libraries(libprotobuf atomic)
+ endif()
++if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
++       target_link_libraries(libprotobuf log)
++endif()
+ target_include_directories(libprotobuf PUBLIC ${protobuf_source_dir}/src)
+ if(MSVC AND protobuf_BUILD_SHARED_LIBS)
+   target_compile_definitions(libprotobuf
