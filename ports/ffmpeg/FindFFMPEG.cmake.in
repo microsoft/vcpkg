@@ -33,7 +33,7 @@ set(FFMPEG_VERSION "4.2")
 
 find_dependency(Threads)
 if(UNIX)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread -lvdpau -lX11)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread -lX11)
 endif()
 
 if(@ENABLE_BZIP2@)

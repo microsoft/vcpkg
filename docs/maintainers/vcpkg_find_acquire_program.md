@@ -24,6 +24,8 @@ The current list of programs includes:
 - PERL
 - PYTHON2
 - PYTHON3
+- GIT
+- GN
 - GO
 - JOM
 - MESON

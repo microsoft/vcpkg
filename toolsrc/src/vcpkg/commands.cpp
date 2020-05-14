@@ -17,6 +17,7 @@ namespace vcpkg::Commands
     {
         static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
             {"install", &Install::perform_and_exit},
+            {"x-set-installed", &SetInstalled::perform_and_exit},
             {"ci", &CI::perform_and_exit},
             {"remove", &Remove::perform_and_exit},
             {"upgrade", &Upgrade::perform_and_exit},

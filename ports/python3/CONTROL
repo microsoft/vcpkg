@@ -1,5 +1,8 @@
 Source: python3
-Version: 3.7.3
+Version: 3.7.3-2
 Homepage: https://github.com/python/cpython
 Description: The Python programming language as an embeddable library
 Build-Depends: libffi, openssl
+
+Feature: enable-shared
+Description: Build shared libraries in addition to static ones built by default

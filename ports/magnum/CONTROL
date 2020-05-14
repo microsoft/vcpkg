@@ -1,5 +1,5 @@
 Source: magnum
-Version: 2019.10
+Version: 2019.10-1
 Build-Depends: corrade[utility]
 Description: C++11/C++14 graphics middleware for games and data visualization
 Homepage: https://magnum.graphics/

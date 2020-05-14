@@ -1,0 +1,5 @@
+Source: bitserializer-pugixml
+Version: 0.9
+Build-Depends: bitserializer, pugixml
+Description: C++ 17 library for serialization, module for support XML (implementation based on the PugiXml library)
+Homepage: https://bitbucket.org/Pavel_Kisliak/bitserializer

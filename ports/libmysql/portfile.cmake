@@ -19,6 +19,7 @@ vcpkg_from_github(
         system-libs.patch
         linux_libmysql.patch
         re2_add_compile_flags.patch
+        rename-version.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_65_0)
