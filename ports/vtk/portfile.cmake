@@ -16,13 +16,13 @@ if("qt" IN_LIST FEATURES)
         -DVTK_MODULE_ENABLE_VTK_RenderingQt=YES
         -DVTK_MODULE_ENABLE_VTK_ViewsQt=YES
     )
-    if("atlmfc" IN_LIST FEATURES)
-        list(APPEND ADDITIONAL_OPTIONS
-            -DVTK_MODULE_ENABLE_VTK_GUISupportQtMFC=YES
-        )
-    endif()
-endif()
 
+endif()
+if("atlmfc" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_GUISupportMFC=YES
+    )
+endif()
 if("vtkm" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKm=YES
@@ -38,22 +38,7 @@ if("python" IN_LIST FEATURES)
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
     )
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
-                                        "-DPython3_LIBRARIES:STRING=debug\\\\\\\;${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib\\\\\\\;optimized\\\\\\\;${CURRENT_INSTALLED_DIR}/lib/python37.lib"
-                                        "-DPYTHON_DEBUG_LIBRARY:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython37m.a"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a"
-                                        "-DPython3_LIBRARIES:STRING=debug\\\\\\\;${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a\\\\\\\;optimized\\\\\\\;${CURRENT_INSTALLED_DIR}/lib/libpython37m.a"
-                                        "-DPYTHON_DEBUG_LIBRARY:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7m")
-    elseif(VCPKG_TARGET_IS_OSX)
-        #Need Python3 information on OSX within VCPKG
-    endif()    
-    
+  
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
@@ -107,21 +92,22 @@ vcpkg_from_github(
     SHA512 50a324f55b58bc4415f972f711420e83b41a100b27729266db4541c24bc7d7bcd27d9158ce2588178b9b2e43c20b9695ffe382605f5cde331e8371e213655164
     HEAD_REF master
     PATCHES
-        FindLibHaru.patch
-        FindLZMA.patch
+        FindLibHaru.patch # Will be fixed in 9.0.1?
+        FindLZMA.patch    # Will be fixed in 9.1?
         FindLZ4.patch
         Findproj.patch
         vtkm.patch # To include an external VTKm build (v.1.5 required)
         pegtl.patch
-        ##pythonwrapper.patch # needs checking with paraview PR if still required
-        ##NoUndefDebug.patch # needs checking with paraview PR if still required
+        pythonwrapper.patch # Required by ParaView to Wrap required classes
+        NoUndefDebug.patch # Required to link against correct Python library depending on build type. 
+        python_debug.patch
         # Last patch TODO: Patch out internal loguru
 )
 
 # =============================================================================
 #Overwrite outdated modules if they have not been patched:
-file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake")
-file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99")
+file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake") # will be backported from CMake in VTK in a future release
+file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 # =============================================================================
 
 # =============================================================================
@@ -268,7 +254,8 @@ if("paraview" IN_LIST FEATURES)
     foreach(module ${VTK_CMAKE_NEEDED})
         file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
     endforeach()
-    
+        
+    ## Check List on UPDATE !!
     file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
 
     file(INSTALL "${SOURCE_PATH}/GUISupport/Qt/QVTKOpenGLWidget.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # Legacy header
@@ -284,8 +271,9 @@ if("paraview" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/static_python) #python headers
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/static_python DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
+    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python) #python headers
+        file(GLOB_RECURSE STATIC_PYTHON_FILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/*/static_python/*.h")
+        file(INSTALL ${STATIC_PYTHON_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
     endif()
 endif()
     
