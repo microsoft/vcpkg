@@ -1,7 +1,7 @@
-diff --git a/CMake/ParaViewOptionsCMake/patches/3.18/FindPython/Support.cmake b/CMake/ParaViewOptionsCMake/patches/3.18/FindPython/Support.cmake
+diff --git a/CMake/patches/3.18/FindPython/Support.cmake b/CMake/patches/3.18/FindPython/Support.cmake
 index 0879537ed..122e7228d 100644
---- a/CMake/ParaViewOptionsCMake/patches/3.18/FindPython/Support.cmake	
-+++ b/CMake/ParaViewOptionsCMake/patches/3.18/FindPython/Support.cmake
+--- a/CMake/patches/3.18/FindPython/Support.cmake	
++++ b/CMake/patches/3.18/FindPython/Support.cmake
 @@ -2253,7 +2257,7 @@ if (("Development.Module" IN_LIST ${_PYTHON_PREFIX}_FIND_COMPONENTS
                    NAMES ${_${_PYTHON_PREFIX}_LIB_NAMES_DEBUG}
                    NAMES_PER_DIR
