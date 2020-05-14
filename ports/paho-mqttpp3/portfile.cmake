@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # Download from Github
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
