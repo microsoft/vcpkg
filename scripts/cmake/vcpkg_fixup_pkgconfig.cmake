@@ -144,6 +144,8 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
                 # endif()
                 # get_filename_component(PTHREAD_LIB "${PTHREAD_LIB}" NAME_WE)
                 # string(REPLACE "Libs: -pthread" "Libs: -L\${libdir} -l${PTHREAD_LIB}" _contents ${_contents})
+            elseif(_lib STREQUAL _ignore_flags)
+                message(STATUS "${_lib} found in *.pc file and ignored!")
             else()
                 message(FATAL_ERROR "Found ${_lib} and no rule to analyse the flag! Please check the *.pc file")
             endif()
