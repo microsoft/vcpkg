@@ -6,6 +6,10 @@ variables:
   linux-pool: 'PrLin-2020-05-07'
 
 jobs:
+  - template: windows/run-tests.yml
+    parameters:
+      poolName: $(windows-pool)
+
   - template: windows/azure-pipelines.yml
     parameters:
       triplet: x86-windows
