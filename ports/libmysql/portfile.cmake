@@ -17,6 +17,7 @@ vcpkg_from_github(
     PATCHES
         ignore-boost-version.patch
         system-libs.patch
+        rename-version.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_70_0)

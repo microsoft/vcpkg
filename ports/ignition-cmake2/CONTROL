@@ -1,5 +1,5 @@
 Source: ignition-cmake2
-Version: 2.2.0
+Version: 2.2.0-1
 Homepage: https://ignitionrobotics.org/libs/cmake
 Description: CMake helper functions for building robotic applications
 Build-Depends: ignition-modularscripts
