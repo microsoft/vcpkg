@@ -30,7 +30,7 @@ jobs:
     displayName: 'Build vcpkg'
     inputs:
       filePath: bootstrap-vcpkg.sh
-      arguments: '-allowAppleClang -buildTests'
+      arguments: '-buildTests'
   - bash: toolsrc/build.rel/vcpkg-test
     displayName: 'Run vcpkg tests'
   - powershell: |
