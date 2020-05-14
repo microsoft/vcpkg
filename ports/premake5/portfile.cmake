@@ -12,9 +12,10 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(BUILD_CONFIG "debug")
+    set(BUILD_CONFIG "debug")
+else()
+    set(BUILD_CONFIG "release")
 endif()
-set(BUILD_CONFIG "release")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_install_msbuild(
