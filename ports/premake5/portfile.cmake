@@ -20,7 +20,7 @@ else()
     if(VCPKG_TARGET_IS_OSX)
         set(PROJECT_SUBPATH "build/gmake2.macosx/")
     else()
-       set(PROJECT_SUBPATH "build/gmake2.unix/")
+        set(PROJECT_SUBPATH "build/gmake2.unix/")
     endif()
 
     vcpkg_configure_make(
