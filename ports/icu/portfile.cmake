@@ -1,6 +1,4 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 set(ICU_VERSION_MAJOR 65)
 set(ICU_VERSION_MINOR 1)
@@ -24,6 +22,9 @@ vcpkg_extract_source_archive_ex(
         ${CMAKE_CURRENT_LIST_DIR}/fix-extra.patch
 )
 
+vcpkg_find_acquire_program(PYTHON3)
+set(ENV{PYTHON} "${PYTHON3}")
+
 set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -35,7 +36,7 @@ endif()
 set(CONFIGURE_OPTIONS_RELEASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
 set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(BASH bash)
     set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -fPIC")
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -fPIC")
@@ -188,7 +189,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 else()
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(VCPKG_TARGET_IS_WINDOWS)
         # rename static libraries to match import libs
         # see https://gitlab.kitware.com/cmake/cmake/issues/16617
         foreach(MODULE dt in io tu uc)
@@ -221,5 +222,4 @@ endif()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/icu)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/icu/LICENSE ${CURRENT_PACKAGES_DIR}/share/icu/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

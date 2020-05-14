@@ -20,15 +20,14 @@ file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindOpenBLAS.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindArmadillo.cmake)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools     BUILD_TOOLS
+    tools     BUILD_CLI_EXECUTABLES
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_TESTS=${BUILD_TOOLS}
-        -DBUILD_CLI_EXECUTABLES=${BUILD_TOOLS}
+        -DBUILD_TESTS=OFF
         ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()
