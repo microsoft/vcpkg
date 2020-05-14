@@ -1384,6 +1384,11 @@ pangomm:x64-osx=fail
 pangomm:x64-windows=ignore
 pangomm:x86-windows=ignore
 pangomm:arm64-windows=fail
+# ParaView build error: /mnt/1/s/installed/x64-linux/tools/qt5-tools/bin/qhelpgenerator: error while loading shared libraries: 
+# libpq.so.5: cannot open shared object file: No such file or directory.
+# Looks like qt5-base is autodetection a system version of libpq instead of linking against the provided one.
+paraview:x64-linux=fail
+paraview:x-osx=fail
 parmetis:x64-linux=fail
 parmetis:x64-osx=fail
 pcre2:arm-uwp=fail
