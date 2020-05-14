@@ -14,7 +14,7 @@ Build-Depends: vtk[qt]
 
 Feature: pcap
 Description: PCAP support for PCL
-Build-Depends: winpcap
+Build-Depends: winpcap (windows), libpcap (!windows)
 
 Feature: tools
 Description: Build PCL utilities

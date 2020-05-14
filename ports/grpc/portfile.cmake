@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.27.1
-    SHA512 00a5e1e0f94e441b3406f821943d1775a7ab0580fd22d604ba29f56dc424ccc8f27c476077e39f24ddd7f1bada4eba9a38456fb4ac546e27ae239f43e431d988
+    REF v1.27.3
+    SHA512 0338eedcce40cd7359cc1b216eb3eeaaeb1f2b065d1bb03e72322978a7e40ef8ecc1ad39808bec8c0fd5bcaa91e91bbd6037e5a6611a979c9ab413eb159bb38b
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -15,6 +15,7 @@ vcpkg_from_github(
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
         00009-use-system-upb.patch
+        snprintf.patch
 )
 
 if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")

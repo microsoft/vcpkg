@@ -1,28 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF 53ae1a5ab37fdfc9ad5c236df3eaf4dd63f0fee9
-    SHA512 f5532c0b0287df52ddae173dc92eff06d1f4b2b42a2f7afaf28a7736bf70618ae29ccd51fb9743795a8004918a2a2f55233e6ced58829561c745eafa6118b762
+    REF 6ec4107907552db927be8601aed97b5a4b83d33d#version 1.3.0
+    SHA512 28b99d822d7be0348d4e367c2d92cd2bd4a5563806454388ad3c7d9817ef91fa7b4408d15ce4c77ac6a8ad2dd7db173899fdaf7881585282bf57f4c487909be6
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" NNG_STATIC_LIB)
 
-if("mbedtls" IN_LIST FEATURES)
-    set(NNG_ENABLE_TLS ON)
-else()
-    set(NNG_ENABLE_TLS OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    mbedtls NNG_ENABLE_TLS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
         -DNNG_STATIC_LIB=${NNG_STATIC_LIB}
         -DNNG_TESTS=OFF
         -DNNG_ENABLE_NNGCAT=OFF
-        -DNNG_ENABLE_TLS=${NNG_ENABLE_TLS}
 )
 
 vcpkg_install_cmake()

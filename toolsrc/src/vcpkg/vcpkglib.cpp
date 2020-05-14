@@ -178,7 +178,7 @@ namespace vcpkg
         {
             if (!pgh->is_installed()) continue;
             auto& ipv = ipv_map[pgh->package.spec];
-            if (pgh->package.feature.empty())
+            if (!pgh->package.is_feature())
             {
                 ipv.core = pgh.get();
             }
@@ -206,7 +206,7 @@ namespace vcpkg
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
-            if (!pgh->is_installed() || !pgh->package.feature.empty())
+            if (!pgh->is_installed() || pgh->package.is_feature())
             {
                 continue;
             }

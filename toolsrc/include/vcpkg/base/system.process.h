@@ -61,4 +61,9 @@ namespace vcpkg::System
                                     std::function<void(StringView)> data_cb,
                                     const Environment& env = {});
     void register_console_ctrl_handler();
+#if defined(_WIN32)
+    void initialize_global_job_object();
+    void enter_interactive_subprocess();
+    void exit_interactive_subprocess();
+#endif
 }
