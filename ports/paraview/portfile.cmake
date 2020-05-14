@@ -116,9 +116,14 @@ vcpkg_configure_cmake(
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
         ##VTK_MODULE_USE_EXTERNAL_<name>
 )
-
+if(CMAKE_HOST_UNIX)
+    set(BACKUP_LD_LIBRARY_PATH $ENV{LD_LIBRARY_PATH})
+    set(ENV{LD_LIBRARY_PATH} "${BACKUP_LD_LIBRARY_PATH}:${CURRENT_INSTALLED_DIR}/lib")
+endif()
 vcpkg_install_cmake(ADD_BIN_TO_PATH) # Bin to path required since paraview will use some self build tools
-
+if(CMAKE_HOST_UNIX)
+    set(ENV{LD_LIBRARY_PATH} "${BACKUP_LD_LIBRARY_PATH}")
+endif()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/paraview-5.8)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
