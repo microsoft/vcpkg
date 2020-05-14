@@ -13,12 +13,13 @@ vcpkg_from_github(
         var_libraries.patch
         wrapping.patch
         python_gpu_wrapping.patch
-		opencl.patch
+        opencl.patch
+        cufftw.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "vtk"          Module_ITKVtkGlue
-    "cuda"         Module_ITKCudaCommon
+    "cuda"         Module_ITKCudaCommon # Requires RTK?
     #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
     "cufftw"       ITK_USE_CUFFTW
     "opencl"       ITK_USE_GPU
@@ -30,7 +31,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if("cufftw" IN_LIST FEATURES)
-    message(STATUS "Warning: feature cufftw does currently not compile and requires and upstream fix!")
     # Alternativly set CUFFT_LIB and CUFFTW_LIB
     if(WIN32)
         file(TO_CMAKE_PATH "$ENV{CUDA_PATH}" CUDA_PATH)
@@ -47,6 +47,7 @@ if("cufftw" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS
              "-DFFTW_LIB_SEARCHPATH=${CUDA_LIB_PATH}"
              "-DFFTW_INCLUDE_PATH=${CUDA_PATH}/include"
+             "-DCUFFTW_INCLUDE_PATH=${CUDA_PATH}/include"
              )
     endif()
 endif()
