@@ -188,7 +188,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(GLOB_RECURSE cmake_files ${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake)
     foreach(cmake_file ${cmake_files})
         file(READ "${cmake_file}" _contents)
-        STRING(REPLACE "/bin/" "/lib/" _contents "${_contents}")
+        STRING(REPLACE "bin/" "lib/" _contents "${_contents}")
         file(WRITE "${cmake_file}" "${_contents}")
     endforeach()
 
