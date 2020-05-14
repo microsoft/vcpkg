@@ -29,7 +29,7 @@
 # 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md 
 
 # # Specifies if the port install should fail immediately given a condition
-# vcpkg_fail_port_install(MESSAGE "paraview currently only supports Linux and Mac platforms" ON_TARGET "Windows")
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
@@ -79,8 +79,9 @@ vcpkg_from_gitlab(
 
 file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBridge)
 file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting)
-#file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf)
-#file(REMOVE_RECURSE "${SOURCE_PATH}/ThirdParty/QtTesting")
+# VENDORED DEPENDENCIES
+#file(REMOVE_RECURSE "${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf")
+
 
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
@@ -92,7 +93,6 @@ if("python" IN_LIST FEATURES)
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
-message(STATUS "ADDITIONAL_OPTIONS;${ADDITIONAL_OPTIONS}")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
