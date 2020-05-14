@@ -48,8 +48,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"    BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "ipp", "ovis", "tbb", and "vtk".
+# Cannot use vcpkg_check_features() for "dnn", "ipp", "openmp", "ovis", "tbb", and "vtk".
 # As the respective value of their variables can be unset conditionally.
+set(BUILD_opencv_dnn OFF)
+if("dnn" IN_LIST FEATURES)
+  if(NOT VCPKG_TARGET_IS_ANDROID)
+    set(BUILD_opencv_dnn ON)
+  else()
+    message(WARNING "The dnn module cannot be enabled on Android")
+  endif()
+endif()
+
 set(WITH_IPP OFF)
 if("ipp" IN_LIST FEATURES)
   set(WITH_IPP ON)
@@ -98,7 +107,7 @@ if("contrib" IN_LIST FEATURES)
       HEAD_REF master
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
-  # Used for opencv's face module
+
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8afa57abc8229d611c4937165d20e2a2d9fc5a12/face_landmark_model.dat"
     FILENAME "opencv-cache/data/7505c44ca4eb54b4ab1e4777cb96ac05-face_landmark_model.dat"
@@ -245,10 +254,12 @@ vcpkg_configure_cmake(
         -DOPENCV_LIB_INSTALL_PATH=lib
         -DOPENCV_3P_LIB_INSTALL_PATH=lib
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
+        -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         -DCMAKE_DEBUG_POSTFIX=d
         -DOPENCV_DLLVERSION=
         -DOPENCV_DEBUG_POSTFIX=d
+        -DOPENCV_GENERATE_SETUPVARS=OFF
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
@@ -312,6 +323,7 @@ vcpkg_configure_cmake(
         -DWITH_LAPACK=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
+        -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         ###### Additional build flags
@@ -371,8 +383,6 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/setup_vars_opencv3.cmd)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/setup_vars_opencv3.cmd)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
 

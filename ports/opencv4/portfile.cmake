@@ -33,7 +33,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "contrib"  WITH_CONTRIB
  "cuda"     WITH_CUDA
  "cuda"     WITH_CUBLAS
- "dnn"      BUILD_opencv_dnn
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
  "gdcm"     WITH_GDCM
@@ -55,8 +54,17 @@ if("halide" IN_LIST FEATURES)
   message(WARNING "The Halide feature is currently broken")
 endif()
 
-# Cannot use vcpkg_check_features() for "gtk", "ipp", "openmp", "ovis", "tbb", and "vtk".
+# Cannot use vcpkg_check_features() for "dnn", "gtk", "ipp", "openmp", "ovis", "tbb", and "vtk".
 # As the respective value of their variables can be unset conditionally.
+set(BUILD_opencv_dnn OFF)
+if("dnn" IN_LIST FEATURES)
+  if(NOT VCPKG_TARGET_IS_ANDROID)
+    set(BUILD_opencv_dnn ON)
+  else()
+    message(WARNING "The dnn module cannot be enabled on Android")
+  endif()
+endif()
+
 set(WITH_GTK OFF)
 if("gtk" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_LINUX)
@@ -357,6 +365,7 @@ vcpkg_configure_cmake(
         -DWITH_LAPACK=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
+        -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         ###### The following module is disabled because it's broken #https://github.com/opencv/opencv_contrib/issues/2307

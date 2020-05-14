@@ -24,18 +24,23 @@ index 476156f..4b27b6a 100644
      set(OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE} /debug")
    endif()
 diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
-index c7f9fc2..c068de4 100644
+index c7f9fc2..84bd302 100644
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
-@@ -109,7 +109,7 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
+@@ -109,11 +109,11 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
    endif()
  endfunction()
  
 -if((CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" OR UNIX) AND NOT ANDROID)
-+if(NOT ANDROID)
++if(TRUE)
    ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "" "")
  endif()
  
+-if(ANDROID)
++if(FALSE)
+   ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "abi-${ANDROID_NDK_ABI_NAME}" "OpenCVConfig.root-ANDROID.cmake.in")
+   install(FILES "${OpenCV_SOURCE_DIR}/platforms/android/android.toolchain.cmake" DESTINATION "${OPENCV_CONFIG_INSTALL_PATH}" COMPONENT dev)
+ endif()
 @@ -121,7 +121,7 @@ endif()
  # --------------------------------------------------------------------------------------------
  #  Part 3/3: ${BIN_DIR}/win-install/OpenCVConfig.cmake  -> For use within binary installers/packages
