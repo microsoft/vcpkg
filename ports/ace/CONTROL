@@ -13,3 +13,10 @@ Build-Depends: openssl
 
 Feature: xml
 Description: Enable XML features in ACE
+
+Feature: zlib
+Build-Depends: zlib
+Description: Enable zlib support
+
+Feature: tao
+Description: The ACE ORB
