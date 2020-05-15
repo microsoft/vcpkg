@@ -26,6 +26,7 @@ feature(snappy Snappy)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/lang/c++
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
