@@ -114,6 +114,10 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.Llvm.Clang'
 )
 
+$WindowsSDKUrl = 'https://download.microsoft.com/download/1/c/3/1c3d5161-d9e9-4e4b-9b43-b70fe8be268c/windowssdk/winsdksetup.exe'
+
+$WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
+
 $MpiUrl = 'https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe'
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
@@ -282,6 +286,76 @@ Function InstallZip {
 
 <#
 .SYNOPSIS
+Installs Windows SDK version 2004
+
+.DESCRIPTION
+Downloads the Windows SDK installer located at $Url, and installs it with the
+correct flags.
+
+.PARAMETER Url
+The URL of the installer.
+#>
+Function InstallWindowsSDK {
+  Param(
+    [String]$Url
+  )
+
+  try {
+    Write-Host 'Downloading Windows SDK...'
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Installing Windows SDK...'
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+  }
+  catch {
+    Write-Error "Failed to install Windows SDK! $($_.Exception.Message)"
+  }
+}
+
+<#
+.SYNOPSIS
+Installs Windows WDK version 2004
+
+.DESCRIPTION
+Downloads the Windows WDK installer located at $Url, and installs it with the
+correct flags.
+
+.PARAMETER Url
+The URL of the installer.
+#>
+Function InstallWindowsWDK {
+  Param(
+    [String]$Url
+  )
+
+  try {
+    Write-Host 'Downloading Windows WDK...'
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Installing Windows WDK...'
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+  }
+  catch {
+    Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
+  }
+}
+
+<#
+.SYNOPSIS
 Installs MPI
 
 .DESCRIPTION
@@ -432,6 +506,8 @@ Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
+InstallWindowsSDK -Url $WindowsSDKUrl
+InstallWindowsWDK -Url $WindowsWDKUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
