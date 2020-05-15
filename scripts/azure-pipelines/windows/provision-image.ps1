@@ -112,6 +112,8 @@ $Workloads = @(
   'Microsoft.Component.NetFX.Native'
 )
 
+$LLVMExtensionsUrl = 'https://marekaniola.gallerycdn.vsassets.io/extensions/marekaniola/mangh-llvm2019/1.0/1561651177736/llvm2019.vsix'
+
 $MpiUrl = 'https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe'
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
@@ -280,6 +282,41 @@ Function InstallZip {
 
 <#
 .SYNOPSIS
+Installs LLVM Extensions
+
+.DESCRIPTION
+Downloads the LLVM Extensions installer located at $Url, and installs it with the
+correct flags.
+
+.PARAMETER Url
+The URL of the installer.
+#>
+Function InstallLLVMExtensions {
+  Param(
+    [String]$Url
+  )
+  try {
+    Write-Host 'Downloading LLVM Extensions...'
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Installing LLVM Extensions...'
+    $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
+    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/q /a `"$installerPath`"" -Wait -PassThru
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+  }
+  catch {
+    Write-Error "Failed to install LLVM Extensions! $($_.Exception.Message)"
+  }
+}
+
+<#
+.SYNOPSIS
 Installs MPI
 
 .DESCRIPTION
@@ -430,6 +467,7 @@ Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
+InstallLLVMExtensions -Url $LLVMExtensionsUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
