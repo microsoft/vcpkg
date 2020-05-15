@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 577000a..759e35b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -58,6 +58,10 @@ elseif(UNIX)
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
+ endif()
+ 
++if (MSVC)
++  add_compile_options(/wd4146 -D_CRT_SECURE_NO_WARNINGS)
++endif()
++
+ enable_testing()
+ add_library(descriptor_upbproto INTERFACE)
+ add_library(upb

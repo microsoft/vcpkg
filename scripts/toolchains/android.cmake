@@ -17,6 +17,12 @@ else()
     message(FATAL_ERROR "Unknown ABI for target triplet ${VCPKG_TARGET_TRIPLET}")
 endif()
 
+if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    set(ANDROID_STL c++_shared CACHE STRING "")
+else()
+    set(ANDROID_STL c++_static CACHE STRING "")
+endif()
+
 if(DEFINED ENV{ANDROID_NDK_HOME})
     set(ANDROID_NDK_HOME $ENV{ANDROID_NDK_HOME})
 else()

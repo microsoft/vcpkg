@@ -25,3 +25,7 @@ endmacro()
 
 include("${CMAKE_CURRENT_LIST_DIR}/cprTargets.cmake")
 check_required_components("cpr")
+
+include(CMakeFindDependencyMacro)
+find_dependency(ZLIB REQUIRED)
+find_dependency(CURL REQUIRED)

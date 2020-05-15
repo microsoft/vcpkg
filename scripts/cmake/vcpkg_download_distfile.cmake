@@ -45,7 +45,7 @@
 ##
 ## * [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
 ## * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
-## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
+## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
 function(vcpkg_download_distfile VAR)
     set(options SKIP_SHA512)
     set(oneValueArgs FILENAME SHA512)

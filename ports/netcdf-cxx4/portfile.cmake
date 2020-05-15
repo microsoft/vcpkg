@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(HDF5_USE_STATIC_LIBRARIES ON)
@@ -7,11 +5,10 @@ set(HDF5_USE_STATIC_LIBRARIES ON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-cxx4
-    REF v4.3.0
-    SHA512 8e77333c979513721209e6b3fde31c298e18a45d7ea08123056e8120469eb8c4024d71289fab2b9182ee19ee7b6ad22bd133525bef048a497ede4aa2e9017465
+    REF f8882188267488ef801691e69ad072e3eb217ad8 # v4.3.1
+    SHA512 9816acf221d196e21af19d4c3d85484934916e7c018e9b2c96aab9f5660b2f08c5db9cd8254ba3fa5f0aa5f5c5ad7bd3a3aaba559e5e640c5349d44e07a20ed3
     HEAD_REF master
-    PATCHES
-        install-destination.patch
+    PATCHES fix-dependecy-hdf5.patch
 )
 
 vcpkg_configure_cmake(
@@ -26,14 +23,15 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/netCDFCxx TARGET_PATH share/netCDFCxx)
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/netcdf-cxx4)
-file(
-    RENAME
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-cxx4/COPYRIGHT
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-cxx4/copyright
-)
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

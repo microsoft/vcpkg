@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ed4948f0..aee019be 100644
+index ed4948f0..9f48ebde 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,10 +2,14 @@
@@ -18,12 +18,19 @@ index ed4948f0..aee019be 100644
  SET ( ly_base_dir	${PROJECT_SOURCE_DIR} )
  SET ( ly_src_dir	${ly_base_dir}/source )
  SET ( ly_inc_dir	${ly_base_dir}/include )
-@@ -24,6 +28,8 @@ INCLUDE_DIRECTORIES( BEFORE ${ly_inc_dir} )
+@@ -14,6 +18,7 @@ SET ( ly_lib_name	yuv )
+ SET ( ly_lib_static	${ly_lib_name} )
+ SET ( ly_lib_shared	${ly_lib_name}_shared )
+ 
++FILE ( GLOB_RECURSE ly_include_files ${ly_inc_dir}/libyuv/*.h )
+ FILE ( GLOB_RECURSE	ly_source_files ${ly_src_dir}/*.cc )
+ LIST ( SORT			ly_source_files )
+ 
+@@ -24,6 +29,7 @@ INCLUDE_DIRECTORIES( BEFORE ${ly_inc_dir} )
  
  # this creates the static library (.a)
  ADD_LIBRARY				( ${ly_lib_static} STATIC ${ly_source_files} )
 +SET_TARGET_PROPERTIES( ${ly_lib_static} PROPERTIES PUBLIC_HEADER include/libyuv.h )
-+
  
  # this creates the shared library (.so)
  ADD_LIBRARY				( ${ly_lib_shared} SHARED ${ly_source_files} )
@@ -35,7 +42,7 @@ index ed4948f0..aee019be 100644
    target_link_libraries( yuvconvert ${JPEG_LIBRARY} )
    add_definitions( -DHAVE_JPEG )
  endif()
-@@ -81,10 +88,11 @@ endif()
+@@ -81,10 +88,12 @@ endif()
  
  
  # install the conversion tool, .so, .a, and all the header files
@@ -44,6 +51,7 @@ index ed4948f0..aee019be 100644
 -INSTALL ( TARGETS ${ly_lib_shared} LIBRARY				DESTINATION lib RUNTIME DESTINATION bin )
 -INSTALL ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/		DESTINATION include )
 +INSTALL ( TARGETS yuvconvert DESTINATION bin )
++INSTALL ( FILES ${ly_include_files} DESTINATION include/libyuv )
 +INSTALL ( TARGETS ${ly_lib_static} EXPORT libyuv-export DESTINATION lib INCLUDES DESTINATION include PUBLIC_HEADER DESTINATION include )
 +INSTALL ( TARGETS ${ly_lib_shared} EXPORT libyuv-export LIBRARY DESTINATION lib RUNTIME DESTINATION bin )
 +

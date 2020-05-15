@@ -3,10 +3,14 @@ include(vcpkg_common_functions)
 #the port produces some empty dlls when building shared libraries, since some components do not export anything, breaking the internal build itself
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO RamadanAhmed/DBow3
+    REPO rmsalinas/DBow3
     REF master
-    SHA512 280c76c7c547908fd133f118e1d17fe0faed87b70f61df3cd01964bd7ef33bef10dfc79d6cab8aaaf2edbfc063de0b5ad3fd80e116eab0300f1cbab86d0e38b2
+    SHA512 16e6789b77e8b42428d156ae5efa667861fa8ef2e85b54e3dd1d28e6f8dc7d119e973234c77cac82e775080fb9c859640d04159659a7d63941325e13e40b2814
+    PATCHES
+      fix_cmake.patch
 )
+
+
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

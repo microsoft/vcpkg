@@ -17,6 +17,7 @@ if(MSVC)
 endif()
 
 add_definitions(-DHAVE_CONFIG_H)
+add_definitions(-DG_DISABLE_DEPRECATED)
 add_definitions(-DG_LOG_DOMAIN="GMime")
 
 # Source files

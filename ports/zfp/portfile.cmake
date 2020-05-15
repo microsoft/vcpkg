@@ -31,11 +31,15 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
+# Rename problematic root include "bitstream.h"; conflicts with x265's private headers
+file(RENAME ${CURRENT_PACKAGES_DIR}/include/bitstream.h ${CURRENT_PACKAGES_DIR}/include/zfp/bitstream.h)
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/zfp.h "\"bitstream.h\"" "\"zfp/bitstream.h\"")
 
 vcpkg_copy_pdbs()
 

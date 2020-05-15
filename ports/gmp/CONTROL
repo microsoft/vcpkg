@@ -1,0 +1,5 @@
+Source: gmp
+Version: 6.2.0
+Homepage: https://gmplib.org/
+Description: The GNU Multiple Precision Arithmetic Library
+Build-Depends: vs-yasm (windows)
