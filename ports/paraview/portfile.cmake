@@ -1,34 +1,4 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   CURRENT_INSTALLED_DIR     = ${VCPKG_ROOT_DIR}\installed\${TRIPLET}
-#   DOWNLOADS                 = ${VCPKG_ROOT_DIR}\downloads
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#   VCPKG_TOOLCHAIN           = ON OFF
-#   TRIPLET_SYSTEM_ARCH       = arm x86 x64
-#   BUILD_ARCH                = "Win32" "x64" "ARM"
-#   MSBUILD_PLATFORM          = "Win32"/"x64"/${TRIPLET_SYSTEM_ARCH}
-#   DEBUG_CONFIG              = "Debug Static" "Debug Dll"
-#   RELEASE_CONFIG            = "Release Static"" "Release DLL"
-#   VCPKG_TARGET_IS_WINDOWS
-#   VCPKG_TARGET_IS_UWP
-#   VCPKG_TARGET_IS_LINUX
-#   VCPKG_TARGET_IS_OSX
-#   VCPKG_TARGET_IS_FREEBSD
-#   VCPKG_TARGET_IS_ANDROID
-#   VCPKG_TARGET_EXECUTABLE_SUFFIX
-#   VCPKG_TARGET_STATIC_LIBRARY_SUFFIX
-#   VCPKG_TARGET_SHARED_LIBRARY_SUFFIX
-#
-# 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md 
-
-# # Specifies if the port install should fail immediately given a condition
+set(VERSION 5.8)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
@@ -37,6 +7,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "vtkm"         PARAVIEW_USE_VTKM
     "python"       PARAVIEW_USE_PYTHON
 )
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
@@ -56,6 +27,10 @@ vcpkg_from_github(
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND VisItPatches removedoublesymbols.patch)
 endif()
+
+#The following two dependencies should probably be their own port 
+#but require additional patching in paraview to make it work. 
+
 #Get VisItBridge Plugin
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH VISITIT_SOURCE_PATH
@@ -79,9 +54,6 @@ vcpkg_from_gitlab(
 
 file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBridge)
 file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting)
-# VENDORED DEPENDENCIES
-#file(REMOVE_RECURSE "${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf")
-
 
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
@@ -106,30 +78,32 @@ vcpkg_configure_cmake(
         
         #A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
-        
+    
         # Workarounds for CMake issues
         -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
         -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
         ${ADDITIONAL_OPTIONS}
-
-        
+       
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
-        ##VTK_MODULE_USE_EXTERNAL_<name>
 )
 if(CMAKE_HOST_UNIX)
+    # ParaView runs Qt tools so LD_LIBRARY_PATH must be set correctly for them to find *.so files
     set(BACKUP_LD_LIBRARY_PATH $ENV{LD_LIBRARY_PATH})
     set(ENV{LD_LIBRARY_PATH} "${BACKUP_LD_LIBRARY_PATH}:${CURRENT_INSTALLED_DIR}/lib")
 endif()
+
 vcpkg_install_cmake(ADD_BIN_TO_PATH) # Bin to path required since paraview will use some self build tools
+
 if(CMAKE_HOST_UNIX)
     set(ENV{LD_LIBRARY_PATH} "${BACKUP_LD_LIBRARY_PATH}")
 endif()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/paraview-5.8)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/paraview-${VERSION})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-set(TOOLVER pv5.8)
+set(TOOLVER pv${VERSION})
 set(TOOLS   paraview
             pvbatch
             pvdataserver
@@ -168,12 +142,10 @@ foreach(tool ${TOOLS})
     endif()
 endforeach()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-# # Handle copyright
- file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME Copyright.txt) # Which one is the correct one?
- file(INSTALL ${SOURCE_PATH}/License_v1.2.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME copyright)
-# # Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME paraview)
 
+# # Handle copyright
+file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME Copyright.txt) # Which one is the correct one?
+file(INSTALL ${SOURCE_PATH}/License_v1.2.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME copyright)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     macro(move_bin_to_lib name)
@@ -185,7 +157,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         endif()
     endmacro()
     
-    set(to_move Lib paraview-5.8 paraview-config)
+    set(to_move Lib paraview-${VERSION} paraview-config)
     foreach(name ${to_move})
         move_bin_to_lib(${name})
     endforeach()
