@@ -126,7 +126,7 @@ namespace vcpkg::Test
         if (status == ERROR_SUCCESS && data == 1) {
             return AllowSymlinks::Yes;
         } else {
-            std::clog << "Symlinks are not allowed on this system\n";
+            std::cout << "Symlinks are not allowed on this system\n";
             return AllowSymlinks::No;
         }
 #endif
