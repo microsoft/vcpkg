@@ -71,7 +71,7 @@ function(vcpkg_configure_qmake)
                     -qtconf "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}/qt.conf"
                     ${BUILD_OPT}
             WORKING_DIRECTORY "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}"
-            LOGNAME config-${VCPKG_BUILD_TRIPLET_${buildtype}}
+            LOGNAME config-${VCPKG_BUILD_TRIPLET_${buildtype}})
         
         message(STATUS "Configuring ${VCPKG_BUILD_TRIPLET_${buildtype}} done")
         
