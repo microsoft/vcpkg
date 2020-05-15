@@ -1,5 +1,5 @@
-include(vcpkg_common_functions)
 set(SDL2_MIXER_VERSION 2.0.4)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${SDL2_MIXER_VERSION}.zip"
     FILENAME "SDL2_mixer-${SDL2_MIXER_VERSION}.zip"
@@ -11,15 +11,24 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${SDL2_MIXER_VERSION}
 )
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LIBRARY_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-else()
-    set(LIBRARY_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+if ("dynamic-load" IN_LIST FEATURES)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        message("Building static library, disable dynamic loading")
+    elseif (NOT "mpg123" IN_LIST FEATURES
+            AND NOT "libflac" IN_LIST FEATURES
+            AND NOT "libmodplug" IN_LIST FEATURES
+            AND NOT "libvorbis" IN_LIST FEATURES
+            AND NOT "opusfile" IN_LIST FEATURES
+           )
+        message("No features selected, dynamic loading will not be enabled")
+    endif()
 endif()
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    dynamic-load SDL_DYNAMIC_LOAD
     mpg123 SDL_MIXER_ENABLE_MP3
     libflac SDL_MIXER_ENABLE_FLAC
     libmodplug SDL_MIXER_ENABLE_MOD
@@ -32,7 +41,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DLIBRARY_SUFFIX=${LIBRARY_SUFFIX}
+        -DLIBRARY_SUFFIX=${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} # It should always be dynamic suffix
     OPTIONS_DEBUG
         -DSDL_MIXER_SKIP_HEADERS=ON
 )

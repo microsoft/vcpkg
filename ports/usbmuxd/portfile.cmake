@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/usbmuxd
@@ -8,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master-msvc
     PATCHES
         fix-dependence-pthreads.patch
+        fix-dependence-libimobiledevice.patch
 )
 
 vcpkg_install_msbuild(

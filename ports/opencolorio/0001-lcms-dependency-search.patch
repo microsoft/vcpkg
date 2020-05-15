@@ -17,7 +17,7 @@ index d31b4e3..778b631 100644
 +
 +    find_library(LCMS_LIBRARIES
 +        LIBRARY_NAMES
-+            lcms2
++            lcms
 +        HINTS
 +            ${LCMS_LIBRARY_DIRS}
 +    )

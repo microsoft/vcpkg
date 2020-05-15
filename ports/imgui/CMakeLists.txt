@@ -10,6 +10,7 @@ set(IMGUI_INCLUDES_PUBLIC
 
 set(IMGUI_INCLUDES_PRIVATE
     imgui_internal.h
+    imstb_textedit.h
 )
 
 set(IMGUI_SOURCES
@@ -24,6 +25,8 @@ add_library(${PROJECT_NAME}
     ${IMGUI_INCLUDES_PRIVATE}
     ${IMGUI_SOURCES}
 )
+
+file(GLOB IMGUI_BINDINGS ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_* )
 
 target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
 
@@ -40,5 +43,16 @@ if(NOT IMGUI_SKIP_HEADERS)
     install(
         FILES ${IMGUI_INCLUDES_PUBLIC}
         DESTINATION include
+    )
+endif()
+
+if(IMGUI_COPY_BINDINGS)
+    install(
+        FILES ${IMGUI_INCLUDES_PRIVATE}
+        DESTINATION include
+    )
+    install(
+        FILES ${IMGUI_BINDINGS}
+        DESTINATION include/bindings
     )
 endif()

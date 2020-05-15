@@ -1,5 +1,3 @@
-include(vcpkg_common_definitions)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(_BUILD_SHARED OFF)
     set(_BUILD_STATIC ON)
@@ -95,6 +93,4 @@ file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/OpenColorIOConfig.cmake
 )
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

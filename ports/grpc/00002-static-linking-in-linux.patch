@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a2f23d5..e433e8d 100644
+index 25d96ab..c4057b3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -111,6 +111,11 @@ endif()
- 
+@@ -152,6 +152,11 @@ endif()
  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
  
 +if (gRPC_STATIC_LINKING AND NOT _gRPC_PLATFORM_WINDOWS)
 +  # Force to static link
