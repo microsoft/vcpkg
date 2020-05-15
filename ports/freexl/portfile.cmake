@@ -63,7 +63,7 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
         ARCHIVE ${ARCHIVE}
         OUT_SOURCE_PATH SOURCE_PATH
     )
-    
+    file(REMOVE_RECURSE "${SOURCE_PATH}/configure")
     vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG
