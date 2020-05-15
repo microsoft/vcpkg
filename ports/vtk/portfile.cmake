@@ -92,7 +92,7 @@ vcpkg_from_github(
     SHA512 50a324f55b58bc4415f972f711420e83b41a100b27729266db4541c24bc7d7bcd27d9158ce2588178b9b2e43c20b9695ffe382605f5cde331e8371e213655164
     HEAD_REF master
     PATCHES
-        FindLibHaru.patch # Will be fixed in 9.0.1?
+        6890.diff         # already merged upstream
         FindLZMA.patch    # Will be fixed in 9.1?
         FindLZ4.patch
         Findproj.patch
