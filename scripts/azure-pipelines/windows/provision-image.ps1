@@ -108,8 +108,8 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.ATLMFC',
   'Microsoft.VisualStudio.Component.VC.v141.x86.x64.Spectre',
   'Microsoft.VisualStudio.Component.Windows10SDK.18362',
-  'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
-  'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
+  <# 'Microsoft.VisualStudio.Component.VC.Llvm.Clang', #>
+  <# 'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset', #>
   'Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Llvm.Clang',
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Component.NetFX.Native'
