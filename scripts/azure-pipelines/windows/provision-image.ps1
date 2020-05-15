@@ -177,7 +177,6 @@ The nickname to give the installation.
 #>
 Function InstallVisualStudio {
   Param(
-    [String]$includeRecommended = $null,
     [String[]]$Workloads,
     [String]$BootstrapperUrl,
     [String]$InstallPath = $null,
@@ -193,11 +192,6 @@ Function InstallVisualStudio {
     foreach ($workload in $Workloads) {
       $args += '--add'
       $args += $workload
-    }
-
-    if (-not ([String]::IsNullOrWhiteSpace($includeRecommended))) {
-      $args += '--includeRecommended'
-      $args += $includeRecommended
     }
 
     if (-not ([String]::IsNullOrWhiteSpace($InstallPath))) {
@@ -438,7 +432,7 @@ Add-MPPreference -ExclusionProcess cl.exe
 Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
-InstallVisualStudio -includeRecommended -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
+InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
