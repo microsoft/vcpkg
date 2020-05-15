@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # Check architecture:
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(BUILD_ARCH "Win32")
