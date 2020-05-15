@@ -1,6 +1,4 @@
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-  message(FATAL_ERROR "Folly only supports the x64 architecture.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "x86")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -12,14 +10,12 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF 8874256376d2f8a32867f17c9472a446d6707604 #2019.10.21.00
-    SHA512 96dfdde34697b72e8eb88431d742fffa337fc9146677d63cf0331dc5e4cd341fb00b88edf3781488e3194fa41525e70a6729e1bb6657f224cd1969deea9b468c
+    REF aeabaf80fc05629362c8d08f358b41f51a80985a #2020.05.11.00
+    SHA512 5507bbe39dda61dad5839466ebfb0c2cebb2e4833ff86f142e12d7ba78f1805f5834596a8d880e3f3d3032205e442dbf309254c69c716808e610bf8dc1d89fa8
     HEAD_REF master
     PATCHES
         missing-include-atomic.patch
         reorder-glog-gflags.patch
-        disable-non-underscore-posix-names.patch
-        boost-1.70.patch
 )
 
 file(COPY
