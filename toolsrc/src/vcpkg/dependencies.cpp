@@ -39,7 +39,7 @@ namespace vcpkg::Dependencies
 
         struct ClusterInstallInfo
         {
-            std::unordered_map<std::string, std::vector<FeatureSpec>> build_edges;
+            std::map<std::string, std::vector<FeatureSpec>> build_edges;
             bool defaults_requested = false;
         };
 
@@ -294,7 +294,7 @@ namespace vcpkg::Dependencies
         auto end() const { return m_graph.end(); }
 
     private:
-        std::unordered_map<PackageSpec, Cluster> m_graph;
+        std::map<PackageSpec, Cluster> m_graph;
         const PortFileProvider::PortFileProvider& m_port_provider;
     };
 
@@ -352,7 +352,7 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFileLocation& scfl,
                                          const RequestType& request_type,
-                                         std::unordered_map<std::string, std::vector<FeatureSpec>>&& dependencies)
+                                         std::map<std::string, std::vector<FeatureSpec>>&& dependencies)
         : spec(spec)
         , source_control_file_location(scfl)
         , plan_type(InstallPlanType::BUILD_AND_INSTALL)
@@ -857,7 +857,7 @@ namespace vcpkg::Dependencies
             {
                 auto&& scfl = p_cluster->m_scfl;
 
-                std::unordered_map<std::string, std::vector<FeatureSpec>> computed_edges;
+                std::map<std::string, std::vector<FeatureSpec>> computed_edges;
                 for (auto&& kv : info_ptr->build_edges)
                 {
                     std::set<FeatureSpec> fspecs;
