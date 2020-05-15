@@ -1030,6 +1030,7 @@ luajit:x86-windows        = skip
 luasocket:x64-linux=fail
 luasocket:x64-osx=fail
 lzfse:arm-uwp=fail
+magnum:arm64-windows=skip
 marl:arm-uwp=fail
 marl:x64-uwp=fail
 mathgl:x64-osx=fail
