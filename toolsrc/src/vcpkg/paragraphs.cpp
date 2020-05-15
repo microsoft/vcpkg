@@ -1,13 +1,13 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/parse.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/paragraphparseresult.h>
 #include <vcpkg/paragraphs.h>
-#include <vcpkg/parse.h>
 
 using namespace vcpkg::Parse;
 using namespace vcpkg;
@@ -67,11 +67,11 @@ namespace vcpkg::Paragraphs
         }
 
     public:
-        ExpectedS<std::vector<Paragraph>> get_paragraphs(CStringView text, CStringView origin)
+        PghParser(StringView text, StringView origin) : Parse::ParserBase(text, origin) {}
+
+        ExpectedS<std::vector<Paragraph>> get_paragraphs()
         {
             std::vector<Paragraph> paragraphs;
-
-            init(text, origin);
 
             skip_whitespace();
             while (!at_eof())
@@ -88,8 +88,7 @@ namespace vcpkg::Paragraphs
 
     static ExpectedS<Paragraph> parse_single_paragraph(const std::string& str, const std::string& origin)
     {
-        PghParser parser;
-        auto pghs = parser.get_paragraphs(str, origin);
+        auto pghs = PghParser(str, origin).get_paragraphs();
 
         if (auto p = pghs.get())
         {
@@ -126,8 +125,7 @@ namespace vcpkg::Paragraphs
 
     ExpectedS<std::vector<Paragraph>> parse_paragraphs(const std::string& str, const std::string& origin)
     {
-        PghParser parser;
-        return parser.get_paragraphs(str, origin);
+        return PghParser(str, origin).get_paragraphs();
     }
 
     ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)

@@ -62,7 +62,7 @@ namespace vcpkg
                 // for compatibility with previous vcpkg versions, we discard all irrelevant information
                 return dep.name;
             });
-        if (this->feature.empty())
+        if (!this->is_feature())
         {
             this->default_features = parse_default_features_list(parser.optional_field(Fields::DEFAULTFEATURES))
                                          .value_or_exit(VCPKG_LINE_INFO);
@@ -85,13 +85,16 @@ namespace vcpkg
                                      Triplet triplet,
                                      const std::string& abi_tag,
                                      const std::vector<FeatureSpec>& deps)
-        : version(spgh.version)
+        : spec(spgh.name, triplet)
+        , version(spgh.version)
         , description(spgh.description)
         , maintainer(spgh.maintainer)
+        , feature()
+        , default_features(spgh.default_features)
+        , depends()
         , abi(abi_tag)
         , type(spgh.type)
     {
-        this->spec = PackageSpec(spgh.name, triplet);
         this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
         Util::sort_unique_erase(this->depends);
     }
@@ -100,16 +103,23 @@ namespace vcpkg
                                      const FeatureParagraph& fpgh,
                                      Triplet triplet,
                                      const std ::vector<FeatureSpec>& deps)
-        : version(), description(fpgh.description), maintainer(), feature(fpgh.name), type(spgh.type)
+        : spec(spgh.name, triplet)
+        , version()
+        , description(fpgh.description)
+        , maintainer()
+        , feature(fpgh.name)
+        , default_features()
+        , depends()
+        , abi()
+        , type(spgh.type)
     {
-        this->spec = PackageSpec(spgh.name, triplet);
         this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
         Util::sort_unique_erase(this->depends);
     }
 
     std::string BinaryParagraph::displayname() const
     {
-        if (this->feature.empty() || this->feature == "core")
+        if (!this->is_feature() || this->feature == "core")
             return Strings::format("%s:%s", this->spec.name(), this->spec.triplet());
         return Strings::format("%s[%s]:%s", this->spec.name(), this->feature, this->spec.triplet());
     }
@@ -126,7 +136,7 @@ namespace vcpkg
         out_str.append("Package: ").append(pgh.spec.name()).push_back('\n');
         if (!pgh.version.empty())
             out_str.append("Version: ").append(pgh.version).push_back('\n');
-        else if (!pgh.feature.empty())
+        else if (pgh.is_feature())
             out_str.append("Feature: ").append(pgh.feature).push_back('\n');
         if (!pgh.depends.empty())
         {
@@ -143,5 +153,7 @@ namespace vcpkg
         if (!pgh.description.empty()) out_str.append("Description: ").append(pgh.description).push_back('\n');
 
         out_str.append("Type: ").append(Type::to_string(pgh.type)).push_back('\n');
+        if (!pgh.default_features.empty())
+            out_str.append("Default-Features: ").append(Strings::join(", ", pgh.default_features)).push_back('\n');
     }
 }
