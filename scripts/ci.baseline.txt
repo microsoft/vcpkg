@@ -1171,6 +1171,7 @@ nana:x64-uwp=fail
 nanodbc:arm-uwp=fail
 nanodbc:x64-osx=fail
 nanodbc:x64-uwp=fail
+nanogui:arm64-windows=fail
 nanorange:arm64-windows=fail
 nanorange:arm-uwp=fail
 nanorange:x64-linux=fail
