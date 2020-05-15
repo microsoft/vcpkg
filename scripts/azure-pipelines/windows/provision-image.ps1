@@ -177,11 +177,11 @@ The nickname to give the installation.
 #>
 Function InstallVisualStudio {
   Param(
+    [String]$includeRecommended = $null,
     [String[]]$Workloads,
     [String]$BootstrapperUrl,
     [String]$InstallPath = $null,
-    [String]$Nickname = $null,
-    [String]$includeRecommended = $null
+    [String]$Nickname = $null
   )
 
   try {
@@ -195,14 +195,14 @@ Function InstallVisualStudio {
       $args += $workload
     }
 
-    if (-not ([String]::IsNullOrWhiteSpace($InstallPath))) {
-      $args += '--installpath'
-      $args += $InstallPath
-    }
-
     if (-not ([String]::IsNullOrWhiteSpace($includeRecommended))) {
       $args += '--includeRecommended'
       $args += $includeRecommended
+    }
+
+    if (-not ([String]::IsNullOrWhiteSpace($InstallPath))) {
+      $args += '--installpath'
+      $args += $InstallPath
     }
 
     if (-not ([String]::IsNullOrWhiteSpace($Nickname))) {
