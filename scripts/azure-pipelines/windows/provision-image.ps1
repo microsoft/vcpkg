@@ -297,12 +297,10 @@ Function InstallLLVMExtensions {
   )
   try {
     Write-Host 'Downloading LLVM Extensions...'
-    [string]$installerPath = Get-TempFilePath -Extension 'vsix'
     curl.exe -L -o $installerPath -s -S $Url
     Write-Host 'Installing LLVM Extensions...'
     $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
-    $vsixPath = "$env:installerPath\llvm2019.vsix"
-    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/q /a $vsixPath" -Wait -PassThru
+    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/q /a $installerPath/llvm2019.vsix" -Wait -PassThru
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0) {
       Write-Host 'Installation successful!'
