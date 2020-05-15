@@ -113,7 +113,6 @@ $Workloads = @(
   'Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Llvm.Clang',
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Component.NetFX.Native'
-  <# add --includeRecommended ? #>
 )
 
 $MpiUrl = 'https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe'
@@ -433,7 +432,7 @@ Add-MPPreference -ExclusionProcess cl.exe
 Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
-InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
+InstallVisualStudio --includeRecommended -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
