@@ -36,6 +36,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             INST_DIR="${CURRENT_PACKAGES_DIR}"
             "LINK_FLAGS="
             "LIBS_ALL=${LIBS_ALL_REL}"
+        BUILD_TARGET ""
         
     )
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
