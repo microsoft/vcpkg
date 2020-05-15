@@ -9,7 +9,6 @@ add_library(murmurhash
             src/MurmurHash2.cpp
             src/MurmurHash3.cpp
             )
-target_include_directories(murmurhash SYSTEM PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/src)
 
 set(MURMUR_HEADERS
     src/MurmurHash2.h
@@ -29,17 +28,10 @@ set(namespace "${PROJECT_NAME}::")
 
 include(CMakePackageConfigHelpers)
 
-# Configure '<PROJECT-NAME>ConfigVersion.cmake'
-# Use:
-#   * PROJECT_VERSION
 write_basic_package_version_file(
         "${version_config}" COMPATIBILITY SameMajorVersion
 )
 
-# Configure '<PROJECT-NAME>Config.cmake'
-# Use variables:
-#   * TARGETS_EXPORT_NAME
-#   * PROJECT_NAME
 configure_package_config_file(
         "${CMAKE_SOURCE_DIR}/Config.cmake.in"
         "${project_config}"
