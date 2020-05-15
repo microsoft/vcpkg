@@ -112,6 +112,8 @@ $Workloads = @(
   'Microsoft.Component.NetFX.Native'
 )
 
+$WindowsWDKUrl = 'https://download.microsoft.com/download/2/9/3/29376990-B744-43C5-AE5C-99405068D58B/WDK/wdksetup.exe'
+
 $MpiUrl = 'https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe'
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
@@ -280,6 +282,41 @@ Function InstallZip {
 
 <#
 .SYNOPSIS
+Installs Windows WDK
+
+.DESCRIPTION
+Downloads the Windows WDK installer located at $Url, and installs it with the
+correct flags.
+
+.PARAMETER Url
+The URL of the installer.
+#>
+Function InstallWindowsWDK {
+  Param(
+    [String]$Url
+  )
+
+  try {
+    Write-Host 'Downloading Windows WDK...'
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Installing Windows WDK...'
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features +', '/repair', '/q') -Wait -PassThru
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+  }
+  catch {
+    Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
+  }
+}
+
+<#
+.SYNOPSIS
 Installs MPI
 
 .DESCRIPTION
@@ -429,7 +466,8 @@ Add-MPPreference -ExclusionProcess cl.exe
 Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
-InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
+InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable
+InstallWindowsWDK -Url $WindowsWDKUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
