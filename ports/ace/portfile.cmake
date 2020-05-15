@@ -23,6 +23,11 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/process_manager.patch"
+)
 
 set(ACE_ROOT ${SOURCE_PATH})
 set(ENV{ACE_ROOT} ${ACE_ROOT})
