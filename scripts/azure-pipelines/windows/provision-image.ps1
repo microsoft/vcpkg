@@ -285,8 +285,7 @@ Function InstallZip {
 Installs LLVM Extensions
 
 .DESCRIPTION
-Downloads the LLVM Extensions installer located at $Url, and installs it with the
-correct flags.
+Downloads the LLVM Extensions installer located at $Url, and installs it with the correct flags.
 
 .PARAMETER Url
 The URL of the installer.
