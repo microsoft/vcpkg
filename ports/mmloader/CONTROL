@@ -1,6 +1,7 @@
 Source: mmloader
-Version: 2019-12-31
+Version: 2020-05-15
 Description: A library for loading dll module bypassing windows PE loader from memory (x86/x64)
+Supports: windows&!(uwp|arm|arm64)
 Homepage: http://tishion.github.io/mmLoader/
 
 Feature: shellcode

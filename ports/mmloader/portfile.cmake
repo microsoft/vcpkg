@@ -1,54 +1,40 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "Linux" "OSX" "UWP")
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tishion/mmLoader
-    REF 45ee22085d316088f94e45e5eee4229d67f0d550
-    SHA512 7151b3ace107e02ba8257b58463af69eee5c2e379633578d5077c137574f0a2b74020db67401ab66ed6d2974d20cb07d5bed736e56baa3193b140af1248582c9
+    REF 29e2263a68c17729058be0efb38f87f5ca6f6992
+    SHA512 08bf5d51ede82fc3e2d19b6789891e17f6b370479cbfbe3be9858d8d7d0bc3c87236d052808b3ca3bb74b60a2d6a0c19cd61bda5e4e34e7a1ca25dba5f0c246e
     HEAD_REF master
-    PATCHES
-        fix-invalid-crt-linkage.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(CONFIGURATION_SUFFIX "StaticCRT")
-else()
-    set(CONFIGURATION_SUFFIX "")
-endif()
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-file(REMOVE_RECURSE ${SOURCE_PATH}/output)
-
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/MemModLoader.sln
+vcpkg_install_msbuild(
+    SOURCE_PATH ${SOURCE_PATH}
+    PROJECT_SUBPATH MemModLoader.sln
     TARGET build\\mmLoader-static
     PLATFORM ${VCPKG_TARGET_ARCHITECTURE}
-    RELEASE_CONFIGURATION "Release${CONFIGURATION_SUFFIX}"
-    DEBUG_CONFIGURATION "Debug${CONFIGURATION_SUFFIX}"
+    LICENSE_SUBPATH License
+    SKIP_CLEAN
 )
 
-if ("shellcode" IN_LIST FEATURES)
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/MemModLoader.sln
+# vcpkg_install_msbuild(INCLUDES_SUBPATH src) will install `src/mmLoader/mmLoader.c` as well.
+file(INSTALL ${SOURCE_PATH}/src/mmLoader/mmLoader.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/mmLoader)
+
+if("shellcode" IN_LIST FEATURES)
+    vcpkg_install_msbuild(
+        SOURCE_PATH ${SOURCE_PATH}
+        PROJECT_SUBPATH MemModLoader.sln
         TARGET build\\mmLoader-shellcode-generator
         PLATFORM ${VCPKG_TARGET_ARCHITECTURE}
+        SKIP_CLEAN
     )
+
+    get_filename_component(source_path_last_part ${SOURCE_PATH} NAME)
+
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${source_path_last_part}/output/include/mmLoader/mmLoaderShellCode-${VCPKG_TARGET_ARCHITECTURE}-Debug.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/mmLoader)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${source_path_last_part}/output/include/mmLoader/mmLoaderShellCode-${VCPKG_TARGET_ARCHITECTURE}-Release.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/mmLoader)
 endif()
 
-file(GLOB mmLoader_HEADERS ${SOURCE_PATH}/output/include/mmLoader/*.h)
-file(INSTALL ${mmLoader_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/mmLoader)
-
-file(GLOB mmLoader_libs ${SOURCE_PATH}/output/lib/*.lib)
-
-file(GLOB mmLoader_debug_lib ${SOURCE_PATH}/output/lib/*-d.lib)
-if(mmLoader_debug_lib)
-    file(INSTALL ${mmLoader_debug_lib} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-endif()
-
-list(REMOVE_ITEM mmLoader_libs ${mmLoader_debug_lib})
-if(mmLoader_libs)
-    file(INSTALL ${mmLoader_libs} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-endif()
-
-file(INSTALL ${SOURCE_PATH}/License DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_clean_msbuild()
