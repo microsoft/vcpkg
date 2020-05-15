@@ -297,7 +297,7 @@ Function InstallLLVMExtensions {
   )
   try {
     Write-Host 'Downloading LLVM Extensions...'
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    [string]$installerPath = Get-TempFilePath -Extension 'vsix'
     curl.exe -L -o $installerPath -s -S $Url
     Write-Host 'Installing LLVM Extensions...'
     $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
