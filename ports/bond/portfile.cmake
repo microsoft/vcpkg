@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -34,11 +32,9 @@ else()
 
 endif()
 
-if ("bond-over-grpc" IN_LIST FEATURES)
-    set(ENABLE_GRPC TRUE)
-else()
-    set(ENABLE_GRPC FALSE)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  bond-over-grpc BOND_ENABLE_GRPC
+)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -48,8 +44,8 @@ vcpkg_configure_cmake(
     -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
     -DBOND_SKIP_GBC_TESTS=TRUE
     -DBOND_ENABLE_COMM=FALSE
-    -DBOND_ENABLE_GRPC=${ENABLE_GRPC}
     -DBOND_FIND_RAPIDJSON=TRUE
+    ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
