@@ -7,8 +7,11 @@ Build a msvc makefile project.
 vcpkg_build_nmake(
     SOURCE_PATH <${SOURCE_PATH}>
     [NO_DEBUG]
-    PROJECT_SUBPATH <${SUBPATH}>
-    PROJECT_NAME <${MAKEFILE_NAME}>
+    [PROJECT_SUBPATH <${SUBPATH}>]
+    [PROJECT_NAME <${MAKEFILE_NAME}>]
+    [PRERUN_SHELL <${SHELL_PATH}>]
+    [PRERUN_SHELL_DEBUG <${SHELL_PATH}>]
+    [PRERUN_SHELL_RELEASE <${SHELL_PATH}>]
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
@@ -32,6 +35,15 @@ This port doesn't support debug mode.
 
 ### ENABLE_INSTALL
 Install binaries after build.
+
+### PRERUN_SHELL
+Script that needs to be called before build
+
+### PRERUN_SHELL_DEBUG
+Script that needs to be called before debug build
+
+### PRERUN_SHELL_RELEASE
+Script that needs to be called before release build
 
 ### OPTIONS
 Additional options passed to generate during the generation.

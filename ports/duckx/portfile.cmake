@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO amiremohamadi/DuckX
-    REF 98c946ad13559c03e9c7f2b050b9f70d5caf509e
-    SHA512 20e8970a1faff6e2ff5bc106bd038396d05ace3517ac83583712263870c4b007ebc407b5d69c482f7117ac155aa85f9928d5ee524f75897e8e12eb3659d16c15
+    REF v1.0.0
+    SHA512 21db28f5c62a5695363cb844ce0ca45057433dd622dad44278459dd0582c92a8ca98d8bf597955426636ad31776abdcfdbe51a7fbfe256cfa8adcb8a2fd9410d
 )
 
 vcpkg_configure_cmake(

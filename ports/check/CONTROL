@@ -1,3 +1,4 @@
 Source: check
-Version: 0.12.0-2
+Version: 0.14.0
+Homepage: https://github.com/libcheck/check
 Description: A unit testing framework for C

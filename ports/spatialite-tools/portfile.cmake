@@ -20,8 +20,8 @@ find_program(NMAKE nmake)
 set(LDIR "\"${CURRENT_INSTALLED_DIR}\"")
 
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(CL_FLAGS_DBG "/MDd /Zi")
-    set(CL_FLAGS_REL "/MD /Ox")
+    set(CL_FLAGS_DBG "/MDd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
+    set(CL_FLAGS_REL "/MD /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
     set(GEOS_LIBS_REL "${LDIR}/lib/geos_c.lib")
     set(GEOS_LIBS_DBG "${LDIR}/debug/lib/geos_cd.lib")
     set(LIBXML2_LIBS_REL "${LDIR}/lib/libxml2.lib")
@@ -31,8 +31,8 @@ if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
     set(ICONV_LIBS_REL "${LDIR}/lib/libiconv.lib")
     set(ICONV_LIBS_DBG "${LDIR}/debug/lib/libiconv.lib")
 else()
-    set(CL_FLAGS_DBG "/MTd /Zi")
-    set(CL_FLAGS_REL "/MT /Ox")
+    set(CL_FLAGS_DBG "/MTd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
+    set(CL_FLAGS_REL "/MT /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
     set(GEOS_LIBS_REL "${LDIR}/lib/libgeos_c.lib ${LDIR}/lib/libgeos.lib")
     set(GEOS_LIBS_DBG "${LDIR}/debug/lib/libgeos_c.lib ${LDIR}/debug/lib/libgeos.lib")
     set(LIBXML2_LIBS_REL "${LDIR}/lib/libxml2.lib ${LDIR}/lib/lzma.lib ws2_32.lib")
@@ -52,7 +52,7 @@ set(LIBS_ALL_DBG
     ${LDIR}/debug/lib/readosm.lib \
     ${LDIR}/debug/lib/expat.lib \
     ${LDIR}/debug/lib/zlibd.lib \
-    ${LDIR}/debug/lib/projd.lib"
+    ${LDIR}/debug/lib/proj_d.lib"
    )
 set(LIBS_ALL_REL
     "${ICONV_LIBS_REL} \

@@ -5,11 +5,18 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 For short description of available commands, run `vcpkg help`.
 
+* Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
+* Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
+* Docs: [Documentation](docs/index.md)
+
+[![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
+
 ## Quick Start
 Prerequisites:
 - Windows 10, 8.1, 7, Linux, or MacOS
 - Visual Studio 2015 Update 3 or newer (on Windows)
 - Git
+- gcc >= 7 or equivalent clang (on Linux)
 - *Optional:* CMake 3.12.4
 
 To get started:
@@ -70,3 +77,9 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 ## License
 
 Code licensed under the [MIT License](LICENSE.txt).
+
+## Telemetry
+
+vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by running `bootstrap-vcpkg.bat` or `bootstrap-vcpkg.sh` with `-disableMetrics`.
+
+Read more about vcpkg telemetry at docs/about/privacy.md

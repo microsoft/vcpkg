@@ -1,9 +1,9 @@
 diff --git a/bench/CMakeLists.txt b/bench/CMakeLists.txt
-index 3c4a3f9..3bc3813 100644
+index d087cf6..86483db 100644
 --- a/bench/CMakeLists.txt
 +++ b/bench/CMakeLists.txt
-@@ -46,3 +46,8 @@ add_executable(formatter-bench formatter-bench.cpp)
- target_link_libraries(formatter-bench PRIVATE benchmark::benchmark spdlog::spdlog Threads::Threads)
+@@ -26,3 +26,8 @@ add_executable(formatter-bench formatter-bench.cpp)
+ target_link_libraries(formatter-bench PRIVATE benchmark::benchmark spdlog::spdlog)
  
  file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/logs")
 +

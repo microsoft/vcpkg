@@ -1,0 +1,135 @@
+diff --git a/configure b/configure
+index aafdad5..fe46039 100644
+--- a/configure
++++ b/configure
+@@ -17448,6 +17448,7 @@ fi
+ #   --enable-proj
+ #
+ # Check whether --enable-proj was given.
++
+ if test "${enable_proj+set}" = set; then :
+   enableval=$enable_proj;
+ else
+@@ -17469,122 +17470,6 @@ fi
+ 
+ done
+ 
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pj_init_plus" >&5
+-$as_echo_n "checking for library containing pj_init_plus... " >&6; }
+-if ${ac_cv_search_pj_init_plus+:} false; then :
+-  $as_echo_n "(cached) " >&6
+-else
+-  ac_func_search_save_LIBS=$LIBS
+-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-
+-/* Override any GCC internal prototype to avoid an error.
+-   Use char because int might match the return type of a GCC
+-   builtin and then its argument prototype would still apply.  */
+-#ifdef __cplusplus
+-extern "C"
+-#endif
+-char pj_init_plus ();
+-int
+-main ()
+-{
+-return pj_init_plus ();
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-for ac_lib in '' proj; do
+-  if test -z "$ac_lib"; then
+-    ac_res="none required"
+-  else
+-    ac_res=-l$ac_lib
+-    LIBS="-l$ac_lib -lm $ac_func_search_save_LIBS"
+-  fi
+-  if ac_fn_c_try_link "$LINENO"; then :
+-  ac_cv_search_pj_init_plus=$ac_res
+-fi
+-rm -f core conftest.err conftest.$ac_objext \
+-    conftest$ac_exeext
+-  if ${ac_cv_search_pj_init_plus+:} false; then :
+-  break
+-fi
+-done
+-if ${ac_cv_search_pj_init_plus+:} false; then :
+-
+-else
+-  ac_cv_search_pj_init_plus=no
+-fi
+-rm conftest.$ac_ext
+-LIBS=$ac_func_search_save_LIBS
+-fi
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_pj_init_plus" >&5
+-$as_echo "$ac_cv_search_pj_init_plus" >&6; }
+-ac_res=$ac_cv_search_pj_init_plus
+-if test "$ac_res" != no; then :
+-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+-
+-else
+-  as_fn_error $? "'libproj' is required but it doesn't seem to be installed on this system." "$LINENO" 5
+-fi
+-
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pj_init_ctx" >&5
+-$as_echo_n "checking for library containing pj_init_ctx... " >&6; }
+-if ${ac_cv_search_pj_init_ctx+:} false; then :
+-  $as_echo_n "(cached) " >&6
+-else
+-  ac_func_search_save_LIBS=$LIBS
+-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-
+-/* Override any GCC internal prototype to avoid an error.
+-   Use char because int might match the return type of a GCC
+-   builtin and then its argument prototype would still apply.  */
+-#ifdef __cplusplus
+-extern "C"
+-#endif
+-char pj_init_ctx ();
+-int
+-main ()
+-{
+-return pj_init_ctx ();
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-for ac_lib in '' proj; do
+-  if test -z "$ac_lib"; then
+-    ac_res="none required"
+-  else
+-    ac_res=-l$ac_lib
+-    LIBS="-l$ac_lib -lm $ac_func_search_save_LIBS"
+-  fi
+-  if ac_fn_c_try_link "$LINENO"; then :
+-  ac_cv_search_pj_init_ctx=$ac_res
+-fi
+-rm -f core conftest.err conftest.$ac_objext \
+-    conftest$ac_exeext
+-  if ${ac_cv_search_pj_init_ctx+:} false; then :
+-  break
+-fi
+-done
+-if ${ac_cv_search_pj_init_ctx+:} false; then :
+-
+-else
+-  ac_cv_search_pj_init_ctx=no
+-fi
+-rm conftest.$ac_ext
+-LIBS=$ac_func_search_save_LIBS
+-fi
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_pj_init_ctx" >&5
+-$as_echo "$ac_cv_search_pj_init_ctx" >&6; }
+-ac_res=$ac_cv_search_pj_init_ctx
+-if test "$ac_res" != no; then :
+-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+-
+-else
+-  as_fn_error $? "'libproj' is required but the version on this system does not support the required features (Version 4.8.0 or later is needed)." "$LINENO" 5
+-fi
+-
+ else
+   $as_echo "#define OMIT_PROJ 1" >>confdefs.h
+ 

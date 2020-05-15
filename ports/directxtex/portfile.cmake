@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF aug2019
-    SHA512 16e29fc2ce0c03d71d44dd770271498fc45cd6d29bb48b2a574f65988c0be4319c91d531a2609c0dfbbdf721fd168091d7e9b653c741a6709a8906ea9555548f
+    REF dec2019
+    SHA512 b0c7fdeb2f035186eddeb543cd16813c6807b9646367cd309082bd164ab484001dee912249d5570e3ddf5abb90cb3e7c0355a3c18c2e2bd2a051292b65a293f6
     HEAD_REF master
 )
 
@@ -30,10 +30,14 @@ else()
     message(FATAL_ERROR "Unsupported platform toolset.")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(SLN_NAME "Windows10_${VS_VERSION}")
 else()
-    set(SLN_NAME "Desktop_${VS_VERSION}")
+    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
+        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
+    else()
+        set(SLN_NAME "Desktop_${VS_VERSION}")
+    endif()
 endif()
 
 vcpkg_build_msbuild(
@@ -48,12 +52,14 @@ file(INSTALL
 )
 file(INSTALL
     ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTex.lib
+    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTex.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(INSTALL
     ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.lib
+    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_UWP AND NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
     set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtex)
     file(MAKE_DIRECTORY ${TOOL_PATH})
     file(INSTALL
@@ -67,6 +73,4 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         DESTINATION ${TOOL_PATH})
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/DirectXTex)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/DirectXTex/LICENSE ${CURRENT_PACKAGES_DIR}/share/DirectXTex/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

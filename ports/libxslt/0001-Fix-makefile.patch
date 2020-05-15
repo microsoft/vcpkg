@@ -6,32 +6,6 @@ diff --git a/win32/Makefile.msvc b/win32/Makefile.msvc
 index 23a02d2..b13dd26 100644
 --- a/win32/Makefile.msvc
 +++ b/win32/Makefile.msvc
-@@ -22,7 +22,7 @@ BASEDIR = ..
- XSLT_SRCDIR = $(BASEDIR)\libxslt
- EXSLT_SRCDIR = $(BASEDIR)\libexslt
- UTILS_SRCDIR = $(BASEDIR)\xsltproc
--BINDIR = bin.msvc
-+BINDIR = $(OUTDIR)\bin.msvc
- 
- # Names of various input and output components.
- XSLT_NAME = xslt
-@@ -39,11 +39,11 @@ EXSLT_DEF = $(EXSLT_BASENAME).def
- EXSLT_A = $(EXSLT_BASENAME)_a.lib
- 
- # Places where intermediate files produced by the compiler go
--XSLT_INTDIR = int.xslt.msvc
--XSLT_INTDIR_A = int.xslta.msvc
--EXSLT_INTDIR = int.exslt.msvc
--EXSLT_INTDIR_A = int.exslta.msvc
--UTILS_INTDIR = int.utils.msvc
-+XSLT_INTDIR = $(OUTDIR)\int.xslt.msvc
-+XSLT_INTDIR_A = $(OUTDIR)\int.xslta.msvc
-+EXSLT_INTDIR = $(OUTDIR)\int.exslt.msvc
-+EXSLT_INTDIR_A = $(OUTDIR)\int.exslta.msvc
-+UTILS_INTDIR = $(OUTDIR)\int.utils.msvc
- 
- # The preprocessor and its options.
- CPP = cl.exe /EP
 @@ -59,7 +59,13 @@ CFLAGS = $(CFLAGS) /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE
  LD = link.exe
  LDFLAGS = /nologo

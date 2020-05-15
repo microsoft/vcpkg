@@ -1,0 +1,135 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2577bb2..e88761c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,18 +12,19 @@ option(FEATURE_PE "Implement all win pe hooking functionality" ON)
+ option(BUILD_DLL "Build dll & lib instead of tests" OFF)
+ option(BUILD_STATIC "If BUILD_DLL is set, create the type that can be statically linked" ON)
+ option(CAPSTONE_FULL "Build all features of capstone." OFF)
++option(BUILD_TOOLS "Build tests" OFF)
+ 
+ # Calculate inclusion of necessary dependencies based on features
+ 
+ # for now only inlinentd uses asmjit
+ set(DEP_ASMJIT_NEED ${FEATURE_INLINENTD})
+-set(DEP_ZYDIS_NEED ON)
++set(DEP_ZYDIS_NEED OFF)
+ # todo: make inclusion of capstone stuff depend on feature flags
+ 
+ #IDE's like it when header file are included as source files
+ set(HEADER_FILES ${PROJECT_SOURCE_DIR}/polyhook2/ADisassembler.hpp
+         ${PROJECT_SOURCE_DIR}/polyhook2/CapstoneDisassembler.hpp
+-		${PROJECT_SOURCE_DIR}/polyhook2/ZydisDisassembler.hpp
++#		${PROJECT_SOURCE_DIR}/polyhook2/ZydisDisassembler.hpp
+         ${PROJECT_SOURCE_DIR}/polyhook2/Enums.hpp
+         ${PROJECT_SOURCE_DIR}/polyhook2/IHook.hpp
+         ${PROJECT_SOURCE_DIR}/polyhook2/Instruction.hpp
+@@ -35,13 +36,13 @@ set(HEADER_FILES ${PROJECT_SOURCE_DIR}/polyhook2/ADisassembler.hpp
+ 
+ set(HEADER_IMP_SOURCES 
+ 		${PROJECT_SOURCE_DIR}/sources/CapstoneDisassembler.cpp
+-		${PROJECT_SOURCE_DIR}/sources/ZydisDisassembler.cpp
++#		${PROJECT_SOURCE_DIR}/sources/ZydisDisassembler.cpp
+ 		${PROJECT_SOURCE_DIR}/sources/MemProtector.cpp
+ 		${PROJECT_SOURCE_DIR}/sources/TestEffectTracker.cpp
+ 		${PROJECT_SOURCE_DIR}/sources/PageAllocator.cpp)
+ 
+ # only build tests if making exe
+-if(BUILD_DLL MATCHES OFF)
++if(BUILD_TOOLS)
+ 	set(UNIT_TEST_SOURCES
+ 			${PROJECT_SOURCE_DIR}/MainTests.cpp
+ 			${PROJECT_SOURCE_DIR}/UnitTests/TestDisassembler.cpp
+@@ -65,7 +66,7 @@ if(FEATURE_DETOURS MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${DETOUR_IMP_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+ 			# 64 bits
+ 			set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES} 
+@@ -93,7 +94,7 @@ if(FEATURE_EXCEPTION MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${EXCEPTION_IMP_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES} 
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestBreakpointHook.cpp
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestHWBreakpointHook.cpp)
+@@ -113,7 +114,7 @@ if(FEATURE_VIRTUALS MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${VIRTUAL_IMP_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES} 
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestVTableSwapHook.cpp
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestVFuncSwapHook.cpp)
+@@ -134,7 +135,7 @@ if(FEATURE_PE MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${PE_IMP_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES}
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestEatHook.cpp
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestIatHook.cpp)
+@@ -152,7 +153,7 @@ if(FEATURE_INLINENTD MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${NTD_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+ 			# 64 bits
+ 			set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES}
+@@ -175,8 +176,10 @@ if(BUILD_DLL MATCHES ON)
+ 	else()
+ 	    add_library(PolyHook_2 SHARED ${SOURCE_FILES_PLH})
+ 	endif()
+-else()
+-    add_executable(PolyHook_2 ${SOURCE_FILES_PLH})
++endif()
++
++if(BUILD_TOOLS)
++    add_executable(PolyHook2_tool ${SOURCE_FILES_PLH})
+ endif()
+ 
+ # add WALL + PDB flags
+@@ -220,8 +223,16 @@ if(NOT ${CAPSTONE_FULL})
+ 	set(CAPSTONE_EVM_SUPPORT OFF CACHE BOOL "EVM support")
+ endif()
+ 
+-add_subdirectory(capstone)
+-target_link_libraries(${PROJECT_NAME} capstone-static)
++find_library(CAPSTONE_LIBRARY NAMES capstone_dll capstone)
++find_path(CAPSTONE_INCLUDE_DIR NAMES capstone/capstone.h)
++target_link_libraries(${PROJECT_NAME} ${CAPSTONE_LIBRARY})
++target_include_directories(${PROJECT_NAME} PRIVATE ${CAPSTONE_INCLUDE_DIR})
++
++if(BUILD_TOOLS)
++    target_link_libraries(PolyHook2_tool ${CAPSTONE_LIBRARY})
++    target_include_directories(PolyHook2_tool PRIVATE ${CAPSTONE_INCLUDE_DIR})
++    install(TARGETS PolyHook2_tool DESTINATION tool)
++endif()
+ 
+ # ASMJIT
+ if(DEP_ASMJIT_NEED MATCHES ON)
+diff --git a/polyhook2/CapstoneDisassembler.hpp b/polyhook2/CapstoneDisassembler.hpp
+index d227b30..bb5d222 100644
+--- a/polyhook2/CapstoneDisassembler.hpp
++++ b/polyhook2/CapstoneDisassembler.hpp
+@@ -7,7 +7,7 @@
+ 
+ #include "polyhook2/ADisassembler.hpp"
+ 
+-#include <capstone/include/capstone/capstone.h>
++#include <capstone/capstone.h>
+ 
+ #include <string.h>
+ #include <iostream> //for debug printing
+-- 
+2.25.0.windows.1
+

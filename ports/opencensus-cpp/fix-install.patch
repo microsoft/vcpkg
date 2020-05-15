@@ -1,0 +1,154 @@
+diff --git a/cmake/OpenCensusHelpers.cmake b/cmake/OpenCensusHelpers.cmake
+index c8d35e6..a15231a 100644
+--- a/cmake/OpenCensusHelpers.cmake
++++ b/cmake/OpenCensusHelpers.cmake
+@@ -38,6 +38,13 @@ function(opencensus_test NAME SRC)
+                           gmock
+                           gtest_main)
+     add_test(NAME ${_NAME} COMMAND ${_NAME})
++    
++    install(
++      TARGETS ${_NAME}
++      RUNTIME DESTINATION tools
++      LIBRARY DESTINATION lib
++      ARCHIVE DESTINATION lib
++    )
+   endif()
+ endfunction()
+ 
+@@ -51,6 +58,13 @@ function(opencensus_benchmark NAME SRC)
+     add_executable(${_NAME} ${SRC})
+     prepend_opencensus(DEPS "${ARGN}")
+     target_link_libraries(${_NAME} "${DEPS}" benchmark)
++    
++    install(
++      TARGETS ${_NAME}
++      RUNTIME DESTINATION tools
++      LIBRARY DESTINATION lib
++      ARCHIVE DESTINATION lib
++    )
+   endif()
+ endfunction()
+ 
+@@ -76,6 +90,13 @@ function(opencensus_lib NAME)
+   if(ARG_PUBLIC)
+     add_library(${PROJECT_NAME}::${NAME} ALIAS ${_NAME})
+   endif()
++
++  install(
++    TARGETS ${_NAME}
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++  )
+ endfunction()
+ 
+ # Helper function for fuzzing. Usage:
+@@ -88,5 +109,12 @@ function(opencensus_fuzzer NAME SRC)
+     prepend_opencensus(DEPS "${ARGN}")
+     target_link_libraries(${_NAME} "${DEPS}" ${FUZZER})
+     target_compile_options(${_NAME} PRIVATE ${FUZZER})
++    
++    install(
++      TARGETS ${_NAME}
++      RUNTIME DESTINATION tools
++      LIBRARY DESTINATION lib
++      ARCHIVE DESTINATION lib
++    )
+   endif()
+ endfunction()
+diff --git a/examples/helloworld/CMakeLists.txt b/examples/helloworld/CMakeLists.txt
+index 456169f..71e43d1 100644
+--- a/examples/helloworld/CMakeLists.txt
++++ b/examples/helloworld/CMakeLists.txt
+@@ -22,3 +22,10 @@ target_link_libraries(opencensus_examples_helloworld
+                       opencensus-cpp::stats
+                       opencensus-cpp::trace
+                       Threads::Threads)
++
++install(
++    TARGETS opencensus_examples_helloworld
++    RUNTIME DESTINATION tools
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++)
+\ No newline at end of file
+diff --git a/opencensus/common/internal/CMakeLists.txt b/opencensus/common/internal/CMakeLists.txt
+index c18859d..55a1121 100644
+--- a/opencensus/common/internal/CMakeLists.txt
++++ b/opencensus/common/internal/CMakeLists.txt
+@@ -21,6 +21,8 @@ opencensus_lib(common_random
+                absl::base
+                absl::synchronization
+                absl::time)
++               
++install(FILES ${CMAKE_CURRENT_LIST_DIR}/../version.h DESTINATION include/opencensus-cpp/common/internal)
+ 
+ opencensus_lib(common_stats_object DEPS absl::time)
+ 
+diff --git a/opencensus/context/CMakeLists.txt b/opencensus/context/CMakeLists.txt
+index 525885b..537de02 100644
+--- a/opencensus/context/CMakeLists.txt
++++ b/opencensus/context/CMakeLists.txt
+@@ -21,6 +21,10 @@ opencensus_lib(context
+                tags
+                trace)
+ 
++install(FILES ${CMAKE_CURRENT_LIST_DIR}/context.h
++              ${CMAKE_CURRENT_LIST_DIR}/with_context.h
++              DESTINATION include/opencensus-cpp/context)
++
+ opencensus_test(context_context_test
+                 internal/context_test.cc
+                 context
+diff --git a/opencensus/exporters/stats/prometheus/CMakeLists.txt b/opencensus/exporters/stats/prometheus/CMakeLists.txt
+index 4da7de7..39121f5 100644
+--- a/opencensus/exporters/stats/prometheus/CMakeLists.txt
++++ b/opencensus/exporters/stats/prometheus/CMakeLists.txt
+@@ -28,6 +28,8 @@ opencensus_lib(exporters_stats_prometheus_utils
+                absl::strings
+                absl::time
+                prometheus-cpp::core)
++               
++install(FILES ${CMAKE_CURRENT_LIST_DIR}/prometheus_exporter.h DESTINATION include/opencensus-cpp/exporters/stats/prometheus)
+ 
+ opencensus_test(exporters_stats_prometheus_utils_test
+                 internal/prometheus_utils_test.cc
+diff --git a/opencensus/exporters/stats/stdout/CMakeLists.txt b/opencensus/exporters/stats/stdout/CMakeLists.txt
+index b4f3110..31bc991 100644
+--- a/opencensus/exporters/stats/stdout/CMakeLists.txt
++++ b/opencensus/exporters/stats/stdout/CMakeLists.txt
+@@ -21,6 +21,8 @@ opencensus_lib(exporters_stats_stdout
+                absl::memory
+                absl::strings
+                absl::time)
++               
++install(FILES ${CMAKE_CURRENT_LIST_DIR}/stdout_exporter.h DESTINATION include/opencensus-cpp/exporters/stats/stdout)
+ 
+ opencensus_test(exporters_stats_stdout_test
+                 internal/stdout_exporter_test.cc
+diff --git a/opencensus/exporters/trace/stdout/CMakeLists.txt b/opencensus/exporters/trace/stdout/CMakeLists.txt
+index 2b8bc78..fce50e7 100644
+--- a/opencensus/exporters/trace/stdout/CMakeLists.txt
++++ b/opencensus/exporters/trace/stdout/CMakeLists.txt
+@@ -21,6 +21,7 @@ opencensus_lib(exporters_trace_stdout
+                absl::base
+                absl::memory)
+ 
++install(FILES ${CMAKE_CURRENT_LIST_DIR}/stdout_exporter.h DESTINATION include/opencensus-cpp/exporters/trace/stdout)
+ opencensus_test(exporters_trace_stdout_test
+                 internal/stdout_exporter_test.cc
+                 exporters_trace_stdout
+diff --git a/opencensus/tags/CMakeLists.txt b/opencensus/tags/CMakeLists.txt
+index dbc4c9b..1b304ce 100644
+--- a/opencensus/tags/CMakeLists.txt
++++ b/opencensus/tags/CMakeLists.txt
+@@ -40,6 +40,8 @@ opencensus_lib(tags_with_tag_map
+                context
+                absl::strings)
+ 
++file(GLOB TAGS_HDRS ${CMAKE_CURRENT_LIST_DIR}/*.h)
++install(FILES ${TAGS_HDRS} DESTINATION include/opencensus-cpp/tags)
+ opencensus_test(tags_context_util_test
+                 internal/context_util_test.cc
+                 tags

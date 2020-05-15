@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 42e490a..ec9e4d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -348,6 +348,7 @@ if(CMAKE_USE_SECTRANSP)
+   list(APPEND CURL_LIBS "${COREFOUNDATION_FRAMEWORK}" "${SECURITY_FRAMEWORK}")
+ endif()
+ 
++set(USE_OPENSSL OFF)
+ if(CMAKE_USE_OPENSSL)
+   find_package(OpenSSL REQUIRED)
+   set(SSL_ENABLED ON)
