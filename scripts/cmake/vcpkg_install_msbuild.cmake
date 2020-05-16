@@ -137,6 +137,7 @@ function(vcpkg_install_msbuild)
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
         /p:VcpkgTriplet=${TARGET_TRIPLET}
+        /p:SpectreMitigation=false
         /m
     )
 
@@ -147,7 +148,11 @@ function(vcpkg_install_msbuild)
     endif()
 
     if(_csc_USE_VCPKG_INTEGRATION)
-        list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets /p:VcpkgApplocalDeps=false)
+        list(APPEND _csc_OPTIONS 
+        /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets 
+        /p:VcpkgApplocalDeps=false
+        "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+        )
     endif()
 
     get_filename_component(SOURCE_PATH_SUFFIX "${_csc_SOURCE_PATH}" NAME)
