@@ -132,7 +132,7 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
             "src/libANGLE/renderer/gl/cgl/*.cpp"
             "src/libANGLE/renderer/gl/cgl/*.inl"
             "src/libANGLE/renderer/gl/cgl/*.h"
-            "gpu_info_util/SystemInfo_mac.mm"
+            "gpu_info_util/SystemInfo_macos.mm"
         )
     elseif(LINUX)
         set(ANGLE_RENDERER_OPENGL_PLATFORM 
@@ -212,7 +212,7 @@ if(WIN32)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_win.cpp")
     target_link_libraries(angle_gpu_info_util PRIVATE setupapi.lib dxgi.lib)
 elseif(APPLE)
-    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_mac.mm")
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_macos.mm")
 	find_library(IOKit IOKit)
 	find_library(CoreFoundation CoreFoundation)
 	find_library(CoreGraphics CoreGraphics)
