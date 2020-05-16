@@ -1,6 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "MPIR currently can only be built for desktop")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT when building DLLs")
