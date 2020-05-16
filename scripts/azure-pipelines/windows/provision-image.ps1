@@ -111,6 +111,7 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
   'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
   'Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Llvm.Clang',
+  'Microsoft.VisualStudio.Component.UWP.VC.ARM64',
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Component.NetFX.Native'
 )
