@@ -250,7 +250,7 @@ function(vcpkg_configure_cmake)
 
     foreach(buildtype ${VCPKG_BUILD_LIST})
         set(${VCPKG_BUILD_SHORT_NAME_${buildtype}}_command
-            ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_${buildtype}}
+            ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_${buildtype}}"
             -G ${GENERATOR}
             -DCMAKE_BUILD_TYPE=${VCPKG_BUILD_CMAKE_TYPE_${buildtype}}
             -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}${VCPKG_PATH_SUFFIX_${buildtype}})
@@ -269,12 +269,8 @@ function(vcpkg_configure_cmake)
         foreach(buildtype ${VCPKG_BUILD_LIST})
             set(buildshort ${VCPKG_BUILD_SHORT_NAME_${buildtype}})
             set(${buildtype}_line "build ../${TARGET_TRIPLET}-${buildshort}/CMakeCache.txt: CreateProcess\n  process = cmd /c \"cd ../${TARGET_TRIPLET}-${buildshort} && ")
-            foreach(arg ${buildshort}_command)
-                #Add "<arg>" to each cmd argument.
-                list(TRANSFORM ${arg} APPEND [["]])
-                list(TRANSFORM ${arg} PREPEND [["]])
-                list(JOIN ${arg} " " ${arg})
-                string(APPEND ${buildtype}_line ${${arg}})
+            foreach(arg ${${buildshort}_command})
+                string(APPEND ${buildtype}_line "\"${arg}\" ")
             endforeach()
             set(_contents "${_contents}${${buildtype}_line}\"\n\n")
         endforeach()
