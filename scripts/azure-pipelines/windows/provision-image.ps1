@@ -469,7 +469,7 @@ Add-MPPreference -ExclusionProcess cl.exe
 Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
-InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable
+InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallWindowsWDK -Url $WindowsWDKUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
