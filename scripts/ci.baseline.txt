@@ -1172,10 +1172,6 @@ msmpi:x64-uwp=fail
 munit:arm-uwp=fail
 munit:arm64-windows=fail
 munit:x64-uwp=fail
-# Though `vcpkg_configure_meson` and `vcpkg_install_meson` support `x64-linux` and `x64-osx` now,
-# the CI environment doesn't seem have `meson` pre-installed.
-munit:x64-linux=fail
-munit:x64-osx=fail
 muparser:arm-uwp=fail
 muparser:x64-uwp=fail
 murmurhash:arm-uwp=fail
