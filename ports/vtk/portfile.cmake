@@ -82,6 +82,19 @@ if("mpi" IN_LIST FEATURES)
     )
 endif()
 
+if("opengl" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_DomainsChemestryOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_ImagingOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_opengl=YES
+        )
+endif()
+
 if("all" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
