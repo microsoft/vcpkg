@@ -1,4 +1,4 @@
-message(STATUS "Note: the downloading server may only be avilable during 8:00AM-5:00PM (GMT+8)")
+message(STATUS "Note: the downloading server may only be avilable from 8:00AM-5:00PM (UTC+8), Mon-Fri (except public holidays in China)")
 
 vcpkg_fail_port_install(ON_TARGET "OSX" "UWP" ON_ARCH "arm")
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -15,13 +15,13 @@ vcpkg_extract_source_archive_ex(
     NO_REMOVE_ONE_LEVEL
 )
 
-if(${TARGET_TRIPLET} STREQUAL "x86-windows")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(ARCH_ARCHIVE "6.3.15_20190220_tradeapi_se_windows.zip")
     set(ARCH_ARCHIVE_DATACOLLECT "6.3.15_20190220_clientdll_windows.zip")
-elseif(${TARGET_TRIPLET} STREQUAL "x64-windows")
+elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(ARCH_ARCHIVE "6.3.15_20190220_tradeapi64_se_windows.zip")
     set(ARCH_ARCHIVE_DATACOLLECT "6.3.15_20190220_clientdll64_windows.zip")
-elseif(${TARGET_TRIPLET} STREQUAL "x64-linux")
+elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(ARCH_ARCHIVE "v6.3.15_20190220_api_clientdatacollectdll_linux64.tar")
     set(ARCH_ARCHIVE_DATACOLLECT "6.3.15_20190220_clientdll_windows.zip")
 else()
