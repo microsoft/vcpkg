@@ -1,6 +1,8 @@
- if(NOT DEFINED ENV{EMSDK})
+set(VCPKG_ENV_PASSTHROUGH EMSDK PATH)
+
+if(NOT DEFINED ENV{EMSDK})
    message(FATAL_ERROR "The EMSDK environment variable must be defined")
- endif()
+endif()
 
 set(VCPKG_TARGET_ARCHITECTURE x86)
 set(VCPKG_CRT_LINKAGE dynamic)
