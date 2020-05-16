@@ -112,9 +112,9 @@ $Workloads = @(
   'Microsoft.Component.NetFX.Native'
 )
 
-$WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
-
 $WindowsSDKUrl = 'https://download.microsoft.com/download/1/c/3/1c3d5161-d9e9-4e4b-9b43-b70fe8be268c/windowssdk/winsdksetup.exe'
+
+$WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
 
 $MpiUrl = 'https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe'
 
@@ -284,44 +284,6 @@ Function InstallZip {
 
 <#
 .SYNOPSIS
-Installs Windows WDK version 2004
-
-.DESCRIPTION
-Downloads the Windows WDK installer located at $Url, and installs it with the
-correct flags.
-
-.PARAMETER Url
-The URL of the installer.
-#>
-Function InstallWindowsWDK {
-  Param(
-    [String]$Url
-  )
-
-  try {
-    Write-Host 'Downloading Windows WDK...'
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $installerPath -s -S $Url
-    Write-Host 'Installing Windows WDK...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/repair', '/q') -Wait -PassThru
-    $exitCode = $proc.ExitCode
-    $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
-    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/q /a `"${env:ProgramFiles(x86)}\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -Wait
-    $exitCode = $proc.ExitCode
-    if ($exitCode -eq 0) {
-      Write-Host 'Installation successful!'
-    }
-    else {
-      Write-Error "Installation failed! Exited with $exitCode."
-    }
-  }
-  catch {
-    Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
-  }
-}
-
-<#
-.SYNOPSIS
 Installs Windows SDK version 2004
 
 .DESCRIPTION
@@ -341,7 +303,7 @@ Function InstallWindowsSDK {
     [string]$installerPath = Get-TempFilePath -Extension 'exe'
     curl.exe -L -o $installerPath -s -S $Url
     Write-Host 'Installing Windows SDK...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/repair', '/q') -Wait -PassThru
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0) {
       Write-Host 'Installation successful!'
@@ -352,6 +314,44 @@ Function InstallWindowsSDK {
   }
   catch {
     Write-Error "Failed to install Windows SDK! $($_.Exception.Message)"
+  }
+}
+
+<#
+.SYNOPSIS
+Installs Windows WDK version 2004
+
+.DESCRIPTION
+Downloads the Windows WDK installer located at $Url, and installs it with the
+correct flags.
+
+.PARAMETER Url
+The URL of the installer.
+#>
+Function InstallWindowsWDK {
+  Param(
+    [String]$Url
+  )
+
+  try {
+    Write-Host 'Downloading Windows WDK...'
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Installing Windows WDK...'
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
+    $exitCode = $proc.ExitCode
+    $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
+    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/q /a `"${env:ProgramFiles(x86)}\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -Wait
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+  }
+  catch {
+    Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
   }
 }
 
@@ -507,8 +507,8 @@ Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
-InstallWindowsWDK -Url $WindowsWDKUrl
 InstallWindowsSDK -Url $WindowsSDKUrl
+InstallWindowsWDK -Url $WindowsWDKUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
