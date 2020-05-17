@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "ARM" ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 set(ICU_VERSION_MAJOR 65)
 set(ICU_VERSION_MINOR 1)
