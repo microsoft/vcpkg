@@ -367,6 +367,8 @@ else
 {
     $PreferredToolArchitecture = "x86"
 }
+# Set Environment Variable "VCPKG_DEFAULT_TRIPLET" depends on architecture
+[Environment]::SetEnvironmentVariable("VCPKG_DEFAULT_TRIPLET", $PreferredToolArchitecture+"-windows", 'User')
 
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
