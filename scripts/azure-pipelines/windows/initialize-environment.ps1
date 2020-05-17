@@ -86,8 +86,3 @@ Remove-Item buildtrees\* -Recurse -Force -errorAction silentlycontinue
 
 Write-Host 'Cleaning packages'
 Remove-Item packages\* -Recurse -Force -errorAction silentlycontinue
-
-# Create AppModelUnlock if it doesn't exist, required for enabling Developer Mode
-# Add registry value to enable Developer Mode
-$RegistryKeyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
-New-ItemProperty -Path $RegistryKeyPath -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
