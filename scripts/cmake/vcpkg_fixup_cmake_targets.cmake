@@ -125,8 +125,8 @@ function(vcpkg_fixup_cmake_targets)
     endif()
 
     file(GLOB_RECURSE RELEASE_TARGETS
-        "${RELEASE_SHARE}/*-release.cmake"
-    )
+        "${RELEASE_SHARE}/*-release.cmake")
+    
     foreach(RELEASE_TARGET IN LISTS RELEASE_TARGETS)
         file(READ ${RELEASE_TARGET} _contents)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
