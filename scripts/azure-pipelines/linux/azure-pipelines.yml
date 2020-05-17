@@ -24,6 +24,9 @@ jobs:
     displayName: 'Build vcpkg'
     inputs:
       filePath: bootstrap-vcpkg.sh
+      arguments: "-buildTests"
+  - bash: toolsrc/build.rel/vcpkg-test
+    displayName: 'Run vcpkg tests'
   - powershell: |
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-linux" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results

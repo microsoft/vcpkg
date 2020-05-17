@@ -73,7 +73,7 @@ namespace vcpkg::Files
                 constexpr auto all_write = perms::group_write | perms::owner_write | perms::others_write;
                 permissions = perms::all & ~all_write;
             }
-            else if (ft != file_type::none && ft != file_type::none)
+            else if (ft != file_type::none)
             {
                 permissions = perms::all;
             }

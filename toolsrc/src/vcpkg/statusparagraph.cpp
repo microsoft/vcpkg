@@ -86,11 +86,11 @@ namespace vcpkg
         }
     }
 
-    std::unordered_map<std::string, std::vector<FeatureSpec>> InstalledPackageView::feature_dependencies() const
+    std::map<std::string, std::vector<FeatureSpec>> InstalledPackageView::feature_dependencies() const
     {
         auto extract_deps = [&](const std::string& name) { return FeatureSpec{{name, spec().triplet()}, "core"}; };
 
-        std::unordered_map<std::string, std::vector<FeatureSpec>> deps;
+        std::map<std::string, std::vector<FeatureSpec>> deps;
 
         deps.emplace("core", Util::fmap(core->package.depends, extract_deps));
 

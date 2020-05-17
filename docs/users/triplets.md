@@ -166,3 +166,6 @@ The default triplet when running any vcpkg command is `%VCPKG_DEFAULT_TRIPLET%` 
 - OSX: `x64-osx`
 
 We recommend using a systematic naming scheme when creating new triplets. The Android toolchain naming scheme is a good source of inspiration: https://developer.android.com/ndk/guides/standalone_toolchain.html.
+
+## Android triplets
+See [android.md](android.md)

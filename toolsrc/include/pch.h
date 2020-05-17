@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vcpkg/pragmas.h>
+#include <vcpkg/base/pragmas.h>
 
 #if defined(_WIN32)
 #define NOMINMAX
