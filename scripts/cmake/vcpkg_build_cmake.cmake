@@ -66,8 +66,8 @@ function(vcpkg_build_cmake)
         message(STATUS "Building ${VCPKG_BUILD_TRIPLET_${BUILDTYPE}}")
 
         if(_bc_ADD_BIN_TO_PATH)
-            set(_BACKUP_ENV_PATH  "ENV{PATH}")
-            vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}${VCPKG_PATH_SUFFIX_${BUILDTYPE}}/bin")
+            set(_BACKUP_ENV_PATH  "$ENV{PATH}")
+            vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${VCPKG_PATH_SUFFIX_${BUILDTYPE}}/bin")
         endif()
 
         if (_bc_DISABLE_PARALLEL)
