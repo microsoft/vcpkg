@@ -94,10 +94,10 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       WORKING_DIRECTORY ${TOOLPATH}
     )
     #rerun/recheck the update if the main utilities were upgrade bash, pacman ... more
-#    _execute_process(
-#      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syuu --noconfirm --disable-download-timeout --overwrite '*'"      
-#      WORKING_DIRECTORY ${TOOLPATH}
-#    )
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syuu --noconfirm --disable-download-timeout --overwrite '*'"      
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
     file(WRITE "${TOOLPATH}/${STAMP}" "0")
     message(STATUS "Acquiring MSYS2... OK")
   endif()
