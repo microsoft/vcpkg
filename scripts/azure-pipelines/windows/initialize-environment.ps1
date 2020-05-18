@@ -35,7 +35,7 @@ New-Item -Path $RegistryKeyPath -ItemType Directory -Force
 }
 New-ItemProperty -Path $RegistryKeyPath -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
 
-[Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict")
+[System.Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict", [System.EnvironmentVariableTarget]::"Machine")
 
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
