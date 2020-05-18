@@ -39,10 +39,8 @@ Write-Host "User Access Control (UAC) has been disabled." -ForegroundColor Green
 
 # Set PowerShell execution policy to unrestricted
 Write-Host "Changing PS execution policy to Unrestricted"
-#Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore -Scope Process
-#Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope MachinePolicy -ErrorAction Continue | Out-Null
-Get-ExecutionPolicy -List
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore -Scope Process
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore
 Write-Host "PS policy updated"
 
 #Write-Host "Disable UAC"
