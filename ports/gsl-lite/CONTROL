@@ -1,4 +1,4 @@
 Source: gsl-lite
-Version: 0.36.0
+Version: 0.37.0
 Description: A single-file header-only implementation of ISO C++ Guidelines Support Library (GSL) for C++98, C++11 and later.
 Homepage: https://github.com/gsl-lite/gsl-lite/
