@@ -20,6 +20,7 @@ ln -s ~/Data/packages
 rm -rf ~/Data/packages/* || true
 
 rm archives || rm -rf archives || true
+mkdir -p ~/Data/packages/failureLogs || true
 ln -s ~/Data/archives
 
 rm -rf downloads || true
