@@ -86,7 +86,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate;pacman-key --refresh-keys"
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
