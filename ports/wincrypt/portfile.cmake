@@ -2,8 +2,12 @@ include(vcpkg_common_functions)
 
 vcpkg_get_program_files_32_bit(PROGRAM_FILES_32_BIT)
 vcpkg_get_windows_sdk(WINDOWS_SDK)
+vcpkg_get_windows_sdk_dir(WINDOWS_SDK_DIR)
 
-if (WINDOWS_SDK MATCHES "10.")
+if (WINDOWS_SDK_DIR)
+    set(LIBFILEPATH "${WINDOWS_SDK_DIR}\\Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\Crypt32.Lib")
+    set(HEADERSPATH "${WINDOWS_SDK_DIR}\\Include\\${WINDOWS_SDK}\\um")
+elseif (WINDOWS_SDK MATCHES "10.")
     set(LIBFILEPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\Crypt32.Lib")
     set(HEADERSPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Include\\${WINDOWS_SDK}\\um")
 elseif(WINDOWS_SDK MATCHES "8.")
