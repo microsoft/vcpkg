@@ -107,7 +107,7 @@ Remove-Item E:\installed -Recurse -Force -ErrorAction SilentlyContinue
 mkdir E:\installed
 cmd /c "mklink /D installed E:\installed"
 
-& icacls C:\\agent\\_work\\1\\s\\downloads\\tools\\msys2 /grant Users:"(OI)(CI)F" /T
+Invoke-Expression -Command:"icacls C:\\agent\\_work\\1\\s\\downloads\\tools /grant Users:'(OI)(CI)F' /T"
 
 Write-Host 'Linking downloads => D:\downloads'
 Remove-DirectorySymlink downloads
