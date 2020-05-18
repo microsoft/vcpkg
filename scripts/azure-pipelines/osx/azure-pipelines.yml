@@ -51,6 +51,6 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: x64-osx port build failure logs'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/failureLogs'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'x64-osx port build failure logs'
     condition: failed()
