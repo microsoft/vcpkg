@@ -96,7 +96,6 @@ function(vcpkg_build_msbuild)
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
-#        /p:SpectreMitigation=false
         /m
     )
 
