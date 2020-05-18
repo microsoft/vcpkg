@@ -13,22 +13,18 @@ endif()
 
 vcpkg_find_acquire_program(PERL)
 
-set(OPENSSL_VERSION 1.0.2s)
+set(OPENSSL_VERSION 1.1.1d)
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
-    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
+    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 9f745452c4f777df694158e95003cde78a2cf8199bc481a563ec36644664c3c1415a774779b9791dd18f2aeb57fa1721cb52b3db12d025955e970071d5b66d2a
+    SHA512 2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH MASTER_COPY_SOURCE_PATH
     ARCHIVE ${OPENSSL_SOURCE_ARCHIVE}
     REF ${OPENSSL_VERSION}
-    PATCHES
-        ConfigureIncludeQuotesFix.patch
-        STRINGIFYPatch.patch
-        EmbedSymbolsInStaticLibsZ7.patch
 )
 
 if(CMAKE_HOST_WIN32)

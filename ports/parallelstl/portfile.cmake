@@ -1,12 +1,11 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO intel/parallelstl
-    REF  20190522
-    SHA512 ad1b820ff4c2ce45ea3d6069dc8d5219449baca44d0bce86482aca247db7a4191e2bce10ab8365056ca278322809fdbb096519436e850cf95f2bb98fa7bc1ab1
+    REPO intel/parallelstl #20191218
+    REF  37761e15f62c03b7eb179db64ef930a69f33dfac
+    SHA512 dc8c875f692043b6f10ce7faf034e07536978537ea2a3d545be499cfa047f0c362c5109eb744a41dc0c92bd0fc56d98505183444bd376aeb257c9204480e6668
     HEAD_REF master
-    PATCHES fix-install-header.patch
+    PATCHES 
+        fix-cmakelist.patch
 )
 
 vcpkg_configure_cmake(
@@ -18,10 +17,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ParallelSTL)
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 34fc37a..60d201a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,15 +4,21 @@
+ cmake_minimum_required(VERSION 3.1)
+ project(EAThread CXX)
+ 
++include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
++
+ #-------------------------------------------------------------------------------------------
+ # Options
+ #-------------------------------------------------------------------------------------------
+ option(EATHREAD_BUILD_TESTS "Enable generation of build files for tests" OFF)
+ 
++find_package(EABase CONFIG REQUIRED)
++find_package(EASTL CONFIG REQUIRED)
++
+ #-------------------------------------------------------------------------------------------
+ # Compiler Flags
+ #-------------------------------------------------------------------------------------------
+-set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/test/packages/EASTL/scripts/CMake")
++set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${_VCPKG_ROOT_DIR}/installed/${VCPKG_TARGET_TRIPLET}/share/eastl")
+ include(CommonCppFlags)
+ 
+ #-------------------------------------------------------------------------------------------
+@@ -34,10 +40,45 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ #-------------------------------------------------------------------------------------------
+ # Export Include Directories
+ #-------------------------------------------------------------------------------------------
+-target_include_directories(EAThread PUBLIC include)
++target_include_directories(EAThread PUBLIC
++        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
++        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++    )
+ 
+ #-------------------------------------------------------------------------------------------
+ # Package Dependencies 
+ #-------------------------------------------------------------------------------------------
+-target_link_libraries(EAThread EABase)
++target_link_libraries(EAThread PUBLIC EABase)
++
++# create and install an export set for eabase target as EABase::EABase
++set(EAThread_CMAKE_CONFIG_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/EAThread")
++
++configure_package_config_file(
++    EAThreadConfig.cmake.in
++    ${CMAKE_CURRENT_BINARY_DIR}/EAThreadConfig.cmake
++    INSTALL_DESTINATION ${EAThread_CMAKE_CONFIG_DESTINATION}
++)
++
++# create and install an export set for Terra target as Terra
++install(
++    TARGETS EAThread EXPORT EAThreadTargets
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}
++)
++
++install(EXPORT EAThreadTargets DESTINATION ${EAThread_CMAKE_CONFIG_DESTINATION})
++
++write_basic_package_version_file(
++  "${CMAKE_CURRENT_BINARY_DIR}/EAThreadConfigVersion.cmake"
++  VERSION 3.16.01
++  COMPATIBILITY SameMajorVersion
++)
++
++install(TARGETS EAThread LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++install(DIRECTORY "include/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+ 
++install(
++    FILES
++        "${CMAKE_CURRENT_BINARY_DIR}/EAThreadConfig.cmake"
++        "${CMAKE_CURRENT_BINARY_DIR}/EAThreadConfigVersion.cmake"
++    DESTINATION ${EAThread_CMAKE_CONFIG_DESTINATION}
++)

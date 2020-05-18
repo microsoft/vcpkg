@@ -1,12 +1,10 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO QuantStack/xtensor-blas
-    REF 0.16.1
-    SHA512 3bdbd48b74d7be0b9f4ad2d435789e266b3cc1e043bbe73739978678bd1ca81504a688cdd80c03667305d210d299127be9939333c9bd0ac27dff0423ccb4861d
+    REPO xtensor-stack/xtensor-blas
+    REF 0b23657413bb4380014b82c4dd45821f04a4adad # 0.17.1
+    SHA512 d155d9fdad2e2d1851657953544e9ef3e3c1b203a1cb4e092d0f5bab8bad27bcf3a21a0ae3be0c06a7b8a3fa8b41f244da45690d39ee6c9794ac4fcabc4de35f
     HEAD_REF master
 )
 
@@ -31,8 +29,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xflens/cxxblas/netlib)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

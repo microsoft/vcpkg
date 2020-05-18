@@ -1,8 +1,8 @@
 diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
-index 7f8769a..debac4e 100644
+index ccbbbb6..ee10c90 100644
 --- a/fizz/CMakeLists.txt
 +++ b/fizz/CMakeLists.txt
-@@ -81,7 +81,7 @@ if(TARGET event)
+@@ -86,7 +86,7 @@ if(TARGET event)
    message(STATUS "Found libevent from package config")
    list(APPEND FIZZ_SHINY_DEPENDENCIES event)
  else()

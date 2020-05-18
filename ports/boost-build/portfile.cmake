@@ -8,17 +8,14 @@ elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_N
     return()
 endif()
 
-set(BOOST_VERSION 1.70.0)
+set(BOOST_VERSION 1.73.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${BOOST_VERSION}
-    SHA512 be4e410a9656313519e089977a24da8f633db2182985f5d60e07e489f9eac8c887e8cab7e3cbd13f2b747bc3d9dab2899f174be1eaac73cfd7895015fb6b9b58
+    SHA512 68e132c480c3063f99ddae48177ff5a35369e49e7f497d51d758a9bf760c5b20c1c040cb212fad94b1f27fb140054b0ef14ac0b32c6d7d246e921787ff58a037
     HEAD_REF master
-	PATCHES
-	    # Add the support of arm64-windows
-        arm64msvc.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
@@ -30,7 +27,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_download_distfile(BOOSTCPP_ARCHIVE
     URLS "https://raw.githubusercontent.com/boostorg/boost/boost-${BOOST_VERSION}/boostcpp.jam"
     FILENAME "boost-${BOOST_VERSION}-boostcpp.jam"
-    SHA512 7fac16c1f082821dd52cae39601f60bbdbd5ce043fbd19699da54c74fc5df1ed2ad6d3cefd3ae9a0a7697a2c34737f0c9e2b4bd3590c1f45364254875289cd17
+    SHA512 8cf929fa4a602342c859a6bbd5f9dda783ac29431d951bcf6cae4cb14377c1b3aed90bacd902b0f7d1807591cf5e1a244cf8fc3c6cc6e0a4056db145b58f51df
 )
 
 file(INSTALL ${ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-build RENAME copyright)
