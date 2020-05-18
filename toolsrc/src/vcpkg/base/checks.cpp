@@ -50,7 +50,8 @@ namespace vcpkg
 
     [[noreturn]] void Checks::exit_with_code(const LineInfo& line_info, const int exit_code)
     {
-        Debug::print(System::Color::error, line_info, " exit code = ", exit_code, '\n');
+        Debug::print(exit_code == 0 ? System::Color::success : System::Color::error,
+            line_info, " exit code = ", exit_code, '\n');
         final_cleanup_and_exit(exit_code);
     }
 
