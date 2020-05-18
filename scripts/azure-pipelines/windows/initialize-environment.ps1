@@ -111,7 +111,9 @@ Write-Host 'Linking downloads => D:\downloads'
 Remove-DirectorySymlink downloads
 cmd /c "mklink /D downloads D:\downloads"
 
-$proc = Start-Process -FilePath icacls D:\\downloads /grant *S-1-5-83-0:"(OI)(CI)F" /T -Wait -PassThru
+Get-Acl "D:\\downloads" |Format-List | Out-Host
+"`n"
+$proc = Start-Process -FilePath "icacls D:\\downloads /grant *S-1-5-83-0:"(OI)(CI)F" /T" -Wait -PassThru
 
 Write-Host 'Cleaning buildtrees'
 Remove-Item buildtrees\* -Recurse -Force -errorAction silentlycontinue
