@@ -2015,3 +2015,14 @@ zkpp:arm-uwp=fail
 c4core:arm-uwp=fail
 c4core:arm64-windows=fail
 c4core:x64-osx=fail
+
+# Official downloading server of CTP library is only guaranteed to be available during trading hours of China futures market
+# Skip CI to avoid random failures
+ctp:arm64-windows=skip
+ctp:arm-uwp=skip
+ctp:x64-linux=skip
+ctp:x64-osx=skip
+ctp:x64-uwp=skip
+ctp:x64-windows=skip
+ctp:x64-windows-static=skip
+ctp:x86-windows=skip
