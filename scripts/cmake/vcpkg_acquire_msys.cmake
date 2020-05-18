@@ -90,7 +90,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syyuu --noconfirm --disable-download-timeout --overwrite '*'"      
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syyuv --noconfirm --disable-download-timeout --overwrite '*'"      
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
