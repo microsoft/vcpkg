@@ -110,6 +110,7 @@ cmd /c "mklink /D installed E:\installed"
 Write-Host 'Linking downloads => D:\downloads'
 Remove-DirectorySymlink downloads
 cmd /c "mklink /D downloads D:\downloads"
+icacls D:\\downloads /grant *S-1-5-83-0:"(OI)(CI)F" /T
 
 Write-Host 'Cleaning buildtrees'
 Remove-Item buildtrees\* -Recurse -Force -errorAction silentlycontinue
