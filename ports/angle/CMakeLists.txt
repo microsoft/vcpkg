@@ -51,7 +51,7 @@ include_directories("$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${CMAKE_CU
 if(WINDOWS_DESKTOP)
     set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|_winuwp")
 elseif(WINDOWS_STORE)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|_win[^u]")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|_win32")
 elseif(LINUX)
     set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
 elseif(APPLE)
