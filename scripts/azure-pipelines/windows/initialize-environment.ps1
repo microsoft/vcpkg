@@ -35,8 +35,8 @@ New-Item -Path $RegistryKeyPath -ItemType Directory -Force
 }
 New-ItemProperty -Path $RegistryKeyPath -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
 
-[System.Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict", [System.EnvironmentVariableTarget]::"Machine")
-#[Environment]::SetEnvironmentVariable("MSYS2_PATH_TYPE", "inherit", "Machine")
+[Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict", "Machine")
+[Environment]::SetEnvironmentVariable("MSYS2_PATH_TYPE", "inherit", "Machine")
 
 # Disable UAC
 Write-Host "Disabling UAC"
