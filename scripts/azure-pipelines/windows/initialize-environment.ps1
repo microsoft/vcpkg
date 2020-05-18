@@ -29,18 +29,6 @@ function Remove-DirectorySymlink {
     }
 }
 
-# Set PowerShell execution policy to unrestricted
-Write-Host "Changing PS execution policy to Unrestricted"
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore -Scope Process
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore
-Write-Host "PS policy updated"
-
-# fsutil behavior set SymlinkEvaluation [L2L:{0|1}] | [L2R:{0|1}] | [R2R:{0|1}] | [R2L:{0|1}]
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToLocalEvaluation" -Value "1" -Force
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToRemoteEvaluation" -Value "1" -Force
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkRemoteToLocalEvaluation" -Value "1" -Force
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkRemoteToRemoteEvaluation" -Value "1" -Force
-
 New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
  
 # Disable UAC
@@ -48,6 +36,27 @@ Write-Host "Disabling UAC"
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" -Force
 Set-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value "0" -Force
 Write-Host "User Access Control (UAC) has been disabled." -ForegroundColor Green
+
+# Set PowerShell execution policy to unrestricted
+Write-Host "Changing PS execution policy to Unrestricted"
+#Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore -Scope Process
+#Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope MachinePolicy -ErrorAction Continue | Out-Null
+Get-ExecutionPolicy -List
+Write-Host "PS policy updated"
+
+#Write-Host "Disable UAC"
+#Disable-UserAccessControl
+
+Write-Host "Enable long path behavior"
+# See https://docs.microsoft.com/en-us/windows/desktop/fileio/naming-a-file#maximum-path-length-limitation
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value  "1" -Force
+
+# fsutil behavior set SymlinkEvaluation [L2L:{0|1}] | [L2R:{0|1}] | [R2R:{0|1}] | [R2L:{0|1}]
+Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToLocalEvaluation" -Value "1" -Force
+Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToRemoteEvaluation" -Value "1" -Force
+Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkRemoteToLocalEvaluation" -Value "1" -Force
+Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkRemoteToRemoteEvaluation" -Value "1" -Force
 
 [Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict", "Machine")
 [Environment]::SetEnvironmentVariable("MSYS2_PATH_TYPE", "inherit", "Machine")
