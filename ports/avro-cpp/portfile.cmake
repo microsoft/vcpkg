@@ -10,15 +10,10 @@ vcpkg_from_github(
 
 )
 
-macro(feature FEATURENAME PACKAGENAME)
-    if("${FEATURENAME}" IN_LIST FEATURES)
-        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=OFF)
-    else()
-        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=ON)
-    endif()
-endmacro()
-
-feature(snappy Snappy)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  INVERTED_FEATURES
+    snappy     CMAKE_DISABLE_FIND_PACKAGE_Snappy
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/lang/c++
