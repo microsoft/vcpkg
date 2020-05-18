@@ -568,7 +568,6 @@ gperf:arm-uwp=fail
 gperftools:arm64-windows=fail
 gperftools:x64-uwp=fail
 gperftools:arm-uwp=fail
-graphicsmagick:arm64-windows=fail
 graphicsmagick:arm-uwp=fail
 graphicsmagick:x64-uwp=fail
 graphite2:arm-uwp=fail
