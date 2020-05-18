@@ -35,8 +35,20 @@ New-Item -Path $RegistryKeyPath -ItemType Directory -Force
 }
 New-ItemProperty -Path $RegistryKeyPath -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
 
-#[System.Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict", [System.EnvironmentVariableTarget]::"Machine")
-[Environment]::SetEnvironmentVariable("MSYS2_PATH_TYPE", "inherit", "Machine")
+[System.Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict", [System.EnvironmentVariableTarget]::"Machine")
+#[Environment]::SetEnvironmentVariable("MSYS2_PATH_TYPE", "inherit", "Machine")
+
+# Disable UAC
+Write-Host "Disabling UAC"
+Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value 00000000
+Set-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value "0"
+Write-Host "User Access Control (UAC) has been disabled." -ForegroundColor Green  
+
+# Set PowerShell execution policy to unrestricted
+Write-Host "Changing PS execution policy to Unrestricted"
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore -Scope Process
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore
+Write-Host "PS policy updated"
 
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
