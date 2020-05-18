@@ -288,12 +288,12 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                         auto n = match_until([](char32_t ch) { return ch == ',' || ch == '`' || ch == ';'; });
                         Strings::append(segment, n);
                         auto ch = cur();
-                        if (ch == '\0' || ch == ',' || ch == ';')
+                        if (ch == Unicode::end_of_file || ch == ',' || ch == ';')
                             break;
                         else if (ch == '`')
                         {
                             ch = next();
-                            if (ch == '\0')
+                            if (ch == Unicode::end_of_file)
                                 add_error("unexpected eof: trailing unescaped backticks (`) are not allowed");
                             else
                                 Unicode::utf8_append_code_point(segment, ch);
@@ -305,7 +305,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     segments.emplace_back(std::move(loc), std::move(segment));
 
                     auto ch = cur();
-                    if (ch == '\0' || ch == ';')
+                    if (ch == Unicode::end_of_file || ch == ';')
                         break;
                     else if (ch == ',')
                     {

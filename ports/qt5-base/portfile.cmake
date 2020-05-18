@@ -6,6 +6,10 @@ else()
     option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." OFF)
 endif()
 
+if (VCPKG_TARGET_IS_LINUX)
+    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-xcb-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-xcb-dev.")
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 

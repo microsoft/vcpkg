@@ -5,9 +5,9 @@
 #include <vcpkg/base/parse.h>
 #include <vcpkg/base/stringview.h>
 
-#include <functional>
 #include <stddef.h>
 #include <stdint.h>
+#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
@@ -148,11 +148,6 @@ namespace vcpkg::Json
             return this->underlying_[idx];
         }
 
-        void sort(const std::function<bool(const Value&, const Value&)>& lt)
-        {
-            std::sort(this->begin(), this->end(), std::ref(lt));
-        }
-
         Array clone() const noexcept;
 
         iterator begin() { return underlying_.begin(); }
@@ -204,8 +199,6 @@ namespace vcpkg::Json
         bool contains(StringView key) const noexcept { return this->get(key); }
 
         std::size_t size() const noexcept { return this->underlying_.size(); }
-
-        void sort_keys(const std::function<bool(StringView, StringView)>& lt) noexcept;
 
         Object clone() const noexcept;
 
