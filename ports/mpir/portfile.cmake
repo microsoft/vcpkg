@@ -1,4 +1,8 @@
- vcpkg_fail_port_install(MESSAGE "MPIR currently can only be built for desktop" ON_TARGET "UWP")
+include(vcpkg_common_functions)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "MPIR currently can only be built for desktop")
+endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT when building DLLs")
@@ -128,5 +132,5 @@ else()
 
     vcpkg_copy_pdbs()
 
-    configure_file(${SOURCE_PATH}/COPYING.lib ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+    configure_file(${SOURCE_PATH}/COPYING.lib ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
 endif()
