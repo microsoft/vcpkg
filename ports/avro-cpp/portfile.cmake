@@ -1,6 +1,3 @@
-include(vcpkg_common_functions)
-
-vcpkg_buildpath_length_warning(37)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -39,5 +36,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(COPY ${SOURCE_PATH}/lang/c++/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/avro-cpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/avro-cpp/LICENSE ${CURRENT_PACKAGES_DIR}/share/avro-cpp/copyright)
+file(INSTALL ${SOURCE_PATH}/lang/c++/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -7,5 +7,3 @@ Build-Depends: libzip, boost-format, boost-thread, boost-filesystem, boost-iostr
 Feature: snappy
 Build-Depends: snappy
 Description: Support Snappy for compression
-
-
