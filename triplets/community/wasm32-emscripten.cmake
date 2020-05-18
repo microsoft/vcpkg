@@ -4,7 +4,7 @@ if(NOT DEFINED ENV{EMSDK})
    message(FATAL_ERROR "The EMSDK environment variable must be defined")
 endif()
 
-set(VCPKG_TARGET_ARCHITECTURE x86)
+set(VCPKG_TARGET_ARCHITECTURE wasm32)
 set(VCPKG_CRT_LINKAGE dynamic)
 set(VCPKG_LIBRARY_LINKAGE static)
 set(VCPKG_CMAKE_SYSTEM_NAME Emscripten)
