@@ -128,5 +128,5 @@ else()
 
     vcpkg_copy_pdbs()
 
-    configure_file(${SOURCE_PATH}/COPYING.lib ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
+    configure_file(${SOURCE_PATH}/COPYING.lib ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 endif()
