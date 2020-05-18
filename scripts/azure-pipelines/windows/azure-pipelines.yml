@@ -59,4 +59,4 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
       ArtifactName: '${{ parameters.triplet }} port build failure logs'
-    condition: failed()
+    condition: succeededOrFailed()
