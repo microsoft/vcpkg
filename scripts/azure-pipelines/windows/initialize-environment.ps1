@@ -114,7 +114,7 @@ cmd /c "mklink /D downloads D:\downloads"
 Get-Acl "D:\\downloads" |Format-List | Out-Host
 "`n"
 
-& C:\Windows\System32\icacls.exe D:\\downloads /grant *S-1-5-83-0:"(OI)(CI)F" /T
+& C:\Windows\System32\icacls.exe D:\\downloads /grant SD="D:P(A;;GA;;;WD)" /T
 
 $proc = Start-Process -FilePath C:\Windows\System32\icacls.exe D:\\downloads /grant *S-1-5-83-0:"(OI)(CI)F" /T -Wait -PassThru
 
