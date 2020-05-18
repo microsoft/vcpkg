@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include <vcpkg/pragmas.h>
+#include <vcpkg/base/pragmas.h>
 
 #include <vcpkg/base/files.h>
 #include <vcpkg/statusparagraph.h>

@@ -1,6 +1,8 @@
 # This portfile is based (shamelessly copied and adapted a bit) on 'ogre' portfile.
 
-include(vcpkg_common_functions)
+if (EXISTS "${CURRENT_INSTALLED_DIR}/Media/HLMS/Blendfunctions_piece_fs.glslt")
+    message(FATAL_ERROR "FATAL ERROR: ogre-next and ogre are incompatible.")
+endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
@@ -87,7 +89,7 @@ endif()
 
 #Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
 #manual-link subfolder is here to the rescue!
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -114,6 +116,6 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre-next RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
