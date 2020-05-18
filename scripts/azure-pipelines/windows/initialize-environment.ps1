@@ -1,13 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 #
-
-$RegistryKeyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
-if (-not(Test-Path -Path $RegistryKeyPath)) {
-New-Item -Path $RegistryKeyPath -ItemType Directory -Force
-}
-New-ItemProperty -Path $RegistryKeyPath -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
-
 <#
 .SYNOPSIS
 Sets up the environment to run other vcpkg CI steps in an Azure Pipelines job.
@@ -35,6 +28,12 @@ function Remove-DirectorySymlink {
         [System.IO.Directory]::Delete((Convert-Path $Path), $true)
     }
 }
+
+$RegistryKeyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
+if (-not(Test-Path -Path $RegistryKeyPath)) {
+New-Item -Path $RegistryKeyPath -ItemType Directory -Force
+}
+New-ItemProperty -Path $RegistryKeyPath -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
 
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
