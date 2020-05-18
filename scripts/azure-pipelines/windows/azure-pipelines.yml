@@ -57,6 +57,6 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
       ArtifactName: '${{ parameters.triplet }} port build failure logs'
-    condition: succeededOrFailed()
+    condition: failed()
