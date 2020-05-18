@@ -114,9 +114,9 @@ cmd /c "mklink /D downloads D:\downloads"
 Get-Acl "D:\\downloads" |Format-List | Out-Host
 "`n"
 
-& C:\Windows\System32\icacls.exe D:\\downloads /grant SD="D:P(A;;GA;;;WD)" /T
+& C:\Windows\System32\icacls.exe D:\\downloads /grant Users:"(OI)(CI)F" /T
 
-$proc = Start-Process -FilePath C:\Windows\System32\icacls.exe D:\\downloads /grant *S-1-5-83-0:"(OI)(CI)F" /T -Wait -PassThru
+#$proc = Start-Process -FilePath C:\Windows\System32\icacls.exe D:\\downloads /grant *S-1-5-83-0:"(OI)(CI)F" /T -Wait -PassThru
 
 Write-Host 'Cleaning buildtrees'
 Remove-Item buildtrees\* -Recurse -Force -errorAction silentlycontinue
