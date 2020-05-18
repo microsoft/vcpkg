@@ -37,11 +37,11 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Syste
 Set-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value "0" -Force
 Write-Host "User Access Control (UAC) has been disabled." -ForegroundColor Green
 
-# Set PowerShell execution policy to unrestricted
-Write-Host "Changing PS execution policy to Unrestricted"
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore -Scope Process
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore
-Write-Host "PS policy updated"
+### Set PowerShell execution policy to unrestricted
+#Write-Host "Changing PS execution policy to Unrestricted"
+#Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore -Scope Process
+#Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -ErrorAction Ignore
+#Write-Host "PS policy updated"
 
 #Write-Host "Disable UAC"
 #Disable-UserAccessControl
@@ -50,14 +50,14 @@ Write-Host "Enable long path behavior"
 # See https://docs.microsoft.com/en-us/windows/desktop/fileio/naming-a-file#maximum-path-length-limitation
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value  "1" -Force
 
-# fsutil behavior set SymlinkEvaluation [L2L:{0|1}] | [L2R:{0|1}] | [R2R:{0|1}] | [R2L:{0|1}]
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToLocalEvaluation" -Value "1" -Force
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToRemoteEvaluation" -Value "1" -Force
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkRemoteToLocalEvaluation" -Value "1" -Force
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkRemoteToRemoteEvaluation" -Value "1" -Force
+### fsutil behavior set SymlinkEvaluation [L2L:{0|1}] | [L2R:{0|1}] | [R2R:{0|1}] | [R2L:{0|1}]
+#Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToLocalEvaluation" -Value "1" -Force
+#Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToRemoteEvaluation" -Value "1" -Force
+#Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkRemoteToLocalEvaluation" -Value "1" -Force
+#Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkRemoteToRemoteEvaluation" -Value "1" -Force
 
-[Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict", "Machine")
-[Environment]::SetEnvironmentVariable("MSYS2_PATH_TYPE", "inherit", "Machine")
+#[Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict", "Machine")
+#[Environment]::SetEnvironmentVariable("MSYS2_PATH_TYPE", "inherit", "Machine")
 
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
@@ -107,6 +107,8 @@ Remove-Item E:\installed -Recurse -Force -ErrorAction SilentlyContinue
 mkdir E:\installed
 cmd /c "mklink /D installed E:\installed"
 
+& icacls C:\\agent\\_work\\1\\s\\downloads\\tools\\msys2 /grant Users:"(OI)(CI)F" /T
+
 Write-Host 'Linking downloads => D:\downloads'
 Remove-DirectorySymlink downloads
 cmd /c "mklink /D downloads D:\downloads"
@@ -114,7 +116,7 @@ cmd /c "mklink /D downloads D:\downloads"
 Get-Acl "D:\\downloads" |Format-List | Out-Host
 "`n"
 
-& C:\Windows\System32\icacls.exe D:\\downloads\\tools\\msys2 /grant Users:"(OI)(CI)F" /T
+#& icacls D:\\downloads\\tools\\msys2 /grant Users:"(OI)(CI)F" /T
 
 #$proc = Start-Process -FilePath C:\Windows\System32\icacls.exe D:\\downloads /grant *S-1-5-83-0:"(OI)(CI)F" /T -Wait -PassThru
 
