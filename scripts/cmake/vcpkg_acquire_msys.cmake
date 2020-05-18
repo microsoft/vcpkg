@@ -92,6 +92,10 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy --noconfirm pacman"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syu --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}
     )
