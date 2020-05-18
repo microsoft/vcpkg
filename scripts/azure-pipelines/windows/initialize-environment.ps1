@@ -35,6 +35,8 @@ New-Item -Path $RegistryKeyPath -ItemType Directory -Force
 }
 New-ItemProperty -Path $RegistryKeyPath -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
 
+[Environment]::SetEnvironmentVariable("MSYS", "winsymlinks:nativestrict")
+
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
     net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
