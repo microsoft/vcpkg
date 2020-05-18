@@ -25,7 +25,7 @@ $StorageAccountKey = $env:StorageAccountKey
 function Remove-DirectorySymlink {
     Param([string]$Path)
     if (Test-Path $Path) {
-        [System.IO.Directory]::Delete((Convert-Path $Path.Fullname), $true)
+        [System.IO.Directory]::Delete($Path.Fullname)
     }
 }
 
