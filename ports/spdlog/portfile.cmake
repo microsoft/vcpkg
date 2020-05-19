@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
-    REF cf6f1dd01e660d5865d68bf5fa78f6376b89470a #v1.5.0
-    SHA512 eafe7e12f9be9f5be48d66ca6f7253a7de34ae29e35887249bc447c7d5e97322bfe64ca68fc1b2ff1e9e36f703fb467b0bd14e19ce48844924dd42844b9209a4
+    REF 83b9149930f392d7797b54fe97a66ab3f2120671 #v1.6.0
+    SHA512 b41201e036891ef34399b387d9a04d36687f05aa420a5e324836131e217ffff0d6658a17472817534b45bed6ae10f8b780805a537cb93ffb058f17013af9b14d
     HEAD_REF v1.x
     PATCHES
         disable-master-project-check.patch
@@ -13,15 +13,20 @@ vcpkg_from_github(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    benchmark SPDLOG_BUILD_BENCH
-    coarse-clock SPDLOG_CLOCK_COARSE
-    no-atomic-levels SPDLOG_NO_ATOMIC_LEVELS
-    no-child-fd SPDLOG_PREVENT_CHILD_FD
-    no-exceptions SPDLOG_NO_EXCEPTIONS
-    no-local-storage SPDLOG_NO_TLS
-    no-thread-id SPDLOG_NO_THREAD_ID
-    wchar SPDLOG_WCHAR_SUPPORT
-    wchar SPDLOG_WCHAR_FILENAMES
+    FEATURES
+        benchmark SPDLOG_BUILD_BENCH
+        coarse-clock SPDLOG_CLOCK_COARSE
+        no-atomic-levels SPDLOG_NO_ATOMIC_LEVELS
+        no-child-fd SPDLOG_PREVENT_CHILD_FD
+        no-exceptions SPDLOG_NO_EXCEPTIONS
+        no-local-storage SPDLOG_NO_TLS
+        no-thread-id SPDLOG_NO_THREAD_ID
+        pch SPDLOG_ENABLE_PCH
+        shared SPDLOG_BUILD_SHARED
+        wchar SPDLOG_WCHAR_SUPPORT
+        wchar SPDLOG_WCHAR_FILENAMES
+    INVERTED_FEATURES
+        disable-warnings SPDLOG_BUILD_WARNINGS
 )
 
 vcpkg_configure_cmake(
