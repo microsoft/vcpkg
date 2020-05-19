@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF v1.x
     PATCHES
         fix-feature-export.patch
-        fix-error-4275.patch # Actually a defect in fmtlib
         fix-includes-external-fmt.patch
 )
 
