@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-static-build-error.patch
         cmake-policy.patch
         fix_minizip.patch
+        match-vs2019.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)

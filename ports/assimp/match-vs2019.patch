@@ -1,0 +1,22 @@
+diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
+index 30568ff..3943d99 100644
+--- a/code/CMakeLists.txt
++++ b/code/CMakeLists.txt
+@@ -1143,9 +1143,6 @@ ENDIF (ASSIMP_BUILD_NONFREE_C4D_IMPORTER)
+ if( MSVC )
+   # in order to prevent DLL hell, each of the DLLs have to be suffixed with the major version and msvc prefix
+   # CMake 3.12 added a variable for this
+-  if(MSVC_TOOLSET_VERSION)
+-    set(MSVC_PREFIX "vc${MSVC_TOOLSET_VERSION}")
+-  else()
+     if( MSVC70 OR MSVC71 )
+       set(MSVC_PREFIX "vc70")
+     elseif( MSVC80 )
+@@ -1168,7 +1165,6 @@ if( MSVC )
+       MESSAGE(WARNING "unknown msvc version ${MSVC_VERSION}")
+       set(MSVC_PREFIX "vc150")
+     endif()
+-  endif()
+   set(LIBRARY_SUFFIX "${ASSIMP_LIBRARY_SUFFIX}-${MSVC_PREFIX}-mt" CACHE STRING "the suffix for the assimp windows library")
+ endif()
+ 
