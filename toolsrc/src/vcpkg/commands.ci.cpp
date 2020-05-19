@@ -397,6 +397,11 @@ namespace vcpkg::Commands::CI
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
+        auto& filesystem = paths.get_filesystem();
+        filesystem.remove_all_inside(paths.installed, VCPKG_LINE_INFO);
+        filesystem.remove_all_inside(paths.buildtrees, VCPKG_LINE_INFO);
+        filesystem.remove_all_inside(paths.packages, VCPKG_LINE_INFO);
+
         std::set<std::string> exclusions_set;
         auto it_exclusions = options.settings.find(OPTION_EXCLUDE);
         if (it_exclusions != options.settings.end())
