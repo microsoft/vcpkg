@@ -45,6 +45,7 @@ vcpkg_configure_cmake(
     -DBOND_SKIP_GBC_TESTS=TRUE
     -DBOND_ENABLE_COMM=FALSE
     -DBOND_FIND_RAPIDJSON=TRUE
+    -DBOND_STACK_OPTIONS="--allow-different-user"
     ${FEATURE_OPTIONS}
 )
 
