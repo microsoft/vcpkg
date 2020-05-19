@@ -11,16 +11,16 @@ namespace vcpkg::Help
 {
     void HelpTableFormatter::format(StringView col1, StringView col2)
     {
-        // 1 space, 32 col1, 1 space, 85 col2 = 119
-        m_str.append(1, ' ');
+        // 2 space, 31 col1, 1 space, 85 col2 = 119
+        m_str.append(2, ' ');
         Strings::append(m_str, col1);
-        if (col1.size() > 32)
+        if (col1.size() > 31)
         {
             newline_indent();
         }
         else
         {
-            m_str.append(33 - col1.size(), ' ');
+            m_str.append(32 - col1.size(), ' ');
         }
         const char* line_start = col2.begin();
         const char* const e = col2.end();
@@ -58,7 +58,7 @@ namespace vcpkg::Help
     {
         using topic_function = void (*)(const VcpkgPaths& paths);
 
-        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) {}
+        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) { }
 
         CStringView name;
         topic_function print;
@@ -153,7 +153,7 @@ namespace vcpkg::Help
 #else
 #define ENVVAR(VARNAME) "$" #VARNAME
 #endif
-
+        // clang-format off
         System::print2(
             "Commands:\n"
             "  vcpkg search [pat]              Search for packages available to be built\n"
@@ -171,7 +171,6 @@ namespace vcpkg::Help
             Commands::Integrate::INTEGRATE_COMMAND_HELPSTRING, // Integration help
             "\n"
             "  vcpkg export <pkg>... [opt]...  Exports a package\n"
-            // clang-format off
             "  vcpkg edit <pkg>                Open up a port for editing (uses " ENVVAR(EDITOR) ", default 'code')\n"
             "  vcpkg import <pkg>              Import a pre-built library\n"
             "  vcpkg create <pkg> <url> [archivename]\n"
@@ -182,14 +181,9 @@ namespace vcpkg::Help
             "  vcpkg version                   Display version information\n"
             "  vcpkg contact                   Display contact information to send feedback\n"
             "\n"
-            "Options:\n"
-            "  --triplet <t>                   Specify the target architecture triplet. See 'vcpkg help triplet'\n"
-            "                                  (default: " ENVVAR(VCPKG_DEFAULT_TRIPLET) ")\n"
-            "  --overlay-ports=<path>          Specify directories to be used when searching for ports\n"
-            "  --overlay-triplets=<path>       Specify directories containing triplets files\n"
-            "  --vcpkg-root <path>             Specify the vcpkg root directory\n"
-            "                                  (default: " ENVVAR(VCPKG_ROOT) ")\n"
-            "  --x-scripts-root=<path>         (Experimental) Specify the scripts root directory\n"
+            );
+        display_usage({});
+        System::print2(
             "\n"
             "  @response_file                  Specify a response file to provide additional parameters\n"
             "\n"

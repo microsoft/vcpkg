@@ -450,6 +450,12 @@ namespace vcpkg
 
     void display_usage(const CommandStructure& command_structure)
     {
+#ifdef _WIN32
+#define ENVVAR(VARNAME) "%" #VARNAME "%"
+#else
+#define ENVVAR(VARNAME) "$" #VARNAME
+#endif
+
         if (!command_structure.example_text.empty())
         {
             System::print2(command_structure.example_text, "\n");
@@ -469,22 +475,20 @@ namespace vcpkg
         {
             table.format((option.name + "=..."), option.short_help_text);
         }
-        table.format("--triplet <t>", "Set the default triplet for unqualified packages");
+        table.format("--triplet <t>", "Specify the target architecture triplet. See 'vcpkg help triplet'");
+        table.format("", "(default: " ENVVAR(VCPKG_DEFAULT_TRIPLET) ")");
         table.format("--overlay-ports=<path>", "Specify directories to be used when searching for ports");
         table.format("--overlay-triplets=<path>", "Specify directories containing triplets files");
-        table.format("--vcpkg-root <path>",
-                     "Specify the vcpkg directory to use instead of current directory or tool directory");
-        table.format("--x-buildtrees-root=<path>",
-                     "(Experimental) Specify the downloads directory instead of the default 'buildtrees'");
-        table.format("--x-downloads-root=<path>",
-                     "(Experimental) Specify the downloads directory instead of the default 'downloads'");
-        table.format("--x-install-root=<path>",
-                     "(Experimental) Specify the downloads directory instead of the default 'installed'");
-        table.format("--x-packages-root=<path>",
-                     "(Experimental) Specify the scripts directory to use instead of default 'packages'");
-        table.format("--x-scripts-root=<path>",
-                     "(Experimental) Specify the scripts directory to use instead of default 'scripts'");
+        table.format("--vcpkg-root <path>", "Specify the vcpkg root directory");
+        table.format("", "(default: " ENVVAR(VCPKG_ROOT) ")");
+        table.format("--x-buildtrees-root=<path>", "(Experimental) Specify the buildtrees root directory");
+        table.format("--x-downloads-root=<path>", "(Experimental) Specify the downloads root directory");
+        table.format("", "(default: " ENVVAR(VCPKG_DOWNLOADS) ")");
+        table.format("--x-install-root=<path>", "(Experimental) Specify the install root directory");
+        table.format("--x-packages-root=<path>", "(Experimental) Specify the packages root directory");
+        table.format("--x-scripts-root=<path>", "(Experimental) Specify the scripts root directory");
         System::print2(table.m_str);
+#undef ENVVAR
     }
 
     void VcpkgCmdArguments::imbue_from_environment()
