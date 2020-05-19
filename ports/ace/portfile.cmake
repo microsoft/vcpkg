@@ -20,6 +20,7 @@ endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/process_manager.patch"
 )
 
 set(ACE_ROOT ${SOURCE_PATH})
@@ -252,5 +253,5 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   set($ENV{PWD} _prev_env)
 
   # Handle copyright
-  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+  file(INSTALL ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endif()
