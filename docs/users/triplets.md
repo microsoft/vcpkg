@@ -29,7 +29,7 @@ Community Triplets are enabled by default, when using a community triplet a mess
 ### VCPKG_TARGET_ARCHITECTURE
 Specifies the target machine architecture.
 
-Valid options are `x86`, `x64`, `arm`, `arm64`, `wasm32` and `wasm64`.
+Valid options are `x86`, `x64`, `arm`, `arm64` and `wasm32`.
 
 ### VCPKG_CRT_LINKAGE
 Specifies the desired CRT linkage (for MSVC).
