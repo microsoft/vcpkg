@@ -1,18 +1,8 @@
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-  message(FATAL_ERROR "darknet does not support ARM")
-endif()
-
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  message(FATAL_ERROR "darknet does not support UWP")
-endif()
-
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 35346d2ef80dc46b9eb4fba57da1737a49f4743e
-  SHA512 a905a5e42c4ecfdf2b8276fc565b82e30c97e249c0530b403d149a8e6276bb3852a956869c21efbe092799f3743cf529a577fb03275cfcfcc8322b92e9de0ff6
+  REF 81290b07376c5abb4988a492dda70913bb90133d
+  SHA512 094197cde851dfdd1e102a3ffaed34d67a789dd75dc288bde611144dc9aa484ca0b9e3468abc297d075d3753553f7f09a214be279af9e58ccb642aa757909f79
   HEAD_REF master
 )
 
@@ -27,6 +17,9 @@ set(ENABLE_OPENCV OFF)
 if("opencv-base" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
 endif()
+if("opencv2-base" IN_LIST FEATURES)
+  set(ENABLE_OPENCV ON)
+endif()
 if("opencv3-base" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
 endif()
@@ -35,6 +28,9 @@ endif()
 # (note: this does not mean that DARKNET itself will have CUDA support since by design it is independent, to have it you must require both opencv-cuda and cuda features!)
 # DARKNET will be automatically able to distinguish an OpenCV that is built with or without CUDA support.
 if("opencv-cuda" IN_LIST FEATURES)
+  set(ENABLE_OPENCV ON)
+endif()
+if("opencv2-cuda" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
 endif()
 if("opencv3-cuda" IN_LIST FEATURES)
@@ -110,22 +106,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(CMAKE_HOST_WIN32)
-  set(EXECUTABLE_SUFFIX ".exe")
-else()
-  set(EXECUTABLE_SUFFIX "")
-endif()
-
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/darknet${EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/uselib${EXECUTABLE_SUFFIX})
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/uselib_track${EXECUTABLE_SUFFIX})
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/uselib_track${EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/darknet${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/uselib${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/uselib_track${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/uselib_track${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 endif()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/darknet${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/darknet${EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uselib${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/uselib${EXECUTABLE_SUFFIX})
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/uselib_track${EXECUTABLE_SUFFIX})
-  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uselib_track${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/uselib_track${EXECUTABLE_SUFFIX})
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/darknet${VCPKG_TARGET_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/darknet${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uselib${VCPKG_TARGET_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/uselib${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/uselib_track${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uselib_track${VCPKG_TARGET_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/uselib_track${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 endif()
 file(COPY ${SOURCE_PATH}/cfg DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(COPY ${SOURCE_PATH}/data DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})

@@ -1,0 +1,4 @@
+Source: murmurhash
+Version: 2016-01-09-2
+Homepage: https://github.com/aappleby/smhasher
+Description: MurmurHash a family of hash functions.

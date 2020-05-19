@@ -51,7 +51,7 @@ namespace vcpkg
             {
                 const auto& pghs = *p_pghs;
 
-                Parse::RawParagraph keys;
+                Parse::Paragraph keys;
                 if (pghs.size() > 0) keys = pghs[0];
 
                 for (size_t x = 1; x < pghs.size(); ++x)
@@ -60,10 +60,10 @@ namespace vcpkg
                         keys.insert(p);
                 }
 
-                ret.user_id = keys["User-Id"];
-                ret.user_time = keys["User-Since"];
-                ret.user_mac = keys["Mac-Hash"];
-                ret.last_completed_survey = keys["Survey-Completed"];
+                ret.user_id = keys["User-Id"].first;
+                ret.user_time = keys["User-Since"].first;
+                ret.user_mac = keys["Mac-Hash"].first;
+                ret.last_completed_survey = keys["Survey-Completed"].first;
             }
         }
         catch (...)

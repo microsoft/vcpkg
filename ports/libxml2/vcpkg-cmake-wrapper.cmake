@@ -12,6 +12,13 @@ if(LibXml2_FOUND)
             debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/libcharset.lib
             optimized ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libcharset.lib
             ws2_32)
+        if(TARGET LibXml2::LibXml2)
+           target_link_libraries(LibXml2::LibXml2 INTERFACE
+               debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/libiconv.lib
+               optimized ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libiconv.lib
+               debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/libcharset.lib
+               optimized ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libcharset.lib)
+        endif()
     elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         list(APPEND LIBXML2_LIBRARIES m)
     endif()
