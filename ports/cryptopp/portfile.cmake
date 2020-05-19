@@ -25,13 +25,11 @@ file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 if("pem-pack" IN_LIST FEATURES)
-    message(STATUS "Note: The PEM pack is unofficialy supported, so use it at your own risk.")
-
     vcpkg_from_github(
         OUT_SOURCE_PATH PEM_PACK_SOURCE_PATH
         REPO noloader/cryptopp-pem
-        REF 095f08ff2ef9bca7b81036a59f2395e4f08ce2e8
-        SHA512 49912758a635faca1f49665ac9552b20576b46e0283aaabc19bb012bdc80586106452018e5088b9b46967717982ca6022ca968edc4cac96a7506d2b1a3e4bf13
+        REF 0cfa60820ec1d5e8ac4d77a0a8786ee43e9a2400
+        SHA512 e230e50b62f15f138d81fdb33b73cde28f14f089f56ddb38fbbd67ce74bff237d906c4b3d957d6051f8a9a7634289c5f1dc4d066e836852abbff22e3a65dc419
         HEAD_REF master
     )
 
