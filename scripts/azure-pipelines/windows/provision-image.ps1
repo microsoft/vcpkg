@@ -114,7 +114,8 @@ $Workloads = @(
 
 $MpiUrl = 'https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe'
 
-$CmakeUrl = 'https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-win32-x86.msi'
+$CMakeUrl = 'https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-win32-x86.msi'
+$NinjaUrl = 'https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip'
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
 $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_advisor_10.1 memcheck_10.1 ' + `
@@ -317,38 +318,6 @@ Function InstallMpi {
 
 <#
 .SYNOPSIS
-Installs Cmake
-
-.DESCRIPTION
-Downloads the Cmake installer located at $Url, and installs it with the
-correct flags.
-
-.PARAMETER Url
-The URL of the installer.
-#>
-Function InstallCmake {
-  Param(
-    [String]$Url
-  )
-
-  try {
-    Write-Host 'Downloading Cmake...'
-    [string]$msiPath = Get-TempFilePath -Extension 'msi'
-    curl.exe -L -o $msiPath -s -S $Url
-    Write-Host 'Installing Cmake...'
-    $args = @('/i', $msiPath, '/norestart', '/quiet', '/qn')
-    $proc = Start-Process -FilePath 'msiexec.exe' -ArgumentList $args -Wait -PassThru
-#    $CurrentValue = [Environment]::GetEnvironmentVariable("PATH", "Machine")
-#    [Environment]::SetEnvironmentVariable("PATH", $CurrentValue + [System.IO.Path]::PathSeparator + "${env:ProgramFiles(x86)}\CMake\bin", "Machine")
-    PrintMsiExitCodeMessage $proc.ExitCode
-  }
-  catch {
-    Write-Error "Failed to install Cmake! $($_.Exception.Message)"
-  }
-}
-
-<#
-.SYNOPSIS
 Installs NVIDIA's CUDA Toolkit.
 
 .DESCRIPTION
@@ -464,8 +433,9 @@ Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
+InstallMSI 'CMake' $CMakeUrl
+InstallZip 'Ninja' $NinjaUrl 'C:\Program Files\CMake\bin'
 InstallMpi -Url $MpiUrl
-InstallCmake -Url $CmakeUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
 if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountName))) {
