@@ -1,20 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2c39d1..77b32e0 100644
+index b2c39d1..29bb533 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -36,9 +36,9 @@ if (APPLE)
+@@ -35,10 +35,8 @@ if (APPLE)
+     endif()
  endif()
  
- if(MSVC)
+-if(MSVC)
 -    list (APPEND CMAKE_CXX_FLAGS " -std=c++11 -O3 ")
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
- else()
+-else()
 -    list (APPEND CMAKE_CXX_FLAGS " -std=c++11 -O3 -Wall -Werror ")
++if(NOT MSVC)
 +    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -Wall -Werror")
  endif()
  
  # Check for cryptopp (static)
-@@ -64,21 +64,26 @@ set(LICENSEPP_SOURCE_FILES
+@@ -64,21 +62,26 @@ set(LICENSEPP_SOURCE_FILES
      src/license.cc
  )
  
