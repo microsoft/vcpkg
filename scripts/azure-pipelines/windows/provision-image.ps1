@@ -38,7 +38,7 @@ $ErrorActionPreference = 'Stop'
 # Source: https://github.com/appveyor/ci/blob/master/scripts/path-utils.psm1
 function Get-Path
 {
-    ([Environment]::GetEnvironmentVariable("path", "User")).Split(";") | Sort-Object
+    ([Environment]::GetEnvironmentVariable("path", "machine")).Split(";") | Sort-Object
 }
 
 function Add-Path([string]$item,[switch]$before)
