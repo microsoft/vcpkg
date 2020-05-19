@@ -32,13 +32,13 @@ function Remove-DirectorySymlink {
 # Source: https://github.com/appveyor/ci/blob/master/scripts/path-utils.psm1
 function Get-Path
 {
-    ([Environment]::GetEnvironmentVariable("path", "machine")).Split(";") | Sort-Object
+    ([Environment]::GetEnvironmentVariable("path", "User")).Split(";") | Sort-Object
 }
 
 function Add-Path([string]$item,[switch]$before)
 {
     $item = (Get-SanitizedPath $item)
-    $pathItemsArray = ([Environment]::GetEnvironmentVariable("path", "User")).Split(";")
+    $pathItemsArray = ([Environment]::GetEnvironmentVariable("path", "machine")).Split(";")
     $pathItems = New-Object System.Collections.ArrayList($null)
     $pathItems.AddRange($pathItemsArray)
 
