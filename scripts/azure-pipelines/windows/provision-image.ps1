@@ -35,6 +35,81 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+# Source: https://github.com/appveyor/ci/blob/master/scripts/path-utils.psm1
+function Get-Path
+{
+    ([Environment]::GetEnvironmentVariable("path", "User")).Split(";") | Sort-Object
+}
+
+function Add-Path([string]$item,[switch]$before)
+{
+    $item = (Get-SanitizedPath $item)
+    $pathItemsArray = ([Environment]::GetEnvironmentVariable("path", "machine")).Split(";")
+    $pathItems = New-Object System.Collections.ArrayList($null)
+    $pathItems.AddRange($pathItemsArray)
+
+    # add folder
+    $index = -1
+    for($i = 0; $i -lt $pathItems.Count; $i++) {
+        if((Get-SanitizedPath $pathItems[$i]) -eq $item) {
+            $index = $i;
+            break
+        }
+    }
+
+    if($index -eq -1) {
+        # item not found - add it
+        if ($before) {
+            $pathItems.Insert(0, $item)
+        } else {
+            $pathItems.Add($item) | Out-null
+        }
+
+        # update PATH variable
+        $updatedPath = $pathItems -join ';'
+        [Environment]::SetEnvironmentVariable("path", $updatedPath, "machine")
+    }
+}
+
+function Remove-Path([string]$item)
+{
+    $item = (Get-SanitizedPath $item)
+    $pathItemsArray = ([Environment]::GetEnvironmentVariable("path", "machine")).Split(";")
+    $pathItems = New-Object System.Collections.ArrayList($null)
+    $pathItems.AddRange($pathItemsArray)
+
+    $index = -1
+    for($i = 0; $i -lt $pathItems.Count; $i++) {
+        if((Get-SanitizedPath $pathItems[$i]) -eq $item) {
+            $index = $i;
+            break
+        }
+    }
+
+    if($index -ne -1) {
+        # remove folder
+        $pathItems.RemoveAt($index) | Out-null
+
+        # update PATH variable
+        $updatedPath = $pathItems -join ';'
+        [Environment]::SetEnvironmentVariable("path", $updatedPath, "machine")
+    }
+}
+
+function Get-SanitizedPath([string]$path) {
+    return $path.Replace('/', '\').Trim('\')
+}
+
+function Add-SessionPath([string]$path) {
+    $sanitizedPath = Get-SanitizedPath $path
+    foreach($item in $env:path.Split(";")) {
+        if($sanitizedPath -eq (Get-SanitizedPath $item)) {
+            return # already added
+        }
+    }
+    $env:path = "$sanitizedPath;$env:path"
+}
+
 <#
 .SYNOPSIS
 Gets a random file path in the temp directory.
@@ -338,10 +413,10 @@ Function InstallCmake {
     Write-Host 'Installing Cmake...'
     $args = @('/i', $msiPath, '/norestart', '/quiet', '/qn')
     $proc = Start-Process -FilePath 'msiexec.exe' -ArgumentList $args -Wait -PassThru
-    $CurrentValue = [Environment]::GetEnvironmentVariable("PATH", "Machine")
-    [Environment]::SetEnvironmentVariable("PATH", $CurrentValue + [System.IO.Path]::PathSeparator + "${env:ProgramFiles(x86)}\CMake\bin", "Machine")
-#    Add-SessionPath "${env:ProgramFiles(x86)}\CMake\bin"
-#    Add-Path "${env:ProgramFiles(x86)}\CMake\bin"
+#    $CurrentValue = [Environment]::GetEnvironmentVariable("PATH", "Machine")
+#    [Environment]::SetEnvironmentVariable("PATH", $CurrentValue + [System.IO.Path]::PathSeparator + "${env:ProgramFiles(x86)}\CMake\bin", "Machine")
+    Add-Path "${env:ProgramFiles(x86)}\CMake\bin"
+    Add-SessionPath "${env:ProgramFiles(x86)}\CMake\bin"
     PrintMsiExitCodeMessage $proc.ExitCode
   }
   catch {
