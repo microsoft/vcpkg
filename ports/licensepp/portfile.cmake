@@ -1,16 +1,25 @@
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO zuhd-org/licensepp
-    REF 06e0c35fb300677a292bb2d4e83cbcad8f0c5b99
-    SHA512 e5f24d12299dbae46060f7898c8e5f268135a2bffcbac214734182b85d17bc3d8fc0fc36301068b04a8ce6ad80c75aa283253c78106d142d6b86a04d7606616a
+    REPO amrayn/licensepp
+    REF 0b6d669c0b323be004f73d8c811d38158ce8c0c7
+    SHA512 2161575815d8ff49110d7c2823662ba30d9f1ca2eb6be6dad1ee0807fb3fa9f28483839a133c9d380035254df7c452f8d6fa7f17fd4f29acd8b9bfbbda059291
     HEAD_REF master
+    PATCHES
+        # TODO:
+        # In this commit, https://github.com/noloader/cryptopp-pem/commit/0cfa60820ec1d5e8ac4d77a0a8786ee43e9a2400
+        # the parameter orders have been changed.
+        # But we can not update pem-pack to this version or newer because it
+        # won't compile with the current version of cryptopp in `vcpkg`.
+        # Remove this patch in the future.
+        use-old-pem-pack.patch
+        fix-cmake.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    #PREFER_NINJA
     OPTIONS
         -Dtest=OFF
         -Dtravis=OFF
@@ -18,24 +27,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-#file(REMOVE_RECURSE
-#    ${CURRENT_PACKAGES_DIR}/debug/include
-#    ${CURRENT_PACKAGES_DIR}/debug/share
-#)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-#    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/xeus/xeus.hpp
-#        "#ifdef XEUS_STATIC_LIB"
-#        "#if 1 // #ifdef XEUS_STATIC_LIB"
-#    )
-endif()
-
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,5 +1,5 @@
 Source: licensepp
-Version: 2019-08-17
+Version: 2020-05-19
 Description: Cross platform software licensing library
 Build-Depends: cryptopp[pem-pack]
 Homepage: https://github.com/zuhd-org/licensepp
