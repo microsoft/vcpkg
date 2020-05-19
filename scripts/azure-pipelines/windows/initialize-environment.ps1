@@ -25,17 +25,9 @@ $StorageAccountKey = $env:StorageAccountKey
 function Remove-DirectorySymlink {
     Param([string]$Path)
     if (Test-Path $Path) {
-        [System.IO.Directory]::Delete((Convert-Path $Path), $true)
+        [System.IO.Directory]::Delete($Path)
     }
 }
-
-function Get-Path
-{
-    ([Environment]::GetEnvironmentVariable("path", "machine")).Split(";") | Sort-Object
-}
-
-Get-Path Format-List | Out-Host
-"`n"
 
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
