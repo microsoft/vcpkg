@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200112L
 #include <catch2/catch.hpp>
 
 #include <string>
@@ -27,7 +28,7 @@ using vcpkg::System::CPUArchitecture;
 
 namespace
 {
-    void set_environment_variable(StringView varname, Optional<std::string> value)
+    void set_environment_variable(ZStringView varname, Optional<std::string> value)
     {
 #if defined(_WIN32)
         const auto w_varname = vcpkg::Strings::to_utf16(varname);
@@ -45,19 +46,14 @@ namespace
 
         check_exit(VCPKG_LINE_INFO, exit_code != 0);
 #else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
-        std::string tmp;
-        tmp.append(varname.data(), varname.size());
-        tmp.push_back('=');
         if (auto v = value.get())
         {
-            tmp.append(*v);
+            check_exit(VCPKG_LINE_INFO, setenv(varname.c_str(), v->c_str(), 1) == 0);
         }
-
-        // putenv expects the string to never go out of scope
-        char* env_string = new char[tmp.size() + 1]; // overflow checked by tmp's null allocation
-        memcpy(env_string, tmp.data(), tmp.size());
-        const int exit_code = putenv(env_string);
-        check_exit(VCPKG_LINE_INFO, exit_code == 0);
+        else
+        {
+            check_exit(VCPKG_LINE_INFO, unsetenv(varname.c_str()) == 0);
+        }
 #endif // defined(_WIN32)
     }
 
