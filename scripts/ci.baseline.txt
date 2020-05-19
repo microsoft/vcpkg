@@ -1360,7 +1360,6 @@ orocos-kdl:arm-uwp=fail
 orocos-kdl:x64-uwp=fail
 osg:x86-windows=skip
 osg:x64-windows=skip
-osg:x64-linux=fail
 osgearth:x64-osx=fail
 osgearth:x64-linux=fail
 osgearth:x64-windows-static=fail
