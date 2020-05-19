@@ -10,6 +10,7 @@ set(VCPKG_PLATFORM_TOOLSET external)
 set(B2_OPTIONS)
 
 if(DEFINED BOOST_CMAKE_FRAGMENT)
+    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
     include(${BOOST_CMAKE_FRAGMENT})
 endif()
 

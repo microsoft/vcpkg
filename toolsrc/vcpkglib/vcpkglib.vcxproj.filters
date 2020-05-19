@@ -422,6 +422,9 @@
     <ClInclude Include="..\include\vcpkg\base\view.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\pragmas.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\vcpkg\base\zstringview.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
@@ -438,9 +441,6 @@
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\portfileprovider.h">
-      <Filter>Header Files\vcpkg</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg\pragmas.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\textrowcol.h">

@@ -1,3 +1,7 @@
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv2")
+  message(FATAL_ERROR "OpenCV 2 is installed, please uninstall and try again:\n    vcpkg remove opencv2")
+endif()
+
 if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()

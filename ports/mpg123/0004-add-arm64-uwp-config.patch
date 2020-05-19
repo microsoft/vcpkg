@@ -1,0 +1,181 @@
+diff --git a/ports/MSVC++/2015/uwp/libmpg123.sln b/ports/MSVC++/2015/uwp/libmpg123.sln
+index 6e4eaee..ecedd3d 100644
+--- a/ports/MSVC++/2015/uwp/libmpg123.sln
++++ b/ports/MSVC++/2015/uwp/libmpg123.sln
+@@ -8,21 +8,27 @@ EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|ARM = Debug|ARM
++		Debug|ARM64 = Debug|ARM64
+ 		Debug|x64 = Debug|x64
+ 		Debug|x86 = Debug|x86
+ 		Release|ARM = Release|ARM
++		Release|ARM64 = Release|ARM64
+ 		Release|x64 = Release|x64
+ 		Release|x86 = Release|x86
+ 	EndGlobalSection
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Debug|ARM.ActiveCfg = Debug|ARM
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Debug|ARM.Build.0 = Debug|ARM
++		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Debug|ARM64.ActiveCfg = Debug|ARM64
++		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Debug|ARM64.Build.0 = Debug|ARM64
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Debug|x64.ActiveCfg = Debug|x64
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Debug|x64.Build.0 = Debug|x64
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Debug|x86.ActiveCfg = Debug|Win32
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Debug|x86.Build.0 = Debug|Win32
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Release|ARM.ActiveCfg = Release|ARM
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Release|ARM.Build.0 = Release|ARM
++		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Release|ARM64.ActiveCfg = Release|ARM64
++		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Release|ARM64.Build.0 = Release|ARM64
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Release|x64.ActiveCfg = Release|x64
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Release|x64.Build.0 = Release|x64
+ 		{2411FC2F-79ED-4787-A143-DE3644B0FBF5}.Release|x86.ActiveCfg = Release|Win32
+diff --git a/ports/MSVC++/2015/uwp/libmpg123/libmpg123.vcxproj b/ports/MSVC++/2015/uwp/libmpg123/libmpg123.vcxproj
+index 0e54f92..91f40db 100644
+--- a/ports/MSVC++/2015/uwp/libmpg123/libmpg123.vcxproj
++++ b/ports/MSVC++/2015/uwp/libmpg123/libmpg123.vcxproj
+@@ -5,6 +5,10 @@
+       <Configuration>Debug</Configuration>
+       <Platform>ARM</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug|ARM64">
++      <Configuration>Debug</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug|Win32">
+       <Configuration>Debug</Configuration>
+       <Platform>Win32</Platform>
+@@ -17,6 +21,10 @@
+       <Configuration>Release</Configuration>
+       <Platform>ARM</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|ARM64">
++      <Configuration>Release</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release|Win32">
+       <Configuration>Release</Configuration>
+       <Platform>Win32</Platform>
+@@ -76,6 +84,8 @@
+       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</ExcludedFromBuild>
+       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</ExcludedFromBuild>
++      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">true</ExcludedFromBuild>
++      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">true</ExcludedFromBuild>
+     </ClCompile>
+     <ClCompile Include="..\..\..\..\..\src\libmpg123\equalizer.c" />
+     <ClCompile Include="..\..\..\..\..\src\libmpg123\feature.c" />
+@@ -105,6 +115,8 @@
+       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</ExcludedFromBuild>
+       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</ExcludedFromBuild>
++      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">true</ExcludedFromBuild>
++      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">true</ExcludedFromBuild>
+     </ClCompile>
+     <ClCompile Include="..\..\..\..\..\src\libmpg123\synth_real.c" />
+     <ClCompile Include="..\..\..\..\..\src\libmpg123\synth_s32.c" />
+@@ -206,6 +218,11 @@
+     <UseDebugLibraries>true</UseDebugLibraries>
+     <PlatformToolset>v140</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
++    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <UseDebugLibraries>true</UseDebugLibraries>
++    <PlatformToolset>v140</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+@@ -221,6 +238,11 @@
+     <UseDebugLibraries>false</UseDebugLibraries>
+     <PlatformToolset>v140</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
++    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <UseDebugLibraries>false</UseDebugLibraries>
++    <PlatformToolset>v140</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+@@ -240,9 +262,15 @@
+   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+   </ImportGroup>
++  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++  </ImportGroup>
+   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+   </ImportGroup>
++  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++  </ImportGroup>
+   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+   </ImportGroup>
+@@ -273,6 +301,15 @@
+     <IgnoreImportLibrary>false</IgnoreImportLibrary>
+     <LinkIncremental>false</LinkIncremental>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
++    <GenerateManifest>false</GenerateManifest>
++    <IgnoreImportLibrary>false</IgnoreImportLibrary>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
++    <GenerateManifest>false</GenerateManifest>
++    <IgnoreImportLibrary>false</IgnoreImportLibrary>
++    <LinkIncremental>false</LinkIncremental>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <GenerateManifest>false</GenerateManifest>
+     <IgnoreImportLibrary>false</IgnoreImportLibrary>
+@@ -497,6 +534,48 @@ yasm -a x86 -p gas -r raw -f win32 -g null -m x86 -o "$(IntDir)synth_stereo_sse_
+       </Command>
+     </PreLinkEvent>
+   </ItemDefinitionGroup>
++<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">
++    <ClCompile>
++      <PrecompiledHeader>NotUsing</PrecompiledHeader>
++      <CompileAsWinRT>false</CompileAsWinRT>
++      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..;$(ProjectDir)..\..\..\..\..\src;$(ProjectDir)..\..\..\..\..\src\libmpg123;$(ProjectDir)..\..\..\..\..\src\compat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;BUILD_MPG123_DLL;OPT_MULTI;OPT_GENERIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <CompileAs>CompileAsC</CompileAs>
++      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++    </ClCompile>
++    <Link>
++      <SubSystem>Console</SubSystem>
++      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
++      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
++      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
++      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
++    </Link>
++    <PreLinkEvent>
++      <Command>
++      </Command>
++    </PreLinkEvent>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
++    <ClCompile>
++      <PrecompiledHeader>NotUsing</PrecompiledHeader>
++      <CompileAsWinRT>false</CompileAsWinRT>
++      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..;$(ProjectDir)..\..\..\..\..\src;$(ProjectDir)..\..\..\..\..\src\libmpg123;$(ProjectDir)..\..\..\..\..\src\compat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;BUILD_MPG123_DLL;OPT_MULTI;OPT_GENERIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <CompileAs>CompileAsC</CompileAs>
++      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++    </ClCompile>
++    <Link>
++      <SubSystem>Console</SubSystem>
++      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
++      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
++      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
++    </Link>
++    <PreLinkEvent>
++      <Command>
++      </Command>
++    </PreLinkEvent>
++  </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <ClCompile>
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
