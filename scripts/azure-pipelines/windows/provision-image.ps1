@@ -338,8 +338,8 @@ Function InstallCmake {
     Write-Host 'Installing Cmake...'
     $args = @('/i', $msiPath, '/norestart', '/quiet', '/qn')
     $proc = Start-Process -FilePath 'msiexec.exe' -ArgumentList $args -Wait -PassThru
-#    $CurrentValue = [Environment]::GetEnvironmentVariable("PATH", "Machine")
-#    [Environment]::SetEnvironmentVariable("PATH", $CurrentValue + [System.IO.Path]::PathSeparator + "${env:ProgramFiles(x86)}\CMake\bin", "Machine")
+    $CurrentValue = [Environment]::GetEnvironmentVariable("PATH", "Machine")
+    [Environment]::SetEnvironmentVariable("PATH", $CurrentValue + [System.IO.Path]::PathSeparator + "${env:ProgramFiles(x86)}\CMake\bin", "Machine")
 #    Add-SessionPath "${env:ProgramFiles(x86)}\CMake\bin"
 #    Add-Path "${env:ProgramFiles(x86)}\CMake\bin"
     PrintMsiExitCodeMessage $proc.ExitCode
@@ -482,6 +482,3 @@ if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountKey))) {
     -Name StorageAccountKey `
     -Value $StorageAccountKey
 }
-
-Get-Path Format-List | Out-Host
-"`n"
