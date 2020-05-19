@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2c39d1..03a19e8 100644
+index b2c39d1..77b32e0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -36,9 +36,9 @@ if (APPLE)
@@ -14,7 +14,7 @@ index b2c39d1..03a19e8 100644
  endif()
  
  # Check for cryptopp (static)
-@@ -64,11 +64,7 @@ set(LICENSEPP_SOURCE_FILES
+@@ -64,21 +64,26 @@ set(LICENSEPP_SOURCE_FILES
      src/license.cc
  )
  
@@ -27,7 +27,10 @@ index b2c39d1..03a19e8 100644
  
  set_target_properties (licensepp-lib PROPERTIES
      VERSION ${LICENSEPP_SOVERSION}
-@@ -78,7 +74,15 @@ target_link_libraries (licensepp-lib
+ )
++target_include_directories (licensepp-lib PUBLIC $<INSTALL_INTERFACE:include>)
+ target_link_libraries (licensepp-lib
+     ${CRYPTOPP_LIBRARIES}
  )
  
  set_target_properties (licensepp-lib PROPERTIES OUTPUT_NAME "licensepp")
