@@ -450,3 +450,8 @@ if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountKey))) {
     -Name StorageAccountKey `
     -Value $StorageAccountKey
 }
+Write-Host 'Updating PATH...'
+$environmentKey = Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' `
+  -Name Path `
+  -Value "$($environmentKey.Path);C:\Program Files\CMake\bin"
