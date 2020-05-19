@@ -38,7 +38,7 @@ function Get-Path
 function Add-Path([string]$item,[switch]$before)
 {
     $item = (Get-SanitizedPath $item)
-    $pathItemsArray = ([Environment]::GetEnvironmentVariable("path", "machine")).Split(";")
+    $pathItemsArray = ([Environment]::GetEnvironmentVariable("path", "User")).Split(";")
     $pathItems = New-Object System.Collections.ArrayList($null)
     $pathItems.AddRange($pathItemsArray)
 
