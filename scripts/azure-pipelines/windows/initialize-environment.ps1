@@ -68,21 +68,24 @@ else
 }
 
 Write-Host "Linking archives => $archivesPath"
-Remove-DirectorySymlink archives
-cmd /c "mklink /D archives $archivesPath"
+if (-Not (Test-Path archives)) {
+    cmd /c "mklink /D archives $archivesPath"
+}
 
 Write-Host 'Linking installed => E:\installed'
-Remove-DirectorySymlink installed
-Remove-Item E:\installed -Recurse -Force -ErrorAction SilentlyContinue
-mkdir E:\installed
-cmd /c "mklink /D installed E:\installed"
+if (-Not (Test-Path E:\installed)) {
+    mkdir E:\installed
+}
+
+if (-Not (Test-Path installed)) {
+    cmd /c "mklink /D installed E:\installed"
+}
 
 Write-Host 'Linking downloads => D:\downloads'
-Remove-DirectorySymlink downloads
-cmd /c "mklink /D downloads D:\downloads"
+if (-Not (Test-Path D:\downloads)) {
+    mkdir D:\downloads
+}
 
-Write-Host 'Cleaning buildtrees'
-Remove-Item buildtrees\* -Recurse -Force -errorAction silentlycontinue
-
-Write-Host 'Cleaning packages'
-Remove-Item packages\* -Recurse -Force -errorAction silentlycontinue
+if (-Not (Test-Path downloads)) {
+    cmd /c "mklink /D downloads D:\downloads"
+}
