@@ -17,9 +17,11 @@ vcpkg_from_github(
         fix-cmake.patch
 )
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCryptoPP.cmake DESTINATION ${SOURCE_PATH}/cmake)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    #PREFER_NINJA
+    PREFER_NINJA
     OPTIONS
         -Dtest=OFF
         -Dtravis=OFF
