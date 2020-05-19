@@ -400,7 +400,7 @@ namespace vcpkg::Metrics
 #endif
     }
 
-    void Metrics::flush()
+    void Metrics::flush(Files::Filesystem& fs)
     {
         const std::string payload = g_metricmessage.format_event_data_template();
         if (g_should_print_metrics) std::cerr << payload << "\n";
@@ -414,8 +414,6 @@ namespace vcpkg::Metrics
         const fs::path temp_folder_path_exe =
             temp_folder_path / Strings::format("vcpkgmetricsuploader-%s.exe", Commands::Version::base_version());
 #endif
-
-        auto& fs = Files::get_real_filesystem();
 
 #if defined(_WIN32)
 

@@ -3,6 +3,7 @@
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/files.h>
 
 #include <memory>
 #include <unordered_map>
@@ -82,7 +83,9 @@ namespace vcpkg
 
     struct VcpkgCmdArguments
     {
-        static VcpkgCmdArguments create_from_command_line(const int argc, const CommandLineCharType* const* const argv);
+        static VcpkgCmdArguments create_from_command_line(const Files::Filesystem& fs,
+                                                          const int argc,
+                                                          const CommandLineCharType* const* const argv);
         static VcpkgCmdArguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
 
         std::unique_ptr<std::string> vcpkg_root_dir;

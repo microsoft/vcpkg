@@ -13,14 +13,14 @@
 
 namespace vcpkg
 {
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir,
+    Expected<VcpkgPaths> VcpkgPaths::create(Files::Filesystem& fs,
+                                            const fs::path& vcpkg_root_dir,
                                             const Optional<fs::path>& install_root_dir,
                                             const Optional<fs::path>& vcpkg_scripts_root_dir,
                                             const std::string& default_vs_path,
                                             const std::vector<std::string>* triplets_dirs,
                                             fs::path original_cwd)
     {
-        auto& fs = Files::get_real_filesystem();
         std::error_code ec;
         const fs::path canonical_vcpkg_root_dir = fs.canonical(vcpkg_root_dir, ec);
         if (ec)
@@ -29,6 +29,7 @@ namespace vcpkg
         }
 
         VcpkgPaths paths;
+        paths.fsPtr = &fs;
         paths.root = canonical_vcpkg_root_dir;
         paths.default_vs_path = default_vs_path;
         paths.original_cwd = original_cwd;
@@ -272,5 +273,5 @@ namespace vcpkg
 #endif
     }
 
-    Files::Filesystem& VcpkgPaths::get_filesystem() const { return Files::get_real_filesystem(); }
+    Files::Filesystem& VcpkgPaths::get_filesystem() const { return *fsPtr; }
 }

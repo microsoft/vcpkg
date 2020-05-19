@@ -94,7 +94,8 @@ namespace vcpkg
         option_field.emplace_back(std::move(new_value));
     }
 
-    VcpkgCmdArguments VcpkgCmdArguments::create_from_command_line(const int argc,
+    VcpkgCmdArguments VcpkgCmdArguments::create_from_command_line(const Files::Filesystem& fs,
+                                                                  const int argc,
                                                                   const CommandLineCharType* const* const argv)
     {
         std::vector<std::string> v;
@@ -110,7 +111,6 @@ namespace vcpkg
             if (arg.size() > 0 && arg[0] == '@')
             {
                 arg.erase(arg.begin());
-                const auto& fs = Files::get_real_filesystem();
                 auto lines = fs.read_lines(fs::u8path(arg));
                 if (!lines.has_value())
                 {

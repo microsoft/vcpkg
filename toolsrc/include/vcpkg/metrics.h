@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/util.h>
+#include <vcpkg/base/files.h>
 
 #include <string>
 
@@ -18,7 +19,7 @@ namespace vcpkg::Metrics
         void track_property(const std::string& name, const std::string& value);
 
         void upload(const std::string& payload);
-        void flush();
+        void flush(Files::Filesystem& fs);
     };
 
     extern Util::LockGuarded<Metrics> g_metrics;

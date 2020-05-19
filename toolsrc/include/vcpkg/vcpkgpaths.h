@@ -57,7 +57,8 @@ namespace vcpkg
             TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) {}
         };
 
-        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
+        static Expected<VcpkgPaths> create(Files::Filesystem& fs,
+                                           const fs::path& vcpkg_root_dir,
                                            const Optional<fs::path>& install_root_dir,
                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
                                            const std::string& default_vs_path,
@@ -113,6 +114,8 @@ namespace vcpkg
 
         fs::path default_vs_path;
         std::vector<fs::path> triplets_dirs;
+
+        Files::Filesystem* fsPtr;
 
         mutable std::unique_ptr<ToolCache> m_tool_cache;
         mutable vcpkg::Cache<Triplet, fs::path> m_triplets_cache;

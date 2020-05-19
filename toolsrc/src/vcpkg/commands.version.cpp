@@ -81,7 +81,7 @@ namespace vcpkg::Commands::Version
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args)
+    void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem&)
     {
         Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 

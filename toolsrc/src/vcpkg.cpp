@@ -42,10 +42,8 @@ static void invalid_command(const std::string& cmd)
     Checks::exit_fail(VCPKG_LINE_INFO);
 }
 
-static void inner(const VcpkgCmdArguments& args)
+static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
 {
-    auto& fs = Files::get_real_filesystem();
-
     Metrics::g_metrics.lock()->track_property("command", args.command);
     if (args.command.empty())
     {
@@ -68,7 +66,7 @@ static void inner(const VcpkgCmdArguments& args)
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_c()))
     {
-        return command_function->function(args);
+        return command_function->function(args, fs);
     }
 
     fs::path vcpkg_root_dir;
@@ -103,25 +101,25 @@ static void inner(const VcpkgCmdArguments& args)
     Optional<fs::path> install_root_dir;
     if (args.install_root_dir)
     {
-        install_root_dir = Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.install_root_dir));
+        install_root_dir = fs.canonical(VCPKG_LINE_INFO, fs::u8path(*args.install_root_dir));
         Debug::print("Using install-root: ", install_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
     }
 
-    Optional<fs::path> vcpkg_scripts_root_dir;
+    Optional<fs::path> scripts_root_dir;
     if (args.scripts_root_dir)
     {
-        vcpkg_scripts_root_dir =
-            Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.scripts_root_dir));
-        Debug::print("Using scripts-root: ", vcpkg_scripts_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
+        scripts_root_dir = fs.canonical(VCPKG_LINE_INFO, fs::u8path(*args.scripts_root_dir));
+        Debug::print("Using scripts-root: ", scripts_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
     }
 
     auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
-    auto original_cwd = Files::get_real_filesystem().current_path(VCPKG_LINE_INFO);
+    auto original_cwd = fs.current_path(VCPKG_LINE_INFO);
 
-    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir,
+    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(fs,
+                                                                   vcpkg_root_dir,
                                                                    install_root_dir,
-                                                                   vcpkg_scripts_root_dir,
+                                                                   scripts_root_dir,
                                                                    default_vs_path,
                                                                    args.overlay_triplets.get(),
                                                                    original_cwd);
@@ -213,10 +211,8 @@ static void inner(const VcpkgCmdArguments& args)
     return invalid_command(args.command);
 }
 
-static void load_config()
+static void load_config(vcpkg::Files::Filesystem& fs)
 {
-    auto& fs = Files::get_real_filesystem();
-
     auto config = UserConfig::try_read_data(fs);
 
     bool write_config = false;
@@ -280,6 +276,7 @@ int main(const int argc, const char* const* const argv)
 {
     if (argc == 0) std::abort();
 
+    auto& fs = Files::get_real_filesystem();
     *GlobalState::timer.lock() = Chrono::ElapsedTimer::create_started();
 
 #if defined(_WIN32)
@@ -301,7 +298,7 @@ int main(const int argc, const char* const* const argv)
         auto metrics = Metrics::g_metrics.lock();
         metrics->track_metric("elapsed_us", elapsed_us_inner);
         Debug::g_debugging = false;
-        metrics->flush();
+        metrics->flush(Files::get_real_filesystem());
 
 #if defined(_WIN32)
         if (GlobalState::g_init_console_initialized)
@@ -325,7 +322,7 @@ int main(const int argc, const char* const* const argv)
 
     System::register_console_ctrl_handler();
 
-    load_config();
+    load_config(fs);
 
     const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
     if (const auto v = vcpkg_feature_flags_env.get())
@@ -334,7 +331,7 @@ int main(const int argc, const char* const* const argv)
         if (std::find(flags.begin(), flags.end(), "binarycaching") != flags.end()) GlobalState::g_binary_caching = true;
     }
 
-    const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
+    const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
 
     if (const auto p = args.binarycaching.get()) GlobalState::g_binary_caching = *p;
 
@@ -344,14 +341,14 @@ int main(const int argc, const char* const* const argv)
 
     if (Debug::g_debugging)
     {
-        inner(args);
+        inner(fs, args);
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
     std::string exc_msg;
     try
     {
-        inner(args);
+        inner(fs, args);
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
     catch (std::exception& e)
