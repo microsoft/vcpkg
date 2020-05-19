@@ -109,7 +109,9 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.v141.x86.x64.Spectre',
   'Microsoft.VisualStudio.Component.Windows10SDK.18362',
   'Microsoft.Net.Component.4.8.SDK',
-  'Microsoft.Component.NetFX.Native'
+  'Microsoft.Component.NetFX.Native',
+  'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
+  'Microsoft.VisualStudio.Component.VC.Llvm.Clang'
 )
 
 $MpiUrl = 'https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe'
