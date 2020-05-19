@@ -61,6 +61,12 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
             -DCLANG_ENABLE_STATIC_ANALYZER=OFF
         )
     endif()
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND FEATURE_OPTIONS
+            # Disable dl library on Windows
+            -DDL_LIBRARY_PATH:FILEPATH=
+        )
+    endif()
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
@@ -93,14 +99,38 @@ else()
     if("target-aarch64" IN_LIST FEATURES)
         list(APPEND LLVM_TARGETS_TO_BUILD "AArch64")
     endif()
+    if("target-amdgpu" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "AMDGPU")
+    endif()
     if("target-arm" IN_LIST FEATURES)
         list(APPEND LLVM_TARGETS_TO_BUILD "ARM")
+    endif()
+    if("target-bpf" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "BPF")
+    endif()
+    if("target-hexagon" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "Hexagon")
+    endif()
+    if("target-lanai" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "Lanai")
     endif()
     if("target-mips" IN_LIST FEATURES)
         list(APPEND LLVM_TARGETS_TO_BUILD "Mips")
     endif()
+    if("target-msp430" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "MSP430")
+    endif()
+    if("target-nvptx" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "NVPTX")
+    endif()
     if("target-powerpc" IN_LIST FEATURES)
         list(APPEND LLVM_TARGETS_TO_BUILD "PowerPC")
+    endif()
+    if("target-riscv" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "RISCV")
+    endif()
+    if("target-sparc" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "Sparc")
     endif()
     if("target-systemz" IN_LIST FEATURES)
         list(APPEND LLVM_TARGETS_TO_BUILD "SystemZ")
@@ -110,6 +140,9 @@ else()
     endif()
     if("target-x86" IN_LIST FEATURES)
         list(APPEND LLVM_TARGETS_TO_BUILD "X86")
+    endif()
+    if("target-xcore" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "XCore")
     endif()
 endif()
 
@@ -126,7 +159,7 @@ if("${LLVM_TARGETS_TO_BUILD}" STREQUAL "")
     endif()
 endif()
 
-# Use comma-separated string for enabled projects instead of semicolon-separated string.
+# Use comma-separated string instead of semicolon-separated string.
 # See https://github.com/microsoft/vcpkg/issues/4320
 string(REPLACE ";" "," LLVM_ENABLE_PROJECTS "${LLVM_ENABLE_PROJECTS}")
 string(REPLACE ";" "," LLVM_TARGETS_TO_BUILD "${LLVM_TARGETS_TO_BUILD}")
@@ -167,11 +200,16 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(GLOB_RECURSE _release_targets
+    file(GLOB_RECURSE _llvm_release_targets
         "${CURRENT_PACKAGES_DIR}/share/llvm/*-release.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/clang/*-release.cmake"
     )
-    foreach(_target IN LISTS _release_targets)
+    set(_clang_release_targets)
+    if("clang" IN_LIST FEATURES)
+        file(GLOB_RECURSE _clang_release_targets
+            "${CURRENT_PACKAGES_DIR}/share/clang/*-release.cmake"
+        )
+    endif()
+    foreach(_target IN LISTS _llvm_release_targets _clang_release_targets)
         file(READ ${_target} _contents)
         # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
         # Rename `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
@@ -181,11 +219,16 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(GLOB_RECURSE _debug_targets
+    file(GLOB_RECURSE _llvm_debug_targets
         "${CURRENT_PACKAGES_DIR}/share/llvm/*-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/clang/*-debug.cmake"
     )
-    foreach(_target IN LISTS _debug_targets)
+    set(_clang_debug_targets)
+    if("clang" IN_LIST FEATURES)
+        file(GLOB_RECURSE _clang_debug_targets
+            "${CURRENT_PACKAGES_DIR}/share/clang/*-debug.cmake"
+        )
+    endif()
+    foreach(_target IN LISTS _llvm_debug_targets _clang_debug_targets)
         file(READ ${_target} _contents)
         # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
         # Rename `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
