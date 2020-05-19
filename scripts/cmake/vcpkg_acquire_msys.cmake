@@ -83,7 +83,9 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 
     file(REMOVE_RECURSE ${TOOLPATH}/${TOOLSUBPATH})
     file(MAKE_DIRECTORY ${TOOLPATH})
-    _execute_process(
+
+    vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
       WORKING_DIRECTORY ${TOOLPATH}
     )
@@ -91,12 +93,21 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate"
       WORKING_DIRECTORY ${TOOLPATH}
     )
-    _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy --noconfirm pacman"
+    vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
+      COMMAND ${PATH_TO_ROOT}/usr/bin/pacman.exe -Sy --noconfirm bash pacman
       WORKING_DIRECTORY ${TOOLPATH}
     )
-    _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syu --noconfirm"
+
+    vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
+      COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage ne 0"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+
+    vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
+      COMMAND ${PATH_TO_ROOT}/usr/bin/pacman.exe -Syu --noconfirm
       WORKING_DIRECTORY ${TOOLPATH}
     )
     file(WRITE "${TOOLPATH}/${STAMP}" "0")
@@ -121,13 +132,11 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   endif()
 
   # Deal with a stale process created by MSYS
-  if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-      vcpkg_execute_required_process(
-          ALLOW_IN_DOWNLOAD_MODE
-          COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage gt 2"
-          WORKING_DIRECTORY ${TOOLPATH}
-      )
-  endif()
+  vcpkg_execute_required_process(
+    ALLOW_IN_DOWNLOAD_MODE
+    COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage ne 0"
+    WORKING_DIRECTORY ${TOOLPATH}
+  )
 
   set(${PATH_TO_ROOT_OUT} ${PATH_TO_ROOT} PARENT_SCOPE)
 endfunction()
