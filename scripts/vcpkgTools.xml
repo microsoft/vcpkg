@@ -11,14 +11,14 @@
         <version>3.17.2</version>
         <exeRelativePath>cmake-3.17.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Darwin-x86_64.tar.gz</url>
-        <sha512>804b06439c05b9cf36a988223b7dc47b06b8613cb4653989eff52aad5ab0fa312b8da1ac0c760ad101e74b2c9edaf5b119bd48617a5efb57dff9380ca74e54a9 </sha512>
+        <sha512>804b06439c05b9cf36a988223b7dc47b06b8613cb4653989eff52aad5ab0fa312b8da1ac0c760ad101e74b2c9edaf5b119bd48617a5efb57dff9380ca74e54a9</sha512>
         <archiveName>cmake-3.17.2-Darwin-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
         <version>3.17.2</version>
         <exeRelativePath>cmake-3.17.2-Linux-x86_64/bin/cmake</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.tar.gz</url>
-        <sha512>2afc023363c40b110d97d871fb9a8917643bba308ca0c029ee8fe1164db1c168e32b2c9d7647475d84efa290c1242357f7cf260ea4d1f92f5a829cf418955490 </sha512>
+        <sha512>2afc023363c40b110d97d871fb9a8917643bba308ca0c029ee8fe1164db1c168e32b2c9d7647475d84efa290c1242357f7cf260ea4d1f92f5a829cf418955490</sha512>
         <archiveName>cmake-3.17.2-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
