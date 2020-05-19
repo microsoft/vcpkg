@@ -49,6 +49,7 @@ Valid options include any CMake system name, such as:
 - `WindowsStore` (Universal Windows Platform)
 - `Darwin` (Mac OSX)
 - `Linux` (Linux)
+- `Emscripten` (WebAssembly)
 
 ### VCPKG_CMAKE_SYSTEM_VERSION
 Specifies the target platform system version.
