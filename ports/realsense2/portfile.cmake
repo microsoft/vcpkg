@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF 842ee1e1e5c4bb96d63582a7fde061dbc1bebf69#v2.33.1
-    SHA512 70f6f9c2f1c5925532b2ff22779579b3610a7f616d66ac92e8e85c6f30df334bf8fb125355a0706bacef0be8370acc62bb7623f3f200326e71fe53e07726fa6a
+    REF v2.34.0
+    SHA512 02a89a8249827d67ad496d0ec00af7722d4a598d9d5ea44a84e44e3c32f5a815844ad43e11367bb8a11da482c4a6bb8936fbee9dfdf2fd7540d1136592439ab5
     HEAD_REF master
     PATCHES
         fix_openni2.patch
         fix-dependency-glfw3.patch
-        fix-tools-compile-on-vs2019.patch
 )
 
 file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
