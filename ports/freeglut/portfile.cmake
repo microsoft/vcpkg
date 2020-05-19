@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.2.1/freeglut-3.2.1.tar.gz"
     FILENAME "freeglut-3.2.1.tar.gz"
@@ -15,7 +13,7 @@ vcpkg_extract_source_archive_ex(
     gcc10.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message("Freeglut currently requires the following libraries from the system package manager:\n    opengl\n    glu\n    libx11\n    xrandr\n    xi\n    xxf86vm\n\nThese can be installed on Ubuntu systems via apt-get install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev\nOn macOS Xquartz is required.")
 endif()
 
@@ -70,12 +68,11 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freeglut)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/freeglut/COPYING ${CURRENT_PACKAGES_DIR}/share/freeglut/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/glut)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 endif()
