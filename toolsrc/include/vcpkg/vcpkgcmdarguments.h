@@ -103,12 +103,12 @@ namespace vcpkg
         std::vector<std::string> binarysources;
 
         Optional<bool> debug = nullopt;
-        Optional<bool> sendmetrics = nullopt;
-        Optional<bool> printmetrics = nullopt;
+        Optional<bool> send_metrics = nullopt;
+        Optional<bool> print_metrics = nullopt;
 
         // feature flags
-        Optional<bool> featurepackages = nullopt;
-        Optional<bool> binarycaching = nullopt;
+        Optional<bool> feature_packages = nullopt;
+        Optional<bool> binary_caching = nullopt;
 
         std::string command;
         std::vector<std::string> command_arguments;

@@ -223,42 +223,42 @@ namespace vcpkg
                 }
                 if (arg == "--sendmetrics")
                 {
-                    parse_switch(true, "sendmetrics", args.sendmetrics);
+                    parse_switch(true, "sendmetrics", args.send_metrics);
                     continue;
                 }
                 if (arg == "--printmetrics")
                 {
-                    parse_switch(true, "printmetrics", args.printmetrics);
+                    parse_switch(true, "printmetrics", args.print_metrics);
                     continue;
                 }
                 if (arg == "--no-sendmetrics")
                 {
-                    parse_switch(false, "sendmetrics", args.sendmetrics);
+                    parse_switch(false, "sendmetrics", args.send_metrics);
                     continue;
                 }
                 if (arg == "--no-printmetrics")
                 {
-                    parse_switch(false, "printmetrics", args.printmetrics);
+                    parse_switch(false, "printmetrics", args.print_metrics);
                     continue;
                 }
                 if (arg == "--featurepackages")
                 {
-                    parse_switch(true, "featurepackages", args.featurepackages);
+                    parse_switch(true, "featurepackages", args.feature_packages);
                     continue;
                 }
                 if (arg == "--no-featurepackages")
                 {
-                    parse_switch(false, "featurepackages", args.featurepackages);
+                    parse_switch(false, "featurepackages", args.feature_packages);
                     continue;
                 }
                 if (arg == "--binarycaching")
                 {
-                    parse_switch(true, "binarycaching", args.binarycaching);
+                    parse_switch(true, "binarycaching", args.binary_caching);
                     continue;
                 }
                 if (arg == "--no-binarycaching")
                 {
-                    parse_switch(false, "binarycaching", args.binarycaching);
+                    parse_switch(false, "binarycaching", args.binary_caching);
                     continue;
                 }
 

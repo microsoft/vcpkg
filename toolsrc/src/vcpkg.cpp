@@ -335,10 +335,10 @@ int main(const int argc, const char* const* const argv)
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
 
-    if (const auto p = args.binarycaching.get()) GlobalState::g_binary_caching = *p;
+    if (const auto p = args.binary_caching.get()) GlobalState::g_binary_caching = *p;
 
-    if (const auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
-    if (const auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
+    if (const auto p = args.print_metrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
+    if (const auto p = args.send_metrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
     if (const auto p = args.debug.get()) Debug::g_debugging = *p;
 
     if (Debug::g_debugging)
