@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 b41201e036891ef34399b387d9a04d36687f05aa420a5e324836131e217ffff0d6658a17472817534b45bed6ae10f8b780805a537cb93ffb058f17013af9b14d
     HEAD_REF v1.x
     PATCHES
-        disable-master-project-check.patch
         fix-feature-export.patch
         fix-error-4275.patch # Actually a defect in fmtlib
         fix-includes-external-fmt.patch
@@ -33,6 +32,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DSPDLOG_MASTER_PROJECT=OFF
         -DSPDLOG_FMT_EXTERNAL=ON
         ${FEATURE_OPTIONS}
         -DSPDLOG_INSTALL=ON
