@@ -248,7 +248,7 @@ namespace vcpkg::Metrics
         ;
     static bool g_should_print_metrics = false;
 
-    bool get_compiled_metrics_enabled() { return VCPKG_DISABLE_METRICS == 0; }
+    bool get_compiled_metrics_enabled() { return !VCPKG_DISABLE_METRICS; }
 
     std::string get_MAC_user()
     {

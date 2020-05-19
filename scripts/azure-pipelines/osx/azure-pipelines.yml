@@ -30,7 +30,9 @@ jobs:
     displayName: 'Build vcpkg'
     inputs:
       filePath: bootstrap-vcpkg.sh
-      arguments: '-allowAppleClang'
+      arguments: '-buildTests'
+  - bash: toolsrc/build.rel/vcpkg-test
+    displayName: 'Run vcpkg tests'
   - powershell: |
       $skip_list = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-osx" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results
