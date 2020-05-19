@@ -104,6 +104,9 @@ function Add-SessionPath([string]$path) {
     $env:path = "$sanitizedPath;$env:path"
 }
 
+Get-Path Format-List | Out-Host
+"`n"
+
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
     net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
