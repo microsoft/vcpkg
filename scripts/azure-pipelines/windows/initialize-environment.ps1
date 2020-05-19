@@ -29,6 +29,11 @@ function Remove-DirectorySymlink {
     }
 }
 
+function Get-Path
+{
+    ([Environment]::GetEnvironmentVariable("path", "machine")).Split(";") | Sort-Object
+}
+
 Get-Path Format-List | Out-Host
 "`n"
 
