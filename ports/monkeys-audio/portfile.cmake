@@ -8,13 +8,13 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://monkeysaudio.com/files/MAC_SDK_${MA_VERSION}.zip"
     FILENAME "MAC_SDK_${MA_VERSION}.zip"
     SHA512 2274d69161fad7740332585792da57e8f82634545da0aa13a5be975434a3df8526d1fd727b3f074ba928e4e252de2e5510e4f6616bb3cf469ef93b65dd55696b
-    PATCHES fix-project-config.patch
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
+    PATCHES fix-project-config.patch
 )
 
 file(REMOVE_RECURSE
