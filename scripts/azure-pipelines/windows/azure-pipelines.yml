@@ -41,12 +41,6 @@ jobs:
       cp $xmlPath $(Build.ArtifactStagingDirectory)
       Move-Item $xmlPath -Destination $outputXmlPath
 
-      # already in DevOps, no need for extra copies
-      rm $(System.DefaultWorkingDirectory)\console-out.txt -ErrorAction Ignore
-
-      Remove-Item "$(System.DefaultWorkingDirectory)\buildtrees\*" -Recurse -errorAction silentlycontinue
-      Remove-Item "$(System.DefaultWorkingDirectory)\packages\*" -Recurse -errorAction silentlycontinue
-      Remove-Item "$(System.DefaultWorkingDirectory)\installed\*" -Recurse -errorAction silentlycontinue
     displayName: 'Collect logs and cleanup build'
 
   - task: PowerShell@2

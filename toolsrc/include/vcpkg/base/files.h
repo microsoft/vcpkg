@@ -134,6 +134,9 @@ namespace vcpkg::Files
         virtual void remove_all(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
         void remove_all(const fs::path& path, LineInfo li);
         void remove_all(const fs::path& path, ignore_errors_t);
+        virtual void remove_all_inside(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
+        void remove_all_inside(const fs::path& path, LineInfo li);
+        void remove_all_inside(const fs::path& path, ignore_errors_t);
         bool exists(const fs::path& path, std::error_code& ec) const;
         bool exists(LineInfo li, const fs::path& path) const;
         bool exists(const fs::path& path, ignore_errors_t = ignore_errors) const;
