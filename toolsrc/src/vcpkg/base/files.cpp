@@ -720,11 +720,10 @@ namespace vcpkg::Files
                 else
                 {
                     this->remove(thisPath, ec);
-                }
-
-                if (ec)
-                {
-                    break;
+                    if (ec)
+                    {
+                        break;
+                    }
                 }
 
                 first.increment(ec);
