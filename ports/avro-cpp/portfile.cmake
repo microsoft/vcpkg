@@ -25,6 +25,8 @@ vcpkg_configure_cmake(
         -DAVRO_ADD_PROTECTOR_FLAGS=1
 )
 
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "linux" "uwp")
+
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
