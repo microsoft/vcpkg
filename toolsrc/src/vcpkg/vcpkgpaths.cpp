@@ -16,7 +16,7 @@ namespace vcpkg
     Expected<VcpkgPaths> VcpkgPaths::create(Files::Filesystem& fs,
                                             const fs::path& vcpkg_root_dir,
                                             const Optional<fs::path>& install_root_dir,
-                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
+                                            const Optional<fs::path>& scripts_root_dir,
                                             const std::string& default_vs_path,
                                             const std::vector<std::string>* triplets_dirs,
                                             fs::path original_cwd)
@@ -80,7 +80,7 @@ namespace vcpkg
         paths.triplets = paths.root / "triplets";
         paths.community_triplets = paths.triplets / "community";
 
-        if (auto scripts_dir = vcpkg_scripts_root_dir.get())
+        if (auto scripts_dir = scripts_root_dir.get())
         {
             if (scripts_dir->empty() || !fs::is_directory(fs.status(VCPKG_LINE_INFO, *scripts_dir)))
             {

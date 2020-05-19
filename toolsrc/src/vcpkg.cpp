@@ -61,7 +61,9 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
             return &*it;
         }
         else
+        {
             return static_cast<decltype(&*it)>(nullptr);
+        }
     };
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_c()))

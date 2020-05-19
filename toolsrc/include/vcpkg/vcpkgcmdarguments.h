@@ -89,12 +89,19 @@ namespace vcpkg
         static VcpkgCmdArguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
 
         std::unique_ptr<std::string> vcpkg_root_dir;
+
+        std::unique_ptr<std::string> buildtrees_root_dir;
+        std::unique_ptr<std::string> downloads_root_dir;
         std::unique_ptr<std::string> install_root_dir;
+        std::unique_ptr<std::string> packages_root_dir;
         std::unique_ptr<std::string> scripts_root_dir;
+
         std::unique_ptr<std::string> triplet;
         std::unique_ptr<std::vector<std::string>> overlay_ports;
         std::unique_ptr<std::vector<std::string>> overlay_triplets;
+
         std::vector<std::string> binarysources;
+
         Optional<bool> debug = nullopt;
         Optional<bool> sendmetrics = nullopt;
         Optional<bool> printmetrics = nullopt;
@@ -107,6 +114,8 @@ namespace vcpkg
         std::vector<std::string> command_arguments;
 
         ParsedArguments parse_arguments(const CommandStructure& command_structure) const;
+
+        void imbue_from_environment();
 
     private:
         std::unordered_map<std::string, Optional<std::vector<std::string>>> optional_command_arguments;

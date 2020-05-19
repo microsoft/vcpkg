@@ -161,16 +161,35 @@ namespace vcpkg
                     parse_value(arg_begin, arg_end, "--vcpkg-root", args.vcpkg_root_dir);
                     continue;
                 }
-                if (Strings::starts_with(arg, "--x-scripts-root="))
+                if (Strings::starts_with(arg, "--x-buildtrees-root="))
+                {
+                    parse_cojoined_value(arg.substr(sizeof("--x-buildtrees-root=") - 1),
+                                         "--x-buildtrees-root",
+                                         args.buildtrees_root_dir);
+                    continue;
+                }
+                if (Strings::starts_with(arg, "--x-downloads-root="))
                 {
                     parse_cojoined_value(
-                        arg.substr(sizeof("--x-scripts-root=") - 1), "--x-scripts-root", args.scripts_root_dir);
+                        arg.substr(sizeof("--x-downloads-root=") - 1), "--x-downloads-root", args.downloads_root_dir);
                     continue;
                 }
                 if (Strings::starts_with(arg, "--x-install-root="))
                 {
                     parse_cojoined_value(
                         arg.substr(sizeof("--x-install-root=") - 1), "--x-install-root=", args.install_root_dir);
+                    continue;
+                }
+                if (Strings::starts_with(arg, "--x-packages-root="))
+                {
+                    parse_cojoined_value(
+                        arg.substr(sizeof("--x-packages-root=") - 1), "--x-packages-root=", args.packages_root_dir);
+                    continue;
+                }
+                if (Strings::starts_with(arg, "--x-scripts-root="))
+                {
+                    parse_cojoined_value(
+                        arg.substr(sizeof("--x-scripts-root=") - 1), "--x-scripts-root", args.scripts_root_dir);
                     continue;
                 }
                 if (arg == "--triplet")
@@ -455,8 +474,37 @@ namespace vcpkg
         table.format("--overlay-triplets=<path>", "Specify directories containing triplets files");
         table.format("--vcpkg-root <path>",
                      "Specify the vcpkg directory to use instead of current directory or tool directory");
+        table.format("--x-buildtrees-root=<path>",
+                     "(Experimental) Specify the downloads directory instead of the default 'buildtrees'");
+        table.format("--x-downloads-root=<path>",
+                     "(Experimental) Specify the downloads directory instead of the default 'downloads'");
+        table.format("--x-install-root=<path>",
+                     "(Experimental) Specify the downloads directory instead of the default 'installed'");
+        table.format("--x-packages-root=<path>",
+                     "(Experimental) Specify the scripts directory to use instead of default 'packages'");
         table.format("--x-scripts-root=<path>",
-                     "(Experimental) Specify the scripts directory to use instead of default vcpkg scripts directory");
+                     "(Experimental) Specify the scripts directory to use instead of default 'scripts'");
         System::print2(table.m_str);
+    }
+
+    void VcpkgCmdArguments::imbue_from_environment()
+    {
+        if (!vcpkg_root_dir)
+        {
+            const auto VCPKG_ROOT = System::get_environment_variable("VCPKG_ROOT");
+            if (const auto unpacked = VCPKG_ROOT.get())
+            {
+                vcpkg_root_dir = std::make_unique<std::string>(*unpacked);
+            }
+        }
+
+        if (!downloads_root_dir)
+        {
+            const auto VCPKG_DOWNLOADS = vcpkg::System::get_environment_variable("VCPKG_DOWNLOADS");
+            if (const auto unpacked = VCPKG_DOWNLOADS.get())
+            {
+                downloads_root_dir = std::make_unique<std::string>(*unpacked);
+            }
+        }
     }
 }
