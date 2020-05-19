@@ -26,6 +26,7 @@ namespace vcpkg
         uwp,
         android,
 
+        wasm32,
         static_link,
     };
 
@@ -113,6 +114,7 @@ namespace vcpkg
                 {"osx", Identifier::osx},
                 {"uwp", Identifier::uwp},
                 {"android", Identifier::android},
+                {"wasm32", Identifier::wasm32},
                 {"static", Identifier::static_link},
             };
 
@@ -165,6 +167,7 @@ namespace vcpkg
                 case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
                 case Identifier::uwp: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
                 case Identifier::android: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Android");
+                case Identifier::wasm32: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "wasm32");
                 case Identifier::static_link: return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");
             }
 
