@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2c39d1..29bb533 100644
+index b2c39d1..71ac71d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -35,10 +35,8 @@ if (APPLE)
@@ -10,12 +10,12 @@ index b2c39d1..29bb533 100644
 -    list (APPEND CMAKE_CXX_FLAGS " -std=c++11 -O3 ")
 -else()
 -    list (APPEND CMAKE_CXX_FLAGS " -std=c++11 -O3 -Wall -Werror ")
-+if(NOT MSVC)
++if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 +    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -Wall -Werror")
  endif()
  
  # Check for cryptopp (static)
-@@ -64,21 +62,26 @@ set(LICENSEPP_SOURCE_FILES
+@@ -64,15 +62,12 @@ set(LICENSEPP_SOURCE_FILES
      src/license.cc
  )
  
@@ -33,18 +33,3 @@ index b2c39d1..29bb533 100644
  target_link_libraries (licensepp-lib
      ${CRYPTOPP_LIBRARIES}
  )
- 
- set_target_properties (licensepp-lib PROPERTIES OUTPUT_NAME "licensepp")
--install (TARGETS licensepp-lib EXPORT licensepp-config DESTINATION lib)
-+
-+include(GNUInstallDirs)
-+
-+install (TARGETS licensepp-lib
-+    EXPORT licensepp-config
-+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+)
- install (FILES license++/base-license-manager.h DESTINATION "include/license++")
- install (FILES license++/issuing-authority.h DESTINATION "include/license++")
- install (FILES license++/license.h DESTINATION "include/license++")
