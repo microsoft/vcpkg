@@ -45,7 +45,7 @@ Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "Syml
 
 #Invoke-Expression -Command  "icacls C:\\agent\\_work\\1\\s\\downloads\\tools\\msys2 /grant Users:'(OI)(CI)F' /T"
 #$proc = 
-Start-Process -FilePath "$env:windirsystem32cmd.exe" -ArgumentList "/c icacls.exe D:\downloads\tools /grant *S-1-5-83-0:"(OI)(CI)F" /T" -Verb RunAs
+Start-Process -FilePath "$env:windirsystem32cmd.exe" -ArgumentList "/c icacls.exe D:\downloads\tools /grant *S-1-5-83-0:'(OI)(CI)F' /T" -Verb RunAs
 
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
