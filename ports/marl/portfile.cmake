@@ -1,16 +1,12 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "This port doesn't support UWP currently!")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/marl
-    REF bf3e23083979c3bd3de1c77346b655eec423b3bc
-    SHA512 8c85b9a2b7e3cb397fc11c4bf32c5f62d4113ab6af92861c93472299f1b9296edef4dd8d1eb24db242fe55b52f33d2e058a4ce91fbaa793ffa4d5f4c8e336251
+    REF 0591f0ef0811eff9e87c22048abc048c0399862d
+    SHA512 12a86cc01c5f3c29fd75ad4867f4cc1eb7d7b5e0781d04a12f4d2a57331b24bd03174173fd240b1cabac56b6747a0ac19040e2e1c7c47057c3e249faa47586c7
     HEAD_REF master
 )
 
@@ -27,8 +23,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
