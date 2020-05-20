@@ -50,7 +50,7 @@ namespace vcpkg::Commands::CI
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("ci x64-windows"),
+        create_example_string("ci x64-windows"),
         1,
         SIZE_MAX,
         {CI_SWITCHES, CI_SETTINGS},

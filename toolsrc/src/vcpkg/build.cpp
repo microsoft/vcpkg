@@ -124,7 +124,7 @@ namespace vcpkg::Build::Command
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("build zlib:x64-windows"),
+        create_example_string("build zlib:x64-windows"),
         1,
         1,
         {{}, {}},

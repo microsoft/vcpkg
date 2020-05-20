@@ -22,7 +22,7 @@ namespace vcpkg::Commands::Contact
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("contact"),
+        create_example_string("contact"),
         0,
         0,
         {SWITCHES, {}},

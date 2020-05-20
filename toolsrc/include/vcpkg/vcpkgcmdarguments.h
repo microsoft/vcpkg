@@ -73,7 +73,8 @@ namespace vcpkg
         std::vector<std::string> (*valid_arguments)(const VcpkgPaths& paths);
     };
 
-    void display_usage(const CommandStructure& command_structure);
+    void print_usage();
+    void print_usage(const CommandStructure& command_structure);
 
 #if defined(_WIN32)
     using CommandLineCharType = wchar_t;
@@ -81,12 +82,27 @@ namespace vcpkg
     using CommandLineCharType = char;
 #endif
 
+    std::string create_example_string(const std::string& command_and_arguments);
+
+    std::string format_environment_variable(StringLiteral lit);
+
+    struct HelpTableFormatter
+    {
+        void format(StringView col1, StringView col2);
+        void example(StringView example_text);
+        void header(StringView name);
+
+        std::string m_str;
+    };
+
     struct VcpkgCmdArguments
     {
         static VcpkgCmdArguments create_from_command_line(const Files::Filesystem& fs,
                                                           const int argc,
                                                           const CommandLineCharType* const* const argv);
         static VcpkgCmdArguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
+
+        static void append_common_options(HelpTableFormatter& target);
 
         std::unique_ptr<std::string> vcpkg_root_dir;
 

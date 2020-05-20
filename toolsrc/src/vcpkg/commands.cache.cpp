@@ -28,7 +28,7 @@ namespace vcpkg::Commands::Cache
     const CommandStructure COMMAND_STRUCTURE = {
         Strings::format(
             "The argument should be a substring to search for, or no argument to display all cached libraries.\n%s",
-            Help::create_example_string("cache png")),
+            create_example_string("cache png")),
         0,
         1,
         {},

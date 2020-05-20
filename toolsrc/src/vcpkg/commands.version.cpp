@@ -74,7 +74,7 @@ namespace vcpkg::Commands::Version
         }
     }
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("version"),
+        create_example_string("version"),
         0,
         0,
         {},

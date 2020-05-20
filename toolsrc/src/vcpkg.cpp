@@ -38,7 +38,7 @@ static constexpr int SURVEY_INITIAL_OFFSET_IN_HOURS = SURVEY_INTERVAL_IN_HOURS -
 static void invalid_command(const std::string& cmd)
 {
     System::print2(System::Color::error, "invalid command: ", cmd, '\n');
-    Help::print_usage();
+    print_usage();
     Checks::exit_fail(VCPKG_LINE_INFO);
 }
 
@@ -47,7 +47,7 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
     Metrics::g_metrics.lock()->track_property("command", args.command);
     if (args.command.empty())
     {
-        Help::print_usage();
+        print_usage();
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 

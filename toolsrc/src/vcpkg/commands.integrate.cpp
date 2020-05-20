@@ -446,19 +446,27 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     }
 #endif
 
+    void append_helpstring(HelpTableFormatter& table)
+    {
 #if defined(_WIN32)
-    const char* const INTEGRATE_COMMAND_HELPSTRING =
-        "  vcpkg integrate install         Make installed packages available user-wide. Requires admin privileges on "
-        "first use\n"
-        "  vcpkg integrate remove          Remove user-wide integration\n"
-        "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n"
-        "  vcpkg integrate powershell      Enable PowerShell tab-completion\n";
-#else
-    const char* const INTEGRATE_COMMAND_HELPSTRING =
-        "  vcpkg integrate install         Make installed packages available user-wide.\n"
-        "  vcpkg integrate remove          Remove user-wide integration\n"
-        "  vcpkg integrate bash            Enable bash tab-completion\n";
-#endif
+        table.format("vcpkg integrate install",
+                     "Make installed packages available user-wide. Requires admin privileges on first use");
+        table.format("vcpkg integrate remove", "Remove user-wide integration");
+        table.format("vcpkg integrate project", "Generate a referencing nuget package for individual VS project use");
+        table.format("vcpkg integrate powershell", "Enable PowerShell tab-completion");
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+        table.format("vcpkg integrate install", "Make installed packages available user-wide");
+        table.format("vcpkg integrate remove", "Remove user-wide integration");
+        table.format("vcpkg integrate bash", "Enable bash tab-completion");
+#endif // ^^^ !defined(_WIN32)
+    }
+
+    std::string get_helpstring()
+    {
+        HelpTableFormatter table;
+        append_helpstring(table);
+        return std::move(table.m_str);
+    }
 
     namespace Subcommand
     {
@@ -483,9 +491,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("Commands:\n"
-                        "%s",
-                        INTEGRATE_COMMAND_HELPSTRING),
+        "Commands:\n" + get_helpstring(),
         1,
         1,
         {},
