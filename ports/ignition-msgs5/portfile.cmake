@@ -12,7 +12,9 @@ vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/debug/bin)
 
 ignition_modular_library(NAME msgs
                          VERSION "5.1.0"
-                         SHA512 db485f737c465b310602342a1a751c561473e330eb18d1b322b32d13de246536fe6a7efdf245faaaa9be1c9bfce662b2d39d1bb7cffc37e52690893cb47cc2ee)
+                         SHA512 db485f737c465b310602342a1a751c561473e330eb18d1b322b32d13de246536fe6a7efdf245faaaa9be1c9bfce662b2d39d1bb7cffc37e52690893cb47cc2ee
+                         PATCHES
+                           "01-protobuf.patch")
 
 # Restore old path
 set(ENV{PATH} ${path_backup})
