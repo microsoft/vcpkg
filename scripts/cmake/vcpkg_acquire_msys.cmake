@@ -95,10 +95,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate"
       WORKING_DIRECTORY ${TOOLPATH}
     )
-    _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy --noconfirm pacman"
-      WORKING_DIRECTORY ${TOOLPATH}
-    )
+
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syuu --needed --noconfirm --ask=20 --disable-download-timeout --overwrite '*'"
       WORKING_DIRECTORY ${TOOLPATH}
@@ -122,6 +119,11 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syuu --needed --noconfirm --ask=20 --disable-download-timeout --overwrite '*'"
       WORKING_DIRECTORY ${TOOLPATH}
     )
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy --noconfirm pacman"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -Syu --noconfirm --needed --disable-download-timeout --overwrite '*' ${_am_PACKAGES}"
