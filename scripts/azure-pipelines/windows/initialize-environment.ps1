@@ -43,10 +43,13 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name
 
 Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToLocalEvaluation" -Value "1" -Force
 
+if( Test-Path D:\downloads\tools\msys2 )
+{
 $acl = Get-Acl D:\downloads\tools
 $AccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Users","FullControl","Allow")
 $acl.SetAccessRule($AccessRule)
 $acl | Set-Acl D:\downloads\tools\msys2
+}
 
 #Invoke-Expression -Command "icacls D:\downloads\tools\msys2 /grant BUILTIN\Users:'(OI)(CI)F' /T" -Verb
 #$proc = Start-Process -FilePath cmd.exe /c "icacls.exe D:\downloads\tools /grant *S-1-5-83-0:'(OI)(CI)F' /T" -Verb RunAs
