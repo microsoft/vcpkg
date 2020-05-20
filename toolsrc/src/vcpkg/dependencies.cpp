@@ -39,7 +39,7 @@ namespace vcpkg::Dependencies
 
         struct ClusterInstallInfo
         {
-            std::unordered_map<std::string, std::vector<FeatureSpec>> build_edges;
+            std::map<std::string, std::vector<FeatureSpec>> build_edges;
             bool defaults_requested = false;
         };
 
@@ -106,16 +106,14 @@ namespace vcpkg::Dependencies
                     &m_scfl.source_control_file->find_dependencies_for_feature(feature).value_or_exit(VCPKG_LINE_INFO);
 
                 std::vector<FeatureSpec> dep_list;
-                if (maybe_vars)
+                if (auto vars = maybe_vars.get())
                 {
                     // Qualified dependency resolution is available
-                    auto fullspec_list = filter_dependencies(
-                        *qualified_deps, m_spec.triplet(), maybe_vars.value_or_exit(VCPKG_LINE_INFO));
+                    auto fullspec_list = filter_dependencies(*qualified_deps, m_spec.triplet(), *vars);
 
                     for (auto&& fspec : fullspec_list)
                     {
-                        // TODO: this is incorrect and does not handle default features nor "*"
-                        Util::Vectors::append(&dep_list, fspec.to_feature_specs({"default"}, {}));
+                        Util::Vectors::append(&dep_list, fspec.to_feature_specs({"default"}, {"default"}));
                     }
 
                     Util::sort_unique_erase(dep_list);
@@ -130,10 +128,8 @@ namespace vcpkg::Dependencies
                         {
                             Util::Vectors::append(
                                 &dep_list,
-                                FullPackageSpec(PackageSpec::from_name_and_triplet(dep.depend.name, m_spec.triplet())
-                                                    .value_or_exit(VCPKG_LINE_INFO),
-                                                dep.depend.features)
-                                    .to_feature_specs({"default"}, {}));
+                                FullPackageSpec({dep.depend.name, m_spec.triplet()}, dep.depend.features)
+                                    .to_feature_specs({"default"}, {"default"}));
                         }
                         else
                         {
@@ -261,14 +257,15 @@ namespace vcpkg::Dependencies
 
             if (it == m_graph.end())
             {
-                Optional<const SourceControlFileLocation&> maybe_scfl =
+                ExpectedS<const SourceControlFileLocation&> maybe_scfl =
                     m_port_provider.get_control_file(ipv.spec().name());
 
                 if (!maybe_scfl)
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO,
-                        "We could not find a CONTROL file for '%s'. Please run \"vcpkg remove %s\" and re-attempt.",
+                        "Error: while loading %s: %s.\nPlease run \"vcpkg remove %s\" and re-attempt.",
                         ipv.spec().to_string(),
+                        maybe_scfl.error(),
                         ipv.spec().to_string());
 
                 return m_graph
@@ -297,7 +294,7 @@ namespace vcpkg::Dependencies
         auto end() const { return m_graph.end(); }
 
     private:
-        std::unordered_map<PackageSpec, Cluster> m_graph;
+        std::map<PackageSpec, Cluster> m_graph;
         const PortFileProvider::PortFileProvider& m_port_provider;
     };
 
@@ -355,7 +352,7 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFileLocation& scfl,
                                          const RequestType& request_type,
-                                         std::unordered_map<std::string, std::vector<FeatureSpec>>&& dependencies)
+                                         std::map<std::string, std::vector<FeatureSpec>>&& dependencies)
         : spec(spec)
         , source_control_file_location(scfl)
         , plan_type(InstallPlanType::BUILD_AND_INSTALL)
@@ -403,6 +400,15 @@ namespace vcpkg::Dependencies
 
         const std::string features = Strings::join(",", feature_list);
         return Strings::format("%s[%s]:%s", this->spec.name(), features, this->spec.triplet());
+    }
+    const std::string& InstallPlanAction::public_abi() const
+    {
+        if (auto p = pre_build_info.get())
+        {
+            if (auto q = p->get()->public_abi_override.get()) return *q;
+        }
+        if (auto p = installed_package.get()) return p->core->package.abi;
+        return package_abi.value_or_exit(VCPKG_LINE_INFO);
     }
 
     bool InstallPlanAction::compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right)
@@ -456,7 +462,7 @@ namespace vcpkg::Dependencies
         return nullopt;
     }
 
-    std::vector<PackageSpec> ExportPlanAction::dependencies(const Triplet&) const
+    std::vector<PackageSpec> ExportPlanAction::dependencies(Triplet) const
     {
         if (auto p_ip = m_installed_package.get())
             return p_ip->dependencies();
@@ -552,7 +558,7 @@ namespace vcpkg::Dependencies
                                                      ? RequestType::USER_REQUESTED
                                                      : RequestType::AUTO_SELECTED;
 
-                auto maybe_ipv = status_db.find_all_installed(spec);
+                auto maybe_ipv = status_db.get_installed_package_view(spec);
 
                 if (auto p_ipv = maybe_ipv.get())
                 {
@@ -851,7 +857,7 @@ namespace vcpkg::Dependencies
             {
                 auto&& scfl = p_cluster->m_scfl;
 
-                std::unordered_map<std::string, std::vector<FeatureSpec>> computed_edges;
+                std::map<std::string, std::vector<FeatureSpec>> computed_edges;
                 for (auto&& kv : info_ptr->build_edges)
                 {
                     std::set<FeatureSpec> fspecs;

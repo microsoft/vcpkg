@@ -30,7 +30,7 @@ namespace vcpkg::Commands::Autocomplete
     {
         Metrics::g_metrics.lock()->set_send_metrics(false);
         const std::string to_autocomplete = Strings::join(" ", args.command_arguments);
-        const std::vector<std::string> tokens = Strings::split(to_autocomplete, " ");
+        const std::vector<std::string> tokens = Strings::split(to_autocomplete, ' ');
 
         std::smatch match;
 

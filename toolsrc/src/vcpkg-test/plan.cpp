@@ -19,7 +19,6 @@ using Test::make_status_feature_pgh;
 using Test::make_status_pgh;
 using Test::MockCMakeVarProvider;
 using Test::PackageSpecMap;
-using Test::unsafe_pspec;
 
 /// <summary>
 /// Assert that the given action an install of given features from given package.
@@ -27,7 +26,7 @@ using Test::unsafe_pspec;
 static void features_check(Dependencies::InstallPlanAction& plan,
                            std::string pkg_name,
                            std::vector<std::string> expected_features,
-                           const Triplet& triplet = Triplet::X86_WINDOWS)
+                           Triplet triplet = Triplet::X86_WINDOWS)
 {
     const auto& feature_list = plan.feature_list;
 
@@ -53,7 +52,7 @@ static void features_check(Dependencies::InstallPlanAction& plan,
 /// </summary>
 static void remove_plan_check(Dependencies::RemovePlanAction& plan,
                               std::string pkg_name,
-                              const Triplet& triplet = Triplet::X86_WINDOWS)
+                              Triplet triplet = Triplet::X86_WINDOWS)
 {
     REQUIRE(plan.spec.triplet().to_string() == triplet.to_string());
     REQUIRE(pkg_name == plan.spec.name());
@@ -370,9 +369,8 @@ TEST_CASE ("basic feature test 7", "[plan]")
     remove_plan_check(plan.remove_actions.at(0), "x");
     remove_plan_check(plan.remove_actions.at(1), "b");
 
-    // TODO: order here may change but A < X, and B anywhere
-    features_check(plan.install_actions.at(0), "b", {"core", "b1"});
-    features_check(plan.install_actions.at(1), "a", {"core"});
+    features_check(plan.install_actions.at(0), "a", {"core"});
+    features_check(plan.install_actions.at(1), "b", {"core", "b1"});
     features_check(plan.install_actions.at(2), "x", {"core"});
 }
 
@@ -381,8 +379,7 @@ TEST_CASE ("basic feature test 8", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a"));
     status_paragraphs.push_back(make_status_pgh("a"));
-    status_paragraphs.back()->package.spec =
-        PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
+    status_paragraphs.back()->package.spec = PackageSpec("a", Triplet::X64_WINDOWS);
 
     PackageSpecMap spec_map(Triplet::X64_WINDOWS);
     auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "b", {{"a1", ""}}), {"core"}};
@@ -464,8 +461,7 @@ TEST_CASE ("install default features test 2", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a"));
-    status_paragraphs.back()->package.spec =
-        PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
+    status_paragraphs.back()->package.spec = PackageSpec("a", Triplet::X64_WINDOWS);
 
     // Add a port "a" of which "core" is already installed, but we will
     // install the default features "explicitly"
@@ -610,8 +606,7 @@ TEST_CASE ("do not install default features of existing dependency", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     // "b[core]" is already installed
     status_paragraphs.push_back(make_status_pgh("b"));
-    status_paragraphs.back()->package.spec =
-        PackageSpec::from_name_and_triplet("b", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
+    status_paragraphs.back()->package.spec = PackageSpec("b", Triplet::X64_WINDOWS);
 
     // Install "a" (without explicit feature specification)
     auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
@@ -628,12 +623,39 @@ TEST_CASE ("do not install default features of existing dependency", "[plan]")
     features_check(install_plan.install_actions.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
 }
 
+TEST_CASE ("install default features of existing dependency", "[plan]")
+{
+    // Add a port "a" which depends on the default features of "b"
+    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    spec_map.emplace("a", "b");
+    // "b" has a default feature
+    spec_map.emplace("b", "", {{"b1", ""}}, {"b1"});
+
+    std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+    // "b[core]" is already installed
+    status_paragraphs.push_back(make_status_pgh("b", "", "b1"));
+    status_paragraphs.back()->package.spec = PackageSpec("b", Triplet::X64_WINDOWS);
+
+    // Install "a" (without explicit feature specification)
+    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    PortFileProvider::MapPortFileProvider map_port{spec_map.map};
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = Dependencies::create_feature_install_plan(map_port,
+                                                                  var_provider,
+                                                                  {install_specs.value_or_exit(VCPKG_LINE_INFO)},
+                                                                  StatusParagraphs(std::move(status_paragraphs)));
+
+    // Expect "b" to be rebuilt
+    REQUIRE(install_plan.install_actions.size() == 2);
+    features_check(install_plan.install_actions.at(0), "b", {"core", "b1"}, Triplet::X64_WINDOWS);
+}
+
 TEST_CASE ("install default features of dependency test 3", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("b"));
-    status_paragraphs.back()->package.spec =
-        PackageSpec::from_name_and_triplet("b", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
+    status_paragraphs.back()->package.spec = PackageSpec("b", Triplet::X64_WINDOWS);
 
     // Add a port "a" which depends on the core of "b", which was already
     // installed explicitly
@@ -945,7 +967,7 @@ TEST_CASE ("basic remove scheme", "[plan]")
     pghs.push_back(make_status_pgh("a"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan({unsafe_pspec("a")}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"a", Triplet::X86_WINDOWS}}, status_db);
 
     REQUIRE(remove_plan.size() == 1);
     REQUIRE(remove_plan.at(0).spec.name() == "a");
@@ -958,7 +980,7 @@ TEST_CASE ("recurse remove scheme", "[plan]")
     pghs.push_back(make_status_pgh("b", "a"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan({unsafe_pspec("a")}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"a", Triplet::X86_WINDOWS}}, status_db);
 
     REQUIRE(remove_plan.size() == 2);
     REQUIRE(remove_plan.at(0).spec.name() == "b");
@@ -973,7 +995,7 @@ TEST_CASE ("features depend remove scheme", "[plan]")
     pghs.push_back(make_status_feature_pgh("b", "0", "a"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan({unsafe_pspec("a")}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"a", Triplet::X86_WINDOWS}}, status_db);
 
     REQUIRE(remove_plan.size() == 2);
     REQUIRE(remove_plan.at(0).spec.name() == "b");
@@ -989,7 +1011,7 @@ TEST_CASE ("features depend remove scheme once removed", "[plan]")
     pghs.push_back(make_status_feature_pgh("opencv", "vtk", "vtk"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan({unsafe_pspec("expat")}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"expat", Triplet::X86_WINDOWS}}, status_db);
 
     REQUIRE(remove_plan.size() == 3);
     REQUIRE(remove_plan.at(0).spec.name() == "opencv");
@@ -1006,8 +1028,7 @@ TEST_CASE ("features depend remove scheme once removed x64", "[plan]")
     pghs.push_back(make_status_feature_pgh("opencv", "vtk", "vtk", "x64"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan =
-        Dependencies::create_remove_plan({unsafe_pspec("expat", Triplet::from_canonical_name("x64"))}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"expat", Triplet::from_canonical_name("x64")}}, status_db);
 
     REQUIRE(remove_plan.size() == 3);
     REQUIRE(remove_plan.at(0).spec.name() == "opencv");
@@ -1022,8 +1043,7 @@ TEST_CASE ("features depend core remove scheme", "[plan]")
     pghs.push_back(make_status_pgh("cpr", "curl[core]", "", "x64"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan =
-        Dependencies::create_remove_plan({unsafe_pspec("curl", Triplet::from_canonical_name("x64"))}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"curl", Triplet::from_canonical_name("x64")}}, status_db);
 
     REQUIRE(remove_plan.size() == 2);
     REQUIRE(remove_plan.at(0).spec.name() == "cpr");
@@ -1038,8 +1058,7 @@ TEST_CASE ("features depend core remove scheme 2", "[plan]")
     pghs.push_back(make_status_feature_pgh("curl", "b", "curl[a]", "x64"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan =
-        Dependencies::create_remove_plan({unsafe_pspec("curl", Triplet::from_canonical_name("x64"))}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"curl", Triplet::from_canonical_name("x64")}}, status_db);
 
     REQUIRE(remove_plan.size() == 1);
     REQUIRE(remove_plan.at(0).spec.name() == "curl");

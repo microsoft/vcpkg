@@ -59,7 +59,7 @@ index 89c6703..ab8e553 100644
 +
 +    write_basic_package_version_file(
 +      "${CMAKE_CURRENT_BINARY_DIR}/EABaseConfigVersion.cmake"
-+      VERSION 2.09.10
++      VERSION 2.09.12
 +      COMPATIBILITY SameMajorVersion
 +    )
 +

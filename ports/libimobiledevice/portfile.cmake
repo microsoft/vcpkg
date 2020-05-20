@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/libimobiledevice
-    REF 7cf5cb4b9675ddcaed5ea3d7ee2c8848da18d691 # v1.2.137
-    SHA512 cfc32d3414af333d3410c292660b526f2339d210bc2cc3ddf1de87c951bff526c731c4d61609441b3c1ce8e2d1398e6d4c35fdae3e7434bfd5050e5975047a11
+    REF 37cb65f04249705eb5844821fd925b9edee8866c # v1.2.185
+    SHA512 00a44de9552d3cf3daf3d490ad700188e20c72b24b8a6e9ca32d1d9fa53572479a5cbe85d130cd24fb1a2528c5e2cb238ab4caab35c5d93033c53b5c4c189bc6
     HEAD_REF msvc-master
 )
 

@@ -1,19 +1,21 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
 if(VCPKG_TARGET_IS_WINDOWS)
   # Don't change to vcpkg_from_github! This points to a release and not an archive
   vcpkg_download_distfile(ARCHIVE
-      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_7/ACE-src-6.5.7.zip"
-      FILENAME ACE-src-6.5.7.zip
-      SHA512 6ce6954941521b34ae8913dfe053d0f066632c55adf4091dae6bc180c79963d6f4ddfec7796cd6d9fc8ff59037ee162d20b017c4c296828913498bdbac2fc8a7
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_9/ACE-src-6.5.9.zip"
+      FILENAME ACE-src-6.5.9.zip
+      SHA512 49e2e5f9d0a88ae1b8a75aacb962e4185a9f8c8aae6cde656026267524bcef8a673514fe35709896a1c4e356cb436b249ff5e3d487e8f3fa2e618e2fb813fa43
   )
 else(VCPKG_TARGET_IS_WINDOWS)
   # VCPKG_TARGET_IS_LINUX
   vcpkg_download_distfile(ARCHIVE
-      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_7/ACE-src-6.5.7.tar.gz"
-      FILENAME ACE-src-6.5.7.tar.gz
-      SHA512 0116e269e2d49ba8afccc7abfc7492e5a6a286dcbdcfe850a21f86b4facb5fef2848985d803233f4b1fbb03457e592375ab24c62e7bbaab5c28cc240ccedbacb
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_9/ACE-src-6.5.9.tar.gz"
+      FILENAME ACE-src-6.5.9.tar.gz
+      SHA512 3e1655d4b215b5195a29b22f2e43d985d68367294df98da251dbbedecd6bdb5662a9921faac43be5756cb2fca7a840d58c6ec92637da7fb9d1b5e2bca766a1b4
   )
 endif()
 
@@ -25,10 +27,6 @@ vcpkg_extract_source_archive_ex(
 set(ACE_ROOT ${SOURCE_PATH})
 set(ENV{ACE_ROOT} ${ACE_ROOT})
 set(ACE_SOURCE_PATH ${ACE_ROOT}/ace)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
 
 if("wchar" IN_LIST FEATURES)
     list(APPEND ACE_FEATURE_LIST "uses_wchar=1")
@@ -53,13 +51,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   set(MPC_STATIC_FLAG -static)
 endif()
 
+# Acquire Perl and add it to PATH (for execution of MPC)
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_PATH})
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM is currently not supported.")
-elseif (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
     set(MSBUILD_PLATFORM "Win32")
 else ()
     set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
@@ -68,6 +65,8 @@ endif()
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 if(VCPKG_TARGET_IS_WINDOWS)
+  set(DLL_RELEASE_SUFFIX .dll)
+  set(DLL_DEBUG_SUFFIX d.dll)
   set(LIB_RELEASE_SUFFIX .lib)
   set(LIB_DEBUG_SUFFIX d.lib)
   if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
@@ -78,16 +77,25 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(SOLUTION_TYPE vc14)
   endif()
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
-endif()
-
-if(VCPKG_TARGET_IS_LINUX)
+elseif(VCPKG_TARGET_IS_LINUX)
   set(DLL_DECORATOR)
+  set(DLL_RELEASE_SUFFIX .so)
+  set(DLL_DEBUG_SUFFIX .so)
   set(LIB_RELEASE_SUFFIX .a)
   set(LIB_DEBUG_SUFFIX .a)
   set(LIB_PREFIX lib)
   set(SOLUTION_TYPE gnuace)
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-linux.h\"")
   file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_linux.GNU")
+elseif(VCPKG_TARGET_IS_OSX)
+  set(DLL_DECORATOR)
+  set(DLL_RELEASE_SUFFIX .dylib)
+  set(DLL_DEBUG_SUFFIX .dylib)
+  set(LIB_RELEASE_SUFFIX .a)
+  set(LIB_DEBUG_SUFFIX .a)
+  set(SOLUTION_TYPE gnuace)
+  file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-macosx.h\"")
+  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
 endif()
 
 # Invoke mwc.pl to generate the necessary solution and project files
@@ -138,11 +146,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       # Install the DLL files
       file(INSTALL
-          ${LIB_PATH}/${ACE_LIBRARY}d.dll
+          ${LIB_PATH}/${ACE_LIBRARY}${DLL_DEBUG_SUFFIX}
           DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
       )
       file(INSTALL
-          ${LIB_PATH}/${ACE_LIBRARY}.dll
+          ${LIB_PATH}/${ACE_LIBRARY}${DLL_RELEASE_SUFFIX}
           DESTINATION ${CURRENT_PACKAGES_DIR}/bin
       )
   endif()
@@ -176,9 +184,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
   # Handle copyright
   file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
-else(VCPKG_TARGET_IS_WINDOWS)
-  # VCPKG_TARGTE_IS_LINUX
+  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")
@@ -243,5 +250,5 @@ else(VCPKG_TARGET_IS_WINDOWS)
   set($ENV{PWD} _prev_env)
 
   # Handle copyright
-  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 endif()

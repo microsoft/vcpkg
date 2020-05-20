@@ -1,12 +1,12 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
-set(VERSION v1.0)
+set(VERSION v1.0.1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF ${VERSION}
-    SHA512 a1cc614147ee7fc0b4246abb0dd1a3405e330760c1d9d76980700853f136f7562690906cb428bae81232355d03f27c1cdc71da85e23e0cf16167f42d4faff93b
+    REF e4309754fc2f6ea6508b59ca82e08c27b0118d74 # v1.0.1
+    SHA512 bfff9e722c5ee70b93abc54fe0b3267c531bbe039d3344376069175b5d5d95324cd9471ad45674c50393fb0259faacfa94eac1814de11dde4538d76f3e74b2bb
     HEAD_REF master
     PATCHES fix-install-bindir.patch
 )
