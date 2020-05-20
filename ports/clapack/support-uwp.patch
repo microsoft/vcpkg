@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 842cfce..da7d562 100644
+index db58b4e..0fb61a0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -15,6 +15,9 @@ if(NOT USE_BLAS_WRAP)
@@ -7,7 +7,7 @@ index 842cfce..da7d562 100644
    add_definitions(-DNO_BLAS_WRAP)
  endif()
 +if (ARITHCHK_PATH)
-+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++  add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE)
 +endif()
  include_directories(${CLAPACK_SOURCE_DIR}/INCLUDE)
  add_subdirectory(F2CLIBS)
@@ -59,7 +59,7 @@ index 5936a67..4846d41 100644
  			if(f__units[i].ufd != NULL
  			 && f__units[i].ufnm != NULL
 diff --git a/F2CLIBS/libf2c/open.c b/F2CLIBS/libf2c/open.c
-index a06428d..e3cea1a 100644
+index a06428d..9d08cf7 100644
 --- a/F2CLIBS/libf2c/open.c
 +++ b/F2CLIBS/libf2c/open.c
 @@ -48,7 +48,7 @@ f__bufadj(int n, int c)
@@ -71,24 +71,6 @@ index a06428d..e3cea1a 100644
  
  	if (f__buf == f__buf0)
  		f__buflen = 1024;
-@@ -204,7 +204,7 @@ integer f_open(olist *a)
- 			opnerr(a->oerr,errno,"open")
- 		fclose(tf);
- #else
--		if (access(buf,0))
-+		if (_access(buf,0))
- 			opnerr(a->oerr,errno,"open")
- #endif
- 		break;
-@@ -234,7 +234,7 @@ integer f_open(olist *a)
- 			opnerr(a->oerr,128,"open")
- 			}
- #else
--		if (!access(buf,0))
-+		if (!_access(buf,0))
- 			opnerr(a->oerr,128,"open")
- #endif
- 		/* no break */
 diff --git a/F2CLIBS/libf2c/rsne.c b/F2CLIBS/libf2c/rsne.c
 index e8e9dae..4d65436 100644
 --- a/F2CLIBS/libf2c/rsne.c
@@ -111,16 +93,3 @@ index e8e9dae..4d65436 100644
  	ftnlen *dims, *dims1;
  	ftnlen b, b0, b1, ex, no, nomax, size, span;
  	ftnint no1, no2, type;
-diff --git a/F2CLIBS/libf2c/s_paus.c b/F2CLIBS/libf2c/s_paus.c
-index 51d80eb..4101a40 100644
---- a/F2CLIBS/libf2c/s_paus.c
-+++ b/F2CLIBS/libf2c/s_paus.c
-@@ -62,7 +62,7 @@ s_paus(char *s, ftnlen n)
- 	if(n > 0)
- 		fprintf(stderr, " %.*s", (int)n, s);
- 	fprintf(stderr, " statement executed\n");
--	if( isatty(fileno(stdin)) )
-+	if( isatty(_fileno(stdin)) )
- 		s_1paus(stdin);
- 	else {
- #ifdef MSDOS
