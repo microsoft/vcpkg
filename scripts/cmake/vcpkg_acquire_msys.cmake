@@ -57,7 +57,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 #      "http://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20190524.tar.xz"
       "https://github.com/msys2/msys2-installer/releases/download/2020-05-17/msys2-base-x86_64-20200517.tar.xz"
     )
-    set(ARCHIVE "msys2-base-x86_64-20190524.tar.xz")
+    set(ARCHIVE "msys2-base-x86_64.tar.xz")
 #    set(HASH 50796072d01d30cc4a02df0f9dafb70e2584462e1341ef0eff94e2542d3f5173f20f81e8f743e9641b7528ea1492edff20ce83cb40c6e292904905abe2a91ccc)
     set(SKIP_SHA512)
     set(STAMP "initialized-msys2_64.stamp")
@@ -68,7 +68,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 #      "http://repo.msys2.org/distrib/i686/msys2-base-i686-20190524.tar.xz"
       "https://github.com/msys2/msys2-installer/releases/download/2020-05-17/msys2-base-i686-20200517.tar.xz"
     )
-    set(ARCHIVE "msys2-base-i686-20190524.tar.xz")
+    set(ARCHIVE "msys2-base-i686.tar.xz")
 #    set(HASH b26d7d432e1eabe2138c4caac5f0a62670f9dab833b9e91ca94b9e13d29a763323b0d30160f09a381ac442b473482dac799be0fea5dd7b28ea2ddd3ba3cd3c25)
     set(SKIP_SHA512)
     set(STAMP "initialized-msys2_32.stamp")
@@ -93,6 +93,10 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     )
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy --noconfirm pacman"
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
