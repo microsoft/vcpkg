@@ -341,7 +341,7 @@ int main(const int argc, const char* const* const argv)
     const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
     if (const auto v = vcpkg_feature_flags_env.get())
     {
-        auto flags = Strings::split(*v, ",");
+        auto flags = Strings::split(*v, ',');
         if (std::find(flags.begin(), flags.end(), "binarycaching") != flags.end()) GlobalState::g_binary_caching = true;
     }
 

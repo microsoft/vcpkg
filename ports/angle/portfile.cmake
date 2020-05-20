@@ -18,8 +18,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/angle
-    REF 1fdf6ca5141d8e349e875eab6e51d93d929a7f0e
-    SHA512 2553307f3d10b5c32166b9ed610b4b15310dccba00c644cd35026de86d87ea2e221c2e528f33b02f01c1ded2f08150e429de1fa300b73d655f8944f6f5047a82
+    REF d949154da428bb3e924e28a8eadfe2327631c8bb # chromium/4148
+    SHA512 3ef1c94fccfca592057652e0ad305e3025184675e2323a714428ec934048496fbd242b5e1298bb5e3b3058b53d54f6889e446cbd81af7bea2cc6d5e13c7356bd
     # On update check headers against opengl-registry
     PATCHES
         001-fix-uwp.patch
@@ -28,6 +28,7 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/commit.h DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/commit.h DESTINATION ${SOURCE_PATH}/src/common)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

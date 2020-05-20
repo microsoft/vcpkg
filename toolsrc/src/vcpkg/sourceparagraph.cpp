@@ -245,7 +245,7 @@ namespace vcpkg
 
     std::string to_cmake_version(std::string version)
     {
-        auto versions = Strings::split(version, ".");
+        auto versions = Strings::split(version, '.');
         if (versions.size() > 4) { versions.erase(versions.begin() + 4, versions.end()); }
         version.clear();
         for (auto& v : versions)
