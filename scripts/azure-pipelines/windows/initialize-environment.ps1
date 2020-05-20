@@ -29,6 +29,24 @@ function Remove-DirectorySymlink {
     }
 }
 
+New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
+
+# Disable UAC
+Write-Host "Disabling UAC"
+Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" -Force
+Set-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value "0" -Force
+Write-Host "User Access Control (UAC) has been disabled." -ForegroundColor Green
+
+Write-Host "Enable long path behavior"
+# See https://docs.microsoft.com/en-us/windows/desktop/fileio/naming-a-file#maximum-path-length-limitation
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value  "1" -Force
+
+Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToLocalEvaluation" -Value "1" -Force
+
+#Invoke-Expression -Command  "icacls C:\\agent\\_work\\1\\s\\downloads\\tools\\msys2 /grant Users:'(OI)(CI)F' /T"
+#$proc = 
+Start-Process -FilePath "$env:windirsystem32cmd.exe" -ArgumentList "/c icacls.exe D:\\downloads /grant *S-1-5-83-0:"(OI)(CI)F" /T" -Verb RunAs
+
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
     net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
@@ -47,11 +65,12 @@ Get-ChildItem -Path D:\downloads -Exclude "tools" `
 # Msys sometimes leaves a database lock file laying around, especially if there was a failed job
 # which causes unrelated failures in jobs that run later on the machine.
 # work around this by just removing the vcpkg installed msys2 if it exists
-if( Test-Path D:\downloads\tools\msys2 )
-{
-    Write-Host "removing previously installed msys2"
-    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
-}
+
+#if( Test-Path D:\downloads\tools\msys2 )
+#{
+#    Write-Host "removing previously installed msys2"
+#    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
+#}
 
 Write-Host 'Setting up archives path...'
 if ([string]::IsNullOrWhiteSpace($ForceAllPortsToRebuildKey))
@@ -89,3 +108,6 @@ if (-Not (Test-Path D:\downloads)) {
 if (-Not (Test-Path downloads)) {
     cmd /c "mklink /D downloads D:\downloads"
 }
+
+Get-Acl "D:\\downloads" |Format-List | Out-Host
+"`n"
