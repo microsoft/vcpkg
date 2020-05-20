@@ -183,10 +183,14 @@ function(vcpkg_get_last_commit_hash OUTPUT_VARIABLE)
     if(Git_FOUND)
         execute_process(
             COMMAND "${GIT_EXECUTABLE}" rev-parse --short HEAD
+            # vcpkg might be used as a submodule.
+            WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}"
             OUTPUT_VARIABLE LAST_COMMIT_HASH
+            OUTPUT_STRIP_TRAILING_WHITESPACE
             RESULT_VARIABLE ERROR_CODE
             ERROR_QUIET
         )
+
         if(ERROR_CODE EQUAL "0")
             set(${OUTPUT_VARIABLE} ${LAST_COMMIT_HASH} PARENT_SCOPE)
         else()

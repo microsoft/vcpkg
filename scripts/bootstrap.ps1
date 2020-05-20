@@ -372,7 +372,17 @@ function getLastCommitHash()
 {
     try
     {
-        return git rev-parse --short HEAD
+        $output = git rev-parse --short HEAD
+
+        if ($LastExitCode -ne 0)
+        {
+            Write-Warning "Failed to get last commit hash, exit code $LastExitCode."
+            return "unknownhash"
+        }
+        else
+        {
+            return $output
+        }
     }
     catch [System.Management.Automation.CommandNotFoundException]
     {
@@ -380,10 +390,11 @@ function getLastCommitHash()
     }
 }
 
-$commitHash = getLastCommitHash
+$lastCommitHash = getLastCommitHash
+Write-Verbose "VCPKG_VERSION: $lastCommitHash"
 
 $arguments = (
-"`"/p:VCPKG_VERSION=-$commitHash`"",
+"`"/p:VCPKG_VERSION=-$lastCommitHash`"",
 "`"/p:DISABLE_METRICS=$disableMetricsValue`"",
 "/p:Configuration=Release",
 "/p:Platform=$platform",
