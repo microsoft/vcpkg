@@ -10,3 +10,16 @@ index 078d495..b6f50bd 100644
 +    add_definitions(-DGPR_ABSEIL_SYNC=1)
 +  endif()
  endif()
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df1703c..7667662 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1464,6 +1464,8 @@ target_link_libraries(gpr
+   absl::str_format
+   absl::strings
+   absl::optional
++  absl::time
++  absl::synchronization
+ )
+ if(_gRPC_PLATFORM_ANDROID)
+   target_link_libraries(gpr
