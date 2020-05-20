@@ -9,6 +9,9 @@ jobs:
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
+  ContinueOnError: true
+  CancelTimeoutInMinutes: 10
+  MaxConcurrency: 5
 
   steps:
   - task: PowerShell@2
