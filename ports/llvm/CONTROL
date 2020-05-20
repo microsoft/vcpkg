@@ -1,5 +1,5 @@
 Source: llvm
-Version: 10.0.0-1
+Version: 10.0.0-2
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Supports: !uwp
@@ -17,14 +17,38 @@ Description: Build with all backends.
 Feature: target-aarch64
 Description: Build with AArch64 backend.
 
+Feature: target-amdgpu
+Description: Build with AMDGPU backend.
+
 Feature: target-arm
 Description: Build with ARM backend.
+
+Feature: target-bpf
+Description: Build with BPF backend.
+
+Feature: target-hexagon
+Description: Build with Hexagon backend.
+
+Feature: target-lanai
+Description: Build with Lanai backend.
 
 Feature: target-mips
 Description: Build with Mips backend.
 
+Feature: target-msp430
+Description: Build with MSP430 backend.
+
+Feature: target-nvptx
+Description: Build with NVPTX backend.
+
 Feature: target-powerpc
 Description: Build with PowerPC backend.
+
+Feature: target-riscv
+Description: Build with RISCV backend.
+
+Feature: target-sparc
+Description: Build with Sparc backend.
 
 Feature: target-systemz
 Description: Build with SystemZ backend.
@@ -34,6 +58,9 @@ Description: Build with WebAssembly backend.
 
 Feature: target-x86
 Description: Build with X86 backend.
+
+Feature: target-xcore
+Description: Build with XCore backend.
 
 Feature: enable-rtti
 Description: Build LLVM with run-time type information.

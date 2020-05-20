@@ -55,7 +55,7 @@ namespace vcpkg
                 auto override_vars = evaluation_context.cmake_context.find("VCPKG_DEP_INFO_OVERRIDE_VARS");
                 if (override_vars != evaluation_context.cmake_context.end())
                 {
-                    auto cmake_list = Strings::split(override_vars->second, ";");
+                    auto cmake_list = Strings::split(override_vars->second, ';');
                     for (auto& override_id : cmake_list)
                     {
                         if (!override_id.empty())

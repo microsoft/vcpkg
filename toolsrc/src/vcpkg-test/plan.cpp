@@ -369,9 +369,8 @@ TEST_CASE ("basic feature test 7", "[plan]")
     remove_plan_check(plan.remove_actions.at(0), "x");
     remove_plan_check(plan.remove_actions.at(1), "b");
 
-    // TODO: order here may change but A < X, and B anywhere
-    features_check(plan.install_actions.at(0), "b", {"core", "b1"});
-    features_check(plan.install_actions.at(1), "a", {"core"});
+    features_check(plan.install_actions.at(0), "a", {"core"});
+    features_check(plan.install_actions.at(1), "b", {"core", "b1"});
     features_check(plan.install_actions.at(2), "x", {"core"});
 }
 
