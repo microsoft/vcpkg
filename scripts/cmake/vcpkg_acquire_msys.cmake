@@ -134,7 +134,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     )
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -Syu --noconfirm --needed --disable-download-timeout --overwrite '*' ${_am_PACKAGES}"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -Sy --noconfirm --disable-download-timeout --overwrite '*' ${_am_PACKAGES}"
       WORKING_DIRECTORY ${TOOLPATH}
       LOGNAME msys-pacman-${TARGET_TRIPLET}
     )
