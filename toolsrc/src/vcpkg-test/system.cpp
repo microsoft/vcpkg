@@ -1,4 +1,4 @@
-#define _POSIX_C_SOURCE 200112L
+#include <vcpkg/base/system_headers.h>
 #include <catch2/catch.hpp>
 
 #include <string>
@@ -7,14 +7,6 @@
 #include <vcpkg/base/zstringview.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.h>
-
-#if defined(_WIN32)
-#define _NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#else
-#include <stdlib.h>
-#endif
 
 using vcpkg::Optional;
 using vcpkg::StringView;
