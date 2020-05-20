@@ -9,9 +9,6 @@ jobs:
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
-  ContinueOnError: true
-  CancelTimeoutInMinutes: 10
-  MaxConcurrency: 5
 
   steps:
   - task: PowerShell@2
@@ -22,8 +19,8 @@ jobs:
   - powershell: |
       $baselineFile = "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
       $skipList = $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile $baselineFile
-      Write-Host "baseline file: $baselineFile"
-      Write-Host "skip list: $skipList"
+      Write-Host "baseline file: $baselineFile" | Out-Null
+      Write-Host "skip list: $skipList" | Out-Null
       $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\windows\ci-step.ps1 -Triplet "${{ parameters.triplet }}" -ExcludePorts $skipList
       Write-Host "CI test script is complete"
     errorActionPreference: continue
