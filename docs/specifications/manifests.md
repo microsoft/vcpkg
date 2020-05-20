@@ -133,7 +133,7 @@ You may notice that the platform specification is fairly wordy. See [reasoning](
 
 ## Behavior of the Tool
 
-There will be two "modes" for vcpkg from this point forward: "legacy", and "modern".
+There will be two "modes" for vcpkg from this point forward: "classic", and "modern".
 The former will act exactly like the existing vcpkg workflow, so as to avoid breaking
 anyone. The latter will be the mode only when the user either:
 
@@ -141,24 +141,24 @@ anyone. The latter will be the mode only when the user either:
 * Runs `vcpkg` in a directory that contains a file named `vcpkg.json`, or in a
   child directory of a directory containing `vcpkg.json`.
   * For this, initially vcpkg will warn that the behavior will change in the
-    future, and simply run in legacy mode, unless the feature flag `manifests` is
+    future, and simply run in classic mode, unless the feature flag `manifests` is
     passed via:
     * The environment variable `VCPKG_FEATURE_FLAGS`
     * The option `--feature-flags`
       * (e.g., `--feature-flags=binarycaching,manifests`)
 
-Additionally, we'll add the `--x-legacy-mode` flag to allow someone to force legacy
+Additionally, we'll add the `--x-classic-mode` flag to allow someone to force classic
 mode.
 
 When in "modern" mode, the `installed` directory will be changed to
-`<manifest-root>/vcpkg_modules` (name up for bikeshedding).
+`<manifest-root>/vcpkg_installed` (name up for bikeshedding).
 The following commands will change behavior:
 
 * `vcpkg install` without any port arguments will install the dependencies listed in
   the manifest file, and will remove any dependencies
   which are no longer in the dependency tree implied by the manifest file.
-* `vcpkg install` and `vcpkg x-set-installed` with port arguments will give an error.
-* `vcpkg x-clean` will be added, and will delete your `vcpkg_modules` directory.
+* `vcpkg install` with port arguments will give an error.
+* `vcpkg x-clean` will be added, and will delete your `vcpkg_installed` directory.
 
 The following commands will not work in modern mode, at least initially:
 
@@ -173,37 +173,34 @@ implement them.
 
 ### Behavior of the Toolchain
 
-Mostly, the toolchain file stays the same; however, we shall add one function:
+Mostly, the toolchain file stays the same; however, we shall add one public cache variable:
+
+```cmake
+VCPKG_MANIFEST_ROOT:PATH=<path to the directory containing the vcpkg.json file>
+```
+
+and one function:
 
 ```cmake
 vcpkg_acquire_dependencies(
   [TRIPLET <triplet>]
-  [MANIFEST <path to manifest>])
+  [MANIFEST <path to manifest>]
+  [INSTALL_DIRECTORY <install directory>])
 ```
 
 which installs the dependencies required by the manifest file.
-If `TRIPLET` is not passed, it installs for `VCPKG_TARGET_TRIPLET`
-(which defaults to the default triplet for the configured system).
-For example, on x64 Windows, it defaults to `x64-windows`; however
-you can run:
 
-```cmake
-vcpkg_acquire_dependencies(TRIPLET x64-windows-static)
-```
+The default for `TRIPLET` is `VCPKG_TARGET_TRIPLET`
+(which is the default triplet for the configured system).
+For example, on x64 Windows, it defaults to `x64-windows`.
 
-in order to get libraries for `/MT`.
+The default for `INSTALL_DIRECTORY` is `${CMAKE_BINARY_DIR}/vcpkg_installed`.
 
 Additionally, in the course of implementation, we would like to
 look at adding the following function, but may not be able to:
 
-```cmake
-vcpkg_find_acquire_dependencies(
-  [TRIPLET <triplet>]
-  [MANIFEST <path to manifest>])
-```
-
-This function first acquires, then `find_package`s, the
-dependencies.
+It is almost certain that one should guard any use of this function
+by `if(EXISTS CACHE{VCPKG_MANIFEST_FILE})`.
 
 ### Example - CMake Integration
 
@@ -249,9 +246,15 @@ cmake_minimum_required(VERSION 3.14)
 
 project(example CXX)
 
+if(EXISTS CACHE{VCPKG_MANIFEST_FILE})
+  vcpkg_acquire_dependencies()
+endif()
+
+
 add_executable(example src/main.cxx)
 
-vcpkg_find_acquire_dependencies()
+find_package(fmt REQUIRED)
+
 target_link_libraries(example
   PRIVATE
     fmt::fmt)
@@ -267,50 +270,11 @@ $ cmake --build build
 ```
 
 and we're done! `fmt` will get installed into
-`example/vcpkg_modules`, and we can run our executable with:
+`example/build/vcpkg_installed`, and we can run our executable with:
 
 ```sh
 $ build/example
 Hello, world!
-```
-
-### Example - No CMake Integration
-
-On the other hand, one may wish to _allow_ people to install dependencies with vcpkg, while not requiring them to do so.
-This is important if the project wants to support being installed with system package managers like `apt` - generally,
-the specific distros would like to control _all_ dependencies. They can do this with exactly the same structure as before,
-and the same code, except for in CMakeLists.txt:
-
-```cmake
-cmake_minimum_required(VERSION 3.14)
-
-project(example CXX)
-
-add_executable(example src/main.cxx)
-
-if(DEFINED VCPKG_TOOLCHAIN)
-  vcpkg_acquire_dependencies()
-endif()
-
-find_package(fmt REQUIRED)
-target_link_libraries(example
-  PRIVATE
-    fmt::fmt)
-```
-
-Then, one could build it either with vcpkg:
-
-```sh
-$ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystem/vcpkg.cmake
-$ cmake --build build
-```
-
-or without:
-
-```sh
-$ sudo apt install fmt # assuming ubuntu, for example
-$ cmake -B build -S .
-$ cmake --build build
 ```
 
 ## Definitions
@@ -334,9 +298,6 @@ $ cmake --build build
     * Optionally, `"default-features"`: a `boolean`. If this is false, then don't use the default features of the package; equivalent to core in existing CONTROL files. If this is true, do the default thing of including the default features.
     * Optionally, `"platform"`: a `<platform-specification>`
   * `<dependency.port>`: No extra fields are required.
-  * `<dependency.git>`:
-    * `"git"`: A url pointing to a git repository
-    * Optionally, `"commit"`: A `<git-commit>` or `<git-branch-name>`. Defaults to `"master"`.
 * `<license-string>`: An SPDX license expression at version 3.8.
 * `<platform-specification>`: A specification of a set of platforms; used in platform-specific dependencies and supports fields. One of:
   * `<platform-specification.exact>`: A string denoting a triplet tag like “windows”, “osx”, etc.
