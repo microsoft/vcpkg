@@ -73,11 +73,7 @@ Get-ChildItem -Path D:\downloads -Exclude "tools" `
 # which causes unrelated failures in jobs that run later on the machine.
 # work around this by just removing the vcpkg installed msys2 if it exists
 
-#if( Test-Path D:\downloads\tools\msys2 )
-#{
-    Write-Host "removing previously installed msys2"
-    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
-#}
+
 
 Write-Host 'Setting up archives path...'
 if ([string]::IsNullOrWhiteSpace($ForceAllPortsToRebuildKey))
@@ -114,6 +110,12 @@ if (-Not (Test-Path D:\downloads)) {
 
 if (-Not (Test-Path downloads)) {
     cmd /c "mklink /D downloads D:\downloads"
+}
+
+if( Test-Path D:\downloads\tools\msys2 )
+{
+    Write-Host "removing previously installed msys2"
+    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
 }
 
 if( Test-Path D:\downloads\tools\msys2 )
