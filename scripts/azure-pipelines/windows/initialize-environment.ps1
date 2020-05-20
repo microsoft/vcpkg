@@ -116,5 +116,8 @@ if (-Not (Test-Path downloads)) {
     cmd /c "mklink /D downloads D:\downloads"
 }
 
+if( Test-Path D:\downloads\tools\msys2 )
+{
 Get-Acl "D:\\downloads\\tools\\msys2" |Format-List | Out-Host
 "`n"
+}
