@@ -115,7 +115,7 @@ if (-Not (Test-Path downloads)) {
 if( Test-Path D:\downloads\tools\msys2 )
 {
     Write-Host "removing previously installed msys2"
-    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
+#    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
 }
 
 if( Test-Path D:\downloads\tools\msys2 )
