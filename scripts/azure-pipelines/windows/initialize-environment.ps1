@@ -76,7 +76,7 @@ Get-ChildItem -Path D:\downloads -Exclude "tools" `
 if( Test-Path D:\downloads\tools\msys2 )
 {
     Write-Host "removing previously installed msys2"
-#    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
+    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
 }
 
 Write-Host 'Setting up archives path...'
