@@ -143,8 +143,8 @@ else {
         # WORKAROUND: the x86-windows flavors of these are needed for all
         # cross-compilation, but they are not auto-installed.
         # Install them so the CI succeeds
-        ./vcpkg install "protobuf:x86-windows" "boost-build:x86-windows" "sqlite3:x86-windows"
-        if (-not $?) { throw "Failed to install protobuf & boost-build & sqlite3" }
+        ./vcpkg install "boost-build:x86-windows" "sqlite3:x86-windows"
+        if (-not $?) { throw "Failed to install boost-build & sqlite3" }
     }
 
     # Turn all error messages into strings for output in the CI system.
