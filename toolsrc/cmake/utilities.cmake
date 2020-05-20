@@ -177,3 +177,22 @@ int main() {}
         message(STATUS "Detecting how to use the C++ filesystem library - ${msg}")
     endif()
 endfunction()
+
+function(vcpkg_get_last_commit_hash OUTPUT_VARIABLE)
+    find_package(Git QUIET)
+    if(Git_FOUND)
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" rev-parse --short HEAD
+            OUTPUT_VARIABLE LAST_COMMIT_HASH
+            RESULT_VARIABLE ERROR_CODE
+            ERROR_QUIET
+        )
+        if(ERROR_CODE EQUAL "0")
+            set(${OUTPUT_VARIABLE} ${LAST_COMMIT_HASH} PARENT_SCOPE)
+        else()
+            set(${OUTPUT_VARIABLE} "unknownhash" PARENT_SCOPE)
+        endif()
+    else()
+        set(${OUTPUT_VARIABLE} "unknownhash" PARENT_SCOPE)
+    endif()
+endfunction()

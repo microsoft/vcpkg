@@ -368,8 +368,22 @@ else
     $PreferredToolArchitecture = "x86"
 }
 
+function getLastCommitHash()
+{
+    try
+    {
+        return git rev-parse --short HEAD
+    }
+    catch [System.Management.Automation.CommandNotFoundException]
+    {
+        return "unknownhash"
+    }
+}
+
+$commitHash = getLastCommitHash
+
 $arguments = (
-"`"/p:VCPKG_VERSION=-nohash`"",
+"`"/p:VCPKG_VERSION=-$commitHash`"",
 "`"/p:DISABLE_METRICS=$disableMetricsValue`"",
 "/p:Configuration=Release",
 "/p:Platform=$platform",
