@@ -114,12 +114,15 @@ vcpkg_execute_build_process(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_build_msbuild(
-    PROJECT_PATH ${WORKSPACE}.sln
+  file(RELATIVE_PATH PROJECT_SUBPATH ${SOURCE_PATH} ${WORKSPACE}.sln)
+  vcpkg_install_msbuild(
+    SOURCE_PATH ${SOURCE_PATH}
+    PROJECT_SUBPATH ${PROJECT_SUBPATH}
+    LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
     USE_VCPKG_INTEGRATION
   )
-
+  
   # ACE itself does not define an install target, so it is not clear which
   # headers are public and which not. For the moment we install everything
   # that is in the source path and ends in .h, .inl
@@ -240,207 +243,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
     install_ace_headers_subdirectory(${TAO_ROOT} "tao/ZIOP")
   endif()
   
-  # Install the libraries
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-      if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-        set(DLL_DECORATOR s)
-      endif()
-  endif()
-
-  function(install_ace_library ACE_LIBRARY)
-    set(LIB_PATH ${ACE_ROOT}/lib/)
+  # Remove dlls without any export
+  if("tao" IN_LIST FEATURES)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        # Install the DLL files
-        file(INSTALL
-            ${LIB_PATH}/${ACE_LIBRARY}d.dll
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        )
-        file(INSTALL
-            ${LIB_PATH}/${ACE_LIBRARY}.dll
-            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-        )
-    endif()
-
-    # Install the lib files
-    file(INSTALL
-        ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}d.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
-
-    file(INSTALL
-        ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    )
-  endfunction()
-
-  install_ace_library("ACE")
-  install_ace_library("ACE_Compression")
-  install_ace_library("ACE_ETCL")
-  install_ace_library("ACE_ETCL_Parser")
-  install_ace_library("ACE_Monitor_Control")
-  install_ace_library("ACE_RLECompression")
-  if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-    install_ace_library("ACE_QoS")
-  endif()
-  if("ssl" IN_LIST FEATURES)
-    install_ace_library("ACE_SSL")
-  endif()
-  if("tao" IN_LIST FEATURES)
-    install_ace_library("ACE_HTBP")
-    install_ace_library("ACE_INet")
-    install_ace_library("ACE_RMCast")
-    install_ace_library("ACE_TMCast")
-    install_ace_library("ACEXML")
-    install_ace_library("ACEXML_Parser")
-    install_ace_library("Kokyu")
-    install_ace_library("TAO")
-    install_ace_library("TAO_AnyTypeCode")
-    install_ace_library("TAO_Async_ImR_Client_IDL")
-    install_ace_library("TAO_Async_IORTable")
-    install_ace_library("TAO_AV")
-    install_ace_library("TAO_BiDirGIOP")
-    install_ace_library("TAO_Catior_i")
-    install_ace_library("TAO_CodecFactory")
-    install_ace_library("TAO_Codeset")
-    install_ace_library("TAO_Compression")
-    install_ace_library("TAO_CosConcurrency")
-    install_ace_library("TAO_CosConcurrency_Serv")
-    install_ace_library("TAO_CosConcurrency_Skel")
-    install_ace_library("TAO_CosEvent")
-    install_ace_library("TAO_CosEvent_Serv")
-    install_ace_library("TAO_CosEvent_Skel")
-    install_ace_library("TAO_CosLifeCycle")
-    install_ace_library("TAO_CosLifeCycle_Skel")
-    install_ace_library("TAO_CosLoadBalancing")
-    install_ace_library("TAO_CosNaming")
-    install_ace_library("TAO_CosNaming_Serv")
-    install_ace_library("TAO_CosNaming_Skel")
-    install_ace_library("TAO_CosNotification")
-    install_ace_library("TAO_CosNotification_MC")
-    install_ace_library("TAO_CosNotification_MC_Ext")
-    install_ace_library("TAO_CosNotification_Persist")
-    install_ace_library("TAO_CosNotification_Serv")
-    install_ace_library("TAO_CosNotification_Skel")
-    install_ace_library("TAO_CosProperty")
-    install_ace_library("TAO_CosProperty_Serv")
-    install_ace_library("TAO_CosProperty_Skel")
-    install_ace_library("TAO_CosTime")
-    install_ace_library("TAO_CosTime_Serv")
-    install_ace_library("TAO_CosTime_Skel")
-    install_ace_library("TAO_CosTrading")
-    install_ace_library("TAO_CosTrading_Serv")
-    install_ace_library("TAO_CosTrading_Skel")
-    install_ace_library("TAO_CSD_Framework")
-    install_ace_library("TAO_CSD_ThreadPool")
-    install_ace_library("TAO_DiffServPolicy")
-    install_ace_library("TAO_DsEventLogAdmin")
-    install_ace_library("TAO_DsEventLogAdmin_Serv")
-    install_ace_library("TAO_DsEventLogAdmin_Skel")
-    install_ace_library("TAO_DsLogAdmin")
-    install_ace_library("TAO_DsLogAdmin_Serv")
-    install_ace_library("TAO_DsLogAdmin_Skel")
-    install_ace_library("TAO_DsNotifyLogAdmin")
-    install_ace_library("TAO_DsNotifyLogAdmin_Serv")
-    install_ace_library("TAO_DsNotifyLogAdmin_Skel")
-    install_ace_library("TAO_Dynamic_TP")
-    install_ace_library("TAO_DynamicAny")
-    install_ace_library("TAO_DynamicInterface")
-    install_ace_library("TAO_EndpointPolicy")
-    install_ace_library("TAO_ETCL")
-    install_ace_library("TAO_FaultTolerance")
-    install_ace_library("TAO_FT_ClientORB")
-    install_ace_library("TAO_FT_Naming_Serv")
-    install_ace_library("TAO_FT_ServerORB")
-    install_ace_library("TAO_FtNaming")
-    install_ace_library("TAO_FtNamingReplication")
-    install_ace_library("TAO_FTORB_Utils")
-    install_ace_library("TAO_FTRT_ClientORB")
-    install_ace_library("TAO_FTRT_EventChannel")
-    install_ace_library("TAO_FtRtEvent")
-    install_ace_library("TAO_HTIOP")
-    install_ace_library("TAO_IDL_BE")
-    install_ace_library("TAO_IDL_FE")
-    install_ace_library("TAO_IFR_BE")
-    install_ace_library("TAO_IFR_Client")
-    install_ace_library("TAO_IFR_Client_skel")
-    install_ace_library("TAO_IFRService")
-    install_ace_library("TAO_ImR_Activator")
-    install_ace_library("TAO_ImR_Activator_IDL")
-    install_ace_library("TAO_ImR_Client")
-    install_ace_library("TAO_ImR_Locator")
-    install_ace_library("TAO_ImR_Locator_IDL")
-    install_ace_library("TAO_IORInterceptor")
-    install_ace_library("TAO_IORManip")
-    install_ace_library("TAO_IORTable")
-    install_ace_library("TAO_Messaging")
-    install_ace_library("TAO_Monitor")
-    install_ace_library("TAO_Notify_Service")
-    install_ace_library("TAO_ObjRefTemplate")
-    install_ace_library("TAO_PI")
-    install_ace_library("TAO_PI_Server")
-    install_ace_library("TAO_PortableGroup")
-    install_ace_library("TAO_PortableServer")
-    install_ace_library("TAO_ReplicationManagerLib")
-    install_ace_library("TAO_RLECompressor")
-    install_ace_library("TAO_RT_Notification")
-    install_ace_library("TAO_RTCORBA")
-    install_ace_library("TAO_RTCORBAEvent")
-    install_ace_library("TAO_RTEvent")
-    install_ace_library("TAO_RTEvent_Serv")
-    install_ace_library("TAO_RTEvent_Skel")
-    install_ace_library("TAO_RTEventLogAdmin")
-    install_ace_library("TAO_RTEventLogAdmin_Serv")
-    install_ace_library("TAO_RTEventLogAdmin_Skel")
-    install_ace_library("TAO_RTKokyuEvent")
-    install_ace_library("TAO_RTPortableServer")
-    install_ace_library("TAO_RTSched")
-    install_ace_library("TAO_RTSchedEvent")
-    install_ace_library("TAO_RTScheduler")
-    install_ace_library("TAO_Security")
-    install_ace_library("TAO_SmartProxies")
-    install_ace_library("TAO_Strategies")
-    install_ace_library("TAO_Svc_Utils")
-    install_ace_library("TAO_TC")
-    install_ace_library("TAO_TC_IIOP")
-    install_ace_library("TAO_TypeCodeFactory")
-    install_ace_library("TAO_Utils")
-    install_ace_library("TAO_Valuetype")
-    install_ace_library("TAO_ZIOP")
-    if("ssl" IN_LIST FEATURES)
-      install_ace_library("ACE_INet_SSL")
-      install_ace_library("TAO_SSLIOP")
-    endif()
-    if("zlib" IN_LIST FEATURES)
-      install_ace_library("TAO_ZlibCompressor")
+      file(REMOVE 
+        ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.dll 
+        ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.pdb
+        ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd.dll
+        ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
     endif()
   endif()
-
-  # Install the executables
-  function(install_ace_executable ACE_EXECUTABLE)
-    set(BIN_PATH ${ACE_ROOT}/bin/)
-    file(INSTALL
-        ${BIN_PATH}/${ACE_EXECUTABLE}.exe
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
-    )
-  endfunction()
-
-  if("tao" IN_LIST FEATURES)
-    install_ace_executable("ace_gperf")
-    install_ace_executable("tao_catior")
-    install_ace_executable("tao_idl")
-    install_ace_executable("tao_ifr")
-    install_ace_executable("tao_imr")
-    install_ace_executable("tao_nsadd")
-    install_ace_executable("tao_nsdel")
-    install_ace_executable("tao_nsgroup")
-    install_ace_executable("tao_nslist")
-  endif()
-
-  vcpkg_copy_pdbs()
-
-  # Handle copyright
-  file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
