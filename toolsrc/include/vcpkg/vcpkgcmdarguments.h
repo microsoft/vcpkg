@@ -91,6 +91,7 @@ namespace vcpkg
         void format(StringView col1, StringView col2);
         void example(StringView example_text);
         void header(StringView name);
+        void blank();
 
         std::string m_str;
     };

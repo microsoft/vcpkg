@@ -462,7 +462,9 @@ namespace vcpkg
         table.format("vcpkg hash <file> [alg]", "Hash a file by specific algorithm, default SHA512");
         table.format("vcpkg help topics", "Display the list of help topics");
         table.format("vcpkg help <topic>", "Display help for a specific topic");
+        table.blank();
         Commands::Integrate::append_helpstring(table);
+        table.blank();
         table.format("vcpkg export <pkg>... [opt]...", "Exports a package");
         table.format("vcpkg edit <pkg>",
                      "Open up a port for editing (uses " + format_environment_variable("EDITOR") + ", default 'code')");
@@ -473,11 +475,12 @@ namespace vcpkg
         table.format("vcpkg env", "Creates a clean shell environment for development or compiling");
         table.format("vcpkg version", "Display version information");
         table.format("vcpkg contact", "Display contact information to send feedback");
-
+        table.blank();
         table.header("Options");
         VcpkgCmdArguments::append_common_options(table);
+        table.blank();
         table.format("@response_file", "Specify a response file to provide additional parameters");
-
+        table.blank();
         table.example("For more help (including examples) see the accompanying README.md and docs folder.");
         System::print2(table.m_str);
     }
@@ -635,4 +638,6 @@ namespace vcpkg
         m_str.append(example_text.data(), example_text.size());
         m_str.push_back('\n');
     }
+
+    void HelpTableFormatter::blank() { m_str.push_back('\n'); }
 }
