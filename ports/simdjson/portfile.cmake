@@ -4,8 +4,8 @@ vcpkg_fail_port_install(ON_ARCH "x86")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lemire/simdjson
-    REF 8927a0561f7ef7e5b1830cb2b19f8418b27cbbfd
-    SHA512 dcca09fa4dedcb003e51fa8cd8e06a38965555588a68724602d80c8a82db222a7a41db94a62920f779b7562c6902b4496987ffb5c827e9dbf626edd1a0f0ed55
+    REF 561813eb2a9c80e662efe6cc7223f3990191d03d
+    SHA512 9faa4f520293758372fc4e5ac2e8b72f7fbacea82d8b79eb9bfd32e20ada3310b3f3c91f062ad1e5b18f05cc3f684e6b0e18273116bbfb49397227949ed70395
     HEAD_REF master
     PATCHES
         no_benchmark.patch # `_pclose` is not available on UWP
