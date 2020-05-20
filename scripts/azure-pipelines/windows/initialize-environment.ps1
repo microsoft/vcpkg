@@ -43,7 +43,7 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name
 
 Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToLocalEvaluation" -Value "1" -Force
 
-$acl = Get-Acl D:\downloads\tools\msys2
+$acl = Get-Acl D:\downloads\tools
 $AccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Users","FullControl","Allow")
 $acl.SetAccessRule($AccessRule)
 $acl | Set-Acl D:\downloads\tools\msys2
@@ -73,7 +73,7 @@ Get-ChildItem -Path D:\downloads -Exclude "tools" `
 if( Test-Path D:\downloads\tools\msys2 )
 {
     Write-Host "removing previously installed msys2"
-    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
+#    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
 }
 
 Write-Host 'Setting up archives path...'
