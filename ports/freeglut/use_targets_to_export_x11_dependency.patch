@@ -1,7 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6f403af..07b6e52 100644
+index 6f403af..4ced28a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -72,7 +72,7 @@ SET(FREEGLUT_HEADERS
+     include/GL/freeglut_ext.h
+     include/GL/freeglut_std.h
+ )
+-IF(FREEGLUT_REPLACE_GLUT)
++IF(TRUE)
+     LIST(APPEND FREEGLUT_HEADERS
+         include/GL/glut.h
+     )
 @@ -312,8 +312,7 @@ ENDIF(CMAKE_COMPILER_IS_GNUCC)
  INCLUDE(CheckIncludeFiles)
  IF(UNIX AND NOT(ANDROID OR BLACKBERRY OR FREEGLUT_WAYLAND))

@@ -39,7 +39,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DFREEGLUT_BUILD_STATIC_LIBS=${FREEGLUT_STATIC}
         -DFREEGLUT_BUILD_SHARED_LIBS=${FREEGLUT_DYNAMIC}
-        -DFREEGLUT_REPLACE_GLUT=ON
         -DFREEGLUT_BUILD_DEMOS=OFF
         -DINSTALL_PDB=OFF # Installing pdbs failed on debug static. So, disable it and let vcpkg_copy_pdbs() do it
 )
