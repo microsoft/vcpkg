@@ -69,8 +69,8 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
        "https://github.com/msys2/msys2-installer/releases/download/2020-05-17/msys2-base-i686-20200517.tar.xz"
        )
     set(ARCHIVE "msys2-base-i686.tar.xz")
-#    set(HASH 74786326c07c1cf2b11440cbd7caf947c2a32ebcc2b5bb362301d12327a2108182f57e98c217487db75bf6f0e3a4577291933e025b9b170e37848ec0b51a134c)
-    SKIP_SHA512 0
+    set(HASH 74786326c07c1cf2b11440cbd7caf947c2a32ebcc2b5bb362301d12327a2108182f57e98c217487db75bf6f0e3a4577291933e025b9b170e37848ec0b51a134c)
+#    SKIP_SHA512 0
     set(STAMP "initialized-msys2_32.stamp")
   endif()
 
