@@ -55,22 +55,22 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     set(URLS
 #      "https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20190524.tar.xz/download"
 #      "http://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20190524.tar.xz"
-      "https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.tar.xz"
-    )
+       "https://github.com/msys2/msys2-installer/releases/download/2020-05-17/msys2-base-x86_64-20200517.tar.xz"
+       )
     set(ARCHIVE "msys2-base-x86_64.tar.xz")
-#    set(HASH 50796072d01d30cc4a02df0f9dafb70e2584462e1341ef0eff94e2542d3f5173f20f81e8f743e9641b7528ea1492edff20ce83cb40c6e292904905abe2a91ccc)
-    set(SKIP_SHA512 0)
+    set(HASH 76097d523cae8e0fcf30409cc2d7aeb37afa3b8ae169f150d77b2d5d3d84380269b54201b192f166589b14f1fcae31ead34b627b62b1916d493f90bad8012e42)
+#    SKIP_SHA512 0
     set(STAMP "initialized-msys2_64.stamp")
   else()
     set(TOOLSUBPATH msys32)
     set(URLS
 #      "https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20190524.tar.xz/download"
 #      "http://repo.msys2.org/distrib/i686/msys2-base-i686-20190524.tar.xz"
-      "https://github.com/msys2/msys2-installer/releases/download/nightly-i686/msys2-base-i686-latest.tar.xz"
-    )
+       "https://github.com/msys2/msys2-installer/releases/download/2020-05-17/msys2-base-i686-20200517.tar.xz"
+       )
     set(ARCHIVE "msys2-base-i686.tar.xz")
-#    set(HASH b26d7d432e1eabe2138c4caac5f0a62670f9dab833b9e91ca94b9e13d29a763323b0d30160f09a381ac442b473482dac799be0fea5dd7b28ea2ddd3ba3cd3c25)
-    set(SKIP_SHA512 0)
+#    set(HASH 74786326c07c1cf2b11440cbd7caf947c2a32ebcc2b5bb362301d12327a2108182f57e98c217487db75bf6f0e3a4577291933e025b9b170e37848ec0b51a134c)
+    SKIP_SHA512 0
     set(STAMP "initialized-msys2_32.stamp")
   endif()
 
