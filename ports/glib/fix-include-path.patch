@@ -1,0 +1,117 @@
+Index: glib/gio/meson.build
+===================================================================
+--- glib.orig/gio/meson.build
++++ glib/gio/meson.build
+@@ -173,7 +173,7 @@ gnetworking_h_conf.set('NAMESER_COMPAT_I
+ 
+ gnetworking_h = configure_file(input : 'gnetworking.h.in',
+                                output : 'gnetworking.h',
+-                               install_dir : join_paths(get_option('includedir'), 'glib-2.0/gio'),
++                               install_dir : join_paths(get_option('includedir'), 'gio'),
+                                configuration : gnetworking_h_conf)
+ 
+ gdbus_headers = files(
+@@ -722,7 +722,7 @@ gio_headers = files(
+ gio_headers += application_headers
+ gio_headers += settings_headers
+ gio_headers += gdbus_headers
+-install_headers(gio_headers, subdir : 'glib-2.0/gio/')
++install_headers(gio_headers, subdir : 'gio/')
+ 
+ # We can't use gnome.mkenums() because the GNOME module looks for glib-mkenums
+ # in PATH, which means you can't bootstrap glib with its own glib-mkenums.
+@@ -731,7 +731,7 @@ gioenumtypes_h = custom_target('gioenumt
+   capture : true,
+   input : gio_headers,
+   install : true,
+-  install_dir : join_paths(get_option('includedir'), 'glib-2.0/gio'),
++  install_dir : join_paths(get_option('includedir'), 'gio'),
+   command : [python, glib_mkenums,
+              '--template', files('gioenumtypes.h.template'),
+              '@INPUT@', gnetworking_h])
+Index: glib/glib/meson.build
+===================================================================
+--- glib.orig/glib/meson.build
++++ glib/glib/meson.build
+@@ -1,5 +1,5 @@
+ configure_file(input : 'glibconfig.h.in', output : 'glibconfig.h',
+-  install_dir : join_paths(get_option('libdir'), 'glib-2.0/include'),
++  install_dir : get_option('includedir'),
+   configuration : glibconfig_conf)
+ 
+ subdir('libcharset')
+@@ -112,7 +112,7 @@ glib_headers = files(
+   'glib-unix.h',
+   'glib-object.h',
+ )
+-install_headers(glib_headers, subdir : 'glib-2.0')
++install_headers(glib_headers, subdir : '.')
+ 
+ glib_deprecated_headers = files(
+   'deprecated/gallocator.h',
+@@ -122,7 +122,7 @@ glib_deprecated_headers = files(
+   'deprecated/grel.h',
+   'deprecated/gthread.h',
+ )
+-install_headers(glib_deprecated_headers, subdir : 'glib-2.0/glib/deprecated')
++install_headers(glib_deprecated_headers, subdir : 'glib/deprecated')
+ 
+ glib_sub_headers = files(
+   'glib-autocleanups.h',
+@@ -203,7 +203,7 @@ glib_sub_headers = files(
+   'gwin32.h',
+   'gprintf.h',
+ )
+-install_headers(glib_sub_headers, subdir : 'glib-2.0/glib')
++install_headers(glib_sub_headers, subdir : 'glib')
+ 
+ deprecated_sources = files(
+   'deprecated/gallocator.c',
+Index: glib/gmodule/meson.build
+===================================================================
+--- glib.orig/gmodule/meson.build
++++ glib/gmodule/meson.build
+@@ -59,7 +59,7 @@ gmoduleconf_h = configure_file(input : '
+                                output : 'gmoduleconf.h',
+                                configuration : gmoduleconf_conf)
+ 
+-install_headers(['gmodule.h'], subdir : 'glib-2.0')
++install_headers(['gmodule.h'], subdir : '.')
+ 
+ gmodule_sources = ['gmodule.c']
+ if host_system == 'windows'
+Index: glib/gobject/meson.build
+===================================================================
+--- glib.orig/gobject/meson.build
++++ glib/gobject/meson.build
+@@ -20,7 +20,7 @@ gobject_install_headers = files(
+   'gvaluetypes.h',
+   'gobjectnotifyqueue.c', # sic
+ )
+-install_headers(gobject_install_headers, subdir : 'glib-2.0/gobject')
++install_headers(gobject_install_headers, subdir : 'gobject')
+ 
+ gobject_sources = files(
+   'gatomicarray.c',
+@@ -101,7 +101,7 @@ glib_enumtypes_h = custom_target('glib_e
+   capture : true,
+   input : glib_enumtypes_input_headers,
+   install : true,
+-  install_dir : join_paths(get_option('includedir'), 'glib-2.0/gobject'),
++  install_dir : join_paths(get_option('includedir'), 'gobject'),
+   command : [python, glib_mkenums,
+              '--template', files('glib-enumtypes.h.template'),
+              '@INPUT@'])
+Index: glib/meson.build
+===================================================================
+--- glib.orig/meson.build
++++ glib/meson.build
+@@ -2214,7 +2214,7 @@ endif
+ configure_file(output : 'config.h', configuration : glib_conf)
+ 
+ if host_system == 'windows'
+-  install_headers([ 'msvc_recommended_pragmas.h' ], subdir : 'glib-2.0')
++  install_headers([ 'msvc_recommended_pragmas.h' ], subdir : '.')
+ endif
+ 
+ if get_option('man')

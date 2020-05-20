@@ -1,0 +1,208 @@
+Index: 2.64.3-9640cd793d/meson.build
+===================================================================
+--- 2.64.3-9640cd793d.orig/meson.build
++++ 2.64.3-9640cd793d/meson.build
+@@ -51,6 +51,7 @@ library_version = '@0@.@1@.@2@'.format(s
+ darwin_versions = [current + 1, '@0@.@1@'.format(current + 1, interface_age)]
+ 
+ configinc = include_directories('.')
++libintlinc = include_directories(get_option('libintlinc'))
+ glibinc = include_directories('glib')
+ gobjectinc = include_directories('gobject')
+ gmoduleinc = include_directories('gmodule')
+@@ -84,7 +85,7 @@ installed_tests_template = files('templa
+ installed_tests_template_tap = files('template-tap.test.in')
+ 
+ # Don’t build the tests unless we can run them (either natively, in an exe wrapper, or by installing them for later use)
+-build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper()) or installed_tests_enabled
++build_tests = get_option('build_tests') and (not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper()) or installed_tests_enabled)
+ 
+ add_project_arguments('-D_GNU_SOURCE', language: 'c')
+ 
+@@ -1828,12 +1829,7 @@ glibconfig_conf.set10('G_HAVE_GROWING_ST
+ # the built-in implementation
+ iconv_opt = get_option('iconv')
+ if host_system == 'windows'
+-  libiconv = []
+-  # We have a #include "win_iconv.c" in gconvert.c on Windows, so we don't need
+-  # any external library for it
+-  if iconv_opt != 'auto'
+-    warning('-Diconv was set to @0@, which was ignored')
+-  endif
++  libiconv = [cc.find_library('iconv', dirs: get_option('libintldir'))]
+ else
+   found_iconv = false
+   if ['auto', 'libc'].contains(iconv_opt) and cc.has_function('iconv_open')
+@@ -1920,7 +1916,7 @@ if cc.has_function('ngettext')
+   libintl = []
+   have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset')
+ else
+-  libintl = cc.find_library('intl', required : false)
++  libintl = cc.find_library('intl', dirs: get_option('libintldir'))
+   if not libintl.found()
+     libintl = subproject('proxy-libintl').get_variable('intl_dep')
+     have_bind_textdomain_codeset = true  # proxy-libintl supports it
+@@ -2070,7 +2066,7 @@ endif
+ 
+ glib_conf.set('HAVE_PROC_SELF_CMDLINE', have_proc_self_cmdline)
+ 
+-python = import('python').find_installation('python3')
++python = import('python').find_installation(get_option('pythonexe'))
+ # used for '#!/usr/bin/env <name>'
+ python_name = 'python3'
+ 
+Index: 2.64.3-9640cd793d/glib/meson.build
+===================================================================
+--- 2.64.3-9640cd793d.orig/glib/meson.build
++++ 2.64.3-9640cd793d/glib/meson.build
+@@ -355,7 +355,7 @@ libglib = library('glib-2.0',
+   install : true,
+   # intl.lib is not compatible with SAFESEH
+   link_args : [noseh_link_args, glib_link_flags, win32_ldflags],
+-  include_directories : configinc,
++  include_directories : [configinc, libintlinc],
+   dependencies : pcre_deps + [thread_dep, libintl, librt] + libiconv + platform_deps + gnulib_libm_dependency,
+   c_args : glib_c_args,
+   objc_args : glib_c_args,
+@@ -391,23 +391,23 @@ if host_system == 'windows'
+     executable('gspawn-win32-helper', 'gspawn-win32-helper.c',
+       install : true,
+       gui_app : true,
+-      include_directories : configinc,
++      include_directories : [configinc, libintlinc],
+       dependencies : [libglib_dep])
+     executable('gspawn-win32-helper-console', 'gspawn-win32-helper.c',
+       install : true,
+       c_args : ['-DHELPER_CONSOLE'],
+-      include_directories : configinc,
++      include_directories : [configinc, libintlinc],
+       dependencies : [libglib_dep])
+   else
+     executable('gspawn-win64-helper', 'gspawn-win32-helper.c',
+       install : true,
+       gui_app : true,
+-      include_directories : configinc,
++      include_directories : [configinc, libintlinc],
+       dependencies : [libglib_dep])
+     executable('gspawn-win64-helper-console', 'gspawn-win32-helper.c',
+       install : true,
+       c_args : ['-DHELPER_CONSOLE'],
+-      include_directories : configinc,
++      include_directories : [configinc, libintlinc],
+       dependencies : [libglib_dep])
+   endif
+ else
+Index: 2.64.3-9640cd793d/gobject/meson.build
+===================================================================
+--- 2.64.3-9640cd793d.orig/gobject/meson.build
++++ 2.64.3-9640cd793d/gobject/meson.build
+@@ -124,7 +124,7 @@ libgobject = library('gobject-2.0',
+   soversion : soversion,
+   darwin_versions : darwin_versions,
+   install : true,
+-  include_directories : [configinc],
++  include_directories : [configinc, libintlinc],
+   dependencies : [libffi_dep, libglib_dep],
+   c_args : ['-DG_LOG_DOMAIN="GLib-GObject"', '-DGOBJECT_COMPILATION'] + glib_hidden_visibility_args,
+   link_args : glib_link_flags,
+Index: 2.64.3-9640cd793d/gio/meson.build
+===================================================================
+--- 2.64.3-9640cd793d.orig/gio/meson.build
++++ 2.64.3-9640cd793d/gio/meson.build
+@@ -794,7 +794,7 @@ libgio = library('gio-2.0',
+   soversion : soversion,
+   darwin_versions : darwin_versions,
+   install : true,
+-  include_directories : [configinc, gioinc],
++  include_directories : [configinc, gioinc, libintlinc],
+   #  '$(gio_win32_res_ldflag)',
+   dependencies : [libz_dep, libdl_dep, libmount_dep, libglib_dep,
+                   libgobject_dep, libgmodule_dep, selinux_dep, xattr_dep,
+@@ -922,12 +922,14 @@ executable('gio', gio_tool_sources,
+   install : true,
+   c_args : gio_c_args,
+   # intl.lib is not compatible with SAFESEH
++  include_directories : [libintlinc],
+   link_args : noseh_link_args,
+   dependencies : [libgio_dep, libgobject_dep, libgmodule_dep, libglib_dep])
+ 
+ executable('gresource', 'gresource-tool.c',
+   install : true,
+   # intl.lib is not compatible with SAFESEH
++  include_directories : [libintlinc],
+   link_args : noseh_link_args,
+   dependencies : [libelf, libgio_dep, libgobject_dep, libgmodule_dep, libglib_dep])
+ 
+@@ -942,6 +944,7 @@ glib_compile_schemas = executable('glib-
+   [gconstructor_as_data_h, 'gvdb/gvdb-builder.c', 'glib-compile-schemas.c'],
+   install : true,
+   # intl.lib is not compatible with SAFESEH
++  include_directories : [libintlinc],
+   link_args : noseh_link_args,
+   dependencies : [libgio_dep, libgobject_dep, libgmodule_dep, libglib_dep])
+ 
+@@ -950,6 +953,7 @@ glib_compile_resources = executable('gli
+   install : true,
+   c_args : gio_c_args,
+   # intl.lib is not compatible with SAFESEH
++  include_directories : [libintlinc],
+   link_args : noseh_link_args,
+   dependencies : [libgio_dep, libgobject_dep, libgmodule_dep, libglib_dep])
+ 
+@@ -965,6 +969,7 @@ executable('gsettings', 'gsettings-tool.
+   install : true,
+   c_args : gio_c_args,
+   # intl.lib is not compatible with SAFESEH
++  include_directories : [libintlinc],
+   link_args : noseh_link_args,
+   dependencies : [libgio_dep, libgobject_dep, libgmodule_dep, libglib_dep])
+ install_data('gschema.dtd',
+@@ -977,6 +982,7 @@ executable('gdbus', 'gdbus-tool.c',
+   install : true,
+   c_args : gio_c_args,
+   # intl.lib is not compatible with SAFESEH
++  include_directories : [libintlinc],
+   link_args : noseh_link_args,
+   dependencies : [libgio_dep, libgobject_dep, libgmodule_dep, libglib_dep])
+ 
+Index: 2.64.3-9640cd793d/gio/win32/meson.build
+===================================================================
+--- 2.64.3-9640cd793d.orig/gio/win32/meson.build
++++ 2.64.3-9640cd793d/gio/win32/meson.build
+@@ -9,7 +9,7 @@ giowin32_sources = [
+ 
+ giowin32_lib = static_library('giowin32',
+   sources : [giowin32_sources],
+-  include_directories : [configinc, glibinc, gioinc, gmoduleinc],
++  include_directories : [configinc, glibinc, gioinc, gmoduleinc, libintlinc],
+   dependencies : [libintl, gioenumtypes_dep],
+   pic : true,
+   c_args : gio_c_args)
+Index: 2.64.3-9640cd793d/meson_options.txt
+===================================================================
+--- 2.64.3-9640cd793d.orig/meson_options.txt
++++ 2.64.3-9640cd793d/meson_options.txt
+@@ -94,3 +94,23 @@ option('oss_fuzz',
+        type : 'feature',
+        value : 'disabled',
+        description : 'Indicate oss-fuzz build environment')
++       
++option('build_tests',
++       type : 'boolean',
++       value : 'false',
++       description : 'Enable tests')
++
++option('libintlinc',
++       type : 'string',
++       value : '',
++       description : 'Path to include libintl')
++
++option('libintldir',
++       type : 'string',
++       value : '',
++       description : 'Path to lib libintl')
++
++option('pythonexe',
++       type : 'string',
++       value : '',
++       description : 'Path to python')

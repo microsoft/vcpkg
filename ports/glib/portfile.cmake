@@ -6,26 +6,27 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-set(GLIB_VERSION 2.52.3)
+set(GLIB_VERSION 2.64.3)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
+    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.64/glib-${GLIB_VERSION}.tar.xz"
     FILENAME "glib-${GLIB_VERSION}.tar.xz"
-    SHA512 a068f2519cfb82de8d4b7f004e7c1f15e841cad4046430a83b02b359d011e0c4077cdff447a1687ed7c68f1a11b4cf66b9ed9fc23ab5f0c7c6be84eb0ddc3017)
+    SHA512 a3828c37a50e86eb8791be53bd8af848d144e4580841ffab28f3b6eae5144f5cdf4a5d4b43130615b97488e700b274c2468fc7d561b3701a1fc686349501a1db)
+
+
+vcpkg_find_acquire_program(MESON)
+vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${GLIB_VERSION}
     PATCHES
+        fix-meson.patch
+        fix-include-path.patch
         use-libiconv-on-windows.patch
-        arm64-defines.patch
         fix-arm-builds.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
-file(REMOVE_RECURSE ${SOURCE_PATH}/glib/pcre)
-file(WRITE ${SOURCE_PATH}/glib/pcre/Makefile.in)
 file(REMOVE ${SOURCE_PATH}/glib/win_iconv.c)
 
 if (selinux IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
@@ -36,22 +37,57 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     selinux HAVE_SELINUX
 )
 
-vcpkg_configure_cmake(
+if(CMAKE_HOST_WIN32)
+    set(MESON_COMMON_CFLAGS "${MESON_COMMON_CFLAGS} /I${CURRENT_INSTALLED_DIR}/include")
+    set(MESON_DEBUG_LDFLAGS "${MESON_DEBUG_LDFLAGS} /LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib")
+    set(MESON_RELEASE_LDFLAGS "${MESON_RELEASE_LDFLAGS} /LIBPATH:${CURRENT_INSTALLED_DIR}/lib")
+endif()
+
+vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
-        -DGLIB_VERSION=${GLIB_VERSION}
+    OPTIONS
+        --backend=ninja
+        --cross-file=${CMAKE_CURRENT_LIST_DIR}/meson.cross
+        -Dbuild_tests=false
+        -Dlibintlinc=${CURRENT_INSTALLED_DIR}/include
+        -Dpythonexe=${PYTHON3}
     OPTIONS_DEBUG
-        -DGLIB_SKIP_HEADERS=ON
-        -DGLIB_SKIP_TOOLS=ON
+        -Dlibintldir=${CURRENT_INSTALLED_DIR}/debug/lib
+    OPTIONS_RELEASE
+        -Dlibintldir=${CURRENT_INSTALLED_DIR}/lib
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-glib TARGET_PATH share/unofficial-glib)
+vcpkg_install_meson()
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+
+vcpkg_copy_tools(TOOL_NAMES gdbus gio gio-querymodules glib-compile-resources glib-compile-schemas gobject-query gresource gsettings AUTO_CLEAN)
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    vcpkg_copy_tools(TOOL_NAMES gspawn-win32-helper gspawn-win32-helper-console AUTO_CLEAN)
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    vcpkg_copy_tools(TOOL_NAMES gspawn-win64-helper gspawn-win64-helper-console AUTO_CLEAN)
+endif()
+
+
+list(APPEND TOOLS gdbus-codegen glib-genmarshal glib-gettextize glib-mkenums gtester-report)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+foreach(TOOL ${TOOLS})   
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${TOOL} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/${TOOL})
+endforeach(TOOL)
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+# for backward compatibility with existing ports
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cmake/unofficial-glib-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-glib/)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cmake/unofficial-glib-targets-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-glib/)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cmake/unofficial-glib-targets-release.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-glib/)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cmake/unofficial-glib-targets.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-glib/)

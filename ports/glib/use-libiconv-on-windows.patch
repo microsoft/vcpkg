@@ -1,7 +1,7 @@
-diff --git a/glib/gconvert.c b/glib/gconvert.c
-index 3deac78..134ded9 100644
---- a/glib/gconvert.c
-+++ b/glib/gconvert.c
+Index: 2.64.3-9640cd793d/glib/gconvert.c
+===================================================================
+--- 2.64.3-9640cd793d.orig/glib/gconvert.c
++++ 2.64.3-9640cd793d/glib/gconvert.c
 @@ -30,7 +30,8 @@
  #include <stdlib.h>
  
