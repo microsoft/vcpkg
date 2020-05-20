@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "x86")
+
 # Don't file if the bin folder exists. We need exe and custom files.
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
