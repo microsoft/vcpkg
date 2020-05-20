@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <limits.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
@@ -7,17 +8,17 @@
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 
-namespace vcpkg::Commands::Edit
-{
 #if defined(_WIN32)
-    static std::vector<fs::path> find_from_registry()
+namespace
+{
+    std::vector<fs::path> find_from_registry()
     {
         std::vector<fs::path> output;
 
         struct RegKey
         {
             HKEY root;
-            StringLiteral subkey;
+            vcpkg::StringLiteral subkey;
         } REGKEYS[] = {
             {HKEY_LOCAL_MACHINE,
              R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)"},
@@ -33,8 +34,8 @@ namespace vcpkg::Commands::Edit
 
         for (auto&& keypath : REGKEYS)
         {
-            const Optional<std::string> code_installpath =
-                System::get_registry_string(keypath.root, keypath.subkey, "InstallLocation");
+            const vcpkg::Optional<std::string> code_installpath =
+                vcpkg::System::get_registry_string(keypath.root, keypath.subkey, "InstallLocation");
             if (const auto c = code_installpath.get())
             {
                 const fs::path install_path = fs::u8path(*c);
@@ -44,8 +45,39 @@ namespace vcpkg::Commands::Edit
         }
         return output;
     }
+
+    std::string expand_environment_strings(const std::string& input)
+    {
+        const auto widened = vcpkg::Strings::to_utf16(input);
+        std::wstring result;
+        result.resize(result.capacity());
+        bool done;
+        do
+        {
+            if (result.size() == ULONG_MAX)
+            {
+                vcpkg::Checks::exit_fail(VCPKG_LINE_INFO); // integer overflow
+            }
+
+            const auto required_size =
+                ExpandEnvironmentStringsW(widened.c_str(), &result[0], static_cast<unsigned long>(result.size() + 1));
+            if (required_size == 0)
+            {
+                vcpkg::System::print2(vcpkg::System::Color::error, "Error: could not expand the environment string:\n");
+                vcpkg::System::print2(vcpkg::System::Color::error, input);
+                vcpkg::Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            done = required_size <= result.size() + 1;
+            result.resize(required_size - 1);
+        } while (!done);
+        return vcpkg::Strings::to_utf8(result);
+    }
+}
 #endif
 
+namespace vcpkg::Commands::Edit
+{
     static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
 
     static constexpr StringLiteral OPTION_ALL = "--all";
@@ -171,17 +203,12 @@ namespace vcpkg::Commands::Edit
         const auto txt_default = System::get_registry_string(HKEY_CLASSES_ROOT, R"(.txt\ShellNew)", "ItemName");
         if (const auto entry = txt_default.get())
         {
-#ifdef UNICODE
-            LPWSTR dst = new wchar_t[MAX_PATH];
-            ExpandEnvironmentStrings(Strings::to_utf16(*entry).c_str(), dst, MAX_PATH);
-            auto full_path = Strings::to_utf8(dst);
-#else
-            LPSTR dst = new char[MAX_PATH];
-            ExpandEnvironmentStrings(entry->c_str(), dst, MAX_PATH);
-            auto full_path = std::string(dst);
-#endif
-            auto begin = full_path.find_first_not_of('@');
-            candidate_paths.push_back(fs::u8path(full_path.substr(begin, full_path.find_first_of(',') - begin)));
+            auto full_path = expand_environment_strings(*entry);
+            auto first = full_path.begin();
+            const auto last = full_path.end();
+            first = std::find_if_not(first, last, [](const char c) { return c == '@'; });
+            const auto comma = std::find(first, last, ',');
+            candidate_paths.push_back(fs::u8path(first, comma));
         }
 #elif defined(__APPLE__)
         candidate_paths.push_back(

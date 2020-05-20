@@ -1,9 +1,9 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "x64" "arm" "arm64")
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "arm" "arm64")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/gsoap2/gsoap-2.8/gsoap_2.8.93.zip"
-    FILENAME "gsoap_2.8.93.zip"
-    SHA512 45965d04e1c46e06803467887f62d9bea5909fa2d4c4d9ffc935f9fced014efed9169a0171a555067c89ef47b2def9983b277eecee18eb9e70d7198bc72b1ece
+    URLS "https://downloads.sourceforge.net/project/gsoap2/gsoap-2.8/gsoap_2.8.102.zip"
+    FILENAME "gsoap_2.8.102.zip"
+    SHA512 3cff65605b15f820c9d56e32575231fb6fb89927bafc1db85ac1f879acd8496d6f38b558e994d17cce475beae0976d5fafcff7f22b28cdfbec8b7ec4b08bcbe7
 )
 
 vcpkg_extract_source_archive_ex(
@@ -49,6 +49,9 @@ file(COPY ${SOURCE_PATH}/gsoap/import DESTINATION ${CURRENT_PACKAGES_DIR}/share/
 
 # Handle plugin files
 file(COPY ${SOURCE_PATH}/gsoap/plugin DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+# Cleanup surplus empty directory
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/gsoap/plugin/.deps")    
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

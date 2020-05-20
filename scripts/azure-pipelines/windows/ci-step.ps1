@@ -125,14 +125,13 @@ if (!$?) { throw "bootstrap failed" }
 Write-Host "Bootstrapping vcpkg ... done."
 
 $ciXmlPath = "$vcpkgRootDir\test-full-ci.xml"
-$consoleOuputPath = "$vcpkgRootDir\console-out.txt"
 Remove-VcpkgItem $ciXmlPath
 
 $env:VCPKG_FEATURE_FLAGS = "binarycaching"
 
 if (![string]::IsNullOrEmpty($OnlyIncludePorts)) {
     ./vcpkg install --triplet $Triplet $OnlyIncludePorts $AdditionalVcpkgFlags `
-        "--x-xunit=$ciXmlPath" | Tee-Object -FilePath "$consoleOuputPath"
+        "--x-xunit=$ciXmlPath"
 }
 else {
     $exclusions = ""
@@ -155,9 +154,6 @@ else {
     | ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) { $_.ToString() } else { $_ }
     }
-
-    # Phasing out the console output (it is already saved in DevOps) Create a dummy file for now.
-    Set-Content -LiteralPath "$consoleOuputPath" -Value ''
 }
 
 Write-Host "CI test is complete"
