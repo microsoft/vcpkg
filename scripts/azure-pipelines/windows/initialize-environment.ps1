@@ -48,7 +48,7 @@ if( Test-Path D:\downloads\tools\msys2 )
 $acl = Get-Acl D:\downloads\tools
 $AccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Users","FullControl","Allow")
 $acl.SetAccessRule($AccessRule)
-$acl | Set-Acl D:\downloads\tools\msys2
+$acl | Set-Acl D:\downloads\tools\msys2 | Out-Null
 }
 
 #Invoke-Expression -Command "icacls D:\downloads\tools\msys2 /grant BUILTIN\Users:'(OI)(CI)F' /T" -Verb
