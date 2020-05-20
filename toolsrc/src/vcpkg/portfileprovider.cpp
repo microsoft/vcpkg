@@ -1,5 +1,6 @@
 #include <pch.h>
 
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
@@ -34,7 +35,17 @@ namespace vcpkg::PortFileProvider
             {
                 if (!overlay_path.empty())
                 {
-                    auto overlay = fs::stdfs::canonical(fs::u8path(overlay_path));
+                    auto overlay = fs::u8path(overlay_path);
+                    if (overlay.is_absolute())
+                    {
+                        overlay = fs.canonical(VCPKG_LINE_INFO, overlay);
+                    }
+                    else
+                    {
+                        overlay = fs.canonical(VCPKG_LINE_INFO, paths.original_cwd / overlay);
+                    }
+
+                    Debug::print("Using overlay: ", overlay.u8string(), "\n");
 
                     Checks::check_exit(VCPKG_LINE_INFO,
                                        filesystem.exists(overlay),

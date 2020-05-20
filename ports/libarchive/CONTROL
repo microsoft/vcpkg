@@ -1,14 +1,18 @@
 Source: libarchive
-Version: 3.4.1
+Version: 3.4.1-2
 Homepage: https://github.com/libarchive/libarchive
 Description: Library for reading and writing streaming archives
 Build-Depends: zlib
-Default-Features: bzip2, libxml2, lz4, lzma, lzo, openssl
+Default-Features: bzip2, libxml2, lz4, lzma, lzo, openssl, zstd
 Supports: !uwp
 
 Feature: bzip2
 Build-Depends: bzip2
 Description: BZip2 support
+
+Feature: zstd
+Build-Depends: zstd
+Description: zstd support
 
 Feature: libxml2
 Build-Depends: libxml2

@@ -14,6 +14,8 @@ namespace vcpkg
     namespace Tools
     {
         static const std::string SEVEN_ZIP = "7zip";
+        static const std::string SEVEN_ZIP_ALT = "7z";
+        static const std::string MAVEN = "mvn";
         static const std::string CMAKE = "cmake";
         static const std::string GIT = "git";
         static const std::string NINJA = "ninja";
@@ -56,9 +58,11 @@ namespace vcpkg
         };
 
         static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
+                                           const Optional<fs::path>& install_root_dir,
                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
                                            const std::string& default_vs_path,
-                                           const std::vector<std::string>* triplets_dirs);
+                                           const std::vector<std::string>* triplets_dirs,
+                                           fs::path original_cwd);
 
         fs::path package_dir(const PackageSpec& spec) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
@@ -69,6 +73,7 @@ namespace vcpkg
         const std::vector<TripletFile>& get_available_triplets() const;
         const fs::path get_triplet_file_path(Triplet triplet) const;
 
+        fs::path original_cwd;
         fs::path root;
         fs::path packages;
         fs::path buildtrees;

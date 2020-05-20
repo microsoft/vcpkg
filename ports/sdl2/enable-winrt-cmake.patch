@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 0128c7a..bd534e4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -5,6 +5,18 @@ endif()
+@@ -5,6 +5,18 @@
  cmake_minimum_required(VERSION 2.8.11)
  project(SDL2 C CXX)
  
@@ -21,7 +21,7 @@ index 0128c7a..bd534e4 100644
  # !!! FIXME: this should probably do "MACOSX_RPATH ON" as a target property
  # !!! FIXME:  for the SDL2 shared library (so you get an
  # !!! FIXME:  install_name ("soname") of "@rpath/libSDL-whatever.dylib"
-@@ -1209,6 +1221,11 @@ elseif(WINDOWS)
+@@ -1297,6 +1309,11 @@
    file(GLOB CORE_SOURCES ${SDL2_SOURCE_DIR}/src/core/windows/*.c)
    set(SOURCE_FILES ${SOURCE_FILES} ${CORE_SOURCES})
  
@@ -33,7 +33,7 @@ index 0128c7a..bd534e4 100644
    if(MSVC)
      # Prevent codegen that would use the VC runtime libraries.
      set_property(DIRECTORY . APPEND PROPERTY COMPILE_OPTIONS "/GS-")
-@@ -1254,6 +1271,9 @@ elseif(WINDOWS)
+@@ -1342,6 +1359,9 @@
      check_include_file(ddraw.h HAVE_DDRAW_H)
      check_include_file(dsound.h HAVE_DSOUND_H)
      check_include_file(dinput.h HAVE_DINPUT_H)
@@ -43,8 +43,8 @@ index 0128c7a..bd534e4 100644
      check_include_file(dxgi.h HAVE_DXGI_H)
      if(HAVE_D3D_H OR HAVE_D3D11_H OR HAVE_DDRAW_H OR HAVE_DSOUND_H OR HAVE_DINPUT_H)
        set(HAVE_DIRECTX TRUE)
-@@ -1272,18 +1292,20 @@ elseif(WINDOWS)
-   check_include_file(endpointvolume.h HAVE_ENDPOINTVOLUME_H)
+@@ -1359,18 +1379,20 @@
+   check_include_file(audioclient.h HAVE_AUDIOCLIENT_H)
  
    if(SDL_AUDIO)
 +    if(NOT WINDOWS_STORE)
@@ -66,7 +66,7 @@ index 0128c7a..bd534e4 100644
        set(SDL_AUDIO_DRIVER_WASAPI 1)
        file(GLOB WASAPI_AUDIO_SOURCES ${SDL2_SOURCE_DIR}/src/audio/wasapi/*.c)
        set(SOURCE_FILES ${SOURCE_FILES} ${WASAPI_AUDIO_SOURCES})
-@@ -1295,11 +1317,20 @@ elseif(WINDOWS)
+@@ -1382,11 +1404,20 @@
      if(NOT SDL_LOADSO)
        message_error("SDL_VIDEO requires SDL_LOADSO, which is not enabled")
      endif()
@@ -88,7 +88,7 @@ index 0128c7a..bd534e4 100644
        set(SDL_VIDEO_RENDER_D3D 1)
        set(HAVE_RENDER_D3D TRUE)
      endif()
-@@ -1322,20 +1353,31 @@ elseif(WINDOWS)
+@@ -1409,20 +1440,31 @@
    endif()
  
    if(SDL_POWER)
@@ -120,7 +120,7 @@ index 0128c7a..bd534e4 100644
  
    # TODO: in configure.ac the check for timers is set on
    # cygwin | mingw32* - does this include mingw32CE?
-@@ -1357,7 +1399,7 @@ elseif(WINDOWS)
+@@ -1444,7 +1486,7 @@
    set(SOURCE_FILES ${SOURCE_FILES} ${CORE_SOURCES})
  
    if(SDL_VIDEO)
@@ -129,7 +129,7 @@ index 0128c7a..bd534e4 100644
        set(SDL_VIDEO_OPENGL 1)
        set(SDL_VIDEO_OPENGL_WGL 1)
        set(SDL_VIDEO_RENDER_OGL 1)
-@@ -1788,12 +1830,14 @@ endif()
+@@ -2027,12 +2069,14 @@
  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
  
  # Always build SDLmain
@@ -138,36 +138,36 @@ index 0128c7a..bd534e4 100644
  target_include_directories(SDL2main PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include> $<INSTALL_INTERFACE:include/SDL2>)
  set(_INSTALL_LIBS "SDL2main")
  if (NOT ANDROID)
-   set_target_properties(SDL2main PROPERTIES DEBUG_POSTFIX ${SDL_CMAKE_DEBUG_POSTFIX})
+   set_target_properties(SDL2main PROPERTIES DEBUG_POSTFIX "${SDL_CMAKE_DEBUG_POSTFIX}")
  endif()
 +endif()
  
- if(SDL_SHARED)
-   add_library(SDL2 SHARED ${SOURCE_FILES} ${VERSION_SOURCES})
+ if (ANDROID AND HAVE_HIDAPI)
+   set(_INSTALL_LIBS ${_INSTALL_LIBS} "hidapi")
 diff --git a/include/SDL_config.h.cmake b/include/SDL_config.h.cmake
 index 48dd2d4..0c4fa28 100644
 --- a/include/SDL_config.h.cmake
 +++ b/include/SDL_config.h.cmake
-@@ -326,6 +326,7 @@
- #cmakedefine SDL_VIDEO_DRIVER_DIRECTFB_DYNAMIC @SDL_VIDEO_DRIVER_DIRECTFB_DYNAMIC@
+@@ -335,6 +326,7 @@
  #cmakedefine SDL_VIDEO_DRIVER_DUMMY @SDL_VIDEO_DRIVER_DUMMY@
+ #cmakedefine SDL_VIDEO_DRIVER_OFFSCREEN @SDL_VIDEO_DRIVER_OFFSCREEN@
  #cmakedefine SDL_VIDEO_DRIVER_WINDOWS @SDL_VIDEO_DRIVER_WINDOWS@
 +#cmakedefine SDL_VIDEO_DRIVER_WINRT @SDL_VIDEO_DRIVER_WINRT@
  #cmakedefine SDL_VIDEO_DRIVER_WAYLAND @SDL_VIDEO_DRIVER_WAYLAND@
  #cmakedefine SDL_VIDEO_DRIVER_RPI @SDL_VIDEO_DRIVER_RPI@
  #cmakedefine SDL_VIDEO_DRIVER_VIVANTE @SDL_VIDEO_DRIVER_VIVANTE@
-@@ -391,6 +392,7 @@
+@@ -403,6 +404,7 @@
  #cmakedefine SDL_POWER_ANDROID @SDL_POWER_ANDROID@
  #cmakedefine SDL_POWER_LINUX @SDL_POWER_LINUX@
  #cmakedefine SDL_POWER_WINDOWS @SDL_POWER_WINDOWS@
 +#cmakedefine SDL_POWER_WINRT @SDL_POWER_WINRT@
  #cmakedefine SDL_POWER_MACOSX @SDL_POWER_MACOSX@
+ #cmakedefine SDL_POWER_UIKIT @SDL_POWER_UIKIT@
  #cmakedefine SDL_POWER_HAIKU @SDL_POWER_HAIKU@
- #cmakedefine SDL_POWER_EMSCRIPTEN @SDL_POWER_EMSCRIPTEN@
-@@ -413,7 +415,7 @@
- #cmakedefine SDL_LIBSAMPLERATE_DYNAMIC @SDL_LIBSAMPLERATE_DYNAMIC@
+@@ -428,7 +430,7 @@
+ #cmakedefine SDL_IPHONE_KEYBOARD @SDL_IPHONE_KEYBOARD@
+ #cmakedefine SDL_IPHONE_LAUNCHSCREEN @SDL_IPHONE_LAUNCHSCREEN@
  
- /* Platform specific definitions */
 -#if !defined(__WIN32__)
 +#if !defined(__WIN32__) && !defined(__WINRT__)
  #  if !defined(_STDINT_H_) && !defined(_STDINT_H) && !defined(HAVE_STDINT_H) && !defined(_HAVE_STDINT_H)
