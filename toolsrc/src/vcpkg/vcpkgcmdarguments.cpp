@@ -589,7 +589,7 @@ namespace vcpkg
 
     void HelpTableFormatter::format(StringView col1, StringView col2)
     {
-        // 2 space, 31 col1, 1 space, 85 col2 = 119
+        // 2 space, 31 col1, 1 space, 65 col2 = 99
         m_str.append(2, ' ');
         Strings::append(m_str, col1);
         if (col1.size() > 31)
@@ -607,7 +607,7 @@ namespace vcpkg
         while (best_break != e)
         {
             const char* next_break = std::find_if(best_break + 1, e, [](char ch) { return ch == ' ' || ch == '\n'; });
-            if (next_break - line_start > 85 || *best_break == '\n')
+            if (next_break - line_start > 65 || *best_break == '\n')
             {
                 m_str.append(line_start, best_break);
                 line_start = best_break + 1;
