@@ -11,9 +11,8 @@
 #if !defined(_WIN32)
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#endif // ^^^ !defined(_WIN32)
+#endif
+
 #if defined(__linux__)
 #include <sys/sendfile.h>
 #elif defined(__APPLE__)
@@ -834,10 +833,10 @@ namespace vcpkg::Files
         {
 #if defined(_WIN32)
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
-            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ";");
+            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ';');
 #else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
             static constexpr StringLiteral EXTS[] = {""};
-            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ":");
+            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ':');
 #endif // ^^^ !defined(_WIN32)
 
             std::vector<fs::path> ret;

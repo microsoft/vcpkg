@@ -407,7 +407,7 @@ namespace vcpkg::Commands::CI
         auto it_exclusions = options.settings.find(OPTION_EXCLUDE);
         if (it_exclusions != options.settings.end())
         {
-            auto exclusions = Strings::split(it_exclusions->second, ",");
+            auto exclusions = Strings::split(it_exclusions->second, ',');
             exclusions_set.insert(exclusions.begin(), exclusions.end());
         }
 

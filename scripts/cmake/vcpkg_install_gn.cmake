@@ -68,6 +68,12 @@ function(vcpkg_install_gn)
                             string(REGEX REPLACE "^/" "" OUTPUT "${OUTPUT}")
                         endif()
                     endif()
+
+                    if(NOT EXISTS "${OUTPUT}")
+                        message(STATUS "Output for target, ${TARGET} doesn't exist: ${OUTPUT}.")
+                        continue()
+                    endif()
+                    
                     if(TARGET_TYPE STREQUAL "executable")
                         file(INSTALL "${OUTPUT}" DESTINATION "${INSTALL_DIR}/tools")
                     elseif("${OUTPUT}" MATCHES "(\\.dll|\\.pdb)$")
