@@ -96,16 +96,15 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy --noconfirm pacman"
-      WORKING_DIRECTORY ${TOOLPATH}
-    )
-     
-    _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman --noconfirm -Su"
+      COMMAND taskkill /F /IM gpg-agent.exe
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syuu --needed --noconfirm --ask=20 --disable-download-timeout --overwrite '*'"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    _execute_process(
+      COMMAND taskkill /F /IM gpg-agent.exe
       WORKING_DIRECTORY ${TOOLPATH}
     )
     #rerun/recheck the update if the main utilities were upgrade bash, pacman ... more
