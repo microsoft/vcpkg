@@ -79,6 +79,21 @@ namespace vcpkg
         option_field->emplace_back(std::move(new_value));
     }
 
+    static void parse_cojoined_multivalue(std::string new_value,
+                                          const std::string& option_name,
+                                          std::vector<std::string>& option_field)
+    {
+        if (new_value.empty())
+        {
+            System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
+            Metrics::g_metrics.lock()->track_property("error", "error option name");
+            Help::print_usage();
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        option_field.emplace_back(std::move(new_value));
+    }
+
     VcpkgCmdArguments VcpkgCmdArguments::create_from_command_line(const int argc,
                                                                   const CommandLineCharType* const* const argv)
     {
@@ -152,6 +167,12 @@ namespace vcpkg
                         arg.substr(sizeof("--x-scripts-root=") - 1), "--x-scripts-root", args.scripts_root_dir);
                     continue;
                 }
+                if (Strings::starts_with(arg, "--x-install-root="))
+                {
+                    parse_cojoined_value(
+                        arg.substr(sizeof("--x-install-root=") - 1), "--x-install-root=", args.install_root_dir);
+                    continue;
+                }
                 if (arg == "--triplet")
                 {
                     ++arg_begin;
@@ -168,6 +189,12 @@ namespace vcpkg
                 {
                     parse_cojoined_multivalue(
                         arg.substr(sizeof("--overlay-triplets=") - 1), "--overlay-triplets", args.overlay_triplets);
+                    continue;
+                }
+                if (Strings::starts_with(arg, "--x-binarysource="))
+                {
+                    parse_cojoined_multivalue(
+                        arg.substr(sizeof("--x-binarysource=") - 1), "--x-binarysource", args.binarysources);
                     continue;
                 }
                 if (arg == "--debug")
@@ -410,27 +437,26 @@ namespace vcpkg
         }
 
         System::print2("Options:\n");
+        Help::HelpTableFormatter table;
         for (auto&& option : command_structure.options.switches)
         {
-            System::printf("    %-40s %s\n", option.name, option.short_help_text);
+            table.format(option.name, option.short_help_text);
         }
         for (auto&& option : command_structure.options.settings)
         {
-            System::printf("    %-40s %s\n", (option.name + "=..."), option.short_help_text);
+            table.format((option.name + "=..."), option.short_help_text);
         }
         for (auto&& option : command_structure.options.multisettings)
         {
-            System::printf("    %-40s %s\n", (option.name + "=..."), option.short_help_text);
+            table.format((option.name + "=..."), option.short_help_text);
         }
-        System::printf("    %-40s %s\n", "--triplet <t>", "Set the default triplet for unqualified packages");
-        System::printf(
-            "    %-40s %s\n", "--overlay-ports=<path>", "Specify directories to be used when searching for ports");
-        System::printf("    %-40s %s\n", "--overlay-triplets=<path>", "Specify directories containing triplets files");
-        System::printf("    %-40s %s\n",
-                       "--vcpkg-root <path>",
-                       "Specify the vcpkg directory to use instead of current directory or tool directory");
-        System::printf("    %-40s %s\n",
-                       "--x-scripts-root=<path>",
-                       "(Experimental) Specify the scripts directory to use instead of default vcpkg scripts directory");
+        table.format("--triplet <t>", "Set the default triplet for unqualified packages");
+        table.format("--overlay-ports=<path>", "Specify directories to be used when searching for ports");
+        table.format("--overlay-triplets=<path>", "Specify directories containing triplets files");
+        table.format("--vcpkg-root <path>",
+                     "Specify the vcpkg directory to use instead of current directory or tool directory");
+        table.format("--x-scripts-root=<path>",
+                     "(Experimental) Specify the scripts directory to use instead of default vcpkg scripts directory");
+        System::print2(table.m_str);
     }
 }

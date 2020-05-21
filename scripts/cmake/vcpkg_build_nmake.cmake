@@ -178,7 +178,7 @@ function(vcpkg_build_nmake)
             endforeach()
             
             if (_bn_PRERUN_SHELL)
-                message("Prerunning ${CURRENT_TRIPLET_NAME}")
+                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
                 vcpkg_execute_required_process(
                     COMMAND ${_bn_PRERUN_SHELL}
                     WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
@@ -186,7 +186,7 @@ function(vcpkg_build_nmake)
                 )
             endif()
             if (BUILDTYPE STREQUAL "debug" AND _bn_PRERUN_SHELL_DEBUG)
-                message("Prerunning ${CURRENT_TRIPLET_NAME}")
+                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
                 vcpkg_execute_required_process(
                     COMMAND "${_bn_PRERUN_SHELL_DEBUG}"
                     WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
@@ -194,11 +194,11 @@ function(vcpkg_build_nmake)
                 )
             endif()
             if (BUILDTYPE STREQUAL "release" AND _bn_PRERUN_SHELL_RELEASE)
-                message("Prerunning ${CURRENT_TRIPLET_NAME}")
+                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
                 vcpkg_execute_required_process(
                     COMMAND ${_bn_PRERUN_SHELL_RELEASE}
                     WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
-                    LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-dbg"
+                    LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-rel"
                 )
             endif()
 

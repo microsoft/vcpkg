@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project(openvpncli CXX)
 
 find_path(ASIO_HPP asio.hpp)
@@ -13,6 +13,9 @@ if(WIN32)
 endif()
 
 add_definitions(-DNOMINMAX -DUSE_ASIO -DUSE_MBEDTLS -D_WIN32_WINNT=0x0600)
+if(LINUX)
+  add_compile_options(-include bits/endian.h)
+endif()
 
 add_library(ovpncli client/ovpncli.cpp)
 target_link_libraries(ovpncli PRIVATE Iphlpapi.lib Wininet.lib Setupapi.lib Cfgmgr32.lib Rpcrt4.lib Fwpuclnt.lib Wtsapi32.lib ${MBEDTLS_LIB} ${MBEDCRYPTO_LIB} ${MBEDX509_LIB})

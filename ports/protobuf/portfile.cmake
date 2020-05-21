@@ -1,13 +1,12 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.10.0
-    SHA512 0dcba6d21486fdc162f57119754b47b4a2fb605af878d5b96a32df55895321535cffb5b804566fd90ee7c36e20106d0cd4f5d9f3c652dc9c4dfca96be41a1977
+    REF v3.12.0
+    SHA512 2a5448651db557505ad0ad88e681b88c956de7a7b8b029f8685416629d55b09dd35a0d1219311c524b9981067c3685178d89918d4fc2540d30669e9ad0c7c2d0
     HEAD_REF master
     PATCHES
         fix-uwp.patch
+        fix-android-log.patch
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
@@ -34,11 +33,10 @@ else()
   set(VCPKG_BUILD_STATIC_CRT ON)
 endif()
 
-if("zlib" IN_LIST FEATURES)
-    set(protobuf_WITH_ZLIB ON)
-else()
-    set(protobuf_WITH_ZLIB OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	zlib	protobuf_WITH_ZLIB
+)
+
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
@@ -50,6 +48,7 @@ vcpkg_configure_cmake(
         -Dprotobuf_BUILD_TESTS=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
+         ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

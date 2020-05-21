@@ -3,7 +3,7 @@ project(sqlite3 C)
 
 include_directories(.)
 if(BUILD_SHARED_LIBS)
-    if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    if(UNIX)
         set(API "-DSQLITE_API=__attribute__((visibility(\"default\")))")
     elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(API "-DSQLITE_API=__declspec(dllexport)")

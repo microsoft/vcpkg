@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cd17178..c9910e1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -126,6 +126,10 @@ if(SPDLOG_FMT_EXTERNAL)
+ 
+     target_compile_definitions(spdlog_header_only INTERFACE SPDLOG_FMT_EXTERNAL)
+     target_link_libraries(spdlog_header_only INTERFACE fmt::fmt)
++    
++    if (WIN32)
++        target_compile_options(spdlog PRIVATE /wd4275)
++    endif()
+ 
+     set(PKG_CONFIG_REQUIRES fmt) # add dependecy to pkg-config
+ endif()

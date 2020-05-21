@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(LIBTIFF_VERSION 4.0.10)
 
 vcpkg_download_distfile(ARCHIVE
@@ -21,11 +19,15 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQ
     set (TIFF_CXX_TARGET -Dcxx=OFF)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tool BUILD_TOOLS
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_TOOLS=OFF
+        ${FEATURE_OPTIONS}
         -DBUILD_DOCS=OFF
         -DBUILD_CONTRIB=OFF
         -DBUILD_TESTS=OFF
@@ -49,5 +51,18 @@ file(REMOVE_RECURSE
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiff)
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiff RENAME copyright)
+
+if ("tool" IN_LIST FEATURES)
+    file(GLOB TIFF_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+    file(INSTALL ${TIFF_TOOLS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    file(REMOVE ${TIFF_TOOLS})
+    file(GLOB TIFF_TOOLS ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+    file(REMOVE ${TIFF_TOOLS})
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+endif()
 
 vcpkg_copy_pdbs()

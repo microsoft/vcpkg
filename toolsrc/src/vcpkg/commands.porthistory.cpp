@@ -48,8 +48,8 @@ namespace vcpkg::Commands::PortHistory
         auto output = run_git_command(paths, cmd);
 
         auto commits = Util::fmap(
-            Strings::split(output.output, "\n"), [](const std::string& line) -> auto {
-                auto parts = Strings::split(line, " ");
+            Strings::split(output.output, '\n'), [](const std::string& line) -> auto {
+                auto parts = Strings::split(line, ' ');
                 return std::make_pair(parts[0], parts[1]);
             });
 

@@ -1,8 +1,4 @@
 #define HAVE_LIMITS_H 1
 #define HAVE_INTTYPES_H 1
-#define HAVE_STRING_H 1
-#define HAVE_CTYPE_H 1
 
-#define HAVE_MEMCMP 1
 #define HAVE_TOWLOWER 1
-#define HAVE_TOLOWER 1
