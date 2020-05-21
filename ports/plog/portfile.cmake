@@ -7,6 +7,7 @@ vcpkg_from_github(
     REF 1.1.5
     SHA512 c16b428e1855c905c486130c8610d043962bedc2b40d1d986c250c8f7fd7139540164a3cbb408ed08298370aa150d5937f358c13ccae2728ce8ea47fa897fd0b
     HEAD_REF master
+    PATCHES fix_winreg_confliction.patch
 )
 
 # Put the licence file where vcpkg expects it
