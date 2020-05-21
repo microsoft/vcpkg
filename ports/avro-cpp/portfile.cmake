@@ -27,7 +27,7 @@ vcpkg_configure_cmake(
 
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "linux" "osx")
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
