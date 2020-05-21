@@ -1094,6 +1094,13 @@ minizip:arm-uwp=fail
 minizip:x64-uwp=fail
 mman:x64-linux=fail
 mman:x64-osx=fail
+mmloader:arm64-windows=fail
+mmloader:arm-uwp=fail
+mmloader:x64-linux=fail
+mmloader:x64-osx=fail
+mmloader:x64-uwp=fail
+mmloader:x64-windows=fail
+mmloader:x86-windows=fail
 # mmx installs many problematic headers, such as `json.h` and `sched.h`
 mmx:x64-windows=skip
 mmx:x64-windows-static=skip
