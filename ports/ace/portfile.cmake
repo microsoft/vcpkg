@@ -22,7 +22,8 @@ endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/process_manager.patch"
+    PATCHES
+        process_manager.patch # Fix MSVC 16.5 ICE
 )
 
 set(ACE_ROOT ${SOURCE_PATH})
