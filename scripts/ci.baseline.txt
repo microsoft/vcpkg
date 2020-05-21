@@ -1092,6 +1092,10 @@ miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
 minizip:x64-uwp=fail
+# conflicts with stb
+mlpack:x86-windows=skip
+mlpack:x64-windows=skip
+mlpack:x64-windows-static=skip
 mman:x64-linux=fail
 mman:x64-osx=fail
 mmloader:arm64-windows=fail
