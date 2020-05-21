@@ -2,6 +2,7 @@ Source: azure-umqtt-c
 Version: 2020-05-20.1
 Build-Depends: azure-c-shared-utility, azure-macro-utils-c, umock-c
 Description: General purpose library for communication over the mqtt protocol
+Homepage: https://github.com/Azure/azure-umqtt-c
 
 Feature: public-preview
 Description: General purpose library for communication over the mqtt protocol (public preview)
