@@ -89,8 +89,17 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "export PATH=/usr/bin;pacman-key --init;pacman-key --populate"
       WORKING_DIRECTORY ${TOOLPATH}
     )
+    # in some environments process not exiting and preventing futher usage of msys
+    _execute_process(
+      COMMAND taskkill /F /IM gpg-agent.exe
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin pacman -Syuu --noconfirm --disable-download-timeout"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    _execute_process(
+      COMMAND taskkill /F /IM gpg-agent.exe
       WORKING_DIRECTORY ${TOOLPATH}
     )
     # pacman may fail to update files in use, so running it twice
