@@ -167,10 +167,10 @@ namespace vcpkg
                                          args.buildtrees_root_dir);
                     continue;
                 }
-                if (Strings::starts_with(arg, "--x-downloads-root="))
+                if (Strings::starts_with(arg, "--downloads-root="))
                 {
                     parse_cojoined_value(
-                        arg.substr(sizeof("--x-downloads-root=") - 1), "--x-downloads-root", args.downloads_root_dir);
+                        arg.substr(sizeof("--downloads-root=") - 1), "--downloads-root", args.downloads_root_dir);
                     continue;
                 }
                 if (Strings::starts_with(arg, "--x-install-root="))
@@ -553,6 +553,14 @@ namespace vcpkg
             if (const auto unpacked = VCPKG_DOWNLOADS.get())
             {
                 downloads_root_dir = std::make_unique<std::string>(*unpacked);
+            }
+        }
+
+        {
+            const auto VCPKG_VISUAL_STUDIO_PATH = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH");
+            if (const auto unpacked = VCPKG_VISUAL_STUDIO_PATH.get())
+            {
+                default_visual_studio_path = std::make_unique<std::string>(*unpacked);
             }
         }
     }
