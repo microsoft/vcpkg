@@ -80,6 +80,7 @@ namespace vcpkg
         fs::path triplets;
         fs::path community_triplets;
         fs::path scripts;
+        fs::path prefab;
 
         fs::path tools;
         fs::path buildsystems;

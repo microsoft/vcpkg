@@ -81,6 +81,17 @@ namespace vcpkg
             }
         }
 
+        #if defined(_WIN32)
+        // fixup Windows drive letter to uppercase
+        const auto& nativeRoot = root.native();
+        if (nativeRoot.size() > 2 && (nativeRoot[0] >= L'a' && nativeRoot[0] <= L'z') && nativeRoot[1] == L':')
+        {
+            auto uppercaseFirstLetter = nativeRoot;
+            uppercaseFirstLetter[0] = nativeRoot[0] - L'a' + L'A';
+            root = uppercaseFirstLetter;
+        }
+        #endif // defined(_WIN32)
+
         Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
         Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
 
@@ -94,6 +105,7 @@ namespace vcpkg
         installed =
             process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
+        prefab = root / fs::u8path("prefab");
 
         if (args.default_visual_studio_path)
         {
