@@ -1,0 +1,25 @@
+diff --git a/cmake/abseil-cpp.cmake b/cmake/abseil-cpp.cmake
+index 078d495..b6f50bd 100644
+--- a/cmake/abseil-cpp.cmake
++++ b/cmake/abseil-cpp.cmake
+@@ -37,4 +37,7 @@ elseif(gRPC_ABSL_PROVIDER STREQUAL "package")
+   # Use "CONFIG" as there is no built-in cmake module for absl.
+   find_package(absl REQUIRED CONFIG)
+   set(_gRPC_FIND_ABSL "if(NOT absl_FOUND)\n  find_package(absl CONFIG)\nendif()")
++  if (gRPC_ABSL_SYNC_ENABLE)
++    add_definitions(-DGPR_ABSEIL_SYNC=1)
++  endif()
+ endif()
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df1703c..7667662 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1464,6 +1464,8 @@ target_link_libraries(gpr
+   absl::str_format
+   absl::strings
+   absl::optional
++  absl::time
++  absl::synchronization
+ )
+ if(_gRPC_PLATFORM_ANDROID)
+   target_link_libraries(gpr

@@ -1,22 +1,12 @@
 #pragma once
 
 #include <vcpkg/base/pragmas.h>
+#include <vcpkg/base/system_headers.h>
 
 #if defined(_WIN32)
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-
-#pragma warning(suppress : 4768)
-#include <windows.h>
-
-#pragma warning(suppress : 4768)
-#include <Shlobj.h>
-
 #include <process.h>
 #include <shellapi.h>
 #include <winhttp.h>
-#else
-#include <unistd.h>
 #endif
 
 #include <algorithm>
@@ -29,13 +19,15 @@
 #include <cstdarg>
 #include <cstddef>
 #include <cstdint>
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <cstring>
+
 #if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
 #else
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
 #endif
+
 #include <fstream>
 #include <functional>
 #include <iomanip>
@@ -54,11 +46,6 @@
 #else
 #include <sys/time.h>
 #endif
-
-#include <sys/types.h>
-// glibc defines major and minor in sys/types.h, and should not
-#undef major
-#undef minor
 
 #include <system_error>
 #include <thread>
