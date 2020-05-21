@@ -129,7 +129,13 @@ else()
         set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
     endif()
 
-    message(STATUS "Building Options: ${OPTIONS}")
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        set(LIBVPX_TARGET "x86_64-linux-gcc")
+    else()
+        set(LIBVPX_TARGET "x86_64-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+    endif()
+
+    message(STATUS "Building info. Target: ${LIBVPX_TARGET}; Options: ${OPTIONS}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring libvpx for Release")
@@ -138,6 +144,7 @@ else()
         COMMAND
             ${BASH} --noprofile --norc
             "${SOURCE_PATH}/configure"
+            --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_RELEASE}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
@@ -169,6 +176,7 @@ else()
         COMMAND
             ${BASH} --noprofile --norc
             "${SOURCE_PATH}/configure"
+            --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_DEBUG}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
