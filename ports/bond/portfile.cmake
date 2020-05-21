@@ -3,17 +3,17 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
-    REF  8.2.0
-    SHA512 b65d60be8a0fe2442c1d4f4d318b17dd2fb4e3456d97666719e52edaac8eb9ab967aeec30fabe5c32d375b604dec759a859f198ad769c12012e6c11617aa7211
+    REF  gbc@0.12.0.1
+    SHA512 4cd3b8054fc63cf1e3b57e89b6a1d308f03c64bf2e9c6d7878bc4e0fd255262ef1d38a3968b11cb81c8f02a81f6e1d95774a5fc62119ad98c1e0fadc9f9b384d
     HEAD_REF master
     PATCHES fix-install-path.patch skip-grpc-compilation.patch
 )
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     vcpkg_download_distfile(GBC_ARCHIVE
-    URLS "https://github.com/microsoft/bond/releases/download/8.2.0/gbc-8.2.0-amd64.zip"
-    FILENAME "gbc-8.2.0-amd64.zip"
-    SHA512 77a0e2dc7fcc476b599b9a9e70350bb5bb3ec6200d7dae224a58b5fdd308f2650a4291f72407701064a80536db042f6c00c203b9e83643b53f9768101988e8e4
+    URLS "https://github.com/microsoft/bond/archive/gbc@0.12.0.1.zip"
+    FILENAME "gbc@0.12.0.1.zip"
+    SHA512 4cd3b8054fc63cf1e3b57e89b6a1d308f03c64bf2e9c6d7878bc4e0fd255262ef1d38a3968b11cb81c8f02a81f6e1d95774a5fc62119ad98c1e0fadc9f9b384d
     )
 
     # Extract the precompiled gbc
@@ -45,7 +45,7 @@ vcpkg_configure_cmake(
     -DBOND_SKIP_GBC_TESTS=TRUE
     -DBOND_ENABLE_COMM=FALSE
     -DBOND_FIND_RAPIDJSON=TRUE
-    -DBOND_STACK_OPTIONS="--allow-different-user"
+    -DBOND_STACK_OPTIONS=--allow-different-user
     ${FEATURE_OPTIONS}
 )
 
