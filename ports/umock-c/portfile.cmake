@@ -14,8 +14,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/umock-c
-        REF 5e3d93112360ee2d4a622b1c48eb70896da3e8c7
-        SHA512 9f5c0ce782f66a41e702e2d54dcff92b07b30e7c2be0ee2c63a56e2bff0c26a1de7f77abcb2a964d668deea817dcb3a4771e328707c2d982c23526465c950608
+        REF 504193e65d1c2f6eb50c15357167600a296df7ff
+        SHA512 68d5d986314dbd46d20de2a9b9454154c11675c25d1b5a5b1cfecdd0c0945d9dc68d0348ec1dbb00b5d1a6a1f0356121ba561d7c8fffb97ab37864edade5a85b
         HEAD_REF master
     )
 endif()
