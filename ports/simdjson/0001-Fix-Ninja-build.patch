@@ -1,0 +1,32 @@
+From 332dd76867d91d56fc70bc928372beea5f78c604 Mon Sep 17 00:00:00 2001
+From: myd7349 <myd7349@gmail.com>
+Date: Thu, 21 May 2020 12:29:39 +0800
+Subject: [PATCH] Fix Ninja build
+
+When using Ninja as generator, it failed to build:
+$ cmake .. -G Ninja
+$ ninja
+> ninja: error: '/jsonexamples/generated/miss-templates/*.txt', needed by 'jsonexamples/generated/utf-8.json', missing and no known rule to make it
+---
+ jsonexamples/generated/CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/jsonexamples/generated/CMakeLists.txt b/jsonexamples/generated/CMakeLists.txt
+index 678c090..704ccd7 100644
+--- a/jsonexamples/generated/CMakeLists.txt
++++ b/jsonexamples/generated/CMakeLists.txt
+@@ -4,9 +4,10 @@ set(generated_files
+ )
+ find_package(Ruby QUIET)
+ if (RUBY_EXECUTABLE)
++  file(GLOB template_files ${CMAKE_CURRENT_SOURCE_DIR}/miss-templates/*.txt)
+   add_custom_command(
+     OUTPUT ${generated_files}
+-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/miss-templates/*.txt
++    DEPENDS ${template_files}
+     COMMAND ${RUBY_EXECUTABLE} genfeaturejson.rb ${CMAKE_CURRENT_BINARY_DIR}
+     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+   )
+-- 
+2.19.1.windows.1
+
