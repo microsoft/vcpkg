@@ -1,0 +1,51 @@
+--- a/include/plog/Appenders/EventLogAppender.h	2020-01-19 14:22:00.000000000 +0700
++++ b/include/plog/Appenders/EventLogAppender.h	2020-01-31 14:43:34.000000000 +0700
+@@ -59,18 +59,18 @@
+             getKeyNames(sourceName, logName, sourceKeyName, logKeyName);
+ 
+             HKEY sourceKey;
+-            if (0 != RegCreateKeyExW(hkey::kLocalMachine, sourceKeyName.c_str(), 0, NULL, 0, regSam::kSetValue, NULL, &sourceKey, NULL))
++            if (0 != plog::RegCreateKeyExW(hkey::kLocalMachine, sourceKeyName.c_str(), 0, NULL, 0, regSam::kSetValue, NULL, &sourceKey, NULL))
+             {
+                 return false;
+             }
+ 
+             const DWORD kTypesSupported = eventLog::kErrorType | eventLog::kWarningType | eventLog::kInformationType;
+-            RegSetValueExW(sourceKey, L"TypesSupported", 0, regType::kDword, reinterpret_cast<const BYTE*>(&kTypesSupported), sizeof(kTypesSupported));
++            plog::RegSetValueExW(sourceKey, L"TypesSupported", 0, regType::kDword, reinterpret_cast<const BYTE*>(&kTypesSupported), sizeof(kTypesSupported));
+ 
+             const wchar_t kEventMessageFile[] = L"%windir%\\Microsoft.NET\\Framework\\v4.0.30319\\EventLogMessages.dll;%windir%\\Microsoft.NET\\Framework\\v2.0.50727\\EventLogMessages.dll";
+-            RegSetValueExW(sourceKey, L"EventMessageFile", 0, regType::kExpandSz, reinterpret_cast<const BYTE*>(kEventMessageFile), sizeof(kEventMessageFile) - sizeof(*kEventMessageFile));
++            plog::RegSetValueExW(sourceKey, L"EventMessageFile", 0, regType::kExpandSz, reinterpret_cast<const BYTE*>(kEventMessageFile), sizeof(kEventMessageFile) - sizeof(*kEventMessageFile));
+ 
+-            RegCloseKey(sourceKey);
++            plog::RegCloseKey(sourceKey);
+             return true;
+         }
+ 
+@@ -81,12 +81,12 @@
+             getKeyNames(sourceName, logName, sourceKeyName, logKeyName);
+ 
+             HKEY sourceKey;
+-            if (0 != RegOpenKeyExW(hkey::kLocalMachine, sourceKeyName.c_str(), 0, regSam::kQueryValue, &sourceKey))
++            if (0 != plog::RegOpenKeyExW(hkey::kLocalMachine, sourceKeyName.c_str(), 0, regSam::kQueryValue, &sourceKey))
+             {
+                 return false;
+             }
+ 
+-            RegCloseKey(sourceKey);
++            plog::RegCloseKey(sourceKey);
+             return true;
+         }
+ 
+@@ -96,8 +96,8 @@
+             std::wstring sourceKeyName;
+             getKeyNames(sourceName, logName, sourceKeyName, logKeyName);
+ 
+-            RegDeleteKeyW(hkey::kLocalMachine, sourceKeyName.c_str());
+-            RegDeleteKeyW(hkey::kLocalMachine, logKeyName.c_str());
++            plog::RegDeleteKeyW(hkey::kLocalMachine, sourceKeyName.c_str());
++            plog::RegDeleteKeyW(hkey::kLocalMachine, logKeyName.c_str());
+         }
+ 
+     private:
