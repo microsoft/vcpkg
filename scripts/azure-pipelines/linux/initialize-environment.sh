@@ -6,7 +6,3 @@
 if [ ! -d "archives" ]; then
     ln -s /archives archives
 fi
-
-rm -rf installed
-rm -rf buildtrees
-rm -rf packages/*
