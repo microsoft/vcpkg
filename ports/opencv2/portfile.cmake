@@ -115,6 +115,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
+find_package(CUDA QUIET)
 find_package(PNG QUIET)
 find_package(OpenEXR QUIET)
 set(CMAKE_AUTOMOC ON)
