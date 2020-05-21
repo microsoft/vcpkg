@@ -11,9 +11,8 @@
 #if !defined(_WIN32)
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#endif // ^^^ !defined(_WIN32)
+#endif
+
 #if defined(__linux__)
 #include <sys/sendfile.h>
 #elif defined(__APPLE__)
