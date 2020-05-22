@@ -11,7 +11,7 @@ vcpkg_from_github(
     PATCHES fix-install-and-c4996-error.patch
 )
 
-configure_file( ${CMAKE_CURRENT_LIST_DIR}/Bento4Config.cmake ${SOURCE_PATH}/Bento4Config.cmake COPYONLY)
+configure_file( ${CMAKE_CURRENT_LIST_DIR}/Bento4Config.cmake ${SOURCE_PATH}/bento4Config.cmake COPYONLY)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
