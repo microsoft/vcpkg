@@ -20,7 +20,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${SOURCE_ARCHIVE_PATH}
     REF 1.9.1
-    PATCHES 0001-fix-package-name.patch
+    PATCHES 
+        0001-fix-package-name.patch
 )
 
 vcpkg_configure_cmake(
