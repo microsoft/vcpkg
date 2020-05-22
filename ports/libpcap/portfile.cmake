@@ -35,7 +35,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpcap RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_fixup_pkgconfig()
 
