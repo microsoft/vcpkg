@@ -374,14 +374,14 @@ function getLastCommitHash()
     {
         $output = git rev-parse --short HEAD
 
-        if ($LastExitCode -ne 0)
+        if ($LastExitCode -eq 0)
         {
-            Write-Warning "Failed to get last commit hash, exit code $LastExitCode."
-            return "unknownhash"
+            return $output
         }
         else
         {
-            return $output
+            Write-Warning "Failed to get last commit hash, exit code $LastExitCode."
+            return "unknownhash"
         }
     }
     catch [System.Management.Automation.CommandNotFoundException]
