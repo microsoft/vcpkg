@@ -115,11 +115,18 @@ if (-Not (Test-Path downloads)) {
 if( Test-Path D:\downloads\tools\msys2 )
 {
     Write-Host "removing previously installed msys2"
-#    Remove-Item D:\downloads\tools\msys2 -Recurse -Force
+function bash($command) {
+    Write-Host $command -NoNewline
+    cmd /c start /wait C:\agent\_work\1\s\downloads\tools\msys64\usr\bin\sh.exe --login -c $command
+    Write-Host " - OK" -ForegroundColor Green
+}
 }
 
-if( Test-Path D:\downloads\tools\msys2 )
-{
-Get-Acl "D:\\downloads\\tools\\msys2" |Format-List | Out-Host
-"`n"
-}
+# update core packages
+bash 'pacman -Syuu --needed --noconfirm --ask=20'
+
+#if( Test-Path D:\downloads\tools\msys2 )
+#{
+#Get-Acl "D:\\downloads\\tools\\msys2" |Format-List | Out-Host
+#"`n"
+#}
