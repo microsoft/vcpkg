@@ -15,10 +15,12 @@ jobs:
     displayName: 'Initialize Environment'
     inputs:
       filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
-  - task: BatchScript@1
+  - task: CmdLine@2
     displayName: 'Build vcpkg'
     inputs:
-      filename: 'bootstrap-vcpkg.bat'
+      script: |
+        set VCPKG_DOWNLOADS=D:\downloads
+        .\bootstrap-vcpkg.bat
   - powershell: |
       .\vcpkg.exe x-ci-clean
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
@@ -26,10 +28,10 @@ jobs:
       # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
       # Install them so the CI succeeds:
       if ( "${{ parameters.triplet }}" -notmatch "x86-windows" -and "${{ parameters.triplet }}" -notmatch "x64-windows" ) {
-          .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows
+          .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows --binarycaching --x-binarysource=clear;files,W:\,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads
       }
 
-      $command = ".\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching"
+      $command = ".\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching --x-binarysource=clear;files,W:\,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads"
       Set-Content -Path 'run_ci.cmd' -Value $command -Encoding ASCII
     displayName: 'Write Test Modified Ports Batch File'
   - task: BatchScript@1
