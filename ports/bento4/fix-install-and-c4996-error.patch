@@ -1,56 +1,42 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2f08b2f..f116d53 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -33,7 +33,9 @@ else()
-   set(AP4_SOURCES ${AP4_SOURCES} ${SOURCE_SYSTEM}/Posix/Ap4PosixRandom.cpp)
- endif()
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index 70b302a..dfe6711 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -37,6 +37,8 @@ endif()
  
--add_library(ap4 STATIC ${AP4_SOURCES})
-+add_library(Bento4 STATIC ${AP4_SOURCES})
-+
+ add_library(ap4 STATIC ${AP4_SOURCES})
+ 
 +add_definitions(-D_CRT_SECURE_NO_WARNINGS)
- 
++
  # Includes
  include_directories(
-@@ -43,10 +45,36 @@ include_directories(
-   ${SOURCE_METADATA}
- )
- 
-+# AP4 includes
-+file(GLOB AP4_INCLUDES
-+  ${SOURCE_CODECS}/*.h
-+  ${SOURCE_CORE}/*.h
-+  ${SOURCE_CRYPTO}/*.h
-+  ${SOURCE_METADATA}/*.h
-+)
-+
- # Apps
- file(GLOB BENTO4_APPS RELATIVE ${SOURCE_ROOT}/Apps ${SOURCE_ROOT}/Apps/*)
- foreach(app ${BENTO4_APPS})
-   string(TOLOWER ${app} binary_name)
+   ${SOURCE_CORE}
+@@ -52,3 +54,28 @@ foreach(app ${BENTO4_APPS})
    add_executable(${binary_name} ${SOURCE_ROOT}/Apps/${app}/${app}.cpp)
--  target_link_libraries(${binary_name} ap4)
-+  target_link_libraries(${binary_name} Bento4)
+   target_link_libraries(${binary_name} ap4)
  endforeach()
 +
-+install(TARGETS Bento4
-+        EXPORT   Bento4Targets
++file(GLOB AP4_INCLUDES
++     ${SOURCE_CODECS}/*.h
++     ${SOURCE_CORE}/*.h
++     ${SOURCE_CRYPTO}/*.h
++     ${SOURCE_METADATA}/*.h
++)
++
++install(TARGETS ap4
++        EXPORT   ${PROJECT_NAME}Targets
 +        LIBRARY  DESTINATION lib
 +        ARCHIVE  DESTINATION lib
 +        RUNTIME  DESTINATION bin
 +        INCLUDES DESTINATION include)
 +
-+install(EXPORT Bento4Targets
-+        FILE Bento4Targets.cmake
-+        NAMESPACE Bento4::
-+        DESTINATION cmake/Bento4)
++install(EXPORT ${PROJECT_NAME}Targets
++        FILE ${PROJECT_NAME}Targets.cmake
++        NAMESPACE ${PROJECT_NAME}::
++        DESTINATION cmake/${PROJECT_NAME})
 +
 +install(FILES ${AP4_INCLUDES} DESTINATION include)
 +
 +install(FILES 
-+        Bento4Config.cmake 
-+        DESTINATION cmake/Bento4)
--- 
-2.22.0.windows.1
-
++        ${PROJECT_NAME}Config.cmake 
++        DESTINATION cmake/${PROJECT_NAME})
