@@ -29,31 +29,6 @@ function Remove-DirectorySymlink {
     }
 }
 
-#New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name AllowDevelopmentWithoutDevLicense -Value 1 -PropertyType DWORD -Force
-
-# Disable UAC
-#Write-Host "Disabling UAC"
-#Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" -Force
-#Set-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value "0" -Force
-#Write-Host "User Access Control (UAC) has been disabled." -ForegroundColor Green
-
-#Write-Host "Enable long path behavior"
-# See https://docs.microsoft.com/en-us/windows/desktop/fileio/naming-a-file#maximum-path-length-limitation
-#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value  "1" -Force
-
-#Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "SymlinkLocalToLocalEvaluation" -Value "1" -Force
-
-#if( Test-Path D:\downloads\tools\msys2 )
-#{
-#$acl = Get-Acl D:\downloads\tools
-#$AccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Users","FullControl","Allow")
-#$acl.SetAccessRule($AccessRule)
-#$acl | Set-Acl D:\downloads\tools\msys2 | Out-Null
-#}
-
-#Invoke-Expression -Command "icacls D:\downloads\tools\msys2 /grant BUILTIN\Users:'(OI)(CI)F' /T" -Verb
-#$proc = Start-Process -FilePath cmd.exe /c "icacls.exe D:\downloads\tools /grant *S-1-5-83-0:'(OI)(CI)F' /T" -Verb RunAs
-
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
     net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
@@ -115,11 +90,11 @@ if (-Not (Test-Path downloads)) {
 if( Test-Path C:\agent\_work\1\s\downloads\tools\msys2 )
 {
     Write-Host "removing previously installed msys2"
-function bash($command) {
-    Write-Host $command -NoNewline
-    cmd /c start /wait C:\agent\_work\1\s\downloads\tools\msys2\msys64\usr\bin\sh.exe --login -c $command
-    Write-Host " - OK" -ForegroundColor Green
-}
+    function bash($command) {
+        Write-Host $command -NoNewline
+        cmd /c start /wait C:\agent\_work\1\s\downloads\tools\msys2\msys64\usr\bin\sh.exe --login -c $command
+        Write-Host " - OK" -ForegroundColor Green
+    }
 }
 
 # update core packages
