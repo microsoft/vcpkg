@@ -2,15 +2,16 @@
 
 #include <vcpkg/base/strings.h>
 
-#include <cstdint>
+#include <stdint.h>
 #include <utility>
 #include <vector>
+#include <string>
 
 TEST_CASE ("b32 encoding", "[strings]")
 {
-    using u64 = std::uint64_t;
+    using u64 = uint64_t;
 
-    std::vector<std::pair<std::uint64_t, std::string>> map;
+    std::vector<std::pair<u64, std::string>> map;
 
     map.emplace_back(0, "AAAAAAAAAAAAA");
     map.emplace_back(1, "BAAAAAAAAAAAA");
@@ -24,10 +25,19 @@ TEST_CASE ("b32 encoding", "[strings]")
     map.emplace_back(0x1405'64E7'FE7E'A88C, "MEK5H774ELBIB");
     map.emplace_back(0xFFFF'FFFF'FFFF'FFFF, "777777777777P");
 
-    std::string result;
     for (const auto& pr : map)
     {
-        result = vcpkg::Strings::b32_encode(pr.first);
         REQUIRE(vcpkg::Strings::b32_encode(pr.first) == pr.second);
     }
+}
+
+TEST_CASE ("split by char", "[strings]")
+{
+    using vcpkg::Strings::split;
+    using result_t = std::vector<std::string>;
+    REQUIRE(split(",,,,,,", ',').empty());
+    REQUIRE(split(",,a,,b,,", ',') == result_t{"a", "b"});
+    REQUIRE(split("hello world", ' ') == result_t{"hello", "world"});
+    REQUIRE(split("    hello  world    ", ' ') == result_t{"hello", "world"});
+    REQUIRE(split("no delimiters", ',') == result_t{"no delimiters"});
 }

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if (EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
@@ -7,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF cd17fa2abda2a2e4111cdabd62a87aea16835014 #version 1.10.0 commit on 2019.10.09
-    SHA512 0899ebc21821e1978e8831ac89698fc88bf98ec7e22b9dd4f9eea0459396f6834ef35f6ee2afd1b8ca9432722e561c30905f8d87614d012bb711d295ebc1d833
+    REF release-1.10.0
+    SHA512 bd52abe938c3722adc2347afad52ea3a17ecc76730d8d16b065e165bc7477d762bce0997a427131866a89f1001e3f3315198204ffa5d643a9355f1f4d0d7b1a9
     HEAD_REF master
     PATCHES
         0002-Fix-z7-override.patch
@@ -48,7 +46,6 @@ file(
 )
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtest RENAME copyright)
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_maind.lib)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
@@ -78,4 +75,5 @@ endif()
 
 vcpkg_copy_pdbs()
 
+file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -1,24 +1,6 @@
-#if defined(_MSC_VER) && _MSC_VER < 1911
-// [[nodiscard]] is not recognized before VS 2017 version 15.3
-#pragma warning(disable : 5030)
-#endif
+#include <vcpkg/base/pragmas.h>
 
-#if defined(__GNUC__) && __GNUC__ < 7
-// [[nodiscard]] is not recognized before GCC version 7
-#pragma GCC diagnostic ignored "-Wattributes"
-#endif
-
-#if defined(_WIN32)
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
-#pragma warning(push)
-#pragma warning(disable : 4768)
-#include <ShlObj.h>
-#pragma warning(pop)
-#else
-#include <unistd.h>
-#endif
+#include <vcpkg/base/system_headers.h>
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
@@ -62,6 +44,8 @@ static void invalid_command(const std::string& cmd)
 
 static void inner(const VcpkgCmdArguments& args)
 {
+    auto& fs = Files::get_real_filesystem();
+
     Metrics::g_metrics.lock()->track_property("command", args.command);
     if (args.command.empty())
     {
@@ -88,26 +72,26 @@ static void inner(const VcpkgCmdArguments& args)
     }
 
     fs::path vcpkg_root_dir;
-    if (args.vcpkg_root_dir != nullptr)
+    if (args.vcpkg_root_dir)
     {
-        vcpkg_root_dir = fs::stdfs::absolute(fs::u8path(*args.vcpkg_root_dir));
+        vcpkg_root_dir = fs.absolute(VCPKG_LINE_INFO, fs::u8path(*args.vcpkg_root_dir));
     }
     else
     {
         const auto vcpkg_root_dir_env = System::get_environment_variable("VCPKG_ROOT");
         if (const auto v = vcpkg_root_dir_env.get())
         {
-            vcpkg_root_dir = fs::stdfs::absolute(*v);
+            vcpkg_root_dir = fs.absolute(VCPKG_LINE_INFO, *v);
         }
         else
         {
-            const fs::path current_path = fs::stdfs::current_path();
-            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(current_path, ".vcpkg-root");
+            const fs::path current_path = fs.current_path(VCPKG_LINE_INFO);
+            vcpkg_root_dir = fs.find_file_recursively_up(current_path, ".vcpkg-root");
 
             if (vcpkg_root_dir.empty())
             {
-                vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(
-                    fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+                vcpkg_root_dir = fs.find_file_recursively_up(
+                    fs.absolute(VCPKG_LINE_INFO, System::get_exe_path_of_current_process()), ".vcpkg-root");
             }
         }
     }
@@ -116,17 +100,31 @@ static void inner(const VcpkgCmdArguments& args)
 
     Debug::print("Using vcpkg-root: ", vcpkg_root_dir.u8string(), '\n');
 
-    Optional<fs::path> vcpkg_scripts_root_dir = nullopt;
-    if (nullptr != args.scripts_root_dir)
+    Optional<fs::path> install_root_dir;
+    if (args.install_root_dir)
     {
-        vcpkg_scripts_root_dir = fs::stdfs::canonical(fs::u8path(*args.scripts_root_dir));
+        install_root_dir = Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.install_root_dir));
+        Debug::print("Using install-root: ", install_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
+    }
+
+    Optional<fs::path> vcpkg_scripts_root_dir;
+    if (args.scripts_root_dir)
+    {
+        vcpkg_scripts_root_dir =
+            Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.scripts_root_dir));
         Debug::print("Using scripts-root: ", vcpkg_scripts_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
     }
 
     auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
-    const Expected<VcpkgPaths> expected_paths =
-        VcpkgPaths::create(vcpkg_root_dir, vcpkg_scripts_root_dir, default_vs_path, args.overlay_triplets.get());
+    auto original_cwd = Files::get_real_filesystem().current_path(VCPKG_LINE_INFO);
+
+    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir,
+                                                                   install_root_dir,
+                                                                   vcpkg_scripts_root_dir,
+                                                                   default_vs_path,
+                                                                   args.overlay_triplets.get(),
+                                                                   original_cwd);
     Checks::check_exit(VCPKG_LINE_INFO,
                        !expected_paths.error(),
                        "Error: Invalid vcpkg root directory %s: %s",
@@ -262,31 +260,19 @@ static void load_config()
 }
 
 #if defined(_WIN32)
-static std::string trim_path_from_command_line(const std::string& full_command_line)
+// note: this prevents a false positive for -Wmissing-prototypes on clang-cl
+int wmain(int, const wchar_t* const* const);
+
+#if !defined(_MSC_VER)
+#include <shellapi.h>
+int main(int argc, const char* const* const /*argv*/)
 {
-    Checks::check_exit(
-        VCPKG_LINE_INFO, !full_command_line.empty(), "Internal failure - cannot have empty command line");
-
-    if (full_command_line[0] == '"')
-    {
-        auto it = std::find(full_command_line.cbegin() + 1, full_command_line.cend(), '"');
-        if (it != full_command_line.cend()) // Skip over the quote
-            ++it;
-        while (it != full_command_line.cend() && *it == ' ') // Skip over a space
-            ++it;
-        return std::string(it, full_command_line.cend());
-    }
-
-    auto it = std::find(full_command_line.cbegin(), full_command_line.cend(), ' ');
-    while (it != full_command_line.cend() && *it == ' ')
-        ++it;
-    return std::string(it, full_command_line.cend());
+    wchar_t** wargv;
+    wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    return wmain(argc, wargv);
 }
 #endif
 
-#if defined(_WIN32)
-// note: this prevents a false positive for -Wmissing-prototypes on clang-cl
-int wmain(int, const wchar_t* const*);
 int wmain(const int argc, const wchar_t* const* const argv)
 #else
 int main(const int argc, const char* const* const argv)
@@ -304,6 +290,7 @@ int main(const int argc, const char* const* const argv)
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
 
+    System::initialize_global_job_object();
 #endif
 
     Checks::register_global_shutdown_handler([]() {
@@ -343,7 +330,7 @@ int main(const int argc, const char* const* const argv)
     const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
     if (const auto v = vcpkg_feature_flags_env.get())
     {
-        auto flags = Strings::split(*v, ",");
+        auto flags = Strings::split(*v, ',');
         if (std::find(flags.begin(), flags.end(), "binarycaching") != flags.end()) GlobalState::g_binary_caching = true;
     }
 

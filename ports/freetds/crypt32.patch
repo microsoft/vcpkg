@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 796625e17..fc9076f54 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -149,6 +149,9 @@ if(OPENSSL_FOUND)
+ 	config_write("#define HAVE_OPENSSL 1\n\n")
+ 	include_directories(${OPENSSL_INCLUDE_DIR})
+ 	set(CMAKE_REQUIRED_LIBRARIES ${OPENSSL_LIBRARIES})
++    if(WIN32)
++        list(APPEND CMAKE_REQUIRED_LIBRARIES crypt32 ws2_32)
++    endif()
+ 	check_function_exists_define(BIO_get_data)
+ 	check_function_exists_define(RSA_get0_key)
+ 	check_function_exists_define(ASN1_STRING_get0_data)
+@@ -441,7 +444,10 @@ else(WIN32)
+ endif(WIN32)
+ 
+ if(OPENSSL_FOUND)
+ 	set(lib_NETWORK ${lib_NETWORK} ${OPENSSL_LIBRARIES})
++   if(WIN32)
++       list(APPEND lib_NETWORK crypt32)
++   endif()
+ elseif(GNUTLS_FOUND)
+ 	set(lib_NETWORK ${lib_NETWORK} ${lib_GNUTLS})
+ endif(OPENSSL_FOUND)

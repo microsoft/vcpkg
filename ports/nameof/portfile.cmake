@@ -1,12 +1,10 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/nameof
-    REF v0.9.2
-    SHA512 b83167daf13e1e4f174d723a8aaeb13cb386eb7bd5a74ebf4cdc34c78f5deb537c11d8b5204df26c827de11e10bd9006854c1f898e1fcf6526ad0e41aff6987b
+    REF v0.9.3
+    SHA512 be644edfa30b2f6b0461585910bccf1ee6b1828d7fc013c01a50bed85ed9a7e3630a67a8362c8f5c8b5e3b372537d726c7c002f86b3c08d5fc73d99d10197f56
     HEAD_REF master
 )
 
@@ -20,12 +18,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nameof)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nameof TARGET_PATH share/nameof)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/nameof/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME nameof)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

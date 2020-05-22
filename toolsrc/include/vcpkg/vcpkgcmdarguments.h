@@ -86,10 +86,12 @@ namespace vcpkg
         static VcpkgCmdArguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
 
         std::unique_ptr<std::string> vcpkg_root_dir;
+        std::unique_ptr<std::string> install_root_dir;
         std::unique_ptr<std::string> scripts_root_dir;
         std::unique_ptr<std::string> triplet;
         std::unique_ptr<std::vector<std::string>> overlay_ports;
         std::unique_ptr<std::vector<std::string>> overlay_triplets;
+        std::vector<std::string> binarysources;
         Optional<bool> debug = nullopt;
         Optional<bool> sendmetrics = nullopt;
         Optional<bool> printmetrics = nullopt;

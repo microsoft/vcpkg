@@ -1,0 +1,12 @@
+diff --git a/include/spdlog/common.h b/include/spdlog/common.h
+index e1108a0a..b4faf26e 100644
+--- a/include/spdlog/common.h
++++ b/include/spdlog/common.h
+@@ -14,6 +14,7 @@
+ #include <string>
+ #include <type_traits>
+ #include <functional>
++#include <cassert>
+
+ #ifdef _WIN32
+ #ifndef NOMINMAX

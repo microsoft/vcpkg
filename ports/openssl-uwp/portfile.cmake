@@ -1,7 +1,5 @@
-include(vcpkg_common_functions)
-
-if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "This portfile only supports UWP")
+if (NOT VCPKG_TARGET_IS_UWP)
+    message(FATAL_ERROR "${PORT} only supports UWP")
 endif()
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
@@ -30,63 +28,166 @@ get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${JOM_EXE_PATH}")
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Microsoft/openssl
-    REF OpenSSL_1_0_2r_WinRT
-    SHA512 3045693fca4b042b69675f6164d8cc82106582cf31081d65a0adbd528f04e77fa48b3761f3be7bdf8ab962a093b28fec0ae6d7da02058f2b049f79b784c39c2e
-    HEAD_REF master
-    PATCHES
-        fix-uwp-configure-unicode.patch
+set(OPENSSL_VERSION 1.1.1d)
+
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
+    FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
+    SHA512 2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7
 )
 
-file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)
-file(REMOVE_RECURSE ${SOURCE_PATH}/out32dll)
-file(REMOVE_RECURSE ${SOURCE_PATH}/inc32dll)
-
-file(
-    COPY ${CMAKE_CURRENT_LIST_DIR}/make-openssl.bat
-    DESTINATION ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+  OUT_SOURCE_PATH SOURCE_PATH
+  ARCHIVE ${ARCHIVE}
+  PATCHES
+    EnableUWPSupport.patch
 )
 
-message(STATUS "Build ${TARGET_TRIPLET}")
-vcpkg_execute_required_process(
-    COMMAND ${SOURCE_PATH}/make-openssl.bat ${UWP_PLATFORM}
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME make-openssl-${TARGET_TRIPLET}
+vcpkg_find_acquire_program(NASM)
+get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
+
+vcpkg_find_acquire_program(JOM)
+
+set(CONFIGURE_COMMAND ${PERL} Configure
+    enable-static-engine
+    enable-capieng
+    no-unit-test
+    no-ssl2
+    no-asm
+    no-uplink
+    -utf-8
+    shared
 )
-message(STATUS "Build ${TARGET_TRIPLET} done")
 
-file(
-    COPY ${SOURCE_PATH}/inc32/openssl
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(OPENSSL_ARCH VC-WIN32-UWP)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(OPENSSL_ARCH VC-WIN64A-UWP)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(OPENSSL_ARCH VC-WIN32-ARM-UWP)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(OPENSSL_ARCH VC-WIN64-ARM-UWP)
+else()
+    message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
+set(OPENSSL_MAKEFILE "makefile")
+
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+
+    # Copy openssl sources.
+    message(STATUS "Copying openssl release source files...")
+    file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
+    foreach(SOURCE_FILE ${OPENSSL_SOURCE_FILES})
+        file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    endforeach()
+    message(STATUS "Copying openssl release source files... done")
+    set(SOURCE_PATH_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+
+    set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
+
+    message(STATUS "Configure ${TARGET_TRIPLET}-rel")
+    vcpkg_execute_required_process(
+        COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
+        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+        LOGNAME configure-perl-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}-rel
+    )
+    message(STATUS "Configure ${TARGET_TRIPLET}-rel done")
+
+    message(STATUS "Build ${TARGET_TRIPLET}-rel")
+    # Openssl's buildsystem has a race condition which will cause JOM to fail at some point.
+    # This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build.
+    make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl)
+    execute_process(
+        COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE} build_libs
+        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log
+        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
+    )
+    vcpkg_execute_required_process(
+        COMMAND nmake -f ${OPENSSL_MAKEFILE} install_dev
+        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+        LOGNAME build-${TARGET_TRIPLET}-rel-1)
+
+    message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+endif()
+
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    # Copy openssl sources.
+    message(STATUS "Copying openssl debug source files...")
+    file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
+    foreach(SOURCE_FILE ${OPENSSL_SOURCE_FILES})
+        file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    endforeach()
+    message(STATUS "Copying openssl debug source files... done")
+    set(SOURCE_PATH_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+
+    set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
+
+    message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
+    vcpkg_execute_required_process(
+        COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
+        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+        LOGNAME configure-perl-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}-dbg
+    )
+    message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
+
+    message(STATUS "Build ${TARGET_TRIPLET}-dbg")
+    make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
+    execute_process(
+        COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE} build_libs
+        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log
+        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
+    )
+    vcpkg_execute_required_process(
+        COMMAND nmake -f ${OPENSSL_MAKEFILE} install_dev
+        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+        LOGNAME build-${TARGET_TRIPLET}-dbg-1)
+
+    message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+endif()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/certs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/private)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/engines-1_1)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/certs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/private)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+
+
+file(REMOVE
+    ${CURRENT_PACKAGES_DIR}/bin/openssl.exe
+    ${CURRENT_PACKAGES_DIR}/debug/bin/openssl.exe
+    ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf
+    ${CURRENT_PACKAGES_DIR}/openssl.cnf
+    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf
+    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf.dist
+    ${CURRENT_PACKAGES_DIR}/openssl.cnf.dist
+    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf
+    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf.dist
+    ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist
 )
 
-file(INSTALL
-    ${SOURCE_PATH}/out32dll/libeay32.dll
-    ${SOURCE_PATH}/out32dll/libeay32.pdb
-    ${SOURCE_PATH}/out32dll/ssleay32.dll
-    ${SOURCE_PATH}/out32dll/ssleay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 
-file(INSTALL
-    ${SOURCE_PATH}/out32dll/libeay32.lib
-    ${SOURCE_PATH}/out32dll/ssleay32.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" _contents)
+string(REPLACE "<winsock.h>" "<winsock2.h>" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" "${_contents}")
 
-file(INSTALL
-    ${SOURCE_PATH}/out32dll/libeay32.dll
-    ${SOURCE_PATH}/out32dll/libeay32.pdb
-    ${SOURCE_PATH}/out32dll/ssleay32.dll
-    ${SOURCE_PATH}/out32dll/ssleay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" _contents)
+string(REPLACE "#  include <windows.h>" "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" "${_contents}")
 
-file(INSTALL
-    ${SOURCE_PATH}/out32dll/libeay32.lib
-    ${SOURCE_PATH}/out32dll/ssleay32.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)

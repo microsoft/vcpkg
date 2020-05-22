@@ -1,13 +1,13 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v0.15.0
-    SHA512 f8cc8f9d47a4df1d76ac7b0836fe107f2f199070a89ab5136f66aa1be5f08737495dbb3f4cf7f709ac0a1346648d869af639836b85b552c6791fa8bb85362a91
+    REF v0.21.0
+    SHA512 744c7a14c31966df1f1383ad5804428807babf53079ed96514367f145eb38b4b90be3e0f9c6f16deb9269c754fd5a44e898e5afb77f6f749ba968605d79b8397
     HEAD_REF master
+    PATCHES
+        0001-fix-x86-build.patch
 )
 
 vcpkg_configure_cmake(
@@ -26,6 +26,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/google-cloud-cpp RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
