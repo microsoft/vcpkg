@@ -95,10 +95,10 @@ if( Test-Path C:\agent\_work\1\s\downloads\tools\msys2 )
         cmd /c start /wait C:\agent\_work\1\s\downloads\tools\msys2\msys64\usr\bin\sh.exe --login -c $command
         Write-Host " - OK" -ForegroundColor Green
     }
+    bash "PATH=/usr/bin;pacman -Syuu --needed --noconfirm --ask=20 --overwrite '*'" 
 }
 
 # update core packages
-bash "PATH=/usr/bin;pacman -Syuu --needed --noconfirm --ask=20 --overwrite '*'" 
 #bash "PATH=/usr/bin;pacman-key --init;pacman-key --populate msys2;pacman-key --refresh-keys;pacman --sync pacman --refresh --sysupgrade --sysupgrade --overwrite '*'"
 
 #if( Test-Path D:\downloads\tools\msys2 )
