@@ -12,6 +12,15 @@ vcpkg_from_github(
         all.patch
 )
 
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_find_acquire_program(BISON)
+    vcpkg_find_acquire_program(FLEX)
+endif()
+
+if (VCPKG_TARGET_IS_OSX)
+    vcpkg_find_acquire_program(BISON)
+endif()
+
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
 
