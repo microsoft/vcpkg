@@ -9,7 +9,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         no_benchmark.patch
-
        Fix-error-LNK2001.patch
 
 )
