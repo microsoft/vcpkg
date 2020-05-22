@@ -247,8 +247,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     else()
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     endif()
-    #file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
-    #vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
 else()
     if("${FEATURES}" MATCHES "openssl")
@@ -262,21 +261,19 @@ else()
     endif()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
+        COPY_SOURCE
         OPTIONS
             ${BUILD_OPTS}
             --with-includes=${CURRENT_INSTALLED_DIR}/include
         OPTIONS_RELEASE
-            --exec-prefix=${CURRENT_PACKAGES_DIR}/tools/${PORT}
-            --datarootdir=${CURRENT_PACKAGES_DIR}/share/${PORT}
             --with-libraries=${CURRENT_INSTALLED_DIR}/lib
         OPTIONS_DEBUG
-            --exec-prefix=${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}
-            --datarootdir=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}
             --with-libraries=${CURRENT_INSTALLED_DIR}/debug/lib
             --enable-debug
     )
 
     vcpkg_install_make()
+
     # instead?
     #    make -C src/include install
     #    make -C src/interfaces install
