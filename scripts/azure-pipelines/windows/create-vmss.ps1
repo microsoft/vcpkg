@@ -18,11 +18,10 @@ or are running from Azure Cloud Shell.
 
 $Location = 'westus2'
 $Prefix = 'PrWin-' + (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_F16s_v2'
+$VMSize = 'Standard_D16a_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
 $WindowsServerSku = '2019-Datacenter'
-$InstalledDiskSizeInGB = 1024
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
@@ -186,16 +185,6 @@ $VM = Set-AzVMSourceImage `
   -Skus $WindowsServerSku `
   -Version latest
 
-$InstallDiskName = $ProtoVMName + "InstallDisk"
-$VM = Add-AzVMDataDisk `
-  -Vm $VM `
-  -Name $InstallDiskName `
-  -Lun 0 `
-  -Caching ReadWrite `
-  -CreateOption Empty `
-  -DiskSizeInGB $InstalledDiskSizeInGB `
-  -StorageAccountType 'StandardSSD_LRS'
-
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
 New-AzVm `
   -ResourceGroupName $ResourceGroupName `
@@ -274,7 +263,6 @@ Write-Progress `
 
 Remove-AzVM -Id $VM.ID -Force
 Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $PrototypeOSDiskName -Force
-Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $InstallDiskName -Force
 
 ####################################################################################################
 Write-Progress `
