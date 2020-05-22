@@ -1,6 +1,4 @@
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  message(FATAL_ERROR "Apache Arrow only supports x64")
-endif()
+vcpkg_fail_port_install(ON_ARCH x86 arm arm64)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
