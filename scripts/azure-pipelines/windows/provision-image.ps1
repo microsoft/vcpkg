@@ -90,8 +90,7 @@ if (-not [string]::IsNullOrEmpty($AdminUserPassword)) {
   }
 
   Write-Host "Executing $PsExecPath " + @PsExecArgs
-
-  $proc = Start-Process -FilePath $PsExecPath -ArgumentList $PsExecArgs -Wait -PassThru
+  & $PsExecPath @PsExecArgs > C:\ProvisionLog.txt
   Write-Host 'Cleaning up...'
   Remove-Item $PsExecPath
   exit $proc.ExitCode
@@ -449,13 +448,17 @@ InstallWindowsWDK -Url $WindowsWDKUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
-if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountName))) {
+if ([string]::IsNullOrWhiteSpace($StorageAccountName)) {
+  Write-Host 'No storage account name configured.'
+} else {
   Write-Host 'Storing storage account name to environment'
   Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' `
     -Name StorageAccountName `
     -Value $StorageAccountName
 }
-if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountKey))) {
+if ([string]::IsNullOrWhiteSpace($StorageAccountKey)) {
+  Write-Host 'No storage account key configured.'
+} else {
   Write-Host 'Storing storage account key to environment'
   Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' `
     -Name StorageAccountKey `
