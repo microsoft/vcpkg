@@ -88,6 +88,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "export PATH=/usr/bin;pacman-key --init;pacman-key --populate"
       WORKING_DIRECTORY ${TOOLPATH}
+      TIMEOUT 600
     )
     # in some environments process not exiting and preventing futher usage of msys
     _execute_process(
@@ -97,6 +98,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin pacman -Syuu --noconfirm --disable-download-timeout"
       WORKING_DIRECTORY ${TOOLPATH}
+      TIMEOUT 600
     )
     _execute_process(
       COMMAND taskkill /F /IM gpg-agent.exe
@@ -106,6 +108,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin pacman -Syuu --noconfirm --disable-download-timeout"
       WORKING_DIRECTORY ${TOOLPATH}
+      TIMEOUT 600
     )
     file(WRITE "${TOOLPATH}/${STAMP}" "0")
     message(STATUS "Acquiring MSYS2... OK")
@@ -122,6 +125,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin pacman -Sy --noconfirm --disable-download-timeout --needed ${_am_PACKAGES}"
       WORKING_DIRECTORY ${TOOLPATH}
       LOGNAME msys-pacman-${TARGET_TRIPLET}
+      TIMEOUT 600
     )
     set(ENV{PATH} "${_ENV_ORIGINAL}")
 
