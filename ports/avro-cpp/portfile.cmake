@@ -20,14 +20,15 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DAVRO_ADD_PROTECTOR_FLAGS=1
 )
 
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "linux" "osx")
+#vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "osx")
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
