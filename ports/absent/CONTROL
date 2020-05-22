@@ -1,0 +1,4 @@
+Source: absent
+Version: 0.3.0
+Homepage: https://github.com/rvarago/absent
+Description: A small library meant to simplify the composition of nullable types in a generic, type-safe, and declarative style for some C++ type constructors 
