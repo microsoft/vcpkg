@@ -8,7 +8,6 @@ These can be installed on Ubuntu systems via sudo apt install flex libbison-dev"
 )
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
-include(vcpkg_fixup_pkgconfig)
 
 vcpkg_download_distfile(
     SOURCE_ARCHIVE_PATH
