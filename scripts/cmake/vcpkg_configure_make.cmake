@@ -44,6 +44,11 @@
 ## ### OPTIONS_DEBUG
 ## Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
 ##
+## ### CONFIG_DEPENDENT_ENVIROMNENT
+## List of additional configuration dependent enviroment variables to set. 
+## Pass SOMEVAR to set the enviroment and have SOMEVAR_(DEBUG|RELEASE) set in the portfile to the appriopiate values
+## General enviromnent variables can be set from within the portfile itself. 
+##
 ## ## Notes
 ## This command supplies many common arguments to configure. To see the full list, examine the source.
 ##
@@ -110,7 +115,7 @@ function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
         "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIG_DEPENDENT_ENVIROMNENT"
         ${ARGN}
     )
     # Backup enviromnent variables
@@ -421,6 +426,12 @@ function(vcpkg_configure_make)
     endif()
 
     foreach(_buildtype IN LISTS _buildtypes)
+        foreach(ENV_VAR ${_csc_CONFIG_DEPENDENT_ENVIROMNENT})
+            if(ENV{${ENV_VAR}})
+                set(BACKUP_CONFIG_${ENV_VAR} "$ENV{${ENV_VAR}}")
+            endif()
+            set(ENV{${ENV_VAR}} "${${ENV_VAR}_${_buildtype}}")
+        endforeach()
         set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}")
         file(MAKE_DIRECTORY "${TAR_DIR}")
         file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${SRC_DIR}")
@@ -477,6 +488,14 @@ function(vcpkg_configure_make)
             unset(ENV{PKG_CONFIG_PATH})
         endif()
         unset(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype})
+        
+        foreach(ENV_VAR ${_csc_CONFIG_DEPENDENT_ENVIROMNENT})
+            if(BACKUP_CONFIG_${ENV_VAR})
+                set(ENV{${ENV_VAR}} "${BACKUP_CONFIG_${ENV_VAR}}")
+            else()
+                unset(ENV{${ENV_VAR}})
+            endif()
+        endforeach()
     endforeach()
         
     # Restore enviromnent
