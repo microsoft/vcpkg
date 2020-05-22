@@ -112,12 +112,12 @@ if (-Not (Test-Path downloads)) {
     cmd /c "mklink /D downloads D:\downloads"
 }
 
-if( Test-Path D:\downloads\tools\msys2 )
+if( Test-Path C:\agent\_work\1\s\downloads\tools\msys2 )
 {
     Write-Host "removing previously installed msys2"
 function bash($command) {
     Write-Host $command -NoNewline
-    cmd /c start /wait C:\agent\_work\1\s\downloads\tools\msys64\usr\bin\sh.exe --login -c $command
+    cmd /c start /wait C:\agent\_work\1\s\downloads\tools\msys2\msys64\usr\bin\sh.exe --login -c $command
     Write-Host " - OK" -ForegroundColor Green
 }
 }
