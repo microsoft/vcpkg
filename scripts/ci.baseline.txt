@@ -2019,11 +2019,8 @@ zkpp:arm-uwp=fail
 c4core:arm-uwp=fail
 c4core:arm64-windows=fail
 c4core:x64-osx=fail
-#avro-cpp:arm_uwp=fail
-#avro-cpp:x64-osx=fail
-#avro-cpp:arm64-windows=fail
+avro-cpp:x64-osx=fail
 avro-cpp:x64-windows-static=fail
-#avro-cpp:x64-linux=fail
 
 # Official downloading server of CTP library is only guaranteed to be available during trading hours of China futures market
 # Skip CI to avoid random failures
