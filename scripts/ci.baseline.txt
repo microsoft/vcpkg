@@ -1431,6 +1431,8 @@ pixel:x64-windows=fail
 pixel:x64-windows-static=fail
 pixel:x86-windows=fail
 pixel:x64-linux=ignore
+# Make currently does not support crosscompile. 
+pkg-config:arm64-windows=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
 plib:arm-uwp=fail
