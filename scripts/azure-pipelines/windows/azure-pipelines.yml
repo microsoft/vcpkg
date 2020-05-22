@@ -18,7 +18,7 @@ jobs:
   - task: BatchScript@1
     displayName: 'Build vcpkg'
     inputs:
-      filePath: 'bootstrap-vcpkg.bat'
+      filename: 'bootstrap-vcpkg.bat'
   - powershell: |
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)\xml-results
@@ -27,7 +27,7 @@ jobs:
   - task: BatchScript@1
     displayName: '** Test Modified Ports **'
     inputs:
-      filePath: 'run_ci.cmd'
+      filename: 'run_ci.cmd'
   - task: PowerShell@2
     displayName: 'Analyze results and prepare test logs'
     inputs:
