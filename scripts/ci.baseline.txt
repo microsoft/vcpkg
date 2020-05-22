@@ -660,7 +660,6 @@ isal:x86-windows=fail
 itk:x64-windows=fail
 itk:x64-windows-static=fail
 itk:x86-windows=fail
-itk:x64-osx=fail
 ixwebsocket:x64-linux=ignore
 jack2:arm-uwp=fail
 jack2:x64-uwp=fail
