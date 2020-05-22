@@ -1,0 +1,5 @@
+Source: pkg-config
+Version: 0.29.2 
+Homepage: https://gitlab.freedesktop.org/pkg-config/pkg-config
+Description: pkg-config is a script to make putting together all the build flags when compiling/linking a lot easier.
+Build-Depends: glib[core]
