@@ -9,7 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no_benchmark.patch # `_pclose` is not available on UWP
-        #fix_uwp_build.patch # On x64-uwp, size_t -> unsigned long long, DWORD -> unsigned long
+        fix_uwp_build.patch # On x64-uwp, size_t -> unsigned long long, DWORD -> unsigned long
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
