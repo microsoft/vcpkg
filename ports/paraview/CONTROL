@@ -3,7 +3,6 @@ Version: 5.8.0
 Homepage: https://www.paraview.org/
 Description: VTK-based Data Analysis and Visualization Application
 Build-Depends: vtk[core,paraview], protobuf, cgns, boost-core, boost-format, boost-algorithm
-Default-Features: 
 
 Feature: vtkm
 Description: enables vtkm for the build of paraview
