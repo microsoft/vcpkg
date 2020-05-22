@@ -10,7 +10,6 @@ vcpkg_from_github(
     PATCHES 
         no_benchmark.patch
         Fix-error-LNK2001.patch
-
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
