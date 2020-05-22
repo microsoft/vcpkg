@@ -44,10 +44,10 @@
 ## ### OPTIONS_DEBUG
 ## Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
 ##
-## ### CONFIG_DEPENDENT_ENVIROMNENT
-## List of additional configuration dependent enviroment variables to set. 
-## Pass SOMEVAR to set the enviroment and have SOMEVAR_(DEBUG|RELEASE) set in the portfile to the appriopiate values
-## General enviromnent variables can be set from within the portfile itself. 
+## ### CONFIG_DEPENDENT_ENVIRONMENT
+## List of additional configuration dependent environment variables to set. 
+## Pass SOMEVAR to set the environment and have SOMEVAR_(DEBUG|RELEASE) set in the portfile to the appropriate values
+## General environment variables can be set from within the portfile itself. 
 ##
 ## ## Notes
 ## This command supplies many common arguments to configure. To see the full list, examine the source.
@@ -115,10 +115,10 @@ function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
         "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIG_DEPENDENT_ENVIROMNENT"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIG_DEPENDENT_ENVIRONMENT"
         ${ARGN}
     )
-    # Backup enviromnent variables
+    # Backup environment variables
     set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
     set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
     set(LD_FLAGS_BACKUP "$ENV{LDFLAGS}")
@@ -185,8 +185,8 @@ function(vcpkg_configure_make)
             set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --target=arm-pc-mingw32 --host=i686-pc-mingw32")
         endif()
         
-        macro(_vcpkg_append_to_configure_enviromnent inoutstring var defaultval)
-            # Allows to overwrite settings in custom triplets via the enviromnent
+        macro(_vcpkg_append_to_configure_environment inoutstring var defaultval)
+            # Allows to overwrite settings in custom triplets via the environment
             if(ENV{${var}})
                 string(APPEND ${inoutstring} " ${var}='$ENV{${var}}'")
             else()
@@ -195,16 +195,16 @@ function(vcpkg_configure_make)
         endmacro()
 
         set(CONFIGURE_ENV "")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CC "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CXX "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV LD "link.exe -verbose")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV AR "${MSYS_ROOT}/usr/share/automake-1.16/ar-lib lib.exe -verbose")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV RANLIB ":") # Trick to ignore the RANLIB call
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV NM "dumpbin.exe -symbols -headers -all") 
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV LD "link.exe -verbose")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "${MSYS_ROOT}/usr/share/automake-1.16/ar-lib lib.exe -verbose")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV RANLIB ":") # Trick to ignore the RANLIB call
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "dumpbin.exe -symbols -headers -all") 
         # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
         # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
         
         # Other maybe interesting variables to control
         # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
@@ -286,7 +286,7 @@ function(vcpkg_configure_make)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
     endif()
     
-    # Setup include enviromnent
+    # Setup include environment
     set(ENV{INCLUDE} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_BACKUP}")
     set(ENV{INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_PATH_BACKUP}")
     set(ENV{C_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${C_INCLUDE_PATH_BACKUP}")
@@ -426,7 +426,7 @@ function(vcpkg_configure_make)
     endif()
 
     foreach(_buildtype IN LISTS _buildtypes)
-        foreach(ENV_VAR ${_csc_CONFIG_DEPENDENT_ENVIROMNENT})
+        foreach(ENV_VAR ${_csc_CONFIG_DEPENDENT_ENVIRONMENT})
             if(ENV{${ENV_VAR}})
                 set(BACKUP_CONFIG_${ENV_VAR} "$ENV{${ENV_VAR}}")
             endif()
@@ -451,7 +451,7 @@ function(vcpkg_configure_make)
             set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_INSTALLED_SHARE_DIR}")
         endif()
 
-        # Setup enviromnent
+        # Setup environment
         set(ENV{CFLAGS} ${CFLAGS_${_buildtype}})
         set(ENV{CXXFLAGS} ${CXXFLAGS_${_buildtype}})
         set(ENV{LDFLAGS} ${LDFLAGS_${_buildtype}})
@@ -489,7 +489,7 @@ function(vcpkg_configure_make)
         endif()
         unset(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype})
         
-        foreach(ENV_VAR ${_csc_CONFIG_DEPENDENT_ENVIROMNENT})
+        foreach(ENV_VAR ${_csc_CONFIG_DEPENDENT_ENVIRONMENT})
             if(BACKUP_CONFIG_${ENV_VAR})
                 set(ENV{${ENV_VAR}} "${BACKUP_CONFIG_${ENV_VAR}}")
             else()
@@ -498,7 +498,7 @@ function(vcpkg_configure_make)
         endforeach()
     endforeach()
         
-    # Restore enviromnent
+    # Restore environment
     set(ENV{CFLAGS} "${C_FLAGS_BACKUP}")
     set(ENV{CXXFLAGS} "${CXX_FLAGS_BACKUP}")
     set(ENV{LDFLAGS} "${LD_FLAGS_BACKUP}")
