@@ -20,6 +20,7 @@ jobs:
   - bash: |
       sudo mkdir /mnt/vcpkg-ci -m=777
       sudo mkdir /mnt/vcpkg-ci/downloads -m=777
+      exit 0
     displayName: 'Create /mnt/vcpkg-ci/downloads'
   - task: Bash@3
     displayName: 'Build vcpkg'
