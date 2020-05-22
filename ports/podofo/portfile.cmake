@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(PODOFO_VERSION 0.9.6)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/podofo/files/podofo/${PODOFO_VERSION}/podofo-${PODOFO_VERSION}.tar.gz/download"
@@ -56,5 +54,4 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/podofo)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/podofo/COPYING ${CURRENT_PACKAGES_DIR}/share/podofo/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
