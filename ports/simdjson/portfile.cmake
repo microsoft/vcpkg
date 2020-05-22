@@ -4,13 +4,12 @@ vcpkg_fail_port_install(ON_ARCH "x86")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lemire/simdjson
-    REF d2c9ea8a9a0598a28d91a61ed7c3d28217049bb9
-    SHA512 5094f011096530dad82bb2c8d7bebd6b42f6754fe2314b74b865d303e0b6947d45008eaad28291a786a45e50ad8e8de791035746a12652c5a9d3164dea13e655
+    REF 12150baa5e4d35a9cb4b5a6d6faf4e1a0bae0ddd
+    SHA512 d3b9b54aa2b24fdddfcacf7621c7811c084ae0c29cffe0a80af52494562c822121b4da0f0fee502c75aecc9100333fce4a55d1a67debe74630b702a919d6bb15
     HEAD_REF master
     PATCHES
         no_benchmark.patch # `_pclose` is not available on UWP
-        fix_uwp_build.patch # On x64-uwp, size_t -> unsigned long long, DWORD -> unsigned long
-        0001-Fix-Ninja-build.patch
+        #fix_uwp_build.patch # On x64-uwp, size_t -> unsigned long long, DWORD -> unsigned long
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
