@@ -75,7 +75,7 @@
     <tool name="7zip" os="windows">
         <version>19.0.0</version>
         <exeRelativePath>7-Zip.StandaloneConsole.19.0.0/tools/7za.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/7-Zip.StandaloneConsole/19.0.0</url>
+        <url>https://globalcdn.nuget.org/packages/7-zip.standaloneconsole.19.0.0.nupkg</url>
         <sha512>7e05111289a7a666336f5a2ac88954e5ebd368d3c67d1eb5a0eee39cce2f789f1bb31c721236b97a5a89bbcb39a4d457cae801ce6689a7fd7cb1a6a6b1022116</sha512>
         <archiveName>7-zip.standaloneconsole.19.0.0.nupkg</archiveName>
     </tool>
