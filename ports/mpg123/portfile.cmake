@@ -123,12 +123,46 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     file(REMOVE_RECURSE ${SOURCE_PATH}/build/debug)
     file(REMOVE_RECURSE ${SOURCE_PATH}/build/release)
 
+    set(MPG123_OPTIONS
+        --enable-static
+        --disable-dependency-tracking
+        --with-default-audio=coreaudio
+        --with-module-suffix=.so
+    )
+    # Find cross-compiler prefix
+    if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+        include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
+    endif()
+    if(CMAKE_C_COMPILER)
+        execute_process(
+            COMMAND ${CMAKE_C_COMPILER} -dumpmachine
+            OUTPUT_VARIABLE MPG123_HOST
+        )
+        message(STATUS "Detected target triplet ${MPG123_HOST} from ${CMAKE_C_COMPILER}")
+        set(MPG123_OPTIONS
+            --host=${MPG123_HOST}
+            ${MPG123_OPTIONS}
+        )
+        set(MPG123_CC CC=${CMAKE_C_COMPILER})
+    endif()
+
     ################
     # Debug build
     ################
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+    if(EXISTS "${SOURCE_PATH}/Makefile")
+        # Clean up from previous builds
+        vcpkg_execute_required_process(
+            COMMAND make distclean
+            WORKING_DIRECTORY ${SOURCE_PATH}
+            LOGNAME config-${TARGET_TRIPLET}-dbg
+        )
+    endif()
     vcpkg_execute_required_process(
-        COMMAND "${SOURCE_PATH}/configure" --prefix=${SOURCE_PATH}/build/debug --enable-debug=yes --enable-static=yes --disable-dependency-tracking --with-default-audio=coreaudio --with-module-suffix=.so
+        COMMAND "${SOURCE_PATH}/configure"
+            --prefix=${SOURCE_PATH}/build/debug
+            --enable-debug
+            ${MPG123_OPTIONS}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME config-${TARGET_TRIPLET}-dbg
     )
@@ -136,7 +170,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
 
     message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
-        COMMAND make -j install
+        COMMAND make -j install ${MPG123_CC}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME build-${TARGET_TRIPLET}-dbg
     )
@@ -152,7 +186,9 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
         LOGNAME config-${TARGET_TRIPLET}-dbg
     )
     vcpkg_execute_required_process(
-        COMMAND "${SOURCE_PATH}/configure" --prefix=${SOURCE_PATH}/build/release --enable-static=yes --disable-dependency-tracking --with-default-audio=coreaudio --with-module-suffix=.so
+        COMMAND "${SOURCE_PATH}/configure"
+            --prefix=${SOURCE_PATH}/build/release
+            ${MPG123_OPTIONS}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME config-${TARGET_TRIPLET}-rel
     )
@@ -160,7 +196,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
 
     message(STATUS "Installing ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
-        COMMAND make -j install
+        COMMAND make -j install ${MPG123_CC}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
