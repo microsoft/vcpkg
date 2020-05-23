@@ -60,10 +60,10 @@
         <sha512>f477842d0cebefcd6bf9c6d536ab8ea20ec5b0aa967ee963ab6a101aeff9df8742ca600d35f39e2e7158d76d8231f1ed2bef6104dce84d2bf8d6b07d17d706a1</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>4.8.1</version>
+        <version>5.6.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v4.8.1/nuget.exe</url>
-        <sha512>42cb744338af8decc033a75bce5b4c4df28e102bafc45f9a8ba86d7bc010f5b43ebacae80d7b28c4f85ac900eefc2a349620ae65f27f6ca1c21c53b63b92924b</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.6.0/nuget.exe</url>
+        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
     </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
@@ -73,11 +73,11 @@
         <archiveName>QtInstallerFramework-win-x86.zip</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>18.1.0</version>
-        <exeRelativePath>7-Zip.CommandLine.18.1.0\tools\7za.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/7-Zip.CommandLine/18.1.0</url>
-        <sha512>8c75314102e68d2b2347d592f8e3eb05812e1ebb525decbac472231633753f1d4ca31c8e6881a36144a8da26b2571305b3ae3f4e2b85fc4a290aeda63d1a13b8</sha512>
-        <archiveName>7-zip.commandline.18.1.0.nupkg</archiveName>
+        <version>19.0.0</version>
+        <exeRelativePath>7-Zip.StandaloneConsole.19.0.0\tools\7za.exe</exeRelativePath>
+        <url>https://www.nuget.org/api/v2/package/7-Zip.StandaloneConsole/19.0.0</url>
+        <sha512>7e05111289a7a666336f5a2ac88954e5ebd368d3c67d1eb5a0eee39cce2f789f1bb31c721236b97a5a89bbcb39a4d457cae801ce6689a7fd7cb1a6a6b1022116</sha512>
+        <archiveName>7-zip.standaloneconsole.19.0.0.nupkg</archiveName>
     </tool>
     <tool name="aria2" os="windows">
         <version>18.01.0</version>
@@ -114,7 +114,6 @@
         <sha512>56a55ae9a6b5dfad4f28f9fe9b8114f1475c999d2f07fff7efa7375f987e74b498e9b63c41fc6c577756f15f3a1459c6d5d367902de3bedebdf9a9fd49089a86</sha512>
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
-    
     <tool name="powershell-core" os="windows">
         <version>7.0.1</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
