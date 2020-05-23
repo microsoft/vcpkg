@@ -176,6 +176,14 @@ boost-test:arm-uwp=fail
 boost-test:x64-uwp=fail
 boost-wave:arm-uwp=fail
 boost-wave:x64-uwp=fail
+# Building boost-* with arm-uwp requires the x86-windows boost-* which breaks CI testing, Ignore them
+boost-atomic:arm-uwp=ignore
+boost-signals:arm-uwp=ignore
+boost-exception:arm-uwp=ignore
+boost-regex:arm-uwp=ignore
+boost-nowide:arm-uwp=ignore
+boost-system:arm-uwp=ignore
+boost-container:arm-uwp=ignore
 botan:arm64-windows=fail
 botan:arm-uwp=fail
 botan:x64-uwp=fail
@@ -1091,6 +1099,15 @@ miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
 minizip:x64-uwp=fail
+# Conflicts with signalrclient
+microsoft-signalr:arm64-windows=skip
+microsoft-signalr:arm-uwp=skip
+microsoft-signalr:x64-linux=skip
+microsoft-signalr:x64-osx=skip
+microsoft-signalr:x64-uwp=skip
+microsoft-signalr:x64-windows=skip
+microsoft-signalr:x64-windows-static=skip
+microsoft-signalr:x86-windows=skip
 # conflicts with stb
 mlpack:x86-windows=skip
 mlpack:x64-windows=skip
