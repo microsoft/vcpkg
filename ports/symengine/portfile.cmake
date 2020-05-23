@@ -14,6 +14,7 @@ vcpkg_check_features(
     arb WITH_ARB
     flint WITH_FLINT 
     mpfr WITH_MPFR
+    tcmalloc WITH_TCMALLOC
 )
 
 if(integer-class-boostmp IN_LIST FEATURES)

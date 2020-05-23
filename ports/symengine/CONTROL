@@ -24,3 +24,7 @@ Build-Depends: boost-multiprecision
 Feature: integer-class-flint
 Description: Use flint integer class
 Build-Depends: flint, gmp
+
+Feature: tcmalloc
+Description: Build with tcmalloc
+Build-Depends: gperftools
