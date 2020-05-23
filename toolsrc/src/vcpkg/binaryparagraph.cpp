@@ -89,9 +89,11 @@ namespace vcpkg
         , version(spgh.version)
         , description(spgh.description)
         , maintainer(spgh.maintainer)
+        , feature()
+        , default_features(spgh.default_features)
+        , depends()
         , abi(abi_tag)
         , type(spgh.type)
-        , default_features(spgh.default_features)
     {
         this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
         Util::sort_unique_erase(this->depends);
@@ -106,8 +108,10 @@ namespace vcpkg
         , description(fpgh.description)
         , maintainer()
         , feature(fpgh.name)
-        , type(spgh.type)
         , default_features()
+        , depends()
+        , abi()
+        , type(spgh.type)
     {
         this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
         Util::sort_unique_erase(this->depends);

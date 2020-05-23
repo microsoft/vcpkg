@@ -1,3 +1,5 @@
+#include <vcpkg/base/system_headers.h>
+
 #include <catch2/catch.hpp>
 #include <vcpkg-test/util.h>
 
@@ -20,15 +22,13 @@
 #define FILESYSTEM_SYMLINK_UNIX 1
 #define FILESYSTEM_SYMLINK_NONE 2
 
-#if defined(__cpp_lib_filesystem)
+#if VCPKG_USE_STD_FILESYSTEM
 
 #define FILESYSTEM_SYMLINK FILESYSTEM_SYMLINK_STD
-#include <filesystem> // required for filesystem::create_{directory_}symlink
 
 #elif !defined(_MSC_VER)
 
 #define FILESYSTEM_SYMLINK FILESYSTEM_SYMLINK_UNIX
-#include <unistd.h>
 
 #else
 
@@ -126,7 +126,7 @@ namespace vcpkg::Test
         if (status == ERROR_SUCCESS && data == 1) {
             return AllowSymlinks::Yes;
         } else {
-            std::clog << "Symlinks are not allowed on this system\n";
+            std::cout << "Symlinks are not allowed on this system\n";
             return AllowSymlinks::No;
         }
 #endif
@@ -169,10 +169,10 @@ namespace vcpkg::Test
 #if FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_STD
         if (can_create_symlinks())
         {
-            std::filesystem::path targetp = target.native();
-            std::filesystem::path filep = file.native();
+            fs::path targetp = target.native();
+            fs::path filep = file.native();
 
-            std::filesystem::create_symlink(targetp, filep, ec);
+            fs::stdfs::create_symlink(targetp, filep, ec);
         }
         else
         {
