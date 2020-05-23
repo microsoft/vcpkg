@@ -128,14 +128,20 @@ else()
     else()
         set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
     endif()
-
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-        set(LIBVPX_TARGET "x86_64-linux-gcc")
-    else()
-        set(LIBVPX_TARGET "x86_64-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+    
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+        set(LIBVPX_TARGET_ARCH "x86")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+        set(LIBVPX_TARGET_ARCH "x86_64")
     endif()
 
-    message(STATUS "Building info. Target: ${LIBVPX_TARGET}; Options: ${OPTIONS}")
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
+    else()
+        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+    endif()
+
+    message(STATUS "Build info. Target: ${LIBVPX_TARGET}; Options: ${OPTIONS}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring libvpx for Release")
