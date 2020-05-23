@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
+#vcpkg_fail_port_install(ON_TARGET "uwp")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MSVC_USE_MT)
 
