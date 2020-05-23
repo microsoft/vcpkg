@@ -1,12 +1,3 @@
-#vcpkg_fail_port_install(ON_TARGET "uwp")
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MSVC_USE_MT)
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    # Though SymEngine supports dynamic library on Windows, it doesn't work correctly sometimes.
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
@@ -31,6 +22,13 @@ if(integer-class-boostmp IN_LIST FEATURES)
 elseif(integer-class-flint IN_LIST FEATURES)
     set(INTEGER_CLASS flint)
 endif()
+
+if(VCPKG_TARGET_IS_UWP)
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
+endif()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MSVC_USE_MT)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
