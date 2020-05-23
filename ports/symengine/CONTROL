@@ -23,4 +23,4 @@ Build-Depends: boost-multiprecision
 
 Feature: integer-class-flint
 Description: Use flint integer class
-Build-Depends: flint
+Build-Depends: flint, gmp

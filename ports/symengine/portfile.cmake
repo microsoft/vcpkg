@@ -34,7 +34,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DINTEGER_CLASS=boostmp
+        -DINTEGER_CLASS=${INTEGER_CLASS}
         -DBUILD_BENCHMARKS=no
         -DBUILD_TESTS=no
         -DMSVC_WARNING_LEVEL=3
