@@ -72,15 +72,18 @@ function(vcpkg_configure_meson)
     string(APPEND MESON_COMMON_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS${MESON_CMAKE_FLAG_SUFFIX}}")
     string(APPEND MESON_DEBUG_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS_DEBUG${MESON_CMAKE_FLAG_SUFFIX}}")
     string(APPEND MESON_RELEASE_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS_RELEASE${MESON_CMAKE_FLAG_SUFFIX}}")
-    
-    # select meson cmd-line options
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND _vcm_OPTIONS "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/share']")
-    else()
-        list(APPEND _vcm_OPTIONS "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}']")
-    endif()
+
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
-    
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+        if(NOT VCPKG_MESON_CROSS_FILE)
+            set(VCPKG_MESON_CROSS_FILE "${SCRIPTS}/toolchains/meson.windows.arm64.crossfile")
+        endif()
+    endif()
+
+    if(VCPKG_MESON_CROSS_FILE)
+        list(APPEND _vcm_OPTIONS --cross "${VCPKG_MESON_CROSS_FILE}")
+    endif()
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(APPEND _vcm_OPTIONS --default-library shared)
     else()
@@ -88,9 +91,18 @@ function(vcpkg_configure_meson)
     endif()
     
     list(APPEND _vcm_OPTIONS --libdir lib) # else meson install into an architecture describing folder
-    list(APPEND _vcm_OPTIONS_DEBUG --prefix ${CURRENT_PACKAGES_DIR}/debug --includedir ../include)
-    list(APPEND _vcm_OPTIONS_RELEASE --prefix  ${CURRENT_PACKAGES_DIR})
-    
+    list(APPEND _vcm_OPTIONS_DEBUG -Ddebug=true --prefix ${CURRENT_PACKAGES_DIR}/debug --includedir ../include)
+    list(APPEND _vcm_OPTIONS_RELEASE -Ddebug=false --prefix  ${CURRENT_PACKAGES_DIR})
+
+    # select meson cmd-line options
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND _vcm_OPTIONS_DEBUG "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/share']")
+        list(APPEND _vcm_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}/share']")
+    else()
+        list(APPEND _vcm_OPTIONS_DEBUG "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}']")
+        list(APPEND _vcm_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug']")
+    endif()
+
     vcpkg_find_acquire_program(MESON)
     
     get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
