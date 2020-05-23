@@ -1,9 +1,106 @@
+## # ignition_modular_library
+##
+## Download and build a library from the Ignition Robotics project ( https://ignitionrobotics.org/ ).
+##
+## ## Usage:
+## ```cmake
+## ignition_modular_library(NAME <name>
+##                          VERSION <version>
+##                          SHA512 <sha512>
+##                          [REF <ref>]
+##                          [HEAD_REF <head_ref>]
+##                          [PATCHES <patches>]
+##                          [CMAKE_PACKAGE_NAME <cmake_package_name>]
+##                          [DISABLE_PKGCONFIG_INSTALL])
+## ```
+##
+## ## Parameters:
+## ### NAME
+## The name of the specific ignition library, i.e. `cmake` for `ignition-cmake0`, `math` for `ignition-math4`.
+##
+## ### VERSION
+## The complete version number.
+##
+## ### SHA512
+## The SHA512 hash that should match the downloaded  archive. This is forwarded to the `vcpkg_from_github` command.
+##
+## ### REF
+## Reference to the tag of the desired release. This is forwarded to the `vcpkg_from_github` command.
+## If not specified, defaults to `ignition-${NAME}${MAJOR_VERSION}_${VERSION}`.
+##
+## ### HEAD_REF
+## Reference (tag) to the desired release. This is forwarded to the `vcpkg_from_github` command.
+## If not specified, defaults to `ign-${NAME}${MAJOR_VERSION}`.
+##
+## ### PATCHES
+## A list of patches to be applied to the extracted sources.
+## This is forwarded to the `vcpkg_from_github` command.
+##
+## ### CMAKE_PACKAGE_NAME
+## The name of the CMake package for the port.
+## If not specified, defaults to `ignition-${NAME}${MAJOR_VERSION}`.
+## 
+## ### DISABLE_PKGCONFIG_INSTALL
+## If present, disable installation of .pc pkg-config configuration files.
+##
+## ### CMAKE_OPTIONS
+## A list of options to be passed to the CMake invocation.
+## This is forwarded to the `vcpkg_configure_cmake` command.
+##
+## ### TOOL_NAMES
+## A list of executable tools that need to be handled by this port.
+## If present, this option is forwarded to the `vcpkg_copy_tools` command.
+##
+## ## Examples:
+##
+## * [ignition-cmake0](https://github.com/Microsoft/vcpkg/blob/master/ports/ignition-cmake0/portfile.cmake)
+## * [ignition-math4](https://github.com/Microsoft/vcpkg/blob/master/ports/ignition-math4/portfile.cmake)
+## * [ignition-fuel-tools1](https://github.com/Microsoft/vcpkg/blob/master/ports/ignition-fuel-tools1/portfile.cmake)
+function(ignition_modular_library)
+    set(options DISABLE_PKGCONFIG_INSTALL)
+    set(oneValueArgs NAME VERSION SHA512 REF HEAD_REF CMAKE_PACKAGE_NAME)
+	set(multiValueArgs PATCHES CMAKE_OPTIONS TOOL_NAMES)
+    cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    
+    string(REPLACE "." ";" IML_VERSION_LIST ${IML_VERSION})
+    list(GET IML_VERSION_LIST 0 IML_MAJOR_VERSION)
 
-function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PACKAGE_NAME DEFAULT_CMAKE_PACKAGE_NAME IML_DISABLE_PKGCONFIG_INSTALL)
+    # If the REF option is omitted, use the canonical one 
+    if(NOT DEFINED IML_REF)
+        set(IML_REF "ignition-${IML_NAME}${IML_MAJOR_VERSION}_${IML_VERSION}")
+    endif()
+    
+    # If the HEAD_REF option is omitted, use the canonical one 
+    if(NOT DEFINED IML_HEAD_REF)
+        set(IML_HEAD_REF "ign-${IML_NAME}${IML_MAJOR_VERSION}")
+    endif()
+
+    # If the CMAKE_PACKAGE_NAME option is omitted, use the canonical one
+    set(DEFAULT_CMAKE_PACKAGE_NAME "ignition-${IML_NAME}${IML_MAJOR_VERSION}")
+    if(NOT DEFINED IML_CMAKE_PACKAGE_NAME)
+        set(IML_CMAKE_PACKAGE_NAME ${DEFAULT_CMAKE_PACKAGE_NAME})
+    endif()
+
+    # If the CMAKE_OPTIONS option is omitted set it to an empty
+    if(NOT DEFINED IML_CMAKE_OPTIONS)
+        set(IML_CMAKE_OPTIONS "")
+    endif()
+
+    # Download library from github, to support also the --head option
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO ignitionrobotics/ign-${IML_NAME}
+        REF ${IML_REF}
+        SHA512 ${IML_SHA512}
+        HEAD_REF ${IML_HEAD_REF}
+        PATCHES ${IML_PATCHES}
+    )
+    
+    # Build library
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
-        OPTIONS -DBUILD_TESTING=OFF
+        OPTIONS -DBUILD_TESTING:BOOL=OFF ${IML_CMAKE_OPTIONS}
     )
 
     vcpkg_install_cmake()
@@ -54,94 +151,10 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
         set(LICENSE_PATH "${SOURCE_PATH}/README.md")
     endif()
     file(INSTALL ${LICENSE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-endfunction()
 
-## # ignition_modular_library
-##
-## Download and build a library from the Ignition Robotics project ( https://ignitionrobotics.org/ ).
-##
-## ## Usage:
-## ```cmake
-## ignition_modular_library(NAME <name>
-##                          VERSION <version>
-##                          SHA512 <sha512>
-##                          [REF <ref>]
-##                          [HEAD_REF <head_ref>]
-##                          [PATCHES <patches>]
-##                          [CMAKE_PACKAGE_NAME <cmake_package_name>]
-##                          [DISABLE_PKGCONFIG_INSTALL])
-## ```
-##
-## ## Parameters:
-## ### NAME
-## The name of the specific ignition library, i.e. `cmake` for `ignition-cmake0`, `math` for `ignition-math4`.
-##
-## ### VERSION
-## The complete version number.
-##
-## ### SHA512
-## The SHA512 hash that should match the downloaded  archive. This is forwarded to the `vcpkg_from_github` command.
-##
-## ### REF
-## Reference to the tag of the desired release. This is forwarded to the `vcpkg_from_github` command.
-## If not specified, defaults to `ignition-${NAME}${MAJOR_VERSION}_${VERSION}`.
-##
-## ### HEAD_REF
-## Reference (tag) to the desired release. This is forwarded to the `vcpkg_from_github` command.
-## If not specified, defaults to `ign-${NAME}${MAJOR_VERSION}`.
-##
-## ### PATCHES
-## A list of patches to be applied to the extracted sources.
-## This is forwarded to the `vcpkg_from_github` command.
-##
-## ### CMAKE_PACKAGE_NAME
-## The name of the CMake package for the port.
-## If not specified, defaults to `ignition-${NAME}${MAJOR_VERSION}`.
-## 
-## ### DISABLE_PKGCONFIG_INSTALL
-## If present, disable installation of .pc pkg-config configuration files.
-##
-##
-## ## Examples:
-##
-## * [ignition-cmake0](https://github.com/Microsoft/vcpkg/blob/master/ports/ignition-cmake0/portfile.cmake)
-## * [ignition-math4](https://github.com/Microsoft/vcpkg/blob/master/ports/ignition-math4/portfile.cmake)
-## * [ignition-fuel-tools1](https://github.com/Microsoft/vcpkg/blob/master/ports/ignition-fuel-tools1/portfile.cmake)
-function(ignition_modular_library)
-    set(options DISABLE_PKGCONFIG_INSTALL)
-    set(oneValueArgs NAME VERSION SHA512 REF HEAD_REF CMAKE_PACKAGE_NAME)
-	set(multiValueArgs PATCHES)
-    cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    
-    string(REPLACE "." ";" IML_VERSION_LIST ${IML_VERSION})
-    list(GET IML_VERSION_LIST 0 IML_MAJOR_VERSION)
-
-    # If the REF option is omitted, use the canonical one 
-    if(NOT DEFINED IML_REF)
-        set(IML_REF "ignition-${IML_NAME}${IML_MAJOR_VERSION}_${IML_VERSION}")
-    endif()
-    
-    # If the HEAD_REF option is omitted, use the canonical one 
-    if(NOT DEFINED IML_HEAD_REF)
-        set(IML_HEAD_REF "ign-${IML_NAME}${IML_MAJOR_VERSION}")
+    # Handle tools
+    if(DEFINED IML_TOOL_NAMES)
+        vcpkg_copy_tools(TOOL_NAMES ${IML_TOOL_NAMES} AUTO_CLEAN)
     endif()
 
-    # If the CMAKE_PACKAGE_NAME option is omitted, use the canonical one
-    set(DEFAULT_CMAKE_PACKAGE_NAME "ignition-${IML_NAME}${IML_MAJOR_VERSION}")
-    if(NOT DEFINED IML_CMAKE_PACKAGE_NAME)
-        set(IML_CMAKE_PACKAGE_NAME ${DEFAULT_CMAKE_PACKAGE_NAME})
-    endif()
-
-    # Download library from github, to support also the --head option
-    vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO ignitionrobotics/ign-${IML_NAME}
-        REF ${IML_REF}
-        SHA512 ${IML_SHA512}
-        HEAD_REF ${IML_HEAD_REF}
-        PATCHES ${IML_PATCHES}
-    )
-    
-    # Build library
-    ignition_modular_build_library(${IML_NAME} ${IML_MAJOR_VERSION} ${SOURCE_PATH} ${IML_CMAKE_PACKAGE_NAME} ${DEFAULT_CMAKE_PACKAGE_NAME} ${IML_DISABLE_PKGCONFIG_INSTALL})
 endfunction()
