@@ -114,6 +114,7 @@
         <sha512>56a55ae9a6b5dfad4f28f9fe9b8114f1475c999d2f07fff7efa7375f987e74b498e9b63c41fc6c577756f15f3a1459c6d5d367902de3bedebdf9a9fd49089a86</sha512>
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
+    
     <tool name="powershell-core" os="windows">
         <version>7.0.1</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
