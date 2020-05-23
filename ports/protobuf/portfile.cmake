@@ -11,14 +11,14 @@ vcpkg_from_github(
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-    set(protobuf_BUILD_PROTOC_BINARIES OFF)
+    set(protobuf_CROSSCOMPILING ON)
 elseif(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_MINGW AND NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP))
-    set(protobuf_BUILD_PROTOC_BINARIES OFF)
+    set(protobuf_CROSSCOMPILING ON)
 else()
-    set(protobuf_BUILD_PROTOC_BINARIES ON)
+    set(protobuf_CROSSCOMPILING OFF)
 endif()
 
-if(NOT protobuf_BUILD_PROTOC_BINARIES AND NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/protobuf)
+if(protobuf_CROSSCOMPILING AND NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/protobuf)
     message(FATAL_ERROR "Cross-targetting protobuf requires the x86-windows protoc to be available. Please install protobuf:x86-windows first.")
 endif()
 
@@ -47,7 +47,7 @@ vcpkg_configure_cmake(
         -Dprotobuf_MSVC_STATIC_RUNTIME=${VCPKG_BUILD_STATIC_CRT}
         -Dprotobuf_BUILD_TESTS=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
-        -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
+        -Dprotobuf_BUILD_PROTOC_BINARIES=ON
          ${FEATURE_OPTIONS}
 )
 
@@ -89,7 +89,7 @@ endif()
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(CMAKE_HOST_WIN32)
-    if(protobuf_BUILD_PROTOC_BINARIES)
+    if(NOT protobuf_CROSSCOMPILING)
         vcpkg_copy_tools(TOOL_NAMES protoc)
     else()
         file(COPY ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
