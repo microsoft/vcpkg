@@ -4,6 +4,9 @@ vcpkg_from_github(
     REF ca7b279fb6c9af931ffdaed96a3b11ca3ccd79ea
     SHA512 d3adfe7cce849a14fd473cfd67baef0163d4e45ff32724516270d5893a18086f7ac17d87bda5c33381442766849b41516bd2c7757e97038c95af0c70d5f0edde
     HEAD_REF master
+    PATCHES
+        # TODO: Remove this patch if https://github.com/ddiakopoulos/tinyply/pull/41 was accepted.
+        fix-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIB)
