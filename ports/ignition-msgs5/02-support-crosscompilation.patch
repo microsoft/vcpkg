@@ -1,0 +1,70 @@
+From 8d3735616c34fdc266b45c614c6d179d72732066 Mon Sep 17 00:00:00 2001
+From: Silvio Traversaro <silvio.traversaro@iit.it>
+Date: Sat, 23 May 2020 12:09:15 +0200
+Subject: [PATCH] Add CMake options to support cross-compilation
+
+This commit adds two CMake options:
+* INSTALL_IGN_MSGS_GEN_EXECUTABLE if this option is enabled, the
+  ign_msgs_gen protobuf executable plugin is also installed, so
+  that this option can be enabled in host builds to permit
+  cross-compilation builds to use it to generate the messages.
+  As this executable is not side by side installable with other
+  ignition-msgs installations with different major versions and is an
+  advanced option meant just for packaging, by default it is set to OFF.
+* IGN_MSGS_GEN_EXECUTABLE: this string variable can be set to
+  have ign-msgs use a ign_msgs_gen executable plugin that was not
+  build by the project, to enable cross-compilation scenarios.
+
+Signed-off-by: Silvio Traversaro <silvio.traversaro@iit.it>
+---
+ CMakeLists.txt     | 13 ++++++++++++-
+ src/CMakeLists.txt |  6 +++++-
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 62b56b1..1641489 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,7 +20,18 @@ ign_configure_project()
+ # Set project-specific options
+ #============================================================================
+ 
+-# ignition-msgs currently has no options that are unique to it
++option(
++  INSTALL_IGN_MSGS_GEN_EXECUTABLE
++  "Install the ign_msgs_gen executable."
++  OFF)
++mark_as_advanced(INSTALL_IGN_MSGS_GEN_EXECUTABLE)
++
++set(
++  IGN_MSGS_GEN_EXECUTABLE
++  "$<TARGET_FILE:ign_msgs_gen>"
++  CACHE STRING
++  "ign_msgs_gen executable used in the ign_msgs_protoc CMake function.")
++mark_as_advanced(IGN_MSGS_GEN_EXECUTABLE)
+ 
+ #============================================================================
+ # Search for project-specific dependencies
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index f68bf3d..1eb5e36 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -11,6 +11,9 @@ if (UNIX)
+   target_link_libraries(ign_msgs_gen pthread)
+ endif()
+ 
++if(INSTALL_IGN_MSGS_GEN_EXECUTABLE)
++  install(TARGETS ign_msgs_gen DESTINATION ${IGN_BIN_INSTALL_DIR})
++endif()
+ 
+ ##################################################
+ # A function that calls protoc on a protobuf file
+@@ -57,7 +61,7 @@ function(ign_msgs_protoc)
+     list(APPEND ${ign_msgs_protoc_OUTPUT_CPP_CC_VAR} ${output_source})
+     list(APPEND output_files ${output_header})
+     list(APPEND output_files ${output_source})
+-    list(APPEND protoc_args "--plugin=protoc-gen-ignmsgs=$<TARGET_FILE:ign_msgs_gen>")
++    list(APPEND protoc_args "--plugin=protoc-gen-ignmsgs=${IGN_MSGS_GEN_EXECUTABLE}")
+     list(APPEND protoc_args "--cpp_out=dllexport_decl=IGNITION_MSGS_VISIBLE:${ign_msgs_protoc_OUTPUT_CPP_DIR}")
+     list(APPEND protoc_args "--ignmsgs_out" "${ign_msgs_protoc_OUTPUT_CPP_DIR}")
+     set(${ign_msgs_protoc_OUTPUT_CPP_HH_VAR} ${${ign_msgs_protoc_OUTPUT_CPP_HH_VAR}} PARENT_SCOPE)
