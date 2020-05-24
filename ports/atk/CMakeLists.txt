@@ -11,19 +11,20 @@ endif()
 
 # generate atkmarshal.c and atkmarshal.h source files
 # glib-genmarshal should be installed along with glib
+find_package (Python COMPONENTS Interpreter)
 find_program(GLIB_GENMARSHAL glib-genmarshal PATH_SUFFIXES glib)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/atk)
 
-message("Generating atkmarshal.h: ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --header")
+message("Generating atkmarshal.h: ${Python_EXECUTABLE} ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --header")
 execute_process(
-    COMMAND ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --header
+    COMMAND ${Python_EXECUTABLE} ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --header
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/atk
     OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/atk/atkmarshal.h
 )
 
-message("Generating atkmarshal.c: ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --body")
+message("Generating atkmarshal.c: ${Python_EXECUTABLE} ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --body")
 execute_process(
-    COMMAND ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --body
+    COMMAND ${Python_EXECUTABLE} ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --body
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/atk
     OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/atk/atkmarshal.c
 )
