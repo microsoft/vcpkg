@@ -82,9 +82,9 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         message(STATUS "pkg-config output: ${_pkg_output}")
         message(FATAL_ERROR "pkg-config error output: ${_pkg_error_out}")
     else()
-        message(STATUS "pkg-config call failed with error code: ${_pkg_error_var}")
-        message(STATUS "pkg-config output: ${_pkg_output}")
-        message(STATUS "pkg-config error output: ${_pkg_error_out}")
+        debug_message("pkg-config call failed with error code: ${_pkg_error_var}")
+        debug_message("pkg-config output: ${_pkg_output}")
+        debug_message("pkg-config error output: ${_pkg_error_out}")
     endif()
 
     # Get all required libs. --static means we get all libraries required for static linkage 
