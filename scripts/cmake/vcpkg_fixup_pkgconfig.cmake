@@ -50,7 +50,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         set(_VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
         set(_VCPKG_PACKAGES_PKGCONF "${CURRENT_PACKAGES_DIR}")
     endif()
-
+    
     set(PATH_SUFFIX_DEBUG /debug)
     set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
     set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
@@ -134,11 +134,12 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         string(REGEX REPLACE " /([a-zA-Z])/" ";\\1:/" _pkg_libs_output "${_pkg_libs_output}")
         string(REGEX REPLACE "-l/([a-zA-Z])/" "-l\\1:/" _pkg_libs_output "${_pkg_libs_output}")
         debug_message("pkg-config output lib paths after replacement (cmake style): ${_pkg_lib_paths_output}")
-        debug_message("pkg-config output lib after replacement (cmake style): ${_pkg_lib_paths_output}")
+        debug_message("pkg-config output lib after replacement (cmake style): ${_pkg_libs_output}")
     endif()
     string(REPLACE " -L" ";" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
     string(REGEX REPLACE "^-L" "" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
     string(REPLACE " -l" ";-l" _pkg_libs_output "${_pkg_libs_output}")
+    string(REGEX REPLACE "^;" "" _pkg_libs_output "${_pkg_libs_output}")
 
     if("${_config}" STREQUAL "DEBUG")
         set(lib_suffixes d _d _debug)
@@ -159,6 +160,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     list(REMOVE_DUPLICATES _pkg_lib_paths_output) # We don't care about linker order and repeats
     
     debug_message("Library search paths: ${_pkg_lib_paths_output}")
+    debug_message("Libraries to search: ${_pkg_libs_output}")
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
     list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
     foreach(_lib IN LISTS _pkg_libs_output)
@@ -170,13 +172,13 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
             if(EXISTS "${_libname}")
                 continue() # fullpath in -l argument and exists; all ok
             endif()
-            find_library(CHECK_LIB_${_libname} NAMES "${_libname}" PATHS ${_pkg_lib_paths_output} NO_DEFAULT_PATH)
+            find_library(CHECK_LIB_${_libname} NAMES "${_libname}" PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
             if(CHECK_LIB_${_libname})
                 continue() # found library; all ok
             endif()
             foreach(_lib_suffix ${lib_suffixes})
                 string(REPLACE ".dll.a|.a|.lib|.so" "" _name_without_extension "${_libname}")
-                find_library(CHECK_LIB_${_libname} NAMES ${_name_without_extension}${_lib_suffix} PATHS ${_pkg_lib_paths_output})
+                find_library(CHECK_LIB_${_libname} NAMES ${_name_without_extension}${_lib_suffix} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" PATHS ${_pkg_lib_paths_output})
                 if(CHECK_LIB_${_libname})
                     message(FATAL_ERROR "Found ${CHECK_LIB_${_libname}} with additional debug suffix! Please correct the *.pc file!")
                 endif()
