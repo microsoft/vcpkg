@@ -20,8 +20,15 @@ jobs:
     inputs:
       filename: 'bootstrap-vcpkg.bat'
   - powershell: |
+      .\vcpkg.exe x-ci-clean
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)\xml-results
+      # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
+      # Install them so the CI succeeds:
+      if ( "${{ parameters.triplet }}" -notmatch "x86-windows" -and "${{ parameters.triplet }}" -notmatch "x64-windows" ) {
+          .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows
+      }
+
       $command = ".\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching"
       Set-Content -Path 'run_ci.cmd' -Value $command -Encoding ASCII
     displayName: 'Write Test Modified Ports Batch File'
