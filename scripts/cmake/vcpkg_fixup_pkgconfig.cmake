@@ -152,14 +152,15 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         string(REGEX REPLACE "[\t ]+${_ignore}" "" _pkg_libs_output "${_pkg_libs_output}")
     endforeach()
     foreach(_system_lib IN LISTS _system_libs)  # Remove system libs with whitespace
-        string(REGEX REPLACE "(;-l|[\t ]+)?${_system_lib}" "" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "^[\t ]*-l?${_system_lib}" "" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "(;-l|[\t ]+-?)?${_system_lib}" "" _pkg_libs_output "${_pkg_libs_output}")
     endforeach()
     list(REMOVE_DUPLICATES _pkg_libs_output) # We don't care about linker order and repeats
     list(REMOVE_DUPLICATES _pkg_lib_paths_output) # We don't care about linker order and repeats
     
     debug_message("Library search paths: ${_pkg_lib_paths_output}")
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
-    list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".lib;.dll.a;.a")
+    list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
     foreach(_lib IN LISTS _pkg_libs_output)
         if(EXISTS "${_lib}" OR "x${_lib}x" STREQUAL "xx" ) # eat; all ok _lib is a fullpath to a library or empty
             continue()
@@ -169,13 +170,13 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
             if(EXISTS "${_libname}")
                 continue() # fullpath in -l argument and exists; all ok
             endif()
-            find_library(CHECK_LIB_${_libname} NAMES "${_libname}" PATHS "${_pkg_lib_paths_output}" NO_DEFAULT_PATH)
+            find_library(CHECK_LIB_${_libname} NAMES "${_libname}" PATHS ${_pkg_lib_paths_output} NO_DEFAULT_PATH)
             if(CHECK_LIB_${_libname})
                 continue() # found library; all ok
             endif()
             foreach(_lib_suffix ${lib_suffixes})
                 string(REPLACE ".dll.a|.a|.lib|.so" "" _name_without_extension "${_libname}")
-                find_library(CHECK_LIB_${_libname} NAMES ${_name_without_extension}${_lib_suffix} PATHS "${_pkg_lib_paths_output}")
+                find_library(CHECK_LIB_${_libname} NAMES ${_name_without_extension}${_lib_suffix} PATHS ${_pkg_lib_paths_output})
                 if(CHECK_LIB_${_libname})
                     message(FATAL_ERROR "Found ${CHECK_LIB_${_libname}} with additional debug suffix! Please correct the *.pc file!")
                 endif()
@@ -242,6 +243,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "${_VCPKG_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REGEX REPLACE "^prefix=(\\\\)?\\\${prefix}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         file(WRITE "${_file}" "${_contents}")
 
         if(NOT _vfpkg_SKIP_CHECK)
@@ -271,6 +273,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "\${prefix}/share" "\${prefix}/../share" _contents "${_contents}")
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
         string(REGEX REPLACE "^prefix=(\\\\)?\\\${prefix}(/debug)?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
         file(WRITE "${_file}" "${_contents}")
 
