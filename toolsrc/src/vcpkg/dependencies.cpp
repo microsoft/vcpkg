@@ -39,7 +39,7 @@ namespace vcpkg::Dependencies
 
         struct ClusterInstallInfo
         {
-            std::unordered_map<std::string, std::vector<FeatureSpec>> build_edges;
+            std::map<std::string, std::vector<FeatureSpec>> build_edges;
             bool defaults_requested = false;
         };
 
@@ -106,15 +106,13 @@ namespace vcpkg::Dependencies
                     &m_scfl.source_control_file->find_dependencies_for_feature(feature).value_or_exit(VCPKG_LINE_INFO);
 
                 std::vector<FeatureSpec> dep_list;
-                if (maybe_vars)
+                if (auto vars = maybe_vars.get())
                 {
                     // Qualified dependency resolution is available
-                    auto fullspec_list = filter_dependencies(
-                        *qualified_deps, m_spec.triplet(), maybe_vars.value_or_exit(VCPKG_LINE_INFO));
+                    auto fullspec_list = filter_dependencies(*qualified_deps, m_spec.triplet(), *vars);
 
                     for (auto&& fspec : fullspec_list)
                     {
-                        // TODO: this is incorrect and does not handle default features nor "*"
                         Util::Vectors::append(&dep_list, fspec.to_feature_specs({"default"}, {"default"}));
                     }
 
@@ -296,7 +294,7 @@ namespace vcpkg::Dependencies
         auto end() const { return m_graph.end(); }
 
     private:
-        std::unordered_map<PackageSpec, Cluster> m_graph;
+        std::map<PackageSpec, Cluster> m_graph;
         const PortFileProvider::PortFileProvider& m_port_provider;
     };
 
@@ -354,7 +352,7 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFileLocation& scfl,
                                          const RequestType& request_type,
-                                         std::unordered_map<std::string, std::vector<FeatureSpec>>&& dependencies)
+                                         std::map<std::string, std::vector<FeatureSpec>>&& dependencies)
         : spec(spec)
         , source_control_file_location(scfl)
         , plan_type(InstallPlanType::BUILD_AND_INSTALL)
@@ -560,7 +558,7 @@ namespace vcpkg::Dependencies
                                                      ? RequestType::USER_REQUESTED
                                                      : RequestType::AUTO_SELECTED;
 
-                auto maybe_ipv = status_db.find_all_installed(spec);
+                auto maybe_ipv = status_db.get_installed_package_view(spec);
 
                 if (auto p_ipv = maybe_ipv.get())
                 {
@@ -859,7 +857,7 @@ namespace vcpkg::Dependencies
             {
                 auto&& scfl = p_cluster->m_scfl;
 
-                std::unordered_map<std::string, std::vector<FeatureSpec>> computed_edges;
+                std::map<std::string, std::vector<FeatureSpec>> computed_edges;
                 for (auto&& kv : info_ptr->build_edges)
                 {
                     std::set<FeatureSpec> fspecs;

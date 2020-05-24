@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/EGL-Registry
@@ -18,11 +16,11 @@ file(
 file(
   COPY
     ${SOURCE_PATH}/api/egl.xml
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/egl-registry
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
 file(
   INSTALL ${SOURCE_PATH}/sdk/docs/man/copyright.xml
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/egl-registry
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
   RENAME copyright
 )

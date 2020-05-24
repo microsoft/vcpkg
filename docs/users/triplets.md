@@ -140,6 +140,10 @@ Sets the minimum macOS version for compiled binaries. This also changes what ver
 ### VCPKG_OSX_SYSROOT
 Set the name or path of the macOS platform SDK that will be used by CMake. See the CMake documentation for [CMAKE_OSX_SYSROOT](https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_SYSROOT.html) for more information.
 
+
+### VCPKG_OSX_ARCHITECTURES
+Set the macOS / iOS target architecture which will be used by CMake. See the CMake documentation for [CMAKE_OSX_ARCHITECTURES](https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_ARCHITECTURES.html) for more information.
+
 ## Per-port customization
 The CMake Macro `PORT` will be set when interpreting the triplet file and can be used to change settings (such as `VCPKG_LIBRARY_LINKAGE`) on a per-port basis.
 
@@ -162,3 +166,6 @@ The default triplet when running any vcpkg command is `%VCPKG_DEFAULT_TRIPLET%` 
 - OSX: `x64-osx`
 
 We recommend using a systematic naming scheme when creating new triplets. The Android toolchain naming scheme is a good source of inspiration: https://developer.android.com/ndk/guides/standalone_toolchain.html.
+
+## Android triplets
+See [android.md](android.md)

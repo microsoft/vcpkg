@@ -1,5 +1,3 @@
-#vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux platform" ON_TARGET "Windows" "OSX") 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BLAKE2/libb2
@@ -8,12 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(OPTIONS)
+if(CMAKE_HOST_WIN32)
+    set(OPTIONS --disable-native) # requires cpuid
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${OPTIONS}
 )
-#vcpkg_fixup_pkgconfig()
-
 vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
+
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

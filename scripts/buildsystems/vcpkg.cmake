@@ -76,7 +76,38 @@ else()
             set(_VCPKG_TARGET_TRIPLET_ARCH arm64)
         elseif(_VCPKG_CL MATCHES "bin/cl.exe$" OR _VCPKG_CL MATCHES "x86/cl.exe$")
             set(_VCPKG_TARGET_TRIPLET_ARCH x86)
-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_SYSTEM_NAME AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+            list(LENGTH CMAKE_OSX_ARCHITECTURES arch_count)
+            if(arch_count EQUAL 0)
+                message(WARNING "Unable to determine target architecture. "
+                                "Consider providing a value for the CMAKE_OSX_ARCHITECTURES cache variable. "
+                                "Continuing without vcpkg.")
+                set(VCPKG_TOOLCHAIN ON)
+                return()
+            else()
+                if(arch_count GREATER 1)
+                    message(WARNING "Detected more than one target architecture. Using the first one.")
+                endif()
+                list(GET CMAKE_OSX_ARCHITECTURES 0 target_arch)
+                if(target_arch STREQUAL arm64)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH arm64)
+                elseif(target_arch STREQUAL arm64s)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH arm64s)
+                elseif(target_arch STREQUAL armv7s)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH armv7s)
+                elseif(target_arch STREQUAL armv7)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH arm)
+                elseif(target_arch STREQUAL x86_64)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH x64)
+                elseif(target_arch STREQUAL i386)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH x86)
+                else()
+                    message(WARNING "Unable to determine target architecture, continuing without vcpkg.")
+                    set(VCPKG_TOOLCHAIN ON)
+                    return()
+                endif()
+            endif()
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64")
             set(_VCPKG_TARGET_TRIPLET_ARCH x64)
         else()
             if( _CMAKE_IN_TRY_COMPILE )
@@ -96,6 +127,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HO
     set(_VCPKG_TARGET_TRIPLET_PLAT linux)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin"))
     set(_VCPKG_TARGET_TRIPLET_PLAT osx)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    set(_VCPKG_TARGET_TRIPLET_PLAT ios)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows"))
     set(_VCPKG_TARGET_TRIPLET_PLAT windows)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
@@ -145,6 +178,8 @@ else() #Release build: Put Release paths before Debug paths. Debug Paths are req
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug
     )
 endif()
+
+set(VCPKG_CMAKE_FIND_ROOT_PATH ${CMAKE_FIND_ROOT_PATH})
 
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
 set(_PROGRAMFILESX86 "PROGRAMFILES(x86)")
@@ -235,7 +270,15 @@ if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
     set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
 endif()
 macro(${VCPKG_OVERRIDE_FIND_PACKAGE_NAME} name)
+    # Workaround to set the ROOT_PATH until upstream CMake stops overriding
+    # the ROOT_PATH at apple OS initialization phase.
+    # See https://gitlab.kitware.com/cmake/cmake/merge_requests/3273
+    if(CMAKE_SYSTEM_NAME STREQUAL iOS)
+        set(BACKUP_CMAKE_FIND_ROOT_PATH ${CMAKE_FIND_ROOT_PATH})
+        list(APPEND CMAKE_FIND_ROOT_PATH ${VCPKG_CMAKE_FIND_ROOT_PATH})
+    endif()
     string(TOLOWER "${name}" _vcpkg_lowercase_name)
+
     if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${_vcpkg_lowercase_name}/vcpkg-cmake-wrapper.cmake")
         set(ARGS "${ARGV}")
         include(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${_vcpkg_lowercase_name}/vcpkg-cmake-wrapper.cmake)
@@ -285,6 +328,9 @@ macro(${VCPKG_OVERRIDE_FIND_PACKAGE_NAME} name)
     else()
         _find_package(${ARGV})
     endif()
+    if(CMAKE_SYSTEM_NAME STREQUAL iOS)
+        set(CMAKE_FIND_ROOT_PATH "${BACKUP_CMAKE_FIND_ROOT_PATH}")
+    endif()
 endmacro()
 
 set(VCPKG_TOOLCHAIN ON)
@@ -301,13 +347,15 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         file(TO_CMAKE_PATH "${_VCPKG_ROOT_DIR}" _root_dir)
         file(WRITE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/vcpkg.config.cmake"
             "set(VCPKG_TARGET_TRIPLET \"${VCPKG_TARGET_TRIPLET}\" CACHE STRING \"\")\n"
+            "set(VCPKG_TARGET_ARCHITECTURE \"${VCPKG_TARGET_ARCHITECTURE}\" CACHE STRING \"\")\n"
             "set(VCPKG_APPLOCAL_DEPS \"${VCPKG_APPLOCAL_DEPS}\" CACHE STRING \"\")\n"
             "set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE \"${_chainload_file}\" CACHE STRING \"\")\n"
             "set(_VCPKG_ROOT_DIR \"${_root_dir}\" CACHE STRING \"\")\n"
         )
     else()
-        list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES 
+        list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
             VCPKG_TARGET_TRIPLET
+            VCPKG_TARGET_ARCHITECTURE
             VCPKG_APPLOCAL_DEPS
             VCPKG_CHAINLOAD_TOOLCHAIN_FILE
             _VCPKG_ROOT_DIR

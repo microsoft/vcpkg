@@ -105,6 +105,7 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
 
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/locale/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
@@ -114,3 +115,11 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURR
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/lzma.h"
+        "if !defined(LZMA_API_STATIC)"
+        "if 0"
+    )
+endif()

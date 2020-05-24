@@ -1,6 +1,6 @@
+#include <vcpkg/base/system_headers.h>
 #include <catch2/catch.hpp>
 
-#include <Windows.h>
 #include <string>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringview.h>
@@ -20,7 +20,7 @@ using vcpkg::System::CPUArchitecture;
 
 namespace
 {
-    void set_environment_variable(StringView varname, Optional<std::string> value)
+    void set_environment_variable(ZStringView varname, Optional<std::string> value)
     {
 #if defined(_WIN32)
         const auto w_varname = vcpkg::Strings::to_utf16(varname);
@@ -38,18 +38,14 @@ namespace
 
         check_exit(VCPKG_LINE_INFO, exit_code != 0);
 #else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
-        std::string tmp;
-        tmp.reserve(varname.size() + value.size() + 1);
-        tmp.append(varname.data(), varname.size());
-        tmp.push_back('=');
-        if (value)
+        if (auto v = value.get())
         {
-            const auto& unpacked = value.value_or_exit(VCPKG_LINE_INFO);
-            tmp.append(unpacked);
+            check_exit(VCPKG_LINE_INFO, setenv(varname.c_str(), v->c_str(), 1) == 0);
         }
-
-        const int exit_code = putenv(tmp.c_str());
-        check_exit(VCPKG_LINE_INFO, exit_code == 0);
+        else
+        {
+            check_exit(VCPKG_LINE_INFO, unsetenv(varname.c_str()) == 0);
+        }
 #endif // defined(_WIN32)
     }
 

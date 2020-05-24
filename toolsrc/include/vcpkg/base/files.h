@@ -3,7 +3,7 @@
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/ignore_errors.h>
 
-#if USE_STD_FILESYSTEM
+#if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
 #else
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
@@ -12,7 +12,7 @@
 
 namespace fs
 {
-#if USE_STD_FILESYSTEM
+#if VCPKG_USE_STD_FILESYSTEM
     namespace stdfs = std::filesystem;
 #else
     namespace stdfs = std::experimental::filesystem;
@@ -22,6 +22,7 @@ namespace fs
     using stdfs::path;
     using stdfs::perms;
     using stdfs::u8path;
+    using stdfs::directory_iterator;
 
 #if defined(_WIN32)
     enum class file_type
@@ -133,6 +134,9 @@ namespace vcpkg::Files
         virtual void remove_all(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
         void remove_all(const fs::path& path, LineInfo li);
         void remove_all(const fs::path& path, ignore_errors_t);
+        virtual void remove_all_inside(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
+        void remove_all_inside(const fs::path& path, LineInfo li);
+        void remove_all_inside(const fs::path& path, ignore_errors_t);
         bool exists(const fs::path& path, std::error_code& ec) const;
         bool exists(LineInfo li, const fs::path& path) const;
         bool exists(const fs::path& path, ignore_errors_t = ignore_errors) const;
@@ -155,9 +159,13 @@ namespace vcpkg::Files
         fs::file_status status(const fs::path& p, ignore_errors_t) const noexcept;
         fs::file_status symlink_status(LineInfo li, const fs::path& p) const noexcept;
         fs::file_status symlink_status(const fs::path& p, ignore_errors_t) const noexcept;
+        virtual fs::path absolute(const fs::path& path, std::error_code& ec) const = 0;
+        fs::path absolute(LineInfo li, const fs::path& path) const;
         virtual fs::path canonical(const fs::path& path, std::error_code& ec) const = 0;
         fs::path canonical(LineInfo li, const fs::path& path) const;
         fs::path canonical(const fs::path& path, ignore_errors_t) const;
+        virtual fs::path current_path(std::error_code&) const = 0;
+        fs::path current_path(LineInfo li) const;
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
     };

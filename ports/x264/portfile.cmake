@@ -1,6 +1,6 @@
 set(X264_VERSION 157)
 
-#vcpkg_fail_port_install(ON_TARGET "Linux" "OSX") 
+vcpkg_fail_port_install(ON_TARGET "OSX") 
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -27,7 +27,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-#vcpkg_fixup_pkgconfig()?
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES -lpthread -lm -ldl)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/lib/pkgconfig

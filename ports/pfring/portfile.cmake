@@ -20,7 +20,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 endif()
 set(ENV{VCPKG_LIBPCAP_DIR} "${CURRENT_INSTALLED_DIR}")
 vcpkg_build_make()
-#vcpkg_fixup_pkgconfig()?
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 

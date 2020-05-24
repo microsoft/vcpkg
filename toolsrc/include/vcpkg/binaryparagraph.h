@@ -28,6 +28,8 @@ namespace vcpkg
 
         std::string dir() const;
 
+        bool is_feature() const { return !feature.empty(); }
+
         PackageSpec spec;
         std::string version;
         std::string description;

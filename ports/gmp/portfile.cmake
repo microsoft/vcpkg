@@ -1,4 +1,3 @@
-
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -7,17 +6,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
         SHA512 3b646c142447946bb4556db01214ff130da917bc149946b8cf086f3b01e1cc3d664b941a30a42608799c14461b2f29e4b894b72915d723bd736513c8914729b7
         HEAD_REF master
         PATCHES vs.build.patch
+                runtime.patch
+                prefix.patch
     )
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
     vcpkg_add_to_path(${YASM_DIR})
     set(ENV{YASMPATH} ${YASM_DIR}/)
-    if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-        set(PLATFORM "Win32")
-    else ()
-        set(PLATFORM ${TRIPLET_SYSTEM_ARCH})
-    endif()
-    
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(CONFIGURATION_RELEASE ReleaseDLL)
         set(CONFIGURATION_DEBUG DebugDLL)
@@ -30,22 +26,31 @@ if(VCPKG_TARGET_IS_WINDOWS)
         string(APPEND CONFIGURATION_RELEASE WinRT)
         string(APPEND CONFIGURATION_DEBUG WinRT)
     endif()
-    #<Import Project="${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props" />
+
+    #Setup YASM integration
     set(_file "${SOURCE_PATH}/SMP/libgmp.vcxproj")
     file(READ "${_file}" _contents)
-    string(REPLACE
-[[<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup Label="ProjectConfigurations">]]
-"<Project DefaultTargets=\"Build\" ToolsVersion=\"12.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n \
-  <Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />\n \
-  <ItemGroup Label=\"ProjectConfigurations\">"
-  _contents "${_contents}")
+    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
+                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
+                    _contents "${_contents}")
+    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
+                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
+                    _contents "${_contents}")
+    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already replaced by another triplet
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
+        STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
+    else()
+        STRING(REPLACE ">MultiThreadedDebug<" ">MultiThreadedDebugDLL<" _contents "${_contents}")
+        STRING(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" _contents "${_contents}")
+    endif()
     file(WRITE "${_file}" "${_contents}")
     
     vcpkg_install_msbuild(
+        USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH SMP/libgmp.sln
-        PLATFORM ${PLATFORM}
+        PLATFORM ${TRIPLET_SYSTEM_ARCH}
         LICENSE_SUBPATH COPYING.LESSERv3
         TARGET Rebuild
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
@@ -87,20 +92,14 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
-        #SKIP_CONFIGURE
-        #NO_DEBUG
-        #AUTO_HOST
-        #AUTO_DST
-        #PRERUN_SHELL ${SHELL_PATH}
         OPTIONS ${OPTIONS}
-        #OPTIONS_DEBUG
-        #OPTIONS_RELEASE
     )
 
     vcpkg_install_make()
-
+    vcpkg_fixup_pkgconfig()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
     # # Handle copyright
     file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
