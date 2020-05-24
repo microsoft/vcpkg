@@ -233,6 +233,7 @@ function(vcpkg_find_acquire_program VAR)
       set(SCRIPTNAME meson)
     endif()
     set(PATHS ${DOWNLOADS}/tools/meson/meson-0.54.2)
+    set(_vfa_SUPPORTED ON) # Just download meson from github. It is very likely that the system package manager has only an outdated version
     set(URL "https://github.com/mesonbuild/meson/archive/0.54.2.zip")
     set(ARCHIVE "meson-0.54.2.zip")
     set(HASH 8d19110bad3e6a223d1d169e833b746b884ece9cd23d2539ec02dccb5cd0c56542414b7afc0f7f2adcec9d957e4120d31f41734397aa0a7ee7f9c29ebdc9eb4c)
