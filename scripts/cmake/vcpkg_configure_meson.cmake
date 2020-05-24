@@ -59,7 +59,7 @@ function(vcpkg_configure_meson)
     endif()
 
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-    
+
     string(APPEND MESON_COMMON_CFLAGS " ${CMAKE_C_FLAGS${MESON_CMAKE_FLAG_SUFFIX}}")
     string(APPEND MESON_COMMON_CXXFLAGS " ${CMAKE_CXX_FLAGS${MESON_CMAKE_FLAG_SUFFIX}}")
 
@@ -74,11 +74,6 @@ function(vcpkg_configure_meson)
     string(APPEND MESON_RELEASE_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS_RELEASE${MESON_CMAKE_FLAG_SUFFIX}}")
 
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-        if(NOT VCPKG_MESON_CROSS_FILE)
-            set(VCPKG_MESON_CROSS_FILE "${SCRIPTS}/toolchains/meson.windows.arm64.crossfile")
-        endif()
-    endif()
 
     if(VCPKG_MESON_CROSS_FILE)
         list(APPEND _vcm_OPTIONS --cross "${VCPKG_MESON_CROSS_FILE}")
@@ -104,7 +99,7 @@ function(vcpkg_configure_meson)
     endif()
 
     vcpkg_find_acquire_program(MESON)
-    
+
     get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
     vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
 
@@ -128,27 +123,22 @@ function(vcpkg_configure_meson)
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_SHARE_DIR "${PKGCONFIG_SHARE_DIR}")
     endif()
     # configure debug
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")        
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         
         #setting up PKGCONFIG
-        if(NOT PKGCONFIG MATCHES "--define-variable=prefix")
-            set(PKGCONFIG_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
-            # if(WIN32)
-                # string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_PREFIX "${PKGCONFIG_PREFIX}")
-            # endif()
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${PKGCONFIG_PREFIX}")
-        endif()
+        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
         set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/")
         if(WIN32)
             string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_INSTALLED_DIR "${PKGCONFIG_INSTALLED_DIR}")
         endif()
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}: ${PKGCONFIG_SHARE_DIR}: $ENV{PKG_CONFIG_PATH}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}:$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}: ${PKGCONFIG_SHARE_DIR}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}")
         endif()
 
         set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_DEBUG_CFLAGS}]")
@@ -199,24 +189,19 @@ function(vcpkg_configure_meson)
     # configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)        
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
         #setting up PKGCONFIG
-        if(NOT PKGCONFIG MATCHES "--define-variable=prefix")
-            set(PKGCONFIG_PREFIX "${CURRENT_INSTALLED_DIR}")
-            # if(WIN32)
-                # string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_PREFIX "${PKGCONFIG_PREFIX}")
-            # endif()
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${PKGCONFIG_PREFIX}")
-        endif()
+        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
         set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/")
         if(WIN32)
             string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_INSTALLED_DIR "${PKGCONFIG_INSTALLED_DIR}")
         endif()
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}: ${PKGCONFIG_SHARE_DIR}: $ENV{PKG_CONFIG_PATH}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}:$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}: ${PKGCONFIG_SHARE_DIR}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}")
         endif()
 
         # Normalize flags for meson (i.e. " /string /with /flags " -> ['/string', '/with', '/flags'])
