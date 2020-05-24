@@ -52,28 +52,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
 else()
     message("libgles2-mesa-dev must be installed before sdl1 can build. Install it with \"apt install libgles2-mesa-dev\".")
-    
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        set(BUILD_SHARED yes)
-        set(BUILD_STATIC no)
-    else()
-        set(BUILD_SHARED no)
-        set(BUILD_STATIC yes)
-    endif()
 
-    file(REMOVE_RECURSE ${SOURCE_PATH}/m4)
-    file(MAKE_DIRECTORY ${SOURCE_PATH}/m4)
-    
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
-        NO_DEBUG
-        PRERUN_SHELL autogen.sh
-        OPTIONS
-            --enable-shared=${BUILD_SHARED}
-            --enable-static=${BUILD_STATIC}
+        SOURCE_PATH ${SOURCE_PATH}     
     )
     
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig(IGNORE_FLAGS -Wl,-rpath,\${libdir} SYSTEM_LIBRARIES -lm -ldl -lpthread)
     
     file(GLOB SDL1_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     foreach (SDL1_TOOL ${SDL1_TOOLS})
@@ -83,4 +68,5 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     
     file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()

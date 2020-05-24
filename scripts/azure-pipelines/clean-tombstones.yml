@@ -3,7 +3,7 @@
 #
 variables:
   windows-pool: 'PrWin-2020-04-28'
-  linux-pool: 'PrLin-2020-04-30'
+  linux-pool: 'PrLin-2020-05-07'
 
 jobs:
   - job: windows

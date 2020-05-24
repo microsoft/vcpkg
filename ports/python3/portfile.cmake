@@ -18,6 +18,9 @@ vcpkg_from_github(
 
 if("enable-shared" IN_LIST FEATURES)
 	set(_ENABLED_SHARED --enable-shared)
+    if(VCPKG_TARGET_IS_LINUX)
+        message(WARNING"Feature enable-shared requires libffi-devel from the system package manager, please install it on Ubuntu system via sudo apt-get install libffi-dev.")
+    endif()
 else()
 	unset(_ENABLED_SHARED)
 endif()

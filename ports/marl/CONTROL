@@ -1,5 +1,5 @@
 Source: marl
-Version: 2019-09-13
+Version: 2020-05-21
 Description: A hybrid thread/fiber task scheduler written in C++ 11
 Homepage: https://github.com/google/marl
 Supports: !uwp

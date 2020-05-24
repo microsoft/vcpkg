@@ -1,24 +1,6 @@
-#if defined(_MSC_VER) && _MSC_VER < 1911
-// [[nodiscard]] is not recognized before VS 2017 version 15.3
-#pragma warning(disable : 5030)
-#endif
+#include <vcpkg/base/pragmas.h>
 
-#if defined(__GNUC__) && __GNUC__ < 7
-// [[nodiscard]] is not recognized before GCC version 7
-#pragma GCC diagnostic ignored "-Wattributes"
-#endif
-
-#if defined(_WIN32)
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
-#pragma warning(push)
-#pragma warning(disable : 4768)
-#include <ShlObj.h>
-#pragma warning(pop)
-#else
-#include <unistd.h>
-#endif
+#include <vcpkg/base/system_headers.h>
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
@@ -348,7 +330,7 @@ int main(const int argc, const char* const* const argv)
     const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
     if (const auto v = vcpkg_feature_flags_env.get())
     {
-        auto flags = Strings::split(*v, ",");
+        auto flags = Strings::split(*v, ',');
         if (std::find(flags.begin(), flags.end(), "binarycaching") != flags.end()) GlobalState::g_binary_caching = true;
     }
 

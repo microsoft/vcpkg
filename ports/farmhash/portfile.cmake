@@ -1,5 +1,5 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "Windows")
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+#Requires a compiler which understands '__builtin_unreachable': 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
 
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -9,12 +9,12 @@ vcpkg_from_github(
         HEAD_REF master
 )
 
-set(FLAGS "-g -mavx -maes -O3")
+if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) AND NOT ENV{CXX_FLAGS}) # This should be a compiler check
+    set(ENV{CXXFLAGS} "-maes -msse4.2")
+endif()
+file(REMOVE_RECURSE "${SOURCE_PATH}/configure")
 vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
-        AUTOCONFIG
-        OPTIONS
-        CXXFLAGS=${FLAGS}
 )
 
 vcpkg_install_make()
