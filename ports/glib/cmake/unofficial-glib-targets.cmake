@@ -53,7 +53,7 @@ endif()
 add_library(unofficial::glib::glib SHARED IMPORTED)
 
 set_target_properties(unofficial::glib::glib PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/glib-2.0;${_IMPORT_PREFIX}/lib/glib-2.0/include"
 )
 
 # Create imported target unofficial::glib::gthread
@@ -63,21 +63,21 @@ add_library(unofficial::glib::gthread SHARED IMPORTED)
 add_library(unofficial::glib::gobject SHARED IMPORTED)
 
 set_target_properties(unofficial::glib::gobject PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/glib-2.0"
 )
 
 # Create imported target unofficial::glib::gmodule
 add_library(unofficial::glib::gmodule SHARED IMPORTED)
 
 set_target_properties(unofficial::glib::gmodule PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/glib-2.0"
 )
 
 # Create imported target unofficial::glib::gio
 add_library(unofficial::glib::gio SHARED IMPORTED)
 
 set_target_properties(unofficial::glib::gio PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/gio"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/glib-2.0/gio"
 )
 
 # Load information for each installed configuration.

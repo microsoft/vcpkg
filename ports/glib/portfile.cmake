@@ -22,7 +22,6 @@ vcpkg_extract_source_archive_ex(
     REF ${GLIB_VERSION}
     PATCHES
         fix-meson.patch
-        fix-include-path.patch
         use-libiconv-on-windows.patch
         fix-arm-builds.patch
 )
