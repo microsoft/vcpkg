@@ -137,7 +137,7 @@ else()
         message(FATAL_ERROR "libvpx does not support architecture ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
 
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(VCPKG_TARGET_IS_LINUX)
         set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
     elseif(VCPKG_TARGET_IS_OSX)
         set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
