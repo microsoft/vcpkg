@@ -1,5 +1,5 @@
 Source: opencc
-Version: 2020-04-26-2
+Version: 2020-04-26-3
 Description: A project for conversion between Traditional and Simplified Chinese
 Homepage: https://github.com/BYVoid/OpenCC
 Supports: !(arm|arm64|uwp)
