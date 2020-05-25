@@ -1,0 +1,55 @@
+From df53cf93d35f74db22eaadcac87bd0c88ea87f5d Mon Sep 17 00:00:00 2001
+From: Cheney-Wang <v-xincwa@microsoft.com>
+Date: Wed, 12 Feb 2020 04:12:46 -0800
+Subject: [PATCH 1/2] Include <ostream> in variable.hpp
+
+---
+ include/telnetpp/options/msdp/variable.hpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/telnetpp/options/msdp/variable.hpp b/include/telnetpp/options/msdp/variable.hpp
+index 16dae0c..d74a6da 100644
+--- a/include/telnetpp/options/msdp/variable.hpp
++++ b/include/telnetpp/options/msdp/variable.hpp
+@@ -5,6 +5,7 @@
+ #include <boost/variant.hpp>
+ #include <iosfwd>
+ #include <string>
++#include <ostream>
+ 
+ namespace telnetpp { namespace options { namespace msdp {
+ 
+
+From ea7477eba057fec5ca8178eaacd5b11c5745a9e7 Mon Sep 17 00:00:00 2001
+From: Cheney-Wang <v-xincwa@microsoft.com>
+Date: Thu, 20 Feb 2020 04:17:39 -0800
+Subject: [PATCH 2/2] Include <ostream> in variable.cpp
+
+---
+ include/telnetpp/options/msdp/variable.hpp | 1 -
+ src/options/msdp/variable.cpp              | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/telnetpp/options/msdp/variable.hpp b/include/telnetpp/options/msdp/variable.hpp
+index d74a6da..16dae0c 100644
+--- a/include/telnetpp/options/msdp/variable.hpp
++++ b/include/telnetpp/options/msdp/variable.hpp
+@@ -5,7 +5,6 @@
+ #include <boost/variant.hpp>
+ #include <iosfwd>
+ #include <string>
+-#include <ostream>
+ 
+ namespace telnetpp { namespace options { namespace msdp {
+ 
+diff --git a/src/options/msdp/variable.cpp b/src/options/msdp/variable.cpp
+index dc779ea..82549e9 100644
+--- a/src/options/msdp/variable.cpp
++++ b/src/options/msdp/variable.cpp
+@@ -1,5 +1,6 @@
+ #include "telnetpp/options/msdp/variable.hpp"
+ #include "telnetpp/detail/lambda_visitor.hpp"
++#include <ostream>
+ 
+ namespace telnetpp { namespace options { namespace msdp {
+ 
