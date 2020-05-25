@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
@@ -7,7 +7,7 @@ vcpkg_from_github(
 	SHA512 83f5614a23c8fb4ab02517dec95d8b490c5ef472302735d5cc4cf483cc51513cc81ae2e1b4618c7c73fb5b071efe422e463b46fa79492ccb4775b511a943295a
 	HEAD_REF master
 	PATCHES
-		"out_of_source_build_version_file_configure.patch")
+		out_of_source_build_version_file_configure.patch)
 
 if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
@@ -36,7 +36,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
 	vcpkg_configure_make(
 		SOURCE_PATH ${SOURCE_PATH}
-		OPTIONS --with-oracle-import=runtime)
+		OPTIONS 
+			--with-oracle-import=runtime)
 
 	vcpkg_install_make()
 
