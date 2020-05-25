@@ -43,7 +43,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
-      arguments: '-baselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt" -logDir "$(System.ArtifactsDirectory)\xml-results" -failurelogDir "archives\fail" -outputDir "$(Build.ArtifactStagingDirectory)" -errorOnRegression -triplets "${{ parameters.triplet }}"'
+      arguments: '-baselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt" -logDir "$(System.ArtifactsDirectory)\xml-results" -failurelogDir "W:\fail" -outputDir "$(Build.ArtifactStagingDirectory)" -errorOnRegression -triplets "${{ parameters.triplet }}"'
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
