@@ -60,10 +60,10 @@
         <sha512>f477842d0cebefcd6bf9c6d536ab8ea20ec5b0aa967ee963ab6a101aeff9df8742ca600d35f39e2e7158d76d8231f1ed2bef6104dce84d2bf8d6b07d17d706a1</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>4.8.1</version>
+        <version>5.7.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v4.8.1/nuget.exe</url>
-        <sha512>42cb744338af8decc033a75bce5b4c4df28e102bafc45f9a8ba86d7bc010f5b43ebacae80d7b28c4f85ac900eefc2a349620ae65f27f6ca1c21c53b63b92924b</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.7.0-preview1/nuget.exe</url>
+        <sha512>227da80a54bf63c2ec73d04b11448457c4932add2c3a5c53567ed7e0e3eb5837de266855de52c3673c29dc836d1df39e4aff0fd231836f1a143139d70b6d7a0c</sha512>
     </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
