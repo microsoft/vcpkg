@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
-    REF 3697e424ffc2866ddf44e4a30f379dc913c9a7a8
-    SHA512 0efa9295b80a2b47fe9632643ed3b8172fc096a910dcd2c99bef6d9af9f8c5ec7ea0677ab32308915d8cf5432f10c97466144ca3272583172b13c1ec497b0bd1
+    REF 4f669d5954977e86f4da0f53cb5110d2eb6320b6
+    SHA512 091ebc83240d3823fb73e0f65f80732d2a85e55f19c8e1a3d1435f05cfa0d1b95d893e8a3c432e1698953a35c56a6af78044ee59db04f03706cf33e0798a02c7
     HEAD_REF master
-    PATCHES
-         # TODO: Remove this patch if https://github.com/symengine/symengine/pull/1669 is merged.
-        interface-includedir.patch
 )
 
 vcpkg_check_features(
