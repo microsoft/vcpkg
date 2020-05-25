@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/wtl/WTL%2010/WTL%2010.0.9163/WTL10_9163.zip"
     FILENAME "WTL10_9163.zip"
