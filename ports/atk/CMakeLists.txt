@@ -37,11 +37,7 @@ endif()
 add_definitions(-DHAVE_CONFIG_H)
 include_directories(. ./atk ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/atk)
 
-find_path(GLIB_INCLUDE_DIR glib.h)
-find_library(GLIB_GLIB_LIBRARY glib-${GLIB_LIB_VERSION})
-find_library(GLIB_GOBJECT_LIBRARY gobject-${GLIB_LIB_VERSION})
-find_library(GLIB_GMODULE_LIBRARY gmodule-${GLIB_LIB_VERSION})
-set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GOBJECT_LIBRARY} ${GLIB_GMODULE_LIBRARY})
+find_package(unofficial-glib REQUIRED)
 
 if (WIN32 OR APPLE)
     find_path(LIBINTL_INCLUDE_DIR libintl.h)
@@ -89,8 +85,8 @@ set(ATK_SOURCES
 
 add_library(atk ${ATK_SOURCES})
 target_compile_definitions(atk PRIVATE ATK_COMPILATION ${ATK_EXPORT_MACRO} G_DISABLE_SINGLE_INCLUDES ATK_LOCALEDIR="/dummy/share/locale")
-target_link_libraries(atk ${LIBINTL_LIBRARY} ${GLIB_LIBRARIES})
-target_include_directories(atk PRIVATE ${GLIB_INCLUDE_DIR} ${LIBINTL_INCLUDE_DIR})
+target_link_libraries(atk ${LIBINTL_LIBRARY} unofficial::glib::glib unofficial::glib::gobject unofficial::glib::gmodule)
+target_include_directories(atk PRIVATE ${LIBINTL_INCLUDE_DIR})
 
 set_target_properties(atk PROPERTIES 
     OUTPUT_NAME atk-${ATK_DLL_SUFFIX}
@@ -140,6 +136,3 @@ endif()
 
 message(STATUS "Link-time dependencies:")
 message(STATUS "  " ${LIBINTL_LIBRARY})
-foreach(GL ${GLIB_LIBRARIES})
-    message(STATUS "  " ${GL})
-endforeach()
