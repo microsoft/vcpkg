@@ -1,4 +1,6 @@
 
+vcpkg_fail_port_install(ON_TARGET "osx")
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO apache/avro
@@ -25,8 +27,6 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DAVRO_ADD_PROTECTOR_FLAGS=1
 )
-
-vcpkg_fail_port_install(ON_TARGET "osx")
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
