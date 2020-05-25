@@ -2,7 +2,7 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -13,24 +13,41 @@
 
 namespace vcpkg
 {
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir,
-                                            const Optional<fs::path>& install_root_dir,
-                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
-                                            const std::string& default_vs_path,
-                                            const std::vector<std::string>* triplets_dirs,
-                                            fs::path original_cwd)
+    namespace details
+    {
+        struct VcpkgPathsImpl
+        {
+            Lazy<std::vector<VcpkgPaths::TripletFile>> available_triplets;
+            Lazy<std::vector<Toolset>> toolsets;
+
+            fs::path default_vs_path;
+            std::vector<fs::path> triplets_dirs;
+
+            std::unique_ptr<ToolCache> m_tool_cache;
+            vcpkg::Cache<Triplet, fs::path> m_triplets_cache;
+            Build::EnvCache m_env_cache;
+        };
+    }
+
+    VcpkgPaths::~VcpkgPaths() noexcept {}
+
+    Optional<std::unique_ptr<VcpkgPaths>> VcpkgPaths::create(const fs::path& vcpkg_root_dir,
+                                                             const Optional<fs::path>& install_root_dir,
+                                                             const Optional<fs::path>& vcpkg_scripts_root_dir,
+                                                             const std::string& default_vs_path,
+                                                             const std::vector<std::string>* triplets_dirs,
+                                                             fs::path original_cwd)
     {
         auto& fs = Files::get_real_filesystem();
         std::error_code ec;
-        const fs::path canonical_vcpkg_root_dir = fs.canonical(vcpkg_root_dir, ec);
-        if (ec)
-        {
-            return ec;
-        }
+        const fs::path canonical_vcpkg_root_dir = fs.canonical(VCPKG_LINE_INFO, vcpkg_root_dir);
 
-        VcpkgPaths paths;
+        auto ret = std::make_unique<VcpkgPaths>();
+        VcpkgPaths& paths = *ret;
         paths.root = canonical_vcpkg_root_dir;
-        paths.default_vs_path = default_vs_path;
+        paths.m_pimpl = std::make_unique<details::VcpkgPathsImpl>();
+        paths.m_pimpl->m_tool_cache = get_tool_cache();
+        paths.m_pimpl->default_vs_path = default_vs_path;
         paths.original_cwd = original_cwd;
 
         if (paths.root.empty())
@@ -56,11 +73,7 @@ namespace vcpkg
                     asPath.u8string());
             }
 
-            paths.downloads = fs.canonical(std::move(asPath), ec);
-            if (ec)
-            {
-                return ec;
-            }
+            paths.downloads = fs.canonical(VCPKG_LINE_INFO, std::move(asPath));
         }
         else
         {
@@ -118,13 +131,13 @@ namespace vcpkg
                                    paths.get_filesystem().exists(path),
                                    "Error: Path does not exist '%s'",
                                    triplets_dir);
-                paths.triplets_dirs.emplace_back(fs.canonical(VCPKG_LINE_INFO, path));
+                paths.m_pimpl->triplets_dirs.emplace_back(fs.canonical(VCPKG_LINE_INFO, path));
             }
         }
-        paths.triplets_dirs.emplace_back(fs.canonical(VCPKG_LINE_INFO, paths.triplets));
-        paths.triplets_dirs.emplace_back(fs.canonical(VCPKG_LINE_INFO, paths.community_triplets));
+        paths.m_pimpl->triplets_dirs.emplace_back(fs.canonical(VCPKG_LINE_INFO, paths.triplets));
+        paths.m_pimpl->triplets_dirs.emplace_back(fs.canonical(VCPKG_LINE_INFO, paths.community_triplets));
 
-        return paths;
+        return std::move(ret);
     }
 
     fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / spec.dir(); }
@@ -155,10 +168,10 @@ namespace vcpkg
 
     const std::vector<VcpkgPaths::TripletFile>& VcpkgPaths::get_available_triplets() const
     {
-        return this->available_triplets.get_lazy([this]() -> std::vector<TripletFile> {
+        return m_pimpl->available_triplets.get_lazy([this]() -> std::vector<TripletFile> {
             std::vector<TripletFile> output;
             Files::Filesystem& fs = this->get_filesystem();
-            for (auto&& triplets_dir : triplets_dirs)
+            for (auto&& triplets_dir : m_pimpl->triplets_dirs)
             {
                 for (auto&& path : fs.get_files_non_recursive(triplets_dir))
                 {
@@ -174,9 +187,9 @@ namespace vcpkg
 
     const fs::path VcpkgPaths::get_triplet_file_path(Triplet triplet) const
     {
-        return m_triplets_cache.get_lazy(
+        return m_pimpl->m_triplets_cache.get_lazy(
             triplet, [&]() -> auto {
-                for (const auto& triplet_dir : triplets_dirs)
+                for (const auto& triplet_dir : m_pimpl->triplets_dirs)
                 {
                     auto path = triplet_dir / (triplet.canonical_name() + ".cmake");
                     if (this->get_filesystem().exists(path))
@@ -192,13 +205,11 @@ namespace vcpkg
 
     const fs::path& VcpkgPaths::get_tool_exe(const std::string& tool) const
     {
-        if (!m_tool_cache) m_tool_cache = get_tool_cache();
-        return m_tool_cache->get_tool_path(*this, tool);
+        return m_pimpl->m_tool_cache->get_tool_path(*this, tool);
     }
     const std::string& VcpkgPaths::get_tool_version(const std::string& tool) const
     {
-        if (!m_tool_cache) m_tool_cache = get_tool_cache();
-        return m_tool_cache->get_tool_version(*this, tool);
+        return m_pimpl->m_tool_cache->get_tool_version(*this, tool);
     }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
@@ -223,15 +234,15 @@ namespace vcpkg
 #if !defined(_WIN32)
         Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot build windows triplets from non-windows.");
 #else
-        const std::vector<Toolset>& vs_toolsets =
-            this->toolsets.get_lazy([this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
+        const std::vector<Toolset>& vs_toolsets = m_pimpl->toolsets.get_lazy(
+            [this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
 
         std::vector<const Toolset*> candidates = Util::fmap(vs_toolsets, [](auto&& x) { return &x; });
         const auto tsv = prebuildinfo.platform_toolset.get();
         auto vsp = prebuildinfo.visual_studio_path.get();
-        if (!vsp && !default_vs_path.empty())
+        if (!vsp && !m_pimpl->default_vs_path.empty())
         {
-            vsp = &default_vs_path;
+            vsp = &m_pimpl->default_vs_path;
         }
 
         if (tsv && vsp)
@@ -270,6 +281,11 @@ namespace vcpkg
         return *candidates.front();
 
 #endif
+    }
+
+    const System::Environment& VcpkgPaths::get_action_env(const Build::AbiInfo& abi_info) const
+    {
+        return m_pimpl->m_env_cache.get_action_env(*this, abi_info);
     }
 
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return Files::get_real_filesystem(); }

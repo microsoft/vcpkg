@@ -119,18 +119,15 @@ static void inner(const VcpkgCmdArguments& args)
 
     auto original_cwd = Files::get_real_filesystem().current_path(VCPKG_LINE_INFO);
 
-    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir,
-                                                                   install_root_dir,
-                                                                   vcpkg_scripts_root_dir,
-                                                                   default_vs_path,
-                                                                   args.overlay_triplets.get(),
-                                                                   original_cwd);
-    Checks::check_exit(VCPKG_LINE_INFO,
-                       !expected_paths.error(),
-                       "Error: Invalid vcpkg root directory %s: %s",
-                       vcpkg_root_dir.string(),
-                       expected_paths.error().message());
-    const VcpkgPaths& paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
+    auto expected_paths = VcpkgPaths::create(vcpkg_root_dir,
+                                             install_root_dir,
+                                             vcpkg_scripts_root_dir,
+                                             default_vs_path,
+                                             args.overlay_triplets.get(),
+                                             original_cwd);
+    Checks::check_exit(
+        VCPKG_LINE_INFO, expected_paths.has_value(), "Error: Invalid vcpkg root directory %s", vcpkg_root_dir.string());
+    const VcpkgPaths& paths = *expected_paths.value_or_exit(VCPKG_LINE_INFO);
 
 #if defined(_WIN32)
     const int exit_code = _wchdir(paths.root.c_str());

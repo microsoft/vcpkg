@@ -42,14 +42,6 @@ namespace vcpkg::Dependencies
 
     struct InstallPlanAction : Util::MoveOnlyBase
     {
-        struct BuildAbiInfo
-        {
-            std::unique_ptr<Build::PreBuildInfo> pre_build_info;
-            const Toolset* toolset;
-            std::string package_abi;
-            Optional<fs::path> abi_tag_file;
-        };
-
         static bool compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right);
 
         InstallPlanAction() noexcept;
@@ -78,7 +70,7 @@ namespace vcpkg::Dependencies
         std::vector<PackageSpec> package_dependencies;
         std::vector<std::string> feature_list;
 
-        Optional<BuildAbiInfo> abi_info;
+        Optional<Build::AbiInfo> abi_info;
     };
 
     enum class RemovePlanType

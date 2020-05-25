@@ -261,14 +261,15 @@ namespace vcpkg::Build
                                   }));
     }
 
-#if defined(_WIN32)
-    static const std::unordered_map<std::string, std::string>& make_env_passthrough(const PreBuildInfo& pre_build_info)
+    const System::Environment& EnvCache::get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
-        static Cache<std::vector<std::string>, std::unordered_map<std::string, std::string>> envs;
-        return envs.get_lazy(pre_build_info.passthrough_env_vars, [&]() {
+#if defined(_WIN32)
+        std::string build_env_cmd = make_build_env_cmd(*abi_info.pre_build_info, *abi_info.toolset);
+
+        const auto& base_env = envs.get_lazy(abi_info.pre_build_info->passthrough_env_vars, [&]() -> EnvMapEntry {
             std::unordered_map<std::string, std::string> env;
 
-            for (auto&& env_var : pre_build_info.passthrough_env_vars)
+            for (auto&& env_var : abi_info.pre_build_info->passthrough_env_vars)
             {
                 auto env_val = System::get_environment_variable(env_var);
 
@@ -278,10 +279,29 @@ namespace vcpkg::Build
                 }
             }
 
-            return env;
+            return {env};
         });
-    }
+
+        return base_env.cmd_cache.get_lazy(build_env_cmd, [&]() {
+            const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
+            auto& fs = paths.get_filesystem();
+            if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
+            {
+                fs.copy(
+                    powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);
+            }
+
+            auto clean_env = System::get_modified_clean_environment(base_env.env_map,
+                                                                    powershell_exe_path.parent_path().u8string() + ";");
+            if (build_env_cmd.empty())
+                return clean_env;
+            else
+                return System::cmd_execute_modify_env(build_env_cmd, clean_env);
+        });
+#else
+        return System::get_clean_environment();
 #endif
+    }
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
@@ -353,8 +373,7 @@ namespace vcpkg::Build
 
     static std::vector<System::CMakeVariable> get_cmake_vars(const VcpkgPaths& paths,
                                                              const Dependencies::InstallPlanAction& action,
-                                                             Triplet triplet,
-                                                             const Toolset& toolset)
+                                                             Triplet triplet)
     {
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
@@ -378,7 +397,7 @@ namespace vcpkg::Build
             {"VCPKG_ROOT_PATH", paths.root},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
-            {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
+            {"VCPKG_PLATFORM_TOOLSET", action.abi_info.value_or_exit(VCPKG_LINE_INFO).toolset->version.c_str()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(action.build_options.use_head_version) ? "1" : "0"},
             {"DOWNLOADS", paths.downloads},
             {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(action.build_options.allow_downloads) ? "1" : "0"},
@@ -486,14 +505,6 @@ namespace vcpkg::Build
         auto& fs = paths.get_filesystem();
         auto&& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
 
-#if defined(_WIN32)
-        const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
-        if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
-        {
-            fs.copy(powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);
-        }
-#endif
-
         Triplet triplet = action.spec.triplet();
         const auto& triplet_file_path = paths.get_triplet_file_path(triplet).u8string();
 
@@ -517,28 +528,11 @@ namespace vcpkg::Build
 
         const auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto& toolset = paths.get_toolset(pre_build_info);
-
         auto command = System::make_cmake_cmd(
-            paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, get_cmake_vars(paths, action, triplet, toolset));
-#if defined(_WIN32)
-        std::string build_env_cmd = make_build_env_cmd(pre_build_info, toolset);
+            paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, get_cmake_vars(paths, action, triplet));
 
-        const std::unordered_map<std::string, std::string>& base_env = make_env_passthrough(pre_build_info);
-        static Cache<std::pair<const std::unordered_map<std::string, std::string>*, std::string>, System::Environment>
-            build_env_cache;
+        const auto& env = paths.get_action_env(action.abi_info.value_or_exit(VCPKG_LINE_INFO));
 
-        const auto& env = build_env_cache.get_lazy({&base_env, build_env_cmd}, [&]() {
-            auto clean_env =
-                System::get_modified_clean_environment(base_env, powershell_exe_path.parent_path().u8string() + ";");
-            if (build_env_cmd.empty())
-                return clean_env;
-            else
-                return System::cmd_execute_modify_env(build_env_cmd, clean_env);
-        });
-#else
-        const auto& env = System::get_clean_environment();
-#endif
         auto buildpath = paths.buildtrees / action.spec.name();
         if (!fs.exists(buildpath))
         {
@@ -677,7 +671,6 @@ namespace vcpkg::Build
 
     static Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
                                                    const Dependencies::InstallPlanAction& action,
-                                                   const PreBuildInfo& pre_build_info,
                                                    Span<const AbiEntry> dependency_abis)
     {
         auto& fs = paths.get_filesystem();
@@ -686,7 +679,7 @@ namespace vcpkg::Build
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
-        abi_tags_from_pre_build_info(pre_build_info, abi_tag_entries);
+        abi_tags_from_pre_build_info(*action.abi_info.value_or_exit(VCPKG_LINE_INFO).pre_build_info, abi_tag_entries);
 
         // If there is an unusually large number of files in the port then
         // something suspicious is going on.  Rather than hash all of them
@@ -809,18 +802,18 @@ namespace vcpkg::Build
                 }
             }
 
-            auto pbi = std::make_unique<PreBuildInfo>(
+            action.abi_info = Build::AbiInfo{};
+            auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
+
+            abi_info.pre_build_info = std::make_unique<PreBuildInfo>(
                 paths, action.spec.triplet(), var_provider.get_tag_vars(action.spec).value_or_exit(VCPKG_LINE_INFO));
-            auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, *pbi, dependency_abis);
-            auto&& toolset = paths.get_toolset(*pbi);
+            abi_info.toolset = &paths.get_toolset(*abi_info.pre_build_info);
+
+            auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, dependency_abis);
             if (auto p = maybe_abi_tag_and_file.get())
             {
-                action.abi_info = InstallPlanAction::BuildAbiInfo{
-                    std::move(pbi), &toolset, std::move(p->tag), std::move(p->tag_file)};
-            }
-            else
-            {
-                action.abi_info = InstallPlanAction::BuildAbiInfo{std::move(pbi), &toolset, "", nullopt};
+                abi_info.package_abi = std::move(p->tag);
+                abi_info.abi_tag_file = std::move(p->tag_file);
             }
         }
     }

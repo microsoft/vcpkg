@@ -5,9 +5,10 @@
 #include <vcpkg/tools.h>
 
 #include <vcpkg/base/cache.h>
-#include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
+#include <vcpkg/base/optional.h>
+#include <vcpkg/base/util.h>
 
 namespace vcpkg
 {
@@ -45,9 +46,20 @@ namespace vcpkg
     namespace Build
     {
         struct PreBuildInfo;
+        struct AbiInfo;
     }
 
-    struct VcpkgPaths
+    namespace System
+    {
+        struct Environment;
+    }
+
+    namespace details
+    {
+        struct VcpkgPathsImpl;
+    }
+
+    struct VcpkgPaths : Util::MoveOnlyBase
     {
         struct TripletFile
         {
@@ -57,12 +69,14 @@ namespace vcpkg
             TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) {}
         };
 
-        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
-                                           const Optional<fs::path>& install_root_dir,
-                                           const Optional<fs::path>& vcpkg_scripts_root_dir,
-                                           const std::string& default_vs_path,
-                                           const std::vector<std::string>* triplets_dirs,
-                                           fs::path original_cwd);
+        ~VcpkgPaths() noexcept;
+
+        static Optional<std::unique_ptr<VcpkgPaths>> create(const fs::path& vcpkg_root_dir,
+                                                            const Optional<fs::path>& install_root_dir,
+                                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
+                                                            const std::string& default_vs_path,
+                                                            const std::vector<std::string>* triplets_dirs,
+                                                            fs::path original_cwd);
 
         fs::path package_dir(const PackageSpec& spec) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
@@ -106,15 +120,9 @@ namespace vcpkg
 
         Files::Filesystem& get_filesystem() const;
 
+        const System::Environment& get_action_env(const Build::AbiInfo& abi_info) const;
+
     private:
-        Lazy<std::vector<TripletFile>> available_triplets;
-        Lazy<std::vector<Toolset>> toolsets;
-        Lazy<std::vector<Toolset>> toolsets_vs2013;
-
-        fs::path default_vs_path;
-        std::vector<fs::path> triplets_dirs;
-
-        mutable std::unique_ptr<ToolCache> m_tool_cache;
-        mutable vcpkg::Cache<Triplet, fs::path> m_triplets_cache;
+        std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;
     };
 }

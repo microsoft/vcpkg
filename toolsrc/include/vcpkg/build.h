@@ -27,6 +27,11 @@ namespace vcpkg::Dependencies
     struct ActionPlan;
 }
 
+namespace vcpkg::System
+{
+    struct Environment;
+}
+
 namespace vcpkg::Build
 {
     namespace Command
@@ -237,8 +242,7 @@ namespace vcpkg::Build
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
         BuildPolicy::ALLOW_RESTRICTED_HEADERS,
         BuildPolicy::SKIP_DUMPBIN_CHECKS,
-        BuildPolicy::SKIP_ARCHITECTURE_CHECK
-    };
+        BuildPolicy::SKIP_ARCHITECTURE_CHECK};
 
     const std::string& to_string(BuildPolicy policy);
     CStringView to_cmake_variable(BuildPolicy policy);
@@ -299,8 +303,32 @@ namespace vcpkg::Build
         fs::path tag_file;
     };
 
+    struct AbiInfo
+    {
+        std::unique_ptr<PreBuildInfo> pre_build_info;
+        const Toolset* toolset;
+        std::string package_abi;
+        Optional<fs::path> abi_tag_file;
+    };
+
     void compute_all_abis(const VcpkgPaths& paths,
                           Dependencies::ActionPlan& action_plan,
                           const CMakeVars::CMakeVarProvider& var_provider,
                           const StatusParagraphs& status_db);
+
+    struct EnvCache
+    {
+        const System::Environment& get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info);
+
+#if defined(_WIN32)
+    private:
+        struct EnvMapEntry
+        {
+            std::unordered_map<std::string, std::string> env_map;
+            Cache<std::string, System::Environment> cmd_cache;
+        };
+
+        Cache<std::vector<std::string>, EnvMapEntry> envs;
+#endif
+    };
 }
