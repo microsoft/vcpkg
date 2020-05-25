@@ -3,24 +3,18 @@ project(glibmm)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_path(GLIB_INCLUDE_DIR NAMES glib.h)
-find_library(GLIB_LIBRARY NAMES glib-2.0)
-find_library(GIO_LIBRARY NAMES gio-2.0)
-find_library(GOBJECT_LIBRARY NAMES gobject-2.0)
-find_library(GMODULE_LIBRARY NAMES gmodule-2.0)
-find_library(GTHREAD_LIBRARY NAMES gthread-2.0)
+find_package(unofficial-glib REQUIRED)
 find_program(GLIB_COMPILE_SCHEMAS NAMES glib-compile-schemas)
 find_library(PCRE_LIBRARY NAMES pcre)
 find_library(SIGC_LIBRARY NAMES sigc-2.0)
 find_library(FFI_LIBRARY NAMES ffi libffi)
 
-include_directories(${GLIB_INCLUDE_DIR})
 link_libraries(
-    ${GIO_LIBRARY}
-    ${GOBJECT_LIBRARY}
-    ${GMODULE_LIBRARY}
-    ${GTHREAD_LIBRARY}
-    ${GLIB_LIBRARY}
+    unofficial::glib::gio
+    unofficial::glib::gobject
+    unofficial::glib::gmodule
+    unofficial::glib::gthread
+    unofficial::glib::glib
     ${PCRE_LIBRARY}
     ${SIGC_LIBRARY}
     ${FFI_LIBRARY}
