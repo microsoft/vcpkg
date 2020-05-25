@@ -19,6 +19,11 @@ if(NOT EXISTS "${SOURCE_PATH}/.git")
     )
 endif()
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES patch_v2.patch
+)
+
 # MSBuild - TARGET Restore #not work /t:Restore or /Restore and /t:Build
 vcpkg_find_acquire_program(NUGET)
 execute_process(
