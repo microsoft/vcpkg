@@ -1,6 +1,3 @@
-#cmake-only scripts
-include(vcpkg_common_functions)
-
 set(LPEG_VER 1.0.2)
 
 vcpkg_download_distfile(ARCHIVE
@@ -28,7 +25,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/lpeg.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/lpeg RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/lpeg.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
