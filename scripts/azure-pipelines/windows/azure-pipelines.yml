@@ -22,13 +22,8 @@ jobs:
   - powershell: |
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)\xml-results
-      $command = ".\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching"
-      Set-Content -Path 'run_ci.cmd' -Value $command -Encoding ASCII
-    displayName: 'Write Test Modified Ports Batch File'
-  - task: BatchScript@1
+      .\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching
     displayName: '** Test Modified Ports **'
-    inputs:
-      filename: 'run_ci.cmd'
   - task: PowerShell@2
     displayName: 'Analyze results and prepare test logs'
     inputs:
