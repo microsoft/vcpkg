@@ -73,11 +73,11 @@
         <archiveName>QtInstallerFramework-win-x86.zip</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>18.1.0</version>
-        <exeRelativePath>7-Zip.CommandLine.18.1.0\tools\7za.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/7-Zip.CommandLine/18.1.0</url>
-        <sha512>8c75314102e68d2b2347d592f8e3eb05812e1ebb525decbac472231633753f1d4ca31c8e6881a36144a8da26b2571305b3ae3f4e2b85fc4a290aeda63d1a13b8</sha512>
-        <archiveName>7-zip.commandline.18.1.0.nupkg</archiveName>
+        <version>19.0.0</version>
+        <exeRelativePath>7-Zip.StandaloneConsole.19.0.0\tools\7za.exe</exeRelativePath>
+        <url>https://www.nuget.org/api/v2/package/7-Zip.StandaloneConsole/19.0.0</url>
+        <sha512>7e05111289a7a666336f5a2ac88954e5ebd368d3c67d1eb5a0eee39cce2f789f1bb31c721236b97a5a89bbcb39a4d457cae801ce6689a7fd7cb1a6a6b1022116</sha512>
+        <archiveName>7-zip.standaloneconsole.19.0.0.nupkg</archiveName>
     </tool>
     <tool name="aria2" os="windows">
         <version>18.01.0</version>
