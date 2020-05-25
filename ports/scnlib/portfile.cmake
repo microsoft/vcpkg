@@ -28,7 +28,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/share/scn)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE 
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/scnlib 
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     RENAME copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME scn)
