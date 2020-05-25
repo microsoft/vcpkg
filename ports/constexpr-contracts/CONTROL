@@ -1,0 +1,4 @@
+Source: constexpr-contracts
+Version: 2020-05-25
+Homepage: https://github.com/cjdb/constexpr-contracts
+Description: A constexpr-friendly, optimisation-friendly contracts library.
