@@ -149,11 +149,11 @@ namespace vcpkg::Downloads
 
         // <HACK to handle NuGet.org changing nupkg hashes.>
         // This is the NEW hash for 7zip
-        if (actual_hash == "7e05111289a7a666336f5a2ac88954e5ebd368d3c67d1eb5a0eee39cce2f789f1bb31c721236b97a5a89bbcb39a"
-                           "4d457cae801ce6689a7fd7cb1a6a6b1022116")
-            // This is the OLD hash for 7zip
-            actual_hash = "a9dfaaafd15d98a2ac83682867ec5766720acf6e99d40d1a00d480692752603bf3f3742623f0ea85647a92374df"
+        if (actual_hash = "a9dfaaafd15d98a2ac83682867ec5766720acf6e99d40d1a00d480692752603bf3f3742623f0ea85647a92374df"
                           "405f331afd6021c5cf36af43ee8db198129c0";
+        // This is the OLD hash for 7zip
+            actual_hash == "7e05111289a7a666336f5a2ac88954e5ebd368d3c67d1eb5a0eee39cce2f789f1bb31c721236b97a5a89bbcb39a"
+                           "4d457cae801ce6689a7fd7cb1a6a6b1022116")
         // </HACK>
 
         Checks::check_exit(VCPKG_LINE_INFO,
