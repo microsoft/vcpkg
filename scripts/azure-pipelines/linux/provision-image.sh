@@ -68,8 +68,3 @@ sudo rm /etc/debian_version
 # https://docs.microsoft.com/en-us/dotnet/core/install/dependencies?tabs=netcore31&pivots=os-linux
 # (we assume libssl1.0.0 or equivalent is already installed to not accidentially change SSL certs)
 apt install -y liblttng-ust0 libkrb5-3 zlib1g libicu60
-
-# Create work trees for the Azure Pipelines agent so that it puts its work tree into temporary storage.
-sudo chmod 777 /mnt
-sudo mkdir /agent -m=777
-sudo ln -s /mnt /agent/_work
