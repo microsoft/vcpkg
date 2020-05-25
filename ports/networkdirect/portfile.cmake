@@ -28,7 +28,7 @@ vcpkg_apply_patches(
 vcpkg_find_acquire_program(NUGET)
 execute_process(
     COMMAND ${NUGET} restore ${SOURCE_PATH}/dirs.proj -Force -NonInteractive -Verbosity detailed
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    ERROR_VARIABLE error_output
 )
 
 vcpkg_install_msbuild(
