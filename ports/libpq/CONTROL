@@ -80,4 +80,4 @@ Build-Depends: libxslt
 Description: Build with libxslt (--with-libxslt)
 
 Feature: client
-Description: Build all client tools and libraries. 
+Description: Build all client tools and libraries.

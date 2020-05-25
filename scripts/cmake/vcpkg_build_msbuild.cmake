@@ -110,6 +110,7 @@ function(vcpkg_build_msbuild)
             APPEND _csc_OPTIONS
             /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
             "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+            "/p:VcpkgRoot=${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
         )
     endif()
 
