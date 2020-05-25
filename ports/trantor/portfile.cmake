@@ -6,12 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-#     set(TRANTOR_SHARED OFF)
-# else()
-#     set(TRANTOR_SHARED ON)
-# endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
