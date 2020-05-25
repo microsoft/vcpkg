@@ -20,6 +20,7 @@ jobs:
       filePath: scripts/azure-pipelines/linux/initialize-environment.sh
   - bash: |
       sudo mkdir /home/agent -m=777
+      sudo chown `id -u` /home/agent
       exit 0
     displayName: 'Create /home/agent'
   - bash: |
