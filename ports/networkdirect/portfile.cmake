@@ -25,11 +25,11 @@ vcpkg_apply_patches(
 )
 
 # MSBuild - TARGET Restore #not work /t:Restore or /Restore and /t:Build
-set(OVERRIDEN_EXECUTE_PROCESS OFF)
 vcpkg_find_acquire_program(NUGET)
-execute_process(
+vcpkg_execute_required_process(
     COMMAND ${NUGET} restore ${SOURCE_PATH}/dirs.proj -Force -NonInteractive -Verbosity detailed
-    ERROR_VARIABLE error_output
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME nuget_error_output
 )
 
 vcpkg_install_msbuild(
