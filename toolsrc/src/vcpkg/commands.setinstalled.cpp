@@ -71,7 +71,7 @@ namespace vcpkg::Commands::SetInstalled
 
         for (const auto& action : action_plan.install_actions)
         {
-            all_abis.insert(action.package_abi.value_or_exit(VCPKG_LINE_INFO));
+            all_abis.insert(action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi);
         }
 
         // currently (or once) installed specifications

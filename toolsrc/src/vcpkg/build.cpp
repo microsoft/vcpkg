@@ -481,7 +481,7 @@ namespace vcpkg::Build
 
     static ExtendedBuildResult do_build_package(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action)
     {
-        const auto& pre_build_info = *action.pre_build_info.value_or_exit(VCPKG_LINE_INFO).get();
+        const auto& pre_build_info = action.pre_build_info(VCPKG_LINE_INFO);
 
         auto& fs = paths.get_filesystem();
         auto&& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
@@ -517,12 +517,12 @@ namespace vcpkg::Build
 
         const auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto command =
-            System::make_cmake_cmd(paths.get_tool_exe(Tools::CMAKE),
-                                   paths.ports_cmake,
-                                   get_cmake_vars(paths, action, triplet, paths.get_toolset(pre_build_info)));
+        auto& toolset = paths.get_toolset(pre_build_info);
+
+        auto command = System::make_cmake_cmd(
+            paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, get_cmake_vars(paths, action, triplet, toolset));
 #if defined(_WIN32)
-        std::string build_env_cmd = make_build_env_cmd(pre_build_info, paths.get_toolset(pre_build_info));
+        std::string build_env_cmd = make_build_env_cmd(pre_build_info, toolset);
 
         const std::unordered_map<std::string, std::string>& base_env = make_env_passthrough(pre_build_info);
         static Cache<std::pair<const std::unordered_map<std::string, std::string>*, std::string>, System::Environment>
@@ -675,14 +675,14 @@ namespace vcpkg::Build
         }
     }
 
-    Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
-                                            const Dependencies::InstallPlanAction& action,
-                                            Span<const AbiEntry> dependency_abis)
+    static Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
+                                                   const Dependencies::InstallPlanAction& action,
+                                                   const PreBuildInfo& pre_build_info,
+                                                   Span<const AbiEntry> dependency_abis)
     {
         auto& fs = paths.get_filesystem();
         Triplet triplet = action.spec.triplet();
         const std::string& name = action.spec.name();
-        const auto& pre_build_info = *action.pre_build_info.value_or_exit(VCPKG_LINE_INFO);
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
@@ -809,17 +809,18 @@ namespace vcpkg::Build
                 }
             }
 
-            action.pre_build_info = std::make_unique<PreBuildInfo>(
+            auto pbi = std::make_unique<PreBuildInfo>(
                 paths, action.spec.triplet(), var_provider.get_tag_vars(action.spec).value_or_exit(VCPKG_LINE_INFO));
-            auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, dependency_abis);
+            auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, *pbi, dependency_abis);
+            auto&& toolset = paths.get_toolset(*pbi);
             if (auto p = maybe_abi_tag_and_file.get())
             {
-                action.abi_tag_file = std::move(p->tag_file);
-                action.package_abi = std::move(p->tag);
+                action.abi_info = InstallPlanAction::BuildAbiInfo{
+                    std::move(pbi), &toolset, std::move(p->tag), std::move(p->tag_file)};
             }
             else
             {
-                action.package_abi = "";
+                action.abi_info = InstallPlanAction::BuildAbiInfo{std::move(pbi), &toolset, "", nullopt};
             }
         }
     }
@@ -866,12 +867,13 @@ namespace vcpkg::Build
                 AbiEntry{status_it->get()->package.spec.name(), status_it->get()->package.abi});
         }
 
-        if (!action.abi_tag_file)
+        auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
+        if (!abi_info.abi_tag_file)
         {
             return do_build_package_and_clean_buildtrees(paths, action);
         }
 
-        auto& abi_file = *action.abi_tag_file.get();
+        auto& abi_file = *abi_info.abi_tag_file.get();
 
         std::error_code ec;
         const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
@@ -906,7 +908,7 @@ namespace vcpkg::Build
         else if (binary_caching_enabled &&
                  (result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED))
         {
-            binaries_provider.push_failure(paths, action.package_abi.value_or_exit(VCPKG_LINE_INFO), spec);
+            binaries_provider.push_failure(paths, abi_info.package_abi, spec);
         }
 
         return result;
@@ -1054,7 +1056,9 @@ namespace vcpkg::Build
                         build_type = ConfigurationType::RELEASE;
                     else
                         Checks::exit_with_message(
-                            VCPKG_LINE_INFO, "Unknown setting for VCPKG_BUILD_TYPE: %s. Valid settings are '', 'debug' and 'release'.", variable_value);
+                            VCPKG_LINE_INFO,
+                            "Unknown setting for VCPKG_BUILD_TYPE: %s. Valid settings are '', 'debug' and 'release'.",
+                            variable_value);
                     break;
                 case VcpkgTripletVar::ENV_PASSTHROUGH:
                     passthrough_env_vars = Strings::split(variable_value, ';');
@@ -1077,8 +1081,10 @@ namespace vcpkg::Build
                              Strings::case_insensitive_ascii_equals(variable_value, "false"))
                         load_vcvars_env = false;
                     else
-                        Checks::exit_with_message(
-                            VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s. Valid settings are '', '1', '0', 'on', 'off', 'true', and 'false'.", variable_value);
+                        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                  "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s. Valid "
+                                                  "settings are '', '1', '0', 'on', 'off', 'true', and 'false'.",
+                                                  variable_value);
                     break;
             }
         }

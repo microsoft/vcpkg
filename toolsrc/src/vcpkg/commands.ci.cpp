@@ -311,7 +311,7 @@ namespace vcpkg::Commands::CI
         for (auto&& action : action_plan.install_actions)
         {
             auto p = &action;
-            ret->abi_map.emplace(action.spec, action.package_abi.value_or_exit(VCPKG_LINE_INFO));
+            ret->abi_map.emplace(action.spec, action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi);
             ret->features.emplace(action.spec, action.feature_list);
             if (auto scfl = p->source_control_file_location.get())
             {
@@ -370,7 +370,7 @@ namespace vcpkg::Commands::CI
                                             p->spec,
                                             (b_will_build ? "*" : " "),
                                             state,
-                                            action.package_abi.value_or_exit(VCPKG_LINE_INFO)));
+                                            action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi));
             if (stdout_buffer.size() > 2048)
             {
                 System::print2(stdout_buffer);

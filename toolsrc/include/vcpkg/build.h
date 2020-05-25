@@ -303,8 +303,4 @@ namespace vcpkg::Build
                           Dependencies::ActionPlan& action_plan,
                           const CMakeVars::CMakeVarProvider& var_provider,
                           const StatusParagraphs& status_db);
-
-    Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
-                                            const Dependencies::InstallPlanAction& config,
-                                            Span<const AbiEntry> dependency_abis);
 }

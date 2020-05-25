@@ -69,7 +69,7 @@ namespace
         void prefetch() override {}
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& spec = action.spec;
             auto& fs = paths.get_filesystem();
             std::error_code ec;
@@ -134,7 +134,7 @@ namespace
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             if (m_write_dirs.empty()) return;
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& spec = action.spec;
             auto& fs = paths.get_filesystem();
             const auto tmp_archive_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".zip");
@@ -209,7 +209,7 @@ namespace
                                const Dependencies::InstallPlanAction& action,
                                bool purge_tombstones) override
         {
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& fs = paths.get_filesystem();
             std::error_code ec;
             for (auto&& archives_root_dir : m_read_dirs)
