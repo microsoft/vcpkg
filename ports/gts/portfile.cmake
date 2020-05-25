@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-M_PI-in-windows.patch
         support-unix.patch
+        find-glib.patch
 )
 
 vcpkg_configure_cmake(

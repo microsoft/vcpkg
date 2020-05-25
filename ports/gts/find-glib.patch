@@ -1,0 +1,37 @@
+Index: f777f54c2b-0d3894a905/CMakeLists.txt
+===================================================================
+--- f777f54c2b-0d3894a905.orig/CMakeLists.txt
++++ f777f54c2b-0d3894a905/CMakeLists.txt
+@@ -85,30 +85,14 @@ include_directories(
+   ${CMAKE_CURRENT_SOURCE_DIR}/src
+   )
+ 
+-find_library(glib_LIBRARY NAMES glib libglib glib-2.0 libglib-2.0
+-             HINTS ${glib_BINARY_DIR})
+-
+-get_filename_component(glib_LIBRARY_DIR ${glib_LIBRARY} DIRECTORY)
+-get_filename_component(glib_LIBRARY_NAME ${glib_LIBRARY} NAME)
+-string(REGEX REPLACE "\\.[^.]*$" "" glib_LIBRARY_NAME ${glib_LIBRARY_NAME})
+-
+-find_path(glib_H NAMES glib.h
+-          HINTS ${glib_LIBRARY_DIR}/../include)
+-get_filename_component(glib_INCLUDE_DIR ${glib_H} DIRECTORY)
+-
+-set(glib_CONFIG_H)
+-find_path(glib_CONFIG_H NAMES glibconfig.h
+-          HINTS ${glib_LIBRARY_DIR}/${glib_LIBRARY_NAME}/include)
+-
+-get_filename_component(glibconfig_INCLUDE_DIR ${glib_CONFIG_H} DIRECTORY)
+-include_directories(${glib_INCLUDE_DIR} ${glib_CONFIG_H})
++find_package(unofficial-glib REQUIRED)
+ 
+ if (NOT WIN32 AND BUILD_SHARED_LIBS)
+ add_definitions(/DGTS_COMPILATION)
+ endif()
+ 
+ add_library(${kit} SHARED ${srcs})
+-target_link_libraries(${kit} ${glib_LIBRARY})
++target_link_libraries(${kit} unofficial::glib::glib)
+ 
+ if(MSVC)
+   SET_TARGET_PROPERTIES(${kit} PROPERTIES LINK_FLAGS "/DEF:\"${CMAKE_CURRENT_SOURCE_DIR}/src/gts.def\"")
