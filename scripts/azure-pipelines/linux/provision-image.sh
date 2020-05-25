@@ -58,9 +58,6 @@ sudo chmod 600 $smbCredentialFile
 sudo mkdir /archives -m=777
 echo "//$StorageAccountName.file.core.windows.net/archives /archives cifs nofail,vers=3.0,credentials=$smbCredentialFile,serverino,dir_mode=0777,file_mode=0777 0 0" | sudo tee -a /etc/fstab
 
-# Create 'home' directory for haskell stack bits that want this
-sudo mkdir -p /home/root -m=777
-
 # Delete /etc/debian_version to prevent Azure Pipelines Scale Set Agents from removing some of the above
 sudo rm /etc/debian_version
 
