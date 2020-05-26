@@ -1,0 +1,6 @@
+{
+  "net": {
+    "version": "46",
+    "rollForward": "latestFeature"
+  }
+}
