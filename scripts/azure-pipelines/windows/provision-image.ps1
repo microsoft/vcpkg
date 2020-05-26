@@ -419,7 +419,7 @@ Function InstallWindowsVSIXWDKv2 {
     $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
     $wdkPath = "${env:ProgramFiles(x86)}\Windows Kits\10"
     $proc = Expand-Archive -Path "$wdkPath\Vsix\VS2019\WDK.vsix" -DestinationPath "C:\temp" -Force -PassThru
-    $proc = Copy-Item 'C:\temp\$MSBuild' -Destination $vsPath\MSBuild -Force -Recurse -PassThru
+    $proc = Copy-Item -Path 'C:\temp\$MSBuild' -Destination $vsPath\MSBuild -Force -Recurse -PassThru
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0) {
       Write-Host 'Installation successful!'
@@ -432,7 +432,7 @@ Function InstallWindowsVSIXWDKv2 {
     Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
   }
 }
-#InstallWindowsVSIXWDKv2 
+InstallWindowsVSIXWDKv2 
 
 <#
 .SYNOPSIS
