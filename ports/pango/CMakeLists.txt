@@ -26,11 +26,8 @@ find_library(LIBINTL_LIBRARY NAMES libintl intl)
 endif()
 
 # find glib
-find_path(GLIB_INCLUDE_DIR glib.h)
-find_library(GLIB_GLIB_LIBRARY glib-${GLIB_LIB_VERSION})
-find_library(GLIB_GOBJECT_LIBRARY gobject-${GLIB_LIB_VERSION})
-find_library(GLIB_GMODULE_LIBRARY gmodule-${GLIB_LIB_VERSION})
-set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GOBJECT_LIBRARY} ${GLIB_GMODULE_LIBRARY})
+find_package(unofficial-glib REQUIRED)
+set(GLIB_LIBRARIES unofficial::glib::glib unofficial::glib::gmodule unofficial::glib::gobject)
 
 # find cairo
 find_path(CAIRO_INCLUDE_DIR cairo.h)
@@ -69,7 +66,7 @@ set(FONT_LIBRARIES ${FREETYPE_LIBRARY} ${FONTCONFIG_LIBRARY} ${HARFBUZZ_LIBRARY}
 
 macro(pango_add_module MODULE_NAME)
     add_library(${MODULE_NAME} ${ARGN})
-    target_include_directories(${MODULE_NAME} PRIVATE ${GLIB_INCLUDE_DIR} ${LIBINTL_INCLUDE_DIR})
+    target_include_directories(${MODULE_NAME} PRIVATE ${LIBINTL_INCLUDE_DIR})
     target_link_libraries(${MODULE_NAME} ${LIBINTL_LIBRARY} ${GLIB_LIBRARIES})
     target_compile_definitions(${MODULE_NAME} PRIVATE
         G_LOG_DOMAIN="Pango" PANGO_ENABLE_BACKEND PANGO_ENABLE_ENGINE 
