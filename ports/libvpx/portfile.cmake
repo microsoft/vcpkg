@@ -142,7 +142,7 @@ else()
     elseif(VCPKG_TARGET_IS_OSX)
         set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
     else()
-        message(FATAL_ERROR "libvpx does not support system ${VCPKG_CMAKE_SYSTEM_NAME}")
+        set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
 
     message(STATUS "Build info. Target: ${LIBVPX_TARGET}; Options: ${OPTIONS}")
