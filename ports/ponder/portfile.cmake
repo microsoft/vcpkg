@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no-install-unused.patch
+        github-121.patch
 )
 
 vcpkg_configure_cmake(
