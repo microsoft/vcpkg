@@ -13,7 +13,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(GBC_ARCHIVE
     URLS "https://github.com/microsoft/bond/archive/gbc@0.12.0.1.zip"
     FILENAME "gbc@0.12.0.1.zip"
-    SHA512 4cd3b8054fc63cf1e3b57e89b6a1d308f03c64bf2e9c6d7878bc4e0fd255262ef1d38a3968b11cb81c8f02a81f6e1d95774a5fc62119ad98c1e0fadc9f9b384d
+    SHA512 5f5fdb738b542d86dbf06b7019b215c505818848f2472f7619c383bd001242a355ea935d2a49de71e14b3e361666a4a0e12f83cd52a53e46ca999bf95c1790be
     )
 
     # Extract the precompiled gbc
