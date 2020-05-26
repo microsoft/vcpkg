@@ -28,12 +28,12 @@ vcpkg_apply_patches(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/global.json DESTINATION ${CURRENT_BUILDTREES_DIR})
 
 # MSBuild - TARGET Restore #not work /t:Restore or /Restore and /t:Build
-vcpkg_find_acquire_program(NUGET)
-vcpkg_execute_required_process(
-    COMMAND ${NUGET} restore ${SOURCE_PATH}/dirs.proj -Force -NonInteractive -Verbosity detailed
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nuget_error_output
-)
+#vcpkg_find_acquire_program(NUGET)
+#vcpkg_execute_required_process(
+#    COMMAND ${NUGET} restore ${SOURCE_PATH}/dirs.proj -Force -NonInteractive -Verbosity detailed
+#    WORKING_DIRECTORY ${SOURCE_PATH}
+#    LOGNAME nuget_error_output
+#)
 
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
