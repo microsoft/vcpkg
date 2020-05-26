@@ -2,6 +2,7 @@ Source: networkdirect
 Version: 
 #Homepage: 
 Description: 
+Supports: !(uwp|arm|arm64|linux|osx)
 #Build-Depends: 
 #Default-Features: 
 #
