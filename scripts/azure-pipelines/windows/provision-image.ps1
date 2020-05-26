@@ -260,7 +260,10 @@ function InstallEXE
         $FilePath = "${env:Temp}\$Name"
         Invoke-WebRequest -Uri $Url -OutFile $FilePath
         Write-Host "Starting Install $Name..."
-        $process = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -Wait -PassThru
+        & curl.exe -L -o "${env:Temp}\PsExec64.exe" -s -S https://live.sysinternals.com/PsExec64.exe
+        $PsExec = ${env:Temp}\PsExec64.exe
+        $PsExecArgs = @('-u', 'AdminUser', '-p', $AdminUserPassword, '-accepteula', '-h')
+        $process = Start-Process -FilePath $PsExec $PsExecArgs $FilePath -ArgumentList $ArgumentList -Wait -PassThru
         $exitCode = $process.ExitCode
         if ($exitCode -eq 0 -or $exitCode -eq 3010) {
             Write-Host -Object 'Installation successful'
