@@ -16,10 +16,6 @@ index 16dae0c..d74a6da 100644
  namespace telnetpp { namespace options { namespace msdp {
  
 
-From ea7477eba057fec5ca8178eaacd5b11c5745a9e7 Mon Sep 17 00:00:00 2001
-From: Cheney-Wang <v-xincwa@microsoft.com>
-Date: Thu, 20 Feb 2020 04:17:39 -0800
-Subject: [PATCH 2/2] Include <ostream> in variable.cpp
 
 ---
  include/telnetpp/options/msdp/variable.hpp | 1 -
