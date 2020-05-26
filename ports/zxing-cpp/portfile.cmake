@@ -8,13 +8,21 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       0001-opencv4-compat.patch
-      0002-fix-dependency-libiconv.patch
+      0002-improve-features.patch
+)
+
+file(REMOVE ${SOURCE_PATH}/cmake/FindModules/FindIconv.cmake)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    opencv WITH_OPENCV
+    iconv WITH_ICONV
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Iconv=ON
+    OPTIONS  ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
