@@ -27,7 +27,7 @@ vcpkg_apply_patches(
 # MSBuild - TARGET Restore #not work /t:Restore or /Restore and /t:Build
 vcpkg_find_acquire_program(NUGET)
 set(ENV{RestoreUseSkipNonexistentTargets} "false")
-set(ENV{NUGET_RESTORE_MSBUILD_ARGS} /p:TreatWarningsAsErrors="false")
+set(ENV{NUGET_RESTORE_MSBUILD_ARGS} /p:TreatWarningsAsErrors="true")
 set(ENV{NUGET_RESTORE_MSBUILD_VERBOSITY "diag")
 set(ENV{NUGET_SHOW_STACK} "true")
 vcpkg_execute_required_process(
@@ -45,7 +45,7 @@ vcpkg_install_msbuild(
         "/p:BasePlatformToolset=v142"
         "/p:VCToolsVersion=$ENV{VCToolsVersion}"
         "/P:RestoreUseSkipNonexistentTargets=false"
-        "/p:TreatWarningsAsErrors=false"
+        "/p:TreatWarningsAsErrors=true"
     LICENSE_SUBPATH LICENSE.txt
 )
 
