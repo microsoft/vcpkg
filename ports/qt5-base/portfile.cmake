@@ -16,14 +16,14 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 if("latest" IN_LIST FEATURES) # latest = core currently
     set(QT_BUILD_LATEST ON)
     set(PATCHES 
-        patches/Qt5BasicConfig_latest.patch
-        patches/Qt5PluginTarget_latest.patch
+        patches/Qt5BasicConfig.patch
+        patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
         )
 else()
     set(PATCHES 
-        patches/Qt5BasicConfig_latest.patch
-        patches/Qt5PluginTarget_latest.patch
+        patches/Qt5BasicConfig.patch
+        patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
     )
 endif()
