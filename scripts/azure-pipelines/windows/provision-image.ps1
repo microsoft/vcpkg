@@ -369,6 +369,25 @@ Function InstallWindowsVSIXWDK {
   }
 }
 
+Function InstallWindowsVSIXWDKv2 {
+    Write-Host 'Installing Windows VSIX WDK...'
+    $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
+    $wdkPath = "${env:ProgramFiles(x86)}\Windows Kits\10"
+    $proc = Expand-Archive -Path "$wdkPath\Vsix\VS2019\WDK.vsix" -DestinationPath "C:\temp" -Force -Wait  -PassThru
+    $proc = Start-Process xcopy /E /H /R /Y "C:\temp\$MSBuild" "$vsPath\MSBuild" -Wait  -PassThru
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+  }
+  catch {
+    Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
+  }
+}
+
 <#
 .SYNOPSIS
 Installs MPI
@@ -522,7 +541,8 @@ Add-MPPreference -ExclusionProcess python.exe
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallWindowsSDK -Url $WindowsSDKUrl
 InstallWindowsWDK -Url $WindowsWDKUrl
-InstallWindowsVSIXWDK 
+#InstallWindowsVSIXWDK 
+InstallWindowsVSIXWDKv2 
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
