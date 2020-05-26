@@ -1,6 +1,6 @@
 {
-  "net": {
-    "version": "46",
+  "sdk": {
+    "version": "2.0.0",
     "rollForward": "latestFeature"
   }
 }
