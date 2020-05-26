@@ -339,7 +339,6 @@ Function InstallWindowsWDK {
     curl.exe -L -o $installerPath -s -S $Url
     Write-Host 'Installing Windows WDK...'
     $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
-    $exitCode = $proc.ExitCode
     $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
     $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/q /f /sp `"${env:ProgramFiles(x86)}\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -Wait  -PassThru
     $exitCode = $proc.ExitCode
