@@ -1,0 +1,40 @@
+Index: fluidsynth/CMakeLists.txt
+===================================================================
+--- fluidsynth.orig/CMakeLists.txt
++++ fluidsynth/CMakeLists.txt
+@@ -446,21 +446,8 @@ if ( ASTYLE )
+ endif(ASTYLE)
+ 
+ if(NOT enable-pkgconfig)
+-
+-    FIND_LIBRARY( GLIB_LIB NAMES glib glib-2.0 PATH GLIB_LIBRARY_DIR )
+-    FIND_LIBRARY( GTHREAD_LIB NAMES gthread gthread-2.0 PATH GTHREAD_LIBRARY_DIR )
+-    FIND_PATH( GLIBH_DIR glib.h PATH GLIB_INCLUDE_DIR )
+-    FIND_PATH( GLIBCONF_DIR glibconfig.h PATH GLIBCONF_INCLUDE_DIR )
+-    
+-    IF( GLIB_LIB MATCHES "GLIB_LIB-NOTFOUND" OR
+-            GTHREAD_LIB MATCHES "GTHREAD_LIB-NOTFOUND" OR
+-            GLIBH_DIR MATCHES "GLIBH_DIR-NOTFOUND" OR
+-            GLIBCONF_DIR MATCHES "GLIBCONF_DIR-NOTFOUND")
+-            message( WARNING "Not sure if I found GLIB, continuing anyway.")
+-    ENDIF()
+-    
+-    SET( GLIB_INCLUDE_DIRS ${GLIBH_DIR} ${GLIBCONF_DIR} )
+-    SET( GLIB_LIBRARIES ${GLIB_LIB} ${GTHREAD_LIB} )
++    find_package(unofficial-glib REQUIRED)
++    SET( GLIB_LIBRARIES unofficial::glib::glib unofficial::glib::gthread)
+     
+     message( STATUS "GLIB_INCLUDE_DIRS: " ${GLIB_INCLUDE_DIRS} )
+     message( STATUS "GLIB_LIBRARIES: " ${GLIB_LIBRARIES} )
+Index: fluidsynth/src/CMakeLists.txt
+===================================================================
+--- fluidsynth.orig/src/CMakeLists.txt
++++ fluidsynth/src/CMakeLists.txt
+@@ -288,6 +288,7 @@ add_library ( libfluidsynth-OBJ OBJECT
+     ${public_main_HEADER}
+     ${VersionFilesOutputVariable}
+ )
++target_link_libraries(libfluidsynth-OBJ unofficial::glib::glib)
+ 
+ if ( LIBFLUID_CPPFLAGS )
+   set_target_properties ( libfluidsynth-OBJ

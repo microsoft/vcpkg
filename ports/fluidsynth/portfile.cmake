@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
        force-x86-gentables.patch
+       fix-cmakelists.patch
 )
 
 vcpkg_configure_cmake(
