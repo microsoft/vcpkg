@@ -7,7 +7,8 @@ vcpkg_from_github(
 	SHA512 83f5614a23c8fb4ab02517dec95d8b490c5ef472302735d5cc4cf483cc51513cc81ae2e1b4618c7c73fb5b071efe422e463b46fa79492ccb4775b511a943295a
 	HEAD_REF master
 	PATCHES
-		out_of_source_build_version_file_configure.patch)
+		out_of_source_build_version_file_configure.patch
+)
 
 if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
@@ -37,7 +38,8 @@ else()
 	vcpkg_configure_make(
 		SOURCE_PATH ${SOURCE_PATH}
 		OPTIONS 
-			--with-oracle-import=runtime)
+			--with-oracle-import=runtime
+	)
 
 	vcpkg_install_make()
 
