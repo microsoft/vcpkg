@@ -112,10 +112,6 @@ $Workloads = @(
   'Microsoft.Component.NetFX.Native'
 )
 
-$WindowsSDKUrl = 'https://download.microsoft.com/download/1/c/3/1c3d5161-d9e9-4e4b-9b43-b70fe8be268c/windowssdk/winsdksetup.exe'
-
-$WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
-
 $MpiUrl = 'https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe'
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
@@ -246,42 +242,6 @@ Function InstallMSI {
   }
 }
 
-function InstallEXE
-{
-    Param
-    (
-        [String]$Url,
-        [String]$Name,
-        [String[]]$ArgumentList
-    )
-    $exitCode = -1
-    try {
-        Write-Host "Downloading $Name..."
-        $FilePath = "${env:Temp}\$Name"
-        Invoke-WebRequest -Uri $Url -OutFile $FilePath
-        Write-Host "Starting Install $Name..."
-        & curl.exe -L -o "${env:Temp}\PsExec64.exe" -s -S https://live.sysinternals.com/PsExec64.exe | Format-List | Out-Host
-        $PsExec = ${env:Temp}\PsExec64.exe
-        $PsExecArgs = @('-u', 'AdminUser', '-p', $AdminUserPassword, '-accepteula', '-h')
-        $process = Start-Process -FilePath $PsExec $PsExecArgs $FilePath -ArgumentList $ArgumentList -Wait -PassThru | Format-List | Out-Host
-        $exitCode = $process.ExitCode
-        if ($exitCode -eq 0 -or $exitCode -eq 3010) {
-            Write-Host -Object 'Installation successful'
-            return $exitCode
-        }
-        else {
-            Write-Host -Object "Non zero exit code returned by the installation process : $exitCode."
-            return $exitCode
-        }
-    }
-    catch
-    {
-        Write-Host -Object "Failed to install the Executable $Name"
-        Write-Host -Object $_.Exception.Message
-        return -1
-    }
-}
-
 <#
 .SYNOPSIS
 Unpacks a zip file to $Dir.
@@ -318,80 +278,10 @@ Function InstallZip {
   }
 }
 
-<#
-.SYNOPSIS
-Installs Windows SDK version 2004
-
-.DESCRIPTION
-Downloads the Windows SDK installer located at $Url, and installs it with the
-correct flags.
-
-.PARAMETER Url
-The URL of the installer.
-#>
-
-Function InstallWindowsSDK {
-  Param(
-    [String]$Url
-  )
-  try {
-    Write-Host 'Downloading Windows SDK...'
-    [string]$WindowsSDKPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $WindowsSDKPath -s -S $Url
-    Write-Host 'Installing Windows SDK...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru | Format-List | Out-Host
-    $exitCode = $proc.ExitCode
-    if ($exitCode -eq 0) {
-      Write-Host 'Installation successful!'
-    }
-    else {
-      Write-Error "Installation failed! Exited with $exitCode."
-    }
-  }
-  catch {
-    Write-Error "Failed to install Windows SDK! $($_.Exception.Message)"
-  }
-}
-
-<#
-.SYNOPSIS
-Installs Windows WDK version 2004
-
-.DESCRIPTION
-Downloads the Windows WDK installer located at $Url, and installs it with the
-correct flags.
-
-.PARAMETER Url
-The URL of the installer.
-#>
-Function InstallWindowsWDK {
-  Param(
-    [String]$Url
-  )
-
-  try {
-    Write-Host 'Downloading Windows WDK...'
-    [string]$WindowsWDKPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $WindowsWDKPath -s -S $Url
-    Write-Host 'Installing Windows WDK...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru | Format-List | Out-Host
-    $exitCode = $proc.ExitCode
-    if ($exitCode -eq 0) {
-      Write-Host 'Installation successful!'
-    }
-    else {
-      Write-Error "Installation failed! Exited with $exitCode."
-    }
-  }
-  catch {
-    Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
-  }
-}
-
 Function InstallWindowsVSIXWDK {
     Write-Host 'Installing Windows VSIX WDK...'
     $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
-    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/a /q /f /sp `"${env:ProgramFiles(x86)}\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -Wait  -PassThru
+    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/a /q /f /sp `"${env:ProgramFiles(x86)}\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -PassThru
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0 -or $exitCode -eq 1001) {
       Write-Host 'Installation VSIX WDK successful!'
@@ -405,24 +295,12 @@ Function InstallWindowsVSIXWDK {
   }
 }
 
-$sdkExitCode = InstallEXE -Url $WindowsSDKUrl -Name "winsdksetup.exe" -ArgumentList ("/features", "+", "/quiet")
-if ($sdkExitCode -ne 0) {
-    Write-Host "Failed to install the Windows SDK."
-    exit $sdkExitCode
-}
-
-$wdkExitCode = InstallEXE -Url $WindowsWDKUrl -Name "wdksetup.exe" -ArgumentList ("/features", "+", "/quiet")
-if ($wdkExitCode -ne 0) {
-    Write-Host "Failed to install the Windows Driver Kit."
-    exit $wdkExitCode
-}
-
 Function InstallWindowsVSIXWDKv2 {
     Write-Host 'Installing Windows VSIX WDK...'
     $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
     $wdkPath = "${env:ProgramFiles(x86)}\Windows Kits\10"
-    $proc = Expand-Archive -Path "$wdkPath\Vsix\VS2019\WDK.vsix" -DestinationPath "C:\temp" -Force -PassThru | Format-List | Out-Host
-    $proc = Copy-Item -Path 'C:\temp\$MSBuild' -Destination $vsPath\MSBuild -Force -Recurse -PassThru | Format-List | Out-Host
+    $proc = Expand-Archive -Path "$wdkPath\Vsix\VS2019\WDK.vsix" -DestinationPath "C:\temp" -Force -PassThru
+    $proc = Copy-Item -Path 'C:\temp\$MSBuild' -Destination $vsPath\MSBuild -Force -Recurse -PassThru
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0) {
       Write-Host 'Installation successful!'
@@ -435,7 +313,6 @@ Function InstallWindowsVSIXWDKv2 {
     Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
   }
 }
-InstallWindowsVSIXWDKv2 
 
 <#
 .SYNOPSIS
@@ -588,9 +465,8 @@ Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
-#InstallWindowsSDK -Url $WindowsSDKUrl
-#InstallWindowsWDK -Url $WindowsWDKUrl
-InstallWindowsVSIXWDK 
+#InstallWindowsVSIXWDK 
+#InstallWindowsVSIXWDKv2 
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
