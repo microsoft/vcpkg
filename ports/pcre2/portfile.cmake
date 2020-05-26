@@ -14,7 +14,7 @@ vcpkg_extract_source_archive_ex(
             fix-uwp.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(JIT OFF)
 else()
     set(JIT ON)

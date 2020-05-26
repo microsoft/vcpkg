@@ -1,0 +1,43 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+jobs:
+- job: ${{ parameters.jobName }}
+  pool:
+    name: ${{ parameters.poolName }}
+  workspace:
+    clean: resources
+  timeoutInMinutes: 1440 # 1 day
+
+  steps:
+  - task: PowerShell@2
+    displayName: 'Initialize Environment'
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
+  - task: BatchScript@1
+    displayName: 'Build vcpkg'
+    inputs:
+      filename: 'bootstrap-vcpkg.bat'
+  - powershell: |
+      $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
+      mkdir $(System.ArtifactsDirectory)\xml-results
+      $command = ".\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching"
+      Set-Content -Path 'run_ci.cmd' -Value $command -Encoding ASCII
+    displayName: 'Write Test Modified Ports Batch File'
+  - task: BatchScript@1
+    displayName: '** Test Modified Ports **'
+    inputs:
+      filename: 'run_ci.cmd'
+  - task: PowerShell@2
+    displayName: 'Analyze results and prepare test logs'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
+      arguments: '-baselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt" -logDir "$(System.ArtifactsDirectory)\xml-results" -failurelogDir "archives\fail" -outputDir "$(Build.ArtifactStagingDirectory)" -errorOnRegression -triplets "${{ parameters.triplet }}"'
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
+      ArtifactName: '${{ parameters.triplet }} port build failure logs'
+    condition: failed()
