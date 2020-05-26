@@ -19,12 +19,8 @@ endif()
 
 # find dependencies
 # glib
-find_path(GLIB_INCLUDE_DIR glib.h)
-find_library(GLIB_GLIB_LIBRARY glib-${GLIB_LIB_SUFFIX})
-find_library(GLIB_GIO_LIBRARY gio-${GLIB_LIB_SUFFIX})
-find_library(GLIB_GMODULE_LIBRARY gmodule-${GLIB_LIB_SUFFIX})
-find_library(GLIB_GOBJECT_LIBRARY gobject-${GLIB_LIB_SUFFIX})
-set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GIO_LIBRARY} ${GLIB_GMODULE_LIBRARY} ${GLIB_GOBJECT_LIBRARY})
+find_package(unofficial-glib REQUIRED)
+set(GLIB_LIBRARIES unofficial::glib::glib unofficial::glib::gobject unofficial::glib::gmodule unofficial::glib::gio)
 
 # pango
 find_path(PANGO_INCLUDE_DIR pango/pango.h)
@@ -57,7 +53,6 @@ find_library(LIBINTL_LIBRARY NAMES intl libintl)
 set(GTK_REQUIRED_LIBRARIES
     ${LIBINTL_LIBRARY}
     ${EPOXY_LIBRARY}
-    ${GLIB_LIBRARIES}
     ${CAIRO_LIBRARIES}
     ${PANGO_LIBRARIES}
     ${GDK_PIXBUF_LIBRARY}
@@ -66,7 +61,6 @@ set(GTK_REQUIRED_LIBRARIES
 set(GTK_REQUIRED_INCLUDE_DIR
     ${LIBINTL_INCLUDE_DIR}
     ${EPOXY_INCLUDE_DIR}
-    ${GLIB_INCLUDE_DIR}
     ${GDK_PIXBUF_INCLUDE_DIR}
     ${CAIRO_INCLUDE_DIR}
     ${PANGO_INCLUDE_DIR}
@@ -108,6 +102,8 @@ add_library(gdk-3-win32 STATIC ${GDK_WIN32_SOURCES})
 target_compile_definitions(gdk-3-win32 PRIVATE 
     GDK_COMPILATION G_LOG_DOMAIN="Gdk" INSIDE_GDK_WIN32)
 target_include_directories(gdk-3-win32 PRIVATE . ./gdk ./gdk/win32 ${GTK_REQUIRED_INCLUDE_DIR})
+target_link_libraries(gdk-3-win32 PRIVATE ${GLIB_LIBRARIES})
+
 
 # build 'broadway' gdk backend
 extract_vcproj_sources(build/win32/vs14/gdk3-broadway.vcxproj GDK_BROADWAY_SOURCES)
@@ -115,11 +111,12 @@ add_library(gdk-3-broadway STATIC ${GDK_BROADWAY_SOURCES})
 target_compile_definitions(gdk-3-broadway PRIVATE 
     GDK_COMPILATION G_LOG_DOMAIN="Gdk")
 target_include_directories(gdk-3-broadway PRIVATE . ./gdk ./gdk/broadway ${GTK_REQUIRED_INCLUDE_DIR})
+target_link_libraries(gdk-3-broadway PRIVATE ${GLIB_LIBRARIES})
 
 macro(gtk_add_module MODULE_NAME)
     add_library(${MODULE_NAME} ${ARGN})
     target_include_directories(${MODULE_NAME} PRIVATE . ./gdk ./gtk ${GTK_REQUIRED_INCLUDE_DIR})
-    target_link_libraries(${MODULE_NAME} ${GTK_REQUIRED_LIBRARIES})
+    target_link_libraries(${MODULE_NAME} ${GTK_REQUIRED_LIBRARIES} ${GLIB_LIBRARIES})
     set_target_properties(${MODULE_NAME} PROPERTIES 
         ARCHIVE_OUTPUT_NAME ${MODULE_NAME}.0)
     install(TARGETS ${MODULE_NAME} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
