@@ -26,8 +26,7 @@ vcpkg_apply_patches(
 
 # MSBuild - TARGET Restore #not work /t:Restore or /Restore and /t:Build
 vcpkg_find_acquire_program(NUGET)
-set(ENV{RestoreUseSkipNonexistentTargets} "false")
-set(ENV{NUGET_RESTORE_MSBUILD_ARGS} /p:TreatWarningsAsErrors="false")
+set(ENV{NUGET_RESTORE_MSBUILD_ARGS} /p:TreatWarningsAsErrors="false" /P:RestoreUseSkipNonexistentTargets="false")
 vcpkg_execute_required_process(
     COMMAND ${NUGET} restore ${SOURCE_PATH}/dirs.proj -Force -NonInteractive -Verbosity detailed
     WORKING_DIRECTORY ${SOURCE_PATH}
@@ -42,6 +41,8 @@ vcpkg_install_msbuild(
         "/p:PlatformToolset=WindowsUserModeDriver10.0"
         "/p:BasePlatformToolset=v142"
         "/p:VCToolsVersion=$ENV{VCToolsVersion}"
+        "/P:RestoreUseSkipNonexistentTargets=false"
+        "/p:TreatWarningsAsErrors=false"
     LICENSE_SUBPATH LICENSE.txt
 )
 
