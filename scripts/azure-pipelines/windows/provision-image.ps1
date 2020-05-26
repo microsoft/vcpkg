@@ -339,8 +339,7 @@ Function InstallWindowsWDK {
     curl.exe -L -o $installerPath -s -S $Url
     Write-Host 'Installing Windows WDK...'
     $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
-      if ($wdkExitCode -ne 0)
-      {
+      if ($exitCode -eq 0) {
         Write-Host "Failed to install the Windows Driver Kit."
         exit  = $proc
       }
