@@ -8,7 +8,6 @@ find_package(LibXml2 REQUIRED)
 if(NOT WIN32)
     find_package(Threads REQUIRED)
 endif()
-find_path(GLIB_INCLUDE_DIR glib.h)
 
 file(GLOB SOURCES
 	src/cr-utils.c
@@ -70,7 +69,7 @@ set(CMAKE_DEBUG_POSTFIX "d")
 
 add_library(croco-0.6 ${SOURCES})
 
-target_include_directories(croco-0.6 PRIVATE ${GLIB_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
+target_include_directories(croco-0.6 PRIVATE ${LIBXML2_INCLUDE_DIR})
 target_link_libraries(croco-0.6 PRIVATE 
     unofficial::glib::gio
     unofficial::glib::glib
