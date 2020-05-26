@@ -28,18 +28,9 @@ vcpkg_apply_patches(
 file(REMOVE_RECURSE ${SOURCE_PATH}/.build/Local/CBTModules/CBTModules.proj)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/packages.config DESTINATION ${SOURCE_PATH}/.build/Local/CBTModules)
 
-# MSBuild - TARGET Restore #not work /t:Restore or /Restore and /t:Build
-#vcpkg_find_acquire_program(NUGET)
-#vcpkg_execute_required_process(
-#    COMMAND ${NUGET} restore ${SOURCE_PATH}/dirs.proj -Force -NonInteractive -Verbosity detailed
-#    WORKING_DIRECTORY ${SOURCE_PATH}
-#    LOGNAME nuget_error_output
-#)
-
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH dirs.proj
-#    SKIP_CLEAN
     OPTIONS
         "/p:PlatformToolset=WindowsUserModeDriver10.0"
         "/p:BasePlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
@@ -48,8 +39,11 @@ vcpkg_install_msbuild(
 )
 
 file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${PORT}/out/Release-${TRIPLET_SYSTEM_ARCH}/include" DESTINATION ${CURRENT_PACKAGES_DIR})
-file(REMOVE_RECURSE ${CURRENT_INSTALLED_DIR}/tools/${PORT}/nuget.exe)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(REMOVE_RECURSE 
+  ${CURRENT_INSTALLED_DIR}/tools/${PORT}/nuget.exe
+  ${CURRENT_PACKAGES_DIR}/bin 
+  ${CURRENT_PACKAGES_DIR}/debug/bin
+  )
 
 vcpkg_copy_pdbs() # automatic templates
 ###
