@@ -25,7 +25,8 @@ vcpkg_apply_patches(
     PATCHES patch_v2.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/global.json DESTINATION ${CURRENT_BUILDTREES_DIR})
+file(REMOVE_RECURSE ${SOURCE_PATH}/.build/Local/CBTModules/CBTModules.proj)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/packages.config DESTINATION ${SOURCE_PATH}/.build/Local/CBTModules)
 
 # MSBuild - TARGET Restore #not work /t:Restore or /Restore and /t:Build
 #vcpkg_find_acquire_program(NUGET)
