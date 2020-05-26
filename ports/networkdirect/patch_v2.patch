@@ -1,3 +1,15 @@
+diff --git a/Directory.Build.props b/Directory.Build.props
+index a5e937a..4b17312 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -14,6 +14,7 @@
+     <!--
+       Enlistment root is based off of wherever this file is.  Be sure not to set this property anywhere else.
+     -->
++    <RestoreUseSkipNonexistentTargets>false</RestoreUseSkipNonexistentTargets>
+     <EnlistmentRoot>$(MSBuildThisFileDirectory.TrimEnd('\\'))</EnlistmentRoot>
+     <NuGetPackagesPath Condition=" '$(NuGetPackagesPath)' == '' ">$(EnlistmentRoot)\packages</NuGetPackagesPath>
+ 
 diff --git a/src/examples/ndadapterinfo/ndadapterinfo.vcxproj b/src/examples/ndadapterinfo/ndadapterinfo.vcxproj
 index 21b47a0..af81287 100644
 --- a/src/examples/ndadapterinfo/ndadapterinfo.vcxproj
