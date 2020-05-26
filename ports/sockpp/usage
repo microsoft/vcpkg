@@ -1,4 +1,4 @@
-The package libgo provides CMake integration:
+The package sockpp provides CMake integration:
 
     find_package(sockpp CONFIG REQUIRED)
     target_include_directories(main PRIVATE ${SOCKPP_INCLUDE_DIRS})
