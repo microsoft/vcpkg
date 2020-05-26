@@ -432,7 +432,7 @@ Function InstallWindowsVSIXWDKv2 {
     Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
   }
 }
-InstallWindowsVSIXWDKv2 
+#InstallWindowsVSIXWDKv2 
 
 <#
 .SYNOPSIS
@@ -587,7 +587,7 @@ Add-MPPreference -ExclusionProcess python.exe
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 #InstallWindowsSDK -Url $WindowsSDKUrl
 #InstallWindowsWDK -Url $WindowsWDKUrl
-#InstallWindowsVSIXWDK 
+InstallWindowsVSIXWDK 
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
