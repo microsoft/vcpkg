@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5ade734..6e6ce85 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -58,10 +58,9 @@ include_directories(core/src)
+ add_library(libzxing ${LIBZXING_FILES})
+ set_target_properties(libzxing PROPERTIES PREFIX "")
+ 
+-find_package(Iconv)
+-if(ICONV_FOUND)
+-    include_directories(${ICONV_INCLUDE_DIR})
+-    target_link_libraries(libzxing ${ICONV_LIBRARIES})
++find_package(unofficial-iconv CONFIG)
++if(unofficial-iconv_FOUND)
++    target_link_libraries(libzxing unofficial::iconv::libiconv unofficial::iconv::libcharset)
+ else()
+     add_definitions(-DNO_ICONV=1)
+ endif()
