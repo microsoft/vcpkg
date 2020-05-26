@@ -105,6 +105,8 @@ if("contrib" IN_LIST FEATURES)
       REF ${OPENCV_VERSION}
       SHA512 70b4ecfaf9881390ad826a2aba24cced8514a680965ec7151df9926082fff53364bbe6be36458bb9ff466fda6f6f6ca2174eeac94c10a6bada989f07ed1c4da1
       HEAD_REF master
+      PATCHES
+        0004-add-missing-stdexcept-include.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
