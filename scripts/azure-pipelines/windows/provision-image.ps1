@@ -339,14 +339,9 @@ Function InstallWindowsWDK {
     curl.exe -L -o $installerPath -s -S $Url
     Write-Host 'Installing Windows WDK...'
     $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
-      if ($exitCode -eq 0) {
-        Write-Host "Failed to install the Windows Driver Kit."
-        exit  = $proc
-      }
-    $proc = Start-Process "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\VSIXInstaller.exe" "/a /q /f /sp /skuName:Enterprise /skuVersion:2019 `"C:\Program Files (x86)\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -Wait  -PassThru
     $exitCode = $proc.ExitCode
-    if ($exitCode -eq 0 -or $exitCode -eq 1001) {
-      Write-Host 'Installation WDK successful!'
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
     }
     else {
       Write-Error "Installation failed! Exited with $exitCode."
@@ -354,6 +349,23 @@ Function InstallWindowsWDK {
   }
   catch {
     Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
+  }
+}
+
+Function InstallWindowsVSIXWDK {
+    Write-Host 'Installing Windows VSIX WDK...'
+    $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
+    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/a /q /f /sp /skuName:Enterprise /skuVersion:2019 `"${env:ProgramFiles(x86)}\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -Wait  -PassThru
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0 -or $exitCode -eq 1001) {
+      Write-Host 'Installation VSIX WDK successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+  }
+  catch {
+    Write-Error "Failed to install Windows VSIX WDK! $($_.Exception.Message)"
   }
 }
 
@@ -411,7 +423,6 @@ Function InstallCuda {
     [String]$Url,
     [String]$Features
   )
-
   try {
     Write-Host 'Downloading CUDA...'
     [string]$installerPath = Get-TempFilePath -Extension 'exe'
@@ -511,6 +522,7 @@ Add-MPPreference -ExclusionProcess python.exe
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallWindowsSDK -Url $WindowsSDKUrl
 InstallWindowsWDK -Url $WindowsWDKUrl
+InstallWindowsVSIXWDK 
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
