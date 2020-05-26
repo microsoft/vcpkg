@@ -300,8 +300,8 @@ Function InstallWindowsSDK {
 
   try {
     Write-Host 'Downloading Windows SDK...'
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $installerPath -s -S $Url
+    [string]$WindowsSDKPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $WindowsSDKPath -s -S $Url
     Write-Host 'Installing Windows SDK...'
     $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
     $exitCode = $proc.ExitCode
@@ -335,8 +335,8 @@ Function InstallWindowsWDK {
 
   try {
     Write-Host 'Downloading Windows WDK...'
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $installerPath -s -S $Url
+    [string]$WindowsWDKPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $WindowsWDKPath -s -S $Url
     Write-Host 'Installing Windows WDK...'
     $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
     $exitCode = $proc.ExitCode
