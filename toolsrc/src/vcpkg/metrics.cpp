@@ -238,12 +238,39 @@ namespace vcpkg::Metrics
 #endif
         ;
     static bool g_should_print_metrics = false;
+    static bool g_metrics_disabled =
+#if VCPKG_DISABLE_METRICS
+        true
+#else
+        false
+#endif
+        ;
 
-    bool get_compiled_metrics_enabled() { return !VCPKG_DISABLE_METRICS; }
+    // for child vcpkg processes, we also want to disable metrics
+    static void set_vcpkg_disable_metrics_environment_variable(bool disabled)
+    {
+#if defined(_WIN32)
+        SetEnvironmentVariableW(L"VCPKG_DISABLE_METRICS", disabled ? L"1" : nullptr);
+#else
+        if (disabled)
+        {
+            setenv("VCPKG_DISABLE_METRICS", "1", true);
+        }
+        else
+        {
+            unsetenv("VCPKG_DISABLE_METRICS");
+        }
+#endif
+    }
 
     std::string get_MAC_user()
     {
 #if defined(_WIN32)
+        if (!g_metrics.lock()->metrics_enabled())
+        {
+            return "{}";
+        }
+
         auto getmac = System::cmd_execute_and_capture_output("getmac");
 
         if (getmac.exit_code != 0) return "0";
@@ -284,20 +311,55 @@ namespace vcpkg::Metrics
 
     void Metrics::set_print_metrics(bool should_print_metrics) { g_should_print_metrics = should_print_metrics; }
 
-    void Metrics::track_metric(const std::string& name, double value) { g_metricmessage.track_metric(name, value); }
+    void Metrics::set_disabled(bool disabled)
+    {
+        set_vcpkg_disable_metrics_environment_variable(disabled);
+        g_metrics_disabled = disabled;
+    }
+
+    bool Metrics::metrics_enabled()
+    {
+#if VCPKG_DISABLE_METRICS
+        return false;
+#else
+        return !g_metrics_disabled;
+#endif
+    }
+
+    void Metrics::track_metric(const std::string& name, double value)
+    {
+        if (!metrics_enabled())
+        {
+            return;
+        }
+        g_metricmessage.track_metric(name, value);
+    }
 
     void Metrics::track_buildtime(const std::string& name, double value)
     {
+        if (!metrics_enabled())
+        {
+            return;
+        }
         g_metricmessage.track_buildtime(name, value);
     }
 
     void Metrics::track_property(const std::string& name, const std::string& value)
     {
+        if (!metrics_enabled())
+        {
+            return;
+        }
         g_metricmessage.track_property(name, value);
     }
 
     void Metrics::upload(const std::string& payload)
     {
+        if (!metrics_enabled())
+        {
+            return;
+        }
+
 #if !defined(_WIN32)
         Util::unused(payload);
 #else
@@ -393,6 +455,11 @@ namespace vcpkg::Metrics
 
     void Metrics::flush()
     {
+        if (!metrics_enabled())
+        {
+            return;
+        }
+
         const std::string payload = g_metricmessage.format_event_data_template();
         if (g_should_print_metrics) std::cerr << payload << "\n";
         if (!g_should_send_metrics) return;
