@@ -10,7 +10,6 @@ find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 
 find_package(unofficial-glib CONFIG REQUIRED)
-find_path(GLIB_INCLUDE_DIR glib.h)
 
 if(WIN32)
     find_package(unofficial-gettext CONFIG REQUIRED)
@@ -62,7 +61,6 @@ endif()
 add_library(gdk-pixbuf ${SOURCES})
 
 target_include_directories(gdk-pixbuf PRIVATE 
-    ${GLIB_INCLUDE_DIR} 
     ${PNG_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
     ${LIBINTL_INCLUDE_DIR})
@@ -114,8 +112,7 @@ install(TARGETS gdk-pixbuf
 
 macro(gdk_add_tool TOOL_NAME)
     add_executable(${TOOL_NAME} ${ARGN})
-    target_include_directories(${TOOL_NAME} PRIVATE ${GLIB_INCLUDE_DIR})
-    target_link_libraries(${TOOL_NAME} gdk-pixbuf ${GLIB_LIBRARIES})
+    target_link_libraries(${TOOL_NAME} gdk-pixbuf unofficial::glib::glib unofficial::glib::gthread unofficial::glib::gio unofficial::glib::gmodule unofficial::glib::gobject)
     install(TARGETS ${TOOL_NAME} RUNTIME DESTINATION tools/gdk-pixbuf)
 endmacro()  
 
