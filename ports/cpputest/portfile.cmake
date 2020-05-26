@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -8,7 +6,9 @@ vcpkg_from_github(
     REF 4699da9942a1bdcc33e2a8c8a48e863b0f18188e
     SHA512 6f588691f1b4092b3be8167ab09f3a4a64c34715ac9397210724121d161024a43b12a88198b02b0cc8da7d72406670daaf375bb64cc4cf92c8bd2479e7a881bc
     HEAD_REF master
-    PATCHES fix-arm-build-error.patch
+    PATCHES
+        fix-arm-build-error.patch
+        instal-manual-link.patch
 )
 
 vcpkg_configure_cmake(
