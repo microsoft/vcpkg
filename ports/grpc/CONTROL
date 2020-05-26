@@ -1,5 +1,8 @@
 Source: grpc
-Version: 1.27.3
+Version: 1.28.1-1
 Build-Depends: zlib, openssl, protobuf, c-ares (!uwp), upb, abseil
 Homepage: https://github.com/grpc/grpc
 Description: An RPC library and framework
+
+Feature: absl-sync
+Description: Use abseil synchronization module

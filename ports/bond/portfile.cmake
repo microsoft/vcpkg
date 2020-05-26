@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES fix-install-path.patch skip-grpc-compilation.patch
 )
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(GBC_ARCHIVE
     URLS "https://github.com/microsoft/bond/archive/gbc@0.12.0.1.zip"
     FILENAME "gbc@0.12.0.1.zip"
@@ -53,13 +53,12 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/bond TARGET_PATH share/bond)
 
-# Put the license file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bond)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/bond/LICENSE ${CURRENT_PACKAGES_DIR}/share/bond/copyright)
+vcpkg_copy_pdbs()
 
 # There's no way to supress installation of the headers in the debug build,
 # so we just delete them.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-vcpkg_copy_pdbs()
+# Put the license file where vcpkg expects it
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
