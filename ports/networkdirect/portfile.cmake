@@ -26,6 +26,8 @@ vcpkg_apply_patches(
 
 # MSBuild - TARGET Restore #not work /t:Restore or /Restore and /t:Build
 vcpkg_find_acquire_program(NUGET)
+set(RestoreUseSkipNonexistentTargets false)
+set(NUGET_RESTORE_MSBUILD_ARGS "/p:TreatWarningsAsErrors=false")
 vcpkg_execute_required_process(
     COMMAND ${NUGET} restore ${SOURCE_PATH}/dirs.proj -Force -NonInteractive -Verbosity detailed
     WORKING_DIRECTORY ${SOURCE_PATH}
