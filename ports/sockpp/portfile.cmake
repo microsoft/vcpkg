@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -26,7 +24,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${CURRENT_PORT_DIR}/sockppConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
