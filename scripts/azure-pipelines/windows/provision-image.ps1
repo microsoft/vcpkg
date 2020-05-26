@@ -260,10 +260,10 @@ function InstallEXE
         $FilePath = "${env:Temp}\$Name"
         Invoke-WebRequest -Uri $Url -OutFile $FilePath
         Write-Host "Starting Install $Name..."
-        & curl.exe -L -o "${env:Temp}\PsExec64.exe" -s -S https://live.sysinternals.com/PsExec64.exe
+        & curl.exe -L -o "${env:Temp}\PsExec64.exe" -s -S https://live.sysinternals.com/PsExec64.exe | Format-List | Out-Host
         $PsExec = ${env:Temp}\PsExec64.exe
         $PsExecArgs = @('-u', 'AdminUser', '-p', $AdminUserPassword, '-accepteula', '-h')
-        $process = Start-Process -FilePath $PsExec $PsExecArgs $FilePath -ArgumentList $ArgumentList -Wait -PassThru
+        $process = Start-Process -FilePath $PsExec $PsExecArgs $FilePath -ArgumentList $ArgumentList -Wait -PassThru | Format-List | Out-Host
         $exitCode = $process.ExitCode
         if ($exitCode -eq 0 -or $exitCode -eq 3010) {
             Write-Host -Object 'Installation successful'
@@ -339,7 +339,7 @@ Function InstallWindowsSDK {
     [string]$WindowsSDKPath = Get-TempFilePath -Extension 'exe'
     curl.exe -L -o $WindowsSDKPath -s -S $Url
     Write-Host 'Installing Windows SDK...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru | Format-List | Out-Host
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0) {
       Write-Host 'Installation successful!'
@@ -374,7 +374,7 @@ Function InstallWindowsWDK {
     [string]$WindowsWDKPath = Get-TempFilePath -Extension 'exe'
     curl.exe -L -o $WindowsWDKPath -s -S $Url
     Write-Host 'Installing Windows WDK...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru | Format-List | Out-Host
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0) {
       Write-Host 'Installation successful!'
@@ -421,8 +421,8 @@ Function InstallWindowsVSIXWDKv2 {
     Write-Host 'Installing Windows VSIX WDK...'
     $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
     $wdkPath = "${env:ProgramFiles(x86)}\Windows Kits\10"
-    $proc = Expand-Archive -Path "$wdkPath\Vsix\VS2019\WDK.vsix" -DestinationPath "C:\temp" -Force -PassThru
-    $proc = Copy-Item -Path 'C:\temp\$MSBuild' -Destination $vsPath\MSBuild -Force -Recurse -PassThru
+    $proc = Expand-Archive -Path "$wdkPath\Vsix\VS2019\WDK.vsix" -DestinationPath "C:\temp" -Force -PassThru | Format-List | Out-Host
+    $proc = Copy-Item -Path 'C:\temp\$MSBuild' -Destination $vsPath\MSBuild -Force -Recurse -PassThru | Format-List | Out-Host
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0) {
       Write-Host 'Installation successful!'
