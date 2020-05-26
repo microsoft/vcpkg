@@ -28,6 +28,7 @@ vcpkg_apply_patches(
 vcpkg_find_acquire_program(NUGET)
 set(ENV{RestoreUseSkipNonexistentTargets} "false")
 set(ENV{NUGET_RESTORE_MSBUILD_ARGS} /p:TreatWarningsAsErrors="false")
+set(ENV{NUGET_RESTORE_MSBUILD_VERBOSITY "diag")
 vcpkg_execute_required_process(
     COMMAND ${NUGET} restore ${SOURCE_PATH}/dirs.proj -Force -NonInteractive -Verbosity detailed
     WORKING_DIRECTORY ${SOURCE_PATH}
