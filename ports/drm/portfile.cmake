@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/drm
-    REF  0190f49a139e7069d7cad6a6890832831da1aa8b #v2.4.100 
+    REF  27fa47a738b15464528a1c44d8cb0b2ab31d3cf7 #v2.4.101
     SHA512 2d1d372e3f5007a6286f5e95f455af32dd678f04fa47629b7ddc461423120ae424e783985fa33c72bfd4ffc7d1c079a84f2f44bb3888b3d5e9eea458bb36c925
     HEAD_REF master # branch name
     #PATCHES example.patch #patch name

@@ -1,0 +1,6 @@
+Source: xf86-input-mouse
+Version: 1.9.3
+Homepage: https://xcb.freedesktop.org/
+Description: Mouse input driver for non-Linux platforms for the Xorg X server
+Build-Depends: 
+

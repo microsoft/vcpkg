@@ -1,0 +1,16 @@
+diff --git a/src/XvMC.c b/src/XvMC.c
+index 76a855226..fcaddb02f 100644
+--- a/src/XvMC.c	
++++ b/src/XvMC.c
+@@ -12,7 +12,11 @@
+ #include <shm.h>
+ #endif /* Lynx */
+ #endif /* HAVE_SHMAT */
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
++#ifdef HAVE_SYS_TIME_H
+ #include <sys/time.h>
++#endif
+ #include <X11/extensions/Xext.h>
+ #include <X11/extensions/extutil.h>

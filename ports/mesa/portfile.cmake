@@ -10,8 +10,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF  352037317b36c7ffd13aa3be8dc12e23a38a5bf2 #v19.3.3
-    SHA512 9813c98b6b04186e510e16b76b29d0ec1be75bcc0eca758a115ab93c289c72d9103c69c8e4025f3c48d0350b7432aba42167b3768bbbc5877720c036681f1fec
+    REF  4c59d9944a8833165c8da2d38924e71261e80d1a #v20.0.6
+    SHA512 bffc1fa3c129a666d107a83cab3b45b9186d2744368c6f08486953c7614d04c2681a5ab34bfae041a66a0efe5a73f4f922029c5dc5deae52083cfcae3e559ea4
     HEAD_REF master # branch name
     PATCHES ${PATCHES} #patch name
 ) 
@@ -61,17 +61,20 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -D shared-glapi=false
-                             -D opengl=false
-                             -D gles2=false
-                             -D glvnd=false
+                             -D opengl=true
+                             #-D egl=false
+                             #-D gles1=false
+                             #-D gles2=false
+                             #-D glvnd=false
+                             
                              -D gallium-drivers=swrast
                              -D osmesa=gallium)
 else()
     list(APPEND MESA_OPTIONS -D shared-glapi=true
                              -D opengl=true
-                             -D egl=true
-                             -D gles1=true
-                             -D gles2=true
+                             #-D egl=true
+                             #-D gles1=true
+                             #-D gles2=true
     )
 endif()
 

@@ -4,42 +4,50 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         list(INSERT VCPKG_CXX_FLAGS 0 /arch:SSE2)
         list(INSERT VCPKG_C_FLAGS 0 /arch:SSE2)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        #list(APPEND OPTIONS -Dmmx=disabled)
     endif()
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND PATCHES static.patch)
+#if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    #list(APPEND PATCHES static.patch)
+#endif()
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    list(INSERT VCPKG_CXX_FLAGS 0 /arch:SSE2)
+    list(INSERT VCPKG_C_FLAGS 0 /arch:SSE2)
+    list(APPEND OPTIONS
+            -Dmmx=enabled
+            -Dsse2=enabled
+            -Dssse3=enabled)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    list(APPEND OPTIONS
+            -Dmmx=enabled
+            -Dsse2=enabled
+            -Dssse3=enabled)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+    list(APPEND OPTIONS
+            -Darm-simd=enabled
+        )
 endif()
-
-set(PIXMAN_VERSION 0.38.4)
+    
+set(PIXMAN_VERSION 0.40.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.cairographics.org/releases/pixman-${PIXMAN_VERSION}.tar.gz"
     FILENAME "pixman-${PIXMAN_VERSION}.tar.gz"
-    SHA512 b66dc23c0bc7327cb90085cbc14ccf96ad58001a927f23af24e0258ca13f32d4255535862f1efcf00e9e723410aa9f51edf26fb01c8cde49379d1225acf7b5af
+    SHA512 063776e132f5d59a6d3f94497da41d6fc1c7dca0d269149c78247f0e0d7f520a25208d908cf5e421d1564889a91da44267b12d61c0bd7934cd54261729a7de5f
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PIXMAN_VERSION}
-    PATCHES meson.build.patch
-            ${PATCHES}
+    PATCHES #meson.build.patch
+            #${PATCHES}
 )
 # Meson install wrongly pkgconfig file!
-# vcpkg_configure_meson(
-    # SOURCE_PATH "${SOURCE_PATH}"
-    # OPTIONS ${OPTIONS}
-            # -Dmmx=enabled
-            # -Dsse2=enabled
-            # -Dssse3=enabled
-# )
-# vcpkg_install_meson()
-
-vcpkg_configure_make(
+vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${OPTIONS}
+            -Dlibpng=enabled
 )
-vcpkg_install_make()
+vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

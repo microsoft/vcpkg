@@ -1,0 +1,6 @@
+Source: xf86-video-ati
+Version: 19.1.0
+Homepage: https://xcb.freedesktop.org/
+Description: ATI/AMD Radeon video driver for the Xorg X server
+Build-Depends: 
+

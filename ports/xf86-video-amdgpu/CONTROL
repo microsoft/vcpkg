@@ -1,0 +1,6 @@
+Source: xf86-video-amdgpu
+Version: 19.1.0
+Homepage: https://xcb.freedesktop.org/
+Description: Xorg driver for AMD Radeon GPUs using the amdgpu kernel driver
+Build-Depends: 
+

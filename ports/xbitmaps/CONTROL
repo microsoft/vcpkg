@@ -1,0 +1,6 @@
+Source: xbitmaps
+Version: 1.1.2
+Homepage: https://xcb.freedesktop.org/
+Description: X BitMap (XBM) format bitmaps commonly used in X.Org applications
+Build-Depends: 
+

@@ -57,7 +57,12 @@ macro(_vcpkg_determine_host)
     # --build: the machine you are building on
     # --host: the machine you are building for
     # --target: the machine that GCC will produce binary for
-    set(HOST_ARCH $ENV{PROCESSOR_ARCHITECTURE})
+    if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
+        set(HOST_ARCH $ENV{PROCESSOR_ARCHITEW6432})
+    else()
+        set(HOST_ARCH $ENV{PROCESSOR_ARCHITECTURE})
+    endif()
+    message(STATUS "HOST_ARCH:${HOST_ARCH}")
     set(MINGW_W w64)
     set(MINGW_PACKAGES)
     #message(STATUS "${HOST_ARCH}")
@@ -89,7 +94,7 @@ macro(_vcpkg_determine_host)
 endmacro()
 
 macro(_vcpkg_backup_env_variable envvar)
-    if(ENV{${envvar}})
+    if(DEFINED ENV{${envvar}})
         set(${envvar}_BACKUP "$ENV{${envvar}}")
         set(${envvar}_PATHLIKE_CONCAT "${VCPKG_HOST_PATH_SEPARATOR}$ENV{${envvar}}")
     else()
@@ -168,21 +173,27 @@ function(vcpkg_configure_make)
         file(CREATE_LINK "${MSYS_ROOT}/usr/bin/find.exe" "${SCRIPTS}/buildsystems/make_wrapper/find.exe" COPY_ON_ERROR)
         vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
 
-        # --build: the machine you are building on
-        # --host: the machine you are building for
+        # --build: the machine you are building on (HOST_ARCH|MSYS_HOST)
+        # --host: the machine you are building for (VCPKG_TARGET_ARCHITECTURE)
         # --target: the machine that CC will produce binaries for
         _vcpkg_determine_host() # VCPKG_HOST => machine you are building on => --build=
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --target=i686-pc-mingw32 --host=i686-pc-mingw32")
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --target=x86_64-pc-mingw32 --host=x86_64-pc-mingw32")
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-            set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --target=arm-pc-mingw32 --host=i686-pc-mingw32")
+        if(NOT HOST_ARCH STREQUAL VCPKG_TARGET_ARCHITECTURE) # native builds don't require any extra info
+            message(STATUS "Detected: Target architecture (${VCPKG_TARGET_ARCHITECTURE}) different from host architecture (${HOST_ARCH}) -> Crosscompiling")
+            if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --host=i686-pc-mingw32")
+            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --host=x86_64-pc-mingw32")
+            elseif(VCPKG_TARGET_ARCHITECTURE MATCHES arm)
+                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --host=arm")
+            endif()
+        else()
+            set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32") # else msys will be detected
         endif()
         
         macro(_vcpkg_append_to_configure_enviromnent inoutstring var defaultval)
             # Allows to overwrite settings in custom triplets via the enviromnent
-            if(ENV{${var}})
+            if(DEFINED ENV{${var}})
+                message(STATUS "using:$ENV{${var}}")
                 string(APPEND ${inoutstring} " ${var}='$ENV{${var}}'")
             else()
                 string(APPEND ${inoutstring} " ${var}='${defaultval}'")
@@ -191,6 +202,8 @@ function(vcpkg_configure_make)
 
         set(CONFIGURE_ENV "")
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CC "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CC_FOR_BUILD "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
+        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CPP "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo -E")
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CXX "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV LD "link.exe -verbose")
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV AR "${MSYS_ROOT}/usr/share/automake-1.16/ar-lib lib.exe -verbose")
@@ -306,7 +319,7 @@ function(vcpkg_configure_make)
         endif()
     endif()
     
-    if(NOT ENV{PKG_CONFIG})
+    if(NOT DEFINED ENV{PKG_CONFIG})
         find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
         debug_message("Using pkg-config from: ${PKGCONFIG}")
         if(NOT PKGCONFIG)

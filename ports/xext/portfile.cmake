@@ -19,7 +19,7 @@ vcpkg_configure_make(
     #AUTO_HOST
     #AUTO_DST
     #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    #OPTIONS
+    OPTIONS xorg_cv_malloc0_returns_null=yes
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
 )

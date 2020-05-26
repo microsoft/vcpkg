@@ -18,6 +18,10 @@ vcpkg_from_gitlab(
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    set(ENV{CPP} "cl_cpp_wrapper")
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS 
         --enable-malloc0returnsnull=yes      #Configre fails to run the test for some reason
         --enable-loadable-i18n=no           #Pointer conversion errors
@@ -67,7 +71,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES Ws2_32 )
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/X11/extensions/XKBgeom.h")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/X11/extensions/") #XKBgeom.h should be the only file in there

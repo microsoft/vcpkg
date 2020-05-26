@@ -1,0 +1,6 @@
+Source: xf86-drivers
+Version: 1
+Homepage: https://xcb.freedesktop.org/
+Description: xf86 metaport to install a collection of xf86-drivers
+Build-Depends: xf86-input-evdev(!windows), xf86-input-joystick, xf86-input-keyboard, xf86-input-libinput, xf86-input-mouse, xf86-video-amdgpu, xf86-video-ati, xf86-video-fbdev, xf86-video-intel, xf86-video-nouveau, xf86-video-nv, xf86-video-vesa
+

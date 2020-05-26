@@ -1,0 +1,6 @@
+Source: xf86-video-vesa
+Version: 2.4.0
+Homepage: https://xcb.freedesktop.org/
+Description: Generic VESA video driver for the Xorg X server
+Build-Depends: xserver
+

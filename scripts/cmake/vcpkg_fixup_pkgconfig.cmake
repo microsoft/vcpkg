@@ -149,12 +149,17 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         message(FATAL_ERROR "Unknown configuration in vcpkg_fixup_pkgconfig_check_libraries!")
     endif()
 
+    debug_message("IGNORED FLAGS: ${_ignore_flags}")
     foreach(_ignore IN LISTS _ignore_flags)  # Remove ignore with whitespace
-        string(REGEX REPLACE "[\t ]+${_ignore}" "" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "[\t ]+${_ignore}([\t ]+)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
     endforeach()
+    debug_message("SYSTEM LIBRARIES: ${_system_libs}")
     foreach(_system_lib IN LISTS _system_libs)  # Remove system libs with whitespace
-        string(REGEX REPLACE "^[\t ]*-l?${_system_lib}" "" _pkg_libs_output "${_pkg_libs_output}")
-        string(REGEX REPLACE "(;-l|[\t ]+-?)?${_system_lib}" "" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "^[\t ]*-l?${_system_lib}([\t ]|;|$)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "(;-l|[\t ]+-?)?${_system_lib}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
+        string(TOLOWER "${_system_lib}" _system_lib_lower)
+        string(REGEX REPLACE "^[\t ]*-l?${_system_lib_lower}([\t ]|;|$)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "(;-l|[\t ]+-?)?${_system_lib_lower}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
     endforeach()
     list(REMOVE_DUPLICATES _pkg_libs_output) # We don't care about linker order and repeats
     list(REMOVE_DUPLICATES _pkg_lib_paths_output) # We don't care about linker order and repeats
@@ -172,7 +177,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
             if(EXISTS "${_libname}")
                 continue() # fullpath in -l argument and exists; all ok
             endif()
-            find_library(CHECK_LIB_${_libname} NAMES "${_libname}" PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
+            find_library(CHECK_LIB_${_libname} NAMES ${_libname} PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
             if(CHECK_LIB_${_libname})
                 continue() # found library; all ok
             endif()
@@ -200,6 +205,10 @@ function(vcpkg_fixup_pkgconfig)
     if(VCPKG_TARGET_IS_LINUX)
         list(APPEND _vfpkg_SYSTEM_LIBRARIES -ldl -lm)
     endif()
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND _vfpkg_SYSTEM_LIBRARIES Ws2_32)
+    endif()
+    
     message(STATUS "Fixing pkgconfig")
     if(_vfpkg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")

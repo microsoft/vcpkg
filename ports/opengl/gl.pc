@@ -1,0 +1,11 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: gl
+Description: Windows OpenGL Library
+URL: 
+Version: 1.0
+Cflags: -I${includedir}
+Libs: -L${libdir} -lOpenGL32

@@ -20,8 +20,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO proto/xcbproto
-    REF  94228cde97d9aecfda04a8e699d462ba2b89e3a0 #v1.13
-    SHA512 a6d44efb2fe7ff0b731e6024436cc6b07633839c69716e835c4aa8c02d67686068e966f811da61722ea5e2545cd621b76fb6a0f5775840387727acb61a9bdd44
+    REF  73d84bf39be7f3d8c90d7494bd4641456f2c8ef9 #v1.14
+    SHA512  e3ee11fa487102b6218dc4b7de361d6212b2dc9287bd0aba1c27310fb378701a9baddd8f7c879679ec13f5143f88ad532f8e485c67602cfa021386f4d3a5bb6d
     HEAD_REF master # branch name
     #PATCHES example.patch #patch name
 ) 

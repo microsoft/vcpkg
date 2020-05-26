@@ -1,3 +1,15 @@
 Source: opengl
-Version: 0.0-6
-Description: Open Graphics Library (OpenGL)[3][4][5] is a cross-language, cross-platform application programming interface (API) for rendering 2D and 3D vector graphics.
+Version: 0.0-7
+Description: Open Graphics Library (OpenGL) is a cross-language, cross-platform application programming interface (API) for rendering 2D and 3D vector graphics.
+Default-Features: impl-select
+
+Feature: impl-select
+Description: Feature to select the implementation via build depends since features do not support platform dependent flags
+Build-Depends: opengl[core,windows] (windows), opengl[core,mesa] (!windows)
+
+Feature: windows
+Description: Use and install OpenGL from WindowsSDK
+
+Feature: mesa
+Description: Use and install OpenGL from mesa
+Build-Depends: mesa[core]

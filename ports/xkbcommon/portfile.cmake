@@ -33,7 +33,7 @@ vcpkg_configure_meson(
         -Denable-docs=false
 )
 vcpkg_install_meson()
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES Ws2_32)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -1,17 +1,12 @@
-## requires AUTOCONF, LIBTOOL and PKCONF
-if(VCPKG_TARGET_IS_WINDOWS)
-    # this skips the check on the lib which will fail due to missing 2nd linker member
-    SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-endif()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxcb
-    REF  8287ebd7b752c33b0cabc4982606fe4831106f7e #v1.13.1 
-    SHA512 625939b67d129f681503a2f784daa75897b31b09daba0b9ea72457c9dffdab34a644c0b73068282de01ddfdcd5fc29242e4db5367d39b795984374846c1319c8
+    REF  4b40b44cb6d088b6ffa2fb5cf3ad8f12da588cef #v1.14
+    SHA512 bd600b9e321f39758bf32582933b4167d335af74acd7312ecc1072bc8df3f511b4f7a85ead3075b73449a3167764cd0fc77f799a86dfe42012f94a4d20a20bd7
     HEAD_REF master # branch name
     PATCHES makefile.patch #without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
-            time.patch # missing include 
+            #time.patch # missing include 
             build.patch # avoid pulling in conflicting definitions. 
             configure.patch
 ) 
@@ -74,7 +69,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make(MAKE_OPTIONS -k --print-data-base)
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES Ws2_32)
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES Ws2_32 ws2_32)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

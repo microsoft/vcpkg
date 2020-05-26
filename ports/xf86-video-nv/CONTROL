@@ -1,0 +1,6 @@
+Source: xf86-video-nv
+Version: 2.1.21
+Homepage: https://xcb.freedesktop.org/
+Description: Minimal NVIDIA video driver for the Xorg X server
+Build-Depends: 
+

@@ -5,8 +5,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xorg/xserver
-    REF  489f4191f3c881c6c8acce97ec612167a4ae0f33 #v1.20.7
-    SHA512 30c15c0f7bfca635118dd9b4ca615b6d79d005880108415dc46b561c7f08b648c231b7f5c498c74ecaa1815cfa81c23f7ba39f6d0c0cdfddaf00104df8741b27
+    REF  f84ad082557f9cde6b8faa373eca6a0a89ba7d56 #v1.20.8
+    SHA512 105bf5fa2875315bed4afc355607243b954beaf6a484069b58e37ef161bdd6691a815dca410acbf777683a7b2b880f636b8499fb161305b7c42753b1aecb1de3
     HEAD_REF master # branch name
     PATCHES ${PATCHES} #patch name
 ) 
@@ -62,6 +62,7 @@ if(1)
             --enable-pciaccess=no
             
             )
+         set(ENV{CPP} "cl_cpp_wrapper")
     endif()
 
     vcpkg_configure_make(

@@ -1,14 +1,13 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-message(STATUS "----- ${PORT} requires autoconf, libtool and pkconf from the system package manager! -----")
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO app/xkbcomp
-    REF 2abe23d23d3755335c10ff573e4e1f93b682e9d9 # 1.4.2 
-    SHA512  43b47775afa0be884ec66446d3f12728225e83bbacdf56b6a00790672f783a351c779bbbf2482bd0276dc48347adca8db2e3dc061e56d262713e32a8251c66a7
+    REF d373c9b434c603bf6a5eb442b6427992d23ef874 # 1.4.3
+    SHA512  2c09d1baca37e5d2abd8a8366309d615fb86f7207847f298e2bf8e16362e283526220ff7e38d5143f998ac3274600c173d32ec38cf1ed81f7051f8d07296901b
     HEAD_REF master # branch name
-    PATCHES configure.patch 
+    PATCHES #configure.patch 
             unistd.h.patch
             xkbscan.patch
             listing.patch#patch name

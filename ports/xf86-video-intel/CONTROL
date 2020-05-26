@@ -1,0 +1,6 @@
+Source: xf86-video-intel
+Version: 2.99.917
+Homepage: https://xcb.freedesktop.org/
+Description: Open-source Xorg graphics driver for Intel graphics
+Build-Depends: 
+
