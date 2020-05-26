@@ -246,6 +246,39 @@ Function InstallMSI {
   }
 }
 
+function InstallEXE
+{
+    Param
+    (
+        [String]$Url,
+        [String]$Name,
+        [String[]]$ArgumentList
+    )
+    $exitCode = -1
+    try {
+        Write-Host "Downloading $Name..."
+        $FilePath = "${env:Temp}\$Name"
+        Invoke-WebRequest -Uri $Url -OutFile $FilePath
+        Write-Host "Starting Install $Name..."
+        $process = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -Wait -PassThru
+        $exitCode = $process.ExitCode
+        if ($exitCode -eq 0 -or $exitCode -eq 3010) {
+            Write-Host -Object 'Installation successful'
+            return $exitCode
+        }
+        else {
+            Write-Host -Object "Non zero exit code returned by the installation process : $exitCode."
+            return $exitCode
+        }
+    }
+    catch
+    {
+        Write-Host -Object "Failed to install the Executable $Name"
+        Write-Host -Object $_.Exception.Message
+        return -1
+    }
+}
+
 <#
 .SYNOPSIS
 Unpacks a zip file to $Dir.
@@ -293,11 +326,11 @@ correct flags.
 .PARAMETER Url
 The URL of the installer.
 #>
+
 Function InstallWindowsSDK {
   Param(
     [String]$Url
   )
-
   try {
     Write-Host 'Downloading Windows SDK...'
     [string]$WindowsSDKPath = Get-TempFilePath -Extension 'exe'
@@ -369,6 +402,18 @@ Function InstallWindowsVSIXWDK {
   }
 }
 
+$sdkExitCode = InstallEXE -Url $WindowsSDKUrl -Name "winsdksetup.exe" -ArgumentList ("/features", "+", "/quiet")
+if ($sdkExitCode -ne 0) {
+    Write-Host "Failed to install the Windows SDK."
+    exit $sdkExitCode
+}
+
+$wdkExitCode = InstallEXE -Url $WindowsWDKUrl -Name "wdksetup.exe" -ArgumentList ("/features", "+", "/quiet")
+if ($wdkExitCode -ne 0) {
+    Write-Host "Failed to install the Windows Driver Kit."
+    exit $wdkExitCode
+}
+
 Function InstallWindowsVSIXWDKv2 {
     Write-Host 'Installing Windows VSIX WDK...'
     $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
@@ -387,6 +432,7 @@ Function InstallWindowsVSIXWDKv2 {
     Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
   }
 }
+InstallWindowsVSIXWDKv2 
 
 <#
 .SYNOPSIS
@@ -539,10 +585,9 @@ Add-MPPreference -ExclusionProcess link.exe
 Add-MPPreference -ExclusionProcess python.exe
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
-InstallWindowsSDK -Url $WindowsSDKUrl
-InstallWindowsWDK -Url $WindowsWDKUrl
+#InstallWindowsSDK -Url $WindowsSDKUrl
+#InstallWindowsWDK -Url $WindowsWDKUrl
 #InstallWindowsVSIXWDK 
-InstallWindowsVSIXWDKv2 
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
