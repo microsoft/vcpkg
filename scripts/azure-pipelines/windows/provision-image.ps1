@@ -355,7 +355,7 @@ Function InstallWindowsWDK {
 Function InstallWindowsVSIXWDK {
     Write-Host 'Installing Windows VSIX WDK...'
     $vsPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise"
-    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/a /q /f /sp /skuName:Enterprise /skuVersion:2019 `"${env:ProgramFiles(x86)}\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -Wait  -PassThru
+    $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/a /q /f /sp `"${env:ProgramFiles(x86)}\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -Wait  -PassThru
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0 -or $exitCode -eq 1001) {
       Write-Host 'Installation VSIX WDK successful!'
