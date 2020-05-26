@@ -344,7 +344,7 @@ Function InstallWindowsWDK {
         Write-Host "Failed to install the Windows Driver Kit."
         exit  = $proc
       }
-    $vsPath = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\VSIXInstaller.exe"
+    $vsPath = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise"
     $proc = Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/a /q /f /sp /skuName:Enterprise /skuVersion:2019 `"C:\Program Files (x86)\Windows Kits\10\Vsix\VS2019\WDK.vsix`"" -Wait  -PassThru
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0 -or $exitCode -eq 1001) {
