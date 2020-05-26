@@ -5,6 +5,8 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/unicode.h>
 
+#include <inttypes.h>
+
 namespace vcpkg::Json
 {
     using VK = ValueKind;
@@ -23,7 +25,8 @@ namespace vcpkg::Json
             {
                 std::nullptr_t null;
                 bool boolean;
-                int64_t number;
+                int64_t integer;
+                double number;
                 std::string string;
                 Array array;
                 Object object;
@@ -31,7 +34,8 @@ namespace vcpkg::Json
 
             ValueImpl(ValueKindConstant<VK::Null> vk, std::nullptr_t) : tag(vk), null() { }
             ValueImpl(ValueKindConstant<VK::Boolean> vk, bool b) : tag(vk), boolean(b) { }
-            ValueImpl(ValueKindConstant<VK::Number> vk, int64_t i) : tag(vk), number(i) { }
+            ValueImpl(ValueKindConstant<VK::Integer> vk, int64_t i) : tag(vk), integer(i) { }
+            ValueImpl(ValueKindConstant<VK::Number> vk, double d) : tag(vk), number(d) { }
             ValueImpl(ValueKindConstant<VK::String> vk, std::string&& s) : tag(vk), string(std::move(s)) { }
             ValueImpl(ValueKindConstant<VK::Array> vk, Array&& arr) : tag(vk), array(std::move(arr)) { }
             ValueImpl(ValueKindConstant<VK::Object> vk, Object&& obj) : tag(vk), object(std::move(obj)) { }
@@ -42,6 +46,7 @@ namespace vcpkg::Json
                 {
                     case VK::Null: return internal_assign(VK::Null, &ValueImpl::null, other);
                     case VK::Boolean: return internal_assign(VK::Boolean, &ValueImpl::boolean, other);
+                    case VK::Integer: return internal_assign(VK::Integer, &ValueImpl::integer, other);
                     case VK::Number: return internal_assign(VK::Number, &ValueImpl::number, other);
                     case VK::String: return internal_assign(VK::String, &ValueImpl::string, other);
                     case VK::Array: return internal_assign(VK::Array, &ValueImpl::array, other);
@@ -101,7 +106,12 @@ namespace vcpkg::Json
 
     bool Value::is_null() const noexcept { return kind() == VK::Null; }
     bool Value::is_boolean() const noexcept { return kind() == VK::Boolean; }
-    bool Value::is_number() const noexcept { return kind() == VK::Number; }
+    bool Value::is_integer() const noexcept { return kind() == VK::Integer; }
+    bool Value::is_number() const noexcept
+    {
+        auto k = kind();
+        return k == VK::Integer || k == VK::Number;
+    }
     bool Value::is_string() const noexcept { return kind() == VK::String; }
     bool Value::is_array() const noexcept { return kind() == VK::Array; }
     bool Value::is_object() const noexcept { return kind() == VK::Object; }
@@ -111,10 +121,22 @@ namespace vcpkg::Json
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_boolean());
         return underlying_->boolean;
     }
-    int64_t Value::number() const noexcept
+    int64_t Value::integer() const noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_number());
-        return underlying_->number;
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_integer());
+        return underlying_->integer;
+    }
+    double Value::number() const noexcept
+    {
+        auto k = kind();
+        if (k == VK::Number)
+        {
+            return underlying_->number;
+        }
+        else
+        {
+            return static_cast<double>(integer());
+        }
     }
     StringView Value::string() const noexcept
     {
@@ -155,6 +177,7 @@ namespace vcpkg::Json
         {
             case ValueKind::Null: return Value::null(nullptr);
             case ValueKind::Boolean: return Value::boolean(boolean());
+            case ValueKind::Integer: return Value::integer(integer());
             case ValueKind::Number: return Value::number(number());
             case ValueKind::String: return Value::string(string());
             case ValueKind::Array: return Value::array(array().clone());
@@ -170,10 +193,17 @@ namespace vcpkg::Json
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Boolean>(), b);
         return val;
     }
-    Value Value::number(int64_t i) noexcept
+    Value Value::integer(int64_t i) noexcept
     {
         Value val;
-        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Number>(), i);
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Integer>(), i);
+        return val;
+    }
+    Value Value::number(double d) noexcept
+    {
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, isfinite(d));
+        Value val;
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Number>(), d);
         return val;
     }
     Value Value::string(StringView sv) noexcept
@@ -463,11 +493,15 @@ namespace vcpkg::Json
             Value parse_number() noexcept
             {
                 Checks::check_exit(VCPKG_LINE_INFO, is_number_start(cur()));
-                bool negative = false;
+
+                bool floating = false;
+                bool negative = false; // negative & 0 -> floating, so keep track of it
+                std::string number_to_parse;
 
                 char32_t current = cur();
                 if (cur() == '-')
                 {
+                    number_to_parse.push_back('-');
                     negative = true;
                     current = next();
                     if (current == Unicode::end_of_file)
@@ -480,54 +514,81 @@ namespace vcpkg::Json
                 if (current == '0')
                 {
                     current = next();
-                    if (current != Unicode::end_of_file)
+                    if (current == '.')
                     {
-                        if (is_digit(current))
-                        {
-                            add_error("Unexpected digits after a leading zero");
-                        }
-                        if (current == '.')
-                        {
-                            add_error("Found a `.` -- this JSON implementation does not support floating point");
-                        }
+                        number_to_parse.append("0.");
+                        floating = true;
+                        current = next();
                     }
-                    return Value::number(0);
-                }
-
-                // parse as negative so that someone can write INT64_MIN; otherwise, they'd only be able to get
-                // -INT64_MAX = INT64_MIN + 1
-                constexpr auto min_value = std::numeric_limits<int64_t>::min();
-                int64_t result = 0;
-                while (current != Unicode::end_of_file && is_digit(current))
-                {
-                    const int digit = current - '0';
-                    // result * 10 - digit < min_value : remember that result < 0
-                    if (result < (min_value + digit) / 10)
+                    else if (is_digit(current))
                     {
-                        add_error("Number is too big for an int64_t");
+                        add_error("Unexpected digits after a leading zero");
                         return Value();
                     }
-                    result *= 10;
-                    result -= digit;
+                    else
+                    {
+                        if (negative)
+                        {
+                            return Value::number(-0.0);
+                        }
+                        else
+                        {
+                            return Value::integer(0);
+                        }
+                    }
+                }
+
+                while (is_digit(current))
+                {
+                    number_to_parse.push_back(static_cast<char>(current));
                     current = next();
                 }
-                if (current == '.')
+                if (!floating && current == '.')
                 {
-                    add_error("Found a `.` -- this JSON implementation doesn't support floating point");
-                    return Value();
-                }
-
-                if (!negative)
-                {
-                    if (result == min_value)
+                    floating = true;
+                    number_to_parse.push_back('.');
+                    current = next();
+                    if (!is_digit(current))
                     {
-                        add_error("Number is too big for a uint64_t");
+                        add_error("Expected digits after the decimal point");
                         return Value();
                     }
-                    result = -result;
+                    while (is_digit(current))
+                    {
+                        number_to_parse.push_back(static_cast<char>(current));
+                        current = next();
+                    }
                 }
 
-                return Value::number(result);
+#ifdef _MSC_VER
+#define SCANF sscanf_s
+#else
+#define SCANF sscanf
+#endif
+
+                // TODO: switch to `from_chars` once we are able to remove support for old compilers
+                if (floating)
+                {
+                    double res;
+                    if (SCANF(number_to_parse.c_str(), "%lf", &res) != 1)
+                    {
+                        add_error(Strings::format("Invalid floating point constant: %s", number_to_parse));
+                        return Value();
+                    }
+                    return Value::number(res);
+                }
+                else
+                {
+                    int64_t res;
+                    if (SCANF(number_to_parse.c_str(), "%" SCNd64, &res) != 1)
+                    {
+                        add_error(Strings::format("Invalid integer constant: %s", number_to_parse));
+                        return Value();
+                    }
+                    return Value::integer(res);
+                }
+
+#undef SCANF
             }
 
             Value parse_keyword() noexcept
@@ -907,6 +968,8 @@ namespace vcpkg::Json
                 buffer.append(v ? "true" : "false");
                 break;
             }
+            // TODO: switch to `to_chars` once we are able to remove support for old compilers
+            case VK::Integer: buffer.append(std::to_string(value.integer())); break;
             case VK::Number: buffer.append(std::to_string(value.number())); break;
             case VK::String:
             {

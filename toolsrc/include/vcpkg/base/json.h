@@ -70,6 +70,7 @@ namespace vcpkg::Json
     {
         Null,
         Boolean,
+        Integer,
         Number,
         String,
         Array,
@@ -84,10 +85,19 @@ namespace vcpkg::Json
 
     struct Value
     {
+        Value() noexcept; // equivalent to Value::null()
+        Value(Value&&) noexcept;
+        Value& operator=(Value&&) noexcept;
+        ~Value();
+
+        Value clone() const noexcept;
+
         ValueKind kind() const noexcept;
 
         bool is_null() const noexcept;
         bool is_boolean() const noexcept;
+        bool is_integer() const noexcept;
+        // either integer _or_ number
         bool is_number() const noexcept;
         bool is_string() const noexcept;
         bool is_array() const noexcept;
@@ -95,7 +105,8 @@ namespace vcpkg::Json
 
         // a.x() asserts when !a.is_x()
         bool boolean() const noexcept;
-        int64_t number() const noexcept;
+        int64_t integer() const noexcept;
+        double number() const noexcept;
         StringView string() const noexcept;
 
         const Array& array() const noexcept;
@@ -104,18 +115,13 @@ namespace vcpkg::Json
         const Object& object() const noexcept;
         Object& object() noexcept;
 
-        Value(Value&&) noexcept;
-        Value& operator=(Value&&) noexcept;
-        ~Value();
-
-        Value() noexcept; // equivalent to Value::null()
         static Value null(std::nullptr_t) noexcept;
         static Value boolean(bool) noexcept;
-        static Value number(int64_t i) noexcept;
+        static Value integer(int64_t i) noexcept;
+        static Value number(double d) noexcept;
         static Value string(StringView) noexcept;
         static Value array(Array&&) noexcept;
         static Value object(Object&&) noexcept;
-        Value clone() const noexcept;
 
     private:
         friend struct impl::ValueImpl;
@@ -128,6 +134,15 @@ namespace vcpkg::Json
         using underlying_t = std::vector<Value>;
 
     public:
+        Array() = default;
+        Array(Array const&) = delete;
+        Array(Array&&) = default;
+        Array& operator=(Array const&) = delete;
+        Array& operator=(Array&&) = default;
+        ~Array() = default;
+
+        Array clone() const noexcept;
+
         using iterator = underlying_t::iterator;
         using const_iterator = underlying_t::const_iterator;
 
@@ -148,8 +163,6 @@ namespace vcpkg::Json
             return this->underlying_[idx];
         }
 
-        Array clone() const noexcept;
-
         iterator begin() { return underlying_.begin(); }
         iterator end() { return underlying_.end(); }
         const_iterator begin() const { return cbegin(); }
@@ -160,7 +173,6 @@ namespace vcpkg::Json
     private:
         underlying_t underlying_;
     };
-
     struct Object
     {
     private:
@@ -169,6 +181,16 @@ namespace vcpkg::Json
         underlying_t::const_iterator internal_find_key(StringView key) const noexcept;
 
     public:
+        // these are here for better diagnostics
+        Object() = default;
+        Object(Object const&) = delete;
+        Object(Object&&) = default;
+        Object& operator=(Object const&) = delete;
+        Object& operator=(Object&&) = default;
+        ~Object() = default;
+
+        Object clone() const noexcept;
+
         // asserts if the key is found
         void insert(std::string key, Value value) noexcept;
 
@@ -199,8 +221,6 @@ namespace vcpkg::Json
         bool contains(StringView key) const noexcept { return this->get(key); }
 
         std::size_t size() const noexcept { return this->underlying_.size(); }
-
-        Object clone() const noexcept;
 
         struct const_iterator
         {
