@@ -267,7 +267,7 @@ namespace vcpkg
 
         if (k && !k->empty())
         {
-            auto vars = Strings::split(*k, ";");
+            auto vars = Strings::split(*k, ';');
 
             for (auto&& var : vars)
             {
