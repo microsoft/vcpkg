@@ -1,3 +1,5 @@
+# header-only library
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
