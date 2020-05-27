@@ -26,8 +26,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DNO_OPENMP=${NO_OPENMP}
-        -DNO_OPENCL=${NO_OPENCL}
+        ${FEATURE_OPTIONS}
         -DLIB_TYPE=${LIB_TYPE}
 )
 
