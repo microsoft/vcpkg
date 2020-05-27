@@ -8,6 +8,8 @@ endif()
 
 if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-xcb-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-xcb-dev.")
+    message(WARNING "${PORT} for qt5-x11extras requires the following libraries from the system package manager:\n    libxkbcommon-x11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libxkbcommon-x11-dev.")
+    #
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
@@ -292,6 +294,7 @@ else()
         OPTIONS_RELEASE ${RELEASE_OPTIONS}
         OPTIONS_DEBUG ${DEBUG_OPTIONS}
         )
+    message(FATAL_ERROR "Make qt fail in CI to get logs.")
     install_qt()
 
     #########################
