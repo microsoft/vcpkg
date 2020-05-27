@@ -289,7 +289,6 @@ Function InstallWindowsVSIXWDK {
     else {
       Write-Error "Installation failed! Exited with $exitCode."
     }
-  }
   catch {
     Write-Error "Failed to install Windows VSIX WDK! $($_.Exception.Message)"
   }
@@ -308,7 +307,6 @@ Function InstallWindowsVSIXWDKv2 {
     else {
       Write-Error "Installation failed! Exited with $exitCode."
     }
-  }
   catch {
     Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
   }
