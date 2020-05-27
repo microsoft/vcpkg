@@ -21,6 +21,12 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
     # Note: D: is the Azure machines' temporary disk.
+  - task: Powershell@2
+    displayName: 'Check C++ Formatting'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/check-formatting.ps1'
+      arguments: '-Toolsrc ./toolsrc'
   - task: CmdLine@2
     displayName: 'Build vcpkg'
     inputs:
