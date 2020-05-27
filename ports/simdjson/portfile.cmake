@@ -7,7 +7,9 @@ vcpkg_from_github(
     REF 4da06830f1389c8cd33171f5ab3558e79f0ece04
     SHA512 ffb11ee91f97d975fba2946653c9c847565933380f94e334d15e627f77a7a750702c539ca55d17e077b2ed0a79006f56a3b9a202d888bb7e2e3f0484237cb537
     HEAD_REF master
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/no_benchmark.patch
+    PATCHES 
+        no_benchmark.patch
+        Fix-error-LNK2001.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)

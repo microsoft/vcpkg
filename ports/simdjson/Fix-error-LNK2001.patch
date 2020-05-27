@@ -1,0 +1,15 @@
+diff --git a/tools/cmake/FindOptions.cmake b/tools/cmake/FindOptions.cmake
+index f9854c1..0c4d331 100644
+--- a/tools/cmake/FindOptions.cmake
++++ b/tools/cmake/FindOptions.cmake
+@@ -4,9 +4,9 @@ endmacro(append)
+ 
+ set(SANITIZE_FLAGS "")
+ if(SIMDJSON_SANITIZE)
+-  set(SIMDJSON_SANITIZE_FLAGS "-fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined -fno-sanitize-recover=all")
+   if (CMAKE_COMPILER_IS_GNUCC)
+     # Ubuntu bug for GCC 5.0+ (safe for all versions)
++    set(SIMDJSON_SANITIZE_FLAGS "-fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined -fno-sanitize-recover=all")
+     append(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=gold")
+     append(CMAKE_SHARED_LINKER_FLAGS "-fuse-ld=gold")
+   endif()
