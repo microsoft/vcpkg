@@ -18,7 +18,7 @@ index 2bbb283..2f7eb52 100644
 +add_subdirectory ("${CMAKE_CURRENT_SOURCE_DIR}/VHACD_Lib")
 \ No newline at end of file
 diff --git a/src/VHACD_Lib/CMakeLists.txt b/src/VHACD_Lib/CMakeLists.txt
-index 46fc1b1..1d499c6 100644
+index 46fc1b1..2260fdc 100644
 --- a/src/VHACD_Lib/CMakeLists.txt
 +++ b/src/VHACD_Lib/CMakeLists.txt
 @@ -1,34 +1,36 @@
@@ -71,17 +71,33 @@ index 46fc1b1..1d499c6 100644
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc/>
    $<INSTALL_INTERFACE:include/>  # <prefix>/include/mylib
    )
-@@ -48,7 +50,7 @@ write_basic_package_version_file(
+@@ -43,32 +45,32 @@ install(FILES ${PROJECT_INL_FILES} DESTINATION include)
+ set(VHACD_LIB_VERSION 3.2.0)
+ include(CMakePackageConfigHelpers)
+ write_basic_package_version_file(
+-  "${CMAKE_CURRENT_BINARY_DIR}/vhacd/vhacd-config-version.cmake"
++  "${CMAKE_CURRENT_BINARY_DIR}/vhacd/v-hacd-config-version.cmake"
+   VERSION ${VHACD_LIB_VERSION}
    COMPATIBILITY AnyNewerVersion
  )
  
 -export(EXPORT vhacd-targets NAMESPACE ::
+-  FILE "${CMAKE_CURRENT_BINARY_DIR}/vhacd/vhacd-targets.cmake"
 +export(EXPORT vhacd-targets NAMESPACE vhacd::
-   FILE "${CMAKE_CURRENT_BINARY_DIR}/vhacd/vhacd-targets.cmake"
++  FILE "${CMAKE_CURRENT_BINARY_DIR}/vhacd/v-hacd-targets.cmake"
  )
  
-@@ -63,7 +65,7 @@ install(EXPORT vhacd-targets
-     vhacd-targets.cmake
+ configure_file(cmake/vhacd-config.cmake
+-  "${CMAKE_CURRENT_BINARY_DIR}/vhacd/vhacd-config.cmake"
++  "${CMAKE_CURRENT_BINARY_DIR}/vhacd/v-hacd-config.cmake"
+   COPYONLY
+ )
+ 
+ set(ConfigPackageLocation lib/cmake/vhacd)
+ install(EXPORT vhacd-targets
+   FILE
+-    vhacd-targets.cmake
++	v-hacd-targets.cmake
    DESTINATION
      ${ConfigPackageLocation}
 -	NAMESPACE ::
@@ -89,3 +105,22 @@ index 46fc1b1..1d499c6 100644
  )
  install(
    FILES
+-    "${CMAKE_CURRENT_BINARY_DIR}/vhacd/vhacd-config.cmake"
+-    "${CMAKE_CURRENT_BINARY_DIR}/vhacd/vhacd-config-version.cmake"
++    "${CMAKE_CURRENT_BINARY_DIR}/vhacd/v-hacd-config.cmake"
++    "${CMAKE_CURRENT_BINARY_DIR}/vhacd/v-hacd-config-version.cmake"
+   DESTINATION
+     ${ConfigPackageLocation}
+   COMPONENT
+diff --git a/src/VHACD_Lib/cmake/vhacd-config.cmake b/src/VHACD_Lib/cmake/vhacd-config.cmake
+index 8fc5c58..7677f58 100644
+--- a/src/VHACD_Lib/cmake/vhacd-config.cmake
++++ b/src/VHACD_Lib/cmake/vhacd-config.cmake
+@@ -1,4 +1,4 @@
+ 
+ find_package(OpenCL)
+ find_package(OpenMP)
+-include("${CMAKE_CURRENT_LIST_DIR}/vhacd-targets.cmake")
+\ No newline at end of file
++include("${CMAKE_CURRENT_LIST_DIR}/v-hacd-targets.cmake")
+\ No newline at end of file
