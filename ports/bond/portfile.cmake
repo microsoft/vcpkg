@@ -18,7 +18,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
     # Extract the precompiled gbc
     vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-    set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc.exe)
+    set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-9.0.0-amd64.exe)
 
     if (NOT EXISTS "${FETCHED_GBC_PATH}")
         message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
