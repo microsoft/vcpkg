@@ -19,6 +19,11 @@ jobs:
     inputs:
       filePath: scripts/azure-pipelines/linux/initialize-environment.sh
   - bash: |
+      sudo mkdir /home/agent -m=777
+      sudo chown `id -u` /home/agent
+      exit 0
+    displayName: 'Create /home/agent'
+  - bash: |
       df -h
     displayName: 'Report on Disk Space After Environment'
     condition: always()
@@ -32,7 +37,7 @@ jobs:
   - powershell: |
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-linux" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results
-      $env:HOME = '/home/root'
+      $env:HOME = '/home/agent'
       ./vcpkg ci x64-linux --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-linux.xml" --exclude=$skipList --binarycaching
     displayName: '** Test Modified Ports **'
   - task: PowerShell@2
