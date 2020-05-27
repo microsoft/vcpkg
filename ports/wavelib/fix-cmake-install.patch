@@ -45,22 +45,47 @@ index 51c836d..25823e6 100644
 +    ARCHIVE DESTINATION lib
 +    INCLUDES DESTINATION include)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index dc9592a..0bb6940 100644
+index dc9592a..0c2f119 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -27,5 +27,14 @@ add_library(wavelib STATIC ${SOURCE_FILES} ${HEADER_FILES})
-         
+@@ -24,8 +24,38 @@ set(HEADER_FILES    conv.h
+                     )
+ 
+ add_library(wavelib STATIC ${SOURCE_FILES} ${HEADER_FILES})
+-        
++
++include(CheckSymbolExists)
++
++# https://stackoverflow.com/questions/32816646/can-cmake-detect-if-i-need-to-link-to-libm-when-using-pow-in-c
++if(NOT POW_FUNCTION_EXISTS AND NOT NEED_LINKING_AGAINST_LIBM)
++    check_symbol_exists(pow "math.h" POW_FUNCTION_EXISTS)
++    if(NOT POW_FUNCTION_EXISTS)
++        unset(POW_FUNCTION_EXISTS CACHE)
++        list(APPEND CMAKE_REQUIRED_LIBRARIES m)
++        check_symbol_exists(pow "math.h" POW_FUNCTION_EXISTS)
++        if(POW_FUNCTION_EXISTS)
++            set(NEED_LINKING_AGAINST_LIBM True CACHE BOOL "" FORCE)
++        else()
++            message(FATAL_ERROR "Failed making the pow() function available")
++        endif()
++    endif()
++endif()
++
++if(NEED_LINKING_AGAINST_LIBM)
++    target_link_libraries(wavelib PUBLIC m)
++endif()
++
  set_property(TARGET wavelib PROPERTY FOLDER "lib")
  
 -target_include_directories(wavelib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}../header)
 +target_include_directories(wavelib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}../header)
- 
++
 +install(TARGETS wavelib
 +    EXPORT wavelib-targets
 +    ARCHIVE DESTINATION lib
 +    INCLUDES DESTINATION include)
-+
+ 
 +install(EXPORT wavelib-targets
-+    FILE wavelib-targets.cmake
++    FILE wavelib-config.cmake
 +    NAMESPACE wavelib::
 +    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wavelib)
