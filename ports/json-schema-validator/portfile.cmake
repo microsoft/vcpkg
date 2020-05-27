@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 4fd05087743f43871586a53d119acd1a19d0bdec8a5620f62b6eee7a926d285842e8439127eec52eeb11069c92b8d9af28558897d48e2422ecafca39d9f23cdb
     HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/fix-ambiguous-assignment.patch"
+        "fix-ambiguous-assignment.patch"
 )
 
 vcpkg_configure_cmake(
