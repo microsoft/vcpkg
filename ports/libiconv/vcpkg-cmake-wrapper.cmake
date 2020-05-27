@@ -1,3 +1,5 @@
+include(SelectLibraryConfigurations)
+
 _find_package(${ARGS})
 if(Iconv_FOUND)
     find_library(CHARSET_LIBRARY_DEBUG NAMES charsetd libcharsetd charset libcharset NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH)
