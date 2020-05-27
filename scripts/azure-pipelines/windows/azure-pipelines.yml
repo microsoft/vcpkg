@@ -15,34 +15,20 @@ jobs:
     displayName: 'Initialize Environment'
     inputs:
       filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
-
+  - task: BatchScript@1
+    displayName: 'Build vcpkg'
+    inputs:
+      filename: 'bootstrap-vcpkg.bat'
   - powershell: |
-      $baselineFile = "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
-      $skipList = $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile $baselineFile
-      Write-Host "baseline file: $baselineFile"
-      Write-Host "skip list: $skipList"
-      $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\windows\ci-step.ps1 -Triplet "${{ parameters.triplet }}" -ExcludePorts $skipList
-      Write-Host "CI test script is complete"
-    errorActionPreference: continue
-    displayName: '** Build vcpkg and Test Modified Ports **'
-
-  - powershell: |
-      $baseName = "${{ parameters.triplet }}"
-      $outputPathRoot = "$(System.ArtifactsDirectory)\xml-results"
-      if(-not (Test-Path $outputPathRoot))
-      {
-          Write-Host "creating $outputPathRoot"
-          mkdir $outputPathRoot | Out-Null
-      }
-
-      $xmlPath = "$(System.DefaultWorkingDirectory)\test-full-ci.xml"
-      $outputXmlPath = "$outputPathRoot\$baseName.xml"
-
-      cp $xmlPath $(Build.ArtifactStagingDirectory)
-      Move-Item $xmlPath -Destination $outputXmlPath
-
-    displayName: 'Collect logs and cleanup build'
-
+      $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
+      mkdir $(System.ArtifactsDirectory)\xml-results
+      $command = ".\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching"
+      Set-Content -Path 'run_ci.cmd' -Value $command -Encoding ASCII
+    displayName: 'Write Test Modified Ports Batch File'
+  - task: BatchScript@1
+    displayName: '** Test Modified Ports **'
+    inputs:
+      filename: 'run_ci.cmd'
   - task: PowerShell@2
     displayName: 'Analyze results and prepare test logs'
     inputs:
