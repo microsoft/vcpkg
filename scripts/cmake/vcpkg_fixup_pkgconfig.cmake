@@ -130,7 +130,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
 
     string(REPLACE "${_pkg_lib_paths_output}" "" _pkg_libs_output "${_pkg_libs_output}") # Remove search paths from libs
     if(CMAKE_HOST_WIN32)
-        string(REGEX REPLACE "/([a-zA-Z])/" "\\1:/" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
+        string(REGEX REPLACE "-L/([a-zA-Z])/" "-L\\1:/" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
         string(REGEX REPLACE " /([a-zA-Z])/" ";\\1:/" _pkg_libs_output "${_pkg_libs_output}")
         string(REGEX REPLACE "-l/([a-zA-Z])/" "-l\\1:/" _pkg_libs_output "${_pkg_libs_output}")
         debug_message("pkg-config output lib paths after replacement (cmake style): ${_pkg_lib_paths_output}")
