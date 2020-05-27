@@ -1,0 +1,87 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aae7ab3..5ad3fc8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,6 +8,8 @@ cmake_minimum_required(VERSION 3.2)
+ option(BUILD_TESTS    "Build tests"    ON)
+ option(BUILD_EXAMPLES "Build examples" ON)
+ 
++find_package(nlohmann_json CONFIG REQUIRED)
++
+ # the library
+ add_library(nlohmann_json_schema_validator
+     src/json-schema-draft7.json.cpp
+@@ -30,68 +32,13 @@ set_target_properties(nlohmann_json_schema_validator
+                           VERSION ${PROJECT_VERSION}
+                           SOVERSION 1)
+ 
+-# if used as a sub-directory, do not create install-rules -
+-# because of the dependency to nlohmann_json.
+ set(JSON_VALIDATOR_INSTALL ON)
+ 
+-# here we decice how nlohmann::json is found and used to build this project
+-
+-# first, check whether a nlohmann_json::nlohmann_json target exists already
+-# -> we are used as a sub-directory from within another project
+-if(TARGET nlohmann_json::nlohmann_json)
+-    message(STATUS "Found nlohmann_json::nlohmann_json-target - linking with it")
+-    target_link_libraries(
+-        nlohmann_json_schema_validator
+-        PUBLIC nlohmann_json::nlohmann_json)
+-
+-    set(JSON_VALIDATOR_INSTALL OFF)
+-
+-elseif(TARGET nlohmann_json) # or nlohmann_json, we are used a sub-project next to nlohmann-json's git repo
+-    message(STATUS "Found nlohmann_json-target - linking with it")
+-    target_link_libraries(
+-        nlohmann_json_schema_validator
+-        PUBLIC nlohmann_json)
+-    set(JSON_VALIDATOR_INSTALL OFF)
+-
+-else()
+-    if (NOT IS_ABSOLUTE ${nlohmann_json_DIR}) # make nlohmann_json_DIR absolute
+-        get_filename_component(nlohmann_json_DIR
+-                               "${CMAKE_CURRENT_BINARY_DIR}/${nlohmann_json_DIR}"
+-                               REALPATH)
+-    endif()
+-
+-    set(nlohmann_json_orignal_DIR ${nlohmann_json_DIR}) # save path for later use
+-
+-    # find nlohmann_json-cmake-package
+-    find_package(nlohmann_json QUIET)
+-
+-    if(TARGET nlohmann_json::nlohmann_json)
+-        message(STATUS "Found nlohmann_json-cmake-package - linking with it")
+-        target_link_libraries(
+-            nlohmann_json_schema_validator
+-            PUBLIC nlohmann_json::nlohmann_json)
+-    else()
+-
+-        # find nlohmann/json.hpp
+-
+-        message(STATUS ${nlohmann_json_orignal_DIR})
+-
+-        find_path(JSON_HPP nlohmann/json.hpp
+-                  PATHS ${nlohmann_json_orignal_DIR})
+-
+-        if(EXISTS ${JSON_HPP}/nlohmann/json.hpp)
+-            message(STATUS "Found nlohmann/json.hpp in given path: ${JSON_HPP}")
+-            target_include_directories(
+-                nlohmann_json_schema_validator
+-                PUBLIC $<BUILD_INTERFACE:${JSON_HPP}>)
+-        else()
+-            message(FATAL_ERROR "could not find nlohmann/json.hpp or any related cmake-target. Please set nlohmann_json_DIR.")
+-        endif()
+-
+-        # nlohmann_json_DIR has to be reset (for later use in tests)
+-        set(nlohmann_json_DIR ${JSON_HPP})
+-    endif()
+-endif()
++target_link_libraries(
++    nlohmann_json_schema_validator
++    PUBLIC
++        nlohmann_json
++        nlohmann_json::nlohmann_json)
+ 
+ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR
+    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")

@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "fix-ambiguous-assignment.patch"
+        "cmake-find-package.patch"
+        "forward-find-package.patch"
 )
 
 vcpkg_configure_cmake(
