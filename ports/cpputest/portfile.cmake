@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-arm-build-error.patch
-        instal-manual-link.patch
 )
 
 vcpkg_configure_cmake(
@@ -25,6 +24,32 @@ endif()
 
 if (EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/CppUTest)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/CppUTest)
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    file(GLOB CPPUTEST_LIBS ${CURRENT_PACKAGES_DIR}/lib/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+    file(COPY ${CPPUTEST_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    file(REMOVE ${CPPUTEST_LIBS})
+    
+    file(READ ${CURRENT_PACKAGES_DIR}/share/CppUTest/CppUTestTargets-release.cmake RELEASE_CONFIG)
+    # Replace CppUTestExt first
+    string(REPLACE "\${_IMPORT_PREFIX}/lib/"
+                   "\${_IMPORT_PREFIX}/lib/manual-link/" RELEASE_CONFIG "${RELEASE_CONFIG}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/CppUTest/CppUTestTargets-release.cmake "${RELEASE_CONFIG}")
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(GLOB CPPUTEST_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+    file(COPY ${CPPUTEST_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(REMOVE ${CPPUTEST_LIBS})
+
+    file(READ ${CURRENT_PACKAGES_DIR}/share/CppUTest/CppUTestTargets-debug.cmake DEBUG_CONFIG)
+    # Replace CppUTestExt first
+    string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/"
+                   "\${_IMPORT_PREFIX}/debug/lib/manual-link/" DEBUG_CONFIG "${DEBUG_CONFIG}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/CppUTest/CppUTestTargets-debug.cmake "${DEBUG_CONFIG}")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
