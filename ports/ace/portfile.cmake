@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
@@ -100,9 +98,13 @@ elseif(VCPKG_TARGET_IS_OSX)
   file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
 endif()
 
+if(VCPKG_TARGET_IS_UWP)
+  set(MPC_VALUE_TEMPLATE -value_template link_options+=/APPCONTAINER)
+endif()
+
 # Invoke mwc.pl to generate the necessary solution and project files
 vcpkg_execute_build_process(
-    COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" ace ${MPC_STATIC_FLAG}
+    COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" ace ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
     WORKING_DIRECTORY ${ACE_ROOT}
     LOGNAME mwc-${TARGET_TRIPLET}
 )
@@ -174,9 +176,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   install_ace_library(${ACE_ROOT} "ACE_ETCL")
   install_ace_library(${ACE_ROOT} "ACE_ETCL_Parser")
   install_ace_library(${ACE_ROOT} "ACE_Monitor_Control")
-  if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-    install_ace_library(${ACE_ROOT} "ACE_QoS")
-  endif()
+  install_ace_library(${ACE_ROOT} "ACE_QoS")
   install_ace_library(${ACE_ROOT} "ACE_RLECompression")
   if("ssl" IN_LIST FEATURES)
       install_ace_library(${ACE_ROOT} "ACE_SSL")
@@ -185,8 +185,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_copy_pdbs()
 
   # Handle copyright
-  file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+  file(INSTALL ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
