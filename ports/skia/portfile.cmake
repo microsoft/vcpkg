@@ -5,34 +5,111 @@ vcpkg_fail_port_install(
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
-    REF 05676f7bc238f667de848dfd37b4aa3c01b69efb
+    REF fb0b35fed5580d49392df7ce9374551b348fffbf
 )
 
-find_program(GIT NAMES git git.cmd)
-set(ENV{GIT_EXECUTABLE} "${GIT}")
+function(checkout_in_path PATH URL REF)
+    if(EXISTS "${PATH}")
+        return()
+    endif()
+    
+    vcpkg_from_git(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        URL "${URL}"
+        REF "${REF}"
+    )
+    file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
+    file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
+endfunction()
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
+set(EXTERNALS "${SOURCE_PATH}/third_party/externals")
+file(MAKE_DIRECTORY "${EXTERNALS}")
 
-vcpkg_find_acquire_program(NINJA)
-
-message(STATUS "Syncing git dependencies...")
-vcpkg_execute_required_process(
-    COMMAND "${PYTHON2}" tools/git-sync-deps
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME sync-deps-${TARGET_TRIPLET}
+# these following aren't available in vcpkg
+checkout_in_path("${EXTERNALS}/sfntly"
+    "https://github.com/googlefonts/sfntly"
+    "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
+)
+checkout_in_path("${EXTERNALS}/dng_sdk"
+    "https://android.googlesource.com/platform/external/dng_sdk"
+    "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
+)
+checkout_in_path("${EXTERNALS}/libgifcodec"
+    "https://skia.googlesource.com/libgifcodec"
+    "d06d2a6d42baf6c0c91cacc28df2542a911d05fe"
+)
+checkout_in_path("${EXTERNALS}/piex"
+    "https://android.googlesource.com/platform/external/piex"
+    "bb217acdca1cc0c16b704669dd6f91a1b509c406"
 )
 
-find_program(GN gn PATHS "${SOURCE_PATH}/bin" "${DEPOT_TOOLS_PATH}")
+# turn a CMake list into a GN list of quoted items
+# "a;b;c" -> ["a","b","c"]
+function(cmake_to_gn_list OUTPUT_ INPUT_)
+    if(NOT INPUT_)
+        set(${OUTPUT_} "[]" PARENT_SCOPE)
+    else()
+        string(REPLACE ";" "\",\"" TEMP "${INPUT_}")
+        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)    
+    endif()
+endfunction()
+
+# multiple libraries with multiple names may be passed as
+# "libA,libA2;libB,libB2,libB3;..."
+function(find_libraries RESOLVED LIBRARY_NAMES PATHS)
+    set(_RESOLVED "")
+    foreach(_LIB_GROUP ${LIBRARY_NAMES})
+        string(REPLACE "," ";" _LIB_GROUP_NAMES "${_LIB_GROUP}")
+        unset(_LIB CACHE)
+        find_library(_LIB NAMES ${_LIB_GROUP_NAMES}
+            PATHS "${PATHS}"
+            NO_DEFAULT_PATH)
+
+        if(_LIB MATCHES "-NOTFOUND")
+            message(FATAL_ERROR "Could not find library with names: ${_LIB_GROUP_NAMES}")
+        endif()
+
+        list(APPEND _RESOLVED "${_LIB}")
+    endforeach()
+    set(${RESOLVED} "${_RESOLVED}" PARENT_SCOPE)
+endfunction()
+
+# For each .gn file in the current list directory, configure and install at
+# the corresponding directory to replace Skia dependencies with ones from vcpkg.
+function(replace_skia_dep NAME INCLUDES LIBS_DBG LIBS_REL DEFINITIONS)
+    list(TRANSFORM INCLUDES PREPEND "${CURRENT_INSTALLED_DIR}")
+    cmake_to_gn_list(_INCLUDES "${INCLUDES}")
+
+    find_libraries(_LIBS_DBG "${LIBS_DBG}" "${CURRENT_INSTALLED_DIR}/debug/lib")
+    cmake_to_gn_list(_LIBS_DBG "${_LIBS_DBG}")
+
+    find_libraries(_LIBS_REL "${LIBS_REL}" "${CURRENT_INSTALLED_DIR}/lib")
+    cmake_to_gn_list(_LIBS_REL "${_LIBS_REL}")
+
+    cmake_to_gn_list(_DEFINITIONS "${DEFINITIONS}")
+
+    set(OUT_FILE "${SOURCE_PATH}/third_party/${NAME}/BUILD.gn")
+    file(REMOVE "${OUT_FILE}")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/${NAME}.gn" "${OUT_FILE}" @ONLY)
+endfunction()
+
+set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
+
+replace_skia_dep(expat "/include" "expat" "expat" "")
+replace_skia_dep(freetype2 "/include" "freetype,freetyped" "freetype" "")
+replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz-icu" "harfbuzz-icu" "")
+replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")
+replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpegd;turbojpeg,turbojpegd" "jpeg;turbojpeg" "")
+replace_skia_dep(libpng "/include" "libpng16,libpng16d" "libpng16" "")
+replace_skia_dep(libwebp "/include" 
+    "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;libwebpmux,libwebpmuxd" 
+    "webp;webpdemux;webpdecoder;libwebpmux" "")
+replace_skia_dep(zlib "/include" "z,zlib,zlibd" "z,zlib" "")
 
 set(OPTIONS "\
-skia_use_system_libjpeg_turbo=false \
-skia_use_system_libpng=false \
-skia_use_system_libwebp=false \
-skia_use_system_icu=false \
-skia_use_system_expat=false \
-skia_use_system_zlib=false")
+skia_use_lua=false \
+skia_enable_tools=false \
+skia_enable_spirv_validation=false")
 
 # used for passing feature-specific definitions to the config file
 set(SKIA_PUBLIC_DEFINITIONS "")
@@ -86,35 +163,15 @@ if(CMAKE_HOST_WIN32)
 
 endif()
 
-set(BUILD_DIR_REL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-set(BUILD_DIR_DBG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-
-message(STATUS "Generating build (debug)...")
-vcpkg_execute_required_process(
-    COMMAND "${GN}" gen "${BUILD_DIR_DBG}" --args=${OPTIONS_DBG}
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME generate-${TARGET_TRIPLET}-dbg
+vcpkg_configure_gn(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS_DEBUG "${OPTIONS_DBG}"
+    OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
-message(STATUS "Generating build (release)...")
-vcpkg_execute_required_process(
-    COMMAND "${GN}" gen "${BUILD_DIR_REL}" --args=${OPTIONS_REL}
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME generate-${TARGET_TRIPLET}-rel
-)
-
-message(STATUS "Building Skia (debug)...")
-vcpkg_execute_build_process(
-    COMMAND "${NINJA}" -C "${BUILD_DIR_DBG}" skia
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
-
-message(STATUS "Building Skia (release)...")
-vcpkg_execute_build_process(
-    COMMAND "${NINJA}" -C "${BUILD_DIR_REL}" skia
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME build-${TARGET_TRIPLET}-rel
+vcpkg_install_gn(
+    SOURCE_PATH "${SOURCE_PATH}"
+    TARGETS ":skia"
 )
 
 message(STATUS "Installing: ${CURRENT_PACKAGES_DIR}/include/${PORT}")
@@ -128,65 +185,9 @@ foreach(file_ ${SKIA_INCLUDE_FILES})
     vcpkg_replace_string("${file_}" "#include \"include/" "#include \"${PORT}/")
 endforeach()
 
-# Finds and stores a single file that matches GLOBBING_EXPR
-# into the OUT_VAR or fails otherwise
-function(glob_single_file OUT_VAR GLOBBING_EXPR)
-    file(GLOB RESULTS LIST_DIRECTORIES false "${GLOBBING_EXPR}")
-    list(LENGTH RESULTS RESULTS_LENGTH)
-    if(NOT RESULTS_LENGTH EQUAL 1)
-        message(FATAL_ERROR "Expected one file to match glob: '${GLOBBING_EXPR}'; found: '${RESULTS}'")
-    endif()
-    list(GET RESULTS 0 FIRST_RESULT)
-    set(${OUT_VAR} "${FIRST_RESULT}" PARENT_SCOPE)
-endfunction()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    glob_single_file(SKIA_LIBRARY_DBG "${BUILD_DIR_DBG}/skia*.lib")
-    file(INSTALL "${SKIA_LIBRARY_DBG}" 
-        DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-
-    glob_single_file(SKIA_LIBRARY_REL "${BUILD_DIR_REL}/skia*.lib")
-    file(INSTALL "${SKIA_LIBRARY_REL}" 
-        DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        get_filename_component(SKIA_LIBRARY_IMPLIB_DBG 
-            "${SKIA_LIBRARY_DBG}" NAME)
-        get_filename_component(SKIA_LIBRARY_IMPLIB_REL 
-            "${SKIA_LIBRARY_REL}" NAME)
-
-        glob_single_file(SKIA_LIBRARY_DBG "${BUILD_DIR_DBG}/skia*.dll")
-        file(INSTALL "${SKIA_LIBRARY_DBG}" 
-            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        get_filename_component(SKIA_LIBRARY_NAME_DBG "${SKIA_LIBRARY_DBG}" NAME)
-
-        glob_single_file(SKIA_LIBRARY_DBG "${BUILD_DIR_DBG}/skia*.pdb")
-        file(INSTALL "${SKIA_LIBRARY_DBG}" 
-            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-
-        glob_single_file(SKIA_LIBRARY_REL "${BUILD_DIR_REL}/skia*.dll")
-        file(INSTALL "${SKIA_LIBRARY_REL}" 
-            DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        get_filename_component(SKIA_LIBRARY_NAME_REL "${SKIA_LIBRARY_REL}" NAME)
-    else()
-        get_filename_component(SKIA_LIBRARY_NAME_DBG "${SKIA_LIBRARY_DBG}" NAME)
-        get_filename_component(SKIA_LIBRARY_NAME_REL "${SKIA_LIBRARY_REL}" NAME)
-    endif()
-else()
-    find_library(SKIA_LIBRARY_DBG skia PATHS "${BUILD_DIR_DBG}" NO_DEFAULT_PATH)
-    file(INSTALL "${SKIA_LIBRARY_DBG}" 
-        DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-
-    find_library(SKIA_LIBRARY_REL skia PATHS "${BUILD_DIR_REL}" NO_DEFAULT_PATH)
-    file(INSTALL "${SKIA_LIBRARY_REL}" 
-        DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-
-    get_filename_component(SKIA_LIBRARY_NAME_DBG "${SKIA_LIBRARY_DBG}" NAME)
-    get_filename_component(SKIA_LIBRARY_NAME_REL "${SKIA_LIBRARY_REL}" NAME)
-endif()
-
 # get a list of library dependencies for TARGET
-function(gn_desc_target_libs SOURCE_PATH BUILD_DIR TARGET OUTPUT)
+function(gn_desc_target_libs OUTPUT BUILD_DIR TARGET)
+    vcpkg_find_acquire_program(GN)
     execute_process(
         COMMAND ${GN} desc "${BUILD_DIR}" "${TARGET}" libs
         WORKING_DIRECTORY "${SOURCE_PATH}"
@@ -198,8 +199,12 @@ function(gn_desc_target_libs SOURCE_PATH BUILD_DIR TARGET OUTPUT)
 endfunction()
 
 # skiaConfig.cmake.in input variables
-gn_desc_target_libs("${SOURCE_PATH}" "${BUILD_DIR_DBG}" //:skia SKIA_DEP_DBG)
-gn_desc_target_libs("${SOURCE_PATH}" "${BUILD_DIR_REL}" //:skia SKIA_DEP_REL)
+gn_desc_target_libs(SKIA_DEP_DBG
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+    //:skia)
+gn_desc_target_libs(SKIA_DEP_REL
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+    //:skia)
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/skia/skiaConfig.cmake" @ONLY)
