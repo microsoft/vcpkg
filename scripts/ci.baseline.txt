@@ -1556,8 +1556,6 @@ qt5-webengine:x64-osx=fail
 qt5-webengine:x64-windows-static=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=fail
-# Missing system libraries
-qt5-x11extras:x64-linux=fail
 # Missing libraries
 qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
