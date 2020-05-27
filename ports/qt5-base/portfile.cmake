@@ -52,12 +52,13 @@ endif()
 
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
-                            patches/winmain_pro.patch   #Moves qtmain to manual-link
-                            patches/windows_prf.patch   #fixes the qtmain dependency due to the above move
-                            patches/qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
-                            patches/gui_configure.patch #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
-                            patches/icu.patch           #Help configure find static icu builds in vcpkg on windows
-                            patches/xlib.patch          #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+                            patches/winmain_pro.patch    #Moves qtmain to manual-link
+                            patches/windows_prf.patch    #fixes the qtmain dependency due to the above move
+                            patches/qt_app.patch         #Moves the target location of qt5 host apps to always install into the host dir. 
+                            patches/gui_configure.patch  #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
+                            patches/icu.patch            #Help configure find static icu builds in vcpkg on windows
+                            patches/xlib.patch           #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+                            patches/egl.patch            #Fix egl detection logic. 
                             #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
                                                          #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
                                                          #the windows supplied gl.h header and the angle gl.h otherwise. 
@@ -294,7 +295,6 @@ else()
         OPTIONS_RELEASE ${RELEASE_OPTIONS}
         OPTIONS_DEBUG ${DEBUG_OPTIONS}
         )
-    message(FATAL_ERROR "Make qt fail in CI to get logs.")
     install_qt()
 
     #########################
