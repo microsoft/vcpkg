@@ -146,8 +146,12 @@ namespace vcpkg::Json
         using iterator = underlying_t::iterator;
         using const_iterator = underlying_t::const_iterator;
 
-        void push_back(Value&& value) { this->underlying_.push_back(std::move(value)); }
-        void insert_before(iterator it, Value&& value) { this->underlying_.insert(it, std::move(value)); }
+        Value& push_back(Value&& value);
+        Object& push_back(Object&& value);
+        Array& push_back(Array&& value);
+        Value& insert_before(iterator it, Value&& value);
+        Object& insert_before(iterator it, Object&& value);
+        Array& insert_before(iterator it, Array&& value);
 
         std::size_t size() const noexcept { return this->underlying_.size(); }
 
@@ -192,11 +196,15 @@ namespace vcpkg::Json
         Object clone() const noexcept;
 
         // asserts if the key is found
-        void insert(std::string key, Value value) noexcept;
+        Value& insert(std::string key, Value&& value);
+        Object& insert(std::string key, Object&& value);
+        Array& insert(std::string key, Array&& value);
 
         // replaces the value if the key is found, otherwise inserts a new
         // value.
-        void insert_or_replace(std::string key, Value value) noexcept;
+        Value& insert_or_replace(std::string key, Value&& value);
+        Object& insert_or_replace(std::string key, Object&& value);
+        Array& insert_or_replace(std::string key, Array&& value);
 
         // returns whether the key existed
         bool remove(StringView key) noexcept;
@@ -265,6 +273,9 @@ namespace vcpkg::Json
         const Files::Filesystem&, const fs::path&, std::error_code& ec) noexcept;
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(
         StringView text, const fs::path& filepath = "") noexcept;
-    std::string stringify(const Value&, JsonStyle style) noexcept;
+
+    std::string stringify(const Value&, JsonStyle style);
+    std::string stringify(const Object&, JsonStyle style);
+    std::string stringify(const Array&, JsonStyle style);
 
 }

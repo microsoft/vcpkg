@@ -162,7 +162,7 @@ namespace vcpkg::Metrics
         void track_buildtime(const std::string& name, double value)
         {
             buildtime_names.push_back(Json::Value::string(name));
-            buildtime_names.push_back(Json::Value::number(value));
+            buildtime_times.push_back(Json::Value::number(value));
         }
 
         std::string format_event_data_template() const
@@ -174,18 +174,19 @@ namespace vcpkg::Metrics
                 props_plus_buildtimes.insert("buildtimes", Json::Value::array(buildtime_times.clone()));
             }
 
-            Json::Object obj;
+            Json::Array arr = Json::Array();
+            Json::Object& obj = arr.push_back(Json::Object());
 
             obj.insert("ver", Json::Value::integer(1));
             obj.insert("name", Json::Value::string("Microsoft.ApplicationInsights.Event"));
             obj.insert("time", Json::Value::string(timestamp));
-            obj.insert("sampleRate", Json::Value::integer(100));
+            obj.insert("sampleRate", Json::Value::number(100.0));
             obj.insert("seq", Json::Value::string("0:0"));
             obj.insert("iKey", Json::Value::string("b4e88960-4393-4dd9-ab8e-97e8fe6d7603"));
             obj.insert("flags", Json::Value::integer(0));
 
             {
-                Json::Object tags;
+                Json::Object& tags = obj.insert("tags", Json::Object());
 
                 tags.insert("ai.device.os", Json::Value::string("Other"));
 
@@ -209,23 +210,21 @@ namespace vcpkg::Metrics
                 tags.insert("ai.session.id", Json::Value::string(get_session_id()));
                 tags.insert("ai.user.id", Json::Value::string(user_id));
                 tags.insert("ai.user.accountAcquisitionDate", Json::Value::string(user_timestamp));
-
-                obj.insert("tags", Json::Value::object(std::move(tags)));
             }
 
             {
-                Json::Object data;
+                Json::Object& data = obj.insert("data", Json::Object());
 
                 data.insert("baseType", Json::Value::string("EventData"));
-                data.insert("ver", Json::Value::integer(2));
-                data.insert("name", Json::Value::string("commandline_test7"));
-                data.insert("properties", Json::Value::object(std::move(props_plus_buildtimes)));
-                data.insert("measurements", Json::Value::object(measurements.clone()));
+                Json::Object& base_data = data.insert("baseData", Json::Object());
 
-                obj.insert("data", Json::Value::object(std::move(data)));
+                base_data.insert("ver", Json::Value::integer(2));
+                base_data.insert("name", Json::Value::string("commandline_test7"));
+                base_data.insert("properties", Json::Value::object(std::move(props_plus_buildtimes)));
+                base_data.insert("measurements", Json::Value::object(measurements.clone()));
             }
 
-            return Json::stringify(Json::Value::object(std::move(obj)), vcpkg::Json::JsonStyle());
+            return Json::stringify(arr, vcpkg::Json::JsonStyle());
         }
     };
 

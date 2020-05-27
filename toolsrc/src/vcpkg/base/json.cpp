@@ -241,24 +241,65 @@ namespace vcpkg::Json
         }
         return arr;
     }
+
+    Value& Array::push_back(Value&& value)
+    {
+        underlying_.push_back(std::move(value));
+        return underlying_.back();
+    }
+    Object& Array::push_back(Object&& obj) { return push_back(Value::object(std::move(obj))).object(); }
+    Array& Array::push_back(Array&& arr) { return push_back(Value::array(std::move(arr))).array(); }
+    Value& Array::insert_before(iterator it, Value&& value)
+    {
+        size_t index = it - underlying_.begin();
+        underlying_.insert(it, std::move(value));
+        return underlying_[index];
+    }
+    Object& Array::insert_before(iterator it, Object&& obj)
+    {
+        return insert_before(it, Value::object(std::move(obj))).object();
+    }
+    Array& Array::insert_before(iterator it, Array&& arr)
+    {
+        return insert_before(it, Value::array(std::move(arr))).array();
+    }
     // } struct Array
     // struct Object {
-    void Object::insert(std::string key, Value value) noexcept
+    Value& Object::insert(std::string key, Value&& value)
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, !contains(key));
         underlying_.push_back(std::make_pair(std::move(key), std::move(value)));
+        return underlying_.back().second;
     }
-    void Object::insert_or_replace(std::string key, Value value) noexcept
+    Array& Object::insert(std::string key, Array&& value)
+    {
+        return insert(std::move(key), Value::array(std::move(value))).array();
+    }
+    Object& Object::insert(std::string key, Object&& value)
+    {
+        return insert(std::move(key), Value::object(std::move(value))).object();
+    }
+    Value& Object::insert_or_replace(std::string key, Value&& value)
     {
         auto v = get(key);
         if (v)
         {
             *v = std::move(value);
+            return *v;
         }
         else
         {
             underlying_.push_back(std::make_pair(std::move(key), std::move(value)));
+            return underlying_.back().second;
         }
+    }
+    Array& Object::insert_or_replace(std::string key, Array&& value)
+    {
+        return insert_or_replace(std::move(key), Value::array(std::move(value))).array();
+    }
+    Object& Object::insert_or_replace(std::string key, Object&& value)
+    {
+        return insert_or_replace(std::move(key), Value::object(std::move(value))).object();
     }
 
     auto Object::internal_find_key(StringView key) const noexcept -> underlying_t::const_iterator
@@ -865,120 +906,124 @@ namespace vcpkg::Json
     }
     // } auto parse()
 
-    // auto stringify() {
-    static std::string& append_unicode_escape(std::string& s, char16_t code_unit)
+    namespace
     {
-        s.append("\\u");
-
-        // AFAIK, there's no standard way of doing this?
-        constexpr const char hex_digit[16] = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
-        s.push_back(hex_digit[(code_unit >> 12) & 0x0F]);
-        s.push_back(hex_digit[(code_unit >> 8) & 0x0F]);
-        s.push_back(hex_digit[(code_unit >> 4) & 0x0F]);
-        s.push_back(hex_digit[(code_unit >> 0) & 0x0F]);
-
-        return s;
-    }
-
-    // taken from the ECMAScript 2020 standard, 24.5.2.2: Runtime Semantics: QuoteJSONString
-    static std::string& append_quoted_json_string(std::string& product, StringView sv)
-    {
-        // Table 66: JSON Single Character Escape Sequences
-        constexpr static std::array<std::pair<char32_t, const char*>, 7> escape_sequences = {
-            std::make_pair(0x0008, R"(\b)"), // BACKSPACE
-            std::make_pair(0x0009, R"(\t)"), // CHARACTER TABULATION
-            std::make_pair(0x000A, R"(\n)"), // LINE FEED (LF)
-            std::make_pair(0x000C, R"(\f)"), // FORM FEED (FF)
-            std::make_pair(0x000D, R"(\r)"), // CARRIAGE RETURN (CR)
-            std::make_pair(0x0022, R"(\")"), // QUOTATION MARK
-            std::make_pair(0x005C, R"(\\)")  // REVERSE SOLIDUS
-        };
-        // 1. Let product be the String value consisting solely of the code unit 0x0022 (QUOTATION MARK).
-        product.push_back('"');
-
-        // 2. For each code point C in ! UTF16DecodeString(value), do
-        // (note that we use utf8 instead of utf16)
-        for (auto code_point : Unicode::Utf8Decoder(sv.begin(), sv.end()))
+        struct Stringifier
         {
-            bool matched = false; // early exit boolean
-            // a. If C is listed in the "Code Point" column of Table 66, then
-            for (auto pr : escape_sequences)
+            JsonStyle style;
+            std::string& buffer;
+
+            void append_indent(int indent)
             {
-                // i. Set product to the string-concatenation of product and the escape sequence for C as specified in
-                // the "Escape Sequence" column of the corresponding row.
-                if (code_point == pr.first)
+                if (style.use_tabs())
                 {
-                    product.append(pr.second);
-                    matched = true;
-                    break;
+                    buffer.append(indent, '\t');
                 }
-            }
-            if (matched) break;
+                else
+                {
+                    buffer.append(indent * style.spaces(), ' ');
+                }
+            };
 
-            // b. Else if C has a numeric value less than 0x0020 (SPACE), or if C has the same numeric value as a
-            // leading surrogate or trailing surrogate, then
-            if (code_point < 0x0020 || Unicode::utf16_is_surrogate_code_point(code_point))
+            void append_unicode_escape(char16_t code_unit)
             {
-                // i. Let unit be the code unit whose numeric value is that of C.
-                // ii. Set product to the string-concatenation of product and UnicodeEscape(unit).
-                append_unicode_escape(product, static_cast<char16_t>(code_point));
-                break;
+                buffer.append("\\u");
+
+                // AFAIK, there's no standard way of doing this?
+                constexpr const char hex_digit[16] = {
+                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+                buffer.push_back(hex_digit[(code_unit >> 12) & 0x0F]);
+                buffer.push_back(hex_digit[(code_unit >> 8) & 0x0F]);
+                buffer.push_back(hex_digit[(code_unit >> 4) & 0x0F]);
+                buffer.push_back(hex_digit[(code_unit >> 0) & 0x0F]);
             }
 
-            // c. Else,
-            // i. Set product to the string-concatenation of product and the UTF16Encoding of C.
-            // (again, we use utf-8 here instead)
-            Unicode::utf8_append_code_point(product, code_point);
-        }
+            // taken from the ECMAScript 2020 standard, 24.5.2.2: Runtime Semantics: QuoteJSONString
+            void append_quoted_json_string(StringView sv)
+            {
+                // Table 66: JSON Single Character Escape Sequences
+                constexpr static std::array<std::pair<char32_t, const char*>, 7> escape_sequences = {
+                    std::make_pair(0x0008, R"(\b)"), // BACKSPACE
+                    std::make_pair(0x0009, R"(\t)"), // CHARACTER TABULATION
+                    std::make_pair(0x000A, R"(\n)"), // LINE FEED (LF)
+                    std::make_pair(0x000C, R"(\f)"), // FORM FEED (FF)
+                    std::make_pair(0x000D, R"(\r)"), // CARRIAGE RETURN (CR)
+                    std::make_pair(0x0022, R"(\")"), // QUOTATION MARK
+                    std::make_pair(0x005C, R"(\\)")  // REVERSE SOLIDUS
+                };
+                // 1. Let product be the String value consisting solely of the code unit 0x0022 (QUOTATION MARK).
+                buffer.push_back('"');
 
-        // 3. Set product to the string-concatenation of product and the code unit 0x0022 (QUOTATION MARK).
-        product.push_back('"');
+                // 2. For each code point C in ! UTF16DecodeString(value), do
+                // (note that we use utf8 instead of utf16)
+                for (auto code_point : Unicode::Utf8Decoder(sv.begin(), sv.end()))
+                {
+                    bool matched = false; // early exit boolean
+                    // a. If C is listed in the "Code Point" column of Table 66, then
+                    for (auto pr : escape_sequences)
+                    {
+                        // i. Set product to the string-concatenation of product and the escape sequence for C as
+                        // specified in the "Escape Sequence" column of the corresponding row.
+                        if (code_point == pr.first)
+                        {
+                            buffer.append(pr.second);
+                            matched = true;
+                            break;
+                        }
+                    }
+                    if (matched) break;
 
-        // 4. Return product.
-        return product;
-    }
+                    // b. Else if C has a numeric value less than 0x0020 (SPACE), or if C has the same numeric value as
+                    // a leading surrogate or trailing surrogate, then
+                    if (code_point < 0x0020 || Unicode::utf16_is_surrogate_code_point(code_point))
+                    {
+                        // i. Let unit be the code unit whose numeric value is that of C.
+                        // ii. Set product to the string-concatenation of product and UnicodeEscape(unit).
+                        append_unicode_escape(static_cast<char16_t>(code_point));
+                        break;
+                    }
 
-    static std::string quote_json_string(StringView sv)
-    {
-        std::string product;
-        append_quoted_json_string(product, sv);
-        return product;
-    }
+                    // c. Else,
+                    // i. Set product to the string-concatenation of product and the UTF16Encoding of C.
+                    // (again, we use utf-8 here instead)
+                    Unicode::utf8_append_code_point(buffer, code_point);
+                }
 
-    static void internal_stringify(const Value& value, JsonStyle style, std::string& buffer, int current_indent)
-    {
-        const auto append_indent = [&](int indent) {
-            if (style.use_tabs())
-            {
-                buffer.append(indent, '\t');
+                // 3. Set product to the string-concatenation of product and the code unit 0x0022 (QUOTATION MARK).
+                buffer.push_back('"');
             }
-            else
+
+            void stringify_object(const Object& obj, int current_indent)
             {
-                buffer.append(indent * style.spaces(), ' ');
+                buffer.push_back('{');
+                if (obj.size() != 0)
+                {
+                    bool first = true;
+
+                    for (const auto& el : obj)
+                    {
+                        if (!first)
+                        {
+                            buffer.push_back(',');
+                        }
+                        first = false;
+
+                        buffer.append(style.newline());
+                        append_indent(current_indent + 1);
+
+                        append_quoted_json_string(el.first);
+                        buffer.append(": ");
+                        stringify(el.second, current_indent + 1);
+                    }
+                    buffer.append(style.newline());
+                    append_indent(current_indent);
+                }
+                buffer.push_back('}');
             }
-        };
-        switch (value.kind())
-        {
-            case VK::Null: buffer.append("null"); break;
-            case VK::Boolean:
+
+            void stringify_array(const Array& arr, int current_indent)
             {
-                auto v = value.boolean();
-                buffer.append(v ? "true" : "false");
-                break;
-            }
-            // TODO: switch to `to_chars` once we are able to remove support for old compilers
-            case VK::Integer: buffer.append(std::to_string(value.integer())); break;
-            case VK::Number: buffer.append(std::to_string(value.number())); break;
-            case VK::String:
-            {
-                append_quoted_json_string(buffer, value.string());
-                break;
-            }
-            case VK::Array:
-            {
-                const auto& arr = value.array();
                 buffer.push_back('[');
                 if (arr.size() == 0)
                 {
@@ -999,51 +1044,64 @@ namespace vcpkg::Json
                         buffer.append(style.newline());
                         append_indent(current_indent + 1);
 
-                        internal_stringify(el, style, buffer, current_indent + 1);
+                        stringify(el, current_indent + 1);
                     }
                     buffer.append(style.newline());
                     append_indent(current_indent);
                     buffer.push_back(']');
                 }
-                break;
             }
-            case VK::Object:
+
+            void stringify(const Value& value, int current_indent)
             {
-                const auto& obj = value.object();
-                buffer.push_back('{');
-                if (obj.size() != 0)
+                switch (value.kind())
                 {
-                    bool first = true;
-
-                    for (const auto& el : obj)
+                    case VK::Null: buffer.append("null"); break;
+                    case VK::Boolean:
                     {
-                        if (!first)
-                        {
-                            buffer.push_back(',');
-                        }
-                        first = false;
-
-                        buffer.append(style.newline());
-                        append_indent(current_indent + 1);
-
-                        auto key = quote_json_string(el.first);
-                        buffer.append(key.begin(), key.end());
-                        buffer.append(": ");
-                        internal_stringify(el.second, style, buffer, current_indent + 1);
+                        auto v = value.boolean();
+                        buffer.append(v ? "true" : "false");
+                        break;
                     }
-                    buffer.append(style.newline());
-                    append_indent(current_indent);
+                    // TODO: switch to `to_chars` once we are able to remove support for old compilers
+                    case VK::Integer: buffer.append(std::to_string(value.integer())); break;
+                    case VK::Number: buffer.append(std::to_string(value.number())); break;
+                    case VK::String:
+                    {
+                        append_quoted_json_string(value.string());
+                        break;
+                    }
+                    case VK::Array:
+                    {
+                        stringify_array(value.array(), current_indent);
+                        break;
+                    }
+                    case VK::Object:
+                    {
+                        stringify_object(value.object(), current_indent);
+                        break;
+                    }
                 }
-                buffer.push_back('}');
-                break;
             }
-        }
+        };
     }
 
-    std::string stringify(const Value& value, JsonStyle style) noexcept
+    std::string stringify(const Value& value, JsonStyle style)
     {
         std::string res;
-        internal_stringify(value, style, res, 0);
+        Stringifier{style, res}.stringify(value, 0);
+        return res;
+    }
+    std::string stringify(const Object& obj, JsonStyle style)
+    {
+        std::string res;
+        Stringifier{style, res}.stringify_object(obj, 0);
+        return res;
+    }
+    std::string stringify(const Array& arr, JsonStyle style)
+    {
+        std::string res;
+        Stringifier{style, res}.stringify_array(arr, 0);
         return res;
     }
     // } auto stringify()
