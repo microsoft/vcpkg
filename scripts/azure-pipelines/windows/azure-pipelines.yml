@@ -31,7 +31,7 @@ jobs:
           .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows --binarycaching --x-binarysource=clear;files,W:\,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads
       }
 
-      $command = ".\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching --x-binarysource=clear;files,W:\,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads"
+      $command = ".\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching --x-binarysource=clear`;files`,W:\`,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads"
       Set-Content -Path 'run_ci.cmd' -Value $command -Encoding ASCII
     displayName: 'Write Test Modified Ports Batch File'
   - task: BatchScript@1
