@@ -35,6 +35,7 @@ jobs:
   - bash: toolsrc/build.rel/vcpkg-test
     displayName: 'Run vcpkg tests'
   - powershell: |
+      ./vcpkg x-ci-clean
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-linux" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results
       $env:HOME = '/home/agent'

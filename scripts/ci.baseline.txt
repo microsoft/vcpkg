@@ -166,14 +166,6 @@ boost-test:arm-uwp=fail
 boost-test:x64-uwp=fail
 boost-wave:arm-uwp=fail
 boost-wave:x64-uwp=fail
-# Building boost-* with arm-uwp requires the x86-windows boost-* which breaks CI testing, Ignore them
-boost-atomic:arm-uwp=ignore
-boost-signals:arm-uwp=ignore
-boost-exception:arm-uwp=ignore
-boost-regex:arm-uwp=ignore
-boost-nowide:arm-uwp=ignore
-boost-system:arm-uwp=ignore
-boost-container:arm-uwp=ignore
 botan:arm64-windows=fail
 botan:arm-uwp=fail
 botan:x64-uwp=fail
