@@ -13,13 +13,27 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DENABLE_LIB_ONLY=ON
-        -DENABLE_ASIO_LIB=OFF
-)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DENABLE_LIB_ONLY=ON
+            -DENABLE_ASIO_LIB=OFF
+            -DENABLE_STATIC_LIB=ON
+            -DENABLE_SHARED_LIB=OFF
+    )
+else()
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DENABLE_LIB_ONLY=ON
+            -DENABLE_ASIO_LIB=OFF
+            -DENABLE_STATIC_LIB=OFF
+            -DENABLE_SHARED_LIB=ON
+    )
+endif()
 
 vcpkg_install_cmake()
 
