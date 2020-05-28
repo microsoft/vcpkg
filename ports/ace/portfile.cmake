@@ -119,67 +119,56 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # ACE itself does not define an install target, so it is not clear which
   # headers are public and which not. For the moment we install everything
   # that is in the source path and ends in .h, .inl
-  function(install_ace_headers_subdirectory ORIGINAL_PATH RELATIVE_PATH)
-  file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.inl)
-  file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/${RELATIVE_PATH})
+  function(install_includes SOURCE_PATH SUBDIRECTORIES INCLUDE_DIR)
+    foreach(SUB_DIR ${SUBDIRECTORIES})
+      file(GLOB HEADER_FILES ${SOURCE_PATH}/${SUB_DIR}/*.h ${SOURCE_PATH}/${SUB_DIR}/*.inl ${SOURCE_PATH}/${SUB_DIR}/*_T.cpp)
+      file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${INCLUDE_DIR}/${SUB_DIR})
+    endforeach()
   endfunction()
 
-  # We manually install header found in the ace directory because in that case
-  # we are supposed to install also *cpp files, see ACE_wrappers\debian\libace-dev.install file
-  file(GLOB HEADER_FILES ${ACE_SOURCE_PATH}/*.h ${ACE_SOURCE_PATH}/*.inl ${ACE_SOURCE_PATH}/*.cpp)
-  file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/)
-
-  # Install headers in subdirectory
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "Compression")
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "Compression/rle")
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "ETCL")
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "QoS")
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "Monitor_Control")
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include")
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/arpa")
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/net")
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/netinet")
-  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/sys")
+  # Install headers
+  set(ACE_INCLUDE_FOLDERS "." "Compression" "Compression/rle" "ETCL" "QoS" "Monitor_Control" "os_include" "os_include/arpa" "os_include/net" "os_include/netinet" "os_include/sys")
+  install_includes(${ACE_SOURCE_PATH} "${ACE_INCLUDE_FOLDERS}" "ace")
   if("ssl" IN_LIST FEATURES)
-      install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "SSL")
+      set(ACE_INCLUDE_FOLDERS "SSL")
+      install_includes(${ACE_SOURCE_PATH} "${ACE_INCLUDE_FOLDERS}" "ace")
   endif()
 
   # Install the libraries
-  function(install_ace_library ORIGINAL_PATH ACE_LIBRARY)
-  set(LIB_PATH ${ORIGINAL_PATH}/lib/)
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      # Install the DLL files
-      file(INSTALL
-          ${LIB_PATH}/${ACE_LIBRARY}${DLL_DEBUG_SUFFIX}
+  function(install_libraries SOURCE_PATH LIBRARIES)
+    foreach(LIBRARY ${LIBRARIES})
+      set(LIB_PATH ${SOURCE_PATH}/lib/)
+      if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        # Install the DLL files
+        file(INSTALL
+          ${LIB_PATH}/${LIBRARY}${DLL_DEBUG_SUFFIX}
           DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-      )
-      file(INSTALL
-          ${LIB_PATH}/${ACE_LIBRARY}${DLL_RELEASE_SUFFIX}
+        )
+        file(INSTALL
+          ${LIB_PATH}/${LIBRARY}${DLL_RELEASE_SUFFIX}
           DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+        )
+      endif()
+
+      # Install the lib files
+      file(INSTALL
+          ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX}
+          DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
       )
-  endif()
 
-  # Install the lib files
-  file(INSTALL
-      ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX}
-      DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-  )
-
-  file(INSTALL
-      ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}${LIB_RELEASE_SUFFIX}
-      DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-  )
+      file(INSTALL
+          ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_RELEASE_SUFFIX}
+          DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+      )
+    endforeach()
   endfunction()
 
-  install_ace_library(${ACE_ROOT} "ACE")
-  install_ace_library(${ACE_ROOT} "ACE_Compression")
-  install_ace_library(${ACE_ROOT} "ACE_ETCL")
-  install_ace_library(${ACE_ROOT} "ACE_ETCL_Parser")
-  install_ace_library(${ACE_ROOT} "ACE_Monitor_Control")
-  install_ace_library(${ACE_ROOT} "ACE_QoS")
-  install_ace_library(${ACE_ROOT} "ACE_RLECompression")
+  set(ACE_LIBRARIES "ACE" "ACE_Compression" "ACE_ETCL" "ACE_ETCL_Parser" "ACE_Monitor_Control" "ACE_QoS" "ACE_RLECompression")
+  install_libraries(${ACE_ROOT} "${ACE_LIBRARIES}")
+
   if("ssl" IN_LIST FEATURES)
-      install_ace_library(${ACE_ROOT} "ACE_SSL")
+    set(ACE_LIBRARIES "ACE_SSL")
+    install_libraries(${ACE_ROOT} "${ACE_LIBRARIES}")
   endif()
 
   vcpkg_copy_pdbs()
