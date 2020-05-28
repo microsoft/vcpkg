@@ -86,6 +86,10 @@ if (-Not (Test-Path D:\downloads)) {
     mkdir D:\downloads
 }
 
+if (-Not (Test-Path downloads)) {
+    cmd /c "mklink /D downloads D:\downloads"
+}
+
 Write-Host "Installing Windows SDK 2004 (10.0.19041.0)..." -ForegroundColor Cyan
 
 Write-Host "Downloading..."
