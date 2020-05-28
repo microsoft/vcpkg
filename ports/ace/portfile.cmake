@@ -130,121 +130,131 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # ACE itself does not define an install target, so it is not clear which
   # headers are public and which not. For the moment we install everything
   # that is in the source path and ends in .h, .inl
-  function(install_ace_headers_subdirectory ORIGINAL_PATH RELATIVE_PATH)
-    file(GLOB HEADER_FILES 
-        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h 
+  function(install_includes ORIGINAL_PATH RELATIVE_PATHS)
+    foreach(RELATIVE_PATH ${RELATIVE_PATHS})
+      file(
+        GLOB
+        HEADER_FILES
+        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h
         ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.hpp
-        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.inl 
+        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.inl
+        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*_T.cpp
         ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.idl
-        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.pidl
-    )
-    file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH})
+        ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.pidl)
+      file(INSTALL ${HEADER_FILES}
+           DESTINATION ${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH})
+    endforeach()
   endfunction()
 
-  # We manually install cpp files found in the ace directory
-  # see ACE_wrappers\debian\libace-dev.install file
-  file(GLOB ACE_SOURCE_FILES ${ACE_SOURCE_PATH}/*.cpp)
-  file(INSTALL ${ACE_SOURCE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/)
-
   # Install headers in subdirectory
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/Compression")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/Compression/rle")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/ETCL")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/QoS")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/Monitor_Control")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/os_include")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/os_include/arpa")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/os_include/net")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/os_include/netinet")
-  install_ace_headers_subdirectory(${ACE_ROOT} "ace/os_include/sys")
+  set(ACE_INCLUDE_FOLDERS
+      "ace"
+      "ace/Compression"
+      "ace/Compression/rle"
+      "ace/ETCL"
+      "ace/QoS"
+      "ace/Monitor_Control"
+      "ace/os_include"
+      "ace/os_include/arpa"
+      "ace/os_include/net"
+      "ace/os_include/netinet"
+      "ace/os_include/sys")
+  install_includes(${ACE_ROOT} "${ACE_INCLUDE_FOLDERS}")
+
   if("ssl" IN_LIST FEATURES)
-      install_ace_headers_subdirectory(${ACE_ROOT} "ace/SSL")
+    install_includes(${ACE_ROOT} "ace/SSL")
   endif()
+
   if("tao" IN_LIST FEATURES)
-    install_ace_headers_subdirectory(${ACE_ROOT} "ACEXML")
-    install_ace_headers_subdirectory(${ACE_ROOT} "ACEXML/apps")
-    install_ace_headers_subdirectory(${ACE_ROOT} "ACEXML/apps/svcconf")
-    install_ace_headers_subdirectory(${ACE_ROOT} "ACEXML/common")
-    install_ace_headers_subdirectory(${ACE_ROOT} "ACEXML/parser")
-    install_ace_headers_subdirectory(${ACE_ROOT} "ACEXML/parser/parser")
-    install_ace_headers_subdirectory(${ACE_ROOT}/protocols "ace/HTBP")
-    install_ace_headers_subdirectory(${ACE_ROOT}/protocols "ace/INet")
-    install_ace_headers_subdirectory(${ACE_ROOT}/protocols "ace/RMCast")
-    install_ace_headers_subdirectory(${ACE_ROOT}/protocols "ace/TMCast")
-    install_ace_headers_subdirectory(${ACE_ROOT} "Kokyu")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/AV")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Concurrency")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/CosEvent")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Event")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/FaultTolerance")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/FtRtEvent/ClientORB")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/FtRtEvent/EventChannel")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/FtRtEvent/Utils")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/HTIOP")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/IFRService")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/LifeCycle")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/LoadBalancing")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Log")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Naming")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Naming/FaultTolerant")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Notify")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Notify/Any")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Notify/MonitorControl")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Notify/MonitorControlExt")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Notify/Sequence")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Notify/Structured")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/PortableGroup")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Property")
-    install_ace_headers_subdirectory(${TAO_ROOT} "orbsvcs/FT_ReplicationManager")
-    install_ace_headers_subdirectory(${TAO_ROOT} "orbsvcs/Notify_Service")
+    set(ACEXML_INCLUDE_FOLDERS "ACEXML/apps/svcconf" "ACEXML/common"
+                               "ACEXML/parser/parser")
+    install_includes(${ACE_ROOT} "${ACEXML_INCLUDE_FOLDERS}")
+
+    set(ACE_PROTOCOLS_INCLUDE_FOLDERS "ace/HTBP" "ace/INet" "ace/RMCast"
+                                      "ace/TMCast")
+    install_includes(${ACE_ROOT}/protocols "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
+
+    install_includes(${ACE_ROOT} "Kokyu")
+
+    set(TAO_ORBSVCS_INCLUDE_FOLDERS
+        "orbsvcs"
+        "orbsvcs/AV"
+        "orbsvcs/Concurrency"
+        "orbsvcs/CosEvent"
+        "orbsvcs/Event"
+        "orbsvcs/FaultTolerance"
+        "orbsvcs/FtRtEvent/ClientORB"
+        "orbsvcs/FtRtEvent/EventChannel"
+        "orbsvcs/FtRtEvent/Utils"
+        "orbsvcs/HTIOP"
+        "orbsvcs/IFRService"
+        "orbsvcs/LifeCycle"
+        "orbsvcs/LoadBalancing"
+        "orbsvcs/Log"
+        "orbsvcs/Naming"
+        "orbsvcs/Naming/FaultTolerant"
+        "orbsvcs/Notify"
+        "orbsvcs/Notify/Any"
+        "orbsvcs/Notify/MonitorControl"
+        "orbsvcs/Notify/MonitorControlExt"
+        "orbsvcs/Notify/Sequence"
+        "orbsvcs/Notify/Structured"
+        "orbsvcs/PortableGroup"
+        "orbsvcs/Property"
+        "orbsvcs/Sched"
+        "orbsvcs/Security"
+        "orbsvcs/Time"
+        "orbsvcs/Trader")
     if("ssl" IN_LIST FEATURES)
-        install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/SSLIOP")
+      list(APPEND TAO_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/SSLIOP")
     endif()
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Sched")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Security")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Time")
-    install_ace_headers_subdirectory(${TAO_ROOT}/orbsvcs "orbsvcs/Trader")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/AnyTypeCode")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/BiDir_GIOP")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/CSD_Framework")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/CSD_ThreadPool")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/CodecFactory")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/Codeset")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/Compression")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/Compression/rle")
+    install_includes(${TAO_ROOT}/orbsvcs "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
+
+    set(TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/FT_ReplicationManager"
+                                         "orbsvcs/Notify_Service")
+    install_includes(${TAO_ROOT} "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
+
+    set(TAO_INCLUDE_FOLDERS
+        "tao"
+        "tao/AnyTypeCode"
+        "tao/BiDir_GIOP"
+        "tao/CSD_Framework"
+        "tao/CSD_ThreadPool"
+        "tao/CodecFactory"
+        "tao/Codeset"
+        "tao/Compression"
+        "tao/Compression/rle"
+        "tao/DiffServPolicy"
+        "tao/DynamicAny"
+        "tao/DynamicInterface"
+        "tao/Dynamic_TP"
+        "tao/ETCL"
+        "tao/EndpointPolicy"
+        "tao/IFR_Client"
+        "tao/IORInterceptor"
+        "tao/IORManipulation"
+        "tao/IORTable"
+        "tao/ImR_Client"
+        "tao/Messaging"
+        "tao/Monitor"
+        "tao/ObjRefTemplate"
+        "tao/PI"
+        "tao/PI_Server"
+        "tao/PortableServer"
+        "tao/RTCORBA"
+        "tao/RTPortableServer"
+        "tao/RTScheduling"
+        "tao/SmartProxies"
+        "tao/Strategies"
+        "tao/TransportCurrent"
+        "tao/TypeCodeFactory"
+        "tao/Utils"
+        "tao/Valuetype"
+        "tao/ZIOP")
     if("zlib" IN_LIST FEATURES)
-        install_ace_headers_subdirectory(${TAO_ROOT} "tao/Compression/zlib")
+      list(APPEND TAO_INCLUDE_FOLDERS "tao/Compression/zlib")
     endif()
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/DiffServPolicy")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/DynamicAny")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/DynamicInterface")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/Dynamic_TP")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/ETCL")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/EndpointPolicy")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/IFR_Client")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/IORInterceptor")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/IORManipulation")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/IORTable")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/ImR_Client")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/Messaging")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/Monitor")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/ObjRefTemplate")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/PI")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/PI_Server")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/PortableServer")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/RTCORBA")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/RTPortableServer")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/RTScheduling")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/SmartProxies")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/Strategies")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/TransportCurrent")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/TypeCodeFactory")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/Utils")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/Valuetype")
-    install_ace_headers_subdirectory(${TAO_ROOT} "tao/ZIOP")
+    install_includes(${TAO_ROOT} "${TAO_INCLUDE_FOLDERS}")
   endif()
   
   # Remove dlls without any export
