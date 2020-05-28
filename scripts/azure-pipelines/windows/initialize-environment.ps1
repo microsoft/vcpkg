@@ -86,10 +86,6 @@ if (-Not (Test-Path D:\downloads)) {
     mkdir D:\downloads
 }
 
-Write-Host 'Cleaning packages'
-Remove-Item packages\* -Recurse -Force -errorAction silentlycontinue
-
-
 Write-Host "Installing Windows SDK 2004 (10.0.19041.0)..." -ForegroundColor Cyan
 
 Write-Host "Downloading..."
@@ -134,8 +130,3 @@ Write-Host "Installing LLVM extension..."
 Start-Process "$vsPath\Common7\IDE\VSIXInstaller.exe" "/a /q /f /sp $vsixPath" -Wait
 Remove-Item $vsixPath -Force -ErrorAction Ignore
 Write-Host "Installed" -ForegroundColor Green
-
-=======
-if (-Not (Test-Path downloads)) {
-    cmd /c "mklink /D downloads D:\downloads"
-}
