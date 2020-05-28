@@ -371,9 +371,31 @@ namespace vcpkg::Build
         return concurrency;
     }
 
-    static std::vector<System::CMakeVariable> get_cmake_vars(const VcpkgPaths& paths,
-                                                             const Dependencies::InstallPlanAction& action,
-                                                             Triplet triplet)
+    static void get_generic_cmake_build_args(const VcpkgPaths& paths,
+                                             Triplet triplet,
+                                             const Toolset& toolset,
+                                             std::vector<System::CMakeVariable>& out_vars)
+    {
+        Util::Vectors::append(&out_vars,
+                              std::initializer_list<System::CMakeVariable>{
+                                  {"CMD", "BUILD"},
+                                  {"VCPKG_ROOT_PATH", paths.root},
+                                  {"TARGET_TRIPLET", triplet.canonical_name()},
+                                  {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
+                                  {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
+                                  {"DOWNLOADS", paths.downloads},
+                                  {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
+                              });
+        if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+        {
+            const fs::path& git_exe_path = paths.get_tool_exe(Tools::GIT);
+            out_vars.push_back({"GIT", git_exe_path});
+        }
+    }
+
+    static std::vector<System::CMakeVariable> get_cmake_build_args(const VcpkgPaths& paths,
+                                                                   const Dependencies::InstallPlanAction& action,
+                                                                   Triplet triplet)
     {
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
@@ -382,7 +404,6 @@ namespace vcpkg::Build
 #endif
         auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
         auto& scf = *scfl.source_control_file;
-        const fs::path& git_exe_path = paths.get_tool_exe(Tools::GIT);
 
         std::string all_features;
         for (auto& feature : scf.feature_paragraphs)
@@ -391,30 +412,20 @@ namespace vcpkg::Build
         }
 
         std::vector<System::CMakeVariable> variables{
-            {"CMD", "BUILD"},
             {"PORT", scf.core_paragraph->name},
             {"CURRENT_PORT_DIR", scfl.source_location},
-            {"VCPKG_ROOT_PATH", paths.root},
-            {"TARGET_TRIPLET", triplet.canonical_name()},
-            {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
-            {"VCPKG_PLATFORM_TOOLSET", action.abi_info.value_or_exit(VCPKG_LINE_INFO).toolset->version.c_str()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(action.build_options.use_head_version) ? "1" : "0"},
-            {"DOWNLOADS", paths.downloads},
             {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(action.build_options.allow_downloads) ? "1" : "0"},
             {"_VCPKG_DOWNLOAD_TOOL", to_string(action.build_options.download_tool)},
             {"FEATURES", Strings::join(";", action.feature_list)},
             {"ALL_FEATURES", all_features},
-            {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
         };
+        get_generic_cmake_build_args(
+            paths, triplet, *action.abi_info.value_or_exit(VCPKG_LINE_INFO).toolset, variables);
 
         if (Util::Enum::to_bool(action.build_options.only_downloads))
         {
             variables.push_back({"VCPKG_DOWNLOAD_MODE", "true"});
-        }
-
-        if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
-        {
-            variables.push_back({"GIT", git_exe_path});
         }
 
         const Files::Filesystem& fs = paths.get_filesystem();
@@ -529,7 +540,7 @@ namespace vcpkg::Build
         const auto timer = Chrono::ElapsedTimer::create_started();
 
         auto command = System::make_cmake_cmd(
-            paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, get_cmake_vars(paths, action, triplet));
+            paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, get_cmake_build_args(paths, action, triplet));
 
         const auto& env = paths.get_action_env(action.abi_info.value_or_exit(VCPKG_LINE_INFO));
 
@@ -808,6 +819,72 @@ namespace vcpkg::Build
             abi_info.pre_build_info = std::make_unique<PreBuildInfo>(
                 paths, action.spec.triplet(), var_provider.get_tag_vars(action.spec).value_or_exit(VCPKG_LINE_INFO));
             abi_info.toolset = &paths.get_toolset(*abi_info.pre_build_info);
+
+            if (GlobalState::g_binary_caching)
+            {
+                static Cache<std::string, std::string> s_compiler_cache;
+                auto triplet = action.spec.triplet();
+                const auto& compiler_tag =
+                    s_compiler_cache.get_lazy(abi_info.pre_build_info->triplet_abi_tag, [&]() -> std::string {
+                        System::print2("Detecting compiler hash for triplet ", triplet, "...\n");
+                        auto buildpath = paths.buildtrees / "detect_compiler";
+
+                        std::vector<System::CMakeVariable> cmake_args{
+                            {"CURRENT_PORT_DIR", paths.scripts / "detect_compiler"},
+                            {"CURRENT_BUILDTREES_DIR", buildpath},
+                            {"CURRENT_PACKAGES_DIR", paths.packages / ("detect_compiler_" + triplet.canonical_name())},
+                        };
+                        get_generic_cmake_build_args(paths, triplet, *abi_info.toolset, cmake_args);
+
+                        auto command =
+                            System::make_cmake_cmd(paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, cmake_args);
+
+                        const auto& env = paths.get_action_env(action.abi_info.value_or_exit(VCPKG_LINE_INFO));
+                        auto& fs = paths.get_filesystem();
+                        if (!fs.exists(buildpath))
+                        {
+                            std::error_code err;
+                            fs.create_directory(buildpath, err);
+                            Checks::check_exit(VCPKG_LINE_INFO,
+                                               !err.value(),
+                                               "Failed to create directory '%s', code: %d",
+                                               buildpath.u8string(),
+                                               err.value());
+                        }
+                        auto stdoutlog = buildpath / ("stdout-" + triplet.canonical_name() + ".log");
+                        std::ofstream out_file(stdoutlog.native().c_str(),
+                                               std::ios::out | std::ios::binary | std::ios::trunc);
+                        Checks::check_exit(
+                            VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", stdoutlog.u8string());
+                        std::string compiler_hash;
+                        const int return_code = System::cmd_execute_and_stream_lines(
+                            command,
+                            [&](const std::string& s) {
+                                static const StringLiteral s_marker = "#COMPILER_HASH#";
+                                if (Strings::starts_with(s, s_marker))
+                                {
+                                    compiler_hash = s.data() + s_marker.size();
+                                }
+                                Debug::print(s, '\n');
+                                out_file.write(s.data(), s.size()).put('\n');
+                                Checks::check_exit(VCPKG_LINE_INFO,
+                                                   out_file,
+                                                   "Error occurred while writing '%s'",
+                                                   stdoutlog.u8string());
+                            },
+                            env);
+                        out_file.close();
+
+                        Checks::check_exit(VCPKG_LINE_INFO,
+                                           !compiler_hash.empty(),
+                                           "Error occured while detecting compiler information");
+
+                        System::print2("Detecting compiler hash for triplet ", triplet, ": ", compiler_hash, "\n");
+                        return compiler_hash;
+                    });
+
+                dependency_abis.push_back(AbiEntry{".compiler", compiler_tag});
+            }
 
             auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, dependency_abis);
             if (auto p = maybe_abi_tag_and_file.get())
