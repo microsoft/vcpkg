@@ -1,0 +1,69 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 343e3d2..62653c6 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -822,7 +822,7 @@ if (NOT PLIBSYS_TARGET_OS STREQUAL os2 AND NOT PLIBSYS_TARGET_OS STREQUAL amigao
+ endif()
+ 
+ if (PLIBSYS_BUILD_STATIC)
+-        set_target_properties (plibsysstatic PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
++        set_target_properties (plibsysstatic PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR} OUTPUT_NAME plibsys)
+ 
+         if (NOT PLIBSYS_TARGET_OS STREQUAL os2)
+                 set_target_properties (plibsysstatic PROPERTIES SOVERSION ${PLIBSYS_SOVERSION})
+@@ -860,15 +860,15 @@ if (PLIBSYS_BUILD_STATIC)
+ endif()
+ 
+ if (PLIBSYS_BUILD_STATIC)
+-        set (PLIBSYS_INSTALL_TARGETS plibsys plibsysstatic)
++        set (PLIBSYS_INSTALL_TARGETS plibsysstatic)
+ else()
+         set (PLIBSYS_INSTALL_TARGETS plibsys)
+ endif()
+ 
+ if (PLIBSYS_NATIVE_WINDOWS)
+         install (TARGETS ${PLIBSYS_INSTALL_TARGETS}
+-                DESTINATION lib
+-                RUNTIME DESTINATION lib
++                LIBRARY DESTINATION lib
++                RUNTIME DESTINATION bin
+                 COMPONENT Core
+         )
+ 
+@@ -878,11 +878,6 @@ if (PLIBSYS_NATIVE_WINDOWS)
+ 
+         set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
+         include (InstallRequiredSystemLibraries)
+-
+-        install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+-                DESTINATION lib
+-                COMPONENT Core
+-        )
+ endif()
+ 
+ # Prepare installation dirs
+@@ -890,18 +885,18 @@ if (NOT CMAKE_INSTALL_LIBDIR)
+         set (CMAKE_INSTALL_LIBDIR "lib")
+ endif()
+ 
++if (NOT CMAKE_INSTALL_BINDIR)
++        set (CMAKE_INSTALL_BINDIR "bin")
++endif()
++
+ if (NOT CMAKE_INSTALL_INCLUDEDIR)
+         set (CMAKE_INSTALL_INCLUDEDIR "include")
+ endif()
+ 
+ install (TARGETS ${PLIBSYS_INSTALL_TARGETS} EXPORT plibsys-targets
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        COMPONENT Core
+-)
+-install (TARGETS ${PLIBSYS_INSTALL_TARGETS}
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         COMPONENT Core
+ )
+ install (FILES
