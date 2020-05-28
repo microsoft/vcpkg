@@ -1,4 +1,3 @@
-
 vcpkg_fail_port_install(ON_TARGET "osx")
 
 vcpkg_from_github(
