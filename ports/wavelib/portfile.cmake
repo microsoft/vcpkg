@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 20403990fe151d623ef10970056db7dccc659c667f5eba999ab8659849e7cd5c8c8474a7892dae5e66b4a7ef372ec69332f2f8dd2ebf75ee6f35be408f0e48ea
     HEAD_REF master
     PATCHES
-        fix-cmake-install.patch
+        fix-cmake-install.patch # https://github.com/rafat/wavelib/pull/20
 )
 
 vcpkg_configure_cmake(

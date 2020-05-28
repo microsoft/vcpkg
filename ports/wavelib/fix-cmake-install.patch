@@ -30,7 +30,7 @@ index 335b1ad..e2e8a4d 100644
 +    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 +    FILES_MATCHING PATTERN "*.h")
 diff --git a/auxiliary/CMakeLists.txt b/auxiliary/CMakeLists.txt
-index 51c836d..25823e6 100644
+index 51c836d..1da2c08 100644
 --- a/auxiliary/CMakeLists.txt
 +++ b/auxiliary/CMakeLists.txt
 @@ -12,5 +12,9 @@ target_link_libraries(wauxlib wavelib)
@@ -42,10 +42,10 @@ index 51c836d..25823e6 100644
  
 +install(TARGETS wauxlib
 +    EXPORT wavelib-targets
-+    ARCHIVE DESTINATION lib
-+    INCLUDES DESTINATION include)
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index dc9592a..0c2f119 100644
+index dc9592a..1eb6123 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -24,8 +24,38 @@ set(HEADER_FILES    conv.h
@@ -82,8 +82,8 @@ index dc9592a..0c2f119 100644
 +
 +install(TARGETS wavelib
 +    EXPORT wavelib-targets
-+    ARCHIVE DESTINATION lib
-+    INCLUDES DESTINATION include)
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  
 +install(EXPORT wavelib-targets
 +    FILE wavelib-config.cmake
