@@ -74,6 +74,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
+file(INSTALL ${SOURCE_PATH}/src/raymath.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/src/rlgl.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
 # Install usage
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
 
