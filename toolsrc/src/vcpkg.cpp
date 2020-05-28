@@ -351,12 +351,12 @@ int main(const int argc, const char* const* const argv)
     if (args.sendmetrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
     {
         System::print2(System::Color::warning,
-                       "Warning: passed either --sendmetrics or --no-sendmetrics, but metrics are disabled.");
+                       "Warning: passed either --sendmetrics or --no-sendmetrics, but metrics are disabled.\n");
     }
     if (args.printmetrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
     {
         System::print2(System::Color::warning,
-                       "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.");
+                       "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
     }
 
     if (Debug::g_debugging)

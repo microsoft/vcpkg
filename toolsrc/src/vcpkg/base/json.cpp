@@ -268,7 +268,7 @@ namespace vcpkg::Json
     Value& Object::insert(std::string key, Value&& value)
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, !contains(key));
-        underlying_.push_back(std::make_pair(std::move(key), std::move(value)));
+        underlying_.push_back({std::move(key), std::move(value)});
         return underlying_.back().second;
     }
     Array& Object::insert(std::string key, Array&& value)
@@ -289,7 +289,7 @@ namespace vcpkg::Json
         }
         else
         {
-            underlying_.push_back(std::make_pair(std::move(key), std::move(value)));
+            underlying_.push_back({std::move(key), std::move(value)});
             return underlying_.back().second;
         }
     }
@@ -732,7 +732,7 @@ namespace vcpkg::Json
 
                 auto current = cur();
 
-                auto res = std::make_pair(std::string(""), Value());
+                std::pair<std::string, Value> res = {std::string(""), Value()};
 
                 if (current == Unicode::end_of_file)
                 {
@@ -943,15 +943,15 @@ namespace vcpkg::Json
             void append_quoted_json_string(StringView sv)
             {
                 // Table 66: JSON Single Character Escape Sequences
-                constexpr static std::array<std::pair<char32_t, const char*>, 7> escape_sequences = {
-                    std::make_pair(0x0008, R"(\b)"), // BACKSPACE
-                    std::make_pair(0x0009, R"(\t)"), // CHARACTER TABULATION
-                    std::make_pair(0x000A, R"(\n)"), // LINE FEED (LF)
-                    std::make_pair(0x000C, R"(\f)"), // FORM FEED (FF)
-                    std::make_pair(0x000D, R"(\r)"), // CARRIAGE RETURN (CR)
-                    std::make_pair(0x0022, R"(\")"), // QUOTATION MARK
-                    std::make_pair(0x005C, R"(\\)")  // REVERSE SOLIDUS
-                };
+                constexpr static std::array<std::pair<char32_t, const char*>, 7> escape_sequences = {{
+                    {0x0008, R"(\b)"}, // BACKSPACE
+                    {0x0009, R"(\t)"}, // CHARACTER TABULATION
+                    {0x000A, R"(\n)"}, // LINE FEED (LF)
+                    {0x000C, R"(\f)"}, // FORM FEED (FF)
+                    {0x000D, R"(\r)"}, // CARRIAGE RETURN (CR)
+                    {0x0022, R"(\")"}, // QUOTATION MARK
+                    {0x005C, R"(\\)"}  // REVERSE SOLIDUS
+                }};
                 // 1. Let product be the String value consisting solely of the code unit 0x0022 (QUOTATION MARK).
                 buffer.push_back('"');
 
@@ -959,20 +959,16 @@ namespace vcpkg::Json
                 // (note that we use utf8 instead of utf16)
                 for (auto code_point : Unicode::Utf8Decoder(sv.begin(), sv.end()))
                 {
-                    bool matched = false; // early exit boolean
                     // a. If C is listed in the "Code Point" column of Table 66, then
-                    for (auto pr : escape_sequences)
-                    {
-                        // i. Set product to the string-concatenation of product and the escape sequence for C as
-                        // specified in the "Escape Sequence" column of the corresponding row.
-                        if (code_point == pr.first)
-                        {
-                            buffer.append(pr.second);
-                            matched = true;
-                            break;
-                        }
+                    const auto match = std::find_if(begin(escape_sequences), end(escape_sequences), [code_point](const std::pair<char32_t, const char*>& attempt) {
+                        return attempt.first == code_point;
+                    });
+                    // i. Set product to the string-concatenation of product and the escape sequence for C as
+                    // specified in the "Escape Sequence" column of the corresponding row.
+                    if (match != end(escape_sequences)) {
+                        buffer.append(match->second);
+                        continue;
                     }
-                    if (matched) break;
 
                     // b. Else if C has a numeric value less than 0x0020 (SPACE), or if C has the same numeric value as
                     // a leading surrogate or trailing surrogate, then
