@@ -766,7 +766,7 @@ namespace vcpkg::Build
                                  abi_file_path};
         }
 
-        System::print2(
+        Debug::print(
             "Warning: abi keys are missing values:\n",
             Strings::join("", abi_tag_entries_missing, [](const AbiEntry& e) { return "    " + e.key + "\n"; }),
             "\n");
