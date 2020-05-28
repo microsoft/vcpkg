@@ -1,4 +1,3 @@
-set(PORT_DEBUG ON)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
