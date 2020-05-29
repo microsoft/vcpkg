@@ -1,0 +1,29 @@
+ src/wavelib.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/wavelib.c b/src/wavelib.c
+index a7d4ae8..f9283da 100644
+--- a/src/wavelib.c
++++ b/src/wavelib.c
+@@ -3353,7 +3353,7 @@ void setWTConv(wt_object wt, const char *cmethod) {
+ }
+ 
+ double* dwt2(wt2_object wt, double *inp) {
+-	double *wavecoeff;
++	double *wavecoeff = NULL;
+ 	int i, J, iter, N, lp, rows_n, cols_n, rows_i, cols_i;
+ 	int ir, ic, istride,ostride;
+ 	int aLL, aLH, aHL, aHH, cdim,clen;
+@@ -3504,11 +3504,11 @@ void idwt2(wt2_object wt, double *wavecoeff, double *oup) {
+ 	int istride, ostride, iter, J;
+ 	int aLL, aLH, aHL, aHH;
+ 	double *cL, *cH, *X_lp,*orig;
++    double *out = NULL;
+ 
+ 	rows = wt->rows;
+ 	cols = wt->cols;
+ 	J = wt->J;
+-	double *out;
+ 	
+ 
+ 	if (!strcmp(wt->ext, "per")) {

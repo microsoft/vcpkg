@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF f104d084be91cc7e59dc3253bedceb11ece77136
     SHA512 5db4a3141e23ddaae0b5c6c1e119404343f2f6bef6b24ef94c99cd412f1d9d444512386484266cf4070f7572bbf69fca691f4f95a583dc46e2ea81ca1c147181
     HEAD_REF master
+    PATCHES
+        fix-uwp-build.patch
 )
 
 vcpkg_configure_cmake(
