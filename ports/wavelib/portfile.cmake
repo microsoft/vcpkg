@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rafat/wavelib
-    REF cef10c11334007e958daa977f40af1eca7ffb5b8
-    SHA512 20403990fe151d623ef10970056db7dccc659c667f5eba999ab8659849e7cd5c8c8474a7892dae5e66b4a7ef372ec69332f2f8dd2ebf75ee6f35be408f0e48ea
+    REF f104d084be91cc7e59dc3253bedceb11ece77136
+    SHA512 5db4a3141e23ddaae0b5c6c1e119404343f2f6bef6b24ef94c99cd412f1d9d444512386484266cf4070f7572bbf69fca691f4f95a583dc46e2ea81ca1c147181
     HEAD_REF master
-    PATCHES
-        fix-cmake-install.patch # https://github.com/rafat/wavelib/pull/20
 )
 
 vcpkg_configure_cmake(
