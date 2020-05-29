@@ -153,14 +153,14 @@ namespace vcpkg::Build
     /// <summary>
     /// Settings from the triplet file which impact the build environment and post-build checks
     /// </summary>
-    struct PreBuildInfo
+    struct PreBuildInfo : Util::ResourceBase
     {
         PreBuildInfo(const VcpkgPaths& paths,
                      Triplet triplet,
                      const std::unordered_map<std::string, std::string>& cmakevars);
 
-        bool load_vcvars_env;
-        std::string triplet_abi_tag;
+        Triplet triplet;
+        bool load_vcvars_env = false;
         std::string target_architecture;
         std::string cmake_system_name;
         std::string cmake_system_version;
@@ -169,8 +169,12 @@ namespace vcpkg::Build
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
         Optional<std::string> public_abi_override;
-        Optional<const SourceControlFileLocation&> port;
         std::vector<std::string> passthrough_env_vars;
+
+        fs::path toolchain_file() const;
+
+    private:
+        const VcpkgPaths& m_paths;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
@@ -319,9 +323,18 @@ namespace vcpkg::Build
     struct EnvCache
     {
         const System::Environment& get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info);
+        const std::string& get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info);
+
+    private:
+        struct TripletMapEntry
+        {
+            std::string hash;
+            Cache<std::string, std::string> compiler_hashes;
+        };
+        Cache<fs::path, TripletMapEntry> m_triplet_cache;
+        Cache<fs::path, std::string> m_toolchain_cache;
 
 #if defined(_WIN32)
-    private:
         struct EnvMapEntry
         {
             std::unordered_map<std::string, std::string> env_map;

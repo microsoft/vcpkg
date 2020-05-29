@@ -303,6 +303,34 @@ namespace vcpkg::Build
 #endif
     }
 
+    static std::string load_compiler_hash(const VcpkgPaths& paths, const AbiInfo& abi_info);
+
+    const std::string& EnvCache::get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info)
+    {
+        const auto& fs = paths.get_filesystem();
+        const fs::path triplet_file_path = paths.get_triplet_file_path(abi_info.pre_build_info->triplet);
+
+        auto tcfile = abi_info.pre_build_info->toolchain_file();
+        auto&& toolchain_hash = m_toolchain_cache.get_lazy(
+            tcfile, [&]() { return Hash::get_file_hash(VCPKG_LINE_INFO, fs, tcfile, Hash::Algorithm::Sha1); });
+
+        auto&& triplet_entry = m_triplet_cache.get_lazy(triplet_file_path, [&]() -> TripletMapEntry {
+            return TripletMapEntry{Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, Hash::Algorithm::Sha1)};
+        });
+
+        return triplet_entry.compiler_hashes.get_lazy(toolchain_hash, [&]() -> std::string {
+            if (GlobalState::g_compiler_tracking)
+            {
+                auto compiler_hash = load_compiler_hash(paths, abi_info);
+                return Strings::concat(triplet_entry.hash, '-', toolchain_hash, '-', compiler_hash);
+            }
+            else
+            {
+                return triplet_entry.hash + "-" + toolchain_hash;
+            }
+        });
+    }
+
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
         if (pre_build_info.external_toolchain_file.has_value() && !pre_build_info.load_vcvars_env) return "";
@@ -393,6 +421,60 @@ namespace vcpkg::Build
         }
     }
 
+    static std::string load_compiler_hash(const VcpkgPaths& paths, const AbiInfo& abi_info)
+    {
+        auto triplet = abi_info.pre_build_info->triplet;
+        System::print2("Detecting compiler hash for triplet ", triplet, "...\n");
+        auto buildpath = paths.buildtrees / "detect_compiler";
+
+        std::vector<System::CMakeVariable> cmake_args{
+            {"CURRENT_PORT_DIR", paths.scripts / "detect_compiler"},
+            {"CURRENT_BUILDTREES_DIR", buildpath},
+            {"CURRENT_PACKAGES_DIR", paths.packages / ("detect_compiler_" + triplet.canonical_name())},
+        };
+        get_generic_cmake_build_args(paths, triplet, *abi_info.toolset, cmake_args);
+
+        auto command = System::make_cmake_cmd(paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, cmake_args);
+
+        const auto& env = paths.get_action_env(abi_info);
+        auto& fs = paths.get_filesystem();
+        if (!fs.exists(buildpath))
+        {
+            std::error_code err;
+            fs.create_directory(buildpath, err);
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !err.value(),
+                               "Failed to create directory '%s', code: %d",
+                               buildpath.u8string(),
+                               err.value());
+        }
+        auto stdoutlog = buildpath / ("stdout-" + triplet.canonical_name() + ".log");
+        std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
+        Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", stdoutlog.u8string());
+        std::string compiler_hash;
+        const int return_code = System::cmd_execute_and_stream_lines(
+            command,
+            [&](const std::string& s) {
+                static const StringLiteral s_marker = "#COMPILER_HASH#";
+                if (Strings::starts_with(s, s_marker))
+                {
+                    compiler_hash = s.data() + s_marker.size();
+                }
+                Debug::print(s, '\n');
+                out_file.write(s.data(), s.size()).put('\n');
+                Checks::check_exit(
+                    VCPKG_LINE_INFO, out_file, "Error occurred while writing '%s'", stdoutlog.u8string());
+            },
+            env);
+        out_file.close();
+
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !compiler_hash.empty(), "Error occured while detecting compiler information");
+
+        System::print2("Detecting compiler hash for triplet ", triplet, ": ", compiler_hash, "\n");
+        return compiler_hash;
+    }
+
     static std::vector<System::CMakeVariable> get_cmake_build_args(const VcpkgPaths& paths,
                                                                    const Dependencies::InstallPlanAction& action,
                                                                    Triplet triplet)
@@ -450,63 +532,39 @@ namespace vcpkg::Build
         return variables;
     }
 
-    static std::string get_triplet_abi(const VcpkgPaths& paths, const PreBuildInfo& pre_build_info, Triplet triplet)
+    fs::path PreBuildInfo::toolchain_file() const
     {
-        static std::map<fs::path, std::string> s_hash_cache;
-
-        const fs::path triplet_file_path = paths.get_triplet_file_path(triplet);
-        const auto& fs = paths.get_filesystem();
-
-        std::string hash;
-
-        auto it_hash = s_hash_cache.find(triplet_file_path);
-        if (it_hash != s_hash_cache.end())
+        if (auto p = external_toolchain_file.get())
         {
-            hash = it_hash->second;
+            return fs::u8path(*p);
+        }
+        else if (cmake_system_name == "Linux")
+        {
+            return m_paths.scripts / "toolchains" / "linux.cmake";
+        }
+        else if (cmake_system_name == "Darwin")
+        {
+            return m_paths.scripts / "toolchains" / "osx.cmake";
+        }
+        else if (cmake_system_name == "FreeBSD")
+        {
+            return m_paths.scripts / "toolchains" / "freebsd.cmake";
+        }
+        else if (cmake_system_name == "Android")
+        {
+            return m_paths.scripts / "toolchains" / "android.cmake";
+        }
+        else if (cmake_system_name.empty() || cmake_system_name == "Windows" || cmake_system_name == "WindowsStore")
+        {
+            return m_paths.scripts / "toolchains" / "windows.cmake";
         }
         else
         {
-            const auto algo = Hash::Algorithm::Sha1;
-            // TODO: Use file path as part of hash.
-            // REASON: Copying a triplet file without modifying it produces the same hash as the original.
-            hash = Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, algo);
-
-            if (auto p = pre_build_info.external_toolchain_file.get())
-            {
-                hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, *p, algo);
-            }
-            else if (pre_build_info.cmake_system_name == "Linux")
-            {
-                hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "linux.cmake", algo);
-            }
-            else if (pre_build_info.cmake_system_name == "Darwin")
-            {
-                hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "osx.cmake", algo);
-            }
-            else if (pre_build_info.cmake_system_name == "FreeBSD")
-            {
-                hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "freebsd.cmake", algo);
-            }
-            else if (pre_build_info.cmake_system_name == "Android")
-            {
-                hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "android.cmake", algo);
-            }
-            else if (pre_build_info.cmake_system_name.empty() || pre_build_info.cmake_system_name == "Windows" ||
-                     pre_build_info.cmake_system_name == "WindowsStore")
-            {
-                hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "windows.cmake", algo);
-            }
-
-            s_hash_cache.emplace(triplet_file_path, hash);
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Unable to determine toolchain to use for triplet %s with CMAKE_SYSTEM_NAME %s",
+                                      triplet,
+                                      cmake_system_name);
         }
-
-        return hash;
     }
 
     static ExtendedBuildResult do_build_package(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action)
@@ -660,10 +718,13 @@ namespace vcpkg::Build
         return result;
     }
 
-    static void abi_tags_from_pre_build_info(const PreBuildInfo& pre_build_info, std::vector<AbiEntry>& abi_tag_entries)
+    static void abi_entries_from_abi_info(const VcpkgPaths& paths,
+                                          const AbiInfo& abi_info,
+                                          std::vector<AbiEntry>& abi_tag_entries)
     {
-        abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
+        abi_tag_entries.emplace_back("triplet", paths.get_triplet_info(abi_info));
 
+        const auto& pre_build_info = *abi_info.pre_build_info;
         if (pre_build_info.public_abi_override)
         {
             abi_tag_entries.emplace_back(
@@ -690,7 +751,7 @@ namespace vcpkg::Build
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
-        abi_tags_from_pre_build_info(*action.abi_info.value_or_exit(VCPKG_LINE_INFO).pre_build_info, abi_tag_entries);
+        abi_entries_from_abi_info(paths, action.abi_info.value_or_exit(VCPKG_LINE_INFO), abi_tag_entries);
 
         // If there is an unusually large number of files in the port then
         // something suspicious is going on.  Rather than hash all of them
@@ -743,10 +804,10 @@ namespace vcpkg::Build
 
         if (Debug::g_debugging)
         {
-            std::string message = "[DEBUG] <abientries>\n";
+            std::string message = Strings::concat("[DEBUG] <abientries for ", action.spec, ">\n");
             for (auto&& entry : abi_tag_entries)
             {
-                Strings::append(message, "[DEBUG] ", entry.key, "|", entry.value, "\n");
+                Strings::append(message, "[DEBUG]   ", entry.key, "|", entry.value, "\n");
             }
             Strings::append(message, "[DEBUG] </abientries>\n");
             System::print2(message);
@@ -819,72 +880,6 @@ namespace vcpkg::Build
             abi_info.pre_build_info = std::make_unique<PreBuildInfo>(
                 paths, action.spec.triplet(), var_provider.get_tag_vars(action.spec).value_or_exit(VCPKG_LINE_INFO));
             abi_info.toolset = &paths.get_toolset(*abi_info.pre_build_info);
-
-            if (GlobalState::g_binary_caching)
-            {
-                static Cache<std::string, std::string> s_compiler_cache;
-                auto triplet = action.spec.triplet();
-                const auto& compiler_tag =
-                    s_compiler_cache.get_lazy(abi_info.pre_build_info->triplet_abi_tag, [&]() -> std::string {
-                        System::print2("Detecting compiler hash for triplet ", triplet, "...\n");
-                        auto buildpath = paths.buildtrees / "detect_compiler";
-
-                        std::vector<System::CMakeVariable> cmake_args{
-                            {"CURRENT_PORT_DIR", paths.scripts / "detect_compiler"},
-                            {"CURRENT_BUILDTREES_DIR", buildpath},
-                            {"CURRENT_PACKAGES_DIR", paths.packages / ("detect_compiler_" + triplet.canonical_name())},
-                        };
-                        get_generic_cmake_build_args(paths, triplet, *abi_info.toolset, cmake_args);
-
-                        auto command =
-                            System::make_cmake_cmd(paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, cmake_args);
-
-                        const auto& env = paths.get_action_env(action.abi_info.value_or_exit(VCPKG_LINE_INFO));
-                        auto& fs = paths.get_filesystem();
-                        if (!fs.exists(buildpath))
-                        {
-                            std::error_code err;
-                            fs.create_directory(buildpath, err);
-                            Checks::check_exit(VCPKG_LINE_INFO,
-                                               !err.value(),
-                                               "Failed to create directory '%s', code: %d",
-                                               buildpath.u8string(),
-                                               err.value());
-                        }
-                        auto stdoutlog = buildpath / ("stdout-" + triplet.canonical_name() + ".log");
-                        std::ofstream out_file(stdoutlog.native().c_str(),
-                                               std::ios::out | std::ios::binary | std::ios::trunc);
-                        Checks::check_exit(
-                            VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", stdoutlog.u8string());
-                        std::string compiler_hash;
-                        const int return_code = System::cmd_execute_and_stream_lines(
-                            command,
-                            [&](const std::string& s) {
-                                static const StringLiteral s_marker = "#COMPILER_HASH#";
-                                if (Strings::starts_with(s, s_marker))
-                                {
-                                    compiler_hash = s.data() + s_marker.size();
-                                }
-                                Debug::print(s, '\n');
-                                out_file.write(s.data(), s.size()).put('\n');
-                                Checks::check_exit(VCPKG_LINE_INFO,
-                                                   out_file,
-                                                   "Error occurred while writing '%s'",
-                                                   stdoutlog.u8string());
-                            },
-                            env);
-                        out_file.close();
-
-                        Checks::check_exit(VCPKG_LINE_INFO,
-                                           !compiler_hash.empty(),
-                                           "Error occured while detecting compiler information");
-
-                        System::print2("Detecting compiler hash for triplet ", triplet, ": ", compiler_hash, "\n");
-                        return compiler_hash;
-                    });
-
-                dependency_abis.push_back(AbiEntry{".compiler", compiler_tag});
-            }
 
             auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, dependency_abis);
             if (auto p = maybe_abi_tag_and_file.get())
@@ -1092,6 +1087,7 @@ namespace vcpkg::Build
     PreBuildInfo::PreBuildInfo(const VcpkgPaths& paths,
                                Triplet triplet,
                                const std::unordered_map<std::string, std::string>& cmakevars)
+        : m_paths(paths), triplet(triplet)
     {
         for (auto&& kv : VCPKG_OPTIONS)
         {
@@ -1158,8 +1154,6 @@ namespace vcpkg::Build
                     break;
             }
         }
-
-        triplet_abi_tag = get_triplet_abi(paths, *this, triplet);
     }
 
     ExtendedBuildResult::ExtendedBuildResult(BuildResult code) : code(code) {}

@@ -329,6 +329,12 @@ int main(const int argc, const char* const* const argv)
     {
         auto flags = Strings::split(*v, ',');
         if (std::find(flags.begin(), flags.end(), "binarycaching") != flags.end()) GlobalState::g_binary_caching = true;
+        if (std::find(flags.begin(), flags.end(), "compilertracking") != flags.end())
+            GlobalState::g_compiler_tracking = true;
+        if (std::find(flags.begin(), flags.end(), "-binarycaching") != flags.end())
+            GlobalState::g_binary_caching = false;
+        if (std::find(flags.begin(), flags.end(), "-compilertracking") != flags.end())
+            GlobalState::g_compiler_tracking = false;
     }
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);

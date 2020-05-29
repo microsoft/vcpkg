@@ -14,6 +14,7 @@ namespace vcpkg
         static Util::LockGuarded<std::string> g_surveydate;
 
         static std::atomic<bool> g_binary_caching;
+        static std::atomic<bool> g_compiler_tracking;
 
         static std::atomic<int> g_init_console_cp;
         static std::atomic<int> g_init_console_output_cp;

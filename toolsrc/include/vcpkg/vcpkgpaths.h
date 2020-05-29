@@ -121,6 +121,7 @@ namespace vcpkg
         Files::Filesystem& get_filesystem() const;
 
         const System::Environment& get_action_env(const Build::AbiInfo& abi_info) const;
+        const std::string& get_triplet_info(const Build::AbiInfo& abi_info) const;
 
     private:
         std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;

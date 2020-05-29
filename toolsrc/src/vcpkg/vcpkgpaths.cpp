@@ -288,5 +288,10 @@ namespace vcpkg
         return m_pimpl->m_env_cache.get_action_env(*this, abi_info);
     }
 
+    const std::string& VcpkgPaths::get_triplet_info(const Build::AbiInfo& abi_info) const
+    {
+        return m_pimpl->m_env_cache.get_triplet_info(*this, abi_info);
+    }
+
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return Files::get_real_filesystem(); }
 }
