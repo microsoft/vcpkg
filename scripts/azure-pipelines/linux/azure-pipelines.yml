@@ -17,6 +17,7 @@ jobs:
       sudo chown `id -u` /home/agent
       exit 0
     displayName: 'Create /home/agent'
+    # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
       sudo mkdir /mnt/vcpkg-ci -m=777
       sudo mkdir /mnt/vcpkg-ci/downloads -m=777

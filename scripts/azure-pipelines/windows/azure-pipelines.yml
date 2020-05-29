@@ -15,6 +15,7 @@ jobs:
     displayName: 'Initialize Environment'
     inputs:
       filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
+    # Note: D: is the Azure machines' temporary disk.
   - task: CmdLine@2
     displayName: 'Build vcpkg'
     inputs:
