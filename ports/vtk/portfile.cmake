@@ -196,7 +196,7 @@ function(_vtk_remove_debug_tool TOOL_NAME)
     if(EXISTS ${filename})
         file(REMOVE ${filename})
     endif()
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
         # we also have to bend the lines referencing the tools in VTKTargets-debug.cmake
         # to make them point to the release version of the tools
         file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-debug.cmake" VTK_TARGETS_CONTENT_DEBUG)
@@ -214,7 +214,7 @@ function(_vtk_move_release_tool TOOL_NAME)
         file(REMOVE ${old_filename})
     endif()
 
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL release)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
         # we also have to bend the lines referencing the tools in VTKTargets-release.cmake
         # to make them point to the tool folder
         file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-release.cmake" VTK_TARGETS_CONTENT_RELEASE)
