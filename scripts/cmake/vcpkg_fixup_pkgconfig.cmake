@@ -77,14 +77,14 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
                     )
     if(NOT _pkg_error_var EQUAL 0)
         message(STATUS "pkg_cfg_cmd call with:${pkg_cfg_cmd} --exists ${_package_name} failed")
-        message(STATUS "ENV{PKG_CONFIG_PATH}: $ENV{PKG_CONFIG_PATH}")
-        message(STATUS "pkg-config call failed with error code: ${_pkg_error_var}")
-        message(STATUS "pkg-config output: ${_pkg_output}")
-        message(FATAL_ERROR "pkg-config error output: ${_pkg_error_out}")
+        message(STATUS "ENV{PKG_CONFIG_PATH}:$ENV{PKG_CONFIG_PATH}")
+        message(STATUS "pkg-config call failed with error code:${_pkg_error_var}")
+        message(STATUS "pkg-config output:${_pkg_output}")
+        message(FATAL_ERROR "pkg-config error output:${_pkg_error_out}")
     else()
-        debug_message("pkg-config call failed with error code: ${_pkg_error_var}")
-        debug_message("pkg-config output: ${_pkg_output}")
-        debug_message("pkg-config error output: ${_pkg_error_out}")
+        debug_message("pkg-config returned:${_pkg_error_var}")
+        debug_message("pkg-config output:${_pkg_output}")
+        debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
     # Get all required libs. --static means we get all libraries required for static linkage 
@@ -99,13 +99,13 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
                     )
     if(NOT _pkg_error_var EQUAL 0)
         message(STATUS "pkg_cfg_cmd call with:${pkg_cfg_cmd} --libs ${_package_name} failed")
-        message(STATUS "pkg-config call failed with error code: ${_pkg_error_var}")
-        message(STATUS "pkg-config output: ${_pkg_libs_output}")
-        message(FATAL_ERROR "pkg-config error output: ${_pkg_error_out}")
+        message(STATUS "pkg-config call failed with error code:${_pkg_error_var}")
+        message(STATUS "pkg-config output:${_pkg_libs_output}")
+        message(FATAL_ERROR "pkg-config error output:${_pkg_error_out}")
     else()
-        debug_message("pkg-config returned: ${_pkg_error_var}")
-        debug_message("pkg-config output: ${_pkg_libs_output}")
-        debug_message("pkg-config error output: ${_pkg_error_out}")
+        debug_message("pkg-config returned:${_pkg_error_var}")
+        debug_message("pkg-config output:${_pkg_libs_output}")
+        debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
     execute_process(COMMAND "${pkg_cfg_cmd}" --print-errors --static --libs-only-L ${_package_name}
@@ -119,34 +119,45 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
 
     if(NOT _pkg_error_var EQUAL 0)
         message(STATUS "pkg_cfg_cmd call with:${pkg_cfg_cmd} --libs-only-L ${_package_name} failed")
-        message(STATUS "pkg-config call failed with error code: ${_pkg_error_var}")
-        message(STATUS "pkg-config output: ${_pkg_lib_paths_output}")
-        message(FATAL_ERROR "pkg-config error output: ${_pkg_error_out}")
+        message(STATUS "pkg-config call failed with error code:${_pkg_error_var}")
+        message(STATUS "pkg-config output:${_pkg_lib_paths_output}")
+        message(FATAL_ERROR "pkg-config error output:${_pkg_error_out}")
     else()
-        debug_message("pkg-config returned: ${_pkg_error_var}")
-        debug_message("pkg-config output: ${_pkg_lib_paths_output}")
-        debug_message("pkg-config error output: ${_pkg_error_out}")
+        debug_message("pkg-config returned:${_pkg_error_var}")
+        debug_message("pkg-config output:${_pkg_lib_paths_output}")
+        debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
     if(CMAKE_HOST_WIN32)
         string(REGEX REPLACE "/([a-zA-Z])/" "\\1:/" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
         string(REGEX REPLACE " /([a-zA-Z])/" ";\\1:/" _pkg_libs_output "${_pkg_libs_output}")
         string(REGEX REPLACE "-l/([a-zA-Z])/" "-l\\1:/" _pkg_libs_output "${_pkg_libs_output}")
-        debug_message("pkg-config output lib paths after replacement (cmake style): ${_pkg_lib_paths_output}")
-        debug_message("pkg-config output lib after replacement (cmake style): ${_pkg_libs_output}")
+        debug_message("pkg-config output lib paths after replacement (cmake style):${_pkg_lib_paths_output}")
+        debug_message("pkg-config output lib after replacement (cmake style):${_pkg_libs_output}")
     endif()
-    string(REGEX REPLACE "(^|[\t ]+)-L" ";" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
+
+    string(REPLACE "\\ " "##" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
+    string(REGEX REPLACE "(^[\t ]*|[\t ]+)-L" ";" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
+    debug_message("-L LIST TRANSFORMATION:'${_pkg_lib_paths_output}'")
     string(REGEX REPLACE "^[\t ]*;" "" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
+    string(REPLACE "##" "\\ " _pkg_lib_paths_output "${_pkg_lib_paths_output}")
+
     list(REMOVE_DUPLICATES _pkg_lib_paths_output) # We don't care about linker order and repeats
+    ## Remove search paths from LIBS
     foreach(_search_path IN LISTS _pkg_lib_paths_output)
-        debug_message("REMOVING:'${_search_path}' FROM '${_pkg_libs_output}'")
-        string(REGEX REPLACE "(^|[\t ]+)-L${_search_path}" "" _pkg_libs_output "${_pkg_libs_output}") # Remove search paths from libs
+        debug_message("REMOVING:'${_search_path}'")
+        debug_message("FROM:'${_pkg_libs_output}'")
+        string(REGEX REPLACE "(^[\t ]*|[\t ]+|;[\t ]*)-L${_search_path}([\t ]+|[\t ]*$)" ";" _pkg_libs_output "${_pkg_libs_output}") # Remove search paths from libs
     endforeach()
     debug_message("LIBS AFTER -L<path> REMOVAL:'${_pkg_libs_output}'")
-    string(REGEX REPLACE "(^|[\t ])-l" ";-l" _pkg_libs_output "${_pkg_libs_output}")
-    string(REGEX REPLACE "[\t ]*(-pthreads?)" ";\\1" _pkg_libs_output "${_pkg_libs_output}") # ahndle pthread without -l here (makes a lot of problems otherwise)
-    string(REGEX REPLACE "^[\t ]*;" "" _pkg_libs_output "${_pkg_libs_output}")
-
+    
+    #Make the remaining libs a proper CMake List
+    string(REPLACE "\\ " "##" _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
+    string(REGEX REPLACE "(^[\t ]*|[\t ]+)-l" ";-l" _pkg_libs_output "${_pkg_libs_output}")
+    string(REGEX REPLACE "[\t ]*(-pthreads?)" ";\\1" _pkg_libs_output "${_pkg_libs_output}") # handle pthread without -l here (makes a lot of problems otherwise)
+    string(REGEX REPLACE "^[\t ]*;[\t ]*" "" _pkg_libs_output "${_pkg_libs_output}")
+    string(REPLACE "##" "\\ " _pkg_libs_output "${_pkg_libs_output}")
+    
     if("${_config}" STREQUAL "DEBUG")
         set(lib_suffixes d _d _debug)
     elseif("${_config}" STREQUAL "RELEASE")
@@ -155,25 +166,28 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         message(FATAL_ERROR "Unknown configuration in vcpkg_fixup_pkgconfig_check_libraries!")
     endif()
 
-    debug_message("IGNORED FLAGS: ${_ignore_flags}")
+    debug_message("IGNORED FLAGS:'${_ignore_flags}'")
     foreach(_ignore IN LISTS _ignore_flags)  # Remove ignore with whitespace
         string(REGEX REPLACE "[\t ]+${_ignore}([\t ]+)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
     endforeach()
-    debug_message("SYSTEM LIBRARIES: ${_system_libs}")
-    debug_message("LIBRARIES in PC: ${_pkg_libs_output}")
+    debug_message("SYSTEM LIBRARIES:'${_system_libs}'")
+    debug_message("LIBRARIES in PC:'${_pkg_libs_output}'")
     foreach(_system_lib IN LISTS _system_libs)  # Remove system libs with whitespace
-        string(REGEX REPLACE "(^|[\t ]+)[\t ]*-l?${_system_lib}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
-        string(REGEX REPLACE "(;-l|[\t ]+-?)?${_system_lib}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
+        debug_message("REMOVING:'${_system_lib}'")
+        debug_message("FROM:'${_pkg_libs_output}'")
+        string(REGEX REPLACE "(^[\t ]*|;[\t ]*|[\t ]+)(-l?)${_system_lib}([\t ]+|[\t ]*;|[\t ]*$)" "\\3" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "(^[\t ]*|;[\t ]*|[\t ]+)${_system_lib}([\t ]+|[\t ]*;|[\t ]*$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
         string(TOLOWER "${_system_lib}" _system_lib_lower)
-        string(REGEX REPLACE "(^|[\t ]+)[\t ]*-l?${_system_lib_lower}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
-        string(REGEX REPLACE "(;-l|[\t ]+-?)?${_system_lib_lower}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
-        debug_message("LIBRARIES without SYSTEM LIBRARY ${_system_lib}: ${_pkg_libs_output}")
+        string(REGEX REPLACE "(^[\t ]*|;[\t ]*|[\t ]+)(-l?)${_system_lib_lower}([\t ]+|[\t ]*;|[\t ]*$)" "\\3" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "(^[\t ]*|;[\t ]*|[\t ]+)${_system_lib_lower}([\t ]+|[\t ]*;|[\t ]*$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
+        debug_message("AFTER REMOVAL:'${_pkg_libs_output}'")
     endforeach()
     list(REMOVE_DUPLICATES _pkg_libs_output) # We don't care about linker order and repeats
 
-    
-    debug_message("Library search paths: ${_pkg_lib_paths_output}")
-    debug_message("Libraries to search: ${_pkg_libs_output}")
+    string(REGEX REPLACE ";?[\t ]*;[\t ]*" ";" _pkg_libs_output "${_pkg_libs_output}") # Double ;; and Whitespace before/after ; removal
+
+    debug_message("Library search paths:${_pkg_lib_paths_output}")
+    debug_message("Libraries to search:${_pkg_libs_output}")
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
     list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
     foreach(_lib IN LISTS _pkg_libs_output)
