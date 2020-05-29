@@ -515,10 +515,14 @@ namespace vcpkg::Export
             std::vector<fs::path> files;
             for (auto&& suffix : lines)
             {
+                if (suffix.empty()) continue;
+                if (suffix.back() == '/') suffix.pop_back();
+                if (suffix == action.spec.triplet().to_string()) continue;
                 files.push_back(paths.installed / fs::u8path(suffix));
             }
 
-            Install::install_files_and_write_listfile(fs, paths.installed, files, dirs);
+            Install::install_files_and_write_listfile(
+                fs, paths.installed / action.spec.triplet().to_string(), files, dirs);
         }
 
         // Copy files needed for integration
