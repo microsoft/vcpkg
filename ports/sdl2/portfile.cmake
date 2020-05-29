@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "UWP")
+
 set(SDL2_VERSION 2.0.12)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.libsdl.org/release/SDL2-2.0.12.tar.gz"
