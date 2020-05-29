@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO woollybah/gppanel
-    REF 5ef9674d893bbf5e17da66841cbc6aeeef051b25
-    SHA512 a52eb5c4d9065e29d84374e9c484bae14cf7ff9a80fe6b025be108942a6c4683dd7f64830f78f0f7d45971f930df68f58dadf7c3915178e8908dd220d06a1e2c
+    REF f58a9028f7c9a8e9b4324ff2165951f558365f90
+    SHA512 4ec5fbef4c487d351c60f48b0c0e41c5d077989ab96f827b9fd5ef01c167d50f39a313bd82db1b5df19d14025983e83db4d19cc4048c1c50fc8ef9128de15575
     HEAD_REF master
     PATCHES 00001-fix-build.patch
 )
