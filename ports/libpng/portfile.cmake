@@ -37,6 +37,8 @@ vcpkg_from_github(
     PATCHES
         use_abort.patch
         cmake.patch
+        pkgconfig.patch
+        pkgconfig.2.patch
         ${APNG_EXTRA_PATCH}
 )
 
@@ -62,6 +64,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DPNG_MAN_DIR=share/${PORT}/man
         ${LIBPNG_APNG_OPTION}
         ${LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION}
         ${LD_VERSION_SCRIPT_OPTION}
@@ -71,7 +74,7 @@ vcpkg_configure_cmake(
         -DPNG_TESTS=OFF
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
-        -DSKIP_INSTALL_FILES=ON
+        -DSKIP_INSTALL_FILES=OFF
         OPTIONS_DEBUG
             -DSKIP_INSTALL_HEADERS=ON
 )
@@ -79,7 +82,44 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng16.pc")
+if(EXISTS ${_file})
+    file(READ "${_file}" _contents)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        string(REGEX REPLACE "-lpng16(d)?" "-llibpng16d" _contents "${_contents}")
+    else()
+        string(REGEX REPLACE "-lpng16(d)?" "-lpng16d" _contents "${_contents}")
+    endif()
+    string(REPLACE "-lzlib" "-lzlibd" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng.pc")
+if(EXISTS ${_file})
+    file(READ "${_file}" _contents)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        string(REGEX REPLACE "-lpng16(d)?" "-llibpng16d" _contents "${_contents}")
+    else()
+        string(REGEX REPLACE "-lpng16(d)?" "-lpng16d" _contents "${_contents}")
+    endif()
+    string(REPLACE "-lzlib" "-lzlibd" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpng16.pc")
+    if(EXISTS ${_file})
+        file(READ "${_file}" _contents)
+        string(REPLACE "-lpng16" "-llibpng16" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
+    endif()
+    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpng.pc")
+    if(EXISTS ${_file})
+        file(READ "${_file}" _contents)
+        string(REPLACE "-lpng16" "-llibpng16" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
+    endif()
+endif()
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
-
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
