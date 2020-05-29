@@ -454,25 +454,25 @@ namespace vcpkg::Build
             {
                 hash += "-";
                 hash += Hash::get_file_hash(
-                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains") / fs::u8path("linux.cmake"), algo);
+                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/linux.cmake"), algo);
             }
             else if (pre_build_info.cmake_system_name == "Darwin")
             {
                 hash += "-";
                 hash += Hash::get_file_hash(
-                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains") / fs::u8path("osx.cmake"), algo);
+                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/osx.cmake"), algo);
             }
             else if (pre_build_info.cmake_system_name == "FreeBSD")
             {
                 hash += "-";
                 hash += Hash::get_file_hash(
-                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains") / fs::u8path("freebsd.cmake"), algo);
+                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/freebsd.cmake"), algo);
             }
             else if (pre_build_info.cmake_system_name == "Android")
             {
                 hash += "-";
                 hash += Hash::get_file_hash(
-                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains") / fs::u8path("android.cmake"), algo);
+                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/android.cmake"), algo);
             }
 
             s_hash_cache.emplace(triplet_file_path, hash);

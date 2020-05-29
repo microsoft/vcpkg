@@ -156,7 +156,7 @@ namespace vcpkg::Commands::Integrate
     {
         static const fs::path LOCAL_APP_DATA =
             fs::u8path(System::get_environment_variable("LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
-        return LOCAL_APP_DATA / "vcpkg" / "vcpkg.user.targets";
+        return LOCAL_APP_DATA / fs::u8path("vcpkg/vcpkg.user.targets");
     }
 #endif
 
