@@ -128,7 +128,6 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         debug_message("pkg-config error output: ${_pkg_error_out}")
     endif()
 
-    string(REPLACE "${_pkg_lib_paths_output}" "" _pkg_libs_output "${_pkg_libs_output}") # Remove search paths from libs
     if(CMAKE_HOST_WIN32)
         string(REGEX REPLACE "/([a-zA-Z])/" "\\1:/" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
         string(REGEX REPLACE " /([a-zA-Z])/" ";\\1:/" _pkg_libs_output "${_pkg_libs_output}")
@@ -136,10 +135,17 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         debug_message("pkg-config output lib paths after replacement (cmake style): ${_pkg_lib_paths_output}")
         debug_message("pkg-config output lib after replacement (cmake style): ${_pkg_libs_output}")
     endif()
-    string(REPLACE " -L" ";" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
-    string(REGEX REPLACE "^-L" "" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
-    string(REPLACE " -l" ";-l" _pkg_libs_output "${_pkg_libs_output}")
-    string(REGEX REPLACE "^;" "" _pkg_libs_output "${_pkg_libs_output}")
+    string(REGEX REPLACE "(^|[\t ]+)-L" ";" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
+    string(REGEX REPLACE "^[\t ]*;" "" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
+    list(REMOVE_DUPLICATES _pkg_lib_paths_output) # We don't care about linker order and repeats
+    foreach(_search_path IN LISTS _pkg_lib_paths_output)
+        debug_message("REMOVING:'${_search_path}' FROM '${_pkg_libs_output}'")
+        string(REGEX REPLACE "(^|[\t ]+)-L${_search_path}" "" _pkg_libs_output "${_pkg_libs_output}") # Remove search paths from libs
+    endforeach()
+    debug_message("LIBS AFTER -L<path> REMOVAL:'${_pkg_libs_output}'")
+    string(REGEX REPLACE "(^|[\t ])-l" ";-l" _pkg_libs_output "${_pkg_libs_output}")
+    string(REGEX REPLACE "[\t ]*(-pthreads?)" ";\\1" _pkg_libs_output "${_pkg_libs_output}") # ahndle pthread without -l here (makes a lot of problems otherwise)
+    string(REGEX REPLACE "^[\t ]*;" "" _pkg_libs_output "${_pkg_libs_output}")
 
     if("${_config}" STREQUAL "DEBUG")
         set(lib_suffixes d _d _debug)
@@ -154,15 +160,17 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         string(REGEX REPLACE "[\t ]+${_ignore}([\t ]+)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
     endforeach()
     debug_message("SYSTEM LIBRARIES: ${_system_libs}")
+    debug_message("LIBRARIES in PC: ${_pkg_libs_output}")
     foreach(_system_lib IN LISTS _system_libs)  # Remove system libs with whitespace
-        string(REGEX REPLACE "^[\t ]*-l?${_system_lib}([\t ]|;|$)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "(^|[\t ]+)[\t ]*-l?${_system_lib}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
         string(REGEX REPLACE "(;-l|[\t ]+-?)?${_system_lib}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
         string(TOLOWER "${_system_lib}" _system_lib_lower)
-        string(REGEX REPLACE "^[\t ]*-l?${_system_lib_lower}([\t ]|;|$)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "(^|[\t ]+)[\t ]*-l?${_system_lib_lower}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
         string(REGEX REPLACE "(;-l|[\t ]+-?)?${_system_lib_lower}([\t ]|;|$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
+        debug_message("LIBRARIES without SYSTEM LIBRARY ${_system_lib}: ${_pkg_libs_output}")
     endforeach()
     list(REMOVE_DUPLICATES _pkg_libs_output) # We don't care about linker order and repeats
-    list(REMOVE_DUPLICATES _pkg_lib_paths_output) # We don't care about linker order and repeats
+
     
     debug_message("Library search paths: ${_pkg_lib_paths_output}")
     debug_message("Libraries to search: ${_pkg_libs_output}")
@@ -256,14 +264,13 @@ function(vcpkg_fixup_pkgconfig)
         string(REGEX REPLACE "^prefix=(\\\\)?\\\${prefix}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         file(WRITE "${_file}" "${_contents}")
-
-        if(NOT _vfpkg_SKIP_CHECK)
-            vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "RELEASE" "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_IGNORE_FLAGS}")
-        endif()
-
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
-    
+    if(NOT _vfpkg_SKIP_CHECK) # The check can only run after all files have been corrected!
+        foreach(_file ${_vfpkg_RELEASE_FILES})
+            vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "RELEASE" "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_IGNORE_FLAGS}")
+        endforeach()
+    endif()
     message(STATUS "Fixing pkgconfig - debug")
     debug_message("Files: ${_vfpkg_DEBUG_FILES}")
     foreach(_file ${_vfpkg_DEBUG_FILES})
@@ -287,13 +294,13 @@ function(vcpkg_fixup_pkgconfig)
         string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
         file(WRITE "${_file}" "${_contents}")
-
-        if(NOT _vfpkg_SKIP_CHECK)
-            vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "DEBUG" "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_IGNORE_FLAGS}")
-        endif()
-
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
+    if(NOT _vfpkg_SKIP_CHECK) # The check can only run after all files have been corrected!
+        foreach(_file ${_vfpkg_DEBUG_FILES})
+            vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "DEBUG" "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_IGNORE_FLAGS}")
+        endforeach()
+    endif()
     message(STATUS "Fixing pkgconfig --- finished")
     
     set(VCPKG_FIXUP_PKGCONFIG_CALLED TRUE CACHE INTERNAL "See below" FORCE) 

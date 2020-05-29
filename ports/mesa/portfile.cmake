@@ -62,13 +62,17 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -D shared-glapi=false
                              -D opengl=true
-                             #-D egl=false
+                             "-Dplatforms=['windows']"
+                             #-D egl=true # not available on windows
                              #-D gles1=false
                              #-D gles2=false
                              #-D glvnd=false
-                             
-                             -D gallium-drivers=swrast
-                             -D osmesa=gallium)
+                             #-D glx=gallium-xlib
+                             -D gallium-drivers=['swr','swrast']
+                             -D osmesa=gallium
+                             #-D dri-drivers=nouveau
+                             #-D llvm=true
+                             )
 else()
     list(APPEND MESA_OPTIONS -D shared-glapi=true
                              -D opengl=true
@@ -83,6 +87,7 @@ vcpkg_configure_meson(
     OPTIONS 
         #-D gles-lib-suffix=_mesa
         #-D egl-lib-suffix=_mesa
+        -D build-tests=false
         "${MESA_OPTIONS}"
 )
 vcpkg_install_meson()

@@ -26,17 +26,16 @@ if("windows" IN_LIST FEATURES) # Using WinSDK opengl
         ${CURRENT_PACKAGES_DIR}/include/gl
         ${CURRENT_PACKAGES_DIR}/share/opengl
     )
+    set(glversion 1.2)
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(MAKE_DIRECTORY
-            ${CURRENT_PACKAGES_DIR}/lib
-        )
-        file(COPY "${CURRENT_PORT_DIR}/gl.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+        configure_file("${CURRENT_PORT_DIR}/gl.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gl.pc" @ONLY)
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY
-            ${CURRENT_PACKAGES_DIR}/debug/lib
-        )
-        file(COPY "${CURRENT_PORT_DIR}/gl.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+        configure_file("${CURRENT_PORT_DIR}/gl.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gl.pc" @ONLY)
     endif()
 
     file(COPY
@@ -60,17 +59,16 @@ if("windows" IN_LIST FEATURES) # Using WinSDK opengl
     endif()
 else() # Using Mesa
     if(VCPKG_TARGET_IS_WINDOWS)
+        set(glversion 4.6)
         if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(MAKE_DIRECTORY
-                ${CURRENT_PACKAGES_DIR}/lib
-            )
-            file(COPY "${CURRENT_PORT_DIR}/gl.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+            configure_file("${CURRENT_PORT_DIR}/gl.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gl.pc" @ONLY)
         endif()
         if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(MAKE_DIRECTORY
-                ${CURRENT_PACKAGES_DIR}/debug/lib
-            )
-            file(COPY "${CURRENT_PORT_DIR}/gl.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+            configure_file("${CURRENT_PORT_DIR}/gl.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gl.pc" @ONLY)
         endif()
     endif()
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)

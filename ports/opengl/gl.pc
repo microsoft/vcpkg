@@ -6,6 +6,6 @@ libdir=${prefix}/lib
 Name: gl
 Description: Windows OpenGL Library
 URL: 
-Version: 1.0
+Version: @glversion@
 Cflags: -I${includedir}
 Libs: -L${libdir} -lOpenGL32

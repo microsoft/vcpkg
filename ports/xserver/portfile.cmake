@@ -5,8 +5,10 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xorg/xserver
-    REF  f84ad082557f9cde6b8faa373eca6a0a89ba7d56 #v1.20.8
-    SHA512 105bf5fa2875315bed4afc355607243b954beaf6a484069b58e37ef161bdd6691a815dca410acbf777683a7b2b880f636b8499fb161305b7c42753b1aecb1de3
+    REF  4195e8035645007be313ade79032b8d561ceec6c #head
+    SHA512 108ff20aa4b3558177d054beab29cd8e4a8ae8dedf42f700b5aae90fc4cd4fa0bd44ef8cf9b171807753cb711c85da66095dd470752e89294736977f8f6ecc8f
+    #REF  f84ad082557f9cde6b8faa373eca6a0a89ba7d56 #v1.20.8
+    #SHA512 105bf5fa2875315bed4afc355607243b954beaf6a484069b58e37ef161bdd6691a815dca410acbf777683a7b2b880f636b8499fb161305b7c42753b1aecb1de3
     HEAD_REF master # branch name
     PATCHES ${PATCHES} #patch name
 ) 
@@ -53,8 +55,10 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
-if(1)
+if(0)
     if(VCPKG_TARGET_IS_WINDOWS)
+    
+
         set(OPTIONS 
             --enable-windowsdri=no
             --enable-windowswm=no
@@ -103,6 +107,8 @@ else()
         list(APPEND OPTIONS -Dxorg=false)
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
+        string(APPEND VCPKG_C_FLAGS " /DYY_NO_UNISTD_H")
+        string(APPEND VCPKG_CXX_FLAGS " /DYY_NO_UNISTD_H")
         list(APPEND OPTIONS -Dglx=false) #Requires Mesa3D for gl.pc
         list(APPEND OPTIONS -Dsecure-rpc=false) #Problem encountered: secure-rpc requested, but neither libtirpc or libc RPC support were found
         list(APPEND OPTIONS -Dxvfb=false) #hw\vfb\meson.build:7:0: ERROR: '' is not a target.
@@ -128,8 +134,6 @@ else()
     vcpkg_configure_meson(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${OPTIONS}
-        PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-        PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
     )
     vcpkg_install_meson()
 endif()

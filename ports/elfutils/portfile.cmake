@@ -1,14 +1,29 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://sourceware.org/pub/elfutils/0.178/elfutils-0.178.tar.bz2"
-    FILENAME "elfutils.tar.bz2"
-    SHA512 356656ad0db8f6877b461de1a11280de16a9cc5d8dde4381a938a212e828e32755135e5e3171d311c4c9297b728fbd98123048e2e8fbf7fe7de68976a2daabe5
+#vcpkg_download_distfile(ARCHIVE
+#    URLS "ftp://sourceware.org/pub/elfutils/0.178/elfutils-0.178.tar.bz2"
+#    FILENAME "elfutils.tar.bz2"
+#    SHA512 356656ad0db8f6877b461de1a11280de16a9cc5d8dde4381a938a212e828e32755135e5e3171d311c4c9297b728fbd98123048e2e8fbf7fe7de68976a2daabe5
+#)
+# vcpkg_extract_source_archive_ex(
+    # OUT_SOURCE_PATH SOURCE_PATH
+    # ARCHIVE "${ARCHIVE}"
+    # PATCHES configure.ac.patch
+# )
+
+vcpkg_from_git(
+    OUT_SOURCE_PATH SOURCE_PATH
+    URL https://sourceware.org/git/elfutils
+    REF 3a772880847f6a5ecf0755b752801ea02abd5a3d 
+    PATCHES configure.ac.patch
+    #HEAD# elfutils-0.179 	 #3a772880847f6a5ecf0755b752801ea02abd5a3d
+    #SHA512 1
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    PATCHES configure.ac.patch
-)
+vcpkg_find_acquire_program(FLEX)
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
+vcpkg_find_acquire_program(BISON)
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,11 +37,12 @@ vcpkg_configure_make(
             --with-zlib
             --with-bzlib
             --with-lzma
+            --enable-maintainer-mode
 )
 
 vcpkg_install_make()
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libdebuginfod.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libdebuginfod.pc") #--disable-debuginfod 
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
