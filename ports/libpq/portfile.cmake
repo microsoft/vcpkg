@@ -194,7 +194,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             /m
             /p:ForceImportBeforeCppTargets=\"${SCRIPTS}/buildsystems/msbuild/vcpkg.targets\"
             /p:VcpkgTriplet=${TARGET_TRIPLET}
-            /p:VcpkgRoot=\"${CURRENT_INSTALLED_DIR}\""
+            /p:VcpkgCurrentInstalledDir=\"${CURRENT_INSTALLED_DIR}\""
             )
         if(HAS_TOOLS)
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
