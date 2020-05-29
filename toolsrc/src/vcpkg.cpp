@@ -268,7 +268,19 @@ int main(const int argc, const char* const* const argv)
     if (const auto p = args.binary_caching.get()) GlobalState::g_binary_caching = *p;
     if (const auto p = args.print_metrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
     if (const auto p = args.send_metrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
+    if (const auto p = args.disable_metrics.get()) Metrics::g_metrics.lock()->set_disabled(*p);
     if (const auto p = args.debug.get()) Debug::g_debugging = *p;
+
+    if (args.send_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
+    {
+        System::print2(System::Color::warning,
+                       "Warning: passed either --sendmetrics or --no-sendmetrics, but metrics are disabled.\n");
+    }
+    if (args.print_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
+    {
+        System::print2(System::Color::warning,
+                       "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
+    }
 
     if (Debug::g_debugging)
     {

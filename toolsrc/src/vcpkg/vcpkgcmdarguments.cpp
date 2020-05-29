@@ -230,6 +230,11 @@ namespace vcpkg
                     parse_switch(true, "printmetrics", args.print_metrics);
                     continue;
                 }
+                if (arg == "--disable-metrics")
+                {
+                    parse_switch(true, "printmetrics", args.disable_metrics);
+                    continue;
+                }
                 if (arg == "--no-sendmetrics")
                 {
                     parse_switch(false, "sendmetrics", args.send_metrics);
@@ -238,6 +243,11 @@ namespace vcpkg
                 if (arg == "--no-printmetrics")
                 {
                     parse_switch(false, "printmetrics", args.print_metrics);
+                    continue;
+                }
+                if (arg == "--no-disable-metrics")
+                {
+                    parse_switch(false, "printmetrics", args.disable_metrics);
                     continue;
                 }
                 if (arg == "--featurepackages")
@@ -529,6 +539,15 @@ namespace vcpkg
 
     void VcpkgCmdArguments::imbue_from_environment()
     {
+        if (!disable_metrics)
+        {
+            const auto VCPKG_DISABLE_METRICS_ENV = System::get_environment_variable("VCPKG_DISABLE_METRICS");
+            if (VCPKG_DISABLE_METRICS_ENV)
+            {
+                disable_metrics = true;
+            }
+        }
+
         if (!triplet)
         {
             const auto VCPKG_DEFAULT_TRIPLET = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");

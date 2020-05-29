@@ -123,6 +123,8 @@ namespace vcpkg
 
         Optional<bool> debug = nullopt;
         Optional<bool> send_metrics = nullopt;
+        // fully disable metrics -- both printing and sending
+        Optional<bool> disable_metrics = nullopt;
         Optional<bool> print_metrics = nullopt;
 
         // feature flags
