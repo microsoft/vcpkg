@@ -333,8 +333,7 @@ namespace vcpkg::Build
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
-        if (pre_build_info.external_toolchain_file.has_value() && !pre_build_info.load_vcvars_env) return "";
-        if (!pre_build_info.cmake_system_name.empty() && pre_build_info.cmake_system_name != "WindowsStore") return "";
+        if (!pre_build_info.using_vcvars()) return "";
 
         const char* tonull = " >nul";
         if (Debug::g_debugging)
@@ -530,6 +529,12 @@ namespace vcpkg::Build
         }
 
         return variables;
+    }
+
+    bool PreBuildInfo::using_vcvars() const
+    {
+        return (!external_toolchain_file.has_value() || load_vcvars_env) &&
+               (cmake_system_name.empty() || cmake_system_name == "WindowsStore");
     }
 
     fs::path PreBuildInfo::toolchain_file() const
@@ -1089,15 +1094,47 @@ namespace vcpkg::Build
                                const std::unordered_map<std::string, std::string>& cmakevars)
         : m_paths(paths), triplet(triplet)
     {
+        enum class VcpkgTripletVar
+        {
+            TARGET_ARCHITECTURE = 0,
+            CMAKE_SYSTEM_NAME,
+            CMAKE_SYSTEM_VERSION,
+            PLATFORM_TOOLSET,
+            VISUAL_STUDIO_PATH,
+            CHAINLOAD_TOOLCHAIN_FILE,
+            BUILD_TYPE,
+            ENV_PASSTHROUGH,
+            PUBLIC_ABI_OVERRIDE,
+            LOAD_VCVARS_ENV,
+        };
+
+        static const std::vector<std::pair<std::string, VcpkgTripletVar>> VCPKG_OPTIONS = {
+            {"VCPKG_TARGET_ARCHITECTURE", VcpkgTripletVar::TARGET_ARCHITECTURE},
+            {"VCPKG_CMAKE_SYSTEM_NAME", VcpkgTripletVar::CMAKE_SYSTEM_NAME},
+            {"VCPKG_CMAKE_SYSTEM_VERSION", VcpkgTripletVar::CMAKE_SYSTEM_VERSION},
+            {"VCPKG_PLATFORM_TOOLSET", VcpkgTripletVar::PLATFORM_TOOLSET},
+            {"VCPKG_VISUAL_STUDIO_PATH", VcpkgTripletVar::VISUAL_STUDIO_PATH},
+            {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
+            {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
+            {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
+            {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
+            {"VCPKG_LOAD_VCVARS_ENV", VcpkgTripletVar::LOAD_VCVARS_ENV},
+        };
+
+        std::string empty;
         for (auto&& kv : VCPKG_OPTIONS)
         {
-            auto find_itr = cmakevars.find(kv.first);
-            if (find_itr == cmakevars.end())
-            {
-                continue;
-            }
-
-            const std::string& variable_value = find_itr->second;
+            const std::string& variable_value = [&]() -> const std::string& {
+                auto find_itr = cmakevars.find(kv.first);
+                if (find_itr == cmakevars.end())
+                {
+                    return empty;
+                }
+                else
+                {
+                    return find_itr->second;
+                }
+            }();
 
             switch (kv.second)
             {

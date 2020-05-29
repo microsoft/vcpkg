@@ -172,39 +172,13 @@ namespace vcpkg::Build
         std::vector<std::string> passthrough_env_vars;
 
         fs::path toolchain_file() const;
+        bool using_vcvars() const;
 
     private:
         const VcpkgPaths& m_paths;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
-
-    enum class VcpkgTripletVar
-    {
-        TARGET_ARCHITECTURE = 0,
-        CMAKE_SYSTEM_NAME,
-        CMAKE_SYSTEM_VERSION,
-        PLATFORM_TOOLSET,
-        VISUAL_STUDIO_PATH,
-        CHAINLOAD_TOOLCHAIN_FILE,
-        BUILD_TYPE,
-        ENV_PASSTHROUGH,
-        PUBLIC_ABI_OVERRIDE,
-        LOAD_VCVARS_ENV,
-    };
-
-    const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
-        {"VCPKG_TARGET_ARCHITECTURE", VcpkgTripletVar::TARGET_ARCHITECTURE},
-        {"VCPKG_CMAKE_SYSTEM_NAME", VcpkgTripletVar::CMAKE_SYSTEM_NAME},
-        {"VCPKG_CMAKE_SYSTEM_VERSION", VcpkgTripletVar::CMAKE_SYSTEM_VERSION},
-        {"VCPKG_PLATFORM_TOOLSET", VcpkgTripletVar::PLATFORM_TOOLSET},
-        {"VCPKG_VISUAL_STUDIO_PATH", VcpkgTripletVar::VISUAL_STUDIO_PATH},
-        {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
-        {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
-        {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
-        {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
-        {"VCPKG_LOAD_VCVARS_ENV", VcpkgTripletVar::LOAD_VCVARS_ENV},
-    };
 
     struct ExtendedBuildResult
     {
