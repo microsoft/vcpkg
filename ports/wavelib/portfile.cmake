@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rafat/wavelib
-    REF f104d084be91cc7e59dc3253bedceb11ece77136
-    SHA512 5db4a3141e23ddaae0b5c6c1e119404343f2f6bef6b24ef94c99cd412f1d9d444512386484266cf4070f7572bbf69fca691f4f95a583dc46e2ea81ca1c147181
+    REF c7c9ba8b1091610a678b2091ae4edba740fe83a7
+    SHA512 16f24288e410732cd7a2744e0039f93ddb435c6aaa59fde169f117e5536e5f452f0e78edc75ad725b18f9e16b34870c3a100c32c84399a004eb443ba0030f758
     HEAD_REF master
-    PATCHES
-        fix-uwp-build.patch
 )
 
 vcpkg_configure_cmake(
