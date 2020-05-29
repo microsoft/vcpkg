@@ -36,6 +36,7 @@ jobs:
   - bash: toolsrc/build.rel/vcpkg-test
     displayName: 'Run vcpkg tests'
   - powershell: |
+      ./vcpkg x-ci-clean
       $skip_list = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-osx" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results
       ./vcpkg ci x64-osx --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-osx.xml" --exclude=$skip_list --binarycaching
