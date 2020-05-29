@@ -4,7 +4,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/drm
     REF  27fa47a738b15464528a1c44d8cb0b2ab31d3cf7 #v2.4.101
-    SHA512 2d1d372e3f5007a6286f5e95f455af32dd678f04fa47629b7ddc461423120ae424e783985fa33c72bfd4ffc7d1c079a84f2f44bb3888b3d5e9eea458bb36c925
+    SHA512  897b40c5b3752a1bf4a1c82eb820698821d780eec22fff10d3267009aab527ff6ac4db019e99e67d4a474d18bd241fd5e8bdff2dfe0a59f666a4c2896a7cb7c4
     HEAD_REF master # branch name
     #PATCHES example.patch #patch name
 ) 
