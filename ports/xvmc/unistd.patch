@@ -9,7 +9,7 @@ index 76a855226..fcaddb02f 100644
 +#ifdef HAVE_UNISTD_H
  #include <unistd.h>
 +#endif
-+#ifdef HAVE_SYS_TIME_H
++#ifndef _MSC_VER
  #include <sys/time.h>
 +#endif
  #include <X11/extensions/Xext.h>

@@ -128,14 +128,6 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
-    if(CMAKE_HOST_WIN32)
-        string(REGEX REPLACE "/([a-zA-Z])/" "\\1:/" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
-        string(REGEX REPLACE " /([a-zA-Z])/" ";\\1:/" _pkg_libs_output "${_pkg_libs_output}")
-        string(REGEX REPLACE "-l/([a-zA-Z])/" "-l\\1:/" _pkg_libs_output "${_pkg_libs_output}")
-        debug_message("pkg-config output lib paths after replacement (cmake style):${_pkg_lib_paths_output}")
-        debug_message("pkg-config output lib after replacement (cmake style):${_pkg_libs_output}")
-    endif()
-
     string(REPLACE "\\ " "##" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
     string(REGEX REPLACE "(^[\t ]*|[\t ]+)-L" ";" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
     debug_message("-L LIST TRANSFORMATION:'${_pkg_lib_paths_output}'")
@@ -150,14 +142,23 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         string(REGEX REPLACE "(^[\t ]*|[\t ]+|;[\t ]*)-L${_search_path}([\t ]+|[\t ]*$)" ";" _pkg_libs_output "${_pkg_libs_output}") # Remove search paths from libs
     endforeach()
     debug_message("LIBS AFTER -L<path> REMOVAL:'${_pkg_libs_output}'")
-    
+
     #Make the remaining libs a proper CMake List
     string(REPLACE "\\ " "##" _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
     string(REGEX REPLACE "(^[\t ]*|[\t ]+)-l" ";-l" _pkg_libs_output "${_pkg_libs_output}")
     string(REGEX REPLACE "[\t ]*(-pthreads?)" ";\\1" _pkg_libs_output "${_pkg_libs_output}") # handle pthread without -l here (makes a lot of problems otherwise)
     string(REGEX REPLACE "^[\t ]*;[\t ]*" "" _pkg_libs_output "${_pkg_libs_output}")
     string(REPLACE "##" "\\ " _pkg_libs_output "${_pkg_libs_output}")
-    
+
+    #Windows path transformations
+    if(CMAKE_HOST_WIN32)
+        string(REGEX REPLACE ";/([a-zA-Z])/" ";\\1:/" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
+        string(REGEX REPLACE " /([a-zA-Z])/" ";\\1:/" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "-l/([a-zA-Z])/" "-l\\1:/" _pkg_libs_output "${_pkg_libs_output}")
+        debug_message("pkg-config output lib paths after replacement (cmake style):${_pkg_lib_paths_output}")
+        debug_message("pkg-config output lib after replacement (cmake style):${_pkg_libs_output}")
+    endif()
+
     if("${_config}" STREQUAL "DEBUG")
         set(lib_suffixes d _d _debug)
     elseif("${_config}" STREQUAL "RELEASE")
