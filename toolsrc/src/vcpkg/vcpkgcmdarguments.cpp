@@ -232,22 +232,22 @@ namespace vcpkg
                 }
                 if (arg == "--disable-metrics")
                 {
-                    parse_switch(true, "printmetrics", args.disable_metrics);
+                    parse_switch(true, "disable-metrics", args.disable_metrics);
                     continue;
                 }
                 if (arg == "--no-sendmetrics")
                 {
-                    parse_switch(false, "sendmetrics", args.send_metrics);
+                    parse_switch(false, "no-sendmetrics", args.send_metrics);
                     continue;
                 }
                 if (arg == "--no-printmetrics")
                 {
-                    parse_switch(false, "printmetrics", args.print_metrics);
+                    parse_switch(false, "no-printmetrics", args.print_metrics);
                     continue;
                 }
                 if (arg == "--no-disable-metrics")
                 {
-                    parse_switch(false, "printmetrics", args.disable_metrics);
+                    parse_switch(false, "no-disable-metrics", args.disable_metrics);
                     continue;
                 }
                 if (arg == "--featurepackages")
@@ -267,7 +267,7 @@ namespace vcpkg
                 }
                 if (arg == "--no-binarycaching")
                 {
-                    parse_switch(false, "binarycaching", args.binary_caching);
+                    parse_switch(false, "no-binarycaching", args.binary_caching);
                     continue;
                 }
 
