@@ -128,8 +128,24 @@ else()
     else()
         set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
     endif()
+    
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+        set(LIBVPX_TARGET_ARCH "x86")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+        set(LIBVPX_TARGET_ARCH "x86_64")
+    else()
+        message(FATAL_ERROR "libvpx does not support architecture ${VCPKG_TARGET_ARCHITECTURE}")
+    endif()
 
-    message(STATUS "Building Options: ${OPTIONS}")
+    if(VCPKG_TARGET_IS_LINUX)
+        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
+    elseif(VCPKG_TARGET_IS_OSX)
+        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+    else()
+        set(LIBVPX_TARGET "generic-gnu") # use default target
+    endif()
+
+    message(STATUS "Build info. Target: ${LIBVPX_TARGET}; Options: ${OPTIONS}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring libvpx for Release")
@@ -138,6 +154,7 @@ else()
         COMMAND
             ${BASH} --noprofile --norc
             "${SOURCE_PATH}/configure"
+            --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_RELEASE}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
@@ -169,6 +186,7 @@ else()
         COMMAND
             ${BASH} --noprofile --norc
             "${SOURCE_PATH}/configure"
+            --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_DEBUG}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
