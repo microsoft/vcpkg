@@ -237,6 +237,7 @@ namespace vcpkg
             L"USERDOMAIN_ROAMINGPROFILE",
             L"USERNAME",
             L"USERPROFILE",
+            L"VCPKG_DISABLE_METRICS",
             L"windir",
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"http_proxy",
@@ -558,6 +559,7 @@ VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'proce
         (void)env;
         Debug::print("system(", cmd_line, ")\n");
         fflush(nullptr);
+
         int exit_code = system(cmd_line.c_str());
         Debug::print(
             "system() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
@@ -617,6 +619,7 @@ VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'proce
         Debug::print("popen(", actual_cmd_line, ")\n");
         // Flush stdout before launching external process
         fflush(stdout);
+
         const auto pipe = popen(actual_cmd_line.c_str(), "r");
         if (pipe == nullptr)
         {

@@ -32,3 +32,6 @@ ForEachMacros: [TEST_CASE, SECTION]
 PenaltyReturnTypeOnItsOwnLine: 1000
 SpaceAfterTemplateKeyword: false
 SpaceBeforeCpp11BracedList: false
+
+IncludeBlocks: Preserve
+SortIncludes: false

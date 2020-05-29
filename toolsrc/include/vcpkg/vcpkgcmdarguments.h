@@ -94,6 +94,8 @@ namespace vcpkg
         std::vector<std::string> binarysources;
         Optional<bool> debug = nullopt;
         Optional<bool> sendmetrics = nullopt;
+        // fully disable metrics -- both printing and sending
+        Optional<bool> disable_metrics = nullopt;
         Optional<bool> printmetrics = nullopt;
 
         // feature flags
