@@ -51,7 +51,7 @@ include_directories("$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${CMAKE_CU
 if(WINDOWS_DESKTOP)
     set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|_winuwp")
 elseif(WINDOWS_STORE)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|_win[^u]")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|_win32")
 elseif(LINUX)
     set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
 elseif(APPLE)
@@ -132,7 +132,7 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
             "src/libANGLE/renderer/gl/cgl/*.cpp"
             "src/libANGLE/renderer/gl/cgl/*.inl"
             "src/libANGLE/renderer/gl/cgl/*.h"
-            "gpu_info_util/SystemInfo_mac.mm"
+            "gpu_info_util/SystemInfo_macos.mm"
         )
     elseif(LINUX)
         set(ANGLE_RENDERER_OPENGL_PLATFORM 
@@ -212,7 +212,7 @@ if(WIN32)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_win.cpp")
     target_link_libraries(angle_gpu_info_util PRIVATE setupapi.lib dxgi.lib)
 elseif(APPLE)
-    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_mac.mm")
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_macos.mm")
 	find_library(IOKit IOKit)
 	find_library(CoreFoundation CoreFoundation)
 	find_library(CoreGraphics CoreGraphics)

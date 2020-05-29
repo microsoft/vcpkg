@@ -62,7 +62,7 @@ namespace vcpkg::Export
         return Strings::format(R"###(
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <VcpkgRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
+    <VcpkgRoot></VcpkgRoot>
   </PropertyGroup>
   <Import Condition="Exists('%s')" Project="%s" />
 </Project>

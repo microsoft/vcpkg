@@ -1,0 +1,16 @@
+diff --git a/FindOggVorbis.cmake b/FindOggVorbis.cmake
+index a33e63e..7e2708b 100644
+--- a/FindOggVorbis.cmake
++++ b/FindOggVorbis.cmake
+@@ -28,10 +28,10 @@ mark_as_advanced(
+ 
+ set(
+ 	OGGVORBIS_LIBRARIES
+-	${OGG_LIBRARY}
+ 	${VORBIS_LIBRARY}
+ 	${VORBISFILE_LIBRARY}
+ 	${VORBISENC_LIBRARY}
++	${OGG_LIBRARY}
+ )
+ 
+ find_package_handle_standard_args(
