@@ -19,6 +19,8 @@ vcpkg_from_github(
     REF 7ef114d1da2c34a70bba5442497103441647d8f3 # 3.0.0
     SHA512 e15df6f0f95d9580d6211459815f174496b1385c9797a682d372a03b1175c9eb38e51b3b27077346d5e1a2d6ee2d5c636e03e8fd3ca9a73a7fa2a67afd255bd2
     HEAD_REF master
+    PATCHES
+        fix-cmake-static.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
@@ -76,6 +78,8 @@ endif()
 
 file(INSTALL ${SOURCE_PATH}/src/raymath.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(INSTALL ${SOURCE_PATH}/src/rlgl.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/src/physac.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/src/raudio.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # Install usage
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)

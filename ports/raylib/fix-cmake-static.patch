@@ -1,0 +1,17 @@
+diff --git a/cmake/raylib-config.cmake b/cmake/raylib-config.cmake
+index b5358740..140a2830 100644
+--- a/cmake/raylib-config.cmake
++++ b/cmake/raylib-config.cmake
+@@ -27,11 +27,7 @@ find_path(raylib_INCLUDE_DIR
+     HINTS ${${XPREFIX}_INCLUDE_DIRS}
+ )
+ 
+-set(RAYLIB_NAMES raylib)
+-
+-if (raylib_USE_STATIC_LIBS)
+-    set(RAYLIB_NAMES libraylib.a raylib.lib ${RAYLIB_NAMES})
+-endif()
++set(RAYLIB_NAMES raylib raylib_static)
+ 
+ find_library(raylib_LIBRARY
+     NAMES ${RAYLIB_NAMES}
