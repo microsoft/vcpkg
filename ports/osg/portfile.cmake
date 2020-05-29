@@ -16,6 +16,7 @@ vcpkg_from_github(
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
         fix-liblas.patch
         fix-nvtt.patch
+        fix-asio-error.patch # Upstream issue https://github.com/openscenegraph/OpenSceneGraph/issues/921
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

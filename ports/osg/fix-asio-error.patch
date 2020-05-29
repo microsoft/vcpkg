@@ -1,0 +1,31 @@
+diff --git a/src/osgPlugins/RestHttpDevice/server.cpp b/src/osgPlugins/RestHttpDevice/server.cpp
+index d0231ef..8d71e5c 100644
+--- a/src/osgPlugins/RestHttpDevice/server.cpp
++++ b/src/osgPlugins/RestHttpDevice/server.cpp
+@@ -9,7 +9,7 @@
+ //
+ 
+ #include "server.hpp"
+-#include <boost/bind.hpp>
++#include <functional>
+ 
+ namespace http {
+ namespace server {
+@@ -31,7 +31,7 @@ server::server(const std::string& address, const std::string& port,
+   acceptor_.bind(endpoint);
+   acceptor_.listen();
+   acceptor_.async_accept(new_connection_->socket(),
+-      boost::bind(&server::handle_accept, this,
++      std::bind(&server::handle_accept, this,
+         asio::placeholders::error));
+ }
+ 
+@@ -56,7 +56,7 @@ void server::handle_accept(const asio::error_code& e)
+     new_connection_.reset(new connection(
+           io_service_pool_.get_io_service(), request_handler_));
+     acceptor_.async_accept(new_connection_->socket(),
+-        boost::bind(&server::handle_accept, this,
++        std::bind(&server::handle_accept, this,
+           asio::placeholders::error));
+   }
+   else
