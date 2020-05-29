@@ -7,7 +7,7 @@ vcpkg_from_gitlab(
     REF d373c9b434c603bf6a5eb442b6427992d23ef874 # 1.4.3
     SHA512  2c09d1baca37e5d2abd8a8366309d615fb86f7207847f298e2bf8e16362e283526220ff7e38d5143f998ac3274600c173d32ec38cf1ed81f7051f8d07296901b
     HEAD_REF master # branch name
-    PATCHES #configure.patch 
+    PATCHES configure.patch 
             unistd.h.patch
             xkbscan.patch
             listing.patch#patch name
@@ -45,7 +45,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

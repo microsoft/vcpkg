@@ -1,5 +1,5 @@
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(PATCHES meson.build.patch)
+    #set(PATCHES meson.build.patch)
 endif()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
@@ -138,7 +138,7 @@ else()
     vcpkg_install_meson()
 endif()
 
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

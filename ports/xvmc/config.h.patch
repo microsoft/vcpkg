@@ -1,0 +1,14 @@
+diff --git a/config.h.in b/config.h.in
+index 3ff1b727d..73dc20cee 100644
+--- a/config.h.in	
++++ b/config.h.in
+@@ -30,6 +30,9 @@
+ /* Define to 1 if you have the <sys/types.h> header file. */
+ #undef HAVE_SYS_TYPES_H
+ 
++/* Define to 1 if you have the <sys/time.h> header file. */
++#undef HAVE_SYS_TIME_H
++
+ /* Define to 1 if you have the <unistd.h> header file. */
+ #undef HAVE_UNISTD_H
+ 
