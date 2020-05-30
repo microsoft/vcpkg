@@ -2,4 +2,4 @@ Source: drm
 Version: 2.4.101
 Homepage: https://gitlab.freedesktop.org/mesa/drm
 Description: Direct Rendering Manager library and headers
-Build-Depends: pciaccess
+Build-Depends: pciaccess, tool-meson
