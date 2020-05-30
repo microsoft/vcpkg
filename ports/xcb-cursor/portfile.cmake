@@ -1,8 +1,3 @@
-## requires AUTOCONF, LIBTOOL, PKCONF, GPERF
-vcpkg_find_acquire_program(GPERF)
-get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY)
-vcpkg_add_to_path("${GPERF_DIR}")
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -12,20 +7,17 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
     #PATCHES example.patch #patch name
 ) 
-file(TOUCH ${SOURCE_PATH}/m4/dummy)
+
+vcpkg_find_acquire_program(GPERF)
+get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY)
+vcpkg_add_to_path("${GPERF_DIR}")
+
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL ${SHELL_PATH}
-    #OPTIONS
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
+    COPY_SOURCE
 )
 
 vcpkg_install_make()
@@ -35,7 +27,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # # Handle copyright
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright") #already installed by xproto
-
-
+file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

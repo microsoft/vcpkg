@@ -2,5 +2,5 @@ Source: xf86-input-libinput
 Version: 0.30.0
 Homepage: https://xcb.freedesktop.org/
 Description: A libinput-based input driver for the Xorg X server
-Build-Depends: 
+Build-Depends: xserver[core, xorg]
 

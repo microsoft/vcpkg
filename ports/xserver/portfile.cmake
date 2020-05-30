@@ -1,5 +1,5 @@
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    #set(PATCHES meson.build.patch)
+    set(PATCHES meson.build.patch)
 endif()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
@@ -114,7 +114,6 @@ else()
         list(APPEND OPTIONS -Dxvfb=false) #hw\vfb\meson.build:7:0: ERROR: '' is not a target.
         list(APPEND OPTIONS -Dglamor=false)
         list(APPEND OPTIONS -Dlinux_apm=false)
-        list(APPEND OPTIONS -Dlinux_acpi=false)
         list(APPEND OPTIONS -Dlinux_acpi=false)
         list(APPEND OPTIONS -Dxwin=true)
         set(ENV{INCLUDE} "$ENV{INCLUDE};${CURRENT_INSTALLED_DIR}/include")
