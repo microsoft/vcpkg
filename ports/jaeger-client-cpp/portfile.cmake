@@ -17,7 +17,7 @@ set(THRIFT_SOURCE_FILES agent.thrift jaeger.thrift sampling.thrift zipkincore.th
 # Generate proxy/stubs for the input files
 foreach(THRIFT_SOURCE_FILE IN LISTS THRIFT_SOURCE_FILES)
 vcpkg_execute_required_process(
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/installed/${TARGET_TRIPLET}/tools/thrift/thrift --gen cpp:no_skeleton -o "${SOURCE_PATH}/data" ${THRIFT_SOURCE_FILE} 
+    COMMAND ${CURRENT_INSTALLED_DIR}/tools/thrift/thrift --gen cpp:no_skeleton -o "${SOURCE_PATH}/data" ${THRIFT_SOURCE_FILE}
     WORKING_DIRECTORY ${SOURCE_PATH}/thrift
     LOGNAME jaeger-idl-${TARGET_TRIPLET}
 )
@@ -33,7 +33,7 @@ vcpkg_from_github(
     REF 47fbf19aae2e48d59dd8335b6f2a1e1a99abba7f
     SHA512 a07e4d3e585c0f3e99aff6a662229f6beed8aef80fc6f7188629da38421bc49ab9effea479398e0d94e0a127bd931054ab332b38b73c2191bf75d4adfe5f6928
     HEAD_REF master
-    PATCHES 
+    PATCHES
        "fix-CMakeLists.patch"
 )
 
@@ -41,14 +41,14 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
-        -DHUNTER_ENABLED=0 
-        -DBUILD_TESTING=0 
-        -DJAEGERTRACING_PLUGIN=0 
+    OPTIONS
+        -DHUNTER_ENABLED=0
+        -DBUILD_TESTING=0
+        -DJAEGERTRACING_PLUGIN=0
         -DJAEGERTRACING_BUILD_EXAMPLES=0
 )
 
-# Copy generated files over to jaeger-client-cpp 
+# Copy generated files over to jaeger-client-cpp
 file(GLOB IDL_SOURCE_FILES LIST_DIRECTORIES false ${IDL_SOURCE_DIR}/*)
 file(COPY ${IDL_SOURCE_FILES} DESTINATION ${SOURCE_PATH}/src/jaegertracing/thrift-gen)
 

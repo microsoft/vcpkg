@@ -9,6 +9,12 @@
 #include <winhttp.h>
 #endif
 
+#include <math.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -16,10 +22,6 @@
 #include <cctype>
 #include <chrono>
 #include <codecvt>
-#include <cstdarg>
-#include <cstddef>
-#include <cstdint>
-#include <cstring>
 
 #if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
