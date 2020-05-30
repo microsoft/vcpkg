@@ -5,7 +5,7 @@ set(BOND_VER 9.0.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
-    REF  fe6f582ce4beb65644d9338536066e07d80a0289 #9.0.0
+    REF  ${BOND_VER}
     SHA512 bf9c7436462fabb451c6a50b662455146a37c1421a6fe22920a5c4c1fa7c0fe727c1d783917fa119cd7092dc120e375a99a8eb84e3fc87c17b54a23befd9abc4
     HEAD_REF master
     PATCHES fix-install-path.patch skip-grpc-compilation.patch
