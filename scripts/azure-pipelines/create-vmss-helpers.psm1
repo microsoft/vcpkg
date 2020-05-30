@@ -99,6 +99,40 @@ function New-Password {
 
 <#
 .SYNOPSIS
+Waits for the shutdown of the specified resource.
+
+.DESCRIPTION
+Wait-Shutdown takes a VM, and checks if there's a 'PowerState/stopped'
+code; if there is, it returns. If there isn't, it waits ten seconds and
+tries again.
+
+.PARAMETER ResourceGroupName
+The name of the resource group to look up the VM in.
+
+.PARAMETER Name
+The name of the virtual machine to wait on.
+#>
+function Wait-Shutdown {
+  [CmdletBinding()]
+  Param([string]$ResourceGroupName, [string]$Name)
+
+  Write-Host "Waiting for $Name to stop..."
+  while ($true) {
+    $Vm = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $Name -Status
+    $highestStatus = $Vm.Statuses.Count
+    for ($idx = 0; $idx -lt $highestStatus; $idx++) {
+      if ($Vm.Statuses[$idx].Code -eq 'PowerState/stopped') {
+        return
+      }
+    }
+
+    Write-Host "... not stopped yet, sleeping for 10 seconds"
+    Start-Sleep -Seconds 10
+  }
+}
+
+<#
+.SYNOPSIS
 Sanitizes a name to be used in a storage account.
 
 .DESCRIPTION
@@ -127,4 +161,5 @@ function Sanitize-Name {
 
 Export-ModuleMember -Function Find-ResourceGroupName
 Export-ModuleMember -Function New-Password
+Export-ModuleMember -Function Wait-Shutdown
 Export-ModuleMember -Function Sanitize-Name
