@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index fc40b17a5..e1e16c298 100644
+--- a/configure.ac	
++++ b/configure.ac
+@@ -20,7 +20,7 @@ XORG_MACROS_VERSION(1.8)
+ XORG_DEFAULT_OPTIONS
+ 
+ # Checks for pkg-config packages
+-PKG_CHECK_MODULES(XCURSORGEN, x11 xcursor libpng >= 1.2.0)
++PKG_CHECK_MODULES(XCURSORGEN, x11 xcb xtrans xdmcp xau xcursor xrender xfixes libpng >= 1.2.0)
+ 
+ AC_CHECK_FUNCS([asprintf])
+ 
