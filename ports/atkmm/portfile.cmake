@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
@@ -26,6 +24,10 @@ vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/MSVC_Net2013/atkmm.sln
     TARGET atkmm
     PLATFORM ${VS_PLATFORM}
+    OPTIONS
+    # Remark: This is a workaround for now. When updating atkmm to a newer version, meson should be used instead
+    # CurrentInstalledDir is used by fix_properties.patch for glib-2.0 include dirs
+        /p:CurrentInstalledDir=${CURRENT_INSTALLED_DIR}
     USE_VCPKG_INTEGRATION
 )
 

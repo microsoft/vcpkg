@@ -16,7 +16,7 @@ index 421f5c3..0275e6e 100644
    <ItemDefinitionGroup>
      <ClCompile>
 -      <AdditionalIncludeDirectories>.\atkmm;..\atk;$(GlibEtcInstallRoot)\include\glibmm-2.4;$(GlibEtcInstallRoot)\lib\glibmm-2.4\include;$(GlibEtcInstallRoot)\include\sigc++-2.0;$(GlibEtcInstallRoot)\lib\sigc++-2.0\include;$(GlibEtcInstallRoot)\include\atk-1.0;$(GlibEtcInstallRoot)\include\glib-2.0;$(GlibEtcInstallRoot)\lib\glib-2.0\include;$(GlibEtcInstallRoot)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-+      <AdditionalIncludeDirectories>.\atkmm;..\atk;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>.\atkmm;..\atk;.;$(CurrentInstalledDir)\include\glib-2.0;$(CurrentInstalledDir)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <ForcedIncludeFiles>msvc_recommended_pragmas.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
        <MultiProcessorCompilation>true</MultiProcessorCompilation>
        <AdditionalOptions>/d2Zi+ %(AdditionalOptions)</AdditionalOptions>
