@@ -89,7 +89,7 @@ Generates a random password.
 
 .DESCRIPTION
 New-Password generates a password, randomly, of length $Length, containing
-only alphanumeric characters, underscore, and dash
+only alphanumeric characters, underscore, and dash.
 
 .PARAMETER Length
 The length of the returned password.
@@ -97,11 +97,12 @@ The length of the returned password.
 function New-Password {
   Param ([int] $Length = 32)
 
-  # 6 bits
-  $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"
+  # This 64-character alphabet generates 6 bits of entropy per character.
+  # The power-of-2 alphabet size allows us to select a character by masking a random Byte with bitwise-AND.
+  $alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"
   $mask = 63
-  if ($chars.Length -ne 64) {
-    throw 'Bad chars length'
+  if ($alphabet.Length -ne 64) {
+    throw 'Bad alphabet length'
   }
 
   [Byte[]]$randomData = [Byte[]]::new($Length)
@@ -118,7 +119,7 @@ function New-Password {
 
   $result = ''
   for ($idx = 0; $idx -lt $Length; $idx++) {
-    $result += $chars[$randomData[$idx] -band $mask]
+    $result += $alphabet[$randomData[$idx] -band $mask]
   }
 
   return $result
