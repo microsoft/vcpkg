@@ -24,6 +24,7 @@ vcpkg_extract_source_archive_ex(
         fix-meson.patch
         use-libiconv-on-windows.patch
         fix-arm-builds.patch
+        fix-gdbus-codegen.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/glib/win_iconv.c)
