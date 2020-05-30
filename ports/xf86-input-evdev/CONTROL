@@ -2,5 +2,5 @@ Source: xf86-input-evdev
 Version: 2.10.6
 Homepage: https://xcb.freedesktop.org/
 Description: Generic Linux input driver for the Xorg X server
-Build-Depends: xserver[core, xorg], libuvdev, mtdev, libevdev
+Build-Depends: xserver[core, xorg], systemd, mtdev, libevdev
 
