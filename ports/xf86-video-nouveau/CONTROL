@@ -2,5 +2,6 @@ Source: xf86-video-nouveau
 Version: 1.0.16
 Homepage: https://xcb.freedesktop.org/
 Description: NVIDIA video driver for the Xorg X server
-Build-Depends: 
+Build-Depends: xserver[core, xorg]
+
 

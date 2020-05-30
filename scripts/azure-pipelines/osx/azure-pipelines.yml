@@ -21,8 +21,10 @@ jobs:
       filePath: 'scripts/azure-pipelines/osx/initialize-environment.sh'
   - bash: |
       brew list autoconf || brew install autoconf
+      brew list autoconf-archive || brew install autoconf-archive
       brew list automake || brew install automake
       brew list libtool || brew install libtool
+      brew list pkg-config || brew install pkg-config
     displayName: 'Install brew dependencies'
   - bash: |
       df -h

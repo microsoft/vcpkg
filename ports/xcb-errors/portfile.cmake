@@ -11,17 +11,14 @@ vcpkg_from_gitlab(
 file(TOUCH ${SOURCE_PATH}/m4/dummy)
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL ${SHELL_PATH}
-    #OPTIONS
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
+    COPY_SOURCE
 )
 
 vcpkg_install_make()
@@ -31,7 +28,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # # Handle copyright
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright") #already installed by xproto
+ configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/xcb-errors/copyright" COPYONLY)
 
 

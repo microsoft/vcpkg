@@ -1,0 +1,5 @@
+Source: libinput
+Version: 1.15.5
+Homepage: https://gitlab.freedesktop.org/libinput/libinput
+Description: Input device management and event handling library
+Build-Depends: gtk
