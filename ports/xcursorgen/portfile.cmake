@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO app/xcursorgen
     REF 291d9a052aec0ad4a315c09a9af8b451c94ed57a 
-    SHA512  63a3a7c5db8d41c73ef2f55e86a47bdae0112ac39802efa5da4fa26a8794066d6906d4a5e4e9af5abb5838a061f2583dc2b8865e38754ee3f2a8e3918de87168
+    SHA512  eb834227020d2158d33ca2c9683592572bdba2ca9b6e5f940171ad13a4c3d893447cf261e679fc1e67f46e1fc86804e14abf3275d29055aa6996d502fc367970
     HEAD_REF master # branch name
     #PATCHES example.patch #patch name
 ) 

@@ -2,4 +2,4 @@ Source: xcursorgen
 Version: 1.0.7
 Homepage: https://gitlab.freedesktop.org/xorg/lib/libxrandr
 Description: prepares X11 cursor sets for use with libXcursor
-Build-Depends: xorg-macros, bzip2
+Build-Depends: xorg-macros, bzip2, x11, xcursor, libpng

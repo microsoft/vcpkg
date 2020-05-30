@@ -7,7 +7,6 @@ vcpkg_from_gitlab(
     REF  771b773b50717884b37f6b2473166b4be4670076 #v1.19.2
     SHA512 7a4048fb609b4c83127758f0aa53163114da4a4a9f1414f3bda5d44cebcf49dfe41b1daa82f232420a25e6b3a7a163848f3ce30fd3c77bdb289d4ee00bec31a6
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
 ) 
 
 vcpkg_configure_make(

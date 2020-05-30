@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO data/cursors
     REF  28ade0ae2f0237303ca188b62fdb2bd02486ec34 #1.0.6
-    SHA512 cca7bf1f2aeaab8d256052a676098d7c600b90dc47cf9bc84d11229e59fbf5c83f7f877b8538f7cc662983807566d28c87b3501abc7cab76cc553d9db29eceb9
+    SHA512 1291b813ca73eee67172b6f20e762d21614ed812e381c2e4833bb58d2d20f621525a4a66449e80fdccb4e91ba847363b6b2d218c9b0922fed55e5ee72198d888
     HEAD_REF master # branch name
     #PATCHES example.patch #patch name
 ) 

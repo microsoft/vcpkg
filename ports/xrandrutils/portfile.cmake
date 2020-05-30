@@ -24,7 +24,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -32,10 +32,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/xrandr${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/xrandr${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-file(MAKE_DIRECTORY  "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/man" "${CURRENT_PACKAGES_DIR}/share/${PORT}/man")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static OR NOT VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()

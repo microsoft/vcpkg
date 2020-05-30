@@ -2,4 +2,4 @@ Source: xcursor-themes
 Version: 1.0.6
 Homepage: https://xcb.freedesktop.org/
 Description: Default set of cursor themes for use with libXcursor.
-Build-Depends:
+Build-Depends: xcursorgen

@@ -2,5 +2,5 @@ Source: xf86-video-fbdev
 Version: 0.5
 Homepage: https://xcb.freedesktop.org/
 Description: framebuffer device video driver for the Xorg X server
-Build-Depends: 
+Build-Depends: xserver[core, xorg]
 
