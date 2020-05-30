@@ -6,9 +6,11 @@
 sudo apt -y update
 sudo apt -y dist-upgrade
 # Install common build dependencies and partitioning tools
-sudo apt -y install at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils build-essential g++ gfortran zip libx11-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config
-# Required by qt5-x11extras
-sudo apt -y install libxkbcommon-dev libxkbcommon-x11-dev
+sudo apt -y install at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils build-essential g++ gfortran zip libx11-dev libxkbcommon-x11-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config
+# Required by qt5-base
+sudo apt -y install libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libxkbcommon-x11-dev
+# Required by qt5-base for qt5-x11extras
+sudo apt -y install libxkbcommon-dev libxcb-keysyms1-dev libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev
 # Required by libhdfs3
 sudo apt -y install libkrb5-dev
 # Required by mesa
