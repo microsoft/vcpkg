@@ -541,8 +541,8 @@ namespace vcpkg
     {
         if (!disable_metrics)
         {
-            const auto VCPKG_DISABLE_METRICS_ENV = System::get_environment_variable("VCPKG_DISABLE_METRICS");
-            if (VCPKG_DISABLE_METRICS_ENV)
+            const auto vcpkg_disable_metrics_env = System::get_environment_variable("VCPKG_DISABLE_METRICS");
+            if (vcpkg_disable_metrics_env)
             {
                 disable_metrics = true;
             }
@@ -550,8 +550,8 @@ namespace vcpkg
 
         if (!triplet)
         {
-            const auto VCPKG_DEFAULT_TRIPLET = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
-            if (const auto unpacked = VCPKG_DEFAULT_TRIPLET.get())
+            const auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
+            if (const auto unpacked = vcpkg_default_triplet_env.get())
             {
                 triplet = std::make_unique<std::string>(*unpacked);
             }
@@ -559,8 +559,8 @@ namespace vcpkg
 
         if (!vcpkg_root_dir)
         {
-            const auto VCPKG_ROOT = System::get_environment_variable("VCPKG_ROOT");
-            if (const auto unpacked = VCPKG_ROOT.get())
+            const auto vcpkg_root_env = System::get_environment_variable("VCPKG_ROOT");
+            if (const auto unpacked = vcpkg_root_env.get())
             {
                 vcpkg_root_dir = std::make_unique<std::string>(*unpacked);
             }
@@ -568,16 +568,16 @@ namespace vcpkg
 
         if (!downloads_root_dir)
         {
-            const auto VCPKG_DOWNLOADS = vcpkg::System::get_environment_variable("VCPKG_DOWNLOADS");
-            if (const auto unpacked = VCPKG_DOWNLOADS.get())
+            const auto vcpkg_downloads_env = vcpkg::System::get_environment_variable("VCPKG_DOWNLOADS");
+            if (const auto unpacked = vcpkg_downloads_env.get())
             {
                 downloads_root_dir = std::make_unique<std::string>(*unpacked);
             }
         }
 
         {
-            const auto VCPKG_VISUAL_STUDIO_PATH = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH");
-            if (const auto unpacked = VCPKG_VISUAL_STUDIO_PATH.get())
+            const auto vcpkg_visual_studio_path_env = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH");
+            if (const auto unpacked = vcpkg_visual_studio_path_env.get())
             {
                 default_visual_studio_path = std::make_unique<std::string>(*unpacked);
             }
