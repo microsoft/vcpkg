@@ -8,7 +8,9 @@ vcpkg_from_github(
   REF 8dc780579293153ad2ae9ad6943815c050d4c659
   SHA512 280a8e6c0392f5822b05968520d176d1510f00c12a2502f6039f4f1f78a558e61f825a231fb70b7de6fd21a18b24734eea3ba36a24b29f2a7e9856b1f4de5217
   HEAD_REF master
-  PATCHES fix-build-error.patch
+  PATCHES
+    fix-build-error.patch
+    github-215.patch
 )
 
 set(USE_ZLIB OFF)

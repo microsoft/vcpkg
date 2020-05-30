@@ -1,24 +1,28 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+set(BOND_VER 9.0.0)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
-    REF  9.0.0
-    SHA512 b6bed9be8b5dd2a7d50c6bd275b94c62050b83717907522a07279cccc50e209306792c6f3c7f206afcb3226aed21b43b115b63dccc806eff5d9cd4e12b355461
+    REF  fe6f582ce4beb65644d9338536066e07d80a0289 #9.0.0
+    SHA512 bf9c7436462fabb451c6a50b662455146a37c1421a6fe22920a5c4c1fa7c0fe727c1d783917fa119cd7092dc120e375a99a8eb84e3fc87c17b54a23befd9abc4
     HEAD_REF master
     PATCHES fix-install-path.patch skip-grpc-compilation.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(GBC_ARCHIVE
-    URLS "https://github.com/microsoft/bond/releases/download/9.0.0/gbc-9.0.0-amd64.zip"
-    FILENAME "gbc-9.0.0-amd64.zip"
+    URLS "https://github.com/microsoft/bond/releases/download/${BOND_VER}/gbc-${BOND_VER}-amd64.zip"
+    FILENAME "gbc-${BOND_VER}-amd64.zip"
     SHA512 f4480a3eb7adedfd3da554ef3cdc64b6e7da5c699bde0ccd86b2dd6a159ccacbb1df2b84b6bc80bc8475f30b904cba98085609e42aad929b2b23258eaff52048
     )
 
+    # Clear the generator to prevent it from updating
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/tools/)
     # Extract the precompiled gbc
     vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-    set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-9.0.0-amd64.exe)
+    set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-${BOND_VER}-amd64.exe)
 
     if (NOT EXISTS "${FETCHED_GBC_PATH}")
         message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")

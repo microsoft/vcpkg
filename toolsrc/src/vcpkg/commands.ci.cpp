@@ -397,12 +397,6 @@ namespace vcpkg::Commands::CI
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        auto& filesystem = paths.get_filesystem();
-        if (filesystem.is_directory(paths.installed))
-        {
-            filesystem.remove_all_inside(paths.installed, VCPKG_LINE_INFO);
-        }
-
         std::set<std::string> exclusions_set;
         auto it_exclusions = options.settings.find(OPTION_EXCLUDE);
         if (it_exclusions != options.settings.end())
@@ -558,11 +552,11 @@ namespace vcpkg::Commands::CI
             System::print2("Total elapsed time: ", result.summary.total_elapsed_time, "\n");
             result.summary.print();
         }
-        auto& fs = paths.get_filesystem();
+
         auto it_xunit = options.settings.find(OPTION_XUNIT);
         if (it_xunit != options.settings.end())
         {
-            fs.write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
+            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

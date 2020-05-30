@@ -212,6 +212,11 @@ namespace vcpkg
                     parse_switch(true, "printmetrics", args.printmetrics);
                     continue;
                 }
+                if (arg == "--disable-metrics")
+                {
+                    parse_switch(true, "printmetrics", args.disable_metrics);
+                    continue;
+                }
                 if (arg == "--no-sendmetrics")
                 {
                     parse_switch(false, "sendmetrics", args.sendmetrics);
@@ -220,6 +225,11 @@ namespace vcpkg
                 if (arg == "--no-printmetrics")
                 {
                     parse_switch(false, "printmetrics", args.printmetrics);
+                    continue;
+                }
+                if (arg == "--no-disable-metrics")
+                {
+                    parse_switch(false, "printmetrics", args.disable_metrics);
                     continue;
                 }
                 if (arg == "--featurepackages")
