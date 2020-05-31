@@ -3,3 +3,4 @@ Version: v245
 Homepage: https://systemd.io
 Description: The systemd System and Service Manager 
 Build-Depends: 
+Supports: !windows

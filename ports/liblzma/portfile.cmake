@@ -17,6 +17,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 vcpkg_configure_make(
+    AUTOCONF
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS 
     --disable-xz
@@ -30,14 +31,6 @@ vcpkg_configure_make(
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
-
-# vcpkg_configure_cmake(
-    # SOURCE_PATH ${SOURCE_PATH}
-    # PREFER_NINJA
-# )
-# vcpkg_install_cmake()
-#vcpkg_fixup_cmake_targets()
-
 vcpkg_copy_pdbs()
 
 #Move this out of the portfile

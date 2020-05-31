@@ -3,3 +3,4 @@ Version: 1.1.6
 Homepage: http://bitmath.org/code/mtdev/
 Description: mtdev - Multitouch Protocol Translation Library
 Build-Depends: 
+Supports: !windows
