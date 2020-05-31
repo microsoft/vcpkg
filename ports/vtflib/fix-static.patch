@@ -1,0 +1,17 @@
+diff --git a/VTFLib/stdafx.h b/VTFLib/stdafx.h
+index 6d898e7..b5f076d 100644
+--- a/VTFLib/stdafx.h
++++ b/VTFLib/stdafx.h
+@@ -20,11 +20,7 @@
+ #ifndef STDAFX_H
+ #define STDAFX_H
+ 
+-#ifdef VTFLIB_EXPORTS
+-#	define VTFLIB_API __declspec(dllexport)
+-#else
+-#	define VTFLIB_API __declspec(dllimport)
+-#endif
++#include "vtflib_export.h"
+ 
+ // Custom data types
+ typedef unsigned char	vlBool;				//!< Boolean value 0/1.

@@ -1,0 +1,3 @@
+Source: vtflib
+Version: 1.3.2
+Description: A C++ library for working with Valve's VMT/VTF format.

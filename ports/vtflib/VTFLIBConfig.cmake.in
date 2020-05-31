@@ -1,0 +1,6 @@
+@PACKAGE_INIT@
+
+get_filename_component(VTFLIB_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+include("${VTFLIB_CMAKE_DIR}/@PROJECT_NAME@Targets.cmake")
+check_required_components("@PROJECT_NAME@")
