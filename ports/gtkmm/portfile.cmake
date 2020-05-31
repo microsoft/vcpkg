@@ -17,6 +17,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
         fix_properties.patch
+        msvc-fix.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/msvc_recommended_pragmas.h DESTINATION ${SOURCE_PATH}/MSVC_Net2013)
@@ -30,6 +31,8 @@ vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/MSVC_Net2013/gtkmm.sln
     TARGET gtkmm
     PLATFORM ${VS_PLATFORM}
+    OPTIONS
+        /p:CurrentInstalledDir=${CURRENT_INSTALLED_DIR}
     USE_VCPKG_INTEGRATION
 )
 

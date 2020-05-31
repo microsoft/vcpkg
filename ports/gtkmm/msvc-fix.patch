@@ -1,0 +1,20 @@
+Index: gtkmm/MSVC_Net2013/gtkmm-build-defines.props
+===================================================================
+--- gtkmm.orig/MSVC_Net2013/gtkmm-build-defines.props
++++ gtkmm/MSVC_Net2013/gtkmm-build-defines.props
+@@ -14,7 +14,7 @@
+   </PropertyGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
+-      <AdditionalIncludeDirectories>.\gdkmm;..;..\gdk;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>.\gdkmm;..;..\gdk;.;$(CurrentInstalledDir)\include\glib-2.0;$(CurrentInstalledDir)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <ForcedIncludeFiles>msvc_recommended_pragmas.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+       <DisableSpecificWarnings>4250;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+@@ -33,4 +33,4 @@
+       <Value>$(GtkMMBuildDefs)</Value>
+     </BuildMacro>
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
