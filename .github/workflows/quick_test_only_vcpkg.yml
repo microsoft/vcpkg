@@ -1,4 +1,4 @@
-name: CMake
+name: CMake Build VCPKG
 
 on: [push]
 
