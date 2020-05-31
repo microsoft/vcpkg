@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
 ) 
 
 vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
 )
 vcpkg_install_make()
