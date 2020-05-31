@@ -90,6 +90,7 @@ namespace vcpkg::Build::Command
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, action != nullptr);
+        _Analysis_assume_(action != nullptr);
 
         action->build_options = build_package_options;
 
@@ -149,6 +150,7 @@ namespace vcpkg::Build::Command
         const auto* scfl = provider.get_control_file(port_name).get();
 
         Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
+        _Analysis_assume_(scfl != nullptr);
 
         perform_and_exit_ex(spec, *scfl, provider, *binaryprovider, paths);
     }
@@ -1055,7 +1057,7 @@ namespace vcpkg::Build
                             VCPKG_LINE_INFO, "Unknown setting for VCPKG_BUILD_TYPE: %s", variable_value);
                     break;
                 case VcpkgTripletVar::ENV_PASSTHROUGH:
-                    passthrough_env_vars = Strings::split(variable_value, ";");
+                    passthrough_env_vars = Strings::split(variable_value, ';');
                     break;
                 case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE:
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};

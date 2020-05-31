@@ -1,5 +1,5 @@
 Source: dmlc
-Version: 2019-08-12-1
+Version: 2019-08-12-3
 Homepage: https://github.com/dmlc/dmlc-core
 Description: DMLC-Core is the backbone library to support all DMLC projects, offers the bricks to build efficient and scalable distributed machine learning libraries.
 Default-Features: openmp
