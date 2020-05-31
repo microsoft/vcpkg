@@ -12,24 +12,43 @@ generate_export_header(VTFLIB
         EXPORT_MACRO_NAME VTFLIB_API
         )
 
-file(GLOB SOURCES VTFLib/*.cpp)
-file(GLOB HEADERS VTFLib/*.h ${CMAKE_CURRENT_BINARY_DIR}/*.h)
-
 target_sources(VTFLIB
-        PRIVATE
-            ${SOURCES}
-        )
+    PRIVATE
+        VTFLib/Error.cpp
+        VTFLib/FileReader.cpp
+        VTFLib/FileWriter.cpp
+        VTFLib/Float16.cpp
+        VTFLib/MemoryReader.cpp
+        VTFLib/MemoryWriter.cpp
+        VTFLib/Proc.cpp
+        VTFLib/ProcReader.cpp
+        VTFLib/ProcWriter.cpp
+        VTFLib/VMTFile.cpp
+        VTFLib/VMTGroupNode.cpp
+        VTFLib/VMTIntegerNode.cpp
+        VTFLib/VMTNode.cpp
+        VTFLib/VMTSingleNode.cpp
+        VTFLib/VMTStringNode.cpp
+        VTFLib/VMTValueNode.cpp
+        VTFLib/VMTWrapper.cpp
+        VTFLib/VTFFile.cpp
+        VTFLib/VTFLib.cpp
+        VTFLib/VTFMathlib.cpp
+        VTFLib/VTFWrapper.cpp
+)
 
 target_include_directories(VTFLIB
-        PUBLIC
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/VTFLib>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-        $<INSTALL_INTERFACE:include/vtflib>
-        )
+)
 
 set_target_properties(VTFLIB
-    PROPERTIES
-        PUBLIC_HEADER "${HEADERS}"
+        PROPERTIES
+        PUBLIC_HEADER "lib/VTFLib.h"
 )
 
 export(TARGETS VTFLIB
@@ -48,17 +67,17 @@ write_basic_package_version_file(
 )
 
 install(FILES
-    ${PROJECT_BINARY_DIR}/vtflib-config.cmake
-    DESTINATION
+        ${PROJECT_BINARY_DIR}/vtflib-config.cmake
+        DESTINATION
         ${CMAKE_INSTALL_LIBDIR}/cmake/VTFLIB
-)
+        )
 
 install(TARGETS VTFLIB
         EXPORT VTFLIBTargets
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vtflib
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         )
 
 install(EXPORT VTFLIBTargets
