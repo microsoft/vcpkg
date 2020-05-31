@@ -27,6 +27,11 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 
+    namespace CIClean
+    {
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     namespace Env
     {
         extern const CommandStructure COMMAND_STRUCTURE;
