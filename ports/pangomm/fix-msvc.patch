@@ -1,0 +1,13 @@
+Index: pangomm/MSVC_Net2013/pangomm-build-defines.props
+===================================================================
+--- pangomm.orig/MSVC_Net2013/pangomm-build-defines.props
++++ pangomm/MSVC_Net2013/pangomm-build-defines.props
+@@ -13,7 +13,7 @@
+   </PropertyGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
+-      <AdditionalIncludeDirectories>.\pangomm;..\pango;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>.\pangomm;..\pango;.;$(CurrentInstalledDir)\include\glib-2.0;$(CurrentInstalledDir)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <ForcedIncludeFiles>msvc_recommended_pragmas.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       <AdditionalOptions>/d2Zi+ %(AdditionalOptions)</AdditionalOptions>
