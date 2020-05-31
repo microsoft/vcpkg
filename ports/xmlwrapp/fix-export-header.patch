@@ -1,0 +1,20 @@
+diff --git a/include/xmlwrapp/export.h b/include/xmlwrapp/export.h
+index b23ead8..6d371c2 100644
+--- a/include/xmlwrapp/export.h
++++ b/include/xmlwrapp/export.h
+@@ -37,8 +37,13 @@
+     #define XMLWRAPP_API   __attribute__ ((visibility("default")))
+     #define XSLTWRAPP_API  __attribute__ ((visibility("default")))
+ #else
+-    #define XMLWRAPP_API
+-    #define XSLTWRAPP_API
++  #ifdef BUILDING_DLL
++    #define XMLWRAPP_API __declspec(dllexport)
++    #define XSLTWRAPP_API __declspec(dllexport)    
++  #else
++    #define XMLWRAPP_API __declspec(dllimport)
++    #define XSLTWRAPP_API __declspec(dllimport)
++  #endif
+ #endif
+ 
+ #if defined(__clang__)

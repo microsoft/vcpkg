@@ -1,0 +1,4 @@
+Source: xmlwrapp
+Version:0.9.0
+Description: xmlwrapp is a modern style C++ library for working with XML data, built atop the venerable libxml2 C library.
+Build-Depends: libxml2, libxslt

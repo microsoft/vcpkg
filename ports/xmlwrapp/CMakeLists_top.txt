@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8.8)
+project(xmlwrapp_project)
+
+option(INSTALL_HEADERS "Install public header files" ON)
+
+subdirs(src/libxml)
+subdirs(src/libxslt)

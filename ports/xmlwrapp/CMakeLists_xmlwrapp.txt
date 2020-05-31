@@ -1,0 +1,119 @@
+#require 3.10 to ignore libxml dependent libraries (i.e libiconv, etc.) when dynamically linking
+cmake_minimum_required(VERSION 3.10)
+project (xmlwrapp C)
+
+set(PUB_HDRS  
+    ../../include/xmlwrapp/attributes.h
+    ../../include/xmlwrapp/_cbfo.h
+    ../../include/xmlwrapp/document.h
+    ../../include/xmlwrapp/event_parser.h
+    ../../include/xmlwrapp/errors.h
+    ../../include/xmlwrapp/init.h
+    ../../include/xmlwrapp/node.h
+    ../../include/xmlwrapp/nodes_view.h
+    ../../include/xmlwrapp/schema.h
+    ../../include/xmlwrapp/tree_parser.h
+    ../../include/xmlwrapp/xpath.h
+    ../../include/xmlwrapp/xmlwrapp.h
+    ../../include/xmlwrapp/version.h
+)
+
+set(PRIV_HDRS
+    ait_impl.h
+    dtd_impl.h
+    errors_impl.h
+    node_iterator.h
+    node_manip.h
+    pimpl_base.h
+    utility.h
+)
+
+set (SRC
+    ait_impl.cxx
+    attributes.cxx
+    document.cxx
+    dtd_impl.cxx
+    event_parser.cxx
+    errors.cxx
+    init.cxx
+    node.cxx
+    node_iterator.cxx
+    node_manip.cxx
+    nodes_view.cxx
+    schema.cxx
+    tree_parser.cxx
+    utility.cxx
+    xpath.cxx
+)
+
+#file(READ ../../include/xmlwrapp/export_static.h EXPORT_H)
+
+if(BUILD_SHARED_LIBS)
+    
+    # Generate exports with fixed definition of XMLWRAPP_API for static and dynamic builds
+    set(ORIG_XMLWRAPP_API_DEFINES "[ \t]*#define XMLWRAPP_API[ \t]*[\n][ \t]*#define XSLTWRAPP_API[ \t]*[\n]")
+
+    set(NEW_XMLWRAPP_API_DEFINES [=[
+    #ifdef BUILDING_XMLWRAPP_DLL
+        #define XMLWRAPP_API __declspec(dllexport)
+    #else
+        #define XMLWRAPP_API __declspec(dllimport)
+    #endif
+    #ifdef BUILDING_XSLTWRAPP_DLL
+        #define XSLTWRAPP_API __declspec(dllexport)  
+    #else
+        #define XSLTWRAPP_API __declspec(dllimport)
+    #endif    
+    ]=]
+    )
+    
+    string(REGEX REPLACE ${ORIG_XMLWRAPP_API_DEFINES} ${NEW_XMLWRAPP_API_DEFINES} EXPORT_H "${EXPORT_H}")
+endif()
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/xmlwrapp/export.h "${EXPORT_H}")
+
+list(APPEND PUB_HDRS ${CMAKE_CURRENT_BINARY_DIR}/xmlwrapp/export.h)
+
+add_library(xmlwrapp ${PUB_HDRS} ${PRIV_HDRS} ${SRC})
+
+find_package(LibXml2 REQUIRED)
+
+if(LIBXML2_FOUND)
+    if (BUILD_SHARED_LIBS)
+        target_link_libraries(xmlwrapp ${LIBXML2_LIBRARY})
+        target_compile_definitions(xmlwrapp PRIVATE BUILDING_XMLWRAPP_DLL)
+    else()
+        target_link_libraries(xmlwrapp ${LIBXML2_LIBRARIES})
+        target_compile_definitions(xmlwrapp PUBLIC LIBXML_STATIC)
+    endif()
+    
+    target_include_directories(xmlwrapp PUBLIC         
+       "${CMAKE_CURRENT_SOURCE_DIR}/../../include"
+       ${CMAKE_CURRENT_BINARY_DIR}
+       ${LIBXML2_INCLUDE_DIRS}
+    )
+    target_compile_definitions(xmlwrapp PUBLIC ${LIBXML2_DEFINITIONS})
+
+    if(MSVC)
+        target_compile_definitions(xmlwrapp PUBLIC 
+            _CRT_SECURE_NO_DEPRECATE 
+            _CRT_SECURE_NO_WARNINGS
+            _CRT_NONSTDC_NO_WARNINGS 
+            _SCL_SECURE_NO_WARNINGS)
+    endif()
+endif()    
+
+set(TARGET_INSTALL_OPTIONS)
+if(INSTALL_HEADERS)  
+    
+    set_target_properties(xmlwrapp PROPERTIES PUBLIC_HEADER "${PUB_HDRS}")
+    set(TARGET_INSTALL_OPTIONS PUBLIC_HEADER DESTINATION "include/xmlwrapp")
+endif()
+
+install(TARGETS xmlwrapp
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    ${TARGET_INSTALL_OPTIONS}
+)
+

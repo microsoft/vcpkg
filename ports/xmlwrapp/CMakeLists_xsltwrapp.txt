@@ -1,0 +1,46 @@
+cmake_minimum_required(VERSION 3.0)
+project (xsltwrapp C)
+
+set(PUB_HDRS  
+    ../../include/xsltwrapp/init.h
+    ../../include/xsltwrapp/stylesheet.h
+    ../../include/xsltwrapp/xsltwrapp.h
+)
+
+set(PRIV_HDRS 
+    result.h
+)
+
+set (SRC
+    init.cxx
+    stylesheet.cxx
+)
+
+add_library(xsltwrapp ${PUB_HDRS} ${PRIV_HDRS} ${SRC})
+
+find_package(LibXslt REQUIRED)
+
+if(LIBXSLT_FOUND)
+    target_link_libraries(xsltwrapp PUBLIC xmlwrapp ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARIES})
+    target_include_directories(xsltwrapp PUBLIC ${LIBXSLT_INCLUDE_DIR})
+    target_compile_definitions(xsltwrapp PUBLIC ${LIBXSLT_DEFINITIONS})
+endif()    
+   
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(xsltwrapp PRIVATE BUILDING_XSLTWRAPP_DLL)
+else()
+    target_compile_definitions(xsltwrapp PUBLIC LIBXSLT_STATIC LIBEXSLT_STATIC)
+endif()
+
+set(TARGET_INSTALL_OPTIONS)
+if(INSTALL_HEADERS)  
+    set_target_properties(xsltwrapp PROPERTIES PUBLIC_HEADER "${PUB_HDRS}")
+    set(TARGET_INSTALL_OPTIONS PUBLIC_HEADER DESTINATION "include/xsltwrapp")
+endif()
+
+install(TARGETS xsltwrapp
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    ${TARGET_INSTALL_OPTIONS}
+)
