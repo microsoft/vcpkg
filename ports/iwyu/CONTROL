@@ -3,3 +3,4 @@ Version: 0.14
 Build-Depends: llvm
 Supports: !uwp
 Description: include-what-you-use: A tool for use with clang to analyze #includes in C and C++ source files
+Homepage: https://github.com/include-what-you-use/include-what-you-use
