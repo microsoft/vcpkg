@@ -4,7 +4,7 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO include-what-you-use/include-what-you-use
-    REF clang_8.0
+    REF 0.14
     SHA512 e75e91ce198b1ec446ed34afcf9fdbcb0534c5edc5346e4884f0f589c73512d778c428aa71c1b109d45a45543a952438610ab21e32ef1f03ff1a014823ed8425
     HEAD_REF master
 	)
