@@ -29,6 +29,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zlib.pc")
     file(READ "${_file}" _contents)
@@ -45,8 +47,6 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zlib RENAME copyright)
-vcpkg_copy_pdbs()
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 vcpkg_test_cmake(PACKAGE_NAME ZLIB MODULE)
