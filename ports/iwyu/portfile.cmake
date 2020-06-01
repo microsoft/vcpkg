@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 vcpkg_from_github(
