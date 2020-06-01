@@ -9,9 +9,11 @@ vcpkg_from_github(
     SHA512 e05e0b24056c17f01784ced1f9606a269974de195f1aca8a6fce2123314e7ee609f70df77ac7fe18dc7f0c04fb883d38cc7de9b963caacf9586aaa24d4ac6210
     HEAD_REF master
     PATCHES
-        fix-C1083.patch
         fix-find-openexr-ilmbase.patch
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindIlmBase.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindOpenEXR.cmake)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     # In debug mode with g++, alembic defines -Werror
