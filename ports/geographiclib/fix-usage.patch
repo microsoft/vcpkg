@@ -1,16 +1,12 @@
-diff --git a/cmake/project-config-version.cmake.in b/cmake/project-config-version.cmake.in
-index 1f207b8..d469658 100644
---- a/cmake/project-config-version.cmake.in
-+++ b/cmake/project-config-version.cmake.in
-@@ -22,9 +22,9 @@ elseif (NOT (APPLE OR (NOT DEFINED CMAKE_SIZEOF_VOID_P) OR
-   # Reject if there's a mismatch in MSVC compiler versions
- #  set (REASON "_MSC_VER = @MSVC_VERSION@")
- #  set (PACKAGE_VERSION_UNSUITABLE TRUE)
--elseif (NOT CMAKE_CROSSCOMPILING STREQUAL "@CMAKE_CROSSCOMPILING@")
-+elseif (NOT CMAKE_CROSSCOMPILING STREQUAL FALSE)
-   # Reject if there's a mismatch in ${CMAKE_CROSSCOMPILING}
--  set (REASON "cross-compiling = @CMAKE_CROSSCOMPILING@")
-+  set (REASON "cross-compiling = FALSE")
-   set (PACKAGE_VERSION_UNSUITABLE TRUE)
- elseif (CMAKE_CROSSCOMPILING AND
-     NOT (CMAKE_SYSTEM_NAME STREQUAL "@CMAKE_SYSTEM_NAME@" AND
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4a9ec4e..57bf448 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,6 +46,7 @@ set (LIBVERSION_API 19)
+ set (LIBVERSION_BUILD 19.0.1)
+ string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+ string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
++set(PROJECT_NAME_LOWER ${PROJECT_NAME})
+ 
+ cmake_minimum_required (VERSION 3.1.0) # This version was released 2014-12-15
+ 

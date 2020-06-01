@@ -2,7 +2,6 @@ The package geographiclib:x64-linux provides CMake targets:
 
     find_package(GeographicLib CONFIG REQUIRED)
     #dynamic
-    target_link_libraries(main PRIVATE GeographicLib GeographicLib::GeographicLib)
+    target_link_libraries(main PRIVATE GeographicLib GeographicLib_SHARED GeographicLib::GeographicLib GeographicLib::GeographicLib_SHARED)    
     #static
-    target_link_libraries(main PRIVATE GeographicLib_STATIC GeographicLib::GeographicLib_STATIC)
-    
+    target_link_libraries(main PRIVATE GeographicLib GeographicLib_STATIC GeographicLib::GeographicLib GeographicLib::GeographicLib_STATIC)
