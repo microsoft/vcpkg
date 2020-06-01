@@ -169,7 +169,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
 
     debug_message("IGNORED FLAGS:'${_ignore_flags}'")
     foreach(_ignore IN LISTS _ignore_flags)  # Remove ignore with whitespace
-        string(REGEX REPLACE "[\t ]+${_ignore}([\t ]+)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "[\t ]+${_ignore}([\t ]+|$)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
     endforeach()
     debug_message("SYSTEM LIBRARIES:'${_system_libs}'")
     debug_message("LIBRARIES in PC:'${_pkg_libs_output}'")
@@ -272,12 +272,14 @@ function(vcpkg_fixup_pkgconfig)
         string(REGEX REPLACE "/$" "" RELATIVE_PC_PATH "${RELATIVE_PC_PATH}")
         #Correct *.pc file
         file(READ "${_file}" _contents)
+        debug_message("CONTENTS before: ${_contents}")
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REGEX REPLACE "^prefix=(\\\\)?\\\${prefix}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        debug_message("CONTENTS after: ${_contents}")
         file(WRITE "${_file}" "${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
@@ -296,6 +298,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REGEX REPLACE "/pkgconfig/?" "" PKG_LIB_SEARCH_PATH "${PKG_LIB_SEARCH_PATH}")
         #Correct *.pc file
         file(READ "${_file}" _contents)
+        debug_message("CONTENTS before: ${_contents}")
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
@@ -308,6 +311,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REGEX REPLACE "^prefix=(\\\\)?\\\${prefix}(/debug)?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
+        debug_message("CONTENTS after: ${_contents}")
         file(WRITE "${_file}" "${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()

@@ -29,6 +29,14 @@
 ## ### SKIP_CONFIGURE
 ## Skip configure process
 ##
+## ### CUSTOM_CONFIGURE
+## Don't assume autotools rules regarding configure options. 
+## As such variables like --prefix will not be implicitly passed to the configure command
+## Using this command all normally implicitly passed arguments to configure must be passed manually
+##
+## ### CONFIGURE_ENV
+## String containing enviromnent variables for the configure command on windows (unused otherwise)
+##
 ## ### AUTOCONFIG
 ## Need to use autoconfig to generate configure file.
 ##
@@ -113,11 +121,15 @@ endmacro()
 
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE"
-        "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL"
+        "AUTOCONFIG;SKIP_CONFIGURE;CUSTOM_CONFIGURE;COPY_SOURCE"
+        "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;CONFIGURE_ENV"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
     )
+    if(_csc_CUSTOM_CONFIGURE AND _csc_AUTOCONFIG)
+        message(FATAL_ERROR "Option AUTOCONFIG and CUSTOM_CONFIGURE together do not make sense! Please remove one!")
+    endif()
+    
     # Backup enviromnent variables
     set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
     set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
@@ -131,7 +143,7 @@ function(vcpkg_configure_make)
     #set(LIBRARY_PATH_BACKUP "$ENV{LIBRARY_PATH}")
     _vcpkg_backup_env_variable(LIBRARY_PATH)
     set(LIBPATH_BACKUP "$ENV{LIBPATH}")
-
+    
     if(${CURRENT_PACKAGES_DIR} MATCHES " " OR ${CURRENT_INSTALLED_DIR} MATCHES " ")
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
@@ -176,20 +188,21 @@ function(vcpkg_configure_make)
         # --build: the machine you are building on (HOST_ARCH|MSYS_HOST)
         # --host: the machine you are building for (VCPKG_TARGET_ARCHITECTURE)
         # --target: the machine that CC will produce binaries for
-        _vcpkg_determine_host() # VCPKG_HOST => machine you are building on => --build=
-        if(NOT HOST_ARCH STREQUAL VCPKG_TARGET_ARCHITECTURE) # native builds don't require any extra info
-            message(STATUS "Detected: Target architecture (${VCPKG_TARGET_ARCHITECTURE}) different from host architecture (${HOST_ARCH}) -> Crosscompiling")
-            if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --host=i686-pc-mingw32")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --host=x86_64-pc-mingw32")
-            elseif(VCPKG_TARGET_ARCHITECTURE MATCHES arm)
-                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --host=arm")
+        if(NOT _csc_CUSTOM_CONFIGURE)
+            _vcpkg_determine_host() # VCPKG_HOST => machine you are building on => --build=
+            if(NOT HOST_ARCH STREQUAL VCPKG_TARGET_ARCHITECTURE) # native builds don't require any extra info
+                message(STATUS "Detected: Target architecture (${VCPKG_TARGET_ARCHITECTURE}) different from host architecture (${HOST_ARCH}) -> Crosscompiling")
+                if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+                    set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --host=i686-pc-mingw32")
+                elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+                    set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --host=x86_64-pc-mingw32")
+                elseif(VCPKG_TARGET_ARCHITECTURE MATCHES arm)
+                    set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --host=arm")
+                endif()
+            else()
+                set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32") # else msys will be detected
             endif()
-        else()
-            set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32") # else msys will be detected
         endif()
-        
         macro(_vcpkg_append_to_configure_enviromnent inoutstring var defaultval)
             # Allows to overwrite settings in custom triplets via the enviromnent
             if(DEFINED ENV{${var}})
@@ -200,7 +213,7 @@ function(vcpkg_configure_make)
             endif()
         endmacro()
 
-        set(CONFIGURE_ENV "")
+        set(CONFIGURE_ENV "${_csc_CONFIGURE_ENV}")
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CC "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CC_FOR_BUILD "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
         _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CPP "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo -E")
@@ -242,37 +255,39 @@ function(vcpkg_configure_make)
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
                         
     set(ENV{V} "1") #Enabel Verbose MODE
-
-    # Set configure paths
-    set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
-                            "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}${EXTRA_QUOTES}"
-                            # Important: These should all be relative to prefix!
-                            "--bindir=${prefix_var}/tools/${PORT}/bin"
-                            "--sbindir=${prefix_var}/tools/${PORT}/sbin"
-                            #"--libdir='\${prefix}'/lib" # already the default!
-                            #"--includedir='\${prefix}'/include" # already the default!
-                            "--mandir=${prefix_var}/share/${PORT}"
-                            "--docdir=${prefix_var}/share/${PORT}"
-                            "--datarootdir=${prefix_var}/share/${PORT}")
-    set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
-                            "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}"
-                            # Important: These should all be relative to prefix!
-                            "--bindir=${prefix_var}/../tools/${PORT}/debug/bin"
-                            "--sbindir=${prefix_var}/../tools/${PORT}/debug/sbin"
-                            #"--libdir='\${prefix}'/lib" # already the default!
-                            "--includedir=${prefix_var}/../include"
-                            "--datarootdir=${prefix_var}/share/${PORT}")
     
-    # Setup common options
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        list(APPEND _csc_OPTIONS --disable-silent-rules --verbose --enable-shared --disable-static)
-        if (VCPKG_TARGET_IS_UWP)
-                list(APPEND _csc_OPTIONS --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib)
+    if(NOT _csc_CUSTOM_CONFIGURE)
+        # Set configure paths
+        set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
+                                "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}${EXTRA_QUOTES}"
+                                # Important: These should all be relative to prefix!
+                                "--bindir=${prefix_var}/tools/${PORT}/bin"
+                                "--sbindir=${prefix_var}/tools/${PORT}/sbin"
+                                #"--libdir='\${prefix}'/lib" # already the default!
+                                #"--includedir='\${prefix}'/include" # already the default!
+                                "--mandir=${prefix_var}/share/${PORT}"
+                                "--docdir=${prefix_var}/share/${PORT}"
+                                "--datarootdir=${prefix_var}/share/${PORT}")
+        set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
+                                "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}"
+                                # Important: These should all be relative to prefix!
+                                "--bindir=${prefix_var}/../tools/${PORT}/debug/bin"
+                                "--sbindir=${prefix_var}/../tools/${PORT}/debug/sbin"
+                                #"--libdir='\${prefix}'/lib" # already the default!
+                                "--includedir=${prefix_var}/../include"
+                                "--datarootdir=${prefix_var}/share/${PORT}")
+        
+        # Setup common options
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            list(APPEND _csc_OPTIONS --disable-silent-rules --verbose --enable-shared --disable-static)
+            if (VCPKG_TARGET_IS_UWP)
+                    list(APPEND _csc_OPTIONS --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib)
+            endif()
+        else()
+            list(APPEND _csc_OPTIONS --disable-silent-rules --verbose --enable-static --disable-shared)
         endif()
-    else()
-        list(APPEND _csc_OPTIONS --disable-silent-rules --verbose --enable-static --disable-shared)
     endif()
-    
+
     file(RELATIVE_PATH RELATIVE_BUILD_PATH "${CURRENT_BUILDTREES_DIR}" "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
 
     set(base_cmd)

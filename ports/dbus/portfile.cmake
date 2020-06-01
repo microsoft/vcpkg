@@ -9,21 +9,6 @@ vcpkg_from_gitlab(
     PATCHES cmake.dep.patch #patch name
 ) 
 
-# vcpkg_configure_make(
-    # SOURCE_PATH ${SOURCE_PATH}
-    # AUTOCONFIG
-    # #SKIP_CONFIGURE
-    # #NO_DEBUG
-    # #AUTO_HOST
-    # #AUTO_DST
-    # #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    # OPTIONS ${OPTIONS} --enable-tests=no
-    # #OPTIONS_DEBUG
-    # #OPTIONS_RELEASE
-    # PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    # PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
-# )
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

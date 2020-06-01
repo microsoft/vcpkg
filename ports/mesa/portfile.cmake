@@ -43,7 +43,9 @@ else()
     execute_process(COMMAND ${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX} mako)
     execute_process(COMMAND ${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX} setuptools)
 endif()
-
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    execute_process(COMMAND pip3 install setuptools mako)
+endif()
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )

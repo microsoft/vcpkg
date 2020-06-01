@@ -24,6 +24,10 @@
 ## The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
 ## be passed.
 ##
+## ### CONFIG_DEPENDENT_DESTDIR
+## add config suffix to DESTDIR
+##
+##
 ## ## Notes:
 ## This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
 ## You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your CMake script supports the
@@ -36,7 +40,7 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT;BUILD_TARGET" "" ${ARGN})
+    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;CONFIG_DEPENDENT_DESTDIR" "LOGFILE_ROOT;BUILD_TARGET" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -57,6 +61,7 @@ function(vcpkg_build_make)
     set(MAKE )
     set(MAKE_OPTS )
     set(INSTALL_OPTS )
+
     if (CMAKE_HOST_WIN32)
         set(PATH_GLOBAL "$ENV{PATH}")
         # These should be moved into the portfile!
@@ -75,6 +80,7 @@ function(vcpkg_build_make)
 
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
+        set(DESTDIR "DESTDIR=${_VCPKG_PACKAGE_PREFIX}")
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f Makefile install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
@@ -84,6 +90,7 @@ function(vcpkg_build_make)
         set(MAKE_COMMAND "${MAKE}")
         # Set make command and install command
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f Makefile ${_bc_BUILD_TARGET})
+        set(DESTDIR "DESTDIR=${CURRENT_PACKAGES_DIR}")
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
     
@@ -218,6 +225,10 @@ function(vcpkg_build_make)
                         continue()
                     endif()
                     set(SHORT_BUILDTYPE "-dbg")
+                    set(PATH_SUFFIX)
+                    if(_bc_CONFIG_DEPENDENT_DESTDIR)
+                        set(PATH_SUFFIX "/debug")
+                    endif()
                 else()
                     # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                     if (_VCPKG_NO_DEBUG)
@@ -225,13 +236,15 @@ function(vcpkg_build_make)
                     else()
                         set(SHORT_BUILDTYPE "-rel")
                     endif()
+                    set(PATH_SUFFIX)
                 endif()
             
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
                 
                 if(MAKE_BASH)
-                    set(MAKE_CMD_LINE "${MAKE_COMMAND} ${INSTALL_OPTS}")
+                    set(MAKE_CMD_LINE "${MAKE_COMMAND} ${INSTALL_OPTS} ${DESTDIR}${PATH_SUFFIX}")
                 else()
+                    set(INSTALL_OPTS ${INSTALL_OPTS} "${DESTDIR}${PATH_SUFFIX}")
                     set(MAKE_CMD_LINE ${MAKE_COMMAND} ${INSTALL_OPTS})
                 endif()
                 
@@ -245,10 +258,12 @@ function(vcpkg_build_make)
             endif()
         endforeach()
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALL_PREFIX "${CURRENT_INSTALLED_DIR}")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
-        file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
-        file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}${_VCPKG_INSTALL_PREFIX}/")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+            file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
+            file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+        endif()
     endif()
 
     # Restore enviromnent

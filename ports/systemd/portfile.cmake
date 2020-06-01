@@ -8,6 +8,8 @@ vcpkg_from_github(
 )
 
 
+string(APPEND MESON_COMMON_CFLAGS " -I${CURRENT_INSTALLED_DIR}/include")
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     #OPTIONS 
