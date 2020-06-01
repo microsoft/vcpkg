@@ -11,6 +11,9 @@ sudo apt -y install at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils bui
 sudo apt -y install libxkbcommon-dev libxkbcommon-x11-dev
 # Required by libhdfs3
 sudo apt -y install libkrb5-dev
+# Required by mesa
+sudo apt -y install python3-setuptools
+
 
 # Install newer version of nasm than the apt package, required by intel-ipsec
 mkdir /tmp/nasm
