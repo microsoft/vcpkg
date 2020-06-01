@@ -8,12 +8,22 @@ set(PYTHON_VERSION_MINOR  8)
 set(PYTHON_VERSION_PATCH  3)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
+if(VCPKG_TARGET_IS_WINDOWS)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+		list(APPEND PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-static-library.patch)
+	endif()
+	if (VCPKG_CRT_LINKAGE STREQUAL static)
+		list(APPEND PATCHES ${CMAKE_CURRENT_LIST_DIR}/0002-static-crt.patch)
+	endif()
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH TEMP_SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
     SHA512 eb264a858ef55f2f61b53f663454be6e99ffe9035d8fcdb3366d7a08fd3b295613e5d15e93e2e4b9b18ad297d8c17139bde5e90e396db04fe04c6f441a443fd2
     HEAD_REF master
+    PATCHES ${PATCHES}
 )
 
 if("enable-shared" IN_LIST FEATURES)
@@ -32,9 +42,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	set(SOURCE_PATH "${TEMP_SOURCE_PATH}-Lib-Win")
 	file(REMOVE_RECURSE ${SOURCE_PATH})
 	file(RENAME "${TEMP_SOURCE_PATH}" ${SOURCE_PATH})
-
-	# We need per-triplet directories because we need to patch the project files differently based on the linkage
-	# Because the patches patch the same file, they have to be applied in the correct order
 
 	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
 		set(BUILD_ARCH "Win32")
