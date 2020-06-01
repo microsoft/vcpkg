@@ -1,20 +1,18 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO include-what-you-use/include-what-you-use
     REF 0.14
-    SHA512 e75e91ce198b1ec446ed34afcf9fdbcb0534c5edc5346e4884f0f589c73512d778c428aa71c1b109d45a45543a952438610ab21e32ef1f03ff1a014823ed8425
+    SHA512 e54a7c7e3a6d3e0de7c263d1f26b373d95b8fab5f1f7e76f52d80341bda2bad0fb12238a325dc1e2f6d3ab5e6d8e0b4ed60b5a19dc82e06d480bcb461f9aefba
     HEAD_REF master
-	)
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    )
-	
-vcpkg_build_cmake()
+)
+
 vcpkg_install_cmake()
 
 # cleanup
@@ -24,24 +22,15 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
 
 # license
-file(COPY ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/iwyu)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/iwyu/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/iwyu/copyright)
-
+file(INSTALL  ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # copy tools
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
 list(FILTER BINARY_TOOLS EXCLUDE REGEX "\\.dll\$")
-file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/iwyu)
+file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(REMOVE ${BINARY_TOOLS})
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/debug/bin/*")
 list(FILTER BINARY_TOOLS EXCLUDE REGEX "\\.dll\$")
-#file(REMOVE ${BINARY_TOOLS})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/iwyu)
-
-
-
-
+vcpkg_copy_tools(${CURRENT_PACKAGES_DIR}/tools/${PORT})
