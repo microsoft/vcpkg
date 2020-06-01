@@ -14,6 +14,5 @@ file(INSTALL ${SOURCE_PATH}/threadpool/boost
     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 file(INSTALL ${SOURCE_PATH}/threadpool/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/threadpool
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     RENAME copyright)
-
