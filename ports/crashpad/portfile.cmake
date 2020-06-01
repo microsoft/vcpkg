@@ -1,6 +1,6 @@
 vcpkg_fail_port_install(
     ON_ARCH "x86" "arm" "arm64"
-    ON_TARGET "UWP" "LINUX")
+    ON_TARGET "UWP")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -30,6 +30,15 @@ checkout_in_path(
     "https://chromium.googlesource.com/chromium/mini_chromium"
     "c426ff98e1d9e9d59777fe8b883a5c0ceeca9ca3"
 )
+
+if(VCPKG_TARGET_IS_LINUX)
+	# linux support files
+	checkout_in_path(
+	   "${SOURCE_PATH}/third_party/lss/lss"
+	   "https://chromium.googlesource.com/linux-syscall-support"
+	   "851f3a53a06ce834f9c2f7b2745e02f93b90fdd2"
+	)
+endif()
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
     unset(_LIBRARY_DEB CACHE)
@@ -114,6 +123,9 @@ install_headers("${SOURCE_PATH}/client")
 install_headers("${SOURCE_PATH}/util")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/base")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build")
+if(VCPKG_TARGET_IS_LINUX)
+	install_headers("${SOURCE_PATH}/third_party/lss/lss")
+endif()
 
 # remove empty directories
 file(REMOVE_RECURSE 
