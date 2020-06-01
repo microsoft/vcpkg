@@ -44,7 +44,6 @@
 7zip:x64-linux=fail
 7zip:x64-osx=fail
 7zip:x64-uwp=fail
-abseil:arm-uwp=fail
 activemq-cpp:x64-windows-static=fail
 activemq-cpp:x64-linux=fail
 activemq-cpp:x64-osx=fail
@@ -569,7 +568,6 @@ graphite2:arm-uwp=fail
 graphite2:x64-uwp=fail
 graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
-grpc:arm-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/pull/11048
