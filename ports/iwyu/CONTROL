@@ -1,0 +1,4 @@
+Source: iwyu
+Version: 0.12
+Build-Depends: llvm
+Description: include-what-you-use: A tool for use with clang to analyze #includes in C and C++ source files
