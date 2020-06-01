@@ -169,7 +169,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
 
     debug_message("IGNORED FLAGS:'${_ignore_flags}'")
     foreach(_ignore IN LISTS _ignore_flags)  # Remove ignore with whitespace
-        string(REGEX REPLACE "[\t ]+${_ignore}([\t ]+)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
+        string(REGEX REPLACE "[\t ]+${_ignore}([\t ]+|$)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
     endforeach()
     debug_message("SYSTEM LIBRARIES:'${_system_libs}'")
     debug_message("LIBRARIES in PC:'${_pkg_libs_output}'")
@@ -248,14 +248,15 @@ function(vcpkg_fixup_pkgconfig)
     endif()
 
     if(NOT PKGCONFIG)
-        find_program(PKGCONFIG pkg-config PATHS REQUIRED)
+        find_program(PKGCONFIG pkg-config PATHS "bin" "/usr/bin" "/usr/local/Cellar/pkg-config/0.29.2_3" REQUIRED)
         if(NOT PKGCONFIG AND CMAKE_HOST_WIN32)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
             find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
         endif()
         debug_message("Using pkg-config from: ${PKGCONFIG}")
-        if(NOT PKGCONFIG)
-            message(STATUS "${PORT} requires pkg-config from the system package manager (example: \"sudo apt-get install pkg-config\")")
+        if(NOT PKGCONFIG AND NOT _vfpkg_SKIP_CHECK)
+            message(WARNING "Unable to find pkg-config to validate *.pc files. Skipping checkes!")
+            set(_vfpkg_SKIP_CHECK TRUE)
         endif()
     endif()
 
