@@ -699,7 +699,6 @@ libb2:x64-windows-static=fail
 libb2:x64-uwp=fail
 libb2:arm64-windows=fail
 libb2:arm-uwp=fail
-libb2:x64-osx=fail
 libbf:arm64-windows=fail
 libbf:arm-uwp=fail
 libbf:x64-uwp=fail
