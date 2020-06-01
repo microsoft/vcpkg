@@ -46,9 +46,6 @@ sudo apt update
 sudo add-apt-repository universe
 sudo apt install -y powershell
 
-# Install odbc
-sudo apt install -y unixodbc-dev
-
 # Write SMB credentials
 sudo mkdir /etc/smbcredentials
 smbCredentialFile=/etc/smbcredentials/$StorageAccountName.cred
