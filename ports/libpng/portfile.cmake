@@ -14,9 +14,7 @@ if ("apng" IN_LIST FEATURES)
             FILENAME "${LIBPNG_APG_PATCH_NAME}.gz"
             SHA512 226adcb3a8c60f2267fe2976ab531329ae43c2603dab4d0cf8f16217d64069936b879f3d6516b75d259c47d6f5c5b1f24f887602206c8e46abde0fb7f5c7946b
         )
-
         vcpkg_find_acquire_program(7Z)
-
         vcpkg_execute_required_process(
             COMMAND ${7Z} x ${LIBPNG_APNG_PATCH_ARCHIVE} -aoa
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src
@@ -78,7 +76,6 @@ vcpkg_configure_cmake(
         OPTIONS_DEBUG
             -DSKIP_INSTALL_HEADERS=ON
 )
-
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
@@ -118,7 +115,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(WRITE "${_file}" "${_contents}")
     endif()
 endif()
-vcpkg_fixup_pkgconfig()
+
 
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
