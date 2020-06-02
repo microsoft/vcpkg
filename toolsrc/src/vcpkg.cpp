@@ -1,17 +1,6 @@
 #include <vcpkg/base/pragmas.h>
 
-#if defined(_WIN32)
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
-#pragma warning(push)
-#pragma warning(disable : 4768)
-#include <ShlObj.h>
-#pragma warning(pop)
-#else
-#include <unistd.h>
-#endif
+#include <vcpkg/base/system_headers.h>
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
@@ -341,8 +330,13 @@ int main(const int argc, const char* const* const argv)
     const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
     if (const auto v = vcpkg_feature_flags_env.get())
     {
-        auto flags = Strings::split(*v, ",");
+        auto flags = Strings::split(*v, ',');
         if (std::find(flags.begin(), flags.end(), "binarycaching") != flags.end()) GlobalState::g_binary_caching = true;
+    }
+    const auto vcpkg_disable_metrics_env = System::get_environment_variable("VCPKG_DISABLE_METRICS");
+    if (vcpkg_disable_metrics_env.has_value())
+    {
+        Metrics::g_metrics.lock()->set_disabled(true);
     }
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
@@ -351,7 +345,19 @@ int main(const int argc, const char* const* const argv)
 
     if (const auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
     if (const auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
+    if (const auto p = args.disable_metrics.get()) Metrics::g_metrics.lock()->set_disabled(*p);
     if (const auto p = args.debug.get()) Debug::g_debugging = *p;
+
+    if (args.sendmetrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
+    {
+        System::print2(System::Color::warning,
+                       "Warning: passed either --sendmetrics or --no-sendmetrics, but metrics are disabled.\n");
+    }
+    if (args.printmetrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
+    {
+        System::print2(System::Color::warning,
+                       "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
+    }
 
     if (Debug::g_debugging)
     {

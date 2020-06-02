@@ -1,7 +1,7 @@
 # Vcpkg telemetry and privacy
 
 vcpkg collects telemetry data to understand usage issues, such as failing packages, and to guide tool improvements. The collected data is anonymous.
-For more information about how Microsoft protects your privacy, see https://privacy.microsoft.com/en-US/privacystatement#mainenterprisedeveloperproductsmodule 
+For more information about how Microsoft protects your privacy, see https://privacy.microsoft.com/en-US/privacystatement#mainenterprisedeveloperproductsmodule
 
 ## Scope
 
@@ -22,7 +22,11 @@ vcpkg displays text similar to the following when you build vcpkg. This is how M
 ```
 Telemetry
 ---------
-vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics.
+vcpkg collects usage data in order to help us improve your experience.
+The data collected by Microsoft is anonymous.
+You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
+passing --disable-metrics to vcpkg on the command line,
+or by setting the VCPKG_DISABLE_METRICS environment variable.
 
 Read more about vcpkg telemetry at docs/about/privacy.md
 ```
@@ -39,7 +43,7 @@ You can see the telemetry events any command by appending `--printmetrics` after
 
 In the source code (included in `toolsrc\`), you can search for calls to the functions `track_property()` and `track_metric()` to see every specific data point we collect.
 
-## Avoid inadvertent disclosure information 
+## Avoid inadvertent disclosure information
 
 vcpkg contributors and anyone else running a version of vcpkg that they built themselves should consider the path to their source code. If a crash occurs when using vcpkg, the file path from the build machine is collected as part of the stack trace and isn't hashed.
 Because of this, builds of vcpkg shouldn't be located in directories whose path names expose personal or sensitive information.
