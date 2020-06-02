@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1610c2e..c9bc69c 100644
+index 1610c2e..be868f7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,11 +1,11 @@
@@ -26,16 +26,38 @@ index 1610c2e..c9bc69c 100644
  # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-@@ -49,7 +49,7 @@ FIND_PACKAGE (Boost COMPONENTS regex thread program_options system)
- FIND_PACKAGE (MPI)
- ENDIF ()
+@@ -31,25 +31,18 @@
+ 
+ # Author : Nicholas Yue yue.nicholas@gmail.com
+ 
+-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
++CMAKE_MINIMUM_REQUIRED( VERSION 3.17 )
+ 
+ PROJECT ( field3d )
+ 
+ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
+ 
+ FIND_PACKAGE (Doxygen)
+-FIND_PACKAGE (HDF5 COMPONENTS C)
+-IF ( CMAKE_HOST_WIN32 )
+-# f3dinfo relies on program_options but don't include it, since
+-# for some reason, unlike all the other boost components, a link is
+-# forced via a pragma.
+-FIND_PACKAGE (Boost COMPONENTS regex thread)
+-ELSE ()
+-FIND_PACKAGE (Boost COMPONENTS regex thread program_options system)
+-FIND_PACKAGE (MPI)
+-ENDIF ()
++FIND_PACKAGE (HDF5 COMPONENTS C REQUIRED)
++FIND_PACKAGE (Boost COMPONENTS regex thread program_options system REQUIRED)
++FIND_PACKAGE (MPI REQUIRED)
  
 -FIND_PACKAGE (ILMBase)
 +FIND_PACKAGE (OpenEXR REQUIRED)
  
  # Allow the developer to select if Dynamic or Static libraries are built
  OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
-@@ -79,26 +79,15 @@ IF ( CMAKE_HOST_UNIX )
+@@ -79,26 +72,15 @@ IF ( CMAKE_HOST_UNIX )
  ENDIF ( )
  IF ( CMAKE_HOST_WIN32 )
    ADD_DEFINITIONS (
@@ -63,7 +85,7 @@ index 1610c2e..c9bc69c 100644
  ENDIF ( NOT BUILD_SHARED_LIBS )
  
  ADD_LIBRARY ( Field3D ${LIB_TYPE}
-@@ -147,7 +136,6 @@ IF ( CMAKE_HOST_UNIX )
+@@ -147,24 +129,22 @@ IF ( CMAKE_HOST_UNIX )
               ${MPI_LIBRARIES} )
    ENDIF ( MPI_FOUND )
    LIST ( APPEND Field3D_Libraries_Shared
@@ -71,16 +93,18 @@ index 1610c2e..c9bc69c 100644
      pthread dl z )
    SET ( Field3D_DSO_Libraries ${Field3D_Libraries_Shared} )
    SET ( Field3D_BIN_Libraries Field3D ${Field3D_Libraries_Shared}
-@@ -155,7 +143,7 @@ IF ( CMAKE_HOST_UNIX )
+         ${Boost_LIBRARIES} )
  ENDIF ( )
  IF ( CMAKE_HOST_WIN32 )
-   # Add OpenEXR and zlib release/debug
+-  # Add OpenEXR and zlib release/debug
 -  FOREACH ( lib Iex Half IlmThread Imath zdll )
-+  FOREACH ( lib zdll )
++  FOREACH ( lib zlib )
      LIST ( APPEND Field3D_Libraries_Shared
        optimized ${lib}
-       debug ${lib}_d )
-@@ -164,7 +152,7 @@ IF ( CMAKE_HOST_WIN32 )
+-      debug ${lib}_d )
++      debug ${lib}d )
+   ENDFOREACH()
+   SET ( Field3D_DSO_Libraries ${Field3D_Libraries_Shared} Shlwapi.lib)
    SET ( Field3D_BIN_Libraries Field3D ${Boost_LIBRARIES} )
  ENDIF ()
  
@@ -89,7 +113,50 @@ index 1610c2e..c9bc69c 100644
  
  # Parase version and soversion from export/ns.h
  
-@@ -249,7 +237,7 @@ IF (DOXYGEN_FOUND)
+@@ -183,7 +163,7 @@ SET_TARGET_PROPERTIES ( Field3D PROPERTIES VERSION ${FIELD3D_VERSION})
+ SET_TARGET_PROPERTIES ( Field3D PROPERTIES SOVERSION ${FIELD3D_SOVERSION})
+ 
+ IF ( CMAKE_HOST_WIN32 )
+-  SET_TARGET_PROPERTIES( Field3D PROPERTIES ENABLE_EXPORTS ON )
++  SET_TARGET_PROPERTIES( Field3D PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON )
+   IF ( BUILD_SHARED_LIBS )
+     SET_TARGET_PROPERTIES( Field3D PROPERTIES COMPILE_DEFINITIONS FIELD3D_EXPORT )
+   ELSE ()
+@@ -214,33 +194,7 @@ ADD_EXECUTABLE ( f3dinfo
+ 
+ TARGET_LINK_LIBRARIES ( f3dinfo ${Field3D_BIN_Libraries} )
+ 
+-# field3d - sparse_field_io
+-ADD_EXECUTABLE ( sparse_field_io
+-  apps/sample_code/sparse_field_io/main.cpp
+-  )
+-
+-TARGET_LINK_LIBRARIES ( sparse_field_io ${Field3D_BIN_Libraries} )
+-
+-# field3d - read
+-ADD_EXECUTABLE ( read
+-  apps/sample_code/read/main.cpp
+-  )
+ 
+-TARGET_LINK_LIBRARIES ( read ${Field3D_BIN_Libraries} )
+-
+-# field3d - mixed_types
+-ADD_EXECUTABLE ( mixed_types
+-  apps/sample_code/mixed_types/main.cpp
+-  )
+-
+-TARGET_LINK_LIBRARIES ( mixed_types ${Field3D_BIN_Libraries} )
+-
+-# field3d - create_and_write
+-ADD_EXECUTABLE ( create_and_write
+-  apps/sample_code/create_and_write/main.cpp
+-  )
+-
+-TARGET_LINK_LIBRARIES ( create_and_write ${Field3D_BIN_Libraries} )
+ 
+ IF (DOXYGEN_FOUND)
+   ADD_CUSTOM_TARGET ( doc
+@@ -249,7 +203,7 @@ IF (DOXYGEN_FOUND)
      WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}
      )
    IF (INSTALL_DOCS)
@@ -98,7 +165,7 @@ index 1610c2e..c9bc69c 100644
        ${CMAKE_HOME_DIRECTORY}/docs
        DESTINATION ${CMAKE_INSTALL_PREFIX}
      )
-@@ -263,12 +251,11 @@ INSTALL ( TARGETS
+@@ -263,12 +217,11 @@ INSTALL ( TARGETS
  
  FILE(GLOB Field3d_Includes  "${CMAKE_CURRENT_SOURCE_DIR}/export/*.h")
  
