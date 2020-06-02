@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e16830a..c68ae65 100644
+index e16830a..3c7c8da 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -166,6 +166,7 @@ message(STATUS "")
@@ -10,7 +10,7 @@ index e16830a..c68ae65 100644
  # shared library
  add_library(mimalloc SHARED ${mi_sources})
  set_target_properties(mimalloc PROPERTIES VERSION ${mi_version} OUTPUT_NAME ${mi_basename} )
-@@ -178,12 +179,19 @@ target_include_directories(mimalloc PUBLIC
+@@ -178,12 +179,27 @@ target_include_directories(mimalloc PUBLIC
  )
  if(WIN32)
    # On windows copy the mimalloc redirection dll too.
@@ -21,11 +21,19 @@ index e16830a..c68ae65 100644
 +    add_custom_command(TARGET mimalloc POST_BUILD
      COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_SOURCE_DIR}/bin/mimalloc-redirect.dll" $<TARGET_FILE_DIR:mimalloc>
      COMMENT "Copy mimalloc-redirect.dll to output directory")
++    install (
++      FILES $<TARGET_FILE_DIR:mimalloc>/mimalloc-redirect.dll
++      DESTINATION ${CMAKE_INSTALL_BINDIR}
++   )
 +  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
 +    target_link_libraries(mimalloc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bin/mimalloc-redirect32.lib)
 +    add_custom_command(TARGET mimalloc POST_BUILD
 +    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_SOURCE_DIR}/bin/mimalloc-redirect32.dll" $<TARGET_FILE_DIR:mimalloc>
 +    COMMENT "Copy mimalloc-redirect32.dll to output directory")
++    install (
++      FILES $<TARGET_FILE_DIR:mimalloc>/mimalloc-redirect32.dll
++      DESTINATION ${CMAKE_INSTALL_BINDIR}
++   )
 +  endif()
  endif()
 -
@@ -33,7 +41,7 @@ index e16830a..c68ae65 100644
  # static library
  add_library(mimalloc-static STATIC ${mi_sources})
  target_compile_definitions(mimalloc-static PRIVATE ${mi_defines} MI_STATIC_LIB)
-@@ -201,10 +209,13 @@ if(WIN32)
+@@ -201,10 +217,13 @@ if(WIN32)
  else()
    set_target_properties(mimalloc-static PROPERTIES OUTPUT_NAME ${mi_basename})
  endif()
@@ -50,7 +58,7 @@ index e16830a..c68ae65 100644
  install(FILES include/mimalloc.h DESTINATION ${mi_install_dir}/include)
  install(FILES include/mimalloc-override.h DESTINATION ${mi_install_dir}/include)
  install(FILES include/mimalloc-new-delete.h DESTINATION ${mi_install_dir}/include)
-@@ -234,9 +245,6 @@ target_include_directories(mimalloc-obj PUBLIC
+@@ -234,9 +253,6 @@ target_include_directories(mimalloc-obj PUBLIC
  
  # the FILES expression can also be: $<TARGET_OBJECTS:mimalloc-obj>
  # but that fails cmake versions less than 3.10 so we leave it as is for now
