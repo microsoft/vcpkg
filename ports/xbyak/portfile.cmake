@@ -1,6 +1,3 @@
-#header-only library
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO herumi/xbyak
@@ -10,7 +7,7 @@ vcpkg_from_github(
 )
 
 # handle license file
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/xbyak RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # copy headers
 file(GLOB HEADER_FILES ${SOURCE_PATH}/xbyak/*.h)
