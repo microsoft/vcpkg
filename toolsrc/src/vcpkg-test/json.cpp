@@ -4,6 +4,8 @@
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/unicode.h>
 
+#include "math.h"
+
 // TODO: remove this once we switch to C++20 completely
 // This is the worst, but we also can't really deal with it any other way.
 #if __cpp_char8_t
@@ -57,9 +59,7 @@ TEST_CASE ("JSON parse strings", "[json]")
     REQUIRE(res.get()->first.is_string());
     REQUIRE(res.get()->first.string() == "\xED\xA0\x80");
 
-    const auto make_json_string = [] (vcpkg::StringView sv) {
-        return '"' + sv.to_string() + '"';
-    };
+    const auto make_json_string = [](vcpkg::StringView sv) { return '"' + sv.to_string() + '"'; };
     const vcpkg::StringView radical = U8_STR("⎷");
     const vcpkg::StringView grin = U8_STR("😁");
 
@@ -79,28 +79,51 @@ TEST_CASE ("JSON parse strings", "[json]")
     REQUIRE(res.get()->first.string() == grin);
 }
 
-TEST_CASE ("JSON parse numbers", "[json]")
+TEST_CASE ("JSON parse integers", "[json]")
 {
     auto res = Json::parse("0");
     REQUIRE(res);
-    REQUIRE(res.get()->first.is_number());
-    REQUIRE(res.get()->first.number() == 0);
+    REQUIRE(res.get()->first.is_integer());
+    REQUIRE(res.get()->first.integer() == 0);
     res = Json::parse("12345");
     REQUIRE(res);
-    REQUIRE(res.get()->first.is_number());
-    REQUIRE(res.get()->first.number() == 12345);
+    REQUIRE(res.get()->first.is_integer());
+    REQUIRE(res.get()->first.integer() == 12345);
     res = Json::parse("-12345");
     REQUIRE(res);
-    REQUIRE(res.get()->first.is_number());
-    REQUIRE(res.get()->first.number() == -12345);
+    REQUIRE(res.get()->first.is_integer());
+    REQUIRE(res.get()->first.integer() == -12345);
     res = Json::parse("9223372036854775807"); // INT64_MAX
     REQUIRE(res);
-    REQUIRE(res.get()->first.is_number());
-    REQUIRE(res.get()->first.number() == 9223372036854775807);
+    REQUIRE(res.get()->first.is_integer());
+    REQUIRE(res.get()->first.integer() == 9223372036854775807);
     res = Json::parse("-9223372036854775808");
     REQUIRE(res);
+    REQUIRE(res.get()->first.is_integer());
+    REQUIRE(res.get()->first.integer() == (-9223372036854775807 - 1)); // INT64_MIN (C++'s parser is fun)
+}
+
+TEST_CASE ("JSON parse floats", "[json]")
+{
+    auto res = Json::parse("0.0");
+    REQUIRE(res);
     REQUIRE(res.get()->first.is_number());
-    REQUIRE(res.get()->first.number() == (-9223372036854775807 - 1)); // INT64_MIN (C++'s parser is fun)
+    REQUIRE(!res.get()->first.is_integer());
+    REQUIRE(res.get()->first.number() == 0.0);
+    REQUIRE(!signbit(res.get()->first.number()));
+    res = Json::parse("-0.0");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_number());
+    REQUIRE(res.get()->first.number() == 0.0);
+    REQUIRE(signbit(res.get()->first.number()));
+    res = Json::parse("12345.6789");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_number());
+    REQUIRE_THAT(res.get()->first.number(), Catch::WithinULP(12345.6789, 3));
+    res = Json::parse("-12345.6789");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_number());
+    REQUIRE_THAT(res.get()->first.number(), Catch::WithinULP(-12345.6789, 3));
 }
 
 TEST_CASE ("JSON parse arrays", "[json]")
@@ -116,18 +139,18 @@ TEST_CASE ("JSON parse arrays", "[json]")
     val = std::move(res.get()->first);
     REQUIRE(val.is_array());
     REQUIRE(val.array().size() == 1);
-    REQUIRE(val.array()[0].is_number());
-    REQUIRE(val.array()[0].number() == 123);
+    REQUIRE(val.array()[0].is_integer());
+    REQUIRE(val.array()[0].integer() == 123);
 
     res = Json::parse("[123, 456]");
     REQUIRE(res);
     val = std::move(res.get()->first);
     REQUIRE(val.is_array());
     REQUIRE(val.array().size() == 2);
-    REQUIRE(val.array()[0].is_number());
-    REQUIRE(val.array()[0].number() == 123);
-    REQUIRE(val.array()[1].is_number());
-    REQUIRE(val.array()[1].number() == 456);
+    REQUIRE(val.array()[0].is_integer());
+    REQUIRE(val.array()[0].integer() == 123);
+    REQUIRE(val.array()[1].is_integer());
+    REQUIRE(val.array()[1].integer() == 456);
 
     res = Json::parse("[123, 456, [null]]");
     REQUIRE(res);
@@ -155,5 +178,8 @@ TEST_CASE ("JSON parse full file", "[json]")
         ;
 
     auto res = Json::parse(json);
+    if (!res) {
+        std::cerr << res.error()->format() << '\n';
+    }
     REQUIRE(res);
 }
