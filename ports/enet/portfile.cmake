@@ -1,8 +1,3 @@
-include(vcpkg_from_github)
-include(vcpkg_configure_cmake)
-include(vcpkg_install_cmake)
-include(vcpkg_copy_pdbs)
-
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO  "lsalzman/enet"
     REF 224f31101fc60939c02f6bbe8e8fc810a7db306b
