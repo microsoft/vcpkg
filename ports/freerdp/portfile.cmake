@@ -26,11 +26,16 @@ file(WRITE "${SOURCE_PATH}/.source_version" "${SOURCE_VERSION}-vcpkg")
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindOpenSSL.cmake) # Remove outdated Module
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    urbdrc CHANNEL_URBDRC
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         ${FREERDP_CRT_LINKAGE}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -53,13 +58,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY ${FREERDP_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
         file(REMOVE ${FREERDP_DLL})
     endforeach()
-    
+
     file(GLOB_RECURSE FREERDP_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
     foreach(FREERDP_DLL ${FREERDP_DLLS})
         file(COPY ${FREERDP_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
         file(REMOVE ${FREERDP_DLL})
     endforeach()
-else()    
+else()
     file(GLOB_RECURSE FREERDP_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     foreach(FREERDP_TOOL ${FREERDP_TOOLS})
         file(COPY ${FREERDP_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
@@ -112,7 +117,7 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/FreeRDP-Client/FreeRDP-Client
     "bin/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(GLOB OBJS ${CURRENT_PACKAGES_DIR}/debug/*.lib)
     file(REMOVE ${OBJS})
     file(GLOB OBJS ${CURRENT_PACKAGES_DIR}/*.lib)
