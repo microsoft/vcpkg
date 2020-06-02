@@ -1,0 +1,116 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1610c2e..c9bc69c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,11 +1,11 @@
+ # Copyright (c) 2009 Sony Pictures Imageworks Inc. et al.
+-# 
++#
+ # All rights reserved.
+-# 
++#
+ # Redistribution and use in source and binary forms, with or without
+ # modification, are permitted provided that the following conditions
+ # are met:
+-# 
++#
+ # Redistributions of source code must retain the above copyright
+ # notice, this list of conditions and the following disclaimer.
+ # Redistributions in binary form must reproduce the above copyright
+@@ -15,7 +15,7 @@
+ # names of its contributors may be used to endorse or promote
+ # products derived from this software without specific prior written
+ # permission.
+-# 
++#
+ # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+@@ -49,7 +49,7 @@ FIND_PACKAGE (Boost COMPONENTS regex thread program_options system)
+ FIND_PACKAGE (MPI)
+ ENDIF ()
+ 
+-FIND_PACKAGE (ILMBase)
++FIND_PACKAGE (OpenEXR REQUIRED)
+ 
+ # Allow the developer to select if Dynamic or Static libraries are built
+ OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
+@@ -79,26 +79,15 @@ IF ( CMAKE_HOST_UNIX )
+ ENDIF ( )
+ IF ( CMAKE_HOST_WIN32 )
+   ADD_DEFINITIONS (
+-    -D_HAS_ITERATOR_DEBUGGING=0 
++    -D_HAS_ITERATOR_DEBUGGING=0
+     -D_CRT_SECURE_NO_WARNINGS=1
+     )
+ ENDIF ( )
+ 
+ SET ( LIB_TYPE SHARED )
+ IF ( NOT BUILD_SHARED_LIBS )
+-  IF ( CMAKE_HOST_WIN32 )
+-  # User wants to build static libraries, so change the LIB_TYPE variable to CMake keyword 'STATIC'
+     SET ( LIB_TYPE STATIC )
+     ADD_DEFINITIONS( -DFIELD3D_STATIC )
+-  ENDIF()
+-ELSE ()
+-  IF ( CMAKE_HOST_WIN32 )
+-    ADD_DEFINITIONS (
+-        -DOPENEXR_DLL
+-        -D_HDF5USEDLL_
+-        -DHDF5CPP_USEDLL
+-        )
+-  ENDIF()
+ ENDIF ( NOT BUILD_SHARED_LIBS )
+ 
+ ADD_LIBRARY ( Field3D ${LIB_TYPE}
+@@ -147,7 +136,6 @@ IF ( CMAKE_HOST_UNIX )
+              ${MPI_LIBRARIES} )
+   ENDIF ( MPI_FOUND )
+   LIST ( APPEND Field3D_Libraries_Shared
+-    Iex Half IlmThread Imath
+     pthread dl z )
+   SET ( Field3D_DSO_Libraries ${Field3D_Libraries_Shared} )
+   SET ( Field3D_BIN_Libraries Field3D ${Field3D_Libraries_Shared}
+@@ -155,7 +143,7 @@ IF ( CMAKE_HOST_UNIX )
+ ENDIF ( )
+ IF ( CMAKE_HOST_WIN32 )
+   # Add OpenEXR and zlib release/debug
+-  FOREACH ( lib Iex Half IlmThread Imath zdll )
++  FOREACH ( lib zdll )
+     LIST ( APPEND Field3D_Libraries_Shared
+       optimized ${lib}
+       debug ${lib}_d )
+@@ -164,7 +152,7 @@ IF ( CMAKE_HOST_WIN32 )
+   SET ( Field3D_BIN_Libraries Field3D ${Boost_LIBRARIES} )
+ ENDIF ()
+ 
+-TARGET_LINK_LIBRARIES ( Field3D ${Field3D_DSO_Libraries} ${Boost_LIBRARIES})
++TARGET_LINK_LIBRARIES ( Field3D ${Field3D_DSO_Libraries} ${Boost_LIBRARIES} OpenEXR::IlmImf)
+ 
+ # Parase version and soversion from export/ns.h
+ 
+@@ -249,7 +237,7 @@ IF (DOXYGEN_FOUND)
+     WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}
+     )
+   IF (INSTALL_DOCS)
+-    INSTALL (DIRECTORY 
++    INSTALL (DIRECTORY
+       ${CMAKE_HOME_DIRECTORY}/docs
+       DESTINATION ${CMAKE_INSTALL_PREFIX}
+     )
+@@ -263,12 +251,11 @@ INSTALL ( TARGETS
+ 
+ FILE(GLOB Field3d_Includes  "${CMAKE_CURRENT_SOURCE_DIR}/export/*.h")
+ 
+-INSTALL ( FILES 
+-  ${Field3d_Includes} 
++INSTALL ( FILES
++  ${Field3d_Includes}
+   DESTINATION include/Field3D
+ )
+ 
+-INSTALL ( TARGETS f3dinfo 
++INSTALL ( TARGETS f3dinfo
+   RUNTIME DESTINATION bin
+ )
+-
