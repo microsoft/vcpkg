@@ -25,9 +25,9 @@ namespace vcpkg
         osx,
         uwp,
         android,
-
         emscripten,
         wasm32,
+
         static_link,
     };
 
