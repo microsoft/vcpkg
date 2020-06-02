@@ -42,8 +42,7 @@ set(TOOL_PERMS FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ 
 
 # license
 file(COPY ${SOURCE_PATH}/logfile.htm DESTINATION ${SCITER_SHARE})
-file(COPY ${SOURCE_PATH}/license.htm DESTINATION ${SCITER_SHARE})
-file(RENAME ${SCITER_SHARE}/license.htm ${SCITER_SHARE}/copyright)
+file(INSTALL ${SOURCE_PATH}/license.htm DESTINATION ${SCITER_SHARE} RENAME copyright)
 
 # samples & widgets
 file(COPY ${SOURCE_PATH}/samples DESTINATION ${SCITER_SHARE})
@@ -59,6 +58,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux AND VCPKG_TARGET_ARCHITECTURE STREQUAL
     file(INSTALL ${SCITER_BIN}/usciter DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/inspector DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${SCITER_TOOLS})
+
+    if ("windowless" IN_LIST FEATURES)
+        set(SCITER_BIN ${SOURCE_PATH}/bin.lnx/x64lite)
+    endif()
 
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -92,6 +95,10 @@ else()
     file(INSTALL ${SCITER_BIN32}/wsciter.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN32}/inspector.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN32}/sciter.dll DESTINATION ${SCITER_TOOLS})
+
+    if ("windowless" IN_LIST FEATURES)
+        set(SCITER_BIN ${SOURCE_PATH}/bin.win/${SCITER_ARCH}lite)
+    endif()
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
