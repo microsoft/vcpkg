@@ -433,14 +433,19 @@ Write-Host 'Disabling pagefile...'
 wmic computersystem set AutomaticManagedPagefile=False
 wmic pagefileset delete
 
-Write-Host 'Configuring AntiVirus exclusions...'
-Add-MPPreference -ExclusionPath C:\
-Add-MPPreference -ExclusionPath D:\
-Add-MPPreference -ExclusionProcess ninja.exe
-Add-MPPreference -ExclusionProcess clang-cl.exe
-Add-MPPreference -ExclusionProcess cl.exe
-Add-MPPreference -ExclusionProcess link.exe
-Add-MPPreference -ExclusionProcess python.exe
+$av = Get-Command Add-MPPreference -ErrorAction SilentlyContinue
+if ($null -eq $av) {
+  Write-Host 'AntiVirus not installed, skipping exclusions.'
+} else {
+  Write-Host 'Configuring AntiVirus exclusions...'
+  Add-MPPreference -ExclusionPath C:\
+  Add-MPPreference -ExclusionPath D:\
+  Add-MPPreference -ExclusionProcess ninja.exe
+  Add-MPPreference -ExclusionProcess clang-cl.exe
+  Add-MPPreference -ExclusionProcess cl.exe
+  Add-MPPreference -ExclusionProcess link.exe
+  Add-MPPreference -ExclusionProcess python.exe
+}
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallWindowsSDK -Url $WindowsSDKUrl
