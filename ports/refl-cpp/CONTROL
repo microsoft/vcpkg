@@ -1,0 +1,4 @@
+Source: refl-cpp
+Version: 0.9.1
+Description: A compile-time reflection library for modern C++ with support for overloads, templates, attributes and proxies
+Homepage: https://github.com/veselink1/refl-cpp

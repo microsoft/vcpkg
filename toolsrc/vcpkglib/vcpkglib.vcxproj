@@ -244,6 +244,7 @@
     <ClCompile Include="..\src\vcpkg\commands.buildexternal.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cache.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.ci.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.ciclean.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.contact.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.create.cpp" />

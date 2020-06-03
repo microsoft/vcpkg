@@ -3,7 +3,8 @@
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 
-#include <Windows.h>
+#include <vcpkg/base/system_headers.h>
+#include <shellapi.h>
 
 using namespace vcpkg;
 
