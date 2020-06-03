@@ -1140,19 +1140,15 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
-mpir:arm64-windows=fail
-mpir:arm-uwp=fail
-mpir:x64-uwp=fail
-# Building package gmp[core]:x64-linux... done
-# Installing package gmp[core]:x64-linux...
-# The following files are already installed in /mnt/1/s/installed/x64-linux and are in conflict with gmp:x64-linux
-#
-# Installed by mpir:x64-linux
-#     debug/lib/libgmp.a
-#     debug/lib/libgmp.la
-#     include/gmp.h
-#     lib/libgmp.a
-#     lib/libgmp.la
+# mpir conflicts with gmp
+# see https://github.com/microsoft/vcpkg/issues/11756
+mpir:x86-windows=skip
+mpir:x64-windows=skip
+mpir:x64-windows-static=skip
+mpir:arm64-windows=skip
+mpir:arm-uwp=skip
+mpir:x64-uwp=skip
+mpir:x64-osx=skip
 mpir:x64-linux=skip
 #Conflicts with angle and qt-5base
 ms-angle:arm64-windows      = skip
