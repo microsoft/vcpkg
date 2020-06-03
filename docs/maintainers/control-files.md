@@ -138,6 +138,8 @@ The predefined expressions are computed from standard triplet settings:
 - `osx` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Darwin"`
 - `android` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Android"`
 - `static` - `VCPKG_LIBRARY_LINKAGE` == `"static"`
+- `wasm32` - `VCPKG_TARGET_ARCHITECTURE` == `"wasm32"`
+- `emscripten` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Emscripten"`
 
 These predefined expressions can be overridden in the triplet file via the [`VCPKG_DEP_INFO_OVERRIDE_VARS`](../users/triplets.md) option.
 
