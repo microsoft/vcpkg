@@ -5,10 +5,10 @@ set(BOND_VER 9.0.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
-    REF  fe6f582ce4beb65644d9338536066e07d80a0289 #9.0.0
-    SHA512 bf9c7436462fabb451c6a50b662455146a37c1421a6fe22920a5c4c1fa7c0fe727c1d783917fa119cd7092dc120e375a99a8eb84e3fc87c17b54a23befd9abc4
+    REF  ${BOND_VER}
+    SHA512 b6bed9be8b5dd2a7d50c6bd275b94c62050b83717907522a07279cccc50e209306792c6f3c7f206afcb3226aed21b43b115b63dccc806eff5d9cd4e12b355461
     HEAD_REF master
-    PATCHES fix-install-path.patch
+    PATCHES fix-install-path.patch skip-grpc-compilation.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -36,6 +36,10 @@ else()
 
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  bond-over-grpc BOND_ENABLE_GRPC
+)
+
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
@@ -44,8 +48,9 @@ vcpkg_configure_cmake(
     -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
     -DBOND_SKIP_GBC_TESTS=TRUE
     -DBOND_ENABLE_COMM=FALSE
-    -DBOND_ENABLE_GRPC=FALSE
     -DBOND_FIND_RAPIDJSON=TRUE
+    -DBOND_STACK_OPTIONS=--allow-different-user
+    ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
