@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
+        COPY_SOURCE
 )
 
 vcpkg_install_make()
