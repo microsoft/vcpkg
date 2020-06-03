@@ -1,0 +1,4 @@
+The package h5cpp provides CMake targets:
+
+    find_package(h5cpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE h5cpp)
