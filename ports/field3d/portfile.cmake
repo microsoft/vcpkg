@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001_fix_build_errors.patch
+        0002_improve_win_compatibility.patch   # not enough, port is still broken on final linking stages
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindILMBase.cmake)
