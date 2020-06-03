@@ -121,7 +121,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # that is in the source path and ends in .h, .inl
   function(install_includes SOURCE_PATH SUBDIRECTORIES INCLUDE_DIR)
     foreach(SUB_DIR ${SUBDIRECTORIES})
-      file(GLOB HEADER_FILES ${SOURCE_PATH}/${SUB_DIR}/*.h ${SOURCE_PATH}/${SUB_DIR}/*.inl ${SOURCE_PATH}/${SUB_DIR}/*_T.cpp)
+      file(GLOB HEADER_FILES ${SOURCE_PATH}/${SUB_DIR}/*.h ${SOURCE_PATH}/${SUB_DIR}/*.inl ${SOURCE_PATH}/${SUB_DIR}/*.cpp)
       file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${INCLUDE_DIR}/${SUB_DIR})
     endforeach()
   endfunction()
