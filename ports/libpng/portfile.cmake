@@ -115,7 +115,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(WRITE "${_file}" "${_contents}")
     endif()
 endif()
-
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
