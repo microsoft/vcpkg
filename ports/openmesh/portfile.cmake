@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(VERSION 8.0)
+set(VERSION 8.1)
 
 # Note: upstream GitLab instance at https://graphics.rwth-aachen.de:9000 often goes down
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openmesh.org/media/Releases/${VERSION}/OpenMesh-${VERSION}.tar.gz"
     FILENAME "OpenMesh-${VERSION}.tar.gz"
-    SHA512 6c9cb323d83d48daca7ddefe51df67f611befd657655d8013c2c620ad53e0b8521e6b8e25ebf3f5321f94182252ae0c75795875ff7ac11585e4ffa79e16f8008
+    SHA512 c146e6b21d709a31772621a6a913def93a51460c4abb950c2eb64eea4528c7efd4c86166ba56ae0bc8090cc5878dd9328b570e094e61c1b64d6d298de05aca61
 )
 
 vcpkg_extract_source_archive_ex(
@@ -29,6 +29,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/OpenMesh/Tools/VDPM/xpm)
 
 # Handle copyright
