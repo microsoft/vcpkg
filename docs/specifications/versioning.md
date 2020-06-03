@@ -330,7 +330,7 @@ To explain the algorithm we will use the following graph to represent the depend
 * Blue arrows represent `minimum-version` requirements.
 * Green arrows represent exact `version` requirements.
 
-[[ TODO: INSERT GRAPH IMAGE HERE ]]
+![example package graph image](res/example-package-graph.png)
 
 Also consider the following manifest file for the project:
 
