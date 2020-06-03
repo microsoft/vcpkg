@@ -1,5 +1,5 @@
 Source: h5cpp
-Version: 1.10.4-5.0968
-Homepage: https://github.com/steven-varga/h5cpp
+Version: 1.10.4-6
+Homepage: http://h5cpp.org
 Description: C++17 templates between [stl::vector | armadillo | eigen3 | ublas | blitz++] and HDF5 datasets
 Build-Depends: hdf5
