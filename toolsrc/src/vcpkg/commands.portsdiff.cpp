@@ -121,7 +121,7 @@ namespace vcpkg::Commands::PortsDiff
 
     const CommandStructure COMMAND_STRUCTURE = {
         Strings::format("The argument should be a branch/tag/hash to checkout.\n%s",
-                        Help::create_example_string("portsdiff mybranchname")),
+                        create_example_string("portsdiff mybranchname")),
         1,
         2,
         {},

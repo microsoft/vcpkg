@@ -25,7 +25,7 @@ namespace vcpkg::Commands::Owns
     }
     const CommandStructure COMMAND_STRUCTURE = {
         Strings::format("The argument should be a pattern to search for. %s",
-                        Help::create_example_string("owns zlib.dll")),
+                        create_example_string("owns zlib.dll")),
         1,
         1,
         {},
