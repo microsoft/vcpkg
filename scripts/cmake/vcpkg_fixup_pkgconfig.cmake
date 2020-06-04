@@ -202,6 +202,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
             endif()
             find_library(CHECK_LIB_${_libname} NAMES ${_libname} PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
             if(CHECK_LIB_${_libname})
+                unset(CHECK_LIB_${_libname}) # need to unset or else other configurations will not check correctly
                 continue() # found library; all ok
             endif()
             foreach(_lib_suffix ${lib_suffixes})
