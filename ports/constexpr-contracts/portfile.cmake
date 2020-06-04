@@ -9,7 +9,6 @@ vcpkg_from_github(
     PATCHES ${ABSEIL_PATCHES}
 )
 
-vcpkg_find_acquire_program(GIT)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
