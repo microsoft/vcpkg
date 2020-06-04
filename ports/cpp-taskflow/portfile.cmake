@@ -1,8 +1,7 @@
 # header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO cpp-taskflow/cpp-taskflow
+    REPO taskflow/taskflow
     REF v2.2.0
     SHA512 1aa4e9d7324f56eb33cd4986d721035f0abf12e022da956bafc0b16cf6cb82d152334ae58edc4581ab2f6d44989ca21cdd590ad560d6f1a4f905710fe08d0091
     HEAD_REF master
