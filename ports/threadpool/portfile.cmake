@@ -1,4 +1,4 @@
-
+# header-only library
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/threadpool/threadpool/0.2.5%20%28Stable%29/threadpool-0_2_5-src.zip"
     FILENAME "threadpool-0_2_5-src.zip"
