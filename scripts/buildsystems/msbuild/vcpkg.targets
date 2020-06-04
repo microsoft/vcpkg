@@ -1,4 +1,4 @@
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="VcpkgRoot;VcpkgCurrentInstalledDir">
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32||'">
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>
@@ -32,7 +32,7 @@
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm64||'">
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm64-windows</VcpkgTriplet>
-  </PropertyGroup>  
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64|Windows Store|10.0'">
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
@@ -54,36 +54,32 @@
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
     <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\</VcpkgRoot>
-    <!-- We add a trailing slash if it is missing in a different property because msbuild's default behavior does not
-    allow us to override a console provided property here. -->
-    <VcpkgRootSanitized>$(VcpkgRoot)</VcpkgRootSanitized>
-    <VcpkgRootSanitized Condition="!$(VcpkgRootSanitized.EndsWith('\'))">$(VcpkgRootSanitized)\</VcpkgRootSanitized>
-    <VcpkgCurrentInstalledDirSanitized>$(VcpkgCurrentInstalledDir)</VcpkgCurrentInstalledDirSanitized>
-    <VcpkgCurrentInstalledDirSanitized Condition="'$(VcpkgCurrentInstalledDirSanitized)' == ''">$(VcpkgRootSanitized)installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDirSanitized>
-    <VcpkgCurrentInstalledDirSanitized Condition="!$(VcpkgCurrentInstalledDirSanitized.EndsWith('\'))">$(VcpkgCurrentInstalledDirSanitized)\</VcpkgCurrentInstalledDirSanitized>
+    <VcpkgRoot Condition="!$(VcpkgRoot.EndsWith('\'))">$(VcpkgRoot)\</VcpkgRoot>
+    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$(VcpkgRoot)installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDir>
+    <VcpkgCurrentInstalledDir Condition="!$(VcpkgCurrentInstalledDir.EndsWith('\'))">$(VcpkgCurrentInstalledDir)\</VcpkgCurrentInstalledDir>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
-    <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!). 
+    <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!).
     Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
     <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true' and '$(VcpkgAutoLink)' == ''">false</VcpkgAutoLink>
   </PropertyGroup>
 
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <Link>
-      <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgCurrentInstalledDirSanitized)debug\lib\*.lib</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Release' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgCurrentInstalledDirSanitized)lib\*.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Release'">%(AdditionalLibraryDirectories);$(VcpkgCurrentInstalledDirSanitized)lib;$(VcpkgCurrentInstalledDirSanitized)lib\manual-link</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">%(AdditionalLibraryDirectories);$(VcpkgCurrentInstalledDirSanitized)debug\lib;$(VcpkgCurrentInstalledDirSanitized)debug\lib\manual-link</AdditionalLibraryDirectories>
+      <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgCurrentInstalledDir)debug\lib\*.lib</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Release' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgCurrentInstalledDir)lib\*.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Release'">%(AdditionalLibraryDirectories);$(VcpkgCurrentInstalledDir)lib;$(VcpkgCurrentInstalledDir)lib\manual-link</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">%(AdditionalLibraryDirectories);$(VcpkgCurrentInstalledDir)debug\lib;$(VcpkgCurrentInstalledDir)debug\lib\manual-link</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgCurrentInstalledDirSanitized)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgCurrentInstalledDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgCurrentInstalledDirSanitized)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgCurrentInstalledDir)include</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
 
   <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
-    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDirSanitized)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
+    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
     <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
     <Message Text="Vcpkg is unable to link because we cannot decide between Release and Debug libraries. Please define the property VcpkgConfiguration to be 'Release' or 'Debug' (currently '$(VcpkgConfiguration)')." Importance="High" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgNormalizedConfiguration)' == ''"/>
   </Target>
@@ -93,11 +89,11 @@
     File="$(TLogLocation)$(ProjectName).write.1u.tlog"
     Lines="^$(TargetPath);$([System.IO.Path]::Combine($(ProjectDir),$(IntDir)))vcpkg.applocal.log" Encoding="Unicode"/>
     <Exec Condition="$(VcpkgConfiguration.StartsWith('Debug'))"
-      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgCurrentInstalledDirSanitized)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
+      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgCurrentInstalledDir)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
       StandardOutputImportance="Normal">
     </Exec>
     <Exec Condition="$(VcpkgConfiguration.StartsWith('Release'))"
-      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgCurrentInstalledDirSanitized)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
+      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgCurrentInstalledDir)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
       StandardOutputImportance="Normal">
     </Exec>
     <ReadLinesFromFile File="$(IntDir)vcpkg.applocal.log">
