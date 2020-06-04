@@ -118,10 +118,12 @@ Now let's make a simple CMake project with a main file.
 cmake_minimum_required(VERSION 3.0)
 project(test)
 
-find_package(Sqlite3 REQUIRED)
+find_package(SQLite3 REQUIRED)
 
 add_executable(main main.cpp)
-target_link_libraries(main sqlite3)
+
+target_include_directories(main PRIVATE ${SQLite3_INCLUDE_DIRS})
+target_link_libraries(main ${SQLite3_LIBRARIES})
 ```
 ```cpp
 // main.cpp
