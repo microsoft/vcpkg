@@ -6,7 +6,8 @@ jobs:
 - job: ${{ parameters.jobName }}
   pool:
     name: ${{ parameters.poolName }}
-
+  workspace:
+    clean: resources
   timeoutInMinutes: 1440 # 1 day
 
   steps:
@@ -14,46 +15,32 @@ jobs:
     displayName: 'Initialize Environment'
     inputs:
       filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
-
+    # Note: D: is the Azure machines' temporary disk.
+  - task: CmdLine@2
+    displayName: 'Build vcpkg'
+    inputs:
+      script: |
+        set VCPKG_DOWNLOADS=D:\downloads
+        .\bootstrap-vcpkg.bat
   - powershell: |
-      $baselineFile = "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
-      $skipList = $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile $baselineFile
-      Write-Host "baseline file: $baselineFile"
-      Write-Host "skip list: $skipList"
-      $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\windows\ci-step.ps1 -Triplet "${{ parameters.triplet }}" -ExcludePorts $skipList
-      Write-Host "CI test script is complete"
-    errorActionPreference: continue
-    displayName: '** Build vcpkg and Test Modified Ports **'
-
-  - powershell: |
-      $baseName = "${{ parameters.triplet }}"
-      $outputPathRoot = "$(System.ArtifactsDirectory)\xml-results"
-      if(-not (Test-Path $outputPathRoot))
-      {
-          Write-Host "creating $outputPathRoot"
-          mkdir $outputPathRoot | Out-Null
+      .\vcpkg.exe x-ci-clean --binarycaching --x-binarysource=clear`;files`,W:\`,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads
+      $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile .\scripts\ci.baseline.txt
+      mkdir $(System.ArtifactsDirectory)\xml-results
+      # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
+      # Install them so the CI succeeds:
+      if ( "${{ parameters.triplet }}" -notmatch "x86-windows" -and "${{ parameters.triplet }}" -notmatch "x64-windows" ) {
+          .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows --binarycaching --x-binarysource=clear`;files`,W:\`,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads
       }
 
-      $xmlPath = "$(System.DefaultWorkingDirectory)\test-full-ci.xml"
-      $outputXmlPath = "$outputPathRoot\$baseName.xml"
-
-      cp $xmlPath $(Build.ArtifactStagingDirectory)
-      Move-Item $xmlPath -Destination $outputXmlPath
-
-      # already in DevOps, no need for extra copies
-      rm $(System.DefaultWorkingDirectory)\console-out.txt -ErrorAction Ignore
-
-      Remove-Item "$(System.DefaultWorkingDirectory)\buildtrees\*" -Recurse -errorAction silentlycontinue
-      Remove-Item "$(System.DefaultWorkingDirectory)\packages\*" -Recurse -errorAction silentlycontinue
-      Remove-Item "$(System.DefaultWorkingDirectory)\installed\*" -Recurse -errorAction silentlycontinue
-    displayName: 'Collect logs and cleanup build'
-
+      .\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching --x-binarysource=clear`;files`,W:\`,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads
+      Set-Content -Path 'run_ci.cmd' -Value $command -Encoding ASCII
+    displayName: '** Test Modified Ports **'
   - task: PowerShell@2
     displayName: 'Analyze results and prepare test logs'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
-      arguments: '-baselineFile "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt" -logDir "$(System.ArtifactsDirectory)\xml-results" -failurelogDir "archives\fail" -outputDir "$(Build.ArtifactStagingDirectory)" -errorOnRegression -triplets "${{ parameters.triplet }}"'
+      arguments: '-baselineFile .\scripts\ci.baseline.txt -logDir "$(System.ArtifactsDirectory)\xml-results" -failurelogDir "W:\fail" -outputDir "$(Build.ArtifactStagingDirectory)" -errorOnRegression -triplets "${{ parameters.triplet }}"'
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:

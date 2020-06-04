@@ -28,7 +28,7 @@ namespace vcpkg::Commands::Upgrade
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("upgrade --no-dry-run"),
+        create_example_string("upgrade --no-dry-run"),
         0,
         SIZE_MAX,
         {INSTALL_SWITCHES, {}},
