@@ -39,7 +39,6 @@ sudo dpkg -i nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
 sudo apt -y update
 sudo apt install -y --no-install-recommends cuda-compiler-10-2 cuda-libraries-dev-10-2 cuda-driver-dev-10-2 cuda-cudart-dev-10-2 libcublas10 cuda-curand-dev-10-2
 sudo apt install -y --no-install-recommends libcudnn7-dev
-sudo ln -s /usr/local/cuda-10.1/lib64/stubs/libcuda.so /usr/local/cuda-10.1/lib64/stubs/libcuda.so.1
 
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
