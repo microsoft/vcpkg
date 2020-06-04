@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VERSION 8.1)
 
 # Note: upstream GitLab instance at https://graphics.rwth-aachen.de:9000 often goes down
@@ -27,9 +25,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/OpenMesh/cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/OpenMesh/Tools/VDPM/xpm)
 
 # Handle copyright
