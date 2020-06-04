@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 d84df1ea72dc6fa038440a370e1b1ff523364474e7f214b967edc26d3191b2ef4fe1d9273c4a086a5945f1ad1ab6aa8dbcda495898e7967b2b73fd93dd5071e0
     HEAD_REF develop
     PATCHES hdf5_config.patch
+            szip.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
@@ -34,7 +35,7 @@ if(FEATURES MATCHES "tools" AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "static")
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS
                     -DBUILD_STATIC_LIBS=OFF
                     -DONLY_SHARED_LIBS=ON)
@@ -53,8 +54,6 @@ vcpkg_configure_cmake(
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share
-        "-DSZIP_LIBRARY_DEBUG:PATH=${SZIP_DEBUG}"
-        "-DSZIP_LIBRARY_RELEASE:PATH=${SZIP_RELEASE}"
 )
 
 vcpkg_install_cmake()
