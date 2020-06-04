@@ -54,6 +54,7 @@
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
     <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\</VcpkgRoot>
+    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$(VcpkgRoot)installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDir>
     <!-- We add a trailing slash if it is missing in a different property because msbuild's default behavior does not
     allow us to override a console provided property here. -->
     <VcpkgRootSanitized>$(VcpkgRoot)</VcpkgRootSanitized>
