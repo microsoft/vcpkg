@@ -33,7 +33,7 @@ jobs:
   - bash: toolsrc/build.rel/vcpkg-test
     displayName: 'Run vcpkg tests'
   - powershell: |
-      ./vcpkg x-ci-clean
+      ./vcpkg x-ci-clean --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-linux.xml" --exclude=$skipList --binarycaching --x-binarysource=clear`;files`,/archives`,upload --x-buildtrees-root=/mnt/vcpkg-ci/buildtrees --x-install-root=/mnt/vcpkg-ci/install --x-packages-root=/mnt/vcpkg-ci/packages
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-linux" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results
       $env:HOME = '/home/agent'
