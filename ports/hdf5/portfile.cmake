@@ -54,7 +54,7 @@ vcpkg_configure_cmake(
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share
-        -DHDF_PACKAGE_NAMESPACE:STRING="hdf5::"
+        -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
 )
 
 vcpkg_install_cmake()
