@@ -3,6 +3,7 @@
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
@@ -69,14 +70,8 @@ namespace vcpkg
             TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) {}
         };
 
+        VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args);
         ~VcpkgPaths() noexcept;
-
-        static Optional<std::unique_ptr<VcpkgPaths>> create(const fs::path& vcpkg_root_dir,
-                                                            const Optional<fs::path>& install_root_dir,
-                                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
-                                                            const std::string& default_vs_path,
-                                                            const std::vector<std::string>* triplets_dirs,
-                                                            fs::path original_cwd);
 
         fs::path package_dir(const PackageSpec& spec) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
@@ -89,14 +84,16 @@ namespace vcpkg
 
         fs::path original_cwd;
         fs::path root;
-        fs::path packages;
+
         fs::path buildtrees;
         fs::path downloads;
+        fs::path packages;
         fs::path ports;
         fs::path installed;
         fs::path triplets;
         fs::path community_triplets;
         fs::path scripts;
+        fs::path prefab;
 
         fs::path tools;
         fs::path buildsystems;

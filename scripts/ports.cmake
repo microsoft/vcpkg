@@ -6,34 +6,20 @@ macro(debug_message)
     endif()
 endmacro()
 
-#Detect .vcpkg-root to figure VCPKG_ROOT_DIR, starting from triplet folder.
-set(VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
-
-if(DEFINED VCPKG_ROOT_PATH)
-    set(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_PATH})
-else()
+if((NOT DEFINED VCPKG_ROOT_DIR)
+    OR (NOT DEFINED DOWNLOADS)
+    OR (NOT DEFINED _VCPKG_INSTALLED_DIR)
+    OR (NOT DEFINED PACKAGES_DIR)
+    OR (NOT DEFINED BUILDTREES_DIR))
     message(FATAL_ERROR [[
         Your vcpkg executable is outdated and is not compatible with the current CMake scripts.
         Please re-build vcpkg by running bootstrap-vcpkg.
     ]])
 endif()
 
-# fixup Windows drive letter to uppercase.
-get_filename_component(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_DIR_CANDIDATE} ABSOLUTE)
-
-# Validate VCPKG_ROOT_DIR_CANDIDATE
-if (NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
-    message(FATAL_ERROR "Could not find .vcpkg-root")
-endif()
-
-set(VCPKG_ROOT_DIR ${VCPKG_ROOT_DIR_CANDIDATE})
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
-set(CURRENT_INSTALLED_DIR ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET} CACHE PATH "Location to install final packages")
-set(DOWNLOADS ${VCPKG_ROOT_DIR}/downloads CACHE PATH "Location to download sources and tools")
+set(CURRENT_INSTALLED_DIR ${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET} CACHE PATH "Location to install final packages")
 set(SCRIPTS ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "Location to stored scripts")
-set(PACKAGES_DIR ${VCPKG_ROOT_DIR}/packages CACHE PATH "Location to store package images")
-set(BUILDTREES_DIR ${VCPKG_ROOT_DIR}/buildtrees CACHE PATH "Location to perform actual extract+config+build")
 
 if(PORT)
     set(CURRENT_BUILDTREES_DIR ${BUILDTREES_DIR}/${PORT})

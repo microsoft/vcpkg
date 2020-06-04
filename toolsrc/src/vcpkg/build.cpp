@@ -124,7 +124,7 @@ namespace vcpkg::Build::Command
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("build zlib:x64-windows"),
+        create_example_string("build zlib:x64-windows"),
         1,
         1,
         {{}, {}},
@@ -377,7 +377,7 @@ namespace vcpkg::Build
         {
             start += "\n" + Strings::serialize(feature);
         }
-        const fs::path binary_control_file = paths.packages / bcf.core_paragraph.dir() / "CONTROL";
+        const fs::path binary_control_file = paths.packages / bcf.core_paragraph.dir() / fs::u8path("CONTROL");
         paths.get_filesystem().write_contents(binary_control_file, start, VCPKG_LINE_INFO);
     }
 
@@ -406,7 +406,10 @@ namespace vcpkg::Build
         Util::Vectors::append(&out_vars,
                               std::initializer_list<System::CMakeVariable>{
                                   {"CMD", "BUILD"},
-                                  {"VCPKG_ROOT_PATH", paths.root},
+                                  {"VCPKG_ROOT_DIR", paths.root},
+                                  {"PACKAGES_DIR", paths.packages},
+                                  {"BUILDTREES_DIR", paths.buildtrees},
+                                  {"_VCPKG_INSTALLED_DIR", paths.installed},
                                   {"TARGET_TRIPLET", triplet.canonical_name()},
                                   {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
                                   {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
@@ -514,8 +517,9 @@ namespace vcpkg::Build
         std::vector<std::string> port_configs;
         for (const PackageSpec& dependency : action.package_dependencies)
         {
-            const fs::path port_config_path = paths.installed / dependency.triplet().canonical_name() / "share" /
-                                              dependency.name() / "vcpkg-port-config.cmake";
+            const fs::path port_config_path = paths.installed / fs::u8path(dependency.triplet().canonical_name()) /
+                                              fs::u8path("share") / fs::u8path(dependency.name()) /
+                                              fs::u8path("vcpkg-port-config.cmake");
 
             if (fs.is_regular_file(port_config_path))
             {
@@ -545,23 +549,23 @@ namespace vcpkg::Build
         }
         else if (cmake_system_name == "Linux")
         {
-            return m_paths.scripts / "toolchains" / "linux.cmake";
+            return m_paths.scripts / fs::u8path("toolchains/linux.cmake");
         }
         else if (cmake_system_name == "Darwin")
         {
-            return m_paths.scripts / "toolchains" / "osx.cmake";
+            return m_paths.scripts / fs::u8path("toolchains/osx.cmake");
         }
         else if (cmake_system_name == "FreeBSD")
         {
-            return m_paths.scripts / "toolchains" / "freebsd.cmake";
+            return m_paths.scripts / fs::u8path("toolchains/freebsd.cmake");
         }
         else if (cmake_system_name == "Android")
         {
-            return m_paths.scripts / "toolchains" / "android.cmake";
+            return m_paths.scripts / fs::u8path("toolchains/android.cmake");
         }
         else if (cmake_system_name.empty() || cmake_system_name == "Windows" || cmake_system_name == "WindowsStore")
         {
-            return m_paths.scripts / "toolchains" / "windows.cmake";
+            return m_paths.scripts / fs::u8path("toolchains/windows.cmake");
         }
         else
         {
@@ -1186,7 +1190,7 @@ namespace vcpkg::Build
                     else
                         Checks::exit_with_message(VCPKG_LINE_INFO,
                                                   "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s. Valid "
-                                                  "settings are '', '1', '0', 'on', 'off', 'true', and 'false'.",
+                                                  "settings are '', '1', '0', 'ON', 'OFF', 'TRUE', and 'FALSE'.",
                                                   variable_value);
                     break;
             }
