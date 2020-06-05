@@ -115,8 +115,6 @@ else()
     )
 
     file(GLOB HEADERS
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmp.h
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmpxx.h
         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.h
         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.h
     )
@@ -135,7 +133,6 @@ else()
 
     vcpkg_copy_pdbs()
     
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/include/gmp.h ${CURRENT_PACKAGES_DIR}/include/gmpxx.h)
 endif()
 
 configure_file(${SOURCE_PATH}/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
