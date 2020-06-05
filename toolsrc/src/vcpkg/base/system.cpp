@@ -200,10 +200,10 @@ namespace vcpkg
     Optional<CPUArchitecture> System::guess_visual_studio_prompt_target_architecture()
     {
         // Check for the "vsdevcmd" infrastructure used by Visual Studio 2017 and later
-        const auto VSCMD_ARG_TGT_ARCH = System::get_environment_variable("VSCMD_ARG_TGT_ARCH");
-        if (VSCMD_ARG_TGT_ARCH)
+        const auto vscmd_arg_tgt_arch_env = System::get_environment_variable("VSCMD_ARG_TGT_ARCH");
+        if (vscmd_arg_tgt_arch_env)
         {
-            return to_cpu_architecture(VSCMD_ARG_TGT_ARCH.value_or_exit(VCPKG_LINE_INFO));
+            return to_cpu_architecture(vscmd_arg_tgt_arch_env.value_or_exit(VCPKG_LINE_INFO));
         }
 
         // Check for the "vcvarsall" infrastructure used by Visual Studio 2015

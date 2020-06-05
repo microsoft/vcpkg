@@ -13,6 +13,9 @@ sudo apt -y install libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-de
 sudo apt -y install libxkbcommon-dev libxcb-keysyms1-dev libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev
 # Required by libhdfs3
 sudo apt -y install libkrb5-dev
+# Required by mesa
+sudo apt -y install python3-setuptools
+
 
 # Install newer version of nasm than the apt package, required by intel-ipsec
 mkdir /tmp/nasm
@@ -44,9 +47,6 @@ sudo dpkg -i packages-microsoft-prod.deb
 sudo apt update
 sudo add-apt-repository universe
 sudo apt install -y powershell
-
-# Install odbc
-sudo apt install -y unixodbc-dev
 
 # Write SMB credentials
 sudo mkdir /etc/smbcredentials
