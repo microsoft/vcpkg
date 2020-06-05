@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/libpmemobj-cpp
-    REF 8ff8c542a87a6ac9cb52c5c04def66d844c290cb
+    REF 8ff8c542a87a6ac9cb52c5c04def66d844c290cb #v1.10
     SHA512 09ee9a027fee74d6352ec92445fb5c688b7cc28bc30258d4a9efc250242a1c43f6c55c07f9e43e72d50e09f93dc8eeaffabec9e205f2af2899bde63b7fbdfca1
     HEAD_REF master
 	PATCHES
-	  fix-.patch
+		fixlibpmemobj-cpp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -14,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
+vcpkg_add_to_path(${PERL_EXE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
