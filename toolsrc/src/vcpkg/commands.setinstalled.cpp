@@ -14,7 +14,7 @@
 namespace vcpkg::Commands::SetInstalled
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string(R"(x-set-installed <package>...)"),
+        create_example_string(R"(x-set-installed <package>...)"),
         1,
         SIZE_MAX,
         {},

@@ -206,7 +206,7 @@ namespace vcpkg::Remove
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("remove zlib zlib:x64-windows curl boost"),
+        create_example_string("remove zlib zlib:x64-windows curl boost"),
         0,
         SIZE_MAX,
         {SWITCHES, {}},
