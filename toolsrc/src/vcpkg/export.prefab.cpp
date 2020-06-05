@@ -329,10 +329,7 @@ namespace vcpkg::Export::Prefab
 
         NdkVersion version = to_version(version_opt.value_or_exit(VCPKG_LINE_INFO)).value_or_exit(VCPKG_LINE_INFO);
 
-        const fs::path vcpkg_root_path = paths.root;
-        const fs::path raw_exported_dir_path = vcpkg_root_path / "prefab";
-
-        utils.remove_all(raw_exported_dir_path, VCPKG_LINE_INFO);
+        utils.remove_all(paths.prefab, VCPKG_LINE_INFO);
 
         /*
         prefab
@@ -399,7 +396,7 @@ namespace vcpkg::Export::Prefab
                 continue;
             }
 
-            const fs::path per_package_dir_path = raw_exported_dir_path / name;
+            const fs::path per_package_dir_path = paths.prefab / fs::u8path(name);
 
             const auto& binary_paragraph = action.core_paragraph().value_or_exit(VCPKG_LINE_INFO);
             const std::string norm_version = binary_paragraph.version;
@@ -435,8 +432,7 @@ namespace vcpkg::Export::Prefab
 
             utils.create_directories(meta_dir, error_code);
 
-            const fs::path share_root =
-                vcpkg_root_path / "packages" / Strings::format("%s_%s", name, action.spec.triplet());
+            const fs::path share_root = paths.packages / fs::u8path(Strings::format("%s_%s", name, action.spec.triplet()));
 
             utils.copy_file(share_root / "share" / name / "copyright",
                             meta_dir / "LICENSE",
@@ -509,9 +505,9 @@ namespace vcpkg::Export::Prefab
 
             for (const auto& triplet : triplets)
             {
-                const fs::path listfile = vcpkg_root_path / "installed" / "vcpkg" / "info" /
-                                          (Strings::format("%s_%s_%s", name, norm_version, triplet) + ".list");
-                const fs::path installed_dir = vcpkg_root_path / "packages" / Strings::format("%s_%s", name, triplet);
+                const fs::path listfile =
+                    paths.vcpkg_dir_info / fs::u8path(Strings::format("%s_%s_%s", name, norm_version, triplet) + ".list");
+                const fs::path installed_dir = paths.packages / fs::u8path(Strings::format("%s_%s", name, triplet));
                 Checks::check_exit(VCPKG_LINE_INFO,
                                    utils.exists(listfile),
                                    "Error: Packages not installed %s:%s %s",
@@ -519,7 +515,7 @@ namespace vcpkg::Export::Prefab
                                    triplet,
                                    listfile.generic_u8string());
 
-                fs::path libs = installed_dir / "lib";
+                fs::path libs = installed_dir / fs::u8path("lib");
 
                 std::vector<fs::path> modules;
 
@@ -540,13 +536,13 @@ namespace vcpkg::Export::Prefab
                 if (modules.empty())
                 {
                     fs::path module_dir = modules_directory / name;
-                    fs::path module_libs_dir = module_dir / "libs";
+                    fs::path module_libs_dir = module_dir / fs::u8path("libs");
                     utils.create_directories(module_libs_dir, error_code);
-                    fs::path installed_headers_dir = installed_dir / "include";
-                    fs::path exported_headers_dir = module_dir / "include";
+                    fs::path installed_headers_dir = installed_dir / fs::u8path("include");
+                    fs::path exported_headers_dir = module_dir / fs::u8path("include");
 
                     ModuleMetadata meta;
-                    fs::path module_meta_path = module_dir / "module.json";
+                    fs::path module_meta_path = module_dir / fs::u8path("module.json");
                     utils.write_contents(module_meta_path, meta.to_json(), VCPKG_LINE_INFO);
 
                     utils.copy(installed_headers_dir, exported_headers_dir, fs::copy_options::recursive);
@@ -689,7 +685,7 @@ namespace vcpkg::Export::Prefab
             System::print2(System::Color::success,
                            Strings::format("Successfuly exported %s. Checkout %s  \n",
                                            name,
-                                           raw_exported_dir_path.generic_u8string()));
+                                           paths.prefab.generic_u8string()));
         }
     }
 }

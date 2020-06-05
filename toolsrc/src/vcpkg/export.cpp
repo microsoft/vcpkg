@@ -341,7 +341,7 @@ namespace vcpkg::Export
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("export zlib zlib:x64-windows boost --nuget"),
+        create_example_string("export zlib zlib:x64-windows boost --nuget"),
         0,
         SIZE_MAX,
         {EXPORT_SWITCHES, EXPORT_SETTINGS},
