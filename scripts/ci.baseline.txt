@@ -1092,10 +1092,6 @@ microsoft-signalr:x64-uwp=skip
 microsoft-signalr:x64-windows=skip
 microsoft-signalr:x64-windows-static=skip
 microsoft-signalr:x86-windows=skip
-# conflicts with stb
-mlpack:x86-windows=skip
-mlpack:x64-windows=skip
-mlpack:x64-windows-static=skip
 mman:x64-linux=fail
 mman:x64-osx=fail
 mmloader:arm64-windows=fail
