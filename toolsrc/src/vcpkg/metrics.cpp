@@ -452,7 +452,7 @@ namespace vcpkg::Metrics
 #endif
     }
 
-    void Metrics::flush()
+    void Metrics::flush(Files::Filesystem& fs)
     {
         if (!metrics_enabled())
         {
@@ -471,8 +471,6 @@ namespace vcpkg::Metrics
         const fs::path temp_folder_path_exe =
             temp_folder_path / Strings::format("vcpkgmetricsuploader-%s.exe", Commands::Version::base_version());
 #endif
-
-        auto& fs = Files::get_real_filesystem();
 
 #if defined(_WIN32)
 
