@@ -44,7 +44,6 @@
 7zip:x64-linux=fail
 7zip:x64-osx=fail
 7zip:x64-uwp=fail
-abseil:arm-uwp=fail
 activemq-cpp:x64-windows-static=fail
 activemq-cpp:x64-linux=fail
 activemq-cpp:x64-osx=fail
@@ -60,6 +59,8 @@ aliyun-oss-c-sdk:x64-osx=fail
 ampl-mp:arm64-windows=fail
 ampl-mp:arm-uwp=fail
 ampl-mp:x64-uwp=fail
+amqpcpp:arm-uwp=fail
+amqpcpp:x64-uwp=fail
 angelscript:arm64-windows=fail
 angelscript:arm-uwp=fail
 antlr4:arm-uwp=fail
@@ -553,10 +554,9 @@ gmmlib:x64-uwp=fail
 gmmlib:x64-windows=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x86-windows=fail
-googleapis:arm64-windows=fail
-googleapis:arm-uwp=fail
-googleapis:x64-uwp=fail
-google-cloud-cpp-spanner:x86-windows=fail
+google-cloud-cpp:arm64-windows=fail
+google-cloud-cpp:arm-uwp=fail
+google-cloud-cpp:x64-uwp=fail
 gppanel:x64-osx=fail
 gperf:x64-uwp=fail
 gperf:arm-uwp=fail
@@ -569,7 +569,6 @@ graphite2:arm-uwp=fail
 graphite2:x64-uwp=fail
 graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
-grpc:arm-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/pull/11048
@@ -622,6 +621,7 @@ ignition-msgs5:x64-linux=fail
 ignition-msgs5:arm64-windows=fail
 ignition-msgs5:arm-uwp=fail
 ignition-msgs5:x64-uwp=fail
+ignition-msgs5:x64-osx=fail
 imgui-sfml:x64-linux=ignore
 intel-ipsec:arm64-windows=fail
 intel-ipsec:arm-uwp=fail
@@ -699,7 +699,6 @@ libb2:x64-windows-static=fail
 libb2:x64-uwp=fail
 libb2:arm64-windows=fail
 libb2:arm-uwp=fail
-libb2:x64-osx=fail
 libbf:arm64-windows=fail
 libbf:arm-uwp=fail
 libbf:x64-uwp=fail
@@ -746,6 +745,7 @@ libfabric:x64-linux=fail
 libfabric:x64-osx=fail
 libfabric:x64-uwp=fail
 libfabric:x64-windows=ignore
+libfabric:x64-windows-static=fail
 libfreenect2:arm64-windows=fail
 libgd:x64-linux=ignore
 libgit2:arm-uwp=fail
@@ -1143,19 +1143,15 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
-mpir:arm64-windows=fail
-mpir:arm-uwp=fail
-mpir:x64-uwp=fail
-# Building package gmp[core]:x64-linux... done
-# Installing package gmp[core]:x64-linux...
-# The following files are already installed in /mnt/1/s/installed/x64-linux and are in conflict with gmp:x64-linux
-#
-# Installed by mpir:x64-linux
-#     debug/lib/libgmp.a
-#     debug/lib/libgmp.la
-#     include/gmp.h
-#     lib/libgmp.a
-#     lib/libgmp.la
+# mpir conflicts with gmp
+# see https://github.com/microsoft/vcpkg/issues/11756
+mpir:x86-windows=skip
+mpir:x64-windows=skip
+mpir:x64-windows-static=skip
+mpir:arm64-windows=skip
+mpir:arm-uwp=skip
+mpir:x64-uwp=skip
+mpir:x64-osx=skip
 mpir:x64-linux=skip
 #Conflicts with angle and qt-5base
 ms-angle:arm64-windows      = skip
@@ -1217,6 +1213,7 @@ netcdf-cxx4:x64-linux=ignore
 nethost:x64-uwp=fail
 nethost:arm-uwp=fail
 nettle:x64-windows=skip
+nettle:x64-osx=fail
 networkdirect-sdk:arm64-windows=fail
 networkdirect-sdk:arm-uwp=fail
 networkdirect-sdk:x64-linux=fail
@@ -1719,6 +1716,8 @@ smpeg2:x64-linux=fail
 smpeg2:x64-uwp=fail
 soci:arm-uwp=fail
 soci:x64-uwp=fail
+sockpp:arm-uwp=fail
+sockpp:x64-uwp=fail
 soem:x64-uwp=fail
 soem:arm-uwp=fail
 soil:arm-uwp=fail
@@ -2035,3 +2034,5 @@ ctp:x64-uwp=skip
 ctp:x64-windows=skip
 ctp:x64-windows-static=skip
 ctp:x86-windows=skip
+protozero:arm-uwp=fail
+protozero:x64-uwp=fail
