@@ -448,9 +448,6 @@ fftw3:arm-uwp=fail
 fftw3:x64-uwp=fail
 # ffmpeg on arm64 is currently failing due to an internal compiler error
 ffmpeg:arm64-windows=fail
-field3d:x64-windows=fail
-field3d:x64-windows-static=fail
-field3d:x86-windows=fail
 flint:x64-linux=fail
 flint:x64-osx=fail
 fltk:arm-uwp=fail
