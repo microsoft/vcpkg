@@ -13,23 +13,9 @@ vcpkg_from_github(
         004-fix-find-sfml.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB SFML_DYNAMIC_LIBS "${CURRENT_INSTALLED_DIR}/bin/sfml-*")
-else()
-    file(GLOB SFML_DYNAMIC_LIBS "${CURRENT_INSTALLED_DIR}/bin/libsfml-*")
-endif()
-
-if (SFML_DYNAMIC_LIBS)
-    set(SFML_STATIC OFF)
-else()
-    set(SFML_STATIC ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DSFML_STATIC_LIBRARIES=${SFML_STATIC}
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
