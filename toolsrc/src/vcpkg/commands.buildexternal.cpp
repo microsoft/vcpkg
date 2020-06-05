@@ -10,7 +10,7 @@
 namespace vcpkg::Commands::BuildExternal
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)"),
+        create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)"),
         2,
         2,
         {},

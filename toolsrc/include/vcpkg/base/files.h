@@ -19,10 +19,10 @@ namespace fs
 #endif
 
     using stdfs::copy_options;
+    using stdfs::directory_iterator;
     using stdfs::path;
     using stdfs::perms;
     using stdfs::u8path;
-    using stdfs::directory_iterator;
 
 #if defined(_WIN32)
     enum class file_type
@@ -166,6 +166,8 @@ namespace vcpkg::Files
         fs::path canonical(const fs::path& path, ignore_errors_t) const;
         virtual fs::path current_path(std::error_code&) const = 0;
         fs::path current_path(LineInfo li) const;
+        virtual void current_path(const fs::path& path, std::error_code&) = 0;
+        void current_path(const fs::path& path, LineInfo li);
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
     };
