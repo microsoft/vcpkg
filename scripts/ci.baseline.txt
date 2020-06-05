@@ -44,14 +44,6 @@
 7zip:x64-linux=fail
 7zip:x64-osx=fail
 7zip:x64-uwp=fail
-abseil:arm-uwp=fail
-# ace is failing because the port's attempt to make yasm available is not succeeding
-ace:arm-uwp=fail
-ace:arm64-windows=fail
-ace:x64-uwp=fail
-ace:x64-windows-static=fail
-ace:x64-windows=fail
-ace:x86-windows=fail
 activemq-cpp:x64-windows-static=fail
 activemq-cpp:x64-linux=fail
 activemq-cpp:x64-osx=fail
@@ -67,6 +59,8 @@ aliyun-oss-c-sdk:x64-osx=fail
 ampl-mp:arm64-windows=fail
 ampl-mp:arm-uwp=fail
 ampl-mp:x64-uwp=fail
+amqpcpp:arm-uwp=fail
+amqpcpp:x64-uwp=fail
 angelscript:arm64-windows=fail
 angelscript:arm-uwp=fail
 antlr4:arm-uwp=fail
@@ -76,9 +70,6 @@ anyrpc:x86-windows=ignore
 anyrpc:x64-windows-static=ignore
 apr:arm-uwp=fail
 apr:x64-uwp=fail
-# Static builds fail beacuase apr-1-config is installed in bin
-apr:x64-linux=fail
-apr:x64-osx=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
 argtable2:arm-uwp=fail
@@ -225,8 +216,14 @@ chakracore:x64-osx=fail
 chakracore:x64-uwp=fail
 chakracore:x64-windows-static=fail
 # DCMTK currently has a vendored copy of libcharls.a, which causes conflicts with charls (TODO: use charls' copy)
+charls:arm64-windows=skip
+charls:arm-uwp=skip
 charls:x64-linux=skip
 charls:x64-osx=skip
+charls:x64-uwp=skip
+charls:x64-windows=skip
+charls:x64-windows-static=skip
+charls:x86-windows=skip
 chartdir:arm64-windows=fail
 chartdir:arm-uwp=fail
 chartdir:x64-uwp=fail
@@ -559,10 +556,9 @@ gmmlib:x64-uwp=fail
 gmmlib:x64-windows=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x86-windows=fail
-googleapis:arm64-windows=fail
-googleapis:arm-uwp=fail
-googleapis:x64-uwp=fail
-google-cloud-cpp-spanner:x86-windows=fail
+google-cloud-cpp:arm64-windows=fail
+google-cloud-cpp:arm-uwp=fail
+google-cloud-cpp:x64-uwp=fail
 gppanel:x64-osx=fail
 gperf:x64-uwp=fail
 gperf:arm-uwp=fail
@@ -575,7 +571,6 @@ graphite2:arm-uwp=fail
 graphite2:x64-uwp=fail
 graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
-grpc:arm-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/pull/11048
@@ -628,6 +623,7 @@ ignition-msgs5:x64-linux=fail
 ignition-msgs5:arm64-windows=fail
 ignition-msgs5:arm-uwp=fail
 ignition-msgs5:x64-uwp=fail
+ignition-msgs5:x64-osx=fail
 imgui-sfml:x64-linux=ignore
 intel-ipsec:arm64-windows=fail
 intel-ipsec:arm-uwp=fail
@@ -705,7 +701,6 @@ libb2:x64-windows-static=fail
 libb2:x64-uwp=fail
 libb2:arm64-windows=fail
 libb2:arm-uwp=fail
-libb2:x64-osx=fail
 libbf:arm64-windows=fail
 libbf:arm-uwp=fail
 libbf:x64-uwp=fail
@@ -752,6 +747,7 @@ libfabric:x64-linux=fail
 libfabric:x64-osx=fail
 libfabric:x64-uwp=fail
 libfabric:x64-windows=ignore
+libfabric:x64-windows-static=fail
 libfreenect2:arm64-windows=fail
 libgd:x64-linux=ignore
 libgit2:arm-uwp=fail
@@ -1016,12 +1012,8 @@ log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:arm-uwp=fail
 log4cpp:x64-uwp=fail
-lpeg:x64-linux=fail
-lpeg:x64-osx=fail
 lua:arm-uwp=fail
 lua:x64-uwp=fail
-luafilesystem:x64-linux=fail
-luafilesystem:x64-osx=fail
 luajit:arm64-windows      = skip
 luajit:arm-uwp            = skip
 luajit:x64-linux          = skip
@@ -1093,6 +1085,15 @@ miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
 minizip:x64-uwp=fail
+# Conflicts with signalrclient
+microsoft-signalr:arm64-windows=skip
+microsoft-signalr:arm-uwp=skip
+microsoft-signalr:x64-linux=skip
+microsoft-signalr:x64-osx=skip
+microsoft-signalr:x64-uwp=skip
+microsoft-signalr:x64-windows=skip
+microsoft-signalr:x64-windows-static=skip
+microsoft-signalr:x86-windows=skip
 # conflicts with stb
 mlpack:x86-windows=skip
 mlpack:x64-windows=skip
@@ -1142,19 +1143,15 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
-mpir:arm64-windows=fail
-mpir:arm-uwp=fail
-mpir:x64-uwp=fail
-# Building package gmp[core]:x64-linux... done
-# Installing package gmp[core]:x64-linux...
-# The following files are already installed in /mnt/1/s/installed/x64-linux and are in conflict with gmp:x64-linux
-#
-# Installed by mpir:x64-linux
-#     debug/lib/libgmp.a
-#     debug/lib/libgmp.la
-#     include/gmp.h
-#     lib/libgmp.a
-#     lib/libgmp.la
+# mpir conflicts with gmp
+# see https://github.com/microsoft/vcpkg/issues/11756
+mpir:x86-windows=skip
+mpir:x64-windows=skip
+mpir:x64-windows-static=skip
+mpir:arm64-windows=skip
+mpir:arm-uwp=skip
+mpir:x64-uwp=skip
+mpir:x64-osx=skip
 mpir:x64-linux=skip
 #Conflicts with angle and qt-5base
 ms-angle:arm64-windows      = skip
@@ -1216,6 +1213,7 @@ netcdf-cxx4:x64-linux=ignore
 nethost:x64-uwp=fail
 nethost:arm-uwp=fail
 nettle:x64-windows=skip
+nettle:x64-osx=fail
 networkdirect-sdk:arm64-windows=fail
 networkdirect-sdk:arm-uwp=fail
 networkdirect-sdk:x64-linux=fail
@@ -1240,6 +1238,10 @@ numactl:x86-windows=fail
 nvtt:arm64-windows=fail
 nvtt:arm-uwp=fail
 nvtt:x64-uwp=fail
+ocilib:arm64-windows=fail
+ocilib:arm-uwp=fail
+ocilib:x64-uwp=fail
+ocilib:x64-windows-static=fail
 octomap:arm-uwp=fail
 octomap:x64-uwp=fail
 ode:arm64-windows=fail
@@ -1700,7 +1702,6 @@ shogun:x64-windows-static = skip
 shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
-simdjson:arm64-windows=fail
 simdjson:arm-uwp=fail
 simdjson:x86-windows=fail
 skia:arm64-windows=fail
@@ -1715,6 +1716,8 @@ smpeg2:x64-linux=fail
 smpeg2:x64-uwp=fail
 soci:arm-uwp=fail
 soci:x64-uwp=fail
+sockpp:arm-uwp=fail
+sockpp:x64-uwp=fail
 soem:x64-uwp=fail
 soem:arm-uwp=fail
 soil:arm-uwp=fail
@@ -2031,3 +2034,5 @@ ctp:x64-uwp=skip
 ctp:x64-windows=skip
 ctp:x64-windows-static=skip
 ctp:x86-windows=skip
+protozero:arm-uwp=fail
+protozero:x64-uwp=fail
