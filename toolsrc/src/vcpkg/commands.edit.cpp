@@ -95,7 +95,7 @@ namespace vcpkg::Commands::Edit
          {OPTION_ALL, "Open editor into the port as well as the port-specific buildtree subfolder"}}};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("edit zlib"),
+        create_example_string("edit zlib"),
         1,
         10,
         {EDIT_SWITCHES, {}},
