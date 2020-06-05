@@ -4,55 +4,55 @@ Homepage: https://github.com/am2222/mapnik-windows/
 Description: Mapnik is an open source toolkit for developing mapping applications. Compiling on windows. (unofficial port)
 Build-Depends: icu, boost-locale[icu], boost-regex[icu], boost, freetype, tiff, libwebp, libxml2, harfbuzz, libpng, zlib
 
-Feature: WITH_CAIRO
+Feature: CAIRO
 Description: Cairo renderer
 Build-Depends: cairo
 
-Feature: WITH_PROJ4
+Feature: PROJ4
 Description: PROJ4 Functionalities
 Build-Depends: proj4
 
-Feature: WITH_INPUT_CSV
+Feature: INPUT_CSV
 Description: CSV input plugin
 
-Feature: WITH_INPUT_GDAL
+Feature: INPUT_GDAL
 Description: GDAL input plugin
 Build-Depends: gdal
 
-Feature: WITH_INPUT_GEOBUF
+Feature: INPUT_GEOBUF
 Description: GEOBUF input plugin
 Build-Depends: protozero
 
-Feature: WITH_INPUT_GEOJSON
+Feature: INPUT_GEOJSON
 Description: GEOJSON input plugin
 
-Feature: WITH_INPUT_OGR
+Feature: INPUT_OGR
 Description: OGR input plugin
 Build-Depends: gdal
 
-Feature: WITH_INPUT_PGRASTER
+Feature: INPUT_PGRASTER
 Description: PGRASTER input plugin
 Build-Depends: libodb-pgsql
 
-Feature: WITH_INPUT_POSTGIS
+Feature: INPUT_POSTGIS
 Description: POSTGIS input plugin
 Build-Depends: libodb-pgsql
 
-Feature: WITH_INPUT_RASTER
+Feature: INPUT_RASTER
 Description: RASTER input plugin
 
-Feature: WITH_INPUT_SHAPE
+Feature: INPUT_SHAPE
 Description: SHAPE input plugin
 
-Feature: WITH_INPUT_SQLITE
+Feature: INPUT_SQLITE
 Description: SQLITE input plugin
 Build-Depends: sqlite3
 
-Feature: WITH_INPUT_TOPOJSON
+Feature: INPUT_TOPOJSON
 Description: TOPOJSON input plugin
 
-Feature: WITH_DEMO
+Feature: DEMO
 Description: Make Demo Application
 
-Feature: WITH_UTILS
+Feature: UTILS
 Description: Make utilities Application including mapnik-rendrer and shapeindex
