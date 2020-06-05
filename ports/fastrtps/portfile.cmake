@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-RTPS
     REF b1779b608c7b5b2dcb101728f4213c58bdde74ee # waiting for next release
-    SHA512 f316a71784cdac5379b1cf59cee4bf57304aa59a73563fcbdd141b0d1297302048ca73817adca68baf18472e74f200af9490d2d6fa6124863ec260546fb373e4
+    SHA512 9ec4a1e41296df1c0bc00926d925e0947602fabb68e9b28311e92739b0e1909a2993b15fc05eb31aeb9842ed50127f8d56571d09e57dd64ac6f37d0fed6cea73
     HEAD_REF master
     PATCHES 
         fix-install.patch 
