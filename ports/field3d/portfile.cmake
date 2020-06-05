@@ -13,7 +13,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build_error.patch
-        hdf5-api.patch # Switches the HDF5 default API for this port to 1.10
+        hdf5.api.patch # Switches the HDF5 default API for this port to 1.10
 )
 
 vcpkg_configure_cmake(
