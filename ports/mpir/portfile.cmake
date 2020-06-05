@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "MPIR currently can only be built for desktop")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT when building DLLs")
@@ -10,7 +6,7 @@ endif()
 
 set(MPIR_VERSION 3.0.0)
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(
         ARCHIVE
         URLS "http://mpir.org/mpir-${MPIR_VERSION}.tar.bz2"
@@ -71,7 +67,14 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
     )
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
-    configure_file(${SOURCE_PATH}/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
+    
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/include/gmp.h)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libgmp.a ${CURRENT_PACKAGES_DIR}/debug/lib/libgmp.la)
+    endif()
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libgmp.a ${CURRENT_PACKAGES_DIR}/lib/libgmp.la)
+    endif()
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -131,6 +134,8 @@ else()
     file(COPY ${DBG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
     vcpkg_copy_pdbs()
-
-    configure_file(${SOURCE_PATH}/COPYING.lib ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
+    
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/include/gmp.h ${CURRENT_PACKAGES_DIR}/include/gmpxx.h)
 endif()
+
+configure_file(${SOURCE_PATH}/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
