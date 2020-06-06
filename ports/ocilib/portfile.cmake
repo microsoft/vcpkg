@@ -12,12 +12,24 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-		set(SOLUTION_TYPE vs2019)
+        set(SOLUTION_TYPE vs2019)
+        set(OCILIB_ARCH_X86 x86)
+        set(OCILIB_ARCH_X64 x64)
 	elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-		set(SOLUTION_TYPE vs2017)
+        set(SOLUTION_TYPE vs2017)
+        set(OCILIB_ARCH_X86 Win32)
+        set(OCILIB_ARCH_X64 Win64)
 	else()
-		set(SOLUTION_TYPE vs2015)
+        set(SOLUTION_TYPE vs2015)
+        set(OCILIB_ARCH_X86 Win32)
+        set(OCILIB_ARCH_X64 Win64)
 	endif()
+    
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(PLATFORM ${OCILIB_ARCH_X86})
+    else()
+        set(PLATFORM ${OCILIB_ARCH_X64})
+    endif()
 	
 	# There is no debug configuration
 	# As it is a C library, build the release configuration and copy its output to the debug folder
@@ -28,7 +40,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 		INCLUDES_SUBPATH include
 		LICENSE_SUBPATH LICENSE
 		RELEASE_CONFIGURATION "Release - ANSI"
-		PLATFORM ${VCPKG_TARGET_ARCHITECTURE}
+		PLATFORM ${PLATFORM}
 		USE_VCPKG_INTEGRATION
 		ALLOW_ROOT_INCLUDES)
 
