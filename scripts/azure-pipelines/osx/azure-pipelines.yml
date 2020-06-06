@@ -23,6 +23,7 @@ jobs:
       brew list autoconf || brew install autoconf
       brew list automake || brew install automake
       brew list libtool || brew install libtool
+      brew list gfortran || brew cask install gfortran
     displayName: 'Install brew dependencies'
   - bash: |
       df -h
