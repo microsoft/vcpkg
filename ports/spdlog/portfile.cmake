@@ -6,17 +6,16 @@ vcpkg_from_github(
     HEAD_REF v1.x
 )
 
-set(SPDLOG_USE_BENCHMARK OFF)
-if("benchmark" IN_LIST FEATURES)
-    set(SPDLOG_USE_BENCHMARK ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	benchmark SPDLOG_BUILD_BENCH
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+	${FEATURE_OPTIONS}
         -DSPDLOG_FMT_EXTERNAL=ON
-        -DSPDLOG_BUILD_BENCH=${SPDLOG_USE_BENCHMARK}
         -DSPDLOG_INSTALL=ON
 )
 
