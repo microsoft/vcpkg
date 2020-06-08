@@ -33,7 +33,6 @@ jobs:
       }
 
       .\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching --x-binarysource=clear`;files`,W:\`,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads
-      Set-Content -Path 'run_ci.cmd' -Value $command -Encoding ASCII
     displayName: '** Test Modified Ports **'
   - task: PowerShell@2
     displayName: 'Analyze results and prepare test logs'
