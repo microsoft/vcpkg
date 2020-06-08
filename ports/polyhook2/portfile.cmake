@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "Linux" "OSX" "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevemk14ebr/PolyHook_2_0
-    REF  410c6088433a21eeaead49401e63186b9d3e7c3f
-    SHA512 5678020d11bf154c80192c2bfddd09b6dae6e1b458db8a9376addabad3abf8d2e62c2c1462a279db016918bc757dfc783f12ae83c5aba16dac093b324c3bd1f7
+    REF  eeaca1d7955965f981b27ee461645f2c1ce42b2b
+    SHA512 c92a8f838fbe9f252ba1edab6364ddc473b1dbfba7849d10477eff7d5d2da0d42c21a93acf8deb3687b7bac679692f6749809749282177274f8852bbd3f9d1c5
     HEAD_REF master
 )
 
