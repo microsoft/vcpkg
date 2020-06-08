@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(CAIRO_VERSION 1.16.0)
 
 vcpkg_download_distfile(ARCHIVE
@@ -25,8 +24,13 @@ if ("x11" IN_LIST FEATURES)
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
 endif()
 
+if("gobject" IN_LIST FEATURES)
+    message(WARNING "Feature gobject currently only supports dynamic build.")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     x11 WITH_X11
+    gobject WITH_GOBJECT
 )
 
 vcpkg_configure_cmake(
@@ -67,9 +71,6 @@ foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/
 endforeach()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cairo)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cairo/COPYING ${CURRENT_PACKAGES_DIR}/share/cairo/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
-
-vcpkg_test_cmake(PACKAGE_NAME unofficial-cairo)
