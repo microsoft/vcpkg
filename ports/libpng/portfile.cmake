@@ -21,7 +21,6 @@ if ("apng" IN_LIST FEATURES)
             LOGNAME extract-patch.log
         )
     endif()
-
     set(APNG_EXTRA_PATCH ${LIBPNG_APG_PATCH_PATH})
     set(LIBPNG_APNG_OPTION "-DPNG_PREFIX=a")
 endif()
