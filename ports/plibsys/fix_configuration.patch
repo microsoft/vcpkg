@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 343e3d2..3a22075 100644
+index 343e3d2..aff7929 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -785,18 +785,18 @@ if (PLIBSYS_PLATFORM_DEFINES)
@@ -44,18 +44,14 @@ index 343e3d2..3a22075 100644
  set_target_properties (plibsys PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
  set_target_properties (plibsys PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
  set_target_properties (plibsys PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
-@@ -820,9 +821,10 @@ set_target_properties (plibsys PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}
+@@ -820,6 +821,7 @@ set_target_properties (plibsys PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}
  if (NOT PLIBSYS_TARGET_OS STREQUAL os2 AND NOT PLIBSYS_TARGET_OS STREQUAL amigaos)
          set_target_properties (plibsys PROPERTIES SOVERSION ${PLIBSYS_SOVERSION})
  endif()
 +endif()
  
  if (PLIBSYS_BUILD_STATIC)
--        set_target_properties (plibsysstatic PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
-+        set_target_properties (plibsysstatic PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR} OUTPUT_NAME plibsys)
- 
-         if (NOT PLIBSYS_TARGET_OS STREQUAL os2)
-                 set_target_properties (plibsysstatic PROPERTIES SOVERSION ${PLIBSYS_SOVERSION})
+         set_target_properties (plibsysstatic PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 @@ -834,10 +836,10 @@ if (PLIBSYS_PLATFORM_CFLAGS)
                  set (PLIBSYS_PLATFORM_CFLAGS_STR "${PLIBSYS_PLATFORM_CFLAGS_STR} ${PLATFORM_CFLAG}")
          endforeach()
