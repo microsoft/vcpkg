@@ -244,7 +244,7 @@ if (CAIRO_HAS_XLIB_SURFACE)
     file(INSTALL cairo-xlib.h DESTINATION include)
 endif()
 
-install(TARGETS cairo)
+install(TARGETS cairo
     EXPORT cairo-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
