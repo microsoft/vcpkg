@@ -29,7 +29,7 @@ set(prefix ${CURRENT_INSTALLED_DIR})
 set(exec_prefix \$\{prefix\})
 set(libdir \$\{exec_prefix\}/lib)
 set(includedir \$\{prefix\}/include)
-configure_file(${SOURCE_PATH}/uuid.pc.in ${SOURCE_PATH}/uuid.pc)
+configure_file(${SOURCE_PATH}/uuid.pc.in ${SOURCE_PATH}/uuid.pc @ONLY)
 file(INSTALL ${SOURCE_PATH}/uuid.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 file(INSTALL
     ${SOURCE_PATH}/COPYING
