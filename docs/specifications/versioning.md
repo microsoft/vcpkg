@@ -1,9 +1,9 @@
 # Versioning Specification 
 
 ## 1 Glossary
-Some of the terms used in this document have similar o even the same meaning when discussed by the community, and because of that, they can cause confusion and ambiguity. To solve this issue, we will assign specific meaning to these terms and try to keep a consistent usage through the document.
+Some of the terms used in this document have similar meaning when discussed by the community, and because of that, they can cause confusion and ambiguity. To solve this issue, we will assign specific meaning to these terms and try to keep a consistent usage through the document.
 
-**Library**: A piece of software (source code, binary files, documentation, license, etc.) that is intended to be reutilized by other software.
+**Library**: A piece of software (source code, binary files, documentation, license, etc.) that is intended to be reused by other software.
 
 **Package**: A package can contain a library, collection of libraries, build scripts, software tools, or other components necessary for their use. The goal of VCPKG is to facilitate the installation of these packages in the user's environment.
 
@@ -13,14 +13,14 @@ Some of the terms used in this document have similar o even the same meaning whe
 * Instructions to acquire, build if necessary, and install the package.
 
 ## 2 Specifying package versions
-Through the years, C++ software authors have adopted multiple versioning schmes and practices that are sometimes conflicting between each other. On VCPKG, the most recurrent versioning schemes found are:
+Through the years, C++ software authors have adopted multiple versioning schemes and practices that sometimes conflict between each other. On VCPKG, the most recurrent versioning schemes found are:
 
-* [Semantic Versioning](semver.org)
-* Dates
-* Repository commit IDs
-* Arbitrary strings
+* [Semantic Versioning](https://semver.org/)
+* Date
+* Repository commit
+* Arbitrary string
 
-For VCPKG to achieve wide adoption and interoperability with existing projects it is important that we respect the versioning schemes used by each of the packages contained in our ports library.
+For VCPKG to achieve wide adoption and interoperability with existing projects, it is important that we respect the versioning schemes used by each of the packages contained in our ports library.
 
 Currently, package versions are defined in the Version field of a port's `CONTROL` file. Moving on, we plan to phase out `CONTROL` files in favor of manifest files.
 
@@ -34,27 +34,27 @@ This document describes:
 Package versioning information is specified using the following fields:
 
 **`version-scheme`** 
-The versioning schme used by the package. VCPKG can understand the following values `semver`, `date`, `commit-id`, and `string`. VCPKG uses the field to validate format constraints and determine which version matching operations are supported by the package.
+The versioning scheme used by the package. VCPKG splits versions into four different kinds: `semver`, `date`, `commit`, and `string`. VCPKG uses the field to validate format constraints and determine which version matching operations are supported by the package.
 
 * **`semver`**: Accepts version strings that follow semantic versioning conventions. Packages that use this scheme can be sorted which allows VCPKG to apply minimum version requirement constraints on them.
 
     _Note: some packages that follow semver-like convetions are not actually semver compliant, for examples: `openssl`, and for that reason are more suited to use the arbitrary string versioning scheme._
 
-* **`date`**: Accepts version strings that can be parsed to a date following the format: `YYYY-MM-DD`. Packages that use this scheme can be sorted which allows VCPKG to apply minimum version requirement constraints on them.
+* **`date`**: Accepts version strings that can be parsed to a date  following the ISO-8601 format `"YYYY-MM-DD"`. Packages that use this scheme can be sorted which allows VCPKG to apply minimum version requirement constraints on them.
 
-* **`commit-id`**: Accepts version strings that represent commit IDs under versioning control systems. These are usually hash strings that are not sortable, and as such, VCPKG can only apply direct version requirements on them.
+* **`commit`**: Accepts version strings that represent commit IDs under versioning control systems. These are usually hash strings that are not sortable, and as such, VCPKG can only apply direct version requirements on them.
 
-* **`string`**: Accepts an arbitrary string as the versioning string. The versioning string must be JSON-parsable and may not contain escpaed characters. VCPKG can only apply direct version requirements on packages using this versioning scheme.
+* **`string`**: Accepts an arbitrary string as the versioning string. The versioning string may not contain escaped characters nor any of the following characters: `@`, `:`, `. VCPKG can only apply direct version requirements on packages using this versioning scheme.
 
 **`version`**
-The version of the package. The version must match the version of the library or software being installed. VCPKG validates that the string follows the format specified in the `version-scheme` field and reports an error if the version string is not valid.
+The version must match the version of the package being installed. VCPKG validates that the string follows the format specified in the `version-scheme` field and reports an error if the version string is not valid.
 
-**`port-revision`**
-Historically, VCPKG port revision numbers were added as a suffix to the version string in `CONTROL` files. This practice must now be disallowed, and port revisions should be instead specified by this field.  Port revisions deal with VCPKG specific changes and do not change the version of the package being installed. 
+**`port-version`**
+Historically, VCPKG port version numbers were added as a suffix to the version string in `CONTROL` files. This practice must now be disallowed, and port versions should be instead specified by this field.  Port versions deal with VCPKG specific changes and do not change the version of the package being installed. 
 
-Port revision values should start at 0 for the original revision, increase by 1 each time a new port revision is pu blished, and reset each time the "version" or "version-scheme" fields are changed.
+Port version values should start at 0 for the original version, increase by 1 each time a new port version is published, and reset each time the "version" or "version-scheme" fields are changed.
 
-When resolving package versions only the latest port revision is considered, it is a responsability of the package owner to ensure that no bugs or regressions are introduced when updating the port.
+When resolving package versions only the latest port version is considered, it is a responsibility of the port owner to ensure that no bugs or regressions are introduced when updating the port.
 
 ### 2.1.1 Manifest file example
 
@@ -114,15 +114,16 @@ Truncated parts of a SemVer string are considered as if they were filled with ze
 ### 5.2 No requirements
 By not specifying a version requirement, the user implies that the version to install is unimportant. This results in different versions getting installed depending on the circumstances (the composition of the build graph).
 
-Example: A project depends on package `foo` but doesn't specify a version requirement.
+Example: A project depends on package `meow` but doesn't specify a version requirement.
 
-* If no version requirements for `foo` are added by a dependency when constructing the build list, the latest version of `foo` is installed.
-* If version requirements for `foo` are added by a dependency when constructing the build list:
-  *  And there are no conflicts, the oldest version of `foo` that satisfies all the requirements is installed.
+* If no version requirements for `meow` are added by a dependency when constructing the build list, the latest version of `meow` is installed.
+* If version requirements for `meow` are added by a dependency when constructing the build list:
+  * And there are no conflicts, the oldest version of `meow` that satisfies all the requirements is installed.
   * And there are conflict, the build fails and the conflicts are reported.
 
 #### 5.2.1 Example
 
+Project manifest
 ```json
 {
     "name": "project",
@@ -346,9 +347,9 @@ Also consider the following manifest file for the project:
 }
 ```
 
-The original algorithm constrcuts a build list from the dependencies following these steps:
+The original algorithm constructs a build list from the dependencies following these steps:
 
-> Construct the rough build list for M by starting rom an empty list, adding M, and then appending the build list for each of M's requirements. Simplify the rough build list to produce the final build list, by keeping only the newest version of any listed module.
+> Construct the rough build list for M by starting from an empty list, adding M, and then appending the build list for each of M's requirements. Simplify the rough build list to produce the final build list, by keeping only the newest version of any listed module.
 
 In VCPKG's case, keeping only the newest versions can result in the violation of direct version requirements. The solution is to create two build lists, one for minimum version requirements (MVR) and one for direct version requirements (DVR). The solutions from these build lists are merged and then either a valid build list is created or a conflict is reported.
 
@@ -393,8 +394,8 @@ Resulting in the temporary lists:
 
  The lists are then validated resulting in the final temporary lists: 
 
-* MRL `[ A:1.0, B:2.0, C:3.0, E:1.2 ]` (only latest version of each package)
-* DRL `[ C:4.0, D: 1.0 ]` (no conflicts)
+* MRV list `[ A:1.0, B:2.0, C:3.0, E:1.2 ]` (only latest version of each package)
+* DRV list `[ C:4.0, D: 1.0 ]` (no conflicts)
 
 The last step is merging both lists, for which we follow these rules: 
 
