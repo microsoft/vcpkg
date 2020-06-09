@@ -22,7 +22,8 @@ jobs:
       brew list gfortran || brew cask install gfortran
     displayName: 'Install brew dependencies'
   - bash: |
-      sudo mkdir /Users/vagrant/Data/downloads -m=777
+      sudo mkdir /Users/vagrant/Data/downloads || 0
+      sudo chmod 777 /Users/vagrant/Data/downloads || 0
       exit 0
     displayName: 'Create /Users/vagrant/Data/downloads'
   - task: Bash@3
