@@ -23,17 +23,25 @@ jobs:
         set VCPKG_DOWNLOADS=D:\downloads
         .\bootstrap-vcpkg.bat
   - powershell: |
-      .\vcpkg.exe x-ci-clean --binarycaching --x-binarysource=clear`;files`,W:\`,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads
+      $env:VCPKG_DOWNLOADS='D:\downloads'
+      $commonArgs = @(
+        '--binarycaching',
+        '--x-binarysource=clear;files,W:\,upload',
+        '--x-buildtrees-root=E:\buildtrees',
+        '--x-install-root=E:\install',
+        '--x-packages-root=E:\packages'
+      )
+
+      .\vcpkg.exe x-ci-clean @commonArgs
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile .\scripts\ci.baseline.txt
       mkdir $(System.ArtifactsDirectory)\xml-results
       # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
       # Install them so the CI succeeds:
       if ( "${{ parameters.triplet }}" -notmatch "x86-windows" -and "${{ parameters.triplet }}" -notmatch "x64-windows" ) {
-          .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows --binarycaching --x-binarysource=clear`;files`,W:\`,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads
+          .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows @commonArgs
       }
 
-      .\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList --binarycaching --x-binarysource=clear`;files`,W:\`,upload --x-buildtrees-root=E:\buildtrees --x-install-root=E:\install --x-packages-root=E:\packages --downloads-root=D:\downloads
-      Set-Content -Path 'run_ci.cmd' -Value $command -Encoding ASCII
+      .\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList @commonArgs
     displayName: '** Test Modified Ports **'
   - task: PowerShell@2
     displayName: 'Analyze results and prepare test logs'
