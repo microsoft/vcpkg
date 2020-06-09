@@ -31,6 +31,9 @@ set(libdir \$\{exec_prefix\}/lib)
 set(includedir \$\{prefix\}/include)
 configure_file(${SOURCE_PATH}/uuid.pc.in ${SOURCE_PATH}/uuid.pc @ONLY)
 file(INSTALL ${SOURCE_PATH}/uuid.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+file(INSTALL ${SOURCE_PATH}/uuid.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+vcpkg_fixup_pkgconfig()
+
 file(INSTALL
     ${SOURCE_PATH}/COPYING
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
