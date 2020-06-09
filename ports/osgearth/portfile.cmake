@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-file(GLOB OSG_PLUGINS_SUBDIR ${CURRENT_INSTALLED_DIR}/tools/osg/osgPlugins-*)
+file(GLOB OSG_PLUGINS_SUBDIR "${CURRENT_INSTALLED_DIR}/tools/osg/osgPlugins-*" "${CURRENT_INSTALLED_DIR}/lib/osgPlugins-*")
 list(LENGTH OSG_PLUGINS_SUBDIR OSG_PLUGINS_SUBDIR_LENGTH)
 if(NOT OSG_PLUGINS_SUBDIR_LENGTH EQUAL 1)
     message(FATAL_ERROR "Could not determine osg version")
