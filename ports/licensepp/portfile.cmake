@@ -16,7 +16,7 @@ vcpkg_from_github(
         # won't compile with the current version of cryptopp in `vcpkg`.
         # Remove this patch in the future.
         use-old-pem-pack.patch
-		# TODO: Remove this patch if https://github.com/amrayn/licensepp/pull/33 was merged.
+        # TODO: Remove this patch if https://github.com/amrayn/licensepp/pull/33 was merged.
         fix-cmake.patch
 )
 
