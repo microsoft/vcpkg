@@ -1,8 +1,4 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "DirectXTK12 only supports dynamic CRT linkage")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -36,6 +32,7 @@ endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
+    PLATFORM ${TRIPLET_SYSTEM_ARCH}
 )
 
 file(INSTALL

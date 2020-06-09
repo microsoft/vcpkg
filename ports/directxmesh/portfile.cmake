@@ -46,7 +46,7 @@ endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXMesh_${SLN_NAME}.sln
-    PLATFORM ${BUILD_ARCH}
+    PLATFORM ${TRIPLET_SYSTEM_ARCH}
 )
 
 file(INSTALL
