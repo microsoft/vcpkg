@@ -1,7 +1,7 @@
 Source: mapnik
 Version: 3.0.22
-Homepage: https://github.com/am2222/mapnik-windows/
-Description: Mapnik is an open source toolkit for developing mapping applications. Compiling on windows. (unofficial port)
+Homepage: https://github.com/mapnik/mapnik
+Description: Mapnik is an open source toolkit for developing mapping applications. 
 Build-Depends: libjpeg-turbo, tiff, libpng, libwebp, freetype[bzip2,png], icu, libxml2, harfbuzz[icu],  boost-locale[icu], boost-regex[icu],  boost-gil, boost-geometry, boost-property-tree, boost-filesystem, boost-system, boost-spirit, boost-program-options, boost-assign, boost-bimap, mapbox-variant, zlib
 
 Feature: CAIRO
