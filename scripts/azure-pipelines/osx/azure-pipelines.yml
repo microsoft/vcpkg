@@ -47,7 +47,7 @@ jobs:
       ./vcpkg x-ci-clean @commonArgs
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-osx" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results
-      ./vcpkg ci x64-osx --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-osx.xml" @commonArgs
+      ./vcpkg ci x64-osx --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-osx.xml" --exclude=$skipList @commonArgs
     displayName: '** Test Modified Ports **'
   - task: PowerShell@2
     displayName: 'Analyze results and prepare test logs'
