@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.h>
@@ -9,7 +10,7 @@
 namespace vcpkg::Commands::BuildExternal
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)"),
+        create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)"),
         2,
         2,
         {},
@@ -19,6 +20,9 @@ namespace vcpkg::Commands::BuildExternal
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
+
+        auto binaryprovider =
+            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
 
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(
             std::string(args.command_arguments.at(0)), default_triplet, COMMAND_STRUCTURE.example_text);
@@ -33,6 +37,7 @@ namespace vcpkg::Commands::BuildExternal
         Checks::check_exit(
             VCPKG_LINE_INFO, maybe_scfl.has_value(), "could not load control file for %s", spec.package_spec.name());
 
-        Build::Command::perform_and_exit_ex(spec, maybe_scfl.value_or_exit(VCPKG_LINE_INFO), provider, paths);
+        Build::Command::perform_and_exit_ex(
+            spec, maybe_scfl.value_or_exit(VCPKG_LINE_INFO), provider, *binaryprovider, paths);
     }
 }

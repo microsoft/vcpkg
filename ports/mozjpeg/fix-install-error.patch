@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ac0ebdb..483bf0f 100644
+index 51f4714..9ca3463 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -875,43 +875,51 @@ add_custom_target(installer
-     cjpeg djpeg jpegtran tjbench ${JAVA_DEPEND}
-   SOURCES mozjpeg.nsi)
+@@ -1370,21 +1370,28 @@ endif()
+ 
+ set(EXE ${CMAKE_EXECUTABLE_SUFFIX})
  
 +if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 +    set(REAL_BUILDS_PATH "Debug/")
@@ -15,73 +15,112 @@ index ac0ebdb..483bf0f 100644
  if(WITH_TURBOJPEG)
    if(ENABLE_SHARED)
      install(TARGETS turbojpeg tjbench
--      ARCHIVE DESTINATION lib
--      LIBRARY DESTINATION lib
--      RUNTIME DESTINATION bin)
-+      ARCHIVE DESTINATION lib/mozjpeg
-+      LIBRARY DESTINATION lib/mozjpeg
+-      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozjpeg
++      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozjpeg
 +      RUNTIME DESTINATION tools/mozjpeg)
-   endif()
-   if(ENABLE_STATIC)
--    install(TARGETS turbojpeg-static ARCHIVE DESTINATION lib)
-+    install(TARGETS turbojpeg-static
-+            LIBRARY DESTINATION lib/mozjpeg
-+            ARCHIVE DESTINATION lib/mozjpeg)
-     if(NOT ENABLE_SHARED)
--      install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/tjbench-static.exe
--        DESTINATION bin RENAME tjbench.exe)
-+      install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${REAL_BUILDS_PATH}mozjpeg/tjbench-static.exe
-+        DESTINATION tools/mozjpeg RENAME tjbench.exe)
+     if(NOT CMAKE_VERSION VERSION_LESS "3.1" AND MSVC AND
+       CMAKE_C_LINKER_SUPPORTS_PDB)
+       install(FILES "$<TARGET_PDB_FILE:turbojpeg>"
+-        DESTINATION ${CMAKE_INSTALL_BINDIR} OPTIONAL)
++        DESTINATION ${CMAKE_INSTALL_BINDIR}/mozjpeg OPTIONAL)
      endif()
    endif()
--  install(FILES ${CMAKE_SOURCE_DIR}/turbojpeg.h DESTINATION include)
-+  install(FILES ${CMAKE_SOURCE_DIR}/turbojpeg.h DESTINATION include/mozjpeg)
+   if(ENABLE_STATIC)
+-    install(TARGETS turbojpeg-static ARCHIVE
+-      DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    install(TARGETS turbojpeg-static
++      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozjpeg
++      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozjpeg)
+     if(NOT ENABLE_SHARED)
+       if(MSVC_IDE OR XCODE)
+         set(DIR "${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}")
+@@ -1392,15 +1399,15 @@ if(WITH_TURBOJPEG)
+         set(DIR ${CMAKE_CURRENT_BINARY_DIR})
+       endif()
+       install(PROGRAMS ${DIR}/tjbench-static${EXE}
+-        DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME tjbench${EXE})
++        DESTINATION tools/mozjpeg RENAME tjbench${EXE})
+     endif()
+   endif()
+   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/turbojpeg.h
+-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mozjpeg)
  endif()
  
  if(ENABLE_STATIC)
--  install(TARGETS jpeg-static ARCHIVE DESTINATION lib)
-+  install(TARGETS jpeg-static ARCHIVE DESTINATION lib/mozjpeg)
+-  install(TARGETS jpeg-static ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++  install(TARGETS jpeg-static ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozjpeg)
    if(NOT ENABLE_SHARED)
--    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/cjpeg-static.exe
--      DESTINATION bin RENAME cjpeg.exe)
--    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/djpeg-static.exe
--      DESTINATION bin RENAME djpeg.exe)
--    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/jpegtran-static.exe
--      DESTINATION bin RENAME jpegtran.exe)
-+    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${REAL_BUILDS_PATH}mozjpeg/cjpeg-static.exe
-+      DESTINATION tools/mozjpeg RENAME cjpeg.exe)
-+    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${REAL_BUILDS_PATH}mozjpeg/djpeg-static.exe
-+      DESTINATION tools/mozjpeg RENAME djpeg.exe)
-+    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${REAL_BUILDS_PATH}mozjpeg/jpegtran-static.exe
-+      DESTINATION tools/mozjpeg RENAME jpegtran.exe)
+     if(MSVC_IDE OR XCODE)
+       set(DIR "${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}")
+@@ -1408,15 +1415,15 @@ if(ENABLE_STATIC)
+       set(DIR ${CMAKE_CURRENT_BINARY_DIR})
+     endif()
+     install(PROGRAMS ${DIR}/cjpeg-static${EXE}
+-      DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME cjpeg${EXE})
++      DESTINATION tools/mozjpeg RENAME cjpeg${EXE})
+     install(PROGRAMS ${DIR}/djpeg-static${EXE}
+-      DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME djpeg${EXE})
++      DESTINATION tools/mozjpeg RENAME djpeg${EXE})
+     install(PROGRAMS ${DIR}/jpegtran-static${EXE}
+-      DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME jpegtran${EXE})
++      DESTINATION tools/mozjpeg RENAME jpegtran${EXE})
    endif()
  endif()
  
--install(TARGETS rdjpgcom wrjpgcom RUNTIME DESTINATION bin)
+-install(TARGETS rdjpgcom wrjpgcom RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 +install(TARGETS rdjpgcom wrjpgcom RUNTIME DESTINATION tools/mozjpeg)
  
- install(FILES ${CMAKE_SOURCE_DIR}/README.ijg ${CMAKE_SOURCE_DIR}/README-mozilla.txt
-   ${CMAKE_SOURCE_DIR}/example.c ${CMAKE_SOURCE_DIR}/libjpeg.txt
-   ${CMAKE_SOURCE_DIR}/structure.txt ${CMAKE_SOURCE_DIR}/usage.txt
-   ${CMAKE_SOURCE_DIR}/wizard.txt
--  DESTINATION doc)
-+  DESTINATION share/mozjpeg)
+ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.ijg
+   ${CMAKE_CURRENT_SOURCE_DIR}/README.md ${CMAKE_CURRENT_SOURCE_DIR}/example.txt
+@@ -1424,10 +1431,10 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.ijg
+   ${CMAKE_CURRENT_SOURCE_DIR}/libjpeg.txt
+   ${CMAKE_CURRENT_SOURCE_DIR}/structure.txt
+   ${CMAKE_CURRENT_SOURCE_DIR}/usage.txt ${CMAKE_CURRENT_SOURCE_DIR}/wizard.txt
+-  ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md DESTINATION ${CMAKE_INSTALL_DOCDIR})
++  ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md DESTINATION share/mozjpeg)
+ if(WITH_JAVA)
+   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/java/TJExample.java
+-    DESTINATION ${CMAKE_INSTALL_DOCDIR})
++    DESTINATION share/mozjpeg)
+ endif()
  
- install(FILES ${CMAKE_BINARY_DIR}/jconfig.h ${CMAKE_SOURCE_DIR}/jerror.h
-   ${CMAKE_SOURCE_DIR}/jmorecfg.h ${CMAKE_SOURCE_DIR}/jpeglib.h
--  DESTINATION include)
-+  DESTINATION include/mozjpeg)
+ if(UNIX OR MINGW)
+@@ -1439,12 +1446,12 @@ if(UNIX OR MINGW)
+ endif()
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libjpeg.pc
+     ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libturbojpeg.pc
+-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/mozjpeg)
+ 
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/jerror.h ${CMAKE_CURRENT_SOURCE_DIR}/jmorecfg.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/jpeglib.h
+-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mozjpeg)
+ 
+ include(cmakescripts/BuildPackages.cmake)
+ 
 diff --git a/sharedlib/CMakeLists.txt b/sharedlib/CMakeLists.txt
-index 268cc14..d067d2a 100644
+index f0a7d87..1e82349 100644
 --- a/sharedlib/CMakeLists.txt
 +++ b/sharedlib/CMakeLists.txt
-@@ -68,6 +68,6 @@ add_executable(jcstest ../jcstest.c)
+@@ -92,11 +92,11 @@ add_executable(jcstest ../jcstest.c)
  target_link_libraries(jcstest jpeg)
  
  install(TARGETS jpeg cjpeg djpeg jpegtran
--  ARCHIVE DESTINATION lib
--  LIBRARY DESTINATION lib
--  RUNTIME DESTINATION bin)
-+  ARCHIVE DESTINATION lib/mozjpeg
-+  LIBRARY DESTINATION lib/mozjpeg
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozjpeg
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozjpeg
 +  RUNTIME DESTINATION tools/mozjpeg)
+ if(NOT CMAKE_VERSION VERSION_LESS "3.1" AND MSVC AND
+   CMAKE_C_LINKER_SUPPORTS_PDB)
+   install(FILES "$<TARGET_PDB_FILE:jpeg>"
+-    DESTINATION ${CMAKE_INSTALL_BINDIR} OPTIONAL)
++    DESTINATION ${CMAKE_INSTALL_BINDIR}/mozjpeg OPTIONAL)
+ endif()

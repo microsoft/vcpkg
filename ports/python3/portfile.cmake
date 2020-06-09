@@ -18,6 +18,9 @@ vcpkg_from_github(
 
 if("enable-shared" IN_LIST FEATURES)
 	set(_ENABLED_SHARED --enable-shared)
+    if(VCPKG_TARGET_IS_LINUX)
+        message(WARNING"Feature enable-shared requires libffi-devel from the system package manager, please install it on Ubuntu system via sudo apt-get install libffi-dev.")
+    endif()
 else()
 	unset(_ENABLED_SHARED)
 endif()
@@ -139,17 +142,10 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
 		vcpkg_execute_build_process(
-		  COMMAND make -j ${VCPKG_CONCURRENCY}
-		  NO_PARALLEL_COMMAND make
+		  COMMAND make install -j ${VCPKG_CONCURRENCY}
+		  NO_PARALLEL_COMMAND make install
 		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
 		  LOGNAME make-build-${TARGET_TRIPLET}-release
-		)
-
-		message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-		vcpkg_execute_build_process(
-		  COMMAND make install
-		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-		  LOGNAME make-install-${TARGET_TRIPLET}-release
 		)
 
 		message(STATUS "Installing ${TARGET_TRIPLET}-rel headers...")
@@ -223,17 +219,10 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
 		message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 		vcpkg_execute_build_process(
-		  COMMAND make -j ${VCPKG_CONCURRENCY}
-		  NO_PARALLEL_COMMAND make
+		  COMMAND make install -j ${VCPKG_CONCURRENCY}
+		  NO_PARALLEL_COMMAND make install
 		  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
 		  LOGNAME make-build-${TARGET_TRIPLET}-debug
-		)
-
-		message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
-		vcpkg_execute_build_process(
-		  COMMAND make install
-		  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-		  LOGNAME make-install-${TARGET_TRIPLET}-debug
 		)
 
 		message(STATUS "Installing ${TARGET_TRIPLET}-dbg Python library files...")

@@ -6,10 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
-        0002-detect-openssl.patch
         0003-fix-windowsinclude.patch
         0004-fix-debug-build.patch
         0005-fix-libvpx-linking.patch
+        0006-fix-StaticFeatures.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
