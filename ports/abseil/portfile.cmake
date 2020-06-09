@@ -5,6 +5,9 @@ set(ABSEIL_PATCHES
 
     # This patch is an upstream commit, the related PR: https://github.com/abseil/abseil-cpp/pull/637
     fix-MSVCbuildfail.patch
+    
+    # Remove this patch in next update, see https://github.com/google/cctz/pull/145
+    fix-arm-build.patch
 )
 
 if("cxx17" IN_LIST FEATURES)

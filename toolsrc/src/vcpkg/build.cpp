@@ -124,7 +124,7 @@ namespace vcpkg::Build::Command
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("build zlib:x64-windows"),
+        create_example_string("build zlib:x64-windows"),
         1,
         1,
         {{}, {}},
@@ -330,7 +330,7 @@ namespace vcpkg::Build
         {
             start += "\n" + Strings::serialize(feature);
         }
-        const fs::path binary_control_file = paths.packages / bcf.core_paragraph.dir() / "CONTROL";
+        const fs::path binary_control_file = paths.packages / bcf.core_paragraph.dir() / fs::u8path("CONTROL");
         paths.get_filesystem().write_contents(binary_control_file, start, VCPKG_LINE_INFO);
     }
 
@@ -375,7 +375,10 @@ namespace vcpkg::Build
             {"CMD", "BUILD"},
             {"PORT", scf.core_paragraph->name},
             {"CURRENT_PORT_DIR", scfl.source_location},
-            {"VCPKG_ROOT_PATH", paths.root},
+            {"VCPKG_ROOT_DIR", paths.root},
+            {"PACKAGES_DIR", paths.packages},
+            {"BUILDTREES_DIR", paths.buildtrees},
+            {"_VCPKG_INSTALLED_DIR", paths.installed},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
@@ -403,8 +406,9 @@ namespace vcpkg::Build
         std::vector<std::string> port_configs;
         for (const PackageSpec& dependency : action.package_dependencies)
         {
-            const fs::path port_config_path = paths.installed / dependency.triplet().canonical_name() / "share" /
-                                              dependency.name() / "vcpkg-port-config.cmake";
+            const fs::path port_config_path = paths.installed / fs::u8path(dependency.triplet().canonical_name()) /
+                                              fs::u8path("share") / fs::u8path(dependency.name()) /
+                                              fs::u8path("vcpkg-port-config.cmake");
 
             if (fs.is_regular_file(port_config_path))
             {
@@ -449,22 +453,26 @@ namespace vcpkg::Build
             else if (pre_build_info.cmake_system_name == "Linux")
             {
                 hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "linux.cmake", algo);
+                hash += Hash::get_file_hash(
+                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/linux.cmake"), algo);
             }
             else if (pre_build_info.cmake_system_name == "Darwin")
             {
                 hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "osx.cmake", algo);
+                hash += Hash::get_file_hash(
+                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/osx.cmake"), algo);
             }
             else if (pre_build_info.cmake_system_name == "FreeBSD")
             {
                 hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "freebsd.cmake", algo);
+                hash += Hash::get_file_hash(
+                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/freebsd.cmake"), algo);
             }
             else if (pre_build_info.cmake_system_name == "Android")
             {
                 hash += "-";
-                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "android.cmake", algo);
+                hash += Hash::get_file_hash(
+                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/android.cmake"), algo);
             }
 
             s_hash_cache.emplace(triplet_file_path, hash);
@@ -1063,31 +1071,30 @@ namespace vcpkg::Build
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                     break;
                 case VcpkgTripletVar::LOAD_VCVARS_ENV:
-                        if (variable_value.empty())
-                        {
-                            load_vcvars_env = true;
-                            if(external_toolchain_file)
-                                load_vcvars_env = false;
-                        }
-                        else if (Strings::case_insensitive_ascii_equals(variable_value, "1") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "on") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "true"))
-                            load_vcvars_env = true;
-                        else if (Strings::case_insensitive_ascii_equals(variable_value, "0") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "off") ||
-                                 Strings::case_insensitive_ascii_equals(variable_value, "false"))
-                            load_vcvars_env = false;
-                        else
-                            Checks::exit_with_message(
-                                VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s", variable_value);
-                        break;
+                    if (variable_value.empty())
+                    {
+                        load_vcvars_env = true;
+                        if (external_toolchain_file) load_vcvars_env = false;
+                    }
+                    else if (Strings::case_insensitive_ascii_equals(variable_value, "1") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "on") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "true"))
+                        load_vcvars_env = true;
+                    else if (Strings::case_insensitive_ascii_equals(variable_value, "0") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "off") ||
+                             Strings::case_insensitive_ascii_equals(variable_value, "false"))
+                        load_vcvars_env = false;
+                    else
+                        Checks::exit_with_message(
+                            VCPKG_LINE_INFO, "Unknown boolean setting for VCPKG_LOAD_VCVARS_ENV: %s", variable_value);
+                    break;
             }
         }
 
         triplet_abi_tag = get_triplet_abi(paths, *this, triplet);
     }
 
-    ExtendedBuildResult::ExtendedBuildResult(BuildResult code) : code(code) {}
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code) : code(code) { }
     ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::unique_ptr<BinaryControlFile>&& bcf)
         : code(code), binary_control_file(std::move(bcf))
     {
