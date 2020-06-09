@@ -1,7 +1,7 @@
 # Mark variables as used so cmake doesn't complain about them
 mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 
-# VCPKG toolchain options. 
+# VCPKG toolchain options.
 option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging purposes." OFF)
 mark_as_advanced(VCPKG_VERBOSE)
 
@@ -28,7 +28,7 @@ endif()
 
 #If CMake does not have a mapping for MinSizeRel and RelWithDebInfo in imported targets
 #it will map those configuration to the first valid configuration in CMAKE_CONFIGURATION_TYPES or the targets IMPORTED_CONFIGURATIONS.
-#In most cases this is the debug configuration which is wrong. 
+#In most cases this is the debug configuration which is wrong.
 if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
     set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;")
     if(VCPKG_VERBOSE)
@@ -107,7 +107,7 @@ else()
                     return()
                 endif()
             endif()
-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64")
             set(_VCPKG_TARGET_TRIPLET_ARCH x64)
         else()
             if( _CMAKE_IN_TRY_COMPILE )
@@ -151,7 +151,9 @@ if(NOT DEFINED _VCPKG_ROOT_DIR)
     endwhile()
     set(_VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR_CANDIDATE} CACHE INTERNAL "Vcpkg root directory")
 endif()
-set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
+if (NOT DEFINED _VCPKG_INSTALLED_DIR)
+    set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
+endif()
 
 if(NOT EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" AND NOT _CMAKE_IN_TRY_COMPILE AND NOT VCPKG_SUPPRESS_INSTALLED_LIBRARIES_WARNING)
     message(WARNING "There are no libraries installed for the Vcpkg triplet ${VCPKG_TARGET_TRIPLET}.")

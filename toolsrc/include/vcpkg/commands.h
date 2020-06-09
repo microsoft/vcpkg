@@ -14,7 +14,7 @@ namespace vcpkg::Commands
 {
     using CommandTypeA = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-    using CommandTypeC = void (*)(const VcpkgCmdArguments& args);
+    using CommandTypeC = void (*)(const VcpkgCmdArguments& args, Files::Filesystem& fs);
 
     namespace BuildExternal
     {
@@ -25,6 +25,11 @@ namespace vcpkg::Commands
     {
         extern const CommandStructure COMMAND_STRUCTURE;
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
+    }
+
+    namespace CIClean
+    {
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Env
@@ -87,10 +92,11 @@ namespace vcpkg::Commands
 
     namespace Integrate
     {
-        extern const char* const INTEGRATE_COMMAND_HELPSTRING;
         extern const CommandStructure COMMAND_STRUCTURE;
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+        void append_helpstring(HelpTableFormatter& table);
+        std::string get_helpstring();
     }
 
     namespace PortsDiff
@@ -113,14 +119,14 @@ namespace vcpkg::Commands
         const char* base_version();
         const std::string& version();
         void warn_if_vcpkg_version_mismatch(const VcpkgPaths& paths);
-        void perform_and_exit(const VcpkgCmdArguments& args);
+        void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs);
     }
 
     namespace Contact
     {
         extern const CommandStructure COMMAND_STRUCTURE;
         const std::string& email();
-        void perform_and_exit(const VcpkgCmdArguments& args);
+        void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs);
     }
 
     namespace X_VSInstances

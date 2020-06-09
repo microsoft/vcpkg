@@ -174,7 +174,7 @@ namespace vcpkg::CMakeVars
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
 
-        const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
+        const std::vector<std::string> lines = Strings::split(ec_data.output, '\n');
 
         const auto end = lines.cend();
 
@@ -192,7 +192,7 @@ namespace vcpkg::CMakeVars
                 {
                     const std::string& line = *block_start;
 
-                    std::vector<std::string> s = Strings::split(line, "=");
+                    std::vector<std::string> s = Strings::split(line, '=');
                     Checks::check_exit(VCPKG_LINE_INFO,
                                        s.size() == 1 || s.size() == 2,
                                        "Expected format is [VARIABLE_NAME=VARIABLE_VALUE], but was [%s]",

@@ -1,3 +1,5 @@
+#include <vcpkg/base/system_headers.h>
+
 #include <catch2/catch.hpp>
 #include <vcpkg/base/pragmas.h>
 
