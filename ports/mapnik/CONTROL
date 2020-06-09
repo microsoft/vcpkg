@@ -2,15 +2,15 @@ Source: mapnik
 Version: 3.0.22
 Homepage: https://github.com/am2222/mapnik-windows/
 Description: Mapnik is an open source toolkit for developing mapping applications. Compiling on windows. (unofficial port)
-Build-Depends: icu, boost-locale[icu], boost-regex[icu], boost, freetype, tiff, libwebp, libxml2, harfbuzz, libpng, zlib
+Build-Depends: libjpeg-turbo, tiff, libpng, libwebp, freetype[bzip2,png], icu, libxml2, harfbuzz[icu],  boost-locale[icu], boost-regex[icu],  boost-gil, boost-geometry, boost-property-tree, boost-filesystem, boost-system, boost-spirit, boost-program-options, boost-assign, boost-bimap, mapbox-variant, zlib
 
 Feature: CAIRO
 Description: Cairo renderer
-Build-Depends: cairo
+Build-Depends: cairo,cairomm
 
 Feature: PROJ4
 Description: PROJ4 Functionalities
-Build-Depends: proj4
+Build-Depends: proj4[database]
 
 Feature: INPUT_CSV
 Description: CSV input plugin
@@ -32,11 +32,11 @@ Build-Depends: gdal
 
 Feature: INPUT_PGRASTER
 Description: PGRASTER input plugin
-Build-Depends: libodb-pgsql
+Build-Depends: libpq, libodb-pgsql
 
 Feature: INPUT_POSTGIS
 Description: POSTGIS input plugin
-Build-Depends: libodb-pgsql
+Build-Depends: libpq, libodb-pgsql
 
 Feature: INPUT_RASTER
 Description: RASTER input plugin
