@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 09ee9a027fee74d6352ec92445fb5c688b7cc28bc30258d4a9efc250242a1c43f6c55c07f9e43e72d50e09f93dc8eeaffabec9e205f2af2899bde63b7fbdfca1
     HEAD_REF master
     PATCHES
-		fixlibpmemobj-cpp.patch
+    fixlibpmemobj-cpp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
