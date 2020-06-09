@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF 8ff8c542a87a6ac9cb52c5c04def66d844c290cb #v1.10
     SHA512 09ee9a027fee74d6352ec92445fb5c688b7cc28bc30258d4a9efc250242a1c43f6c55c07f9e43e72d50e09f93dc8eeaffabec9e205f2af2899bde63b7fbdfca1
     HEAD_REF master
-	PATCHES
+   PATCHES
 		fixlibpmemobj-cpp.patch
 )
 
@@ -32,4 +32,3 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpmemobj++/cmake TARGET_PATH share/l
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib/libpmemobj++)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
