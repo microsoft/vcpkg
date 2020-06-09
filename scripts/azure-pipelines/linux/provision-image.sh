@@ -6,11 +6,14 @@
 sudo apt -y update
 sudo apt -y dist-upgrade
 # Install common build dependencies and partitioning tools
-sudo apt -y install at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils build-essential g++ zip libx11-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config
+sudo apt -y install at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils build-essential g++ gfortran zip libx11-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config
 # Required by qt5-x11extras
 sudo apt -y install libxkbcommon-dev libxkbcommon-x11-dev
 # Required by libhdfs3
 sudo apt -y install libkrb5-dev
+# Required by mesa
+sudo apt -y install python3-setuptools
+
 
 # Install newer version of nasm than the apt package, required by intel-ipsec
 mkdir /tmp/nasm
@@ -42,9 +45,6 @@ sudo dpkg -i packages-microsoft-prod.deb
 sudo apt update
 sudo add-apt-repository universe
 sudo apt install -y powershell
-
-# Install odbc
-sudo apt install -y unixodbc-dev
 
 # Write SMB credentials
 sudo mkdir /etc/smbcredentials

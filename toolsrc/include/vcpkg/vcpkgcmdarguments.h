@@ -3,6 +3,7 @@
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/files.h>
 
 #include <memory>
 #include <unordered_map>
@@ -72,7 +73,8 @@ namespace vcpkg
         std::vector<std::string> (*valid_arguments)(const VcpkgPaths& paths);
     };
 
-    void display_usage(const CommandStructure& command_structure);
+    void print_usage();
+    void print_usage(const CommandStructure& command_structure);
 
 #if defined(_WIN32)
     using CommandLineCharType = wchar_t;
@@ -80,30 +82,61 @@ namespace vcpkg
     using CommandLineCharType = char;
 #endif
 
+    std::string create_example_string(const std::string& command_and_arguments);
+
+    std::string format_environment_variable(StringLiteral lit);
+
+    struct HelpTableFormatter
+    {
+        void format(StringView col1, StringView col2);
+        void example(StringView example_text);
+        void header(StringView name);
+        void blank();
+
+        std::string m_str;
+    };
+
     struct VcpkgCmdArguments
     {
-        static VcpkgCmdArguments create_from_command_line(const int argc, const CommandLineCharType* const* const argv);
+        static VcpkgCmdArguments create_from_command_line(const Files::Filesystem& fs,
+                                                          const int argc,
+                                                          const CommandLineCharType* const* const argv);
         static VcpkgCmdArguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
 
+        static void append_common_options(HelpTableFormatter& target);
+
         std::unique_ptr<std::string> vcpkg_root_dir;
+
+        std::unique_ptr<std::string> buildtrees_root_dir;
+        std::unique_ptr<std::string> downloads_root_dir;
         std::unique_ptr<std::string> install_root_dir;
+        std::unique_ptr<std::string> packages_root_dir;
         std::unique_ptr<std::string> scripts_root_dir;
+
+        std::unique_ptr<std::string> default_visual_studio_path;
+
         std::unique_ptr<std::string> triplet;
         std::unique_ptr<std::vector<std::string>> overlay_ports;
         std::unique_ptr<std::vector<std::string>> overlay_triplets;
+
         std::vector<std::string> binarysources;
+
         Optional<bool> debug = nullopt;
-        Optional<bool> sendmetrics = nullopt;
-        Optional<bool> printmetrics = nullopt;
+        Optional<bool> send_metrics = nullopt;
+        // fully disable metrics -- both printing and sending
+        Optional<bool> disable_metrics = nullopt;
+        Optional<bool> print_metrics = nullopt;
 
         // feature flags
-        Optional<bool> featurepackages = nullopt;
-        Optional<bool> binarycaching = nullopt;
+        Optional<bool> feature_packages = nullopt;
+        Optional<bool> binary_caching = nullopt;
 
         std::string command;
         std::vector<std::string> command_arguments;
 
         ParsedArguments parse_arguments(const CommandStructure& command_structure) const;
+
+        void imbue_from_environment();
 
     private:
         std::unordered_map<std::string, Optional<std::vector<std::string>>> optional_command_arguments;

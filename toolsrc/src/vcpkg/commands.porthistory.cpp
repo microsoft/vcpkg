@@ -68,7 +68,7 @@ namespace vcpkg::Commands::PortHistory
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("history <port>"),
+        create_example_string("history <port>"),
         1,
         1,
         {},
