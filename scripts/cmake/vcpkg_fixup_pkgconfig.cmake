@@ -226,7 +226,7 @@ endfunction()
 function(vcpkg_fixup_pkgconfig)
     cmake_parse_arguments(_vfpkg "SKIP_CHECK" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS" ${ARGN})
     
-    if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGER_IS_OSX)
+    if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
         list(APPEND _vfpkg_SYSTEM_LIBRARIES -ldl -lm)
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)

@@ -1,5 +1,5 @@
 set(LIBPNG_VER 1.6.37)
-set(PORT_DEBUG ON)
+
 # Download the apng patch
 set(LIBPNG_APNG_OPTION )
 if ("apng" IN_LIST FEATURES)
