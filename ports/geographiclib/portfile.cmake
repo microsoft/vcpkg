@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://jaist.dl.sourceforge.net/project/geographiclib/distrib/archive/GeographicLib-1.47-patch1.zip"
     FILENAME "geographiclib-1.47-patch1.zip"

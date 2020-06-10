@@ -93,7 +93,7 @@ namespace vcpkg::Commands::Import
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)"),
+        create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)"),
         3,
         3,
         {},

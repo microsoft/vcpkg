@@ -106,8 +106,8 @@ namespace
             for (auto&& archives_root_dir : m_read_dirs)
             {
                 const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
-                const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
+                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
+                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
                 if (fs.exists(archive_tombstone_path))
                 {
                     if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
@@ -174,14 +174,15 @@ namespace
             {
                 const fs::path& archives_root_dir = m_directory;
                 const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
-                const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
+                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
+                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
                 if (!fs.exists(archive_tombstone_path))
                 {
                     // Build failed, store all failure logs in the tombstone.
-                    const auto tmp_log_path = paths.buildtrees / spec.name() / "tmp_failure_logs";
-                    const auto tmp_log_path_destination = tmp_log_path / spec.name();
-                    const auto tmp_failure_zip = paths.buildtrees / spec.name() / "failure_logs.zip";
+                    const auto spec_name_path = fs::u8path(spec.name());
+                    const auto tmp_log_path = paths.buildtrees / spec_name_path / fs::u8path("tmp_failure_logs");
+                    const auto tmp_log_path_destination = tmp_log_path / spec_name_path;
+                    const auto tmp_failure_zip = paths.buildtrees / spec_name_path / fs::u8path("failure_logs.zip");
                     fs.create_directories(tmp_log_path_destination, ignore_errors);
 
                     for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
@@ -195,8 +196,7 @@ namespace
                         }
                     }
 
-                    compress_directory(paths, tmp_log_path, paths.buildtrees / spec.name() / "failure_logs.zip");
-
+                    compress_directory(paths, tmp_log_path, tmp_failure_zip);
                     fs.create_directories(archive_tombstone_path.parent_path(), ignore_errors);
                     fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
 
@@ -226,8 +226,8 @@ namespace
             for (auto&& archives_root_dir : m_read_dirs)
             {
                 const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
-                const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
+                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
+                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
 
                 if (purge_tombstones)
                 {
@@ -288,12 +288,12 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                         auto n = match_until([](char32_t ch) { return ch == ',' || ch == '`' || ch == ';'; });
                         Strings::append(segment, n);
                         auto ch = cur();
-                        if (ch == '\0' || ch == ',' || ch == ';')
+                        if (ch == Unicode::end_of_file || ch == ',' || ch == ';')
                             break;
                         else if (ch == '`')
                         {
                             ch = next();
-                            if (ch == '\0')
+                            if (ch == Unicode::end_of_file)
                                 add_error("unexpected eof: trailing unescaped backticks (`) are not allowed");
                             else
                                 Unicode::utf8_append_code_point(segment, ch);
@@ -305,7 +305,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     segments.emplace_back(std::move(loc), std::move(segment));
 
                     auto ch = cur();
-                    if (ch == '\0' || ch == ';')
+                    if (ch == Unicode::end_of_file || ch == ';')
                         break;
                     else if (ch == ',')
                     {
