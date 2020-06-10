@@ -4,55 +4,55 @@ Homepage: https://github.com/mapnik/mapnik
 Description: Mapnik is an open source toolkit for developing mapping applications. 
 Build-Depends: libjpeg-turbo, tiff, libpng, libwebp, freetype[bzip2,png], icu, libxml2, harfbuzz[icu],  boost-locale[icu], boost-regex[icu],  boost-gil, boost-geometry, boost-property-tree, boost-filesystem, boost-system, boost-spirit, boost-program-options, boost-assign, boost-bimap, mapbox-variant, zlib
 
-Feature: CAIRO
+Feature: cairo
 Description: Cairo renderer
 Build-Depends: cairo,cairomm
 
-Feature: PROJ4
+Feature: proj4
 Description: PROJ4 Functionalities
 Build-Depends: proj4[database]
 
-Feature: INPUT_CSV
+Feature: input_csv
 Description: CSV input plugin
 
-Feature: INPUT_GDAL
+Feature: input_gdal
 Description: GDAL input plugin
 Build-Depends: gdal
 
-Feature: INPUT_GEOBUF
+Feature: input_geobuf
 Description: GEOBUF input plugin
 Build-Depends: protozero
 
-Feature: INPUT_GEOJSON
+Feature: input_geojson
 Description: GEOJSON input plugin
 
-Feature: INPUT_OGR
+Feature: input_ogr
 Description: OGR input plugin
 Build-Depends: gdal
 
-Feature: INPUT_PGRASTER
+Feature: input_pgraster
 Description: PGRASTER input plugin
 Build-Depends: libpq, libodb-pgsql
 
-Feature: INPUT_POSTGIS
+Feature: input_postgis
 Description: POSTGIS input plugin
 Build-Depends: libpq, libodb-pgsql
 
-Feature: INPUT_RASTER
+Feature: input_raster
 Description: RASTER input plugin
 
-Feature: INPUT_SHAPE
+Feature: input_shape
 Description: SHAPE input plugin
 
-Feature: INPUT_SQLITE
+Feature: input_sqlite
 Description: SQLITE input plugin
 Build-Depends: sqlite3
 
-Feature: INPUT_TOPOJSON
+Feature: input_topojson
 Description: TOPOJSON input plugin
 
-Feature: DEMO
+Feature: demo
 Description: Make Demo Application
 
-Feature: UTILS
+Feature: utils
 Description: Make utilities Application including mapnik-rendrer and shapeindex
