@@ -18,4 +18,4 @@ vcpkg_configure_cmake(
 
 file(GLOB HEADER_LIST "${PROJECT_SOURCE_DIR}/src/*.h")
 file(INSTALL ${HEADER_LIST} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-configure_file(${SOURCE_PATH}/license ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
