@@ -7,6 +7,24 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   include_directories("./win32")
 endif()
 
+set(CAIRO_HEADERS
+    cairo.h
+    cairo-deprecated.h
+    cairo-features.h
+    cairo-pdf.h
+    cairo-ps.h
+    cairo-script.h
+    cairo-svg.h
+    ../cairo-version.h
+    cairo-win32.h
+    ../util/cairo-gobject/cairo-gobject.h
+    cairo-ft.h
+)
+
+set(CAIRO_X11_HEADERS
+    cairo-xlib.h
+)
+
 file(GLOB SOURCES
 "cairo-analysis-surface.c"
 "cairo-arc.c"
@@ -154,7 +172,7 @@ file(GLOB PLATFORM_SOURCES_WIN32
 "win32/cairo-win32-font.c"
 )
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
   list(APPEND SOURCES ${PLATFORM_SOURCES_WIN32})
 endif()
 
@@ -237,6 +255,14 @@ endif()
 
 if (CAIRO_HAS_XLIB_SURFACE)
     file(INSTALL cairo-xlib.h DESTINATION include)
+endif()
+
+install(FILES ${CAIRO_HEADERS} DESTINATION include)
+install(FILES ${CAIRO_HEADERS} DESTINATION include/cairo)
+
+if (WITH_X11)
+    install(FILES ${CAIRO_X11_HEADERS} DESTINATION include)
+    install(FILES ${CAIRO_X11_HEADERS} DESTINATION include/cairo)
 endif()
 
 install(TARGETS cairo cairo-gobject
