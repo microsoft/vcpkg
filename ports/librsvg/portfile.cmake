@@ -1,9 +1,12 @@
-vcpkg_from_github(
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://download.gnome.org/sources/librsvg/2.40/librsvg-2.40.20.tar.xz"
+    FILENAME "librsvg-2.40.20.tar.xz"
+    SHA512 cdd8224deb4c3786e29f48ed02c32ed9dff5cb15aba574a5ef845801ad3669cfcc3eedb9d359c22213dc7a29de24c363248825adad5877c40abf73b3688ff12f
+)
+
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/librsvg
-    REF  2cbb0f7bf56666187993bd7ba688bf82d0c9a5c7 #2.40.20
-    SHA512 776558fdd911f0cc9e8d467bf8e00a1930d2e51bb8ccd5f36f95955fefecab65faf575a80fdaacfe83fd32808f8b9c2e0323b16823e0431300df7bc0c1dfde12
-    HEAD_REF master
+    ARCHIVE ${ARCHIVE}
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
