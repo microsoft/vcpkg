@@ -8,7 +8,7 @@ vcpkg_from_github(
 )
 
 set(OPTIONS)
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_UWP)
     SET(WEBSOCKETPP_PATH "${CURRENT_INSTALLED_DIR}/share/websocketpp")
     list(APPEND OPTIONS
         -DWEBSOCKETPP_CONFIG=${WEBSOCKETPP_PATH}
@@ -42,7 +42,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
 
 file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
