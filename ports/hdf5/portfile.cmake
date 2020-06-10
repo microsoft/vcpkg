@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES 
         hdf5_config.patch
-            szip.patch
+       szip.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
