@@ -2,12 +2,12 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO live-clones/hdf5
+    REPO  HDFGroup/hdf5 
     REF hdf5-1_12_0
     SHA512 d84df1ea72dc6fa038440a370e1b1ff523364474e7f214b967edc26d3191b2ef4fe1d9273c4a086a5945f1ad1ab6aa8dbcda495898e7967b2b73fd93dd5071e0
     HEAD_REF develop
     PATCHES 
-        hdf5_config.patch
+       hdf5_config.patch
        szip.patch
 )
 
