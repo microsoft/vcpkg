@@ -10,6 +10,7 @@
 #include <vcpkg/vcpkgpaths.h>
 
 #include <functional>
+#include <map>
 #include <vector>
 
 namespace vcpkg::Graphs
@@ -50,9 +51,10 @@ namespace vcpkg::Dependencies
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFileLocation& scfl,
                           const RequestType& request_type,
-                          std::unordered_map<std::string, std::vector<FeatureSpec>>&& dependencies);
+                          std::map<std::string, std::vector<FeatureSpec>>&& dependencies);
 
         std::string displayname() const;
+        const std::string& public_abi() const;
 
         PackageSpec spec;
 
@@ -63,10 +65,13 @@ namespace vcpkg::Dependencies
         RequestType request_type;
         Build::BuildPackageOptions build_options;
 
-        std::unordered_map<std::string, std::vector<FeatureSpec>> feature_dependencies;
+        std::map<std::string, std::vector<FeatureSpec>> feature_dependencies;
         std::vector<PackageSpec> package_dependencies;
-
         std::vector<std::string> feature_list;
+
+        Optional<std::unique_ptr<Build::PreBuildInfo>> pre_build_info;
+        Optional<std::string> package_abi;
+        Optional<fs::path> abi_tag_file;
     };
 
     enum class RemovePlanType

@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/binarycaching.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
@@ -27,7 +28,7 @@ namespace vcpkg::Commands::Upgrade
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("upgrade --no-dry-run"),
+        create_example_string("upgrade --no-dry-run"),
         0,
         SIZE_MAX,
         {INSTALL_SWITCHES, {}},
@@ -41,11 +42,15 @@ namespace vcpkg::Commands::Upgrade
         const bool no_dry_run = Util::Sets::contains(options.switches, OPTION_NO_DRY_RUN);
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
+        auto binaryprovider =
+            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+
         StatusParagraphs status_db = database_load_check(paths);
 
         // Load ports from ports dirs
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        CMakeVars::TripletCMakeVarProvider var_provider(paths);
+        auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
+        auto& var_provider = *var_provider_storage;
 
         // input sanitization
         const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
@@ -180,8 +185,10 @@ namespace vcpkg::Commands::Upgrade
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
+        var_provider.load_tag_vars(action_plan, provider);
+
         const Install::InstallSummary summary =
-            Install::perform(action_plan, keep_going, paths, status_db, var_provider);
+            Install::perform(action_plan, keep_going, paths, status_db, *binaryprovider, var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 

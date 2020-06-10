@@ -22,14 +22,14 @@ namespace vcpkg::Commands::Contact
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("contact"),
+        create_example_string("contact"),
         0,
         0,
         {SWITCHES, {}},
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args)
+    void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs)
     {
         const ParsedArguments parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -38,7 +38,6 @@ namespace vcpkg::Commands::Contact
             auto maybe_now = Chrono::CTime::get_current_date_time();
             if (const auto p_now = maybe_now.get())
             {
-                auto& fs = Files::get_real_filesystem();
                 auto config = UserConfig::try_read_data(fs);
                 config.last_completed_survey = p_now->to_string();
                 config.try_write_data(fs);

@@ -1,9 +1,9 @@
 #include "pch.h"
 
+#include <vcpkg/base/parse.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/logicexpression.h>
-#include <vcpkg/parse.h>
 
 #include <string>
 #include <vector>
@@ -25,6 +25,8 @@ namespace vcpkg
         osx,
         uwp,
         android,
+        emscripten,
+        wasm32,
 
         static_link,
     };
@@ -48,14 +50,14 @@ namespace vcpkg
     class ExpressionParser : public Parse::ParserBase
     {
     public:
-        ExpressionParser(const std::string& str, const ExpressionContext& context) : evaluation_context(context)
+        ExpressionParser(const std::string& str, const ExpressionContext& context) :
+            Parse::ParserBase(str, "CONTROL"), evaluation_context(context)
         {
-            this->init(str, "CONTROL");
             {
                 auto override_vars = evaluation_context.cmake_context.find("VCPKG_DEP_INFO_OVERRIDE_VARS");
                 if (override_vars != evaluation_context.cmake_context.end())
                 {
-                    auto cmake_list = Strings::split(override_vars->second, ";");
+                    auto cmake_list = Strings::split(override_vars->second, ';');
                     for (auto& override_id : cmake_list)
                     {
                         if (!override_id.empty())
@@ -90,7 +92,7 @@ namespace vcpkg
 
         bool final_result;
 
-        static bool is_identifier_char(char ch)
+        static bool is_identifier_char(char32_t ch)
         {
             return is_upper_alpha(ch) || is_lower_alpha(ch) || is_ascii_digit(ch) || ch == '-';
         }
@@ -113,6 +115,8 @@ namespace vcpkg
                 {"osx", Identifier::osx},
                 {"uwp", Identifier::uwp},
                 {"android", Identifier::android},
+                {"emscripten", Identifier::emscripten},
+                {"wasm32", Identifier::wasm32},
                 {"static", Identifier::static_link},
             };
 
@@ -165,6 +169,8 @@ namespace vcpkg
                 case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
                 case Identifier::uwp: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
                 case Identifier::android: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Android");
+                case Identifier::emscripten: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Emscripten");
+                case Identifier::wasm32: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "wasm32");
                 case Identifier::static_link: return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");
             }
 

@@ -12,13 +12,20 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-set(USE_OPENSSL OFF)
+if ("network" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature network only support Windows")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    ssl CMAKE_USE_OPENSSL
+    event CMAKE_USE_EVENT
+    network CMAKE_USE_NETWORK
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
-        -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
+    OPTIONS ${FEATURE_OPTIONS}
         -DLIBUS_USE_LIBUV=${USE_LIBUV}
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
