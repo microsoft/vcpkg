@@ -75,7 +75,6 @@ apr:arm64-windows=fail
 argtable2:arm-uwp=fail
 argtable2:x64-uwp=fail
 arrow:arm64-windows=fail
-arrow:x64-linux=fail
 arrow:x86-windows=fail
 asiosdk:x64-linux=fail
 asiosdk:x64-osx=fail
@@ -622,6 +621,7 @@ ignition-msgs5:x64-linux=fail
 ignition-msgs5:arm64-windows=fail
 ignition-msgs5:arm-uwp=fail
 ignition-msgs5:x64-uwp=fail
+ignition-msgs5:x64-osx=skip
 imgui-sfml:x64-linux=ignore
 intel-ipsec:arm64-windows=fail
 intel-ipsec:arm-uwp=fail
@@ -1088,10 +1088,6 @@ microsoft-signalr:x64-uwp=skip
 microsoft-signalr:x64-windows=skip
 microsoft-signalr:x64-windows-static=skip
 microsoft-signalr:x86-windows=skip
-# conflicts with stb
-mlpack:x86-windows=skip
-mlpack:x64-windows=skip
-mlpack:x64-windows-static=skip
 mman:x64-linux=fail
 mman:x64-osx=fail
 mmloader:arm64-windows=fail
@@ -1137,19 +1133,15 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
-mpir:arm64-windows=fail
-mpir:arm-uwp=fail
-mpir:x64-uwp=fail
-# Building package gmp[core]:x64-linux... done
-# Installing package gmp[core]:x64-linux...
-# The following files are already installed in /mnt/1/s/installed/x64-linux and are in conflict with gmp:x64-linux
-#
-# Installed by mpir:x64-linux
-#     debug/lib/libgmp.a
-#     debug/lib/libgmp.la
-#     include/gmp.h
-#     lib/libgmp.a
-#     lib/libgmp.la
+# mpir conflicts with gmp
+# see https://github.com/microsoft/vcpkg/issues/11756
+mpir:x86-windows=skip
+mpir:x64-windows=skip
+mpir:x64-windows-static=skip
+mpir:arm64-windows=skip
+mpir:arm-uwp=skip
+mpir:x64-uwp=skip
+mpir:x64-osx=skip
 mpir:x64-linux=skip
 #Conflicts with angle and qt-5base
 ms-angle:arm64-windows      = skip
@@ -1207,6 +1199,7 @@ netcdf-cxx4:x64-linux=ignore
 nethost:x64-uwp=fail
 nethost:arm-uwp=fail
 nettle:x64-windows=skip
+nettle:x64-osx=fail
 networkdirect-sdk:arm64-windows=fail
 networkdirect-sdk:arm-uwp=fail
 networkdirect-sdk:x64-linux=fail

@@ -514,7 +514,7 @@ namespace vcpkg::Install
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("install zlib zlib:x64-windows curl boost"),
+        create_example_string("install zlib zlib:x64-windows curl boost"),
         1,
         SIZE_MAX,
         {INSTALL_SWITCHES, INSTALL_SETTINGS},
