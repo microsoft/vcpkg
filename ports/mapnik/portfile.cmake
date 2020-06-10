@@ -21,7 +21,6 @@ elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   set(MAPNIK_STATIC_LIB ON)
 endif()
 
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cairo   WITH_CAIRO
     demo  WITH_DEMO
@@ -57,7 +56,7 @@ file(COPY ${SOURCE_PATH}/include/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/inc
 
 vcpkg_copy_pdbs()
 
-if ("UTILS" IN_LIST FEATURES)
+if ("utils" IN_LIST FEATURES)
     vcpkg_copy_tools(
       TOOL_NAMES mapnik-demo mapnik-render shapeindex
       AUTO_CLEAN
