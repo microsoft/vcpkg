@@ -9,9 +9,10 @@ vcpkg_from_github(
     PATCHES
         fix-linux-build.patch
         Fix-FindCairo.patch
+        fix-expat-cannot-found.patch
 )
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+if (VCPKG_TARGET_IS_OSX)
     set(IO2D_DEFAULT_OPTION "-DIO2D_DEFAULT=COREGRAPHICS_MAC")
 endif()
 
@@ -43,5 +44,3 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME io2d)
