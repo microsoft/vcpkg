@@ -3,7 +3,7 @@ project(cairo C)
 
 # Add include directories
 include_directories(".")
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
   include_directories("./win32")
 endif()
 
@@ -195,7 +195,7 @@ add_definitions(
     -DHAVE_FT_GET_X11_FONT_FORMAT=1)
 
 # additional features for macOS
-if((CMAKE_SYSTEM_NAME STREQUAL "Darwin") OR (CMAKE_SYSTEM_NAME STREQUAL "Linux"))
+if(UNIX OR APPLE)
   add_definitions(
       -DHAVE_INTTYPES_H=1
       -DHAVE_STDINT_H=1
@@ -214,7 +214,7 @@ endif()
 
 target_link_libraries(cairo PRIVATE ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
     target_link_libraries(cairo PRIVATE gdi32 msimg32 user32)
 endif()
 
