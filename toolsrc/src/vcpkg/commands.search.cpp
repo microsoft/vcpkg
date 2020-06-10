@@ -54,7 +54,7 @@ namespace vcpkg::Commands::Search
     const CommandStructure COMMAND_STRUCTURE = {
         Strings::format(
             "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
-            Help::create_example_string("search png")),
+            create_example_string("search png")),
         0,
         1,
         {SEARCH_SWITCHES, {}},

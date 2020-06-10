@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
         -DBUILD_SAMPLES=OFF
         -DCPPREST_EXPORT_DIR=share/cpprestsdk
         -DWERROR=OFF
+        -DPKG_CONFIG_EXECUTABLE=FALSE
     OPTIONS_DEBUG
         -DCPPREST_INSTALL_HEADERS=OFF
 )

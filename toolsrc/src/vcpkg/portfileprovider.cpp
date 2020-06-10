@@ -28,7 +28,7 @@ namespace vcpkg::PortFileProvider
                                                  const std::vector<std::string>* ports_dirs_paths)
         : filesystem(paths.get_filesystem())
     {
-        auto& fs = Files::get_real_filesystem();
+        auto& fs = paths.get_filesystem();
         if (ports_dirs_paths)
         {
             for (auto&& overlay_path : *ports_dirs_paths)

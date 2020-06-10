@@ -202,6 +202,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
             endif()
             find_library(CHECK_LIB_${_libname} NAMES ${_libname} PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
             if(CHECK_LIB_${_libname})
+                unset(CHECK_LIB_${_libname}) # need to unset or else other configurations will not check correctly
                 continue() # found library; all ok
             endif()
             foreach(_lib_suffix ${lib_suffixes})
@@ -225,7 +226,7 @@ endfunction()
 function(vcpkg_fixup_pkgconfig)
     cmake_parse_arguments(_vfpkg "SKIP_CHECK" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS" ${ARGN})
     
-    if(VCPKG_TARGET_IS_LINUX)
+    if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
         list(APPEND _vfpkg_SYSTEM_LIBRARIES -ldl -lm)
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -248,14 +249,15 @@ function(vcpkg_fixup_pkgconfig)
     endif()
 
     if(NOT PKGCONFIG)
-        find_program(PKGCONFIG pkg-config PATHS REQUIRED)
+        find_program(PKGCONFIG pkg-config PATHS "bin" "/usr/bin" "/usr/local/Cellar/pkg-config/0.29.2_3" REQUIRED)
         if(NOT PKGCONFIG AND CMAKE_HOST_WIN32)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
             find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
         endif()
         debug_message("Using pkg-config from: ${PKGCONFIG}")
-        if(NOT PKGCONFIG)
-            message(STATUS "${PORT} requires pkg-config from the system package manager (example: \"sudo apt-get install pkg-config\")")
+        if(NOT PKGCONFIG AND NOT _vfpkg_SKIP_CHECK)
+            message(WARNING "Unable to find pkg-config to validate *.pc files. Skipping checkes!")
+            set(_vfpkg_SKIP_CHECK TRUE)
         endif()
     endif()
 
@@ -279,7 +281,6 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "${_VCPKG_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REGEX REPLACE "^prefix=(\\\\)?\\\${prefix}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        debug_message("CONTENTS after: ${_contents}")
         file(WRITE "${_file}" "${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
@@ -311,7 +312,6 @@ function(vcpkg_fixup_pkgconfig)
         string(REGEX REPLACE "^prefix=(\\\\)?\\\${prefix}(/debug)?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
-        debug_message("CONTENTS after: ${_contents}")
         file(WRITE "${_file}" "${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()

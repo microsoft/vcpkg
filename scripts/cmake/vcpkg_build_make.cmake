@@ -93,7 +93,7 @@ function(vcpkg_build_make)
         set(DESTDIR "DESTDIR=${CURRENT_PACKAGES_DIR}")
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
-    
+
     # Backup enviromnent variables
     set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
     set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
@@ -105,7 +105,7 @@ function(vcpkg_build_make)
     _vcpkg_backup_env_variable(LD_LIBRARY_PATH)
     _vcpkg_backup_env_variable(LIBRARY_PATH)
     set(LIBPATH_BACKUP "$ENV{LIBPATH}")
-    
+
     # Setup include enviromnent
     set(ENV{INCLUDE} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_BACKUP}")
     set(ENV{INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_PATH_BACKUP}")
@@ -148,7 +148,7 @@ function(vcpkg_build_make)
                 endif()
                 set(CMAKE_BUILDTYPE "RELEASE")
             endif()
-            
+
             set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
@@ -156,9 +156,9 @@ function(vcpkg_build_make)
             if(_bc_ADD_BIN_TO_PATH)
                 set(_BACKUP_ENV_PATH "$ENV{PATH}")
                 if(BUILDTYPE STREQUAL "debug")
-                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin")
+                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
                 else()
-                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
+                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
                 endif()
             endif()
 
@@ -166,15 +166,15 @@ function(vcpkg_build_make)
                 set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_${CMAKE_BUILDTYPE}}")
                 string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
                 set(ENV{CFLAGS} ${TMP_CFLAGS})
-                
+
                 set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_${CMAKE_BUILDTYPE}}")
                 string(REGEX REPLACE "[ \t]+/" " -" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
                 set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
-                
+
                 set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
                 string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
                 set(ENV{LDFLAGS} ${TMP_LDFLAGS})
-                
+
                 string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
                 string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF "${_VCPKG_INSTALLED_PKGCONF}")
                 string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF "${_VCPKG_INSTALLED_PKGCONF}")
@@ -183,7 +183,7 @@ function(vcpkg_build_make)
                 else()
                     set(ENV{VCPKG_PKG_PREFIX} ${_VCPKG_INSTALLED_PKGCONF})
                 endif()
-                
+
             else()
                 set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_${CMAKE_BUILDTYPE}}")
                 set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_${CMAKE_BUILDTYPE}}")
@@ -238,16 +238,16 @@ function(vcpkg_build_make)
                     endif()
                     set(PATH_SUFFIX)
                 endif()
-            
+
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-                
+
                 if(MAKE_BASH)
                     set(MAKE_CMD_LINE "${MAKE_COMMAND} ${INSTALL_OPTS} ${DESTDIR}${PATH_SUFFIX}")
                 else()
                     set(INSTALL_OPTS ${INSTALL_OPTS} "${DESTDIR}${PATH_SUFFIX}")
                     set(MAKE_CMD_LINE ${MAKE_COMMAND} ${INSTALL_OPTS})
                 endif()
-                
+
                 set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
                 vcpkg_execute_build_process(
                     COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
@@ -281,6 +281,6 @@ function(vcpkg_build_make)
     if (CMAKE_HOST_WIN32)
         set(ENV{PATH} "${PATH_GLOBAL}")
     endif()
-    
+
 
 endfunction()
