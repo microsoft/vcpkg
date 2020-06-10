@@ -41,6 +41,7 @@ if(APPLE)
     find_library(FOUNDATION_LIBRARY Foundation)
     find_library(CORESERVICES_LIBRARY CoreServices)
     link_libraries(${CORESERVICES_LIBRARY} ${COREFOUNDATION_LIBRARY} ${FOUNDATION_LIBRARY})
+    set(ENV{SDKROOT} ${CMAKE_OSX_SYSROOT})
 endif()
 
 if(WIN32 OR APPLE)
