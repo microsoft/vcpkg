@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF v2.10.16
     SHA512 d850b26051439dd10edcecd006075c64c61c565193cd76870af175bd343a72ecc59485deb0f907807071a57dd256b67139ad5d016f19cb38f7142357f430be1c
     HEAD_REF master
+    PATCHES fix-find-openssl.patch
 )
 
 set(OPTIONS)
@@ -39,11 +40,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
 
-file(INSTALL
-    ${SOURCE_PATH}/license.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpprestsdk RENAME copyright)
-
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
