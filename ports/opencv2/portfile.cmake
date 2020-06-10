@@ -33,7 +33,6 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"     WITH_CUDA
- "cuda"     WITH_CUBLAS
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
  "jasper"   WITH_JASPER
@@ -105,6 +104,7 @@ vcpkg_configure_cmake(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENMP=OFF
         -DWITH_ZLIB=ON
+        -DWITH_CUBLAS=OFF   # newer libcublas cannot be found by the old cuda cmake script in opencv2, requires a fix
 )
 
 vcpkg_install_cmake()
