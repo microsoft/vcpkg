@@ -14,7 +14,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-		${FEATURE_OPTIONS}
+       ${FEATURE_OPTIONS}
         -DSPDLOG_FMT_EXTERNAL=ON
         -DSPDLOG_INSTALL=ON
 )
