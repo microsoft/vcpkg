@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xalan-c
@@ -34,11 +32,11 @@ file(REMOVE_RECURSE
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/Xalan.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/Xalan.exe ${CURRENT_PACKAGES_DIR}/debug/bin/Xalan.exe)
 endif()	
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/xalan-c)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/xalan-c/LICENSE ${CURRENT_PACKAGES_DIR}/share/xalan-c/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
