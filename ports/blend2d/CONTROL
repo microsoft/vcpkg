@@ -1,5 +1,5 @@
 Source: blend2d
-Version: beta_2020-05-04
+Version: beta_2020-06-01
 Homepage: https://github.com/blend2d/blend2d
 Description: Beta 2D Vector Graphics Powered by a JIT Compiler
 Default-Features: jit, logging, tls
