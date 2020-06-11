@@ -319,6 +319,7 @@ vcpkg_configure_cmake(
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_PROTOBUF=ON
