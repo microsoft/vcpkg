@@ -27,9 +27,9 @@ jobs:
       $commonArgs = @(
         '--binarycaching',
         '--x-binarysource=clear;files,W:\,upload',
-        '--x-buildtrees-root=E:\buildtrees',
-        '--x-install-root=E:\install',
-        '--x-packages-root=E:\packages'
+        '--x-buildtrees-root=D:\buildtrees',
+        '--x-install-root=D:\install',
+        '--x-packages-root=D:\packages'
       )
 
       .\vcpkg.exe x-ci-clean @commonArgs
