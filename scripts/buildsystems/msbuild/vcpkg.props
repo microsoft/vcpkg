@@ -4,9 +4,9 @@
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
     <VcpkgAutoLink Condition="'$(VcpkgAutoLink)' == ''">true</VcpkgAutoLink>
     <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
-    <VcpkgBasePath Condition="'$(VcpkgBasePath)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgBasePath>
+    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgRoot>
     <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
-    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$(VcpkgBasePath)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
+    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
   </PropertyGroup>
 
   <!-- Set default OS Target-->
@@ -21,7 +21,7 @@
   <PropertyGroup>
     <VcpkgUserTriplet Condition="'$(VcpkgUserTriplet)' == ''">$(PlatformTarget)-$(VcpkgOSTarget)</VcpkgUserTriplet>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgUserTriplet)</VcpkgTriplet>
-    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$(VcpkgBasePath)\installed\$(VcpkgTriplet)\</VcpkgRoot>
-    <VcpkgPageSchema>$(VcpkgBasePath)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
+    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$(VcpkgRoot)\installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDir>
+    <VcpkgPageSchema>$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
   </PropertyGroup> 
 </Project>
