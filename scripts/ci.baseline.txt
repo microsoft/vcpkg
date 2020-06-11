@@ -1532,6 +1532,9 @@ qt5-x11extras:x64-osx=fail
 qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
+# Broken by VS2019 16.6 and throws a ton of dialogs attempting to build
+# fixed by https://github.com/microsoft/vcpkg/pull/11596
+qt5-translations:x64-windows-static=skip
 quickfast:x64-linux=ignore
 quickfix:x64-linux=ignore
 quickfix:x64-windows=ignore
