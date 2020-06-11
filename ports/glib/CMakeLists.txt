@@ -389,6 +389,6 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gio-windows-2.0.pc"  DESTINATION lib/
 endif()
 
 if(UNIX)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gio-unix-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gio-windows-2.0.pc" @ONLY)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gio-windows-2.0.pc"  DESTINATION lib/pkgconfig)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gio-unix-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gio-unix-2.0.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gio-unix-2.0.pc"  DESTINATION lib/pkgconfig)
 endif()
