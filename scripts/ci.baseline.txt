@@ -641,7 +641,6 @@ intel-mkl:x86-windows=fail
 intelrdfpmathlib:arm-uwp=fail
 intelrdfpmathlib:x64-linux=fail
 intelrdfpmathlib:x64-uwp=fail
-io2d:x64-linux=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
 irrlicht:x64-osx=fail
