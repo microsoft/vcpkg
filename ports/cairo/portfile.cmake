@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(CAIRO_VERSION 1.16.0)
 
 vcpkg_download_distfile(ARCHIVE
@@ -39,22 +38,7 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cairo TARGET_PATH share/unofficial-cairo)
 
-# Copy the appropriate header files.
-foreach(FILE
-"${SOURCE_PATH}/src/cairo.h"
-"${SOURCE_PATH}/src/cairo-deprecated.h"
-"${SOURCE_PATH}/src/cairo-features.h"
-"${SOURCE_PATH}/src/cairo-pdf.h"
-"${SOURCE_PATH}/src/cairo-ps.h"
-"${SOURCE_PATH}/src/cairo-script.h"
-"${SOURCE_PATH}/src/cairo-svg.h"
-"${SOURCE_PATH}/cairo-version.h"
-"${SOURCE_PATH}/src/cairo-win32.h"
-"${SOURCE_PATH}/util/cairo-gobject/cairo-gobject.h"
-"${SOURCE_PATH}/src/cairo-ft.h")
-  file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-  file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cairo)
-endforeach()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
     file(READ ${FILE} CAIRO_H)
@@ -67,9 +51,8 @@ foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/
 endforeach()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cairo)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cairo/COPYING ${CURRENT_PACKAGES_DIR}/share/cairo/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
 
-vcpkg_test_cmake(PACKAGE_NAME unofficial-cairo)
+#vcpkg_test_cmake(PACKAGE_NAME unofficial-cairo)

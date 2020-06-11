@@ -1,10 +1,15 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 set(ABSEIL_PATCHES
     fix-uwp-build.patch
 
     # This patch is an upstream commit, the related PR: https://github.com/abseil/abseil-cpp/pull/637
     fix-MSVCbuildfail.patch
+    
+    # Remove this patch in next update, see https://github.com/google/cctz/pull/145
+    fix-arm-build.patch
 )
 
 if("cxx17" IN_LIST FEATURES)
@@ -27,7 +32,7 @@ vcpkg_from_github(
     PATCHES ${ABSEIL_PATCHES}
 )
 
-set(CMAKE_CXX_STANDARD  )
+set(CMAKE_CXX_STANDARD 11)
 if("cxx17" IN_LIST FEATURES)
     set(CMAKE_CXX_STANDARD 17)
 endif()
