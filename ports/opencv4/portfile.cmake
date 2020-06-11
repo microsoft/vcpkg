@@ -356,6 +356,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_GTK=${WITH_GTK}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}
