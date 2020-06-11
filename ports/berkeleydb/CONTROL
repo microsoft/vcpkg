@@ -1,5 +1,5 @@
 Source: berkeleydb
-Version: 4.8.30-3
+Version: 4.8.30-4
 Homepage: https://download.oracle.com/
 Description: BDB - A high-performance embedded database for key/value data.
-Supports: !uwp
+Supports: !(uwp|linux|osx)

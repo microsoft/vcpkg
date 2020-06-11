@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c4cc218..ff2b706 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,6 +8,8 @@ cmake_minimum_required(VERSION 3.2)
+ option(BUILD_TESTS      "Build tests"    ON)
+ option(BUILD_EXAMPLES   "Build examples" ON)
+ 
++find_package(nlohmann_json CONFIG REQUIRED)
++
+ # the library
+ add_library(nlohmann_json_schema_validator
+     src/json-schema-draft7.json.cpp
+@@ -34,6 +36,13 @@ set_target_properties(nlohmann_json_schema_validator
+ # because of the dependency to nlohmann_json.
+ set(JSON_VALIDATOR_INSTALL ON)
+ 
++target_link_libraries(
++    nlohmann_json_schema_validator
++    PUBLIC
++        nlohmann_json
++        nlohmann_json::nlohmann_json)
++
++if(0)
+ # here we decice how nlohmann::json is found and used to build this project
+ 
+ # first, check whether a nlohmann_json::nlohmann_json target exists already
+@@ -92,7 +101,7 @@ else()
+         set(nlohmann_json_DIR ${JSON_HPP})
+     endif()
+ endif()
+-
++endif()
+ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR
+    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+     target_compile_options(nlohmann_json_schema_validator

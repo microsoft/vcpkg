@@ -4,7 +4,7 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     return()
-elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
     return()
 endif()
 
@@ -52,8 +52,13 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/tools/boost-build/src/tools/msvc.jam" "${_co
 
 message(STATUS "Bootstrapping...")
 if(CMAKE_HOST_WIN32)
+    if(VCPKG_TARGET_IS_MINGW)
+        set(TOOLSET mingw)
+    else()
+        set(TOOLSET msvc)
+    endif()
     vcpkg_execute_required_process(
-        COMMAND "${CURRENT_PACKAGES_DIR}/tools/boost-build/bootstrap.bat" msvc
+        COMMAND "${CURRENT_PACKAGES_DIR}/tools/boost-build/bootstrap.bat" ${TOOLSET}
         WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/boost-build
         LOGNAME bootstrap-${TARGET_TRIPLET}
     )
