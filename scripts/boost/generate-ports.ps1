@@ -394,7 +394,7 @@ foreach ($library in $libraries)
 
 if ($libraries_in_boost_port.length -gt 1) {
     # Generate master boost control file which depends on each individual library
-    # mpi is excluded due to it having a dependency on msmpi
+    # mpi is excluded due to it having a dependency on msmpi/openmpi
     $boostDependsList = @($libraries_in_boost_port | % { "boost-$_" } | ? { $_ -notmatch "boost-mpi" }) -join ", "
 
     @(
