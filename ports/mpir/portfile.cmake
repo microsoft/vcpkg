@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(FATAL_ERROR "${PORT} currently can only be built using the dynamic CRT when building DLLs")
