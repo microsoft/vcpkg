@@ -72,12 +72,6 @@ else()
     set(EXECUTABLE_SUFFIX "")
 endif()
 
-#if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-#    file(READ ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake RELEASE_MODULE)
-#    string(REPLACE "\${_IMPORT_PREFIX}/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}" RELEASE_MODULE "${RELEASE_MODULE}")
-#    file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake "${RELEASE_MODULE}")
-#endif()
-
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake
 	"\"\${_IMPORT_PREFIX}/bin/protoc${EXECUTABLE_SUFFIX}\""
@@ -126,11 +120,6 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platf
 )
 endif()
 
-#if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-#    file(READ ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h _contents)
-#    string(REPLACE "\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" "\#define PROTOBUF_USE_DLLS\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" _contents "${_contents}")
-#    file(WRITE ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h "${_contents}")
-#endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 vcpkg_copy_pdbs()
