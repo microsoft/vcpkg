@@ -1,24 +1,6 @@
-#if defined(_MSC_VER) && _MSC_VER < 1911
-// [[nodiscard]] is not recognized before VS 2017 version 15.3
-#pragma warning(disable : 5030)
-#endif
+#include <vcpkg/base/pragmas.h>
 
-#if defined(__GNUC__) && __GNUC__ < 7
-// [[nodiscard]] is not recognized before GCC version 7
-#pragma GCC diagnostic ignored "-Wattributes"
-#endif
-
-#if defined(_WIN32)
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
-#pragma warning(push)
-#pragma warning(disable : 4768)
-#include <ShlObj.h>
-#pragma warning(pop)
-#else
-#include <unistd.h>
-#endif
+#include <vcpkg/base/system_headers.h>
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
@@ -56,18 +38,16 @@ static constexpr int SURVEY_INITIAL_OFFSET_IN_HOURS = SURVEY_INTERVAL_IN_HOURS -
 static void invalid_command(const std::string& cmd)
 {
     System::print2(System::Color::error, "invalid command: ", cmd, '\n');
-    Help::print_usage();
+    print_usage();
     Checks::exit_fail(VCPKG_LINE_INFO);
 }
 
-static void inner(const VcpkgCmdArguments& args)
+static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
 {
-    auto& fs = Files::get_real_filesystem();
-
     Metrics::g_metrics.lock()->track_property("command", args.command);
     if (args.command.empty())
     {
-        Help::print_usage();
+        print_usage();
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
@@ -81,78 +61,18 @@ static void inner(const VcpkgCmdArguments& args)
             return &*it;
         }
         else
+        {
             return static_cast<decltype(&*it)>(nullptr);
+        }
     };
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_c()))
     {
-        return command_function->function(args);
+        return command_function->function(args, fs);
     }
 
-    fs::path vcpkg_root_dir;
-    if (args.vcpkg_root_dir)
-    {
-        vcpkg_root_dir = fs.absolute(VCPKG_LINE_INFO, fs::u8path(*args.vcpkg_root_dir));
-    }
-    else
-    {
-        const auto vcpkg_root_dir_env = System::get_environment_variable("VCPKG_ROOT");
-        if (const auto v = vcpkg_root_dir_env.get())
-        {
-            vcpkg_root_dir = fs.absolute(VCPKG_LINE_INFO, *v);
-        }
-        else
-        {
-            const fs::path current_path = fs.current_path(VCPKG_LINE_INFO);
-            vcpkg_root_dir = fs.find_file_recursively_up(current_path, ".vcpkg-root");
-
-            if (vcpkg_root_dir.empty())
-            {
-                vcpkg_root_dir = fs.find_file_recursively_up(
-                    fs.absolute(VCPKG_LINE_INFO, System::get_exe_path_of_current_process()), ".vcpkg-root");
-            }
-        }
-    }
-
-    Checks::check_exit(VCPKG_LINE_INFO, !vcpkg_root_dir.empty(), "Error: Could not detect vcpkg-root.");
-
-    Debug::print("Using vcpkg-root: ", vcpkg_root_dir.u8string(), '\n');
-
-    Optional<fs::path> install_root_dir;
-    if (args.install_root_dir) {
-        install_root_dir = Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.install_root_dir));
-        Debug::print("Using install-root: ", install_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
-    }
-
-    Optional<fs::path> vcpkg_scripts_root_dir = nullopt;
-    if (args.scripts_root_dir)
-    {
-        vcpkg_scripts_root_dir = Files::get_real_filesystem().canonical(VCPKG_LINE_INFO, fs::u8path(*args.scripts_root_dir));
-        Debug::print("Using scripts-root: ", vcpkg_scripts_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
-    }
-
-    auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
-
-    const Expected<VcpkgPaths> expected_paths =
-        VcpkgPaths::create(vcpkg_root_dir, install_root_dir, vcpkg_scripts_root_dir, default_vs_path, args.overlay_triplets.get());
-    Checks::check_exit(VCPKG_LINE_INFO,
-                       !expected_paths.error(),
-                       "Error: Invalid vcpkg root directory %s: %s",
-                       vcpkg_root_dir.string(),
-                       expected_paths.error().message());
-    const VcpkgPaths& paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
-
-#if defined(_WIN32)
-    const int exit_code = _wchdir(paths.root.c_str());
-#else
-    const int exit_code = chdir(paths.root.c_str());
-#endif
-    Checks::check_exit(
-        VCPKG_LINE_INFO,
-        exit_code == 0,
-        "Changing the working directory to the vcpkg root directory failed. Did you incorrectly define the VCPKG_ROOT "
-        "environment variable, or did you mistakenly create a file named .vcpkg-root somewhere?");
-
+    const VcpkgPaths paths(fs, args);
+    fs.current_path(paths.root, VCPKG_LINE_INFO);
     if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
     {
         Commands::Version::warn_if_vcpkg_version_mismatch(paths);
@@ -223,10 +143,8 @@ static void inner(const VcpkgCmdArguments& args)
     return invalid_command(args.command);
 }
 
-static void load_config()
+static void load_config(vcpkg::Files::Filesystem& fs)
 {
-    auto& fs = Files::get_real_filesystem();
-
     auto config = UserConfig::try_read_data(fs);
 
     bool write_config = false;
@@ -290,6 +208,7 @@ int main(const int argc, const char* const* const argv)
 {
     if (argc == 0) std::abort();
 
+    auto& fs = Files::get_real_filesystem();
     *GlobalState::timer.lock() = Chrono::ElapsedTimer::create_started();
 
 #if defined(_WIN32)
@@ -311,7 +230,7 @@ int main(const int argc, const char* const* const argv)
         auto metrics = Metrics::g_metrics.lock();
         metrics->track_metric("elapsed_us", elapsed_us_inner);
         Debug::g_debugging = false;
-        metrics->flush();
+        metrics->flush(Files::get_real_filesystem());
 
 #if defined(_WIN32)
         if (GlobalState::g_init_console_initialized)
@@ -335,33 +254,44 @@ int main(const int argc, const char* const* const argv)
 
     System::register_console_ctrl_handler();
 
-    load_config();
+    load_config(fs);
 
     const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
     if (const auto v = vcpkg_feature_flags_env.get())
     {
-        auto flags = Strings::split(*v, ",");
+        auto flags = Strings::split(*v, ',');
         if (std::find(flags.begin(), flags.end(), "binarycaching") != flags.end()) GlobalState::g_binary_caching = true;
     }
 
-    const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
-
-    if (const auto p = args.binarycaching.get()) GlobalState::g_binary_caching = *p;
-
-    if (const auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
-    if (const auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
+    VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
+    args.imbue_from_environment();
+    if (const auto p = args.binary_caching.get()) GlobalState::g_binary_caching = *p;
+    if (const auto p = args.print_metrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
+    if (const auto p = args.send_metrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
+    if (const auto p = args.disable_metrics.get()) Metrics::g_metrics.lock()->set_disabled(*p);
     if (const auto p = args.debug.get()) Debug::g_debugging = *p;
+
+    if (args.send_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
+    {
+        System::print2(System::Color::warning,
+                       "Warning: passed either --sendmetrics or --no-sendmetrics, but metrics are disabled.\n");
+    }
+    if (args.print_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
+    {
+        System::print2(System::Color::warning,
+                       "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
+    }
 
     if (Debug::g_debugging)
     {
-        inner(args);
+        inner(fs, args);
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
     std::string exc_msg;
     try
     {
-        inner(args);
+        inner(fs, args);
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
     catch (std::exception& e)

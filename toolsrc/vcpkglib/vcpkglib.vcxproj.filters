@@ -48,6 +48,9 @@
     <ClCompile Include="..\src\vcpkg\commands.ci.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.ciclean.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.contact.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
@@ -422,6 +425,9 @@
     <ClInclude Include="..\include\vcpkg\base\view.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\pragmas.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\vcpkg\base\zstringview.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
@@ -438,9 +444,6 @@
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\portfileprovider.h">
-      <Filter>Header Files\vcpkg</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg\pragmas.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\textrowcol.h">

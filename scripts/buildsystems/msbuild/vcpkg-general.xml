@@ -35,15 +35,15 @@
                   Category="General"
                   Subtype="Text">
   </StringProperty>
-  <StringProperty Name="VcpkgBasePath"
-                  DisplayName="Base Path"
-                  Description="Base path where Vcpkg is located. Be careful with changing this one. It is, for example, unable to update this property page from the new location without restarting visual studio."
+  <StringProperty Name="VcpkgRoot"
+                  DisplayName="Vcpkg Root"
+                  Description="Root path where Vcpkg is located. Be careful with changing this one. It is, for example, unable to update this property page from the new location without restarting visual studio."
                   Category="General"
                   Subtype="folder"
                   Visible="false">
   </StringProperty>
-  <StringProperty Name="VcpkgRoot"
-                  DisplayName="Package install directory (Sets VcpkgRoot)"
+  <StringProperty Name="VcpkgCurrentInstalledDir"
+                  DisplayName="Package install directory"
                   Description="Defines the direct path to the installed Vcpkg packages. Only change this if you know what you are doing!"
                   Category="General"
                   Subtype="folder">

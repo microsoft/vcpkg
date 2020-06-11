@@ -30,7 +30,7 @@ namespace vcpkg
     {
         struct CtrlCStateMachine
         {
-            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) {}
+            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) { }
 
             void transition_to_spawn_process() noexcept
             {
@@ -192,14 +192,14 @@ namespace vcpkg
     Environment System::get_modified_clean_environment(const std::unordered_map<std::string, std::string>& extra_env,
                                                        const std::string& prepend_to_path)
     {
-        static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
-        static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
+        static const std::string system_root_env = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
+        static const std::string system32_env = system_root_env + R"(\system32)";
         std::string new_path = Strings::format(R"(Path=%s%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)",
                                                prepend_to_path,
-                                               SYSTEM_32,
-                                               SYSTEM_ROOT,
-                                               SYSTEM_32,
-                                               SYSTEM_32);
+                                               system32_env,
+                                               system_root_env,
+                                               system32_env,
+                                               system32_env);
 
         std::vector<std::wstring> env_wstrings = {
             L"ALLUSERSPROFILE",
@@ -237,6 +237,7 @@ namespace vcpkg
             L"USERDOMAIN_ROAMINGPROFILE",
             L"USERNAME",
             L"USERPROFILE",
+            L"VCPKG_DISABLE_METRICS",
             L"windir",
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"http_proxy",
@@ -267,7 +268,7 @@ namespace vcpkg
 
         if (k && !k->empty())
         {
-            auto vars = Strings::split(*k, ";");
+            auto vars = Strings::split(*k, ';');
 
             for (auto&& var : vars)
             {
@@ -294,6 +295,8 @@ namespace vcpkg
         env_cstr.append(Strings::to_utf16(new_path));
         env_cstr.push_back(L'\0');
         env_cstr.append(L"VSLANG=1033");
+        env_cstr.push_back(L'\0');
+        env_cstr.append(L"VSCMD_SKIP_SENDTELEMETRY=1");
         env_cstr.push_back(L'\0');
 
         for (const auto& item : extra_env)
@@ -325,27 +328,45 @@ namespace vcpkg
 #if defined(_WIN32)
     struct ProcessInfo
     {
-        constexpr ProcessInfo() : proc_info{} {}
-
-        unsigned int wait_and_close_handles()
+        constexpr ProcessInfo() noexcept : proc_info{} { }
+        ProcessInfo(ProcessInfo&& other) noexcept : proc_info(other.proc_info)
         {
-            CloseHandle(proc_info.hThread);
-
-            const DWORD result = WaitForSingleObject(proc_info.hProcess, INFINITE);
-            Checks::check_exit(VCPKG_LINE_INFO, result != WAIT_FAILED, "WaitForSingleObject failed");
-
-            DWORD exit_code = 0;
-            GetExitCodeProcess(proc_info.hProcess, &exit_code);
-
-            CloseHandle(proc_info.hProcess);
-
-            return exit_code;
+            other.proc_info.hProcess = nullptr;
+            other.proc_info.hThread = nullptr;
+        }
+        ~ProcessInfo()
+        {
+            if (proc_info.hThread)
+            {
+                CloseHandle(proc_info.hThread);
+            }
+            if (proc_info.hProcess)
+            {
+                CloseHandle(proc_info.hProcess);
+            }
         }
 
-        void close_handles()
+        ProcessInfo& operator=(ProcessInfo&& other) noexcept
         {
-            CloseHandle(proc_info.hThread);
-            CloseHandle(proc_info.hProcess);
+            ProcessInfo{std::move(other)}.swap(*this);
+            return *this;
+        }
+
+        void swap(ProcessInfo& other) noexcept
+        {
+            std::swap(proc_info.hProcess, other.proc_info.hProcess);
+            std::swap(proc_info.hThread, other.proc_info.hThread);
+        }
+
+        friend void swap(ProcessInfo& lhs, ProcessInfo& rhs) noexcept { lhs.swap(rhs); }
+
+        unsigned int wait()
+        {
+            const DWORD result = WaitForSingleObject(proc_info.hProcess, INFINITE);
+            Checks::check_exit(VCPKG_LINE_INFO, result != WAIT_FAILED, "WaitForSingleObject failed");
+            DWORD exit_code = 0;
+            GetExitCodeProcess(proc_info.hProcess, &exit_code);
+            return exit_code;
         }
 
         PROCESS_INFORMATION proc_info;
@@ -363,16 +384,23 @@ namespace vcpkg
 
         // Flush stdout before launching external process
         fflush(nullptr);
-        bool succeeded = TRUE == CreateProcessW(nullptr,
-                                                Strings::to_utf16(cmd_line).data(),
-                                                nullptr,
-                                                nullptr,
-                                                TRUE,
-                                                IDLE_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT | dwCreationFlags,
-                                                (void*)(env.m_env_data.empty() ? nullptr : env.m_env_data.data()),
-                                                nullptr,
-                                                &startup_info,
-                                                &process_info.proc_info);
+
+VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'process_info.proc_info.hProcess'
+                            // /analyze can't tell that we transferred ownership here
+        bool succeeded =
+            TRUE == CreateProcessW(nullptr,
+                                   Strings::to_utf16(cmd_line).data(),
+                                   nullptr,
+                                   nullptr,
+                                   TRUE,
+                                   IDLE_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT | dwCreationFlags,
+                                   env.m_env_data.empty()
+                                       ? nullptr
+                                       : const_cast<void*>(static_cast<const void*>(env.m_env_data.data())),
+                                   nullptr,
+                                   &startup_info,
+                                   &process_info.proc_info);
+
         if (succeeded)
             return process_info;
         else
@@ -411,7 +439,7 @@ namespace vcpkg
 
             CloseHandle(child_stdout);
 
-            return proc_info.wait_and_close_handles();
+            return proc_info.wait();
         }
     };
 
@@ -465,11 +493,7 @@ namespace vcpkg
         auto timer = Chrono::ElapsedTimer::create_started();
 
         auto process_info = windows_create_process(cmd_line, {}, DETACHED_PROCESS | CREATE_BREAKAWAY_FROM_JOB);
-        if (auto p = process_info.get())
-        {
-            p->close_handles();
-        }
-        else
+        if (!process_info.get())
         {
             Debug::print("cmd_execute_no_wait() failed with error code ", process_info.error(), "\n");
         }
@@ -521,7 +545,7 @@ namespace vcpkg
         auto proc_info = windows_create_process(cmd_line, env, NULL);
         auto long_exit_code = [&]() -> unsigned long {
             if (auto p = proc_info.get())
-                return p->wait_and_close_handles();
+                return p->wait();
             else
                 return proc_info.error();
         }();
@@ -535,6 +559,7 @@ namespace vcpkg
         (void)env;
         Debug::print("system(", cmd_line, ")\n");
         fflush(nullptr);
+
         int exit_code = system(cmd_line.c_str());
         Debug::print(
             "system() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
@@ -594,6 +619,7 @@ namespace vcpkg
         Debug::print("popen(", actual_cmd_line, ")\n");
         // Flush stdout before launching external process
         fflush(stdout);
+
         const auto pipe = popen(actual_cmd_line.c_str(), "r");
         if (pipe == nullptr)
         {
@@ -644,6 +670,6 @@ namespace vcpkg
         SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ctrl_handler), TRUE);
     }
 #else
-    void System::register_console_ctrl_handler() {}
+    void System::register_console_ctrl_handler() { }
 #endif
 }

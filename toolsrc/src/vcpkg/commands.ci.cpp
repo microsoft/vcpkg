@@ -50,7 +50,7 @@ namespace vcpkg::Commands::CI
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("ci x64-windows"),
+        create_example_string("ci x64-windows"),
         1,
         SIZE_MAX,
         {CI_SWITCHES, CI_SETTINGS},
@@ -401,7 +401,7 @@ namespace vcpkg::Commands::CI
         auto it_exclusions = options.settings.find(OPTION_EXCLUDE);
         if (it_exclusions != options.settings.end())
         {
-            auto exclusions = Strings::split(it_exclusions->second, ",");
+            auto exclusions = Strings::split(it_exclusions->second, ',');
             exclusions_set.insert(exclusions.begin(), exclusions.end());
         }
 
@@ -552,11 +552,11 @@ namespace vcpkg::Commands::CI
             System::print2("Total elapsed time: ", result.summary.total_elapsed_time, "\n");
             result.summary.print();
         }
-        auto& fs = paths.get_filesystem();
+
         auto it_xunit = options.settings.find(OPTION_XUNIT);
         if (it_xunit != options.settings.end())
         {
-            fs.write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
+            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

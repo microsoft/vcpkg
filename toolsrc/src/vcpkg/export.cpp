@@ -61,9 +61,6 @@ namespace vcpkg::Export
     {
         return Strings::format(R"###(
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <VcpkgRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
-  </PropertyGroup>
   <Import Condition="Exists('%s')" Project="%s" />
 </Project>
 )###",
@@ -344,7 +341,7 @@ namespace vcpkg::Export
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("export zlib zlib:x64-windows boost --nuget"),
+        create_example_string("export zlib zlib:x64-windows boost --nuget"),
         0,
         SIZE_MAX,
         {EXPORT_SWITCHES, EXPORT_SETTINGS},

@@ -1,5 +1,6 @@
 #include <pch.h>
 
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
@@ -27,14 +28,24 @@ namespace vcpkg::PortFileProvider
                                                  const std::vector<std::string>* ports_dirs_paths)
         : filesystem(paths.get_filesystem())
     {
-        auto& fs = Files::get_real_filesystem();
+        auto& fs = paths.get_filesystem();
         if (ports_dirs_paths)
         {
             for (auto&& overlay_path : *ports_dirs_paths)
             {
                 if (!overlay_path.empty())
                 {
-                    auto overlay = fs.canonical(VCPKG_LINE_INFO, fs::u8path(overlay_path));
+                    auto overlay = fs::u8path(overlay_path);
+                    if (overlay.is_absolute())
+                    {
+                        overlay = fs.canonical(VCPKG_LINE_INFO, overlay);
+                    }
+                    else
+                    {
+                        overlay = fs.canonical(VCPKG_LINE_INFO, paths.original_cwd / overlay);
+                    }
+
+                    Debug::print("Using overlay: ", overlay.u8string(), "\n");
 
                     Checks::check_exit(VCPKG_LINE_INFO,
                                        filesystem.exists(overlay),

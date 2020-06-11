@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
-    REF 2.0.0-rc4
-    SHA512 b4a4d4a58d09010bc45fb90cca148dc4421a4cf0cd5caf288aa702212ef081f14fc418b91f1b79ec8631f582c9ebcdd3031d3333b6a892adb29c402492abb649
+    REF 2.0.0
+    SHA512 efdaa1b018e5166c0f2469663bdd0dc788de0577d0c0cb8b98048a535f8cb07de1078f86aaacc9445d42078d2e02fd7bc7f1ed700ca96032976f6bd84c68ee8f
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
@@ -10,6 +10,7 @@ vcpkg_from_github(
         openssl_threads.patch
         fix-include-install-path.patch
         fix-include-path.patch
+        fix-libusb.patch
 )
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
@@ -25,11 +26,16 @@ file(WRITE "${SOURCE_PATH}/.source_version" "${SOURCE_VERSION}-vcpkg")
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindOpenSSL.cmake) # Remove outdated Module
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    urbdrc CHANNEL_URBDRC
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         ${FREERDP_CRT_LINKAGE}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -52,13 +58,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY ${FREERDP_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
         file(REMOVE ${FREERDP_DLL})
     endforeach()
-    
+
     file(GLOB_RECURSE FREERDP_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
     foreach(FREERDP_DLL ${FREERDP_DLLS})
         file(COPY ${FREERDP_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
         file(REMOVE ${FREERDP_DLL})
     endforeach()
-else()    
+else()
     file(GLOB_RECURSE FREERDP_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     foreach(FREERDP_TOOL ${FREERDP_TOOLS})
         file(COPY ${FREERDP_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
@@ -110,6 +116,13 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/FreeRDP-Client/FreeRDP-Client
     "lib/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
     "bin/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
 )
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB OBJS ${CURRENT_PACKAGES_DIR}/debug/*.lib)
+    file(REMOVE ${OBJS})
+    file(GLOB OBJS ${CURRENT_PACKAGES_DIR}/*.lib)
+    file(REMOVE ${OBJS})
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/debug/share
