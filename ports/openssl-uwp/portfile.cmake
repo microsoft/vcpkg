@@ -13,7 +13,8 @@ vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(JOM)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${JOM_EXE_PATH}")
+vcpkg_add_to_path("${PERL_EXE_PATH}")
+vcpkg_add_to_path("${JOM_EXE_PATH}")
 
 set(OPENSSL_VERSION 1.1.1g)
 
@@ -32,7 +33,7 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
+vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
@@ -177,5 +178,3 @@ vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)
