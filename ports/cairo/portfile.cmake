@@ -21,11 +21,13 @@ if ("x11" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Feature x11 only support UNIX.")
     endif()
-    message(WARNING "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
+    message(FATAL_ERROR "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
 endif()
 
 if("gobject" IN_LIST FEATURES)
-    message(FATAL_ERROR "Feature gobject currently only supports dynamic build.")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "Feature gobject currently only supports dynamic build.")
+    endif()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
