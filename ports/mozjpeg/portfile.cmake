@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mozilla/mozjpeg
-    REF v3.2
-    SHA512 d14789827a9f4f78139a3945d3169d37eb891758b5ab40ef19e99ebebb2fb6d7c3a05495de245bba54cfd913b153af352159aa9fc0218127f97819137e0f1ab8
+    REF 6d95c51adf0c314017f541b6cb07e13cc1bce754
+    SHA512 a21c8b3a561b387933a27befaa1d05a8c63b0e203d72d73071a4c9b57c6b7d57b44836f211c4dcb80eee4b01876f0a0fb4c91a60c3ae867e906e5e4e27165627
     HEAD_REF master
     PATCHES
         fix-install-error.patch
@@ -12,7 +10,7 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(ENABLE_STATIC_BUILD ON)
@@ -39,7 +37,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/mozjpeg)
+vcpkg_copy_tools(${CURRENT_PACKAGES_DIR}/tools/mozjpeg)
 
 #remove empty folders after static build
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -48,5 +46,5 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/mozjpeg RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 vcpkg_copy_pdbs()
