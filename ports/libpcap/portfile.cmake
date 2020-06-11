@@ -7,6 +7,8 @@ message(
 These can be installed on Ubuntu systems via sudo apt install flex libbison-dev"
 )
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+
 vcpkg_download_distfile(
     SOURCE_ARCHIVE_PATH
     URLS http://www.tcpdump.org/release/libpcap-1.9.1.tar.gz
@@ -18,6 +20,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${SOURCE_ARCHIVE_PATH}
     REF 1.9.1
+    PATCHES 
+        0001-fix-package-name.patch
 )
 
 vcpkg_configure_cmake(
@@ -32,18 +36,12 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpcap RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/man)
-
-file(READ ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcap.pc LIBPCAP_PC)
-string(REGEX REPLACE \($|\n\)prefix=[^\n]+ \\1prefix=\"${CURRENT_INSTALLED_DIR}\" LIBPCAP_PC_FIXED "${LIBPCAP_PC}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcap.pc "${LIBPCAP_PC_FIXED}")
-
-file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcap.pc DEBUG_LIBPCAP_PC)
-string(REGEX REPLACE \($|\n\)prefix=[^\n]+ \\1prefix=\"${CURRENT_INSTALLED_DIR}/debug\" DEBUG_LIBPCAP_PC_FIXED "${DEBUG_LIBPCAP_PC}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcap.pc "${DEBUG_LIBPCAP_PC_FIXED}")
