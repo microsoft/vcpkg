@@ -25,7 +25,7 @@ if ("x11" IN_LIST FEATURES)
 endif()
 
 if("gobject" IN_LIST FEATURES)
-    message(WARNING "Feature gobject currently only supports dynamic build.")
+    message(FATAL_ERROR "Feature gobject currently only supports dynamic build.")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
