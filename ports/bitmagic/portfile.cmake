@@ -16,6 +16,6 @@ vcpkg_configure_cmake(
         -DPSNIP_INSTALL_HEADERS=ON
 )
 
-file(GLOB HEADER_LIST "${PROJECT_SOURCE_DIR}/src/*.h")
+file(GLOB HEADER_LIST "${SOURCE_PATH}/src/*.h")
 file(INSTALL ${HEADER_LIST} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
