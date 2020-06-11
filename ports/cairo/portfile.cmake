@@ -21,7 +21,7 @@ if ("x11" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Feature x11 only support UNIX.")
     endif()
-    message(FATAL_ERROR "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
+    message(WARNING "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
 endif()
 
 if("gobject" IN_LIST FEATURES)
