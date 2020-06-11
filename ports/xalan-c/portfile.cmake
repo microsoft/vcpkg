@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xalan-c
@@ -16,6 +18,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_tools(TOOL_NAMES Xalan AUTO_CLEAN)
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/xalanc)
@@ -28,13 +31,6 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/Xalan.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/Xalan.exe ${CURRENT_PACKAGES_DIR}/debug/bin/Xalan.exe)
-endif()	
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
