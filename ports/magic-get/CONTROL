@@ -1,4 +1,4 @@
 Source: magic-get
-Version: 2019-09-02
+Version: 2019-09-02-1
 Homepage: https://github.com/apolukhin/magic_get
 Description: This C++14 library is meant for accessing structure elements by index and providing other std::tuple like methods for user defined types without any macro or boilerplate code.

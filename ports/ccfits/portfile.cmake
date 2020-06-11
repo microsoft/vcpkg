@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://heasarc.gsfc.nasa.gov/fitsio/ccfits/CCfits-2.5.tar.gz"
     FILENAME "CCfits-2.5.tar.gz"
@@ -40,4 +38,4 @@ foreach(HEADER IN LISTS HEADERS)
 endforeach()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ccfits RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

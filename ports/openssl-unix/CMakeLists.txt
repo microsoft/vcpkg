@@ -5,9 +5,7 @@ if(NOT SOURCE_PATH)
     message(FATAL_ERROR "Requires SOURCE_PATH")
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(PLATFORM android)
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(CMAKE_SYSTEM_NAME STREQUAL "Android" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
         set(PLATFORM linux-x86_64)
     else()
@@ -69,14 +67,9 @@ endif()
 
 get_filename_component(MSYS_BIN_DIR "${MAKE}" DIRECTORY)
 
-
-file(READ "${BUILDDIR}/Configure" _contents)
-string(REPLACE "-mandroid" "" _contents "${_contents}")
-file(WRITE "${BUILDDIR}/Configure" "${_contents}")
-
 if(BUILD_SHARED_LIBS)
     set(SHARED shared)
-    file(STRINGS "${BUILDDIR}/crypto/opensslv.h" SHLIB_VERSION
+    file(STRINGS "${BUILDDIR}/include/openssl/opensslv.h" SHLIB_VERSION
         REGEX "^#[\t ]*define[\t ]+SHLIB_VERSION_NUMBER[\t ]+\".*\".*")
     string(REGEX REPLACE "^.*SHLIB_VERSION_NUMBER[\t ]+\"([^\"]*)\".*$" "\\1"
         SHLIB_VERSION "${SHLIB_VERSION}")

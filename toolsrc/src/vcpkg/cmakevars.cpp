@@ -1,17 +1,77 @@
 #include "pch.h"
 
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/cmakevars.h>
+#include <vcpkg/dependencies.h>
 
 using namespace vcpkg;
 using vcpkg::Optional;
-using vcpkg::CMakeVars::TripletCMakeVarProvider;
 
 namespace vcpkg::CMakeVars
 {
+    void CMakeVarProvider::load_tag_vars(const vcpkg::Dependencies::ActionPlan& action_plan,
+                                         const PortFileProvider::PortFileProvider& port_provider) const
+    {
+        std::vector<FullPackageSpec> install_package_specs;
+        for (auto&& action : action_plan.install_actions)
+        {
+            install_package_specs.emplace_back(FullPackageSpec{action.spec, action.feature_list});
+        }
+
+        load_tag_vars(install_package_specs, port_provider);
+    }
+
+    namespace
+    {
+        struct TripletCMakeVarProvider : Util::ResourceBase, CMakeVarProvider
+        {
+            explicit TripletCMakeVarProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) {}
+
+            void load_generic_triplet_vars(Triplet triplet) const override;
+
+            void load_dep_info_vars(Span<const PackageSpec> specs) const override;
+
+            void load_tag_vars(Span<const FullPackageSpec> specs,
+                               const PortFileProvider::PortFileProvider& port_provider) const override;
+
+            Optional<const std::unordered_map<std::string, std::string>&> get_generic_triplet_vars(
+                Triplet triplet) const override;
+
+            Optional<const std::unordered_map<std::string, std::string>&> get_dep_info_vars(
+                const PackageSpec& spec) const override;
+
+            Optional<const std::unordered_map<std::string, std::string>&> get_tag_vars(
+                const PackageSpec& spec) const override;
+
+        public:
+            fs::path create_tag_extraction_file(
+                const Span<const std::pair<const FullPackageSpec*, std::string>>& spec_abi_settings) const;
+
+            fs::path create_dep_info_extraction_file(const Span<const PackageSpec> specs) const;
+
+            void launch_and_split(const fs::path& script_path,
+                                  std::vector<std::vector<std::pair<std::string, std::string>>>& vars) const;
+
+            const VcpkgPaths& paths;
+            const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
+            const fs::path get_tags_path = paths.scripts / "vcpkg_get_tags.cmake";
+            const fs::path get_dep_info_path = paths.scripts / "vcpkg_get_dep_info.cmake";
+            mutable std::unordered_map<PackageSpec, std::unordered_map<std::string, std::string>> dep_resolution_vars;
+            mutable std::unordered_map<PackageSpec, std::unordered_map<std::string, std::string>> tag_vars;
+            mutable std::unordered_map<Triplet, std::unordered_map<std::string, std::string>> generic_triplet_vars;
+        };
+    }
+
+    std::unique_ptr<CMakeVarProvider> make_triplet_cmake_var_provider(const vcpkg::VcpkgPaths& paths)
+    {
+        return std::make_unique<TripletCMakeVarProvider>(paths);
+    }
+
     fs::path TripletCMakeVarProvider::create_tag_extraction_file(
         const Span<const std::pair<const FullPackageSpec*, std::string>>& spec_abi_settings) const
     {
@@ -114,7 +174,7 @@ namespace vcpkg::CMakeVars
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
 
-        const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
+        const std::vector<std::string> lines = Strings::split(ec_data.output, '\n');
 
         const auto end = lines.cend();
 
@@ -132,7 +192,7 @@ namespace vcpkg::CMakeVars
                 {
                     const std::string& line = *block_start;
 
-                    std::vector<std::string> s = Strings::split(line, "=");
+                    std::vector<std::string> s = Strings::split(line, '=');
                     Checks::check_exit(VCPKG_LINE_INFO,
                                        s.size() == 1 || s.size() == 2,
                                        "Expected format is [VARIABLE_NAME=VARIABLE_VALUE], but was [%s]",

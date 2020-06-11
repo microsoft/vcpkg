@@ -1,0 +1,5 @@
+Source: nowide
+Version: alias
+Homepage: https://github.com/boostorg/nowide
+Build-Depends: boost-nowide
+Description: Deprecated alias for Boost nowide module

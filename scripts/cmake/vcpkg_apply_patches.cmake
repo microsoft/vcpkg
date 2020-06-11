@@ -41,13 +41,14 @@ function(vcpkg_apply_patches)
         _execute_process(
             COMMAND ${GIT} --work-tree=. --git-dir=.git apply "${ABSOLUTE_PATCH}" --ignore-whitespace --whitespace=nowarn --verbose
             OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-out.log
-            ERROR_FILE ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-err.log
+            ERROR_VARIABLE error
             WORKING_DIRECTORY ${_ap_SOURCE_PATH}
             RESULT_VARIABLE error_code
         )
+        file(WRITE "${CURRENT_BUILDTREES_DIR}/${LOGNAME}-err.log" "${error}")
 
         if(error_code AND NOT _ap_QUIET)
-            message(FATAL_ERROR "Applying patch failed. Patch needs to be updated to work with source being used by vcpkg!")
+            message(FATAL_ERROR "Applying patch failed. ${error}")
         endif()
 
         math(EXPR PATCHNUM "${PATCHNUM}+1")

@@ -1,0 +1,12 @@
+diff --git a/source/datetime.cpp b/source/datetime.cpp
+index e6e8fa5..c3ae852 100644
+--- a/source/datetime.cpp
++++ b/source/datetime.cpp
+@@ -15,6 +15,7 @@
+ 	#include <windows.h>
+ #endif
+ #include <array>
++#include <stdexcept>
+ 
+ namespace {
+ 	std::tm localtime()
