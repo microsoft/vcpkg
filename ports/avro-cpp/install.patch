@@ -1,5 +1,5 @@
 diff --git a/lang/c++/CMakeLists.txt b/lang/c++/CMakeLists.txt
-index 30a5d66..f4496c9 100644
+index 30a5d66..f7f2b94 100644
 --- a/lang/c++/CMakeLists.txt
 +++ b/lang/c++/CMakeLists.txt
 @@ -40,6 +40,8 @@ set (AVRO_VERSION_MINOR "0")
@@ -11,6 +11,20 @@ index 30a5d66..f4496c9 100644
  if (WIN32 AND NOT CYGWIN AND NOT MSYS)
      add_definitions (/EHa)
      add_definitions (
+@@ -118,11 +120,11 @@ set_target_properties (avrocpp PROPERTIES
+ set_target_properties (avrocpp_s PROPERTIES
+     VERSION ${AVRO_VERSION_MAJOR}.${AVRO_VERSION_MINOR})
+ 
+-target_link_libraries (avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
++target_link_libraries (avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} ZLIB::ZLIB)
+ 
+ add_executable (precompile test/precompile.cc)
+ 
+-target_link_libraries (precompile avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
++target_link_libraries (precompile avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} ZLIB::ZLIB)
+ 
+ macro (gen file ns)
+     add_custom_command (OUTPUT ${file}.hh
 @@ -151,34 +153,40 @@ gen (crossref cr)
  gen (primitivetypes pt)
  
