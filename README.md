@@ -7,6 +7,7 @@ For short description of available commands, run `vcpkg help`.
 
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
+* Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
 * Docs: [Documentation](docs/index.md)
 
 [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
