@@ -13,12 +13,8 @@ jobs:
   steps:
   - bash: |
       df -h
-    displayName: 'Report on Disk Space Before Environment'
+    displayName: 'Report on Disk Space'
     condition: always()
-  - task: Bash@3
-    displayName: 'Initialize Environment'
-    inputs:
-      filePath: 'scripts/azure-pipelines/osx/initialize-environment.sh'
   - bash: |
       brew list autoconf || brew install autoconf
       brew list automake || brew install automake
@@ -26,9 +22,10 @@ jobs:
       brew list gfortran || brew cask install gfortran
     displayName: 'Install brew dependencies'
   - bash: |
-      df -h
-    displayName: 'Report on Disk Space After Environment'
-    condition: always()
+      sudo mkdir /Users/vagrant/Data/downloads || 0
+      sudo chmod 777 /Users/vagrant/Data/downloads || 0
+      exit 0
+    displayName: 'Create /Users/vagrant/Data/downloads'
   - task: Bash@3
     displayName: 'Build vcpkg'
     inputs:
@@ -39,10 +36,19 @@ jobs:
   - bash: toolsrc/build.rel/vcpkg-test
     displayName: 'Run vcpkg tests'
   - powershell: |
-      ./vcpkg x-ci-clean --x-buildtrees-root=/Users/vagrant/Data/buildtrees --x-install-root=/Users/vagrant/Data/installed --x-packages-root=/Users/vagrant/Data/packages --downloads-root=/Users/vagrant/Data/downloads
+      $env:VCPKG_DOWNLOADS = '/Users/vagrant/Data/downloads'
+      $commonArgs = @(
+        '--binarycaching',
+        '--x-binarysource=clear;files,/Users/vagrant/Data/archives,upload',
+        '--x-buildtrees-root=/Users/vagrant/Data/buildtrees',
+        '--x-install-root=/Users/vagrant/Data/installed',
+        '--x-packages-root=/Users/vagrant/Data/packages'
+      )
+
+      ./vcpkg x-ci-clean @commonArgs
       $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-osx" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
       mkdir $(System.ArtifactsDirectory)/xml-results
-      ./vcpkg ci x64-osx --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-osx.xml" --exclude=$skipList --binarycaching --x-binarysource=clear`;files`,/Users/vagrant/Data/archives`,upload --x-buildtrees-root=/Users/vagrant/Data/buildtrees --x-install-root=/Users/vagrant/Data/installed --x-packages-root=/Users/vagrant/Data/packages --downloads-root=/Users/vagrant/Data/downloads
+      ./vcpkg ci x64-osx --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-osx.xml" --exclude=$skipList @commonArgs
     displayName: '** Test Modified Ports **'
   - task: PowerShell@2
     displayName: 'Analyze results and prepare test logs'

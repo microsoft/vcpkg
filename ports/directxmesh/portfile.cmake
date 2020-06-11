@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF dec2019
-    SHA512 b48b144172574d56775f7607d7ee7370b427fd95ab4e3089cdaf79b6cbd7fc4bbc15264d9a6703840b763bc2f4a5974594afa39f113960df34e07adfd74561d6
+    REF jun2020
+    SHA512 1421c0bbe76ec9ea2fb3c61dacdede73ecfc1a2d0149cf70d0aca87ed91b87846f7b4581438e0dd8058d082092a872fbd432070f54c8b1d981d03b0db75e41d5
     HEAD_REF master
 )
 
@@ -46,7 +46,7 @@ endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXMesh_${SLN_NAME}.sln
-    PLATFORM ${BUILD_ARCH}
+    PLATFORM ${TRIPLET_SYSTEM_ARCH}
 )
 
 file(INSTALL
