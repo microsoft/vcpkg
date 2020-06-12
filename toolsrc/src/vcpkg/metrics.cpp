@@ -32,7 +32,7 @@ namespace vcpkg::Metrics
 
     struct append_hexits {
         constexpr static char hex[17] = "0123456789abcdef";
-        void operator()(std::string& res, std::uint8_t bits) {
+        void operator()(std::string& res, std::uint8_t bits) const {
             res.push_back(hex[(bits >> 4) & 0x0F]);
             res.push_back(hex[(bits >> 0) & 0x0F]);
         }
