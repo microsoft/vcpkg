@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v1.7.0
     SHA512 7da6ab9daf253c2493e0c3960c6f817e0234dfbd0463467cd1e5f11f7d6804735e401b73fb1038b8f81cfc6527fafb6ac7f4668c3de9400a0131c1292bdbe660 
     HEAD_REF master
+    PATCHES
+        dont_build_examples_and_gdk_pixbuf.patch
 )
 
 vcpkg_configure_cmake(
