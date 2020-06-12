@@ -269,7 +269,7 @@ if (WITH_X11)
     install(FILES ${CAIRO_X11_HEADERS} DESTINATION include/cairo)
 endif()
 
-install(TARGETS cairo cairo-gobject
+install(TARGETS cairo
     EXPORT cairo-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
