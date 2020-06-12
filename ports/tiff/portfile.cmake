@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(LIBTIFF_VERSION 4.0.10)
 
 vcpkg_download_distfile(ARCHIVE
@@ -57,10 +55,11 @@ file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/
 if ("tool" IN_LIST FEATURES)
     file(GLOB TIFF_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(INSTALL ${TIFF_TOOLS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     file(REMOVE ${TIFF_TOOLS})
     file(GLOB TIFF_TOOLS ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     file(REMOVE ${TIFF_TOOLS})
-    
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()

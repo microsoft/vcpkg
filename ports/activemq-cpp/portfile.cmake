@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install( ON_TARGET "uwp" "linux" "osx")
 
 set(VERSION 3.9.5)
 
@@ -42,10 +38,7 @@ vcpkg_build_msbuild(
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/activemq-cpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/activemq-cpp/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/activemq-cpp/copyright)
-
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(
     COPY

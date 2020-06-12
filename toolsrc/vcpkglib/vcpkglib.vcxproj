@@ -158,6 +158,7 @@
     <ClInclude Include="..\include\vcpkg\base\lineinfo.h" />
     <ClInclude Include="..\include\vcpkg\base\machinetype.h" />
     <ClInclude Include="..\include\vcpkg\base\parse.h" />
+    <ClInclude Include="..\include\vcpkg\base\pragmas.h" />
     <ClInclude Include="..\include\vcpkg\base\optional.h" />
     <ClInclude Include="..\include\vcpkg\base\sortedvector.h" />
     <ClInclude Include="..\include\vcpkg\base\span.h" />
@@ -196,7 +197,6 @@
     <ClInclude Include="..\include\vcpkg\portfileprovider.h" />
     <ClInclude Include="..\include\vcpkg\postbuildlint.h" />
     <ClInclude Include="..\include\vcpkg\postbuildlint.buildtype.h" />
-    <ClInclude Include="..\include\vcpkg\pragmas.h" />
     <ClInclude Include="..\include\vcpkg\remove.h" />
     <ClInclude Include="..\include\vcpkg\sourceparagraph.h" />
     <ClInclude Include="..\include\vcpkg\statusparagraph.h" />
@@ -244,6 +244,7 @@
     <ClCompile Include="..\src\vcpkg\commands.buildexternal.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cache.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.ci.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.ciclean.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.contact.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.create.cpp" />

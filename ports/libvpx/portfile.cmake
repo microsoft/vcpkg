@@ -128,8 +128,24 @@ else()
     else()
         set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
     endif()
+    
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+        set(LIBVPX_TARGET_ARCH "x86")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+        set(LIBVPX_TARGET_ARCH "x86_64")
+    else()
+        message(FATAL_ERROR "libvpx does not support architecture ${VCPKG_TARGET_ARCHITECTURE}")
+    endif()
 
-    message(STATUS "Building Options: ${OPTIONS}")
+    if(VCPKG_TARGET_IS_LINUX)
+        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
+    elseif(VCPKG_TARGET_IS_OSX)
+        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+    else()
+        set(LIBVPX_TARGET "generic-gnu") # use default target
+    endif()
+
+    message(STATUS "Build info. Target: ${LIBVPX_TARGET}; Options: ${OPTIONS}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring libvpx for Release")
@@ -138,6 +154,7 @@ else()
         COMMAND
             ${BASH} --noprofile --norc
             "${SOURCE_PATH}/configure"
+            --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_RELEASE}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
@@ -169,6 +186,7 @@ else()
         COMMAND
             ${BASH} --noprofile --norc
             "${SOURCE_PATH}/configure"
+            --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_DEBUG}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
@@ -193,6 +211,13 @@ else()
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     endif()
 endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(LIBVPX_CONFIG_DEBUG ON)
+else()
+    set(LIBVPX_CONFIG_DEBUG OFF)
+endif()
+configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake @ONLY)
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libvpx)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libvpx/LICENSE ${CURRENT_PACKAGES_DIR}/share/libvpx/copyright)

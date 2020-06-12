@@ -1,5 +1,5 @@
 Source: magnum
-Version: 2019.10-1
+Version: 2019.10-2
 Build-Depends: corrade[utility]
 Description: C++11/C++14 graphics middleware for games and data visualization
 Homepage: https://magnum.graphics/
@@ -137,14 +137,6 @@ Feature: windowlesseglapplication
 Description: WindowlessEglApplication library
 Build-Depends: magnum[gl]
 
-Feature: eglcontext
-Description: EglContext library
-Build-Depends: magnum[gl]
-
 Feature: windowlessglxapplication
 Description: WindowlessGlxApplication library
-Build-Depends: magnum[gl]
-
-Feature: glxcontext
-Description: GlxContext library
 Build-Depends: magnum[gl]

@@ -11,8 +11,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
-    vcpkg_add_to_path(${YASM_DIR})
-    set(ENV{YASMPATH} ${YASM_DIR}/)
+    vcpkg_add_to_path("${YASM_DIR}")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(CONFIGURATION_RELEASE ReleaseDLL)
@@ -56,6 +55,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
         SKIP_CLEAN
+        OPTIONS /p:UseEnv=True
     )
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
     file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
