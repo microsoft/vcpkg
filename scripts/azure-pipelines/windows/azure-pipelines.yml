@@ -38,6 +38,13 @@ jobs:
         ninja.exe -C build.x86.debug
         build.x86.debug\vcpkg-test.exe
       failOnStderr: true
+  - task: PowerShell@2
+    displayName: "Clean Up Old Archives"
+    condition: and(eq('${{ parameters.triplet }}', 'x86-windows'), ne(variables['Build.Reason'], 'PullRequest'))
+    inputs:
+      filePath: 'scripts/azure-pipelines/remove-old-archives.ps1'
+      arguments: 'W:\'
+      failOnStderr: false
   - powershell: |
       $env:VCPKG_DOWNLOADS='D:\downloads'
       $commonArgs = @(

@@ -35,6 +35,13 @@ jobs:
       VCPKG_DOWNLOADS: '/Users/vagrant/Data/downloads'
   - bash: toolsrc/build.rel/vcpkg-test
     displayName: 'Run vcpkg tests'
+  - task: PowerShell@2
+    displayName: "Clean Up Old Archives"
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    inputs:
+      filePath: 'scripts/azure-pipelines/remove-old-archives.ps1'
+      arguments: '/Users/vagrant/Data/archives'
+      failOnStderr: false
   - powershell: |
       $env:VCPKG_DOWNLOADS = '/Users/vagrant/Data/downloads'
       $commonArgs = @(
