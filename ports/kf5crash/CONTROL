@@ -1,0 +1,5 @@
+Source: kf5crash
+Version: 5.64.0
+Description: KCrash provides support for intercepting and handling application crashes.
+Supports: linux
+Build-Depends: ecm, kf5coreaddons, kf5widgetsaddons
