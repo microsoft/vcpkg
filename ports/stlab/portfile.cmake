@@ -20,7 +20,8 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/share/cmake)
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/stlabConfig.cmake STLAB_CONFIG)
-string(REPLACE "find_dependency(Boost 1.60.0)" "if(APPLE)\nfind_dependency(Boost 1.73.0)\nendif()" STLAB_CONFIG ${STLAB_CONFIG})
+string(REPLACE "find_dependency(Boost 1.60.0)" "if(APPLE)\nfind_dependency(Boost)\nendif()" STLAB_CONFIG ${STLAB_CONFIG})
+
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/stlabConfig.cmake "${STLAB_CONFIG}")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
