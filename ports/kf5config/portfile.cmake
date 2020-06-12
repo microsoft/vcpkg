@@ -20,21 +20,34 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5config)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kconfig_compiler_kf5.exe ${CURRENT_PACKAGES_DIR}/tools/kf5config/kconfig_compiler_kf5.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kconf_update.exe ${CURRENT_PACKAGES_DIR}/tools/kf5config/kconf_update.exe)
+
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kconfig_compiler_kf5.exe ${CURRENT_PACKAGES_DIR}/tools/kf5config/kconfig_compiler_kf5.exe)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kconf_update.exe ${CURRENT_PACKAGES_DIR}/tools/kf5config/kconf_update.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kreadconfig5.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kwriteconfig5.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kconfig_compiler_kf5.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kconf_update.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kreadconfig5.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kwriteconfig5.exe)
+else()
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kreadconfig5)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kwriteconfig5)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kreadconfig5)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kwriteconfig5)
+endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Config)
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kreadconfig5.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kwriteconfig5.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kconfig_compiler_kf5.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kconf_update.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kreadconfig5.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kwriteconfig5.exe)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5config)
 file(APPEND ${CURRENT_PACKAGES_DIR}/tools/kf5config/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
 vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
