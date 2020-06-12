@@ -44,9 +44,7 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5config)
 file(APPEND ${CURRENT_PACKAGES_DIR}/tools/kf5config/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
