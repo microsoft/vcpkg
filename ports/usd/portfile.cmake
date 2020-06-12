@@ -1,7 +1,7 @@
+vcpkg_fail_port_install(ON_ARCH "x86")
+
 # Don't file if the bin folder exists. We need exe and custom files.
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,6 +9,8 @@ vcpkg_from_github(
     REF be1a80f8cb91133ac75e1fc2a2e1832cd10d91c8 # v20.02
     SHA512 12c7cf7e5320b168ddde870b1a68b482515b33bd29206c4f6cbb248b9071b866c47353bf496890e01950abb5f725157eca576f9dc403e15020474f9a653b43fe
     HEAD_REF master
+    PATCHES
+        fix-build-error.patch
 )
 
 vcpkg_find_acquire_program(PYTHON2)
