@@ -25,7 +25,7 @@ if ("x11" IN_LIST FEATURES)
 endif()
 
 if("gobject" IN_LIST FEATURES)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         message(FATAL_ERROR "Feature gobject currently only supports dynamic build.")
     endif()
 endif()
