@@ -1,4 +1,5 @@
 Source: nowide
-Version: 10.0.1
+Version: alias
 Homepage: https://github.com/boostorg/nowide
-Description: Boost nowide module (standalone)
+Build-Depends: boost-nowide
+Description: Deprecated alias for Boost nowide module
