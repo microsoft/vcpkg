@@ -211,6 +211,10 @@ else()
     endforeach()
 endif()
 
+# Install executables from ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin to /tools/icu
+file(GLOB ICU_TOOLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(INSTALL ${ICU_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
 # remove any remaining dlls in /lib
 file(GLOB DUMMY_DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
 if(DUMMY_DLLS)
