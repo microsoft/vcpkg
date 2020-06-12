@@ -1,5 +1,4 @@
 Source: bitserializer-rapidjson
-Version: 0.9
-Build-Depends: bitserializer, rapidjson
-Description: C++ 17 library for serialization, module for support JSON (implementation based on the RapidJson library)
-Homepage: https://bitbucket.org/Pavel_Kisliak/bitserializer
+Version: alias
+Build-Depends: bitserializer[rapidjson-archive]
+Description: Deprecated alias for bitserializer-rapidjson
