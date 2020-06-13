@@ -3,56 +3,78 @@ project(imgui CXX)
 
 set(CMAKE_DEBUG_POSTFIX d)
 
-set(IMGUI_INCLUDES_PUBLIC
-    imgui.h
-    imconfig.h
+add_library(${PROJECT_NAME} "")
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_include_directories(
+	${PROJECT_NAME}
+	PUBLIC
+	    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+		$<INSTALL_INTERFACE:Include>
 )
 
-set(IMGUI_INCLUDES_PRIVATE
-    imgui_internal.h
-    imstb_textedit.h
+target_sources(
+	${PROJECT_NAME}
+	PRIVATE
+		${CMAKE_CURRENT_SOURCE_DIR}/imgui.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/imgui_demo.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/imgui_draw.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/imgui_widgets.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
 )
 
-set(IMGUI_SOURCES
-    imgui.cpp
-    imgui_demo.cpp
-    imgui_draw.cpp
-    imgui_widgets.cpp
+if(IMGUI_FREETYPE)
+	find_package(Freetype REQUIRED)
+
+	target_include_directories(
+		${PROJECT_NAME}
+		PRIVATE
+			${FREETYPE_INCLUDE_DIRS}
+	)
+
+	target_sources(
+		${PROJECT_NAME}
+		PRIVATE
+			${CMAKE_CURRENT_SOURCE_DIR}/misc/freetype/imgui_freetype.cpp
+	)
+endif()
+
+install(
+	TARGETS ${PROJECT_NAME}
+	EXPORT ${PROJECT_NAME}_target
+	ARCHIVE DESTINATION lib
+	LIBRARY DESTINATION lib
+	RUNTIME DESTINATION bin
 )
-
-add_library(${PROJECT_NAME}
-    ${IMGUI_INCLUDES_PUBLIC}
-    ${IMGUI_INCLUDES_PRIVATE}
-    ${IMGUI_SOURCES}
-)
-
-file(GLOB IMGUI_BINDINGS ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_* )
-
-target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
-
-install(TARGETS ${PROJECT_NAME}
-    EXPORT IMGUIExport
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-)
-
-install(EXPORT IMGUIExport FILE ${PROJECT_NAME}Config.cmake NAMESPACE ${PROJECT_NAME}:: DESTINATION share/${PROJECT_NAME})
 
 if(NOT IMGUI_SKIP_HEADERS)
-    install(
-        FILES ${IMGUI_INCLUDES_PUBLIC}
+    install(FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/imgui.h
+		${CMAKE_CURRENT_SOURCE_DIR}/imconfig.h
+		${CMAKE_CURRENT_SOURCE_DIR}/imgui_internal.h
+		${CMAKE_CURRENT_SOURCE_DIR}/imstb_textedit.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
         DESTINATION include
     )
+
+	if(IMGUI_COPY_BINDINGS)
+		file(GLOB IMGUI_BINDINGS ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_* )
+		install(
+			FILES ${IMGUI_BINDINGS}
+			DESTINATION include/bindings
+		)
+	endif()
+
+	if(IMGUI_FREETYPE)
+		install(FILES
+			${CMAKE_CURRENT_SOURCE_DIR}/misc/freetype/imgui_freetype.h
+			DESTINATION include
+		)
+	endif()
 endif()
 
-if(IMGUI_COPY_BINDINGS)
-    install(
-        FILES ${IMGUI_INCLUDES_PRIVATE}
-        DESTINATION include
-    )
-    install(
-        FILES ${IMGUI_BINDINGS}
-        DESTINATION include/bindings
-    )
-endif()
+install(
+	EXPORT ${PROJECT_NAME}_target
+	NAMESPACE ${PROJECT_NAME}::
+	FILE ${PROJECT_NAME}-config.cmake
+	DESTINATION share/${PROJECT_NAME}
+)
