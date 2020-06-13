@@ -244,7 +244,7 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS -A ${ARCH})
     endif()
 
-    if(DEFINED VS_PLATFORM_TOOLSET)
+    if(NOT DEFINED PREFER_NINJA AND DEFINED VS_PLATFORM_TOOLSET)
         list(APPEND _csc_OPTIONS -T ${VS_PLATFORM_TOOLSET})
         set(NINJA_CAN_BE_USED OFF)
     endif()
