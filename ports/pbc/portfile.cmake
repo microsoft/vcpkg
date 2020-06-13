@@ -128,7 +128,7 @@ else()
     vcpkg_install_msbuild(SOURCE_PATH ${SOURCE_PATH_PARENT}
         PROJECT_SUBPATH ${SOURCE_PATH_SUFFIX}/pbcwin/projects/pbclib.vcxproj
         INCLUDES_SUBPATH ${SOURCE_PATH_SUFFIX}/include
-        LICENSE_SUBPATH ${SOURCE_PATH_SUFFIX}/COPYING
+        LICENSE_SUBPATH ${SOURCE_PATH_SUFFIX}/COPY
         RELEASE_CONFIGURATION "Release${ConfigurationSuffix}"
         DEBUG_CONFIGURATION "Debug${ConfigurationSuffix}"
         OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
