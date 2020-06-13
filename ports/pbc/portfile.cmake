@@ -1,7 +1,5 @@
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
-
 set(PBC_VERSION 0.5.14)
-
 if(VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_download_distfile(
         ARCHIVE
