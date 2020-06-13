@@ -106,7 +106,7 @@ function(vcpkg_build_msbuild)
         /p:UseInteloneMKL=No
         /m
     )
-    if(VS_PLATFORM_TOOLSET MATCHES "Clang")
+    if(DEFINED CMAKE_COMPILER_IS_CLANG)
       list(APPEND _csc_OPTIONS
         "/p:BasePlatformToolset=${_csc_PLATFORM_TOOLSET}"
         "/p:PlatformToolset=${_csc_VS_PLATFORM_TOOLSET}"
@@ -116,10 +116,10 @@ function(vcpkg_build_msbuild)
         "/p:UseLlvmLib=false"
         "/p:TrackFileAccess=false"
         "/p:LibToolExe=lib.exe"
-        "/p:ClangClAdditionalOptions=-Wno-gcc-compat -Xclang -fopenmp -Xclang -flto=thin -Wextra -Wno-unused-variable -verbose"
-        "/p:LldLinkAdditionalOptions=-debug -force:multipleres -fuse-ld=lld-link -lib"
+#        "/p:ClangClAdditionalOptions=-Wno-gcc-compat -Xclang -fopenmp -Xclang -flto=thin -Wextra -Wno-unused-variable -verbose"
+#        "/p:LldLinkAdditionalOptions=-debug -force:multipleres -fuse-ld=lld-link -lib"
       )
-    elseif(VS_PLATFORM_TOOLSET MATCHES "Intel")
+    elseif(DEFINED CMAKE_COMPILER_IS_INTEL)
       list(APPEND _csc_OPTIONS
         "/p:BasePlatformToolset=${_csc_PLATFORM_TOOLSET}"
         "/p:PlatformToolset=${_csc_VS_PLATFORM_TOOLSET}"
