@@ -1,0 +1,69 @@
+diff --git a/meson.build b/meson.build
+index 0056b8a9..8a9fac6c 100644
+--- a/meson.build
++++ b/meson.build
+@@ -94,6 +94,7 @@ if cc.get_id() == 'clang'
+ 	add_project_arguments('-Wno-missing-braces', language: 'c')
+ endif
+ 
++threads = dependency('threads')
+ wayland_server = dependency('wayland-server', version: '>=1.16')
+ wayland_client = dependency('wayland-client')
+ wayland_egl = dependency('wayland-egl')
+@@ -105,12 +106,16 @@ gbm = dependency('gbm', version: '>=17.1.0')
+ libinput = dependency('libinput', version: '>=1.9.0')
+ xkbcommon = dependency('xkbcommon')
+ udev = dependency('libudev')
+-pixman = dependency('pixman-1')
++pixman = declare_dependency(
++  link_args: ['-L' + get_option('vcpkg_installed_dir') + '/lib/', '-lpixman-1'],
++  include_directories: [include_directories(get_option('vcpkg_installed_dir') + '/include/')]
++)
+ math = cc.find_library('m')
+ rt = cc.find_library('rt')
+ 
+ wlr_files = []
+ wlr_deps = [
++  threads,
+ 	wayland_server,
+ 	wayland_client,
+ 	wayland_egl,
+@@ -154,7 +159,7 @@ lib_wlr = library(
+ 	meson.project_name(), wlr_files,
+ 	version: '.'.join(so_version),
+ 	dependencies: wlr_deps,
+-	include_directories: [wlr_inc, proto_inc],
++	include_directories: [wlr_inc, proto_inc, '/usr/include/libdrm/'],
+ 	install: true,
+ 	link_args : symbols_flag,
+ 	link_depends: symbols_file,
+diff --git a/meson_options.txt b/meson_options.txt
+index e6efd780..6b63e595 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -6,3 +6,4 @@ option('xcb-icccm', type: 'feature', value: 'auto', description: 'Use xcb-icccm
+ option('xwayland', type: 'feature', value: 'auto', yield: true, description: 'Enable support for X11 applications')
+ option('x11-backend', type: 'feature', value: 'auto', description: 'Enable X11 backend')
+ option('examples', type: 'boolean', value: true, description: 'Build example applications')
++option('vcpkg_installed_dir', type: 'string', description: 'Path to vcpkg install prefix')
+diff --git a/protocol/meson.build b/protocol/meson.build
+index 1f295df0..26f1d8a1 100644
+--- a/protocol/meson.build
++++ b/protocol/meson.build
+@@ -1,14 +1,6 @@
+-wl_protocol_dir = wayland_protos.get_variable(pkgconfig: 'pkgdatadir')
++wl_protocol_dir = '/usr/share/wayland-protocols/'
+ 
+-wayland_scanner_dep = dependency('wayland-scanner', required: false, native: true)
+-if wayland_scanner_dep.found()
+-	wayland_scanner = find_program(
+-		wayland_scanner_dep.get_variable(pkgconfig: 'wayland_scanner'),
+-		native: true,
+-	)
+-else
+-	wayland_scanner = find_program('wayland-scanner', native: true)
+-endif
++wayland_scanner = find_program('/usr/bin/wayland-scanner', native: true)
+ 
+ protocols = {
+ 	# Stable upstream protocols

@@ -1,0 +1,4 @@
+Source: wlroots
+Version: 0.10.1
+Description: A modular Wayland compositor library
+Build-Depends: tool-meson, pixman
