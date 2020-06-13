@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(ITPP_VERSION 4.3.1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/itpp/files/itpp/${ITPP_VERSION}/itpp-${ITPP_VERSION}.tar.bz2"

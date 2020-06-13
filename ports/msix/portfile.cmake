@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/msix-packaging
     REF ab322965d64baf1448548cbe18139e8872d686f2 # v1.7
-    SHA512 67f07b3f374a7493f1aa85dc5f18759daa9c3e39294f24f5d5023b5d7d9ada88b1fcf9daa497b4c2012547bab674a4b74c2236310229f29b998bf0731574a711
+    SHA512 d64767c84d5933bf3d1e0e62e9dc21fa13e02b8cf31776ccbe2e7066e514798d8ff758dc2b6fd64f6eabcf3deb83ef0eaa03e1a7d407307f347a045e8a75d3dd
     HEAD_REF master
     PATCHES
         install-cmake.patch
@@ -43,7 +43,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_copy_pdbs()
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
