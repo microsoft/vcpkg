@@ -79,7 +79,7 @@ namespace vcpkg::Files
 
             return fs::file_status(ft, permissions);
 
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
             auto result = follow_symlinks ? fs::stdfs::status(p, ec) : fs::stdfs::symlink_status(p, ec);
             // libstdc++ doesn't correctly not-set ec on nonexistent paths
             if (ec.value() == ENOENT || ec.value() == ENOTDIR)
@@ -88,7 +88,7 @@ namespace vcpkg::Files
                 return fs::file_status(file_type::not_found, perms::unknown);
             }
             return fs::file_status(result.type(), result.permissions());
-#endif// ^^^ !defined(_WIN32)
+#endif // ^^^ !defined(_WIN32)
         }
 
         fs::file_status status(const fs::path& p, std::error_code& ec) noexcept
@@ -326,6 +326,12 @@ namespace vcpkg::Files
         if (ec) Checks::exit_with_message(li, "Error getting current path: %s", ec.message());
         return result;
     }
+    void Filesystem::current_path(const fs::path& path, LineInfo li)
+    {
+        std::error_code ec;
+        this->current_path(path, ec);
+        if (ec) Checks::exit_with_message(li, "Error setting current path: %s", ec.message());
+    }
 
     struct RealFilesystem final : Filesystem
     {
@@ -501,7 +507,7 @@ namespace vcpkg::Files
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
 #elif defined(__APPLE__)
                 auto written_bytes = fcopyfile(i_fd, o_fd, 0, COPYFILE_ALL);
-#else // ^^^ defined(__APPLE__) // !(defined(__APPLE__) || defined(__linux__)) vvv
+#else  // ^^^ defined(__APPLE__) // !(defined(__APPLE__) || defined(__linux__)) vvv
                 ssize_t written_bytes = 0;
                 {
                     constexpr std::size_t buffer_length = 4096;
@@ -598,7 +604,7 @@ namespace vcpkg::Files
                         {
                             ec.assign(GetLastError(), std::system_category());
                         }
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
                         if (rmdir(current_path.c_str()))
                         {
                             ec.assign(errno, std::system_category());
@@ -627,7 +633,7 @@ namespace vcpkg::Files
                             ec.assign(GetLastError(), std::system_category());
                         }
                     }
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
                     else
                     {
                         if (unlink(current_path.c_str()))
@@ -777,7 +783,7 @@ namespace vcpkg::Files
             FILE* f = nullptr;
 #if defined(_WIN32)
             auto err = _wfopen_s(&f, file_path.native().c_str(), L"wb");
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
             f = fopen(file_path.native().c_str(), "wb");
             int err = f != nullptr ? 0 : 1;
 #endif // ^^^ !defined(_WIN32)
@@ -807,7 +813,7 @@ namespace vcpkg::Files
 #if defined(_WIN32)
             // absolute was called system_complete in experimental filesystem
             return fs::stdfs::system_complete(path, ec);
-#else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
             if (path.is_absolute())
             {
                 return path;
@@ -828,13 +834,17 @@ namespace vcpkg::Files
         }
 
         virtual fs::path current_path(std::error_code& ec) const override { return fs::stdfs::current_path(ec); }
+        virtual void current_path(const fs::path& path, std::error_code& ec) override
+        {
+            fs::stdfs::current_path(path, ec);
+        }
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
 #if defined(_WIN32)
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
             auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ';');
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
             static constexpr StringLiteral EXTS[] = {""};
             auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ':');
 #endif // ^^^ !defined(_WIN32)
