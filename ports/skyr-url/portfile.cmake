@@ -5,7 +5,7 @@ vcpkg_from_github(
         REPO cpp-netlib/url
         REF v1.11.0
         SHA512 bb3dd369df76de4a540dc6f83c9f1de4099043258ac2be2ba431328833f8db12c2b52d1b930f93ab64942917fe57b8996bf61659c2a923d052c7427ca06c4dae
-        HEAD_REF master
+        HEAD_REF main
 )
 
 vcpkg_configure_cmake(
