@@ -122,13 +122,19 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     file(REMOVE_RECURSE ${SOURCE_PATH}/build/debug)
     file(REMOVE_RECURSE ${SOURCE_PATH}/build/release)
+    if(EXISTS "${SOURCE_PATH}/Makefile")
+        # Clean up from previous builds
+        vcpkg_execute_required_process(
+            COMMAND make distclean
+            WORKING_DIRECTORY ${SOURCE_PATH}
+            LOGNAME config-${TARGET_TRIPLET}-dbg
+        )
+    endif()
 
     set(MPG123_OPTIONS
-        --enable-static
         --disable-dependency-tracking
-        --with-default-audio=coreaudio
-        --with-module-suffix=.so
     )
+
     # Find cross-compiler prefix
     if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
@@ -146,86 +152,13 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
         set(MPG123_CC CC=${CMAKE_C_COMPILER})
     endif()
 
-    ################
-    # Debug build
-    ################
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    if(EXISTS "${SOURCE_PATH}/Makefile")
-        # Clean up from previous builds
-        vcpkg_execute_required_process(
-            COMMAND make distclean
-            WORKING_DIRECTORY ${SOURCE_PATH}
-            LOGNAME config-${TARGET_TRIPLET}-dbg
-        )
-    endif()
-    vcpkg_execute_required_process(
-        COMMAND "${SOURCE_PATH}/configure"
-            --prefix=${SOURCE_PATH}/build/debug
-            --enable-debug
-            ${MPG123_OPTIONS}
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME config-${TARGET_TRIPLET}-dbg
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS ${MPG123_OPTIONS}
     )
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done.")
+    vcpkg_install_make()
 
-    message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND make -j install ${MPG123_CC}
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME build-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Installing ${TARGET_TRIPLET}-dbg done.")
-
-    ################
-    # Release build
-    ################
-    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-        COMMAND make distclean
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME config-${TARGET_TRIPLET}-dbg
-    )
-    vcpkg_execute_required_process(
-        COMMAND "${SOURCE_PATH}/configure"
-            --prefix=${SOURCE_PATH}/build/release
-            ${MPG123_OPTIONS}
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME config-${TARGET_TRIPLET}-rel
-    )
-    message(STATUS "Configuring ${TARGET_TRIPLET}-rel done.")
-
-    message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-        COMMAND make -j install ${MPG123_CC}
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME build-${TARGET_TRIPLET}-rel
-    )
-    message(STATUS "Installing ${TARGET_TRIPLET}-rel done.")
-
-    file(
-        INSTALL
-            "${SOURCE_PATH}/build/debug/include/fmt123.h"
-            "${SOURCE_PATH}/build/debug/include/mpg123.h"
-            "${SOURCE_PATH}/build/debug/include/out123.h"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/include
-    )
-
-    file(
-        INSTALL
-            "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
-            "${SOURCE_PATH}/build/debug/lib/libout123.a"
-        DESTINATION
-            ${CURRENT_INSTALLED_DIR}/debug/lib
-    )
-
-    file(
-        INSTALL
-            "${SOURCE_PATH}/build/release/lib/libmpg123.a"
-            "${SOURCE_PATH}/build/release/lib/libout123.a"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/lib
-    )
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
