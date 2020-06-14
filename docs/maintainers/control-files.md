@@ -140,6 +140,9 @@ The predefined expressions are computed from standard triplet settings:
 - `static` - `VCPKG_LIBRARY_LINKAGE` == `"static"`
 - `wasm32` - `VCPKG_TARGET_ARCHITECTURE` == `"wasm32"`
 - `emscripten` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Emscripten"`
+- `mingw32` - `VCPKG_TARGET_ARCHITECTURE` == `"MinGW32"`
+- `mingw64` - `VCPKG_TARGET_ARCHITECTURE` == `"MinGW64"`
+- `msys2` - `VCPKG_CMAKE_SYSTEM_NAME` == `"MSYS2"`
 
 These predefined expressions can be overridden in the triplet file via the [`VCPKG_DEP_INFO_OVERRIDE_VARS`](../users/triplets.md) option.
 
