@@ -29,7 +29,7 @@ Community Triplets are enabled by default, when using a community triplet a mess
 ### VCPKG_TARGET_ARCHITECTURE
 Specifies the target machine architecture.
 
-Valid options are `x86`, `x64`, `arm`, `arm64` and `wasm32`.
+Valid options are `x86`, `x64`, `arm`, `arm64`, `wasm32`, `mingw32` and `mingw64`.
 
 ### VCPKG_CRT_LINKAGE
 Specifies the desired CRT linkage (for MSVC).
@@ -50,6 +50,7 @@ Valid options include any CMake system name, such as:
 - `Darwin` (Mac OSX)
 - `Linux` (Linux)
 - `Emscripten` (WebAssembly)
+- `MSYS2` (MSYS_NT)
 
 ### VCPKG_CMAKE_SYSTEM_VERSION
 Specifies the target platform system version.
