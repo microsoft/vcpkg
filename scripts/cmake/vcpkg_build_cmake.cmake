@@ -48,6 +48,8 @@ function(vcpkg_build_cmake)
             "/p:UseIntelMKL=No"
         )
         set(PARALLEL_ARG "/m")
+    elseif( _VCPKG_CMAKE_GENERATOR MATCHES "Unix Makefiles" )
+        set(NO_PARALLEL_ARG "-j1")
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "NMake")
         # No options are currently added for nmake builds
     else()
