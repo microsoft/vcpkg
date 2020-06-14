@@ -50,7 +50,7 @@ Valid options include any CMake system name, such as:
 - `Darwin` (Mac OSX)
 - `Linux` (Linux)
 - `Emscripten` (WebAssembly)
-- `mingw` (MinGW)
+- `MinGW` (Minimalist GNU for Windows)
 
 ### VCPKG_CMAKE_SYSTEM_VERSION
 Specifies the target platform system version.
