@@ -20,8 +20,6 @@ namespace vcpkg
         arm,
         arm64,
         wasm32,
-        mingw32,
-        mingw64,
 
         windows,
         linux,
@@ -29,7 +27,7 @@ namespace vcpkg
         uwp,
         android,
         emscripten,
-        msys2,
+        mingw,
 
         static_link,
     };
@@ -120,9 +118,7 @@ namespace vcpkg
                 {"android", Identifier::android},
                 {"emscripten", Identifier::emscripten},
                 {"wasm32", Identifier::wasm32},
-                {"msys2", Identifier::msys2},
-                {"mingw32", Identifier::mingw32},
-                {"mingw64", Identifier::mingw64},
+                {"mingw", Identifier::mingw},
                 {"static", Identifier::static_link},
                 
             };
@@ -178,9 +174,7 @@ namespace vcpkg
                 case Identifier::android: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Android");
                 case Identifier::emscripten: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Emscripten");
                 case Identifier::wasm32: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "wasm32");
-                case Identifier::msys2: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "msys2");
-                case Identifier::mingw32: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "mingw32");
-                case Identifier::mingw64: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "mingw64");
+                case Identifier::mingw: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "mingw");
                 case Identifier::static_link: return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");
             }
 
