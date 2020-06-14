@@ -125,6 +125,10 @@ function(vcpkg_download_distfile VAR)
             endif()
             _execute_process(
                 COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
+                --connect-timeout=60
+                --max-connection-per-server=3
+                --retry-wait=2
+                --max-tries=5
                 -o temp/${vcpkg_download_distfile_FILENAME}
                 -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
                 ${request_headers}
