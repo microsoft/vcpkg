@@ -198,7 +198,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
+if("clang" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
+endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(GLOB_RECURSE _llvm_release_targets
