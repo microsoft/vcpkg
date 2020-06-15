@@ -881,6 +881,7 @@ libpng-apng:x64-windows        = skip
 libpng-apng:x64-windows-static = skip
 libpng-apng:x86-windows        = skip
 libpq:arm-uwp=fail
+libpq:arm64-windows=fail
 libpq:x64-uwp=fail
 libqcow:arm-uwp=fail
 libqcow:x64-uwp=fail

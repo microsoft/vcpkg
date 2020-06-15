@@ -3,9 +3,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
   return()
 endif()
 
-if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  message(FATAL_ERROR "${PORT} does not currently support UWP platform nor ARM architectures")
-endif()
+vcpkg_fail_port_install(MESSAGE "${PORT} does not currently support UWP platform nor ARM architectures" ON_TARGET "UWP" ON_ARCH "arm" )
 
 set(PTHREADS4W_VERSION "3.0.0")
 
@@ -87,9 +85,10 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthreads RENAME copyright)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthread)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthreads)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthreads_windows)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
