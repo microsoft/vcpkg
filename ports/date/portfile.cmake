@@ -23,11 +23,13 @@ if("remote-api" IN_LIST FEATURES)
   set(DATE_USE_SYSTEM_TZ_DB 0)
 endif()
 
+message(STATUS "$ENV{APPDATA}/atomic_qt")
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
     -DBUILD_TZ_LIB=ON
+    -DCMAKE_DEBUG_POSTFIX="d"
     -DUSE_SYSTEM_TZ_DB=${DATE_USE_SYSTEM_TZ_DB}
 )
 
