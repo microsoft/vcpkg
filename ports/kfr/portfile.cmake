@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+#vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,6 +6,13 @@ vcpkg_from_github(
     REF 1f9706197abfcd4b4ec19ded3ce37b70ebd9a223
     SHA512 901c6984a46a7abcc28adf9397759156a9e8d173e028c236ab423568ed20b3a3efe207be9660c961539c73a2767afaedcd76133304f542d3299353942cf13f5e
     HEAD_REF master
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    capi ENABLE_CAPI_BUILD
+    dft ENABLE_DFT
+    dft-np ENABLE_DFT_NP
 )
 
 vcpkg_configure_cmake(
@@ -17,6 +24,7 @@ vcpkg_configure_cmake(
         -DREGENERATE_TESTS=OFF
         -DKFR_EXTENDED_TESTS=OFF
         -DSKIP_TESTS=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
