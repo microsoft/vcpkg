@@ -130,6 +130,7 @@ namespace vcpkg
         // feature flags
         Optional<bool> feature_packages = nullopt;
         Optional<bool> binary_caching = nullopt;
+        bool binary_caching_enabled() const { return binary_caching.value_or(false); }
 
         std::string command;
         std::vector<std::string> command_arguments;
