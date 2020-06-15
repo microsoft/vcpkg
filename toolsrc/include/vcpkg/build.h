@@ -34,6 +34,7 @@ namespace vcpkg::Build
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
+                                 const bool binary_caching_enabled,
                                  IBinaryProvider& binaryprovider,
                                  const VcpkgPaths& paths);
 

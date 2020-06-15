@@ -39,6 +39,7 @@ namespace vcpkg::Build::Command
     void perform_and_exit_ex(const FullPackageSpec& full_spec,
                              const SourceControlFileLocation& scfl,
                              const PathsPortFileProvider& provider,
+                             const bool binary_caching_enabled,
                              IBinaryProvider& binaryprovider,
                              const VcpkgPaths& paths)
     {
@@ -69,7 +70,7 @@ namespace vcpkg::Build::Command
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            binary_caching_enabled ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -152,7 +153,7 @@ namespace vcpkg::Build::Command
         Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
         _Analysis_assume_(scfl != nullptr);
 
-        perform_and_exit_ex(spec, *scfl, provider, *binaryprovider, paths);
+        perform_and_exit_ex(spec, *scfl, provider, args.binary_caching_enabled(), *binaryprovider, paths);
     }
 }
 
