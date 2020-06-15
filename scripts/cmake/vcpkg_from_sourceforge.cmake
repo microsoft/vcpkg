@@ -7,7 +7,7 @@
 ## vcpkg_from_sourceforge(
 ##     OUT_SOURCE_PATH <SOURCE_PATH>
 ##     REPO <cunit/CUnit>
-##     REF <2.1-3>
+##     [REF] <2.1-3>
 ##     SHA512 <547b417109332...>
 ##     FILENAME <CUnit-2.1-3.tar.bz2>
 ##     [PATCHES <patch1.patch> <patch2.patch>...]
@@ -65,16 +65,12 @@ function(vcpkg_from_sourceforge)
         message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")
     endif()
 
-    if((DEFINED _vdus_REF AND NOT DEFINED _vdus_SHA512) OR (NOT DEFINED _vdus_REF AND DEFINED _vdus_SHA512))
-        message(FATAL_ERROR "SHA512 must be specified if REF is specified.")
+    if(NOT DEFINED _vdus_SHA512)
+        message(FATAL_ERROR "SHA512 must be specified.")
     endif()
 
     if(NOT DEFINED _vdus_REPO)
         message(FATAL_ERROR "The sourceforge repository must be specified.")
-    endif()
-
-    if(NOT DEFINED _vdus_REF AND NOT DEFINED _vdus_HEAD_REF)
-        message(FATAL_ERROR "At least one of REF and HEAD_REF must be specified.")
     endif()
 
     if (DISABLE_SSL)
@@ -90,23 +86,35 @@ function(vcpkg_from_sourceforge)
         set(HEADERS)
     endif()
 
-    string(REGEX REPLACE ".*/" "" REPO_NAME ${_vdus_REPO})
-    string(REGEX REPLACE "/.*" "" ORG_NAME ${_vdus_REPO})
+    string(FIND ${_vdus_REPO} "/" FOUND_ORG)
+    if (NOT FOUND_ORG EQUAL -1)
+        string(REGEX REPLACE ".*/" "" REPO_NAME ${_vdus_REPO})
+        string(REGEX REPLACE "/.*" "" ORG_NAME ${_vdus_REPO})
+        set(ORG_NAME ${ORG_NAME}/)
+    else()
+        set(REPO_NAME ${_vdus_REPO})
+        set(ORG_NAME )
+    endif()
 
     if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED _vdus_HEAD_REF)
         message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
         set(VCPKG_USE_HEAD_VERSION OFF)
     endif()
     
-    set(URL "${SOURCEFORGE_HOST}/${ORG_NAME}/${REPO_NAME}/${_vdus_REF}/${_vdus_FILENAME}")
+    if (DEFINED _vdus_REF)
+        set(URL "${SOURCEFORGE_HOST}/${ORG_NAME}${REPO_NAME}/${_vdus_REF}/${_vdus_FILENAME}")
+    else()
+        set(URL "${SOURCEFORGE_HOST}/${ORG_NAME}${REPO_NAME}/${_vdus_FILENAME}")
+    endif()
+
 
     # Handle --no-head scenarios
     if(NOT VCPKG_USE_HEAD_VERSION)
-        if(NOT _vdus_REF)
-            message(FATAL_ERROR "Package does not specify REF. It must built using --head.")
+        if (DEFINED _vdus_HEAD_REF)
+            string(REPLACE "/" "-" SANITIZED_REF "${_vdus_REF}")
+        else()
+            string(SUBSTRING "${_vdus_SHA512}" 0 10 SANITIZED_REF)
         endif()
-
-        string(REPLACE "/" "-" SANITIZED_REF "${_vdus_REF}")
 
         vcpkg_download_distfile(ARCHIVE
             URLS "${URL}"
