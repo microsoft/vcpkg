@@ -10,6 +10,8 @@
 ##     [REF] <2.1-3>
 ##     SHA512 <547b417109332...>
 ##     FILENAME <CUnit-2.1-3.tar.bz2>
+##     [DISABLE_SSL]
+##     [NO_REMOVE_ONE_LEVEL]
 ##     [PATCHES <patch1.patch> <patch2.patch>...]
 ## )
 ## ```
@@ -21,21 +23,21 @@
 ## This should be set to `SOURCE_PATH` by convention.
 ##
 ## ### REPO
-## The organization or user and repository on sourceforge.
+## The organization or user and repository (optional) on sourceforge.
 ##
 ## ### REF
-## A stable git commit-ish (ideally a tag or commit) that will not change contents.
+## A stable version number that will not change contents.
 ##
-## For repositories without official releases, this can be set to the full commit id of the current latest master.
+## For example, we can get the download link:
+## https://sourceforge.net/settings/mirror_choices?projectname=mad&filename=libmad/0.15.1b/libmad-0.15.1b.tar.gz&selected=nchc
+## So the REPO is `mad/libmad`, and the REF is `0.15.1b`.
 ##
-## If `REF` is specified, `SHA512` must also be specified.
+## For some special links:
+## https://sourceforge.net/settings/mirror_choices?projectname=soxr&filename=soxr-0.1.3-Source.tar.xz&selected=nchc
+## The REPO is `soxr` and REF is not exist.
 ##
 ## ### SHA512
 ## The SHA512 hash that should match the archive.
-##
-## This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
-##
-## For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
 ##
 ## ### PATCHES
 ## A list of patches to be applied to the extracted sources.
@@ -44,17 +46,17 @@
 ##
 ## This field should contain the scheme, host, and port of the desired URL without a trailing slash.
 ##
-## ### AUTHORIZATION_TOKEN
-## A token to be passed via the Authorization HTTP header as "token ${AUTHORIZATION_TOKEN}".
+## ### DISABLE_SSL
+## Disable ssl when downloading source.
 ##
-## ## Notes:
-## At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
-##
-## This exports the `VCPKG_HEAD_VERSION` variable during head builds.
+## ### NO_REMOVE_ONE_LEVEL
+## Specifies that the default removal of the top level folder should not occur.
 ##
 ## ## Examples:
 ##
 ## * [cunit](https://github.com/Microsoft/vcpkg/blob/master/ports/cunit/portfile.cmake)
+## * [polyclipping](https://github.com/Microsoft/vcpkg/blob/master/ports/polyclipping/portfile.cmake)
+## * [tinyfiledialogs](https://github.com/Microsoft/vcpkg/blob/master/ports/tinyfiledialogs/portfile.cmake)
 
 function(vcpkg_from_sourceforge)
     set(booleanValueArgs DISABLE_SSL NO_REMOVE_ONE_LEVEL)
@@ -74,18 +76,12 @@ function(vcpkg_from_sourceforge)
         message(FATAL_ERROR "The sourceforge repository must be specified.")
     endif()
 
-    if (DISABLE_SSL)
+    if (_vdus_DISABLE_SSL)
         set(URL_PROTOCOL http:)
     else()
         set(URL_PROTOCOL https:)
     endif()
     set(SOURCEFORGE_HOST ${URL_PROTOCOL}//downloads.sourceforge.net/project)
-
-    if(DEFINED _vdus_AUTHORIZATION_TOKEN)
-        set(HEADERS "HEADERS" "Authorization: token ${_vdus_AUTHORIZATION_TOKEN}")
-    else()
-        set(HEADERS)
-    endif()
 
     string(FIND ${_vdus_REPO} "/" FOUND_ORG)
     if (NOT FOUND_ORG EQUAL -1)
@@ -125,7 +121,6 @@ function(vcpkg_from_sourceforge)
             URLS "${URL}"
             SHA512 "${_vdus_SHA512}"
             FILENAME "${_vdus_FILENAME}"
-            ${HEADERS}
         )
 
         vcpkg_extract_source_archive_ex(
