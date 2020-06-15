@@ -23,6 +23,11 @@ namespace vcpkg
         static const Triplet X64_UWP;
         static const Triplet ARM_UWP;
         static const Triplet ARM64_UWP;
+        
+        static const Triplet ARM_ANDROID;
+        static const Triplet ARM64_ANDROID;
+        static const Triplet X86_ANDROID;
+        static const Triplet X64_ANDROID;
 
         const std::string& canonical_name() const;
         const std::string& to_string() const;

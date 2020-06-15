@@ -1,11 +1,12 @@
 #pragma once
 
+#include <vcpkg/base/pragmas.h>
+
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>
-#include <vcpkg/pragmas.h>
 
 #include <vector>
 
@@ -172,9 +173,7 @@ namespace vcpkg::Strings
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
 
-    std::vector<std::string> split(const std::string& s, const std::string& delimiter);
-
-    std::vector<std::string> split(const std::string& s, const std::string& delimiter, size_t max_count);
+    std::vector<std::string> split(const std::string& s, const char delimiter);
 
     std::vector<StringView> find_all_enclosed(StringView input, StringView left_delim, StringView right_delim);
 

@@ -1,5 +1,9 @@
 Source: freerdp
-Version: 2.0.0-rc4-7
+Version: 2.0.0-1
 Homepage: https://github.com/FreeRDP/FreeRDP
 Description: A free implementation of the Remote Desktop Protocol (RDP)
 Build-Depends: openssl, glib (!windows)
+
+Feature: urbdrc
+Description: USB redirection channel support
+Build-Depends: libusb
