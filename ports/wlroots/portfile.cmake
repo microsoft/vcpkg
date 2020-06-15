@@ -1,4 +1,28 @@
-include(vcpkg_common_functions)
+message("wlroots currently requires the following libraries from the system package manager:
+    wayland
+    wayland-protocols
+    EGL
+    GLESv2
+    libdrm
+    GBM
+    libinput
+    xkbcommon
+    udev
+    pixman
+    systemd (optional, for logind support)
+    elogind (optional, for logind support on systems without systemd)
+
+If you choose to enable X11 support:
+    
+    xcb
+    xcb-composite
+    xcb-xfixes
+    xcb-xinput
+    xcb-image
+    xcb-render
+    x11-xcb
+    xcb-errors (optional, for improved error reporting)
+    x11-icccm (optional, for improved Xwayland introspection)")
 
 vcpkg_fail_port_install(
   MESSAGE "Only Linux is supported by wlroots"

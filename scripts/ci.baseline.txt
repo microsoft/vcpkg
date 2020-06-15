@@ -1952,8 +1952,6 @@ wintoast:x64-osx=fail
 wintoast:x64-uwp=fail
 wlroots:arm64-windows=skip
 wlroots:arm-uwp=skip
-# depends on native drm and x11 libraries
-wlroots:x64-linux=fail
 wlroots:x64-osx=skip
 wlroots:x64-uwp=skip
 wlroots:x64-windows=skip

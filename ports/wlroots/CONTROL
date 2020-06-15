@@ -1,4 +1,6 @@
 Source: wlroots
 Version: 0.10.1
 Description: A modular Wayland compositor library
+Homepage: https://github.com/swaywm/wlroots/
+Supports: linux
 Build-Depends: tool-meson, pixman
