@@ -42,10 +42,6 @@ stages:
     displayName: 'Run PR Test'
     dependsOn: delete_tombstones
     jobs:
-      - template: windows/run-tests.yml
-        parameters:
-          poolName: $(windows-pool)
-
       - template: windows/azure-pipelines.yml
         parameters:
           triplet: x86-windows
