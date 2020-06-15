@@ -16,6 +16,12 @@ namespace vcpkg::Commands
     using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     using CommandTypeC = void (*)(const VcpkgCmdArguments& args, Files::Filesystem& fs);
 
+    enum class DryRun : bool
+    {
+        No,
+        Yes,
+    };
+
     namespace BuildExternal
     {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
@@ -86,11 +92,6 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
-    namespace Import
-    {
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-    }
-
     namespace Integrate
     {
         extern const CommandStructure COMMAND_STRUCTURE;
@@ -146,9 +147,23 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
+    namespace FormatManifest
+    {
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     namespace SetInstalled
     {
         extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit_ex(const VcpkgCmdArguments& args,
+                                 const VcpkgPaths& paths,
+                                 const PortFileProvider::PathsPortFileProvider& provider,
+                                 IBinaryProvider& binary_provider,
+                                 const CMakeVars::CMakeVarProvider& cmake_vars,
+                                 const std::vector<FullPackageSpec>& specs,
+                                 const Build::BuildPackageOptions& install_plan_options,
+                                 DryRun dry_run);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 

@@ -37,7 +37,7 @@ static void features_check(Dependencies::InstallPlanAction& plan,
     for (auto&& feature_name : expected_features)
     {
         // TODO: see if this can be simplified
-        if (feature_name == "core" || feature_name == "")
+        if (feature_name == "core" || feature_name.empty())
         {
             REQUIRE((Util::find(feature_list, "core") != feature_list.end() ||
                      Util::find(feature_list, "") != feature_list.end()));

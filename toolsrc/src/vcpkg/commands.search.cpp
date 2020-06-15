@@ -20,15 +20,22 @@ namespace vcpkg::Commands::Search
     {
         if (full_desc)
         {
-            System::printf(
-                "%-20s %-16s %s\n", source_paragraph.name, source_paragraph.version, source_paragraph.description);
+            System::printf("%-20s %-16s %s\n",
+                           source_paragraph.name,
+                           source_paragraph.version,
+                           Strings::join("\n    ", source_paragraph.description));
         }
         else
         {
+            std::string description;
+            if (!source_paragraph.description.empty())
+            {
+                description = source_paragraph.description[0];
+            }
             System::printf("%-20s %-16s %s\n",
                            vcpkg::shorten_text(source_paragraph.name, 20),
                            vcpkg::shorten_text(source_paragraph.version, 16),
-                           vcpkg::shorten_text(source_paragraph.description, 81));
+                           vcpkg::shorten_text(description, 81));
         }
     }
 
@@ -37,13 +44,17 @@ namespace vcpkg::Commands::Search
         auto full_feature_name = Strings::concat(name, "[", feature_paragraph.name, "]");
         if (full_desc)
         {
-            System::printf("%-37s %s\n", full_feature_name, feature_paragraph.description);
+            System::printf("%-37s %s\n", full_feature_name, Strings::join("\n   ", feature_paragraph.description));
         }
         else
         {
-            System::printf("%-37s %s\n",
-                           vcpkg::shorten_text(full_feature_name, 37),
-                           vcpkg::shorten_text(feature_paragraph.description, 81));
+            std::string description;
+            if (!feature_paragraph.description.empty())
+            {
+                description = feature_paragraph.description[0];
+            }
+            System::printf(
+                "%-37s %s\n", vcpkg::shorten_text(full_feature_name, 37), vcpkg::shorten_text(description, 81));
         }
     }
 
@@ -66,7 +77,7 @@ namespace vcpkg::Commands::Search
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const bool full_description = Util::Sets::contains(options.switches, OPTION_FULLDESC);
 
-        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PathsPortFileProvider provider(paths, args.overlay_ports);
         auto source_paragraphs =
             Util::fmap(provider.load_all_control_files(),
                        [](auto&& port) -> const SourceControlFile* { return port->source_control_file.get(); });
@@ -84,24 +95,40 @@ namespace vcpkg::Commands::Search
         }
         else
         {
-            const auto& icontains = Strings::case_insensitive_ascii_contains;
-
             // At this point there is 1 argument
             auto&& args_zero = args.command_arguments[0];
+            const auto contained_in = [&args_zero](const auto& s) {
+                return Strings::case_insensitive_ascii_contains(s, args_zero);
+            };
             for (const auto& source_control_file : source_paragraphs)
             {
                 auto&& sp = *source_control_file->core_paragraph;
 
-                const bool contains_name = icontains(sp.name, args_zero);
-                if (contains_name || icontains(sp.description, args_zero))
+                bool found_match = contained_in(sp.name);
+                if (!found_match)
+                {
+                    found_match = std::any_of(sp.description.begin(), sp.description.end(), contained_in);
+                }
+
+                if (found_match)
                 {
                     do_print(sp, full_description);
                 }
 
                 for (auto&& feature_paragraph : source_control_file->feature_paragraphs)
                 {
-                    if (contains_name || icontains(feature_paragraph->name, args_zero) ||
-                        icontains(feature_paragraph->description, args_zero))
+                    bool found_match_for_feature = found_match;
+                    if (!found_match_for_feature)
+                    {
+                        found_match_for_feature = contained_in(feature_paragraph->name);
+                    }
+                    if (!found_match_for_feature)
+                    {
+                        found_match_for_feature = std::any_of(
+                            feature_paragraph->description.begin(), feature_paragraph->description.end(), contained_in);
+                    }
+
+                    if (found_match_for_feature)
                     {
                         do_print(sp.name, *feature_paragraph, full_description);
                     }

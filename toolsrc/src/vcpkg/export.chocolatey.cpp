@@ -19,7 +19,7 @@ namespace vcpkg::Export::Chocolatey
         static constexpr auto CONTENT_TEMPLATE = R"(<dependency id="@PACKAGE_ID@" version="[@PACKAGE_VERSION@]" />)";
 
         std::string nuspec_dependencies;
-        for (const std::string& depend : binary_paragraph.depends)
+        for (const std::string& depend : binary_paragraph.dependencies)
         {
             auto found = packages_version.find(depend);
             if (found == packages_version.end())
@@ -68,8 +68,8 @@ namespace vcpkg::Export::Chocolatey
             Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_VERSION@", package_version->second);
         nuspec_file_content = Strings::replace_all(
             std::move(nuspec_file_content), "@PACKAGE_MAINTAINER@", chocolatey_options.maybe_maintainer.value_or(""));
-        nuspec_file_content =
-            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_DESCRIPTION@", binary_paragraph.description);
+        nuspec_file_content = Strings::replace_all(
+            std::move(nuspec_file_content), "@PACKAGE_DESCRIPTION@", Strings::join("\n", binary_paragraph.description));
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@EXPORTED_ROOT_DIR@", exported_root_dir);
         nuspec_file_content = Strings::replace_all(std::move(nuspec_file_content),
