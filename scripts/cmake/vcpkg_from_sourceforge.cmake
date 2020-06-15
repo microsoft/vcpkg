@@ -24,7 +24,7 @@
 ## The organization or user and repository on sourceforge.
 ##
 ## ### REF
-## A stable git commit-ish (ideally a tag or commit) that will not change contents. **This should not be a branch.**
+## A stable git commit-ish (ideally a tag or commit) that will not change contents.
 ##
 ## For repositories without official releases, this can be set to the full commit id of the current latest master.
 ##
@@ -55,8 +55,9 @@
 ## ## Examples:
 ##
 ## * [cunit](https://github.com/Microsoft/vcpkg/blob/master/ports/cunit/portfile.cmake)
+
 function(vcpkg_from_sourceforge)
-    set(booleanValueArgs DISABLE_SSL)
+    set(booleanValueArgs DISABLE_SSL NO_REMOVE_ONE_LEVEL)
     set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 FILENAME)
     set(multipleValuesArgs PATCHES)
     cmake_parse_arguments(_vdus "${booleanValueArgs}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
@@ -106,7 +107,11 @@ function(vcpkg_from_sourceforge)
     else()
         set(URL "${SOURCEFORGE_HOST}/${ORG_NAME}${REPO_NAME}/${_vdus_FILENAME}")
     endif()
-
+        
+    set(NO_REMOVE_ONE_LEVEL )
+    if (_vdus_NO_REMOVE_ONE_LEVEL)
+        set(NO_REMOVE_ONE_LEVEL NO_REMOVE_ONE_LEVEL)
+    endif()
 
     # Handle --no-head scenarios
     if(NOT VCPKG_USE_HEAD_VERSION)
@@ -127,6 +132,7 @@ function(vcpkg_from_sourceforge)
             OUT_SOURCE_PATH SOURCE_PATH
             ARCHIVE "${ARCHIVE}"
             REF "${SANITIZED_REF}"
+            ${NO_REMOVE_ONE_LEVEL}
             PATCHES ${_vdus_PATCHES}
         )
 
@@ -151,6 +157,7 @@ function(vcpkg_from_sourceforge)
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${downloaded_file_path}"
         REF "${SANITIZED_HEAD_REF}"
+        ${NO_REMOVE_ONE_LEVEL}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/head
         PATCHES ${_vdus_PATCHES}
     )
