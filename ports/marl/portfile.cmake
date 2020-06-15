@@ -7,7 +7,7 @@ vcpkg_from_github(
     REPO google/marl
     REF 00433d41804f52af29ef6f386f4c479f48c63e66
     SHA512 8e86121cf212e4d7d2cfb1387a8f4c7749c82b8e916f4ea517d0a67696fefa91d900ffcf6f6358586cc341e8620ccb03ce2505b7828fd56a9d7561b9a2523bfd
-    HEAD_REF master
+    HEAD_REF main
 )
 
 vcpkg_configure_cmake(
