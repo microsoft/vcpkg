@@ -8,18 +8,11 @@ vcpkg_from_github(
         fix_dynamic_build.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED_LIBS ON)
-else()
-    set(BUILD_SHARED_LIBS OFF)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DVERBOSE=ON
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DBUILD_TEST_APP=OFF
 )
 
