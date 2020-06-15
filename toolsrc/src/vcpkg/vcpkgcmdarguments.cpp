@@ -548,6 +548,17 @@ namespace vcpkg
             }
         }
 
+        const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
+        if (const auto unpacked = vcpkg_feature_flags_env.get())
+        {
+            auto flags = Strings::split(*unpacked, ',');
+            if (!binary_caching
+                && std::find(flags.begin(), flags.end(), "binarycaching") != flags.end())
+            {
+                binary_caching = true;
+            }
+        }
+
         if (!triplet)
         {
             const auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");

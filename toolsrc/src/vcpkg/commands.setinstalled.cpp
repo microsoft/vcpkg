@@ -47,7 +47,7 @@ namespace vcpkg::Commands::SetInstalled
             Build::CleanPackages::YES,
             Build::CleanDownloads::YES,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            args.binary_caching_enabled() ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
