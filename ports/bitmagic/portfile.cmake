@@ -1,4 +1,4 @@
-
+# Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tlk00/BitMagic
@@ -6,14 +6,6 @@ vcpkg_from_github(
     SHA512 a7968aaed950e9174192635fe7ab560234bb2757519ea5a2db911e73457e5859f0e16499756865d1eeab286a93da0e87bd454cfa750c20093db3219c05204f96
     HEAD_REF master
 
-)
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG
-        -DPSNIP_INSTALL_HEADERS=OFF
-    OPTIONS_RELEASE
-        -DPSNIP_INSTALL_HEADERS=ON
 )
 
 file(GLOB HEADER_LIST "${SOURCE_PATH}/src/*.h")
