@@ -1,26 +1,26 @@
-## # vcpkg_from_sourceforge
-##
-## Download and extract a project from sourceforge.
-##
-## ## Usage:
-## ```cmake
-## vcpkg_from_sourceforge(
-##     OUT_SOURCE_PATH <SOURCE_PATH>
-##     REPO <cunit/CUnit>
-##     [REF] <2.1-3>
-##     SHA512 <547b417109332...>
-##     FILENAME <CUnit-2.1-3.tar.bz2>
-##     [DISABLE_SSL]
-##     [NO_REMOVE_ONE_LEVEL]
-##     [PATCHES <patch1.patch> <patch2.patch>...]
-## )
-## ```
-##
-## ## Parameters:
-## ### OUT_SOURCE_PATH
-## Specifies the out-variable that will contain the extracted location.
-##
-## This should be set to `SOURCE_PATH` by convention.
+# vcpkg_from_sourceforge
+
+Download and extract a project from sourceforge.
+
+## Usage:
+```cmake
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH <SOURCE_PATH>
+    REPO <cunit/CUnit>
+    [REF] <2.1-3>
+    SHA512 <547b417109332...>
+    FILENAME <CUnit-2.1-3.tar.bz2>
+    [DISABLE_SSL]
+    [NO_REMOVE_ONE_LEVEL]
+    [PATCHES <patch1.patch> <patch2.patch>...]
+)
+```
+
+## Parameters:
+### OUT_SOURCE_PATH
+Specifies the out-variable that will contain the extracted location.
+
+This should be set to `SOURCE_PATH` by convention.
 
 ### REPO
 The organization or user and repository (optional) on sourceforge.
