@@ -158,7 +158,8 @@ Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 10
 
 ####################################################################################################
 Write-Progress `
-  -Activity 'Creating prototype VM' `
+  -Activity $ProgressActivity `
+  -Status 'Creating prototype VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 $NicName = $ResourceGroupName + 'NIC'

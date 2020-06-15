@@ -173,7 +173,7 @@ Build-Depends: qt5
 
 Feature: mpi
 Description: MPI functionality for VTK
-Build-Depends: msmpi, hdf5[parallel]
+Build-Depends: mpi, hdf5[parallel]
 
 Feature: python
 Description: Python functionality for VTK
