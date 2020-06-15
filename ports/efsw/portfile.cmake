@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 23458ba287c220a682e39acfd2782c863ea9ca746740579b0310a5d8d9fc1d8a49b4f618a7d18bdab621b6808ee25255f651cc27bcbdd8ebd47003ace021570d
     HEAD_REF master
     PATCHES
-    fix_dynamic_build.patch
+        fix_dynamic_build.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -18,9 +18,9 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-    -DVERBOSE=ON
-    -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-    -DBUILD_TEST_APP=OFF
+        -DVERBOSE=ON
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+        -DBUILD_TEST_APP=OFF
 )
 
 vcpkg_install_cmake()
