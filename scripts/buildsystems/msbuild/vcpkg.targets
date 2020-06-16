@@ -1,64 +1,58 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="VcpkgRoot;VcpkgCurrentInstalledDir">
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32||'">
+  <!-- Setting reasonable defaults if vcpkg.props was not loaded-->
+  <PropertyGroup Condition="'$(VcpkgHasProps)'!='true'" >
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>
+    <VcpkgAutoLink Condition="'$(VcpkgAutoLink)' == ''">true</VcpkgAutoLink>
+    <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
+    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgRoot>
+    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
+    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp</VcpkgTriplet>
+  <!-- Set default OS Target-->
+  <PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0' And '$(VcpkgHasProps)'!='true'">
+    <VcpkgOSTarget Condition="'$(VcpkgOSTarget)' == ''">uwp</VcpkgOSTarget>
+  </PropertyGroup>
+  <PropertyGroup  Condition="'$(VcpkgHasProps)'!='true'" >
+    <VcpkgOSTarget Condition="'$(VcpkgOSTarget)' == ''">windows</VcpkgOSTarget>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>
+  <!-- Set other defaults-->
+  <PropertyGroup Condition="'$(VcpkgHasProps)'!='true'" >
+    <VcpkgUserTriplet Condition="'$(VcpkgUserTriplet)' == ''">$(PlatformTarget)-$(VcpkgOSTarget)</VcpkgUserTriplet>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgUserTriplet)</VcpkgTriplet>
+    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$(VcpkgRoot)\installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDir>
+  </PropertyGroup> 
+
+  <!--Import property page for vcpkg -->
+  <ItemGroup Condition="'$(VcpkgPageSchema)' != '' ">
+    <PropertyPageSchema Include="$(VcpkgPageSchema)">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+
+  <!-- Update properties if using static libs-->
+  <PropertyGroup Condition="'$(VcpkgUseStatic)' == 'true'">
+      <VcpkgTripletTmp>$(VcpkgUserTriplet)</VcpkgTripletTmp>
+      <VcpkgTriplet>$(VcpkgTripletTmp)-static</VcpkgTriplet>
+      <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == '$(VcpkgRoot)\installed\$(VcpkgTripletTmp)\'">$(VcpkgRoot)\installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDir>
+      <VcpkgTripletTmp />
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-windows</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm-windows</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm64||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm64-windows</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-uwp</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm-uwp</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm64|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm64-uwp</VcpkgTriplet>
+  <PropertyGroup Condition="'$(VcpkgUseStatic)' != 'true'">
+      <VcpkgTripletTmp>$(VcpkgTriplet)</VcpkgTripletTmp>
+      <VcpkgTriplet Condition="'$(VcpkgTriplet)'!='$(VcpkgUserTriplet)'">$(VcpkgUserTriplet)</VcpkgTriplet>
+      <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == '$(VcpkgRoot)\installed\$(VcpkgTripletTmp)\'">$(VcpkgRoot)\installed\$(VcpkgUserTriplet)\</VcpkgCurrentInstalledDir>
+      <VcpkgTripletTmp />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
-    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
-    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\</VcpkgRoot>
     <VcpkgRoot Condition="!$(VcpkgRoot.EndsWith('\'))">$(VcpkgRoot)\</VcpkgRoot>
-    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$(VcpkgRoot)installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDir>
     <VcpkgCurrentInstalledDir Condition="!$(VcpkgCurrentInstalledDir.EndsWith('\'))">$(VcpkgCurrentInstalledDir)\</VcpkgCurrentInstalledDir>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
-    <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!).
+    <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!). 
     Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
     <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true' and '$(VcpkgAutoLink)' == ''">false</VcpkgAutoLink>
   </PropertyGroup>
@@ -79,8 +73,8 @@
   </ItemDefinitionGroup>
 
   <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
-    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
-    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
+    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;" Importance="High" Condition="'$(VcpkgEnabled)' == 'true'"/>
+    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="High" Condition="'$(VcpkgEnabled)' != 'true'"/>
     <Message Text="Vcpkg is unable to link because we cannot decide between Release and Debug libraries. Please define the property VcpkgConfiguration to be 'Release' or 'Debug' (currently '$(VcpkgConfiguration)')." Importance="High" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgNormalizedConfiguration)' == ''"/>
   </Target>
 
