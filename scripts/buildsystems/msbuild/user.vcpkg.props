@@ -20,7 +20,7 @@
             -->
 	</PropertyGroup>
     <ImportGroup Label="ExtensionSettings">
-        <Import Project="$(VCPKGPropsPath)\yasm.props" />
+	<Import Project="$(VCPKGPropsPath)\yasm.props" />
 	<Import Project="$(VCPKGPropsPath)\nasm.props" />
 	<!--
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 9.2.props" />
@@ -142,6 +142,8 @@
 	</Manifest>
     </ItemDefinitionGroup>
     <ImportGroup Label="ExtensionTargets">
+	<Import Project="$(VCPKGPropsPath)\yasm.targets" />
+	<Import Project="$(VCPKGPropsPath)\nasm.targets" />
 	<!--
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 9.2.targets" />	
 
