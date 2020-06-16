@@ -10,6 +10,7 @@
             -->
 	</PropertyGroup>
 	<PropertyGroup>
+            <VCPKGPropsPath Condition="'$(VCPKGPropsPath)'==''">$(VCPKGTargetsPath)\BuildCustomizations\</VCPKGPropsPath>
             <!--
             <CUDAPropsPath Condition="'$(CUDAPropsPath)'==''">$(VCTargetsPath)\BuildCustomizations</CUDAPropsPath>
             <YasmPath Condition= "'$(YASMPATH)' == ''">$(VCTargetsPath)</YasmPath>
@@ -19,8 +20,10 @@
             -->
 	</PropertyGroup>
     <ImportGroup Label="ExtensionSettings">
+        <Import Project="$(VCPKGPropsPath)\yasm.props" />
+	<Import Project="$(VCPKGPropsPath)\nasm.props" />
 	<!--
-	<Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 9.2.props" />	
+	<Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 9.2.props" />
 
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\nasm.props" />
