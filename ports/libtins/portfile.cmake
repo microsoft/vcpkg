@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mfontanini/libtins
@@ -12,11 +10,11 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBTINS_BUILD_SHARED)
 
 set(ENABLE_PCAP FALSE)
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
   set(ENABLE_PCAP TRUE)
 endif()
 
-if (WIN32 AND NOT LIBTINS_BUILD_SHARED)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT LIBTINS_BUILD_SHARED)
   set(ENV{PACKET_LIB_PATH} ${CURRENT_INSTALLED_DIR}/lib/Packet.lib)
 endif()
 vcpkg_configure_cmake(
@@ -29,9 +27,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") #Windows
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
-else() #Linux/Unix/Darwin
+else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libtins)
 endif()
 
