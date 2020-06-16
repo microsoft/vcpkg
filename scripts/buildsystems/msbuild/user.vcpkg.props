@@ -2,17 +2,20 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ImportGroup Label="PropertySheets">
     </ImportGroup>
+	<PropertyGroup Label="Globals">
+            <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgRoot>
+            <VCPKGTargetsPath Condition="'$(VCPKGTargetsPath)'==''">$(VcpkgRoot)\scripts\buildsystems\msbuild\</VCPKGTargetsPath>
+            <VCPKGtoolsPath Condition="'$(VCPKGtoolsPath)'==''">$(VcpkgRoot)\downloads\tools\</VCPKGtoolsPath>
+            <!--
+            -->
+	</PropertyGroup>
 	<PropertyGroup>
             <!--
             <CUDAPropsPath Condition="'$(CUDAPropsPath)'==''">$(VCTargetsPath)\BuildCustomizations</CUDAPropsPath>
+            <YasmPath Condition= "'$(YASMPATH)' == ''">$(VCTargetsPath)</YasmPath>
             <PYTHON2>E:\Anaconda2\</PYTHON2>
             <PYTHON3>E:\Anaconda3\</PYTHON3>
             <WINFLEXBISON>E:\tools\Bin\</WINFLEXBISON>
-            -->
-	</PropertyGroup>
-	<PropertyGroup Label="Globals">
-            <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgRoot>
-            <!--
             -->
 	</PropertyGroup>
     <ImportGroup Label="ExtensionSettings">
