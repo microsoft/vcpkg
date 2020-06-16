@@ -4,12 +4,7 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   return()
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-  message(FATAL_ERROR "${PORT} does not support ARM")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 include(vcpkg_common_functions)
 
