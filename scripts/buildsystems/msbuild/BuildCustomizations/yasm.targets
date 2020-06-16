@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName Include="YASM">
+      <Targets>_YASM</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+      $(ComputeLinkInputsTargets);
+      ComputeYASMOutput;
+    </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+      $(ComputeLibInputsTargets);
+      ComputeYASMOutput;
+    </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <UsingTask
+    TaskName="YASM"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_YASM"
+    BeforeTargets="$(YASMBeforeTargets)"
+    AfterTargets="$(YASMAfterTargets)"
+    Condition="'@(YASM)' != ''"
+    Outputs="%(YASM.ObjectFileName)"
+    Inputs="%(YASM.Identity);%(YASM.AdditionalDependencies);$(MSBuildProjectFile)"
+    DependsOnTargets="_SelectedFiles">
+    <ItemGroup Condition="'@(SelectedFiles)' != ''">
+      <YASM Remove="@(YASM)" Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <YASM_tlog Include="%(YASM.ObjectFileName)" Condition="'%(YASM.ObjectFileName)' != '' and '%(YASM.ExcludedFromBuild)' != 'true'">
+        <Source>@(YASM, '|')</Source>
+      </YASM_tlog>
+    </ItemGroup>
+    <Message
+      Condition="'@(YASM)' != '' and '%(YASM.ExcludedFromBuild)' != 'true'"
+      Importance="High"
+      Text="%(YASM.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(YASM_tlog)' != '' and '%(YASM_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(YASM_tlog.Source);@(YASM_tlog-&gt;'%(Fullpath)')"/>
+    <YASM
+      Condition="'@(YASM)' != '' and '%(YASM.ExcludedFromBuild)' != 'true'"
+      Inputs="%(YASM.Inputs)"
+      ObjectFileName="%(YASM.ObjectFileName)"
+      SymbolsPrefix="%(NASM.SymbolsPrefix)"
+      SymbolsPostfix="%(NASM.SymbolsPostfix)"
+      GenerateDebugInformation="%(YASM.GenerateDebugInformation)"
+      IncludePaths="%(YASM.IncludePaths)"
+      PreIncludeFiles="%(YASM.PreIncludeFiles)"
+      PreprocessorDefinitions="%(YASM.PreprocessorDefinitions)"
+      UndefinePreprocessorDefinitions="%(YASM.UndefinePreprocessorDefinitions)"
+      Preprocessor="%(YASM.Preprocessor)"
+      Parser="%(YASM.Parser)"
+      TreatWarningsAsErrors="%(YASM.TreatWarningsAsErrors)"
+      CommandLineTemplate="%(YASM.CommandLineTemplate)"
+      AdditionalOptions="%(YASM.AdditionalOptions)"
+    />
+  </Target>
+  <Target
+    Name="ComputeYASMOutput"
+    Condition="'@(YASM)' != ''">
+    <ItemGroup>
+      <Link Include="@(YASM->Metadata('ObjectFileName')->Distinct()->ClearMetadata())" Condition="'%(YASM.ExcludedFromBuild)' != 'true'"/>
+      <Lib Include="@(YASM->Metadata('ObjectFileName')->Distinct()->ClearMetadata())" Condition="'%(YASM.ExcludedFromBuild)' != 'true'"/>
+    </ItemGroup>
+  </Target>
+</Project>

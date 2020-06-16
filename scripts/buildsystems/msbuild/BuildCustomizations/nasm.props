@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(NASMBeforeTargets)' == '' and '$(NASMAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <NASMBeforeTargets>Midl</NASMBeforeTargets>
+    <NASMAfterTargets>CustomBuild</NASMAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NasmPath Condition= "'$(NASMPATH)' == ''">$(VCInstallDir)</NasmPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <NASM>
+      <ObjectFileName>$(IntDir)%(FileName).obj</ObjectFileName>
+      <CommandLineTemplate Condition="'$(Platform)' == 'Win32'">"$(NasmPath)"nasm.exe -Xvc -f win32 [AllOptions] [AdditionalOptions] "%(FullPath)"</CommandLineTemplate>
+      <CommandLineTemplate Condition="'$(Platform)' == 'x64'">"$(NasmPath)"nasm.exe -Xvc -f win64 [AllOptions] [AdditionalOptions] "%(FullPath)"</CommandLineTemplate>
+      <CommandLineTemplate Condition="'$(Platform)' != 'Win32' and '$(Platform)' != 'x64'">echo NASM not supported on this platform
+exit 1</CommandLineTemplate>
+      <ExecutionDescription>%(Identity)</ExecutionDescription>
+    </NASM>
+  </ItemDefinitionGroup>
+</Project>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName Include="NASM">
+      <Targets>_NASM</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+      $(ComputeLinkInputsTargets);
+      ComputeNASMOutput;
+    </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+      $(ComputeLibInputsTargets);
+      ComputeNASMOutput;
+    </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <UsingTask
+    TaskName="NASM"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_NASM"
+    BeforeTargets="$(NASMBeforeTargets)"
+    AfterTargets="$(NASMAfterTargets)"
+    Condition="'@(NASM)' != ''"
+    Outputs="%(NASM.ObjectFileName)"
+    Inputs="%(NASM.Identity);%(NASM.AdditionalDependencies);$(MSBuildProjectFile)"
+    DependsOnTargets="_SelectedFiles">
+    <ItemGroup Condition="'@(SelectedFiles)' != ''">
+      <NASM Remove="@(NASM)" Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <NASM_tlog Include="%(NASM.ObjectFileName)" Condition="'%(NASM.ObjectFileName)' != '' and '%(NASM.ExcludedFromBuild)' != 'true'">
+        <Source>@(NASM, '|')</Source>
+      </NASM_tlog>
+    </ItemGroup>
+    <Message
+      Condition="'@(NASM)' != '' and '%(NASM.ExcludedFromBuild)' != 'true'"
+      Importance="High"
+      Text="%(NASM.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(NASM_tlog)' != '' and '%(NASM_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(NASM_tlog.Source);@(NASM_tlog-&gt;'%(Fullpath)')"/>
+    <NASM
+      Condition="'@(NASM)' != '' and '%(NASM.ExcludedFromBuild)' != 'true'"
+      Inputs="%(NASM.Inputs)"
+      ObjectFileName="%(NASM.ObjectFileName)"
+      SymbolsPrefix="%(NASM.SymbolsPrefix)"
+      SymbolsPostfix="%(NASM.SymbolsPostfix)"
+      GenerateDebugInformation="%(NASM.GenerateDebugInformation)"
+      IncludePaths="%(NASM.IncludePaths)"
+      PreIncludeFiles="%(NASM.PreIncludeFiles)"
+      PreprocessorDefinitions="%(NASM.PreprocessorDefinitions)"
+      UndefinePreprocessorDefinitions="%(NASM.UndefinePreprocessorDefinitions)"
+      TreatWarningsAsErrors="%(NASM.TreatWarningsAsErrors)"
+      CommandLineTemplate="%(NASM.CommandLineTemplate)"
+      AdditionalOptions="%(NASM.AdditionalOptions)"
+    />
+  </Target>
+  <Target
+    Name="ComputeNASMOutput"
+    Condition="'@(NASM)' != ''">
+    <ItemGroup>
+      <Link Include="@(NASM->Metadata('ObjectFileName')->Distinct()->ClearMetadata())" Condition="'%(NASM.ExcludedFromBuild)' != 'true'"/>
+      <Lib Include="@(NASM->Metadata('ObjectFileName')->Distinct()->ClearMetadata())" Condition="'%(NASM.ExcludedFromBuild)' != 'true'"/>
+    </ItemGroup>
+  </Target>
+</Project>
