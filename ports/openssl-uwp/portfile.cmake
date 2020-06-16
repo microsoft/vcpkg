@@ -1,6 +1,5 @@
 vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Universal Platform" ON_TARGET "Linux" "OSX")
 
-
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
   set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
