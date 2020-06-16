@@ -212,5 +212,12 @@ else()
     endif()
 endif()
 
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(LIBVPX_CONFIG_DEBUG ON)
+else()
+    set(LIBVPX_CONFIG_DEBUG OFF)
+endif()
+configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake @ONLY)
+
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libvpx)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libvpx/LICENSE ${CURRENT_PACKAGES_DIR}/share/libvpx/copyright)

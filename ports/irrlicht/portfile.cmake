@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "osx" "uwp")
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/irrlicht/Irrlicht%20SDK/1.8/1.8.4/irrlicht-1.8.4.zip"
     FILENAME "irrlicht-1.8.4.zip"
@@ -12,9 +14,7 @@ vcpkg_extract_source_archive_ex(
         "fix-encoding.patch"
 )
 
-# Copy CMakeLists.txt to the source, because Irrlicht does not have one.
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt DESTINATION ${SOURCE_PATH})
+configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -24,10 +24,7 @@ vcpkg_check_features(
         tools       IRR_BUILD_TOOLS
 )
 
-set(SHARED_LIB TRUE)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(SHARED_LIB FALSE)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIB)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -52,7 +49,5 @@ vcpkg_copy_pdbs()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/irrlicht)
 endif()
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME irrlicht)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -36,17 +36,11 @@ if("python" IN_LIST FEATURES)
     )
 
     if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
-                                        "-DPython3_LIBRARIES:STRING=debug\\\\\\\;${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib\\\\\\\;optimized\\\\\\\;${CURRENT_INSTALLED_DIR}/lib/python37.lib"
-                                        "-DPYTHON_DEBUG_LIBRARY:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7")
+        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY:PATH=${CURRENT_INSTALLED_DIR}/lib/python38.lib"
+                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.8")
     elseif(VCPKG_TARGET_IS_LINUX)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython37m.a"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a"
-                                        "-DPython3_LIBRARIES:STRING=debug\\\\\\\;${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a\\\\\\\;optimized\\\\\\\;${CURRENT_INSTALLED_DIR}/lib/libpython37m.a"
-                                        "-DPYTHON_DEBUG_LIBRARY:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython37md.a"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.7m")
+        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython38.a"
+                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.8")
     elseif(VCPKG_TARGET_IS_OSX)
         #Need Python3 information on OSX within VCPKG
     endif()    
