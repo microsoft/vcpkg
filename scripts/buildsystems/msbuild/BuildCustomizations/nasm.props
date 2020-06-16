@@ -6,7 +6,9 @@
     <NASMAfterTargets>CustomBuild</NASMAfterTargets>
   </PropertyGroup>
   <PropertyGroup>
-    <NasmPath Condition= "'$(NASMPATH)' == ''">$(VCInstallDir)</NasmPath>
+    <!-- <NasmPath Condition= "'$(NASMPATH)' == ''">$(VCInstallDir)</NasmPath> -->
+    <!-- update version ? -->
+    <NasmPath Condition= "'$(NASMPATH)' == ''">$(VCPKGtoolsPath)\nasm\nasm-2.14.02\</NasmPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <NASM>
