@@ -27,16 +27,15 @@ vcpkg_extract_source_archive_ex(
         0002-suppress-msvc-warnings.patch
 )
 
-set(LIBRESSL_APPS OFF)
-if("tools" IN_LIST FEATURES)
-    set(LIBRESSL_APPS ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "tools" LIBRESSL_APPS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DLIBRESSL_APPS=${LIBRESSL_APPS}
+        ${FEATURE_OPTIONS}
         -DLIBRESSL_TESTS=OFF
     OPTIONS_DEBUG
         -DLIBRESSL_APPS=OFF
