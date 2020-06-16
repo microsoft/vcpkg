@@ -1,8 +1,9 @@
+# Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO d1vanov/Simple-FFT
-    REF e4a06b2b8b61a6d5c76ddb07a433c4c0b678fccf
-    SHA512 3cb357857c38b61bdecd58ed9e92d886f97d32459987544c8bc0936f981f852f66b1b328657ef449a6b709c5dcbd0730a09506a6ef014a44e9163a1b72f2f9b1
+    REF a0cc843ff36d33ad09c08674b9503614742ad0b9
+    SHA512 6fbbda1f172505f6627f97ae671d12ff282844ca50e6e6c8016f78ee333c32ce6d17763837c281e47f10cfc277cb1f67394169f6bbf137b09885c1a053d6d342
     HEAD_REF master
 )
 
@@ -16,4 +17,4 @@ file(COPY ${SOURCE_PATH}/include/simple_fft/check_fft.hpp
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "Copyright (c) 2020 Dmitry Ivanov")
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
