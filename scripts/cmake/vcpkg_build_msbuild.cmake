@@ -108,7 +108,8 @@ function(vcpkg_build_msbuild)
     if(_csc_USE_VCPKG_INTEGRATION)
         list(
             APPEND _csc_OPTIONS
-            /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
+            "/p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets"
+            "/p:ForceImportBeforeCppProps=${SCRIPTS}/buildsystems/msbuild/user.vcpkg.props"
             "/p:VcpkgTriplet=${TARGET_TRIPLET}"
             "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
         )
