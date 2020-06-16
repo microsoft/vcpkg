@@ -3,18 +3,16 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SpartanJ/efsw
-    REF caacfa665ae6b4da265e7bf28fdf5bc8d343581e
-    SHA512 23458ba287c220a682e39acfd2782c863ea9ca746740579b0310a5d8d9fc1d8a49b4f618a7d18bdab621b6808ee25255f651cc27bcbdd8ebd47003ace021570d
+    REF b62d04829bb0a6f3cacc7859e0b046a3c053bc50
+    SHA512 fc16ef6ad330941dc0a1112ce645b57bd126d353556d50f45fadf150f25edd42c1d4946bc54d629d94c208d67d4ce17dbf5d1079cbeed51f0f6b1ccbe2199132
     HEAD_REF master
-    PATCHES
-        fix_dynamic_build.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DVERBOSE=ON
+        -DVERBOSE=OFF
         -DBUILD_TEST_APP=OFF
 )
 
