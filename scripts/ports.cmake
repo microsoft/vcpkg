@@ -93,7 +93,7 @@ elseif(CMD MATCHES "^CREATE$")
         set(_VCPKG_INTERNAL_NO_HASH_CHECK "TRUE")
         vcpkg_download_distfile(ARCHIVE
             URLS ${URL}
-            FILENAME ${DOWNLOADS}/${FILENAME}
+            FILENAME ${FILENAME}
         )
         set(_VCPKG_INTERNAL_NO_HASH_CHECK "FALSE")
     endif()
