@@ -78,7 +78,7 @@ if(CMD MATCHES "^BUILD$")
 elseif(CMD MATCHES "^CREATE$")
     file(TO_NATIVE_PATH ${VCPKG_ROOT_DIR} NATIVE_VCPKG_ROOT_DIR)
     file(TO_NATIVE_PATH ${DOWNLOADS} NATIVE_DOWNLOADS)
-    if(EXISTS ports/${PORT}/portfile.cmake)
+    if(EXISTS ${VCPKG_ROOT_DIR}/ports/${PORT}/portfile.cmake)
         message(FATAL_ERROR "Portfile already exists: '${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}\\portfile.cmake'")
     endif()
     if(NOT FILENAME)
@@ -93,15 +93,15 @@ elseif(CMD MATCHES "^CREATE$")
         set(_VCPKG_INTERNAL_NO_HASH_CHECK "TRUE")
         vcpkg_download_distfile(ARCHIVE
             URLS ${URL}
-            FILENAME ${FILENAME}
+            FILENAME ${DOWNLOADS}/${FILENAME}
         )
         set(_VCPKG_INTERNAL_NO_HASH_CHECK "FALSE")
     endif()
     file(SHA512 ${DOWNLOADS}/${FILENAME} SHA512)
 
-    file(MAKE_DIRECTORY ports/${PORT})
-    configure_file(${SCRIPTS}/templates/portfile.in.cmake ports/${PORT}/portfile.cmake @ONLY)
-    configure_file(${SCRIPTS}/templates/CONTROL.in ports/${PORT}/CONTROL @ONLY)
+    file(MAKE_DIRECTORY ${VCPKG_ROOT_DIR}/ports/${PORT})
+    configure_file(${SCRIPTS}/templates/portfile.in.cmake ${VCPKG_ROOT_DIR}/ports/${PORT}/portfile.cmake @ONLY)
+    configure_file(${SCRIPTS}/templates/CONTROL.in ${VCPKG_ROOT_DIR}/ports/${PORT}/CONTROL @ONLY)
 
     message(STATUS "Generated portfile: ${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}\\portfile.cmake")
     message(STATUS "Generated CONTROL: ${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}\\CONTROL")

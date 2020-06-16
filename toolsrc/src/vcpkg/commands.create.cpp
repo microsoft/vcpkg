@@ -16,7 +16,7 @@ namespace vcpkg::Commands::Create
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
+    int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
         const std::string port_name = args.command_arguments.at(0);
@@ -36,6 +36,11 @@ namespace vcpkg::Commands::Create
         }
 
         const std::string cmd_launch_cmake = make_cmake_cmd(paths, paths.ports_cmake, std::move(cmake_args));
-        Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute_clean(cmd_launch_cmake));
+        return System::cmd_execute_clean(cmd_launch_cmake);
+    }
+
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
+    {
+        Checks::exit_with_code(VCPKG_LINE_INFO, perform(args, paths));
     }
 }
