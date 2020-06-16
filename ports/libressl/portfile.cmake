@@ -44,7 +44,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if(LIBRESSL_APPS)
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         set(EXECUTABLE_SUFFIX .exe)
     endif()
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl")
