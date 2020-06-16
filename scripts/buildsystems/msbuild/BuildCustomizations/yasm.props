@@ -6,7 +6,9 @@
     <YASMAfterTargets>CustomBuild</YASMAfterTargets>
   </PropertyGroup>
   <PropertyGroup>
-    <YasmPath Condition= "'$(YASMPATH)' == ''">$(VCInstallDir)</YasmPath>
+    <!-- <YasmPath Condition= "'$(YASMPATH)' == ''">$(VCInstallDir)</YasmPath> -->
+    <!-- update version ? -->
+    <YasmPath Condition= "'$(YASMPATH)' == ''">$(VCPKGtoolsPath)\yasm\1.3.0.6\</YasmPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <YASM>
