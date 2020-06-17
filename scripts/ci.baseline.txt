@@ -1824,7 +1824,6 @@ theia:x64-windows-static = skip
 theia:x86-windows        = skip
 thor:x64-linux=fail
 thor:x64-osx=fail
-thrift:x64-osx=fail
 tidy-html5:arm-uwp=fail
 tidy-html5:x64-uwp=fail
 tinkerforge:arm-uwp=fail
