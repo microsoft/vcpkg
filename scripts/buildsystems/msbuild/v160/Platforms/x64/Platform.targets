@@ -1,0 +1,25 @@
+﻿<!--
+***********************************************************************************************
+Platform.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps/targets required to build Visual C++ projects
+specifically on x64 platforms.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <!-- When UseNativeEnvironment or UseEnv on 64bit prompt, then try building with the 64bit native tools. -->
+    <_IsNative64Available Condition="'$(_IsNative64Available)' == '' and Exists('$(VCToolsInstallDir)\bin\amd64') and ('$(PROCESSOR_ARCHITECTURE)' == 'AMD64' or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64')">true</_IsNative64Available>
+    <_IsNativeEnvironment Condition="'$(_IsNativeEnvironment)' == '' and (('$(PROCESSOR_ARCHITECTURE)' == 'AMD64' and '$(UseEnv)' == 'true') or ('$(UseNativeEnvironment)' != 'false' and '$(_IsNative64Available)' == 'true'))">true</_IsNativeEnvironment>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Platform.targets"/>
+</Project>

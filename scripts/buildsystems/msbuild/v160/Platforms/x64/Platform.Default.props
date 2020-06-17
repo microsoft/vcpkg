@@ -1,0 +1,38 @@
+﻿<!--
+***********************************************************************************************
+Platform.default.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Import Before -->
+  <Import Condition="Exists('$(MSBuildThisFileDirectory)ImportBefore\Default')" Project="$(MSBuildThisFileDirectory)ImportBefore\Default\*.props" />
+  
+  <PropertyGroup>
+    <PlatformShortName>x64</PlatformShortName>
+    <PlatformArchitecture>64</PlatformArchitecture>
+    <PlatformTarget>x64</PlatformTarget>
+    <DefaultPlatformToolset Condition="'$(DefaultPlatformToolset)' == ''">v142</DefaultPlatformToolset>
+
+    <!-- Required for ASAN libraries -->
+    <!--<LlvmPlatformName>x86_64</LlvmPlatformName>-->
+    
+    <!-- Have to maintain compatibility with VS2010 projects, which might not have toolset defined in the project-->
+    <PlatformToolset Condition="'$(PlatformToolset)' == ''">$(DefaultX64PlatformToolset)</PlatformToolset>
+    <PlatformToolset Condition="'$(PlatformToolset)' == ''">v100</PlatformToolset>
+
+    <!-- Required for enabling Team Build for packaging Windows Store app projects -->
+    <OutDirWasSpecified Condition=" '$(OutDir)'!='' AND '$(OutDirWasSpecified)'=='' ">true</OutDirWasSpecified>
+    <OutDirWasSpecified Condition=" '$(OutDir)'=='' AND '$(OutDirWasSpecified)'=='' ">false</OutDirWasSpecified>
+  </PropertyGroup>
+  
+  <!-- Import After -->
+  <Import Condition="Exists('$(MSBuildThisFileDirectory)ImportAfter\Default')" Project="$(MSBuildThisFileDirectory)ImportAfter\Default\*.props" />
+</Project>

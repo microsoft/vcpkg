@@ -1,0 +1,35 @@
+﻿<!--
+***********************************************************************************************
+Platform.common.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DebuggerFlavor Condition="'$(DebuggerFlavor)'==''">WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <DebugInformationFormat  Condition="'$(UseDebugLibraries)' == 'true' and ('$(CLRSupport)' == '' or '$(CLRSupport)' == 'false')">EditAndContinue</DebugInformationFormat>
+    </ClCompile>  
+    <Link>
+      <TargetMachine Condition="'%(Link.TargetMachine)' == ''">MachineX64</TargetMachine>
+    </Link>
+    <Lib>
+      <TargetMachine Condition="'%(Lib.TargetMachine)' == ''">MachineX64</TargetMachine>
+    </Lib>
+    <ImpLib>
+      <TargetMachine Condition="'%(ImpLib.TargetMachine)' == ''">MachineX64</TargetMachine>
+    </ImpLib>
+    <Midl>
+      <TargetEnvironment Condition="'%(Midl.TargetEnvironment)' == ''">X64</TargetEnvironment>
+    </Midl>
+  </ItemDefinitionGroup>
+</Project>
