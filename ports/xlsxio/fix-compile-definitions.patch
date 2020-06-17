@@ -1,0 +1,31 @@
+From 78b3698bab50e139dec87d7ac57094b9589feb48 Mon Sep 17 00:00:00 2001
+From: Leonid Pospelov <pospelovlm@yandex.ru>
+Date: Wed, 17 Jun 2020 22:40:46 +0200
+Subject: [PATCH] Update CMakeLists.txt
+
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a9b085f..376e379 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -85,7 +85,7 @@ ENDIF()
+ 
+ FOREACH(LINKTYPE ${LINKTYPES})
+   ADD_LIBRARY(xlsxio_read_${LINKTYPE} ${LINKTYPE} lib/xlsxio_read.c lib/xlsxio_read_sharedstrings.c)
+-  SET_TARGET_PROPERTIES(xlsxio_read_${LINKTYPE} PROPERTIES COMPILE_DEFINITIONS "BUILD_XLSXIO;${ANYZIP_DEF}")
++  SET_TARGET_PROPERTIES(xlsxio_read_${LINKTYPE} PROPERTIES COMPILE_DEFINITIONS "BUILD_XLSXIO;${ANYZIP_DEF};BUILD_XLSXIO_${LINKTYPE}")
+   SET_TARGET_PROPERTIES(xlsxio_read_${LINKTYPE} PROPERTIES OUTPUT_NAME xlsxio_read)
+   IF(MINGW AND LINKTYPE STREQUAL "SHARED")
+     SET_TARGET_PROPERTIES(xlsxio_read_${LINKTYPE} PROPERTIES LINK_FLAGS "-Wl,--output-def=libxlsxio_read.def")
+@@ -96,7 +96,7 @@ FOREACH(LINKTYPE ${LINKTYPES})
+   SET(ALLTARGETS ${ALLTARGETS} xlsxio_read_${LINKTYPE})
+ 
+   ADD_LIBRARY(xlsxio_write_${LINKTYPE} ${LINKTYPE} lib/xlsxio_write.c)
+-  SET_TARGET_PROPERTIES(xlsxio_write_${LINKTYPE} PROPERTIES COMPILE_DEFINITIONS "BUILD_XLSXIO;${ANYZIP_DEF}")
++  SET_TARGET_PROPERTIES(xlsxio_write_${LINKTYPE} PROPERTIES COMPILE_DEFINITIONS "BUILD_XLSXIO;${ANYZIP_DEF};BUILD_XLSXIO_${LINKTYPE}")
+   SET_TARGET_PROPERTIES(xlsxio_write_${LINKTYPE} PROPERTIES OUTPUT_NAME xlsxio_write)
+   IF(MINGW AND LINKTYPE STREQUAL "SHARED")
+     SET_TARGET_PROPERTIES(xlsxio_write_${LINKTYPE} PROPERTIES LINK_FLAGS "-Wl,--output-def=libxlsxio_write.def")
