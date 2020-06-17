@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <ImportGroup Label="PropertySheets">
-    </ImportGroup>
-	<PropertyGroup Label="Globals">
-            <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgRoot>
-            <VCPKGTargetsPath Condition="'$(VCPKGTargetsPath)'==''">$(VcpkgRoot)\scripts\buildsystems\msbuild\</VCPKGTargetsPath>
-            <VCPKGtoolsPath Condition="'$(VCPKGtoolsPath)'==''">$(VcpkgRoot)\downloads\tools\</VCPKGtoolsPath>
-            <!--
-            -->
-	</PropertyGroup>
-	<PropertyGroup>
-            <VCPKGPropsPath Condition="'$(VCPKGPropsPath)'==''">$(VCPKGTargetsPath)\BuildCustomizations\</VCPKGPropsPath>
-            <!--
-            <CUDAPropsPath Condition="'$(CUDAPropsPath)'==''">$(VCTargetsPath)\BuildCustomizations</CUDAPropsPath>
-            <YasmPath Condition= "'$(YASMPATH)' == ''">$(VCTargetsPath)</YasmPath>
-            <PYTHON2>E:\Anaconda2\</PYTHON2>
-            <PYTHON3>E:\Anaconda3\</PYTHON3>
-            <WINFLEXBISON>E:\tools\Bin\</WINFLEXBISON>
-            -->
-	</PropertyGroup>
-    <ImportGroup Label="ExtensionSettings">
-	<Import Project="$(VCPKGPropsPath)\yasm.props" />
-	<Import Project="$(VCPKGPropsPath)\nasm.props" />
-	<!--
-	<Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 9.2.props" />
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+    <PropertyGroup Label="Globals">
+      <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgRoot>
+	  <VCPKGTargetsPath Condition="'$(VCPKGTargetsPath)'==''">$(VcpkgRoot)\scripts\buildsystems\msbuild\</VCPKGTargetsPath>
+      <VCPKGTargetsPath160 Condition="'$(VCPKGTargetsPath160)'==''">$(VcpkgRoot)\scripts\buildsystems\msbuild\v160\</VCPKGTargetsPath160>
+	  <VCPKGTargetsPath150 Condition="'$(VCPKGTargetsPath150)'==''">$(VcpkgRoot)\scripts\buildsystems\msbuild\v150\</VCPKGTargetsPath150>
+	  <VCPKGTargetsPath140 Condition="'$(VCPKGTargetsPath140)'==''">$(VcpkgRoot)\scripts\buildsystems\msbuild\v140\</VCPKGTargetsPath140>
+      <VCPKGtoolsPath Condition="'$(VCPKGtoolsPath)'==''">$(VcpkgRoot)\downloads\tools\</VCPKGtoolsPath>
+      <!--
+      -->
+    </PropertyGroup>
+    <PropertyGroup>
 
+      <VCPKG_ToolsetPropsPath160>$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformToolsets\$(PlatformToolset)\</VCPKG_ToolsetPropsPath160>
+      <VCPKG_ToolsetTargetsPath160>$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformToolsets\$(PlatformToolset)\</VCPKG_ToolsetTargetsPath160>
+      <!--     
+      <VCPKGPropsPath Condition="'$(VCPKGPropsPath)'==''">$(VCPKGTargetsPath)\BuildCustomizations\</VCPKGPropsPath>
+
+      <CUDAPropsPath Condition="'$(CUDAPropsPath)'==''">$(VCTargetsPath)\BuildCustomizations</CUDAPropsPath>
+      <YasmPath Condition= "'$(YASMPATH)' == ''">$(VCTargetsPath)</YasmPath>
+      <PYTHON2>E:\Anaconda2\</PYTHON2>
+      <PYTHON3>E:\Anaconda3\</PYTHON3>
+      <WINFLEXBISON>E:\tools\Bin\</WINFLEXBISON>
+      -->
+    </PropertyGroup>
+  <ImportGroup Label="ExtensionProps">
+  <!--
+  -->
+	<Import Project="$(VCPKG_ToolsetPropsPath160)\Toolset.props" Condition="'$(BasePlatformToolset)' == 'v142'" Label="LocalAppDataPlatform" />
+	<Import Project="$(VCPKG_ToolsetPropsPath150)\Toolset.props" Condition="'$(BasePlatformToolset)' == 'v141'" Label="LocalAppDataPlatform" />
+	<Import Project="$(VCPKG_ToolsetPropsPath140)\Toolset.props" Condition="'$(BasePlatformToolset)' == 'v140'" Label="LocalAppDataPlatform" />
+	
+	<!--
+  <ImportGroup Label="ExtensionSettings">
+	<Import Project="$(VCPKGTargetsPath)\BuildCustomizations\yasm.props" />
+	<Import Project="$(VCPKGTargetsPath)\BuildCustomizations\nasm.props" />	
+	<Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 9.2.props" />
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\nasm.props" />
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\bison.props" />
@@ -32,119 +45,121 @@
 	<Import Project="$(CUDAPropsPath)\CUDA 10.1.props" />
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />
 	-->
-    </ImportGroup>
-	<PropertyGroup Label="UserMacros" />
-	<PropertyGroup>
-            <!--
-            <PYTHON2_INCLUDE>$(PYTHON2)\include\</PYTHON2_INCLUDE>
-            <PYTHON2_LIB>$(PYTHON2)\libs\python27.lib</PYTHON2_LIB>
-            <PYTHON2_EXE>$(PYTHON2)\python.exe</PYTHON2_EXE>
+  </ImportGroup>
+    <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+      <!--
+      <PYTHON2_INCLUDE>$(PYTHON2)\include\</PYTHON2_INCLUDE>
+      <PYTHON2_LIB>$(PYTHON2)\libs\python27.lib</PYTHON2_LIB>
+      <PYTHON2_EXE>$(PYTHON2)\python.exe</PYTHON2_EXE>
 
-            <PYTHON3_INCLUDE>$(PYTHON3)\include\</PYTHON3_INCLUDE>
-            <PYTHON3_LIB>$(PYTHON3)\libs\python35.lib</PYTHON3_LIB>
-            <PYTHON3_EXE>$(PYTHON3)\python.exe</PYTHON3_EXE>
-            -->
-            <!--
-            <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-            <LinkLibraryDependencies>false</LinkLibraryDependencies>
-            <MSBuildWarningsAsMessages>MSB4011</MSBuildWarningsAsMessages>
-            <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-            <Private>false</Private>
-            <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-            -->
-	</PropertyGroup>
+      <PYTHON3_INCLUDE>$(PYTHON3)\include\</PYTHON3_INCLUDE>
+      <PYTHON3_LIB>$(PYTHON3)\libs\python35.lib</PYTHON3_LIB>
+      <PYTHON3_EXE>$(PYTHON3)\python.exe</PYTHON3_EXE>
+      -->
+      <!--
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <MSBuildWarningsAsMessages>MSB4011</MSBuildWarningsAsMessages>
+      <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+      <Private>false</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      -->
+    </PropertyGroup>
     <ItemDefinitionGroup>
 	<BuildLog>
-            <!--
-            <Path>$(OutDir)BuildLog.html</Path>
-            -->
+      <!--
+      <Path>$(OutDir)BuildLog.html</Path>
+      -->
 	</BuildLog>
 	<Midl>
-            <MkTypLibCompatible>true</MkTypLibCompatible>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <SuppressCompilerWarnings>true</SuppressCompilerWarnings>
-            <!--
-            -->
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SuppressCompilerWarnings>true</SuppressCompilerWarnings>
+      <!--
+      -->
 	</Midl>
 	<ClCompile>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
-            <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-            <WarningLevel>TurnOffAllWarnings</WarningLevel>		
-            <TreatWarningAsError>false</TreatWarningAsError>
-            <UseFullPaths>true</UseFullPaths>
-            <ErrorReporting>None</ErrorReporting>
-            <!--
-            -->
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>		
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <UseFullPaths>true</UseFullPaths>
+      <ErrorReporting>None</ErrorReporting>
+      <!--
+      -->
 	</ClCompile>
 	<Link>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <ShowProgress>LinkVerbose</ShowProgress>
-            <LinkStatus>true</LinkStatus>
-            <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
-            <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
-            <ModuleDefinitionFile>%(ModuleDefinitionFile)</ModuleDefinitionFile>
-            <ErrorReporting>NoErrorReport</ErrorReporting>
-            <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Debug|MultiThreadedDebug'">MSVCURT;LIBCMT;MSVCRT;LIBCPMT;MSVCMRT;LIBVCRUNTIME;LIBUCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-            <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Release|MultiThreaded'">MSVCURTD;LIBCMTD;MSVCRTD;LIBCPMTD;MSVCMRTD;LIBVCRUNTIMED;LIBUCRTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-            <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Debug|MultiThreadedDebugDLL'">MSVCPRT;VCRUNTIME;UCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-            <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Release|MultiThreadedDLL'">MSVCPRTD;VCRUNTIMED;UCRTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-            <!--
-            -->
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ShowProgress>LinkVerbose</ShowProgress>
+      <LinkStatus>true</LinkStatus>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
+      <ModuleDefinitionFile>%(ModuleDefinitionFile)</ModuleDefinitionFile>
+      <ErrorReporting>NoErrorReport</ErrorReporting>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Debug|MultiThreadedDebug'">MSVCURT;LIBCMT;MSVCRT;LIBCPMT;MSVCMRT;LIBVCRUNTIME;LIBUCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Release|MultiThreaded'">MSVCURTD;LIBCMTD;MSVCRTD;LIBCPMTD;MSVCMRTD;LIBVCRUNTIMED;LIBUCRTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Debug|MultiThreadedDebugDLL'">MSVCPRT;VCRUNTIME;UCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Release|MultiThreadedDLL'">MSVCPRTD;VCRUNTIMED;UCRTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <!--
+      -->
 	</Link>
 	<Lib>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <Verbose>true</Verbose>
-            <ErrorReporting>NoErrorReport</ErrorReporting>
-            <TreatLibWarningAsErrors>false</TreatLibWarningAsErrors>
-            <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Debug|MultiThreadedDebug'">MSVCURT;LIBCMT;MSVCRT;LIBCPMT;MSVCMRT;LIBVCRUNTIME;LIBUCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-            <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Release|MultiThreaded'">MSVCURTD;LIBCMTD;MSVCRTD;LIBCPMTD;MSVCMRTD;LIBVCRUNTIMED;LIBUCRTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-            <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Debug|MultiThreadedDebugDLL'">MSVCPRT;VCRUNTIME;UCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-            <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Release|MultiThreadedDLL'">MSVCPRTD;VCRUNTIMED;UCRTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-            <!--
-            -->
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <Verbose>true</Verbose>
+      <ErrorReporting>NoErrorReport</ErrorReporting>
+      <TreatLibWarningAsErrors>false</TreatLibWarningAsErrors>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Debug|MultiThreadedDebug'">MSVCURT;LIBCMT;MSVCRT;LIBCPMT;MSVCMRT;LIBVCRUNTIME;LIBUCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Release|MultiThreaded'">MSVCURTD;LIBCMTD;MSVCRTD;LIBCPMTD;MSVCMRTD;LIBVCRUNTIMED;LIBUCRTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Debug|MultiThreadedDebugDLL'">MSVCPRT;VCRUNTIME;UCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries Condition="'$(Configuration)|$(RuntimeLibrary)'=='Release|MultiThreadedDLL'">MSVCPRTD;VCRUNTIMED;UCRTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <!--
+      -->
 	</Lib>
 	<ResourceCompile>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-            <ShowProgress>true</ShowProgress>
-            <!--
-            -->
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <ShowProgress>true</ShowProgress>
+      <!--
+      -->
 	</ResourceCompile>
 	<ManifestResourceCompile>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-            <ShowProgress>true</ShowProgress>
-            <!--
-            -->
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <ShowProgress>true</ShowProgress>
+      <!--
+      -->
 	</ManifestResourceCompile>
 	<Bscmake>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <!--
-            -->
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <!--
+      -->
 	</Bscmake>
 	<MASM>
-            <IncludePaths>%(IncludePaths)</IncludePaths>
-            <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-            <!--
-            -->
+      <IncludePaths>%(IncludePaths)</IncludePaths>
+      <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+      <!--
+      -->
 	</MASM>
 	<YASM>
-            <!--
-            -->
+      <!--
+      -->
 	</YASM>
 	<Manifest>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <!--
-            -->
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <!--
+      -->
 	</Manifest>
     </ItemDefinitionGroup>
-    <ImportGroup Label="ExtensionTargets">
+  <ImportGroup Label="ExtensionTargets">
+
+	<Import Project="$(VCPKG_ToolsetTargetsPath160)\Toolset.targets" Condition="'$(BasePlatformToolset)' == 'v142'" />
+	<!--
 	<Import Project="$(VCPKGPropsPath)\yasm.targets" />
 	<Import Project="$(VCPKGPropsPath)\nasm.targets" />
-	<!--
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 9.2.targets" />	
 
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
@@ -154,5 +169,5 @@
 	<Import Project="$(CUDAPropsPath)\CUDA 10.1.targets" />
 	<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />
 	-->
-    </ImportGroup>
+  </ImportGroup>
 </Project>
