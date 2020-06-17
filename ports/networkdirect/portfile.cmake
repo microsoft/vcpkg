@@ -38,6 +38,7 @@ vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH dirs.proj
     SKIP_CLEAN
+    USE_VCPKG_INTEGRATION
     OPTIONS
         "/p:PlatformToolset=WindowsUserModeDriver10.0"
         "/p:BasePlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
