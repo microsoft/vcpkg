@@ -28,13 +28,16 @@
 ## ### REF
 ## A stable version number that will not change contents.
 ##
+## ### FILENAME
+## The local name for the file. Files are shared between ports, so the file may need to be renamed to make it clearly attributed to this port and avoid conflicts.
+##
 ## For example, we can get the download link:
 ## https://sourceforge.net/settings/mirror_choices?projectname=mad&filename=libmad/0.15.1b/libmad-0.15.1b.tar.gz&selected=nchc
-## So the REPO is `mad/libmad`, and the REF is `0.15.1b`.
+## So the REPO is `mad/libmad`, the REF is `0.15.1b`, and the FILENAME is `libmad-0.15.1b.tar.gz`
 ##
 ## For some special links:
 ## https://sourceforge.net/settings/mirror_choices?projectname=soxr&filename=soxr-0.1.3-Source.tar.xz&selected=nchc
-## The REPO is `soxr` and REF is not exist.
+## The REPO is `soxr`, REF is not exist, and the FILENAME is `soxr-0.1.3-Source.tar.xz`
 ##
 ## ### SHA512
 ## The SHA512 hash that should match the archive.
