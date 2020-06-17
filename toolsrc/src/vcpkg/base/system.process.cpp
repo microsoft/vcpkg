@@ -167,7 +167,7 @@ namespace vcpkg
     }
 
     System::CMakeVariable::CMakeVariable(const StringView varname, const char* varvalue)
-        : s(Strings::format(R"("-D%s=%s")", varname, varvalue))
+        : s(Strings::format("-D%s=%s", varname, varvalue))
     {
     }
     System::CMakeVariable::CMakeVariable(const StringView varname, const std::string& varvalue)
