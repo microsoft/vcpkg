@@ -29,6 +29,8 @@ namespace vcpkg::System
         CmdLineBuilder& string_arg(StringView s);
         std::string build() { return std::move(buf); }
 
+        operator ZStringView() const { return buf; }
+
     private:
         std::string buf;
     };

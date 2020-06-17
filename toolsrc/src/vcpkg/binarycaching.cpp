@@ -67,7 +67,7 @@ namespace
         {
         }
         ~ArchivesBinaryProvider() = default;
-        void prefetch() override {}
+        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override {}
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
@@ -376,73 +376,91 @@ namespace
 
     struct NugetBinaryProvider : IBinaryProvider
     {
-        NugetBinaryProvider(std::vector<std::string>&& read_sources, std::vector<std::string>&& write_sources)
-            : m_read_sources(std::move(read_sources)), m_write_sources(std::move(write_sources))
+        NugetBinaryProvider(std::vector<std::string>&& read_sources,
+                            std::vector<std::string>&& write_sources,
+                            bool interactive)
+            : m_read_sources(std::move(read_sources))
+            , m_write_sources(std::move(write_sources))
+            , m_interactive(interactive)
         {
         }
         ~NugetBinaryProvider() = default;
-        void prefetch() override {}
-        RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
+        void prefetch(const VcpkgPaths& paths, const Dependencies::ActionPlan& plan) override
         {
-            if (m_read_sources.empty()) return RestoreResult::missing;
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
-            auto& spec = action.spec;
+            if (m_read_sources.empty()) return;
+            if (plan.install_actions.empty()) return;
 
             auto& fs = paths.get_filesystem();
-            auto pkg_path = paths.package_dir(spec);
-            fs.remove_all(pkg_path, VCPKG_LINE_INFO);
 
-            auto packages_config = paths.buildtrees / fs::u8path("packages.config");
-            NugetReference nuget_ref{spec.dir(), "0.0.0-" + abi_tag};
-            /**/
+            std::vector<NugetReference> nuget_refs;
+            XmlSerializer xml;
+            xml.emit_declaration().line_break();
+            xml.open_tag("packages").line_break();
+
+            for (auto&& action : plan.install_actions)
             {
-                XmlSerializer xml;
-                xml.emit_declaration().line_break();
-                xml.open_tag("packages").line_break();
+                const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+                auto& spec = action.spec;
+                fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
+
+                NugetReference nuget_ref{spec.dir(), "0.0.0-" + abi_tag};
+
                 xml.start_complex_open_tag("package")
                     .text_attr("id", nuget_ref.id)
                     .text_attr("version", nuget_ref.version)
                     .finish_self_closing_complex_tag()
                     .line_break();
-                xml.close_tag("packages").line_break();
-                paths.get_filesystem().write_contents(packages_config, xml.buf, VCPKG_LINE_INFO);
+
+                nuget_refs.push_back(std::move(nuget_ref));
             }
-            /**/
+
+            xml.close_tag("packages").line_break();
+            auto packages_config = paths.buildtrees / fs::u8path("packages.config");
+            paths.get_filesystem().write_contents(packages_config, xml.buf, VCPKG_LINE_INFO);
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
-            auto cmdline = System::CmdLineBuilder()
-                               .path_arg(nuget_exe)
-                               .string_arg("install")
-                               .path_arg(packages_config)
-                               .string_arg("-OutputDirectory")
-                               .path_arg(paths.packages)
-                               .string_arg("-Source")
-                               .string_arg(Strings::join(";", m_read_sources))
-                               .string_arg("-ExcludeVersion")
-                               .string_arg("-NoCache")
-                               .string_arg("-DirectDownload")
-                               .string_arg("-NonInteractive")
-                               .string_arg("-PackageSaveMode")
-                               .string_arg("nupkg")
-                               .string_arg("-Verbosity")
-                               .string_arg("detailed")
-                               .string_arg("-ForceEnglishOutput")
-                               .build();
+            System::CmdLineBuilder cmdline;
+            cmdline.path_arg(nuget_exe)
+                .string_arg("install")
+                .path_arg(packages_config)
+                .string_arg("-OutputDirectory")
+                .path_arg(paths.packages)
+                .string_arg("-Source")
+                .string_arg(Strings::join(";", m_read_sources))
+                .string_arg("-ExcludeVersion")
+                .string_arg("-NoCache")
+                .string_arg("-PreRelease")
+                .string_arg("-DirectDownload")
+                .string_arg("-PackageSaveMode")
+                .string_arg("nupkg")
+                .string_arg("-Verbosity")
+                .string_arg("detailed")
+                .string_arg("-ForceEnglishOutput");
+            if (!m_interactive) cmdline.string_arg("-NonInteractive");
 
-            auto pack_rc = [&] {
+            System::print2("Attempting to fetch ", plan.install_actions.size(), " packages from nuget.\n");
+
+            [&] {
                 if (Debug::g_debugging)
-                    return System::cmd_execute(cmdline);
+                    System::cmd_execute(cmdline);
                 else
-                    return System::cmd_execute_and_capture_output(cmdline).exit_code;
+                {
+                    auto res = System::cmd_execute_and_capture_output(cmdline);
+                    if (res.output.find("Authentication may require manual action.") != std::string::npos)
+                    {
+                        System::print2(System::Color::warning,
+                                       "One or more NuGet credential providers requested manual action. Add the binary "
+                                       "source 'interactive' to allow interactivity.\n");
+                    }
+                }
             }();
 
-            if (pack_rc != 0)
+            size_t num_restored = 0;
+
+            for (size_t i = 0; i < plan.install_actions.size(); ++i)
             {
-                System::print2(System::Color::error, "Restoring NuGet failed. Use --debug for more information.\n");
-            }
-            else
-            {
-                auto nupkg_path = pkg_path / fs::u8path(nuget_ref.id + ".nupkg");
+                const auto& action = plan.install_actions[i];
+                auto nupkg_path = paths.package_dir(action.spec) / fs::u8path(nuget_refs[i].id + ".nupkg");
                 if (fs.exists(nupkg_path, ignore_errors))
                 {
                     fs.remove(nupkg_path, VCPKG_LINE_INFO);
@@ -450,11 +468,19 @@ namespace
                                        !fs.exists(nupkg_path, ignore_errors),
                                        "Unable to remove nupkg after restoring: %s",
                                        nupkg_path.u8string());
-
-                    return RestoreResult::success;
+                    m_restored.emplace(action.spec);
+                    ++num_restored;
                 }
             }
-            return RestoreResult::missing;
+
+            System::print2("Restored ", num_restored, " packages. Use --debug for more information.\n");
+        }
+        RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction& action) override
+        {
+            if (Util::Sets::contains(m_restored, action.spec))
+                return RestoreResult::success;
+            else
+                return RestoreResult::missing;
         }
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
@@ -467,16 +493,15 @@ namespace
             create_nuspec(paths, spec, nuspec_path, nuget_ref);
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
-            auto cmdline = System::CmdLineBuilder()
-                               .path_arg(nuget_exe)
-                               .string_arg("pack")
-                               .path_arg(nuspec_path)
-                               .string_arg("-OutputDirectory")
-                               .path_arg(paths.buildtrees)
-                               .string_arg("-NoDefaultExcludes")
-                               .string_arg("-NonInteractive")
-                               .string_arg("-ForceEnglishOutput")
-                               .build();
+            System::CmdLineBuilder cmdline;
+            cmdline.path_arg(nuget_exe)
+                .string_arg("pack")
+                .path_arg(nuspec_path)
+                .string_arg("-OutputDirectory")
+                .path_arg(paths.buildtrees)
+                .string_arg("-NoDefaultExcludes")
+                .string_arg("-ForceEnglishOutput");
+            if (!m_interactive) cmdline.string_arg("-NonInteractive");
 
             auto pack_rc = [&] {
                 if (Debug::g_debugging)
@@ -494,22 +519,24 @@ namespace
                 auto nupkg_path = paths.buildtrees / nuget_ref.nupkg_filename();
                 for (auto&& write_src : m_write_sources)
                 {
-                    auto cmd = System::CmdLineBuilder()
-                                   .path_arg(nuget_exe)
-                                   .string_arg("push")
-                                   .path_arg(nupkg_path)
-                                   .string_arg("-ApiKey")
-                                   .string_arg("AzureDevOps")
-                                   .string_arg("-NonInteractive")
-                                   .string_arg("-ForceEnglishOutput")
-                                   .string_arg("-Source")
-                                   .string_arg(write_src);
+                    System::CmdLineBuilder cmd;
+                    cmd.path_arg(nuget_exe)
+                        .string_arg("push")
+                        .path_arg(nupkg_path)
+                        .string_arg("-ApiKey")
+                        .string_arg("AzureDevOps")
+                        .string_arg("-ForceEnglishOutput")
+                        .string_arg("-Source")
+                        .string_arg(write_src);
+                    if (!m_interactive) cmd.string_arg("-NonInteractive");
+
+                    System::print2("Uploading binaries for ", spec, " to NuGet source ", write_src, ".\n");
 
                     auto rc = [&] {
                         if (Debug::g_debugging)
-                            return System::cmd_execute(cmd.build());
+                            return System::cmd_execute(cmd);
                         else
-                            return System::cmd_execute_and_capture_output(cmd.build()).exit_code;
+                            return System::cmd_execute_and_capture_output(cmd).exit_code;
                     }();
 
                     if (rc != 0)
@@ -531,6 +558,8 @@ namespace
 
     private:
         std::vector<std::string> m_read_sources, m_write_sources;
+        std::set<PackageSpec> m_restored;
+        bool m_interactive;
     };
 
     struct MergeBinaryProviders : IBinaryProvider
@@ -540,10 +569,10 @@ namespace
         {
         }
 
-        void prefetch() override
+        void prefetch(const VcpkgPaths& paths, const Dependencies::ActionPlan& plan) override
         {
             for (auto&& provider : m_providers)
-                provider->prefetch();
+                provider->prefetch(paths, plan);
         }
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
@@ -614,6 +643,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
     struct State
     {
         bool clear = false;
+        bool interactive = false;
 
         std::vector<fs::path> archives_to_read;
         std::vector<fs::path> archives_to_write;
@@ -687,6 +717,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     return add_error("unexpected arguments: binary config 'clear' does not take arguments",
                                      segments[1].first);
                 state->clear = true;
+                state->interactive = false;
                 state->archives_to_read.clear();
                 state->archives_to_write.clear();
                 state->sources_to_read.clear();
@@ -722,6 +753,13 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     }
                 }
                 state->archives_to_read.push_back(std::move(p));
+            }
+            else if (segments[0].second == "interactive")
+            {
+                if (segments.size() > 1)
+                    return add_error("unexpected arguments: binary config 'interactive' does not accept any arguments",
+                                     segments[1].first);
+                state->interactive = true;
             }
             else if (segments[0].second == "nuget")
             {
@@ -781,9 +819,9 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
             }
             else
             {
-                return add_error(
-                    "unknown binary provider type: valid providers are 'clear', 'default', 'nuget', and 'files'",
-                    segments[0].first);
+                return add_error("unknown binary provider type: valid providers are 'clear', 'default', 'nuget', "
+                                 "'interactive', and 'files'",
+                                 segments[0].first);
             }
         }
     };
@@ -807,8 +845,8 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
         providers.push_back(
             std::make_unique<ArchivesBinaryProvider>(std::move(s.archives_to_read), std::move(s.archives_to_write)));
     if (!s.sources_to_read.empty() || !s.sources_to_write.empty())
-        providers.push_back(
-            std::make_unique<NugetBinaryProvider>(std::move(s.sources_to_read), std::move(s.sources_to_write)));
+        providers.push_back(std::make_unique<NugetBinaryProvider>(
+            std::move(s.sources_to_read), std::move(s.sources_to_write), s.interactive));
 
     return {std::make_unique<MergeBinaryProviders>(std::move(providers))};
 }

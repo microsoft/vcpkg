@@ -125,6 +125,18 @@ TEST_CASE ("BinaryConfigParser clear provider", "[binaryconfigparser]")
     }
 }
 
+TEST_CASE ("BinaryConfigParser interactive provider", "[binaryconfigparser]")
+{
+    {
+        auto parsed = create_binary_provider_from_configs_pure("interactive", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("interactive,upload", {});
+        REQUIRE(!parsed.has_value());
+    }
+}
+
 TEST_CASE ("BinaryConfigParser multiple providers", "[binaryconfigparser]")
 {
     {
