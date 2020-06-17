@@ -1,0 +1,5 @@
+Source: networkdirect
+Version: 2.0
+Homepage: https://github.com/microsoft/NetworkDirect
+Description: The NetworkDirect architecture provides application developers with a networking interface
+Supports: !(uwp|arm|arm64|linux|osx)

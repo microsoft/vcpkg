@@ -1,0 +1,439 @@
+diff --git a/Directory.Build.props b/Directory.Build.props
+index a5e937a..4b17312 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -14,6 +14,7 @@
+     <!--
+       Enlistment root is based off of wherever this file is.  Be sure not to set this property anywhere else.
+     -->
++    <RestoreUseSkipNonexistentTargets>false</RestoreUseSkipNonexistentTargets>
+     <EnlistmentRoot>$(MSBuildThisFileDirectory.TrimEnd('\\'))</EnlistmentRoot>
+     <NuGetPackagesPath Condition=" '$(NuGetPackagesPath)' == '' ">$(EnlistmentRoot)\packages</NuGetPackagesPath>
+ 
+diff --git a/src/examples/ndadapterinfo/ndadapterinfo.vcxproj b/src/examples/ndadapterinfo/ndadapterinfo.vcxproj
+index 21b47a0..af81287 100644
+--- a/src/examples/ndadapterinfo/ndadapterinfo.vcxproj
++++ b/src/examples/ndadapterinfo/ndadapterinfo.vcxproj
+@@ -17,10 +17,19 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/examples/ndcat/ndcat.vcxproj b/src/examples/ndcat/ndcat.vcxproj
+index 83233cc..a20ef54 100644
+--- a/src/examples/ndcat/ndcat.vcxproj
++++ b/src/examples/ndcat/ndcat.vcxproj
+@@ -17,9 +17,18 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/examples/ndmrlat/ndmrlat.vcxproj b/src/examples/ndmrlat/ndmrlat.vcxproj
+index 0b8e2ab..92cfd12 100644
+--- a/src/examples/ndmrlat/ndmrlat.vcxproj
++++ b/src/examples/ndmrlat/ndmrlat.vcxproj
+@@ -14,10 +14,19 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/examples/ndmrrate/ndmrrate.vcxproj b/src/examples/ndmrrate/ndmrrate.vcxproj
+index 0230c83..ea17883 100644
+--- a/src/examples/ndmrrate/ndmrrate.vcxproj
++++ b/src/examples/ndmrrate/ndmrrate.vcxproj
+@@ -14,10 +14,19 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/examples/ndping/ndping.vcxproj b/src/examples/ndping/ndping.vcxproj
+index af1b087..727b790 100644
+--- a/src/examples/ndping/ndping.vcxproj
++++ b/src/examples/ndping/ndping.vcxproj
+@@ -14,15 +14,24 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
+     </Link>
+     <ResourceCompile>
+       <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ResourceCompile>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
++    </Link>
++  </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="ndping.cpp" />
+   </ItemGroup>
+diff --git a/src/examples/ndpingpong/ndpingpong.vcxproj b/src/examples/ndpingpong/ndpingpong.vcxproj
+index 25bf24f..367bb0a 100644
+--- a/src/examples/ndpingpong/ndpingpong.vcxproj
++++ b/src/examples/ndpingpong/ndpingpong.vcxproj
+@@ -17,11 +17,20 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <CallingConvention>StdCall</CallingConvention>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/examples/ndrping/ndrping.vcxproj b/src/examples/ndrping/ndrping.vcxproj
+index 264b175..4b34646 100644
+--- a/src/examples/ndrping/ndrping.vcxproj
++++ b/src/examples/ndrping/ndrping.vcxproj
+@@ -17,11 +17,20 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <CallingConvention>StdCall</CallingConvention>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/examples/ndrpingpong/ndrpingpong.vcxproj b/src/examples/ndrpingpong/ndrpingpong.vcxproj
+index 00a94de..cf772ac 100644
+--- a/src/examples/ndrpingpong/ndrpingpong.vcxproj
++++ b/src/examples/ndrpingpong/ndrpingpong.vcxproj
+@@ -17,11 +17,20 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <CallingConvention>StdCall</CallingConvention>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/examples/ndtestutil/ndtestutil.vcxproj b/src/examples/ndtestutil/ndtestutil.vcxproj
+index 161796e..cfba579 100644
+--- a/src/examples/ndtestutil/ndtestutil.vcxproj
++++ b/src/examples/ndtestutil/ndtestutil.vcxproj
+@@ -18,10 +18,16 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <AdditionalIncludeDirectories>$(OutIncludePath);.\;..\;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+     </ClCompile>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
++    </Link>
++  </ItemDefinitionGroup>
+   <ItemGroup>
+     <QCustomOutput Include="$(OutputPath)\ndtestutil.lib" />
+   </ItemGroup>
+diff --git a/src/ndutil/ndutil.vcxproj b/src/ndutil/ndutil.vcxproj
+index 0b5df8c..ceb242e 100644
+--- a/src/ndutil/ndutil.vcxproj
++++ b/src/ndutil/ndutil.vcxproj
+@@ -27,6 +27,7 @@
+ 
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PrecompiledHeader>Use</PrecompiledHeader>
+       <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
+diff --git a/src/unittests/ndconn/ndconn.cpp b/src/unittests/ndconn/ndconn.cpp
+index 5b6e0f4..4f48016 100644
+--- a/src/unittests/ndconn/ndconn.cpp
++++ b/src/unittests/ndconn/ndconn.cpp
+@@ -3,7 +3,7 @@
+ //
+ // ndconn.cpp - NetworkDirect connection scalability test
+ //
+-
++#include <winternl.h>
+ #include "ntstatus.h"
+ #define WIN32_NO_STATUS
+ #include "ndcommon.h"
+diff --git a/src/unittests/ndconn/ndconn.vcxproj b/src/unittests/ndconn/ndconn.vcxproj
+index 414e276..83f4bd5 100644
+--- a/src/unittests/ndconn/ndconn.vcxproj
++++ b/src/unittests/ndconn/ndconn.vcxproj
+@@ -17,10 +17,19 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/unittests/ndcq/ndcq.vcxproj b/src/unittests/ndcq/ndcq.vcxproj
+index d1a703a..863cbeb 100644
+--- a/src/unittests/ndcq/ndcq.vcxproj
++++ b/src/unittests/ndcq/ndcq.vcxproj
+@@ -17,10 +17,19 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/unittests/ndmemorytest/ndinvalidip.cpp b/src/unittests/ndmemorytest/ndinvalidip.cpp
+index 7680610..a1b8eec 100644
+--- a/src/unittests/ndmemorytest/ndinvalidip.cpp
++++ b/src/unittests/ndmemorytest/ndinvalidip.cpp
+@@ -3,7 +3,7 @@
+ //
+ // ndinvalidip.cpp - Test connector using invalid IP address
+ 
+-
++#include <winternl.h>
+ #include "ndmemorytest.h"
+ #include <ntstatus.h>
+ 
+diff --git a/src/unittests/ndmemorytest/ndmemorytest.h b/src/unittests/ndmemorytest/ndmemorytest.h
+index e586624..343ab5b 100644
+--- a/src/unittests/ndmemorytest/ndmemorytest.h
++++ b/src/unittests/ndmemorytest/ndmemorytest.h
+@@ -7,6 +7,7 @@
+ #define _ND_MEMORY_TEST_
+ 
+ // to get STATUS_DATA_ERROR
++#include <winternl.h>
+ #include <ntstatus.h>
+ // define WIN32_NO_STATUS so that STATUS_* types are not defined again
+ #define WIN32_NO_STATUS
+diff --git a/src/unittests/ndmemorytest/ndmemorytest.vcxproj b/src/unittests/ndmemorytest/ndmemorytest.vcxproj
+index c4e31d6..9222db9 100644
+--- a/src/unittests/ndmemorytest/ndmemorytest.vcxproj
++++ b/src/unittests/ndmemorytest/ndmemorytest.vcxproj
+@@ -15,11 +15,20 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <CallingConvention>StdCall</CallingConvention>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/unittests/ndmpic/ndmpic.vcxproj b/src/unittests/ndmpic/ndmpic.vcxproj
+index c695fb1..addc47f 100644
+--- a/src/unittests/ndmpic/ndmpic.vcxproj
++++ b/src/unittests/ndmpic/ndmpic.vcxproj
+@@ -14,10 +14,19 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/unittests/ndmval/ndmval.cpp b/src/unittests/ndmval/ndmval.cpp
+index e0d483f..57ff907 100644
+--- a/src/unittests/ndmval/ndmval.cpp
++++ b/src/unittests/ndmval/ndmval.cpp
+@@ -17,6 +17,7 @@
+ //  4. Expect ND_BUFFER_OVERFLOW
+ 
+ // to get STATUS_DATA_ERROR
++#include <winternl.h>
+ #include <ntstatus.h>
+ // define WIN32_NO_STATUS so that STATUS_* types are not defined again
+ #define WIN32_NO_STATUS
+diff --git a/src/unittests/ndmval/ndmval.vcxproj b/src/unittests/ndmval/ndmval.vcxproj
+index cdf3241..cb4f938 100644
+--- a/src/unittests/ndmval/ndmval.vcxproj
++++ b/src/unittests/ndmval/ndmval.vcxproj
+@@ -14,10 +14,19 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/src/unittests/ndmw/ndmw.vcxproj b/src/unittests/ndmw/ndmw.vcxproj
+index 120d819..497f421 100644
+--- a/src/unittests/ndmw/ndmw.vcxproj
++++ b/src/unittests/ndmw/ndmw.vcxproj
+@@ -14,10 +14,19 @@
+   </ImportGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
++      <AdditionalOptions>/WX- /W4 %(AdditionalOptions)</AdditionalOptions>
+       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <ShowProgress>LinkVerbose</ShowProgress>
++      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
++    <Link>
++      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
