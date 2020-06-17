@@ -28,4 +28,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/tinyfiledialogs/tinyfiledialogs.h _contents)
 string(SUBSTRING "${_contents}" 0 1024 _contents)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/tinyfiledialogs/copyright "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "${_contents}")

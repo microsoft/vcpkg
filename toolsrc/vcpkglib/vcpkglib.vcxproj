@@ -177,6 +177,7 @@
     <ClInclude Include="..\include\vcpkg\binarycaching.h" />
     <ClInclude Include="..\include\vcpkg\binaryparagraph.h" />
     <ClInclude Include="..\include\vcpkg\build.h" />
+    <ClInclude Include="..\include\vcpkg\buildenvironment.h" />
     <ClInclude Include="..\include\vcpkg\cmakevars.h" />
     <ClInclude Include="..\include\vcpkg\commands.h" />
     <ClInclude Include="..\include\vcpkg\dependencies.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="..\src\vcpkg\binarycaching.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
+    <ClCompile Include="..\src\vcpkg\buildenvironment.cpp" />
     <ClCompile Include="..\src\vcpkg\cmakevars.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.autocomplete.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.buildexternal.cpp" />

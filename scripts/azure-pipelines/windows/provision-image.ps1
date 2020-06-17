@@ -90,8 +90,7 @@ if (-not [string]::IsNullOrEmpty($AdminUserPassword)) {
   }
 
   Write-Host "Executing $PsExecPath " + @PsExecArgs
-
-  $proc = Start-Process -FilePath $PsExecPath -ArgumentList $PsExecArgs -Wait -PassThru
+  & $PsExecPath @PsExecArgs > C:\ProvisionLog.txt
   Write-Host 'Cleaning up...'
   Remove-Item $PsExecPath
   exit $proc.ExitCode
@@ -109,10 +108,16 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.v141.x86.x64.Spectre',
   'Microsoft.VisualStudio.Component.Windows10SDK.18362',
   'Microsoft.Net.Component.4.8.SDK',
-  'Microsoft.Component.NetFX.Native'
+  'Microsoft.Component.NetFX.Native',
+  'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
+  'Microsoft.VisualStudio.Component.VC.Llvm.Clang'
 )
 
-$MpiUrl = 'https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe'
+$WindowsSDKUrl = 'https://download.microsoft.com/download/1/c/3/1c3d5161-d9e9-4e4b-9b43-b70fe8be268c/windowssdk/winsdksetup.exe'
+
+$WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
+
+$MpiUrl = 'https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe'
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
 $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_advisor_10.1 memcheck_10.1 ' + `
@@ -280,6 +285,76 @@ Function InstallZip {
 
 <#
 .SYNOPSIS
+Installs Windows SDK version 2004
+
+.DESCRIPTION
+Downloads the Windows SDK installer located at $Url, and installs it with the
+correct flags.
+
+.PARAMETER Url
+The URL of the installer.
+#>
+Function InstallWindowsSDK {
+  Param(
+    [String]$Url
+  )
+
+  try {
+    Write-Host 'Downloading Windows SDK...'
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Installing Windows SDK...'
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+  }
+  catch {
+    Write-Error "Failed to install Windows SDK! $($_.Exception.Message)"
+  }
+}
+
+<#
+.SYNOPSIS
+Installs Windows WDK version 2004
+
+.DESCRIPTION
+Downloads the Windows WDK installer located at $Url, and installs it with the
+correct flags.
+
+.PARAMETER Url
+The URL of the installer.
+#>
+Function InstallWindowsWDK {
+  Param(
+    [String]$Url
+  )
+
+  try {
+    Write-Host 'Downloading Windows WDK...'
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Installing Windows WDK...'
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+  }
+  catch {
+    Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
+  }
+}
+
+<#
+.SYNOPSIS
 Installs MPI
 
 .DESCRIPTION
@@ -352,94 +427,43 @@ Function InstallCuda {
   }
 }
 
-<#
-.SYNOPSIS
-Partitions a new physical disk.
-
-.DESCRIPTION
-Takes the disk $DiskNumber, turns it on, then partitions it for use with label
-$Label and drive letter $Letter.
-
-.PARAMETER DiskNumber
-The number of the disk to set up.
-
-.PARAMETER Letter
-The drive letter at which to mount the disk.
-
-.PARAMETER Label
-The label to give the disk.
-#>
-Function New-PhysicalDisk {
-  Param(
-    [int]$DiskNumber,
-    [string]$Letter,
-    [string]$Label
-  )
-
-  if ($Letter.Length -ne 1) {
-    throw "Bad drive letter $Letter, expected only one letter. (Did you accidentially add a : ?)"
-  }
-
-  try {
-    Write-Host "Attempting to online physical disk $DiskNumber"
-    [string]$diskpartScriptPath = Get-TempFilePath -Extension 'txt'
-    [string]$diskpartScriptContent =
-    "SELECT DISK $DiskNumber`r`n" +
-    "ONLINE DISK`r`n"
-
-    Write-Host "Writing diskpart script to $diskpartScriptPath with content:"
-    Write-Host $diskpartScriptContent
-    Set-Content -Path $diskpartScriptPath -Value $diskpartScriptContent
-    Write-Host 'Invoking DISKPART...'
-    & diskpart.exe /s $diskpartScriptPath
-
-    Write-Host "Provisioning physical disk $DiskNumber as drive $Letter"
-    [string]$diskpartScriptContent =
-    "SELECT DISK $DiskNumber`r`n" +
-    "ATTRIBUTES DISK CLEAR READONLY`r`n" +
-    "CREATE PARTITION PRIMARY`r`n" +
-    "FORMAT FS=NTFS LABEL=`"$Label`" QUICK`r`n" +
-    "ASSIGN LETTER=$Letter`r`n"
-    Write-Host "Writing diskpart script to $diskpartScriptPath with content:"
-    Write-Host $diskpartScriptContent
-    Set-Content -Path $diskpartScriptPath -Value $diskpartScriptContent
-    Write-Host 'Invoking DISKPART...'
-    & diskpart.exe /s $diskpartScriptPath
-  }
-  catch {
-    Write-Error "Failed to provision physical disk $DiskNumber as drive $Letter! $($_.Exception.Message)"
-  }
-}
-
 Write-Host "AdminUser password not supplied; assuming already running as AdminUser"
-
-New-PhysicalDisk -DiskNumber 2 -Letter 'E' -Label 'install disk'
 
 Write-Host 'Disabling pagefile...'
 wmic computersystem set AutomaticManagedPagefile=False
 wmic pagefileset delete
 
-Write-Host 'Configuring AntiVirus exclusions...'
-Add-MPPreference -ExclusionPath C:\
-Add-MPPreference -ExclusionPath D:\
-Add-MPPreference -ExclusionPath E:\
-Add-MPPreference -ExclusionProcess ninja.exe
-Add-MPPreference -ExclusionProcess clang-cl.exe
-Add-MPPreference -ExclusionProcess cl.exe
-Add-MPPreference -ExclusionProcess link.exe
-Add-MPPreference -ExclusionProcess python.exe
+$av = Get-Command Add-MPPreference -ErrorAction SilentlyContinue
+if ($null -eq $av) {
+  Write-Host 'AntiVirus not installed, skipping exclusions.'
+} else {
+  Write-Host 'Configuring AntiVirus exclusions...'
+  Add-MPPreference -ExclusionPath C:\
+  Add-MPPreference -ExclusionPath D:\
+  Add-MPPreference -ExclusionProcess ninja.exe
+  Add-MPPreference -ExclusionProcess clang-cl.exe
+  Add-MPPreference -ExclusionProcess cl.exe
+  Add-MPPreference -ExclusionProcess link.exe
+  Add-MPPreference -ExclusionProcess python.exe
+}
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
+InstallWindowsSDK -Url $WindowsSDKUrl
+InstallWindowsWDK -Url $WindowsWDKUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
-if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountName))) {
+if ([string]::IsNullOrWhiteSpace($StorageAccountName)) {
+  Write-Host 'No storage account name configured.'
+} else {
   Write-Host 'Storing storage account name to environment'
   Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' `
     -Name StorageAccountName `
     -Value $StorageAccountName
 }
-if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountKey))) {
+if ([string]::IsNullOrWhiteSpace($StorageAccountKey)) {
+  Write-Host 'No storage account key configured.'
+} else {
   Write-Host 'Storing storage account key to environment'
   Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' `
     -Name StorageAccountKey `

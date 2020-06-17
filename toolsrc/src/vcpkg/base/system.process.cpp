@@ -179,12 +179,12 @@ namespace vcpkg
     {
     }
 
-    std::string System::make_cmake_cmd(const fs::path& cmake_exe,
-                                       const fs::path& cmake_script,
-                                       const std::vector<CMakeVariable>& pass_variables)
+    std::string System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
+                                             const fs::path& cmake_script,
+                                             const std::vector<CMakeVariable>& pass_variables)
     {
         System::CmdLineBuilder cmd;
-        cmd.path_arg(cmake_exe);
+        cmd.path_arg(cmake_tool_path);
         for (auto&& var : pass_variables)
             cmd.string_arg(var.s);
         cmd.string_arg("-P").path_arg(cmake_script);
