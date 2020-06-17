@@ -1,6 +1,6 @@
 
-if("snappy" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Feature snappy is currently broken in static build.")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "static linkage is currently broken.")
 endif()
 
 vcpkg_from_github(
