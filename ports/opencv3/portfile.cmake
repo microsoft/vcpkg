@@ -21,7 +21,9 @@ vcpkg_from_github(
       0009-fix-uwp.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/FindCUDNN.cmake)
+file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
