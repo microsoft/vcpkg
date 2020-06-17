@@ -140,16 +140,18 @@ elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
         include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
     endif()
     if(CMAKE_C_COMPILER)
-        execute_process(
+        vcpkg_execute_required_process(
             COMMAND ${CMAKE_C_COMPILER} -dumpmachine
-            OUTPUT_VARIABLE MPG123_HOST
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+            LOGNAME dumpmachine-${TARGET_TRIPLET}
         )
-        message(STATUS "Detected target triplet ${MPG123_HOST} from ${CMAKE_C_COMPILER}")
+        file(READ ${CURRENT_BUILDTREES_DIR}/dumpmachine-${TARGET_TRIPLET}-out.log MPG123_HOST)
+        message(STATUS "Cross-compiling with ${CMAKE_C_COMPILER}")
+        message(STATUS "Detected autoconf triplet --host=${MPG123_HOST}")
         set(MPG123_OPTIONS
             --host=${MPG123_HOST}
             ${MPG123_OPTIONS}
         )
-        set(MPG123_CC CC=${CMAKE_C_COMPILER})
     endif()
 
     vcpkg_configure_make(
