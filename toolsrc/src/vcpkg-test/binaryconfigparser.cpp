@@ -93,6 +93,42 @@ TEST_CASE ("BinaryConfigParser nuget source provider", "[binaryconfigparser]")
     }
 }
 
+TEST_CASE ("BinaryConfigParser nuget config provider", "[binaryconfigparser]")
+{
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig,relative-path", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig,http://example.org/", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig," ABSOLUTE_PATH, {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig," ABSOLUTE_PATH ",nonsense", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig," ABSOLUTE_PATH ",upload", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig," ABSOLUTE_PATH ",upload,extra", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig,,upload", {});
+        REQUIRE(!parsed.has_value());
+    }
+}
+
 TEST_CASE ("BinaryConfigParser default provider", "[binaryconfigparser]")
 {
     {

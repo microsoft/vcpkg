@@ -378,24 +378,25 @@ namespace
     {
         NugetBinaryProvider(std::vector<std::string>&& read_sources,
                             std::vector<std::string>&& write_sources,
+                            std::vector<fs::path>&& read_configs,
+                            std::vector<fs::path>&& write_configs,
                             bool interactive)
             : m_read_sources(std::move(read_sources))
             , m_write_sources(std::move(write_sources))
+            , m_read_configs(std::move(read_configs))
+            , m_write_configs(std::move(write_configs))
             , m_interactive(interactive)
         {
         }
         ~NugetBinaryProvider() = default;
         void prefetch(const VcpkgPaths& paths, const Dependencies::ActionPlan& plan) override
         {
-            if (m_read_sources.empty()) return;
+            if (m_read_sources.empty() && m_read_configs.empty()) return;
             if (plan.install_actions.empty()) return;
 
             auto& fs = paths.get_filesystem();
 
-            std::vector<NugetReference> nuget_refs;
-            XmlSerializer xml;
-            xml.emit_declaration().line_break();
-            xml.open_tag("packages").line_break();
+            std::vector<std::pair<PackageSpec, NugetReference>> nuget_refs;
 
             for (auto&& action : plan.install_actions)
             {
@@ -405,72 +406,118 @@ namespace
 
                 NugetReference nuget_ref{spec.dir(), "0.0.0-" + abi_tag};
 
-                xml.start_complex_open_tag("package")
-                    .text_attr("id", nuget_ref.id)
-                    .text_attr("version", nuget_ref.version)
-                    .finish_self_closing_complex_tag()
-                    .line_break();
-
-                nuget_refs.push_back(std::move(nuget_ref));
+                nuget_refs.emplace_back(spec, std::move(nuget_ref));
             }
-
-            xml.close_tag("packages").line_break();
-            auto packages_config = paths.buildtrees / fs::u8path("packages.config");
-            paths.get_filesystem().write_contents(packages_config, xml.buf, VCPKG_LINE_INFO);
-
-            const auto& nuget_exe = paths.get_tool_exe("nuget");
-            System::CmdLineBuilder cmdline;
-            cmdline.path_arg(nuget_exe)
-                .string_arg("install")
-                .path_arg(packages_config)
-                .string_arg("-OutputDirectory")
-                .path_arg(paths.packages)
-                .string_arg("-Source")
-                .string_arg(Strings::join(";", m_read_sources))
-                .string_arg("-ExcludeVersion")
-                .string_arg("-NoCache")
-                .string_arg("-PreRelease")
-                .string_arg("-DirectDownload")
-                .string_arg("-PackageSaveMode")
-                .string_arg("nupkg")
-                .string_arg("-Verbosity")
-                .string_arg("detailed")
-                .string_arg("-ForceEnglishOutput");
-            if (!m_interactive) cmdline.string_arg("-NonInteractive");
 
             System::print2("Attempting to fetch ", plan.install_actions.size(), " packages from nuget.\n");
 
-            [&] {
-                if (Debug::g_debugging)
-                    System::cmd_execute(cmdline);
-                else
-                {
-                    auto res = System::cmd_execute_and_capture_output(cmdline);
-                    if (res.output.find("Authentication may require manual action.") != std::string::npos)
-                    {
-                        System::print2(System::Color::warning,
-                                       "One or more NuGet credential providers requested manual action. Add the binary "
-                                       "source 'interactive' to allow interactivity.\n");
-                    }
-                }
-            }();
+            auto packages_config = paths.buildtrees / fs::u8path("packages.config");
+
+            auto generate_packages_config = [&] {
+                XmlSerializer xml;
+                xml.emit_declaration().line_break();
+                xml.open_tag("packages").line_break();
+
+                for (auto&& nuget_ref : nuget_refs)
+                    xml.start_complex_open_tag("package")
+                        .text_attr("id", nuget_ref.second.id)
+                        .text_attr("version", nuget_ref.second.version)
+                        .finish_self_closing_complex_tag()
+                        .line_break();
+
+                xml.close_tag("packages").line_break();
+                paths.get_filesystem().write_contents(packages_config, xml.buf, VCPKG_LINE_INFO);
+            };
+
+            const auto& nuget_exe = paths.get_tool_exe("nuget");
+            std::vector<std::string> cmdlines;
+
+            if (!m_read_sources.empty())
+            {
+                // First check using all sources
+                System::CmdLineBuilder cmdline;
+                cmdline.path_arg(nuget_exe)
+                    .string_arg("install")
+                    .path_arg(packages_config)
+                    .string_arg("-OutputDirectory")
+                    .path_arg(paths.packages)
+                    .string_arg("-Source")
+                    .string_arg(Strings::join(";", m_read_sources))
+                    .string_arg("-ExcludeVersion")
+                    .string_arg("-NoCache")
+                    .string_arg("-PreRelease")
+                    .string_arg("-DirectDownload")
+                    .string_arg("-PackageSaveMode")
+                    .string_arg("nupkg")
+                    .string_arg("-Verbosity")
+                    .string_arg("detailed")
+                    .string_arg("-ForceEnglishOutput");
+                if (!m_interactive) cmdline.string_arg("-NonInteractive");
+                cmdlines.push_back(cmdline.build());
+            }
+            for (auto&& cfg : m_read_configs)
+            {
+                // Then check using each config
+                System::CmdLineBuilder cmdline;
+                cmdline.path_arg(nuget_exe)
+                    .string_arg("install")
+                    .path_arg(packages_config)
+                    .string_arg("-OutputDirectory")
+                    .path_arg(paths.packages)
+                    .string_arg("-ConfigFile")
+                    .path_arg(cfg)
+                    .string_arg("-ExcludeVersion")
+                    .string_arg("-NoCache")
+                    .string_arg("-PreRelease")
+                    .string_arg("-DirectDownload")
+                    .string_arg("-PackageSaveMode")
+                    .string_arg("nupkg")
+                    .string_arg("-Verbosity")
+                    .string_arg("detailed")
+                    .string_arg("-ForceEnglishOutput");
+                if (!m_interactive) cmdline.string_arg("-NonInteractive");
+                cmdlines.push_back(cmdline.build());
+            }
 
             size_t num_restored = 0;
 
-            for (size_t i = 0; i < plan.install_actions.size(); ++i)
+            for (const auto& cmdline : cmdlines)
             {
-                const auto& action = plan.install_actions[i];
-                auto nupkg_path = paths.package_dir(action.spec) / fs::u8path(nuget_refs[i].id + ".nupkg");
-                if (fs.exists(nupkg_path, ignore_errors))
-                {
-                    fs.remove(nupkg_path, VCPKG_LINE_INFO);
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                                       !fs.exists(nupkg_path, ignore_errors),
-                                       "Unable to remove nupkg after restoring: %s",
-                                       nupkg_path.u8string());
-                    m_restored.emplace(action.spec);
-                    ++num_restored;
-                }
+                [&] {
+                    generate_packages_config();
+                    if (Debug::g_debugging)
+                        System::cmd_execute(cmdline);
+                    else
+                    {
+                        auto res = System::cmd_execute_and_capture_output(cmdline);
+                        if (res.output.find("Authentication may require manual action.") != std::string::npos)
+                        {
+                            System::print2(
+                                System::Color::warning,
+                                "One or more NuGet credential providers requested manual action. Add the binary "
+                                "source 'interactive' to allow interactivity.\n");
+                        }
+                    }
+                }();
+
+                Util::erase_remove_if(nuget_refs, [&](const std::pair<PackageSpec, NugetReference>& nuget_ref) -> bool {
+                    auto nupkg_path = paths.package_dir(nuget_ref.first) / fs::u8path(nuget_ref.second.id + ".nupkg");
+                    if (fs.exists(nupkg_path, ignore_errors))
+                    {
+                        fs.remove(nupkg_path, VCPKG_LINE_INFO);
+                        Checks::check_exit(VCPKG_LINE_INFO,
+                                           !fs.exists(nupkg_path, ignore_errors),
+                                           "Unable to remove nupkg after restoring: %s",
+                                           nupkg_path.u8string());
+                        m_restored.emplace(nuget_ref.first);
+                        ++num_restored;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                });
             }
 
             System::print2("Restored ", num_restored, " packages. Use --debug for more information.\n");
@@ -484,7 +531,7 @@ namespace
         }
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
-            if (m_write_sources.empty()) return;
+            if (m_write_sources.empty() && m_write_configs.empty()) return;
             const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
             auto& spec = action.spec;
 
@@ -547,6 +594,37 @@ namespace
                                        " failed. Use --debug for more information.\n");
                     }
                 }
+                for (auto&& write_cfg : m_write_configs)
+                {
+                    System::CmdLineBuilder cmd;
+                    cmd.path_arg(nuget_exe)
+                        .string_arg("push")
+                        .path_arg(nupkg_path)
+                        .string_arg("-ApiKey")
+                        .string_arg("AzureDevOps")
+                        .string_arg("-ForceEnglishOutput")
+                        .string_arg("-ConfigFile")
+                        .path_arg(write_cfg);
+                    if (!m_interactive) cmd.string_arg("-NonInteractive");
+
+                    System::print2(
+                        "Uploading binaries for ", spec, " using NuGet config ", write_cfg.u8string(), ".\n");
+
+                    auto rc = [&] {
+                        if (Debug::g_debugging)
+                            return System::cmd_execute(cmd);
+                        else
+                            return System::cmd_execute_and_capture_output(cmd).exit_code;
+                    }();
+
+                    if (rc != 0)
+                    {
+                        System::print2(System::Color::error,
+                                       "Pushing NuGet with ",
+                                       write_cfg.u8string(),
+                                       " failed. Use --debug for more information.\n");
+                    }
+                }
                 paths.get_filesystem().remove(nupkg_path, ignore_errors);
             }
         }
@@ -558,6 +636,7 @@ namespace
 
     private:
         std::vector<std::string> m_read_sources, m_write_sources;
+        std::vector<fs::path> m_read_configs, m_write_configs;
         std::set<PackageSpec> m_restored;
         bool m_interactive;
     };
@@ -650,6 +729,9 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
 
         std::vector<std::string> sources_to_read;
         std::vector<std::string> sources_to_write;
+
+        std::vector<fs::path> configs_to_read;
+        std::vector<fs::path> configs_to_write;
     };
 
     struct BinaryConfigParser : Parse::ParserBase
@@ -722,6 +804,8 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 state->archives_to_write.clear();
                 state->sources_to_read.clear();
                 state->sources_to_write.clear();
+                state->configs_to_read.clear();
+                state->configs_to_write.clear();
             }
             else if (segments[0].second == "files")
             {
@@ -760,6 +844,40 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     return add_error("unexpected arguments: binary config 'interactive' does not accept any arguments",
                                      segments[1].first);
                 state->interactive = true;
+            }
+            else if (segments[0].second == "nugetconfig")
+            {
+                if (segments.size() < 2)
+                    return add_error(
+                        "expected arguments: binary config 'nugetconfig' requires at least a source argument",
+                        segments[0].first);
+
+                auto p = fs::u8path(segments[1].second);
+                if (!p.is_absolute())
+                    return add_error("expected arguments: path arguments for binary config strings must be absolute",
+                                     segments[1].first);
+
+                if (segments.size() > 3)
+                {
+                    return add_error(
+                        "unexpected arguments: binary config 'nugetconfig' does not take more than 2 arguments",
+                        segments[3].first);
+                }
+                else if (segments.size() == 3)
+                {
+                    if (segments[2].second != "upload")
+                    {
+                        return add_error(
+                            "unexpected arguments: binary config 'nugetconfig' can only accept 'upload' as "
+                            "a second argument",
+                            segments[2].first);
+                    }
+                    else
+                    {
+                        state->configs_to_write.push_back(p);
+                    }
+                }
+                state->configs_to_read.push_back(std::move(p));
             }
             else if (segments[0].second == "nuget")
             {
@@ -844,9 +962,13 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
     if (!s.archives_to_read.empty() || !s.archives_to_write.empty())
         providers.push_back(
             std::make_unique<ArchivesBinaryProvider>(std::move(s.archives_to_read), std::move(s.archives_to_write)));
-    if (!s.sources_to_read.empty() || !s.sources_to_write.empty())
-        providers.push_back(std::make_unique<NugetBinaryProvider>(
-            std::move(s.sources_to_read), std::move(s.sources_to_write), s.interactive));
+    if (!s.sources_to_read.empty() || !s.sources_to_write.empty() || !s.configs_to_read.empty() ||
+        !s.configs_to_write.empty())
+        providers.push_back(std::make_unique<NugetBinaryProvider>(std::move(s.sources_to_read),
+                                                                  std::move(s.sources_to_write),
+                                                                  std::move(s.configs_to_read),
+                                                                  std::move(s.configs_to_write),
+                                                                  s.interactive));
 
     return {std::make_unique<MergeBinaryProviders>(std::move(providers))};
 }
