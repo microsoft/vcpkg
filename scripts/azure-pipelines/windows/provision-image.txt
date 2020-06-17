@@ -438,7 +438,6 @@ if ($null -eq $av) {
   Write-Host 'AntiVirus not installed, skipping exclusions.'
 } else {
   Write-Host 'Configuring AntiVirus exclusions...'
-  Add-MPPreference -ExclusionPath C:\
   Add-MPPreference -ExclusionPath D:\
   Add-MPPreference -ExclusionProcess ninja.exe
   Add-MPPreference -ExclusionProcess clang-cl.exe
