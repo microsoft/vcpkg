@@ -28,7 +28,6 @@ vcpkg_configure_cmake(
         -DENABLE_GNUTLS=OFF
 )
 
-
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
