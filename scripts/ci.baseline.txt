@@ -173,7 +173,6 @@ botan:x64-uwp=fail
 box2d:x64-uwp=fail
 box2d:arm-uwp=fail
 breakpad:arm64-windows=fail
-breakpad:x64-osx=fail
 bullet3:arm64-windows=fail
 bullet3:arm-uwp=fail
 bullet3:x64-uwp=fail
