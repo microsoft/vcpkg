@@ -1,0 +1,15 @@
+﻿<!--
+***********************************************************************************************
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <PropertyPageSchema Include="$(WDKContentRoot)build\1033\drivercl.xml" Condition="Exists('$(WDKContentRoot)build\1033\drivercl.xml')"/>
+  </ItemGroup>
+  <!-- Import the WDK Kit Version specific Platform dependent ImportAfter targets. -->
+  <Import Project="$(WDKContentRoot)build\$(Platform)\ImportAfter\*.targets" />
+
+</Project>

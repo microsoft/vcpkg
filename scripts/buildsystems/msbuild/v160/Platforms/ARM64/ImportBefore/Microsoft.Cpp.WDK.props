@@ -1,0 +1,13 @@
+﻿<!--
+***********************************************************************************************
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+
+    <Import Condition="Exists('$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformUpgrade\Microsoft.Cpp.WDK.PlatformUpgrade.props')" Project="$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformUpgrade\Microsoft.Cpp.WDK.PlatformUpgrade.props"/>
+
+</Project>
+

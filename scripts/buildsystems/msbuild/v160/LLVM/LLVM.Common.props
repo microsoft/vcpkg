@@ -1,0 +1,43 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <LLVMInstallDir>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\LLVM\LLVM)</LLVMInstallDir>
+    <LLVMInstallDir Condition="'$(LLVMInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\LLVM\LLVM)</LLVMInstallDir>
+    <LLVMInstallDir Condition="'$(LLVMInstallDir)' != ''">$(LLVMInstallDir)\</LLVMInstallDir>
+    <ClangClExecutable>$(LLVMInstallDir)bin\clang-cl.exe</ClangClExecutable>
+    <LldLinkExecutable>$(LLVMInstallDir)bin\lld-link.exe</LldLinkExecutable>
+    <LlvmLibExecutable>$(LLVMInstallDir)bin\llvm-lib.exe</LlvmLibExecutable>
+    <LlvmRcExecutable>$(LLVMInstallDir)bin\llvm-rc.exe</LlvmRcExecutable>
+    <UseClangCl>true</UseClangCl>
+    <UseLldLink>false</UseLldLink>
+    <UseLlvmLib>false</UseLlvmLib>
+    <UseLlvmRc>false</UseLlvmRc>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Short names for platform toolsets (added to project name in Solution Explorer) -->
+    <_PlatformToolsetShortNameFor_LLVM_v142>LLVM v142</_PlatformToolsetShortNameFor_LLVM_v142>
+    <_PlatformToolsetShortNameFor_LLVM_v141>LLVM v141</_PlatformToolsetShortNameFor_LLVM_v141>
+    <_PlatformToolsetShortNameFor_LLVM_v141_xp>LLVM v141_xp</_PlatformToolsetShortNameFor_LLVM_v141_xp>
+    <_PlatformToolsetShortNameFor_LLVM_v140>LLVM v140</_PlatformToolsetShortNameFor_LLVM_v140>
+    <_PlatformToolsetShortNameFor_LLVM_v140_xp>LLVM v140_xp</_PlatformToolsetShortNameFor_LLVM_v140_xp>
+    <_PlatformToolsetShortNameFor_LLVM_v120>LLVM v120</_PlatformToolsetShortNameFor_LLVM_v120>
+    <_PlatformToolsetShortNameFor_LLVM_v120_xp>LLVM v120_xp</_PlatformToolsetShortNameFor_LLVM_v120_xp>
+    <_PlatformToolsetShortNameFor_LLVM_v110>LLVM v110</_PlatformToolsetShortNameFor_LLVM_v110>
+    <_PlatformToolsetShortNameFor_LLVM_v110_xp>LLVM v110_xp</_PlatformToolsetShortNameFor_LLVM_v110_xp>
+    <_PlatformToolsetShortNameFor_LLVM_v100>LLVM v100</_PlatformToolsetShortNameFor_LLVM_v100>
+    <_PlatformToolsetShortNameFor_LLVM_v90>LLVM v90</_PlatformToolsetShortNameFor_LLVM_v90>
+
+    <!-- Friendly names added to the PlatformToolset in the property pages. -->
+    <_PlatformToolsetFriendlyNameFor_LLVM_v142>LLVM for Visual Studio 2019 (LLVM_v142)</_PlatformToolsetFriendlyNameFor_LLVM_v142>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v141>LLVM for Visual Studio 2017 (LLVM_v141)</_PlatformToolsetFriendlyNameFor_LLVM_v141>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v141_xp>LLVM for Visual Studio 2017 - Windows XP (LLVM_v141_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v141_xp>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v140>LLVM for Visual Studio 2015 (LLVM_v140)</_PlatformToolsetFriendlyNameFor_LLVM_v140>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v140_xp>LLVM for Visual Studio 2015 - Windows XP (LLVM_v140_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v140_xp>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v120>LLVM for Visual Studio 2013 (LLVM_v120)</_PlatformToolsetFriendlyNameFor_LLVM_v120>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v120_xp>LLVM for Visual Studio 2013 - Windows XP (LLVM_v120_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v120_xp>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v110>LLVM for Visual Studio 2012 (LLVM_v110)</_PlatformToolsetFriendlyNameFor_LLVM_v110>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v110_xp>LLVM for Visual Studio 2012 - Windows XP (LLVM_v110_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v110_xp>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v100>LLVM for Visual Studio 2010 (LLVM_v100)</_PlatformToolsetFriendlyNameFor_LLVM_v100>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v90>LLVM for Visual Studio 2008 (LLVM_v90)</_PlatformToolsetFriendlyNameFor_LLVM_v90>
+  </PropertyGroup>
+</Project>

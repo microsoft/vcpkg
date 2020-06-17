@@ -1,0 +1,29 @@
+<!--
+***********************************************************************************************
+Microsoft.Cpp.$(Platform).WindowsKernelModeDriver10.0.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps/targets required to build Visual C++ (version 10.0) projects 
+specifically on x86 platforms.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformToolsets\WindowsKernelModeDriver10.0\ImportBefore\*.targets" Condition="Exists('$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformToolsets\WindowsKernelModeDriver10.0\ImportBefore')" />
+  
+  <PropertyGroup>
+    <V141TargetsFile>$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v141\Toolset.targets</V141TargetsFile>
+    <V142TargetsFile>$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v142\Toolset.targets</V142TargetsFile>
+  </PropertyGroup>
+  
+  <Import Project="$(WDKContentRoot)\build\WindowsDriver.common.targets" Condition="Exists('$(WDKContentRoot)\build\WindowsDriver.common.targets')"/>
+  <Import Condition="Exists('$(V142TargetsFile)')" Project="$(V142TargetsFile)" />
+  <Import Condition="!Exists('$(V142TargetsFile)')" Project="$(V141TargetsFile)" />
+  <Import Project="$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformToolsets\WindowsKernelModeDriver10.0\ImportAfter\*.targets" Condition="Exists('$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformToolsets\WindowsKernelModeDriver10.0\ImportAfter')" />
+</Project>
+

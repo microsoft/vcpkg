@@ -1,0 +1,26 @@
+<!--
+***********************************************************************************************
+PreConfiguration.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps/targets required to build driver projects.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- PreConfiguration build properties -->
+  <PropertyGroup>
+    <INITIAL_KMDF_VERSION_MAJOR>DUMMY_KMDF_VERSION_MAJOR$([System.Guid]::NewGuid())</INITIAL_KMDF_VERSION_MAJOR>
+    <KMDF_VERSION_MAJOR>$(INITIAL_KMDF_VERSION_MAJOR)</KMDF_VERSION_MAJOR>
+    <INITIAL_KMDF_VERSION_MINOR>DUMMY_KMDF_VERSION_MINOR$([System.Guid]::NewGuid())</INITIAL_KMDF_VERSION_MINOR>
+    <KMDF_VERSION_MINOR>$(INITIAL_KMDF_VERSION_MINOR)</KMDF_VERSION_MINOR>
+    <INITIAL_UMDF_VERSION_MAJOR>DUMMY_UMDF_VERSION_MAJOR$([System.Guid]::NewGuid())</INITIAL_UMDF_VERSION_MAJOR>
+    <UMDF_VERSION_MAJOR>$(INITIAL_UMDF_VERSION_MAJOR)</UMDF_VERSION_MAJOR>
+    <INITIAL_UMDF_VERSION_MINOR>DUMMY_UMDF_VERSION_MINOR$([System.Guid]::NewGuid())</INITIAL_UMDF_VERSION_MINOR>
+    <UMDF_VERSION_MINOR>$(INITIAL_UMDF_VERSION_MINOR)</UMDF_VERSION_MINOR>
+  </PropertyGroup>
+</Project>

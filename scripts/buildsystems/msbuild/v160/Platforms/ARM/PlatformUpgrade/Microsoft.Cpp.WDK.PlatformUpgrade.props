@@ -1,0 +1,43 @@
+<!--
+***********************************************************************************************
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- WDK Project Upgrade Settings-->
+  <PropertyGroup>
+
+    
+    <_LatestWdkKmDriverToolset Condition="'$(_LatestWdkKmDriverToolset)' == ''">WindowsKernelModeDriver10.0</_LatestWdkKmDriverToolset>
+    <_LatestWdkUmDriverToolset Condition="'$(_LatestWdkUmDriverToolset)' == ''">WindowsUserModeDriver10.0</_LatestWdkUmDriverToolset>
+    <_LatestWdkDriverAppToolset Condition="'$(_LatestWdkDriverAppToolset)' == ''">WindowsApplicationForDrivers10.0</_LatestWdkDriverAppToolset>
+
+    <_UpgradePlatformToolsetFor_WindowsKernelModeDriver10_0>$(_LatestWdkKmDriverToolset)</_UpgradePlatformToolsetFor_WindowsKernelModeDriver10_0>
+    <_UpgradePlatformToolsetFor_WindowsKernelModeDriver8_2>$(_LatestWdkKmDriverToolset)</_UpgradePlatformToolsetFor_WindowsKernelModeDriver8_2>
+    <_UpgradePlatformToolsetFor_WindowsKernelModeDriver8_1>$(_LatestWdkKmDriverToolset)</_UpgradePlatformToolsetFor_WindowsKernelModeDriver8_1>
+    <_UpgradePlatformToolsetFor_WindowsKernelModeDriver8_0>$(_LatestWdkKmDriverToolset)</_UpgradePlatformToolsetFor_WindowsKernelModeDriver8_0>
+    
+    <_UpgradePlatformToolsetFor_WindowsUserModeDriver10_0>$(_LatestWdkUmDriverToolset)</_UpgradePlatformToolsetFor_WindowsUserModeDriver10_0>
+    <_UpgradePlatformToolsetFor_WindowsUserModeDriver8_2>$(_LatestWdkUmDriverToolset)</_UpgradePlatformToolsetFor_WindowsUserModeDriver8_2>
+    <_UpgradePlatformToolsetFor_WindowsUserModeDriver8_1>$(_LatestWdkUmDriverToolset)</_UpgradePlatformToolsetFor_WindowsUserModeDriver8_1>
+    <_UpgradePlatformToolsetFor_WindowsUserModeDriver8_0>$(_LatestWdkUmDriverToolset)</_UpgradePlatformToolsetFor_WindowsUserModeDriver8_0>
+    
+    <_UpgradePlatformToolsetFor_WindowsApplicationForDrivers10_0>$(_LatestWdkDriverAppToolset)</_UpgradePlatformToolsetFor_WindowsApplicationForDrivers10_0>
+    <_UpgradePlatformToolsetFor_WindowsApplicationForDrivers8_2>$(_LatestWdkDriverAppToolset)</_UpgradePlatformToolsetFor_WindowsApplicationForDrivers8_2>
+    <_UpgradePlatformToolsetFor_WindowsApplicationForDrivers8_1>$(_LatestWdkDriverAppToolset)</_UpgradePlatformToolsetFor_WindowsApplicationForDrivers8_1>
+    <_UpgradePlatformToolsetFor_WindowsApplicationForDrivers8_0>$(_LatestWdkDriverAppToolset)</_UpgradePlatformToolsetFor_WindowsApplicationForDrivers8_0>
+
+    <_WdkProjectUpgraderName Condition="'$(_WdkProjectUpgraderName)' == ''">WdkProjectUpgrader</_WdkProjectUpgraderName>
+    <VCProjectUpgraderObjectName Condition="$(PlatformToolset.StartsWith('WindowsKernelModeDriver'))">$(_WdkProjectUpgraderName)</VCProjectUpgraderObjectName>
+    <VCProjectUpgraderObjectName Condition="$(PlatformToolset.StartsWith('WindowsUserModeDriver'))">$(_WdkProjectUpgraderName)</VCProjectUpgraderObjectName>
+    <VCProjectUpgraderObjectName Condition="$(PlatformToolset.StartsWith('WindowsApplicationForDrivers'))">$(_WdkProjectUpgraderName)</VCProjectUpgraderObjectName>
+
+  </PropertyGroup>
+  
+</Project>

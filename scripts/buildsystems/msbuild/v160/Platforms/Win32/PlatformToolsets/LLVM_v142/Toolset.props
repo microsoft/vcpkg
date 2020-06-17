@@ -1,0 +1,4 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v142\Toolset.props"/>
+  <Import Project="$(VCPKGTargetsPath160)\LLVM\LLVM.Common.props"/>
+</Project>

@@ -1,0 +1,58 @@
+<!--
+***********************************************************************************************
+Microsoft.Cpp.$(Platform).WindowsKernelModeDriver10.0.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <IsKernelModeToolset>true</IsKernelModeToolset>
+    <!--
+      Driver_SpectreMitigation property is added to override the default value of SpectreMitigation and to mark is always
+      Enabled for drivers unless set to false using cmdline or UI.
+      Special property is needed because SpectreMitigation is set to Disabled by Microsoft.Cpp.Default.props which gets imported
+      in the chain early. This property is defined in drivercl.xml
+     -->
+    <Driver_SpectreMitigation Condition="'$(Driver_SpectreMitigation)' == ''">Spectre</Driver_SpectreMitigation>
+    <SpectreMitigation>$(Driver_SpectreMitigation)</SpectreMitigation>
+    <DebuggerFlavor Condition="'$(DebuggerFlavor)'==''">DbgengKernelDebugger</DebuggerFlavor>
+    
+    <!-- If MicrosoftKitRoot value is defined in the environment, then we define the WDKContentRoot based on that -->
+    <MicrosoftKitRoot  Condition=" '$(MicrosoftKitRoot)'!='' AND !HasTrailingSlash('$(MicrosoftKitRoot)') ">$(MicrosoftKitRoot)\</MicrosoftKitRoot>
+    <!-- Users can override the kit version by specifying it as an environment variable, by default use the current kit version -->
+    <WDKKitVersion Condition=" '$(WDKKitVersion)'==''">10.0</WDKKitVersion>
+    <!--WDKContentRoot value is derived from MicrosoftKitRoot, it is this sub-dir "Windows Kits\$(WDKKitVersion)\" under MicrosoftKitRoot. -->
+    <WDKContentRoot Condition=" '$(MicrosoftKitRoot)'!=''">$(MicrosoftKitRoot)windows kits\$(WDKKitVersion)</WDKContentRoot>
+    
+    <WDKContentRoot Condition="'$(WDKContentRoot)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots@KitsRoot10)</WDKContentRoot>
+    <WDKContentRoot Condition="'$(WDKContentRoot)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows Kits\Installed Roots@KitsRoot10)</WDKContentRoot>
+    
+    <!-- Check for Trailing Slash -->
+    <WDKContentRoot  Condition=" '$(WDKContentRoot)'!='' AND !HasTrailingSlash('$(WDKContentRoot)') ">$(WDKContentRoot)\</WDKContentRoot>
+	
+  </PropertyGroup>
+    
+  <Import Condition="Exists('$(WDKContentRoot)build\WindowsDriver.Default.props')" Project="$(WDKContentRoot)build\WindowsDriver.Default.props"/>
+
+  <Import Project="$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformToolsets\WindowsKernelModeDriver10.0\ImportBefore\*.props" Condition="Exists('$(VCPKGTargetsPath160)\Platforms\$(Platform)\PlatformToolsets\WindowsKernelModeDriver10.0\ImportBefore')" />
+  
+  <Import Project="$(WDKContentRoot)\build\$(Platform)\WindowsKernelModeDriver\*.props" />
+
+  <PropertyGroup>
+    <V141PropsFile>$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v141\Toolset.props</V141PropsFile>
+    <V142PropsFile>$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v142\Toolset.props</V142PropsFile>
+  </PropertyGroup>
+
+  <Import Condition="Exists('$(V142PropsFile)')" Project="$(V142PropsFile)" />
+  <Import Condition="!Exists('$(V142PropsFile)')" Project="$(V141PropsFile)" />
+  
+  <Import Condition="Exists('$(WDKContentRoot)\DesignTime\CommonConfiguration\Neutral\WDK\WDK.props') AND '$(LegacyTargetVersion)' == 'false'" Project="$(WDKContentRoot)\DesignTime\CommonConfiguration\Neutral\WDK\WDK.props" />
+  <Import Condition="Exists('$(WDKContentRoot)\DesignTime\CommonConfiguration\Neutral\WDK\WDK.Legacy.props') AND '$(LegacyTargetVersion)' == 'true'" Project="$(WDKContentRoot)\DesignTime\CommonConfiguration\Neutral\WDK\WDK.Legacy.props" />
+  
+</Project>

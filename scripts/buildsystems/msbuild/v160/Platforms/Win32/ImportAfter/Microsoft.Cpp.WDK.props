@@ -1,0 +1,12 @@
+﻿<!--
+***********************************************************************************************
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Import the WDK Kit Version specific Platform dependent ImportAfter props. -->
+  <Import Project="$(WDKContentRoot)build\$(Platform)\ImportAfter\*.props" />
+
+</Project>
