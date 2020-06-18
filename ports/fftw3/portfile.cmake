@@ -1,4 +1,3 @@
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.fftw.org/fftw-3.3.8.tar.gz"
     FILENAME "fftw-3.3.8.tar.gz"

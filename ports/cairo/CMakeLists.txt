@@ -3,9 +3,27 @@ project(cairo C)
 
 # Add include directories
 include_directories(".")
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
   include_directories("./win32")
 endif()
+
+set(CAIRO_HEADERS
+    cairo.h
+    cairo-deprecated.h
+    cairo-features.h
+    cairo-pdf.h
+    cairo-ps.h
+    cairo-script.h
+    cairo-svg.h
+    ../cairo-version.h
+    cairo-win32.h
+    ../util/cairo-gobject/cairo-gobject.h
+    cairo-ft.h
+)
+
+set(CAIRO_X11_HEADERS
+    cairo-xlib.h
+)
 
 file(GLOB SOURCES
 "cairo-analysis-surface.c"
@@ -154,7 +172,7 @@ file(GLOB PLATFORM_SOURCES_WIN32
 "win32/cairo-win32-font.c"
 )
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
   list(APPEND SOURCES ${PLATFORM_SOURCES_WIN32})
 endif()
 
@@ -177,7 +195,7 @@ add_definitions(
     -DHAVE_FT_GET_X11_FONT_FORMAT=1)
 
 # additional features for macOS
-if((CMAKE_SYSTEM_NAME STREQUAL "Darwin") OR (CMAKE_SYSTEM_NAME STREQUAL "Linux"))
+if(UNIX OR APPLE)
   add_definitions(
       -DHAVE_INTTYPES_H=1
       -DHAVE_STDINT_H=1
@@ -196,7 +214,7 @@ endif()
 
 target_link_libraries(cairo PRIVATE ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
     target_link_libraries(cairo PRIVATE gdi32 msimg32 user32)
 endif()
 
@@ -237,6 +255,14 @@ endif()
 
 if (CAIRO_HAS_XLIB_SURFACE)
     file(INSTALL cairo-xlib.h DESTINATION include)
+endif()
+
+install(FILES ${CAIRO_HEADERS} DESTINATION include)
+install(FILES ${CAIRO_HEADERS} DESTINATION include/cairo)
+
+if (WITH_X11)
+    install(FILES ${CAIRO_X11_HEADERS} DESTINATION include)
+    install(FILES ${CAIRO_X11_HEADERS} DESTINATION include/cairo)
 endif()
 
 install(TARGETS cairo cairo-gobject

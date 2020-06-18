@@ -81,7 +81,7 @@ namespace vcpkg
             }
         }
 
-        #if defined(_WIN32)
+#if defined(_WIN32)
         // fixup Windows drive letter to uppercase
         const auto& nativeRoot = root.native();
         if (nativeRoot.size() > 2 && (nativeRoot[0] >= L'a' && nativeRoot[0] <= L'z') && nativeRoot[1] == L':')
@@ -90,7 +90,7 @@ namespace vcpkg
             uppercaseFirstLetter[0] = nativeRoot[0] - L'a' + L'A';
             root = uppercaseFirstLetter;
         }
-        #endif // defined(_WIN32)
+#endif // defined(_WIN32)
 
         Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
         Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
@@ -117,7 +117,9 @@ namespace vcpkg
 
         tools = downloads / fs::u8path("tools");
         buildsystems = scripts / fs::u8path("buildsystems");
-        buildsystems_msbuild_targets = buildsystems / fs::u8path("msbuild") / fs::u8path("vcpkg.targets");
+        const auto msbuildDirectory = buildsystems / fs::u8path("msbuild");
+        buildsystems_msbuild_targets = msbuildDirectory / fs::u8path("vcpkg.targets");
+        buildsystems_msbuild_props = msbuildDirectory / fs::u8path("vcpkg.props");
 
         vcpkg_dir = installed / fs::u8path("vcpkg");
         vcpkg_dir_status_file = vcpkg_dir / fs::u8path("status");
