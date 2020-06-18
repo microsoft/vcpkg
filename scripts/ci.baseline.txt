@@ -44,7 +44,6 @@
 7zip:x64-linux=fail
 7zip:x64-osx=fail
 7zip:x64-uwp=fail
-activemq-cpp:x64-windows-static=fail
 activemq-cpp:x64-linux=fail
 activemq-cpp:x64-osx=fail
 akali:x64-uwp=fail
