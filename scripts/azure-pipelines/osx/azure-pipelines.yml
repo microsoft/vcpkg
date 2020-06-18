@@ -10,6 +10,9 @@ jobs:
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
+  variables:
+  - name: system.debug
+    value: true
   steps:
   - bash: |
       df -h
