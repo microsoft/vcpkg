@@ -4,7 +4,7 @@
 variables:
   windows-pool: 'PrWin-2020-06-04'
   linux-pool: 'PrLin-2020-06-08'
-  delete-tombstones-first: false
+  delete-tombstones-first: ${{ ne(variables['Build.Reason'], 'PullRequest') }}
 
 stages:
   - stage: delete_tombstones
@@ -13,7 +13,7 @@ stages:
     - job: windows
       displayName: 'Clean Windows Tombstones'
       pool: $(windows-pool)
-      condition: eq(variables['delete-tombstones-first'], 'true')
+      condition: ${{ variables['delete-tombstones-first'] }}
       steps:
       - task: PowerShell@2
         displayName: 'Initialize Environment'
@@ -24,13 +24,13 @@ stages:
     - job: linux
       displayName: 'Clean Linux Tombstones'
       pool: $(linux-pool)
-      condition: eq(variables['delete-tombstones-first'], 'true')
+      condition: ${{ variables['delete-tombstones-first'] }}
       steps:
       - bash: rm -rf /archives/fail
         displayName: 'Delete /archives/fail'
     - job: osx
       displayName: 'Clean MacOS Tombstones'
-      condition: eq(variables['delete-tombstones-first'], 'true')
+      condition: ${{ variables['delete-tombstones-first'] }}
       pool:
         name: vcpkgAgentPool
         demands: Agent.OS -equals Darwin
