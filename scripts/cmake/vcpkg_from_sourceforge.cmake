@@ -95,11 +95,6 @@ function(vcpkg_from_sourceforge)
         set(REPO_NAME ${_vdus_REPO})
         set(ORG_NAME )
     endif()
-
-    if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED _vdus_HEAD_REF)
-        message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
-        set(VCPKG_USE_HEAD_VERSION OFF)
-    endif()
     
     if (DEFINED _vdus_REF)
         set(URL "${SOURCEFORGE_HOST}/${ORG_NAME}${REPO_NAME}/${_vdus_REF}/${_vdus_FILENAME}")
@@ -109,55 +104,24 @@ function(vcpkg_from_sourceforge)
         
     set(NO_REMOVE_ONE_LEVEL )
     if (_vdus_NO_REMOVE_ONE_LEVEL)
-        set(NO_REMOVE_ONE_LEVEL NO_REMOVE_ONE_LEVEL)
+        set(NO_REMOVE_ONE_LEVEL "NO_REMOVE_ONE_LEVEL")
     endif()
 
-    # Handle --no-head scenarios
-    if(NOT VCPKG_USE_HEAD_VERSION)
-        if (DEFINED _vdus_HEAD_REF)
-            string(REPLACE "/" "-" SANITIZED_REF "${_vdus_REF}")
-        else()
-            string(SUBSTRING "${_vdus_SHA512}" 0 10 SANITIZED_REF)
-        endif()
+    string(SUBSTRING "${_vdus_SHA512}" 0 10 SANITIZED_REF)
 
-        vcpkg_download_distfile(ARCHIVE
-            URLS "${URL}"
-            SHA512 "${_vdus_SHA512}"
-            FILENAME "${_vdus_FILENAME}"
-        )
-
-        vcpkg_extract_source_archive_ex(
-            OUT_SOURCE_PATH SOURCE_PATH
-            ARCHIVE "${ARCHIVE}"
-            REF "${SANITIZED_REF}"
-            ${NO_REMOVE_ONE_LEVEL}
-            PATCHES ${_vdus_PATCHES}
-        )
-
-        set(${_vdus_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
-        
-        return()
-    endif()
-
-    # The following is for --head scenarios
-    string(REPLACE "/" "-" SANITIZED_HEAD_REF "${_vdus_HEAD_REF}")
-    set(downloaded_file_name "${_vdus_FILENAME}")
-    set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
-
-    # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
-    # When multiple vcpkg_from_sourceforge's are used after each other, only use the version from the first (hopefully the primary one).
-    if(NOT DEFINED VCPKG_HEAD_VERSION)
-        set(VCPKG_HEAD_VERSION ${REF} PARENT_SCOPE)
-    endif()
+    vcpkg_download_distfile(ARCHIVE
+        URLS "${URL}"
+        SHA512 "${_vdus_SHA512}"
+        FILENAME "${_vdus_FILENAME}"
+    )
 
     vcpkg_extract_source_archive_ex(
-        SKIP_PATCH_CHECK
         OUT_SOURCE_PATH SOURCE_PATH
-        ARCHIVE "${downloaded_file_path}"
-        REF "${SANITIZED_HEAD_REF}"
+        ARCHIVE "${ARCHIVE}"
+        REF "${SANITIZED_REF}"
         ${NO_REMOVE_ONE_LEVEL}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/head
         PATCHES ${_vdus_PATCHES}
     )
+
     set(${_vdus_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
