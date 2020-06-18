@@ -4,7 +4,7 @@
 variables:
   windows-pool: 'PrWin-2020-06-04'
   linux-pool: 'PrLin-2020-06-08'
-  delete-tombstones-first: false
+  delete-tombstones-first: true
 
 stages:
   - stage: delete_tombstones
