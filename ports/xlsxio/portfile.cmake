@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brechtsanders/xlsxio
@@ -6,21 +8,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(BUILD_STATIC OFF)
-  set(BUILD_SHARED ON)
-else()
-  set(BUILD_STATIC ON)
-  set(BUILD_SHARED OFF)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TOOLS=OFF
-        -DBUILD_STATIC=${BUILD_STATIC}
-        -DBUILD_SHARED=${BUILD_SHARED}
+        -DBUILD_STATIC=ON
+        -DBUILD_SHARED=OFF
 )
 
 vcpkg_install_cmake()
