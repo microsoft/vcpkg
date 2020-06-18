@@ -47,7 +47,6 @@ namespace vcpkg::Commands::SetInstalled
             Build::CleanPackages::YES,
             Build::CleanDownloads::YES,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -105,8 +104,12 @@ namespace vcpkg::Commands::SetInstalled
 
         Dependencies::print_plan(real_action_plan, true);
 
-        const auto summary =
-            Install::perform(real_action_plan, Install::KeepGoing::NO, paths, status_db, *binaryprovider, *cmake_vars);
+        const auto summary = Install::perform(real_action_plan,
+                                              Install::KeepGoing::NO,
+                                              paths,
+                                              status_db,
+                                              args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
+                                              *cmake_vars);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 

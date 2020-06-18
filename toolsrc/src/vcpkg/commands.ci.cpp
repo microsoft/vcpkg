@@ -271,7 +271,6 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
         };
 
@@ -387,7 +386,7 @@ namespace vcpkg::Commands::CI
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
-        if (!GlobalState::g_binary_caching)
+        if (!args.binary_caching_enabled())
         {
             System::print2(System::Color::warning, "Warning: Running ci without binary caching!\n");
         }
@@ -430,7 +429,6 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
             Build::PurgeDecompressFailure::YES,
         };
@@ -460,13 +458,14 @@ namespace vcpkg::Commands::CI
                 return FullPackageSpec{spec, std::move(default_features)};
             });
 
-            auto split_specs = find_unknown_ports_for_ci(paths,
-                                                         exclusions_set,
-                                                         provider,
-                                                         var_provider,
-                                                         all_default_full_specs,
-                                                         purge_tombstones,
-                                                         *binaryprovider);
+            auto split_specs =
+                find_unknown_ports_for_ci(paths,
+                                          exclusions_set,
+                                          provider,
+                                          var_provider,
+                                          all_default_full_specs,
+                                          purge_tombstones,
+                                          args.binary_caching_enabled() ? *binaryprovider : null_binary_provider());
             PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
 
             Dependencies::CreateInstallPlanOptions serialize_options;
@@ -556,7 +555,8 @@ namespace vcpkg::Commands::CI
         auto it_xunit = options.settings.find(OPTION_XUNIT);
         if (it_xunit != options.settings.end())
         {
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
+            paths.get_filesystem().write_contents(
+                fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

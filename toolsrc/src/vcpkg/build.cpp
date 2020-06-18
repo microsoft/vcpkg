@@ -14,6 +14,7 @@
 
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
+#include <vcpkg/buildenvironment.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
@@ -31,16 +32,16 @@ using vcpkg::Parse::ParseControlErrorInfo;
 using vcpkg::Parse::ParseExpected;
 using vcpkg::PortFileProvider::PathsPortFileProvider;
 
-namespace vcpkg::Build::Command
+namespace vcpkg::Build
 {
     using Dependencies::InstallPlanAction;
     using Dependencies::InstallPlanType;
 
-    void perform_and_exit_ex(const FullPackageSpec& full_spec,
-                             const SourceControlFileLocation& scfl,
-                             const PathsPortFileProvider& provider,
-                             IBinaryProvider& binaryprovider,
-                             const VcpkgPaths& paths)
+    void Command::perform_and_exit_ex(const FullPackageSpec& full_spec,
+                                      const SourceControlFileLocation& scfl,
+                                      const PathsPortFileProvider& provider,
+                                      IBinaryProvider& binaryprovider,
+                                      const VcpkgPaths& paths)
     {
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
@@ -69,7 +70,6 @@ namespace vcpkg::Build::Command
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -131,7 +131,7 @@ namespace vcpkg::Build::Command
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    void Command::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         // Build only takes a single package and all dependencies must already be installed
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
@@ -152,7 +152,8 @@ namespace vcpkg::Build::Command
         Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
         _Analysis_assume_(scfl != nullptr);
 
-        perform_and_exit_ex(spec, *scfl, provider, *binaryprovider, paths);
+        perform_and_exit_ex(
+            spec, *scfl, provider, args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(), paths);
     }
 }
 
@@ -319,7 +320,7 @@ namespace vcpkg::Build
         });
 
         return triplet_entry.compiler_hashes.get_lazy(toolchain_hash, [&]() -> std::string {
-            if (GlobalState::g_compiler_tracking)
+            if (m_compiler_tracking)
             {
                 auto compiler_hash = load_compiler_hash(paths, abi_info);
                 return Strings::concat(triplet_entry.hash, '-', toolchain_hash, '-', compiler_hash);
@@ -406,10 +407,6 @@ namespace vcpkg::Build
         Util::Vectors::append(&out_vars,
                               std::initializer_list<System::CMakeVariable>{
                                   {"CMD", "BUILD"},
-                                  {"VCPKG_ROOT_DIR", paths.root},
-                                  {"PACKAGES_DIR", paths.packages},
-                                  {"BUILDTREES_DIR", paths.buildtrees},
-                                  {"_VCPKG_INSTALLED_DIR", paths.installed},
                                   {"TARGET_TRIPLET", triplet.canonical_name()},
                                   {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
                                   {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
@@ -436,7 +433,7 @@ namespace vcpkg::Build
         };
         get_generic_cmake_build_args(paths, triplet, *abi_info.toolset, cmake_args);
 
-        auto command = System::make_cmake_cmd(paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, cmake_args);
+        auto command = vcpkg::make_cmake_cmd(paths, paths.ports_cmake, std::move(cmake_args));
 
         const auto& env = paths.get_action_env(abi_info);
         auto& fs = paths.get_filesystem();
@@ -473,7 +470,7 @@ namespace vcpkg::Build
         Checks::check_exit(
             VCPKG_LINE_INFO, !compiler_hash.empty(), "Error occured while detecting compiler information");
 
-        System::print2("Detecting compiler hash for triplet ", triplet, ": ", compiler_hash, "\n");
+        Debug::print("Detecting compiler hash for triplet ", triplet, ": ", compiler_hash, "\n");
         return compiler_hash;
     }
 
@@ -606,8 +603,7 @@ namespace vcpkg::Build
 
         const auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto command = System::make_cmake_cmd(
-            paths.get_tool_exe(Tools::CMAKE), paths.ports_cmake, get_cmake_build_args(paths, action, triplet));
+        auto command = vcpkg::make_cmake_cmd(paths, paths.ports_cmake, get_cmake_build_args(paths, action, triplet));
 
         const auto& env = paths.get_action_env(action.abi_info.value_or_exit(VCPKG_LINE_INFO));
 
@@ -883,7 +879,7 @@ namespace vcpkg::Build
                 }
             }
 
-            action.abi_info = Build::AbiInfo{};
+            action.abi_info = Build::AbiInfo();
             auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
 
             abi_info.pre_build_info = std::make_unique<PreBuildInfo>(
@@ -904,8 +900,6 @@ namespace vcpkg::Build
                                       IBinaryProvider& binaries_provider,
                                       const StatusParagraphs& status_db)
     {
-        auto binary_caching_enabled = action.build_options.binary_caching == BinaryCaching::YES;
-
         auto& fs = paths.get_filesystem();
         auto& spec = action.spec;
         const std::string& name = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
@@ -952,21 +946,18 @@ namespace vcpkg::Build
         std::error_code ec;
         const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
         const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
-        if (binary_caching_enabled)
+        auto restore = binaries_provider.try_restore(paths, action);
+        if (restore == RestoreResult::build_failed)
+            return BuildResult::BUILD_FAILED;
+        else if (restore == RestoreResult::success)
         {
-            auto restore = binaries_provider.try_restore(paths, action);
-            if (restore == RestoreResult::build_failed)
-                return BuildResult::BUILD_FAILED;
-            else if (restore == RestoreResult::success)
-            {
-                auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
-                auto bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
-                return {BuildResult::SUCCEEDED, std::move(bcf)};
-            }
-            else
-            {
-                // missing package, proceed to build.
-            }
+            auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
+            auto bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
+            return {BuildResult::SUCCEEDED, std::move(bcf)};
+        }
+        else
+        {
+            // missing package, proceed to build.
         }
 
         ExtendedBuildResult result = do_build_package_and_clean_buildtrees(paths, action);
@@ -975,12 +966,11 @@ namespace vcpkg::Build
         fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
 
-        if (binary_caching_enabled && result.code == BuildResult::SUCCEEDED)
+        if (result.code == BuildResult::SUCCEEDED)
         {
             binaries_provider.push_success(paths, action);
         }
-        else if (binary_caching_enabled &&
-                 (result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED))
+        else if ((result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED))
         {
             binaries_provider.push_failure(paths, abi_info.package_abi, spec);
         }

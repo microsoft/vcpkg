@@ -68,7 +68,10 @@ namespace vcpkg
     {
         struct VcpkgPathsImpl
         {
-            VcpkgPathsImpl(Files::Filesystem& fs) : fs_ptr(&fs), m_tool_cache(get_tool_cache()) {}
+            VcpkgPathsImpl(Files::Filesystem& fs, bool compiler_tracking)
+                : fs_ptr(&fs), m_tool_cache(get_tool_cache()), m_env_cache(compiler_tracking)
+            {
+            }
 
             Lazy<std::vector<VcpkgPaths::TripletFile>> available_triplets;
             Lazy<std::vector<Toolset>> toolsets;
@@ -87,7 +90,7 @@ namespace vcpkg
     VcpkgPaths::~VcpkgPaths() noexcept {}
 
     VcpkgPaths::VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args)
-        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem))
+        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.compiler_tracking_enabled()))
     {
         original_cwd = filesystem.current_path(VCPKG_LINE_INFO);
         if (args.vcpkg_root_dir)
@@ -141,7 +144,9 @@ namespace vcpkg
 
         tools = downloads / fs::u8path("tools");
         buildsystems = scripts / fs::u8path("buildsystems");
-        buildsystems_msbuild_targets = buildsystems / fs::u8path("msbuild") / fs::u8path("vcpkg.targets");
+        const auto msbuildDirectory = buildsystems / fs::u8path("msbuild");
+        buildsystems_msbuild_targets = msbuildDirectory / fs::u8path("vcpkg.targets");
+        buildsystems_msbuild_props = msbuildDirectory / fs::u8path("vcpkg.props");
 
         vcpkg_dir = installed / fs::u8path("vcpkg");
         vcpkg_dir_status_file = vcpkg_dir / fs::u8path("status");

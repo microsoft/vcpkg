@@ -246,6 +246,27 @@ namespace
 
         std::vector<fs::path> m_read_dirs, m_write_dirs;
     };
+
+    struct NullBinaryProvider : IBinaryProvider
+    {
+        void prefetch() override {}
+        RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
+        {
+            return RestoreResult::missing;
+        }
+        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override {}
+        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
+        RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&, bool) override
+        {
+            return RestoreResult::missing;
+        }
+    };
+}
+
+IBinaryProvider& vcpkg::null_binary_provider()
+{
+    static NullBinaryProvider p;
+    return p;
 }
 
 ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(const VcpkgPaths& paths,

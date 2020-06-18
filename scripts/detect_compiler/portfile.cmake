@@ -11,6 +11,8 @@ foreach(LOG IN LISTS LOGS)
     endif()
 endforeach()
 
+set(VCPKG_BUILD_TYPE release)
+
 vcpkg_configure_cmake(
     SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}"
     PREFER_NINJA

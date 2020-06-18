@@ -10,6 +10,7 @@
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/system.process.h>
 
 #include <array>
 #include <map>
@@ -94,12 +95,6 @@ namespace vcpkg::Build
     };
     const std::string& to_string(DownloadTool tool);
 
-    enum class BinaryCaching
-    {
-        NO = 0,
-        YES
-    };
-
     enum class FailOnTombstone
     {
         NO = 0,
@@ -121,7 +116,6 @@ namespace vcpkg::Build
         CleanPackages clean_packages;
         CleanDownloads clean_downloads;
         DownloadTool download_tool;
-        BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;
         PurgeDecompressFailure purge_decompress_failure;
     };
@@ -296,6 +290,8 @@ namespace vcpkg::Build
 
     struct EnvCache
     {
+        explicit EnvCache(bool compiler_tracking) : m_compiler_tracking(compiler_tracking) {}
+
         const System::Environment& get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info);
         const std::string& get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info);
 
@@ -317,5 +313,7 @@ namespace vcpkg::Build
 
         Cache<std::vector<std::string>, EnvMapEntry> envs;
 #endif
+
+        bool m_compiler_tracking;
     };
 }

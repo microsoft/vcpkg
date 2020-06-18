@@ -1,9 +1,7 @@
-include(vcpkg_common_functions)
-
 message(WARNING "This tensorflow port currently is experimental on Windows and Linux platforms.")
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-    message(FATAL_ERROR "TensorFlow does not support 32bit system.")
+    message(FATAL_ERROR "TensorFlow does not support 32bit systems.")
 endif()
 
 vcpkg_from_github(
@@ -76,6 +74,7 @@ set(ENV{TF_NCCL_VERSION} 2.3)
 set(ENV{NCCL_INSTALL_PATH} "")
 set(ENV{CC_OPT_FLAGS} "/arch:AVX")
 set(ENV{TF_NEED_CUDA} 0)
+set(ENV{TF_CONFIGURE_IOS} 0)
 
 message(STATUS "Configuring TensorFlow")
 
