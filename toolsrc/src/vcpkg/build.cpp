@@ -14,6 +14,7 @@
 
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
+#include <vcpkg/buildenvironment.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
@@ -39,6 +40,7 @@ namespace vcpkg::Build::Command
     void perform_and_exit_ex(const FullPackageSpec& full_spec,
                              const SourceControlFileLocation& scfl,
                              const PathsPortFileProvider& provider,
+                             const bool binary_caching_enabled,
                              IBinaryProvider& binaryprovider,
                              const VcpkgPaths& paths)
     {
@@ -69,7 +71,7 @@ namespace vcpkg::Build::Command
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            binary_caching_enabled ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -152,7 +154,7 @@ namespace vcpkg::Build::Command
         Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
         _Analysis_assume_(scfl != nullptr);
 
-        perform_and_exit_ex(spec, *scfl, provider, *binaryprovider, paths);
+        perform_and_exit_ex(spec, *scfl, provider, args.binary_caching_enabled(), *binaryprovider, paths);
     }
 }
 
@@ -375,15 +377,10 @@ namespace vcpkg::Build
             {"CMD", "BUILD"},
             {"PORT", scf.core_paragraph->name},
             {"CURRENT_PORT_DIR", scfl.source_location},
-            {"VCPKG_ROOT_DIR", paths.root},
-            {"PACKAGES_DIR", paths.packages},
-            {"BUILDTREES_DIR", paths.buildtrees},
-            {"_VCPKG_INSTALLED_DIR", paths.installed},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(action.build_options.use_head_version) ? "1" : "0"},
-            {"DOWNLOADS", paths.downloads},
             {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(action.build_options.allow_downloads) ? "1" : "0"},
             {"_VCPKG_DOWNLOAD_TOOL", to_string(action.build_options.download_tool)},
             {"FEATURES", Strings::join(";", action.feature_list)},
@@ -459,8 +456,8 @@ namespace vcpkg::Build
             else if (pre_build_info.cmake_system_name == "Darwin")
             {
                 hash += "-";
-                hash += Hash::get_file_hash(
-                    VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/osx.cmake"), algo);
+                hash +=
+                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / fs::u8path("toolchains/osx.cmake"), algo);
             }
             else if (pre_build_info.cmake_system_name == "FreeBSD")
             {
@@ -519,10 +516,8 @@ namespace vcpkg::Build
 
         const auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto command =
-            System::make_cmake_cmd(paths.get_tool_exe(Tools::CMAKE),
-                                   paths.ports_cmake,
-                                   get_cmake_vars(paths, action, triplet, paths.get_toolset(pre_build_info)));
+        auto command = vcpkg::make_cmake_cmd(
+            paths, paths.ports_cmake, get_cmake_vars(paths, action, triplet, paths.get_toolset(pre_build_info)));
 #if defined(_WIN32)
         std::string build_env_cmd = make_build_env_cmd(pre_build_info, paths.get_toolset(pre_build_info));
 
