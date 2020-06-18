@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brechtsanders/xlsxio
-    REF 7224eecf08b4b0584ec7601d3cc34c56dc83eb96
-    SHA512 41350f26abee738e1748f0d02e947fe5b0907104b39d5c42ec5b76c14f042c3139a5f74b59d3a7cde374f5bab2c9644d33a94d65c1e6c6b18b7b0e3ef89b8e99
+    REF 489279e51404eac10458d48fb4c68dfc7e4950fe
+    SHA512 afc75b272ade916d1b6f0aa4fd5b6dad263a11fe0aac0ca939fed1f0c5c12d0d0d831f25e19449e33c6a6151410cbb7dd9f327896011dcfd6165375de4fd50ea
     HEAD_REF master
-    PATCHES
-        fix-build-error.patch
-        fix-compile-definitions.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
