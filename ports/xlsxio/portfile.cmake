@@ -9,7 +9,7 @@ vcpkg_from_github(
         fix-compile-definitions.patch
 )
 
-if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(BUILD_STATIC OFF)
   set(BUILD_SHARED ON)
 else()
