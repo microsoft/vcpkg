@@ -14,6 +14,10 @@ for more information.
 This script assumes you have installed Azure tools into PowerShell by following the instructions
 at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
 or are running from Azure Cloud Shell.
+
+This script assumes you have installed an SSH key as per
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-powershell
+and your public key is stored at ~/.ssh/id_rsa.pub
 #>
 
 $Location = 'westus2'
@@ -26,6 +30,12 @@ $ErrorActionPreference = 'Stop'
 $ProgressActivity = 'Creating Scale Set'
 $TotalProgress = 10
 $CurrentProgress = 1
+
+if (-Not (Test-Path ~/.ssh/id_rsa.pub)) {
+  Write-Error 'You need to generate an SSH key first. Try running ssh-keygen.'
+}
+
+$sshPublicKey = Get-Content ~/.ssh/id_rsa.pub -ErrorAction Stop
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
 
@@ -174,7 +184,8 @@ $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Linux `
   -ComputerName $ProtoVMName `
-  -Credential $Credential
+  -Credential $Credential `
+  -DisablePasswordAuthentication
 
 $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
 $VM = Set-AzVMSourceImage `
@@ -185,6 +196,12 @@ $VM = Set-AzVMSourceImage `
   -Version latest
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
+
+$VM = Add-AzVMSshPublicKey `
+  -VM $VM `
+  -KeyData $sshPublicKey `
+  -Path "/home/AdminUser/.ssh/authorized_keys"
+
 New-AzVm `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
@@ -269,11 +286,16 @@ $Vmss = Add-AzVmssNetworkInterfaceConfiguration `
   -NetworkSecurityGroupId $NetworkSecurityGroup.Id `
   -Name $NicName
 
+$VmssPublicKey = New-Object -TypeName 'Microsoft.Azure.Management.Compute.Models.SshPublicKey' `
+  -ArgumentList @('/home/AdminUser/.ssh/authorized_keys', $sshPublicKey)
+
 $Vmss = Set-AzVmssOsProfile `
   -VirtualMachineScaleSet $Vmss `
   -ComputerNamePrefix $LiveVMPrefix `
   -AdminUsername AdminUser `
-  -AdminPassword $AdminPW
+  -AdminPassword $AdminPW `
+  -LinuxConfigurationDisablePasswordAuthentication $true `
+  -PublicKey @($VmssPublicKey)
 
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `
