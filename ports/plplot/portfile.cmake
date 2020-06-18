@@ -45,6 +45,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/plplot)
 
 # Remove unnecessary tool
@@ -67,5 +69,4 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-vcpkg_copy_pdbs()
-file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/plplot RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
