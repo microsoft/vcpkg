@@ -434,24 +434,11 @@ if(STX_BUILD_DOCS)
 
 endif()
 
-set(PUBLIC_HEADERS
-  stx/backtrace.h
-  stx/common.h
-  stx/config.h
-  stx/option.h
-  stx/panic.h
-  stx/report.h
-  stx/result.h
-  stx/source_location.h
-  stx/internal/option_result.h
-  stx/internal/panic_helpers.h
-  stx/internal/try.h
-  stx/panic/hook.h
-  stx/panic/handlers/print.h
-  stx/panic/handlers/abort/abort.h
-  stx/panic/handlers/default/default.h
-  stx/panic/handlers/halt/halt.h
-)
+# ===============================================
+#
+# === Install 
+#
+# ===============================================
 
 install(
     TARGETS stx
@@ -461,14 +448,10 @@ install(
     RUNTIME DESTINATION bin
 )
 
-# Headers makes relative includes so directory structure must be kept
-foreach(HEADER ${PUBLIC_HEADERS})
-    get_filename_component(HEADER_DIR ${HEADER} DIRECTORY)
-    install(
-        FILES include/${HEADER}
-        DESTINATION include/${HEADER_DIR}
-    )
-endforeach()
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.h*")
 
 install(
     EXPORT stx
@@ -476,3 +459,4 @@ install(
     FILE stxConfig.cmake
     NAMESPACE stx::
 )
+

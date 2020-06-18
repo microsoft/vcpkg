@@ -15,6 +15,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" STX_BUILD_SHARED)
+
+if(${STX_BUILD_SHARED})
+    message("STX does not currenly support building a dynamic library")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -22,9 +28,8 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DSTX_BUILD_DOCS=OFF
         -DSTX_BUILD_BENCHMARKS=OFF
+        -DSTX_BUILD_SHARED=OFF
 )
-
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" STX_BUILD_SHARED)
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/stx)
