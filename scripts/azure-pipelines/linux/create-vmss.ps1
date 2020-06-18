@@ -15,9 +15,7 @@ This script assumes you have installed Azure tools into PowerShell by following 
 at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
 or are running from Azure Cloud Shell.
 
-This script assumes you have installed an SSH key as per
-https://docs.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-powershell
-and your public key is stored at ~/.ssh/id_rsa.pub
+This script assumes you have installed the OpenSSH Client optional Windows component.
 #>
 
 $Location = 'westus2'
@@ -28,16 +26,30 @@ $LiveVMPrefix = 'BUILD'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
-$TotalProgress = 10
+$TotalProgress = 11
 $CurrentProgress = 1
 
 if (-Not (Test-Path ~/.ssh/id_rsa.pub)) {
   Write-Error 'You need to generate an SSH key first. Try running ssh-keygen.'
 }
 
-$sshPublicKey = Get-Content ~/.ssh/id_rsa.pub -ErrorAction Stop
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Creating SSH key' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+$sshDir = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName()
+mkdir $sshDir
+try {
+  ssh-keygen.exe -q -b 2048 -t rsa -f "$sshDir/key" -P `"`"
+  $sshPublicKey = Get-Content "$sshDir/key.pub"
+} finally {
+  Remove-Item $sshDir -Recurse -Force
+}
 
 ####################################################################################################
 Write-Progress `
