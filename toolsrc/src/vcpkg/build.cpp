@@ -90,8 +90,7 @@ namespace vcpkg::Build
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, action != nullptr);
-        _Analysis_assume_(action != nullptr);
-
+        ASSUME(action != nullptr);
         action->build_options = build_package_options;
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
@@ -150,7 +149,7 @@ namespace vcpkg::Build
         const auto* scfl = provider.get_control_file(port_name).get();
 
         Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
-        _Analysis_assume_(scfl != nullptr);
+        ASSUME(scfl != nullptr);
 
         perform_and_exit_ex(
             spec, *scfl, provider, args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(), paths);
