@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcoreaddons
@@ -10,11 +8,12 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DBUILD_HTML_DOCS=OFF
-            -DBUILD_MAN_DOCS=OFF
-            -DBUILD_QTHELP_DOCS=OFF
-            -DBUILD_TESTING=OFF
-            -DKDE_INSTALL_DATAROOTDIR=data
+    OPTIONS 
+        -DBUILD_HTML_DOCS=OFF
+        -DBUILD_MAN_DOCS=OFF
+        -DBUILD_QTHELP_DOCS=OFF
+        -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_DATAROOTDIR=data
 )
 
 vcpkg_install_cmake()
@@ -27,10 +26,10 @@ else()
     set(EXECUTABLE_SUFFIX "")
 endif()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/desktoptojson${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons/desktoptojson${EXECUTABLE_SUFFIX})
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons)
-file(APPEND ${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/desktoptojson${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/desktoptojson${EXECUTABLE_SUFFIX})
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(APPEND ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
@@ -46,4 +45,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
 endif()
 
 
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/kf5coreaddons RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
