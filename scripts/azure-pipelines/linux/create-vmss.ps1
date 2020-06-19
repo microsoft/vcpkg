@@ -40,7 +40,7 @@ Write-Progress `
 $sshDir = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName()
 mkdir $sshDir
 try {
-  ssh-keygen.exe -q -b 2048 -t rsa -f "$sshDir/key" -P `"`"
+  ssh-keygen.exe -q -b 2048 -t rsa -f "$sshDir/key" -P '""'
   $sshPublicKey = Get-Content "$sshDir/key.pub"
 } finally {
   Remove-Item $sshDir -Recurse -Force
