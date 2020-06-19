@@ -128,8 +128,6 @@ namespace vcpkg
 
         ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
 
-        triplets_dirs.emplace_back(triplets);
-        triplets_dirs.emplace_back(community_triplets);
         if (args.overlay_triplets)
         {
             for (auto&& overlay_triplets_dir : *args.overlay_triplets)
@@ -137,6 +135,8 @@ namespace vcpkg
                 triplets_dirs.emplace_back(filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(overlay_triplets_dir)));
             }
         }
+        triplets_dirs.emplace_back(triplets);
+        triplets_dirs.emplace_back(community_triplets);
     }
 
     fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / spec.dir(); }
