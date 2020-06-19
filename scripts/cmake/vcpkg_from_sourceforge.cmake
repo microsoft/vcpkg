@@ -47,8 +47,6 @@
 ##
 ## Relative paths are based on the port directory.
 ##
-## This field should contain the scheme, host, and port of the desired URL without a trailing slash.
-##
 ## ### DISABLE_SSL
 ## Disable ssl when downloading source.
 ##
