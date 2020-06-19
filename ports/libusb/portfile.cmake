@@ -45,72 +45,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
       LICENSE_SUBPATH COPYING
   )
 else()
-    set(BASH /bin/bash)
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        # Copy sources
-        message(STATUS "Copying source files...")
-        file(GLOB PORT_SOURCE_FILES ${SOURCE_PATH}/*)
-        foreach(SOURCE_FILE ${PORT_SOURCE_FILES})
-          file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        endforeach()
-        message(STATUS "Copying source files... done")
-        # Configure release
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./autogen.sh\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./configure --prefix=${CURRENT_PACKAGES_DIR}\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        # Copy sources
-        message(STATUS "Copying source files...")
-        file(GLOB PORT_SOURCE_FILES ${SOURCE_PATH}/*)
-        foreach(SOURCE_FILE ${PORT_SOURCE_FILES})
-          file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        endforeach()
-        message(STATUS "Copying source files... done")
-        # Configure debug
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./autogen.sh\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./configure --prefix=${CURRENT_PACKAGES_DIR}/debug\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-      # Build release
-      message(STATUS "Package ${TARGET_TRIPLET}-rel")
-      execute_process(
-          COMMAND "${BASH} --noprofile --norc -c \"make install\""
-          WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-      message(STATUS "Package ${TARGET_TRIPLET}-rel done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      # Build debug
-      message(STATUS "Package ${TARGET_TRIPLET}-dbg")
-      execute_process(
-          COMMAND "${BASH} --noprofile --norc -c \"make install\""
-          WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-      message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
-    endif()
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+    )
+    vcpkg_install_make()
 endif()
-
-file(INSTALL
-    ${SOURCE_PATH}/libusb/libusb.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/libusb-1.0
-)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
