@@ -376,6 +376,7 @@ namespace vcpkg::Build
         std::vector<System::CMakeVariable> variables{
             {"CMD", "BUILD"},
             {"PORT", scf.core_paragraph->name},
+            {"PORT_VERSION", scf.core_paragraph->version},
             {"CURRENT_PORT_DIR", scfl.source_location},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
