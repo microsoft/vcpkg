@@ -44,6 +44,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
       PROJECT_SUBPATH msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
       LICENSE_SUBPATH COPYING
   )
+  file(INSTALL ${SOURCE_PATH}/libusb/libusb.h  DESTINATION ${CURRENT_PACKAGES_DIR}/include/libusb-1.0)
 else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
