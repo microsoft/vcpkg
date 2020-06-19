@@ -22,21 +22,14 @@ vcpkg_install_cmake()
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/xdiff.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/xdiff.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/xdiff.dll")
-        file(COPY ${CURRENT_PACKAGES_DIR}/debug/bin/xdiff.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
     endif()
 endif()
 
 
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/xdiff.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)    
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/xdiff.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/xdiff.dll")
     endif()
 endif()
