@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,19 +5,18 @@ vcpkg_from_github(
     REF v1.0.1
     SHA512 544ca32f07cd863082fa9688f5d56e2715b0129ff90d2a8533cc24a92c943e5848c4b2b06a71f54c12668f6e89e9e3c649f595f9eb886f671a5fa18d343f794b
     HEAD_REF master
+    PATCHES
+      "CMakeLists.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
      backtrace    STX_ENABLE_BACKTRACE
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" STX_BUILD_SHARED)
 
 if(${STX_BUILD_SHARED})
-    message("STX does not currenly support building a dynamic library")
+    message("STX does not currently support building a dynamic library")
 endif()
 
 vcpkg_configure_cmake(
@@ -40,5 +38,3 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
 )
-
-vcpkg_test_cmake(PACKAGE_NAME stx)
