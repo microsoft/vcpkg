@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aab915d..4daeb87 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
+ project(drogon)
+ message(STATUS "compiler: " ${CMAKE_CXX_COMPILER_ID})
+ option(BUILD_CTL "Build drogon_ctl" ON)
+-option(BUILD_EXAMPLES "Build examples" ON)
++option(BUILD_EXAMPLES "Build examples" OFF)
+ option(BUILD_ORM "Build orm" ON)
+ option(COZ_PROFILING "Use coz for profiling" OFF)
+ option(LIBPQ_BATCH_MODE "Use batch mode for libpq" ON)
+@@ -64,9 +64,9 @@ if(WIN32)
+     PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/mman-win32>)
+ endif(WIN32)
+ 
+-add_subdirectory(trantor)
++find_package(Trantor CONFIG REQUIRED)
+ 
+-target_link_libraries(${PROJECT_NAME} PUBLIC trantor)
++target_link_libraries(${PROJECT_NAME} PUBLIC Trantor::Trantor)
+ 
+ if(NOT WIN32)
+   target_link_libraries(${PROJECT_NAME} PRIVATE dl)
