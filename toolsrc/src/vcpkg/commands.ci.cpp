@@ -257,6 +257,7 @@ namespace vcpkg::Commands::CI
         const CMakeVars::CMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
         const bool purge_tombstones,
+        const bool binary_caching_enabled,
         IBinaryProvider& binaryprovider)
     {
         auto ret = std::make_unique<UnknownCIPortsResults>();
@@ -271,7 +272,7 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            binary_caching_enabled ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
         };
 
@@ -387,7 +388,7 @@ namespace vcpkg::Commands::CI
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
-        if (!GlobalState::g_binary_caching)
+        if (!args.binary_caching_enabled())
         {
             System::print2(System::Color::warning, "Warning: Running ci without binary caching!\n");
         }
@@ -430,7 +431,7 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            args.binary_caching_enabled() ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
             Build::PurgeDecompressFailure::YES,
         };
@@ -466,6 +467,7 @@ namespace vcpkg::Commands::CI
                                                          var_provider,
                                                          all_default_full_specs,
                                                          purge_tombstones,
+                                                         args.binary_caching_enabled(),
                                                          *binaryprovider);
             PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
 
