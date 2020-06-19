@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports being built for desktop" ON_TARGET "UWP")
+
 set(LIBXDIFF_REF 77e30f3190685efd87cce2c9c5d688cbaa1b0134)
 set(LIBXDIFF_SHA512 c559b575e6d6f06f3b3064f3e077a15d8f57422340199215a4cbd7beab527bc250347c8779a8d6f8c4e41799a032431e83c7336f86569527ab754444455b8c87)
 
