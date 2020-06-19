@@ -1,5 +1,5 @@
 Source: opencv3
-Version: 3.4.7-2
+Version: 3.4.7-3
 Build-Depends: protobuf, zlib
 Homepage: https://github.com/opencv/opencv
 Description: computer vision library
@@ -63,7 +63,7 @@ Build-Depends: libpng
 Description: PNG support for opencv
 
 Feature: qt
-Build-Depends: qt5
+Build-Depends: qt5-base
 Description: Qt GUI support for opencv
 
 Feature: sfm

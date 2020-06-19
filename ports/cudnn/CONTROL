@@ -2,3 +2,4 @@ Source: cudnn
 Version: 7.6
 Description: NVIDIA's cuDNN deep neural network acceleration library
 Build-Depends: cuda
+Supports: (windows|linux)&x64

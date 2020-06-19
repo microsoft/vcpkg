@@ -7,20 +7,13 @@
 #include <vcpkg/install.h>
 #include <vcpkg/remove.h>
 
-// Write environment variable names as %VARIABLE% on Windows and $VARIABLE in *nix
-#ifdef _WIN32
-#define ENVVAR(VARNAME) "%%" #VARNAME "%%"
-#else
-#define ENVVAR(VARNAME) "$" #VARNAME
-#endif
-
 namespace vcpkg::Help
 {
     struct Topic
     {
         using topic_function = void (*)(const VcpkgPaths& paths);
 
-        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) {}
+        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) { }
 
         CStringView name;
         topic_function print;
@@ -29,18 +22,18 @@ namespace vcpkg::Help
     template<const CommandStructure& S>
     static void command_topic_fn(const VcpkgPaths&)
     {
-        display_usage(S);
+        print_usage(S);
     }
 
     static void integrate_topic_fn(const VcpkgPaths&)
     {
-        System::print2("Commands:\n", Commands::Integrate::INTEGRATE_COMMAND_HELPSTRING);
+        System::print2("Commands:\n", Commands::Integrate::get_helpstring());
     }
 
     static void help_topics(const VcpkgPaths&);
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("help"),
+        create_example_string("help"),
         0,
         1,
         {},
@@ -74,72 +67,37 @@ namespace vcpkg::Help
 
     void help_topic_valid_triplet(const VcpkgPaths& paths)
     {
-        System::print2("Available architecture triplets:\n");
-        for (auto&& triplet : paths.get_available_triplets())
+        std::map<std::string, std::vector<const VcpkgPaths::TripletFile*>> triplets_per_location;
+        vcpkg::Util::group_by(paths.get_available_triplets(),
+                              &triplets_per_location,
+                              [](const VcpkgPaths::TripletFile& triplet_file) -> std::string {
+                                  return triplet_file.location.u8string();
+                              });
+
+        System::print2("Available architecture triplets\n");
+
+        System::print2("VCPKG built-in triplets:\n");
+        for (auto* triplet : triplets_per_location[paths.triplets.u8string()])
         {
-            System::print2("  ", triplet, '\n');
+            System::print2("  ", triplet->name, '\n');
         }
-    }
+        triplets_per_location.erase(paths.triplets.u8string());
 
-    void print_usage()
-    {
-        System::print2("Commands:\n"
-                       "  vcpkg search [pat]              Search for packages available to be built\n"
-                       "  vcpkg install <pkg>...          Install a package\n"
-                       "  vcpkg remove <pkg>...           Uninstall a package\n"
-                       "  vcpkg remove --outdated         Uninstall all out-of-date packages\n"
-                       "  vcpkg list                      List installed packages\n"
-                       "  vcpkg update                    Display list of packages for updating\n"
-                       "  vcpkg upgrade                   Rebuild all outdated packages\n"
-                       "  vcpkg x-history <pkg>           Shows the history of CONTROL versions of a package\n"
-                       "  vcpkg hash <file> [alg]         Hash a file by specific algorithm, default SHA512\n"
-                       "  vcpkg help topics               Display the list of help topics\n"
-                       "  vcpkg help <topic>              Display help for a specific topic\n"
-                       "\n",
-                       Commands::Integrate::INTEGRATE_COMMAND_HELPSTRING, // Integration help
-                       "\n"
-                       "  vcpkg export <pkg>... [opt]...  Exports a package\n"
-                       "  vcpkg edit <pkg>                Open up a port for editing (uses " ENVVAR(EDITOR) //
-                       ", default 'code')\n"
-                       "  vcpkg import <pkg>              Import a pre-built library\n"
-                       "  vcpkg create <pkg> <url>\n"
-                       "             [archivename]        Create a new package\n"
-                       "  vcpkg owns <pat>                Search for files in installed packages\n"
-                       "  vcpkg depend-info [pkg]...      Display a list of dependencies for packages\n"
-                       "  vcpkg env                       Creates a clean shell environment for development or "
-                       "compiling.\n"
-                       "  vcpkg version                   Display version information\n"
-                       "  vcpkg contact                   Display contact information to send feedback\n"
-                       "\n"
-                       "Options:\n"
-                       "  --triplet <t>                   Specify the target architecture triplet\n"
-                       "                                  (default: " ENVVAR(VCPKG_DEFAULT_TRIPLET) //
-                       ", see 'vcpkg help triplet')\n"
-                       "\n"
-                       "  --overlay-ports=<path>          Specify directories to be used when searching for ports\n"
-                       "\n"
-                       "  --overlay-triplets=<path>       Specify directories containing triplets files\n"
-                       "\n"
-                       "  --vcpkg-root <path>             Specify the vcpkg root "
-                       "directory\n"
-                       "                                  (default: " ENVVAR(VCPKG_ROOT) //
-                       ")\n"
-                       "\n"
-                       "  --x-scripts-root=<path>             (Experimental) Specify the scripts root directory\n"
-                       "\n"
-                       "  @response_file                  Specify a "
-                       "response file to provide additional parameters\n"
-                       "\n"
-                       "For more help (including examples) see the "
-                       "accompanying README.md.\n");
-    }
+        System::print2("\nVCPKG community triplets:\n");
+        for (auto* triplet : triplets_per_location[paths.community_triplets.u8string()])
+        {
+            System::print2("  ", triplet->name, '\n');
+        }
+        triplets_per_location.erase(paths.community_triplets.u8string());
 
-    std::string create_example_string(const std::string& command_and_arguments)
-    {
-        std::string cs = Strings::format("Example:\n"
-                                         "  vcpkg %s\n",
-                                         command_and_arguments);
-        return cs;
+        for (auto&& kv_pair : triplets_per_location)
+        {
+            System::print2("\nOverlay triplets from ", kv_pair.first, ":\n");
+            for (auto* triplet : kv_pair.second)
+            {
+                System::print2("  ", triplet->name, '\n');
+            }
+        }
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)

@@ -1,10 +1,10 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
-    REF 6.0.0
-    SHA512 7deb5bd843ae6b9d4b58dca9c68c1cfe7b55a41040f358247f5309655188d1ae194ff414437c068f74367f078faa214b5883e8c9e634c7623dcda50850e24766
+    REF 19bd751020a1f3c3363b2eb67a039852f139a8d3#version 6.2.1
+    SHA512 5d03445c64c3b7973bdf4e445238c63fa41bf0fa8c2d5b32cd56f0a6b3036b039d9c303a06300f3af87795a07f80f2ed28b90ddbf9c3f7398796d77906c21f40
     HEAD_REF master
+    PATCHES fix-warning4189.patch
 )
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -16,16 +16,20 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmt RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    if(VCPKG_TARGET_IS_WINDOWS)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fmtd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fmtd.dll)
+            if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/fmtd.dll")
+                file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+                file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fmtd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fmtd.dll)
+            endif()
         endif()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fmt.dll ${CURRENT_PACKAGES_DIR}/bin/fmt.dll)
+            if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/fmt.dll")
+                file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+                file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fmt.dll ${CURRENT_PACKAGES_DIR}/bin/fmt.dll)
+            endif()
         endif()
     endif()
 
@@ -37,8 +41,9 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_fixup_cmake_targets()
+vcpkg_fixup_pkgconfig()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_WINDOWS)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake FMT_DEBUG_MODULE)
         string(REPLACE "lib/fmtd.dll" "bin/fmtd.dll" FMT_DEBUG_MODULE ${FMT_DEBUG_MODULE})

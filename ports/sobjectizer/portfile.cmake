@@ -1,16 +1,8 @@
-include(vcpkg_common_functions)
-
-set(VERSION 5.6.1)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/sobjectizer/files/sobjectizer/SObjectizer%20Core%20v.5.6/so-${VERSION}.tar.bz2"
-    FILENAME "so-${VERSION}.tar.bz2"
-    SHA512 f043a2d9025fe98d407023291100a79c2fbbd9d61e7c24602311e7383607b0fc1ec6108bfaea5f98021ebb942b3494f0380a2357bcaed01f92ede5dba0ab9cf0
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO stiffstream/sobjectizer
+    REF afe9fc4d9fac6157860ec4459ac7a129223be87c # v.5.7.0.1
+    SHA512 5dfdfa5d868f9165c3f2b2051a737c36849c3ed7fbc6a4c857ce8f079dee8636e311b6ad5a4510fb36d3888601bfddb063bd8f880fd7107293e6096e34253148
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -32,6 +24,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sobjectizer)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

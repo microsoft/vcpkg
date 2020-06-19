@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 42640bc..7a621a8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,7 +42,6 @@ add_subdirectory(singleheader)
+ add_subdirectory(dependencies)
+ add_subdirectory(tests)
+ add_subdirectory(examples)
+-add_subdirectory(benchmark)
+ add_subdirectory(fuzz)
+ 
+ #

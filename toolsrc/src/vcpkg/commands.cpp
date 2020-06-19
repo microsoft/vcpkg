@@ -17,6 +17,7 @@ namespace vcpkg::Commands
     {
         static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
             {"install", &Install::perform_and_exit},
+            {"x-set-installed", &SetInstalled::perform_and_exit},
             {"ci", &CI::perform_and_exit},
             {"remove", &Remove::perform_and_exit},
             {"upgrade", &Upgrade::perform_and_exit},
@@ -47,6 +48,7 @@ namespace vcpkg::Commands
             {"autocomplete", &Autocomplete::perform_and_exit},
             {"hash", &Hash::perform_and_exit},
             {"fetch", &Fetch::perform_and_exit},
+            {"x-ci-clean", &CIClean::perform_and_exit},
             {"x-history", &PortHistory::perform_and_exit},
             {"x-vsinstances", &X_VSInstances::perform_and_exit},
         };
@@ -66,7 +68,7 @@ namespace vcpkg::Commands
 namespace vcpkg::Commands::Fetch
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("The argument should be tool name\n%s", Help::create_example_string("fetch cmake")),
+        Strings::format("The argument should be tool name\n%s", create_example_string("fetch cmake")),
         1,
         1,
         {},
@@ -88,7 +90,7 @@ namespace vcpkg::Commands::Hash
 {
     const CommandStructure COMMAND_STRUCTURE = {
         Strings::format("The argument should be a file path\n%s",
-                        Help::create_example_string("hash boost_1_62_0.tar.bz2")),
+                        create_example_string("hash boost_1_62_0.tar.bz2")),
         1,
         2,
         {},
