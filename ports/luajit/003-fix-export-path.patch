@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index ecce9ec..c55e585 100644
+--- a/Makefile
++++ b/Makefile
+@@ -24,7 +24,7 @@ ABIVER=  5.1
+ # Change the installation path as needed. This automatically adjusts
+ # the paths in src/luaconf.h, too. Note: PREFIX must be an absolute path!
+ #
+-export PREFIX= /usr/local
++export PREFIX= /
+ export MULTILIB= lib
+ ##############################################################################
+ 
