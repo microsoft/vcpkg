@@ -6,12 +6,11 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 For short description of available commands, run `vcpkg help`.
 
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
-* Slack: [https://cpplang.now.sh/](https://cpplang.now.sh/), the #vcpkg channel
+* Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
+* Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
 * Docs: [Documentation](docs/index.md)
 
-| Windows (x86, x64, arm, uwp)  | MacOS | Linux |
-| ------------- | ------------- | ------------- |
-| [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/vcpkg-Windows-master-CI?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=9&branchName=master)  | [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/vcpkg-osx-master-CI?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=11&branchName=master) | [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/vcpkg-Linux-master-CI?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=6&branchName=master) |
+[![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
 ## Quick Start
 Prerequisites:
@@ -79,3 +78,13 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 ## License
 
 Code licensed under the [MIT License](LICENSE.txt).
+
+## Telemetry
+
+vcpkg collects usage data in order to help us improve your experience.
+The data collected by Microsoft is anonymous.
+You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
+passing --disable-metrics to vcpkg on the command line,
+or by setting the VCPKG_DISABLE_METRICS environment variable.
+
+Read more about vcpkg telemetry at docs/about/privacy.md

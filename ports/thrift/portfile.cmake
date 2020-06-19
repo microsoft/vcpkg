@@ -1,10 +1,7 @@
-include(vcpkg_common_functions)
-
 # We currently insist on static only because:
 # - Thrift doesn't yet support building as a DLL on Windows,
 # - x64-linux only builds static anyway.
 # From https://github.com/apache/thrift/blob/master/CHANGES.md
-# it looks like it will be supported in v0.13.
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_find_acquire_program(FLEX)
@@ -13,12 +10,17 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/thrift
-    REF 286eee16b147a302ddc7b10740c5e5401ebbec17
-    SHA512 83aff3a51281ec43228e66b33d15b344710030ee59c1373c6cf33efae9d26db1896ae3518a23b641a7897724d496c38b5217bfc7c41ff538648ec4c571b924f5
+    REF cecee50308fc7e6f77f55b3fd906c1c6c471fa2f #0.13.0
+    SHA512 4097fd7951a4d47f2fadc520a54fd1b91b10769d65e899c6bab490dd7ac459e12bb2aa335df8fdfc61a32095033bfac928a54660abb1ee54ca14a144216c3339
     HEAD_REF master
     PATCHES
       "correct-paths.patch"
 )
+
+if (VCPKG_TARGET_IS_OSX)
+    message(WARNING "${PORT} requires bison version greater than 2.5,\n\
+please use command \`brew install bison\` to install bison")
+endif()
 
 # note we specify values for WITH_STATIC_LIB and WITH_SHARED_LIB because even though
 # they're marked as deprecated, Thrift incorrectly hard-codes a value for BUILD_SHARED_LIBS.
@@ -44,7 +46,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/thrift RENAME copyright)
+vcpkg_copy_pdbs()
 
 # Move CMake config files to the right place
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/thrift)
@@ -68,4 +70,4 @@ if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

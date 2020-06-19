@@ -1,0 +1,25 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index b2c39d1..24a6866 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -35,10 +35,8 @@ if (APPLE)
+     endif()
+ endif()
+ 
+-if(MSVC)
+-    list (APPEND CMAKE_CXX_FLAGS " -std=c++11 -O3 ")
+-else()
+-    list (APPEND CMAKE_CXX_FLAGS " -std=c++11 -O3 -Wall -Werror ")
++if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -Wall -Werror")
+ endif()
+ 
+ # Check for cryptopp (static)
+@@ -73,6 +71,7 @@ endif()
+ set_target_properties (licensepp-lib PROPERTIES
+     VERSION ${LICENSEPP_SOVERSION}
+ )
++target_include_directories (licensepp-lib PUBLIC $<INSTALL_INTERFACE:include>)
+ target_link_libraries (licensepp-lib
+     ${CRYPTOPP_LIBRARIES}
+ )

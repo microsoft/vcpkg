@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/project/tclap/tclap-1.2.2.tar.gz"
     FILENAME "tclap-1.2.2.tar.gz"

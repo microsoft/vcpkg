@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 6.3.0
-    SHA512 603256c27fb73b82e9af245ad09b46e6bc6e1934cb6375bf476f8b63177e933fb210b932b6890c425722c509189a0323755e311466f226d64694013c6c4a52de
+    REF 6.3.1
+    SHA512 ec5a2b61b12d3d3ec2456b9e742cf7be98767889c4759334e60276f609054fa8eb59f13f07af38e69e9ee7b6f2b9542e2d5d7806726ce5616062af4de626c6fa
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
@@ -33,6 +33,8 @@ if ("database" IN_LIST FEATURES)
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows/tools)
         elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools/sqlite3.exe AND (NOT CMAKE_HOST_SYSTEM_PROCESSOR OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64"))
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools)
+        elseif (NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm" AND EXISTS ${CURRENT_INSTALLED_DIR}/tools/sqlite3.exe)
+            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/tools)
         else()
             message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x86-windows first.")
         endif()
