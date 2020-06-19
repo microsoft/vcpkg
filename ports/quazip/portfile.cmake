@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO stachenov/quazip
     REF v0.9.1
     SHA512 db31f3c7e3d7e95c25090ceb8379643e0b49ed69ece009dd015bee120b2b60f42e73408f580caed3138fa19ca64dcd23a05f16435abb54e2b8df21105c7b42c0
+    PATCHES
+        vcpkg_remove_extra_static.patch
 )
 
 vcpkg_configure_cmake(
@@ -18,9 +20,9 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/quazip5.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/quazip5.dll ${CURRENT_PACKAGES_DIR}/bin/quazip5.dll)
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/quazip5d.dll)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/quazip5.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/quazip5d.dll ${CURRENT_PACKAGES_DIR}/debug/bin/quazip5d.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/quazip5.dll ${CURRENT_PACKAGES_DIR}/debug/bin/quazip5.dll)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
