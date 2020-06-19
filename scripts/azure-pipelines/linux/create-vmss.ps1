@@ -29,11 +29,6 @@ $ProgressActivity = 'Creating Scale Set'
 $TotalProgress = 11
 $CurrentProgress = 1
 
-if (-Not (Test-Path ~/.ssh/id_rsa.pub)) {
-  Write-Error 'You need to generate an SSH key first. Try running ssh-keygen.'
-}
-
-
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
 
 ####################################################################################################
