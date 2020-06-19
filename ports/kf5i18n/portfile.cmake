@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 13b5d701003edea704ffc86a886d86b27ff2198d4cde4ee732b9241cf04dba0fba403f1f78b45facd7c2d3b543f8f0a098369035270a61b347331eb495fae1d3
 )
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES mingw-w64-i686-gettext)
     set(GETTEXT_PATH ${MSYS_ROOT}/mingw32/bin)
     vcpkg_add_to_path(${GETTEXT_PATH})

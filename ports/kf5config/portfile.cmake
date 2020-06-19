@@ -20,7 +20,7 @@ vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kconfig_compiler_kf5.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/kconfig_compiler_kf5.exe)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kconf_update.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/kconf_update.exe)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kreadconfig5.exe)
@@ -38,16 +38,13 @@ endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Config)
 
-
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(APPEND ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)	
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
 endif()
-
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
