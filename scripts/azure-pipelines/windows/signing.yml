@@ -1,0 +1,65 @@
+# This script is used internally to produce signed vcpkg builds.
+# It uses machines / tasks that are not exposed here on GitHub, as
+# the hardware on which we allow signing is restricted.
+
+trigger: none
+
+pool:
+  name: 'MicroBuildV2Pool'
+
+steps:
+- task: CmdLine@2
+  displayName: 'Build vcpkg'
+  inputs:
+    script: .\bootstrap-vcpkg.bat
+- task: CmdLine@2
+  displayName: "Build vcpkg with CMake and Run Tests"
+  inputs:
+    failOnStderr: true
+    script: |
+      .\vcpkg.exe fetch cmake
+      .\vcpkg.exe fetch ninja
+      set PATH=D:\downloads\tools\cmake-3.17.2-windows\cmake-3.17.2-win32-x86\bin;D:\downloads\tools\ninja-1.10.0-windows;%PATH%
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x86
+      cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=ON -B "$(Build.StagingDirectory)" -S toolsrc
+      ninja.exe -C "$(Build.StagingDirectory)"
+      "$(Build.StagingDirectory)\vcpkg-test.exe"
+- task: AntiMalware@3
+  inputs:
+    InputType: 'Basic'
+    ScanType: 'CustomScan'
+    FileDirPath: '$(Build.StagingDirectory)'
+    EnableServices: false
+    SupportLogOnError: false
+    TreatSignatureUpdateFailureAs: 'Warning'
+    SignatureFreshness: 'UpToDate'
+    TreatStaleSignatureAs: 'Error'
+- task: APIScan@2
+  inputs:
+    softwareFolder: '$(Build.StagingDirectory)'
+    softwareName: 'vcpkg'
+    softwareVersionNum: '1.0.0'
+    softwareBuildNum: '$(Build.BuildId)'
+    symbolsFolder: '$(Build.StagingDirectory)'
+- task: CredScan@3
+- task: BinSkim@4
+  inputs:
+    InputType: 'Basic'
+    Function: 'analyze'
+    TargetPattern: 'guardianGlob'
+    AnalyzeTargetGlob: '$(Build.StagingDirectory)\vcpkg.exe'
+    AnalyzeSymPath: '$(Build.StagingDirectory)'
+    AnalyzeVerbose: true
+    AnalyzeHashes: true
+    AnalyzeStatistics: true
+- task: PoliCheck@1
+  inputs:
+    inputType: 'Basic'
+    targetType: 'F'
+    targetArgument: '$(Build.SourcesDirectory)'
+    result: 'PoliCheck.xml'
+    optionsFC: '1'
+- task: MicroBuildSigningPlugin@2
+  inputs:
+    signType: 'real'
+    feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
