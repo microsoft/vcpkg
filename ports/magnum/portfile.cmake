@@ -28,43 +28,20 @@ else()
     set(BUILD_PLUGINS_STATIC 0)
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    al-info                     WITH_AL_INFO
-    anyimageimporter            WITH_ANYIMAGEIMPORTER
-    anyaudioimporter            WITH_ANYAUDIOIMPORTER
-    anyimageconverter           WITH_ANYIMAGECONVERTER
-    anysceneimporter            WITH_ANYSCENEIMPORTER
-    audio                       WITH_AUDIO
-    debugtools                  WITH_DEBUGTOOLS
-    distancefieldconverter      WITH_DISTANCEFIELDCONVERTER
-    fontconverter               WITH_FONTCONVERTER
-    gl                          WITH_GL
-    gl-info                     WITH_GL_INFO
-    glfwapplication             WITH_GLFWAPPLICATION
-    imageconverter              WITH_IMAGECONVERTER
-    magnumfont                  WITH_MAGNUMFONT
-    magnumfontconverter         WITH_MAGNUMFONTCONVERTER
-    meshtools                   WITH_MESHTOOLS
-    objimporter                 WITH_OBJIMPORTER
-    tgaimageconverter           WITH_TGAIMAGECONVERTER
-    opengltester                WITH_OPENGLTESTER
-    primitives                  WITH_PRIMITIVES
-    sdl2application             WITH_SDL2APPLICATION
-    scenegraph                  WITH_SCENEGRAPH
-    shaders                     WITH_SHADERS
-    text                        WITH_TEXT
-    texturetools                WITH_TEXTURETOOLS
-    tgaimporter                 WITH_TGAIMPORTER
-    trade                       WITH_TRADE
-    wavaudioimporter            WITH_WAVAUDIOIMPORTER
-    windowlesswglapplication    WITH_WINDOWLESSWGLAPPLICATION
-    eglcontext                  WITH_EGLCONTEXT
-    cglcontext                  WITH_CGLCONTEXT
-    glxcontext                  WITH_GLXCONTEXT
-    wglcontext                  WITH_WGLCONTEXT
-    windowlesseglapplication    WITH_WINDOWLESSEGLAPPLICATION
-    windowlessglxapplication    WITH_WINDOWLESSGLXAPPLICATION
-)
+set(_COMPONENTS "")
+# Generate cmake parameters from feature names
+foreach(_feature IN LISTS ALL_FEATURES)
+    # Uppercase the feature name and replace "-" with "_"
+    string(TOUPPER "${_feature}" _FEATURE)
+    string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
+
+    # Final feature is empty, ignore it
+    if(_feature)
+        list(APPEND _COMPONENTS ${_feature} WITH_${_FEATURE})
+    endif()
+endforeach()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS ${_COMPONENTS})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
