@@ -28,9 +28,41 @@ else()
     set(BUILD_PLUGINS_STATIC 0)
 endif()
 
+# Remove platform-specific feature that are not available
+# on current target platform from all features.
+
+# For documentation on VCPKG_CMAKE_SYSTEM_NAME see
+# https://github.com/microsoft/vcpkg/blob/master/docs/users/triplets.md#vcpkg_cmake_system_name
+
+set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
+# Windows Desktop
+if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES wglcontext windowlesswglapplication)
+endif()
+
+# Universal Windows Platform
+if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
+    # No UWP specific features
+endif()
+
+# Mac OSX
+if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES cglcontext windowlesscglapplication)
+endif()
+
+# Linux
+if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES glxcontext windowlessglxapplication)
+endif()
+
+# WebAssembly / Linux
+if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" MATCHES "(Emscripten|Linux)")
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES eglcontext windowlesseglapplication)
+endif()
+
 set(_COMPONENTS "")
 # Generate cmake parameters from feature names
-foreach(_feature IN LISTS ALL_FEATURES)
+foreach(_feature IN LISTS ALL_SUPPORTED_FEATURES)
     # Uppercase the feature name and replace "-" with "_"
     string(TOUPPER "${_feature}" _FEATURE)
     string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
