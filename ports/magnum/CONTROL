@@ -113,20 +113,16 @@ Feature: wavaudioimporter
 Description: WavAudioImporter plugin
 Build-Depends: magnum[audio]
 
-Feature: windowlesswglapplication
-Description: WindowlessWglApplication library
-Build-Depends: magnum[gl]
-
-Feature: eglcontext
-Description: EglContext library
+Feature: windowlesscglapplication
+Description: WindowlessCglApplication library
 Build-Depends: magnum[gl]
 
 Feature: cglcontext
 Description: CglContext library
 Build-Depends: magnum[gl]
 
-Feature: glxcontext
-Description: GlxContext library
+Feature: windowlesswglapplication
+Description: WindowlessWglApplication library
 Build-Depends: magnum[gl]
 
 Feature: wglcontext
@@ -137,6 +133,14 @@ Feature: windowlesseglapplication
 Description: WindowlessEglApplication library
 Build-Depends: magnum[gl]
 
+Feature: eglcontext
+Description: EglContext library
+Build-Depends: magnum[gl]
+
 Feature: windowlessglxapplication
 Description: WindowlessGlxApplication library
+Build-Depends: magnum[gl]
+
+Feature: glxcontext
+Description: GlxContext library
 Build-Depends: magnum[gl]
