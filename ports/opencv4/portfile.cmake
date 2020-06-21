@@ -25,6 +25,7 @@ vcpkg_from_github(
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCUDA.cmake DESTINATION ${SOURCE_PATH}/cmake/)
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
@@ -295,6 +296,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        -DOPENCV_CUDA_FORCE_BUILTIN_CMAKE_MODULE=ON
         ###### ocv_options
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_BIN_INSTALL_PATH=bin
