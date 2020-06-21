@@ -59,6 +59,10 @@ Feature: jpegimageconverter
 Description: JpegImageConverter plugin
 Build-Depends: libjpeg-turbo, magnum[trade]
 
+Feature: meshoptimizersceneconverter
+Description: MeshOptimizerSceneConverter plugin
+Build-Depends: magnum[trade]
+
 Feature: miniexrimageconverter
 Description: MiniExrImageConverter plugin
 Build-Depends: magnum[trade]
