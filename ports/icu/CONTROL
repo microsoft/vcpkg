@@ -1,5 +1,6 @@
 Source: icu
-Version: 67.1
+Version: 67.1-1
 Homepage: http://icu-project.org/apiref/icu4c/
 Description: Mature and widely used Unicode and localization library.
+Build-Depends: tool-msys (windows)
 Supports: !(arm|uwp)
