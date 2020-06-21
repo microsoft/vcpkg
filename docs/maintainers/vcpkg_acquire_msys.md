@@ -29,6 +29,10 @@ vcpkg_execute_required_process(
 )
 ```
 
+### Modifying vcpkg_acquire_msys
+A change to `vcpkg_acquire_msys` should be accompanied by an increment of `tool-msys` port's version.
+This ensures all the MSYS2 dependent ports are built with the same MSYS2 environment.
+
 ## Examples
 
 * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)

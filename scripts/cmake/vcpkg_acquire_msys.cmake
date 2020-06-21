@@ -29,6 +29,10 @@
 ## )
 ## ```
 ##
+## ### Modifying vcpkg_acquire_msys
+## A change to `vcpkg_acquire_msys` should be accompanied by an increment of `tool-msys` port's version.
+## This ensures all the MSYS2 dependent ports are built with the same MSYS2 environment.
+##
 ## ## Examples
 ##
 ## * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
@@ -72,7 +76,18 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 
   set(PATH_TO_ROOT ${TOOLPATH}/${TOOLSUBPATH})
 
+  # the version of tool-msys port specifies "an epoch" of MSYS2 installation
+  if(EXISTS "${TOOLPATH}/${STAMP}" AND PORT STREQUAL tool-msys)
+    file(READ "${TOOLPATH}/${STAMP}" _vam_VERSION)
+    if(NOT _vam_VERSION STREQUAL PORT_VERSION)
+      file(REMOVE_RECURSE "${TOOLPATH}")
+    endif()
+  endif()
+
   if(NOT EXISTS "${TOOLPATH}/${STAMP}")
+    if(NOT PORT STREQUAL tool-msys)
+      message(FATAL_ERROR "vcpkg_acquire_msys() depends on tool-msys -- add 'tool-msys (windows)' to port's build dependencies")
+    endif()
 
     message(STATUS "Acquiring MSYS2...")
     vcpkg_download_distfile(ARCHIVE_PATH
@@ -102,7 +117,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syu --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}
     )
-    file(WRITE "${TOOLPATH}/${STAMP}" "0")
+    file(WRITE "${TOOLPATH}/${STAMP}" "${PORT_VERSION}")
     message(STATUS "Acquiring MSYS2... OK")
   endif()
 

@@ -1,0 +1,5 @@
+Source: tool-msys
+Version: 2019-05-24
+Homepage: https://www.msys2.org/
+Description: MSYS2 software distro and building platform for Windows
+Supports: windows
