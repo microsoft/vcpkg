@@ -14,11 +14,11 @@ Description: OpenDdl library
 
 Feature: basisimageconverter
 Description: BasisImageConverter plugin
-Build-Depends: magnum[trade], basisu
+Build-Depends: magnum[trade]
 
 Feature: basisimporter
 Description: BasisImporter plugin
-Build-Depends: magnum[trade], basisu
+Build-Depends: magnum[trade]
 
 Feature: ddsimporter
 Description: DdsImporter plugin

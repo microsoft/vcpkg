@@ -19,6 +19,35 @@ vcpkg_from_github(
         ${_RELEASE_ONLY_PATCHES}
 )
 
+if(basisimporter IN_LIST FEATURES OR basisimageconverter IN_LIST FEATURES)
+    # Bundle Basis Universal, a commit that's before the UASTC support (which
+    # is not implemented yet). The repo has big unrequired files in its
+    # history, so we're downloading just a snapshot instead of a git clone.
+    vcpkg_download_distfile(
+        _BASIS_UNIVERSAL_PATCHES
+        URLS "https://github.com/BinomialLLC/basis_universal/commit/e9c55faac7745ebf38d08cd3b4f71aaf542f8191.diff"
+        FILENAME "e9c55faac7745ebf38d08cd3b4f71aaf542f8191.patch"
+        SHA512 e5dda11de2ba8cfd39728e69c74a7656bb522e509786fe5673c94b26be9bd4bee897510096479ee6323f5276d34cba1c44c60804a515c0b35ff7b6ac9d625b88
+    )
+    set(_BASIS_VERSION "8565af680d1bd2ad56ab227ca7d96c56dfbe93ed")
+    vcpkg_download_distfile(
+        _BASIS_UNIVERSAL_ARCHIVE
+        URLS "https://github.com/BinomialLLC/basis_universal/archive/${_BASIS_VERSION}.tar.gz"
+        FILENAME "basis-universal-${_BASIS_VERSION}.tar.gz"
+        SHA512 65062ab3ba675c46760f56475a7528189ed4097fb9bab8316e25d9e23ffec2a9560eb9a6897468baf2a6ab2bd698b5907283e96deaeaef178085a47f9d371bb2
+    )
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH _BASIS_UNIVERSAL_SOURCE
+        ARCHIVE ${_BASIS_UNIVERSAL_ARCHIVE}
+        WORKING_DIRECTORY "${SOURCE_PATH}/src/external"
+        PATCHES
+            ${_BASIS_UNIVERSAL_PATCHES})
+    # Remove potentially cached directory which would cause renaming to fail
+    file(REMOVE_RECURSE "${SOURCE_PATH}/src/external/basis-universal")
+    # Rename the output folder so that magnum auto-detects it
+    file(RENAME ${_BASIS_UNIVERSAL_SOURCE} "${SOURCE_PATH}/src/external/basis-universal")
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_PLUGINS_STATIC 1)
 else()
