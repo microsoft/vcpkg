@@ -483,6 +483,8 @@ namespace
 
             for (const auto& cmdline : cmdlines)
             {
+                if (nuget_refs.empty()) break;
+
                 [&] {
                     generate_packages_config();
                     if (Debug::g_debugging)
@@ -917,7 +919,8 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 auto maybe_home = System::get_home_dir();
                 if (!maybe_home.has_value()) return add_error(maybe_home.error(), segments[0].first);
 
-                auto p = fs::u8path(maybe_home.value_or_exit(VCPKG_LINE_INFO)) / fs::u8path(".vcpkg/archives");
+                auto p = fs::u8path(maybe_home.value_or_exit(VCPKG_LINE_INFO)) / fs::u8path(".vcpkg") /
+                         fs::u8path("archives");
                 if (!p.is_absolute())
                     return add_error("default path was not absolute: " + p.u8string(), segments[0].first);
                 if (segments.size() == 2)
