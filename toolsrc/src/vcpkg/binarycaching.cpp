@@ -251,7 +251,7 @@ namespace
         }
         void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override {}
         void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
-        RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&, bool) override
+        RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
         }
