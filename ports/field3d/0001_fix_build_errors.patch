@@ -32,7 +32,15 @@ index 1610c2e..b012008 100644
  
  # Allow the developer to select if Dynamic or Static libraries are built
  OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
-@@ -86,19 +78,8 @@ ENDIF ( )
+@@ -79,26 +71,15 @@ IF ( CMAKE_HOST_UNIX )
+ ENDIF ( )
+ IF ( CMAKE_HOST_WIN32 )
+   ADD_DEFINITIONS (
+-    -D_HAS_ITERATOR_DEBUGGING=0 
++    -D_HAS_ITERATOR_DEBUGGING=0
+     -D_CRT_SECURE_NO_WARNINGS=1
+     )
+ ENDIF ( )
  
  SET ( LIB_TYPE SHARED )
  IF ( NOT BUILD_SHARED_LIBS )
@@ -123,8 +131,28 @@ index 1610c2e..b012008 100644
  
  IF (DOXYGEN_FOUND)
    ADD_CUSTOM_TARGET ( doc
-@@ -271,4 +224,3 @@ INSTALL ( FILES
- INSTALL ( TARGETS f3dinfo
+@@ -249,7 +202,7 @@ IF (DOXYGEN_FOUND)
+     WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}
+     )
+   IF (INSTALL_DOCS)
+-    INSTALL (DIRECTORY 
++    INSTALL (DIRECTORY
+       ${CMAKE_HOME_DIRECTORY}/docs
+       DESTINATION ${CMAKE_INSTALL_PREFIX}
+     )
+@@ -263,12 +216,11 @@ INSTALL ( TARGETS
+ 
+ FILE(GLOB Field3d_Includes  "${CMAKE_CURRENT_SOURCE_DIR}/export/*.h")
+ 
+-INSTALL ( FILES 
+-  ${Field3d_Includes} 
++INSTALL ( FILES
++  ${Field3d_Includes}
+   DESTINATION include/Field3D
+ )
+ 
+-INSTALL ( TARGETS f3dinfo 
++INSTALL ( TARGETS f3dinfo
    RUNTIME DESTINATION bin
  )
 -
