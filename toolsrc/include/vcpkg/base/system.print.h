@@ -42,7 +42,7 @@ namespace vcpkg::System
         ::vcpkg::System::details::print(Strings::concat_or_view(args...));
     }
 
-    class buffered_print
+    class BufferedPrint
     {
         ::std::string stdout_buffer;
         static constexpr ::std::size_t buffer_size_target = 2048;
@@ -50,9 +50,9 @@ namespace vcpkg::System
         static constexpr ::std::size_t alloc_size = buffer_size_target + expected_maximum_print;
 
     public:
-        buffered_print() { stdout_buffer.reserve(alloc_size); }
-        buffered_print(const buffered_print&) = delete;
-        buffered_print& operator=(const buffered_print&) = delete;
+        BufferedPrint() { stdout_buffer.reserve(alloc_size); }
+        BufferedPrint(const BufferedPrint&) = delete;
+        BufferedPrint& operator=(const BufferedPrint&) = delete;
         void append(::vcpkg::StringView nextView)
         {
             stdout_buffer.append(nextView.data(), nextView.size());
@@ -62,6 +62,6 @@ namespace vcpkg::System
                 stdout_buffer.clear();
             }
         }
-        ~buffered_print() { ::vcpkg::System::details::print(stdout_buffer); }
+        ~BufferedPrint() { ::vcpkg::System::details::print(stdout_buffer); }
     };
 }

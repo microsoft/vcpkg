@@ -304,7 +304,7 @@ namespace vcpkg::Commands::CI
         Build::compute_all_abis(paths, action_plan, var_provider, {});
 
         {
-            vcpkg::System::buffered_print stdout_print;
+            vcpkg::System::BufferedPrint stdout_print;
             for (auto&& action : action_plan.install_actions)
             {
                 auto p = &action;
