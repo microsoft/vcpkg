@@ -1,5 +1,5 @@
 Source: xsimd
-Version: 7.4.5
+Version: 7.4.6
 Description: Modern, portable C++ wrappers for SIMD intrinsics
 Homepage: https://github.com/xtensor-stack/xsimd
 

@@ -1,30 +1,28 @@
 diff --git a/src/gpu_info_util/SystemInfo_win.cpp b/src/gpu_info_util/SystemInfo_win.cpp
-index 878f0f5..2255982 100644
+index f4bb137f2..86495013b 100644
 --- a/src/gpu_info_util/SystemInfo_win.cpp
 +++ b/src/gpu_info_util/SystemInfo_win.cpp
-@@ -4,6 +4,12 @@
- // found in the LICENSE file.
- //
+@@ -6,11 +6,6 @@
  
-+// Windows.h needs to be included first
-+#include <windows.h>
-+
-+#include <d3d10.h>
-+#include <dxgi.h>
-+
  // SystemInfo_win.cpp: implementation of the Windows-specific parts of SystemInfo.h
  
- #include "gpu_info_util/SystemInfo_internal.h"
-@@ -11,12 +17,6 @@
- #include "common/debug.h"
- #include "common/string_utils.h"
+-#include "gpu_info_util/SystemInfo_internal.h"
+-
+-#include "common/debug.h"
+-#include "common/string_utils.h"
+-
+ // Windows.h needs to be included first
+ #include <windows.h>
  
--// Windows.h needs to be included first
--#include <windows.h>
--
--#include <d3d10.h>
--#include <dxgi.h>
--
+@@ -19,6 +14,11 @@
  #include <array>
  #include <sstream>
+ 
++#include "gpu_info_util/SystemInfo_internal.h"
++
++#include "common/debug.h"
++#include "common/string_utils.h"
++
+ namespace angle
+ {
  

@@ -33,7 +33,7 @@ set(FFMPEG_VERSION "4.2")
 
 find_dependency(Threads)
 if(UNIX)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread -lvdpau -lX11)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread -lX11)
 endif()
 
 if(@ENABLE_BZIP2@)
@@ -51,7 +51,7 @@ endif()
 #  Platform dependent libraries required by FFMPEG
 if(WIN32)
   if(NOT CYGWIN)
-    list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS wsock32 ws2_32 Secur32 bcrypt)
+    list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS wsock32 ws2_32 secur32 bcrypt)
   endif()
 else()
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS m)
@@ -153,14 +153,14 @@ if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_
   set(FFMPEG_libswscale_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
 
   list(APPEND FFMPEG_LIBRARIES
-    ${FFMPEG_libavformat_LIBRARY}
     ${FFMPEG_libavdevice_LIBRARY}
-    ${FFMPEG_libavcodec_LIBRARY}
-    ${FFMPEG_libavutil_LIBRARY}
-    ${FFMPEG_libswscale_LIBRARY}
     ${FFMPEG_libavfilter_LIBRARY}
+    ${FFMPEG_libavformat_LIBRARY}
+    ${FFMPEG_libswscale_LIBRARY}
+    ${FFMPEG_libavcodec_LIBRARY}
     ${FFMPEG_libswresample_LIBRARY}
     ${FFMPEG_libavresample_LIBRARY}
+    ${FFMPEG_libavutil_LIBRARY} 
     ${FFMPEG_libzlib_LIBRARY}
     ${FFMPEG_PLATFORM_DEPENDENT_LIBS}
   )

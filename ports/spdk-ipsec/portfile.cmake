@@ -1,12 +1,10 @@
-INCLUDE(vcpkg_common_functions)
-
 IF (NOT VCPKG_CMAKE_SYSTEM_NAME)
     SET(EXEC_ENV "Windows")
 ELSE ()
     SET(EXEC_ENV "${VCPKG_CMAKE_SYSTEM_NAME}")
 ENDIF ()
 
-IF (NOT EXEC_ENV STREQUAL "Linux")
+IF (NOT VCPKG_TARGET_IS_LINUX)
     MESSAGE(FATAL_ERROR "Intel(R) Multi-Buffer Crypto for IPsec Library currently only supports Linux/Windows platforms")
     MESSAGE(STATUS "Well, it is not true, but I didnt manage to get it working on Windows")
 ENDIF ()
@@ -18,36 +16,34 @@ ELSEIF (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 ENDIF ()
 
 VCPKG_FROM_GITHUB(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO spdk/intel-ipsec-mb
-        REF spdk
-        SHA512 037fc382d9aa87b6645309f29cb761a584ed855c583638c9e27b5b7200ceb2ae21ad5adcc7c92b2b1d1387186a7fd2b5ae22f337a8f52dea3f6c35d8f90b42bd
-        HEAD_REF master
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO spdk/intel-ipsec-mb
+    REF spdk
+    SHA512 037fc382d9aa87b6645309f29cb761a584ed855c583638c9e27b5b7200ceb2ae21ad5adcc7c92b2b1d1387186a7fd2b5ae22f337a8f52dea3f6c35d8f90b42bd
+    HEAD_REF master
 )
 
 VCPKG_FIND_ACQUIRE_PROGRAM(NASM)
 
-EXEC_PROGRAM(${NASM}
-             ARGS -v
-             OUTPUT_VARIABLE NASM_OUTPUT
-             )
-STRING(REGEX REPLACE "NASM version ([0-9]+\\.[0-9]+\\.[0-9]+).*" "\\1"
-       NASM_VERSION
-       ${NASM_OUTPUT})
+execute_process(
+    COMMAND "${NASM}" -v
+    OUTPUT_VARIABLE NASM_OUTPUT
+    ERROR_VARIABLE NASM_OUTPUT
+)
+STRING(REGEX REPLACE "NASM version ([0-9]+\\.[0-9]+\\.[0-9]+).*" "\\1" NASM_VERSION "${NASM_OUTPUT}")
 IF (NASM_VERSION VERSION_LESS 2.13.03)
     MESSAGE(FATAL_ERROR "NASM version 2.13.03 (or newer) is required to build this package")
 ENDIF ()
 
 GET_FILENAME_COMPONENT(NASM_PATH ${NASM} DIRECTORY)
-SET(ENV{PATH} " $ENV{PATH};${NASM_PATH} ")
+vcpkg_add_to_path("${NASM_PATH}")
 
 VCPKG_CONFIGURE_CMAKE(
-        SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
-        PREFER_NINJA
-        OPTIONS
+    SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
+    PREFER_NINJA
+    OPTIONS
         -DSOURCE_PATH=${SOURCE_PATH}
         -DEXEC_ENV=${VCPKG_CMAKE_SYSTEM_NAME}
-        -DLIBRARY_LINKAGE=${VCPKG_LIBRARY_LINKAGE}
 )
 
 VCPKG_INSTALL_CMAKE()

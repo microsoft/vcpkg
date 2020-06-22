@@ -18,7 +18,7 @@ namespace vcpkg::Util
     namespace Vectors
     {
         template<class Container, class T = ElementT<Container>>
-        void concatenate(std::vector<T>* augend, const Container& addend)
+        void append(std::vector<T>* augend, const Container& addend)
         {
             augend->insert(augend->end(), addend.begin(), addend.end());
         }
@@ -122,6 +122,12 @@ namespace vcpkg::Util
         std::sort(begin(cont), end(cont), comp);
     }
 
+    template<class Range, class Pred>
+    bool any_of(Range&& rng, Pred pred)
+    {
+        return std::any_of(rng.begin(), rng.end(), std::move(pred));
+    }
+
     template<class Range>
     Range&& sort_unique_erase(Range&& cont)
     {
@@ -219,5 +225,11 @@ namespace vcpkg::Util
     template<class... Ts>
     void unused(const Ts&...)
     {
+    }
+
+    template<class T>
+    T copy(const T& t)
+    {
+        return t;
     }
 }

@@ -1,11 +1,10 @@
 #pragma once
 
+#include <string>
 #include <unordered_map>
-#include <unordered_set>
-#include <utility>
+#include <vector>
 
 #include <vcpkg/base/checks.h>
-#include <vcpkg/base/span.h>
 #include <vcpkg/base/system.print.h>
 
 namespace vcpkg::Graphs
@@ -95,10 +94,8 @@ namespace vcpkg::Graphs
         }
     }
 
-    template<class VertexContainer, class V, class U>
-    std::vector<U> topological_sort(VertexContainer starting_vertices,
-                                    const AdjacencyProvider<V, U>& f,
-                                    Randomizer* randomizer)
+    template<class Range, class V, class U>
+    std::vector<U> topological_sort(Range starting_vertices, const AdjacencyProvider<V, U>& f, Randomizer* randomizer)
     {
         std::vector<U> sorted;
         std::unordered_map<V, ExplorationStatus> exploration_status;
@@ -112,40 +109,4 @@ namespace vcpkg::Graphs
 
         return sorted;
     }
-
-    template<class V>
-    struct Graph final : AdjacencyProvider<V, V>
-    {
-    public:
-        void add_vertex(const V& v) { this->m_edges[v]; }
-
-        void add_edge(const V& u, const V& v)
-        {
-            this->m_edges[v];
-            this->m_edges[u].insert(v);
-        }
-
-        std::vector<V> vertex_list() const
-        {
-            std::vector<V> vertex_list;
-            for (auto&& vertex : this->m_edges)
-                vertex_list.emplace_back(vertex.first);
-            return vertex_list;
-        }
-
-        std::vector<V> adjacency_list(const V& vertex) const override
-        {
-            const std::unordered_set<V>& as_set = this->m_edges.at(vertex);
-            return std::vector<V>(as_set.cbegin(), as_set.cend()); // TODO: Avoid redundant copy
-        }
-
-        V load_vertex_data(const V& vertex) const override { return vertex; }
-
-        // Note: this function indicates how tied this template is to the exact type it will be templated upon.
-        // Possible fix: This type shouldn't implement to_string() and should instead be derived from?
-        std::string to_string(const V& spec) const override { return spec->spec.to_string(); }
-
-    private:
-        std::unordered_map<V, std::unordered_set<V>> m_edges;
-    };
 }

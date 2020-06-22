@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix-cmake.patch
         no-write-source-dir.patch
+        intrin.patch
 )
 
 #delete CMake builtins modules
