@@ -51,6 +51,8 @@ namespace vcpkg::System
 
     public:
         buffered_print() { stdout_buffer.reserve(alloc_size); }
+        buffered_print(const buffered_print&) = delete;
+        buffered_print& operator=(const buffered_print&) = delete;
         void append(::vcpkg::StringView nextView)
         {
             stdout_buffer.append(nextView.data(), nextView.size());
