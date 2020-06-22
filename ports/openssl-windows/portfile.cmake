@@ -1,9 +1,9 @@
 vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Desktop" ON_TARGET "UWP" "Linux" "OSX")
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
-  message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
-  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-  return()
+    message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    return()
 endif()
 
 vcpkg_find_acquire_program(PERL)
@@ -20,8 +20,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -32,16 +32,23 @@ vcpkg_find_acquire_program(JOM)
 
 set(OPENSSL_SHARED no-shared)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(OPENSSL_SHARED shared)
+    set(OPENSSL_SHARED shared)
 endif()
 
-set(CONFIGURE_COMMAND ${PERL} Configure
+set(CONFIGURE_OPTIONS 
     enable-static-engine
     enable-capieng
     no-ssl2
     -utf-8
     ${OPENSSL_SHARED}
 )
+
+# Optional features from vcpkg install command (e.g. openssl-windows[no-pinshared]:x64-windows-static)
+if("no-pinshared" IN_LIST FEATURES)
+    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-pinshared)
+endif()
+
+set(CONFIGURE_COMMAND ${PERL} Configure ${CONFIGURE_OPTIONS})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
@@ -73,7 +80,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
 
-    message(STATUS "Configure ${TARGET_TRIPLET}-rel")
+    message(STATUS "Configure ${TARGET_TRIPLET}-rel with options ${CONFIGURE_OPTIONS}")
     vcpkg_execute_required_process(
         COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
