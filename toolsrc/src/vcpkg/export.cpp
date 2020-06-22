@@ -3,9 +3,9 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/export.chocolatey.h>
-#include <vcpkg/export.prefab.h>
 #include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
+#include <vcpkg/export.prefab.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
@@ -519,7 +519,18 @@ namespace vcpkg::Export
                 action.spec.triplet().to_string(),
                 raw_exported_dir_path / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
-            Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
+            auto lines = fs.read_lines(paths.listfile_path(binary_paragraph)).value_or_exit(VCPKG_LINE_INFO);
+            std::vector<fs::path> files;
+            for (auto&& suffix : lines)
+            {
+                if (suffix.empty()) continue;
+                if (suffix.back() == '/') suffix.pop_back();
+                if (suffix == action.spec.triplet().to_string()) continue;
+                files.push_back(paths.installed / fs::u8path(suffix));
+            }
+
+            Install::install_files_and_write_listfile(
+                fs, paths.installed / action.spec.triplet().to_string(), files, dirs);
         }
 
         // Copy files needed for integration
