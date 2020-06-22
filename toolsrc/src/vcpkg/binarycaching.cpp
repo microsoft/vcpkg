@@ -738,9 +738,12 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
 
     struct BinaryConfigParser : Parse::ParserBase
     {
-        using Parse::ParserBase::ParserBase;
+        BinaryConfigParser(StringView text, StringView origin, State* state)
+            : Parse::ParserBase(text, origin), state(state)
+        {
+        }
 
-        State* state = nullptr;
+        State* state;
 
         void parse()
         {
@@ -940,23 +943,22 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
             }
             else
             {
-                return add_error("unknown binary provider type: valid providers are 'clear', 'default', 'nuget', "
-                                 "'interactive', and 'files'",
-                                 segments[0].first);
+                return add_error(
+                    "unknown binary provider type: valid providers are 'clear', 'default', 'nuget', 'nugetconfig', "
+                    "'interactive', and 'files'",
+                    segments[0].first);
             }
         }
     };
 
     State s;
 
-    BinaryConfigParser env_parser(env_string, "VCPKG_BINARY_SOURCES");
-    env_parser.state = &s;
+    BinaryConfigParser env_parser(env_string, "VCPKG_BINARY_SOURCES", &s);
     env_parser.parse();
     if (auto err = env_parser.get_error()) return err->format();
     for (auto&& arg : args)
     {
-        BinaryConfigParser arg_parser(arg, "<command>");
-        arg_parser.state = &s;
+        BinaryConfigParser arg_parser(arg, "<command>", &s);
         arg_parser.parse();
         if (auto err = arg_parser.get_error()) return err->format();
     }
@@ -974,4 +976,40 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                                                                   s.interactive));
 
     return {std::make_unique<MergeBinaryProviders>(std::move(providers))};
+}
+
+void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
+{
+    System::print2(
+        System::Color::warning,
+        "** The following help documentation covers an experimental feature that will change at any time **\n\n");
+
+    HelpTableFormatter tbl;
+    tbl.text(
+        "Vcpkg can cache compiled packages to accelerate restoration on a single machine or across the network."
+        " This functionality is currently disabled by default and must be enabled by either passing `--binarycaching` "
+        "to every vcpkg command line or setting the environment variable `VCPKG_FEATURE_FLAGS` to `binarycaching`.");
+    tbl.blank();
+    tbl.blank();
+    tbl.text(
+        "Once caching is enabled, it can be further configured by either passing `--x-binarysource=<source>` options "
+        "to every command line or setting the `VCPKG_BINARY_SOURCES` environment variable to a set of sources (Ex: "
+        "\"<source>;<source>;...\"). Command line sources are interpreted after environment sources.");
+    tbl.blank();
+    tbl.blank();
+    tbl.header("Valid source strings");
+    tbl.format("clear", "Removes all previous sources");
+    tbl.format("default[,upload]", "Adds the default file-based source location (~/.vcpkg/archives).");
+    tbl.format("files,<path>[,upload]", "Adds a custom file-based source location.");
+    tbl.format("nuget,<uri>[,upload]",
+               "Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI.");
+    tbl.format("nugetconfig,<path>[,upload]",
+               "Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This "
+               "config should specify `defaultPushSource` for uploads.");
+    tbl.format("interactive", "Enables interactive credential management for some source types");
+    tbl.blank();
+    tbl.text("The `upload` optional parameter for certain source strings controls whether on-demand builds will be "
+             "uploaded to that remote.");
+
+    System::print2(tbl.m_str);
 }

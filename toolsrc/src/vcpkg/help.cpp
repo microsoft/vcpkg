@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+#include <vcpkg/binarycaching.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/export.h>
 #include <vcpkg/help.h>
@@ -13,7 +14,7 @@ namespace vcpkg::Help
     {
         using topic_function = void (*)(const VcpkgPaths& paths);
 
-        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) { }
+        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) {}
 
         CStringView name;
         topic_function print;
@@ -40,7 +41,7 @@ namespace vcpkg::Help
         nullptr,
     };
 
-    static constexpr std::array<Topic, 13> topics = {{
+    static constexpr std::array<Topic, 14> topics = {{
         {"create", command_topic_fn<Commands::Create::COMMAND_STRUCTURE>},
         {"edit", command_topic_fn<Commands::Edit::COMMAND_STRUCTURE>},
         {"depend-info", command_topic_fn<Commands::DependInfo::COMMAND_STRUCTURE>},
@@ -53,14 +54,14 @@ namespace vcpkg::Help
         {"owns", command_topic_fn<Commands::Owns::COMMAND_STRUCTURE>},
         {"remove", command_topic_fn<Remove::COMMAND_STRUCTURE>},
         {"search", command_topic_fn<Commands::Search::COMMAND_STRUCTURE>},
+        {"binarycaching", help_topic_binary_caching},
         {"topics", help_topics},
     }};
 
     static void help_topics(const VcpkgPaths&)
     {
         System::print2("Available help topics:\n"
-                       "  triplet\n"
-                       "  integrate",
+                       "  triplet",
                        Strings::join("", topics, [](const Topic& topic) { return std::string("\n  ") + topic.name; }),
                        "\n");
     }

@@ -92,6 +92,7 @@ namespace vcpkg
         void example(StringView example_text);
         void header(StringView name);
         void blank();
+        void text(StringView text, int indent = 0);
 
         std::string m_str;
     };
