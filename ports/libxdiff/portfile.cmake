@@ -10,6 +10,7 @@ vcpkg_from_github(
     REPO Drako/libxdiff
     REF ${LIBXDIFF_REF}
     SHA512 ${LIBXDIFF_SHA512}
+    HEAD_REF master
 )
 
 vcpkg_configure_cmake(
