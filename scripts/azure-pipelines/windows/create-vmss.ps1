@@ -202,7 +202,7 @@ Invoke-AzVMRunCommand `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\provision-image.ps1" `
+  -ScriptPath "$PSScriptRoot\provision-image.txt" `
   -Parameter @{AdminUserPassword = $AdminPW; `
     StorageAccountName=$StorageAccountName; `
     StorageAccountKey=$StorageAccountKey;}
