@@ -195,7 +195,7 @@ New-AzVm `
 ####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
-  -Status 'Running provisioning script provision-image.ps1 in VM' `
+  -Status 'Running provisioning script provision-image.txt (as a .ps1) in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 Invoke-AzVMRunCommand `
