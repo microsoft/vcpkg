@@ -1,5 +1,6 @@
 # yarpl only support static build in Windows
 if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fail_port_install(ON_ARCH "x64")
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
