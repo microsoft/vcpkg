@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e4ed99e..9e26ac7 100644
+index e4ed99e..b0d2b15 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -204,12 +204,7 @@ endif()
@@ -44,7 +44,7 @@ index e4ed99e..9e26ac7 100644
  if(STX_BUILD_BENCHMARKS)
  
    if(NOT EXISTS third_party/benchmark)
-@@ -433,3 +433,30 @@ if(STX_BUILD_DOCS)
+@@ -433,3 +433,24 @@ if(STX_BUILD_DOCS)
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/docs/html/assets)
  
  endif()
