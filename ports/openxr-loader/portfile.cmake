@@ -9,11 +9,15 @@ endif()
 
 include(vcpkg_common_functions)
 
+# If you update the version, you MUST regenerate the OpenXR.hpp file and include it in the PR
+# See below where we copy the openxr.hpp from the ports directory to the installation directory
+# The openxr.hpp build process depends on the specific OpenXR version, but it hasn't yet be 
+# incorporated into the official build process, hence this bit of hackery
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO jherico/OpenXR-SDK
-    REF e3dcdb820fae01fb8d25dfd32e15d14caa14b411
-    SHA512 421eb3651e388b69d70d3200a1c40d363c0ac9eb1d35c89a53430ea764dd3dd0e864b756dfff0e0f98ac574309331782c95a1cadcfe84eb5a6c34434737d7a38
+    REPO KhronosGroup/OpenXR-SDK
+    REF 97cfe495bb7a3853266b646d1c79e169387f9c7a
+    SHA512 794c546d4b240e8f502caf0cf64174d7d72801999260bba9579d9ddd5f3815c3dd0b2da006a6e22164284670e603f4348d1ea2ff6e6852554b2ef1039114dee7
     HEAD_REF master
 )
 
@@ -44,6 +48,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/openxr.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/openxr)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # No CMake files are contained in /share only docs
