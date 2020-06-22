@@ -165,7 +165,6 @@ namespace vcpkg::Build
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
         Optional<std::string> public_abi_override;
-        Optional<const SourceControlFileLocation&> port;
         std::vector<std::string> passthrough_env_vars;
     };
 

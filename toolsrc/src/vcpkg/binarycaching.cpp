@@ -341,25 +341,101 @@ namespace
 
     struct NugetReference
     {
+        explicit NugetReference(const Dependencies::InstallPlanAction& action)
+            : NugetReference(action.spec,
+                             action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
+                                 .source_control_file->core_paragraph->version,
+                             action.package_abi.value_or_exit(VCPKG_LINE_INFO))
+        {
+        }
+
+        NugetReference(const PackageSpec& spec, const std::string& raw_version, const std::string& abi_tag)
+            : id(spec.dir()), version(reformat_version(raw_version, abi_tag))
+        {
+        }
+
         std::string id;
         std::string version;
 
         std::string nupkg_filename() const { return Strings::concat(id, '.', version, ".nupkg"); }
+
+    private:
+        static std::string trim_zeroes(std::string v)
+        {
+            auto n = v.find_first_not_of('0');
+            if (n == std::string::npos)
+            {
+                return "0";
+            }
+            if (n > 0)
+            {
+                v.erase(0, n);
+            }
+            return v;
+        }
+
+        static std::string reformat_version(const std::string& version, const std::string& abi_tag)
+        {
+            static const std::regex semver_matcher(R"(v?(\d+)\.(\d+)(\.\d+)?.*)");
+
+            std::smatch sm;
+            if (std::regex_match(version.cbegin(), version.cend(), sm, semver_matcher))
+            {
+                if (sm.size() <= 3 || sm[3].length() == 0)
+                    return Strings::concat(trim_zeroes(sm.str(1)), '.', trim_zeroes(sm.str(2)), ".0-", abi_tag);
+                else if (sm.size() >= 4)
+                    return Strings::concat(trim_zeroes(sm.str(1)),
+                                           '.',
+                                           trim_zeroes(sm.str(2)),
+                                           '.',
+                                           trim_zeroes(sm.str(3).substr(1)),
+                                           "-",
+                                           abi_tag);
+                else
+                    Checks::unreachable(VCPKG_LINE_INFO);
+            }
+
+            static const std::regex date_matcher(R"((\d\d\d\d)-(\d\d)-(\d\d).*)");
+            if (std::regex_match(version.cbegin(), version.cend(), sm, date_matcher))
+            {
+                return Strings::concat(
+                    trim_zeroes(sm.str(1)), '.', trim_zeroes(sm.str(2)), '.', trim_zeroes(sm.str(3)), "-", abi_tag);
+            }
+
+            return Strings::concat("0.0.0-", abi_tag);
+        }
     };
 
     static void create_nuspec(const VcpkgPaths& paths,
-                              const PackageSpec& spec,
+                              const Dependencies::InstallPlanAction& action,
                               const fs::path& nuspec_path,
                               const NugetReference& ref)
     {
+        auto& spec = action.spec;
+        auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
+        auto& version = scf.core_paragraph->version;
+        std::string description = Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
+                                                  scf.core_paragraph->description,
+                                                  "\n\nVersion: ",
+                                                  version,
+                                                  "\nTriplet/Compiler hash: ",
+                                                  action.pre_build_info.value_or_exit(VCPKG_LINE_INFO)->triplet_abi_tag,
+                                                  "\nFeatures: ",
+                                                  Strings::join(", ", action.feature_list),
+                                                  "\nDependencies:\n");
+
+        for (auto&& dep : action.package_dependencies)
+        {
+            Strings::append(description, "    ", dep.name(), '\n');
+        }
         XmlSerializer xml;
         xml.open_tag("package").line_break();
         xml.open_tag("metadata").line_break();
         xml.simple_tag("id", ref.id).line_break();
         xml.simple_tag("version", ref.version).line_break();
+        if (!scf.core_paragraph->homepage.empty()) xml.simple_tag("projectUrl", scf.core_paragraph->homepage);
         xml.simple_tag("authors", "vcpkg").line_break();
-        xml.simple_tag("summary", "temp summary").line_break();
-        xml.simple_tag("description", "temp description").line_break();
+        xml.simple_tag("description", description).line_break();
         xml.open_tag("packageTypes");
         xml.start_complex_open_tag("packageType").text_attr("name", "vcpkg").finish_self_closing_complex_tag();
         xml.close_tag("packageTypes").line_break();
@@ -400,11 +476,10 @@ namespace
 
             for (auto&& action : plan.install_actions)
             {
-                const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
                 auto& spec = action.spec;
                 fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
 
-                NugetReference nuget_ref{spec.dir(), "0.0.0-" + abi_tag};
+                NugetReference nuget_ref(action);
 
                 nuget_refs.emplace_back(spec, std::move(nuget_ref));
             }
@@ -534,12 +609,11 @@ namespace
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             if (m_write_sources.empty() && m_write_configs.empty()) return;
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
             auto& spec = action.spec;
 
+            NugetReference nuget_ref(action);
             auto nuspec_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".nuspec");
-            NugetReference nuget_ref{spec.dir(), "0.0.0-" + abi_tag};
-            create_nuspec(paths, spec, nuspec_path, nuget_ref);
+            create_nuspec(paths, action, nuspec_path, nuget_ref);
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
             System::CmdLineBuilder cmdline;
