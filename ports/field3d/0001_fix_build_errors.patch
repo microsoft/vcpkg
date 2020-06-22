@@ -1,31 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1610c2e..be868f7 100644
+index 1610c2e..b012008 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,11 +1,11 @@
- # Copyright (c) 2009 Sony Pictures Imageworks Inc. et al.
--# 
-+#
- # All rights reserved.
--# 
-+#
- # Redistribution and use in source and binary forms, with or without
- # modification, are permitted provided that the following conditions
- # are met:
--# 
-+#
- # Redistributions of source code must retain the above copyright
- # notice, this list of conditions and the following disclaimer.
- # Redistributions in binary form must reproduce the above copyright
-@@ -15,7 +15,7 @@
- # names of its contributors may be used to endorse or promote
- # products derived from this software without specific prior written
- # permission.
--# 
-+#
- # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
 @@ -31,25 +31,17 @@
  
  # Author : Nicholas Yue yue.nicholas@gmail.com
@@ -56,15 +32,7 @@ index 1610c2e..be868f7 100644
  
  # Allow the developer to select if Dynamic or Static libraries are built
  OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
-@@ -79,26 +72,15 @@ IF ( CMAKE_HOST_UNIX )
- ENDIF ( )
- IF ( CMAKE_HOST_WIN32 )
-   ADD_DEFINITIONS (
--    -D_HAS_ITERATOR_DEBUGGING=0 
-+    -D_HAS_ITERATOR_DEBUGGING=0
-     -D_CRT_SECURE_NO_WARNINGS=1
-     )
- ENDIF ( )
+@@ -86,19 +78,8 @@ ENDIF ( )
  
  SET ( LIB_TYPE SHARED )
  IF ( NOT BUILD_SHARED_LIBS )
@@ -84,7 +52,7 @@ index 1610c2e..be868f7 100644
  ENDIF ( NOT BUILD_SHARED_LIBS )
  
  ADD_LIBRARY ( Field3D ${LIB_TYPE}
-@@ -147,24 +129,22 @@ IF ( CMAKE_HOST_UNIX )
+@@ -147,24 +128,22 @@ IF ( CMAKE_HOST_UNIX )
               ${MPI_LIBRARIES} )
    ENDIF ( MPI_FOUND )
    LIST ( APPEND Field3D_Libraries_Shared
@@ -112,7 +80,7 @@ index 1610c2e..be868f7 100644
  
  # Parase version and soversion from export/ns.h
  
-@@ -183,7 +163,7 @@ SET_TARGET_PROPERTIES ( Field3D PROPERTIES VERSION ${FIELD3D_VERSION})
+@@ -183,7 +162,7 @@ SET_TARGET_PROPERTIES ( Field3D PROPERTIES VERSION ${FIELD3D_VERSION})
  SET_TARGET_PROPERTIES ( Field3D PROPERTIES SOVERSION ${FIELD3D_SOVERSION})
  
  IF ( CMAKE_HOST_WIN32 )
@@ -121,7 +89,7 @@ index 1610c2e..be868f7 100644
    IF ( BUILD_SHARED_LIBS )
      SET_TARGET_PROPERTIES( Field3D PROPERTIES COMPILE_DEFINITIONS FIELD3D_EXPORT )
    ELSE ()
-@@ -214,33 +194,7 @@ ADD_EXECUTABLE ( f3dinfo
+@@ -214,33 +193,7 @@ ADD_EXECUTABLE ( f3dinfo
  
  TARGET_LINK_LIBRARIES ( f3dinfo ${Field3D_BIN_Libraries} )
  
@@ -155,28 +123,8 @@ index 1610c2e..be868f7 100644
  
  IF (DOXYGEN_FOUND)
    ADD_CUSTOM_TARGET ( doc
-@@ -249,7 +203,7 @@ IF (DOXYGEN_FOUND)
-     WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}
-     )
-   IF (INSTALL_DOCS)
--    INSTALL (DIRECTORY 
-+    INSTALL (DIRECTORY
-       ${CMAKE_HOME_DIRECTORY}/docs
-       DESTINATION ${CMAKE_INSTALL_PREFIX}
-     )
-@@ -263,12 +217,11 @@ INSTALL ( TARGETS
- 
- FILE(GLOB Field3d_Includes  "${CMAKE_CURRENT_SOURCE_DIR}/export/*.h")
- 
--INSTALL ( FILES 
--  ${Field3d_Includes} 
-+INSTALL ( FILES
-+  ${Field3d_Includes}
-   DESTINATION include/Field3D
- )
- 
--INSTALL ( TARGETS f3dinfo 
-+INSTALL ( TARGETS f3dinfo
+@@ -271,4 +224,3 @@ INSTALL ( FILES
+ INSTALL ( TARGETS f3dinfo
    RUNTIME DESTINATION bin
  )
 -
