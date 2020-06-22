@@ -47,7 +47,6 @@ namespace vcpkg::Commands::SetInstalled
             Build::CleanPackages::YES,
             Build::CleanDownloads::YES,
             Build::DownloadTool::BUILT_IN,
-            args.binary_caching_enabled() ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -71,7 +70,7 @@ namespace vcpkg::Commands::SetInstalled
 
         for (const auto& action : action_plan.install_actions)
         {
-            all_abis.insert(action.package_abi.value_or_exit(VCPKG_LINE_INFO));
+            all_abis.insert(action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi);
         }
 
         // currently (or once) installed specifications
@@ -105,8 +104,12 @@ namespace vcpkg::Commands::SetInstalled
 
         Dependencies::print_plan(real_action_plan, true);
 
-        const auto summary =
-            Install::perform(real_action_plan, Install::KeepGoing::NO, paths, status_db, *binaryprovider, *cmake_vars);
+        const auto summary = Install::perform(real_action_plan,
+                                              Install::KeepGoing::NO,
+                                              paths,
+                                              status_db,
+                                              args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
+                                              *cmake_vars);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 
