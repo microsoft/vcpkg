@@ -93,8 +93,10 @@ else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
 endif()
 
+set (ENABLE_VPX OFF)
 if("vpx" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvpx")
+    set (ENABLE_VPX ON) #necessary for configuring FFMPEG CMake Module
 else()
     set(OPTIONS "${OPTIONS} --disable-libvpx")
 endif()

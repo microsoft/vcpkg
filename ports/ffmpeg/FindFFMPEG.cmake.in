@@ -48,6 +48,13 @@ if(@ENABLE_LZMA@)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS "$<$<CONFIG:Debug>:${LibLZMA_LIBRARY_DEBUG}>$<$<CONFIG:Release>:${LibLZMA_LIBRARY_RELEASE}>")
 endif()
 
+if(@ENABLE_VPX@)
+  find_dependency(unofficial-libvpx)
+  get_target_property(VPX_LIBRARY_RELEASE unofficial::libvpx::libvpx IMPORTED_LOCATION_RELEASE)
+  get_target_property(VPX_LIBRARY_DEBUG unofficial::libvpx::libvpx IMPORTED_LOCATION_DEBUG)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS "$<$<CONFIG:Debug>:${VPX_LIBRARY_DEBUG}>$<$<CONFIG:Release>:${VPX_LIBRARY_RELEASE}>")
+endif()
+
 #  Platform dependent libraries required by FFMPEG
 if(WIN32)
   if(NOT CYGWIN)
