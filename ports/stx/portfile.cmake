@@ -12,11 +12,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      backtrace    STX_ENABLE_BACKTRACE
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" STX_BUILD_SHARED)
-
-if(${STX_BUILD_SHARED})
-    message("STX does not currently support building a dynamic library")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
