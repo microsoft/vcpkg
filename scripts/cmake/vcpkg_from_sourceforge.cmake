@@ -86,8 +86,16 @@ function(vcpkg_from_sourceforge)
 
     string(FIND ${_vdus_REPO} "/" FOUND_ORG)
     if (NOT FOUND_ORG EQUAL -1)
-        string(REGEX REPLACE ".*/" "" REPO_NAME ${_vdus_REPO})
-        string(REGEX REPLACE "/.*" "" ORG_NAME ${_vdus_REPO})
+        # Check for the second slash
+        math(EXPR NEXT_SLASH "${FOUND_ORG} + 1")
+        string(SUBSTRING ${_vdus_REPO} ${NEXT_SLASH} -1 LAST_STRING)
+        string(FIND ${LAST_STRING} "/" FOUND_NEXT_SLASH)
+        if (NOT FOUND_NEXT_SLASH EQUAL -1)
+            message(FATAL_ERROR "REPO should contain at most one slash.\nExample: mad/libmad")
+        endif()
+        
+        string(SUBSTRING "${_vdus_REPO}" 0 FOUND_ORG ORG_NAME)
+        string(SUBSTRING "${_vdus_REPO}" FOUND_ORG -1 REPO_NAME)
         set(ORG_NAME ${ORG_NAME}/)
     else()
         set(REPO_NAME ${_vdus_REPO})
