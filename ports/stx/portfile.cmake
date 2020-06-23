@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lamarrr/STX
@@ -11,8 +13,6 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      backtrace    STX_ENABLE_BACKTRACE
 )
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
