@@ -20,7 +20,7 @@ stages:
         inputs:
           filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
       - script: rmdir /s /q W:\fail
-        failOnStandardError: false
+        failOnStderr: false
         displayName: 'Delete W:\fail'
     - job: linux
       displayName: 'Clean Linux Tombstones'
