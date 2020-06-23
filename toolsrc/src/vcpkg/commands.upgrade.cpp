@@ -28,7 +28,7 @@ namespace vcpkg::Commands::Upgrade
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("upgrade --no-dry-run"),
+        create_example_string("upgrade --no-dry-run"),
         0,
         SIZE_MAX,
         {INSTALL_SWITCHES, {}},
@@ -165,7 +165,6 @@ namespace vcpkg::Commands::Upgrade
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -188,7 +187,12 @@ namespace vcpkg::Commands::Upgrade
         var_provider.load_tag_vars(action_plan, provider);
 
         const Install::InstallSummary summary =
-            Install::perform(action_plan, keep_going, paths, status_db, *binaryprovider, var_provider);
+            Install::perform(action_plan,
+                             keep_going,
+                             paths,
+                             status_db,
+                             args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
+                             var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 

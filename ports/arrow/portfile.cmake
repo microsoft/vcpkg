@@ -1,12 +1,10 @@
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  message(FATAL_ERROR "Apache Arrow only supports x64")
-endif()
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-0.17.0
-    SHA512 293737db80defa0f8766f726dc228ace50936f7124647de15c2e024c2901ded1cda893d771d38aa4e9ab19ff7eb06b11dfc230587ca5b17cdd87e681fc3009ca
+    REF apache-arrow-0.17.1
+    SHA512 2a1a637d6df08e19d0c8313c51e1baf8902db677b072f8787c4f9faf8bdec94357ac8af839718d449377b508fe4f6e31b011cbdc6ccf029b6a66f567172569aa
     HEAD_REF master
     PATCHES
         all.patch

@@ -179,27 +179,29 @@ namespace vcpkg
     {
     }
 
-    std::string System::make_cmake_cmd(const fs::path& cmake_exe,
-                                       const fs::path& cmake_script,
-                                       const std::vector<CMakeVariable>& pass_variables)
+    std::string System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
+                                             const fs::path& cmake_script,
+                                             const std::vector<CMakeVariable>& pass_variables)
     {
-        const std::string cmd_cmake_pass_variables = Strings::join(" ", pass_variables, [](auto&& v) { return v.s; });
-        return Strings::format(
-            R"("%s" %s -P "%s")", cmake_exe.u8string(), cmd_cmake_pass_variables, cmake_script.generic_u8string());
+        return Strings::format(R"("%s" %s -P "%s")",
+                               cmake_tool_path.u8string(),
+                               Strings::join(" ", pass_variables, [](auto&& v) { return v.s; }),
+                               cmake_script.generic_u8string());
     }
 
 #if defined(_WIN32)
     Environment System::get_modified_clean_environment(const std::unordered_map<std::string, std::string>& extra_env,
                                                        const std::string& prepend_to_path)
     {
-        static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
-        static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
+        static const std::string system_root_env =
+            get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
+        static const std::string system32_env = system_root_env + R"(\system32)";
         std::string new_path = Strings::format(R"(Path=%s%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)",
                                                prepend_to_path,
-                                               SYSTEM_32,
-                                               SYSTEM_ROOT,
-                                               SYSTEM_32,
-                                               SYSTEM_32);
+                                               system32_env,
+                                               system_root_env,
+                                               system32_env,
+                                               system32_env);
 
         std::vector<std::wstring> env_wstrings = {
             L"ALLUSERSPROFILE",
@@ -237,6 +239,7 @@ namespace vcpkg
             L"USERDOMAIN_ROAMINGPROFILE",
             L"USERNAME",
             L"USERPROFILE",
+            L"VCPKG_DISABLE_METRICS",
             L"windir",
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"http_proxy",
@@ -384,8 +387,8 @@ namespace vcpkg
         // Flush stdout before launching external process
         fflush(nullptr);
 
-VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'process_info.proc_info.hProcess'
-                            // /analyze can't tell that we transferred ownership here
+        VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'process_info.proc_info.hProcess'
+                                            // /analyze can't tell that we transferred ownership here
         bool succeeded =
             TRUE == CreateProcessW(nullptr,
                                    Strings::to_utf16(cmd_line).data(),
@@ -558,6 +561,7 @@ VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'proce
         (void)env;
         Debug::print("system(", cmd_line, ")\n");
         fflush(nullptr);
+
         int exit_code = system(cmd_line.c_str());
         Debug::print(
             "system() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
@@ -617,6 +621,7 @@ VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'proce
         Debug::print("popen(", actual_cmd_line, ")\n");
         // Flush stdout before launching external process
         fflush(stdout);
+
         const auto pipe = popen(actual_cmd_line.c_str(), "r");
         if (pipe == nullptr)
         {

@@ -69,7 +69,7 @@ namespace
         void prefetch() override {}
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& spec = action.spec;
             auto& fs = paths.get_filesystem();
             std::error_code ec;
@@ -106,8 +106,8 @@ namespace
             for (auto&& archives_root_dir : m_read_dirs)
             {
                 const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
-                const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
+                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
+                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
                 if (fs.exists(archive_tombstone_path))
                 {
                     if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
@@ -134,7 +134,7 @@ namespace
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             if (m_write_dirs.empty()) return;
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& spec = action.spec;
             auto& fs = paths.get_filesystem();
             const auto tmp_archive_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".zip");
@@ -174,14 +174,15 @@ namespace
             {
                 const fs::path& archives_root_dir = m_directory;
                 const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
-                const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
+                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
+                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
                 if (!fs.exists(archive_tombstone_path))
                 {
                     // Build failed, store all failure logs in the tombstone.
-                    const auto tmp_log_path = paths.buildtrees / spec.name() / "tmp_failure_logs";
-                    const auto tmp_log_path_destination = tmp_log_path / spec.name();
-                    const auto tmp_failure_zip = paths.buildtrees / spec.name() / "failure_logs.zip";
+                    const auto spec_name_path = fs::u8path(spec.name());
+                    const auto tmp_log_path = paths.buildtrees / spec_name_path / fs::u8path("tmp_failure_logs");
+                    const auto tmp_log_path_destination = tmp_log_path / spec_name_path;
+                    const auto tmp_failure_zip = paths.buildtrees / spec_name_path / fs::u8path("failure_logs.zip");
                     fs.create_directories(tmp_log_path_destination, ignore_errors);
 
                     for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
@@ -195,8 +196,7 @@ namespace
                         }
                     }
 
-                    compress_directory(paths, tmp_log_path, paths.buildtrees / spec.name() / "failure_logs.zip");
-
+                    compress_directory(paths, tmp_log_path, tmp_failure_zip);
                     fs.create_directories(archive_tombstone_path.parent_path(), ignore_errors);
                     fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
 
@@ -209,7 +209,7 @@ namespace
                                const Dependencies::InstallPlanAction& action,
                                bool purge_tombstones) override
         {
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& fs = paths.get_filesystem();
             std::error_code ec;
             for (auto&& archives_root_dir : m_read_dirs)
@@ -226,8 +226,8 @@ namespace
             for (auto&& archives_root_dir : m_read_dirs)
             {
                 const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
-                const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
+                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
+                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
 
                 if (purge_tombstones)
                 {
@@ -246,6 +246,27 @@ namespace
 
         std::vector<fs::path> m_read_dirs, m_write_dirs;
     };
+
+    struct NullBinaryProvider : IBinaryProvider
+    {
+        void prefetch() override {}
+        RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
+        {
+            return RestoreResult::missing;
+        }
+        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override {}
+        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
+        RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&, bool) override
+        {
+            return RestoreResult::missing;
+        }
+    };
+}
+
+IBinaryProvider& vcpkg::null_binary_provider()
+{
+    static NullBinaryProvider p;
+    return p;
 }
 
 ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(const VcpkgPaths& paths,
