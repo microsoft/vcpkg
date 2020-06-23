@@ -62,6 +62,8 @@ namespace vcpkg::Build
                            scf.core_paragraph->name,
                            spec.name());
 
+        compute_all_abis(paths, action_plan, var_provider, status_db);
+
         const Build::BuildPackageOptions build_package_options{
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
