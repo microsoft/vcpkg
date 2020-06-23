@@ -1,3 +1,9 @@
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
+message("xmsh REPO has been removed")
+
+return()
+
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_fail_port_install(ON_TARGET "Windows")
