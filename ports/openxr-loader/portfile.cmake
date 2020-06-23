@@ -1,13 +1,4 @@
-if (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm*")
-  message(FATAL_ERROR "OpenXR does not support arm")
-endif()
-
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  # Due to UWP restricting the usage of static CRT OpenXR cannot be built.
-  message(FATAL_ERROR "OpenXR does not support UWP")
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 # If you update the version, you MUST regenerate the OpenXR.hpp file and include it in the PR
 # See below where we copy the openxr.hpp from the ports directory to the installation directory
@@ -23,7 +14,7 @@ vcpkg_from_github(
 
 # Weird behavior inside the OpenXR loader.  On Windows they force shared libraries to use static crt, and
 # vice-versa.  Might be better in future iterations to patch the CMakeLists.txt for OpenXR
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_UWP)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         set(DYNAMIC_LOADER OFF)
         set(VCPKG_CRT_LINKAGE dynamic)
@@ -54,6 +45,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # No CMake files are contained in /share only docs
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openxr-loader RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
