@@ -18,8 +18,6 @@ vcpkg_from_github(
         paraview_build.patch
         remove_duplicates.patch # Missed something in the above patch
         cgns.patch
-        qt_plugin.patch # Remove with Qt version > 5.14 
-        qt_static_plugins.patch # Remove with Qt version > 5.14 
         python_include.patch
         python_wrapper.patch
 )
