@@ -474,7 +474,6 @@ freeglut:arm64-windows=fail
 freeglut:arm-uwp=fail
 freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
-freerdp:x64-uwp=fail
 freetds:arm-uwp=fail
 freetds:x64-linux=fail
 freetds:x64-osx=fail
