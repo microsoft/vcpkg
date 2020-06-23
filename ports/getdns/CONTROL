@@ -1,0 +1,5 @@
+Source: getdns
+Version: 1.6.0
+Build-Depends: libidn2, libevent, libuv, openssl
+Description: GetDNS is a modern asynchronous DNS API
+Homepage: https://getdnsapi.net/
