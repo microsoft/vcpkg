@@ -14,7 +14,7 @@ vcpkg_from_github(
 
 # Weird behavior inside the OpenXR loader.  On Windows they force shared libraries to use static crt, and
 # vice-versa.  Might be better in future iterations to patch the CMakeLists.txt for OpenXR
-if (VCPKG_TARGET_IS_UWP)
+if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         set(DYNAMIC_LOADER OFF)
         set(VCPKG_CRT_LINKAGE dynamic)
