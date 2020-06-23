@@ -295,6 +295,7 @@ __pycache__/
 #add vcpkg-designed triplets back in
 !triplets/community/arm64-mingw.cmake
 !triplets/community/arm64-uwp.cmake
+!triplets/community/arm64-windows-static.cmake
 !triplets/community/arm-mingw.cmake
 !triplets/community/arm-windows.cmake
 !triplets/community/x64-mingw.cmake
@@ -312,6 +313,7 @@ __pycache__/
 !triplets/community/arm-ios.cmake
 !triplets/community/x64-ios.cmake
 !triplets/community/x86-ios.cmake
+!triplets/community/wasm32-emscripten.cmake
 !triplets/arm-uwp.cmake
 !triplets/x64-uwp.cmake
 !triplets/x64-windows.cmake
