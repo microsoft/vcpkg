@@ -11,7 +11,7 @@ vcpkg_find_acquire_program(PERL)
 set(OPENSSL_VERSION 1.1.1d)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
+vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
@@ -26,7 +26,7 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
+vcpkg_add_to_path("${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
@@ -176,17 +176,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
 endif()
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" _contents)
-string(REPLACE "<winsock.h>" "<winsock2.h>" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" "${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h"
+    "<winsock.h>"
+    "<winsock2.h>"
+)
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" _contents)
-string(REPLACE "#  include <windows.h>" "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" "${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
+    "#  include <windows.h>"
+    "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>"
+)
 
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)
