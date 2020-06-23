@@ -147,12 +147,12 @@ function(vcpkg_from_sourceforge)
     endforeach()
 
     if (NOT download_success)
-        message(FATAL_ERROR
-                "    \n"
-                "    Couldn't download source from any of the mirrors, please check your network.\n"
-                "    If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment\n"
-                "    variables to \"https://user:password@your-proxy-ip-address:port/\".\n"
-                "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
+        message(FATAL_ERROR [[
+            Couldn't download source from any of the sourceforge mirrors, please check your network.
+            If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment
+            variables to "http[s]://user:password@your-proxy-ip-address:port/".
+            Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues
+        ]])
     endif()
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
