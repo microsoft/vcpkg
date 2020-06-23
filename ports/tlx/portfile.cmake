@@ -30,7 +30,7 @@ vcpkg_copy_pdbs()
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake/")
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/tlk")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/tlx")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
