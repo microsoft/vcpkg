@@ -1,0 +1,24 @@
+diff --git a/Rendering/Qt/vtkQtLabelRenderStrategy.cxx b/Rendering/Qt/vtkQtLabelRenderStrategy.cxx
+index afda585ccabf7688c059bd4bb6a5f25d2903d0c4..eca65c64cd4d5ca85e2492919aceb7865fa95ae9 100644
+--- a/Rendering/Qt/vtkQtLabelRenderStrategy.cxx
++++ b/Rendering/Qt/vtkQtLabelRenderStrategy.cxx
+@@ -41,6 +41,7 @@
+ #include <QImage>
+ #include <QMap>
+ #include <QPainter>
++#include <QPainterPath>
+ #include <QPair>
+ #include <QPixmap>
+ #include <QTextDocument>
+diff --git a/Rendering/Qt/vtkQtStringToImage.cxx b/Rendering/Qt/vtkQtStringToImage.cxx
+index 659c71570eaf81d6b49d13b9d873c68a4a084876..fbb9b78f05d36b20f39beda648da18cd596ec66d 100644
+--- a/Rendering/Qt/vtkQtStringToImage.cxx
++++ b/Rendering/Qt/vtkQtStringToImage.cxx
+@@ -30,6 +30,7 @@
+ #include <QFontMetrics>
+ #include <QImage>
+ #include <QPainter>
++#include <QPainterPath>
+ #include <QPixmap>
+ #include <QString>
+ #include <QTextDocument>

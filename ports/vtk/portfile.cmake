@@ -93,6 +93,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         6890.diff         # already merged upstream
+        6943.diff         # already merged upstream
         FindLZMA.patch    # Will be fixed in 9.1?
         FindLZ4.patch
         Findproj.patch
