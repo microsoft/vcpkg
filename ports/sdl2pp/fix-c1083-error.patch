@@ -1,0 +1,13 @@
+diff --git a/SDL2pp/Color.hh b/SDL2pp/Color.hh
+index 5bd6e80..b3300f4 100644
+--- a/SDL2pp/Color.hh
++++ b/SDL2pp/Color.hh
+@@ -24,7 +24,7 @@
+ 
+ #include <ostream>
+ 
+-#include <SDL_pixels.h>
++#include <SDL2/SDL_pixels.h>
+ 
+ #include <SDL2pp/Export.hh>
+ 

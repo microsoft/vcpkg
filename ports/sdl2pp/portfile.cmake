@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF 0.16.0
     SHA512 36603a0b1c3ba9294fffa5368357866e5689ceed9743352ff52c096d8b0070cc3f8708a5e837c10c871b410b6bda3ed7e8e3b95cb9afc136d91afb035cde6361
     HEAD_REF master
-    PATCHES fix-dependencies.patch
+    PATCHES 
+        fix-dependencies.patch
+        fix-c1083-error.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindSDL2.cmake
