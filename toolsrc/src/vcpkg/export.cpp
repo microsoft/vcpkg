@@ -84,7 +84,6 @@ namespace vcpkg::Export
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
