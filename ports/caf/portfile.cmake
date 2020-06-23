@@ -18,8 +18,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF 4da751ab7a79bcdc6e9dd2157b9b5c5c6814e26d # 0.17.2
-    SHA512 4bd739c553fcbd6aa3b61372b42ad2ab40099c18959892553b9bc232b95740ba563d967d73e0695f0ce3d31409ae704eb578b6590431039f18291c896f535a36
+    REF b05a4b7b2a6f59b0508db84ea68e5ada2224f904 # 0.17.3
+    SHA512 02b1598f5090674bc2ce4fdbcd70a4669c8c0710e98d910dbd77338c088cc87db4e0eeb3dd89100772ff4f74bdf09a7f70b8975d79c816e422dc34a356f8ba4e
     HEAD_REF master
 	PATCHES
 		openssl-version-override.patch
