@@ -24,7 +24,7 @@ vcpkg_from_github(
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCUDA.cmake DESTINATION ${SOURCE_PATH}/cmake/)  #contains fixes for CUDA 11 compat, remove when CMake has support for it
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCUDA.cmake DESTINATION ${SOURCE_PATH}/cmake/)    # backported from CMake 3.18, remove when released
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
@@ -51,7 +51,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"    BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", "ipp", "openmp", "ovis", "tbb", and "vtk".
+# Cannot use vcpkg_check_features() for "dnn", "ipp", ovis", "tbb", and "vtk".
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)

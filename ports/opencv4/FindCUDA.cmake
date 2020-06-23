@@ -357,7 +357,8 @@ The script defines the following variables::
   CUDA_nppicc_LIBRARY   -- NVIDIA Performance Primitives lib (image processing).
                            Only available for CUDA version 9.0.
   CUDA_nppicom_LIBRARY  -- NVIDIA Performance Primitives lib (image processing).
-                           Only available for CUDA version 9.0.
+                           Only available for CUDA version 9.0 - 10.2.
+                           Replaced by nvjpeg.
   CUDA_nppidei_LIBRARY  -- NVIDIA Performance Primitives lib (image processing).
                            Only available for CUDA version 9.0.
   CUDA_nppif_LIBRARY    -- NVIDIA Performance Primitives lib (image processing).
@@ -430,7 +431,6 @@ macro(CUDA_FIND_HELPER_FILE _name _extension)
   # CMAKE_CURRENT_LIST_FILE contains the full path to the file currently being
   # processed.  Using this variable, we can pull out the current path, and
   # provide a way to get access to the other files we need local to here.
-  get_filename_component(CMAKE_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
   set(CUDA_${_name} "${CMAKE_ROOT}/Modules/FindCUDA/${_full_name}")
   if(NOT EXISTS "${CUDA_${_name}}")
     set(error_message "${_full_name} not found in ${CMAKE_ROOT}/Modules/FindCUDA")
@@ -1002,9 +1002,7 @@ if(NOT CUDA_VERSION VERSION_LESS "9.0")
   find_cuda_helper_libs(nppc)
   find_cuda_helper_libs(nppial)
   find_cuda_helper_libs(nppicc)
-  if(CUDA_VERSION VERSION_GREATER_EQUAL "11.0")
-    set(CUDA_nppicom_LIBRARY)
-  else()
+  if(CUDA_VERSION VERSION_LESS "11.0")
     find_cuda_helper_libs(nppicom)
   endif()
   find_cuda_helper_libs(nppidei)
