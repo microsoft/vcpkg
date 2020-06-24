@@ -7,7 +7,7 @@
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
-TEST_CASE ("smoke test", "[build]")
+TEST_CASE ("build smoke test", "[commands-build]")
 {
     using namespace vcpkg;
     static const std::string args_raw[] = {"build", "zlib"};
