@@ -616,6 +616,10 @@ namespace vcpkg::Build
         {
             return m_paths.scripts / fs::u8path("toolchains/ios.cmake");
         }
+        else if (cmake_system_name == "MinGW")
+        {
+            return m_paths.scripts / fs::u8path("toolchains/mingw.cmake");
+        }
         else if (cmake_system_name.empty() || cmake_system_name == "Windows" || cmake_system_name == "WindowsStore")
         {
             return m_paths.scripts / fs::u8path("toolchains/windows.cmake");
