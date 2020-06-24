@@ -1,5 +1,5 @@
 Source: date
-Version: 2019-11-08
+Version: 3.0.0
 Homepage: https://github.com/HowardHinnant/date
 Description: A date and time library based on the C++17 <chrono> header
 

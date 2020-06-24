@@ -12,7 +12,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001_fix_build_errors.patch
-        0002_improve_win_compatibility.patch   # not enough, port is still broken on final linking stages
+        0002_improve_win_compatibility.patch
+        hdf5.api.patch # Switches the HDF5 default API for this port to 1.10
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindILMBase.cmake)
@@ -20,6 +21,8 @@ file(REMOVE ${SOURCE_PATH}/cmake/FindILMBase.cmake)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        "-DINSTALL_DOCS:BOOL=OFF"
 )
 
 vcpkg_install_cmake()

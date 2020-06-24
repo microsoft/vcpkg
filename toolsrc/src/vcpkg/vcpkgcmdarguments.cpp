@@ -552,10 +552,13 @@ namespace vcpkg
         if (const auto unpacked = vcpkg_feature_flags_env.get())
         {
             auto flags = Strings::split(*unpacked, ',');
-            if (!binary_caching
-                && std::find(flags.begin(), flags.end(), "binarycaching") != flags.end())
+            if (!binary_caching && Util::Vectors::contains(flags, "binarycaching"))
             {
                 binary_caching = true;
+            }
+            if (Util::Vectors::contains(flags, "compilertracking"))
+            {
+                compiler_tracking = true;
             }
         }
 

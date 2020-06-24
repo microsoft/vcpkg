@@ -403,12 +403,24 @@ namespace vcpkg::Dependencies
     }
     const std::string& InstallPlanAction::public_abi() const
     {
-        if (auto p = pre_build_info.get())
+        switch (plan_type)
         {
-            if (auto q = p->get()->public_abi_override.get()) return *q;
+            case InstallPlanType::ALREADY_INSTALLED:
+                return installed_package.value_or_exit(VCPKG_LINE_INFO).core->package.abi;
+            case InstallPlanType::BUILD_AND_INSTALL:
+            {
+                auto&& i = abi_info.value_or_exit(VCPKG_LINE_INFO);
+                if (auto o = i.pre_build_info->public_abi_override.get())
+                    return *o;
+                else
+                    return i.package_abi;
+            }
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
-        if (auto p = installed_package.get()) return p->core->package.abi;
-        return package_abi.value_or_exit(VCPKG_LINE_INFO);
+    }
+    const Build::PreBuildInfo& InstallPlanAction::pre_build_info(LineInfo linfo) const
+    {
+        return *abi_info.value_or_exit(linfo).pre_build_info.get();
     }
 
     bool InstallPlanAction::compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right)
