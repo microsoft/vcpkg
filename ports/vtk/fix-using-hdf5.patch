@@ -1,0 +1,13 @@
+diff --git a/ThirdParty/h5part/vtkh5part/src/H5Part.c b/ThirdParty/h5part/vtkh5part/src/H5Part.c
+index 228d246..b9c6640 100644
+--- a/ThirdParty/h5part/vtkh5part/src/H5Part.c
++++ b/ThirdParty/h5part/vtkh5part/src/H5Part.c
+@@ -2092,7 +2092,7 @@ _H5Part_iteration_operator2 (
+     case H5L_TYPE_HARD: {
+ 
+       H5O_info_t objinfo;
+-      if( H5Oget_info_by_name( group_id, member_name, &objinfo, H5P_DEFAULT ) < 0 ) {
++      if( H5Oget_info_by_name1( group_id, member_name, &objinfo, H5P_DEFAULT ) < 0 ) {
+ 	return (herr_t)HANDLE_H5G_GET_OBJINFO_ERR ( member_name );
+       }
+ 
