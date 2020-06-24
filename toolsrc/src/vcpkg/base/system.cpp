@@ -84,6 +84,15 @@ namespace vcpkg
         return supported_architectures;
     }
 
+    const ExpectedS<fs::path>& System::get_platform_cache_home() noexcept
+    {
+#ifdef _WIN32
+        return System::get_appdata_local();
+#else
+        return System::get_xdg_cache_home();
+#endif
+    }
+
     Optional<std::string> System::get_environment_variable(ZStringView varname) noexcept
     {
 #if defined(_WIN32)
@@ -105,20 +114,46 @@ namespace vcpkg
 #endif // defined(_WIN32)
     }
 
-    ExpectedS<std::string> System::get_home_dir() noexcept
+    const ExpectedS<fs::path>& System::get_home_dir() noexcept
     {
+        static ExpectedS<fs::path> s_home = []() -> ExpectedS<fs::path> {
 #ifdef _WIN32
-        auto maybe_home = System::get_environment_variable("USERPROFILE");
-        if (!maybe_home.has_value() || maybe_home.get()->empty())
-            return {"unable to read %USERPROFILE%", ExpectedRightTag{}};
+#define HOMEVAR "%USERPROFILE%"
+            auto maybe_home = System::get_environment_variable("USERPROFILE");
+            if (!maybe_home.has_value() || maybe_home.get()->empty())
+                return {"unable to read " HOMEVAR, ExpectedRightTag{}};
 #else
-        auto maybe_home = System::get_environment_variable("HOME");
-        if (!maybe_home.has_value() || maybe_home.get()->empty()) return {"unable to read $HOME", ExpectedRightTag{}};
+#define HOMEVAR "$HOME"
+            auto maybe_home = System::get_environment_variable("HOME");
+            if (!maybe_home.has_value() || maybe_home.get()->empty())
+                return {"unable to read " HOMEVAR, ExpectedRightTag{}};
 #endif
-        return {std::move(*maybe_home.get()), ExpectedLeftTag{}};
+
+            auto p = fs::u8path(*maybe_home.get());
+            if (!p.is_absolute()) return {HOMEVAR " was not an absolute path", ExpectedRightTag{}};
+
+            return {std::move(p), ExpectedLeftTag{}};
+        }();
+        return s_home;
+#undef HOMEVAR
     }
 
-    ExpectedS<fs::path> get_xdg_config_home() noexcept
+    const ExpectedS<fs::path>& System::get_appdata_local() noexcept
+    {
+        static ExpectedS<fs::path> s_home = []() -> ExpectedS<fs::path> {
+            auto maybe_home = System::get_environment_variable("LOCALAPPDATA");
+            if (!maybe_home.has_value() || maybe_home.get()->empty())
+                return {"unable to read %LOCALAPPDATA%", ExpectedRightTag{}};
+
+            auto p = fs::u8path(*maybe_home.get());
+            if (!p.is_absolute()) return {"%LOCALAPPDATA% was not an absolute path", ExpectedRightTag{}};
+
+            return {std::move(p), ExpectedLeftTag{}};
+        }();
+        return s_home;
+    }
+
+    const ExpectedS<fs::path>& get_xdg_config_home() noexcept
     {
         static ExpectedS<fs::path> s_home = [] {
             auto maybe_home = System::get_environment_variable("XDG_CONFIG_HOME");
@@ -128,13 +163,16 @@ namespace vcpkg
             }
             else
             {
-                return System::get_home_dir().map([](std::string home) { return fs::u8path(home) / ".config"; });
+                return System::get_home_dir().map([](fs::path home) {
+                    home.append(".config");
+                    return home;
+                });
             }
         }();
         return s_home;
     }
 
-    ExpectedS<fs::path> get_xdg_cache_home() noexcept
+    const ExpectedS<fs::path>& get_xdg_cache_home() noexcept
     {
         static ExpectedS<fs::path> s_home = [] {
             auto maybe_home = System::get_environment_variable("XDG_CACHE_HOME");
@@ -144,13 +182,16 @@ namespace vcpkg
             }
             else
             {
-                return System::get_home_dir().map([](std::string home) { return fs::u8path(home) / ".cache"; });
+                return System::get_home_dir().map([](fs::path home) {
+                    home.append(".cache");
+                    return home;
+                });
             }
         }();
         return s_home;
     }
 
-    ExpectedS<fs::path> get_xdg_data_home() noexcept
+    const ExpectedS<fs::path>& get_xdg_data_home() noexcept
     {
         static ExpectedS<fs::path> s_home = [] {
             auto maybe_home = System::get_environment_variable("XDG_DATA_HOME");
@@ -160,8 +201,10 @@ namespace vcpkg
             }
             else
             {
-                return System::get_home_dir().map(
-                    [](std::string home) { return fs::u8path(home) / ".local" / "share"; });
+                return System::get_home_dir().map([](fs::path home) {
+                    home.append(".local").append(".share");
+                    return home;
+                });
             }
         }();
         return s_home;
