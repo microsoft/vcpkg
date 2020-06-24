@@ -118,6 +118,55 @@ namespace vcpkg
         return {std::move(*maybe_home.get()), ExpectedLeftTag{}};
     }
 
+    ExpectedS<fs::path> get_xdg_config_home() noexcept
+    {
+        static ExpectedS<fs::path> s_home = [] {
+            auto maybe_home = System::get_environment_variable("XDG_CONFIG_HOME");
+            if (auto p = maybe_home.get())
+            {
+                return ExpectedS<fs::path>(fs::u8path(*p));
+            }
+            else
+            {
+                return System::get_home_dir().map([](std::string home) { return fs::u8path(home) / ".config"; });
+            }
+        }();
+        return s_home;
+    }
+
+    ExpectedS<fs::path> get_xdg_cache_home() noexcept
+    {
+        static ExpectedS<fs::path> s_home = [] {
+            auto maybe_home = System::get_environment_variable("XDG_CACHE_HOME");
+            if (auto p = maybe_home.get())
+            {
+                return ExpectedS<fs::path>(fs::u8path(*p));
+            }
+            else
+            {
+                return System::get_home_dir().map([](std::string home) { return fs::u8path(home) / ".cache"; });
+            }
+        }();
+        return s_home;
+    }
+
+    ExpectedS<fs::path> get_xdg_data_home() noexcept
+    {
+        static ExpectedS<fs::path> s_home = [] {
+            auto maybe_home = System::get_environment_variable("XDG_DATA_HOME");
+            if (auto p = maybe_home.get())
+            {
+                return ExpectedS<fs::path>(fs::u8path(*p));
+            }
+            else
+            {
+                return System::get_home_dir().map(
+                    [](std::string home) { return fs::u8path(home) / ".local" / "share"; });
+            }
+        }();
+        return s_home;
+    }
+
 #if defined(_WIN32)
     static bool is_string_keytype(const DWORD hkey_type)
     {

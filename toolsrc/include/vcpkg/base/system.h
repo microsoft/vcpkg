@@ -11,6 +11,12 @@ namespace vcpkg::System
 
     ExpectedS<std::string> get_home_dir() noexcept;
 
+    ExpectedS<fs::path> get_xdg_config_home() noexcept;
+
+    ExpectedS<fs::path> get_xdg_cache_home() noexcept;
+
+    ExpectedS<fs::path> get_xdg_data_home() noexcept;
+
     Optional<std::string> get_registry_string(void* base_hkey, StringView subkey, StringView valuename);
 
     enum class CPUArchitecture
