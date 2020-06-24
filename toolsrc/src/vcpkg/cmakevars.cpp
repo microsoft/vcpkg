@@ -115,8 +115,7 @@ namespace vcpkg::CMakeVars
 
         fs::path path = paths.buildtrees / Strings::concat(tag_extract_id++, ".vcpkg_tags.cmake");
 
-        std::error_code ec;
-        fs.create_directories(paths.buildtrees, ec);
+        fs.create_directories(paths.buildtrees, ignore_errors);
         fs.write_contents(path, extraction_file, VCPKG_LINE_INFO);
 
         return path;
