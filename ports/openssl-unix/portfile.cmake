@@ -1,4 +1,4 @@
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW"))
     message(FATAL_ERROR "This port is only for openssl on Unix-like systems")
 endif()
 
