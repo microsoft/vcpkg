@@ -49,6 +49,7 @@ else(VCPKG_TARGET_IS_WINDOWS)
         ARCHIVE ${ARCHIVE} 
     )
     
+    message("CURRENT_INSTALLED_DIR: ${CURRENT_INSTALLED_DIR}")
     if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/build-1/apr_rules.mk)
         message(FATAL_ERROR "Could not find path \"${CURRENT_INSTALLED_DIR}/build-1/apr_rules.mk\", please re-install apr.")
     endif()
