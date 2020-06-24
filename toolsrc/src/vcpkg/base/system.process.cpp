@@ -598,7 +598,7 @@ namespace vcpkg
 #if defined(_WIN32)
         using vcpkg::g_ctrl_c_state;
         g_ctrl_c_state.transition_to_spawn_process();
-        auto proc_info = windows_create_process(cmd_line, env, NULL);
+        auto proc_info = windows_create_process(cmd_line, env, 0);
         auto long_exit_code = [&]() -> unsigned long {
             if (auto p = proc_info.get())
                 return p->wait();
@@ -660,7 +660,7 @@ namespace vcpkg
         using vcpkg::g_ctrl_c_state;
 
         g_ctrl_c_state.transition_to_spawn_process();
-        auto maybe_proc_info = windows_create_process_redirect(cmd_line, env, NULL);
+        auto maybe_proc_info = windows_create_process_redirect(cmd_line, env, 0);
         auto exit_code = [&]() -> unsigned long {
             if (auto p = maybe_proc_info.get())
                 return p->wait_and_stream_output(data_cb);
