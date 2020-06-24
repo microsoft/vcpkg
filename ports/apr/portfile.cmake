@@ -77,12 +77,10 @@ else()
     vcpkg_install_make()
 
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/apr-1.pc
-        "Libs: -L\${libdir} -lapr-\${APR_MAJOR_VERSION} -lpthread"
-        "Libs: -L\${libdir} -lapr-1 -lpthread"
+        "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
     )
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/lib/pkgconfig/apr-1.pc
-        "Libs: -L\${libdir} -lapr-\${APR_MAJOR_VERSION} -lpthread"
-        "Libs: -L\${libdir} -lapr-1 -lpthread"
+        "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
     )
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 endif()
