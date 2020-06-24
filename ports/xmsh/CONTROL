@@ -1,4 +1,3 @@
 Source: xmsh
-Version: 0
-Description: Reference Implementation of XMSH Library
-Homepage: https://gitlab.com/libxmsh/xmsh
+Version: alias
+Description: Deprecated alias for xmsh
