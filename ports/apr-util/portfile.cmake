@@ -49,8 +49,8 @@ else(VCPKG_TARGET_IS_WINDOWS)
         ARCHIVE ${ARCHIVE} 
     )
     
-    if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/build-1)
-        message(FATAL_ERROR "Could not find path \"${CURRENT_INSTALLED_DIR}/build-1\", please re-install apr.")
+    if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/build-1/apr_rules.mk)
+        message(FATAL_ERROR "Could not find path \"${CURRENT_INSTALLED_DIR}/build-1/apr_rules.mk\", please re-install apr.")
     endif()
 
     # To cross-compile you will need a triplet file that locates the tool chain and sets --host and --cache parameters of "./configure".
