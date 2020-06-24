@@ -73,9 +73,9 @@ else()
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake
-	"\"\${_IMPORT_PREFIX}/bin/protoc${EXECUTABLE_SUFFIX}\""
-	"\"\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}\""
+	vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake
+		"\${_IMPORT_PREFIX}/bin/protoc${EXECUTABLE_SUFFIX}"
+		"\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}"
 )
 endif()
 
@@ -114,12 +114,11 @@ else()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h
-	"\"\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_\""
-	"\"\#define PROTOBUF_USE_DLLS\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_\""
+	vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h
+		"\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_"
+		"\#ifndef PROTOBUF_USE_DLLS\n\#define PROTOBUF_USE_DLLS\n\#endif // PROTOBUF_USE_DLLS\n\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_"
 )
 endif()
-
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 vcpkg_copy_pdbs()
