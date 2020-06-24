@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/wtl/WTL%2010/WTL%2010.0.9163/WTL10_9163.zip"
-    FILENAME "WTL10_9163.zip"
-    SHA512 feb7fb1c456e44ad05610f31f8c0f964eb6ce3eadf65a389219051f0ea2547069727666616622631cd90e25ea4a682a7c88c7089a374181870717246ad44e035
+    URLS "https://downloads.sourceforge.net/project/wtl/WTL%2010/WTL%2010.0.10077/WTL10_1077..zip"
+    FILENAME "WTL10_1077..zip"
+    SHA512 5a49283196caf5b2ad8a3fb3cfa5d09cd555d59d4d5871408bf6a5b850cf4546cc6ece4e0bf79d152a4d2589fae3749f0f3e73ab6a3a7bc0cb373efa1474b98b
 )
 
 vcpkg_extract_source_archive_ex(

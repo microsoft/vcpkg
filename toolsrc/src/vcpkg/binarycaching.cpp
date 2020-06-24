@@ -69,7 +69,7 @@ namespace
         void prefetch() override {}
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& spec = action.spec;
             auto& fs = paths.get_filesystem();
             std::error_code ec;
@@ -134,7 +134,7 @@ namespace
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             if (m_write_dirs.empty()) return;
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& spec = action.spec;
             auto& fs = paths.get_filesystem();
             const auto tmp_archive_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".zip");
@@ -209,7 +209,7 @@ namespace
                                const Dependencies::InstallPlanAction& action,
                                bool purge_tombstones) override
         {
-            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& fs = paths.get_filesystem();
             std::error_code ec;
             for (auto&& archives_root_dir : m_read_dirs)
@@ -246,6 +246,27 @@ namespace
 
         std::vector<fs::path> m_read_dirs, m_write_dirs;
     };
+
+    struct NullBinaryProvider : IBinaryProvider
+    {
+        void prefetch() override {}
+        RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
+        {
+            return RestoreResult::missing;
+        }
+        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override {}
+        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
+        RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&, bool) override
+        {
+            return RestoreResult::missing;
+        }
+    };
+}
+
+IBinaryProvider& vcpkg::null_binary_provider()
+{
+    static NullBinaryProvider p;
+    return p;
 }
 
 ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(const VcpkgPaths& paths,

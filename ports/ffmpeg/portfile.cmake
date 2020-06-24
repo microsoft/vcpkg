@@ -141,6 +141,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
 endif()
 
+if("avisynthplus" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avisynth --enable-gpl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-avisynth --disable-gpl")
+endif()
+
 set(OPTIONS_CROSS "")
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
