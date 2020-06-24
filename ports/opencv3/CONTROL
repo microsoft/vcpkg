@@ -35,6 +35,10 @@ Feature: gdcm
 Build-Depends: gdcm
 Description: GDCM support for opencv
 
+Feature: halide
+Build-Depends: halide, opencv3[core], opencv3[dnn]
+Description: Halide support for opencv
+
 Feature: ipp
 Description: Enable Intel Integrated Performance Primitives
 
@@ -85,10 +89,6 @@ Description: vtk support for opencv
 Feature: webp
 Build-Depends: libwebp
 Description: WebP support for opencv
-
-Feature: halide
-Build-Depends: halide, opencv3[core], opencv3[dnn]
-Description: Halide support for opencv
 
 Feature: world
 Description: Compile to a single package support for opencv

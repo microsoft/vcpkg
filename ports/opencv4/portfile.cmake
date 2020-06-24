@@ -53,10 +53,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"    BUILD_opencv_world
 )
 
-if("halide" IN_LIST FEATURES)
-  message(WARNING "The Halide feature is currently broken")
-endif()
-
 # Cannot use vcpkg_check_features() for "dnn", "gtk", "ipp", "openmp", "ovis", "tbb", and "vtk".
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
@@ -359,8 +355,8 @@ vcpkg_configure_cmake(
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
-        -DWITH_GTK=${WITH_GTK}
         -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
+        -DWITH_GTK=${WITH_GTK}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}

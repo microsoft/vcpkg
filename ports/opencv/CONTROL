@@ -37,6 +37,14 @@ Feature: gdcm
 Build-Depends: opencv4[core,gdcm]
 Description: GDCM support for opencv
 
+Feature: gtk
+Build-Depends: opencv4[core,gtk]
+Description: gtk support for opencv
+
+Feature: halide
+Build-Depends: opencv4[core,halide]
+Description: Halide support for opencv
+
 Feature: ipp
 Build-Depends: opencv4[core,ipp]
 Description: Enable Intel Integrated Performance Primitives
@@ -93,14 +101,6 @@ Feature: webp
 Build-Depends: opencv4[core,webp]
 Description: WebP support for opencv
 
-Feature: halide
-Build-Depends: opencv4[core,halide]
-Description: Halide support for opencv
-
 Feature: world
 Build-Depends: opencv4[core,world]
 Description: Compile to a single package support for opencv
-
-Feature: gtk
-Build-Depends: opencv4[core,gtk]
-Description: gtk support for opencv
