@@ -1,5 +1,5 @@
 diff --git a/ThirdParty/h5part/vtkh5part/src/H5Part.c b/ThirdParty/h5part/vtkh5part/src/H5Part.c
-index 228d246..b9c6640 100644
+index 228d246..41af04d 100644
 --- a/ThirdParty/h5part/vtkh5part/src/H5Part.c
 +++ b/ThirdParty/h5part/vtkh5part/src/H5Part.c
 @@ -2092,7 +2092,7 @@ _H5Part_iteration_operator2 (
@@ -11,3 +11,12 @@ index 228d246..b9c6640 100644
  	return (herr_t)HANDLE_H5G_GET_OBJINFO_ERR ( member_name );
        }
  
+@@ -2142,7 +2142,7 @@ _H5Part_iteration_operator2 (
+           if ( obj_id < 0 ) {
+ 	    return (herr_t)HANDLE_H5G_OPEN_ERR ( member_name );
+           }
+-          else if ( H5Oget_info ( obj_id, &objinfo ) < 0 ) {
++          else if ( H5Oget_info1 ( obj_id, &objinfo ) < 0 ) {
+ 	    return (herr_t)HANDLE_H5G_GET_OBJINFO_ERR ( member_name );
+           }
+           else {
