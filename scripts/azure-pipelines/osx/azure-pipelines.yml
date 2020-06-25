@@ -50,10 +50,6 @@ jobs:
       df -h
     displayName: 'Report on Disk Space After Build'
     condition: always()
-  - bash: |
-      df -h
-    displayName: 'Report on Disk Space After Build'
-    condition: always()
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: x64-osx port build failure logs'
     inputs:
