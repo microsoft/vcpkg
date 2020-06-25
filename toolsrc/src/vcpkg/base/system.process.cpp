@@ -30,7 +30,7 @@ namespace vcpkg
     {
         struct CtrlCStateMachine
         {
-            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) { }
+            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) {}
 
             void transition_to_spawn_process() noexcept
             {
@@ -197,7 +197,40 @@ namespace vcpkg
         if (Strings::find_first_of(s, " \t\n\r\"\\,;&`^|'") != s.end())
         {
             // TODO: improve this to properly handle all escaping
-            Strings::append(buf, '"', s, '"');
+#if _WIN32
+            // On Windows, `\`s before a double-quote must be doubled. Inner double-quotes must be escaped.
+            buf.push_back('"');
+            size_t n_slashes = 0;
+            for (auto ch : s)
+            {
+                if (ch == '\\')
+                {
+                    ++n_slashes;
+                }
+                else if (ch == '"')
+                {
+                    buf.append(n_slashes + 1, '\\');
+                    n_slashes = 0;
+                }
+                else
+                {
+                    n_slashes = 0;
+                }
+                buf.push_back(ch);
+            }
+            buf.append(n_slashes, '\\');
+            buf.push_back('"');
+#else
+            // On non-Windows, `\` is the escape character and always requires doubling. Inner double-quotes must be
+            // escaped.
+            buf.push_back('"');
+            for (auto ch : s)
+            {
+                if (ch == '\\' || ch == '"') buf.push_back('\\');
+                buf.push_back(ch);
+            }
+            buf.push_back('"');
+#endif
         }
         else
         {
@@ -347,7 +380,7 @@ namespace vcpkg
 #if defined(_WIN32)
     struct ProcessInfo
     {
-        constexpr ProcessInfo() noexcept : proc_info{} { }
+        constexpr ProcessInfo() noexcept : proc_info{} {}
         ProcessInfo(ProcessInfo&& other) noexcept : proc_info(other.proc_info)
         {
             other.proc_info.hProcess = nullptr;
@@ -689,6 +722,6 @@ namespace vcpkg
         SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ctrl_handler), TRUE);
     }
 #else
-    void System::register_console_ctrl_handler() { }
+    void System::register_console_ctrl_handler() {}
 #endif
 }
