@@ -156,7 +156,7 @@ namespace vcpkg
             else
             {
                 return System::get_home_dir().map([](fs::path home) {
-                    home.append(fs::u8path(".config"));
+                    home /= fs::u8path(".config");
                     return home;
                 });
             }
@@ -175,7 +175,7 @@ namespace vcpkg
             else
             {
                 return System::get_home_dir().map([](fs::path home) {
-                    home.append(fs::u8path(".cache"));
+                    home /= fs::u8path(".cache");
                     return home;
                 });
             }
