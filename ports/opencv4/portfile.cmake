@@ -53,7 +53,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"    BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", "gtk", "ipp", "openmp", "ovis", "tbb", and "vtk".
+# Cannot use vcpkg_check_features() for "dnn", ipp", "openmp", "ovis", "tbb", and "vtk".
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
@@ -61,15 +61,6 @@ if("dnn" IN_LIST FEATURES)
     set(BUILD_opencv_dnn ON)
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
-  endif()
-endif()
-
-set(WITH_GTK OFF)
-if("gtk" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_LINUX)
-    set(WITH_GTK ON)
-  else()
-    message(WARNING "The GTK feature can be enabled only on Linux")
   endif()
 endif()
 
@@ -356,7 +347,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
-        -DWITH_GTK=${WITH_GTK}
+        -DWITH_GTK=OFF
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}

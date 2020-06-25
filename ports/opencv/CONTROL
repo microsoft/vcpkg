@@ -37,10 +37,6 @@ Feature: gdcm
 Build-Depends: opencv4[core,gdcm]
 Description: GDCM support for opencv
 
-Feature: gtk
-Build-Depends: opencv4[core,gtk]
-Description: gtk support for opencv
-
 Feature: halide
 Build-Depends: opencv4[core,halide]
 Description: Halide support for opencv
