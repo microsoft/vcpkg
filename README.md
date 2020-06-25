@@ -1,7 +1,7 @@
 # Vcpkg: Overview
 
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS.
-This tool and ecosystem are constantly evolving; your involvement is vital to its success!
+This tool and ecosystem are constantly evolving, and we always appreciate contributions!
 
 If you've never used vcpkg before, or if you're trying to figure out how to use vcpkg,
 check out our [Getting Started](#getting-started) section for how to start using vcpkg.
@@ -26,7 +26,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
   - [Quick Start: Unix](#quick-start-unix)
   - [Installing Linux Developer Tools](#installing-linux-developer-tools)
   - [Installing macOS Developer Tools](#installing-macos-developer-tools)
-    - [Installing GCC on macOS](#installing-gcc-on-macos)
+    - [Installing GCC for macOS before 10.15](#installing-gcc-for-macos-before-1015)
   - [Using vcpkg with CMake](#using-vcpkg-with-cmake)
     - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
@@ -44,7 +44,7 @@ First, follow the quick start guide for either
 depending on what you're using.
 
 For more information, see [Installing and Using Packages][getting-vcpkg:using-a-package].
-If a library you need is not present in vcpkg catalog,
+If a library you need is not present in the vcpkg catalog,
 you can [open an issue on the GitHub repo][getting-vcpkg:open-issue]
 where the vcpkg team and community can see it,
 and potentially add the port to vcpkg.
@@ -66,7 +66,9 @@ Prerequisites:
 
 First, download and bootstrap vcpkg itself; it can be installed anywhere,
 but generally we recommend using vcpkg as a submodule for CMake projects,
-and installing it on a user-local level for Visual Studio projects.
+and installing it globally for Visual Studio projects.
+We recommend somewhere like `C:\src\vcpkg` or `C:\dev\vcpkg`,
+since otherwise you may run into path issues for some port build systems.
 
 ```cmd
 > git clone https://github.com/microsoft/vcpkg
@@ -76,11 +78,17 @@ and installing it on a user-local level for Visual Studio projects.
 To install the libraries for your project, run:
 
 ```cmd
-> .\vcpkg\vcpkg install [packages to install] # on Windows
+> .\vcpkg\vcpkg install [packages to install]
+```
+
+You can also search for the libraries you need with the `search` subcommand:
+
+```cmd
+> .\vcpkg\vcpkg search [search term]
 ```
 
 In order to use vcpkg with Visual Studio, including CMake projects in Visual Studio,
-run the following command in an administrator command prompt:
+run the following command (may require administrator elevation):
 
 ```cmd
 > .\vcpkg\vcpkg integrate install
@@ -126,8 +134,14 @@ $ ./vcpkg/bootstrap-vcpkg.sh
 
 To install the libraries for your project, run:
 
+```sh
+$ ./vcpkg/vcpkg install [packages to install]
 ```
-> ./vcpkg/vcpkg install [packages to install]
+
+You can also search for the libraries you need with the `search` subcommand:
+
+```sh
+$ ./vcpkg/vcpkg search [search term]
 ```
 
 In order to use vcpkg with CMake, you can use the toolchain file:
@@ -153,7 +167,7 @@ need to install:
 
 ```sh
 $ sudo apt-get update
-$ sudo apt-get install build-essential
+$ sudo apt-get install build-essential tar curl zip unzip
 ```
 
 - CentOS
@@ -181,7 +195,7 @@ Then follow along with the prompts in the windows that comes up.
 On macOS 10.14 and previous, you'll also need to install g++ from homebrew;
 follow the instructions in the following section.
 
-### Installing GCC on macOS
+### Installing GCC for macOS before 10.15
 
 This will _only_ be necessary if you're using a macOS version from before 10.15.
 Installing homebrew should be very easy; check out <brew.sh> for more information,
@@ -206,11 +220,11 @@ If you're using vcpkg with CMake, the following may help!
 ### Vcpkg as a Submodule
 
 When using vcpkg as a submodule of your project,
-you can add the following to your CMakeLists.txt instead of passing `CMAKE_TOOLCHAIN_FILE`
-to the cmake invocation.
+you can add the following to your CMakeLists.txt before the first `project()` call,
+instead of passing `CMAKE_TOOLCHAIN_FILE` to the cmake invocation.
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
   CACHE STRING "Vcpkg toolchain file")
 ```
 
@@ -249,26 +263,9 @@ and it's fine to run multiple vcpkg commands from the same
 vcpkg directory at the same time.
 
 Then, we must turn on the `manifests` vcpkg feature flag by adding
-`manifests` to the comma-separated `VCPKG_FEATURE_FLAGS` environment
-variable:
-
-in Windows Command Prompt:
-
-```cmd
-> set VCPKG_FEATURE_FLAGS=manifests
-```
-
-in Powershell:
-
-```pwsh
-PS> $env:VCPKG_FEATURE_FLAGS = "manifests"
-```
-
-and in bash (and other bash-like shells):
-
-```sh
-$ export VCPKG_FEATURE_FLAGS="manifests"
-```
+`manifests` to the comma-separated `--feature-flags` option,
+or by adding it to the comma-separated `VCPKG_FEATURE_FLAGS`
+environment variable.
 
 You may also want to add vcpkg to the `PATH`.
 
@@ -293,7 +290,7 @@ or the Visual Studio/MSBuild inteegration,
 it will install the dependencies automatically,
 although you will need to set `VcpkgManifestEnabled` to `On` for MSBuild.
 If you wish to install your dependencies without using either CMake or MSBuild,
-you may use a simple `vcpkg install` without arguments.
+you may use a simple `vcpkg install --feature-flags=manifests`
 
 For more information, check out the [manifest][getting-started:manifest-spec]
 specification.
