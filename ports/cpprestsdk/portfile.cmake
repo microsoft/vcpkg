@@ -45,4 +45,9 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/cpprest/details/cpprest_compat.h
+        "#ifdef _NO_ASYNCRTIMP" "#if 1")
+endif()
+
 file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
