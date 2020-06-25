@@ -32,9 +32,4 @@ Function Format-Size {
     return "$Size GiB"
 }
 
-Get-CimInstance -ClassName Win32_LogicalDisk
-    | Format-Table -Property `
-        @{Label="Disk"; Expression={ $_.DeviceID }}, `
-        @{Label="Label"; Expression={ $_.VolumeName }}, `
-        @{Label="Size"; Expression={ Format-Size($_.Size) }}, `
-        @{Label="Free Space"; Expression={ Format-Size($_.FreeSpace) }}
+Get-CimInstance -ClassName Win32_LogicalDisk | Format-Table -Property @{Label="Disk"; Expression={ $_.DeviceID }},@{Label="Label"; Expression={ $_.VolumeName }},@{Label="Size"; Expression={ Format-Size($_.Size) }},@{Label="Free Space"; Expression={ Format-Size($_.FreeSpace) }}
