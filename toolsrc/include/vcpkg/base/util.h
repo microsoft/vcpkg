@@ -22,6 +22,11 @@ namespace vcpkg::Util
         {
             augend->insert(augend->end(), addend.begin(), addend.end());
         }
+        template<class Vec, class Key>
+        bool contains(const Vec& container, const Key& item)
+        {
+            return std::find(container.begin(), container.end(), item) != container.end();
+        }
     }
 
     namespace Sets

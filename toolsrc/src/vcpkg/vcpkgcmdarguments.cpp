@@ -548,6 +548,20 @@ namespace vcpkg
             }
         }
 
+        const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
+        if (const auto unpacked = vcpkg_feature_flags_env.get())
+        {
+            auto flags = Strings::split(*unpacked, ',');
+            if (!binary_caching && Util::Vectors::contains(flags, "binarycaching"))
+            {
+                binary_caching = true;
+            }
+            if (Util::Vectors::contains(flags, "compilertracking"))
+            {
+                compiler_tracking = true;
+            }
+        }
+
         if (!triplet)
         {
             const auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
