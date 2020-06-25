@@ -147,9 +147,9 @@ if(@ENABLE_VORBIS@)
 endif()
 
 if(@ENABLE_VPX@)
-  find_library(VPX_LIBRARY_RELEASE NAMES vpx vpxmt PATHS ${_IMPORT_PREFIX}/lib/ NO_DEFAULT_PATH)
-  find_library(VPX_LIBRARY_DEBUG NAMES vpx vpxmt PATHS ${_IMPORT_PREFIX}/debug/lib/ NO_DEFAULT_PATH)
-  select_library_configurations(VPX)
+  find_dependency(unofficial-libvpx)
+  get_target_property(VPX_LIBRARY_RELEASE unofficial::libvpx::libvpx IMPORTED_LOCATION_RELEASE)
+  get_target_property(VPX_LIBRARY_DEBUG unofficial::libvpx::libvpx IMPORTED_LOCATION_DEBUG)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS "$<$<CONFIG:Debug>:${VPX_LIBRARY_DEBUG}>$<$<CONFIG:Release>:${VPX_LIBRARY_RELEASE}>")
 endif()
 
