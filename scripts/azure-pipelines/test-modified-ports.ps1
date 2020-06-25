@@ -45,12 +45,12 @@ Param(
 )
 
 if (-Not (Test-Path "triplets/$Triplet.cmake")) {
-    Write-Error 'Incorrect triplet, please supply a valid triplet.'
+    Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
 }
 
 $env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
 $buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
-$installRoot = Join-Path $WorkingRoot 'install'
+$installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
