@@ -20,6 +20,7 @@ stages:
         inputs:
           filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
       - script: rmdir /s /q W:\fail
+        failOnStderr: false
         displayName: 'Delete W:\fail'
     - job: linux
       displayName: 'Clean Linux Tombstones'
@@ -28,6 +29,7 @@ stages:
       steps:
       - bash: rm -rf /archives/fail
         displayName: 'Delete /archives/fail'
+        failOnStderr: false
     - job: osx
       displayName: 'Clean MacOS Tombstones'
       condition: ${{ variables['delete-tombstones-first'] }}
@@ -37,6 +39,7 @@ stages:
       steps:
       - bash: rm -rf /Users/vagrant/Data/archives/fail
         displayName: 'Delete /Users/vagrant/Data/archives/fail'
+        failOnStderr: false
 
   - stage: run_pr_test
     displayName: 'Run PR Test'
