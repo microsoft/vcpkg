@@ -1965,13 +1965,16 @@ xerces-c:x64-uwp=fail
 xeus:x64-linux=ignore
 xmlsec:arm-uwp=fail
 xmlsec:x64-uwp=fail
-xmsh:arm64-windows=fail
-xmsh:arm-uwp=fail
-xmsh:x64-uwp=fail
-xmsh:x64-windows=fail
-xmsh:x64-windows-static=fail
-xmsh:x86-windows=fail
-xmsh:x64-linux=ignore
+# The xmsh upstream repository is gone, if we find no replacement before
+# 2021-01-01 we will remove the port outright.
+xmsh:arm-uwp=skip
+xmsh:arm64-windows=skip
+xmsh:x64-linux=skip
+xmsh:x64-osx=skip
+xmsh:x64-uwp=skip
+xmsh:x64-windows-static=skip
+xmsh:x64-windows=skip
+xmsh:x86-windows=skip
 xtensor-io:x64-uwp=ignore
 x-plane:arm64-windows=fail
 x-plane:arm-uwp=fail
