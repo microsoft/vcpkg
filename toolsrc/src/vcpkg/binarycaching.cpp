@@ -396,7 +396,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 if (!maybe_home.has_value()) return add_error(maybe_home.error(), segments[0].first);
 
                 auto p = *maybe_home.get();
-                p.append("vcpkg").append("archives");
+                p /= fs::u8path("vcpkg/archives");
                 if (!p.is_absolute())
                     return add_error("default path was not absolute: " + p.u8string(), segments[0].first);
                 if (segments.size() == 2)
