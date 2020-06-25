@@ -10,7 +10,7 @@ namespace vcpkg
     template<class Err>
     struct ErrorHolder
     {
-        ErrorHolder() : m_is_error(false) {}
+        ErrorHolder() : m_is_error(false), m_err{} {}
         template<class U>
         ErrorHolder(U&& err) : m_is_error(true), m_err(std::forward<U>(err))
         {
@@ -187,7 +187,7 @@ namespace vcpkg
             }
             else
             {
-                return {std::move(error()), expected_right_tag};
+                return {std::move(*this).error(), expected_right_tag};
             }
         }
 

@@ -2,7 +2,7 @@
 
 #include <vcpkg/binaryparagraph.h>
 
-#include <unordered_map>
+#include <map>
 
 namespace vcpkg
 {
@@ -56,7 +56,7 @@ namespace vcpkg
 
         const PackageSpec& spec() const { return core->package.spec; }
         std::vector<PackageSpec> dependencies() const;
-        std::unordered_map<std::string, std::vector<FeatureSpec>> feature_dependencies() const;
+        std::map<std::string, std::vector<FeatureSpec>> feature_dependencies() const;
 
         const StatusParagraph* core;
         std::vector<const StatusParagraph*> features;

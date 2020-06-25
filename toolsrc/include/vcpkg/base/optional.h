@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/base/pragmas.h>
+
 #include <vcpkg/base/lineinfo.h>
 
 #include <type_traits>
@@ -19,9 +21,7 @@ namespace vcpkg
         template<class T, bool B = std::is_copy_constructible<T>::value>
         struct OptionalStorage
         {
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
+            VCPKG_MSVC_WARNING(suppress : 26495)
             constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() {}
             constexpr OptionalStorage(const T& t) : m_is_present(true), m_t(t) {}
             constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) {}
@@ -31,17 +31,13 @@ namespace vcpkg
                 if (m_is_present) m_t.~T();
             }
 
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
+            VCPKG_MSVC_WARNING(suppress : 26495)
             OptionalStorage(const OptionalStorage& o) : m_is_present(o.m_is_present), m_inactive()
             {
                 if (m_is_present) new (&m_t) T(o.m_t);
             }
 
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
+            VCPKG_MSVC_WARNING(suppress : 26495)
             OptionalStorage(OptionalStorage&& o) noexcept : m_is_present(o.m_is_present), m_inactive()
             {
                 if (m_is_present)
@@ -109,9 +105,7 @@ namespace vcpkg
         template<class T>
         struct OptionalStorage<T, false>
         {
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
+            VCPKG_MSVC_WARNING(suppress : 26495)
             constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() {}
             constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) {}
 
@@ -120,9 +114,7 @@ namespace vcpkg
                 if (m_is_present) m_t.~T();
             }
 
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
+            VCPKG_MSVC_WARNING(suppress : 26495)
             OptionalStorage(OptionalStorage&& o) noexcept : m_is_present(o.m_is_present), m_inactive()
             {
                 if (m_is_present)
@@ -283,6 +275,21 @@ namespace vcpkg
             }
         }
 
+        friend bool operator==(const Optional& lhs, const Optional& rhs)
+        {
+            if (lhs.m_base.has_value())
+            {
+                if (rhs.m_base.has_value())
+                {
+                    return lhs.m_base.value() == rhs.m_base.value();
+                }
+
+                return false;
+            }
+
+            return !rhs.m_base.has_value();
+        }
+
     private:
         details::OptionalStorage<T> m_base;
     };
@@ -316,5 +323,28 @@ namespace vcpkg
     {
         if (auto p = o.get()) return t != *p;
         return true;
+    }
+
+    template<class Container, class Projection>
+    auto common_projection(const Container& input, Projection proj)
+        -> Optional<std::decay_t<decltype(proj(*(input.begin())))>>
+    {
+        const auto last = input.end();
+        auto first = input.begin();
+        if (first == last)
+        {
+            return nullopt;
+        }
+
+        const auto& prototype = proj(*first);
+        while (++first != last)
+        {
+            if (prototype != proj(*first))
+            {
+                return nullopt;
+            }
+        }
+
+        return prototype;
     }
 }

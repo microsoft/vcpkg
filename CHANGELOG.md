@@ -1,3 +1,1801 @@
+vcpkg (2020.04.20 - 2020.06.15)
+---
+#### Total port count: 1402
+#### Total port count per triplet (tested): 
+|triplet|ports available|
+|---|---|
+|**x64-windows**|1282|
+|**x64-osx**|1109|
+|**x64-linux**|1181|
+|x64-windows-static|1187|
+|x86-windows|1261|
+|x64-uwp|693|
+|arm64-windows|903|
+|arm-uwp|656|
+
+#### The following documentation has been updated:
+- [Testing](docs/tool-maintainers/testing.md)
+    - [(#11007)](https://github.com/microsoft/vcpkg/pull/11007) [vcpkg] Fix Catch2 include path in documentation (by @horenmar)
+- [Maintainer Guidelines and Policies](docs/maintainers/maintainer-guide.md)
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools (by @myd7349)
+- [Portfile helper functions](docs/maintainers/portfile-functions.md)
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools (by @myd7349)
+    - [(#10505)](https://github.com/microsoft/vcpkg/pull/10505) [gn, crashpad] Add GN build support and crashpad port (by @myd7349)
+- [vcpkg_clean_executables_in_bin](docs/maintainers/vcpkg_clean_executables_in_bin.md)***[NEW]***
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools (by @myd7349)
+- [vcpkg_copy_tools](docs/maintainers/vcpkg_copy_tools.md)***[NEW]***
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools (by @myd7349)
+- [vcpkg_build_gn](docs/maintainers/vcpkg_build_gn.md)***[NEW]***
+    - [(#10505)](https://github.com/microsoft/vcpkg/pull/10505) [gn, crashpad] Add GN build support and crashpad port (by @vejmartin)
+- [vcpkg_build_ninja](docs/maintainers/vcpkg_build_ninja.md)***[NEW]***
+    - [(#10505)](https://github.com/microsoft/vcpkg/pull/10505) [gn, crashpad] Add GN build support and crashpad port (by @vejmartin)
+- [vcpkg_configure_gn](docs/maintainers/vcpkg_configure_gn.md)***[NEW]***
+    - [(#10505)](https://github.com/microsoft/vcpkg/pull/10505) [gn, crashpad] Add GN build support and crashpad port (by @vejmartin)
+- [vcpkg_find_acquire_program](docs/maintainers/vcpkg_find_acquire_program.md)
+    - [(#10505)](https://github.com/microsoft/vcpkg/pull/10505) [gn, crashpad] Add GN build support and crashpad port (by @vejmartin)
+- [vcpkg_install_gn](docs/maintainers/vcpkg_install_gn.md)***[NEW]***
+    - [(#10505)](https://github.com/microsoft/vcpkg/pull/10505) [gn, crashpad] Add GN build support and crashpad port (by @vejmartin)
+- [vcpkg and Android](docs/examples/vcpkg_android_example_cmake_script/cmake/vcpkg_android.cmake)***[NEW]***
+    - [(#11264)](https://github.com/microsoft/vcpkg/pull/11264) Improve Android doc (triplets, usage with cmake and prefab) (by @pthom)
+- [vcpkg telemetry and privacy](docs/about/privacy.md)
+    - [(#11542)](https://github.com/microsoft/vcpkg/pull/11542) [vcpkg metrics] Allow someone to opt out after build (by @strega-nil)
+- [Manifests](docs/specifications/manifests.md)***[NEW]***
+    - [(#11203)](https://github.com/microsoft/vcpkg/pull/11203) [vcpkg] RFC: Manifests (by @strega-nil)
+- [CONTROL files](docs/maintainers/control-files.md)
+    - [(#11323)](https://github.com/microsoft/vcpkg/pull/11323) [vcpkg] add x86-wasm.cmake to community triplets (by @MoAlyousef)
+    - [(#11365)](https://github.com/microsoft/vcpkg/pull/11365) [vcpkg] [cudnn] [msmpi] [openmpi] Update VMSS (by @MoAlyousef)
+- [Installing and Using Packagese Example: SQLite](docs/examples/installing-and-using-packages.md)
+    - [(#11763)](https://github.com/microsoft/vcpkg/pull/11763) docs: fix CMakeLists example for SQLite3 (by @disposedtrolley)
+
+#### The following changes have been made to the vcpkg tool and infrastructure:
+- [(#10828)](https://github.com/microsoft/vcpkg/pull/10828) Onboard Windows PR tests to Azure Pipelines YAML and Scale Sets (by @BillyONeal)
+- [(#10932)](https://github.com/microsoft/vcpkg/pull/10932) [vcpkg] Update git to 2.26.2 (by @Cheney-W)
+- [(#10973)](https://github.com/microsoft/vcpkg/pull/10973) [vcpkg] Fix toolsrc CMake build error (by @NancyLi1013)
+- [(#11009)](https://github.com/microsoft/vcpkg/pull/11009) Fix slack link to current, correct, location. (by @grafikrobot)
+- [(#9861)](https://github.com/microsoft/vcpkg/pull/9861) [scripts] add new function vcpkg_fixup_pkgconfig (by @Neumann-A)
+- [(#11064)](https://github.com/microsoft/vcpkg/pull/11064) [vcpkg] Copy macos pipelines into azure-pipelines.yml (by @BillyONeal)
+- [(#10476)](https://github.com/microsoft/vcpkg/pull/10476) [vcpkg] Add support for VCPKG_BINARY_SOURCES and --x-binarysource=<> (by @ras0219-msft)
+- [(#11068)](https://github.com/microsoft/vcpkg/pull/11068) [vcpkg] Small touchups for vcpkg unit tests (by @horenmar)
+- [(#11085)](https://github.com/microsoft/vcpkg/pull/11085) [vcpkg] Correctly record default feature list in BinaryParagraphs. Fixes #10678. (by @ras0219-msft)
+- [(#11090)](https://github.com/microsoft/vcpkg/pull/11090) [vcpkg] Bump macos build timeouts to 1 day (by @BillyONeal)
+- [(#11091)](https://github.com/microsoft/vcpkg/pull/11091) [vcpkg baseline] Ignore mlpack on macOS (by @strega-nil)
+- [(#11083)](https://github.com/microsoft/vcpkg/pull/11083) [vcpkg] Warn on unmatched removal with reasonable alternative (by @ras0219-msft)
+- [(#11102)](https://github.com/microsoft/vcpkg/pull/11102) [vcpkg] fix undefined working dir in vcpkg_acquire_msys (by @Neumann-A)
+- [(#11058)](https://github.com/microsoft/vcpkg/pull/11058) [msbuild]fix use UseEnv-True (by @Voskrese)
+- [(#10980)](https://github.com/microsoft/vcpkg/pull/10980) [vcpkg] Onboard Linux to VMSS, open 'git' port, and switch back to Azure Spot (by @BillyONeal)
+- [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools (by @myd7349)
+- [(#11166)](https://github.com/microsoft/vcpkg/pull/11166) [vcpkg] Add disk space report on Linux. (by @BillyONeal)
+- [(#11170)](https://github.com/microsoft/vcpkg/pull/11170) [vcpkg] fix bug in Filesystem::absolute (by @strega-nil)
+- [(#11175)](https://github.com/microsoft/vcpkg/pull/11175) [vcpkg] Point README.md to the correct status badge. (by @BillyONeal)
+- [(#11171)](https://github.com/microsoft/vcpkg/pull/11171) [vcpkg] Add telemetry notice to `README.md`. (by @BillyONeal)
+- [(#11189)](https://github.com/microsoft/vcpkg/pull/11189) [vcpkg] Add tombstone deletion scripts. (by @BillyONeal)
+- [(#11105)](https://github.com/microsoft/vcpkg/pull/11105) [vcpkg/scripts] Fix ninja search path on windows and find binaries within vcpkg first (by @Neumann-A)
+- [(#11202)](https://github.com/microsoft/vcpkg/pull/11202) [vcpkg] always pass VSCMD_SKIP_SENDTELEMETRY=1 (by @strega-nil)
+- [(#8588)](https://github.com/microsoft/vcpkg/pull/8588) [vcpkg] Add x86 support for Linux toolchain (by @zhbanito)
+- [(#11213)](https://github.com/microsoft/vcpkg/pull/11213) [vcpkg] Restrict telemetry uploads to TLS 1.2 (by @BillyONeal)
+- [(#11234)](https://github.com/microsoft/vcpkg/pull/11234) [vcpkg] Don't build the metrics uploader when metrics are disabled. (by @BillyONeal)
+- [(#11233)](https://github.com/microsoft/vcpkg/pull/11233) [vcpkg] Resolve relative overlay ports to the current working directory. (by @ras0219-msft)
+- [(#10760)](https://github.com/microsoft/vcpkg/pull/10760) [vcpkg] Adding support for finding VS2019 by environment variable (by @Honeybunch)
+- [(#11174)](https://github.com/microsoft/vcpkg/pull/11174) [vcpkg] [llvm] Bump Linux VM memory size and do all operations on the temporary disk. (by @BillyONeal)
+- [(#11266)](https://github.com/microsoft/vcpkg/pull/11266) [vcpkg][android] Link C++ runtime according to VCPKG_CRT_LINKAGE (by @huangqinjin)
+- [(#11260)](https://github.com/microsoft/vcpkg/pull/11260) [vcpkg] Update pull request template (by @PhoebeHui)
+- [(#11302)](https://github.com/microsoft/vcpkg/pull/11302) [vcpkg] Resolve --overlay-ports is only working for relative parths since fix… (by @TobiasFunk)
+- [(#11205)](https://github.com/microsoft/vcpkg/pull/11205) [vcpkg] Hopefully fix build on macOS 10.13/10.14 (by @strega-nil)
+- [(#11093)](https://github.com/microsoft/vcpkg/pull/11093) [vcpkg] Fix nuget package import failed. (by @shihaonan369)
+- [(#11239)](https://github.com/microsoft/vcpkg/pull/11239) [vcpkg] Turn on tests in CI. (by @BillyONeal)
+- [(#11339)](https://github.com/microsoft/vcpkg/pull/11339) [vcpkg] Avoid naming Policheck sensitive term 'Virgin Islands' (by @BillyONeal)
+- [(#11368)](https://github.com/microsoft/vcpkg/pull/11368) [vcpkg] Do not build the metrics uploader with MSBuild when metrics are disabled (by @rickertm)
+- [(#11315)](https://github.com/microsoft/vcpkg/pull/11315) [vcpkg] Harden expand environment strings path with explicit integer overflow checks and resistance to CP_ACP. (by @BillyONeal)
+- [(#11450)](https://github.com/microsoft/vcpkg/pull/11450) [vcpkg CI] Clean git directory before clone (by @strega-nil)
+- [(#11432)](https://github.com/microsoft/vcpkg/pull/11432) [vcpkg] Harden file removals and clean directory contents in "CI" inside vcpkg itself. (by @BillyONeal)
+- [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2 (by @JackBoosY)
+- [(#11433)](https://github.com/microsoft/vcpkg/pull/11433) [vcpkg] Optimize string split slightly. (by @BillyONeal)
+- [(#11299)](https://github.com/microsoft/vcpkg/pull/11299) [vcpkg] pass -disableMetrics to bootstrap on git bash (by @strega-nil)
+- [(#11453)](https://github.com/microsoft/vcpkg/pull/11453) Fix CMake PATH that fails Windows tests. (by @BillyONeal)
+- [(#11343)](https://github.com/microsoft/vcpkg/pull/11343) [vcpkg] fix extern C around ctermid (by @strega-nil)
+- [(#11380)](https://github.com/microsoft/vcpkg/pull/11380) [tool-meson] Update to 0.54.2 (by @c72578)
+- [(#11057)](https://github.com/microsoft/vcpkg/pull/11057) [Vcpkg] Fix macOS applocal.py dependency bundling error (by @kevinhartman)
+- [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds (by @Neumann-A)
+- [(#11431)](https://github.com/microsoft/vcpkg/pull/11431) [vcpkg] Add static triplet for arm64-windows (by @orudge)
+- [(#11466)](https://github.com/microsoft/vcpkg/pull/11466) [vcpkg] Fix cmake architecture detection on windows with ninja generator (by @Chronial)
+- [(#11512)](https://github.com/microsoft/vcpkg/pull/11512) [vcpkg] Remove powershell from the 'run vcpkg ci' path to reduce hangs from msys components. (by @BillyONeal)
+- [(#11443)](https://github.com/microsoft/vcpkg/pull/11443) [vcpkg-acquire-msys] Update pacman before any other package. (by @emptyVoid)
+- [(#11496)](https://github.com/microsoft/vcpkg/pull/11496) [Baseline] Fix boost-*:arm-uwp failure and resolve conflicts in CI (by @PhoebeHui)
+- [(#11559)](https://github.com/microsoft/vcpkg/pull/11559) [VCPKG baseline] Fix many ports (by @JackBoosY)
+- [(#11545)](https://github.com/microsoft/vcpkg/pull/11545) [vcpkg] Move CI cleaning back out of the 'ci' command into a separate command to restore cross-compilation preinstalls. (by @BillyONeal)
+- [(#11612)](https://github.com/microsoft/vcpkg/pull/11612) [vcpkg baseline] Fix baseline failures (by @PhoebeHui)
+- [(#11542)](https://github.com/microsoft/vcpkg/pull/11542) [vcpkg metrics] Allow someone to opt out after build (by @strega-nil)
+- [(#11653)](https://github.com/microsoft/vcpkg/pull/11653) [vcpkg] Rename the msbuild property VcpkgRoot (by @BillyONeal)
+- [(#11629)](https://github.com/microsoft/vcpkg/pull/11629) [vcpkg] Use a crypto RNG to generate admin passwords (by @BillyONeal)
+- [(#11697)](https://github.com/microsoft/vcpkg/pull/11697) [vcpkg baseline] fix libb2:x64-osx (by @strega-nil)
+- [(#11668)](https://github.com/microsoft/vcpkg/pull/11668) [CI|python3] add setuptools (by @Neumann-A)
+- [(#11613)](https://github.com/microsoft/vcpkg/pull/11613) [vcpkg-baseline][unixodbc/nanodbc] Fix unixodbc build failure and set it as a dependency on nanodbc (by @JackBoosY)
+- [(#11692)](https://github.com/microsoft/vcpkg/pull/11692) [vcpkg baseline] Remove passing port from Ci baseline (by @PhoebeHui)
+- [(#11323)](https://github.com/microsoft/vcpkg/pull/11323) [vcpkg] add x86-wasm.cmake to community triplets (by @MoAlyousef)
+- [(#11647)](https://github.com/microsoft/vcpkg/pull/11647) [vcpkg baseline][libfabric] Only support dynamic build (by @JackBoosY)
+- [(#11483)](https://github.com/microsoft/vcpkg/pull/11483) [vcpkg] Allow CI to pass in all relevant directories and remove use of symbolic links (by @BillyONeal)
+- [(#11764)](https://github.com/microsoft/vcpkg/pull/11764) [vcpkg] Add directories to x-ci-clean lost in merge conflict resolution. (by @BillyONeal)
+- [(#11742)](https://github.com/microsoft/vcpkg/pull/11742) [vcpkg-baseline][manyport] Fix baseline error (by @JackBoosY)
+- [(#11779)](https://github.com/microsoft/vcpkg/pull/11779) [vcpkg] Provide $(VcpkgRoot) and $(VcpkgCurrentInstalledDir) for customers. (by @BillyONeal)
+- [(#11750)](https://github.com/microsoft/vcpkg/pull/11750) [vcpkg README] Add #include<C++> channel (by @strega-nil)
+- [(#11693)](https://github.com/microsoft/vcpkg/pull/11693) [CI|gfortran] Install gfortran for OSX and Linux CI (by @Neumann-A)
+- [(#11839)](https://github.com/microsoft/vcpkg/pull/11839) [vcpkg] Fix OSX CI by ensuring the downloads directory exists (by @BillyONeal
+- [(#11810)](https://github.com/microsoft/vcpkg/pull/11810) [vcpkg-acquire-msys] Improvement (by @emptyVoid)
+- [(#11365)](https://github.com/microsoft/vcpkg/pull/11365) [vcpkg] [cudnn] [msmpi] [openmpi] Update VMSS (by @BillyONeal)
+- [(#11146)](https://github.com/microsoft/vcpkg/pull/11146) [vcpkg] Add nologo to windows toolchain  (by @Neumann-A)
+- [(#11891)](https://github.com/microsoft/vcpkg/pull/11891) [vcpkg] Fix bootstrap on VS2015 (by @BillyONeal)
+- [(#11858)](https://github.com/microsoft/vcpkg/pull/11858) [vcpkg] Merge unit test pass into x86-windows. (by @BillyONeal)
+- [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error (by @JackBoosY)
+- [(#4361)](https://github.com/microsoft/vcpkg/pull/4361) Adds vcpkg item to project settings in Visual Studio (by @Neumann-A)
+- [(#11958)](https://github.com/microsoft/vcpkg/pull/11958) Delete g_binary_caching global that should be passed as a parameter. (by @BillyONeal)
+
+<details>
+<summary><b>The following 79 ports have been added:</b></summary>
+
+|port|version|
+|---|---|
+|[ryml](https://github.com/microsoft/vcpkg/pull/10793)| 2020-04-12
+|[qt5-androidextras](https://github.com/microsoft/vcpkg/pull/10644)<sup>[#11026](https://github.com/microsoft/vcpkg/pull/11026) </sup>| 5.12.8
+|[qt5-canvas3d](https://github.com/microsoft/vcpkg/pull/10644)<sup>[#11026](https://github.com/microsoft/vcpkg/pull/11026) </sup>| 5.12.8
+|[qt5-doc](https://github.com/microsoft/vcpkg/pull/10644)<sup>[#11026](https://github.com/microsoft/vcpkg/pull/11026) </sup>| 5.12.8
+|[qt5-serialbus](https://github.com/microsoft/vcpkg/pull/10644)<sup>[#11026](https://github.com/microsoft/vcpkg/pull/11026) </sup>| 5.12.8
+|[qt5-translations](https://github.com/microsoft/vcpkg/pull/10644)<sup>[#11026](https://github.com/microsoft/vcpkg/pull/11026) </sup>| 5.12.8
+|[qt5-wayland](https://github.com/microsoft/vcpkg/pull/10644)<sup>[#11026](https://github.com/microsoft/vcpkg/pull/11026) </sup>| 5.12.8
+|[qt5-webengine](https://github.com/microsoft/vcpkg/pull/10644)<sup>[#11026](https://github.com/microsoft/vcpkg/pull/11026) [#11120](https://github.com/microsoft/vcpkg/pull/11120) [#11653](https://github.com/microsoft/vcpkg/pull/11653) </sup>| 5.12.8
+|[qt5-webglplugin](https://github.com/microsoft/vcpkg/pull/10644)<sup>[#11026](https://github.com/microsoft/vcpkg/pull/11026) </sup>| 5.12.8
+|[qt5-x11extras](https://github.com/microsoft/vcpkg/pull/10644)<sup>[#11026](https://github.com/microsoft/vcpkg/pull/11026) </sup>| 5.12.8
+|[iniparser](https://github.com/microsoft/vcpkg/pull/10710)| 2020-04-06
+|[quill](https://github.com/microsoft/vcpkg/pull/10902)<sup>[#11326](https://github.com/microsoft/vcpkg/pull/11326) </sup>| 1.3.1
+|[frozen](https://github.com/microsoft/vcpkg/pull/10766)| 1.0.0
+|[cppcoro](https://github.com/microsoft/vcpkg/pull/10693)| 2020-2-28-1
+|[libtomcrypt](https://github.com/microsoft/vcpkg/pull/10960)| 1.18.2-1
+|[libtommath](https://github.com/microsoft/vcpkg/pull/10960)| 1.2.0-1
+|[pe-parse](https://github.com/microsoft/vcpkg/pull/11012)| 1.2.0
+|[opencc](https://github.com/microsoft/vcpkg/pull/8474)<sup>[#10767](https://github.com/microsoft/vcpkg/pull/10767) [#11559](https://github.com/microsoft/vcpkg/pull/11559) [#11612](https://github.com/microsoft/vcpkg/pull/11612) </sup>| 2020-04-26-4
+|[uchardet](https://github.com/microsoft/vcpkg/pull/8477)| 2020-04-26
+|[libqcow](https://github.com/microsoft/vcpkg/pull/11036)<sup>[#11238](https://github.com/microsoft/vcpkg/pull/11238) </sup>| 20191221-1
+|[mstch](https://github.com/microsoft/vcpkg/pull/11020)| 1.0.2-2
+|[nowide](https://github.com/microsoft/vcpkg/pull/11066)<sup>[#11732](https://github.com/microsoft/vcpkg/pull/11732) [#11859](https://github.com/microsoft/vcpkg/pull/11859) </sup>| alias
+|[discord-game-sdk](https://github.com/microsoft/vcpkg/pull/10763)<sup>[#11728](https://github.com/microsoft/vcpkg/pull/11728) </sup>| 2.5.6-1
+|[libmpeg2](https://github.com/microsoft/vcpkg/pull/8871)| 0.5.1
+|[opencv2](https://github.com/microsoft/vcpkg/pull/7849)<sup>[#11201](https://github.com/microsoft/vcpkg/pull/11201) </sup>| 2.4.13.7-1
+|[rtlsdr](https://github.com/microsoft/vcpkg/pull/10901)<sup>[#11575](https://github.com/microsoft/vcpkg/pull/11575) </sup>| 2020-04-16-1
+|[gasol](https://github.com/microsoft/vcpkg/pull/9550)| 2018-01-04
+|[coin](https://github.com/microsoft/vcpkg/pull/9880)| 4.0.0
+|[simage](https://github.com/microsoft/vcpkg/pull/9880)| 1.8.0
+|[soqt](https://github.com/microsoft/vcpkg/pull/9880)| 1.6.0
+|[gmp](https://github.com/microsoft/vcpkg/pull/10613)<sup>[#11565](https://github.com/microsoft/vcpkg/pull/11565) </sup>| 6.2.0-1
+|[nettle](https://github.com/microsoft/vcpkg/pull/10613)<sup>[#11565](https://github.com/microsoft/vcpkg/pull/11565) </sup>| 3.5.1-1
+|[vs-yasm](https://github.com/microsoft/vcpkg/pull/10613)| 0.5.0
+|[uthenticode](https://github.com/microsoft/vcpkg/pull/11199)<sup>[#11256](https://github.com/microsoft/vcpkg/pull/11256) [#11362](https://github.com/microsoft/vcpkg/pull/11362) </sup>| 1.0.4
+|[bitserializer-pugixml](https://github.com/microsoft/vcpkg/pull/11241)<sup>[#11683](https://github.com/microsoft/vcpkg/pull/11683) </sup>| alias
+|[ignition-math6](https://github.com/microsoft/vcpkg/pull/11232)| 6.4.0
+|[vtk-m](https://github.com/microsoft/vcpkg/pull/11148)| 1.5.0
+|[crashpad](https://github.com/microsoft/vcpkg/pull/10505)| 2020-03-18
+|[bitserializer-rapidyaml](https://github.com/microsoft/vcpkg/pull/11242)<sup>[#11683](https://github.com/microsoft/vcpkg/pull/11683) </sup>| alias
+|[ignition-msgs5](https://github.com/microsoft/vcpkg/pull/11272)<sup>[#11397](https://github.com/microsoft/vcpkg/pull/11397) </sup>| 5.1.0
+|[ignition-transport8](https://github.com/microsoft/vcpkg/pull/11272)| 8.0.0
+|[sdformat9](https://github.com/microsoft/vcpkg/pull/11265)<sup>[#11742](https://github.com/microsoft/vcpkg/pull/11742) </sup>| 9.2.0-1
+|[kissfft](https://github.com/microsoft/vcpkg/pull/9237)| 2020-03-30
+|[jaeger-client-cpp](https://github.com/microsoft/vcpkg/pull/9126)<sup>[#11583](https://github.com/microsoft/vcpkg/pull/11583) </sup>| 0.5.1-1
+|[libmediainfo](https://github.com/microsoft/vcpkg/pull/7005)| 20.03
+|[h5py-lzf](https://github.com/microsoft/vcpkg/pull/10871)| 2019-12-04
+|[microsoft-signalr](https://github.com/microsoft/vcpkg/pull/10833)<sup>[#11496](https://github.com/microsoft/vcpkg/pull/11496) </sup>| 0.1.0-alpha1-1
+|[oatpp-consul](https://github.com/microsoft/vcpkg/pull/9402)| 1.0.0
+|[oatpp-curl](https://github.com/microsoft/vcpkg/pull/9402)| 1.0.0
+|[oatpp-libressl](https://github.com/microsoft/vcpkg/pull/9402)| 1.0.0
+|[oatpp-mbedtls](https://github.com/microsoft/vcpkg/pull/9402)| 1.0.0
+|[oatpp-swagger](https://github.com/microsoft/vcpkg/pull/9402)| 1.0.0
+|[oatpp-websocket](https://github.com/microsoft/vcpkg/pull/9402)| 1.0.0
+|[oatpp](https://github.com/microsoft/vcpkg/pull/9402)| 1.0.0
+|[gperftools](https://github.com/microsoft/vcpkg/pull/8750)| 2019-09-02
+|[libvmdk](https://github.com/microsoft/vcpkg/pull/11010)| 2019-12-21
+|[ctp](https://github.com/microsoft/vcpkg/pull/10717)| 6.3.15_20190220_se
+|[munit](https://github.com/microsoft/vcpkg/pull/6780)| 2019-04-06
+|[mmloader](https://github.com/microsoft/vcpkg/pull/11381)| 2020-05-15
+|[absent](https://github.com/microsoft/vcpkg/pull/11447)| 0.3.0
+|[ocilib](https://github.com/microsoft/vcpkg/pull/11549)<sup>[#11646](https://github.com/microsoft/vcpkg/pull/11646) </sup>| 4.6.4-1
+|[tinyply](https://github.com/microsoft/vcpkg/pull/11534)| 2020-05-22
+|[symengine](https://github.com/microsoft/vcpkg/pull/8752)| 2020-05-25
+|[nanoprintf](https://github.com/microsoft/vcpkg/pull/11605)| 2020-05-27
+|[wavelib](https://github.com/microsoft/vcpkg/pull/11611)| 2020-05-29
+|[refl-cpp](https://github.com/microsoft/vcpkg/pull/11622)| 0.9.1
+|[trantor](https://github.com/microsoft/vcpkg/pull/11533)| v1.0.0-rc13
+|[sockpp](https://github.com/microsoft/vcpkg/pull/11562)| 0.7
+|[protozero](https://github.com/microsoft/vcpkg/pull/11652)| 1.6.8
+|[p-ranav-csv2](https://github.com/microsoft/vcpkg/pull/11725)| 2020-06-02
+|[cr](https://github.com/microsoft/vcpkg/pull/11841)| 2020-04-26
+|[json-schema-validator](https://github.com/microsoft/vcpkg/pull/11599)| 2.1.0
+|[log4cxx](https://github.com/microsoft/vcpkg/pull/11659)| 0.10.0-2
+|[xbyak](https://github.com/microsoft/vcpkg/pull/11689)| 5.911
+|[licensepp](https://github.com/microsoft/vcpkg/pull/11711)| 2020-05-19
+|[v-hacd](https://github.com/microsoft/vcpkg/pull/11606)| 3.2.0
+|[libosmium](https://github.com/microsoft/vcpkg/pull/11863)| 2.15.5
+|[gzip-hpp](https://github.com/microsoft/vcpkg/pull/11735)| 0.1.0
+|[infoware](https://github.com/microsoft/vcpkg/pull/11410)| 0.5.3
+</details>
+
+<details>
+<summary><b>The following 375 ports have been updated:</b></summary>
+
+- otl `4.0.451` -> `4.0.455`
+    - [(#10922)](https://github.com/microsoft/vcpkg/pull/10922) [vcpkg baseline] Update hash for otl
+    - [(#11300)](https://github.com/microsoft/vcpkg/pull/11300) [otl] Update to 4.0.455
+
+- vtk `8.2.0-12` -> `9.0-2`
+    - [(#10925)](https://github.com/microsoft/vcpkg/pull/10925) [VTK] Check if VTKTarget files exist
+    - [(#11148)](https://github.com/microsoft/vcpkg/pull/11148) [VTK/vtk-m]  Update VTK to 9.0 and add vtk-m
+    - [(#11643)](https://github.com/microsoft/vcpkg/pull/11643) [vtk] Fix single configuration builds
+    - [(#11708)](https://github.com/microsoft/vcpkg/pull/11708) [python3] Update to Python 3.8
+
+- winreg `1.2.1-1` -> `3.1.0`
+    - [(#10926)](https://github.com/microsoft/vcpkg/pull/10926) [winreg] Update to 2.2.0
+    - [(#10976)](https://github.com/microsoft/vcpkg/pull/10976) [WinReg] update to v2.2.2
+    - [(#11034)](https://github.com/microsoft/vcpkg/pull/11034) [winreg] Update to 2.2.3
+    - [(#11766)](https://github.com/microsoft/vcpkg/pull/11766) [winreg] Update to 2.4.0
+    - [(#11883)](https://github.com/microsoft/vcpkg/pull/11883) [WinReg] Update to 3.0.1
+    - [(#11888)](https://github.com/microsoft/vcpkg/pull/11888) [WinReg] Update to 3.1.0
+
+- libyaml `0.2.2-2` -> `0.2.2-3`
+    - [(#10908)](https://github.com/microsoft/vcpkg/pull/10908) [libyaml] Fix linkage in non-Windows systems
+
+- libzippp `2019-07-22` -> `3.1-1.6.1`
+    - [(#10893)](https://github.com/microsoft/vcpkg/pull/10893) [libzippp] Update to libzippp-v3.1-1.6.1
+
+- blend2d `beta_2020-04-15` -> `beta_2020-06-01`
+    - [(#10891)](https://github.com/microsoft/vcpkg/pull/10891) [blend2d] Update to beta_2020-04-19
+    - [(#11155)](https://github.com/microsoft/vcpkg/pull/11155) [blend2d] Update to beta_2020-05-04
+    - [(#11778)](https://github.com/microsoft/vcpkg/pull/11778) [blend2d] Update to beta_2020-06-01
+
+- pegtl `3.0.0-pre-9d58962` -> `3.0.0-pre-83b6cdc`
+    - [(#10870)](https://github.com/microsoft/vcpkg/pull/10870) [pegtl] Update to latest commit from 4/5/2020
+    - [(#11148)](https://github.com/microsoft/vcpkg/pull/11148) [VTK/vtk-m]  Update VTK to 9.0 and add vtk-m
+    - [(#11531)](https://github.com/microsoft/vcpkg/pull/11531) [pegtl/cppgraphqlgen] matching updates for dependency
+
+- skyr-url `1.5.1` -> `1.9.0`
+    - [(#10868)](https://github.com/microsoft/vcpkg/pull/10868) [skyr-url] Bump version to 1.7.0
+    - [(#10954)](https://github.com/microsoft/vcpkg/pull/10954) [skyr-url] Updated port to use version 1.7.3
+    - [(#11153)](https://github.com/microsoft/vcpkg/pull/11153) [skyr-url] Changed skyr-url version number to 1.7.5
+    - [(#11568)](https://github.com/microsoft/vcpkg/pull/11568) [skyr-url] Changed version number to 1.9.0
+    - [(#11774)](https://github.com/microsoft/vcpkg/pull/11774) [skyr-url] Changed version number for skyr-url
+
+- protobuf `3.11.3` -> `3.12.0-2`
+    - [(#10863)](https://github.com/microsoft/vcpkg/pull/10863) [protobuf] Update to 3.11.4
+    - [(#11228)](https://github.com/microsoft/vcpkg/pull/11228) [protobuf] Correct protobuf under android (Fix issue #8218)
+    - [(#11397)](https://github.com/microsoft/vcpkg/pull/11397) [protobuf] protobuf v3.12.0
+    - [(#11504)](https://github.com/microsoft/vcpkg/pull/11504) [protobuf] Fix RPATH error for static build
+    - [(#11516)](https://github.com/microsoft/vcpkg/pull/11516) [protobuf] Don't redefine PROTOBUF_USE_DLLS
+
+- sdformat6 `6.2.0` -> `6.2.0-1`
+    - [(#10859)](https://github.com/microsoft/vcpkg/pull/10859) [sdformat6] Migrate from Bitbucket to GitHub 🤖
+
+- ompl `1.4.2-2` -> `1.4.2-4`
+    - [(#10854)](https://github.com/microsoft/vcpkg/pull/10854) [ompl] Fix ompl[app] build error
+    - [(#10972)](https://github.com/microsoft/vcpkg/pull/10972) [ompl] Fix patch apply error
+
+- dlib `19.17-1` -> `19.19-1`
+    - [(#10826)](https://github.com/microsoft/vcpkg/pull/10826) [dlib] Updated dlib to v19.19
+    - [(#11195)](https://github.com/microsoft/vcpkg/pull/11195) [dlib] add more granularity in features
+
+- arrow `0.17.0` -> `0.17.1`
+    - [(#10800)](https://github.com/microsoft/vcpkg/pull/10800) [Arrow] Explicitly enable CSV and JSON
+    - [(#11016)](https://github.com/microsoft/vcpkg/pull/11016) [Arrow] Add filesystem feature
+    - [(#11472)](https://github.com/microsoft/vcpkg/pull/11472) [Arrow] Update to 0.17.1
+
+- ace `6.5.8` -> `6.5.9-5`
+    - [(#10984)](https://github.com/microsoft/vcpkg/pull/10984) [ace] Add support for MacOSX
+    - [(#11112)](https://github.com/microsoft/vcpkg/pull/11112) [ace] Update to 6.5.9
+    - [(#11369)](https://github.com/microsoft/vcpkg/pull/11369) [ace] Add patch to fix Visual Studio 2019 16.5 internal compiler error
+    - [(#11441)](https://github.com/microsoft/vcpkg/pull/11441) [ace] Add support for uwp
+    - [(#11464)](https://github.com/microsoft/vcpkg/pull/11464) [ace] Simplified port file
+    - [(#11713)](https://github.com/microsoft/vcpkg/pull/11713) [ace] Fix missing cpp files
+    - [(#11473)](https://github.com/microsoft/vcpkg/pull/11473) [ace] tao as feature
+
+- libaaplus `2.12` -> `2.12-1`
+    - [(#10981)](https://github.com/microsoft/vcpkg/pull/10981) [libaaplus] Use versioned download link
+
+- spscqueue `2019-07-26` -> `1.0`
+    - [(#10874)](https://github.com/microsoft/vcpkg/pull/10874) [spscqueue] Update to version 1.0
+
+- googleapis `0.8.0` -> `alias`
+    - [(#10994)](https://github.com/microsoft/vcpkg/pull/10994) [googleapis] update to v0.9.0
+    - [(#11698)](https://github.com/microsoft/vcpkg/pull/11698) [google-cloud-cpp] Consolidate all google-cloud* packages
+
+- ms-gsl `3.0.0` -> `3.0.1`
+    - [(#10993)](https://github.com/microsoft/vcpkg/pull/10993) [ms-gsl] Update to 3.0.1
+
+- ryu `2.0-1` -> `2.0-2`
+    - [(#10989)](https://github.com/microsoft/vcpkg/pull/10989) [ryu]Ryu include fix
+
+- glm `0.9.9.7` -> `0.9.9.8`
+    - [(#10977)](https://github.com/microsoft/vcpkg/pull/10977) [glm, sqlitecpp] update to new version
+
+- sqlitecpp `2.3.0-1` -> `3.0.0`
+    - [(#10977)](https://github.com/microsoft/vcpkg/pull/10977) [glm, sqlitecpp] update to new version
+
+- nngpp `1.2.4` -> `1.3.0`
+    - [(#10975)](https://github.com/microsoft/vcpkg/pull/10975) [nngpp] Update to 1.3.0
+
+- libvpx `1.8.1-1` -> `1.8.1-5`
+    - [(#10952)](https://github.com/microsoft/vcpkg/pull/10952) [libvpx][mpg123] Fix use of YASM in MSBuild (via path)
+    - [(#11058)](https://github.com/microsoft/vcpkg/pull/11058) [msbuild]fix use UseEnv-True
+    - [(#11022)](https://github.com/microsoft/vcpkg/pull/11022) [libvpx] Added support for build on MacOS and Linux
+    - [(#11500)](https://github.com/microsoft/vcpkg/pull/11500) [libvpx] Change default target on Unix
+    - [(#11795)](https://github.com/microsoft/vcpkg/pull/11795) [libvpx] Add cmake config file
+
+- mpg123 `1.25.8-6` -> `1.25.8-9`
+    - [(#10952)](https://github.com/microsoft/vcpkg/pull/10952) [libvpx][mpg123] Fix use of YASM in MSBuild (via path)
+    - [(#11058)](https://github.com/microsoft/vcpkg/pull/11058) [msbuild]fix use UseEnv-True
+    - [(#11287)](https://github.com/microsoft/vcpkg/pull/11287) [mpg123] Enable UWP support
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- qt5-3d `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-activeqt `5.12.5-1` -> `5.12.8-1`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+    - [(#11045)](https://github.com/microsoft/vcpkg/pull/11045) [qt5] reactivate qt5-activeqt for CI coverage
+
+- qt5-base `5.12.5-13` -> `5.12.8-4`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+    - [(#11111)](https://github.com/microsoft/vcpkg/pull/11111) [qt5] Add -j to make to parallelize on Linux and MacOS
+    - [(#11371)](https://github.com/microsoft/vcpkg/pull/11371) [qt5-base] Add Xorg dependency libx11-xcb-dev
+    - [(#11416)](https://github.com/microsoft/vcpkg/pull/11416) [harfbuzz,skia] Update and replace Skia dependencies with vcpkg
+    - [(#11483)](https://github.com/microsoft/vcpkg/pull/11483) [vcpkg] Allow CI to pass in all relevant directories and remove use of symbolic links
+
+- qt5-charts `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-connectivity `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-datavis3d `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-declarative `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-gamepad `5.12.5-2` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-graphicaleffects `5.12.5-2` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-imageformats `5.12.5-3` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-location `5.12.5-2` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-macextras `5.12.5` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-mqtt `5.12.5` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-multimedia `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-networkauth `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-purchasing `5.12.5-2` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-quickcontrols `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-quickcontrols2 `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-remoteobjects `5.12.5-2` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-script `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-scxml `5.12.5` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-sensors `5.12.5-2` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-serialport `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-speech `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-svg `5.12.5` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-tools `5.12.5-5` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-virtualkeyboard `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-webchannel `5.12.5-2` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-websockets `5.12.5` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-webview `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-winextras `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5-xmlpatterns `5.12.5-1` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- qt5 `5.12.5` -> `5.12.8`
+    - [(#10644)](https://github.com/microsoft/vcpkg/pull/10644) [Qt[latest]] Update to 5.14.2
+    - [(#10749)](https://github.com/microsoft/vcpkg/pull/10749) [Qt5] Update qt to 5.12.8
+
+- libzip `rel-1-5-2--1` -> `rel-1-6-1`
+    - [(#10784)](https://github.com/microsoft/vcpkg/pull/10784) [libzip] update to rel-1-6-1
+
+- nng `1.2.5` -> `1.3.0`
+    - [(#10974)](https://github.com/microsoft/vcpkg/pull/10974) [nng] Update to 1.3.0
+
+- libmupdf `1.16.1` -> `1.16.1-1`
+    - [(#10708)](https://github.com/microsoft/vcpkg/pull/10708) [libmupdf] fix build error on Linux
+
+- catch2 `2.11.3` -> `2.12.1`
+    - [(#10996)](https://github.com/microsoft/vcpkg/pull/10996) [catch2] Update to 2.12.1
+
+- websocketpp `0.8.1-1` -> `0.8.2`
+    - [(#10969)](https://github.com/microsoft/vcpkg/pull/10969) [websocketpp] Update to 0.8.2
+
+- coroutine `2020-01-13` -> `1.5.0`
+    - [(#10692)](https://github.com/microsoft/vcpkg/pull/10692) [coroutine] update to 1.5.0
+
+- boost-modular-build-helper `1.72.0-1` -> `1.73.0-1`
+    - [(#10285)](https://github.com/microsoft/vcpkg/pull/10285) [boost-modular-build-helper] Support Clang '--target=<value>' syntax to enable Android builds
+    - [(#10814)](https://github.com/microsoft/vcpkg/pull/10814) [boost-modular-build] Fix lack of arm64-linux support
+    - [(#11427)](https://github.com/microsoft/vcpkg/pull/11427) [boost] MinGW build fixes
+
+- openssl-unix `1.1.1d-2` -> `1.1.1d-4`
+    - [(#10450)](https://github.com/microsoft/vcpkg/pull/10450) [openssl-unix] Update header path for shared library compilation
+    - [(#11344)](https://github.com/microsoft/vcpkg/pull/11344) [openssl-unix] Fix openssl-unix android build
+
+- sdl2-gfx `1.0.4-5` -> `1.0.4-6`
+    - [(#10575)](https://github.com/microsoft/vcpkg/pull/10575) [sdl2-gfx] Fix build error on non windows
+
+- hwloc `1.11.7-3` -> `1.11.7-4`
+    - [(#10615)](https://github.com/microsoft/vcpkg/pull/10615) [hwloc] Support UNIX
+
+- pixel `0.3` -> `0.3-1`
+    - [(#10638)](https://github.com/microsoft/vcpkg/pull/10638) [pixel] Add warning message on Linux
+
+- qt-advanced-docking-system `2019-08-14-1` -> `3.2.5-1`
+    - [(#10170)](https://github.com/microsoft/vcpkg/pull/10170) [qt-advanced-docking-system] updated qt-advanced-docking-system to 3.2.1
+    - [(#10980)](https://github.com/microsoft/vcpkg/pull/10980) [vcpkg] Onboard Linux to VMSS, open 'git' port, and switch back to Azure Spot
+
+- libarchive `3.4.1-1` -> `3.4.1-3`
+    - [(#11044)](https://github.com/microsoft/vcpkg/pull/11044) [libarchive] expose zstd as a build feature
+    - [(#11570)](https://github.com/microsoft/vcpkg/pull/11570) [libarchive] Disable C4061 which causes build to fail in Visual Studio 2019 16.6
+
+- azure-kinect-sensor-sdk `1.4.0-alpha.0-2` -> `1.4.0-alpha.0-5`
+    - [(#11033)](https://github.com/microsoft/vcpkg/pull/11033) [azure-kinect-sensor-sdk] Fix pipeline error
+    - [(#10253)](https://github.com/microsoft/vcpkg/pull/10253) [imgui] Add feature bindings and remove feature example
+    - [(#11116)](https://github.com/microsoft/vcpkg/pull/11116) [azure-kinect-sensor-sdk] Disable parallel configure due to source directory writes
+    - [(#11139)](https://github.com/microsoft/vcpkg/pull/11139) [azure-kinect-sensor-sdk] Fix Deploy Azure Kinect Sensor SDK on Windows
+
+- range-v3 `0.10.0` -> `0.10.0-20200425`
+    - [(#11031)](https://github.com/microsoft/vcpkg/pull/11031) [range-v3] Update to new version.
+
+- ode `0.16` -> `0.16.1`
+    - [(#11029)](https://github.com/microsoft/vcpkg/pull/11029) [ode] Bump version to 0.16.1
+
+- boost-coroutine `1.72.0` -> `1.73.0`
+    - [(#10988)](https://github.com/microsoft/vcpkg/pull/10988) [boost-coroutine] Add patch from boost.org
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- libtorrent `1.2.2-1` -> `1.2.7`
+    - [(#10686)](https://github.com/microsoft/vcpkg/pull/10686) [libtorrent] Update to 1.2.6 and add features
+    - [(#11257)](https://github.com/microsoft/vcpkg/pull/11257) [libtorrent] add iconv feature on windows and clean up portfile
+    - [(#11389)](https://github.com/microsoft/vcpkg/pull/11389) [libtorrent] minor portfile simplification and version bump
+    - [(#11709)](https://github.com/microsoft/vcpkg/pull/11709) [libtorrent] Update to 1.2.7
+
+- geos `3.6.3-3` -> `3.6.4`
+    - [(#10377)](https://github.com/microsoft/vcpkg/pull/10377) [geos] Upgrade to GEOS 3.6.4
+
+- egl-registry `2020-02-03` -> `2020-02-20`
+    - [(#10676)](https://github.com/microsoft/vcpkg/pull/10676) [egl-registry, opengl-registry] Update egl-registry to 2020-02-20 and opengl-registry to 2020-03-25
+
+- opengl-registry `2020-02-03` -> `2020-03-25`
+    - [(#10676)](https://github.com/microsoft/vcpkg/pull/10676) [egl-registry, opengl-registry] Update egl-registry to 2020-02-20 and opengl-registry to 2020-03-25
+
+- murmurhash `2016-01-09` -> `2016-01-09-3`
+    - [(#11011)](https://github.com/microsoft/vcpkg/pull/11011) [murmurhash] installation fix
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+
+- gts `0.7.6-1` -> `0.7.6-3`
+    - [(#10055)](https://github.com/microsoft/vcpkg/pull/10055) [gts] Support for build with cmake in unix
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+    - [(#11884)](https://github.com/microsoft/vcpkg/pull/11884) [glib/gts] Add pkgconfig files
+
+- icu `65.1-3` -> `67.1`
+    - [(#10656)](https://github.com/microsoft/vcpkg/pull/10656) [icu] Fix configure failure due to not finding python
+    - [(#11714)](https://github.com/microsoft/vcpkg/pull/11714) [icu] Update to 67.1
+
+- ffmpeg `4.2-7` -> `4.2-9`
+    - [(#8797)](https://github.com/microsoft/vcpkg/pull/8797) [ffmpeg] Fix ffmpeg[opencl, openssl, lzma] static build failed
+    - [(#11443)](https://github.com/microsoft/vcpkg/pull/11443) [vcpkg-acquire-msys] Update pacman before any other package.
+    - [(#11810)](https://github.com/microsoft/vcpkg/pull/11810) [vcpkg-acquire-msys] Improvement
+
+- liblzma `5.2.4-4` -> `5.2.4-5`
+    - [(#8797)](https://github.com/microsoft/vcpkg/pull/8797) [ffmpeg] Fix ffmpeg[opencl, openssl, lzma] static build failed
+
+- cpprestsdk `2.10.15-1` -> `2.10.16-2`
+    - [(#11018)](https://github.com/microsoft/vcpkg/pull/11018) [cpprestsdk] Update to v2.10.16
+    - [(#11694)](https://github.com/microsoft/vcpkg/pull/11694) [cpprestsdk] Avoid using pkg-config to find OpenSSL libraries on Linux
+    - [(#11867)](https://github.com/microsoft/vcpkg/pull/11867) [cpprestsdk] Fix find dependency openssl
+
+- harfbuzz `2.5.3` -> `2.6.6`
+    - [(#11082)](https://github.com/microsoft/vcpkg/pull/11082) [harfbuzz] Change build depends from freetype to freetype[core]
+    - [(#11416)](https://github.com/microsoft/vcpkg/pull/11416) [harfbuzz,skia] Update and replace Skia dependencies with vcpkg
+
+- pcl `1.9.1-11` -> `1.9.1-13`
+    - [(#11047)](https://github.com/microsoft/vcpkg/pull/11047) [pcl] Fix link to libpng
+    - [(#11148)](https://github.com/microsoft/vcpkg/pull/11148) [VTK/vtk-m]  Update VTK to 9.0 and add vtk-m
+
+- armadillo `2019-04-16-6` -> `2019-04-16-8`
+    - [(#11063)](https://github.com/microsoft/vcpkg/pull/11063) [armadillo] Add dependent port superlu on osx
+
+- abseil `2020-03-03-3` -> `2020-03-03-6`
+    - [(#11039)](https://github.com/microsoft/vcpkg/pull/11039) [abseil] Configure abseil to use std:: types when feature cxx17 is enabled
+    - [(#11630)](https://github.com/microsoft/vcpkg/pull/11630) [abseil] Fix arm build
+    - [(#11827)](https://github.com/microsoft/vcpkg/pull/11827) [abseil] Enable dynamic build on Windows
+
+- metrohash `1.1.3` -> `1.1.3-1`
+    - [(#10992)](https://github.com/microsoft/vcpkg/pull/10992) [metrohash] installation fix
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+
+- nana `1.7.2-1` -> `1.7.2-3`
+    - [(#10936)](https://github.com/microsoft/vcpkg/pull/10936) [nana] Revert 1 darkcacok patch nana
+    - [(#11494)](https://github.com/microsoft/vcpkg/pull/11494) [basisu, gppanel, msgpack11, nana, rapidcheck, folly] Add missing header file of STL
+
+- alembic `1.7.12` -> `1.7.12-1`
+    - [(#10912)](https://github.com/microsoft/vcpkg/pull/10912) [alembic] linux fixes
+
+- civetweb `2019-07-05-1` -> `1.12`
+    - [(#10591)](https://github.com/microsoft/vcpkg/pull/10591) [civetweb] Update to version 1.12
+
+- argh `2018-12-18-1` -> `2018-12-18-2`
+    - [(#10980)](https://github.com/microsoft/vcpkg/pull/10980) [vcpkg] Onboard Linux to VMSS, open 'git' port, and switch back to Azure Spot
+
+- ceres `1.14.0-6` -> `1.14.0-7`
+    - [(#10980)](https://github.com/microsoft/vcpkg/pull/10980) [vcpkg] Onboard Linux to VMSS, open 'git' port, and switch back to Azure Spot
+    - [(#11200)](https://github.com/microsoft/vcpkg/pull/11200) [ceres] Added patch to add find_dependency() for suitesparse targets downstream
+
+- idevicerestore `1.0.12-3` -> `1.0.12-4`
+    - [(#10980)](https://github.com/microsoft/vcpkg/pull/10980) [vcpkg] Onboard Linux to VMSS, open 'git' port, and switch back to Azure Spot
+    - [(#11074)](https://github.com/microsoft/vcpkg/pull/11074) [idevicerestore] Fix libgen.h cannot be found
+
+- openblas `0.3.7` -> `0.3.9-1`
+    - [(#10980)](https://github.com/microsoft/vcpkg/pull/10980) [vcpkg] Onboard Linux to VMSS, open 'git' port, and switch back to Azure Spot
+
+- imgui `1.74` -> `1.76-1`
+    - [(#10253)](https://github.com/microsoft/vcpkg/pull/10253) [imgui] Add feature bindings and remove feature example
+    - [(#11388)](https://github.com/microsoft/vcpkg/pull/11388) [imgui] Update to 1.76
+
+- libigl `2.1.0-1` -> `2.1.0-2`
+    - [(#10253)](https://github.com/microsoft/vcpkg/pull/10253) [imgui] Add feature bindings and remove feature example
+
+- opencv4 `4.1.1-3` -> `4.1.1-6`
+    - [(#10886)](https://github.com/microsoft/vcpkg/pull/10886) [opencv4] Add GTK support for opencv4 portfile
+    - [(#7849)](https://github.com/microsoft/vcpkg/pull/7849) [OpenCV2] add new "old" port
+    - [(#11201)](https://github.com/microsoft/vcpkg/pull/11201) [opencv4] Changed dependency on qt5 to qt5-base, closes microsoft/vcpkg#11138
+    - [(#11429)](https://github.com/microsoft/vcpkg/pull/11429) [opencv4] Fix linking halide
+
+- libbson `1.15.1-1` -> `1.16.1`
+    - [(#10010)](https://github.com/microsoft/vcpkg/pull/10010) [libbson/mongo-c-driver] Update to 1.16.1
+
+- mongo-c-driver `1.15.1-1` -> `1.16.1-1`
+    - [(#10010)](https://github.com/microsoft/vcpkg/pull/10010) [libbson/mongo-c-driver] Update to 1.16.1
+    - [(#11217)](https://github.com/microsoft/vcpkg/pull/11217) [mongo-c-driver] Fix find_package error
+
+- mongo-cxx-driver `3.4.0-4` -> `3.4.0-5`
+    - [(#10010)](https://github.com/microsoft/vcpkg/pull/10010) [libbson/mongo-c-driver] Update to 1.16.1
+    - [(#11584)](https://github.com/microsoft/vcpkg/pull/11584) [mongo-cxx-driver] Patch std::atomic P0883 changes
+
+- cpuinfo `2019-07-28` -> `2019-07-28-1`
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools
+
+- czmq `2019-06-10-3` -> `2019-06-10-4`
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools
+
+- libsvm `323` -> `323-1`
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools
+
+- nanomsg `1.1.5-1` -> `1.1.5-2`
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools
+
+- uriparser `0.9.3-4` -> `0.9.3-5`
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools
+
+- zyre `2019-07-07` -> `2019-07-07-1`
+    - [(#8749)](https://github.com/microsoft/vcpkg/pull/8749) [vcpkg] Add new function vcpkg_copy_tools
+
+- halide `release_2019_08_27-2` -> `master_2020_03_07`
+    - [(#10295)](https://github.com/microsoft/vcpkg/pull/10295) [llvm] Update to version 10.0.0 and add new features
+
+- llvm `8.0.0-5` -> `10.0.0-3`
+    - [(#10295)](https://github.com/microsoft/vcpkg/pull/10295) [llvm] Update to version 10.0.0 and add new features
+    - [(#11174)](https://github.com/microsoft/vcpkg/pull/11174) [vcpkg] [llvm] Bump Linux VM memory size and do all operations on the temporary disk.
+    - [(#11268)](https://github.com/microsoft/vcpkg/pull/11268) [llvm] add more backend options, fix issues
+    - [(#11703)](https://github.com/microsoft/vcpkg/pull/11703) [llvm] fix llvm-tblgen build with MSVC v19.26
+
+- sciter `4.4.1.5` -> `4.4.3.20`
+    - [(#11161)](https://github.com/microsoft/vcpkg/pull/11161) [sciter] Update to 4.4.3.15.7771
+    - [(#11393)](https://github.com/microsoft/vcpkg/pull/11393) [sciter] Update to 4.4.3.18.7817
+    - [(#11723)](https://github.com/microsoft/vcpkg/pull/11723) [sciter] Update to 4.4.3.20.7852
+
+- apr-util `1.6.0-5` -> `1.6.1-1`
+    - [(#8579)](https://github.com/microsoft/vcpkg/pull/8579) [apr apr-util] Apr and apr-util for non windows systems
+    - [(#11559)](https://github.com/microsoft/vcpkg/pull/11559) [VCPKG baseline] Fix many ports
+
+- apr `1.6.5-3` -> `1.7.0`
+    - [(#8579)](https://github.com/microsoft/vcpkg/pull/8579) [apr apr-util] Apr and apr-util for non windows systems
+
+- opencv3 `3.4.7-2` -> `3.4.7-3`
+    - [(#7849)](https://github.com/microsoft/vcpkg/pull/7849) [OpenCV2] add new "old" port
+    - [(#11201)](https://github.com/microsoft/vcpkg/pull/11201) [opencv4] Changed dependency on qt5 to qt5-base, closes microsoft/vcpkg#11138
+
+- gtest `2019-10-09-1` -> `1.10.0`
+    - [(#10963)](https://github.com/microsoft/vcpkg/pull/10963) [gtest] Rollback to a release version.
+
+- ignition-cmake0 `0.6.2-1` -> `0.6.2-2`
+    - [(#10858)](https://github.com/microsoft/vcpkg/pull/10858) [ignition-modular-scripts] Migrate from Bitbucket to GitHub 🤖
+
+- ignition-cmake2 `2.1.1` -> `2.2.0-1`
+    - [(#10858)](https://github.com/microsoft/vcpkg/pull/10858) [ignition-modular-scripts] Migrate from Bitbucket to GitHub 🤖
+    - [(#11232)](https://github.com/microsoft/vcpkg/pull/11232) [ignition-math6] Add new port 🤖
+    - [(#11270)](https://github.com/microsoft/vcpkg/pull/11270) [eigen3] [ignition-modularscripts] Fix installed pkgconfig files
+
+- ignition-common1 `1.1.1` -> `1.1.1-1`
+    - [(#10858)](https://github.com/microsoft/vcpkg/pull/10858) [ignition-modular-scripts] Migrate from Bitbucket to GitHub 🤖
+
+- ignition-fuel-tools1 `1.2.0` -> `1.2.0-2`
+    - [(#10858)](https://github.com/microsoft/vcpkg/pull/10858) [ignition-modular-scripts] Migrate from Bitbucket to GitHub 🤖
+    - [(#11270)](https://github.com/microsoft/vcpkg/pull/11270) [eigen3] [ignition-modularscripts] Fix installed pkgconfig files
+
+- ignition-math4 `4.0.0` -> `4.0.0-1`
+    - [(#10858)](https://github.com/microsoft/vcpkg/pull/10858) [ignition-modular-scripts] Migrate from Bitbucket to GitHub 🤖
+
+- ignition-modularscripts `2020-02-10` -> `2020-05-09`
+    - [(#10858)](https://github.com/microsoft/vcpkg/pull/10858) [ignition-modular-scripts] Migrate from Bitbucket to GitHub 🤖
+    - [(#11270)](https://github.com/microsoft/vcpkg/pull/11270) [eigen3] [ignition-modularscripts] Fix installed pkgconfig files
+
+- ignition-msgs1 `1.0.0` -> `1.0.0-1`
+    - [(#10858)](https://github.com/microsoft/vcpkg/pull/10858) [ignition-modular-scripts] Migrate from Bitbucket to GitHub 🤖
+
+- ignition-transport4 `4.0.0` -> `4.0.0-2`
+    - [(#10858)](https://github.com/microsoft/vcpkg/pull/10858) [ignition-modular-scripts] Migrate from Bitbucket to GitHub 🤖
+    - [(#11270)](https://github.com/microsoft/vcpkg/pull/11270) [eigen3] [ignition-modularscripts] Fix installed pkgconfig files
+
+- cuda `10.1` -> `10.1-1`
+    - [(#10838)](https://github.com/microsoft/vcpkg/pull/10838) [cuda] Fix find cuda in UNIX
+
+- libiconv `1.16-1` -> `1.16-3`
+    - [(#9832)](https://github.com/microsoft/vcpkg/pull/9832) libiconv - Fix ICONV_CONST
+    - [(#11586)](https://github.com/microsoft/vcpkg/pull/11586) [vcpkg-baseline][zxing-cpp] Fix build failure
+
+- glib `2.52.3-14-5` -> `2.52.3-14-7`
+    - [(#10856)](https://github.com/microsoft/vcpkg/pull/10856) [glib] Update the usage of string(TOUPPER ...)
+    - [(#11884)](https://github.com/microsoft/vcpkg/pull/11884) [glib/gts] Add pkgconfig files
+
+- freerdp `2.0.0-rc4-7` -> `2.0.0-1`
+    - [(#11051)](https://github.com/microsoft/vcpkg/pull/11051) [freerdp] Update to 2.0.0
+    - [(#11639)](https://github.com/microsoft/vcpkg/pull/11639) [freerdp] Optional 'urbdrc' feature
+
+- wxwidgets `3.1.3` -> `3.1.3-1`
+    - [(#11178)](https://github.com/microsoft/vcpkg/pull/11178) [wxwidgets] Apply fix to wxWidgets for copy and paste macOS
+
+- libsquish `1.15-2` -> `1.15-3`
+    - [(#11124)](https://github.com/microsoft/vcpkg/pull/11124) [libsquish] add missing SQUISH_EXPORT
+
+- bitserializer-cpprestjson `0.8` -> `alias`
+    - [(#11157)](https://github.com/microsoft/vcpkg/pull/11157) [BitSerializer] Update to version 0.9
+    - [(#11683)](https://github.com/microsoft/vcpkg/pull/11683) [bitserializer] Update to new version 0.10
+
+- bitserializer-rapidjson `0.8` -> `alias`
+    - [(#11157)](https://github.com/microsoft/vcpkg/pull/11157) [BitSerializer] Update to version 0.9
+    - [(#11683)](https://github.com/microsoft/vcpkg/pull/11683) [bitserializer] Update to new version 0.10
+
+- bitserializer `0.8` -> `0.9`
+    - [(#11157)](https://github.com/microsoft/vcpkg/pull/11157) [BitSerializer] Update to version 0.9
+    - [(#11683)](https://github.com/microsoft/vcpkg/pull/11683) [bitserializer] Update to new version 0.10
+
+- gsoap `2.8.93-2` -> `2.8.93-3`
+    - [(#11048)](https://github.com/microsoft/vcpkg/pull/11048) [gsoap] Add supports for gsoap
+    - [(#11355)](https://github.com/microsoft/vcpkg/pull/11355) [gSoap] Update to 2.8.102 and re-enable x64 Builds
+
+- lua `5.3.5-3` -> `5.3.5-5`
+    - [(#11163)](https://github.com/microsoft/vcpkg/pull/11163) [lua] Compile as position-independent code
+    - [(#11870)](https://github.com/microsoft/vcpkg/pull/11870) [lua] Add vcpkg-cmake-wrapper
+
+- gainput `1.0.0-2` -> `1.0.0-3`
+    - [(#11000)](https://github.com/microsoft/vcpkg/pull/11000) [gainput] imporve cmake search gainput library
+
+- opencl `2.2-2` -> `2.2-2-1`
+    - [(#10567)](https://github.com/microsoft/vcpkg/pull/10567) [opencl] Add build type when installing targets
+
+- azure-iot-sdk-c `2020-02-04.1` -> `2020-02-04.1-1`
+    - [(#11017)](https://github.com/microsoft/vcpkg/pull/11017) [azure-iot-sdk-c] Fixed the CMake config export.
+
+- sfml `2.5.1-6` -> `2.5.1-7`
+    - [(#11246)](https://github.com/microsoft/vcpkg/pull/11246) [sfml] Remove unnecessary patch
+
+- asmjit `2020-02-08` -> `2020-05-08`
+    - [(#11245)](https://github.com/microsoft/vcpkg/pull/11245) [asmjit] Update to the latest commit
+
+- libpq `12.0-1` -> `12.2-2`
+    - [(#11223)](https://github.com/microsoft/vcpkg/pull/11223) [libpq] link libdl on linux
+    - [(#10915)](https://github.com/microsoft/vcpkg/pull/10915) [libpq] Update to 12.2 and some feature fixes
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+    - [(#11612)](https://github.com/microsoft/vcpkg/pull/11612) [vcpkg baseline] Fix baseline failures
+    - [(#11483)](https://github.com/microsoft/vcpkg/pull/11483) [vcpkg] Allow CI to pass in all relevant directories and remove use of symbolic links
+
+- allegro5 `5.2.5.0` -> `5.2.6.0`
+    - [(#11187)](https://github.com/microsoft/vcpkg/pull/11187) [Allegro] Update to 5.2.6.0
+
+- lz4 `1.9.2-1` -> `1.9.2-2`
+    - [(#11148)](https://github.com/microsoft/vcpkg/pull/11148) [VTK/vtk-m]  Update VTK to 9.0 and add vtk-m
+
+- pegtl-2 `2.8.1` -> `2.8.1-1`
+    - [(#11148)](https://github.com/microsoft/vcpkg/pull/11148) [VTK/vtk-m]  Update VTK to 9.0 and add vtk-m
+
+- vtk-dicom `0.8.12` -> `0.8.12-1`
+    - [(#11148)](https://github.com/microsoft/vcpkg/pull/11148) [VTK/vtk-m]  Update VTK to 9.0 and add vtk-m
+
+- libzen `0.4.37` -> `0.4.38`
+    - [(#11237)](https://github.com/microsoft/vcpkg/pull/11237) [libzen] Update to 0.4.38
+
+- speexdsp `1.2.0-1` -> `1.2.0-2`
+    - [(#11218)](https://github.com/microsoft/vcpkg/pull/11218) [speexdsp] Change repo to github
+
+- restclient-cpp `0.5.1-3` -> `0.5.2`
+    - [(#9717)](https://github.com/microsoft/vcpkg/pull/9717) [restclient-cpp] Fix portfile and update version.
+
+- libpng `1.6.37-7` -> `1.6.37-9`
+    - [(#11162)](https://github.com/microsoft/vcpkg/pull/11162) [libpng] Fix missing symbols when compiling for ARM
+    - [(#11280)](https://github.com/microsoft/vcpkg/pull/11280) [libpng] Fix android build
+
+- capstone `4.0.1-120373dc` -> `4.0.2`
+    - [(#11250)](https://github.com/microsoft/vcpkg/pull/11250) [capstone] Update to 4.0.2
+
+- nuspell `3.1.0` -> `3.1.1`
+    - [(#11291)](https://github.com/microsoft/vcpkg/pull/11291) [nuspell] update port to v3.1.1
+
+- zydis `3.1.0` -> `3.1.0-1`
+    - [(#11173)](https://github.com/microsoft/vcpkg/pull/11173) Update zydis portfile.cmake
+
+- glog `0.4.0-2` -> `0.4.0-3`
+    - [(#11288)](https://github.com/microsoft/vcpkg/pull/11288) [glog] Disable tests
+
+- opus `1.3.1-2` -> `1.3.1-3`
+    - [(#11279)](https://github.com/microsoft/vcpkg/pull/11279) [opus] Update port to 1.3.1-2
+
+- eigen3 `3.3.7-4` -> `3.3.7-5`
+    - [(#11270)](https://github.com/microsoft/vcpkg/pull/11270) [eigen3] [ignition-modularscripts] Fix installed pkgconfig files
+
+- nlopt `2.6.1-1` -> `2.6.2-1`
+    - [(#11254)](https://github.com/microsoft/vcpkg/pull/11254) [nlopt] Update to 2.6.2
+    - [(#11398)](https://github.com/microsoft/vcpkg/pull/11398) [nlopt] Enable UWP support
+
+- string-theory `3.1` -> `3.2`
+    - [(#11310)](https://github.com/microsoft/vcpkg/pull/11310) [string-theory] Update to 3.2
+
+- miniz `2.1.0` -> `2.1.0-1`
+    - [(#11316)](https://github.com/microsoft/vcpkg/pull/11316) [miniz] Fix broken cmake config file
+
+- z3 `4.8.6` -> `4.8.8`
+    - [(#11314)](https://github.com/microsoft/vcpkg/pull/11314) [z3] update port to 4.8.8
+
+- jsoncons `0.150.0` -> `0.153.0`
+    - [(#11311)](https://github.com/microsoft/vcpkg/pull/11311) [jsoncons] Update to v0.151.0
+    - [(#11505)](https://github.com/microsoft/vcpkg/pull/11505) [jsoncons] Update to v0.152.0
+    - [(#11699)](https://github.com/microsoft/vcpkg/pull/11699) [jsoncons] Update to v0.153.0
+
+- units `2.3.0` -> `2.3.1`
+    - [(#11308)](https://github.com/microsoft/vcpkg/pull/11308) [units] Update to 2.3.1
+
+- boost-accumulators `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-algorithm `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-align `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-any `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-array `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-asio `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-assert `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-assign `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-atomic `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-beast `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-bimap `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-bind `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-build `1.72.0` -> `1.73.0-1`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+    - [(#11427)](https://github.com/microsoft/vcpkg/pull/11427) [boost] MinGW build fixes
+
+- boost-callable-traits `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-chrono `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-circular-buffer `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-compatibility `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-compute `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-concept-check `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-config `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-container-hash `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-container `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-context `1.72.0` -> `1.73.0-1`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+    - [(#11692)](https://github.com/microsoft/vcpkg/pull/11692) [vcpkg baseline] Remove passing port from Ci baseline
+
+- boost-contract `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-conversion `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-convert `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-core `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-coroutine2 `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-crc `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-date-time `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-detail `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-dll `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-dynamic-bitset `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-endian `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-exception `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-fiber `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-filesystem `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-flyweight `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-foreach `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-format `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-function-types `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-function `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-functional `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-fusion `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-geometry `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-gil `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-graph-parallel `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- boost-graph `1.72.0` -> `1.73.0`
+    - [(#11221)](https://github.com/microsoft/vcpkg/pull/11221) [boost] update to 1.73.0
+
+- sobjectizer `5.7.0` -> `5.7.0.1`
+    - [(#11276)](https://github.com/microsoft/vcpkg/pull/11276) [sobjectizer] update to v.5.7.0.1.
+
+- imgui-sfml `2.1` -> `2.1-1`
+    - [(#10840)](https://github.com/microsoft/vcpkg/pull/10840) [imgui-sfml] Force imgui-sfml to be a static library
+
+- gdcm `3.0.4` -> `3.0.5`
+    - [(#11258)](https://github.com/microsoft/vcpkg/pull/11258) [gdcm] Update to version 3.0.5
+
+- opengl `0.0-5` -> `0.0-6`
+    - [(#11294)](https://github.com/microsoft/vcpkg/pull/11294) [OpenGL] Fix lib files copy when VCPKG_BUILD_TYPE is set
+
+- libmysql `8.0.4-7` -> `8.0.20`
+    - [(#11303)](https://github.com/microsoft/vcpkg/pull/11303) [libmysql] Update to 8.0.20
+
+- libodb-mysql `2.4.0-6` -> `2.4.0-7`
+    - [(#11303)](https://github.com/microsoft/vcpkg/pull/11303) [libmysql] Update to 8.0.20
+
+- ogre-next `2019-10-20` -> `2019-10-20-1`
+    - [(#11325)](https://github.com/microsoft/vcpkg/pull/11325) [ogre/ogre-next] Add conflict error message
+
+- ogre `1.12.1` -> `1.12.1-1`
+    - [(#11325)](https://github.com/microsoft/vcpkg/pull/11325) [ogre/ogre-next] Add conflict error message
+
+- paho-mqttpp3 `1.0.1-3` -> `1.1`
+    - [(#11327)](https://github.com/microsoft/vcpkg/pull/11327) [paho-mqttpp3] update to 1.1
+
+- gsl-lite `0.36.0` -> `0.37.0`
+    - [(#11351)](https://github.com/microsoft/vcpkg/pull/11351) [gsl-lite] update to 0.37.0
+
+- restinio `0.6.6` -> `0.6.8`
+    - [(#11367)](https://github.com/microsoft/vcpkg/pull/11367) [restinio] update to v.0.6.8
+
+- tiff `4.0.10-8` -> `4.0.10-9`
+    - [(#11364)](https://github.com/microsoft/vcpkg/pull/11364) [tiff] Install runtime deps for tiff[tool]
+
+- sqlite3 `3.31.1` -> `3.32.1`
+    - [(#11267)](https://github.com/microsoft/vcpkg/pull/11267) [sqlite3] Enable build for android
+    - [(#11635)](https://github.com/microsoft/vcpkg/pull/11635) [sqlite3] update to 3.32
+    - [(#11716)](https://github.com/microsoft/vcpkg/pull/11716) [sqlite] Updated to 3.32.1 to fix a security vulnerability
+
+- aws-sdk-cpp `1.7.270` -> `1.7.333`
+    - [(#11332)](https://github.com/microsoft/vcpkg/pull/11332) [aws-sdk-cpp] Update to 1.7.333
+
+- libxml2 `2.9.9-5` -> `2.9.9-6`
+    - [(#11072)](https://github.com/microsoft/vcpkg/pull/11072) [libxml2] Add iconv and charset linkage in vcpkg-cmake-wrapper on osx
+
+- libgo `2.8-2` -> `3.1-1`
+    - [(#11263)](https://github.com/microsoft/vcpkg/pull/11263) [libgo] Update to 3.1
+    - [(#11435)](https://github.com/microsoft/vcpkg/pull/11435) [libgo] Update CONTROL file for typo
+
+- ixwebsocket `9.1.9` -> `9.6.2`
+    - [(#11030)](https://github.com/microsoft/vcpkg/pull/11030) [ixwebsocket] update to 9.6.2
+
+- cpuid `0.4.1` -> `0.4.1-1`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+
+- dmlc `2019-08-12-1` -> `2019-08-12-4`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+    - [(#11612)](https://github.com/microsoft/vcpkg/pull/11612) [vcpkg baseline] Fix baseline failures
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- libnice `0.1.15-2` -> `0.1.15-3`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+
+- magnum `2019.10-1` -> `2019.10-2`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+
+- mlpack `3.2.2-1` -> `3.2.2-3`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+    - [(#11785)](https://github.com/microsoft/vcpkg/pull/11785) [mlpack] Explicitly depend on stb
+
+- nanodbc `2.12.4-5` -> `2.12.4-8`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+    - [(#11613)](https://github.com/microsoft/vcpkg/pull/11613) [vcpkg-baseline][unixodbc/nanodbc] Fix unixodbc build failure and set it as a dependency on nanodbc
+
+- osg `3.6.4-2` -> `3.6.4-3`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+    - [(#11715)](https://github.com/microsoft/vcpkg/pull/11715) [osg] Fix conflict when asio and boost-asio are installed.
+
+- podofo `0.9.6-7` -> `0.9.6-8`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+
+- replxx `0.0.2` -> `0.0.2-2`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+    - [(#11571)](https://github.com/microsoft/vcpkg/pull/11571) [replxx] Add missing header <stdexcept> needed to name std::runtime_error for replxx.
+
+- stormlib `2019-05-10` -> `2019-05-10-1`
+    - [(#10767)](https://github.com/microsoft/vcpkg/pull/10767) [cmake] Update to 3.17.2
+
+- parallelstl `20191218` -> `20200330`
+    - [(#11379)](https://github.com/microsoft/vcpkg/pull/11379) [parallelstl] update to 20200330
+
+- angle `2019-12-31-2` -> `2020-05-15`
+    - [(#11394)](https://github.com/microsoft/vcpkg/pull/11394) [angle] update for gcc 10 compatibility
+
+- parallel-hashmap `1.30` -> `1.32`
+    - [(#11420)](https://github.com/microsoft/vcpkg/pull/11420) [parallel-hashmap] Update parallel-hashmap version
+
+- utfcpp `3.1` -> `3.1.1`
+    - [(#11426)](https://github.com/microsoft/vcpkg/pull/11426) [utfcpp] Update to 3.1.1
+
+- realsense2 `2.33.1-1` -> `2.34.0`
+    - [(#11437)](https://github.com/microsoft/vcpkg/pull/11437) [realsense2] Update to 2.34.0
+
+- grpc `1.27.3` -> `1.28.1-1`
+    - [(#11449)](https://github.com/microsoft/vcpkg/pull/11449) [grpc] upgrade to 1.28.1
+    - [(#10307)](https://github.com/microsoft/vcpkg/pull/10307) [grpc] Add feature absl-sync
+
+- skia `2020-02-15-1` -> `2020-05-18-1`
+    - [(#11416)](https://github.com/microsoft/vcpkg/pull/11416) [harfbuzz,skia] Update and replace Skia dependencies with vcpkg
+
+- fribidi `1.0.9` -> `1.0.9-1`
+    - [(#11380)](https://github.com/microsoft/vcpkg/pull/11380) [tool-meson] Update to 0.54.2
+
+- libepoxy `1.5.3-3` -> `1.5.4`
+    - [(#11380)](https://github.com/microsoft/vcpkg/pull/11380) [tool-meson] Update to 0.54.2
+    - [(#11448)](https://github.com/microsoft/vcpkg/pull/11448) [libepoxy] Update to 1.5.4
+
+- tool-meson `0.53.2` -> `0.54.2`
+    - [(#11380)](https://github.com/microsoft/vcpkg/pull/11380) [tool-meson] Update to 0.54.2
+
+- monkeys-audio `5.24` -> `5.38`
+    - [(#11444)](https://github.com/microsoft/vcpkg/pull/11444) [monkeys-audio] Update to 5.38
+
+- clapack `3.2.1-12` -> `3.2.1-13`
+    - [(#9957)](https://github.com/microsoft/vcpkg/pull/9957) [clapack] Add uwp support
+
+- fcl `0.6.0` -> `0.6.0-1`
+    - [(#11406)](https://github.com/microsoft/vcpkg/pull/11406) [fcl] Explicity handle FCL_USE_X64_SSE CMake option
+
+- farmhash `1.1` -> `1.1-1`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- freexl `1.0.4-8` -> `1.0.4-9`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- healpix `1.12.10` -> `1.12.10-1`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- libb2 `0.98.1` -> `0.98.1-2`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+    - [(#11692)](https://github.com/microsoft/vcpkg/pull/11692) [vcpkg baseline] Remove passing port from Ci baseline
+
+- libcrafter `0.3` -> `0.3-1`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- libmagic `5.37` -> `5.37-1`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- libmesh `1.5.0` -> `1.5.0-1`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- libosip2 `5.1.0-3` -> `5.1.0-4`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- libudns `0.4-1` -> `0.4-2`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- libwandio `4.2.1` -> `4.2.1-2`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- libxslt `1.1.33-6` -> `1.1.33-7`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- pfring `2019-10-17-1` -> `2019-10-17-2`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- sdl1 `1.2.15-10` -> `1.2.15-11`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- tcl `8.6.10-3` -> `core-9-0-a1`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- x264 `157-303c484ec828ed0-7` -> `157-303c484ec828ed0-8`
+    - [(#10402)](https://github.com/microsoft/vcpkg/pull/10402) [vcpkg] Improve make builds
+
+- libflac `1.3.3` -> `1.3.3-1`
+    - [(#11152)](https://github.com/microsoft/vcpkg/pull/11152) [libflac] Update to 1.3.3-1
+
+- libsndfile `1.0.29-8` -> `1.0.29-9`
+    - [(#11152)](https://github.com/microsoft/vcpkg/pull/11152) [libflac] Update to 1.3.3-1
+
+- octomap `2017-03-11-7` -> `2017-03-11-8`
+    - [(#11408)](https://github.com/microsoft/vcpkg/pull/11408) [octomap] Cleanup
+
+- freeglut `3.0.0-9` -> `3.2.1-1`
+    - [(#11423)](https://github.com/microsoft/vcpkg/pull/11423) [freeglut] updated to 3.2.1
+    - [(#11527)](https://github.com/microsoft/vcpkg/pull/11527) [freeglut] fix debug macro patch
+
+- libpqxx `6.4.5-2` -> `6.4.5-3`
+    - [(#11442)](https://github.com/microsoft/vcpkg/pull/11442) [libpqxx] linux support
+
+- marl `2019-09-13` -> `2020-05-21`
+    - [(#11465)](https://github.com/microsoft/vcpkg/pull/11465) [marl] Update to 2020-05-20
+
+- python3 `3.7.3-2` -> `3.8.3`
+    - [(#11489)](https://github.com/microsoft/vcpkg/pull/11489) [python3] Fix dynamic build error on Linux
+    - [(#11708)](https://github.com/microsoft/vcpkg/pull/11708) [python3] Update to Python 3.8
+
+- azure-storage-cpp `7.3.0` -> `7.4.0`
+    - [(#11510)](https://github.com/microsoft/vcpkg/pull/11510) [azure-storage-cpp] Upgrade to 7.4.0
+
+- entt `3.3.2` -> `3.4.0`
+    - [(#11509)](https://github.com/microsoft/vcpkg/pull/11509) [entt] Update to 3.4.0 (#11507)
+
+- wil `2019-11-07` -> `2020-05-19`
+    - [(#11506)](https://github.com/microsoft/vcpkg/pull/11506) [wil] Update to 2020-05-19
+
+- signalrclient `1.0.0-beta1-8` -> `1.0.0-beta1-9`
+    - [(#11496)](https://github.com/microsoft/vcpkg/pull/11496) [Baseline] Fix boost-*:arm-uwp failure and resolve conflicts in CI
+
+- bond `8.1.0-3` -> `9.0.0`
+    - [(#11559)](https://github.com/microsoft/vcpkg/pull/11559) [VCPKG baseline] Fix many ports
+    - [(#11628)](https://github.com/microsoft/vcpkg/pull/11628) [bond] Update to 9.0.0
+    - [(#10319)](https://github.com/microsoft/vcpkg/pull/10319) [bond] updated version + added bond-over-grpc integration as feature
+
+- ccfits `2.5-4` -> `2.5-5`
+    - [(#11559)](https://github.com/microsoft/vcpkg/pull/11559) [VCPKG baseline] Fix many ports
+
+- geographiclib `1.47-patch1-10` -> `1.47-patch1-12`
+    - [(#11559)](https://github.com/microsoft/vcpkg/pull/11559) [VCPKG baseline] Fix many ports
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- libaiff `5.0-2` -> `5.0-3`
+    - [(#11559)](https://github.com/microsoft/vcpkg/pull/11559) [VCPKG baseline] Fix many ports
+
+- ois `1.5` -> `1.5-1`
+    - [(#11559)](https://github.com/microsoft/vcpkg/pull/11559) [VCPKG baseline] Fix many ports
+
+- wtl `10.0-4` -> `10.0-5`
+    - [(#11559)](https://github.com/microsoft/vcpkg/pull/11559) [VCPKG baseline] Fix many ports
+
+- xmsh `0.5.2` -> `0.5.2-1`
+    - [(#11559)](https://github.com/microsoft/vcpkg/pull/11559) [VCPKG baseline] Fix many ports
+
+- xmlsec `1.2.29-2` -> `1.2.30`
+    - [(#11595)](https://github.com/microsoft/vcpkg/pull/11595) [Xmlsec] Update to 1.2.30
+
+- activemq-cpp `3.9.5-1` -> `3.9.5-2`
+    - [(#11589)](https://github.com/microsoft/vcpkg/pull/11589) [libusbmuxd berkeleydb cppcms activemq-cpp] Add Supports and failure message
+
+- berkeleydb `4.8.30-3` -> `4.8.30-4`
+    - [(#11589)](https://github.com/microsoft/vcpkg/pull/11589) [libusbmuxd berkeleydb cppcms activemq-cpp] Add Supports and failure message
+
+- cppcms `1.2.1` -> `1.2.1-1`
+    - [(#11589)](https://github.com/microsoft/vcpkg/pull/11589) [libusbmuxd berkeleydb cppcms activemq-cpp] Add Supports and failure message
+
+- libusbmuxd `1.2.185` -> `1.2.185-1`
+    - [(#11589)](https://github.com/microsoft/vcpkg/pull/11589) [libusbmuxd berkeleydb cppcms activemq-cpp] Add Supports and failure message
+
+- seal `3.4.5` -> `3.4.5-1`
+    - [(#11588)](https://github.com/microsoft/vcpkg/pull/11588) [seal] Disable SEAL_USE_MSGSL and add default feature zlib
+
+- magic-get `2019-09-02` -> `2019-09-02-1`
+    - [(#11581)](https://github.com/microsoft/vcpkg/pull/11581) [magic-get] Fix improper direct reference to the "downloads" directory
+
+- lpeg `1.0.1-4` -> `1.0.2-1`
+    - [(#11554)](https://github.com/microsoft/vcpkg/pull/11554) [luafilesystem][lpeg] Bump versions
+
+- luafilesystem `1.7.0.2-1` -> `1.8.0-1`
+    - [(#11554)](https://github.com/microsoft/vcpkg/pull/11554) [luafilesystem][lpeg] Bump versions
+
+- scnlib `0.1.2` -> `0.3`
+    - [(#11540)](https://github.com/microsoft/vcpkg/pull/11540) [scnlib] Update to version 0.3
+
+- cppgraphqlgen `3.2.1` -> `3.2.2`
+    - [(#11531)](https://github.com/microsoft/vcpkg/pull/11531) [pegtl/cppgraphqlgen] matching updates for dependency
+
+- protobuf-c `1.3.2` -> `1.3.2-2`
+    - [(#11517)](https://github.com/microsoft/vcpkg/pull/11517) [protobuf-c] Fix tool protoc-gen-c crash
+    - [(#11609)](https://github.com/microsoft/vcpkg/pull/11609) [protobuf-c] Fix wrong dependency for feature test
+
+- basisu `1.11-3` -> `1.11-4`
+    - [(#11494)](https://github.com/microsoft/vcpkg/pull/11494) [basisu, gppanel, msgpack11, nana, rapidcheck, folly] Add missing header file of STL
+
+- folly `2019.10.21.00-1` -> `2019.10.21.00-2`
+    - [(#11494)](https://github.com/microsoft/vcpkg/pull/11494) [basisu, gppanel, msgpack11, nana, rapidcheck, folly] Add missing header file of STL
+
+- gppanel `2018-04-06` -> `2020-05-20`
+    - [(#11494)](https://github.com/microsoft/vcpkg/pull/11494) [basisu, gppanel, msgpack11, nana, rapidcheck, folly] Add missing header file of STL
+
+- msgpack11 `0.0.10` -> `0.0.10-1`
+    - [(#11494)](https://github.com/microsoft/vcpkg/pull/11494) [basisu, gppanel, msgpack11, nana, rapidcheck, folly] Add missing header file of STL
+
+- rapidcheck `2018-11-05-1` -> `2018-11-05-2`
+    - [(#11494)](https://github.com/microsoft/vcpkg/pull/11494) [basisu, gppanel, msgpack11, nana, rapidcheck, folly] Add missing header file of STL
+
+- simdjson `2019-12-27` -> `2020-05-26`
+    - [(#11495)](https://github.com/microsoft/vcpkg/pull/11495) [simdjson] Fix error LNK2001 when compile with /fsanitize=address in MSVC
+    - [(#10709)](https://github.com/microsoft/vcpkg/pull/10709) [simdjson] Update to 0.3.1
+
+- ponder `3.0.0` -> `3.0.0-1`
+    - [(#11582)](https://github.com/microsoft/vcpkg/pull/11582) [ponder] patch missing headers for Visual Studio 2019 16.6
+
+- telnetpp `2.0-3` -> `2.0-4`
+    - [(#11573)](https://github.com/microsoft/vcpkg/pull/11573) [telnetpp] Add missing <ostream> for Visual Studio 2019 16.6
+
+- libpopt `1.16-12` -> `1.16-13`
+    - [(#11607)](https://github.com/microsoft/vcpkg/pull/11607) [libpopt] Remove invalid URL
+
+- cpputest `2019-9-16` -> `2019-9-16-1`
+    - [(#11585)](https://github.com/microsoft/vcpkg/pull/11585) [cpputest] Move library to manual-link
+
+- unixodbc `2.3.7` -> `2.3.7-1`
+    - [(#11613)](https://github.com/microsoft/vcpkg/pull/11613) [vcpkg-baseline][unixodbc/nanodbc] Fix unixodbc build failure and set it as a dependency on nanodbc
+
+- nghttp2 `1.39.2-1` -> `1.39.2-2`
+    - [(#11638)](https://github.com/microsoft/vcpkg/pull/11638) [nghttp2] Fix to build nghttp2 statically
+
+- gli `dd17acf` -> `dd17acf-1`
+    - [(#11634)](https://github.com/microsoft/vcpkg/pull/11634) [gli] Add CMake config support
+
+- mimalloc `1.6.1` -> `1.6.1-1`
+    - [(#11632)](https://github.com/microsoft/vcpkg/pull/11632) [mimalloc] Install mimalloc-redirect.dll to CMAKE_INSTALL_BINDIR
+
+- quickfix `1.15.1-3` -> `1.15.1-4`
+    - [(#11604)](https://github.com/microsoft/vcpkg/pull/11604) [vcpkg-baseline][quickfix] Fix build failure on arm64-windows
+
+- zxing-cpp `3.3.3-6` -> `3.3.3-7`
+    - [(#11586)](https://github.com/microsoft/vcpkg/pull/11586) [vcpkg-baseline][zxing-cpp] Fix build failure
+
+- ppconsul `0.5` -> `0.5-1`
+    - [(#11692)](https://github.com/microsoft/vcpkg/pull/11692) [vcpkg baseline] Remove passing port from Ci baseline
+
+- proj4 `6.3.1` -> `6.3.1-1`
+    - [(#11692)](https://github.com/microsoft/vcpkg/pull/11692) [vcpkg baseline] Remove passing port from Ci baseline
+    - [(#11086)](https://github.com/microsoft/vcpkg/pull/11086) [PROJ4] Add search path for sqlite.exe
+
+- jwt-cpp `2019-05-07-1` -> `0.4.0`
+    - [(#11625)](https://github.com/microsoft/vcpkg/pull/11625) [jwt-cpp] Update to v0.4.0
+
+- polyhook2 `2020-02-17` -> `2020-06-02`
+    - [(#11561)](https://github.com/microsoft/vcpkg/pull/11561) [polyhook2] Update to 2020-05-25
+    - [(#11729)](https://github.com/microsoft/vcpkg/pull/11729) [polyhook2] Update polyhook to latest
+
+- gdk-pixbuf `2.36.9-4` -> `2.36.9-5`
+    - [(#11721)](https://github.com/microsoft/vcpkg/pull/11721) [gdk-pixbuf] GdkPixbuf fix for building on macOS
+
+- yaml-cpp `0.6.2-3` -> `0.6.3`
+    - [(#11718)](https://github.com/microsoft/vcpkg/pull/11718) [yaml-cpp] Update to 0.6.3 and also fix headers cannot be found
+
+- fmt `6.2.0` -> `6.2.1`
+    - [(#11706)](https://github.com/microsoft/vcpkg/pull/11706) [fmt] add vcpkg_fixup_pkgconfig
+    - [(#11789)](https://github.com/microsoft/vcpkg/pull/11789) [fmt] Update to 6.2.1
+
+- magic-enum `0.6.4` -> `0.6.6`
+    - [(#11704)](https://github.com/microsoft/vcpkg/pull/11704) [magic-enum] Update to v0.6.5
+    - [(#11814)](https://github.com/microsoft/vcpkg/pull/11814) [magic-enum] Update to v0.6.6
+
+- enet `1.3.13-1` -> `1.3.15`
+    - [(#11702)](https://github.com/microsoft/vcpkg/pull/11702) [enet] Update to 1.3.15
+
+- libfabric `1.8.1` -> `1.8.1-1`
+    - [(#11647)](https://github.com/microsoft/vcpkg/pull/11647) [vcpkg baseline][libfabric] Only support dynamic build
+
+- google-cloud-cpp-common `0.25.0` -> `alias`
+    - [(#11698)](https://github.com/microsoft/vcpkg/pull/11698) [google-cloud-cpp] Consolidate all google-cloud* packages
+
+- google-cloud-cpp-spanner `1.1.0` -> `alias`
+    - [(#11698)](https://github.com/microsoft/vcpkg/pull/11698) [google-cloud-cpp] Consolidate all google-cloud* packages
+
+- google-cloud-cpp `0.21.0` -> `1.14.0`
+    - [(#11698)](https://github.com/microsoft/vcpkg/pull/11698) [google-cloud-cpp] Consolidate all google-cloud* packages
+
+- amqpcpp `4.1.5` -> `4.1.7`
+    - [(#11608)](https://github.com/microsoft/vcpkg/pull/11608) [amqpcpp] Update to 4.1.7
+
+- shiva-sfml `1.0` -> `1.0-1`
+    - [(#11483)](https://github.com/microsoft/vcpkg/pull/11483) [vcpkg] Allow CI to pass in all relevant directories and remove use of symbolic links
+
+- spirv-tools `2020.1` -> `2020.1-1`
+    - [(#11483)](https://github.com/microsoft/vcpkg/pull/11483) [vcpkg] Allow CI to pass in all relevant directories and remove use of symbolic links
+
+- cpp-taskflow `2.2.0` -> `2.2.0-1`
+    - [(#11742)](https://github.com/microsoft/vcpkg/pull/11742) [vcpkg-baseline][manyport] Fix baseline error
+
+- eabase `2.09.12` -> `2.09.12-1`
+    - [(#11742)](https://github.com/microsoft/vcpkg/pull/11742) [vcpkg-baseline][manyport] Fix baseline error
+
+- fastrtps `1.5.0-2` -> `1.5.0-3`
+    - [(#11742)](https://github.com/microsoft/vcpkg/pull/11742) [vcpkg-baseline][manyport] Fix baseline error
+
+- librsvg `2.40.20` -> `2.40.20-2`
+    - [(#11722)](https://github.com/microsoft/vcpkg/pull/11722) [librsvg] Fix for macOS
+    - [(#11865)](https://github.com/microsoft/vcpkg/pull/11865) [vcpkg baseline] Fix baseline
+
+- mozjpeg `3.2-3` -> `2020-06-02`
+    - [(#11719)](https://github.com/microsoft/vcpkg/pull/11719) [mozjpeg] Update to latest commit
+
+- pcre `8.44` -> `8.44-1`
+    - [(#11564)](https://github.com/microsoft/vcpkg/pull/11564) [pcre] Add pkgconfig files
+
+- tensorflow-cc `1.14-1` -> `1.14-2`
+    - [(#11839)](https://github.com/microsoft/vcpkg/pull/11839) [vcpkg] Fix OSX CI by ensuring the downloads directory exists
+
+- sqlpp11-connector-mysql `0.29` -> `0.29-1`
+    - [(#11771)](https://github.com/microsoft/vcpkg/pull/11771) [sqlpp11] update to v0.59
+
+- sqlpp11 `0.58-3` -> `0.59`
+    - [(#11771)](https://github.com/microsoft/vcpkg/pull/11771) [sqlpp11] update to v0.59
+
+- unicorn-lib `2019-07-11` -> `2020-03-02`
+    - [(#11830)](https://github.com/microsoft/vcpkg/pull/11830) [unicorn-lib] Update to 01cc7fc (2020-03-02)
+
+- sol2 `3.2.0` -> `3.2.1`
+    - [(#11826)](https://github.com/microsoft/vcpkg/pull/11826) [sol] Update to version 3.2.1
+
+- avisynthplus `3.5.0` -> `3.6.0`
+    - [(#11736)](https://github.com/microsoft/vcpkg/pull/11736) [avisynthplus] Upgrade to 3.6.0
+
+- plibsys `0.0.4-2` -> `0.0.4-3`
+    - [(#11633)](https://github.com/microsoft/vcpkg/pull/11633) [plibsys] Fix failures on linux and osx
+
+- libxmp-lite `4.4.1-2` -> `4.4.1-3`
+    - [(#11865)](https://github.com/microsoft/vcpkg/pull/11865) [vcpkg baseline] Fix baseline
+
+- msix `1.7` -> `1.7-2`
+    - [(#11865)](https://github.com/microsoft/vcpkg/pull/11865) [vcpkg baseline] Fix baseline
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- usd `20.02` -> `20.02-1`
+    - [(#11440)](https://github.com/microsoft/vcpkg/pull/11440) [usd] Fix build error on Linux
+
+- cryptopp `8.2.0-1` -> `8.2.0-2`
+    - [(#11711)](https://github.com/microsoft/vcpkg/pull/11711) [licensepp] Add new port
+
+- libpcap `1.9.1` -> `1.9.1-2`
+    - [(#9426)](https://github.com/microsoft/vcpkg/pull/9426) [libpcap] Fix pkgconfig libs and include path
+    - [(#10731)](https://github.com/microsoft/vcpkg/pull/10731) [libpcap] Enable compilation of libpcap port on x86-windows and x64-windows
+
+- ms-angle `2018-04-18-2` -> `alias`
+    - [(#11458)](https://github.com/microsoft/vcpkg/pull/11458) [ms-angle] Set ms-angle to empty package
+
+- libgit2 `1.0.0` -> `1.0.1`
+    - [(#11844)](https://github.com/microsoft/vcpkg/pull/11844) [libgit2] Update to 1.0.1
+
+- uwebsockets `0.17.2` -> `18.1.0`
+    - [(#11866)](https://github.com/microsoft/vcpkg/pull/11866) [uWbSockets] Update to 18.1.0
+
+- nameof `0.9.3` -> `0.9.4`
+    - [(#11815)](https://github.com/microsoft/vcpkg/pull/11815) [nameof] Update to 0.9.4
+
+- cairo `1.16.0-3` -> `1.16.0-4`
+    - [(#11868)](https://github.com/microsoft/vcpkg/pull/11868) [cairo] Install the xlib header file when selecting feature x11
+
+- directxmesh `dec2019-1` -> `jun2020`
+    - [(#11794)](https://github.com/microsoft/vcpkg/pull/11794) [directxtk][directxtk12][directxtex][directxmesh] Update to latest version
+
+- directxtex `dec2019` -> `jun2020`
+    - [(#11794)](https://github.com/microsoft/vcpkg/pull/11794) [directxtk][directxtk12][directxtex][directxmesh] Update to latest version
+
+- directxtk `2019-12-31` -> `jun2020`
+    - [(#11794)](https://github.com/microsoft/vcpkg/pull/11794) [directxtk][directxtk12][directxtex][directxmesh] Update to latest version
+
+- directxtk12 `dec2019` -> `jun2020`
+    - [(#11794)](https://github.com/microsoft/vcpkg/pull/11794) [directxtk][directxtk12][directxtex][directxmesh] Update to latest version
+
+- spdlog `1.4.2-1` -> `1.6.1`
+    - [(#11793)](https://github.com/microsoft/vcpkg/pull/11793) [spdlog] Update to 1.61
+
+- msmpi `10.0-2` -> `10.1`
+    - [(#11365)](https://github.com/microsoft/vcpkg/pull/11365) [vcpkg] [cudnn] [msmpi] [openmpi] Update VMSS
+
+- openmpi `4.0.1` -> `4.0.3`
+    - [(#11365)](https://github.com/microsoft/vcpkg/pull/11365) [vcpkg] [cudnn] [msmpi] [openmpi] Update VMSS
+
+- sdl2 `2.0.12` -> `2.0.12-1`
+    - [(#11365)](https://github.com/microsoft/vcpkg/pull/11365) [vcpkg] [cudnn] [msmpi] [openmpi] Update VMSS
+
+- gtk `3.22.19-3` -> `3.22.19-4`
+    - [(#11892)](https://github.com/microsoft/vcpkg/pull/11892) [gtk] DISABLE_PARALLEL_CONFIGURE
+
+- xalan-c `1.11-11` -> `1.11-12`
+    - [(#11869)](https://github.com/microsoft/vcpkg/pull/11869) [xalan-c] Fix import Xalan.exe
+
+- libuuid `1.0.3-3` -> `1.0.3-4`
+    - [(#11849)](https://github.com/microsoft/vcpkg/pull/11849) [libuuid] Install uuid.pc file
+
+- lastools `2019-07-10` -> `2020-05-09`
+    - [(#11796)](https://github.com/microsoft/vcpkg/pull/11796) [LAStools] Update to 200509
+
+- libpmemobj-cpp `1.8` -> `1.10`
+    - [(#11738)](https://github.com/microsoft/vcpkg/pull/11738) [libpmemobj-cpp] Update to 1.10
+
+- librabbitmq `0.10.0` -> `2020-06-03`
+    - [(#11733)](https://github.com/microsoft/vcpkg/pull/11733) [librabbitmq] Update to use rabbitmq-config.cmake
+
+- hyperscan `5.2.1` -> `5.2.1-1`
+    - [(#11708)](https://github.com/microsoft/vcpkg/pull/11708) [python3] Update to Python 3.8
+
+- tinyxml2 `7.1.0` -> `8.0.0`
+    - [(#11616)](https://github.com/microsoft/vcpkg/pull/11616) [tinyxml2] Update to 8.0.0; avoid exporting symbols when building static libraries
+
+- winpcap `4.1.3-2` -> `4.1.3-3`
+    - [(#10731)](https://github.com/microsoft/vcpkg/pull/10731) [libpcap] Enable compilation of libpcap port on x86-windows and x64-windows
+
+- ccd `2.1-3` -> `2.1-4`
+    - [(#11407)](https://github.com/microsoft/vcpkg/pull/11407) [ccd] Add emscripten support
+
+- itpp `4.3.1-1` -> `4.3.1-2`
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- plplot `5.13.0-4` -> `5.13.0-5`
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- pthreads `3.0.0-4` -> `3.0.0-5`
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- qwt `6.1.3-10` -> `6.1.3-11`
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- soundtouch `2.0.0-4` -> `2.0.0-6`
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- tclap `1.2.2-1` -> `1.2.2-2`
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- tinyfiledialogs `3.4.3-1` -> `3.4.3-2`
+    - [(#11896)](https://github.com/microsoft/vcpkg/pull/11896) [vcpkg baseline] Fix baseline error
+
+- mpir `3.0.0-7` -> `3.0.0-8`
+    - [(#9205)](https://github.com/microsoft/vcpkg/pull/9205) [mpir] Add mpirxx.lib
+
+- fftw3 `3.3.8-6` -> `3.3.8-7`
+    - [(#4361)](https://github.com/microsoft/vcpkg/pull/4361) Adds vcpkg item to project settings in Visual Studio
+
+</details>
+
+-- vcpkg team vcpkg@microsoft.com MON, 16 June 1400:00 -0700
+
+vcpkg (2020.04.01 - 2020.04.20)
+---
+#### Total port count: 1322
+
+#### Total port count per triplet (tested): 
+|triplet|ports available|
+|---|---|
+|**x64-windows**|1218|
+|x86-windows|1202|
+|x64-windows-static|1130|
+|**x64-linux**|1104|
+|**x64-osx**|1041|
+|arm64-windows|842|
+|x64-uwp|654|
+|arm-uwp|625|
+
+#### The following documentation has been updated:
+- [vcpkg_from_git](docs/maintainers/vcpkg_from_git.md)
+    - [(#9446)](https://github.com/microsoft/vcpkg/pull/9446) vcpkg_from_git: Add support for git over ssh (by @marcrambo)
+- [Exporting to Android Archives (AAR files)](docs/specifications/prefab.md) ***[NEW]***
+    - [(#10271)](https://github.com/microsoft/vcpkg/pull/10271) Android Support: Exporting to Android Archive (AAR) (by @atkawa7)
+- [Triplets](docs/users/triplets.md)
+    - [(#6275)](https://github.com/microsoft/vcpkg/pull/6275) Add initial iOS support (by @alcroito)
+
+#### The following *remarkable* changes have been made to vcpkg:
+- [(#9446)](https://github.com/microsoft/vcpkg/pull/9446) vcpkg_from_git: Add support for git over ssh (by @marcrambo)
+- [(#10271)](https://github.com/microsoft/vcpkg/pull/10271) Android Support: Exporting to Android Archive (AAR) (by @atkawa7)
+- [(#10395)](https://github.com/microsoft/vcpkg/pull/10395) [vcpkg] Make configure meson sane and work for all targets.  (by @Neumann-A)
+- [(#10398)](https://github.com/microsoft/vcpkg/pull/10398) [vcpkg] New policy: SKIP_ARCHITECTURE_CHECK. (by @Neumann-A)
+- [(#6275)](https://github.com/microsoft/vcpkg/pull/6275) Add initial iOS support (by @alcroito)
+- [(#10817)](https://github.com/microsoft/vcpkg/pull/10817) [vcpkg] Add x-set-installed command (by @strega-nil)
+- [(#10521)](https://github.com/microsoft/vcpkg/pull/10521) [vcpkg] Add initial JSON support (by @strega-nil)
+
+#### The following *additional* changes have been made to vcpkg:
+- [(#10637)](https://github.com/microsoft/vcpkg/pull/10637) [vcpkg baseline] Ignore osg-qt (by @PhoebeHui)
+- [(#10660)](https://github.com/microsoft/vcpkg/pull/10660) [vcpkg] Fix spec instance name (by @PhoebeHui)
+- [(#10703)](https://github.com/microsoft/vcpkg/pull/10703) [vcpkg baseline] Remove replxx:x86-windows=fail (by @strega-nil)
+- [(#10655)](https://github.com/microsoft/vcpkg/pull/10655) [vcpkg] Fix nuget/aria2/ninja version/filename inconsistent (by @LilyWangL)
+- [(#10583)](https://github.com/microsoft/vcpkg/pull/10583) [vcpkg] Correct UInt128 code 😇 (by @strega-nil)
+- [(#10543)](https://github.com/microsoft/vcpkg/pull/10543) [vcpkg-test] Fix the check for ability to make symlinks (by @strega-nil)
+- [(#10621)](https://github.com/microsoft/vcpkg/pull/10621) [vcpkg] fix vcpkg_find_acquire_program for scripts (by @Neumann-A)
+- [(#10834)](https://github.com/microsoft/vcpkg/pull/10834) [vcpkg] Clean up CMake build system (by @strega-nil)
+- [(#10846)](https://github.com/microsoft/vcpkg/pull/10846) [vcpkg] Fix bootstrap from out of directory (by @strega-nil)
+- [(#10796)](https://github.com/microsoft/vcpkg/pull/10796) [Ninja] Update to 1.10 (by @Voskrese)
+- [(#10867)](https://github.com/microsoft/vcpkg/pull/10867) [vcpkg] Fix build scripts on openSUSE and g++9 (by @strega-nil)
+
+<details>
+<summary><b>The following 5 ports have been added:</b></summary>
+
+|port|version|
+|---|---|
+|[skyr-url](https://github.com/microsoft/vcpkg/pull/10463)<sup>[#10694](https://github.com/microsoft/vcpkg/pull/10694) </sup>| 1.5.1
+|[boringssl](https://github.com/microsoft/vcpkg/pull/8455)| 2020-04-07
+|[quadtree](https://github.com/microsoft/vcpkg/pull/10787)| 2020-04-13
+|[avisynthplus](https://github.com/microsoft/vcpkg/pull/10496)| 3.5.0
+|[c4core](https://github.com/microsoft/vcpkg/pull/10791)| 2020-04-12
+</details>
+
+<details>
+<summary><b>The following 69 ports have been updated:</b></summary>
+
+- cub `1.8.0` -> `1.8.0-1`
+    - [(#10660)](https://github.com/microsoft/vcpkg/pull/10660) [vcpkg] Fix spec instance name
+
+- vulkan-hpp `2019-05-11` -> `2019-05-11-1`
+    - [(#10660)](https://github.com/microsoft/vcpkg/pull/10660) [vcpkg] Fix spec instance name
+
+- function2 `4.0.0` -> `4.1.0`
+    - [(#10666)](https://github.com/microsoft/vcpkg/pull/10666) [function2] Update to version 4.1.0
+
+- libwebsockets `3.2.2-1` -> `4.0.1-1`
+    - [(#10658)](https://github.com/microsoft/vcpkg/pull/10658) [libwebsockets] Update to 4.0.1
+    - [(#10636)](https://github.com/microsoft/vcpkg/pull/10636) [mosquitto] Add support for static build
+
+- googleapis `0.6.0` -> `0.8.0`
+    - [(#10651)](https://github.com/microsoft/vcpkg/pull/10651) [googleapis] upgrade to v0.7.0 release
+    - [(#10885)](https://github.com/microsoft/vcpkg/pull/10885) [googleapis] Update to v0.8.0
+
+- ixwebsocket `8.0.5` -> `9.1.9`
+    - [(#10633)](https://github.com/microsoft/vcpkg/pull/10633) [ixwebsocket] Update to 9.1.9
+
+- opus `1.3.1` -> `1.3.1-2`
+    - [(#10634)](https://github.com/microsoft/vcpkg/pull/10634) [opus] Make AVX an optional feature
+
+- freerdp `2.0.0-rc4-6` -> `2.0.0-rc4-7`
+    - [(#10630)](https://github.com/microsoft/vcpkg/pull/10630) [freerdp] Fix include paths and output
+
+- openvr `1.9.16` -> `1.10.30`
+    - [(#10629)](https://github.com/microsoft/vcpkg/pull/10629) [openvr] Added Linux support and updated to v1.10.30
+
+- abseil `2020-03-03-1` -> `2020-03-03-3`
+    - [(#10620)](https://github.com/microsoft/vcpkg/pull/10620) [abseil] Fix feature name error
+    - [(#10721)](https://github.com/microsoft/vcpkg/pull/10721) [abseil] Fix CompressedTuple move constructor on MSVC
+
+- reproc `11.0.1` -> `12.0.0`
+    - [(#10594)](https://github.com/microsoft/vcpkg/pull/10594) [reproc] Update to version 12.0.0
+
+- hunspell `1.7.0` -> `1.7.0-1`
+    - [(#10574)](https://github.com/microsoft/vcpkg/pull/10574) [hunspell] Disable build tools in non-Windows
+
+- sciter `4.4.0.7` -> `4.4.1.5`
+    - [(#10071)](https://github.com/microsoft/vcpkg/pull/10071) [sciter] Update to 4.4.1.5
+
+- qt5-base `5.12.5-11` -> `5.12.5-13`
+    - [(#10641)](https://github.com/microsoft/vcpkg/pull/10641) [qt5-base] Fix EGL absolute path on Linux
+    - [(#10746)](https://github.com/microsoft/vcpkg/pull/10746) [qt5] fix some remaining absolute paths.
+    - [(#9705)](https://github.com/microsoft/vcpkg/pull/9705) [qt5-base, qt5-imageformat] fix issues on osx 
+
+- nana `1.7.2` -> `1.7.2-1`
+    - [(#10605)](https://github.com/microsoft/vcpkg/pull/10605) [nana] Add Xorg dependency libxcursor-dev and modify deprecated functions
+
+- blend2d `beta_2019-12-27` -> `beta_2020-04-15`
+    - [(#10600)](https://github.com/microsoft/vcpkg/pull/10600) [blend2d] Update to beta_2020-03-29
+    - [(#10844)](https://github.com/microsoft/vcpkg/pull/10844) [blend2d] Update to beta_2020-04-15
+
+- libffi `3.3` -> `3.3-2`
+    - [(#10485)](https://github.com/microsoft/vcpkg/pull/10485) [libffi] Support arm/arm64
+    - [(#10469)](https://github.com/microsoft/vcpkg/pull/10469) [libffi] Check return value of execute_process()
+
+- fribidi `2019-02-04-2` -> `2019-02-04-3`
+    - [(#10395)](https://github.com/microsoft/vcpkg/pull/10395) [vcpkg] Make configure meson sane and work for all targets. 
+    - [(#10713)](https://github.com/microsoft/vcpkg/pull/10713) [fribidi] Updated to v1.0.9
+
+- libepoxy `1.5.3-2` -> `1.5.3-3`
+    - [(#10395)](https://github.com/microsoft/vcpkg/pull/10395) [vcpkg] Make configure meson sane and work for all targets. 
+
+- egl-registry `2019-08-08` -> `2020-02-03`
+    - [(#9965)](https://github.com/microsoft/vcpkg/pull/9965) [angle] Improve port
+
+- glad `0.1.33` -> `0.1.33-1`
+    - [(#9965)](https://github.com/microsoft/vcpkg/pull/9965) [angle] Improve port
+
+- opengl-registry `2019-08-22` -> `2020-02-03`
+    - [(#9965)](https://github.com/microsoft/vcpkg/pull/9965) [angle] Improve port
+
+- mpfr `4.0.2-1` -> `4.0.2-2`
+    - [(#10035)](https://github.com/microsoft/vcpkg/pull/10035) [mpfr] Add mirror for mpfr at gnu.org
+
+- google-cloud-cpp-common `0.21.0` -> `0.25.0`
+    - [(#10680)](https://github.com/microsoft/vcpkg/pull/10680) [google-cloud-cpp*] update to the latest release
+
+- google-cloud-cpp-spanner `0.9.0` -> `1.1.0`
+    - [(#10680)](https://github.com/microsoft/vcpkg/pull/10680) [google-cloud-cpp*] update to the latest release
+
+- google-cloud-cpp `0.20.0` -> `0.21.0`
+    - [(#10680)](https://github.com/microsoft/vcpkg/pull/10680) [google-cloud-cpp*] update to the latest release
+
+- jsoncons `0.149.0` -> `0.150.0`
+    - [(#10688)](https://github.com/microsoft/vcpkg/pull/10688) [jsoncons] update to v0.150.0
+
+- osg-qt `Qt4` -> `Qt4-1`
+    - [(#9705)](https://github.com/microsoft/vcpkg/pull/9705) [qt5-base, qt5-imageformat] fix issues on osx 
+
+- qt5-imageformats `5.12.5-2` -> `5.12.5-3`
+    - [(#9705)](https://github.com/microsoft/vcpkg/pull/9705) [qt5-base, qt5-imageformat] fix issues on osx 
+
+- libpng `1.6.37-6` -> `1.6.37-7`
+    - [(#6275)](https://github.com/microsoft/vcpkg/pull/6275) Add initial iOS support
+
+- pcre2 `10.30-6` -> `10.30-7`
+    - [(#6275)](https://github.com/microsoft/vcpkg/pull/6275) Add initial iOS support
+
+- curlpp `2018-06-15-2` -> `2018-06-15-3`
+    - [(#10535)](https://github.com/microsoft/vcpkg/pull/10535) [curlpp] Fix target "curlpp" link "ZLIB::ZLIB" error
+
+- avro-c `1.9.2` -> `1.9.2-1`
+    - [(#10514)](https://github.com/microsoft/vcpkg/pull/10514) [avro-c] Fix building avro-c in Linux
+
+- nlohmann-fifo-map `2018.05.07` -> `2018.05.07-1`
+    - [(#10850)](https://github.com/microsoft/vcpkg/pull/10850) [nlohmann-fifo-map] Fix could not find a package "nlohmann-fifo-map"
+
+- cppitertools `2019-04-14-3` -> `2.0`
+    - [(#10848)](https://github.com/microsoft/vcpkg/pull/10848) [cppitertools] Update to version 2.0
+
+- python3 `3.7.3-1` -> `3.7.3-2`
+    - [(#10841)](https://github.com/microsoft/vcpkg/pull/10841) [python3] fix build on macOS and linux
+
+- restinio `0.6.5` -> `0.6.6`
+    - [(#10813)](https://github.com/microsoft/vcpkg/pull/10813) [restinio] Updated to v.0.6.6
+
+- libgit2 `0.99.0-1` -> `1.0.0`
+    - [(#10807)](https://github.com/microsoft/vcpkg/pull/10807) [libgit2] Upgrade to 1.0.0
+
+- zstd `1.4.4` -> `1.4.4-1`
+    - [(#10815)](https://github.com/microsoft/vcpkg/pull/10815) [zstd] export zstd-config.cmake
+
+- blosc `1.17.1` -> `1.18.1-1`
+    - [(#10816)](https://github.com/microsoft/vcpkg/pull/10816) [blosc] Update to 1.18.1
+
+- freetype `2.10.1-5` -> `2.10.1-6`
+    - [(#10835)](https://github.com/microsoft/vcpkg/pull/10835) [Freetype] Actually prevent linking HarfBuzz on POSIX
+
+- gsl `2.4-5` -> `2.6`
+    - [(#10758)](https://github.com/microsoft/vcpkg/pull/10758) [gsl] update to 2.6
+
+- physfs `3.0.2-1` -> `3.0.2-2`
+    - [(#10781)](https://github.com/microsoft/vcpkg/pull/10781) [physfs] mirror url
+
+- openssl-windows `1.1.1d-1` -> `1.1.1d-2`
+    - [(#10743)](https://github.com/microsoft/vcpkg/pull/10743) [openssl-windows] Avoid to install docs for openssl-windows
+
+- coolprop `6.1.0-4` -> `6.1.0-5`
+    - [(#10755)](https://github.com/microsoft/vcpkg/pull/10755) [fmt] update to 6.2.0
+
+- fmt `6.1.2` -> `6.2.0`
+    - [(#10755)](https://github.com/microsoft/vcpkg/pull/10755) [fmt] update to 6.2.0
+
+- directxmesh `dec2019` -> `dec2019-1`
+    - [(#10739)](https://github.com/microsoft/vcpkg/pull/10739) [DirectXMesh] Add support build for DirectX12
+
+- libvorbis `1.3.6-9eadecc-3` -> `1.3.6-4d963fe`
+    - [(#10756)](https://github.com/microsoft/vcpkg/pull/10756) [libvorbis] Update to latest commit
+
+- nuspell `3.0.0` -> `3.1.0`
+    - [(#10737)](https://github.com/microsoft/vcpkg/pull/10737) [nuspell] update port to v3.1.0
+
+- raylib `2.6.0` -> `3.0.0`
+    - [(#10722)](https://github.com/microsoft/vcpkg/pull/10722) [raylib] Update to 3.0.0
+
+- entt `3.3.0` -> `3.3.2`
+    - [(#10672)](https://github.com/microsoft/vcpkg/pull/10672) [entt] Update to version 3.3.2
+
+- indicators `1.5` -> `1.7`
+    - [(#10685)](https://github.com/microsoft/vcpkg/pull/10685) [indicators] Updated indicators to 1.7
+
+- realsense2 `2.33.1` -> `2.33.1-1`
+    - [(#10673)](https://github.com/microsoft/vcpkg/pull/10673) [realsense2] Add tm2 feature for support T265 devices
+
+- flatbuffers `1.11.0-1` -> `1.12.0`
+    - [(#10664)](https://github.com/microsoft/vcpkg/pull/10664) [flatbuffers] Update to 1.12.0
+
+- curl `7.68.0-2` -> `7.68.0-3`
+    - [(#10659)](https://github.com/microsoft/vcpkg/pull/10659) [curl] Fix cmake configure error 
+
+- ismrmrd `1.4.1` -> `1.4.2`
+    - [(#10618)](https://github.com/microsoft/vcpkg/pull/10618) [ismrmrd] updated to version 1.4.2
+
+- mosquitto `1.6.8` -> `1.6.8-1`
+    - [(#10636)](https://github.com/microsoft/vcpkg/pull/10636) [mosquitto] Add support for static build
+
+- lz4 `1.9.2` -> `1.9.2-1`
+    - [(#10452)](https://github.com/microsoft/vcpkg/pull/10452) [lz4] Fix for building Linux shared libraries
+
+- sdl2 `2.0.10-3` -> `2.0.12`
+    - [(#10500)](https://github.com/microsoft/vcpkg/pull/10500) [sdl2] Update to 2.0.12 version
+
+- osg `3.6.4-1` -> `3.6.4-2`
+    - [(#10082)](https://github.com/microsoft/vcpkg/pull/10082) [osg] Add feature examples and plugins, fix configure options
+
+- osgearth `2.10.2` -> `2.10.2-1`
+    - [(#10082)](https://github.com/microsoft/vcpkg/pull/10082) [osg] Add feature examples and plugins, fix configure options
+
+- ms-gsl `2.1.0` -> `3.0.0`
+    - [(#10872)](https://github.com/microsoft/vcpkg/pull/10872) [ms-gsl] Update version to v3.0.0
+    - [(#10831)](https://github.com/microsoft/vcpkg/pull/10831) [ms-gsl] Update to v3.0.0
+
+- cppgraphqlgen `3.2.0` -> `3.2.1`
+    - [(#10869)](https://github.com/microsoft/vcpkg/pull/10869) [cppgraphqlgen] Update to v3.2.1
+
+- cgal `5.0.2` -> `5.0.2-1`
+    - [(#10879)](https://github.com/microsoft/vcpkg/pull/10879) [cgal] Add dependency boost-interval
+
+- arrow `0.16.0` -> `0.17.0`
+    - [(#10883)](https://github.com/microsoft/vcpkg/pull/10883) [Arrow] Update to 0.17
+
+- xerces-c `3.2.2-13` -> `3.2.3`
+    - [(#10779)](https://github.com/microsoft/vcpkg/pull/10779) [xerces-c] Update to version 3.2.3
+
+- libarchive `3.4.1` -> `3.4.1-1`
+    - [(#10769)](https://github.com/microsoft/vcpkg/pull/10769) [libarchive, libuv]Fix static linkage
+
+- libuv `1.34.2` -> `1.34.2-1`
+    - [(#10769)](https://github.com/microsoft/vcpkg/pull/10769) [libarchive, libuv]Fix static linkage
+
+- qscintilla `2.10-11` -> `2.11.4-1`
+    - [(#10511)](https://github.com/microsoft/vcpkg/pull/10511) [qscintilla] Update to 2.11.4
+
+</details>
+
+-- vcpkg team vcpkg@microsoft.com MON, 20 April 15:00:00 -0700
+
+
 vcpkg (2020.01.31)
 ---
 #### Total port count: 1295

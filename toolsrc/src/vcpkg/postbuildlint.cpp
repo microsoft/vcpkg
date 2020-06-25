@@ -738,7 +738,7 @@ namespace vcpkg::PostBuildLint
             System::printf(System::Color::warning,
                            "Expected %s crt linkage, but the following libs had invalid crt linkage:\n\n",
                            expected_build_type.to_string());
-            for (const BuildTypeAndFile btf : libs_with_invalid_crt)
+            for (const BuildTypeAndFile& btf : libs_with_invalid_crt)
             {
                 System::printf("    %s: %s\n", btf.file.generic_string(), btf.build_type.to_string());
             }
@@ -786,7 +786,7 @@ namespace vcpkg::PostBuildLint
         if (!dlls_with_outdated_crt.empty())
         {
             System::print2(System::Color::warning, "Detected outdated dynamic CRT in the following files:\n\n");
-            for (const OutdatedDynamicCrtAndFile btf : dlls_with_outdated_crt)
+            for (const OutdatedDynamicCrtAndFile& btf : dlls_with_outdated_crt)
             {
                 System::print2("    ", btf.file.u8string(), ": ", btf.outdated_crt.name, "\n");
             }
@@ -871,11 +871,11 @@ namespace vcpkg::PostBuildLint
         if (!pre_build_info.build_type)
             error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
+        if (!build_info.policies.is_enabled(BuildPolicy::SKIP_ARCHITECTURE_CHECK))
         {
             std::vector<fs::path> libs;
             libs.insert(libs.cend(), debug_libs.cbegin(), debug_libs.cend());
             libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
-
             error_count += check_lib_architecture(pre_build_info.target_architecture, libs);
         }
 

@@ -11,10 +11,9 @@ vcpkg_from_github(
     PATCHES cmake-fix.patch
 )
 
-set(BULLET_MULTITHREADING OFF)
-if ("multithreading" IN_LIST FEATURES)
-    set(BULLET_MULTITHREADING ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    multithreading       BULLET2_MULTITHREADING
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -28,7 +27,7 @@ vcpkg_configure_cmake(
         -DBUILD_EXTRAS=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DINSTALL_LIBS=ON
-        -DBULLET2_MULTITHREADING=${BULLET_MULTITHREADING}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -42,5 +41,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/bullet/BulletInverseDynamics
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/bullet3 RENAME copyright)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
