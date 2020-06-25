@@ -38,33 +38,16 @@ jobs:
         ninja.exe -C build.x86.debug
         build.x86.debug\vcpkg-test.exe
       failOnStderr: true
-  - powershell: |
-      $env:VCPKG_DOWNLOADS='D:\downloads'
-      $commonArgs = @(
-        '--binarycaching',
-        '--x-binarysource=clear;files,W:\,upload',
-        '--x-buildtrees-root=D:\buildtrees',
-        '--x-install-root=D:\install',
-        '--x-packages-root=D:\packages'
-      )
-
-      .\vcpkg.exe x-ci-clean @commonArgs
-      $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile .\scripts\ci.baseline.txt
-      mkdir $(System.ArtifactsDirectory)\xml-results
-      # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
-      # Install them so the CI succeeds:
-      if ( "${{ parameters.triplet }}" -notmatch "x86-windows" -and "${{ parameters.triplet }}" -notmatch "x64-windows" ) {
-          .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows @commonArgs
-      }
-
-      .\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList @commonArgs
-    displayName: '** Test Modified Ports **'
   - task: PowerShell@2
-    displayName: 'Analyze results and prepare test logs'
+    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
-      filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
-      arguments: '-baselineFile .\scripts\ci.baseline.txt -logDir "$(System.ArtifactsDirectory)\xml-results" -failurelogDir "W:\fail" -outputDir "$(Build.ArtifactStagingDirectory)" -errorOnRegression -triplets "${{ parameters.triplet }}"'
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot D:\ -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -ArtifactsDirectory $(System.ArtifactsDirectory)'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '$(System.ArtifactsDirectory)/xml-results/${{ parameters.triplet }}.xml'
+    condition: always()
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
