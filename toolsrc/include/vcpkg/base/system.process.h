@@ -27,7 +27,7 @@ namespace vcpkg::System
     {
         CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(p.u8string()); }
         CmdLineBuilder& string_arg(StringView s);
-        std::string build() { return std::move(buf); }
+        std::string extract() noexcept { return std::move(buf); }
 
         operator ZStringView() const { return buf; }
 

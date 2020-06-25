@@ -529,7 +529,7 @@ namespace
                     .string_arg("detailed")
                     .string_arg("-ForceEnglishOutput");
                 if (!m_interactive) cmdline.string_arg("-NonInteractive");
-                cmdlines.push_back(cmdline.build());
+                cmdlines.push_back(cmdline.extract());
             }
             for (auto&& cfg : m_read_configs)
             {
@@ -552,7 +552,7 @@ namespace
                     .string_arg("detailed")
                     .string_arg("-ForceEnglishOutput");
                 if (!m_interactive) cmdline.string_arg("-NonInteractive");
-                cmdlines.push_back(cmdline.build());
+                cmdlines.push_back(cmdline.extract());
             }
 
             size_t num_restored = 0;

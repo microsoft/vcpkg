@@ -188,7 +188,7 @@ namespace vcpkg
         for (auto&& var : pass_variables)
             cmd.string_arg(var.s);
         cmd.string_arg("-P").path_arg(cmake_script);
-        return cmd.build();
+        return cmd.extract();
     }
 
     System::CmdLineBuilder& System::CmdLineBuilder::string_arg(StringView s)
