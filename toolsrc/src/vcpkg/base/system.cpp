@@ -84,15 +84,6 @@ namespace vcpkg
         return supported_architectures;
     }
 
-    const ExpectedS<fs::path>& System::get_platform_cache_home() noexcept
-    {
-#ifdef _WIN32
-        return System::get_appdata_local();
-#else
-        return System::get_xdg_cache_home();
-#endif
-    }
-
     Optional<std::string> System::get_environment_variable(ZStringView varname) noexcept
     {
 #if defined(_WIN32)
@@ -138,6 +129,7 @@ namespace vcpkg
 #undef HOMEVAR
     }
 
+#ifdef _WIN32
     const ExpectedS<fs::path>& System::get_appdata_local() noexcept
     {
         static ExpectedS<fs::path> s_home = []() -> ExpectedS<fs::path> {
@@ -152,8 +144,8 @@ namespace vcpkg
         }();
         return s_home;
     }
-
-    const ExpectedS<fs::path>& get_xdg_config_home() noexcept
+#else
+    static const ExpectedS<fs::path>& get_xdg_config_home() noexcept
     {
         static ExpectedS<fs::path> s_home = [] {
             auto maybe_home = System::get_environment_variable("XDG_CONFIG_HOME");
@@ -164,7 +156,7 @@ namespace vcpkg
             else
             {
                 return System::get_home_dir().map([](fs::path home) {
-                    home.append(".config");
+                    home.append(fs::u8path(".config"));
                     return home;
                 });
             }
@@ -172,7 +164,7 @@ namespace vcpkg
         return s_home;
     }
 
-    const ExpectedS<fs::path>& get_xdg_cache_home() noexcept
+    static const ExpectedS<fs::path>& get_xdg_cache_home() noexcept
     {
         static ExpectedS<fs::path> s_home = [] {
             auto maybe_home = System::get_environment_variable("XDG_CACHE_HOME");
@@ -183,31 +175,22 @@ namespace vcpkg
             else
             {
                 return System::get_home_dir().map([](fs::path home) {
-                    home.append(".cache");
+                    home.append(fs::u8path(".cache"));
                     return home;
                 });
             }
         }();
         return s_home;
     }
+#endif
 
-    const ExpectedS<fs::path>& get_xdg_data_home() noexcept
+    const ExpectedS<fs::path>& System::get_platform_cache_home() noexcept
     {
-        static ExpectedS<fs::path> s_home = [] {
-            auto maybe_home = System::get_environment_variable("XDG_DATA_HOME");
-            if (auto p = maybe_home.get())
-            {
-                return ExpectedS<fs::path>(fs::u8path(*p));
-            }
-            else
-            {
-                return System::get_home_dir().map([](fs::path home) {
-                    home.append(".local").append(".share");
-                    return home;
-                });
-            }
-        }();
-        return s_home;
+#ifdef _WIN32
+        return System::get_appdata_local();
+#else
+        return get_xdg_cache_home();
+#endif
     }
 
 #if defined(_WIN32)
@@ -242,7 +225,7 @@ namespace vcpkg
         ret.pop_back(); // remove extra trailing null byte
         return Strings::to_utf8(ret);
     }
-#else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
     Optional<std::string> System::get_registry_string(void*, StringView, StringView) { return nullopt; }
 #endif // defined(_WIN32)
 

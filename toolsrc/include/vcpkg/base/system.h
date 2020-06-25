@@ -13,10 +13,9 @@ namespace vcpkg::System
 
     const ExpectedS<fs::path>& get_platform_cache_home() noexcept;
 
+#ifdef _WIN32
     const ExpectedS<fs::path>& get_appdata_local() noexcept;
-    const ExpectedS<fs::path>& get_xdg_config_home() noexcept;
-    const ExpectedS<fs::path>& get_xdg_cache_home() noexcept;
-    const ExpectedS<fs::path>& get_xdg_data_home() noexcept;
+#endif
 
     Optional<std::string> get_registry_string(void* base_hkey, StringView subkey, StringView valuename);
 
