@@ -13,7 +13,7 @@ vcpkg_from_github(
     PATCHES
         0001_fix_build_errors.patch
         0002_improve_win_compatibility.patch
-        hdf5.api.patch # Switches the HDF5 default API for this port to 1.10
+        0003_hdf5_api.patch # Switches the HDF5 default API for this port to 1.10
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindILMBase.cmake)
