@@ -15,6 +15,11 @@ jobs:
     displayName: 'Initialize Environment'
     inputs:
       filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
     # Note: D: is the Azure machines' temporary disk.
   - task: CmdLine@2
     displayName: 'Build vcpkg'
@@ -48,6 +53,11 @@ jobs:
     inputs:
       testResultsFiles: '$(System.ArtifactsDirectory)/xml-results/${{ parameters.triplet }}.xml'
     condition: always()
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space After Build'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
