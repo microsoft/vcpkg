@@ -24,8 +24,10 @@ else
 
 if "@PORT@" = "boost-python"
 {
-    using python : @VCPKG_PYTHON_VERSION@ : "@VCPKG_PYTHON_EXECUTABLE@" : "@VCPKG_PYTHON_INCLUDE@" : "@VCPKG_PYTHON_LIBS_RELEASE@" ;
-    using python : @VCPKG_PYTHON_VERSION@ : "@VCPKG_PYTHON_EXECUTABLE@" : "@VCPKG_PYTHON_INCLUDE@" : "@VCPKG_PYTHON_LIBS_DEBUG@" : <python-debugging>on ;
+    using python : @VCPKG_PYTHON3_VERSION@ : : "@VCPKG_PYTHON3_INCLUDE@" : "@VCPKG_PYTHON3_LIBS_RELEASE@" ;
+    using python : @VCPKG_PYTHON3_VERSION@ : : "@VCPKG_PYTHON3_INCLUDE@" : "@VCPKG_PYTHON3_LIBS_DEBUG@" : <python-debugging>on ;
+    using python : @VCPKG_PYTHON2_VERSION@ : : "@VCPKG_PYTHON2_INCLUDE@" : "@VCPKG_PYTHON2_LIBS_RELEASE@" ;
+    using python : @VCPKG_PYTHON2_VERSION@ : : "@VCPKG_PYTHON2_INCLUDE@" : "@VCPKG_PYTHON2_LIBS_DEBUG@" : <python-debugging>on ;
 }
 
 if "@PORT@" = "boost-mpi"

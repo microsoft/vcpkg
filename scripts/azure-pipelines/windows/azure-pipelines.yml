@@ -5,11 +5,9 @@
 jobs:
 - job: ${{ parameters.jobName }}
   pool:
-    name: PrWin-2020-04-22
-
-  variables:
-    triplet: '${{ parameters.triplet }}'
-
+    name: ${{ parameters.poolName }}
+  workspace:
+    clean: resources
   timeoutInMinutes: 1440 # 1 day
 
   steps:
@@ -17,50 +15,59 @@ jobs:
     displayName: 'Initialize Environment'
     inputs:
       filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
-
+    # Note: D: is the Azure machines' temporary disk.
+  - task: CmdLine@2
+    displayName: 'Build vcpkg'
+    inputs:
+      script: |
+        set VCPKG_DOWNLOADS=D:\downloads
+        .\bootstrap-vcpkg.bat
+  - task: CmdLine@2
+    displayName: "Build vcpkg with CMake and Run Tests"
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      script: |
+        :: TRANSITION, get these tools on the VMs next time we roll them
+        set VCPKG_DOWNLOADS=D:\downloads
+        .\vcpkg.exe fetch cmake
+        .\vcpkg.exe fetch ninja
+        set PATH=D:\downloads\tools\cmake-3.17.2-windows\cmake-3.17.2-win32-x86\bin;D:\downloads\tools\ninja-1.10.0-windows;%PATH%
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x86
+        rmdir /s /q build.x86.debug > nul 2> nul
+        cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=ON -B build.x86.debug -S toolsrc
+        ninja.exe -C build.x86.debug
+        build.x86.debug\vcpkg-test.exe
+      failOnStderr: true
   - powershell: |
-      $baselineFile = "$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt"
-      $skipList = $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\generate-skip-list.ps1 -Triplet "$(triplet)" -BaselineFile $baselineFile
-      Write-Host "baseline file: $baselineFile"
-      Write-Host "skip list: $skipList"
-      $(System.DefaultWorkingDirectory)\scripts\azure-pipelines\windows\ci-step.ps1 -Triplet "$(triplet)" -ExcludePorts $skipList
-      Write-Host "CI test script is complete"
-    errorActionPreference: continue
-    displayName: '** Build vcpkg and test ports **'
+      $env:VCPKG_DOWNLOADS='D:\downloads'
+      $commonArgs = @(
+        '--binarycaching',
+        '--x-binarysource=clear;files,W:\,upload',
+        '--x-buildtrees-root=D:\buildtrees',
+        '--x-install-root=D:\install',
+        '--x-packages-root=D:\packages'
+      )
 
-  - powershell: |
-      $baseName = "$(triplet)"
-      $outputPathRoot = "$(System.ArtifactsDirectory)\raw xml results"
-      if(-not (Test-Path $outputPathRoot))
-      {
-          Write-Host "creating $outputPathRoot"
-          mkdir $outputPathRoot | Out-Null
+      .\vcpkg.exe x-ci-clean @commonArgs
+      $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile .\scripts\ci.baseline.txt
+      mkdir $(System.ArtifactsDirectory)\xml-results
+      # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
+      # Install them so the CI succeeds:
+      if ( "${{ parameters.triplet }}" -notmatch "x86-windows" -and "${{ parameters.triplet }}" -notmatch "x64-windows" ) {
+          .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows @commonArgs
       }
 
-      $xmlPath = "$(System.DefaultWorkingDirectory)\test-full-ci.xml"
-      $outputXmlPath = "$outputPathRoot\$baseName.xml"
-
-      cp $xmlPath $(Build.ArtifactStagingDirectory)
-      Move-Item $xmlPath -Destination $outputXmlPath
-
-      # already in DevOps, no need for extra copies
-      rm $(System.DefaultWorkingDirectory)\console-out.txt -ErrorAction Ignore
-
-      Remove-Item "$(System.DefaultWorkingDirectory)\buildtrees\*" -Recurse -errorAction silentlycontinue
-      Remove-Item "$(System.DefaultWorkingDirectory)\packages\*" -Recurse -errorAction silentlycontinue
-      Remove-Item "$(System.DefaultWorkingDirectory)\installed\*" -Recurse -errorAction silentlycontinue
-    displayName: 'Collect logs and cleanup build'
-
+      .\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList @commonArgs
+    displayName: '** Test Modified Ports **'
   - task: PowerShell@2
     displayName: 'Analyze results and prepare test logs'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
-      arguments: '-baselineFile ''$(System.DefaultWorkingDirectory)\scripts\ci.baseline.txt'' -logDir ''$(System.ArtifactsDirectory)\raw xml results'' -failurelogDir ''archives\fail'' -outputDir ''$(Build.ArtifactStagingDirectory)'' -errorOnRegression -triplets ''$(triplet)'''
-
+      arguments: '-baselineFile .\scripts\ci.baseline.txt -logDir "$(System.ArtifactsDirectory)\xml-results" -failurelogDir "W:\fail" -outputDir "$(Build.ArtifactStagingDirectory)" -errorOnRegression -triplets "${{ parameters.triplet }}"'
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: $(triplet) port build failure logs'
+    displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
-      ArtifactName: '$(triplet) port build failure logs'
+      ArtifactName: '${{ parameters.triplet }} port build failure logs'
     condition: failed()

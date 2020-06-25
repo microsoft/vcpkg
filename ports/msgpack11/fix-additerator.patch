@@ -1,0 +1,12 @@
+diff --git a/msgpack11.cpp b/msgpack11.cpp
+index fa572fa..640ba9a 100644
+--- a/msgpack11.cpp
++++ b/msgpack11.cpp
+@@ -10,6 +10,7 @@
+ #include <algorithm>
+ #include <functional>
+ #include <stdexcept>
++#include <iterator>
+ 
+ namespace msgpack11 {
+ 

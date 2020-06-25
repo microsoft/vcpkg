@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 55f068b..7123174 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -133,15 +133,17 @@ if(CLANG)
+ 	endif()
+ endif()
+ 
+-if(BUILD_TESTS OR BUILD_EXAMPLES)
+-	if(PKG_CONFIG_FOUND)
+-		pkg_check_modules(LIBPMEMOBJ REQUIRED libpmemobj>=${LIBPMEMOBJ_REQUIRED_VERSION})
+-		pkg_check_modules(LIBPMEM REQUIRED libpmem>=${LIBPMEM_REQUIRED_VERSION})
+-	else()
+-		find_package(LIBPMEMOBJ REQUIRED ${LIBPMEMOBJ_REQUIRED_VERSION})
+-		find_package(LIBPMEM REQUIRED ${LIBPMEM_REQUIRED_VERSION})
+-	endif()
++if (BUILD_BENCHMARKS OR BUILD_TESTS OR BUILD_EXAMPLES)
++if(PKG_CONFIG_FOUND)
++	pkg_check_modules(LIBPMEMOBJ REQUIRED libpmemobj>=${LIBPMEMOBJ_REQUIRED_VERSION})
++	pkg_check_modules(LIBPMEM REQUIRED libpmem>=${LIBPMEM_REQUIRED_VERSION})
++else()
++	find_package(LIBPMEMOBJ REQUIRED ${LIBPMEMOBJ_REQUIRED_VERSION})
++	find_package(LIBPMEM REQUIRED ${LIBPMEM_REQUIRED_VERSION})
++endif()
++endif()
+ 
++if(BUILD_TESTS OR BUILD_EXAMPLES)
+ 	if (LIBPMEMOBJ_VERSION AND LIBPMEMOBJ_VERSION MATCHES "[0-9]+[.][0-9]+.*")
+ 		string(REGEX REPLACE "\\+git.*" "" LIBPMEMOBJ_VERSION_SHORT ${LIBPMEMOBJ_VERSION})
+ 		string(REGEX REPLACE "-rc.*" "" LIBPMEMOBJ_VERSION_SHORT ${LIBPMEMOBJ_VERSION_SHORT})
+diff --git a/benchmarks/CMakeLists.txt b/benchmarks/CMakeLists.txt
+index a390731..e4764d3 100644
+--- a/benchmarks/CMakeLists.txt
++++ b/benchmarks/CMakeLists.txt
+@@ -27,6 +27,12 @@ function(add_benchmark name)
+ 	prepend(srcs ${CMAKE_CURRENT_SOURCE_DIR} ${srcs})
+ 	add_executable(benchmark-${name} ${srcs})
+ 	target_link_libraries(benchmark-${name} ${LIBPMEMOBJ_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
++	install(
++	TARGETS benchmark-${name}
++	RUNTIME DESTINATION tools
++	LIBRARY DESTINATION lib
++	ARCHIVE DESTINATION lib
++	)
+ endfunction()
+ 
+ add_check_whitespace(benchmarks-cmake ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt)

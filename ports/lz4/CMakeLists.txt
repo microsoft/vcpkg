@@ -40,7 +40,7 @@ list(REMOVE_ITEM lz4h "${CMAKE_CURRENT_LIST_DIR}/lib/xxhash.h")
 INSTALL(FILES ${lz4h} DESTINATION "${INSTALL_INCLUDE_DIR}")
 
 install(EXPORT lz4Config
-  FILE lz4Config.cmake
+  FILE lz4-config.cmake
   NAMESPACE lz4::
   DESTINATION "${INSTALL_CMAKE_DIR}"
 )

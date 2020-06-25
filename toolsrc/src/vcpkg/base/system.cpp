@@ -105,6 +105,19 @@ namespace vcpkg
 #endif // defined(_WIN32)
     }
 
+    ExpectedS<std::string> System::get_home_dir() noexcept
+    {
+#ifdef _WIN32
+        auto maybe_home = System::get_environment_variable("USERPROFILE");
+        if (!maybe_home.has_value() || maybe_home.get()->empty())
+            return {"unable to read %USERPROFILE%", ExpectedRightTag{}};
+#else
+        auto maybe_home = System::get_environment_variable("HOME");
+        if (!maybe_home.has_value() || maybe_home.get()->empty()) return {"unable to read $HOME", ExpectedRightTag{}};
+#endif
+        return {std::move(*maybe_home.get()), ExpectedLeftTag{}};
+    }
+
 #if defined(_WIN32)
     static bool is_string_keytype(const DWORD hkey_type)
     {
@@ -187,10 +200,10 @@ namespace vcpkg
     Optional<CPUArchitecture> System::guess_visual_studio_prompt_target_architecture()
     {
         // Check for the "vsdevcmd" infrastructure used by Visual Studio 2017 and later
-        const auto VSCMD_ARG_TGT_ARCH = System::get_environment_variable("VSCMD_ARG_TGT_ARCH");
-        if (VSCMD_ARG_TGT_ARCH)
+        const auto vscmd_arg_tgt_arch_env = System::get_environment_variable("VSCMD_ARG_TGT_ARCH");
+        if (vscmd_arg_tgt_arch_env)
         {
-            return to_cpu_architecture(VSCMD_ARG_TGT_ARCH.value_or_exit(VCPKG_LINE_INFO));
+            return to_cpu_architecture(vscmd_arg_tgt_arch_env.value_or_exit(VCPKG_LINE_INFO));
         }
 
         // Check for the "vcvarsall" infrastructure used by Visual Studio 2015
