@@ -140,10 +140,10 @@ namespace vcpkg::Build
         {
             System::print2(System::Color::error, Build::create_error_message(result.code, spec), '\n');
             System::print2(Build::create_user_troubleshooting_message(spec), '\n');
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            return 1;
         }
 
-        Checks::exit_success(VCPKG_LINE_INFO);
+        return 0;
     }
 
     int Command::perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
