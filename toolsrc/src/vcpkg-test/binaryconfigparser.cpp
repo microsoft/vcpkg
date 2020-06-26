@@ -44,11 +44,19 @@ TEST_CASE ("BinaryConfigParser files provider", "[binaryconfigparser]")
         REQUIRE(!parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",upload", {});
+        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",read", {});
         REQUIRE(parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",upload,extra", {});
+        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",write", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",readwrite", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",readwrite,extra", {});
         REQUIRE(!parsed.has_value());
     }
     {
@@ -68,11 +76,19 @@ TEST_CASE ("BinaryConfigParser default provider", "[binaryconfigparser]")
         REQUIRE(!parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("default,upload", {});
+        auto parsed = create_binary_provider_from_configs_pure("default,read", {});
         REQUIRE(parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("default,upload,extra", {});
+        auto parsed = create_binary_provider_from_configs_pure("default,readwrite", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("default,write", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("default,read,extra", {});
         REQUIRE(!parsed.has_value());
     }
 }
@@ -96,11 +112,11 @@ TEST_CASE ("BinaryConfigParser multiple providers", "[binaryconfigparser]")
         REQUIRE(parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("clear;default,upload", {});
+        auto parsed = create_binary_provider_from_configs_pure("clear;default,readwrite", {});
         REQUIRE(parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("clear;default,upload;clear;clear", {});
+        auto parsed = create_binary_provider_from_configs_pure("clear;default,readwrite;clear;clear", {});
         REQUIRE(parsed.has_value());
     }
     {
