@@ -846,7 +846,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 }
                 else if (mode == "readwrite")
                 {
-                    state->archives_to_write.push_back(p);
+                    state->archives_to_read.push_back(p);
                     state->archives_to_write.push_back(std::move(p));
                 }
                 else
@@ -963,7 +963,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 }
                 else if (mode == "readwrite")
                 {
-                    state->archives_to_write.push_back(p);
+                    state->archives_to_read.push_back(p);
                     state->archives_to_write.push_back(std::move(p));
                 }
                 else
