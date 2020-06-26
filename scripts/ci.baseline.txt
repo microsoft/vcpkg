@@ -411,6 +411,7 @@ embree2:x64-osx=fail
 embree2:x64-windows-static=fail
 enet:arm-uwp=fail
 enet:x64-uwp=fail
+epsilon:x64-windows-static=fail
 epsilon:arm-uwp=fail
 epsilon:x64-linux=fail
 epsilon:x64-osx=fail
