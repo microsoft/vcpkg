@@ -1,4 +1,7 @@
 Source: nlohmann-json
-Version: 3.8.0
+Version: 3.8.0-1
 Homepage: https://github.com/nlohmann/json
 Description: JSON for Modern C++
+
+Feature: multiple-headers
+Description: Support forward declarations with json_fwd.hpp
