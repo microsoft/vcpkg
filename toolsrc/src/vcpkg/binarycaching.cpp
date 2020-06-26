@@ -443,7 +443,6 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 else
                 {
                     Checks::check_exit(VCPKG_LINE_INFO, segments.size() > 1);
-                    Checks::check_exit(VCPKG_LINE_INFO, segments.size() > 1);
                     return add_error("unexpected arguments: binary config 'default' can only accept"
                                      " 'read', readwrite', or 'write' as a first argument",
                                      segments[1].first);
