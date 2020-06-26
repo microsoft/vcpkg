@@ -105,34 +105,7 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
         return command_function->function(args, paths);
     }
 
-    Triplet default_triplet;
-    if (args.triplet != nullptr)
-    {
-        default_triplet = Triplet::from_canonical_name(std::string(*args.triplet));
-    }
-    else
-    {
-        auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
-        if (auto v = vcpkg_default_triplet_env.get())
-        {
-            default_triplet = Triplet::from_canonical_name(std::move(*v));
-        }
-        else
-        {
-#if defined(_WIN32)
-            default_triplet = Triplet::X86_WINDOWS;
-#elif defined(__APPLE__)
-            default_triplet = Triplet::from_canonical_name("x64-osx");
-#elif defined(__FreeBSD__)
-            default_triplet = Triplet::from_canonical_name("x64-freebsd");
-#elif defined(__GLIBC__)
-            default_triplet = Triplet::from_canonical_name("x64-linux");
-#else
-            default_triplet = Triplet::from_canonical_name("x64-linux-musl");
-#endif
-        }
-    }
-
+    Triplet default_triplet = vcpkg::default_triplet(args);
     Input::check_triplet(default_triplet, paths);
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_a()))
