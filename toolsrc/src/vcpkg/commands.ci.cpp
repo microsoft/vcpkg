@@ -34,7 +34,6 @@ namespace vcpkg::Commands::CI
 
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
     static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
-    static constexpr StringLiteral OPTION_PURGE_TOMBSTONES = "--purge-tombstones";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
 
@@ -43,10 +42,9 @@ namespace vcpkg::Commands::CI
         {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
     }};
 
-    static constexpr std::array<CommandSwitch, 3> CI_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 2> CI_SWITCHES = {{
         {OPTION_DRY_RUN, "Print out plan without execution"},
         {OPTION_RANDOMIZE, "Randomize the install order"},
-        {OPTION_PURGE_TOMBSTONES, "Purge failure tombstones and retry building the ports"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -256,7 +254,6 @@ namespace vcpkg::Commands::CI
         const PortFileProvider::PortFileProvider& provider,
         const CMakeVars::CMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
-        const bool purge_tombstones,
         IBinaryProvider& binaryprovider)
     {
         auto ret = std::make_unique<UnknownCIPortsResults>();
@@ -293,7 +290,7 @@ namespace vcpkg::Commands::CI
         std::vector<FullPackageSpec> install_specs;
         for (auto&& install_action : action_plan.install_actions)
         {
-            install_specs.emplace_back(FullPackageSpec{install_action.spec, install_action.feature_list});
+            install_specs.emplace_back(install_action.spec, install_action.feature_list);
         }
 
         var_provider.load_tag_vars(install_specs, provider);
@@ -306,81 +303,74 @@ namespace vcpkg::Commands::CI
 
         Build::compute_all_abis(paths, action_plan, var_provider, {});
 
-        std::string stdout_buffer;
-        for (auto&& action : action_plan.install_actions)
         {
-            auto p = &action;
-            ret->abi_map.emplace(action.spec, action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi);
-            ret->features.emplace(action.spec, action.feature_list);
-            if (auto scfl = p->source_control_file_location.get())
+            vcpkg::System::BufferedPrint stdout_print;
+            for (auto&& action : action_plan.install_actions)
             {
-                auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
-                emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
+                auto p = &action;
+                ret->abi_map.emplace(action.spec, action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi);
+                ret->features.emplace(action.spec, action.feature_list);
+                if (auto scfl = p->source_control_file_location.get())
+                {
+                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
+                    emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
-                p->build_options = build_options;
-            }
+                    p->build_options = build_options;
+                }
 
-            auto precheck_result = binaryprovider.precheck(paths, action, purge_tombstones);
-            bool b_will_build = false;
+                auto precheck_result = binaryprovider.precheck(paths, action);
+                bool b_will_build = false;
 
-            std::string state;
+                std::string state;
 
-            if (Util::Sets::contains(exclusions, p->spec.name()))
-            {
-                state = "skip";
-                ret->known.emplace(p->spec, BuildResult::EXCLUDED);
-                will_fail.emplace(p->spec);
-            }
-            else if (!supported_for_triplet(var_provider, p))
-            {
-                // This treats unsupported ports as if they are excluded
-                // which means the ports dependent on it will be cascaded due to missing dependencies
-                // Should this be changed so instead it is a failure to depend on a unsupported port?
-                state = "n/a";
-                ret->known.emplace(p->spec, BuildResult::EXCLUDED);
-                will_fail.emplace(p->spec);
-            }
-            else if (Util::any_of(p->package_dependencies,
-                                  [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
-            {
-                state = "cascade";
-                ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
-                will_fail.emplace(p->spec);
-            }
-            else if (precheck_result == RestoreResult::success)
-            {
-                state = "pass";
-                ret->known.emplace(p->spec, BuildResult::SUCCEEDED);
-            }
-            else if (precheck_result == RestoreResult::build_failed)
-            {
-                state = "fail";
-                ret->known.emplace(p->spec, BuildResult::BUILD_FAILED);
-                will_fail.emplace(p->spec);
-            }
-            else
-            {
-                ret->unknown.push_back(FullPackageSpec{p->spec, {p->feature_list.begin(), p->feature_list.end()}});
-                b_will_build = true;
-            }
+                if (Util::Sets::contains(exclusions, p->spec.name()))
+                {
+                    state = "skip";
+                    ret->known.emplace(p->spec, BuildResult::EXCLUDED);
+                    will_fail.emplace(p->spec);
+                }
+                else if (!supported_for_triplet(var_provider, p))
+                {
+                    // This treats unsupported ports as if they are excluded
+                    // which means the ports dependent on it will be cascaded due to missing dependencies
+                    // Should this be changed so instead it is a failure to depend on a unsupported port?
+                    state = "n/a";
+                    ret->known.emplace(p->spec, BuildResult::EXCLUDED);
+                    will_fail.emplace(p->spec);
+                }
+                else if (Util::any_of(p->package_dependencies,
+                                      [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
+                {
+                    state = "cascade";
+                    ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
+                    will_fail.emplace(p->spec);
+                }
+                else if (precheck_result == RestoreResult::success)
+                {
+                    state = "pass";
+                    ret->known.emplace(p->spec, BuildResult::SUCCEEDED);
+                }
+                else if (precheck_result == RestoreResult::build_failed)
+                {
+                    state = "fail";
+                    ret->known.emplace(p->spec, BuildResult::BUILD_FAILED);
+                    will_fail.emplace(p->spec);
+                }
+                else
+                {
+                    ret->unknown.emplace_back(p->spec, p->feature_list);
+                    b_will_build = true;
+                }
 
-            Strings::append(stdout_buffer,
-                            Strings::format("%40s: %1s %8s: %s\n",
-                                            p->spec,
-                                            (b_will_build ? "*" : " "),
-                                            state,
-                                            action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi));
-            if (stdout_buffer.size() > 2048)
-            {
-                System::print2(stdout_buffer);
-                stdout_buffer.clear();
+                stdout_print.append(Strings::format("%40s: %1s %8s: %s\n",
+                                                    p->spec,
+                                                    (b_will_build ? "*" : " "),
+                                                    state,
+                                                    action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi));
             }
-        }
-        System::print2(stdout_buffer);
-        stdout_buffer.clear();
+        } // flush stdout_print
 
         System::printf("Time to determine pass/fail: %s\n", timer.elapsed());
-
         return ret;
     }
 
@@ -411,7 +401,6 @@ namespace vcpkg::Commands::CI
         }
 
         const auto is_dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
-        const auto purge_tombstones = Util::Sets::contains(options.switches, OPTION_PURGE_TOMBSTONES);
 
         std::vector<Triplet> triplets = Util::fmap(
             args.command_arguments, [](std::string s) { return Triplet::from_canonical_name(std::move(s)); });
@@ -469,7 +458,6 @@ namespace vcpkg::Commands::CI
                                                          provider,
                                                          var_provider,
                                                          all_default_full_specs,
-                                                         purge_tombstones,
                                                          binaryprovider);
             PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
 
@@ -557,8 +545,9 @@ namespace vcpkg::Commands::CI
             result.summary.print();
         }
 
-        auto it_xunit = options.settings.find(OPTION_XUNIT);
-        if (it_xunit != options.settings.end())
+        auto& settings = options.settings;
+        auto it_xunit = settings.find(OPTION_XUNIT);
+        if (it_xunit != settings.end())
         {
             paths.get_filesystem().write_contents(
                 fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);

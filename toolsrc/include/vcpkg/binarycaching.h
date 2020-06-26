@@ -40,8 +40,7 @@ namespace vcpkg
         /// Requests the result of `try_restore()` without actually downloading the package. Used by CI to determine
         /// missing packages.
         virtual RestoreResult precheck(const VcpkgPaths& paths,
-                                       const Dependencies::InstallPlanAction& action,
-                                       bool purge_tombstones) = 0;
+                                       const Dependencies::InstallPlanAction& action) = 0;
     };
 
     IBinaryProvider& null_binary_provider();
