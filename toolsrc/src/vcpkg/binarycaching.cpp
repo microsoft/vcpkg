@@ -7,6 +7,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/binarycaching.h>
+#include <vcpkg/binarycaching.private.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 
@@ -339,124 +340,18 @@ namespace
         }
     };
 
-    struct NugetReference
+    static std::string trim_leading_zeroes(std::string v)
     {
-        explicit NugetReference(const Dependencies::InstallPlanAction& action)
-            : NugetReference(action.spec,
-                             action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
-                                 .source_control_file->core_paragraph->version,
-                             action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi)
+        auto n = v.find_first_not_of('0');
+        if (n == std::string::npos)
         {
+            v = "0";
         }
-
-        NugetReference(const PackageSpec& spec, const std::string& raw_version, const std::string& abi_tag)
-            : id(spec.dir()), version(reformat_version(raw_version, abi_tag))
+        else if (n > 0)
         {
+            v.erase(0, n);
         }
-
-        std::string id;
-        std::string version;
-
-        std::string nupkg_filename() const { return Strings::concat(id, '.', version, ".nupkg"); }
-
-    private:
-        static std::string trim_leading_zeroes(std::string v)
-        {
-            auto n = v.find_first_not_of('0');
-            if (n == std::string::npos)
-            {
-                v = "0";
-            }
-            if (n > 0)
-            {
-                v.erase(0, n);
-            }
-            return v;
-        }
-
-        static std::string reformat_version(const std::string& version, const std::string& abi_tag)
-        {
-            static const std::regex semver_matcher(R"(v?(\d+)\.(\d+)(\.\d+)?.*)");
-
-            std::smatch sm;
-            if (std::regex_match(version.cbegin(), version.cend(), sm, semver_matcher))
-            {
-                if (sm.size() <= 3 || sm[3].length() == 0)
-                {
-                    return Strings::concat(
-                        trim_leading_zeroes(sm.str(1)), '.', trim_leading_zeroes(sm.str(2)), ".0-", abi_tag);
-                }
-                else if (sm.size() >= 4)
-                {
-                    return Strings::concat(trim_leading_zeroes(sm.str(1)),
-                                           '.',
-                                           trim_leading_zeroes(sm.str(2)),
-                                           '.',
-                                           trim_leading_zeroes(sm.str(3).substr(1)),
-                                           "-",
-                                           abi_tag);
-                }
-                Checks::unreachable(VCPKG_LINE_INFO);
-            }
-
-            static const std::regex date_matcher(R"((\d\d\d\d)-(\d\d)-(\d\d).*)");
-            if (std::regex_match(version.cbegin(), version.cend(), sm, date_matcher))
-            {
-                return Strings::concat(trim_leading_zeroes(sm.str(1)),
-                                       '.',
-                                       trim_leading_zeroes(sm.str(2)),
-                                       '.',
-                                       trim_leading_zeroes(sm.str(3)),
-                                       "-",
-                                       abi_tag);
-            }
-
-            return Strings::concat("0.0.0-", abi_tag);
-        }
-    };
-
-    static std::string generate_nuspec(const VcpkgPaths& paths,
-                                       const Dependencies::InstallPlanAction& action,
-                                       const NugetReference& ref)
-    {
-        auto& spec = action.spec;
-        auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
-        auto& version = scf.core_paragraph->version;
-        std::string description =
-            Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
-                            scf.core_paragraph->description,
-                            "\n\nVersion: ",
-                            version,
-                            "\nTriplet/Compiler hash: ",
-                            paths.get_triplet_info(action.abi_info.value_or_exit(VCPKG_LINE_INFO)),
-                            "\nFeatures: ",
-                            Strings::join(", ", action.feature_list),
-                            "\nDependencies:\n");
-
-        for (auto&& dep : action.package_dependencies)
-        {
-            Strings::append(description, "    ", dep.name(), '\n');
-        }
-        XmlSerializer xml;
-        xml.open_tag("package").line_break();
-        xml.open_tag("metadata").line_break();
-        xml.simple_tag("id", ref.id).line_break();
-        xml.simple_tag("version", ref.version).line_break();
-        if (!scf.core_paragraph->homepage.empty()) xml.simple_tag("projectUrl", scf.core_paragraph->homepage);
-        xml.simple_tag("authors", "vcpkg").line_break();
-        xml.simple_tag("description", description).line_break();
-        xml.open_tag("packageTypes");
-        xml.start_complex_open_tag("packageType").text_attr("name", "vcpkg").finish_self_closing_complex_tag();
-        xml.close_tag("packageTypes").line_break();
-        xml.close_tag("metadata").line_break();
-        xml.open_tag("files");
-        xml.start_complex_open_tag("file")
-            .text_attr("src", (paths.package_dir(spec) / fs::u8path("**")).u8string())
-            .text_attr("target", "")
-            .finish_self_closing_complex_tag();
-        xml.close_tag("files").line_break();
-        xml.close_tag("package").line_break();
-        return std::move(xml.buf);
+        return v;
     }
 
     struct NugetBinaryProvider : IBinaryProvider
@@ -1093,6 +988,77 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                                                                   s.interactive));
 
     return {std::make_unique<MergeBinaryProviders>(std::move(providers))};
+}
+
+std::string vcpkg::reformat_version(const std::string& version, const std::string& abi_tag)
+{
+    static const std::regex semver_matcher(R"(v?(\d+)(\.\d+|$)(\.\d+)?.*)");
+
+    std::smatch sm;
+    if (std::regex_match(version.cbegin(), version.cend(), sm, semver_matcher))
+    {
+        auto major = trim_leading_zeroes(sm.str(1));
+        auto minor = sm.size() > 2 && !sm.str(2).empty() ? trim_leading_zeroes(sm.str(2).substr(1)) : "0";
+        auto patch = sm.size() > 3 && !sm.str(3).empty() ? trim_leading_zeroes(sm.str(3).substr(1)) : "0";
+        return Strings::concat(major, '.', minor, '.', patch, "-", abi_tag);
+    }
+
+    static const std::regex date_matcher(R"((\d\d\d\d)-(\d\d)-(\d\d).*)");
+    if (std::regex_match(version.cbegin(), version.cend(), sm, date_matcher))
+    {
+        return Strings::concat(trim_leading_zeroes(sm.str(1)),
+                               '.',
+                               trim_leading_zeroes(sm.str(2)),
+                               '.',
+                               trim_leading_zeroes(sm.str(3)),
+                               "-",
+                               abi_tag);
+    }
+
+    return Strings::concat("0.0.0-", abi_tag);
+}
+
+std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
+                                   const Dependencies::InstallPlanAction& action,
+                                   const vcpkg::NugetReference& ref)
+{
+    auto& spec = action.spec;
+    auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
+    auto& version = scf.core_paragraph->version;
+    std::string description = Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
+                                              scf.core_paragraph->description,
+                                              "\n\nVersion: ",
+                                              version,
+                                              "\nTriplet/Compiler hash: ",
+                                              paths.get_triplet_info(action.abi_info.value_or_exit(VCPKG_LINE_INFO)),
+                                              "\nFeatures: ",
+                                              Strings::join(", ", action.feature_list),
+                                              "\nDependencies:\n");
+
+    for (auto&& dep : action.package_dependencies)
+    {
+        Strings::append(description, "    ", dep.name(), '\n');
+    }
+    XmlSerializer xml;
+    xml.open_tag("package").line_break();
+    xml.open_tag("metadata").line_break();
+    xml.simple_tag("id", ref.id).line_break();
+    xml.simple_tag("version", ref.version).line_break();
+    if (!scf.core_paragraph->homepage.empty()) xml.simple_tag("projectUrl", scf.core_paragraph->homepage);
+    xml.simple_tag("authors", "vcpkg").line_break();
+    xml.simple_tag("description", description).line_break();
+    xml.open_tag("packageTypes");
+    xml.start_complex_open_tag("packageType").text_attr("name", "vcpkg").finish_self_closing_complex_tag();
+    xml.close_tag("packageTypes").line_break();
+    xml.close_tag("metadata").line_break();
+    xml.open_tag("files");
+    xml.start_complex_open_tag("file")
+        .text_attr("src", (paths.package_dir(spec) / fs::u8path("**")).u8string())
+        .text_attr("target", "")
+        .finish_self_closing_complex_tag();
+    xml.close_tag("files").line_break();
+    xml.close_tag("package").line_break();
+    return std::move(xml.buf);
 }
 
 void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
