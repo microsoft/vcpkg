@@ -16,6 +16,7 @@ TEST_CASE ("build smoke test", "[commands-build]")
 
     auto& fs_wrapper = Files::get_real_filesystem();
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_arg_sequence(std::begin(args_raw), std::end(args_raw));
+    args.binary_caching = false;
     args.buildtrees_root_dir =
         std::make_unique<std::string>((Test::base_temporary_directory() / fs::u8path("buildtrees")).u8string());
     args.install_root_dir =
