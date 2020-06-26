@@ -30,6 +30,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
   - [Using vcpkg with CMake](#using-vcpkg-with-cmake)
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
+    - [Vcpkg with CLion](#vcpkg-with-clion)
     - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
   - [Quick Start: Manifests](#quick-start-manifests)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
@@ -111,7 +112,7 @@ you can use the toolchain file:
 
 With CMake, you will still need to `find_package` and the like to use the libraries.
 Check out the [CMake section](#using-vcpkg-with-cmake) for more information,
-including on using CMake with VS and VS Code.
+including on using CMake with an IDE.
 
 For any other tools, including Visual Studio Code,
 check out the [integration guide][quick-start:integration].
@@ -242,6 +243,19 @@ add the path to the vcpkg toolchain file:
 ```
 [vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
+
+### Vcpkg with CLion
+
+Open the Toolchains settings
+(File > Settings on Windows and Linux, CLion > Preferences on macOS),
+and go to the CMake settings (Build, Execution, Deployment > CMake).
+Finally, in `CMake options`, add the following line:
+
+```
+-DCMAKE_TOOLCHAIN_FILE=C:/Users/nimazzuc/src/vcpkg/scripts/buildsystems/vcpkg.cmake
+```
+
+Unfortunately, you'll have to add this to each profile.
 
 ### Vcpkg as a Submodule
 
