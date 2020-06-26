@@ -37,7 +37,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-vcpkg_copy_tools(${CURRENT_PACKAGES_DIR}/tools/mozjpeg)
+vcpkg_copy_tools(TOOL_NAMES cjpeg djpeg jpegtran AUTO_CLEAN)
 
 #remove empty folders after static build
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
