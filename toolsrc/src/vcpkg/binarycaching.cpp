@@ -512,7 +512,7 @@ namespace
             }
         }
         void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
-        RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&, bool) override
+        RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
         }
@@ -572,12 +572,11 @@ namespace
             }
         }
         RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action,
-                               bool purge_tombstones) override
+                               const Dependencies::InstallPlanAction& action) override
         {
             for (auto&& provider : m_providers)
             {
-                auto result = provider->precheck(paths, action, purge_tombstones);
+                auto result = provider->precheck(paths, action);
                 switch (result)
                 {
                     case RestoreResult::build_failed:
@@ -600,8 +599,8 @@ namespace
         {
             return RestoreResult::missing;
         }
-        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override {}
-        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
+        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override { }
+        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override { }
         RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
@@ -815,33 +814,48 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
             else if (segments[0].second == "files")
             {
                 if (segments.size() < 2)
+                {
                     return add_error("expected arguments: binary config 'files' requires at least a path argument",
                                      segments[0].first);
+                }
 
                 auto p = fs::u8path(segments[1].second);
                 if (!p.is_absolute())
+                {
                     return add_error("expected arguments: path arguments for binary config strings must be absolute",
                                      segments[1].first);
+                }
 
-                if (segments.size() > 3)
+                std::string mode;
+                switch (segments.size())
                 {
-                    return add_error("unexpected arguments: binary config 'files' does not take more than 2 arguments",
-                                     segments[3].first);
+                    case 2: mode = "read"; break;
+                    case 3: mode = segments[2].second; break;
+                    default:
+                        return add_error("unexpected arguments: binary config 'files' requires 1 or 2 arguments",
+                                         segments[3].first);
                 }
-                else if (segments.size() == 3)
+
+                if (mode == "read")
                 {
-                    if (segments[2].second != "upload")
-                    {
-                        return add_error("unexpected arguments: binary config 'files' can only accept 'upload' as "
-                                         "a second argument",
-                                         segments[2].first);
-                    }
-                    else
-                    {
-                        state->archives_to_write.push_back(p);
-                    }
+                    state->archives_to_read.push_back(std::move(p));
                 }
-                state->archives_to_read.push_back(std::move(p));
+                else if (mode == "write")
+                {
+                    state->archives_to_write.push_back(std::move(p));
+                }
+                else if (mode == "readwrite")
+                {
+                    state->archives_to_read.push_back(p);
+                    state->archives_to_write.push_back(std::move(p));
+                }
+                else
+                {
+                    Checks::check_exit(VCPKG_LINE_INFO, segments.size() > 2);
+                    return add_error("unexpected arguments: binary config 'files' can only accept"
+                                     " 'read', readwrite', or 'write' as a second argument",
+                                     segments[2].first);
+                }
             }
             else if (segments[0].second == "interactive")
             {
@@ -916,8 +930,10 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
             else if (segments[0].second == "default")
             {
                 if (segments.size() > 2)
+                {
                     return add_error("unexpected arguments: binary config 'default' does not take more than 1 argument",
                                      segments[0].first);
+                }
 
                 auto&& maybe_home = System::get_platform_cache_home();
                 if (!maybe_home.has_value()) return add_error(maybe_home.error(), segments[0].first);
@@ -925,21 +941,38 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 auto p = *maybe_home.get();
                 p /= fs::u8path("vcpkg/archives");
                 if (!p.is_absolute())
-                    return add_error("default path was not absolute: " + p.u8string(), segments[0].first);
-                if (segments.size() == 2)
                 {
-                    if (segments[1].second != "upload")
-                    {
-                        return add_error(
-                            "unexpected arguments: binary config 'default' can only accept 'upload' as an argument",
-                            segments[1].first);
-                    }
-                    else
-                    {
-                        state->archives_to_write.push_back(p);
-                    }
+                    return add_error("default path was not absolute: " + p.u8string(), segments[0].first);
                 }
-                state->archives_to_read.push_back(std::move(p));
+
+                std::string mode;
+                switch (segments.size())
+                {
+                    case 1: mode = "read"; break;
+                    case 2: mode = segments[1].second; break;
+                    default: Checks::unreachable(VCPKG_LINE_INFO);
+                }
+
+                if (mode == "read")
+                {
+                    state->archives_to_read.push_back(std::move(p));
+                }
+                else if (mode == "write")
+                {
+                    state->archives_to_write.push_back(std::move(p));
+                }
+                else if (mode == "readwrite")
+                {
+                    state->archives_to_read.push_back(p);
+                    state->archives_to_write.push_back(std::move(p));
+                }
+                else
+                {
+                    Checks::check_exit(VCPKG_LINE_INFO, segments.size() > 1);
+                    return add_error("unexpected arguments: binary config 'default' can only accept"
+                                     " 'read', readwrite', or 'write' as a first argument",
+                                     segments[1].first);
+                }
             }
             else
             {

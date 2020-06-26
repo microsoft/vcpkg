@@ -28,13 +28,13 @@ supplied, binary caching will be used.
 
 [CmdletBinding()]
 Param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     [string]$Triplet,
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     $ArchivesRoot,
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     $WorkingRoot,
     [ValidateNotNullOrEmpty()]
@@ -53,33 +53,34 @@ $buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
 $commonArgs = @(
+    '--binarycaching',
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot"
 )
 
-$binaryCaching = $false
+$binaryCachingMode = 'readwrite'
 if ([string]::IsNullOrWhiteSpace($BuildReason)) {
-    Write-Host 'Build reason not specified, defaulting to using binary caching.'
-    $binaryCaching = $true
-} elseif ($BuildReason -eq 'PullRequest') {
-    Write-Host 'Build reason was Pull Request, using binary caching.'
-    $binaryCaching = $true
+    Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
+}
+elseif ($BuildReason -eq 'PullRequest') {
+    Write-Host 'Build reason was Pull Request, using binary caching in read write mode.'
+}
+else {
+    Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
+    $binaryCachingMode = 'write'
 }
 
-if ($binaryCaching) {
-    $commonArgs += @(
-        '--binarycaching',
-        "--x-binarysource=clear;files,$ArchivesRoot,upload"
-    )
-}
+$commonArgs += @("--x-binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
 
 if ($Triplet -eq 'x64-linux') {
     $env:HOME = '/home/agent'
     $executableExtension = [string]::Empty
-} elseif ($Triplet -eq 'x64-osx') {
+}
+elseif ($Triplet -eq 'x64-osx') {
     $executableExtension = [string]::Empty
-} else {
+}
+else {
     $executableExtension = '.exe'
 }
 
