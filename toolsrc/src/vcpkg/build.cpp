@@ -280,7 +280,8 @@ namespace vcpkg::Build
     const System::Environment& EnvCache::get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
 #if defined(_WIN32)
-        std::string build_env_cmd = make_build_env_cmd(*abi_info.pre_build_info, *abi_info.toolset);
+        std::string build_env_cmd =
+            make_build_env_cmd(*abi_info.pre_build_info, abi_info.toolset.value_or_exit(VCPKG_LINE_INFO));
 
         const auto& base_env = envs.get_lazy(abi_info.pre_build_info->passthrough_env_vars, [&]() -> EnvMapEntry {
             std::unordered_map<std::string, std::string> env;
@@ -324,6 +325,7 @@ namespace vcpkg::Build
     const std::string& EnvCache::get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
         const auto& fs = paths.get_filesystem();
+        Checks::check_exit(VCPKG_LINE_INFO, abi_info.pre_build_info != nullptr);
         const fs::path triplet_file_path = paths.get_triplet_file_path(abi_info.pre_build_info->triplet);
 
         auto tcfile = abi_info.pre_build_info->toolchain_file();
@@ -446,7 +448,7 @@ namespace vcpkg::Build
             {"CURRENT_BUILDTREES_DIR", buildpath},
             {"CURRENT_PACKAGES_DIR", paths.packages / ("detect_compiler_" + triplet.canonical_name())},
         };
-        get_generic_cmake_build_args(paths, triplet, *abi_info.toolset, cmake_args);
+        get_generic_cmake_build_args(paths, triplet, abi_info.toolset.value_or_exit(VCPKG_LINE_INFO), cmake_args);
 
         auto command = vcpkg::make_cmake_cmd(paths, paths.ports_cmake, std::move(cmake_args));
 
@@ -517,7 +519,10 @@ namespace vcpkg::Build
             {"ALL_FEATURES", all_features},
         };
         get_generic_cmake_build_args(
-            paths, triplet, *action.abi_info.value_or_exit(VCPKG_LINE_INFO).toolset, variables);
+            paths,
+            triplet,
+            action.abi_info.value_or_exit(VCPKG_LINE_INFO).toolset.value_or_exit(VCPKG_LINE_INFO),
+            variables);
 
         if (Util::Enum::to_bool(action.build_options.only_downloads))
         {
@@ -738,11 +743,9 @@ namespace vcpkg::Build
         return result;
     }
 
-    static void abi_entries_from_abi_info(const VcpkgPaths& paths,
-                                          const AbiInfo& abi_info,
-                                          std::vector<AbiEntry>& abi_tag_entries)
+    static void abi_entries_from_abi_info(const AbiInfo& abi_info, std::vector<AbiEntry>& abi_tag_entries)
     {
-        abi_tag_entries.emplace_back("triplet", paths.get_triplet_info(abi_info));
+        abi_tag_entries.emplace_back("triplet", abi_info.triplet_abi.value_or_exit(VCPKG_LINE_INFO));
 
         const auto& pre_build_info = *abi_info.pre_build_info;
         if (pre_build_info.public_abi_override)
@@ -771,7 +774,7 @@ namespace vcpkg::Build
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
-        abi_entries_from_abi_info(paths, action.abi_info.value_or_exit(VCPKG_LINE_INFO), abi_tag_entries);
+        abi_entries_from_abi_info(action.abi_info.value_or_exit(VCPKG_LINE_INFO), abi_tag_entries);
 
         // If there is an unusually large number of files in the port then
         // something suspicious is going on.  Rather than hash all of them
@@ -833,8 +836,7 @@ namespace vcpkg::Build
             System::print2(message);
         }
 
-        auto abi_tag_entries_missing = abi_tag_entries;
-        Util::erase_remove_if(abi_tag_entries_missing, [](const AbiEntry& p) { return !p.value.empty(); });
+        auto abi_tag_entries_missing = Util::filter(abi_tag_entries, [](const AbiEntry& p) { return p.value.empty(); });
 
         if (abi_tag_entries_missing.empty())
         {
@@ -899,7 +901,8 @@ namespace vcpkg::Build
 
             abi_info.pre_build_info = std::make_unique<PreBuildInfo>(
                 paths, action.spec.triplet(), var_provider.get_tag_vars(action.spec).value_or_exit(VCPKG_LINE_INFO));
-            abi_info.toolset = &paths.get_toolset(*abi_info.pre_build_info);
+            abi_info.toolset = paths.get_toolset(*abi_info.pre_build_info);
+            abi_info.triplet_abi = paths.get_triplet_info(abi_info);
 
             auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, dependency_abis);
             if (auto p = maybe_abi_tag_and_file.get())
