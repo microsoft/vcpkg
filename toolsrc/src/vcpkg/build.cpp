@@ -43,6 +43,28 @@ namespace vcpkg::Build
                                       IBinaryProvider& binaryprovider,
                                       const VcpkgPaths& paths)
     {
+        Checks::exit_with_code(VCPKG_LINE_INFO, perform_ex(full_spec, scfl, provider, binaryprovider, paths));
+    }
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        create_example_string("build zlib:x64-windows"),
+        1,
+        1,
+        {{}, {}},
+        nullptr,
+    };
+
+    void Command::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    {
+        Checks::exit_with_code(VCPKG_LINE_INFO, perform(args, paths, default_triplet));
+    }
+
+    int Command::perform_ex(const FullPackageSpec& full_spec,
+                            const SourceControlFileLocation& scfl,
+                            const PathsPortFileProvider& provider,
+                            IBinaryProvider& binaryprovider,
+                            const VcpkgPaths& paths)
+    {
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
         var_provider.load_dep_info_vars(std::array<PackageSpec, 1>{full_spec.package_spec});
@@ -61,6 +83,8 @@ namespace vcpkg::Build
                            "The Source field inside the CONTROL file does not match the port directory: '%s' != '%s'",
                            scf.core_paragraph->name,
                            spec.name());
+
+        compute_all_abis(paths, action_plan, var_provider, status_db);
 
         const Build::BuildPackageOptions build_package_options{
             Build::UseHeadVersion::NO,
@@ -122,15 +146,7 @@ namespace vcpkg::Build
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    const CommandStructure COMMAND_STRUCTURE = {
-        create_example_string("build zlib:x64-windows"),
-        1,
-        1,
-        {{}, {}},
-        nullptr,
-    };
-
-    void Command::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    int Command::perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         // Build only takes a single package and all dependencies must already be installed
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
@@ -151,7 +167,7 @@ namespace vcpkg::Build
         Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
         ASSUME(scfl != nullptr);
 
-        perform_and_exit_ex(
+        return perform_ex(
             spec, *scfl, provider, args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(), paths);
     }
 }
@@ -1186,7 +1202,7 @@ namespace vcpkg::Build
         }
     }
 
-    ExtendedBuildResult::ExtendedBuildResult(BuildResult code) : code(code) {}
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code) : code(code) { }
     ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::unique_ptr<BinaryControlFile>&& bcf)
         : code(code), binary_control_file(std::move(bcf))
     {

@@ -37,12 +37,18 @@ namespace vcpkg::Build
 {
     namespace Command
     {
+        int perform_ex(const FullPackageSpec& full_spec,
+                       const SourceControlFileLocation& scfl,
+                       const PortFileProvider::PathsPortFileProvider& provider,
+                       IBinaryProvider& binaryprovider,
+                       const VcpkgPaths& paths);
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
                                  IBinaryProvider& binaryprovider,
                                  const VcpkgPaths& paths);
 
+        int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 
@@ -222,7 +228,7 @@ namespace vcpkg::Build
     struct BuildPolicies
     {
         BuildPolicies() = default;
-        BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) {}
+        BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) { }
 
         bool is_enabled(BuildPolicy policy) const
         {
@@ -261,7 +267,7 @@ namespace vcpkg::Build
         std::string value;
 
         AbiEntry() = default;
-        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) {}
+        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) { }
 
         bool operator<(const AbiEntry& other) const
         {
@@ -290,7 +296,7 @@ namespace vcpkg::Build
 
     struct EnvCache
     {
-        explicit EnvCache(bool compiler_tracking) : m_compiler_tracking(compiler_tracking) {}
+        explicit EnvCache(bool compiler_tracking) : m_compiler_tracking(compiler_tracking) { }
 
         const System::Environment& get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info);
         const std::string& get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info);
