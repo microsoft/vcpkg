@@ -108,7 +108,7 @@ This flow enables arbitrarily complex, user-defined authentication and signing s
 
 Currently, our file-based backend is enabled by passing the undocumented `--binarycaching` flag to any Vcpkg command or setting the undocumented environment variable `VCPKG_FEATURE_FLAGS` to `binarycaching`. We will replace this feature flag with an on-by-default user-wide behavior, plus command line and environment-based configurability.
 
-The on-by-default user-wide location will use the file-based archive protocol on `~/.vcpkg/archives/`. This can be redirected with a symlink, or completely overridden with the command line or environment. In the future we can also consider having a user-wide configuration file, however we do not believe this is important for any of our key scenarios.
+The on-by-default configuration will specify the file-based archive protocol on either `%LOCALAPPDATA%/vcpkg/archives` (Windows) or `$XDG_CACHE_HOME/vcpkg/archives` (Unix). If `XDG_CACHE_HOME` is not defined on Unix, we will fall back to `$HOME/.cache/vcpkg/archives` based on the [XDG Base Directory Specification][1]. This can be redirected with a symlink, or completely overridden with the command line or environment. In the future we can also consider having a user-wide configuration file, however we do not believe this is important for any of our key scenarios.
 
 On the command line, a backend can be specified via `--binarysource=<config>`. Multiple backends can be specified by passing the option multiple times and the order of evaluation is determined by the order on the command line. Writes will be performed on all upload backends, but only for packages that were built as part of this build (the tool will not repackage/reupload binaries downloaded from other sources).
 
@@ -116,15 +116,19 @@ The environment variable `VCPKG_BINARY_SOURCES` can be set to a semicolon-delimi
 
 `<config>` can be any of:
 
-- `clear` – ignore all lower priority sources (lowest priority is default, then env, then command line)
+- `clear` - ignore all lower priority sources (lowest priority is default, then env, then command line)
 
-- `default[,upload]` – Reintroduce the default ~/.vcpkg/packages (as read-only or with uploading)
+- `default[,<readwrite>]` - Reintroduce the default ~/.vcpkg/packages (as read-only or with uploading)
 
-- `files,<path>[,upload]` – Add a file-based archive at `<path>`
+- `files,<path>[,<readwrite>]` - Add a file-based archive at `<path>`
 
-- `nuget,<url>[,upload]` – Add a nuget-based source at `<url>`. This url has a similar semantic as `nuget.exe restore -source <url>` for reads and `nuget.exe push -source <url>` for writes; notably it can also be a local path.
+- `nuget,<url>[,<readwrite>]` - Add a nuget-based source at `<url>`. This url has a similar semantic as `nuget.exe restore -source <url>` for reads and `nuget.exe push -source <url>` for writes; notably it can also be a local path.
 
-- `nugetconfig,<path>[,upload]` – Add a nuget-based source using the NuGet.config file at `<path>`. This enables users to fully control NuGet’s execution in combination with the documented NuGet environment variables. This has similar semantics to `nuget.exe push -ConfigFile <path>` and `nuget.exe restore -ConfigFile <path>`.
+- `nugetconfig,<path>[,<readwrite>]` - Add a nuget-based source using the NuGet.config file at `<path>`. This enables users to fully control NuGet's execution in combination with the documented NuGet environment variables. This has similar semantics to `nuget.exe push -ConfigFile <path>` and `nuget.exe restore -ConfigFile <path>`.
+
+- `interactive` - Enables interactive mode (such as manual credential entry) for all other configured backends.
+
+`<readwrite>` can be any of `read`, `write`, or `readwrite` to control whether packages will be consumed or published.
 
 Backtick (`) can be used as an escape character within config strings, with double backtick (``) inserting a single backtick. All paths must be absolute.
 
@@ -132,16 +136,20 @@ For all backends, noninteractive operation will be the default and the vcpkg too
 
 To enable the 4-step flow, `vcpkg install` will take a command `--output-nuget-package-config=<path>` which can be used in combination with `--dry-run`. This path can be relative and will resolve with respect to the current working directory.
 
+[1]: https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+
 #### Example 4-step flow
 
 ```
 PS> vcpkg install --dry-run pkg1 pkg2 pkg3 --output-nuget-package-config=packages.config 
 ```
 
-An unspecified process, such as `nuget.exe restore packages.config -packagedirectory $packages` or the ADO task https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/package/nuget?view=azure-devops, restores the packages to `$packages`.
+An unspecified process, such as `nuget.exe restore packages.config -packagedirectory $packages` or the [ADO task][2], restores the packages to `$packages`.
 
 ```
 PS> vcpkg install pkg1 pkg2 pkg3 --binarysource=clear --binarysource=nuget,$outpkgs,upload --binarysource=nuget,$packages
 ```
 
 Another unspecified process such as `nuget.exe sign $outpkgs/*.nupkg` and `nuget.exe push $outpkgs/*.nupkg` or the ADO task uploads the packages for use in future CI runs.
+
+[2]: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/package/nuget?view=azure-devops
