@@ -392,10 +392,11 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     return add_error("unexpected arguments: binary config 'default' does not take more than 1 argument",
                                      segments[0].first);
 
-                auto maybe_home = System::get_home_dir();
+                auto&& maybe_home = System::get_platform_cache_home();
                 if (!maybe_home.has_value()) return add_error(maybe_home.error(), segments[0].first);
 
-                auto p = fs::u8path(maybe_home.value_or_exit(VCPKG_LINE_INFO)) / fs::u8path(".vcpkg/archives");
+                auto p = *maybe_home.get();
+                p /= fs::u8path("vcpkg/archives");
                 if (!p.is_absolute())
                     return add_error("default path was not absolute: " + p.u8string(), segments[0].first);
                 if (segments.size() == 2)
