@@ -143,7 +143,7 @@ namespace vcpkg::Build
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        Checks::exit_success(VCPKG_LINE_INFO);
+        return 0;
     }
 
     int Command::perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
