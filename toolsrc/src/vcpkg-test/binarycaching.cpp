@@ -103,3 +103,30 @@ Dependencies:
     }
     REQUIRE(nuspec_lines.size() == expected_lines.size());
 }
+
+TEST_CASE ("XmlSerializer", "[XmlSerializer]")
+{
+    XmlSerializer xml;
+    xml.open_tag("a");
+    xml.open_tag("b");
+    xml.simple_tag("c", "d");
+    xml.close_tag("b");
+    xml.text("escaping: & < > \" '");
+
+    REQUIRE(xml.buf == R"(<a><b><c>d</c></b>escaping: &amp; &lt; &gt; &quot; &apos;)");
+
+    xml = XmlSerializer();
+    xml.emit_declaration();
+    xml.start_complex_open_tag("a").text_attr("b", "<").text_attr("c", "  ").finish_self_closing_complex_tag();
+    REQUIRE(xml.buf == R"(<?xml version="1.0" encoding="utf-8"?><a b="&lt;" c="  "/>)");
+
+    xml = XmlSerializer();
+    xml.start_complex_open_tag("a").finish_complex_open_tag();
+    REQUIRE(xml.buf == R"(<a>)");
+
+    xml = XmlSerializer();
+    xml.line_break();
+    xml.open_tag("a").line_break().line_break();
+    xml.close_tag("a").line_break().line_break();
+    REQUIRE(xml.buf == "\n<a>\n  \n  </a>\n\n");
+}

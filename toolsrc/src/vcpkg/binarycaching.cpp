@@ -250,96 +250,6 @@ namespace
         std::vector<fs::path> m_read_dirs, m_write_dirs;
     };
 
-    struct XmlSerializer
-    {
-        std::string buf;
-        int indent = 0;
-
-        XmlSerializer& emit_declaration()
-        {
-            buf.append(R"(<?xml version="1.0" encoding="utf-8"?>)");
-            return *this;
-        }
-        XmlSerializer& open_tag(StringLiteral sl)
-        {
-            Strings::append(buf, '<', sl, '>');
-            indent += 2;
-            return *this;
-        }
-        XmlSerializer& start_complex_open_tag(StringLiteral sl)
-        {
-            Strings::append(buf, '<', sl);
-            indent += 2;
-            return *this;
-        }
-        XmlSerializer& text_attr(StringLiteral name, StringView content)
-        {
-            Strings::append(buf, ' ', name, "=\"");
-            text(content);
-            Strings::append(buf, '"');
-            return *this;
-        }
-        XmlSerializer& finish_complex_open_tag()
-        {
-            Strings::append(buf, '>');
-            return *this;
-        }
-        XmlSerializer& finish_self_closing_complex_tag()
-        {
-            Strings::append(buf, "/>");
-            indent -= 2;
-            return *this;
-        }
-        XmlSerializer& close_tag(StringLiteral sl)
-        {
-            Strings::append(buf, "</", sl, '>');
-            indent -= 2;
-            return *this;
-        }
-        XmlSerializer& text(StringView sv)
-        {
-            Unicode::Utf8Decoder decoder(sv.begin(), sv.end());
-            for (auto ch : decoder)
-            {
-                if (ch == '&')
-                {
-                    buf.append("&amp;");
-                }
-                else if (ch == '<')
-                {
-                    buf.append("&lt;");
-                }
-                else if (ch == '>')
-                {
-                    buf.append("&gt;");
-                }
-                else if (ch == '"')
-                {
-                    buf.append("&quot;");
-                }
-                else if (ch == '\'')
-                {
-                    buf.append("&apos;");
-                }
-                else
-                {
-                    Unicode::utf8_append_code_point(buf, ch);
-                }
-            }
-            return *this;
-        }
-        XmlSerializer& simple_tag(StringLiteral tag, StringView content)
-        {
-            return open_tag(tag).text(content).close_tag(tag);
-        }
-        XmlSerializer& line_break()
-        {
-            buf.push_back('\n');
-            buf.append(indent, ' ');
-            return *this;
-        }
-    };
-
     static std::string trim_leading_zeroes(std::string v)
     {
         auto n = v.find_first_not_of('0');
@@ -702,6 +612,89 @@ namespace
             return RestoreResult::missing;
         }
     };
+}
+
+XmlSerializer& XmlSerializer::emit_declaration()
+{
+    buf.append(R"(<?xml version="1.0" encoding="utf-8"?>)");
+    return *this;
+}
+XmlSerializer& XmlSerializer::open_tag(StringLiteral sl)
+{
+    Strings::append(buf, '<', sl, '>');
+    indent += 2;
+    return *this;
+}
+XmlSerializer& XmlSerializer::start_complex_open_tag(StringLiteral sl)
+{
+    Strings::append(buf, '<', sl);
+    indent += 2;
+    return *this;
+}
+XmlSerializer& XmlSerializer::text_attr(StringLiteral name, StringView content)
+{
+    Strings::append(buf, ' ', name, "=\"");
+    text(content);
+    Strings::append(buf, '"');
+    return *this;
+}
+XmlSerializer& XmlSerializer::finish_complex_open_tag()
+{
+    Strings::append(buf, '>');
+    return *this;
+}
+XmlSerializer& XmlSerializer::finish_self_closing_complex_tag()
+{
+    Strings::append(buf, "/>");
+    indent -= 2;
+    return *this;
+}
+XmlSerializer& XmlSerializer::close_tag(StringLiteral sl)
+{
+    Strings::append(buf, "</", sl, '>');
+    indent -= 2;
+    return *this;
+}
+XmlSerializer& XmlSerializer::text(StringView sv)
+{
+    for (auto ch : sv)
+    {
+        if (ch == '&')
+        {
+            buf.append("&amp;");
+        }
+        else if (ch == '<')
+        {
+            buf.append("&lt;");
+        }
+        else if (ch == '>')
+        {
+            buf.append("&gt;");
+        }
+        else if (ch == '"')
+        {
+            buf.append("&quot;");
+        }
+        else if (ch == '\'')
+        {
+            buf.append("&apos;");
+        }
+        else
+        {
+            buf.push_back(ch);
+        }
+    }
+    return *this;
+}
+XmlSerializer& XmlSerializer::simple_tag(StringLiteral tag, StringView content)
+{
+    return open_tag(tag).text(content).close_tag(tag);
+}
+XmlSerializer& XmlSerializer::line_break()
+{
+    buf.push_back('\n');
+    buf.append(indent, ' ');
+    return *this;
 }
 
 IBinaryProvider& vcpkg::null_binary_provider()

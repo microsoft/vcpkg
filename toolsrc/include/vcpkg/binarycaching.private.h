@@ -33,4 +33,22 @@ namespace vcpkg
     std::string generate_nuspec(const VcpkgPaths& paths,
                                 const Dependencies::InstallPlanAction& action,
                                 const NugetReference& ref);
+
+    struct XmlSerializer
+    {
+        std::string buf;
+        int indent = 0;
+
+        XmlSerializer& emit_declaration();
+        XmlSerializer& open_tag(StringLiteral sl);
+        XmlSerializer& start_complex_open_tag(StringLiteral sl);
+        XmlSerializer& text_attr(StringLiteral name, StringView content);
+        XmlSerializer& finish_complex_open_tag();
+        XmlSerializer& finish_self_closing_complex_tag();
+        XmlSerializer& close_tag(StringLiteral sl);
+        XmlSerializer& text(StringView sv);
+        XmlSerializer& simple_tag(StringLiteral tag, StringView content);
+        XmlSerializer& line_break();
+    };
+
 }
