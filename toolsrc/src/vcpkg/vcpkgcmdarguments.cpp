@@ -667,8 +667,6 @@ namespace vcpkg
     // ASCII.
     void HelpTableFormatter::text(StringView text, int indent)
     {
-        if (text.size() == 0) return;
-
         const char* line_start = text.begin();
         const char* const e = text.end();
         const char* best_break = std::find_if(line_start, e, [](char ch) { return ch == ' ' || ch == '\n'; });

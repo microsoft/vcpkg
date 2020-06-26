@@ -186,7 +186,9 @@ namespace vcpkg
         System::CmdLineBuilder cmd;
         cmd.path_arg(cmake_tool_path);
         for (auto&& var : pass_variables)
+        {
             cmd.string_arg(var.s);
+        }
         cmd.string_arg("-P").path_arg(cmake_script);
         return cmd.extract();
     }

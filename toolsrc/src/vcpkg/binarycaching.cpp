@@ -360,12 +360,12 @@ namespace
         std::string nupkg_filename() const { return Strings::concat(id, '.', version, ".nupkg"); }
 
     private:
-        static std::string trim_zeroes(std::string v)
+        static std::string trim_leading_zeroes(std::string v)
         {
             auto n = v.find_first_not_of('0');
             if (n == std::string::npos)
             {
-                return "0";
+                v = "0";
             }
             if (n > 0)
             {
@@ -382,34 +382,42 @@ namespace
             if (std::regex_match(version.cbegin(), version.cend(), sm, semver_matcher))
             {
                 if (sm.size() <= 3 || sm[3].length() == 0)
-                    return Strings::concat(trim_zeroes(sm.str(1)), '.', trim_zeroes(sm.str(2)), ".0-", abi_tag);
+                {
+                    return Strings::concat(
+                        trim_leading_zeroes(sm.str(1)), '.', trim_leading_zeroes(sm.str(2)), ".0-", abi_tag);
+                }
                 else if (sm.size() >= 4)
-                    return Strings::concat(trim_zeroes(sm.str(1)),
+                {
+                    return Strings::concat(trim_leading_zeroes(sm.str(1)),
                                            '.',
-                                           trim_zeroes(sm.str(2)),
+                                           trim_leading_zeroes(sm.str(2)),
                                            '.',
-                                           trim_zeroes(sm.str(3).substr(1)),
+                                           trim_leading_zeroes(sm.str(3).substr(1)),
                                            "-",
                                            abi_tag);
-                else
-                    Checks::unreachable(VCPKG_LINE_INFO);
+                }
+                Checks::unreachable(VCPKG_LINE_INFO);
             }
 
             static const std::regex date_matcher(R"((\d\d\d\d)-(\d\d)-(\d\d).*)");
             if (std::regex_match(version.cbegin(), version.cend(), sm, date_matcher))
             {
-                return Strings::concat(
-                    trim_zeroes(sm.str(1)), '.', trim_zeroes(sm.str(2)), '.', trim_zeroes(sm.str(3)), "-", abi_tag);
+                return Strings::concat(trim_leading_zeroes(sm.str(1)),
+                                       '.',
+                                       trim_leading_zeroes(sm.str(2)),
+                                       '.',
+                                       trim_leading_zeroes(sm.str(3)),
+                                       "-",
+                                       abi_tag);
             }
 
             return Strings::concat("0.0.0-", abi_tag);
         }
     };
 
-    static void create_nuspec(const VcpkgPaths& paths,
-                              const Dependencies::InstallPlanAction& action,
-                              const fs::path& nuspec_path,
-                              const NugetReference& ref)
+    static std::string generate_nuspec(const VcpkgPaths& paths,
+                                       const Dependencies::InstallPlanAction& action,
+                                       const NugetReference& ref)
     {
         auto& spec = action.spec;
         auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
@@ -448,7 +456,7 @@ namespace
             .finish_self_closing_complex_tag();
         xml.close_tag("files").line_break();
         xml.close_tag("package").line_break();
-        paths.get_filesystem().write_contents(nuspec_path, xml.buf, VCPKG_LINE_INFO);
+        return std::move(xml.buf);
     }
 
     struct NugetBinaryProvider : IBinaryProvider
@@ -465,7 +473,6 @@ namespace
             , m_interactive(interactive)
         {
         }
-        ~NugetBinaryProvider() = default;
         void prefetch(const VcpkgPaths& paths, const Dependencies::ActionPlan& plan) override
         {
             if (m_read_sources.empty() && m_read_configs.empty()) return;
@@ -478,11 +485,9 @@ namespace
             for (auto&& action : plan.install_actions)
             {
                 auto& spec = action.spec;
-                fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
+                fs.remove_all_inside(paths.package_dir(spec), VCPKG_LINE_INFO);
 
-                NugetReference nuget_ref(action);
-
-                nuget_refs.emplace_back(spec, std::move(nuget_ref));
+                nuget_refs.emplace_back(spec, NugetReference(action));
             }
 
             System::print2("Attempting to fetch ", plan.install_actions.size(), " packages from nuget.\n");
@@ -614,7 +619,8 @@ namespace
 
             NugetReference nuget_ref(action);
             auto nuspec_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".nuspec");
-            create_nuspec(paths, action, nuspec_path, nuget_ref);
+            paths.get_filesystem().write_contents(
+                nuspec_path, generate_nuspec(paths, action, nuget_ref), VCPKG_LINE_INFO);
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
             System::CmdLineBuilder cmdline;
@@ -712,8 +718,12 @@ namespace
         }
 
     private:
-        std::vector<std::string> m_read_sources, m_write_sources;
-        std::vector<fs::path> m_read_configs, m_write_configs;
+        std::vector<std::string> m_read_sources;
+        std::vector<std::string> m_write_sources;
+
+        std::vector<fs::path> m_read_configs;
+        std::vector<fs::path> m_write_configs;
+
         std::set<PackageSpec> m_restored;
         bool m_interactive;
     };
@@ -728,7 +738,9 @@ namespace
         void prefetch(const VcpkgPaths& paths, const Dependencies::ActionPlan& plan) override
         {
             for (auto&& provider : m_providers)
+            {
                 provider->prefetch(paths, plan);
+            }
         }
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
@@ -748,12 +760,16 @@ namespace
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             for (auto&& provider : m_providers)
+            {
                 provider->push_success(paths, action);
+            }
         }
         void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) override
         {
             for (auto&& provider : m_providers)
+            {
                 provider->push_failure(paths, abi_tag, spec);
+            }
         }
         RestoreResult precheck(const VcpkgPaths& paths,
                                const Dependencies::InstallPlanAction& action,
@@ -819,7 +835,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
 {
     struct State
     {
-        bool clear = false;
+        bool m_cleared = false;
         bool interactive = false;
 
         std::vector<fs::path> archives_to_read;
@@ -830,6 +846,18 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
 
         std::vector<fs::path> configs_to_read;
         std::vector<fs::path> configs_to_write;
+
+        void clear()
+        {
+            m_cleared = true;
+            interactive = false;
+            archives_to_read.clear();
+            archives_to_write.clear();
+            sources_to_read.clear();
+            sources_to_write.clear();
+            configs_to_read.clear();
+            configs_to_write.clear();
+        }
     };
 
     struct BinaryConfigParser : Parse::ParserBase
@@ -899,14 +927,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 if (segments.size() != 1)
                     return add_error("unexpected arguments: binary config 'clear' does not take arguments",
                                      segments[1].first);
-                state->clear = true;
-                state->interactive = false;
-                state->archives_to_read.clear();
-                state->archives_to_write.clear();
-                state->sources_to_read.clear();
-                state->sources_to_write.clear();
-                state->configs_to_read.clear();
-                state->configs_to_write.clear();
+                state->clear();
             }
             else if (segments[0].second == "files")
             {
