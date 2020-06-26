@@ -1,5 +1,11 @@
 #include <catch2/catch.hpp>
 #include <vcpkg/binarycaching.private.h>
+#include <vcpkg/base/files.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/sourceparagraph.h>
+#include <vcpkg/paragraphs.h>
+#include <vcpkg/dependencies.h>
+#include <string>
 
 using namespace vcpkg;
 
@@ -27,4 +33,73 @@ TEST_CASE ("reformat_version generic", "[reformat_version]")
 {
     REQUIRE(reformat_version("apr", "abitag") == "0.0.0-abitag");
     REQUIRE(reformat_version("", "abitag") == "0.0.0-abitag");
+}
+
+TEST_CASE ("generate_nuspec", "[generate_nuspec]")
+{
+    auto& fsWrapper = Files::get_real_filesystem();
+    VcpkgCmdArguments args = VcpkgCmdArguments::create_from_arg_sequence(nullptr, nullptr);
+    VcpkgPaths paths(fsWrapper, args);
+
+    auto pghs = Paragraphs::parse_paragraphs(R"(
+Source: zlib2
+Version: 1.5
+Build-Depends: zlib
+Description: a spiffy compression library wrapper
+
+Feature: a
+Description: a feature
+
+Feature: b
+Description: enable bzip capabilities
+Build-Depends: bzip
+)",
+                                             "<testdata>");
+    REQUIRE(pghs.has_value());
+    auto maybe_scf = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs.get()));
+    REQUIRE(maybe_scf.has_value());
+    SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
+
+    Dependencies::InstallPlanAction ipa(PackageSpec{"zlib2", Triplet::X64_WINDOWS},
+                                        scfl,
+                                        Dependencies::RequestType::USER_REQUESTED,
+                                        {{"a", {}}, {"b", {}}});
+
+    ipa.abi_info = Build::AbiInfo{};
+    ipa.abi_info.get()->package_abi = "packageabi";
+    std::string tripletabi("tripletabi");
+    ipa.abi_info.get()->triplet_abi = tripletabi;
+
+    NugetReference ref(ipa);
+
+    REQUIRE(ref.nupkg_filename() == "zlib2_x64-windows.1.5.0-packageabi.nupkg");
+
+    auto nuspec = generate_nuspec(paths, ipa, ref);
+    static StringLiteral expected = R"(<package>
+  <metadata>
+    <id>zlib2_x64-windows</id>
+    <version>1.5.0-packageabi</version>
+    <authors>vcpkg</authors>
+    <description>NOT FOR DIRECT USE. Automatically generated cache package.
+
+a spiffy compression library wrapper
+
+Version: 1.5
+Triplet/Compiler hash: tripletabi
+Features: a, b
+Dependencies:
+</description>
+    <packageTypes><packageType name="vcpkg"/></packageTypes>
+    </metadata>
+  <files><file src="C:\src\vcpkg\packages\zlib2_x64-windows\**" target=""/></files>
+  </package>
+)";
+    auto expected_lines = Strings::split(expected, '\n');
+    auto nuspec_lines = Strings::split(nuspec, '\n');
+    for (size_t i = 0; i < expected_lines.size() && i < nuspec_lines.size(); ++i)
+    {
+        INFO("on line: " << i);
+        REQUIRE(nuspec_lines[i] == expected_lines[i]);
+    }
+    REQUIRE(nuspec_lines.size() == expected_lines.size());
 }

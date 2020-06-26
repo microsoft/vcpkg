@@ -309,6 +309,7 @@ namespace vcpkg::Build
     const std::string& EnvCache::get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
         const auto& fs = paths.get_filesystem();
+        Checks::check_exit(VCPKG_LINE_INFO, abi_info.pre_build_info != nullptr);
         const fs::path triplet_file_path = paths.get_triplet_file_path(abi_info.pre_build_info->triplet);
 
         auto tcfile = abi_info.pre_build_info->toolchain_file();
