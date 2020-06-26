@@ -39,6 +39,7 @@ TEST_CASE ("generate_nuspec", "[generate_nuspec]")
 {
     auto& fsWrapper = Files::get_real_filesystem();
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_arg_sequence(nullptr, nullptr);
+    args.packages_root_dir = std::make_unique<std::string>("/");
     VcpkgPaths paths(fsWrapper, args);
 
     auto pghs = Paragraphs::parse_paragraphs(R"(
@@ -75,7 +76,12 @@ Build-Depends: bzip
     REQUIRE(ref.nupkg_filename() == "zlib2_x64-windows.1.5.0-packageabi.nupkg");
 
     auto nuspec = generate_nuspec(paths, ipa, ref);
-    static StringLiteral expected = R"(<package>
+#ifdef _WIN32
+#define PKGPATH "C:\\zlib2_x64-windows\\**"
+#else
+#define PKGPATH "/zlib2_x64-windows/**"
+#endif
+    std::string expected = R"(<package>
   <metadata>
     <id>zlib2_x64-windows</id>
     <version>1.5.0-packageabi</version>
@@ -91,7 +97,7 @@ Dependencies:
 </description>
     <packageTypes><packageType name="vcpkg"/></packageTypes>
     </metadata>
-  <files><file src="C:\src\vcpkg\packages\zlib2_x64-windows\**" target=""/></files>
+  <files><file src=")" PKGPATH R"(" target=""/></files>
   </package>
 )";
     auto expected_lines = Strings::split(expected, '\n');
