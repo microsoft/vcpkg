@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(LIBVPX_VERSION 1.8.1)
@@ -19,7 +17,7 @@ vcpkg_extract_source_archive_ex(
 vcpkg_find_acquire_program(YASM)
 vcpkg_find_acquire_program(PERL)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
@@ -44,6 +42,9 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
         set(LIBVPX_TARGET_ARCH "x86_64-win64")
         set(LIBVPX_ARCH_DIR "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        set(LIBVPX_TARGET_ARCH "arm64-win64")
+        set(LIBVPX_ARCH_DIR "ARM64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
         set(LIBVPX_TARGET_ARCH "armv7-win32")
         set(LIBVPX_ARCH_DIR "ARM")
@@ -97,7 +98,9 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         endif()
     endif()
 
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
         set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nomt-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
     else()
         set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
@@ -217,7 +220,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 else()
     set(LIBVPX_CONFIG_DEBUG OFF)
 endif()
+
 configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake @ONLY)
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libvpx)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libvpx/LICENSE ${CURRENT_PACKAGES_DIR}/share/libvpx/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

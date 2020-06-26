@@ -476,7 +476,7 @@ namespace vcpkg::Export::IFW
                                                                       ifw_package_dir_path / "vcpkg" / "info" /
                                                                           (binary_paragraph.fullstem() + ".list"));
 
-            Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
+            Install::install_package_and_write_listfile(paths, action.spec, dirs);
         }
 
         System::printf("Exporting packages %s... done\n", ifw_packages_dir_path.generic_u8string());

@@ -257,7 +257,6 @@ namespace vcpkg::Commands::CI
         const CMakeVars::CMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
         const bool purge_tombstones,
-        const bool binary_caching_enabled,
         IBinaryProvider& binaryprovider)
     {
         auto ret = std::make_unique<UnknownCIPortsResults>();
@@ -272,7 +271,6 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            binary_caching_enabled ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
         };
 
@@ -312,7 +310,7 @@ namespace vcpkg::Commands::CI
         for (auto&& action : action_plan.install_actions)
         {
             auto p = &action;
-            ret->abi_map.emplace(action.spec, action.package_abi.value_or_exit(VCPKG_LINE_INFO));
+            ret->abi_map.emplace(action.spec, action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi);
             ret->features.emplace(action.spec, action.feature_list);
             if (auto scfl = p->source_control_file_location.get())
             {
@@ -371,7 +369,7 @@ namespace vcpkg::Commands::CI
                                             p->spec,
                                             (b_will_build ? "*" : " "),
                                             state,
-                                            action.package_abi.value_or_exit(VCPKG_LINE_INFO)));
+                                            action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi));
             if (stdout_buffer.size() > 2048)
             {
                 System::print2(stdout_buffer);
@@ -393,8 +391,14 @@ namespace vcpkg::Commands::CI
             System::print2(System::Color::warning, "Warning: Running ci without binary caching!\n");
         }
 
-        auto binaryprovider =
-            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+        std::unique_ptr<IBinaryProvider> binaryproviderStorage;
+        if (args.binary_caching_enabled())
+        {
+            binaryproviderStorage =
+                create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+        }
+
+        IBinaryProvider& binaryprovider = binaryproviderStorage ? *binaryproviderStorage : null_binary_provider();
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -431,7 +435,6 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            args.binary_caching_enabled() ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
             Build::PurgeDecompressFailure::YES,
         };
@@ -467,8 +470,7 @@ namespace vcpkg::Commands::CI
                                                          var_provider,
                                                          all_default_full_specs,
                                                          purge_tombstones,
-                                                         args.binary_caching_enabled(),
-                                                         *binaryprovider);
+                                                         binaryprovider);
             PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
 
             Dependencies::CreateInstallPlanOptions serialize_options;
@@ -513,7 +515,7 @@ namespace vcpkg::Commands::CI
             {
                 auto collection_timer = Chrono::ElapsedTimer::create_started();
                 auto summary = Install::perform(
-                    action_plan, Install::KeepGoing::YES, paths, status_db, *binaryprovider, var_provider);
+                    action_plan, Install::KeepGoing::YES, paths, status_db, binaryprovider, var_provider);
                 auto collection_time_elapsed = collection_timer.elapsed();
 
                 // Adding results for ports that were built or pulled from an archive
@@ -558,7 +560,8 @@ namespace vcpkg::Commands::CI
         auto it_xunit = options.settings.find(OPTION_XUNIT);
         if (it_xunit != options.settings.end())
         {
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
+            paths.get_filesystem().write_contents(
+                fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
