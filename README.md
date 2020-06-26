@@ -28,8 +28,9 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
   - [Installing macOS Developer Tools](#installing-macos-developer-tools)
     - [Installing GCC for macOS before 10.15](#installing-gcc-for-macos-before-1015)
   - [Using vcpkg with CMake](#using-vcpkg-with-cmake)
-    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
+    - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
+    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
   - [Quick Start: Manifests](#quick-start-manifests)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
@@ -87,18 +88,20 @@ You can also search for the libraries you need with the `search` subcommand:
 > .\vcpkg\vcpkg search [search term]
 ```
 
-In order to use vcpkg with Visual Studio, including CMake projects in Visual Studio,
+In order to use vcpkg with Visual Studio,
 run the following command (may require administrator elevation):
 
 ```cmd
 > .\vcpkg\vcpkg integrate install
 ```
 
-After this, you can now create a New Project (or open an existing one).
+After this, you can now create a New non-CMake Project (or open an existing one).
 All installed libraries are immediately ready to be `#include`'d and used
 in your project without additional configuration.
+If you're using CMake with Visual Studio,
+continue [here](#vcpkg-with-visual-studio-cmake-projects).
 
-In order to use vcpkg with CMake, for non-Visual Studio workflows,
+In order to use vcpkg with CMake outside of an IDE,
 you can use the toolchain file:
 
 ```
@@ -107,7 +110,8 @@ you can use the toolchain file:
 ```
 
 With CMake, you will still need to `find_package` and the like to use the libraries.
-Check out the [CMake section](#using-vcpkg-with-cmake) for more information.
+Check out the [CMake section](#using-vcpkg-with-cmake) for more information,
+including on using CMake with VS and VS Code.
 
 For any other tools, including Visual Studio Code,
 check out the [integration guide][quick-start:integration].
@@ -217,6 +221,28 @@ You'll then be able to bootstrap vcpkg along with the [quick start guide](#quick
 
 If you're using vcpkg with CMake, the following may help!
 
+### Visual Studio Code with CMake Tools
+
+Adding the following to your workspace `settings.json` will make
+CMake Tools automatically use vcpkg for libraries:
+
+```json
+{
+  "cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
+  }
+}
+```
+
+### Vcpkg with Visual Studio CMake Projects
+
+Open the CMake Settings Editor, and under `CMake toolchain file`,
+add the path to the vcpkg toolchain file:
+
+```
+[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+```
+
 ### Vcpkg as a Submodule
 
 When using vcpkg as a submodule of your project,
@@ -231,19 +257,6 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 This will still allow people to not use vcpkg,
 by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
-
-### Visual Studio Code with CMake Tools
-
-Adding the following to your workspace `settings.json` will make
-CMake Tools automatically use vcpkg for libraries:
-
-```json
-{
-  "cmake.configureSettings": {
-    "CMAKE_TOOLCHAIN_FILE": "[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
-  }
-}
-```
 
 ## Quick Start: Manifests
 
