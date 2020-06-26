@@ -948,6 +948,13 @@ namespace vcpkg::Dependencies
 
     void print_plan(const ActionPlan& action_plan, const bool is_recursive, const fs::path& default_ports_dir)
     {
+        if (action_plan.remove_actions.empty() && action_plan.already_installed.empty() &&
+            action_plan.install_actions.empty())
+        {
+            System::print2("All requested packages are currently installed.\n");
+            return;
+        }
+
         std::vector<const RemovePlanAction*> remove_plans;
         std::vector<const InstallPlanAction*> rebuilt_plans;
         std::vector<const InstallPlanAction*> only_install_plans;
@@ -972,6 +979,7 @@ namespace vcpkg::Dependencies
                                     [&](const RemovePlanAction* plan) { return plan->spec == install_action.spec; });
             if (it != remove_plans.end())
             {
+                remove_plans.erase(it);
                 rebuilt_plans.push_back(&install_action);
             }
             else
@@ -1019,6 +1027,16 @@ namespace vcpkg::Dependencies
                            '\n');
         }
 
+        if (!remove_plans.empty())
+        {
+            std::string msg = "The following packages will be removed:\n";
+            for (auto action : remove_plans)
+            {
+                Strings::append(msg, to_output_string(RequestType::USER_REQUESTED, action->spec.to_string()), '\n');
+            }
+            System::print2(msg);
+        }
+
         if (!rebuilt_plans.empty())
         {
             System::print2("The following packages will be rebuilt:\n", actions_to_output_string(rebuilt_plans), '\n');
@@ -1040,7 +1058,7 @@ namespace vcpkg::Dependencies
         if (has_non_user_requested_packages)
             System::print2("Additional packages (*) will be modified to complete this operation.\n");
 
-        if (!remove_plans.empty() && !is_recursive)
+        if ((!remove_plans.empty() || !rebuilt_plans.empty()) && !is_recursive)
         {
             System::print2(System::Color::warning,
                            "If you are sure you want to rebuild the above packages, run the command with the "
