@@ -13,6 +13,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TOOLS=OFF
+        -DWITH_LIBZIP=ON
 )
 
 vcpkg_install_cmake()

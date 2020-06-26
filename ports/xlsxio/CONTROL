@@ -2,4 +2,4 @@ Source: xlsxio
 Version: 2020-06-17
 Homepage: https://github.com/brechtsanders/xlsxio
 Description: XLSX I/O - C library for reading and writing .xlsx files
-Build-Depends: minizip, expat
+Build-Depends: libzip[bzip2], expat
