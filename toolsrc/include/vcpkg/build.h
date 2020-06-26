@@ -284,7 +284,8 @@ namespace vcpkg::Build
     struct AbiInfo
     {
         std::unique_ptr<PreBuildInfo> pre_build_info;
-        const Toolset* toolset;
+        Optional<const Toolset&> toolset;
+        Optional<const std::string&> triplet_abi;
         std::string package_abi;
         Optional<fs::path> abi_tag_file;
     };

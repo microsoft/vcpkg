@@ -470,6 +470,8 @@ namespace vcpkg::Install
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
+        binaryprovider.prefetch(paths, action_plan);
+
         for (auto&& action : action_plan.install_actions)
         {
             with_tracking(action.spec, [&]() {
