@@ -890,4 +890,16 @@ namespace vcpkg::Files
         message.push_back('\n');
         System::print2(message);
     }
+
+    fs::path concat(const fs::path& lhs, const fs::path& rhs)
+    {
+        if (rhs.is_absolute())
+        {
+            return rhs;
+        }
+        else
+        {
+            return lhs / rhs;
+        }
+    }
 }

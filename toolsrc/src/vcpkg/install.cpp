@@ -499,6 +499,7 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
 
     static constexpr std::array<CommandSwitch, 8> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
@@ -510,8 +511,11 @@ namespace vcpkg::Install
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
     }};
-    static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 2> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
+        {OPTION_WRITE_PACKAGES_CONFIG,
+         "Writes out a NuGet packages.config-formatted file for use with external binary caching.\nSee `vcpkg help "
+         "binarycaching` for more information."},
     }};
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
@@ -760,6 +764,17 @@ namespace vcpkg::Install
         Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
         Dependencies::print_plan(action_plan, is_recursive, paths.ports);
+
+        auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
+        if (it_pkgsconfig != options.settings.end())
+        {
+            Build::compute_all_abis(paths, action_plan, var_provider, status_db);
+
+            auto pkgsconfig_path = Files::concat(paths.original_cwd, fs::u8path(it_pkgsconfig->second));
+            auto pkgsconfig_contents = generate_packagesconfig(action_plan);
+            fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
+            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+        }
 
         if (dry_run)
         {

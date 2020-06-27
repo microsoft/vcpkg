@@ -14,16 +14,22 @@
 namespace vcpkg::Commands::SetInstalled
 {
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
 
     static constexpr CommandSwitch INSTALL_SWITCHES[] = {
         {OPTION_DRY_RUN, "Do not actually build or install"},
+    };
+    static constexpr CommandSetting INSTALL_SETTINGS[] = {
+        {OPTION_WRITE_PACKAGES_CONFIG,
+         "Writes out a NuGet packages.config-formatted file for use with external binary caching.\nSee `vcpkg help "
+         "binarycaching` for more information."},
     };
 
     const CommandStructure COMMAND_STRUCTURE = {
         create_example_string(R"(x-set-installed <package>...)"),
         0,
         SIZE_MAX,
-        {INSTALL_SWITCHES},
+        {INSTALL_SWITCHES, INSTALL_SETTINGS},
         nullptr,
     };
 
@@ -115,6 +121,17 @@ namespace vcpkg::Commands::SetInstalled
         });
 
         Dependencies::print_plan(action_plan, true, paths.ports);
+
+        auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
+        if (it_pkgsconfig != options.settings.end())
+        {
+            Build::compute_all_abis(paths, action_plan, *cmake_vars, status_db);
+            auto& fs = paths.get_filesystem();
+            auto pkgsconfig_path = Files::concat(paths.original_cwd, fs::u8path(it_pkgsconfig->second));
+            auto pkgsconfig_contents = generate_packagesconfig(action_plan);
+            fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
+            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+        }
 
         if (dry_run)
         {

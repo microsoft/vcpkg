@@ -484,8 +484,9 @@ namespace vcpkg::Build
             env);
         out_file.close();
 
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !compiler_hash.empty(), "Error occured while detecting compiler information");
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !compiler_hash.empty(),
+                           "Error occured while detecting compiler information. Pass `--debug` for more information.");
 
         Debug::print("Detecting compiler hash for triplet ", triplet, ": ", compiler_hash, "\n");
         return compiler_hash;
@@ -866,6 +867,8 @@ namespace vcpkg::Build
         for (auto it = action_plan.install_actions.begin(); it != action_plan.install_actions.end(); ++it)
         {
             auto& action = *it;
+            if (action.abi_info.has_value()) continue;
+
             std::vector<AbiEntry> dependency_abis;
             if (!Util::Enum::to_bool(action.build_options.only_downloads))
             {
