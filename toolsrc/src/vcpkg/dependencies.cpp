@@ -955,7 +955,7 @@ namespace vcpkg::Dependencies
             return;
         }
 
-        std::vector<const RemovePlanAction*> remove_plans;
+        std::set<PackageSpec> remove_specs;
         std::vector<const InstallPlanAction*> rebuilt_plans;
         std::vector<const InstallPlanAction*> only_install_plans;
         std::vector<const InstallPlanAction*> new_plans;
@@ -969,17 +969,16 @@ namespace vcpkg::Dependencies
 
         for (auto&& remove_action : action_plan.remove_actions)
         {
-            remove_plans.emplace_back(&remove_action);
+            remove_specs.emplace(remove_action.spec);
         }
         for (auto&& install_action : action_plan.install_actions)
         {
             // remove plans are guaranteed to come before install plans, so we know the plan will be contained
             // if at all.
-            auto it = Util::find_if(remove_plans,
-                                    [&](const RemovePlanAction* plan) { return plan->spec == install_action.spec; });
-            if (it != remove_plans.end())
+            auto it = remove_specs.find(install_action.spec);
+            if (it != remove_specs.end())
             {
-                remove_plans.erase(it);
+                remove_specs.erase(it);
                 rebuilt_plans.push_back(&install_action);
             }
             else
@@ -996,7 +995,6 @@ namespace vcpkg::Dependencies
         }
         already_installed_plans = Util::fmap(action_plan.already_installed, [](auto&& action) { return &action; });
 
-        std::sort(remove_plans.begin(), remove_plans.end(), &RemovePlanAction::compare_by_name);
         std::sort(rebuilt_plans.begin(), rebuilt_plans.end(), &InstallPlanAction::compare_by_name);
         std::sort(only_install_plans.begin(), only_install_plans.end(), &InstallPlanAction::compare_by_name);
         std::sort(new_plans.begin(), new_plans.end(), &InstallPlanAction::compare_by_name);
@@ -1027,12 +1025,12 @@ namespace vcpkg::Dependencies
                            '\n');
         }
 
-        if (!remove_plans.empty())
+        if (!remove_specs.empty())
         {
             std::string msg = "The following packages will be removed:\n";
-            for (auto action : remove_plans)
+            for (auto spec : remove_specs)
             {
-                Strings::append(msg, to_output_string(RequestType::USER_REQUESTED, action->spec.to_string()), '\n');
+                Strings::append(msg, to_output_string(RequestType::USER_REQUESTED, spec.to_string()), '\n');
             }
             System::print2(msg);
         }
@@ -1057,8 +1055,8 @@ namespace vcpkg::Dependencies
 
         if (has_non_user_requested_packages)
             System::print2("Additional packages (*) will be modified to complete this operation.\n");
-
-        if ((!remove_plans.empty() || !rebuilt_plans.empty()) && !is_recursive)
+        bool have_removals = !remove_specs.empty() || !rebuilt_plans.empty();
+        if (have_removals && !is_recursive)
         {
             System::print2(System::Color::warning,
                            "If you are sure you want to rebuild the above packages, run the command with the "
