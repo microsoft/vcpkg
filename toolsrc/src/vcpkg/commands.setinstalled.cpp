@@ -13,11 +13,17 @@
 
 namespace vcpkg::Commands::SetInstalled
 {
+    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+
+    static constexpr CommandSwitch INSTALL_SWITCHES[] = {
+        {OPTION_DRY_RUN, "Do not actually build or install"},
+    };
+
     const CommandStructure COMMAND_STRUCTURE = {
         create_example_string(R"(x-set-installed <package>...)"),
-        1,
+        0,
         SIZE_MAX,
-        {},
+        {INSTALL_SWITCHES},
         nullptr,
     };
 
@@ -38,6 +44,8 @@ namespace vcpkg::Commands::SetInstalled
 
         auto binaryprovider =
             create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+
+        const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
@@ -76,6 +84,7 @@ namespace vcpkg::Commands::SetInstalled
         // currently (or once) installed specifications
         auto status_db = database_load_check(paths);
         std::vector<PackageSpec> specs_to_remove;
+        std::set<PackageSpec> specs_installed;
         for (auto&& status_pgh : status_db)
         {
             if (!status_pgh->is_installed()) continue;
@@ -86,25 +95,33 @@ namespace vcpkg::Commands::SetInstalled
             {
                 specs_to_remove.push_back(status_pgh->package.spec);
             }
+            else
+            {
+                specs_installed.emplace(status_pgh->package.spec);
+            }
         }
 
-        auto remove_plan = Dependencies::create_remove_plan(specs_to_remove, status_db);
+        action_plan.remove_actions = Dependencies::create_remove_plan(specs_to_remove, status_db);
 
-        for (const auto& action : remove_plan)
+        for (const auto& action : action_plan.remove_actions)
         {
-            Remove::perform_remove_plan_action(paths, action, Remove::Purge::NO, &status_db);
+            // This should not technically be needed, however ensuring that all specs to be removed are not included in
+            // `specs_installed` acts as a sanity check
+            specs_installed.erase(action.spec);
         }
 
-        auto real_action_plan = Dependencies::create_feature_install_plan(provider, *cmake_vars, specs, status_db);
+        Util::erase_remove_if(action_plan.install_actions, [&](const Dependencies::InstallPlanAction& ipa) {
+            return Util::Sets::contains(specs_installed, ipa.spec);
+        });
 
-        for (auto& action : real_action_plan.install_actions)
+        Dependencies::print_plan(action_plan, true, paths.ports);
+
+        if (dry_run)
         {
-            action.build_options = install_plan_options;
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        Dependencies::print_plan(real_action_plan, true);
-
-        const auto summary = Install::perform(real_action_plan,
+        const auto summary = Install::perform(action_plan,
                                               Install::KeepGoing::NO,
                                               paths,
                                               status_db,
