@@ -1,0 +1,13 @@
+diff --git a/winpr/tools/makecert-cli/CMakeLists.txt b/winpr/tools/makecert-cli/CMakeLists.txt
+index 48fda5b..4e15a22 100644
+--- a/winpr/tools/makecert-cli/CMakeLists.txt
++++ b/winpr/tools/makecert-cli/CMakeLists.txt
+@@ -42,7 +42,7 @@ add_executable(${MODULE_NAME} ${${MODULE_PREFIX}_SRCS})
+ 
+ set(${MODULE_PREFIX}_LIBS winpr-tools)
+ 
+-target_link_libraries(${MODULE_NAME} ${${MODULE_PREFIX}_LIBS} winpr)
++target_link_libraries(${MODULE_NAME} ${OPENSSL_LIBRARIES} ${${MODULE_PREFIX}_LIBS} winpr)
+ 
+ set_property(TARGET ${MODULE_NAME} PROPERTY FOLDER "WinPR/Tools")
+ 

@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-add-install-target.patch
-        0002-use-ansi.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

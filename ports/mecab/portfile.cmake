@@ -4,7 +4,6 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(MECAB_VERSION 0.996)
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO taku910/mecab
@@ -15,21 +14,17 @@ vcpkg_from_github(
 		fix_wpath_unsigned.patch
 )
 
-message(STATUS "source path is : ${SOURCE_PATH}")
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/mecab/src)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/mecab/src)
 file(COPY ${SOURCE_PATH}/mecab/COPYING DESTINATION ${SOURCE_PATH}/mecab/src)
 
-message(STATUS "CURRENT_PACKAGES_DIR is : ${CURRENT_PACKAGES_DIR}")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/mecab/src
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
+
 file(COPY ${SOURCE_PATH}/mecab/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mecab)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/mecab/COPYING ${CURRENT_PACKAGES_DIR}/share/mecab/copyright)
-
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME mecab)

@@ -73,6 +73,11 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+file(READ ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake TARGET_CONFIG)
+string(REPLACE [[INTERFACE_INCLUDE_DIRECTORIES "/src/lib;${_IMPORT_PREFIX}/include"]]
+               [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]] TARGET_CONFIG "${TARGET_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake "${TARGET_CONFIG}")
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/doc/devkit/license.dox DESTINATION ${CURRENT_PACKAGES_DIR}/share/geogram)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/geogram/license.dox ${CURRENT_PACKAGES_DIR}/share/geogram/copyright)

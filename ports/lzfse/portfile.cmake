@@ -8,10 +8,10 @@ vcpkg_from_github(
     REPO lzfse/lzfse
     REF lzfse-1.0
     SHA512 9d7ca44e6d3d2bdf4b82b0eb66c14922369b8b6fe2cf891187a77c6708b8d26c2c1b2ccddec6059e85dbbbb37c497419549f02812b5f34d06238ac246a8cf912
-    HEAD_REF master)
-
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-cli-option.patch)
+    HEAD_REF master
+    PATCHES
+        disable-cli-option.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

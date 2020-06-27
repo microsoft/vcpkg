@@ -1,14 +1,9 @@
-include(vcpkg_common_functions)
-
-set(VERSION 5.6.1)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/so-${VERSION}/dev)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/sobjectizer/files/sobjectizer/SObjectizer%20Core%20v.5.6/so-${VERSION}.tar.bz2"
-    FILENAME "so-${VERSION}.tar.bz2"
-    SHA512 f043a2d9025fe98d407023291100a79c2fbbd9d61e7c24602311e7383607b0fc1ec6108bfaea5f98021ebb942b3494f0380a2357bcaed01f92ede5dba0ab9cf0
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO stiffstream/sobjectizer
+    REF 64e9c1062ef1bbbb67de44426f2eac55d4f5241c # v.5.7.1
+    SHA512 aa8f1bc982f1212fd040bb68c52d824f518104f1e5ce6af884ec57ffb70334148765fd44c5f883458e7733cf28ace380c349e68d8dbe19564374ab0afb0b969a
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(SOBJECTIZER_BUILD_STATIC ON)
@@ -19,7 +14,7 @@ else()
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/dev
     PREFER_NINJA
     OPTIONS
         -DSOBJECTIZER_BUILD_STATIC=${SOBJECTIZER_BUILD_STATIC}
@@ -29,8 +24,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sobjectizer)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/../LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sobjectizer)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/sobjectizer/LICENSE ${CURRENT_PACKAGES_DIR}/share/sobjectizer/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

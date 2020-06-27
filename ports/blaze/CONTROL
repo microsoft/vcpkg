@@ -1,5 +1,5 @@
 Source: blaze
-Version: 3.6
+Version: 3.7
 Build-Depends: clapack (!osx), boost-exception
 Homepage: https://bitbucket.org/blaze-lib/blaze
 Description: Blaze is an open-source, high-performance C++ math library for dense and sparse arithmetic.

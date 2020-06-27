@@ -1,19 +1,18 @@
 include(vcpkg_common_functions)
 
 set(ARCHIVE_NAME "sundials-3.1.1")
-set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME}")
 
-vcpkg_download_distfile(ARCHIVE_FILE
+vcpkg_download_distfile(ARCHIVE
     URLS "https://computation.llnl.gov/projects/sundials/download/${ARCHIVE_NAME}.tar.gz"
     FILENAME "${ARCHIVE_NAME}.tar.gz"
     SHA512 3e8fc7183c5503943f1ba00c73b04c1614a48b6e6cb90559ec5481f9acffaa19acd97bd961611b251ebdc032f1a13f0919b0ab0cdfe9d9b4ddc99d40bef5719f
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
     PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/uwp-c4703-warning.patch
+        uwp-c4703-warning.patch
 )
 
 vcpkg_configure_cmake(
@@ -47,7 +46,7 @@ if(DEBUG_DLLS)
     file(INSTALL ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sundials RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
 

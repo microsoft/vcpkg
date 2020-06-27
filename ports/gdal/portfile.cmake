@@ -37,20 +37,20 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
       vcpkg_apply_patches(
           SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
           PATCHES
-          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
-          ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-static-build.patch
+                0001-Fix-debug-crt-flags.patch
+                0002-Fix-static-build.patch
       )
     else()
       vcpkg_apply_patches(
           SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
           PATCHES
-          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+                0001-Fix-debug-crt-flags.patch
       )
     endif()
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}/ogr
         PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-std-fabs.patch
+              0003-Fix-std-fabs.patch
     )
 endforeach()
 
@@ -65,7 +65,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   # Setup proj4 libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PROJ_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/proj.lib" PROJ_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/projd.lib" PROJ_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib" PROJ_LIBRARY_DBG)
 
   # Setup libpng libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PNG_INCLUDE_DIR)
@@ -113,7 +113,17 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   # Setup PostgreSQL libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PGSQL_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpq.lib" PGSQL_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.lib" PGSQL_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpq.lib" PGSQL_LIBRARY_DBG)
+  
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpgcommon.lib" TMP_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpgcommon.lib" TMP_DBG)
+  set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
+  set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
+
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpgport.lib" TMP_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpgport.lib" TMP_DBG)
+  set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
+  set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
 
   # Setup OpenJPEG libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" OPENJPEG_INCLUDE_DIR)
@@ -136,8 +146,8 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib" LZMA_LIBRARY_DBG)
 
   # Setup openssl libraries path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libeay32.lib ${CURRENT_INSTALLED_DIR}/lib/ssleay32.lib" OPENSSL_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libeay32.lib ${CURRENT_INSTALLED_DIR}/debug/lib/ssleay32.lib" OPENSSL_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcrypto.lib ${CURRENT_INSTALLED_DIR}/lib/libssl.lib" OPENSSL_LIBRARY_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.lib" OPENSSL_LIBRARY_DBG)
 
   # Setup libiconv libraries path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib" ICONV_LIBRARY_REL)
@@ -192,6 +202,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
       PNGDIR=${PNG_INCLUDE_DIR}
       ZLIB_INC=-I${ZLIB_INCLUDE_DIR}
       ZLIB_EXTERNAL_LIB=1
+      ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
       MSVC_VER=1900
   )
 
@@ -200,7 +211,6 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   endif()
 
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-      list(APPEND NMAKE_OPTIONS PROJ_FLAGS=-DPROJ_STATIC)
       list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
   else()
       # Enables PDBs for release and debug builds
@@ -352,8 +362,9 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     )
 
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-      COMMAND make
+    vcpkg_execute_build_process(
+      COMMAND make -j ${VCPKG_CONCURRENCY}
+      NO_PARALLEL_COMMAND make
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME make-build-${TARGET_TRIPLET}-release
     )
@@ -388,8 +399,9 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     )
 
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-      COMMAND make
+    vcpkg_execute_build_process(
+      COMMAND make -j ${VCPKG_CONCURRENCY}
+      NO_PARALLEL_COMMAND make
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME make-build-${TARGET_TRIPLET}-debug
     )

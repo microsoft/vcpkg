@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
-    REF 2.0.2
-    SHA512 4dcde37ba014500cee69f7d49b359112655c177cf2c0003b4693bfe25f8a55147e9a87f58d31b4fc952a7faed6fecd5087220fd879110ade326922991f11c423
+    REF 166e34213e4f4e2363ce058a7bcc69fd03e38b76 # 2.0.4
+    SHA512 e4ac657cdb5df0b37e9429d21c2c49eed0c195408469597b49c06791fc5899a66f7f7dbb0b253f32eb28e63e5382fcf3afe68e5e30b04f76e145f6151d8f1112
     HEAD_REF master
     PATCHES
         add-options-for-exes-docs-headers.patch

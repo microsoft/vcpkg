@@ -38,7 +38,7 @@ elseif(VCPKG_TARGET_IS_OSX)
     vcpkg_download_distfile(ARCHIVE_FILE
         URLS "https://www.advsofteng.net/chartdir_cpp_mac.tar.gz"
         FILENAME "chartdir_cpp_mac-6.3.1.tar.gz"
-        SHA512 50a6b8d80a65a1e723808ce6722c7ec8b1457f1c63d187ce487b71b7d1d820f64301729d034ca99ddcea13ec0db8dab9fd14262023c24a6f9ecf196a0cac800d
+        SHA512 d7364b42ed7c5dd2f89ed8692ed0df1ec952216ba24f8afa8e039641f3296f23c9ff6391e3e0dcd3bfdb9e6898c21a8281aa2803fbee33c7197c1df271a0edf7
     )
 
     vcpkg_extract_source_archive_ex(

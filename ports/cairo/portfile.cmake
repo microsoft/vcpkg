@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(CAIRO_VERSION 1.16.0)
 
 vcpkg_download_distfile(ARCHIVE
@@ -18,31 +17,35 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
 file(COPY ${CURRENT_PORT_DIR}/cairo-features.h DESTINATION ${SOURCE_PATH}/src)
 
+if ("x11" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Feature x11 only support UNIX.")
+    endif()
+    message(WARNING "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
+endif()
+
+if("gobject" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "Feature gobject currently only supports dynamic build.")
+    endif()
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    x11 WITH_X11
+    gobject WITH_GOBJECT
+)
+
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}/src
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cairo TARGET_PATH share/unofficial-cairo)
 
-# Copy the appropriate header files.
-foreach(FILE
-"${SOURCE_PATH}/src/cairo.h"
-"${SOURCE_PATH}/src/cairo-deprecated.h"
-"${SOURCE_PATH}/src/cairo-features.h"
-"${SOURCE_PATH}/src/cairo-pdf.h"
-"${SOURCE_PATH}/src/cairo-ps.h"
-"${SOURCE_PATH}/src/cairo-script.h"
-"${SOURCE_PATH}/src/cairo-svg.h"
-"${SOURCE_PATH}/cairo-version.h"
-"${SOURCE_PATH}/src/cairo-win32.h"
-"${SOURCE_PATH}/util/cairo-gobject/cairo-gobject.h"
-"${SOURCE_PATH}/src/cairo-ft.h")
-  file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-  file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cairo)
-endforeach()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
     file(READ ${FILE} CAIRO_H)
@@ -55,9 +58,8 @@ foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/
 endforeach()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cairo)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cairo/COPYING ${CURRENT_PACKAGES_DIR}/share/cairo/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
 
-vcpkg_test_cmake(PACKAGE_NAME unofficial-cairo)
+#vcpkg_test_cmake(PACKAGE_NAME unofficial-cairo)

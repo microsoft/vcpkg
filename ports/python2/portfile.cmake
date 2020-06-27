@@ -1,4 +1,4 @@
-# Patches are from: 
+# Patches are from:
 # - https://github.com/python-cmake-buildsystem/python-cmake-buildsystem/tree/master/patches/2.7.13/Windows-MSVC/1900
 # - https://github.com/Microsoft/vcpkg/tree/master/ports/python3
 
@@ -11,21 +11,10 @@ set(PYTHON_VERSION_MAJOR  2)
 set(PYTHON_VERSION_MINOR  7)
 set(PYTHON_VERSION_PATCH  15)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/python-${PYTHON_VERSION})
 
 include(vcpkg_common_functions)
 
-vcpkg_download_distfile(
-    PYTHON_ARCHIVE
-    URLS https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz
-    FILENAME Python-${PYTHON_VERSION}.tar.xz
-    SHA512 27ea43eb45fc68f3d2469d5f07636e10801dee11635a430ec8ec922ed790bb426b072da94df885e4dfa1ea8b7a24f2f56dd92f9b0f51e162330f161216bd6de6
-)
-
-vcpkg_extract_source_archive(${PYTHON_ARCHIVE})
-
 set(_PYTHON_PATCHES "")
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND _PYTHON_PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/004-static-library-msvc.patch
@@ -36,8 +25,17 @@ if (VCPKG_CRT_LINKAGE STREQUAL static)
     list(APPEND _PYTHON_PATCHES ${CMAKE_CURRENT_LIST_DIR}/005-static-crt-msvc.patch)
 endif()
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+
+vcpkg_download_distfile(ARCHIVE
+    URLS https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz
+    FILENAME Python-${PYTHON_VERSION}.tar.xz
+    SHA512 27ea43eb45fc68f3d2469d5f07636e10801dee11635a430ec8ec922ed790bb426b072da94df885e4dfa1ea8b7a24f2f56dd92f9b0f51e162330f161216bd6de6
+)
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/001-build-msvc.patch
         ${CMAKE_CURRENT_LIST_DIR}/002-build-msvc.patch

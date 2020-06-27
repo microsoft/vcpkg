@@ -1,3 +1,10 @@
 Source: @PORT@
 Version:
+Homepage: 
 Description:
+Build-Depends:
+Default-Features:
+
+Feature:
+Description:
+Build-Depends:

@@ -1,5 +1,5 @@
---- a/CMakeLists.txt	Mon Mar 13 21:37:24 2017
-+++ b/CMakeLists.txt	Sun Aug 06 19:34:00 2017
+--- a/src/CMakeLists.txt	Mon Mar 13 21:37:24 2017
++++ b/src/CMakeLists.txt	Sun Aug 06 19:34:00 2017
 @@ -1,6 +1,8 @@
  cmake_minimum_required (VERSION 2.8.8)
  project (hypre)

@@ -1,5 +1,5 @@
---- a/utilities/_hypre_utilities.h	Thu Jun 09 15:56:18 2016
-+++ b/utilities/_hypre_utilities.h	Wed Jan 04 18:08:27 2017
+--- a/src/utilities/_hypre_utilities.h	Thu Jun 09 15:56:18 2016
++++ b/src/utilities/_hypre_utilities.h	Wed Jan 04 18:08:27 2017
 @@ -13,6 +13,7 @@
  #ifndef hypre_UTILITIES_HEADER
  #define hypre_UTILITIES_HEADER

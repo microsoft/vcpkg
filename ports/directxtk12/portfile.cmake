@@ -1,16 +1,10 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "DirectXTK12 only supports dynamic CRT linkage")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
-    REF aug2019
-    SHA512 e1f31a4d2d1963c9de507f723bdd6c1626c61c6b3c1585c6ed7c587d14dc090fec5114c7cec00eecb2c70f11e668581d423a68aa94444931370a0c93ca2daa24
+    REF jun2020b
+    SHA512 5c8815e574d5acfffcf4c14ca06f028353bc30fb3b3680235fba9f94472a553a36cdfd38d0f8a87c63e2be7672b62174482373635fb55020c5ec4a097805dbff
     HEAD_REF master
 )
 
@@ -30,7 +24,7 @@ else()
     message(FATAL_ERROR "Unsupported platform toolset.")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(SLN_NAME "Windows10_${VS_VERSION}")
 else()
     set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
@@ -38,6 +32,7 @@ endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
+    PLATFORM ${TRIPLET_SYSTEM_ARCH}
 )
 
 file(INSTALL
@@ -47,11 +42,12 @@ file(INSTALL
 
 file(INSTALL
     ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK12.lib
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK12.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 file(INSTALL
     ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK12.lib
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK12.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxtk12 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -8,13 +8,9 @@ vcpkg_from_github(
     REF c9fc0b862f09260b558cf81e94e0d58aca15d9e9
     SHA512 ac9c79e3ac991dd58f239f7e0b2bd6c3185907aa283bc42098aadddac87b361867f002664cc14853822f92a491d95269578bea01aa00477e39a40424320000a1
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-headers.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-cmake-order.patch
+        fix-headers.patch
+        fix-cmake-order.patch
 )
 
 set(WITH_EXTRAS OFF)

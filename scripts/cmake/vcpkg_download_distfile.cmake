@@ -45,7 +45,7 @@
 ##
 ## * [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
 ## * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
-## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
+## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
 function(vcpkg_download_distfile VAR)
     set(options SKIP_SHA512)
     set(oneValueArgs FILENAME SHA512)
@@ -75,11 +75,14 @@ function(vcpkg_download_distfile VAR)
 
     # Works around issue #3399
     if(IS_DIRECTORY "${DOWNLOADS}/temp")
+        # Delete "temp0" directory created by the old version of vcpkg
         file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
-        file(RENAME "${DOWNLOADS}/temp" "${DOWNLOADS}/temp0")
-        file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
+
+        file(GLOB temp_files "${DOWNLOADS}/temp")
+        file(REMOVE_RECURSE ${temp_files})
+    else()
+      file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
     endif()
-    file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
 
     function(test_hash FILE_PATH FILE_KIND CUSTOM_ERROR_ADVICE)
         if(_VCPKG_INTERNAL_NO_HASH_CHECK)

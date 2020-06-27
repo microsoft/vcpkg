@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -8,8 +6,6 @@ vcpkg_from_github(
     REF d1b906991a7587688d384b648c55731f9be52506
     SHA512 ac1229f95db9ab6367d7650e27b87e76a0874e01c9d404e8c5fb75ba2761318218b658a4f7522188fda8008974393a333a8a5fbed8e3a472c98445f13e459ad5
     HEAD_REF master
-    PATCHES
-        remove_execution_character_set.patch
 )
 
 vcpkg_configure_cmake(
@@ -25,8 +21,14 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/tidyd.exe)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/tidyd)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/tidy-html5)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/tidy.exe ${CURRENT_PACKAGES_DIR}/tools/tidy-html5/tidy.exe)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/tidy.exe ${CURRENT_PACKAGES_DIR}/tools/tidy-html5/tidy.exe)
+else()
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/tidy ${CURRENT_PACKAGES_DIR}/tools/tidy-html5/tidy)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -35,3 +37,4 @@ endif()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(INSTALL ${SOURCE_PATH}/README/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/tidy-html5 RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

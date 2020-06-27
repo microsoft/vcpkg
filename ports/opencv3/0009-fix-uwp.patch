@@ -11,6 +11,19 @@ index c2fda8f..3f7dfdc 100644
      # removing APPCONTAINER from modules to run from console
      # in case of usual starting of WinRT test apps output is missing
      # so starting of console version w/o APPCONTAINER is required to get test results
+diff --git a/modules/core/src/utils/datafile.cpp b/modules/core/src/utils/datafile.cpp
+index f1107b0..c613ca2 100644
+--- a/modules/core/src/utils/datafile.cpp
++++ b/modules/core/src/utils/datafile.cpp
+@@ -108,7 +108,7 @@ static cv::String getModuleLocation(const void* addr)
+     CV_UNUSED(addr);
+ #ifdef _WIN32
+     HMODULE m = 0;
+-#if _WIN32_WINNT >= 0x0501
++#if (_WIN32_WINNT >= 0x0501) && (!WINRT_STORE)
+     ::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+         reinterpret_cast<LPCTSTR>(addr),
+         &m);
 diff --git a/modules/highgui/include/opencv2/highgui/highgui_winrt.hpp b/modules/highgui/include/opencv2/highgui/highgui_winrt.hpp
 index f4147f3..b92efdd 100644
 --- a/modules/highgui/include/opencv2/highgui/highgui_winrt.hpp

@@ -1,17 +1,15 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO malaterre/GDCM
-    REF v3.0.0
-    SHA512 2ac076dd49011234f4431ffe67fcba84a1ca9042ec5fc4dfc8aed2ed16bec5f499fa7aa666e5630796afc266ce76741d931cca333534b55fdc477e25a9189d33
+    REF f46fc26fa1c85e803f77496255a4de308828ac7f # v3.0.5
+    SHA512 b5a85f4e752056cd40e06d557e17f8b56fc49c30ae8aaa3c7f483ae4851cb60c18edb227e8bf8ec8133de2a442a38f7a82dac99bce9d9afb74397778564bae4f
     HEAD_REF master
     PATCHES
         use-openjpeg-config.patch
         fix-share-path.patch
-		Fix-Cmake_DIR.patch
+        Fix-Cmake_DIR.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMake/FindOpenJPEG.cmake)
@@ -54,4 +52,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/gdcm RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

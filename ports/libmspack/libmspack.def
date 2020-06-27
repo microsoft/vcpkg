@@ -30,3 +30,6 @@ mspack_destroy_kwaj_compressor
 mspack_destroy_kwaj_decompressor
 mspack_destroy_oab_compressor
 mspack_destroy_oab_decompressor
+
+mspack_sys_selftest_internal
+mspack_version

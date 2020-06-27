@@ -1,6 +1,5 @@
 include(vcpkg_common_functions)
 
-#set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/szip-2.1.1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://support.hdfgroup.org/ftp/lib-external/szip/2.1.1/src/szip-2.1.1.tar.gz"
     FILENAME "szip-2.1.1.tar.gz"

@@ -1,25 +1,35 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF 8b7cc18456f377b7f0df42dcdefb24ae81d9e7fc
-        SHA512 0386889fc3d32a795998a35a382cce6d11f6712416f3a1a49de6ea7d9c0c973ca05989353ee9a3ec5ca02dc55c2b59dc803cbf4866b918274667e52d03d1490f
+        REF cb2e8d390df56ffa31d08ca0a79ab58ff96160cc
+        SHA512 6798b17d6768b3ccbd0eb66719b50f364cd951736eb71110e2dc9deca054a1566ff88b9e8c5e9b52536e4308cad6cd3cbebff3282c123083e3afaee5535e724b
         HEAD_REF public-preview
-        PATCHES improve-external-deps.patch
+        PATCHES
+            improve-external-deps.patch
+            fix-cmake.patch
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF b03cc5e0afb647934e45d4530d3e993476db3d3e
-        SHA512 7428c625dbacfd9ab612d5bbfad3c079074cd3834fe84a42db88e747aab2615140c0ca3035adc36b29ed8cf4bf487360522215ce03cee3e26254af925a68384a
+        REF 989f1dc66c7de53cb14d29eb051003eec0de798e
+        SHA512 876e846cdef699ee3635e5191a697c56c7c40b2110d2468cfbbe204cff59d42a0d930861fda7229dbba163a329de9d8f06276228bab516ef92c88feebfcfbc13
         HEAD_REF master
-        PATCHES improve-external-deps.patch
+        PATCHES
+            improve-external-deps.patch
+            fix-cmake.patch
     )
+endif()
+
+if("use_prov_client" IN_LIST FEATURES)
+    message(STATUS "use prov_client")
+    set(USE_PROV_CLIENT 1)
+else()
+    message(STATUS "NO prov_client")
+    set(USE_PROV_CLIENT 0)
 endif()
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
@@ -34,6 +44,8 @@ vcpkg_configure_cmake(
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
+        -Duse_prov_client=${USE_PROV_CLIENT}
+        -Dhsm_type_symm_key=${USE_PROV_CLIENT}
 )
 
 vcpkg_install_cmake()
@@ -42,7 +54,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/azure_iot_sdks)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-iot-sdk-c/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
 

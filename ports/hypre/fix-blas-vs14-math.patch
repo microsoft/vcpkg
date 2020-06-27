@@ -1,5 +1,5 @@
---- a/blas/f2c.h	Fri Sep 11 18:57:56 2015
-+++ b/blas/f2c.h	Thu Dec 22 18:20:08 2016
+--- a/src/blas/f2c.h	Fri Sep 11 18:57:56 2015
++++ b/src/blas/f2c.h	Thu Dec 22 18:20:08 2016
 @@ -190,18 +190,18 @@
  typedef struct Namelist Namelist;
  

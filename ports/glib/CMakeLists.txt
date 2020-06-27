@@ -73,36 +73,43 @@ else()
     set(ENV{PCRE_CFLAGS} "-I${PCRE_INCLUDE_DIR}")
     set(ENV{MSGFMT} "/bin/echo")
     set(ENV{GMSGFMT} "/bin/echo")
-    if(NOT EXISTS "${CMAKE_BINARY_DIR}/config/config.h")
-        string(TOUPPER UPPER_CONFIG "${CMAKE_BUILD_TYPE}")
-        set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
-        set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
-        if(BUILD_SHARED_LIBS)
-            set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
-        else()
-            set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
-        endif()
-
-        string(STRIP "${CXXFLAGS}" CXXFLAGS)
-        string(STRIP "${CFLAGS}"   CFLAGS)
-        string(STRIP "${LDFLAGS}"  LDFLAGS)
-        execute_process(
-            COMMAND "${CMAKE_SOURCE_DIR}/configure"
-                --disable-libelf
-                --disable-libmount
-                "CPPFLAGS=${CXXFLAGS}"
-                "CFLAGS=${CFLAGS}"
-                "LDFLAGS=${LDFLAGS}"
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
-            RESULT_VARIABLE res
-        )
-        if(NOT res EQUAL 0)
-            message(FATAL_ERROR "Configure failed.")
-        endif()
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" UPPER_CONFIG)
+    set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
+    set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
+    if(BUILD_SHARED_LIBS)
+        set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
+    else()
+        set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
     endif()
+
+    string(STRIP "${CXXFLAGS}" CXXFLAGS)
+    string(STRIP "${CFLAGS}"   CFLAGS)
+    string(STRIP "${LDFLAGS}"  LDFLAGS)
+    execute_process(
+        COMMAND "${CMAKE_SOURCE_DIR}/configure"
+            --disable-libelf
+            --disable-libmount
+            "CPPFLAGS=${CXXFLAGS}"
+            "CFLAGS=${CFLAGS}"
+            "LDFLAGS=${LDFLAGS}"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
+        RESULT_VARIABLE res
+    )
+    if(NOT res EQUAL 0)
+        message(FATAL_ERROR "Configure failed.")
+    endif()
+
+    if (NOT HAVE_SELINUX)
+        file(READ "${CMAKE_BINARY_DIR}/config/config.h" CONFIG_H)
+        string(REPLACE "#define HAVE_SELINUX 1"
+                    "#undef HAVE_SELINUX" CONFIG_H "${CONFIG_H}")
+        file(WRITE "${CMAKE_BINARY_DIR}/config/config.h" "${CONFIG_H}")
+    endif()
+    
     add_definitions("-DGIO_MODULE_DIR=\"gio/modules\"")
 endif()
 install(FILES ${CMAKE_BINARY_DIR}/config/config.h DESTINATION include/glib)
+install(FILES ${CMAKE_SOURCE_DIR}/msvc_recommended_pragmas.h DESTINATION include)
 
 include_directories(${CMAKE_BINARY_DIR}/config ${CMAKE_BINARY_DIR}/config/glib ${CMAKE_BINARY_DIR}/config/gio ${CMAKE_BINARY_DIR}/config/gmodule)
 include_directories(. glib)
@@ -353,3 +360,35 @@ message(STATUS "  " ${ICONV_LIBRARY})
 message(STATUS "  " ${CHARSET_LIBRARY})
 message(STATUS "  " ${FFI_LIBRARY})
 message(STATUS "  " ${LIBINTL_LIBRARY})
+
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/glib-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/glib-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gobject-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gobject-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gmodule-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gmodule-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gmodule-export-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gmodule-export-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gmodule-no-export-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gmodule-no-export-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gthread-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gthread-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gio-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gio-2.0.pc" @ONLY)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/glib-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gobject-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gmodule-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gmodule-export-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gmodule-no-export-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gthread-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gio-2.0.pc"
+            DESTINATION lib/pkgconfig)
+
+if(WIN32)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gio-windows-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gio-windows-2.0.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gio-windows-2.0.pc"  DESTINATION lib/pkgconfig)
+endif()
+
+if(UNIX)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gio-unix-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gio-unix-2.0.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gio-unix-2.0.pc"  DESTINATION lib/pkgconfig)
+endif()

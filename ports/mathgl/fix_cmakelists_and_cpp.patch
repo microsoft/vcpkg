@@ -68,20 +68,86 @@ index 5243549..23eebe5 100644
  	}
  }
  //-----------------------------------------------------------------------------
+diff --git a/src/parser.cpp b/src/parser.cpp
+index 577191d..e6909a1 100644
+--- a/src/parser.cpp
++++ b/src/parser.cpp
+@@ -58,7 +58,10 @@ void mglParser::FillBaseCmd()
+ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
+ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
+ //-----------------------------------------------------------------------------
++#ifndef MGL_ASK_FUNC
++#define MGL_ASK_FUNC
+ MGL_EXPORT void (*mgl_ask_func)(const wchar_t *, wchar_t *)=0;
++#endif
+ void MGL_EXPORT mgl_ask_gets(const wchar_t *quest, wchar_t *res)
+ {	printf("%ls\n",quest);	if(!fgetws(res,1024,stdin))	*res=0;	}
+ //-----------------------------------------------------------------------------
+@@ -69,7 +72,10 @@ void MGL_EXPORT mgl_progress_txt(int value, int maximal, HMGL)
+ 	else	for(int i=prev;i<value;i++)	printf("#");
+ 	prev = value;	fflush(stdout);
+ }
++#ifndef MGL_PROGRESS_FUNC
++#define MGL_PROGRESS_FUNC
+ MGL_EXPORT void (*mgl_progress_func)(int value, int maximal, HMGL)=mgl_progress_txt;
++#endif
+ void MGL_EXPORT mgl_progress(int value, int maximal, HMGL gr)
+ {	mgl_progress_func(value, maximal, gr);	}
+ //-----------------------------------------------------------------------------
 diff --git a/utils/mglview.cpp b/utils/mglview.cpp
-index d360df3..15eeb3e 100644
+index d360df3..7e2634b 100644
 --- a/utils/mglview.cpp
 +++ b/utils/mglview.cpp
-@@ -29,6 +29,12 @@
+@@ -29,6 +29,18 @@
  	#include "mgl2/qt.h"
  #endif
  //-----------------------------------------------------------------------------
-+#if WIN32
-+	MGL_EXPORT void (*mgl_ask_func)(const wchar_t *, wchar_t *)=0;
-+	MGL_EXPORT void (*mgl_progress_func)(int value, int maximal, HMGL)=0;
-+	MGL_EXPORT std::string mglGlobalMess;
++#ifdef WIN32
++#ifndef MGL_ASK_FUNC
++#define MGL_ASK_FUNC
++MGL_EXPORT void (*mgl_ask_func)(const wchar_t *, wchar_t *)=0;
++#endif
++#ifndef MGL_PROGRESS_FUNC
++#define MGL_PROGRESS_FUNC
++MGL_EXPORT void (*mgl_progress_func)(int value, int maximal, HMGL)=0;
++#endif
++MGL_EXPORT std::string mglGlobalMess;	///< Buffer for receiving global messages
 +#endif
 +//-----------------------------------------------------------------------------
  std::wstring str, opt;
  std::vector<std::string> anim;
  mglParse p(true);
+diff --git a/include/mgl2/datac.h b/include/mgl2/datac.h
+index f2c0251..0e69de7 100644
+--- a/include/mgl2/datac.h
++++ b/include/mgl2/datac.h
+@@ -474,7 +474,7 @@ using mglDataA::Momentum;
+ 	void set_v(mreal val, long i,long j=0,long k=0)	{	a[i+nx*(j+ny*k)]=val;	}
+ #else
+ 	/// Get the value in given cell of the data with border checking
+-	mreal v(long i,long j=0,long k=0) const	{	return mgl_abs(mgl_datac_get_value(this,i,j,k));	}
++	mreal v(long i,long j=0,long k=0) const	{	return abs(a[i+nx*(j+ny*k)]);	}
+ 	/// Set the value in given cell of the data
+ 	void set_v(mreal val, long i,long j=0,long k=0)	{	mgl_datac_set_value(this,val,i,j,k);	}
+ #endif
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d0c779d..acd9d7f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -579,10 +579,15 @@ if(enable-glut)
+ 	if(NOT MGL_HAVE_OPENGL)
+ 		message(SEND_ERROR "You have to enable OpenGL if you plan to use GLUT.")
+ 	endif(NOT MGL_HAVE_OPENGL)
+-	include(FindGLUT)
++    find_path(GLUT_INCLUDE_DIR freeglut.h PATH_SUFFIXES GL)
++    include(SelectLibraryConfigurations)
++    find_library(GLUT_LIBRARY_RELEASE NAMES freeglut)
++    find_library(GLUT_LIBRARY_DEBUG NAMES freeglutd)
++    select_library_configurations(GLUT)
+ 	if(NOT GLUT_FOUND)
+ 		message(SEND_ERROR "Couldn't find GLUT library.")
+ 	endif(NOT GLUT_FOUND)
++    include_directories(${GLUT_INCLUDE_DIR}/GL)
+ else(enable-glut)
+ 	set(MGL_HAVE_GLUT 0)
+ endif(enable-glut)

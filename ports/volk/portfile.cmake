@@ -6,14 +6,15 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/volk
-    REF d6c2bde94f70506240eac22763cf3adf930cedf5
-    SHA512 ef82e00883d873cf895e71539b26bb5f650c0ad6888171177e72323e69a80d3b6767b73bae086b93f2bec144c1d95cc169b5bb8faf4ad0bca600a6ad623942dc
+    REF 5a605f5d6997bd929b666700a36ca3d9bd1d7a47
+    SHA512 ed6faf13828f3e47c4f12f8d19952c94589420539e98405bf2a4b7959518357dcc2f210746f3683d3862ac8c80821f3c863d49f4625e2dac85d2a680567e4f00
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS -DVOLK_INSTALL=ON
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

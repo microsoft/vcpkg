@@ -6,7 +6,7 @@ vcpkg_from_github(
     REF v4.0.2
     SHA512 847e32bd13358319f3beabde103b5335a6e11c3f9275425b74e89a00b0ee4d67af8a428f12acc8b80a0419382480e5aeb02e58602a69ee750c21b28f357af6bc
     HEAD_REF master
-    PATCHES 
+    PATCHES
         fix-found-wingetopt.patch
 )
 

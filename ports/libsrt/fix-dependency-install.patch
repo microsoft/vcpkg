@@ -1,0 +1,74 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ec91d08..f19d28d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -234,6 +234,10 @@ if (ENABLE_ENCRYPTION)
+ 		# fall back to find_package method otherwise
+ 		if (USE_OPENSSL_PC)
+ 			pkg_check_modules(SSL ${SSL_REQUIRED_MODULES})
++        else()
++            find_package(OpenSSL REQUIRED)
++            set(SSL_FOUND ${OpenSSL_FOUND})
++            set(SSL_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
+ 		endif()
+ 		if (SSL_FOUND)
+ 			# We have some cases when pkg-config is improperly configured
+@@ -438,7 +442,7 @@ elseif (WIN32 AND NOT MINGW)
+ 		message(FATAL_ERROR "Failed to find pthread.h. Specify PTHREAD_INCLUDE_DIR.")
+ 	endif()
+ 
+-	find_library(PTHREAD_LIBRARY NAMES pthread pthread_dll pthread_lib HINTS C:/pthread-win32/lib C:/pthread-win64/lib)
++	find_library(PTHREAD_LIBRARY NAMES pthreadVC3 REQUIRED)
+ 	if (PTHREAD_LIBRARY)
+ 		message(STATUS "Pthread library: ${PTHREAD_LIBRARY}")
+ 	else()
+@@ -637,6 +641,7 @@ if (ENABLE_SHARED)
+ 	target_compile_definitions(srt_virtual PUBLIC -DSRT_DYNAMIC) 
+ 	target_compile_definitions(haicrypt_virtual PRIVATE -DHAICRYPT_EXPORTS)
+ endif()
++target_link_libraries(haicrypt_virtual PRIVATE ${SSL_LIBRARIES})
+ 
+ if (srt_libspec_shared)
+ if (MICROSOFT)
+@@ -650,6 +655,7 @@ set (INSTALL_SHARED_DIR ${CMAKE_INSTALL_LIBDIR})
+ if (CYGWIN)
+ 	set (INSTALL_SHARED_DIR ${CMAKE_INSTALL_BINDIR})
+ endif()
++set(CMAKE_INSTALL_INCLUDEDIR include)
+ 
+ message(STATUS "INSTALL DIRS: bin=${CMAKE_INSTALL_BINDIR} lib=${CMAKE_INSTALL_LIBDIR} shlib=${INSTALL_SHARED_DIR} include=${CMAKE_INSTALL_INCLUDEDIR}")
+ 
+@@ -730,7 +736,7 @@ macro(srt_add_program name)
+ 	add_executable(${name} ${ARGN})
+ 	target_include_directories(${name} PRIVATE apps)
+ 	target_include_directories(${name} PRIVATE common)
+-	install(TARGETS ${name} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++	install(TARGETS ${name} RUNTIME DESTINATION tools)
+ endmacro()
+ 
+ macro(srt_make_application name)
+@@ -769,7 +775,7 @@ endmacro()
+ macro(srt_add_application name) # ARGN=sources...
+ 	srt_add_program(${name} apps/${name}.cpp ${ARGN})
+ 	srt_make_application(${name})
+-	install(TARGETS ${name} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++	install(TARGETS ${name} RUNTIME DESTINATION tools)
+ endmacro()
+ 
+ ## FIXME: transmitmedia.cpp does not build on OpenBSD
+@@ -923,7 +929,7 @@ if (ENABLE_UNITTESTS AND ENABLE_CXX11)
+ endif()
+ 
+ 
+-install(PROGRAMS scripts/srt-ffplay DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(PROGRAMS scripts/srt-ffplay DESTINATION tools)
+ 
+ 
+ if (DEFINED SRT_EXTRA_APPS_INC)
+@@ -939,5 +945,5 @@ if ( ENABLE_SUFLIP )
+ 	)
+ 	srt_add_program(suflip ${SOURCES_suflip})
+ 	target_link_libraries(suflip ${srt_link_library})
+-	install(TARGETS suflip RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++	install(TARGETS suflip RUNTIME DESTINATION tools)
+ endif ()

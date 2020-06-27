@@ -5,8 +5,8 @@ add_library(gettimeofday gettimeofday.c gettimeofday.def)
 
 install(TARGETS gettimeofday
     RUNTIME DESTINATION bin
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/manual-link
+    LIBRARY DESTINATION lib/manual-link
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
