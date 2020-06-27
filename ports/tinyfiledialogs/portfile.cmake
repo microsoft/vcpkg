@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tinyfiledialogs
-    REF v3.4
-    FILENAME "tinyfiledialogs-3.4.3.zip"
+    REF v3.6.3
+    FILENAME "frozen_versions/tinyfiledialogs-3.6.3.zip"
     SHA512 b4a8c8fa5ff53a0972ce9dd1a4a473eaeb82689e5a47553b83e9220ea7e0ec582d87111728088ab6d314972e6531653b11fbd8c05c5e46fbe5bc4d29c7fe23fb
 )
 
