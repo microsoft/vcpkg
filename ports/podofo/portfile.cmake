@@ -1,18 +1,15 @@
 set(PODOFO_VERSION 0.9.6)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/podofo/files/podofo/${PODOFO_VERSION}/podofo-${PODOFO_VERSION}.tar.gz/download"
-    FILENAME "podofo-${PODOFO_VERSION}.tar.gz"
-    SHA512 35c1a457758768bdadc93632385f6b9214824fead279f1b85420443fb2135837cefca9ced476df0d47066f060e9150e12fcd40f60fa1606b177da433feb20130
-)
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_UWP)
   set(ADDITIONAL_PATCH "0003-uwp_fix.patch")
 endif()
 
-vcpkg_extract_source_archive_ex(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO podofo/podofo
     REF ${PODOFO_VERSION}
+    FILENAME "podofo-${PODOFO_VERSION}.tar.gz"
+    SHA512 35c1a457758768bdadc93632385f6b9214824fead279f1b85420443fb2135837cefca9ced476df0d47066f060e9150e12fcd40f60fa1606b177da433feb20130
     PATCHES
         0001-unique_ptr.patch
         0002-HAVE_UNISTD_H.patch

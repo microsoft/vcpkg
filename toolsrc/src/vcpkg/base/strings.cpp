@@ -176,6 +176,11 @@ std::vector<std::string> Strings::split(const std::string& s, const char delimit
     }
 }
 
+const char* Strings::find_first_of(StringView input, StringView chars)
+{
+    return std::find_first_of(input.begin(), input.end(), chars.begin(), chars.end());
+}
+
 std::vector<StringView> Strings::find_all_enclosed(StringView input, StringView left_delim, StringView right_delim)
 {
     auto it_left = input.begin();
