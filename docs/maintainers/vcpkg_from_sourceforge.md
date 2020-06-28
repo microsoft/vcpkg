@@ -5,9 +5,9 @@ Download and extract a project from sourceforge.
 ## Usage:
 ```cmake
 vcpkg_from_sourceforge(
-    OUT_SOURCE_PATH <SOURCE_PATH>
+    OUT_SOURCE_PATH SOURCE_PATH
     REPO <cunit/CUnit>
-    [REF] <2.1-3>
+    [REF <2.1-3>]
     SHA512 <547b417109332...>
     FILENAME <CUnit-2.1-3.tar.bz2>
     [DISABLE_SSL]

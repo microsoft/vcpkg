@@ -5,9 +5,9 @@
 ## ## Usage:
 ## ```cmake
 ## vcpkg_from_sourceforge(
-##     OUT_SOURCE_PATH <SOURCE_PATH>
+##     OUT_SOURCE_PATH SOURCE_PATH
 ##     REPO <cunit/CUnit>
-##     [REF] <2.1-3>
+##     [REF <2.1-3>]
 ##     SHA512 <547b417109332...>
 ##     FILENAME <CUnit-2.1-3.tar.bz2>
 ##     [DISABLE_SSL]
@@ -82,16 +82,21 @@ function(vcpkg_from_sourceforge)
     else()
         set(URL_PROTOCOL https:)
     endif()
+    
     set(SOURCEFORGE_HOST ${URL_PROTOCOL}//sourceforge.net/projects)
 
     string(FIND ${_vdus_REPO} "/" FOUND_ORG)
     if (NOT FOUND_ORG EQUAL -1)
-        string(REGEX REPLACE ".*/" "" REPO_NAME ${_vdus_REPO})
-        string(REGEX REPLACE "/.*" "" ORG_NAME ${_vdus_REPO})
+        string(SUBSTRING "${_vdus_REPO}" 0 ${FOUND_ORG} ORG_NAME)
+        math(EXPR FOUND_ORG "${FOUND_ORG} + 1") # skip the slash
+        string(SUBSTRING "${_vdus_REPO}" ${FOUND_ORG} -1 REPO_NAME)
+        if (REPO_NAME MATCHES "/")
+            message(FATAL_ERROR "REPO should contain at most one slash (found ${_vdus_REPO}).")
+        endif()
         set(ORG_NAME ${ORG_NAME}/)
     else()
-        set(REPO_NAME )
         set(ORG_NAME ${_vdus_REPO}/)
+        set(REPO_NAME )
     endif()
     
     if (DEFINED _vdus_REF)
@@ -154,6 +159,7 @@ function(vcpkg_from_sourceforge)
             Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues
         ]])
     endif()
+    
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${ARCHIVE}"

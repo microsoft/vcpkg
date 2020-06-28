@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+#include <vcpkg/binarycaching.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/export.h>
 #include <vcpkg/help.h>
@@ -13,7 +14,7 @@ namespace vcpkg::Help
     {
         using topic_function = void (*)(const VcpkgPaths& paths);
 
-        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) { }
+        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) {}
 
         CStringView name;
         topic_function print;
@@ -40,10 +41,11 @@ namespace vcpkg::Help
         nullptr,
     };
 
-    static constexpr std::array<Topic, 13> topics = {{
+    static constexpr std::array<Topic, 15> topics = {{
+        {"binarycaching", help_topic_binary_caching},
         {"create", command_topic_fn<Commands::Create::COMMAND_STRUCTURE>},
-        {"edit", command_topic_fn<Commands::Edit::COMMAND_STRUCTURE>},
         {"depend-info", command_topic_fn<Commands::DependInfo::COMMAND_STRUCTURE>},
+        {"edit", command_topic_fn<Commands::Edit::COMMAND_STRUCTURE>},
         {"env", command_topic_fn<Commands::Env::COMMAND_STRUCTURE>},
         {"export", command_topic_fn<Export::COMMAND_STRUCTURE>},
         {"help", command_topic_fn<Help::COMMAND_STRUCTURE>},
@@ -54,13 +56,12 @@ namespace vcpkg::Help
         {"remove", command_topic_fn<Remove::COMMAND_STRUCTURE>},
         {"search", command_topic_fn<Commands::Search::COMMAND_STRUCTURE>},
         {"topics", help_topics},
+        {"triplet", help_topic_valid_triplet},
     }};
 
     static void help_topics(const VcpkgPaths&)
     {
-        System::print2("Available help topics:\n"
-                       "  triplet\n"
-                       "  integrate",
+        System::print2("Available help topics:",
                        Strings::join("", topics, [](const Topic& topic) { return std::string("\n  ") + topic.name; }),
                        "\n");
     }
@@ -110,7 +111,7 @@ namespace vcpkg::Help
             Checks::exit_success(VCPKG_LINE_INFO);
         }
         const auto& topic = args.command_arguments[0];
-        if (topic == "triplet" || topic == "triplets" || topic == "triple")
+        if (topic == "triplets" || topic == "triple")
         {
             help_topic_valid_triplet(paths);
             Checks::exit_success(VCPKG_LINE_INFO);
