@@ -1,8 +1,12 @@
 Source: imgui
-Version: 1.76-1
+Version: 1.76-2
 Homepage: https://github.com/ocornut/imgui
 Description: Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.
 
 Feature: bindings
 Description: make available bindings header and source files for supported implementations
-Build-Depends: glfw3, freeglut, opengl, sdl1, allegro5
+Build-Depends: glfw3, freeglut, opengl, sdl2, allegro5
+
+Feature: freetype
+Description: Build font atlases using FreeType instead of stb_truetype
+Build-Depends: freetype
