@@ -23,15 +23,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(MPG123_CONFIGURATION_SUFFIX _Dll)
 endif()
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/mpg123/mpg123/${MPG123_VERSION}/mpg123-${MPG123_VERSION}.tar.bz2"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mpg123/mpg123
+    REF ${MPG123_VERSION}
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         0001-fix-crt-linking.patch
         0002-fix-x86-build.patch

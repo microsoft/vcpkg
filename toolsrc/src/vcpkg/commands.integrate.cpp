@@ -155,17 +155,13 @@ namespace vcpkg::Commands::Integrate
 #if defined(_WIN32)
     static fs::path get_appdata_targets_path()
     {
-        static const fs::path LOCAL_APP_DATA =
-            fs::u8path(System::get_environment_variable("LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
-        return LOCAL_APP_DATA / fs::u8path("vcpkg/vcpkg.user.targets");
+        return System::get_appdata_local().value_or_exit(VCPKG_LINE_INFO) / fs::u8path("vcpkg/vcpkg.user.targets");
     }
 #endif
 #if defined(_WIN32)
     static fs::path get_appdata_props_path()
     {
-        static const fs::path LOCAL_APP_DATA =
-            fs::u8path(System::get_environment_variable("LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
-        return LOCAL_APP_DATA / "vcpkg" / "vcpkg.user.props";
+        return System::get_appdata_local().value_or_exit(VCPKG_LINE_INFO) / fs::u8path("vcpkg/vcpkg.user.props");
     }
 #endif
 
@@ -277,19 +273,20 @@ namespace vcpkg::Commands::Integrate
             const fs::path appdata_src_path2 = tmp_dir / "vcpkg.user.props";
             fs.write_contents(appdata_src_path2,
                               create_appdata_shortcut(paths.buildsystems_msbuild_props.u8string()),
-			      VCPKG_LINE_INFO);
+                              VCPKG_LINE_INFO);
             auto appdata_dst_path2 = get_appdata_props_path();
 
-            const auto rc2 = fs.copy_file(appdata_src_path2, appdata_dst_path2, fs::copy_options::overwrite_existing, ec);
+            const auto rc2 =
+                fs.copy_file(appdata_src_path2, appdata_dst_path2, fs::copy_options::overwrite_existing, ec);
 
             if (!rc2 || ec)
             {
                 System::print2(System::Color::error,
-                                "Error: Failed to copy file: ",
-                                appdata_src_path2.u8string(),
-                                " -> ",
-                                appdata_dst_path2.u8string(),
-								"\n");
+                               "Error: Failed to copy file: ",
+                               appdata_src_path2.u8string(),
+                               " -> ",
+                               appdata_dst_path2.u8string(),
+                               "\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }

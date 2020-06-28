@@ -227,8 +227,8 @@ function(vcpkg_configure_make)
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-                        
-    set(ENV{V} "1") #Enabel Verbose MODE
+
+    set(ENV{V} "1") #Enable Verbose MODE
 
     # Set configure paths
     set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
