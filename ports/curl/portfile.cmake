@@ -1,13 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_68_0
-    SHA512 d75ed39b121a5a04d5a4ba89779967a49e196a93325747b51399adf1afb5f5c13355d6dbe798b259d19245c83bb55f0b621b24b25d8f3ddb1914df30067b8737
+    REF e9db32a09af03f27e86d1251a9e68e9b7486d371 #curl-7_71_0
+    SHA512 6d9ec1dd21d095657d136b634f8b7eea8eefa272551f9a804701b59d19c8dd8fb2baf0c1cef52c693fd356396824e578dd149b373315df550c4e9f947f099d0f
     HEAD_REF master
     PATCHES
-        0001_cmake.patch
         0002_fix_uwp.patch
-        0003_fix_libraries.patch
         0004_nghttp2_staticlib.patch
         0005_remove_imp_suffix.patch
         0006_fix_tool_depends.patch
@@ -98,13 +96,17 @@ else()
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config "${CURL_CONFIG}")
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "#ifdef CURL_STATICLIB" "#if 1" CURL_H "${CURL_H}")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/curl/curl.h
+        "#ifdef CURL_STATICLIB"
+        "#if 1"
+    )
 else()
-    string(REPLACE "#ifdef CURL_STATICLIB" "#if 0" CURL_H "${CURL_H}")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/curl/curl.h
+        "#ifdef CURL_STATICLIB"
+        "#if 0"
+    )
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/curl/curl.h "${CURL_H}")
 
 file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
