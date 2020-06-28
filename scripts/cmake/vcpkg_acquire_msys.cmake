@@ -98,6 +98,18 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;gpgconf --homedir /etc/pacman.d/gnupg --kill all"
       WORKING_DIRECTORY ${TOOLPATH}
     )
+    # we need to update pacman before anything else due to pacman transitioning
+    # to using zstd packages, and our pacman is too old to support those
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy pacman --noconfirm"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    # dash relies on specific versions of the base packages, which prevents us
+    # from doing a proper update. However, we don't need it so we remove it
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Rc dash --noconfirm"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syu --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}

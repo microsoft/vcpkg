@@ -195,14 +195,14 @@ New-AzVm `
 ####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
-  -Status 'Running provisioning script provision-image.ps1 in VM' `
+  -Status 'Running provisioning script provision-image.txt (as a .ps1) in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 Invoke-AzVMRunCommand `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\provision-image.ps1" `
+  -ScriptPath "$PSScriptRoot\provision-image.txt" `
   -Parameter @{AdminUserPassword = $AdminPW; `
     StorageAccountName=$StorageAccountName; `
     StorageAccountKey=$StorageAccountKey;}

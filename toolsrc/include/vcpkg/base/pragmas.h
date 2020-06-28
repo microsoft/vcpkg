@@ -19,8 +19,10 @@
 #include <sal.h>
 #endif
 
-#ifndef _Analysis_assume_
-#define _Analysis_assume_(...)
+#if defined(_MSC_VER)
+#define ASSUME(expr) __assume(expr)
+#else
+#define ASSUME(expr)
 #endif
 
 #ifdef _MSC_VER

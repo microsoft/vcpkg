@@ -1,24 +1,25 @@
-diff --git i/CMakeLists.txt w/CMakeLists.txt
-index 885e424..b9e0b43 100644
---- i/CMakeLists.txt
-+++ w/CMakeLists.txt
-@@ -72,7 +72,6 @@ target_sources( date INTERFACE
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ad74900..42d55af 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,7 +72,7 @@ target_sources( date INTERFACE
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include/date/iso_week.h>
      $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include/date/julian.h>
  )
- # public headers will get installed:
--set_target_properties( date PROPERTIES PUBLIC_HEADER include/date/date.h )
- target_compile_definitions( date INTERFACE
-     #To workaround libstdc++ issue https://github.com/HowardHinnant/date/issues/388
-     ONLY_C_LOCALE=$<IF:$<BOOL:${COMPILE_WITH_C_LOCALE}>,1,0>
-@@ -112,7 +111,6 @@ if( BUILD_TZ_LIB )
+-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.15)
++if (0)
+     # public headers will get installed:
+     set_target_properties( date PROPERTIES PUBLIC_HEADER include/date/date.h )
+ endif ()
+@@ -115,7 +115,6 @@ if( BUILD_TZ_LIB )
      endif( )
-     set_target_properties( tz PROPERTIES
+     set_target_properties( date-tz PROPERTIES
          POSITION_INDEPENDENT_CODE ON
 -        PUBLIC_HEADER "${TZ_HEADERS}"
          VERSION "${PROJECT_VERSION}"
          SOVERSION "${PROJECT_VERSION}" )
      if( NOT MSVC )
-@@ -136,8 +134,8 @@ write_basic_package_version_file( "${version_config}"
+@@ -140,8 +139,8 @@ write_basic_package_version_file( "${version_config}"
      COMPATIBILITY SameMajorVersion )
  
  install( TARGETS date
@@ -26,6 +27,6 @@ index 885e424..b9e0b43 100644
 -    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/date )
 +    EXPORT dateConfig )
 +install( FILES include/date/date.h ${TZ_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/date )
- export( TARGETS date NAMESPACE date:: FILE dateConfig.cmake )
- 
- if( BUILD_TZ_LIB )
+ export( TARGETS date NAMESPACE date:: FILE dateTargets.cmake )
+ if (CMAKE_VERSION VERSION_LESS 3.15)
+     install(
