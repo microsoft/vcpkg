@@ -173,9 +173,9 @@ namespace vcpkg::Strings
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
 
-    std::vector<std::string> split(const std::string& s, const std::string& delimiter);
+    std::vector<std::string> split(const std::string& s, const char delimiter);
 
-    std::vector<std::string> split(const std::string& s, const std::string& delimiter, size_t max_count);
+    const char* find_first_of(StringView searched, StringView candidates);
 
     std::vector<StringView> find_all_enclosed(StringView input, StringView left_delim, StringView right_delim);
 

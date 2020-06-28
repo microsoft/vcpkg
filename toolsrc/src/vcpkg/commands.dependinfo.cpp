@@ -227,7 +227,7 @@ namespace vcpkg::Commands::DependInfo
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("depend-info sqlite3"),
+        create_example_string("depend-info sqlite3"),
         1,
         1,
         {DEPEND_SWITCHES, DEPEND_SETTINGS},

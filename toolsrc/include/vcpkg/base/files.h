@@ -19,10 +19,10 @@ namespace fs
 #endif
 
     using stdfs::copy_options;
+    using stdfs::directory_iterator;
     using stdfs::path;
     using stdfs::perms;
     using stdfs::u8path;
-    using stdfs::directory_iterator;
 
 #if defined(_WIN32)
     enum class file_type
@@ -111,6 +111,8 @@ namespace vcpkg::Files
     {
         std::string read_contents(const fs::path& file_path, LineInfo linfo) const;
         virtual Expected<std::string> read_contents(const fs::path& file_path) const = 0;
+        /// <summary>Read text lines from a file</summary>
+        /// <remarks>Lines will have up to one trailing carriage-return character stripped (CRLF)</remarks>
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;
         virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename) const = 0;
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const = 0;
@@ -166,6 +168,8 @@ namespace vcpkg::Files
         fs::path canonical(const fs::path& path, ignore_errors_t) const;
         virtual fs::path current_path(std::error_code&) const = 0;
         fs::path current_path(LineInfo li) const;
+        virtual void current_path(const fs::path& path, std::error_code&) = 0;
+        void current_path(const fs::path& path, LineInfo li);
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
     };

@@ -1,0 +1,105 @@
+diff --git a/databases/readers/M3DC1/avtM3DC1FileFormat.C b/databases/readers/M3DC1/avtM3DC1FileFormat.C
+index 642be7e..d044b87 100644
+--- a/databases/readers/M3DC1/avtM3DC1FileFormat.C
++++ b/databases/readers/M3DC1/avtM3DC1FileFormat.C
+@@ -2051,10 +2051,10 @@ avtM3DC1FileFormat::linkIterator(hid_t locId, const char* name,
+   switch (linfo->type) {
+     case H5L_TYPE_HARD: {
+ 
+-      H5O_info_t objinfo;
++      H5O_info1_t objinfo;
+ 
+       /* Stat the object */
+-      if(H5Oget_info_by_name(locId, name, &objinfo, H5P_DEFAULT) < 0) {
++      if(H5Oget_info_by_name1(locId, name, &objinfo, H5P_DEFAULT) < 0) {
+         debug5 << "visitLinks() - unable to open object with name " <<name <<std::endl;
+         debug5 << "visitLinks() - this object and all children will be dropped." <<std::endl;
+         return 0;
+@@ -2103,7 +2103,7 @@ avtM3DC1FileFormat::linkIterator(hid_t locId, const char* name,
+       targbuf = NULL;
+       
+       // Get info of the linked object.
+-      H5O_info_t objinfo;
++      H5O_info1_t objinfo;
+       hid_t obj_id = H5Oopen(locId, name, H5P_DEFAULT);
+       
+       if (obj_id < 0) {
+@@ -2113,7 +2113,7 @@ avtM3DC1FileFormat::linkIterator(hid_t locId, const char* name,
+       }
+ 
+       //Test-open the linked object
+-      if (H5Oget_info (obj_id, &objinfo) < 0) {
++      if (H5Oget_info1(obj_id, &objinfo) < 0) {
+         debug5 << "visitLinks() - unable to open external object " <<name <<std::endl;
+         debug5 << "visitLinks() - this object and all children will be dropped." <<std::endl;
+         return 0;
+diff --git a/databases/readers/Pixie/avtPixieFileFormat.C b/databases/readers/Pixie/avtPixieFileFormat.C
+index 6532b4e..ff56604 100644
+--- a/databases/readers/Pixie/avtPixieFileFormat.C
++++ b/databases/readers/Pixie/avtPixieFileFormat.C
+@@ -1979,10 +1979,10 @@ avtPixieFileFormat::VisitLinks(hid_t locId, const char* name,
+   switch (linfo->type) {
+     case H5L_TYPE_HARD: {
+ 
+-      H5O_info_t objinfo;
++      H5O_info1_t objinfo;
+ 
+       /* Stat the object */
+-      if(H5Oget_info_by_name(locId, name, &objinfo, H5P_DEFAULT) < 0) {
++      if(H5Oget_info_by_name1(locId, name, &objinfo, H5P_DEFAULT) < 0) {
+         debug5 << "visitLinks() - unable to open object with name " <<name <<std::endl;
+         debug5 << "visitLinks() - this object and all children will be dropped." <<std::endl;
+         return 0;
+@@ -2031,7 +2031,7 @@ avtPixieFileFormat::VisitLinks(hid_t locId, const char* name,
+       targbuf = NULL;
+       
+       // Get info of the linked object.
+-      H5O_info_t objinfo;
++      H5O_info1_t objinfo;
+       hid_t obj_id = H5Oopen(locId, name, H5P_DEFAULT);
+       
+       if (obj_id < 0) {
+@@ -2041,7 +2041,7 @@ avtPixieFileFormat::VisitLinks(hid_t locId, const char* name,
+       }
+ 
+       //Test-open the linked object
+-      if (H5Oget_info (obj_id, &objinfo) < 0) {
++      if (H5Oget_info1(obj_id, &objinfo) < 0) {
+         debug5 << "visitLinks() - unable to open external object " <<name <<std::endl;
+         debug5 << "visitLinks() - this object and all children will be dropped." <<std::endl;
+         return 0;
+diff --git a/databases/readers/Vs/VsFilter.C b/databases/readers/Vs/VsFilter.C
+index c6caba6..b95f424 100644
+--- a/databases/readers/Vs/VsFilter.C
++++ b/databases/readers/Vs/VsFilter.C
+@@ -60,10 +60,10 @@ int VsFilter::visitLinks(hid_t locId, const char* name,
+   switch (linfo->type) {
+     case H5L_TYPE_HARD: {
+ 
+-      H5O_info_t objinfo;
++      H5O_info1_t objinfo;
+ 
+       /* Stat the object */
+-      if(H5Oget_info_by_name(locId, name, &objinfo, H5P_DEFAULT) < 0) {
++      if(H5Oget_info_by_name1(locId, name, &objinfo, H5P_DEFAULT) < 0) {
+         VsLog::errorLog() <<"VsFilter::visitLinks() - unable to open object with name " <<name <<std::endl;
+         VsLog::errorLog() <<"VsFilter::visitLinks() - this object and all children will be dropped." <<std::endl;
+         return 0;
+@@ -112,7 +112,7 @@ int VsFilter::visitLinks(hid_t locId, const char* name,
+       targbuf = NULL;
+       
+       // Get info of the linked object.
+-      H5O_info_t objinfo;
++      H5O_info1_t objinfo;
+ #ifndef H5_USE_16_API
+       hid_t obj_id = H5Oopen(locId, name, H5P_DEFAULT);
+ #else
+@@ -126,7 +126,7 @@ int VsFilter::visitLinks(hid_t locId, const char* name,
+       }
+ 
+       //Test-open the linked object
+-      if (H5Oget_info (obj_id, &objinfo) < 0) {
++      if (H5Oget_info1(obj_id, &objinfo) < 0) {
+         VsLog::errorLog() <<"VsFilter::visitLinks() - unable to open external object " <<name <<std::endl;
+         VsLog::errorLog() <<"VsFilter::visitLinks() - this object and all children will be dropped." <<std::endl;
+         return 0;
