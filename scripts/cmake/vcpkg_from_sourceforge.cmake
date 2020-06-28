@@ -135,21 +135,37 @@ function(vcpkg_from_sourceforge)
         tenet           # Wynberg, South Africa
     )
     
-    foreach(SOURCEFORGE_MIRROR ${SOURCEFORGE_MIRRORS})
-        set(DOWNLOAD_URL ${URL}/download?use_mirror=${SOURCEFORGE_MIRROR})
-        message(STATUS "Trying mirror ${SOURCEFORGE_MIRROR}")
-        vcpkg_download_distfile(ARCHIVE
-            URLS "${DOWNLOAD_URL}"
-            SHA512 "${_vdus_SHA512}"
-            FILENAME "${_vdus_FILENAME}"
-            SILENT_EXIT
-        )
-        
-        if (EXISTS ${ARCHIVE})
-            set(download_success 1)
-            break()
-        endif()
-    endforeach()
+    # Try to use auto-select first
+    set(DOWNLOAD_URL ${URL}/download)
+    message(STATUS "Trying auto-select mirror...")
+    vcpkg_download_distfile(ARCHIVE
+        URLS "${DOWNLOAD_URL}"
+        SHA512 "${_vdus_SHA512}"
+        FILENAME "${_vdus_FILENAME}"
+        SILENT_EXIT
+    )
+    
+    if (EXISTS ${ARCHIVE})
+        set(download_success 1)
+    endif()
+    
+    if (NOT download_success EQUAL 1)
+        foreach(SOURCEFORGE_MIRROR ${SOURCEFORGE_MIRRORS})
+            set(DOWNLOAD_URL ${URL}/download?use_mirror=${SOURCEFORGE_MIRROR})
+            message(STATUS "Trying mirror ${SOURCEFORGE_MIRROR}...")
+            vcpkg_download_distfile(ARCHIVE
+                URLS "${DOWNLOAD_URL}"
+                SHA512 "${_vdus_SHA512}"
+                FILENAME "${_vdus_FILENAME}"
+                SILENT_EXIT
+            )
+            
+            if (EXISTS ${ARCHIVE})
+                set(download_success 1)
+                break()
+            endif()
+        endforeach()
+    endif()
 
     if (NOT download_success)
         message(FATAL_ERROR [[
