@@ -20,6 +20,13 @@ vcpkg_extract_source_archive_ex(
         "install_dlls.patch"
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        libevent BUILD_LIBEVENT2
+        libuv BUILD_LIBUV
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -28,6 +35,7 @@ vcpkg_configure_cmake(
         -DBUILD_GETDNS_SERVER_MON=OFF
         -DENABLE_STATIC=${GETDNS_ENABLE_STATIC}
         -DENABLE_SHARED=${GETDNS_ENABLE_SHARED}
+        ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/getdns RENAME copyright)
