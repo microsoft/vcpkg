@@ -198,6 +198,9 @@ function(vcpkg_fixup_cmake_targets)
         string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../.." _contents "${_contents}")
         file(WRITE ${CMAKE_FILE} "${_contents}")
     endforeach()
+    
+    set(VCPKG_FIXUP_CMAKE_CALLED TRUE CACHE INTERNAL "See below" FORCE) 
+    
 endfunction()
 
  
