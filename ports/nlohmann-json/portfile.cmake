@@ -41,7 +41,9 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DJSON_BuildTests=0 ${FEATURE_OPTIONS}
+    OPTIONS 
+        -DJSON_BuildTests=0 
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
