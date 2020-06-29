@@ -19,12 +19,14 @@ if("latest" IN_LIST FEATURES)
         patches/Qt5BasicConfig_latest.patch
         patches/Qt5PluginTarget_latest.patch
         patches/create_cmake.patch
+        patches/8c44d70_latest.diff        # Fix for MSVC static init fiasco. 
         )
 else()
     set(PATCHES 
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
         patches/prl_parser.patch # Modified backport of the prl parser from Qt5.14.1 without using QMAKE_PRL_LIBS_FOR_CMAKE
+        patches/8c44d70_lts.diff        # Fix for MSVC static init fiasco. 
     )
 endif()
 
@@ -56,7 +58,6 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/gui_configure.patch #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
                             patches/icu.patch           #Help configure find static icu builds in vcpkg on windows
                             patches/xlib.patch          #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
-                            patches/8c44d70.diff        # Fix for MSVC static init fiasco. 
                             #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
                                                          #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
                                                          #the windows supplied gl.h header and the angle gl.h otherwise. 
