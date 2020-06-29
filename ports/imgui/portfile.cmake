@@ -11,16 +11,16 @@ vcpkg_from_github(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    bindings       IMGUI_COPY_BINDINGS # should only be copied once, at most
+    bindings    IMGUI_COPY_BINDINGS # should only be copied once, at most
+    freetype    IMGUI_FREETYPE
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_RELEASE
+    OPTIONS
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
-        -DIMGUI_COPY_BINDINGS=OFF
         -DIMGUI_SKIP_HEADERS=ON
 )
 
