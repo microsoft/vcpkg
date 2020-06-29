@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Windows platform" ON_TARGET "Linux" "OSX" "UWP")
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.gaia-gis.it/gaia-sins/readosm-sources/readosm-1.1.0.tar.gz"
@@ -85,4 +85,4 @@ endif()
 message(STATUS "Packaging ${TARGET_TRIPLET} done")
 
 #Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/readosm RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

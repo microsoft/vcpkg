@@ -1,4 +1,5 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
@@ -9,7 +10,7 @@ vcpkg_from_github(
 )
 
 set(OPTIONS)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_OSX)
     set(OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
 endif()
 
@@ -57,8 +58,7 @@ if(DLLS)
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/wxwidgets/licence.txt ${CURRENT_PACKAGES_DIR}/share/wxwidgets/copyright)
+file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
