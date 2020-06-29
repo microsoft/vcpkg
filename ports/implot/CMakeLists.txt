@@ -15,6 +15,7 @@ target_include_directories(
 	PUBLIC
 	   	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 		$<INSTALL_INTERFACE:Include>
+	PRIVATE
 		${IMGUI_INCLUDE_DIRS}
 )
 
