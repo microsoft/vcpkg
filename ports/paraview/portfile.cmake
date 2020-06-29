@@ -46,7 +46,6 @@ vcpkg_from_gitlab(
     SHA512 6d2c1d6e1cd345547926938451755e7a8be5dabd89e18a2ceb419db16c5b29f354554a5130eb365b7e522d655370fd4766953813ff530c06e4851fe26104ce58
     PATCHES
         VisIt_Build.patch
-        fix-using-hdf5.patch
         #removeunusedsymbols.patch # These also get remove in master of ParaView
         ${VisItPatches}
 )
