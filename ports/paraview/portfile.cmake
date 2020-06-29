@@ -6,6 +6,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "mpi"          PARAVIEW_USE_MPI             #untested
     "vtkm"         PARAVIEW_USE_VTKM
     "python"       PARAVIEW_USE_PYTHON
+    "tools"        PARAVIEW_BUILD_TOOLS
 )
 
 vcpkg_from_github(
@@ -22,6 +23,7 @@ vcpkg_from_github(
         qt_static_plugins.patch # Remove with Qt version > 5.14
         python_include.patch
         python_wrapper.patch
+        add-tools-option.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

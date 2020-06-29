@@ -20,6 +20,9 @@ Feature: mpi
 Description: enables cuda within paraview
 Build-Depends: hdf5[core,parallel], vtk[core, mpi]
 
+Feature: tools
+Description: Build paraview tools
+
 Feature: all_modules
 Description: enables the build of all paraview modules
 Build-Depends: gdal, pdal, ffmpeg, laszip
