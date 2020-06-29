@@ -29,6 +29,7 @@ Param(
 
 $ErrorActionPreference = "Stop"
 
+$TestingRoot = Join-Path $WorkingRoot 'testing'
 $buildtreesRoot = Join-Path $TestingRoot 'buildtrees'
 $installRoot = Join-Path $TestingRoot 'installed'
 $packagesRoot = Join-Path $TestingRoot 'packages'
@@ -43,11 +44,8 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot"
 )
 
-Remove-Item -Recurse -Force $buildtreesRoot -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force $installRoot -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force $packagesRoot -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force $NuGetRoot -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force $NuGetRoot2 -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force $TestingRoot -ErrorAction SilentlyContinue
+mkdir $TestingRoot
 mkdir $NuGetRoot
 
 function Require-File {
