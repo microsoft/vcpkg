@@ -9,7 +9,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
     "mpi"          PARAVIEW_USE_MPI             #untested
 
-if ("tools" IN_LIST FEATURES)
     message(FATAL_ERROR "Feature tools is not available now,  waiting for fix. ")
 endif()
     
