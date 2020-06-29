@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 594f7ce6aff73c3e7f55b6fc31ee9a13feb5e4ef
-  SHA512 943df8f41ca8ea5c4239daf568efbca5b7967a4093b406e715ba89914c2c60629279a17688c99f4e3a01e47b034a24b2e62fc31fc9ca1cb9697ab66a5e5b68e4
+  REF 320e6fd8d29f6f7825ef668f15f955f90131f782
+  SHA512 f95ac04c1c4e1b3f28aa835a64d969ffee064a3681a7966b255981722d562aa1eb91c30a378cad2f1bccd4581b74d8c2ec641c57763bc0fa97bfce8b1c222480
   HEAD_REF master
   PATCHES
       fix_shared_static.patch
@@ -53,6 +53,11 @@ if ("cuda" IN_LIST FEATURES)
 endif()
 
 if("weights" IN_LIST FEATURES)
+  vcpkg_download_distfile(YOLOV4-TINY_WEIGHTS
+    URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights"
+    FILENAME "darknet-cache/yolov4-tiny.weights"
+    SHA512 804ca2ab8e3699d31c95bf773d22f901f186703487c7945f30dc2dbb808094793362cb6f5da5cd0b4b83f820c8565a3cba22fafa069ee6ca2a925677137d95f4
+  )
   vcpkg_download_distfile(YOLOV4_WEIGHTS
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights"
     FILENAME "darknet-cache/yolov4.weights"
@@ -91,6 +96,11 @@ if("weights" IN_LIST FEATURES)
 endif()
 
 if("weights-train" IN_LIST FEATURES)
+  vcpkg_download_distfile(YOLOV4-TINY-CONV-29
+    URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.conv.29"
+    FILENAME "darknet-cache/yolov4-tiny.conv.29"
+    SHA512 318e47f4bdf43b7f4eff8f3669bc9ba66cd7bd8ffb31df5bc1978682c85fec8e63a8349958022fd933cc676cbf5241953f2181bf4d1789f7cf9d371e012e3e49
+  )
   vcpkg_download_distfile(YOLOV4-CONV-137
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.conv.137"
     FILENAME "darknet-cache/yolov4.conv.137"
@@ -155,6 +165,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if("weights" IN_LIST FEATURES)
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4-tiny.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-tiny-prn.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-openimages.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
@@ -165,6 +176,7 @@ if("weights" IN_LIST FEATURES)
 endif()
 
 if("weights-train" IN_LIST FEATURES)
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4-tiny.conv.29 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4.conv.137 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet53.conv.74 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet19_448.conv.23 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
