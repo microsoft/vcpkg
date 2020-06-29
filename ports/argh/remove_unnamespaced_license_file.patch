@@ -1,0 +1,67 @@
+From 83f364a2eb1b137453772ae9fcf5d7973770637f Mon Sep 17 00:00:00 2001
+From: Billy Robert O'Neal III <bion@microsoft.com>
+Date: Wed, 29 Apr 2020 13:01:31 -0700
+Subject: [PATCH] Don't install 'LICENSE' or 'README.md' directly to the
+ installation directory.
+
+This change unconditionally uses GNUInstallDirs which will correctly 'namespace' these files with the 'argh' project name.
+
+=========
+
+The names 'LICENSE' and 'README.md' are extremely common and likely to be taken by other ports. This happened in a recent full vcpkg catalog rebuild:
+
+Starting package 757/1254: qt-advanced-docking-system:x86-windows
+Building package qt-advanced-docking-system[core]:x86-windows...
+Could not locate cached archive: C:\agent\_work\1\s\archives\a1\a1507296ead5788137561997571557204aaac78f.zip
+-- Downloading https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System/archive/661d0c4356ab61d155b53718aa1bf6bab86dad13.tar.gz...
+-- Extracting source C:/agent/_work/1/s/downloads/githubuser0xFFFF-Qt-Advanced-Docking-System-661d0c4356ab61d155b53718aa1bf6bab86dad13.tar.gz
+-- Applying patch config_changes.patch
+-- Using source at C:/agent/_work/1/s/buildtrees/qt-advanced-docking-system/src/bab86dad13-3088149a9b
+-- Configuring x86-windows
+-- Building x86-windows-dbg
+-- Building x86-windows-rel
+-- Installing: C:/agent/_work/1/s/packages/qt-advanced-docking-system_x86-windows/share/qt-advanced-docking-system/copyright
+-- Performing post-build validation
+-- Performing post-build validation done
+Stored binary cache: C:\agent\_work\1\s\archives\a1\a1507296ead5788137561997571557204aaac78f.zip
+Building package qt-advanced-docking-system[core]:x86-windows... done
+Installing package qt-advanced-docking-system[core]:x86-windows...
+The following files are already installed in C:/agent/_work/1/s/installed/x86-windows and are in conflict with qt-advanced-docking-system:x86-windows
+
+Installed by argh:x86-windows
+    license/LICENSE
+
+Elapsed time for package qt-advanced-docking-system:x86-windows: 11.09 s
+---
+ CMakeLists.txt | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 13bc879..f6264f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,19 +36,17 @@ endif()
+ 
+ install(TARGETS argh EXPORT arghTargets)
+ 
++include(GNUInstallDirs)
++install(FILES "${CMAKE_CURRENT_LIST_DIR}/argh.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++install(FILES "${CMAKE_CURRENT_LIST_DIR}/LICENSE" DESTINATION ${CMAKE_INSTALL_DOCDIR})
++install(FILES "${CMAKE_CURRENT_LIST_DIR}/README.md" DESTINATION ${CMAKE_INSTALL_DOCDIR})
++
+ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+ # this might be a bit too restrictive, since for other (BSD, ...) this might apply also
+ # but this can be fixed later in extra pull requests from people on the platform
+-	include(GNUInstallDirs)
+-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/argh.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/LICENSE" DESTINATION ${CMAKE_INSTALL_DOCDIR})
+-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/README.md" DESTINATION ${CMAKE_INSTALL_DOCDIR})
+ 	install(FILES argh-config.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/argh)
+ 	install(EXPORT arghTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/argh)
+ else()
+-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/argh.h" DESTINATION include)
+-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/LICENSE" DESTINATION license)
+-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/README.md" DESTINATION .)
+ 	install(FILES argh-config.cmake DESTINATION CMake)
+ 	install(EXPORT arghTargets DESTINATION CMake)
+ endif()

@@ -4,20 +4,33 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
 endif()
 
 set(PYTHON_VERSION_MAJOR  3)
-set(PYTHON_VERSION_MINOR  7)
+set(PYTHON_VERSION_MINOR  8)
 set(PYTHON_VERSION_PATCH  3)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
+
+if(VCPKG_TARGET_IS_WINDOWS)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+		list(APPEND PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-static-library.patch)
+	endif()
+	if (VCPKG_CRT_LINKAGE STREQUAL static)
+		list(APPEND PATCHES ${CMAKE_CURRENT_LIST_DIR}/0002-static-crt.patch)
+	endif()
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH TEMP_SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 023960a2f570fe7178d3901df0c3c33346466906b6d55c73ef7947c19619dbab62efc42c7262a0539bc5e31543b1113eb7a088d4615ad7557a0707bdaca27940
+    SHA512 eb264a858ef55f2f61b53f663454be6e99ffe9035d8fcdb3366d7a08fd3b295613e5d15e93e2e4b9b18ad297d8c17139bde5e90e396db04fe04c6f441a443fd2
     HEAD_REF master
+    PATCHES ${PATCHES}
 )
 
 if("enable-shared" IN_LIST FEATURES)
 	set(_ENABLED_SHARED --enable-shared)
+    if(VCPKG_TARGET_IS_LINUX)
+        message(WARNING"Feature enable-shared requires libffi-devel from the system package manager, please install it on Ubuntu system via sudo apt-get install libffi-dev.")
+    endif()
 else()
 	unset(_ENABLED_SHARED)
 endif()
@@ -29,9 +42,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	set(SOURCE_PATH "${TEMP_SOURCE_PATH}-Lib-Win")
 	file(REMOVE_RECURSE ${SOURCE_PATH})
 	file(RENAME "${TEMP_SOURCE_PATH}" ${SOURCE_PATH})
-
-	# We need per-triplet directories because we need to patch the project files differently based on the linkage
-	# Because the patches patch the same file, they have to be applied in the correct order
 
 	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
 		set(BUILD_ARCH "Win32")
@@ -47,12 +57,11 @@ if (VCPKG_TARGET_IS_WINDOWS)
 		PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythoncore.vcxproj
 		PLATFORM ${BUILD_ARCH})
 
-	file(GLOB HEADERS ${SOURCE_PATH}/Include/*.h)
 	file(INSTALL
-			${HEADERS}
+			"${SOURCE_PATH}/Include/"
 			"${SOURCE_PATH}/PC/pyconfig.h"
-		DESTINATION
-			"${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
+		DESTINATION "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
+		FILES_MATCHING PATTERN *.h
 	)
 	file(INSTALL
 			"${SOURCE_PATH}/Lib"
@@ -139,24 +148,16 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
 		vcpkg_execute_build_process(
-		  COMMAND make -j ${VCPKG_CONCURRENCY}
-		  NO_PARALLEL_COMMAND make
+		  COMMAND make install -j ${VCPKG_CONCURRENCY}
+		  NO_PARALLEL_COMMAND make install
 		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
 		  LOGNAME make-build-${TARGET_TRIPLET}-release
 		)
 
-		message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-		vcpkg_execute_build_process(
-		  COMMAND make install
-		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-		  LOGNAME make-install-${TARGET_TRIPLET}-release
-		)
-
 		message(STATUS "Installing ${TARGET_TRIPLET}-rel headers...")
-		file(GLOB HEADERS
-			${OUT_PATH_RELEASE}/include/*)
-		file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include
-			PATTERN "*__pycache__*" EXCLUDE
+		file(INSTALL "${OUT_PATH_RELEASE}/include/"
+			DESTINATION ${CURRENT_PACKAGES_DIR}/include
+			FILES_MATCHING PATTERN *.h
 		)
 
 		message(STATUS "Installing ${TARGET_TRIPLET}-rel lib files...")
@@ -177,7 +178,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
 		message(STATUS "Installing ${TARGET_TRIPLET}-rel Python library files...")
 		file(GLOB LIBS
-			${OUT_PATH_RELEASE}/lib/libpython${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}m.*)
+			${OUT_PATH_RELEASE}/lib/libpython${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.*)
 		file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 			PATTERN "*.pyc" EXCLUDE
 			PATTERN "*__pycache__*" EXCLUDE
@@ -223,22 +224,15 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
 		message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 		vcpkg_execute_build_process(
-		  COMMAND make -j ${VCPKG_CONCURRENCY}
-		  NO_PARALLEL_COMMAND make
+		  COMMAND make install -j ${VCPKG_CONCURRENCY}
+		  NO_PARALLEL_COMMAND make install
 		  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
 		  LOGNAME make-build-${TARGET_TRIPLET}-debug
 		)
 
-		message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
-		vcpkg_execute_build_process(
-		  COMMAND make install
-		  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-		  LOGNAME make-install-${TARGET_TRIPLET}-debug
-		)
-
 		message(STATUS "Installing ${TARGET_TRIPLET}-dbg Python library files...")
 		file(GLOB LIBS
-			${OUT_PATH_DEBUG}/lib/libpython${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}dm.*)
+			${OUT_PATH_DEBUG}/lib/libpython${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}d.*)
 		file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 			PATTERN "*.pyc" EXCLUDE
 			PATTERN "*__pycache__*" EXCLUDE

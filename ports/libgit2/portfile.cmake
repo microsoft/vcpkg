@@ -4,8 +4,8 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v0.99.0
-    SHA512 e38e18da0e6ed1e5c8198c9eb2c362b21da2d0b9c8bc23309d2f70183549f4b9f23a6db8ce5f1f0f24b373e6427039c2a845b62dd74f91b02cfe8954f961a91b
+    REF 0ced29612dacb67eefe0c562a5c1d3aab21cce96#version 1.0.1
+    SHA512 477e7309682d470965ef85c84f57b647526e1d2cd9ece1fd4f5f4e03e586280651ee40aafadb5b66940cfbd80816f205aa54886f457ca8fd795313137e015102
     HEAD_REF master
 )
 
@@ -32,4 +32,4 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgit2 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

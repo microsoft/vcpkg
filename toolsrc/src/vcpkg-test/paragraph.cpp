@@ -8,6 +8,8 @@
 namespace Strings = vcpkg::Strings;
 using vcpkg::Parse::Paragraph;
 
+namespace {
+
 auto test_parse_control_file(const std::vector<std::unordered_map<std::string, std::string>>& v)
 {
     std::vector<Paragraph> pghs;
@@ -27,6 +29,8 @@ auto test_make_binary_paragraph(const std::unordered_map<std::string, std::strin
         pgh.emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
 
     return vcpkg::BinaryParagraph(std::move(pgh));
+}
+
 }
 
 TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")

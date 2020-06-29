@@ -6,10 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
-        0002-detect-openssl.patch
         0003-fix-windowsinclude.patch
         0004-fix-debug-build.patch
         0005-fix-libvpx-linking.patch
+        0006-fix-StaticFeatures.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -139,6 +139,12 @@ if("nvcodec" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
 else()
     set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
+endif()
+
+if("avisynthplus" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avisynth --enable-gpl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-avisynth --disable-gpl")
 endif()
 
 set(OPTIONS_CROSS "")

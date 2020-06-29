@@ -42,30 +42,37 @@ namespace vcpkg::Install
 
     const fs::path& InstallDir::listfile() const { return this->m_listfile; }
 
+    void install_package_and_write_listfile(const VcpkgPaths& paths,
+                                            const PackageSpec& spec,
+                                            const InstallDir& destination_dir)
+    {
+        auto& fs = paths.get_filesystem();
+        auto source_dir = paths.package_dir(spec);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.u8string());
+        auto files = fs.get_files_recursive(source_dir);
+        install_files_and_write_listfile(fs, source_dir, files, destination_dir);
+    }
     void install_files_and_write_listfile(Files::Filesystem& fs,
                                           const fs::path& source_dir,
+                                          const std::vector<fs::path>& files,
                                           const InstallDir& destination_dir)
     {
         std::vector<std::string> output;
         std::error_code ec;
 
-        const size_t prefix_length = source_dir.native().size();
+        const size_t prefix_length = source_dir.generic_u8string().size();
         const fs::path& destination = destination_dir.destination();
         const std::string& destination_subdirectory = destination_dir.destination_subdirectory();
         const fs::path& listfile = destination_dir.listfile();
 
-        Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.generic_string());
         fs.create_directories(destination, ec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.u8string());
         const fs::path listfile_parent = listfile.parent_path();
         fs.create_directories(listfile_parent, ec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.u8string());
 
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
-        auto files = fs.get_files_recursive(source_dir);
         for (auto&& file : files)
         {
             const auto status = fs.symlink_status(file, ec);
@@ -75,7 +82,7 @@ namespace vcpkg::Install
                 continue;
             }
 
-            const std::string filename = file.filename().u8string();
+            const std::string filename = file.filename().generic_u8string();
             if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
             {
@@ -278,7 +285,7 @@ namespace vcpkg::Install
         const InstallDir install_dir = InstallDir::from_destination_root(
             paths.installed, triplet.to_string(), paths.listfile_path(bcf.core_paragraph));
 
-        install_files_and_write_listfile(paths.get_filesystem(), package_dir, install_dir);
+        install_package_and_write_listfile(paths, bcf.core_paragraph.spec, install_dir);
 
         source_paragraph.state = InstallState::INSTALLED;
         write_update(paths, source_paragraph);
@@ -297,10 +304,10 @@ namespace vcpkg::Install
     using Build::BuildResult;
     using Build::ExtendedBuildResult;
 
-    ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                    InstallPlanAction& action,
-                                                    StatusParagraphs& status_db,
-                                                    IBinaryProvider* binaries_provider)
+    static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+                                                           InstallPlanAction& action,
+                                                           StatusParagraphs& status_db,
+                                                           IBinaryProvider& binaries_provider)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
@@ -425,6 +432,7 @@ namespace vcpkg::Install
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,
+                           IBinaryProvider& binaryprovider,
                            const CMakeVars::CMakeVarProvider& var_provider)
     {
         std::vector<SpecSummary> results;
@@ -457,16 +465,17 @@ namespace vcpkg::Install
         for (auto&& action : action_plan.already_installed)
         {
             results.emplace_back(action.spec, &action);
-            results.back().build_result = perform_install_plan_action(paths, action, status_db, nullptr);
+            results.back().build_result = perform_install_plan_action(paths, action, status_db, binaryprovider);
         }
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
-        auto binary_provider = create_archives_provider();
+        binaryprovider.prefetch(paths, action_plan);
+
         for (auto&& action : action_plan.install_actions)
         {
             with_tracking(action.spec, [&]() {
-                auto result = perform_install_plan_action(paths, action, status_db, binary_provider.get());
+                auto result = perform_install_plan_action(paths, action, status_db, binaryprovider);
 
                 if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {
@@ -514,7 +523,7 @@ namespace vcpkg::Install
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("install zlib zlib:x64-windows curl boost"),
+        create_example_string("install zlib zlib:x64-windows curl boost"),
         1,
         SIZE_MAX,
         {INSTALL_SWITCHES, INSTALL_SETTINGS},
@@ -638,6 +647,9 @@ namespace vcpkg::Install
         // input sanitization
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
+        auto binaryprovider =
+            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
             return Input::check_and_get_full_package_spec(
                 std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
@@ -675,7 +687,6 @@ namespace vcpkg::Install
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
-            (GlobalState::g_binary_caching && !only_downloads) ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -731,7 +742,7 @@ namespace vcpkg::Install
                     {
                         const auto vs_prompt_view = to_zstring_view(vs_prompt);
                         System::print2(vcpkg::System::Color::warning,
-                                        "warning: vcpkg appears to be in a Visual Studio prompt targeting ",
+                                       "warning: vcpkg appears to be in a Visual Studio prompt targeting ",
                                        vs_prompt_view,
                                        " but is installing packages for ",
                                        common_triplet.to_string(),
@@ -755,7 +766,13 @@ namespace vcpkg::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const InstallSummary summary = perform(action_plan, keep_going, paths, status_db, var_provider);
+        const InstallSummary summary =
+            perform(action_plan,
+                    keep_going,
+                    paths,
+                    status_db,
+                    args.binary_caching_enabled() && !only_downloads ? *binaryprovider : null_binary_provider(),
+                    var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 
