@@ -9,7 +9,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
     "mpi"          PARAVIEW_USE_MPI             #untested
 
-endif()
     
 
     "python"       PARAVIEW_USE_PYTHON
