@@ -1,6 +1,3 @@
-# https://github.com/Microsoft/vcpkg/issues/5418#issuecomment-470519894
-vcpkg_fail_port_install(ON_ARCH "x86")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdjson/simdjson
