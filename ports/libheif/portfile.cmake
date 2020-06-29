@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dont_build_examples_and_gdk_pixbuf.patch
+        remove_finding_pkgconfig.patch
 )
 
 vcpkg_configure_cmake(
