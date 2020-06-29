@@ -92,6 +92,7 @@ namespace vcpkg
         void example(StringView example_text);
         void header(StringView name);
         void blank();
+        void text(StringView text, int indent = 0);
 
         std::string m_str;
     };
@@ -130,6 +131,9 @@ namespace vcpkg
         // feature flags
         Optional<bool> feature_packages = nullopt;
         Optional<bool> binary_caching = nullopt;
+        Optional<bool> compiler_tracking = nullopt;
+        bool binary_caching_enabled() const { return binary_caching.value_or(false); }
+        bool compiler_tracking_enabled() const { return compiler_tracking.value_or(false); }
 
         std::string command;
         std::vector<std::string> command_arguments;

@@ -1,5 +1,5 @@
 Source: libssh
-Version: 0.9.3-1
+Version: 0.9.3-2
 Homepage: https://www.libssh.org/
 Description: libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side
 Default-Features: crypto

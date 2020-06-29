@@ -548,6 +548,20 @@ namespace vcpkg
             }
         }
 
+        const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
+        if (const auto unpacked = vcpkg_feature_flags_env.get())
+        {
+            auto flags = Strings::split(*unpacked, ',');
+            if (!binary_caching && Util::Vectors::contains(flags, "binarycaching"))
+            {
+                binary_caching = true;
+            }
+            if (Util::Vectors::contains(flags, "compilertracking"))
+            {
+                compiler_tracking = true;
+            }
+        }
+
         if (!triplet)
         {
             const auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
@@ -614,6 +628,8 @@ namespace vcpkg
         target.append(34, ' ');
     }
 
+    static constexpr ptrdiff_t S_MAX_LINE_LENGTH = 100;
+
     void HelpTableFormatter::format(StringView col1, StringView col2)
     {
         // 2 space, 31 col1, 1 space, 65 col2 = 99
@@ -627,29 +643,8 @@ namespace vcpkg
         {
             m_str.append(32 - col1.size(), ' ');
         }
-        const char* line_start = col2.begin();
-        const char* const e = col2.end();
-        const char* best_break = std::find_if(line_start, e, [](char ch) { return ch == ' ' || ch == '\n'; });
+        text(col2, 34);
 
-        while (best_break != e)
-        {
-            const char* next_break = std::find_if(best_break + 1, e, [](char ch) { return ch == ' ' || ch == '\n'; });
-            if (next_break - line_start > 65 || *best_break == '\n')
-            {
-                m_str.append(line_start, best_break);
-                line_start = best_break + 1;
-                best_break = next_break;
-                if (line_start != e)
-                {
-                    help_table_newline_indent(m_str);
-                }
-            }
-            else
-            {
-                best_break = next_break;
-            }
-        }
-        m_str.append(line_start, best_break);
         m_str.push_back('\n');
     }
 
@@ -667,4 +662,31 @@ namespace vcpkg
     }
 
     void HelpTableFormatter::blank() { m_str.push_back('\n'); }
+
+    // Note: this formatting code does not properly handle unicode, however all of our documentation strings are English
+    // ASCII.
+    void HelpTableFormatter::text(StringView text, int indent)
+    {
+        const char* line_start = text.begin();
+        const char* const e = text.end();
+        const char* best_break = std::find_if(line_start, e, [](char ch) { return ch == ' ' || ch == '\n'; });
+
+        while (best_break != e)
+        {
+            const char* next_break = std::find_if(best_break + 1, e, [](char ch) { return ch == ' ' || ch == '\n'; });
+            if (*best_break == '\n' || next_break - line_start + indent > S_MAX_LINE_LENGTH)
+            {
+                m_str.append(line_start, best_break);
+                m_str.push_back('\n');
+                line_start = best_break + 1;
+                best_break = next_break;
+                m_str.append(indent, ' ');
+            }
+            else
+            {
+                best_break = next_break;
+            }
+        }
+        m_str.append(line_start, best_break);
+    }
 }

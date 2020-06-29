@@ -1,16 +1,12 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "MPIR currently can only be built for desktop")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT when building DLLs")
+    message(FATAL_ERROR "${PORT} currently can only be built using the dynamic CRT when building DLLs")
 endif()
 
 set(MPIR_VERSION 3.0.0)
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_download_distfile(
         ARCHIVE
         URLS "http://mpir.org/mpir-${MPIR_VERSION}.tar.bz2"
@@ -71,8 +67,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
     )
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
-    configure_file(${SOURCE_PATH}/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
-else()
+    file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO wbhart/mpir
@@ -110,6 +106,16 @@ else()
         OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
         OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
     )
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        vcpkg_build_msbuild(
+            PROJECT_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/build.vc${MSVC_VERSION}/${DLL_OR_LIB}_mpir_cxx/${DLL_OR_LIB}_mpir_cxx.vcxproj
+            OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
+            OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
+        )
+        file(GLOB REL_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.lib)
+        file(GLOB DBG_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.lib)       
+    endif()
 
     file(GLOB HEADERS
         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmp.h
@@ -117,20 +123,27 @@ else()
         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.h
         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.h
     )
-    file(COPY ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+    file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
     file(GLOB REL_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.dll)
     file(GLOB REL_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.lib)
 
     file(GLOB DBG_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.dll)
     file(GLOB DBG_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.lib)
-
-    file(COPY ${REL_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(COPY ${REL_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(COPY ${DBG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(COPY ${DBG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    
+    list(APPEND REL_LIBS  ${REL_LIBS_CXX})
+    list(APPEND DBG_LIBS  ${DBG_LIBS_CXX})
+    
+    file(INSTALL ${REL_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL ${REL_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${DBG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(INSTALL ${DBG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 
     vcpkg_copy_pdbs()
 
-    configure_file(${SOURCE_PATH}/COPYING.lib ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
+    file(INSTALL ${SOURCE_PATH}/COPYING.lib DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endif()

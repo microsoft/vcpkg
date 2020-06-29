@@ -30,6 +30,14 @@ namespace vcpkg::Metrics
         return "";
     }
 
+    struct append_hexits {
+        constexpr static char hex[17] = "0123456789abcdef";
+        void operator()(std::string& res, std::uint8_t bits) const {
+            res.push_back(hex[(bits >> 4) & 0x0F]);
+            res.push_back(hex[(bits >> 0) & 0x0F]);
+        }
+    };
+
     // note: this ignores the bits of these numbers that would be where format and variant go
     static std::string uuid_of_integers(uint64_t top, uint64_t bottom)
     {
@@ -40,11 +48,7 @@ namespace vcpkg::Metrics
         // uuid_field_size in hex characters, not bytes
         constexpr size_t uuid_size = 8 + 1 + 4 + 1 + 4 + 1 + 4 + 1 + 12;
 
-        constexpr static char hex[17] = "0123456789abcdef";
-        constexpr static auto write_byte = [](std::string& res, std::uint8_t bits) {
-            res.push_back(hex[(bits >> 4) & 0x0F]);
-            res.push_back(hex[(bits >> 0) & 0x0F]);
-        };
+        constexpr static append_hexits write_byte;
 
         // set the version bits to 4
         top &= 0xFFFF'FFFF'FFFF'0FFFULL;

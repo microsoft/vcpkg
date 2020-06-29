@@ -3,9 +3,9 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/export.chocolatey.h>
-#include <vcpkg/export.prefab.h>
 #include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
+#include <vcpkg/export.prefab.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
@@ -25,7 +25,8 @@ namespace vcpkg::Export
     using Install::InstallDir;
 
     static std::string create_nuspec_file_contents(const std::string& raw_exported_dir,
-                                                   const std::string& targets_redirect_path,
+                                                   const fs::path& targets_redirect_path,
+                                                   const fs::path& props_redirect_path,
                                                    const std::string& nuget_id,
                                                    const std::string& nupkg_version)
     {
@@ -44,6 +45,7 @@ namespace vcpkg::Export
         <file src="@RAW_EXPORTED_DIR@\scripts\**" target="scripts" />
         <file src="@RAW_EXPORTED_DIR@\.vcpkg-root" target="" />
         <file src="@TARGETS_REDIRECT_PATH@" target="build\native\@NUGET_ID@.targets" />
+        <file src="@PROPS_REDIRECT_PATH@" target="build\native\@NUGET_ID@.props" />
     </files>
 </package>
 )";
@@ -52,8 +54,10 @@ namespace vcpkg::Export
         nuspec_file_content = Strings::replace_all(std::move(nuspec_file_content), "@VERSION@", nupkg_version);
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@RAW_EXPORTED_DIR@", raw_exported_dir);
-        nuspec_file_content =
-            Strings::replace_all(std::move(nuspec_file_content), "@TARGETS_REDIRECT_PATH@", targets_redirect_path);
+        nuspec_file_content = Strings::replace_all(
+            std::move(nuspec_file_content), "@TARGETS_REDIRECT_PATH@", targets_redirect_path.u8string());
+        nuspec_file_content = Strings::replace_all(
+            std::move(nuspec_file_content), "@PROPS_REDIRECT_PATH@", props_redirect_path.u8string());
         return nuspec_file_content;
     }
 
@@ -80,7 +84,6 @@ namespace vcpkg::Export
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -136,18 +139,23 @@ namespace vcpkg::Export
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path& nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
+        std::error_code ec;
+        fs.create_directories(paths.buildsystems / "tmp", ec);
+
         // This file will be placed in "build\native" in the nuget package. Therefore, go up two dirs.
         const std::string targets_redirect_content =
             create_targets_redirect("$(MSBuildThisFileDirectory)../../scripts/buildsystems/msbuild/vcpkg.targets");
         const fs::path targets_redirect = paths.buildsystems / "tmp" / "vcpkg.export.nuget.targets";
-
-        std::error_code ec;
-        fs.create_directories(paths.buildsystems / "tmp", ec);
-
         fs.write_contents(targets_redirect, targets_redirect_content, VCPKG_LINE_INFO);
 
-        const std::string nuspec_file_content =
-            create_nuspec_file_contents(raw_exported_dir.string(), targets_redirect.string(), nuget_id, nuget_version);
+        // This file will be placed in "build\native" in the nuget package. Therefore, go up two dirs.
+        const std::string props_redirect_content =
+            create_targets_redirect("$(MSBuildThisFileDirectory)../../scripts/buildsystems/msbuild/vcpkg.props");
+        const fs::path props_redirect = paths.buildsystems / "tmp" / "vcpkg.export.nuget.props";
+        fs.write_contents(props_redirect, props_redirect_content, VCPKG_LINE_INFO);
+
+        const std::string nuspec_file_content = create_nuspec_file_contents(
+            raw_exported_dir.string(), targets_redirect, props_redirect, nuget_id, nuget_version);
         const fs::path nuspec_file_path = paths.buildsystems / "tmp" / "vcpkg.export.nuspec";
         fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
@@ -235,6 +243,8 @@ namespace vcpkg::Export
             {".vcpkg-root"},
             {fs::path{"scripts"} / "buildsystems" / "msbuild" / "applocal.ps1"},
             {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
+            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.props"},
+            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg-general.xml"},
             {fs::path{"scripts"} / "buildsystems" / "vcpkg.cmake"},
             {fs::path{"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
         };
@@ -303,9 +313,6 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_PREFAB_ENABLE_MAVEN = "--prefab-maven";
     static constexpr StringLiteral OPTION_PREFAB_ENABLE_DEBUG = "--prefab-debug";
 
-
-
-
     static constexpr std::array<CommandSwitch, 11> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
@@ -333,7 +340,7 @@ namespace vcpkg::Export
          "Specify the maintainer for the exported Chocolatey package (experimental feature)"},
         {OPTION_CHOCOLATEY_VERSION_SUFFIX,
          "Specify the version suffix to add for the exported Chocolatey package (experimental feature)"},
-        {OPTION_PREFAB_GROUP_ID,  "GroupId uniquely identifies your project according maven specifications"},
+        {OPTION_PREFAB_GROUP_ID, "GroupId uniquely identifies your project according maven specifications"},
         {OPTION_PREFAB_ARTIFACT_ID, "Artifact Id is the name of the project according maven specifications"},
         {OPTION_PREFAB_VERSION, "Version is the name of the project according maven specifications"},
         {OPTION_PREFAB_SDK_MIN_VERSION, "Android minimum supported sdk version"},
@@ -386,10 +393,12 @@ namespace vcpkg::Export
             });
         }
 
-        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey && !ret.prefab)
+        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey &&
+            !ret.prefab)
         {
-            System::print2(System::Color::error,
-                           "Must provide at least one export type: --raw --nuget --ifw --zip --7zip --chocolatey --prefab\n");
+            System::print2(
+                System::Color::error,
+                "Must provide at least one export type: --raw --nuget --ifw --zip --7zip --chocolatey --prefab\n");
             System::print2(COMMAND_STRUCTURE.example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -509,7 +518,18 @@ namespace vcpkg::Export
                 action.spec.triplet().to_string(),
                 raw_exported_dir_path / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
-            Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
+            auto lines = fs.read_lines(paths.listfile_path(binary_paragraph)).value_or_exit(VCPKG_LINE_INFO);
+            std::vector<fs::path> files;
+            for (auto&& suffix : lines)
+            {
+                if (suffix.empty()) continue;
+                if (suffix.back() == '/') suffix.pop_back();
+                if (suffix == action.spec.triplet().to_string()) continue;
+                files.push_back(paths.installed / fs::u8path(suffix));
+            }
+
+            Install::install_files_and_write_listfile(
+                fs, paths.installed / action.spec.triplet().to_string(), files, dirs);
         }
 
         // Copy files needed for integration
@@ -638,7 +658,8 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             Chocolatey::do_export(export_plan, paths, opts.chocolatey_options);
         }
 
-        if(opts.prefab){
+        if (opts.prefab)
+        {
             Prefab::do_export(export_plan, paths, opts.prefab_options, default_triplet);
         }
 

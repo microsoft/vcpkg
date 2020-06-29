@@ -175,6 +175,8 @@ namespace vcpkg::Strings
 
     std::vector<std::string> split(const std::string& s, const char delimiter);
 
+    const char* find_first_of(StringView searched, StringView candidates);
+
     std::vector<StringView> find_all_enclosed(StringView input, StringView left_delim, StringView right_delim);
 
     StringView find_exactly_one_enclosed(StringView input, StringView left_tag, StringView right_tag);

@@ -1,8 +1,8 @@
 diff --git a/cpp/cmake_modules/BuildUtils.cmake b/cpp/cmake_modules/BuildUtils.cmake
-index f5f0ad7..3dca82e 100644
+index e4e13cb70..58ca626da 100644
 --- a/cpp/cmake_modules/BuildUtils.cmake
 +++ b/cpp/cmake_modules/BuildUtils.cmake
-@@ -305,7 +305,7 @@ function(ADD_ARROW_LIB LIB_NAME)
+@@ -335,7 +335,7 @@ function(ADD_ARROW_LIB LIB_NAME)
        target_include_directories(${LIB_NAME}_static PRIVATE ${ARG_PRIVATE_INCLUDES})
      endif()
  
@@ -11,8 +11,22 @@ index f5f0ad7..3dca82e 100644
        set(LIB_NAME_STATIC ${LIB_NAME}_static)
      else()
        set(LIB_NAME_STATIC ${LIB_NAME})
+diff --git a/cpp/cmake_modules/FindBrotli.cmake b/cpp/cmake_modules/FindBrotli.cmake
+index bf47915c4..053e605a0 100644
+--- a/cpp/cmake_modules/FindBrotli.cmake
++++ b/cpp/cmake_modules/FindBrotli.cmake
+@@ -64,8 +64,7 @@ if(BROTLI_ROOT)
+             PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES}
+             NO_DEFAULT_PATH)
+ else()
+-  pkg_check_modules(BROTLI_PC libbrotlicommon libbrotlienc libbrotlidec)
+-  if(BROTLI_PC_FOUND)
++  if(0) # Find via pkg_check_modules disabled as incompatible with vcpkg
+     set(BROTLI_INCLUDE_DIR "${BROTLI_PC_libbrotlicommon_INCLUDEDIR}")
+ 
+     # Some systems (e.g. Fedora) don't fill Brotli_LIBRARY_DIRS, so add the other dirs here.
 diff --git a/cpp/cmake_modules/FindLz4.cmake b/cpp/cmake_modules/FindLz4.cmake
-index 8410916..a196b25 100644
+index 841091643..a196b251d 100644
 --- a/cpp/cmake_modules/FindLz4.cmake
 +++ b/cpp/cmake_modules/FindLz4.cmake
 @@ -19,14 +19,16 @@ if(MSVC AND NOT DEFINED LZ4_MSVC_STATIC_LIB_SUFFIX)
@@ -53,10 +67,10 @@ index 8410916..a196b25 100644
        PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
      find_path(LZ4_INCLUDE_DIR NAMES lz4.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
 diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
-index f9d6296..82b8d22 100644
+index bb3eb5608..0b03d37d3 100644
 --- a/cpp/cmake_modules/FindThrift.cmake
 +++ b/cpp/cmake_modules/FindThrift.cmake
-@@ -54,6 +54,10 @@ if(MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
+@@ -43,6 +43,10 @@ if(MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
    set(THRIFT_MSVC_STATIC_LIB_SUFFIX md)
  endif()
  
@@ -67,7 +81,7 @@ index f9d6296..82b8d22 100644
  if(Thrift_ROOT)
    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
                 PATHS ${Thrift_ROOT}
-@@ -74,16 +78,14 @@ else()
+@@ -61,16 +65,14 @@ else()
  
      list(APPEND THRIFT_PC_LIBRARY_DIRS "${THRIFT_PC_LIBDIR}")
  
@@ -88,7 +102,7 @@ index f9d6296..82b8d22 100644
      find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h PATH_SUFFIXES "include")
      find_program(THRIFT_COMPILER thrift PATH_SUFFIXES "bin")
 diff --git a/cpp/cmake_modules/FindZSTD.cmake b/cpp/cmake_modules/FindZSTD.cmake
-index 8e47086..d7ce559 100644
+index 8e47086e8..d87906a25 100644
 --- a/cpp/cmake_modules/FindZSTD.cmake
 +++ b/cpp/cmake_modules/FindZSTD.cmake
 @@ -19,14 +19,18 @@ if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
@@ -112,7 +126,13 @@ index 8e47086..d7ce559 100644
                       "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
                 PATHS ${ZSTD_ROOT}
                 PATH_SUFFIXES ${LIB_PATH_SUFFIXES}
-@@ -44,14 +48,14 @@ else()
+@@ -39,19 +43,18 @@ if(ZSTD_ROOT)
+ 
+ else()
+   # Second, find via pkg_check_modules
+-  pkg_check_modules(ZSTD_PC libzstd)
+-  if(ZSTD_PC_FOUND)
++  if(0) # Disabled as incompatible with vcpkg
      set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
  
      list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
@@ -130,10 +150,10 @@ index 8e47086..d7ce559 100644
                   PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
      find_path(ZSTD_INCLUDE_DIR NAMES zstd.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
 diff --git a/cpp/cmake_modules/SetupCxxFlags.cmake b/cpp/cmake_modules/SetupCxxFlags.cmake
-index 75b33c2..80cac9a 100644
+index 6110a5aa5..3270d74a9 100644
 --- a/cpp/cmake_modules/SetupCxxFlags.cmake
 +++ b/cpp/cmake_modules/SetupCxxFlags.cmake
-@@ -128,7 +128,9 @@ macro(arrow_add_werror_if_debug)
+@@ -163,7 +163,9 @@ macro(arrow_add_werror_if_debug)
    if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
      # Treat all compiler warnings as errors
      if(MSVC)
