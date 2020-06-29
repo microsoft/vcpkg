@@ -199,7 +199,7 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${CMAKE_FILE} "${_contents}")
     endforeach()
     
-    set(VCPKG_FIXUP_CMAKE_CALLED TRUE CACHE INTERNAL "See below" FORCE) 
+    set(VCPKG_FIXUP_CMAKE_CALLED TRUE CACHE INTERNAL "See below" FORCE)
     
 endfunction()
 
