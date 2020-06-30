@@ -209,6 +209,14 @@ namespace vcpkg::Files
         std::error_code ec;
         return this->create_directories(path, ec);
     }
+    void Filesystem::copy_file(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts, LineInfo li)
+    {
+        std::error_code ec;
+        this->copy_file(oldpath, newpath, opts, ec);
+        if (ec)
+            vcpkg::Checks::exit_with_message(
+                li, "error copying file from %s to %s: %s", oldpath.u8string(), newpath.u8string(), ec.message());
+    }
 
     fs::file_status Filesystem::status(vcpkg::LineInfo li, const fs::path& p) const noexcept
     {
@@ -848,14 +856,13 @@ namespace vcpkg::Files
 #if defined(WIN32)
             constexpr static auto busy_error = ERROR_BUSY;
             const auto system_try_take_file_lock = [&] {
-                auto handle = CreateFileW(
-                    system_file_name.c_str(),
-                    GENERIC_READ,
-                    0 /* no sharing */,
-                    nullptr /* no security attributes */,
-                    OPEN_ALWAYS,
-                    FILE_ATTRIBUTE_NORMAL,
-                    nullptr /* no template file */);
+                auto handle = CreateFileW(system_file_name.c_str(),
+                                          GENERIC_READ,
+                                          0 /* no sharing */,
+                                          nullptr /* no security attributes */,
+                                          OPEN_ALWAYS,
+                                          FILE_ATTRIBUTE_NORMAL,
+                                          nullptr /* no template file */);
                 if (handle == INVALID_HANDLE_VALUE)
                 {
                     const auto err = GetLastError();
