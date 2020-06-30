@@ -44,15 +44,95 @@ TEST_CASE ("BinaryConfigParser files provider", "[binaryconfigparser]")
         REQUIRE(!parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",upload", {});
+        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",read", {});
         REQUIRE(parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",upload,extra", {});
+        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",write", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",readwrite", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("files," ABSOLUTE_PATH ",readwrite,extra", {});
         REQUIRE(!parsed.has_value());
     }
     {
         auto parsed = create_binary_provider_from_configs_pure("files,,upload", {});
+        REQUIRE(!parsed.has_value());
+    }
+}
+
+TEST_CASE ("BinaryConfigParser nuget source provider", "[binaryconfigparser]")
+{
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nuget", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nuget,relative-path", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nuget,http://example.org/", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nuget," ABSOLUTE_PATH, {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nuget," ABSOLUTE_PATH ",nonsense", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nuget," ABSOLUTE_PATH ",upload", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nuget," ABSOLUTE_PATH ",upload,extra", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nuget,,upload", {});
+        REQUIRE(!parsed.has_value());
+    }
+}
+
+TEST_CASE ("BinaryConfigParser nuget config provider", "[binaryconfigparser]")
+{
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig,relative-path", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig,http://example.org/", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig," ABSOLUTE_PATH, {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig," ABSOLUTE_PATH ",nonsense", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig," ABSOLUTE_PATH ",upload", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig," ABSOLUTE_PATH ",upload,extra", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("nugetconfig,,upload", {});
         REQUIRE(!parsed.has_value());
     }
 }
@@ -68,11 +148,19 @@ TEST_CASE ("BinaryConfigParser default provider", "[binaryconfigparser]")
         REQUIRE(!parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("default,upload", {});
+        auto parsed = create_binary_provider_from_configs_pure("default,read", {});
         REQUIRE(parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("default,upload,extra", {});
+        auto parsed = create_binary_provider_from_configs_pure("default,readwrite", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("default,write", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("default,read,extra", {});
         REQUIRE(!parsed.has_value());
     }
 }
@@ -89,6 +177,18 @@ TEST_CASE ("BinaryConfigParser clear provider", "[binaryconfigparser]")
     }
 }
 
+TEST_CASE ("BinaryConfigParser interactive provider", "[binaryconfigparser]")
+{
+    {
+        auto parsed = create_binary_provider_from_configs_pure("interactive", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("interactive,upload", {});
+        REQUIRE(!parsed.has_value());
+    }
+}
+
 TEST_CASE ("BinaryConfigParser multiple providers", "[binaryconfigparser]")
 {
     {
@@ -96,11 +196,11 @@ TEST_CASE ("BinaryConfigParser multiple providers", "[binaryconfigparser]")
         REQUIRE(parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("clear;default,upload", {});
+        auto parsed = create_binary_provider_from_configs_pure("clear;default,readwrite", {});
         REQUIRE(parsed.has_value());
     }
     {
-        auto parsed = create_binary_provider_from_configs_pure("clear;default,upload;clear;clear", {});
+        auto parsed = create_binary_provider_from_configs_pure("clear;default,readwrite;clear;clear", {});
         REQUIRE(parsed.has_value());
     }
     {
