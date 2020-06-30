@@ -28,7 +28,7 @@ namespace vcpkg::Commands::List
                     arr.push_back(Json::Value::string(status_paragraph->package.feature));
                 }
                 library_obj.insert("feature", Json::Value::array(std::move(arr)));
-                library_obj.insert("desc", Json::Value::string(Strings::join("\n    ", status_paragraph->package.description)));
+                library_obj.insert("desc", Json::Value::string(Strings::join("\n ", status_paragraph->package.description)));
             } else {
                 if(status_paragraph->package.is_feature()) {
                     auto library_obj =  obj.get(current_spec.name());
