@@ -365,6 +365,10 @@ InstallLLVM installs LLVM from the supplied URL.
 The URL of the LLVM installer.
 #>
 Function InstallLLVM {
+  Param(
+    [String]$Url
+  )
+
   try {
     Write-Host 'Downloading LLVM...'
     [string]$installerPath = Get-TempFilePath -Extension 'exe'
@@ -474,7 +478,7 @@ if ($null -eq $av) {
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallWindowsSDK -Url $WindowsSDKUrl
 InstallWindowsWDK -Url $WindowsWDKUrl
-InstallLLVM $LlvmUrl
+InstallLLVM -Url $LlvmUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
