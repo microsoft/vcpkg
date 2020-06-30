@@ -101,6 +101,7 @@ vcpkg_from_github(
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type. 
         python_debug.patch
+        fix-using-hdf5.patch
         # Last patch TODO: Patch out internal loguru
 )
 
