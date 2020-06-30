@@ -6,3 +6,4 @@ Supports: !uwp
 
 Feature: private-headers
 Description: Install non-standard files required for building Apache httpd
+Supports: !uwp
