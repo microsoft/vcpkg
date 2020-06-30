@@ -1379,8 +1379,8 @@ pangomm:x86-windows=ignore
 pangomm:arm64-windows=fail
 # Missing symbols will, probably fix itself with Qt >= 5.15
 paraview:x64-osx=fail
-# Fixed in #12144
-paraview:x64-linux=fail
+# Fixed in #12144; when embree3 is installed, breaks, otherwise works
+paraview:x64-linux=ignore
 parmetis:x64-linux=fail
 parmetis:x64-osx=fail
 pcre2:arm-uwp=fail
