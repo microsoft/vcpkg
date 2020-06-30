@@ -88,11 +88,9 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Name of the feature.",
           "$ref": "#/definitions/identifier"
         },
         "description": {
-          "description": "Description of the feature.",
           "$ref": "#/definitions/descriptionField"
         },
         "dependencies": {
