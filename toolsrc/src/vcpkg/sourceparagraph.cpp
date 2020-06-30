@@ -154,6 +154,7 @@ namespace vcpkg
 
         parser.required_field(SourceParagraphFields::FEATURE, fpgh->name);
         parser.required_field(SourceParagraphFields::DESCRIPTION, fpgh->description);
+        fpgh->supports_expression = parser.optional_field(SourceParagraphFields::SUPPORTS);
 
         fpgh->depends = parse_dependencies_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS), origin)
                             .value_or_exit(VCPKG_LINE_INFO);

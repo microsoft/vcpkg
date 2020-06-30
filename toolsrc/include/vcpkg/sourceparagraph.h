@@ -36,6 +36,7 @@ namespace vcpkg
         std::string name;
         std::string description;
         std::vector<Dependency> depends;
+        std::string supports_expression;
     };
 
     /// <summary>

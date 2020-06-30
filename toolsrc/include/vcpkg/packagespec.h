@@ -125,6 +125,7 @@ namespace vcpkg
     {
         Features depend;
         std::string qualifier;
+        std::string supports_expression;
 
         static ExpectedS<Dependency> from_string(const std::string& input);
     };
