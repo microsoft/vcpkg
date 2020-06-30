@@ -1,0 +1,12 @@
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 1f27b802..ecf836b4 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -21,7 +21,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/geos-config
+         PERMISSIONS
+         OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+ 
+-add_subdirectory(astyle)
+ 
+ # if(UNIX OR MINGW)
+ 
