@@ -72,8 +72,8 @@ vcpkg_configure_cmake(
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
         -DSKIP_INSTALL_FILES=OFF
-        OPTIONS_DEBUG
-            -DSKIP_INSTALL_HEADERS=ON
+    OPTIONS_DEBUG
+        -DSKIP_INSTALL_HEADERS=ON
 )
 vcpkg_install_cmake()
 
