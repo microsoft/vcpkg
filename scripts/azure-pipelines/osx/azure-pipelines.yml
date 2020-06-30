@@ -56,3 +56,14 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/failureLogs'
       ArtifactName: 'x64-osx port build failure logs'
     condition: failed()
+  - task: BuildFileList
+    displayName: 'Build a file list for all packages'
+    condition: and(succeeded(), eq(variables['Build.Reason'], "PullRequest"))
+  - bash: |
+      python3 scripts/file_script.py /Users/vagrant/Data/installed/vcpkg/info/
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: and(succeeded(), eq(variables['Build.Reason'], "PullRequest"))
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "x64-osx package file lists"
