@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index f68bf3d..d4d1372 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -135,6 +135,8 @@ if(MSVC)
+   # warning is not important since those members do not need to be interfaced
+   # with.
+   set_source_files_properties(${gen_sources} COMPILE_FLAGS "/wd4251 /wd4146")
++  # Fix for protobuf 3.12 - allow big object files
++  add_definitions(/bigobj)
+ endif()
+ 
+ set_source_files_properties(${gen_headers} ${gen_sources} ${gen_ruby_scripts}

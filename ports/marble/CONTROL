@@ -2,13 +2,5 @@ Source: marble
 Version: 19.08.2
 Homepage: https://marble.kde.org
 Description: Marble KDE library
-Build-Depends: qt5
-
-Feature: tools
-Description: support for tools
-
-Feature: tests
-Description: support for tests
-
-Feature: plugins
-Description: Build plugins for Qt Designer
+Supports: !(x86|uwp|arm|linux|osx|android|static)
+Build-Depends: qt5-base, qt5-xmlpatterns, qt5-svg, qt5-quickcontrols, qt5-webchannel, qt5-webengine  

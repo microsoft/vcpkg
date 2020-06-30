@@ -3,12 +3,11 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
-    REF f5e0eef34db3a3ab94b61a2f99f84f078ba947e7 # openal-soft-1.20.1
-    SHA512 3b05e67406e594215bc5a5e684feafa05ae3b6c898f5b91ab923c59688d7bc4f37f7a9f3bbc8ae252f8997d2588dc2766f44866eb095f0f53cb42030596d26a5
+    REF a01dbeb09f0a6cdb1f2946b9fdf6c16c8b979066
+    SHA512 cf59e0150861a428dec0764f4479fa80ae64dc75e3367b577902616d77509de8ae906633713bc509596b18435d19ec323e77592ef01f79cfc1a1706016550993
     HEAD_REF master
     PATCHES
         dont-export-symbols-in-static-build.patch
-        fix-arm-builds.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -73,6 +72,7 @@ foreach(HEADER al.h alc.h)
 endforeach()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 

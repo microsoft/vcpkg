@@ -10,7 +10,7 @@
 namespace vcpkg::Commands::BuildExternal
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)"),
+        create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)"),
         2,
         2,
         {},
@@ -37,7 +37,10 @@ namespace vcpkg::Commands::BuildExternal
         Checks::check_exit(
             VCPKG_LINE_INFO, maybe_scfl.has_value(), "could not load control file for %s", spec.package_spec.name());
 
-        Build::Command::perform_and_exit_ex(
-            spec, maybe_scfl.value_or_exit(VCPKG_LINE_INFO), provider, *binaryprovider, paths);
+        Build::Command::perform_and_exit_ex(spec,
+                                            maybe_scfl.value_or_exit(VCPKG_LINE_INFO),
+                                            provider,
+                                            args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
+                                            paths);
     }
 }
