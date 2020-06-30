@@ -1,8 +1,8 @@
 Source: paraview
-Version: 5.8.0-1
+Version: 5.8.0-2
 Homepage: https://www.paraview.org/
 Description: VTK-based Data Analysis and Visualization Application
-Build-Depends: vtk[core,paraview], protobuf, cgns, boost-core, boost-format, boost-algorithm
+Build-Depends: vtk[core,paraview], protobuf, cgns, boost-core, boost-format, boost-algorithm, embree3(linux)
 
 Feature: vtkm
 Description: enables vtkm for the build of paraview
@@ -19,6 +19,9 @@ Build-Depends: cuda, vtk[core, cuda]
 Feature: mpi
 Description: enables cuda within paraview
 Build-Depends: hdf5[core,parallel], vtk[core, mpi]
+
+Feature: tools
+Description: Build paraview tools
 
 Feature: all_modules
 Description: enables the build of all paraview modules
