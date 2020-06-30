@@ -155,6 +155,7 @@ Function PrintMsiExitCodeMessage {
   }
   else {
     Write-Error "Installation failed! Exited with $ExitCode."
+    throw
   }
 }
 
@@ -212,6 +213,7 @@ Function InstallVisualStudio {
   }
   catch {
     Write-Error "Failed to install Visual Studio! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -245,6 +247,7 @@ Function InstallMSI {
   }
   catch {
     Write-Error "Failed to install $Name! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -281,6 +284,7 @@ Function InstallZip {
   }
   catch {
     Write-Error "Failed to install $Name! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -312,10 +316,12 @@ Function InstallWindowsSDK {
     }
     else {
       Write-Error "Installation failed! Exited with $exitCode."
+      throw
     }
   }
   catch {
     Write-Error "Failed to install Windows SDK! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -347,10 +353,12 @@ Function InstallWindowsWDK {
     }
     else {
       Write-Error "Installation failed! Exited with $exitCode."
+      throw
     }
   }
   catch {
     Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -379,6 +387,7 @@ Function InstallLLVM {
   }
   catch {
     Write-Error "Failed to install LLVM! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -410,10 +419,12 @@ Function InstallMpi {
     }
     else {
       Write-Error "Installation failed! Exited with $exitCode."
+      throw
     }
   }
   catch {
     Write-Error "Failed to install MPI! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -449,10 +460,12 @@ Function InstallCuda {
     }
     else {
       Write-Error "Installation failed! Exited with $exitCode."
+      throw
     }
   }
   catch {
     Write-Error "Failed to install CUDA! $($_.Exception.Message)"
+    throw
   }
 }
 
