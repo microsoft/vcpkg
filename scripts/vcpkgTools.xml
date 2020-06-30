@@ -2,7 +2,7 @@
 <tools version="2">
     <tool name="python3" os="windows">
         <version>3.8.3</version>
-        <exeRelativePath>python.exe</exeRelativePath>
+        <exeRelativePath>python3-3.8.3-windows\python.exe</exeRelativePath>
         <url>https://www.python.org/ftp/python/3.8.3/python-3.8.3-embed-win32.zip</url>
         <sha512>8c9078f55b1b5d694e0e809eee6ccf8a6e15810dd4649e8ae1209bff30e102d49546ce970a5d519349ca7759d93146f459c316dc440737171f018600255dcd0a</sha512>
         <archiveName>python-3.8.3-embed-win32.zip</archiveName>

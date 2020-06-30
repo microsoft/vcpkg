@@ -24,6 +24,10 @@ def gen_all_file_strings(path, files, headers, output):
         f.close()
 
 def main(path):
+    try: 
+        os.mkdir("scripts/list_files")
+    except FileExistsError:
+        print("Path already exists, continuing...")
     headers = open("scripts/list_files/VCPKGHeadersDatabase.txt", mode='w')
     output = open("scripts/list_files/VCPKGDatabase.txt", mode='w')
     gen_all_file_strings(path, getFiles(path), headers, output)
