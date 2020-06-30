@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexif/libexif
-    REF libexif-0_6_21-release
-    SHA512 aecba54eb9c8b4ce29d11985a547074b381d72027b563c7aef865852b661a6f18a258c748fca6b16198344f4a86568b658071ac95cc1d332f576c6160e1f257d
+    REF libexif-0_6_22-release
+    SHA512 6c63abe2734c9e83fb04adb00bdd77f687165007c0efd0279df26c101363b990604050c430c7dd73dfa8735dd2fd196334d321bdb114d4869998f21e7bed5b43
     HEAD_REF master
     PATCHES add-missing-_stdint-h.patch
 )
