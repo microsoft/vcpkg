@@ -9,10 +9,10 @@ vcpkg_from_github(
     PATCHES
         fix-linux-build.patch
         Fix-FindCairo.patch
-        fix-expat-cannot-found.patch
+        fix-expat.patch
 )
 
-if (VCPKG_TARGET_IS_OSX)
+if (VCPKG_TARGET_OS_OSX)
     set(IO2D_DEFAULT_OPTION "-DIO2D_DEFAULT=COREGRAPHICS_MAC")
 endif()
 
@@ -32,7 +32,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/io2d)
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+if (NOT VCPKG_TARGET_IS_OSX)
     file(RENAME ${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake ${CURRENT_PACKAGES_DIR}/share/io2d/io2dTargets.cmake)
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake "
     include(CMakeFindDependencyMacro)
