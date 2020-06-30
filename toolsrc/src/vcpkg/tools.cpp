@@ -392,7 +392,7 @@ git version 2.17.1.windows.2
 
     struct IfwInstallerBaseProvider : ToolProvider
     {
-        std::string m_exe = "";
+        std::string m_exe;
         std::string m_toolname = "installerbase";
 
         virtual const std::string& tool_data_name() const override { return m_toolname; }

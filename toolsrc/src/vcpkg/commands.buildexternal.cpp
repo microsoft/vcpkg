@@ -22,16 +22,16 @@ namespace vcpkg::Commands::BuildExternal
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         auto binaryprovider =
-            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+            create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
 
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(
             std::string(args.command_arguments.at(0)), default_triplet, COMMAND_STRUCTURE.example_text);
         Input::check_triplet(spec.package_spec.triplet(), paths);
 
-        auto overlays = args.overlay_ports ? *args.overlay_ports : std::vector<std::string>();
+        auto overlays = args.overlay_ports;
         overlays.insert(overlays.begin(), args.command_arguments.at(1));
 
-        PortFileProvider::PathsPortFileProvider provider(paths, &overlays);
+        PortFileProvider::PathsPortFileProvider provider(paths, overlays);
         auto maybe_scfl = provider.get_control_file(spec.package_spec.name());
 
         Checks::check_exit(

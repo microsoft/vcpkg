@@ -10,6 +10,7 @@
 
 #if !defined(_WIN32)
 #include <fcntl.h>
+#include <sys/file.h>
 #include <sys/stat.h>
 #endif
 
@@ -837,6 +838,97 @@ namespace vcpkg::Files
         virtual void current_path(const fs::path& path, std::error_code& ec) override
         {
             fs::stdfs::current_path(path, ec);
+        }
+
+        virtual fs::SystemHandle try_take_exclusive_file_lock(const fs::path& path, std::error_code& ec) override
+        {
+            fs::SystemHandle res;
+
+            const auto system_file_name = path.native();
+#if defined(WIN32)
+            constexpr static auto busy_error = ERROR_BUSY;
+            const auto system_try_take_file_lock = [&] {
+                auto handle = CreateFileW(
+                    system_file_name.c_str(),
+                    GENERIC_READ,
+                    0 /* no sharing */,
+                    nullptr /* no security attributes */,
+                    OPEN_ALWAYS,
+                    FILE_ATTRIBUTE_NORMAL,
+                    nullptr /* no template file */);
+                if (handle == INVALID_HANDLE_VALUE)
+                {
+                    const auto err = GetLastError();
+                    if (err != ERROR_SHARING_VIOLATION)
+                    {
+                        ec.assign(err, std::system_category());
+                    }
+                    return false;
+                }
+
+                res.system_handle = reinterpret_cast<intptr_t>(handle);
+                return true;
+            };
+#else // ^^^ WIN32 / !WIN32 vvv
+            constexpr static auto busy_error = EBUSY;
+            int fd = open(system_file_name.c_str(), 0);
+            if (fd < 0)
+            {
+                ec.assign(errno, std::system_category());
+                return res;
+            }
+            const auto system_try_take_file_lock = [&] {
+                if (flock(fd, LOCK_EX | LOCK_NB) != 0)
+                {
+                    if (errno != EWOULDBLOCK)
+                    {
+                        ec.assign(errno, std::system_category());
+                    }
+                    return false;
+                }
+
+                res.system_handle = fd;
+                return true;
+            };
+#endif
+
+            if (system_try_take_file_lock() || ec)
+            {
+                return res;
+            }
+
+            System::printf("Waiting to take filesystem lock on %s...\n", path.u8string());
+            auto wait = std::chrono::milliseconds(100);
+            // waits, at most, a second and a half.
+            while (wait < std::chrono::milliseconds(1000))
+            {
+                std::this_thread::sleep_for(wait);
+                if (system_try_take_file_lock() || ec)
+                {
+                    return res;
+                }
+                wait *= 2;
+            }
+
+#if !defined(WIN32)
+            close(fd);
+#endif
+            ec.assign(busy_error, std::system_category());
+            return res;
+        }
+        virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code& ec) override
+        {
+#if defined(WIN32)
+            if (CloseHandle(reinterpret_cast<HANDLE>(handle.system_handle)) == 0)
+            {
+                ec.assign(GetLastError(), std::system_category());
+            }
+#else
+            if (flock(handle.system_handle, LOCK_UN) != 0 || close(handle.system_handle) != 0)
+            {
+                ec.assign(errno, std::system_category());
+            }
+#endif
         }
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
