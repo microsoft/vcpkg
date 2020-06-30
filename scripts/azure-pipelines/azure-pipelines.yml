@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  windows-pool: 'PrWin-2020-06-04'
-  linux-pool: 'PrLin-2020-06-08'
+  windows-pool: 'PrWin-2020-06-30'
+  linux-pool: 'PrLin-2020-06-30'
 
 jobs:
   - template: windows/azure-pipelines.yml
