@@ -59,6 +59,17 @@ namespace fs
         perms m_permissions;
     };
 
+    struct SystemHandle
+    {
+        using type = intptr_t; // HANDLE
+        type system_handle = -1;
+
+        bool is_valid() const
+        {
+            return system_handle != -1;
+        }
+    };
+
 #else
 
     using stdfs::file_type;
@@ -69,6 +80,17 @@ namespace fs
         using stdfs::file_status::file_status;
         using stdfs::file_status::permissions;
         using stdfs::file_status::type;
+    };
+
+    struct SystemHandle
+    {
+        using type = int; // file descriptor
+        type system_handle = -1;
+
+        bool is_valid() const
+        {
+            return system_handle != -1;
+        }
     };
 
 #endif
@@ -170,6 +192,9 @@ namespace vcpkg::Files
         fs::path current_path(LineInfo li) const;
         virtual void current_path(const fs::path& path, std::error_code&) = 0;
         void current_path(const fs::path& path, LineInfo li);
+
+        virtual fs::SystemHandle try_take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;
+        virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code&) = 0;
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
     };

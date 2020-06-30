@@ -14,7 +14,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
-#include <vcpkg/logicexpression.h>
+#include <vcpkg/platform-expression.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkglib.h>
 
@@ -171,7 +171,7 @@ namespace vcpkg::Commands::CI
             }
 
             std::string traits_block;
-            if (test.abi_tag != "")
+            if (!test.abi_tag.empty())
             {
                 traits_block += Strings::format(R"(<trait name="abi_tag" value="%s" />)", test.abi_tag);
             }
@@ -226,26 +226,11 @@ namespace vcpkg::Commands::CI
                                       const InstallPlanAction* install_plan)
     {
         auto&& scfl = install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-        const std::string& supports_expression = scfl.source_control_file->core_paragraph->supports_expression;
-        if (supports_expression.empty())
-        {
-            return true; // default to 'supported'
-        }
+        const auto& supports_expression = scfl.source_control_file->core_paragraph->supports_expression;
+        PlatformExpression::Context context =
+            var_provider.get_tag_vars(install_plan->spec).value_or_exit(VCPKG_LINE_INFO);
 
-        ExpressionContext context = {var_provider.get_tag_vars(install_plan->spec).value_or_exit(VCPKG_LINE_INFO),
-                                     install_plan->spec.triplet().canonical_name()};
-        auto maybe_result = evaluate_expression(supports_expression, context);
-        if (auto b = maybe_result.get())
-            return *b;
-        else
-        {
-            System::print2(System::Color::error,
-                           "Error: while processing ",
-                           install_plan->spec.to_string(),
-                           "\n",
-                           maybe_result.error());
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
+        return supports_expression.evaluate(context);
     }
 
     static std::unique_ptr<UnknownCIPortsResults> find_unknown_ports_for_ci(
@@ -272,13 +257,13 @@ namespace vcpkg::Commands::CI
         };
 
         std::vector<PackageSpec> packages_with_qualified_deps;
-        auto has_qualifier = [](Dependency const& dep) { return !dep.qualifier.empty(); };
+        auto has_qualifier = [](Dependency const& dep) { return !dep.platform.is_empty(); };
         for (auto&& spec : specs)
         {
             auto&& scfl = provider.get_control_file(spec.package_spec.name()).value_or_exit(VCPKG_LINE_INFO);
-            if (Util::any_of(scfl.source_control_file->core_paragraph->depends, has_qualifier) ||
+            if (Util::any_of(scfl.source_control_file->core_paragraph->dependencies, has_qualifier) ||
                 Util::any_of(scfl.source_control_file->feature_paragraphs,
-                             [&](auto&& pgh) { return Util::any_of(pgh->depends, has_qualifier); }))
+                             [&](auto&& pgh) { return Util::any_of(pgh->dependencies, has_qualifier); }))
             {
                 packages_with_qualified_deps.push_back(spec.package_spec);
             }
@@ -385,7 +370,7 @@ namespace vcpkg::Commands::CI
         if (args.binary_caching_enabled())
         {
             binaryproviderStorage =
-                create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+                create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
         }
 
         IBinaryProvider& binaryprovider = binaryproviderStorage ? *binaryproviderStorage : null_binary_provider();
@@ -412,7 +397,7 @@ namespace vcpkg::Commands::CI
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 
