@@ -14,7 +14,7 @@ namespace vcpkg::Commands::List
     static constexpr StringLiteral OPTION_JSON = "--json";
 
     static void do_print_json(std::vector<const vcpkg::StatusParagraph*> installed_packages) {
-        Json::Object& obj = Json::Object();
+        Json::Object obj = Json::Object();
 
         for (const StatusParagraph* status_paragraph : installed_packages) {
             auto current_spec = status_paragraph->package.spec;
@@ -23,7 +23,7 @@ namespace vcpkg::Commands::List
                 library_obj.insert("package_name", Json::Value::string(current_spec.name()));
                 library_obj.insert("triplet", Json::Value::string(current_spec.triplet().to_string()));
                 library_obj.insert("version", Json::Value::string(status_paragraph->package.version));
-                Json::Array& arr = Json::Array();
+                Json::Array arr = Json::Array();
                 if(status_paragraph->package.is_feature()) {
                     arr.push_back(Json::Value::string(status_paragraph->package.feature));
                 }
