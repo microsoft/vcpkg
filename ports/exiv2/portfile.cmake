@@ -1,4 +1,9 @@
-include(vcpkg_common_functions)
+#https://github.com/Exiv2/exiv2/issues/1063
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
+if("xmp" IN_LIST FEATURES)
+    set(EXPAT_PATCH ${CMAKE_CURRENT_LIST_DIR}/expat.patch)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,19 +14,23 @@ vcpkg_from_github(
     PATCHES
         iconv.patch
         1059-Add-missing-library-link-on-Windows.patch # https://github.com/Exiv2/exiv2/pull/1059
+        ${EXPAT_PATCH}
 )
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND ("unicode" IN_LIST FEATURES))
-    set(enable_win_unicode TRUE)
-elseif()
-    set(enable_win_unicode FALSE)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    unicode EXIV2_ENABLE_WIN_UNICODE
+    xmp     EXIV2_ENABLE_XMP
+)
+
+if("unicode" IN_LIST FEATURES)
+    message(WARNING "Feature unicode only supports Windows platform.")
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DEXIV2_ENABLE_WIN_UNICODE:BOOL=${enable_win_unicode}
+        ${FEATURE_OPTIONS}
         -DEXIV2_BUILD_EXIV2_COMMAND:BOOL=FALSE
         -DEXIV2_BUILD_UNIT_TESTS:BOOL=FALSE
         -DEXIV2_BUILD_SAMPLES:BOOL=FALSE
@@ -32,7 +41,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/exiv2)
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    ${CURRENT_PACKAGES_DIR}/share/exiv2
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}
     @ONLY
 )
 
@@ -47,5 +56,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/exiv2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/exiv2/COPYING ${CURRENT_PACKAGES_DIR}/share/exiv2/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
