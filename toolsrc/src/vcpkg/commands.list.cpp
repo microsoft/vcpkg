@@ -4,11 +4,42 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/base/json.h>
 
 namespace vcpkg::Commands::List
 {
     static constexpr StringLiteral OPTION_FULLDESC =
         "--x-full-desc"; // TODO: This should find a better home, eventually
+
+    static constexpr StringLiteral OPTION_JSON = "--json";
+
+    static void do_print_json(std::vector<const vcpkg::StatusParagraph*> installed_packages) {
+        Json::Object& obj = Json::Object();
+
+        for (const StatusParagraph* status_paragraph : installed_packages) {
+            auto current_spec = status_paragraph->package.spec;
+            if(!obj.contains(current_spec.name())) {
+                Json::Object& library_obj = obj.insert(current_spec.name(), Json::Object());
+                library_obj.insert("package_name", Json::Value::string(current_spec.name()));
+                library_obj.insert("triplet", Json::Value::string(current_spec.triplet().to_string()));
+                library_obj.insert("version", Json::Value::string(status_paragraph->package.version));
+                Json::Array& arr = Json::Array();
+                if(status_paragraph->package.is_feature()) {
+                    arr.push_back(Json::Value::string(status_paragraph->package.feature));
+                }
+                library_obj.insert("feature", Json::Value::array(std::move(arr)));
+                library_obj.insert("desc", Json::Value::string(Strings::join("\n    ", status_paragraph->package.description)));
+            } else {
+                if(status_paragraph->package.is_feature()) {
+                    auto library_obj =  obj.get(current_spec.name());
+                    auto& feature_list = library_obj->object().get("feature")->array();
+                    feature_list.push_back(Json::Value::string(status_paragraph->package.feature));
+                }
+            }
+        }
+
+        System::printf("%s\n", Json::stringify(obj, Json::JsonStyle{}));
+    }
 
     static void do_print(const StatusParagraph& pgh, const bool full_desc)
     {
@@ -33,8 +64,9 @@ namespace vcpkg::Commands::List
         }
     }
 
-    static constexpr std::array<CommandSwitch, 1> LIST_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 2> LIST_SWITCHES = {{
         {OPTION_FULLDESC, "Do not truncate long text"},
+        {OPTION_JSON, "List libraries in JSON format"}
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -72,26 +104,40 @@ namespace vcpkg::Commands::List
                   });
 
         const auto enable_fulldesc = Util::Sets::contains(options.switches, OPTION_FULLDESC.to_string());
+        const auto enable_json = Util::Sets::contains(options.switches, OPTION_JSON.to_string());
 
         if (args.command_arguments.empty())
         {
-            for (const StatusParagraph* status_paragraph : installed_packages)
-            {
-                do_print(*status_paragraph, enable_fulldesc);
+            if(enable_json) {
+                do_print_json(installed_packages);
+            } else {
+                for (const StatusParagraph* status_paragraph : installed_packages)
+                {
+                    do_print(*status_paragraph, enable_fulldesc);
+                }
             }
         }
         else
         {
             // At this point there is 1 argument
-            for (const StatusParagraph* status_paragraph : installed_packages)
-            {
-                const std::string displayname = status_paragraph->package.displayname();
-                if (!Strings::case_insensitive_ascii_contains(displayname, args.command_arguments[0]))
-                {
-                    continue;
-                }
 
-                do_print(*status_paragraph, enable_fulldesc);
+            if(enable_json) {
+                auto& query = args.command_arguments[0];
+                auto pghs = Util::filter(installed_packages, [query](const StatusParagraph* status_paragraph) {
+                    return Strings::case_insensitive_ascii_contains(status_paragraph->package.displayname(), query);
+                });
+                do_print_json(pghs);
+            } else {
+                for (const StatusParagraph* status_paragraph : installed_packages)
+                {
+                    const std::string displayname = status_paragraph->package.displayname();
+                    if (!Strings::case_insensitive_ascii_contains(displayname, args.command_arguments[0]))
+                    {
+                        continue;
+                    }
+
+                    do_print(*status_paragraph, enable_fulldesc);
+                }
             }
         }
 
