@@ -589,13 +589,17 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
+        if (paths.manifest_mode_enabled())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, "vcpkg export does not support manifest mode, in order to allow for future design considerations. You may use export in classic mode by running vcpkg outside of a manifest-based project.");
+        }
         const StatusParagraphs status_db = database_load_check(paths);
         const auto opts = handle_export_command_arguments(args, default_triplet, status_db);
         for (auto&& spec : opts.specs)
             Input::check_triplet(spec.triplet(), paths);
 
         // Load ports from ports dirs
-        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
 
         // create the plan
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(opts.specs, status_db);

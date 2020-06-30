@@ -13,6 +13,8 @@
 
 toolsrc/out*
 toolsrc/CMakeSettings.json
+# fuzzing
+sync_dir*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
