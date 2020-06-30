@@ -24,7 +24,7 @@ if(MARL_BUILD_SHARED)
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/marl/export.h"
         "#ifdef MARL_DLL"
-        "if 1  // #ifdef MARL_DLL"
+        "#if 1  // #ifdef MARL_DLL"
     )
 endif()
 
