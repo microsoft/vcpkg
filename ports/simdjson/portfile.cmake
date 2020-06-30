@@ -11,7 +11,9 @@ string(COMPARE EQUAL "${VCPKG_TARGET_ARCHITECTURE}" "arm64" SIMDJSON_IMPLEMENTAT
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    # TODO:
+    # Uncomment this line once https://github.com/simdjson/simdjson/pull/1009 is processed.
+    #PREFER_NINJA
     OPTIONS
         -DSIMDJSON_BUILD_STATIC=${SIMDJSON_BUILD_STATIC}
         -DSIMDJSON_IMPLEMENTATION_ARM64=${SIMDJSON_IMPLEMENTATION_ARM64}
