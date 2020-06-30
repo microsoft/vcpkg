@@ -180,6 +180,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libx264")
 endif()
 
+if("x265" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libx265")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libx265")
+endif()
+
 if("zlib" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-zlib")
 else()

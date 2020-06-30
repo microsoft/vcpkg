@@ -86,6 +86,10 @@ Feature: x264
 Build-Depends: x264, ffmpeg[gpl]
 Description: H.264 encoding via x264 support in ffmpeg
 
+Feature: x265
+Build-Depends: x265, ffmpeg[gpl]
+Description: HEVC encoding via x265 support in ffmpeg
+
 Feature: zlib
 Build-Depends: zlib
 Description: zlib support in ffmpeg
