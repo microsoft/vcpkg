@@ -64,7 +64,7 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
       ArtifactName: '${{ parameters.triplet }} port build failure logs'
     condition: failed()
-  -task: PowerShell@2
+  - task: PowerShell@2
     displayName: "Generating all packages files"
     condition: and(succeeded(), eq(variables['Build.Reason'], "PullRequest"))
     inputs:
