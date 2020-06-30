@@ -207,8 +207,7 @@ namespace
                 }
             }
         }
-        RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action) override
+        RestoreResult precheck(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& fs = paths.get_filesystem();
@@ -317,6 +316,9 @@ namespace
             {
                 // First check using all sources
                 System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+                cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                 cmdline.path_arg(nuget_exe)
                     .string_arg("install")
                     .path_arg(packages_config)
@@ -340,6 +342,9 @@ namespace
             {
                 // Then check using each config
                 System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+                cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                 cmdline.path_arg(nuget_exe)
                     .string_arg("install")
                     .path_arg(packages_config)
@@ -424,6 +429,9 @@ namespace
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
             System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+            cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
             cmdline.path_arg(nuget_exe)
                 .string_arg("pack")
                 .path_arg(nuspec_path)
@@ -450,6 +458,9 @@ namespace
                 for (auto&& write_src : m_write_sources)
                 {
                     System::CmdLineBuilder cmd;
+#ifndef _WIN32
+                    cmd.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
@@ -480,6 +491,9 @@ namespace
                 for (auto&& write_cfg : m_write_configs)
                 {
                     System::CmdLineBuilder cmd;
+#ifndef _WIN32
+                    cmd.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
@@ -571,8 +585,7 @@ namespace
                 provider->push_failure(paths, abi_tag, spec);
             }
         }
-        RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action) override
+        RestoreResult precheck(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             for (auto&& provider : m_providers)
             {
@@ -599,8 +612,8 @@ namespace
         {
             return RestoreResult::missing;
         }
-        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override { }
-        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override { }
+        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override {}
+        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
         RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
