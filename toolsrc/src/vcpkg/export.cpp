@@ -240,7 +240,6 @@ namespace vcpkg::Export
     void export_integration_files(const fs::path& raw_exported_dir_path, const VcpkgPaths& paths)
     {
         const std::vector<fs::path> integration_files_relative_to_root = {
-            {".vcpkg-root"},
             {fs::path{"scripts"} / "buildsystems" / "msbuild" / "applocal.ps1"},
             {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
             {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.props"},
@@ -249,17 +248,15 @@ namespace vcpkg::Export
             {fs::path{"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
         };
 
+        Files::Filesystem& fs = paths.get_filesystem();
         for (const fs::path& file : integration_files_relative_to_root)
         {
             const fs::path source = paths.root / file;
             fs::path destination = raw_exported_dir_path / file;
-            Files::Filesystem& fs = paths.get_filesystem();
-            std::error_code ec;
-            fs.create_directories(destination.parent_path(), ec);
-            Checks::check_exit(VCPKG_LINE_INFO, !ec);
-            fs.copy_file(source, destination, fs::copy_options::overwrite_existing, ec);
-            Checks::check_exit(VCPKG_LINE_INFO, !ec);
+            fs.create_directories(destination.parent_path(), ignore_errors);
+            fs.copy_file(source, destination, fs::copy_options::overwrite_existing, VCPKG_LINE_INFO);
         }
+        fs.write_contents(raw_exported_dir_path / fs::u8path(".vcpkg-root"), "", VCPKG_LINE_INFO);
     }
 
     struct ExportArguments
@@ -591,7 +588,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     {
         if (paths.manifest_mode_enabled())
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO, "vcpkg export does not support manifest mode, in order to allow for future design considerations. You may use export in classic mode by running vcpkg outside of a manifest-based project.");
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO,
+                "vcpkg export does not support manifest mode, in order to allow for future design considerations. You "
+                "may use export in classic mode by running vcpkg outside of a manifest-based project.");
         }
         const StatusParagraphs status_db = database_load_check(paths);
         const auto opts = handle_export_command_arguments(args, default_triplet, status_db);

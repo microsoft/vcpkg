@@ -108,14 +108,17 @@ namespace vcpkg
         const std::string tool_dir_name = Strings::format("%s-%s-%s", tool, version_as_string, OS_STRING);
         const fs::path tool_dir_path = paths.tools / tool_dir_name;
         const fs::path exe_path = tool_dir_path / exe_relative_path;
+        fs::path download_path;
+        if (auto a = archive_name.get())
+        {
+            download_path = paths.downloads / fs::u8path(a->to_string());
+        }
+        else
+        {
+            download_path = paths.downloads / fs::u8path(Strings::concat(sha512.substr(0, 8), '-', exe_relative_path));
+        }
 
-        return ToolData{*version.get(),
-                        exe_path,
-                        url,
-                        paths.downloads / archive_name.value_or(exe_relative_path).to_string(),
-                        archive_name.has_value(),
-                        tool_dir_path,
-                        sha512};
+        return ToolData{*version.get(), exe_path, url, download_path, archive_name.has_value(), tool_dir_path, sha512};
 #endif
     }
 
