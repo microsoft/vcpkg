@@ -52,7 +52,7 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/failureLogs'
       ArtifactName: 'x64-linux port build failure logs'
     condition: failed()
-  - task: BuildFileList
+  - task: BuildFileList@1
     displayName: 'Build a file list for all packages'
     condition: and(succeeded(), eq(variables['Build.Reason'], "PullRequest"))
   - bash: |
