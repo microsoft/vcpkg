@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 6f85d17ef..8de0eb299 100644
 --- a/CMakeLists.txt	
 +++ b/CMakeLists.txt
-@@ -814,20 +814,28 @@ endif()
+@@ -814,20 +814,31 @@ endif()
  # Only do this on Windows for Cygwin - the files don't make much sense outside
  # of a UNIX look-alike.
  if(NOT WIN32 OR CYGWIN OR MINGW)
@@ -10,7 +10,11 @@ index 6f85d17ef..8de0eb299 100644
 -  set(exec_prefix ${CMAKE_INSTALL_PREFIX})
 -  set(libdir      ${CMAKE_INSTALL_FULL_LIBDIR})
 -  set(includedir  ${CMAKE_INSTALL_FULL_INCLUDEDIR})
-   set(LIBS        "-lz -lm")
+-  set(LIBS        "-lz -lm")
++  set(LIBS        "-lz")
++  if(NOT APPLE)
++    string(APPEND LIBS " -lm")
++  endif()
 -  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpng.pc.in
 -    ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc @ONLY)
 -  create_symlink(libpng.pc FILE ${PNGLIB_NAME}.pc)
