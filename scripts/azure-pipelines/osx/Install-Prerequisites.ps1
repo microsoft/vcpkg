@@ -1,6 +1,7 @@
 #!pwsh
 #Requires -Version 6.0
 
+<##>
 [CmdletBinding()]
 Param(
     [Parameter()]
