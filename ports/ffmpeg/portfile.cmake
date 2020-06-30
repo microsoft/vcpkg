@@ -142,9 +142,9 @@ else()
 endif()
 
 if("avisynthplus" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-avisynth --enable-gpl")
+    set(OPTIONS "${OPTIONS} --enable-avisynth")
 else()
-    set(OPTIONS "${OPTIONS} --disable-avisynth --disable-gpl")
+    set(OPTIONS "${OPTIONS} --disable-avisynth")
 endif()
 
 set(OPTIONS_CROSS "")
