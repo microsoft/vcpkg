@@ -54,7 +54,7 @@ endif()
 
 if(WIN32 AND NOT MINGW)
     target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype expat::libexpat)
-else
+else()
     target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype expat::expat)
 endif()
 
