@@ -305,9 +305,9 @@ namespace vcpkg::Install
     using Build::ExtendedBuildResult;
 
     static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                    InstallPlanAction& action,
-                                                    StatusParagraphs& status_db,
-                                                    IBinaryProvider& binaries_provider)
+                                                           InstallPlanAction& action,
+                                                           StatusParagraphs& status_db,
+                                                           IBinaryProvider& binaries_provider)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
@@ -469,6 +469,8 @@ namespace vcpkg::Install
         }
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
+
+        binaryprovider.prefetch(paths, action_plan);
 
         for (auto&& action : action_plan.install_actions)
         {
@@ -685,7 +687,6 @@ namespace vcpkg::Install
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
-            (args.binary_caching_enabled() && !only_downloads) ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -766,7 +767,12 @@ namespace vcpkg::Install
         }
 
         const InstallSummary summary =
-            perform(action_plan, keep_going, paths, status_db, *binaryprovider, var_provider);
+            perform(action_plan,
+                    keep_going,
+                    paths,
+                    status_db,
+                    args.binary_caching_enabled() && !only_downloads ? *binaryprovider : null_binary_provider(),
+                    var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 
