@@ -47,7 +47,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 如果vcpkg目录中没有您需要的库，
 您可以 [在GitHub上打开问题] [getting-vcpkg：open-issue]
 vcpkg团队和社区可以看到它的地方，
-并可能将端口添加到vcpkg。
+并可能将这个库添加到vcpkg。
 
 安装并运行vcpkg后，
 您可能希望将 [TAB补全](#tab-completionauto-completion) 添加到您的Shell中。
