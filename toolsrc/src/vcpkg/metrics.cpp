@@ -153,6 +153,8 @@ namespace vcpkg::Metrics
         Json::Array buildtime_names;
         Json::Array buildtime_times;
 
+        Json::Object feature_flags;
+
         void track_property(const std::string& name, const std::string& value)
         {
             properties.insert_or_replace(name, Json::Value::string(value));
@@ -167,6 +169,10 @@ namespace vcpkg::Metrics
         {
             buildtime_names.push_back(Json::Value::string(name));
             buildtime_times.push_back(Json::Value::number(value));
+        }
+        void track_feature(const std::string& name, bool value)
+        {
+            feature_flags.insert(name, Json::Value::boolean(value));
         }
 
         std::string format_event_data_template() const
@@ -226,6 +232,7 @@ namespace vcpkg::Metrics
                 base_data.insert("name", Json::Value::string("commandline_test7"));
                 base_data.insert("properties", Json::Value::object(std::move(props_plus_buildtimes)));
                 base_data.insert("measurements", Json::Value::object(measurements.clone()));
+                base_data.insert("feature-flags", Json::Value::object(feature_flags.clone()));
             }
 
             return Json::stringify(arr, vcpkg::Json::JsonStyle());
@@ -354,6 +361,15 @@ namespace vcpkg::Metrics
             return;
         }
         g_metricmessage.track_property(name, value);
+    }
+
+    void Metrics::track_feature(const std::string& name, bool value)
+    {
+        if (!metrics_enabled())
+        {
+            return;
+        }
+        g_metricmessage.track_feature(name, value);
     }
 
     void Metrics::upload(const std::string& payload)

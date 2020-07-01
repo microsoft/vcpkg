@@ -251,7 +251,7 @@ namespace vcpkg::Commands::DependInfo
             Input::check_triplet(spec.package_spec.triplet(), paths);
         }
 
-        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 

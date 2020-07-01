@@ -51,9 +51,11 @@ if(MSVC)
     if(VCPKG_DEVELOPMENT_WARNINGS)
         string(REGEX REPLACE "[-/]W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-        add_compile_options(-W4 -analyze)
+        add_compile_options(-W4)
         if(VCPKG_COMPILER STREQUAL "clang")
             add_compile_options(-Wmissing-prototypes -Wno-missing-field-initializers)
+        else()
+            add_compile_options(-analyze)
         endif()
     endif()
 
