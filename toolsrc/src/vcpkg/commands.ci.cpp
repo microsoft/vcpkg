@@ -14,7 +14,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
-#include <vcpkg/logicexpression.h>
+#include <vcpkg/platform-expression.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkglib.h>
 
@@ -34,7 +34,6 @@ namespace vcpkg::Commands::CI
 
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
     static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
-    static constexpr StringLiteral OPTION_PURGE_TOMBSTONES = "--purge-tombstones";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
 
@@ -43,10 +42,9 @@ namespace vcpkg::Commands::CI
         {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
     }};
 
-    static constexpr std::array<CommandSwitch, 3> CI_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 2> CI_SWITCHES = {{
         {OPTION_DRY_RUN, "Print out plan without execution"},
         {OPTION_RANDOMIZE, "Randomize the install order"},
-        {OPTION_PURGE_TOMBSTONES, "Purge failure tombstones and retry building the ports"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -173,7 +171,7 @@ namespace vcpkg::Commands::CI
             }
 
             std::string traits_block;
-            if (test.abi_tag != "")
+            if (!test.abi_tag.empty())
             {
                 traits_block += Strings::format(R"(<trait name="abi_tag" value="%s" />)", test.abi_tag);
             }
@@ -228,26 +226,11 @@ namespace vcpkg::Commands::CI
                                       const InstallPlanAction* install_plan)
     {
         auto&& scfl = install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-        const std::string& supports_expression = scfl.source_control_file->core_paragraph->supports_expression;
-        if (supports_expression.empty())
-        {
-            return true; // default to 'supported'
-        }
+        const auto& supports_expression = scfl.source_control_file->core_paragraph->supports_expression;
+        PlatformExpression::Context context =
+            var_provider.get_tag_vars(install_plan->spec).value_or_exit(VCPKG_LINE_INFO);
 
-        ExpressionContext context = {var_provider.get_tag_vars(install_plan->spec).value_or_exit(VCPKG_LINE_INFO),
-                                     install_plan->spec.triplet().canonical_name()};
-        auto maybe_result = evaluate_expression(supports_expression, context);
-        if (auto b = maybe_result.get())
-            return *b;
-        else
-        {
-            System::print2(System::Color::error,
-                           "Error: while processing ",
-                           install_plan->spec.to_string(),
-                           "\n",
-                           maybe_result.error());
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
+        return supports_expression.evaluate(context);
     }
 
     static std::unique_ptr<UnknownCIPortsResults> find_unknown_ports_for_ci(
@@ -256,7 +239,6 @@ namespace vcpkg::Commands::CI
         const PortFileProvider::PortFileProvider& provider,
         const CMakeVars::CMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
-        const bool purge_tombstones,
         IBinaryProvider& binaryprovider)
     {
         auto ret = std::make_unique<UnknownCIPortsResults>();
@@ -271,18 +253,17 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
         };
 
         std::vector<PackageSpec> packages_with_qualified_deps;
-        auto has_qualifier = [](Dependency const& dep) { return !dep.qualifier.empty(); };
+        auto has_qualifier = [](Dependency const& dep) { return !dep.platform.is_empty(); };
         for (auto&& spec : specs)
         {
             auto&& scfl = provider.get_control_file(spec.package_spec.name()).value_or_exit(VCPKG_LINE_INFO);
-            if (Util::any_of(scfl.source_control_file->core_paragraph->depends, has_qualifier) ||
+            if (Util::any_of(scfl.source_control_file->core_paragraph->dependencies, has_qualifier) ||
                 Util::any_of(scfl.source_control_file->feature_paragraphs,
-                             [&](auto&& pgh) { return Util::any_of(pgh->depends, has_qualifier); }))
+                             [&](auto&& pgh) { return Util::any_of(pgh->dependencies, has_qualifier); }))
             {
                 packages_with_qualified_deps.push_back(spec.package_spec);
             }
@@ -294,7 +275,7 @@ namespace vcpkg::Commands::CI
         std::vector<FullPackageSpec> install_specs;
         for (auto&& install_action : action_plan.install_actions)
         {
-            install_specs.emplace_back(FullPackageSpec{install_action.spec, install_action.feature_list});
+            install_specs.emplace_back(install_action.spec, install_action.feature_list);
         }
 
         var_provider.load_tag_vars(install_specs, provider);
@@ -307,93 +288,92 @@ namespace vcpkg::Commands::CI
 
         Build::compute_all_abis(paths, action_plan, var_provider, {});
 
-        std::string stdout_buffer;
-        for (auto&& action : action_plan.install_actions)
         {
-            auto p = &action;
-            ret->abi_map.emplace(action.spec, action.package_abi.value_or_exit(VCPKG_LINE_INFO));
-            ret->features.emplace(action.spec, action.feature_list);
-            if (auto scfl = p->source_control_file_location.get())
+            vcpkg::System::BufferedPrint stdout_print;
+            for (auto&& action : action_plan.install_actions)
             {
-                auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
-                emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
+                auto p = &action;
+                ret->abi_map.emplace(action.spec, action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi);
+                ret->features.emplace(action.spec, action.feature_list);
+                if (auto scfl = p->source_control_file_location.get())
+                {
+                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
+                    emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
-                p->build_options = build_options;
-            }
+                    p->build_options = build_options;
+                }
 
-            auto precheck_result = binaryprovider.precheck(paths, action, purge_tombstones);
-            bool b_will_build = false;
+                auto precheck_result = binaryprovider.precheck(paths, action);
+                bool b_will_build = false;
 
-            std::string state;
+                std::string state;
 
-            if (Util::Sets::contains(exclusions, p->spec.name()))
-            {
-                state = "skip";
-                ret->known.emplace(p->spec, BuildResult::EXCLUDED);
-                will_fail.emplace(p->spec);
-            }
-            else if (!supported_for_triplet(var_provider, p))
-            {
-                // This treats unsupported ports as if they are excluded
-                // which means the ports dependent on it will be cascaded due to missing dependencies
-                // Should this be changed so instead it is a failure to depend on a unsupported port?
-                state = "n/a";
-                ret->known.emplace(p->spec, BuildResult::EXCLUDED);
-                will_fail.emplace(p->spec);
-            }
-            else if (Util::any_of(p->package_dependencies,
-                                  [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
-            {
-                state = "cascade";
-                ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
-                will_fail.emplace(p->spec);
-            }
-            else if (precheck_result == RestoreResult::success)
-            {
-                state = "pass";
-                ret->known.emplace(p->spec, BuildResult::SUCCEEDED);
-            }
-            else if (precheck_result == RestoreResult::build_failed)
-            {
-                state = "fail";
-                ret->known.emplace(p->spec, BuildResult::BUILD_FAILED);
-                will_fail.emplace(p->spec);
-            }
-            else
-            {
-                ret->unknown.push_back(FullPackageSpec{p->spec, {p->feature_list.begin(), p->feature_list.end()}});
-                b_will_build = true;
-            }
+                if (Util::Sets::contains(exclusions, p->spec.name()))
+                {
+                    state = "skip";
+                    ret->known.emplace(p->spec, BuildResult::EXCLUDED);
+                    will_fail.emplace(p->spec);
+                }
+                else if (!supported_for_triplet(var_provider, p))
+                {
+                    // This treats unsupported ports as if they are excluded
+                    // which means the ports dependent on it will be cascaded due to missing dependencies
+                    // Should this be changed so instead it is a failure to depend on a unsupported port?
+                    state = "n/a";
+                    ret->known.emplace(p->spec, BuildResult::EXCLUDED);
+                    will_fail.emplace(p->spec);
+                }
+                else if (Util::any_of(p->package_dependencies,
+                                      [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
+                {
+                    state = "cascade";
+                    ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
+                    will_fail.emplace(p->spec);
+                }
+                else if (precheck_result == RestoreResult::success)
+                {
+                    state = "pass";
+                    ret->known.emplace(p->spec, BuildResult::SUCCEEDED);
+                }
+                else if (precheck_result == RestoreResult::build_failed)
+                {
+                    state = "fail";
+                    ret->known.emplace(p->spec, BuildResult::BUILD_FAILED);
+                    will_fail.emplace(p->spec);
+                }
+                else
+                {
+                    ret->unknown.emplace_back(p->spec, p->feature_list);
+                    b_will_build = true;
+                }
 
-            Strings::append(stdout_buffer,
-                            Strings::format("%40s: %1s %8s: %s\n",
-                                            p->spec,
-                                            (b_will_build ? "*" : " "),
-                                            state,
-                                            action.package_abi.value_or_exit(VCPKG_LINE_INFO)));
-            if (stdout_buffer.size() > 2048)
-            {
-                System::print2(stdout_buffer);
-                stdout_buffer.clear();
+                stdout_print.append(Strings::format("%40s: %1s %8s: %s\n",
+                                                    p->spec,
+                                                    (b_will_build ? "*" : " "),
+                                                    state,
+                                                    action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi));
             }
-        }
-        System::print2(stdout_buffer);
-        stdout_buffer.clear();
+        } // flush stdout_print
 
         System::printf("Time to determine pass/fail: %s\n", timer.elapsed());
-
         return ret;
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
-        if (!GlobalState::g_binary_caching)
+        if (!args.binary_caching_enabled())
         {
             System::print2(System::Color::warning, "Warning: Running ci without binary caching!\n");
         }
 
-        auto binaryprovider =
-            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+        std::unique_ptr<IBinaryProvider> binaryproviderStorage;
+        if (args.binary_caching_enabled())
+        {
+            binaryproviderStorage =
+                create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+        }
+
+        IBinaryProvider& binaryprovider = binaryproviderStorage ? *binaryproviderStorage : null_binary_provider();
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -406,7 +386,6 @@ namespace vcpkg::Commands::CI
         }
 
         const auto is_dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
-        const auto purge_tombstones = Util::Sets::contains(options.switches, OPTION_PURGE_TOMBSTONES);
 
         std::vector<Triplet> triplets = Util::fmap(
             args.command_arguments, [](std::string s) { return Triplet::from_canonical_name(std::move(s)); });
@@ -418,7 +397,7 @@ namespace vcpkg::Commands::CI
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 
@@ -430,7 +409,6 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
             Build::PurgeDecompressFailure::YES,
         };
@@ -465,8 +443,7 @@ namespace vcpkg::Commands::CI
                                                          provider,
                                                          var_provider,
                                                          all_default_full_specs,
-                                                         purge_tombstones,
-                                                         *binaryprovider);
+                                                         binaryprovider);
             PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
 
             Dependencies::CreateInstallPlanOptions serialize_options;
@@ -511,7 +488,7 @@ namespace vcpkg::Commands::CI
             {
                 auto collection_timer = Chrono::ElapsedTimer::create_started();
                 auto summary = Install::perform(
-                    action_plan, Install::KeepGoing::YES, paths, status_db, *binaryprovider, var_provider);
+                    action_plan, Install::KeepGoing::YES, paths, status_db, binaryprovider, var_provider);
                 auto collection_time_elapsed = collection_timer.elapsed();
 
                 // Adding results for ports that were built or pulled from an archive
@@ -553,10 +530,12 @@ namespace vcpkg::Commands::CI
             result.summary.print();
         }
 
-        auto it_xunit = options.settings.find(OPTION_XUNIT);
-        if (it_xunit != options.settings.end())
+        auto& settings = options.settings;
+        auto it_xunit = settings.find(OPTION_XUNIT);
+        if (it_xunit != settings.end())
         {
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
+            paths.get_filesystem().write_contents(
+                fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
