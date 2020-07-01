@@ -16,7 +16,7 @@ set(IRR_TOOL_DIR "tools")
 # -------------------------------------------------------------------------------------------------
 set(DXSDK "")
 if(DEFINED ENV{DXSDK_DIR})
-    set(DXSDK "ENV{DXSDK_DIR}")
+    set(DXSDK "$ENV{DXSDK_DIR}")
 endif()
 
 set(IRR_UNICODE_PATH 0 CACHE BOOL "Whether to enable unicode path support on windows")

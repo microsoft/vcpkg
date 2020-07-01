@@ -42,30 +42,37 @@ namespace vcpkg::Install
 
     const fs::path& InstallDir::listfile() const { return this->m_listfile; }
 
+    void install_package_and_write_listfile(const VcpkgPaths& paths,
+                                            const PackageSpec& spec,
+                                            const InstallDir& destination_dir)
+    {
+        auto& fs = paths.get_filesystem();
+        auto source_dir = paths.package_dir(spec);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.u8string());
+        auto files = fs.get_files_recursive(source_dir);
+        install_files_and_write_listfile(fs, source_dir, files, destination_dir);
+    }
     void install_files_and_write_listfile(Files::Filesystem& fs,
                                           const fs::path& source_dir,
+                                          const std::vector<fs::path>& files,
                                           const InstallDir& destination_dir)
     {
         std::vector<std::string> output;
         std::error_code ec;
 
-        const size_t prefix_length = source_dir.native().size();
+        const size_t prefix_length = source_dir.generic_u8string().size();
         const fs::path& destination = destination_dir.destination();
         const std::string& destination_subdirectory = destination_dir.destination_subdirectory();
         const fs::path& listfile = destination_dir.listfile();
 
-        Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.generic_string());
         fs.create_directories(destination, ec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.u8string());
         const fs::path listfile_parent = listfile.parent_path();
         fs.create_directories(listfile_parent, ec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.u8string());
 
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
-        auto files = fs.get_files_recursive(source_dir);
         for (auto&& file : files)
         {
             const auto status = fs.symlink_status(file, ec);
@@ -75,11 +82,12 @@ namespace vcpkg::Install
                 continue;
             }
 
-            const std::string filename = file.filename().u8string();
+            const std::string filename = file.filename().generic_u8string();
             if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
+                                                Strings::case_insensitive_ascii_equals(filename, "vcpkg.json") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
             {
-                // Do not copy the control file
+                // Do not copy the control file or manifest file
                 continue;
             }
 
@@ -278,7 +286,7 @@ namespace vcpkg::Install
         const InstallDir install_dir = InstallDir::from_destination_root(
             paths.installed, triplet.to_string(), paths.listfile_path(bcf.core_paragraph));
 
-        install_files_and_write_listfile(paths.get_filesystem(), package_dir, install_dir);
+        install_package_and_write_listfile(paths, bcf.core_paragraph.spec, install_dir);
 
         source_paragraph.state = InstallState::INSTALLED;
         write_update(paths, source_paragraph);
@@ -298,9 +306,9 @@ namespace vcpkg::Install
     using Build::ExtendedBuildResult;
 
     static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                    InstallPlanAction& action,
-                                                    StatusParagraphs& status_db,
-                                                    IBinaryProvider& binaries_provider)
+                                                           InstallPlanAction& action,
+                                                           StatusParagraphs& status_db,
+                                                           IBinaryProvider& binaries_provider)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
@@ -463,6 +471,8 @@ namespace vcpkg::Install
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
+        binaryprovider.prefetch(paths, action_plan);
+
         for (auto&& action : action_plan.install_actions)
         {
             with_tracking(action.spec, [&]() {
@@ -519,6 +529,14 @@ namespace vcpkg::Install
         SIZE_MAX,
         {INSTALL_SWITCHES, INSTALL_SETTINGS},
         &get_all_port_names,
+    };
+
+    const CommandStructure MANIFEST_COMMAND_STRUCTURE = {
+        create_example_string("install --triplet x64-windows"),
+        0,
+        0,
+        {INSTALL_SWITCHES, INSTALL_SETTINGS},
+        nullptr,
     };
 
     static void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
@@ -636,20 +654,10 @@ namespace vcpkg::Install
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         // input sanitization
-        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
+        const ParsedArguments options = args.parse_arguments(paths.manifest_mode_enabled() ? MANIFEST_COMMAND_STRUCTURE : COMMAND_STRUCTURE);
 
         auto binaryprovider =
-            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
-
-        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_full_package_spec(
-                std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-        });
-
-        for (auto&& spec : specs)
-        {
-            Input::check_triplet(spec.package_spec.triplet(), paths);
-        }
+            create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
@@ -663,10 +671,6 @@ namespace vcpkg::Install
 
         auto& fs = paths.get_filesystem();
 
-        // create the plan
-        System::print2("Computing installation plan...\n");
-        StatusParagraphs status_db = database_load_check(paths);
-
         Build::DownloadTool download_tool = Build::DownloadTool::BUILT_IN;
         if (use_aria2) download_tool = Build::DownloadTool::ARIA2;
 
@@ -678,14 +682,56 @@ namespace vcpkg::Install
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
-            (GlobalState::g_binary_caching && !only_downloads) ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
-        //// Load ports from ports dirs
-        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
+
+        if (paths.manifest_mode_enabled())
+        {
+            std::error_code ec;
+            const auto path_to_manifest = paths.manifest_root_dir / "vcpkg.json";
+            auto res = Paragraphs::try_load_manifest(paths.get_filesystem(), "user manifest", path_to_manifest, ec);
+
+            if (ec)
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to load manifest file (%s): %s\n",
+                    path_to_manifest.u8string(), ec.message());
+            }
+
+            std::vector<FullPackageSpec> specs;
+            if (auto val = res.get())
+            {
+                for (auto& dep : (*val)->core_paragraph->dependencies)
+                {
+                    specs.push_back(Input::check_and_get_full_package_spec(
+                        std::move(dep.name), default_triplet, COMMAND_STRUCTURE.example_text));
+                }
+            }
+            else
+            {
+                print_error_message(res.error());
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            Commands::SetInstalled::perform_and_exit_ex(args, paths, provider, *binaryprovider, var_provider, specs, install_plan_options, dry_run ? Commands::DryRun::Yes : Commands::DryRun::No);
+        }
+
+        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+            return Input::check_and_get_full_package_spec(
+                std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+        });
+
+        for (auto&& spec : specs)
+        {
+            Input::check_triplet(spec.package_spec.triplet(), paths);
+        }
+
+        // create the plan
+        System::print2("Computing installation plan...\n");
+        StatusParagraphs status_db = database_load_check(paths);
 
         // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db);
@@ -759,7 +805,12 @@ namespace vcpkg::Install
         }
 
         const InstallSummary summary =
-            perform(action_plan, keep_going, paths, status_db, *binaryprovider, var_provider);
+            perform(action_plan,
+                    keep_going,
+                    paths,
+                    status_db,
+                    args.binary_caching_enabled() && !only_downloads ? *binaryprovider : null_binary_provider(),
+                    var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 

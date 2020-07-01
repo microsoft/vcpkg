@@ -30,7 +30,7 @@ namespace vcpkg
     {
         struct CtrlCStateMachine
         {
-            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) { }
+            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) {}
 
             void transition_to_spawn_process() noexcept
             {
@@ -167,7 +167,7 @@ namespace vcpkg
     }
 
     System::CMakeVariable::CMakeVariable(const StringView varname, const char* varvalue)
-        : s(Strings::format(R"("-D%s=%s")", varname, varvalue))
+        : s(Strings::format("-D%s=%s", varname, varvalue))
     {
     }
     System::CMakeVariable::CMakeVariable(const StringView varname, const std::string& varvalue)
@@ -179,20 +179,74 @@ namespace vcpkg
     {
     }
 
-    std::string System::make_cmake_cmd(const fs::path& cmake_exe,
-                                       const fs::path& cmake_script,
-                                       const std::vector<CMakeVariable>& pass_variables)
+    std::string System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
+                                             const fs::path& cmake_script,
+                                             const std::vector<CMakeVariable>& pass_variables)
     {
-        const std::string cmd_cmake_pass_variables = Strings::join(" ", pass_variables, [](auto&& v) { return v.s; });
-        return Strings::format(
-            R"("%s" %s -P "%s")", cmake_exe.u8string(), cmd_cmake_pass_variables, cmake_script.generic_u8string());
+        System::CmdLineBuilder cmd;
+        cmd.path_arg(cmake_tool_path);
+        for (auto&& var : pass_variables)
+        {
+            cmd.string_arg(var.s);
+        }
+        cmd.string_arg("-P").path_arg(cmake_script);
+        return cmd.extract();
+    }
+
+    System::CmdLineBuilder& System::CmdLineBuilder::string_arg(StringView s)
+    {
+        if (!buf.empty()) buf.push_back(' ');
+        if (Strings::find_first_of(s, " \t\n\r\"\\,;&`^|'") != s.end())
+        {
+            // TODO: improve this to properly handle all escaping
+#if _WIN32
+            // On Windows, `\`s before a double-quote must be doubled. Inner double-quotes must be escaped.
+            buf.push_back('"');
+            size_t n_slashes = 0;
+            for (auto ch : s)
+            {
+                if (ch == '\\')
+                {
+                    ++n_slashes;
+                }
+                else if (ch == '"')
+                {
+                    buf.append(n_slashes + 1, '\\');
+                    n_slashes = 0;
+                }
+                else
+                {
+                    n_slashes = 0;
+                }
+                buf.push_back(ch);
+            }
+            buf.append(n_slashes, '\\');
+            buf.push_back('"');
+#else
+            // On non-Windows, `\` is the escape character and always requires doubling. Inner double-quotes must be
+            // escaped.
+            buf.push_back('"');
+            for (auto ch : s)
+            {
+                if (ch == '\\' || ch == '"') buf.push_back('\\');
+                buf.push_back(ch);
+            }
+            buf.push_back('"');
+#endif
+        }
+        else
+        {
+            Strings::append(buf, s);
+        }
+        return *this;
     }
 
 #if defined(_WIN32)
     Environment System::get_modified_clean_environment(const std::unordered_map<std::string, std::string>& extra_env,
                                                        const std::string& prepend_to_path)
     {
-        static const std::string system_root_env = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
+        static const std::string system_root_env =
+            get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string system32_env = system_root_env + R"(\system32)";
         std::string new_path = Strings::format(R"(Path=%s%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)",
                                                prepend_to_path,
@@ -328,7 +382,7 @@ namespace vcpkg
 #if defined(_WIN32)
     struct ProcessInfo
     {
-        constexpr ProcessInfo() noexcept : proc_info{} { }
+        constexpr ProcessInfo() noexcept : proc_info{} {}
         ProcessInfo(ProcessInfo&& other) noexcept : proc_info(other.proc_info)
         {
             other.proc_info.hProcess = nullptr;
@@ -385,8 +439,8 @@ namespace vcpkg
         // Flush stdout before launching external process
         fflush(nullptr);
 
-VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'process_info.proc_info.hProcess'
-                            // /analyze can't tell that we transferred ownership here
+        VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'process_info.proc_info.hProcess'
+                                            // /analyze can't tell that we transferred ownership here
         bool succeeded =
             TRUE == CreateProcessW(nullptr,
                                    Strings::to_utf16(cmd_line).data(),
@@ -670,6 +724,6 @@ VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'proce
         SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ctrl_handler), TRUE);
     }
 #else
-    void System::register_console_ctrl_handler() { }
+    void System::register_console_ctrl_handler() {}
 #endif
 }
