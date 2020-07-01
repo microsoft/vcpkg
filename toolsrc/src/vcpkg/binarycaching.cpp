@@ -1048,7 +1048,7 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     auto& version = scf.core_paragraph->version;
     std::string description =
         Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
-                        scf.core_paragraph->description,
+                        Strings::join("\n    ", scf.core_paragraph->description),
                         "\n\nVersion: ",
                         version,
                         "\nTriplet/Compiler hash: ",
