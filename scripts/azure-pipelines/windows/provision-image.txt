@@ -118,6 +118,7 @@ $WindowsSDKUrl = 'https://download.microsoft.com/download/1/c/3/1c3d5161-d9e9-4e
 $WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
 
 $MpiUrl = 'https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe'
+$LlvmUrl = 'https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe'
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
 $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_advisor_10.1 memcheck_10.1 ' + `
@@ -154,6 +155,7 @@ Function PrintMsiExitCodeMessage {
   }
   else {
     Write-Error "Installation failed! Exited with $ExitCode."
+    throw
   }
 }
 
@@ -211,6 +213,7 @@ Function InstallVisualStudio {
   }
   catch {
     Write-Error "Failed to install Visual Studio! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -244,6 +247,7 @@ Function InstallMSI {
   }
   catch {
     Write-Error "Failed to install $Name! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -280,6 +284,7 @@ Function InstallZip {
   }
   catch {
     Write-Error "Failed to install $Name! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -311,10 +316,12 @@ Function InstallWindowsSDK {
     }
     else {
       Write-Error "Installation failed! Exited with $exitCode."
+      throw
     }
   }
   catch {
     Write-Error "Failed to install Windows SDK! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -346,10 +353,41 @@ Function InstallWindowsWDK {
     }
     else {
       Write-Error "Installation failed! Exited with $exitCode."
+      throw
     }
   }
   catch {
     Write-Error "Failed to install Windows WDK! $($_.Exception.Message)"
+    throw
+  }
+}
+
+<#
+.SYNOPSIS
+Installs LLVM.
+
+.DESCRIPTION
+InstallLLVM installs LLVM from the supplied URL.
+
+.PARAMETER Url
+The URL of the LLVM installer.
+#>
+Function InstallLLVM {
+  Param(
+    [String]$Url
+  )
+
+  try {
+    Write-Host 'Downloading LLVM...'
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Installing LLVM...'
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/S') -NoNewWindow -Wait -PassThru
+    PrintMsiExitCodeMessage $proc.ExitCode
+  }
+  catch {
+    Write-Error "Failed to install LLVM! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -381,10 +419,12 @@ Function InstallMpi {
     }
     else {
       Write-Error "Installation failed! Exited with $exitCode."
+      throw
     }
   }
   catch {
     Write-Error "Failed to install MPI! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -420,10 +460,12 @@ Function InstallCuda {
     }
     else {
       Write-Error "Installation failed! Exited with $exitCode."
+      throw
     }
   }
   catch {
     Write-Error "Failed to install CUDA! $($_.Exception.Message)"
+    throw
   }
 }
 
@@ -449,6 +491,7 @@ if ($null -eq $av) {
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallWindowsSDK -Url $WindowsSDKUrl
 InstallWindowsWDK -Url $WindowsWDKUrl
+InstallLLVM -Url $LlvmUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'

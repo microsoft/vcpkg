@@ -144,6 +144,13 @@ namespace vcpkg::Parse
         optional_field(fieldname, {out, ignore});
         return out;
     }
+    std::string ParagraphParser::required_field(const std::string& fieldname)
+    {
+        std::string out;
+        TextRowCol ignore;
+        optional_field(fieldname, {out, ignore});
+        return out;
+    }
 
     std::unique_ptr<ParseControlErrorInfo> ParagraphParser::error_info(const std::string& name) const
     {
@@ -151,8 +158,9 @@ namespace vcpkg::Parse
         {
             auto err = std::make_unique<ParseControlErrorInfo>();
             err->name = name;
-            err->extra_fields = Util::extract_keys(fields);
-            err->missing_fields = std::move(missing_fields);
+            err->extra_fields["CONTROL"] = Util::extract_keys(fields);
+            err->missing_fields["CONTROL"] = std::move(missing_fields);
+            err->expected_types = std::move(expected_types);
             return err;
         }
         return nullptr;
@@ -214,7 +222,7 @@ namespace vcpkg::Parse
                     parser.add_error("triplet specifier not allowed in this context", loc);
                     return nullopt;
                 }
-                return Dependency{{pqs.name, pqs.features.value_or({})}, pqs.qualifier.value_or({})};
+                return Dependency{pqs.name, pqs.features.value_or({}), pqs.platform.value_or({})};
             });
         });
         if (!opt) return {parser.get_error()->format(), expected_right_tag};

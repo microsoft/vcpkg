@@ -21,12 +21,14 @@ if("latest" IN_LIST FEATURES) # latest = core currently
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
+        patches/8c44d70_latest.diff        # Fix for MSVC static init fiasco. 
         )
 else()
     set(PATCHES 
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
+        patches/8c44d70_lts.diff        # Fix for MSVC static init fiasco. 
     )
 endif()
 
