@@ -1,7 +1,24 @@
 #!pwsh
 #Requires -Version 6.0
 
-<##>
+<#
+.SYNOPSIS
+Installs the set of prerequisites for the macOS CI hosts.
+
+.DESCRIPTION
+Install-Prerequisites.ps1 installs all of the necessary prerequisites
+to run the vcpkg macOS CI in a vagrant virtual machine,
+skipping all prerequisites that are already installed.
+
+.PARAMETER Force
+Don't skip the prerequisites that are already installed.
+
+.INPUTS
+None
+
+.OUTPUTS
+None
+#>
 [CmdletBinding()]
 Param(
     [Parameter()]
@@ -38,7 +55,7 @@ $Installables.Applications | ForEach-Object {
 }
 
 # Install plugins
-$installedExtensionPacks = VBoxManage list extpacks | ConvertFrom-VirtualBoxExtensionPacks
+$installedExtensionPacks = Get-InstalledVirtualBoxExtensionPacks
 
 $Installables.VBoxExtensions | ForEach-Object {
     $extension = $_

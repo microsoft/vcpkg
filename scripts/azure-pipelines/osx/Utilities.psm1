@@ -34,7 +34,32 @@ function Get-CommandExists
     $null -ne (Get-Command -Name $Command -ErrorAction SilentlyContinue)
 }
 
-<##>
+<#
+.SYNOPSIS
+Downloads a file and checks its hash.
+
+.DESCRIPTION
+Get-RemoteFile takes a URI and a hash,
+downloads the file at that URI to OutFile,
+and checks that the hash of the downloaded file.
+It then returns a FileInfo object corresponding to the downloaded file.
+
+.PARAMETER OutFile
+Specifies the file path to download to.
+
+.PARAMETER Uri
+The URI to download from.
+
+.PARAMETER Sha256
+The expected SHA256 of the downloaded file.
+
+.INPUTS
+None
+
+.OUTPUTS
+System.IO.FileInfo
+    The FileInfo for the downloaded file.
+#>
 function Get-RemoteFile
 {
     [CmdletBinding(PositionalBinding=$False)]
@@ -63,23 +88,42 @@ Please make sure that the hash in the powershell file is correct.
     Get-Item $OutFile
 }
 
-<##>
-function ConvertFrom-VirtualBoxExtensionPacks
+<#
+.SYNOPSIS
+Gets the list of installed extensions as powershell objects.
+
+.DESCRIPTION
+Get-InstalledVirtualBoxExtensionPacks gets the installed extensions,
+returning objects that look like:
+
+{
+    Pack = 'Oracle VM VirtualBox Extension Pack';
+    Version = '6.1.10';
+    ...
+}
+
+.INPUTS
+None
+
+.OUTPUTS
+PSCustomObject
+    The list of VBox Extension objects that are installed.
+#>
+function Get-InstalledVirtualBoxExtensionPacks
 {
     [CmdletBinding()]
     [OutputType([PSCustomObject])]
-    Param(
-        [Parameter(ValueFromPipeline)]
-        [String]$Line
-    )
+    Param()
 
-    Begin {
-        $currentObject = $null
-        $currentKey = ""
-        $currentString = ""
-    }
+    $lines = VBoxManage list extpacks
 
-    Process {
+    $result = @()
+
+    $currentObject = $null
+    $currentKey = ""
+    $currentString = ""
+
+    $lines | ForEach-Object {
         if ($Line[0] -eq ' ') {
             $currentString += "`n$($Line.Trim())"
         } else {
@@ -92,17 +136,15 @@ function ConvertFrom-VirtualBoxExtensionPacks
             if ($currentKey.StartsWith('Pack no')) {
                 $currentKey = 'Pack'
                 if ($null -ne $currentObject) {
-                    $PSCmdlet.WriteObject([PSCustomObject]$currentObject)
+                    Write-Output ([PSCustomObject]$currentObject)
                 }
                 $currentObject = @{}
             }
         }
     }
 
-    End {
-        if ($null -ne $currentObject) {
-            $currentObject.$currentKey = $currentString
-            $PSCmdlet.WriteObject([PSCustomObject]$currentObject)
-        }
+    if ($null -ne $currentObject) {
+        $currentObject.$currentKey = $currentString
+        Write-Output ([PSCustomObject]$currentObject)
     }
 }

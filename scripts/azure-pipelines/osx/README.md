@@ -47,7 +47,7 @@ $ ./Setup-VagrantMachines.ps1 XX \
   -Pat '<get this from azure>' \
   -ArchivesUsername '<get this from the archives share>' \
   -ArchivesAccessKey '<get this from the archives share>' \
-  -ArchivesUri '<something>.file.core.windows.net' \
+  -ArchivesUrn '<something>.file.core.windows.net' \
   -ArchivesShare 'archives'
 $ cd ~/vagrant/vcpkg-eg-mac
 $ vagrant up

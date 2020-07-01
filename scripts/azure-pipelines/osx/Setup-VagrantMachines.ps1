@@ -1,7 +1,49 @@
 #!pwsh
 #Requires -Version 6.0
 
-<##>
+<#
+.SYNOPSIS
+Sets up the configuration for the vagrant virtual machines.
+
+.DESCRIPTION
+Setup-VagrantMachines.ps1 sets up the virtual machines for
+vcpkg's macOS CI. It puts the VagrantFile and necessary
+configuration JSON file into ~/vagrant/vcpkg-eg-mac.
+
+.PARAMETER Pat
+The personal access token which has Read & Manage permissions on the ADO pool.
+
+.PARAMETER ArchivesUsername
+The username for the archives share.
+
+.PARAMETER ArchivesAccessKey
+The access key for the archives share.
+
+.PARAMETER ArchivesUri
+The URN of the archives share; looks like `foo.windows.core.net`.
+
+.PARAMETER ArchivesShare
+The archives share name.
+
+.PARAMETER BaseName
+The base name for the vagrant VM; the machine name is $BaseName-$MachineIdentifiers.
+Defaults to 'vcpkg-eg-mac'.
+
+.PARAMETER Force
+Delete any existing vagrant/vcpkg-eg-mac directory.
+
+.PARAMETER DiskSize
+The size to make the temporary disks in gigabytes. Defaults to 425.
+
+.PARAMETER MachineIdentifiers
+The numbers to give the machines; should match [0-9]{2}.
+
+.INPUTS
+None
+
+.OUTPUTS
+None
+#>
 [CmdletBinding(PositionalBinding=$False)]
 Param(
     [Parameter(Mandatory=$True)]
@@ -14,7 +56,7 @@ Param(
     [String]$ArchivesAccessKey,
 
     [Parameter(Mandatory=$True)]
-    [String]$ArchivesUri,
+    [String]$ArchivesUrn,
 
     [Parameter(Mandatory=$True)]
     [String]$ArchivesShare,
