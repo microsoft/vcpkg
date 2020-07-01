@@ -825,8 +825,8 @@ namespace vcpkg::Install
         {
             Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
-            auto pkgsconfig_path = Files::concat(paths.original_cwd, fs::u8path(it_pkgsconfig->second));
-            auto pkgsconfig_contents = generate_packagesconfig(action_plan);
+            auto pkgsconfig_path = Files::combine(paths.original_cwd, fs::u8path(it_pkgsconfig->second));
+            auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
             fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
             System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
         }

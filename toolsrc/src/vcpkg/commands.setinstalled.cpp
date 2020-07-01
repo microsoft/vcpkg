@@ -21,8 +21,8 @@ namespace vcpkg::Commands::SetInstalled
     };
     static constexpr CommandSetting INSTALL_SETTINGS[] = {
         {OPTION_WRITE_PACKAGES_CONFIG,
-         "Writes out a NuGet packages.config-formatted file for use with external binary caching.\nSee `vcpkg help "
-         "binarycaching` for more information."},
+         "Writes out a NuGet packages.config-formatted file for use with external binary caching.\n"
+         "See `vcpkg help binarycaching` for more information."},
     };
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -102,8 +102,8 @@ namespace vcpkg::Commands::SetInstalled
         {
             Build::compute_all_abis(paths, action_plan, cmake_vars, status_db);
             auto& fs = paths.get_filesystem();
-            auto pkgsconfig_path = Files::concat(paths.original_cwd, *p_pkgsconfig);
-            auto pkgsconfig_contents = generate_packagesconfig(action_plan);
+            auto pkgsconfig_path = Files::combine(paths.original_cwd, *p_pkgsconfig);
+            auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
             fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
             System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
         }

@@ -24,7 +24,7 @@ Param(
     [string]$Triplet,
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
-    $WorkingRoot
+    [string]$WorkingRoot
 )
 
 $ErrorActionPreference = "Stop"
@@ -48,81 +48,87 @@ Remove-Item -Recurse -Force $TestingRoot -ErrorAction SilentlyContinue
 mkdir $TestingRoot
 mkdir $NuGetRoot
 
-function Require-File {
+function Require-FileExists {
     [CmdletBinding()]
     Param(
-        $file
+        [string]$File
     )
-    if (-Not (Test-Path $file)) {
-        throw "'$CurrentTest' failed to create file '$file'"
+    if (-Not (Test-Path $File)) {
+        throw "'$CurrentTest' failed to create file '$File'"
     }
 }
-function Require-Not-File {
+function Require-FileNotExists {
     [CmdletBinding()]
     Param(
-        $file
+        [string]$File
     )
-    if (Test-Path $file) {
-        throw "'$CurrentTest' should not have created file '$file'"
+    if (Test-Path $File) {
+        throw "'$CurrentTest' should not have created file '$File'"
     }
 }
 
 # Test simple installation
-$CurrentTest = "./vcpkg $($commonArgs -join ' ') install rapidjson --binarycaching --x-binarysource=clear;files,$ArchiveRoot,write;nuget,$NuGetRoot,upload"
+$args = $commonArgs + @("install","rapidjson","--binarycaching","--x-binarysource=clear;files,$ArchiveRoot,write;nuget,$NuGetRoot,upload")
+$CurrentTest = "./vcpkg $($args -join ' ')"
 Write-Host $CurrentTest
-./vcpkg @commonArgs install rapidjson --binarycaching "--x-binarysource=clear;files,$ArchiveRoot,write;nuget,$NuGetRoot,upload"
+./vcpkg @args
 
-Require-File "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
+Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 
 # Test simple removal
-$CurrentTest = "./vcpkg $($commonArgs -join ' ') remove rapidjson"
+$args = $commonArgs + @("remove", "rapidjson")
+$CurrentTest = "./vcpkg $($args -join ' ')"
 Write-Host $CurrentTest
-./vcpkg @commonArgs remove rapidjson
+./vcpkg @args
 
-Require-Not-File "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
+Require-FileNotExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 
 # Test restoring from files archive
-$CurrentTest = "./vcpkg $($commonArgs -join ' ') install rapidjson --binarycaching --x-binarysource=clear;files,$ArchiveRoot,read"
+$args = $commonArgs + @("install","rapidjson","--binarycaching","--x-binarysource=clear;files,$ArchiveRoot,read")
+$CurrentTest = "./vcpkg $($args -join ' ')"
 Remove-Item -Recurse -Force $installRoot
 Remove-Item -Recurse -Force $buildtreesRoot
 Write-Host $CurrentTest
-./vcpkg @commonArgs install rapidjson --binarycaching "--x-binarysource=clear;files,$ArchiveRoot,read"
+./vcpkg @args
 
-Require-File "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
-Require-Not-File "$buildtreesRoot/rapidjson/src"
+Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
+Require-FileNotExists "$buildtreesRoot/rapidjson/src"
 
 # Test restoring from nuget
-$CurrentTest = "./vcpkg $($commonArgs -join ' ') install rapidjson --binarycaching --x-binarysource=clear;nuget,$NuGetRoot"
+$args = $commonArgs + @("install","rapidjson","--binarycaching","--x-binarysource=clear;nuget,$NuGetRoot")
+$CurrentTest = "./vcpkg $($args -join ' ')"
 Remove-Item -Recurse -Force $installRoot
 Remove-Item -Recurse -Force $buildtreesRoot
 Write-Host $CurrentTest
-./vcpkg @commonArgs install rapidjson --binarycaching "--x-binarysource=clear;nuget,$NuGetRoot"
+./vcpkg @args
 
-Require-File "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
-Require-Not-File "$buildtreesRoot/rapidjson/src"
+Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
+Require-FileNotExists "$buildtreesRoot/rapidjson/src"
 
 # Test four-phase flow
-$CurrentTest = "./vcpkg $($commonArgs -join ' ') install rapidjson --dry-run --x-write-nuget-packages-config=$TestingRoot/packages.config"
+$args = $commonArgs + @("install","rapidjson","--dry-run","--x-write-nuget-packages-config=$TestingRoot/packages.config")
+$CurrentTest = "./vcpkg $($args -join ' ')"
 Remove-Item -Recurse -Force $installRoot -ErrorAction SilentlyContinue
 Write-Host $CurrentTest
-./vcpkg @commonArgs install rapidjson --dry-run "--x-write-nuget-packages-config=$TestingRoot/packages.config"
-Require-Not-File "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
-Require-Not-File "$buildtreesRoot/rapidjson/src"
-Require-File "$TestingRoot/packages.config"
+./vcpkg @args
+Require-FileNotExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
+Require-FileNotExists "$buildtreesRoot/rapidjson/src"
+Require-FileExists "$TestingRoot/packages.config"
 
 & $(./vcpkg fetch nuget) restore $TestingRoot/packages.config -OutputDirectory "$NuGetRoot2" -Source "$NuGetRoot"
 
 Remove-Item -Recurse -Force $NuGetRoot -ErrorAction SilentlyContinue
 mkdir $NuGetRoot
 
-$CurrentTest = "./vcpkg $($commonArgs -join ' ') install rapidjson tinyxml --binarycaching --x-binarysource=clear;nuget,$NuGetRoot2;nuget,$NuGetRoot,upload"
+$args = $commonArgs + @("install","rapidjson","tinyxml","--binarycaching","--x-binarysource=clear;nuget,$NuGetRoot2;nuget,$NuGetRoot,upload")
+$CurrentTest = "./vcpkg $($args -join ' ')"
 Write-Host $CurrentTest
-./vcpkg @commonArgs install rapidjson tinyxml --binarycaching "--x-binarysource=clear;nuget,$NuGetRoot2;nuget,$NuGetRoot,upload"
-Require-File "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
-Require-File "$installRoot/$Triplet/include/tinyxml.h"
-Require-Not-File "$buildtreesRoot/rapidjson/src"
-Require-File "$buildtreesRoot/tinyxml/src"
+./vcpkg @args
+Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
+Require-FileExists "$installRoot/$Triplet/include/tinyxml.h"
+Require-FileNotExists "$buildtreesRoot/rapidjson/src"
+Require-FileExists "$buildtreesRoot/tinyxml/src"
 
-if ($(Get-ChildItem $NuGetRoot/*.nupkg | Measure-Object).count -ne 1) {
+if ((Get-ChildItem $NuGetRoot -Filter '*.nupkg' | Measure-Object).Count -ne 1) {
     throw "In '$CurrentTest': did not create exactly 1 NuGet package"
 }

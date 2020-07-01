@@ -154,10 +154,10 @@ TEST_CASE ("XmlSerializer", "[XmlSerializer]")
     REQUIRE(xml.buf == "<a b=\"&lt;\"\n  c=\"  \">\n  <d>e</d>\n");
 }
 
-TEST_CASE ("generate_packagesconfig", "[generate_packagesconfig]")
+TEST_CASE ("generate_nuget_packages_config", "[generate_nuget_packages_config]")
 {
     Dependencies::ActionPlan plan;
-    auto packageconfig = generate_packagesconfig(plan);
+    auto packageconfig = generate_nuget_packages_config(plan);
     REQUIRE(packageconfig == R"(<?xml version="1.0" encoding="utf-8"?>
 <packages>
 </packages>
@@ -179,7 +179,7 @@ Description: a spiffy compression library wrapper
     plan.install_actions[0].abi_info = Build::AbiInfo{};
     plan.install_actions[0].abi_info.get()->package_abi = "packageabi";
 
-    packageconfig = generate_packagesconfig(plan);
+    packageconfig = generate_nuget_packages_config(plan);
     REQUIRE(packageconfig == R"(<?xml version="1.0" encoding="utf-8"?>
 <packages>
   <package id="zlib_x64-android" version="1.5.0-packageabi"/>
@@ -202,7 +202,7 @@ Description: a spiffy compression library wrapper
     plan.install_actions[1].abi_info = Build::AbiInfo{};
     plan.install_actions[1].abi_info.get()->package_abi = "packageabi2";
 
-    packageconfig = generate_packagesconfig(plan);
+    packageconfig = generate_nuget_packages_config(plan);
     REQUIRE(packageconfig == R"(<?xml version="1.0" encoding="utf-8"?>
 <packages>
   <package id="zlib_x64-android" version="1.5.0-packageabi"/>

@@ -49,7 +49,7 @@ namespace vcpkg
     ExpectedS<std::unique_ptr<IBinaryProvider>> create_binary_provider_from_configs_pure(const std::string& env_string,
                                                                                          View<std::string> args);
 
-    std::string generate_packagesconfig(const Dependencies::ActionPlan& action);
+    std::string generate_nuget_packages_config(const Dependencies::ActionPlan& action);
 
     void help_topic_binary_caching(const VcpkgPaths& paths);
 }

@@ -1143,7 +1143,7 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
     System::print2(tbl.m_str);
 }
 
-std::string vcpkg::generate_packagesconfig(const Dependencies::ActionPlan& action)
+std::string vcpkg::generate_nuget_packages_config(const Dependencies::ActionPlan& action)
 {
     auto refs = Util::fmap(action.install_actions,
                            [&](const Dependencies::InstallPlanAction& ipa) { return NugetReference(ipa); });

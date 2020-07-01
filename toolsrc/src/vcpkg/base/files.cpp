@@ -983,8 +983,11 @@ namespace vcpkg::Files
         System::print2(message);
     }
 
-    fs::path concat(const fs::path& lhs, const fs::path& rhs)
+    fs::path combine(const fs::path& lhs, const fs::path& rhs)
     {
+#if VCPKG_USE_STD_FILESYSTEM
+        return lhs / rhs;
+#else // ^^^ VCPKG_USE_STD_FILESYSTEM // !VCPKG_USE_STD_FILESYSTEM vvv
         if (rhs.is_absolute())
         {
             return rhs;
@@ -993,5 +996,6 @@ namespace vcpkg::Files
         {
             return lhs / rhs;
         }
+#endif
     }
 }
