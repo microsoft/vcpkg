@@ -177,7 +177,7 @@ $ scl enable devtoolset-7 bash
 
 ## 安装 macOS Developer Tools
 
-在 macOS 10.15 中， 唯一需要做的是在终端中运行以下命令:
+在 macOS 10.15 中，唯一需要做的是在终端中运行以下命令:
 
 ```sh
 $ xcode-select --install
