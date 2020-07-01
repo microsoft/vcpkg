@@ -7,6 +7,6 @@ Feature: icu
 Description: ICU support
 Build-Depends: icu
 
-Feature: xmlchwchar
+Feature: xmlch-wchar
 Description: XMLCh type uses wchar_t
 
