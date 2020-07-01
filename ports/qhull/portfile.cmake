@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         mac-fix.patch
+        target-fix.patch
 )
 if(${TARGET_TRIPLET} STREQUAL "x64-windows-static")
 # workaround for visual studio toolset regression LNK1201 (remove if solved)
@@ -53,6 +54,7 @@ if(EXEFILES_RELEASE OR EXEFILES_DEBUG)
     file(REMOVE ${EXEFILES_RELEASE} ${EXEFILES_DEBUG})
 endif()
 
+if(0) #disabled otherwise targets are broken!
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qhull.lib ${CURRENT_PACKAGES_DIR}/debug/lib/qhull_d.lib)
@@ -62,6 +64,7 @@ else()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qhullcpp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/qhullcpp_d.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qhullstatic.lib ${CURRENT_PACKAGES_DIR}/debug/lib/qhullstatic_d.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qhullstatic_r.lib ${CURRENT_PACKAGES_DIR}/debug/lib/qhullstatic_rd.lib)
+endif()
 endif()
 
 file(COPY ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/qhull)

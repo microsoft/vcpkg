@@ -1,0 +1,331 @@
+diff --git a/3rdparty/CMakeLists.txt b/3rdparty/CMakeLists.txt
+index 09eef92..d012a91 100644
+--- a/3rdparty/CMakeLists.txt
++++ b/3rdparty/CMakeLists.txt
+@@ -1,16 +1,3 @@
+-find_package(PkgConfig QUIET)
+-find_package(OpenGL    QUIET)
+-find_package(pybind11  QUIET)
+-
+-if (PKGCONFIG_FOUND)
+-    pkg_search_module(FLANN           flann           QUIET)
+-    pkg_search_module(EIGEN3          eigen3>=3.2.7   QUIET)
+-    pkg_search_module(GLFW            glfw3           QUIET)
+-    pkg_search_module(GLEW            glew            QUIET)
+-    pkg_search_module(JSONCPP         jsoncpp>=1.7.0  QUIET)
+-    pkg_search_module(PNG             libpng>=1.6.0   QUIET)
+-    pkg_search_module(JPEG_TURBO      libturbojpeg    QUIET)
+-endif (PKGCONFIG_FOUND)
+ 
+ macro(INSTALL_HEADERS source)
+     install(DIRECTORY   "${CMAKE_CURRENT_SOURCE_DIR}/${source}"
+@@ -24,23 +11,6 @@ macro(INSTALL_HEADERS source)
+             PATTERN     ".gitignore"    EXCLUDE)
+ endmacro()
+ 
+-# Check 3rdparty submodules are present:
+-# when adding a new git submodule, put in a check for one of the files from the module
+-# git pull does not notify users that submodules have been updated, this check
+-# will let developers know that their submodule list is out of date
+-# Updated Modules:
+-# 2020-05-15 Added dependency on Dear ImGui
+-if (EXISTS "${PROJECT_SOURCE_DIR}/3rdparty/pybind11/include/pybind11/pybind11.h"
+-    AND EXISTS "${PROJECT_SOURCE_DIR}/3rdparty/fmt/include/fmt/format.h"
+-    AND EXISTS "${PROJECT_SOURCE_DIR}/3rdparty/imgui/imgui.h"
+-   )
+-# updated submodules are present
+-else ()
+-    message(FATAL_ERROR "3rdparty submodules are missing
+-if you are using git, to update submodules run:
+-  git submodule update --init --recursive")
+-endif ()
+-
+ # dirent
+ if (WIN32)
+     message(STATUS "On windows, so using 3rdparty/dirent")
+@@ -93,7 +63,7 @@ endif ()
+ # GLFW
+ if (BUILD_GLFW)
+     message(STATUS "Building GLFW from source (BUILD_GLFW=ON)")
+-elseif (GLFW_FOUND AND OPENGL_FOUND)
++elseif (OPENGL_FOUND)
+     message(STATUS "Using installed GLFW ${GLFW_VERSION}")
+     if (APPLE)
+         find_library(COCOA_FRAMEWORK Cocoa)
+@@ -131,9 +101,6 @@ endif ()
+ # Azure Kinect
+ include(azure_kinect/azure_kinect.cmake)
+ 
+-# JSONCPP is always built from source to avoid ABI compatibility issues
+-message(STATUS "Building JSONCPP from source")
+-add_subdirectory(jsoncpp)
+ 
+ 
+ # liblzf
+@@ -143,39 +110,12 @@ Directories("${CMAKE_CURRENT_SOURCE_DIR}/liblzf" liblzf_INCLUDE_DIRS)
+ Directories("${CMAKE_CURRENT_SOURCE_DIR}/tomasakeninemoeller/include" tomasakeninemoeller_INCLUDE_DIRS)
+ 
+ # PNG
+-if (BUILD_PNG)
+-    message(STATUS "Building LIBPNG from source (BUILD_PNG=ON)")
+-elseif (PNG_FOUND)
+-    message(STATUS "Using installed LIBPNG ${PNG_VERSION}")
+-else ()
+-    message(STATUS "Unable to find libpng installed in the system")
+-    message(STATUS "Building libpng from source")
+-    set(BUILD_PNG on)
+-endif ()
+-
+-if (BUILD_PNG)
+-    add_subdirectory(zlib)
+-    add_subdirectory(libpng)
+-    list(APPEND PNG_LIBRARIES zlib)
+-endif ()
++set(PNG_LIBRARIES png)
++include_directories(${PNG_INCLUDE_DIRS})
+ 
+ # JPEG
+-if (BUILD_JPEG)
+-    message(STATUS "Building libjpeg-turbo from source (BUILD_JPEG=ON)")
+-elseif (JPEG_TURBO_FOUND)
+-    message(STATUS "Using installed libjpeg-turbo ${JPEG_TUROB_VERSION}")
+-    message(STATUS ${JPEG_TURBO_INCLUDE_DIRS})
+-    message(STATUS ${JPEG_TURBO_LIBRARIES})
+-else ()
+-    message(STATUS "Unable to find libjpeg-turbo installed in the system")
+-    message(STATUS "Building libjpeg-turbo from source")
+-    set(BUILD_JPEG ON)
+-endif ()
+-
+-if (BUILD_JPEG)
+-    message(STATUS "Building libjpeg-turbo from source")
+-    include(libjpeg-turbo/libjpeg-turbo.cmake)
+-endif()
++set(JPEG_TURBO_INCLUDE_DIRS ${JPEG_INCLUDE_DIR})
++set(JPEG_TURBO_LIBRARIES ${JPEG_LIBRARIES})
+ 
+ # PyBind
+ # http://pybind11.readthedocs.io/en/stable/compiling.html
+@@ -202,120 +142,23 @@ if (BUILD_LIBREALSENSE)
+ endif ()
+ 
+ # tinyfiledialogs
+-if (BUILD_TINYFILEDIALOGS)
+-    message(STATUS "Building TINYFILEDIALOGS from source")
+-    add_subdirectory(tinyfiledialogs)
+-    set(tinyfiledialogs_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/tinyfiledialogs/include")
+-    set(tinyfiledialogs_LIBRARIES tinyfiledialogs)
+-else ()
+-    message(SEND_ERROR "TINYFILEDIALOGS dependency not met.")
+-endif ()
++set(tinyfiledialogs_LIBRARIES tinyfiledialogs::tinyfiledialogs)
+ 
+ # tinygltf (don't use Directories(), as the examples/common/ directory includes
+ # imgui.h, which we don't want coming before the real imgui path)
+ set(tinygltf_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/tinygltf")
+ 
+ # tinyobjloader
+-message(STATUS "Building tinyobjloader from source")
+-include_directories("tinyobjloader/")
+-add_library(tinyobjloader STATIC tinyobjloader/tinyobjloader/tiny_obj_loader.cc)
+-if (NOT BUILD_SHARED_LIBS)
+-  install(TARGETS tinyobjloader
+-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-        ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+-endif()
+-set(tinyobjloader_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/tinyobjloader")
+-set(tinyobjloader_LIBRARIES tinyobjloader)
++set(tinyobjloader_LIBRARIES tinyobjloader::tinyobjloader)
+ 
+ # rply
+ Directories("${CMAKE_CURRENT_SOURCE_DIR}/rply"   rply_INCLUDE_DIRS)
+ 
+ # qhull
+-if (BUILD_QHULL)
+-    message(STATUS "Building QHULL from source")
+-    include_directories("qhull/src")
+-    set(libqhullr_SOURCES
+-        qhull/src/libqhull_r/global_r.c
+-        qhull/src/libqhull_r/stat_r.c
+-        qhull/src/libqhull_r/geom2_r.c
+-        qhull/src/libqhull_r/poly2_r.c
+-        qhull/src/libqhull_r/merge_r.c
+-        qhull/src/libqhull_r/libqhull_r.c
+-        qhull/src/libqhull_r/geom_r.c
+-        qhull/src/libqhull_r/poly_r.c
+-        qhull/src/libqhull_r/qset_r.c
+-        qhull/src/libqhull_r/mem_r.c
+-        qhull/src/libqhull_r/random_r.c
+-        qhull/src/libqhull_r/usermem_r.c
+-        qhull/src/libqhull_r/userprintf_r.c
+-        qhull/src/libqhull_r/io_r.c
+-        qhull/src/libqhull_r/user_r.c
+-        qhull/src/libqhull_r/rboxlib_r.c
+-        qhull/src/libqhull_r/userprintf_rbox_r.c
+-    )
+-    add_library(qhullstatic_r STATIC ${libqhullr_SOURCES})
+-    set(libqhullcpp_SOURCES
+-        qhull/src/libqhullcpp/Coordinates.cpp
+-        qhull/src/libqhullcpp/PointCoordinates.cpp
+-        qhull/src/libqhullcpp/Qhull.cpp
+-        qhull/src/libqhullcpp/QhullFacet.cpp
+-        qhull/src/libqhullcpp/QhullFacetList.cpp
+-        qhull/src/libqhullcpp/QhullFacetSet.cpp
+-        qhull/src/libqhullcpp/QhullHyperplane.cpp
+-        qhull/src/libqhullcpp/QhullPoint.cpp
+-        qhull/src/libqhullcpp/QhullPointSet.cpp
+-        qhull/src/libqhullcpp/QhullPoints.cpp
+-        qhull/src/libqhullcpp/QhullQh.cpp
+-        qhull/src/libqhullcpp/QhullRidge.cpp
+-        qhull/src/libqhullcpp/QhullSet.cpp
+-        qhull/src/libqhullcpp/QhullStat.cpp
+-        qhull/src/libqhullcpp/QhullVertex.cpp
+-        qhull/src/libqhullcpp/QhullVertexSet.cpp
+-        qhull/src/libqhullcpp/RboxPoints.cpp
+-        qhull/src/libqhullcpp/RoadError.cpp
+-        qhull/src/libqhullcpp/RoadLogEvent.cpp
+-    )
+-    add_library(qhullcpp STATIC ${libqhullcpp_SOURCES})
+-    if (NOT BUILD_SHARED_LIBS)
+-      install(TARGETS qhullstatic_r
+-            RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-            LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-            ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+-      install(TARGETS qhullcpp
+-            RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-            LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-            ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+-    endif()
+-    set(qhull_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/qhull/src")
+-    set(qhull_LIBRARIES qhullcpp qhullstatic_r)
+-else ()
+-    message(SEND_ERROR "qhull dependency not met.")
+-endif ()
++set(qhull_LIBRARIES  Qhull::libqhull Qhull::qhullcpp)
+ 
+ # googletest
+-if (BUILD_UNIT_TESTS)
+-    message(STATUS "Building googletest from source")
+-    include_directories("googletest/googletest/include")
+-    include_directories("googletest/googletest/")
+-    set(googletest_INCLUDE_DIRS
+-      ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/include
+-      ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/
+-      ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googlemock/include
+-      ${CMAKE_CURRENT_SOURCE_DIR}/googletest/googlemock/)
+-    set(googletest_SOURCE
+-        googletest/googletest/src/gtest-all.cc
+-        googletest/googlemock/src/gmock-all.cc)
+-    include_directories(${googletest_INCLUDE_DIRS})
+-    add_library(googletest STATIC ${googletest_SOURCE})
+-    if (NOT BUILD_SHARED_LIBS)
+-      install(TARGETS googletest
+-            RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+-            LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+-            ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+-    endif()
+-    set(googletest_LIBRARIES googletest)
+-endif()
++set(googletest_LIBRARIES GTest::gtest)
+ 
+ # benchmark
+ if (BUILD_BENCHMARKS)
+@@ -339,8 +182,7 @@ if (BUILD_BENCHMARKS)
+ endif()
+ 
+ # fmt library
+-set(fmt_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fmt/include)
+-INSTALL_HEADERS(fmt)
++set(fmt_LIBRARIES fmt::fmt)
+ 
+ # PoissonRecon
+ set(poisson_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/PoissonRecon)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3e967fc..a104f35 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -336,6 +336,21 @@ macro(ADD_SOURCE_GROUP MODULE_NAME)
+     source_group("Source Files\\${MODULE_NAME}" FILES ${MODULE_SOURCE_FILES})
+ endmacro(ADD_SOURCE_GROUP)
+ 
++find_package(OpenGL REQUIRED)
++find_package(pybind11 REQUIRED)
++find_package(flann REQUIRED)
++find_package(Eigen3 REQUIRED)
++find_package(GLEW REQUIRED)
++find_package(jsoncpp REQUIRED)
++find_package(libpng REQUIRED)
++find_package(JPEG REQUIRED)
++find_package(fmt REQUIRED)
++find_package(imgui REQUIRED)
++find_package(tinyfiledialogs REQUIRED)
++find_package(tinyobjloader REQUIRED)
++find_package(GTest REQUIRED)
++find_package(Qhull REQUIRED)
++
+ # 3rd-party projects that are added with external_project_add will be installed
+ # with this prefix. E.g.
+ # - 3RDPARTY_INSTALL_PREFIX: Open3D/build/3rdparty_install
+diff --git a/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp b/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp
+index 363be9b..1cba61d 100644
+--- a/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp
++++ b/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp
+@@ -37,12 +37,12 @@
+ #include <list>
+ 
+ // clang-format off
+-#include "PoissonRecon/Src/PreProcessor.h"
+-#include "PoissonRecon/Src/MyMiscellany.h"
+-#include "PoissonRecon/Src/CmdLineParser.h"
+-#include "PoissonRecon/Src/FEMTree.h"
+-#include "PoissonRecon/Src/PPolynomial.h"
+-#include "PoissonRecon/Src/PointStreamData.h"
++#include <PoissonRecon/PreProcessor.h>
++#include <PoissonRecon/MyMiscellany.h>
++#include <PoissonRecon/CmdLineParser.h>
++#include <PoissonRecon/FEMTree.h>
++#include <PoissonRecon/PPolynomial.h>
++#include <PoissonRecon/PointStreamData.h>
+ // clang-format on
+ 
+ namespace open3d {
+diff --git a/src/Open3D/IO/FileFormat/FileGLTF.cpp b/src/Open3D/IO/FileFormat/FileGLTF.cpp
+index 0ff09dd..8b7b113 100644
+--- a/src/Open3D/IO/FileFormat/FileGLTF.cpp
++++ b/src/Open3D/IO/FileFormat/FileGLTF.cpp
+@@ -35,7 +35,7 @@
+ #define TINYGLTF_IMPLEMENTATION
+ #define STB_IMAGE_IMPLEMENTATION
+ #define STB_IMAGE_WRITE_IMPLEMENTATION
+-#include "tinygltf/tiny_gltf.h"
++#include <tiny_gltf.h>
+ 
+ namespace open3d {
+ namespace io {
+diff --git a/src/Open3D/IO/FileFormat/FileOBJ.cpp b/src/Open3D/IO/FileFormat/FileOBJ.cpp
+index 009bb21..a6c0254 100644
+--- a/src/Open3D/IO/FileFormat/FileOBJ.cpp
++++ b/src/Open3D/IO/FileFormat/FileOBJ.cpp
+@@ -35,7 +35,7 @@
+ #include "Open3D/Utility/FileSystem.h"
+ 
+ #define TINYOBJLOADER_IMPLEMENTATION
+-#include "tinyobjloader/tiny_obj_loader.h"
++#include <tiny_obj_loader.h>
+ 
+ namespace open3d {
+ namespace io {
+diff --git a/src/Open3D/Utility/Console.cpp b/src/Open3D/Utility/Console.cpp
+index 0d6de9e..6a1c24e 100644
+--- a/src/Open3D/Utility/Console.cpp
++++ b/src/Open3D/Utility/Console.cpp
+@@ -42,7 +42,7 @@
+ #include <windows.h>
+ #endif
+ 
+-#include <fmt/time.h>
++#include <fmt/chrono.h>
+ 
+ #include "Open3D/Utility/Helper.h"
+ 

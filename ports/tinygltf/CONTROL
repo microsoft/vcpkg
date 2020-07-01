@@ -1,4 +1,4 @@
 Source: tinygltf
-Version: 2.2.0
+Version: 2.2.0-1
 Description: A header only C++11 glTF 2.0 library.
 Build-Depends: stb, nlohmann-json
