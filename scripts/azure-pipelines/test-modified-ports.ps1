@@ -95,7 +95,7 @@ $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -Triplet $Triplet `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
-    -SkipFailures $skipFailures
+    -SkipFailures:$skipFailures
 
 # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
 # Install them so the CI succeeds:
