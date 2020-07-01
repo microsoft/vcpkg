@@ -29,7 +29,7 @@ function Transform-JsonFile {
     if ($req.StatusCode -ne 200)
     {
         Write-Error "Failed to GET $Uri"
-        return
+        throw
     }
 
     $json = $req.Content | ConvertFrom-Json -Depth 10

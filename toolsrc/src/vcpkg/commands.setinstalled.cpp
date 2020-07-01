@@ -14,16 +14,22 @@
 namespace vcpkg::Commands::SetInstalled
 {
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
 
     static constexpr CommandSwitch INSTALL_SWITCHES[] = {
         {OPTION_DRY_RUN, "Do not actually build or install"},
+    };
+    static constexpr CommandSetting INSTALL_SETTINGS[] = {
+        {OPTION_WRITE_PACKAGES_CONFIG,
+         "Writes out a NuGet packages.config-formatted file for use with external binary caching.\n"
+         "See `vcpkg help binarycaching` for more information."},
     };
 
     const CommandStructure COMMAND_STRUCTURE = {
         create_example_string(R"(x-set-installed <package>...)"),
         0,
         SIZE_MAX,
-        {INSTALL_SWITCHES},
+        {INSTALL_SWITCHES, INSTALL_SETTINGS},
         nullptr,
     };
 
@@ -34,7 +40,8 @@ namespace vcpkg::Commands::SetInstalled
                              const CMakeVars::CMakeVarProvider& cmake_vars,
                              const std::vector<FullPackageSpec>& specs,
                              const Build::BuildPackageOptions& install_plan_options,
-                             DryRun dry_run)
+                             DryRun dry_run,
+                             const Optional<fs::path>& maybe_pkgsconfig)
     {
         // We have a set of user-requested specs.
         // We need to know all the specs which are required to fulfill dependencies for those specs.
@@ -91,6 +98,16 @@ namespace vcpkg::Commands::SetInstalled
 
         Dependencies::print_plan(action_plan, true, paths.ports);
 
+        if (auto p_pkgsconfig = maybe_pkgsconfig.get())
+        {
+            Build::compute_all_abis(paths, action_plan, cmake_vars, status_db);
+            auto& fs = paths.get_filesystem();
+            auto pkgsconfig_path = Files::combine(paths.original_cwd, *p_pkgsconfig);
+            auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
+            fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
+            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+        }
+
         if (dry_run == DryRun::Yes)
         {
             Checks::exit_success(VCPKG_LINE_INFO);
@@ -142,6 +159,12 @@ namespace vcpkg::Commands::SetInstalled
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto cmake_vars = CMakeVars::make_triplet_cmake_var_provider(paths);
 
+        Optional<fs::path> pkgsconfig;
+        auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
+        if (it_pkgsconfig != options.settings.end())
+        {
+            pkgsconfig = it_pkgsconfig->second;
+        }
         perform_and_exit_ex(args,
                             paths,
                             provider,
@@ -149,6 +172,7 @@ namespace vcpkg::Commands::SetInstalled
                             *cmake_vars,
                             specs,
                             install_plan_options,
-                            dry_run ? DryRun::Yes : DryRun::No);
+                            dry_run ? DryRun::Yes : DryRun::No,
+                            pkgsconfig);
     }
 }

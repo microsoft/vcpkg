@@ -207,8 +207,7 @@ namespace
                 }
             }
         }
-        RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action) override
+        RestoreResult precheck(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& fs = paths.get_filesystem();
@@ -285,7 +284,7 @@ namespace
             for (auto&& action : plan.install_actions)
             {
                 auto& spec = action.spec;
-                fs.remove_all_inside(paths.package_dir(spec), VCPKG_LINE_INFO);
+                fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
 
                 nuget_refs.emplace_back(spec, NugetReference(action));
             }
@@ -317,6 +316,9 @@ namespace
             {
                 // First check using all sources
                 System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+                cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                 cmdline.path_arg(nuget_exe)
                     .string_arg("install")
                     .path_arg(packages_config)
@@ -340,6 +342,9 @@ namespace
             {
                 // Then check using each config
                 System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+                cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                 cmdline.path_arg(nuget_exe)
                     .string_arg("install")
                     .path_arg(packages_config)
@@ -424,6 +429,9 @@ namespace
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
             System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+            cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
             cmdline.path_arg(nuget_exe)
                 .string_arg("pack")
                 .path_arg(nuspec_path)
@@ -450,6 +458,9 @@ namespace
                 for (auto&& write_src : m_write_sources)
                 {
                     System::CmdLineBuilder cmd;
+#ifndef _WIN32
+                    cmd.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
@@ -480,6 +491,9 @@ namespace
                 for (auto&& write_cfg : m_write_configs)
                 {
                     System::CmdLineBuilder cmd;
+#ifndef _WIN32
+                    cmd.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
@@ -571,8 +585,7 @@ namespace
                 provider->push_failure(paths, abi_tag, spec);
             }
         }
-        RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action) override
+        RestoreResult precheck(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             for (auto&& provider : m_providers)
             {
@@ -599,8 +612,8 @@ namespace
         {
             return RestoreResult::missing;
         }
-        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override { }
-        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override { }
+        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override {}
+        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
         RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
@@ -615,42 +628,57 @@ XmlSerializer& XmlSerializer::emit_declaration()
 }
 XmlSerializer& XmlSerializer::open_tag(StringLiteral sl)
 {
+    emit_pending_indent();
     Strings::append(buf, '<', sl, '>');
-    indent += 2;
+    m_indent += 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::start_complex_open_tag(StringLiteral sl)
 {
+    emit_pending_indent();
     Strings::append(buf, '<', sl);
-    indent += 2;
+    m_indent += 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::text_attr(StringLiteral name, StringView content)
 {
-    Strings::append(buf, ' ', name, "=\"");
+    if (m_pending_indent)
+    {
+        m_pending_indent = false;
+        buf.append(m_indent, ' ');
+    }
+    else
+    {
+        buf.push_back(' ');
+    }
+    Strings::append(buf, name, "=\"");
     text(content);
     Strings::append(buf, '"');
     return *this;
 }
 XmlSerializer& XmlSerializer::finish_complex_open_tag()
 {
+    emit_pending_indent();
     Strings::append(buf, '>');
     return *this;
 }
 XmlSerializer& XmlSerializer::finish_self_closing_complex_tag()
 {
+    emit_pending_indent();
     Strings::append(buf, "/>");
-    indent -= 2;
+    m_indent -= 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::close_tag(StringLiteral sl)
 {
+    m_indent -= 2;
+    emit_pending_indent();
     Strings::append(buf, "</", sl, '>');
-    indent -= 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::text(StringView sv)
 {
+    emit_pending_indent();
     for (auto ch : sv)
     {
         if (ch == '&')
@@ -682,12 +710,21 @@ XmlSerializer& XmlSerializer::text(StringView sv)
 }
 XmlSerializer& XmlSerializer::simple_tag(StringLiteral tag, StringView content)
 {
-    return open_tag(tag).text(content).close_tag(tag);
+    return emit_pending_indent().open_tag(tag).text(content).close_tag(tag);
 }
 XmlSerializer& XmlSerializer::line_break()
 {
     buf.push_back('\n');
-    buf.append(indent, ' ');
+    m_pending_indent = true;
+    return *this;
+}
+XmlSerializer& XmlSerializer::emit_pending_indent()
+{
+    if (m_pending_indent)
+    {
+        m_pending_indent = false;
+        buf.append(m_indent, ' ');
+    }
     return *this;
 }
 
@@ -1117,4 +1154,23 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
              "uploaded to that remote.");
 
     System::print2(tbl.m_str);
+}
+
+std::string vcpkg::generate_nuget_packages_config(const Dependencies::ActionPlan& action)
+{
+    auto refs = Util::fmap(action.install_actions,
+                           [&](const Dependencies::InstallPlanAction& ipa) { return NugetReference(ipa); });
+    XmlSerializer xml;
+    xml.emit_declaration().line_break();
+    xml.open_tag("packages").line_break();
+    for (auto&& ref : refs)
+    {
+        xml.start_complex_open_tag("package")
+            .text_attr("id", ref.id)
+            .text_attr("version", ref.version)
+            .finish_self_closing_complex_tag()
+            .line_break();
+    }
+    xml.close_tag("packages").line_break();
+    return std::move(xml.buf);
 }

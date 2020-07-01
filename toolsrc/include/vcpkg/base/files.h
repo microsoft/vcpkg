@@ -201,4 +201,8 @@ namespace vcpkg::Files
     bool has_invalid_chars_for_filesystem(const std::string& s);
 
     void print_paths(const std::vector<fs::path>& paths);
+
+    /// Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
+    /// This function exists as a workaround for TS implementations.
+    fs::path combine(const fs::path& lhs, const fs::path& rhs);
 }
