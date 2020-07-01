@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF boost-1.73.0
     SHA512 0af88d8db7b18395a2b3668bcb51a5f32cd0de9acb9633572c2fb7edcdf06f354802392606394cf75ec4fd4d9cfe5c96351db766e55f8ef30f746b0a7017ad1f
     HEAD_REF master
+    PATCHES 0001-Fix-boost-ICU-support.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
