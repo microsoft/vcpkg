@@ -172,7 +172,7 @@ $ sudo yum install devtoolset-7
 $ scl enable devtoolset-7 bash
 ```
 
-对于其他的发行版， 请确保已安装 g++ 6 或更新的版本。
+对于其他的发行版，请确保已安装 g++ 6 或更新的版本。
 若您希望添加特定发行版的说明， [请提交一个 PR][contributing:submit-pr]!
 
 ## 安装 macOS Developer Tools
