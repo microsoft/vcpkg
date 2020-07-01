@@ -12,7 +12,7 @@ vcpkg_from_github(
         fix-expat.patch
 )
 
-if (VCPKG_TARGET_OS_OSX)
+if (VCPKG_TARGET_IS_OSX)
     set(IO2D_DEFAULT_OPTION "-DIO2D_DEFAULT=COREGRAPHICS_MAC")
 endif()
 
