@@ -2,14 +2,26 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Vcpkg manifest",
   "description": "Vcpkg manifest file. See https://github.com/microsoft/vcpkg/blob/master/docs/specifications/manifests.md.",
-
   "definitions": {
     "identifier": {
-      "type": "string",
-      "pattern": "[a-z0-9]+(-[a-z0-9]+)*"
+      "description": "Identifiers used for feature names.",
+      "allOf": [
+        {
+          "description": "Identifier are lowercase with digits and dashes.",
+          "type": "string",
+          "pattern": "[a-z0-9]+(-[a-z0-9]+)*"
+        },
+        {
+          "not": {
+            "description": "Identifiers must not be a Windows filesystem reserved name.",
+            "type": "string",
+            "pattern": "^prn|aux|nul|con|lpt[1-9]|com[1-9]|core|default$"
+          }
+        }
+      ]
     },
     "package-name": {
-      "title": "Name of a package.",
+      "description": "Name of a package.",
       "allOf": [
         {
           "description": "Package name must be a dot-separated list of valid identifiers",
@@ -104,11 +116,13 @@
       "patternProperties": {
         "^[$]": {}
       },
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "additionalProperties": false
     }
   },
-
   "type": "object",
   "properties": {
     "name": {
