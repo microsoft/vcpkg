@@ -8,7 +8,7 @@
       "type": "string",
       "pattern": "[a-z0-9]+(-[a-z0-9]+)*"
     },
-    "packageName": {
+    "package-name": {
       "title": "Name of a package.",
       "allOf": [
         {
@@ -25,7 +25,7 @@
         }
       ]
     },
-    "descriptionField": {
+    "description-field": {
       "description": "A string or array of strings containing the description of a package or feature.",
       "oneOf": [
         {
@@ -39,12 +39,12 @@
         }
       ]
     },
-    "dependencyObject": {
+    "dependency-object": {
       "description": "Expanded form of a dependency with explicit features and platform.",
       "type": "object",
       "properties": {
         "name": {
-          "$ref": "#/definitions/packageName"
+          "$ref": "#/definitions/package-name"
         },
         "features": {
           "type": "array",
@@ -57,7 +57,7 @@
           "default": true
         },
         "platform": {
-          "$ref": "#/definitions/platformExpression"
+          "$ref": "#/definitions/platform-expression"
         }
       },
       "patternProperties": {
@@ -72,14 +72,14 @@
       "description": "A dependency fetchable by Vcpkg.",
       "oneOf": [
         {
-          "$ref": "#/definitions/packageName"
+          "$ref": "#/definitions/package-name"
         },
         {
-          "$ref": "#/definitions/dependencyObject"
+          "$ref": "#/definitions/dependency-object"
         }
       ]
     },
-    "platformExpression": {
+    "platform-expression": {
       "description": "A specification of a set of platforms. See https://github.com/microsoft/vcpkg/blob/master/docs/specifications/manifests.md#definitions.",
       "type": "string"
     },
@@ -91,7 +91,7 @@
           "$ref": "#/definitions/identifier"
         },
         "description": {
-          "$ref": "#/definitions/descriptionField"
+          "$ref": "#/definitions/description-field"
         },
         "dependencies": {
           "description": "Dependencies used by this feature.",
@@ -112,7 +112,7 @@
   "type": "object",
   "properties": {
     "name": {
-      "$ref": "#/definitions/packageName"
+      "$ref": "#/definitions/package-name"
     },
     "version-string": {
       "description": "A string without semantic meaning, equivalent to `CONTROL`'s `Version` field.",
@@ -132,7 +132,7 @@
       }
     },
     "description": {
-      "$ref": "#/definitions/descriptionField"
+      "$ref": "#/definitions/description-field"
     },
     "homepage": {
       "description": "A url which points to the homepage of a package.",
@@ -177,7 +177,7 @@
       }
     },
     "supports": {
-      "$ref": "#/definitions/platformExpression"
+      "$ref": "#/definitions/platform-expression"
     }
   },
   "patternProperties": {
