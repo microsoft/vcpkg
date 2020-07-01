@@ -1,11 +1,14 @@
 set(PCRE2_VERSION 10.30)
 
-vcpkg_from_sourceforge(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO pcre/pcre2
-    REF ${PCRE2_VERSION}
-    FILENAME "pcre2-${PCRE2_VERSION}.zip"
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://ftp.pcre.org/pub/pcre/pcre2-${PCRE2_VERSION}.zip"
+         "https://sourceforge.net/projects/pcre/files/pcre2/${PCRE2_VERSION}/pcre2-${PCRE2_VERSION}.zip/download"    FILENAME "pcre2-${PCRE2_VERSION}.zip"
     SHA512 03e570b946ac29498a114b27e715a0fcf25702bfc9623f9fc085ee8a3214ab3c303baccb9c0af55da6916e8ce40d931d97f1ee9628690563041a943f0aa2bc54
+)
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
     PATCHES
         fix-space.patch
         fix-arm64-config.patch
