@@ -115,7 +115,7 @@ Linux中需求:
 
 macOS中需求:
 - [Apple Developer Tools][quick-start:apple-developer-tools]
-- macOS 10.14 或更低版本中， 您也需要:
+- macOS 10.14 或更低版本中，您也需要:
   - [Homebrew][quick-start:homebrew]
   - Homebrew 中 [g++][quick-start:macos-gcc] >= 6 
 
