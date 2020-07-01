@@ -86,16 +86,6 @@ namespace vcpkg::Build
 
         compute_all_abis(paths, action_plan, var_provider, status_db);
 
-        const Build::BuildPackageOptions build_package_options{
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
-            Build::CleanBuildtrees::NO,
-            Build::CleanPackages::NO,
-            Build::CleanDownloads::NO,
-            Build::DownloadTool::BUILT_IN,
-        };
-
         InstallPlanAction* action = nullptr;
         for (auto& install_action : action_plan.already_installed)
         {
@@ -114,7 +104,7 @@ namespace vcpkg::Build
 
         Checks::check_exit(VCPKG_LINE_INFO, action != nullptr);
         ASSUME(action != nullptr);
-        action->build_options = build_package_options;
+        action->build_options = default_build_package_options;
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, *action, binaryprovider, status_db);

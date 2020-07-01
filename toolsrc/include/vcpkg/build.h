@@ -118,6 +118,17 @@ namespace vcpkg::Build
         PurgeDecompressFailure purge_decompress_failure;
     };
 
+    static constexpr BuildPackageOptions default_build_package_options{
+        Build::UseHeadVersion::NO,
+        Build::AllowDownloads::YES,
+        Build::OnlyDownloads::NO,
+        Build::CleanBuildtrees::YES,
+        Build::CleanPackages::YES,
+        Build::CleanDownloads::NO,
+        Build::DownloadTool::BUILT_IN,
+        Build::PurgeDecompressFailure::YES,
+    };
+
     enum class BuildResult
     {
         NULLVALUE = 0,
