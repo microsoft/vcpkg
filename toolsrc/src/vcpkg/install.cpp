@@ -687,7 +687,6 @@ namespace vcpkg::Install
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
-            Build::FailOnTombstone::NO,
         };
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);

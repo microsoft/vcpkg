@@ -153,7 +153,6 @@ namespace vcpkg::Commands::SetInstalled
             Build::CleanPackages::YES,
             Build::CleanDownloads::YES,
             Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::NO,
         };
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);

@@ -100,13 +100,6 @@ namespace vcpkg::Build
         ARIA2,
     };
     const std::string& to_string(DownloadTool tool);
-
-    enum class FailOnTombstone
-    {
-        NO = 0,
-        YES
-    };
-
     enum class PurgeDecompressFailure
     {
         NO = 0,
@@ -122,7 +115,6 @@ namespace vcpkg::Build
         CleanPackages clean_packages;
         CleanDownloads clean_downloads;
         DownloadTool download_tool;
-        FailOnTombstone fail_on_tombstone;
         PurgeDecompressFailure purge_decompress_failure;
     };
 

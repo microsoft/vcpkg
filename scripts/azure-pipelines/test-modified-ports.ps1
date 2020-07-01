@@ -61,11 +61,13 @@ $commonArgs = @(
 )
 
 $binaryCachingMode = 'readwrite'
+$skipFailures = $false
 if ([string]::IsNullOrWhiteSpace($BuildReason)) {
     Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
 }
 elseif ($BuildReason -eq 'PullRequest') {
-    Write-Host 'Build reason was Pull Request, using binary caching in read write mode.'
+    Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
+    $skipFailures = $true
 }
 else {
     Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
@@ -90,7 +92,10 @@ mkdir $xmlResults
 $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
-$skipList = . "$PSScriptRoot/generate-skip-list.ps1" -Triplet $Triplet -BaselineFile "$PSScriptRoot/../ci.baseline.txt"
+$skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
+    -Triplet $Triplet `
+    -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
+    -SkipFailures $skipFailures
 
 # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
 # Install them so the CI succeeds:

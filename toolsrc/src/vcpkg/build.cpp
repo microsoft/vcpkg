@@ -94,7 +94,6 @@ namespace vcpkg::Build
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::NO,
         };
 
         InstallPlanAction* action = nullptr;
@@ -990,10 +989,6 @@ namespace vcpkg::Build
         if (result.code == BuildResult::SUCCEEDED)
         {
             binaries_provider.push_success(paths, action);
-        }
-        else if ((result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED))
-        {
-            binaries_provider.push_failure(paths, abi_info.package_abi, spec);
         }
 
         return result;

@@ -253,7 +253,6 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::YES,
         };
 
         std::vector<PackageSpec> packages_with_qualified_deps;
@@ -409,7 +408,6 @@ namespace vcpkg::Commands::CI
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::YES,
             Build::PurgeDecompressFailure::YES,
         };
 
