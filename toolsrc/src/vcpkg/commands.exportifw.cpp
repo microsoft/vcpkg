@@ -94,7 +94,7 @@ namespace vcpkg::Export::IFW
                                package_xml_file_path.generic_u8string());
 
             auto deps = Strings::join(
-                ",", binary_paragraph.depends, [](const std::string& dep) { return "packages." + dep + ":"; });
+                ",", binary_paragraph.dependencies, [](const std::string& dep) { return "packages." + dep + ":"; });
 
             if (!deps.empty()) deps = "\n    <Dependencies>" + deps + "</Dependencies>";
 
@@ -175,7 +175,7 @@ namespace vcpkg::Export::IFW
 </Package>
 )###",
                                       action.spec.name(),
-                                      safe_rich_from_plain_text(binary_paragraph.description),
+                                      safe_rich_from_plain_text(Strings::join("\n", binary_paragraph.description)),
                                       binary_paragraph.version,
                                       create_release_date()),
                                   VCPKG_LINE_INFO);

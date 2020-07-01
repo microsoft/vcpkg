@@ -27,52 +27,27 @@ namespace vcpkg::Commands::SetInstalled
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    void perform_and_exit_ex(const VcpkgCmdArguments& args,
+                             const VcpkgPaths& paths,
+                             const PortFileProvider::PathsPortFileProvider& provider,
+                             IBinaryProvider& binary_provider,
+                             const CMakeVars::CMakeVarProvider& cmake_vars,
+                             const std::vector<FullPackageSpec>& specs,
+                             const Build::BuildPackageOptions& install_plan_options,
+                             DryRun dry_run)
     {
-        // input sanitization
-        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
-
-        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_full_package_spec(
-                std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-        });
-
-        for (auto&& spec : specs)
-        {
-            Input::check_triplet(spec.package_spec.triplet(), paths);
-        }
-
-        auto binaryprovider =
-            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
-
-        const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
-
-        const Build::BuildPackageOptions install_plan_options = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
-            Build::CleanBuildtrees::YES,
-            Build::CleanPackages::YES,
-            Build::CleanDownloads::YES,
-            Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::NO,
-        };
-
-        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        auto cmake_vars = CMakeVars::make_triplet_cmake_var_provider(paths);
-
         // We have a set of user-requested specs.
         // We need to know all the specs which are required to fulfill dependencies for those specs.
         // Therefore, we see what we would install into an empty installed tree, so we can use the existing code.
-        auto action_plan = Dependencies::create_feature_install_plan(provider, *cmake_vars, specs, {});
+        auto action_plan = Dependencies::create_feature_install_plan(provider, cmake_vars, specs, {});
 
         for (auto&& action : action_plan.install_actions)
         {
             action.build_options = install_plan_options;
         }
 
-        cmake_vars->load_tag_vars(action_plan, provider);
-        Build::compute_all_abis(paths, action_plan, *cmake_vars, {});
+        cmake_vars.load_tag_vars(action_plan, provider);
+        Build::compute_all_abis(paths, action_plan, cmake_vars, {});
 
         std::set<std::string> all_abis;
 
@@ -116,7 +91,7 @@ namespace vcpkg::Commands::SetInstalled
 
         Dependencies::print_plan(action_plan, true, paths.ports);
 
-        if (dry_run)
+        if (dry_run == DryRun::Yes)
         {
             Checks::exit_success(VCPKG_LINE_INFO);
         }
@@ -125,12 +100,55 @@ namespace vcpkg::Commands::SetInstalled
                                               Install::KeepGoing::NO,
                                               paths,
                                               status_db,
-                                              args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
-                                              *cmake_vars);
+                                              args.binary_caching_enabled() ? binary_provider : null_binary_provider(),
+                                              cmake_vars);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    {
+        // input sanitization
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
+
+        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+            return Input::check_and_get_full_package_spec(
+                std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+        });
+
+        for (auto&& spec : specs)
+        {
+            Input::check_triplet(spec.package_spec.triplet(), paths);
+        }
+
+        auto binary_provider =
+            create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+
+        const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
+
+        const Build::BuildPackageOptions install_plan_options = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
+            Build::CleanBuildtrees::YES,
+            Build::CleanPackages::YES,
+            Build::CleanDownloads::YES,
+            Build::DownloadTool::BUILT_IN,
+            Build::FailOnTombstone::NO,
+        };
+
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
+        auto cmake_vars = CMakeVars::make_triplet_cmake_var_provider(paths);
+
+        perform_and_exit_ex(args,
+                            paths,
+                            provider,
+                            *binary_provider,
+                            *cmake_vars,
+                            specs,
+                            install_plan_options,
+                            dry_run ? DryRun::Yes : DryRun::No);
+    }
 }

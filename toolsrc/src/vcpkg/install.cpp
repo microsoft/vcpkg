@@ -84,9 +84,10 @@ namespace vcpkg::Install
 
             const std::string filename = file.filename().generic_u8string();
             if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
+                                                Strings::case_insensitive_ascii_equals(filename, "vcpkg.json") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
             {
-                // Do not copy the control file
+                // Do not copy the control file or manifest file
                 continue;
             }
 
@@ -530,6 +531,14 @@ namespace vcpkg::Install
         &get_all_port_names,
     };
 
+    const CommandStructure MANIFEST_COMMAND_STRUCTURE = {
+        create_example_string("install --triplet x64-windows"),
+        0,
+        0,
+        {INSTALL_SWITCHES, INSTALL_SETTINGS},
+        nullptr,
+    };
+
     static void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
     {
         static const std::regex cmake_library_regex(R"(\badd_library\(([^\$\s\)]+)\s)",
@@ -645,20 +654,10 @@ namespace vcpkg::Install
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         // input sanitization
-        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
+        const ParsedArguments options = args.parse_arguments(paths.manifest_mode_enabled() ? MANIFEST_COMMAND_STRUCTURE : COMMAND_STRUCTURE);
 
         auto binaryprovider =
-            create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
-
-        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_full_package_spec(
-                std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-        });
-
-        for (auto&& spec : specs)
-        {
-            Input::check_triplet(spec.package_spec.triplet(), paths);
-        }
+            create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
@@ -671,10 +670,6 @@ namespace vcpkg::Install
             to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) || only_downloads);
 
         auto& fs = paths.get_filesystem();
-
-        // create the plan
-        System::print2("Computing installation plan...\n");
-        StatusParagraphs status_db = database_load_check(paths);
 
         Build::DownloadTool download_tool = Build::DownloadTool::BUILT_IN;
         if (use_aria2) download_tool = Build::DownloadTool::ARIA2;
@@ -690,10 +685,53 @@ namespace vcpkg::Install
             Build::FailOnTombstone::NO,
         };
 
-        //// Load ports from ports dirs
-        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
+
+        if (paths.manifest_mode_enabled())
+        {
+            std::error_code ec;
+            const auto path_to_manifest = paths.manifest_root_dir / "vcpkg.json";
+            auto res = Paragraphs::try_load_manifest(paths.get_filesystem(), "user manifest", path_to_manifest, ec);
+
+            if (ec)
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to load manifest file (%s): %s\n",
+                    path_to_manifest.u8string(), ec.message());
+            }
+
+            std::vector<FullPackageSpec> specs;
+            if (auto val = res.get())
+            {
+                for (auto& dep : (*val)->core_paragraph->dependencies)
+                {
+                    specs.push_back(Input::check_and_get_full_package_spec(
+                        std::move(dep.name), default_triplet, COMMAND_STRUCTURE.example_text));
+                }
+            }
+            else
+            {
+                print_error_message(res.error());
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            Commands::SetInstalled::perform_and_exit_ex(args, paths, provider, *binaryprovider, var_provider, specs, install_plan_options, dry_run ? Commands::DryRun::Yes : Commands::DryRun::No);
+        }
+
+        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+            return Input::check_and_get_full_package_spec(
+                std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+        });
+
+        for (auto&& spec : specs)
+        {
+            Input::check_triplet(spec.package_spec.triplet(), paths);
+        }
+
+        // create the plan
+        System::print2("Computing installation plan...\n");
+        StatusParagraphs status_db = database_load_check(paths);
 
         // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db);

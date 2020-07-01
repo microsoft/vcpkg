@@ -62,7 +62,7 @@ $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 if (!(Test-Path $vcpkgSourcesPath))
 {
     Write-Error "Unable to determine vcpkg sources directory. '$vcpkgSourcesPath' does not exist."
-    return
+    throw
 }
 
 function getVisualStudioInstances()
@@ -408,8 +408,9 @@ $ec = vcpkgInvokeCommandClean $msbuildExe $arguments
 if ($ec -ne 0)
 {
     Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
-    return
+    throw
 }
+
 Write-Host "`nBuilding vcpkg.exe... done.`n"
 
 if (-not $disableMetrics)
