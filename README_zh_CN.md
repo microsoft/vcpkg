@@ -185,7 +185,7 @@ $ xcode-select --install
 
 然后按照出现的窗口中的提示进行操作。
 
-在 macOS 10.14 及先前版本中， 您也需要使用 homebrew 安装 g++。
+在 macOS 10.14 及先前版本中，您也需要使用 homebrew 安装 g++。
 请遵循以下部分中的说明：
 
 ### 在 macOS 10.15 之前版本中安装 GCC
