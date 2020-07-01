@@ -500,6 +500,7 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
 
     static constexpr std::array<CommandSwitch, 8> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
@@ -511,8 +512,11 @@ namespace vcpkg::Install
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
     }};
-    static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 2> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
+        {OPTION_WRITE_PACKAGES_CONFIG,
+         "Writes out a NuGet packages.config-formatted file for use with external binary caching.\nSee `vcpkg help "
+         "binarycaching` for more information."},
     }};
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
@@ -654,7 +658,8 @@ namespace vcpkg::Install
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         // input sanitization
-        const ParsedArguments options = args.parse_arguments(paths.manifest_mode_enabled() ? MANIFEST_COMMAND_STRUCTURE : COMMAND_STRUCTURE);
+        const ParsedArguments options =
+            args.parse_arguments(paths.manifest_mode_enabled() ? MANIFEST_COMMAND_STRUCTURE : COMMAND_STRUCTURE);
 
         auto binaryprovider =
             create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
@@ -697,8 +702,10 @@ namespace vcpkg::Install
 
             if (ec)
             {
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to load manifest file (%s): %s\n",
-                    path_to_manifest.u8string(), ec.message());
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "Failed to load manifest file (%s): %s\n",
+                                          path_to_manifest.u8string(),
+                                          ec.message());
             }
 
             std::vector<FullPackageSpec> specs;
@@ -716,7 +723,21 @@ namespace vcpkg::Install
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
-            Commands::SetInstalled::perform_and_exit_ex(args, paths, provider, *binaryprovider, var_provider, specs, install_plan_options, dry_run ? Commands::DryRun::Yes : Commands::DryRun::No);
+            Optional<fs::path> pkgsconfig;
+            auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
+            if (it_pkgsconfig != options.settings.end())
+            {
+                pkgsconfig = fs::u8path(it_pkgsconfig->second);
+            }
+            Commands::SetInstalled::perform_and_exit_ex(args,
+                                                        paths,
+                                                        provider,
+                                                        *binaryprovider,
+                                                        var_provider,
+                                                        specs,
+                                                        install_plan_options,
+                                                        dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
+                                                        pkgsconfig);
         }
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
@@ -798,6 +819,17 @@ namespace vcpkg::Install
         Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
         Dependencies::print_plan(action_plan, is_recursive, paths.ports);
+
+        auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
+        if (it_pkgsconfig != options.settings.end())
+        {
+            Build::compute_all_abis(paths, action_plan, var_provider, status_db);
+
+            auto pkgsconfig_path = Files::combine(paths.original_cwd, fs::u8path(it_pkgsconfig->second));
+            auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
+            fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
+            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+        }
 
         if (dry_run)
         {
