@@ -8,7 +8,7 @@
 namespace vcpkg::Commands::X_VSInstances
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("x-vsinstances"),
+        create_example_string("x-vsinstances"),
         0,
         0,
         {{}, {}},

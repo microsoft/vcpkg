@@ -28,6 +28,10 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTS=OFF
+        -DDOWNLOAD_STB_IMAGE=OFF
+        -DDOWNLOAD_ENSMALLEN=OFF
+        -DBUILD_PYTHON_BINDINGS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()

@@ -155,9 +155,12 @@ namespace vcpkg::Test
 #endif
     }
 
-    const static fs::path BASE_TEMPORARY_DIRECTORY = internal_base_temporary_directory();
 
-    const fs::path& base_temporary_directory() noexcept { return BASE_TEMPORARY_DIRECTORY; }
+    const fs::path& base_temporary_directory() noexcept
+    {
+        const static fs::path BASE_TEMPORARY_DIRECTORY = internal_base_temporary_directory();
+        return BASE_TEMPORARY_DIRECTORY;
+    }
 
 #if FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_NONE
     constexpr char no_filesystem_message[] =

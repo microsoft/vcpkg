@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
         disable-hidapi-for-uwp.patch
         fix-space-in-path.patch
         disable-wcslcpy-and-wcslcat-for-windows.patch
+        fix-EventToken-header-reference.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
