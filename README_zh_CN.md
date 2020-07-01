@@ -155,7 +155,7 @@ $ ./vcpkg/vcpkg search [search term]
 
 ## 安装 Linux Developer Tools
 
-在Linux的不同发行版中， 您需要安装不同的工具包:
+在Linux的不同发行版中，您需要安装不同的工具包:
 
 - Debian， Ubuntu， popOS， 或其他基于 Debian 的发行版:
 
