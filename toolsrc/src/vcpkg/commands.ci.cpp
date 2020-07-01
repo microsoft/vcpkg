@@ -411,6 +411,7 @@ namespace vcpkg::Commands::CI
             Build::DownloadTool::BUILT_IN,
             Build::FailOnTombstone::YES,
             Build::PurgeDecompressFailure::YES,
+            Build::Editable::NO,
         };
 
         std::vector<std::map<PackageSpec, BuildResult>> all_known_results;

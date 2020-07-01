@@ -113,6 +113,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class Editable
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -124,6 +130,7 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         FailOnTombstone fail_on_tombstone;
         PurgeDecompressFailure purge_decompress_failure;
+        Editable editable;
     };
 
     enum class BuildResult

@@ -85,6 +85,8 @@ namespace vcpkg::Export
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             Build::FailOnTombstone::NO,
+            Build::PurgeDecompressFailure::NO,
+            Build::Editable::NO,
         };
 
         for (const ExportPlanType plan_type : ORDER)

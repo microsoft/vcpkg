@@ -166,6 +166,8 @@ namespace vcpkg::Commands::Upgrade
             Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             Build::FailOnTombstone::NO,
+            Build::PurgeDecompressFailure::NO,
+            Build::Editable::NO,
         };
 
         // Set build settings for all install actions
