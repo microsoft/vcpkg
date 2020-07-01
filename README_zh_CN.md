@@ -72,7 +72,7 @@ vcpkg团队和社区可以看到它的地方，
 > .\vcpkg\bootstrap-vcpkg.bat
 ```
 
-使用以下命令安装任意包：
+使用以下命令为您的项目安装需要的库：
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install]
