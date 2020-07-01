@@ -1,0 +1,10 @@
+include(SelectLibraryConfigurations)
+
+_find_package(${ARGS})
+if(Iconv_FOUND)
+    find_library(CHARSET_LIBRARY_DEBUG NAMES charsetd libcharsetd charset libcharset NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}/debug" NO_DEFAULT_PATH)
+    find_library(CHARSET_LIBRARY_RELEASE NAMES charset libcharset NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}" NO_DEFAULT_PATH)
+    find_library(CHARSET_LIBRARY_RELEASE NAMES charset libcharset NAMES_PER_DIR PATH_SUFFIXES lib)
+    select_library_configurations(CHARSET)
+    list(APPEND Iconv_LIBRARIES ${CHARSET_LIBRARIES})
+endif()

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if("public-preview" IN_LIST FEATURES)
@@ -14,8 +12,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uhttp-c
-        REF b67a6bfa0d018a8a23176ee214e46c208fc323c3
-        SHA512 75fafe242324bb2fc72befdd06427350e6f99aec9496fdf38b9660e7965fad89276ee543f36c3ba3360fc99b8301e74e2c1723d17f39e8471beee3e32cacb348
+        REF 6bf59b9057f653aaa57e6539627085f41c2dfe33
+        SHA512 96437df9f249e2a551e9890b4d476ae032384a067d845b86893013138380802592f70139e2b4f4c0d543c464ef98008d0b2f025ce6f0341181e431b53e311dc5
         HEAD_REF master
     )
 endif()
@@ -38,7 +36,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/uhttp)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-uhttp-c/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
 

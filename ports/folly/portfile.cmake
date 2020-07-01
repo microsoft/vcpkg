@@ -20,6 +20,7 @@ vcpkg_from_github(
         reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
+        fix-addbit.patch
 )
 
 file(COPY

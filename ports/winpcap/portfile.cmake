@@ -1,4 +1,6 @@
-include(vcpkg_common_functions)
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libpcap")
+    message(FATAL_ERROR "FATAL ERROR: libpcap and winpcap are incompatible.")
+endif()
 
 set(WINPCAP_VERSION 4_1_3)
 

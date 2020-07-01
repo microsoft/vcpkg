@@ -3,24 +3,24 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF bdce8336364595d1a446957a6164c97363349a53 # v1.74
-    SHA512 148c949a4d1a07832e97dbf4b3333b728f7207756a95db633daad83636790abe0a335797b2c5a27938453727de43f6abb9f5a5b41909f223ee735ddd1924eb3f
+    REF 5503c0a12e0c929e84b3f61b2cb4bb9177ea3da1 # v1.76
+    SHA512 5cafb4f1c76975c38ddda0316da96e1f29e652fbc5c8d0e5158c9b21b11c0acc45e4b84fbc53bde1d07c4f2002744e1407f900e92eb8146e0a843b8b4f4b58bd
     HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    bindings       IMGUI_COPY_BINDINGS # should only be copied once, at most
+    bindings    IMGUI_COPY_BINDINGS # should only be copied once, at most
+    freetype    IMGUI_FREETYPE
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_RELEASE
+    OPTIONS
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
-        -DIMGUI_COPY_BINDINGS=OFF
         -DIMGUI_SKIP_HEADERS=ON
 )
 
