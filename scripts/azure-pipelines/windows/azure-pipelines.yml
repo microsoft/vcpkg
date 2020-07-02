@@ -76,7 +76,7 @@ jobs:
         & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
   - task: PublishBuildArtifacts@1
     displayName: 'Upload file lists for all packages'
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
     inputs:
       PathtoPublish: scripts/list_files
       ArtifactName: "${{ parameters.triplet }} package file lists"
