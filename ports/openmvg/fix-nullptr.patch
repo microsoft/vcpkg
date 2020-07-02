@@ -1,0 +1,13 @@
+diff --git a/src/software/VO/Tracker_opencv_klt.hpp b/src/software/VO/Tracker_opencv_klt.hpp
+index aa7dffe..2c4d237 100644
+--- a/src/software/VO/Tracker_opencv_klt.hpp
++++ b/src/software/VO/Tracker_opencv_klt.hpp
+@@ -80,7 +80,7 @@ struct Tracker_opencv_KLT : public Abstract_Tracker
+     std::vector<cv::KeyPoint> m_nextKeypoints;
+ 
+     cv::Ptr<cv::FeatureDetector> m_detector = cv::GFTTDetector::create(count);
+-    if (m_detector == NULL)
++    if (m_detector == nullptr)
+       return false;
+ 
+     m_detector->detect(current_img, m_nextKeypoints);

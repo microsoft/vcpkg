@@ -9,16 +9,17 @@ vcpkg_from_github(
     REF 606d1c9e82123dd50de282128151a50bf42262fc # v1.5
     SHA512 eddcf4c5f86541112840a6d89bbf360d30b085c2b3ff3e39b357030a465163b465e89d01474f8dbd65b66f8bccfc1f54a58963324f622482e2960f00214b2b75
     PATCHES
-        fixcmake.patch
+        fix-cmake.patch
         fix-config-cmake.patch
+        fix-nullptr.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     openmp OpenMVG_USE_OPENMP
-    openmp ENABLE_OPENMP
     opencv OpenMVG_USE_OPENCV
     opencv OpenMVG_USE_OCVSIFT
-    opencv ENABLE_OPENCV
+    software OpenMVG_BUILD_SOFTWARES
+    software OpenMVG_BUILD_GUI_SOFTWARES
 )
 
 # remove some deps to prevent conflict
@@ -49,8 +50,6 @@ vcpkg_configure_cmake(
         -DOpenMVG_BUILD_DOC=OFF
         -DOpenMVG_BUILD_EXAMPLES=OFF
         -DOpenMVG_BUILD_OPENGL_EXAMPLES=OFF
-        -DOpenMVG_BUILD_SOFTWARES=OFF
-        -DOpenMVG_BUILD_GUI_SOFTWARES=OFF
         -DOpenMVG_BUILD_COVERAGE=OFF
         -DOpenMVG_USE_INTERNAL_CLP=OFF
         -DOpenMVG_USE_INTERNAL_COINUTILS=OFF
@@ -86,6 +85,51 @@ if(OpenMVG_BUILD_SHARED)
     file(REMOVE_RECURSE ${DLL_FILES})
 endif()
 vcpkg_copy_pdbs()
+
+vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
+    openMVG_main_AlternativeVO
+    openMVG_main_ChangeLocalOrigin
+    openMVG_main_ColHarmonize
+    openMVG_main_ComputeClusters
+    openMVG_main_ComputeFeatures
+    openMVG_main_ComputeFeatures_OpenCV
+    openMVG_main_ComputeMatches
+    openMVG_main_ComputeSfM_DataColor
+    openMVG_main_ComputeStructureFromKnownPoses
+    openMVG_main_ConvertList
+    openMVG_main_ConvertSfM_DataFormat
+    openMVG_main_evalQuality
+    openMVG_main_ExportCameraFrustums
+    openMVG_main_exportKeypoints
+    openMVG_main_exportMatches
+    openMVG_main_exportTracks
+    openMVG_main_ExportUndistortedImages
+    openMVG_main_FrustumFiltering
+    openMVG_main_geodesy_registration_to_gps_position
+    openMVG_main_GlobalSfM
+    openMVG_main_IncrementalSfM
+    openMVG_main_IncrementalSfM2
+    openMVG_main_ListMatchingPairs
+    openMVG_main_MatchesToTracks
+    openMVG_main_openMVG2Agisoft
+    openMVG_main_openMVG2CMPMVS
+    openMVG_main_openMVG2Colmap
+    openMVG_main_openMVG2MESHLAB
+    openMVG_main_openMVG2MVE2
+    openMVG_main_openMVG2MVSTEXTURING
+    openMVG_main_openMVG2NVM
+    openMVG_main_openMVG2openMVS
+    openMVG_main_openMVG2PMVS
+    openMVG_main_openMVG2WebGL
+    openMVG_main_openMVGSpherical2Cubic
+    openMVG_main_PointsFiltering
+    openMVG_main_SfMInit_ImageListing
+    openMVG_main_SfMInit_ImageListingFromKnownPoses
+    openMVG_main_SfM_Localization
+    openMVG_main_SplitMatchFileIntoMatchFiles
+    ui_openMVG_control_points_registration
+    ui_openMVG_MatchesViewer
+)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

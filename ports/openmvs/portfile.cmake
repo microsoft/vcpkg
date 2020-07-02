@@ -8,12 +8,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    cuda OpenMVS_USE_CUDA
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DOpenMVS_USE_BREAKPAD=OFF
-        -DOpenMVS_USE_CUDA=OFF
         -DINSTALL_CMAKE_DIR:STRING=share/openmvs
         -DINSTALL_BIN_DIR:STRING=bin
         -DINSTALL_LIB_DIR:STRING=lib
@@ -25,9 +28,14 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_fixup_cmake_targets()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/openmvs)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openmvs)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
+    DensifyPointCloud
+    InterfaceCOLMAP
+    InterfaceVisualSFM
+    ReconstructMesh
+    RefineMesh
+    TextureMesh
+    Viewer
+)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
