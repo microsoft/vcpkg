@@ -229,7 +229,12 @@ If you wish to silence this error and use classic mode, you can:
         m_pimpl->triplets_dirs.emplace_back(community_triplets);
     }
 
-    fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / spec.dir(); }
+    fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / fs::u8path(spec.dir()); }
+    fs::path VcpkgPaths::build_dir(const PackageSpec& spec) const { return this->buildtrees / fs::u8path(spec.name()); }
+    fs::path VcpkgPaths::build_dir(const std::string& package_name) const
+    {
+        return this->buildtrees / fs::u8path(package_name);
+    }
 
     fs::path VcpkgPaths::build_info_file_path(const PackageSpec& spec) const
     {
@@ -389,9 +394,7 @@ If you wish to silence this error and use classic mode, you can:
         {
             StringView flag;
             bool enabled;
-        } flags[] = {
-            {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, manifest_mode_enabled()}
-        };
+        } flags[] = {{VcpkgCmdArguments::MANIFEST_MODE_FEATURE, manifest_mode_enabled()}};
 
         for (const auto& flag : flags)
         {

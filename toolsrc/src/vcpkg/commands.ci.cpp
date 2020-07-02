@@ -20,6 +20,48 @@
 
 using namespace vcpkg;
 
+namespace
+{
+    using namespace vcpkg::Build;
+
+    const fs::path log_path = fs::u8path(".log");
+
+    class CiBuildLogsRecorder final : public IBuildLogsRecorder
+    {
+        fs::path base_path;
+    public:
+        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) { }
+
+        virtual void record_build_result(const VcpkgPaths& paths,
+                                         const PackageSpec& spec,
+                                         BuildResult result) const override
+        {
+            if (result == BuildResult::SUCCEEDED)
+            {
+                return;
+            }
+
+            auto& filesystem = paths.get_filesystem();
+            const auto source_path = paths.build_dir(spec);
+            auto children = filesystem.get_files_non_recursive(source_path);
+            Util::erase_remove_if(children, [](const fs::path& p) { return p.extension() != log_path; });
+            const auto target_path = base_path / fs::u8path(spec.name());
+            (void)filesystem.create_directory(target_path, VCPKG_LINE_INFO);
+            if (children.empty())
+            {
+                //filesystem.write_contents(spec.name() + )
+            }
+            else
+            {
+                for (const fs::path& p : children)
+                {
+                    filesystem.copy_file(p, target_path / p.filename(), fs::copy_options::none, VCPKG_LINE_INFO);
+                }
+            }
+        }
+    };
+}
+
 namespace vcpkg::Commands::CI
 {
     using Build::BuildResult;
@@ -38,11 +80,10 @@ namespace vcpkg::Commands::CI
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
 
-    static constexpr std::array<CommandSetting, 3> CI_SETTINGS = {{
-        {OPTION_EXCLUDE, "Comma separated list of ports to skip"},
-        {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
-        {OPTION_FAILURE_LOGS, "Directory to which failure logs will be copied"}
-    }};
+    static constexpr std::array<CommandSetting, 3> CI_SETTINGS = {
+        {{OPTION_EXCLUDE, "Comma separated list of ports to skip"},
+         {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
+         {OPTION_FAILURE_LOGS, "Directory to which failure logs will be copied"}}};
 
     static constexpr std::array<CommandSwitch, 2> CI_SWITCHES = {{
         {OPTION_DRY_RUN, "Print out plan without execution"},
@@ -383,24 +424,20 @@ namespace vcpkg::Commands::CI
         }
 
         auto& filesystem = paths.get_filesystem();
-        Optional<fs::path> failure_logs_directory;
+        Optional<CiBuildLogsRecorder> build_logs_recorder_storage;
         {
             auto it_failure_logs = settings.find(OPTION_FAILURE_LOGS);
             if (it_failure_logs != settings.end())
             {
                 auto raw_path = fs::u8path(it_failure_logs->second);
                 System::printf("Creating failure logs output directory %s\n", it_failure_logs->second);
-                std::error_code ec;
-                filesystem.create_directories(raw_path, ec);
-                if (ec)
-                {
-                    System::printf("failed: %s\n", ec.message());
-                    Checks::exit_fail(VCPKG_LINE_INFO);
-                }
-
-                failure_logs_directory.emplace_or_assign(filesystem.canonical(VCPKG_LINE_INFO, raw_path));
+                filesystem.create_directories(raw_path, VCPKG_LINE_INFO);
+                build_logs_recorder_storage = filesystem.canonical(VCPKG_LINE_INFO, raw_path);
             }
         }
+
+        const IBuildLogsRecorder& build_logs_recorder =
+            build_logs_recorder_storage ? *(build_logs_recorder_storage.get()) : null_build_logs_recorder();
 
         StatusParagraphs status_db = database_load_check(paths);
 
@@ -433,12 +470,8 @@ namespace vcpkg::Commands::CI
                 return FullPackageSpec{spec, std::move(default_features)};
             });
 
-            auto split_specs = find_unknown_ports_for_ci(paths,
-                                                         exclusions_set,
-                                                         provider,
-                                                         var_provider,
-                                                         all_default_full_specs,
-                                                         binaryprovider);
+            auto split_specs = find_unknown_ports_for_ci(
+                paths, exclusions_set, provider, var_provider, all_default_full_specs, binaryprovider);
             PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
 
             Dependencies::CreateInstallPlanOptions serialize_options;
@@ -482,8 +515,13 @@ namespace vcpkg::Commands::CI
             else
             {
                 auto collection_timer = Chrono::ElapsedTimer::create_started();
-                auto summary = Install::perform(
-                    action_plan, Install::KeepGoing::YES, paths, status_db, binaryprovider, var_provider);
+                auto summary = Install::perform(action_plan,
+                                                Install::KeepGoing::YES,
+                                                paths,
+                                                status_db,
+                                                binaryprovider,
+                                                build_logs_recorder,
+                                                var_provider);
                 auto collection_time_elapsed = collection_timer.elapsed();
 
                 // Adding results for ports that were built or pulled from an archive
@@ -528,8 +566,7 @@ namespace vcpkg::Commands::CI
         auto it_xunit = settings.find(OPTION_XUNIT);
         if (it_xunit != settings.end())
         {
-            filesystem.write_contents(
-                fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
+            filesystem.write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

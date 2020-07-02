@@ -181,6 +181,7 @@ namespace vcpkg::Commands::Upgrade
                              paths,
                              status_db,
                              args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
+                             Build::null_build_logs_recorder(),
                              var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");

@@ -290,19 +290,6 @@ namespace vcpkg
             return !rhs.m_base.has_value();
         }
 
-        template<class U>
-        void emplace_or_assign(U&& source)
-        {
-            if (m_base.has_value())
-            {
-                m_base.value() = std::forward<U>(source);
-            }
-            else
-            {
-                new (&m_base.value()) T(std::forward<U>(source));
-            }
-        }
-
     private:
         details::OptionalStorage<T> m_base;
     };

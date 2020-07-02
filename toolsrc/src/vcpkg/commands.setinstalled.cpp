@@ -118,6 +118,7 @@ namespace vcpkg::Commands::SetInstalled
                                               paths,
                                               status_db,
                                               args.binary_caching_enabled() ? binary_provider : null_binary_provider(),
+                                              Build::null_build_logs_recorder(),
                                               cmake_vars);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");

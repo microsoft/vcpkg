@@ -35,17 +35,40 @@ namespace vcpkg::System
 
 namespace vcpkg::Build
 {
+    enum class BuildResult
+    {
+        NULLVALUE = 0,
+        SUCCEEDED,
+        BUILD_FAILED,
+        POST_BUILD_CHECKS_FAILED,
+        FILE_CONFLICTS,
+        CASCADED_DUE_TO_MISSING_DEPENDENCIES,
+        EXCLUDED,
+        DOWNLOADED
+    };
+
+    struct IBuildLogsRecorder
+    {
+        virtual void record_build_result(const VcpkgPaths& paths,
+                                         const PackageSpec& spec,
+                                         BuildResult result) const = 0;
+    };
+
+    const IBuildLogsRecorder& null_build_logs_recorder() noexcept;
+
     namespace Command
     {
         int perform_ex(const FullPackageSpec& full_spec,
                        const SourceControlFileLocation& scfl,
                        const PortFileProvider::PathsPortFileProvider& provider,
                        IBinaryProvider& binaryprovider,
+                       const IBuildLogsRecorder& build_logs_recorder,
                        const VcpkgPaths& paths);
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
                                  IBinaryProvider& binaryprovider,
+                                 const IBuildLogsRecorder& build_logs_recorder,
                                  const VcpkgPaths& paths);
 
         int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
@@ -129,18 +152,6 @@ namespace vcpkg::Build
         Build::PurgeDecompressFailure::YES,
     };
 
-    enum class BuildResult
-    {
-        NULLVALUE = 0,
-        SUCCEEDED,
-        BUILD_FAILED,
-        POST_BUILD_CHECKS_FAILED,
-        FILE_CONFLICTS,
-        CASCADED_DUE_TO_MISSING_DEPENDENCIES,
-        EXCLUDED,
-        DOWNLOADED
-    };
-
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
         BuildResult::SUCCEEDED,
         BuildResult::BUILD_FAILED,
@@ -197,6 +208,7 @@ namespace vcpkg::Build
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
                                       IBinaryProvider& binaries_provider,
+                                      const IBuildLogsRecorder& build_logs_recorder,
                                       const StatusParagraphs& status_db);
 
     enum class BuildPolicy
