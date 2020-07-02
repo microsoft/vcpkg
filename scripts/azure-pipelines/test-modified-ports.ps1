@@ -46,6 +46,7 @@ Param(
 
 if (-Not (Test-Path "triplets/$Triplet.cmake")) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
+    throw
 }
 
 $env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
