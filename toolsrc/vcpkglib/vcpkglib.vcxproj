@@ -189,7 +189,7 @@
     <ClInclude Include="..\include\vcpkg\help.h" />
     <ClInclude Include="..\include\vcpkg\input.h" />
     <ClInclude Include="..\include\vcpkg\install.h" />
-    <ClInclude Include="..\include\vcpkg\logicexpression.h" />
+    <ClInclude Include="..\include\vcpkg\platform-expression.h" />
     <ClInclude Include="..\include\vcpkg\metrics.h" />
     <ClInclude Include="..\include\vcpkg\packagespec.h" />
     <ClInclude Include="..\include\vcpkg\paragraphparser.h" />
@@ -254,7 +254,7 @@
     <ClCompile Include="..\src\vcpkg\commands.edit.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.env.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.exportifw.cpp" />
-    <ClCompile Include="..\src\vcpkg\commands.import.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.format-manifest.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.integrate.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.list.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.owns.cpp" />
@@ -273,7 +273,7 @@
     <ClCompile Include="..\src\vcpkg\help.cpp" />
     <ClCompile Include="..\src\vcpkg\input.cpp" />
     <ClCompile Include="..\src\vcpkg\install.cpp" />
-    <ClCompile Include="..\src\vcpkg\logicexpression.cpp" />
+    <ClCompile Include="..\src\vcpkg\platform-expression.cpp" />
     <ClCompile Include="..\src\vcpkg\metrics.cpp" />
     <ClCompile Include="..\src\vcpkg\packagespec.cpp" />
     <ClCompile Include="..\src\vcpkg\paragraphparseresult.cpp" />

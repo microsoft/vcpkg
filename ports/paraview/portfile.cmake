@@ -1,11 +1,16 @@
 set(VERSION 5.8)
 
+if ("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_OSX)
+    mesage(FATAL_ERROR "Feature tools are currently not supported.")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
     "mpi"          PARAVIEW_USE_MPI             #untested
     "vtkm"         PARAVIEW_USE_VTKM
     "python"       PARAVIEW_USE_PYTHON
+    "tools"        PARAVIEW_BUILD_TOOLS
 )
 
 vcpkg_from_github(
@@ -22,6 +27,7 @@ vcpkg_from_github(
         qt_static_plugins.patch # Remove with Qt version > 5.14
         python_include.patch
         python_wrapper.patch
+        add-tools-option.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -40,7 +46,6 @@ vcpkg_from_gitlab(
     SHA512 6d2c1d6e1cd345547926938451755e7a8be5dabd89e18a2ceb419db16c5b29f354554a5130eb365b7e522d655370fd4766953813ff530c06e4851fe26104ce58
     PATCHES
         VisIt_Build.patch
-        fix-using-hdf5.patch
         #removeunusedsymbols.patch # These also get remove in master of ParaView
         ${VisItPatches}
 )
@@ -65,6 +70,9 @@ if("python" IN_LIST FEATURES)
 
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
+
+string(APPEND VCPKG_C_FLAGS " -DH5_USE_110_API")
+string(APPEND VCPKG_CXX_FLAGS " -DH5_USE_110_API")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
