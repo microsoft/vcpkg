@@ -1,23 +1,12 @@
-# Patches that are independent of --head flag
-set(_PATCHES 001-tools-path.patch)
-
-# Patches that are only applied to --head builds
-if(VCPKG_USE_HEAD_VERSION)
-    list(APPEND _PATCHES 002-sdl-includes-head.patch)
-
-# Patches that are only applied to release builds
-else()
-    list(APPEND _PATCHES 002-sdl-includes.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum
-    REF v2019.10
-    SHA512 b1c991199fa9b09b780ea822de4b2251c70fcc95e7f28bb14a6184861d92fcd4c6e6fe43ad21acfbfd191cd46e79bf58b867240ad6f706b07cd1fbe145b8eaff
+    REF v2020.06
+    SHA512 65b0c8a4520d1d282420c30ecd7c8525525d4dbb6e562e1e2e93d110f4eb686af43f098bf02460727fab1e1f9446dd00a99051e150c05ea40b1486a44fea1042
     HEAD_REF master
     PATCHES
-        ${_PATCHES}
+        001-tools-path.patch
+        002-sdl-includes.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -97,27 +86,23 @@ else()
     set(EXE_SUFFIX)
 endif()
 
-if(distancefieldconverter IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-distancefieldconverter${EXE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
-endif()
-if(fontconverter IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-fontconverter${EXE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
-endif()
-if(al-info IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-al-info${EXE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
-endif()
-if(magnuminfo IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-info${EXE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
-endif()
-
-# Tools require dlls
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/magnum)
-
-file(GLOB_RECURSE TO_REMOVE
-   ${CURRENT_PACKAGES_DIR}/bin/*${EXE_SUFFIX}
-   ${CURRENT_PACKAGES_DIR}/debug/bin/*${EXE_SUFFIX})
-if(TO_REMOVE)
-    file(REMOVE ${TO_REMOVE})
+# Copy tools into vcpkg's tools directory
+set(_TOOL_EXEC_NAMES "")
+set(_TOOLS
+    al-info
+    distancefieldconverter
+    fontconverter
+    gl-info
+    imageconverter
+    sceneconverter)
+foreach(_tool IN LISTS _TOOLS)
+    if("${_tool}" IN_LIST FEATURES)
+        list(APPEND _TOOL_EXEC_NAMES magnum-${_tool})
+    endif()
+endforeach()
+message(STATUS ${_TOOL_EXEC_NAMES})
+if(_TOOL_EXEC_NAMES)
+    vcpkg_copy_tools(TOOL_NAMES "${_TOOL_EXEC_NAMES}" AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

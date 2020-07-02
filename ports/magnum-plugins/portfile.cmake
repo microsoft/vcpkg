@@ -1,25 +1,14 @@
-set(_RELEASE_ONLY_PATCHES)
-if(NOT VCPKG_USE_HEAD_VERSION)
-    vcpkg_download_distfile(
-        _RELEASE_ONLY_PATCHES
-        URLS "https://github.com/mosra/magnum-plugins/commit/c2a05465fa43befbb628b424378e328fa42923b7.diff"
-        FILENAME "c2a05465fa43befbb628b424378e328fa42923b7.diff"
-        SHA512 e03953ff7319b3b8e3644b8e25c006a856dd6a85cec6e4c033f9b2059af7ae39ed84b76c11c93c41ea6a681d7f34dd5980806f49f760d1c26778047c90cc76df
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-plugins
-    REF v2019.10
-    SHA512 702c43b0d323dc5b903ffee3dd9aaecf2de3b6bb00e7b243880e433df12efe337e512aac75a6f38adce02eb94f3065770ff6a03b7241198f27b5c46de63e5750
+    REF v2020.06
+    SHA512 3c11c2928bfc9d04c1ad64f72b6ffac6cf80a1ef3aacc5d0486b9ad955cf4f6ea6d5dcb3846dc5d73f64ec522a015eafb997f62c79ad7ff91169702341f23af0
     HEAD_REF master
     PATCHES
         001-tools-path.patch
-        ${_RELEASE_ONLY_PATCHES}
 )
 
-if(basisimporter IN_LIST FEATURES OR basisimageconverter IN_LIST FEATURES)
+if("basisimporter" IN_LIST FEATURES OR "basisimageconverter" IN_LIST FEATURES)
     # Bundle Basis Universal, a commit that's before the UASTC support (which
     # is not implemented yet). The repo has big unrequired files in its
     # history, so we're downloading just a snapshot instead of a git clone.
@@ -48,7 +37,7 @@ if(basisimporter IN_LIST FEATURES OR basisimageconverter IN_LIST FEATURES)
     file(RENAME ${_BASIS_UNIVERSAL_SOURCE} "${SOURCE_PATH}/src/external/basis-universal")
 endif()
 
-if(meshoptimizersceneconverter IN_LIST FEATURES)
+if("meshoptimizersceneconverter" IN_LIST FEATURES)
     # Bundle meshoptimizer 0.14 + a commit that fixes the build on old Apple
     # Clang versions: https://github.com/zeux/meshoptimizer/pull/130
     vcpkg_download_distfile(
