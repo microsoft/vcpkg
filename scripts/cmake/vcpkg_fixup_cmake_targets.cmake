@@ -171,6 +171,11 @@ function(vcpkg_fixup_cmake_targets)
     if(NOT _vfct_NO_PREFIX_CORRECTION)
         foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
             file(READ ${MAIN_CMAKE} _contents)
+            #This correction is not correct for all cases. To make it correct for all cases it needs to consider
+            #original folder deepness to CURRENT_PACKAGES_DIR in comparison to the moved to folder deepness which 
+            #is always at least (>=) 2, e.g. share/${PORT}. Currently the code assumes it is always 2 although 
+            #this requirement is only true for the *Config.cmake. The targets are not required to be in the same
+            #folder as the *Config.cmake!
             string(REGEX REPLACE
                 "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
                 "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
