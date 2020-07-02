@@ -8,13 +8,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        tools BUILD_MARBLE_TOOLS
-        tests BUILD_MARBLE_TESTS
-        plugins WITH_DESIGNER_PLUGIN
-)
+#vcpkg_check_features(
+#    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+#    FEATURES
+#        tools BUILD_MARBLE_TOOLS
+#       tests BUILD_MARBLE_TESTS
+#        plugins WITH_DESIGNER_PLUGIN
+#)
  
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -30,13 +30,16 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 file(GLOB  EXE "${CURRENT_PACKAGES_DIR}/*.exe")
 file(GLOB  DLL "${CURRENT_PACKAGES_DIR}/*.dll")
 file(GLOB_RECURSE  PLUGINS "${CURRENT_PACKAGES_DIR}/plugins/*")
+file(GLOB_RECURSE  PLUGINS_DESIGNER "${CURRENT_PACKAGES_DIR}/lib/plugins/*")
+file(GLOB_RECURSE  PLUGINS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/plugins/*")
 file(GLOB_RECURSE  DATA "${CURRENT_PACKAGES_DIR}/data/*")
 file(GLOB_RECURSE  MKSPECS "${CURRENT_PACKAGES_DIR}/mkspecs/*")
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(COPY ${DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(COPY ${PLUGINS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins)
+file(COPY ${PLUGINS} ${PLUGINS_DESIGNER} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins)
+file(COPY ${PLUGINS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins/debug)
 file(COPY ${DATA} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/data)
 file(COPY ${MKSPECS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/mkspecs)
 
@@ -51,7 +54,9 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/plugins ${CURRENT_PACKAGES_DIR}/debug/plugins
     ${CURRENT_PACKAGES_DIR}/data    ${CURRENT_PACKAGES_DIR}/debug/data
     ${CURRENT_PACKAGES_DIR}/mkspecs ${CURRENT_PACKAGES_DIR}/debug/mkspecs
-    ${CURRENT_PACKAGES_DIR}/debug/share)
+    ${CURRENT_PACKAGES_DIR}/debug/share
+	${CURRENT_PACKAGES_DIR}/debug/lib/plugins   ${CURRENT_PACKAGES_DIR}/lib/plugins
+)
 
 vcpkg_copy_pdbs()
 
