@@ -27,6 +27,11 @@
 ## Passing this option disable such behavior, as it is convenient for ports that install
 ## more than one CMake package configuration file.
 ##
+## ### NO_PREFIX_CORRECTION 
+## Disables the correction of_IMPORT_PREFIX done by vcpkg due to moving the targets. 
+## Currently the correction does not take into account how the files are moved and applies
+## I rather simply correction which in some cases will yield the wrong results.
+##
 ## ## Notes
 ## Transform all `/debug/<CONFIG_PATH>/*targets-debug.cmake` files and move them to `/<TARGET_PATH>`.
 ## Removes all `/debug/<CONFIG_PATH>/*targets.cmake` and `/debug/<CONFIG_PATH>/*config.cmake`.
@@ -43,7 +48,7 @@
 ## * [curl](https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake)
 ## * [nlohmann-json](https://github.com/Microsoft/vcpkg/blob/master/ports/nlohmann-json/portfile.cmake)
 function(vcpkg_fixup_cmake_targets)
-    cmake_parse_arguments(_vfct "DO_NOT_DELETE_PARENT_CONFIG_PATH" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
+    cmake_parse_arguments(_vfct "DO_NOT_DELETE_PARENT_CONFIG_PATH;NO_PREFIX_CORRECTION" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
 
     if(_vfct_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_cmake_targets was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
@@ -163,20 +168,32 @@ function(vcpkg_fixup_cmake_targets)
     #Fix ${_IMPORT_PREFIX} in cmake generated targets and configs; 
     #Since those can be renamed we have to check in every *.cmake
     file(GLOB_RECURSE MAIN_CMAKES "${RELEASE_SHARE}/*.cmake")
-    foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
-        file(READ ${MAIN_CMAKE} _contents)
-        string(REGEX REPLACE
-            "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
-            "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-            _contents "${_contents}") # see #1044 for details why this replacement is necessary. See #4782 why it must be a regex.
-         string(REGEX REPLACE
-            "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
-            "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
-            _contents "${_contents}")
-        #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
-        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
-        file(WRITE ${MAIN_CMAKE} "${_contents}")
-    endforeach()
+    if(NOT _vfct_NO_PREFIX_CORRECTION)
+        foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
+            file(READ ${MAIN_CMAKE} _contents)
+            string(REGEX REPLACE
+                "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
+                "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+                _contents "${_contents}") # see #1044 for details why this replacement is necessary. See #4782 why it must be a regex.
+            string(REGEX REPLACE
+                "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
+                "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
+                _contents "${_contents}")
+            #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
+            #This happens if vcpkg built libraries are directly linked to a target instead of using
+            #an imported target for it. We could add more logic here to identify defect target files.
+            #Since the replacement her ein a multi config build always requires a generator expression
+            #in front of the absoulte path to ${CURRENT_INSTALLED_DIR}. So the match should always be at
+            #least >:${CURRENT_INSTALLED_DIR}. 
+            #In general the following generator expressions should be there:
+            #\$<\$<CONFIG:DEBUG>:${CURRENT_INSTALLED_DIR}/debug/lib/somelib>
+            #and/or
+            #\$<\$<NOT:\$<CONFIG:DEBUG>>:${CURRENT_INSTALLED_DIR}/lib/somelib>
+            #with ${CURRENT_INSTALLED_DIR} being fully expanded
+            string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
+            file(WRITE ${MAIN_CMAKE} "${_contents}")
+        endforeach()
+    endif()
 
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE REMAINING_FILES "${DEBUG_SHARE}/*")
