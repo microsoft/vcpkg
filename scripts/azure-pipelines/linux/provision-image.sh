@@ -11,7 +11,8 @@ APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
   libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev \
   libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml \
   flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
-  xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config"
+  xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config python3-pip \
+  ninja-build"
 
 # Additionally required by qt5-base
 APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
@@ -71,6 +72,9 @@ sudo dpkg -i packages-microsoft-prod.deb
 sudo apt update
 sudo add-apt-repository universe
 sudo apt install -y powershell
+
+# Install meson build
+sudo pip3 install meson==0.54.3
 
 if [ -z "$StorageAccountName" ]; then
 echo "No storage account supplied, skipping."
