@@ -40,7 +40,7 @@ vcpkg_configure_cmake(
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
-        -Dhsm_type_symm_key=${USE_PROV_CLIENT}
+        -Dhsm_type_symm_key=${use_prov_client}
 )
 
 vcpkg_install_cmake()
