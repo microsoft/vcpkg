@@ -8,6 +8,7 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -60,6 +61,20 @@ namespace
         return result;
     }
 
+    void uppercase_win32_drive_letter(fs::path& path)
+    {
+#if defined(_WIN32)
+        const auto& nativePath = path.native();
+        if (nativePath.size() > 2 && (nativePath[0] >= L'a' && nativePath[0] <= L'z') && nativePath[1] == L':')
+        {
+            auto uppercaseFirstLetter = std::move(path).native();
+            uppercaseFirstLetter[0] = nativePath[0] - L'a' + L'A';
+            path = uppercaseFirstLetter;
+        }
+#endif
+        (void)path;
+    }
+
 } // unnamed namespace
 
 namespace vcpkg
@@ -84,10 +99,10 @@ namespace vcpkg
             std::unique_ptr<ToolCache> m_tool_cache;
             Cache<Triplet, fs::path> m_triplets_cache;
             Build::EnvCache m_env_cache;
+
+            fs::SystemHandle file_lock_handle;
         };
     }
-
-    VcpkgPaths::~VcpkgPaths() noexcept {}
 
     VcpkgPaths::VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args)
         : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.compiler_tracking_enabled()))
@@ -106,20 +121,72 @@ namespace vcpkg
                     filesystem.canonical(VCPKG_LINE_INFO, System::get_exe_path_of_current_process()), ".vcpkg-root");
             }
         }
-
-#if defined(_WIN32)
-        // fixup Windows drive letter to uppercase
-        const auto& nativeRoot = root.native();
-        if (nativeRoot.size() > 2 && (nativeRoot[0] >= L'a' && nativeRoot[0] <= L'z') && nativeRoot[1] == L':')
-        {
-            auto uppercaseFirstLetter = nativeRoot;
-            uppercaseFirstLetter[0] = nativeRoot[0] - L'a' + L'A';
-            root = uppercaseFirstLetter;
-        }
-#endif // defined(_WIN32)
-
+        uppercase_win32_drive_letter(root);
         Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
         Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
+
+        std::error_code ec;
+        const auto vcpkg_lock = root / ".vcpkg-root";
+        m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
+        if (ec)
+        {
+            System::printf(System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
+            System::printf(System::Color::error, "    %s\n", ec.message());
+            System::print2(System::Color::error, "Exiting now.\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        if (args.manifest_root_dir)
+        {
+            manifest_root_dir = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.manifest_root_dir));
+        }
+        else
+        {
+            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, "vcpkg.json");
+        }
+        uppercase_win32_drive_letter(manifest_root_dir);
+
+        if (!manifest_root_dir.empty() && args.manifest_mode.value_or(true))
+        {
+            Debug::print("Using manifest-root: ", root.u8string(), '\n');
+
+            installed = process_output_directory(
+                filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
+        }
+        else
+        {
+            // we ignore the manifest root dir if the user requests -manifest
+            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value())
+            {
+                System::print2(System::Color::warning,
+                               "Warning: manifest-root detected at ",
+                               manifest_root_dir.generic_u8string(),
+                               ", but manifests are not enabled.\n");
+                System::printf(System::Color::warning,
+                               R"(If you wish to use manifest mode, you may do one of the following:
+    * Add the `%s` feature flag to the comma-separated environment
+      variable `%s`.
+    * Add the `%s` feature flag to the `--%s` option.
+    * Pass your manifest directory to the `--%s` option.
+If you wish to silence this error and use classic mode, you can:
+    * Add the `-%s` feature flag to `%s`.
+    * Add the `-%s` feature flag to `--%s`.
+)",
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ENV,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ARG,
+                               VcpkgCmdArguments::MANIFEST_ROOT_DIR_ARG,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ENV,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ARG);
+            }
+
+            manifest_root_dir.clear();
+            installed =
+                process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
+        }
 
         buildtrees =
             process_output_directory(filesystem, root, args.buildtrees_root_dir.get(), "buildtrees", VCPKG_LINE_INFO);
@@ -128,8 +195,6 @@ namespace vcpkg
         packages =
             process_output_directory(filesystem, root, args.packages_root_dir.get(), "packages", VCPKG_LINE_INFO);
         ports = filesystem.canonical(VCPKG_LINE_INFO, root / fs::u8path("ports"));
-        installed =
-            process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
         prefab = root / fs::u8path("prefab");
 
@@ -155,13 +220,10 @@ namespace vcpkg
 
         ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
 
-        if (args.overlay_triplets)
+        for (auto&& overlay_triplets_dir : args.overlay_triplets)
         {
-            for (auto&& overlay_triplets_dir : *args.overlay_triplets)
-            {
-                m_pimpl->triplets_dirs.emplace_back(
-                    filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(overlay_triplets_dir)));
-            }
+            m_pimpl->triplets_dirs.emplace_back(
+                filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(overlay_triplets_dir)));
         }
         m_pimpl->triplets_dirs.emplace_back(triplets);
         m_pimpl->triplets_dirs.emplace_back(community_triplets);
@@ -245,13 +307,13 @@ namespace vcpkg
         {
             static Toolset external_toolset = []() -> Toolset {
                 Toolset ret;
-                ret.dumpbin = "";
+                ret.dumpbin.clear();
                 ret.supported_architectures = {
                     ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()}};
-                ret.vcvarsall = "";
+                ret.vcvarsall.clear();
                 ret.vcvarsall_options = {};
                 ret.version = "external";
-                ret.visual_studio_root_path = "";
+                ret.visual_studio_root_path.clear();
                 return ret;
             }();
             return external_toolset;
@@ -320,4 +382,30 @@ namespace vcpkg
     }
 
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return *m_pimpl->fs_ptr; }
+
+    void VcpkgPaths::track_feature_flag_metrics() const
+    {
+        struct
+        {
+            StringView flag;
+            bool enabled;
+        } flags[] = {
+            {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, manifest_mode_enabled()}
+        };
+
+        for (const auto& flag : flags)
+        {
+            Metrics::g_metrics.lock()->track_feature(flag.flag.to_string(), flag.enabled);
+        }
+    }
+
+    VcpkgPaths::~VcpkgPaths()
+    {
+        std::error_code ec;
+        m_pimpl->fs_ptr->unlock_file_lock(m_pimpl->file_lock_handle, ec);
+        if (ec)
+        {
+            Debug::print("Failed to unlock filesystem lock: ", ec.message(), '\n');
+        }
+    }
 }
