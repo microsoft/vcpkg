@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/packagespec.h>

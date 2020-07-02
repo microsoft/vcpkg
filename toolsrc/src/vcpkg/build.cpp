@@ -853,9 +853,8 @@ namespace vcpkg::Build
 
         if (abi_tag_entries_missing.empty())
         {
-            std::error_code ec;
             auto current_build_tree = paths.build_dir(action.spec);
-            fs.create_directory(current_build_tree, ec);
+            fs.create_directory(current_build_tree, VCPKG_LINE_INFO);
             const auto abi_file_path = current_build_tree / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
             fs.write_contents(abi_file_path, full_abi_info, VCPKG_LINE_INFO);
 

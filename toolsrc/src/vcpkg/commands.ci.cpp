@@ -24,14 +24,15 @@ namespace
 {
     using namespace vcpkg::Build;
 
-    const fs::path log_path = fs::u8path(".log");
-    const fs::path readme_path = fs::u8path("readme.log");
+    const fs::path dot_log = fs::u8path(".log");
+    const fs::path readme_dot_log = fs::u8path("readme.log");
 
     class CiBuildLogsRecorder final : public IBuildLogsRecorder
     {
         fs::path base_path;
+
     public:
-        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) { }
+        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) {}
 
         virtual void record_build_result(const VcpkgPaths& paths,
                                          const PackageSpec& spec,
@@ -45,7 +46,7 @@ namespace
             auto& filesystem = paths.get_filesystem();
             const auto source_path = paths.build_dir(spec);
             auto children = filesystem.get_files_non_recursive(source_path);
-            Util::erase_remove_if(children, [](const fs::path& p) { return p.extension() != log_path; });
+            Util::erase_remove_if(children, [](const fs::path& p) { return p.extension() != dot_log; });
             const auto target_path = base_path / fs::u8path(spec.name());
             (void)filesystem.create_directory(target_path, VCPKG_LINE_INFO);
             if (children.empty())
@@ -55,7 +56,7 @@ namespace
                     " build.\n"
                     "This is usually because the build failed early and outside of a task that is logged.\n"
                     "See the console output logs from vcpkg for more information on the failure.\n";
-                filesystem.write_contents(target_path / readme_path, message, VCPKG_LINE_INFO);
+                filesystem.write_contents(target_path / readme_dot_log, message, VCPKG_LINE_INFO);
             }
             else
             {
