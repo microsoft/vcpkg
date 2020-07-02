@@ -168,14 +168,15 @@ function(vcpkg_fixup_cmake_targets)
     #Fix ${_IMPORT_PREFIX} in cmake generated targets and configs; 
     #Since those can be renamed we have to check in every *.cmake
     file(GLOB_RECURSE MAIN_CMAKES "${RELEASE_SHARE}/*.cmake")
-    if(NOT _vfct_NO_PREFIX_CORRECTION)
-        foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
-            file(READ ${MAIN_CMAKE} _contents)
-            #This correction is not correct for all cases. To make it correct for all cases it needs to consider
-            #original folder deepness to CURRENT_PACKAGES_DIR in comparison to the moved to folder deepness which 
-            #is always at least (>=) 2, e.g. share/${PORT}. Currently the code assumes it is always 2 although 
-            #this requirement is only true for the *Config.cmake. The targets are not required to be in the same
-            #folder as the *Config.cmake!
+
+    foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
+        file(READ ${MAIN_CMAKE} _contents)
+        #This correction is not correct for all cases. To make it correct for all cases it needs to consider
+        #original folder deepness to CURRENT_PACKAGES_DIR in comparison to the moved to folder deepness which 
+        #is always at least (>=) 2, e.g. share/${PORT}. Currently the code assumes it is always 2 although 
+        #this requirement is only true for the *Config.cmake. The targets are not required to be in the same
+        #folder as the *Config.cmake!
+        if(NOT _vfct_NO_PREFIX_CORRECTION)
             string(REGEX REPLACE
                 "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
                 "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
@@ -184,21 +185,22 @@ function(vcpkg_fixup_cmake_targets)
                 "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
                 "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
                 _contents "${_contents}")
-            #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
-            #This happens if vcpkg built libraries are directly linked to a target instead of using
-            #an imported target for it. We could add more logic here to identify defect target files.
-            #Since the replacement her ein a multi config build always requires a generator expression
-            #in front of the absoulte path to ${CURRENT_INSTALLED_DIR}. So the match should always be at
-            #least >:${CURRENT_INSTALLED_DIR}. 
-            #In general the following generator expressions should be there:
-            #\$<\$<CONFIG:DEBUG>:${CURRENT_INSTALLED_DIR}/debug/lib/somelib>
-            #and/or
-            #\$<\$<NOT:\$<CONFIG:DEBUG>>:${CURRENT_INSTALLED_DIR}/lib/somelib>
-            #with ${CURRENT_INSTALLED_DIR} being fully expanded
-            string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
-            file(WRITE ${MAIN_CMAKE} "${_contents}")
-        endforeach()
-    endif()
+        endif()
+        #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
+        #This happens if vcpkg built libraries are directly linked to a target instead of using
+        #an imported target for it. We could add more logic here to identify defect target files.
+        #Since the replacement her ein a multi config build always requires a generator expression
+        #in front of the absoulte path to ${CURRENT_INSTALLED_DIR}. So the match should always be at
+        #least >:${CURRENT_INSTALLED_DIR}. 
+        #In general the following generator expressions should be there:
+        #\$<\$<CONFIG:DEBUG>:${CURRENT_INSTALLED_DIR}/debug/lib/somelib>
+        #and/or
+        #\$<\$<NOT:\$<CONFIG:DEBUG>>:${CURRENT_INSTALLED_DIR}/lib/somelib>
+        #with ${CURRENT_INSTALLED_DIR} being fully expanded
+        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
+        file(WRITE ${MAIN_CMAKE} "${_contents}")
+    endforeach()
+
 
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE REMAINING_FILES "${DEBUG_SHARE}/*")
