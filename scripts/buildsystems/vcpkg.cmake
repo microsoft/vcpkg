@@ -6,10 +6,6 @@ option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging pu
 mark_as_advanced(VCPKG_VERBOSE)
 
 function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
-    if(DEFINED ${OUT})
-        return()
-    endif()
-
     set(_vcpkg_get_dir_candidate ${DIRECTORY})
     while(IS_DIRECTORY ${_vcpkg_get_dir_candidate} AND NOT DEFINED _vcpkg_get_dir_out)
         if(EXISTS ${_vcpkg_get_dir_candidate}/${FILENAME})
@@ -27,23 +23,26 @@ function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
     set(${OUT} ${_vcpkg_get_dir_out} CACHE INTERNAL "_vcpkg_get_directory_name_of_file_above: ${OUT}")
 endfunction()
 
-_vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
-if(_VCPKG_MANIFEST_DIR)
-    set(_VCPKG_MANIFEST_MODE_DEFAULT ON)
+if(NOT DEFINED VCPKG_MANIFEST_MODE)
+    _vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
+
+    if(_VCPKG_MANIFEST_DIR)
+        set(VCPKG_MANIFEST_MODE ON)
+    else()
+        set(VCPKG_MANIFEST_MODE OFF)
+    endif()
+elseif(VCPKG_MANIFEST_MODE)
+    _vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
+
+    if(NOT _VCPKG_MANIFEST_DIR)
+        message(FATAL_ERROR
+            "vcpkg manifest mode was enabled, but we couldn't find a manifest file (vcpkg.json) "
+            "in any directories above ${CMAKE_CURRENT_SOURCE_DIR}. Please add a manifest, or "
+            "disable manifests by turning off VCPKG_MANIFEST_MODE.")
+    endif()
 else()
-    set(_VCPKG_MANIFEST_MODE_DEFAULT OFF)
+    set(VCPKG_MANIFEST_MODE OFF)
 endif()
-
-option(VCPKG_MANIFEST_MODE "Set vcpkg to manifest mode" ${_VCPKG_MANIFEST_MODE_DEFAULT})
-
-if(NOT _VCPKG_MANIFEST_DIR AND VCPKG_MANIFEST_MODE)
-    message(FATAL_ERROR
-        "vcpkg manifest mode was enabled, but we couldn't find a manifest file (vcpkg.json) "
-        "in any directories above ${CMAKE_CURRENT_SOURCE_DIR}. Please add a manifest, or "
-        "disable manifests by turning off VCPKG_MANIFEST_MODE.")
-endif()
-
-option(VCPKG_MANIFEST_INSTALL "Install packages from the manifest" ON)
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
@@ -271,11 +270,31 @@ endforeach()
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
 if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     set(_VCPKG_EXECUTABLE_SUFFIX ".exe")
+    set(_VCPKG_SCRIPT_SUFFIX ".bat")
 else()
     set(_VCPKG_EXECUTABLE_SUFFIX "")
+    set(_VCPKG_SCRIPT_SUFFIX ".sh")
 endif()
 
 if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
+    set(_VCPKG_EXECUTABLE "${_VCPKG_ROOT_DIR}/vcpkg${_VCPKG_EXECUTABLE_SUFFIX}")
+
+    if(NOT EXISTS "${_VCPKG_EXECUTABLE}")
+        message(STATUS "Bootstrapping vcpkg before install")
+
+        execute_process(
+            COMMAND "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg${_VCPKG_SCRIPT_SUFFIX}"
+            RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
+
+        if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
+            message(FATAL_ERROR "Bootstrapping vcpkg before install - Failed")
+        else()
+            message(STATUS "Bootstrapping vcpkg before install - Done")
+        endif()
+    endif()
+
+    message(STATUS "Running vcpkg install")
+
     execute_process(
         COMMAND "${_VCPKG_ROOT_DIR}/vcpkg${_VCPKG_EXECUTABLE_SUFFIX}" install
             --triplet ${VCPKG_TARGET_TRIPLET}
@@ -284,9 +303,13 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             --x-install-root=${_VCPKG_INSTALLED_DIR}
             --binarycaching
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
+
     if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR "vcpkg install failed")
+        message(FATAL_ERROR "Running vcpkg install - Failed")
+    else()
+        message(STATUS "Running vcpkg install - Done")
     endif()
+
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
         "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
         "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
