@@ -14,14 +14,22 @@ namespace vcpkg::Commands::List
     {
         if (full_desc)
         {
-            System::printf("%-50s %-16s %s\n", pgh.package.displayname(), pgh.package.version, pgh.package.description);
+            System::printf("%-50s %-16s %s\n",
+                           pgh.package.displayname(),
+                           pgh.package.version,
+                           Strings::join("\n    ", pgh.package.description));
         }
         else
         {
+            std::string description;
+            if (!pgh.package.description.empty())
+            {
+                description = pgh.package.description[0];
+            }
             System::printf("%-50s %-16s %s\n",
                            vcpkg::shorten_text(pgh.package.displayname(), 50),
                            vcpkg::shorten_text(pgh.package.version, 16),
-                           vcpkg::shorten_text(pgh.package.description, 51));
+                           vcpkg::shorten_text(description, 51));
         }
     }
 

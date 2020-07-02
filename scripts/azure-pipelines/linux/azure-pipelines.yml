@@ -32,28 +32,16 @@ jobs:
       VCPKG_DOWNLOADS: '/mnt/vcpkg-ci/downloads'
   - bash: toolsrc/build.rel/vcpkg-test
     displayName: 'Run vcpkg tests'
-  - powershell: |
-      $env:VCPKG_DOWNLOADS = '/mnt/vcpkg-ci/downloads'
-      $commonArgs = @(
-        '--binarycaching',
-        '--x-binarysource=clear;files,/archives,upload',
-        '--x-buildtrees-root=/mnt/vcpkg-ci/buildtrees',
-        '--x-install-root=/mnt/vcpkg-ci/install',
-        '--x-packages-root=/mnt/vcpkg-ci/packages'
-      )
-
-      ./vcpkg x-ci-clean @commonArgs
-      $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "x64-linux" -BaselineFile "$(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt"
-      mkdir $(System.ArtifactsDirectory)/xml-results
-      $env:HOME = '/home/agent'
-      ./vcpkg ci x64-linux --x-xunit="$(System.ArtifactsDirectory)/xml-results/x64-linux.xml" --exclude=$skipList @commonArgs
-    displayName: '** Test Modified Ports **'
   - task: PowerShell@2
-    displayName: 'Analyze results and prepare test logs'
+    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
-      filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
-      arguments: '-baselineFile $(System.DefaultWorkingDirectory)/scripts/ci.baseline.txt -logDir "$(System.ArtifactsDirectory)/xml-results" -outputDir "$(Build.ArtifactStagingDirectory)" -failurelogDir "/archives/fail" -triplets "x64-linux" -errorOnRegression'
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -ArchivesRoot /archives -WorkingRoot /mnt/vcpkg-ci -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -ArtifactsDirectory $(System.ArtifactsDirectory)'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '$(System.ArtifactsDirectory)/xml-results/x64-linux.xml'
+    condition: always()
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'

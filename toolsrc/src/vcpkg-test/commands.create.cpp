@@ -7,7 +7,7 @@
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
-TEST_CASE ("smoke test", "[create]")
+TEST_CASE ("create smoke test", "[commands-create]")
 {
     using namespace vcpkg;
     static const std::string argsRaw[] = {"create", "zlib2", "http://zlib.net/zlib-1.2.11.tar.gz", "zlib-1.2.11.zip"};
