@@ -9,7 +9,8 @@ vcpkg_from_github(
     PATCHES
         hdf5.patch
         double-conversion.patch 
-        jpeg.patch
+        openjpeg.patch
+        openjpeg2.patch
         var_libraries.patch
         wrapping.patch
         python_gpu_wrapping.patch
@@ -152,10 +153,10 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_FFTW=ON
         -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past and still is. ITK still has not figured out how to do it correctly!
         -DITK_USE_SYSTEM_GDCM=ON
-        -DITK_USE_SYSTEM_OpenJPEG=ON # Added by VCPKG        
+        -DITK_USE_SYSTEM_OpenJPEG=ON # Added by VCPKG
         -DITK_USE_SYSTEM_DCMTK=ON 
         -DDCMTK_USE_ICU=ON
-        -DITK_USE_SYSTEM_ICU=ON        
+        -DITK_USE_SYSTEM_ICU=ON
         #-DITK_USE_SYSTEM_VXL=ON
         #-DITK_USE_SYSTEM_CASTXML=ON # needs to be added to vcpkg_find_acquire_program https://data.kitware.com/api/v1/file/hashsum/sha512/b8b6f0aff11fe89ab2fcd1949cc75f2c2378a7bc408827a004396deb5ff5a9976bffe8a597f8db1b74c886ea39eb905e610dce8f5bd7586a4d6c196d7349da8d/download
         -DITK_USE_SYSTEM_MINC=ON
