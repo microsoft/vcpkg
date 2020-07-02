@@ -44,6 +44,8 @@ else()
     set(VCPKG_MANIFEST_MODE OFF)
 endif()
 
+option(VCPKG_MANIFEST_INSTALL "Install the dependencies listed in your manifest" ON)
+
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
 
@@ -287,9 +289,9 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
 
         if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
-            message(FATAL_ERROR "Bootstrapping vcpkg before install - Failed")
+            message(FATAL_ERROR "Bootstrapping vcpkg before install - failed")
         else()
-            message(STATUS "Bootstrapping vcpkg before install - Done")
+            message(STATUS "Bootstrapping vcpkg before install - done")
         endif()
     endif()
 
@@ -305,9 +307,9 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
 
     if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR "Running vcpkg install - Failed")
+        message(FATAL_ERROR "Running vcpkg install - failed")
     else()
-        message(STATUS "Running vcpkg install - Done")
+        message(STATUS "Running vcpkg install - done")
     endif()
 
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
