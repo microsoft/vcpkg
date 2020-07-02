@@ -12,7 +12,7 @@ index 9728ead..f9e8051 100644
 +if(WIN32 AND NOT MINGW)
 +  set(EXPAT_LIBRARY expat::libexpat)
 +else()
-+  set( expat::expat)
++  set(EXPAT_LIBRARY expat::expat)
 +endif()
 +if(EXPAT_LIBRARY)
    include_directories(${EXPAT_INCLUDE_DIR})

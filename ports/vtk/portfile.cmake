@@ -103,6 +103,7 @@ vcpkg_from_github(
         python_debug.patch
         fix-using-hdf5.patch
         # Last patch TODO: Patch out internal loguru
+        FindExpat.patch
 )
 
 # =============================================================================
