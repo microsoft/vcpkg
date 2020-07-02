@@ -49,11 +49,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot D:\ -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -ArtifactsDirectory $(System.ArtifactsDirectory)'
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '$(System.ArtifactsDirectory)/xml-results/${{ parameters.triplet }}.xml'
-    condition: always()
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot D:\ -ArtifactsDirectory $(System.ArtifactsDirectory)'
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'
     condition: always()
@@ -62,6 +58,6 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
+      PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
       ArtifactName: '${{ parameters.triplet }} port build failure logs'
     condition: failed()

@@ -15,9 +15,6 @@ The location where the binary caching archives are stored. Shared across runs of
 .PARAMETER WorkingRoot
 The location used as scratch space for 'installed', 'packages', and 'buildtrees' vcpkg directories.
 
-.PARAMETER ArtifactStagingDirectory
-The Azure Pipelines artifact staging directory. If not supplied, defaults to the current directory.
-
 .PARAMETER ArtifactsDirectory
 The Azure Pipelines artifacts directory. If not supplied, defaults to the current directory.
 
@@ -37,8 +34,6 @@ Param(
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     $WorkingRoot,
-    [ValidateNotNullOrEmpty()]
-    $ArtifactStagingDirectory = '.',
     [ValidateNotNullOrEmpty()]
     $ArtifactsDirectory = '.',
     $BuildReason = $null
@@ -91,6 +86,8 @@ $xmlResults = Join-Path $ArtifactsDirectory 'xml-results'
 mkdir $xmlResults
 $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
+$failureLogs = Join-Path $ArtifactsDirectory 'failure-logs'
+
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -Triplet $Triplet `
@@ -103,7 +100,7 @@ if ($Triplet -in @('x64-uwp', 'arm64-windows', 'arm-uwp')) {
     .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows @commonArgs
 }
 
-& "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList @commonArgs
-& "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults -outputDir $ArtifactStagingDirectory `
-    -failureLogDir (Join-Path $ArchivesRoot 'fail') -triplets $Triplet -errorOnRegression `
+& "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
+& "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
+    -triplet $Triplet `
     -baselineFile .\scripts\ci.baseline.txt

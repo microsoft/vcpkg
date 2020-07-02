@@ -25,6 +25,7 @@ namespace
     using namespace vcpkg::Build;
 
     const fs::path log_path = fs::u8path(".log");
+    const fs::path readme_path = fs::u8path("readme.log");
 
     class CiBuildLogsRecorder final : public IBuildLogsRecorder
     {
@@ -49,7 +50,12 @@ namespace
             (void)filesystem.create_directory(target_path, VCPKG_LINE_INFO);
             if (children.empty())
             {
-                //filesystem.write_contents(spec.name() + )
+                std::string message =
+                    "There are no build logs for " + spec.to_string() +
+                    " build.\n"
+                    "This is usually because the build failed early and outside of a task that is logged.\n"
+                    "See the console output logs from vcpkg for more information on the failure.\n";
+                filesystem.write_contents(target_path / readme_path, message, VCPKG_LINE_INFO);
             }
             else
             {
