@@ -41,11 +41,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -ArchivesRoot /Users/vagrant/Data/archives -WorkingRoot /Users/vagrant/Data -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -ArtifactsDirectory $(System.ArtifactsDirectory)'
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '$(System.ArtifactsDirectory)/xml-results/x64-osx.xml'
-    condition: always()
+      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -ArchivesRoot /Users/vagrant/Data/archives -WorkingRoot /Users/vagrant/Data -ArtifactsDirectory $(System.ArtifactsDirectory)'
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'
@@ -53,6 +49,6 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: x64-osx port build failure logs'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/failureLogs'
+      PathtoPublish: '$(System.ArtifactsDirectory)/failure-logs'
       ArtifactName: 'x64-osx port build failure logs'
     condition: failed()

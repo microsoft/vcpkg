@@ -163,8 +163,10 @@ namespace vcpkg::Files
         virtual bool is_empty(const fs::path& path) const = 0;
         virtual bool create_directory(const fs::path& path, std::error_code& ec) = 0;
         bool create_directory(const fs::path& path, ignore_errors_t);
+        bool create_directory(const fs::path& path, LineInfo li);
         virtual bool create_directories(const fs::path& path, std::error_code& ec) = 0;
         bool create_directories(const fs::path& path, ignore_errors_t);
+        bool create_directories(const fs::path& path, LineInfo);
         virtual void copy(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts) = 0;
         virtual bool copy_file(const fs::path& oldpath,
                                const fs::path& newpath,
@@ -201,4 +203,8 @@ namespace vcpkg::Files
     bool has_invalid_chars_for_filesystem(const std::string& s);
 
     void print_paths(const std::vector<fs::path>& paths);
+
+    /// Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
+    /// This function exists as a workaround for TS implementations.
+    fs::path combine(const fs::path& lhs, const fs::path& rhs);
 }

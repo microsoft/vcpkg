@@ -42,17 +42,14 @@ jobs:
         cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=ON -B build.x86.debug -S toolsrc
         ninja.exe -C build.x86.debug
         build.x86.debug\vcpkg-test.exe
+        powershell.exe -NoProfile -ExecutionPolicy Bypass "scripts\azure-pipelines\end-to-end-tests.ps1 -WorkingRoot \"%cd%\testing\" -triplet x86-windows"
       failOnStderr: true
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot D:\ -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -ArtifactsDirectory $(System.ArtifactsDirectory)'
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '$(System.ArtifactsDirectory)/xml-results/${{ parameters.triplet }}.xml'
-    condition: always()
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot D:\ -ArtifactsDirectory $(System.ArtifactsDirectory)'
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'
     condition: always()
@@ -61,6 +58,6 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
+      PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
       ArtifactName: '${{ parameters.triplet }} port build failure logs'
     condition: failed()

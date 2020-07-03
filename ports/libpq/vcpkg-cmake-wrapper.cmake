@@ -2,7 +2,7 @@
 find_library(PostgreSQL_LIBRARY_DEBUG
 NAMES pq
 PATHS
-  "${CURRENT_INSTALLED_DIR}/debug/lib"
+  "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib"
 NO_DEFAULT_PATH
 )
 _find_package(${ARGS})
