@@ -103,7 +103,6 @@ if("software" IN_LIST FEATURES)
         openMVG_main_ColHarmonize
         openMVG_main_ComputeClusters
         openMVG_main_ComputeFeatures
-        openMVG_main_ComputeFeatures_OpenCV
         openMVG_main_ComputeMatches
         openMVG_main_ComputeSfM_DataColor
         openMVG_main_ComputeStructureFromKnownPoses
@@ -141,6 +140,11 @@ if("software" IN_LIST FEATURES)
         ui_openMVG_control_points_registration
         ui_openMVG_MatchesViewer
     )
+    if("opencv" IN_LIST FEATURES)
+        vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
+            openMVG_main_ComputeFeatures_OpenCV
+        )
+    endif()
 
     file(COPY ${SOURCE_PATH}/src/openMVG/exif/sensor_width_database/sensor_width_camera_database.txt DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     set(OPENMVG_SOFTWARE_SFM_BUILD_DIR ${CURRENT_INSTALLED_DIR}/tools/${PORT})
