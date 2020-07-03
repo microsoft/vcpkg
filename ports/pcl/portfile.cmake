@@ -1,20 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF af3ce2530b7ae8ed083a3515168626c587a5bbcd # pcl-1.10.0
-    SHA512 ed580fa3b365f575d51ac637701760ade64cb5f925f326e0acd016e25b2054b8e272094525a6a4104834c11e6ec8743452f8ad881f90f6f212b787fe0eea2475
+    REF f9f214f34a38d5bb67441140703a681c5d299906 # pcl-1.11.0
+    SHA512 7d1bbadcd6843001895bd1faeb5ad4166f7746bf77f83573160507746d438797fbe9e283a8989f517fe1dc7195934ad59e008b4fce61e5943ce6426d49141365
     HEAD_REF master
     PATCHES
         pcl_utils.patch
         pcl_config.patch
         use_flann_targets.patch
         boost-1.70.patch
-        fix-compile-options.patch
-        cuda_10_1.patch
-        # Patch for https://github.com/microsoft/vcpkg/issues/7660
-        use_target_link_libraries_in_pclconfig.patch
         fix-link-libpng.patch
-        boost-1.73.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
