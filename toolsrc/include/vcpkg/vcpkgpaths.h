@@ -68,7 +68,7 @@ namespace vcpkg
             std::string name;
             fs::path location;
 
-            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) { }
+            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) {}
         };
 
         VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args);
@@ -83,6 +83,7 @@ namespace vcpkg
         bool is_valid_triplet(Triplet t) const;
         const std::vector<std::string> get_available_triplets_names() const;
         const std::vector<TripletFile>& get_available_triplets() const;
+        const std::map<std::string, std::string>& get_cmake_script_hashes() const;
         const fs::path get_triplet_file_path(Triplet triplet) const;
 
         fs::path original_cwd;
