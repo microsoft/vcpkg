@@ -140,7 +140,7 @@ Now we can modify `pngpriv.h` to use `abort()` everywhere.
 
 The output of `git diff` is already in patch format, so we just need to save the patch into the `ports/libpng` directory.
 ```no-highlight
-PS buildtrees\libpng\src\libpng-1.6.24> git diff | out-file -enc ascii ..\..\..\..\ports\libpng\use-abort-on-all-platforms.patch
+PS buildtrees\libpng\src\libpng-1.6.24> git diff --ignore-space-at-eol | out-file -enc ascii ..\..\..\..\ports\libpng\use-abort-on-all-platforms.patch
 ```
 
 Finally, we need to apply the patch after extracting the source.

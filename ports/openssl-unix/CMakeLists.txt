@@ -5,9 +5,7 @@ if(NOT SOURCE_PATH)
     message(FATAL_ERROR "Requires SOURCE_PATH")
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(PLATFORM android)
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(CMAKE_SYSTEM_NAME STREQUAL "Android" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
         set(PLATFORM linux-x86_64)
     else()
@@ -69,11 +67,6 @@ endif()
 
 get_filename_component(MSYS_BIN_DIR "${MAKE}" DIRECTORY)
 
-
-file(READ "${BUILDDIR}/Configure" _contents)
-string(REPLACE "-mandroid" "" _contents "${_contents}")
-file(WRITE "${BUILDDIR}/Configure" "${_contents}")
-
 if(BUILD_SHARED_LIBS)
     set(SHARED shared)
     file(STRINGS "${BUILDDIR}/include/openssl/opensslv.h" SHLIB_VERSION
@@ -125,6 +118,7 @@ add_custom_command(
         no-cast
         no-seed
         no-md2
+        no-tests
         ${PLATFORM}
         "--prefix=${CMAKE_INSTALL_PREFIX}"
         "--openssldir=/etc/ssl"
