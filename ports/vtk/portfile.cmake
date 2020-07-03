@@ -127,6 +127,7 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
+        -DVTK_ENABLE_REMOTE_MODULES=OFF
         # VTK groups to enable
         -DVTK_GROUP_ENABLE_StandAlone=YES
         -DVTK_GROUP_ENABLE_Rendering=YES
