@@ -41,6 +41,7 @@ namespace vcpkg::Commands::BuildExternal
                                             maybe_scfl.value_or_exit(VCPKG_LINE_INFO),
                                             provider,
                                             args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
+                                            Build::null_build_logs_recorder(),
                                             paths);
     }
 }

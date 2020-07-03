@@ -37,11 +37,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -ArchivesRoot /archives -WorkingRoot /mnt/vcpkg-ci -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -ArtifactsDirectory $(System.ArtifactsDirectory)'
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '$(System.ArtifactsDirectory)/xml-results/x64-linux.xml'
-    condition: always()
+      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -ArchivesRoot /archives -WorkingRoot /mnt/vcpkg-ci -ArtifactsDirectory $(System.ArtifactsDirectory)'
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'
@@ -49,6 +45,6 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: x86-linux Build Failure Logs'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/failureLogs'
+      PathtoPublish: '$(System.ArtifactsDirectory)/failure-logs'
       ArtifactName: 'x64-linux port build failure logs'
     condition: failed()
