@@ -75,6 +75,8 @@ namespace vcpkg
         ~VcpkgPaths();
 
         fs::path package_dir(const PackageSpec& spec) const;
+        fs::path build_dir(const PackageSpec& spec) const;
+        fs::path build_dir(const std::string& package_name) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
