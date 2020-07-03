@@ -13,7 +13,7 @@
 ##
 ## ## Parameters
 ## ### RELEASE_FILES
-## Specifies a list of files to apply the fixes for release paths. 
+## Specifies a list of files to apply the fixes for release paths.
 ## Defaults to every *.pc file in the folder ${CURRENT_PACKAGES_DIR} without ${CURRENT_PACKAGES_DIR}/debug/
 ##
 ## ### DEBUG_FILES
@@ -22,11 +22,11 @@
 ##
 ## ### SYSTEM_PACKAGES
 ## If the *.pc file contains system packages outside vcpkg these need to be listed here.
-## Since vcpkg checks the existence of all required packages within vcpkg. 
+## Since vcpkg checks the existence of all required packages within vcpkg.
 ##
 ## ### SYSTEM_LIBRARIES
 ## If the *.pc file contains system libraries outside vcpkg these need to be listed here.
-## VCPKG checks every -l flag for the existence of the required library within vcpkg. 
+## VCPKG checks every -l flag for the existence of the required library within vcpkg.
 ##
 ## ### IGNORE_FLAGS
 ## If the *.pc file contains flags in the lib field which are not libraries. These can be listed here
@@ -36,7 +36,7 @@
 ##
 ## ## Examples
 ##
-## Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files. 
+## Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files.
 function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_libs _system_packages _ignore_flags)
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
     list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".lib;.dll.a;.a")
@@ -64,7 +64,7 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
         string(REPLACE "-l" "" _system_lib "${_system_lib}")
         list(APPEND _system_lib_normalized "${_system_lib}")
     endforeach()
-    
+
     ## Extra libraries:
     string(REGEX MATCH "Libs:[^\n#]+" _libs "${_contents}")
     #message(STATUS "LIB LINE: ${_libs}")
@@ -133,9 +133,9 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
             endif()
         else()
             #handle special cases
-            if(_lib STREQUAL "-pthread" OR _lib STREQUAL "-pthreads") 
+            if(_lib STREQUAL "-pthread" OR _lib STREQUAL "-pthreads")
                 # Replace with VCPKG version?
-                #VCPKG should probably rename one of the pthread versions to avoid linking against system pthread? 
+                #VCPKG should probably rename one of the pthread versions to avoid linking against system pthread?
                 # set(PTHREAD_SUFFIX )
                 # if("${_config}" STREQUAL "DEBUG")
                     # file(GLOB PTHREAD_LIB "${CURRENT_INSTALLED_DIR}/debug/lib/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}pthread*C3d.*")
@@ -165,18 +165,18 @@ function(vcpkg_fixup_pkgconfig_check_libraries _config _contents_var _system_lib
     string(REGEX REPLACE "[\t ]*,[\t ]*" ";" _pkg_private_list_tmp "${_pkg_private_list_tmp}")
     string(REGEX REPLACE "[\t ]*(>|=)+[\t ]*([0-9]+|\\.)+" " " _pkg_private_list_tmp "${_pkg_private_list_tmp}")
     string(REGEX REPLACE "[\t ]+" ";" _pkg_private_list_tmp "${_pkg_private_list_tmp}")
-    
+
     debug_message("Required packages: ${_pkg_list_tmp}")
     debug_message("Required private packages: ${_pkg_private_list_tmp}")
-    
+
     #message(STATUS "System packages: ${_system_packages}")
     foreach(_package  ${_pkg_list_tmp} ${_pkg_private_list_tmp})
         debug_message("Searching for package: ${_package}")
         set(PKG_CHECK ON)
         if(NOT "${_system_packages}" STREQUAL "")
-            #message(STATUS "Checking ${_package} for SYSTEM PACKAGE: ${_system_packages}") 
+            #message(STATUS "Checking ${_package} for SYSTEM PACKAGE: ${_system_packages}")
             if("${_system_packages}" MATCHES "${_package}" )
-                debug_message("Package ${_package} is SYSTEM PACKAGE!") 
+                debug_message("Package ${_package} is SYSTEM PACKAGE!")
                 set(PKG_CHECK OFF)
             endif()
         endif()
@@ -193,9 +193,9 @@ endfunction()
 
 function(vcpkg_fixup_pkgconfig)
     cmake_parse_arguments(_vfpkg "" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS" ${ARGN})
-    
-    if(VCPKG_TARGET_IS_LINUX)
-        list(APPEND _vfpkg_SYSTEM_LIBRARIES -ldl -lm)
+
+    if(VCPKG_SYSTEM_LIBRARIES)
+        list(APPEND _vfpkg_SYSTEM_LIBRARIES ${VCPKG_SYSTEM_LIBRARIES})
     endif()
     message(STATUS "Fixing pkgconfig")
     if(_vfpkg_UNPARSED_ARGUMENTS)
@@ -206,16 +206,16 @@ function(vcpkg_fixup_pkgconfig)
         file(GLOB_RECURSE _vfpkg_RELEASE_FILES "${CURRENT_PACKAGES_DIR}/**/*.pc")
         list(FILTER _vfpkg_RELEASE_FILES EXCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
     endif()
-    
+
     if(NOT _vfpkg_DEBUG_FILES)
         file(GLOB_RECURSE _vfpkg_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/**/*.pc")
         list(FILTER _vfpkg_DEBUG_FILES INCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
     endif()
-    
-    #Absolute Unix like paths 
+
+    #Absolute Unix like paths
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
-    
+
     message(STATUS "Fixing pkgconfig - release")
     debug_message("Files: ${_vfpkg_RELEASE_FILES}")
     foreach(_file ${_vfpkg_RELEASE_FILES})
@@ -235,7 +235,7 @@ function(vcpkg_fixup_pkgconfig)
         file(WRITE "${_file}" "${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
-    
+
     message(STATUS "Fixing pkgconfig - debug")
     debug_message("Files: ${_vfpkg_DEBUG_FILES}")
     foreach(_file ${_vfpkg_DEBUG_FILES})
@@ -257,17 +257,17 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
 
         string(REGEX REPLACE "^prefix=(\\\\)?\\\${prefix}(/debug)?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
+        string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist.
         vcpkg_fixup_pkgconfig_check_libraries("DEBUG" _contents "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_SYSTEM_PACKAGES}" "${_vfpkg_IGNORE_FLAGS}")
         file(WRITE "${_file}" "${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
     message(STATUS "Fixing pkgconfig --- finished")
-    
-    set(VCPKG_FIXUP_PKGCONFIG_CALLED TRUE CACHE INTERNAL "See below" FORCE) 
-    # Variable to check if this function has been called! 
+
+    set(VCPKG_FIXUP_PKGCONFIG_CALLED TRUE CACHE INTERNAL "See below" FORCE)
+    # Variable to check if this function has been called!
     # Theoreotically vcpkg could look for *.pc files and automatically call this function
-    # or check if this function has been called if *.pc files are detected. 
+    # or check if this function has been called if *.pc files are detected.
     # The same is true for vcpkg_fixup_cmake_targets
 endfunction()
 

@@ -32,13 +32,13 @@ TEST_CASE ("VcpkgCmdArguments from lowercase argument sequence", "[arguments]")
     REQUIRE(v.print_metrics);
     REQUIRE(*v.print_metrics.get());
 
-    REQUIRE(v.overlay_ports->size() == 2);
-    REQUIRE(v.overlay_ports->at(0) == "C:\\ports1");
-    REQUIRE(v.overlay_ports->at(1) == "C:\\ports2");
+    REQUIRE(v.overlay_ports.size() == 2);
+    REQUIRE(v.overlay_ports.at(0) == "C:\\ports1");
+    REQUIRE(v.overlay_ports.at(1) == "C:\\ports2");
 
-    REQUIRE(v.overlay_triplets->size() == 2);
-    REQUIRE(v.overlay_triplets->at(0) == "C:\\tripletsA");
-    REQUIRE(v.overlay_triplets->at(1) == "C:\\tripletsB");
+    REQUIRE(v.overlay_triplets.size() == 2);
+    REQUIRE(v.overlay_triplets.at(0) == "C:\\tripletsA");
+    REQUIRE(v.overlay_triplets.at(1) == "C:\\tripletsB");
 }
 
 TEST_CASE ("VcpkgCmdArguments from uppercase argument sequence", "[arguments]")
@@ -64,13 +64,13 @@ TEST_CASE ("VcpkgCmdArguments from uppercase argument sequence", "[arguments]")
     REQUIRE(v.print_metrics);
     REQUIRE(*v.print_metrics.get());
 
-    REQUIRE(v.overlay_ports->size() == 2);
-    REQUIRE(v.overlay_ports->at(0) == "C:\\ports1");
-    REQUIRE(v.overlay_ports->at(1) == "C:\\ports2");
+    REQUIRE(v.overlay_ports.size() == 2);
+    REQUIRE(v.overlay_ports.at(0) == "C:\\ports1");
+    REQUIRE(v.overlay_ports.at(1) == "C:\\ports2");
 
-    REQUIRE(v.overlay_triplets->size() == 2);
-    REQUIRE(v.overlay_triplets->at(0) == "C:\\tripletsA");
-    REQUIRE(v.overlay_triplets->at(1) == "C:\\tripletsB");
+    REQUIRE(v.overlay_triplets.size() == 2);
+    REQUIRE(v.overlay_triplets.at(0) == "C:\\tripletsA");
+    REQUIRE(v.overlay_triplets.at(1) == "C:\\tripletsB");
 }
 
 TEST_CASE ("VcpkgCmdArguments from argument sequence with valued options", "[arguments]")
