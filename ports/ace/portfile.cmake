@@ -2,7 +2,7 @@
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
 set(ACE_VERSION 6.5.10)
-set(ACE_VERSION_DIRECTORY 6_5_10)
+string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
 
 if("tao" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_WINDOWS)
