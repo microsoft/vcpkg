@@ -1,5 +1,6 @@
 Source: libarchive
-Version: 3.4.1-3
+Version: 3.4.1
+Port-Version: 5
 Homepage: https://github.com/libarchive/libarchive
 Description: Library for reading and writing streaming archives
 Build-Depends: zlib

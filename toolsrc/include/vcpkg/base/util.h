@@ -22,6 +22,11 @@ namespace vcpkg::Util
         {
             augend->insert(augend->end(), addend.begin(), addend.end());
         }
+        template<class Vec, class Key>
+        bool contains(const Vec& container, const Key& item)
+        {
+            return std::find(container.begin(), container.end(), item) != container.end();
+        }
     }
 
     namespace Sets
@@ -42,6 +47,19 @@ namespace vcpkg::Util
                 output[p.first] = func(p.second);
             });
         }
+    }
+
+    template<class Range, class Pred, class E = ElementT<Range>>
+    std::vector<E> filter(const Range& xs, Pred&& f)
+    {
+        std::vector<E> ret;
+
+        for (auto&& x : xs)
+        {
+            if (f(x)) ret.push_back(x);
+        }
+
+        return ret;
     }
 
     template<class Range, class Func>

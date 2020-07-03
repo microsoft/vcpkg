@@ -182,7 +182,6 @@ find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(Freetype REQUIRED)
-find_package(unofficial-glib CONFIG REQUIRED)
 find_package(unofficial-fontconfig CONFIG REQUIRED)
 find_package(unofficial-pixman CONFIG REQUIRED)
 
@@ -225,22 +224,25 @@ set(CAIRO_GOBJECT_SOURCES
     "../util/cairo-gobject/cairo-gobject-structs.c")
 
 # GObject support sources do not include header with export macro
-if(BUILD_SHARED_LIBS)
-    if(MSVC)
-        set_source_files_properties(
-              "../util/cairo-gobject/cairo-gobject-enums.c"
-        "../util/cairo-gobject/cairo-gobject-structs.c"
-        PROPERTIES COMPILE_DEFINITIONS "cairo_public=__declspec(dllexport)")
-    else()
-        set_source_files_properties(
-              "../util/cairo-gobject/cairo-gobject-enums.c"
-        "../util/cairo-gobject/cairo-gobject-structs.c"
-        PROPERTIES COMPILE_DEFINITIONS "cairo_public=__attribute__((visibility(\"default\")))")
+if(WITH_GOBJECT)
+    if(BUILD_SHARED_LIBS)
+        if(MSVC)
+            set_source_files_properties(
+                "../util/cairo-gobject/cairo-gobject-enums.c"
+            "../util/cairo-gobject/cairo-gobject-structs.c"
+            PROPERTIES COMPILE_DEFINITIONS "cairo_public=__declspec(dllexport)")
+        else()
+            set_source_files_properties(
+                "../util/cairo-gobject/cairo-gobject-enums.c"
+            "../util/cairo-gobject/cairo-gobject-structs.c"
+            PROPERTIES COMPILE_DEFINITIONS "cairo_public=__attribute__((visibility(\"default\")))")
+        endif()
     endif()
+    
+    find_package(unofficial-glib CONFIG REQUIRED)    
+    add_library(cairo-gobject ${CAIRO_GOBJECT_SOURCES}) 
+    target_link_libraries(cairo-gobject PRIVATE cairo unofficial::glib::gobject unofficial::glib::glib)
 endif()
-
-add_library(cairo-gobject ${CAIRO_GOBJECT_SOURCES}) 
-target_link_libraries(cairo-gobject PRIVATE cairo unofficial::glib::gobject unofficial::glib::glib)
 
 if(MSVC)
     # cairo produces a lot of warnings which are disabled here because they otherwise fill up the log files
@@ -248,9 +250,11 @@ if(MSVC)
     target_compile_options(cairo PRIVATE
         "/wd4244" "/wd4146" "/wd4312" "/wd4267" "/wd4996" "/wd4311" "/wd4334" "/wd4101"
     )
-    target_compile_options(cairo-gobject PRIVATE
-        "/wd4244" "/wd4146" "/wd4312" "/wd4267" "/wd4996" "/wd4311" "/wd4334" "/wd4101"
-    )
+    if(WITH_GOBJECT)
+        target_compile_options(cairo-gobject PRIVATE
+            "/wd4244" "/wd4146" "/wd4312" "/wd4267" "/wd4996" "/wd4311" "/wd4334" "/wd4101"
+        )
+    endif()
 endif()
 
 if (CAIRO_HAS_XLIB_SURFACE)
@@ -265,12 +269,21 @@ if (WITH_X11)
     install(FILES ${CAIRO_X11_HEADERS} DESTINATION include/cairo)
 endif()
 
-install(TARGETS cairo cairo-gobject
+install(TARGETS cairo
     EXPORT cairo-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
+if(WITH_GOBJECT)
+   install(TARGETS cairo-gobject
+       EXPORT cairo-targets
+       RUNTIME DESTINATION bin
+       LIBRARY DESTINATION lib
+       ARCHIVE DESTINATION lib
+) 
+endif()
 
 install(
     EXPORT cairo-targets
@@ -284,9 +297,11 @@ include(CMakeFindDependencyMacro)
 find_dependency(ZLIB)
 find_dependency(PNG)
 find_dependency(Freetype)
-find_dependency(unofficial-glib CONFIG)
 find_dependency(unofficial-fontconfig CONFIG)
 find_dependency(unofficial-pixman CONFIG)
+if(WITH_GOBJECT)
+    find_dependency(unofficial-glib CONFIG)
+endif()
 
 include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-cairo-targets.cmake)
 ")
