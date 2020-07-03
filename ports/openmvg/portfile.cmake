@@ -15,8 +15,16 @@ vcpkg_from_github(
         fix-tools-config.patch
 )
 
+set(OpenMVG_USE_OPENMP OFF)
+if("openmp" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_WINDOWS)
+    message(WARNING "OpenMP feature is broken on Windows, disabled until fixed https://github.com/openMVG/openMVG/issues/1765")
+  else()
+    set(OpenMVG_USE_OPENMP ON)
+  endif()
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openmp OpenMVG_USE_OPENMP
     opencv OpenMVG_USE_OPENCV
     opencv OpenMVG_USE_OCVSIFT
     software OpenMVG_BUILD_SOFTWARES
@@ -46,6 +54,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
+        -DOpenMVG_USE_OPENMP=${OpenMVG_USE_OPENMP}
         -DOpenMVG_BUILD_SHARED=OFF
         -DOpenMVG_BUILD_TESTS=OFF
         -DOpenMVG_BUILD_DOC=OFF
@@ -139,6 +148,7 @@ if("software" IN_LIST FEATURES)
     configure_file("${SOURCE_PATH}/src/software/SfM/tutorial_demo.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/tutorial_demo.py" @ONLY)
     configure_file("${SOURCE_PATH}/src/software/SfM/SfM_GlobalPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_GlobalPipeline.py" @ONLY)
     configure_file("${SOURCE_PATH}/src/software/SfM/SfM_SequentialPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_SequentialPipeline.py" @ONLY)
+    message(STATUS "To use tools, you need graphviz installed and manually added to path (to have neato executable)")
 endif()
 
 # Handle copyright
