@@ -1,0 +1,27 @@
+diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
+index 6636173..fa9eb9d 100644
+--- a/data/CMakeLists.txt
++++ b/data/CMakeLists.txt
+@@ -118,6 +118,9 @@ foreach(DICT ${DICTS_GENERATED})
+ endforeach(DICT)
+ 
+ foreach(DICT ${DICTS})
++  message("CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
++  message("CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
++  message("COPYING libopencc.a to ${OPENCC_DICT_BIN}")
+   add_custom_command(
+     OUTPUT
+       ${DICT}.ocd2
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 32ac7b4..5df6ead 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -119,7 +119,7 @@ set_target_properties(
+ )
+ 
+ # Installation
+-
++message("Install libopencc to ${DIR_LIBRARY}")
+ install(
+   TARGETS libopencc
+   LIBRARY DESTINATION ${DIR_LIBRARY}
