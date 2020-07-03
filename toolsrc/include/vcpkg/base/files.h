@@ -163,8 +163,10 @@ namespace vcpkg::Files
         virtual bool is_empty(const fs::path& path) const = 0;
         virtual bool create_directory(const fs::path& path, std::error_code& ec) = 0;
         bool create_directory(const fs::path& path, ignore_errors_t);
+        bool create_directory(const fs::path& path, LineInfo li);
         virtual bool create_directories(const fs::path& path, std::error_code& ec) = 0;
         bool create_directories(const fs::path& path, ignore_errors_t);
+        bool create_directories(const fs::path& path, LineInfo);
         virtual void copy(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts) = 0;
         virtual bool copy_file(const fs::path& oldpath,
                                const fs::path& newpath,
