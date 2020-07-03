@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF e8ec6d59f264a4a42e310148a9534a8cc0123928
     SHA512 e6b3f6d681223b299795c324a48e82609abd1f411d3cbd5f9d8607284ec04717fa9878953d037c25a931a0857f50a5c0e883e0d44ddbea18c50830ad49514c59
     HEAD_REF master
-    PATCHES debug-macro.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
