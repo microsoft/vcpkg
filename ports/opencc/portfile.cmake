@@ -14,13 +14,14 @@ vcpkg_add_to_path(${PYTHON3_DIR})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL
     OPTIONS
         -DBUILD_DOCUMENTATION=OFF
         -DENABLE_GTEST=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(
+    DISABLE_PARALLEL
+)
 
 vcpkg_copy_pdbs()
 
