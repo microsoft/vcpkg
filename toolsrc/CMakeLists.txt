@@ -54,6 +54,8 @@ if(MSVC)
         add_compile_options(-W4)
         if(VCPKG_COMPILER STREQUAL "clang")
             add_compile_options(-Wmissing-prototypes -Wno-missing-field-initializers)
+        else()
+            add_compile_options(-analyze)
         endif()
     endif()
 

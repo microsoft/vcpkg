@@ -1,0 +1,13 @@
+diff --git a/cmake/install.cmake b/cmake/install.cmake
+index be47c54..8b1bd97 100644
+--- a/cmake/install.cmake
++++ b/cmake/install.cmake
+@@ -31,7 +31,7 @@ endforeach()
+ if (protobuf_BUILD_PROTOC_BINARIES)
+   install(TARGETS protoc EXPORT protobuf-targets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+-  if (UNIX AND NOT APPLE)
++  if (UNIX AND NOT APPLE AND NOT protobuf_MSVC_STATIC_RUNTIME)
+     set_property(TARGET protoc
+       PROPERTY INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
+   elseif (APPLE)

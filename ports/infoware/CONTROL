@@ -1,0 +1,19 @@
+Source: infoware
+Homepage: https://github.com/ThePhD/infoware
+Version: 0.5.4
+Description: C++ Library for pulling system and hardware information, without hitting the command line.
+# Note that independent usage and testing may work, but it seems to fail in CI environments for potential cross-compilation,
+# and is thusly noted here to note break how vcpkg builds things!
+Supports: !(arm|uwp)
+
+Feature: x11
+Description: Prefer usage of X11 to find graphical capabilities.
+
+Feature: d3d
+Description: Prefer usage of Direct3D to find graphical capabilities (typically only works on Windows systems).
+
+Feature: opencl
+Description: Prefer usage of OpenCL to find graphical capabilities of the system.
+
+Feature: opengl
+Description: Prefer usage of OpenGL to find graphical capabilities (may require additional libraries to be available for linking depending on the system).

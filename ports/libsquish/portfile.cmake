@@ -1,18 +1,10 @@
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/libsquish/libsquish-1.15.tgz"
-    FILENAME "libsquish-1.15.tgz"
-    SHA512 5b569b7023874c7a43063107e2e428ea19e6eb00de045a4a13fafe852ed5402093db4b65d540b5971ec2be0d21cb97dfad9161ebfe6cf6e5376174ff6c6c3e7a
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE} 
+    REPO libsquish
+    FILENAME "libsquish-1.15.tgz"
     NO_REMOVE_ONE_LEVEL
-    REF v1.15
-    PATCHES
-        fix-export-symbols.patch
+    SHA512 5b569b7023874c7a43063107e2e428ea19e6eb00de045a4a13fafe852ed5402093db4b65d540b5971ec2be0d21cb97dfad9161ebfe6cf6e5376174ff6c6c3e7a
+    PATCHES fix-export-symbols.patch
 )
 
 vcpkg_configure_cmake(
