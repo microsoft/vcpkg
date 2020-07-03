@@ -68,7 +68,7 @@ function Require-FileNotExists {
 }
 
 # Test simple installation
-$args = $commonArgs + @("install","rapidjson","--binarycaching","--x-binarysource=clear;files,$ArchiveRoot,write;nuget,$NuGetRoot,upload")
+$args = $commonArgs + @("install","rapidjson","--binarycaching","--x-binarysource=clear;files,$ArchiveRoot,write;nuget,$NuGetRoot,readwrite")
 $CurrentTest = "./vcpkg $($args -join ' ')"
 Write-Host $CurrentTest
 ./vcpkg @args
@@ -120,7 +120,7 @@ Require-FileExists "$TestingRoot/packages.config"
 Remove-Item -Recurse -Force $NuGetRoot -ErrorAction SilentlyContinue
 mkdir $NuGetRoot
 
-$args = $commonArgs + @("install","rapidjson","tinyxml","--binarycaching","--x-binarysource=clear;nuget,$NuGetRoot2;nuget,$NuGetRoot,upload")
+$args = $commonArgs + @("install","rapidjson","tinyxml","--binarycaching","--x-binarysource=clear;nuget,$NuGetRoot2;nuget,$NuGetRoot,write")
 $CurrentTest = "./vcpkg $($args -join ' ')"
 Write-Host $CurrentTest
 ./vcpkg @args
