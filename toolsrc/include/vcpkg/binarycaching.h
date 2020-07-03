@@ -35,8 +35,6 @@ namespace vcpkg
         virtual RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) = 0;
         /// Called upon a successful build of `action`
         virtual void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) = 0;
-        /// Called upon a failure during the build of `action`
-        virtual void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) = 0;
         /// Requests the result of `try_restore()` without actually downloading the package. Used by CI to determine
         /// missing packages.
         virtual RestoreResult precheck(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) = 0;
