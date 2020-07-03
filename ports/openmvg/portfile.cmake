@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-cmake.patch
         fix-config-cmake.patch
         fix-nullptr.patch
+        fix-tools-config.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -86,50 +87,59 @@ if(OpenMVG_BUILD_SHARED)
 endif()
 vcpkg_copy_pdbs()
 
-vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
-    openMVG_main_AlternativeVO
-    openMVG_main_ChangeLocalOrigin
-    openMVG_main_ColHarmonize
-    openMVG_main_ComputeClusters
-    openMVG_main_ComputeFeatures
-    openMVG_main_ComputeFeatures_OpenCV
-    openMVG_main_ComputeMatches
-    openMVG_main_ComputeSfM_DataColor
-    openMVG_main_ComputeStructureFromKnownPoses
-    openMVG_main_ConvertList
-    openMVG_main_ConvertSfM_DataFormat
-    openMVG_main_evalQuality
-    openMVG_main_ExportCameraFrustums
-    openMVG_main_exportKeypoints
-    openMVG_main_exportMatches
-    openMVG_main_exportTracks
-    openMVG_main_ExportUndistortedImages
-    openMVG_main_FrustumFiltering
-    openMVG_main_geodesy_registration_to_gps_position
-    openMVG_main_GlobalSfM
-    openMVG_main_IncrementalSfM
-    openMVG_main_IncrementalSfM2
-    openMVG_main_ListMatchingPairs
-    openMVG_main_MatchesToTracks
-    openMVG_main_openMVG2Agisoft
-    openMVG_main_openMVG2CMPMVS
-    openMVG_main_openMVG2Colmap
-    openMVG_main_openMVG2MESHLAB
-    openMVG_main_openMVG2MVE2
-    openMVG_main_openMVG2MVSTEXTURING
-    openMVG_main_openMVG2NVM
-    openMVG_main_openMVG2openMVS
-    openMVG_main_openMVG2PMVS
-    openMVG_main_openMVG2WebGL
-    openMVG_main_openMVGSpherical2Cubic
-    openMVG_main_PointsFiltering
-    openMVG_main_SfMInit_ImageListing
-    openMVG_main_SfMInit_ImageListingFromKnownPoses
-    openMVG_main_SfM_Localization
-    openMVG_main_SplitMatchFileIntoMatchFiles
-    ui_openMVG_control_points_registration
-    ui_openMVG_MatchesViewer
-)
+if("software" IN_LIST FEATURES)
+    vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
+        openMVG_main_AlternativeVO
+        openMVG_main_ChangeLocalOrigin
+        openMVG_main_ColHarmonize
+        openMVG_main_ComputeClusters
+        openMVG_main_ComputeFeatures
+        openMVG_main_ComputeFeatures_OpenCV
+        openMVG_main_ComputeMatches
+        openMVG_main_ComputeSfM_DataColor
+        openMVG_main_ComputeStructureFromKnownPoses
+        openMVG_main_ConvertList
+        openMVG_main_ConvertSfM_DataFormat
+        openMVG_main_evalQuality
+        openMVG_main_ExportCameraFrustums
+        openMVG_main_exportKeypoints
+        openMVG_main_exportMatches
+        openMVG_main_exportTracks
+        openMVG_main_ExportUndistortedImages
+        openMVG_main_FrustumFiltering
+        openMVG_main_geodesy_registration_to_gps_position
+        openMVG_main_GlobalSfM
+        openMVG_main_IncrementalSfM
+        openMVG_main_IncrementalSfM2
+        openMVG_main_ListMatchingPairs
+        openMVG_main_MatchesToTracks
+        openMVG_main_openMVG2Agisoft
+        openMVG_main_openMVG2CMPMVS
+        openMVG_main_openMVG2Colmap
+        openMVG_main_openMVG2MESHLAB
+        openMVG_main_openMVG2MVE2
+        openMVG_main_openMVG2MVSTEXTURING
+        openMVG_main_openMVG2NVM
+        openMVG_main_openMVG2openMVS
+        openMVG_main_openMVG2PMVS
+        openMVG_main_openMVG2WebGL
+        openMVG_main_openMVGSpherical2Cubic
+        openMVG_main_PointsFiltering
+        openMVG_main_SfMInit_ImageListing
+        openMVG_main_SfMInit_ImageListingFromKnownPoses
+        openMVG_main_SfM_Localization
+        openMVG_main_SplitMatchFileIntoMatchFiles
+        ui_openMVG_control_points_registration
+        ui_openMVG_MatchesViewer
+    )
+
+    file(COPY ${SOURCE_PATH}/src/openMVG/exif/sensor_width_database/sensor_width_camera_database.txt DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    set(OPENMVG_SOFTWARE_SFM_BUILD_DIR ${CURRENT_INSTALLED_DIR}/tools/${PORT})
+    set(OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY ${CURRENT_INSTALLED_DIR}/tools/${PORT})
+    configure_file("${SOURCE_PATH}/src/software/SfM/tutorial_demo.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/tutorial_demo.py" @ONLY)
+    configure_file("${SOURCE_PATH}/src/software/SfM/SfM_GlobalPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_GlobalPipeline.py" @ONLY)
+    configure_file("${SOURCE_PATH}/src/software/SfM/SfM_SequentialPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_SequentialPipeline.py" @ONLY)
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
