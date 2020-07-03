@@ -7,3 +7,6 @@ Build-Depends: zlib, boost-iostreams, boost-program-options, boost-system, boost
 Feature: cuda
 Build-Depends: cuda
 Description: cuda support for openmvs
+
+Feature: openmp
+Description: openmp support for openmvs

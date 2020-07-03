@@ -97,8 +97,22 @@ endif()
 vcpkg_copy_pdbs()
 
 if("software" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_OSX)
+        vcpkg_copy_tools(TOOL_NAMES
+            openMVG_main_AlternativeVO.app
+            ui_openMVG_MatchesViewer.app
+        )
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/openMVG_main_AlternativeVO.app)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ui_openMVG_MatchesViewer.app)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/openMVG_main_AlternativeVO.app)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ui_openMVG_MatchesViewer.app)
+    else()
+        vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
+            openMVG_main_AlternativeVO
+            ui_openMVG_MatchesViewer
+        )
+    endif()
     vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
-        openMVG_main_AlternativeVO
         openMVG_main_ChangeLocalOrigin
         openMVG_main_ColHarmonize
         openMVG_main_ComputeClusters
@@ -138,7 +152,6 @@ if("software" IN_LIST FEATURES)
         openMVG_main_SfM_Localization
         openMVG_main_SplitMatchFileIntoMatchFiles
         ui_openMVG_control_points_registration
-        ui_openMVG_MatchesViewer
     )
     if("opencv" IN_LIST FEATURES)
         vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES

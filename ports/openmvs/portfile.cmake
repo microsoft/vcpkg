@@ -11,7 +11,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cuda OpenMVS_USE_CUDA
+    cuda   OpenMVS_USE_CUDA
+    openmp OpenMVS_USE_OPENMP
 )
 
 vcpkg_configure_cmake(
