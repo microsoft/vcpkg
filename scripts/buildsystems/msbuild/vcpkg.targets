@@ -20,9 +20,17 @@
     <VcpkgOSTarget Condition="'$(VcpkgOSTarget)' == ''">windows</VcpkgOSTarget>
   </PropertyGroup>
 
+  <!-- Set default Platform Target-->
+  <PropertyGroup Condition="'$(Platform)' == 'Win32'">
+    <VcpkgPlatformTarget Condition="'$(VcpkgPlatformTarget)' == ''">x86</VcpkgPlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VcpkgPlatformTarget Condition="'$(VcpkgPlatformTarget)' == ''">$(Platform)</VcpkgPlatformTarget>
+  </PropertyGroup>
+
   <!-- Set other defaults-->
   <PropertyGroup Condition="'$(VcpkgHasProps)'!='true'" >
-    <VcpkgUserTriplet Condition="'$(VcpkgUserTriplet)' == ''">$(PlatformTarget)-$(VcpkgOSTarget)</VcpkgUserTriplet>
+    <VcpkgUserTriplet Condition="'$(VcpkgUserTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)</VcpkgUserTriplet>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgUserTriplet)</VcpkgTriplet>
     <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$(VcpkgRoot)\installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDir>
   </PropertyGroup>
@@ -45,9 +53,6 @@
   <!-- Update properties if using static libs-->
   <PropertyGroup Condition="'$(VcpkgUseStatic)' == 'true'">
     <VcpkgTriplet>$(VcpkgUserTriplet)-static</VcpkgTriplet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(VcpkgUseStatic)' != 'true'">
-    <VcpkgTriplet>$(VcpkgUserTriplet)</VcpkgTriplet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(VcpkgCurrentInstalledDir)' == ''">

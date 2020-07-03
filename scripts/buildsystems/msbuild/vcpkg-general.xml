@@ -41,7 +41,7 @@
                 Category="General"
                 Default="true">
   </BoolProperty>
-  <StringProperty Name="VcpkgUserTriplet"
+  <StringProperty Name="VcpkgTriplet"
                   DisplayName="Triplet"
                   Description="Specifies the triplet used by Vcpkg"
                   Category="General"
