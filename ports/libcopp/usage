@@ -1,5 +1,31 @@
 The package libcopp provides CMake integration:
 
     find_package(Libcopp CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${Libcopp_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${Libcotask_LIBRARIES} ${Libcopp_LIBRARIES})
+    target_link_libraries(main PRIVATE libcopp::cotask)
+    # Or just using copp by target_link_libraries(main PRIVATE libcopp::copp)
+
+If using MSVC, CRT must match the triplet of vcpkg, these codes below may be helpful:
+
+    if (MSVC AND VCPKG_TOOLCHAIN)
+        string(REGEX MATCH "^.*windows-static$" CHECK_VCPKG_TARGET_TRIPLET_RUNTIME ${VCPKG_TARGET_TRIPLET})
+        message(STATUS "CHECK_VCPKG_TARGET_TRIPLET_RUNTIME=${CHECK_VCPKG_TARGET_TRIPLET_RUNTIME}")
+        if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
+            set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}" CACHE STRING "")
+        endif()
+        if (CHECK_VCPKG_TARGET_TRIPLET_RUNTIME)
+            set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "")
+            set(CMAKE_MSVC_RUNTIME "/MT$<$<CONFIG:Debug>:d>")
+        else ()
+            set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "")
+            set(CMAKE_MSVC_RUNTIME "/MD$<$<CONFIG:Debug>:d>")
+        endif ()
+        target_compile_options(main PRIVATE ${CMAKE_MSVC_RUNTIME})
+    endif ()
+
+BREAK CHANGES & UPGRADE GUIDE FROM 1.2.X
+
++ Rename ```cotask::task::await``` into ```cotask::task::await_task```
++ Replace ```cotask::task<TCO_MACRO, TTASK_MACRO>``` with ```cotask::task<TCO_MACRO>``` , we don't allow to custom id allocator now.
++ Replace ```cotask::core::standard_int_id_allocator<uint64_t>``` with ```copp::util::uint64_id_allocator``` , we don't allow to custom id allocator now.
++ Require gcc 4.7+, MSVC 14+(Visual Studio 2015)>)
++ Require cmake 3.12.0 or upper
