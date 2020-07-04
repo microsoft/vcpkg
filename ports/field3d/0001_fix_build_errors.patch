@@ -32,12 +32,11 @@ index 1610c2e..b012008 100644
  
  # Allow the developer to select if Dynamic or Static libraries are built
  OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
-@@ -79,26 +71,15 @@ IF ( CMAKE_HOST_UNIX )
+@@ -79,26 +71,14 @@ IF ( CMAKE_HOST_UNIX )
  ENDIF ( )
  IF ( CMAKE_HOST_WIN32 )
    ADD_DEFINITIONS (
 -    -D_HAS_ITERATOR_DEBUGGING=0 
-+    -D_HAS_ITERATOR_DEBUGGING=0
      -D_CRT_SECURE_NO_WARNINGS=1
      )
  ENDIF ( )
