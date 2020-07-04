@@ -32,7 +32,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},unchecked)
     endif()
     if ("utfmax" IN_LIST FEATURES)
-        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},time64bit)
+        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},utfmax)
     endif()
     
     vcpkg_install_nmake(
@@ -58,9 +58,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
                 ${CURRENT_PACKAGES_DIR}/lib/dde1.4/*
                 ${CURRENT_PACKAGES_DIR}/lib/nmake/*
                 ${CURRENT_PACKAGES_DIR}/lib/reg1.3/*
-                ${CURRENT_PACKAGES_DIR}/lib/tcl8/*
-                ${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*
-                ${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*
         )
         
         foreach(TOOL ${TOOLS})
@@ -70,18 +67,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/dde1.4
                             ${CURRENT_PACKAGES_DIR}/lib/nmake
                             ${CURRENT_PACKAGES_DIR}/lib/reg1.3
-                            ${CURRENT_PACKAGES_DIR}/lib/tcl8
-                            ${CURRENT_PACKAGES_DIR}/lib/tcl8.6
-                            ${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0
         )
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/dde1.4
                             ${CURRENT_PACKAGES_DIR}/debug/lib/nmake
                             ${CURRENT_PACKAGES_DIR}/debug/lib/reg1.3
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/tcl8
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0
         )
     endif()
     
