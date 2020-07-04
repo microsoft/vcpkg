@@ -24,13 +24,9 @@ else()
     )
 endif()
 
-if("use_prov_client" IN_LIST FEATURES)
-    message(STATUS "use prov_client")
-    set(USE_PROV_CLIENT 1)
-else()
-    message(STATUS "NO prov_client")
-    set(USE_PROV_CLIENT 0)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    use-prov-client use_prov_client
+)
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
 file(COPY ${SOURCE_PATH}/configs/azure_iot_sdksFunctions.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/cmake/azure_iot_sdks/)
@@ -38,14 +34,13 @@ file(COPY ${SOURCE_PATH}/configs/azure_iot_sdksFunctions.cmake DESTINATION ${CUR
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
-        -Duse_prov_client=${USE_PROV_CLIENT}
-        -Dhsm_type_symm_key=${USE_PROV_CLIENT}
+        -Dhsm_type_symm_key=${use_prov_client}
 )
 
 vcpkg_install_cmake()
@@ -57,4 +52,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
-

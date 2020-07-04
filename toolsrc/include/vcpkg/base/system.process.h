@@ -23,6 +23,18 @@ namespace vcpkg::System
                                      const fs::path& cmake_script,
                                      const std::vector<CMakeVariable>& pass_variables);
 
+    struct CmdLineBuilder
+    {
+        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(p.u8string()); }
+        CmdLineBuilder& string_arg(StringView s);
+        std::string extract() noexcept { return std::move(buf); }
+
+        operator ZStringView() const { return buf; }
+
+    private:
+        std::string buf;
+    };
+
     fs::path get_exe_path_of_current_process();
 
     struct ExitCodeAndOutput

@@ -1,12 +1,9 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/qwt/files/qwt/6.1.3/qwt-6.1.3.zip"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO qwt/qwt
+    REF 6.1.3
     FILENAME "qwt-6.1.3.zip"
     SHA512 8f249e23d50f71d14fca37776ea40d8d6931db14d9602e03a343bfb7a9bf55502202103135b77f583c3890a7924220e8a142a01c448dbde311860d89a3b10fc8
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES fix-dynamic-static.patch
 )
 
