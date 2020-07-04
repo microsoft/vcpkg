@@ -361,7 +361,7 @@ namespace vcpkg
         using type = bool;
         StringView type_name() { return "a boolean"; }
 
-        Optional<bool> visit_bool(Json::Reader&, StringView, bool b) { return b; }
+        Optional<bool> visit_boolean(Json::Reader&, StringView, bool b) { return b; }
     };
 
     enum class AllowEmpty : bool

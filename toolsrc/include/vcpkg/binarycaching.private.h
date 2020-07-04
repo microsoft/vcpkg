@@ -36,9 +36,6 @@ namespace vcpkg
 
     struct XmlSerializer
     {
-        std::string buf;
-        int indent = 0;
-
         XmlSerializer& emit_declaration();
         XmlSerializer& open_tag(StringLiteral sl);
         XmlSerializer& start_complex_open_tag(StringLiteral sl);
@@ -49,6 +46,14 @@ namespace vcpkg
         XmlSerializer& text(StringView sv);
         XmlSerializer& simple_tag(StringLiteral tag, StringView content);
         XmlSerializer& line_break();
+
+        std::string buf;
+
+    private:
+        XmlSerializer& emit_pending_indent();
+
+        int m_indent = 0;
+        bool m_pending_indent = false;
     };
 
 }

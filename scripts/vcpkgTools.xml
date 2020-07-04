@@ -65,6 +65,18 @@
         <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
         <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
     </tool>
+    <tool name="nuget" os="linux">
+        <version>5.5.1</version>
+        <exeRelativePath>nuget.exe</exeRelativePath>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
+        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+    </tool>
+    <tool name="nuget" os="osx">
+        <version>5.5.1</version>
+        <exeRelativePath>nuget.exe</exeRelativePath>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
+        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+    </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
         <exeRelativePath>QtInstallerFramework-win-x86\bin\installerbase.exe</exeRelativePath>
