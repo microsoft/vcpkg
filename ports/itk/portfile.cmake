@@ -199,7 +199,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
 if(TOOL_NAMES)
-    vcpkg_coyp_tools(TOOL_NAMES ${TOOL_NAMES})
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES})
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
