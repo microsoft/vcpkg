@@ -8,15 +8,15 @@ endif()
 
 vcpkg_find_acquire_program(PERL)
 
-set(OPENSSL_VERSION 1.1.1d)
+set(OPENSSL_VERSION 1.1.1g)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
+vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7
+    SHA512 01e3d0b1bceeed8fb066f542ef5480862001556e0f612e017442330bbd7e5faee228b2de3513d7fc347446b7f217e27de1003dc9d7214d5833b97593f3ec25ab
 )
 
 vcpkg_extract_source_archive_ex(
@@ -26,7 +26,7 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
+vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
@@ -39,6 +39,7 @@ set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
     enable-capieng
     no-ssl2
+    no-tests
     -utf-8
     ${OPENSSL_SHARED}
 )
@@ -92,7 +93,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
     )
     vcpkg_execute_required_process(
-        COMMAND nmake -f ${OPENSSL_MAKEFILE} install
+        COMMAND nmake -f ${OPENSSL_MAKEFILE} install_sw install_ssldirs
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
         LOGNAME build-${TARGET_TRIPLET}-rel-1)
 
@@ -129,7 +130,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
     )
     vcpkg_execute_required_process(
-        COMMAND nmake -f ${OPENSSL_MAKEFILE} install
+        COMMAND nmake -f ${OPENSSL_MAKEFILE} install_sw install_ssldirs
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
         LOGNAME build-${TARGET_TRIPLET}-dbg-1)
 
@@ -181,5 +182,3 @@ vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)

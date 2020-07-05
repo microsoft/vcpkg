@@ -1,6 +1,8 @@
 Source: raylib
-Version: 2.6.0
+Version: 3.0.0
+Port-Version: 1
 Description: A simple and easy-to-use library to enjoy videogames programming
+Homepage: https://github.com/raysan5/raylib
 Supports: !(arm|uwp)
 
 Feature: non-audio

@@ -1,3 +1,7 @@
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv2")
+  message(FATAL_ERROR "OpenCV 2 is installed, please uninstall and try again:\n    vcpkg remove opencv2")
+endif()
+
 if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
@@ -46,6 +50,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "tiff"     WITH_TIFF
  "webp"     WITH_WEBP
  "world"    BUILD_opencv_world
+ "gtk"      WITH_GTK
 )
 
 # Cannot use vcpkg_check_features() for "ipp", "ovis", "tbb", and "vtk".
@@ -314,6 +319,7 @@ vcpkg_configure_cmake(
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_PROTOBUF=ON

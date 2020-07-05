@@ -43,7 +43,7 @@ namespace vcpkg::Update
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("update"),
+        create_example_string("update"),
         0,
         0,
         {},
@@ -57,7 +57,7 @@ namespace vcpkg::Update
 
         const StatusParagraphs status_db = database_load_check(paths);
 
-        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
 
         const auto outdated_packages = SortedVector<OutdatedPackage>(find_outdated_packages(provider, status_db),
                                                                      &OutdatedPackage::compare_by_name);

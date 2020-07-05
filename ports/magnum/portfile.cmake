@@ -28,27 +28,49 @@ else()
     set(BUILD_PLUGINS_STATIC 0)
 endif()
 
-# Handle features
-set(_COMPONENT_FLAGS "")
-foreach(_feature IN LISTS ALL_FEATURES)
-    # Uppercase the feature name and replace "-" with "_"
-    string(TOUPPER "${_feature}" _FEATURE)
-    string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
-
-    # Turn "-DWITH_*=" ON or OFF depending on whether the feature
-    # is in the list.
-    if(_feature IN_LIST FEATURES)
-        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=ON")
-    else()
-        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
-    endif()
-endforeach()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    al-info                     WITH_AL_INFO
+    anyimageimporter            WITH_ANYIMAGEIMPORTER
+    anyaudioimporter            WITH_ANYAUDIOIMPORTER
+    anyimageconverter           WITH_ANYIMAGECONVERTER
+    anysceneimporter            WITH_ANYSCENEIMPORTER
+    audio                       WITH_AUDIO
+    debugtools                  WITH_DEBUGTOOLS
+    distancefieldconverter      WITH_DISTANCEFIELDCONVERTER
+    fontconverter               WITH_FONTCONVERTER
+    gl                          WITH_GL
+    gl-info                     WITH_GL_INFO
+    glfwapplication             WITH_GLFWAPPLICATION
+    imageconverter              WITH_IMAGECONVERTER
+    magnumfont                  WITH_MAGNUMFONT
+    magnumfontconverter         WITH_MAGNUMFONTCONVERTER
+    meshtools                   WITH_MESHTOOLS
+    objimporter                 WITH_OBJIMPORTER
+    tgaimageconverter           WITH_TGAIMAGECONVERTER
+    opengltester                WITH_OPENGLTESTER
+    primitives                  WITH_PRIMITIVES
+    sdl2application             WITH_SDL2APPLICATION
+    scenegraph                  WITH_SCENEGRAPH
+    shaders                     WITH_SHADERS
+    text                        WITH_TEXT
+    texturetools                WITH_TEXTURETOOLS
+    tgaimporter                 WITH_TGAIMPORTER
+    trade                       WITH_TRADE
+    wavaudioimporter            WITH_WAVAUDIOIMPORTER
+    windowlesswglapplication    WITH_WINDOWLESSWGLAPPLICATION
+    eglcontext                  WITH_EGLCONTEXT
+    cglcontext                  WITH_CGLCONTEXT
+    glxcontext                  WITH_GLXCONTEXT
+    wglcontext                  WITH_WGLCONTEXT
+    windowlesseglapplication    WITH_WINDOWLESSEGLAPPLICATION
+    windowlessglxapplication    WITH_WINDOWLESSGLXAPPLICATION
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
-        ${_COMPONENT_FLAGS}
+        ${FEATURE_OPTIONS}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
@@ -56,6 +78,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_copy_pdbs()
 
 # Drop a copy of tools
 if(NOT VCPKG_CMAKE_SYSTEM_NAME)
@@ -105,8 +129,4 @@ else()
    file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d)
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/magnum)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/magnum/COPYING ${CURRENT_PACKAGES_DIR}/share/magnum/copyright)
-
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

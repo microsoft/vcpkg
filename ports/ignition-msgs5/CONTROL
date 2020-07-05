@@ -1,0 +1,5 @@
+Source: ignition-msgs5
+Version: 5.1.0
+Build-Depends: ignition-modularscripts, ignition-cmake2, ignition-math6, protobuf, tinyxml2
+Description: Middleware protobuf messages for robotics
+Supports: !(arm|linux|uwp)
