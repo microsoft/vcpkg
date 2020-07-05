@@ -1,13 +1,18 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_fail_port_install(ON_ARCH "arm")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kfrlib/kfr
-    REF 11d9a1568b6157ebe6b4b44e121be8c9d3e587bf
-    SHA512 09120b38bcd5e49ca83a14516ab678d0cb866cf08ca5dd33cc6701ac7db7cd73cd7a3f445b30085b4e1718d98a53497e4e9b27772224051f623ac3006fe409bf
+    REF 1f9706197abfcd4b4ec19ded3ce37b70ebd9a223
+    SHA512 901c6984a46a7abcc28adf9397759156a9e8d173e028c236ab423568ed20b3a3efe207be9660c961539c73a2767afaedcd76133304f542d3299353942cf13f5e
     HEAD_REF master
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    capi ENABLE_CAPI_BUILD
+    dft ENABLE_DFT
+    dft-np ENABLE_DFT_NP
 )
 
 vcpkg_configure_cmake(
@@ -19,11 +24,11 @@ vcpkg_configure_cmake(
         -DREGENERATE_TESTS=OFF
         -DKFR_EXTENDED_TESTS=OFF
         -DSKIP_TESTS=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
