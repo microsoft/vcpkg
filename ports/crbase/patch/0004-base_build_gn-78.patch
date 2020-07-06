@@ -1,0 +1,39 @@
+diff --git a/base/BUILD.gn b/base/BUILD.gn
+index c093596dba..20f6229784 100644
+--- a/base/BUILD.gn
++++ b/base/BUILD.gn
+@@ -1602,20 +1602,20 @@ jumbo_component("base") {
+     "hash/md5_constexpr_internal.h",
+     "hash/sha1.h",
+   ]
+-  if (is_nacl) {
+-    sources += [
+-      "hash/md5_nacl.cc",
+-      "hash/md5_nacl.h",
+-      "hash/sha1.cc",
+-    ]
+-  } else {
+-    sources += [
+-      "hash/md5_boringssl.cc",
+-      "hash/md5_boringssl.h",
+-      "hash/sha1_boringssl.cc",
+-    ]
+-    public_deps += [ "//third_party/boringssl" ]
+-  }
++  # if (is_nacl) {
++  sources += [
++    "hash/md5_nacl.cc",
++    "hash/md5_nacl.h",
++    "hash/sha1.cc",
++  ]
++  # } else {
++  #   sources += [
++  #     "hash/md5_boringssl.cc",
++  #     "hash/md5_boringssl.h",
++  #     "hash/sha1_boringssl.cc",
++  #   ]
++  #   public_deps += [ "//third_party/boringssl" ]
++  # }
+ 
+   # NaCl.
+   if (is_nacl) {

@@ -1,0 +1,27 @@
+diff --git a/base/gtest_prod_util.h b/base/gtest_prod_util.h
+index 2ca267e27f..7575e115b8 100644
+--- a/base/gtest_prod_util.h
++++ b/base/gtest_prod_util.h
+@@ -5,6 +5,15 @@
+ #ifndef BASE_GTEST_PROD_UTIL_H_
+ #define BASE_GTEST_PROD_UTIL_H_
+ 
++#ifndef GTEST_PROD_SWITCH
++
++#define FRIEND_TEST_ALL_PREFIXES(test_case_name, test_name) \
++  friend class test_case_name##_##test_name##_Test
++#define FORWARD_DECLARE_TEST(test_case_name, test_name) \
++  class test_case_name##_##test_name##_Test
++
++#else
++
+ #include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
+ 
+ // This is a wrapper for gtest's FRIEND_TEST macro that friends
+@@ -63,4 +72,6 @@
+   class test_case_name##_##DISABLED_##test_name##_Test; \
+   class test_case_name##_##FLAKY_##test_name##_Test
+ 
++#endif // GTEST_SWITCH
++
+ #endif  // BASE_GTEST_PROD_UTIL_H_
