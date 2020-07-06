@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # Don't change to vcpkg_from_github! The sources in the git repository (archives) are missing some files that are distributed inside releases.
 # More info: https://github.com/nigels-com/glew/issues/31 and https://github.com/nigels-com/glew/issues/13
@@ -25,29 +25,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glew)
-
-if(VCPKG_TARGET_IS_WINDOWS)
-set(_targets_cmake_files)
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    list(APPEND _targets_cmake_files "${CURRENT_PACKAGES_DIR}/share/glew/glew-targets-debug.cmake")
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    list(APPEND _targets_cmake_files "${CURRENT_PACKAGES_DIR}/share/glew/glew-targets-release.cmake")
-endif()
-
-foreach(FILE ${_targets_cmake_files})
-    file(READ ${FILE} _contents)
-    string(REPLACE "libglew32" "glew32" _contents "${_contents}")
-    file(WRITE ${FILE} "${_contents}")
-endforeach()
-
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libglew32.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libglew32.lib ${CURRENT_PACKAGES_DIR}/lib/glew32.lib)
-endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/glew32d.lib)
-endif()
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
