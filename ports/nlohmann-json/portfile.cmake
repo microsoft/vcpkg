@@ -19,31 +19,26 @@ download_src(nlohmann_json.natvis 9bce6758db0e54777394a4e718e60a281952b15f0c6dc6
 download_src(cmake/config.cmake.in 7caab6166baa891f77f5b632ac4a920e548610ec41777b885ec51fe68d3665ffe91984dd2881caf22298b5392dfbd84b526fda252467bb66de9eb90e6e6ade5a)
 download_src(cmake/nlohmann_jsonConfigVersion.cmake.in 3b3ca2cfe740ba9646e5976b1112ba37c229bf527959bfb47a5e6c2fcd5ba6b5626d3c2455c181fe41a72ec78500738e2950e4fe76a2e91ba2073ba01f5595a8)
 
-if ("multiple-headers" IN_LIST FEATURES)
-    vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/nlohmann/json/releases/download/v${SOURCE_VERSION}/include.zip"
-        FILENAME ${PORT}-v${SOURCE_VERSION}-include.zip
-        SHA512 f4453aced8d74cf7c65d038fdf8da1e2b2153a1c15e26c7f25394ab1ce81f78920dd30b418b1db4cbf3f934df0459024230700bdd943aad569b2525b6a26e5d0
-    )
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH OUT_PATH
-        ARCHIVE ${ARCHIVE}
-        REF ${SOURCE_VERSION}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-        NO_REMOVE_ONE_LEVEL
-    )
-    file(COPY "${OUT_PATH}/include" DESTINATION ${SOURCE_PATH})
-    set(FEATURE_OPTIONS -DJSON_MultipleHeaders=ON)
-else()
-    download_src(single_include/nlohmann/json.hpp 6643748f7d96196e7b5659f39762a839e509da3352787ced29d62c28be18dd74b53bc2601cae3c765117ba3cb23aed491de9766ea66dd2539894f77073d0398d)
-endif()
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/nlohmann/json/releases/download/v${SOURCE_VERSION}/include.zip"
+    FILENAME ${PORT}-v${SOURCE_VERSION}-include.zip
+    SHA512 f4453aced8d74cf7c65d038fdf8da1e2b2153a1c15e26c7f25394ab1ce81f78920dd30b418b1db4cbf3f934df0459024230700bdd943aad569b2525b6a26e5d0
+)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH OUT_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${SOURCE_VERSION}
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+    NO_REMOVE_ONE_LEVEL
+)
+file(COPY "${OUT_PATH}/include" DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS 
         -DJSON_BuildTests=0 
-        ${FEATURE_OPTIONS}
+        -DJSON_MultipleHeaders=ON
 )
 
 vcpkg_install_cmake()
