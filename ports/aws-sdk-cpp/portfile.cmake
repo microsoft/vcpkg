@@ -3,8 +3,8 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF e8a7e7263e900983921e95363026efaa494622ab # 1.7.214
-    SHA512 dc4e003ffaebf21410d8d360f8a4602dda99d3ee0c0ab7fb61c97fe8b5f0b38438ed5315fb85d3a435cd5a99724e43c5cf569a7cb365ed8137caeac32c619a86
+    REF 934ed5c02bc6afdd24de23a44429dfd2bc63d081 # 1.7.333
+    SHA512 e8fa1cdb365f07a28240deca824c0b003072a5d8fe237131d2c35a4b8e37abd67cc11e015fe01a0145e30a387aa8aa9528eb98262b802442ef08750e7c1636de
     HEAD_REF master
 )
 
@@ -14,14 +14,11 @@ set(BUILD_ONLY core)
 
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
-if(CMAKE_HOST_WIN32)
-    string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
-else()
-    string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
-endif()
+string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DENABLE_UNITY_BUILD=ON

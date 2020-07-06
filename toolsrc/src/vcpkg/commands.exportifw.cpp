@@ -94,7 +94,7 @@ namespace vcpkg::Export::IFW
                                package_xml_file_path.generic_u8string());
 
             auto deps = Strings::join(
-                ",", binary_paragraph.depends, [](const std::string& dep) { return "packages." + dep + ":"; });
+                ",", binary_paragraph.dependencies, [](const std::string& dep) { return "packages." + dep + ":"; });
 
             if (!deps.empty()) deps = "\n    <Dependencies>" + deps + "</Dependencies>";
 
@@ -175,7 +175,7 @@ namespace vcpkg::Export::IFW
 </Package>
 )###",
                                       action.spec.name(),
-                                      safe_rich_from_plain_text(binary_paragraph.description),
+                                      safe_rich_from_plain_text(Strings::join("\n", binary_paragraph.description)),
                                       binary_paragraph.version,
                                       create_release_date()),
                                   VCPKG_LINE_INFO);
@@ -370,12 +370,13 @@ namespace vcpkg::Export::IFW
                                repository_dir.generic_u8string(),
                                failure_point.string());
 
-            const auto cmd_line = Strings::format(R"("%s" --packages "%s" "%s" > nul)",
+            const auto cmd_line = Strings::format(R"("%s" --packages "%s" "%s")",
                                                   repogen_exe.u8string(),
                                                   packages_dir.u8string(),
                                                   repository_dir.u8string());
 
-            const int exit_code = System::cmd_execute_clean(cmd_line);
+            const int exit_code =
+                System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
             Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: IFW repository generating failed");
 
             System::printf(
@@ -397,7 +398,7 @@ namespace vcpkg::Export::IFW
             std::string ifw_repo_url = ifw_options.maybe_repository_url.value_or("");
             if (!ifw_repo_url.empty())
             {
-                cmd_line = Strings::format(R"("%s" --online-only --config "%s" --repository "%s" "%s" > nul)",
+                cmd_line = Strings::format(R"("%s" --online-only --config "%s" --repository "%s" "%s")",
                                            binarycreator_exe.u8string(),
                                            config_file.u8string(),
                                            repository_dir.u8string(),
@@ -405,14 +406,15 @@ namespace vcpkg::Export::IFW
             }
             else
             {
-                cmd_line = Strings::format(R"("%s" --config "%s" --packages "%s" "%s" > nul)",
+                cmd_line = Strings::format(R"("%s" --config "%s" --packages "%s" "%s")",
                                            binarycreator_exe.u8string(),
                                            config_file.u8string(),
                                            packages_dir.u8string(),
                                            installer_file.u8string());
             }
 
-            const int exit_code = System::cmd_execute_clean(cmd_line);
+            const int exit_code =
+                System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
             Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: IFW installer generating failed");
 
             System::printf(
@@ -474,7 +476,7 @@ namespace vcpkg::Export::IFW
                                                                       ifw_package_dir_path / "vcpkg" / "info" /
                                                                           (binary_paragraph.fullstem() + ".list"));
 
-            Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
+            Install::install_package_and_write_listfile(paths, action.spec, dirs);
         }
 
         System::printf("Exporting packages %s... done\n", ifw_packages_dir_path.generic_u8string());

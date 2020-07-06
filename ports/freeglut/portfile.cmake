@@ -1,21 +1,16 @@
-set(FREEGLUT_VER 3.2.1)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/${FREEGLUT_VER}/freeglut-${FREEGLUT_VER}.tar.gz"
-    FILENAME "freeglut-${FREEGLUT_VER}.tar.gz"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO freeglut/freeglut
+    REF 3.2.1
+    FILENAME "freeglut-3.2.1.tar.gz"
     SHA512 aced4bbcd36269ce6f4ee1982e0f9e3fffbf18c94f785d3215ac9f4809b992e166c7ada496ed6174e13d77c0f7ef3ca4c57d8a282e96cbbe6ff086339ade3b08
-)
-
-vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
-  PATCHES
-    use_targets_to_export_x11_dependency.patch
-    macOS_Xquartz.patch
-    fix-debug-macro.patch
-    fix-link-property.patch
-    fix-output-name.patch
-    fix-static-lib-name.patch
+    PATCHES 
+        use_targets_to_export_x11_dependency.patch
+        macOS_Xquartz.patch
+        fix-debug-macro.patch
+        fix-link-property.patch
+        fix-output-name.patch
+        fix-static-lib-name.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -49,9 +44,10 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeGLUT)
 
 # Rename static lib (otherwise it's incompatible with FindGLUT.cmake)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

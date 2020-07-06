@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BlueBrain/HighFive
-    REF v2.0
-    SHA512 d6bc38ae421adfa3cb9ee761ec92819bebe385cb100a8227bd9ff436cd7ae31725a96264a7963cfe5ce806cdd3b7978a8a630e9312c1567f6df6029062c6b8a0
+    REF b9b25da543145166b01bcca01c3cbedfcbd06307 # v2.1.1
+    SHA512 f1de563bf811c285447fdf8e88e4861f1ac0e10bf830cedec587b7a85dcfb2fc9b038dd1f71cbbbf4774c517b5097f3c4afad5048b6a3dfd21f8f0e23ab67ec1
     HEAD_REF master
 )
 

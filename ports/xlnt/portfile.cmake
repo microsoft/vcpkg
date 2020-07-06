@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tfussell/xlnt
-    REF v1.4.0
-    SHA512 74abbee97994098fb7d8fd0839929db74fe01b8428f8bdb8edd28340d3b3ed04d4c7d6dd5d886ae766054ff1b0fe9a8275098a1462e7a5146ff09f1cdb063360
+    REF 85e6878cc41d4c5ad002e961dc1fe35e41f936b6 # v1.4.0
+    SHA512 335198fbcc1b3028e38bced4ee26047047b02372b6c52727a64c0cab6db19cc31be8ac6c08e96f415875a181d6f717082220b0f63f08ef6ac194927e2184a9df
     HEAD_REF master
     PATCHES
         ${win_patch}

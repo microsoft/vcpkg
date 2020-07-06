@@ -7,7 +7,7 @@ namespace vcpkg
 {
     struct TripletInstance
     {
-        TripletInstance(std::string&& s) : value(std::move(s)), hash(std::hash<std::string>()(value)) {}
+        TripletInstance(std::string&& s) : value(std::move(s)), hash(std::hash<std::string>()(value)) { }
 
         const std::string value;
         const size_t hash = 0;
@@ -32,16 +32,18 @@ namespace vcpkg
 
     const Triplet Triplet::X86_WINDOWS = from_canonical_name("x86-windows");
     const Triplet Triplet::X64_WINDOWS = from_canonical_name("x64-windows");
+    const Triplet Triplet::ARM_WINDOWS = from_canonical_name("arm-windows");
+    const Triplet Triplet::ARM64_WINDOWS = from_canonical_name("arm64-windows");
     const Triplet Triplet::X86_UWP = from_canonical_name("x86-uwp");
     const Triplet Triplet::X64_UWP = from_canonical_name("x64-uwp");
     const Triplet Triplet::ARM_UWP = from_canonical_name("arm-uwp");
     const Triplet Triplet::ARM64_UWP = from_canonical_name("arm64-uwp");
-    const Triplet Triplet::ARM_WINDOWS = from_canonical_name("arm-windows");
-    const Triplet Triplet::ARM64_WINDOWS = from_canonical_name("arm64-windows");
 
-    bool Triplet::operator==(const Triplet& other) const { return this->m_instance == other.m_instance; }
-
-    bool operator!=(const Triplet& left, const Triplet& right) { return !(left == right); }
+    //
+    const Triplet Triplet::ARM_ANDROID = from_canonical_name("arm-android");
+    const Triplet Triplet::ARM64_ANDROID = from_canonical_name("arm64-android");
+    const Triplet Triplet::X86_ANDROID = from_canonical_name("x86-android");
+    const Triplet Triplet::X64_ANDROID = from_canonical_name("x64-android");
 
     Triplet Triplet::from_canonical_name(std::string&& triplet_as_string)
     {
@@ -55,4 +57,57 @@ namespace vcpkg
     const std::string& Triplet::to_string() const { return this->canonical_name(); }
     void Triplet::to_string(std::string& out) const { out.append(this->canonical_name()); }
     size_t Triplet::hash_code() const { return m_instance->hash; }
+
+    Optional<System::CPUArchitecture> Triplet::guess_architecture() const noexcept
+    {
+        using System::CPUArchitecture;
+        if (*this == X86_WINDOWS || *this == X86_UWP || *this == X86_ANDROID)
+        {
+            return CPUArchitecture::X86;
+        }
+        else if (*this == X64_WINDOWS || *this == X64_UWP || *this == X64_ANDROID)
+        {
+            return CPUArchitecture::X64;
+        }
+        else if (*this == ARM_WINDOWS || *this == ARM_UWP || *this == ARM_ANDROID)
+        {
+            return CPUArchitecture::ARM;
+        }
+        else if (*this == ARM64_WINDOWS || *this == ARM64_UWP || *this == ARM64_ANDROID)
+        {
+            return CPUArchitecture::ARM64;
+        }
+
+        return nullopt;
+    }
+
+    Triplet default_triplet(const VcpkgCmdArguments& args)
+    {
+        if (args.triplet != nullptr)
+        {
+            return Triplet::from_canonical_name(std::string(*args.triplet));
+        }
+        else
+        {
+            auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
+            if (auto v = vcpkg_default_triplet_env.get())
+            {
+                return Triplet::from_canonical_name(std::move(*v));
+            }
+            else
+            {
+#if defined(_WIN32)
+                return Triplet::X86_WINDOWS;
+#elif defined(__APPLE__)
+                return Triplet::from_canonical_name("x64-osx");
+#elif defined(__FreeBSD__)
+                return Triplet::from_canonical_name("x64-freebsd");
+#elif defined(__GLIBC__)
+                return Triplet::from_canonical_name("x64-linux");
+#else
+                return Triplet::from_canonical_name("x64-linux-musl");
+#endif
+            }
+        }
+    }
 }

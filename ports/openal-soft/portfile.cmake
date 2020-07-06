@@ -3,12 +3,11 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
-    REF openal-soft-1.20.0
-    SHA512 d106bf8f96b32a61fadc0ee54882ce5041e4cbc35bf573296a210c83815b6c7be056ee3ed7617196dda5f89f2acd7163375f14b0cf24934faa0eda1fdb4f82a9
+    REF a01dbeb09f0a6cdb1f2946b9fdf6c16c8b979066
+    SHA512 cf59e0150861a428dec0764f4479fa80ae64dc75e3367b577902616d77509de8ae906633713bc509596b18435d19ec323e77592ef01f79cfc1a1706016550993
     HEAD_REF master
     PATCHES
         dont-export-symbols-in-static-build.patch
-        fix-arm-builds.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -17,14 +16,18 @@ else()
     set(OPENAL_LIBTYPE "STATIC")
 endif()
 
+set(ALSOFT_REQUIRE_LINUX OFF)
+set(ALSOFT_REQUIRE_WINDOWS OFF)
+set(ALSOFT_REQUIRE_OSX OFF)
+
 if(VCPKG_TARGET_IS_LINUX)
-    set(ALSOFT_REQUIRE_WINDOWS OFF)
     set(ALSOFT_REQUIRE_LINUX ON)
 endif()
-
 if(VCPKG_TARGET_IS_WINDOWS)
     set(ALSOFT_REQUIRE_WINDOWS ON)
-    set(ALSOFT_REQUIRE_LINUX OFF)
+endif()
+if(VCPKG_TARGET_IS_OSX)
+    set(ALSOFT_REQUIRE_OSX ON)
 endif()
 
 vcpkg_configure_cmake(
@@ -45,7 +48,7 @@ vcpkg_configure_cmake(
         -DALSOFT_BACKEND_QSA=OFF
         -DALSOFT_BACKEND_PORTAUDIO=OFF
         -DALSOFT_BACKEND_PULSEAUDIO=OFF
-        -DALSOFT_BACKEND_COREAUDIO=OFF
+        -DALSOFT_BACKEND_COREAUDIO=${ALSOFT_REQUIRE_OSX}
         -DALSOFT_BACKEND_JACK=OFF
         -DALSOFT_BACKEND_OPENSL=OFF
         -DALSOFT_BACKEND_WAVE=ON
@@ -69,6 +72,8 @@ foreach(HEADER al.h alc.h)
 endforeach()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 vcpkg_copy_pdbs()

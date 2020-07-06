@@ -1,0 +1,29 @@
+diff --git a/Qt4Qt5/qscintilla.pro b/Qt4Qt5/qscintilla.pro
+index 075079c32..8ff8678b6 100644
+--- a/Qt4Qt5/qscintilla.pro
++++ b/Qt4Qt5/qscintilla.pro
+@@ -37,13 +37,13 @@ CONFIG(debug, debug|release) {
+     TARGET = qscintilla2_qt$${QT_MAJOR_VERSION}
+ }
+ 
+-macx:!CONFIG(staticlib) {
++macx:!CONFIG(static) {
+     QMAKE_POST_LINK += install_name_tool -id @rpath/$(TARGET1) $(TARGET)
+ }
+ 
+ INCLUDEPATH += . ../include ../lexlib ../src
+ 
+-!CONFIG(staticlib) {
++!CONFIG(static) {
+     DEFINES += QSCINTILLA_MAKE_DLL
+ }
+ DEFINES += SCINTILLA_QT SCI_LEXER INCLUDE_DEPRECATED_FEATURES
+@@ -90,7 +90,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
+ } else {
+     features.path = $$[QT_INSTALL_DATA]/mkspecs/features
+ }
+-CONFIG(staticlib) {
++CONFIG(static) {
+     features.files = $$PWD/features_staticlib/qscintilla2.prf
+ } else {
+     features.files = $$PWD/features/qscintilla2.prf
