@@ -578,7 +578,7 @@ namespace vcpkg
 
     void VcpkgCmdArguments::append_common_options(HelpTableFormatter& table)
     {
-        constexpr static auto opt = [](StringView arg, StringView joiner, StringView value) {
+        static auto opt = [](StringView arg, StringView joiner, StringView value) {
             return Strings::format("--%s%s%s", arg, joiner, value);
         };
 
@@ -683,9 +683,7 @@ namespace vcpkg
         {
             StringView flag;
             bool enabled;
-        } flags[] = {
-            {BINARY_CACHING_FEATURE, binary_caching_enabled()}
-        };
+        } flags[] = {{BINARY_CACHING_FEATURE, binary_caching_enabled()}};
 
         for (const auto& flag : flags)
         {
