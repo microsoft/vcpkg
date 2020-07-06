@@ -1,5 +1,5 @@
 diff --git a/3rdparty/CMakeLists.txt b/3rdparty/CMakeLists.txt
-index 09eef92..d012a91 100644
+index 09eef92..cf7d4de 100644
 --- a/3rdparty/CMakeLists.txt
 +++ b/3rdparty/CMakeLists.txt
 @@ -1,16 +1,3 @@
@@ -19,7 +19,7 @@ index 09eef92..d012a91 100644
  
  macro(INSTALL_HEADERS source)
      install(DIRECTORY   "${CMAKE_CURRENT_SOURCE_DIR}/${source}"
-@@ -24,23 +11,6 @@ macro(INSTALL_HEADERS source)
+@@ -24,117 +11,26 @@ macro(INSTALL_HEADERS source)
              PATTERN     ".gitignore"    EXCLUDE)
  endmacro()
  
@@ -41,28 +41,113 @@ index 09eef92..d012a91 100644
 -endif ()
 -
  # dirent
- if (WIN32)
-     message(STATUS "On windows, so using 3rdparty/dirent")
-@@ -93,7 +63,7 @@ endif ()
- # GLFW
- if (BUILD_GLFW)
-     message(STATUS "Building GLFW from source (BUILD_GLFW=ON)")
--elseif (GLFW_FOUND AND OPENGL_FOUND)
-+elseif (OPENGL_FOUND)
-     message(STATUS "Using installed GLFW ${GLFW_VERSION}")
-     if (APPLE)
-         find_library(COCOA_FRAMEWORK Cocoa)
-@@ -131,9 +101,6 @@ endif ()
- # Azure Kinect
- include(azure_kinect/azure_kinect.cmake)
+-if (WIN32)
+-    message(STATUS "On windows, so using 3rdparty/dirent")
+-    Directories("${CMAKE_CURRENT_SOURCE_DIR}/dirent" dirent_INCLUDE_DIRS)
+-else ()
+-    message(STATUS "Using system dirent")
+-endif ()
++message(STATUS "Using installed dirent")
  
+ # Eigen 3.2.7 version is required for pybind11 included in Open3D
+-if (BUILD_EIGEN3)
+-    message(STATUS "Building EIGEN3 from source (BUILD_EIGEN3=ON)")
+-elseif (EIGEN3_FOUND)
+-    message(STATUS "Using installed EIGEN3 ${EIGEN3_VERSION}")
+-else ()
+-    message(STATUS "Unable to find EIGEN3 installed in the system")
+-    message(STATUS "Building EIGEN3 from source")
+-    set(BUILD_EIGEN3 ON)
+-endif ()
+-
+-if (BUILD_EIGEN3)
+-    set(EIGEN3_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/3rdparty/Eigen")
+-    INSTALL_HEADERS(Eigen)
+-endif ()
++message(STATUS "Using installed EIGEN3 ${EIGEN3_VERSION}")
+ 
+ # flann
+-if (BUILD_FLANN OR NOT FLANN_FOUND)
+-  message(STATUS "Using open3d's flann")
+-  Directories("${CMAKE_CURRENT_SOURCE_DIR}/flann"  FLANN_INCLUDE_DIRS)
+-else ()
+-  message(STATUS "Using system flann ${FLANN_VERSION}")
+-endif ()
+-message(STATUS "Flann includes ${FLANN_INCLUDE_DIRS}")
++message(STATUS "Using installed flann ${FLANN_VERSION}")
+ 
+ # GLEW
+-if (BUILD_GLEW)
+-    message(STATUS "Building GLEW from source (BUILD_GLEW=ON)")
+-elseif (GLEW_FOUND)
+-    message(STATUS "Using installed GLEW ${GLEW_VERSION}")
+-else ()
+-    message(STATUS "Unable to find GLEW installed in the system")
+-    message(STATUS "Building GLEW from source")
+-    set(BUILD_GLEW ON)
+-endif ()
+-
+-if (BUILD_GLEW)
+-    add_subdirectory(glew)
+-    INSTALL_HEADERS(glew)
+-endif ()
++message(STATUS "Using installed GLEW ${GLEW_VERSION}")
+ 
+ # GLFW
+-if (BUILD_GLFW)
+-    message(STATUS "Building GLFW from source (BUILD_GLFW=ON)")
+-elseif (GLFW_FOUND AND OPENGL_FOUND)
+-    message(STATUS "Using installed GLFW ${GLFW_VERSION}")
+-    if (APPLE)
+-        find_library(COCOA_FRAMEWORK Cocoa)
+-        find_library(IOKIT_FRAMEWORK IOKit)
+-        find_library(CORE_FOUNDATION_FRAMEWORK CoreFoundation)
+-        find_library(CORE_VIDEO_FRAMEWORK CoreVideo)
+-        mark_as_advanced(COCOA_FRAMEWORK
+-                         IOKIT_FRAMEWORK
+-                         CORE_FOUNDATION_FRAMEWORK
+-                         CORE_VIDEO_FRAMEWORK)
+-        list(APPEND GLFW_LIBRARIES "${COCOA_FRAMEWORK}"
+-                                    "${OPENGL_gl_LIBRARY}"
+-                                    "${IOKIT_FRAMEWORK}"
+-                                    "${CORE_FOUNDATION_FRAMEWORK}"
+-                                    "${CORE_VIDEO_FRAMEWORK}")
+-    else ()
+-        list(APPEND GLFW_INCLUDE_DIRS ${OPENGL_INCLUDE_DIR})
+-        list(APPEND GLFW_LIBRARIES    ${OPENGL_gl_LIBRARY})
+-    endif ()
+-else ()
+-    message(STATUS "Unable to find GLFW installed in the system")
+-    message(STATUS "Building GLFW from source")
+-    set(BUILD_GLFW ON)
+-    # Notify PARENT_SCOPE that GLFW was built, to deal with glfw(3) naming issue
+-    set(BUILD_GLFW ON PARENT_SCOPE)
+-endif ()
+-
+-if (BUILD_GLFW)
+-    add_subdirectory(GLFW)
+-    INSTALL_HEADERS(GLFW)
+-    list(APPEND GLFW_INCLUDE_DIRS ${OPENGL_INCLUDE_DIR})
+-    list(APPEND GLFW_LIBRARIES    ${OPENGL_gl_LIBRARY})
+-endif ()
+-
+-# Azure Kinect
+-include(azure_kinect/azure_kinect.cmake)
+-
 -# JSONCPP is always built from source to avoid ABI compatibility issues
 -message(STATUS "Building JSONCPP from source")
 -add_subdirectory(jsoncpp)
++message(STATUS "Using installed GLFW ${GLFW_VERSION}")
++list(APPEND GLFW_INCLUDE_DIRS ${OPENGL_INCLUDE_DIR})
++list(APPEND GLFW_LIBRARIES    glfw)
  
++### MOVE TO OPEN3D FEATURE
++### # Azure Kinect
++### include(azure_kinect/azure_kinect.cmake)
  
  # liblzf
-@@ -143,39 +110,12 @@ Directories("${CMAKE_CURRENT_SOURCE_DIR}/liblzf" liblzf_INCLUDE_DIRS)
+ Directories("${CMAKE_CURRENT_SOURCE_DIR}/liblzf" liblzf_INCLUDE_DIRS)
+@@ -143,192 +39,42 @@ Directories("${CMAKE_CURRENT_SOURCE_DIR}/liblzf" liblzf_INCLUDE_DIRS)
  Directories("${CMAKE_CURRENT_SOURCE_DIR}/tomasakeninemoeller/include" tomasakeninemoeller_INCLUDE_DIRS)
  
  # PNG
@@ -81,7 +166,7 @@ index 09eef92..d012a91 100644
 -    add_subdirectory(libpng)
 -    list(APPEND PNG_LIBRARIES zlib)
 -endif ()
-+set(PNG_LIBRARIES png)
++set(PNG_LIBRARIES PNG::PNG)
 +include_directories(${PNG_INCLUDE_DIRS})
  
  # JPEG
@@ -102,12 +187,32 @@ index 09eef92..d012a91 100644
 -    include(libjpeg-turbo/libjpeg-turbo.cmake)
 -endif()
 +set(JPEG_TURBO_INCLUDE_DIRS ${JPEG_INCLUDE_DIR})
-+set(JPEG_TURBO_LIBRARIES ${JPEG_LIBRARIES})
++set(JPEG_TURBO_LIBRARIES JPEG::JPEG)
  
  # PyBind
  # http://pybind11.readthedocs.io/en/stable/compiling.html
-@@ -202,120 +142,23 @@ if (BUILD_LIBREALSENSE)
- endif ()
+ # https://github.com/pybind/pybind11/blob/master/tools/pybind11Config.cmake.in
+-if (BUILD_PYBIND11)
+-    message(STATUS "Building PYBIND11 from source (BUILD_PYBIND11=ON)")
+-elseif (pybind11_FOUND)
+-    message(STATUS "Using installed PYBIND11 ${pybind11_VERSION}")
+-elseif (BUILD_PYTHON_MODULE)
+-    message(STATUS "Unable to find PYBIND11 installed in the system")
+-    message(STATUS "Building PYBIND11 from source")
+-    set(BUILD_PYBIND11 ON)
+-endif ()
+-
+-if (BUILD_PYBIND11)
+-    add_subdirectory(pybind11)
+-endif ()
+-
+-# RealSense
+-if (BUILD_LIBREALSENSE)
+-    message(STATUS "Building LIBREALSENSE from source")
+-    add_subdirectory(librealsense)
+-    Directories("${CMAKE_CURRENT_SOURCE_DIR}/librealsense" librealsense_INCLUDE_DIRS)
+-endif ()
++message(STATUS "Using installed PYBIND11 v${pybind11_VERSION}")
  
  # tinyfiledialogs
 -if (BUILD_TINYFILEDIALOGS)
@@ -118,11 +223,11 @@ index 09eef92..d012a91 100644
 -else ()
 -    message(SEND_ERROR "TINYFILEDIALOGS dependency not met.")
 -endif ()
+-
+-# tinygltf (don't use Directories(), as the examples/common/ directory includes
+-# imgui.h, which we don't want coming before the real imgui path)
+-set(tinygltf_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/tinygltf")
 +set(tinyfiledialogs_LIBRARIES tinyfiledialogs::tinyfiledialogs)
- 
- # tinygltf (don't use Directories(), as the examples/common/ directory includes
- # imgui.h, which we don't want coming before the real imgui path)
- set(tinygltf_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/tinygltf")
  
  # tinyobjloader
 -message(STATUS "Building tinyobjloader from source")
@@ -136,10 +241,10 @@ index 09eef92..d012a91 100644
 -endif()
 -set(tinyobjloader_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/tinyobjloader")
 -set(tinyobjloader_LIBRARIES tinyobjloader)
+-
+-# rply
+-Directories("${CMAKE_CURRENT_SOURCE_DIR}/rply"   rply_INCLUDE_DIRS)
 +set(tinyobjloader_LIBRARIES tinyobjloader::tinyobjloader)
- 
- # rply
- Directories("${CMAKE_CURRENT_SOURCE_DIR}/rply"   rply_INCLUDE_DIRS)
  
  # qhull
 -if (BUILD_QHULL)
@@ -202,7 +307,7 @@ index 09eef92..d012a91 100644
 -else ()
 -    message(SEND_ERROR "qhull dependency not met.")
 -endif ()
-+set(qhull_LIBRARIES  Qhull::libqhull Qhull::qhullcpp)
++set(qhull_LIBRARIES Qhull::qhullcpp Qhull::qhull_r Qhull::libqhull Qhull::qhull_p)
  
  # googletest
 -if (BUILD_UNIT_TESTS)
@@ -231,42 +336,227 @@ index 09eef92..d012a91 100644
  
  # benchmark
  if (BUILD_BENCHMARKS)
-@@ -339,8 +182,7 @@ if (BUILD_BENCHMARKS)
+     # turn off installing and testing of the benchmark lib
+-    set( BENCHMARK_ENABLE_INSTALL  OFF CACHE BOOL "This should be OFF. Enables installing the benchmark lib" ) 
++    set( BENCHMARK_ENABLE_INSTALL  OFF CACHE BOOL "This should be OFF. Enables installing the benchmark lib" )
+     set( BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "This should be OFF. Enables gtest framework for the benchmark lib" )
+     set( BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "This should be OFF. Enables tests for the benchmark lib" )
+     add_subdirectory(benchmark)
+     # set the cache vars introduced by the benchmark lib as advanced to not
+     # clutter the cmake interfaces
+-    mark_as_advanced( BENCHMARK_ENABLE_INSTALL 
+-                      BENCHMARK_ENABLE_GTEST_TESTS 
+-                      BENCHMARK_ENABLE_TESTING 
++    mark_as_advanced( BENCHMARK_ENABLE_INSTALL
++                      BENCHMARK_ENABLE_GTEST_TESTS
++                      BENCHMARK_ENABLE_TESTING
+                       BENCHMARK_ENABLE_ASSEMBLY_TESTS
+                       BENCHMARK_DOWNLOAD_DEPENDENCIES
+                       BENCHMARK_BUILD_32_BITS
+@@ -339,11 +85,7 @@ if (BUILD_BENCHMARKS)
  endif()
  
  # fmt library
 -set(fmt_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fmt/include)
 -INSTALL_HEADERS(fmt)
+-
+-# PoissonRecon
+-set(poisson_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/PoissonRecon)
 +set(fmt_LIBRARIES fmt::fmt)
  
- # PoissonRecon
- set(poisson_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/PoissonRecon)
+ # Filament library
+ if (ENABLE_GUI)
+@@ -366,7 +108,7 @@ if (ENABLE_GUI)
+                 # a temporary file, so we have to do it ourselves. Since we are
+                 # guaranteed to be on Unix here, using /tmp is safe.
+                 set(CHKVER_C /tmp/open3d.checkclang.c)
+-                file(WRITE ${CHKVER_C} 
++                file(WRITE ${CHKVER_C}
+ "#if __clang_major__ < 7
+ #error Need clang >= 7
+ #endif
+@@ -463,41 +205,25 @@ if (ENABLE_GUI)
+         # GUI needs to be able to send Expose events, which needs to link
+         # against libX11 if using system GLFW.
+         list(APPEND 3RDPARTY_LIBRARIES "-lX11")
+-    endif() 
++    endif()
+ endif()
+ list(APPEND 3RDPARTY_LIBRARIES
+-     ${FLANN_LIBRARIES}
+-     ${GLEW_LIBRARIES}
+-     ${GLFW_LIBRARIES}
+-     ${JPEG_TURBO_LIBRARIES}
+-     ${JSONCPP_LIBRARIES}
+-     ${PNG_LIBRARIES}
+-     ${tinyfiledialogs_LIBRARIES}
+-     ${tinyobjloader_LIBRARIES}
+-     ${qhull_LIBRARIES}
+-     ${googletest_LIBRARIES}
+-     ${fmt_LIBRARIES}
++     flann::flann flann::flann_cpp
++     glfw
++     GLEW::GLEW OpenGL::GL
++     JPEG::JPEG
++     jsoncpp_lib
++     PNG::PNG
++     tinyfiledialogs::tinyfiledialogs
++     tinyobjloader::tinyobjloader
++     Qhull::qhullcpp #Qhull::qhull_r Qhull::libqhull Qhull::qhull_p
++     Qhull::qhullstatic Qhull::qhullstatic_r
++     GTest::gtest
++     fmt::fmt
+ )
+ 
+-# set PRE_BUILT_3RDPARTY_LIBRARIES. When building Open3D as shared library,
+-# the user app that links Open3D also need to link PRE_BUILT_3RDPARTY_LIBRARIES,
+-# all other 3rd party libraries are embedded in the Open3D, so the user app
+-# shall not link them
+-if (NOT BUILD_GLEW)
+-    list(APPEND PRE_BUILT_3RDPARTY_LIBRARIES ${GLEW_LIBRARIES})
+-endif ()
+-if (NOT BUILD_GLFW)
+-    list(APPEND PRE_BUILT_3RDPARTY_LIBRARIES ${GLFW_LIBRARIES})
+-endif ()
+-if (NOT BUILD_PNG)
+-    list(APPEND PRE_BUILT_3RDPARTY_LIBRARIES ${PNG_LIBRARIES})
+-endif ()
+-if (NOT BUILD_TINYFILEDIALOGS)
+-    list(APPEND PRE_BUILT_3RDPARTY_LIBRARIES ${tinyfiledialogs_LIBRARIES})
+-endif ()
+-
+ set(3RDPARTY_INCLUDE_DIRS ${3RDPARTY_INCLUDE_DIRS} PARENT_SCOPE)
+ set(3RDPARTY_INCLUDE_DIRS_AT_INSTALL ${3RDPARTY_INCLUDE_DIRS_AT_INSTALL} PARENT_SCOPE)
+ set(3RDPARTY_LIBRARY_DIRS ${3RDPARTY_LIBRARY_DIRS} PARENT_SCOPE)
+ set(3RDPARTY_LIBRARIES    ${3RDPARTY_LIBRARIES}    PARENT_SCOPE)
+-set(PRE_BUILT_3RDPARTY_LIBRARIES ${PRE_BUILT_3RDPARTY_LIBRARIES} PARENT_SCOPE)
++set(PRE_BUILT_3RDPARTY_LIBRARIES ${3RDPARTY_LIBRARIES} PARENT_SCOPE)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3e967fc..a104f35 100644
+index 3e967fc..b52e58d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -336,6 +336,21 @@ macro(ADD_SOURCE_GROUP MODULE_NAME)
+@@ -336,6 +336,24 @@ macro(ADD_SOURCE_GROUP MODULE_NAME)
      source_group("Source Files\\${MODULE_NAME}" FILES ${MODULE_SOURCE_FILES})
  endmacro(ADD_SOURCE_GROUP)
  
 +find_package(OpenGL REQUIRED)
 +find_package(pybind11 REQUIRED)
 +find_package(flann REQUIRED)
++set(FLANN_FOUND TRUE)
 +find_package(Eigen3 REQUIRED)
 +find_package(GLEW REQUIRED)
 +find_package(jsoncpp REQUIRED)
 +find_package(libpng REQUIRED)
 +find_package(JPEG REQUIRED)
++find_package(PNG REQUIRED)
 +find_package(fmt REQUIRED)
 +find_package(imgui REQUIRED)
 +find_package(tinyfiledialogs REQUIRED)
 +find_package(tinyobjloader REQUIRED)
 +find_package(GTest REQUIRED)
 +find_package(Qhull REQUIRED)
++find_package(glfw3 REQUIRED)
 +
  # 3rd-party projects that are added with external_project_add will be installed
  # with this prefix. E.g.
  # - 3RDPARTY_INSTALL_PREFIX: Open3D/build/3rdparty_install
+@@ -347,17 +365,14 @@ set(3RDPARTY_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/3rdparty_install")
+ # headers in Open3D/build/3rdparty_install/include. We prioritize this include
+ # directory by putting it in front, to avoid mistakenly including other header
+ # files of the same name.
+-include_directories(${3RDPARTY_INSTALL_PREFIX}/include)
+ 
+ # 3rd-party libraries using the ExternalProject_Add approach will install
+ # libs in Open3D/build/3rdparty_install/lib.
+ # This isn't required for Ubuntu/Mac since the link directory info is propagated
+ # with the interface library. We still need this for Windows.
+-link_directories(${3RDPARTY_INSTALL_PREFIX}/lib)
+ 
+ # Handling dependencies
+ add_subdirectory(3rdparty)
+-link_directories(${3RDPARTY_LIBRARY_DIRS})
+ 
+ # set include directories
+ include_directories(
+diff --git a/src/Open3D/CMakeLists.txt b/src/Open3D/CMakeLists.txt
+index 4a47b90..119c160 100644
+--- a/src/Open3D/CMakeLists.txt
++++ b/src/Open3D/CMakeLists.txt
+@@ -149,33 +149,7 @@ list(REMOVE_DUPLICATES CONFIG_Open3D_INCLUDE_DIRS)
+ #           2) Pre-installed 3rd-party libraries
+ #           3) Built-from-source 3rd-party libraries
+ list(APPEND CONFIG_Open3D_LIBRARIES "${CMAKE_PROJECT_NAME}" ${OGL_LIBS} ${OMP_LIBRARIES})
+-if (BUILD_SHARED_LIBS)
+-    list(APPEND CONFIG_Open3D_LIBRARIES ${PRE_BUILT_3RDPARTY_LIBRARIES})
+-else ()
+-    list(APPEND CONFIG_Open3D_LIBRARIES ${3RDPARTY_LIBRARIES})
+-endif ()
+-
+-# hot-fix for glfw vs glfw3 issue for Windows
+-# TODO: we shall revisit this for a better fix
+-# glfw is the target_name i.e. there is add_library(glfw) in glfw's cmake
+-# glfw3.lib (or libglfw3.a) is the library name of the compiled glfw
+-function(list_replace src_list dst_list src_val dst_val)
+-    foreach(val ${src_list})
+-        if(${val} STREQUAL ${src_val})
+-            message(STATUS "Replacing ${val} with ${dst_val}")
+-            list(APPEND converted ${dst_val})
+-        else()
+-            list(APPEND converted ${val})
+-        endif()
+-    endforeach()
+-    set(${dst_list} ${converted} PARENT_SCOPE)
+-endfunction(list_replace)
+-
+-if (${BUILD_GLFW})
+-    message(STATUS "${CONFIG_Open3D_LIBRARIES}")
+-    list_replace("${CONFIG_Open3D_LIBRARIES}" CONFIG_Open3D_LIBRARIES "glfw" "glfw3")
+-    message(STATUS "${CONFIG_Open3D_LIBRARIES}")
+-endif()
++list(APPEND CONFIG_Open3D_LIBRARIES ${3RDPARTY_LIBRARIES})
+ 
+ # set Open3D library directories
+ list(APPEND CONFIG_Open3D_LIBRARY_DIRS
+@@ -185,21 +159,13 @@ list(APPEND CONFIG_Open3D_LIBRARY_DIRS
+ 
+ include(CMakePackageConfigHelpers)
+ 
+-# find_package Open3D
+-configure_package_config_file(Open3DConfig.cmake.in
+-                              "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Open3DConfig.cmake"
+-                              INSTALL_DESTINATION ${INSTALL_CMAKE_DIR}
+-                              PATH_VARS CONFIG_Open3D_INCLUDE_DIRS CONFIG_Open3D_LIBRARY_DIRS
+-                              NO_SET_AND_CHECK_MACRO
+-                              NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+-
+ # find_package Open3D Version
+ write_basic_package_version_file("${PROJECT_BINARY_DIR}/Open3DConfigVersion.cmake"
+                                  VERSION ${PROJECT_VERSION}
+                                  COMPATIBILITY ExactVersion)
+ 
+ # install
+-install(TARGETS ${CMAKE_PROJECT_NAME}
++install(TARGETS ${CMAKE_PROJECT_NAME} EXPORT ${CMAKE_PROJECT_NAME}Targets
+         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+         LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+@@ -209,10 +175,15 @@ install(FILES ${HEADERS_ROOT} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${CMAK
+ 
+ # Install the Open3DConfig.cmake and Open3DConfigVersion.cmake
+ install(FILES
+-        "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Open3DConfig.cmake"
+         "${PROJECT_BINARY_DIR}/Open3DConfigVersion.cmake"
+         DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+ 
++install(EXPORT ${CMAKE_PROJECT_NAME}Targets
++  FILE ${CMAKE_PROJECT_NAME}Config.cmake
++  NAMESPACE ${CMAKE_PROJECT_NAME}::
++  DESTINATION "${INSTALL_CMAKE_DIR}"
++)
++
+ # uninstall target
+ if (NOT TARGET uninstall)
+     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
 diff --git a/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp b/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp
 index 363be9b..1cba61d 100644
 --- a/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp
@@ -316,6 +606,19 @@ index 009bb21..a6c0254 100644
  
  namespace open3d {
  namespace io {
+diff --git a/src/Open3D/Open3DConfig.cmake.in b/src/Open3D/Open3DConfig.cmake.in
+index 1998543..2c3530d 100644
+--- a/src/Open3D/Open3DConfig.cmake.in
++++ b/src/Open3D/Open3DConfig.cmake.in
+@@ -5,6 +5,8 @@
+ 
+ @PACKAGE_INIT@
+ 
++include("${Open3D_CMAKE_DIR}/Open3DTargets.cmake")
++
+ set(Open3D_INCLUDE_DIRS "@PACKAGE_CONFIG_Open3D_INCLUDE_DIRS@")
+ set(Open3D_LIBRARY_DIRS "@PACKAGE_CONFIG_Open3D_LIBRARY_DIRS@")
+ set(Open3D_LIBRARIES    "@CONFIG_Open3D_LIBRARIES@")
 diff --git a/src/Open3D/Utility/Console.cpp b/src/Open3D/Utility/Console.cpp
 index 0d6de9e..6a1c24e 100644
 --- a/src/Open3D/Utility/Console.cpp
@@ -329,3 +632,16 @@ index 0d6de9e..6a1c24e 100644
  
  #include "Open3D/Utility/Helper.h"
  
+diff --git a/src/Open3D/Utility/FileSystem.cpp b/src/Open3D/Utility/FileSystem.cpp
+index 73e3782..4645272 100644
+--- a/src/Open3D/Utility/FileSystem.cpp
++++ b/src/Open3D/Utility/FileSystem.cpp
+@@ -33,7 +33,7 @@
+ #include <sstream>
+ #ifdef WINDOWS
+ #include <direct.h>
+-#include <dirent/dirent.h>
++#include <dirent.h>
+ #include <io.h>
+ #include <windows.h>
+ #ifndef PATH_MAX

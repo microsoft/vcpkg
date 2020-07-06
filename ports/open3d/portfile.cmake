@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel-isl/Open3D
@@ -12,7 +14,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_WINDOWS_RUNTIME)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         -DBUILD_CPP_EXAMPLES=OFF
         -DBUILD_UNIT_TESTS=OFF
@@ -34,13 +36,13 @@ vcpkg_configure_cmake(
         -DBUILD_CUDA_MODULE=OFF
         -DBUILD_TENSORFLOW_OPS=OFF
         -DGLIBCXX_USE_CXX11_ABI=OFF
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()
 
-# vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/open3d)
+vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 
-# # Handle copyright
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/Open3D/IO/FileFormat")
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
