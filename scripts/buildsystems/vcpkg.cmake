@@ -44,7 +44,15 @@ else()
     set(VCPKG_MANIFEST_MODE OFF)
 endif()
 
-option(VCPKG_MANIFEST_INSTALL "Install the dependencies listed in your manifest" ON)
+if(VCPKG_MANIFEST_MODE)
+    option(VCPKG_MANIFEST_INSTALL
+[[
+Install the dependencies listed in your manifest:
+    If this is off, you will have to manually install your dependencies.
+    See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md for more info.
+]]
+        ON)
+endif()
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
@@ -288,10 +296,10 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             COMMAND "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg${_VCPKG_SCRIPT_SUFFIX}"
             RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
 
-        if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
-            message(FATAL_ERROR "Bootstrapping vcpkg before install - failed")
-        else()
+        if (_VCPKG_BOOTSTRAP_RESULT EQUAL 0)
             message(STATUS "Bootstrapping vcpkg before install - done")
+        else()
+            message(FATAL_ERROR "Bootstrapping vcpkg before install - failed")
         endif()
     endif()
 
@@ -306,10 +314,10 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             --binarycaching
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
 
-    if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR "Running vcpkg install - failed")
-    else()
+    if (_VCPKG_INSTALL_RESULT EQUAL 0)
         message(STATUS "Running vcpkg install - done")
+    else()
+        message(FATAL_ERROR "Running vcpkg install - failed")
     endif()
 
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
