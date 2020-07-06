@@ -1,5 +1,5 @@
 Source: poissonrecon
-Version: 13.00
+Version: 2019-09-15
 Homepage: https://github.com/mkazhdan/PoissonRecon
 Description: Adaptive Multigrid Solvers
 Build-Depends: zlib, libpng, libjpeg-turbo
