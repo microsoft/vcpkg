@@ -100,6 +100,7 @@ run the following command (may require administrator elevation):
 After this, you can now create a New non-CMake Project (or open an existing one).
 All installed libraries are immediately ready to be `#include`'d and used
 in your project without additional configuration.
+
 If you're using CMake with Visual Studio,
 continue [here](#vcpkg-with-visual-studio-cmake-projects).
 
@@ -314,7 +315,7 @@ create a file called `vcpkg.json`, and type the following:
 The libraries will be installed into the `vcpkg_installed`
 directory, in the same directory as your `vcpkg.json`.
 If you can use the regular CMake toolchain,
-or the Visual Studio/MSBuild inteegration,
+or the Visual Studio/MSBuild integration,
 it will install the dependencies automatically,
 although you will need to set `VcpkgManifestEnabled` to `On` for MSBuild.
 If you wish to install your dependencies without using either CMake or MSBuild,
@@ -345,7 +346,7 @@ To enable tab-completion in the shell of your choice, run:
 
 or
 
-```
+```sh
 $ ./vcpkg integrate bash
 ```
 
