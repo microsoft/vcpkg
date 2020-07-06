@@ -1,8 +1,7 @@
 #include <catch2/catch.hpp>
+
 #include <vcpkg-test/util.h>
-
 #include <vcpkg/base/strings.h>
-
 #include <vcpkg/paragraphs.h>
 
 namespace Strings = vcpkg::Strings;

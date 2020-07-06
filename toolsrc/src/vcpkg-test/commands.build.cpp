@@ -1,12 +1,13 @@
 #include <catch2/catch.hpp>
 
-#include <string>
 #include <iterator>
+#include <string>
+
+#include <vcpkg-test/util.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
-#include <vcpkg-test/util.h>
 
 using namespace vcpkg;
 

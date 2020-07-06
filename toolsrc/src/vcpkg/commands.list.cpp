@@ -12,7 +12,9 @@ namespace vcpkg::Commands::List
 
     static void do_print(const StatusParagraph& pgh, const bool full_desc)
     {
-        auto full_version = pgh.package.port_version == 0 ? pgh.package.version : Strings::format("%s#%d", pgh.package.version, pgh.package.port_version);
+        auto full_version = pgh.package.port_version == 0
+                                ? pgh.package.version
+                                : Strings::format("%s#%d", pgh.package.version, pgh.package.port_version);
         if (full_desc)
         {
             System::printf("%-50s %-16s %s\n",

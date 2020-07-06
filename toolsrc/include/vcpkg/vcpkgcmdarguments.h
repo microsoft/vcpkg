@@ -1,14 +1,14 @@
 #pragma once
 
-#include <vcpkg/base/optional.h>
-#include <vcpkg/base/span.h>
-#include <vcpkg/base/stringliteral.h>
-#include <vcpkg/base/files.h>
-
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/optional.h>
+#include <vcpkg/base/span.h>
+#include <vcpkg/base/stringliteral.h>
 
 namespace vcpkg
 {

@@ -10,6 +10,7 @@
 
 #if !defined(_WIN32)
 #include <fcntl.h>
+
 #include <sys/file.h>
 #include <sys/stat.h>
 #endif
@@ -879,11 +880,13 @@ namespace vcpkg::Files
             fs::path::string_type native;
             TakeExclusiveFileLockHelper(fs::SystemHandle& res, const fs::path::string_type& native)
                 : res(res), native(native)
-            { }
+            {
+            }
 
 #if defined(WIN32)
             constexpr static auto busy_error = ERROR_BUSY;
-            bool operator()(std::error_code& ec) {
+            bool operator()(std::error_code& ec)
+            {
                 auto handle = CreateFileW(native.c_str(),
                                           GENERIC_READ,
                                           0 /* no sharing */,
@@ -908,7 +911,8 @@ namespace vcpkg::Files
             constexpr static auto busy_error = EBUSY;
             int fd = -1;
 
-            bool operator()(std::error_code& ec) {
+            bool operator()(std::error_code& ec)
+            {
                 if (fd == -1)
                 {
                     fd = ::open(native.c_str(), 0);
@@ -933,7 +937,8 @@ namespace vcpkg::Files
                 return true;
             };
 
-            ~TakeExclusiveFileLockHelper() {
+            ~TakeExclusiveFileLockHelper()
+            {
                 if (fd != -1)
                 {
                     ::close(fd);

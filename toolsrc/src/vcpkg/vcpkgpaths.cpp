@@ -2,10 +2,9 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.process.h>
-#include <vcpkg/base/util.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <vcpkg/base/chrono.h>
-#include <vcpkg/base/util.h>
-
 #include <atomic>
 #include <string>
+
+#include <vcpkg/base/chrono.h>
+#include <vcpkg/base/util.h>
 
 namespace vcpkg
 {

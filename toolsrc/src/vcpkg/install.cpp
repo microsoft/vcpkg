@@ -434,7 +434,9 @@ namespace vcpkg::Install
         SpecSummary* current_summary = nullptr;
         Chrono::ElapsedTimer build_timer = Chrono::ElapsedTimer::create_started();
 
-        TrackedPackageInstallGuard(const size_t package_count, std::vector<SpecSummary>& results, const PackageSpec& spec)
+        TrackedPackageInstallGuard(const size_t package_count,
+                                   std::vector<SpecSummary>& results,
+                                   const PackageSpec& spec)
         {
             results.emplace_back(spec, nullptr);
             current_summary = &results.back();

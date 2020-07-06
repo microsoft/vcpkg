@@ -1,16 +1,15 @@
 #include "pch.h"
 
-#include <vcpkg/platform-expression.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/sourceparagraph.h>
-#include <vcpkg/triplet.h>
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/packagespec.h>
+#include <vcpkg/platform-expression.h>
+#include <vcpkg/sourceparagraph.h>
+#include <vcpkg/triplet.h>
 
 namespace vcpkg
 {
@@ -186,14 +185,8 @@ namespace vcpkg
         return Type{Type::UNKNOWN};
     }
 
-    bool operator==(const Type& lhs, const Type& rhs)
-    {
-        return lhs.type == rhs.type;
-    }
-    bool operator!=(const Type& lhs, const Type& rhs)
-    {
-        return !(lhs == rhs);
-    }
+    bool operator==(const Type& lhs, const Type& rhs) { return lhs.type == rhs.type; }
+    bool operator!=(const Type& lhs, const Type& rhs) { return !(lhs == rhs); }
 
     static void trim_all(std::vector<std::string>& arr)
     {
@@ -246,7 +239,8 @@ namespace vcpkg
         auto supports_expr = parser.optional_field(SourceParagraphFields::SUPPORTS);
         if (!supports_expr.empty())
         {
-            auto maybe_expr = PlatformExpression::parse_platform_expression(supports_expr, PlatformExpression::MultipleBinaryOperators::Allow);
+            auto maybe_expr = PlatformExpression::parse_platform_expression(
+                supports_expr, PlatformExpression::MultipleBinaryOperators::Allow);
             if (auto expr = maybe_expr.get())
             {
                 spgh->supports_expression = std::move(*expr);
@@ -377,7 +371,10 @@ namespace vcpkg
 
         StringView type_name() { return type_name_; }
 
-        ArrayField(StringView type_name_, AllowEmpty allow_empty, T&& t = {}) : type_name_(type_name_), underlying_visitor_(static_cast<T&&>(t)), allow_empty_(allow_empty) { }
+        ArrayField(StringView type_name_, AllowEmpty allow_empty, T&& t = {})
+            : type_name_(type_name_), underlying_visitor_(static_cast<T&&>(t)), allow_empty_(allow_empty)
+        {
+        }
 
         Optional<type> visit_array(Json::Reader& r, StringView key, const Json::Array& arr)
         {
@@ -634,7 +631,8 @@ namespace vcpkg
 
         Optional<PlatformExpression::Expr> visit_string(Json::Reader&, StringView, StringView sv)
         {
-            auto opt = PlatformExpression::parse_platform_expression(sv, PlatformExpression::MultipleBinaryOperators::Deny);
+            auto opt =
+                PlatformExpression::parse_platform_expression(sv, PlatformExpression::MultipleBinaryOperators::Deny);
             if (auto res = opt.get())
             {
                 return std::move(*res);
