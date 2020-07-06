@@ -127,7 +127,14 @@ namespace vcpkg
 
         std::error_code ec;
         const auto vcpkg_lock = root / ".vcpkg-root";
-        m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
+        if (args.wait_for_lock.value_or(false))
+        {
+            m_pimpl->file_lock_handle = filesystem.take_exclusive_file_lock(vcpkg_lock, ec);
+        }
+        else
+        {
+            m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
+        }
         if (ec)
         {
             System::printf(System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());

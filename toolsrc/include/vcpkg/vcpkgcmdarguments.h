@@ -149,6 +149,9 @@ namespace vcpkg
         constexpr static StringLiteral PRINT_METRICS_SWITCH = "printmetrics";
         Optional<bool> print_metrics = nullopt;
 
+        constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
+        Optional<bool> wait_for_lock = nullopt;
+
         // feature flags
         constexpr static StringLiteral FEATURE_FLAGS_ENV = "VCPKG_FEATURE_FLAGS";
         constexpr static StringLiteral FEATURE_FLAGS_ARG = "feature-flags";

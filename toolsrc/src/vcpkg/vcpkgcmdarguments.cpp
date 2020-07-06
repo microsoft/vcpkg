@@ -297,6 +297,7 @@ namespace vcpkg
                 {PRINT_METRICS_SWITCH, &VcpkgCmdArguments::print_metrics},
                 {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
                 {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
+                {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
             };
 
             bool found = false;
