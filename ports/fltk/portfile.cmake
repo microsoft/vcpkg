@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
         findlibsfix.patch
         add-link-libraries.patch
         config-path.patch
+        include.patch
 )
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
