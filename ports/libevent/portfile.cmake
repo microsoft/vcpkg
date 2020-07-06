@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 5d6c6f0072f69a68b190772d4c973ce8f33961912032cdc104ad0854c0950f9d7e28bc274ca9df23897937f0cd8e45d1f214543d80ec271c5a6678814a7f195e
     PATCHES
         fix-file_path.patch
+        fix-LibeventConfig_cmake_in_path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
