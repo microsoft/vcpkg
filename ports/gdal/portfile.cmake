@@ -48,7 +48,7 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
     )
 endforeach()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   # Check build system first
   find_program(NMAKE nmake REQUIRED)
 

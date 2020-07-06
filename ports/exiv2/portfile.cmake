@@ -22,8 +22,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     xmp     EXIV2_ENABLE_XMP
 )
 
-if("unicode" IN_LIST FEATURES)
-    message(WARNING "Feature unicode only supports Windows platform.")
+if("unicode" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature unicode only supports Windows platform.")
 endif()
 
 vcpkg_configure_cmake(
