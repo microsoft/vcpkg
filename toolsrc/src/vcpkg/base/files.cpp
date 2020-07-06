@@ -890,7 +890,7 @@ namespace vcpkg::Files
                     if (fd < 0)
                     {
                         ec.assign(errno, std::system_category());
-                        return res;
+                        return false;
                     }
                 }
 
