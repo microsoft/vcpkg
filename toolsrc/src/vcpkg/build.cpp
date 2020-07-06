@@ -126,6 +126,8 @@ namespace vcpkg::Build
         Checks::check_exit(VCPKG_LINE_INFO, action != nullptr);
         ASSUME(action != nullptr);
         action->build_options = default_build_package_options;
+        action->build_options.clean_buildtrees = CleanBuildtrees::NO;
+        action->build_options.clean_packages = CleanPackages::NO;
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, *action, binaryprovider, build_logs_recorder, status_db);
