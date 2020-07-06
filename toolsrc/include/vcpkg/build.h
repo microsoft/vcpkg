@@ -35,14 +35,43 @@ namespace vcpkg::System
 
 namespace vcpkg::Build
 {
+    enum class BuildResult
+    {
+        NULLVALUE = 0,
+        SUCCEEDED,
+        BUILD_FAILED,
+        POST_BUILD_CHECKS_FAILED,
+        FILE_CONFLICTS,
+        CASCADED_DUE_TO_MISSING_DEPENDENCIES,
+        EXCLUDED,
+        DOWNLOADED
+    };
+
+    struct IBuildLogsRecorder
+    {
+        virtual void record_build_result(const VcpkgPaths& paths,
+                                         const PackageSpec& spec,
+                                         BuildResult result) const = 0;
+    };
+
+    const IBuildLogsRecorder& null_build_logs_recorder() noexcept;
+
     namespace Command
     {
+        int perform_ex(const FullPackageSpec& full_spec,
+                       const SourceControlFileLocation& scfl,
+                       const PortFileProvider::PathsPortFileProvider& provider,
+                       IBinaryProvider& binaryprovider,
+                       const IBuildLogsRecorder& build_logs_recorder,
+                       const VcpkgPaths& paths);
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
                                  IBinaryProvider& binaryprovider,
+                                 const IBuildLogsRecorder& build_logs_recorder,
                                  const VcpkgPaths& paths);
 
+        int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 
@@ -94,13 +123,6 @@ namespace vcpkg::Build
         ARIA2,
     };
     const std::string& to_string(DownloadTool tool);
-
-    enum class FailOnTombstone
-    {
-        NO = 0,
-        YES
-    };
-
     enum class PurgeDecompressFailure
     {
         NO = 0,
@@ -116,20 +138,18 @@ namespace vcpkg::Build
         CleanPackages clean_packages;
         CleanDownloads clean_downloads;
         DownloadTool download_tool;
-        FailOnTombstone fail_on_tombstone;
         PurgeDecompressFailure purge_decompress_failure;
     };
 
-    enum class BuildResult
-    {
-        NULLVALUE = 0,
-        SUCCEEDED,
-        BUILD_FAILED,
-        POST_BUILD_CHECKS_FAILED,
-        FILE_CONFLICTS,
-        CASCADED_DUE_TO_MISSING_DEPENDENCIES,
-        EXCLUDED,
-        DOWNLOADED
+    static constexpr BuildPackageOptions default_build_package_options{
+        Build::UseHeadVersion::NO,
+        Build::AllowDownloads::YES,
+        Build::OnlyDownloads::NO,
+        Build::CleanBuildtrees::YES,
+        Build::CleanPackages::YES,
+        Build::CleanDownloads::NO,
+        Build::DownloadTool::BUILT_IN,
+        Build::PurgeDecompressFailure::YES,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
@@ -188,6 +208,7 @@ namespace vcpkg::Build
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
                                       IBinaryProvider& binaries_provider,
+                                      const IBuildLogsRecorder& build_logs_recorder,
                                       const StatusParagraphs& status_db);
 
     enum class BuildPolicy
@@ -222,7 +243,7 @@ namespace vcpkg::Build
     struct BuildPolicies
     {
         BuildPolicies() = default;
-        BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) {}
+        BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) { }
 
         bool is_enabled(BuildPolicy policy) const
         {
@@ -261,7 +282,7 @@ namespace vcpkg::Build
         std::string value;
 
         AbiEntry() = default;
-        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) {}
+        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) { }
 
         bool operator<(const AbiEntry& other) const
         {
@@ -278,7 +299,8 @@ namespace vcpkg::Build
     struct AbiInfo
     {
         std::unique_ptr<PreBuildInfo> pre_build_info;
-        const Toolset* toolset;
+        Optional<const Toolset&> toolset;
+        Optional<const std::string&> triplet_abi;
         std::string package_abi;
         Optional<fs::path> abi_tag_file;
     };
@@ -290,7 +312,7 @@ namespace vcpkg::Build
 
     struct EnvCache
     {
-        explicit EnvCache(bool compiler_tracking) : m_compiler_tracking(compiler_tracking) {}
+        explicit EnvCache(bool compiler_tracking) : m_compiler_tracking(compiler_tracking) { }
 
         const System::Environment& get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info);
         const std::string& get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info);

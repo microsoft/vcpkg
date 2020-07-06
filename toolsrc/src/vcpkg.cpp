@@ -72,6 +72,8 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
     }
 
     const VcpkgPaths paths(fs, args);
+    paths.track_feature_flag_metrics();
+
     fs.current_path(paths.root, VCPKG_LINE_INFO);
     if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
     {
@@ -105,34 +107,7 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
         return command_function->function(args, paths);
     }
 
-    Triplet default_triplet;
-    if (args.triplet != nullptr)
-    {
-        default_triplet = Triplet::from_canonical_name(std::string(*args.triplet));
-    }
-    else
-    {
-        auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
-        if (auto v = vcpkg_default_triplet_env.get())
-        {
-            default_triplet = Triplet::from_canonical_name(std::move(*v));
-        }
-        else
-        {
-#if defined(_WIN32)
-            default_triplet = Triplet::X86_WINDOWS;
-#elif defined(__APPLE__)
-            default_triplet = Triplet::from_canonical_name("x64-osx");
-#elif defined(__FreeBSD__)
-            default_triplet = Triplet::from_canonical_name("x64-freebsd");
-#elif defined(__GLIBC__)
-            default_triplet = Triplet::from_canonical_name("x64-linux");
-#else
-            default_triplet = Triplet::from_canonical_name("x64-linux-musl");
-#endif
-        }
-    }
-
+    Triplet default_triplet = vcpkg::default_triplet(args);
     Input::check_triplet(default_triplet, paths);
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_a()))
@@ -258,10 +233,11 @@ int main(const int argc, const char* const* const argv)
 
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
     args.imbue_from_environment();
+    args.check_feature_flag_consistency();
 
+    if (const auto p = args.disable_metrics.get()) Metrics::g_metrics.lock()->set_disabled(*p);
     if (const auto p = args.print_metrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
     if (const auto p = args.send_metrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
-    if (const auto p = args.disable_metrics.get()) Metrics::g_metrics.lock()->set_disabled(*p);
     if (const auto p = args.debug.get()) Debug::g_debugging = *p;
 
     if (args.send_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
@@ -274,6 +250,8 @@ int main(const int argc, const char* const* const argv)
         System::print2(System::Color::warning,
                        "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
     }
+
+    args.track_feature_flag_metrics();
 
     if (Debug::g_debugging)
     {
