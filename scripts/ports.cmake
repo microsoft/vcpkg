@@ -93,7 +93,7 @@ elseif(CMD MATCHES "^CREATE$")
     if(NOT FILENAME)
         get_filename_component(FILENAME "${URL}" NAME)
     endif()
-    string(REGEX REPLACE "(\\.(zip|gz|tar|tgz|bz2))+\$" "" ROOT_NAME ${FILENAME})
+    string(REGEX REPLACE "(\\.(zip|gz|tar|tgz|bz2))+\$" "" ROOT_NAME ${FILENAME} "" "")
 
     set(DOWNLOAD_PATH "${DOWNLOADS}/${FILENAME}")
     file(TO_NATIVE_PATH ${DOWNLOAD_PATH} NATIVE_DOWNLOAD_PATH)
