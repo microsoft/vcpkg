@@ -1,6 +1,8 @@
 #include <catch2/catch.hpp>
-#include <vcpkg/base/optional.h>
+
 #include <vector>
+
+#include <vcpkg/base/optional.h>
 
 namespace
 {

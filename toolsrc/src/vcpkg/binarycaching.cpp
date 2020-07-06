@@ -68,7 +68,7 @@ namespace
         {
         }
         ~ArchivesBinaryProvider() = default;
-        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override {}
+        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override { }
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
@@ -522,12 +522,12 @@ namespace
 
     struct NullBinaryProvider : IBinaryProvider
     {
-        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override {}
+        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override { }
         RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
         }
-        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override {}
+        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override { }
         RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;

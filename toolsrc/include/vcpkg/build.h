@@ -1,21 +1,20 @@
 #pragma once
 
+#include <array>
+#include <map>
+#include <set>
+#include <vector>
+
+#include <vcpkg/base/cstringview.h>
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/optional.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/triplet.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
-
-#include <vcpkg/base/cstringview.h>
-#include <vcpkg/base/files.h>
-#include <vcpkg/base/optional.h>
-#include <vcpkg/base/system.process.h>
-
-#include <array>
-#include <map>
-#include <set>
-#include <vector>
 
 namespace vcpkg
 {
