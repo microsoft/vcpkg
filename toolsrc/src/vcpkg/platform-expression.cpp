@@ -3,10 +3,10 @@
 #include <vcpkg/base/parse.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
+#include <vcpkg/base/util.h>
 #include <vcpkg/platform-expression.h>
 
 #include <string>
-#include <variant>
 #include <vector>
 
 namespace vcpkg::PlatformExpression
@@ -61,68 +61,43 @@ namespace vcpkg::PlatformExpression
 
     namespace detail
     {
-        struct ExprIdentifier
+        enum class ExprKind
         {
-            std::string identifier;
-        };
-        struct ExprNot
-        {
-            std::unique_ptr<ExprImpl> expr;
-        };
-        struct ExprAnd
-        {
-            std::vector<ExprImpl> exprs;
-        };
-        struct ExprOr
-        {
-            std::vector<ExprImpl> exprs;
+            identifier,
+            op_not,
+            op_and,
+            op_or
         };
 
         struct ExprImpl
         {
-            std::variant<ExprIdentifier, ExprNot, ExprAnd, ExprOr> underlying;
-
-            explicit ExprImpl(ExprIdentifier e) : underlying(std::move(e)) { }
-            explicit ExprImpl(ExprNot e) : underlying(std::move(e)) { }
-            explicit ExprImpl(ExprAnd e) : underlying(std::move(e)) { }
-            explicit ExprImpl(ExprOr e) : underlying(std::move(e)) { }
-
-            ExprImpl clone() const
+            ExprImpl(ExprKind k, std::string i, std::vector<std::unique_ptr<ExprImpl>> es)
+                : kind(k), identifier(std::move(i)), exprs(std::move(es))
             {
-                struct Visitor
-                {
-                    ExprImpl operator()(const ExprIdentifier& e) { return ExprImpl(e); }
-                    ExprImpl operator()(const ExprNot& e)
-                    {
-                        return ExprImpl(ExprNot{std::make_unique<ExprImpl>(e.expr->clone())});
-                    }
-                    ExprImpl operator()(const ExprAnd& e)
-                    {
-                        ExprAnd res;
-                        for (const auto& expr : e.exprs)
-                        {
-                            res.exprs.push_back(expr.clone());
-                        }
-                        return ExprImpl(std::move(res));
-                    }
-                    ExprImpl operator()(const ExprOr& e)
-                    {
-                        ExprOr res;
-                        for (const auto& expr : e.exprs)
-                        {
-                            res.exprs.push_back(expr.clone());
-                        }
-                        return ExprImpl(std::move(res));
-                    }
-                };
-                return std::visit(Visitor{}, underlying);
+            }
+
+            ExprImpl(ExprKind k, std::string i) : kind(k), identifier(std::move(i)) {}
+            ExprImpl(ExprKind k, std::unique_ptr<ExprImpl> a) : kind(k) { exprs.push_back(std::move(a)); }
+            ExprImpl(ExprKind k, std::vector<std::unique_ptr<ExprImpl>> es) : kind(k), exprs(std::move(es)) {}
+
+            ExprKind kind;
+            std::string identifier;
+            std::vector<std::unique_ptr<ExprImpl>> exprs;
+
+            std::unique_ptr<ExprImpl> clone() const
+            {
+                return std::make_unique<ExprImpl>(
+                    ExprImpl{kind, identifier, Util::fmap(exprs, [](auto&& p) { return p->clone(); })});
             }
         };
 
         class ExpressionParser : public Parse::ParserBase
         {
         public:
-            ExpressionParser(StringView str, MultipleBinaryOperators multiple_binary_operators) : Parse::ParserBase(str, "CONTROL"), multiple_binary_operators(multiple_binary_operators) { }
+            ExpressionParser(StringView str, MultipleBinaryOperators multiple_binary_operators)
+                : Parse::ParserBase(str, "CONTROL"), multiple_binary_operators(multiple_binary_operators)
+            {
+            }
 
             MultipleBinaryOperators multiple_binary_operators;
 
@@ -142,7 +117,7 @@ namespace vcpkg::PlatformExpression
                     add_error("invalid logic expression, unexpected character");
                 }
 
-                return Expr(std::make_unique<ExprImpl>(std::move(res)));
+                return Expr(std::move(res));
             }
 
         private:
@@ -153,16 +128,13 @@ namespace vcpkg::PlatformExpression
             //     <platform-expression.not>
             //     <platform-expression.or> | <platform-expression.not>
 
-            static bool is_identifier_char(char32_t ch)
-            {
-                return is_lower_alpha(ch) || is_ascii_digit(ch);
-            }
+            static bool is_identifier_char(char32_t ch) { return is_lower_alpha(ch) || is_ascii_digit(ch); }
 
             // <platform-expression>:
             //     <platform-expression.not>
             //     <platform-expression.and>
             //     <platform-expression.or>
-            ExprImpl expr()
+            std::unique_ptr<ExprImpl> expr()
             {
                 auto result = expr_not();
 
@@ -170,15 +142,11 @@ namespace vcpkg::PlatformExpression
                 {
                     case '|':
                     {
-                        ExprOr e;
-                        e.exprs.push_back(std::move(result));
-                        return expr_binary<'|', '&'>(std::move(e));
+                        return expr_binary<'|', '&'>(std::make_unique<ExprImpl>(ExprKind::op_or, std::move(result)));
                     }
                     case '&':
                     {
-                        ExprAnd e;
-                        e.exprs.push_back(std::move(result));
-                        return expr_binary<'&', '|'>(std::move(e));
+                        return expr_binary<'&', '|'>(std::make_unique<ExprImpl>(ExprKind::op_and, std::move(result)));
                     }
                     default: return result;
                 }
@@ -187,7 +155,7 @@ namespace vcpkg::PlatformExpression
             // <platform-expression.simple>:
             //     ( <platform-expression> )
             //     <platform-expression.identifier>
-            ExprImpl expr_simple()
+            std::unique_ptr<ExprImpl> expr_simple()
             {
                 if (cur() == '(')
                 {
@@ -209,7 +177,7 @@ namespace vcpkg::PlatformExpression
 
             // <platform-expression.identifier>:
             //     A lowercase alpha-numeric string
-            ExprImpl expr_identifier()
+            std::unique_ptr<ExprImpl> expr_identifier()
             {
                 std::string name = match_zero_or_more(is_identifier_char).to_string();
 
@@ -219,26 +187,26 @@ namespace vcpkg::PlatformExpression
                 }
 
                 skip_whitespace();
-                return ExprImpl{ExprIdentifier{name}};
+                return std::make_unique<ExprImpl>(ExprKind::identifier, std::move(name));
             }
 
             // <platform-expression.not>:
             //     <platform-expression.simple>
             //     ! <platform-expression.simple>
-            ExprImpl expr_not()
+            std::unique_ptr<ExprImpl> expr_not()
             {
                 if (cur() == '!')
                 {
                     next();
                     skip_whitespace();
-                    return ExprImpl(ExprNot{std::make_unique<ExprImpl>(expr_simple())});
+                    return std::make_unique<ExprImpl>(ExprKind::op_not, expr_simple());
                 }
 
                 return expr_simple();
             }
 
-            template<char oper, char other, class ExprKind>
-            ExprImpl expr_binary(ExprKind&& seed)
+            template<char oper, char other>
+            std::unique_ptr<ExprImpl> expr_binary(std::unique_ptr<ExprImpl>&& seed)
             {
                 do
                 {
@@ -249,7 +217,7 @@ namespace vcpkg::PlatformExpression
                     } while (allow_multiple_binary_operators() && cur() == oper);
 
                     skip_whitespace();
-                    seed.exprs.push_back(expr_not());
+                    seed->exprs.push_back(expr_not());
                 } while (cur() == oper);
 
                 if (cur() == other)
@@ -258,7 +226,7 @@ namespace vcpkg::PlatformExpression
                 }
 
                 skip_whitespace();
-                return ExprImpl(std::move(seed));
+                return std::move(seed);
             }
         };
     }
@@ -273,21 +241,14 @@ namespace vcpkg::PlatformExpression
     {
         if (other.underlying_)
         {
-            underlying_ = std::make_unique<ExprImpl>(other.underlying_->clone());
+            this->underlying_ = other.underlying_->clone();
         }
     }
     Expr& Expr::operator=(const Expr& other)
     {
         if (other.underlying_)
         {
-            if (this->underlying_)
-            {
-                *this->underlying_ = other.underlying_->clone();
-            }
-            else
-            {
-                this->underlying_ = std::make_unique<ExprImpl>(other.underlying_->clone());
-            }
+            this->underlying_ = other.underlying_->clone();
         }
         else
         {
@@ -297,36 +258,28 @@ namespace vcpkg::PlatformExpression
         return *this;
     }
 
-    Expr::Expr(std::unique_ptr<ExprImpl>&& e) : underlying_(std::move(e)) { }
+    Expr::Expr(std::unique_ptr<ExprImpl>&& e) : underlying_(std::move(e)) {}
     Expr::~Expr() = default;
 
     Expr Expr::Identifier(StringView id)
     {
-        return Expr(std::make_unique<ExprImpl>(ExprImpl{ExprIdentifier{id.to_string()}}));
+        return Expr(std::make_unique<ExprImpl>(ExprKind::identifier, id.to_string()));
     }
-    Expr Expr::Not(Expr&& e) { return Expr(std::make_unique<ExprImpl>(ExprImpl{ExprNot{std::move(e.underlying_)}})); }
+    Expr Expr::Not(Expr&& e) { return Expr(std::make_unique<ExprImpl>(ExprKind::op_not, std::move(e.underlying_))); }
     Expr Expr::And(std::vector<Expr>&& exprs)
     {
-        std::vector<ExprImpl> impls;
-        for (auto& e : exprs)
-        {
-            impls.push_back(std::move(*e.underlying_));
-        }
-        return Expr(std::make_unique<ExprImpl>(ExprAnd{std::move(impls)}));
+        return Expr(std::make_unique<ExprImpl>(
+            ExprKind::op_and, Util::fmap(exprs, [](Expr& expr) { return std::move(expr.underlying_); })));
     }
     Expr Expr::Or(std::vector<Expr>&& exprs)
     {
-        std::vector<ExprImpl> impls;
-        for (auto& e : exprs)
-        {
-            impls.push_back(std::move(*e.underlying_));
-        }
-        return Expr(std::make_unique<ExprImpl>(ExprOr{std::move(impls)}));
+        return Expr(std::make_unique<ExprImpl>(
+            ExprKind::op_or, Util::fmap(exprs, [](Expr& expr) { return std::move(expr.underlying_); })));
     }
 
     bool Expr::evaluate(const Context& context) const
     {
-        if (!underlying_)
+        if (!this->underlying_)
         {
             return true; // empty expression is always true
         }
@@ -369,89 +322,96 @@ namespace vcpkg::PlatformExpression
                 return iter->second == value;
             }
 
-            bool visit(const ExprImpl& e) const { return std::visit(*this, e.underlying); }
-
-            bool operator()(const ExprIdentifier& expr) const
+            bool visit(const ExprImpl& expr) const
             {
-                if (!override_ctxt.empty())
+                if (expr.kind == ExprKind::identifier)
                 {
-                    auto override_id = override_ctxt.find(expr.identifier);
-                    if (override_id != override_ctxt.end())
+                    if (!override_ctxt.empty())
                     {
-                        return override_id->second;
+                        auto override_id = override_ctxt.find(expr.identifier);
+                        if (override_id != override_ctxt.end())
+                        {
+                            return override_id->second;
+                        }
+                        // Fall through to use the cmake logic if the id does not have an override
                     }
-                    // Fall through to use the cmake logic if the id does not have an override
-                }
 
-                auto id = string2identifier(expr.identifier);
-                switch (id)
+                    auto id = string2identifier(expr.identifier);
+                    switch (id)
+                    {
+                        case Identifier::invalid:
+                            // Point out in the diagnostic that they should add to the override list because that is
+                            // what most users should do, however it is also valid to update the built in identifiers to
+                            // recognize the name.
+                            System::printf(
+                                System::Color::error,
+                                "Error: Unrecognized identifer name %s. Add to override list in triplet file.\n",
+                                expr.identifier);
+                            return false;
+                        case Identifier::x64: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "x64");
+                        case Identifier::x86: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "x86");
+                        case Identifier::arm:
+                            // For backwards compatability arm is also true for arm64.
+                            // This is because it previously was only checking for a substring.
+                            return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm") ||
+                                   true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm64");
+                        case Identifier::arm64: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm64");
+                        case Identifier::windows:
+                            return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "") ||
+                                   true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
+                        case Identifier::linux: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
+                        case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
+                        case Identifier::uwp:
+                            return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
+                        case Identifier::android: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Android");
+                        case Identifier::emscripten:
+                            return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Emscripten");
+                        case Identifier::wasm32: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "wasm32");
+                        case Identifier::static_link:
+                            return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");
+                        default:
+                            Checks::exit_with_message(
+                                VCPKG_LINE_INFO,
+                                "vcpkg bug: string2identifier returned a value that we don't recognize: %d\n",
+                                static_cast<int>(id));
+                    }
+                }
+                else if (expr.kind == ExprKind::op_not)
                 {
-                    case Identifier::invalid:
-                        // Point out in the diagnostic that they should add to the override list because that is what
-                        // most users should do, however it is also valid to update the built in identifiers to
-                        // recognize the name.
-                        System::printf(System::Color::error,
-                                       "Error: Unrecognized identifer name %s. Add to override list in triplet file.\n",
-                                       expr.identifier);
-                        return false;
-                    case Identifier::x64: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "x64");
-                    case Identifier::x86: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "x86");
-                    case Identifier::arm:
-                        // For backwards compatability arm is also true for arm64.
-                        // This is because it previously was only checking for a substring.
-                        return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm") ||
-                               true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm64");
-                    case Identifier::arm64: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm64");
-                    case Identifier::windows:
-                        return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "") ||
-                               true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
-                    case Identifier::linux: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
-                    case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
-                    case Identifier::uwp: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
-                    case Identifier::android: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Android");
-                    case Identifier::emscripten:
-                        return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Emscripten");
-                    case Identifier::wasm32: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "wasm32");
-                    case Identifier::static_link: return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");
-                    default:
-                        Checks::exit_with_message(
-                            VCPKG_LINE_INFO,
-                            "vcpkg bug: string2identifier returned a value that we don't recognize: %d\n",
-                            static_cast<int>(id));
+                    return !visit(*expr.exprs.at(0));
                 }
-            }
-
-            bool operator()(const ExprNot& expr) const {
-                bool res = visit(*expr.expr);
-                return !res;
-            }
-
-            bool operator()(const ExprAnd& expr) const
-            {
-                bool valid = true;
-
-                // we want to print errors in all expressions, so we check all of the expressions all the time
-                for (const auto& e : expr.exprs)
+                else if (expr.kind == ExprKind::op_and)
                 {
-                    valid &= visit(e);
+                    bool valid = true;
+
+                    // we want to print errors in all expressions, so we check all of the expressions all the time
+                    for (const auto& e : expr.exprs)
+                    {
+                        valid &= visit(*e);
+                    }
+
+                    return valid;
                 }
-
-                return valid;
-            }
-
-            bool operator()(const ExprOr& expr) const
-            {
-                bool valid = false;
-                // we want to print errors in all expressions, so we check all of the expressions all the time
-                for (const auto& e : expr.exprs)
+                else if (expr.kind == ExprKind::op_or)
                 {
-                    valid |= visit(e);
+                    bool valid = false;
+
+                    // we want to print errors in all expressions, so we check all of the expressions all the time
+                    for (const auto& e : expr.exprs)
+                    {
+                        valid |= visit(*e);
+                    }
+
+                    return valid;
                 }
-                return valid;
+                else
+                {
+                    Checks::unreachable(VCPKG_LINE_INFO);
+                }
             }
         };
 
-        return Visitor{context, override_ctxt}.visit(*underlying_);
+        return Visitor{context, override_ctxt}.visit(*this->underlying_);
     }
 
     ExpectedS<Expr> parse_platform_expression(StringView expression, MultipleBinaryOperators multiple_binary_operators)

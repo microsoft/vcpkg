@@ -57,6 +57,7 @@
   <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
+    <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
     <VcpkgRoot Condition="!$(VcpkgRoot.EndsWith('\'))">$(VcpkgRoot)\</VcpkgRoot>
     <VcpkgCurrentInstalledDir Condition="!$(VcpkgCurrentInstalledDir.EndsWith('\'))">$(VcpkgCurrentInstalledDir)\</VcpkgCurrentInstalledDir>
     <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' != '' and !$(VcpkgManifestRoot.EndsWith('\'))">$(VcpkgManifestRoot)\</VcpkgManifestRoot>
@@ -68,10 +69,8 @@
 
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <Link>
-      <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgCurrentInstalledDir)debug\lib\*.lib</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Release' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgCurrentInstalledDir)lib\*.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Release'">%(AdditionalLibraryDirectories);$(VcpkgCurrentInstalledDir)lib;$(VcpkgCurrentInstalledDir)lib\manual-link</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">%(AdditionalLibraryDirectories);$(VcpkgCurrentInstalledDir)debug\lib;$(VcpkgCurrentInstalledDir)debug\lib\manual-link</AdditionalLibraryDirectories>
+      <AdditionalDependencies Condition="'$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)lib\*.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)lib;$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)lib\manual-link</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgCurrentInstalledDir)include</AdditionalIncludeDirectories>
@@ -87,9 +86,10 @@
   </Target>
 
   <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
-    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
-    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
-    <Message Text="Vcpkg is unable to link because we cannot decide between Release and Debug libraries. Please define the property VcpkgConfiguration to be 'Release' or 'Debug' (currently '$(VcpkgConfiguration)')." Importance="High" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgNormalizedConfiguration)' == ''"/>
+    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;" Importance="High" Condition="'$(VcpkgEnabled)' == 'true'"/>
+    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="High" Condition="'$(VcpkgEnabled)' != 'true'"/>
+    <Message Text="Vcpkg is unable to link because we cannot decide between Release and Debug libraries. Please define the property VcpkgConfiguration to be 'Release' or 'Debug' (currently '$(VcpkgConfiguration)')."
+             Importance="High" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgNormalizedConfiguration)' == ''"/>
   </Target>
 
   <Target Name="VcpkgInstallManifestDependencies" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'" BeforeTargets="ClCompile">
@@ -101,12 +101,8 @@
     <WriteLinesToFile
     File="$(TLogLocation)$(ProjectName).write.1u.tlog"
     Lines="^$(TargetPath);$([System.IO.Path]::Combine($(ProjectDir),$(IntDir)))vcpkg.applocal.log" Encoding="Unicode"/>
-    <Exec Condition="$(VcpkgConfiguration.StartsWith('Debug'))"
-      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgCurrentInstalledDir)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
-      StandardOutputImportance="Normal">
-    </Exec>
-    <Exec Condition="$(VcpkgConfiguration.StartsWith('Release'))"
-      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgCurrentInstalledDir)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
+    <Exec
+      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
       StandardOutputImportance="Normal">
     </Exec>
     <ReadLinesFromFile File="$(IntDir)vcpkg.applocal.log">
