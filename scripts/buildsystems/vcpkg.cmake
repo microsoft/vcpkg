@@ -23,25 +23,18 @@ function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
     set(${OUT} ${_vcpkg_get_dir_out} CACHE INTERNAL "_vcpkg_get_directory_name_of_file_above: ${OUT}")
 endfunction()
 
+_vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
 if(NOT DEFINED VCPKG_MANIFEST_MODE)
-    _vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
-
     if(_VCPKG_MANIFEST_DIR)
         set(VCPKG_MANIFEST_MODE ON)
     else()
         set(VCPKG_MANIFEST_MODE OFF)
     endif()
-elseif(VCPKG_MANIFEST_MODE)
-    _vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
-
-    if(NOT _VCPKG_MANIFEST_DIR)
-        message(FATAL_ERROR
-            "vcpkg manifest mode was enabled, but we couldn't find a manifest file (vcpkg.json) "
-            "in any directories above ${CMAKE_CURRENT_SOURCE_DIR}. Please add a manifest, or "
-            "disable manifests by turning off VCPKG_MANIFEST_MODE.")
-    endif()
-else()
-    set(VCPKG_MANIFEST_MODE OFF)
+elseif(VCPKG_MANIFEST_MODE AND NOT _VCPKG_MANIFEST_DIR)
+    message(FATAL_ERROR
+        "vcpkg manifest mode was enabled, but we couldn't find a manifest file (vcpkg.json) "
+        "in any directories above ${CMAKE_CURRENT_SOURCE_DIR}. Please add a manifest, or "
+        "disable manifests by turning off VCPKG_MANIFEST_MODE.")
 endif()
 
 if(VCPKG_MANIFEST_MODE)
@@ -296,11 +289,11 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             COMMAND "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg${_VCPKG_SCRIPT_SUFFIX}"
             RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
 
-        if (_VCPKG_BOOTSTRAP_RESULT EQUAL 0)
-            message(STATUS "Bootstrapping vcpkg before install - done")
-        else()
+        if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
             message(FATAL_ERROR "Bootstrapping vcpkg before install - failed")
         endif()
+
+        message(STATUS "Bootstrapping vcpkg before install - done")
     endif()
 
     message(STATUS "Running vcpkg install")
@@ -314,11 +307,11 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             --binarycaching
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
 
-    if (_VCPKG_INSTALL_RESULT EQUAL 0)
-        message(STATUS "Running vcpkg install - done")
-    else()
+    if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
         message(FATAL_ERROR "Running vcpkg install - failed")
     endif()
+
+    message(STATUS "Running vcpkg install - done")
 
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
         "${_VCPKG_MANIFEST_DIR}/vcpkg.json"

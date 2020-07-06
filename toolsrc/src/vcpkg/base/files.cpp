@@ -877,7 +877,7 @@ namespace vcpkg::Files
         struct TakeExclusiveFileLockHelper
         {
             fs::SystemHandle& res;
-            fs::path::string_type native;
+            const fs::path::string_type& native;
             TakeExclusiveFileLockHelper(fs::SystemHandle& res, const fs::path::string_type& native)
                 : res(res), native(native)
             {
@@ -959,7 +959,6 @@ namespace vcpkg::Files
 
             System::printf("Waiting to take filesystem lock on %s...\n", path.u8string());
             const auto wait = std::chrono::milliseconds(1000);
-            // infinite loop
             for (;;)
             {
                 std::this_thread::sleep_for(wait);
