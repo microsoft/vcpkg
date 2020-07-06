@@ -61,3 +61,19 @@ jobs:
       PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
       ArtifactName: '${{ parameters.triplet }} port build failure logs'
     condition: failed()
+  - task: PowerShell@2
+    displayName: "Generating all packages files"
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+    inputs:
+      targetType: inline
+      script: |
+        $env:VCPKG_DOWNLOADS = "D:\downloads"
+        ./vcpkg.exe fetch python3
+        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "${{ parameters.triplet }} package file lists"
