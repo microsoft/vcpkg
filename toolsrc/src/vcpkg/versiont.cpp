@@ -9,7 +9,9 @@ namespace vcpkg
     VersionT::VersionT(std::string&& value, int port_version) : value(std::move(value)), port_version(port_version) {}
     VersionT::VersionT(const std::string& value, int port_version) : value(value), port_version(port_version) {}
 
-    std::string VersionT::to_string() const { return Strings::format("%s#%d", value, port_version); }
+    std::string VersionT::to_string() const {
+        return port_version == 0 ? value : Strings::format("%s#%d", value, port_version);
+    }
 
     bool operator==(const VersionT& left, const VersionT& right) {
         return left.port_version == right.port_version && left.value == right.value;
