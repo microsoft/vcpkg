@@ -1,8 +1,8 @@
 #include <catch2/catch.hpp>
 
-#include <vcpkg/vcpkgcmdarguments.h>
-
 #include <vector>
+
+#include <vcpkg/vcpkgcmdarguments.h>
 
 using vcpkg::CommandSetting;
 using vcpkg::CommandStructure;

@@ -1,14 +1,13 @@
 #include "pch.h"
 
-#include <vcpkg/commands.h>
-#include <vcpkg/metrics.h>
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/commands.h>
+#include <vcpkg/metrics.h>
 
 #if defined(_WIN32)
 #pragma comment(lib, "version")
@@ -30,9 +29,11 @@ namespace vcpkg::Metrics
         return "";
     }
 
-    struct append_hexits {
+    struct append_hexits
+    {
         constexpr static char hex[17] = "0123456789abcdef";
-        void operator()(std::string& res, std::uint8_t bits) const {
+        void operator()(std::string& res, std::uint8_t bits) const
+        {
             res.push_back(hex[(bits >> 4) & 0x0F]);
             res.push_back(hex[(bits >> 0) & 0x0F]);
         }
