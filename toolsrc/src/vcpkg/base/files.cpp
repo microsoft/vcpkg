@@ -204,11 +204,36 @@ namespace vcpkg::Files
         return this->create_directory(path, ec);
     }
 
+    bool Filesystem::create_directory(const fs::path& path, LineInfo li)
+    {
+        std::error_code ec;
+        bool result = this->create_directory(path, ec);
+        if (ec)
+        {
+            vcpkg::Checks::exit_with_message(li, "error creating directory %s", path.u8string(), ec.message());
+        }
+
+        return result;
+    }
+
     bool Filesystem::create_directories(const fs::path& path, ignore_errors_t)
     {
         std::error_code ec;
         return this->create_directories(path, ec);
     }
+
+    bool Filesystem::create_directories(const fs::path& path, LineInfo li)
+    {
+        std::error_code ec;
+        bool result = this->create_directories(path, ec);
+        if (ec)
+        {
+            vcpkg::Checks::exit_with_message(li, "error creating directories %s", path.u8string(), ec.message());
+        }
+
+        return result;
+    }
+
     void Filesystem::copy_file(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts, LineInfo li)
     {
         std::error_code ec;

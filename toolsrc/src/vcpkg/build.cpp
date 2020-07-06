@@ -32,6 +32,24 @@ using vcpkg::Parse::ParseControlErrorInfo;
 using vcpkg::Parse::ParseExpected;
 using vcpkg::PortFileProvider::PathsPortFileProvider;
 
+namespace
+{
+    using vcpkg::PackageSpec;
+    using vcpkg::VcpkgPaths;
+    using vcpkg::Build::IBuildLogsRecorder;
+    struct NullBuildLogsRecorder final : IBuildLogsRecorder
+    {
+        void record_build_result(const VcpkgPaths& paths, const PackageSpec& spec, BuildResult result) const override
+        {
+            (void)paths;
+            (void)spec;
+            (void)result;
+        }
+    };
+
+    static const NullBuildLogsRecorder null_build_logs_recorder_instance;
+}
+
 namespace vcpkg::Build
 {
     using Dependencies::InstallPlanAction;
@@ -41,9 +59,11 @@ namespace vcpkg::Build
                                       const SourceControlFileLocation& scfl,
                                       const PathsPortFileProvider& provider,
                                       IBinaryProvider& binaryprovider,
+                                      const IBuildLogsRecorder& build_logs_recorder,
                                       const VcpkgPaths& paths)
     {
-        Checks::exit_with_code(VCPKG_LINE_INFO, perform_ex(full_spec, scfl, provider, binaryprovider, paths));
+        Checks::exit_with_code(VCPKG_LINE_INFO,
+                               perform_ex(full_spec, scfl, provider, binaryprovider, build_logs_recorder, paths));
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -63,6 +83,7 @@ namespace vcpkg::Build
                             const SourceControlFileLocation& scfl,
                             const PathsPortFileProvider& provider,
                             IBinaryProvider& binaryprovider,
+                            const IBuildLogsRecorder& build_logs_recorder,
                             const VcpkgPaths& paths)
     {
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
@@ -86,17 +107,6 @@ namespace vcpkg::Build
 
         compute_all_abis(paths, action_plan, var_provider, status_db);
 
-        const Build::BuildPackageOptions build_package_options{
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
-            Build::CleanBuildtrees::NO,
-            Build::CleanPackages::NO,
-            Build::CleanDownloads::NO,
-            Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::NO,
-        };
-
         InstallPlanAction* action = nullptr;
         for (auto& install_action : action_plan.already_installed)
         {
@@ -115,10 +125,10 @@ namespace vcpkg::Build
 
         Checks::check_exit(VCPKG_LINE_INFO, action != nullptr);
         ASSUME(action != nullptr);
-        action->build_options = build_package_options;
+        action->build_options = default_build_package_options;
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
-        const auto result = Build::build_package(paths, *action, binaryprovider, status_db);
+        const auto result = Build::build_package(paths, *action, binaryprovider, build_logs_recorder, status_db);
         System::print2("Elapsed time for package ", spec, ": ", build_timer, '\n');
 
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
@@ -167,8 +177,12 @@ namespace vcpkg::Build
         Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
         ASSUME(scfl != nullptr);
 
-        return perform_ex(
-            spec, *scfl, provider, args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(), paths);
+        return perform_ex(spec,
+                          *scfl,
+                          provider,
+                          args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
+                          Build::null_build_logs_recorder(),
+                          paths);
     }
 }
 
@@ -728,8 +742,7 @@ namespace vcpkg::Build
         if (action.build_options.clean_buildtrees == CleanBuildtrees::YES)
         {
             auto& fs = paths.get_filesystem();
-            const fs::path buildtrees_dir = paths.buildtrees / action.spec.name();
-            auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
+            auto buildtree_files = fs.get_files_non_recursive(paths.build_dir(action.spec));
             for (auto&& file : buildtree_files)
             {
                 if (fs.is_directory(file)) // Will only keep the logs
@@ -771,7 +784,6 @@ namespace vcpkg::Build
     {
         auto& fs = paths.get_filesystem();
         Triplet triplet = action.spec.triplet();
-        const std::string& name = action.spec.name();
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
@@ -841,9 +853,9 @@ namespace vcpkg::Build
 
         if (abi_tag_entries_missing.empty())
         {
-            std::error_code ec;
-            fs.create_directories(paths.buildtrees / name, ec);
-            const auto abi_file_path = paths.buildtrees / name / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
+            auto current_build_tree = paths.build_dir(action.spec);
+            fs.create_directory(current_build_tree, VCPKG_LINE_INFO);
+            const auto abi_file_path = current_build_tree / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
             fs.write_contents(abi_file_path, full_abi_info, VCPKG_LINE_INFO);
 
             return AbiTagAndFile{Hash::get_file_hash(VCPKG_LINE_INFO, fs, abi_file_path, Hash::Algorithm::Sha1),
@@ -919,6 +931,7 @@ namespace vcpkg::Build
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& action,
                                       IBinaryProvider& binaries_provider,
+                                      const IBuildLogsRecorder& build_logs_recorder,
                                       const StatusParagraphs& status_db)
     {
         auto& fs = paths.get_filesystem();
@@ -991,10 +1004,8 @@ namespace vcpkg::Build
         {
             binaries_provider.push_success(paths, action);
         }
-        else if ((result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED))
-        {
-            binaries_provider.push_failure(paths, abi_info.package_abi, spec);
-        }
+
+        build_logs_recorder.record_build_result(paths, spec, result.code);
 
         return result;
     }
@@ -1217,4 +1228,6 @@ namespace vcpkg::Build
         : code(code), unmet_dependencies(std::move(unmet_deps))
     {
     }
+
+    const IBuildLogsRecorder& null_build_logs_recorder() noexcept { return null_build_logs_recorder_instance; }
 }

@@ -118,6 +118,7 @@ namespace vcpkg::Commands::SetInstalled
                                               paths,
                                               status_db,
                                               args.binary_caching_enabled() ? binary_provider : null_binary_provider(),
+                                              Build::null_build_logs_recorder(),
                                               cmake_vars);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
@@ -145,17 +146,6 @@ namespace vcpkg::Commands::SetInstalled
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
 
-        const Build::BuildPackageOptions install_plan_options = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
-            Build::CleanBuildtrees::YES,
-            Build::CleanPackages::YES,
-            Build::CleanDownloads::YES,
-            Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::NO,
-        };
-
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto cmake_vars = CMakeVars::make_triplet_cmake_var_provider(paths);
 
@@ -171,7 +161,7 @@ namespace vcpkg::Commands::SetInstalled
                             *binary_provider,
                             *cmake_vars,
                             specs,
-                            install_plan_options,
+                            vcpkg::Build::default_build_package_options,
                             dry_run ? DryRun::Yes : DryRun::No,
                             pkgsconfig);
     }
