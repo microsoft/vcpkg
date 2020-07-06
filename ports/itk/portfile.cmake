@@ -53,6 +53,7 @@ if("cufftw" IN_LIST FEATURES)
              )
     endif()
 endif()
+
 if("rtk" IN_LIST FEATURES)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         message(FATAL_ERROR "RTK is not supported on architecture ${VCPKG_TARGET_ARCHITECTURE}")
@@ -63,10 +64,11 @@ if("rtk" IN_LIST FEATURES)
          )
     if("cuda" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS "-DRTK_USE_CUDA=ON")
-		#RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes. 
+        #RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes. 
     endif()
-	file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/RTK")
 endif()
+file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/RTK")
+
 if("opencl" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS # Wrapping options required by OpenCL if build with Python Wrappers
          -DITK_WRAP_unsigned_long_long=ON
