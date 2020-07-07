@@ -5,7 +5,20 @@ variables:
   windows-pool: 'PrWin-2020-06-30'
   linux-pool: 'PrLin-2020-06-30'
 
-jobs:
+stages:
+- stage: check-formatting
+  pool: $(windows-pool)
+  jobs:
+  - job:
+    steps:
+    - task: Powershell@2
+      displayName: 'Check C++ Formatting'
+      inputs:
+        filePath: 'scripts/azure-pipelines/windows/check-formatting.ps1'
+        arguments: '-Toolsrc ./toolsrc'
+- stage: run-port-ci
+  dependsOn: check-formatting
+  jobs:
   - template: windows/azure-pipelines.yml
     parameters:
       triplet: x86-windows
