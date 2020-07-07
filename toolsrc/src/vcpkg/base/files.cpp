@@ -884,10 +884,7 @@ namespace vcpkg::Files
             }
 
 #if defined(WIN32)
-            void assign_busy_error(std::error_code& ec)
-            {
-                ec.assign(ERROR_BUSY, std::system_category());
-            }
+            void assign_busy_error(std::error_code& ec) { ec.assign(ERROR_BUSY, std::system_category()); }
 
             bool operator()(std::error_code& ec)
             {
@@ -914,10 +911,7 @@ namespace vcpkg::Files
 #else // ^^^ WIN32 / !WIN32 vvv
             int fd = -1;
 
-            void assign_busy_error(std::error_code& ec)
-            {
-                ec.assign(EBUSY, std::generic_category());
-            }
+            void assign_busy_error(std::error_code& ec) { ec.assign(EBUSY, std::generic_category()); }
 
             bool operator()(std::error_code& ec)
             {
