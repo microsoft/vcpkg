@@ -1,13 +1,13 @@
 #include "pch.h"
 
+#include <ctime>
+
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-
-#include <ctime>
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h>
@@ -30,7 +30,7 @@ namespace vcpkg
     {
         struct CtrlCStateMachine
         {
-            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) {}
+            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) { }
 
             void transition_to_spawn_process() noexcept
             {
@@ -382,7 +382,7 @@ namespace vcpkg
 #if defined(_WIN32)
     struct ProcessInfo
     {
-        constexpr ProcessInfo() noexcept : proc_info{} {}
+        constexpr ProcessInfo() noexcept : proc_info{} { }
         ProcessInfo(ProcessInfo&& other) noexcept : proc_info(other.proc_info)
         {
             other.proc_info.hProcess = nullptr;
@@ -724,6 +724,6 @@ namespace vcpkg
         SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ctrl_handler), TRUE);
     }
 #else
-    void System::register_console_ctrl_handler() {}
+    void System::register_console_ctrl_handler() { }
 #endif
 }

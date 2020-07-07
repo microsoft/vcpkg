@@ -1,15 +1,14 @@
 #pragma once
 
-#include <vcpkg/binaryparagraph.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/tools.h>
-#include <vcpkg/vcpkgcmdarguments.h>
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/binaryparagraph.h>
+#include <vcpkg/packagespec.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
 {

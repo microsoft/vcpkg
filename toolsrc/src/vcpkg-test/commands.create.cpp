@@ -1,7 +1,8 @@
 #include <catch2/catch.hpp>
 
-#include <string>
 #include <iterator>
+#include <string>
+
 #include <vcpkg/base/files.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -11,7 +12,7 @@ TEST_CASE ("create smoke test", "[commands-create]")
 {
     using namespace vcpkg;
     static const std::string argsRaw[] = {"create", "zlib2", "http://zlib.net/zlib-1.2.11.tar.gz", "zlib-1.2.11.zip"};
-    
+
     auto& fsWrapper = Files::get_real_filesystem();
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_arg_sequence(std::begin(argsRaw), std::end(argsRaw));
     VcpkgPaths paths(fsWrapper, args);

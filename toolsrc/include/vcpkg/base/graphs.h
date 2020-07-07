@@ -34,7 +34,7 @@ namespace vcpkg::Graphs
         virtual int random(int max_exclusive) = 0;
 
     protected:
-        ~Randomizer() {}
+        ~Randomizer() { }
     };
 
     namespace details
