@@ -1,5 +1,9 @@
 #include "pch.h"
 
+#include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/export.chocolatey.h>
@@ -11,11 +15,6 @@
 #include <vcpkg/install.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkglib.h>
-
-#include <vcpkg/base/stringliteral.h>
-#include <vcpkg/base/system.print.h>
-#include <vcpkg/base/system.process.h>
-#include <vcpkg/base/util.h>
 
 namespace vcpkg::Export
 {

@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#include <vector>
+
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
@@ -9,7 +11,6 @@
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
-#include <vector>
 
 using vcpkg::Dependencies::ActionPlan;
 using vcpkg::Dependencies::InstallPlanAction;

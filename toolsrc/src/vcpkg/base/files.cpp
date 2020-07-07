@@ -10,6 +10,7 @@
 
 #if !defined(_WIN32)
 #include <fcntl.h>
+
 #include <sys/file.h>
 #include <sys/stat.h>
 #endif

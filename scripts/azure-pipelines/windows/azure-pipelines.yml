@@ -20,6 +20,12 @@ jobs:
     condition: always()
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
+  - task: Powershell@2
+    displayName: 'Check C++ Formatting'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/check-formatting.ps1'
+      arguments: '-Toolsrc ./toolsrc'
     # Note: D: is the Azure machines' temporary disk.
   - task: CmdLine@2
     displayName: 'Build vcpkg'
@@ -61,3 +67,19 @@ jobs:
       PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
       ArtifactName: '${{ parameters.triplet }} port build failure logs'
     condition: failed()
+  - task: PowerShell@2
+    displayName: "Generating all packages files"
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+    inputs:
+      targetType: inline
+      script: |
+        $env:VCPKG_DOWNLOADS = "D:\downloads"
+        ./vcpkg.exe fetch python3
+        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "${{ parameters.triplet }} package file lists"
