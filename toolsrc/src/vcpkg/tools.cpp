@@ -1,9 +1,6 @@
 #include "pch.h"
 
 #include <vcpkg/archives.h>
-#include <vcpkg/tools.h>
-#include <vcpkg/vcpkgpaths.h>
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/files.h>
@@ -13,6 +10,8 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg
 {

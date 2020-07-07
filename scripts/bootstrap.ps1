@@ -140,7 +140,7 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
     $VisualStudioInstances = getVisualStudioInstances
     if ($null -eq $VisualStudioInstances)
     {
-        throw "Could not find Visual Studio. VS2015 or VS2017 (with C++) needs to be installed."
+        throw "Could not find Visual Studio. VS2015, VS2017, or VS2019 (with C++) needs to be installed."
     }
 
     Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstances))"

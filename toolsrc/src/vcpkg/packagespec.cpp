@@ -244,7 +244,8 @@ namespace vcpkg
                 return nullopt;
             }
             platform_string.append((++loc.it).pointer_to_current(), parser.it().pointer_to_current());
-            auto platform_opt = PlatformExpression::parse_platform_expression(platform_string, PlatformExpression::MultipleBinaryOperators::Allow);
+            auto platform_opt = PlatformExpression::parse_platform_expression(
+                platform_string, PlatformExpression::MultipleBinaryOperators::Allow);
             if (auto platform = platform_opt.get())
             {
                 ret.platform = std::move(*platform);

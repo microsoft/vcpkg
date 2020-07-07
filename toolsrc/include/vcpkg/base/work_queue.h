@@ -1,17 +1,17 @@
 #pragma once
 
-#include <vcpkg/base/checks.h>
-
 #include <condition_variable>
 #include <memory>
 #include <vector>
+
+#include <vcpkg/base/checks.h>
 
 namespace vcpkg
 {
     template<class Action>
     struct WorkQueue
     {
-        WorkQueue(LineInfo li) : m_line_info(li) {}
+        WorkQueue(LineInfo li) : m_line_info(li) { }
         WorkQueue(const WorkQueue&) = delete;
 
         ~WorkQueue()
