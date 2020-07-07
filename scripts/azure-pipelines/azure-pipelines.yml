@@ -32,7 +32,7 @@ stages:
 - stage: run_port_ci
   displayName: 'Run the Port CI'
   dependsOn:
-  - check_formatting
+  - check_cxx_formatting
   - check_manifest_formatting
   jobs:
   - template: windows/azure-pipelines.yml
