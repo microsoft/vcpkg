@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onqtam/doctest
-    REF 7d42bd0fab6c44010c8aed9338bd02bea5feba41 #version 2.3.7
-    SHA512 4e71c8dd49a97ee2324207e063d47ce56cfb0371c0e855dd26ce4f169299f1710e4f30a9c5f16a078690c983e6ce7b6d5bb4fe9e0ec6be017905b2381a85b5a6
+    REF 1c8da00c978c19e00a434b2b1f854fcffc9fba35 #version 2.4.0
+    SHA512 aa0d10a0fbd6d3b9f89c3d909bce332804610390a310c3f6ac89c44c76a07f00a8770d30d6481627572bdbd9dabccfe6c6f9f7b5fb6b323bf5120ec623dd358f
     HEAD_REF master
 )
 

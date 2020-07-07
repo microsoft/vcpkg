@@ -20,6 +20,12 @@ jobs:
     condition: always()
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
+  - task: Powershell@2
+    displayName: 'Check C++ Formatting'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/check-formatting.ps1'
+      arguments: '-Toolsrc ./toolsrc'
     # Note: D: is the Azure machines' temporary disk.
   - task: CmdLine@2
     displayName: 'Build vcpkg'
@@ -42,17 +48,14 @@ jobs:
         cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=ON -B build.x86.debug -S toolsrc
         ninja.exe -C build.x86.debug
         build.x86.debug\vcpkg-test.exe
+        powershell.exe -NoProfile -ExecutionPolicy Bypass "scripts\azure-pipelines\end-to-end-tests.ps1 -WorkingRoot \"%cd%\testing\" -triplet x86-windows"
       failOnStderr: true
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot D:\ -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -ArtifactsDirectory $(System.ArtifactsDirectory)'
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '$(System.ArtifactsDirectory)/xml-results/${{ parameters.triplet }}.xml'
-    condition: always()
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot D:\ -ArtifactsDirectory $(System.ArtifactsDirectory)'
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'
     condition: always()
@@ -61,6 +64,22 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
+      PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
       ArtifactName: '${{ parameters.triplet }} port build failure logs'
     condition: failed()
+  - task: PowerShell@2
+    displayName: "Generating all packages files"
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+    inputs:
+      targetType: inline
+      script: |
+        $env:VCPKG_DOWNLOADS = "D:\downloads"
+        ./vcpkg.exe fetch python3
+        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "${{ parameters.triplet }} package file lists"
