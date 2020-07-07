@@ -10,6 +10,7 @@ vcpkg_from_github(
         use_flann_targets.patch
         boost-1.70.patch
         fix-link-libpng.patch
+        remove-broken-targets.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
