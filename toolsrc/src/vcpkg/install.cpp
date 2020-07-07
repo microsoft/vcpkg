@@ -506,18 +506,20 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "--only-downloads";
     static constexpr StringLiteral OPTION_RECURSE = "--recurse";
     static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
+    static constexpr StringLiteral OPTION_EDITABLE = "--editable";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
     static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
 
-    static constexpr std::array<CommandSwitch, 8> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 9> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_ONLY_DOWNLOADS, "Download sources but don't build packages"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
+        {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
     }};
@@ -678,6 +680,7 @@ namespace vcpkg::Install
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
         const bool only_downloads = Util::Sets::contains(options.switches, (OPTION_ONLY_DOWNLOADS));
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
+        const bool is_editable = Util::Sets::contains(options.switches, (OPTION_EDITABLE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going =
@@ -692,10 +695,12 @@ namespace vcpkg::Install
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
             Util::Enum::to_enum<Build::OnlyDownloads>(only_downloads),
-            clean_after_build ? Build::CleanBuildtrees::YES : Build::CleanBuildtrees::NO,
-            clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
-            clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
+            Util::Enum::to_enum<Build::CleanBuildtrees>(clean_after_build),
+            Util::Enum::to_enum<Build::CleanPackages>(clean_after_build),
+            Util::Enum::to_enum<Build::CleanDownloads>(clean_after_build),
             download_tool,
+            Build::PurgeDecompressFailure::NO,
+            Util::Enum::to_enum<Build::Editable>(is_editable),
         };
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
@@ -769,7 +774,10 @@ namespace vcpkg::Install
         {
             action.build_options = install_plan_options;
             if (action.request_type != RequestType::USER_REQUESTED)
+            {
                 action.build_options.use_head_version = Build::UseHeadVersion::NO;
+                action.build_options.editable = Build::Editable::NO;
+            }
         }
 
         var_provider.load_tag_vars(action_plan, provider);
