@@ -1,0 +1,21 @@
+diff --git a/Modules/ThirdParty/GDCM/CMakeLists.txt b/Modules/ThirdParty/GDCM/CMakeLists.txt
+index f1b68ef..3ac1f33 100644
+--- a/Modules/ThirdParty/GDCM/CMakeLists.txt
++++ b/Modules/ThirdParty/GDCM/CMakeLists.txt
+@@ -10,14 +10,14 @@ if(ITK_USE_SYSTEM_GDCM)
+   # When this module is loaded by an app, load GDCM too.
+   set(ITKGDCM_EXPORT_CODE_INSTALL "
+ set(GDCM_DIR \"${GDCM_DIR}\")
+-find_package(GDCM REQUIRED)
++find_package(GDCM CONFIG REQUIRED)
+ ")
+   set(ITKGDCM_EXPORT_CODE_BUILD "
+ if(NOT ITK_BINARY_DIR)
+   set(CMAKE_MODULE_PATH \"${CMAKE_CURRENT_SOURCE_DIR}/CMake\" \${CMAKE_MODULE_PATH})
+ 
+   set(GDCM_DIR \"${GDCM_DIR}\")
+-  find_package(GDCM REQUIRED)
++  find_package(GDCM CONFIG REQUIRED)
+ endif()
+ ")
+ 

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_buildpath_length_warning(37)
 
 vcpkg_from_github(
@@ -11,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix_openjpeg_search.patch
         fix_libminc_config_path.patch
+        fix-depends-gdcm.patch
 )
 
 if ("vtk" IN_LIST FEATURES)
@@ -37,6 +36,7 @@ vcpkg_configure_cmake(
         -DITK_INSTALL_PACKAGE_DIR=share/itk
         -DITK_USE_64BITS_IDS=${USE_64BITS_IDS}
         -DITK_USE_CONCEPT_CHECKING=ON
+        -DITK_USE_SYSTEM_GDCM=ON
         #-DITK_USE_SYSTEM_LIBRARIES=ON # enables USE_SYSTEM for all third party libraries, some of which do not have vcpkg ports such as CastXML, SWIG, MINC etc
         -DITK_USE_SYSTEM_DOUBLECONVERSION=ON
         -DITK_USE_SYSTEM_EXPAT=ON
