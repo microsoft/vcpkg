@@ -17,25 +17,26 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 
 # 目录
 
-- [Vcpkg: 总览](#vcpkg-overview)
-- [目录](#table-of-contents)
-- [入门](#getting-started)
-  - [快速开始: Windows](#quick-start-windows)
-  - [快速开始: Unix](#quick-start-unix)
-  - [安装 Linux Developer Tools](#installing-linux-developer-tools)
-  - [安装 macOS Developer Tools](#installing-macos-developer-tools)
-    - [在 macOS 10.15 之前版本中安装 GCC](#installing-gcc-for-macos-before-1015)
-  - [在 CMake 中使用 vcpkg](#using-vcpkg-with-cmake)
-    - [Visual Studio Code 中的 CMake Tools](#visual-studio-code-with-cmake-tools)
-    - [Visual Studio CMake 工程中使用 vcpkg](#vcpkg-with-visual-studio-cmake-projects)
-    - [CLion 中使用 vcpkg](#vcpkg-with-clion)
-    - [将 vcpkg 作为一个子模块](#vcpkg-as-a-submodule)
-  - [快速开始: 清单](#quick-start-manifests)
-- [Tab补全/自动补全](#tab-completionauto-completion)
-- [示例](#examples)
-- [贡献者](#contributing)
+- [Vcpkg 总览](#vcpkg---)
+  * [概要](#--)
+- [目录](#--)
+- [入门](#--)
+  * [快速开始: Windows](#------windows)
+  * [快速开始: Unix](#------unix)
+  * [安装 Linux Developer Tools](#---linux-developer-tools)
+  * [安装 macOS Developer Tools](#---macos-developer-tools)
+    + [在 macOS 10.15 之前版本中安装 GCC](#--macos-1015---------gcc)
+  * [在 CMake 中使用 vcpkg](#--cmake-----vcpkg)
+    + [Visual Studio Code 中的 CMake Tools](#visual-studio-code----cmake-tools)
+    + [Visual Studio CMake 工程中使用 vcpkg](#visual-studio-cmake-------vcpkg)
+    + [CLion 中使用 vcpkg](#clion-----vcpkg)
+    + [将 vcpkg 作为一个子模块](#--vcpkg--------)
+  * [快速开始: 清单](#--------)
+- [Tab补全/自动补全](#tab-------)
+  * [示例](#--)
+  * [贡献者](#---)
 - [License](#license)
-- [数据收集](#telemetry)
+- [数据收集](#----)
 
 # 入门
 
@@ -109,11 +110,11 @@ vcpkg团队和社区可以看到它的地方，
 
 ## 快速开始: Unix
 
-Linux中需求:
+Linux平台的使用需求:
 - [Git][quick-start:git]
 - [g++][quick-start:linux-gcc] >= 6
 
-macOS中需求:
+macOS平台的使用需求:
 - [Apple Developer Tools][quick-start:apple-developer-tools]
 - macOS 10.14 或更低版本中， 您也需要:
   - [Homebrew][quick-start:homebrew]
@@ -265,7 +266,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 如果您遇到任何错误，请 [提交一个issue][contributing:submit-issue]！
 
 首先，为 [Windows](#quick-start-windows) 正常安装vcpkg或 [Unix](#quick-start-unix)。
-您可能希望将vcpkg安装在中央位置，由于安装的目录位于本地，并且可以从同一vcpkg目录中同时运行多个vcpkg命令。
+您可能希望将vcpkg安装在常用的位置，由于安装的目录位于本地，并且可以从同一vcpkg目录中同时运行多个vcpkg命令。
 
 然后，您必须通过将 `manifests` 添加到以逗号分隔的 `--feature-flags` 选项中来打开 `manifests` vcpkg功能标记，
 或将其添加到以逗号分隔的 `VCPKG_FEATURE_FLAGS` 环境变量中。
@@ -335,7 +336,7 @@ $ ./vcpkg integrate bash
 Vcpkg是一个开源项目，并通过您的贡献不断发展。
 下面是一些您可以贡献的方式:
 
-* [提交 issue][contributing:submit-issue] in vcpkg or existing packages
+* [提交一个关于vcpkg或已支持包的新issue][contributing:submit-issue]
 * [提交修复PR和创建新包][contributing:submit-pr]
 
 请参阅我们的 [贡献准则](CONTRIBUTING.md) 了解更多详细信息。
