@@ -6,7 +6,7 @@ variables:
   linux-pool: 'PrLin-2020-06-30'
 
 stages:
-- stage: check-formatting
+- stage: check_formatting
   pool: $(windows-pool)
   jobs:
   - job:
@@ -16,8 +16,8 @@ stages:
       inputs:
         filePath: 'scripts/azure-pipelines/windows/check-formatting.ps1'
         arguments: '-Toolsrc ./toolsrc'
-- stage: run-port-ci
-  dependsOn: check-formatting
+- stage: run_port_ci
+  dependsOn: check_formatting
   jobs:
   - template: windows/azure-pipelines.yml
     parameters:
