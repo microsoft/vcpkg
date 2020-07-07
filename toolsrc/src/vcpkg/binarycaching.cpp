@@ -68,7 +68,7 @@ namespace
         {
         }
         ~ArchivesBinaryProvider() = default;
-        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override {}
+        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override { }
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
@@ -104,33 +104,10 @@ namespace
                         }
                     }
                 }
+
+                System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
             }
-            for (auto&& archives_root_dir : m_read_dirs)
-            {
-                const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
-                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
-                if (fs.exists(archive_tombstone_path))
-                {
-                    if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
-                    {
-                        System::print2("Found failure tombstone: ", archive_tombstone_path.u8string(), "\n");
-                        return RestoreResult::build_failed;
-                    }
-                    else
-                    {
-                        System::print2(System::Color::warning,
-                                       "Found failure tombstone: ",
-                                       archive_tombstone_path.u8string(),
-                                       "\n");
-                    }
-                }
-                else
-                {
-                    const fs::path archive_path = archives_root_dir / archive_subpath;
-                    System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
-                }
-            }
+
             return RestoreResult::missing;
         }
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
@@ -167,48 +144,7 @@ namespace
             }
             if (m_write_dirs.size() > 1) fs.remove(tmp_archive_path, ignore_errors);
         }
-        void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) override
-        {
-            if (m_write_dirs.empty()) return;
-            auto& fs = paths.get_filesystem();
-            std::error_code ec;
-            for (auto&& m_directory : m_write_dirs)
-            {
-                const fs::path& archives_root_dir = m_directory;
-                const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
-                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
-                if (!fs.exists(archive_tombstone_path))
-                {
-                    // Build failed, store all failure logs in the tombstone.
-                    const auto spec_name_path = fs::u8path(spec.name());
-                    const auto tmp_log_path = paths.buildtrees / spec_name_path / fs::u8path("tmp_failure_logs");
-                    const auto tmp_log_path_destination = tmp_log_path / spec_name_path;
-                    const auto tmp_failure_zip = paths.buildtrees / spec_name_path / fs::u8path("failure_logs.zip");
-                    fs.create_directories(tmp_log_path_destination, ignore_errors);
-
-                    for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
-                    {
-                        if (log_file.path().extension() == ".log")
-                        {
-                            fs.copy_file(log_file.path(),
-                                         tmp_log_path_destination / log_file.path().filename(),
-                                         fs::copy_options::none,
-                                         ec);
-                        }
-                    }
-
-                    compress_directory(paths, tmp_log_path, tmp_failure_zip);
-                    fs.create_directories(archive_tombstone_path.parent_path(), ignore_errors);
-                    fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
-
-                    // clean up temporary directory
-                    fs.remove_all(tmp_log_path, VCPKG_LINE_INFO);
-                }
-            }
-        }
-        RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action) override
+        RestoreResult precheck(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& fs = paths.get_filesystem();
@@ -222,20 +158,6 @@ namespace
                 if (fs.exists(archive_path))
                 {
                     return RestoreResult::success;
-                }
-            }
-            for (auto&& archives_root_dir : m_read_dirs)
-            {
-                const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
-                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
-
-                if (fs.exists(archive_tombstone_path))
-                {
-                    if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
-                    {
-                        return RestoreResult::build_failed;
-                    }
                 }
             }
             return RestoreResult::missing;
@@ -276,7 +198,6 @@ namespace
         void prefetch(const VcpkgPaths& paths, const Dependencies::ActionPlan& plan) override
         {
             if (m_read_sources.empty() && m_read_configs.empty()) return;
-            if (plan.install_actions.empty()) return;
 
             auto& fs = paths.get_filesystem();
 
@@ -284,13 +205,17 @@ namespace
 
             for (auto&& action : plan.install_actions)
             {
+                if (action.build_options.editable == Build::Editable::YES) continue;
+
                 auto& spec = action.spec;
-                fs.remove_all_inside(paths.package_dir(spec), VCPKG_LINE_INFO);
+                fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
 
                 nuget_refs.emplace_back(spec, NugetReference(action));
             }
 
-            System::print2("Attempting to fetch ", plan.install_actions.size(), " packages from nuget.\n");
+            if (nuget_refs.empty()) return;
+
+            System::print2("Attempting to fetch ", nuget_refs.size(), " packages from nuget.\n");
 
             auto packages_config = paths.buildtrees / fs::u8path("packages.config");
 
@@ -317,6 +242,9 @@ namespace
             {
                 // First check using all sources
                 System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+                cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                 cmdline.path_arg(nuget_exe)
                     .string_arg("install")
                     .path_arg(packages_config)
@@ -340,6 +268,9 @@ namespace
             {
                 // Then check using each config
                 System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+                cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                 cmdline.path_arg(nuget_exe)
                     .string_arg("install")
                     .path_arg(packages_config)
@@ -424,6 +355,9 @@ namespace
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
             System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+            cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
             cmdline.path_arg(nuget_exe)
                 .string_arg("pack")
                 .path_arg(nuspec_path)
@@ -450,6 +384,9 @@ namespace
                 for (auto&& write_src : m_write_sources)
                 {
                     System::CmdLineBuilder cmd;
+#ifndef _WIN32
+                    cmd.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
@@ -480,6 +417,9 @@ namespace
                 for (auto&& write_cfg : m_write_configs)
                 {
                     System::CmdLineBuilder cmd;
+#ifndef _WIN32
+                    cmd.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
@@ -511,7 +451,6 @@ namespace
                 paths.get_filesystem().remove(nupkg_path, ignore_errors);
             }
         }
-        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
         RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
@@ -564,15 +503,7 @@ namespace
                 provider->push_success(paths, action);
             }
         }
-        void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) override
-        {
-            for (auto&& provider : m_providers)
-            {
-                provider->push_failure(paths, abi_tag, spec);
-            }
-        }
-        RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action) override
+        RestoreResult precheck(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             for (auto&& provider : m_providers)
             {
@@ -594,13 +525,12 @@ namespace
 
     struct NullBinaryProvider : IBinaryProvider
     {
-        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override {}
+        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override { }
         RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
         }
         void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override { }
-        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override { }
         RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
@@ -615,42 +545,57 @@ XmlSerializer& XmlSerializer::emit_declaration()
 }
 XmlSerializer& XmlSerializer::open_tag(StringLiteral sl)
 {
+    emit_pending_indent();
     Strings::append(buf, '<', sl, '>');
-    indent += 2;
+    m_indent += 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::start_complex_open_tag(StringLiteral sl)
 {
+    emit_pending_indent();
     Strings::append(buf, '<', sl);
-    indent += 2;
+    m_indent += 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::text_attr(StringLiteral name, StringView content)
 {
-    Strings::append(buf, ' ', name, "=\"");
+    if (m_pending_indent)
+    {
+        m_pending_indent = false;
+        buf.append(m_indent, ' ');
+    }
+    else
+    {
+        buf.push_back(' ');
+    }
+    Strings::append(buf, name, "=\"");
     text(content);
     Strings::append(buf, '"');
     return *this;
 }
 XmlSerializer& XmlSerializer::finish_complex_open_tag()
 {
+    emit_pending_indent();
     Strings::append(buf, '>');
     return *this;
 }
 XmlSerializer& XmlSerializer::finish_self_closing_complex_tag()
 {
+    emit_pending_indent();
     Strings::append(buf, "/>");
-    indent -= 2;
+    m_indent -= 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::close_tag(StringLiteral sl)
 {
+    m_indent -= 2;
+    emit_pending_indent();
     Strings::append(buf, "</", sl, '>');
-    indent -= 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::text(StringView sv)
 {
+    emit_pending_indent();
     for (auto ch : sv)
     {
         if (ch == '&')
@@ -682,12 +627,21 @@ XmlSerializer& XmlSerializer::text(StringView sv)
 }
 XmlSerializer& XmlSerializer::simple_tag(StringLiteral tag, StringView content)
 {
-    return open_tag(tag).text(content).close_tag(tag);
+    return emit_pending_indent().open_tag(tag).text(content).close_tag(tag);
 }
 XmlSerializer& XmlSerializer::line_break()
 {
     buf.push_back('\n');
-    buf.append(indent, ' ');
+    m_pending_indent = true;
+    return *this;
+}
+XmlSerializer& XmlSerializer::emit_pending_indent()
+{
+    if (m_pending_indent)
+    {
+        m_pending_indent = false;
+        buf.append(m_indent, ' ');
+    }
     return *this;
 }
 
@@ -1117,4 +1071,23 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
              "uploaded to that remote.");
 
     System::print2(tbl.m_str);
+}
+
+std::string vcpkg::generate_nuget_packages_config(const Dependencies::ActionPlan& action)
+{
+    auto refs = Util::fmap(action.install_actions,
+                           [&](const Dependencies::InstallPlanAction& ipa) { return NugetReference(ipa); });
+    XmlSerializer xml;
+    xml.emit_declaration().line_break();
+    xml.open_tag("packages").line_break();
+    for (auto&& ref : refs)
+    {
+        xml.start_complex_open_tag("package")
+            .text_attr("id", ref.id)
+            .text_attr("version", ref.version)
+            .finish_self_closing_complex_tag()
+            .line_break();
+    }
+    xml.close_tag("packages").line_break();
+    return std::move(xml.buf);
 }

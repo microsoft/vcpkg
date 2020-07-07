@@ -1,14 +1,14 @@
 #pragma once
 
+#include <array>
+#include <map>
+#include <vector>
+
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
-
-#include <array>
-#include <map>
-#include <vector>
 
 namespace vcpkg::Commands
 {
@@ -163,7 +163,8 @@ namespace vcpkg::Commands
                                  const CMakeVars::CMakeVarProvider& cmake_vars,
                                  const std::vector<FullPackageSpec>& specs,
                                  const Build::BuildPackageOptions& install_plan_options,
-                                 DryRun dry_run);
+                                 DryRun dry_run,
+                                 const Optional<fs::path>& pkgsconfig_path);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 

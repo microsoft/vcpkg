@@ -9,22 +9,15 @@
 
 namespace vcpkg::Commands::FormatManifest
 {
-
     static constexpr StringLiteral OPTION_ALL = "--all";
 
-    const CommandSwitch FORMAT_SWITCHES[] = {
-        { OPTION_ALL, "Format all ports' manifest files." }
-    };
+    const CommandSwitch FORMAT_SWITCHES[] = {{OPTION_ALL, "Format all ports' manifest files."}};
 
     const CommandStructure COMMAND_STRUCTURE = {
         create_example_string(R"###(x-format-manifest --all)###"),
         0,
         SIZE_MAX,
-        {
-            FORMAT_SWITCHES,
-            {},
-            {}
-        },
+        {FORMAT_SWITCHES, {}, {}},
         nullptr,
     };
 
@@ -76,7 +69,10 @@ namespace vcpkg::Commands::FormatManifest
             }
             else
             {
-                System::printf(System::Color::error, "Failed to parse %s: %s\n", path.u8string(), parsed_json_opt.error()->format());
+                System::printf(System::Color::error,
+                               "Failed to parse %s: %s\n",
+                               path.u8string(),
+                               parsed_json_opt.error()->format());
                 has_error = true;
             }
 

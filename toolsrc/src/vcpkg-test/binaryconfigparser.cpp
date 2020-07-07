@@ -1,4 +1,5 @@
 #include <catch2/catch.hpp>
+
 #include <vcpkg/binarycaching.h>
 
 using namespace vcpkg;
