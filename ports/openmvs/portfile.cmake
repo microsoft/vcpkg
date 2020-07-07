@@ -17,14 +17,22 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     openmp OpenMVS_USE_OPENMP
 )
 
+file(REMOVE "${SOURCE_PATH}/build/Modules/FindCERES.cmake")
+file(REMOVE "${SOURCE_PATH}/build/Modules/FindCGAL.cmake")
+file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
+        -DOpenMVS_USE_NONFREE=ON
+        -DOpenMVS_USE_CERES=OFF
+        -DOpenMVS_USE_FAST_FLOAT2INT=ON
+        -DOpenMVS_USE_FAST_INVSQRT=OFF
+        -DOpenMVS_USE_FAST_CBRT=ON
+        -DOpenMVS_USE_SSE=ON
+        -DOpenMVS_USE_OPENGL=ON
         -DOpenMVS_USE_BREAKPAD=OFF
-        -DINSTALL_CMAKE_DIR:STRING=share/openmvs
-        -DINSTALL_BIN_DIR:STRING=bin
-        -DINSTALL_LIB_DIR:STRING=lib
     OPTIONS_RELEASE
         -DOpenMVS_BUILD_TOOLS=ON
     OPTIONS_DEBUG
@@ -60,5 +68,6 @@ set(OPENMVG_TOOLS_PATH "${CURRENT_INSTALLED_DIR}/tools/openmvg")
 set(OPENMVS_TOOLS_PATH "${CURRENT_INSTALLED_DIR}/tools/${PORT}")
 set(SENSOR_WIDTH_CAMERA_DATABASE_TXT_PATH "${OPENMVG_TOOLS_PATH}/sensor_width_camera_database.txt")
 configure_file("${SOURCE_PATH}/MvgMvsPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/MvgMvsPipeline.py" @ONLY)
+file(INSTALL "${SOURCE_PATH}/build/Modules/FindVCG.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
