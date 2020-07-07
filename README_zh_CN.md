@@ -23,7 +23,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 - [入门](#入门)
   * [快速开始: Windows](#快速开始-windows)
   * [快速开始: Unix](#快速开始-unix)
-  * [安装 Linux Developer Tools](#安装-linux-developer-tools
+  * [安装 Linux Developer Tools](#安装-linux-developer-tools)
   * [安装 macOS Developer Tools](#安装-macos-developer-tools)
     + [在 macOS 10.15 之前版本中安装 GCC](#在-macos-1015-之前版本中安装-gcc)
   * [在 CMake 中使用 vcpkg](#在-cmake-中使用-vcpkg)
@@ -32,7 +32,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
     + [CLion 中使用 vcpkg](#clion-中使用-vcpkg)
     + [将 vcpkg 作为一个子模块](#将-vcpkg-作为一个子模块)
   * [快速开始: 清单](#快速开始-清单)
-- [Tab补全/自动补全](#tab-补全自动补全)
+- [Tab补全/自动补全](#tab补全自动补全)
   * [示例](#示例)
   * [贡献者](#贡献者)
 - [License](#license)
