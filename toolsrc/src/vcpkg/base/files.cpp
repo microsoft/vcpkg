@@ -10,6 +10,8 @@
 
 #if !defined(_WIN32)
 #include <fcntl.h>
+
+#include <sys/file.h>
 #include <sys/stat.h>
 #endif
 
@@ -79,7 +81,7 @@ namespace vcpkg::Files
 
             return fs::file_status(ft, permissions);
 
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
             auto result = follow_symlinks ? fs::stdfs::status(p, ec) : fs::stdfs::symlink_status(p, ec);
             // libstdc++ doesn't correctly not-set ec on nonexistent paths
             if (ec.value() == ENOENT || ec.value() == ENOTDIR)
@@ -88,7 +90,7 @@ namespace vcpkg::Files
                 return fs::file_status(file_type::not_found, perms::unknown);
             }
             return fs::file_status(result.type(), result.permissions());
-#endif// ^^^ !defined(_WIN32)
+#endif // ^^^ !defined(_WIN32)
         }
 
         fs::file_status status(const fs::path& p, std::error_code& ec) noexcept
@@ -203,10 +205,43 @@ namespace vcpkg::Files
         return this->create_directory(path, ec);
     }
 
+    bool Filesystem::create_directory(const fs::path& path, LineInfo li)
+    {
+        std::error_code ec;
+        bool result = this->create_directory(path, ec);
+        if (ec)
+        {
+            vcpkg::Checks::exit_with_message(li, "error creating directory %s", path.u8string(), ec.message());
+        }
+
+        return result;
+    }
+
     bool Filesystem::create_directories(const fs::path& path, ignore_errors_t)
     {
         std::error_code ec;
         return this->create_directories(path, ec);
+    }
+
+    bool Filesystem::create_directories(const fs::path& path, LineInfo li)
+    {
+        std::error_code ec;
+        bool result = this->create_directories(path, ec);
+        if (ec)
+        {
+            vcpkg::Checks::exit_with_message(li, "error creating directories %s", path.u8string(), ec.message());
+        }
+
+        return result;
+    }
+
+    void Filesystem::copy_file(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts, LineInfo li)
+    {
+        std::error_code ec;
+        this->copy_file(oldpath, newpath, opts, ec);
+        if (ec)
+            vcpkg::Checks::exit_with_message(
+                li, "error copying file from %s to %s: %s", oldpath.u8string(), newpath.u8string(), ec.message());
     }
 
     fs::file_status Filesystem::status(vcpkg::LineInfo li, const fs::path& p) const noexcept
@@ -325,6 +360,12 @@ namespace vcpkg::Files
 
         if (ec) Checks::exit_with_message(li, "Error getting current path: %s", ec.message());
         return result;
+    }
+    void Filesystem::current_path(const fs::path& path, LineInfo li)
+    {
+        std::error_code ec;
+        this->current_path(path, ec);
+        if (ec) Checks::exit_with_message(li, "Error setting current path: %s", ec.message());
     }
 
     struct RealFilesystem final : Filesystem
@@ -501,7 +542,7 @@ namespace vcpkg::Files
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
 #elif defined(__APPLE__)
                 auto written_bytes = fcopyfile(i_fd, o_fd, 0, COPYFILE_ALL);
-#else // ^^^ defined(__APPLE__) // !(defined(__APPLE__) || defined(__linux__)) vvv
+#else  // ^^^ defined(__APPLE__) // !(defined(__APPLE__) || defined(__linux__)) vvv
                 ssize_t written_bytes = 0;
                 {
                     constexpr std::size_t buffer_length = 4096;
@@ -598,7 +639,7 @@ namespace vcpkg::Files
                         {
                             ec.assign(GetLastError(), std::system_category());
                         }
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
                         if (rmdir(current_path.c_str()))
                         {
                             ec.assign(errno, std::system_category());
@@ -627,7 +668,7 @@ namespace vcpkg::Files
                             ec.assign(GetLastError(), std::system_category());
                         }
                     }
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
                     else
                     {
                         if (unlink(current_path.c_str()))
@@ -777,7 +818,7 @@ namespace vcpkg::Files
             FILE* f = nullptr;
 #if defined(_WIN32)
             auto err = _wfopen_s(&f, file_path.native().c_str(), L"wb");
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
             f = fopen(file_path.native().c_str(), "wb");
             int err = f != nullptr ? 0 : 1;
 #endif // ^^^ !defined(_WIN32)
@@ -807,7 +848,7 @@ namespace vcpkg::Files
 #if defined(_WIN32)
             // absolute was called system_complete in experimental filesystem
             return fs::stdfs::system_complete(path, ec);
-#else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
             if (path.is_absolute())
             {
                 return path;
@@ -828,13 +869,107 @@ namespace vcpkg::Files
         }
 
         virtual fs::path current_path(std::error_code& ec) const override { return fs::stdfs::current_path(ec); }
+        virtual void current_path(const fs::path& path, std::error_code& ec) override
+        {
+            fs::stdfs::current_path(path, ec);
+        }
+
+        virtual fs::SystemHandle try_take_exclusive_file_lock(const fs::path& path, std::error_code& ec) override
+        {
+            fs::SystemHandle res;
+
+            const auto system_file_name = path.native();
+#if defined(WIN32)
+            constexpr static auto busy_error = ERROR_BUSY;
+            const auto system_try_take_file_lock = [&] {
+                auto handle = CreateFileW(system_file_name.c_str(),
+                                          GENERIC_READ,
+                                          0 /* no sharing */,
+                                          nullptr /* no security attributes */,
+                                          OPEN_ALWAYS,
+                                          FILE_ATTRIBUTE_NORMAL,
+                                          nullptr /* no template file */);
+                if (handle == INVALID_HANDLE_VALUE)
+                {
+                    const auto err = GetLastError();
+                    if (err != ERROR_SHARING_VIOLATION)
+                    {
+                        ec.assign(err, std::system_category());
+                    }
+                    return false;
+                }
+
+                res.system_handle = reinterpret_cast<intptr_t>(handle);
+                return true;
+            };
+#else // ^^^ WIN32 / !WIN32 vvv
+            constexpr static auto busy_error = EBUSY;
+            int fd = open(system_file_name.c_str(), 0);
+            if (fd < 0)
+            {
+                ec.assign(errno, std::system_category());
+                return res;
+            }
+            const auto system_try_take_file_lock = [&] {
+                if (flock(fd, LOCK_EX | LOCK_NB) != 0)
+                {
+                    if (errno != EWOULDBLOCK)
+                    {
+                        ec.assign(errno, std::system_category());
+                    }
+                    return false;
+                }
+
+                res.system_handle = fd;
+                return true;
+            };
+#endif
+
+            if (system_try_take_file_lock() || ec)
+            {
+                return res;
+            }
+
+            System::printf("Waiting to take filesystem lock on %s...\n", path.u8string());
+            auto wait = std::chrono::milliseconds(100);
+            // waits, at most, a second and a half.
+            while (wait < std::chrono::milliseconds(1000))
+            {
+                std::this_thread::sleep_for(wait);
+                if (system_try_take_file_lock() || ec)
+                {
+                    return res;
+                }
+                wait *= 2;
+            }
+
+#if !defined(WIN32)
+            close(fd);
+#endif
+            ec.assign(busy_error, std::system_category());
+            return res;
+        }
+        virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code& ec) override
+        {
+#if defined(WIN32)
+            if (CloseHandle(reinterpret_cast<HANDLE>(handle.system_handle)) == 0)
+            {
+                ec.assign(GetLastError(), std::system_category());
+            }
+#else
+            if (flock(handle.system_handle, LOCK_UN) != 0 || close(handle.system_handle) != 0)
+            {
+                ec.assign(errno, std::system_category());
+            }
+#endif
+        }
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
 #if defined(_WIN32)
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
             auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ';');
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
             static constexpr StringLiteral EXTS[] = {""};
             auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ':');
 #endif // ^^^ !defined(_WIN32)
@@ -879,5 +1014,21 @@ namespace vcpkg::Files
         }
         message.push_back('\n');
         System::print2(message);
+    }
+
+    fs::path combine(const fs::path& lhs, const fs::path& rhs)
+    {
+#if VCPKG_USE_STD_FILESYSTEM
+        return lhs / rhs;
+#else // ^^^ VCPKG_USE_STD_FILESYSTEM // !VCPKG_USE_STD_FILESYSTEM vvv
+        if (rhs.is_absolute())
+        {
+            return rhs;
+        }
+        else
+        {
+            return lhs / rhs;
+        }
+#endif
     }
 }

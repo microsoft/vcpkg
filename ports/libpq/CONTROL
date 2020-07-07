@@ -1,5 +1,6 @@
 Source: libpq
-Version: 12.2-1
+Version: 12.2
+Port-Version: 4
 Build-Depends: libpq[bonjour] (osx)
 Supports: !uwp
 Homepage: https://www.postgresql.org/
@@ -80,4 +81,4 @@ Build-Depends: libxslt
 Description: Build with libxslt (--with-libxslt)
 
 Feature: client
-Description: Build all client tools and libraries. 
+Description: Build all client tools and libraries.

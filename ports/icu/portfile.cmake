@@ -35,6 +35,8 @@ endif()
 
 set(CONFIGURE_OPTIONS_RELEASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
 set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
+set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
+set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(BASH bash)
@@ -42,32 +44,32 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -fPIC")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         # Configure release
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        message(STATUS "Configuring ${RELEASE_TRIPLET}")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
         set(ENV{CFLAGS} "-O2 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
         set(ENV{CXXFLAGS} "-O2 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
                 "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELEASE}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-            LOGNAME "configure-${TARGET_TRIPLET}-rel")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+            LOGNAME "configure-${RELEASE_TRIPLET}")
+        message(STATUS "Configuring ${RELEASE_TRIPLET} done")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         # Configure debug
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        message(STATUS "Configuring ${DEBUG_TRIPLET}")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
         set(ENV{CFLAGS} "-O0 -g ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
         set(ENV{CXXFLAGS} "-O0 -g ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
                 "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-            LOGNAME "configure-${TARGET_TRIPLET}-dbg")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+            LOGNAME "configure-${DEBUG_TRIPLET}")
+        message(STATUS "Configuring ${DEBUG_TRIPLET} done")
     endif()
 
 else()
@@ -94,34 +96,34 @@ else()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         # Configure release
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        message(STATUS "Configuring ${RELEASE_TRIPLET}")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
         set(ENV{CFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi -FS ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
         set(ENV{CXXFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi -FS ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
         set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
                 "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELEASE}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-            LOGNAME "configure-${TARGET_TRIPLET}-rel")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+            LOGNAME "configure-${RELEASE_TRIPLET}")
+        message(STATUS "Configuring ${RELEASE_TRIPLET} done")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         # Configure debug
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        message(STATUS "Configuring ${DEBUG_TRIPLET}")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
         set(ENV{CFLAGS} "${ICU_RUNTIME}d -Od -Zi -FS -RTC1 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
         set(ENV{CXXFLAGS} "${ICU_RUNTIME}d -Od -Zi -FS -RTC1 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
         set(ENV{LDFLAGS} "-DEBUG")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
                 "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-            LOGNAME "configure-${TARGET_TRIPLET}-dbg")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+            LOGNAME "configure-${DEBUG_TRIPLET}")
+        message(STATUS "Configuring ${DEBUG_TRIPLET} done")
     endif()
 endif()
 
@@ -131,34 +133,34 @@ unset(ENV{LDFLAGS})
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # Build release
-    message(STATUS "Package ${TARGET_TRIPLET}-rel")
+    message(STATUS "Package ${RELEASE_TRIPLET}")
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
         NO_PARALLEL_COMMAND ${BASH} --noprofile --norc -c "make"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        LOGNAME "make-build-${TARGET_TRIPLET}-rel")
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+        LOGNAME "make-build-${RELEASE_TRIPLET}")
 
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "make install"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        LOGNAME "make-install-${TARGET_TRIPLET}-rel")
-    message(STATUS "Package ${TARGET_TRIPLET}-rel done")
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+        LOGNAME "make-install-${RELEASE_TRIPLET}")
+    message(STATUS "Package ${RELEASE_TRIPLET} done")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     # Build debug
-    message(STATUS "Package ${TARGET_TRIPLET}-dbg")
+    message(STATUS "Package ${DEBUG_TRIPLET}")
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
         NO_PARALLEL_COMMAND ${BASH} --noprofile --norc -c "make"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        LOGNAME "make-build-${TARGET_TRIPLET}-dbg")
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+        LOGNAME "make-build-${DEBUG_TRIPLET}")
 
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "make install"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        LOGNAME "make-install-${TARGET_TRIPLET}-dbg")
-    message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+        LOGNAME "make-install-${DEBUG_TRIPLET}")
+    message(STATUS "Package ${DEBUG_TRIPLET} done")
 endif()
 
 file(REMOVE_RECURSE
@@ -210,6 +212,10 @@ else()
         file(WRITE ${CURRENT_PACKAGES_DIR}/include/unicode/${HEADER} "${HEADER_CONTENTS}")
     endforeach()
 endif()
+
+# Install executables from ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin to /tools/icu
+file(GLOB ICU_TOOLS ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(INSTALL ${ICU_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 # remove any remaining dlls in /lib
 file(GLOB DUMMY_DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)

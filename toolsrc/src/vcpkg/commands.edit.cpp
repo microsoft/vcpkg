@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <limits.h>
+
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
@@ -95,7 +96,7 @@ namespace vcpkg::Commands::Edit
          {OPTION_ALL, "Open editor into the port as well as the port-specific buildtree subfolder"}}};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("edit zlib"),
+        create_example_string("edit zlib"),
         1,
         10,
         {EDIT_SWITCHES, {}},
@@ -115,7 +116,7 @@ namespace vcpkg::Commands::Edit
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
                 const auto portpath = paths.ports / port_name;
                 const auto portfile = portpath / "portfile.cmake";
-                const auto buildtrees_current_dir = paths.buildtrees / port_name;
+                const auto buildtrees_current_dir = paths.build_dir(port_name);
                 const auto pattern = port_name + "_";
 
                 std::string package_paths;
@@ -138,8 +139,7 @@ namespace vcpkg::Commands::Edit
         if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
         {
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
-                const auto buildtrees_current_dir = paths.buildtrees / port_name;
-                return Strings::format(R"###("%s")###", buildtrees_current_dir.u8string());
+                return Strings::format(R"###("%s")###", paths.build_dir(port_name).u8string());
             });
         }
 

@@ -1,20 +1,26 @@
 #pragma once
 
+#include <array>
+#include <map>
+#include <vector>
+
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
-#include <array>
-#include <map>
-#include <vector>
-
 namespace vcpkg::Commands
 {
     using CommandTypeA = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-    using CommandTypeC = void (*)(const VcpkgCmdArguments& args);
+    using CommandTypeC = void (*)(const VcpkgCmdArguments& args, Files::Filesystem& fs);
+
+    enum class DryRun : bool
+    {
+        No,
+        Yes,
+    };
 
     namespace BuildExternal
     {
@@ -41,6 +47,7 @@ namespace vcpkg::Commands
     namespace Create
     {
         extern const CommandStructure COMMAND_STRUCTURE;
+        int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
@@ -85,17 +92,13 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
-    namespace Import
-    {
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-    }
-
     namespace Integrate
     {
-        extern const char* const INTEGRATE_COMMAND_HELPSTRING;
         extern const CommandStructure COMMAND_STRUCTURE;
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+        void append_helpstring(HelpTableFormatter& table);
+        std::string get_helpstring();
     }
 
     namespace PortsDiff
@@ -118,14 +121,14 @@ namespace vcpkg::Commands
         const char* base_version();
         const std::string& version();
         void warn_if_vcpkg_version_mismatch(const VcpkgPaths& paths);
-        void perform_and_exit(const VcpkgCmdArguments& args);
+        void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs);
     }
 
     namespace Contact
     {
         extern const CommandStructure COMMAND_STRUCTURE;
         const std::string& email();
-        void perform_and_exit(const VcpkgCmdArguments& args);
+        void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs);
     }
 
     namespace X_VSInstances
@@ -144,9 +147,24 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
+    namespace FormatManifest
+    {
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     namespace SetInstalled
     {
         extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit_ex(const VcpkgCmdArguments& args,
+                                 const VcpkgPaths& paths,
+                                 const PortFileProvider::PathsPortFileProvider& provider,
+                                 IBinaryProvider& binary_provider,
+                                 const CMakeVars::CMakeVarProvider& cmake_vars,
+                                 const std::vector<FullPackageSpec>& specs,
+                                 const Build::BuildPackageOptions& install_plan_options,
+                                 DryRun dry_run,
+                                 const Optional<fs::path>& pkgsconfig_path);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 
