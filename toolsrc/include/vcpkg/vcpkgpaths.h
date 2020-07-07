@@ -67,7 +67,7 @@ namespace vcpkg
             std::string name;
             fs::path location;
 
-            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) {}
+            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) { }
         };
 
         VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args);

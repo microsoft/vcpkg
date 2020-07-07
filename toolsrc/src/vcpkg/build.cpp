@@ -1224,7 +1224,7 @@ namespace vcpkg::Build
         }
     }
 
-    ExtendedBuildResult::ExtendedBuildResult(BuildResult code) : code(code) {}
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code) : code(code) { }
     ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::unique_ptr<BinaryControlFile>&& bcf)
         : code(code), binary_control_file(std::move(bcf))
     {

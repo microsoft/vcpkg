@@ -160,11 +160,11 @@ namespace vcpkg
             if (!manifest_root_dir.empty() && !args.manifest_mode.has_value())
             {
                 System::print2(System::Color::warning,
-                    "Warning: manifest-root detected at ",
-                    manifest_root_dir.generic_u8string(),
-                    ", but manifests are not enabled.\n");
+                               "Warning: manifest-root detected at ",
+                               manifest_root_dir.generic_u8string(),
+                               ", but manifests are not enabled.\n");
                 System::printf(System::Color::warning,
-                    R"(If you wish to use manifest mode, you may do one of the following:
+                               R"(If you wish to use manifest mode, you may do one of the following:
     * Add the `%s` feature flag to the comma-separated environment
       variable `%s`.
     * Add the `%s` feature flag to the `--%s` option.
@@ -173,15 +173,15 @@ If you wish to silence this error and use classic mode, you can:
     * Add the `-%s` feature flag to `%s`.
     * Add the `-%s` feature flag to `--%s`.
 )",
-VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
-VcpkgCmdArguments::FEATURE_FLAGS_ENV,
-VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
-VcpkgCmdArguments::FEATURE_FLAGS_ARG,
-VcpkgCmdArguments::MANIFEST_ROOT_DIR_ARG,
-VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
-VcpkgCmdArguments::FEATURE_FLAGS_ENV,
-VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
-VcpkgCmdArguments::FEATURE_FLAGS_ARG);
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ENV,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ARG,
+                               VcpkgCmdArguments::MANIFEST_ROOT_DIR_ARG,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ENV,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ARG);
             }
 
             manifest_root_dir.clear();
@@ -251,14 +251,14 @@ VcpkgCmdArguments::FEATURE_FLAGS_ARG);
     {
         const auto it = Util::find_if(this->get_available_triplets(), [&](auto&& available_triplet) {
             return t.canonical_name() == available_triplet.name;
-            });
+        });
         return it != this->get_available_triplets().cend();
     }
 
     const std::vector<std::string> VcpkgPaths::get_available_triplets_names() const
     {
         return vcpkg::Util::fmap(this->get_available_triplets(),
-            [](auto&& triplet_file) -> std::string { return triplet_file.name; });
+                                 [](auto&& triplet_file) -> std::string { return triplet_file.name; });
     }
 
     const std::vector<VcpkgPaths::TripletFile>& VcpkgPaths::get_available_triplets() const
@@ -277,7 +277,7 @@ VcpkgCmdArguments::FEATURE_FLAGS_ARG);
                 }
             }
             return output;
-            });
+        });
     }
 
     const std::map<std::string, std::string>& VcpkgPaths::get_cmake_script_hashes() const
@@ -293,29 +293,29 @@ VcpkgCmdArguments::FEATURE_FLAGS_ARG);
                 if (stem != common_functions)
                 {
                     helpers.emplace(stem.u8string(),
-                        Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
+                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
                 }
             }
             return helpers;
-            });
+        });
     }
 
     const fs::path VcpkgPaths::get_triplet_file_path(Triplet triplet) const
     {
         return m_pimpl->m_triplets_cache.get_lazy(
             triplet, [&]() -> auto {
-            for (const auto& triplet_dir : m_pimpl->triplets_dirs)
-            {
-                auto path = triplet_dir / (triplet.canonical_name() + ".cmake");
-                if (this->get_filesystem().exists(path))
+                for (const auto& triplet_dir : m_pimpl->triplets_dirs)
                 {
-                    return path;
+                    auto path = triplet_dir / (triplet.canonical_name() + ".cmake");
+                    if (this->get_filesystem().exists(path))
+                    {
+                        return path;
+                    }
                 }
-            }
 
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "Error: Triplet file %s.cmake not found", triplet.canonical_name());
-        });
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Error: Triplet file %s.cmake not found", triplet.canonical_name());
+            });
     }
 
     const fs::path& VcpkgPaths::get_tool_exe(const std::string& tool) const
@@ -335,7 +335,7 @@ VcpkgCmdArguments::FEATURE_FLAGS_ARG);
                 Toolset ret;
                 ret.dumpbin.clear();
                 ret.supported_architectures = {
-                    ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()} };
+                    ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()}};
                 ret.vcvarsall.clear();
                 ret.vcvarsall_options = {};
                 ret.version = "external";
@@ -364,10 +364,10 @@ VcpkgCmdArguments::FEATURE_FLAGS_ARG);
             Util::erase_remove_if(
                 candidates, [&](const Toolset* t) { return *tsv != t->version || *vsp != t->visual_studio_root_path; });
             Checks::check_exit(VCPKG_LINE_INFO,
-                !candidates.empty(),
-                "Could not find Visual Studio instance at %s with %s toolset.",
-                vsp->u8string(),
-                *tsv);
+                               !candidates.empty(),
+                               "Could not find Visual Studio instance at %s with %s toolset.",
+                               vsp->u8string(),
+                               *tsv);
 
             Checks::check_exit(VCPKG_LINE_INFO, candidates.size() == 1);
             return *candidates.back();
@@ -384,11 +384,11 @@ VcpkgCmdArguments::FEATURE_FLAGS_ARG);
         {
             const fs::path vs_root_path = *vsp;
             Util::erase_remove_if(candidates,
-                [&](const Toolset* t) { return vs_root_path != t->visual_studio_root_path; });
+                                  [&](const Toolset* t) { return vs_root_path != t->visual_studio_root_path; });
             Checks::check_exit(VCPKG_LINE_INFO,
-                !candidates.empty(),
-                "Could not find Visual Studio instance at %s.",
-                vs_root_path.generic_string());
+                               !candidates.empty(),
+                               "Could not find Visual Studio instance at %s.",
+                               vs_root_path.generic_string());
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");
@@ -415,7 +415,7 @@ VcpkgCmdArguments::FEATURE_FLAGS_ARG);
         {
             StringView flag;
             bool enabled;
-        } flags[] = { {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, manifest_mode_enabled()} };
+        } flags[] = {{VcpkgCmdArguments::MANIFEST_MODE_FEATURE, manifest_mode_enabled()}};
 
         for (const auto& flag : flags)
         {
