@@ -133,7 +133,10 @@ namespace vcpkg::Paragraphs
         return fs.exists(path / fs::u8path("CONTROL")) || fs.exists(path / fs::u8path("vcpkg.json"));
     }
 
-    ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs, const std::string& port_name, const fs::path& path_to_manifest, std::error_code& ec)
+    ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
+                                                       const std::string& port_name,
+                                                       const fs::path& path_to_manifest,
+                                                       std::error_code& ec)
     {
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         auto res = Json::parse_file(fs, path_to_manifest, ec);
@@ -164,12 +167,12 @@ namespace vcpkg::Paragraphs
     {
         const auto path_to_manifest = path / fs::u8path("vcpkg.json");
         const auto path_to_control = path / fs::u8path("CONTROL");
-        if (fs.exists(path_to_manifest)) {
-            vcpkg::Checks::check_exit(
-                VCPKG_LINE_INFO,
-                !fs.exists(path_to_control),
-                "Found both manifest and CONTROL file in port %s; please rename one or the other",
-                path.u8string());
+        if (fs.exists(path_to_manifest))
+        {
+            vcpkg::Checks::check_exit(VCPKG_LINE_INFO,
+                                      !fs.exists(path_to_control),
+                                      "Found both manifest and CONTROL file in port %s; please rename one or the other",
+                                      path.u8string());
 
             std::error_code ec;
             auto res = try_load_manifest(fs, path.filename().u8string(), path_to_manifest, ec);
@@ -177,7 +180,8 @@ namespace vcpkg::Paragraphs
             {
                 auto error_info = std::make_unique<ParseControlErrorInfo>();
                 error_info->name = path.filename().u8string();
-                error_info->error = Strings::format("Failed to load manifest file for port: %s\n", path_to_manifest.u8string(), ec.message());
+                error_info->error = Strings::format(
+                    "Failed to load manifest file for port: %s\n", path_to_manifest.u8string(), ec.message());
             }
 
             return res;

@@ -11,7 +11,6 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/buildenvironment.h>
@@ -127,6 +126,8 @@ namespace vcpkg::Build
         ASSUME(action != nullptr);
         action->build_options = default_build_package_options;
         action->build_options.editable = Editable::YES;
+        action->build_options.clean_buildtrees = CleanBuildtrees::NO;
+        action->build_options.clean_packages = CleanPackages::NO;
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, *action, binaryprovider, build_logs_recorder, status_db);
@@ -986,7 +987,9 @@ namespace vcpkg::Build
         {
             auto restore = binaries_provider.try_restore(paths, action);
             if (restore == RestoreResult::build_failed)
+            {
                 return BuildResult::BUILD_FAILED;
+            }
             else if (restore == RestoreResult::success)
             {
                 auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
@@ -1005,12 +1008,9 @@ namespace vcpkg::Build
         fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
 
-        if (action.build_options.editable == Build::Editable::NO)
+        if (action.build_options.editable == Build::Editable::NO && result.code == BuildResult::SUCCEEDED)
         {
-            if (result.code == BuildResult::SUCCEEDED)
-            {
-                binaries_provider.push_success(paths, action);
-            }
+            binaries_provider.push_success(paths, action);
         }
 
         build_logs_recorder.record_build_result(paths, spec, result.code);

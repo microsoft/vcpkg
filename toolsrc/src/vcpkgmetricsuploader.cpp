@@ -1,10 +1,10 @@
-#include <vcpkg/metrics.h>
+#include <vcpkg/base/system_headers.h>
+
+#include <shellapi.h>
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
-
-#include <vcpkg/base/system_headers.h>
-#include <shellapi.h>
+#include <vcpkg/metrics.h>
 
 using namespace vcpkg;
 
