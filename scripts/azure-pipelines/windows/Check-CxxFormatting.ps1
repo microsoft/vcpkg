@@ -1,3 +1,5 @@
+#Requires -Version 3.0
+
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$True)]
@@ -26,10 +28,7 @@ try
 
     & $clangFormat -style=file -i @fileNames
 
-    $changedFiles = git status --porcelain $Toolsrc | ForEach-Object {
-        (-split $_)[1]
-    }
-
+    $changedFiles = & "$PSScriptRoot/Get-ChangedFiles.ps1" -Directory $Toolsrc
     if (-not $IgnoreErrors -and $null -ne $changedFiles)
     {
         $msg = @(

@@ -6,7 +6,8 @@ variables:
   linux-pool: 'PrLin-2020-06-30'
 
 stages:
-- stage: check_formatting
+- stage: check_cxx_formatting
+  displayName: 'Check the formatting of the C++'
   pool: $(windows-pool)
   jobs:
   - job:
@@ -14,10 +15,25 @@ stages:
     - task: Powershell@2
       displayName: 'Check C++ Formatting'
       inputs:
-        filePath: 'scripts/azure-pipelines/windows/check-formatting.ps1'
+        filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
         arguments: '-Toolsrc ./toolsrc'
+- stage: check_manifest_formatting
+  displayName: Check the formatting of port manifests
+  pool: $(windows-pool)
+  dependsOn: []
+  jobs:
+  - job:
+    steps:
+    - task: Powershell@2
+      displayName: 'Check port manifest Formatting'
+      inputs:
+        filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
+        arguments: '-PortsTree ./ports'
 - stage: run_port_ci
-  dependsOn: check_formatting
+  displayName: 'Run the Port CI'
+  dependsOn:
+  - check_formatting
+  - check_manifest_formatting
   jobs:
   - template: windows/azure-pipelines.yml
     parameters:
