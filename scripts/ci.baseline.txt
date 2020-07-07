@@ -397,7 +397,6 @@ epsilon:arm-uwp=fail
 epsilon:x64-linux=fail
 epsilon:x64-osx=fail
 epsilon:x64-uwp=fail
-evpp:x64-osx=fail
 expat:arm-uwp=fail
 expat:x64-uwp=fail
 faad2:x64-linux=fail
