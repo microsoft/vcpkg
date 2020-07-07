@@ -37,25 +37,6 @@ if("basisimporter" IN_LIST FEATURES OR "basisimageconverter" IN_LIST FEATURES)
     file(RENAME ${_BASIS_UNIVERSAL_SOURCE} "${SOURCE_PATH}/src/external/basis-universal")
 endif()
 
-if("meshoptimizersceneconverter" IN_LIST FEATURES)
-    # Bundle meshoptimizer 0.14 + a commit that fixes the build on old Apple
-    # Clang versions: https://github.com/zeux/meshoptimizer/pull/130
-    vcpkg_download_distfile(
-        _MESHOPTIMIZER_ARCHIVE
-        URLS "https://github.com/zeux/meshoptimizer/archive/97c52415c6d29f297a76482ddde22f739292446d.tar.gz"
-        FILENAME "meshoptimizer.tar.gz"
-        SHA512 7e2934511d0f0346e552df61684aca27e8772f85f98f37942c75deb5886c5631e33a4a9e9b1318ffdfb36bce22b192d8015e354440657c08660538c98d31dd31
-    )
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH _MESHOPTIMIZER_SOURCE
-        ARCHIVE ${_MESHOPTIMIZER_ARCHIVE}
-        WORKING_DIRECTORY "${SOURCE_PATH}/src/external")
-    # Remove potentially cached directory which would cause renaming to fail
-    file(REMOVE_RECURSE "${SOURCE_PATH}/src/external/meshoptimizer")
-    # Rename the output folder so that magnum auto-detects it
-    file(RENAME ${_MESHOPTIMIZER_SOURCE} "${SOURCE_PATH}/src/external/meshoptimizer")
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_PLUGINS_STATIC 1)
 else()

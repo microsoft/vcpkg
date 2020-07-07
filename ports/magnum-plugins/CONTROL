@@ -65,7 +65,7 @@ Build-Depends: libjpeg-turbo, magnum[trade]
 
 Feature: meshoptimizersceneconverter
 Description: MeshOptimizerSceneConverter plugin
-Build-Depends: magnum[trade]
+Build-Depends: magnum[trade], meshoptimizer
 
 Feature: miniexrimageconverter
 Description: MiniExrImageConverter plugin
