@@ -1,7 +1,9 @@
-vcpkg_from_git(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://gitlab.freedesktop.org/uchardet/uchardet
-    REF 8681fc060ea07f646434cd2d324e4a5aa7c495c4
+    REPO uchardet/uchardet
+    REF v0.0.7
+    SHA512 d5a12fdc42b0431aa6112e3d906568b15a181d49718d5f9c983e1bdf4827bc0b43aed0ebd08952ddc275e10ad52a3badf96ef40537268b1c355b2c248b1d2aaa
 )
 
 vcpkg_check_features(
