@@ -36,6 +36,10 @@ Feature: cuda
 Description: Support CUDA compilation
 Build-Depends: cuda
 
+Feature: opengl
+Description: All opengl related modules
+Build-Depends: vtk[core]
+
 Feature: all
-Description: Build vtk modules required by paraview
+Description: Build all vtk modules
 Build-Depends: libmysql, ffmpeg, gdal, vtk[core, qt, python, mpi], vtk[core, atlmfc] (windows)
