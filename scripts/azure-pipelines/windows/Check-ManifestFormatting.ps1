@@ -8,10 +8,14 @@ Param(
     [switch]$IgnoreErrors # allows one to just format
 )
 
-$vcpkgRoot = $PSScriptRoot ` # .../vcpkg/scripts/azure-pipelines/windows
-    | Split-Path ` # .../vcpkg/scripts/azure-pipelines
-    | Split-Path ` # .../vcpkg/scripts
-    | Split-Path # .../vcpkg
+# .../vcpkg/scripts/azure-pipelines/windows
+# .../vcpkg/scripts/azure-pipelines
+# .../vcpkg/scripts
+# .../vcpkg
+$vcpkgRoot = $PSScriptRoot `
+    | Split-Path `
+    | Split-Path `
+    | Split-Path
 
 $PortsTree = Get-Item $PortsTree
 
