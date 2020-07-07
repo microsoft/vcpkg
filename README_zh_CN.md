@@ -6,7 +6,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 
 若您从未使用过vcpkg或希望了解如何使用vcpkg，请查阅[快速开始](#getting-started)章节。
 
-如需获取有关可用命令的简短描述， 请在编译vcpkg后执行 `vcpkg help` 或执行 `vcpkg help [command]` 来获取具体的帮助信息。
+如需获取有关可用命令的简短描述，请在编译vcpkg后执行 `vcpkg help` 或执行 `vcpkg help [command]` 来获取具体的帮助信息。
 
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/)， #vcpkg 频道
@@ -42,13 +42,13 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 
 首先，请遵循以下任一方面的快速入门指南：
 [Windows](#quick-start-windows) 或 [macOS和Linux](#quick-start-unix)，
-这取决于您使用的是什么。
+这取决于您使用的是什么平台。
 
 有关更多信息，请参见 [安装和使用软件包] [getting-vcpkg：using-a-package]。
 如果vcpkg目录中没有您需要的库，
 您可以 [在GitHub上打开问题] [getting-vcpkg：open-issue]
 vcpkg团队和社区可以看到它的地方，
-并可能将端口添加到vcpkg。
+并可能将这个库添加到vcpkg。
 
 安装并运行vcpkg后，
 您可能希望将 [TAB补全](#tab-completionauto-completion) 添加到您的Shell中。
@@ -73,7 +73,7 @@ vcpkg团队和社区可以看到它的地方，
 > .\vcpkg\bootstrap-vcpkg.bat
 ```
 
-使用以下命令安装任意包：
+使用以下命令为您的项目安装需要的库：
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install]
@@ -116,11 +116,11 @@ Linux平台的使用需求:
 
 macOS平台的使用需求:
 - [Apple Developer Tools][quick-start:apple-developer-tools]
-- macOS 10.14 或更低版本中， 您也需要:
+- macOS 10.14 或更低版本中，您也需要:
   - [Homebrew][quick-start:homebrew]
   - Homebrew 中 [g++][quick-start:macos-gcc] >= 6 
 
-首先， 请下载vcpkg并执行bootstrap.sh脚本。
+首先，请下载vcpkg并执行bootstrap.sh脚本。
 我们总体上建议您将vcpkg作为cmake项目的子模块使用。
 
 ```sh
@@ -156,7 +156,7 @@ $ ./vcpkg/vcpkg search [search term]
 
 ## 安装 Linux Developer Tools
 
-在Linux的不同发行版中， 您需要安装不同的工具包:
+在Linux的不同发行版中，您需要安装不同的工具包:
 
 - Debian， Ubuntu， popOS， 或其他基于 Debian 的发行版:
 
@@ -173,12 +173,12 @@ $ sudo yum install devtoolset-7
 $ scl enable devtoolset-7 bash
 ```
 
-对于其他的发行版， 请确保已安装 g++ 6 或更新的版本。
+对于其他的发行版，请确保已安装 g++ 6 或更新的版本。
 若您希望添加特定发行版的说明， [请提交一个 PR][contributing:submit-pr]!
 
 ## 安装 macOS Developer Tools
 
-在 macOS 10.15 中， 唯一需要做的是在终端中运行以下命令:
+在 macOS 10.15 中，唯一需要做的是在终端中运行以下命令:
 
 ```sh
 $ xcode-select --install
@@ -186,7 +186,7 @@ $ xcode-select --install
 
 然后按照出现的窗口中的提示进行操作。
 
-在 macOS 10.14 及先前版本中， 您也需要使用 homebrew 安装 g++。
+在 macOS 10.14 及先前版本中，您也需要使用 homebrew 安装 g++。
 请遵循以下部分中的说明：
 
 ### 在 macOS 10.15 之前版本中安装 GCC
