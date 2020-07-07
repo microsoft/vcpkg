@@ -6,7 +6,8 @@ vcpkg_from_github(
     SHA512 7b90893f9cdec529789f6e75703f5945c6fc5c946b8708a7a2cb295faf4af111c8cc61265b636f385641031b85181929205be9c5d155f405909445dce85b4ce8
     HEAD_REF master
     PATCHES
-    	msvc.patch
+        msvc.patch
+        fix-additerator.patch
 )
 
 vcpkg_configure_cmake(

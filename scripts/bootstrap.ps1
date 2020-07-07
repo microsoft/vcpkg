@@ -62,7 +62,7 @@ $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 if (!(Test-Path $vcpkgSourcesPath))
 {
     Write-Error "Unable to determine vcpkg sources directory. '$vcpkgSourcesPath' does not exist."
-    return
+    throw
 }
 
 function getVisualStudioInstances()
@@ -140,7 +140,7 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
     $VisualStudioInstances = getVisualStudioInstances
     if ($null -eq $VisualStudioInstances)
     {
-        throw "Could not find Visual Studio. VS2015 or VS2017 (with C++) needs to be installed."
+        throw "Could not find Visual Studio. VS2015, VS2017, or VS2019 (with C++) needs to be installed."
     }
 
     Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstances))"
@@ -341,7 +341,7 @@ if ($disableMetrics)
 $platform = "x86"
 $vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x86.release"
 if($PSVersionTable.PSVersion.Major -le 2)
-{ 
+{
     $architecture=(Get-WmiObject win32_operatingsystem | Select-Object osarchitecture).osarchitecture
 }
 else
@@ -408,8 +408,9 @@ $ec = vcpkgInvokeCommandClean $msbuildExe $arguments
 if ($ec -ne 0)
 {
     Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
-    return
+    throw
 }
+
 Write-Host "`nBuilding vcpkg.exe... done.`n"
 
 if (-not $disableMetrics)
@@ -417,9 +418,13 @@ if (-not $disableMetrics)
     Write-Host @"
 Telemetry
 ---------
-vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running bootstrap-vcpkg.bat with -disableMetrics.
-Read more about vcpkg telemetry at docs/about/privacy.md
+vcpkg collects usage data in order to help us improve your experience.
+The data collected by Microsoft is anonymous.
+You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
+passing --disable-metrics to vcpkg on the command line,
+or by setting the VCPKG_DISABLE_METRICS environment variable.
 
+Read more about vcpkg telemetry at docs/about/privacy.md
 "@
 }
 

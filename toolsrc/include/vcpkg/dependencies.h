@@ -1,5 +1,9 @@
 #pragma once
 
+#include <functional>
+#include <map>
+#include <vector>
+
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
@@ -8,10 +12,6 @@
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgpaths.h>
-
-#include <functional>
-#include <map>
-#include <vector>
 
 namespace vcpkg::Graphs
 {
@@ -55,6 +55,7 @@ namespace vcpkg::Dependencies
 
         std::string displayname() const;
         const std::string& public_abi() const;
+        const Build::PreBuildInfo& pre_build_info(LineInfo linfo) const;
 
         PackageSpec spec;
 
@@ -69,9 +70,7 @@ namespace vcpkg::Dependencies
         std::vector<PackageSpec> package_dependencies;
         std::vector<std::string> feature_list;
 
-        Optional<std::unique_ptr<Build::PreBuildInfo>> pre_build_info;
-        Optional<std::string> package_abi;
-        Optional<fs::path> abi_tag_file;
+        Optional<Build::AbiInfo> abi_info;
     };
 
     enum class RemovePlanType
@@ -163,5 +162,5 @@ namespace vcpkg::Dependencies
 
     void print_plan(const ActionPlan& action_plan,
                     const bool is_recursive = true,
-                    const fs::path& default_ports_dir = "");
+                    const fs::path& default_ports_dir = {});
 }

@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
-#include <vcpkg-test/util.h>
 
+#include <vcpkg-test/util.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/statusparagraphs.h>

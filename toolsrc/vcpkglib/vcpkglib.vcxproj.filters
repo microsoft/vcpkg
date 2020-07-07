@@ -48,6 +48,9 @@
     <ClCompile Include="..\src\vcpkg\commands.ci.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.ciclean.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.contact.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
@@ -69,7 +72,7 @@
     <ClCompile Include="..\src\vcpkg\commands.exportifw.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\commands.import.cpp">
+    <ClCompile Include="..\src\vcpkg\commands.format-manifest.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.integrate.cpp">
@@ -114,7 +117,7 @@
     <ClCompile Include="..\src\vcpkg\install.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\logicexpression.cpp">
+    <ClCompile Include="..\src\vcpkg\platform-expression.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\metrics.cpp">
@@ -434,7 +437,7 @@
     <ClInclude Include="..\include\vcpkg\export.chocolatey.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg\logicexpression.h">
+    <ClInclude Include="..\include\vcpkg\platform-expression.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\paragraphparser.h">

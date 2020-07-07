@@ -1,13 +1,20 @@
 #pragma once
 
-#include <vcpkg/base/pragmas.h>
 #include <vcpkg/base/system_headers.h>
+
+#include <vcpkg/base/pragmas.h>
 
 #if defined(_WIN32)
 #include <process.h>
 #include <shellapi.h>
 #include <winhttp.h>
 #endif
+
+#include <math.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 #include <algorithm>
 #include <array>
@@ -16,10 +23,6 @@
 #include <cctype>
 #include <chrono>
 #include <codecvt>
-#include <cstdarg>
-#include <cstddef>
-#include <cstdint>
-#include <cstring>
 
 #if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
@@ -47,9 +50,10 @@
 #include <sys/time.h>
 #endif
 
+#include <time.h>
+
 #include <system_error>
 #include <thread>
-#include <time.h>
 #include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
