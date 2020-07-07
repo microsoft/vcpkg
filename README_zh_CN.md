@@ -17,8 +17,8 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 
 # 目录
 
-- [Vcpkg 总览](#vcpkg---)
-  * [概要](#--)
+- [Vcpkg 总览](#vcpkg-总览)
+  * [概要](#概要)
 - [目录](#--)
 - [入门](#--)
   * [快速开始: Windows](#------windows)
