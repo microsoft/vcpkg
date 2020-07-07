@@ -4,7 +4,7 @@
 Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 这个工具和生态链正在不断发展，我们一直期待您的贡献！
 
-若您从未使用过vcpkg或希望了解如何使用vcpkg，请查阅[快速开始](#getting-started)章节。
+若您从未使用过vcpkg或希望了解如何使用vcpkg，请查阅[快速开始](#入门)章节。
 
 如需获取有关可用命令的简短描述，请在编译vcpkg后执行 `vcpkg help` 或执行 `vcpkg help [command]` 来获取具体的帮助信息。
 
@@ -18,42 +18,42 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 # 目录
 
 - [Vcpkg 总览](#vcpkg-总览)
-  * [概要](#概要)
+  - [概要](#概要)
 - [目录](#目录)
 - [入门](#入门)
-  * [快速开始: Windows](#快速开始-windows)
-  * [快速开始: Unix](#快速开始-unix)
-  * [安装 Linux Developer Tools](#安装-linux-developer-tools)
-  * [安装 macOS Developer Tools](#安装-macos-developer-tools)
-    + [在 macOS 10.15 之前版本中安装 GCC](#在-macos-1015-之前版本中安装-gcc)
-  * [在 CMake 中使用 vcpkg](#在-cmake-中使用-vcpkg)
-    + [Visual Studio Code 中的 CMake Tools](#visual-studio-code-中的-cmake-tools)
-    + [Visual Studio CMake 工程中使用 vcpkg](#visual-studio-cmake-工程中使用-vcpkg)
-    + [CLion 中使用 vcpkg](#clion-中使用-vcpkg)
-    + [将 vcpkg 作为一个子模块](#将-vcpkg-作为一个子模块)
-  * [快速开始: 清单](#快速开始-清单)
+  - [快速开始: Windows](#快速开始-windows)
+  - [快速开始: Unix](#快速开始-unix)
+  - [安装 Linux Developer Tools](#安装-linux-developer-tools)
+  - [安装 macOS Developer Tools](#安装-macos-developer-tools)
+    - [在 macOS 10.15 之前版本中安装 GCC](#在-macos-1015-之前版本中安装-gcc)
+  - [在 CMake 中使用 vcpkg](#在-cmake-中使用-vcpkg)
+    - [Visual Studio Code 中的 CMake Tools](#visual-studio-code-中的-cmake-tools)
+    - [Visual Studio CMake 工程中使用 vcpkg](#visual-studio-cmake-工程中使用-vcpkg)
+    - [CLion 中使用 vcpkg](#clion-中使用-vcpkg)
+    - [将 vcpkg 作为一个子模块](#将-vcpkg-作为一个子模块)
+  - [快速开始: 清单](#快速开始-清单)
 - [Tab补全/自动补全](#tab补全自动补全)
-  * [示例](#示例)
-  * [贡献者](#贡献者)
+  - [示例](#示例)
+  - [贡献者](#贡献者)
 - [License](#license)
 - [数据收集](#数据收集)
 
 # 入门
 
 首先，请遵循以下任一方面的快速入门指南：
-[Windows](#quick-start-windows) 或 [macOS和Linux](#quick-start-unix)，
+[Windows](#快速开始-windows) 或 [macOS和Linux](#快速开始-unix)，
 这取决于您使用的是什么平台。
 
-有关更多信息，请参见 [安装和使用软件包] [getting-vcpkg：using-a-package]。
+有关更多信息，请参见 [安装和使用软件包][getting-started:using-a-package]。
 如果vcpkg目录中没有您需要的库，
-您可以 [在GitHub上打开问题] [getting-vcpkg：open-issue]
+您可以 [在GitHub上打开问题][contributing:submit-issue]
 vcpkg团队和社区可以看到它的地方，
 并可能将这个库添加到vcpkg。
 
 安装并运行vcpkg后，
-您可能希望将 [TAB补全](#tab-completionauto-completion) 添加到您的Shell中。
+您可能希望将 [TAB补全](#tab补全自动补全) 添加到您的Shell中。
 
-最后，如果您对vcpkg的未来感兴趣，请查看 [清单](#quick-start-manifest)！
+最后，如果您对vcpkg的未来感兴趣，请查看 [清单](#快速开始-清单)！
 这是一项实验性功能，可能会出现错误。
 因此，请尝试一下并[打开所有问题][contributing:submit-issue]!
 
@@ -61,8 +61,8 @@ vcpkg团队和社区可以看到它的地方，
 
 需求:
 - Windows 7 或更新的版本
-- [Git][quick-start:git]
-- [Visual Studio][quick-start:visual-studio] 2015 Update 3 或更新的版本（包含英文语言包）
+- [Git][getting-started:git]
+- [Visual Studio][getting-started:visual-studio] 2015 Update 3 或更新的版本（包含英文语言包）
 
 首先，请下载vcpkg并执行bootstrap.bat脚本。
 它可以安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块，并为 Visual Studio 项目在全局安装它。
@@ -94,7 +94,7 @@ vcpkg团队和社区可以看到它的地方，
 在此之后， 您可以创建一个非cmake项目 (或打开已有的项目)。
 在您的项目中，所有已安装的库均可立即使用 `#include` 包含您需使用的库的头文件并无需添加额外配置。
 
-若您在 Visual Studio 中使用cmake工程，请查阅[这里](#vcpkg-with-visual-studio-cmake-projects)。
+若您在 Visual Studio 中使用cmake工程，请查阅[这里](#visual-studio-cmake-工程中使用-vcpkg)。
 
 为了在IDE以外在cmake中使用vcpkg， 您需要使用以下工具链文件:
 
@@ -104,21 +104,21 @@ vcpkg团队和社区可以看到它的地方，
 ```
 
 在cmake中，您仍需通过 `find_package` 来使用第三方库。
-请查阅 [CMake 章节](#using-vcpkg-with-cmake) 获取更多信息，其中包含了在IDE中使用cmake的内容。
+请查阅 [CMake 章节](#在-cmake-中使用-vcpkg) 获取更多信息，其中包含了在IDE中使用cmake的内容。
 
-对于其他工具 (包括Visual Studio Code)，请查阅 [集成指南][quick-start:integration]。
+对于其他工具 (包括Visual Studio Code)，请查阅 [集成指南][getting-started:integration]。
 
 ## 快速开始: Unix
 
 Linux平台的使用需求:
-- [Git][quick-start:git]
-- [g++][quick-start:linux-gcc] >= 6
+- [Git][getting-started:git]
+- [g++][getting-started:linux-gcc] >= 6
 
 macOS平台的使用需求:
-- [Apple Developer Tools][quick-start:apple-developer-tools]
+- [Apple Developer Tools][getting-started:macos-dev-tools]
 - macOS 10.14 或更低版本中，您也需要:
-  - [Homebrew][quick-start:homebrew]
-  - Homebrew 中 [g++][quick-start:macos-gcc] >= 6 
+  - [Homebrew][getting-started:macos-brew]
+  - Homebrew 中 [g++][getting-started:macos-gcc] >= 6
 
 首先，请下载vcpkg并执行bootstrap.sh脚本。
 我们总体上建议您将vcpkg作为cmake项目的子模块使用。
@@ -149,10 +149,10 @@ $ ./vcpkg/vcpkg search [search term]
 
 在cmake中，您仍需通过 `find_package` 来使用第三方库。
 为了您更好的在cmake或 VSCode CMake Tools 中使用vcpkg，
-请查阅 [CMake 章节](#using-vcpkg-with-cmake) 获取更多信息，
+请查阅 [CMake 章节](#在-cmake-中使用-vcpkg) 获取更多信息，
 其中包含了在IDE中使用cmake的内容。
 
-对于其他工具，请查阅 [集成指南][quick-start:integration]。
+对于其他工具，请查阅 [集成指南][getting-started:integration]。
 
 ## 安装 Linux Developer Tools
 
@@ -205,7 +205,7 @@ $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/
 $ brew install gcc
 ```
 
-此时，您就可以使用 bootstarp.sh 编译vcpkg了。 请参阅 [quick start guide](#quick-start-unix)
+此时，您就可以使用 bootstrap.sh 编译vcpkg了。 请参阅 [quick start guide](#快速开始-unix)
 
 ## 在 CMake 中使用 vcpkg
 
@@ -265,7 +265,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 另外，我们可能会在稳定之前破坏行为，因此请提前警告。
 如果您遇到任何错误，请 [提交一个issue][contributing:submit-issue]！
 
-首先，为 [Windows](#quick-start-windows) 正常安装vcpkg或 [Unix](#quick-start-unix)。
+首先，为 [Windows](#快速开始-windows) 正常安装vcpkg或 [Unix](#快速开始-unix)。
 您可能希望将vcpkg安装在常用的位置，由于安装的目录位于本地，并且可以从同一vcpkg目录中同时运行多个vcpkg命令。
 
 然后，您必须通过将 `manifests` 添加到以逗号分隔的 `--feature-flags` 选项中来打开 `manifests` vcpkg功能标记，
@@ -294,6 +294,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 请查阅 [清单][getting-started:manifest-spec] 获取更多信息。
 
 [getting-started:using-a-package]: docs/examples/intalling-and-using-packages.md
+[getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
