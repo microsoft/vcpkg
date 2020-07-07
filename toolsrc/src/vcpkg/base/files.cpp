@@ -884,7 +884,11 @@ namespace vcpkg::Files
             }
 
 #if defined(WIN32)
-            constexpr static auto busy_error = ERROR_BUSY;
+            void assign_busy_error(std::error_code& ec)
+            {
+                ec.assign(ERROR_BUSY, std::system_category());
+            }
+
             bool operator()(std::error_code& ec)
             {
                 auto handle = CreateFileW(native.c_str(),
@@ -908,8 +912,12 @@ namespace vcpkg::Files
                 return true;
             }
 #else // ^^^ WIN32 / !WIN32 vvv
-            constexpr static auto busy_error = EBUSY;
             int fd = -1;
+
+            void assign_busy_error(std::error_code& ec)
+            {
+                ec.assign(EBUSY, std::generic_category());
+            }
 
             bool operator()(std::error_code& ec)
             {
@@ -918,7 +926,7 @@ namespace vcpkg::Files
                     fd = ::open(native.c_str(), 0);
                     if (fd < 0)
                     {
-                        ec.assign(errno, std::system_category());
+                        ec.assign(errno, std::generic_category());
                         return false;
                     }
                 }
@@ -927,7 +935,7 @@ namespace vcpkg::Files
                 {
                     if (errno != EWOULDBLOCK)
                     {
-                        ec.assign(errno, std::system_category());
+                        ec.assign(errno, std::generic_category());
                     }
                     return false;
                 }
@@ -992,7 +1000,7 @@ namespace vcpkg::Files
                 wait *= 2;
             }
 
-            ec.assign(helper.busy_error, std::system_category());
+            helper.assign_busy_error(ec);
             return res;
         }
 
@@ -1006,7 +1014,7 @@ namespace vcpkg::Files
 #else
             if (flock(handle.system_handle, LOCK_UN) != 0 || close(handle.system_handle) != 0)
             {
-                ec.assign(errno, std::system_category());
+                ec.assign(errno, std::generic_category());
             }
 #endif
         }
