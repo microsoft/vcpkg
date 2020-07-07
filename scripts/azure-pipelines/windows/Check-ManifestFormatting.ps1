@@ -31,7 +31,7 @@ if (-not (Test-Path "$Root/vcpkg.exe"))
     }
 }
 
-& "$vcpkgRoot/vcpkg.exe" 'x-format-manifest' '--all'
+& "$Root/vcpkg.exe" 'x-format-manifest' '--all'
 $changedFiles = & "$PSScriptRoot/Get-ChangedFiles.ps1" -Directory $portsTree
 if (-not $IgnoreErrors -and $null -ne $changedFiles)
 {
