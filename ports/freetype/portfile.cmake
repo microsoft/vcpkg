@@ -24,11 +24,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         png         CMAKE_DISABLE_FIND_PACKAGE_PNG
 )
 
-set(OPTIONS)
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-  list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -36,8 +31,7 @@ vcpkg_configure_cmake(
         -DCONFIG_INSTALL_PATH=share/freetype
         -DFT_WITH_ZLIB=ON # Force system zlib.
         ${FEATURE_OPTIONS}
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-        ${OPTIONS}
+        -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=ON
 )
 
 vcpkg_install_cmake()
