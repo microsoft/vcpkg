@@ -1,0 +1,4 @@
+Source: meshoptimizer
+Version: 0.14
+Homepage: https://github.com/zeux/meshoptimizer
+Description: Mesh optimization library that makes meshes smaller and faster to render
