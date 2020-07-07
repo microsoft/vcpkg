@@ -1,9 +1,7 @@
-#Requires -Version 3.0
-
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$True)]
-    [string]$Toolsrc,
+    [string]$Root,
     [Parameter()]
     [switch]$IgnoreErrors # allows one to just format
 )
@@ -15,20 +13,20 @@ if (-not (Test-Path $clangFormat))
     throw
 }
 
-$Toolsrc = Get-Item $Toolsrc
-Push-Location $Toolsrc
+$toolsrc = Get-Item "$Root/toolsrc"
+Push-Location $toolsrc
 
 try
 {
-    $files = Get-ChildItem -Recurse -LiteralPath "$Toolsrc/src" -Filter '*.cpp'
-    $files += Get-ChildItem -Recurse -LiteralPath "$Toolsrc/include/vcpkg" -Filter '*.h'
-    $files += Get-ChildItem -Recurse -LiteralPath "$Toolsrc/include/vcpkg-test" -Filter '*.h'
-    $files += Get-Item "$Toolsrc/include/pch.h"
+    $files = Get-ChildItem -Recurse -LiteralPath "$toolsrc/src" -Filter '*.cpp'
+    $files += Get-ChildItem -Recurse -LiteralPath "$toolsrc/include/vcpkg" -Filter '*.h'
+    $files += Get-ChildItem -Recurse -LiteralPath "$toolsrc/include/vcpkg-test" -Filter '*.h'
+    $files += Get-Item "$toolsrc/include/pch.h"
     $fileNames = $files.FullName
 
     & $clangFormat -style=file -i @fileNames
 
-    $changedFiles = & "$PSScriptRoot/Get-ChangedFiles.ps1" -Directory $Toolsrc
+    $changedFiles = & "$PSScriptRoot/Get-ChangedFiles.ps1" -Directory $toolsrc
     if (-not $IgnoreErrors -and $null -ne $changedFiles)
     {
         $msg = @(
@@ -41,7 +39,7 @@ try
         $msg += ""
 
         $msg += "clang-format should produce the following diff:"
-        $msg += git diff $Toolsrc
+        $msg += git diff $toolsrc
 
         Write-Error ($msg -join "`n")
         throw

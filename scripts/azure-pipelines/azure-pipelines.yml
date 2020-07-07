@@ -16,7 +16,7 @@ stages:
       displayName: 'Check C++ Formatting'
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
-        arguments: '-Toolsrc ./toolsrc'
+        arguments: '-Root .'
 - stage: check_manifest_formatting
   displayName: Check the formatting of port manifests
   pool: $(windows-pool)
@@ -28,7 +28,7 @@ stages:
       displayName: 'Check port manifest Formatting'
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
-        arguments: '-PortsTree ./ports'
+        arguments: '-Root . -Downloads D:\Downloads'
 - stage: run_port_ci
   displayName: 'Run the Port CI'
   dependsOn:

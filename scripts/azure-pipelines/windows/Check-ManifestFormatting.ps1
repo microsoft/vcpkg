@@ -1,33 +1,29 @@
-#Requires -Version 3.0
-
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$True)]
-    [string]$PortsTree,
+    [string]$Root,
+    [Parameter()]
+    [string]$DownloadsDirectory,
     [Parameter()]
     [switch]$IgnoreErrors # allows one to just format
 )
 
-# .../vcpkg/scripts/azure-pipelines/windows
-# .../vcpkg/scripts/azure-pipelines
-# .../vcpkg/scripts
-# .../vcpkg
-$vcpkgRoot = $PSScriptRoot `
-    | Split-Path `
-    | Split-Path `
-    | Split-Path
+$portsTree = Get-Item "$Root/ports"
 
-$PortsTree = Get-Item $PortsTree
-
-if (-not (Test-Path "$vcpkgRoot/.vcpkg-root"))
+if (-not (Test-Path "$Root/.vcpkg-root"))
 {
-    Write-Error "The vcpkg root was not at $vcpkgRoot; did the script get moved?"
+    Write-Error "The vcpkg root was not at $Root"
     throw
 }
 
-if (-not (Test-Path "$vcpkgRoot/vcpkg.exe"))
+if (-not [string]::IsNullOrEmpty($DownloadsDirectory))
 {
-    & "$vcpkgRoot/bootstrap-vcpkg.bat"
+    $env:VCPKG_DOWNLOADS = $DownloadsDirectory
+}
+
+if (-not (Test-Path "$Root/vcpkg.exe"))
+{
+    & "$Root/bootstrap-vcpkg.bat"
     if (-not $?)
     {
         Write-Error "Bootstrapping vcpkg failed"
@@ -36,7 +32,7 @@ if (-not (Test-Path "$vcpkgRoot/vcpkg.exe"))
 }
 
 & "$vcpkgRoot/vcpkg.exe" 'x-format-manifest' '--all'
-$changedFiles = & "$PSScriptRoot/Get-ChangedFiles.ps1" -Directory $PortsTree
+$changedFiles = & "$PSScriptRoot/Get-ChangedFiles.ps1" -Directory $portsTree
 if (-not $IgnoreErrors -and $null -ne $changedFiles)
 {
     $msg = @(
@@ -48,7 +44,7 @@ if (-not $IgnoreErrors -and $null -ne $changedFiles)
     $msg += ""
 
     $msg += "vcpkg should produce the following diff:"
-    $msg += git diff $Toolsrc
+    $msg += git diff $portsTree
 
     Write-Error ($msg -join "`n")
     throw
