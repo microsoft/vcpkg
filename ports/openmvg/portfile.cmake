@@ -9,10 +9,7 @@ vcpkg_from_github(
     REF 606d1c9e82123dd50de282128151a50bf42262fc # v1.5
     SHA512 eddcf4c5f86541112840a6d89bbf360d30b085c2b3ff3e39b357030a465163b465e89d01474f8dbd65b66f8bccfc1f54a58963324f622482e2960f00214b2b75
     PATCHES
-        fix-cmake.patch
-        fix-config-cmake.patch
-        fix-nullptr.patch
-        fix-tools-config.patch
+        build_fixes.patch
 )
 
 set(OpenMVG_USE_OPENMP OFF)
