@@ -1,4 +1,5 @@
 #include <catch2/catch.hpp>
+
 #include <vcpkg-test/mockcmakevarprovider.h>
 #include <vcpkg-test/util.h>
 #include <vcpkg/dependencies.h>

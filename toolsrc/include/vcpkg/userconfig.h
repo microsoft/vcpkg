@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+
 #include <vcpkg/base/files.h>
 
 namespace vcpkg

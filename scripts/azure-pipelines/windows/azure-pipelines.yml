@@ -20,7 +20,7 @@ jobs:
     condition: always()
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
-    # Note: D: is the Azure machines' temporary disk.
+  # Note: D: is the Azure machines' temporary disk.
   - task: CmdLine@2
     displayName: 'Build vcpkg'
     inputs:

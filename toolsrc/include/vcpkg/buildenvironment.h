@@ -1,8 +1,8 @@
-#include <vcpkg/base/system.process.h>
-#include <vcpkg/vcpkgpaths.h>
-
 #include <string>
 #include <vector>
+
+#include <vcpkg/base/system.process.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg
 {
