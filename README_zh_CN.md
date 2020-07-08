@@ -40,7 +40,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 
 # 入门
 
-首先，请遵循以下任一方面的快速入门指南：
+首先，请阅读以下任一方面的快速入门指南：
 [Windows](#快速开始-windows) 或 [macOS和Linux](#快速开始-unix)，
 这取决于您使用的是什么平台。
 
