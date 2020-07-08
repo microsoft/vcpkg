@@ -1,12 +1,12 @@
 #pragma once
 
-#include <vcpkg/base/files.h>
-#include <vcpkg/base/zstringview.h>
-
 #include <functional>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/zstringview.h>
 
 namespace vcpkg::System
 {
@@ -22,6 +22,18 @@ namespace vcpkg::System
     std::string make_basic_cmake_cmd(const fs::path& cmake_tool_path,
                                      const fs::path& cmake_script,
                                      const std::vector<CMakeVariable>& pass_variables);
+
+    struct CmdLineBuilder
+    {
+        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(p.u8string()); }
+        CmdLineBuilder& string_arg(StringView s);
+        std::string extract() noexcept { return std::move(buf); }
+
+        operator ZStringView() const { return buf; }
+
+    private:
+        std::string buf;
+    };
 
     fs::path get_exe_path_of_current_process();
 

@@ -19,12 +19,14 @@ if("latest" IN_LIST FEATURES)
         patches/Qt5BasicConfig_latest.patch
         patches/Qt5PluginTarget_latest.patch
         patches/create_cmake.patch
+        patches/8c44d70_latest.diff        # Fix for MSVC static init fiasco. 
         )
 else()
     set(PATCHES 
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
         patches/prl_parser.patch # Modified backport of the prl parser from Qt5.14.1 without using QMAKE_PRL_LIBS_FOR_CMAKE
+        patches/8c44d70_lts.diff        # Fix for MSVC static init fiasco. 
     )
 endif()
 

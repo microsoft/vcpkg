@@ -1,9 +1,13 @@
-#include <vcpkg/base/pragmas.h>
-
 #include <vcpkg/base/system_headers.h>
+
+#include <cassert>
+#include <fstream>
+#include <memory>
+#include <random>
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/pragmas.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
@@ -16,11 +20,6 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/userconfig.h>
 #include <vcpkg/vcpkglib.h>
-
-#include <cassert>
-#include <fstream>
-#include <memory>
-#include <random>
 
 #if defined(_WIN32)
 #pragma comment(lib, "ole32")
@@ -72,6 +71,8 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
     }
 
     const VcpkgPaths paths(fs, args);
+    paths.track_feature_flag_metrics();
+
     fs.current_path(paths.root, VCPKG_LINE_INFO);
     if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
     {
@@ -231,10 +232,11 @@ int main(const int argc, const char* const* const argv)
 
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
     args.imbue_from_environment();
+    args.check_feature_flag_consistency();
 
+    if (const auto p = args.disable_metrics.get()) Metrics::g_metrics.lock()->set_disabled(*p);
     if (const auto p = args.print_metrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
     if (const auto p = args.send_metrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
-    if (const auto p = args.disable_metrics.get()) Metrics::g_metrics.lock()->set_disabled(*p);
     if (const auto p = args.debug.get()) Debug::g_debugging = *p;
 
     if (args.send_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
@@ -247,6 +249,8 @@ int main(const int argc, const char* const* const argv)
         System::print2(System::Color::warning,
                        "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
     }
+
+    args.track_feature_flag_metrics();
 
     if (Debug::g_debugging)
     {

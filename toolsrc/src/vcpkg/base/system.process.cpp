@@ -1,13 +1,13 @@
 #include "pch.h"
 
+#include <ctime>
+
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-
-#include <ctime>
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h>
@@ -167,7 +167,7 @@ namespace vcpkg
     }
 
     System::CMakeVariable::CMakeVariable(const StringView varname, const char* varvalue)
-        : s(Strings::format(R"("-D%s=%s")", varname, varvalue))
+        : s(Strings::format("-D%s=%s", varname, varvalue))
     {
     }
     System::CMakeVariable::CMakeVariable(const StringView varname, const std::string& varvalue)
@@ -183,10 +183,62 @@ namespace vcpkg
                                              const fs::path& cmake_script,
                                              const std::vector<CMakeVariable>& pass_variables)
     {
-        return Strings::format(R"("%s" %s -P "%s")",
-                               cmake_tool_path.u8string(),
-                               Strings::join(" ", pass_variables, [](auto&& v) { return v.s; }),
-                               cmake_script.generic_u8string());
+        System::CmdLineBuilder cmd;
+        cmd.path_arg(cmake_tool_path);
+        for (auto&& var : pass_variables)
+        {
+            cmd.string_arg(var.s);
+        }
+        cmd.string_arg("-P").path_arg(cmake_script);
+        return cmd.extract();
+    }
+
+    System::CmdLineBuilder& System::CmdLineBuilder::string_arg(StringView s)
+    {
+        if (!buf.empty()) buf.push_back(' ');
+        if (Strings::find_first_of(s, " \t\n\r\"\\,;&`^|'") != s.end())
+        {
+            // TODO: improve this to properly handle all escaping
+#if _WIN32
+            // On Windows, `\`s before a double-quote must be doubled. Inner double-quotes must be escaped.
+            buf.push_back('"');
+            size_t n_slashes = 0;
+            for (auto ch : s)
+            {
+                if (ch == '\\')
+                {
+                    ++n_slashes;
+                }
+                else if (ch == '"')
+                {
+                    buf.append(n_slashes + 1, '\\');
+                    n_slashes = 0;
+                }
+                else
+                {
+                    n_slashes = 0;
+                }
+                buf.push_back(ch);
+            }
+            buf.append(n_slashes, '\\');
+            buf.push_back('"');
+#else
+            // On non-Windows, `\` is the escape character and always requires doubling. Inner double-quotes must be
+            // escaped.
+            buf.push_back('"');
+            for (auto ch : s)
+            {
+                if (ch == '\\' || ch == '"') buf.push_back('\\');
+                buf.push_back(ch);
+            }
+            buf.push_back('"');
+#endif
+        }
+        else
+        {
+            Strings::append(buf, s);
+        }
+        return *this;
     }
 
 #if defined(_WIN32)

@@ -49,6 +49,19 @@ namespace vcpkg::Util
         }
     }
 
+    template<class Range, class Pred, class E = ElementT<Range>>
+    std::vector<E> filter(const Range& xs, Pred&& f)
+    {
+        std::vector<E> ret;
+
+        for (auto&& x : xs)
+        {
+            if (f(x)) ret.push_back(x);
+        }
+
+        return ret;
+    }
+
     template<class Range, class Func>
     using FmapOut = std::remove_reference_t<decltype(std::declval<Func&>()(*std::declval<Range>().begin()))>;
 
@@ -205,7 +218,7 @@ namespace vcpkg::Util
 
         T* get() { return &m_ptr; }
 
-        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) {}
+        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) { }
 
     private:
         std::unique_lock<std::mutex> m_lock;

@@ -62,7 +62,7 @@ $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 if (!(Test-Path $vcpkgSourcesPath))
 {
     Write-Error "Unable to determine vcpkg sources directory. '$vcpkgSourcesPath' does not exist."
-    return
+    throw
 }
 
 function getVisualStudioInstances()
@@ -140,7 +140,7 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
     $VisualStudioInstances = getVisualStudioInstances
     if ($null -eq $VisualStudioInstances)
     {
-        throw "Could not find Visual Studio. VS2015 or VS2017 (with C++) needs to be installed."
+        throw "Could not find Visual Studio. VS2015, VS2017, or VS2019 (with C++) needs to be installed."
     }
 
     Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstances))"
@@ -408,8 +408,9 @@ $ec = vcpkgInvokeCommandClean $msbuildExe $arguments
 if ($ec -ne 0)
 {
     Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
-    return
+    throw
 }
+
 Write-Host "`nBuilding vcpkg.exe... done.`n"
 
 if (-not $disableMetrics)
