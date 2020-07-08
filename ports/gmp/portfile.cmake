@@ -55,7 +55,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
         SKIP_CLEAN
-        OPTIONS /p:UseEnv=True
+        OPTIONS
+            /p:UseEnv=True
+            "/p:YASMPATH=${YASM_DIR}/"
     )
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
     file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
