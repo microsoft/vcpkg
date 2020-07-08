@@ -726,7 +726,10 @@ namespace vcpkg::Install
             {
                 for (auto& dep : (*val)->core_paragraph->dependencies)
                 {
-                    specs.push_back(FullPackageSpec{{std::move(dep.name), default_triplet}, std::move(dep.features),});
+                    specs.push_back(FullPackageSpec{
+                        {std::move(dep.name), default_triplet},
+                        std::move(dep.features),
+                    });
                 }
             }
             else
