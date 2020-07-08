@@ -62,9 +62,9 @@ vcpkg团队和贡献者可以看到它的地方，
 需求:
 - Windows 7 或更新的版本
 - [Git][getting-started:git]
-- [Visual Studio 2015 Update 3][getting-started:visual-studio]  或更新的版本（包含英文语言包）
+- [Visual Studio 2015 Update 3][getting-started:visual-studio] 或更新的版本（包含英文语言包）
 
-首先，请下载vcpkg并执行bootstrap.bat脚本。
+首先，请下载vcpkg并执行 bootstrap.bat 脚本。
 它可以安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块，并将其全局安装到 Visual Studio 项目中。
 我们建议您使用例如 `C:\src\vcpkg` 或 `C:\dev\vcpkg` 的安装目录，否则您可能遇到某些库构建系统的路径问题。
 
@@ -73,7 +73,7 @@ vcpkg团队和贡献者可以看到它的地方，
 > .\vcpkg\bootstrap-vcpkg.bat
 ```
 
-使用以下命令为您的项目安装需要的库：
+使用以下命令安装您的项目所需要的库：
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install]
@@ -121,7 +121,7 @@ macOS平台的使用需求:
   - Homebrew 中 [g++][getting-started:macos-gcc] >= 6
 
 首先，请下载vcpkg并执行 bootstrap.sh 脚本。
-我们总体上建议您将vcpkg作为cmake项目的子模块使用。
+我们建议您将vcpkg作为cmake项目的子模块使用。
 
 ```sh
 $ git clone https://github.com/microsoft/vcpkg
@@ -134,7 +134,7 @@ $ ./vcpkg/bootstrap-vcpkg.sh
 $ ./vcpkg/vcpkg install [packages to install]
 ```
 
-您也可以使用 `search` 子命令来查找vcpkg中集成的库:
+您也可以使用 `search` 子命令来查找vcpkg中已集成的库:
 
 ```sh
 $ ./vcpkg/vcpkg search [search term]
@@ -191,7 +191,7 @@ $ xcode-select --install
 
 ### 在 macOS 10.15 之前版本中安装 GCC
 
-此条_只_在您的macOS版本低于 10.15 时是必须的。
+此条只在您的macOS版本低于 10.15 时是必须的。
 安装homebrew应当很轻松， 请查阅 <brew.sh> 以获取更多信息。
 为了更简便，请使用以下命令:
 
@@ -213,7 +213,7 @@ $ brew install gcc
 
 ### Visual Studio Code 中的 CMake Tools
 
-将以下内容添加到您的工作区 `settings.json` 中将使CMake Tools自动使用vcpkg中的第三方库:
+将以下内容添加到您的工作区的 `settings.json` 中将使CMake Tools自动使用vcpkg中的第三方库:
 
 ```json
 {
@@ -255,15 +255,15 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
   CACHE STRING "Vcpkg toolchain file")
 ```
 
-这仍然允许您不通过直接传递 `CMAKE_TOOLCHAIN_FILE` 来使用vcpkg，但这会使配置构建步骤稍微容易一些。
+使用此种方式可无需设置 `CMAKE_TOOLCHAIN_FILE` 即可使用vcpkg，且更容易完成配置工作。
 
 ## 快速开始: 清单
 
 如果您期待vcpkg在未来会更好，我们真的很感激😄。
-但是，首先要警告： vcpkg中的清单支持仍处于beta中！
-通常，它应该可以正常工作，但您很可能会在这种模式下使用vcpkg时遇到至少一个或两个错误。
+但是，首先要警告：vcpkg中的清单支持仍处于beta中！
+通常，vcpkg可以正常工作，但您很可能会在使用时遇到至少一个或两个错误。
 另外，我们可能会在稳定之前更改vcpkg的各个功能，请提前知悉。
-如果您遇到任何错误，请 [提交一个issue][contributing:submit-issue]！
+如果您遇到任何错误，请[提交一个issue][contributing:submit-issue]！
 
 首先，在 [Windows](#快速开始-windows) 或 [Unix](#快速开始-unix) 正常安装vcpkg。
 您可能希望将vcpkg安装在常用的位置，由于安装的目录位于本地，并且可以从同一vcpkg目录中同时运行多个vcpkg命令。
@@ -287,9 +287,9 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 ```
 
 您所安装的库将生成在 `vcpkg_installed` 文件夹中，并与您的 `vcpkg.json` 所在的文件夹相同。
-如果您可以使用常规的CMake toolchain 或 Visual Studio / MSBuild 集成，
-它将自动安装依赖项，尽管您需要将MSBuild的 `VcpkgManifestEnabled` 设置为 `On`。
-如果您希望不使用CMake或MSBuild来安装依赖项，您可以使用命令 `vcpkg install --feature-flags = manifests` 。
+如果您可以使用常规的 CMake toolchain 或 Visual Studio / MSBuild 集成，
+它将自动安装依赖项，您需要将MSBuild的 `VcpkgManifestEnabled` 设置为 `On`。
+如果您希望不使用 CMake 或 MSBuild 来安装依赖项，您可以使用命令 `vcpkg install --feature-flags = manifests` 。
 
 请查阅 [清单][getting-started:manifest-spec] 获取更多信息。
 
@@ -307,7 +307,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 # Tab补全/自动补全
 
 `vcpkg` 支持命令，包名称，以及 Powershell 和 Bash 中的选项。
-要在您选择的 shell 中启用Tab补全功能，请运行：
+若您需要在指定的 shell 中启用Tab补全功能，请依据您使用的shell运行：
 
 ```pwsh
 > .\vcpkg integrate powershell
@@ -319,14 +319,14 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 $ ./vcpkg integrate bash
 ```
 
-这依据您使用的shell，然后重新启动控制台。
+然后重新启动控制台。
 
 ## 示例
 
-请查看 [文档](docs/index.md)获取具体示例，
+请查看 [文档](docs/index.md) 获取具体示例，
 其包含 [安装并使用包](docs/examples/installing-and-using-packages.md)，
-[使用压缩文件添加包](docs/examples/packaging-zipfiles.md)，
-与 [从GitHub源中添加一个包](docs/examples/packaging-github-repos.md)。
+[使用压缩文件添加包](docs/examples/packaging-zipfiles.md)
+和 [从GitHub源中添加一个包](docs/examples/packaging-github-repos.md)。
 
 我们的文档现在也可以从 [ReadTheDocs](https://vcpkg.readthedocs.io/) 在线获取。
 
