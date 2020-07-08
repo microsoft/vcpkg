@@ -5,7 +5,36 @@ variables:
   windows-pool: 'PrWin-2020-06-30'
   linux-pool: 'PrLin-2020-06-30'
 
-jobs:
+stages:
+- stage: check_cxx_formatting
+  displayName: 'Check the formatting of the C++'
+  pool: $(windows-pool)
+  jobs:
+  - job:
+    steps:
+    - task: Powershell@2
+      displayName: 'Check C++ Formatting'
+      inputs:
+        filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
+        arguments: '-Root .'
+- stage: check_manifest_formatting
+  displayName: Check the formatting of port manifests
+  pool: $(windows-pool)
+  dependsOn: []
+  jobs:
+  - job:
+    steps:
+    - task: Powershell@2
+      displayName: 'Check port manifest Formatting'
+      inputs:
+        filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
+        arguments: '-Root . -Downloads D:\Downloads'
+- stage: run_port_ci
+  displayName: 'Run the Port CI'
+  dependsOn:
+  - check_cxx_formatting
+  - check_manifest_formatting
+  jobs:
   - template: windows/azure-pipelines.yml
     parameters:
       triplet: x86-windows
