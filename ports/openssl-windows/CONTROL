@@ -2,6 +2,3 @@ Source: openssl-windows
 Version: 1.1.1g-1
 Description: OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols. It is also a general-purpose cryptography library.
 Supports: windows
-
-Feature: no-pinshared
-Description: OpenSSL additional configuration parameter "no-pinshared". This will prevent OpenSSL to stay in memory until the process exits. Further details, see OpenSSL project on GitHub.

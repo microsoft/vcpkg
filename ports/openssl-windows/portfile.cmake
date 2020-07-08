@@ -44,8 +44,7 @@ set(CONFIGURE_OPTIONS
     ${OPENSSL_SHARED}
 )
 
-# Optional features from vcpkg install command (e.g. openssl-windows[no-pinshared]:x64-windows-static)
-if("no-pinshared" IN_LIST FEATURES)
+if(DEFINED OPENSSL_USE_NOPINSHARED)
     set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-pinshared)
 endif()
 
