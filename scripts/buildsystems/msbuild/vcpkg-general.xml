@@ -37,7 +37,7 @@
   </BoolProperty>
   <BoolProperty Name="VcpkgAutoLink"
                 DisplayName="Use AutoLink"
-                Description="Enables automatic linking with libraries build using Vcpkg"
+                Description="Enables automatic linking with libraries build using Vcpkg. Does not work with lld-link.exe."
                 Category="General"
                 Default="true">
   </BoolProperty>

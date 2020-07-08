@@ -64,7 +64,7 @@
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
     <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!).
     Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
-    <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true' and '$(VcpkgAutoLink)' == ''">false</VcpkgAutoLink>
+    <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true'">false</VcpkgAutoLink>
   </PropertyGroup>
 
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
