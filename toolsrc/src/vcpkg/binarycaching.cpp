@@ -198,7 +198,6 @@ namespace
         void prefetch(const VcpkgPaths& paths, const Dependencies::ActionPlan& plan) override
         {
             if (m_read_sources.empty() && m_read_configs.empty()) return;
-            if (plan.install_actions.empty()) return;
 
             auto& fs = paths.get_filesystem();
 
@@ -206,13 +205,17 @@ namespace
 
             for (auto&& action : plan.install_actions)
             {
+                if (action.build_options.editable == Build::Editable::YES) continue;
+
                 auto& spec = action.spec;
                 fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
 
                 nuget_refs.emplace_back(spec, NugetReference(action));
             }
 
-            System::print2("Attempting to fetch ", plan.install_actions.size(), " packages from nuget.\n");
+            if (nuget_refs.empty()) return;
+
+            System::print2("Attempting to fetch ", nuget_refs.size(), " packages from nuget.\n");
 
             auto packages_config = paths.buildtrees / fs::u8path("packages.config");
 
