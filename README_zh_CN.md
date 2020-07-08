@@ -47,7 +47,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 有关更多信息，请参见 [安装和使用软件包][getting-started:using-a-package]。
 如果vcpkg目录中没有您需要的库，
 您可以 [在GitHub上打开问题][contributing:submit-issue]。
-vcpkg团队和社区可以看到它的地方，
+vcpkg团队和贡献者可以看到它的地方，
 并可能将这个库添加到vcpkg。
 
 安装并运行vcpkg后，
