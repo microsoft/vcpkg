@@ -4,6 +4,8 @@ project(gtk+ C)
 configure_file(config.h.win32 ${CMAKE_CURRENT_SOURCE_DIR}/config.h COPYONLY)
 configure_file(gdk/gdkconfig.h.win32_broadway ${CMAKE_CURRENT_SOURCE_DIR}/gdk/gdkconfig.h COPYONLY)
 
+set(PACKAGE_VERSION 3.22.19)
+set(GTK_API_VERSION 3.0)
 set(GLIB_LIB_SUFFIX 2.0)
 set(PANGO_LIB_SUFFIX 1.0)
 set(ATK_LIB_SUFFIX 1.0)
@@ -83,9 +85,9 @@ add_definitions(
 
 add_definitions(-DG_ENABLE_DEBUG)
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
-	add_definitions(-DG_ENABLE_CONSISTENCY_CHECKS)
+    add_definitions(-DG_ENABLE_CONSISTENCY_CHECKS)
 else()
-	add_definitions(-DG_DISABLE_CAST_CHECKS)
+    add_definitions(-DG_DISABLE_CAST_CHECKS)
 endif()
 
 macro(extract_vcproj_sources VC_PROJECT OUT_VAR)
@@ -121,7 +123,7 @@ macro(gtk_add_module MODULE_NAME)
     target_include_directories(${MODULE_NAME} PRIVATE . ./gdk ./gtk ${GTK_REQUIRED_INCLUDE_DIR})
     target_link_libraries(${MODULE_NAME} ${GTK_REQUIRED_LIBRARIES})
     set_target_properties(${MODULE_NAME} PROPERTIES 
-        ARCHIVE_OUTPUT_NAME ${MODULE_NAME}.0)
+        ARCHIVE_OUTPUT_NAME ${MODULE_NAME})
     install(TARGETS ${MODULE_NAME} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
 endmacro()
 
@@ -174,4 +176,24 @@ set_target_properties(gailutil-3 PROPERTIES
 if(NOT GTK_SKIP_HEADERS)
     set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
     include(install_headers)
+endif()
+
+set(VERSION ${PACKAGE_VERSION})
+set(GTK_API_VERSION ${GTK_API_VERSION})
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gail-3.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gail-3.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gdk-3.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gdk-3.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gtk+-3.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gtk+-3.0.pc" @ONLY)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gail-3.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gdk-3.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gtk+-3.0.pc"
+            DESTINATION lib/pkgconfig)
+if(UNIX)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gtk+-unix-print-3.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gtk+-unix-print-3.0.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gtk+-unix-print-3.0.pc"  DESTINATION lib/pkgconfig)
 endif()

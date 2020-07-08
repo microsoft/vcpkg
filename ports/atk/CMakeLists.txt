@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(atk C)
 
+set(PACKAGE_VERSION 2.24.0)
+set(ATK_API_VERSION 1.0)
 set(ATK_LIB_SUFFIX 1.0)
 set(ATK_DLL_SUFFIX 1)
 set(GLIB_LIB_VERSION 2.0)
@@ -142,3 +144,13 @@ message(STATUS "  " ${LIBINTL_LIBRARY})
 foreach(GL ${GLIB_LIBRARIES})
     message(STATUS "  " ${GL})
 endforeach()
+
+set(VERSION ${PACKAGE_VERSION})
+set(ATK_API_VERSION ${ATK_API_VERSION})
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/atk.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/atk.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/atk.pc" DESTINATION lib/pkgconfig)
