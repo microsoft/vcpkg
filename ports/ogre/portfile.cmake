@@ -15,6 +15,7 @@ vcpkg_from_github(
     PATCHES
         toolchain_fixes.patch
         fix-dependency.patch
+		fix-findimgui.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
