@@ -954,7 +954,7 @@ namespace vcpkg::Build
             }
         }
 
-        if (!missing_fspecs.empty())
+        if (!missing_fspecs.empty() && !Util::Enum::to_bool(action.build_options.only_downloads))
         {
             return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(missing_fspecs)};
         }
