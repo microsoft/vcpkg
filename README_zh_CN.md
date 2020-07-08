@@ -262,7 +262,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 如果您期待vcpkg在未来会更好，我们真的很感激😄。
 但是，首先要警告： vcpkg中的清单支持仍处于beta中！
 通常，它应该可以正常工作，但您很可能会在这种模式下使用vcpkg时遇到至少一个或两个错误。
-另外，我们可能会在稳定之前破坏行为，因此请提前警告。
+另外，我们可能会在稳定之前更改vcpkg的各个功能，请提前知悉。
 如果您遇到任何错误，请 [提交一个issue][contributing:submit-issue]！
 
 首先，在 [Windows](#快速开始-windows) 或 [Unix](#快速开始-unix) 正常安装vcpkg。
