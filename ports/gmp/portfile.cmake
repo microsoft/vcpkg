@@ -56,7 +56,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
         SKIP_CLEAN
         OPTIONS
-            /p:UseEnv=True
             "/p:YASMPATH=${YASM_DIR}/"
     )
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
@@ -105,5 +104,4 @@ else()
     # # Handle copyright
     file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
-
 
