@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7966ed5..b8dfb54 100644
+index 7966ed5..4e0f673 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -63,7 +63,7 @@ INCLUDE_DIRECTORIES("${OpenMVS_SOURCE_DIR}")
@@ -54,10 +54,11 @@ index 7966ed5..b8dfb54 100644
 -FIND_PACKAGE(Eigen ${SYSTEM_PACKAGE_REQUIRED})
 -if(EIGEN_FOUND)
 -	INCLUDE_DIRECTORIES(${EIGEN_INCLUDE_DIRS})
+-	ADD_DEFINITIONS(${EIGEN_DEFINITIONS} -D_USE_EIGEN)
 +FIND_PACKAGE(Eigen3 REQUIRED)
 +if(EIGEN3_FOUND)
 +	INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIRS})
- 	ADD_DEFINITIONS(${EIGEN_DEFINITIONS} -D_USE_EIGEN)
++	ADD_DEFINITIONS(${EIGEN3_DEFINITIONS} -D_USE_EIGEN)
  	SET(_USE_EIGEN TRUE)
  endif()
  
@@ -163,10 +164,10 @@ index c519040..934cd50 100644
  # List sources files
  FILE(GLOB PCH_C "Common.cpp")
 diff --git a/build/OpenMVSConfig.cmake.in b/build/OpenMVSConfig.cmake.in
-index 96b8fe2..2dce8e7 100644
+index 96b8fe2..454e846 100644
 --- a/build/OpenMVSConfig.cmake.in
 +++ b/build/OpenMVSConfig.cmake.in
-@@ -3,16 +3,66 @@
+@@ -3,16 +3,70 @@
  #  OpenMVS_INCLUDE_DIRS - include directories for OpenMVS
  #  OpenMVS_LIBRARIES    - libraries to link against
  #  OpenMVS_BINARIES     - the binaries
@@ -184,6 +185,9 @@ index 96b8fe2..2dce8e7 100644
 +	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
 +	set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} /LTCG")
 +endif()
++
++set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
 +
 +include(CMakeFindDependencyMacro)
 +
@@ -210,8 +214,9 @@ index 96b8fe2..2dce8e7 100644
 +
 +find_dependency(Boost)
 +add_definitions(${Boost_DEFINITIONS} -D_USE_BOOST)
++include_directories(${Boost_INCLUDE_DIRS})
 +find_dependency(Eigen3)
-+add_definitions(${EIGEN_DEFINITIONS} -D_USE_EIGEN)
++add_definitions(${EIGEN3_DEFINITIONS} -D_USE_EIGEN)
 +find_dependency(OpenCV)
 +add_definitions(${OpenCV_DEFINITIONS})
 +find_dependency(CGAL)
