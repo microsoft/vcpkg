@@ -162,5 +162,5 @@ namespace vcpkg::Dependencies
 
     void print_plan(const ActionPlan& action_plan,
                     const bool is_recursive = true,
-                    const fs::path& default_ports_dir = "");
+                    const fs::path& default_ports_dir = {});
 }
