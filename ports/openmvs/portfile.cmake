@@ -7,9 +7,7 @@ vcpkg_from_github(
     SHA512 baa9149853dc08c602deeb1a04cf57643d1cb0733aee2776f4e99b210279aad3b4a1013ab1d790e91a3a95b7c72b9c12c6be25f2c30a76b69b5319b610cb8e7a
     HEAD_REF master
     PATCHES
-       fix-tool-paths.patch
-       fix-linux-build.patch
-       fix-tool-build.patch
+       fix-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
