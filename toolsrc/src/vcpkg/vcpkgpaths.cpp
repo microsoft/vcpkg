@@ -152,9 +152,9 @@ namespace vcpkg
         }
         uppercase_win32_drive_letter(manifest_root_dir);
 
-        if (!manifest_root_dir.empty() && args.manifest_mode.value_or(true))
+        if (!manifest_root_dir.empty() && args.manifest_mode.value_or(false))
         {
-            Debug::print("Using manifest-root: ", root.u8string(), '\n');
+            Debug::print("Using manifest-root: ", manifest_root_dir.u8string(), '\n');
 
             installed = process_output_directory(
                 filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);

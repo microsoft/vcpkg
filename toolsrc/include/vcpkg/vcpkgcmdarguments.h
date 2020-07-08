@@ -178,6 +178,7 @@ namespace vcpkg
 
         void check_feature_flag_consistency() const;
 
+        void debug_print_feature_flags() const;
         void track_feature_flag_metrics() const;
 
     private:
