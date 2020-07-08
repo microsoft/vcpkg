@@ -66,7 +66,7 @@ Build-Depends: libpng
 Description: PNG support for opencv
 
 Feature: qt
-Build-Depends: qt5-base
+Build-Depends: qt5-base[core]
 Description: Qt GUI support for opencv
 
 Feature: sfm
