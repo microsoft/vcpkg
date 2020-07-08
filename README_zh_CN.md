@@ -205,7 +205,7 @@ $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/
 $ brew install gcc
 ```
 
-此时，您就可以使用 bootstrap.sh 编译vcpkg了。 请参阅 [quick start guide](#快速开始-unix)
+此时，您就可以使用 bootstrap.sh 编译vcpkg了。 请参阅 [快速开始](#快速开始-unix)
 
 ## 在 CMake 中使用 vcpkg
 
