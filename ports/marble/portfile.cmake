@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" ON_LIBRARY_LINKAGE "static")
+vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID" ON_ARCH "arm" "x86" ON_LIBRARY_LINKAGE "static")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,19 +7,10 @@ vcpkg_from_github(
     SHA512 f808bfbb118f509bd7939e8ae514a72cb9eec30b3a42f2bfedffcbeab7a1cbd658e35b5cd3e90ebeeacee6402c11ae9d293c12aaa5f2d70908e451b174a58e8e
     HEAD_REF master
 )
-
-#vcpkg_check_features(
-#    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#    FEATURES
-#        tools BUILD_MARBLE_TOOLS
-#       tests BUILD_MARBLE_TESTS
-#        plugins WITH_DESIGNER_PLUGIN
-#)
  
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -32,7 +23,6 @@ file(GLOB  DLL "${CURRENT_PACKAGES_DIR}/*.dll")
 file(GLOB_RECURSE  PLUGINS "${CURRENT_PACKAGES_DIR}/plugins/*")
 file(GLOB_RECURSE  PLUGINS_DESIGNER "${CURRENT_PACKAGES_DIR}/lib/plugins/*")
 file(GLOB_RECURSE  PLUGINS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/plugins/*")
-#file(GLOB_RECURSE  DATA LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/data/*")
 file(GLOB_RECURSE  MKSPECS "${CURRENT_PACKAGES_DIR}/mkspecs/*")
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
@@ -40,8 +30,6 @@ file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(COPY ${DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(COPY ${PLUGINS} ${PLUGINS_DESIGNER} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins)
 file(COPY ${PLUGINS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins/debug)
-#file(COPY ${DATA} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/data)
-#install(DIRECTORY "${CURRENT_PACKAGES_DIR}/data/"  DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/data)
 file(COPY "${CURRENT_PACKAGES_DIR}/data" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(COPY ${MKSPECS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/mkspecs)
 
