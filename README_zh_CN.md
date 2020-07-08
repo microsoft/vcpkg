@@ -265,7 +265,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 另外，我们可能会在稳定之前破坏行为，因此请提前警告。
 如果您遇到任何错误，请 [提交一个issue][contributing:submit-issue]！
 
-首先，为 [Windows](#快速开始-windows) 正常安装vcpkg或 [Unix](#快速开始-unix)。
+首先，为 [Windows](#快速开始-windows) 或 [Unix](#快速开始-unix) 正常安装vcpkg。
 您可能希望将vcpkg安装在常用的位置，由于安装的目录位于本地，并且可以从同一vcpkg目录中同时运行多个vcpkg命令。
 
 然后，您必须通过将 `manifests` 添加到以逗号分隔的 `--feature-flags` 选项中来打开 `manifests` vcpkg功能标记，
