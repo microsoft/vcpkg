@@ -120,7 +120,7 @@ macOS平台的使用需求:
   - [Homebrew][getting-started:macos-brew]
   - Homebrew 中 [g++][getting-started:macos-gcc] >= 6
 
-首先，请下载vcpkg并执行bootstrap.sh脚本。
+首先，请下载vcpkg并执行 bootstrap.sh 脚本。
 我们总体上建议您将vcpkg作为cmake项目的子模块使用。
 
 ```sh
