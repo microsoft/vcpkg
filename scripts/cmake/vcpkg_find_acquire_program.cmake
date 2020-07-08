@@ -244,33 +244,28 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://github.com/mesonbuild/meson/archive/0.54.2.zip")
     set(ARCHIVE "meson-0.54.2.zip")
     set(HASH 8d19110bad3e6a223d1d169e833b746b884ece9cd23d2539ec02dccb5cd0c56542414b7afc0f7f2adcec9d957e4120d31f41734397aa0a7ee7f9c29ebdc9eb4c)
-  elseif(VAR MATCHES "FLEX")
+  elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
     if(CMAKE_HOST_WIN32)
-      set(PROGNAME win_flex)
-      set(SUBDIR win_flex-2.5.16)
-      set(PATHS ${DOWNLOADS}/tools/win_flex/${SUBDIR})
-      set(URL "https://sourceforge.net/projects/winflexbison/files/winflexbison-2.5.16.zip/download")
-      set(ARCHIVE "win_flex_bison-2.5.16.zip")
-      set(HASH 0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123)
+      set(SOURCEFORGE_ARGS
+        REPO winflexbison
+        FILENAME winflexbison-2.5.16.zip
+        SHA512 0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123
+        NO_REMOVE_ONE_LEVEL
+        WORKING_DIRECTORY "${DOWNLOADS}/tools/winflexbison"
+      )
+      if(VAR MATCHES "FLEX")
+        set(PROGNAME win_flex)
+      else()
+        set(PROGNAME win_bison)
+      endif()
+      set(PATHS ${DOWNLOADS}/tools/winflexbison/0a14154bff-a8cf65db07)
       if(NOT EXISTS "${PATHS}/data/m4sugar/m4sugar.m4")
         file(REMOVE_RECURSE "${PATHS}")
       endif()
-    else()
+    elseif(VAR MATCHES "FLEX")
       set(PROGNAME flex)
       set(APT_PACKAGE_NAME flex)
       set(BREW_PACKAGE_NAME flex)
-    endif()
-  elseif(VAR MATCHES "BISON")
-    if(CMAKE_HOST_WIN32)
-      set(PROGNAME win_bison)
-      set(SUBDIR win_bison-2.5.16)
-      set(PATHS ${DOWNLOADS}/tools/win_bison/${SUBDIR})
-      set(URL "https://sourceforge.net/projects/winflexbison/files/winflexbison-2.5.16.zip/download")
-      set(ARCHIVE "win_flex_bison-2.5.16.zip")
-      set(HASH 0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123)
-      if(NOT EXISTS "${PATHS}/data/m4sugar/m4sugar.m4")
-        file(REMOVE_RECURSE "${PATHS}")
-      endif()
     else()
       set(PROGNAME bison)
       set(APT_PACKAGE_NAME bison)
@@ -378,41 +373,48 @@ function(vcpkg_find_acquire_program VAR)
       message(FATAL_ERROR "Could not find ${PROGNAME}. Please install it via your package manager${EXAMPLE}")
     endif()
 
-    vcpkg_download_distfile(ARCHIVE_PATH
-        URLS ${URL}
-        SHA512 ${HASH}
-        FILENAME ${ARCHIVE}
-    )
-
-    set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
-    file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
-    if(DEFINED NOEXTRACT)
-      if(DEFINED _vfa_RENAME)
-        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-      else()
-        file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-      endif()
+    if(DEFINED SOURCEFORGE_ARGS)
+      # Locally change editable to suppress re-extraction each time
+      set(_VCPKG_EDITABLE 1)
+      vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${SOURCEFORGE_ARGS})
+      unset(_VCPKG_EDITABLE)
     else()
-      get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} LAST_EXT)
-      string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
-      if(ARCHIVE_EXTENSION STREQUAL ".msi")
-        file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
-        file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
-        _execute_process(
-          COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
-          WORKING_DIRECTORY ${DOWNLOADS}
-        )
-      elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
-        vcpkg_find_acquire_program(7Z)
-        _execute_process(
-          COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
-        )
+      vcpkg_download_distfile(ARCHIVE_PATH
+          URLS ${URL}
+          SHA512 ${HASH}
+          FILENAME ${ARCHIVE}
+      )
+
+      set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
+      file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
+      if(DEFINED NOEXTRACT)
+        if(DEFINED _vfa_RENAME)
+          file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        else()
+          file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        endif()
       else()
-        _execute_process(
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
-        )
+        get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} LAST_EXT)
+        string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
+        if(ARCHIVE_EXTENSION STREQUAL ".msi")
+          file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
+          file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
+          _execute_process(
+            COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
+            WORKING_DIRECTORY ${DOWNLOADS}
+          )
+        elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
+          vcpkg_find_acquire_program(7Z)
+          _execute_process(
+            COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
+            WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+          )
+        else()
+          _execute_process(
+            COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
+            WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+          )
+        endif()
       endif()
     endif()
 
