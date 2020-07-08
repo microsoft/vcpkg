@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d22d3ca..7784ab58 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -335,7 +335,7 @@ check_include_file(openssl/rand.h HAVE_OPENSSL_RAND_H)
+ check_include_file(openssl/conf.h HAVE_OPENSSL_CONF_H)
+ check_include_file(openssl/engine.h HAVE_OPENSSL_ENGINE_H)
+
+-set(CMAKE_REQUIRED_LIBRARIES ${OPENSSL_LIBRARIES})
++set(CMAKE_REQUIRED_LIBRARIES ${OPENSSL_LIBRARIES} ${getdns_system_libs})
+ check_function_exists(DSA_SIG_set0 HAVE_DSA_SIG_SET0)
+ check_function_exists(DSA_set0_pqg HAVE_DSA_SET0_PQG)
+ check_function_exists(DSA_set0_key HAVE_DSA_SET0_KEY)

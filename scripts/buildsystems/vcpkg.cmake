@@ -230,6 +230,16 @@ else() #Release build: Put Release paths before Debug paths. Debug Paths are req
     )
 endif()
 
+# If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET} 
+# and ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug are searched, it is not sufficient to just add them to CMAKE_FIND_ROOT_PATH,
+# as CMAKE_FIND_ROOT_PATH specify "one or more directories to be prepended to all other search directories", so to make sure that 
+# the libraries are searched as they are, it is necessary to add "/" to the CMAKE_PREFIX_PATH
+if(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE STREQUAL "ONLY" OR 
+   CMAKE_FIND_ROOT_PATH_MODE_LIBRARY STREQUAL "ONLY" OR
+   CMAKE_FIND_ROOT_PATH_MODE_PACKAGE STREQUAL "ONLY")
+   list(APPEND CMAKE_PREFIX_PATH "/")
+endif()
+
 set(VCPKG_CMAKE_FIND_ROOT_PATH ${CMAKE_FIND_ROOT_PATH})
 
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)

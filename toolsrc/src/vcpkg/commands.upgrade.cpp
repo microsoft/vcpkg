@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/util.h>
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
@@ -10,9 +12,6 @@
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/update.h>
 #include <vcpkg/vcpkglib.h>
-
-#include <vcpkg/base/system.print.h>
-#include <vcpkg/base/util.h>
 
 namespace vcpkg::Commands::Upgrade
 {

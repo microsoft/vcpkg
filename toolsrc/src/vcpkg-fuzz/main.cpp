@@ -1,15 +1,15 @@
+#include <string.h>
+
+#include <iostream>
+#include <sstream>
+#include <utility>
+
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/unicode.h>
-
 #include <vcpkg/platform-expression.h>
-
-#include <iostream>
-#include <sstream>
-#include <string.h>
-#include <utility>
 
 using namespace vcpkg;
 
@@ -86,9 +86,12 @@ namespace
         {
             auto first = std::find_if(arg.begin(), arg.end(), [](char c) { return c != '-'; });
             auto division = std::find(first, arg.end(), '=');
-            if (division == arg.end()) {
+            if (division == arg.end())
+            {
                 return {StringView(first, arg.end()), StringView(arg.end(), arg.end())};
-            } else {
+            }
+            else
+            {
                 return {StringView(first, division), StringView(division + 1, arg.end())};
             }
         }
@@ -152,8 +155,10 @@ Options:
 
     [[noreturn]] void fuzz_platform_expr_and_exit(StringView text)
     {
-        auto res1 = PlatformExpression::parse_platform_expression(text, PlatformExpression::MultipleBinaryOperators::Deny);
-        auto res2 = PlatformExpression::parse_platform_expression(text, PlatformExpression::MultipleBinaryOperators::Allow);
+        auto res1 =
+            PlatformExpression::parse_platform_expression(text, PlatformExpression::MultipleBinaryOperators::Deny);
+        auto res2 =
+            PlatformExpression::parse_platform_expression(text, PlatformExpression::MultipleBinaryOperators::Allow);
 
         if (!res1)
         {

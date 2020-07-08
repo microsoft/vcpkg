@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+
 #include <vcpkg/dependencies.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkgpaths.h>

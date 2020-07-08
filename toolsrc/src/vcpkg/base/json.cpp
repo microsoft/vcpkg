@@ -1,11 +1,11 @@
 #include "pch.h"
 
+#include <inttypes.h>
+
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/unicode.h>
-
-#include <inttypes.h>
 
 namespace vcpkg::Json
 {
@@ -154,10 +154,7 @@ namespace vcpkg::Json
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
         return underlying_->array;
     }
-    Array&& Value::array() && noexcept
-    {
-        return std::move(this->array());
-    }
+    Array&& Value::array() && noexcept { return std::move(this->array()); }
 
     const Object& Value::object() const& noexcept
     {
@@ -169,10 +166,7 @@ namespace vcpkg::Json
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
         return underlying_->object;
     }
-    Object&& Value::object() && noexcept
-    {
-        return std::move(this->object());
-    }
+    Object&& Value::object() && noexcept { return std::move(this->object()); }
 
     Value::Value() noexcept = default;
     Value::Value(Value&&) noexcept = default;

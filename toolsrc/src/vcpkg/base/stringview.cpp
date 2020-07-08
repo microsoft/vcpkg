@@ -1,10 +1,10 @@
 #include "pch.h"
 
+#include <cstring>
+
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/stringview.h>
-
-#include <cstring>
 
 namespace vcpkg
 {
@@ -71,7 +71,7 @@ namespace vcpkg
         return result.front();
     }
 
-    StringView::StringView(const std::string& s) : m_ptr(s.data()), m_size(s.size()) {}
+    StringView::StringView(const std::string& s) : m_ptr(s.data()), m_size(s.size()) { }
 
     std::string StringView::to_string() const { return std::string(m_ptr, m_size); }
     void StringView::to_string(std::string& s) const { s.append(m_ptr, m_size); }
