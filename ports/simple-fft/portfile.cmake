@@ -14,7 +14,7 @@ file(COPY ${SOURCE_PATH}/include/simple_fft/check_fft.hpp
     ${SOURCE_PATH}/include/simple_fft/fft.hpp
     ${SOURCE_PATH}/include/simple_fft/fft_impl.hpp
     ${SOURCE_PATH}/include/simple_fft/fft_settings.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/simple-fft
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include/simple_fft
 )
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
