@@ -35,24 +35,10 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(GLOB share ${CURRENT_PACKAGES_DIR}/CMake/*)
-file(COPY ${share} DESTINATION ${CURRENT_PACKAGES_DIR}/share)
-
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/CMake
-    ${CURRENT_PACKAGES_DIR}/debug/CMake
     ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
 )
-
-set(dir "lib") # would be "bin" for dynamic linkage
-
-file(GLOB libs ${CURRENT_PACKAGES_DIR}/debug/${dir}/Debug/*)
-file(COPY ${libs} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/${dir})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${dir}/Debug)
-
-file(GLOB libs ${CURRENT_PACKAGES_DIR}/${dir}/Release/*)
-file(COPY ${libs} DESTINATION ${CURRENT_PACKAGES_DIR}/${dir})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/${dir}/Release)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
