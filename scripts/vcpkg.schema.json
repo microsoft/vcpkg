@@ -74,7 +74,7 @@
         }
       },
       "patternProperties": {
-        "^[$]": {}
+        "^\\$": {}
       },
       "required": [
         "name"
@@ -115,7 +115,7 @@
         }
       },
       "patternProperties": {
-        "^[$]": {}
+        "^\\$": {}
       },
       "required": [
         "name",
@@ -196,7 +196,7 @@
     }
   },
   "patternProperties": {
-    "^[$]": {}
+    "^\\$": {}
   },
   "required": [
     "name",
