@@ -138,10 +138,10 @@ namespace vcpkg
         {
             System::printf(System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
             System::printf(System::Color::error, "    %s\n", ec.message());
-            System::print2(System::Color::error, "Exiting now.\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
+        bool manifest_mode_on = args.manifest_root_dir || args.manifest_mode.value_or(false);
         if (args.manifest_root_dir)
         {
             manifest_root_dir = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.manifest_root_dir));
@@ -152,7 +152,7 @@ namespace vcpkg
         }
         uppercase_win32_drive_letter(manifest_root_dir);
 
-        if (!manifest_root_dir.empty() && args.manifest_mode.value_or(false))
+        if (!manifest_root_dir.empty() && manifest_mode_on)
         {
             Debug::print("Using manifest-root: ", manifest_root_dir.u8string(), '\n');
 

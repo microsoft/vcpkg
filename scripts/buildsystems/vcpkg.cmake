@@ -200,7 +200,7 @@ endif()
 
 if (NOT DEFINED _VCPKG_INSTALLED_DIR)
     if(_VCPKG_MANIFEST_DIR)
-        set(_VCPKG_INSTALLED_DIR ${_VCPKG_MANIFEST_DIR}/vcpkg_installed)
+        set(_VCPKG_INSTALLED_DIR ${CMAKE_BINARY_DIR}/vcpkg_installed)
     else()
         set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
     endif()
@@ -232,11 +232,11 @@ else() #Release build: Put Release paths before Debug paths. Debug Paths are req
     )
 endif()
 
-# If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET} 
+# If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
 # and ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug are searched, it is not sufficient to just add them to CMAKE_FIND_ROOT_PATH,
-# as CMAKE_FIND_ROOT_PATH specify "one or more directories to be prepended to all other search directories", so to make sure that 
+# as CMAKE_FIND_ROOT_PATH specify "one or more directories to be prepended to all other search directories", so to make sure that
 # the libraries are searched as they are, it is necessary to add "/" to the CMAKE_PREFIX_PATH
-if(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE STREQUAL "ONLY" OR 
+if(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE STREQUAL "ONLY" OR
    CMAKE_FIND_ROOT_PATH_MODE_LIBRARY STREQUAL "ONLY" OR
    CMAKE_FIND_ROOT_PATH_MODE_PACKAGE STREQUAL "ONLY")
    list(APPEND CMAKE_PREFIX_PATH "/")
@@ -282,21 +282,19 @@ endforeach()
 
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
 if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(_VCPKG_EXECUTABLE_SUFFIX ".exe")
-    set(_VCPKG_SCRIPT_SUFFIX ".bat")
+    set(_VCPKG_EXECUTABLE "${_VCPKG_ROOT_DIR}/vcpkg.exe")
+    set(_VCPKG_BOOTSTRAP_SCRIPT "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg.bat")
 else()
-    set(_VCPKG_EXECUTABLE_SUFFIX "")
-    set(_VCPKG_SCRIPT_SUFFIX ".sh")
+    set(_VCPKG_EXECUTABLE "${_VCPKG_ROOT_DIR}/vcpkg")
+    set(_VCPKG_BOOTSTRAP_SCRIPT "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg.sh")
 endif()
 
 if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
-    set(_VCPKG_EXECUTABLE "${_VCPKG_ROOT_DIR}/vcpkg${_VCPKG_EXECUTABLE_SUFFIX}")
-
     if(NOT EXISTS "${_VCPKG_EXECUTABLE}")
         message(STATUS "Bootstrapping vcpkg before install")
 
         execute_process(
-            COMMAND "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg${_VCPKG_SCRIPT_SUFFIX}"
+            COMMAND "${_VCPKG_BOOTSTRAP_SCRIPT}"
             RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
 
         if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
@@ -309,7 +307,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
     message(STATUS "Running vcpkg install")
 
     execute_process(
-        COMMAND "${_VCPKG_ROOT_DIR}/vcpkg${_VCPKG_EXECUTABLE_SUFFIX}" install
+        COMMAND "${_VCPKG_EXECUTABLE}" install
             --triplet ${VCPKG_TARGET_TRIPLET}
             --vcpkg-root ${_VCPKG_ROOT_DIR}
             --x-manifest-root=${_VCPKG_MANIFEST_DIR}

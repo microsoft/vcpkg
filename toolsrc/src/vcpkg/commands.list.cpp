@@ -4,6 +4,7 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::List
 {
@@ -12,9 +13,7 @@ namespace vcpkg::Commands::List
 
     static void do_print(const StatusParagraph& pgh, const bool full_desc)
     {
-        auto full_version = pgh.package.port_version == 0
-                                ? pgh.package.version
-                                : Strings::format("%s#%d", pgh.package.version, pgh.package.port_version);
+        auto full_version = VersionT(pgh.package.version, pgh.package.port_version).to_string();
         if (full_desc)
         {
             System::printf("%-50s %-16s %s\n",

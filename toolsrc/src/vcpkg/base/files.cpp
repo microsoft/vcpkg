@@ -888,6 +888,7 @@ namespace vcpkg::Files
 
             bool operator()(std::error_code& ec)
             {
+                ec.clear();
                 auto handle = CreateFileW(native.c_str(),
                                           GENERIC_READ,
                                           0 /* no sharing */,
@@ -915,6 +916,7 @@ namespace vcpkg::Files
 
             bool operator()(std::error_code& ec)
             {
+                ec.clear();
                 if (fd == -1)
                 {
                     fd = ::open(native.c_str(), 0);
