@@ -46,9 +46,9 @@ First, follow the quick start guide for either
 [Windows](#quick-start-windows), or [macOS and Linux](#quick-start-unix),
 depending on what you're using.
 
-For more information, see [Installing and Using Packages][getting-vcpkg:using-a-package].
+For more information, see [Installing and Using Packages][getting-started:using-a-package].
 If a library you need is not present in the vcpkg catalog,
-you can [open an issue on the GitHub repo][getting-vcpkg:open-issue]
+you can [open an issue on the GitHub repo][contributing:submit-issue]
 where the vcpkg team and community can see it,
 and potentially add the port to vcpkg.
 
@@ -64,8 +64,8 @@ so try it out and [open all the issues][contributing:submit-issue]!
 
 Prerequisites:
 - Windows 7 or newer
-- [Git][quick-start:git]
-- [Visual Studio][quick-start:visual-studio] 2015 Update 3 or greater with the English language pack
+- [Git][getting-started:git]
+- [Visual Studio][getting-started:visual-studio] 2015 Update 3 or greater with the English language pack
 
 First, download and bootstrap vcpkg itself; it can be installed anywhere,
 but generally we recommend using vcpkg as a submodule for CMake projects,
@@ -107,7 +107,7 @@ continue [here](#vcpkg-with-visual-studio-cmake-projects).
 In order to use vcpkg with CMake outside of an IDE,
 you can use the toolchain file:
 
-```
+```cmd
 > cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
 > cmake --build [build directory]
 ```
@@ -117,19 +117,19 @@ Check out the [CMake section](#using-vcpkg-with-cmake) for more information,
 including on using CMake with an IDE.
 
 For any other tools, including Visual Studio Code,
-check out the [integration guide][quick-start:integration].
+check out the [integration guide][getting-started:integration].
 
 ## Quick Start: Unix
 
 Prerequisites for Linux:
-- [Git][quick-start:git]
-- [g++][quick-start:linux-gcc] >= 6
+- [Git][getting-started:git]
+- [g++][getting-started:linux-gcc] >= 6
 
 Prerequisites for macOS:
-- [Apple Developer Tools][quick-start:apple-developer-tools]
+- [Apple Developer Tools][getting-started:macos-dev-tools]
 - On macOS 10.14 or below, you will also need:
-  - [Homebrew][quick-start:homebrew]
-  - [g++][quick-start:macos-gcc] >= 6 from Homebrew
+  - [Homebrew][getting-started:macos-brew]
+  - [g++][getting-started:macos-gcc] >= 6 from Homebrew
 
 First, download and bootstrap vcpkg itself; it can be installed anywhere,
 but generally we recommend using vcpkg as a submodule for CMake projects.
@@ -153,9 +153,9 @@ $ ./vcpkg/vcpkg search [search term]
 
 In order to use vcpkg with CMake, you can use the toolchain file:
 
-```
-> cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
-> cmake --build [build directory]
+```sh
+$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake --build [build directory]
 ```
 
 With CMake, you will still need to `find_package` and the like to use the libraries.
@@ -163,7 +163,7 @@ Check out the [CMake section](#using-vcpkg-with-cmake)
 for more information on how best to use vcpkg with CMake,
 and CMake Tools for VSCode.
 
-For any other tools, check out the [integration guide][quick-start:integration].
+For any other tools, check out the [integration guide][getting-started:integration].
 
 ## Installing Linux Developer Tools
 
@@ -325,6 +325,7 @@ For more information, check out the [manifest][getting-started:manifest-spec]
 specification.
 
 [getting-started:using-a-package]: docs/examples/intalling-and-using-packages.md
+[getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
