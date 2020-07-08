@@ -20,25 +20,24 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 # Install  plugins and data files
 file(GLOB  EXE "${CURRENT_PACKAGES_DIR}/*.exe")
 file(GLOB  DLL "${CURRENT_PACKAGES_DIR}/*.dll")
+file(GLOB  DEXE "${CURRENT_PACKAGES_DIR}/debug/*.exe")
+file(GLOB  DDLL "${CURRENT_PACKAGES_DIR}/debug/*.dll")
 file(GLOB_RECURSE  PLUGINS "${CURRENT_PACKAGES_DIR}/plugins/*")
 file(GLOB_RECURSE  PLUGINS_DESIGNER "${CURRENT_PACKAGES_DIR}/lib/plugins/*")
 file(GLOB_RECURSE  PLUGINS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/plugins/*")
 file(GLOB_RECURSE  MKSPECS "${CURRENT_PACKAGES_DIR}/mkspecs/*")
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(COPY ${DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(COPY ${EXE} ${DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(COPY ${DDLL} ${DEXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
 file(COPY ${PLUGINS} ${PLUGINS_DESIGNER} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins)
-file(COPY ${PLUGINS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins/debug)
-file(COPY "${CURRENT_PACKAGES_DIR}/data" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(COPY ${PLUGINS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/plugins)
+file(COPY "${CURRENT_PACKAGES_DIR}/data" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}) # have to keep folder structure here
 file(COPY ${MKSPECS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/mkspecs)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
- # remove plugin folder
-file(GLOB  DEXE "${CURRENT_PACKAGES_DIR}/debug/*.exe")
-file(GLOB  DDLL "${CURRENT_PACKAGES_DIR}/debug/*.dll")
-
+# remove plugin folder
 file(REMOVE_RECURSE
     ${EXE} ${DEXE} ${DLL} ${DDLL}
     ${CURRENT_PACKAGES_DIR}/plugins ${CURRENT_PACKAGES_DIR}/debug/plugins
