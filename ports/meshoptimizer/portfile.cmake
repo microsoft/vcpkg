@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/meshoptimizer
@@ -7,29 +6,20 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHADERED_LIBS)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
-        -DMESHOPT_BUILD_SHARED_LIBS=${BUILD_SHADERED_LIBS}
+        -DMESHOPT_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()
 
-# Debug includes and share are the same as release
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Merge /debug/lib/cmake and /lib/cmake into /share/meshoptimizer
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-file(INSTALL
-        ${CURRENT_PACKAGES_DIR}/lib/cmake/meshoptimizer/meshoptimizerConfig.cmake
-        ${CURRENT_PACKAGES_DIR}/lib/cmake/meshoptimizer/meshoptimizerConfigVersion.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/meshoptimizer)
-# Make sure no empty folder is left behind
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/meshoptimizer)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.md
