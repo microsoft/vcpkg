@@ -11,6 +11,8 @@ stages:
   pool: $(windows-pool)
   jobs:
   - job:
+    workspace:
+      clean: resources
     steps:
     - task: Powershell@2
       displayName: 'Check C++ Formatting'
@@ -23,6 +25,8 @@ stages:
   dependsOn: []
   jobs:
   - job:
+    workspace:
+      clean: resources
     steps:
     - task: Powershell@2
       displayName: 'Check port manifest Formatting'

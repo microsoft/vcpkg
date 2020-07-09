@@ -103,7 +103,10 @@ namespace vcpkg::Commands::PortsDiff
             Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
         std::map<std::string, VersionT> names_and_versions;
         for (auto&& port : all_ports)
-            names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
+        {
+            const auto& core_pgh = *port->core_paragraph;
+            names_and_versions.emplace(port->core_paragraph->name, VersionT(core_pgh.version, core_pgh.port_version));
+        }
         fs.remove_all(temp_checkout_path, VCPKG_LINE_INFO);
         return names_and_versions;
     }
