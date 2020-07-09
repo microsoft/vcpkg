@@ -269,7 +269,21 @@ namespace vcpkg
         parser.required_field(SourceParagraphFields::FEATURE, fpgh->name);
         fpgh->description = Strings::split(parser.required_field(SourceParagraphFields::DESCRIPTION), '\n');
         trim_all(fpgh->description);
-        fpgh->supports_expression = parser.optional_field(SourceParagraphFields::SUPPORTS);
+
+        auto supports_expr = parser.optional_field(SourceParagraphFields::SUPPORTS);
+        if (!supports_expr.empty())
+        {
+            auto maybe_expr = PlatformExpression::parse_platform_expression(
+                supports_expr, PlatformExpression::MultipleBinaryOperators::Allow);
+            if (auto expr = maybe_expr.get())
+            {
+                fpgh->supports_expression = std::move(*expr);
+            }
+            else
+            {
+                parser.add_type_error(SourceParagraphFields::SUPPORTS, "a platform expression");
+            }
+        }
 
         fpgh->dependencies =
             parse_dependencies_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS), origin)

@@ -39,7 +39,7 @@ namespace vcpkg
         std::string name;
         std::vector<std::string> description;
         std::vector<Dependency> dependencies;
-        std::string supports_expression;
+        PlatformExpression::Expr supports_expression;
     };
 
     /// <summary>

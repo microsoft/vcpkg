@@ -127,7 +127,6 @@ namespace vcpkg
         std::string name;
         std::vector<std::string> features;
         PlatformExpression::Expr platform;
-        std::string supports_expression;
     };
 
     struct ParsedQualifiedSpecifier
