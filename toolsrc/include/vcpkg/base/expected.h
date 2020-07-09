@@ -1,16 +1,16 @@
 #pragma once
 
+#include <system_error>
+
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/stringliteral.h>
-
-#include <system_error>
 
 namespace vcpkg
 {
     template<class Err>
     struct ErrorHolder
     {
-        ErrorHolder() : m_is_error(false), m_err{} {}
+        ErrorHolder() : m_is_error(false), m_err{} { }
         template<class U>
         ErrorHolder(U&& err) : m_is_error(true), m_err(std::forward<U>(err))
         {

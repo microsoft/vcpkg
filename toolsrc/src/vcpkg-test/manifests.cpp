@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
-#include <vcpkg-test/util.h>
 
+#include <vcpkg-test/util.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/paragraphs.h>
@@ -108,9 +108,12 @@ TEST_CASE ("manifest construct maximum", "[manifests]")
     REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].name == "order.white-lotus");
     REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].features.size() == 1);
     REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].features[0] == "the-ancient-ways");
-    REQUIRE_FALSE(pgh.feature_paragraphs[0]->dependencies[2].platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", ""}, {"VCPKG_TARGET_ARCHITECTURE", "arm"}}));
-    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", ""}, {"VCPKG_TARGET_ARCHITECTURE", "x86"}}));
-    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "Linux"}, {"VCPKG_TARGET_ARCHITECTURE", "x86"}}));
+    REQUIRE_FALSE(pgh.feature_paragraphs[0]->dependencies[2].platform.evaluate(
+        {{"VCPKG_CMAKE_SYSTEM_NAME", ""}, {"VCPKG_TARGET_ARCHITECTURE", "arm"}}));
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].platform.evaluate(
+        {{"VCPKG_CMAKE_SYSTEM_NAME", ""}, {"VCPKG_TARGET_ARCHITECTURE", "x86"}}));
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].platform.evaluate(
+        {{"VCPKG_CMAKE_SYSTEM_NAME", "Linux"}, {"VCPKG_TARGET_ARCHITECTURE", "x86"}}));
 
     REQUIRE(pgh.feature_paragraphs[1]->name == "zuko");
     REQUIRE(pgh.feature_paragraphs[1]->description.size() == 2);
@@ -230,6 +233,7 @@ TEST_CASE ("SourceParagraph manifest empty supports", "[manifests]")
         "name": "a",
         "version-string": "1.0",
         "supports": ""
-    })json", true);
+    })json",
+                                     true);
     REQUIRE_FALSE(m_pgh.has_value());
 }

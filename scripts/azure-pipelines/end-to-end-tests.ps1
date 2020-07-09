@@ -44,9 +44,11 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot"
 )
 
-Remove-Item -Recurse -Force $TestingRoot -ErrorAction SilentlyContinue
-mkdir $TestingRoot
-mkdir $NuGetRoot
+function Refresh-TestRoot {
+    Remove-Item -Recurse -Force $TestingRoot -ErrorAction SilentlyContinue
+    mkdir $TestingRoot
+    mkdir $NuGetRoot
+}
 
 function Require-FileExists {
     [CmdletBinding()]
@@ -66,12 +68,49 @@ function Require-FileNotExists {
         throw "'$CurrentTest' should not have created file '$File'"
     }
 }
+function Throw-IfFailed {
+    if ($LASTEXITCODE -ne 0) {
+        throw "'$CurrentTest' had a step with a nonzero exit code"
+    }
+}
+
+if (-not $IsLinux -and -not $IsMacOS)
+{
+    Refresh-TestRoot
+    # Test msbuild props and targets
+    $CurrentTest = "zlib:x86-windows-static msbuild scripts\testing\integrate-install\..."
+    Write-Host $CurrentTest
+    ./vcpkg $commonArgs install zlib:x86-windows-static --x-binarysource=clear
+    Throw-IfFailed
+    foreach ($project in @("VcpkgTriplet", "VcpkgTriplet2", "VcpkgUseStatic", "VcpkgUseStatic2")) {
+        $CurrentTest = "msbuild scripts\testing\integrate-install\$project.vcxproj"
+        ./vcpkg $commonArgs env "msbuild scripts\testing\integrate-install\$project.vcxproj /p:VcpkgRoot=$TestingRoot /p:IntDir=$TestingRoot\int\ /p:OutDir=$TestingRoot\out\ "
+        Throw-IfFailed
+        Remove-Item -Recurse -Force $TestingRoot\int
+        Remove-Item -Recurse -Force $TestingRoot\out
+    }
+    $CurrentTest = "zlib:x86-windows msbuild scripts\testing\integrate-install\..."
+    Write-Host $CurrentTest
+    ./vcpkg $commonArgs install zlib:x86-windows --x-binarysource=clear
+    Throw-IfFailed
+    foreach ($project in @("Project1", "NoProps")) {
+        $CurrentTest = "msbuild scripts\testing\integrate-install\$project.vcxproj"
+        Write-Host $CurrentTest
+        ./vcpkg $commonArgs env "msbuild scripts\testing\integrate-install\$project.vcxproj /p:VcpkgRoot=$TestingRoot /p:IntDir=$TestingRoot\int\ /p:OutDir=$TestingRoot\out\ "
+        Throw-IfFailed
+        Remove-Item -Recurse -Force $TestingRoot\int
+        Remove-Item -Recurse -Force $TestingRoot\out
+    }
+}
+
+Refresh-TestRoot
 
 # Test simple installation
 $args = $commonArgs + @("install","rapidjson","--binarycaching","--x-binarysource=clear;files,$ArchiveRoot,write;nuget,$NuGetRoot,upload")
 $CurrentTest = "./vcpkg $($args -join ' ')"
 Write-Host $CurrentTest
 ./vcpkg @args
+Throw-IfFailed
 
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 
@@ -80,6 +119,7 @@ $args = $commonArgs + @("remove", "rapidjson")
 $CurrentTest = "./vcpkg $($args -join ' ')"
 Write-Host $CurrentTest
 ./vcpkg @args
+Throw-IfFailed
 
 Require-FileNotExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 
@@ -90,6 +130,7 @@ Remove-Item -Recurse -Force $installRoot
 Remove-Item -Recurse -Force $buildtreesRoot
 Write-Host $CurrentTest
 ./vcpkg @args
+Throw-IfFailed
 
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 Require-FileNotExists "$buildtreesRoot/rapidjson/src"
@@ -101,6 +142,7 @@ Remove-Item -Recurse -Force $installRoot
 Remove-Item -Recurse -Force $buildtreesRoot
 Write-Host $CurrentTest
 ./vcpkg @args
+Throw-IfFailed
 
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 Require-FileNotExists "$buildtreesRoot/rapidjson/src"
@@ -111,11 +153,13 @@ $CurrentTest = "./vcpkg $($args -join ' ')"
 Remove-Item -Recurse -Force $installRoot -ErrorAction SilentlyContinue
 Write-Host $CurrentTest
 ./vcpkg @args
+Throw-IfFailed
 Require-FileNotExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 Require-FileNotExists "$buildtreesRoot/rapidjson/src"
 Require-FileExists "$TestingRoot/packages.config"
 
 & $(./vcpkg fetch nuget) restore $TestingRoot/packages.config -OutputDirectory "$NuGetRoot2" -Source "$NuGetRoot"
+Throw-IfFailed
 
 Remove-Item -Recurse -Force $NuGetRoot -ErrorAction SilentlyContinue
 mkdir $NuGetRoot
@@ -124,6 +168,7 @@ $args = $commonArgs + @("install","rapidjson","tinyxml","--binarycaching","--x-b
 $CurrentTest = "./vcpkg $($args -join ' ')"
 Write-Host $CurrentTest
 ./vcpkg @args
+Throw-IfFailed
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 Require-FileExists "$installRoot/$Triplet/include/tinyxml.h"
 Require-FileNotExists "$buildtreesRoot/rapidjson/src"

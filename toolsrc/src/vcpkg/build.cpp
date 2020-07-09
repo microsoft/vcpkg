@@ -11,7 +11,6 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/buildenvironment.h>
@@ -126,6 +125,9 @@ namespace vcpkg::Build
         Checks::check_exit(VCPKG_LINE_INFO, action != nullptr);
         ASSUME(action != nullptr);
         action->build_options = default_build_package_options;
+        action->build_options.editable = Editable::YES;
+        action->build_options.clean_buildtrees = CleanBuildtrees::NO;
+        action->build_options.clean_packages = CleanPackages::NO;
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, *action, binaryprovider, build_logs_recorder, status_db);
@@ -530,6 +532,7 @@ namespace vcpkg::Build
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(action.build_options.use_head_version) ? "1" : "0"},
             {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(action.build_options.allow_downloads) ? "1" : "0"},
             {"_VCPKG_DOWNLOAD_TOOL", to_string(action.build_options.download_tool)},
+            {"_VCPKG_EDITABLE", Util::Enum::to_bool(action.build_options.editable) ? "1" : "0"},
             {"FEATURES", Strings::join(";", action.feature_list)},
             {"ALL_FEATURES", all_features},
         };
@@ -951,7 +954,7 @@ namespace vcpkg::Build
             }
         }
 
-        if (!missing_fspecs.empty())
+        if (!missing_fspecs.empty() && !Util::Enum::to_bool(action.build_options.only_downloads))
         {
             return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(missing_fspecs)};
         }
@@ -980,18 +983,23 @@ namespace vcpkg::Build
         std::error_code ec;
         const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
         const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
-        auto restore = binaries_provider.try_restore(paths, action);
-        if (restore == RestoreResult::build_failed)
-            return BuildResult::BUILD_FAILED;
-        else if (restore == RestoreResult::success)
+        if (action.build_options.editable == Build::Editable::NO)
         {
-            auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
-            auto bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
-            return {BuildResult::SUCCEEDED, std::move(bcf)};
-        }
-        else
-        {
-            // missing package, proceed to build.
+            auto restore = binaries_provider.try_restore(paths, action);
+            if (restore == RestoreResult::build_failed)
+            {
+                return BuildResult::BUILD_FAILED;
+            }
+            else if (restore == RestoreResult::success)
+            {
+                auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
+                auto bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
+                return {BuildResult::SUCCEEDED, std::move(bcf)};
+            }
+            else
+            {
+                // missing package, proceed to build.
+            }
         }
 
         ExtendedBuildResult result = do_build_package_and_clean_buildtrees(paths, action);
@@ -1000,7 +1008,7 @@ namespace vcpkg::Build
         fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
 
-        if (result.code == BuildResult::SUCCEEDED)
+        if (action.build_options.editable == Build::Editable::NO && result.code == BuildResult::SUCCEEDED)
         {
             binaries_provider.push_success(paths, action);
         }

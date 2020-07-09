@@ -48,3 +48,15 @@ jobs:
       PathtoPublish: '$(System.ArtifactsDirectory)/failure-logs'
       ArtifactName: 'x64-linux port build failure logs'
     condition: failed()
+  - bash: |
+      python3 scripts/file_script.py /mnt/vcpkg-ci/installed/vcpkg/info/
+    displayName: 'Build a file list for all packages'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "x64-linux package file lists"

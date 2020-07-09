@@ -56,7 +56,10 @@ function(vcpkg_find_acquire_program VAR)
   unset(POST_INSTALL_COMMAND)
 
   vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
-  vcpkg_get_program_files_32_bit(PROGRAM_FILES_32_BIT)
+  set(PROGRAM_FILES_32_BIT $ENV{ProgramFiles\(X86\)})
+  if (NOT DEFINED PROGRAM_FILES_32_BIT)
+      set(PROGRAM_FILES_32_BIT $ENV{PROGRAMFILES})
+  endif()
 
   if(VAR MATCHES "PERL")
     set(PROGNAME perl)

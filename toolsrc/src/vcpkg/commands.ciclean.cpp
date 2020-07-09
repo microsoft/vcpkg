@@ -8,7 +8,8 @@
 
 using namespace vcpkg;
 
-namespace {
+namespace
+{
     void clear_directory(Files::Filesystem& fs, const fs::path& target)
     {
         using vcpkg::System::print2;
