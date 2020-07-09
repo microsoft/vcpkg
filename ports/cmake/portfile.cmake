@@ -7,15 +7,6 @@ vcpkg_from_gitlab(
     SHA512 5f02e05b7e6119c9c165c868d0679e0fbe5cc6b4f081a4e63a87d663c029bc378327ec042ae6bfd16bf48737bfaa5bae3be33a6dd33648e1f47cdc1a2370c366
     HEAD_REF master
 )
-if(EXISTS "${CURRENT_INSTALLED_DIR}/bin/Qt5Core.dll")
-    set(QT_IS_STATIC false)
-elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libQt5Core.so")
-    set(QT_IS_STATIC false)
-elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libQt5Core.dylib")
-    set(QT_IS_STATIC false)
-else()
-    set(QT_IS_STATIC true)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -37,16 +28,16 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
-
 vcpkg_copy_pdbs()
 
-set(_tools cmake cmake-gui ctest cpack)
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND _tools cmcldeps)
-endif()
 if(NOT VCPKG_TARGET_IS_OSX)
+    set(_tools cmake cmake-gui ctest cpack)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND _tools cmcldeps)
+    endif()
     vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
 else()
+    # On OSX everything is within a CMake.app folder
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
     file(RENAME "${CURRENT_PACKAGES_DIR}/CMake.app" "${CURRENT_PACKAGES_DIR}/tools/CMake.app")
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/CMake.app")
