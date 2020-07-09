@@ -125,7 +125,7 @@ namespace vcpkg
         Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
 
         std::error_code ec;
-        bool manifest_mode_on = args.manifest_root_dir || args.manifest_mode.value_or(false);
+        bool manifest_mode_on = args.manifest_mode.value_or(args.manifest_root_dir.has_value());
         if (args.manifest_root_dir)
         {
             manifest_root_dir = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.manifest_root_dir));
