@@ -59,7 +59,10 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-set(_tools cmake cmake-gui cmcldeps ctest cpack)
+set(_tools cmake cmake-gui ctest cpack)
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND _tools cmcldeps)
+endif()
 vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
 # foreach(_tool IN LISTS _tools)
     # set(_file "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
