@@ -5,9 +5,9 @@
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.print.h>
-#include <vcpkg/platform-expression.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphparser.h>
+#include <vcpkg/platform-expression.h>
 
 namespace vcpkg
 {
