@@ -1,5 +1,3 @@
 Source: zlib
-Version: 1.2.11
-Port-Version: 6
-Homepage: https://www.zlib.net/
+Version: 1.2.8
 Description: A compression library
