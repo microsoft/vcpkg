@@ -6,8 +6,6 @@ endif()
 
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
-include(vcpkg_common_functions)
-
 set(LIBRESSL_VERSION 2.9.1)
 set(LIBRESSL_HASH 7051911e566bb093c48a70da72c9981b870e3bf49a167ba6c934eece873084cc41221fbe3cd0c8baba268d0484070df7164e4b937854e716337540a87c214354)
 
@@ -70,7 +68,7 @@ vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
+if((VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
     file(GLOB_RECURSE LIBS "${CURRENT_PACKAGES_DIR}/*.lib")
     foreach(LIB ${LIBS})
         string(REGEX REPLACE "(.+)-[0-9]+\\.lib" "\\1.lib" LINK "${LIB}")
