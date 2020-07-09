@@ -68,7 +68,7 @@ namespace
         {
         }
         ~ArchivesBinaryProvider() = default;
-        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override {}
+        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override { }
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
@@ -198,7 +198,6 @@ namespace
         void prefetch(const VcpkgPaths& paths, const Dependencies::ActionPlan& plan) override
         {
             if (m_read_sources.empty() && m_read_configs.empty()) return;
-            if (plan.install_actions.empty()) return;
 
             auto& fs = paths.get_filesystem();
 
@@ -206,13 +205,17 @@ namespace
 
             for (auto&& action : plan.install_actions)
             {
+                if (action.build_options.editable == Build::Editable::YES) continue;
+
                 auto& spec = action.spec;
                 fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
 
                 nuget_refs.emplace_back(spec, NugetReference(action));
             }
 
-            System::print2("Attempting to fetch ", plan.install_actions.size(), " packages from nuget.\n");
+            if (nuget_refs.empty()) return;
+
+            System::print2("Attempting to fetch ", nuget_refs.size(), " packages from nuget.\n");
 
             auto packages_config = paths.buildtrees / fs::u8path("packages.config");
 
@@ -522,12 +525,12 @@ namespace
 
     struct NullBinaryProvider : IBinaryProvider
     {
-        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override {}
+        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override { }
         RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
         }
-        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override {}
+        void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override { }
         RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;

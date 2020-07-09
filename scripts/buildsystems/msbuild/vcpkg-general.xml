@@ -37,11 +37,11 @@
   </BoolProperty>
   <BoolProperty Name="VcpkgAutoLink"
                 DisplayName="Use AutoLink"
-                Description="Enables automatic linking with libraries build using Vcpkg"
+                Description="Enables automatic linking with libraries build using Vcpkg. Does not work with lld-link.exe."
                 Category="General"
                 Default="true">
   </BoolProperty>
-  <StringProperty Name="VcpkgUserTriplet"
+  <StringProperty Name="VcpkgTriplet"
                   DisplayName="Triplet"
                   Description="Specifies the triplet used by Vcpkg"
                   Category="General"

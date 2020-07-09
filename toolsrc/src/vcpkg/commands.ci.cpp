@@ -14,8 +14,8 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
-#include <vcpkg/platform-expression.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/platform-expression.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
@@ -32,7 +32,7 @@ namespace
         fs::path base_path;
 
     public:
-        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) {}
+        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) { }
 
         virtual void record_build_result(const VcpkgPaths& paths,
                                          const PackageSpec& spec,

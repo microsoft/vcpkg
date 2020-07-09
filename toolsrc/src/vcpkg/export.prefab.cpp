@@ -436,7 +436,8 @@ namespace vcpkg::Export::Prefab
 
             utils.create_directories(meta_dir, error_code);
 
-            const fs::path share_root = paths.packages / fs::u8path(Strings::format("%s_%s", name, action.spec.triplet()));
+            const fs::path share_root =
+                paths.packages / fs::u8path(Strings::format("%s_%s", name, action.spec.triplet()));
 
             utils.copy_file(share_root / "share" / name / "copyright",
                             meta_dir / "LICENSE",
@@ -518,7 +519,8 @@ namespace vcpkg::Export::Prefab
             for (const auto& triplet : triplets)
             {
                 const fs::path listfile =
-                    paths.vcpkg_dir_info / fs::u8path(Strings::format("%s_%s_%s", name, norm_version, triplet) + ".list");
+                    paths.vcpkg_dir_info /
+                    fs::u8path(Strings::format("%s_%s_%s", name, norm_version, triplet) + ".list");
                 const fs::path installed_dir = paths.packages / fs::u8path(Strings::format("%s_%s", name, triplet));
                 Checks::check_exit(VCPKG_LINE_INFO,
                                    utils.exists(listfile),
@@ -704,10 +706,9 @@ namespace vcpkg::Export::Prefab
 )");
                 }
             }
-            System::print2(System::Color::success,
-                           Strings::format("Successfuly exported %s. Checkout %s  \n",
-                                           name,
-                                           paths.prefab.generic_u8string()));
+            System::print2(
+                System::Color::success,
+                Strings::format("Successfuly exported %s. Checkout %s  \n", name, paths.prefab.generic_u8string()));
         }
     }
 }

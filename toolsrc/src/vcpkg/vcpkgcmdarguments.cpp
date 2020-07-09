@@ -1,7 +1,7 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.debug.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
@@ -297,6 +297,7 @@ namespace vcpkg
                 {PRINT_METRICS_SWITCH, &VcpkgCmdArguments::print_metrics},
                 {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
                 {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
+                {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
             };
 
             bool found = false;
@@ -578,7 +579,7 @@ namespace vcpkg
 
     void VcpkgCmdArguments::append_common_options(HelpTableFormatter& table)
     {
-        constexpr static auto opt = [](StringView arg, StringView joiner, StringView value) {
+        static auto opt = [](StringView arg, StringView joiner, StringView value) {
             return Strings::format("--%s%s%s", arg, joiner, value);
         };
 
@@ -677,6 +678,31 @@ namespace vcpkg
         }
     }
 
+    void VcpkgCmdArguments::debug_print_feature_flags() const
+    {
+        struct
+        {
+            StringView name;
+            Optional<bool> flag;
+        } flags[] = {
+            {BINARY_CACHING_FEATURE, binary_caching},
+            {MANIFEST_MODE_FEATURE, manifest_mode},
+            {COMPILER_TRACKING_FEATURE, compiler_tracking},
+        };
+
+        for (const auto& flag : flags)
+        {
+            if (auto r = flag.flag.get())
+            {
+                Debug::print("Feature flag '", flag.name, "' = ", *r ? "on" : "off", "\n");
+            }
+            else
+            {
+                Debug::print("Feature flag '", flag.name, "' unset\n");
+            }
+        }
+    }
+
     void VcpkgCmdArguments::track_feature_flag_metrics() const
     {
         struct
@@ -684,7 +710,8 @@ namespace vcpkg
             StringView flag;
             bool enabled;
         } flags[] = {
-            {BINARY_CACHING_FEATURE, binary_caching_enabled()}
+            {BINARY_CACHING_FEATURE, binary_caching_enabled()},
+            {COMPILER_TRACKING_FEATURE, compiler_tracking_enabled()},
         };
 
         for (const auto& flag : flags)
