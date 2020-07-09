@@ -16,21 +16,6 @@ elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libQt5Core.dylib")
 else()
     set(QT_IS_STATIC true)
 endif()
-# if(VCPKG_TARGET_IS_WINDOWS AND QT_IS_STATIC)
-    # set(qt_prefix "${CURRENT_INSTALLED_DIR}")
-    # set(QT_STATIC_RELEASE_LIBS "-DCMake_QT_STATIC_QWindowsIntegrationPlugin_LIBRARIES:STRING=${qt_prefix}/plugins/platforms/qwindows.lib\\\\\\\;${qt_prefix}/plugins/styles/qwindowsvistastyle.lib\\\\\\\;${qt_prefix}/lib/Qt5EventDispatcherSupport.lib\\\\\\\;${qt_prefix}/lib/Qt5FontDatabaseSupport.lib\\\\\\\;${qt_prefix}/lib/Qt5ThemeSupport.lib\\\\\\\;${qt_prefix}/lib/Qt5FontDatabaseSupport.lib\\\\\\\;${qt_prefix}/lib/Qt5AccessibilitySupport.lib\\\\\\\;${qt_prefix}/lib/Qt5WindowsUIAutomationSupport.lib\\\\\\\;${qt_prefix}/lib/Qt5Gui.lib\\\\\\\;${qt_prefix}/lib/Qt5Widgets.lib\\\\\\\;${qt_prefix}/lib/Qt5Core.lib\\\\\\\;${qt_prefix}/lib/freetype.lib\\\\\\\;${qt_prefix}/lib/libpng16.lib\\\\\\\;imm32.lib\\\\\\\;wtsapi32.lib")
-    # set(qt_prefix "${CURRENT_INSTALLED_DIR}/debug")
-    # set(QT_STATIC_DEBUG_LIBS "-DCMake_QT_STATIC_QWindowsIntegrationPlugin_LIBRARIES:STRING=${qt_prefix}/plugins/platforms/qwindowsd.lib\\\\\\\;${qt_prefix}/plugins/styles/qwindowsvistastyled.lib\\\\\\\;${qt_prefix}/lib/Qt5EventDispatcherSupportd.lib\\\\\\\;${qt_prefix}/lib/Qt5FontDatabaseSupportd.lib\\\\\\\;${qt_prefix}/lib/Qt5ThemeSupportd.lib\\\\\\\;${qt_prefix}/lib/Qt5FontDatabaseSupportd.lib\\\\\\\;${qt_prefix}/lib/Qt5AccessibilitySupportd.lib\\\\\\\;${qt_prefix}/lib/Qt5WindowsUIAutomationSupportd.lib\\\\\\\;${qt_prefix}/lib/Qt5Guid.lib\\\\\\\;${qt_prefix}/lib/Qt5Widgetsd.lib\\\\\\\;${qt_prefix}/lib/Qt5Cored.lib\\\\\\\;${qt_prefix}/lib/freetyped.lib\\\\\\\;${qt_prefix}/lib/libpng16d.lib\\\\\\\;imm32.lib\\\\\\\;wtsapi32.lib")
-# endif()
-
-# if(NOT VCPKG_TARGET_IS_WINDOWS AND QT_IS_STATIC)
-    # set(qt_prefix "${CURRENT_INSTALLED_DIR}")
-    # set(QT_STATIC_RELEASE_LIBS "-DCMake_QT_STATIC_QXcbIntegrationPlugin_LIBRARIES:STRING=${qt_prefix}/plugins/platforms/libqxcb.a\\\\\\\;${qt_prefix}/lib/libQt5XcbQpa.a\\\\\\\;${qt_prefix}/lib/libQt5ServiceSupport.a\\\\\\\;${qt_prefix}/lib/libQt5EdidSupport.a\\\\\\\;${qt_prefix}/lib/libQt5EventDispatcherSupport.a\\\\\\\;${qt_prefix}/lib/libQt5FontDatabaseSupport.a\\\\\\\;${qt_prefix}/lib/libQt5ThemeSupport.a\\\\\\\;${qt_prefix}/lib/libfontconfig.a\\\\\\\;${qt_prefix}/lib/libfreetype.a")
-    # set(qt_prefix "${CURRENT_INSTALLED_DIR}/debug")
-    # set(QT_STATIC_DEBUG_LIBS "-DCMake_QT_STATIC_QXcbIntegrationPlugin_LIBRARIES:STRING=${qt_prefix}/plugins/platforms/libqxcb.a\\\\\\\;${qt_prefix}/lib/libQt5XcbQpa.a\\\\\\\;${qt_prefix}/lib/libQt5ServiceSupport.a\\\\\\\;${qt_prefix}/lib/libQt5EdidSupport.a\\\\\\\;${qt_prefix}/lib/libQt5EventDispatcherSupport.a\\\\\\\;${qt_prefix}/lib/libQt5FontDatabaseSupport.a\\\\\\\;${qt_prefix}/lib/libQt5ThemeSupport.a\\\\\\\;${qt_prefix}/lib/libfontconfig.a\\\\\\\;${qt_prefix}/lib/libfreetyped.a")
-# endif()
-
-#CMake_QT_STATIC_QXcbIntegrationPlugin_LIBRARIES:STRING=${qt_prefix}/plugins/platforms/libqxcb.a;${qt_prefix}/lib/libQt5XcbQpa.a;${qt_prefix}/lib/libQt5ServiceSupport.a;${qt_prefix}/lib/libQt5EdidSupport.a;${qt_prefix}/lib/libQt5EventDispatcherSupport.a;${qt_prefix}/lib/libQt5FontDatabaseSupport.a;${qt_prefix}/lib/libQt5ThemeSupport.a;-lxcb-static;-lxcb;-lfontconfig;-lfreetype
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -49,10 +34,6 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_SYSTEM_LIBRHASH=OFF # not yet in VCPKG
         -DCMAKE_USE_SYSTEM_LIBUV=ON
         -DBUILD_QtDialog=ON # Just to test Qt with CMake
-    # OPTIONS_RELEASE
-        # ${QT_STATIC_RELEASE_LIBS}
-    # OPTIONS_DEBUG
-        # ${QT_STATIC_DEBUG_LIBS}
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
@@ -63,25 +44,19 @@ set(_tools cmake cmake-gui ctest cpack)
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND _tools cmcldeps)
 endif()
-vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
-# foreach(_tool IN LISTS _tools)
-    # set(_file "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    # if(EXISTS "${_file}")
-        # file(INSTALL "${_file}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        # file(REMOVE "${_file}")
-    # endif()
-    # set(_file "${CURRENT_PACKAGES_DIR}/debug/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    # if(EXISTS "${_file}")
-        # file(INSTALL "${_file}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
-        # file(REMOVE "${_file}")
-    # endif()
-# endforeach()
+if(NOT VCPKG_TARGET_IS_OSX)
+    vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
+else()
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/CMake.app" "${CURRENT_PACKAGES_DIR}/tools/CMake.app")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/CMake.app")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/debug)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/CMake.app" "${CURRENT_PACKAGES_DIR}/tools/debug/CMake.app")
+    endif()
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-
-# vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-# vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
