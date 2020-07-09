@@ -6,7 +6,6 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/base/work_queue.h>
 
 #if !defined(_WIN32)
 #include <fcntl.h>
