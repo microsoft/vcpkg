@@ -9,7 +9,7 @@
 
 namespace vcpkg::Commands::FormatManifest
 {
-    static constexpr StringLiteral OPTION_ALL = "--all";
+    static constexpr StringLiteral OPTION_ALL = "all";
 
     const CommandSwitch FORMAT_SWITCHES[] = {{OPTION_ALL, "Format all ports' manifest files."}};
 

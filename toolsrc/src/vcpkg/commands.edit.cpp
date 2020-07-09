@@ -79,9 +79,9 @@ namespace
 
 namespace vcpkg::Commands::Edit
 {
-    static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
+    static constexpr StringLiteral OPTION_BUILDTREES = "buildtrees";
 
-    static constexpr StringLiteral OPTION_ALL = "--all";
+    static constexpr StringLiteral OPTION_ALL = "all";
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
