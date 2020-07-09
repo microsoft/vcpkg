@@ -1,5 +1,9 @@
 #pragma once
 
+#include <functional>
+#include <map>
+#include <vector>
+
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
@@ -8,10 +12,6 @@
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgpaths.h>
-
-#include <functional>
-#include <map>
-#include <vector>
 
 namespace vcpkg::Graphs
 {
@@ -162,5 +162,5 @@ namespace vcpkg::Dependencies
 
     void print_plan(const ActionPlan& action_plan,
                     const bool is_recursive = true,
-                    const fs::path& default_ports_dir = "");
+                    const fs::path& default_ports_dir = {});
 }
