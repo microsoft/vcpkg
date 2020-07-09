@@ -153,7 +153,8 @@ namespace vcpkg
             }
             if (ec)
             {
-                System::printf(System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
+                System::printf(
+                    System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
                 System::printf(System::Color::error, "    %s\n", ec.message());
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
