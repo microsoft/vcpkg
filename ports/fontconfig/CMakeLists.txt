@@ -74,8 +74,8 @@ if(NOT FC_SKIP_TOOLS)
     set(FC_CACHEDIR WINDOWSTEMPDIR_FONTCONFIG_CACHE)
     set(CONFIGDIR ./fonts/conf.d)
     configure_file(fonts.conf.in ${CMAKE_SOURCE_DIR}/fonts.conf @ONLY)
-    install(FILES fonts.conf DESTINATION tools/fontconfig/fonts)
-    install(DIRECTORY conf.d DESTINATION tools/fontconfig/fonts FILES_MATCHING PATTERN "*.conf")
+    install(FILES fonts.conf DESTINATION tools/fontconfig)
+    install(DIRECTORY conf.d DESTINATION tools/fontconfig FILES_MATCHING PATTERN "*.conf")
 endif()
 
 install(
