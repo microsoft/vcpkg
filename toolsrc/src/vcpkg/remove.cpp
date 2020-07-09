@@ -206,7 +206,7 @@ namespace vcpkg::Remove
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("remove zlib zlib:x64-windows curl boost"),
+        create_example_string("remove zlib zlib:x64-windows curl boost"),
         0,
         SIZE_MAX,
         {SWITCHES, {}},
@@ -215,6 +215,12 @@ namespace vcpkg::Remove
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
+        if (paths.manifest_mode_enabled())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "vcpkg remove does not support manifest mode. In order to remove dependencies, "
+                                      "you will need to edit your manifest (vcpkg.json).");
+        }
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         StatusParagraphs status_db = database_load_check(paths);
@@ -228,7 +234,7 @@ namespace vcpkg::Remove
             }
 
             // Load ports from ports dirs
-            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
 
             specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });

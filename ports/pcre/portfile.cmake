@@ -1,21 +1,34 @@
 set(PCRE_VERSION 8.44)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.pcre.org/pub/pcre/pcre-${PCRE_VERSION}.zip"
-         "https://downloads.sourceforge.net/project/pcre/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.zip"
-    FILENAME "pcre-${PCRE_VERSION}.zip"
-    SHA512 adddec1236b25ff1c90e73835c2ba25d60a5839cbde2d6be7838a8ec099f7443dede931dc39002943243e21afea572eda71ee8739058e72235a192e4324398f0
-)
-
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
+set(EXPECTED_SHA adddec1236b25ff1c90e73835c2ba25d60a5839cbde2d6be7838a8ec099f7443dede931dc39002943243e21afea572eda71ee8739058e72235a192e4324398f0)
+set(PATCHES
         # Fix CMake Deprecation Warning concerning OLD behavior for policy CMP0026
         # Suppress MSVC compiler warnings C4703, C4146, C4308, which fixes errors
         # under x64-uwp and arm-uwp
-        pcre-8.44_suppress_cmake_and_compiler_warnings-errors.patch
+        pcre-8.44_suppress_cmake_and_compiler_warnings-errors.patch)
+
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://ftp.pcre.org/pub/pcre/pcre-${PCRE_VERSION}.zip"
+    FILENAME "pcre-${PCRE_VERSION}.zip"
+    SHA512 ${EXPECTED_SHA}
+    SILENT_EXIT
 )
+
+if (EXISTS "${ARCHIVE}")
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE ${ARCHIVE}
+        PATCHES ${PATCHES}
+    )
+else()
+    vcpkg_from_sourceforge(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO pcre/pcre
+        REF ${PCRE_VERSION}
+        FILENAME "pcre-${PCRE_VERSION}.zip"
+        SHA512 ${EXPECTED_SHA}
+        PATCHES ${PATCHES}
+    )
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -49,6 +62,55 @@ foreach(FILE ${CURRENT_PACKAGES_DIR}/include/pcre.h ${CURRENT_PACKAGES_DIR}/incl
     endif()
     file(WRITE ${FILE} "${PCRE_H}")
 endforeach()
+
+# Create pkgconfig files
+set(PACKAGE_VERSION ${PCRE_VERSION})
+set(prefix "${CURRENT_INSTALLED_DIR}")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+if(VCPKG_TARGET_IS_LINUX)
+    # Used here in .pc.in files: Libs.private: @PTHREAD_CFLAGS@
+    set(PTHREAD_CFLAGS "-pthread")
+endif()
+
+configure_file("${SOURCE_PATH}/libpcre.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre.pc" @ONLY)
+configure_file("${SOURCE_PATH}/libpcre16.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre16.pc" @ONLY)
+configure_file("${SOURCE_PATH}/libpcre32.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre32.pc" @ONLY)
+configure_file("${SOURCE_PATH}/libpcrecpp.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcrecpp.pc" @ONLY)
+configure_file("${SOURCE_PATH}/libpcreposix.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcreposix.pc" @ONLY)
+
+# debug
+set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/../include")
+
+configure_file("${SOURCE_PATH}/libpcre.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc" @ONLY)
+configure_file("${SOURCE_PATH}/libpcre16.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre16.pc" @ONLY)
+configure_file("${SOURCE_PATH}/libpcre32.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre32.pc" @ONLY)
+configure_file("${SOURCE_PATH}/libpcrecpp.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc" @ONLY)
+configure_file("${SOURCE_PATH}/libpcreposix.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc" @ONLY)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc LIBPCRE.PC)
+    string(REPLACE "-lpcre" "-lpcred" LIBPCRE.PC ${LIBPCRE.PC})
+    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc ${LIBPCRE.PC})
+    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre16.pc LIBPCRE16.PC)
+    string(REPLACE "-lpcre16" "-lpcre16d" LIBPCRE16.PC ${LIBPCRE16.PC})
+    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre16.pc ${LIBPCRE16.PC})
+    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre32.pc LIBPCRE32.PC)
+    string(REPLACE "-lpcre32" "-lpcre32d" LIBPCRE32.PC ${LIBPCRE32.PC})
+    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre32.pc ${LIBPCRE32.PC})
+    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc LIBPCRECPP.PC)
+    string(REPLACE "-lpcre -lpcrecpp" "-lpcred -lpcrecppd" LIBPCRECPP.PC ${LIBPCRECPP.PC})
+    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc ${LIBPCRECPP.PC})
+    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc LIBPCREPOSIX.PC)
+    string(REPLACE "-lpcreposix" "-lpcreposixd" LIBPCREPOSIX.PC ${LIBPCREPOSIX.PC})
+    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc ${LIBPCREPOSIX.PC})
+endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

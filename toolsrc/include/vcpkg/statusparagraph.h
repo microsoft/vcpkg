@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vcpkg/binaryparagraph.h>
-
 #include <map>
+
+#include <vcpkg/binaryparagraph.h>
 
 namespace vcpkg
 {
@@ -47,7 +47,7 @@ namespace vcpkg
 
     struct InstalledPackageView
     {
-        InstalledPackageView() noexcept : core(nullptr) {}
+        InstalledPackageView() noexcept : core(nullptr) { }
 
         InstalledPackageView(const StatusParagraph* c, std::vector<const StatusParagraph*>&& fs)
             : core(c), features(std::move(fs))

@@ -1,0 +1,13 @@
+diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
+index 5a8956456..997bb8e81 100644
+--- a/CMakeFilters.cmake	
++++ b/CMakeFilters.cmake
+@@ -100,7 +100,7 @@ option (HDF5_ENABLE_SZIP_SUPPORT "Use SZip Filter" OFF)
+ if (HDF5_ENABLE_SZIP_SUPPORT)
+   option (HDF5_ENABLE_SZIP_ENCODING "Use SZip Encoding" OFF)
+   if (NOT SZIP_USE_EXTERNAL)
+-    find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
++    find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT})
+     if (NOT SZIP_FOUND)
+       find_package (SZIP) # Legacy find
+       if (SZIP_FOUND)

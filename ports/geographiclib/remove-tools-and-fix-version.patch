@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 30875dd..4a9ec4e 100644
+index 30875dd..fa9a99f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -508,13 +508,13 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
+@@ -508,13 +508,6 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
  # The list of subdirectories to process
  add_subdirectory (src)
  add_subdirectory (include/GeographicLib)
@@ -13,13 +13,6 @@ index 30875dd..4a9ec4e 100644
 -add_subdirectory (matlab)
 -add_subdirectory (python/geographiclib)
 -add_subdirectory (examples)
-+#add_subdirectory (tools)
-+#add_subdirectory (man)
-+#add_subdirectory (doc)
-+#add_subdirectory (js)
-+#add_subdirectory (matlab)
-+#add_subdirectory (python/geographiclib)
-+#add_subdirectory (examples)
  if (MSVC AND BUILD_NETGEOGRAPHICLIB)
    if (GEOGRAPHICLIB_PRECISION EQUAL 2)
      set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
@@ -41,26 +34,21 @@ index 90e773b..1f4e061 100644
    FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
  
 diff --git a/cmake/project-config-version.cmake.in b/cmake/project-config-version.cmake.in
-index f15702f..089fa17 100644
+index f15702f..5b9a11c 100644
 --- a/cmake/project-config-version.cmake.in
 +++ b/cmake/project-config-version.cmake.in
-@@ -35,14 +35,14 @@ elseif (NOT (APPLE OR (NOT DEFINED CMAKE_SIZEOF_VOID_P) OR
+@@ -35,14 +35,6 @@ elseif (NOT (APPLE OR (NOT DEFINED CMAKE_SIZEOF_VOID_P) OR
    # since a multi-architecture library is built for that platform).
    set (REASON "sizeof(*void) =  @CMAKE_SIZEOF_VOID_P@")
    set (PACKAGE_VERSION_UNSUITABLE TRUE)
 -elseif (MSVC AND NOT (
-+#elseif (MSVC AND NOT (
-     # toolset version must be at least as great as @PROJECT_NAME@'s
+-    # toolset version must be at least as great as @PROJECT_NAME@'s
 -    MSVC_TOOLSET_VERSION GREATER_EQUAL @MSVC_TOOLSET_VERSION@
-+#    MSVC_TOOLSET_VERSION GREATER_EQUAL @MSVC_TOOLSET_VERSION@
-     # and major versions must match
+-    # and major versions must match
 -    AND MSVC_TOOLSET_MAJOR EQUAL @MSVC_TOOLSET_MAJOR@ ))
-+#    AND MSVC_TOOLSET_MAJOR EQUAL @MSVC_TOOLSET_MAJOR@ ))
-   # Reject if there's a mismatch in MSVC compiler versions
+-  # Reject if there's a mismatch in MSVC compiler versions
 -  set (REASON "MSVC_TOOLSET_VERSION = @MSVC_TOOLSET_VERSION@")
 -  set (PACKAGE_VERSION_UNSUITABLE TRUE)
-+#  set (REASON "MSVC_TOOLSET_VERSION = @MSVC_TOOLSET_VERSION@")
-+#  set (PACKAGE_VERSION_UNSUITABLE TRUE)
  elseif (NOT CMAKE_CROSSCOMPILING_STR STREQUAL "@CMAKE_CROSSCOMPILING_STR@")
    # Reject if there's a mismatch in ${CMAKE_CROSSCOMPILING}
    set (REASON "cross-compiling = @CMAKE_CROSSCOMPILING@")

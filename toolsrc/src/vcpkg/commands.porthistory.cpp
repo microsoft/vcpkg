@@ -1,11 +1,10 @@
 #include "pch.h"
 
-#include <vcpkg/commands.h>
-#include <vcpkg/help.h>
-
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/commands.h>
+#include <vcpkg/help.h>
 
 namespace vcpkg::Commands::PortHistory
 {
@@ -68,7 +67,7 @@ namespace vcpkg::Commands::PortHistory
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("history <port>"),
+        create_example_string("history <port>"),
         1,
         1,
         {},

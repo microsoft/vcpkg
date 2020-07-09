@@ -74,14 +74,14 @@ namespace vcpkg::Commands::Version
         }
     }
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("version"),
+        create_example_string("version"),
         0,
         0,
         {},
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args)
+    void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem&)
     {
         Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 

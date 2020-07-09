@@ -1,8 +1,7 @@
 #include <catch2/catch.hpp>
+
 #include <vcpkg-test/util.h>
-
 #include <vcpkg/base/sortedvector.h>
-
 #include <vcpkg/update.h>
 
 using namespace vcpkg;

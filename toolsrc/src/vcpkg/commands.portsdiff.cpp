@@ -1,14 +1,13 @@
 #include "pch.h"
 
-#include <vcpkg/commands.h>
-#include <vcpkg/help.h>
-#include <vcpkg/paragraphs.h>
-#include <vcpkg/versiont.h>
-
 #include <vcpkg/base/sortedvector.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/commands.h>
+#include <vcpkg/help.h>
+#include <vcpkg/paragraphs.h>
+#include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::PortsDiff
 {
@@ -121,7 +120,7 @@ namespace vcpkg::Commands::PortsDiff
 
     const CommandStructure COMMAND_STRUCTURE = {
         Strings::format("The argument should be a branch/tag/hash to checkout.\n%s",
-                        Help::create_example_string("portsdiff mybranchname")),
+                        create_example_string("portsdiff mybranchname")),
         1,
         2,
         {},
