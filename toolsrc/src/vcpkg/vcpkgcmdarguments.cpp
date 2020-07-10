@@ -410,7 +410,12 @@ namespace vcpkg
         auto options_copy = this->optional_command_arguments;
         for (auto&& option : command_structure.options.switches)
         {
-            const auto it = options_copy.find(option.name);
+            auto it = options_copy.find(option.name);
+            if (it == options_copy.end() && !Strings::starts_with(option.name, "x-"))
+            {
+                // Support x-<name> as a fallback to enable easier migration for users
+                it = options_copy.find(Strings::concat("x-", option.name));
+            }
             if (it != options_copy.end())
             {
                 if (it->second.has_value())
@@ -430,7 +435,12 @@ namespace vcpkg
 
         for (auto&& option : command_structure.options.settings)
         {
-            const auto it = options_copy.find(option.name);
+            auto it = options_copy.find(option.name);
+            if (it == options_copy.end() && !Strings::starts_with(option.name, "x-"))
+            {
+                // Support x-<name> as a fallback to enable easier migration for users
+                it = options_copy.find(Strings::concat("x-", option.name));
+            }
             if (it != options_copy.end())
             {
                 if (!it->second.has_value())
@@ -450,6 +460,12 @@ namespace vcpkg
                             System::Color::error, "Error: The option '%s' must be passed an argument.\n", option.name);
                         failed = true;
                     }
+                    else if (value.size() > 1)
+                    {
+                        System::printf(
+                            System::Color::error, "Error: The option '%s' can only be passed once.\n", option.name);
+                        failed = true;
+                    }
                     else
                     {
                         output.settings.emplace(option.name, value.front());
@@ -461,7 +477,12 @@ namespace vcpkg
 
         for (auto&& option : command_structure.options.multisettings)
         {
-            const auto it = options_copy.find(option.name);
+            auto it = options_copy.find(option.name);
+            if (it == options_copy.end() && !Strings::starts_with(option.name, "x-"))
+            {
+                // Support x-<name> as a fallback to enable easier migration for users
+                it = options_copy.find(Strings::concat("x-", option.name));
+            }
             if (it != options_copy.end())
             {
                 if (!it->second.has_value())
@@ -587,6 +608,8 @@ namespace vcpkg
         table.format("", "(default: " + format_environment_variable("VCPKG_DEFAULT_TRIPLET") + ')');
         table.format(opt(OVERLAY_PORTS_ARG, "=", "<path>"), "Specify directories to be used when searching for ports");
         table.format(opt(OVERLAY_TRIPLETS_ARG, "=", "<path>"), "Specify directories containing triplets files");
+        table.format(opt(BINARY_SOURCES_ARG, "=", "<path>"),
+                     "Add sources for binary caching. See 'vcpkg help binarycaching'");
         table.format(opt(DOWNLOADS_ROOT_DIR_ARG, "=", "<path>"), "Specify the downloads root directory");
         table.format("", "(default: " + format_environment_variable("VCPKG_DOWNLOADS") + ')');
         table.format(opt(VCPKG_ROOT_DIR_ARG, " ", "<path>"), "Specify the vcpkg root directory");
