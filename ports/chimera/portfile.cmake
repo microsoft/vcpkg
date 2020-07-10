@@ -4,10 +4,12 @@ set(CHIMERA_VERSION "5.2.1")
 set(PCRE_VERSION "8.41")
 
 # download hyperscan source code which is required by and also contains chimera
-vcpkg_download_distfile(ARCHIVE_HYPERSCAN
-    URLS "https://github.com/intel/hyperscan/archive/d79973efb1fcf5ed338122882c1f896829767fb6.zip"
-    FILENAME "d79973efb1fcf5ed338122882c1f896829767fb6.zip"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO intel/hyperscan
+    REF d79973efb1fcf5ed338122882c1f896829767fb6
     SHA512 8bf6e8c323ab3c4b3f26d871a9f89e666edba598925c99ad2f14b3e849792c51cb87bc30ad54008ec813603a9a7c94d689ad4344e1a45c10b2a891e434a678f3
+    HEAD_REF master
 )
 # extract hyperscan source code which contains chimera code in a sub folder
 vcpkg_extract_source_archive_ex(
