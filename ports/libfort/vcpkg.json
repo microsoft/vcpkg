@@ -1,0 +1,7 @@
+{
+  "name": "libfort",
+  "version-string": "0.4.1",
+  "description": "A simple crossplatform library to create formatted text tables",
+  "homepage": "https://github.com/seleznevae/libfort",
+  "license": "MIT"
+}

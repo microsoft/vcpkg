@@ -5,7 +5,7 @@ if ("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_OSX)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here
+    "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
     "mpi"          PARAVIEW_USE_MPI             #untested
     "vtkm"         PARAVIEW_USE_VTKM
@@ -23,8 +23,6 @@ vcpkg_from_github(
         paraview_build.patch
         remove_duplicates.patch # Missed something in the above patch
         cgns.patch
-        qt_plugin.patch # Remove with Qt version > 5.14
-        qt_static_plugins.patch # Remove with Qt version > 5.14
         python_include.patch
         python_wrapper.patch
         add-tools-option.patch
@@ -34,8 +32,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND VisItPatches removedoublesymbols.patch)
 endif()
 
-#The following two dependencies should probably be their own port
-#but require additional patching in paraview to make it work.
+#The following two dependencies should probably be their own port 
+#but require additional patching in paraview to make it work. 
 
 #Get VisItBridge Plugin
 vcpkg_from_gitlab(
@@ -44,8 +42,8 @@ vcpkg_from_gitlab(
     REPO paraview/visitbridge
     REF c2605b5c3115bc4869c76a0d8bfdd8939b59f283
     SHA512 6d2c1d6e1cd345547926938451755e7a8be5dabd89e18a2ceb419db16c5b29f354554a5130eb365b7e522d655370fd4766953813ff530c06e4851fe26104ce58
-    PATCHES
-        VisIt_Build.patch
+    PATCHES 
+        VisIt_Build.patch        
         #removeunusedsymbols.patch # These also get remove in master of ParaView
         ${VisItPatches}
 )
@@ -67,7 +65,7 @@ if("python" IN_LIST FEATURES)
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
         )
-
+  
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
@@ -84,15 +82,15 @@ vcpkg_configure_cmake(
         -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
         -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION:BOOL=OFF
         -DPARAVIEW_USE_QTHELP:BOOL=OFF
-
+        
         #A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
-
+    
         # Workarounds for CMake issues
         -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
-        -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian.
+        -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
         ${ADDITIONAL_OPTIONS}
-
+       
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
 )
 if(CMAKE_HOST_UNIX)
@@ -122,7 +120,7 @@ set(TOOLS   paraview
             smTestDriver
             vtkProcessXML
             vtkWrapClientServer)
-
+            
 foreach(tool ${TOOLS})
     # Remove debug tools
     set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
@@ -137,7 +135,7 @@ foreach(tool ${TOOLS})
     if(EXISTS ${filename})
         file(REMOVE ${filename})
     endif()
-
+    
     # Move release tools
     set(filename ${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
     if(EXISTS ${filename})
@@ -165,7 +163,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
             file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/${name}" "${CURRENT_PACKAGES_DIR}/debug/lib/${name}")
         endif()
     endmacro()
-
+    
     set(to_move Lib paraview-${VERSION} paraview-config)
     foreach(name ${to_move})
         move_bin_to_lib(${name})
