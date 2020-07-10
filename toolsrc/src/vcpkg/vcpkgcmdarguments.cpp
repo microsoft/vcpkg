@@ -181,13 +181,17 @@ namespace vcpkg
     static bool try_parse_argument_as_option(StringView option, StringView argument, T& place, F parser)
     {
         // remove the first two '-'s
-        const auto arg = argument.substr(2);
+        auto arg = argument.substr(2);
         if (arg.size() <= option.size() + 1)
         {
             // it is impossible for this argument to be this option
             return false;
         }
 
+        if (Strings::starts_with(arg, "x-") && !Strings::starts_with(option, "x-"))
+        {
+            arg = arg.substr(2);
+        }
         if (Strings::starts_with(arg, option) && arg.byte_at_index(option.size()) == '=')
         {
             parser(arg.substr(option.size() + 1), option, place);
@@ -197,21 +201,33 @@ namespace vcpkg
         return false;
     }
 
+    static bool equals_modulo_experimental(StringView arg, StringView option)
+    {
+        if (Strings::starts_with(arg, "x-") && !Strings::starts_with(option, "x-"))
+        {
+            return arg.substr(2) == option;
+        }
+        else
+        {
+            return arg == option;
+        }
+    }
+
     // returns true if this does parse this argument as this option
     // REQUIRES: Strings::starts_with(argument, "--");
     template<class T>
     static bool try_parse_argument_as_switch(StringView option, StringView argument, T& place)
     {
         // remove the first two '-'s
-        const auto arg = argument.substr(2);
+        auto arg = argument.substr(2);
 
-        if (arg == option)
+        if (equals_modulo_experimental(arg, option))
         {
             parse_switch(true, option, place);
             return true;
         }
 
-        if (Strings::starts_with(arg, "no-") && arg.substr(3) == option)
+        if (Strings::starts_with(arg, "no-") && equals_modulo_experimental(arg.substr(3), option))
         {
             parse_switch(false, option, place);
             return true;
