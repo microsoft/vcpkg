@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-storage-cpp
-    REF v7.3.0
-    SHA512 4297fa9e70fc4f4dde63f78f21714c2f9f6a9a63529cc3595f61e08659ea86a3590dbf9e99ee67572099c6bb7cc5b376bba6f29fbf59c5a1b705d841bb9a32e4
+    REF v7.5.0
+    SHA512 83eabcaf2114c8af1cabbc96b6ef2b57c934a06f68e7a870adf336feaa19edd57aedaf8507d5c40500e46d4e77f5059f9286e319fe7cadeb9ffc8fa018fb030c
     HEAD_REF master
 )
 
@@ -25,7 +25,7 @@ vcpkg_install_cmake()
 
 file(INSTALL
     ${SOURCE_PATH}/LICENSE.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-storage-cpp RENAME copyright)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include)
 

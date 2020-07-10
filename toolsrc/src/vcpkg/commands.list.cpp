@@ -4,6 +4,7 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::List
 {
@@ -12,16 +13,25 @@ namespace vcpkg::Commands::List
 
     static void do_print(const StatusParagraph& pgh, const bool full_desc)
     {
+        auto full_version = VersionT(pgh.package.version, pgh.package.port_version).to_string();
         if (full_desc)
         {
-            System::printf("%-50s %-16s %s\n", pgh.package.displayname(), pgh.package.version, pgh.package.description);
+            System::printf("%-50s %-16s %s\n",
+                           pgh.package.displayname(),
+                           full_version,
+                           Strings::join("\n    ", pgh.package.description));
         }
         else
         {
+            std::string description;
+            if (!pgh.package.description.empty())
+            {
+                description = pgh.package.description[0];
+            }
             System::printf("%-50s %-16s %s\n",
                            vcpkg::shorten_text(pgh.package.displayname(), 50),
-                           vcpkg::shorten_text(pgh.package.version, 16),
-                           vcpkg::shorten_text(pgh.package.description, 51));
+                           vcpkg::shorten_text(full_version, 16),
+                           vcpkg::shorten_text(description, 51));
         }
     }
 
@@ -32,7 +42,7 @@ namespace vcpkg::Commands::List
     const CommandStructure COMMAND_STRUCTURE = {
         Strings::format(
             "The argument should be a substring to search for, or no argument to display all installed libraries.\n%s",
-            Help::create_example_string("list png")),
+            create_example_string("list png")),
         0,
         1,
         {LIST_SWITCHES, {}},

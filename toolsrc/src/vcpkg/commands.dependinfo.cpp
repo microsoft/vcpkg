@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#include <vector>
+
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
@@ -9,7 +11,6 @@
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
-#include <vector>
 
 using vcpkg::Dependencies::ActionPlan;
 using vcpkg::Dependencies::InstallPlanAction;
@@ -227,7 +228,7 @@ namespace vcpkg::Commands::DependInfo
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("depend-info sqlite3"),
+        create_example_string("depend-info sqlite3"),
         1,
         1,
         {DEPEND_SWITCHES, DEPEND_SETTINGS},
@@ -251,7 +252,7 @@ namespace vcpkg::Commands::DependInfo
             Input::check_triplet(spec.package_spec.triplet(), paths);
         }
 
-        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 

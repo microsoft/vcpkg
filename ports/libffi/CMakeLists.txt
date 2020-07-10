@@ -21,13 +21,13 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "ARM")
     set(TARGET ARM)
 elseif(CMAKE_SYSTEM_NAME MATCHES "BSD" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_FREEBSD)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(TARGET ARM_WIN32)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(TARGET ARM_WIN64)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(TARGET X86_WIN32)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(TARGET X86_WIN64)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin"  AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_DARWIN)
@@ -120,7 +120,12 @@ macro(add_assembly ASMFILE)
             COMMAND ${CMAKE_C_COMPILER} /nologo /EP /I. /Iinclude /I${CMAKE_CURRENT_SOURCE_DIR}/include "${ASMFILE_FULL}"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
             OUTPUT_FILE ${ARCH_ASM_NAME}.asm
+            RESULT_VARIABLE retcode
         )
+
+        if(NOT ${retcode} STREQUAL "0")
+            message(FATAL_ERROR "Unable to assemble, exit code: '${retcode}'.")
+        endif()
 
         # Produced *.asm file could be just added to sources.
         # It works in x64 mode, but for some strange reason MASM returns error code when in x86,
@@ -129,7 +134,12 @@ macro(add_assembly ASMFILE)
         execute_process(
             COMMAND ${ARCH_ASSEMBLER} ${ARCH_ASM_NAME}.asm
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            RESULT_VARIABLE retcode
         )
+
+        if(NOT ${retcode} STREQUAL "0")
+            message(FATAL_ERROR "Unable to compile assembly, exit code: '${retcode}'.")
+        endif()
 
         list(APPEND FFI_SOURCES ${CMAKE_BINARY_DIR}/${ARCH_ASM_NAME}.obj)
     else()
@@ -176,8 +186,6 @@ include(CMakePackageConfigHelpers)
 configure_package_config_file(${PROJECT_NAME}Config.cmake.in
      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
      INSTALL_DESTINATION share/${PROJECT_NAME})
-# Disable check for same 32/64bit-ness in libffiConfigVersion.cmake by setting CMAKE_SIZEOF_VOID_P
-set (CMAKE_SIZEOF_VOID_P "")
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${VERSION}
