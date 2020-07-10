@@ -1,21 +1,15 @@
 vcpkg_fail_port_install(ON_TARGET "Windows")
 
-set(CHIMERA_VERSION "5.2.1")
+set(CHIMERA_VERSION "5.3.0")
 set(PCRE_VERSION "8.41")
 
-# download hyperscan source code which is required by and also contains chimera
+# checkout hyperscan source code which is required by and also contains chimera
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO intel/hyperscan
-    REF d79973efb1fcf5ed338122882c1f896829767fb6
-    SHA512 8bf6e8c323ab3c4b3f26d871a9f89e666edba598925c99ad2f14b3e849792c51cb87bc30ad54008ec813603a9a7c94d689ad4344e1a45c10b2a891e434a678f3
-    HEAD_REF master
-)
-# extract hyperscan source code which contains chimera code in a sub folder
-vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH CHIMERA_SOURCE_PATH
-    ARCHIVE ${ARCHIVE_HYPERSCAN}
-    REF ${CHIMERA_VERSION}
+    REPO intel/hyperscan
+    REF c00683d73916e39f01b0d418f686c8b5c379159c
+    SHA512 3c4d52706901acc9ef4c3d12b0e5b2956f4e6bce13f6828a4ba3b736c05ffacb1d733ef9c226988ca80220584525f9cb6dcfe4914ced6cc34ae6a0a45975afb5
+    HEAD_REF master
 )
 
 # downlaod pcre-8.41 source code which is required by chimera
