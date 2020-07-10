@@ -42,13 +42,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if(LIBRESSL_APPS)
-    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-        set(EXECUTABLE_SUFFIX .exe)
-    endif()
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl${EXECUTABLE_SUFFIX}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/ocspcheck${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/openssl/ocspcheck${EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
+    vcpkg_copy_tools(TOOL_NAMES openssl ocspcheck)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
