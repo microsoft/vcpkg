@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9cfd06c..a4dea06 100644
+index 9cfd06c..45d73a6 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -14,6 +14,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
@@ -55,6 +55,21 @@ index 9cfd06c..a4dea06 100644
  endif (OpenMVG_USE_OPENMP)
  
  # ==============================================================================
+@@ -160,10 +157,10 @@ endif()
+ # ==============================================================================
+ # IMAGE IO detection
+ # ==============================================================================
+-find_package(JPEG QUIET)
+-find_package(PNG QUIET)
+-find_package(TIFF QUIET)
+-
++find_package(JPEG REQUIRED)
++find_package(PNG REQUIRED)
++find_package(TIFF REQUIRED)
++find_package(vlfeat REQUIRED)
+ # Folders
+ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+ 
 @@ -182,6 +179,7 @@ if (OpenMVG_BUILD_OPENGL_EXAMPLES)
    set_property(TARGET glfw PROPERTY FOLDER OpenMVG/3rdParty/glfw)
  endif (OpenMVG_BUILD_OPENGL_EXAMPLES)
@@ -331,7 +346,7 @@ index 8a69c23..6a81580 100644
          IF(DEFINED CLP_LIBRARY AND DEFINED CLPSOLVER_LIBRARY AND DEFINED OSICLP_LIBRARY)
            SET(CLP_LIBRARIES ${CLP_LIBRARY} ${CLPSOLVER_LIBRARY} ${OSICLP_LIBRARY})
 diff --git a/src/cmakeFindModules/OpenMVGConfig.cmake.in b/src/cmakeFindModules/OpenMVGConfig.cmake.in
-index e7dfbfd..31ec90c 100644
+index e7dfbfd..c01910d 100644
 --- a/src/cmakeFindModules/OpenMVGConfig.cmake.in
 +++ b/src/cmakeFindModules/OpenMVGConfig.cmake.in
 @@ -19,7 +19,7 @@
@@ -343,7 +358,7 @@ index e7dfbfd..31ec90c 100644
  # unsets all public (designed to be used externally) variables and reports
  # error message at priority depending upon [REQUIRED/QUIET/<NONE>] argument.
  macro(OPENMVG_REPORT_NOT_FOUND REASON_MSG)
-@@ -59,9 +59,18 @@ set(CALLERS_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
+@@ -59,9 +59,19 @@ set(CALLERS_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
  # script.
  set(CMAKE_MODULE_PATH ${CURRENT_CONFIG_INSTALL_DIR})
  
@@ -355,6 +370,7 @@ index e7dfbfd..31ec90c 100644
 +find_dependency(Threads)
 +find_dependency(cereal)
 +find_dependency(Ceres)
++find_dependency(vlfeat)
 +
  # Build the absolute root install directory as a relative path
  get_filename_component(CURRENT_ROOT_INSTALL_DIR
@@ -363,6 +379,97 @@ index e7dfbfd..31ec90c 100644
  if (NOT EXISTS ${CURRENT_ROOT_INSTALL_DIR})
    OPENMVG_REPORT_NOT_FOUND(
      "OpenMVG install root: ${CURRENT_ROOT_INSTALL_DIR}, "
+diff --git a/src/nonFree/sift/CMakeLists.txt b/src/nonFree/sift/CMakeLists.txt
+index 402a2d8..a9f2790 100644
+--- a/src/nonFree/sift/CMakeLists.txt
++++ b/src/nonFree/sift/CMakeLists.txt
+@@ -1,33 +1,33 @@
+ 
+-# libs should be static
+-set(BUILD_SHARED_LIBS OFF)
+-
+-# use PIC code for link into shared lib
+-if(UNIX)
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+-endif(UNIX)
+-
+-if(NOT USE_SSE2)
+-  add_definitions(-DVL_DISABLE_SSE2)
+-endif()
+-
+-add_definitions(-DVL_DISABLE_THREADS)
+-
+-include_directories(./vl)
+-set(FEATS
+-  vl/generic.c
+-  vl/imopv_sse2.c
+-  vl/sift.c
+-  vl/imopv.c
+-  vl/mathop_sse2.c
+-  vl/sift.c
+-  vl/host.c
+-  vl/mathop.c
+-  vl/random.c)
+-set_source_files_properties(${FEATS} PROPERTIES LANGUAGE C)
+-add_library(vlsift ${FEATS})
+-install(TARGETS vlsift DESTINATION lib EXPORT openMVG-targets)
+-set_property(TARGET vlsift PROPERTY FOLDER OpenMVG/nonFree)
++## libs should be static
++#set(BUILD_SHARED_LIBS OFF)
++#
++## use PIC code for link into shared lib
++#if(UNIX)
++#  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
++#endif(UNIX)
++#
++#if(NOT USE_SSE2)
++#  add_definitions(-DVL_DISABLE_SSE2)
++#endif()
++#
++#add_definitions(-DVL_DISABLE_THREADS)
++#
++#include_directories(./vl)
++#set(FEATS
++#  vl/generic.c
++#  vl/imopv_sse2.c
++#  vl/sift.c
++#  vl/imopv.c
++#  vl/mathop_sse2.c
++#  vl/sift.c
++#  vl/host.c
++#  vl/mathop.c
++#  vl/random.c)
++#set_source_files_properties(${FEATS} PROPERTIES LANGUAGE C)
++#add_library(vlsift ${FEATS})
++#install(TARGETS vlsift DESTINATION lib EXPORT openMVG-targets)
++#set_property(TARGET vlsift PROPERTY FOLDER OpenMVG/nonFree)
+ install(
+   DIRECTORY .
+   DESTINATION include/openMVG_dependencies/nonFree/sift
+diff --git a/src/nonFree/sift/SIFT_describer.hpp b/src/nonFree/sift/SIFT_describer.hpp
+index cd800b0..20e9c8e 100644
+--- a/src/nonFree/sift/SIFT_describer.hpp
++++ b/src/nonFree/sift/SIFT_describer.hpp
+@@ -17,9 +17,7 @@
+ #include <iostream>
+ #include <numeric>
+ 
+-extern "C" {
+-#include "nonFree/sift/vl/sift.h"
+-}
++#include <sift.h>
+ 
+ namespace openMVG {
+ namespace features {
+@@ -174,7 +172,7 @@ public:
+       const int nkeys = vl_sift_get_nkeypoints(filt);
+ 
+       // Update gradient before launching parallel extraction
+-      vl_sift_update_gradient(filt);
++      update_gradient(filt);
+ 
+       #ifdef OPENMVG_USE_OPENMP
+       #pragma omp parallel for private(descr, descriptor)
 diff --git a/src/openMVG/linearProgramming/CMakeLists.txt b/src/openMVG/linearProgramming/CMakeLists.txt
 index cc5212f..acc57dd 100644
 --- a/src/openMVG/linearProgramming/CMakeLists.txt
@@ -425,6 +532,80 @@ index 06baee7..47255be 100644
    target_include_directories(openMVG_numeric PUBLIC
      $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include/openMVG/third_party/eigen/>)
  else()
+diff --git a/src/openMVG_Samples/describe_and_match_GUI/CMakeLists.txt b/src/openMVG_Samples/describe_and_match_GUI/CMakeLists.txt
+index 862ffc7..326fc9a 100644
+--- a/src/openMVG_Samples/describe_and_match_GUI/CMakeLists.txt
++++ b/src/openMVG_Samples/describe_and_match_GUI/CMakeLists.txt
+@@ -18,7 +18,7 @@ if (OpenMVG_BUILD_GUI_SOFTWARES)
+       add_executable( openMVG_sample_describe_and_match_GUI WIN32 ${FEATURES_PAIR_DEMO_SRCS} ${FEATURES_PAIR_DEMO_HDRS} )
+     endif( APPLE )
+ 
+-    target_link_libraries( openMVG_sample_describe_and_match_GUI Qt5::Widgets openMVG_features openMVG_image openMVG_matching vlsift )
++    target_link_libraries( openMVG_sample_describe_and_match_GUI Qt5::Widgets openMVG_features openMVG_image openMVG_matching unofficial::vlfeat::vl )
+ 
+     set_target_properties( openMVG_sample_describe_and_match_GUI PROPERTIES CXX_STANDARD 11)
+ 
+diff --git a/src/openMVG_Samples/features_image_matching/CMakeLists.txt b/src/openMVG_Samples/features_image_matching/CMakeLists.txt
+index 18fb385..d44ffce 100644
+--- a/src/openMVG_Samples/features_image_matching/CMakeLists.txt
++++ b/src/openMVG_Samples/features_image_matching/CMakeLists.txt
+@@ -5,7 +5,7 @@ target_link_libraries(openMVG_sample_image_matching
+   openMVG_features
+   openMVG_matching
+   ${STLPLUS_LIBRARY}
+-  vlsift)
++  unofficial::vlfeat::vl)
+ target_compile_definitions(openMVG_sample_image_matching
+   PRIVATE -DTHIS_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
+ 
+diff --git a/src/openMVG_Samples/features_repeatability/CMakeLists.txt b/src/openMVG_Samples/features_repeatability/CMakeLists.txt
+index fd2b7c6..91f2766 100644
+--- a/src/openMVG_Samples/features_repeatability/CMakeLists.txt
++++ b/src/openMVG_Samples/features_repeatability/CMakeLists.txt
+@@ -6,7 +6,7 @@ target_link_libraries(openMVG_sample_main_features_repeatability_dataset
+   openMVG_matching
+   openMVG_system
+   openMVG_multiview
+-  vlsift
++  unofficial::vlfeat::vl
+   ${STLPLUS_LIBRARY})
+ 
+ set_property(TARGET openMVG_sample_main_features_repeatability_dataset PROPERTY FOLDER OpenMVG/Samples)
+diff --git a/src/software/Localization/CMakeLists.txt b/src/software/Localization/CMakeLists.txt
+index 2f60393..0d57d0a 100644
+--- a/src/software/Localization/CMakeLists.txt
++++ b/src/software/Localization/CMakeLists.txt
+@@ -11,7 +11,7 @@ target_link_libraries(openMVG_main_SfM_Localization
+   openMVG_sfm
+   openMVG_exif
+   ${STLPLUS_LIBRARY}
+-  vlsift
++  unofficial::vlfeat::vl
+   )
+ 
+ # Installation rules
+diff --git a/src/software/SfM/CMakeLists.txt b/src/software/SfM/CMakeLists.txt
+index 013a6c8..f38daa9 100644
+--- a/src/software/SfM/CMakeLists.txt
++++ b/src/software/SfM/CMakeLists.txt
+@@ -44,7 +44,7 @@ target_link_libraries(openMVG_main_ComputeFeatures
+     openMVG_multiview
+     openMVG_sfm
+     ${STLPLUS_LIBRARY}
+-    vlsift
++    unofficial::vlfeat::vl
+ )
+ if (MSVC)
+   set_target_properties(openMVG_main_ComputeFeatures PROPERTIES COMPILE_FLAGS "/bigobj")
+@@ -235,7 +235,7 @@ if(OpenMVG_USE_OPENCV)
+     openMVG_multiview
+     openMVG_sfm
+     ${STLPLUS_LIBRARY}
+-    vlsift
++    unofficial::vlfeat::vl
+     ${OpenCV_LIBS})
+   target_include_directories(openMVG_main_ComputeFeatures_OpenCV PRIVATE ${OpenCV_INCLUDE_DIRS})
+ 
 diff --git a/src/software/SfM/SfM_GlobalPipeline.py.in b/src/software/SfM/SfM_GlobalPipeline.py.in
 index 42405a4..28b0246 100644
 --- a/src/software/SfM/SfM_GlobalPipeline.py.in
