@@ -68,9 +68,6 @@ if("python" IN_LIST FEATURES)
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
-string(APPEND VCPKG_C_FLAGS " -DH5_USE_110_API")
-string(APPEND VCPKG_CXX_FLAGS " -DH5_USE_110_API")
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
