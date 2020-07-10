@@ -481,7 +481,7 @@ namespace vcpkg
             }
         }
 
-        if (!options_copy.empty() || !switches_copy.empty())
+        if (!switches_copy.empty())
         {
             System::printf(System::Color::error, "Unknown option(s) for command '%s':\n", this->command);
             for (auto&& switch_ : switches_copy)
