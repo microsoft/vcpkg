@@ -127,7 +127,6 @@ elseif(CMD MATCHES "^CREATE$")
         message(FATAL_ERROR "Portfile already exists: '${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}\\portfile.cmake'")
     endif()
     
-    # Download with git needn't SHA512
     if (NOT DOWNLOAD_WITH_GIT)
         if (DOWNLOAD_WITH_GITHUB)
             string(REGEX REPLACE "(\\.(zip|gz|tar|tgz|bz2))+\$" "" TMP_FILENAME ${FILENAME})
