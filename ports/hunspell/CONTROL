@@ -1,7 +1,9 @@
 Source: hunspell
-Version: 1.7.0-1
+Version: 1.7.0
+Port-Version: 2
 Homepage: https://github.com/hunspell/hunspell
 Description: The most popular spellchecking library.
 
 Feature: tools
 Description: Build hunspell tools
+Supports: windows
