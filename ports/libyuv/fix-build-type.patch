@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 50442cd..6358fd0 100644
+index 50442cd..fdc82f2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -28,25 +28,35 @@ LIST ( SORT			ly_unittest_sources )
+@@ -28,24 +28,32 @@ LIST ( SORT			ly_unittest_sources )
  INCLUDE_DIRECTORIES( BEFORE ${ly_inc_dir} )
  
  # this creates the static library (.a)
@@ -32,29 +32,17 @@ index 50442cd..6358fd0 100644
 -  include_directories( ${JPEG_INCLUDE_DIR} )
 -  target_link_libraries( ${ly_lib_shared} PUBLIC ${JPEG_LIBRARY} )
 -  target_link_libraries( yuvconvert ${JPEG_LIBRARY} )
--  add_definitions( -DHAVE_JPEG )
 +  include_directories( ${JPEG_INCLUDE_DIR})
 +  if( BUILD_SHARED_LIBS)
 +    target_link_libraries(${ly_lib_shared} PUBLIC ${JPEG_LIBRARY})
-+    target_compile_definitions(${ly_lib_shared} PUBLIC HAVE_JPEG)
 +  else()
 +    target_link_libraries(${ly_lib_static} PUBLIC ${JPEG_LIBRARY})
-+    target_compile_definitions(${ly_lib_static} PUBLIC HAVE_JPEG)
 +  endif()
 +  target_link_libraries(yuvconvert ${JPEG_LIBRARY})
-+  target_compile_definitions(yuvconvert PUBLIC HAVE_JPEG)
+   add_definitions( -DHAVE_JPEG )
  endif()
  
- if(TEST)
-@@ -73,6 +83,7 @@ if(TEST)
-   endif()
-   if (JPEG_FOUND)
-     target_link_libraries(libyuv_unittest ${JPEG_LIBRARY})
-+    target_compile_definitions(libyuv_unittest PUBLIC HAVE_JPEG)
-   endif()
- 
-   if(NACL AND NACL_LIBC STREQUAL "newlib")
-@@ -88,11 +99,13 @@ endif()
+@@ -88,11 +96,13 @@ endif()
  
  
  # install the conversion tool, .so, .a, and all the header files
