@@ -250,6 +250,7 @@ int main(const int argc, const char* const* const argv)
                        "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
     }
 
+    args.debug_print_feature_flags();
     args.track_feature_flag_metrics();
 
     if (Debug::g_debugging)

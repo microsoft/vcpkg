@@ -404,7 +404,7 @@ namespace vcpkg::Commands::CI
         if (args.binary_caching_enabled())
         {
             binaryproviderStorage =
-                create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+                create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
         }
 
         IBinaryProvider& binaryprovider = binaryproviderStorage ? *binaryproviderStorage : null_binary_provider();
