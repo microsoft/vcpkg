@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <algorithm>
+
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
@@ -285,7 +286,7 @@ namespace vcpkg::Commands::CI
     }
 
     static void include_all_supported_features_for_triplet(const CMakeVars::CMakeVarProvider& var_provider,
-                                      const InstallPlanAction* install_plan)
+                                                           const InstallPlanAction* install_plan)
     {
         auto&& scfl = install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
         const auto& supports_expression = scfl.source_control_file->feature_paragraphs;
