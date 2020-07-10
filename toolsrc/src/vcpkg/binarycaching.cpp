@@ -996,10 +996,10 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
 void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
 {
     HelpTableFormatter tbl;
-    tbl.text(
-        "Vcpkg can cache compiled packages to accelerate restoration on a single machine or across the network."
-        " This functionality is currently enable by default and can be disabled by either passing `--no-binarycaching` "
-        "to every vcpkg command line or setting the environment variable `VCPKG_FEATURE_FLAGS` to `-binarycaching`.");
+    tbl.text("Vcpkg can cache compiled packages to accelerate restoration on a single machine or across the network."
+             " This functionality is currently enabled by default and can be disabled by either passing "
+             "`--no-binarycaching` to every vcpkg command line or setting the environment variable "
+             "`VCPKG_FEATURE_FLAGS` to `-binarycaching`.");
     tbl.blank();
     tbl.blank();
     tbl.text(
@@ -1028,9 +1028,10 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
     if (auto p = maybe_cachepath.get())
     {
         auto p_preferred = *p;
-        System::print2("\nBased on your system settings, the default path to store binaries is\n    ",
-                       p_preferred.make_preferred().u8string(),
-                       '\n');
+        System::print2(
+            "\nBased on your system settings, the default path to store binaries is\n    ",
+            p_preferred.make_preferred().u8string(),
+            "\n\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.");
     }
 }
 

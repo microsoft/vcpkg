@@ -135,7 +135,20 @@ namespace vcpkg
         static ExpectedS<fs::path> s_home = []() -> ExpectedS<fs::path> {
             auto maybe_home = System::get_environment_variable("LOCALAPPDATA");
             if (!maybe_home.has_value() || maybe_home.get()->empty())
-                return {"unable to read %LOCALAPPDATA%", ExpectedRightTag{}};
+            {
+                // Consult %APPDATA% as a workaround for Service accounts
+                // Microsoft/vcpkg#12285
+                maybe_home = System::get_environment_variable("APPDATA");
+                if (!maybe_home.has_value() || maybe_home.get()->empty())
+                {
+                    return {"unable to read %LOCALAPPDATA% or %APPDATA%", ExpectedRightTag{}};
+                }
+
+                auto p = fs::u8path(*maybe_home.get()).parent_path();
+                p /= "Local";
+                if (!p.is_absolute()) return {"%APPDATA% was not an absolute path", ExpectedRightTag{}};
+                return {std::move(p), ExpectedLeftTag{}};
+            }
 
             auto p = fs::u8path(*maybe_home.get());
             if (!p.is_absolute()) return {"%LOCALAPPDATA% was not an absolute path", ExpectedRightTag{}};
