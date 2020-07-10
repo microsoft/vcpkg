@@ -1,5 +1,5 @@
 diff --git a/Components/Overlay/CMakeLists.txt b/Components/Overlay/CMakeLists.txt
-index 1cea873..a3cb4aa 100644
+index 1cea873..d3e756e 100644
 --- a/Components/Overlay/CMakeLists.txt
 +++ b/Components/Overlay/CMakeLists.txt
 @@ -19,12 +19,8 @@ list(APPEND HEADER_FILES
@@ -17,7 +17,7 @@ index 1cea873..a3cb4aa 100644
  else()
      list(REMOVE_ITEM SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreImGuiOverlay.cpp")
  endif()
-@@ -32,7 +28,7 @@ endif()
+@@ -32,13 +28,13 @@ endif()
  # setup target
  add_library(OgreOverlay ${OGRE_COMP_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES})
  set_target_properties(OgreOverlay PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
@@ -26,14 +26,10 @@ index 1cea873..a3cb4aa 100644
  target_include_directories(OgreOverlay PUBLIC 
    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
    $<INSTALL_INTERFACE:include/OGRE/Overlay>
-@@ -58,8 +54,8 @@ if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
-     #define IMGUI_API _OgreOverlayExport")
+   PRIVATE ${FREETYPE_INCLUDE_DIRS})
  
-   list(APPEND HEADER_FILES
--    ${CMAKE_CURRENT_SOURCE_DIR}/src/imgui/imgui.h
--    ${CMAKE_CURRENT_SOURCE_DIR}/src/imgui/imconfig.h)
-+    ${IMGUI_INCLUDE_DIR}/src/imgui/imgui.h
-+    ${IMGUI_INCLUDE_DIR}/src/imgui/imconfig.h)
- endif()
- 
- generate_export_header(OgreOverlay 
+-if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
++if(0)
+   target_include_directories(OgreOverlay PUBLIC
+     PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/imgui>"
+     PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/imgui/misc/freetype>")
