@@ -5,6 +5,7 @@
 #include <vcpkg/base/lazy.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/tools.h>

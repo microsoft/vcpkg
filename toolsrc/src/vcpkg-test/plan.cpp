@@ -1,16 +1,18 @@
 #include <catch2/catch.hpp>
 
+#include <vcpkg/base/graphs.h>
+
+#include <vcpkg/dependencies.h>
+#include <vcpkg/portfileprovider.h>
+#include <vcpkg/sourceparagraph.h>
+#include <vcpkg/triplet.h>
+
 #include <memory>
 #include <unordered_map>
 #include <vector>
 
 #include <vcpkg-test/mockcmakevarprovider.h>
 #include <vcpkg-test/util.h>
-#include <vcpkg/base/graphs.h>
-#include <vcpkg/dependencies.h>
-#include <vcpkg/portfileprovider.h>
-#include <vcpkg/sourceparagraph.h>
-#include <vcpkg/triplet.h>
 
 using namespace vcpkg;
 

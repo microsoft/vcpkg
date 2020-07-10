@@ -1,10 +1,10 @@
 #pragma once
 
-#include <type_traits>
-#include <utility>
-
 #include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/pragmas.h>
+
+#include <type_traits>
+#include <utility>
 
 namespace vcpkg
 {
