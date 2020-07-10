@@ -1,3 +1,5 @@
+set(VERSION 3.3)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
@@ -19,17 +21,39 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+# Create pkgconfig file
+set(PACKAGE_VERSION ${VERSION})
+set(prefix "${CURRENT_INSTALLED_DIR}")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(toolexeclibdir "\${libdir}")
+set(includedir "\${prefix}/include")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc" @ONLY)
+endif()
+# debug
+set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(toolexeclibdir "\${libdir}")
+set(includedir "\${prefix}/../include")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc" @ONLY)
+endif()
+
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
+vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-file(READ ${CURRENT_PACKAGES_DIR}/include/ffi.h FFI_H)
-string(REPLACE "   *know* they are going to link with the static library.  */"
-"   *know* they are going to link with the static library.  */
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/ffi.h
+        "   *know* they are going to link with the static library.  */"
+        "   *know* they are going to link with the static library.  */
 
 #define FFI_BUILDING
-" FFI_H "${FFI_H}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
+"
+    )
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -28,16 +28,22 @@ namespace vcpkg
 
         std::string dir() const;
 
+        bool is_feature() const { return !feature.empty(); }
+
         PackageSpec spec;
         std::string version;
-        std::string description;
-        std::string maintainer;
+        int port_version = 0;
+        std::vector<std::string> description;
+        std::vector<std::string> maintainers;
         std::string feature;
         std::vector<std::string> default_features;
-        std::vector<std::string> depends;
+        std::vector<std::string> dependencies;
         std::string abi;
         Type type;
     };
+
+    bool operator==(const BinaryParagraph&, const BinaryParagraph&);
+    bool operator!=(const BinaryParagraph&, const BinaryParagraph&);
 
     struct BinaryControlFile
     {

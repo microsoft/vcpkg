@@ -1,25 +1,32 @@
 <?xml version="1.0"?>
 <tools version="2">
+    <tool name="python3" os="windows">
+        <version>3.8.3</version>
+        <exeRelativePath>python.exe</exeRelativePath>
+        <url>https://www.python.org/ftp/python/3.8.3/python-3.8.3-embed-win32.zip</url>
+        <sha512>8c9078f55b1b5d694e0e809eee6ccf8a6e15810dd4649e8ae1209bff30e102d49546ce970a5d519349ca7759d93146f459c316dc440737171f018600255dcd0a</sha512>
+        <archiveName>python-3.8.3-embed-win32.zip</archiveName>
+    </tool>
     <tool name="cmake" os="windows">
-        <version>3.14.0</version>
-        <exeRelativePath>cmake-3.14.0-win32-x86\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-win32-x86.zip</url>
-        <sha512>60eb6a0790883da4152a957bd1133405f620f4b7a073af3bea97695b3ef8c22c41d9b90e45815f2a896df5be0cd6dedb73a6df5f17a42761ca8f457c9f3b708c</sha512>
-        <archiveName>cmake-3.14.0-win32-x86.zip</archiveName>
+        <version>3.17.2</version>
+        <exeRelativePath>cmake-3.17.2-win32-x86\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-win32-x86.zip</url>
+        <sha512>63bb3dc5a8683ed193025450620a70b8dd675eccba4a83882c96f21eda8994dd5b21854036a0c17f978bf31f67d1d1b33b416c7f6ffb0470c9f48c2e495d44c1</sha512>
+        <archiveName>cmake-3.17.2-win32-x86.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.14.0</version>
-        <exeRelativePath>cmake-3.14.0-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Darwin-x86_64.tar.gz</url>
-        <sha512>a5a7217a049be3bb2ef5c93292b1d92eb4dd5ec6ab2dd04984aae01d2732eb343cea4f9741b333a5e21a27eb7934f568f780f3558e7ff870150c3309fc4656b3</sha512>
-        <archiveName>cmake-3.14.0-Darwin-x86_64.tar.gz</archiveName>
+        <version>3.17.2</version>
+        <exeRelativePath>cmake-3.17.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Darwin-x86_64.tar.gz</url>
+        <sha512>804b06439c05b9cf36a988223b7dc47b06b8613cb4653989eff52aad5ab0fa312b8da1ac0c760ad101e74b2c9edaf5b119bd48617a5efb57dff9380ca74e54a9</sha512>
+        <archiveName>cmake-3.17.2-Darwin-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.14.0</version>
-        <exeRelativePath>cmake-3.14.0-Linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Linux-x86_64.tar.gz</url>
-        <sha512>e687c0f3acfb15c880ddac67e2821907f833cb900c6ecedb4ab5df5102604d82753c948e3c7dca6e5bcce6278a09b7d577b1afade2e133aec5b2057ac48d3c74</sha512>
-        <archiveName>cmake-3.14.0-Linux-x86_64.tar.gz</archiveName>
+        <version>3.17.2</version>
+        <exeRelativePath>cmake-3.17.2-Linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.tar.gz</url>
+        <sha512>2afc023363c40b110d97d871fb9a8917643bba308ca0c029ee8fe1164db1c168e32b2c9d7647475d84efa290c1242357f7cf260ea4d1f92f5a829cf418955490</sha512>
+        <archiveName>cmake-3.17.2-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.12.4</version>
@@ -29,11 +36,11 @@
         <archiveName>cmake-3.12.4-FreeBSD-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
-        <version>2.25.1-1</version>
+        <version>2.26.2-1</version>
         <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.25.1.windows.1/PortableGit-2.25.1-32-bit.7z.exe</url>
-        <sha512>222d6e384ecae5841cb02dc004c4b3f56659d19b662bc93ab531df844c9477c9717c4a1adfb8bc2d3159678238fa4c79ccbdcb5c116eea5eccd652f4b483359e</sha512>
-        <archiveName>PortableGit-2.25.1-32-bit.7z.exe</archiveName>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.26.2.windows.1/PortableGit-2.26.2-32-bit.7z.exe</url>
+        <sha512>d3cb60d62ca7b5d05ab7fbed0fa7567bec951984568a6c1646842a798c4aaff74bf534cf79414a6275c1927081a11b541d09931c017bf304579746e24fe57b36</sha512>
+        <archiveName>PortableGit-2.26.2-32-bit.7z.exe</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>
@@ -60,10 +67,22 @@
         <sha512>f477842d0cebefcd6bf9c6d536ab8ea20ec5b0aa967ee963ab6a101aeff9df8742ca600d35f39e2e7158d76d8231f1ed2bef6104dce84d2bf8d6b07d17d706a1</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>4.6.2</version>
+        <version>5.5.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v4.6.2/nuget.exe</url>
-        <sha512>60daea7bec2de23089f7ad73985dd788ac154171d6326c2c456726849b8f97dfc38cbdd9b9bf8d96aced009ccaaed317905b65c108e149cfbbbcdfb95f8f0519</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
+        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+    </tool>
+    <tool name="nuget" os="linux">
+        <version>5.5.1</version>
+        <exeRelativePath>nuget.exe</exeRelativePath>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
+        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+    </tool>
+    <tool name="nuget" os="osx">
+        <version>5.5.1</version>
+        <exeRelativePath>nuget.exe</exeRelativePath>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
+        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
     </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
@@ -81,31 +100,31 @@
     </tool>
     <tool name="aria2" os="windows">
         <version>18.01.0</version>
-        <exeRelativePath>aria2-1.33.1-win-32bit-build1\aria2c.exe</exeRelativePath>
-        <url>https://github.com/aria2/aria2/releases/download/release-1.33.1/aria2-1.33.1-win-32bit-build1.zip</url>
-        <sha512>2456176ba3d506a07cf0cc4f61f080e1ff8cb4106426d66f354c5bb67a9a8720b5ddb26904275e61b1f623c932355f7dcde4cd17556cc895f11293c23c3a9bf3</sha512>
+        <exeRelativePath>aria2-1.34.0-win-32bit-build1\aria2c.exe</exeRelativePath>
+        <url>https://github.com/aria2/aria2/releases/download/release-1.34.0/aria2-1.34.0-win-32bit-build1.zip</url>
+        <sha512>2a5480d503ac6e8203040c7e516a3395028520da05d0ebf3a2d56d5d24ba5d17630e8f318dd4e3cc2094cc4668b90108fb58e8b986b1ffebd429995058063c27</sha512>
         <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
     </tool>
     <tool name="ninja" os="windows">
-        <version>1.8.2</version>
+        <version>1.10.0</version>
         <exeRelativePath>ninja.exe</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip</url>
-        <sha512>9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5</sha512>
-        <archiveName>ninja-win-1.8.2.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip</url>
+        <sha512>a196e243c53daa1df9d287af658d6d38d6b830b614f2d5704e8c88ffc61f179a533ae71cdb6d0d383d1559d65dacccbaaab270fb2a33aa211e5dba42ff046f97</sha512>
+        <archiveName>ninja-win-1.10.0.zip</archiveName>
     </tool>
     <tool name="ninja" os="linux">
-        <version>1.8.2</version>
+        <version>1.10.0</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip</url>
-        <sha512>38fcb68e745c1f15b4b50f20069ffe686b1ef5baf93b74958e132ea5d30d155cf6970d6dc1b095aafd421ebd8bcc63acf4f64e305c496266b5182f99b815cca5</sha512>
-        <archiveName>ninja-linux-1.8.2.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-linux.zip</url>
+        <sha512>ffb179ab8ea315167fcc99a8f13286e1363590185b18cf819cc73e09f2a7553790e9dc45fd1ccd0bd1d2dbf543aee3f6c0951cf9ce453a7168ffd2ac873cdd29</sha512>
+        <archiveName>ninja-linux-1.10.0.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
-        <version>1.8.2</version>
+        <version>1.10.0</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip</url>
-        <sha512>acadfb286eb7d93676629701917fa0c3c39f36daa068c169e4a098c29f97380d1ea95abfd42b04798ff118fd9dc93fdb250fcda36086bac20bc5506354214fc3</sha512>
-        <archiveName>ninja-mac-1.8.2.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-mac.zip</url>
+        <sha512>619a1924067a0b30fc5f8887f868d3ee5481838d2f0f158d031f7614a2a10b95a73d4a56b658d5d560283ebf809e2e536b968c6c01ff0108075c3f393f5780ba</sha512>
+        <archiveName>ninja-mac-1.10.0.zip</archiveName>
     </tool>
     <tool name="ninja" os="freebsd">
         <version>1.8.2</version>

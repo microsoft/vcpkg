@@ -1,16 +1,10 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "DirectXMesh only supports dynamic CRT linkage")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF dec2019
-    SHA512 b48b144172574d56775f7607d7ee7370b427fd95ab4e3089cdaf79b6cbd7fc4bbc15264d9a6703840b763bc2f4a5974594afa39f113960df34e07adfd74561d6
+    REF jul2020
+    SHA512 27618f56fbce39d908417a44ea42ef0040254888fbb92108ecb06f6d70e06c1b168c0366c01f65c6b3d2c9915e445d1da85a48e11c23980cb4ab4b41e0b2904a
     HEAD_REF master
 )
 
@@ -37,12 +31,22 @@ else()
         set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
     else()
         set(SLN_NAME "Desktop_${VS_VERSION}")
+        
+        # fix solution file to include DirectX 12 in build
+        file(READ ${SOURCE_PATH}/DirectXMesh/DirectXMesh_${SLN_NAME}.vcxproj _contents)
+        string(REPLACE "_WIN32_WINNT=0x0601" "_WIN32_WINNT=0x0A00" _contents "${_contents}")
+        file(WRITE ${SOURCE_PATH}/DirectXMesh/DirectXMesh_${SLN_NAME}.vcxproj "${_contents}")
+        
+        # fix solution file to include DirectX 12 in build
+        file(READ ${SOURCE_PATH}/Meshconvert/Meshconvert_${SLN_NAME}.vcxproj _contents)
+        string(REPLACE "_WIN32_WINNT=0x0601" "_WIN32_WINNT=0x0A00" _contents "${_contents}")
+        file(WRITE ${SOURCE_PATH}/Meshconvert/Meshconvert_${SLN_NAME}.vcxproj "${_contents}")
     endif()
 endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXMesh_${SLN_NAME}.sln
-    PLATFORM ${BUILD_ARCH}
+    PLATFORM ${TRIPLET_SYSTEM_ARCH}
 )
 
 file(INSTALL

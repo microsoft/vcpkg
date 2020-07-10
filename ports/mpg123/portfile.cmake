@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(MPG123_VERSION 1.25.8)
 set(MPG123_HASH f226317dddb07841a13753603fa13c0a867605a5a051626cb30d45cfba266d3d4296f5b8254f65b403bb5eef6addce1784ae8829b671a746854785cda1bad203)
 
@@ -25,28 +23,58 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(MPG123_CONFIGURATION_SUFFIX _Dll)
 endif()
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/mpg123/mpg123/${MPG123_VERSION}/mpg123-${MPG123_VERSION}.tar.bz2"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mpg123/mpg123
+    REF ${MPG123_VERSION}
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         0001-fix-crt-linking.patch
         0002-fix-x86-build.patch
         0003-add-arm-configs.patch
+        0004-add-arm64-uwp-config.patch
 )
 
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_UWP)
+    vcpkg_build_msbuild(
+        PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/libmpg123.vcxproj
+        OPTIONS /p:UseEnv=True
+    )
+
+    message(STATUS "Installing")
+    file(INSTALL
+        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Debug/libmpg123/libmpg123.dll
+        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Debug/libmpg123/libmpg123.pdb
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Debug/libmpg123/libmpg123.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Release/libmpg123/libmpg123.dll
+        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Release/libmpg123/libmpg123.pdb
+        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Release/libmpg123/libmpg123.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/ports/MSVC++/mpg123.h
+        ${SOURCE_PATH}/src/libmpg123/fmt123.h
+        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
+        DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    )
+elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_build_msbuild(
         PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
+        OPTIONS /p:UseEnv=True
         RELEASE_CONFIGURATION Release${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
         DEBUG_CONFIGURATION Debug${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
     )
@@ -144,23 +172,43 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
             ${CURRENT_PACKAGES_DIR}/include
     )
 
-    file(
-        INSTALL
-            "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
-            "${SOURCE_PATH}/build/debug/lib/libout123.a"
-        DESTINATION
-            ${CURRENT_INSTALLED_DIR}/debug/lib
-    )
+    if(EXISTS "${SOURCE_PATH}/build/debug/lib64/libmpg123.a")
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/debug/lib64/libmpg123.a"
+                "${SOURCE_PATH}/build/debug/lib64/libout123.a"
+            DESTINATION
+                ${CURRENT_INSTALLED_DIR}/debug/lib
+        )
+    else()
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
+                "${SOURCE_PATH}/build/debug/lib/libout123.a"
+            DESTINATION
+                ${CURRENT_INSTALLED_DIR}/debug/lib
+        )
+    endif()
 
-    file(
-        INSTALL
-            "${SOURCE_PATH}/build/release/lib/libmpg123.a"
-            "${SOURCE_PATH}/build/release/lib/libout123.a"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/lib
-    )
+    if(EXISTS "${SOURCE_PATH}/build/release/lib64/libmpg123.a")
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/release/lib64/libmpg123.a"
+                "${SOURCE_PATH}/build/release/lib64/libout123.a"
+            DESTINATION
+                ${CURRENT_PACKAGES_DIR}/lib
+        )
+    else()
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/release/lib/libmpg123.a"
+                "${SOURCE_PATH}/build/release/lib/libout123.a"
+            DESTINATION
+                ${CURRENT_PACKAGES_DIR}/lib
+        )
+    endif()
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mpg123 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 message(STATUS "Installing done")

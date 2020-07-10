@@ -1,34 +1,37 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "This port doesn't support UWP currently!")
-endif()
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/marl
-    REF bf3e23083979c3bd3de1c77346b655eec423b3bc
-    SHA512 8c85b9a2b7e3cb397fc11c4bf32c5f62d4113ab6af92861c93472299f1b9296edef4dd8d1eb24db242fe55b52f33d2e058a4ce91fbaa793ffa4d5f4c8e336251
-    HEAD_REF master
+    REF 45be9b248306e6ec3136efdd256d769c23b581d1
+    SHA512 24efe143718adbf4894e21e715ef5ed2585085b7b3729d9e21d3b0951c7c939e16c9f531eb52ec489cb539d1f70a2dcde025b7bbcbb2165ddf1a5b8278f9b806
+    HEAD_REF main
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MARL_BUILD_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DMARL_BUILD_SHARED=${MARL_BUILD_SHARED}
         -DMARL_INSTALL=ON
 )
 
 vcpkg_install_cmake()
 
+if(MARL_BUILD_SHARED)
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/marl/export.h"
+        "#ifdef MARL_DLL"
+        "#if 1  // #ifdef MARL_DLL"
+    )
+endif()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
