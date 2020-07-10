@@ -1,0 +1,65 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ae8d42c6b..bccd9bfdc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -170,7 +170,7 @@ set (PEDANTIC FALSE CACHE BOOL "Determines if we should compile with -Wall -Werr
+ set (WITH_DESIGNER_PLUGIN TRUE CACHE BOOL "Build plugins for Qt Designer")
+ add_feature_info("Qt Designer plugins" WITH_DESIGNER_PLUGIN "Marble widget support in Qt Designer. Toggle with WITH_DESIGNER_PLUGIN=YES/NO")
+ 
+-set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX} CACHE PATH  "Base directory for executables and libraries" FORCE)
++set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX}/tools/marble CACHE PATH  "Base directory for executables and libraries" FORCE)
+ if (NOT QT_PLUGINS_DIR)
+    set(QT_PLUGINS_DIR ${CMAKE_INSTALL_LIBDIR}/plugins)
+ endif()
+diff --git a/src/apps/marble-qt/CMakeLists.txt b/src/apps/marble-qt/CMakeLists.txt
+index d28e3aa5e..a5ac9fc08 100644
+--- a/src/apps/marble-qt/CMakeLists.txt
++++ b/src/apps/marble-qt/CMakeLists.txt
+@@ -48,7 +48,7 @@ if(STATIC_BUILD)
+ endif(STATIC_BUILD)
+ 
+ if(WIN32)
+-install (TARGETS marble-qt RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
++	install (TARGETS marble-qt RUNTIME DESTINATION tools/marble)
+ else(WIN32)
+ if (APPLE)
+   # No need for this when installing to a bundle
+diff --git a/src/lib/astro/CMakeLists.txt b/src/lib/astro/CMakeLists.txt
+index 5e1afd60f..148dadf07 100644
+--- a/src/lib/astro/CMakeLists.txt
++++ b/src/lib/astro/CMakeLists.txt
+@@ -50,7 +50,7 @@ target_include_directories(astro
+ 
+ # choose the correct target install library path
+ if(WIN32)
+-  INSTALL(TARGETS astro EXPORT AstroTargets RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} ARCHIVE DESTINATION lib)
++  INSTALL(TARGETS astro EXPORT AstroTargets RUNTIME DESTINATION tools/marble ARCHIVE DESTINATION lib)
+ elseif(APPLE)
+   INSTALL(TARGETS astro LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/Marble.app/Contents/MacOS/lib)
+ else()
+diff --git a/src/lib/marble/CMakeLists.txt b/src/lib/marble/CMakeLists.txt
+index 3a681af0f..a29e1fc8d 100644
+--- a/src/lib/marble/CMakeLists.txt
++++ b/src/lib/marble/CMakeLists.txt
+@@ -446,7 +446,7 @@ target_include_directories(marblewidget
+ 
+ # choose the correct target install library path
+ if(WIN32)
+-  install(TARGETS marblewidget EXPORT MarbleTargets RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} ARCHIVE DESTINATION lib)
++  install(TARGETS marblewidget EXPORT MarbleTargets RUNTIME DESTINATION tools/marble ARCHIVE DESTINATION lib)
+ elseif(APPLE)
+   install(TARGETS marblewidget LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/Marble.app/Contents/MacOS/lib)
+ else()
+diff --git a/src/lib/marble/declarative/CMakeLists.txt b/src/lib/marble/declarative/CMakeLists.txt
+index 4fa8f1b94..704e9b26b 100644
+--- a/src/lib/marble/declarative/CMakeLists.txt
++++ b/src/lib/marble/declarative/CMakeLists.txt
+@@ -51,7 +51,7 @@ if(Qt5Positioning_FOUND)
+ endif()
+ 
+ if(WIN32)
+-  install(TARGETS marbledeclarative RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} ARCHIVE DESTINATION lib)
++  install(TARGETS marbledeclarative RUNTIME DESTINATION tools/marble ARCHIVE DESTINATION lib)
+ else()
+   install(TARGETS marbledeclarative LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()
