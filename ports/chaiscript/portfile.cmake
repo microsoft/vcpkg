@@ -8,6 +8,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/usage
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage
+    COPYONLY
+)
 
+file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

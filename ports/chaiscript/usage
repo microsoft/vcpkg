@@ -1,0 +1,4 @@
+The package chaiscript can be used via CMake:
+
+    find_path(CHAISCRIPT_INCLUDE_DIR chaiscript/chaiscript.hpp)
+    target_include_directories(main PRIVATE ${CHAISCRIPT_INCLUDE_DIR})

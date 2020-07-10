@@ -1,4 +1,5 @@
 Source: chaiscript
-Version: 6.1.0-1
+Version: 6.1.0
+Port-Version: 2
 Homepage: https://github.com/ChaiScript/ChaiScript
 Description: Embedded Scripting Language Designed for C++
