@@ -17,7 +17,8 @@
 // ctermid is not behind an `extern "C"` barrier, so it's linked incorrectly.
 // This has been reported; remove it after 2023-05-19
 #if __APPLE__
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <unistd.h>
@@ -32,4 +33,3 @@ extern "C" {
 // glibc defines major and minor in sys/types.h, and should not
 #undef major
 #undef minor
-

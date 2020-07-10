@@ -1,8 +1,8 @@
 #pragma once
-#include <vcpkg/statusparagraph.h>
-
 #include <iterator>
 #include <memory>
+
+#include <vcpkg/statusparagraph.h>
 
 namespace vcpkg
 {
@@ -35,8 +35,8 @@ namespace vcpkg
         /// <param name="triplet">Triplet</param>
         /// <param name="feature">Feature name</param>
         /// <returns>Iterator for found spec</returns>
-        iterator find(const std::string& name, Triplet triplet, const std::string& feature = "");
-        const_iterator find(const std::string& name, Triplet triplet, const std::string& feature = "") const;
+        iterator find(const std::string& name, Triplet triplet, const std::string& feature = {});
+        const_iterator find(const std::string& name, Triplet triplet, const std::string& feature = {}) const;
 
         std::vector<std::unique_ptr<StatusParagraph>*> find_all(const std::string& name, Triplet triplet);
 
