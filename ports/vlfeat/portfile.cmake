@@ -8,7 +8,8 @@ vcpkg_from_github(
 )
 
 set(USE_SSE ON)
-set(USE_AVX ON)
+set(USE_AVX OFF)  # feature is broken, so it's always off anyway
+
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(USE_SSE OFF)
   set(USE_AVX OFF)
