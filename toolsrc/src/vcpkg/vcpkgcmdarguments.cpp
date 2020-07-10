@@ -459,8 +459,8 @@ namespace vcpkg
                     if (v.empty())
                     {
                         System::printf(System::Color::error,
-                                        "Error: The option '--%s' must be passed an argument.\n",
-                                        option.name);
+                                       "Error: The option '--%s' must be passed an argument.\n",
+                                       option.name);
                         failed = true;
                     }
                     else
