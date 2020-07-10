@@ -1,8 +1,7 @@
 #include <catch2/catch.hpp>
+
 #include <vcpkg-test/util.h>
-
 #include <vcpkg/base/sortedvector.h>
-
 #include <vcpkg/update.h>
 
 using namespace vcpkg;
@@ -20,9 +19,9 @@ TEST_CASE ("find outdated packages basic", "[update]")
     StatusParagraphs status_db(std::move(status_paragraphs));
 
     std::unordered_map<std::string, SourceControlFileLocation> map;
-    auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "0"}}}));
+    auto scf = unwrap(test_parse_control_file({{{"Source", "a"}, {"Version", "0"}}}));
     map.emplace("a", SourceControlFileLocation{std::move(scf), ""});
-    Dependencies::MapPortFileProvider provider(map);
+    PortFileProvider::MapPortFileProvider provider(map);
 
     auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
                                               &OutdatedPackage::compare_by_name);
@@ -44,9 +43,9 @@ TEST_CASE ("find outdated packages features", "[update]")
     StatusParagraphs status_db(std::move(status_paragraphs));
 
     std::unordered_map<std::string, SourceControlFileLocation> map;
-    auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "0"}}}));
+    auto scf = unwrap(test_parse_control_file({{{"Source", "a"}, {"Version", "0"}}}));
     map.emplace("a", SourceControlFileLocation{std::move(scf), ""});
-    Dependencies::MapPortFileProvider provider(map);
+    PortFileProvider::MapPortFileProvider provider(map);
 
     auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
                                               &OutdatedPackage::compare_by_name);
@@ -70,9 +69,9 @@ TEST_CASE ("find outdated packages features 2", "[update]")
     StatusParagraphs status_db(std::move(status_paragraphs));
 
     std::unordered_map<std::string, SourceControlFileLocation> map;
-    auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "0"}}}));
+    auto scf = unwrap(test_parse_control_file({{{"Source", "a"}, {"Version", "0"}}}));
     map.emplace("a", SourceControlFileLocation{std::move(scf), ""});
-    Dependencies::MapPortFileProvider provider(map);
+    PortFileProvider::MapPortFileProvider provider(map);
 
     auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
                                               &OutdatedPackage::compare_by_name);
@@ -91,9 +90,9 @@ TEST_CASE ("find outdated packages none", "[update]")
     StatusParagraphs status_db(std::move(status_paragraphs));
 
     std::unordered_map<std::string, SourceControlFileLocation> map;
-    auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "2"}}}));
+    auto scf = unwrap(test_parse_control_file({{{"Source", "a"}, {"Version", "2"}}}));
     map.emplace("a", SourceControlFileLocation{std::move(scf), ""});
-    Dependencies::MapPortFileProvider provider(map);
+    PortFileProvider::MapPortFileProvider provider(map);
 
     auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
                                               &OutdatedPackage::compare_by_name);

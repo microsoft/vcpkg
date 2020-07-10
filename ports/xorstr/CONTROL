@@ -1,4 +1,4 @@
 Source: xorstr
-Version: 2019-08-10
+Version: 2020-02-11
 Description: Heavily vectorized c++17 compile time string encryption
 Homepage: https://github.com/JustasMasiulis/xorstr

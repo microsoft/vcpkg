@@ -2,24 +2,25 @@ _find_package(${ARGS})
 if(LibXml2_FOUND)
     find_package(LibLZMA)
     find_package(ZLIB)
-
+    include(SelectLibraryConfigurations)
+    find_library(ICONV_LIBRARY_DEBUG NAMES iconvd libiconvd iconv libiconv NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_INSTALLED_DIR}/debug" NO_DEFAULT_PATH)
+    find_library(ICONV_LIBRARY_RELEASE NAMES iconv libiconv NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
+    find_library(ICONV_LIBRARY_RELEASE NAMES iconv libiconv NAMES_PER_DIR PATH_SUFFIXES lib)
+    find_library(CHARSET_LIBRARY_DEBUG NAMES charsetd libcharsetd charset libcharset NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH)
+    find_library(CHARSET_LIBRARY_RELEASE NAMES charset libcharset NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
+    find_library(CHARSET_LIBRARY_RELEASE NAMES charset libcharset NAMES_PER_DIR PATH_SUFFIXES lib)
+    select_library_configurations(ICONV)
+    select_library_configurations(CHARSET)
     list(APPEND LIBXML2_LIBRARIES ${LIBLZMA_LIBRARIES} ${ZLIB_LIBRARIES})
-
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        list(APPEND LIBXML2_LIBRARIES
-            debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/libiconv.lib
-            optimized ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libiconv.lib
-            debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/libcharset.lib
-            optimized ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libcharset.lib
-            ws2_32)
-        if(TARGET LibXml2::LibXml2)
-           target_link_libraries(LibXml2::LibXml2 INTERFACE
-               debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/libiconv.lib
-               optimized ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libiconv.lib
-               debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/libcharset.lib
-               optimized ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libcharset.lib)
-        endif()
-    elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         list(APPEND LIBXML2_LIBRARIES m)
+    else()
+        list(APPEND LIBXML2_LIBRARIES ${ICONV_LIBRARIES} ${CHARSET_LIBRARIES})
+        if(TARGET LibXml2::LibXml2)
+           target_link_libraries(LibXml2::LibXml2 INTERFACE ${ICONV_LIBRARIES} ${CHARSET_LIBRARIES})
+        endif()
+    endif()
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        list(APPEND LIBXML2_LIBRARIES ws2_32)
     endif()
 endif()

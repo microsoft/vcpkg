@@ -1,4 +1,5 @@
 Source: ismrmrd
-Version: 1.4.1
+Version: 1.4.2
 Description: ISMRM Raw Data Format
 Build-Depends: pugixml, hdf5, boost, fftw3
+Homepage: https://github.com/ismrmrd/ismrmrd
