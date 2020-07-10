@@ -88,12 +88,13 @@ namespace vcpkg::Build
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
         var_provider.load_dep_info_vars(std::array<PackageSpec, 1>{full_spec.package_spec});
-        var_provider.load_tag_vars(std::array<FullPackageSpec, 1>{full_spec}, provider);
 
         StatusParagraphs status_db = database_load_check(paths);
 
         auto action_plan = Dependencies::create_feature_install_plan(
             provider, var_provider, std::vector<FullPackageSpec>{full_spec}, status_db);
+
+        var_provider.load_tag_vars(action_plan, provider);
 
         const PackageSpec& spec = full_spec.package_spec;
         const SourceControlFile& scf = *scfl.source_control_file;
@@ -913,7 +914,7 @@ namespace vcpkg::Build
                 }
             }
 
-            action.abi_info = Build::AbiInfo();
+            action.abi_info = AbiInfo();
             auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
 
             abi_info.pre_build_info = std::make_unique<PreBuildInfo>(
