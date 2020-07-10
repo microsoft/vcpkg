@@ -7,11 +7,21 @@ vcpkg_from_github(
         expose_missing_symbols.patch
 )
 
+set(USE_SSE ON)
+set(USE_AVX ON)
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+  set(USE_SSE OFF)
+  set(USE_AVX OFF)
+endif()
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DUSE_SSE=${USE_SSE}
+        -DUSE_AVX=${USE_AVX}
 )
 
 vcpkg_install_cmake()

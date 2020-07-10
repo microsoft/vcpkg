@@ -33,7 +33,6 @@ endif()
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
   add_definitions(-D__LITTLE_ENDIAN__)
-  add_definitions(-D__SSE2__)
   add_definitions(/Zp8)
   if(CMAKE_C_FLAGS MATCHES "/W[0-4]")
     string(REGEX REPLACE "/W[0-4]" "/W1" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
@@ -47,12 +46,21 @@ if(CMAKE_COMPILER_IS_GNUCC)
   add_definitions(-Wno-variadic-macros)
 endif()
 
+if(USE_SSE)
+  add_definitions(-D__SSE2__)
+  set(SSE2_VL_C_FILES "vl/mathop_sse2.c" "vl/imopv_sse2.c")
+  set(SSE2_VL_H_FILES "vl/mathop_sse2.h" "vl/imopv_sse2.h")
+else()
+  add_definitions(-DVL_DISABLE_SSE2)
+endif()
 
-set(SSE2_VL_C_FILES "vl/mathop_sse2.c" "vl/imopv_sse2.c")
-set(AVX_VL_C_FILES "vl/mathop_avx.c")
-set(SSE2_VL_H_FILES "vl/mathop_sse2.h" "vl/imopv_sse2.h")
-set(AVX_VL_H_FILES "vl/mathop_avx.h")
-add_definitions(-DVL_DISABLE_AVX)
+if(USE_AVX)
+  set(AVX_VL_C_FILES "vl/mathop_avx.c")
+  set(AVX_VL_H_FILES "vl/mathop_avx.h")
+else()
+  add_definitions(-DVL_DISABLE_AVX)
+endif()
+
 
 set (C_SOURCES
   vl/aib.c
@@ -131,9 +139,7 @@ set (H_SOURCES
 
 add_library(vl ${C_SOURCES} ${H_SOURCES})
 set_property(TARGET vl PROPERTY POSITION_INDEPENDENT_CODE ON)
-if(BUILD_SHARED_LIBS)
-  target_compile_definitions(vl PRIVATE -DVL_BUILD_DLL)
-endif()
+target_compile_definitions(vl PRIVATE -DVL_BUILD_DLL)
 target_include_directories(vl PUBLIC $<INSTALL_INTERFACE:${RELATIVE_INSTALL_INCLUDE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vl>)
 set_target_properties(vl PROPERTIES PUBLIC_HEADER "${H_SOURCES}")
 
