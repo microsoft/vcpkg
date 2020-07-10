@@ -25,7 +25,7 @@ Description: Python functionality for VTK
 Build-Depends: python3
 
 Feature: atlmfc
-Description: Mfc functionality for vtk on Windows
+Description: Mfc functionality for VTK on Windows
 Build-Depends: atlmfc (windows)
 
 Feature: paraview
