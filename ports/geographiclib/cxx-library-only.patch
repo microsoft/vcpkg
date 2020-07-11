@@ -1,0 +1,140 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 30875ddb..8a12f151 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -184,11 +184,6 @@ option (APPLE_MULTIPLE_ARCHITECTURES
+ option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+ 
+ set (LIBNAME Geographic)
+-if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+-  # For multi-config systems and for Visual Studio, the debug version of
+-  # the library is called Geographic_d.
+-  set (CMAKE_DEBUG_POSTFIX _d)
+-endif ()
+ 
+ if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
+   set (DEVELOPER ON)
+@@ -464,16 +459,7 @@ endif ()
+ # documentation files into the source tree.  Skip Apple here because
+ # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
+ # file and there's no simple equivalent for MacOSX
+-if (NOT WIN32 AND NOT APPLE)
+-  find_program (HAVE_POD2MAN pod2man)
+-  find_program (HAVE_POD2HTML pod2html)
+-  find_program (HAVE_COL col)
+-endif ()
+-if (HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL)
+-  set (MAINTAINER ON)
+-else ()
+   set (MAINTAINER OFF)
+-endif ()
+ if (MAINTAINER)
+   add_custom_target (distrib-all)
+   add_dependencies (distrib-all distrib-man)
+@@ -509,12 +495,6 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
+ add_subdirectory (src)
+ add_subdirectory (include/GeographicLib)
+ add_subdirectory (tools)
+-add_subdirectory (man)
+-add_subdirectory (doc)
+-add_subdirectory (js)
+-add_subdirectory (matlab)
+-add_subdirectory (python/geographiclib)
+-add_subdirectory (examples)
+ if (MSVC AND BUILD_NETGEOGRAPHICLIB)
+   if (GEOGRAPHICLIB_PRECISION EQUAL 2)
+     set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 90e773ba..2dfef4e0 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -44,15 +44,9 @@ export (TARGETS
+ # ${INSTALL_CMAKE_DIR} and @PROJECT_ROOT_DIR@ is the relative
+ # path to the root from there.  (Note that the whole install tree can
+ # be relocated.)
+-if (COMMON_INSTALL_PATH)
+-  # Install under lib${LIB_SUFFIX} so that 32-bit and 64-bit packages
+-  # can be installed on a single machine.
+-  set (INSTALL_CMAKE_DIR "lib${LIB_SUFFIX}/cmake/${PROJECT_NAME}")
+-  set (PROJECT_ROOT_DIR "../../..")
+-else ()
+-  set (INSTALL_CMAKE_DIR "cmake")
+-  set (PROJECT_ROOT_DIR "..")
+-endif ()
++  set (INSTALL_CMAKE_DIR "share/${PROJECT_NAME_LOWER}")
++  set (PROJECT_ROOT_DIR "../..")
++
+ # @PROJECT_INCLUDE_DIRS@ is not used in the install tree; reset
+ # it to prevent the source and build paths appearing in the installed
+ # config files
+@@ -97,3 +91,6 @@ configure_file (project.pc.in geographiclib.pc @ONLY)
+ install (FILES
+   "${CMAKE_CURRENT_BINARY_DIR}/geographiclib.pc"
+   DESTINATION "lib${LIB_SUFFIX}/pkgconfig")
++
++install (FILES "${PROJECT_SOURCE_DIR}/LICENSE.txt"
++    DESTINATION "${INSTALL_CMAKE_DIR}" RENAME "copyright")
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index b8c028c7..673a53dd 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ # Build the tools...
+ 
+ # Where to find the *.usage files for the --help option.
+-include_directories (${PROJECT_BINARY_DIR}/man)
++include_directories (${PROJECT_SOURCE_DIR}/man)
+ # Only needed if target_compile_definitions is not supported
+ add_definitions (${PROJECT_DEFINITIONS})
+ 
+@@ -16,7 +16,7 @@ foreach (TOOL ${TOOLS})
+   add_dependencies (tools ${TOOL})
+ 
+   set_source_files_properties (${TOOL}.cpp PROPERTIES
+-    OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
++    OBJECT_DEPENDS ${PROJECT_SOURCE_DIR}/man/${TOOL}.usage)
+ 
+   target_link_libraries (${TOOL} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
+ 
+@@ -28,41 +28,5 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+ endif ()
+ 
+-if (APPLE)
+-  # Ensure that the package is relocatable
+-  set_target_properties (${TOOLS} PROPERTIES
+-    INSTALL_RPATH "@loader_path/../lib${LIB_SUFFIX}")
+-endif ()
+-
+-# Specify where the tools are installed, adding them to the export targets
+-install (TARGETS ${TOOLS} EXPORT targets DESTINATION bin)
+-
+-if (MSVC AND PACKAGE_DEBUG_LIBS)
+-  # Possibly don't EXPORT the debug versions of the tools and then this
+-  # wouldn't be necessary.  However, including the debug versions of the
+-  # tools in the installer package is innocuous.
+-  foreach (TOOL ${TOOLS})
+-    install (PROGRAMS
+-      "${PROJECT_BINARY_DIR}/bin/Debug/${TOOL}${CMAKE_DEBUG_POSTFIX}.exe"
+-      DESTINATION bin CONFIGURATIONS Release)
+-  endforeach ()
+-endif ()
+-
+ # Put all the tools into a folder in the IDE
+ set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)
+-
+-# Create the scripts for downloading the data files on non-Windows
+-# systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
+-# default data directory.  These are installed under sbin, because it is
+-# expected to be run with write access to /usr/local.
+-if (NOT WIN32)
+-  foreach (SCRIPT ${SCRIPTS})
+-    configure_file (${SCRIPT}.sh scripts/${SCRIPT} @ONLY)
+-    add_custom_command (OUTPUT ${SCRIPT}
+-      COMMAND ${CMAKE_COMMAND} -E
+-        copy scripts/${SCRIPT} ${SCRIPT} && chmod +x ${SCRIPT}
+-      DEPENDS ${SCRIPT}.sh)
+-    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)
+-  endforeach ()
+-  add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
+-endif ()
