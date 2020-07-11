@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9cfd06c..45d73a6 100644
+index 9cfd06c..8859469 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -14,6 +14,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
@@ -229,7 +229,7 @@ index 9cfd06c..45d73a6 100644
  
  # ==============================================================================
  # OpenCV
-@@ -372,15 +400,13 @@ endif()
+@@ -372,20 +400,13 @@ endif()
  # - only external and enabled only if OpenMVG_USE_OPENCV is set to ON
  # ==============================================================================
  if (OpenMVG_USE_OPENCV)
@@ -243,14 +243,15 @@ index 9cfd06c..45d73a6 100644
  endif()
  
 -
-+# ==============================================================================
-+# Suitesparse
-+# ==============================================================================
-+find_package(suitesparse REQUIRED)
  # ==============================================================================
  # Third-party libraries:
  # ==============================================================================
-@@ -472,67 +498,67 @@ message("** Use OpenCV SIFT features: " ${OpenMVG_USE_OCVSIFT})
+ add_subdirectory(third_party)
+-add_subdirectory(testing)
+ 
+ # ==============================================================================
+ # openMVG modules
+@@ -472,67 +493,67 @@ message("** Use OpenCV SIFT features: " ${OpenMVG_USE_OCVSIFT})
  
  message("\n")
  
@@ -380,10 +381,10 @@ index e7dfbfd..c01910d 100644
    OPENMVG_REPORT_NOT_FOUND(
      "OpenMVG install root: ${CURRENT_ROOT_INSTALL_DIR}, "
 diff --git a/src/nonFree/sift/CMakeLists.txt b/src/nonFree/sift/CMakeLists.txt
-index 402a2d8..a9f2790 100644
+index 402a2d8..60ddc11 100644
 --- a/src/nonFree/sift/CMakeLists.txt
 +++ b/src/nonFree/sift/CMakeLists.txt
-@@ -1,33 +1,33 @@
+@@ -1,36 +1,36 @@
  
 -# libs should be static
 -set(BUILD_SHARED_LIBS OFF)
@@ -446,6 +447,10 @@ index 402a2d8..a9f2790 100644
  install(
    DIRECTORY .
    DESTINATION include/openMVG_dependencies/nonFree/sift
+   COMPONENT headers
+-  FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
++  FILES_MATCHING PATTERN "*.hpp"
+ )
 diff --git a/src/nonFree/sift/SIFT_describer.hpp b/src/nonFree/sift/SIFT_describer.hpp
 index cd800b0..20e9c8e 100644
 --- a/src/nonFree/sift/SIFT_describer.hpp

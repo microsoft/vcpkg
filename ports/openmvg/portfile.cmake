@@ -70,16 +70,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/openMVG/cmake)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-#remove extra deprecated cmake target files left in unappropriate folders
-file(GLOB REMOVE_CMAKE ${CURRENT_PACKAGES_DIR}/lib/*.cmake)
-file(REMOVE_RECURSE ${REMOVE_CMAKE})
-file(GLOB REMOVE_CMAKE ${CURRENT_PACKAGES_DIR}/debug/lib/*.cmake)
-file(REMOVE_RECURSE ${REMOVE_CMAKE})
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test
-                    ${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data)
+                    ${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data
+                    ${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/nonFree/sift/vl)
 
 if(OpenMVG_BUILD_SHARED)
     # release
