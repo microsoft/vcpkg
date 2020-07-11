@@ -75,6 +75,7 @@ namespace vcpkg::Install
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
         for (auto&& file : files)
         {
+            ec.clear();
             const auto status = fs.symlink_status(file, ec);
             if (ec)
             {
