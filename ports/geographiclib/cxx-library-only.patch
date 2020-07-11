@@ -1,7 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 30875ddb..a44c3f83 100644
+index 30875ddb..f44ef82e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -1,3 +1,5 @@
++cmake_minimum_required (VERSION 3.1.0) # This version was released 2014-12-15
++
+ project (GeographicLib)
+ 
+ # Version information
+@@ -47,8 +49,6 @@ set (LIBVERSION_BUILD 19.0.1)
+ string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+ string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
+ 
+-cmake_minimum_required (VERSION 3.1.0) # This version was released 2014-12-15
+-
+ # User-settable variables
+ 
+ # (1) COMMON_INSTALL_PATH governs the installation convention.  If it
 @@ -464,12 +464,12 @@ endif ()
  # documentation files into the source tree.  Skip Apple here because
  # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
