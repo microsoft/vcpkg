@@ -75,7 +75,7 @@ index 90e773ba..2dfef4e0 100644
 +install (FILES "${PROJECT_SOURCE_DIR}/LICENSE.txt"
 +    DESTINATION "${INSTALL_CMAKE_DIR}" RENAME "copyright")
 diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
-index b8c028c7..673a53dd 100644
+index b8c028c7..bbd39557 100644
 --- a/tools/CMakeLists.txt
 +++ b/tools/CMakeLists.txt
 @@ -1,7 +1,7 @@
@@ -87,7 +87,7 @@ index b8c028c7..673a53dd 100644
  # Only needed if target_compile_definitions is not supported
  add_definitions (${PROJECT_DEFINITIONS})
  
-@@ -16,7 +16,7 @@ foreach (TOOL ${TOOLS})
+@@ -16,53 +16,11 @@ foreach (TOOL ${TOOLS})
    add_dependencies (tools ${TOOL})
  
    set_source_files_properties (${TOOL}.cpp PROPERTIES
@@ -96,10 +96,14 @@ index b8c028c7..673a53dd 100644
  
    target_link_libraries (${TOOL} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
  
-@@ -28,41 +28,5 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
-     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
- endif ()
+ endforeach ()
  
+-if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+-  # Add _d suffix for your debug versions of the tools
+-  set_target_properties (${TOOLS} PROPERTIES
+-    DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+-endif ()
+-
 -if (APPLE)
 -  # Ensure that the package is relocatable
 -  set_target_properties (${TOOLS} PROPERTIES
