@@ -53,6 +53,16 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
+set(_target_suffix)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(_target_suffix static)
+else()
+    set(_target_suffix shared)
+endif()
+file(READ ${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_target_suffix}.cmake _content)
+string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" _content ${_content})
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_target_suffix}.cmake ${_content})
+
 vcpkg_copy_pdbs()
 
 #Handle copyright
