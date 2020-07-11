@@ -42,8 +42,7 @@ namespace vcpkg
 
     IBinaryProvider& null_binary_provider();
 
-    ExpectedS<std::unique_ptr<IBinaryProvider>> create_binary_provider_from_configs(const VcpkgPaths& paths,
-                                                                                    View<std::string> args);
+    ExpectedS<std::unique_ptr<IBinaryProvider>> create_binary_provider_from_configs(View<std::string> args);
     ExpectedS<std::unique_ptr<IBinaryProvider>> create_binary_provider_from_configs_pure(const std::string& env_string,
                                                                                          View<std::string> args);
 
