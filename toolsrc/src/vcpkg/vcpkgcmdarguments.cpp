@@ -427,12 +427,7 @@ namespace vcpkg
         auto options_copy = this->optional_command_arguments;
         for (auto&& option : command_structure.options.switches)
         {
-            auto it = options_copy.find(option.name);
-            if (it == options_copy.end() && !Strings::starts_with(option.name, "x-"))
-            {
-                // Support x-<name> as a fallback to enable easier migration for users
-                it = options_copy.find(Strings::concat("x-", option.name));
-            }
+            const auto it = options_copy.find(option.name);
             if (it != options_copy.end())
             {
                 if (it->second.has_value())
@@ -452,12 +447,7 @@ namespace vcpkg
 
         for (auto&& option : command_structure.options.settings)
         {
-            auto it = options_copy.find(option.name);
-            if (it == options_copy.end() && !Strings::starts_with(option.name, "x-"))
-            {
-                // Support x-<name> as a fallback to enable easier migration for users
-                it = options_copy.find(Strings::concat("x-", option.name));
-            }
+            const auto it = options_copy.find(option.name);
             if (it != options_copy.end())
             {
                 if (!it->second.has_value())
@@ -494,12 +484,7 @@ namespace vcpkg
 
         for (auto&& option : command_structure.options.multisettings)
         {
-            auto it = options_copy.find(option.name);
-            if (it == options_copy.end() && !Strings::starts_with(option.name, "x-"))
-            {
-                // Support x-<name> as a fallback to enable easier migration for users
-                it = options_copy.find(Strings::concat("x-", option.name));
-            }
+            const auto it = options_copy.find(option.name);
             if (it != options_copy.end())
             {
                 if (!it->second.has_value())
