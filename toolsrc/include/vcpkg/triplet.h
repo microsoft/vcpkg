@@ -1,10 +1,11 @@
 #pragma once
 
-#include <string>
-
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.h>
+
 #include <vcpkg/vcpkgcmdarguments.h>
+
+#include <string>
 
 namespace vcpkg
 {

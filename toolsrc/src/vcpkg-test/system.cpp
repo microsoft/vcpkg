@@ -2,14 +2,14 @@
 
 #include <catch2/catch.hpp>
 
-#include <string>
-
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/zstringview.h>
+
+#include <string>
 
 using vcpkg::nullopt;
 using vcpkg::Optional;

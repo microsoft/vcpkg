@@ -5,6 +5,7 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/paragraphparseresult.h>
 #include <vcpkg/paragraphs.h>

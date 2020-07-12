@@ -1,8 +1,8 @@
 #pragma once
 
-#include <map>
-
 #include <vcpkg/binaryparagraph.h>
+
+#include <map>
 
 namespace vcpkg
 {
