@@ -1,22 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 30875ddb..f44ef82e 100644
+index 30875ddb..b45db698 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,3 +1,5 @@
-+cmake_minimum_required (VERSION 3.1.0) # This version was released 2014-12-15
-+
- project (GeographicLib)
- 
- # Version information
-@@ -47,8 +49,6 @@ set (LIBVERSION_BUILD 19.0.1)
- string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
- string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
- 
--cmake_minimum_required (VERSION 3.1.0) # This version was released 2014-12-15
--
- # User-settable variables
- 
- # (1) COMMON_INSTALL_PATH governs the installation convention.  If it
 @@ -464,12 +464,12 @@ endif ()
  # documentation files into the source tree.  Skip Apple here because
  # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
@@ -32,14 +17,15 @@ index 30875ddb..f44ef82e 100644
    set (MAINTAINER ON)
  else ()
    set (MAINTAINER OFF)
-@@ -509,12 +509,14 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
+@@ -508,6 +508,7 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
+ # The list of subdirectories to process
  add_subdirectory (src)
  add_subdirectory (include/GeographicLib)
- add_subdirectory (tools)
 +if (FALSE)
+ add_subdirectory (tools)
  add_subdirectory (man)
  add_subdirectory (doc)
- add_subdirectory (js)
+@@ -515,6 +516,7 @@ add_subdirectory (js)
  add_subdirectory (matlab)
  add_subdirectory (python/geographiclib)
  add_subdirectory (examples)
@@ -70,51 +56,3 @@ index 90e773ba..4cceaeb1 100644
  # @PROJECT_INCLUDE_DIRS@ is not used in the install tree; reset
  # it to prevent the source and build paths appearing in the installed
  # config files
-diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
-index b8c028c7..5b542991 100644
---- a/tools/CMakeLists.txt
-+++ b/tools/CMakeLists.txt
-@@ -1,7 +1,7 @@
- # Build the tools...
- 
- # Where to find the *.usage files for the --help option.
--include_directories (${PROJECT_BINARY_DIR}/man)
-+include_directories (${PROJECT_SOURCE_DIR}/man)
- # Only needed if target_compile_definitions is not supported
- add_definitions (${PROJECT_DEFINITIONS})
- 
-@@ -16,7 +16,7 @@ foreach (TOOL ${TOOLS})
-   add_dependencies (tools ${TOOL})
- 
-   set_source_files_properties (${TOOL}.cpp PROPERTIES
--    OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
-+    OBJECT_DEPENDS ${PROJECT_SOURCE_DIR}/man/${TOOL}.usage)
- 
-   target_link_libraries (${TOOL} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
- 
-@@ -28,6 +28,7 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
-     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
- endif ()
- 
-+if (FALSE)
- if (APPLE)
-   # Ensure that the package is relocatable
-   set_target_properties (${TOOLS} PROPERTIES
-@@ -47,10 +48,12 @@ if (MSVC AND PACKAGE_DEBUG_LIBS)
-       DESTINATION bin CONFIGURATIONS Release)
-   endforeach ()
- endif ()
-+endif ()
- 
- # Put all the tools into a folder in the IDE
- set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)
- 
-+if (FALSE)
- # Create the scripts for downloading the data files on non-Windows
- # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
- # default data directory.  These are installed under sbin, because it is
-@@ -66,3 +69,4 @@ if (NOT WIN32)
-   endforeach ()
-   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
- endif ()
-+endif ()
