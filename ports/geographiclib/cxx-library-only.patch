@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 30875ddb..a44c3f83 100644
+index 30875ddb..34aa6515 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -464,12 +464,12 @@ endif ()
@@ -17,10 +17,30 @@ index 30875ddb..a44c3f83 100644
    set (MAINTAINER ON)
  else ()
    set (MAINTAINER OFF)
-@@ -509,12 +509,14 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
+@@ -496,25 +496,34 @@ if (WIN32)
+   set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
+ endif ()
+ 
++if (SKIP_TOOLS)
++  set (TOOLS)
++  set (SCRIPTS)
++else ()
+ # The list of tools (to be installed into, e.g., /usr/local/bin)
+ set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
+   GeoidEval Gravity MagneticField Planimeter RhumbSolve TransverseMercatorProj)
+ # The list of scripts (to be installed into, e.g., /usr/local/sbin)
+ set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
+   geographiclib-get-magnetic)
++endif ()
+ 
+ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
+ 
+ # The list of subdirectories to process
  add_subdirectory (src)
  add_subdirectory (include/GeographicLib)
++if (NOT SKIP_TOOLS)
  add_subdirectory (tools)
++endif ()
 +if (FALSE)
  add_subdirectory (man)
  add_subdirectory (doc)

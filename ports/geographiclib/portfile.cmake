@@ -7,24 +7,28 @@ vcpkg_from_sourceforge (
   PATCHES cxx-library-only.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  vcpkg_configure_cmake (
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DGEOGRAPHICLIB_LIB_TYPE=SHARED
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    )
+if (VCPKG_TARGET_TRIPLET MATCHES ".*-uwp")
+  set (SKIP_TOOLS_OPTION "-DSKIP_TOOLS=ON")
 else ()
-  vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DGEOGRAPHICLIB_LIB_TYPE=STATIC
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    )
+  set (SKIP_TOOLS_OPTION "-DSKIP_TOOLS=OFF")
 endif ()
 
-vcpkg_install_cmake ()
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  set (LIB_TYPE "-DGEOGRAPHICLIB_LIB_TYPE=SHARED")
+else ()
+  set (LIB_TYPE "-DGEOGRAPHICLIB_LIB_TYPE=STATIC")
+endif ()
 
+vcpkg_configure_cmake (
+  SOURCE_PATH ${SOURCE_PATH}
+  OPTIONS ${LIB_TYPE} ${SKIP_TOOLS_OPTION}
+  PREFER_NINJA # Disable this option if project cannot be built with Ninja
+  )
+
+vcpkg_install_cmake ()
 vcpkg_fixup_cmake_targets (CONFIG_PATH share/geographiclib)
 vcpkg_copy_pdbs ()
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file (REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file (REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
