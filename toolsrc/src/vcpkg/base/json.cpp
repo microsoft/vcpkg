@@ -1,11 +1,11 @@
 #include "pch.h"
 
-#include <inttypes.h>
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/unicode.h>
+
+#include <inttypes.h>
 
 namespace vcpkg::Json
 {

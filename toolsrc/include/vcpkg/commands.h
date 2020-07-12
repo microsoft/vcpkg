@@ -1,14 +1,14 @@
 #pragma once
 
-#include <array>
-#include <map>
-#include <vector>
-
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
+
+#include <array>
+#include <map>
+#include <vector>
 
 namespace vcpkg::Commands
 {

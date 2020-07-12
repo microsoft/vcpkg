@@ -1,9 +1,9 @@
 #pragma once
 
-#include <atomic>
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.print.h>
+
+#include <atomic>
 
 namespace vcpkg::Debug
 {

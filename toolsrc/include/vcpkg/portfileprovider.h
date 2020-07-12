@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgpaths.h>
 
