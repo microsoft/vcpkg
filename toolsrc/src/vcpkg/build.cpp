@@ -501,6 +501,14 @@ namespace vcpkg::Build
             env);
         out_file.close();
 
+        if (compiler_hash.empty())
+        {
+            Debug::print("Compiler information tracking can be disabled by passing --",
+                         VcpkgCmdArguments::FEATURE_FLAGS_ARG,
+                         "=-",
+                         VcpkgCmdArguments::COMPILER_TRACKING_FEATURE,
+                         "\n");
+        }
         Checks::check_exit(VCPKG_LINE_INFO,
                            !compiler_hash.empty(),
                            "Error occured while detecting compiler information. Pass `--debug` for more information.");
