@@ -622,7 +622,7 @@ namespace vcpkg::Install
                 if (Strings::case_insensitive_ascii_contains(suffix, "/lib/") ||
                     Strings::case_insensitive_ascii_contains(suffix, "/bin/"))
                 {
-                    if (!Strings::ends_with(suffix, ".pc")) is_header_only = false;
+                    if (!Strings::ends_with(suffix, ".pc") && !Strings::ends_with(suffix, "/")) is_header_only = false;
                 }
 
                 if (is_header_only && header_path.empty())
