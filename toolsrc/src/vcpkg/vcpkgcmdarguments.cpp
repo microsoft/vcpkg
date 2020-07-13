@@ -449,8 +449,9 @@ namespace vcpkg
                 else if (value.front().empty())
                 {
                     // Fail when not given a value, e.g.: "vcpkg install sqlite3 --additional-ports="
-                    System::printf(
-                        System::Color::error, "Error: The option '--%s' must be passed a non-empty argument.\n", option.name);
+                    System::printf(System::Color::error,
+                                   "Error: The option '--%s' must be passed a non-empty argument.\n",
+                                   option.name);
                     failed = true;
                 }
                 else
