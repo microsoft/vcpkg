@@ -1,0 +1,40 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index 7b7cd51..ae4aa09 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -1638,7 +1638,7 @@ jumbo_component("base") {
+     "hash/md5_constexpr_internal.h",
+     "hash/sha1.h",
+   ]
+-  if (is_nacl) {
++  if (true) {
+     sources += [
+       "hash/md5_nacl.cc",
+       "hash/md5_nacl.h",
+diff --git a/gtest_prod_util.h b/gtest_prod_util.h
+index 2ca267e..0a0b6df 100644
+--- a/gtest_prod_util.h
++++ b/gtest_prod_util.h
+@@ -5,7 +5,8 @@
+ #ifndef BASE_GTEST_PROD_UTIL_H_
+ #define BASE_GTEST_PROD_UTIL_H_
+ 
+-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
++#define FRIEND_TEST(test_case_name, test_name)\
++friend class test_case_name##_##test_name##_Test
+ 
+ // This is a wrapper for gtest's FRIEND_TEST macro that friends
+ // test with all possible prefixes. This is very helpful when changing the test
+diff --git a/hash/md5.h b/hash/md5.h
+index 8a49f08..24acdab 100644
+--- a/hash/md5.h
++++ b/hash/md5.h
+@@ -11,7 +11,7 @@
+ #include "base/strings/string_piece.h"
+ #include "build/build_config.h"
+ 
+-#if defined(OS_NACL)
++#if true
+ #include "base/hash/md5_nacl.h"
+ #else
+ #include "base/hash/md5_boringssl.h"
