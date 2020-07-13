@@ -11,6 +11,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/buildenvironment.h>
@@ -88,12 +89,13 @@ namespace vcpkg::Build
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
         var_provider.load_dep_info_vars(std::array<PackageSpec, 1>{full_spec.package_spec});
-        var_provider.load_tag_vars(std::array<FullPackageSpec, 1>{full_spec}, provider);
 
         StatusParagraphs status_db = database_load_check(paths);
 
         auto action_plan = Dependencies::create_feature_install_plan(
             provider, var_provider, std::vector<FullPackageSpec>{full_spec}, status_db);
+
+        var_provider.load_tag_vars(action_plan, provider);
 
         const PackageSpec& spec = full_spec.package_spec;
         const SourceControlFile& scf = *scfl.source_control_file;
@@ -458,6 +460,11 @@ namespace vcpkg::Build
         System::print2("Detecting compiler hash for triplet ", triplet, "...\n");
         auto buildpath = paths.buildtrees / "detect_compiler";
 
+#if !defined(_WIN32)
+        // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
+        // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
+        vcpkg::Util::unused(paths.get_tool_exe(Tools::NINJA));
+#endif
         std::vector<System::CMakeVariable> cmake_args{
             {"CURRENT_PORT_DIR", paths.scripts / "detect_compiler"},
             {"CURRENT_BUILDTREES_DIR", buildpath},
@@ -499,6 +506,14 @@ namespace vcpkg::Build
             env);
         out_file.close();
 
+        if (compiler_hash.empty())
+        {
+            Debug::print("Compiler information tracking can be disabled by passing --",
+                         VcpkgCmdArguments::FEATURE_FLAGS_ARG,
+                         "=-",
+                         VcpkgCmdArguments::COMPILER_TRACKING_FEATURE,
+                         "\n");
+        }
         Checks::check_exit(VCPKG_LINE_INFO,
                            !compiler_hash.empty(),
                            "Error occured while detecting compiler information. Pass `--debug` for more information.");
@@ -821,12 +836,16 @@ namespace vcpkg::Build
         abi_tag_entries.emplace_back("powershell", paths.get_tool_version("powershell-core"));
 #endif
 
-        abi_tag_entries.emplace_back(
-            "vcpkg_fixup_cmake_targets",
-            vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO,
-                                       fs,
-                                       paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake",
-                                       Hash::Algorithm::Sha1));
+        auto& helpers = paths.get_cmake_script_hashes();
+        auto portfile_contents =
+            fs.read_contents(port_dir / fs::u8path("portfile.cmake")).value_or_exit(VCPKG_LINE_INFO);
+        for (auto&& helper : helpers)
+        {
+            if (Strings::case_insensitive_ascii_contains(portfile_contents, helper.first))
+            {
+                abi_tag_entries.emplace_back(helper.first, helper.second);
+            }
+        }
 
         abi_tag_entries.emplace_back("post_build_checks", "2");
         std::vector<std::string> sorted_feature_list = action.feature_list;
@@ -913,7 +932,7 @@ namespace vcpkg::Build
                 }
             }
 
-            action.abi_info = Build::AbiInfo();
+            action.abi_info = AbiInfo();
             auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
 
             abi_info.pre_build_info = std::make_unique<PreBuildInfo>(
