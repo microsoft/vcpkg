@@ -6,6 +6,7 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/binarycaching.private.h>
 #include <vcpkg/build.h>
