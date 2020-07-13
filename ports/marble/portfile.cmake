@@ -3,10 +3,10 @@ vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID" ON_ARCH "arm" "x
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/marble
-    REF a7b7e23113a8a87ae2206caed969ab557137c282 #v19.08.2
-    SHA512 f808bfbb118f509bd7939e8ae514a72cb9eec30b3a42f2bfedffcbeab7a1cbd658e35b5cd3e90ebeeacee6402c11ae9d293c12aaa5f2d70908e451b174a58e8e
+    REF 552cb9ae1f34482d1ec56532a703e0d820856286 #v20.04.3
+    SHA512 ac6106a6db53534c96d7281b1a07624c2852ed8c78cce0b91c5f865b106487f1f49aaa4c72d00ffb1f79a761d8d2eca18129ef9517bef463a1840554ed3e51fb
     HEAD_REF master
-    PATCHES "move-exe-to-tools.patch"
+    PATCHES "qtfix.patch"
 )
  
 vcpkg_configure_cmake(
