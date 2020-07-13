@@ -405,7 +405,7 @@ namespace vcpkg::Commands::CI
                 }
                 else
                 {
-                    include_all_supported_features_for_triplet(var_provider, p);
+                    // include_all_supported_features_for_triplet(var_provider, p);
                     ret->unknown.emplace_back(p->spec, p->feature_list);
                     b_will_build = true;
                 }
@@ -525,7 +525,7 @@ namespace vcpkg::Commands::CI
             }
 
             auto action_plan = Dependencies::create_feature_install_plan(
-                new_default_provider, var_provider, split_specs->unknown, status_db, serialize_options);
+                new_default_provider, var_provider, split_specs->unknown, status_db, serialize_options, true);
 
             for (auto&& action : action_plan.install_actions)
             {

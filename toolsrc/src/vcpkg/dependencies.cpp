@@ -597,7 +597,8 @@ namespace vcpkg::Dependencies
                                            const CMakeVars::CMakeVarProvider& var_provider,
                                            const std::vector<FullPackageSpec>& specs,
                                            const StatusParagraphs& status_db,
-                                           const CreateInstallPlanOptions& options)
+                                           const CreateInstallPlanOptions& options,
+                                           bool allFeatures)
     {
         PackageGraph pgraph(port_provider, var_provider, status_db);
 
@@ -609,7 +610,7 @@ namespace vcpkg::Dependencies
             Checks::check_exit(
                 VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.package_spec.name());
 
-            const std::vector<std::string> all_features =
+            std::vector<std::string> all_features =
                 Util::fmap(scfl->source_control_file->feature_paragraphs,
                            [](auto&& feature_paragraph) { return feature_paragraph->name; });
 
@@ -617,6 +618,24 @@ namespace vcpkg::Dependencies
                 spec.to_feature_specs(scfl->source_control_file->core_paragraph->default_features, all_features);
             feature_specs.insert(
                 feature_specs.end(), std::make_move_iterator(fspecs.begin()), std::make_move_iterator(fspecs.end()));
+
+            if (allFeatures)
+            {
+                auto feature_list = feature_specs;
+                const auto& features_paragraphs = scfl->source_control_file->feature_paragraphs;
+                PlatformExpression::Context context =
+                    var_provider.get_tag_vars(spec.package_spec).value_or_exit(VCPKG_LINE_INFO);
+
+                for (auto feature = features_paragraphs.begin(); feature != features_paragraphs.end(); feature++)
+                {
+                    if (feature->get()->supports_expression.evaluate(context))
+                    {
+                        // if (find(feature_list.begin(), feature_list.end(), feature->get()->name) ==
+                        // feature_list.end())
+                        feature_specs.insert(feature_specs.end(), FeatureSpec(spec.package_spec, feature->get()->name));
+                    }
+                }
+            }
         }
         Util::sort_unique_erase(feature_specs);
 

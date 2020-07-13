@@ -152,7 +152,8 @@ namespace vcpkg::Dependencies
                                            const CMakeVars::CMakeVarProvider& var_provider,
                                            const std::vector<FullPackageSpec>& specs,
                                            const StatusParagraphs& status_db,
-                                           const CreateInstallPlanOptions& options = {});
+                                           const CreateInstallPlanOptions& options = {},
+                                           bool allFeatures = false);
 
     ActionPlan create_upgrade_plan(const PortFileProvider::PortFileProvider& provider,
                                    const CMakeVars::CMakeVarProvider& var_provider,
