@@ -286,27 +286,6 @@ namespace vcpkg::Commands::CI
         return supports_expression.evaluate(context);
     }
 
-    static void include_all_supported_features_for_triplet(const CMakeVars::CMakeVarProvider& var_provider,
-                                                           const InstallPlanAction* install_plan)
-    {
-        auto&& scfl = install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-        const auto& supports_expression = scfl.source_control_file->feature_paragraphs;
-        auto feature_list = install_plan->feature_list;
-        PlatformExpression::Context context =
-            var_provider.get_tag_vars(install_plan->spec).value_or_exit(VCPKG_LINE_INFO);
-
-        for (auto feature = supports_expression.begin(); feature != supports_expression.end(); feature++)
-        {
-            if (feature->get()->supports_expression.evaluate(context))
-            {
-                if (find(feature_list.begin(), feature_list.end(), feature->get()->name) == feature_list.end())
-                    feature_list.push_back(feature->get()->name);
-            }
-        }
-
-        return;
-    }
-
     static std::unique_ptr<UnknownCIPortsResults> find_unknown_ports_for_ci(
         const VcpkgPaths& paths,
         const std::set<std::string>& exclusions,
