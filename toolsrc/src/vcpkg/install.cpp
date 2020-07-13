@@ -4,6 +4,7 @@
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
@@ -672,8 +673,7 @@ namespace vcpkg::Install
         const ParsedArguments options =
             args.parse_arguments(paths.manifest_mode_enabled() ? MANIFEST_COMMAND_STRUCTURE : COMMAND_STRUCTURE);
 
-        auto binaryprovider =
-            create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+        auto binaryprovider = create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
@@ -726,8 +726,10 @@ namespace vcpkg::Install
             {
                 for (auto& dep : (*val)->core_paragraph->dependencies)
                 {
-                    specs.push_back(Input::check_and_get_full_package_spec(
-                        std::move(dep.name), default_triplet, COMMAND_STRUCTURE.example_text));
+                    specs.push_back(FullPackageSpec{
+                        {std::move(dep.name), default_triplet},
+                        std::move(dep.features),
+                    });
                 }
             }
             else

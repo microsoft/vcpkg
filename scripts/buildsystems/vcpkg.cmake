@@ -6,10 +6,6 @@ option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging pu
 mark_as_advanced(VCPKG_VERBOSE)
 
 function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
-    if(DEFINED ${OUT})
-        return()
-    endif()
-
     set(_vcpkg_get_dir_candidate ${DIRECTORY})
     while(IS_DIRECTORY ${_vcpkg_get_dir_candidate} AND NOT DEFINED _vcpkg_get_dir_out)
         if(EXISTS ${_vcpkg_get_dir_candidate}/${FILENAME})
@@ -28,22 +24,28 @@ function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
 endfunction()
 
 _vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
-if(_VCPKG_MANIFEST_DIR)
-    set(_VCPKG_MANIFEST_MODE_DEFAULT ON)
-else()
-    set(_VCPKG_MANIFEST_MODE_DEFAULT OFF)
-endif()
-
-option(VCPKG_MANIFEST_MODE "Set vcpkg to manifest mode" ${_VCPKG_MANIFEST_MODE_DEFAULT})
-
-if(NOT _VCPKG_MANIFEST_DIR AND VCPKG_MANIFEST_MODE)
+if(NOT DEFINED VCPKG_MANIFEST_MODE)
+    if(_VCPKG_MANIFEST_DIR)
+        set(VCPKG_MANIFEST_MODE ON)
+    else()
+        set(VCPKG_MANIFEST_MODE OFF)
+    endif()
+elseif(VCPKG_MANIFEST_MODE AND NOT _VCPKG_MANIFEST_DIR)
     message(FATAL_ERROR
         "vcpkg manifest mode was enabled, but we couldn't find a manifest file (vcpkg.json) "
         "in any directories above ${CMAKE_CURRENT_SOURCE_DIR}. Please add a manifest, or "
         "disable manifests by turning off VCPKG_MANIFEST_MODE.")
 endif()
 
-option(VCPKG_MANIFEST_INSTALL "Install packages from the manifest" ON)
+if(VCPKG_MANIFEST_MODE)
+    option(VCPKG_MANIFEST_INSTALL
+[[
+Install the dependencies listed in your manifest:
+    If this is off, you will have to manually install your dependencies.
+    See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md for more info.
+]]
+        ON)
+endif()
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
@@ -198,7 +200,7 @@ endif()
 
 if (NOT DEFINED _VCPKG_INSTALLED_DIR)
     if(_VCPKG_MANIFEST_DIR)
-        set(_VCPKG_INSTALLED_DIR ${_VCPKG_MANIFEST_DIR}/vcpkg_installed)
+        set(_VCPKG_INSTALLED_DIR ${CMAKE_BINARY_DIR}/vcpkg_installed)
     else()
         set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
     endif()
@@ -230,11 +232,11 @@ else() #Release build: Put Release paths before Debug paths. Debug Paths are req
     )
 endif()
 
-# If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET} 
+# If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
 # and ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug are searched, it is not sufficient to just add them to CMAKE_FIND_ROOT_PATH,
-# as CMAKE_FIND_ROOT_PATH specify "one or more directories to be prepended to all other search directories", so to make sure that 
+# as CMAKE_FIND_ROOT_PATH specify "one or more directories to be prepended to all other search directories", so to make sure that
 # the libraries are searched as they are, it is necessary to add "/" to the CMAKE_PREFIX_PATH
-if(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE STREQUAL "ONLY" OR 
+if(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE STREQUAL "ONLY" OR
    CMAKE_FIND_ROOT_PATH_MODE_LIBRARY STREQUAL "ONLY" OR
    CMAKE_FIND_ROOT_PATH_MODE_PACKAGE STREQUAL "ONLY")
    list(APPEND CMAKE_PREFIX_PATH "/")
@@ -280,23 +282,45 @@ endforeach()
 
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
 if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(_VCPKG_EXECUTABLE_SUFFIX ".exe")
+    set(_VCPKG_EXECUTABLE "${_VCPKG_ROOT_DIR}/vcpkg.exe")
+    set(_VCPKG_BOOTSTRAP_SCRIPT "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg.bat")
 else()
-    set(_VCPKG_EXECUTABLE_SUFFIX "")
+    set(_VCPKG_EXECUTABLE "${_VCPKG_ROOT_DIR}/vcpkg")
+    set(_VCPKG_BOOTSTRAP_SCRIPT "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg.sh")
 endif()
 
 if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
+    if(NOT EXISTS "${_VCPKG_EXECUTABLE}")
+        message(STATUS "Bootstrapping vcpkg before install")
+
+        execute_process(
+            COMMAND "${_VCPKG_BOOTSTRAP_SCRIPT}"
+            RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
+
+        if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
+            message(FATAL_ERROR "Bootstrapping vcpkg before install - failed")
+        endif()
+
+        message(STATUS "Bootstrapping vcpkg before install - done")
+    endif()
+
+    message(STATUS "Running vcpkg install")
+
     execute_process(
-        COMMAND "${_VCPKG_ROOT_DIR}/vcpkg${_VCPKG_EXECUTABLE_SUFFIX}" install
+        COMMAND "${_VCPKG_EXECUTABLE}" install
             --triplet ${VCPKG_TARGET_TRIPLET}
             --vcpkg-root ${_VCPKG_ROOT_DIR}
             --x-manifest-root=${_VCPKG_MANIFEST_DIR}
             --x-install-root=${_VCPKG_INSTALLED_DIR}
             --binarycaching
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
+
     if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR "vcpkg install failed")
+        message(FATAL_ERROR "Running vcpkg install - failed")
     endif()
+
+    message(STATUS "Running vcpkg install - done")
+
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
         "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
         "${_VCPKG_INSTALLED_DIR}/vcpkg/status")

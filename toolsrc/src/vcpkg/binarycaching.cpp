@@ -6,6 +6,7 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/binarycaching.private.h>
 #include <vcpkg/build.h>
@@ -651,23 +652,13 @@ IBinaryProvider& vcpkg::null_binary_provider()
     return p;
 }
 
-ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(const VcpkgPaths& paths,
-                                                                                       View<std::string> args)
+ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(View<std::string> args)
 {
     std::string env_string = System::get_environment_variable("VCPKG_BINARY_SOURCES").value_or("");
 
-    // Preserve existing behavior until CI can be updated
-    // TODO: remove
-    if (args.size() == 0 && env_string.empty())
-    {
-        auto p = paths.root / fs::u8path("archives");
-        return {std::make_unique<ArchivesBinaryProvider>(std::vector<fs::path>{p}, std::vector<fs::path>{p})};
-    }
-
     return create_binary_provider_from_configs_pure(env_string, args);
 }
-ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs_pure(
-    const std::string& env_string, View<std::string> args)
+namespace
 {
     struct State
     {
@@ -755,6 +746,41 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
             }
         }
 
+        template<class T>
+        void handle_readwrite(std::vector<T>& read,
+                              std::vector<T>& write,
+                              T&& t,
+                              const std::vector<std::pair<SourceLoc, std::string>>& segments,
+                              size_t segment_idx)
+        {
+            if (segment_idx >= segments.size())
+            {
+                read.push_back(std::move(t));
+                return;
+            }
+
+            auto& mode = segments[segment_idx].second;
+
+            if (mode == "read")
+            {
+                read.push_back(std::move(t));
+            }
+            else if (mode == "write")
+            {
+                write.push_back(std::move(t));
+            }
+            else if (mode == "readwrite")
+            {
+                read.push_back(t);
+                write.push_back(std::move(t));
+            }
+            else
+            {
+                return add_error("unexpected argument: expected 'read', readwrite', or 'write'",
+                                 segments[segment_idx].first);
+            }
+        }
+
         void handle_segments(std::vector<std::pair<SourceLoc, std::string>>&& segments)
         {
             if (segments.empty()) return;
@@ -779,37 +805,10 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     return add_error("expected arguments: path arguments for binary config strings must be absolute",
                                      segments[1].first);
                 }
-
-                std::string mode;
-                switch (segments.size())
-                {
-                    case 2: mode = "read"; break;
-                    case 3: mode = segments[2].second; break;
-                    default:
-                        return add_error("unexpected arguments: binary config 'files' requires 1 or 2 arguments",
-                                         segments[3].first);
-                }
-
-                if (mode == "read")
-                {
-                    state->archives_to_read.push_back(std::move(p));
-                }
-                else if (mode == "write")
-                {
-                    state->archives_to_write.push_back(std::move(p));
-                }
-                else if (mode == "readwrite")
-                {
-                    state->archives_to_read.push_back(p);
-                    state->archives_to_write.push_back(std::move(p));
-                }
-                else
-                {
-                    Checks::check_exit(VCPKG_LINE_INFO, segments.size() > 2);
-                    return add_error("unexpected arguments: binary config 'files' can only accept"
-                                     " 'read', readwrite', or 'write' as a second argument",
-                                     segments[2].first);
-                }
+                handle_readwrite(state->archives_to_read, state->archives_to_write, std::move(p), segments, 2);
+                if (segments.size() > 3)
+                    return add_error("unexpected arguments: binary config 'files' requires 1 or 2 arguments",
+                                     segments[3].first);
             }
             else if (segments[0].second == "interactive")
             {
@@ -829,28 +828,10 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 if (!p.is_absolute())
                     return add_error("expected arguments: path arguments for binary config strings must be absolute",
                                      segments[1].first);
-
+                handle_readwrite(state->configs_to_read, state->configs_to_write, std::move(p), segments, 2);
                 if (segments.size() > 3)
-                {
-                    return add_error(
-                        "unexpected arguments: binary config 'nugetconfig' does not take more than 2 arguments",
-                        segments[3].first);
-                }
-                else if (segments.size() == 3)
-                {
-                    if (segments[2].second != "upload")
-                    {
-                        return add_error(
-                            "unexpected arguments: binary config 'nugetconfig' can only accept 'upload' as "
-                            "a second argument",
-                            segments[2].first);
-                    }
-                    else
-                    {
-                        state->configs_to_write.push_back(p);
-                    }
-                }
-                state->configs_to_read.push_back(std::move(p));
+                    return add_error("unexpected arguments: binary config 'nugetconfig' requires 1 or 2 arguments",
+                                     segments[3].first);
             }
             else if (segments[0].second == "nuget")
             {
@@ -861,25 +842,11 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 auto&& p = segments[1].second;
                 if (p.empty())
                     return add_error("unexpected arguments: binary config 'nuget' requires non-empty source");
+
+                handle_readwrite(state->sources_to_read, state->sources_to_write, std::move(p), segments, 2);
                 if (segments.size() > 3)
-                {
-                    return add_error("unexpected arguments: binary config 'nuget' does not take more than 2 arguments",
+                    return add_error("unexpected arguments: binary config 'nuget' requires 1 or 2 arguments",
                                      segments[3].first);
-                }
-                else if (segments.size() == 3)
-                {
-                    if (segments[2].second != "upload")
-                    {
-                        return add_error("unexpected arguments: binary config 'nuget' can only accept 'upload' as "
-                                         "a second argument",
-                                         segments[2].first);
-                    }
-                    else
-                    {
-                        state->sources_to_write.push_back(p);
-                    }
-                }
-                state->sources_to_read.push_back(std::move(p));
             }
             else if (segments[0].second == "default")
             {
@@ -899,34 +866,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     return add_error("default path was not absolute: " + p.u8string(), segments[0].first);
                 }
 
-                std::string mode;
-                switch (segments.size())
-                {
-                    case 1: mode = "read"; break;
-                    case 2: mode = segments[1].second; break;
-                    default: Checks::unreachable(VCPKG_LINE_INFO);
-                }
-
-                if (mode == "read")
-                {
-                    state->archives_to_read.push_back(std::move(p));
-                }
-                else if (mode == "write")
-                {
-                    state->archives_to_write.push_back(std::move(p));
-                }
-                else if (mode == "readwrite")
-                {
-                    state->archives_to_read.push_back(p);
-                    state->archives_to_write.push_back(std::move(p));
-                }
-                else
-                {
-                    Checks::check_exit(VCPKG_LINE_INFO, segments.size() > 1);
-                    return add_error("unexpected arguments: binary config 'default' can only accept"
-                                     " 'read', readwrite', or 'write' as a first argument",
-                                     segments[1].first);
-                }
+                handle_readwrite(state->archives_to_read, state->archives_to_write, std::move(p), segments, 1);
             }
             else
             {
@@ -937,8 +877,15 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
             }
         }
     };
+}
 
+ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs_pure(
+    const std::string& env_string, View<std::string> args)
+{
     State s;
+
+    BinaryConfigParser default_parser("default,readwrite", "<defaults>", &s);
+    default_parser.parse();
 
     BinaryConfigParser env_parser(env_string, "VCPKG_BINARY_SOURCES", &s);
     env_parser.parse();
