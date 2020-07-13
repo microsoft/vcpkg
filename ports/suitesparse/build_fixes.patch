@@ -263,7 +263,7 @@ index 1e587d1..fd8f3a7 100644
    find_dependency(BLAS)
    find_dependency(LAPACK)
 -endif ()
-+  @SuiteSparse_FIND_PACKAGE_METIS@
++  @SuiteSparse_FIND_DEPENDENCY_METIS@
  
  # Load targets from the install tree.
 -include(${_SuiteSparse_SELF_DIR}/SuiteSparse-targets.cmake)
