@@ -53,8 +53,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
 		message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 	endif()
 
-	set(ENV{_CL_} "/FS /MP${VCPKG_CONCURRENCY}")
-
 	vcpkg_install_msbuild(
 		SOURCE_PATH ${SOURCE_PATH}
 		PROJECT_SUBPATH PCBuild/pythoncore.vcxproj

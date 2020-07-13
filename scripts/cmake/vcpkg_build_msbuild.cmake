@@ -97,7 +97,6 @@ function(vcpkg_build_msbuild)
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
         /p:VcpkgManifestInstall=false
-        /m
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -115,14 +114,16 @@ function(vcpkg_build_msbuild)
         )
     endif()
 
+    list(APPEND _csc_OPTIONS_RELEASE /p:Configuration=${_csc_RELEASE_CONFIGURATION})
+    list(APPEND _csc_OPTIONS_DEBUG /p:Configuration=${_csc_DEBUG_CONFIGURATION})
+    set(BASE_COMMAND msbuild ${_csc_PROJECT_PATH} ${_csc_OPTIONS})
+    set(PARALLEL_OPT /p:CL_MPCount=${VCPKG_CONCURRENCY} /m)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        vcpkg_execute_required_process(
-            COMMAND msbuild ${_csc_PROJECT_PATH}
-                /p:Configuration=${_csc_RELEASE_CONFIGURATION}
-                ${_csc_OPTIONS}
-                ${_csc_OPTIONS_RELEASE}
+        vcpkg_execute_build_process(
+            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE} ${PARALLEL_OPT}
+            NO_PARALLEL_COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
@@ -131,11 +132,9 @@ function(vcpkg_build_msbuild)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        vcpkg_execute_required_process(
-            COMMAND msbuild ${_csc_PROJECT_PATH}
-                /p:Configuration=${_csc_DEBUG_CONFIGURATION}
-                ${_csc_OPTIONS}
-                ${_csc_OPTIONS_DEBUG}
+        vcpkg_execute_build_process(
+            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG} ${PARALLEL_OPT}
+            NO_PARALLEL_COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
