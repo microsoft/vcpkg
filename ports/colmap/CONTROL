@@ -1,0 +1,9 @@
+Source: colmap
+Version: 3.6-dev.3
+Build-Depends: boost-program-options, boost-filesystem, boost-graph, boost-regex, boost-system, boost-test, eigen3, suitesparse, freeimage, glog, gflags, glew, qt5-base, cgal[qt], ceres
+Homepage: https://github.com/colmap/colmap
+Description: COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline with a graphical and command-line interface. It offers a wide range of features for reconstruction of ordered and unordered image collections. The software is licensed under the new BSD license. Documentation: https://colmap.github.io/
+
+Feature: cuda
+Build-Depends: cuda
+Description: CUDA support for COLMAP

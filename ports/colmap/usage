@@ -1,0 +1,10 @@
+To see the full list of command-line options:
+
+    colmap -h
+    colmap gui
+
+
+If you want to include and link COLMAP against your own library:
+
+    find_package(COLMAP REQUIRED)
+    target_link_libraries(main ${COLMAP_LIBRARIES})
