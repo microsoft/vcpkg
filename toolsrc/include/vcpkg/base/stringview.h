@@ -1,10 +1,10 @@
 #pragma once
 
+#include <vcpkg/base/optional.h>
+
 #include <limits>
 #include <string>
 #include <vector>
-
-#include <vcpkg/base/optional.h>
 
 namespace vcpkg
 {

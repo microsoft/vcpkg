@@ -1,9 +1,9 @@
 #pragma once
 
+#include <vcpkg/base/files.h>
+
 #include <string>
 #include <utility>
-
-#include <vcpkg/base/files.h>
 
 namespace vcpkg
 {

@@ -2,11 +2,13 @@
 
 #include <catch2/catch.hpp>
 
-#include <vcpkg-test/util.h>
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/statusparagraph.h>
+
+#include <vcpkg-test/util.h>
 
 // used to get the implementation specific compiler flags (i.e., __cpp_lib_filesystem)
 #include <ciso646>
