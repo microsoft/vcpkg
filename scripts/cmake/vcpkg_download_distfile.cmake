@@ -47,7 +47,7 @@
 ## * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
 ## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
 function(vcpkg_download_distfile VAR)
-    set(options SKIP_SHA512)
+    set(options SKIP_SHA512 SILENT_EXIT)
     set(oneValueArgs FILENAME SHA512)
     set(multipleValuesArgs URLS HEADERS)
     cmake_parse_arguments(vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
@@ -171,18 +171,31 @@ function(vcpkg_download_distfile VAR)
             endforeach(url)
         endif()
 
-        if (NOT download_success)
-            message(FATAL_ERROR
-            "    \n"
-            "    Failed to download file.\n"
-            "    If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment\n"
-            "    variables to \"https://user:password@your-proxy-ip-address:port/\".\n"
-            "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
+        if (NOT vcpkg_download_distfile_SILENT_EXIT)
+            if (NOT download_success)
+                message(FATAL_ERROR
+                "    \n"
+                "    Failed to download file.\n"
+                "    If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment\n"
+                "    variables to \"https://user:password@your-proxy-ip-address:port/\".\n"
+                "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
+            else()
+                test_hash("${download_file_path_part}" "downloaded file" "The file may have been corrupted in transit. This can be caused by proxies. If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment variables to \"https://user:password@your-proxy-ip-address:port/\".\n")
+                get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
+                file(MAKE_DIRECTORY "${downloaded_file_dir}")
+                file(RENAME ${download_file_path_part} ${downloaded_file_path})
+            endif()
         else()
-            test_hash("${download_file_path_part}" "downloaded file" "The file may have been corrupted in transit. This can be caused by proxies. If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment variables to \"https://user:password@your-proxy-ip-address:port/\".\n")
-            get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
-            file(MAKE_DIRECTORY "${downloaded_file_dir}")
-            file(RENAME ${download_file_path_part} ${downloaded_file_path})
+            if (NOT download_success)
+                message(WARNING
+                "    \n"
+                "    Failed to download file.\n")
+            else()
+                test_hash("${download_file_path_part}" "downloaded file" "The file may have been corrupted in transit. This can be caused by proxies. If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment variables to \"https://user:password@your-proxy-ip-address:port/\".\n")
+                get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
+                file(MAKE_DIRECTORY "${downloaded_file_dir}")
+                file(RENAME ${download_file_path_part} ${downloaded_file_path})
+            endif()
         endif()
     endif()
     set(${VAR} ${downloaded_file_path} PARENT_SCOPE)

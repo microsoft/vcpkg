@@ -1,5 +1,10 @@
 #include "pch.h"
 
+#include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/export.chocolatey.h>
@@ -11,11 +16,6 @@
 #include <vcpkg/install.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkglib.h>
-
-#include <vcpkg/base/stringliteral.h>
-#include <vcpkg/base/system.print.h>
-#include <vcpkg/base/system.process.h>
-#include <vcpkg/base/util.h>
 
 namespace vcpkg::Export
 {
@@ -76,17 +76,6 @@ namespace vcpkg::Export
     {
         static constexpr std::array<ExportPlanType, 2> ORDER = {ExportPlanType::ALREADY_BUILT,
                                                                 ExportPlanType::NOT_BUILT};
-        static constexpr Build::BuildPackageOptions BUILD_OPTIONS = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
-            Build::CleanBuildtrees::NO,
-            Build::CleanPackages::NO,
-            Build::CleanDownloads::NO,
-            Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::NO,
-        };
-
         for (const ExportPlanType plan_type : ORDER)
         {
             const auto it = group_by_plan_type.find(plan_type);
@@ -98,7 +87,8 @@ namespace vcpkg::Export
             std::vector<const ExportPlanAction*> cont = it->second;
             std::sort(cont.begin(), cont.end(), &ExportPlanAction::compare_by_name);
             const std::string as_string = Strings::join("\n", cont, [](const ExportPlanAction* p) {
-                return Dependencies::to_output_string(p->request_type, p->spec.to_string(), BUILD_OPTIONS);
+                return Dependencies::to_output_string(
+                    p->request_type, p->spec.to_string(), vcpkg::Build::default_build_package_options);
             });
 
             switch (plan_type)

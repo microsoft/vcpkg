@@ -1,9 +1,8 @@
 #pragma once
 
-#include <vcpkg/base/pragmas.h>
-
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/pragmas.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>

@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/export.h>
@@ -14,7 +15,7 @@ namespace vcpkg::Help
     {
         using topic_function = void (*)(const VcpkgPaths& paths);
 
-        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) {}
+        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) { }
 
         CStringView name;
         topic_function print;
