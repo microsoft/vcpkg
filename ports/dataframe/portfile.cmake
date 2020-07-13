@@ -8,9 +8,9 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
 
-file(INSTALL ${SOURCE_PATH}/License DESTINATION ${CURRENT_PACKAGES_DIR}/share/dataframe RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/License DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
