@@ -53,9 +53,22 @@ index 30875ddb..34aa6515 100644
    if (GEOGRAPHICLIB_PRECISION EQUAL 2)
      set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 90e773ba..4cceaeb1 100644
+index 90e773ba..c9a303b0 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
+@@ -33,10 +33,10 @@ configure_file (project-config.cmake.in
+ configure_file (project-config-version.cmake.in
+   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake" @ONLY)
+ export (TARGETS
+-  ${PROJECT_ALL_LIBRARIES} ${TOOLS}
++  ${PROJECT_ALL_LIBRARIES}
+   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
+ export (TARGETS
+-  ${PROJECT_ALL_LIBRARIES} ${TOOLS}
++  ${PROJECT_ALL_LIBRARIES}
+   NAMESPACE ${PROJECT_NAME}::
+   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
+ 
 @@ -44,15 +44,9 @@ export (TARGETS
  # ${INSTALL_CMAKE_DIR} and @PROJECT_ROOT_DIR@ is the relative
  # path to the root from there.  (Note that the whole install tree can
@@ -76,7 +89,7 @@ index 90e773ba..4cceaeb1 100644
  # it to prevent the source and build paths appearing in the installed
  # config files
 diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
-index b8c028c7..ff8f9673 100644
+index b8c028c7..26e4ba14 100644
 --- a/tools/CMakeLists.txt
 +++ b/tools/CMakeLists.txt
 @@ -1,7 +1,7 @@
@@ -102,7 +115,7 @@ index b8c028c7..ff8f9673 100644
  
  # Specify where the tools are installed, adding them to the export targets
 -install (TARGETS ${TOOLS} EXPORT targets DESTINATION bin)
-+install (TARGETS ${TOOLS} EXPORT targets DESTINATION tools)
++install (TARGETS ${TOOLS} DESTINATION tools)
  
  if (MSVC AND PACKAGE_DEBUG_LIBS)
    # Possibly don't EXPORT the debug versions of the tools and then this
