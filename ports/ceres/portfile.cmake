@@ -7,7 +7,7 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(ADDITIONAL_PATCH "0004_blas_linux_fix.patch")
+    set(ADDITIONAL_PATCH "0005_blas_linux_fix.patch")
 endif()
 
 vcpkg_from_github(
@@ -20,14 +20,15 @@ vcpkg_from_github(
         0001_cmakelists_fixes.patch
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
+        0004_fix_find_eigen.patch
         ${ADDITIONAL_PATCH}
 )
 
+file(REMOVE ${SOURCE_PATH}/cmake/FindCXSparse.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindGflags.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindGlog.cmake)
-#file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
-#file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
 
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -77,6 +78,4 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright of suitesparse and metis
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ceres)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ceres/LICENSE ${CURRENT_PACKAGES_DIR}/share/ceres/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

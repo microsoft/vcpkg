@@ -1,0 +1,67 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7033de0..5235baa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -209,40 +209,40 @@ endif (IOS)
+ unset(CERES_COMPILE_OPTIONS)
+ 
+ # Eigen.
+-find_package(Eigen REQUIRED)
+-if (EIGEN_FOUND)
+-  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
+-  if (EIGEN_VERSION VERSION_LESS 3.1.0)
++find_package(Eigen3 REQUIRED)
++if (EIGEN3_FOUND)
++  message(STATUS "Found Eigen version ${EIGEN3_VERSION_STRING}: ${EIGEN3_INCLUDE_DIRS}")
++  if (EIGEN3_VERSION_STRING VERSION_LESS 3.1.0)
+     message(FATAL_ERROR "-- Ceres requires Eigen version >= 3.1.0 in order "
+       "that Eigen/SparseCore be available, detected version of Eigen is: "
+-      "${EIGEN_VERSION}")
+-  endif (EIGEN_VERSION VERSION_LESS 3.1.0)
++      "${EIGEN3_VERSION_STRING}")
++  endif (EIGEN3_VERSION_STRING VERSION_LESS 3.1.0)
+ 
+   if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*)" AND
+-      EIGEN_VERSION VERSION_LESS 3.3.4)
++      EIGEN3_VERSION_STRING VERSION_LESS 3.3.4)
+     # As per issue #289: https://github.com/ceres-solver/ceres-solver/issues/289
+     # the bundle_adjustment_test will fail for Eigen < 3.3.4 on aarch64.
+     message(FATAL_ERROR "-- Ceres requires Eigen version >= 3.3.4 on aarch64. "
+-      "Detected version of Eigen is: ${EIGEN_VERSION}.")
++      "Detected version of Eigen is: ${EIGEN3_VERSION_STRING}.")
+   endif()
+ 
+   if (EIGENSPARSE)
+-    message("-- Enabling use of Eigen as a sparse linear algebra library.")
++    message(STATUS "Enabling use of Eigen as a sparse linear algebra library.")
+     list(APPEND CERES_COMPILE_OPTIONS CERES_USE_EIGEN_SPARSE)
+-    if (EIGEN_VERSION VERSION_LESS 3.2.2)
++    if (EIGEN3_VERSION_STRING VERSION_LESS 3.2.2)
+       message("   WARNING:")
+       message("")
+-      message("   Your version of Eigen (${EIGEN_VERSION}) is older than ")
++      message("   Your version of Eigen (${EIGEN3_VERSION_STRING}) is older than ")
+       message("   version 3.2.2.  The performance of SPARSE_NORMAL_CHOLESKY ")
+       message("   and SPARSE_SCHUR linear solvers will suffer.")
+-    endif (EIGEN_VERSION VERSION_LESS 3.2.2)
++    endif (EIGEN3_VERSION_STRING VERSION_LESS 3.2.2)
+   else (EIGENSPARSE)
+     message("-- Disabling use of Eigen as a sparse linear algebra library.")
+     message("   This does not affect the covariance estimation algorithm ")
+     message("   which can still use the EIGEN_SPARSE_QR algorithm.")
+     add_definitions(-DEIGEN_MPL2_ONLY)
+   endif (EIGENSPARSE)
+-endif (EIGEN_FOUND)
++endif (EIGEN3_FOUND)
+ 
+ if (LAPACK)
+   find_package(LAPACK QUIET)
+@@ -562,7 +562,7 @@ include_directories(
+ # Note that this is *not* propagated to clients, ie CERES_INCLUDE_DIRS
+ # used by clients after find_package(Ceres) does not identify Eigen as
+ # as system headers.
+-include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
++include_directories(${EIGEN3_INCLUDE_DIRS})
+ 
+ if (SUITESPARSE)
+   include_directories(${SUITESPARSE_INCLUDE_DIRS})
