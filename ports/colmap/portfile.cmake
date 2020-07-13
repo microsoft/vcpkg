@@ -20,8 +20,24 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/exe"
+    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/lib/Graclus/multilevelLib"
+    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/tools"
+    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/ui/media"
+    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/ui/shaders"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/exe"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/lib/Graclus/multilevelLib"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/tools"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/ui/media"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/ui/shaders"
+    "${CURRENT_PACKAGES_DIR}/COLMAP.bat"
+    "${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat"
+    "${CURRENT_PACKAGES_DIR}/debug/COLMAP.bat"
+    "${CURRENT_PACKAGES_DIR}/debug/RUN_TESTS.bat"
+)
 
 vcpkg_copy_pdbs()
 
