@@ -88,6 +88,7 @@ vcpkg_from_github(
     SHA512 f3a690039cf39fe2db9a728b82af0d39eaa02340a853bdad4b5152d63532367eb24fc7033a614882168049b80d803b6225fc60ed2900a9d0deab847f220540be
     HEAD_REF master
 	PATCHES
+		internalMBP_symbols.patch
 		msvc_142_bug_workaround.patch
 		vs16_3_typeinfo_header_fix.patch
 )
