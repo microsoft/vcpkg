@@ -1,7 +1,5 @@
 #include "pch.h"
 
-#include <algorithm>
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
@@ -19,6 +17,8 @@
 #include <vcpkg/packagespec.h>
 #include <vcpkg/platform-expression.h>
 #include <vcpkg/vcpkglib.h>
+
+#include <algorithm>
 
 using namespace vcpkg;
 
