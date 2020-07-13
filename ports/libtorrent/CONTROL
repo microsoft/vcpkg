@@ -19,6 +19,7 @@ Description: build with libiconv on Windows
 Feature: python
 Build-Depends: boost-python, libtorrent[deprfun]
 Description: build the python bindings in bindings/python directory
+Supports: !windows
 
 Feature: test
 Build-Depends: libtorrent[deprfun]
@@ -26,4 +27,3 @@ Description: build the libtorrent tests
 
 Feature: tools
 Description: build the tools in the tools directory
-Supports: !windows
