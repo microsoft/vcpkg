@@ -836,12 +836,16 @@ namespace vcpkg::Build
         abi_tag_entries.emplace_back("powershell", paths.get_tool_version("powershell-core"));
 #endif
 
-        abi_tag_entries.emplace_back(
-            "vcpkg_fixup_cmake_targets",
-            vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO,
-                                       fs,
-                                       paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake",
-                                       Hash::Algorithm::Sha1));
+        auto& helpers = paths.get_cmake_script_hashes();
+        auto portfile_contents =
+            fs.read_contents(port_dir / fs::u8path("portfile.cmake")).value_or_exit(VCPKG_LINE_INFO);
+        for (auto&& helper : helpers)
+        {
+            if (Strings::case_insensitive_ascii_contains(portfile_contents, helper.first))
+            {
+                abi_tag_entries.emplace_back(helper.first, helper.second);
+            }
+        }
 
         abi_tag_entries.emplace_back("post_build_checks", "2");
         std::vector<std::string> sorted_feature_list = action.feature_list;
