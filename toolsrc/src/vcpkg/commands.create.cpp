@@ -9,8 +9,8 @@
 namespace vcpkg::Commands::Create
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        create_example_string(R"###(create zlib2 http://zlib.net/zlib1211.zip "zlib1211-2.zip" windows cmake linux make)###"),
-        create_example_string(R"###(create zlib2 http://zlib.net/zlib1211.zip "zlib1211-2.zip")###"),
+        create_example_string(
+            R"###(create zlib2 http://zlib.net/zlib1211.zip "zlib1211-2.zip" windows cmake linux make)###"),
         2,
         9,
         {},
@@ -28,7 +28,7 @@ namespace vcpkg::Commands::Create
         bool bWithGitLab = url.find("gitlab.") != std::string::npos;
         bool bWithGit = (url.find("git.") != std::string::npos || url.find("googlesource.com") != std::string::npos);
         bool bWithUrl = (!bWithGithub && !bWithGitLab && !bWithGit);
-        
+
         std::string ref;
         // download with git needs arg REF
         if (bWithGit)
@@ -41,7 +41,6 @@ namespace vcpkg::Commands::Create
                                3,
                                2);
                 Checks::exit_with_code(VCPKG_LINE_INFO, 1);
-
             }
             ref = args.command_arguments.at(2);
         }
@@ -60,7 +59,7 @@ namespace vcpkg::Commands::Create
                 ref = zip_file_name;
             }
         }
-        
+
         std::vector<System::CMakeVariable> build_types;
         if (args.command_arguments.size() >= 4)
         {
@@ -83,19 +82,17 @@ namespace vcpkg::Commands::Create
 
         const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
 
-        std::vector<System::CMakeVariable> cmake_args{
-            {"CMD", "CREATE"},
-            {"PORT", port_name},
-            {"URL", url},
-            {"FILENAME", zip_file_name},
-            {"DOWNLOAD_WITH_GITHUB", bWithGithub ? "1" : "0"},
-            {"DOWNLOAD_WITH_GITLAB", bWithGitLab ? "1" : "0"},
-            {"DOWNLOAD_WITH_GIT", bWithGit ? "1" : "0"},
-            {"DOWNLOAD_WITH_URL", bWithUrl ? "1" : "0"},
-            {"VCPKG_ROOT_PATH", paths.root}};
+        std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"},
+                                                      {"PORT", port_name},
+                                                      {"URL", url},
+                                                      {"FILENAME", zip_file_name},
+                                                      {"DOWNLOAD_WITH_GITHUB", bWithGithub ? "1" : "0"},
+                                                      {"DOWNLOAD_WITH_GITLAB", bWithGitLab ? "1" : "0"},
+                                                      {"DOWNLOAD_WITH_GIT", bWithGit ? "1" : "0"},
+                                                      {"DOWNLOAD_WITH_URL", bWithUrl ? "1" : "0"},
+                                                      {"VCPKG_ROOT_PATH", paths.root}};
 
-        if (!ref.empty())
-            cmake_args.push_back(System::CMakeVariable({"REF", ref}));
+        if (!ref.empty()) cmake_args.push_back(System::CMakeVariable({"REF", ref}));
 
         cmake_args.insert(cmake_args.begin(), build_types.begin(), build_types.end());
 
