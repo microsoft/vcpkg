@@ -471,7 +471,7 @@ function(vcpkg_find_acquire_program VAR)
         vcpkg_execute_required_process(COMMAND ${${VAR}} ${PYFILE_PATH}/get-pip.py ${PYTHON_OPTION}
                                        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
                                        LOGNAME acquire-pip)
-    else()
+    elseif(NOT PIP)
         message(FATAL_ERROR "VCPKG requires a python3 intallation with pip3! Please install pip. (e.g. apt install python3-pip)")
     endif()
   endif()
