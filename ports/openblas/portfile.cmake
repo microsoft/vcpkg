@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
@@ -96,13 +94,8 @@ file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
 string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 
-# openblas is BSD
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DIR}/share/openblas/copyright)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindBLAS.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
-
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
