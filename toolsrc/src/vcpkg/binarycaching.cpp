@@ -672,7 +672,6 @@ namespace
             {
                 return {"default path was not absolute: " + p.u8string(), expected_right_tag};
             }
-
         });
         return cachepath;
     }
