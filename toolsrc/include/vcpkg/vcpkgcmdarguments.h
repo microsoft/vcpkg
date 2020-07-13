@@ -135,7 +135,7 @@ namespace vcpkg
         constexpr static StringLiteral OVERLAY_TRIPLETS_ARG = "overlay-triplets";
         std::vector<std::string> overlay_triplets;
 
-        constexpr static StringLiteral BINARY_SOURCES_ARG = "x-binarysource";
+        constexpr static StringLiteral BINARY_SOURCES_ARG = "binarysource";
         std::vector<std::string> binary_sources;
 
         constexpr static StringLiteral DEBUG_SWITCH = "debug";
@@ -166,8 +166,8 @@ namespace vcpkg
         constexpr static StringLiteral MANIFEST_MODE_FEATURE = "manifests";
         Optional<bool> manifest_mode = nullopt;
 
-        bool binary_caching_enabled() const { return binary_caching.value_or(false); }
-        bool compiler_tracking_enabled() const { return compiler_tracking.value_or(false); }
+        bool binary_caching_enabled() const { return binary_caching.value_or(true); }
+        bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
 
         std::string command;
         std::vector<std::string> command_arguments;

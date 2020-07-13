@@ -182,13 +182,17 @@ namespace vcpkg
     static bool try_parse_argument_as_option(StringView option, StringView argument, T& place, F parser)
     {
         // remove the first two '-'s
-        const auto arg = argument.substr(2);
+        auto arg = argument.substr(2);
         if (arg.size() <= option.size() + 1)
         {
             // it is impossible for this argument to be this option
             return false;
         }
 
+        if (Strings::starts_with(arg, "x-") && !Strings::starts_with(option, "x-"))
+        {
+            arg = arg.substr(2);
+        }
         if (Strings::starts_with(arg, option) && arg.byte_at_index(option.size()) == '=')
         {
             parser(arg.substr(option.size() + 1), option, place);
@@ -198,21 +202,33 @@ namespace vcpkg
         return false;
     }
 
+    static bool equals_modulo_experimental(StringView arg, StringView option)
+    {
+        if (Strings::starts_with(arg, "x-") && !Strings::starts_with(option, "x-"))
+        {
+            return arg.substr(2) == option;
+        }
+        else
+        {
+            return arg == option;
+        }
+    }
+
     // returns true if this does parse this argument as this option
     // REQUIRES: Strings::starts_with(argument, "--");
     template<class T>
     static bool try_parse_argument_as_switch(StringView option, StringView argument, T& place)
     {
         // remove the first two '-'s
-        const auto arg = argument.substr(2);
+        auto arg = argument.substr(2);
 
-        if (arg == option)
+        if (equals_modulo_experimental(arg, option))
         {
             parse_switch(true, option, place);
             return true;
         }
 
-        if (Strings::starts_with(arg, "no-") && arg.substr(3) == option)
+        if (Strings::starts_with(arg, "no-") && equals_modulo_experimental(arg.substr(3), option))
         {
             parse_switch(false, option, place);
             return true;
@@ -451,6 +467,12 @@ namespace vcpkg
                             System::Color::error, "Error: The option '%s' must be passed an argument.\n", option.name);
                         failed = true;
                     }
+                    else if (value.size() > 1)
+                    {
+                        System::printf(
+                            System::Color::error, "Error: The option '%s' can only be passed once.\n", option.name);
+                        failed = true;
+                    }
                     else
                     {
                         output.settings.emplace(option.name, value.front());
@@ -588,6 +610,8 @@ namespace vcpkg
         table.format("", "(default: " + format_environment_variable("VCPKG_DEFAULT_TRIPLET") + ')');
         table.format(opt(OVERLAY_PORTS_ARG, "=", "<path>"), "Specify directories to be used when searching for ports");
         table.format(opt(OVERLAY_TRIPLETS_ARG, "=", "<path>"), "Specify directories containing triplets files");
+        table.format(opt(BINARY_SOURCES_ARG, "=", "<path>"),
+                     "Add sources for binary caching. See 'vcpkg help binarycaching'");
         table.format(opt(DOWNLOADS_ROOT_DIR_ARG, "=", "<path>"), "Specify the downloads root directory");
         table.format("", "(default: " + format_environment_variable("VCPKG_DOWNLOADS") + ')');
         table.format(opt(VCPKG_ROOT_DIR_ARG, " ", "<path>"), "Specify the vcpkg root directory");

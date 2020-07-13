@@ -460,6 +460,11 @@ namespace vcpkg::Build
         System::print2("Detecting compiler hash for triplet ", triplet, "...\n");
         auto buildpath = paths.buildtrees / "detect_compiler";
 
+#if !defined(_WIN32)
+        // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
+        // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
+        vcpkg::Util::unused(paths.get_tool_exe(Tools::NINJA));
+#endif
         std::vector<System::CMakeVariable> cmake_args{
             {"CURRENT_PORT_DIR", paths.scripts / "detect_compiler"},
             {"CURRENT_BUILDTREES_DIR", buildpath},
@@ -501,6 +506,14 @@ namespace vcpkg::Build
             env);
         out_file.close();
 
+        if (compiler_hash.empty())
+        {
+            Debug::print("Compiler information tracking can be disabled by passing --",
+                         VcpkgCmdArguments::FEATURE_FLAGS_ARG,
+                         "=-",
+                         VcpkgCmdArguments::COMPILER_TRACKING_FEATURE,
+                         "\n");
+        }
         Checks::check_exit(VCPKG_LINE_INFO,
                            !compiler_hash.empty(),
                            "Error occured while detecting compiler information. Pass `--debug` for more information.");
