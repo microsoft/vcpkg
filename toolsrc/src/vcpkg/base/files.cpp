@@ -101,6 +101,23 @@ namespace vcpkg::Files
             return status_implementation(false, p, ec);
         }
 
+        void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
+        {
+#if defined(_WIN32)
+            const DWORD flags = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+            if (!CreateSymbolicLinkW(newpath.c_str(), oldpath.c_str(), flags))
+            {
+                const auto err = GetLastError();
+                ec.assign(err, std::system_category());
+                return;
+            }
+            ec.clear();
+            return;
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+#endif // ^^^ !defined(_WIN32)
+        }
+
         // does _not_ follow symlinks
         void set_writeable(const fs::path& path, std::error_code& ec) noexcept
         {
@@ -799,7 +816,7 @@ namespace vcpkg::Files
         }
         virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
-            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+            return Files::copy_symlink_implementation(oldpath, newpath, ec);
         }
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
