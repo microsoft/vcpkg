@@ -3,7 +3,9 @@
   "version-string": "1.50.1",
   "homepage": "https://geographiclib.sourceforge.io",
   "description": "a small set of C++ classes for performing conversions between geographic, UTM, UPS, MGRS, geocentric, and local cartesian coordinates, for gravity (e.g., EGM2008), geoid height, and geomagnetic field (e.g., WMM2010) calculations, and for solving geodesic problems.",
-  "default-features": [ "default-features" ],
+  "default-features": [
+    "default-features"
+  ],
   "features": [
     {
       "name": "default-features",
@@ -11,7 +13,9 @@
       "dependencies": [
         {
           "name": "geographiclib",
-          "features": [ "tools" ],
+          "features": [
+            "tools"
+          ],
           "platform": "!uwp"
         }
       ]
