@@ -10,4 +10,4 @@ Build-Depends: openssl
 
 Feature: example
 Description: Build example
-Build-Depends: libevent, pthread
+Build-Depends: libevent, pthread, libuv
