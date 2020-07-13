@@ -212,14 +212,26 @@ namespace vcpkg::Export
             Strings::format("%s.%s", exported_dir_filename, format.extension());
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
-        // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const auto cmd_line = Strings::format(R"("%s" -E tar "cf" "%s" --format=%s -- "%s")",
-                                              cmake_exe.u8string(),
-                                              exported_archive_path.u8string(),
-                                              format.cmake_option(),
-                                              raw_exported_dir.u8string());
+        System::CmdLineBuilder cmd;
+        cmd.string_arg("cd").path_arg(raw_exported_dir.parent_path());
+        cmd.ampersand();
+        cmd.path_arg(cmake_exe)
+            .string_arg("-E")
+            .string_arg("tar")
+            .string_arg("cf")
+            .path_arg(exported_archive_path)
+            .string_arg(Strings::concat("--format=", format.cmake_option()))
+            .string_arg("--")
+            .path_arg(raw_exported_dir);
 
-        const int exit_code = System::cmd_execute_clean(cmd_line);
+        auto cmdline = cmd.extract();
+#ifdef WIN32
+        // Invoke through `cmd` to support `&&`
+        cmdline.insert(0, "cmd /c \"");
+        cmdline.push_back('"');
+#endif
+
+        const int exit_code = System::cmd_execute_clean(cmdline);
         Checks::check_exit(
             VCPKG_LINE_INFO, exit_code == 0, "Error: %s creation failed", exported_archive_path.generic_string());
         return exported_archive_path;
