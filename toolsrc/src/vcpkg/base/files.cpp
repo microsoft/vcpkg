@@ -6,7 +6,6 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/base/work_queue.h>
 
 #if !defined(_WIN32)
 #include <fcntl.h>
@@ -35,6 +34,7 @@ namespace vcpkg::Files
             WIN32_FILE_ATTRIBUTE_DATA file_attributes;
             auto ft = file_type::unknown;
             auto permissions = perms::unknown;
+            ec.clear();
             if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
             {
                 const auto err = GetLastError();

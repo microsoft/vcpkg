@@ -1,13 +1,14 @@
 #include "pch.h"
 
-#include <string>
-#include <vector>
-
 #include <vcpkg/base/parse.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/platform-expression.h>
+
+#include <string>
+#include <vector>
 
 namespace vcpkg::PlatformExpression
 {
