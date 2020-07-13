@@ -664,14 +664,15 @@ namespace
     {
         static auto cachepath = System::get_platform_cache_home().then([](fs::path p) -> ExpectedS<fs::path> {
             p /= fs::u8path("vcpkg/archives");
-            if (!p.is_absolute())
-            {
-                return {"default path was not absolute: " + p.u8string(), expected_right_tag};
-            }
-            else
+            if (p.is_absolute())
             {
                 return {std::move(p), expected_left_tag};
             }
+            else
+            {
+                return {"default path was not absolute: " + p.u8string(), expected_right_tag};
+            }
+
         });
         return cachepath;
     }
