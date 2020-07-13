@@ -632,7 +632,7 @@ namespace vcpkg::Dependencies
                     {
                         // if (find(feature_list.begin(), feature_list.end(), feature->get()->name) ==
                         // feature_list.end())
-                        feature_specs.insert(feature_specs.end(), FeatureSpec(spec.package_spec, feature->get()->name));
+                        feature_specs.emplace_back(spec.package_spec, feature->get()->name);
                     }
                 }
             }
