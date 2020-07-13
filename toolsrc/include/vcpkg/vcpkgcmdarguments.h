@@ -1,14 +1,14 @@
 #pragma once
 
-#include <memory>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/stringliteral.h>
+
+#include <memory>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 namespace vcpkg
 {
@@ -149,6 +149,9 @@ namespace vcpkg
         constexpr static StringLiteral PRINT_METRICS_SWITCH = "printmetrics";
         Optional<bool> print_metrics = nullopt;
 
+        constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
+        Optional<bool> wait_for_lock = nullopt;
+
         // feature flags
         constexpr static StringLiteral FEATURE_FLAGS_ENV = "VCPKG_FEATURE_FLAGS";
         constexpr static StringLiteral FEATURE_FLAGS_ARG = "feature-flags";
@@ -175,6 +178,7 @@ namespace vcpkg
 
         void check_feature_flag_consistency() const;
 
+        void debug_print_feature_flags() const;
         void track_feature_flag_metrics() const;
 
     private:

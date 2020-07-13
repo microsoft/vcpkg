@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/machinetype.h>
+
+#include <vector>
 
 namespace vcpkg::CoffFileReader
 {
