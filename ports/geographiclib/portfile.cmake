@@ -7,11 +7,11 @@ vcpkg_from_sourceforge (
     PATCHES cxx-library-only.patch
 )
 
-if (TARGET_TRIPLET MATCHES ".*-uwp")
-  set (SKIP_TOOLS ON)
-else ()
-  set (SKIP_TOOLS OFF)
-endif ()
+vcpkg_check_features (
+  OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  INVERTED_FEATURES
+    "tools" SKIP_TOOLS
+)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set (LIB_TYPE "SHARED")
@@ -23,9 +23,9 @@ vcpkg_configure_cmake (
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         "-DGEOGRAPHICLIB_LIB_TYPE=${LIB_TYPE}"
-        "-DSKIP_TOOLS=${SKIP_TOOLS}"
+        ${FEATURE_OPTIONS}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-  )
+)
 
 vcpkg_install_cmake ()
 vcpkg_fixup_cmake_targets (CONFIG_PATH share/geographiclib)
