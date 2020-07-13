@@ -50,3 +50,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${SUITESPARSEWIN_SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright_suitesparse-metis-for-windows)
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cxsparse)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper_cxsparse.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/cxsparse RENAME vcpkg-cmake-wrapper.cmake)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCXSparse.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/cxsparse)
