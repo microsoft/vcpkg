@@ -2,7 +2,8 @@
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.process.h>
+
+#include <vcpkg/buildenvironment.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 
@@ -16,15 +17,13 @@ namespace vcpkg::Commands::Create
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
+    int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
         const std::string port_name = args.command_arguments.at(0);
         const std::string url = args.command_arguments.at(1);
 
-        const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
-
-        std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}, {"VCPKG_ROOT_DIR", paths.root}};
+        std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
 
         if (args.command_arguments.size() >= 3)
         {
@@ -37,7 +36,12 @@ namespace vcpkg::Commands::Create
             cmake_args.emplace_back("FILENAME", zip_file_name);
         }
 
-        const std::string cmd_launch_cmake = make_cmake_cmd(cmake_exe, paths.ports_cmake, cmake_args);
-        Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute_clean(cmd_launch_cmake));
+        const std::string cmd_launch_cmake = make_cmake_cmd(paths, paths.ports_cmake, std::move(cmake_args));
+        return System::cmd_execute_clean(cmd_launch_cmake);
+    }
+
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
+    {
+        Checks::exit_with_code(VCPKG_LINE_INFO, perform(args, paths));
     }
 }

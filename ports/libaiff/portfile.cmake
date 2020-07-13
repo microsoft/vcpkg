@@ -1,17 +1,14 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/aifftools/files/libaiff/LibAiff%205.0/libaiff-5.0-release.tar.gz"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO aifftools/libaiff
+    REF LibAiff%205.0
     FILENAME "libaiff-5.0-release.tar.gz"
     SHA512 7800f9a3fbd0c5a17b8cc6c9b60181131d159ab5f5fb8e7de54e8f88c151717a988231de664a635e61940267c854a9ce83d58b12e322dcdda3aa8080c7b15f66
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/allow_utf_16_filename.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/buffer_uninitialized.patch"
+        allow_utf_16_filename.patch
+        buffer_uninitialized.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

@@ -1,6 +1,8 @@
 #include "pch.h"
 
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
@@ -8,14 +10,62 @@
 
 namespace vcpkg
 {
+    static void set_from_feature_flag(const std::vector<std::string>& flags, StringView flag, Optional<bool>& place)
+    {
+        if (!place.has_value())
+        {
+            const auto not_flag = [flag](const std::string& el) {
+                return !el.empty() && el[0] == '-' && flag == StringView{el.data() + 1, el.data() + el.size()};
+            };
+
+            if (std::find(flags.begin(), flags.end(), flag) != flags.end())
+            {
+                place = true;
+            }
+            if (std::find_if(flags.begin(), flags.end(), not_flag) != flags.end())
+            {
+                if (place.has_value())
+                {
+                    System::printf(
+                        System::Color::error, "Error: both %s and -%s were specified as feature flags\n", flag, flag);
+                    Metrics::g_metrics.lock()->track_property("error", "error feature flag +-" + flag.to_string());
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+
+                place = false;
+            }
+        }
+    }
+
+    static void parse_feature_flags(const std::vector<std::string>& flags, VcpkgCmdArguments& args)
+    {
+        // NOTE: when these features become default, switch the value_or(false) to value_or(true)
+        struct FeatureFlag
+        {
+            StringView flag_name;
+            Optional<bool>& local_option;
+        };
+
+        const FeatureFlag flag_descriptions[] = {
+            {VcpkgCmdArguments::BINARY_CACHING_FEATURE, args.binary_caching},
+            {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, args.manifest_mode},
+            {VcpkgCmdArguments::COMPILER_TRACKING_FEATURE, args.compiler_tracking},
+        };
+
+        for (const auto& desc : flag_descriptions)
+        {
+            set_from_feature_flag(flags, desc.flag_name, desc.local_option);
+        }
+    }
+
     static void parse_value(const std::string* arg_begin,
                             const std::string* arg_end,
-                            const std::string& option_name,
+                            StringView option_name,
                             std::unique_ptr<std::string>& option_field)
     {
         if (arg_begin == arg_end)
         {
-            System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
+            System::print2(System::Color::error, "Error: expected value after --", option_name, '\n');
             Metrics::g_metrics.lock()->track_property("error", "error option name");
             print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -23,7 +73,7 @@ namespace vcpkg
 
         if (option_field != nullptr)
         {
-            System::print2(System::Color::error, "Error: ", option_name, " specified multiple times\n");
+            System::print2(System::Color::error, "Error: --", option_name, " specified multiple times\n");
             Metrics::g_metrics.lock()->track_property("error", "error option specified multiple times");
             print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -32,22 +82,22 @@ namespace vcpkg
         option_field = std::make_unique<std::string>(*arg_begin);
     }
 
-    static void parse_cojoined_value(std::string new_value,
-                                     const std::string& option_name,
+    static void parse_cojoined_value(StringView new_value,
+                                     StringView option_name,
                                      std::unique_ptr<std::string>& option_field)
     {
         if (nullptr != option_field)
         {
-            System::printf(System::Color::error, "Error: %s specified multiple times\n", option_name);
+            System::printf(System::Color::error, "Error: --%s specified multiple times\n", option_name);
             Metrics::g_metrics.lock()->track_property("error", "error option specified multiple times");
             print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        option_field = std::make_unique<std::string>(std::move(new_value));
+        option_field = std::make_unique<std::string>(new_value.begin(), new_value.end());
     }
 
-    static void parse_switch(bool new_setting, const std::string& option_name, Optional<bool>& option_field)
+    static void parse_switch(bool new_setting, StringView option_name, Optional<bool>& option_field)
     {
         if (option_field && option_field != new_setting)
         {
@@ -59,30 +109,11 @@ namespace vcpkg
         option_field = new_setting;
     }
 
-    static void parse_cojoined_multivalue(std::string new_value,
-                                          const std::string& option_name,
-                                          std::unique_ptr<std::vector<std::string>>& option_field)
-    {
-        if (new_value.empty())
-        {
-            System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
-            Metrics::g_metrics.lock()->track_property("error", "error option name");
-            print_usage();
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-
-        if (!option_field)
-        {
-            option_field = std::make_unique<std::vector<std::string>>();
-        }
-        option_field->emplace_back(std::move(new_value));
-    }
-
-    static void parse_cojoined_multivalue(std::string new_value,
-                                          const std::string& option_name,
+    static void parse_cojoined_multivalue(StringView new_value,
+                                          StringView option_name,
                                           std::vector<std::string>& option_field)
     {
-        if (new_value.empty())
+        if (new_value.size() == 0)
         {
             System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
             Metrics::g_metrics.lock()->track_property("error", "error option name");
@@ -90,7 +121,25 @@ namespace vcpkg
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        option_field.emplace_back(std::move(new_value));
+        option_field.emplace_back(new_value.begin(), new_value.end());
+    }
+
+    static void parse_cojoined_list_multivalue(StringView new_value,
+                                               StringView option_name,
+                                               std::vector<std::string>& option_field)
+    {
+        if (new_value.size() == 0)
+        {
+            System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
+            Metrics::g_metrics.lock()->track_property("error", "error option name");
+            print_usage();
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        for (const auto& v : Strings::split(new_value, ','))
+        {
+            option_field.emplace_back(v.begin(), v.end());
+        }
     }
 
     VcpkgCmdArguments VcpkgCmdArguments::create_from_command_line(const Files::Filesystem& fs,
@@ -127,185 +176,209 @@ namespace vcpkg
         return VcpkgCmdArguments::create_from_arg_sequence(v.data(), v.data() + v.size());
     }
 
+    // returns true if this does parse this argument as this option
+    // REQUIRES: Strings::starts_with(argument, "--");
+    template<class T, class F>
+    static bool try_parse_argument_as_option(StringView option, StringView argument, T& place, F parser)
+    {
+        // remove the first two '-'s
+        auto arg = argument.substr(2);
+        if (arg.size() <= option.size() + 1)
+        {
+            // it is impossible for this argument to be this option
+            return false;
+        }
+
+        if (Strings::starts_with(arg, "x-") && !Strings::starts_with(option, "x-"))
+        {
+            arg = arg.substr(2);
+        }
+        if (Strings::starts_with(arg, option) && arg.byte_at_index(option.size()) == '=')
+        {
+            parser(arg.substr(option.size() + 1), option, place);
+            return true;
+        }
+
+        return false;
+    }
+
+    static bool equals_modulo_experimental(StringView arg, StringView option)
+    {
+        if (Strings::starts_with(arg, "x-") && !Strings::starts_with(option, "x-"))
+        {
+            return arg.substr(2) == option;
+        }
+        else
+        {
+            return arg == option;
+        }
+    }
+
+    // returns true if this does parse this argument as this option
+    // REQUIRES: Strings::starts_with(argument, "--");
+    template<class T>
+    static bool try_parse_argument_as_switch(StringView option, StringView argument, T& place)
+    {
+        // remove the first two '-'s
+        auto arg = argument.substr(2);
+
+        if (equals_modulo_experimental(arg, option))
+        {
+            parse_switch(true, option, place);
+            return true;
+        }
+
+        if (Strings::starts_with(arg, "no-") && equals_modulo_experimental(arg.substr(3), option))
+        {
+            parse_switch(false, option, place);
+            return true;
+        }
+
+        return false;
+    }
+
     VcpkgCmdArguments VcpkgCmdArguments::create_from_arg_sequence(const std::string* arg_begin,
                                                                   const std::string* arg_end)
     {
         VcpkgCmdArguments args;
+        std::vector<std::string> feature_flags;
 
-        for (; arg_begin != arg_end; ++arg_begin)
+        for (auto it = arg_begin; it != arg_end; ++it)
         {
-            std::string arg = *arg_begin;
+            std::string arg = *it;
 
             if (arg.empty())
             {
                 continue;
             }
 
-            if (arg[0] == '-' && arg[1] != '-')
+            if (arg.size() >= 2 && arg[0] == '-' && arg[1] != '-')
             {
                 Metrics::g_metrics.lock()->track_property("error", "error short options are not supported");
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Error: short options are not supported: %s", arg);
             }
 
-            if (arg[0] == '-' && arg[1] == '-')
+            if (arg.size() < 2 || arg[0] != '-')
             {
-                // make argument case insensitive before the first =
-                auto& f = std::use_facet<std::ctype<char>>(std::locale());
-                auto first_eq = std::find(std::begin(arg), std::end(arg), '=');
-                f.tolower(&arg[0], &arg[0] + (first_eq - std::begin(arg)));
-                // command switch
-                if (arg == "--vcpkg-root")
+                if (args.command.empty())
                 {
-                    ++arg_begin;
-                    parse_value(arg_begin, arg_end, "--vcpkg-root", args.vcpkg_root_dir);
-                    continue;
-                }
-                if (Strings::starts_with(arg, "--x-buildtrees-root="))
-                {
-                    parse_cojoined_value(arg.substr(sizeof("--x-buildtrees-root=") - 1),
-                                         "--x-buildtrees-root",
-                                         args.buildtrees_root_dir);
-                    continue;
-                }
-                if (Strings::starts_with(arg, "--downloads-root="))
-                {
-                    parse_cojoined_value(
-                        arg.substr(sizeof("--downloads-root=") - 1), "--downloads-root", args.downloads_root_dir);
-                    continue;
-                }
-                if (Strings::starts_with(arg, "--x-install-root="))
-                {
-                    parse_cojoined_value(
-                        arg.substr(sizeof("--x-install-root=") - 1), "--x-install-root=", args.install_root_dir);
-                    continue;
-                }
-                if (Strings::starts_with(arg, "--x-packages-root="))
-                {
-                    parse_cojoined_value(
-                        arg.substr(sizeof("--x-packages-root=") - 1), "--x-packages-root=", args.packages_root_dir);
-                    continue;
-                }
-                if (Strings::starts_with(arg, "--x-scripts-root="))
-                {
-                    parse_cojoined_value(
-                        arg.substr(sizeof("--x-scripts-root=") - 1), "--x-scripts-root", args.scripts_root_dir);
-                    continue;
-                }
-                if (arg == "--triplet")
-                {
-                    ++arg_begin;
-                    parse_value(arg_begin, arg_end, "--triplet", args.triplet);
-                    continue;
-                }
-                if (Strings::starts_with(arg, "--overlay-ports="))
-                {
-                    parse_cojoined_multivalue(
-                        arg.substr(sizeof("--overlay-ports=") - 1), "--overlay-ports", args.overlay_ports);
-                    continue;
-                }
-                if (Strings::starts_with(arg, "--overlay-triplets="))
-                {
-                    parse_cojoined_multivalue(
-                        arg.substr(sizeof("--overlay-triplets=") - 1), "--overlay-triplets", args.overlay_triplets);
-                    continue;
-                }
-                if (Strings::starts_with(arg, "--x-binarysource="))
-                {
-                    parse_cojoined_multivalue(
-                        arg.substr(sizeof("--x-binarysource=") - 1), "--x-binarysource", args.binarysources);
-                    continue;
-                }
-                if (arg == "--debug")
-                {
-                    parse_switch(true, "debug", args.debug);
-                    continue;
-                }
-                if (arg == "--sendmetrics")
-                {
-                    parse_switch(true, "sendmetrics", args.send_metrics);
-                    continue;
-                }
-                if (arg == "--printmetrics")
-                {
-                    parse_switch(true, "printmetrics", args.print_metrics);
-                    continue;
-                }
-                if (arg == "--disable-metrics")
-                {
-                    parse_switch(true, "disable-metrics", args.disable_metrics);
-                    continue;
-                }
-                if (arg == "--no-sendmetrics")
-                {
-                    parse_switch(false, "no-sendmetrics", args.send_metrics);
-                    continue;
-                }
-                if (arg == "--no-printmetrics")
-                {
-                    parse_switch(false, "no-printmetrics", args.print_metrics);
-                    continue;
-                }
-                if (arg == "--no-disable-metrics")
-                {
-                    parse_switch(false, "no-disable-metrics", args.disable_metrics);
-                    continue;
-                }
-                if (arg == "--featurepackages")
-                {
-                    parse_switch(true, "featurepackages", args.feature_packages);
-                    continue;
-                }
-                if (arg == "--no-featurepackages")
-                {
-                    parse_switch(false, "featurepackages", args.feature_packages);
-                    continue;
-                }
-                if (arg == "--binarycaching")
-                {
-                    parse_switch(true, "binarycaching", args.binary_caching);
-                    continue;
-                }
-                if (arg == "--no-binarycaching")
-                {
-                    parse_switch(false, "no-binarycaching", args.binary_caching);
-                    continue;
-                }
-
-                const auto eq_pos = arg.find('=');
-                if (eq_pos != std::string::npos)
-                {
-                    const auto& key = arg.substr(0, eq_pos);
-                    const auto& value = arg.substr(eq_pos + 1);
-
-                    auto it = args.optional_command_arguments.find(key);
-                    if (args.optional_command_arguments.end() == it)
-                    {
-                        args.optional_command_arguments.emplace(key, std::vector<std::string>{value});
-                    }
-                    else
-                    {
-                        if (auto* maybe_values = it->second.get())
-                        {
-                            maybe_values->emplace_back(value);
-                        }
-                    }
+                    args.command = std::move(arg);
                 }
                 else
                 {
-                    args.optional_command_arguments.emplace(arg, nullopt);
+                    args.command_arguments.push_back(std::move(arg));
                 }
                 continue;
             }
 
-            if (args.command.empty())
+            // arg[0] == '-' && arg[1] == '-'
+            // make argument case insensitive before the first =
+            auto first_eq = std::find(std::begin(arg), std::end(arg), '=');
+            Strings::ascii_to_lowercase(std::begin(arg), first_eq);
+
+            // command switch
+            if (arg.substr(2) == VCPKG_ROOT_DIR_ARG)
             {
-                args.command = arg;
+                ++it;
+                parse_value(it, arg_end, VCPKG_ROOT_DIR_ARG, args.vcpkg_root_dir);
+                continue;
+            }
+            if (arg.substr(2) == TRIPLET_ARG)
+            {
+                ++it;
+                parse_value(it, arg_end, TRIPLET_ARG, args.triplet);
+                continue;
+            }
+
+            constexpr static std::pair<StringView, std::unique_ptr<std::string> VcpkgCmdArguments::*>
+                cojoined_values[] = {
+                    {MANIFEST_ROOT_DIR_ARG, &VcpkgCmdArguments::manifest_root_dir},
+                    {BUILDTREES_ROOT_DIR_ARG, &VcpkgCmdArguments::buildtrees_root_dir},
+                    {DOWNLOADS_ROOT_DIR_ARG, &VcpkgCmdArguments::downloads_root_dir},
+                    {INSTALL_ROOT_DIR_ARG, &VcpkgCmdArguments::install_root_dir},
+                    {PACKAGES_ROOT_DIR_ARG, &VcpkgCmdArguments::packages_root_dir},
+                    {SCRIPTS_ROOT_DIR_ARG, &VcpkgCmdArguments::scripts_root_dir},
+                };
+
+            constexpr static std::pair<StringView, std::vector<std::string> VcpkgCmdArguments::*>
+                cojoined_multivalues[] = {
+                    {OVERLAY_PORTS_ARG, &VcpkgCmdArguments::overlay_ports},
+                    {OVERLAY_TRIPLETS_ARG, &VcpkgCmdArguments::overlay_triplets},
+                    {BINARY_SOURCES_ARG, &VcpkgCmdArguments::binary_sources},
+                };
+
+            constexpr static std::pair<StringView, Optional<bool> VcpkgCmdArguments::*> switches[] = {
+                {DEBUG_SWITCH, &VcpkgCmdArguments::debug},
+                {DISABLE_METRICS_SWITCH, &VcpkgCmdArguments::disable_metrics},
+                {SEND_METRICS_SWITCH, &VcpkgCmdArguments::send_metrics},
+                {PRINT_METRICS_SWITCH, &VcpkgCmdArguments::print_metrics},
+                {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
+                {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
+                {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
+            };
+
+            bool found = false;
+            for (const auto& pr : cojoined_values)
+            {
+                if (try_parse_argument_as_option(pr.first, arg, args.*pr.second, parse_cojoined_value))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (found) continue;
+
+            for (const auto& pr : cojoined_multivalues)
+            {
+                if (try_parse_argument_as_option(pr.first, arg, args.*pr.second, parse_cojoined_multivalue))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (found) continue;
+
+            if (try_parse_argument_as_option(FEATURE_FLAGS_ARG, arg, feature_flags, parse_cojoined_list_multivalue))
+            {
+                continue;
+            }
+
+            for (const auto& pr : switches)
+            {
+                if (try_parse_argument_as_switch(pr.first, arg, args.*pr.second))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (found) continue;
+
+            const auto eq_pos = arg.find('=');
+            if (eq_pos != std::string::npos)
+            {
+                const auto& key = arg.substr(0, eq_pos);
+                const auto& value = arg.substr(eq_pos + 1);
+
+                auto key_it = args.optional_command_arguments.find(key);
+                if (key_it == args.optional_command_arguments.end())
+                {
+                    args.optional_command_arguments.emplace(key, std::vector<std::string>{value});
+                }
+                else
+                {
+                    if (auto* maybe_values = key_it->second.get())
+                    {
+                        maybe_values->emplace_back(value);
+                    }
+                }
             }
             else
             {
-                args.command_arguments.push_back(arg);
+                args.optional_command_arguments.emplace(arg, nullopt);
             }
         }
+
+        parse_feature_flags(feature_flags, args);
 
         return args;
     }
@@ -392,6 +465,12 @@ namespace vcpkg
                         // Fail when not given a value, e.g.: "vcpkg install sqlite3 --additional-ports="
                         System::printf(
                             System::Color::error, "Error: The option '%s' must be passed an argument.\n", option.name);
+                        failed = true;
+                    }
+                    else if (value.size() > 1)
+                    {
+                        System::printf(
+                            System::Color::error, "Error: The option '%s' can only be passed once.\n", option.name);
                         failed = true;
                     }
                     else
@@ -523,26 +602,33 @@ namespace vcpkg
 
     void VcpkgCmdArguments::append_common_options(HelpTableFormatter& table)
     {
-        table.format("--triplet <t>", "Specify the target architecture triplet. See 'vcpkg help triplet'");
+        static auto opt = [](StringView arg, StringView joiner, StringView value) {
+            return Strings::format("--%s%s%s", arg, joiner, value);
+        };
+
+        table.format(opt(TRIPLET_ARG, " ", "<t>"), "Specify the target architecture triplet. See 'vcpkg help triplet'");
         table.format("", "(default: " + format_environment_variable("VCPKG_DEFAULT_TRIPLET") + ')');
-        table.format("--overlay-ports=<path>", "Specify directories to be used when searching for ports");
-        table.format("--overlay-triplets=<path>", "Specify directories containing triplets files");
-        table.format("--downloads-root=<path>", "Specify the downloads root directory");
+        table.format(opt(OVERLAY_PORTS_ARG, "=", "<path>"), "Specify directories to be used when searching for ports");
+        table.format(opt(OVERLAY_TRIPLETS_ARG, "=", "<path>"), "Specify directories containing triplets files");
+        table.format(opt(BINARY_SOURCES_ARG, "=", "<path>"),
+                     "Add sources for binary caching. See 'vcpkg help binarycaching'");
+        table.format(opt(DOWNLOADS_ROOT_DIR_ARG, "=", "<path>"), "Specify the downloads root directory");
         table.format("", "(default: " + format_environment_variable("VCPKG_DOWNLOADS") + ')');
-        table.format("--vcpkg-root <path>", "Specify the vcpkg root directory");
+        table.format(opt(VCPKG_ROOT_DIR_ARG, " ", "<path>"), "Specify the vcpkg root directory");
         table.format("", "(default: " + format_environment_variable("VCPKG_ROOT") + ')');
-        table.format("--x-buildtrees-root=<path>", "(Experimental) Specify the buildtrees root directory");
-        table.format("--x-install-root=<path>", "(Experimental) Specify the install root directory");
-        table.format("--x-packages-root=<path>", "(Experimental) Specify the packages root directory");
-        table.format("--x-scripts-root=<path>", "(Experimental) Specify the scripts root directory");
+        table.format(opt(BUILDTREES_ROOT_DIR_ARG, "=", "<path>"),
+                     "(Experimental) Specify the buildtrees root directory");
+        table.format(opt(INSTALL_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the install root directory");
+        table.format(opt(PACKAGES_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the packages root directory");
+        table.format(opt(SCRIPTS_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the scripts root directory");
     }
 
     void VcpkgCmdArguments::imbue_from_environment()
     {
         if (!disable_metrics)
         {
-            const auto vcpkg_disable_metrics_env = System::get_environment_variable("VCPKG_DISABLE_METRICS");
-            if (vcpkg_disable_metrics_env)
+            const auto vcpkg_disable_metrics_env = System::get_environment_variable(DISABLE_METRICS_ENV);
+            if (vcpkg_disable_metrics_env.has_value())
             {
                 disable_metrics = true;
             }
@@ -550,7 +636,7 @@ namespace vcpkg
 
         if (!triplet)
         {
-            const auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
+            const auto vcpkg_default_triplet_env = System::get_environment_variable(TRIPLET_ENV);
             if (const auto unpacked = vcpkg_default_triplet_env.get())
             {
                 triplet = std::make_unique<std::string>(*unpacked);
@@ -559,7 +645,7 @@ namespace vcpkg
 
         if (!vcpkg_root_dir)
         {
-            const auto vcpkg_root_env = System::get_environment_variable("VCPKG_ROOT");
+            const auto vcpkg_root_env = System::get_environment_variable(VCPKG_ROOT_DIR_ENV);
             if (const auto unpacked = vcpkg_root_env.get())
             {
                 vcpkg_root_dir = std::make_unique<std::string>(*unpacked);
@@ -568,19 +654,94 @@ namespace vcpkg
 
         if (!downloads_root_dir)
         {
-            const auto vcpkg_downloads_env = vcpkg::System::get_environment_variable("VCPKG_DOWNLOADS");
+            const auto vcpkg_downloads_env = vcpkg::System::get_environment_variable(DOWNLOADS_ROOT_DIR_ENV);
             if (const auto unpacked = vcpkg_downloads_env.get())
             {
                 downloads_root_dir = std::make_unique<std::string>(*unpacked);
             }
         }
 
+        const auto vcpkg_feature_flags_env = System::get_environment_variable(FEATURE_FLAGS_ENV);
+        if (const auto v = vcpkg_feature_flags_env.get())
         {
-            const auto vcpkg_visual_studio_path_env = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH");
+            auto flags = Strings::split(*v, ',');
+            parse_feature_flags(flags, *this);
+        }
+
+        {
+            const auto vcpkg_visual_studio_path_env = System::get_environment_variable(DEFAULT_VISUAL_STUDIO_PATH_ENV);
             if (const auto unpacked = vcpkg_visual_studio_path_env.get())
             {
                 default_visual_studio_path = std::make_unique<std::string>(*unpacked);
             }
+        }
+    }
+
+    void VcpkgCmdArguments::check_feature_flag_consistency() const
+    {
+        struct
+        {
+            StringView flag;
+            StringView option;
+            bool is_inconsistent;
+        } possible_inconsistencies[] = {
+            {BINARY_CACHING_FEATURE, BINARY_SOURCES_ARG, !binary_sources.empty() && !binary_caching.value_or(true)},
+            {MANIFEST_MODE_FEATURE, MANIFEST_ROOT_DIR_ARG, manifest_root_dir && !manifest_mode.value_or(true)},
+        };
+        for (const auto& el : possible_inconsistencies)
+        {
+            if (el.is_inconsistent)
+            {
+                System::printf(System::Color::warning,
+                               "Warning: %s feature specifically turned off, but --%s was specified.\n",
+                               el.flag,
+                               el.option);
+                System::printf(System::Color::warning, "Warning: Defaulting to %s being on.\n", el.flag);
+                Metrics::g_metrics.lock()->track_property(
+                    "warning", Strings::format("warning %s alongside %s", el.flag, el.option));
+            }
+        }
+    }
+
+    void VcpkgCmdArguments::debug_print_feature_flags() const
+    {
+        struct
+        {
+            StringView name;
+            Optional<bool> flag;
+        } flags[] = {
+            {BINARY_CACHING_FEATURE, binary_caching},
+            {MANIFEST_MODE_FEATURE, manifest_mode},
+            {COMPILER_TRACKING_FEATURE, compiler_tracking},
+        };
+
+        for (const auto& flag : flags)
+        {
+            if (auto r = flag.flag.get())
+            {
+                Debug::print("Feature flag '", flag.name, "' = ", *r ? "on" : "off", "\n");
+            }
+            else
+            {
+                Debug::print("Feature flag '", flag.name, "' unset\n");
+            }
+        }
+    }
+
+    void VcpkgCmdArguments::track_feature_flag_metrics() const
+    {
+        struct
+        {
+            StringView flag;
+            bool enabled;
+        } flags[] = {
+            {BINARY_CACHING_FEATURE, binary_caching_enabled()},
+            {COMPILER_TRACKING_FEATURE, compiler_tracking_enabled()},
+        };
+
+        for (const auto& flag : flags)
+        {
+            Metrics::g_metrics.lock()->track_feature(flag.flag.to_string(), flag.enabled);
         }
     }
 
@@ -614,6 +775,8 @@ namespace vcpkg
         target.append(34, ' ');
     }
 
+    static constexpr ptrdiff_t S_MAX_LINE_LENGTH = 100;
+
     void HelpTableFormatter::format(StringView col1, StringView col2)
     {
         // 2 space, 31 col1, 1 space, 65 col2 = 99
@@ -627,29 +790,8 @@ namespace vcpkg
         {
             m_str.append(32 - col1.size(), ' ');
         }
-        const char* line_start = col2.begin();
-        const char* const e = col2.end();
-        const char* best_break = std::find_if(line_start, e, [](char ch) { return ch == ' ' || ch == '\n'; });
+        text(col2, 34);
 
-        while (best_break != e)
-        {
-            const char* next_break = std::find_if(best_break + 1, e, [](char ch) { return ch == ' ' || ch == '\n'; });
-            if (next_break - line_start > 65 || *best_break == '\n')
-            {
-                m_str.append(line_start, best_break);
-                line_start = best_break + 1;
-                best_break = next_break;
-                if (line_start != e)
-                {
-                    help_table_newline_indent(m_str);
-                }
-            }
-            else
-            {
-                best_break = next_break;
-            }
-        }
-        m_str.append(line_start, best_break);
         m_str.push_back('\n');
     }
 
@@ -667,4 +809,31 @@ namespace vcpkg
     }
 
     void HelpTableFormatter::blank() { m_str.push_back('\n'); }
+
+    // Note: this formatting code does not properly handle unicode, however all of our documentation strings are English
+    // ASCII.
+    void HelpTableFormatter::text(StringView text, int indent)
+    {
+        const char* line_start = text.begin();
+        const char* const e = text.end();
+        const char* best_break = std::find_if(line_start, e, [](char ch) { return ch == ' ' || ch == '\n'; });
+
+        while (best_break != e)
+        {
+            const char* next_break = std::find_if(best_break + 1, e, [](char ch) { return ch == ' ' || ch == '\n'; });
+            if (*best_break == '\n' || next_break - line_start + indent > S_MAX_LINE_LENGTH)
+            {
+                m_str.append(line_start, best_break);
+                m_str.push_back('\n');
+                line_start = best_break + 1;
+                best_break = next_break;
+                m_str.append(indent, ' ');
+            }
+            else
+            {
+                best_break = next_break;
+            }
+        }
+        m_str.append(line_start, best_break);
+    }
 }
