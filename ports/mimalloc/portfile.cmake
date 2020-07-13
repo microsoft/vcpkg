@@ -3,11 +3,9 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF 82684042be1be44d34caecc915fb51755278d843 # v1.6.1
-    SHA512 82477501a5fafa4df22c911039b74943275d0932404526692419b5c49d6ccfdd95c1c5a3689211db5cc2a845af039fda4892262b538ac7cdfb5bb35787dd355c
+    REF e6c7b778fb53663985e0a36016a3a087af71d783 # v1.6.3
+    SHA512 486b16396a8e750834f02a1c5954899667a8d9dc1ac4e86a9051829ef624defe61ac7fb4d1f5cfb20f79d635868f1fdcc00bd310bea7fb17a44ae8e8dca60c27
     HEAD_REF master
-    PATCHES
-        fix-cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,6 +25,8 @@ vcpkg_configure_cmake(
         -DMI_INTERPOSE=ON
         -DMI_USE_CXX=OFF
         -DMI_BUILD_TESTS=OFF
+        -DMI_BUILD_SHARED=ON
+        -DMI_BUILD_STATIC=ON
         ${FEATURE_OPTIONS}
 )
 
@@ -34,9 +34,26 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-file(GLOB lib_directories RELATIVE ${CURRENT_PACKAGES_DIR}/lib "${CURRENT_PACKAGES_DIR}/lib/${PORT}-*")
-list(GET lib_directories 0 lib_install_dir)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/${lib_install_dir}/cmake)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
+
+file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/mimalloc-1.6/mimalloc-debug.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/")
+file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/mimalloc-1.6/mimalloc-debug.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/include/mimalloc.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/include/mimalloc-new-delete.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/include/mimalloc-override.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/mimalloc.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/mimalloc.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
+
+file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/mimalloc-1.6/mimalloc-static-debug.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/mimalloc-static.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/include/mimalloc.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/include/mimalloc-new-delete.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/include/mimalloc-override.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/mimalloc-1.6/cmake)
 
 vcpkg_replace_string(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/mimalloc.cmake
@@ -44,17 +61,62 @@ vcpkg_replace_string(
     ""
 )
 
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-)
+if (WIN32)
+    if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
+        file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect32.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect32.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+        file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect32.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect32.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    else()
+        file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+        file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    endif()
+endif (WIN32)
 
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/${lib_install_dir}/include DESTINATION ${CURRENT_PACKAGES_DIR})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/lib/${lib_install_dir}
+    ${CURRENT_PACKAGES_DIR}/debug/lib/mimalloc-1.6
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/lib/${lib_install_dir}
+    ${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/mimalloc/mimalloc.cmake
+    "mimalloc-1.6/"
+    ""
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/mimalloc/mimalloc.cmake
+    "lib/include"
+    "include"
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/mimalloc/mimalloc-debug.cmake
+    "mimalloc-1.6/"
+    ""
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/mimalloc/mimalloc-debug.cmake
+    "debug/lib/mimalloc-debug.dll"
+    "debug/bin/mimalloc-debug.dll"
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/mimalloc/mimalloc-release.cmake
+    "mimalloc-1.6/"
+    ""
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/mimalloc/mimalloc-release.cmake
+    "lib/mimalloc.dll"
+    "bin/mimalloc.dll"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
