@@ -235,6 +235,7 @@ function(vcpkg_find_acquire_program VAR)
     set(VERSION 0.55.0)
     set(PROGNAME meson)
     set(REQUIRED_INTERPRETER PYTHON3)
+    set(REQUIRED_PYTHON_PACKAGES setuptools)
     set(BREW_PACKAGE_NAME "meson")
     set(APT_PACKAGE_NAME "meson")
     set(URL "https://github.com/mesonbuild/meson/releases/download/${VERSION}/meson-${VERSION}.tar.gz")
@@ -353,7 +354,9 @@ function(vcpkg_find_acquire_program VAR)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
-
+  if(NOT CMAKE_HOST_WIN32)
+    set(PYTHON_OPTION "--user")
+  endif()
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
       find_program(${VAR} NAMES ${PROGNAME} PATHS ${PATHS} NO_DEFAULT_PATH)
@@ -362,6 +365,19 @@ function(vcpkg_find_acquire_program VAR)
       endif()
     else()
       vcpkg_find_acquire_program(${REQUIRED_INTERPRETER})
+      message(STATUS "Looking for ${REQUIRED_INTERPRETER} in ${${REQUIRED_INTERPRETER}}")
+      if(REQUIRED_PYTHON_PACKAGES AND REQUIRED_INTERPRETER MATCHES "PYTHON")
+        get_filename_component(PYTHON_DIR "${${REQUIRED_INTERPRETER}}" DIRECTORY)
+        if(NOT EXISTS ${PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX})
+            set(PYTHON_INSTALL_COMMAND ${PYTHON_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install ${REQUIRED_PYTHON_PACKAGES} ${PYTHON_OPTION})
+        else()
+            set(PYTHON_INSTALL_COMMAND ${PYTHON_DIR}/easy_install${EXECUTABLE_SUFFIX} ${REQUIRED_PYTHON_PACKAGES})
+        endif()
+        message(STATUS "Looking for ${PYTHON_INSTALL_COMMAND}")
+        vcpkg_execute_required_process(COMMAND ${PYTHON_INSTALL_COMMAND}
+                               WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+                               LOGNAME install-required-python-packages)
+      endif()
       find_file(SCRIPT_${VAR} NAMES ${SCRIPTNAME} PATHS ${PATHS} NO_DEFAULT_PATH)
       if(NOT _vfa_ONLY_FIND_INTERNAL)
         find_file(SCRIPT_${VAR} NAMES ${SCRIPTNAME})
@@ -433,4 +449,21 @@ function(vcpkg_find_acquire_program VAR)
   endif()
 
   set(${VAR} "${${VAR}}" PARENT_SCOPE)
+
+  if(VAR MATCHES "PYTHON")
+    get_filename_component(PYTHON_DIR "${${VAR}}" DIRECTORY)
+    if(NOT EXISTS ${PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX})
+        vcpkg_from_github(
+            OUT_SOURCE_PATH PYFILE_PATH
+            REPO pypa/get-pip
+            REF eff16c878c7fd6b688b9b4c4267695cf1a0bf01b #2020-05-19
+            SHA512 642736f2d11907375939b9bc204053cda10898ed561a1ee87c438a23d67d94bf14954519705c90bf9396d64c1e5028e3af4aadcf52c9170d393a8763f67dd4e9
+            HEAD_REF master
+        )
+        vcpkg_add_to_path("${PYTHON_DIR}")
+        vcpkg_execute_required_process(COMMAND ${${VAR}} ${PYFILE_PATH}/get-pip.py ${PYTHON_OPTION}
+                                       WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+                                       LOGNAME acquire-pip)
+    endif()
+  endif()
 endfunction()
