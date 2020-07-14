@@ -124,7 +124,7 @@ namespace vcpkg::Files
 
         fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
         {
-#if defined(_WIN32)
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
             auto handle = CreateFileW(oldpath.c_str(),
                                       GENERIC_READ,
                                       FILE_SHARE_READ,
