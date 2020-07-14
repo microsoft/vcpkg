@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO argtable/argtable3
-    REF 1c1bb23b305c8cf349328fc0cacd7beb7a575ff4
+    REF 1c1bb23b305c8cf349328fc0cacd7beb7a575ff4 # v3.1.5
     SHA512 13150c8adc1eda107b6df65a2e276510a66bd912f6067d7cc72951735a4c20307144b04cda959cdd24f160da3810ba8bb35e48992ff4281e44ed2331d030fb1d
     HEAD_REF master
 )
