@@ -189,7 +189,7 @@ function(vcpkg_fixup_cmake_targets)
         #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
         #This happens if vcpkg built libraries are directly linked to a target instead of using
         #an imported target for it. We could add more logic here to identify defect target files.
-        #Since the replacement her ein a multi config build always requires a generator expression
+        #Since the replacement here in a multi config build always requires a generator expression
         #in front of the absoulte path to ${CURRENT_INSTALLED_DIR}. So the match should always be at
         #least >:${CURRENT_INSTALLED_DIR}. 
         #In general the following generator expressions should be there:
