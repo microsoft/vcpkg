@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
             -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
             -DBUILD_PKGCONFIG_FILES=ON
             ${FEATURE_OPTIONS}
+            ${OPTIONS}
 )
 
 vcpkg_install_cmake()
