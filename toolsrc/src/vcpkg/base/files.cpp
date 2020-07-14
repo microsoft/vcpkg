@@ -103,6 +103,7 @@ namespace vcpkg::Files
 
         fs::path normalize_path(const std::wstring& buffer)
         {
+#if defined(_WIN32)
             // cut off \\?\UNC\ prefix of network shares
             const std::wstring networkprefix = L"\\\\?\\UNC\\";
             if (buffer.substr(0, networkprefix.length()) == networkprefix)
@@ -116,6 +117,7 @@ namespace vcpkg::Files
             {
                 return buffer.substr(driveprefix.length());
             }
+#endif // ^^^ defined(_WIN32)
 
             return buffer;
         }
