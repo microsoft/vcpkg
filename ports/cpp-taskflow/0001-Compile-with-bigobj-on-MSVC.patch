@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 33e9247..29be3a3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -35,6 +35,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+   endif()
+ ## microsoft visual c++
+ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++  add_definitions(/bigobj)
+   if(NOT MSVC_VERSION GREATER_EQUAL 1914)
+     message(STATUS "CMAKE_CXX_COMPILER_VERSION: ${CMAKE_CXX_COMPILER_VERSION}")
+     message(FATAL_ERROR "\nTaskflow requires MSVC++ at least v14.14") 
+-- 
+2.17.1.windows.2
+
