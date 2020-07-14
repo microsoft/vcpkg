@@ -410,15 +410,25 @@ namespace vcpkg
         auto switches_copy = this->command_switches;
         auto options_copy = this->command_options;
 
+        const auto find_option = [](const auto& set, StringLiteral name) {
+            auto it = set.find(name);
+            if (it == set.end() && !Strings::starts_with(name, "x-"))
+            {
+                it = set.find(Strings::format("x-%s", name));
+            }
+
+            return it;
+        };
+
         for (const auto& switch_ : command_structure.options.switches)
         {
-            const auto it = switches_copy.find(switch_.name);
+            const auto it = find_option(switches_copy, switch_.name);
             if (it != switches_copy.end())
             {
                 output.switches.insert(switch_.name);
                 switches_copy.erase(it);
             }
-            const auto option_it = options_copy.find(switch_.name);
+            const auto option_it = find_option(options_copy, switch_.name);
             if (option_it != options_copy.end())
             {
                 // This means that the switch was passed like '--a=xyz'
@@ -431,7 +441,7 @@ namespace vcpkg
 
         for (const auto& option : command_structure.options.settings)
         {
-            const auto it = options_copy.find(option.name);
+            const auto it = find_option(options_copy, option.name);
             if (it != options_copy.end())
             {
                 const auto& value = it->second;
@@ -460,7 +470,7 @@ namespace vcpkg
                     options_copy.erase(it);
                 }
             }
-            const auto switch_it = switches_copy.find(option.name);
+            const auto switch_it = find_option(switches_copy, option.name);
             if (switch_it != switches_copy.end())
             {
                 // This means that the option was passed like '--a'
@@ -473,7 +483,7 @@ namespace vcpkg
 
         for (const auto& option : command_structure.options.multisettings)
         {
-            const auto it = options_copy.find(option.name);
+            const auto it = find_option(options_copy, option.name);
             if (it != options_copy.end())
             {
                 const auto& value = it->second;
@@ -493,7 +503,7 @@ namespace vcpkg
                 }
                 options_copy.erase(it);
             }
-            const auto switch_it = switches_copy.find(option.name);
+            const auto switch_it = find_option(switches_copy, option.name);
             if (switch_it != switches_copy.end())
             {
                 // This means that the option was passed like '--a'
