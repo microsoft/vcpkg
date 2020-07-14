@@ -151,9 +151,9 @@ namespace vcpkg::Files
             }
             ec.clear();
             return;
-#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
             return fs::stdfs::copy_symlink(oldpath, newpath, ec);
-#endif // ^^^ !defined(_WIN32)
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
         }
 
         // does _not_ follow symlinks
