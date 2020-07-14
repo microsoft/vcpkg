@@ -33,7 +33,7 @@
 ## - NINJA
 ## - NUGET
 ## - SCONS
-## - SWIG https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.1/swigwin-4.0.1.zip
+## - SWIG
 ## - YASM
 ##
 ## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
