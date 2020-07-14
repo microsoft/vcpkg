@@ -134,14 +134,14 @@ Backtick (`) can be used as an escape character within config strings, with doub
 
 For all backends, noninteractive operation will be the default and the vcpkg tool will take a `--interactive` parameter to enable prompting for user credentials (if needed by the backend).
 
-To enable the 4-step flow, `vcpkg install` will take a command `--output-nuget-package-config=<path>` which can be used in combination with `--dry-run`. This path can be relative and will resolve with respect to the current working directory.
+To enable the 4-step flow, `vcpkg install` will take a command `--write-nuget-packages-config=<path>` which can be used in combination with `--dry-run`. This path can be relative and will resolve with respect to the current working directory.
 
 [1]: https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
 
 #### Example 4-step flow
 
 ```
-PS> vcpkg install --dry-run pkg1 pkg2 pkg3 --output-nuget-package-config=packages.config 
+PS> vcpkg install --dry-run pkg1 pkg2 pkg3 --write-nuget-packages-config=packages.config 
 ```
 
 An unspecified process, such as `nuget.exe restore packages.config -packagedirectory $packages` or the [ADO task][2], restores the packages to `$packages`.
