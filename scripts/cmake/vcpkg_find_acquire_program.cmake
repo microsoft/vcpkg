@@ -325,6 +325,13 @@ function(vcpkg_find_acquire_program VAR)
         set(SUBDIR "swig-${VERSION}")
         set(PATHS "${DOWNLOADS}/tools/swig/${SUBDIR}")
     endif()
+    set(SOURCEFORGE_ARGS
+        REPO swig
+        FILENAME "${ARCHIVE}"
+        SHA512 "${HASH}"
+        NO_REMOVE_ONE_LEVEL
+        WORKING_DIRECTORY "${DOWNLOADS}/tools/swig"
+     )
   elseif(VAR MATCHES "DOXYGEN")
     set(PROGNAME doxygen)
     set(DOXYGEN_VERSION 1.8.17)
