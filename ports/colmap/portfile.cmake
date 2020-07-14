@@ -33,11 +33,28 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/colmap/tools"
     "${CURRENT_PACKAGES_DIR}/include/colmap/ui/media"
     "${CURRENT_PACKAGES_DIR}/include/colmap/ui/shaders"
-    "${CURRENT_PACKAGES_DIR}/COLMAP.bat"
-    "${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat"
     "${CURRENT_PACKAGES_DIR}/debug/COLMAP.bat"
     "${CURRENT_PACKAGES_DIR}/debug/RUN_TESTS.bat"
+    "${CURRENT_PACKAGES_DIR}/debug/bin"
 )
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
+file(RENAME
+    ${CURRENT_PACKAGES_DIR}/bin/colmap.exe
+    ${CURRENT_PACKAGES_DIR}/tools/colmap.exe
+)
+
+file(RENAME
+    ${CURRENT_PACKAGES_DIR}/COLMAP.bat
+    ${CURRENT_PACKAGES_DIR}/tools/COLMAP.bat
+)
+
+file(RENAME
+    ${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat
+    ${CURRENT_PACKAGES_DIR}/tools/RUN_TESTS.bat
+)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 
 vcpkg_copy_pdbs()
 
