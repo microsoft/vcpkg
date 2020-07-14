@@ -193,8 +193,9 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG   ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
-if(BUILD_RTK) # Remote Modules are only downloaded on configure. already_defined.patch
-    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUITE PATCHES rtk/already_defined.patch rtk/unresolved.patch)
+if(BUILD_RTK) # Remote Modules are only downloaded on configure. 
+    # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
+    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch)
 endif()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
