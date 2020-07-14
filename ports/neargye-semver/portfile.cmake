@@ -8,6 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/include/semver.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/include/semver.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/neargye)
 
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
