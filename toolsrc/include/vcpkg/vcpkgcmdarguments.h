@@ -1,9 +1,9 @@
 #pragma once
 
+#include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/stringliteral.h>
-#include <vcpkg/base/files.h>
 
 #include <memory>
 #include <unordered_map>
@@ -135,7 +135,7 @@ namespace vcpkg
         constexpr static StringLiteral OVERLAY_TRIPLETS_ARG = "overlay-triplets";
         std::vector<std::string> overlay_triplets;
 
-        constexpr static StringLiteral BINARY_SOURCES_ARG = "x-binarysource";
+        constexpr static StringLiteral BINARY_SOURCES_ARG = "binarysource";
         std::vector<std::string> binary_sources;
 
         constexpr static StringLiteral DEBUG_SWITCH = "debug";
@@ -148,6 +148,9 @@ namespace vcpkg
         Optional<bool> disable_metrics = nullopt;
         constexpr static StringLiteral PRINT_METRICS_SWITCH = "printmetrics";
         Optional<bool> print_metrics = nullopt;
+
+        constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
+        Optional<bool> wait_for_lock = nullopt;
 
         // feature flags
         constexpr static StringLiteral FEATURE_FLAGS_ENV = "VCPKG_FEATURE_FLAGS";
@@ -163,8 +166,8 @@ namespace vcpkg
         constexpr static StringLiteral MANIFEST_MODE_FEATURE = "manifests";
         Optional<bool> manifest_mode = nullopt;
 
-        bool binary_caching_enabled() const { return binary_caching.value_or(false); }
-        bool compiler_tracking_enabled() const { return compiler_tracking.value_or(false); }
+        bool binary_caching_enabled() const { return binary_caching.value_or(true); }
+        bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
 
         std::string command;
         std::vector<std::string> command_arguments;
@@ -175,6 +178,7 @@ namespace vcpkg
 
         void check_feature_flag_consistency() const;
 
+        void debug_print_feature_flags() const;
         void track_feature_flag_metrics() const;
 
     private:

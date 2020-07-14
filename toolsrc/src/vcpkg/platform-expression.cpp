@@ -4,6 +4,7 @@
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/platform-expression.h>
 
 #include <string>
@@ -76,9 +77,9 @@ namespace vcpkg::PlatformExpression
             {
             }
 
-            ExprImpl(ExprKind k, std::string i) : kind(k), identifier(std::move(i)) {}
+            ExprImpl(ExprKind k, std::string i) : kind(k), identifier(std::move(i)) { }
             ExprImpl(ExprKind k, std::unique_ptr<ExprImpl> a) : kind(k) { exprs.push_back(std::move(a)); }
-            ExprImpl(ExprKind k, std::vector<std::unique_ptr<ExprImpl>> es) : kind(k), exprs(std::move(es)) {}
+            ExprImpl(ExprKind k, std::vector<std::unique_ptr<ExprImpl>> es) : kind(k), exprs(std::move(es)) { }
 
             ExprKind kind;
             std::string identifier;
@@ -258,7 +259,7 @@ namespace vcpkg::PlatformExpression
         return *this;
     }
 
-    Expr::Expr(std::unique_ptr<ExprImpl>&& e) : underlying_(std::move(e)) {}
+    Expr::Expr(std::unique_ptr<ExprImpl>&& e) : underlying_(std::move(e)) { }
     Expr::~Expr() = default;
 
     Expr Expr::Identifier(StringView id)

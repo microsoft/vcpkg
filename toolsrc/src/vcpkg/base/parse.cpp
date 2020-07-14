@@ -1,12 +1,13 @@
 #include "pch.h"
 
 #include <vcpkg/base/parse.h>
-
-#include <utility>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphparser.h>
+
+#include <utility>
 
 using namespace vcpkg;
 
