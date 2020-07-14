@@ -218,7 +218,7 @@ namespace vcpkg::Util
 
         T* get() { return &m_ptr; }
 
-        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) {}
+        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) { }
 
     private:
         std::unique_lock<std::mutex> m_lock;

@@ -2,10 +2,11 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.process.h>
-#include <vcpkg/base/util.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
+
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>
@@ -90,6 +91,7 @@ namespace vcpkg
 
             Lazy<std::vector<VcpkgPaths::TripletFile>> available_triplets;
             Lazy<std::vector<Toolset>> toolsets;
+            Lazy<std::map<std::string, std::string>> cmake_script_hashes;
 
             Files::Filesystem* fs_ptr;
 
@@ -126,16 +128,7 @@ namespace vcpkg
         Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
 
         std::error_code ec;
-        const auto vcpkg_lock = root / ".vcpkg-root";
-        m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
-        if (ec)
-        {
-            System::printf(System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
-            System::printf(System::Color::error, "    %s\n", ec.message());
-            System::print2(System::Color::error, "Exiting now.\n");
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-
+        bool manifest_mode_on = args.manifest_mode.value_or(args.manifest_root_dir != nullptr);
         if (args.manifest_root_dir)
         {
             manifest_root_dir = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.manifest_root_dir));
@@ -146,12 +139,28 @@ namespace vcpkg
         }
         uppercase_win32_drive_letter(manifest_root_dir);
 
-        if (!manifest_root_dir.empty() && args.manifest_mode.value_or(true))
+        if (!manifest_root_dir.empty() && manifest_mode_on)
         {
-            Debug::print("Using manifest-root: ", root.u8string(), '\n');
+            Debug::print("Using manifest-root: ", manifest_root_dir.u8string(), '\n');
 
             installed = process_output_directory(
                 filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
+            const auto vcpkg_lock = root / ".vcpkg-root";
+            if (args.wait_for_lock.value_or(false))
+            {
+                m_pimpl->file_lock_handle = filesystem.take_exclusive_file_lock(vcpkg_lock, ec);
+            }
+            else
+            {
+                m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
+            }
+            if (ec)
+            {
+                System::printf(
+                    System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
+                System::printf(System::Color::error, "    %s\n", ec.message());
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
         }
         else
         {
@@ -276,6 +285,26 @@ If you wish to silence this error and use classic mode, you can:
                 }
             }
             return output;
+        });
+    }
+
+    const std::map<std::string, std::string>& VcpkgPaths::get_cmake_script_hashes() const
+    {
+        return m_pimpl->cmake_script_hashes.get_lazy([this]() -> std::map<std::string, std::string> {
+            auto& fs = this->get_filesystem();
+            std::map<std::string, std::string> helpers;
+            auto files = fs.get_files_non_recursive(this->scripts / fs::u8path("cmake"));
+            auto common_functions = fs::u8path("vcpkg_common_functions");
+            for (auto&& file : files)
+            {
+                auto stem = file.stem();
+                if (stem != common_functions)
+                {
+                    helpers.emplace(stem.u8string(),
+                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
+                }
+            }
+            return helpers;
         });
     }
 
@@ -405,10 +434,13 @@ If you wish to silence this error and use classic mode, you can:
     VcpkgPaths::~VcpkgPaths()
     {
         std::error_code ec;
-        m_pimpl->fs_ptr->unlock_file_lock(m_pimpl->file_lock_handle, ec);
-        if (ec)
+        if (m_pimpl->file_lock_handle.is_valid())
         {
-            Debug::print("Failed to unlock filesystem lock: ", ec.message(), '\n');
+            m_pimpl->fs_ptr->unlock_file_lock(m_pimpl->file_lock_handle, ec);
+            if (ec)
+            {
+                Debug::print("Failed to unlock filesystem lock: ", ec.message(), '\n');
+            }
         }
     }
 }

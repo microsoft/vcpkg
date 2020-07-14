@@ -6,6 +6,7 @@
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -14,8 +15,8 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
-#include <vcpkg/platform-expression.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/platform-expression.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
@@ -32,7 +33,7 @@ namespace
         fs::path base_path;
 
     public:
-        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) {}
+        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) { }
 
         virtual void record_build_result(const VcpkgPaths& paths,
                                          const PackageSpec& spec,
@@ -404,7 +405,7 @@ namespace vcpkg::Commands::CI
         if (args.binary_caching_enabled())
         {
             binaryproviderStorage =
-                create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+                create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
         }
 
         IBinaryProvider& binaryprovider = binaryproviderStorage ? *binaryproviderStorage : null_binary_provider();

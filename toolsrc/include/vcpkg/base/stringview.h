@@ -43,20 +43,7 @@ namespace vcpkg
         std::string to_string() const;
         void to_string(std::string& out) const;
 
-        constexpr StringView substr(size_t pos, size_t count = std::numeric_limits<size_t>::max()) const
-        {
-            if (pos > m_size)
-            {
-                return StringView();
-            }
-
-            if (count > m_size - pos)
-            {
-                return StringView(m_ptr + pos, m_size - pos);
-            }
-
-            return StringView(m_ptr + pos, count);
-        }
+        StringView substr(size_t pos, size_t count = std::numeric_limits<size_t>::max()) const;
 
         constexpr char byte_at_index(size_t pos) const { return m_ptr[pos]; }
 

@@ -1,10 +1,10 @@
 #pragma once
 
+#include <vcpkg/base/expected.h>
+
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/vcpkgpaths.h>
-
-#include <vcpkg/base/expected.h>
 
 namespace vcpkg::Paragraphs
 {
@@ -17,7 +17,10 @@ namespace vcpkg::Paragraphs
 
     bool is_port_directory(const Files::Filesystem& fs, const fs::path& path);
 
-    Parse::ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs, const std::string& port_name, const fs::path& path_to_manifest, std::error_code& ec);
+    Parse::ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
+                                                              const std::string& port_name,
+                                                              const fs::path& path_to_manifest,
+                                                              std::error_code& ec);
 
     Parse::ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path);
 
