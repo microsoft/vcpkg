@@ -106,7 +106,7 @@ namespace vcpkg::Files
 #if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
             auto handle = CreateFileW(oldpath.c_str(),
                                       GENERIC_READ,
-                                      FILE_SHARE_READ,
+                                      FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
                                       nullptr /* no security attributes */,
                                       OPEN_EXISTING,
                                       FILE_ATTRIBUTE_NORMAL,
