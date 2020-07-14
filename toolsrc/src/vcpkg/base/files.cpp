@@ -101,27 +101,6 @@ namespace vcpkg::Files
             return status_implementation(false, p, ec);
         }
 
-#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
-        fs::path normalize_path(const std::wstring& buffer)
-        {
-            // cut off \\?\UNC\ prefix of network shares
-            const std::wstring networkprefix = L"\\\\?\\UNC\\";
-            if (buffer.substr(0, networkprefix.length()) == networkprefix)
-            {
-                return L"\\\\" + buffer.substr(networkprefix.length());
-            }
-
-            // cut off \\?\ prefix before drive:\path
-            const std::wstring driveprefix = L"\\\\?\\";
-            if (buffer.substr(0, driveprefix.length()) == driveprefix)
-            {
-                return buffer.substr(driveprefix.length());
-            }
-#endif // ^^^ defined(_WIN32)
-
-            return buffer;
-        }
-
         fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
         {
 #if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
@@ -145,7 +124,7 @@ namespace vcpkg::Files
             const auto rc = GetFinalPathNameByHandleW(handle, buffer, maxsize, 0);
             if (rc > 0 && rc < maxsize)
             {
-                target = normalize_path(buffer);
+                target = buffer;
             }
             else
             {
