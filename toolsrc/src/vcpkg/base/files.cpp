@@ -104,6 +104,7 @@ namespace vcpkg::Files
         fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
         {
 #if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+                ec.clear();
             auto handle = CreateFileW(oldpath.c_str(),
                                       0, // open just the metadata
                                       FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
