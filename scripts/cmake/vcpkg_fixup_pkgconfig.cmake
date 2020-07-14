@@ -161,9 +161,9 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     endif()
 
     if("${_config}" STREQUAL "DEBUG")
-        set(lib_suffixes d _d _debug)
+        set(lib_suffixes d _d _debug -s -sd _s _sd -static -staticd _static _staticd)
     elseif("${_config}" STREQUAL "RELEASE")
-        set(lib_suffixes "")
+        set(lib_suffixes -s _s -static _static)
     else()
         message(FATAL_ERROR "Unknown configuration in vcpkg_fixup_pkgconfig_check_libraries!")
     endif()
@@ -200,22 +200,33 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
             debug_message("Library match: CMAKE_MATCH_1:${CMAKE_MATCH_1}")
             set(_libname "${CMAKE_MATCH_1}")
             if(EXISTS "${_libname}")
+                debug_message("${_libname} detected as an existing full path!")
                 continue() # fullpath in -l argument and exists; all ok
             endif()
-            find_library(CHECK_LIB_${_libname} NAMES ${_libname} PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
-            if(CHECK_LIB_${_libname})
-                unset(CHECK_LIB_${_libname}) # need to unset or else other configurations will not check correctly
+            debug_message("CHECK_LIB_${_libname}_${_config} before: ${CHECK_LIB_${_libname}_${_config}}")
+            find_library(CHECK_LIB_${_libname}_${_config} NAMES ${_libname} PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
+            debug_message("CHECK_LIB_${_libname}_${_config} after: ${CHECK_LIB_${_libname}_${_config}}")
+            if(CHECK_LIB_${_libname}_${_config})
+                unset(CHECK_LIB_${_libname}_${_config} CACHE) # need to unset or else other configurations will not check correctly
+                debug_message("CHECK_LIB_${_libname}_${_config} after unset: ${CHECK_LIB_${_libname}_${_config}}")
                 continue() # found library; all ok
             endif()
-            foreach(_lib_suffix ${lib_suffixes})
+            debug_message("Searching with additional suffixes: '${lib_suffixes}'")
+            foreach(_lib_suffix IN LISTS lib_suffixes)
                 string(REPLACE ".dll.a|.a|.lib|.so" "" _name_without_extension "${_libname}")
-                find_library(CHECK_LIB_${_libname} NAMES ${_name_without_extension}${_lib_suffix} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" PATHS ${_pkg_lib_paths_output})
-                if(CHECK_LIB_${_libname})
-                    message(FATAL_ERROR "Found ${CHECK_LIB_${_libname}} with additional debug suffix! Please correct the *.pc file!")
+                set(search_name ${_name_without_extension}${_lib_suffix})
+                debug_message("Search name: '${search_name}'")
+                debug_message("CHECK_LIB_${search_name}_${_config} before: ${CHECK_LIB_${search_name}_${_config}}")
+                debug_message("Search paths:'${_pkg_lib_paths_output}' '${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib'")
+                find_library(CHECK_LIB_${search_name}_${_config} NAMES ${search_name} PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
+                debug_message("CHECK_LIB_${search_name}_${_config} after: ${CHECK_LIB_${search_name}_${_config}}")
+                if(CHECK_LIB_${search_name}_${_config})
+                    message(FATAL_ERROR "Found ${CHECK_LIB_${search_name}_${_config}} with additional '${_lib_suffix}' suffix! Please correct the *.pc file!")
+                    unset(CHECK_LIB_${search_name}_${_config} CACHE) # need to unset or else other configurations will not check correctly
                 endif()
             endforeach()
             # Reaching here means error!
-            message(STATUS "CHECK_LIB_${_libname}:${CHECK_LIB_${_libname}}")
+            message(STATUS "CHECK_LIB_${_libname}_${_config}:${CHECK_LIB_${_libname}_${_config}}")
             message(FATAL_ERROR "Library \"${_libname}\" was not found! If it is a system library use the SYSTEM_LIBRARIES parameter for the vcpkg_fixup_pkgconfig call! Otherwise, correct the *.pc file")
         else ()
             message(FATAL_ERROR "Unhandled string \"${_lib}\" was found! If it is a system library use the SYSTEM_LIBRARIES parameter for the vcpkg_fixup_pkgconfig call! Otherwise, correct the *.pc file or add the case to vcpkg_fixup_pkgconfig")
@@ -312,7 +323,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "\${prefix}/share" "\${prefix}/../share" _contents "${_contents}")
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
         string(REGEX REPLACE "^prefix=(\\\\)?\\\${prefix}(/debug)?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "[\n]prefix=(\\\\)?\\\${prefix}(/debug)?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
         file(WRITE "${_file}" "${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
