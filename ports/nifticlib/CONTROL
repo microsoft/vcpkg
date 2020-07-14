@@ -1,5 +1,5 @@
 Source: nifticlib
-Version: 04-30-2020
+Version: 2020-04-30
 Description: Nifticlib is a C I/O library for reading and writing files in the nifti-1 data format. 
 Homepage: NIFTI-Imaging/nifti_clib
 Build-Depends: zlib
