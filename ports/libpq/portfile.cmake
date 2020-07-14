@@ -135,7 +135,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ##	nls       => undef,    # --enable-nls=<path>                    ##done
         ##	tap_tests => undef,    # --enable-tap-tests
         ##	tcl       => undef,    # --with-tcl=<path>                      #done
-        ##	perl      => undef,    # --with-per
+        ##	perl      => undef,    # --with-perl
         ##	python    => undef,    # --with-python=<path>                   ##done
         ##	openssl   => undef,    # --with-openssl=<path>                  ##done
         ##	uuid      => undef,    # --with-ossp-uuid
