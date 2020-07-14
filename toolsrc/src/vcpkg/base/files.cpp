@@ -113,8 +113,7 @@ namespace vcpkg::Files
                                       nullptr /* no template file */);
             if (handle == INVALID_HANDLE_VALUE)
             {
-                const auto err = GetLastError();
-                ec.assign(err, std::system_category());
+                ec.assign(GetLastError(), std::system_category());
                 return oldpath;
             }
             fs::path target;
