@@ -161,7 +161,7 @@ namespace vcpkg::Files
 
         void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
         {
-#if defined(_WIN32)
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
             const auto target = read_symlink_implementation(oldpath, ec);
             if (ec) return;
 
