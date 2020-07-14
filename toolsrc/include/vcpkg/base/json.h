@@ -1,5 +1,10 @@
 #pragma once
 
+#include <vcpkg/base/expected.h>
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/parse.h>
+#include <vcpkg/base/stringview.h>
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -7,11 +12,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-#include <vcpkg/base/expected.h>
-#include <vcpkg/base/files.h>
-#include <vcpkg/base/parse.h>
-#include <vcpkg/base/stringview.h>
 
 namespace vcpkg::Json
 {

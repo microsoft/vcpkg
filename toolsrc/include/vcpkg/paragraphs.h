@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/expected.h>
+
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/vcpkgpaths.h>
