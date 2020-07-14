@@ -11,8 +11,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NordicSemiconductor/pc-ble-driver
-    REF v4.1.1
-    SHA512 bb1853993b3f37836a8f7402e5c0452e8423c3a1c6e651cf353025022a32e16c72f06e2266e283c72fa7ddb0da7cf8cecb875a7a7762565599f2908c4858ce8e
+    REF v4.1.2
+    SHA512 93ab29d8f84ef8b39c931e22af87ec84457b4927c2dd61da2f2052a7ea6862adff0e21d6ad4296c2f277660a81147043dd3fbe9282d47a5186e617f7adec8a2b
     HEAD_REF master
     PATCHES
         001-arm64-support.patch
