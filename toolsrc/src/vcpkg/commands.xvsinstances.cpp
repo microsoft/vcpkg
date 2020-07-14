@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/visualstudio.h>
@@ -8,7 +9,7 @@
 namespace vcpkg::Commands::X_VSInstances
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("x-vsinstances"),
+        create_example_string("x-vsinstances"),
         0,
         0,
         {{}, {}},

@@ -1,13 +1,15 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO anholt/libepoxy
-    REF 1.5.3
-    SHA512 e831f4f918f08fd5f799501efc0e23b8d404478651634f5e7b35f8ebcc29d91abc447ab20da062dde5be75e18cb39ffea708688e6534f7ab257b949f9c53ddc8
-    HEAD_REF master)
+    REF 1.5.4
+    SHA512 c8b03f0a39df320fdd163a34c35f9ffbed51bc0174fd89a7dc4b3ab2439413087e1e1a2fe57418520074abd435051cbf03eb2a7bf8897da1712bbbc69cf27cc5
+    HEAD_REF master
+    PATCHES
+        # https://github.com/anholt/libepoxy/pull/220
+        libepoxy-1.5.4_Add_call_convention_to_mock_function.patch
+)
 
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -72,5 +74,4 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig)
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libepoxy)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libepoxy/COPYING ${CURRENT_PACKAGES_DIR}/share/libepoxy/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

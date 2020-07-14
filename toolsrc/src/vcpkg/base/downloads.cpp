@@ -33,6 +33,7 @@ namespace vcpkg::Downloads
                            url_path,
                            target_file_path,
                            std::to_string(err));
+        ASSUME(f != nullptr);
 
         auto hSession = WinHttpOpen(L"vcpkg/1.0",
                                     IsWindows8Point1OrGreater() ? WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY

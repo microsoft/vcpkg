@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp11-connector-mysql
-    REF 0.25
-    SHA512 1351161eff5ecc3c2bc720f537e474fadc8f4843999e33274a9b1bccf21fd2b5785eb9588dedc951dcf1c09e4a90c8e2193e9046a43a1bc9d355045aaec71740
+    REF 0.29
+    SHA512 0c71d2ea94933be3bbaa8d6afaac7059660bdb0af5ba905844d95facb5e73a122c3ccd723a48a7fd8db0c028309ac6dc8b91c6838dfbfe530727161d62a1481f
     HEAD_REF master
 )
 

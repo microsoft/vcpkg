@@ -3,12 +3,9 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "osx")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/teemo
-    REF 15edb1705d18ee78b32516a8ae52d6b10507af62
-    SHA512 7dbe917d48b1e8c4b004bad33d8a82524e501d8bec6cdeca4e89ebbe8ed79fa484028c3afd365347e31fa83f64a6f0f5a42ea0063baa7c0985824fb3dffcc8f2
+    REF 1ee566747fba3febade554718a2db6a6c71c6fc4
+    SHA512 10b391a0c629bdcd3737c1e04ac09300412322c8a4b87a8008d368663a223442fe7d7dac4fbd423b5051afcab60bb4c619cfc451a9c5902d396b7a7081a4d3c4
     HEAD_REF master
-    PATCHES
-        # Installing "slice.h" to the root include directory causes build issues in many other libraries
-        adjust-install-dir.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" TEEMO_STATIC)

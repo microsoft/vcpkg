@@ -1,12 +1,9 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO fraillt/bitsery
-	REF v5.0.1
-	SHA512 b4bb0cdec177b2b3e02f66bd313e4742345c5d928d862be3a3cf1b726006741cf6db2258bb7078bb42f46ed6247838c553bbb9c95b42566d9b05397554676696
+	REF d7876808195834f05fd84619b8f6b266e5c1d5bd
+	SHA512 ac2c6e3907f8ee8cf51070b3c00aab9071586510d8cfe30f9660ed5aa9918cd996c806b1db2b46d464f1d933fc41472e5406e63ba4814bdc37d2b0f1ad6e1083
 	HEAD_REF master
-	PATCHES fix-install-paths.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,7 +13,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Delete redundant and empty directories
+vcpkg_fixup_cmake_targets( CONFIG_PATH lib/cmake/${PORT} )
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

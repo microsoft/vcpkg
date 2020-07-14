@@ -1,0 +1,79 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+jobs:
+- job: ${{ parameters.jobName }}
+  pool:
+    name: ${{ parameters.poolName }}
+  workspace:
+    clean: resources
+  timeoutInMinutes: 1440 # 1 day
+
+  steps:
+  - task: PowerShell@2
+    displayName: 'Initialize Environment'
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
+  # Note: D: is the Azure machines' temporary disk.
+  - task: CmdLine@2
+    displayName: 'Build vcpkg'
+    inputs:
+      script: |
+        set VCPKG_DOWNLOADS=D:\downloads
+        .\bootstrap-vcpkg.bat
+  - task: CmdLine@2
+    displayName: "Build vcpkg with CMake and Run Tests"
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      script: |
+        :: TRANSITION, get these tools on the VMs next time we roll them
+        set VCPKG_DOWNLOADS=D:\downloads
+        .\vcpkg.exe fetch cmake
+        .\vcpkg.exe fetch ninja
+        set PATH=D:\downloads\tools\cmake-3.17.2-windows\cmake-3.17.2-win32-x86\bin;D:\downloads\tools\ninja-1.10.0-windows;%PATH%
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x86
+        rmdir /s /q build.x86.debug > nul 2> nul
+        cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=ON -B build.x86.debug -S toolsrc
+        ninja.exe -C build.x86.debug
+        build.x86.debug\vcpkg-test.exe
+        powershell.exe -NoProfile -ExecutionPolicy Bypass "scripts\azure-pipelines\end-to-end-tests.ps1 -WorkingRoot \"%cd%\testing\" -triplet x86-windows"
+      failOnStderr: true
+  - task: PowerShell@2
+    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot D:\ -ArtifactsDirectory $(System.ArtifactsDirectory)'
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space After Build'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
+    inputs:
+      PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
+      ArtifactName: '${{ parameters.triplet }} port build failure logs'
+    condition: failed()
+  - task: PowerShell@2
+    displayName: "Generating all packages files"
+    condition: always()
+
+    inputs:
+      targetType: inline
+      script: |
+        $env:VCPKG_DOWNLOADS = "D:\downloads"
+        ./vcpkg.exe fetch python3
+        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: always()
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "${{ parameters.triplet }} package file lists"
