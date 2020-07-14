@@ -127,8 +127,7 @@ namespace vcpkg::Files
             }
             else
             {
-                const auto err = GetLastError();
-                ec.assign(err, std::system_category());
+                ec.assign(GetLastError(), std::system_category());
             }
             CloseHandle(handle);
             return target;
