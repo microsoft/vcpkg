@@ -101,9 +101,9 @@ namespace vcpkg::Files
             return status_implementation(false, p, ec);
         }
 
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
         fs::path normalize_path(const std::wstring& buffer)
         {
-#if defined(_WIN32)
             // cut off \\?\UNC\ prefix of network shares
             const std::wstring networkprefix = L"\\\\?\\UNC\\";
             if (buffer.substr(0, networkprefix.length()) == networkprefix)
