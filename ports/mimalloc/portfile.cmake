@@ -14,19 +14,40 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     override    MI_OVERRIDE
 )
 
+if ("asm" IN_LIST FEATURES)
+    set(MI_SEE_ASM ON)
+else ()
+    set(MI_SEE_ASM OFF)
+endif ()
+
+if ("override" IN_LIST FEATURES)
+    set(MI_OVERRIDE ON)
+else ()
+    set(MI_OVERRIDE OFF)
+endif ()
+
+if ("secure" IN_LIST FEATURES)
+    set(MI_SECURE ON)
+else ()
+    set(MI_SECURE OFF)
+endif ()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS_DEBUG
-        -DMI_CHECK_FULL=ON
+        -DMI_DEBUG_FULL=ON
     OPTIONS_RELEASE
-        -DMI_CHECK_FULL=OFF
+        -DMI_DEBUG_FULL=OFF
     OPTIONS
         -DMI_INTERPOSE=ON
         -DMI_USE_CXX=OFF
         -DMI_BUILD_TESTS=OFF
         -DMI_BUILD_SHARED=ON
         -DMI_BUILD_STATIC=ON
+        -DMI_OVERRIDE=${MI_OVERRIDE}
+        -DMI_SECURE=${MI_SECURE}
+        -DMI_SEE_ASM=${MI_SEE_ASM}
         ${FEATURE_OPTIONS}
 )
 
@@ -57,12 +78,12 @@ else (${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
     file(COPY "${CURRENT_PACKAGES_DIR}/lib/mimalloc-1.6/mimalloc.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
 
     if (WIN32)
-        if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
+        if (${VCPKG_TARGET_ARCHITECTURE} STREQUAL "x86")
             file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect32.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
             file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect32.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
             file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect32.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
             file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect32.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-        else()
+        elseif(${VCPKG_TARGET_ARCHITECTURE} STREQUAL "x64")
             file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
             file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
             file(COPY ${SOURCE_PATH}/bin/mimalloc-redirect.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
