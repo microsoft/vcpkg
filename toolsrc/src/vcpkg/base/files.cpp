@@ -101,11 +101,70 @@ namespace vcpkg::Files
             return status_implementation(false, p, ec);
         }
 
+        fs::path normalize_path(const std::wstring& buffer)
+        {
+            // cut off \\?\UNC\ prefix of network shares
+            const std::wstring networkprefix = L"\\\\?\\UNC\\";
+            if (buffer.substr(0, networkprefix.length()) == networkprefix)
+            {
+                return L"\\\\" + buffer.substr(networkprefix.length());
+            }
+
+            // cut off \\?\ prefix before drive:\path
+            const std::wstring driveprefix = L"\\\\?\\";
+            if (buffer.substr(0, driveprefix.length()) == driveprefix)
+            {
+                return buffer.substr(driveprefix.length());
+            }
+
+            return buffer;
+        }
+
+        fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
+        {
+#if defined(_WIN32)
+            auto handle = CreateFileW(oldpath.c_str(),
+                                      GENERIC_READ,
+                                      FILE_SHARE_READ,
+                                      nullptr /* no security attributes */,
+                                      OPEN_EXISTING,
+                                      FILE_ATTRIBUTE_NORMAL,
+                                      nullptr /* no template file */);
+            if (handle == INVALID_HANDLE_VALUE)
+            {
+                const auto err = GetLastError();
+                ec.assign(err, std::system_category());
+                return oldpath;
+            }
+            fs::path target;
+            const DWORD maxsize = 32768;
+            wchar_t buffer[maxsize];
+            buffer[0] = L'\0';
+            const auto rc = GetFinalPathNameByHandleW(handle, buffer, maxsize, 0);
+            if (rc > 0 && rc < maxsize)
+            {
+                target = normalize_path(buffer);
+            }
+            else
+            {
+                const auto err = GetLastError();
+                ec.assign(err, std::system_category());
+            }
+            CloseHandle(handle);
+            return target;
+#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+            return fs::stdfs::read_symlink(oldpath, ec);
+#endif // ^^^ !defined(_WIN32)
+        }
+
         void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
         {
 #if defined(_WIN32)
+            const auto target = read_symlink_implementation(oldpath, ec);
+            if (ec) return;
+
             const DWORD flags = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
-            if (!CreateSymbolicLinkW(newpath.c_str(), oldpath.c_str(), flags))
+            if (!CreateSymbolicLinkW(newpath.c_str(), target.c_str(), flags))
             {
                 const auto err = GetLastError();
                 ec.assign(err, std::system_category());
