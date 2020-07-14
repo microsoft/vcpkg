@@ -104,7 +104,7 @@ namespace vcpkg::Files
         fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
         {
 #if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
-                ec.clear();
+            ec.clear();
             auto handle = CreateFileW(oldpath.c_str(),
                                       0, // open just the metadata
                                       FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
@@ -119,12 +119,11 @@ namespace vcpkg::Files
             }
             fs::path target;
             const DWORD maxsize = 32768;
-            wchar_t buffer[maxsize];
-            buffer[0] = L'\0';
-            const auto rc = GetFinalPathNameByHandleW(handle, buffer, maxsize, 0);
+            const std::unique_ptr<wchar_t[]> buffer(new wchar_t[maxsize]);
+            const auto rc = GetFinalPathNameByHandleW(handle, buffer.get(), maxsize, 0);
             if (rc > 0 && rc < maxsize)
             {
-                target = buffer;
+                target = buffer.get();
             }
             else
             {
@@ -132,9 +131,9 @@ namespace vcpkg::Files
             }
             CloseHandle(handle);
             return target;
-#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
             return fs::stdfs::read_symlink(oldpath, ec);
-#endif // ^^^ !defined(_WIN32)
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
         }
 
         void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
