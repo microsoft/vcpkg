@@ -215,7 +215,7 @@ namespace vcpkg
     template<class T>
     static bool try_parse_argument_as_switch(StringView option, StringView arg, T& place)
     {
-        if (arg == option)
+        if (equals_modulo_experimental(arg, option))
         {
             parse_switch(true, option, place);
             return true;
