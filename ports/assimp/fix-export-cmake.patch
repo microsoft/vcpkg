@@ -1,0 +1,78 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4cb6927..4520d92 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -389,7 +389,7 @@ IF(HUNTER_ENABLED)
+       NAMESPACE "${NAMESPACE}"
+       DESTINATION "${CONFIG_INSTALL_DIR}"
+   )
+-ELSE(HUNTER_ENABLED)
++ELSEIF(0)
+   # cmake configuration files
+   CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/assimp-config.cmake.in"         "${CMAKE_CURRENT_BINARY_DIR}/assimp-config.cmake" @ONLY IMMEDIATE)
+   CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/assimpTargets.cmake.in"         "${CMAKE_CURRENT_BINARY_DIR}/assimpTargets.cmake" @ONLY IMMEDIATE)
+diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
+index 30568ff..3aa7e0b 100644
+--- a/code/CMakeLists.txt
++++ b/code/CMakeLists.txt
+@@ -1222,6 +1222,14 @@ IF (RT_FOUND AND ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC)
+   TARGET_LINK_LIBRARIES(assimp ${RT_LIBRARY})
+ ENDIF (RT_FOUND AND ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC)
+ 
++include(CMakePackageConfigHelpers)
++set(ASSIMP_VERSION 5.0.0)
++write_basic_package_version_file(assimp-version.cmake VERSION ${ASSIMP_VERSION} COMPATIBILITY ExactVersion)
++configure_package_config_file(assimp-config.cmake.in assimp-config.cmake
++	INSTALL_DESTINATION share
++	PATH_VARS PROJECT_NAME ASSIMP_VERSION
++)
++
+ IF(HUNTER_ENABLED)
+   INSTALL( TARGETS assimp
+     EXPORT "${TARGETS_EXPORT_NAME}"
+@@ -1233,11 +1241,24 @@ IF(HUNTER_ENABLED)
+     INCLUDES DESTINATION "include")
+ ELSE(HUNTER_ENABLED)
+ INSTALL( TARGETS assimp
++    EXPORT assimpTargets
+     LIBRARY DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
+     ARCHIVE DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
+     RUNTIME DESTINATION ${ASSIMP_BIN_INSTALL_DIR}
+     FRAMEWORK DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
+     COMPONENT ${LIBASSIMP_COMPONENT})
++    
++install(FILES
++	${CMAKE_BINARY_DIR}/code/assimp-config.cmake
++	${CMAKE_BINARY_DIR}/code/assimp-version.cmake
++	DESTINATION share/assimp
++)
++
++install(
++	EXPORT assimpTargets
++	NAMESPACE assimp::
++	DESTINATION share/assimp
++)
+ ENDIF(HUNTER_ENABLED)
+ INSTALL( FILES ${PUBLIC_HEADERS} DESTINATION ${ASSIMP_INCLUDE_INSTALL_DIR}/assimp COMPONENT assimp-dev)
+ INSTALL( FILES ${COMPILER_HEADERS} DESTINATION ${ASSIMP_INCLUDE_INSTALL_DIR}/assimp/Compiler COMPONENT assimp-dev)
+diff --git a/contrib/irrXML/CMakeLists.txt b/contrib/irrXML/CMakeLists.txt
+index 7f58af3..85b4d7e 100644
+--- a/contrib/irrXML/CMakeLists.txt
++++ b/contrib/irrXML/CMakeLists.txt
+@@ -22,8 +22,15 @@ set(IRRXML_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}" CACHE INTERNAL "IrrXML_Incl
+ set(IRRXML_LIBRARY "IrrXML" CACHE INTERNAL "IrrXML" )
+ 
+ install(TARGETS IrrXML
++  EXPORT IrrXMLTargets
+   LIBRARY DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
+   ARCHIVE DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
+   RUNTIME DESTINATION ${ASSIMP_BIN_INSTALL_DIR}
+   FRAMEWORK DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
+   COMPONENT ${LIBASSIMP_COMPONENT})
++
++install(
++	EXPORT IrrXMLTargets
++	NAMESPACE assimp::
++	DESTINATION share/assimp
++)
+\ No newline at end of file
