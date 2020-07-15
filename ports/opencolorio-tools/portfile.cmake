@@ -79,7 +79,8 @@ vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
 
 # Clean redundant files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/include
-    ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/cmake)
+    ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib
+    ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/share)
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/OpenColorIOConfig.cmake)
 
