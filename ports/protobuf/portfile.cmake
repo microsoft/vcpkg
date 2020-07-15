@@ -130,4 +130,7 @@ foreach(_package IN LISTS packages)
     endif()
 endforeach()
 
-vcpkg_fixup_pkgconfig()
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(SYSTEM_LIBRARIES SYSTEM_LIBRARIES pthread)
+endif()
+vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
