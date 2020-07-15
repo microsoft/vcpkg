@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 35c694f..861a17b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -839,11 +839,8 @@ ENDIF()
+ 
+ # Check for the math library so it can be explicitly linked.
+ IF(NOT WIN32)
+-  FIND_LIBRARY(HAVE_LIBM NAMES math m libm)
+-  MESSAGE(STATUS "Found Math library: ${HAVE_LIBM}")
+-  IF(NOT HAVE_LIBM)
+-    MESSAGE(FATAL_ERROR "Unable to find the math library.")
+-  ENDIF()
++  find_package(embree CONFIG 3.8 REQUIRED)
++  set(HAVE_LIBM math)
+ ENDIF()
+ 
+ # Option to Enable DAP long tests, remote tests.
+diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
+index 102828f..c5052cc 100644
+--- a/netCDFConfig.cmake.in
++++ b/netCDFConfig.cmake.in
+@@ -16,6 +16,7 @@ include(CMakeFindDependencyMacro)
+ find_dependency(ZLIB)
+ find_dependency(HDF5 CONFIG)
+ find_dependency(CURL CONFIG)
++find_dependency(embree CONFIG)
+ include("${CMAKE_CURRENT_LIST_DIR}/netCDFTargets.cmake")
+ 
+ # Compiling Options
