@@ -173,9 +173,14 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     endif()
 
     debug_message("IGNORED FLAGS:'${_ignore_flags}'")
+    debug_message("BEFORE IGNORE FLAGS REMOVAL: ${_pkg_libs_output}")
     foreach(_ignore IN LISTS _ignore_flags)  # Remove ignore with whitespace
-        string(REGEX REPLACE "[\t ]+${_ignore}([\t ]+|$)" "\\1" _pkg_libs_output "${_pkg_libs_output}")
+        debug_message("REMOVING FLAG:'${_ignore}'")
+        string(REGEX REPLACE "(^[\t ]*|;[\t ]*|[\t ]+)${_ignore}([\t ]+|[\t ]*;|[\t ]*$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
+        debug_message("AFTER REMOVAL: ${_pkg_libs_output}")
     endforeach()
+
+    string(REGEX REPLACE ";?[\t ]*;[\t ]*" ";" _pkg_libs_output "${_pkg_libs_output}") # Double ;; and Whitespace before/after ; removal
 
     debug_message("SYSTEM LIBRARIES:'${_system_libs}'")
     debug_message("LIBRARIES in PC:'${_pkg_libs_output}'")
