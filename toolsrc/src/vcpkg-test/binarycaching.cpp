@@ -1,14 +1,15 @@
 #include <catch2/catch.hpp>
 
-#include <string>
-
 #include <vcpkg/base/files.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/binarycaching.private.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+
+#include <string>
 
 using namespace vcpkg;
 

@@ -1,12 +1,13 @@
 #pragma once
 
-#include <vector>
-
 #include <vcpkg/base/chrono.h>
+
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
+
+#include <vector>
 
 namespace vcpkg::Install
 {

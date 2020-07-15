@@ -28,11 +28,14 @@ def main(path):
     except FileExistsError:
         print("Path already exists, continuing...")
 
-    headers = open("scripts/list_files/VCPKGHeadersDatabase.txt", mode='w')
-    output = open("scripts/list_files/VCPKGDatabase.txt", mode='w')
-    gen_all_file_strings(path, getFiles(path), headers, output)
-    headers.close()
-    output.close()
+    try:
+        headers = open("scripts/list_files/VCPKGHeadersDatabase.txt", mode='w')
+        output = open("scripts/list_files/VCPKGDatabase.txt", mode='w')
+        gen_all_file_strings(path, getFiles(path), headers, output)
+        headers.close()
+        output.close()
+    except e:
+        print("Failed to generate file lists")
 
 if __name__ == "__main__":
     main(sys.argv[1])

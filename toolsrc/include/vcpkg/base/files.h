@@ -190,6 +190,9 @@ namespace vcpkg::Files
         virtual void current_path(const fs::path& path, std::error_code&) = 0;
         void current_path(const fs::path& path, LineInfo li);
 
+        // waits forever for the file lock
+        virtual fs::SystemHandle take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;
+        // waits, at most, 1.5 seconds, for the file lock
         virtual fs::SystemHandle try_take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;
         virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code&) = 0;
 

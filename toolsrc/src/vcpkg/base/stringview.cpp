@@ -1,10 +1,10 @@
 #include "pch.h"
 
-#include <cstring>
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/stringview.h>
+
+#include <cstring>
 
 namespace vcpkg
 {

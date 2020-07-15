@@ -1,12 +1,13 @@
 #include <catch2/catch.hpp>
 
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/strings.h>
+
 #include <iostream>
 #include <random>
 #include <vector>
 
 #include <vcpkg-test/util.h>
-#include <vcpkg/base/files.h>
-#include <vcpkg/base/strings.h>
 
 using vcpkg::Test::AllowSymlinks;
 using vcpkg::Test::base_temporary_directory;

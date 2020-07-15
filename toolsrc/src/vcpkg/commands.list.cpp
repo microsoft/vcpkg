@@ -1,9 +1,11 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::List
 {
@@ -12,11 +14,12 @@ namespace vcpkg::Commands::List
 
     static void do_print(const StatusParagraph& pgh, const bool full_desc)
     {
+        auto full_version = VersionT(pgh.package.version, pgh.package.port_version).to_string();
         if (full_desc)
         {
             System::printf("%-50s %-16s %s\n",
                            pgh.package.displayname(),
-                           pgh.package.version,
+                           full_version,
                            Strings::join("\n    ", pgh.package.description));
         }
         else
@@ -28,7 +31,7 @@ namespace vcpkg::Commands::List
             }
             System::printf("%-50s %-16s %s\n",
                            vcpkg::shorten_text(pgh.package.displayname(), 50),
-                           vcpkg::shorten_text(pgh.package.version, 16),
+                           vcpkg::shorten_text(full_version, 16),
                            vcpkg::shorten_text(description, 51));
         }
     }
