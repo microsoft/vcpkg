@@ -1,13 +1,14 @@
 #pragma once
 
-#include <memory>
-#include <string>
-
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/unicode.h>
+
 #include <vcpkg/textrowcol.h>
+
+#include <memory>
+#include <string>
 
 namespace vcpkg::Parse
 {
