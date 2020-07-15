@@ -19,7 +19,8 @@ vcpkg_from_github(
         0003-osx-self-assign-field.patch
         0004-yaml-dependency-search.patch
         0005-tinyxml-dependency-search.patch
-        0006-oiio-dependency-search.patch
+        # opencolorio doesn't need this patch, apply it in opencolorio-tools
+        #0006-oiio-dependency-search.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
