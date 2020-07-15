@@ -139,10 +139,13 @@ namespace vcpkg::Commands::Autocomplete
                 if (is_option)
                 {
                     results = Util::fmap(command.structure.options.switches,
-                                         [](const CommandSwitch& s) -> std::string { return s.name.to_string(); });
+                                         [](const CommandSwitch& s) -> std::string { return Strings::format("--%s", s.name.to_string()); });
 
-                    auto settings = Util::fmap(command.structure.options.settings, [](auto&& s) { return s.name; });
+                    auto settings = Util::fmap(command.structure.options.settings, [](auto&& s) { return Strings::format("--%s", s.name); });
                     results.insert(results.end(), settings.begin(), settings.end());
+
+                    auto multisettings = Util::fmap(command.structure.options.multisettings, [](auto&& s) { return Strings::format("--%s", s.name); });
+                    results.insert(results.end(), multisettings.begin(), multisettings.end());
                 }
                 else
                 {
