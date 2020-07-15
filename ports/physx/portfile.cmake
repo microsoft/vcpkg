@@ -11,13 +11,13 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 	set(SYSTEM_PLATFORM "arm64")
 	set(SYSTEM_PLATFORM_PATH "arm_64")
 else()
-    message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+	message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 	set(GENERATE_STATIC_LIBRARIES "True")
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(GENERATE_STATIC_LIBRARIES "False")
+	set(GENERATE_STATIC_LIBRARIES "False")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
@@ -80,15 +80,15 @@ else()
 endif()
 
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO NVIDIAGameWorks/PhysX
-    REF ae80dede0546d652040ae6260a810e53e20a06fa
-    SHA512 f3a690039cf39fe2db9a728b82af0d39eaa02340a853bdad4b5152d63532367eb24fc7033a614882168049b80d803b6225fc60ed2900a9d0deab847f220540be
-    HEAD_REF master
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO NVIDIAGameWorks/PhysX
+	REF ae80dede0546d652040ae6260a810e53e20a06fa
+	SHA512 f3a690039cf39fe2db9a728b82af0d39eaa02340a853bdad4b5152d63532367eb24fc7033a614882168049b80d803b6225fc60ed2900a9d0deab847f220540be
+	HEAD_REF master
 	PATCHES
-		internalMBP_symbols.patch
-		msvc_142_bug_workaround.patch
-		vs16_3_typeinfo_header_fix.patch
+	internalMBP_symbols.patch
+	msvc_142_bug_workaround.patch
+	vs16_3_typeinfo_header_fix.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/physx/buildtools/presets/public/${PRESET_FILE}.xml)
@@ -113,10 +113,10 @@ set(RELEASE_CONFIGURATION "release")
 set(DEBUG_CONFIGURATION "debug")
 
 vcpkg_build_msbuild(
-  PROJECT_PATH ${SOURCE_PATH}/physx/compiler/${COMPILER}/PhysXSDK.sln
+	PROJECT_PATH ${SOURCE_PATH}/physx/compiler/${COMPILER}/PhysXSDK.sln
 	RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
 	DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
-    PLATFORM ${MSBUILD_PLATFORM}
+	PLATFORM ${MSBUILD_PLATFORM}
 )
 
 file(INSTALL ${SOURCE_PATH}/physx/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/)
@@ -135,9 +135,9 @@ endif()
 file(
 	GLOB
 	RELEASE_LIBS
-		${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${RELEASE_CONFIGURATION}/*.lib
-		${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${RELEASE_CONFIGURATION}/*.pdb
-		${SOURCE_PATH}/physx/compiler/${COMPILER}/sdk_source_bin/${RELEASE_CONFIGURATION}/*.pdb
+	${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${RELEASE_CONFIGURATION}/*.lib
+	${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${RELEASE_CONFIGURATION}/*.pdb
+	${SOURCE_PATH}/physx/compiler/${COMPILER}/sdk_source_bin/${RELEASE_CONFIGURATION}/*.pdb
 )
 file(INSTALL ${RELEASE_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
