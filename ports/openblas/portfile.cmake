@@ -26,7 +26,7 @@ set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 # for UWP version, must build non uwp first for helper
 # binaries.
-if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     message(STATUS "Building Windows helper files")
     set(TEMP_CMAKE_SYSTEM_NAME "${VCPKG_CMAKE_SYSTEM_NAME}")
     set(TEMP_CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}")
@@ -55,13 +55,13 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS 
+        OPTIONS
             ${COMMON_OPTIONS}
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
             -DVS_WINRT_COMPONENT=TRUE
             "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
-elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
+elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
         PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}

@@ -6,7 +6,7 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(MSVC_USE_STATIC_CRT_VALUE ON)
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
     set(ADDITIONAL_PATCH "0005_blas_linux_fix.patch")
 endif()
 
@@ -53,7 +53,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 else()
   vcpkg_fixup_cmake_targets(CONFIG_PATH lib${LIB_SUFFIX}/cmake/Ceres)
@@ -62,7 +62,7 @@ endif()
 vcpkg_copy_pdbs()
 
 # Changes target search path
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
   file(READ ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake CERES_TARGETS)
   string(REPLACE "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../"
                  "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../../" CERES_TARGETS "${CERES_TARGETS}")

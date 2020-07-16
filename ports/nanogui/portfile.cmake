@@ -1,9 +1,3 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "nanogui doesn't support UWP.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wjakob/nanogui
