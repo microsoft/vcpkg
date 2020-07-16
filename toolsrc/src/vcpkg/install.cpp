@@ -501,17 +501,17 @@ namespace vcpkg::Install
         return InstallSummary{std::move(results), timer.to_string()};
     }
 
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "--head";
-    static constexpr StringLiteral OPTION_NO_DOWNLOADS = "--no-downloads";
-    static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "--only-downloads";
-    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
-    static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
-    static constexpr StringLiteral OPTION_EDITABLE = "--editable";
-    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
-    static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
-    static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
-    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "head";
+    static constexpr StringLiteral OPTION_NO_DOWNLOADS = "no-downloads";
+    static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "only-downloads";
+    static constexpr StringLiteral OPTION_RECURSE = "recurse";
+    static constexpr StringLiteral OPTION_KEEP_GOING = "keep-going";
+    static constexpr StringLiteral OPTION_EDITABLE = "editable";
+    static constexpr StringLiteral OPTION_XUNIT = "x-xunit";
+    static constexpr StringLiteral OPTION_USE_ARIA2 = "x-use-aria2";
+    static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "clean-after-build";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
 
     static constexpr std::array<CommandSwitch, 9> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},

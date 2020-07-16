@@ -82,11 +82,11 @@ namespace vcpkg::Commands::CI
         Install::InstallSummary summary;
     };
 
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
-    static constexpr StringLiteral OPTION_FAILURE_LOGS = "--failure-logs";
-    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
-    static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_EXCLUDE = "exclude";
+    static constexpr StringLiteral OPTION_FAILURE_LOGS = "failure-logs";
+    static constexpr StringLiteral OPTION_XUNIT = "x-xunit";
+    static constexpr StringLiteral OPTION_RANDOMIZE = "x-randomize";
 
     static constexpr std::array<CommandSetting, 3> CI_SETTINGS = {
         {{OPTION_EXCLUDE, "Comma separated list of ports to skip"},

@@ -182,6 +182,7 @@ namespace vcpkg
         void track_feature_flag_metrics() const;
 
     private:
-        std::unordered_map<std::string, Optional<std::vector<std::string>>> optional_command_arguments;
+        std::unordered_set<std::string> command_switches;
+        std::unordered_map<std::string, std::vector<std::string>> command_options;
     };
 }
