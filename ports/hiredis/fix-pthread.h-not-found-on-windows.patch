@@ -1,0 +1,16 @@
+diff --git a/ssl.c b/ssl.c
+index 78ab9e4..768f304 100644
+--- a/ssl.c
++++ b/ssl.c
+@@ -34,7 +34,11 @@
+ #include "async.h"
+ 
+ #include <assert.h>
++#ifdef _WIN32
++#include <windows.h>
++#else
+ #include <pthread.h>
++#endif
+ #include <errno.h>
+ #include <string.h>
+ 

@@ -1,15 +1,15 @@
 #pragma once
 
-#include <vcpkg/binaryparagraph.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/tools.h>
-#include <vcpkg/vcpkgcmdarguments.h>
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
+
+#include <vcpkg/binaryparagraph.h>
+#include <vcpkg/packagespec.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
 {
@@ -20,6 +20,7 @@ namespace vcpkg
         static const std::string MAVEN = "mvn";
         static const std::string CMAKE = "cmake";
         static const std::string GIT = "git";
+        static const std::string MONO = "mono";
         static const std::string NINJA = "ninja";
         static const std::string NUGET = "nuget";
         static const std::string IFW_INSTALLER_BASE = "ifw_installerbase";
@@ -67,24 +68,27 @@ namespace vcpkg
             std::string name;
             fs::path location;
 
-            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) {}
+            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) { }
         };
 
         VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args);
-        ~VcpkgPaths() noexcept;
+        ~VcpkgPaths();
 
         fs::path package_dir(const PackageSpec& spec) const;
+        fs::path build_dir(const PackageSpec& spec) const;
+        fs::path build_dir(const std::string& package_name) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
         bool is_valid_triplet(Triplet t) const;
         const std::vector<std::string> get_available_triplets_names() const;
         const std::vector<TripletFile>& get_available_triplets() const;
+        const std::map<std::string, std::string>& get_cmake_script_hashes() const;
         const fs::path get_triplet_file_path(Triplet triplet) const;
 
         fs::path original_cwd;
         fs::path root;
-
+        fs::path manifest_root_dir;
         fs::path buildtrees;
         fs::path downloads;
         fs::path packages;
@@ -120,6 +124,9 @@ namespace vcpkg
 
         const System::Environment& get_action_env(const Build::AbiInfo& abi_info) const;
         const std::string& get_triplet_info(const Build::AbiInfo& abi_info) const;
+        bool manifest_mode_enabled() const { return !manifest_root_dir.empty(); }
+
+        void track_feature_flag_metrics() const;
 
     private:
         std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;

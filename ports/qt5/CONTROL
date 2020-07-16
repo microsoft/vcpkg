@@ -1,8 +1,8 @@
 Source: qt5
-Version: 5.12.8
+Version: 5.15.0
 Homepage: https://www.qt.io/
 Description: Qt5 Application Framework
-Build-Depends: qt5-base
+Build-Depends: qt5-base[core]
 Default-Features: essentials, default
 
 Feature: essentials
@@ -168,7 +168,3 @@ Description:
 Feature: connectivity
 Build-Depends: qt5-connectivity
 Description: 
-
-Feature: canvas3d
-Build-Depends: qt5-canvas3d
-Description: deprecated and removed in latest

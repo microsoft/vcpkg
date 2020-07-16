@@ -386,5 +386,13 @@ function(boost_modular_build)
         endif()
     endforeach()
 
+    # boost-regex[icu] and boost-locale[icu] generate has_icu.lib
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/has_icu.lib")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/has_icu.lib")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/has_icu.lib")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/has_icu.lib")
+    endif()
+
     vcpkg_copy_pdbs()
 endfunction()
