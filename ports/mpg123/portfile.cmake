@@ -172,21 +172,41 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
             ${CURRENT_PACKAGES_DIR}/include
     )
 
-    file(
-        INSTALL
-            "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
-            "${SOURCE_PATH}/build/debug/lib/libout123.a"
-        DESTINATION
-            ${CURRENT_INSTALLED_DIR}/debug/lib
-    )
+    if(EXISTS "${SOURCE_PATH}/build/debug/lib64/libmpg123.a")
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/debug/lib64/libmpg123.a"
+                "${SOURCE_PATH}/build/debug/lib64/libout123.a"
+            DESTINATION
+                ${CURRENT_INSTALLED_DIR}/debug/lib
+        )
+    else()
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
+                "${SOURCE_PATH}/build/debug/lib/libout123.a"
+            DESTINATION
+                ${CURRENT_INSTALLED_DIR}/debug/lib
+        )
+    endif()
 
-    file(
-        INSTALL
-            "${SOURCE_PATH}/build/release/lib/libmpg123.a"
-            "${SOURCE_PATH}/build/release/lib/libout123.a"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/lib
-    )
+    if(EXISTS "${SOURCE_PATH}/build/release/lib64/libmpg123.a")
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/release/lib64/libmpg123.a"
+                "${SOURCE_PATH}/build/release/lib64/libout123.a"
+            DESTINATION
+                ${CURRENT_PACKAGES_DIR}/lib
+        )
+    else()
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/release/lib/libmpg123.a"
+                "${SOURCE_PATH}/build/release/lib/libout123.a"
+            DESTINATION
+                ${CURRENT_PACKAGES_DIR}/lib
+        )
+    endif()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

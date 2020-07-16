@@ -1,27 +1,37 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::List
 {
-    static constexpr StringLiteral OPTION_FULLDESC =
-        "--x-full-desc"; // TODO: This should find a better home, eventually
+    static constexpr StringLiteral OPTION_FULLDESC = "x-full-desc"; // TODO: This should find a better home, eventually
 
     static void do_print(const StatusParagraph& pgh, const bool full_desc)
     {
+        auto full_version = VersionT(pgh.package.version, pgh.package.port_version).to_string();
         if (full_desc)
         {
-            System::printf("%-50s %-16s %s\n", pgh.package.displayname(), pgh.package.version, pgh.package.description);
+            System::printf("%-50s %-16s %s\n",
+                           pgh.package.displayname(),
+                           full_version,
+                           Strings::join("\n    ", pgh.package.description));
         }
         else
         {
+            std::string description;
+            if (!pgh.package.description.empty())
+            {
+                description = pgh.package.description[0];
+            }
             System::printf("%-50s %-16s %s\n",
                            vcpkg::shorten_text(pgh.package.displayname(), 50),
-                           vcpkg::shorten_text(pgh.package.version, 16),
-                           vcpkg::shorten_text(pgh.package.description, 51));
+                           vcpkg::shorten_text(full_version, 16),
+                           vcpkg::shorten_text(description, 51));
         }
     }
 

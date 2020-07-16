@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
+
 #include <vcpkg/statusparagraphs.h>
 
 namespace vcpkg
@@ -35,9 +36,12 @@ namespace vcpkg
             if (p->package.spec.name() == spec.name() && p->package.spec.triplet() == spec.triplet() &&
                 p->is_installed())
             {
-                if (p->package.is_feature()) {
+                if (p->package.is_feature())
+                {
                     ipv.features.emplace_back(p.get());
-                } else {
+                }
+                else
+                {
                     Checks::check_exit(VCPKG_LINE_INFO, ipv.core == nullptr);
                     ipv.core = p.get();
                 }
@@ -55,8 +59,8 @@ namespace vcpkg
     {
         if (feature == "core")
         {
-            // The core feature maps to .feature == ""
-            return find(name, triplet, "");
+            // The core feature maps to .feature is empty
+            return find(name, triplet, {});
         }
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
             const PackageSpec& spec = pgh->package.spec;
