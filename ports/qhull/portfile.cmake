@@ -8,20 +8,7 @@ vcpkg_from_github(
         mac-fix.patch
         target-fix.patch
 )
-if(${TARGET_TRIPLET} STREQUAL "x64-windows-static")
-# workaround for visual studio toolset regression LNK1201 (remove if solved)
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DINCLUDE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/include
-        -DMAN_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/doc/qhull
-        -DDOC_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/doc/qhull
-    OPTIONS_RELEASE
-        -DLIB_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib
-    OPTIONS_DEBUG
-        -DLIB_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/lib
-)
-else()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -34,7 +21,6 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DLIB_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/lib
 )
-endif()
 
 vcpkg_install_cmake()
 
