@@ -20,7 +20,6 @@ jobs:
       brew list automake || brew install automake
       brew list pkg-config || brew install pkg-config
       brew list libtool || brew install libtool
-      brew list pkg-config || brew install pkg-config
       brew list bison || brew install bison
       brew list gfortran || brew cask install gfortran
     displayName: 'Install brew dependencies'
