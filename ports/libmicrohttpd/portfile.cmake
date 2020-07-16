@@ -39,7 +39,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     
     file(GLOB MICROHTTPD_HEADERS ${SOURCE_PATH}/src/include/*h)
     foreach(MICROHTTPD_HEADER ${MICROHTTPD_HEADERS})
-        file(COPY ${MICROHTTPD_HEADER} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+        file(COPY ${MICROHTTPD_HEADER} DESTINATION ${CURRENT_PACKAGES_DIR}/include/libmicrohttpd)
     endforeach()
 else()
     vcpkg_configure_make(
