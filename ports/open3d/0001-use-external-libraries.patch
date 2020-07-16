@@ -1,5 +1,5 @@
 diff --git a/3rdparty/CMakeLists.txt b/3rdparty/CMakeLists.txt
-index 09eef92..cf7d4de 100644
+index 09eef92..f8629e9 100644
 --- a/3rdparty/CMakeLists.txt
 +++ b/3rdparty/CMakeLists.txt
 @@ -1,16 +1,3 @@
@@ -375,6 +375,15 @@ index 09eef92..cf7d4de 100644
  "#if __clang_major__ < 7
  #error Need clang >= 7
  #endif
+@@ -395,7 +137,7 @@ int main(int argc, char *argv[]) { return 0; }"
+             include(filament/filament_build.cmake)
+         else()
+             message(STATUS "Using prebuilt Filament libraries")
+-            include(filament/filament_download.cmake)
++            find_package(filament)
+         endif()
+     endif ()
+ endif()
 @@ -463,41 +205,25 @@ if (ENABLE_GUI)
          # GUI needs to be able to send Expose events, which needs to link
          # against libX11 if using system GLFW.

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qhull/qhull
@@ -47,12 +45,15 @@ file(GLOB_RECURSE HTMFILES ${CURRENT_PACKAGES_DIR}/include/*.htm)
 file(REMOVE ${HTMFILES})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 
-file(GLOB EXEFILES_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-file(GLOB EXEFILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-file(COPY ${EXEFILES_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qhull)
-if(EXEFILES_RELEASE OR EXEFILES_DEBUG)
-    file(REMOVE ${EXEFILES_RELEASE} ${EXEFILES_DEBUG})
-endif()
+vcpkg_copy_tools(TOOL_NAMES
+    qconvex
+    qdelaunay
+    qhalf
+    qhull
+    qvoronoi
+    rbox
+    AUTO_CLEAN
+)
 
 if(0) #disabled otherwise targets are broken!
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -66,9 +67,4 @@ else()
 endif()
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-file(COPY ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/qhull)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/qhull/README.txt ${CURRENT_PACKAGES_DIR}/share/qhull/copyright)
+file(INSTALL ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
