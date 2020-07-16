@@ -102,6 +102,61 @@ namespace vcpkg::Files
             return status_implementation(false, p, ec);
         }
 
+        fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
+        {
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+            ec.clear();
+            auto handle = CreateFileW(oldpath.c_str(),
+                                      0, // open just the metadata
+                                      FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+                                      nullptr /* no security attributes */,
+                                      OPEN_EXISTING,
+                                      FILE_ATTRIBUTE_NORMAL,
+                                      nullptr /* no template file */);
+            if (handle == INVALID_HANDLE_VALUE)
+            {
+                ec.assign(GetLastError(), std::system_category());
+                return oldpath;
+            }
+            fs::path target;
+            const DWORD maxsize = 32768;
+            const std::unique_ptr<wchar_t[]> buffer(new wchar_t[maxsize]);
+            const auto rc = GetFinalPathNameByHandleW(handle, buffer.get(), maxsize, 0);
+            if (rc > 0 && rc < maxsize)
+            {
+                target = buffer.get();
+            }
+            else
+            {
+                ec.assign(GetLastError(), std::system_category());
+            }
+            CloseHandle(handle);
+            return target;
+#else  // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
+            return fs::stdfs::read_symlink(oldpath, ec);
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
+        }
+
+        void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
+        {
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+            const auto target = read_symlink_implementation(oldpath, ec);
+            if (ec) return;
+
+            const DWORD flags = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+            if (!CreateSymbolicLinkW(newpath.c_str(), target.c_str(), flags))
+            {
+                const auto err = GetLastError();
+                ec.assign(err, std::system_category());
+                return;
+            }
+            ec.clear();
+            return;
+#else  // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
+            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
+        }
+
         // does _not_ follow symlinks
         void set_writeable(const fs::path& path, std::error_code& ec) noexcept
         {
@@ -800,7 +855,7 @@ namespace vcpkg::Files
         }
         virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
-            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+            return Files::copy_symlink_implementation(oldpath, newpath, ec);
         }
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override

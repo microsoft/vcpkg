@@ -14,8 +14,8 @@
 
 namespace vcpkg::Commands::SetInstalled
 {
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
 
     static constexpr CommandSwitch INSTALL_SWITCHES[] = {
         {OPTION_DRY_RUN, "Do not actually build or install"},

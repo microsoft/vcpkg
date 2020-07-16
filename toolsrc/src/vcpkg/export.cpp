@@ -272,33 +272,33 @@ namespace vcpkg::Export
         std::vector<PackageSpec> specs;
     };
 
-    static constexpr StringLiteral OPTION_OUTPUT = "--output";
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_RAW = "--raw";
-    static constexpr StringLiteral OPTION_NUGET = "--nuget";
-    static constexpr StringLiteral OPTION_IFW = "--ifw";
-    static constexpr StringLiteral OPTION_ZIP = "--zip";
-    static constexpr StringLiteral OPTION_SEVEN_ZIP = "--7zip";
-    static constexpr StringLiteral OPTION_NUGET_ID = "--nuget-id";
-    static constexpr StringLiteral OPTION_NUGET_VERSION = "--nuget-version";
-    static constexpr StringLiteral OPTION_IFW_REPOSITORY_URL = "--ifw-repository-url";
-    static constexpr StringLiteral OPTION_IFW_PACKAGES_DIR_PATH = "--ifw-packages-directory-path";
-    static constexpr StringLiteral OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
-    static constexpr StringLiteral OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
-    static constexpr StringLiteral OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
-    static constexpr StringLiteral OPTION_CHOCOLATEY = "--x-chocolatey";
-    static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "--x-maintainer";
-    static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--x-version-suffix";
-    static constexpr StringLiteral OPTION_ALL_INSTALLED = "--x-all-installed";
+    static constexpr StringLiteral OPTION_OUTPUT = "output";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_RAW = "raw";
+    static constexpr StringLiteral OPTION_NUGET = "nuget";
+    static constexpr StringLiteral OPTION_IFW = "ifw";
+    static constexpr StringLiteral OPTION_ZIP = "zip";
+    static constexpr StringLiteral OPTION_SEVEN_ZIP = "7zip";
+    static constexpr StringLiteral OPTION_NUGET_ID = "nuget-id";
+    static constexpr StringLiteral OPTION_NUGET_VERSION = "nuget-version";
+    static constexpr StringLiteral OPTION_IFW_REPOSITORY_URL = "ifw-repository-url";
+    static constexpr StringLiteral OPTION_IFW_PACKAGES_DIR_PATH = "ifw-packages-directory-path";
+    static constexpr StringLiteral OPTION_IFW_REPOSITORY_DIR_PATH = "ifw-repository-directory-path";
+    static constexpr StringLiteral OPTION_IFW_CONFIG_FILE_PATH = "ifw-configuration-file-path";
+    static constexpr StringLiteral OPTION_IFW_INSTALLER_FILE_PATH = "ifw-installer-file-path";
+    static constexpr StringLiteral OPTION_CHOCOLATEY = "x-chocolatey";
+    static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "x-maintainer";
+    static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "x-version-suffix";
+    static constexpr StringLiteral OPTION_ALL_INSTALLED = "x-all-installed";
 
-    static constexpr StringLiteral OPTION_PREFAB = "--prefab";
-    static constexpr StringLiteral OPTION_PREFAB_GROUP_ID = "--prefab-group-id";
-    static constexpr StringLiteral OPTION_PREFAB_ARTIFACT_ID = "--prefab-artifact-id";
-    static constexpr StringLiteral OPTION_PREFAB_VERSION = "--prefab-version";
-    static constexpr StringLiteral OPTION_PREFAB_SDK_MIN_VERSION = "--prefab-min-sdk";
-    static constexpr StringLiteral OPTION_PREFAB_SDK_TARGET_VERSION = "--prefab-target-sdk";
-    static constexpr StringLiteral OPTION_PREFAB_ENABLE_MAVEN = "--prefab-maven";
-    static constexpr StringLiteral OPTION_PREFAB_ENABLE_DEBUG = "--prefab-debug";
+    static constexpr StringLiteral OPTION_PREFAB = "prefab";
+    static constexpr StringLiteral OPTION_PREFAB_GROUP_ID = "prefab-group-id";
+    static constexpr StringLiteral OPTION_PREFAB_ARTIFACT_ID = "prefab-artifact-id";
+    static constexpr StringLiteral OPTION_PREFAB_VERSION = "prefab-version";
+    static constexpr StringLiteral OPTION_PREFAB_SDK_MIN_VERSION = "prefab-min-sdk";
+    static constexpr StringLiteral OPTION_PREFAB_SDK_TARGET_VERSION = "prefab-target-sdk";
+    static constexpr StringLiteral OPTION_PREFAB_ENABLE_MAVEN = "prefab-maven";
+    static constexpr StringLiteral OPTION_PREFAB_ENABLE_DEBUG = "prefab-debug";
 
     static constexpr std::array<CommandSwitch, 11> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
