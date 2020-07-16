@@ -21,11 +21,11 @@ namespace vcpkg::Commands::DependInfo
 {
     namespace
     {
-        constexpr StringLiteral OPTION_DOT = "--dot";
-        constexpr StringLiteral OPTION_DGML = "--dgml";
-        constexpr StringLiteral OPTION_SHOW_DEPTH = "--show-depth";
-        constexpr StringLiteral OPTION_MAX_RECURSE = "--max-recurse";
-        constexpr StringLiteral OPTION_SORT = "--sort";
+        constexpr StringLiteral OPTION_DOT = "dot";
+        constexpr StringLiteral OPTION_DGML = "dgml";
+        constexpr StringLiteral OPTION_SHOW_DEPTH = "show-depth";
+        constexpr StringLiteral OPTION_MAX_RECURSE = "max-recurse";
+        constexpr StringLiteral OPTION_SORT = "sort";
 
         constexpr int NO_RECURSE_LIMIT_VALUE = -1;
 
