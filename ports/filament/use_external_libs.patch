@@ -1,0 +1,824 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3eef6ec..dfb1636 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -33,6 +33,16 @@ endif()
+ # ==================================================================================================
+ # Support for ccache
+ # ==================================================================================================
++find_package(GTest)
++find_package(PNG)
++find_package(SDL2)
++find_package(spirv_cross_core)
++find_package(spirv_cross_glsl)
++find_package(spirv_cross_msl)
++find_package(SPIRV-Tools)
++find_package(SPIRV-Tools-opt)
++find_package(Stb)
++include_directories(${Stb_INCLUDE_DIR})
+ find_program(CCACHE_PROGRAM ccache)
+ if (CCACHE_PROGRAM)
+     set(C_LAUNCHER   "${CCACHE_PROGRAM}")
+@@ -224,7 +234,7 @@ endif()
+ 
+ if (LINUX)
+     option(USE_STATIC_LIBCXX "Link against the static runtime libraries." ON)
+-    if (${USE_STATIC_LIBCXX}) 
++    if (${USE_STATIC_LIBCXX})
+         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+         link_libraries("-static-libgcc -static-libstdc++")
+         link_libraries(libc++.a)
+@@ -521,7 +531,6 @@ endfunction()
+ # ==================================================================================================
+ 
+ # Common to all platforms
+-add_subdirectory(${EXTERNAL}/libgtest/tnt)
+ add_subdirectory(${LIBRARIES}/camutils)
+ add_subdirectory(${LIBRARIES}/filabridge)
+ add_subdirectory(${LIBRARIES}/filaflat)
+@@ -542,15 +551,11 @@ add_subdirectory(${EXTERNAL}/benchmark/tnt)
+ add_subdirectory(${EXTERNAL}/meshoptimizer)
+ add_subdirectory(${EXTERNAL}/cgltf/tnt)
+ add_subdirectory(${EXTERNAL}/draco/tnt)
+-add_subdirectory(${EXTERNAL}/stb/tnt)
+-add_subdirectory(${EXTERNAL}/getopt)
+ 
+ if (FILAMENT_BUILD_FILAMAT OR IS_HOST_PLATFORM)
+     # spirv-tools must come before filamat, as filamat relies on the presence of the
+     # spirv-tools_SOURCE_DIR variable.
+-    add_subdirectory(${EXTERNAL}/spirv-tools)
+     add_subdirectory(${EXTERNAL}/glslang/tnt)
+-    add_subdirectory(${EXTERNAL}/spirv-cross/tnt)
+     add_subdirectory(${LIBRARIES}/filamat)
+ 
+     # the material debugger requires filamat
+@@ -596,12 +601,6 @@ if (IS_HOST_PLATFORM)
+ 
+     add_subdirectory(${EXTERNAL}/astcenc/tnt)
+     add_subdirectory(${EXTERNAL}/etc2comp)
+-    add_subdirectory(${EXTERNAL}/imgui/tnt)
+-    add_subdirectory(${EXTERNAL}/libassimp/tnt)
+-    add_subdirectory(${EXTERNAL}/libpng/tnt)
+-    add_subdirectory(${EXTERNAL}/libsdl2/tnt)
+-    add_subdirectory(${EXTERNAL}/libz/tnt)
+-    add_subdirectory(${EXTERNAL}/tinyexr/tnt)
+ 
+     add_subdirectory(${TOOLS}/cmgen)
+     add_subdirectory(${TOOLS}/cso-lut)
+diff --git a/filament/backend/CMakeLists.txt b/filament/backend/CMakeLists.txt
+index 04ab2d7..a1e954b 100644
+--- a/filament/backend/CMakeLists.txt
++++ b/filament/backend/CMakeLists.txt
+@@ -5,6 +5,12 @@ set(TARGET backend)
+ set(PUBLIC_HDR_DIR include)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR})
+ 
++include(CheckIncludeFile)
++check_include_file("getopt.h" HAVE_GETOPT_H)
++if(HAVE_GETOPT_H)
++    include_directories(${GETOPT_PATH})
++endif()
++add_library(getopt INTERFACE)
+ # ==================================================================================================
+ # Sources and headers
+ # ==================================================================================================
+@@ -313,7 +319,7 @@ if (APPLE)
+         backend
+         filabridge
+         getopt
+-        gtest
++        GTest::gtest
+         SPIRV
+         spirv-cross-glsl)
+ 
+@@ -326,16 +332,13 @@ if (APPLE)
+             backend_test
+             filabridge
+             getopt
+-            gtest
++            GTest::gtest
+             glslang
+             spirv-cross-core
+             spirv-cross-glsl
+             spirv-cross-msl
+             )
+ 
+-    set(BACKEND_TEST_COMBINED_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/libbackendtest_combined.a")
+-    combine_static_libs(backend_test "${BACKEND_TEST_COMBINED_OUTPUT}" "${BACKEND_TEST_DEPS}")
+-
+     set(BACKEND_TEST_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}backend_test${CMAKE_STATIC_LIBRARY_SUFFIX})
+ 
+     if (INSTALL_BACKEND_TEST)
+diff --git a/filament/backend/test/Arguments.cpp b/filament/backend/test/Arguments.cpp
+index 49fa4b7..1332d78 100644
+--- a/filament/backend/test/Arguments.cpp
++++ b/filament/backend/test/Arguments.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include "PlatformRunner.h"
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <iostream>
+ #include <string>
+diff --git a/filament/test/CMakeLists.txt b/filament/test/CMakeLists.txt
+index ce17367..33ddc3b 100644
+--- a/filament/test/CMakeLists.txt
++++ b/filament/test/CMakeLists.txt
+@@ -47,7 +47,7 @@ if (TNT_DEV)
+             filament_framegraph_test.cpp
+             filament_test.cpp)
+ 
+-    target_link_libraries(test_${TARGET} PRIVATE filament gtest)
++    target_link_libraries(test_${TARGET} PRIVATE filament GTest::gtest)
+     target_compile_options(test_${TARGET} PRIVATE ${COMPILER_FLAGS})
+ 
+     add_executable(test_depth depth_test.cpp)
+@@ -57,6 +57,6 @@ endif()
+ add_executable(test_material_parser
+         filament_test_material_parser.cpp
+         ${RESGEN_SOURCE})
+-target_link_libraries(test_material_parser PRIVATE filament gtest)
++target_link_libraries(test_material_parser PRIVATE filament GTest::gtest)
+ target_compile_options(test_material_parser PRIVATE ${COMPILER_FLAGS})
+ target_include_directories(test_material_parser PRIVATE ${RESOURCE_DIR})
+diff --git a/libs/bluegl/CMakeLists.txt b/libs/bluegl/CMakeLists.txt
+index d63cb4e..5b88878 100644
+--- a/libs/bluegl/CMakeLists.txt
++++ b/libs/bluegl/CMakeLists.txt
+@@ -68,4 +68,4 @@ endif()
+ 
+ # and we're linking against the libraries below, importing their public headers
+ target_link_libraries(test_${TARGET} LINK_PUBLIC ${TARGET})
+-target_link_libraries(test_${TARGET} LINK_PUBLIC gtest)
++target_link_libraries(test_${TARGET} LINK_PUBLIC GTest::gtest)
+diff --git a/libs/bluevk/CMakeLists.txt b/libs/bluevk/CMakeLists.txt
+index bfd06c7..59d57c8 100644
+--- a/libs/bluevk/CMakeLists.txt
++++ b/libs/bluevk/CMakeLists.txt
+@@ -36,7 +36,7 @@ target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
+ # test_bluevk is not supported on mobile or Windows
+ if (NOT ANDROID AND NOT IOS AND NOT WIN32)
+     add_executable(test_bluevk tests/test_bluevk_sdl.cpp)
+-    target_link_libraries(test_bluevk PRIVATE dl bluevk sdl2)
++    target_link_libraries(test_bluevk PRIVATE dl bluevk SDL2::SDL2)
+ endif()
+ 
+ install(TARGETS ${TARGET} ARCHIVE DESTINATION lib/${DIST_DIR})
+diff --git a/libs/camutils/CMakeLists.txt b/libs/camutils/CMakeLists.txt
+index 94766ec..efc0e30 100644
+--- a/libs/camutils/CMakeLists.txt
++++ b/libs/camutils/CMakeLists.txt
+@@ -52,5 +52,5 @@ install(DIRECTORY ${PUBLIC_HDR_DIR}/camutils DESTINATION include)
+ # ==================================================================================================
+ if (NOT ANDROID AND NOT WEBGL AND NOT IOS)
+     add_executable(test_${TARGET} tests/test_camutils.cpp)
+-    target_link_libraries(test_${TARGET} PRIVATE camutils gtest)
++    target_link_libraries(test_${TARGET} PRIVATE camutils GTest::gtest)
+ endif()
+diff --git a/libs/filamat/CMakeLists.txt b/libs/filamat/CMakeLists.txt
+index 4efeda8..1869121 100644
+--- a/libs/filamat/CMakeLists.txt
++++ b/libs/filamat/CMakeLists.txt
+@@ -173,7 +173,7 @@ add_executable(${TARGET} ${SRCS})
+ 
+ target_include_directories(${TARGET} PRIVATE src)
+ 
+-target_link_libraries(${TARGET} filamat gtest)
++target_link_libraries(${TARGET} filamat GTest::gtest)
+ 
+ set(TARGET test_filamat_lite)
+ set(SRCS
+@@ -183,4 +183,4 @@ add_executable(${TARGET} ${SRCS})
+ 
+ target_include_directories(${TARGET} PRIVATE src)
+ 
+-target_link_libraries(${TARGET} filamat_lite gtest)
++target_link_libraries(${TARGET} filamat_lite GTest::gtest)
+diff --git a/libs/filamentapp/CMakeLists.txt b/libs/filamentapp/CMakeLists.txt
+index 508f47d..91d8a77 100644
+--- a/libs/filamentapp/CMakeLists.txt
++++ b/libs/filamentapp/CMakeLists.txt
+@@ -41,7 +41,7 @@ set(SRCS
+ set(LIBS
+         assimp
+         filament
+-        sdl2
++        SDL2::SDL2
+         stb
+         math
+         filamat
+@@ -72,7 +72,7 @@ endif()
+ 
+ if (WIN32)
+     list(APPEND SRCS src/NativeWindowHelperWindows.cpp)
+-    list(APPEND LIBS sdl2main)
++    list(APPEND LIBS SDL2::SDL2main)
+ endif()
+ 
+ # ==================================================================================================
+diff --git a/libs/filameshio/CMakeLists.txt b/libs/filameshio/CMakeLists.txt
+index 7fc5152..83fcf18 100644
+--- a/libs/filameshio/CMakeLists.txt
++++ b/libs/filameshio/CMakeLists.txt
+@@ -38,5 +38,5 @@ install(FILES ${DIST_HDRS} DESTINATION include/${TARGET})
+ # ==================================================================================================
+ if (NOT IOS AND NOT WEBGL AND NOT ANDROID)
+     add_executable(test_${TARGET} tests/test_filamesh.cpp )
+-    target_link_libraries(test_${TARGET} PRIVATE filameshio gtest)
++    target_link_libraries(test_${TARGET} PRIVATE filameshio GTest::gtest)
+ endif()
+diff --git a/libs/image/CMakeLists.txt b/libs/image/CMakeLists.txt
+index 7622de1..80488c6 100644
+--- a/libs/image/CMakeLists.txt
++++ b/libs/image/CMakeLists.txt
+@@ -61,5 +61,5 @@ install(DIRECTORY ${PUBLIC_HDR_DIR}/image DESTINATION include)
+ # ==================================================================================================
+ if (NOT ANDROID AND NOT WEBGL AND NOT IOS)
+     add_executable(test_${TARGET} tests/test_image.cpp)
+-    target_link_libraries(test_${TARGET} PRIVATE image imageio gtest)
++    target_link_libraries(test_${TARGET} PRIVATE image imageio GTest::gtest)
+ endif()
+diff --git a/libs/imageio/CMakeLists.txt b/libs/imageio/CMakeLists.txt
+index acdd853..d870946 100644
+--- a/libs/imageio/CMakeLists.txt
++++ b/libs/imageio/CMakeLists.txt
+@@ -30,7 +30,7 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+ target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
+ 
+-target_link_libraries(${TARGET} PUBLIC image math png tinyexr utils z astcenc stb EtcLib)
++target_link_libraries(${TARGET} PUBLIC image math PNG::PNG tinyexr utils z astcenc stb EtcLib)
+ if (WIN32)
+     target_link_libraries(${TARGET} PRIVATE wsock32)
+ endif()
+diff --git a/libs/math/CMakeLists.txt b/libs/math/CMakeLists.txt
+index 4b0d6bf..3dcd859 100644
+--- a/libs/math/CMakeLists.txt
++++ b/libs/math/CMakeLists.txt
+@@ -58,7 +58,7 @@ add_executable(test_${TARGET}
+         tests/test_vec.cpp
+         tests/test_quat.cpp
+ )
+-target_link_libraries(test_${TARGET} PRIVATE math gtest)
++target_link_libraries(test_${TARGET} PRIVATE math GTest::gtest)
+ 
+ # ==================================================================================================
+ # Benchmarks
+diff --git a/libs/utils/CMakeLists.txt b/libs/utils/CMakeLists.txt
+index 3d7e544..38348e1 100644
+--- a/libs/utils/CMakeLists.txt
++++ b/libs/utils/CMakeLists.txt
+@@ -150,7 +150,7 @@ endif()
+ 
+ add_executable(test_${TARGET} ${TEST_SRCS})
+ 
+-target_link_libraries(test_${TARGET} PRIVATE gtest utils tsl math)
++target_link_libraries(test_${TARGET} PRIVATE GTest::gtest utils tsl math)
+ 
+ # ==================================================================================================
+ # Benchmarks
+@@ -173,4 +173,4 @@ if (NOT WEBGL)
+ 
+     target_link_libraries(benchmark_${TARGET} PRIVATE benchmark_main utils benchmark_${TARGET}_callee)
+ 
+-endif()
+\ No newline at end of file
++endif()
+diff --git a/samples/frame_generator.cpp b/samples/frame_generator.cpp
+index 09335a5..a928e2a 100644
+--- a/samples/frame_generator.cpp
++++ b/samples/frame_generator.cpp
+@@ -25,7 +25,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <utils/Path.h>
+ 
+diff --git a/samples/gltf_instances.cpp b/samples/gltf_instances.cpp
+index a88b6ce..623c448 100644
+--- a/samples/gltf_instances.cpp
++++ b/samples/gltf_instances.cpp
+@@ -32,7 +32,7 @@
+ 
+ #include <camutils/Manipulator.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <utils/NameComponentManager.h>
+ 
+diff --git a/samples/gltf_viewer.cpp b/samples/gltf_viewer.cpp
+index 3bd25af..6290789 100644
+--- a/samples/gltf_viewer.cpp
++++ b/samples/gltf_viewer.cpp
+@@ -37,7 +37,7 @@
+ 
+ #include <camutils/Manipulator.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <utils/NameComponentManager.h>
+ 
+diff --git a/samples/heightfield.cpp b/samples/heightfield.cpp
+index 855dabf..92c98ad 100644
+--- a/samples/heightfield.cpp
++++ b/samples/heightfield.cpp
+@@ -32,7 +32,7 @@
+ #include <utils/JobSystem.h>
+ #include <utils/Path.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <filamentapp/FilamentApp.h>
+ 
+diff --git a/samples/lightbulb.cpp b/samples/lightbulb.cpp
+index 58b8946..166e336 100644
+--- a/samples/lightbulb.cpp
++++ b/samples/lightbulb.cpp
+@@ -19,7 +19,7 @@
+ #include <map>
+ #include <vector>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <utils/EntityManager.h>
+ #include <utils/Path.h>
+diff --git a/samples/material_sandbox.cpp b/samples/material_sandbox.cpp
+index 47522e5..f38672c 100644
+--- a/samples/material_sandbox.cpp
++++ b/samples/material_sandbox.cpp
+@@ -19,7 +19,7 @@
+ #include <map>
+ #include <vector>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <imgui.h>
+ 
+diff --git a/samples/sample_cloth.cpp b/samples/sample_cloth.cpp
+index 1ca2ada..edd6086 100644
+--- a/samples/sample_cloth.cpp
++++ b/samples/sample_cloth.cpp
+@@ -19,7 +19,7 @@
+ #include <map>
+ #include <vector>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <utils/Path.h>
+ 
+diff --git a/samples/sample_full_pbr.cpp b/samples/sample_full_pbr.cpp
+index 2629dbe..c12d999 100644
+--- a/samples/sample_full_pbr.cpp
++++ b/samples/sample_full_pbr.cpp
+@@ -36,7 +36,7 @@
+ #include <math/mat4.h>
+ #include <math/vec3.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <stb_image.h>
+ 
+diff --git a/samples/sample_normal_map.cpp b/samples/sample_normal_map.cpp
+index a6a9287..28b18ab 100644
+--- a/samples/sample_normal_map.cpp
++++ b/samples/sample_normal_map.cpp
+@@ -19,7 +19,7 @@
+ #include <map>
+ #include <vector>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <utils/Path.h>
+ 
+diff --git a/third_party/getopt/src/getopt_long.c b/third_party/getopt/src/getopt_long.c
+index fd67535..eb2cec2 100755
+--- a/third_party/getopt/src/getopt_long.c
++++ b/third_party/getopt/src/getopt_long.c
+@@ -27,8 +27,6 @@
+  * POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-#include "getopt/getopt.h"
+-
+ #include <assert.h>
+ #include <errno.h>
+ #include <stdio.h>
+@@ -228,4 +226,4 @@ int *index;
+       *index = match;
+   }
+   return (retval);
+-}
+\ No newline at end of file
++}
+diff --git a/third_party/glslang/External/CMakeLists.txt b/third_party/glslang/External/CMakeLists.txt
+index 6ff4f47..56e2321 100644
+--- a/third_party/glslang/External/CMakeLists.txt
++++ b/third_party/glslang/External/CMakeLists.txt
+@@ -13,12 +13,12 @@ if(BUILD_TESTING)
+         # EXCLUDE_FROM_ALL keeps the install target from installing GTEST files.
+         add_subdirectory(googletest EXCLUDE_FROM_ALL)
+         set(GTEST_TARGETS
+-            gtest
+-            gtest_main
+-            gmock
+-            gmock_main)
++            GTest::gtest
++            GTest::gtest_main
++            GTest::gmock
++            GTest::gmock_main)
+         foreach(target ${GTEST_TARGETS})
+-            set_property(TARGET ${target} PROPERTY FOLDER gtest)
++            set_property(TARGET ${target} PROPERTY FOLDER GTest::gtest)
+         endforeach()
+         mark_as_advanced(gmock_build_tests
+             BUILD_GMOCK
+@@ -41,4 +41,3 @@ if(ENABLE_OPT AND NOT TARGET SPIRV-Tools-opt)
+         add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/spirv-tools spirv-tools)
+     endif()
+ endif()
+-
+diff --git a/tools/cmgen/CMakeLists.txt b/tools/cmgen/CMakeLists.txt
+index 10868b9..95d8aab 100644
+--- a/tools/cmgen/CMakeLists.txt
++++ b/tools/cmgen/CMakeLists.txt
+@@ -42,7 +42,6 @@ endif()
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt libpng tinyexr libz)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/cmgen/src/cmgen.cpp b/tools/cmgen/src/cmgen.cpp
+index 05b1f01..b09f709 100644
+--- a/tools/cmgen/src/cmgen.cpp
++++ b/tools/cmgen/src/cmgen.cpp
+@@ -43,7 +43,7 @@
+ #include <iostream>
+ #include <sstream>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ 
+ using namespace filament::math;
+@@ -234,7 +234,7 @@ static void printUsage(char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/cso-lut/CMakeLists.txt b/tools/cso-lut/CMakeLists.txt
+index 63cf6af..b5da47f 100644
+--- a/tools/cso-lut/CMakeLists.txt
++++ b/tools/cso-lut/CMakeLists.txt
+@@ -29,5 +29,4 @@ endif()
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt libpng tinyexr libz)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+diff --git a/tools/cso-lut/src/main.cpp b/tools/cso-lut/src/main.cpp
+index af4d13b..17c576f 100644
+--- a/tools/cso-lut/src/main.cpp
++++ b/tools/cso-lut/src/main.cpp
+@@ -31,7 +31,7 @@
+ #include <utils/compiler.h>
+ #include <utils/Path.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ using namespace filament::math;
+ using namespace image;
+@@ -79,7 +79,7 @@ static void printUsage(const char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/filamesh/CMakeLists.txt b/tools/filamesh/CMakeLists.txt
+index e53c9c2..e0afe04 100644
+--- a/tools/filamesh/CMakeLists.txt
++++ b/tools/filamesh/CMakeLists.txt
+@@ -39,7 +39,6 @@ endif()
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt libassimp meshoptimizer)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/filamesh/src/main.cpp b/tools/filamesh/src/main.cpp
+index 4fd7bf5..d1e9bb7 100644
+--- a/tools/filamesh/src/main.cpp
++++ b/tools/filamesh/src/main.cpp
+@@ -30,7 +30,7 @@
+ 
+ #include <filameshio/filamesh.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ using namespace filamesh;
+ using namespace filament::math;
+@@ -252,7 +252,7 @@ static void printUsage(const char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/glslminifier/CMakeLists.txt b/tools/glslminifier/CMakeLists.txt
+index 41f4342..28b9dd1 100644
+--- a/tools/glslminifier/CMakeLists.txt
++++ b/tools/glslminifier/CMakeLists.txt
+@@ -19,7 +19,6 @@ target_link_libraries(${TARGET} PRIVATE utils getopt)
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/glslminifier/src/main.cpp b/tools/glslminifier/src/main.cpp
+index a6d2f56..c574e9f 100644
+--- a/tools/glslminifier/src/main.cpp
++++ b/tools/glslminifier/src/main.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <utils/Path.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <fstream>
+ #include <iostream>
+@@ -75,7 +75,7 @@ static void printUsage(const char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/matc/CMakeLists.txt b/tools/matc/CMakeLists.txt
+index 5d6ba9a..03dca2a 100644
+--- a/tools/matc/CMakeLists.txt
++++ b/tools/matc/CMakeLists.txt
+@@ -51,7 +51,6 @@ target_link_libraries(${TARGET} getopt filamat filabridge utils)
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt glslang spirv-cross spirv-tools smol-v)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/matc/src/matc/CommandlineConfig.cpp b/tools/matc/src/matc/CommandlineConfig.cpp
+index 7d96aa6..5bc8e4d 100644
+--- a/tools/matc/src/matc/CommandlineConfig.cpp
++++ b/tools/matc/src/matc/CommandlineConfig.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <private/filament/Variant.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <utils/Path.h>
+ 
+@@ -88,7 +88,7 @@ static void usage(char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/matinfo/CMakeLists.txt b/tools/matinfo/CMakeLists.txt
+index 9f65997..f6d7bda 100644
+--- a/tools/matinfo/CMakeLists.txt
++++ b/tools/matinfo/CMakeLists.txt
+@@ -25,7 +25,6 @@ target_include_directories(${TARGET} PRIVATE ${../glslang_SOURCE_DIR}/..)
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt glslang smol-v)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/matinfo/src/main.cpp b/tools/matinfo/src/main.cpp
+index 73a1925..f9ee49c 100644
+--- a/tools/matinfo/src/main.cpp
++++ b/tools/matinfo/src/main.cpp
+@@ -14,7 +14,7 @@
+  * limitations under the License.
+  */
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <utils/Path.h>
+ 
+@@ -103,7 +103,7 @@ static void printUsage(const char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/mipgen/CMakeLists.txt b/tools/mipgen/CMakeLists.txt
+index 2c76b65..73c2a9d 100644
+--- a/tools/mipgen/CMakeLists.txt
++++ b/tools/mipgen/CMakeLists.txt
+@@ -19,7 +19,6 @@ target_link_libraries(${TARGET} PRIVATE math utils z image imageio getopt)
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt libpng tinyexr libz astcenc stb etc2comp)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/mipgen/src/main.cpp b/tools/mipgen/src/main.cpp
+index d5f8bda..8bb0c58 100644
+--- a/tools/mipgen/src/main.cpp
++++ b/tools/mipgen/src/main.cpp
+@@ -26,7 +26,7 @@
+ 
+ #include <utils/Path.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <fstream>
+ #include <iostream>
+@@ -140,7 +140,7 @@ static void printUsage(const char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/normal-blending/CMakeLists.txt b/tools/normal-blending/CMakeLists.txt
+index b01e056..9fffc53 100644
+--- a/tools/normal-blending/CMakeLists.txt
++++ b/tools/normal-blending/CMakeLists.txt
+@@ -29,7 +29,6 @@ endif()
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt libpng tinyexr libz)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/normal-blending/src/main.cpp b/tools/normal-blending/src/main.cpp
+index e3cadf4..a0ea38a 100644
+--- a/tools/normal-blending/src/main.cpp
++++ b/tools/normal-blending/src/main.cpp
+@@ -25,7 +25,7 @@
+ 
+ #include <utils/Path.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ using namespace filament::math;
+ using namespace image;
+@@ -74,7 +74,7 @@ static void printUsage(const char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/resgen/CMakeLists.txt b/tools/resgen/CMakeLists.txt
+index b7dd505..e47a838 100644
+--- a/tools/resgen/CMakeLists.txt
++++ b/tools/resgen/CMakeLists.txt
+@@ -19,7 +19,6 @@ target_link_libraries(${TARGET} PRIVATE utils getopt)
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/resgen/src/main.cpp b/tools/resgen/src/main.cpp
+index bde604f..79ed222 100644
+--- a/tools/resgen/src/main.cpp
++++ b/tools/resgen/src/main.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <utils/Path.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <algorithm>
+ #include <fstream>
+@@ -100,7 +100,7 @@ static void printUsage(const char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/roughness-prefilter/CMakeLists.txt b/tools/roughness-prefilter/CMakeLists.txt
+index 99b3559..98828ae 100644
+--- a/tools/roughness-prefilter/CMakeLists.txt
++++ b/tools/roughness-prefilter/CMakeLists.txt
+@@ -29,7 +29,6 @@ endif()
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt libpng tinyexr libz)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/roughness-prefilter/src/main.cpp b/tools/roughness-prefilter/src/main.cpp
+index a56a8b9..8f5ccf7 100644
+--- a/tools/roughness-prefilter/src/main.cpp
++++ b/tools/roughness-prefilter/src/main.cpp
+@@ -33,7 +33,7 @@
+ #include <utils/JobSystem.h>
+ #include <utils/Path.h>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ using namespace filament::math;
+ using namespace image;
+@@ -97,7 +97,7 @@ static void printUsage(const char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
+diff --git a/tools/specular-color/CMakeLists.txt b/tools/specular-color/CMakeLists.txt
+index 7a56ce3..1c752a0 100644
+--- a/tools/specular-color/CMakeLists.txt
++++ b/tools/specular-color/CMakeLists.txt
+@@ -20,7 +20,6 @@ target_link_libraries(${TARGET} getopt utils math)
+ # ==================================================================================================
+ set(MODULE_LICENSES getopt)
+ set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+-list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+ # ==================================================================================================
+diff --git a/tools/specular-color/src/main.cpp b/tools/specular-color/src/main.cpp
+index b4d0ea3..ad7d108 100644
+--- a/tools/specular-color/src/main.cpp
++++ b/tools/specular-color/src/main.cpp
+@@ -23,7 +23,7 @@
+ 
+ #include <vector>
+ 
+-#include <getopt/getopt.h>
++#include <getopt.h>
+ 
+ #include <utils/Path.h>
+ 
+@@ -59,7 +59,7 @@ static void printUsage(const char* name) {
+ 
+ static void license() {
+     static const char *license[] = {
+-        #include "licenses/licenses.inc"
++        "See copyright file",
+         nullptr
+     };
+ 
