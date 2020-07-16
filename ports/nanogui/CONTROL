@@ -2,5 +2,5 @@ Source: nanogui
 Version: 2020-06-04
 Homepage: https://github.com/mitsuba-renderer/nanogui
 Description: NanoGUI is a minimalistic cross-platform widget library for OpenGL 3.x or higher.
-Build-Depends: glfw3, nanovg, eigen3
-Supports:!uwp
+Build-Depends: glfw3, nanovg
+Supports:!(uwp|arm|arm64)
