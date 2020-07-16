@@ -1,36 +1,39 @@
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
+set(ACE_VERSION 6.5.10)
+string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
+
 if("tao" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_WINDOWS)
       # Don't change to vcpkg_from_github! This points to a release and not an archive
       vcpkg_download_distfile(ARCHIVE
-          URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_9/ACE%2BTAO-src-6.5.9.zip"
-          FILENAME ACE-TAO-6.5.9.zip
-          SHA512 de626d693911ea6b43001b16183996bd537777b42530a95ef226265948802b87aaac935d92265f1dda39c864a875d669a10cdcb0083e3dc7c3f5f661a5ee9d79
+          URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
+          FILENAME ACE-TAO-${ACE_VERSION}.zip
+          SHA512 1b6453bb692dde6a51090a1ea57677d9241a54ebb7edf32838dbf413f7515b83ae77f407998609f6dcd7cc37b2d4973f2b5cb1ad2f92f75caa686efd08c3a0b5
       )
     else()
       # VCPKG_TARGET_IS_LINUX
       vcpkg_download_distfile(ARCHIVE
-          URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_9/ACE%2BTAO-src-6.5.9.tar.gz"
-          FILENAME ACE-TAO-6.5.9.tar.gz
-          SHA512 d53b7a3745d1be29489d495651a643cf8b436be97a21599bbe4fba19b827cb1ba85dca82542e0eb27384fe87ab163e69c5e0c4c9b61a4c7971077b13edece5cd
+          URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
+          FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
+          SHA512 d0b8c6b398fba62dce75daa2f8759113c1235be3dc3d1c88ecce668d804a1acd6f40bc7e38eede3000c7f85e9da2123b84da1357375f5ee29b1a002cd9d6e0f8
       )
     endif()
 else()
   if(VCPKG_TARGET_IS_WINDOWS)
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_9/ACE-src-6.5.9.zip"
-        FILENAME ACE-src-6.5.9.zip
-        SHA512 49e2e5f9d0a88ae1b8a75aacb962e4185a9f8c8aae6cde656026267524bcef8a673514fe35709896a1c4e356cb436b249ff5e3d487e8f3fa2e618e2fb813fa43
+        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
+        FILENAME ACE-src-${ACE_VERSION}.zip
+        SHA512 d17b4bf41ea6804594a8363d2b8776b5981d305df75b99cda5fe05dd021261a424e1038a522c8dc175f8ea2ee15e064676cbd615bd6c3c6339ef174a0e8a0914
     )
   else(VCPKG_TARGET_IS_WINDOWS)
     # VCPKG_TARGET_IS_LINUX
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_9/ACE-src-6.5.9.tar.gz"
-        FILENAME ACE-src-6.5.9.tar.gz
-        SHA512 3e1655d4b215b5195a29b22f2e43d985d68367294df98da251dbbedecd6bdb5662a9921faac43be5756cb2fca7a840d58c6ec92637da7fb9d1b5e2bca766a1b4
+        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
+        FILENAME ACE-src-${ACE_VERSION}.tar.gz
+        SHA512 a92edae9e120f2220272f138907fc25e53753d3b21a446460e8682d0cae6f5c6e5fa08d398630f6d1e189bc47ce8e69a52143635f459292522753549fd7ad9ab
     )
   endif()
 endif()
@@ -38,8 +41,6 @@ endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES
-        process_manager.patch # Fix MSVC 16.5 ICE
 )
 
 set(ACE_ROOT ${SOURCE_PATH})
@@ -126,7 +127,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     PLATFORM ${MSBUILD_PLATFORM}
     USE_VCPKG_INTEGRATION
   )
-  
+
   # ACE itself does not define an install target, so it is not clear which
   # headers are public and which not. For the moment we install everything
   # that is in the source path and ends in .h, .inl
@@ -256,12 +257,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     install_includes(${TAO_ROOT} "${TAO_INCLUDE_FOLDERS}")
   endif()
-  
+
   # Remove dlls without any export
   if("tao" IN_LIST FEATURES)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      file(REMOVE 
-        ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.dll 
+      file(REMOVE
+        ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.dll
         ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.pdb
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd.dll
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)

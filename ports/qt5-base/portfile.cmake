@@ -8,23 +8,25 @@ endif()
 
 if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-xcb-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-xcb-dev.")
+    message(WARNING "${PORT} for qt5-x11extras requires the following libraries from the system package manager:\n    libxkbcommon-x11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libxkbcommon-x11-dev.")
+    #
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-if("latest" IN_LIST FEATURES)
+if("latest" IN_LIST FEATURES) # latest = core currently
     set(QT_BUILD_LATEST ON)
     set(PATCHES 
-        patches/Qt5BasicConfig_latest.patch
-        patches/Qt5PluginTarget_latest.patch
+        patches/Qt5BasicConfig.patch
+        patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
         )
 else()
     set(PATCHES 
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
-        patches/prl_parser.patch # Modified backport of the prl parser from Qt5.14.1 without using QMAKE_PRL_LIBS_FOR_CMAKE
+        patches/create_cmake.patch
     )
 endif()
 
@@ -50,12 +52,14 @@ endif()
 
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
-                            patches/winmain_pro.patch   #Moves qtmain to manual-link
-                            patches/windows_prf.patch   #fixes the qtmain dependency due to the above move
-                            patches/qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
-                            patches/gui_configure.patch #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
-                            patches/icu.patch           #Help configure find static icu builds in vcpkg on windows
-                            patches/xlib.patch          #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+                            patches/winmain_pro.patch    #Moves qtmain to manual-link
+                            patches/windows_prf.patch    #fixes the qtmain dependency due to the above move
+                            patches/qt_app.patch         #Moves the target location of qt5 host apps to always install into the host dir. 
+                            patches/gui_configure.patch  #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
+                            patches/icu.patch            #Help configure find static icu builds in vcpkg on windows
+                            patches/xlib.patch           #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+                            patches/egl.patch            #Fix egl detection logic. 
+                            patches/8c44d70.diff         #Upstream fix for MSVC 16.6.2. static init of std::atomic. 
                             #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
                                                          #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
                                                          #the windows supplied gl.h header and the angle gl.h otherwise. 
@@ -219,7 +223,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
 elseif(VCPKG_TARGET_IS_LINUX)
-    list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -linuxfb) #-system-xcb
+    list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
     endif()
