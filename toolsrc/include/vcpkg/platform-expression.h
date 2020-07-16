@@ -38,6 +38,15 @@ namespace vcpkg::PlatformExpression
         bool evaluate(const Context& context) const;
         bool is_empty() const { return !static_cast<bool>(underlying_); }
 
+        // these two are friends so that they're only findable via ADL
+
+        // this does a structural equality, so, for example:
+        //   !structurally_equal((x & y) & z, x & y & z)
+        //   !structurally_equal((x & y) | z, (x | z) & (y | z))
+        // even though these expressions are equivalent
+        friend bool structurally_equal(const Expr& lhs, const Expr& rhs);
+        friend std::string to_string(const Expr& expr);
+
     private:
         std::unique_ptr<detail::ExprImpl> underlying_;
     };

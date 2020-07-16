@@ -16,6 +16,54 @@ namespace vcpkg
 {
     using namespace vcpkg::Parse;
 
+    template<class Lhs, class Rhs>
+    static bool paragraph_equal(const Lhs& lhs, const Rhs& rhs)
+    {
+        return std::equal(
+            lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), [](const std::string& lhs, const std::string& rhs) {
+                return Strings::trim(StringView(lhs)) == Strings::trim(StringView(rhs));
+            });
+    }
+
+    bool operator==(const SourceParagraph& lhs, const SourceParagraph& rhs)
+    {
+        if (lhs.name != rhs.name) return false;
+        if (lhs.version != rhs.version) return false;
+        if (lhs.port_version != rhs.port_version) return false;
+        if (!paragraph_equal(lhs.description, rhs.description)) return false;
+        if (!paragraph_equal(lhs.maintainers, rhs.maintainers)) return false;
+        if (lhs.homepage != rhs.homepage) return false;
+        if (lhs.documentation != rhs.documentation) return false;
+        if (lhs.dependencies != rhs.dependencies) return false;
+        if (lhs.default_features != rhs.default_features) return false;
+        if (lhs.license != rhs.license) return false;
+
+        if (lhs.type != rhs.type) return false;
+        if (!structurally_equal(lhs.supports_expression, rhs.supports_expression)) return false;
+
+        return true;
+    }
+
+    bool operator==(const FeatureParagraph& lhs, const FeatureParagraph& rhs)
+    {
+        if (lhs.name != rhs.name) return false;
+        if (lhs.dependencies != rhs.dependencies) return false;
+        if (!paragraph_equal(lhs.description, rhs.description)) return false;
+
+        return true;
+    }
+
+    bool operator==(const SourceControlFile& lhs, const SourceControlFile& rhs)
+    {
+        if (*lhs.core_paragraph != *rhs.core_paragraph) return false;
+        return std::equal(lhs.feature_paragraphs.begin(),
+                          lhs.feature_paragraphs.end(),
+                          rhs.feature_paragraphs.begin(),
+                          rhs.feature_paragraphs.end(),
+                          [](const std::unique_ptr<FeatureParagraph>& lhs,
+                             const std::unique_ptr<FeatureParagraph>& rhs) { return *lhs == *rhs; });
+    }
+
     namespace SourceParagraphFields
     {
         static const std::string BUILD_DEPENDS = "Build-Depends";
@@ -351,6 +399,20 @@ namespace vcpkg
         StringView type_name_;
     };
 
+    struct NaturalNumberField : Json::VisitorCrtpBase<NaturalNumberField>
+    {
+        using type = int;
+        StringView type_name() { return "a natural number"; }
+
+        Optional<int> visit_integer(Json::Reader&, StringView, int64_t value) {
+            if (value > std::numeric_limits<int>::max() || value < 0)
+            {
+                return nullopt;
+            }
+            return static_cast<int>(value);
+        }
+    };
+
     struct BooleanField : Json::VisitorCrtpBase<BooleanField>
     {
         using type = bool;
@@ -651,10 +713,10 @@ namespace vcpkg
         using type = Dependency;
         StringView type_name() { return "a dependency"; }
 
-        constexpr static StringView NAME = "name";
-        constexpr static StringView FEATURES = "features";
-        constexpr static StringView DEFAULT_FEATURES = "default-features";
-        constexpr static StringView PLATFORM = "platform";
+        constexpr static StringLiteral NAME = "name";
+        constexpr static StringLiteral FEATURES = "features";
+        constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
+        constexpr static StringLiteral PLATFORM = "platform";
         constexpr static StringView KNOWN_FIELDS[] = {NAME, FEATURES, DEFAULT_FEATURES, PLATFORM};
 
         Optional<Dependency> visit_string(Json::Reader&, StringView, StringView sv)
@@ -702,12 +764,21 @@ namespace vcpkg
         using type = std::unique_ptr<FeatureParagraph>;
         StringView type_name() { return "a feature"; }
 
-        constexpr static StringView NAME = "name";
-        constexpr static StringView DESCRIPTION = "description";
-        constexpr static StringView DEPENDENCIES = "dependencies";
+        constexpr static StringLiteral NAME = "name";
+        constexpr static StringLiteral DESCRIPTION = "description";
+        constexpr static StringLiteral DEPENDENCIES = "dependencies";
+        constexpr static StringView KNOWN_FIELDS[] = {NAME, DESCRIPTION, DEPENDENCIES};
 
         Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r, StringView, const Json::Object& obj)
         {
+            {
+                auto extra_fields = invalid_json_fields(obj, KNOWN_FIELDS);
+                if (!extra_fields.empty())
+                {
+                    r.error().add_extra_fields(type_name().to_string(), std::move(extra_fields));
+                }
+            }
+
             auto feature = std::make_unique<FeatureParagraph>();
 
             r.required_object_field(type_name(), obj, NAME, feature->name, IdentifierField{});
@@ -773,6 +844,7 @@ namespace vcpkg
         visit.required_object_field(type_name, manifest, ManifestFields::NAME, spgh->name, IdentifierField{});
         visit.required_object_field(
             type_name, manifest, ManifestFields::VERSION, spgh->version, StringField{"a version"});
+        visit.optional_object_field(manifest, ManifestFields::PORT_VERSION, spgh->port_version, NaturalNumberField{});
         visit.optional_object_field(manifest, ManifestFields::MAINTAINERS, spgh->maintainers, ParagraphField{});
         visit.optional_object_field(manifest, ManifestFields::DESCRIPTION, spgh->description, ParagraphField{});
         visit.optional_object_field(manifest, ManifestFields::HOMEPAGE, spgh->homepage, StringField{"a url"});
@@ -844,5 +916,117 @@ namespace vcpkg
             }
         }
         return ret;
+    }
+
+    std::string serialize_manifest(const SourceControlFile& scf)
+    {
+        Json::Object obj;
+        obj.insert(ManifestFields::NAME, Json::Value::string(scf.core_paragraph->name));
+        obj.insert(ManifestFields::VERSION, Json::Value::string(scf.core_paragraph->version));
+
+        static constexpr auto serialize_paragraph =
+            [](Json::Object& obj, StringLiteral name, const std::vector<std::string>& pgh) {
+                if (pgh.empty())
+                {
+                    return;
+                }
+                if (pgh.size() == 1)
+                {
+                    obj.insert(name, Json::Value::string(pgh.front()));
+                    return;
+                }
+
+                auto& arr = obj.insert(name, Json::Array());
+                for (const auto& s : pgh)
+                {
+                    arr.push_back(Json::Value::string(s));
+                }
+            };
+        static constexpr auto serialize_optional_array =
+            [](Json::Object& obj, StringLiteral name, const std::vector<std::string>& pgh) {
+                if (pgh.empty()) return;
+
+                auto& arr = obj.insert(name, Json::Array());
+                for (const auto& s : pgh)
+                {
+                    arr.push_back(Json::Value::string(s));
+                }
+            };
+        static constexpr auto serialize_optional_string =
+            [](Json::Object& obj, StringLiteral name, const std::string& s) {
+                if (!s.empty())
+                {
+                    obj.insert(name, Json::Value::string(s));
+                }
+            };
+        static constexpr auto serialize_dependency = [](Json::Array& arr, const Dependency& dep) {
+            if (dep.features.empty() && dep.platform.is_empty())
+            {
+                arr.push_back(Json::Value::string(dep.name));
+            }
+            else
+            {
+                auto& dep_obj = arr.push_back(Json::Object());
+                dep_obj.insert(DependencyField::NAME, Json::Value::string(dep.name));
+
+                auto features_copy = dep.features;
+                auto core_it = std::find(dep.features.begin(), dep.features.end(), "core");
+                if (core_it != dep.features.end())
+                {
+                    dep_obj.insert(DependencyField::DEFAULT_FEATURES, Json::Value::boolean(false));
+                    features_copy.erase(core_it);
+                }
+
+                serialize_optional_array(dep_obj, DependencyField::FEATURES, features_copy);
+                serialize_optional_string(dep_obj, DependencyField::PLATFORM, to_string(dep.platform));
+            }
+        };
+
+        if (scf.core_paragraph->port_version != 0)
+        {
+            obj.insert(ManifestFields::PORT_VERSION, Json::Value::integer(scf.core_paragraph->port_version));
+        }
+
+        serialize_paragraph(obj, ManifestFields::MAINTAINERS, scf.core_paragraph->maintainers);
+        serialize_paragraph(obj, ManifestFields::DESCRIPTION, scf.core_paragraph->description);
+
+        serialize_optional_string(obj, ManifestFields::HOMEPAGE, scf.core_paragraph->homepage);
+        serialize_optional_string(obj, ManifestFields::DOCUMENTATION, scf.core_paragraph->documentation);
+        serialize_optional_string(obj, ManifestFields::LICENSE, scf.core_paragraph->license);
+        serialize_optional_string(obj, ManifestFields::SUPPORTS, to_string(scf.core_paragraph->supports_expression));
+
+        // ManifestFields::DEV_DEPENDENCIES,
+        if (!scf.core_paragraph->dependencies.empty())
+        {
+            auto& deps = obj.insert(ManifestFields::DEPENDENCIES, Json::Array());
+
+            for (const auto& dep : scf.core_paragraph->dependencies)
+            {
+                serialize_dependency(deps, dep);
+            }
+        }
+
+        serialize_optional_array(obj, ManifestFields::DEFAULT_FEATURES, scf.core_paragraph->default_features);
+
+        if (!scf.feature_paragraphs.empty())
+        {
+            auto& arr = obj.insert(ManifestFields::FEATURES, Json::Array());
+            for (const auto& feature : scf.feature_paragraphs)
+            {
+                auto& feature_obj = arr.push_back(Json::Object());
+                feature_obj.insert(FeatureField::NAME, Json::Value::string(feature->name));
+                serialize_paragraph(feature_obj, FeatureField::DESCRIPTION, feature->description);
+
+                if (feature->dependencies.empty()) continue;
+
+                auto& deps = feature_obj.insert(FeatureField::DEPENDENCIES, Json::Array());
+                for (const auto& dep : scf.core_paragraph->dependencies)
+                {
+                    serialize_dependency(deps, dep);
+                }
+            }
+        }
+
+        return Json::stringify(obj, Json::JsonStyle{});
     }
 }

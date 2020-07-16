@@ -40,6 +40,9 @@ namespace vcpkg
         std::string name;
         std::vector<std::string> description;
         std::vector<Dependency> dependencies;
+
+        friend bool operator==(const FeatureParagraph& lhs, const FeatureParagraph& rhs);
+        friend bool operator!=(const FeatureParagraph& lhs, const FeatureParagraph& rhs) { return !(lhs == rhs); }
     };
 
     /// <summary>
@@ -60,6 +63,9 @@ namespace vcpkg
 
         Type type;
         PlatformExpression::Expr supports_expression;
+
+        friend bool operator==(const SourceParagraph& lhs, const SourceParagraph& rhs);
+        friend bool operator!=(const SourceParagraph& lhs, const SourceParagraph& rhs) { return !(lhs == rhs); }
     };
 
     /// <summary>
@@ -89,7 +95,12 @@ namespace vcpkg
 
         Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
         Optional<const std::vector<Dependency>&> find_dependencies_for_feature(const std::string& featurename) const;
+
+        friend bool operator==(const SourceControlFile& lhs, const SourceControlFile& rhs);
+        friend bool operator!=(const SourceControlFile& lhs, const SourceControlFile& rhs) { return !(lhs == rhs); }
     };
+
+    std::string serialize_manifest(const SourceControlFile& scf);
 
     /// <summary>
     /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was
@@ -117,6 +128,7 @@ namespace vcpkg
         fs::path source_location;
     };
 
+    std::string get_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);
     void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);
     inline void print_error_message(const std::unique_ptr<Parse::ParseControlErrorInfo>& error_info_list)
     {
