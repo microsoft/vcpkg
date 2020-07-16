@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux platforms" ON_TARGET "Windows" "OSX")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pellegre/libcrafter
@@ -11,10 +9,9 @@ vcpkg_from_github(
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
     PROJECT_SUBPATH libcrafter
     OPTIONS
-        --with-libpcap=${CURRENT_INSTALLED_DIR}
+        "--with-libpcap=${CURRENT_INSTALLED_DIR}"
 )
 
 vcpkg_install_make()

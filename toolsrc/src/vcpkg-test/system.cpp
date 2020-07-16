@@ -1,26 +1,29 @@
+#include <vcpkg/base/system_headers.h>
+
 #include <catch2/catch.hpp>
 
-#include <Windows.h>
-#include <string>
 #include <vcpkg/base/optional.h>
-#include <vcpkg/base/stringview.h>
-#include <vcpkg/base/zstringview.h>
 #include <vcpkg/base/strings.h>
+#include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.h>
+#include <vcpkg/base/system.process.h>
+#include <vcpkg/base/zstringview.h>
 
+#include <string>
+
+using vcpkg::nullopt;
 using vcpkg::Optional;
 using vcpkg::StringView;
 using vcpkg::ZStringView;
 using vcpkg::Checks::check_exit;
-using vcpkg::System::get_environment_variable;
-using vcpkg::System::to_cpu_architecture;
-using vcpkg::System::guess_visual_studio_prompt_target_architecture;
-using vcpkg::nullopt;
 using vcpkg::System::CPUArchitecture;
+using vcpkg::System::get_environment_variable;
+using vcpkg::System::guess_visual_studio_prompt_target_architecture;
+using vcpkg::System::to_cpu_architecture;
 
 namespace
 {
-    void set_environment_variable(StringView varname, Optional<std::string> value)
+    void set_environment_variable(ZStringView varname, Optional<std::string> value)
     {
 #if defined(_WIN32)
         const auto w_varname = vcpkg::Strings::to_utf16(varname);
@@ -38,18 +41,14 @@ namespace
 
         check_exit(VCPKG_LINE_INFO, exit_code != 0);
 #else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
-        std::string tmp;
-        tmp.reserve(varname.size() + value.size() + 1);
-        tmp.append(varname.data(), varname.size());
-        tmp.push_back('=');
-        if (value)
+        if (auto v = value.get())
         {
-            const auto& unpacked = value.value_or_exit(VCPKG_LINE_INFO);
-            tmp.append(unpacked);
+            check_exit(VCPKG_LINE_INFO, setenv(varname.c_str(), v->c_str(), 1) == 0);
         }
-
-        const int exit_code = putenv(tmp.c_str());
-        check_exit(VCPKG_LINE_INFO, exit_code == 0);
+        else
+        {
+            check_exit(VCPKG_LINE_INFO, unsetenv(varname.c_str()) == 0);
+        }
 #endif // defined(_WIN32)
     }
 
@@ -130,30 +129,43 @@ TEST_CASE ("guess_visual_studio_prompt", "[system]")
     set_environment_variable("VSCMD_ARG_TGT_ARCH", nullopt);
     CHECK(!guess_visual_studio_prompt_target_architecture().has_value());
     set_environment_variable("VSCMD_ARG_TGT_ARCH", "x86");
-    CHECK(guess_visual_studio_prompt_target_architecture()
-        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X86);
+    CHECK(guess_visual_studio_prompt_target_architecture().value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X86);
     set_environment_variable("VSCMD_ARG_TGT_ARCH", "x64");
-    CHECK(guess_visual_studio_prompt_target_architecture()
-        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X64);
+    CHECK(guess_visual_studio_prompt_target_architecture().value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X64);
     set_environment_variable("VSCMD_ARG_TGT_ARCH", "arm");
-    CHECK(guess_visual_studio_prompt_target_architecture()
-        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::ARM);
+    CHECK(guess_visual_studio_prompt_target_architecture().value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::ARM);
     set_environment_variable("VSCMD_ARG_TGT_ARCH", "arm64");
-    CHECK(guess_visual_studio_prompt_target_architecture()
-        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::ARM64);
+    CHECK(guess_visual_studio_prompt_target_architecture().value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::ARM64);
 
     // check that apparent "nested" prompts defer to "vsdevcmd"
     set_environment_variable("VCINSTALLDIR", "anything");
-    CHECK(guess_visual_studio_prompt_target_architecture()
-        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::ARM64);
+    CHECK(guess_visual_studio_prompt_target_architecture().value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::ARM64);
     set_environment_variable("VSCMD_ARG_TGT_ARCH", nullopt);
     set_environment_variable("Platform", nullopt);
-    CHECK(guess_visual_studio_prompt_target_architecture()
-        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X86);
+    CHECK(guess_visual_studio_prompt_target_architecture().value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X86);
     set_environment_variable("Platform", "x86");
-    CHECK(guess_visual_studio_prompt_target_architecture()
-        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X86);
+    CHECK(guess_visual_studio_prompt_target_architecture().value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X86);
     set_environment_variable("Platform", "x64");
-    CHECK(guess_visual_studio_prompt_target_architecture()
-        .value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X64);
+    CHECK(guess_visual_studio_prompt_target_architecture().value_or_exit(VCPKG_LINE_INFO) == CPUArchitecture::X64);
+}
+
+TEST_CASE ("cmdlinebuilder", "[system]")
+{
+    using vcpkg::System::CmdLineBuilder;
+
+    CmdLineBuilder cmd;
+    cmd.path_arg(fs::u8path("relative/path.exe"));
+    cmd.string_arg("abc");
+    cmd.string_arg("hello world!");
+    cmd.string_arg("|");
+    cmd.string_arg(";");
+    REQUIRE(cmd.extract() == "relative/path.exe abc \"hello world!\" \"|\" \";\"");
+
+    cmd.path_arg(fs::u8path("trailing\\slash\\"));
+    cmd.string_arg("inner\"quotes");
+#ifdef _WIN32
+    REQUIRE(cmd.extract() == "\"trailing\\slash\\\\\" \"inner\\\"quotes\"");
+#else
+    REQUIRE(cmd.extract() == "\"trailing\\\\slash\\\\\" \"inner\\\"quotes\"");
+#endif
 }

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(LIBPNG_VER 1.6.37)
 
 # Download the apng patch
@@ -8,6 +6,9 @@ if ("apng" IN_LIST FEATURES)
     set(LIBPNG_APG_PATCH_NAME libpng-${LIBPNG_VER}-apng.patch)
     set(LIBPNG_APG_PATCH_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APG_PATCH_NAME})
     if (NOT EXISTS ${LIBPNG_APG_PATCH_PATH})
+        if (NOT EXISTS ${CURRENT_BUILDTREES_DIR}/src)
+            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src)
+        endif()
         vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
             URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/${LIBPNG_APG_PATCH_NAME}.gz"
             FILENAME "${LIBPNG_APG_PATCH_NAME}.gz"
@@ -47,11 +48,24 @@ else()
     set(PNG_SHARED_LIBS OFF)
 endif()
 
+set(LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION )
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL iOS)
+    set(LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_HARDWARE_OPTIMIZATIONS=OFF")
+endif()
+
+set(LD_VERSION_SCRIPT_OPTION )
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Android)
+    set(LD_VERSION_SCRIPT_OPTION "-Dld-version-script=OFF")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         ${LIBPNG_APNG_OPTION}
+        ${LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION}
+        ${LD_VERSION_SCRIPT_OPTION}
+        -DPNG_ARM_NEON=on
         -DPNG_STATIC=${PNG_STATIC_LIBS}
         -DPNG_SHARED=${PNG_SHARED_LIBS}
         -DPNG_TESTS=OFF

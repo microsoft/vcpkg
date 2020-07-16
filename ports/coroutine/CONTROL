@@ -1,5 +1,6 @@
 Source: coroutine
-Version: 2020-01-13
+Homepage: https://github.com/luncliff/coroutine
+Version: 1.5.0
 Build-Depends: ms-gsl
-Description: C++ coroutine helper/example library
-Supports: !x86
+Description: C++ 20 Coroutines helper/example library
+Supports: !uwp

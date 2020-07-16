@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
@@ -15,13 +13,22 @@ vcpkg_extract_source_archive_ex(
       remove_internal_blas.patch
 	  fix-ConfigFile.patch
       fix-install.patch
+      support-uwp.patch
 )
+
+if (VCPKG_TARGET_IS_UWP)
+    if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/arithchk.exe)
+        message(FATAL_ERROR "Please install ${PORT}:x86-windows first.")
+    endif()
+    set(ARITHCHK_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/arithchk.exe)
+endif()
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
     -DCMAKE_DEBUG_POSTFIX=d
+    -DARITHCHK_PATH=${ARITHCHK_PATH}
 )
 
 vcpkg_install_cmake()
@@ -37,4 +44,4 @@ file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake DESTINATION ${CURRENT_PA
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/clapack RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

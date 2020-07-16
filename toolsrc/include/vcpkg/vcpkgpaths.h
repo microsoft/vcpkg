@@ -1,21 +1,26 @@
 #pragma once
 
+#include <vcpkg/base/cache.h>
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/lazy.h>
+#include <vcpkg/base/optional.h>
+#include <vcpkg/base/util.h>
+
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/tools.h>
-
-#include <vcpkg/base/cache.h>
-#include <vcpkg/base/expected.h>
-#include <vcpkg/base/files.h>
-#include <vcpkg/base/lazy.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
 {
     namespace Tools
     {
         static const std::string SEVEN_ZIP = "7zip";
+        static const std::string SEVEN_ZIP_ALT = "7z";
+        static const std::string MAVEN = "mvn";
         static const std::string CMAKE = "cmake";
         static const std::string GIT = "git";
+        static const std::string MONO = "mono";
         static const std::string NINJA = "ninja";
         static const std::string NUGET = "nuget";
         static const std::string IFW_INSTALLER_BASE = "ifw_installerbase";
@@ -43,45 +48,61 @@ namespace vcpkg
     namespace Build
     {
         struct PreBuildInfo;
+        struct AbiInfo;
     }
 
-    struct VcpkgPaths
+    namespace System
+    {
+        struct Environment;
+    }
+
+    namespace details
+    {
+        struct VcpkgPathsImpl;
+    }
+
+    struct VcpkgPaths : Util::MoveOnlyBase
     {
         struct TripletFile
         {
             std::string name;
             fs::path location;
 
-            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) {}
+            TripletFile(const std::string& name, const fs::path& location) : name(name), location(location) { }
         };
 
-        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
-                                           const Optional<fs::path>& vcpkg_scripts_root_dir,
-                                           const std::string& default_vs_path,
-                                           const std::vector<std::string>* triplets_dirs);
+        VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args);
+        ~VcpkgPaths();
 
         fs::path package_dir(const PackageSpec& spec) const;
+        fs::path build_dir(const PackageSpec& spec) const;
+        fs::path build_dir(const std::string& package_name) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
         bool is_valid_triplet(Triplet t) const;
         const std::vector<std::string> get_available_triplets_names() const;
         const std::vector<TripletFile>& get_available_triplets() const;
+        const std::map<std::string, std::string>& get_cmake_script_hashes() const;
         const fs::path get_triplet_file_path(Triplet triplet) const;
 
+        fs::path original_cwd;
         fs::path root;
-        fs::path packages;
+        fs::path manifest_root_dir;
         fs::path buildtrees;
         fs::path downloads;
+        fs::path packages;
         fs::path ports;
         fs::path installed;
         fs::path triplets;
         fs::path community_triplets;
         fs::path scripts;
+        fs::path prefab;
 
         fs::path tools;
         fs::path buildsystems;
         fs::path buildsystems_msbuild_targets;
+        fs::path buildsystems_msbuild_props;
 
         fs::path vcpkg_dir;
         fs::path vcpkg_dir_status_file;
@@ -101,15 +122,13 @@ namespace vcpkg
 
         Files::Filesystem& get_filesystem() const;
 
+        const System::Environment& get_action_env(const Build::AbiInfo& abi_info) const;
+        const std::string& get_triplet_info(const Build::AbiInfo& abi_info) const;
+        bool manifest_mode_enabled() const { return !manifest_root_dir.empty(); }
+
+        void track_feature_flag_metrics() const;
+
     private:
-        Lazy<std::vector<TripletFile>> available_triplets;
-        Lazy<std::vector<Toolset>> toolsets;
-        Lazy<std::vector<Toolset>> toolsets_vs2013;
-
-        fs::path default_vs_path;
-        std::vector<fs::path> triplets_dirs;
-
-        mutable std::unique_ptr<ToolCache> m_tool_cache;
-        mutable vcpkg::Cache<Triplet, fs::path> m_triplets_cache;
+        std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;
     };
 }
