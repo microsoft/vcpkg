@@ -1,5 +1,6 @@
 Source: libpq
-Version: 12.2-2
+Version: 12.2
+Port-Version: 5
 Build-Depends: libpq[bonjour] (osx)
 Supports: !uwp
 Homepage: https://www.postgresql.org/
@@ -22,10 +23,6 @@ Feature: libedit
 Build-Depends: libedit
 Description: prefer libedit (--with-libedit-preferred)
 
-Feature: perl
-Build-Depends: perl, libpq[core,client]
-Description: build the server programming language PL/Perl (dynamic only?) (--with-perl)
-
 Feature: python
 Build-Depends: python3, libpq[core,client]
 Description: build the PL/Python server programming language (dynamic only?) (--with-python)
@@ -38,24 +35,8 @@ Feature: nls
 Build-Depends: gettext
 Description: Native Language Support (--enable-nls[=LANGUAGES])
 
-Feature: kerberos
-Build-Depends: kerberos
-Description: Kerberos Support (--with-gssapi)
-
 Feature: systemd
 Description: Build with support for systemd service notifications. (--with-systemd)
-
-Feature: ldap
-Build-Depends: openldap (linux)
-Description: LDAP Support (--with-ldap)
-
-Feature: bsd
-Build-Depends: openbsd
-Description: OpenBSD Support (--with-bsd-auth)
-
-Feature: pam
-Build-Depends: pam
-Description: Build with PAM (Pluggable Authentication Modules) support. (--with-pam)
 
 Feature: llvm
 Build-Depends: llvm
