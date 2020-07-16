@@ -1,0 +1,5 @@
+Source: aruco
+Version: 3.1.12
+Homepage: https://sourceforge.net/projects/aruco/files/
+Description: Augmented reality library based on OpenCV
+Build-Depends: opencv4
