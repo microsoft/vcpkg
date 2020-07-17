@@ -1,11 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3eef6ec..dfb1636 100644
+index 3eef6ec..12edf06 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -33,6 +33,16 @@ endif()
+@@ -33,6 +33,18 @@ endif()
  # ==================================================================================================
  # Support for ccache
  # ==================================================================================================
++find_package(assimp)
 +find_package(GTest)
 +find_package(PNG)
 +find_package(SDL2)
@@ -16,10 +17,11 @@ index 3eef6ec..dfb1636 100644
 +find_package(SPIRV-Tools-opt)
 +find_package(Stb)
 +include_directories(${Stb_INCLUDE_DIR})
++find_package(tinyexr)
  find_program(CCACHE_PROGRAM ccache)
  if (CCACHE_PROGRAM)
      set(C_LAUNCHER   "${CCACHE_PROGRAM}")
-@@ -224,7 +234,7 @@ endif()
+@@ -224,7 +236,7 @@ endif()
  
  if (LINUX)
      option(USE_STATIC_LIBCXX "Link against the static runtime libraries." ON)
@@ -28,7 +30,7 @@ index 3eef6ec..dfb1636 100644
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
          link_libraries("-static-libgcc -static-libstdc++")
          link_libraries(libc++.a)
-@@ -521,7 +531,6 @@ endfunction()
+@@ -521,7 +533,6 @@ endfunction()
  # ==================================================================================================
  
  # Common to all platforms
@@ -36,7 +38,7 @@ index 3eef6ec..dfb1636 100644
  add_subdirectory(${LIBRARIES}/camutils)
  add_subdirectory(${LIBRARIES}/filabridge)
  add_subdirectory(${LIBRARIES}/filaflat)
-@@ -542,15 +551,11 @@ add_subdirectory(${EXTERNAL}/benchmark/tnt)
+@@ -542,15 +553,11 @@ add_subdirectory(${EXTERNAL}/benchmark/tnt)
  add_subdirectory(${EXTERNAL}/meshoptimizer)
  add_subdirectory(${EXTERNAL}/cgltf/tnt)
  add_subdirectory(${EXTERNAL}/draco/tnt)
@@ -52,7 +54,7 @@ index 3eef6ec..dfb1636 100644
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -596,12 +601,6 @@ if (IS_HOST_PLATFORM)
+@@ -596,12 +603,6 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${EXTERNAL}/astcenc/tnt)
      add_subdirectory(${EXTERNAL}/etc2comp)
@@ -66,7 +68,7 @@ index 3eef6ec..dfb1636 100644
      add_subdirectory(${TOOLS}/cmgen)
      add_subdirectory(${TOOLS}/cso-lut)
 diff --git a/filament/backend/CMakeLists.txt b/filament/backend/CMakeLists.txt
-index 04ab2d7..a1e954b 100644
+index 04ab2d7..cde6f1a 100644
 --- a/filament/backend/CMakeLists.txt
 +++ b/filament/backend/CMakeLists.txt
 @@ -5,6 +5,12 @@ set(TARGET backend)
@@ -82,16 +84,22 @@ index 04ab2d7..a1e954b 100644
  # ==================================================================================================
  # Sources and headers
  # ==================================================================================================
-@@ -313,7 +319,7 @@ if (APPLE)
+@@ -313,9 +319,12 @@ if (APPLE)
          backend
          filabridge
          getopt
 -        gtest
 +        GTest::gtest
          SPIRV
-         spirv-cross-glsl)
+-        spirv-cross-glsl)
++        spirv-cross-core
++        spirv-cross-glsl
++        spirv-cross-msl
++    )
  
-@@ -326,16 +332,13 @@ if (APPLE)
+     set(BACKEND_TEST_DEPS
+             OGLCompiler
+@@ -326,16 +335,13 @@ if (APPLE)
              backend_test
              filabridge
              getopt
@@ -178,7 +186,7 @@ index 94766ec..efc0e30 100644
 +    target_link_libraries(test_${TARGET} PRIVATE camutils GTest::gtest)
  endif()
 diff --git a/libs/filamat/CMakeLists.txt b/libs/filamat/CMakeLists.txt
-index 4efeda8..1869121 100644
+index 4efeda8..3d93eb6 100644
 --- a/libs/filamat/CMakeLists.txt
 +++ b/libs/filamat/CMakeLists.txt
 @@ -173,7 +173,7 @@ add_executable(${TARGET} ${SRCS})
@@ -186,7 +194,7 @@ index 4efeda8..1869121 100644
  target_include_directories(${TARGET} PRIVATE src)
  
 -target_link_libraries(${TARGET} filamat gtest)
-+target_link_libraries(${TARGET} filamat GTest::gtest)
++target_link_libraries(${TARGET} filamat GTest::gtest SPIRV spirv-cross-core spirv-cross-glsl spirv-cross-msl)
  
  set(TARGET test_filamat_lite)
  set(SRCS
@@ -195,21 +203,25 @@ index 4efeda8..1869121 100644
  target_include_directories(${TARGET} PRIVATE src)
  
 -target_link_libraries(${TARGET} filamat_lite gtest)
-+target_link_libraries(${TARGET} filamat_lite GTest::gtest)
++target_link_libraries(${TARGET} filamat_lite GTest::gtest SPIRV spirv-cross-core spirv-cross-glsl spirv-cross-msl)
 diff --git a/libs/filamentapp/CMakeLists.txt b/libs/filamentapp/CMakeLists.txt
-index 508f47d..91d8a77 100644
+index 508f47d..cd34002 100644
 --- a/libs/filamentapp/CMakeLists.txt
 +++ b/libs/filamentapp/CMakeLists.txt
-@@ -41,7 +41,7 @@ set(SRCS
+@@ -39,10 +39,9 @@ set(SRCS
+ )
+ 
  set(LIBS
-         assimp
+-        assimp
++        assimp::assimp
          filament
 -        sdl2
+-        stb
 +        SDL2::SDL2
-         stb
          math
          filamat
-@@ -72,7 +72,7 @@ endif()
+         utils
+@@ -72,7 +71,7 @@ endif()
  
  if (WIN32)
      list(APPEND SRCS src/NativeWindowHelperWindows.cpp)
@@ -229,6 +241,19 @@ index 7fc5152..83fcf18 100644
 -    target_link_libraries(test_${TARGET} PRIVATE filameshio gtest)
 +    target_link_libraries(test_${TARGET} PRIVATE filameshio GTest::gtest)
  endif()
+diff --git a/libs/gltfio/CMakeLists.txt b/libs/gltfio/CMakeLists.txt
+index 3c95c3c..f2546b8 100644
+--- a/libs/gltfio/CMakeLists.txt
++++ b/libs/gltfio/CMakeLists.txt
+@@ -158,7 +158,7 @@ add_library(gltfio_resources_lite ${DUMMY_SRC} ${RESGEN_SOURCE})
+ # ==================================================================================================
+ 
+ include_directories(${PUBLIC_HDR_DIR} ${RESOURCE_DIR})
+-link_libraries(math utils filament cgltf stb geometry gltfio_resources tsl trie)
++link_libraries(math utils filament cgltf geometry gltfio_resources tsl trie)
+ 
+ add_library(gltfio_core STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
 diff --git a/libs/image/CMakeLists.txt b/libs/image/CMakeLists.txt
 index 7622de1..80488c6 100644
 --- a/libs/image/CMakeLists.txt
@@ -241,7 +266,7 @@ index 7622de1..80488c6 100644
 +    target_link_libraries(test_${TARGET} PRIVATE image imageio GTest::gtest)
  endif()
 diff --git a/libs/imageio/CMakeLists.txt b/libs/imageio/CMakeLists.txt
-index acdd853..d870946 100644
+index acdd853..7a7d178 100644
 --- a/libs/imageio/CMakeLists.txt
 +++ b/libs/imageio/CMakeLists.txt
 @@ -30,7 +30,7 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
@@ -249,7 +274,7 @@ index acdd853..d870946 100644
  target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
  
 -target_link_libraries(${TARGET} PUBLIC image math png tinyexr utils z astcenc stb EtcLib)
-+target_link_libraries(${TARGET} PUBLIC image math PNG::PNG tinyexr utils z astcenc stb EtcLib)
++target_link_libraries(${TARGET} PUBLIC image math PNG::PNG unofficial::tinyexr::tinyexr utils z astcenc EtcLib)
  if (WIN32)
      target_link_libraries(${TARGET} PRIVATE wsock32)
  endif()
@@ -451,17 +476,27 @@ index 6ff4f47..56e2321 100644
  endif()
 -
 diff --git a/tools/cmgen/CMakeLists.txt b/tools/cmgen/CMakeLists.txt
-index 10868b9..95d8aab 100644
+index 10868b9..982d120 100644
 --- a/tools/cmgen/CMakeLists.txt
 +++ b/tools/cmgen/CMakeLists.txt
-@@ -42,7 +42,6 @@ endif()
+@@ -40,9 +40,8 @@ endif()
+ # =================================================================================================
+ # Licenses
  # ==================================================================================================
- set(MODULE_LICENSES getopt libpng tinyexr libz)
+-set(MODULE_LICENSES getopt libpng tinyexr libz)
++set(MODULE_LICENSES getopt PNG::PNG unofficial::tinyexr::tinyexr libz)
  set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
 -list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
  target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
  
  # ==================================================================================================
+@@ -55,5 +54,5 @@ install(TARGETS ${TARGET} RUNTIME DESTINATION bin)
+ # ==================================================================================================
+ if (NOT ANDROID)
+     add_executable(test_${TARGET} tests/test_cmgen.cpp)
+-    target_link_libraries(test_${TARGET} PRIVATE image imageio gtest)
++    target_link_libraries(test_${TARGET} PRIVATE image imageio GTest::gtest)
+ endif()
 diff --git a/tools/cmgen/src/cmgen.cpp b/tools/cmgen/src/cmgen.cpp
 index 05b1f01..b09f709 100644
 --- a/tools/cmgen/src/cmgen.cpp
@@ -485,12 +520,15 @@ index 05b1f01..b09f709 100644
      };
  
 diff --git a/tools/cso-lut/CMakeLists.txt b/tools/cso-lut/CMakeLists.txt
-index 63cf6af..b5da47f 100644
+index 63cf6af..fed0423 100644
 --- a/tools/cso-lut/CMakeLists.txt
 +++ b/tools/cso-lut/CMakeLists.txt
-@@ -29,5 +29,4 @@ endif()
+@@ -27,7 +27,6 @@ endif()
+ # =================================================================================================
+ # Licenses
  # ==================================================================================================
- set(MODULE_LICENSES getopt libpng tinyexr libz)
+-set(MODULE_LICENSES getopt libpng tinyexr libz)
++set(MODULE_LICENSES getopt PNG::PNG unofficial::tinyexr::tinyexr libz)
  set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
 -list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
  target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
@@ -517,9 +555,18 @@ index af4d13b..17c576f 100644
      };
  
 diff --git a/tools/filamesh/CMakeLists.txt b/tools/filamesh/CMakeLists.txt
-index e53c9c2..e0afe04 100644
+index e53c9c2..f992abc 100644
 --- a/tools/filamesh/CMakeLists.txt
 +++ b/tools/filamesh/CMakeLists.txt
+@@ -18,7 +18,7 @@ add_executable(${TARGET} ${SRCS})
+ 
+ target_link_libraries(${TARGET} PUBLIC math)
+ target_link_libraries(${TARGET} PUBLIC utils)
+-target_link_libraries(${TARGET} PUBLIC assimp)
++target_link_libraries(${TARGET} PUBLIC assimp::assimp)
+ target_link_libraries(${TARGET} PRIVATE getopt filameshio meshoptimizer)
+ 
+ # ==================================================================================================
 @@ -39,7 +39,6 @@ endif()
  # ==================================================================================================
  set(MODULE_LICENSES getopt libassimp meshoptimizer)
@@ -551,7 +598,7 @@ index 4fd7bf5..d1e9bb7 100644
      };
  
 diff --git a/tools/glslminifier/CMakeLists.txt b/tools/glslminifier/CMakeLists.txt
-index 41f4342..28b9dd1 100644
+index 41f4342..299a591 100644
 --- a/tools/glslminifier/CMakeLists.txt
 +++ b/tools/glslminifier/CMakeLists.txt
 @@ -19,7 +19,6 @@ target_link_libraries(${TARGET} PRIVATE utils getopt)
@@ -562,6 +609,13 @@ index 41f4342..28b9dd1 100644
  target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
  
  # ==================================================================================================
+@@ -36,5 +35,5 @@ if (NOT ANDROID)
+             tests/test_glslminifier.cpp
+     )
+     target_include_directories(test_${TARGET} PRIVATE src)
+-    target_link_libraries(test_${TARGET} PRIVATE gtest)
++    target_link_libraries(test_${TARGET} PRIVATE GTest::gtest)
+ endif()
 diff --git a/tools/glslminifier/src/main.cpp b/tools/glslminifier/src/main.cpp
 index a6d2f56..c574e9f 100644
 --- a/tools/glslminifier/src/main.cpp
@@ -585,10 +639,18 @@ index a6d2f56..c574e9f 100644
      };
  
 diff --git a/tools/matc/CMakeLists.txt b/tools/matc/CMakeLists.txt
-index 5d6ba9a..03dca2a 100644
+index 5d6ba9a..e5113c2 100644
 --- a/tools/matc/CMakeLists.txt
 +++ b/tools/matc/CMakeLists.txt
-@@ -51,7 +51,6 @@ target_link_libraries(${TARGET} getopt filamat filabridge utils)
+@@ -44,14 +44,13 @@ add_library(${TARGET} STATIC ${SRCS} ${HDRS})
+ target_include_directories(${TARGET} PUBLIC src)
+ target_include_directories(${TARGET} PRIVATE ${filamat_SOURCE_DIR}/src)
+ 
+-target_link_libraries(${TARGET} getopt filamat filabridge utils)
++target_link_libraries(${TARGET} getopt filamat filabridge utils SPIRV spirv-cross-core spirv-cross-glsl spirv-cross-msl)
+ 
+ # =================================================================================================
+ # Licenses
  # ==================================================================================================
  set(MODULE_LICENSES getopt glslang spirv-cross spirv-tools smol-v)
  set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
@@ -596,6 +658,12 @@ index 5d6ba9a..03dca2a 100644
  target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
  
  # ==================================================================================================
+@@ -89,4 +88,4 @@ set(SRCS
+ 
+ add_executable(${TARGET} ${SRCS})
+ 
+-target_link_libraries(${TARGET} matlang gtest)
++target_link_libraries(${TARGET} matlang GTest::gtest SPIRV spirv-cross-core spirv-cross-glsl spirv-cross-msl)
 diff --git a/tools/matc/src/matc/CommandlineConfig.cpp b/tools/matc/src/matc/CommandlineConfig.cpp
 index 7d96aa6..5bc8e4d 100644
 --- a/tools/matc/src/matc/CommandlineConfig.cpp
@@ -653,12 +721,15 @@ index 73a1925..f9ee49c 100644
      };
  
 diff --git a/tools/mipgen/CMakeLists.txt b/tools/mipgen/CMakeLists.txt
-index 2c76b65..73c2a9d 100644
+index 2c76b65..88460ee 100644
 --- a/tools/mipgen/CMakeLists.txt
 +++ b/tools/mipgen/CMakeLists.txt
-@@ -19,7 +19,6 @@ target_link_libraries(${TARGET} PRIVATE math utils z image imageio getopt)
+@@ -17,9 +17,8 @@ target_link_libraries(${TARGET} PRIVATE math utils z image imageio getopt)
+ # =================================================================================================
+ # Licenses
  # ==================================================================================================
- set(MODULE_LICENSES getopt libpng tinyexr libz astcenc stb etc2comp)
+-set(MODULE_LICENSES getopt libpng tinyexr libz astcenc stb etc2comp)
++set(MODULE_LICENSES getopt PNG::PNG unofficial::tinyexr::tinyexr libz astcenc etc2comp)
  set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
 -list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
  target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
@@ -687,12 +758,15 @@ index d5f8bda..8bb0c58 100644
      };
  
 diff --git a/tools/normal-blending/CMakeLists.txt b/tools/normal-blending/CMakeLists.txt
-index b01e056..9fffc53 100644
+index b01e056..b9b8dcf 100644
 --- a/tools/normal-blending/CMakeLists.txt
 +++ b/tools/normal-blending/CMakeLists.txt
-@@ -29,7 +29,6 @@ endif()
+@@ -27,9 +27,8 @@ endif()
+ # =================================================================================================
+ # Licenses
  # ==================================================================================================
- set(MODULE_LICENSES getopt libpng tinyexr libz)
+-set(MODULE_LICENSES getopt libpng tinyexr libz)
++set(MODULE_LICENSES getopt PNG::PNG unofficial::tinyexr::tinyexr libz)
  set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
 -list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
  target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
@@ -755,12 +829,15 @@ index bde604f..79ed222 100644
      };
  
 diff --git a/tools/roughness-prefilter/CMakeLists.txt b/tools/roughness-prefilter/CMakeLists.txt
-index 99b3559..98828ae 100644
+index 99b3559..af3f49e 100644
 --- a/tools/roughness-prefilter/CMakeLists.txt
 +++ b/tools/roughness-prefilter/CMakeLists.txt
-@@ -29,7 +29,6 @@ endif()
+@@ -27,9 +27,8 @@ endif()
+ # =================================================================================================
+ # Licenses
  # ==================================================================================================
- set(MODULE_LICENSES getopt libpng tinyexr libz)
+-set(MODULE_LICENSES getopt libpng tinyexr libz)
++set(MODULE_LICENSES getopt PNG::PNG unofficial::tinyexr::tinyexr libz)
  set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
 -list_licenses(${GENERATION_ROOT}/licenses/licenses.inc ${MODULE_LICENSES})
  target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
@@ -822,3 +899,16 @@ index b4d0ea3..ad7d108 100644
          nullptr
      };
  
+diff --git a/web/filament-js/CMakeLists.txt b/web/filament-js/CMakeLists.txt
+index bddc850..cd3680c 100644
+--- a/web/filament-js/CMakeLists.txt
++++ b/web/filament-js/CMakeLists.txt
+@@ -41,7 +41,7 @@ set_target_properties(filament-js PROPERTIES
+     LINK_DEPENDS "${EXTERN_POSTJS_SRC};${POSTJS_SRC}"
+     OUTPUT_NAME filament)
+ 
+-target_link_libraries(filament-js PRIVATE filament math utils image filameshio gltfio_core stb)
++target_link_libraries(filament-js PRIVATE filament math utils image filameshio gltfio_core)
+ 
+ # Copy package.json (et al) into the output folder to allow "npm publish" to gather the
+ # artifacts that it needs.
