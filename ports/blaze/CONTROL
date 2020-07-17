@@ -1,6 +1,6 @@
 Source: blaze
 Version: 3.7
 Port-Version: 1
-Build-Depends: lapack-select[core] (!osx), boost-exception
+Build-Depends: lapack-select[core], boost-exception
 Homepage: https://bitbucket.org/blaze-lib/blaze
 Description: Blaze is an open-source, high-performance C++ math library for dense and sparse arithmetic.

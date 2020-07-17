@@ -1,7 +1,7 @@
 Source: lapack-select
 Version: 1
 Description: Port to select the LAPACK — Linear Algebra PACKage implementation
-Default-Features: clapack
+Build-Depends: lapack-select[core,clapack] (!osx)
 
 Feature: clapack
 Description: Use clapack
