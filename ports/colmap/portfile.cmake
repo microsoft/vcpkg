@@ -39,11 +39,7 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_copy_tools(TOOL_NAMES colmap AUTO_CLEAN)
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat
-    ${CURRENT_PACKAGES_DIR}/tools/RUN_TESTS.bat
-)
-
+file(REMOVE ${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 
 vcpkg_copy_pdbs()
