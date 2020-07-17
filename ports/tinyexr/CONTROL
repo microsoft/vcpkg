@@ -1,4 +1,4 @@
 Source: tinyexr
-Version: 2020-03-15
+Version: 2020-07-17
 Homepage: https://github.com/syoyo/tinyexr
-Description: Library to load and save OpenEXR(.exr) images
+Description: Library to load and save OpenEXR images
