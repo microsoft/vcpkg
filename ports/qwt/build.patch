@@ -1,44 +1,44 @@
 diff --git a/src/qwt_compass_rose.cpp b/src/qwt_compass_rose.cpp
-index 8acb045c2..b7b676712 100644
---- a/src/qwt_compass_rose.cpp	
+index fbd30fe..bc8c349 100644
+--- a/src/qwt_compass_rose.cpp
 +++ b/src/qwt_compass_rose.cpp
-@@ -11,6 +11,7 @@
- #include "qwt_point_polar.h"
+@@ -12,6 +12,7 @@
  #include "qwt_painter.h"
  #include <qpainter.h>
+ #include <qpainterpath.h>
 +#include <QPainterPath>
  
  static QPointF qwtIntersection(
      QPointF p11, QPointF p12, QPointF p21, QPointF p22 )
 diff --git a/src/qwt_dial_needle.cpp b/src/qwt_dial_needle.cpp
-index 3589b011d..4f20aada1 100644
---- a/src/qwt_dial_needle.cpp	
+index bb342e0..a3cf6a5 100644
+--- a/src/qwt_dial_needle.cpp
 +++ b/src/qwt_dial_needle.cpp
-@@ -13,6 +13,7 @@
- #include "qwt_painter.h"
+@@ -14,6 +14,7 @@
  #include <qapplication.h>
  #include <qpainter.h>
+ #include <qpainterpath.h>
 +#include <QPainterPath>
  
  #if QT_VERSION < 0x040601
  #define qFastSin(x) qSin(x)
 diff --git a/src/qwt_null_paintdevice.cpp b/src/qwt_null_paintdevice.cpp
-index 21b97b0ad..545804b06 100644
---- a/src/qwt_null_paintdevice.cpp	
+index 468a838..7712fdf 100644
+--- a/src/qwt_null_paintdevice.cpp
 +++ b/src/qwt_null_paintdevice.cpp
-@@ -10,6 +10,7 @@
- #include "qwt_null_paintdevice.h"
+@@ -11,6 +11,7 @@
  #include <qpaintengine.h>
+ #include <qpainterpath.h>
  #include <qpixmap.h>
 +#include <QPainterPath>
  
  class QwtNullPaintDevice::PrivateData
  {
 diff --git a/src/qwt_painter.cpp b/src/qwt_painter.cpp
-index 069e2ae42..824ddfc20 100644
---- a/src/qwt_painter.cpp	
+index be249ae..5f4e55c 100644
+--- a/src/qwt_painter.cpp
 +++ b/src/qwt_painter.cpp
-@@ -27,6 +27,7 @@
+@@ -28,6 +28,7 @@
  #include <qpaintengine.h>
  #include <qapplication.h>
  #include <qdesktopwidget.h>
@@ -47,22 +47,21 @@ index 069e2ae42..824ddfc20 100644
  #if QT_VERSION >= 0x050000
  #include <qwindow.h>
 diff --git a/src/qwt_painter_command.h b/src/qwt_painter_command.h
-index 032d0348b..13db43559 100644
---- a/src/qwt_painter_command.h	
+index 81142ec..d5553be 100644
+--- a/src/qwt_painter_command.h
 +++ b/src/qwt_painter_command.h
-@@ -15,8 +15,7 @@
- #include <qpixmap.h>
- #include <qimage.h>
+@@ -17,7 +17,7 @@
  #include <qpolygon.h>
--
+ #include <qpainterpath.h>
+ 
 -class QPainterPath;
 +#include <QPainterPath>
  
  /*!
    QwtPainterCommand represents the attributes of a paint operation
 diff --git a/src/qwt_plot_glcanvas.cpp b/src/qwt_plot_glcanvas.cpp
-index 64b39b90e..414cb22c5 100644
---- a/src/qwt_plot_glcanvas.cpp	
+index 996c0ad..d5eb2a8 100644
+--- a/src/qwt_plot_glcanvas.cpp
 +++ b/src/qwt_plot_glcanvas.cpp
 @@ -15,6 +15,7 @@
  #include <qdrawutil.h>
@@ -73,34 +72,34 @@ index 64b39b90e..414cb22c5 100644
  #define FIX_GL_TRANSLATION 0
  
 diff --git a/src/qwt_plot_glcanvas.h b/src/qwt_plot_glcanvas.h
-index 82770747f..be93232c4 100644
---- a/src/qwt_plot_glcanvas.h	
+index 9b58bbd..1775916 100644
+--- a/src/qwt_plot_glcanvas.h
 +++ b/src/qwt_plot_glcanvas.h
-@@ -13,6 +13,7 @@
- #include "qwt_global.h"
+@@ -14,6 +14,7 @@
  #include <qframe.h>
  #include <qgl.h>
+ #include <qpainterpath.h>
 +#include <QPainterPath>
  
  class QwtPlot;
  
 diff --git a/src/qwt_plot_panner.cpp b/src/qwt_plot_panner.cpp
-index bed4566dd..852998f01 100644
---- a/src/qwt_plot_panner.cpp	
+index a49bf52..8b14370 100644
+--- a/src/qwt_plot_panner.cpp
 +++ b/src/qwt_plot_panner.cpp
-@@ -14,6 +14,7 @@
- #include <qbitmap.h>
+@@ -15,6 +15,7 @@
  #include <qstyle.h>
  #include <qstyleoption.h>
+ #include <qpainterpath.h>
 +#include <QPainterPath>
  
  #if QT_VERSION >= 0x050000
  #if QT_VERSION < 0x050100
 diff --git a/src/qwt_plot_renderer.cpp b/src/qwt_plot_renderer.cpp
-index b6c83447e..a309fe290 100644
---- a/src/qwt_plot_renderer.cpp	
+index 71cadec..ec3d429 100644
+--- a/src/qwt_plot_renderer.cpp
 +++ b/src/qwt_plot_renderer.cpp
-@@ -26,6 +26,7 @@
+@@ -27,6 +27,7 @@
  #include <qfileinfo.h>
  #include <qimagewriter.h>
  #include <qvariant.h>
@@ -109,11 +108,11 @@ index b6c83447e..a309fe290 100644
  #ifndef QWT_NO_SVG
  #ifdef QT_SVG_LIB
 diff --git a/src/qwt_widget_overlay.cpp b/src/qwt_widget_overlay.cpp
-index 79c46ce10..f64042ac8 100644
---- a/src/qwt_widget_overlay.cpp	
+index e437fe2..8cf76be 100644
+--- a/src/qwt_widget_overlay.cpp
 +++ b/src/qwt_widget_overlay.cpp
-@@ -13,6 +13,7 @@
- #include <qpaintengine.h>
+@@ -14,6 +14,7 @@
+ #include <qpainterpath.h>
  #include <qimage.h>
  #include <qevent.h>
 +#include <QPainterPath>
@@ -121,8 +120,8 @@ index 79c46ce10..f64042ac8 100644
  static QImage::Format qwtMaskImageFormat()
  {
 diff --git a/src/src.pri b/src/src.pri
-index 571870361..412636d5b 100644
---- a/src/src.pri	
+index b7bc3a5..34cc006 100644
+--- a/src/src.pri
 +++ b/src/src.pri
 @@ -7,7 +7,7 @@
  # modify it under the terms of the Qwt License, Version 1.0
