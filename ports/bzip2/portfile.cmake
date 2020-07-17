@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(BZIP2_VERSION 1.0.6) # TODO: Update to 1.0.8
 vcpkg_download_distfile(ARCHIVE # TODO: switch to vcpkg_from_git with https://sourceware.org/git/?p=bzip2.git;a=summary
     URLS "https://github.com/past-due/bzip2-mirror/releases/download/v${BZIP2_VERSION}/bzip2-${BZIP2_VERSION}.tar.gz"
@@ -35,12 +34,11 @@ else()
 endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/bzlib.h" "${BZLIB_H}")
 
-file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/bzip2")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/bzip2/LICENSE" "${CURRENT_PACKAGES_DIR}/share/bzip2/copyright")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_test_cmake(PACKAGE_NAME BZip2 MODULE)
+#vcpkg_test_cmake(PACKAGE_NAME BZip2 MODULE)
 
 set(BZIP2_PREFIX "${CURRENT_INSTALLED_DIR}")
 set(bzname bz2)
