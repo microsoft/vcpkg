@@ -117,17 +117,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
 elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
-    file(REMOVE_RECURSE ${SOURCE_PATH}/build/debug)
-    file(REMOVE_RECURSE ${SOURCE_PATH}/build/release)
-    if(EXISTS "${SOURCE_PATH}/Makefile")
-        # Clean up from previous builds
-        vcpkg_execute_required_process(
-            COMMAND make distclean
-            WORKING_DIRECTORY ${SOURCE_PATH}
-            LOGNAME config-${TARGET_TRIPLET}-dbg
-        )
-    endif()
-
     set(MPG123_OPTIONS
         --disable-dependency-tracking
     )
@@ -143,6 +132,7 @@ elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
             LOGNAME dumpmachine-${TARGET_TRIPLET}
         )
         file(READ ${CURRENT_BUILDTREES_DIR}/dumpmachine-${TARGET_TRIPLET}-out.log MPG123_HOST)
+        string(REPLACE "\n" "" MPG123_HOST "${MPG123_HOST}")
         message(STATUS "Cross-compiling with ${CMAKE_C_COMPILER}")
         message(STATUS "Detected autoconf triplet --host=${MPG123_HOST}")
         set(MPG123_OPTIONS
