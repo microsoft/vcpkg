@@ -11,8 +11,8 @@ vcpkg_extract_source_archive_ex(
     REF ${FT_VERSION}
     PATCHES
         0001-Fix-install-command.patch
-        0002-Add-CONFIG_INSTALL_PATH-option.patch
         0003-Fix-UWP.patch
+        pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,13 +28,22 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DCONFIG_INSTALL_PATH=share/freetype
         -DFT_WITH_ZLIB=ON # Force system zlib.
-        ${FEATURE_OPTIONS}
+        -DFT_WITH_BROTLI=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=ON
+        ${FEATURE_OPTIONS}
+        ${OPTIONS}
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+find_library(FREETYPE_DEBUG NAMES freetyped PATHS "${CURRENT_PACKAGES_DIR}/debug/lib/" NO_DEFAULT_PATH)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc" AND FREETYPE_DEBUG)
+    file(READ "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc" _contents)
+    string(REPLACE "-lfreetype" "-lfreetyped" _contents "${_contents}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc" "${_contents}")
+endif()
+vcpkg_fixup_pkgconfig()
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/freetype2/freetype ${CURRENT_PACKAGES_DIR}/include/freetype)
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/freetype2/ft2build.h ${CURRENT_PACKAGES_DIR}/include/ft2build.h)
@@ -63,6 +72,7 @@ endif()
 string(REPLACE "\${_IMPORT_PREFIX}/include/freetype2" "\${_IMPORT_PREFIX}/include;\${_IMPORT_PREFIX}/include/freetype" CONFIG_MODULE "${CONFIG_MODULE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/freetype/freetype-config.cmake "${CONFIG_MODULE}")
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(COPY
