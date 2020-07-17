@@ -1,0 +1,11 @@
+Source: lapack-select
+Version: 1
+Description: Port to select the LAPACK — Linear Algebra PACKage implementation
+Default-Features: clapack
+
+Feature: clapack
+Description: Use clapack
+Build-Depends: clapack
+
+Feature: lapack-reference
+Description: Use the netlib lapack reference implementation (TODO)
