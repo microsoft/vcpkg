@@ -1,11 +1,10 @@
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Cross
-    REF 2020-02-26
-    SHA512 96e4c7d8bf8603d061d1a7afac34db044842dede65f2d9328da1d99a3c8aed9f6fd64fd611e8d1618bd937b682b377d87304a4fcc9068bcffed3d275cb4dfe2c
+    REF b1082c10afe15eef03e8b12d66008388ce2a468c
+    SHA512 56ecc559157237e54684862501b7697ea9a43996823361787209ddff8e18ee3fa1bb95bcfca19a371ff066882a177663d6d0d667d95a2c0cffc377d59dd6e5f6
     HEAD_REF master
 )
 
@@ -22,11 +21,12 @@ foreach(COMPONENT core cpp glsl hlsl msl reflect util)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/spirv_cross_${COMPONENT}/cmake TARGET_PATH share/spirv_cross_${COMPONENT})
 endforeach()
 
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*")
-file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+vcpkg_copy_tools(
+    TOOL_NAMES spirv-cross
+    AUTO_CLEAN
+)
 
-# cleanup
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/spirv-cross/copyright COPYONLY)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
