@@ -448,14 +448,14 @@ namespace vcpkg::Json
 
                 switch (current)
                 {
-                    case '"': return '"';
-                    case '\\': return '\\';
-                    case '/': return '/';
-                    case 'b': return '\b';
-                    case 'f': return '\f';
-                    case 'n': return '\n';
-                    case 'r': return '\r';
-                    case 't': return '\t';
+                    case '"': next(); return '"';
+                    case '\\': next(); return '\\';
+                    case '/': next(); return '/';
+                    case 'b': next(); return '\b';
+                    case 'f': next(); return '\f';
+                    case 'n': next(); return '\n';
+                    case 'r': next(); return '\r';
+                    case 't': next(); return '\t';
                     case 'u':
                     {
                         char16_t code_unit = 0;

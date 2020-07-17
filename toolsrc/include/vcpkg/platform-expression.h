@@ -38,6 +38,13 @@ namespace vcpkg::PlatformExpression
         bool evaluate(const Context& context) const;
         bool is_empty() const { return !static_cast<bool>(underlying_); }
 
+        // returns:
+        //   - 0 for empty
+        //   - 1 for identifiers
+        //   - 1 + complexity(inner) for !
+        //   - 1 + sum(complexity(inner)) for & and |
+        int complexity() const;
+
         // these two are friends so that they're only findable via ADL
 
         // this does a structural equality, so, for example:

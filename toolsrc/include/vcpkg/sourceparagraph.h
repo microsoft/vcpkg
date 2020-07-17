@@ -101,6 +101,7 @@ namespace vcpkg
     };
 
     std::string serialize_manifest(const SourceControlFile& scf);
+    std::string to_debug_string(const SourceControlFile& scf);
 
     /// <summary>
     /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was

@@ -245,6 +245,117 @@ namespace vcpkg
         }
     }
 
+    namespace {
+        constexpr static struct Canonicalize {
+            struct FeatureLess {
+                bool operator()(const std::unique_ptr<FeatureParagraph>& lhs, const std::unique_ptr<FeatureParagraph>& rhs) const
+                {
+                    return (*this)(*lhs, *rhs);
+                }
+                bool operator()(const FeatureParagraph& lhs, const FeatureParagraph& rhs) const
+                {
+                    return lhs.name < rhs.name;
+                }
+            };
+            struct FeatureEqual {
+                bool operator()(const std::unique_ptr<FeatureParagraph>& lhs, const std::unique_ptr<FeatureParagraph>& rhs) const
+                {
+                    return (*this)(*lhs, *rhs);
+                }
+                bool operator()(const FeatureParagraph& lhs, const FeatureParagraph& rhs) const
+                {
+                    return lhs.name == rhs.name;
+                }
+            };
+
+            // assume canonicalized feature list
+            struct DependencyLess {
+                bool operator()(const std::unique_ptr<Dependency>& lhs, const std::unique_ptr<Dependency>& rhs) const
+                {
+                    return (*this)(*lhs, *rhs);
+                }
+                bool operator()(const Dependency& lhs, const Dependency& rhs) const
+                {
+                    auto cmp = lhs.name.compare(rhs.name);
+                    if (cmp < 0) return true;
+                    if (cmp > 0) return false;
+
+                    // same dependency name
+
+                    // order by platform string:
+                    // least complex first, then smaller, then lexicographical
+                    auto lhs_platform_complexity = lhs.platform.complexity();
+                    auto rhs_platform_complexity = lhs.platform.complexity();
+
+                    if (lhs_platform_complexity < rhs_platform_complexity) return true;
+                    if (rhs_platform_complexity < lhs_platform_complexity) return false;
+
+                    auto lhs_platform = to_string(lhs.platform);
+                    auto rhs_platform = to_string(rhs.platform);
+
+                    if (lhs_platform.size() < rhs_platform.size()) return true;
+                    if (rhs_platform.size() < lhs_platform.size()) return false;
+
+                    auto platform_cmp = lhs_platform.compare(rhs_platform);
+                    if (platform_cmp < 0) return true;
+                    if (platform_cmp > 0) return false;
+
+                    // then order by features
+                    // smaller list first, then lexicographical
+                    if (lhs.features.size() < rhs.features.size()) return true;
+                    if (rhs.features.size() < lhs.features.size()) return false;
+
+                    // then finally order by feature list
+                    if (std::lexicographical_compare(lhs.features.begin(), lhs.features.end(),
+                        rhs.features.begin(), rhs.features.end()))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            };
+
+            template <class T>
+            void operator()(std::unique_ptr<T>& ptr) const
+            {
+                (*this)(*ptr);
+            }
+
+            void operator()(Dependency& dep) const
+            {
+                std::sort(dep.features.begin(), dep.features.end());
+            }
+            void operator()(SourceParagraph& spgh) const
+            {
+                std::for_each(spgh.dependencies.begin(), spgh.dependencies.end(), *this);
+                std::sort(spgh.dependencies.begin(), spgh.dependencies.end(), DependencyLess{});
+
+                std::sort(spgh.default_features.begin(), spgh.default_features.end());
+            }
+            void operator()(FeatureParagraph& fpgh) const
+            {
+                std::for_each(fpgh.dependencies.begin(), fpgh.dependencies.end(), *this);
+                std::sort(fpgh.dependencies.begin(), fpgh.dependencies.end(), DependencyLess{});
+            }
+            void operator()(SourceControlFile& scf) const
+            {
+                canonicalize(*scf.core_paragraph);
+                std::for_each(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), *this);
+                std::sort(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), FeatureLess{});
+
+                auto adjacent_equal = std::adjacent_find(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), FeatureEqual{});
+                if (adjacent_equal != scf.feature_paragraphs.end())
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO, R"(Multiple features with the same name for port %s: %s
+    This is invalid; please make certain that features have distinct names.)",
+                    scf.core_paragraph->name, (*adjacent_equal)->name);
+                }
+            }
+        } canonicalize{};
+    }
+
+
+
     static ParseExpected<SourceParagraph> parse_source_paragraph(const fs::path& path_to_control, Paragraph&& fields)
     {
         auto origin = path_to_control.u8string();
@@ -359,6 +470,7 @@ namespace vcpkg
                 return std::move(maybe_feature).error();
         }
 
+        canonicalize(*control_file);
         return control_file;
     }
 
@@ -485,6 +597,12 @@ namespace vcpkg
             // we only check for lowercase in RESERVED since we already remove all
             // strings with uppercase letters from the basic check
             static const std::regex RESERVED = std::regex(R"(prn|aux|nul|con|(lpt|com)[1-9]|core|default)");
+
+            // back-compat
+            if (sv == "all_modules")
+            {
+                return true;
+            }
 
             if (!std::regex_match(sv.begin(), sv.end(), BASIC_IDENTIFIER))
             {
@@ -839,6 +957,7 @@ namespace vcpkg
         control_file->core_paragraph = std::make_unique<SourceParagraph>();
 
         auto& spgh = control_file->core_paragraph;
+        spgh->type = Type{Type::PORT};
 
         constexpr static StringView type_name = "vcpkg.json";
         visit.required_object_field(type_name, manifest, ManifestFields::NAME, spgh->name, IdentifierField{});
@@ -878,6 +997,7 @@ namespace vcpkg
             return std::make_unique<ParseControlErrorInfo>(std::move(err.pcei));
         }
 
+        canonicalize(*control_file);
         return std::move(control_file);
     }
 
@@ -918,33 +1038,26 @@ namespace vcpkg
         return ret;
     }
 
-    std::string serialize_manifest(const SourceControlFile& scf)
+    static std::string serialize_manifest_impl(const SourceControlFile& scf, bool debug)
     {
-        Json::Object obj;
-        obj.insert(ManifestFields::NAME, Json::Value::string(scf.core_paragraph->name));
-        obj.insert(ManifestFields::VERSION, Json::Value::string(scf.core_paragraph->version));
-
-        static constexpr auto serialize_paragraph =
-            [](Json::Object& obj, StringLiteral name, const std::vector<std::string>& pgh) {
-                if (pgh.empty())
+        auto serialize_paragraph =
+            [&](Json::Object& obj, StringLiteral name, const std::vector<std::string>& pgh, bool always = false) {
+                if (!debug)
                 {
-                    return;
+                    if (pgh.empty())
+                    {
+                        if (always)
+                        {
+                            obj.insert(name, Json::Array({}));
+                        }
+                        return;
+                    }
+                    if (pgh.size() == 1)
+                    {
+                        obj.insert(name, Json::Value::string(pgh.front()));
+                        return;
+                    }
                 }
-                if (pgh.size() == 1)
-                {
-                    obj.insert(name, Json::Value::string(pgh.front()));
-                    return;
-                }
-
-                auto& arr = obj.insert(name, Json::Array());
-                for (const auto& s : pgh)
-                {
-                    arr.push_back(Json::Value::string(s));
-                }
-            };
-        static constexpr auto serialize_optional_array =
-            [](Json::Object& obj, StringLiteral name, const std::vector<std::string>& pgh) {
-                if (pgh.empty()) return;
 
                 auto& arr = obj.insert(name, Json::Array());
                 for (const auto& s : pgh)
@@ -952,14 +1065,24 @@ namespace vcpkg
                     arr.push_back(Json::Value::string(s));
                 }
             };
-        static constexpr auto serialize_optional_string =
-            [](Json::Object& obj, StringLiteral name, const std::string& s) {
-                if (!s.empty())
+        auto serialize_optional_array =
+            [&](Json::Object& obj, StringLiteral name, const std::vector<std::string>& pgh) {
+                if (pgh.empty() && !debug) return;
+
+                auto& arr = obj.insert(name, Json::Array());
+                for (const auto& s : pgh)
+                {
+                    arr.push_back(Json::Value::string(s));
+                }
+            };
+        auto serialize_optional_string =
+            [&](Json::Object& obj, StringLiteral name, const std::string& s) {
+                if (!s.empty() || debug)
                 {
                     obj.insert(name, Json::Value::string(s));
                 }
             };
-        static constexpr auto serialize_dependency = [](Json::Array& arr, const Dependency& dep) {
+        auto serialize_dependency = [&](Json::Array& arr, const Dependency& dep) {
             if (dep.features.empty() && dep.platform.is_empty())
             {
                 arr.push_back(Json::Value::string(dep.name));
@@ -970,8 +1093,8 @@ namespace vcpkg
                 dep_obj.insert(DependencyField::NAME, Json::Value::string(dep.name));
 
                 auto features_copy = dep.features;
-                auto core_it = std::find(dep.features.begin(), dep.features.end(), "core");
-                if (core_it != dep.features.end())
+                auto core_it = std::find(features_copy.begin(), features_copy.end(), "core");
+                if (core_it != features_copy.end())
                 {
                     dep_obj.insert(DependencyField::DEFAULT_FEATURES, Json::Value::boolean(false));
                     features_copy.erase(core_it);
@@ -982,7 +1105,12 @@ namespace vcpkg
             }
         };
 
-        if (scf.core_paragraph->port_version != 0)
+        Json::Object obj;
+        obj.insert(ManifestFields::NAME, Json::Value::string(scf.core_paragraph->name));
+        obj.insert(ManifestFields::VERSION, Json::Value::string(scf.core_paragraph->version));
+
+
+        if (scf.core_paragraph->port_version != 0 || debug)
         {
             obj.insert(ManifestFields::PORT_VERSION, Json::Value::integer(scf.core_paragraph->port_version));
         }
@@ -996,7 +1124,7 @@ namespace vcpkg
         serialize_optional_string(obj, ManifestFields::SUPPORTS, to_string(scf.core_paragraph->supports_expression));
 
         // ManifestFields::DEV_DEPENDENCIES,
-        if (!scf.core_paragraph->dependencies.empty())
+        if (!scf.core_paragraph->dependencies.empty() || debug)
         {
             auto& deps = obj.insert(ManifestFields::DEPENDENCIES, Json::Array());
 
@@ -1008,25 +1136,41 @@ namespace vcpkg
 
         serialize_optional_array(obj, ManifestFields::DEFAULT_FEATURES, scf.core_paragraph->default_features);
 
-        if (!scf.feature_paragraphs.empty())
+        if (!scf.feature_paragraphs.empty() || debug)
         {
             auto& arr = obj.insert(ManifestFields::FEATURES, Json::Array());
             for (const auto& feature : scf.feature_paragraphs)
             {
                 auto& feature_obj = arr.push_back(Json::Object());
                 feature_obj.insert(FeatureField::NAME, Json::Value::string(feature->name));
-                serialize_paragraph(feature_obj, FeatureField::DESCRIPTION, feature->description);
+                serialize_paragraph(feature_obj, FeatureField::DESCRIPTION, feature->description, true);
 
-                if (feature->dependencies.empty()) continue;
-
-                auto& deps = feature_obj.insert(FeatureField::DEPENDENCIES, Json::Array());
-                for (const auto& dep : scf.core_paragraph->dependencies)
+                if (!feature->dependencies.empty() || debug)
                 {
-                    serialize_dependency(deps, dep);
+                    auto& deps = feature_obj.insert(FeatureField::DEPENDENCIES, Json::Array());
+                    for (const auto& dep : feature->dependencies)
+                    {
+                        serialize_dependency(deps, dep);
+                    }
                 }
             }
         }
 
+        if (debug)
+        {
+            obj.insert("TYPE", Json::Value::string(Type::to_string(scf.core_paragraph->type)));
+        }
+
         return Json::stringify(obj, Json::JsonStyle{});
+    }
+
+    std::string to_debug_string(const SourceControlFile& scf)
+    {
+        return serialize_manifest_impl(scf, true);
+    }
+
+    std::string serialize_manifest(const SourceControlFile& scf)
+    {
+        return serialize_manifest_impl(scf, false);
     }
 }

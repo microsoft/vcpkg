@@ -7,6 +7,7 @@
 
 #include <vcpkg/platform-expression.h>
 
+#include <numeric>
 #include <string>
 #include <vector>
 
@@ -415,6 +416,31 @@ namespace vcpkg::PlatformExpression
         return Visitor{context, override_ctxt}.visit(*this->underlying_);
     }
 
+    int Expr::complexity() const
+    {
+        if (is_empty()) return 0;
+
+        struct Impl
+        {
+            int operator()(const std::unique_ptr<detail::ExprImpl>& expr) const
+            {
+                return (*this)(*expr);
+            }
+            int operator()(const detail::ExprImpl& expr) const
+            {
+                if (expr.kind == ExprKind::identifier) return 1;
+
+                if (expr.kind == ExprKind::op_not) return 1 + (*this)(expr.exprs.at(0));
+
+                return 1 + std::accumulate(expr.exprs.begin(), expr.exprs.end(), 0, [](int acc, const auto& el) {
+                    return acc + Impl{}(el);
+                });
+            }
+        };
+
+        return Impl{}(underlying_);
+    }
+
     ExpectedS<Expr> parse_platform_expression(StringView expression, MultipleBinaryOperators multiple_binary_operators)
     {
         auto parser = ExpressionParser(expression, multiple_binary_operators);
@@ -434,7 +460,7 @@ namespace vcpkg::PlatformExpression
     {
         struct Impl
         {
-            bool operator()(const std::unique_ptr<detail::ExprImpl>& lhs, const std::unique_ptr<detail::ExprImpl>& rhs)
+            bool operator()(const std::unique_ptr<detail::ExprImpl>& lhs, const std::unique_ptr<detail::ExprImpl>& rhs) const
             {
                 return (*this)(*lhs, *rhs);
             }
