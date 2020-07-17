@@ -15,4 +15,4 @@ Description: Use a LAPACK library outside of VCPKG. This port makes sure it can 
 
 Feature: platform-select
 Description: Used to select the default implementation by platform. Workaround since Default-Features does not allow conditionals
-Build-Depends: lapack-select[core,clapack] (!osx)
+Build-Depends: lapack-select[core,clapack] (!osx), lapack-select[core,external] (osx)
