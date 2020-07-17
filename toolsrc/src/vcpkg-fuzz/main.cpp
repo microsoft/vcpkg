@@ -2,10 +2,14 @@
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.print.h>
+#include <vcpkg/base/unicode.h>
+
+#include <vcpkg/platform-expression.h>
+
+#include <string.h>
 
 #include <iostream>
 #include <sstream>
-#include <string.h>
 #include <utility>
 
 using namespace vcpkg;
@@ -17,6 +21,7 @@ namespace
         None,
         Utf8Decoder,
         JsonParser,
+        PlatformExpr,
     };
 
     struct FuzzArgs
@@ -57,10 +62,14 @@ namespace
                     {
                         kind = FuzzKind::Utf8Decoder;
                     }
+                    else if (value == "platform-expr")
+                    {
+                        kind = FuzzKind::PlatformExpr;
+                    }
                     else
                     {
                         System::print2(System::Color::error, "Invalid kind: ", value, "\n");
-                        System::print2(System::Color::error, "  Expected one of: utf-8, json\n\n");
+                        System::print2(System::Color::error, "  Expected one of: utf-8, json, platform-expr\n\n");
                         print_help_and_exit(true);
                     }
                 }
@@ -78,9 +87,12 @@ namespace
         {
             auto first = std::find_if(arg.begin(), arg.end(), [](char c) { return c != '-'; });
             auto division = std::find(first, arg.end(), '=');
-            if (division == arg.end()) {
+            if (division == arg.end())
+            {
                 return {StringView(first, arg.end()), StringView(arg.end(), arg.end())};
-            } else {
+            }
+            else
+            {
                 return {StringView(first, division), StringView(division + 1, arg.end())};
             }
         }
@@ -120,6 +132,46 @@ Options:
         return std::move(ss).str();
     }
 
+    [[noreturn]] void fuzz_json_and_exit(StringView text)
+    {
+        auto res = Json::parse(text);
+        if (!res)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, res.error()->format());
+        }
+
+        Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    [[noreturn]] void fuzz_utf8_and_exit(StringView text)
+    {
+        auto res = Unicode::Utf8Decoder(text.begin(), text.end());
+        for (auto ch : res)
+        {
+            (void)ch;
+        }
+
+        Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    [[noreturn]] void fuzz_platform_expr_and_exit(StringView text)
+    {
+        auto res1 =
+            PlatformExpression::parse_platform_expression(text, PlatformExpression::MultipleBinaryOperators::Deny);
+        auto res2 =
+            PlatformExpression::parse_platform_expression(text, PlatformExpression::MultipleBinaryOperators::Allow);
+
+        if (!res1)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, res1.error());
+        }
+        if (!res2)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, res2.error());
+        }
+
+        Checks::exit_success(VCPKG_LINE_INFO);
+    }
 }
 
 int main(int argc, char** argv)
@@ -132,13 +184,11 @@ int main(int argc, char** argv)
     }
 
     auto text = read_all_of_stdin();
-    auto res = Json::parse(text);
-    if (!res)
+    switch (args.kind)
     {
-        System::print2(System::Color::error, res.error()->format());
-    }
-    else
-    {
-        System::print2(System::Color::success, "success!");
+        case FuzzKind::JsonParser: fuzz_json_and_exit(text);
+        case FuzzKind::Utf8Decoder: fuzz_utf8_and_exit(text);
+        case FuzzKind::PlatformExpr: fuzz_platform_expr_and_exit(text);
+        default: Checks::exit_fail(VCPKG_LINE_INFO);
     }
 }

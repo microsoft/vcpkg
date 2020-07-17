@@ -14,6 +14,8 @@ for more information.
 This script assumes you have installed Azure tools into PowerShell by following the instructions
 at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
 or are running from Azure Cloud Shell.
+
+This script assumes you have installed the OpenSSH Client optional Windows component.
 #>
 
 $Location = 'westus2'
@@ -24,10 +26,25 @@ $LiveVMPrefix = 'BUILD'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
-$TotalProgress = 10
+$TotalProgress = 11
 $CurrentProgress = 1
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Creating SSH key' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+$sshDir = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName()
+mkdir $sshDir
+try {
+  ssh-keygen.exe -q -b 2048 -t rsa -f "$sshDir/key" -P [string]::Empty
+  $sshPublicKey = Get-Content "$sshDir/key.pub"
+} finally {
+  Remove-Item $sshDir -Recurse -Force
+}
 
 ####################################################################################################
 Write-Progress `
@@ -174,7 +191,8 @@ $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Linux `
   -ComputerName $ProtoVMName `
-  -Credential $Credential
+  -Credential $Credential `
+  -DisablePasswordAuthentication
 
 $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
 $VM = Set-AzVMSourceImage `
@@ -185,6 +203,12 @@ $VM = Set-AzVMSourceImage `
   -Version latest
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
+
+$VM = Add-AzVMSshPublicKey `
+  -VM $VM `
+  -KeyData $sshPublicKey `
+  -Path "/home/AdminUser/.ssh/authorized_keys"
+
 New-AzVm `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
@@ -269,11 +293,16 @@ $Vmss = Add-AzVmssNetworkInterfaceConfiguration `
   -NetworkSecurityGroupId $NetworkSecurityGroup.Id `
   -Name $NicName
 
+$VmssPublicKey = New-Object -TypeName 'Microsoft.Azure.Management.Compute.Models.SshPublicKey' `
+  -ArgumentList @('/home/AdminUser/.ssh/authorized_keys', $sshPublicKey)
+
 $Vmss = Set-AzVmssOsProfile `
   -VirtualMachineScaleSet $Vmss `
   -ComputerNamePrefix $LiveVMPrefix `
   -AdminUsername AdminUser `
-  -AdminPassword $AdminPW
+  -AdminPassword $AdminPW `
+  -LinuxConfigurationDisablePasswordAuthentication $true `
+  -PublicKey @($VmssPublicKey)
 
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `

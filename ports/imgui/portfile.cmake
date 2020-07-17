@@ -3,24 +3,41 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF 5503c0a12e0c929e84b3f61b2cb4bb9177ea3da1 # v1.76
-    SHA512 5cafb4f1c76975c38ddda0316da96e1f29e652fbc5c8d0e5158c9b21b11c0acc45e4b84fbc53bde1d07c4f2002744e1407f900e92eb8146e0a843b8b4f4b58bd
+    REF v1.77
+    SHA512 d5ebf4bb5e1ce83b226f2e68b3afe0f0abaeb55245fedf754e5453afd8d1df4dac8b5c47fc284c2588b40d05a55fc191b5e55c7be279c5e5e23f7c5b70150546
     HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    bindings       IMGUI_COPY_BINDINGS # should only be copied once, at most
+    allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING
+    dx9-binding                 IMGUI_BUILD_DX9_BINDING
+    dx10-binding                IMGUI_BUILD_DX10_BINDING
+    dx11-binding                IMGUI_BUILD_DX11_BINDING
+    dx12-binding                IMGUI_BUILD_DX12_BINDING
+    glfw-binding                IMGUI_BUILD_GLFW_BINDING
+    glut-binding                IMGUI_BUILD_GLUT_BINDING
+    marmalade-binding           IMGUI_COPY_MARMALADE_BINDING
+    metal-binding               IMGUI_BUILD_METAL_BINDING
+    opengl2-binding             IMGUI_BUILD_OPENGL2_BINDING
+    opengl3-glew-binding        IMGUI_BUILD_OPENGL3_GLEW_BINDING
+    opengl3-glad-binding        IMGUI_BUILD_OPENGL3_GLAD_BINDING
+    opengl3-gl3w-binding        IMGUI_BUILD_OPENGL3_GL3W_BINDING
+    opengl3-glbinding-binding   IMGUI_BUILD_OPENGL3_GLBINDING_BINDING
+    osx-binding                 IMGUI_BUILD_OSX_BINDING
+    sdl2-binding                IMGUI_BUILD_SDL2_BINDING
+    vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
+    win32-binding               IMGUI_BUILD_WIN32_BINDING
+    freetype                    IMGUI_FREETYPE
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_RELEASE
+    OPTIONS
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
-        -DIMGUI_COPY_BINDINGS=OFF
         -DIMGUI_SKIP_HEADERS=ON
 )
 

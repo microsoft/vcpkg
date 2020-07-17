@@ -42,7 +42,6 @@ namespace vcpkg::Commands
             {"update", &Update::perform_and_exit},
             {"edit", &Edit::perform_and_exit},
             {"create", &Create::perform_and_exit},
-            {"import", &Import::perform_and_exit},
             {"cache", &Cache::perform_and_exit},
             {"portsdiff", &PortsDiff::perform_and_exit},
             {"autocomplete", &Autocomplete::perform_and_exit},
@@ -51,6 +50,7 @@ namespace vcpkg::Commands
             {"x-ci-clean", &CIClean::perform_and_exit},
             {"x-history", &PortHistory::perform_and_exit},
             {"x-vsinstances", &X_VSInstances::perform_and_exit},
+            {"x-format-manifest", &FormatManifest::perform_and_exit},
         };
         return t;
     }
@@ -89,8 +89,7 @@ namespace vcpkg::Commands::Fetch
 namespace vcpkg::Commands::Hash
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("The argument should be a file path\n%s",
-                        create_example_string("hash boost_1_62_0.tar.bz2")),
+        Strings::format("The argument should be a file path\n%s", create_example_string("hash boost_1_62_0.tar.bz2")),
         1,
         2,
         {},

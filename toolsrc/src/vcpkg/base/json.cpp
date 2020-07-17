@@ -144,27 +144,29 @@ namespace vcpkg::Json
         return underlying_->string;
     }
 
-    const Array& Value::array() const noexcept
+    const Array& Value::array() const& noexcept
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
         return underlying_->array;
     }
-    Array& Value::array() noexcept
+    Array& Value::array() & noexcept
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
         return underlying_->array;
     }
+    Array&& Value::array() && noexcept { return std::move(this->array()); }
 
-    const Object& Value::object() const noexcept
+    const Object& Value::object() const& noexcept
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
         return underlying_->object;
     }
-    Object& Value::object() noexcept
+    Object& Value::object() & noexcept
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
         return underlying_->object;
     }
+    Object&& Value::object() && noexcept { return std::move(this->object()); }
 
     Value::Value() noexcept = default;
     Value::Value(Value&&) noexcept = default;
@@ -601,35 +603,39 @@ namespace vcpkg::Json
                     }
                 }
 
-#ifdef _MSC_VER
-#define SCANF sscanf_s
-#else
-#define SCANF sscanf
-#endif
-
-                // TODO: switch to `from_chars` once we are able to remove support for old compilers
                 if (floating)
                 {
-                    double res;
-                    if (SCANF(number_to_parse.c_str(), "%lf", &res) != 1)
+                    auto opt = Strings::strto<double>(number_to_parse);
+                    if (auto res = opt.get())
+                    {
+                        if (std::abs(*res) < INFINITY)
+                        {
+                            return Value::number(*res);
+                        }
+                        else
+                        {
+                            add_error(Strings::format("Floating point constant too big: %s", number_to_parse));
+                        }
+                    }
+                    else
                     {
                         add_error(Strings::format("Invalid floating point constant: %s", number_to_parse));
-                        return Value();
                     }
-                    return Value::number(res);
                 }
                 else
                 {
-                    int64_t res;
-                    if (SCANF(number_to_parse.c_str(), "%" SCNd64, &res) != 1)
+                    auto opt = Strings::strto<int64_t>(number_to_parse);
+                    if (auto res = opt.get())
+                    {
+                        return Value::integer(*res);
+                    }
+                    else
                     {
                         add_error(Strings::format("Invalid integer constant: %s", number_to_parse));
-                        return Value();
                     }
-                    return Value::integer(res);
                 }
 
-#undef SCANF
+                return Value();
             }
 
             Value parse_keyword() noexcept
@@ -960,12 +966,15 @@ namespace vcpkg::Json
                 for (auto code_point : Unicode::Utf8Decoder(sv.begin(), sv.end()))
                 {
                     // a. If C is listed in the "Code Point" column of Table 66, then
-                    const auto match = std::find_if(begin(escape_sequences), end(escape_sequences), [code_point](const std::pair<char32_t, const char*>& attempt) {
-                        return attempt.first == code_point;
-                    });
+                    const auto match = std::find_if(begin(escape_sequences),
+                                                    end(escape_sequences),
+                                                    [code_point](const std::pair<char32_t, const char*>& attempt) {
+                                                        return attempt.first == code_point;
+                                                    });
                     // i. Set product to the string-concatenation of product and the escape sequence for C as
                     // specified in the "Escape Sequence" column of the corresponding row.
-                    if (match != end(escape_sequences)) {
+                    if (match != end(escape_sequences))
+                    {
                         buffer.append(match->second);
                         continue;
                     }
@@ -1086,18 +1095,21 @@ namespace vcpkg::Json
     {
         std::string res;
         Stringifier{style, res}.stringify(value, 0);
+        res.push_back('\n');
         return res;
     }
     std::string stringify(const Object& obj, JsonStyle style)
     {
         std::string res;
         Stringifier{style, res}.stringify_object(obj, 0);
+        res.push_back('\n');
         return res;
     }
     std::string stringify(const Array& arr, JsonStyle style)
     {
         std::string res;
         Stringifier{style, res}.stringify_array(arr, 0);
+        res.push_back('\n');
         return res;
     }
     // } auto stringify()
