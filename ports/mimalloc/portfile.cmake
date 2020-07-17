@@ -14,24 +14,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     override    MI_OVERRIDE
 )
 
-if ("asm" IN_LIST FEATURES)
-    set(MI_SEE_ASM ON)
-else ()
-    set(MI_SEE_ASM OFF)
-endif ()
-
-if ("override" IN_LIST FEATURES)
-    set(MI_OVERRIDE ON)
-else ()
-    set(MI_OVERRIDE OFF)
-endif ()
-
-if ("secure" IN_LIST FEATURES)
-    set(MI_SECURE ON)
-else ()
-    set(MI_SECURE OFF)
-endif ()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -45,9 +27,6 @@ vcpkg_configure_cmake(
         -DMI_BUILD_TESTS=OFF
         -DMI_BUILD_SHARED=ON
         -DMI_BUILD_STATIC=ON
-        -DMI_OVERRIDE=${MI_OVERRIDE}
-        -DMI_SECURE=${MI_SECURE}
-        -DMI_SEE_ASM=${MI_SEE_ASM}
         ${FEATURE_OPTIONS}
 )
 
