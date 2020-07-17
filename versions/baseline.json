@@ -6009,7 +6009,7 @@
       "port-version": 0
     },
     "tinyexr": {
-      "baseline": "2020-03-15",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "tinyfiledialogs": {
