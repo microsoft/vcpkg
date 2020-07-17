@@ -38,17 +38,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/bin"
 )
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/bin/colmap.exe
-    ${CURRENT_PACKAGES_DIR}/tools/colmap.exe
-)
-
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/COLMAP.bat
-    ${CURRENT_PACKAGES_DIR}/tools/COLMAP.bat
-)
-
+vcpkg_copy_tools(TOOL_NAMES colmap AUTO_CLEAN)
 file(RENAME
     ${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat
     ${CURRENT_PACKAGES_DIR}/tools/RUN_TESTS.bat
