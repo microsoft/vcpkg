@@ -160,7 +160,7 @@ function(vcpkg_fixup_cmake_targets)
         endforeach()
     endif()
 
-    #Fix ${_IMPORT_PREFIX} in cmake generated targets and configs;
+    #Fix ${_IMPORT_PREFIX} in cmake generated targets and configs; 
     #Since those can be renamed we have to check in every *.cmake
     file(GLOB_RECURSE MAIN_CMAKES "${RELEASE_SHARE}/*.cmake")
     foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
@@ -199,3 +199,5 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${CMAKE_FILE} "${_contents}")
     endforeach()
 endfunction()
+
+ 
