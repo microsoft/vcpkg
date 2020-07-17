@@ -3,6 +3,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 
@@ -35,8 +36,14 @@ namespace vcpkg::Commands::PortHistory
         const std::string cmd = Strings::format(R"(show %s:ports/%s/CONTROL)", commit_id, port_name);
         auto output = run_git_command(paths, cmd);
 
-        const auto version = Strings::find_at_most_one_enclosed(output.output, "Version: ", "\n");
+        const auto version = Strings::find_at_most_one_enclosed(output.output, "\nVersion: ", "\n");
+        const auto port_version = Strings::find_at_most_one_enclosed(output.output, "\nPort-Version: ", "\n");
         Checks::check_exit(VCPKG_LINE_INFO, version.has_value(), "CONTROL file does not have a 'Version' field");
+        if (auto pv = port_version.get())
+        {
+            return Strings::format("%s#%s", version.get()->to_string(), pv->to_string());
+        }
+
         return version.get()->to_string();
     }
 

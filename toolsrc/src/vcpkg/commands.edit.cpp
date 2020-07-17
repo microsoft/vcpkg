@@ -1,13 +1,14 @@
 #include "pch.h"
 
-#include <limits.h>
-
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+
+#include <limits.h>
 
 #if defined(_WIN32)
 namespace
@@ -79,9 +80,9 @@ namespace
 
 namespace vcpkg::Commands::Edit
 {
-    static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
+    static constexpr StringLiteral OPTION_BUILDTREES = "buildtrees";
 
-    static constexpr StringLiteral OPTION_ALL = "--all";
+    static constexpr StringLiteral OPTION_ALL = "all";
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {

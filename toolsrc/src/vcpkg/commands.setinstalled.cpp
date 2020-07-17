@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>
@@ -13,8 +14,8 @@
 
 namespace vcpkg::Commands::SetInstalled
 {
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
 
     static constexpr CommandSwitch INSTALL_SWITCHES[] = {
         {OPTION_DRY_RUN, "Do not actually build or install"},
@@ -141,8 +142,7 @@ namespace vcpkg::Commands::SetInstalled
             Input::check_triplet(spec.package_spec.triplet(), paths);
         }
 
-        auto binary_provider =
-            create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+        auto binary_provider = create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
 

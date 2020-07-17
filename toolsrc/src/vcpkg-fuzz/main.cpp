@@ -1,15 +1,16 @@
-#include <string.h>
-
-#include <iostream>
-#include <sstream>
-#include <utility>
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/unicode.h>
+
 #include <vcpkg/platform-expression.h>
+
+#include <string.h>
+
+#include <iostream>
+#include <sstream>
+#include <utility>
 
 using namespace vcpkg;
 
