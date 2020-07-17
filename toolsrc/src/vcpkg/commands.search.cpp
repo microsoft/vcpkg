@@ -98,15 +98,19 @@ namespace vcpkg::Commands::Search
         else
         {
             // At this point there is 1 argument
-            auto&& args_zero = args.command_arguments[0];
-            const auto contained_in = [&args_zero](const auto& s) {
-                return Strings::case_insensitive_ascii_contains(s, args_zero);
+            auto&& search_arg = args.command_arguments[0];
+            const auto contained_in = [&search_arg](const auto& s) {
+                return Strings::case_insensitive_ascii_contains(s, search_arg);
             };
             for (const auto& source_control_file : source_paragraphs)
             {
                 auto&& sp = *source_control_file->core_paragraph;
 
                 bool found_match = contained_in(sp.name);
+                if (!found_match)
+                {
+                    found_match = std::any_of(sp.tags.begin(), sp.tags.end(), [&search_arg](const std::string& s){return Strings::case_insensitive_ascii_equals(s,search_arg);});
+                }
                 if (!found_match)
                 {
                     found_match = std::any_of(sp.description.begin(), sp.description.end(), contained_in);

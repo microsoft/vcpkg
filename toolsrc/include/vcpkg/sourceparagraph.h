@@ -50,6 +50,7 @@ namespace vcpkg
         std::string name;
         std::string version;
         int port_version = 0;
+        std::vector<std::string> tags;
         std::vector<std::string> description;
         std::vector<std::string> maintainers;
         std::string homepage;

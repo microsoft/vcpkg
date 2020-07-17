@@ -40,6 +40,7 @@ namespace vcpkg
         constexpr static StringLiteral MAINTAINERS = "maintainers";
         constexpr static StringLiteral DESCRIPTION = "description";
         constexpr static StringLiteral HOMEPAGE = "homepage";
+        constexpr static StringLiteral TAGS = "tags";
         constexpr static StringLiteral DOCUMENTATION = "documentation";
         constexpr static StringLiteral LICENSE = "license";
         constexpr static StringLiteral DEPENDENCIES = "dependencies";
@@ -75,6 +76,7 @@ namespace vcpkg
 
             ManifestFields::PORT_VERSION,
             ManifestFields::MAINTAINERS,
+            ManifestFields::TAGS,
             ManifestFields::DESCRIPTION,
             ManifestFields::HOMEPAGE,
             ManifestFields::DOCUMENTATION,
@@ -774,6 +776,7 @@ namespace vcpkg
         visit.required_object_field(
             type_name, manifest, ManifestFields::VERSION, spgh->version, StringField{"a version"});
         visit.optional_object_field(manifest, ManifestFields::MAINTAINERS, spgh->maintainers, ParagraphField{});
+        visit.optional_object_field(manifest, ManifestFields::TAGS, spgh->tags, ArrayField<IdentifierField>{"an array of tags", AllowEmpty::Yes});
         visit.optional_object_field(manifest, ManifestFields::DESCRIPTION, spgh->description, ParagraphField{});
         visit.optional_object_field(manifest, ManifestFields::HOMEPAGE, spgh->homepage, StringField{"a url"});
         visit.optional_object_field(manifest, ManifestFields::DOCUMENTATION, spgh->documentation, StringField{"a url"});
