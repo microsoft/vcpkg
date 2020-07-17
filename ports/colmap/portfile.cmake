@@ -20,27 +20,27 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets()
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/exe"
-    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/lib/Graclus/multilevelLib"
-    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/tools"
-    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/ui/media"
-    "${CURRENT_PACKAGES_DIR}/debug/include/colmap/ui/shaders"
-    "${CURRENT_PACKAGES_DIR}/include/colmap/exe"
-    "${CURRENT_PACKAGES_DIR}/include/colmap/lib/Graclus/multilevelLib"
-    "${CURRENT_PACKAGES_DIR}/include/colmap/tools"
-    "${CURRENT_PACKAGES_DIR}/include/colmap/ui/media"
-    "${CURRENT_PACKAGES_DIR}/include/colmap/ui/shaders"
-    "${CURRENT_PACKAGES_DIR}/debug/COLMAP.bat"
-    "${CURRENT_PACKAGES_DIR}/debug/RUN_TESTS.bat"
-    "${CURRENT_PACKAGES_DIR}/debug/bin"
-)
-
 vcpkg_copy_tools(TOOL_NAMES colmap AUTO_CLEAN)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
+    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/exe
+    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/lib/Graclus/multilevelLib
+    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/tools
+    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/ui/media
+    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/ui/shaders
+    ${CURRENT_PACKAGES_DIR}/include/colmap/exe
+    ${CURRENT_PACKAGES_DIR}/include/colmap/lib/Graclus/multilevelLib
+    ${CURRENT_PACKAGES_DIR}/include/colmap/tools
+    ${CURRENT_PACKAGES_DIR}/include/colmap/ui/media
+    ${CURRENT_PACKAGES_DIR}/include/colmap/ui/shaders
+    ${CURRENT_PACKAGES_DIR}/COLMAP.bat
+    ${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat
+    ${CURRENT_PACKAGES_DIR}/debug/COLMAP.bat
+    ${CURRENT_PACKAGES_DIR}/debug/RUN_TESTS.bat
+    ${CURRENT_PACKAGES_DIR}/debug/bin
+)
 
 vcpkg_copy_pdbs()
 
