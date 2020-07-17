@@ -25,10 +25,6 @@ if ("dynamic-load" IN_LIST FEATURES)
     endif()
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static AND "libflac" IN_LIST FEATURES)
-    set(FLAC_EXPORT_DEFINITION "-DCMAKE_C_FLAGS=-DFLAC__NO_DLL")
-endif()
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -46,7 +42,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
-        ${FLAC_EXPORT_DEFINITION}
         -DLIBRARY_SUFFIX=${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} # It should always be dynamic suffix
     OPTIONS_DEBUG
         -DSDL_MIXER_SKIP_HEADERS=ON
