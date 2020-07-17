@@ -32,10 +32,8 @@ try
         $msg = @(
             "",
             "The formatting of the C++ files didn't match our expectation.",
-            "If your build fails here, you need to format the following files with:"
+            "See https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#vcpkg-internal-code for solution."
         )
-        $msg += "    $(& $clangFormat -version)"
-        $msg += "    $changedFiles"
         $msg += ""
 
         $msg += "clang-format should produce the following diff:"
