@@ -1,7 +1,7 @@
 Source: lapack-select
 Version: 1
 Description: Port to select the LAPACK — Linear Algebra PACKage implementation
-Build-Depends: lapack-select[core,clapack] (!osx)
+Default-Features: platform-select
 
 Feature: clapack
 Description: Use clapack
@@ -9,3 +9,10 @@ Build-Depends: clapack
 
 Feature: lapack-reference
 Description: Use the netlib lapack reference implementation (TODO)
+
+Feature: external
+Description: Use a LAPACK library outside of VCPKG. This port makes sure it can be found via CMake
+
+Feature: platform-select
+Description: Used to select the default implementation by platform. Workaround since Default-Features does not allow conditionals
+Build-Depends: lapack-select[core,clapack] (!osx)

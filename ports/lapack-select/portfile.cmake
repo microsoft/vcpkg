@@ -1,5 +1,7 @@
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+ list(REMOVE_ITEM FEATURES platform-select)
+ 
 list(LENGTH FEATURES NUMBER_ELEMS)
 if(NUMBER_ELEMS GREATER 2)
     message(FATAL_ERROR "Cannot select more than one LAPACK implementation!")
@@ -12,3 +14,7 @@ endif()
 
 # In the future this port might also be used to install a vcpkg-cmake-wrapper or 
 # a FindLAPACK module to make sure all dependent ports use the same LAPACK implementation
+
+IF("external" IN_LIST FEATURES)
+    vcpkg_configure_cmake(SOURCE_PATH ${CURRENT_PORT_DIR})
+endif()
