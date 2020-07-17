@@ -9,8 +9,13 @@ vcpkg_from_github(
 )
 
 # remove bundled fmt
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/quill/quill/include/quill/bundled/fmt)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/quill/quill/src/bundled/fmt)
+file(REMOVE_RECURSE ${SOURCE_PATH}/quill/include/quill/bundled/fmt)
+file(REMOVE_RECURSE ${SOURCE_PATH}/quill/src/bundled/fmt)
+
+vcpkg_replace_string(${SOURCE_PATH}/quill/include/quill/detail/LogMacros.h
+    "fmt::internal"
+    "fmt::detail"
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -24,5 +29,5 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/quill)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-					
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
