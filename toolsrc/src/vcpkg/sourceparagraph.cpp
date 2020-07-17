@@ -245,10 +245,14 @@ namespace vcpkg
         }
     }
 
-    namespace {
-        constexpr static struct Canonicalize {
-            struct FeatureLess {
-                bool operator()(const std::unique_ptr<FeatureParagraph>& lhs, const std::unique_ptr<FeatureParagraph>& rhs) const
+    namespace
+    {
+        constexpr static struct Canonicalize
+        {
+            struct FeatureLess
+            {
+                bool operator()(const std::unique_ptr<FeatureParagraph>& lhs,
+                                const std::unique_ptr<FeatureParagraph>& rhs) const
                 {
                     return (*this)(*lhs, *rhs);
                 }
@@ -257,8 +261,10 @@ namespace vcpkg
                     return lhs.name < rhs.name;
                 }
             };
-            struct FeatureEqual {
-                bool operator()(const std::unique_ptr<FeatureParagraph>& lhs, const std::unique_ptr<FeatureParagraph>& rhs) const
+            struct FeatureEqual
+            {
+                bool operator()(const std::unique_ptr<FeatureParagraph>& lhs,
+                                const std::unique_ptr<FeatureParagraph>& rhs) const
                 {
                     return (*this)(*lhs, *rhs);
                 }
@@ -269,7 +275,8 @@ namespace vcpkg
             };
 
             // assume canonicalized feature list
-            struct DependencyLess {
+            struct DependencyLess
+            {
                 bool operator()(const std::unique_ptr<Dependency>& lhs, const std::unique_ptr<Dependency>& rhs) const
                 {
                     return (*this)(*lhs, *rhs);
@@ -306,8 +313,8 @@ namespace vcpkg
                     if (rhs.features.size() < lhs.features.size()) return false;
 
                     // then finally order by feature list
-                    if (std::lexicographical_compare(lhs.features.begin(), lhs.features.end(),
-                        rhs.features.begin(), rhs.features.end()))
+                    if (std::lexicographical_compare(
+                            lhs.features.begin(), lhs.features.end(), rhs.features.begin(), rhs.features.end()))
                     {
                         return true;
                     }
@@ -315,16 +322,13 @@ namespace vcpkg
                 }
             };
 
-            template <class T>
+            template<class T>
             void operator()(std::unique_ptr<T>& ptr) const
             {
                 (*this)(*ptr);
             }
 
-            void operator()(Dependency& dep) const
-            {
-                std::sort(dep.features.begin(), dep.features.end());
-            }
+            void operator()(Dependency& dep) const { std::sort(dep.features.begin(), dep.features.end()); }
             void operator()(SourceParagraph& spgh) const
             {
                 std::for_each(spgh.dependencies.begin(), spgh.dependencies.end(), *this);
@@ -343,18 +347,19 @@ namespace vcpkg
                 std::for_each(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), *this);
                 std::sort(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), FeatureLess{});
 
-                auto adjacent_equal = std::adjacent_find(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), FeatureEqual{});
+                auto adjacent_equal =
+                    std::adjacent_find(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), FeatureEqual{});
                 if (adjacent_equal != scf.feature_paragraphs.end())
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO, R"(Multiple features with the same name for port %s: %s
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              R"(Multiple features with the same name for port %s: %s
     This is invalid; please make certain that features have distinct names.)",
-                    scf.core_paragraph->name, (*adjacent_equal)->name);
+                                              scf.core_paragraph->name,
+                                              (*adjacent_equal)->name);
                 }
             }
         } canonicalize{};
     }
-
-
 
     static ParseExpected<SourceParagraph> parse_source_paragraph(const fs::path& path_to_control, Paragraph&& fields)
     {
@@ -516,7 +521,8 @@ namespace vcpkg
         using type = int;
         StringView type_name() { return "a natural number"; }
 
-        Optional<int> visit_integer(Json::Reader&, StringView, int64_t value) {
+        Optional<int> visit_integer(Json::Reader&, StringView, int64_t value)
+        {
             if (value > std::numeric_limits<int>::max() || value < 0)
             {
                 return nullopt;
@@ -1075,13 +1081,12 @@ namespace vcpkg
                     arr.push_back(Json::Value::string(s));
                 }
             };
-        auto serialize_optional_string =
-            [&](Json::Object& obj, StringLiteral name, const std::string& s) {
-                if (!s.empty() || debug)
-                {
-                    obj.insert(name, Json::Value::string(s));
-                }
-            };
+        auto serialize_optional_string = [&](Json::Object& obj, StringLiteral name, const std::string& s) {
+            if (!s.empty() || debug)
+            {
+                obj.insert(name, Json::Value::string(s));
+            }
+        };
         auto serialize_dependency = [&](Json::Array& arr, const Dependency& dep) {
             if (dep.features.empty() && dep.platform.is_empty())
             {
@@ -1108,7 +1113,6 @@ namespace vcpkg
         Json::Object obj;
         obj.insert(ManifestFields::NAME, Json::Value::string(scf.core_paragraph->name));
         obj.insert(ManifestFields::VERSION, Json::Value::string(scf.core_paragraph->version));
-
 
         if (scf.core_paragraph->port_version != 0 || debug)
         {
@@ -1164,13 +1168,7 @@ namespace vcpkg
         return Json::stringify(obj, Json::JsonStyle{});
     }
 
-    std::string to_debug_string(const SourceControlFile& scf)
-    {
-        return serialize_manifest_impl(scf, true);
-    }
+    std::string to_debug_string(const SourceControlFile& scf) { return serialize_manifest_impl(scf, true); }
 
-    std::string serialize_manifest(const SourceControlFile& scf)
-    {
-        return serialize_manifest_impl(scf, false);
-    }
+    std::string serialize_manifest(const SourceControlFile& scf) { return serialize_manifest_impl(scf, false); }
 }

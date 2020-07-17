@@ -152,7 +152,8 @@ namespace vcpkg::Commands::FormatManifest
                 continue;
             }
 
-            files_to_write.push_back({std::move(*scf_res.value_or_exit(VCPKG_LINE_INFO)), el.manifest_file, el.control_file, contents});
+            files_to_write.push_back(
+                {std::move(*scf_res.value_or_exit(VCPKG_LINE_INFO)), el.manifest_file, el.control_file, contents});
         }
 
         for (auto const& el : files_to_write)
@@ -236,9 +237,9 @@ Please open an issue at https://github.com/microsoft/vcpkg, with the following o
                 if (ec)
                 {
                     Checks::exit_with_message(VCPKG_LINE_INFO,
-                                            "Failed to remove control file %s: %s\n",
-                                            el.original_path.u8string(),
-                                            ec.message());
+                                              "Failed to remove control file %s: %s\n",
+                                              el.original_path.u8string(),
+                                              ec.message());
                 }
             }
         }

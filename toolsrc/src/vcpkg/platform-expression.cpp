@@ -422,10 +422,7 @@ namespace vcpkg::PlatformExpression
 
         struct Impl
         {
-            int operator()(const std::unique_ptr<detail::ExprImpl>& expr) const
-            {
-                return (*this)(*expr);
-            }
+            int operator()(const std::unique_ptr<detail::ExprImpl>& expr) const { return (*this)(*expr); }
             int operator()(const detail::ExprImpl& expr) const
             {
                 if (expr.kind == ExprKind::identifier) return 1;
@@ -433,8 +430,8 @@ namespace vcpkg::PlatformExpression
                 if (expr.kind == ExprKind::op_not) return 1 + (*this)(expr.exprs.at(0));
 
                 return 1 + std::accumulate(expr.exprs.begin(), expr.exprs.end(), 0, [](int acc, const auto& el) {
-                    return acc + Impl{}(el);
-                });
+                           return acc + Impl{}(el);
+                       });
             }
         };
 
@@ -460,7 +457,8 @@ namespace vcpkg::PlatformExpression
     {
         struct Impl
         {
-            bool operator()(const std::unique_ptr<detail::ExprImpl>& lhs, const std::unique_ptr<detail::ExprImpl>& rhs) const
+            bool operator()(const std::unique_ptr<detail::ExprImpl>& lhs,
+                            const std::unique_ptr<detail::ExprImpl>& rhs) const
             {
                 return (*this)(*lhs, *rhs);
             }
