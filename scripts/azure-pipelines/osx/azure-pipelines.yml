@@ -18,6 +18,7 @@ jobs:
   - bash: |
       brew list autoconf || brew install autoconf
       brew list automake || brew install automake
+      brew list pkg-config || brew install pkg-config
       brew list libtool || brew install libtool
       brew list bison || brew install bison
       brew list gfortran || brew cask install gfortran

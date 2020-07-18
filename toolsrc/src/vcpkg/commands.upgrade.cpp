@@ -19,8 +19,8 @@ namespace vcpkg::Commands::Upgrade
     using Install::KeepGoing;
     using Install::to_keep_going;
 
-    static constexpr StringLiteral OPTION_NO_DRY_RUN = "--no-dry-run";
-    static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
+    static constexpr StringLiteral OPTION_NO_DRY_RUN = "no-dry-run";
+    static constexpr StringLiteral OPTION_KEEP_GOING = "keep-going";
 
     static constexpr std::array<CommandSwitch, 2> INSTALL_SWITCHES = {{
         {OPTION_NO_DRY_RUN, "Actually upgrade"},

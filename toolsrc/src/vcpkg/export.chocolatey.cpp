@@ -114,7 +114,7 @@ Get-Content $whereToInstallCache | Foreach-Object {
 }
 
 $installedDir = Join-Path $whereToInstall 'installed'
-Get-Content $listFile | Foreach-Object { 
+Get-Content $listFile | Foreach-Object {
     $fileToRemove = Join-Path $installedDir $_
     if (Test-Path $fileToRemove -PathType Leaf) {
         Remove-Item $fileToRemove
