@@ -1,0 +1,7 @@
+{
+  "name": "audiofile",
+  "version-string": "1.0.7",
+  "description": "A simple header-only C++ library for reading and writing audio files.",
+  "homepage": "https://github.com/adamstark/AudioFile",
+  "license": "GPL-3.0"
+}
