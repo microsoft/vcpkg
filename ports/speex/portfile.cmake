@@ -26,4 +26,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   file(WRITE "${CURRENT_PACKAGES_DIR}/include/speex/speex.h" "${_contents}")
 endif()
 
+vcpkg_fixup_pkgconfig()
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/speex RENAME copyright)
