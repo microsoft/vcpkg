@@ -376,6 +376,7 @@ find_package(OpenEXR QUIET)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+
 find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
 find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
