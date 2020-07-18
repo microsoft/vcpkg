@@ -1,0 +1,31 @@
+diff --git a/configure b/configure
+index bdfd731602..cadff85f84 100755
+--- a/configure
++++ b/configure
+@@ -1441,7 +1441,7 @@ test_pkg_config(){
+     funcs="$4"
+     shift 4
+     disable $name
+-    test_cmd $pkg_config --exists --print-errors $pkg_version || return
++    test_cmd $pkg_config $pkg_config_flags --exists --print-errors $pkg_version || return
+     pkg_cflags=$($pkg_config --cflags $pkg_config_flags $pkg)
+     pkg_libs=$($pkg_config --libs $pkg_config_flags $pkg)
+     check_func_headers "$headers" "$funcs" $pkg_cflags $pkg_libs "$@" &&
+@@ -2494,7 +2494,6 @@ CMDLINE_SET="
+     nvcc
+     nvccflags
+     pkg_config
+-    pkg_config_flags
+     progs_suffix
+     random_seed
+     ranlib
+@@ -2519,6 +2518,7 @@ CMDLINE_APPEND="
+     extra_cxxflags
+     extra_objcflags
+     host_cppflags
++    pkg_config_flags
+ "
+ 
+ # code dependency declarations
+-- 
+

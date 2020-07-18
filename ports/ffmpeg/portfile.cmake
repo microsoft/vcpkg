@@ -12,6 +12,7 @@ vcpkg_from_github(
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
         0008-Fix-wavpack-detection.patch
+        0009-fix-pkg-config-var-passing.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -312,7 +313,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
+    set(OPTIONS "${OPTIONS} --pkg-config-flags=--static --pkg-config-flags=--define-variable=prefix=${CURRENT_INSTALLED_DIR}")
+else()
+    set(OPTIONS "${OPTIONS} --pkg-config-flags=--define-variable=prefix=${CURRENT_INSTALLED_DIR}")
 endif()
 
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
