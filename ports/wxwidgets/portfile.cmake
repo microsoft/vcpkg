@@ -37,10 +37,10 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Copy wxrc.exe to ${CURRENT_PACKAGES_DIR}/tools/wxwidgets
+# Copy wxrc.exe to ${CURRENT_PACKAGES_DIR}/tools/${PORT}
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/wxrc.exe")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/wxwidgets)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wxrc.exe" "${CURRENT_PACKAGES_DIR}/tools/wxwidgets/wxrc.exe")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    file(COPY "${CURRENT_PACKAGES_DIR}/bin/wxrc.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -69,6 +69,9 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/wxwidgets/licence.txt ${CURRENT_PACKAG
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
 endif()
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
