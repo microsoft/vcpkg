@@ -1,16 +1,11 @@
 set(PLPLOT_VERSION 5.13.0)
-set(PLPLOT_HASH 1d5cb5da17d4bde6d675585bff1f8dcb581719249a0b2687867e767703f8dab0870e7ea44b9549a497f4ac0141a3cabf6761c49520c0e2b26ffe581468512cbb)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/plplot/files/plplot/${PLPLOT_VERSION}%20Source/plplot-${PLPLOT_VERSION}.tar.gz/download"
-    FILENAME "plplot-${PLPLOT_VERSION}.tar.gz"
-    SHA512 ${PLPLOT_HASH}
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${PLPLOT_VERSION}
+    REPO plplot/plplot
+    REF ${PLPLOT_VERSION}%20Source
+    FILENAME "plplot-${PLPLOT_VERSION}.tar.gz"
+    SHA512 1d5cb5da17d4bde6d675585bff1f8dcb581719249a0b2687867e767703f8dab0870e7ea44b9549a497f4ac0141a3cabf6761c49520c0e2b26ffe581468512cbb
     PATCHES
       0001-findwxwidgets-fixes.patch
       0002-wxwidgets-dev-fixes.patch
@@ -45,6 +40,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/plplot)
 
 # Remove unnecessary tool
@@ -67,5 +64,4 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-vcpkg_copy_pdbs()
-file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/plplot RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

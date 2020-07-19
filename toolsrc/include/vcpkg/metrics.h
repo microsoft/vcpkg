@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcpkg/base/files.h>
 #include <vcpkg/base/util.h>
 
 #include <string>
@@ -17,11 +18,12 @@ namespace vcpkg::Metrics
         void track_metric(const std::string& name, double value);
         void track_buildtime(const std::string& name, double value);
         void track_property(const std::string& name, const std::string& value);
+        void track_feature(const std::string& feature, bool value);
 
         bool metrics_enabled();
 
         void upload(const std::string& payload);
-        void flush();
+        void flush(Files::Filesystem& fs);
     };
 
     extern Util::LockGuarded<Metrics> g_metrics;
