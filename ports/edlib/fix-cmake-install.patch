@@ -48,7 +48,7 @@ index 767d808..21f0cfc 100644
 +### //
 +
 +# Create target 'install' for installing libraries.
-+install(TARGETS edlib DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(TARGETS edlib EXPORT ${targets_export_name} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +install(FILES edlib/include/edlib.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 \ No newline at end of file
 diff --git a/edlib-config.cmake.in b/edlib-config.cmake.in
