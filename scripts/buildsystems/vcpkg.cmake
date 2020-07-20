@@ -182,8 +182,8 @@ Install the dependencies listed in your manifest:
 ]] 
     ON "VCPKG_MANIFEST_MODE" OFF)
 
+_vcpkg_get_directory_name_of_file_above(_VCPKG_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}" ".vcpkg-root")
 if(NOT _VCPKG_ROOT_DIR)
-    _vcpkg_get_directory_name_of_file_above(_VCPKG_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}" ".vcpkg-root")
     message(FATAL_ERROR "Could not find .vcpkg-root")
 endif()
 
