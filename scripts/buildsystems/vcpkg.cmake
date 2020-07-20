@@ -197,10 +197,10 @@ if (NOT DEFINED VCPKG_TRIPLET_DIR)
     set(VCPKG_TRIPLET_DIR "${_VCPKG_INSTALLED_DIR_DEFAULT}/${VCPKG_TARGET_TRIPLET}"
             CACHE PATH
             "The directory which contains the installed libraries for the selected triplet")
-    set(_VCPKG_INSTALLED_DIR "${VCPKG_TRIPLET_DIR}/.."
-            CACHE INTERNAL
-            "The directory which contains the installed libraries for each triplet")
 endif()
+set(_VCPKG_INSTALLED_DIR "${VCPKG_TRIPLET_DIR}/.."
+        CACHE INTERNAL
+        "The directory which contains the installed libraries for each triplet")
 
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
 if (CMAKE_HOST_WIN32)
