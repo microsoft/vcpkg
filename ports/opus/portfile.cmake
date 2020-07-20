@@ -21,6 +21,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Opus)
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL
      ${SOURCE_PATH}/COPYING
