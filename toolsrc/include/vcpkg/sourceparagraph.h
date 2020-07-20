@@ -100,8 +100,8 @@ namespace vcpkg
         friend bool operator!=(const SourceControlFile& lhs, const SourceControlFile& rhs) { return !(lhs == rhs); }
     };
 
-    std::string serialize_manifest(const SourceControlFile& scf);
-    std::string to_debug_string(const SourceControlFile& scf);
+    Json::Object serialize_manifest(const SourceControlFile& scf);
+    Json::Object serialize_debug_manifest(const SourceControlFile& scf);
 
     /// <summary>
     /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was

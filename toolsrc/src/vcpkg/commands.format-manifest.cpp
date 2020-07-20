@@ -10,6 +10,168 @@
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
 
+namespace
+{
+    using namespace vcpkg;
+
+    struct ToWrite
+    {
+        SourceControlFile scf;
+        fs::path file_to_write;
+        fs::path original_path;
+        std::string original_source;
+    };
+
+    Optional<ToWrite> read_manifest(Files::Filesystem& fs, fs::path&& manifest_path)
+    {
+        auto path_string = manifest_path.u8string();
+        Debug::print("Reading ", path_string, "\n");
+        auto contents = fs.read_contents(manifest_path, VCPKG_LINE_INFO);
+        auto parsed_json_opt = Json::parse(contents, manifest_path);
+        if (!parsed_json_opt.has_value())
+        {
+            System::printf(
+                System::Color::error, "Failed to parse %s: %s\n", path_string, parsed_json_opt.error()->format());
+            return nullopt;
+        }
+
+        const auto& parsed_json = parsed_json_opt.value_or_exit(VCPKG_LINE_INFO).first;
+        if (!parsed_json.is_object())
+        {
+            System::printf(System::Color::error, "The file %s is not an object\n", path_string);
+            return nullopt;
+        }
+
+        auto scf = SourceControlFile::parse_manifest_file(manifest_path, parsed_json.object());
+        if (!scf.has_value())
+        {
+            System::printf(System::Color::error, "Failed to parse manifest file: %s\n", path_string);
+            print_error_message(scf.error());
+            return nullopt;
+        }
+
+        return ToWrite{
+            std::move(*scf.value_or_exit(VCPKG_LINE_INFO)),
+            manifest_path,
+            manifest_path,
+            std::move(contents),
+        };
+    }
+
+    Optional<ToWrite> read_control_file(Files::Filesystem& fs, fs::path&& control_path)
+    {
+        std::error_code ec;
+        auto control_path_string = control_path.u8string();
+        Debug::print("Reading ", control_path_string, "\n");
+
+        auto manifest_path = control_path.parent_path();
+        manifest_path /= fs::u8path("vcpkg.json");
+
+        auto contents = fs.read_contents(control_path, VCPKG_LINE_INFO);
+        auto paragraphs = Paragraphs::parse_paragraphs(contents, control_path_string);
+
+        if (!paragraphs)
+        {
+            System::printf(System::Color::error,
+                           "Failed to read paragraphs from %s: %s\n",
+                           control_path_string,
+                           paragraphs.error());
+            return {};
+        }
+        auto scf_res =
+            SourceControlFile::parse_control_file(control_path, std::move(paragraphs).value_or_exit(VCPKG_LINE_INFO));
+        if (!scf_res)
+        {
+            System::printf(System::Color::error, "Failed to parse control file: %s\n", control_path_string);
+            print_error_message(scf_res.error());
+            return {};
+        }
+
+        return ToWrite{
+            std::move(*scf_res.value_or_exit(VCPKG_LINE_INFO)),
+            manifest_path,
+            control_path,
+            std::move(contents),
+        };
+    }
+
+    void write_file(Files::Filesystem& fs, const ToWrite& data)
+    {
+        auto original_path_string = data.original_path.u8string();
+        auto file_to_write_string = data.file_to_write.u8string();
+        if (data.file_to_write == data.original_path)
+        {
+            Debug::print("Formatting ", file_to_write_string, "\n");
+        }
+        else
+        {
+            Debug::print("Converting ", file_to_write_string, " -> ", original_path_string, "\n");
+        }
+        auto res = serialize_manifest(data.scf);
+
+        auto check = SourceControlFile::parse_manifest_file(fs::path{}, res);
+        if (!check)
+        {
+            System::printf(System::Color::error,
+                           R"([correctness check] Failed to parse serialized manifest file of %s
+Please open an issue at https://github.com/microsoft/vcpkg, with the following output:
+Error:)",
+                           data.scf.core_paragraph->name);
+            print_error_message(check.error());
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      R"(
+=== Serialized manifest file ===
+%s
+)",
+                                      Json::stringify(res, {}));
+        }
+
+        auto check_scf = std::move(check).value_or_exit(VCPKG_LINE_INFO);
+        if (*check_scf != data.scf)
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO,
+                R"([correctness check] The serialized manifest SCF was different from the original SCF.
+Please open an issue at https://github.com/microsoft/vcpkg, with the following output:
+
+=== Original File ===
+%s
+
+=== Serialized File ===
+%s
+
+=== Original SCF ===
+%s
+
+=== Serialized SCF ===
+%s
+)",
+                data.original_source,
+                Json::stringify(res, {}),
+                Json::stringify(serialize_debug_manifest(data.scf), {}),
+                Json::stringify(serialize_debug_manifest(*check_scf), {}));
+        }
+
+        // the manifest scf is correct
+        std::error_code ec;
+        fs.write_contents(data.file_to_write, Json::stringify(res, {}), ec);
+        if (ec)
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Failed to write manifest file %s: %s\n", file_to_write_string, ec.message());
+        }
+        if (data.original_path != data.file_to_write)
+        {
+            fs.remove(data.original_path, ec);
+            if (ec)
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Failed to remove control file %s: %s\n", original_path_string, ec.message());
+            }
+        }
+    }
+}
+
 namespace vcpkg::Commands::FormatManifest
 {
     static constexpr StringLiteral OPTION_ALL = "all";
@@ -30,46 +192,29 @@ namespace vcpkg::Commands::FormatManifest
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        struct ReadControlFile
-        {
-            fs::path control_file;
-            fs::path manifest_file;
-        };
-        struct WriteFile
-        {
-            SourceControlFile scf;
-            fs::path file_to_write;
-            fs::path original_path;
-            std::string original;
-        };
-
         auto parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
-
-        std::vector<fs::path> manifests_to_read;
-        std::vector<ReadControlFile> control_files_to_read;
-        std::vector<WriteFile> files_to_write;
 
         auto& fs = paths.get_filesystem();
         bool has_error = false;
 
+        const bool format_all = Util::Sets::contains(parsed_args.switches, OPTION_CONVERT_CONTROL);
         const bool convert_control = Util::Sets::contains(parsed_args.switches, OPTION_CONVERT_CONTROL);
 
-        if (Util::Sets::contains(parsed_args.switches, OPTION_ALL))
+        if (!format_all && convert_control)
         {
-            for (const auto& dir : fs::directory_iterator(paths.ports))
-            {
-                auto control_path = dir.path() / fs::u8path("CONTROL");
-                auto manifest_path = dir.path() / fs::u8path("vcpkg.json");
-                if (fs.exists(manifest_path))
-                {
-                    manifests_to_read.push_back(std::move(manifest_path));
-                }
-                else if (convert_control && fs.exists(control_path))
-                {
-                    control_files_to_read.push_back({std::move(control_path), std::move(manifest_path)});
-                }
-            }
+            System::print2(System::Color::warning, R"(x-format-manifest was passed '--convert-control' without '--all'.
+    This doesn't do anything:
+    we will automatically convert all control files passed explicitly.)");
         }
+
+        std::vector<ToWrite> to_write;
+
+        const auto add_file = [&to_write, &has_error](Optional<ToWrite>&& opt) {
+            if (auto t = opt.get())
+                to_write.push_back(std::move(*t));
+            else
+                has_error = true;
+        };
 
         for (const auto& arg : args.command_arguments)
         {
@@ -81,167 +226,42 @@ namespace vcpkg::Commands::FormatManifest
 
             if (path.filename() == fs::u8path("CONTROL"))
             {
-                auto manifest_path = path.parent_path() / fs::u8path("vcpkg.json");
-                control_files_to_read.push_back({std::move(path), std::move(manifest_path)});
+                add_file(read_control_file(fs, std::move(path)));
             }
             else
             {
-                manifests_to_read.push_back(std::move(path));
+                add_file(read_manifest(fs, std::move(path)));
             }
         }
 
-        for (const auto& path : manifests_to_read)
+        if (format_all)
         {
-            Debug::print("Reading ", path.u8string(), "\n");
-            auto contents = fs.read_contents(path, VCPKG_LINE_INFO);
-            auto parsed_json_opt = Json::parse(contents, path);
-            if (!parsed_json_opt.has_value())
+            for (const auto& dir : fs::directory_iterator(paths.ports))
             {
-                System::printf(System::Color::error,
-                               "Failed to parse %s: %s\n",
-                               path.u8string(),
-                               parsed_json_opt.error()->format());
-                has_error = true;
-                continue;
-            }
+                auto control_path = dir.path() / fs::u8path("CONTROL");
+                auto manifest_path = dir.path() / fs::u8path("vcpkg.json");
+                auto manifest_exists = fs.exists(manifest_path);
+                auto control_exists = fs.exists(control_path);
 
-            const auto& parsed_json = parsed_json_opt.value_or_exit(VCPKG_LINE_INFO).first;
-            if (!parsed_json.is_object())
-            {
-                System::printf(System::Color::error, "The file %s is not an object\n", path.u8string());
-                has_error = true;
-                continue;
-            }
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   !manifest_exists || !control_exists,
+                                   "Both a manifest file and a CONTROL file exist in port directory: %s",
+                                   dir.path().u8string());
 
-            auto scf = SourceControlFile::parse_manifest_file(path, parsed_json.object());
-            if (!scf.has_value())
-            {
-                System::printf(System::Color::error, "Failed to parse manifest file: %s\n", path.u8string());
-                print_error_message(scf.error());
-                has_error = true;
-                continue;
-            }
-
-            files_to_write.push_back({std::move(*scf.value_or_exit(VCPKG_LINE_INFO)), path, {}, std::move(contents)});
-        }
-
-        for (const auto& el : control_files_to_read)
-        {
-            std::error_code ec;
-            Debug::print("Reading ", el.control_file.u8string(), "\n");
-
-            auto contents = fs.read_contents(el.control_file, VCPKG_LINE_INFO);
-            auto paragraphs = Paragraphs::parse_paragraphs(contents, el.control_file.u8string());
-
-            if (!paragraphs)
-            {
-                System::printf(System::Color::error,
-                               "Failed to read paragraphs from %s: %s\n",
-                               el.control_file.u8string(),
-                               paragraphs.error());
-                has_error = true;
-                continue;
-            }
-            auto scf_res = SourceControlFile::parse_control_file(el.control_file,
-                                                                 std::move(paragraphs).value_or_exit(VCPKG_LINE_INFO));
-            if (!scf_res)
-            {
-                System::printf(System::Color::error, "Failed to parse control file: %s\n", el.control_file.u8string());
-                print_error_message(scf_res.error());
-                has_error = true;
-                continue;
-            }
-
-            files_to_write.push_back(
-                {std::move(*scf_res.value_or_exit(VCPKG_LINE_INFO)), el.manifest_file, el.control_file, contents});
-        }
-
-        for (auto const& el : files_to_write)
-        {
-            Debug::print("Writing ", el.file_to_write.u8string(), "\n");
-            auto res = serialize_manifest(el.scf);
-
-            auto check_scf_json = Json::parse(res);
-            if (!check_scf_json)
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          R"([correctness check] Failed to parse serialized JSON file of %s
-Please open an issue at https://github.com/microsoft/vcpkg, with the following output:
-    Error: %s
-
-=== Serialized manifest file ===
-%s
-)",
-                                          el.scf.core_paragraph->name,
-                                          check_scf_json.error()->format(),
-                                          res);
-            }
-            auto check_scf_json_value = std::move(check_scf_json).value_or_exit(VCPKG_LINE_INFO).first;
-
-            auto check_scf = SourceControlFile::parse_manifest_file(fs::path{}, check_scf_json_value.object());
-            if (!check_scf)
-            {
-                System::printf(System::Color::error,
-                               R"([correctness check] Failed to parse serialized manifest file of %s
-Please open an issue at https://github.com/microsoft/vcpkg, with the following output:
-    Error:)",
-                               el.scf.core_paragraph->name);
-                print_error_message(check_scf.error());
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          R"(
-=== Serialized manifest file ===
-%s
-)",
-                                          res);
-            }
-
-            auto check = std::move(check_scf).value_or_exit(VCPKG_LINE_INFO);
-            if (*check != el.scf)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO,
-                    R"([correctness check] The serialized manifest SCF was different from the original SCF.
-Please open an issue at https://github.com/microsoft/vcpkg, with the following output:
-
-=== Original File ===
-%s
-
-=== Serialized File ===
-%s
-
-=== Original SCF ===
-%s
-
-=== Serialized SCF ===
-%s
-)",
-                    el.original,
-                    res,
-                    to_debug_string(el.scf),
-                    to_debug_string(*check));
-            }
-
-            // the manifest scf is correct
-            std::error_code ec;
-            fs.write_contents(el.file_to_write, res, ec);
-            if (ec)
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          "Failed to write manifest file %s: %s\n",
-                                          el.file_to_write.u8string(),
-                                          ec.message());
-            }
-            if (!el.original_path.empty())
-            {
-                fs.remove(el.original_path, ec);
-                if (ec)
+                if (manifest_exists)
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Failed to remove control file %s: %s\n",
-                                              el.original_path.u8string(),
-                                              ec.message());
+                    add_file(read_manifest(fs, std::move(manifest_path)));
+                }
+                if (convert_control && control_exists)
+                {
+                    add_file(read_control_file(fs, std::move(control_path)));
                 }
             }
+        }
+
+        for (auto const& el : to_write)
+        {
+            write_file(fs, el);
         }
 
         if (has_error)

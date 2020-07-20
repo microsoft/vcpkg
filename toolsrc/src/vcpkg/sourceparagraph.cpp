@@ -1044,7 +1044,7 @@ namespace vcpkg
         return ret;
     }
 
-    static std::string serialize_manifest_impl(const SourceControlFile& scf, bool debug)
+    static Json::Object serialize_manifest_impl(const SourceControlFile& scf, bool debug)
     {
         auto serialize_paragraph =
             [&](Json::Object& obj, StringLiteral name, const std::vector<std::string>& pgh, bool always = false) {
@@ -1165,10 +1165,10 @@ namespace vcpkg
             obj.insert("TYPE", Json::Value::string(Type::to_string(scf.core_paragraph->type)));
         }
 
-        return Json::stringify(obj, Json::JsonStyle{});
+        return obj;
     }
 
-    std::string to_debug_string(const SourceControlFile& scf) { return serialize_manifest_impl(scf, true); }
+    Json::Object serialize_debug_manifest(const SourceControlFile& scf) { return serialize_manifest_impl(scf, true); }
 
-    std::string serialize_manifest(const SourceControlFile& scf) { return serialize_manifest_impl(scf, false); }
+    Json::Object serialize_manifest(const SourceControlFile& scf) { return serialize_manifest_impl(scf, false); }
 }
