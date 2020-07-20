@@ -233,7 +233,8 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
                             --triplet ${VCPKG_TARGET_TRIPLET}
                             --vcpkg-root "${_VCPKG_ROOT_DIR}"
                             "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
-                            "--x-install-root=\"${_VCPKG_INSTALLED_DIR}\""
+                            "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+                            ${VCPKG_ADDITIONAL_INSTALL_ARGS}
                             )
 
     _vcpkg_get_directory_name_of_file_above(_VCPKG_OVERLAY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_manifest" "vcpkg.overlay")
