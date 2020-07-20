@@ -1,13 +1,14 @@
 #include "pch.h"
 
 #include <vcpkg/base/strings.h>
+
 #include <vcpkg/triplet.h>
 
 namespace vcpkg
 {
     struct TripletInstance
     {
-        TripletInstance(std::string&& s) : value(std::move(s)), hash(std::hash<std::string>()(value)) {}
+        TripletInstance(std::string&& s) : value(std::move(s)), hash(std::hash<std::string>()(value)) { }
 
         const std::string value;
         const size_t hash = 0;
@@ -65,7 +66,7 @@ namespace vcpkg
         {
             return CPUArchitecture::X86;
         }
-        else if (*this == X64_WINDOWS || *this == X64_UWP || *this ==X64_ANDROID)
+        else if (*this == X64_WINDOWS || *this == X64_UWP || *this == X64_ANDROID)
         {
             return CPUArchitecture::X64;
         }
@@ -79,5 +80,35 @@ namespace vcpkg
         }
 
         return nullopt;
+    }
+
+    Triplet default_triplet(const VcpkgCmdArguments& args)
+    {
+        if (args.triplet != nullptr)
+        {
+            return Triplet::from_canonical_name(std::string(*args.triplet));
+        }
+        else
+        {
+            auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
+            if (auto v = vcpkg_default_triplet_env.get())
+            {
+                return Triplet::from_canonical_name(std::move(*v));
+            }
+            else
+            {
+#if defined(_WIN32)
+                return Triplet::X86_WINDOWS;
+#elif defined(__APPLE__)
+                return Triplet::from_canonical_name("x64-osx");
+#elif defined(__FreeBSD__)
+                return Triplet::from_canonical_name("x64-freebsd");
+#elif defined(__GLIBC__)
+                return Triplet::from_canonical_name("x64-linux");
+#else
+                return Triplet::from_canonical_name("x64-linux-musl");
+#endif
+            }
+        }
     }
 }

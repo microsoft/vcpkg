@@ -1,4 +1,4 @@
 Source: qtkeychain
-Version: v0.9.1
+Version: v0.9.1-1
 Description:  qtkeychain - Platform-independent Qt API for storing passwords securely
-Build-Depends: qt5-base, qt5-tools
+Build-Depends: qt5-base[core], qt5-tools
