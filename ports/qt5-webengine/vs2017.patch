@@ -1,7 +1,7 @@
-diff --git a/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc b/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
+diff --git a/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc b/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
 index 33d5cb1f6f6..1ba53aee4b3 100644
---- a/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
-+++ b/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
+--- a/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
++++ b/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
 @@ -26,6 +26,7 @@
  #include "src/trace_processor/slice_tracker.h"
  #include "src/trace_processor/track_tracker.h"
