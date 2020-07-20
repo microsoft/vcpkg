@@ -6,14 +6,17 @@ vcpkg_from_github(
     HEAD_REF dev
 )
 
-set(CUDA_ENABLED OFF)
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cuda CUDA_ENABLED
-)
+if("cuda-redist" IN_LIST FEATURES)
+    set(CUDA_ENABLED ON)
+    set(CUDA_ARCHS "Common")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DCUDA_ENABLED=${CUDA_ENABLED}
+        -DCUDA_ARCHS=${CUDA_ARCHS}
 )
 
 vcpkg_install_cmake()
