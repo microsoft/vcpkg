@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(IrrXML)
+project(irrXML)
 enable_language(CXX)
 
 set(INSTALL_BIN_DIR      "bin"                      CACHE PATH "Path where exe and dll will be installed")
@@ -51,6 +51,6 @@ install(TARGETS ${CMAKE_PROJECT_NAME} EXPORT ${CMAKE_PROJECT_NAME}Targets
 
 install(EXPORT ${CMAKE_PROJECT_NAME}Targets
   FILE ${CMAKE_PROJECT_NAME}Config.cmake
-  NAMESPACE unofficial::${CMAKE_PROJECT_NAME}::
+  NAMESPACE ${CMAKE_PROJECT_NAME}::
   DESTINATION "${INSTALL_CMAKE_DIR}"
 )
