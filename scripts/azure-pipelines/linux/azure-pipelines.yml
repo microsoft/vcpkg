@@ -51,11 +51,11 @@ jobs:
   - bash: |
       python3 scripts/file_script.py /mnt/vcpkg-ci/installed/vcpkg/info/
     displayName: 'Build a file list for all packages'
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    condition: always()
 
   - task: PublishBuildArtifacts@1
     displayName: 'Upload file lists for all packages'
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    condition: always()
 
     inputs:
       PathtoPublish: scripts/list_files
