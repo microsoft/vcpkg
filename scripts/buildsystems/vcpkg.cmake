@@ -163,7 +163,7 @@ function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
     set(${OUT} "${_vcpkg_get_dir_out}" PARENT_SCOPE)
 endfunction()
 
-_vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}" "vcpkg.json") # Should this be CMAKE_SOURCE_DIR instead?
+_vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_manifest" "vcpkg.json") # Should this be CMAKE_SOURCE_DIR instead?
 include(CMakeDependentOption)
 CMAKE_DEPENDENT_OPTION (VCPKG_MANIFEST_MODE "Use vcpkg manifest mode by providing a vcpkg.json in the source directory." ON "EXISTS ${_VCPKG_MANIFEST_DIR}" OFF)
 
@@ -235,6 +235,10 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
                             "--x-install-root=\"${_VCPKG_INSTALLED_DIR}\""
                             --binarycaching)
 
+    _vcpkg_get_directory_name_of_file_above(VCPKG_OVERLAY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_manifest" "vcpkg.overlay")
+    if(VCPKG_OVERLAY_DIR AND NOT VCPKG_PORT_OVERLAYS)
+        list(APPEND VCPKG_PORT_OVERLAYS "${VCPKG_OVERLAY_DIR}/vcpkg.overlay")
+    endif()
     if(VCPKG_PORT_OVERLAYS)
         foreach(_overlay IN LISTS VCPKG_PORT_OVERLAYS)
             list(APPEND VCPKG_INSTALL_CMD "--overlay-ports=\"${_overlay}\"")
