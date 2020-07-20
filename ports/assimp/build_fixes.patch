@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dcafb64..ae9568a 100644
+index dcafb64..de44262 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -130,6 +130,12 @@ OPTION ( IGNORE_GIT_HASH
+@@ -130,6 +130,16 @@ OPTION ( IGNORE_GIT_HASH
     OFF
  )
  
@@ -10,12 +10,16 @@ index dcafb64..ae9568a 100644
 +include_directories(${Stb_INCLUDE_DIR})
 +find_package(irrXML REQUIRED)
 +find_path(UTF8H_INCLUDE_DIRS "utf8h/utf8.h")
-+include_directories(${UTF8H_INCLUDE_DIRS})
++include_directories(${UTF8H_INCLUDE_DIRS}/utf8h)
++find_package(RapidJSON)
++include_directories(${RAPIDJSON_INCLUDE_DIRS})
++find_path(UNZIP_INCLUDE_DIRS "minizip/unzip.h")
++include_directories(${UNZIP_INCLUDE_DIRS}/minizip)
 +
  IF (IOS AND NOT HUNTER_ENABLED)
    IF (NOT CMAKE_BUILD_TYPE)
      SET(CMAKE_BUILD_TYPE "Release")
-@@ -230,10 +236,8 @@ SET(LIBASSIMP-DEV_COMPONENT "libassimp${ASSIMP_VERSION_MAJOR}.${ASSIMP_VERSION_M
+@@ -230,10 +240,8 @@ SET(LIBASSIMP-DEV_COMPONENT "libassimp${ASSIMP_VERSION_MAJOR}.${ASSIMP_VERSION_M
  SET(CPACK_COMPONENTS_ALL assimp-bin ${LIBASSIMP_COMPONENT} ${LIBASSIMP-DEV_COMPONENT} assimp-dev)
  SET(ASSIMP_LIBRARY_SUFFIX "" CACHE STRING "Suffix to append to library names")
  
@@ -26,7 +30,7 @@ index dcafb64..ae9568a 100644
  
  # Grouped compiler settings
  IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT CMAKE_COMPILER_IS_MINGW)
-@@ -253,7 +257,7 @@ ELSEIF(MSVC)
+@@ -253,7 +261,7 @@ ELSEIF(MSVC)
    IF(MSVC12)
      ADD_COMPILE_OPTIONS(/wd4351)
    ENDIF()
@@ -35,7 +39,7 @@ index dcafb64..ae9568a 100644
  ELSEIF ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
    IF(NOT HUNTER_ENABLED)
      SET(CMAKE_CXX_FLAGS "-fPIC -std=c++11 ${CMAKE_CXX_FLAGS}")
-@@ -352,35 +356,17 @@ IF (NOT TARGET uninstall)
+@@ -352,35 +360,17 @@ IF (NOT TARGET uninstall)
    ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
  ENDIF()
  
@@ -74,7 +78,7 @@ index dcafb64..ae9568a 100644
        DESTINATION "${CONFIG_INSTALL_DIR}"
    )
  
-@@ -389,30 +375,6 @@ IF(HUNTER_ENABLED)
+@@ -389,30 +379,6 @@ IF(HUNTER_ENABLED)
        NAMESPACE "${NAMESPACE}"
        DESTINATION "${CONFIG_INSTALL_DIR}"
    )
@@ -105,7 +109,7 @@ index dcafb64..ae9568a 100644
  
  FIND_PACKAGE( DirectX )
  
-@@ -422,63 +384,19 @@ ENDIF( BUILD_DOCS )
+@@ -422,63 +388,19 @@ ENDIF( BUILD_DOCS )
  
  # Look for system installed irrXML
  IF ( SYSTEM_IRRXML )
@@ -173,7 +177,7 @@ index dcafb64..ae9568a 100644
  
  IF ( ASSIMP_NO_EXPORT )
    ADD_DEFINITIONS( -DASSIMP_BUILD_NO_EXPORT)
-@@ -633,7 +551,7 @@ IF(CMAKE_CPACK_COMMAND AND UNIX AND ASSIMP_OPT_BUILD_PACKAGES)
+@@ -633,7 +555,7 @@ IF(CMAKE_CPACK_COMMAND AND UNIX AND ASSIMP_OPT_BUILD_PACKAGES)
    INCLUDE(DebSourcePPA)
  ENDIF()
  
@@ -182,7 +186,7 @@ index dcafb64..ae9568a 100644
    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
      SET(BIN_DIR "${PROJECT_SOURCE_DIR}/bin64/")
      SET(LIB_DIR "${PROJECT_SOURCE_DIR}/lib64/")
-@@ -677,4 +595,4 @@ if(WIN32)
+@@ -677,4 +599,4 @@ if(WIN32)
        ADD_CUSTOM_COMMAND(TARGET UpdateAssimpLibsDebugSymbolsAndDLLs COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/code/assimp-${ASSIMP_MSVC_VERSION}-mtd.pdb		${LIB_DIR}assimp-${ASSIMP_MSVC_VERSION}-mtd.pdb VERBATIM)
      ENDIF()
    ENDIF(MSVC12 OR MSVC14 OR MSVC15 )
@@ -202,7 +206,7 @@ index ab1a8d2..4b0729b 100644
  # Generated CMake target import file.
  #----------------------------------------------------------------
 diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
-index 55538d9..a2d5b39 100644
+index 55538d9..d786804 100644
 --- a/code/CMakeLists.txt
 +++ b/code/CMakeLists.txt
 @@ -862,32 +862,10 @@ SET( Extra_SRCS
@@ -259,7 +263,7 @@ index 55538d9..a2d5b39 100644
  # zip (https://github.com/kuba--/zip)
 -IF(HUNTER_ENABLED)
 -  hunter_add_package(zip)
-   find_package(zip CONFIG REQUIRED)
+-  find_package(zip CONFIG REQUIRED)
 -ELSE(HUNTER_ENABLED)
 -  SET( ziplib_SRCS
 -    ../contrib/zip/src/miniz.h
@@ -276,6 +280,7 @@ index 55538d9..a2d5b39 100644
 -
 -  SOURCE_GROUP( ziplib FILES ${ziplib_SRCS} )
 -ENDIF(HUNTER_ENABLED)
++  find_package(kubazip CONFIG REQUIRED)
  
  # openddlparser
  IF(HUNTER_ENABLED)
@@ -309,7 +314,7 @@ index 55538d9..a2d5b39 100644
  MESSAGE(STATUS "Enabled importer formats:${ASSIMP_IMPORTERS_ENABLED}")
  MESSAGE(STATUS "Disabled importer formats:${ASSIMP_IMPORTERS_DISABLED}")
  
-@@ -1111,22 +1044,15 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1111,22 +1044,14 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<INSTALL_INTERFACE:include>
  )
  
@@ -322,10 +327,11 @@ index 55538d9..a2d5b39 100644
 -      poly2tri::poly2tri
        minizip::minizip
 -      ZLIB::zlib
-+      ZLIB::ZLIB
-       RapidJSON::rapidjson
+-      RapidJSON::rapidjson
 -      utf8::utf8
-       zip::zip
+-      zip::zip
++      ZLIB::ZLIB
++      kubazip::kubazip
    )
 -ELSE(HUNTER_ENABLED)
 -  TARGET_LINK_LIBRARIES(assimp ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES} ${IRRXML_LIBRARY} )
@@ -333,7 +339,7 @@ index 55538d9..a2d5b39 100644
  
  if(ASSIMP_ANDROID_JNIIOSYSTEM)
    set(ASSIMP_ANDROID_JNIIOSYSTEM_PATH port/AndroidJNI)
-@@ -1208,21 +1134,12 @@ ENDIF(APPLE)
+@@ -1208,21 +1133,12 @@ ENDIF(APPLE)
  
  # Build against external unzip, or add ../contrib/unzip so
  # assimp can #include "unzip.h"
@@ -355,7 +361,7 @@ index 55538d9..a2d5b39 100644
    INSTALL( TARGETS assimp
      EXPORT "${TARGETS_EXPORT_NAME}"
      LIBRARY DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
-@@ -1231,14 +1148,6 @@ IF(HUNTER_ENABLED)
+@@ -1231,14 +1147,6 @@ IF(HUNTER_ENABLED)
      FRAMEWORK DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
      COMPONENT ${LIBASSIMP_COMPONENT}
      INCLUDES DESTINATION "include")
@@ -370,6 +376,102 @@ index 55538d9..a2d5b39 100644
  INSTALL( FILES ${PUBLIC_HEADERS} DESTINATION ${ASSIMP_INCLUDE_INSTALL_DIR}/assimp COMPONENT assimp-dev)
  INSTALL( FILES ${COMPILER_HEADERS} DESTINATION ${ASSIMP_INCLUDE_INSTALL_DIR}/assimp/Compiler COMPONENT assimp-dev)
  
+diff --git a/code/Common/BaseImporter.cpp b/code/Common/BaseImporter.cpp
+index b77bbfe..51cba43 100644
+--- a/code/Common/BaseImporter.cpp
++++ b/code/Common/BaseImporter.cpp
+@@ -344,7 +344,7 @@ std::string BaseImporter::GetExtension( const std::string& file ) {
+ #ifdef ASSIMP_USE_HUNTER
+ #  include <utf8/utf8.h>
+ #else
+-#  include "../contrib/utf8cpp/source/utf8.h"
++#  include <utf8.h>
+ #endif
+ 
+ // ------------------------------------------------------------------------------------------------
+@@ -364,8 +364,8 @@ void BaseImporter::ConvertToUTF8(std::vector<char>& data)
+         data.resize(data.size()-3);
+         return;
+     }
+-    
+-    
++
++
+     // UTF 32 BE with BOM
+     if(*((uint32_t*)&data.front()) == 0xFFFE0000) {
+ 
+@@ -507,7 +507,7 @@ struct Assimp::BatchData {
+     , next_id(0xffff)
+     , validate( validate ) {
+         ai_assert( nullptr != pIO );
+-        
++
+         pImporter = new Importer();
+         pImporter->SetIOHandler( pIO );
+     }
+diff --git a/code/MMD/MMDPmxParser.cpp b/code/MMD/MMDPmxParser.cpp
+index 80f0986..47725e2 100644
+--- a/code/MMD/MMDPmxParser.cpp
++++ b/code/MMD/MMDPmxParser.cpp
+@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #  include <utf8/utf8.h>
+ #else
+-#  include "../contrib/utf8cpp/source/utf8.h"
++#  include <utf8.h>
+ #endif
+ #include <assimp/Exceptional.h>
+ 
+@@ -102,7 +102,7 @@ namespace pmx
+ 			const unsigned int targetSize = size * 3; // enough to encode
+ 			char *targetStart = new char[targetSize];
+             std::memset(targetStart, 0, targetSize * sizeof(char));
+-            
++
+             utf8::utf16to8( sourceStart, sourceStart + size/2, targetStart );
+ 
+ 			std::string result(targetStart);
+diff --git a/code/SIB/SIBImporter.cpp b/code/SIB/SIBImporter.cpp
+index 20cdc80..46e9a32 100644
+--- a/code/SIB/SIBImporter.cpp
++++ b/code/SIB/SIBImporter.cpp
+@@ -63,7 +63,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #  include <utf8/utf8.h>
+ #else
+ //#  include "../contrib/ConvertUTF/ConvertUTF.h"
+-#  include "../contrib/utf8cpp/source/utf8.h"
++#  include <utf8.h>
+ #endif
+ #include <assimp/IOSystem.hpp>
+ #include <assimp/DefaultLogger.hpp>
+@@ -90,10 +90,10 @@ struct SIBChunk {
+     uint32_t    Size;
+ } PACK_STRUCT;
+ 
+-enum { 
+-    POS, 
+-    NRM, 
+-    UV,    
++enum {
++    POS,
++    NRM,
++    UV,
+     N
+ };
+ 
+diff --git a/code/X3D/FIReader.cpp b/code/X3D/FIReader.cpp
+index 9bb2c69..525a084 100644
+--- a/code/X3D/FIReader.cpp
++++ b/code/X3D/FIReader.cpp
+@@ -63,7 +63,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #  include <utf8/utf8.h>
+ #else
+-#  include "../contrib/utf8cpp/source/utf8.h"
++#  include <utf8.h>
+ #endif
+ #include <assimp/fast_atof.h>
+ #include <stack>
 diff --git a/contrib/zip/src/miniz.h b/contrib/zip/src/miniz.h
 index 2c27a94..8390dfd 100644
 --- a/contrib/zip/src/miniz.h
