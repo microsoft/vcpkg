@@ -71,8 +71,8 @@ namespace vcpkg::Commands::Create
                 std::string triplet = args.command_arguments.at(3 + i * 2);
                 std::string build_type = args.command_arguments.at(3 + i * 2 + 1);
 
-                std::transform(triplet.begin(), triplet.end(), triplet.begin(), ::tolower);
-                std::transform(build_type.begin(), build_type.end(), build_type.begin(), ::tolower);
+                Strings::ascii_to_lowercase(triplet.begin(), triplet.end());
+                Strings::ascii_to_lowercase(build_type.begin(), build_type.end());
 
                 if (triplet == "windows" || triplet == "win")
                     build_types.push_back(System::CMakeVariable({"TRIPLET_WIN", build_type}));
