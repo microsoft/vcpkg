@@ -231,7 +231,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
     set(VCPKG_INSTALL_CMD   "${_VCPKG_EXECUTABLE}" install
                             --triplet ${VCPKG_TARGET_TRIPLET}
                             --vcpkg-root "${_VCPKG_ROOT_DIR}"
-                            "--x-manifest-root=\"${_VCPKG_MANIFEST_DIR}\""
+                            "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
                             "--x-install-root=\"${_VCPKG_INSTALLED_DIR}\""
                             --binarycaching)
 
