@@ -188,8 +188,9 @@ if(NOT _VCPKG_ROOT_DIR)
 endif()
 
 if (NOT DEFINED VCPKG_TRIPLET_DIR)
-    if(_VCPKG_MANIFEST_DIR)
+    if(_VCPKG_MANIFEST_DIR AND _VCPKG_ROOT_DIR MATCHES CMAKE_SOURCE_DIR)
         set(_VCPKG_INSTALLED_DIR_DEFAULT "${CMAKE_BINARY_DIR}/vcpkg_installed")
+        set(VCPKG_USE_BINARY_CACHE ON)
     else()
         set(_VCPKG_INSTALLED_DIR_DEFAULT "${_VCPKG_ROOT_DIR}/installed")
     endif()
@@ -233,16 +234,21 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
                             --vcpkg-root "${_VCPKG_ROOT_DIR}"
                             "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
                             "--x-install-root=\"${_VCPKG_INSTALLED_DIR}\""
-                            --binarycaching)
+                            )
 
-    _vcpkg_get_directory_name_of_file_above(VCPKG_OVERLAY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_manifest" "vcpkg.overlay")
-    if(VCPKG_OVERLAY_DIR AND NOT VCPKG_PORT_OVERLAYS)
-        list(APPEND VCPKG_PORT_OVERLAYS "${VCPKG_OVERLAY_DIR}/vcpkg.overlay")
+    _vcpkg_get_directory_name_of_file_above(_VCPKG_OVERLAY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_manifest" "vcpkg.overlay")
+    if(_VCPKG_OVERLAY_DIR AND NOT VCPKG_PORT_OVERLAYS)
+        #this does not work since --overlay-ports does not accept file names contrary to it specification. 
+        list(APPEND VCPKG_PORT_OVERLAYS "${_VCPKG_OVERLAY_DIR}/vcpkg.overlay")
     endif()
     if(VCPKG_PORT_OVERLAYS)
         foreach(_overlay IN LISTS VCPKG_PORT_OVERLAYS)
-            list(APPEND VCPKG_INSTALL_CMD "--overlay-ports=\"${_overlay}\"")
+            list(APPEND VCPKG_INSTALL_CMD "--overlay-ports=${_overlay}")
         endforeach()
+    endif()
+
+    if(VCPKG_USE_BINARY_CACHE)
+        list(APPEND VCPKG_INSTALL_CMD --binarycaching)
     endif()
 
     if(VCPKG_VERBOSE)
