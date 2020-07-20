@@ -24,4 +24,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
-vcpkg_copy_pdbs() 
+vcpkg_copy_pdbs()
+
+if(WIN32 AND (NOT MINGW))
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vorbis.pc" "-lm" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vorbis.pc" "-lm" "")
+endif()
+vcpkg_fixup_pkgconfig()
