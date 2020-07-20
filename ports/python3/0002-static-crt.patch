@@ -1,5 +1,5 @@
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index eb5ecffe71..2a7c819533 100644
+index ca83b82d8a0fe..b925a26a96e5e 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -104,6 +104,10 @@

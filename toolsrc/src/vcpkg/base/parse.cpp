@@ -149,7 +149,7 @@ namespace vcpkg::Parse
     {
         std::string out;
         TextRowCol ignore;
-        optional_field(fieldname, {out, ignore});
+        required_field(fieldname, {out, ignore});
         return out;
     }
 

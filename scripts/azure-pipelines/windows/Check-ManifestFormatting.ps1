@@ -38,9 +38,8 @@ if (-not $IgnoreErrors -and $null -ne $changedFiles)
     $msg = @(
         "",
         "The formatting of the manifest files didn't match our expectation.",
-        "If your build fails here, you need to run:"
+        "See https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#manifest for solution."
     )
-    $msg += "    vcpkg x-format-manifest --all"
     $msg += ""
 
     $msg += "vcpkg should produce the following diff:"
