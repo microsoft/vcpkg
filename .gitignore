@@ -330,9 +330,6 @@ __pycache__/
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
 #ignore custom triplets
-
-toolsrc/VERSION.txt.sha256
-
 *.exe
 *.zip
 
