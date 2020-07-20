@@ -52,35 +52,16 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-# port applications to tools
-file(MAKE_DIRECTORY
-    "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-    "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}"
-)
-
-file(GLOB_RECURSE _TOOLS
-    "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-)
-foreach(_TOOL IN LISTS _TOOLS)
-    get_filename_component(_NAME ${_TOOL} NAME)
-    file(RENAME "${_TOOL}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${_NAME}")
-endforeach()
-
-file(GLOB_RECURSE _TOOLS
-    "${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-)
-foreach(_TOOL IN LISTS _TOOLS)
-    get_filename_component(_NAME ${_TOOL} NAME)
-    file(RENAME "${_TOOL}" "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/${_NAME}")
-endforeach()
-
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
+vcpkg_copy_tools(TOOL_NAMES ociobakelut ociocheck)
 
 # Clean redundant files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/include
-    ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib
-    ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/share)
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug
+    ${CURRENT_PACKAGES_DIR}/include
+    ${CURRENT_PACKAGES_DIR}/bin
+    ${CURRENT_PACKAGES_DIR}/lib
+    ${CURRENT_PACKAGES_DIR}/cmake
+    ${CURRENT_PACKAGES_DIR}/share)
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/OpenColorIOConfig.cmake)
 
