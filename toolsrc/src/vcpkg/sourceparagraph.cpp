@@ -720,6 +720,7 @@ namespace vcpkg
         constexpr static StringView NAME = "name";
         constexpr static StringView DESCRIPTION = "description";
         constexpr static StringView DEPENDENCIES = "dependencies";
+        constexpr static StringView SUPPORTS = "supports";
 
         Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r, StringView, const Json::Object& obj)
         {
@@ -731,6 +732,7 @@ namespace vcpkg
                                     DEPENDENCIES,
                                     feature->dependencies,
                                     ArrayField<DependencyField>{"an array of dependencies", AllowEmpty::Yes});
+            r.optional_object_field(obj, SUPPORTS, feature->supports_expression, PlatformExprField{});
 
             return std::move(feature);
         }
