@@ -12,7 +12,6 @@ vcpkg_from_github(
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
         0008-Fix-wavpack-detection.patch
-        0009-fix-pkg-config-var-passing.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -313,13 +312,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(OPTIONS "${OPTIONS} --pkg-config-flags=--static --pkg-config-flags=--define-variable=prefix=${CURRENT_INSTALLED_DIR}")
-else()
-    set(OPTIONS "${OPTIONS} --pkg-config-flags=--define-variable=prefix=${CURRENT_INSTALLED_DIR}")
+    set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 endif()
 
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
-set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 message(STATUS "Building Options: ${OPTIONS}")
 
@@ -329,6 +325,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
     set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
     set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
+    set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
     message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     vcpkg_execute_required_process(
@@ -348,6 +345,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIB_PATH}")
     set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
     set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
+    set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
     message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     vcpkg_execute_required_process(
