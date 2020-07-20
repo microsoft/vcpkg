@@ -207,6 +207,13 @@ namespace vcpkg::Commands::FormatManifest
     we will automatically convert all control files passed explicitly.)");
         }
 
+        if (!format_all && args.command_arguments.empty())
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO,
+                "No files to format; please pass either --all, or the explicit files to format or convert.");
+        }
+
         std::vector<ToWrite> to_write;
 
         const auto add_file = [&to_write, &has_error](Optional<ToWrite>&& opt) {
