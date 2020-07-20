@@ -3,6 +3,7 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/base/system.debug.h>
 
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
@@ -24,7 +25,7 @@ namespace vcpkg
 
             fs.rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file, VCPKG_LINE_INFO);
         }
-
+        Debug::print("Trying to load database from ", vcpkg_dir_status_file.u8string(), '\n');
         auto pghs = Paragraphs::get_paragraphs(fs, vcpkg_dir_status_file).value_or_exit(VCPKG_LINE_INFO);
 
         std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
