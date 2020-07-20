@@ -401,46 +401,6 @@ function vcpkgInvokeCommandClean()
     return $ec
 }
 
-function Test-RebuildVcpkg() {
-    $ToolsRcDir = Join-Path $vcpkgRootDir "toolsrc"
-    $VersionFile = Join-Path $ToolsRcDir "VERSION.txt"
-    $VersionFileHash = Join-Path $ToolsRcDir "VERSION.txt.sha256"
-    Write-Host "Hashing ${VersionFile}"
-
-    # Construct the strongly-typed crypto object
-    $hasher = [System.Security.Cryptography.HashAlgorithm]::Create("SHA256")
-    # Compute file-hash using the crypto object
-    [Byte[]] $computedHash = $Hasher.ComputeHash([System.IO.File]::OpenRead($VersionFile))
-    [string] $CurrentHash = [BitConverter]::ToString($computedHash) -replace '-',''
-    
-    if(!(Test-Path $vcpkgRootDir\vcpkg.exe -PathType Leaf)) {
-        return $true
-    }
-
-    if (!(Test-Path $VersionFileHash -PathType Leaf)) {
-        Write-Host "Hash file doesnt exist, creating it: ${VersionFileHash}"
-        $CurrentHash | Out-File -FilePath $VersionFileHash -Encoding utf8 -NoNewline
-    }
-    
-    $ContentOfHashFile = Get-Content $VersionFileHash -Encoding utf8
-    Write-Host "Current hash: ${CurrentHash} Last hash: ${ContentOfHashFile}"
-    if ($CurrentHash -eq $ContentOfHashFile) {
-        Write-Host "`nvcpkg needs NO rebuild`n"
-        return $false
-    }
-    else {
-        Write-Host "`nvcpkg needs rebuild`n"
-        return $true
-    }
-    
-}
-
-if (!(Test-RebuildVcpkg)) {
-    Write-Host "`nNo rebuild of vcpkg.exe needed... done.`n"
-    return
-}
-
-
 # vcpkgInvokeCommandClean cmd "/c echo %PATH%"
 Write-Host "`nBuilding vcpkg.exe ...`n"
 $ec = vcpkgInvokeCommandClean $msbuildExe $arguments
