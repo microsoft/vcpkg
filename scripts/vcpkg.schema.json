@@ -146,8 +146,11 @@
         "type": "string"
       }
     },
-    "tags":{ 
-      "type": "array","items":{"$ref": "#/definitions/identifier"}
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/identifier"
+      }
     },
     "description": {
       "$ref": "#/definitions/description-field"

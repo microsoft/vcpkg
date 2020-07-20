@@ -109,7 +109,9 @@ namespace vcpkg::Commands::Search
                 bool found_match = contained_in(sp.name);
                 if (!found_match)
                 {
-                    found_match = std::any_of(sp.tags.begin(), sp.tags.end(), [&search_arg](const std::string& s){return Strings::case_insensitive_ascii_equals(s,search_arg);});
+                    found_match = std::any_of(sp.tags.begin(), sp.tags.end(), [&search_arg](const std::string& s) {
+                        return Strings::case_insensitive_ascii_equals(s, search_arg);
+                    });
                 }
                 if (!found_match)
                 {

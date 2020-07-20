@@ -776,7 +776,10 @@ namespace vcpkg
         visit.required_object_field(
             type_name, manifest, ManifestFields::VERSION, spgh->version, StringField{"a version"});
         visit.optional_object_field(manifest, ManifestFields::MAINTAINERS, spgh->maintainers, ParagraphField{});
-        visit.optional_object_field(manifest, ManifestFields::TAGS, spgh->tags, ArrayField<IdentifierField>{"an array of tags", AllowEmpty::Yes});
+        visit.optional_object_field(manifest,
+                                    ManifestFields::TAGS,
+                                    spgh->tags,
+                                    ArrayField<IdentifierField>{"an array of tags", AllowEmpty::Yes});
         visit.optional_object_field(manifest, ManifestFields::DESCRIPTION, spgh->description, ParagraphField{});
         visit.optional_object_field(manifest, ManifestFields::HOMEPAGE, spgh->homepage, StringField{"a url"});
         visit.optional_object_field(manifest, ManifestFields::DOCUMENTATION, spgh->documentation, StringField{"a url"});
