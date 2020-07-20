@@ -343,7 +343,7 @@ namespace vcpkg
             }
             void operator()(SourceControlFile& scf) const
             {
-                canonicalize(*scf.core_paragraph);
+                (*this)(*scf.core_paragraph);
                 std::for_each(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), *this);
                 std::sort(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), FeatureLess{});
 
