@@ -31,9 +31,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/libzip)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libzip)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
- 
+
 # Remove include directories from lib
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libzip ${CURRENT_PACKAGES_DIR}/debug/lib/libzip)
 
