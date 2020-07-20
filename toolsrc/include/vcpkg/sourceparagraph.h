@@ -41,6 +41,8 @@ namespace vcpkg
         std::vector<std::string> description;
         std::vector<Dependency> dependencies;
 
+        Json::Object extra_info;
+
         friend bool operator==(const FeatureParagraph& lhs, const FeatureParagraph& rhs);
         friend bool operator!=(const FeatureParagraph& lhs, const FeatureParagraph& rhs) { return !(lhs == rhs); }
     };
@@ -64,6 +66,8 @@ namespace vcpkg
         Type type;
         PlatformExpression::Expr supports_expression;
 
+        Json::Object extra_info;
+
         friend bool operator==(const SourceParagraph& lhs, const SourceParagraph& rhs);
         friend bool operator!=(const SourceParagraph& lhs, const SourceParagraph& rhs) { return !(lhs == rhs); }
     };
@@ -79,7 +83,7 @@ namespace vcpkg
         {
             for (const auto& feat_ptr : scf.feature_paragraphs)
             {
-                feature_paragraphs.emplace_back(std::make_unique<FeatureParagraph>(*feat_ptr));
+                feature_paragraphs.push_back(std::make_unique<FeatureParagraph>(*feat_ptr));
             }
         }
 

@@ -41,6 +41,8 @@ namespace vcpkg
         if (lhs.type != rhs.type) return false;
         if (!structurally_equal(lhs.supports_expression, rhs.supports_expression)) return false;
 
+        if (lhs.extra_info != rhs.extra_info) return false;
+
         return true;
     }
 
@@ -49,6 +51,7 @@ namespace vcpkg
         if (lhs.name != rhs.name) return false;
         if (lhs.dependencies != rhs.dependencies) return false;
         if (!paragraph_equal(lhs.description, rhs.description)) return false;
+        if (lhs.extra_info != rhs.extra_info) return false;
 
         return true;
     }
@@ -328,18 +331,26 @@ namespace vcpkg
                 (*this)(*ptr);
             }
 
-            void operator()(Dependency& dep) const { std::sort(dep.features.begin(), dep.features.end()); }
+            void operator()(Dependency& dep) const
+            {
+                std::sort(dep.features.begin(), dep.features.end());
+                dep.extra_info.sort_keys();
+            }
             void operator()(SourceParagraph& spgh) const
             {
                 std::for_each(spgh.dependencies.begin(), spgh.dependencies.end(), *this);
                 std::sort(spgh.dependencies.begin(), spgh.dependencies.end(), DependencyLess{});
 
                 std::sort(spgh.default_features.begin(), spgh.default_features.end());
+
+                spgh.extra_info.sort_keys();
             }
             void operator()(FeatureParagraph& fpgh) const
             {
                 std::for_each(fpgh.dependencies.begin(), fpgh.dependencies.end(), *this);
                 std::sort(fpgh.dependencies.begin(), fpgh.dependencies.end(), DependencyLess{});
+
+                fpgh.extra_info.sort_keys();
             }
             void operator()(SourceControlFile& scf) const
             {
@@ -866,6 +877,15 @@ namespace vcpkg
             }
 
             Dependency dep;
+
+            for (const auto& el : obj)
+            {
+                if (Strings::starts_with(el.first, "$"))
+                {
+                    dep.extra_info.insert_or_replace(el.first.to_string(), Json::Value(el.second));
+                }
+            }
+
             r.required_object_field(type_name(), obj, NAME, dep.name, PackageNameField{});
             r.optional_object_field(
                 obj, FEATURES, dep.features, ArrayField<IdentifierField>{"an array of identifiers", AllowEmpty::Yes});
@@ -904,6 +924,14 @@ namespace vcpkg
             }
 
             auto feature = std::make_unique<FeatureParagraph>();
+
+            for (const auto& el : obj)
+            {
+                if (Strings::starts_with(el.first, "$"))
+                {
+                    feature->extra_info.insert_or_replace(el.first.to_string(), Json::Value(el.second));
+                }
+            }
 
             r.required_object_field(type_name(), obj, NAME, feature->name, IdentifierField{});
             r.required_object_field(type_name(), obj, DESCRIPTION, feature->description, ParagraphField{});
@@ -964,6 +992,14 @@ namespace vcpkg
 
         auto& spgh = control_file->core_paragraph;
         spgh->type = Type{Type::PORT};
+
+        for (const auto& el : manifest)
+        {
+            if (Strings::starts_with(el.first, "$"))
+            {
+                spgh->extra_info.insert_or_replace(el.first.to_string(), Json::Value(el.second));
+            }
+        }
 
         constexpr static StringView type_name = "vcpkg.json";
         visit.required_object_field(type_name, manifest, ManifestFields::NAME, spgh->name, IdentifierField{});
@@ -1088,13 +1124,18 @@ namespace vcpkg
             }
         };
         auto serialize_dependency = [&](Json::Array& arr, const Dependency& dep) {
-            if (dep.features.empty() && dep.platform.is_empty())
+            if (dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty())
             {
                 arr.push_back(Json::Value::string(dep.name));
             }
             else
             {
                 auto& dep_obj = arr.push_back(Json::Object());
+                for (const auto& el : dep.extra_info)
+                {
+                    dep_obj.insert(el.first.to_string(), Json::Value(el.second));
+                }
+
                 dep_obj.insert(DependencyField::NAME, Json::Value::string(dep.name));
 
                 auto features_copy = dep.features;
@@ -1111,6 +1152,12 @@ namespace vcpkg
         };
 
         Json::Object obj;
+
+        for (const auto& el : scf.core_paragraph->extra_info)
+        {
+            obj.insert(el.first.to_string(), Json::Value(el.second));
+        }
+
         obj.insert(ManifestFields::NAME, Json::Value::string(scf.core_paragraph->name));
         obj.insert(ManifestFields::VERSION, Json::Value::string(scf.core_paragraph->version));
 
@@ -1146,6 +1193,11 @@ namespace vcpkg
             for (const auto& feature : scf.feature_paragraphs)
             {
                 auto& feature_obj = arr.push_back(Json::Object());
+                for (const auto& el : feature->extra_info)
+                {
+                    feature_obj.insert(el.first.to_string(), Json::Value(el.second));
+                }
+
                 feature_obj.insert(FeatureField::NAME, Json::Value::string(feature->name));
                 serialize_paragraph(feature_obj, FeatureField::DESCRIPTION, feature->description, true);
 

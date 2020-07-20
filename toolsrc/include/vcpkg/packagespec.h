@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/expected.h>
+#include <vcpkg/base/json.h>
 #include <vcpkg/base/optional.h>
 
 #include <vcpkg/platform-expression.h>
@@ -128,6 +129,8 @@ namespace vcpkg
         std::string name;
         std::vector<std::string> features;
         PlatformExpression::Expr platform;
+
+        Json::Object extra_info;
 
         friend bool operator==(const Dependency& lhs, const Dependency& rhs);
         friend bool operator!=(const Dependency& lhs, const Dependency& rhs) { return !(lhs == rhs); }

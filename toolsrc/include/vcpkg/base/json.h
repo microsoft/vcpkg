@@ -88,10 +88,10 @@ namespace vcpkg::Json
     {
         Value() noexcept; // equivalent to Value::null()
         Value(Value&&) noexcept;
+        Value(const Value&);
         Value& operator=(Value&&) noexcept;
+        Value& operator=(const Value&);
         ~Value();
-
-        Value clone() const noexcept;
 
         ValueKind kind() const noexcept;
 
@@ -124,7 +124,12 @@ namespace vcpkg::Json
         static Value number(double d) noexcept;
         static Value string(StringView) noexcept;
         static Value array(Array&&) noexcept;
+        static Value array(const Array&) noexcept;
         static Value object(Object&&) noexcept;
+        static Value object(const Object&) noexcept;
+
+        friend bool operator==(const Value& lhs, const Value& rhs);
+        friend bool operator!=(const Value& lhs, const Value& rhs) { return !(lhs == rhs); }
 
     private:
         friend struct impl::ValueImpl;
@@ -138,13 +143,11 @@ namespace vcpkg::Json
 
     public:
         Array() = default;
-        Array(Array const&) = delete;
+        Array(Array const&) = default;
         Array(Array&&) = default;
-        Array& operator=(Array const&) = delete;
+        Array& operator=(Array const&) = default;
         Array& operator=(Array&&) = default;
         ~Array() = default;
-
-        Array clone() const noexcept;
 
         using iterator = underlying_t::iterator;
         using const_iterator = underlying_t::const_iterator;
@@ -177,26 +180,28 @@ namespace vcpkg::Json
         const_iterator cbegin() const { return underlying_.cbegin(); }
         const_iterator cend() const { return underlying_.cend(); }
 
+        friend bool operator==(const Array& lhs, const Array& rhs);
+        friend bool operator!=(const Array& lhs, const Array& rhs) { return !(lhs == rhs); }
+
     private:
         underlying_t underlying_;
     };
     struct Object
     {
     private:
-        using underlying_t = std::vector<std::pair<std::string, Value>>;
+        using value_type = std::pair<std::string, Value>;
+        using underlying_t = std::vector<value_type>;
 
         underlying_t::const_iterator internal_find_key(StringView key) const noexcept;
 
     public:
         // these are here for better diagnostics
         Object() = default;
-        Object(Object const&) = delete;
+        Object(Object const&) = default;
         Object(Object&&) = default;
-        Object& operator=(Object const&) = delete;
+        Object& operator=(Object const&) = default;
         Object& operator=(Object&&) = default;
         ~Object() = default;
-
-        Object clone() const noexcept;
 
         // asserts if the key is found
         Value& insert(std::string key, Value&& value);
@@ -231,7 +236,11 @@ namespace vcpkg::Json
 
         bool contains(StringView key) const noexcept { return this->get(key); }
 
+        bool is_empty() const noexcept { return size() == 0; }
         std::size_t size() const noexcept { return this->underlying_.size(); }
+
+        // sorts keys alphabetically
+        void sort_keys();
 
         struct const_iterator
         {
@@ -266,6 +275,9 @@ namespace vcpkg::Json
         const_iterator end() const noexcept { return this->cend(); }
         const_iterator cbegin() const noexcept { return const_iterator{this->underlying_.begin()}; }
         const_iterator cend() const noexcept { return const_iterator{this->underlying_.end()}; }
+
+        friend bool operator==(const Object& lhs, const Object& rhs);
+        friend bool operator!=(const Object& lhs, const Object& rhs) { return !(lhs == rhs); }
 
     private:
         underlying_t underlying_;
