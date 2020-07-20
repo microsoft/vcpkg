@@ -11,7 +11,7 @@ namespace vcpkg::Commands::List
 {
     static constexpr StringLiteral OPTION_FULLDESC = "x-full-desc"; // TODO: This should find a better home, eventually
 
-    static constexpr StringLiteral OPTION_JSON = "--x-json";
+    static constexpr StringLiteral OPTION_JSON = "x-json";
 
     static void do_print_json(std::vector<const vcpkg::StatusParagraph*> installed_packages)
     {
