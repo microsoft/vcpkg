@@ -40,6 +40,10 @@
         "cuda"
       ],
       "description": "Redistributable CUDA support for common supported compute architectures."
+    },
+    {
+      "name": "tests",
+      "description": "Enable TESTS."
     }
   ]
 }

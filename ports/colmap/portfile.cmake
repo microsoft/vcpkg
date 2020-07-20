@@ -8,22 +8,29 @@ vcpkg_from_github(
     HEAD_REF dev
 )
 
-set(CUDA_ENABLED OFF)
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cuda CUDA_ENABLED
-)
-
+# set GIT_COMMIT_ID and GIT_COMMIT_DATE
 if(DEFINED VCPKG_HEAD_VERSION)
-    set(COLMAP_GIT_COMMIT_ID "${VCPKG_HEAD_VERSION}")
+    set(GIT_COMMIT_ID "${VCPKG_HEAD_VERSION}")
 else()
-    set(COLMAP_GIT_COMMIT_ID "${COLMAP_REF}")
+    set(GIT_COMMIT_ID "${COLMAP_REF}")
 endif()
 
 string(TIMESTAMP COLMAP_GIT_COMMIT_DATE "%Y-%m-%d")
 
+set(CUDA_ENABLED OFF)
+set(TESTS_ENABLED OFF)
+
+if("cuda" IN_LIST FEATURES)
+    set(CUDA_ENABLED ON)
+endif()
+
 if("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
     set(CUDA_ARCHS "Common")
+endif()
+
+if("tests" IN_LIST FEATURES)
+    set(TESTS_ENABLED ON)
 endif()
 
 vcpkg_configure_cmake(
@@ -32,7 +39,8 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCUDA_ARCHS=${CUDA_ARCHS}
-        -DGIT_COMMIT_ID=${COLMAP_GIT_COMMIT_ID}
+        -DTESTS_ENABLED=${TESTS_ENABLED}
+        -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
         -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
 )
 
@@ -40,8 +48,15 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets()
 
-vcpkg_copy_tools(TOOL_NAMES colmap AUTO_CLEAN)
+file(GLOB TOOL_FILENAMES "${CURRENT_PACKAGES_DIR}/bin/*")
+foreach(TOOL_FILENAME ${TOOL_FILENAMES})
+    get_filename_component(TEST_TOOL_NAME ${TOOL_FILENAME} NAME_WLE)
+    list(APPEND COLMAP_TOOL_NAMES "${TEST_TOOL_NAME}")
+endforeach()
 
+vcpkg_copy_tools(TOOL_NAMES ${COLMAP_TOOL_NAMES} AUTO_CLEAN)
+
+# remove empty folders and unused files
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
