@@ -8,7 +8,10 @@
     <ProjectFile Include="vcpkgmetricsuploader\vcpkgmetricsuploader.vcxproj" Condition="'$(DISABLE_METRICS)'!='1'"/>
   </ItemGroup>
 
-  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+  <!-- TODO: Check if we really need to specify this.
+     If so incremental builds aren't possible and leading always to rebuilds of vcpkg.exe
+    <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+  -->
 
   <Target Name="Build">
     <MSBuild Projects="@(ProjectFile)" Properties="SolutionDir=$(SolutionDir)" Targets="Build"/>

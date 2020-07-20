@@ -436,5 +436,3 @@ if (-not $disableMetrics)
 {
     Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe"
 }
-
-Remove-Item "$vcpkgReleaseDir" -Force -Recurse -ErrorAction SilentlyContinue
