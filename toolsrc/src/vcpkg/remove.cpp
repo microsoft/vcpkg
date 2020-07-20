@@ -184,11 +184,11 @@ namespace vcpkg::Remove
         }
     }
 
-    static constexpr StringLiteral OPTION_PURGE = "--purge";
-    static constexpr StringLiteral OPTION_NO_PURGE = "--no-purge";
-    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_OUTDATED = "--outdated";
+    static constexpr StringLiteral OPTION_PURGE = "purge";
+    static constexpr StringLiteral OPTION_NO_PURGE = "no-purge";
+    static constexpr StringLiteral OPTION_RECURSE = "recurse";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_OUTDATED = "outdated";
 
     static constexpr std::array<CommandSwitch, 5> SWITCHES = {{
         {OPTION_PURGE, "Remove the cached copy of the package (default)"},

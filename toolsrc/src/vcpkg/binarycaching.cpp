@@ -660,6 +660,22 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
 }
 namespace
 {
+    const ExpectedS<fs::path>& default_cache_path()
+    {
+        static auto cachepath = System::get_platform_cache_home().then([](fs::path p) -> ExpectedS<fs::path> {
+            p /= fs::u8path("vcpkg/archives");
+            if (p.is_absolute())
+            {
+                return {std::move(p), expected_left_tag};
+            }
+            else
+            {
+                return {"default path was not absolute: " + p.u8string(), expected_right_tag};
+            }
+        });
+        return cachepath;
+    }
+
     struct State
     {
         bool m_cleared = false;
@@ -856,17 +872,11 @@ namespace
                                      segments[0].first);
                 }
 
-                auto&& maybe_home = System::get_platform_cache_home();
+                const auto& maybe_home = default_cache_path();
                 if (!maybe_home.has_value()) return add_error(maybe_home.error(), segments[0].first);
 
-                auto p = *maybe_home.get();
-                p /= fs::u8path("vcpkg/archives");
-                if (!p.is_absolute())
-                {
-                    return add_error("default path was not absolute: " + p.u8string(), segments[0].first);
-                }
-
-                handle_readwrite(state->archives_to_read, state->archives_to_write, std::move(p), segments, 1);
+                handle_readwrite(
+                    state->archives_to_read, state->archives_to_write, fs::path(*maybe_home.get()), segments, 1);
             }
             else
             {
@@ -986,38 +996,44 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
 
 void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
 {
-    System::print2(
-        System::Color::warning,
-        "** The following help documentation covers an experimental feature that will change at any time **\n\n");
-
     HelpTableFormatter tbl;
-    tbl.text(
-        "Vcpkg can cache compiled packages to accelerate restoration on a single machine or across the network."
-        " This functionality is currently disabled by default and must be enabled by either passing `--binarycaching` "
-        "to every vcpkg command line or setting the environment variable `VCPKG_FEATURE_FLAGS` to `binarycaching`.");
+    tbl.text("Vcpkg can cache compiled packages to accelerate restoration on a single machine or across the network."
+             " This functionality is currently enabled by default and can be disabled by either passing "
+             "`--no-binarycaching` to every vcpkg command line or setting the environment variable "
+             "`VCPKG_FEATURE_FLAGS` to `-binarycaching`.");
     tbl.blank();
     tbl.blank();
     tbl.text(
-        "Once caching is enabled, it can be further configured by either passing `--x-binarysource=<source>` options "
+        "Once caching is enabled, it can be further configured by either passing `--binarysource=<source>` options "
         "to every command line or setting the `VCPKG_BINARY_SOURCES` environment variable to a set of sources (Ex: "
         "\"<source>;<source>;...\"). Command line sources are interpreted after environment sources.");
     tbl.blank();
     tbl.blank();
     tbl.header("Valid source strings");
     tbl.format("clear", "Removes all previous sources");
-    tbl.format("default[,upload]", "Adds the default file-based source location (~/.vcpkg/archives).");
-    tbl.format("files,<path>[,upload]", "Adds a custom file-based source location.");
-    tbl.format("nuget,<uri>[,upload]",
+    tbl.format("default[,<rw>]", "Adds the default file-based location.");
+    tbl.format("files,<path>[,<rw>]", "Adds a custom file-based location.");
+    tbl.format("nuget,<uri>[,<rw>]",
                "Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI.");
-    tbl.format("nugetconfig,<path>[,upload]",
+    tbl.format("nugetconfig,<path>[,<rw>]",
                "Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This "
                "config should specify `defaultPushSource` for uploads.");
     tbl.format("interactive", "Enables interactive credential management for some source types");
     tbl.blank();
-    tbl.text("The `upload` optional parameter for certain source strings controls whether on-demand builds will be "
-             "uploaded to that remote.");
-
+    tbl.text("The `<rw>` optional parameter for certain strings controls whether they will be consulted for "
+             "downloading binaries and whether on-demand builds will be uploaded to that remote. It can be specified "
+             "as 'read', 'write', or 'readwrite'.");
+    tbl.blank();
     System::print2(tbl.m_str);
+    const auto& maybe_cachepath = default_cache_path();
+    if (auto p = maybe_cachepath.get())
+    {
+        auto p_preferred = *p;
+        System::print2(
+            "\nBased on your system settings, the default path to store binaries is\n    ",
+            p_preferred.make_preferred().u8string(),
+            "\n\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.");
+    }
 }
 
 std::string vcpkg::generate_nuget_packages_config(const Dependencies::ActionPlan& action)
