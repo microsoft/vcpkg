@@ -19,9 +19,12 @@ namespace vcpkg::Commands::Create
 
     int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
+        const int PAIR_COUND = 2;
+        const int PORT_POS = 0;
+        const int URL_POS = 1;
         Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
-        const std::string port_name = args.command_arguments.at(0);
-        const std::string url = args.command_arguments.at(1);
+        const std::string port_name = args.command_arguments.at(PORT_POS);
+        const std::string url = args.command_arguments.at(URL_POS);
         std::string zip_file_name;
 
         bool bWithGithub = url.find("github.com") != std::string::npos;
@@ -33,7 +36,7 @@ namespace vcpkg::Commands::Create
         // download with git needs arg REF
         if (bWithGit)
         {
-            if (args.command_arguments.size() == 2)
+            if (args.command_arguments.size() == PAIR_COUND)
             {
                 System::printf(System::Color::error,
                                "Error: '%s' requires %u arguments, but %u were provided.\n",
@@ -46,7 +49,7 @@ namespace vcpkg::Commands::Create
         }
         else
         {
-            zip_file_name = args.command_arguments.at(2);
+            zip_file_name = args.command_arguments.at(PAIR_COUND);
             Checks::check_exit(VCPKG_LINE_INFO,
                                !Files::has_invalid_chars_for_filesystem(zip_file_name),
                                R"(Filename cannot contain invalid chars %s, but was %s)",
@@ -68,8 +71,8 @@ namespace vcpkg::Commands::Create
                 std::string triplet = args.command_arguments.at(3 + i * 2);
                 std::string build_type = args.command_arguments.at(3 + i * 2 + 1);
 
-                transform(triplet.begin(), triplet.end(), triplet.begin(), ::tolower);
-                transform(build_type.begin(), build_type.end(), build_type.begin(), ::tolower);
+                std::transform(triplet.begin(), triplet.end(), triplet.begin(), ::tolower);
+                std::transform(build_type.begin(), build_type.end(), build_type.begin(), ::tolower);
 
                 if (triplet == "windows" || triplet == "win")
                     build_types.push_back(System::CMakeVariable({"TRIPLET_WIN", build_type}));
