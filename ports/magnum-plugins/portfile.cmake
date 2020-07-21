@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-tools-path.patch
+        002-fix-stb-conflict.patch
 )
 
 if("basisimporter" IN_LIST FEATURES OR "basisimageconverter" IN_LIST FEATURES)
