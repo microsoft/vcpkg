@@ -205,14 +205,20 @@ namespace vcpkg::Json
 
         // asserts if the key is found
         Value& insert(std::string key, Value&& value);
+        Value& insert(std::string key, const Value& value);
         Object& insert(std::string key, Object&& value);
+        Object& insert(std::string key, const Object& value);
         Array& insert(std::string key, Array&& value);
+        Array& insert(std::string key, const Array& value);
 
         // replaces the value if the key is found, otherwise inserts a new
         // value.
         Value& insert_or_replace(std::string key, Value&& value);
+        Value& insert_or_replace(std::string key, const Value& value);
         Object& insert_or_replace(std::string key, Object&& value);
+        Object& insert_or_replace(std::string key, const Object& value);
         Array& insert_or_replace(std::string key, Array&& value);
+        Array& insert_or_replace(std::string key, const Array& value);
 
         // returns whether the key existed
         bool remove(StringView key) noexcept;

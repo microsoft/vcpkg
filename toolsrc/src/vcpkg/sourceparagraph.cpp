@@ -882,7 +882,7 @@ namespace vcpkg
             {
                 if (Strings::starts_with(el.first, "$"))
                 {
-                    dep.extra_info.insert_or_replace(el.first.to_string(), Json::Value(el.second));
+                    dep.extra_info.insert_or_replace(el.first.to_string(), el.second);
                 }
             }
 
@@ -929,7 +929,7 @@ namespace vcpkg
             {
                 if (Strings::starts_with(el.first, "$"))
                 {
-                    feature->extra_info.insert_or_replace(el.first.to_string(), Json::Value(el.second));
+                    feature->extra_info.insert_or_replace(el.first.to_string(), el.second);
                 }
             }
 
@@ -997,7 +997,7 @@ namespace vcpkg
         {
             if (Strings::starts_with(el.first, "$"))
             {
-                spgh->extra_info.insert_or_replace(el.first.to_string(), Json::Value(el.second));
+                spgh->extra_info.insert_or_replace(el.first.to_string(), el.second);
             }
         }
 
@@ -1090,7 +1090,7 @@ namespace vcpkg
                     {
                         if (always)
                         {
-                            obj.insert(name, Json::Array({}));
+                            obj.insert(name, Json::Array());
                         }
                         return;
                     }
@@ -1133,7 +1133,7 @@ namespace vcpkg
                 auto& dep_obj = arr.push_back(Json::Object());
                 for (const auto& el : dep.extra_info)
                 {
-                    dep_obj.insert(el.first.to_string(), Json::Value(el.second));
+                    dep_obj.insert(el.first.to_string(), el.second);
                 }
 
                 dep_obj.insert(DependencyField::NAME, Json::Value::string(dep.name));
@@ -1155,7 +1155,7 @@ namespace vcpkg
 
         for (const auto& el : scf.core_paragraph->extra_info)
         {
-            obj.insert(el.first.to_string(), Json::Value(el.second));
+            obj.insert(el.first.to_string(), el.second);
         }
 
         obj.insert(ManifestFields::NAME, Json::Value::string(scf.core_paragraph->name));
@@ -1195,7 +1195,7 @@ namespace vcpkg
                 auto& feature_obj = arr.push_back(Json::Object());
                 for (const auto& el : feature->extra_info)
                 {
-                    feature_obj.insert(el.first.to_string(), Json::Value(el.second));
+                    feature_obj.insert(el.first.to_string(), el.second);
                 }
 
                 feature_obj.insert(FeatureField::NAME, Json::Value::string(feature->name));

@@ -337,14 +337,29 @@ namespace vcpkg::Json
         underlying_.push_back({std::move(key), std::move(value)});
         return underlying_.back().second;
     }
+    Value& Object::insert(std::string key, const Value& value)
+    {
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, !contains(key));
+        underlying_.push_back({std::move(key), value});
+        return underlying_.back().second;
+    }
     Array& Object::insert(std::string key, Array&& value)
     {
         return insert(std::move(key), Value::array(std::move(value))).array();
+    }
+    Array& Object::insert(std::string key, const Array& value)
+    {
+        return insert(std::move(key), Value::array(value)).array();
     }
     Object& Object::insert(std::string key, Object&& value)
     {
         return insert(std::move(key), Value::object(std::move(value))).object();
     }
+    Object& Object::insert(std::string key, const Object& value)
+    {
+        return insert(std::move(key), Value::object(value)).object();
+    }
+
     Value& Object::insert_or_replace(std::string key, Value&& value)
     {
         auto v = get(key);
@@ -359,13 +374,35 @@ namespace vcpkg::Json
             return underlying_.back().second;
         }
     }
+    Value& Object::insert_or_replace(std::string key, const Value& value)
+    {
+        auto v = get(key);
+        if (v)
+        {
+            *v = value;
+            return *v;
+        }
+        else
+        {
+            underlying_.push_back({std::move(key), std::move(value)});
+            return underlying_.back().second;
+        }
+    }
     Array& Object::insert_or_replace(std::string key, Array&& value)
     {
         return insert_or_replace(std::move(key), Value::array(std::move(value))).array();
     }
+    Array& Object::insert_or_replace(std::string key, Array&& value)
+    {
+        return insert_or_replace(std::move(key), Value::array(value)).array();
+    }
     Object& Object::insert_or_replace(std::string key, Object&& value)
     {
         return insert_or_replace(std::move(key), Value::object(std::move(value))).object();
+    }
+    Object& Object::insert_or_replace(std::string key, Object&& value)
+    {
+        return insert_or_replace(std::move(key), Value::object(value)).object();
     }
 
     auto Object::internal_find_key(StringView key) const noexcept -> underlying_t::const_iterator
