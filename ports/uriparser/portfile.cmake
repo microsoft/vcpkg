@@ -31,21 +31,10 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if(URIPARSER_BUILD_TOOLS)
-    if(CMAKE_HOST_WIN32)
-        set(EXECUTABLE_SUFFIX ".exe")
-    else()
-        set(EXECUTABLE_SUFFIX "")
-    endif()
-
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    else()
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX})
-    endif()
+    vcpkg_copy_tools(
+        TOOL_NAMES uriparse
+        AUTO_CLEAN
+    )
 endif()
 
 set(_package_version_re "#define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")

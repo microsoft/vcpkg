@@ -1,5 +1,5 @@
 diff --git a/cmake/AlembicIlmBase.cmake b/cmake/AlembicIlmBase.cmake
-index cd00d70..a73c8db 100644
+index cd00d70..0e50512 100644
 --- a/cmake/AlembicIlmBase.cmake
 +++ b/cmake/AlembicIlmBase.cmake
 @@ -33,11 +33,25 @@
@@ -30,6 +30,18 @@ index cd00d70..a73c8db 100644
      SET(ALEMBIC_ILMBASE_LIBS
          ${ALEMBIC_ILMBASE_IMATH_LIB}
          ${ALEMBIC_ILMBASE_ILMTHREAD_LIB}
+@@ -45,9 +59,9 @@ IF (ILMBASE_FOUND)
+         ${ALEMBIC_ILMBASE_HALF_LIB}
+     )
+ 
+-    if (${ALEMBIC_ILMBASE_IEXMATH_LIB})
++    if (ALEMBIC_ILMBASE_IEXMATH_LIB)
+         SET(ALEMBIC_ILMBASE_LIBS ${ALEMBIC_ILMBASE_LIBS} ${ALEMBIC_ILMBASE_IEXMATH_LIB})
+-    endif (${ALEMBIC_ILMBASE_IEXMATH_LIB})
++    endif (ALEMBIC_ILMBASE_IEXMATH_LIB)
+ 
+ ELSE()
+     SET(ALEMBIC_ILMBASE_FOUND 0 CACHE STRING "Set to 1 if IlmBase is found, 0 otherwise")
 diff --git a/cmake/AlembicOpenEXR.cmake b/cmake/AlembicOpenEXR.cmake
 index 0833b32..a9180cd 100644
 --- a/cmake/AlembicOpenEXR.cmake

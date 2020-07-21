@@ -21,6 +21,6 @@ namespace vcpkg::Remove
 
     extern const CommandStructure COMMAND_STRUCTURE;
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db);
 }

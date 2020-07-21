@@ -1,4 +1,4 @@
 Source: qt5-quickcontrols
-Version: 5.12.5-1
+Version: 5.15.0
 Description: Qt5 QuickControls Module.
-Build-Depends:  qt5-base, qt5-declarative, qt5-graphicaleffects
+Build-Depends:  qt5-base[core], qt5-declarative, qt5-graphicaleffects

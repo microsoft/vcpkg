@@ -1,0 +1,62 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+jobs:
+- job: x64_linux
+  pool:
+    name: ${{ parameters.poolName }}
+  workspace:
+    clean: resources
+  timeoutInMinutes: 1440 # 1 day
+  steps:
+  - bash: df -h
+    displayName: 'Report on Disk Space'
+  - bash: |
+      sudo mkdir /home/agent -m=777
+      sudo chown `id -u` /home/agent
+      exit 0
+    displayName: 'Create /home/agent'
+    # Note: /mnt is the Azure machines' temporary disk.
+  - bash: |
+      sudo mkdir /mnt/vcpkg-ci -m=777
+      sudo mkdir /mnt/vcpkg-ci/downloads -m=777
+      exit 0
+    displayName: 'Create /mnt/vcpkg-ci/downloads'
+  - task: Bash@3
+    displayName: 'Build vcpkg'
+    inputs:
+      filePath: bootstrap-vcpkg.sh
+      arguments: "-buildTests"
+    env:
+      VCPKG_DOWNLOADS: '/mnt/vcpkg-ci/downloads'
+  - bash: toolsrc/build.rel/vcpkg-test
+    displayName: 'Run vcpkg tests'
+  - task: PowerShell@2
+    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -ArchivesRoot /archives -WorkingRoot /mnt/vcpkg-ci -ArtifactsDirectory $(System.ArtifactsDirectory)'
+  - bash: |
+      df -h
+    displayName: 'Report on Disk Space After Build'
+    condition: always()
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: x86-linux Build Failure Logs'
+    inputs:
+      PathtoPublish: '$(System.ArtifactsDirectory)/failure-logs'
+      ArtifactName: 'x64-linux port build failure logs'
+    condition: failed()
+  - bash: |
+      python3 scripts/file_script.py /mnt/vcpkg-ci/installed/vcpkg/info/
+    displayName: 'Build a file list for all packages'
+    condition: always()
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: always()
+
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "x64-linux package file lists"

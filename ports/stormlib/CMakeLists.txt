@@ -274,6 +274,7 @@ install(TARGETS stormlib EXPORT stormlibConfig
 		RUNTIME DESTINATION bin
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib
+        PUBLIC_HEADER DESTINATION include
 )
 
 install(EXPORT stormlibConfig NAMESPACE stormlib:: DESTINATION share/stormlib)

@@ -9,6 +9,8 @@ vcpkg_from_github(
     PATCHES
         fix-install.patch
 )
+#Uses an outdated OpenSSL version and is in an experimental namespace any way. As such we delete it here
+file(REMOVE_RECURSE "${SOURCE_PATH}/Source/src/crypto" "${SOURCE_PATH}/Source/include/slikenet/crypto")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(SLIKENET_ENABLE_STATIC TRUE)
@@ -31,6 +33,11 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/slikenet)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
+configure_file("${CMAKE_CURRENT_LIST_DIR}/slikenet-config.cmake" "${CURRENT_PACKAGES_DIR}/share/slikenet/slikenet-config.cmake" COPYONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/slikenet/vcpkg-cmake-wrapper.cmake" COPYONLY)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
