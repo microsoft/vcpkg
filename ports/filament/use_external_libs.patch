@@ -1,12 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3eef6ec..d3f4a15 100644
+index 3eef6ec..e8217c7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -33,6 +33,19 @@ endif()
+@@ -33,6 +33,20 @@ endif()
  # ==================================================================================================
  # Support for ccache
  # ==================================================================================================
 +find_package(assimp)
++find_package(imgui)
 +find_package(GTest)
 +find_package(PNG)
 +find_package(SDL2)
@@ -22,7 +23,7 @@ index 3eef6ec..d3f4a15 100644
  find_program(CCACHE_PROGRAM ccache)
  if (CCACHE_PROGRAM)
      set(C_LAUNCHER   "${CCACHE_PROGRAM}")
-@@ -224,7 +237,7 @@ endif()
+@@ -224,7 +238,7 @@ endif()
  
  if (LINUX)
      option(USE_STATIC_LIBCXX "Link against the static runtime libraries." ON)
@@ -31,7 +32,7 @@ index 3eef6ec..d3f4a15 100644
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
          link_libraries("-static-libgcc -static-libstdc++")
          link_libraries(libc++.a)
-@@ -521,7 +534,6 @@ endfunction()
+@@ -521,7 +535,6 @@ endfunction()
  # ==================================================================================================
  
  # Common to all platforms
@@ -39,7 +40,7 @@ index 3eef6ec..d3f4a15 100644
  add_subdirectory(${LIBRARIES}/camutils)
  add_subdirectory(${LIBRARIES}/filabridge)
  add_subdirectory(${LIBRARIES}/filaflat)
-@@ -538,19 +550,16 @@ add_subdirectory(${FILAMENT}/shaders)
+@@ -538,19 +551,16 @@ add_subdirectory(${FILAMENT}/shaders)
  add_subdirectory(${EXTERNAL}/hat-trie/tnt)
  add_subdirectory(${EXTERNAL}/robin-map/tnt)
  add_subdirectory(${EXTERNAL}/smol-v/tnt)
@@ -61,7 +62,16 @@ index 3eef6ec..d3f4a15 100644
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -596,12 +605,6 @@ if (IS_HOST_PLATFORM)
+@@ -578,8 +588,6 @@ if (WEBGL)
+     if (FILAMENT_GENERATE_JS_DOCS)
+         add_subdirectory(web/docs)
+     endif()
+-
+-    add_subdirectory(${EXTERNAL}/imgui/tnt)
+ endif()
+ 
+ if (IS_HOST_PLATFORM)
+@@ -596,12 +604,6 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${EXTERNAL}/astcenc/tnt)
      add_subdirectory(${EXTERNAL}/etc2comp)
@@ -74,6 +84,21 @@ index 3eef6ec..d3f4a15 100644
  
      add_subdirectory(${TOOLS}/cmgen)
      add_subdirectory(${TOOLS}/cso-lut)
+diff --git a/filament/CMakeLists.txt b/filament/CMakeLists.txt
+index 69d1cad..fca3b63 100644
+--- a/filament/CMakeLists.txt
++++ b/filament/CMakeLists.txt
+@@ -321,6 +321,10 @@ target_link_libraries(${TARGET} PUBLIC geometry) # TODO: remove this dependency
+ target_link_libraries(${TARGET} PUBLIC filaflat)
+ target_link_libraries(${TARGET} PUBLIC filabridge)
+ target_link_libraries(${TARGET} PUBLIC ibl)
++target_link_libraries(${TARGET} PUBLIC SPIRV)
++target_link_libraries(${TARGET} PUBLIC spirv-cross-core)
++target_link_libraries(${TARGET} PUBLIC spirv-cross-glsl)
++target_link_libraries(${TARGET} PUBLIC spirv-cross-msl)
+ 
+ if (FILAMENT_ENABLE_MATDBG)
+     target_link_libraries(${TARGET} PUBLIC matdbg)
 diff --git a/filament/backend/CMakeLists.txt b/filament/backend/CMakeLists.txt
 index 04ab2d7..45c4013 100644
 --- a/filament/backend/CMakeLists.txt
@@ -139,6 +164,16 @@ index 49fa4b7..1332d78 100644
  
  #include <iostream>
  #include <string>
+diff --git a/filament/benchmark/CMakeLists.txt b/filament/benchmark/CMakeLists.txt
+index a0cfd98..faa8bc5 100644
+--- a/filament/benchmark/CMakeLists.txt
++++ b/filament/benchmark/CMakeLists.txt
+@@ -10,4 +10,4 @@ set(BENCHMARK_SRCS
+ 
+ add_executable(benchmark_filament ${BENCHMARK_SRCS})
+ 
+-target_link_libraries(benchmark_filament PRIVATE benchmark_main utils math filament)
++target_link_libraries(benchmark_filament PRIVATE benchmark::benchmark_main utils math filament)
 diff --git a/filament/test/CMakeLists.txt b/filament/test/CMakeLists.txt
 index ce17367..33ddc3b 100644
 --- a/filament/test/CMakeLists.txt
@@ -194,6 +229,19 @@ index 94766ec..efc0e30 100644
 -    target_link_libraries(test_${TARGET} PRIVATE camutils gtest)
 +    target_link_libraries(test_${TARGET} PRIVATE camutils GTest::gtest)
  endif()
+diff --git a/libs/filagui/CMakeLists.txt b/libs/filagui/CMakeLists.txt
+index e7dae35..8871737 100644
+--- a/libs/filagui/CMakeLists.txt
++++ b/libs/filagui/CMakeLists.txt
+@@ -80,7 +80,7 @@ include_directories(${GENERATION_ROOT})
+ 
+ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS} ${RESGEN_SOURCE})
+ 
+-target_link_libraries(${TARGET} PUBLIC imgui filament filamat)
++target_link_libraries(${TARGET} PUBLIC imgui::imgui filament filamat)
+ 
+ target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
+ 
 diff --git a/libs/filamat/CMakeLists.txt b/libs/filamat/CMakeLists.txt
 index 4efeda8..3d93eb6 100644
 --- a/libs/filamat/CMakeLists.txt
@@ -214,10 +262,10 @@ index 4efeda8..3d93eb6 100644
 -target_link_libraries(${TARGET} filamat_lite gtest)
 +target_link_libraries(${TARGET} filamat_lite GTest::gtest SPIRV spirv-cross-core spirv-cross-glsl spirv-cross-msl)
 diff --git a/libs/filamentapp/CMakeLists.txt b/libs/filamentapp/CMakeLists.txt
-index 508f47d..cd34002 100644
+index 508f47d..513994b 100644
 --- a/libs/filamentapp/CMakeLists.txt
 +++ b/libs/filamentapp/CMakeLists.txt
-@@ -39,10 +39,9 @@ set(SRCS
+@@ -39,15 +39,14 @@ set(SRCS
  )
  
  set(LIBS
@@ -230,6 +278,12 @@ index 508f47d..cd34002 100644
          math
          filamat
          utils
+         getopt
+-        imgui
++        imgui::imgui
+         filagui
+         image
+         camutils
 @@ -72,7 +71,7 @@ endif()
  
  if (WIN32)
@@ -447,7 +501,7 @@ index a6a9287..28b18ab 100644
  #include <utils/Path.h>
  
 diff --git a/third_party/getopt/CMakeLists.txt b/third_party/getopt/CMakeLists.txt
-index b8c4273..a658282 100644
+index b8c4273..a658282 100755
 --- a/third_party/getopt/CMakeLists.txt
 +++ b/third_party/getopt/CMakeLists.txt
 @@ -18,6 +18,7 @@ set(SRCS
@@ -459,7 +513,7 @@ index b8c4273..a658282 100644
  add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS})
  target_include_directories (${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
 diff --git a/third_party/getopt/src/getopt_long.c b/third_party/getopt/src/getopt_long.c
-index fd67535..eb2cec2 100644
+index fd67535..eb2cec2 100755
 --- a/third_party/getopt/src/getopt_long.c
 +++ b/third_party/getopt/src/getopt_long.c
 @@ -27,8 +27,6 @@
