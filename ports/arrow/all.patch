@@ -102,7 +102,7 @@ index bb3eb5608..0b03d37d3 100644
      find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h PATH_SUFFIXES "include")
      find_program(THRIFT_COMPILER thrift PATH_SUFFIXES "bin")
 diff --git a/cpp/cmake_modules/FindZSTD.cmake b/cpp/cmake_modules/FindZSTD.cmake
-index 84d21d2b5..004764f9a 100644
+index 84d21d2b5..c2d70e7c9 100644
 --- a/cpp/cmake_modules/FindZSTD.cmake
 +++ b/cpp/cmake_modules/FindZSTD.cmake
 @@ -49,8 +49,8 @@ if(ZSTD_ROOT)
@@ -116,6 +116,14 @@ index 84d21d2b5..004764f9a 100644
      set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
 
      list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
+@@ -60,6 +60,7 @@ else()
+                  PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
+     # Third, check all other CMake paths
+   else()
++    message("ZSTD_LIB_NAMES: ${ZSTD_LIB_NAMES}")
+     find_library(ZSTD_LIB NAMES ${ZSTD_LIB_NAMES} PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
+     find_path(ZSTD_INCLUDE_DIR NAMES zstd.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+   endif()
 diff --git a/cpp/cmake_modules/Findutf8proc.cmake b/cpp/cmake_modules/Findutf8proc.cmake
 index ab9ae9f98..3854d66bd 100644
 --- a/cpp/cmake_modules/Findutf8proc.cmake
