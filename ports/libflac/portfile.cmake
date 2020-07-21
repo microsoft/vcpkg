@@ -13,6 +13,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(BUILD_SHARED_LIBS ON)
 else()
     set(BUILD_SHARED_LIBS OFF)
+    vcpkg_replace_string(${SOURCE_PATH}/include/FLAC/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 1"
+    )
+    vcpkg_replace_string(${SOURCE_PATH}/include/FLAC++/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 1"
+    )
 endif()
 
 vcpkg_configure_cmake(
