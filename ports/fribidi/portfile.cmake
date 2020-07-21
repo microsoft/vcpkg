@@ -19,5 +19,14 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
+# Define static macro
+file(READ ${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h FRIBIDI_COMMON_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "#ifndef FRIBIDI_LIB_STATIC" "#if 0" FRIBIDI_COMMON_H "${FRIBIDI_COMMON_H}")
+else()
+    string(REPLACE "#ifndef FRIBIDI_LIB_STATIC" "#if 1" FRIBIDI_COMMON_H "${FRIBIDI_COMMON_H}")
+endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h "${FRIBIDI_COMMON_H}")
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
