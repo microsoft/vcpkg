@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dcafb64..557e2ea 100644
+index dcafb64..4b131cc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -130,6 +130,17 @@ OPTION ( IGNORE_GIT_HASH
@@ -55,8 +55,9 @@ index dcafb64..557e2ea 100644
 -  set(VERSION_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
 -  set(PROJECT_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}Config.cmake")
 -  set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
+-  set(NAMESPACE "${PROJECT_NAME}::")
 +  set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Config")
-   set(NAMESPACE "${PROJECT_NAME}::")
++  set(NAMESPACE "assimp::")
  
    # Include module with fuction 'write_basic_package_version_file'
    include(CMakePackageConfigHelpers)

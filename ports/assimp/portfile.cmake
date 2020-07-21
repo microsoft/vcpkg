@@ -50,6 +50,20 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(READ ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake ASSIMP_CONFIG)
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)
+find_package(irrXML QUIET)
+find_package(polyclipping QUIET)
+find_package(minizip QUIET)
+find_package(kubazip QUIET)
+find_package(poly2tri QUIET)" ASSIMP_CONFIG "${ASSIMP_CONFIG}")
+  file(WRITE ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake "${ASSIMP_CONFIG}")
+endif()
+
+
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
