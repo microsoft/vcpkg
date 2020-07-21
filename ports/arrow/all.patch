@@ -101,21 +101,6 @@ index bb3eb5608..0b03d37d3 100644
                   PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib")
      find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h PATH_SUFFIXES "include")
      find_program(THRIFT_COMPILER thrift PATH_SUFFIXES "bin")
-diff --git a/cpp/cmake_modules/SetupCxxFlags.cmake b/cpp/cmake_modules/SetupCxxFlags.cmake
-index 6110a5aa5..3270d74a9 100644
---- a/cpp/cmake_modules/SetupCxxFlags.cmake
-+++ b/cpp/cmake_modules/SetupCxxFlags.cmake
-@@ -163,7 +163,9 @@ macro(arrow_add_werror_if_debug)
-   if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
-     # Treat all compiler warnings as errors
-     if(MSVC)
--      set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
-+      if(MSVC_VERSION VERSION_LESS 1900)
-+        set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
-+      endif()
-     else()
-       set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} -Werror")
-     endif()
 diff --git a/cpp/cmake_modules/Findutf8proc.cmake b/cpp/cmake_modules/Findutf8proc.cmake
 index ab9ae9f98..3854d66bd 100644
 --- a/cpp/cmake_modules/Findutf8proc.cmake
