@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindIrrXML.cmake)
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/clipper)
+#file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/clipper) # https://github.com/assimp/assimp/issues/788
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/poly2tri)
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/zlib)
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/gtest)
@@ -20,6 +20,8 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/stb_image)
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/zip)
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/unzip)
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/utf8cpp)
+#file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/Open3DGC)      #TODO
+#file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/openddlparser) #TODO
 
 
 set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
@@ -45,14 +47,9 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-FILE(GLOB lib_cmake_directories RELATIVE "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/lib/cmake/assimp-*")
-list(GET lib_cmake_directories 0 lib_cmake_directory)
-vcpkg_fixup_cmake_targets(CONFIG_PATH "${lib_cmake_directory}")
-
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
