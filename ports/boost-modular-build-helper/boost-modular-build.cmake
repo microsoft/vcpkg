@@ -100,16 +100,16 @@ function(boost_modular_build)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
         endif()
         vcpkg_configure_cmake(
-        SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
-        PREFER_NINJA
-        OPTIONS
-            "-DPORT=${PORT}"
-            "-DFEATURES=${FEATURES}"
-            "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
-            "-DB2_EXE=${B2_EXE}"
-            "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
-            "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
-            ${configure_option}
+            SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
+            PREFER_NINJA
+            OPTIONS
+                "-DPORT=${PORT}"
+                "-DFEATURES=${FEATURES}"
+                "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
+                "-DB2_EXE=${B2_EXE}"
+                "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
+                "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+                ${configure_option}
         )
         vcpkg_install_cmake()
     endfunction()
