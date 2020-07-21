@@ -392,7 +392,7 @@ namespace vcpkg::Json
     {
         return insert_or_replace(std::move(key), Value::array(std::move(value))).array();
     }
-    Array& Object::insert_or_replace(std::string key, Array&& value)
+    Array& Object::insert_or_replace(std::string key, const Array& value)
     {
         return insert_or_replace(std::move(key), Value::array(value)).array();
     }
@@ -400,7 +400,7 @@ namespace vcpkg::Json
     {
         return insert_or_replace(std::move(key), Value::object(std::move(value))).object();
     }
-    Object& Object::insert_or_replace(std::string key, Object&& value)
+    Object& Object::insert_or_replace(std::string key, const Object& value)
     {
         return insert_or_replace(std::move(key), Value::object(value)).object();
     }
