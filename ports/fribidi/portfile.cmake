@@ -11,23 +11,13 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -Ddocs=false
+        -Dbin=false
+        -Dtests=false
         --backend=ninja
 )
 
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
-
-file(GLOB EXE_FILES
-    "${CURRENT_PACKAGES_DIR}/bin/*.exe"
-    "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe"
-)
-if (EXE_FILES)
-    file(REMOVE ${EXE_FILES})
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
