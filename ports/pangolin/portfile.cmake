@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -11,6 +9,7 @@ vcpkg_from_github(
 	PATCHES
         deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
         fix-includepath-error.patch # include path has one more ../
+        fix-dependeny-ffmpeg.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
@@ -57,6 +56,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/pangolin)
 
 # Put the license file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/Pangolin/)
-file(COPY ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/Pangolin/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/Pangolin/LICENCE ${CURRENT_PACKAGES_DIR}/share/Pangolin/copyright)
+file(COPY ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
+file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
