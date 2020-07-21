@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
@@ -26,11 +27,13 @@ namespace vcpkg::Update
             auto maybe_scfl = provider.get_control_file(pgh->package.spec.name());
             if (auto p_scfl = maybe_scfl.get())
             {
-                auto&& port_version = p_scfl->source_control_file->core_paragraph->version;
-                auto&& installed_version = pgh->package.version;
-                if (installed_version != port_version)
+                const auto& latest_pgh = *p_scfl->source_control_file->core_paragraph;
+                auto latest_version = VersionT(latest_pgh.version, latest_pgh.port_version);
+                auto installed_version = VersionT(pgh->package.version, pgh->package.port_version);
+                if (latest_version != installed_version)
                 {
-                    output.push_back({pgh->package.spec, VersionDiff(installed_version, port_version)});
+                    output.push_back(
+                        {pgh->package.spec, VersionDiff(std::move(installed_version), std::move(latest_version))});
                 }
             }
             else

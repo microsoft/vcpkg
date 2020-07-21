@@ -393,6 +393,30 @@ Function InstallLLVM {
 
 <#
 .SYNOPSIS
+Installs LLVM.
+
+.DESCRIPTION
+InstallLLVM installs LLVM from the supplied URL.
+
+.PARAMETER Url
+The URL of the LLVM installer.
+#>
+Function InstallLLVM {
+  try {
+    Write-Host 'Downloading LLVM...'
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Installing LLVM...'
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/S') -NoNewWindow -Wait -PassThru
+    PrintMsiExitCodeMessage $proc.ExitCode
+  }
+  catch {
+    Write-Error "Failed to install LLVM! $($_.Exception.Message)"
+  }
+}
+
+<#
+.SYNOPSIS
 Installs MPI
 
 .DESCRIPTION

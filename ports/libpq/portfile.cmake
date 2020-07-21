@@ -18,13 +18,13 @@ endmacro()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
-    # the configuration header depends on zlib, nls, ldap, uuid, xml, xlst,gss,openssl,icu
-    feature_unsupported(readline bonjour libedit kerberos bsd systemd llvm pam)
-    feature_not_implemented_yet(perl uuid)
+    # the configuration header depends on zlib, nls, uuid, xml, xlst,gss,openssl,icu
+    feature_unsupported(readline bonjour libedit systemd llvm)
+    feature_not_implemented_yet(uuid)
 elseif(VCPKG_TARGET_IS_OSX)
-    feature_not_implemented_yet(readline libedit kerberos bsd systemd llvm pam perl python tcl uuid)
+    feature_not_implemented_yet(readline libedit systemd llvm python tcl uuid)
 else()
-    feature_not_implemented_yet(readline bonjour libedit kerberos bsd systemd llvm pam perl python tcl uuid)
+    feature_not_implemented_yet(readline bonjour libedit systemd llvm python tcl uuid)
 endif()
 
 ## Download and extract sources
@@ -128,14 +128,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(CONFIG_FILE "${BUILDPATH_${_buildtype}}/src/tools/msvc/config.pl")
         file(READ "${CONFIG_FILE}" _contents)
 
-        ##	ldap      => undef,    # --with-ldap                            ##done
+        ##	ldap      => undef,    # --with-ldap
         ##	extraver  => undef,    # --with-extra-version=<string>
         ##	gss       => undef,    # --with-gssapi=<path>
         ##	icu       => undef,    # --with-icu=<path>                      ##done
         ##	nls       => undef,    # --enable-nls=<path>                    ##done
         ##	tap_tests => undef,    # --enable-tap-tests
         ##	tcl       => undef,    # --with-tcl=<path>                      #done
-        ##	perl      => undef,    # --with-perl                            # requires a patch to the lib path and a port for it
+        ##	perl      => undef,    # --with-perl
         ##	python    => undef,    # --with-python=<path>                   ##done
         ##	openssl   => undef,    # --with-openssl=<path>                  ##done
         ##	uuid      => undef,    # --with-ossp-uuid
@@ -145,10 +145,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ##	zlib      => undef     # --with-zlib=<path>                     ##done
 
         ## Setup external dependencies
-        ##"-DFEATURES=core;openssl;zlib" "-DALL_FEATURES=openssl;zlib;readline;libedit;perl;python;tcl;nls;kerberos;systemd;ldap;bsd;pam;llvm;icu;bonjour;uuid;xml;xslt;"
-        if("${FEATURES}" MATCHES "ldap")
-            string(REPLACE "ldap      => undef" "ldap      => 1" _contents "${_contents}")
-        endif()
+        ##"-DFEATURES=core;openssl;zlib" "-DALL_FEATURES=openssl;zlib;readline;libedit;python;tcl;nls;systemd;llvm;icu;bonjour;uuid;xml;xslt;"
         if("${FEATURES}" MATCHES "icu")
            string(REPLACE "icu       => undef" "icu      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()

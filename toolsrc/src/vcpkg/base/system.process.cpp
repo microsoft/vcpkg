@@ -30,7 +30,7 @@ namespace vcpkg
     {
         struct CtrlCStateMachine
         {
-            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) {}
+            CtrlCStateMachine() : m_number_of_external_processes(0), m_global_job(NULL), m_in_interactive(0) { }
 
             void transition_to_spawn_process() noexcept
             {
@@ -308,6 +308,8 @@ namespace vcpkg
             L"CUDA_PATH_V9_1",
             L"CUDA_PATH_V10_0",
             L"CUDA_PATH_V10_1",
+            L"CUDA_PATH_V10_2",
+            L"CUDA_PATH_V11_0",
             L"CUDA_TOOLKIT_ROOT_DIR",
             // Environmental variable generated automatically by CUDA after installation
             L"NVCUDASAMPLES_ROOT",
@@ -382,7 +384,7 @@ namespace vcpkg
 #if defined(_WIN32)
     struct ProcessInfo
     {
-        constexpr ProcessInfo() noexcept : proc_info{} {}
+        constexpr ProcessInfo() noexcept : proc_info{} { }
         ProcessInfo(ProcessInfo&& other) noexcept : proc_info(other.proc_info)
         {
             other.proc_info.hProcess = nullptr;
@@ -596,7 +598,7 @@ namespace vcpkg
 #if defined(_WIN32)
         using vcpkg::g_ctrl_c_state;
         g_ctrl_c_state.transition_to_spawn_process();
-        auto proc_info = windows_create_process(cmd_line, env, NULL);
+        auto proc_info = windows_create_process(cmd_line, env, 0);
         auto long_exit_code = [&]() -> unsigned long {
             if (auto p = proc_info.get())
                 return p->wait();
@@ -658,7 +660,7 @@ namespace vcpkg
         using vcpkg::g_ctrl_c_state;
 
         g_ctrl_c_state.transition_to_spawn_process();
-        auto maybe_proc_info = windows_create_process_redirect(cmd_line, env, NULL);
+        auto maybe_proc_info = windows_create_process_redirect(cmd_line, env, 0);
         auto exit_code = [&]() -> unsigned long {
             if (auto p = maybe_proc_info.get())
                 return p->wait_and_stream_output(data_cb);
@@ -724,6 +726,6 @@ namespace vcpkg
         SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ctrl_handler), TRUE);
     }
 #else
-    void System::register_console_ctrl_handler() {}
+    void System::register_console_ctrl_handler() { }
 #endif
 }

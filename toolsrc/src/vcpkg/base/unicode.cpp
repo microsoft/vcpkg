@@ -1,8 +1,7 @@
 #include "pch.h"
 
-#include <vcpkg/base/unicode.h>
-
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/unicode.h>
 
 namespace vcpkg::Unicode
 {
