@@ -101,6 +101,25 @@ index bb3eb5608..0b03d37d3 100644
                   PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib")
      find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h PATH_SUFFIXES "include")
      find_program(THRIFT_COMPILER thrift PATH_SUFFIXES "bin")
+diff --git a/cpp/cmake_modules/FindZSTD.cmake b/cpp/cmake_modules/FindZSTD.cmake
+index 84d21d2b5..4b8ae8952 100644
+--- a/cpp/cmake_modules/FindZSTD.cmake
++++ b/cpp/cmake_modules/FindZSTD.cmake
+@@ -24,11 +24,11 @@ if(ARROW_ZSTD_USE_SHARED)
+   list(APPEND ZSTD_LIB_NAMES
+               "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ else()
+-  if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+-    set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
++  if(MSVC AND CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++    set(ZSTD_MSVC_DEBUG_LIB_SUFFIX d)
+   endif()
+   set(ZSTD_STATIC_LIB_SUFFIX
+-      "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++      "${ZSTD_MSVC_DEBUG_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+   set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
+   set(ZSTD_LIB_NAMES "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}")
+ endif()
 diff --git a/cpp/cmake_modules/Findutf8proc.cmake b/cpp/cmake_modules/Findutf8proc.cmake
 index ab9ae9f98..3854d66bd 100644
 --- a/cpp/cmake_modules/Findutf8proc.cmake
