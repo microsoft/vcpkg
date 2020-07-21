@@ -5,7 +5,7 @@
   "description": "Filament is a real-time physically based rendering engine for Android, iOS, Windows, Linux, macOS and WASM/WebGL",
   "dependencies": [
     "assimp",
-    "getopt",
+    "benchmark",
     "gtest",
     "imgui",
     "libpng",

@@ -14,7 +14,7 @@ else()
     set(USE_STATIC_CRT OFF)
 endif()
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/getopt")
+#file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/getopt")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/libassimp")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/libgtest")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/imgui")
@@ -25,6 +25,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/spirv-tools")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/stb")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/tinyexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/libz")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/benchmark")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

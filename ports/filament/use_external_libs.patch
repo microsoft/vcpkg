@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3eef6ec..12edf06 100644
+index 3eef6ec..d3f4a15 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -33,6 +33,18 @@ endif()
+@@ -33,6 +33,19 @@ endif()
  # ==================================================================================================
  # Support for ccache
  # ==================================================================================================
@@ -16,12 +16,13 @@ index 3eef6ec..12edf06 100644
 +find_package(SPIRV-Tools)
 +find_package(SPIRV-Tools-opt)
 +find_package(Stb)
++find_package(benchmark)
 +include_directories(${Stb_INCLUDE_DIR})
 +find_package(tinyexr)
  find_program(CCACHE_PROGRAM ccache)
  if (CCACHE_PROGRAM)
      set(C_LAUNCHER   "${CCACHE_PROGRAM}")
-@@ -224,7 +236,7 @@ endif()
+@@ -224,7 +237,7 @@ endif()
  
  if (LINUX)
      option(USE_STATIC_LIBCXX "Link against the static runtime libraries." ON)
@@ -30,7 +31,7 @@ index 3eef6ec..12edf06 100644
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
          link_libraries("-static-libgcc -static-libstdc++")
          link_libraries(libc++.a)
-@@ -521,7 +533,6 @@ endfunction()
+@@ -521,7 +534,6 @@ endfunction()
  # ==================================================================================================
  
  # Common to all platforms
@@ -38,13 +39,19 @@ index 3eef6ec..12edf06 100644
  add_subdirectory(${LIBRARIES}/camutils)
  add_subdirectory(${LIBRARIES}/filabridge)
  add_subdirectory(${LIBRARIES}/filaflat)
-@@ -542,15 +553,11 @@ add_subdirectory(${EXTERNAL}/benchmark/tnt)
+@@ -538,19 +550,16 @@ add_subdirectory(${FILAMENT}/shaders)
+ add_subdirectory(${EXTERNAL}/hat-trie/tnt)
+ add_subdirectory(${EXTERNAL}/robin-map/tnt)
+ add_subdirectory(${EXTERNAL}/smol-v/tnt)
+-add_subdirectory(${EXTERNAL}/benchmark/tnt)
  add_subdirectory(${EXTERNAL}/meshoptimizer)
  add_subdirectory(${EXTERNAL}/cgltf/tnt)
  add_subdirectory(${EXTERNAL}/draco/tnt)
 -add_subdirectory(${EXTERNAL}/stb/tnt)
--add_subdirectory(${EXTERNAL}/getopt)
- 
++if(WIN32)
+ add_subdirectory(${EXTERNAL}/getopt)
+-
++endif()
  if (FILAMENT_BUILD_FILAMAT OR IS_HOST_PLATFORM)
      # spirv-tools must come before filamat, as filamat relies on the presence of the
      # spirv-tools_SOURCE_DIR variable.
@@ -54,7 +61,7 @@ index 3eef6ec..12edf06 100644
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -596,12 +603,6 @@ if (IS_HOST_PLATFORM)
+@@ -596,12 +605,6 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${EXTERNAL}/astcenc/tnt)
      add_subdirectory(${EXTERNAL}/etc2comp)
@@ -68,23 +75,25 @@ index 3eef6ec..12edf06 100644
      add_subdirectory(${TOOLS}/cmgen)
      add_subdirectory(${TOOLS}/cso-lut)
 diff --git a/filament/backend/CMakeLists.txt b/filament/backend/CMakeLists.txt
-index 04ab2d7..cde6f1a 100644
+index 04ab2d7..45c4013 100644
 --- a/filament/backend/CMakeLists.txt
 +++ b/filament/backend/CMakeLists.txt
-@@ -5,6 +5,12 @@ set(TARGET backend)
+@@ -5,6 +5,14 @@ set(TARGET backend)
  set(PUBLIC_HDR_DIR include)
  set(GENERATION_ROOT ${CMAKE_CURRENT_BINARY_DIR})
  
-+include(CheckIncludeFile)
-+check_include_file("getopt.h" HAVE_GETOPT_H)
-+if(HAVE_GETOPT_H)
-+    include_directories(${GETOPT_PATH})
++if(NOT WIN32)
++  include(CheckIncludeFile)
++  check_include_file("getopt.h" HAVE_GETOPT_H)
++  if(HAVE_GETOPT_H)
++      include_directories(${GETOPT_PATH})
++  endif()
++  add_library(getopt INTERFACE)
 +endif()
-+add_library(getopt INTERFACE)
  # ==================================================================================================
  # Sources and headers
  # ==================================================================================================
-@@ -313,9 +319,12 @@ if (APPLE)
+@@ -313,9 +321,12 @@ if (APPLE)
          backend
          filabridge
          getopt
@@ -99,7 +108,7 @@ index 04ab2d7..cde6f1a 100644
  
      set(BACKEND_TEST_DEPS
              OGLCompiler
-@@ -326,16 +335,13 @@ if (APPLE)
+@@ -326,16 +337,13 @@ if (APPLE)
              backend_test
              filabridge
              getopt
@@ -266,7 +275,7 @@ index 7622de1..80488c6 100644
 +    target_link_libraries(test_${TARGET} PRIVATE image imageio GTest::gtest)
  endif()
 diff --git a/libs/imageio/CMakeLists.txt b/libs/imageio/CMakeLists.txt
-index acdd853..7a7d178 100644
+index acdd853..5fc9b13 100644
 --- a/libs/imageio/CMakeLists.txt
 +++ b/libs/imageio/CMakeLists.txt
 @@ -30,7 +30,7 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
@@ -274,12 +283,12 @@ index acdd853..7a7d178 100644
  target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
  
 -target_link_libraries(${TARGET} PUBLIC image math png tinyexr utils z astcenc stb EtcLib)
-+target_link_libraries(${TARGET} PUBLIC image math PNG::PNG unofficial::tinyexr::tinyexr utils z astcenc EtcLib)
++target_link_libraries(${TARGET} PUBLIC image math PNG::PNG unofficial::tinyexr::tinyexr utils ZLIB::ZLIB astcenc EtcLib)
  if (WIN32)
      target_link_libraries(${TARGET} PRIVATE wsock32)
  endif()
 diff --git a/libs/math/CMakeLists.txt b/libs/math/CMakeLists.txt
-index 4b0d6bf..3dcd859 100644
+index 4b0d6bf..d562196 100644
 --- a/libs/math/CMakeLists.txt
 +++ b/libs/math/CMakeLists.txt
 @@ -58,7 +58,7 @@ add_executable(test_${TARGET}
@@ -291,8 +300,14 @@ index 4b0d6bf..3dcd859 100644
  
  # ==================================================================================================
  # Benchmarks
+@@ -71,4 +71,4 @@ add_executable(benchmark_${TARGET} ${BENCHMARK_SRCS})
+ 
+ target_compile_options(benchmark_${TARGET} PRIVATE ${OPTIMIZATION_FLAGS})
+ 
+-target_link_libraries(benchmark_${TARGET} PRIVATE benchmark_main utils math)
++target_link_libraries(benchmark_${TARGET} PRIVATE benchmark::benchmark_main utils math)
 diff --git a/libs/utils/CMakeLists.txt b/libs/utils/CMakeLists.txt
-index 3d7e544..38348e1 100644
+index 3d7e544..e9def49 100644
 --- a/libs/utils/CMakeLists.txt
 +++ b/libs/utils/CMakeLists.txt
 @@ -150,7 +150,7 @@ endif()
@@ -304,9 +319,12 @@ index 3d7e544..38348e1 100644
  
  # ==================================================================================================
  # Benchmarks
-@@ -173,4 +173,4 @@ if (NOT WEBGL)
+@@ -171,6 +171,6 @@ if (NOT WEBGL)
  
-     target_link_libraries(benchmark_${TARGET} PRIVATE benchmark_main utils benchmark_${TARGET}_callee)
+     add_executable(benchmark_${TARGET} ${BENCHMARK_SRCS})
+ 
+-    target_link_libraries(benchmark_${TARGET} PRIVATE benchmark_main utils benchmark_${TARGET}_callee)
++    target_link_libraries(benchmark_${TARGET} PRIVATE benchmark::benchmark_main utils benchmark_${TARGET}_callee)
  
 -endif()
 \ No newline at end of file
@@ -428,8 +446,20 @@ index a6a9287..28b18ab 100644
  
  #include <utils/Path.h>
  
+diff --git a/third_party/getopt/CMakeLists.txt b/third_party/getopt/CMakeLists.txt
+index b8c4273..a658282 100644
+--- a/third_party/getopt/CMakeLists.txt
++++ b/third_party/getopt/CMakeLists.txt
+@@ -18,6 +18,7 @@ set(SRCS
+ # Include and target definitions
+ # ==================================================================================================
+ include_directories(${PUBLIC_HDR_DIR})
++include_directories(${PUBLIC_HDR_DIR}/getopt)
+ 
+ add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS})
+ target_include_directories (${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
 diff --git a/third_party/getopt/src/getopt_long.c b/third_party/getopt/src/getopt_long.c
-index fd67535..eb2cec2 100755
+index fd67535..eb2cec2 100644
 --- a/third_party/getopt/src/getopt_long.c
 +++ b/third_party/getopt/src/getopt_long.c
 @@ -27,8 +27,6 @@
@@ -476,9 +506,18 @@ index 6ff4f47..56e2321 100644
  endif()
 -
 diff --git a/tools/cmgen/CMakeLists.txt b/tools/cmgen/CMakeLists.txt
-index 10868b9..982d120 100644
+index 10868b9..5f6c061 100644
 --- a/tools/cmgen/CMakeLists.txt
 +++ b/tools/cmgen/CMakeLists.txt
+@@ -22,7 +22,7 @@ set(SRCS
+ # ==================================================================================================
+ add_executable(${TARGET} ${HDRS} ${SRCS})
+ 
+-target_link_libraries(${TARGET} PRIVATE math utils ibl z image imageio getopt)
++target_link_libraries(${TARGET} PRIVATE math utils ibl ZLIB::ZLIB image imageio getopt)
+ 
+ # ==================================================================================================
+ # Compile options and optimizations
 @@ -40,9 +40,8 @@ endif()
  # =================================================================================================
  # Licenses
@@ -520,9 +559,18 @@ index 05b1f01..b09f709 100644
      };
  
 diff --git a/tools/cso-lut/CMakeLists.txt b/tools/cso-lut/CMakeLists.txt
-index 63cf6af..fed0423 100644
+index 63cf6af..bfc8d32 100644
 --- a/tools/cso-lut/CMakeLists.txt
 +++ b/tools/cso-lut/CMakeLists.txt
+@@ -15,7 +15,7 @@ set(SRCS src/main.cpp)
+ # ==================================================================================================
+ add_executable(${TARGET} ${HDRS} ${SRCS})
+ 
+-target_link_libraries(${TARGET} PRIVATE math utils z image imageio getopt)
++target_link_libraries(${TARGET} PRIVATE math utils ZLIB::ZLIB image imageio getopt)
+ 
+ # ==================================================================================================
+ # Compile options and optimizations
 @@ -27,7 +27,6 @@ endif()
  # =================================================================================================
  # Licenses
@@ -721,10 +769,16 @@ index 73a1925..f9ee49c 100644
      };
  
 diff --git a/tools/mipgen/CMakeLists.txt b/tools/mipgen/CMakeLists.txt
-index 2c76b65..88460ee 100644
+index 2c76b65..fedd3fd 100644
 --- a/tools/mipgen/CMakeLists.txt
 +++ b/tools/mipgen/CMakeLists.txt
-@@ -17,9 +17,8 @@ target_link_libraries(${TARGET} PRIVATE math utils z image imageio getopt)
+@@ -12,14 +12,13 @@ set(SRCS src/main.cpp)
+ # Target definitions
+ # ==================================================================================================
+ add_executable(${TARGET} ${SRCS})
+-target_link_libraries(${TARGET} PRIVATE math utils z image imageio getopt)
++target_link_libraries(${TARGET} PRIVATE math util ZLIB::ZLIB image imageio getopt)
+ 
  # =================================================================================================
  # Licenses
  # ==================================================================================================
@@ -758,9 +812,18 @@ index d5f8bda..8bb0c58 100644
      };
  
 diff --git a/tools/normal-blending/CMakeLists.txt b/tools/normal-blending/CMakeLists.txt
-index b01e056..b9b8dcf 100644
+index b01e056..5459eec 100644
 --- a/tools/normal-blending/CMakeLists.txt
 +++ b/tools/normal-blending/CMakeLists.txt
+@@ -15,7 +15,7 @@ set(SRCS src/main.cpp)
+ # ==================================================================================================
+ add_executable(${TARGET} ${HDRS} ${SRCS})
+ 
+-target_link_libraries(${TARGET} PRIVATE math utils z image imageio getopt)
++target_link_libraries(${TARGET} PRIVATE math utils ZLIB::ZLIB image imageio getopt)
+ 
+ # ==================================================================================================
+ # Compile options and optimizations
 @@ -27,9 +27,8 @@ endif()
  # =================================================================================================
  # Licenses
@@ -829,9 +892,18 @@ index bde604f..79ed222 100644
      };
  
 diff --git a/tools/roughness-prefilter/CMakeLists.txt b/tools/roughness-prefilter/CMakeLists.txt
-index 99b3559..af3f49e 100644
+index 99b3559..a15f8a6 100644
 --- a/tools/roughness-prefilter/CMakeLists.txt
 +++ b/tools/roughness-prefilter/CMakeLists.txt
+@@ -15,7 +15,7 @@ set(SRCS src/main.cpp)
+ # ==================================================================================================
+ add_executable(${TARGET} ${HDRS} ${SRCS})
+ 
+-target_link_libraries(${TARGET} PRIVATE math utils z image imageio getopt)
++target_link_libraries(${TARGET} PRIVATE math utils ZLIB::ZLIB image imageio getopt)
+ 
+ # ==================================================================================================
+ # Compile options and optimizations
 @@ -27,9 +27,8 @@ endif()
  # =================================================================================================
  # Licenses
