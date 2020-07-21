@@ -32,7 +32,9 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Pangolin)
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB EXE ${CURRENT_PACKAGES_DIR}/lib/*.dll)
     file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE ${EXE})
@@ -41,19 +43,16 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE ${DEBUG_EXE})
 
-    file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake PANGOLIN_TARGETS)
-    string(REPLACE "lib/pangolin.dll" "bin/pangolin.dll" PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake "${PANGOLIN_TARGETS}")
-
-    file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake PANGOLIN_TARGETS)
-    string(REPLACE "lib/pangolin.dll" "bin/pangolin.dll" PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake "${PANGOLIN_TARGETS}")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake
+        "lib/pangolin.dll" "bin/pangolin.dll"
+    )
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake
+        "lib/pangolin.dll" "bin/pangolin.dll"
+    )
+    
+    # Copy missing header file
+    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/pangolin)
 endif()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# Copy missing header file
-file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/pangolin)
 
 # Put the license file where vcpkg expects it
 file(COPY ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
