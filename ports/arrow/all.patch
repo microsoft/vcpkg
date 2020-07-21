@@ -121,3 +121,17 @@ index ab9ae9f98..3854d66bd 100644
            "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}"
      PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
    find_path(UTF8PROC_INCLUDE_DIR NAMES utf8proc.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+diff --git a/cpp/src/arrow/CMakeLists.txt b/cpp/src/arrow/CMakeLists.txt
+index 91e67fb42..95b046533 100644
+--- a/cpp/src/arrow/CMakeLists.txt
++++ b/cpp/src/arrow/CMakeLists.txt
+@@ -488,6 +488,9 @@ add_dependencies(arrow ${ARROW_LIBRARIES})
+
+ if(ARROW_BUILD_STATIC AND WIN32)
+   target_compile_definitions(arrow_static PUBLIC ARROW_STATIC)
++  if(ARROW_WITH_UTF8PROC)
++    target_compile_definitions(arrow_static PUBLIC UTF8PROC_STATIC)
++  endif()
+ endif()
+
+ if(ARROW_WITH_BACKTRACE)
