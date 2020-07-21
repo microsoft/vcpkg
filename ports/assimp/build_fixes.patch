@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dcafb64..de44262 100644
+index dcafb64..566fa8c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -130,6 +130,16 @@ OPTION ( IGNORE_GIT_HASH
@@ -9,8 +9,8 @@ index dcafb64..de44262 100644
 +find_package(Stb REQUIRED)
 +include_directories(${Stb_INCLUDE_DIR})
 +find_package(irrXML REQUIRED)
-+find_path(UTF8H_INCLUDE_DIRS "utf8h/utf8.h")
-+include_directories(${UTF8H_INCLUDE_DIRS}/utf8h)
++find_path(UTF8_INCLUDE_DIRS "utf8.h")
++include_directories(${UTF8_INCLUDE_DIRS})
 +find_package(RapidJSON)
 +include_directories(${RAPIDJSON_INCLUDE_DIRS})
 +find_path(UNZIP_INCLUDE_DIRS "minizip/unzip.h")
@@ -205,11 +205,24 @@ index ab1a8d2..4b0729b 100644
  #----------------------------------------------------------------
  # Generated CMake target import file.
  #----------------------------------------------------------------
+diff --git a/code/Blender/BlenderTessellator.h b/code/Blender/BlenderTessellator.h
+index 518e56c..ec4a653 100644
+--- a/code/Blender/BlenderTessellator.h
++++ b/code/Blender/BlenderTessellator.h
+@@ -147,7 +147,7 @@ namespace Assimp
+ #ifdef ASSIMP_USE_HUNTER
+ #  include <poly2tri/poly2tri.h>
+ #else
+-#  include "../contrib/poly2tri/poly2tri/poly2tri.h"
++#  include <poly2tri/poly2tri.h>
+ #endif
+ 
+ namespace Assimp
 diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
-index 55538d9..d786804 100644
+index 55538d9..237ffbc 100644
 --- a/code/CMakeLists.txt
 +++ b/code/CMakeLists.txt
-@@ -862,32 +862,10 @@ SET( Extra_SRCS
+@@ -862,89 +862,19 @@ SET( Extra_SRCS
  SOURCE_GROUP( Extra FILES ${Extra_SRCS})
  
  # irrXML
@@ -241,9 +254,25 @@ index 55538d9..d786804 100644
 -ENDIF(HUNTER_ENABLED)
  
  # poly2tri
- IF(HUNTER_ENABLED)
-@@ -911,40 +889,10 @@ ELSE(HUNTER_ENABLED)
- ENDIF(HUNTER_ENABLED)
+-IF(HUNTER_ENABLED)
+-  hunter_add_package(poly2tri)
+   find_package(poly2tri CONFIG REQUIRED)
+-ELSE(HUNTER_ENABLED)
+-  SET( Poly2Tri_SRCS
+-    ../contrib/poly2tri/poly2tri/common/shapes.cc
+-    ../contrib/poly2tri/poly2tri/common/shapes.h
+-    ../contrib/poly2tri/poly2tri/common/utils.h
+-    ../contrib/poly2tri/poly2tri/sweep/advancing_front.h
+-    ../contrib/poly2tri/poly2tri/sweep/advancing_front.cc
+-    ../contrib/poly2tri/poly2tri/sweep/cdt.cc
+-    ../contrib/poly2tri/poly2tri/sweep/cdt.h
+-    ../contrib/poly2tri/poly2tri/sweep/sweep.cc
+-    ../contrib/poly2tri/poly2tri/sweep/sweep.h
+-    ../contrib/poly2tri/poly2tri/sweep/sweep_context.cc
+-    ../contrib/poly2tri/poly2tri/sweep/sweep_context.h
+-  )
+-  SOURCE_GROUP( Contrib\\Poly2Tri FILES ${Poly2Tri_SRCS})
+-ENDIF(HUNTER_ENABLED)
  
  # minizip/unzip
 -IF(HUNTER_ENABLED)
@@ -284,7 +313,7 @@ index 55538d9..d786804 100644
  
  # openddlparser
  IF(HUNTER_ENABLED)
-@@ -1021,13 +969,7 @@ ELSE ()
+@@ -1021,13 +951,7 @@ ELSE ()
  ENDIF ()
  
  # RapidJSON
@@ -298,7 +327,7 @@ index 55538d9..d786804 100644
  
  # VC2010 fixes
  if(MSVC10)
-@@ -1044,15 +986,6 @@ if ( MSVC )
+@@ -1044,15 +968,6 @@ if ( MSVC )
    ADD_DEFINITIONS( -D_CRT_SECURE_NO_WARNINGS )
  endif ( MSVC )
  
@@ -314,7 +343,7 @@ index 55538d9..d786804 100644
  MESSAGE(STATUS "Enabled importer formats:${ASSIMP_IMPORTERS_ENABLED}")
  MESSAGE(STATUS "Disabled importer formats:${ASSIMP_IMPORTERS_DISABLED}")
  
-@@ -1111,22 +1044,14 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1111,22 +1026,15 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<INSTALL_INTERFACE:include>
  )
  
@@ -332,6 +361,7 @@ index 55538d9..d786804 100644
 -      zip::zip
 +      ZLIB::ZLIB
 +      kubazip::kubazip
++      poly2tri::poly2tri
    )
 -ELSE(HUNTER_ENABLED)
 -  TARGET_LINK_LIBRARIES(assimp ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES} ${IRRXML_LIBRARY} )
@@ -339,7 +369,7 @@ index 55538d9..d786804 100644
  
  if(ASSIMP_ANDROID_JNIIOSYSTEM)
    set(ASSIMP_ANDROID_JNIIOSYSTEM_PATH port/AndroidJNI)
-@@ -1208,21 +1133,12 @@ ENDIF(APPLE)
+@@ -1208,21 +1116,12 @@ ENDIF(APPLE)
  
  # Build against external unzip, or add ../contrib/unzip so
  # assimp can #include "unzip.h"
@@ -361,7 +391,7 @@ index 55538d9..d786804 100644
    INSTALL( TARGETS assimp
      EXPORT "${TARGETS_EXPORT_NAME}"
      LIBRARY DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
-@@ -1231,14 +1147,6 @@ IF(HUNTER_ENABLED)
+@@ -1231,14 +1130,6 @@ IF(HUNTER_ENABLED)
      FRAMEWORK DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
      COMPONENT ${LIBASSIMP_COMPONENT}
      INCLUDES DESTINATION "include")
@@ -409,6 +439,68 @@ index b77bbfe..51cba43 100644
          pImporter = new Importer();
          pImporter->SetIOHandler( pIO );
      }
+diff --git a/code/Importer/IFC/IFCGeometry.cpp b/code/Importer/IFC/IFCGeometry.cpp
+index d1c7aee..a3f5a0b 100644
+--- a/code/Importer/IFC/IFCGeometry.cpp
++++ b/code/Importer/IFC/IFCGeometry.cpp
+@@ -53,8 +53,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #  include <poly2tri/poly2tri.h>
+ #  include <polyclipping/clipper.hpp>
+ #else
+-#  include "../contrib/poly2tri/poly2tri/poly2tri.h"
+-#  include "../contrib/clipper/clipper.hpp"
++#  include <poly2tri/poly2tri.h>
++#  include <polyclipping/clipper.hpp>
+ #endif
+ 
+ #include <memory>
+diff --git a/code/Importer/IFC/IFCOpenings.cpp b/code/Importer/IFC/IFCOpenings.cpp
+index d6c40b3..52834fb 100644
+--- a/code/Importer/IFC/IFCOpenings.cpp
++++ b/code/Importer/IFC/IFCOpenings.cpp
+@@ -53,8 +53,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #  include <poly2tri/poly2tri.h>
+ #  include <polyclipping/clipper.hpp>
+ #else
+-#  include "../contrib/poly2tri/poly2tri/poly2tri.h"
+-#  include "../contrib/clipper/clipper.hpp"
++#  include <poly2tri/poly2tri.h>
++#  include <polyclipping/clipper.hpp>
+ #endif
+ 
+ #include <iterator>
+@@ -911,14 +911,14 @@ size_t CloseWindows(ContourVector& contours,
+             // compare base poly normal and contour normal to detect if we need to reverse the face winding
+ 			if(curmesh.mVertcnt.size() > 0) {
+ 				IfcVector3 basePolyNormal = TempMesh::ComputePolygonNormal(curmesh.mVerts.data(), curmesh.mVertcnt.front());
+-				
++
+ 				std::vector<IfcVector3> worldSpaceContourVtx(it->contour.size());
+-				
++
+ 				for(size_t a = 0; a < it->contour.size(); ++a)
+ 					worldSpaceContourVtx[a] = minv * IfcVector3(it->contour[a].x, it->contour[a].y, 0.0);
+-				
++
+ 				IfcVector3 contourNormal = TempMesh::ComputePolygonNormal(worldSpaceContourVtx.data(), worldSpaceContourVtx.size());
+-				
++
+ 				reverseCountourFaces = (contourNormal * basePolyNormal) > 0.0;
+ 			}
+ 
+diff --git a/code/Importer/STEPParser/STEPFileEncoding.cpp b/code/Importer/STEPParser/STEPFileEncoding.cpp
+index 101dcdf..3f12403 100644
+--- a/code/Importer/STEPParser/STEPFileEncoding.cpp
++++ b/code/Importer/STEPParser/STEPFileEncoding.cpp
+@@ -48,7 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #  include <utf8/utf8.h>
+ #else
+-#  include <contrib/utf8cpp/source/utf8.h>
++#  include <utf8.h>
+ #endif
+ 
+ #include <memory>
 diff --git a/code/MMD/MMDPmxParser.cpp b/code/MMD/MMDPmxParser.cpp
 index 80f0986..47725e2 100644
 --- a/code/MMD/MMDPmxParser.cpp

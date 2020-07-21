@@ -11,6 +11,7 @@ vcpkg_from_github(
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindIrrXML.cmake)
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/clipper)
+file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/poly2tri)
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/zlib)
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/gtest)
 file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/irrXML)
