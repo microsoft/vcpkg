@@ -37,12 +37,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Copy wxrc.exe to ${CURRENT_PACKAGES_DIR}/tools/${PORT}
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/wxrc.exe")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin/wxrc.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-endif()
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
