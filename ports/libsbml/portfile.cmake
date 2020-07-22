@@ -21,17 +21,17 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/libsbml/cmake")
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/libsbml/cmake)
 
-set(LICENCE_FILE "${CURRENT_PACKAGES_DIR}/LICENSE.txt")
-if (NOT EXISTS "${LICENCE_FILE}")
-    message(STATUS "Licence file not found at ${LICENCE_fILE}")
-    set(LICENCE_FILE "${CURRENT_PACKAGES_DIR}/share/libsbml/LICENCE.txt")
-    message(STATUS "Setting licence to ${LICENCE_FILE}")
-    if (NOT EXISTS "${LICENCE_FILE}")
-        message(FATAL_ERROR "libsbml LICENCE.txt not found")
+set(LICENSE_FILE "${CURRENT_PACKAGES_DIR}/LICENSE.txt")
+if (NOT EXISTS "${LICENSE_FILE}")
+    message(STATUS "LICENSE file not found at ${LICENSE_fILE}")
+    set(LICENSE_FILE "${CURRENT_PACKAGES_DIR}/share/libsbml/LICENSE.txt")
+    message(STATUS "Setting LICENSE to ${LICENSE_FILE}")
+    if (NOT EXISTS "${LICENSE_FILE}")
+        message(FATAL_ERROR "libsbml LICENSE.txt not found at ${LICENSE_FILE}")
     endif ()
 endif ()
 
-configure_file("${LICENCE_FILE}" "${CURRENT_PACKAGES_DIR}/share/libsbml/copyright" COPYONLY)
+configure_file("${LICENSE_FILE}" "${CURRENT_PACKAGES_DIR}/share/libsbml/copyright" COPYONLY)
 
 
 set(FILES_TO_REMOVE
@@ -57,6 +57,7 @@ foreach (f ${FILES_TO_REMOVE})
     file(REMOVE ${f})
 endforeach ()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
 
