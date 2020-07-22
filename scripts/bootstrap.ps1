@@ -369,9 +369,20 @@ else
     $PreferredToolArchitecture = "x86"
 }
 
+if ($withMirror -ne "")
+{
+    $useMirror="1"
+}
+else
+{
+    $useMirror="0"
+}
+
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
 "`"/p:DISABLE_METRICS=$disableMetricsValue`"",
+"`"/p:USE_MIRROR=$useMirror`"",
+"`"/p:VCPKG_MIRROR=$withMirror`"",
 "/p:Configuration=Release",
 "/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",
@@ -381,11 +392,6 @@ $arguments = (
 "/m",
 "/nologo",
 "`"$vcpkgSourcesPath\dirs.proj`"") -join " "
-
-if ($withMirror -ne "")
-{
-    $arguments -join "`"/p:VCPKG_MIRROR=$withMirror`"" -join " "
-}
 
 function vcpkgInvokeCommandClean()
 {

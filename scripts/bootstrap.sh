@@ -11,7 +11,6 @@ vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
 vcpkgAllowAppleClang=false
 vcpkgBuildTests="OFF"
-vcpkgMirrorUrl=""
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
@@ -20,8 +19,6 @@ do
         vcpkgUseSystem=true
     elif [ "$var" = "-allowAppleClang" -o "$var" = "--allowAppleClang" ]; then
         vcpkgAllowAppleClang=true
-    elif [ "$var" = "-useMirror" -o "$var" = "--useMirror" ]; then
-        vcpkgMirrorUrl=true
     elif [ "$var" = "-buildTests" ]; then
         vcpkgBuildTests="ON"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
