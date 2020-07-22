@@ -69,6 +69,13 @@ function(vcpkg_download_distfile VAR)
             message(FATAL_ERROR "vcpkg_download_distfile must not be passed both SHA512 and SKIP_SHA512.")
         endif()
     endif()
+    
+    if (DEFINED VCPKG_MIRROR_URL AND VCPKG_MIRROR_URL)
+        string(REGEX REPLACE "^.+[\..*]" "." FILE_SUFFIX ${vcpkg_download_distfile_FILENAME})
+        string(SUBSTRING ${vcpkg_download_distfile_SHA512} 0 10 vcpkg_download_distfile_FILENAME)
+        set(vcpkg_download_distfile_FILENAME ${vcpkg_download_distfile_FILENAME}${FILE_SUFFIX})
+        set(vcpkg_download_distfile_URLS "ftp://${VCPKG_MIRROR_URL}/${vcpkg_download_distfile_FILENAME}")
+    endif()
 
     set(downloaded_file_path ${DOWNLOADS}/${vcpkg_download_distfile_FILENAME})
     set(download_file_path_part "${DOWNLOADS}/temp/${vcpkg_download_distfile_FILENAME}")

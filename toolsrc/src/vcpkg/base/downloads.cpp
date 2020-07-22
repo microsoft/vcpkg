@@ -24,6 +24,26 @@ namespace vcpkg::Downloads
         fs.create_directories(dir, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directories %s", dir.u8string());
 
+#if USE_MIRROR == 1
+        HINTERNET hConnect;
+        HINTERNET hFtpSession;
+        hConnect = InternetOpen(NULL, INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, hConnect, "InternetOpen() failed: %d", GetLastError());
+
+        hFtpSession = InternetConnect(
+            hConnect, hostname.to_string().c_str(), INTERNET_DEFAULT_FTP_PORT, "", "", INTERNET_SERVICE_FTP, 0, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, hFtpSession, "InternetConnect() failed: %d", GetLastError());
+        BOOL bSuc = FtpGetFile(hFtpSession,
+                               url_path.to_string().c_str(),
+                               target_file_path.to_string().c_str(),
+                               FALSE,
+                               FTP_TRANSFER_TYPE_BINARY,
+                               0,
+                               0);
+        Checks::check_exit(VCPKG_LINE_INFO, bSuc == TRUE, "InternetConnect() failed: %d", GetLastError());
+        InternetCloseHandle(hFtpSession);
+        InternetCloseHandle(hConnect);
+#else
         FILE* f = nullptr;
         const errno_t err = fopen_s(&f, target_file_path.c_str(), "wb");
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -137,6 +157,7 @@ namespace vcpkg::Downloads
         WinHttpCloseHandle(hRequest);
         fflush(f);
         fclose(f);
+#endif
     }
 #endif
 
@@ -180,7 +201,11 @@ namespace vcpkg::Downloads
         fs.remove(download_path, ec);
         fs.remove(download_path_part_path, ec);
 #if defined(_WIN32)
+#if USE_MIRROR == 1
+        auto url_no_proto = url.substr(6); // drop ftp://
+#else
         auto url_no_proto = url.substr(8); // drop https://
+#endif
         auto path_begin = Util::find(url_no_proto, '/');
         std::string hostname(url_no_proto.begin(), path_begin);
         std::string path(path_begin, url_no_proto.end());

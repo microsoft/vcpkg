@@ -7,7 +7,11 @@
 #if defined(_WIN32)
 #include <process.h>
 #include <shellapi.h>
+#if USE_MIRROR == 1
+#include <wininet.h>
+#else
 #include <winhttp.h>
+#endif
 #endif
 
 #include <math.h>
