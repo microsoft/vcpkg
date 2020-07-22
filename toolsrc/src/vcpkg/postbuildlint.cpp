@@ -5,6 +5,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/build.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/postbuildlint.buildtype.h>
@@ -152,6 +153,7 @@ namespace vcpkg::PostBuildLint
             "config.h",
             "local.h",
             "slice.h",
+            "platform.h",
         };
         static constexpr Span<const StringLiteral> restricted_lists[] = {
             restricted_sys_filenames, restricted_crt_filenames, restricted_general_filenames};
@@ -347,13 +349,14 @@ namespace vcpkg::PostBuildLint
             // if there is only one candidate, provide the cmake lines needed to place it in the proper location
             const fs::path found_file = potential_copyright_files[0];
             auto found_relative_native = found_file.native();
-            found_relative_native.erase(current_buildtrees_dir.native().size() + 1); // The +1 is needed to remove the "/"
+            found_relative_native.erase(current_buildtrees_dir.native().size() +
+                                        1); // The +1 is needed to remove the "/"
             const fs::path relative_path = found_relative_native;
-            System::printf(
-                "\n    configure_file(\"${CURRENT_BUILDTREES_DIR}/%s/%s\" \"${CURRENT_PACKAGES_DIR}/share/%s/copyright\" COPYONLY)\n",
-                relative_path.generic_string(),
-                found_file.filename().generic_string(),
-                spec.name());
+            System::printf("\n    configure_file(\"${CURRENT_BUILDTREES_DIR}/%s/%s\" "
+                           "\"${CURRENT_PACKAGES_DIR}/share/%s/copyright\" COPYONLY)\n",
+                           relative_path.generic_string(),
+                           found_file.filename().generic_string(),
+                           spec.name());
         }
         else if (potential_copyright_files.size() > 1)
         {

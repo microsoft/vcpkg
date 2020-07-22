@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
@@ -24,8 +25,7 @@ namespace vcpkg::Commands::Owns
         }
     }
     const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("The argument should be a pattern to search for. %s",
-                        create_example_string("owns zlib.dll")),
+        Strings::format("The argument should be a pattern to search for. %s", create_example_string("owns zlib.dll")),
         1,
         1,
         {},
