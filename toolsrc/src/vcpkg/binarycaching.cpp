@@ -673,7 +673,7 @@ namespace
                 if (!fs::stdfs::is_directory(status))
                     return {"Value of environment variable VCPKG_BINARY_CACHE is not a directory: " + path.u8string(),
                             expected_right_tag};
-                if (!p.is_absolute())
+                if (!path.is_absolute())
                     return {"Value of environment variable VCPKG_BINARY_CACHE is not absolute: " + path.u8string(),
                             expected_right_tag};
                 return ExpectedS<fs::path>(path);
