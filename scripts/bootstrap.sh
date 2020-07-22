@@ -11,6 +11,7 @@ vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
 vcpkgAllowAppleClang=false
 vcpkgBuildTests="OFF"
+mirrorOpt=""
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
@@ -21,6 +22,8 @@ do
         vcpkgAllowAppleClang=true
     elif [ "$var" = "-buildTests" ]; then
         vcpkgBuildTests="ON"
+    elif [ -z ${VCPKG_DOWNLOADS+x} ]; then
+        mirrorOpt="-DVCPKG_MIRROR=$useMirror"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
@@ -29,7 +32,7 @@ do
         echo "    -disableMetrics      Do not build metrics reporting into the executable"
         echo "    -useSystemBinaries   Force use of the system utilities for building vcpkg"
         echo "    -allowAppleClang     Set VCPKG_ALLOW_APPLE_CLANG to build vcpkg in apple with clang anyway"
-        echo "    -useMirror           Set vcpkg mirror url"
+        echo "    -withMirror          Set vcpkg mirror url"
         exit 1
     else
         echo "Unknown argument $var. Use '-help' for help."
@@ -60,12 +63,6 @@ else
         exit 1
     fi
 
-fi
-
-if [ -z ${useMirror+x} ]; then
-    mirrorOpt="-DVCPKG_MIRROR=$useMirror"
-else
-    mirrorOpt=""
 fi
 
 extractStringBetweenDelimiters()
