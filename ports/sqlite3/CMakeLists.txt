@@ -53,4 +53,4 @@ install(
 )
 
 install(FILES sqlite3.h sqlite3ext.h DESTINATION include CONFIGURATIONS Release)
-install(EXPORT unofficial-sqlite3-targets NAMESPACE unofficial::sqlite3:: FILE sqlite3-targets.cmake DESTINATION share/unofficial-sqlite3)
+install(EXPORT unofficial-sqlite3-targets NAMESPACE unofficial::sqlite3:: FILE unofficial-sqlite3-targets.cmake DESTINATION share/unofficial-sqlite3)
