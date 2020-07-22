@@ -1,0 +1,47 @@
+diff --git a/chimera/CMakeLists.txt b/chimera/CMakeLists.txt
+index 1cd66a3..9caa366 100644
+--- a/chimera/CMakeLists.txt
++++ b/chimera/CMakeLists.txt
+@@ -1,7 +1,24 @@
+ # Chimera lib
++cmake_minimum_required (VERSION 2.8.11)
++project (chimera C CXX)
+ 
+-include_directories(${PCRE_INCLUDE_DIRS})
++set (HS_MAJOR_VERSION 5)
++set (HS_MINOR_VERSION 3)
++set (HS_PATCH_VERSION 0)
++set (HS_VERSION ${HS_MAJOR_VERSION}.${HS_MINOR_VERSION}.${HS_PATCH_VERSION})
+ 
++set(HS_INTERNAL_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/../src)
++
++configure_file(${CMAKE_CURRENT_LIST_DIR}/../cmake/config.h.in ${CMAKE_BINARY_DIR}/config.h)
++configure_file(${CMAKE_CURRENT_LIST_DIR}/../src/hs_version.h.in ${CMAKE_BINARY_DIR}/hs_version.h)
++
++find_path(HS_INCLUDE_DIRS hs_common.h PATH_SUFFIXES hs)
++find_library(hs hs REQUIRED)
++find_library(hs_rt hs_runtime REQUIRED)
++
++find_path(PCRE_INCLUDE_DIRS pcre.h)
++find_library(pcre pcre REQUIRED)
++include_directories(${PCRE_INCLUDE_DIRS} ${HS_INCLUDE_DIRS} ${HS_INTERNAL_INCLUDE_DIRS} ${CMAKE_BINARY_DIR})
+ # only set these after all tests are done
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_C_FLAGS}")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_FLAGS}")
+@@ -28,11 +45,14 @@ SET(chimera_SRCS
+ )
+ 
+ add_library(chimera STATIC ${chimera_SRCS})
+-add_dependencies(chimera hs pcre)
+-target_link_libraries(chimera hs pcre)
++target_link_libraries(chimera hs pcre hs_rt)
++target_compile_definitions(chimera PUBLIC -DUSE_INTRIN_H)
+ 
+ install(TARGETS chimera DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
++file(GLOB CHIMERA_HEADERS ${CMAKE_CURRENT_LIST_DIR}/*.h)
++install(FILES ${CHIMERA_HEADERS} DESTINATION include)
++
+ if (NOT WIN32)
+     # expand out library names for pkgconfig static link info
+     foreach (LIB ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
