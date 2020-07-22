@@ -8,8 +8,8 @@
     "fribidi",
     "freetype",
     "harfbuzz",
-    "dirent",
     {
+      "name": "dirent",
       "platform": "windows"
     }
   ]
