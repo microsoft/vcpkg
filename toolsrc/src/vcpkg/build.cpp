@@ -441,17 +441,19 @@ namespace vcpkg::Build
                                              const Toolset& toolset,
                                              std::vector<System::CMakeVariable>& out_vars)
     {
-        Util::Vectors::append(
-            &out_vars, std::initializer_list<System::CMakeVariable> {
-                {"CMD", "BUILD"}, {"TARGET_TRIPLET", triplet.canonical_name()},
-                    {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
-                    {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()}, {"DOWNLOADS", paths.downloads},
+        Util::Vectors::append(&out_vars,
+                              std::initializer_list<System::CMakeVariable>{
+                                  {"CMD", "BUILD"},
+                                  {"TARGET_TRIPLET", triplet.canonical_name()},
+                                  {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
+                                  {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
+                                  {"DOWNLOADS", paths.downloads},
 #ifdef USE_MIRROR
-                    {"VCPKG_MIRROR_URL", MACRO_TO_STRING(VCPKG_MIRROR)},
+                                  {"VCPKG_MIRROR_URL", MACRO_TO_STRING(VCPKG_MIRROR)},
 #endif
-                    {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
-            });
-            if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+                                  {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
+                              });
+        if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
         {
             const fs::path& git_exe_path = paths.get_tool_exe(Tools::GIT);
             out_vars.push_back({"GIT", git_exe_path});
