@@ -1,0 +1,5 @@
+The package evpp provides CMake targets:
+
+    find_package(evpp REQUIRED)
+    target_include_directories(main PRIVATE ${EVPP_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${EVPP_LIBRARIES})
