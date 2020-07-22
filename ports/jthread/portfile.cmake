@@ -8,8 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/source/jthread.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-file(INSTALL ${SOURCE_PATH}/source/stop_token.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-file(INSTALL ${SOURCE_PATH}/source/condition_variable_any2.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(INSTALL ${SOURCE_PATH}/source/jthread.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/source/stop_token.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/source/condition_variable_any2.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include})
 
 file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
