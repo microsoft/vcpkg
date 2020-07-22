@@ -666,7 +666,7 @@ namespace
             auto maybe_cachepath = System::get_environment_variable("VCPKG_BINARY_CACHE");
             if (auto p_str = maybe_cachepath.get())
             {
-                const auto path = fs::u8path(*p_str); //(u8path is deprecated in C++20)
+                const auto path = fs::u8path(*p_str);
                 const auto status = fs::stdfs::status(path);
                 if (!fs::stdfs::exists(status))
                     return {"Path to VCPKG_BINARY_CACHE does not exist: " + path.u8string(), expected_right_tag};
