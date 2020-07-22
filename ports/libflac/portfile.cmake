@@ -13,14 +13,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(BUILD_SHARED_LIBS ON)
 else()
     set(BUILD_SHARED_LIBS OFF)
-    vcpkg_replace_string(${SOURCE_PATH}/include/FLAC/export.h
-        "#if defined(FLAC__NO_DLL)"
-        "#if 1"
-    )
-    vcpkg_replace_string(${SOURCE_PATH}/include/FLAC++/export.h
-        "#if defined(FLAC__NO_DLL)"
-        "#if 1"
-    )
 endif()
 
 vcpkg_configure_cmake(
@@ -42,6 +34,26 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/FLAC/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 0"
+    )
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/FLAC++/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 0"
+    )
+else()
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/FLAC/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 1"
+    )
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/FLAC++/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 1"
+    )
+endif()
 
 # This license (BSD) is relevant only for library - if someone would want to install
 # FLAC cmd line tools as well additional license (GPL) should be included
