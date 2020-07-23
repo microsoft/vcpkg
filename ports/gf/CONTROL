@@ -1,6 +1,6 @@
 Source: gf
 Version: 0.17
 Homepage: https://github.com/GamedevFramework/gf
-Description: Gamedev Framework (gf) is a framework to build 2D games in C++14.
-Build-Depends: sdl2, freetype, zlib, boost-algorithm, boost-filesystem, boost-heap, boost-container, stb, pugixml, nuklear
+Description: A framework to build 2D games in C++14.
+Build-Depends: sdl2, freetype, zlib, boost-algorithm, boost-filesystem, boost-heap, boost-container, stb, pugixml
 Supports: !arm
