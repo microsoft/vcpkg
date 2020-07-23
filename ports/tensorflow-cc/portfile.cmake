@@ -79,7 +79,7 @@ set(ENV{TF_CONFIGURE_IOS} 0)
 message(STATUS "Configuring TensorFlow")
 
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py
+    COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     LOGNAME config-${TARGET_TRIPLET}-rel
 )
