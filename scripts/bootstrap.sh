@@ -14,6 +14,11 @@ vcpkgBuildTests="OFF"
 mirrorOpt=""
 for var in "$@"
 do
+    case $var in
+    *=?*) var_optarg=`expr "X$var" : '[^=]*=\(.*\)'` ;;
+    *=)   var_optarg= ;;
+    *)    var_optarg=yes ;;
+    esac
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
         vcpkgDisableMetrics="ON"
     elif [ "$var" = "-useSystemBinaries" -o "$var" = "--useSystemBinaries" ]; then
@@ -22,8 +27,8 @@ do
         vcpkgAllowAppleClang=true
     elif [ "$var" = "-buildTests" ]; then
         vcpkgBuildTests="ON"
-    elif [ -z ${VCPKG_DOWNLOADS+x} ]; then
-        mirrorOpt="-DVCPKG_MIRROR=$useMirror"
+    elif [ -n ${withMirror+x} ]; then
+        mirrorOpt="-DVCPKG_MIRROR=$var_optarg"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
