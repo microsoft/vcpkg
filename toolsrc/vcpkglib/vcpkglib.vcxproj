@@ -272,6 +272,7 @@
     <ClCompile Include="..\src\vcpkg\commands.format-manifest.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.integrate.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.list.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.mirror.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.owns.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.porthistory.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.portsdiff.cpp" />

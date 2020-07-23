@@ -38,6 +38,11 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
+    namespace Mirror
+    {
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
+    }
+
     namespace Env
     {
         extern const CommandStructure COMMAND_STRUCTURE;
