@@ -212,9 +212,11 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
       list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
+      list(APPEND NMAKE_OPTIONS DLLBUILD=0)
   else()
       # Enables PDBs for release and debug builds
       list(APPEND NMAKE_OPTIONS WITH_PDB=1)
+      list(APPEND NMAKE_OPTIONS DLLBUILD=1)
   endif()
 
   if (VCPKG_CRT_LINKAGE STREQUAL static)
@@ -255,7 +257,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
       "PG_LIB=${PGSQL_LIBRARY_DBG} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_DBG}"
       DEBUG=1
   )
-  
+
   # Begin build process
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     ################
@@ -305,12 +307,12 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-      file(COPY ${SOURCE_PATH_RELEASE}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+      file(COPY ${SOURCE_PATH_RELEASE}/gdal.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_id.lib)
+      file(COPY ${SOURCE_PATH_DEBUG}/gdal.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
     endif()
 
   else()
