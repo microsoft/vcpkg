@@ -14,7 +14,7 @@ vcpkg_from_github(
     SHA512 d1d59ae65cb4ef8a71e01b42411029e61bef20e2fd6d95b81c091d7d32b8c30f96d3156d7fd28e177ca83fd74ed113b9e31bf5ef360757524beb7cec7ced4996
     HEAD_REF master
     PATCHES 
-		RocksDB.patch
+  	RocksDB.patch
 )
 
 vcpkg_configure_cmake(
@@ -25,7 +25,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 #Release
-set(OSGEARTH_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/osgearth)
+set(OSGEARTH_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 set(OSGEARTH_TOOL_PLUGIN_PATH ${OSGEARTH_TOOL_PATH}/${OSG_PLUGINS_SUBDIR})
 
 file(MAKE_DIRECTORY ${OSGEARTH_TOOL_PATH})
@@ -60,5 +60,5 @@ file(REMOVE_RECURSE ${OSGDB_DEBUG_PLUGINS})
 
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
