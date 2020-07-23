@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GamedevFramework/gf
     HEAD_REF master
-    REF v0.17.2
-    SHA512 40b93cdb2de3744c7f01957330630c6eb8327ad522a8006d15cd37f380e06b51eb47e8c1b34c3033fd121679ed19420b841ea2a08e39dc9718db99dfab7b5c9e
+    REF v0.17.3
+    SHA512 08ddd51cfc574bfa726ad776e32dcdde55640bf39d52219bad63222a6752721030e22cbbbf40eec56fe3d367942d958117be7c19c08952e2b07d8f4287d66f40
 )
 
 vcpkg_configure_cmake(
@@ -19,14 +19,14 @@ vcpkg_configure_cmake(
         -DGF_SINGLE_COMPILTATION_UNIT=ON
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
     OPTIONS_RELEASE -DGF_DEBUG=OFF
-    OPTIONS_DEBUG -DGF_DEBUG=ON 
+    OPTIONS_DEBUG -DGF_DEBUG=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/share/doc"
