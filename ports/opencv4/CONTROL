@@ -13,7 +13,7 @@ Build-Depends: ade
 Description: graph api
 
 Feature: contrib
-Build-Depends: hdf5 (!uwp), tesseract
+Build-Depends: hdf5 (!uwp), tesseract (!uwp)
 Description: opencv_contrib module
 
 Feature: cuda
