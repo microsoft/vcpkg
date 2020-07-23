@@ -512,8 +512,9 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_USE_ARIA2 = "x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "clean-after-build";
     static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
+    static constexpr StringLiteral OPTION_DISABLE_PROGRESS_BAR = "disable-progress-bar";
 
-    static constexpr std::array<CommandSwitch, 9> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 10> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
@@ -523,6 +524,7 @@ namespace vcpkg::Install
         {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
+        {OPTION_DISABLE_PROGRESS_BAR, "Disable progress bar"},
     }};
     static constexpr std::array<CommandSetting, 2> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
@@ -717,6 +719,7 @@ namespace vcpkg::Install
         const bool is_editable = Util::Sets::contains(options.switches, (OPTION_EDITABLE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
+        const bool disable_progress_bar = Util::Sets::contains(options.switches, (OPTION_DISABLE_PROGRESS_BAR));
         const KeepGoing keep_going =
             to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) || only_downloads);
 
@@ -735,6 +738,7 @@ namespace vcpkg::Install
             download_tool,
             Build::PurgeDecompressFailure::NO,
             Util::Enum::to_enum<Build::Editable>(is_editable),
+            Util::Enum::to_enum<Build::ProgressBar>(disable_progress_bar),
         };
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);

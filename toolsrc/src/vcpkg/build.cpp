@@ -549,6 +549,7 @@ namespace vcpkg::Build
             {"_VCPKG_EDITABLE", Util::Enum::to_bool(action.build_options.editable) ? "1" : "0"},
             {"FEATURES", Strings::join(";", action.feature_list)},
             {"ALL_FEATURES", all_features},
+            {"DISABLE_PROGRESS_BAR", Util::Enum::to_bool(action.build_options.disable_progress_bar) ? "1" : "0"},
         };
         get_generic_cmake_build_args(
             paths,
@@ -681,10 +682,119 @@ namespace vcpkg::Build
         auto stdoutlog = buildpath / ("stdout-" + action.spec.triplet().canonical_name() + ".log");
         std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
         Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", stdoutlog.u8string());
+        std::string outputStack;
+        bool downloadProgressMode = false;
+        bool buildProgressMode = false;
+
         const int return_code = System::cmd_execute_and_stream_data(
             command,
             [&](StringView sv) {
-                System::print2(sv);
+                if (action.build_options.disable_progress_bar == Build::ProgressBar::NO)
+                {
+                    outputStack += sv.to_string();
+
+                    std::string current;
+                    if (outputStack.find('\n') != std::string::npos)
+                    {
+                        size_t pos = outputStack.find('\n');
+                        size_t next_pos = pos + 1;
+                        if (next_pos < outputStack.length())
+                        {
+                            current = outputStack.substr(0, next_pos);
+                            outputStack = outputStack.substr(next_pos);
+                        }
+                        else
+                        {
+                            current = outputStack;
+                            outputStack = "";
+                        }
+
+                        current = Strings::replace_all(std::move(current), "\n", "");
+                        current = Strings::replace_all(std::move(current), "\t", "");
+                        current = Strings::replace_all(std::move(current), "\r", "");
+
+                        int max_steps = 10;
+                        std::smatch download_regex;
+                        std::smatch progress_regex;
+                        if (!downloadProgressMode && !buildProgressMode)
+                        {
+                            if (std::regex_match(current, download_regex, std::regex(R"(-- \[download ([\d]+).*)")))
+                            {
+                                downloadProgressMode = true;
+                            }
+                            else if (std::regex_match(current, progress_regex, std::regex(R"(\[([\d]+)/([\d]+)\].*)")))
+                            {
+                                buildProgressMode = true;
+                            }
+                            else
+                            {
+                                System::print2(current, "\n");
+                            }
+                        }
+                        if (downloadProgressMode)
+                        {
+                            if (std::regex_match(current, download_regex, std::regex(R"(-- \[download ([\d]+).*)")))
+                            {
+                                int current_progress = std::stoi(download_regex.str(1));
+                                int total = 100;
+
+                                int progress = current_progress * max_steps / total;
+                                int progress_left = max_steps - progress;
+
+                                System::print2("\r",
+                                               "-- Download Progress [",
+                                               std::string(progress, '.'),
+                                               std::string(progress_left, ' '),
+                                               "] (",
+                                               download_regex.str(1),
+                                               "%)");
+
+                                if (progress_left <= 0)
+                                {
+                                    downloadProgressMode = false;
+                                    System::print2("\n");
+                                }
+                            }
+                        }
+                        else if (buildProgressMode)
+                        {
+                            if (std::regex_match(current, progress_regex, std::regex(R"(\[([\d]+)/([\d]+)\].*)")))
+                            {
+                                int current_progress = std::stoi(progress_regex.str(1));
+                                int total = std::stoi(progress_regex.str(2)) - 1;
+
+                                if (total == 0)
+                                {
+                                    total = 1;
+                                    current_progress = 1;
+                                }
+
+                                int progress = current_progress * max_steps / total;
+                                int progress_left = max_steps - progress;
+
+                                System::print2("\r",
+                                               "-- Progress [",
+                                               std::string(progress, '.'),
+                                               std::string(progress_left, ' '),
+                                               "] (",
+                                               current_progress,
+                                               "/",
+                                               total,
+                                               ")");
+                            }
+                            else if (current.find("[vcpkg] build process done") != std::string::npos)
+                            {
+                                buildProgressMode = false;
+                                System::print2("\n");
+                            }
+                        }
+                        fflush(stdout);
+                    }
+                }
+                else
+                {
+                    System::print2(sv);
+                }
                 out_file.write(sv.data(), sv.size());
                 Checks::check_exit(
                     VCPKG_LINE_INFO, out_file, "Error occurred while writing '%s'", stdoutlog.u8string());

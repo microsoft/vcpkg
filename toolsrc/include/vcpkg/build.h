@@ -135,6 +135,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class ProgressBar
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -146,6 +152,7 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         PurgeDecompressFailure purge_decompress_failure;
         Editable editable;
+        ProgressBar disable_progress_bar;
     };
 
     static constexpr BuildPackageOptions default_build_package_options{
@@ -158,6 +165,7 @@ namespace vcpkg::Build
         Build::DownloadTool::BUILT_IN,
         Build::PurgeDecompressFailure::YES,
         Build::Editable::NO,
+        Build::ProgressBar::YES,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {

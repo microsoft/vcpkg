@@ -33,20 +33,33 @@
 ## * [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
 include(vcpkg_prettify_command)
 function(vcpkg_execute_build_process)
-    cmake_parse_arguments(_ebp "" "WORKING_DIRECTORY;LOGNAME" "COMMAND;NO_PARALLEL_COMMAND" ${ARGN})
+    cmake_parse_arguments(_ebp "" "WORKING_DIRECTORY;LOGNAME;PROGRESS" "COMMAND;NO_PARALLEL_COMMAND" ${ARGN})
 
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err.log")
 
-    execute_process(
-        COMMAND ${_ebp_COMMAND}
-        WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
-        OUTPUT_FILE ${LOG_OUT}
-        ERROR_FILE ${LOG_ERR}
-        RESULT_VARIABLE error_code
-    )
+    if(NOT _ebp_PROGRESS)
+        set(DISABLE_PROGRESS_BAR "true")
+    endif()
 
-    if(error_code)
+    if(DISABLE_PROGRESS_BAR)
+        execute_process(
+            COMMAND ${_ebp_COMMAND}
+            WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
+            OUTPUT_FILE ${LOG_OUT}
+            ERROR_FILE ${LOG_ERR}
+            RESULT_VARIABLE error_code
+        )
+    else()
+        execute_process(
+            COMMAND ${_ebp_COMMAND}
+            WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
+            RESULT_VARIABLE error_code
+        )
+        message(STATUS "[vcpkg] build process done")
+    endif()
+
+    if(error_code AND DISABLE_PROGRESS_BAR)
         file(READ ${LOG_OUT} out_contents)
         file(READ ${LOG_ERR} err_contents)
 
@@ -139,5 +152,5 @@ function(vcpkg_execute_build_process)
                 "  See logs for more information:\n"
                 ${STRINGIFIED_LOGS})
         endif(error_code)
-    endif(error_code)
+    endif()
 endfunction(vcpkg_execute_build_process)
