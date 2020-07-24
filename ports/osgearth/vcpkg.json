@@ -1,12 +1,12 @@
 {
-  "name":"osgearth",
-  "version-string":"3.0",
-  "homepage":"https://github.com/gwaldron/osgearth",
-  "description":"osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2015 Pelican Mapping.",
-  "dependencies":[
+  "name": "osgearth",
+  "version-string": "3.0",
+  "homepage": "https://github.com/gwaldron/osgearth",
+  "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2015 Pelican Mapping.",
+  "dependencies": [
     {
-      "name":"osg",
-      "features":["plugins"]
+      "name": "osg",
+      "features": ["plugins"]
     }
   ]
 }
