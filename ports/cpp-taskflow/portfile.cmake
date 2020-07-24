@@ -5,8 +5,9 @@ vcpkg_from_github(
     REF ccf1711401c5f0cced3c87806e5a348d7c2076ee  #v2.5.0
     SHA512 dac700ad5c914435e83be5ae8dc6720d43748d523c84829b19831e080f5f48c25916b029ec7f97e9898e37117087be1150d216bfe9de547131a7462cce709798
     HEAD_REF master
-	PATCHES
-	    fix-bigobj.patch
+    PATCHES
+        fix-bigobj.patch
+
 )
 
 vcpkg_configure_cmake(
