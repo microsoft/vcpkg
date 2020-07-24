@@ -3,7 +3,7 @@ vcpkg_from_sourceforge(
     REPO qwt/qwt
     REF 6.1.4
     FILENAME "qwt-6.1.4.zip"
-    SHA512 c7f9d4c715479421640e484b2834e0a6868844b1e4986513147e911e02f9af1ef8393d6f8196aca50880fcaa870e60a9b91bc429e30199280e31b8c37fb14b3e 
+    SHA512 711256ec4d1d54d201650e9c63b584b17a61dbedde5a581e0b6227fdbee149cdbe2a889aa58f67777125b6471fc1fe248992ec845eb6481a2dfc2c4276701d7f 
     PATCHES fix-dynamic-static.patch
             build.patch
 )
