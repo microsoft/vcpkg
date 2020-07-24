@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3eef6ec..e8217c7 100644
+index 3eef6ec..994e427 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -33,6 +33,20 @@ endif()
@@ -32,6 +32,15 @@ index 3eef6ec..e8217c7 100644
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
          link_libraries("-static-libgcc -static-libstdc++")
          link_libraries(libc++.a)
+@@ -402,7 +416,7 @@ if (NOT DIST_ARCH)
+     set(DIST_ARCH x86_64)
+ endif()
+ if (NOT DIST_DIR)
+-    set(DIST_DIR "${DIST_ARCH}")
++    set(DIST_DIR "")
+ endif()
+ 
+ # ==================================================================================================
 @@ -521,7 +535,6 @@ endfunction()
  # ==================================================================================================
  

@@ -6,6 +6,7 @@
   "dependencies": [
     "assimp",
     "benchmark",
+    "freetype",
     "gtest",
     "imgui",
     "libpng",
