@@ -441,9 +441,18 @@ index 09eef92..f8629e9 100644
 -set(PRE_BUILT_3RDPARTY_LIBRARIES ${PRE_BUILT_3RDPARTY_LIBRARIES} PARENT_SCOPE)
 +set(PRE_BUILT_3RDPARTY_LIBRARIES ${3RDPARTY_LIBRARIES} PARENT_SCOPE)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3e967fc..b52e58d 100644
+index 3e967fc..2ec6eb5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -303,7 +303,7 @@ endif ()
+ 
+ # Set OpenMP
+ if (WITH_OPENMP)
+-    find_package(OpenMP QUIET)
++    find_package(OpenMP REQUIRED)
+     if (OPENMP_FOUND)
+         message(STATUS "Using installed OpenMP ${OpenMP_VERSION}")
+         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 @@ -336,6 +336,24 @@ macro(ADD_SOURCE_GROUP MODULE_NAME)
      source_group("Source Files\\${MODULE_NAME}" FILES ${MODULE_SOURCE_FILES})
  endmacro(ADD_SOURCE_GROUP)
@@ -566,6 +575,57 @@ index 4a47b90..119c160 100644
  # uninstall target
  if (NOT TARGET uninstall)
      configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+diff --git a/src/Open3D/GUI/CMakeLists.txt b/src/Open3D/GUI/CMakeLists.txt
+index b3396f5..734702c 100644
+--- a/src/Open3D/GUI/CMakeLists.txt
++++ b/src/Open3D/GUI/CMakeLists.txt
+@@ -40,7 +40,7 @@ if (IOS OR ANDROID)
+ elseif (NOT WIN32)
+     set(GUI_MATC_ARGS --platform desktop)
+ endif()
+-set(FILAMENT_MATC ${3RDPARTY_INSTALL_PREFIX}/bin/matc)
++set(FILAMENT_MATC ${VCPKG_CURRENT_INSTALLED_DIR}/filament/matc)
+ 
+ set(GUI_MATERIAL_COMPILED_FILES "")
+ foreach(matsrc IN ITEMS ${GUI_MATERIAL_SOURCE_FILES})
+@@ -54,11 +54,11 @@ endforeach()
+ 
+ add_custom_target(GuiResources
+                   DEPENDS ${GUI_MATERIAL_COMPILED_FILES})
+-add_dependencies(GuiResources filament_copy)
++find_package(filament)
++add_dependencies(GuiResources filament)
+ add_dependencies(GUI GuiResources)
+ 
+ # Export GUI_RESOURCE_FILES to parent CMake context (src/Open3D/)
+ set(GUI_RESOURCE_FILES
+     ${GUI_RESOURCE_SOURCE_FILES} ${GUI_MATERIAL_COMPILED_FILES}
+     PARENT_SCOPE)
+-
+diff --git a/src/Open3D/GUI/ImguiFilamentBridge.cpp b/src/Open3D/GUI/ImguiFilamentBridge.cpp
+index 55cea98..5fb5193 100644
+--- a/src/Open3D/GUI/ImguiFilamentBridge.cpp
++++ b/src/Open3D/GUI/ImguiFilamentBridge.cpp
+@@ -55,8 +55,8 @@
+ #include <filament/TextureSampler.h>
+ #include <filament/TransformManager.h>
+ #include <filament/VertexBuffer.h>
+-#include <filament/filamat/MaterialBuilder.h>
+-#include <filament/utils/EntityManager.h>
++#include <filamat/MaterialBuilder.h>
++#include <utils/EntityManager.h>
+ #include <imgui.h>
+ #include <cerrno>
+ #include <cstddef>  // <filament/Engine> recursive includes needs this, std::size_t especially
+@@ -213,8 +213,6 @@ ImguiFilamentBridge::ImguiFilamentBridge(
+             dynamic_cast<visualization::FilamentView*>(scene->GetView(view_id));
+ 
+     auto native_view = impl_->view_->GetNativeView();
+-    native_view->setClearTargets(false, false, false);
+-    native_view->setRenderTarget(View::TargetBufferFlags::DEPTH_AND_STENCIL);
+     native_view->setPostProcessingEnabled(false);
+     native_view->setShadowsEnabled(false);
+ 
 diff --git a/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp b/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp
 index 363be9b..1cba61d 100644
 --- a/src/Open3D/Geometry/SurfaceReconstructionPoisson.cpp
@@ -654,3 +714,178 @@ index 73e3782..4645272 100644
  #include <io.h>
  #include <windows.h>
  #ifndef PATH_MAX
+diff --git a/src/Open3D/Visualization/Rendering/Filament/FilamentCamera.cpp b/src/Open3D/Visualization/Rendering/Filament/FilamentCamera.cpp
+index 0686dc2..ebf6979 100644
+--- a/src/Open3D/Visualization/Rendering/Filament/FilamentCamera.cpp
++++ b/src/Open3D/Visualization/Rendering/Filament/FilamentCamera.cpp
+@@ -23,6 +23,12 @@
+ // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ // IN THE SOFTWARE.
+ // ----------------------------------------------------------------------------
++#include <math/mat2.h>
++#include <math/mat3.h>
++#include <math/mat4.h>
++#include <math/vec2.h>
++#include <math/vec3.h>
++#include <math/vec4.h>
+ 
+ #include "Open3D/Visualization/Rendering/Filament/FilamentCamera.h"
+ 
+diff --git a/src/Open3D/Visualization/Rendering/Filament/FilamentRenderer.h b/src/Open3D/Visualization/Rendering/Filament/FilamentRenderer.h
+index 41a1a1b..90eaa4c 100644
+--- a/src/Open3D/Visualization/Rendering/Filament/FilamentRenderer.h
++++ b/src/Open3D/Visualization/Rendering/Filament/FilamentRenderer.h
+@@ -28,7 +28,7 @@
+ 
+ #include "Open3D/Visualization/Rendering/Renderer.h"
+ 
+-#include <filament/utils/Entity.h>
++#include <utils/Entity.h>
+ #include <memory>
+ #include <unordered_map>
+ #include <unordered_set>
+diff --git a/src/Open3D/Visualization/Rendering/Filament/FilamentResourceManager.cpp b/src/Open3D/Visualization/Rendering/Filament/FilamentResourceManager.cpp
+index 3b4fb22..5bfb590 100644
+--- a/src/Open3D/Visualization/Rendering/Filament/FilamentResourceManager.cpp
++++ b/src/Open3D/Visualization/Rendering/Filament/FilamentResourceManager.cpp
+@@ -36,8 +36,8 @@
+ #include <filament/Skybox.h>
+ #include <filament/Texture.h>
+ #include <filament/TextureSampler.h>
+-#include <filament/image/KtxBundle.h>
+-#include <filament/image/KtxUtility.h>
++#include <image/KtxBundle.h>
++#include <image/KtxUtility.h>
+ 
+ #include "Open3D/GUI/Application.h"
+ #include "Open3D/IO/ClassIO/ImageIO.h"
+diff --git a/src/Open3D/Visualization/Rendering/Filament/FilamentScene.cpp b/src/Open3D/Visualization/Rendering/Filament/FilamentScene.cpp
+index fdc909c..ba9b2f8 100644
+--- a/src/Open3D/Visualization/Rendering/Filament/FilamentScene.cpp
++++ b/src/Open3D/Visualization/Rendering/Filament/FilamentScene.cpp
+@@ -37,7 +37,7 @@
+ #include <filament/TextureSampler.h>
+ #include <filament/TransformManager.h>
+ #include <filament/View.h>
+-#include <filament/utils/EntityManager.h>
++#include <utils/EntityManager.h>
+ 
+ #include "Open3D/Geometry/BoundingVolume.h"
+ #include "Open3D/Geometry/LineSet.h"
+diff --git a/src/Open3D/Visualization/Rendering/Filament/FilamentScene.h b/src/Open3D/Visualization/Rendering/Filament/FilamentScene.h
+index f0e6bf5..75bccc1 100644
+--- a/src/Open3D/Visualization/Rendering/Filament/FilamentScene.h
++++ b/src/Open3D/Visualization/Rendering/Filament/FilamentScene.h
+@@ -26,8 +26,8 @@
+ 
+ #pragma once
+ 
+-#include <filament/utils/Entity.h>
+-#include <filament/utils/EntityInstance.h>
++#include <utils/Entity.h>
++#include <utils/EntityInstance.h>
+ 
+ #include <memory>
+ #include <unordered_map>
+diff --git a/src/Open3D/Visualization/Rendering/Filament/FilamentView.cpp b/src/Open3D/Visualization/Rendering/Filament/FilamentView.cpp
+index 50bea62..3ae71c2 100644
+--- a/src/Open3D/Visualization/Rendering/Filament/FilamentView.cpp
++++ b/src/Open3D/Visualization/Rendering/Filament/FilamentView.cpp
+@@ -51,6 +51,7 @@ const filament::LinearColorA kDepthClearColor = {0.f, 0.f, 0.f, 0.f};
+ const filament::LinearColorA kNormalsClearColor = {0.5f, 0.5f, 0.5f, 1.f};
+ #endif
+ 
++/*
+ filament::View::TargetBufferFlags FlagsFromTargetBuffers(
+         const View::TargetBuffers& buffers) {
+     using namespace std;
+@@ -72,7 +73,9 @@ filament::View::TargetBufferFlags FlagsFromTargetBuffers(
+ 
+     return static_cast<filament::View::TargetBufferFlags>(raw_filament_buffers);
+ }
+-}  // namespace
++*/
++
++} // namespace
+ 
+ FilamentView::FilamentView(filament::Engine& engine,
+                            FilamentResourceManager& resource_mgr)
+@@ -145,7 +148,7 @@ void FilamentView::SetMode(Mode mode) {
+ 
+ void FilamentView::SetDiscardBuffers(const TargetBuffers& buffers) {
+     discard_buffers_ = buffers;
+-    view_->setRenderTarget(nullptr, FlagsFromTargetBuffers(buffers));
++    view_->setRenderTarget(nullptr);
+ }
+ 
+ void FilamentView::SetSampleCount(int n) { view_->setSampleCount(n); }
+@@ -162,13 +165,6 @@ void FilamentView::SetViewport(std::int32_t x,
+ void FilamentView::SetClearColor(const Eigen::Vector3f& color) {
+     clear_color_ = color;
+ 
+-#if AUTO_CLEAR_COLOR
+-    if (mode_ == Mode::Color || mode_ >= Mode::ColorMapX) {
+-        view_->setClearColor({color.x(), color.y(), color.z(), 1.f});
+-    }
+-#else
+-    view_->setClearColor({color.x(), color.y(), color.z(), 1.f});
+-#endif
+ }
+ 
+ void FilamentView::SetSSAOEnabled(const bool enabled) {
+@@ -181,8 +177,7 @@ Camera* FilamentView::GetCamera() const { return camera_.get(); }
+ 
+ void FilamentView::CopySettingsFrom(const FilamentView& other) {
+     SetMode(other.mode_);
+-    view_->setRenderTarget(nullptr,
+-                           FlagsFromTargetBuffers(other.discard_buffers_));
++    view_->setRenderTarget(nullptr);
+ 
+     auto vp = other.view_->getViewport();
+     SetViewport(0, 0, vp.width, vp.height);
+diff --git a/src/Open3D/Visualization/Rendering/Filament/PointCloudBuffers.cpp b/src/Open3D/Visualization/Rendering/Filament/PointCloudBuffers.cpp
+index 6d437c8..0c2dad4 100644
+--- a/src/Open3D/Visualization/Rendering/Filament/PointCloudBuffers.cpp
++++ b/src/Open3D/Visualization/Rendering/Filament/PointCloudBuffers.cpp
+@@ -26,7 +26,7 @@
+ 
+ #include <filament/IndexBuffer.h>
+ #include <filament/VertexBuffer.h>
+-#include <filament/geometry/SurfaceOrientation.h>
++#include <geometry/SurfaceOrientation.h>
+ #include <Eigen/Core>
+ 
+ #include "Open3D/Geometry/BoundingVolume.h"
+@@ -142,7 +142,7 @@ GeometryBuffersBuilder::Buffers PointCloudBuffersBuilder::ConstructBuffers() {
+                                    .normals(reinterpret_cast<math::float3*>(
+                                            normals.data()))
+                                    .build();
+-        orientation.getQuats(float4v_tagents, n_vertices);
++        orientation->getQuats(float4v_tagents, n_vertices);
+     }
+ 
+     const size_t vertices_byte_count = n_vertices * sizeof(ColoredVertex);
+diff --git a/src/Open3D/Visualization/Rendering/Filament/TriangleMeshBuffers.cpp b/src/Open3D/Visualization/Rendering/Filament/TriangleMeshBuffers.cpp
+index 4b7d501..a8bbdd8 100644
+--- a/src/Open3D/Visualization/Rendering/Filament/TriangleMeshBuffers.cpp
++++ b/src/Open3D/Visualization/Rendering/Filament/TriangleMeshBuffers.cpp
+@@ -29,8 +29,8 @@
+ #include <filament/Scene.h>
+ #include <filament/TransformManager.h>
+ #include <filament/VertexBuffer.h>
+-#include <filament/filament/MaterialEnums.h>
+-#include <filament/geometry/SurfaceOrientation.h>
++#include <filament/MaterialEnums.h>
++#include <geometry/SurfaceOrientation.h>
+ 
+ #include <map>
+ 
+@@ -386,7 +386,7 @@ GeometryBuffersBuilder::Buffers TriangleMeshBuffersBuilder::ConstructBuffers() {
+                                    .normals(reinterpret_cast<math::float3*>(
+                                            normals.data()))
+                                    .build();
+-        orientation.getQuats(float4v_tangents, n_vertices);
++        orientation->getQuats(float4v_tangents, n_vertices);
+     } else {
+         utility::LogWarning(
+                 "Trying to create mesh without vertex normals. Shading would "
