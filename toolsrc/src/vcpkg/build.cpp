@@ -26,9 +26,6 @@
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkglib.h>
 
-#define STRINGIFY(...) #__VA_ARGS__
-#define MACRO_TO_STRING(X) STRINGIFY(X)
-
 using namespace vcpkg;
 using vcpkg::Build::BuildResult;
 using vcpkg::Parse::ParseControlErrorInfo;
