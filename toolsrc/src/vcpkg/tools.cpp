@@ -14,9 +14,6 @@
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgpaths.h>
 
-#define STRINGIFY(...) #__VA_ARGS__
-#define MACRO_TO_STRING(X) STRINGIFY(X)
-
 namespace vcpkg
 {
     struct ToolData
@@ -99,16 +96,20 @@ namespace vcpkg
         const std::string sha512 =
             StringView::find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
 
-#if USE_MIRROR == 1
-        const std::string srcUrl = StringView::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
-        std::string url = "ftp://";
-        url += MACRO_TO_STRING(VCPKG_MIRROR);
-        url += "//" + sha512.substr(0, 10) +
-               srcUrl.substr(srcUrl.find_last_of('.'), srcUrl.length() - srcUrl.find_last_of('.'));
-#else
-        const std::string url = StringView::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
+        std::string url;
+        auto mirrorUrl = System::get_environment_variable("VCPKG_EXPERIMENTAL_MIRROR_URL");
+        if (mirrorUrl.has_value())
+        {
+            const std::string srcUrl = StringView::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
+            url = "ftp://";
+            url += *mirrorUrl.get();
+            url += "//" + sha512;
+        }
+        else
+        {
+            url = StringView::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
+        }
 
-#endif
         auto archive_name = StringView::find_at_most_one_enclosed(tool_data, "<archiveName>", "</archiveName>");
 
         const Optional<std::array<int, 3>> version = parse_version_string(version_as_string);

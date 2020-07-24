@@ -939,11 +939,9 @@ namespace vcpkg::Commands::Mirror
             if (!fs.is_directory(file))
             {
                 std::string fileHash = vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, vcpkg::Hash::Algorithm::Sha256);
-                fileHash = fileHash.substr(0, 10);
                 auto newpath = file.parent_path();
                 newpath += "\\";
                 newpath += fileHash;
-                newpath += file.extension();
                 fs.rename(file, newpath, ec);
             }
         }

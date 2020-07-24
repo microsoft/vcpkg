@@ -11,14 +11,8 @@ vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
 vcpkgAllowAppleClang=false
 vcpkgBuildTests="OFF"
-mirrorOpt=""
 for var in "$@"
 do
-    case $var in
-    *=?*) var_optarg=`expr "X$var" : '[^=]*=\(.*\)'` ;;
-    *=)   var_optarg= ;;
-    *)    var_optarg=yes ;;
-    esac
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
         vcpkgDisableMetrics="ON"
     elif [ "$var" = "-useSystemBinaries" -o "$var" = "--useSystemBinaries" ]; then
@@ -27,8 +21,6 @@ do
         vcpkgAllowAppleClang=true
     elif [ "$var" = "-buildTests" ]; then
         vcpkgBuildTests="ON"
-    elif [ -n ${withMirror+x} ]; then
-        mirrorOpt="-DVCPKG_MIRROR=$var_optarg"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
@@ -37,7 +29,6 @@ do
         echo "    -disableMetrics      Do not build metrics reporting into the executable"
         echo "    -useSystemBinaries   Force use of the system utilities for building vcpkg"
         echo "    -allowAppleClang     Set VCPKG_ALLOW_APPLE_CLANG to build vcpkg in apple with clang anyway"
-        echo "    -withMirror          Set vcpkg mirror url"
         exit 1
     else
         echo "Unknown argument $var. Use '-help' for help."
@@ -258,7 +249,7 @@ buildDir="$vcpkgRootDir/toolsrc/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-(cd "$buildDir" && CXX="$CXX" "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang" $mirrorOpt) || exit 1
+(cd "$buildDir" && CXX="$CXX" "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"

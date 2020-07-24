@@ -15,7 +15,6 @@ option(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang, even versions t
 option(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings" ON)
 option(VCPKG_WARNINGS_AS_ERRORS "Set warnings to be errors" ${VCPKG_DEVELOPMENT_WARNINGS})
 option(VCPKG_BUILD_FUZZING "Option for enabling vcpkg-fuzz support" OFF)
-option(VCPKG_MIRROR "Set vcpkg mirrorl url" "")
 
 CMAKE_DEPENDENT_OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF
     "BUILD_TESTING" OFF)
@@ -112,11 +111,6 @@ endif()
 # ===============
 
 add_compile_definitions(VCPKG_DISABLE_METRICS=$<BOOL:${VCPKG_DISABLE_METRICS}>)
-if (VCPKG_MIRROR)
-    add_compile_definitions(USE_MIRROR=1 VCPKG_MIRROR=${VCPKG_MIRROR})
-else()
-    add_compile_definitions(USE_MIRROR=0)
-endif()
 include_directories(include)
 file(GLOB_RECURSE VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})

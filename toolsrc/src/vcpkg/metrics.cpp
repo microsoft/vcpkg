@@ -11,6 +11,8 @@
 #include <vcpkg/metrics.h>
 
 #if defined(_WIN32)
+#include <winhttp.h>
+
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
 #endif
@@ -383,7 +385,7 @@ namespace vcpkg::Metrics
 
 #if !defined(_WIN32)
         Util::unused(payload);
-#elif USE_MIRROR != 1
+#else
         HINTERNET connect = nullptr, request = nullptr;
         BOOL results = FALSE;
 

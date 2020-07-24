@@ -4,8 +4,7 @@ param(
     [Parameter(Mandatory=$False)][switch]$disableMetrics = $false,
     [Parameter(Mandatory=$False)][switch]$win64 = $false,
     [Parameter(Mandatory=$False)][string]$withVSPath = "",
-    [Parameter(Mandatory=$False)][string]$withWinSDK = "",
-    [Parameter(Mandatory=$False)][string]$withMirror = ""
+    [Parameter(Mandatory=$False)][string]$withWinSDK = ""
 )
 Set-StrictMode -Version Latest
 # Powershell2-compatible way of forcing named-parameters
@@ -369,20 +368,9 @@ else
     $PreferredToolArchitecture = "x86"
 }
 
-if ($withMirror -ne "")
-{
-    $useMirror="1"
-}
-else
-{
-    $useMirror="0"
-}
-
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
 "`"/p:DISABLE_METRICS=$disableMetricsValue`"",
-"`"/p:USE_MIRROR=$useMirror`"",
-"`"/p:VCPKG_MIRROR=$withMirror`"",
 "/p:Configuration=Release",
 "/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",

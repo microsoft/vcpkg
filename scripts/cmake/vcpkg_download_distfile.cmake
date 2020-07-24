@@ -70,10 +70,8 @@ function(vcpkg_download_distfile VAR)
         endif()
     endif()
     
-    if (DEFINED VCPKG_MIRROR_URL AND VCPKG_MIRROR_URL)
-        string(REGEX REPLACE "^.+[\..*]" "." FILE_SUFFIX ${vcpkg_download_distfile_FILENAME})
-        string(SUBSTRING ${vcpkg_download_distfile_SHA512} 0 10 vcpkg_download_distfile_FILENAME)
-        set(vcpkg_download_distfile_FILENAME ${vcpkg_download_distfile_FILENAME}${FILE_SUFFIX})
+    if (ENV{VCPKG_EXPERIMENTAL_MIRROR_URL})
+        set(vcpkg_download_distfile_FILENAME $ENV{VCPKG_EXPERIMENTAL_MIRROR_URL})
         set(vcpkg_download_distfile_URLS "ftp://${VCPKG_MIRROR_URL}/${vcpkg_download_distfile_FILENAME}")
     endif()
 
