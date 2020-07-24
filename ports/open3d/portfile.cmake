@@ -12,10 +12,16 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_WINDOWS_RUNTIME)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "openmp"   WITH_OPENMP
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
+        -DVCPKG_CURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}/tools
         -DBUILD_CPP_EXAMPLES=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_BENCHMARKS=OFF
@@ -40,7 +46,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Open3D)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/Open3D/IO/FileFormat")
