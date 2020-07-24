@@ -18,7 +18,13 @@
     "gflags",
     "glew",
     "qt5-base",
-    "ceres",
+    {
+      "name": "ceres",
+      "features": [
+        "suitesparse",
+        "lapack"
+      ]
+    },
     {
       "name": "cgal",
       "features": [
