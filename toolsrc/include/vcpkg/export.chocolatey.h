@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
-
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgpaths.h>
+
+#include <vector>
 
 namespace vcpkg::Export::Chocolatey
 {

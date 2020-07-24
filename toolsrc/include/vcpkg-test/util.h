@@ -2,11 +2,12 @@
 
 #include <catch2/catch.hpp>
 
-#include <memory>
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/pragmas.h>
+
 #include <vcpkg/statusparagraph.h>
+
+#include <memory>
 
 #define CHECK_EC(ec)                                                                                                   \
     do                                                                                                                 \

@@ -1,12 +1,12 @@
 #include "pch.h"
 
-#include <ctime>
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
+
+#include <ctime>
 
 using namespace vcpkg::System;
 
@@ -19,6 +19,7 @@ namespace vcpkg
         if (Strings::case_insensitive_ascii_equals(arch, "amd64")) return CPUArchitecture::X64;
         if (Strings::case_insensitive_ascii_equals(arch, "arm")) return CPUArchitecture::ARM;
         if (Strings::case_insensitive_ascii_equals(arch, "arm64")) return CPUArchitecture::ARM64;
+        if (Strings::case_insensitive_ascii_equals(arch, "s390x")) return CPUArchitecture::S390X;
         return nullopt;
     }
 
@@ -30,6 +31,7 @@ namespace vcpkg
             case CPUArchitecture::X64: return "x64";
             case CPUArchitecture::ARM: return "arm";
             case CPUArchitecture::ARM64: return "arm64";
+            case CPUArchitecture::S390X: return "s390x";
             default: Checks::exit_with_message(VCPKG_LINE_INFO, "unexpected vcpkg::System::CPUArchitecture");
         }
     }
@@ -51,6 +53,8 @@ namespace vcpkg
         return CPUArchitecture::ARM;
 #elif defined(__aarch64__) || defined(_M_ARM64)
         return CPUArchitecture::ARM64;
+#elif defined(__s390x__)
+        return CPUArchitecture::S390X;
 #else // choose architecture
 #error "Unknown host architecture"
 #endif // choose architecture
@@ -135,7 +139,20 @@ namespace vcpkg
         static ExpectedS<fs::path> s_home = []() -> ExpectedS<fs::path> {
             auto maybe_home = System::get_environment_variable("LOCALAPPDATA");
             if (!maybe_home.has_value() || maybe_home.get()->empty())
-                return {"unable to read %LOCALAPPDATA%", ExpectedRightTag{}};
+            {
+                // Consult %APPDATA% as a workaround for Service accounts
+                // Microsoft/vcpkg#12285
+                maybe_home = System::get_environment_variable("APPDATA");
+                if (!maybe_home.has_value() || maybe_home.get()->empty())
+                {
+                    return {"unable to read %LOCALAPPDATA% or %APPDATA%", ExpectedRightTag{}};
+                }
+
+                auto p = fs::u8path(*maybe_home.get()).parent_path();
+                p /= "Local";
+                if (!p.is_absolute()) return {"%APPDATA% was not an absolute path", ExpectedRightTag{}};
+                return {std::move(p), ExpectedLeftTag{}};
+            }
 
             auto p = fs::u8path(*maybe_home.get());
             if (!p.is_absolute()) return {"%LOCALAPPDATA% was not an absolute path", ExpectedRightTag{}};
