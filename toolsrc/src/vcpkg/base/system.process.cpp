@@ -302,6 +302,8 @@ namespace vcpkg
             // Environment variables needed for ssh-agent based authentication
             L"SSH_AUTH_SOCK",
             L"SSH_AGENT_PID",
+            // Environment variables to set the vcpkg mirror address
+            L"VCPKG_EXPERIMENTAL_MIRROR_URL",
             // Enables find_package(CUDA) and enable_language(CUDA) in CMake
             L"CUDA_PATH",
             L"CUDA_PATH_V9_0",

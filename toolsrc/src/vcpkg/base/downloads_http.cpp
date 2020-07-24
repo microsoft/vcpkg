@@ -15,9 +15,9 @@ namespace vcpkg::Downloads
 {
 #if defined(_WIN32)
     void winhttp_download_file(Files::Filesystem& fs,
-                                      ZStringView target_file_path,
-                                      StringView hostname,
-                                      StringView url_path)
+                               ZStringView target_file_path,
+                               StringView hostname,
+                               StringView url_path)
     {
         // Make sure the directories are present, otherwise fopen_s fails
         const auto dir = fs::path(target_file_path.c_str()).parent_path();

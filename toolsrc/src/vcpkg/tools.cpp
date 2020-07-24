@@ -12,6 +12,7 @@
 
 #include <vcpkg/archives.h>
 #include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg
@@ -97,12 +98,11 @@ namespace vcpkg
             StringView::find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
 
         std::string url;
-        auto mirrorUrl = System::get_environment_variable("VCPKG_EXPERIMENTAL_MIRROR_URL");
-        if (mirrorUrl.has_value())
+        if (paths.vcpkg_use_mirror)
         {
             const std::string srcUrl = StringView::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
             url = "ftp://";
-            url += *mirrorUrl.get();
+            url += paths.vcpkg_mirror_url;
             url += "//" + sha512;
         }
         else
@@ -204,7 +204,7 @@ namespace vcpkg
         {
             System::print2("Downloading ", tool_name, "...\n");
             System::print2("  ", tool_data.url, " -> ", tool_data.download_path.u8string(), "\n");
-            Downloads::download_file(fs, tool_data.url, tool_data.download_path, tool_data.sha512);
+            Downloads::download_file(fs, tool_data.url, paths.vcpkg_use_mirror, tool_data.download_path, tool_data.sha512);
         }
         else
         {

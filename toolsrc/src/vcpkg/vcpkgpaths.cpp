@@ -229,6 +229,9 @@ If you wish to silence this error and use classic mode, you can:
 
         ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
 
+        vcpkg_mirror_url = *args.download_mirror_url.get();
+        vcpkg_use_mirror = args.use_mirror.get();
+
         for (auto&& overlay_triplets_dir : args.overlay_triplets)
         {
             m_pimpl->triplets_dirs.emplace_back(

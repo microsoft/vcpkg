@@ -70,9 +70,9 @@ function(vcpkg_download_distfile VAR)
         endif()
     endif()
     
-    if (ENV{VCPKG_EXPERIMENTAL_MIRROR_URL})
-        set(vcpkg_download_distfile_FILENAME $ENV{VCPKG_EXPERIMENTAL_MIRROR_URL})
-        set(vcpkg_download_distfile_URLS "ftp://${VCPKG_MIRROR_URL}/${vcpkg_download_distfile_FILENAME}")
+    if (NOT ENV{VCPKG_EXPERIMENTAL_MIRROR_URL} STREQUAL "")
+        message(STATUS "Use vcpkg mirror $ENV{VCPKG_EXPERIMENTAL_MIRROR_URL}")
+        set(vcpkg_download_distfile_URLS "ftp://$ENV{VCPKG_EXPERIMENTAL_MIRROR_URL}/${vcpkg_download_distfile_SHA512}")
     endif()
 
     set(downloaded_file_path ${DOWNLOADS}/${vcpkg_download_distfile_FILENAME})

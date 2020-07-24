@@ -111,6 +111,9 @@ namespace vcpkg
 
         fs::path ports_cmake;
 
+        std::string vcpkg_mirror_url;
+        bool vcpkg_use_mirror;
+
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
 

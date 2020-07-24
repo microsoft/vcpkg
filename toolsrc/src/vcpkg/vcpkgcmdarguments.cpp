@@ -663,6 +663,16 @@ namespace vcpkg
             }
         }
 
+        if (!download_mirror_url)
+        {
+            const auto vcpkg_mirror_env = vcpkg::System::get_environment_variable(VCPKG_EXPERIMENTAL_MIRROR_URL);
+            if (const auto unpacked = vcpkg_mirror_env.get())
+            {
+                download_mirror_url = std::make_unique<std::string>(*unpacked);
+                use_mirror = true;
+            }
+        }
+
         const auto vcpkg_feature_flags_env = System::get_environment_variable(FEATURE_FLAGS_ENV);
         if (const auto v = vcpkg_feature_flags_env.get())
         {

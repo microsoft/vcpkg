@@ -152,6 +152,10 @@ namespace vcpkg
         constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
         Optional<bool> wait_for_lock = nullopt;
 
+        constexpr static StringLiteral VCPKG_EXPERIMENTAL_MIRROR_URL = "VCPKG_EXPERIMENTAL_MIRROR_URL";
+        std::unique_ptr<std::string> download_mirror_url;
+        Optional<bool> use_mirror = nullopt;
+
         // feature flags
         constexpr static StringLiteral FEATURE_FLAGS_ENV = "VCPKG_FEATURE_FLAGS";
         constexpr static StringLiteral FEATURE_FLAGS_ARG = "feature-flags";

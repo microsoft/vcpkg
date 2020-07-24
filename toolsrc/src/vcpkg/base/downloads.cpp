@@ -43,6 +43,7 @@ namespace vcpkg::Downloads
 
     void download_file(vcpkg::Files::Filesystem& fs,
                        const std::string& url,
+                       const bool use_mirror,
                        const fs::path& download_path,
                        const std::string& sha512)
     {
@@ -52,20 +53,15 @@ namespace vcpkg::Downloads
         fs.remove(download_path, ec);
         fs.remove(download_path_part_path, ec);
 #if defined(_WIN32)
-        auto mirrorUrl = System::get_environment_variable("VCPKG_EXPERIMENTAL_MIRROR_URL");
-        auto url_no_proto = url;
-        if (mirrorUrl.has_value())
-            url_no_proto = url_no_proto.substr(6); // drop ftp://
-        else
-            url_no_proto = url_no_proto.substr(8); // drop https://
+        auto url_no_proto = url.substr(use_mirror ? 6 : 8); // drop ftp:// or https://
         auto path_begin = Util::find(url_no_proto, '/');
         std::string hostname(url_no_proto.begin(), path_begin);
         std::string path(path_begin, url_no_proto.end());
 
-        if (mirrorUrl.has_value())
+        if (use_mirror)
             ftp_download_file(fs, download_path_part, hostname, path);
         else
-        winhttp_download_file(fs, download_path_part, hostname, path);
+            winhttp_download_file(fs, download_path_part, hostname, path);
 #else
         const auto code = System::cmd_execute(
             Strings::format(R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));

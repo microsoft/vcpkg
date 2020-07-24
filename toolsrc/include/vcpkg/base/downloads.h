@@ -21,6 +21,7 @@ namespace vcpkg::Downloads
 
     void download_file(Files::Filesystem& fs,
                        const std::string& url,
+                       const bool use_mirror,
                        const fs::path& download_path,
                        const std::string& sha512);
 }
