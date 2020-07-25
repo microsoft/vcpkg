@@ -17567,6 +17567,7 @@ OPENXR_HPP_INLINE XrGraphicsBindingEGLMNDX *put(GraphicsBindingEGLMNDX &h) {
 
 #endif // defined(XR_USE_PLATFORM_EGL)
 
+#if 0
 struct SpatialGraphNodeSpaceCreateInfoMSFT
     : public traits::TypedStructTraits<SpatialGraphNodeSpaceCreateInfoMSFT> {
 private:
@@ -17615,6 +17616,7 @@ OPENXR_HPP_INLINE XrSpatialGraphNodeSpaceCreateInfoMSFT *
 put(SpatialGraphNodeSpaceCreateInfoMSFT &h) {
   return &(h.operator XrSpatialGraphNodeSpaceCreateInfoMSFT &());
 }
+#endif
 
 struct SystemHandTrackingPropertiesEXT
     : public traits::TypedStructTraits<SystemHandTrackingPropertiesEXT> {
