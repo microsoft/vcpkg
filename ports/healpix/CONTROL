@@ -1,5 +1,6 @@
 Source: healpix
-Version: 1.12.10-5
+Version: 1.12.10
+Port-Version: 6
 Homepage: http://healpix.sourceforge.net/
 Description: HEALPix is an acronym for Hierarchical Equal Area isoLatitude Pixelation of a sphere.
 Build-Depends: cfitsio

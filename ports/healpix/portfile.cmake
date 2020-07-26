@@ -10,6 +10,7 @@ vcpkg_from_sourceforge(
 )
 
 vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH src/cxx
     COPY_SOURCE
