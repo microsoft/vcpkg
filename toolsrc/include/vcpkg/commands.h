@@ -4,8 +4,6 @@
 #include <vcpkg/commands.interface.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/statusparagraphs.h>
-#include <vcpkg/vcpkgcmdarguments.h>
-#include <vcpkg/vcpkgpaths.h>
 
 #include <array>
 #include <map>
