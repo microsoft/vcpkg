@@ -2,7 +2,7 @@
 
 #include <vcpkg/base/hash.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.hash.h>
 
 namespace vcpkg::Commands::Hash
 {

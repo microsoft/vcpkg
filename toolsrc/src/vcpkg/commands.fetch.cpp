@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.fetch.h>
 
 namespace vcpkg::Commands::Fetch
 {

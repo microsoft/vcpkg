@@ -5,7 +5,7 @@
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.format-manifest.h>
 #include <vcpkg/portfileprovider.h>
 
 namespace vcpkg::Commands::FormatManifest
