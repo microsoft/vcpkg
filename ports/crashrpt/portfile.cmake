@@ -13,18 +13,12 @@ vcpkg_from_git(
     URL https://git.code.sf.net/p/crashrpt/code
     REF 4616504670be5a425a525376648d912a72ce18f2
     PATCHES
-        001-cmake-install.patch
-        002-find-minizip-png-zlib.patch
-        003-find-libogg-libtheora.patch
-        004-find-tinyxml.patch
-        005-find-wtl.patch
-        006-find-libjpeg-turbo.patch
-        007-fix-tests-and-demos-dependencies-and-install.patch
-        008-dbghelp.patch
+        001-add-install-target-and-find-deps.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY dbghelp jpeg libogg libpng libtheora minizip tinyxml wtl zlib)
+# Vendored minizip is still used since it contains modifications needed for CrashRpt
+foreach(DEPENDENCY dbghelp jpeg libogg libpng libtheora tinyxml wtl zlib)
     if(EXISTS ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/thirdparty/${DEPENDENCY})
     endif()
@@ -34,6 +28,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CRASHRPT_BUILD_SHARED_
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" CRASHRPT_LINK_CRT_AS_DLL)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    probe CRASHRPT_BUILD_PROBE
     tests CRASHRPT_BUILD_TESTS
     demos CRASHRPT_BUILD_DEMOS
 )
