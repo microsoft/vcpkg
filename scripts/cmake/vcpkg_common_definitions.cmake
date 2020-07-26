@@ -129,5 +129,5 @@ endif()
 # Windows system libs
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND VCPKG_SYSTEM_LIBRARIES wsock32)
-    list(APPEND VCPKG_SYSTEM_LIBRARIES ws2_32)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES Ws2_32)
 endif()
