@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3eef6ec..994e427 100644
+index 3eef6ec..3e9c3cd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -33,6 +33,20 @@ endif()
@@ -23,6 +23,15 @@ index 3eef6ec..994e427 100644
  find_program(CCACHE_PROGRAM ccache)
  if (CCACHE_PROGRAM)
      set(C_LAUNCHER   "${CCACHE_PROGRAM}")
+@@ -204,7 +218,7 @@ endif()
+ 
+ if (MSVC)
+     set(CXX_STANDARD "/std:c++latest")
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} /W0 /Zc:__cplusplus")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} /Zc:__cplusplus")
+ else()
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -fstrict-aliasing -Wno-unknown-pragmas -Wno-unused-function")
+ endif()
 @@ -224,7 +238,7 @@ endif()
  
  if (LINUX)
@@ -32,7 +41,20 @@ index 3eef6ec..994e427 100644
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
          link_libraries("-static-libgcc -static-libstdc++")
          link_libraries(libc++.a)
-@@ -402,7 +416,7 @@ if (NOT DIST_ARCH)
+@@ -296,10 +310,12 @@ endif()
+ # Linker flags
+ # ==================================================================================================
+ # Strip unused sections
++if(NOT MSVC)
+ if (NOT WEBGL)
+     set(GC_SECTIONS "-Wl,--gc-sections")
+ endif()
+ set(B_SYMBOLIC_FUNCTIONS "-Wl,-Bsymbolic-functions")
++endif()
+ 
+ if (APPLE)
+     set(GC_SECTIONS "-Wl,-dead_strip")
+@@ -402,7 +418,7 @@ if (NOT DIST_ARCH)
      set(DIST_ARCH x86_64)
  endif()
  if (NOT DIST_DIR)
@@ -41,7 +63,7 @@ index 3eef6ec..994e427 100644
  endif()
  
  # ==================================================================================================
-@@ -521,7 +535,6 @@ endfunction()
+@@ -521,7 +537,6 @@ endfunction()
  # ==================================================================================================
  
  # Common to all platforms
@@ -49,7 +71,7 @@ index 3eef6ec..994e427 100644
  add_subdirectory(${LIBRARIES}/camutils)
  add_subdirectory(${LIBRARIES}/filabridge)
  add_subdirectory(${LIBRARIES}/filaflat)
-@@ -538,19 +551,16 @@ add_subdirectory(${FILAMENT}/shaders)
+@@ -538,19 +553,16 @@ add_subdirectory(${FILAMENT}/shaders)
  add_subdirectory(${EXTERNAL}/hat-trie/tnt)
  add_subdirectory(${EXTERNAL}/robin-map/tnt)
  add_subdirectory(${EXTERNAL}/smol-v/tnt)
@@ -58,7 +80,7 @@ index 3eef6ec..994e427 100644
  add_subdirectory(${EXTERNAL}/cgltf/tnt)
  add_subdirectory(${EXTERNAL}/draco/tnt)
 -add_subdirectory(${EXTERNAL}/stb/tnt)
-+if(WIN32)
++if(MSVC)
  add_subdirectory(${EXTERNAL}/getopt)
 -
 +endif()
@@ -71,7 +93,7 @@ index 3eef6ec..994e427 100644
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -578,8 +588,6 @@ if (WEBGL)
+@@ -578,8 +590,6 @@ if (WEBGL)
      if (FILAMENT_GENERATE_JS_DOCS)
          add_subdirectory(web/docs)
      endif()
@@ -80,7 +102,7 @@ index 3eef6ec..994e427 100644
  endif()
  
  if (IS_HOST_PLATFORM)
-@@ -596,12 +604,6 @@ if (IS_HOST_PLATFORM)
+@@ -596,12 +606,6 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${EXTERNAL}/astcenc/tnt)
      add_subdirectory(${EXTERNAL}/etc2comp)
@@ -94,7 +116,7 @@ index 3eef6ec..994e427 100644
      add_subdirectory(${TOOLS}/cmgen)
      add_subdirectory(${TOOLS}/cso-lut)
 diff --git a/filament/CMakeLists.txt b/filament/CMakeLists.txt
-index 69d1cad..fca3b63 100644
+index 69d1cad..a17040c 100644
 --- a/filament/CMakeLists.txt
 +++ b/filament/CMakeLists.txt
 @@ -321,6 +321,10 @@ target_link_libraries(${TARGET} PUBLIC geometry) # TODO: remove this dependency
@@ -108,8 +130,19 @@ index 69d1cad..fca3b63 100644
  
  if (FILAMENT_ENABLE_MATDBG)
      target_link_libraries(${TARGET} PUBLIC matdbg)
+@@ -363,9 +367,7 @@ set(LINUX_COMPILER_FLAGS
+         -fPIC
+ )
+ 
+-if (MSVC)
+-    set(FILAMENT_WARNINGS /W3)
+-else()
++if (NOT MSVC)
+     set(FILAMENT_WARNINGS
+             -Wall -Wextra -Wno-unused-parameter
+             -Wextra-semi -Wnewline-eof -Wdeprecated -Wundef
 diff --git a/filament/backend/CMakeLists.txt b/filament/backend/CMakeLists.txt
-index 04ab2d7..45c4013 100644
+index 04ab2d7..589575b 100644
 --- a/filament/backend/CMakeLists.txt
 +++ b/filament/backend/CMakeLists.txt
 @@ -5,6 +5,14 @@ set(TARGET backend)
@@ -127,7 +160,18 @@ index 04ab2d7..45c4013 100644
  # ==================================================================================================
  # Sources and headers
  # ==================================================================================================
-@@ -313,9 +321,12 @@ if (APPLE)
+@@ -258,9 +266,7 @@ set(LINUX_COMPILER_FLAGS
+         -fPIC
+ )
+ 
+-if (MSVC)
+-    set(FILAMENT_WARNINGS /W3)
+-else()
++if (NOT MSVC)
+     set(FILAMENT_WARNINGS
+             -Wall -Wextra -Wno-unused-parameter
+             -Wextra-semi -Wnewline-eof -Wdeprecated -Wundef
+@@ -313,9 +319,12 @@ if (APPLE)
          backend
          filabridge
          getopt
@@ -142,7 +186,7 @@ index 04ab2d7..45c4013 100644
  
      set(BACKEND_TEST_DEPS
              OGLCompiler
-@@ -326,16 +337,13 @@ if (APPLE)
+@@ -326,16 +335,13 @@ if (APPLE)
              backend_test
              filabridge
              getopt
@@ -252,9 +296,18 @@ index e7dae35..8871737 100644
  target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
  
 diff --git a/libs/filamat/CMakeLists.txt b/libs/filamat/CMakeLists.txt
-index 4efeda8..3d93eb6 100644
+index 4efeda8..1d34fe8 100644
 --- a/libs/filamat/CMakeLists.txt
 +++ b/libs/filamat/CMakeLists.txt
+@@ -126,7 +126,7 @@ target_compile_options(filamat_lite PRIVATE
+ target_compile_definitions(filamat_lite PRIVATE FILAMAT_LITE)
+ 
+ if (MSVC)
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W0 /Zc:__cplusplus")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
+ endif()
+ 
+ # ==================================================================================================
 @@ -173,7 +173,7 @@ add_executable(${TARGET} ${SRCS})
  
  target_include_directories(${TARGET} PRIVATE src)
@@ -509,23 +562,109 @@ index a6a9287..28b18ab 100644
  
  #include <utils/Path.h>
  
+diff --git a/third_party/cgltf/test/CMakeLists.txt b/third_party/cgltf/test/CMakeLists.txt
+index a017aa7..e230fd8 100644
+--- a/third_party/cgltf/test/CMakeLists.txt
++++ b/third_party/cgltf/test/CMakeLists.txt
+@@ -6,7 +6,7 @@ set( EXE_NAME cgltf_test )
+ add_executable( ${EXE_NAME} main.c )
+ set_property( TARGET ${EXE_NAME} PROPERTY C_STANDARD 99 )
+ if(MSVC)
+-    target_compile_options(${EXE_NAME} PRIVATE /W4 /WX)
++    target_compile_options(${EXE_NAME} PRIVATE /WX)
+     add_definitions( -D_CRT_SECURE_NO_WARNINGS)
+ else()
+     target_compile_options(${EXE_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+@@ -17,7 +17,7 @@ set( EXE_NAME test_conversion )
+ add_executable( ${EXE_NAME} test_conversion.cpp )
+ set_property( TARGET ${EXE_NAME} PROPERTY CXX_STANDARD 11 )
+ if(MSVC)
+-    target_compile_options(${EXE_NAME} PRIVATE /W4 /WX)
++    target_compile_options(${EXE_NAME} PRIVATE /WX)
+     add_definitions( -D_CRT_SECURE_NO_WARNINGS)
+ else()
+     target_compile_options(${EXE_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+@@ -28,7 +28,7 @@ set( EXE_NAME test_write )
+ add_executable( ${EXE_NAME} test_write.cpp )
+ set_property( TARGET ${EXE_NAME} PROPERTY CXX_STANDARD 11 )
+ if(MSVC)
+-    target_compile_options(${EXE_NAME} PRIVATE /W4 /WX)
++    target_compile_options(${EXE_NAME} PRIVATE /WX)
+     add_definitions( -D_CRT_SECURE_NO_WARNINGS)
+ else()
+     target_compile_options(${EXE_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+@@ -39,7 +39,7 @@ set( EXE_NAME test_math )
+ add_executable( ${EXE_NAME} test_math.cpp )
+ set_property( TARGET ${EXE_NAME} PROPERTY CXX_STANDARD 11 )
+ if(MSVC)
+-    target_compile_options(${EXE_NAME} PRIVATE /W4 /WX)
++    target_compile_options(${EXE_NAME} PRIVATE /WX)
+     add_definitions( -D_CRT_SECURE_NO_WARNINGS)
+ else()
+     target_compile_options(${EXE_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+diff --git a/third_party/civetweb/CMakeLists.txt b/third_party/civetweb/CMakeLists.txt
+index 90a4920..793d52d 100644
+--- a/third_party/civetweb/CMakeLists.txt
++++ b/third_party/civetweb/CMakeLists.txt
+@@ -362,7 +362,6 @@ if (CIVETWEB_ENABLE_CXX)
+   add_cxx_compiler_flag(-Wshadow)
+   add_cxx_compiler_flag(-Wmissing-prototypes)
+   add_cxx_compiler_flag(-Weverything)
+-  add_cxx_compiler_flag(/W4)
+   add_cxx_compiler_flag(-Wno-padded)
+   add_cxx_compiler_flag(/Wd4820) # padding
+   add_cxx_compiler_flag(-Wno-unused-macros)
+@@ -407,7 +406,6 @@ if (NOT ZEPHYR)
+   add_c_compiler_flag(-Wmissing-prototypes)
+   add_c_compiler_flag(-Weverything)
+   add_c_compiler_flag(-Wparentheses)
+-  add_c_compiler_flag(/W4) # VisualStudio highest warning level
+ 
+   #Warnings: Disable some warnings
+   add_c_compiler_flag(-Wno-padded) # padding in structures by compiler
+@@ -627,4 +625,3 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "${CPACK_PACKAGE_DEPENDS}")
+ 
+ # Finalize CPack settings
+ include(CPack)
+-
+diff --git a/third_party/draco/CMakeLists.txt b/third_party/draco/CMakeLists.txt
+index 9110f65..ba5214f 100644
+--- a/third_party/draco/CMakeLists.txt
++++ b/third_party/draco/CMakeLists.txt
+@@ -87,7 +87,6 @@ endif()
+ # Turn on more compiler warnings.
+ if(ENABLE_EXTRA_WARNINGS)
+   if(MSVC)
+-    add_compiler_flag_if_supported("/W3")
+     # Disable MSVC warnings that suggest making code non-portable.
+     add_compiler_flag_if_supported("/wd4996")
+     if(ENABLE_WERROR)
 diff --git a/third_party/getopt/CMakeLists.txt b/third_party/getopt/CMakeLists.txt
-index b8c4273..a658282 100755
+index b8c4273..e55fa2e 100644
 --- a/third_party/getopt/CMakeLists.txt
 +++ b/third_party/getopt/CMakeLists.txt
+@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
+ project(getopt)
+ 
+ set(TARGET getopt)
+-set(PUBLIC_HDR_DIR include)
++set(PUBLIC_HDR_DIR include/getopt)
+ 
+ # ==================================================================================================
+ # Sources and headers
 @@ -18,6 +18,7 @@ set(SRCS
  # Include and target definitions
  # ==================================================================================================
  include_directories(${PUBLIC_HDR_DIR})
-+include_directories(${PUBLIC_HDR_DIR}/getopt)
++message(STATUS "READY TO BUILD GETOPT")
  
  add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS})
  target_include_directories (${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
 diff --git a/third_party/getopt/src/getopt_long.c b/third_party/getopt/src/getopt_long.c
-index fd67535..eb2cec2 100755
+index fd67535..e473b2e 100644
 --- a/third_party/getopt/src/getopt_long.c
 +++ b/third_party/getopt/src/getopt_long.c
-@@ -27,8 +27,6 @@
+@@ -27,13 +27,12 @@
   * POSSIBILITY OF SUCH DAMAGE.
   */
  
@@ -534,7 +673,13 @@ index fd67535..eb2cec2 100755
  #include <assert.h>
  #include <errno.h>
  #include <stdio.h>
-@@ -228,4 +226,4 @@ int *index;
+ #include <stdlib.h>
+ #include <string.h>
++#include <getopt.h>
+ 
+ extern int opterr;   /* if error message should be printed */
+ extern int optind;   /* index into parent argv vector */
+@@ -228,4 +227,4 @@ int *index;
        *index = match;
    }
    return (retval);
@@ -568,8 +713,21 @@ index 6ff4f47..56e2321 100644
      endif()
  endif()
 -
+diff --git a/third_party/meshoptimizer/CMakeLists.txt b/third_party/meshoptimizer/CMakeLists.txt
+index 0f29511..491fb4c 100644
+--- a/third_party/meshoptimizer/CMakeLists.txt
++++ b/third_party/meshoptimizer/CMakeLists.txt
+@@ -23,7 +23,7 @@ add_library(meshoptimizer STATIC ${SOURCES})
+ target_include_directories(meshoptimizer INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+ 
+ if(MSVC)
+-	target_compile_options(meshoptimizer PRIVATE /W4 /WX)
++	target_compile_options(meshoptimizer PRIVATE /WX)
+ else()
+ 	target_compile_options(meshoptimizer PRIVATE -Wall -Wextra -Werror)
+ endif()
 diff --git a/tools/cmgen/CMakeLists.txt b/tools/cmgen/CMakeLists.txt
-index 10868b9..5f6c061 100644
+index 10868b9..f5d6c21 100644
 --- a/tools/cmgen/CMakeLists.txt
 +++ b/tools/cmgen/CMakeLists.txt
 @@ -22,7 +22,7 @@ set(SRCS
@@ -581,7 +739,14 @@ index 10868b9..5f6c061 100644
  
  # ==================================================================================================
  # Compile options and optimizations
-@@ -40,9 +40,8 @@ endif()
+@@ -34,15 +34,14 @@ else()
+ endif()
+ 
+ if (MSVC)
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W0 /Zc:__cplusplus")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
+ endif()
+ 
  # =================================================================================================
  # Licenses
  # ==================================================================================================
@@ -832,7 +997,7 @@ index 73a1925..f9ee49c 100644
      };
  
 diff --git a/tools/mipgen/CMakeLists.txt b/tools/mipgen/CMakeLists.txt
-index 2c76b65..fedd3fd 100644
+index 2c76b65..f9114d4 100644
 --- a/tools/mipgen/CMakeLists.txt
 +++ b/tools/mipgen/CMakeLists.txt
 @@ -12,14 +12,13 @@ set(SRCS src/main.cpp)
@@ -840,7 +1005,7 @@ index 2c76b65..fedd3fd 100644
  # ==================================================================================================
  add_executable(${TARGET} ${SRCS})
 -target_link_libraries(${TARGET} PRIVATE math utils z image imageio getopt)
-+target_link_libraries(${TARGET} PRIVATE math util ZLIB::ZLIB image imageio getopt)
++target_link_libraries(${TARGET} PRIVATE math utils ZLIB::ZLIB image imageio getopt)
  
  # =================================================================================================
  # Licenses
