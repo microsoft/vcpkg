@@ -5,6 +5,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/build.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/postbuildlint.buildtype.h>
@@ -152,6 +153,7 @@ namespace vcpkg::PostBuildLint
             "config.h",
             "local.h",
             "slice.h",
+            "platform.h",
         };
         static constexpr Span<const StringLiteral> restricted_lists[] = {
             restricted_sys_filenames, restricted_crt_filenames, restricted_general_filenames};
@@ -318,7 +320,7 @@ namespace vcpkg::PostBuildLint
         {
             return LintStatus::SUCCESS;
         }
-        const fs::path current_buildtrees_dir = paths.buildtrees / spec.name();
+        const fs::path current_buildtrees_dir = paths.build_dir(spec);
         const fs::path current_buildtrees_dir_src = current_buildtrees_dir / "src";
 
         std::vector<fs::path> potential_copyright_files;
@@ -342,17 +344,19 @@ namespace vcpkg::PostBuildLint
         System::printf(System::Color::warning,
                        "The software license must be available at ${CURRENT_PACKAGES_DIR}/share/%s/copyright\n",
                        spec.name());
-        if (potential_copyright_files.size() ==
-            1) // if there is only one candidate, provide the cmake lines needed to place it in the proper location
+        if (potential_copyright_files.size() == 1)
         {
+            // if there is only one candidate, provide the cmake lines needed to place it in the proper location
             const fs::path found_file = potential_copyright_files[0];
-            const fs::path relative_path = found_file.string().erase(
-                0, current_buildtrees_dir.string().size() + 1); // The +1 is needed to remove the "/"
-            System::printf(
-                "\n    configure_file(\"${CURRENT_BUILDTREES_DIR}/%s/%s\" \"${CURRENT_PACKAGES_DIR}/share/%s/copyright\" COPYONLY)\n",
-                relative_path.generic_string(),
-                found_file.filename().generic_string(),
-                spec.name());
+            auto found_relative_native = found_file.native();
+            found_relative_native.erase(current_buildtrees_dir.native().size() +
+                                        1); // The +1 is needed to remove the "/"
+            const fs::path relative_path = found_relative_native;
+            System::printf("\n    configure_file(\"${CURRENT_BUILDTREES_DIR}/%s/%s\" "
+                           "\"${CURRENT_PACKAGES_DIR}/share/%s/copyright\" COPYONLY)\n",
+                           relative_path.generic_string(),
+                           found_file.filename().generic_string(),
+                           spec.name());
         }
         else if (potential_copyright_files.size() > 1)
         {

@@ -1,8 +1,8 @@
 diff --git a/CMake/OtherTests.cmake b/CMake/OtherTests.cmake
-index c1c9aa3..378a5bd 100644
+index 7cec6da..c836fc9 100644
 --- a/CMake/OtherTests.cmake
 +++ b/CMake/OtherTests.cmake
-@@ -185,6 +185,7 @@ if(HAVE_SIGNAL_H)
+@@ -212,6 +212,7 @@ if(HAVE_SIGNAL_H)
    set(CMAKE_REQUIRED_FLAGS "-DHAVE_SIGNAL_H")
    set(CMAKE_EXTRA_INCLUDE_FILES "signal.h")
  endif()

@@ -10,10 +10,9 @@ namespace vcpkg::Strings::details
     static bool is_space(const char c) { return std::isspace(static_cast<unsigned char>(c)) != 0; }
 
     // Avoids C4244 warnings because of char<->int conversion that occur when using std::tolower()
-    static char tolower_char(const char c) { return (c < 'A' || c > 'Z') ? c : c - 'A' + 'a'; }
     static char toupper_char(const char c) { return (c < 'a' || c > 'z') ? c : c - 'a' + 'A'; }
 
-    static bool icase_eq(char a, char b) { return tolower_char(a) == tolower_char(b); }
+    static bool icase_eq(char a, char b) { return tolower_char{}(a) == tolower_char{}(b); }
 
 #if defined(_WIN32)
     static _locale_t& c_locale()
@@ -102,7 +101,7 @@ bool Strings::case_insensitive_ascii_equals(StringView left, StringView right)
 
 std::string Strings::ascii_to_lowercase(std::string&& s)
 {
-    std::transform(s.begin(), s.end(), s.begin(), &details::tolower_char);
+    Strings::ascii_to_lowercase(s.begin(), s.end());
     return std::move(s);
 }
 
@@ -157,7 +156,7 @@ void Strings::trim_all_and_remove_whitespace_strings(std::vector<std::string>* s
     Util::erase_remove_if(*strings, [](const std::string& s) { return s.empty(); });
 }
 
-std::vector<std::string> Strings::split(const std::string& s, const char delimiter)
+std::vector<std::string> Strings::split(StringView s, const char delimiter)
 {
     std::vector<std::string> output;
     auto first = s.begin();
@@ -174,6 +173,11 @@ std::vector<std::string> Strings::split(const std::string& s, const char delimit
         output.emplace_back(first, next);
         first = next;
     }
+}
+
+const char* Strings::find_first_of(StringView input, StringView chars)
+{
+    return std::find_first_of(input.begin(), input.end(), chars.begin(), chars.end());
 }
 
 std::vector<StringView> Strings::find_all_enclosed(StringView input, StringView left_delim, StringView right_delim)

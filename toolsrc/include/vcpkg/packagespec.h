@@ -2,6 +2,8 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/optional.h>
+
+#include <vcpkg/platform-expression.h>
 #include <vcpkg/triplet.h>
 
 namespace vcpkg::Parse
@@ -19,8 +21,8 @@ namespace vcpkg
     ///
     struct PackageSpec
     {
-        PackageSpec() noexcept = default;
-        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) {}
+        PackageSpec() = default;
+        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) { }
 
         static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, Triplet triplet);
 
@@ -53,7 +55,7 @@ namespace vcpkg
     ///
     struct FeatureSpec
     {
-        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) {}
+        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) { }
 
         const std::string& name() const { return m_spec.name(); }
         const std::string& feature() const { return m_feature; }
@@ -96,7 +98,7 @@ namespace vcpkg
         PackageSpec package_spec;
         std::vector<std::string> features;
 
-        FullPackageSpec() noexcept = default;
+        FullPackageSpec() = default;
         explicit FullPackageSpec(PackageSpec spec, std::vector<std::string> features = {})
             : package_spec(std::move(spec)), features(std::move(features))
         {
@@ -123,10 +125,9 @@ namespace vcpkg
 
     struct Dependency
     {
-        Features depend;
-        std::string qualifier;
-
-        static ExpectedS<Dependency> from_string(const std::string& input);
+        std::string name;
+        std::vector<std::string> features;
+        PlatformExpression::Expr platform;
     };
 
     struct ParsedQualifiedSpecifier
@@ -134,7 +135,7 @@ namespace vcpkg
         std::string name;
         Optional<std::vector<std::string>> features;
         Optional<std::string> triplet;
-        Optional<std::string> qualifier;
+        Optional<PlatformExpression::Expr> platform;
     };
 
     Optional<std::string> parse_feature_name(Parse::ParserBase& parser);
