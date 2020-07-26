@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/build.h>
+#include <vcpkg/commands.buildexternal.h>
 #include <vcpkg/commands.interface.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/statusparagraphs.h>
@@ -14,11 +15,6 @@ namespace vcpkg::Commands
     using CommandTypeA = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     using CommandTypeC = void (*)(const VcpkgCmdArguments& args, Files::Filesystem& fs);
-
-    namespace BuildExternal
-    {
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
-    }
 
     namespace CI
     {
