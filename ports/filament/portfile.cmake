@@ -1,4 +1,4 @@
-#vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -28,6 +28,11 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/stb")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/tinyexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/libz")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/benchmark")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")  #so that tools that are self-produced during build process, which might depend on vcpkg-provided shared libraries, do not silently fail due to missing .dlls
+    vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
