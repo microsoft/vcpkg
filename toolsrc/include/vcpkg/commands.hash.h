@@ -2,10 +2,7 @@
 
 #include <vcpkg/commands.interface.h>
 
-namespace vcpkg::Commands
+namespace vcpkg::Commands::Hash
 {
-    namespace Hash
-    {
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-    }
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
 }
