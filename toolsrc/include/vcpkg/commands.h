@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/build.h>
+#include <vcpkg/commands.interface.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -15,12 +16,6 @@ namespace vcpkg::Commands
     using CommandTypeA = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     using CommandTypeC = void (*)(const VcpkgCmdArguments& args, Files::Filesystem& fs);
-
-    enum class DryRun : bool
-    {
-        No,
-        Yes,
-    };
 
     namespace BuildExternal
     {
