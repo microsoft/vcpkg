@@ -249,7 +249,7 @@ function(vcpkg_configure_make)
                     #endif()
                 endif()
                 if(VCPKG_TARGET_IS_UWP AND NOT _csc_BUILD_TRIPLET MATCHES "--host")
-                    # Needs to be different from --build to enable cross builds
+                    # Needs to be different from --build to enable cross builds.
                     string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-unknown-mingw32")
                 endif()
             endif()
@@ -278,7 +278,7 @@ function(vcpkg_configure_make)
             endif()
         endmacro()
 
-        set(CONFIGURE_ENV "")
+        set(CONFIGURE_ENV "V=1")
         if (_csc_AUTOCONFIG) # without autotools we assume a custom configure script which correctly handles cl and lib. Otherwise the port needs to set CC|CXX|AR and probably CPP
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile cl.exe -nologo -E")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "compile cl.exe -nologo")
@@ -294,20 +294,12 @@ function(vcpkg_configure_make)
         _vcpkg_append_to_configure_environment(CONFIGURE_ENV RANLIB ":") # Trick to ignore the RANLIB call
         #_vcpkg_append_to_configure_environment(CONFIGURE_ENV OBJDUMP ":") ' Objdump is required to make shared libraries. Otherwise define lt_cv_deplibs_check_method=pass_all
         _vcpkg_append_to_configure_environment(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
-        _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP ":")   # If required set the ENV variable CCAS in the portfile correctly
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP ":")   # If required set the ENV variable STRIP in the portfile correctly
         _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "dumpbin.exe -symbols -headers")
         # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
         # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
         _vcpkg_append_to_configure_environment(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
-        
-        if(VCPKG_TARGET_IS_UWP)
-            string(REPLACE "\\" "/" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
-            file(CREATE_LINK "${VCToolsInstallDir}" "${CURRENT_BUILDTREES_DIR}/UWP/" SYMBOLIC) # Silly trick to move that path VCToolsInstallDir to a path without spaces
-            #_vcpkg_append_to_configure_environment(CONFIGURE_ENV _CL_ "-FU${CURRENT_BUILDTREES_DIR}/UWP/lib/x86/store/references/platform.winmd")
-            #_vcpkg_append_to_configure_environment(CONFIGURE_ENV MANIFEST_TOOL ":")
-            #_vcpkg_append_to_configure_environment(CONFIGURE_ENV LIBS "$ENV{LIBS} -lWindowsApp")
-            #set(ENV{LIBS} "$ENV{LIBS} -lWindowsApp.lib")
-        endif()
+
         foreach(_env IN LISTS _csc_CONFIGURE_ENVIRONMENT_VARIABLES)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV ${_env} "${${_env}}")
         endforeach()
@@ -337,9 +329,7 @@ function(vcpkg_configure_make)
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-                        
-    set(ENV{V} "1") #Enabel Verbose MODE
-    
+
     # Set configure paths
     set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE} "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}${EXTRA_QUOTES}")
     set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG} "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}")
@@ -405,28 +395,20 @@ function(vcpkg_configure_make)
     else()
         string(APPEND C_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS") # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
         string(APPEND CXX_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
-        string(APPEND LD_FLAGS_GLOBAL " -CL_Wl,-VERBOSE,-no-undefined")
+        string(APPEND LD_FLAGS_GLOBAL " -W1,-VERBOSE,-no-undefined")
         if(VCPKG_TARGET_IS_UWP)
             # Be aware that configure thinks it is crosscompiling due to: 
             # error while loading shared libraries: VCRUNTIME140D_APP.dll: cannot open shared object file: No such file or directory
-            #set(PLATFORM $ENV{VCToolsInstallDir})
-            #string(REPLACE "\\" "/" PLATFORM "${PLATFORM}")
-            #string(REPLACE " " "\" PLATFORM "${PLATFORM}")
+            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper is to use the CL and LINK environment variables !!!
+            # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             string(REPLACE "\\" "/" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
-            file(CREATE_LINK "${VCToolsInstallDir}" "${CURRENT_BUILDTREES_DIR}/UWP/" SYMBOLIC) # Silly trick to move that path VCToolsInstallDir to a path without spaces
-            set(ENV{_CL_} "$ENV{_CL_} /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${CURRENT_BUILDTREES_DIR}/UWP/lib/x86/store/references/platform.winmd\"")
+            set(ENV{_CL_} "$ENV{_CL_} /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
             set(ENV{_LINK_} "$ENV{_LINK_} /MANIFEST /DYNAMICBASE WindowsApp.lib /WINMD:NO /APPCONTAINER")
-            #string(APPEND C_FLAGS_GLOBAL " /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${CURRENT_BUILDTREES_DIR}/UWP/lib/x86/store/references/platform.winmd\"") # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
-            #string(APPEND CXX_FLAGS_GLOBAL " /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB__ -FU\"${CURRENT_BUILDTREES_DIR}/UWP/lib/x86/store/references/platform.winmd\"")
-            #string(APPEND LD_FLAGS_GLOBAL " -CL_Wl,-APPCONTAINER,WindowsApp.lib,-WINMD:NO") #-Xlinker
-            #string(APPEND LD_FLAGS_GLOBAL " -CL_Wl,-APPCONTAINER,-DYNAMICBASE,-WINMD:NO") #-Xlinker
-            #set(ENV{LDLIBS} "WindowsApp.lib")
-            #set(ENV{LIBS} "$ENV{LIBS} -lWindowsApp")
         endif()
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            string(APPEND LD_FLAGS_GLOBAL " -CL_Wl,-MACHINE:x64")
+            set(ENV{_CL_} "$ENV{_CL_} -MACHINE:x64")
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            string(APPEND LD_FLAGS_GLOBAL " -CL_Wl,-MACHINE:x86")
+            set(ENV{_CL_} "$ENV{_CL_} -MACHINE:x86")
         endif()
     endif()
     
