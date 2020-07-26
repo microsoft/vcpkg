@@ -1,13 +1,13 @@
-#include <vcpkg/base/pragmas.h>
-
 #include <vcpkg/base/system_headers.h>
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/pragmas.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -251,6 +251,7 @@ int main(const int argc, const char* const* const argv)
                        "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
     }
 
+    args.debug_print_feature_flags();
     args.track_feature_flag_metrics();
 
     if (Debug::g_debugging)

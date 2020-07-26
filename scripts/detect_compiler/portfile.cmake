@@ -2,6 +2,8 @@ set(LOGS
     ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-out.log
     ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-out.log
     ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-dbg-out.log
+    ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-err.log
+    ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-dbg-err.log
 )
 
 foreach(LOG IN LISTS LOGS)
@@ -22,7 +24,5 @@ foreach(LOG IN LISTS LOGS)
     if(EXISTS ${LOG})
         file(READ "${LOG}" _contents)
         message("${_contents}")
-        return()
     endif()
 endforeach()
-message(FATAL_ERROR "Could read logs: ${LOGS}")

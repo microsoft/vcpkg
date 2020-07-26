@@ -77,14 +77,14 @@ TEST_CASE ("VcpkgCmdArguments from argument sequence with valued options", "[arg
 {
     SECTION ("case 1")
     {
-        std::array<CommandSetting, 1> settings = {{{"--a", ""}}};
+        std::array<CommandSetting, 1> settings = {{{"a", ""}}};
         CommandStructure cmdstruct = {"", 0, SIZE_MAX, {{}, settings}, nullptr};
 
         std::vector<std::string> t = {"--a=b", "command", "argument"};
         auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
         auto opts = v.parse_arguments(cmdstruct);
 
-        REQUIRE(opts.settings["--a"] == "b");
+        REQUIRE(opts.settings["a"] == "b");
         REQUIRE(v.command_arguments.size() == 1);
         REQUIRE(v.command_arguments[0] == "argument");
         REQUIRE(v.command == "command");
@@ -92,18 +92,18 @@ TEST_CASE ("VcpkgCmdArguments from argument sequence with valued options", "[arg
 
     SECTION ("case 2")
     {
-        std::array<CommandSwitch, 2> switches = {{{"--a", ""}, {"--c", ""}}};
-        std::array<CommandSetting, 2> settings = {{{"--b", ""}, {"--d", ""}}};
+        std::array<CommandSwitch, 2> switches = {{{"a", ""}, {"c", ""}}};
+        std::array<CommandSetting, 2> settings = {{{"b", ""}, {"d", ""}}};
         CommandStructure cmdstruct = {"", 0, SIZE_MAX, {switches, settings}, nullptr};
 
         std::vector<std::string> t = {"--a", "--b=c"};
         auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
         auto opts = v.parse_arguments(cmdstruct);
 
-        REQUIRE(opts.settings["--b"] == "c");
-        REQUIRE(opts.settings.find("--d") == opts.settings.end());
-        REQUIRE(opts.switches.find("--a") != opts.switches.end());
-        REQUIRE(opts.settings.find("--c") == opts.settings.end());
+        REQUIRE(opts.settings["b"] == "c");
+        REQUIRE(opts.settings.find("d") == opts.settings.end());
+        REQUIRE(opts.switches.find("a") != opts.switches.end());
+        REQUIRE(opts.settings.find("c") == opts.settings.end());
         REQUIRE(v.command_arguments.size() == 0);
     }
 }

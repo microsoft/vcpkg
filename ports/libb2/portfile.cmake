@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "WINDOWS")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BLAKE2/libb2
@@ -23,5 +25,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
