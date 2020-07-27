@@ -34,7 +34,7 @@ endif()
 if(APPLE)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/uninstall.command ${CURRENT_PACKAGES_DIR}/debug/uninstall.command)
 endif()
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/embree/doc)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
