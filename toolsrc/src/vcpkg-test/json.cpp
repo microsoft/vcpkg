@@ -1,8 +1,9 @@
 #include <catch2/catch.hpp>
 
-#include <iostream>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/unicode.h>
+
+#include <iostream>
 
 #include "math.h"
 
@@ -178,7 +179,8 @@ TEST_CASE ("JSON parse full file", "[json]")
         ;
 
     auto res = Json::parse(json);
-    if (!res) {
+    if (!res)
+    {
         std::cerr << res.error()->format() << '\n';
     }
     REQUIRE(res);

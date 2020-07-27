@@ -42,6 +42,11 @@
 ## ### SHA512
 ## The SHA512 hash that should match the archive.
 ##
+## ### WORKING_DIRECTORY
+## If specified, the archive will be extracted into the working directory instead of `${CURRENT_BUILDTREES_DIR}/src/`.
+##
+## Note that the archive will still be extracted into a subfolder underneath that directory (`${WORKING_DIRECTORY}/${REF}-${HASH}/`).
+##
 ## ### PATCHES
 ## A list of patches to be applied to the extracted sources.
 ##
@@ -61,7 +66,7 @@
 
 function(vcpkg_from_sourceforge)
     set(booleanValueArgs DISABLE_SSL NO_REMOVE_ONE_LEVEL)
-    set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 FILENAME)
+    set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 FILENAME WORKING_DIRECTORY)
     set(multipleValuesArgs PATCHES)
     cmake_parse_arguments(_vdus "${booleanValueArgs}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
@@ -75,6 +80,12 @@ function(vcpkg_from_sourceforge)
 
     if(NOT DEFINED _vdus_REPO)
         message(FATAL_ERROR "The sourceforge repository must be specified.")
+    endif()
+
+    if(DEFINED _vdus_WORKING_DIRECTORY)
+        set(WORKING_DIRECTORY WORKING_DIRECTORY "${_vdus_WORKING_DIRECTORY}")
+    else()
+        set(WORKING_DIRECTORY)
     endif()
 
     if (_vdus_DISABLE_SSL)
@@ -181,6 +192,7 @@ function(vcpkg_from_sourceforge)
         ARCHIVE "${ARCHIVE}"
         REF "${SANITIZED_REF}"
         ${NO_REMOVE_ONE_LEVEL}
+        ${WORKING_DIRECTORY}
         PATCHES ${_vdus_PATCHES}
     )
 

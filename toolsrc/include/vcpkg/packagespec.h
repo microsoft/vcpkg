@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/optional.h>
+
 #include <vcpkg/platform-expression.h>
 #include <vcpkg/triplet.h>
 
@@ -21,7 +22,7 @@ namespace vcpkg
     struct PackageSpec
     {
         PackageSpec() = default;
-        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) {}
+        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) { }
 
         static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, Triplet triplet);
 
@@ -54,7 +55,7 @@ namespace vcpkg
     ///
     struct FeatureSpec
     {
-        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) {}
+        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) { }
 
         const std::string& name() const { return m_spec.name(); }
         const std::string& feature() const { return m_feature; }

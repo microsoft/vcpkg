@@ -3,9 +3,10 @@
 #include <vcpkg/base/strings.h>
 
 #include <stdint.h>
+
+#include <string>
 #include <utility>
 #include <vector>
-#include <string>
 
 TEST_CASE ("b32 encoding", "[strings]")
 {

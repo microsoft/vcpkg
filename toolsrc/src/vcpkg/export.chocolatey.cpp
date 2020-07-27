@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/export.chocolatey.h>
 #include <vcpkg/export.h>
@@ -113,7 +114,7 @@ Get-Content $whereToInstallCache | Foreach-Object {
 }
 
 $installedDir = Join-Path $whereToInstall 'installed'
-Get-Content $listFile | Foreach-Object { 
+Get-Content $listFile | Foreach-Object {
     $fileToRemove = Join-Path $installedDir $_
     if (Test-Path $fileToRemove -PathType Leaf) {
         Remove-Item $fileToRemove
