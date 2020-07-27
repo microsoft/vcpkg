@@ -16,5 +16,6 @@
     "stb",
     "tinyexr",
     "zlib"
-  ]
+  ],
+  "supports": "!linux"
 }

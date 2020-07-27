@@ -367,13 +367,13 @@ index 55538d9..4f9b479 100644
  MESSAGE(STATUS "Enabled importer formats:${ASSIMP_IMPORTERS_ENABLED}")
  MESSAGE(STATUS "Disabled importer formats:${ASSIMP_IMPORTERS_DISABLED}")
  
-@@ -1111,22 +1031,15 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1111,22 +1031,14 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<INSTALL_INTERFACE:include>
  )
  
 -IF(HUNTER_ENABLED)
    TARGET_LINK_LIBRARIES(assimp
-       PUBLIC
+-      PUBLIC
        polyclipping::polyclipping
        irrXML::irrXML
 -      openddlparser::openddl_parser
