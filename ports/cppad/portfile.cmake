@@ -10,18 +10,32 @@ vcpkg_from_github(
         windows-fix.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
-    OPTIONS_RELEASE
-        -Dcmake_install_libdirs=lib
-        -Dcppad_debug_which:STRING=debug_none
-    OPTIONS_DEBUG
-        -DCMAKE_DEBUG_POSTFIX=d
-        -Dcmake_install_libdirs=debug/lib
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_configure_cmake(
+      SOURCE_PATH ${SOURCE_PATH}
+      PREFER_NINJA
+      OPTIONS
+          -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
+      OPTIONS_RELEASE
+          -Dcmake_install_libdirs=lib
+          -Dcppad_debug_which:STRING=debug_none
+      OPTIONS_DEBUG
+          -DCMAKE_DEBUG_POSTFIX=d
+          -Dcmake_install_libdirs=debug/lib
+    )
+else()
+  vcpkg_configure_cmake(
+      SOURCE_PATH ${SOURCE_PATH}
+      PREFER_NINJA
+      OPTIONS
+          -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
+      OPTIONS_RELEASE
+          -Dcmake_install_libdirs=lib
+          -Dcppad_debug_which:STRING=debug_none
+      OPTIONS_DEBUG
+          -Dcmake_install_libdirs=debug/lib
+    )
+endif()
 
 vcpkg_install_cmake()
 
