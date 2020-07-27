@@ -30,11 +30,7 @@ find_path(HARFBUZZ_INCLUDE_DIR
           NAMES hb.h
           PATH_SUFFIXES harfbuzz)
 
-if(BUILD_SHARED_LIBS)
-    find_library(FRIBIDI_LIBRARY NAMES fribidi)
-else()
-    find_library(FRIBIDI_LIBRARY NAMES libfribidi)
-endif()
+find_library(FRIBIDI_LIBRARY NAMES libfribidi fribidi)
 find_library(HARFBUZZ_LIBRARY NAMES harfbuzz)
 
 add_library(ass ${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/libass.def)
