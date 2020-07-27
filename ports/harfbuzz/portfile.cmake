@@ -18,18 +18,30 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     glib        glib
 )
 
+string(REPLACE "=ON" "=enabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
+string(REPLACE "=OFF" "=disabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
+
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS # ${FEATURE_OPTIONS}
-        -Dglib=disabled
+    OPTIONS ${FEATURE_OPTIONS}
+        -Dfreetype=enabled
         -Dgobject=disabled
+        -Dcairo=disabled
+        -Dfontconfig=disabled
+        -Dintrospection=disabled
         -Ddocs=disabled
         -Dtests=disabled
+        -Dbenchmark=disabled
         --backend=ninja
 )
 
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}/harfbuzzConfig.cmake" @ONLY)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

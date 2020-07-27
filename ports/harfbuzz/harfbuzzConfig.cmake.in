@@ -1,0 +1,39 @@
+if(TARGET harfbuzz)
+  return()
+endif()
+
+add_library(harfbuzz INTERFACE IMPORTED GLOBAL)
+add_library(harfbuzz::harfbuzz ALIAS harfbuzz)
+
+set(HARFBUZZ_LIBRARIES harfbuzz)
+set(HARFBUZZ_FEATURES @FEATURES@)
+
+if(APPLE)
+  list(APPEND HARFBUZZ_LIBRARIES ApplicationServices)
+endif()
+
+find_package(freetype CONFIG REQUIRED)
+target_link_libraries(harfbuzz INTERFACE freetype)
+
+if ("graphite2" IN_LIST HARFBUZZ_FEATURES)
+  list(APPEND HARFBUZZ_LIBRARIES graphite2)
+endif()
+
+if ("icu" IN_LIST HARFBUZZ_FEATURES)
+  find_package(ICU 61 COMPONENTS uc REQUIRED)
+  target_link_libraries(harfbuzz INTERFACE ICU::uc)
+endif()
+
+if ("glib" IN_LIST HARFBUZZ_FEATURES)
+  find_package(unofficial-glib CONFIG REQUIRED)
+  target_link_libraries(harfbuzz INTERFACE unofficial::glib::glib)
+endif()
+
+foreach(LIB_NAME ${HARFBUZZ_LIBRARIES})
+  find_library(_LIB ${LIB_NAME})
+  target_link_libraries(harfbuzz INTERFACE ${_LIB})
+  unset(_LIB CACHE)
+endforeach()
+
+get_filename_component(_INSTALL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
+target_include_directories(harfbuzz INTERFACE ${_INSTALL_DIR}/include/harfbuzz)
