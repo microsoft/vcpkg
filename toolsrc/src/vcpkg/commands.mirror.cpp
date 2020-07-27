@@ -939,7 +939,7 @@ namespace vcpkg::Commands::Mirror
             if (!fs.is_directory(file))
             {
                 std::string fileHash =
-                    vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, vcpkg::Hash::Algorithm::Sha256);
+                    vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, vcpkg::Hash::Algorithm::Sha512);
                 auto newpath = file.parent_path();
                 newpath += "\\";
                 newpath += fileHash;

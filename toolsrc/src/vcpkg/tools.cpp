@@ -100,7 +100,6 @@ namespace vcpkg
         std::string url;
         if (paths.vcpkg_use_mirror)
         {
-            const std::string srcUrl = StringView::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
             url = "ftp://";
             url += paths.vcpkg_mirror_url;
             url += "//" + sha512;
