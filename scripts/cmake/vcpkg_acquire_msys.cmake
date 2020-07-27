@@ -43,25 +43,14 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     message(FATAL_ERROR "vcpkg_acquire_msys() can only be used on Windows hosts")
   endif()
 
-  # detect host architecture
-  if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
-      set(_vam_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
-  else()
-      set(_vam_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
-  endif()
-
-  if(_vam_HOST_ARCHITECTURE STREQUAL "AMD64")
-    set(TOOLSUBPATH msys64)
-    set(URLS
-        "https://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20200720.tar.xz"
-        "https://github.com/msys2/msys2-installer/releases/download/2020-07-20/msys2-base-x86_64-20200720.tar.xz"
-    )
-    set(ARCHIVE "msys2-base-x86_64-20200720.tar.xz")
-    set(HASH 1d0841107ded2c7917ebe1810175b940dd9ee9478200d535af0c99b235eb1102659c08cbe0f760e6c1c2a06ecf2f49537c7e0470662a99b72f0f8f0011b5242d)
-    set(STAMP "initialized-msys2_64.stamp")
-  else()
-    message(FATAL_ERROR "msys2 is unfortunately no longer supported on 32-bit Windows.")
-  endif()
+  set(TOOLSUBPATH msys64)
+  set(URLS
+      "https://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20200720.tar.xz"
+      "https://github.com/msys2/msys2-installer/releases/download/2020-07-20/msys2-base-x86_64-20200720.tar.xz"
+  )
+  set(ARCHIVE "msys2-base-x86_64-20200720.tar.xz")
+  set(HASH 1d0841107ded2c7917ebe1810175b940dd9ee9478200d535af0c99b235eb1102659c08cbe0f760e6c1c2a06ecf2f49537c7e0470662a99b72f0f8f0011b5242d)
+  set(STAMP "initialized-msys2_64.stamp")
 
   set(PATH_TO_ROOT ${TOOLPATH}/${TOOLSUBPATH})
 
