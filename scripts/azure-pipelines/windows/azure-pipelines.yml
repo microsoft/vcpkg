@@ -15,7 +15,12 @@ jobs:
     displayName: 'Initialize Environment'
     inputs:
       filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
-    # Note: D: is the Azure machines' temporary disk.
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
+  # Note: D: is the Azure machines' temporary disk.
   - task: CmdLine@2
     displayName: 'Build vcpkg'
     inputs:
@@ -37,37 +42,38 @@ jobs:
         cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=ON -B build.x86.debug -S toolsrc
         ninja.exe -C build.x86.debug
         build.x86.debug\vcpkg-test.exe
+        powershell.exe -NoProfile -ExecutionPolicy Bypass "scripts\azure-pipelines\end-to-end-tests.ps1 -WorkingRoot \"%cd%\testing\" -triplet x86-windows"
       failOnStderr: true
-  - powershell: |
-      $env:VCPKG_DOWNLOADS='D:\downloads'
-      $commonArgs = @(
-        '--binarycaching',
-        '--x-binarysource=clear;files,W:\,upload',
-        '--x-buildtrees-root=D:\buildtrees',
-        '--x-install-root=D:\install',
-        '--x-packages-root=D:\packages'
-      )
-
-      .\vcpkg.exe x-ci-clean @commonArgs
-      $skipList = ./scripts/azure-pipelines/generate-skip-list.ps1 -Triplet "${{ parameters.triplet }}" -BaselineFile .\scripts\ci.baseline.txt
-      mkdir $(System.ArtifactsDirectory)\xml-results
-      # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
-      # Install them so the CI succeeds:
-      if ( "${{ parameters.triplet }}" -notmatch "x86-windows" -and "${{ parameters.triplet }}" -notmatch "x64-windows" ) {
-          .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows @commonArgs
-      }
-
-      .\vcpkg.exe ci ${{ parameters.triplet }} --x-xunit=`"$(System.ArtifactsDirectory)\xml-results\${{ parameters.triplet }}.xml`" --exclude=$skipList @commonArgs
-    displayName: '** Test Modified Ports **'
   - task: PowerShell@2
-    displayName: 'Analyze results and prepare test logs'
+    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
-      filePath: 'scripts/azure-pipelines/analyze-test-results.ps1'
-      arguments: '-baselineFile .\scripts\ci.baseline.txt -logDir "$(System.ArtifactsDirectory)\xml-results" -failurelogDir "W:\fail" -outputDir "$(Build.ArtifactStagingDirectory)" -errorOnRegression -triplets "${{ parameters.triplet }}"'
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot D:\ -ArtifactsDirectory $(System.ArtifactsDirectory)'
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space After Build'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failureLogs'
+      PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
       ArtifactName: '${{ parameters.triplet }} port build failure logs'
     condition: failed()
+  - task: PowerShell@2
+    displayName: "Generating all packages files"
+    condition: always()
+
+    inputs:
+      targetType: inline
+      script: |
+        $env:VCPKG_DOWNLOADS = "D:\downloads"
+        ./vcpkg.exe fetch python3
+        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: always()
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "${{ parameters.triplet }} package file lists"

@@ -38,7 +38,10 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
     
     # Make pkg-config files relocatable
     if(NOT IML_DISABLE_PKGCONFIG_INSTALL)
-        vcpkg_fixup_pkgconfig()
+        if(VCPKG_TARGET_IS_LINUX)
+            set(SYSTEM_LIBRARIES SYSTEM_LIBRARIES pthread)
+        endif()
+        vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
     else()
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
                             ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
