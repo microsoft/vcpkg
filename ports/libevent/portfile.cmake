@@ -59,9 +59,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
     set(_target_suffix shared)
 endif()
-file(READ ${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_target_suffix}.cmake _content)
-string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" _content "${_content}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_target_suffix}.cmake "${_content}")
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_target_suffix}.cmake
+    "${CURRENT_PACKAGES_DIR}"
+    "${CURRENT_INSTALLED_DIR}"
+)
 
 vcpkg_copy_pdbs()
 
