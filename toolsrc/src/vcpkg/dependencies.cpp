@@ -4,6 +4,7 @@
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/dependencies.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphs.h>
@@ -53,7 +54,7 @@ namespace vcpkg::Dependencies
             {
             }
 
-            Cluster(const PackageSpec& spec, const SourceControlFileLocation& scfl) : m_spec(spec), m_scfl(scfl) {}
+            Cluster(const PackageSpec& spec, const SourceControlFileLocation& scfl) : m_spec(spec), m_scfl(scfl) { }
 
             bool has_feature_installed(const std::string& feature) const
             {
@@ -124,12 +125,11 @@ namespace vcpkg::Dependencies
                     bool requires_qualified_resolution = false;
                     for (const Dependency& dep : *qualified_deps)
                     {
-                        if (dep.qualifier.empty())
+                        if (dep.platform.is_empty())
                         {
-                            Util::Vectors::append(
-                                &dep_list,
-                                FullPackageSpec({dep.depend.name, m_spec.triplet()}, dep.depend.features)
-                                    .to_feature_specs({"default"}, {"default"}));
+                            Util::Vectors::append(&dep_list,
+                                                  FullPackageSpec({dep.name, m_spec.triplet()}, dep.features)
+                                                      .to_feature_specs({"default"}, {"default"}));
                         }
                         else
                         {
@@ -684,7 +684,7 @@ namespace vcpkg::Dependencies
                     const std::vector<Dependency>* paragraph_depends = nullptr;
                     if (spec.feature() == "core")
                     {
-                        paragraph_depends = &clust.m_scfl.source_control_file->core_paragraph->depends;
+                        paragraph_depends = &clust.m_scfl.source_control_file->core_paragraph->dependencies;
                     }
                     else if (spec.feature() == "default")
                     {
@@ -697,12 +697,12 @@ namespace vcpkg::Dependencies
                                            "Package %s does not have a %s feature",
                                            spec.name(),
                                            spec.feature());
-                        paragraph_depends = &maybe_paragraph.value_or_exit(VCPKG_LINE_INFO).depends;
+                        paragraph_depends = &maybe_paragraph.value_or_exit(VCPKG_LINE_INFO).dependencies;
                     }
 
                     // And it has at least one qualified dependency
                     if (paragraph_depends &&
-                        Util::any_of(*paragraph_depends, [](auto&& dep) { return !dep.qualifier.empty(); }))
+                        Util::any_of(*paragraph_depends, [](auto&& dep) { return !dep.platform.is_empty(); }))
                     {
                         // Add it to the next batch run
                         qualified_dependencies.emplace_back(spec);
@@ -795,7 +795,7 @@ namespace vcpkg::Dependencies
     {
         struct BaseEdgeProvider : Graphs::AdjacencyProvider<PackageSpec, const Cluster*>
         {
-            BaseEdgeProvider(const ClusterGraph& parent) : m_parent(parent) {}
+            BaseEdgeProvider(const ClusterGraph& parent) : m_parent(parent) { }
 
             std::string to_string(const PackageSpec& spec) const override { return spec.to_string(); }
             const Cluster* load_vertex_data(const PackageSpec& spec) const override

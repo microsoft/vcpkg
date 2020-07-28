@@ -139,6 +139,9 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
             "src/libANGLE/renderer/gl/glx/*.cpp"
             "src/libANGLE/renderer/gl/glx/*.inl"
             "src/libANGLE/renderer/gl/glx/*.h"
+            "src/libANGLE/renderer/gl/egl/*.cpp"
+            "src/libANGLE/renderer/gl/egl/*.inl"
+            "src/libANGLE/renderer/gl/egl/*.h"
         )
     endif()
 

@@ -39,7 +39,7 @@ function(vcpkg_copy_pdbs)
         set(${OUTVAR} ${MSG} PARENT_SCOPE)
     endfunction()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND NOT VCPKG_TARGET_IS_MINGW)
         file(GLOB_RECURSE DLLS ${_vcp_BUILD_PATHS})
 
         set(DLLS_WITHOUT_MATCHING_PDBS)

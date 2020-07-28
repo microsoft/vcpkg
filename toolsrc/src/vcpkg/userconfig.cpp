@@ -2,9 +2,10 @@
 
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
+#include <vcpkg/base/system.h>
+
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/userconfig.h>
-#include <vcpkg/base/system.h>
 
 namespace vcpkg
 {
