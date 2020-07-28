@@ -40,6 +40,13 @@ namespace vcpkg::Commands
         static const Install::InstallCommand install{};
         static const SetInstalled::SetInstalledCommand set_installed{};
         static const CI::CICommand ci{};
+        static const Remove::RemoveCommand remove{};
+        static const Upgrade::UpgradeCommand upgrade{};
+        static const Build::BuildCommand build{};
+        static const Env::EnvCommand env{};
+        static const BuildExternal::BuildExternalCommand buildexternal{};
+        static const Export::ExportCommand export_command{};
+        static const DependInfo::DependInfoCommand dependinfo{};
 
         static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
             {"install", &Install::perform_and_exit},
