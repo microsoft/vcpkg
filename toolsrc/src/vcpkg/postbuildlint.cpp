@@ -418,6 +418,65 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
+    static LintStatus check_for_cmake_files(const Files::Filesystem& fs, const fs::path& share_dir)
+    {
+        std::vector<fs::path> shareFolders = fs.get_files_non_recursive(share_dir);
+        for (const auto folder : shareFolders)
+        {
+            if (!fs.is_directory(folder))
+            {
+                continue;
+            }
+
+            const auto files = fs.get_files_non_recursive(folder);
+            fs::path catchedFile;
+            std::string cmakePrefix;
+            for (const auto cmakeFile : files)
+            {
+                auto& filename = cmakeFile.filename().string();
+                if (filename.find("Config.cmake") != std::string::npos)
+                {
+                    cmakePrefix = filename.substr(0, filename.find("Config.cmake"));
+                    catchedFile = cmakeFile;
+                    break;
+                }
+                else if (filename.find("config.cmake") != std::string::npos)
+                {
+                    cmakePrefix = filename.find("-") != std::string::npos
+                                      ? filename.substr(0, filename.find("config.cmake"))
+                                      : filename.substr(0, filename.find("-config.cmake"));
+                    catchedFile = cmakeFile;
+                    break;
+                }
+                else if (filename.find("Find") != std::string::npos)
+                {
+                    cmakePrefix = filename.substr(strlen("Find"), filename.length() - strlen("Find"));
+                    cmakePrefix = cmakePrefix.substr(0, cmakePrefix.find(".cmake"));
+                    catchedFile = cmakeFile;
+                    break;
+                }
+            }
+
+            auto tmpPath = catchedFile.parent_path().filename();
+            auto cmakeName = catchedFile.filename().string();
+            if (!catchedFile.empty() && catchedFile.filename().string().find(
+                                            catchedFile.parent_path().filename().string()) == std::string::npos)
+            {
+                System::printf(System::Color::warning,
+                               "The following cmake file %s were found in %s and didn't match the folder name %s.\n",
+                               catchedFile.filename().string().c_str(),
+                               catchedFile.parent_path().string().c_str(),
+                               catchedFile.parent_path().filename().string().c_str());
+                System::print2(System::Color::warning, "Please add the following code to portfile.cmake:\n");
+                System::printf(
+                    System::Color::warning, "    vcpkg_fixup_cmake_targets(... TARGET_PATH share/%s).\n", cmakePrefix);
+                return LintStatus::ERROR_DETECTED;
+            }
+        }
+
+        return LintStatus::SUCCESS;
+    }
+
     static LintStatus check_uwp_bit_of_dlls(const std::string& expected_system_name,
                                             const std::vector<fs::path>& dlls,
                                             const fs::path dumpbin_exe)
@@ -861,6 +920,7 @@ namespace vcpkg::PostBuildLint
         error_count += check_for_copyright_file(fs, spec, paths);
         error_count += check_for_exes(fs, package_dir);
         error_count += check_for_exes(fs, package_dir / "debug");
+        error_count += check_for_cmake_files(fs, package_dir / "share");
 
         const fs::path debug_lib_dir = package_dir / "debug" / "lib";
         const fs::path release_lib_dir = package_dir / "lib";
