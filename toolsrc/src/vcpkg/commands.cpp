@@ -44,21 +44,21 @@ namespace vcpkg::Commands
         static const Upgrade::UpgradeCommand upgrade{};
         static const Build::BuildCommand build{};
         static const Env::EnvCommand env{};
-        static const BuildExternal::BuildExternalCommand buildexternal{};
+        static const BuildExternal::BuildExternalCommand build_external{};
         static const Export::ExportCommand export_command{};
-        static const DependInfo::DependInfoCommand dependinfo{};
+        static const DependInfo::DependInfoCommand depend_info{};
 
         static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
-            {"install", &Install::perform_and_exit},
-            {"x-set-installed", &SetInstalled::perform_and_exit},
-            {"ci", &CI::perform_and_exit},
-            {"remove", &Remove::perform_and_exit},
-            {"upgrade", &Upgrade::perform_and_exit},
-            {"build", &Build::Command::perform_and_exit},
-            {"env", &Env::perform_and_exit},
-            {"build-external", &BuildExternal::perform_and_exit},
-            {"export", &Export::perform_and_exit},
-            {"depend-info", &DependInfo::perform_and_exit},
+            {"install", &install},
+            {"x-set-installed", &set_installed},
+            {"ci", &ci},
+            {"remove", &remove},
+            {"upgrade", &upgrade},
+            {"build", &build},
+            {"env", &env},
+            {"build-external", &build_external},
+            {"export", &export_command},
+            {"depend-info", &depend_info},
         };
         return t;
     }

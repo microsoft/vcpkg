@@ -114,7 +114,7 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_a()))
     {
-        return command_function->function(args, paths, default_triplet);
+        return command_function->function->perform_and_exit(args, paths, default_triplet);
     }
 
     return invalid_command(args.command);
