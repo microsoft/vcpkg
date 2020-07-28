@@ -39,6 +39,7 @@ namespace vcpkg::Commands
     {
         static const Install::InstallCommand install{};
         static const SetInstalled::SetInstalledCommand set_installed{};
+        static const CI::CICommand ci{};
 
         static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
             {"install", &Install::perform_and_exit},
