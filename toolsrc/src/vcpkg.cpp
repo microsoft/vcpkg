@@ -70,7 +70,7 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_c()))
     {
-        return command_function->function(args, fs);
+        return command_function->function->perform_and_exit(args, fs);
     }
 
     const VcpkgPaths paths(fs, args);
