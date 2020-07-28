@@ -102,9 +102,9 @@ namespace vcpkg::Files
             return status_implementation(false, p, ec);
         }
 
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
         fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
         {
-#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
             ec.clear();
             auto handle = CreateFileW(oldpath.c_str(),
                                       0, // open just the metadata
@@ -132,10 +132,8 @@ namespace vcpkg::Files
             }
             CloseHandle(handle);
             return target;
-#else  // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
-            return fs::stdfs::read_symlink(oldpath, ec);
-#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
         }
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
 
         void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
         {
