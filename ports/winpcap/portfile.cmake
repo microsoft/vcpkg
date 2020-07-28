@@ -172,6 +172,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         DESTINATION  ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h "#define inline __inline" "/* #define inline __inline */")
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
 
 configure_file(${COPYRIGHT} ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
