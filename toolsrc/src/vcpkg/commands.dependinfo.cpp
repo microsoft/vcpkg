@@ -1,16 +1,17 @@
 #include "pch.h"
 
-#include <vector>
-
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
+
+#include <vector>
 
 using vcpkg::Dependencies::ActionPlan;
 using vcpkg::Dependencies::InstallPlanAction;
@@ -20,11 +21,11 @@ namespace vcpkg::Commands::DependInfo
 {
     namespace
     {
-        constexpr StringLiteral OPTION_DOT = "--dot";
-        constexpr StringLiteral OPTION_DGML = "--dgml";
-        constexpr StringLiteral OPTION_SHOW_DEPTH = "--show-depth";
-        constexpr StringLiteral OPTION_MAX_RECURSE = "--max-recurse";
-        constexpr StringLiteral OPTION_SORT = "--sort";
+        constexpr StringLiteral OPTION_DOT = "dot";
+        constexpr StringLiteral OPTION_DGML = "dgml";
+        constexpr StringLiteral OPTION_SHOW_DEPTH = "show-depth";
+        constexpr StringLiteral OPTION_MAX_RECURSE = "max-recurse";
+        constexpr StringLiteral OPTION_SORT = "sort";
 
         constexpr int NO_RECURSE_LIMIT_VALUE = -1;
 

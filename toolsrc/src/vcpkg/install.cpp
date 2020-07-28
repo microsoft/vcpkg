@@ -4,6 +4,7 @@
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
@@ -500,17 +501,17 @@ namespace vcpkg::Install
         return InstallSummary{std::move(results), timer.to_string()};
     }
 
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "--head";
-    static constexpr StringLiteral OPTION_NO_DOWNLOADS = "--no-downloads";
-    static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "--only-downloads";
-    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
-    static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
-    static constexpr StringLiteral OPTION_EDITABLE = "--editable";
-    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
-    static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
-    static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
-    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "head";
+    static constexpr StringLiteral OPTION_NO_DOWNLOADS = "no-downloads";
+    static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "only-downloads";
+    static constexpr StringLiteral OPTION_RECURSE = "recurse";
+    static constexpr StringLiteral OPTION_KEEP_GOING = "keep-going";
+    static constexpr StringLiteral OPTION_EDITABLE = "editable";
+    static constexpr StringLiteral OPTION_XUNIT = "x-xunit";
+    static constexpr StringLiteral OPTION_USE_ARIA2 = "x-use-aria2";
+    static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "clean-after-build";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
 
     static constexpr std::array<CommandSwitch, 9> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
@@ -577,6 +578,8 @@ namespace vcpkg::Install
         {
             std::map<std::string, std::string> config_files;
             std::map<std::string, std::vector<std::string>> library_targets;
+            bool is_header_only = true;
+            std::string header_path;
 
             for (auto&& suffix : *p_lines)
             {
@@ -616,10 +619,42 @@ namespace vcpkg::Install
                             config_files[find_package_name] = root;
                     }
                 }
+                if (Strings::case_insensitive_ascii_contains(suffix, "/lib/") ||
+                    Strings::case_insensitive_ascii_contains(suffix, "/bin/"))
+                {
+                    if (!Strings::ends_with(suffix, ".pc") && !Strings::ends_with(suffix, "/")) is_header_only = false;
+                }
+
+                if (is_header_only && header_path.empty())
+                {
+                    auto it = suffix.find("/include/");
+                    if (it != std::string::npos && !Strings::ends_with(suffix, "/"))
+                    {
+                        header_path = suffix.substr(it + 9);
+                    }
+                }
             }
 
             if (library_targets.empty())
             {
+                if (is_header_only && !header_path.empty())
+                {
+                    static auto cmakeify = [](std::string name) {
+                        auto n = Strings::ascii_to_uppercase(Strings::replace_all(std::move(name), "-", "_"));
+                        if (n.empty() || Parse::ParserBase::is_ascii_digit(n[0]))
+                        {
+                            n.insert(n.begin(), '_');
+                        }
+                        return n;
+                    };
+
+                    const auto name = cmakeify(bpgh.spec.name());
+                    auto msg = Strings::concat(
+                        "The package ", bpgh.spec, " is header only and can be used from CMake via:\n\n");
+                    Strings::append(msg, "    find_path(", name, "_INCLUDE_DIRS \"", header_path, "\")\n");
+                    Strings::append(msg, "    target_include_directories(main PRIVATE ${", name, "_INCLUDE_DIRS})\n\n");
+                    System::print2(msg);
+                }
             }
             else
             {
@@ -672,8 +707,7 @@ namespace vcpkg::Install
         const ParsedArguments options =
             args.parse_arguments(paths.manifest_mode_enabled() ? MANIFEST_COMMAND_STRUCTURE : COMMAND_STRUCTURE);
 
-        auto binaryprovider =
-            create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+        auto binaryprovider = create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
@@ -726,8 +760,10 @@ namespace vcpkg::Install
             {
                 for (auto& dep : (*val)->core_paragraph->dependencies)
                 {
-                    specs.push_back(Input::check_and_get_full_package_spec(
-                        std::move(dep.name), default_triplet, COMMAND_STRUCTURE.example_text));
+                    specs.push_back(FullPackageSpec{
+                        {std::move(dep.name), default_triplet},
+                        std::move(dep.features),
+                    });
                 }
             }
             else

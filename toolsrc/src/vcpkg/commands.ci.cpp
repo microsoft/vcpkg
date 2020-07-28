@@ -6,6 +6,7 @@
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -81,11 +82,11 @@ namespace vcpkg::Commands::CI
         Install::InstallSummary summary;
     };
 
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
-    static constexpr StringLiteral OPTION_FAILURE_LOGS = "--failure-logs";
-    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
-    static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_EXCLUDE = "exclude";
+    static constexpr StringLiteral OPTION_FAILURE_LOGS = "failure-logs";
+    static constexpr StringLiteral OPTION_XUNIT = "x-xunit";
+    static constexpr StringLiteral OPTION_RANDOMIZE = "x-randomize";
 
     static constexpr std::array<CommandSetting, 3> CI_SETTINGS = {
         {{OPTION_EXCLUDE, "Comma separated list of ports to skip"},
@@ -404,7 +405,7 @@ namespace vcpkg::Commands::CI
         if (args.binary_caching_enabled())
         {
             binaryproviderStorage =
-                create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+                create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
         }
 
         IBinaryProvider& binaryprovider = binaryproviderStorage ? *binaryproviderStorage : null_binary_provider();

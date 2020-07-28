@@ -5,6 +5,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/build.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/postbuildlint.buildtype.h>
@@ -152,6 +153,7 @@ namespace vcpkg::PostBuildLint
             "config.h",
             "local.h",
             "slice.h",
+            "platform.h",
         };
         static constexpr Span<const StringLiteral> restricted_lists[] = {
             restricted_sys_filenames, restricted_crt_filenames, restricted_general_filenames};

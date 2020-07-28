@@ -6,7 +6,6 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/base/work_queue.h>
 
 #if !defined(_WIN32)
 #include <fcntl.h>
@@ -35,6 +34,7 @@ namespace vcpkg::Files
             WIN32_FILE_ATTRIBUTE_DATA file_attributes;
             auto ft = file_type::unknown;
             auto permissions = perms::unknown;
+            ec.clear();
             if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
             {
                 const auto err = GetLastError();
@@ -100,6 +100,59 @@ namespace vcpkg::Files
         fs::file_status symlink_status(const fs::path& p, std::error_code& ec) noexcept
         {
             return status_implementation(false, p, ec);
+        }
+
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+        fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
+        {
+            ec.clear();
+            auto handle = CreateFileW(oldpath.c_str(),
+                                      0, // open just the metadata
+                                      FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+                                      nullptr /* no security attributes */,
+                                      OPEN_EXISTING,
+                                      FILE_ATTRIBUTE_NORMAL,
+                                      nullptr /* no template file */);
+            if (handle == INVALID_HANDLE_VALUE)
+            {
+                ec.assign(GetLastError(), std::system_category());
+                return oldpath;
+            }
+            fs::path target;
+            const DWORD maxsize = 32768;
+            const std::unique_ptr<wchar_t[]> buffer(new wchar_t[maxsize]);
+            const auto rc = GetFinalPathNameByHandleW(handle, buffer.get(), maxsize, 0);
+            if (rc > 0 && rc < maxsize)
+            {
+                target = buffer.get();
+            }
+            else
+            {
+                ec.assign(GetLastError(), std::system_category());
+            }
+            CloseHandle(handle);
+            return target;
+        }
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
+
+        void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
+        {
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+            const auto target = read_symlink_implementation(oldpath, ec);
+            if (ec) return;
+
+            const DWORD flags = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+            if (!CreateSymbolicLinkW(newpath.c_str(), target.c_str(), flags))
+            {
+                const auto err = GetLastError();
+                ec.assign(err, std::system_category());
+                return;
+            }
+            ec.clear();
+            return;
+#else  // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
+            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
         }
 
         // does _not_ follow symlinks
@@ -800,7 +853,7 @@ namespace vcpkg::Files
         }
         virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
-            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+            return Files::copy_symlink_implementation(oldpath, newpath, ec);
         }
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
@@ -874,15 +927,22 @@ namespace vcpkg::Files
             fs::stdfs::current_path(path, ec);
         }
 
-        virtual fs::SystemHandle try_take_exclusive_file_lock(const fs::path& path, std::error_code& ec) override
+        struct TakeExclusiveFileLockHelper
         {
-            fs::SystemHandle res;
+            fs::SystemHandle& res;
+            const fs::path::string_type& native;
+            TakeExclusiveFileLockHelper(fs::SystemHandle& res, const fs::path::string_type& native)
+                : res(res), native(native)
+            {
+            }
 
-            const auto system_file_name = path.native();
 #if defined(WIN32)
-            constexpr static auto busy_error = ERROR_BUSY;
-            const auto system_try_take_file_lock = [&] {
-                auto handle = CreateFileW(system_file_name.c_str(),
+            void assign_busy_error(std::error_code& ec) { ec.assign(ERROR_BUSY, std::system_category()); }
+
+            bool operator()(std::error_code& ec)
+            {
+                ec.clear();
+                auto handle = CreateFileW(native.c_str(),
                                           GENERIC_READ,
                                           0 /* no sharing */,
                                           nullptr /* no security attributes */,
@@ -901,31 +961,77 @@ namespace vcpkg::Files
 
                 res.system_handle = reinterpret_cast<intptr_t>(handle);
                 return true;
-            };
-#else // ^^^ WIN32 / !WIN32 vvv
-            constexpr static auto busy_error = EBUSY;
-            int fd = open(system_file_name.c_str(), 0);
-            if (fd < 0)
-            {
-                ec.assign(errno, std::system_category());
-                return res;
             }
-            const auto system_try_take_file_lock = [&] {
-                if (flock(fd, LOCK_EX | LOCK_NB) != 0)
+#else // ^^^ WIN32 / !WIN32 vvv
+            int fd = -1;
+
+            void assign_busy_error(std::error_code& ec) { ec.assign(EBUSY, std::generic_category()); }
+
+            bool operator()(std::error_code& ec)
+            {
+                ec.clear();
+                if (fd == -1)
+                {
+                    fd = ::open(native.c_str(), 0);
+                    if (fd < 0)
+                    {
+                        ec.assign(errno, std::generic_category());
+                        return false;
+                    }
+                }
+
+                if (::flock(fd, LOCK_EX | LOCK_NB) != 0)
                 {
                     if (errno != EWOULDBLOCK)
                     {
-                        ec.assign(errno, std::system_category());
+                        ec.assign(errno, std::generic_category());
                     }
                     return false;
                 }
 
                 res.system_handle = fd;
+                fd = -1;
                 return true;
             };
-#endif
 
-            if (system_try_take_file_lock() || ec)
+            ~TakeExclusiveFileLockHelper()
+            {
+                if (fd != -1)
+                {
+                    ::close(fd);
+                }
+            }
+#endif
+        };
+
+        virtual fs::SystemHandle take_exclusive_file_lock(const fs::path& path, std::error_code& ec) override
+        {
+            fs::SystemHandle res;
+            TakeExclusiveFileLockHelper helper(res, path.native());
+
+            if (helper(ec) || ec)
+            {
+                return res;
+            }
+
+            System::printf("Waiting to take filesystem lock on %s...\n", path.u8string());
+            const auto wait = std::chrono::milliseconds(1000);
+            for (;;)
+            {
+                std::this_thread::sleep_for(wait);
+                if (helper(ec) || ec)
+                {
+                    return res;
+                }
+            }
+        }
+
+        virtual fs::SystemHandle try_take_exclusive_file_lock(const fs::path& path, std::error_code& ec) override
+        {
+            fs::SystemHandle res;
+            TakeExclusiveFileLockHelper helper(res, path.native());
+
+            if (helper(ec) || ec)
             {
                 return res;
             }
@@ -936,19 +1042,17 @@ namespace vcpkg::Files
             while (wait < std::chrono::milliseconds(1000))
             {
                 std::this_thread::sleep_for(wait);
-                if (system_try_take_file_lock() || ec)
+                if (helper(ec) || ec)
                 {
                     return res;
                 }
                 wait *= 2;
             }
 
-#if !defined(WIN32)
-            close(fd);
-#endif
-            ec.assign(busy_error, std::system_category());
+            helper.assign_busy_error(ec);
             return res;
         }
+
         virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code& ec) override
         {
 #if defined(WIN32)
@@ -959,7 +1063,7 @@ namespace vcpkg::Files
 #else
             if (flock(handle.system_handle, LOCK_UN) != 0 || close(handle.system_handle) != 0)
             {
-                ec.assign(errno, std::system_category());
+                ec.assign(errno, std::generic_category());
             }
 #endif
         }

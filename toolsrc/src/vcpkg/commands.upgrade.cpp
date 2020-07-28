@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
@@ -18,8 +19,8 @@ namespace vcpkg::Commands::Upgrade
     using Install::KeepGoing;
     using Install::to_keep_going;
 
-    static constexpr StringLiteral OPTION_NO_DRY_RUN = "--no-dry-run";
-    static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
+    static constexpr StringLiteral OPTION_NO_DRY_RUN = "no-dry-run";
+    static constexpr StringLiteral OPTION_KEEP_GOING = "keep-going";
 
     static constexpr std::array<CommandSwitch, 2> INSTALL_SWITCHES = {{
         {OPTION_NO_DRY_RUN, "Actually upgrade"},
@@ -41,8 +42,7 @@ namespace vcpkg::Commands::Upgrade
         const bool no_dry_run = Util::Sets::contains(options.switches, OPTION_NO_DRY_RUN);
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
-        auto binaryprovider =
-            create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+        auto binaryprovider = create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
 
         StatusParagraphs status_db = database_load_check(paths);
 
