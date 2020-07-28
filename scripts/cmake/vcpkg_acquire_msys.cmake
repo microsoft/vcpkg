@@ -43,6 +43,16 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     message(FATAL_ERROR "vcpkg_acquire_msys() can only be used on Windows hosts")
   endif()
 
+  if (DEFINED ENV{PROCESSOR_ARCHITEW6432})
+    set(_vam_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
+  else()
+    set(_vam_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
+  endif()
+
+  if(_vam_HOST_ARCHITECTURE STREQUAL "x86")
+    message(FATAL_ERROR "msys2 is no longer supported on x86 hosts since version 2020-05-17.")
+  endif()
+
   set(TOOLSUBPATH msys64)
   set(URLS
       "https://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20200720.tar.xz"
