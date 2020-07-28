@@ -4,8 +4,19 @@
 #include <vcpkg/commands.contact.h>
 #include <vcpkg/commands.version.h>
 
+using namespace vcpkg;
+
 TEST_CASE ("test commands are constructible", "[commands]")
 {
-    vcpkg::Commands::Contact::ContactCommand contact{};
-    vcpkg::Commands::Version::VersionCommand version{};
+    Commands::Contact::ContactCommand contact{};
+    Commands::Version::VersionCommand version{};
+}
+
+TEST_CASE ("get_available_commands_type_c works", "[commands]")
+{
+    auto commands_list = Commands::get_available_commands_type_c();
+    CHECK(commands_list.size() == 2);
+    CHECK(Commands::find("version", commands_list) != nullptr);
+    CHECK(Commands::find("contact", commands_list) != nullptr);
+    CHECK(Commands::find("aang", commands_list) == nullptr);
 }

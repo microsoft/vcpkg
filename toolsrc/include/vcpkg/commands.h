@@ -27,7 +27,7 @@ namespace vcpkg::Commands
     Span<const PackageNameAndFunction<CommandTypeC>> get_available_commands_type_c();
 
     template<typename T>
-    T find(const std::string& command_name, const std::vector<PackageNameAndFunction<T>> available_commands)
+    T find(StringView command_name, Span<const PackageNameAndFunction<T>> available_commands)
     {
         for (const PackageNameAndFunction<T>& cmd : available_commands)
         {
