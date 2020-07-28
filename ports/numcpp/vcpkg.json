@@ -8,7 +8,6 @@
     "boost-integer",
     "boost-math",
     "boost-predef",
-    "boost-python",
     "boost-random",
     "boost-type-traits"
   ],
