@@ -12,7 +12,9 @@
     "pugixml",
     {
       "name": "imgui",
-      "features": [ "freetype" ]
+      "features": [
+        "freetype"
+      ]
     }
   ],
   "features": [
