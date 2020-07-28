@@ -37,6 +37,9 @@ namespace vcpkg::Commands
 {
     Span<const PackageNameAndFunction<CommandTypeA>> get_available_commands_type_a()
     {
+        static const Install::InstallCommand install{};
+        static const SetInstalled::SetInstalledCommand set_installed{};
+
         static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
             {"install", &Install::perform_and_exit},
             {"x-set-installed", &SetInstalled::perform_and_exit},
