@@ -433,7 +433,7 @@ namespace vcpkg::PostBuildLint
             std::string cmakePrefix;
             for (const auto cmakeFile : files)
             {
-                auto& filename = cmakeFile.filename().string();
+                const std::string& filename = cmakeFile.filename().string();
                 if (filename.find("Config.cmake") != std::string::npos)
                 {
                     cmakePrefix = filename.substr(0, filename.find("Config.cmake"));
