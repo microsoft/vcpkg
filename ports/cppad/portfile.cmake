@@ -1,4 +1,3 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CppAD
@@ -9,32 +8,17 @@ vcpkg_from_github(
         windows-fix.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_configure_cmake(
-      SOURCE_PATH ${SOURCE_PATH}
-      PREFER_NINJA
-      OPTIONS
-          -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
-      OPTIONS_RELEASE
-          -Dcmake_install_libdirs=lib
-          -Dcppad_debug_which:STRING=debug_none
-      OPTIONS_DEBUG
-          -DCMAKE_DEBUG_POSTFIX=d
-          -Dcmake_install_libdirs=debug/lib
-    )
-else()
-  vcpkg_configure_cmake(
-      SOURCE_PATH ${SOURCE_PATH}
-      PREFER_NINJA
-      OPTIONS
-          -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
-      OPTIONS_RELEASE
-          -Dcmake_install_libdirs=lib
-          -Dcppad_debug_which:STRING=debug_none
-      OPTIONS_DEBUG
-          -Dcmake_install_libdirs=debug/lib
-    )
-endif()
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
+    OPTIONS_RELEASE
+        -Dcmake_install_libdirs=lib
+        -Dcppad_debug_which:STRING=debug_none
+    OPTIONS_DEBUG
+        -Dcmake_install_libdirs=debug/lib
+)
 
 vcpkg_install_cmake()
 
@@ -43,9 +27,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pkgconfig/cppad.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/pkgconfig/cppad.pc "-lcppad_lib" "-lcppad_libd")
-    endif()
     file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/pkgconfig/cppad.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 endif()
 
