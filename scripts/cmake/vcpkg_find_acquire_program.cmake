@@ -56,14 +56,20 @@ function(vcpkg_find_acquire_program VAR)
   unset(POST_INSTALL_COMMAND)
 
   vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
-  vcpkg_get_program_files_32_bit(PROGRAM_FILES_32_BIT)
+  set(PROGRAM_FILES_32_BIT $ENV{ProgramFiles\(X86\)})
+  if (NOT DEFINED PROGRAM_FILES_32_BIT)
+      set(PROGRAM_FILES_32_BIT $ENV{PROGRAMFILES})
+  endif()
 
   if(VAR MATCHES "PERL")
     set(PROGNAME perl)
     set(PATHS ${DOWNLOADS}/tools/perl/perl/bin)
     set(BREW_PACKAGE_NAME "perl")
     set(APT_PACKAGE_NAME "perl")
-    set(URL "http://strawberryperl.com/download/5.30.0.1/strawberry-perl-5.30.0.1-32bit.zip")
+    set(URL 
+      "https://strawberry.perl.bot/download/5.30.0.1/strawberry-perl-5.30.0.1-32bit.zip"
+      "http://strawberryperl.com/download/5.30.0.1/strawberry-perl-5.30.0.1-32bit.zip"
+    )
     set(ARCHIVE "strawberry-perl-5.30.0.1-32bit.zip")
     set(HASH d353d3dc743ebdc6d1e9f6f2b7a6db3c387c1ce6c890bae8adc8ae5deae8404f4c5e3cf249d1e151e7256d4c5ee9cd317e6c41f3b6f244340de18a24b938e0c4)
   elseif(VAR MATCHES "NASM")
@@ -95,7 +101,7 @@ function(vcpkg_find_acquire_program VAR)
       set(URL "https://github.com/git-for-windows/git/releases/download/v2.26.2.windows.1/PortableGit-2.26.2-32-bit.7z.exe")
       set(ARCHIVE "PortableGit-2.26.2-32-bit.7z.exe")
       set(HASH d3cb60d62ca7b5d05ab7fbed0fa7567bec951984568a6c1646842a798c4aaff74bf534cf79414a6275c1927081a11b541d09931c017bf304579746e24fe57b36)
-      set(PATHS 
+      set(PATHS
         "${DOWNLOADS}/tools/${SUBDIR}/mingw32/bin"
         "${DOWNLOADS}/tools/git/${SUBDIR}/mingw32/bin")
     else()
@@ -184,8 +190,8 @@ function(vcpkg_find_acquire_program VAR)
     set(PROGNAME jom)
     set(SUBDIR "jom-1.1.3")
     set(PATHS ${DOWNLOADS}/tools/jom/${SUBDIR})
-    set(URL 
-      "http://download.qt.io/official_releases/jom/jom_1_1_3.zip" 
+    set(URL
+      "http://download.qt.io/official_releases/jom/jom_1_1_3.zip"
       "http://mirrors.ocf.berkeley.edu/qt/official_releases/jom/jom_1_1_3.zip"
     )
     set(ARCHIVE "jom_1_1_3.zip")
@@ -216,57 +222,61 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH a196e243c53daa1df9d287af658d6d38d6b830b614f2d5704e8c88ffc61f179a533ae71cdb6d0d383d1559d65dacccbaaab270fb2a33aa211e5dba42ff046f97)
   elseif(VAR MATCHES "NUGET")
     set(PROGNAME nuget)
-    set(PATHS "${DOWNLOADS}/tools/nuget")
+    set(SUBDIR "5.5.1")
+    set(PATHS "${DOWNLOADS}/tools/nuget/${SUBDIR}")
     set(BREW_PACKAGE_NAME "nuget")
-    set(URL "https://dist.nuget.org/win-x86-commandline/v4.8.1/nuget.exe")
-    set(ARCHIVE "nuget.exe")
+    set(URL "https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe")
+    set(_vfa_RENAME "nuget.exe")
+    set(ARCHIVE "nuget.5.5.1.exe")
     set(NOEXTRACT ON)
-    set(HASH 42cb744338af8decc033a75bce5b4c4df28e102bafc45f9a8ba86d7bc010f5b43ebacae80d7b28c4f85ac900eefc2a349620ae65f27f6ca1c21c53b63b92924b)
+    set(HASH 22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619)
   elseif(VAR MATCHES "MESON")
-    set(PROGNAME meson)
-    set(REQUIRED_INTERPRETER PYTHON3)
-    set(BREW_PACKAGE_NAME "meson")
-    set(APT_PACKAGE_NAME "meson")
-    if(CMAKE_HOST_WIN32)
-      set(SCRIPTNAME meson.py)
+    if(NOT CMAKE_HOST_APPLE)
+      set(PROGNAME meson)
+      set(REQUIRED_INTERPRETER PYTHON3)
+      set(APT_PACKAGE_NAME "meson")
+      if(CMAKE_HOST_WIN32)
+        set(SCRIPTNAME meson.py)
+      else()
+        set(SCRIPTNAME meson)
+      endif()
+      set(PATHS ${DOWNLOADS}/tools/meson/meson-0.54.2)
+      set(URL "https://github.com/mesonbuild/meson/archive/0.54.2.zip")
+      set(ARCHIVE "meson-0.54.2.zip")
+      set(HASH 8d19110bad3e6a223d1d169e833b746b884ece9cd23d2539ec02dccb5cd0c56542414b7afc0f7f2adcec9d957e4120d31f41734397aa0a7ee7f9c29ebdc9eb4c)
     else()
-      set(SCRIPTNAME meson)
+      set(PROGNAME meson)
+      set(BREW_PACKAGE_NAME "meson")
     endif()
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.54.2)
-    set(URL "https://github.com/mesonbuild/meson/archive/0.54.2.zip")
-    set(ARCHIVE "meson-0.54.2.zip")
-    set(HASH 8d19110bad3e6a223d1d169e833b746b884ece9cd23d2539ec02dccb5cd0c56542414b7afc0f7f2adcec9d957e4120d31f41734397aa0a7ee7f9c29ebdc9eb4c)
-  elseif(VAR MATCHES "FLEX")
+  elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
     if(CMAKE_HOST_WIN32)
-      set(PROGNAME win_flex)
-      set(SUBDIR win_flex-2.5.16)
-      set(PATHS ${DOWNLOADS}/tools/win_flex/${SUBDIR})
-      set(URL "https://sourceforge.net/projects/winflexbison/files/winflexbison-2.5.16.zip/download")
-      set(ARCHIVE "win_flex_bison-2.5.16.zip")
-      set(HASH 0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123)
+      set(SOURCEFORGE_ARGS
+        REPO winflexbison
+        FILENAME winflexbison-2.5.16.zip
+        SHA512 0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123
+        NO_REMOVE_ONE_LEVEL
+        WORKING_DIRECTORY "${DOWNLOADS}/tools/winflexbison"
+      )
+      if(VAR MATCHES "FLEX")
+        set(PROGNAME win_flex)
+      else()
+        set(PROGNAME win_bison)
+      endif()
+      set(PATHS ${DOWNLOADS}/tools/winflexbison/0a14154bff-a8cf65db07)
       if(NOT EXISTS "${PATHS}/data/m4sugar/m4sugar.m4")
         file(REMOVE_RECURSE "${PATHS}")
       endif()
-    else()
+    elseif(VAR MATCHES "FLEX")
       set(PROGNAME flex)
       set(APT_PACKAGE_NAME flex)
       set(BREW_PACKAGE_NAME flex)
-    endif()
-  elseif(VAR MATCHES "BISON")
-    if(CMAKE_HOST_WIN32)
-      set(PROGNAME win_bison)
-      set(SUBDIR win_bison-2.5.16)
-      set(PATHS ${DOWNLOADS}/tools/win_bison/${SUBDIR})
-      set(URL "https://sourceforge.net/projects/winflexbison/files/winflexbison-2.5.16.zip/download")
-      set(ARCHIVE "win_flex_bison-2.5.16.zip")
-      set(HASH 0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123)
-      if(NOT EXISTS "${PATHS}/data/m4sugar/m4sugar.m4")
-        file(REMOVE_RECURSE "${PATHS}")
-      endif()
     else()
       set(PROGNAME bison)
       set(APT_PACKAGE_NAME bison)
       set(BREW_PACKAGE_NAME bison)
+      if (APPLE)
+        set(PATHS /usr/local/opt/bison/bin)
+      endif()
     endif()
   elseif(VAR MATCHES "GPERF")
     set(PROGNAME gperf)
@@ -323,12 +333,12 @@ function(vcpkg_find_acquire_program VAR)
       set(HASH db4a583cf2996aeb29fd008261b12fe39a4a5faf0fbf96f7124e6d3ffeccf6d9655d391378e68dd0915bc91c9e146a51fd9661963743857ca25179547feceab1)
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
       set(_vfa_SUPPORTED ON)
-      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-darwin-x86_64") 
+      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-darwin-x86_64")
       set(ARCHIVE "bazel-${BAZEL_VERSION}-darwin-x86_64")
       set(NOEXTRACT ON)
       set(HASH 420a37081e6ee76441b0d92ff26d1715ce647737ce888877980d0665197b5a619d6afe6102f2e7edfb5062c9b40630a10b2539585e35479b780074ada978d23c)
     else()
-      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-windows-x86_64.zip") 
+      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-windows-x86_64.zip")
       set(ARCHIVE "bazel-${BAZEL_VERSION}-windows-x86_64.zip")
       set(HASH 6482f99a0896f55ef65739e7b53452fd9c0adf597b599d0022a5e0c5fa4374f4a958d46f98e8ba25af4b065adacc578bfedced483d8c169ea5cb1777a99eea53)
     endif()
@@ -367,41 +377,48 @@ function(vcpkg_find_acquire_program VAR)
       message(FATAL_ERROR "Could not find ${PROGNAME}. Please install it via your package manager${EXAMPLE}")
     endif()
 
-    vcpkg_download_distfile(ARCHIVE_PATH
-        URLS ${URL}
-        SHA512 ${HASH}
-        FILENAME ${ARCHIVE}
-    )
-
-    set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
-    file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
-    if(DEFINED NOEXTRACT)
-      if(DEFINED _vfa_RENAME)
-        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-      else()
-        file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-      endif()
+    if(DEFINED SOURCEFORGE_ARGS)
+      # Locally change editable to suppress re-extraction each time
+      set(_VCPKG_EDITABLE 1)
+      vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${SOURCEFORGE_ARGS})
+      unset(_VCPKG_EDITABLE)
     else()
-      get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} LAST_EXT)
-      string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
-      if(ARCHIVE_EXTENSION STREQUAL ".msi")
-        file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
-        file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
-        _execute_process(
-          COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
-          WORKING_DIRECTORY ${DOWNLOADS}
-        )
-      elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
-        vcpkg_find_acquire_program(7Z)
-        _execute_process(
-          COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
-        )
+      vcpkg_download_distfile(ARCHIVE_PATH
+          URLS ${URL}
+          SHA512 ${HASH}
+          FILENAME ${ARCHIVE}
+      )
+
+      set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
+      file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
+      if(DEFINED NOEXTRACT)
+        if(DEFINED _vfa_RENAME)
+          file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        else()
+          file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        endif()
       else()
-        _execute_process(
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
-        )
+        get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} LAST_EXT)
+        string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
+        if(ARCHIVE_EXTENSION STREQUAL ".msi")
+          file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
+          file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
+          _execute_process(
+            COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
+            WORKING_DIRECTORY ${DOWNLOADS}
+          )
+        elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
+          vcpkg_find_acquire_program(7Z)
+          _execute_process(
+            COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
+            WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+          )
+        else()
+          _execute_process(
+            COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
+            WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+          )
+        endif()
       endif()
     endif()
 
