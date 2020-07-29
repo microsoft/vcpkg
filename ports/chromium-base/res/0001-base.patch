@@ -1,8 +1,20 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index 7b7cd51..ae4aa09 100644
+index 7b7cd51..af851ca 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -1638,7 +1638,7 @@ jumbo_component("base") {
+@@ -162,6 +162,11 @@ jumbo_component("base") {
+     never_build_jumbo = true
+   }
+ 
++  if (!is_component_build) {
++    complete_static_lib = true
++    configs -= [ "//build/config/compiler:thin_archive" ]
++  }
++
+   sources = [
+     "allocator/allocator_check.cc",
+     "allocator/allocator_check.h",
+@@ -1638,7 +1643,7 @@ jumbo_component("base") {
      "hash/md5_constexpr_internal.h",
      "hash/sha1.h",
    ]

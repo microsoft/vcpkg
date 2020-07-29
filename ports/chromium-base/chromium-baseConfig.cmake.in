@@ -67,6 +67,10 @@ foreach(LIB_NAME ${LIBRARIES_})
     unset(_LIB CACHE)
 endforeach()
 
+if(UNIX AND NOT APPLE)
+    target_link_libraries(chromium-base INTERFACE -ldl -latomic -lpthread)
+endif()
+
 target_include_directories(chromium-base
     INTERFACE ${_IMPORT_PREFIX}/include/chromium-base)
 
