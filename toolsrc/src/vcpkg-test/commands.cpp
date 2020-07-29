@@ -21,6 +21,33 @@ TEST_CASE ("get_available_commands_type_c works", "[commands]")
     CHECK(Commands::find("aang", commands_list) == nullptr);
 }
 
+TEST_CASE ("get_available_commands_type_b works", "[commands]")
+{
+    auto commands_list = Commands::get_available_commands_type_b();
+    CHECK(commands_list.size() == 18);
+
+    CHECK(Commands::find("/?", commands_list) != nullptr);
+    CHECK(Commands::find("help", commands_list) != nullptr);
+    CHECK(Commands::find("search", commands_list) != nullptr);
+    CHECK(Commands::find("list", commands_list) != nullptr);
+    CHECK(Commands::find("integrate", commands_list) != nullptr);
+    CHECK(Commands::find("owns", commands_list) != nullptr);
+    CHECK(Commands::find("update", commands_list) != nullptr);
+    CHECK(Commands::find("edit", commands_list) != nullptr);
+    CHECK(Commands::find("create", commands_list) != nullptr);
+    CHECK(Commands::find("cache", commands_list) != nullptr);
+    CHECK(Commands::find("portsdiff", commands_list) != nullptr);
+    CHECK(Commands::find("autocomplete", commands_list) != nullptr);
+    CHECK(Commands::find("hash", commands_list) != nullptr);
+    CHECK(Commands::find("fetch", commands_list) != nullptr);
+    CHECK(Commands::find("x-ci-clean", commands_list) != nullptr);
+    CHECK(Commands::find("x-history", commands_list) != nullptr);
+    CHECK(Commands::find("x-vsinstances", commands_list) != nullptr);
+    CHECK(Commands::find("x-format-manifest", commands_list) != nullptr);
+
+    CHECK(Commands::find("korra", commands_list) == nullptr);
+}
+
 TEST_CASE ("get_available_commands_type_a works", "[commands]")
 {
     auto commands_list = Commands::get_available_commands_type_a();
