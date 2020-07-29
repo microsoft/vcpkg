@@ -94,8 +94,8 @@ namespace vcpkg::Commands::Version
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-	void VersionCommand::perform_and_exit(const VcpkgCmdArguments & args, Files::Filesystem & fs) const
-	{
-		Version::perform_and_exit(args, fs);
-	}
+    void VersionCommand::perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs) const
+    {
+        Version::perform_and_exit(args, fs);
+    }
 }

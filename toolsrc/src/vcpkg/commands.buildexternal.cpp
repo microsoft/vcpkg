@@ -44,7 +44,9 @@ namespace vcpkg::Commands::BuildExternal
                                             paths);
     }
 
-    void BuildExternalCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet) const
+    void BuildExternalCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                                const VcpkgPaths& paths,
+                                                Triplet default_triplet) const
     {
         BuildExternal::perform_and_exit(args, paths, default_triplet);
     }

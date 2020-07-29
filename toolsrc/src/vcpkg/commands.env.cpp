@@ -100,7 +100,9 @@ namespace vcpkg::Commands::Env
         Checks::exit_with_code(VCPKG_LINE_INFO, rc);
     }
 
-    void EnvCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet) const
+    void EnvCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const
     {
         Env::perform_and_exit(args, paths, default_triplet);
     }

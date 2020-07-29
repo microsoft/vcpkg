@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
-#include <vcpkg/commands.h>
 #include <vcpkg/commands.contact.h>
+#include <vcpkg/commands.h>
 #include <vcpkg/commands.version.h>
 
 using namespace vcpkg;

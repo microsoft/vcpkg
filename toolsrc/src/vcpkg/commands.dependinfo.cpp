@@ -329,7 +329,9 @@ namespace vcpkg::Commands::DependInfo
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    void DependInfoCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet) const
+    void DependInfoCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                             const VcpkgPaths& paths,
+                                             Triplet default_triplet) const
     {
         DependInfo::perform_and_exit(args, paths, default_triplet);
     }
