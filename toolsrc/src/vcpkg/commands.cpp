@@ -65,6 +65,8 @@ namespace vcpkg::Commands
 
     Span<const PackageNameAndFunction<CommandTypeB>> get_available_commands_type_b()
     {
+        static const Search::SearchCommand search{};
+
         static std::vector<PackageNameAndFunction<CommandTypeB>> t = {
             {"/?", &Help::perform_and_exit},
             {"help", &Help::perform_and_exit},
