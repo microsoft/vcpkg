@@ -124,6 +124,7 @@ function Get-InstalledVirtualBoxExtensionPacks
     $currentString = ""
 
     $lines | ForEach-Object {
+        $Line = $_
         if ($Line[0] -eq ' ') {
             $currentString += "`n$($Line.Trim())"
         } else {
