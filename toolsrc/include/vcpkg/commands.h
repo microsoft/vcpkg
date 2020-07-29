@@ -12,7 +12,7 @@
 namespace vcpkg::Commands
 {
     using CommandTypeA = const TripletCommand*;
-    using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    using CommandTypeB = const PathsCommand*;
     using CommandTypeC = const BasicCommand*;
 
     template<class T>
