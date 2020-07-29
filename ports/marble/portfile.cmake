@@ -30,12 +30,11 @@ file(COPY ${PLUGINS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${POR
 file(COPY "${CURRENT_PACKAGES_DIR}/data" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}) # have to keep folder structure here
 file(COPY ${MKSPECS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/mkspecs)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
 # remove plugin folder
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/plugins ${CURRENT_PACKAGES_DIR}/debug/plugins
     ${CURRENT_PACKAGES_DIR}/data    ${CURRENT_PACKAGES_DIR}/debug/data
+	${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/mkspecs ${CURRENT_PACKAGES_DIR}/debug/mkspecs
     ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/debug/lib/plugins   ${CURRENT_PACKAGES_DIR}/lib/plugins
