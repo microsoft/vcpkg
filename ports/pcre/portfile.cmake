@@ -92,7 +92,7 @@ configure_file("${SOURCE_PATH}/libpcre32.pc.in" "${CURRENT_PACKAGES_DIR}/debug/l
 configure_file("${SOURCE_PATH}/libpcrecpp.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc" @ONLY)
 configure_file("${SOURCE_PATH}/libpcreposix.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc" @ONLY)
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug"))
     file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc LIBPCRE.PC)
     string(REPLACE "-lpcre" "-lpcred" LIBPCRE.PC ${LIBPCRE.PC})
     file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc ${LIBPCRE.PC})
