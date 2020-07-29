@@ -349,6 +349,51 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://github.com/aria2/aria2/releases/download/release-1.34.0/aria2-1.34.0-win-32bit-build1.zip")
     set(ARCHIVE "aria2-1.34.0-win-32bit-build1.zip")
     set(HASH 2a5480d503ac6e8203040c7e516a3395028520da05d0ebf3a2d56d5d24ba5d17630e8f318dd4e3cc2094cc4668b90108fb58e8b986b1ffebd429995058063c27)
+  elseif(VAR MATCHES "PKGCONFIG")
+    set(PROGNAME pkg-config)
+    if(CMAKE_HOST_WIN32)
+      set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/0.26-1")
+      set(PKGCONFIG "${PROG_PATH_SUBDIR}/bin/pkg-config.exe")
+      if(NOT EXISTS "${PKGCONFIG}")
+        vcpkg_download_distfile(PKGCONFIG_ARCHIVE
+          URLS "http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/pkg-config_0.26-1_win32.zip"
+          SHA512 ca41f4fdbd0cf5372ef4f73c9caf67e895dc4bcd3640b5f578924cf3911a1bc35892205997752d76278125de0599d39f7a6900c28b686ec22adbf6159dc3d6a6
+          FILENAME pkg-config_0.26-1_win32.zip
+        )
+        vcpkg_download_distfile(GLIB_ARCHIVE
+          URLS "http://ftp.gnome.org/pub/gnome/binaries/win32/glib/2.28/glib_2.28.8-1_win32.zip"
+          SHA512 95e3ca984ad7a107529c1f3eee28cf5efdcf815bbc563b4df494533a3693063c98d6a079928a32a6bf033b376c738ae8793e57015733ffab0bd6498eb512633d
+          FILENAME glib_2.28.8-1_win32.zip
+        )
+        vcpkg_download_distfile(GETTEXT_ARCHIVE
+          URLS "http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip"
+          SHA512 b6fb8993f0dcf625c4a6c68c09840b5dcfb787f6ffa682657ec64035414f57f9fa546961aafd0019679a49f7bb02611240d91468e7866fe55f0be86861b44dfd
+          FILENAME gettext-runtime_0.18.1.1-2_win32.zip
+        )
+        file(MAKE_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/0.26-1)
+        vcpkg_execute_required_process(
+          ALLOW_IN_DOWNLOAD_MODE
+          COMMAND ${CMAKE_COMMAND} -E tar xzf ${GLIB_ARCHIVE}
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+        )
+        vcpkg_execute_required_process(
+          ALLOW_IN_DOWNLOAD_MODE
+          COMMAND ${CMAKE_COMMAND} -E tar xzf ${GETTEXT_ARCHIVE}
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+        )
+        vcpkg_execute_required_process(
+          ALLOW_IN_DOWNLOAD_MODE
+          COMMAND ${CMAKE_COMMAND} -E tar xzf ${PKGCONFIG_ARCHIVE}
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+        )
+      endif()
+      set(${VAR} "${${VAR}}" PARENT_SCOPE)
+      return()
+    else()
+      set(BREW_PACKAGE_NAME pkg-config)
+      set(APT_PACKAGE_NAME pkg-config)
+      set(PATHS "/bin" "/usr/bin" "/usr/local/Cellar/pkg-config/0.29.2_3")
+    endif()
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
