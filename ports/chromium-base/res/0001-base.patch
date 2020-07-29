@@ -38,3 +38,27 @@ index 8a49f08..24acdab 100644
  #include "base/hash/md5_nacl.h"
  #else
  #include "base/hash/md5_boringssl.h"
+diff --git a/hash/md5_nacl.cc b/hash/md5_nacl.cc
+index 827bbbd..4b22c59 100644
+--- a/hash/md5_nacl.cc
++++ b/hash/md5_nacl.cc
+@@ -22,6 +22,7 @@
+  */
+ 
+ #include <stddef.h>
++#include <string.h>
+ 
+ #include "base/hash/md5.h"
+ 
+diff --git a/profiler/stack_copier_signal.cc b/profiler/stack_copier_signal.cc
+index 5a7d8b9..f959f2f 100644
+--- a/profiler/stack_copier_signal.cc
++++ b/profiler/stack_copier_signal.cc
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/futex.h>
+ #include <signal.h>
++#include <string.h>
+ #include <sys/ucontext.h>
+ #include <syscall.h>
+ 
