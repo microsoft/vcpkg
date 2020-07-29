@@ -89,7 +89,7 @@ Vagrant.configure('2') do |config|
       node.vm.provision 'shell',
         run: 'once',
         name: 'Install brew and xcode command line tools',
-        inline: '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"',
+        inline: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"',
         privileged: false
 
       node.vm.provision 'shell',
