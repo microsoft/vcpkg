@@ -65,7 +65,23 @@ namespace vcpkg::Commands
 
     Span<const PackageNameAndFunction<CommandTypeB>> get_available_commands_type_b()
     {
+        static const Help::HelpCommand help{};
         static const Search::SearchCommand search{};
+        static const List::ListCommand list{};
+        static const Integrate::IntegrateCommand integrate{};
+        static const Owns::OwnsCommand owns{};
+        static const Update::UpdateCommand update{};
+        static const Edit::EditCommand edit{};
+        static const Create::CreateCommand create{};
+        static const Cache::CacheCommand cache{};
+        static const PortsDiff::PortsDiffCommand portsdiff{};
+        static const Autocomplete::AutocompleteCommand autocomplete{};
+        static const Hash::HashCommand hash{};
+        static const Fetch::FetchCommand fetch{};
+        static const CIClean::CICleanCommand ciclean{};
+        static const PortHistory::PortHistoryCommand porthistory{};
+        static const X_VSInstances::VSInstancesCommand vsinstances{};
+        static const FormatManifest::FormatManifestCommand format_manifest{};
 
         static std::vector<PackageNameAndFunction<CommandTypeB>> t = {
             {"/?", &Help::perform_and_exit},

@@ -39,4 +39,9 @@ namespace vcpkg::Commands::CIClean
         print2("Completed vcpkg CI clean\n");
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void CICleanCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        CIClean::perform_and_exit(args, paths);
+    }
 }
