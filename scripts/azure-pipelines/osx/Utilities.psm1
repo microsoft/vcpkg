@@ -31,7 +31,7 @@ function Get-CommandExists
         [String]$Name
     )
 
-    $null -ne (Get-Command -Name $Command -ErrorAction SilentlyContinue)
+    $null -ne (Get-Command -Name $Name -ErrorAction SilentlyContinue)
 }
 
 <#

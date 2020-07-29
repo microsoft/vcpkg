@@ -29,7 +29,7 @@ devops_url = 'https://dev.azure.com/vcpkg'
 agent_pool = 'vcpkgAgentPool'
 pat = configuration['pat']
 archives = configuration['archives']
-archives_url = "//#{archives['username']}:#{url_encode(archives['access_key'])}@#{archives['url']}/#{archives['share']}"
+archives_url = "//#{archives['username']}:#{url_encode(archives['access_key'])}@#{archives['urn']}/#{archives['share']}"
 
 Vagrant.configure('2') do |config|
   # give them extra time to boot up
