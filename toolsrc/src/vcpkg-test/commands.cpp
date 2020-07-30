@@ -12,18 +12,18 @@ TEST_CASE ("test commands are constructible", "[commands]")
     Commands::Version::VersionCommand version{};
 }
 
-TEST_CASE ("get_available_commands_type_c works", "[commands]")
+TEST_CASE ("get_available_basic_commands works", "[commands]")
 {
-    auto commands_list = Commands::get_available_commands_type_c();
+    auto commands_list = Commands::get_available_basic_commands();
     CHECK(commands_list.size() == 2);
     CHECK(Commands::find("version", commands_list) != nullptr);
     CHECK(Commands::find("contact", commands_list) != nullptr);
     CHECK(Commands::find("aang", commands_list) == nullptr);
 }
 
-TEST_CASE ("get_available_commands_type_b works", "[commands]")
+TEST_CASE ("get_available_paths_commands works", "[commands]")
 {
-    auto commands_list = Commands::get_available_commands_type_b();
+    auto commands_list = Commands::get_available_paths_commands();
     CHECK(commands_list.size() == 18);
 
     CHECK(Commands::find("/?", commands_list) != nullptr);
@@ -50,7 +50,7 @@ TEST_CASE ("get_available_commands_type_b works", "[commands]")
 
 TEST_CASE ("get_available_commands_type_a works", "[commands]")
 {
-    auto commands_list = Commands::get_available_commands_type_a();
+    auto commands_list = Commands::get_available_triplet_commands();
     CHECK(commands_list.size() == 10);
 
     CHECK(Commands::find("install", commands_list) != nullptr);

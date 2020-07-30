@@ -11,10 +11,6 @@
 
 namespace vcpkg::Commands
 {
-    using CommandTypeA = const TripletCommand*;
-    using CommandTypeB = const PathsCommand*;
-    using CommandTypeC = const BasicCommand*;
-
     template<class T>
     struct PackageNameAndFunction
     {
@@ -22,9 +18,9 @@ namespace vcpkg::Commands
         T function;
     };
 
-    Span<const PackageNameAndFunction<CommandTypeA>> get_available_commands_type_a();
-    Span<const PackageNameAndFunction<CommandTypeB>> get_available_commands_type_b();
-    Span<const PackageNameAndFunction<CommandTypeC>> get_available_commands_type_c();
+    Span<const PackageNameAndFunction<const BasicCommand*>> get_available_basic_commands();
+    Span<const PackageNameAndFunction<const PathsCommand*>> get_available_paths_commands();
+    Span<const PackageNameAndFunction<const TripletCommand*>> get_available_triplet_commands();
 
     template<typename T>
     T find(StringView command_name, Span<const PackageNameAndFunction<T>> available_commands)

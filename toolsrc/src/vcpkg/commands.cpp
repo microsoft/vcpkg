@@ -35,35 +35,18 @@
 
 namespace vcpkg::Commands
 {
-    Span<const PackageNameAndFunction<CommandTypeA>> get_available_commands_type_a()
+    Span<const PackageNameAndFunction<const BasicCommand*>> get_available_basic_commands()
     {
-        static const Install::InstallCommand install{};
-        static const SetInstalled::SetInstalledCommand set_installed{};
-        static const CI::CICommand ci{};
-        static const Remove::RemoveCommand remove{};
-        static const Upgrade::UpgradeCommand upgrade{};
-        static const Build::BuildCommand build{};
-        static const Env::EnvCommand env{};
-        static const BuildExternal::BuildExternalCommand build_external{};
-        static const Export::ExportCommand export_command{};
-        static const DependInfo::DependInfoCommand depend_info{};
-
-        static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
-            {"install", &install},
-            {"x-set-installed", &set_installed},
-            {"ci", &ci},
-            {"remove", &remove},
-            {"upgrade", &upgrade},
-            {"build", &build},
-            {"env", &env},
-            {"build-external", &build_external},
-            {"export", &export_command},
-            {"depend-info", &depend_info},
+        static const Version::VersionCommand version{};
+        static const Contact::ContactCommand contact{};
+        static std::vector<PackageNameAndFunction<const BasicCommand*>> t = {
+            {"version", &version},
+            {"contact", &contact},
         };
         return t;
     }
 
-    Span<const PackageNameAndFunction<CommandTypeB>> get_available_commands_type_b()
+    Span<const PackageNameAndFunction<const PathsCommand*>> get_available_paths_commands()
     {
         static const Help::HelpCommand help{};
         static const Search::SearchCommand search{};
@@ -83,7 +66,7 @@ namespace vcpkg::Commands
         static const X_VSInstances::VSInstancesCommand vsinstances{};
         static const FormatManifest::FormatManifestCommand format_manifest{};
 
-        static std::vector<PackageNameAndFunction<CommandTypeB>> t = {
+        static std::vector<PackageNameAndFunction<const PathsCommand*>> t = {
             {"/?", &help},
             {"help", &help},
             {"search", &search},
@@ -106,13 +89,30 @@ namespace vcpkg::Commands
         return t;
     }
 
-    Span<const PackageNameAndFunction<CommandTypeC>> get_available_commands_type_c()
+    Span<const PackageNameAndFunction<const TripletCommand*>> get_available_triplet_commands()
     {
-        static const Version::VersionCommand version{};
-        static const Contact::ContactCommand contact{};
-        static std::vector<PackageNameAndFunction<CommandTypeC>> t = {
-            {"version", &version},
-            {"contact", &contact},
+        static const Install::InstallCommand install{};
+        static const SetInstalled::SetInstalledCommand set_installed{};
+        static const CI::CICommand ci{};
+        static const Remove::RemoveCommand remove{};
+        static const Upgrade::UpgradeCommand upgrade{};
+        static const Build::BuildCommand build{};
+        static const Env::EnvCommand env{};
+        static const BuildExternal::BuildExternalCommand build_external{};
+        static const Export::ExportCommand export_command{};
+        static const DependInfo::DependInfoCommand depend_info{};
+
+        static std::vector<PackageNameAndFunction<const TripletCommand*>> t = {
+            {"install", &install},
+            {"x-set-installed", &set_installed},
+            {"ci", &ci},
+            {"remove", &remove},
+            {"upgrade", &upgrade},
+            {"build", &build},
+            {"env", &env},
+            {"build-external", &build_external},
+            {"export", &export_command},
+            {"depend-info", &depend_info},
         };
         return t;
     }
