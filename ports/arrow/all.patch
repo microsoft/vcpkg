@@ -121,61 +121,75 @@ index 84d21d2b5..4b8ae8952 100644
    set(ZSTD_LIB_NAMES "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}")
  endif()
 diff --git a/cpp/cmake_modules/DefineOptions.cmake b/cpp/cmake_modules/DefineOptions.cmake
-index 3b229846c..d041f1e60 100644
+index 3b229846c..da2c6d551 100644
 --- a/cpp/cmake_modules/DefineOptions.cmake
 +++ b/cpp/cmake_modules/DefineOptions.cmake
-@@ -297,6 +297,8 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+@@ -297,6 +297,9 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
    define_option(ARROW_PROTOBUF_USE_SHARED
                  "Rely on Protocol Buffers shared libraries where relevant" ON)
-
-+  define_option(ARROW_UTF8PROC_USE_SHARED "Rely on utf8proc shared libraries where relevant" ON)
+ 
++  define_option(ARROW_UTF8PROC_USE_SHARED
++                "Rely on utf8proc shared libraries where relevant" ON)
 +
    define_option(ARROW_ZSTD_USE_SHARED "Rely on zstd shared libraries where relevant" ON)
-
+ 
    define_option(ARROW_WITH_BACKTRACE "Build with backtrace support" ON)
 diff --git a/cpp/cmake_modules/Findutf8proc.cmake b/cpp/cmake_modules/Findutf8proc.cmake
-index ab9ae9f98..410f7ed62 100644
+index ab9ae9f98..d3063827a 100644
 --- a/cpp/cmake_modules/Findutf8proc.cmake
 +++ b/cpp/cmake_modules/Findutf8proc.cmake
-@@ -15,10 +15,16 @@
+@@ -15,11 +15,28 @@
  # specific language governing permissions and limitations
  # under the License.
-
+ 
 +if(ARROW_UTF8PROC_USE_SHARED)
-+  set(UTF8PROC_NAMES utf8proc)
++  set(UTF8PROC_LIB_NAMES)
++  if(CMAKE_IMPORT_LIBRARY_SUFFIX)
++    list(APPEND UTF8PROC_LIB_NAMES
++                "${CMAKE_IMPORT_LIBRARY_PREFIX}utf8proc${CMAKE_IMPORT_LIBRARY_SUFFIX}")
++  endif()
++  list(APPEND UTF8PROC_LIB_NAMES
++              "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}")
 +else()
-+  set(UTF8PROC_NAMES utf8proc utf8proc_static)
++  if(MSVC AND NOT DEFINED UTF8PROC_MSVC_STATIC_LIB_SUFFIX)
++    set(UTF8PROC_MSVC_STATIC_LIB_SUFFIX "_static")
++  endif()
++  set(UTF8PROC_STATIC_LIB_SUFFIX
++      "${UTF8PROC_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++  set(UTF8PROC_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}utf8proc${UTF8PROC_STATIC_LIB_SUFFIX})
++  set(UTF8PROC_LIB_NAMES "${UTF8PROC_STATIC_LIB_NAME}" "lib${UTF8PROC_STATIC_LIB_NAME}")
 +endif()
 +
  if(utf8proc_ROOT)
    find_library(
      UTF8PROC_LIB
 -    NAMES utf8proc
-+    NAMES ${UTF8PROC_NAMES}
-           "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}"
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES ${UTF8PROC_LIB_NAMES}
      PATHS ${utf8proc_ROOT}
      PATH_SUFFIXES ${LIB_PATH_SUFFIXES}
-@@ -32,7 +38,7 @@ if(utf8proc_ROOT)
+     NO_DEFAULT_PATH)
+@@ -28,12 +45,10 @@ if(utf8proc_ROOT)
+             PATHS ${utf8proc_ROOT}
+             NO_DEFAULT_PATH
+             PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+-
  else()
    find_library(
      UTF8PROC_LIB
 -    NAMES utf8proc
-+    NAMES ${UTF8PROC_NAMES}
-           "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}"
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES ${UTF8PROC_LIB_NAMES}
      PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
    find_path(UTF8PROC_INCLUDE_DIR NAMES utf8proc.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
-diff --git a/cpp/src/arrow/CMakeLists.txt b/cpp/src/arrow/CMakeLists.txt
-index 91e67fb42..0deed6c63 100644
---- a/cpp/src/arrow/CMakeLists.txt
-+++ b/cpp/src/arrow/CMakeLists.txt
-@@ -490,6 +490,10 @@ if(ARROW_BUILD_STATIC AND WIN32)
-   target_compile_definitions(arrow_static PUBLIC ARROW_STATIC)
  endif()
-
-+if(NOT ARROW_UTF8PROC_USE_SHARED AND WIN32)
-+  target_compile_definitions(arrow_static PRIVATE UTF8PROC_STATIC)
-+endif()
-+
- if(ARROW_WITH_BACKTRACE)
-   find_package(Backtrace)
-
+@@ -47,5 +62,8 @@ if(UTF8PROC_FOUND OR utf8proc_FOUND)
+   set_target_properties(utf8proc::utf8proc
+                         PROPERTIES IMPORTED_LOCATION "${UTF8PROC_LIB}"
+                                    INTERFACE_INCLUDE_DIRECTORIES "${UTF8PROC_INCLUDE_DIR}")
++  if(NOT ARROW_UTF8PROC_USE_SHARED)
++    set_target_properties(utf8proc::utf8proc
++                          PROPERTIES INTERFACE_COMPILER_DEFINITIONS "UTF8PROC_STATIC")
++  endif()
+ endif()
+-
