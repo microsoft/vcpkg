@@ -293,20 +293,7 @@ namespace vcpkg
                     // same dependency name
 
                     // order by platform string:
-                    // least complex first, then smaller, then lexicographical
-                    auto lhs_platform_complexity = lhs.platform.complexity();
-                    auto rhs_platform_complexity = lhs.platform.complexity();
-
-                    if (lhs_platform_complexity < rhs_platform_complexity) return true;
-                    if (rhs_platform_complexity < lhs_platform_complexity) return false;
-
-                    auto lhs_platform = to_string(lhs.platform);
-                    auto rhs_platform = to_string(rhs.platform);
-
-                    if (lhs_platform.size() < rhs_platform.size()) return true;
-                    if (rhs_platform.size() < lhs_platform.size()) return false;
-
-                    auto platform_cmp = lhs_platform.compare(rhs_platform);
+                    auto platform_cmp = compare(lhs.platform, rhs.platform);
                     if (platform_cmp < 0) return true;
                     if (platform_cmp > 0) return false;
 
@@ -1174,7 +1161,6 @@ namespace vcpkg
         serialize_optional_string(obj, ManifestFields::LICENSE, scf.core_paragraph->license);
         serialize_optional_string(obj, ManifestFields::SUPPORTS, to_string(scf.core_paragraph->supports_expression));
 
-        // ManifestFields::DEV_DEPENDENCIES,
         if (!scf.core_paragraph->dependencies.empty() || debug)
         {
             auto& deps = obj.insert(ManifestFields::DEPENDENCIES, Json::Array());

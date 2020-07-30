@@ -490,6 +490,27 @@ namespace vcpkg::PlatformExpression
         return Impl{}(lhs.underlying_, rhs.underlying_);
     }
 
+    int compare(const Expr& lhs, const Expr& rhs)
+    {
+        auto lhs_platform_complexity = lhs.complexity();
+        auto rhs_platform_complexity = lhs.complexity();
+
+        if (lhs_platform_complexity < rhs_platform_complexity) return -1;
+        if (rhs_platform_complexity < lhs_platform_complexity) return 1;
+
+        auto lhs_platform = to_string(lhs);
+        auto rhs_platform = to_string(rhs);
+
+        if (lhs_platform.size() < rhs_platform.size()) return -1;
+        if (rhs_platform.size() < lhs_platform.size()) return 1;
+
+        auto platform_cmp = lhs_platform.compare(rhs_platform);
+        if (platform_cmp < 0) return -1;
+        if (platform_cmp > 0) return 1;
+
+        return 0;
+    }
+
     std::string to_string(const Expr& expr)
     {
         struct Impl

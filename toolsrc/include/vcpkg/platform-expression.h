@@ -52,6 +52,15 @@ namespace vcpkg::PlatformExpression
         //   !structurally_equal((x & y) | z, (x | z) & (y | z))
         // even though these expressions are equivalent
         friend bool structurally_equal(const Expr& lhs, const Expr& rhs);
+
+        // returns 0 if and only if structurally_equal(lhs, rhs)
+        // Orders via the following:
+        //   - If complexity(a) < complexity(b) => a < b
+        //   - Otherwise, if to_string(a).size() < to_string(b).size() => a < b
+        //   - Otherwise, if to_string(a) < to_string(b) => a < b
+        //   - else, they must be structurally equal
+        friend int compare(const Expr& lhs, const Expr& rhs);
+
         friend std::string to_string(const Expr& expr);
 
     private:
