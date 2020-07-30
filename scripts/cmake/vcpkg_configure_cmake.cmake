@@ -251,7 +251,7 @@ function(vcpkg_configure_cmake)
         if(DEFINED VCPKG_${config_var})
             # support lists in these configuration vars
             string(REPLACE ";" "\\;" _csc_VCPKG_CONFIG_VAR "${VCPKG_${config_var}}")
-            list(APPEND _csc_OPTIONS "-DCMAKE_${config_var}=${_VCPKG_CONFIG_VAR}")
+            list(APPEND _csc_OPTIONS "-DCMAKE_${config_var}=${_csc_VCPKG_CONFIG_VAR}")
         endif()
     endforeach()
 
@@ -308,7 +308,7 @@ function(vcpkg_configure_cmake)
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
             vcpkg_execute_required_process(
-                COMMAND ${dbg_command}
+                COMMAND "${dbg_command}"
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
@@ -318,7 +318,7 @@ function(vcpkg_configure_cmake)
             message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
             vcpkg_execute_required_process(
-                COMMAND ${rel_command}
+                COMMAND "${rel_command}"
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
                 LOGNAME config-${TARGET_TRIPLET}-rel
             )
