@@ -211,6 +211,10 @@ function(vcpkg_configure_cmake)
         endif()
     endif()
 
+    if(DEFINED VCPKG_OSX_ARCHITECTURES)
+        string(REPLACE ";" "\\;" _VCPKG_OSX_ARCHITECTURES "${VCPKG_OSX_ARCHITECTURES}")
+        list(APPEND _csc_OPTIONS "-DCMAKE_OSX_ARCHITECTURES=${_VCPKG_OSX_ARCHITECTURES}")
+    endif()
 
     list(APPEND _csc_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
