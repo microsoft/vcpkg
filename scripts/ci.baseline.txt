@@ -1712,6 +1712,7 @@ telnetpp:x64-uwp=fail
 tensorflow-cc:arm64-windows=fail
 tensorflow-cc:x64-linux=skip
 tensorflow-cc:x64-osx=skip
+tensorflow-cc:x64-windows-static=fail
 tensorflow-cc:x86-windows=fail
 tesseract:x64-windows=fail
 tesseract:x64-windows-static=fail
