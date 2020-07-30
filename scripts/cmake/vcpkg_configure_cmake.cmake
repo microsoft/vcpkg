@@ -211,11 +211,6 @@ function(vcpkg_configure_cmake)
         endif()
     endif()
 
-    if(DEFINED VCPKG_OSX_ARCHITECTURES)
-        string(REPLACE ";" "\\;" _VCPKG_OSX_ARCHITECTURES "${VCPKG_OSX_ARCHITECTURES}")
-        list(APPEND _csc_OPTIONS "-DCMAKE_OSX_ARCHITECTURES=${_VCPKG_OSX_ARCHITECTURES}")
-    endif()
-
     list(APPEND _csc_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
@@ -254,7 +249,9 @@ function(vcpkg_configure_cmake)
     # Sets configuration variables for macOS builds
     foreach(config_var  INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED VCPKG_${config_var})
-            list(APPEND _csc_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
+            # support lists in these configuration vars
+            string(REPLACE ";" "\\;" _csc_VCPKG_CONFIG_VAR "${VCPKG_${config_var}}")
+            list(APPEND _csc_OPTIONS "-DCMAKE_${config_var}=${_VCPKG_CONFIG_VAR}")
         endif()
     endforeach()
 

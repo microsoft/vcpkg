@@ -321,6 +321,7 @@ __pycache__/
 !triplets/community/x86-ios.cmake
 !triplets/community/wasm32-emscripten.cmake
 !triplets/community/arm64-osx.cmake
+!triplets/community/x64_arm64-osx.cmake
 !triplets/arm-uwp.cmake
 !triplets/x64-uwp.cmake
 !triplets/x64-windows.cmake
