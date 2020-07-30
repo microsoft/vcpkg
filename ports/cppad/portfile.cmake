@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         windows-fix.patch
+        pkgconfig-fix.patch
 )
 
 vcpkg_configure_cmake(
