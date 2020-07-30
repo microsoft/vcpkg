@@ -63,7 +63,7 @@ jobs:
     condition: failed()
   - task: PowerShell@2
     displayName: "Generating all packages files"
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    condition: always()
 
     inputs:
       targetType: inline
@@ -73,7 +73,7 @@ jobs:
         & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
   - task: PublishBuildArtifacts@1
     displayName: 'Upload file lists for all packages'
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    condition: always()
     inputs:
       PathtoPublish: scripts/list_files
       ArtifactName: "${{ parameters.triplet }} package file lists"

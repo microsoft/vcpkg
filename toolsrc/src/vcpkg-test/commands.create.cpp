@@ -1,12 +1,13 @@
 #include <catch2/catch.hpp>
 
-#include <iterator>
-#include <string>
-
 #include <vcpkg/base/files.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
+
+#include <iterator>
+#include <string>
 
 TEST_CASE ("create smoke test", "[commands-create]")
 {
