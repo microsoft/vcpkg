@@ -448,13 +448,6 @@ namespace vcpkg::PostBuildLint
                     catchedFile = cmakeFile;
                     break;
                 }
-                else if (filename.find("Find") != std::string::npos)
-                {
-                    cmakePrefix = filename.substr(strlen("Find"), filename.length() - strlen("Find"));
-                    cmakePrefix = cmakePrefix.substr(0, cmakePrefix.find(".cmake"));
-                    catchedFile = cmakeFile;
-                    break;
-                }
             }
 
             auto tmpPath = catchedFile.parent_path().filename();
