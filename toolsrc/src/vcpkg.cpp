@@ -8,7 +8,9 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 
+#include <vcpkg/commands.contact.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>

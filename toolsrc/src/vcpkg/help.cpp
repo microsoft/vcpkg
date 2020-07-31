@@ -3,7 +3,14 @@
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/binarycaching.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.create.h>
+#include <vcpkg/commands.dependinfo.h>
+#include <vcpkg/commands.edit.h>
+#include <vcpkg/commands.env.h>
+#include <vcpkg/commands.integrate.h>
+#include <vcpkg/commands.list.h>
+#include <vcpkg/commands.owns.h>
+#include <vcpkg/commands.search.h>
 #include <vcpkg/export.h>
 #include <vcpkg/help.h>
 #include <vcpkg/install.h>
