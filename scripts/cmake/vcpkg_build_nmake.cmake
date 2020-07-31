@@ -7,7 +7,7 @@
 ## vcpkg_build_nmake(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [NO_DEBUG]
-##     [DISABLE_ALL]
+##     [BUILD_TARGET <target>]
 ##     [PROJECT_SUBPATH <${SUBPATH}>]
 ##     [PROJECT_NAME <${MAKEFILE_NAME}>]
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
@@ -34,8 +34,8 @@
 ## ### NO_DEBUG
 ## This port doesn't support debug mode.
 ##
-## ### DISABLE_ALL
-## Disable build argument `all`
+## ### BUILD_TARGET
+## The target passed to the nmake build command (`./nmake <target>`). If not specified, the 'all' target will
 ##
 ## ### ENABLE_INSTALL
 ## Install binaries after build.
@@ -76,8 +76,8 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 function(vcpkg_build_nmake)
     cmake_parse_arguments(_bn
-        "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG;DISABLE_ALL"
-        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
+        "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
+        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT;BUILD_TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
         ${ARGN}
     )
@@ -117,7 +117,7 @@ function(vcpkg_build_nmake)
     # Set make command and install command
     set(MAKE ${NMAKE} /NOLOGO /G /U)
     set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME})
-    if (NOT _bn_DISABLE_ALL)
+    if(NOT _bn_BUILD_TARGET)
         set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} all)
     endif()
     set(INSTALL_OPTS_BASE install)
