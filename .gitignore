@@ -298,14 +298,15 @@ __pycache__/
 #add vcpkg-designed triplets back in
 !/triplets/arm-uwp.cmake
 !/triplets/arm64-windows.cmake
-!/triplets/community
-!/triplets/community/**
 !/triplets/x64-linux.cmake
 !/triplets/x64-osx.cmake
 !/triplets/x64-uwp.cmake
 !/triplets/x64-windows-static.cmake
 !/triplets/x64-windows.cmake
 !/triplets/x86-windows.cmake
+
+!/triplets/community
+!/triplets/community/**
 
 *.exe
 *.zip
