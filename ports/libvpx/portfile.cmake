@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(LIBVPX_VERSION 1.8.1)
@@ -19,15 +17,20 @@ vcpkg_extract_source_archive_ex(
 vcpkg_find_acquire_program(YASM)
 vcpkg_find_acquire_program(PERL)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
+get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
-    get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-    get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+if(CMAKE_HOST_WIN32)
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
+	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+	set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+else()
+	set(BASH /bin/bash)
+	set(ENV{PATH} "${YASM_EXE_PATH}:${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
+endif()
 
-    set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
-    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 
@@ -44,6 +47,9 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
         set(LIBVPX_TARGET_ARCH "x86_64-win64")
         set(LIBVPX_ARCH_DIR "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        set(LIBVPX_TARGET_ARCH "arm64-win64")
+        set(LIBVPX_ARCH_DIR "ARM64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
         set(LIBVPX_TARGET_ARCH "armv7-win32")
         set(LIBVPX_ARCH_DIR "ARM")
@@ -97,7 +103,9 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         endif()
     endif()
 
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
         set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nomt-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
     else()
         set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
@@ -112,17 +120,11 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
 
 else()
 
-    get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-    get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-
-    set(ENV{PATH} "${YASM_EXE_PATH}:${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
-    set(BASH /bin/bash)
-
     set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests")
 
     set(OPTIONS_DEBUG "--enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
     set(OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
-
+	
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
     else()
@@ -137,7 +139,13 @@ else()
         message(FATAL_ERROR "libvpx does not support architecture ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
 
-    if(VCPKG_TARGET_IS_LINUX)
+	if(VCPKG_TARGET_IS_MINGW)
+		if(LIBVPX_TARGET_ARCH STREQUAL "x86")
+			set(LIBVPX_TARGET "x86-win32-gcc")
+		else()
+			set(LIBVPX_TARGET "x86_64-win64-gcc")
+		endif()
+	elseif(VCPKG_TARGET_IS_LINUX)
         set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
     elseif(VCPKG_TARGET_IS_OSX)
         set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
@@ -217,7 +225,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 else()
     set(LIBVPX_CONFIG_DEBUG OFF)
 endif()
+
 configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake @ONLY)
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libvpx)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libvpx/LICENSE ${CURRENT_PACKAGES_DIR}/share/libvpx/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

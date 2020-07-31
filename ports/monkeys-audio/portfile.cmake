@@ -2,12 +2,12 @@ vcpkg_fail_port_install(ON_TARGET "UWP" "OSX" "Linux")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-set(MA_VERSION 538d)
+set(MA_VERSION 546)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://monkeysaudio.com/files/MAC_SDK_${MA_VERSION}.zip"
     FILENAME "MAC_SDK_${MA_VERSION}.zip"
-    SHA512 2274d69161fad7740332585792da57e8f82634545da0aa13a5be975434a3df8526d1fd727b3f074ba928e4e252de2e5510e4f6616bb3cf469ef93b65dd55696b
+    SHA512 5fd426e3fa1d9283ef812a039fe4290e67881aaf1c374ce912b31df894128413c57e23fda0e79c0ae1e1d117ba15c8dd635b784d150451602f06f2fd3fe41566
 )
 
 vcpkg_extract_source_archive_ex(

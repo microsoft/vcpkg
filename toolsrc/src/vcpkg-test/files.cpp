@@ -1,13 +1,13 @@
 #include <catch2/catch.hpp>
-#include <vcpkg-test/util.h>
 
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/strings.h>
 
 #include <iostream>
 #include <random>
-
 #include <vector>
+
+#include <vcpkg-test/util.h>
 
 using vcpkg::Test::AllowSymlinks;
 using vcpkg::Test::base_temporary_directory;
@@ -38,21 +38,21 @@ namespace
     struct MaxDepth
     {
         std::uint64_t i;
-        explicit MaxDepth(std::uint64_t i) : i(i) {}
+        explicit MaxDepth(std::uint64_t i) : i(i) { }
         operator uint64_t() const { return i; }
     };
 
     struct Width
     {
         std::uint64_t i;
-        explicit Width(std::uint64_t i) : i(i) {}
+        explicit Width(std::uint64_t i) : i(i) { }
         operator uint64_t() const { return i; }
     };
 
     struct CurrentDepth
     {
         std::uint64_t i;
-        explicit CurrentDepth(std::uint64_t i) : i(i) {}
+        explicit CurrentDepth(std::uint64_t i) : i(i) { }
         operator uint64_t() const { return i; }
         CurrentDepth incremented() const { return CurrentDepth{i + 1}; }
     };
