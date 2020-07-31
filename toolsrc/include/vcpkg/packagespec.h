@@ -21,6 +21,8 @@ namespace vcpkg
     ///
     struct PackageSpec
     {
+        constexpr static StringLiteral MANIFEST_NAME = "default";
+
         PackageSpec() = default;
         PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) { }
 

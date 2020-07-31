@@ -12,8 +12,7 @@ namespace vcpkg::Commands::SetInstalled
                              const PortFileProvider::PathsPortFileProvider& provider,
                              IBinaryProvider& binary_provider,
                              const CMakeVars::CMakeVarProvider& cmake_vars,
-                             const std::vector<FullPackageSpec>& specs,
-                             const Build::BuildPackageOptions& install_plan_options,
+                             Dependencies::ActionPlan action_plan,
                              DryRun dry_run,
                              const Optional<fs::path>& pkgsconfig_path);
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
