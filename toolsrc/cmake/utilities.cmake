@@ -181,8 +181,6 @@ int main() {}
 endfunction()
 
 function(vcpkg_target_add_warning_options TARGET)
-    string(REGEX REPLACE "[-/]W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-
     if(MSVC)
         # either MSVC, or clang-cl
         target_compile_options(${TARGET} PRIVATE -FC)

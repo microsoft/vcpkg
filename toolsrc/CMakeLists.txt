@@ -31,13 +31,19 @@ vcpkg_detect_compiler()
 vcpkg_detect_standard_library()
 vcpkg_detect_std_filesystem()
 
-# ======================
-# === Compiler Flags ===
-# ======================
-
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
+if(MSVC)
+    string(REGEX REPLACE "[-/]W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endif()
+
+
+# ===============
+# === Targets ===
+# ===============
+
+# === Target: vcpkglib ===
 
 file(GLOB VCPKGLIB_NON_PCH_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
@@ -51,6 +57,19 @@ add_library(vcpkglib
 target_include_directories(vcpkglib PUBLIC include)
 
 vcpkg_target_add_warning_options(vcpkglib)
+target_compile_definitions(vcpkglib PUBLIC
+    VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(vcpkglib PRIVATE Threads::Threads)
+
+if(VCPKG_REQUIRE_LINK_CXXFS)
+    target_link_libraries(vcpkglib
+        PRIVATE
+            $<$<STREQUAL:${VCPKG_STANDARD_LIBRARY},"libstdc++">:stdc++fs>
+            $<$<STREQUAL:${VCPKG_STANDARD_LIBRARY},"libc++">:c++fs>)
+endif()
 
 if(MSVC)
     get_target_property(_srcs vcpkglib SOURCES)
@@ -65,11 +84,24 @@ if(MSVC)
     target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
 endif()
 
+if (MINGW)
+    target_compile_definitions(vcpkglib
+        PUBLIC
+            UNICODE
+            _WIN32_WINNT=0x0601
+            WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY=4
+            __fastfail=exit)
+    target_link_libraries(vcpkglib PUBLIC winhttp bcrypt version ole32 uuid)
+endif()
+
+# === Target: vcpkg ===
 
 set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
 add_executable(vcpkg ${VCPKG_SOURCES})
 target_link_libraries(vcpkg PRIVATE vcpkglib)
 vcpkg_target_add_warning_options(vcpkg)
+
+# === Target: vcpkgmetricsuploader ===
 
 set(VCPKGMETRICSUPLOADER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkgmetricsuploader.cpp)
 if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
@@ -77,6 +109,8 @@ if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
     target_link_libraries(vcpkgmetricsuploader PRIVATE vcpkglib)
     vcpkg_target_add_warning_options(vcpkgmetricsuploader)
 endif()
+
+# === Target: vcpkg-test ===
 
 file(GLOB VCPKG_TEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
 file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
@@ -96,12 +130,16 @@ if (BUILD_TESTING)
     endif()
 endif()
 
+# === Target: vcpkg-fuzz ===
+
 file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
 if(VCPKG_BUILD_FUZZING)
     add_executable(vcpkg-fuzz ${VCPKG_FUZZ_SOURCES})
     target_link_libraries(vcpkg-fuzz PRIVATE vcpkglib)
     vcpkg_target_add_warning_options(vcpkg-fuzz)
 endif()
+
+# === Target: format ===
 
 find_program(CLANG_FORMAT clang-format)
 if(CLANG_FORMAT)
@@ -121,32 +159,3 @@ if(CLANG_FORMAT)
 
         ${VCPKG_FUZZ_SOURCES})
 endif()
-
-# =========================
-# === Options and Flags ===
-# =========================
-
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-link_libraries(Threads::Threads)
-
-add_compile_definitions(VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
-if(VCPKG_REQUIRE_LINK_CXXFS)
-    if(VCPKG_STANDARD_LIBRARY STREQUAL "libstdc++")
-        link_libraries(stdc++fs)
-    elseif(VCPKG_STANDARD_LIBRARY STREQUAL "libc++")
-        link_libraries(c++fs)
-    endif()
-endif()
-
-if (MINGW)
-    add_compile_definitions(
-        UNICODE
-        _WIN32_WINNT=0x0601
-        WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY=4
-        __fastfail=exit)
-    link_libraries(winhttp bcrypt version ole32 uuid)
-endif()
-
-add_compile_definitions(VCPKG_DISABLE_METRICS=$<BOOL:${VCPKG_DISABLE_METRICS}>)
-include_directories(include)
