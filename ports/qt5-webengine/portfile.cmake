@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 message(STATUS "${PORT} requires a lot of free disk space (>300GB), ram (>32 GB) and time (>4h per configuration) to be successfully build.\n\
 -- As such ${PORT} is not properly tested.\n\
 -- If ${PORT} fails post build validation please open up an issue. \n\
--- If it fails due to post validation the successfully installed files can be found in <vcpkgroot>/packages/${PORT}_${TARGET_TRIPLET} \n\
--- and just need to be copied into <vcpkgroot>/installed/${TARGaET_TRIPLET}")
+-- If it fails due to post validation the successfully installed files can be found in ${CURRENT_PACKAGES_DIR} \n\
+-- and just need to be copied into ${CURRENT_INSTALLED_DIR}")
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "If ${PORT} directly fails ${PORT} might require additional prerequisites on Linux and OSX. Please check the configure logs.\n")
 endif()
@@ -38,11 +38,7 @@ vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
 vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
-if(QT_MAJOR_MINOR_VER STREQUAL "5.14")
-    set(PATCHES common.pri.latest.patch gl.latest.patch)
-else()
-    set(PATCHES common.pri.patch gl.patch)
-endif()
+set(PATCHES common.pri.patch gl.patch build.patch)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND CORE_OPTIONS "BUILD_OPTIONS" "-webengine-system-libwebp" "-webengine-system-ffmpeg" "-webengine-system-icu")

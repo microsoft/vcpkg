@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         fix-build-error.patch
+        fix-addstdexcept.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

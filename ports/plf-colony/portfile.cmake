@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mattreecebentley/plf_colony
-    REF 81fe8c4daf433491f14248837ee8ed5cf447c856
-    SHA512 a6ae03d383c94b0a758e7aedee2838d46b3665881e2c0823b064a3579140a351d96fec66d456de5843b6c4c8d2f6f6efac5f547841c08edd349b0f153e9c4871
+    REF 7aba4b3f27e3dd7ca54cbe41738d04695d2c05e1
+    SHA512 78dc8ee96174776e6993b03f15b1e7452864015641854ff89ffbe8d45e2203982347da9bf6eed1f7a0b40a794c53ab7c06e92eee101e4e0aae20997d240db872
     HEAD_REF master
 )
 

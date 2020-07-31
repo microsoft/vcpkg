@@ -9,12 +9,18 @@ set(CUDA_REQUIRED_VERSION "10.2.89")
 # ${VCPKG_ROOT}/scripts/azure-pipelines/windows/provision-image.ps1
 # ${VCPKG_ROOT}/scripts/azure-pipelines/linux/provision-image.sh
 
+set(CUDA_PATHS 
+        ENV CUDA_PATH
+        ENV CUDA_BIN_PATH
+        ENV CUDA_PATH_V11_0
+        ENV CUDA_PATH_V10_2
+        ENV CUDA_PATH_V10_1)
+
 if (VCPKG_TARGET_IS_WINDOWS)
     find_program(NVCC
         NAMES nvcc.exe
         PATHS
-        ENV CUDA_PATH
-        ENV CUDA_BIN_PATH
+        ${CUDA_PATHS}
         PATH_SUFFIXES bin bin64
         DOC "Toolkit location."
         NO_DEFAULT_PATH
@@ -42,8 +48,7 @@ else()
     find_program(NVCC
         NAMES nvcc
         PATHS
-        ENV CUDA_PATH
-        ENV CUDA_BIN_PATH
+        ${CUDA_PATHS}
         PATHS ${FOUND_PATH}
         PATH_SUFFIXES bin bin64
         DOC "Toolkit location."
@@ -61,6 +66,7 @@ endif()
 
 
 if (error_code)
+    message(STATUS "Executing ${NVCC} --version resulted in error: ${error_code}")
     message(FATAL_ERROR "Could not find CUDA. Before continuing, please download and install CUDA (v${CUDA_REQUIRED_VERSION} or higher) from:"
                         "\n    https://developer.nvidia.com/cuda-downloads\n")
 endif()

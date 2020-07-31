@@ -137,6 +137,8 @@ function(vcpkg_install_msbuild)
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
         /p:VcpkgTriplet=${TARGET_TRIPLET}
+        "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
+        /p:VcpkgManifestInstall=false
         /m
     )
 
