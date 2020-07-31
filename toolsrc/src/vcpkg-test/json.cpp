@@ -1,10 +1,11 @@
 #include <catch2/catch.hpp>
 
+#include <vcpkg/base/json.h>
+#include <vcpkg/base/unicode.h>
+
 #include <iostream>
 
 #include "math.h"
-#include <vcpkg/base/json.h>
-#include <vcpkg/base/unicode.h>
 
 // TODO: remove this once we switch to C++20 completely
 // This is the worst, but we also can't really deal with it any other way.

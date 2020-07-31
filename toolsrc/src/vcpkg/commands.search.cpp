@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
@@ -14,8 +15,7 @@ using vcpkg::PortFileProvider::PathsPortFileProvider;
 
 namespace vcpkg::Commands::Search
 {
-    static constexpr StringLiteral OPTION_FULLDESC =
-        "--x-full-desc"; // TODO: This should find a better home, eventually
+    static constexpr StringLiteral OPTION_FULLDESC = "x-full-desc"; // TODO: This should find a better home, eventually
 
     static void do_print(const SourceParagraph& source_paragraph, bool full_desc)
     {

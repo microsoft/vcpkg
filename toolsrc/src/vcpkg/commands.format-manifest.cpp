@@ -4,12 +4,13 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/portfileprovider.h>
 
 namespace vcpkg::Commands::FormatManifest
 {
-    static constexpr StringLiteral OPTION_ALL = "--all";
+    static constexpr StringLiteral OPTION_ALL = "all";
 
     const CommandSwitch FORMAT_SWITCHES[] = {{OPTION_ALL, "Format all ports' manifest files."}};
 

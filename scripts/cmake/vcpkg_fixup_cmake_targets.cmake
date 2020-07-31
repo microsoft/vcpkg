@@ -53,11 +53,7 @@ function(vcpkg_fixup_cmake_targets)
         set(_vfct_TARGET_PATH share/${PORT})
     endif()
 
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(EXECUTABLE_SUFFIX "\\.exe")
-    else()
-        set(EXECUTABLE_SUFFIX)
-    endif()
+    string(REPLACE "." "\\." EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/${_vfct_TARGET_PATH})
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH})

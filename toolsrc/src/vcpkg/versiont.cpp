@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/strings.h>
+
 #include <vcpkg/versiont.h>
 
 namespace vcpkg

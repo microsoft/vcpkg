@@ -3,6 +3,7 @@
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/userconfig.h>
@@ -15,7 +16,7 @@ namespace vcpkg::Commands::Contact
         return S_EMAIL;
     }
 
-    static constexpr StringLiteral OPTION_SURVEY = "--survey";
+    static constexpr StringLiteral OPTION_SURVEY = "survey";
 
     static constexpr std::array<CommandSwitch, 1> SWITCHES = {{
         {OPTION_SURVEY, "Launch default browser to the current vcpkg survey"},
