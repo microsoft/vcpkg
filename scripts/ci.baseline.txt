@@ -1083,6 +1083,7 @@ moos-core:x86-windows=fail
 moos-essential:arm64-windows=fail
 moos-essential:x64-windows=fail
 moos-essential:x86-windows=fail
+# Conflicts with libjpeg-turbo
 mozjpeg:arm64-windows      = skip
 mozjpeg:arm-uwp            = skip
 mozjpeg:x64-linux          = skip
