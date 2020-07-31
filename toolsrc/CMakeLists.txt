@@ -50,6 +50,8 @@ add_library(vcpkglib
     ${VCPKGLIB_NON_PCH_INCLUDES})
 target_include_directories(vcpkglib PUBLIC include)
 
+vcpkg_target_add_warning_options(vcpkglib)
+
 if(MSVC)
     get_target_property(_srcs vcpkglib SOURCES)
 
@@ -67,11 +69,13 @@ endif()
 set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
 add_executable(vcpkg ${VCPKG_SOURCES})
 target_link_libraries(vcpkg PRIVATE vcpkglib)
+vcpkg_target_add_warning_options(vcpkg)
 
 set(VCPKGMETRICSUPLOADER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkgmetricsuploader.cpp)
 if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
     add_executable(vcpkgmetricsuploader WIN32 ${VCPKGMETRICSUPLOADER_SOURCES})
     target_link_libraries(vcpkgmetricsuploader PRIVATE vcpkglib)
+    vcpkg_target_add_warning_options(vcpkgmetricsuploader)
 endif()
 
 file(GLOB VCPKG_TEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
@@ -83,6 +87,7 @@ if (BUILD_TESTING)
         ${VCPKG_TEST_SOURCES}
         ${VCPKG_TEST_INCLUDES})
     target_link_libraries(vcpkg-test PRIVATE vcpkglib)
+    vcpkg_target_add_warning_options(vcpkg-test)
 
     add_test(NAME default COMMAND vcpkg-test --order rand --rng-seed time)
 
@@ -95,6 +100,7 @@ file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
 if(VCPKG_BUILD_FUZZING)
     add_executable(vcpkg-fuzz ${VCPKG_FUZZ_SOURCES})
     target_link_libraries(vcpkg-fuzz PRIVATE vcpkglib)
+    vcpkg_target_add_warning_options(vcpkg-fuzz)
 endif()
 
 find_program(CLANG_FORMAT clang-format)
@@ -119,46 +125,6 @@ endif()
 # =========================
 # === Options and Flags ===
 # =========================
-
-if(MSVC)
-    # either MSVC, or clang-cl
-    add_compile_options(-FC)
-
-    if (MSVC_VERSION GREATER 1900)
-        # Visual Studio 2017 or later
-        add_compile_options(-permissive- -utf-8)
-    endif()
-
-    if(VCPKG_DEVELOPMENT_WARNINGS)
-        string(REGEX REPLACE "[-/]W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-
-        add_compile_options(-W4)
-        if(VCPKG_COMPILER STREQUAL "clang")
-            add_compile_options(-Wmissing-prototypes -Wno-missing-field-initializers)
-        else()
-            add_compile_options(-analyze)
-        endif()
-    endif()
-
-    if(VCPKG_WARNINGS_AS_ERRORS)
-        add_compile_options(-WX)
-    endif()
-else()
-    if(VCPKG_DEVELOPMENT_WARNINGS)
-        add_compile_options(-Wall -Wextra -Wpedantic -Wno-unknown-pragmas -Wno-missing-field-initializers -Wno-redundant-move)
-
-        # GCC and clang have different names for the same warning
-        if(VCPKG_COMPILER STREQUAL "gcc")
-            add_compile_options(-Wmissing-declarations)
-        elseif(VCPKG_COMPILER STREQUAL "clang")
-            add_compile_options(-Wmissing-prototypes)
-        endif()
-    endif()
-
-    if(VCPKG_WARNINGS_AS_ERRORS)
-        add_compile_options(-Werror)
-    endif()
-endif()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
