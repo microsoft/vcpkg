@@ -4,7 +4,7 @@
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/binaryparagraph.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.cache.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 

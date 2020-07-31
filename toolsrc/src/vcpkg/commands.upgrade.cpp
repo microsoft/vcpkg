@@ -4,7 +4,7 @@
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/binarycaching.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.upgrade.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
