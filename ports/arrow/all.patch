@@ -102,7 +102,7 @@ index bb3eb5608..0b03d37d3 100644
      find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h PATH_SUFFIXES "include")
      find_program(THRIFT_COMPILER thrift PATH_SUFFIXES "bin")
 diff --git a/cpp/cmake_modules/FindZSTD.cmake b/cpp/cmake_modules/FindZSTD.cmake
-index 84d21d2b5..4b8ae8952 100644
+index 84d21d2b5..971a9dec3 100644
 --- a/cpp/cmake_modules/FindZSTD.cmake
 +++ b/cpp/cmake_modules/FindZSTD.cmake
 @@ -24,11 +24,11 @@ if(ARROW_ZSTD_USE_SHARED)
@@ -120,6 +120,17 @@ index 84d21d2b5..4b8ae8952 100644
    set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
    set(ZSTD_LIB_NAMES "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}")
  endif()
+@@ -49,8 +49,8 @@ if(ZSTD_ROOT)
+
+ else()
+   # Second, find via pkg_check_modules
+-  pkg_check_modules(ZSTD_PC libzstd)
+-  if(ZSTD_PC_FOUND)
++  #pkg_check_modules(ZSTD_PC libzstd)
++  if(0) #(ZSTD_PC_FOUND)  # Disabled as sometimes incompatible with vcpkg on Linux and OSX
+     set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
+
+     list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
 diff --git a/cpp/cmake_modules/DefineOptions.cmake b/cpp/cmake_modules/DefineOptions.cmake
 index 3b229846c..da2c6d551 100644
 --- a/cpp/cmake_modules/DefineOptions.cmake
