@@ -1,9 +1,8 @@
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
 
-set(GDAL_VERSION_STR "2.4.1")
-set(GDAL_VERSION_PKG "241")
-set(GDAL_VERSION_LIB "204")
-set(GDAL_PACKAGE_SUM "edb9679ee6788334cf18971c803615ac9b1c72bc0c96af8fd4852cb7e8f58e9c4f3d9cb66406bc8654419612e1a7e9d0e62f361712215f4a50120f646bb0a738")
+set(GDAL_VERSION_STR "3.1.2")
+set(GDAL_VERSION_PKG "312")
+set(GDAL_PACKAGE_SUM "cfd8dc7eeeca7a7897a0e4b6c2deb112b772773977d9f8be1418de1b2b627e09c1c8000259b1d52147052a0f1391175519df95075e4030a8d9dbfc3c32c974e3")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
@@ -12,11 +11,10 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 list(APPEND GDAL_PATCHES 0001-Fix-debug-crt-flags.patch)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND GDAL_PATCHES  0002-Fix-static-build.patch)
 endif()
 list(APPEND GDAL_PATCHES
-            0003-Fix-std-fabs.patch
             0004-fix-linux-build.patch
 )
 
@@ -201,7 +199,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_install_nmake(
         SOURCE_PATH ${SOURCE_PATH}
-        DISABLE_ALL
+        BUILD_TARGET 
         OPTIONS ${NMAKE_OPTIONS}
         OPTIONS_DEBUG ${NMAKE_OPTIONS_DBG}
         OPTIONS_RELEASE ${NMAKE_OPTIONS_REL}
@@ -306,6 +304,7 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
+        COPY_SOURCE
         OPTIONS ${EXTRA_OPTIONS}
             --with-proj5-api=yes
             --enable-shared=${BUILD_DYNAMIC}
@@ -317,7 +316,9 @@ else()
             --with-boost-lib-path=${CURRENT_INSTALLED_DIR}/lib
     )
     
-    vcpkg_install_make()
+    vcpkg_install_make(
+        MAKEFILE GNUmakefile
+    )
     
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
                         ${CURRENT_PACKAGES_DIR}/debug/etc
