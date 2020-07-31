@@ -2,7 +2,7 @@
 
 #include <vcpkg/base/system.print.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.xvsinstances.h>
 #include <vcpkg/help.h>
 #include <vcpkg/visualstudio.h>
 
