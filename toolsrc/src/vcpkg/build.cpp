@@ -16,6 +16,7 @@
 #include <vcpkg/build.h>
 #include <vcpkg/buildenvironment.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -490,7 +491,7 @@ namespace vcpkg::Build
         std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
         Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", stdoutlog.u8string());
         std::string compiler_hash;
-        const int return_code = System::cmd_execute_and_stream_lines(
+        System::cmd_execute_and_stream_lines(
             command,
             [&](const std::string& s) {
                 static const StringLiteral s_marker = "#COMPILER_HASH#";
@@ -615,6 +616,10 @@ namespace vcpkg::Build
         else if (cmake_system_name == "iOS")
         {
             return m_paths.scripts / fs::u8path("toolchains/ios.cmake");
+        }
+        else if (cmake_system_name == "MinGW")
+        {
+            return m_paths.scripts / fs::u8path("toolchains/mingw.cmake");
         }
         else if (cmake_system_name.empty() || cmake_system_name == "Windows" || cmake_system_name == "WindowsStore")
         {
@@ -1148,7 +1153,7 @@ namespace vcpkg::Build
     PreBuildInfo::PreBuildInfo(const VcpkgPaths& paths,
                                Triplet triplet,
                                const std::unordered_map<std::string, std::string>& cmakevars)
-        : m_paths(paths), triplet(triplet)
+        : triplet(triplet), m_paths(paths)
     {
         enum class VcpkgTripletVar
         {

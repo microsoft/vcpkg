@@ -8,7 +8,7 @@
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.setinstalled.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
