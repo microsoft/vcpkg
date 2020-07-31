@@ -262,7 +262,9 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
             auto pghs = Paragraphs::parse_paragraphs(contents, control.u8string());
             REQUIRE(pghs);
 
-            scfs.push_back(std::move(*SourceControlFile::parse_control_file(control, std::move(pghs).value_or_exit(VCPKG_LINE_INFO)).value_or_exit(VCPKG_LINE_INFO)));
+            scfs.push_back(std::move(
+                *SourceControlFile::parse_control_file(control, std::move(pghs).value_or_exit(VCPKG_LINE_INFO))
+                     .value_or_exit(VCPKG_LINE_INFO)));
         }
         else if (fs.exists(manifest))
         {
@@ -271,7 +273,9 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
             REQUIRE_FALSE(ec);
             REQUIRE(contents);
 
-            scfs.push_back(std::move(*SourceControlFile::parse_manifest_file(manifest, contents.value_or_exit(VCPKG_LINE_INFO).first.object()).value_or_exit(VCPKG_LINE_INFO)));
+            scfs.push_back(std::move(*SourceControlFile::parse_manifest_file(
+                                          manifest, contents.value_or_exit(VCPKG_LINE_INFO).first.object())
+                                          .value_or_exit(VCPKG_LINE_INFO)));
         }
     }
 
