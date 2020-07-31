@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(LIB_NAME nghttp2)
 set(LIB_VERSION 1.39.2)
 
@@ -13,12 +11,22 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(ENABLE_STATIC_LIB ON)
+    set(ENABLE_SHARED_LIB OFF)
+else()
+    set(ENABLE_STATIC_LIB OFF)
+    set(ENABLE_SHARED_LIB ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DENABLE_LIB_ONLY=ON
         -DENABLE_ASIO_LIB=OFF
+        -DENABLE_STATIC_LIB=${ENABLE_STATIC_LIB}
+        -DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}
 )
 
 vcpkg_install_cmake()
@@ -32,6 +40,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${LIB_NAME} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

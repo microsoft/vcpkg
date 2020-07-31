@@ -16,6 +16,7 @@
 ## VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX       import library suffix for target (same as CMAKE_IMPORT_LIBRARY_SUFFIX)
 ## VCPKG_FIND_LIBRARY_PREFIXES              target dependent prefixes used for find_library calls in portfiles
 ## VCPKG_FIND_LIBRARY_SUFFIXES              target dependent suffixes used for find_library calls in portfiles
+## VCPKG_SYSTEM_LIBRARIES                   list of libraries are provide by the toolchain and are not managed by vcpkg
 ## ```
 ##
 ## CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and CMAKE_IMPORT_LIBRARY_(PREFIX|SUFFIX) are defined for the target
@@ -37,9 +38,12 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
     set(VCPKG_TARGET_IS_ANDROID 1)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     set(VCPKG_TARGET_IS_FREEBSD 1)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+    set(VCPKG_TARGET_IS_WINDOWS 1)
+    set(VCPKG_TARGET_IS_MINGW 1)
 endif()
 
-#Helper variable to identify the host path separator. 
+#Helper variable to identify the host path separator.
 if(CMAKE_HOST_WIN32)
     set(VCPKG_HOST_PATH_SEPARATOR ";")
 elseif(CMAKE_HOST_UNIX)
@@ -61,7 +65,16 @@ else()
 endif()
 
 #Helper variables for libraries
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_MINGW)
+    set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".a")
+    set(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX ".dll.a")
+    set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".dll")
+    set(VCPKG_TARGET_STATIC_LIBRARY_PREFIX "lib")
+    set(VCPKG_TARGET_SHARED_LIBRARY_PREFIX "lib")
+    set(VCPKG_TARGET_IMPORT_LIBRARY_PREFIX "lib")
+    set(VCPKG_FIND_LIBRARY_SUFFIXES ".dll" ".dll.a" ".a" ".lib")
+    set(VCPKG_FIND_LIBRARY_PREFIXES "lib" "")
+elseif(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".lib")
     set(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX ".lib")
     set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".dll")
@@ -71,11 +84,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_TARGET_IMPORT_LIBRARY_PREFIX "")
     set(VCPKG_FIND_LIBRARY_SUFFIXES ".lib" ".dll") #This is a slight modification to CMakes value which does not include ".dll".
     set(VCPKG_FIND_LIBRARY_PREFIXES "" "lib") #This is a slight modification to CMakes value which does not include "lib".
-    ## For CYGWIN and Windows GNU, maybe VCPKG will support that in the future?
-    #set(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX ".dll.a")
-    #set(VCPKG_TARGET_IMPORT_LIBRARY_PREFIX "lib")
-    #set(VCPKG_FIND_LIBRARY_SUFFIXES ".dll" ".dll.a" ".a" ".lib")
-    #set(VCPKG_FIND_LIBRARY_PREFIXES "lib" "")
 elseif(VCPKG_TARGET_IS_OSX)
     set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".a")
     set(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX "")
@@ -104,3 +112,22 @@ set(CMAKE_IMPORT_LIBRARY_PREFIX "${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}")
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES "${VCPKG_FIND_LIBRARY_SUFFIXES}" CACHE INTERNAL "") # Required by find_library
 set(CMAKE_FIND_LIBRARY_PREFIXES "${VCPKG_FIND_LIBRARY_PREFIXES}" CACHE INTERNAL "") # Required by find_library
+
+# Append platform libraries to VCPKG_SYSTEM_LIBRARIES
+# The variable are just appended to permit to custom triplets define the variable
+
+# Platforms with libdl
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OSX)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES dl)
+endif()
+
+# Platforms with libm
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_FREEBSD)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES m)
+endif()
+
+# Windows system libs
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES wsock32)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES Ws2_32)
+endif()

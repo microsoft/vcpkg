@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jmcnamara/libxlsxwriter
-    REF RELEASE_0.8.9
-    SHA512 0442323b8e55000aa78a689820f8e446b5e925b5077c6ed163ad181b5a8f0e19fe71cc12c4781f47f70f0c702faa27e49655e813f7e90a855ab73dd2bd9f5d66
+    REF RELEASE_0.9.4
+    SHA512 d7bc319e6b9cd2ad6aaa2f3eb6fdce1c5bcc1d5af23ffb3413e29760191f6aed41f836aaa71a322efe7966f3753a6d8a01cb0b403d682b13a6a3734a87cc12ba
 	HEAD_REF master
-	PATCHES
-        0001-fix-cmake-file.patch
 )
 
 if (VCPKG_TARGET_IS_UWP)

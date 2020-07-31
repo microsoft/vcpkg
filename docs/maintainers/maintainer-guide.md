@@ -42,6 +42,7 @@ At this time, the following helpers are deprecated:
 1. `vcpkg_extract_source_archive()` should be replaced by [`vcpkg_extract_source_archive_ex()`](vcpkg_extract_source_archive_ex.md)
 2. `vcpkg_apply_patches()` should be replaced by the `PATCHES` arguments to the "extract" helpers (e.g. [`vcpkg_from_github()`](vcpkg_from_github.md))
 3. `vcpkg_build_msbuild()` should be replaced by [`vcpkg_install_msbuild()`](vcpkg_install_msbuild.md)
+4. `vcpkg_copy_tool_dependencies()` should be replaced by [`vcpkg_copy_tools()`](vcpkg_copy_tools.md)
 
 ### Avoid excessive comments in portfiles
 
@@ -206,6 +207,34 @@ Important caveat:
 Note that if a library generates CMake integration files (`foo-config.cmake`), renaming must be done through patching the CMake build itself instead of simply calling `file(RENAME)` on the output archives/LIBs.
 
 Finally, DLL files on Windows should never be renamed post-build because it breaks the generated LIBs.
+
+## Code format
+
+### Vcpkg internal code
+
+We require the c/c++ code inside vcpkg to follow the clang-format, if you change them. Please perform the following steps after modification:
+
+- Use Visual Studio:
+1. Configure your [clang-format tools](https://devblogs.microsoft.com/cppblog/clangformat-support-in-visual-studio-2017-15-7-preview-1/).
+2. Open the modified file.
+3. Use shortcut keys Ctrl+K, Ctrl+D to format the current file.
+
+- Use tools:
+1. Install [llvm clang-format](https://releases.llvm.org/download.html#10.0.0)
+2. Run command:
+```cmd
+> LLVM_PATH/bin/clang-format.exe -style=file -i changed_file.cpp
+```
+
+### Manifest
+
+We require that the manifest file needs to be formatted, perform the following steps to solve this issue:
+
+1. Format all changed manifest files.
+```cmd
+> vcpkg x-format-manifest --all
+```
+2. Commit changes to your branch.
 
 ## Useful implementation notes
 

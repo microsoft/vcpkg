@@ -18,9 +18,14 @@ namespace vcpkg::Util
     namespace Vectors
     {
         template<class Container, class T = ElementT<Container>>
-        void concatenate(std::vector<T>* augend, const Container& addend)
+        void append(std::vector<T>* augend, const Container& addend)
         {
             augend->insert(augend->end(), addend.begin(), addend.end());
+        }
+        template<class Vec, class Key>
+        bool contains(const Vec& container, const Key& item)
+        {
+            return std::find(container.begin(), container.end(), item) != container.end();
         }
     }
 
@@ -42,6 +47,19 @@ namespace vcpkg::Util
                 output[p.first] = func(p.second);
             });
         }
+    }
+
+    template<class Range, class Pred, class E = ElementT<Range>>
+    std::vector<E> filter(const Range& xs, Pred&& f)
+    {
+        std::vector<E> ret;
+
+        for (auto&& x : xs)
+        {
+            if (f(x)) ret.push_back(x);
+        }
+
+        return ret;
     }
 
     template<class Range, class Func>
@@ -122,6 +140,12 @@ namespace vcpkg::Util
         std::sort(begin(cont), end(cont), comp);
     }
 
+    template<class Range, class Pred>
+    bool any_of(Range&& rng, Pred pred)
+    {
+        return std::any_of(rng.begin(), rng.end(), std::move(pred));
+    }
+
     template<class Range>
     Range&& sort_unique_erase(Range&& cont)
     {
@@ -194,7 +218,7 @@ namespace vcpkg::Util
 
         T* get() { return &m_ptr; }
 
-        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) {}
+        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) { }
 
     private:
         std::unique_lock<std::mutex> m_lock;
@@ -219,5 +243,11 @@ namespace vcpkg::Util
     template<class... Ts>
     void unused(const Ts&...)
     {
+    }
+
+    template<class T>
+    T copy(const T& t)
+    {
+        return t;
     }
 }
