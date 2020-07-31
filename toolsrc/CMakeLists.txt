@@ -39,6 +39,87 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
+file(GLOB VCPKGLIB_NON_PCH_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
+file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
+file(GLOB VCPKGLIB_NON_PCH_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h)
+file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h)
+add_library(vcpkglib
+    ${VCPKGLIB_BASE_SOURCES}
+    ${VCPKGLIB_NON_PCH_SOURCES}
+    ${VCPKGLIB_BASE_INCLUDES}
+    ${VCPKGLIB_NON_PCH_INCLUDES})
+target_include_directories(vcpkglib PUBLIC include)
+
+if(MSVC)
+    get_target_property(_srcs vcpkglib SOURCES)
+
+    if(NOT CMAKE_GENERATOR MATCHES "Visual Studio .*")
+        set_property(SOURCE src/pch.cpp APPEND PROPERTY OBJECT_OUTPUTS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
+        set_property(SOURCE ${_srcs} APPEND PROPERTY OBJECT_DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
+    endif()
+
+    set_source_files_properties(src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
+    target_sources(vcpkglib PRIVATE src/pch.cpp)
+    target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
+endif()
+
+
+set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
+add_executable(vcpkg ${VCPKG_SOURCES})
+target_link_libraries(vcpkg PRIVATE vcpkglib)
+
+set(VCPKGMETRICSUPLOADER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkgmetricsuploader.cpp)
+if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
+    add_executable(vcpkgmetricsuploader WIN32 ${VCPKGMETRICSUPLOADER_SOURCES})
+    target_link_libraries(vcpkgmetricsuploader PRIVATE vcpkglib)
+endif()
+
+file(GLOB VCPKG_TEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
+file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
+if (BUILD_TESTING)
+    enable_testing()
+
+    add_executable(vcpkg-test
+        ${VCPKG_TEST_SOURCES}
+        ${VCPKG_TEST_INCLUDES})
+    target_link_libraries(vcpkg-test PRIVATE vcpkglib)
+
+    add_test(NAME default COMMAND vcpkg-test --order rand --rng-seed time)
+
+    if (VCPKG_BUILD_BENCHMARKING)
+        target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
+    endif()
+endif()
+
+file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
+if(VCPKG_BUILD_FUZZING)
+    add_executable(vcpkg-fuzz ${VCPKG_FUZZ_SOURCES})
+    target_link_libraries(vcpkg-fuzz PRIVATE vcpkglib)
+endif()
+
+find_program(CLANG_FORMAT clang-format)
+if(CLANG_FORMAT)
+    add_custom_target(format COMMAND ${CLANG_FORMAT} -i -verbose
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp
+        ${VCPKGLIB_BASE_SOURCES}
+        ${VCPKGLIB_NON_PCH_SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
+        ${VCPKGLIB_BASE_INCLUDES}
+        ${VCPKGLIB_NON_PCH_INCLUDES}
+
+        ${VCPKG_SOURCES}
+        ${VCPKGMETRICSUPLOADER_SOURCES}
+
+        ${VCPKG_TEST_SOURCES}
+        ${VCPKG_TEST_INCLUDES}
+
+        ${VCPKG_FUZZ_SOURCES})
+endif()
+
+# =========================
+# === Options and Flags ===
+# =========================
+
 if(MSVC)
     # either MSVC, or clang-cl
     add_compile_options(-FC)
@@ -79,10 +160,6 @@ else()
     endif()
 endif()
 
-# ========================
-# === System Libraries ===
-# ========================
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 link_libraries(Threads::Threads)
@@ -105,57 +182,5 @@ if (MINGW)
     link_libraries(winhttp bcrypt version ole32 uuid)
 endif()
 
-
-# ===============
-# === Targets ===
-# ===============
-
 add_compile_definitions(VCPKG_DISABLE_METRICS=$<BOOL:${VCPKG_DISABLE_METRICS}>)
 include_directories(include)
-file(GLOB_RECURSE VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
-add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
-
-add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
-if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
-    add_executable(vcpkgmetricsuploader WIN32 src/vcpkgmetricsuploader.cpp $<TARGET_OBJECTS:vcpkglib>)
-endif()
-
-if (BUILD_TESTING)
-    file(GLOB_RECURSE VCPKGTEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
-
-    enable_testing()
-    add_executable(vcpkg-test ${VCPKGTEST_SOURCES} $<TARGET_OBJECTS:vcpkglib>)
-    add_test(NAME default COMMAND vcpkg-test --order rand --rng-seed time)
-
-    if (VCPKG_BUILD_BENCHMARKING)
-        target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
-    endif()
-endif()
-
-if(VCPKG_BUILD_FUZZING)
-    file(GLOB_RECURSE VCPKGFUZZ_SOURCES src/vcpkg-fuzz/*.cpp)
-    add_executable(vcpkg-fuzz ${VCPKGFUZZ_SOURCES} $<TARGET_OBJECTS:vcpkglib>)
-endif()
-
-find_program(CLANG_FORMAT clang-format)
-if(CLANG_FORMAT)
-    file(GLOB_RECURSE VCPKG_FORMAT_SOURCES CONFIGURE_DEPENDS src/*.cpp include/pch.h include/vcpkg/*.h include/vcpkg-test/*.h)
-    add_custom_target(format COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FORMAT_SOURCES})
-endif()
-
-# ===========
-# === PCH ===
-# ===========
-
-if(MSVC)
-    get_target_property(_srcs vcpkglib SOURCES)
-
-    if(NOT CMAKE_GENERATOR MATCHES "Visual Studio .*")
-        set_property(SOURCE src/pch.cpp APPEND PROPERTY OBJECT_OUTPUTS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
-        set_property(SOURCE ${_srcs} APPEND PROPERTY OBJECT_DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
-    endif()
-
-    set_source_files_properties(src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
-    target_sources(vcpkglib PRIVATE src/pch.cpp)
-    target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
-endif()
