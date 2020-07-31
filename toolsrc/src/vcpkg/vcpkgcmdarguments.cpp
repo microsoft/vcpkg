@@ -655,7 +655,7 @@ namespace vcpkg
                 #else
                     auto overlays = Strings::split(*unpacked, ':');
                 #endif
-                overlay_ports.insert(std::begin(overlay_ports),std::begin(overlays), std::end(overlays));
+                overlay_ports.insert(std::end(overlay_ports),std::begin(overlays), std::end(overlays));
             }
         }
 
