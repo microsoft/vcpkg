@@ -1,0 +1,25 @@
+diff --git a/src/util/intrinsics.h b/src/util/intrinsics.h
+index edc4f6e..075b777 100644
+--- a/src/util/intrinsics.h
++++ b/src/util/intrinsics.h
+@@ -55,6 +55,7 @@
+ # endif
+ #endif
+ 
++#ifdef _WIN32
+ #if defined(USE_X86INTRIN_H)
+ #include <x86intrin.h>
+ #elif defined(USE_INTRIN_H)
+@@ -62,5 +63,12 @@
+ #else
+ #error no intrinsics file
+ #endif
++#else
++#if defined(USE_X86INTRIN_H) || defined(USE_INTRIN_H)
++#include <emmintrin.h>
++#else
++#error no intrinsics file
++#endif
++#endif
+ 
+ #endif // INTRINSICS_H

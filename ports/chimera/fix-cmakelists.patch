@@ -1,5 +1,5 @@
 diff --git a/chimera/CMakeLists.txt b/chimera/CMakeLists.txt
-index 1cd66a3..9caa366 100644
+index 1cd66a3..82b6468 100644
 --- a/chimera/CMakeLists.txt
 +++ b/chimera/CMakeLists.txt
 @@ -1,7 +1,24 @@
@@ -45,3 +45,11 @@ index 1cd66a3..9caa366 100644
  if (NOT WIN32)
      # expand out library names for pkgconfig static link info
      foreach (LIB ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
+@@ -44,6 +64,6 @@ if (NOT WIN32)
+     set(PRIVATE_LIBS "${PRIVATE_LIBS} -L${LIBDIR} -lpcre")
+ 
+     configure_file(libch.pc.in libch.pc @ONLY) # only replace @ quoted vars
+-    install(FILES ${CMAKE_BINARY_DIR}/chimera/libch.pc
++    install(FILES ${CMAKE_BINARY_DIR}/libch.pc
+         DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+ endif()
