@@ -1,3 +1,4 @@
 Source: ignition-modularscripts
-Version: 2020-02-10
+Version: 2020-05-16
+Port-Version: 1
 Description: Vcpkg helpers to package ignition libraries

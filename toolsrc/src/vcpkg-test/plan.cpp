@@ -1,8 +1,7 @@
 #include <catch2/catch.hpp>
-#include <vcpkg-test/mockcmakevarprovider.h>
-#include <vcpkg-test/util.h>
 
 #include <vcpkg/base/graphs.h>
+
 #include <vcpkg/dependencies.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
@@ -11,6 +10,9 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
+
+#include <vcpkg-test/mockcmakevarprovider.h>
+#include <vcpkg-test/util.h>
 
 using namespace vcpkg;
 
@@ -37,7 +39,7 @@ static void features_check(Dependencies::InstallPlanAction& plan,
     for (auto&& feature_name : expected_features)
     {
         // TODO: see if this can be simplified
-        if (feature_name == "core" || feature_name == "")
+        if (feature_name == "core" || feature_name.empty())
         {
             REQUIRE((Util::find(feature_list, "core") != feature_list.end() ||
                      Util::find(feature_list, "") != feature_list.end()));
@@ -369,9 +371,8 @@ TEST_CASE ("basic feature test 7", "[plan]")
     remove_plan_check(plan.remove_actions.at(0), "x");
     remove_plan_check(plan.remove_actions.at(1), "b");
 
-    // TODO: order here may change but A < X, and B anywhere
-    features_check(plan.install_actions.at(0), "b", {"core", "b1"});
-    features_check(plan.install_actions.at(1), "a", {"core"});
+    features_check(plan.install_actions.at(0), "a", {"core"});
+    features_check(plan.install_actions.at(1), "b", {"core", "b1"});
     features_check(plan.install_actions.at(2), "x", {"core"});
 }
 

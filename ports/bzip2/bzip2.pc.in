@@ -1,10 +1,11 @@
-prefix=@TARGET_GENERIC_INSTALLED_FOLDER@
-exec_prefix=@TARGET_GENERIC_INSTALLED_FOLDER@/bin
-libdir=@TARGET_SPECIFIC_INSTALLED_FOLDER@/lib
-includedir=@TARGET_GENERIC_INSTALLED_FOLDER@/include
+prefix=@BZIP2_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
 
 Name: bzip2
-Description: High-quality data compressor
-Version: @BZIP2_VERSION@
-Libs: -L${libdir} -lbz2
+Description: bzip2
+Version: 1.0.6
+Requires:
+Libs: -L${libdir} -l@bzname@
 Cflags: -I${includedir}

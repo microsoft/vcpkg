@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_TARGET_IS_WINDOWS)
     set(ADDITIONAL_GLIB_PATCH "glib-cmake.patch")
 endif()
@@ -7,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 2.5.3
-    SHA512 d541463b3647fc2c7ddaa29aedcea1c3bde5e26e0d529384d66d630af3aaf2a4befb3c4d47c93833f099339a0f951fb132011a02c57fc00ba543bd1b17026ffa
+    REF 2.6.6
+    SHA512 3ddf3e6eccf28ca1441544f0b67e243c6a85a32122bfc0f8092b3cc465b20a25aa3cb72404070d2627b9e204f86412c3bfb9aaca272c5492d8448facc1971a7d
     HEAD_REF master
     PATCHES
         0001-fix-cmake-export.patch
@@ -30,44 +28,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-SET(HB_HAVE_ICU "OFF")
-if("icu" IN_LIST FEATURES)
-    SET(HB_HAVE_ICU "ON")
-endif()
-
-SET(HB_HAVE_GRAPHITE2 "OFF")
-if("graphite2" IN_LIST FEATURES)
-    SET(HB_HAVE_GRAPHITE2 "ON")
-endif()
-
-## Unicode callbacks
-
-# Builtin (UCDN)
-set(BUILTIN_UCDN OFF)
-if("ucdn" IN_LIST FEATURES)
-    set(BUILTIN_UCDN ON)
-endif()
-
-# Glib
-set(HAVE_GLIB OFF)
-if("glib" IN_LIST FEATURES)
-    set(HAVE_GLIB ON)
-endif()
-
-# At least one Unicode callback must be specified, or harfbuzz compilation fails
-if(NOT (BUILTIN_UCDN OR HAVE_GLIB))
-    message(FATAL_ERROR "Error: At least one Unicode callback must be specified (ucdn, glib).")
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    icu         HB_HAVE_ICU
+    graphite2   HB_HAVE_GRAPHITE2
+    glib        HB_HAVE_GLIB
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DHB_HAVE_FREETYPE=ON
-        -DHB_BUILTIN_UCDN=${BUILTIN_UCDN}
-        -DHB_HAVE_ICU=${HB_HAVE_ICU}
-        -DHB_HAVE_GLIB=${HAVE_GLIB}
-        -DHB_HAVE_GRAPHITE2=${HB_HAVE_GRAPHITE2}
         -DHB_BUILD_TESTS=OFF
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
@@ -78,7 +49,7 @@ vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
 
-if (HAVE_GLIB)
+if ("glib" IN_LIST FEATURES)
     # Propagate dependency on glib downstream
     file(READ "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" _contents)
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" "
@@ -90,6 +61,4 @@ ${_contents}
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

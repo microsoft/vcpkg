@@ -1,8 +1,8 @@
-set(FT_VERSION 2.10.1)
+set(FT_VERSION 2.10.2)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.xz" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.xz"
     FILENAME "freetype-${FT_VERSION}.tar.xz"
-    SHA512 c7a565b0ab3dce81927008a6965d5c7540f0dc973fcefdc1677c2e65add8668b4701c2958d25593cb41f706f4488765365d40b93da71dbfa72907394f28b2650
+    SHA512 cf45089bd8893d7de2cdcb59d91bbb300e13dd0f0a9ef80ed697464ba7aeaf46a5a81b82b59638e6b21691754d8f300f23e1f0d11683604541d77f0f581affaa
 )
 
 vcpkg_extract_source_archive_ex(
@@ -13,7 +13,6 @@ vcpkg_extract_source_archive_ex(
         0001-Fix-install-command.patch
         0002-Add-CONFIG_INSTALL_PATH-option.patch
         0003-Fix-UWP.patch
-        0005-Fix-DLL-EXPORTS.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -25,17 +24,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         png         CMAKE_DISABLE_FIND_PACKAGE_PNG
 )
 
-if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
-    set(ENABLE_DLL_EXPORT OFF)
-else()
-    set(ENABLE_DLL_EXPORT ON)
-endif()
-
-set(OPTIONS)
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-  list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -43,8 +31,7 @@ vcpkg_configure_cmake(
         -DCONFIG_INSTALL_PATH=share/freetype
         -DFT_WITH_ZLIB=ON # Force system zlib.
         ${FEATURE_OPTIONS}
-        -DENABLE_DLL_EXPORT=${ENABLE_DLL_EXPORT}
-        ${OPTIONS}
+        -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=ON
 )
 
 vcpkg_install_cmake()

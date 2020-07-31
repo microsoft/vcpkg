@@ -70,7 +70,7 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/gio)
     #todo: we should fix tools setup
 
-    vcpkg_fixup_pkgconfig_targets()
+    vcpkg_fixup_pkgconfig()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

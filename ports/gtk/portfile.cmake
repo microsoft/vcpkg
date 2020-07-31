@@ -47,5 +47,4 @@ else()
     vcpkg_copy_pdbs()
 endif()
 
-
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

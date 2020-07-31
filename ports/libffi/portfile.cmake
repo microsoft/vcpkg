@@ -1,3 +1,5 @@
+set(VERSION 3.3)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
@@ -32,6 +34,27 @@ if(VCPKG_TARGET_IS_WINDOWS)
     " FFI_H "${FFI_H}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
 
+    # Create pkgconfig file
+    set(PACKAGE_VERSION ${VERSION})
+    set(prefix "${CURRENT_INSTALLED_DIR}")
+    set(exec_prefix "\${prefix}")
+    set(libdir "\${prefix}/lib")
+    set(toolexeclibdir "\${libdir}")
+    set(includedir "\${prefix}/include")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc" @ONLY)
+    endif()
+    # debug
+    set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+    set(exec_prefix "\${prefix}")
+    set(libdir "\${prefix}/lib")
+    set(toolexeclibdir "\${libdir}")
+    set(includedir "\${prefix}/../include")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc" @ONLY)
+    endif()
+
+    vcpkg_fixup_pkgconfig()
 else()
     if(0)
         vcpkg_find_acquire_program(PERL)
@@ -62,8 +85,7 @@ else()
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/info/dir)
-    vcpkg_fixup_pkgconfig_targets()
+    vcpkg_fixup_pkgconfig()
 endif()
-
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

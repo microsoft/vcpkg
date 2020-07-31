@@ -54,6 +54,8 @@ if(MSVC)
         add_compile_options(-W4)
         if(VCPKG_COMPILER STREQUAL "clang")
             add_compile_options(-Wmissing-prototypes -Wno-missing-field-initializers)
+        else()
+            add_compile_options(-analyze)
         endif()
     endif()
 
@@ -114,6 +116,9 @@ file(GLOB_RECURSE VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
 
 add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
+    add_executable(vcpkgmetricsuploader WIN32 src/vcpkgmetricsuploader.cpp $<TARGET_OBJECTS:vcpkglib>)
+endif()
 
 if (BUILD_TESTING)
     file(GLOB_RECURSE VCPKGTEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
@@ -154,4 +159,3 @@ if(MSVC)
     target_sources(vcpkglib PRIVATE src/pch.cpp)
     target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
 endif()
-
