@@ -1,0 +1,97 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a3b2139dc..1f9a10513 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -171,7 +171,7 @@ set (PEDANTIC FALSE CACHE BOOL "Determines if we should compile with -Wall -Werr
+ set (WITH_DESIGNER_PLUGIN TRUE CACHE BOOL "Build plugins for Qt Designer")
+ add_feature_info("Qt Designer plugins" WITH_DESIGNER_PLUGIN "Marble widget support in Qt Designer. Toggle with WITH_DESIGNER_PLUGIN=YES/NO")
+ 
+-set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX} CACHE PATH  "Base directory for executables and libraries" FORCE)
++set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX}/bin CACHE PATH  "Base directory for executables and libraries" FORCE)
+ if (NOT QT_PLUGINS_DIR)
+    set(QT_PLUGINS_DIR ${CMAKE_INSTALL_LIBDIR}/plugins)
+ endif()
+@@ -248,7 +248,7 @@ add_definitions(
+     -DQT_NO_URL_CAST_FROM_STRING
+     -DQT_NO_CAST_TO_ASCII
+     -DQT_NO_CAST_FROM_BYTEARRAY
+-    -DQT_STRICT_ITERATORS
++#   -DQT_STRICT_ITERATORS
+     -DQT_DISABLE_DEPRECATED_BEFORE=0x050700
+ )
+ 
+diff --git a/src/apps/marble-qt/CMakeLists.txt b/src/apps/marble-qt/CMakeLists.txt
+index d28e3aa5e..7bbf4a63c 100644
+--- a/src/apps/marble-qt/CMakeLists.txt
++++ b/src/apps/marble-qt/CMakeLists.txt
+@@ -48,7 +48,7 @@ if(STATIC_BUILD)
+ endif(STATIC_BUILD)
+ 
+ if(WIN32)
+-install (TARGETS marble-qt RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
++	install (TARGETS marble-qt RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools/marble)
+ else(WIN32)
+ if (APPLE)
+   # No need for this when installing to a bundle
+diff --git a/src/lib/astro/CMakeLists.txt b/src/lib/astro/CMakeLists.txt
+index 5e1afd60f..fc53985f4 100644
+--- a/src/lib/astro/CMakeLists.txt
++++ b/src/lib/astro/CMakeLists.txt
+@@ -50,7 +50,7 @@ target_include_directories(astro
+ 
+ # choose the correct target install library path
+ if(WIN32)
+-  INSTALL(TARGETS astro EXPORT AstroTargets RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} ARCHIVE DESTINATION lib)
++  INSTALL(TARGETS astro EXPORT AstroTargets RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+ elseif(APPLE)
+   INSTALL(TARGETS astro LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/Marble.app/Contents/MacOS/lib)
+ else()
+diff --git a/src/lib/marble/CMakeLists.txt b/src/lib/marble/CMakeLists.txt
+index 7d27be94b..f1f377967 100644
+--- a/src/lib/marble/CMakeLists.txt
++++ b/src/lib/marble/CMakeLists.txt
+@@ -448,7 +448,7 @@ target_include_directories(marblewidget
+ 
+ # choose the correct target install library path
+ if(WIN32)
+-  install(TARGETS marblewidget EXPORT MarbleTargets RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} ARCHIVE DESTINATION lib)
++  install(TARGETS marblewidget EXPORT MarbleTargets RUNTIME DESTINATION  ${CMAKE_INSTALL_PREFIX}/bin ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+ elseif(APPLE)
+   install(TARGETS marblewidget LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/Marble.app/Contents/MacOS/lib)
+ else()
+diff --git a/src/lib/marble/declarative/CMakeLists.txt b/src/lib/marble/declarative/CMakeLists.txt
+index dd5d519c4..482a02ad5 100644
+--- a/src/lib/marble/declarative/CMakeLists.txt
++++ b/src/lib/marble/declarative/CMakeLists.txt
+@@ -53,7 +53,7 @@ if(Qt5Positioning_FOUND)
+ endif()
+ 
+ if(WIN32)
+-  install(TARGETS marbledeclarative RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} ARCHIVE DESTINATION lib)
++  install(TARGETS marbledeclarative RUNTIME DESTINATION  ${CMAKE_INSTALL_PREFIX}/bin ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+ else()
+   install(TARGETS marbledeclarative LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()
+diff --git a/src/plugins/positionprovider/CMakeLists.txt b/src/plugins/positionprovider/CMakeLists.txt
+index 85591098e..87011876e 100644
+--- a/src/plugins/positionprovider/CMakeLists.txt
++++ b/src/plugins/positionprovider/CMakeLists.txt
+@@ -12,12 +12,12 @@ find_package(Qt5 ${REQUIRED_QT_VERSION}
+     COMPONENTS
+         Positioning
+ )
+-marble_set_package_properties( Qt5Positioning PROPERTIES DESCRIPTION "a collection of APIs and frameworks" )
+-marble_set_package_properties( Qt5Positioning PROPERTIES URL "https://www.qt.io/developers/" )
+-marble_set_package_properties( Qt5Positioning PROPERTIES TYPE OPTIONAL PURPOSE "position information via Qt5Positioning" )
+-if(Qt5Positioning_FOUND)
+-   ADD_SUBDIRECTORY( qtpositioning )
+-endif()
++#marble_set_package_properties( Qt5Positioning PROPERTIES DESCRIPTION "a collection of APIs and frameworks" )
++#marble_set_package_properties( Qt5Positioning PROPERTIES URL "https://www.qt.io/developers/" )
++#arble_set_package_properties( Qt5Positioning PROPERTIES TYPE OPTIONAL PURPOSE "position information via Qt5Positioning" )
++#if(Qt5Positioning_FOUND)
++#   ADD_SUBDIRECTORY( qtpositioning )
++#endif()
+ 
+ 
+ macro_optional_find_package(libwlocate)
