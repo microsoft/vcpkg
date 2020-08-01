@@ -648,14 +648,14 @@ namespace vcpkg
 
         {
             const auto vcpkg_overlay_ports_env = System::get_environment_variable(OVERLAY_PORTS_ENV);
-            if(const auto unpacked = vcpkg_overlay_ports_env.get())
+            if (const auto unpacked = vcpkg_overlay_ports_env.get())
             {
 #ifdef WIN32
                 auto overlays = Strings::split(*unpacked, ';');
 #else
                 auto overlays = Strings::split(*unpacked, ':');
 #endif
-                overlay_ports.insert(std::end(overlay_ports),std::begin(overlays), std::end(overlays));
+                overlay_ports.insert(std::end(overlay_ports), std::begin(overlays), std::end(overlays));
             }
         }
 
