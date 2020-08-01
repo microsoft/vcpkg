@@ -90,6 +90,7 @@ avisynthplus:x64-windows-static=fail
 avro-c:arm-uwp=fail
 avro-c:x64-osx=fail
 avro-c:x64-uwp=fail
+avro-cpp:x64-windows-static=fail
 aws-c-common:arm64-windows=fail
 aws-c-common:arm-uwp=fail
 aws-c-common:x64-uwp=fail
