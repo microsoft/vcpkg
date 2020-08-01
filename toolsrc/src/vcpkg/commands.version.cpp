@@ -2,7 +2,7 @@
 
 #include <vcpkg/base/system.print.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
 #include <vcpkg/help.h>
 #include <vcpkg/metrics.h>
 

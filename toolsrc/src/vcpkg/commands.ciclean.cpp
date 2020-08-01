@@ -4,7 +4,7 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.print.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.ciclean.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 using namespace vcpkg;
