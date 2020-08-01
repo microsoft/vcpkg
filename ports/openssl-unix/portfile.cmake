@@ -1,5 +1,5 @@
 if (NOT VCPKG_TARGET_IS_MINGW)
-vcpkg_fail_port_install(MESSAGE "${PORT} is only for openssl on Unix-like systems" ON_TARGET "UWP" "Windows")
+    vcpkg_fail_port_install(MESSAGE "${PORT} is only for openssl on Unix-like systems" ON_TARGET "UWP" "Windows")
 endif()
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
