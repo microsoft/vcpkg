@@ -69,10 +69,13 @@
     <ClCompile Include="..\src\vcpkg\commands.env.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\commands.exportifw.cpp">
+    <ClCompile Include="..\src\vcpkg\commands.fetch.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.format-manifest.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.hash.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.integrate.cpp">
@@ -103,6 +106,9 @@
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\export.chocolatey.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\export.ifw.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\globalstate.cpp">
@@ -309,6 +315,78 @@
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\commands.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.autocomplete.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.buildexternal.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.cache.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.ci.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.ciclean.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.contact.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.create.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.dependinfo.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.edit.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.env.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.fetch.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.format-manifest.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.hash.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.integrate.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.interface.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.list.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.owns.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.porthistory.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.portsdiff.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.search.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.setinstalled.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.upgrade.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.version.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.xvsinstances.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\dependencies.h">

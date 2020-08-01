@@ -5,7 +5,7 @@
 
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.env.h>
 #include <vcpkg/help.h>
 
 namespace vcpkg::Commands::Env

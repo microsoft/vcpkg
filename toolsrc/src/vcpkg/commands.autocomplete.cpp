@@ -2,7 +2,10 @@
 
 #include <vcpkg/base/system.print.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.autocomplete.h>
+#include <vcpkg/commands.edit.h>
+#include <vcpkg/commands.integrate.h>
+#include <vcpkg/commands.upgrade.h>
 #include <vcpkg/install.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
