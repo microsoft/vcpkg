@@ -273,9 +273,11 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
             REQUIRE_FALSE(ec);
             REQUIRE(contents);
 
-            scfs.push_back(std::move(*SourceControlFile::parse_manifest_file(
-                                          manifest, contents.value_or_exit(VCPKG_LINE_INFO).first.object())
-                                          .value_or_exit(VCPKG_LINE_INFO)));
+            auto scf = SourceControlFile::parse_manifest_file(manifest,
+                                                              contents.value_or_exit(VCPKG_LINE_INFO).first.object());
+            REQUIRE(scf);
+
+            scfs.push_back(std::move(*scf.value_or_exit(VCPKG_LINE_INFO)));
         }
     }
 
