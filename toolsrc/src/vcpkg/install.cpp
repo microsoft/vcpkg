@@ -512,6 +512,8 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_USE_ARIA2 = "x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "clean-after-build";
     static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
+    static constexpr StringLiteral OPTION_MANIFEST_NO_DEFAULT_FEATURES = "x-no-default-features";
+    static constexpr StringLiteral OPTION_MANIFEST_FEATURE = "x-feature";
 
     static constexpr std::array<CommandSwitch, 9> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
@@ -524,11 +526,28 @@ namespace vcpkg::Install
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
     }};
+    static constexpr std::array<CommandSwitch, 10> MANIFEST_INSTALL_SWITCHES = {{
+        {OPTION_DRY_RUN, "Do not actually build or install"},
+        {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
+        {OPTION_NO_DOWNLOADS, "Do not download new sources"},
+        {OPTION_ONLY_DOWNLOADS, "Download sources but don't build packages"},
+        {OPTION_RECURSE, "Allow removal of packages as part of installation"},
+        {OPTION_KEEP_GOING, "Continue installing packages on failure"},
+        {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
+        {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
+        {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
+        {OPTION_MANIFEST_NO_DEFAULT_FEATURES, "Don't install the default features from the manifest."},
+    }};
+
     static constexpr std::array<CommandSetting, 2> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
         {OPTION_WRITE_PACKAGES_CONFIG,
          "Writes out a NuGet packages.config-formatted file for use with external binary caching.\nSee `vcpkg help "
          "binarycaching` for more information."},
+    }};
+
+    static constexpr std::array<CommandMultiSetting, 1> MANIFEST_INSTALL_MULTISETTINGS = {{
+        {OPTION_MANIFEST_FEATURE, "A feature from the manifest to install."},
     }};
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
@@ -551,7 +570,7 @@ namespace vcpkg::Install
         create_example_string("install --triplet x64-windows"),
         0,
         0,
-        {INSTALL_SWITCHES, INSTALL_SETTINGS},
+        {MANIFEST_INSTALL_SWITCHES, INSTALL_SETTINGS, MANIFEST_INSTALL_MULTISETTINGS},
         nullptr,
     };
 
@@ -750,8 +769,24 @@ namespace vcpkg::Install
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
 
+            std::vector<std::string> features;
+
+            if (Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
+            {
+                features.emplace_back("core");
+            }
+
+            auto manifest_feature_it = options.multisettings.find(OPTION_MANIFEST_FEATURE);
+            if (manifest_feature_it != options.multisettings.end())
+            {
+                for (const auto& feature : manifest_feature_it->second)
+                {
+                    features.push_back(feature);
+                }
+            }
+
             std::vector<FullPackageSpec> specs;
-            specs.emplace_back(PackageSpec{PackageSpec::MANIFEST_NAME, default_triplet});
+            specs.emplace_back(PackageSpec{PackageSpec::MANIFEST_NAME, default_triplet}, std::move(features));
             auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
 
             for (InstallPlanAction& action : install_plan.install_actions)

@@ -308,13 +308,23 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
 
     message(STATUS "Running vcpkg install")
 
+    set(_VCPKG_MANIFEST_FEATURES)
+    foreach(feature ${VCPKG_MANIFEST_FEATURES})
+        list(APPEND _VCPKG_MANIFEST_FEATURES "--x-feature=${feature}")
+    endforeach()
+
+    if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
+        set(_VCPKG_MANIFEST_NO_DEFAULT_FEATURES "--x-no-default-features")
+    endif()
+
     execute_process(
         COMMAND "${_VCPKG_EXECUTABLE}" install
-            --triplet ${VCPKG_TARGET_TRIPLET}
-            --vcpkg-root ${_VCPKG_ROOT_DIR}
-            --x-manifest-root=${_VCPKG_MANIFEST_DIR}
-            --x-install-root=${_VCPKG_INSTALLED_DIR}
-            --binarycaching
+            --triplet "${VCPKG_TARGET_TRIPLET}"
+            --vcpkg-root "${_VCPKG_ROOT_DIR}"
+            "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
+            "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+            ${_VCPKG_MANIFEST_FEATURES}
+            ${_VCPKG_MANIFEST_NO_DEFAULT_FEATURES}
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
 
     if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
@@ -405,7 +415,7 @@ macro(${VCPKG_OVERRIDE_FIND_PACKAGE_NAME} name)
             set(Boost_COMPILER "-vc120")
         else()
             set(Boost_COMPILER "-vc140")
-        endif() 
+        endif()
         _find_package(${ARGV})
     elseif("${name}" STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
         function(_vcpkg_find_in_list)
