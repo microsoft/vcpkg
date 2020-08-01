@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
@@ -90,6 +91,7 @@ namespace vcpkg
 
             Lazy<std::vector<VcpkgPaths::TripletFile>> available_triplets;
             Lazy<std::vector<Toolset>> toolsets;
+            Lazy<std::map<std::string, std::string>> cmake_script_hashes;
 
             Files::Filesystem* fs_ptr;
 
@@ -283,6 +285,26 @@ If you wish to silence this error and use classic mode, you can:
                 }
             }
             return output;
+        });
+    }
+
+    const std::map<std::string, std::string>& VcpkgPaths::get_cmake_script_hashes() const
+    {
+        return m_pimpl->cmake_script_hashes.get_lazy([this]() -> std::map<std::string, std::string> {
+            auto& fs = this->get_filesystem();
+            std::map<std::string, std::string> helpers;
+            auto files = fs.get_files_non_recursive(this->scripts / fs::u8path("cmake"));
+            auto common_functions = fs::u8path("vcpkg_common_functions");
+            for (auto&& file : files)
+            {
+                auto stem = file.stem();
+                if (stem != common_functions)
+                {
+                    helpers.emplace(stem.u8string(),
+                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
+                }
+            }
+            return helpers;
         });
     }
 

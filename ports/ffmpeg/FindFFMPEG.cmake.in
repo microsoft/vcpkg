@@ -33,7 +33,11 @@ set(FFMPEG_VERSION "4.2")
 
 find_dependency(Threads)
 if(UNIX)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread -lX11)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread)
+endif()
+
+if(UNIX AND NOT APPLE)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -lX11)
 endif()
 
 if(@ENABLE_BZIP2@)
@@ -160,7 +164,7 @@ if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_
     ${FFMPEG_libavcodec_LIBRARY}
     ${FFMPEG_libswresample_LIBRARY}
     ${FFMPEG_libavresample_LIBRARY}
-    ${FFMPEG_libavutil_LIBRARY} 
+    ${FFMPEG_libavutil_LIBRARY}
     ${FFMPEG_libzlib_LIBRARY}
     ${FFMPEG_PLATFORM_DEPENDENT_LIBS}
   )

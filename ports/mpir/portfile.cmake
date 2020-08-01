@@ -29,45 +29,22 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     endif()
 
     set(OPTIONS --disable-silent-rules --enable-gmpcompat --enable-cxx ${SHARED_STATIC})
+    
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+        OPTIONS ${OPTIONS}  
+    )
+    
+    vcpkg_install_make()
+    
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    endif()
+    
+    configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    set(ENV{CXXFLAGS} "${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG} -O0 -g")
-    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG} -O0 -g")
-    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/configure --prefix=${CURRENT_PACKAGES_DIR}/debug ${OPTIONS} --with-sysroot=${CURRENT_INSTALLED_DIR}/debug
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME configure-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND make -j install
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME install-${TARGET_TRIPLET}-dbg
-    )
-
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-    set(ENV{CXXFLAGS} "${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE} -O2")
-    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE} -O2")
-    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/configure --prefix=${CURRENT_PACKAGES_DIR} ${OPTIONS} --with-sysroot=${CURRENT_INSTALLED_DIR}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME configure-${TARGET_TRIPLET}-rel
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-        COMMAND make -j install
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME install-${TARGET_TRIPLET}-rel
-    )
-
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
-    file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -113,36 +90,51 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
             OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
             OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
         )
-        file(GLOB REL_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.lib)
-        file(GLOB DBG_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.lib)       
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(GLOB REL_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.lib)
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(GLOB DBG_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.lib)       
+        endif()
     endif()
 
-    file(GLOB HEADERS
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmp.h
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmpxx.h
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.h
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.h
-    )
-    file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-    file(GLOB REL_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.dll)
-    file(GLOB REL_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.lib)
-
-    file(GLOB DBG_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.dll)
-    file(GLOB DBG_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.lib)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB HEADERS
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmp.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmpxx.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.h
+        )
+        file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
     
-    list(APPEND REL_LIBS  ${REL_LIBS_CXX})
-    list(APPEND DBG_LIBS  ${DBG_LIBS_CXX})
-    
-    file(INSTALL ${REL_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${REL_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(INSTALL ${DBG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${DBG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(GLOB REL_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.dll)
+        file(GLOB REL_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.lib)
+        list(APPEND REL_LIBS  ${REL_LIBS_CXX})
+        
+        file(INSTALL ${REL_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${REL_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     endif()
-
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(GLOB HEADERS
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/gmp.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/gmpxx.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.h
+        )
+        file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+        
+        file(GLOB DBG_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.dll)
+        file(GLOB DBG_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.lib)
+        list(APPEND DBG_LIBS  ${DBG_LIBS_CXX})
+        
+        file(INSTALL ${DBG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(INSTALL ${DBG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+        
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+            file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        endif()
+    endif()
+    
     vcpkg_copy_pdbs()
 
     file(INSTALL ${SOURCE_PATH}/COPYING.lib DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

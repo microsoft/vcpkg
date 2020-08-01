@@ -11,8 +11,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NordicSemiconductor/pc-ble-driver
-    REF v4.1.1
-    SHA512 bb1853993b3f37836a8f7402e5c0452e8423c3a1c6e651cf353025022a32e16c72f06e2266e283c72fa7ddb0da7cf8cecb875a7a7762565599f2908c4858ce8e
+    REF v4.1.2
+    SHA512 625a52151f2c78421e48e90ff60292c6106e8504b55a26c7df716df75e051a40d2ee4a26c57b5daaa370e53a79002fe965aee8a0d8749f7dce380e8e4a617c95
     HEAD_REF master
     PATCHES
         001-arm64-support.patch
@@ -28,12 +28,19 @@ set(ENV{PATH} "$ENV{PATH};${GIT_EXE_DIRPATH}")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DDISABLE_EXAMPLES= -DDISABLE_TESTS= -DNRF_BLE_DRIVER_VERSION=4.1.1 -DCONNECTIVITY_VERSION=4.1.1
+    OPTIONS -DDISABLE_EXAMPLES= -DDISABLE_TESTS= -DNRF_BLE_DRIVER_VERSION=4.1.2 -DCONNECTIVITY_VERSION=4.1.2
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
+
+# Copy hex files into shared folder for package
+foreach(HEX_DIR IN ITEMS "sd_api_v2" "sd_api_v3" "sd_api_v5" "sd_api_v6")
+    set(TARGET_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/hex/${HEX_DIR}")
+    file(MAKE_DIRECTORY ${TARGET_DIRECTORY})
+    file(INSTALL "${SOURCE_PATH}/hex/${HEX_DIR}" DESTINATION ${TARGET_DIRECTORY}/..)
+endforeach()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
