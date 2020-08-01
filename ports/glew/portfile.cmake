@@ -14,7 +14,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/build/cmake
+    SOURCE_PATH "${SOURCE_PATH}/build/cmake"
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
@@ -40,18 +40,18 @@ foreach(FILE ${_targets_cmake_files})
     file(WRITE ${FILE} "${_contents}")
 endforeach()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libglew32.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libglew32.lib ${CURRENT_PACKAGES_DIR}/lib/glew32.lib)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libglew32.lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libglew32.lib" "${CURRENT_PACKAGES_DIR}/lib/glew32.lib")
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/glew32d.lib)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/glew32d.lib")
 endif()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    foreach(FILE ${CURRENT_PACKAGES_DIR}/include/GL/glew.h ${CURRENT_PACKAGES_DIR}/include/GL/wglew.h ${CURRENT_PACKAGES_DIR}/include/GL/glxew.h)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    foreach(FILE "${CURRENT_PACKAGES_DIR}/include/GL/glew.h" "${CURRENT_PACKAGES_DIR}/include/GL/wglew.h" "${CURRENT_PACKAGES_DIR}/include/GL/glxew.h")
         file(READ ${FILE} _contents)
         string(REPLACE "#ifdef GLEW_STATIC" "#if 1" _contents "${_contents}")
         file(WRITE ${FILE} "${_contents}")
@@ -60,9 +60,8 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/glew )
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/glew RENAME copyright)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
