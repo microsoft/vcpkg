@@ -669,12 +669,15 @@ namespace
                 const auto path = fs::u8path(*p_str);
                 const auto status = fs::stdfs::status(path);
                 if (!fs::stdfs::exists(status))
-                    return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + path.u8string(), expected_right_tag};
+                    return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + path.u8string(),
+                            expected_right_tag};
                 if (!fs::stdfs::is_directory(status))
-                    return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not a directory: " + path.u8string(),
+                    return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not a directory: " +
+                                path.u8string(),
                             expected_right_tag};
                 if (!path.is_absolute())
-                    return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not absolute: " + path.u8string(),
+                    return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not absolute: " +
+                                path.u8string(),
                             expected_right_tag};
                 return ExpectedS<fs::path>(path);
             }
