@@ -94,4 +94,9 @@ namespace vcpkg::Commands::FormatManifest
             Checks::exit_success(VCPKG_LINE_INFO);
         }
     }
+
+    void FormatManifestCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        FormatManifest::perform_and_exit(args, paths);
+    }
 }

@@ -927,6 +927,13 @@ namespace vcpkg::Install
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
+    void InstallCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                          const VcpkgPaths& paths,
+                                          Triplet default_triplet) const
+    {
+        Install::perform_and_exit(args, paths, default_triplet);
+    }
+
     SpecSummary::SpecSummary(const PackageSpec& spec, const Dependencies::InstallPlanAction* action)
         : spec(spec), build_result{BuildResult::NULLVALUE, nullptr}, action(action)
     {

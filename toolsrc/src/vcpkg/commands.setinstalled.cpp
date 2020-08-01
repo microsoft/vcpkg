@@ -165,4 +165,11 @@ namespace vcpkg::Commands::SetInstalled
                             dry_run ? DryRun::Yes : DryRun::No,
                             pkgsconfig);
     }
+
+    void SetInstalledCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                               const VcpkgPaths& paths,
+                                               Triplet default_triplet) const
+    {
+        SetInstalled::perform_and_exit(args, paths, default_triplet);
+    }
 }

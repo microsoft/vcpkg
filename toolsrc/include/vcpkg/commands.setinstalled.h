@@ -17,4 +17,11 @@ namespace vcpkg::Commands::SetInstalled
                              DryRun dry_run,
                              const Optional<fs::path>& pkgsconfig_path);
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
+
+    struct SetInstalledCommand : TripletCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const override;
+    };
 }
