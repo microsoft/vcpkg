@@ -743,48 +743,30 @@ namespace vcpkg::Install
 
         if (paths.manifest_mode_enabled())
         {
-            std::error_code ec;
-            const auto path_to_manifest = paths.manifest_root_dir / "vcpkg.json";
-            auto res = Paragraphs::try_load_manifest(paths.get_filesystem(), "user manifest", path_to_manifest, ec);
-
-            if (ec)
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          "Failed to load manifest file (%s): %s\n",
-                                          path_to_manifest.u8string(),
-                                          ec.message());
-            }
-
-            std::vector<FullPackageSpec> specs;
-            if (auto val = res.get())
-            {
-                for (auto& dep : (*val)->core_paragraph->dependencies)
-                {
-                    specs.push_back(FullPackageSpec{
-                        {std::move(dep.name), default_triplet},
-                        std::move(dep.features),
-                    });
-                }
-            }
-            else
-            {
-                print_error_message(res.error());
-                Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-
             Optional<fs::path> pkgsconfig;
             auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
             if (it_pkgsconfig != options.settings.end())
             {
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
+
+            std::vector<FullPackageSpec> specs;
+            specs.emplace_back(PackageSpec{PackageSpec::MANIFEST_NAME, default_triplet});
+            auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
+
+            for (InstallPlanAction& action : install_plan.install_actions)
+            {
+                action.build_options = install_plan_options;
+                action.build_options.use_head_version = Build::UseHeadVersion::NO;
+                action.build_options.editable = Build::Editable::NO;
+            }
+
             Commands::SetInstalled::perform_and_exit_ex(args,
                                                         paths,
                                                         provider,
                                                         *binaryprovider,
                                                         var_provider,
-                                                        specs,
-                                                        install_plan_options,
+                                                        std::move(install_plan),
                                                         dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
                                                         pkgsconfig);
         }

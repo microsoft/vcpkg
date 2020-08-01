@@ -39,21 +39,10 @@ namespace vcpkg::Commands::SetInstalled
                              const PortFileProvider::PathsPortFileProvider& provider,
                              IBinaryProvider& binary_provider,
                              const CMakeVars::CMakeVarProvider& cmake_vars,
-                             const std::vector<FullPackageSpec>& specs,
-                             const Build::BuildPackageOptions& install_plan_options,
+                             Dependencies::ActionPlan action_plan,
                              DryRun dry_run,
                              const Optional<fs::path>& maybe_pkgsconfig)
     {
-        // We have a set of user-requested specs.
-        // We need to know all the specs which are required to fulfill dependencies for those specs.
-        // Therefore, we see what we would install into an empty installed tree, so we can use the existing code.
-        auto action_plan = Dependencies::create_feature_install_plan(provider, cmake_vars, specs, {});
-
-        for (auto&& action : action_plan.install_actions)
-        {
-            action.build_options = install_plan_options;
-        }
-
         cmake_vars.load_tag_vars(action_plan, provider);
         Build::compute_all_abis(paths, action_plan, cmake_vars, {});
 
@@ -155,13 +144,23 @@ namespace vcpkg::Commands::SetInstalled
         {
             pkgsconfig = it_pkgsconfig->second;
         }
+
+        // We have a set of user-requested specs.
+        // We need to know all the specs which are required to fulfill dependencies for those specs.
+        // Therefore, we see what we would install into an empty installed tree, so we can use the existing code.
+        auto action_plan = Dependencies::create_feature_install_plan(provider, *cmake_vars, specs, {});
+
+        for (auto&& action : action_plan.install_actions)
+        {
+            action.build_options = Build::default_build_package_options;
+        }
+
         perform_and_exit_ex(args,
                             paths,
                             provider,
                             *binary_provider,
                             *cmake_vars,
-                            specs,
-                            vcpkg::Build::default_build_package_options,
+                            std::move(action_plan),
                             dry_run ? DryRun::Yes : DryRun::No,
                             pkgsconfig);
     }
