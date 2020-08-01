@@ -11,6 +11,16 @@
     "boost-random",
     "boost-type-traits"
   ],
+  "features": [
+    {
+      "name": "python",
+      "description": "Interacting with python with pybind11 interface",
+      "dependencies": [
+        "boost-endian",
+        "pybind11"
+      ]
+    }
+  ],
   "homepage": "https://dpilger26.github.io/NumCpp",
   "license": "MIT"
 }
