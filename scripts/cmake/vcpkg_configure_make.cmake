@@ -268,6 +268,7 @@ function(vcpkg_configure_make)
         file(CREATE_LINK "${MSYS_ROOT}/usr/bin/sort.exe" "${SCRIPTS}/buildsystems/make_wrapper/sort.exe" COPY_ON_ERROR)
         file(CREATE_LINK "${MSYS_ROOT}/usr/bin/find.exe" "${SCRIPTS}/buildsystems/make_wrapper/find.exe" COPY_ON_ERROR)
         vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+        vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/share/automake-1.16") # Required wrappers are located here (compile ar-lib)
 
         macro(_vcpkg_append_to_configure_environment inoutstring var defaultval)
             # Allows to overwrite settings in custom triplets via the environment
@@ -385,8 +386,8 @@ function(vcpkg_configure_make)
     set(ENV{CPLUS_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${CPLUS_INCLUDE_PATH_BACKUP}")
 
     # Setup global flags -> TODO: Further improve with toolchain file in mind!
-    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
-    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
+    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} -I${_VCPKG_INSTALLED}/include ${VCPKG_C_FLAGS}")
+    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} -I${_VCPKG_INSTALLED}/include ${VCPKG_CXX_FLAGS}")
     set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
     # Flags should be set in the toolchain instead (Setting this up correctly requires a function named vcpkg_determined_cmake_compiler_flags which can also be used to setup CC and CXX etc.)
     if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -395,7 +396,7 @@ function(vcpkg_configure_make)
     else()
         string(APPEND C_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS") # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
         string(APPEND CXX_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
-        string(APPEND LD_FLAGS_GLOBAL " -W1,-VERBOSE,-no-undefined")
+        #string(APPEND LD_FLAGS_GLOBAL " -W1,-VERBOSE,-no-undefined")
         if(VCPKG_TARGET_IS_UWP)
             # Be aware that configure thinks it is crosscompiling due to: 
             # error while loading shared libraries: VCRUNTIME140D_APP.dll: cannot open shared object file: No such file or directory
@@ -406,9 +407,13 @@ function(vcpkg_configure_make)
             set(ENV{_LINK_} "$ENV{_LINK_} /MANIFEST /DYNAMICBASE WindowsApp.lib /WINMD:NO /APPCONTAINER")
         endif()
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            set(ENV{_CL_} "$ENV{_CL_} -MACHINE:x64")
+            set(ENV{_LINK_} "$ENV{_LINK_} -MACHINE:x64")
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            set(ENV{_CL_} "$ENV{_CL_} -MACHINE:x86")
+            set(ENV{_LINK_} "$ENV{_LINK_} -MACHINE:x86")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+            set(ENV{_LINK_} "$ENV{_LINK_} -MACHINE:ARM")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+            set(ENV{_LINK_} "$ENV{_LINK_} -MACHINE:ARM64")
         endif()
     endif()
     
