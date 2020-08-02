@@ -8,6 +8,7 @@
 #include <vcpkg/base/system.process.h>
 
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
 #include <vcpkg/metrics.h>
 
 #if defined(_WIN32)

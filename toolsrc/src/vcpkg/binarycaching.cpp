@@ -663,6 +663,24 @@ namespace
     const ExpectedS<fs::path>& default_cache_path()
     {
         static auto cachepath = System::get_platform_cache_home().then([](fs::path p) -> ExpectedS<fs::path> {
+            auto maybe_cachepath = System::get_environment_variable("VCPKG_DEFAULT_BINARY_CACHE");
+            if (auto p_str = maybe_cachepath.get())
+            {
+                const auto path = fs::u8path(*p_str);
+                const auto status = fs::stdfs::status(path);
+                if (!fs::stdfs::exists(status))
+                    return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + path.u8string(),
+                            expected_right_tag};
+                if (!fs::stdfs::is_directory(status))
+                    return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not a directory: " +
+                                path.u8string(),
+                            expected_right_tag};
+                if (!path.is_absolute())
+                    return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not absolute: " +
+                                path.u8string(),
+                            expected_right_tag};
+                return ExpectedS<fs::path>(path);
+            }
             p /= fs::u8path("vcpkg/archives");
             if (p.is_absolute())
             {
@@ -673,6 +691,10 @@ namespace
                 return {"default path was not absolute: " + p.u8string(), expected_right_tag};
             }
         });
+        if (cachepath.has_value())
+            Debug::print("Default binary cache path is: ", cachepath.get()->u8string(), '\n');
+        else
+            Debug::print("No binary cache path. Reason: ", cachepath.error(), '\n');
         return cachepath;
     }
 
