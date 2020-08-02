@@ -1,4 +1,17 @@
 Source: openjpeg
-Version: 2.3.1-1
+Version: 2.3.1
+Port-Version: 2
 Homepage: https://github.com/uclouvain/openjpeg
 Description: JPEG 2000 image library
+
+Feature: jpwl
+Description: Build optional component jpwl
+
+Feature: mj2
+Description: Build optional component mj2
+
+Feature: jpip
+Description: Build optional component jpip
+
+Feature: jp3d
+Description: Build optional component jp3d
