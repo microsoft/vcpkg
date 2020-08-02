@@ -33,4 +33,9 @@ namespace vcpkg::Commands::X_VSInstances
         Checks::exit_with_message(VCPKG_LINE_INFO, "This command is not supported on non-windows platforms.");
 #endif
     }
+
+    void VSInstancesCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        X_VSInstances::perform_and_exit(args, paths);
+    }
 }

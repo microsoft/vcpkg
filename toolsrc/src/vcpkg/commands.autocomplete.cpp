@@ -178,4 +178,9 @@ namespace vcpkg::Commands::Autocomplete
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void AutocompleteCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Autocomplete::perform_and_exit(args, paths);
+    }
 }

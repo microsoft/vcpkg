@@ -71,4 +71,9 @@ namespace vcpkg::Commands::Cache
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void CacheCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Cache::perform_and_exit(args, paths);
+    }
 }

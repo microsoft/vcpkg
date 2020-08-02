@@ -192,4 +192,11 @@ namespace vcpkg::Commands::Upgrade
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void UpgradeCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                          const VcpkgPaths& paths,
+                                          Triplet default_triplet) const
+    {
+        Upgrade::perform_and_exit(args, paths, default_triplet);
+    }
 }

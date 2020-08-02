@@ -1,8 +1,9 @@
 Source: paraview
-Version: 5.8.0-2
+Version: 5.8.0
+Port-Version: 3
 Homepage: https://www.paraview.org/
 Description: VTK-based Data Analysis and Visualization Application
-Build-Depends: vtk[core,paraview], protobuf, cgns, boost-core, boost-format, boost-algorithm, embree3(linux)
+Build-Depends: vtk[core,paraview], protobuf, cgns, boost-core, boost-format, boost-algorithm
 
 Feature: vtkm
 Description: enables vtkm for the build of paraview
