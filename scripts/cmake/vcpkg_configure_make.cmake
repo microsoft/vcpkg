@@ -237,16 +237,6 @@ function(vcpkg_configure_make)
                 _vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
                 if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we do not need to specify the additional flags if we build nativly. 
                     string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
-                    #if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-                        #string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32")
-                    #elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-                        #string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32")
-                    #elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-                        #string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32 --target=i686-pc-mingw32") # This is probably wrong
-                        #string(APPEND _csc_BUILD_TRIPLET " --target=i686-pc-mingw32") # This is probably wrong
-                    #elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-                        #string(APPEND _csc_BUILD_TRIPLET " --host=arm-pc-mingw32") # This is probably wrong
-                    #endif()
                 endif()
                 if(VCPKG_TARGET_IS_UWP AND NOT _csc_BUILD_TRIPLET MATCHES "--host")
                     # Needs to be different from --build to enable cross builds.
@@ -394,13 +384,15 @@ function(vcpkg_configure_make)
         string(APPEND C_FLAGS_GLOBAL " -fPIC")
         string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
     else()
-        string(APPEND C_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS") # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
+         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
+        string(APPEND C_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
         string(APPEND CXX_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
-        #string(APPEND LD_FLAGS_GLOBAL " -W1,-VERBOSE,-no-undefined")
         if(VCPKG_TARGET_IS_UWP)
             # Be aware that configure thinks it is crosscompiling due to: 
-            # error while loading shared libraries: VCRUNTIME140D_APP.dll: cannot open shared object file: No such file or directory
-            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper is to use the CL and LINK environment variables !!!
+            # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
+            # cannot open shared object file: No such file or directory
+            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper 
+            # is to use the CL and LINK environment variables !!!
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             string(REPLACE "\\" "/" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
             set(ENV{_CL_} "$ENV{_CL_} /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
