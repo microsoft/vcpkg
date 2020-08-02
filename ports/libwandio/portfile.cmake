@@ -1,7 +1,7 @@
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
     set(PATCHES curl.patch)
-    set(OPTIONS )
+    #TODO: Still does not work. Requires proper "signal" support and "unistd"
 else()
     set(PATCHES openssl.patch) # needed if curl is using openssl
 endif()
@@ -25,7 +25,6 @@ vcpkg_configure_make(
     COPY_SOURCE
     OPTIONS 
         "ADD_INCLS=-I${CURRENT_INSTALLED_DIR}/include"
-        ${OPTIONS}
 )
 vcpkg_install_make()
 
