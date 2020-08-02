@@ -18,7 +18,7 @@ endif()
 
 if ("imgui" IN_LIST FEATURES AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # Remove this after add port libigl-imgui
-    message(FATAL_ERROR "Feature imgui does not support static build currentlly")
+    message(FATAL_ERROR "Feature imgui does not support non-static build currently")
 endif()
 
 if ("test" IN_LIST FEATURES AND NOT EXISTS ${SOURCE_PATH}/tests/data)
