@@ -1,9 +1,5 @@
 set(VERSION 5.8)
 
-if ("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_OSX)
-    mesage(FATAL_ERROR "Feature tools are currently not supported.")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
@@ -65,12 +61,8 @@ if("python" IN_LIST FEATURES)
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
         )
-  
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
-
-string(APPEND VCPKG_C_FLAGS " -DH5_USE_110_API")
-string(APPEND VCPKG_CXX_FLAGS " -DH5_USE_110_API")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -82,15 +74,15 @@ vcpkg_configure_cmake(
         -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
         -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION:BOOL=OFF
         -DPARAVIEW_USE_QTHELP:BOOL=OFF
-        
+
         #A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
-    
+
         # Workarounds for CMake issues
         -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
         -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
         ${ADDITIONAL_OPTIONS}
-       
+
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
 )
 if(CMAKE_HOST_UNIX)
@@ -120,7 +112,7 @@ set(TOOLS   paraview
             smTestDriver
             vtkProcessXML
             vtkWrapClientServer)
-            
+
 foreach(tool ${TOOLS})
     # Remove debug tools
     set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})

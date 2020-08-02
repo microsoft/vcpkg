@@ -21,4 +21,9 @@ namespace vcpkg::Commands::Fetch
         System::print2(tool_path.u8string(), '\n');
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void FetchCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Fetch::perform_and_exit(args, paths);
+    }
 }
