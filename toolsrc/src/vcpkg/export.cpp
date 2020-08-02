@@ -659,4 +659,11 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void ExportCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                         const VcpkgPaths& paths,
+                                         Triplet default_triplet) const
+    {
+        Export::perform_and_exit(args, paths, default_triplet);
+    }
 }

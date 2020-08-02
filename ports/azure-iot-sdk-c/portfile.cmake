@@ -25,6 +25,7 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    use-prov-client hsm_type_symm_key
     use-prov-client use_prov_client
 )
 
@@ -40,7 +41,6 @@ vcpkg_configure_cmake(
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
-        -Dhsm_type_symm_key=${use_prov_client}
 )
 
 vcpkg_install_cmake()

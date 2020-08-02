@@ -627,7 +627,19 @@ namespace vcpkg::Dependencies
         }
         pgraph.install(feature_specs);
 
-        return pgraph.serialize(options);
+        auto res = pgraph.serialize(options);
+
+        const auto is_manifest_spec = [](const auto& action) {
+            return action.spec.name() == PackageSpec::MANIFEST_NAME;
+        };
+
+        Util::erase_remove_if(res.install_actions, is_manifest_spec);
+
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !std::any_of(res.remove_actions.begin(), res.remove_actions.end(), is_manifest_spec),
+                           "\"default\" should never be installed");
+
+        return res;
     }
 
     void PackageGraph::mark_for_reinstall(const PackageSpec& first_remove_spec,
