@@ -34,6 +34,7 @@
 ## - NUGET
 ## - SCONS
 ## - YASM
+## - SWIG
 ##
 ## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 ##
@@ -345,6 +346,12 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://github.com/aria2/aria2/releases/download/release-1.34.0/aria2-1.34.0-win-32bit-build1.zip")
     set(ARCHIVE "aria2-1.34.0-win-32bit-build1.zip")
     set(HASH 2a5480d503ac6e8203040c7e516a3395028520da05d0ebf3a2d56d5d24ba5d17630e8f318dd4e3cc2094cc4668b90108fb58e8b986b1ffebd429995058063c27)
+  elseif(VAR MATCHES "SWIG")
+    set(PROGNAME swig)
+    set(PATHS ${DOWNLOADS}/tools/swig/swigwin-4.0.2)
+    set(URL "https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download")
+    set(ARCHIVE "swigwin-4.0.2.zip")
+    set(HASH b8f105f9b9db6acc1f6e3741990915b533cd1bc206eb9645fd6836457fd30789b7229d2e3219d8e35f2390605ade0fbca493ae162ec3b4bc4e428b57155db03d)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
