@@ -1,3 +1,11 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    set(PATCHES curl.patch)
+    set(OPTIONS )
+else()
+    set(PATCHES openssl.patch) # needed if curl is using openssl
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wanduow/wandio
@@ -6,12 +14,18 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES configure.lib.patch # This is how configure.ac files with dependencies get fixed. 
             configure.patch
+            ${PATCHES}
 )
+
+set(ENV{ADD_INCLS} "-I${CURRENT_INSTALLED_DIR}/include")
 
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     COPY_SOURCE
+    OPTIONS 
+        "ADD_INCLS=-I${CURRENT_INSTALLED_DIR}/include"
+        ${OPTIONS}
 )
 vcpkg_install_make()
 
