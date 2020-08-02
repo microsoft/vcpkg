@@ -190,4 +190,9 @@ namespace vcpkg::Commands::PortsDiff
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void PortsDiffCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        PortsDiff::perform_and_exit(args, paths);
+    }
 }

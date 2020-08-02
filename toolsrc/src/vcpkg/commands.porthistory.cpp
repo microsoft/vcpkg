@@ -94,4 +94,9 @@ namespace vcpkg::Commands::PortHistory
         }
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void PortHistoryCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        PortHistory::perform_and_exit(args, paths);
+    }
 }
