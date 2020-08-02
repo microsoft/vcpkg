@@ -1149,6 +1149,7 @@ networkdirect-sdk:x64-linux=fail
 networkdirect-sdk:x64-osx=fail
 networkdirect-sdk:x64-uwp=fail
 networkdirect-sdk:x86-windows=fail
+ngspice:x64-windows-static=fail
 nmslib:arm64-windows=fail
 nmslib:arm-uwp=fail
 nmslib:x64-uwp=fail
