@@ -134,9 +134,12 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     endif()
 
     string(REPLACE "\\ " "##" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
+    string(REPLACE "${CURRENT_INSTALLED_DIR}" "CURRENT_INSTALLED_DIR" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
+    string(REPLACE "${CURRENT_INSTALLED_DIR_LOWER}" "CURRENT_INSTALLED_DIR" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
     string(REGEX REPLACE "(^[\t ]*|[\t ]+)-L" ";" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
     debug_message("-L LIST TRANSFORMATION:'${_pkg_lib_paths_output}'")
     string(REGEX REPLACE "^[\t ]*;" "" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
+    string(REPLACE "CURRENT_INSTALLED_DIR" "${CURRENT_INSTALLED_DIR}" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
     string(REPLACE "##" "\\ " _pkg_lib_paths_output "${_pkg_lib_paths_output}")
 
     list(REMOVE_DUPLICATES _pkg_lib_paths_output) # We don't care about linker order and repeats
@@ -148,12 +151,17 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     endforeach()
     debug_message("LIBS AFTER -L<path> REMOVAL:'${_pkg_libs_output}'")
 
+    string(TOLOWER "${CURRENT_INSTALLED_DIR}" CURRENT_INSTALLED_DIR_LOWER)
+    
     #Make the remaining libs a proper CMake List
     string(REPLACE "\\ " "##" _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
+    string(REPLACE "${CURRENT_INSTALLED_DIR}" "CURRENT_INSTALLED_DIR" _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
+    string(REPLACE "${CURRENT_INSTALLED_DIR_LOWER}" "CURRENT_INSTALLED_DIR" _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
     string(REGEX REPLACE "(^[\t ]*|[\t ]+)-l" ";-l" _pkg_libs_output "${_pkg_libs_output}")
     string(REGEX REPLACE "[\t ]*(-pthreads?)" ";\\1" _pkg_libs_output "${_pkg_libs_output}") # handle pthread without -l here (makes a lot of problems otherwise)
     string(REGEX REPLACE "^[\t ]*;[\t ]*" "" _pkg_libs_output "${_pkg_libs_output}")
     string(REPLACE "##" "\\ " _pkg_libs_output "${_pkg_libs_output}")
+    string(REPLACE "CURRENT_INSTALLED_DIR" "${CURRENT_INSTALLED_DIR}" _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
 
     #Windows path transformations
     if(CMAKE_HOST_WIN32)
@@ -259,7 +267,17 @@ function(vcpkg_fixup_pkgconfig)
     else()
         set(PKGCONFIG_STATIC --static)
     endif()
-    
+
+    if(VCPKG_SKIP_PKGCONFIG_CHECK)
+        set(_vfpkg_SKIP_CHECK "${VCPKG_SKIP_PKGCONFIG_CHECK}")
+    endif()
+
+    if(CMAKE_HOST_WIN32 AND CURRENT_PACKAGES_DIR MATCHES " ")
+        # Maybe a native pkg-config correctly returns the -L flags. 
+        message(WARNING "vcpkg root path contains spaces. Skipping pkg-config checks!")
+        set(_vfpkg_SKIP_CHECK ON)
+    endif()
+
     message(STATUS "Fixing pkgconfig")
     if(_vfpkg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
@@ -275,15 +293,15 @@ function(vcpkg_fixup_pkgconfig)
         list(FILTER _vfpkg_DEBUG_FILES INCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
     endif()
 
-    if(NOT PKGCONFIG)
+    if(NOT PKGCONFIG AND NOT _vfpkg_SKIP_CHECK)
         find_program(PKGCONFIG pkg-config PATHS "bin" "/usr/bin" "/usr/local/bin")
         if(NOT PKGCONFIG AND CMAKE_HOST_WIN32)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
             find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
         endif()
         debug_message("Using pkg-config from: ${PKGCONFIG}")
-        if(NOT PKGCONFIG AND NOT _vfpkg_SKIP_CHECK)
-            message(WARNING "Unable to find pkg-config to validate *.pc files. Skipping checkes!")
+        if(NOT PKGCONFIG)
+            message(WARNING "Unable to find pkg-config to validate *.pc files. Skipping checks!")
             set(_vfpkg_SKIP_CHECK TRUE)
         endif()
     endif()
