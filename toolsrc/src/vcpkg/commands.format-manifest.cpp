@@ -5,7 +5,7 @@
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.format-manifest.h>
 #include <vcpkg/portfileprovider.h>
 
 namespace vcpkg::Commands::FormatManifest
@@ -93,5 +93,10 @@ namespace vcpkg::Commands::FormatManifest
             System::print2("Succeeded in formatting the manifest files.\n");
             Checks::exit_success(VCPKG_LINE_INFO);
         }
+    }
+
+    void FormatManifestCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        FormatManifest::perform_and_exit(args, paths);
     }
 }

@@ -9,11 +9,13 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
-    REF 8083067c1835147de5d82015347d95c710e36bc0
-    SHA512 0690aaff0bea74c38598894939396cab8077b84bda166deb4790fba87566114bc5267660e8efc4de9babeb1b8bddf73530e1a1dbbc63c7e24b14bc012b033bc8
+    REF 8ff1a4046716244fc4b3a3e44e5b6abeda755b0a #v1.12.7
+    SHA512 60c66118e35904cbabe881301f3e59026483507341450956f99b67220e1aaebd7035caac69c3e06cf45f08163254264da111b93d0c6b3402c3fba64858786b66
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
+        fix-dependency.patch
+        fix-findimgui.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
