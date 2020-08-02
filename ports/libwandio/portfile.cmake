@@ -17,14 +17,10 @@ vcpkg_from_github(
             ${PATCHES}
 )
 
-set(ENV{ADD_INCLS} "-I${CURRENT_INSTALLED_DIR}/include")
-
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     COPY_SOURCE
-    OPTIONS 
-        "ADD_INCLS=-I${CURRENT_INSTALLED_DIR}/include"
 )
 vcpkg_install_make()
 
