@@ -197,7 +197,7 @@ namespace vcpkg::Commands::FormatManifest
         auto& fs = paths.get_filesystem();
         bool has_error = false;
 
-        const bool format_all = Util::Sets::contains(parsed_args.switches, OPTION_CONVERT_CONTROL);
+        const bool format_all = Util::Sets::contains(parsed_args.switches, OPTION_ALL);
         const bool convert_control = Util::Sets::contains(parsed_args.switches, OPTION_CONVERT_CONTROL);
 
         if (!format_all && convert_control)
