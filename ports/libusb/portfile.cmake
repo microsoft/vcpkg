@@ -39,7 +39,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
       endif()
   endif()
 
-  # The README file in the archive is a symlink to README.md and cause issues with the windows MSBUILD process
+  # The README file in the archive is a symlink to README.md 
+  # which causes issues with the windows MSBUILD process
   file(REMOVE ${SOURCE_PATH}/README)
 
   vcpkg_install_msbuild(
