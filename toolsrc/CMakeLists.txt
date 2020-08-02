@@ -27,6 +27,30 @@ if(DEFINE_DISABLE_METRICS)
     set(VCPKG_DISABLE_METRICS ${DEFINE_DISABLE_METRICS} CACHE BOOL "Option for disabling metrics" FORCE)
 endif()
 
+# =============
+# === Files ===
+# =============
+
+file(GLOB VCPKGLIB_NON_PCH_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
+file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
+file(GLOB VCPKGLIB_NON_PCH_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h)
+file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h)
+
+set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
+
+set(VCPKGMETRICSUPLOADER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkgmetricsuploader.cpp)
+
+file(GLOB VCPKG_TEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
+file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
+
+file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
+
+include(cmake/vcxproj/generate.cmake)
+
+# ========================
+# === System detection ===
+# ========================
+
 vcpkg_detect_compiler()
 vcpkg_detect_standard_library()
 vcpkg_detect_std_filesystem()
@@ -38,17 +62,12 @@ if(MSVC)
     string(REGEX REPLACE "[-/]W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()
 
-
 # ===============
 # === Targets ===
 # ===============
 
 # === Target: vcpkglib ===
 
-file(GLOB VCPKGLIB_NON_PCH_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
-file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
-file(GLOB VCPKGLIB_NON_PCH_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h)
-file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h)
 add_library(vcpkglib
     ${VCPKGLIB_BASE_SOURCES}
     ${VCPKGLIB_NON_PCH_SOURCES}
@@ -96,14 +115,12 @@ endif()
 
 # === Target: vcpkg ===
 
-set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
 add_executable(vcpkg ${VCPKG_SOURCES})
 target_link_libraries(vcpkg PRIVATE vcpkglib)
 vcpkg_target_add_warning_options(vcpkg)
 
 # === Target: vcpkgmetricsuploader ===
 
-set(VCPKGMETRICSUPLOADER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkgmetricsuploader.cpp)
 if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
     add_executable(vcpkgmetricsuploader WIN32 ${VCPKGMETRICSUPLOADER_SOURCES})
     target_link_libraries(vcpkgmetricsuploader PRIVATE vcpkglib)
@@ -112,8 +129,6 @@ endif()
 
 # === Target: vcpkg-test ===
 
-file(GLOB VCPKG_TEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
-file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
 if (BUILD_TESTING)
     enable_testing()
 
@@ -132,7 +147,6 @@ endif()
 
 # === Target: vcpkg-fuzz ===
 
-file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
 if(VCPKG_BUILD_FUZZING)
     add_executable(vcpkg-fuzz ${VCPKG_FUZZ_SOURCES})
     target_link_libraries(vcpkg-fuzz PRIVATE vcpkglib)
