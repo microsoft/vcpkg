@@ -1,5 +1,5 @@
 Source: libxlsxwriter
-Version: 0.9.4
+Version: 0.9.5
 Description: Libxlsxwriter is a C library that can be used to write text, numbers, formulas and hyperlinks to multiple worksheets in an Excel 2007+ XLSX file.
 Homepage: https://github.com/jmcnamara/libxlsxwriter
 Build-Depends: zlib
