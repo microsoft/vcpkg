@@ -101,6 +101,8 @@ if(MSVC)
     set_source_files_properties(src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
     target_sources(vcpkglib PRIVATE src/pch.cpp)
     target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
+else()
+    target_compile_options(vcpkglib PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIRECTORY}/include/pch.h")
 endif()
 
 if (MINGW)
