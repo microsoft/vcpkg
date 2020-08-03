@@ -1,7 +1,8 @@
 {
   "name": "pngpp",
   "version-string": "0.2.10",
-  "homepage": "http://www.nongnu.org/pngpp/",
   "description": "A C++ wrapper for libpng library.",
-  "dependencies": ["libpng"]
+  "dependencies": [
+    "libpng"
+  ]
 }
