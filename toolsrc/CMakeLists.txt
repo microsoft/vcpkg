@@ -31,9 +31,9 @@ endif()
 # === Files ===
 # =============
 
-file(GLOB VCPKGLIB_NON_PCH_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
+file(GLOB VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
-file(GLOB VCPKGLIB_NON_PCH_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h)
+file(GLOB VCPKGLIB_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h)
 file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h)
 
 set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
@@ -70,9 +70,9 @@ endif()
 
 add_library(vcpkglib
     ${VCPKGLIB_BASE_SOURCES}
-    ${VCPKGLIB_NON_PCH_SOURCES}
+    ${VCPKGLIB_SOURCES}
     ${VCPKGLIB_BASE_INCLUDES}
-    ${VCPKGLIB_NON_PCH_INCLUDES})
+    ${VCPKGLIB_INCLUDES})
 target_include_directories(vcpkglib PUBLIC include)
 
 vcpkg_target_add_warning_options(vcpkglib)
