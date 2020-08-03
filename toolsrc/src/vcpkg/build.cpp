@@ -16,6 +16,7 @@
 #include <vcpkg/build.h>
 #include <vcpkg/buildenvironment.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -186,6 +187,13 @@ namespace vcpkg::Build
                           args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
                           Build::null_build_logs_recorder(),
                           paths);
+    }
+
+    void BuildCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                        const VcpkgPaths& paths,
+                                        Triplet default_triplet) const
+    {
+        Build::Command::perform_and_exit(args, paths, default_triplet);
     }
 }
 
