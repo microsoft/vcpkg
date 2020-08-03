@@ -1,5 +1,3 @@
-
-
 #if defined(_WIN32)
 
 #include <vcpkg/base/sortedvector.h>
