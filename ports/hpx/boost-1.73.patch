@@ -1,0 +1,13 @@
+diff --git a/src/runtime/agas/addressing_service.cpp b/src/runtime/agas/addressing_service.cpp
+index f30760c..7c2785e 100644
+--- a/src/runtime/agas/addressing_service.cpp
++++ b/src/runtime/agas/addressing_service.cpp
+@@ -2356,6 +2356,8 @@ void addressing_service::register_counter_types()
+         util::bind_front(
+             &addressing_service::get_cache_erase_entry_time, this));
+ 
++    using util::placeholders::_1;
++    using util::placeholders::_2;
+     performance_counters::generic_counter_type_data const counter_types[] =
+     {
+         { "/agas/count/cache/entries", performance_counters::counter_raw,

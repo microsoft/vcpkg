@@ -1,6 +1,4 @@
-include(vcpkg_common_functions)
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
   message(WARNING
     "You will need to also install https://raw.githubusercontent.com/unicode-org/cldr/master/common/supplemental/windowsZones.xml into your install location.\n"
     "See https://howardhinnant.github.io/date/tz.html"
@@ -14,14 +12,13 @@ vcpkg_from_github(
   SHA512 9dad181f8544bfcff8c42200552b6673e537c53b34fbad11663d6435d4e5fd5a3ac6cabbb76312481c9784b237151d9ccd161bb1b8c54c563fa75073896f3cff
   HEAD_REF master
   PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/0002-fix-cmake-3.14.patch"
+    0001-fix-uwp.patch
+    0002-fix-cmake-3.14.patch
 )
-
-set(DATE_USE_SYSTEM_TZ_DB 1)
-if("remote-api" IN_LIST FEATURES)
-  set(DATE_USE_SYSTEM_TZ_DB 0)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+    remote-api USE_SYSTEM_TZ_DB
+)
 
 if (WIN32)
   vcpkg_configure_cmake(

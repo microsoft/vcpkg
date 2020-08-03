@@ -1,13 +1,15 @@
 #include "pch.h"
 
-#include <vcpkg/commands.h>
-#include <vcpkg/metrics.h>
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/json.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
+
+#include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
+#include <vcpkg/metrics.h>
 
 #if defined(_WIN32)
 #pragma comment(lib, "version")
@@ -29,88 +31,85 @@ namespace vcpkg::Metrics
         return "";
     }
 
-    static std::string generate_random_UUID()
+    struct append_hexits
     {
-        int part_sizes[] = {8, 4, 4, 4, 12};
-        char uuid[37];
-        memset(uuid, 0, sizeof(uuid));
-        int num;
-        srand(static_cast<int>(time(nullptr)));
-        int index = 0;
-        for (int part = 0; part < 5; part++)
+        constexpr static char hex[17] = "0123456789abcdef";
+        void operator()(std::string& res, std::uint8_t bits) const
         {
-            if (part > 0)
-            {
-                uuid[index] = '-';
-                index++;
-            }
+            res.push_back(hex[(bits >> 4) & 0x0F]);
+            res.push_back(hex[(bits >> 0) & 0x0F]);
+        }
+    };
 
-            // Generating UUID format version 4
-            // http://en.wikipedia.org/wiki/Universally_unique_identifier
-            for (int i = 0; i < part_sizes[part]; i++, index++)
-            {
-                if (part == 2 && i == 0)
-                {
-                    num = 4;
-                }
-                else if (part == 4 && i == 0)
-                {
-                    num = (rand() % 4) + 8;
-                }
-                else
-                {
-                    num = rand() % 16;
-                }
+    // note: this ignores the bits of these numbers that would be where format and variant go
+    static std::string uuid_of_integers(uint64_t top, uint64_t bottom)
+    {
+        // uuid_field_size in bytes, not hex characters
+        constexpr size_t uuid_top_field_size[] = {4, 2, 2};
+        constexpr size_t uuid_bottom_field_size[] = {2, 6};
 
-                if (num < 10)
-                {
-                    uuid[index] = static_cast<char>('0' + num);
-                }
-                else
-                {
-                    uuid[index] = static_cast<char>('a' + (num - 10));
-                }
+        // uuid_field_size in hex characters, not bytes
+        constexpr size_t uuid_size = 8 + 1 + 4 + 1 + 4 + 1 + 4 + 1 + 12;
+
+        constexpr static append_hexits write_byte;
+
+        // set the version bits to 4
+        top &= 0xFFFF'FFFF'FFFF'0FFFULL;
+        top |= 0x0000'0000'0000'4000ULL;
+
+        // set the variant bits to 2 (variant one)
+        bottom &= 0x3FFF'FFFF'FFFF'FFFFULL;
+        bottom |= 0x8000'0000'0000'0000ULL;
+
+        std::string res;
+        res.reserve(uuid_size);
+
+        bool first = true;
+        size_t start_byte = 0;
+        for (auto field_size : uuid_top_field_size)
+        {
+            if (!first)
+            {
+                res.push_back('-');
             }
+            first = false;
+            for (size_t i = start_byte; i < start_byte + field_size; ++i)
+            {
+                auto shift = 64 - (i + 1) * 8;
+                write_byte(res, (top >> shift) & 0xFF);
+            }
+            start_byte += field_size;
         }
 
-        return uuid;
+        start_byte = 0;
+        for (auto field_size : uuid_bottom_field_size)
+        {
+            res.push_back('-');
+            for (size_t i = start_byte; i < start_byte + field_size; ++i)
+            {
+                auto shift = 64 - (i + 1) * 8;
+                write_byte(res, (bottom >> shift) & 0xFF);
+            }
+            start_byte += field_size;
+        }
+
+        return res;
+    }
+
+    // UUID format version 4, variant 1
+    // http://en.wikipedia.org/wiki/Universally_unique_identifier
+    // [0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}
+    static std::string generate_random_UUID()
+    {
+        std::random_device rnd{};
+        std::uniform_int_distribution<std::uint64_t> uid{};
+        return uuid_of_integers(uid(rnd), uid(rnd));
     }
 
     static const std::string& get_session_id()
     {
         static const std::string ID = generate_random_UUID();
         return ID;
-    }
-
-    static std::string to_json_string(const std::string& str)
-    {
-        std::string encoded = "\"";
-        for (auto&& ch : str)
-        {
-            if (ch == '\\')
-            {
-                encoded.append("\\\\");
-            }
-            else if (ch == '"')
-            {
-                encoded.append("\\\"");
-            }
-            else if (ch < 0x20 || static_cast<unsigned char>(ch) >= 0x80)
-            {
-                // Note: this treats incoming Strings as Latin-1
-                static constexpr const char HEX[16] = {
-                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-                encoded.append("\\u00");
-                encoded.push_back(HEX[ch / 16]);
-                encoded.push_back(HEX[ch % 16]);
-            }
-            else
-            {
-                encoded.push_back(ch);
-            }
-        }
-        encoded.push_back('"');
-        return encoded;
     }
 
     static std::string get_os_version_string()
@@ -150,32 +149,33 @@ namespace vcpkg::Metrics
         std::string user_id = generate_random_UUID();
         std::string user_timestamp;
         std::string timestamp = get_current_date_time();
-        std::string properties;
-        std::string measurements;
 
-        std::vector<std::string> buildtime_names;
-        std::vector<std::string> buildtime_times;
+        Json::Object properties;
+        Json::Object measurements;
+
+        Json::Array buildtime_names;
+        Json::Array buildtime_times;
+
+        Json::Object feature_flags;
 
         void track_property(const std::string& name, const std::string& value)
         {
-            if (properties.size() != 0) properties.push_back(',');
-            properties.append(to_json_string(name));
-            properties.push_back(':');
-            properties.append(to_json_string(value));
+            properties.insert_or_replace(name, Json::Value::string(value));
         }
 
         void track_metric(const std::string& name, double value)
         {
-            if (measurements.size() != 0) measurements.push_back(',');
-            measurements.append(to_json_string(name));
-            measurements.push_back(':');
-            measurements.append(std::to_string(value));
+            measurements.insert_or_replace(name, Json::Value::number(value));
         }
 
         void track_buildtime(const std::string& name, double value)
         {
-            buildtime_names.push_back(name);
-            buildtime_times.push_back(std::to_string(value));
+            buildtime_names.push_back(Json::Value::string(name));
+            buildtime_times.push_back(Json::Value::number(value));
+        }
+        void track_feature(const std::string& name, bool value)
+        {
+            feature_flags.insert(name, Json::Value::boolean(value));
         }
 
         std::string format_event_data_template() const
@@ -183,76 +183,107 @@ namespace vcpkg::Metrics
             auto props_plus_buildtimes = properties;
             if (buildtime_names.size() > 0)
             {
-                if (props_plus_buildtimes.size() > 0) props_plus_buildtimes.push_back(',');
-                props_plus_buildtimes.append(Strings::format(R"("buildnames_1": [%s], "buildtimes": [%s])",
-                                                             Strings::join(",", buildtime_names, to_json_string),
-                                                             Strings::join(",", buildtime_times)));
+                props_plus_buildtimes.insert("buildnames_1", buildtime_names);
+                props_plus_buildtimes.insert("buildtimes", buildtime_times);
             }
 
-            const std::string& session_id = get_session_id();
-            return Strings::format(R"([{
-    "ver": 1,
-    "name": "Microsoft.ApplicationInsights.Event",
-    "time": "%s",
-    "sampleRate": 100.000000,
-    "seq": "0:0",
-    "iKey": "b4e88960-4393-4dd9-ab8e-97e8fe6d7603",
-    "flags": 0.000000,
-    "tags": {
-        "ai.device.os": "Other",
-        "ai.device.osVersion": "%s-%s",
-        "ai.session.id": "%s",
-        "ai.user.id": "%s",
-        "ai.user.accountAcquisitionDate": "%s"
-    },
-    "data": {
-        "baseType": "EventData",
-        "baseData": {
-            "ver": 2,
-            "name": "commandline_test7",
-            "properties": { %s },
-            "measurements": { %s }
-        }
-    }
-}])",
-                                   timestamp,
+            Json::Array arr = Json::Array();
+            Json::Object& obj = arr.push_back(Json::Object());
+
+            obj.insert("ver", Json::Value::integer(1));
+            obj.insert("name", Json::Value::string("Microsoft.ApplicationInsights.Event"));
+            obj.insert("time", Json::Value::string(timestamp));
+            obj.insert("sampleRate", Json::Value::number(100.0));
+            obj.insert("seq", Json::Value::string("0:0"));
+            obj.insert("iKey", Json::Value::string("b4e88960-4393-4dd9-ab8e-97e8fe6d7603"));
+            obj.insert("flags", Json::Value::integer(0));
+
+            {
+                Json::Object& tags = obj.insert("tags", Json::Object());
+
+                tags.insert("ai.device.os", Json::Value::string("Other"));
+
+                const char* os_name =
 #if defined(_WIN32)
-                                   "Windows",
+                    "Windows";
 #elif defined(__APPLE__)
-                                   "OSX",
+                    "OSX";
 #elif defined(__linux__)
-                                   "Linux",
+                    "Linux";
 #elif defined(__FreeBSD__)
-                                   "FreeBSD",
+                    "FreeBSD";
 #elif defined(__unix__)
-                                   "Unix",
+                    "Unix";
 #else
-                                   "Other",
+                    "Other";
 #endif
-                                   get_os_version_string(),
-                                   session_id,
-                                   user_id,
-                                   user_timestamp,
-                                   props_plus_buildtimes,
-                                   measurements);
+
+                tags.insert("ai.device.osVersion",
+                            Json::Value::string(Strings::format("%s-%s", os_name, get_os_version_string())));
+                tags.insert("ai.session.id", Json::Value::string(get_session_id()));
+                tags.insert("ai.user.id", Json::Value::string(user_id));
+                tags.insert("ai.user.accountAcquisitionDate", Json::Value::string(user_timestamp));
+            }
+
+            {
+                Json::Object& data = obj.insert("data", Json::Object());
+
+                data.insert("baseType", Json::Value::string("EventData"));
+                Json::Object& base_data = data.insert("baseData", Json::Object());
+
+                base_data.insert("ver", Json::Value::integer(2));
+                base_data.insert("name", Json::Value::string("commandline_test7"));
+                base_data.insert("properties", std::move(props_plus_buildtimes));
+                base_data.insert("measurements", measurements);
+                base_data.insert("feature-flags", feature_flags);
+            }
+
+            return Json::stringify(arr, vcpkg::Json::JsonStyle());
         }
     };
 
     static MetricMessage g_metricmessage;
     static bool g_should_send_metrics =
-#if defined(NDEBUG) && (DISABLE_METRICS == 0)
+#if defined(NDEBUG) && (VCPKG_DISABLE_METRICS == 0)
         true
 #else
         false
 #endif
         ;
     static bool g_should_print_metrics = false;
+    static bool g_metrics_disabled =
+#if VCPKG_DISABLE_METRICS
+        true
+#else
+        false
+#endif
+        ;
 
-    bool get_compiled_metrics_enabled() { return DISABLE_METRICS == 0; }
+    // for child vcpkg processes, we also want to disable metrics
+    static void set_vcpkg_disable_metrics_environment_variable(bool disabled)
+    {
+#if defined(_WIN32)
+        SetEnvironmentVariableW(L"VCPKG_DISABLE_METRICS", disabled ? L"1" : nullptr);
+#else
+        if (disabled)
+        {
+            setenv("VCPKG_DISABLE_METRICS", "1", true);
+        }
+        else
+        {
+            unsetenv("VCPKG_DISABLE_METRICS");
+        }
+#endif
+    }
 
     std::string get_MAC_user()
     {
 #if defined(_WIN32)
+        if (!g_metrics.lock()->metrics_enabled())
+        {
+            return "{}";
+        }
+
         auto getmac = System::cmd_execute_and_capture_output("getmac");
 
         if (getmac.exit_code != 0) return "0";
@@ -293,20 +324,64 @@ namespace vcpkg::Metrics
 
     void Metrics::set_print_metrics(bool should_print_metrics) { g_should_print_metrics = should_print_metrics; }
 
-    void Metrics::track_metric(const std::string& name, double value) { g_metricmessage.track_metric(name, value); }
+    void Metrics::set_disabled(bool disabled)
+    {
+        set_vcpkg_disable_metrics_environment_variable(disabled);
+        g_metrics_disabled = disabled;
+    }
+
+    bool Metrics::metrics_enabled()
+    {
+#if VCPKG_DISABLE_METRICS
+        return false;
+#else
+        return !g_metrics_disabled;
+#endif
+    }
+
+    void Metrics::track_metric(const std::string& name, double value)
+    {
+        if (!metrics_enabled())
+        {
+            return;
+        }
+        g_metricmessage.track_metric(name, value);
+    }
 
     void Metrics::track_buildtime(const std::string& name, double value)
     {
+        if (!metrics_enabled())
+        {
+            return;
+        }
         g_metricmessage.track_buildtime(name, value);
     }
 
     void Metrics::track_property(const std::string& name, const std::string& value)
     {
+        if (!metrics_enabled())
+        {
+            return;
+        }
         g_metricmessage.track_property(name, value);
+    }
+
+    void Metrics::track_feature(const std::string& name, bool value)
+    {
+        if (!metrics_enabled())
+        {
+            return;
+        }
+        g_metricmessage.track_feature(name, value);
     }
 
     void Metrics::upload(const std::string& payload)
     {
+        if (!metrics_enabled())
+        {
+            return;
+        }
+
 #if !defined(_WIN32)
         Util::unused(payload);
 #else
@@ -315,9 +390,15 @@ namespace vcpkg::Metrics
 
         const HINTERNET session = WinHttpOpen(
             L"vcpkg/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
-        if (session) connect = WinHttpConnect(session, L"dc.services.visualstudio.com", INTERNET_DEFAULT_HTTPS_PORT, 0);
+
+        unsigned long secure_protocols = WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2;
+        if (session && WinHttpSetOption(session, WINHTTP_OPTION_SECURE_PROTOCOLS, &secure_protocols, sizeof(DWORD)))
+        {
+            connect = WinHttpConnect(session, L"dc.services.visualstudio.com", INTERNET_DEFAULT_HTTPS_PORT, 0);
+        }
 
         if (connect)
+        {
             request = WinHttpOpenRequest(connect,
                                          L"POST",
                                          L"/v2/track",
@@ -325,6 +406,7 @@ namespace vcpkg::Metrics
                                          WINHTTP_NO_REFERER,
                                          WINHTTP_DEFAULT_ACCEPT_TYPES,
                                          WINHTTP_FLAG_SECURE);
+        }
 
         if (request)
         {
@@ -393,8 +475,13 @@ namespace vcpkg::Metrics
 #endif
     }
 
-    void Metrics::flush()
+    void Metrics::flush(Files::Filesystem& fs)
     {
+        if (!metrics_enabled())
+        {
+            return;
+        }
+
         const std::string payload = g_metricmessage.format_event_data_template();
         if (g_should_print_metrics) std::cerr << payload << "\n";
         if (!g_should_send_metrics) return;
@@ -407,8 +494,6 @@ namespace vcpkg::Metrics
         const fs::path temp_folder_path_exe =
             temp_folder_path / Strings::format("vcpkgmetricsuploader-%s.exe", Commands::Version::base_version());
 #endif
-
-        auto& fs = Files::get_real_filesystem();
 
 #if defined(_WIN32)
 
@@ -448,7 +533,7 @@ namespace vcpkg::Metrics
 #else
         auto escaped_path = Strings::escape_string(vcpkg_metrics_txt_path.u8string(), '\'', '\\');
         const std::string cmd_line = Strings::format(
-            R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --data '@%s' >/dev/null 2>&1; rm '%s') &)",
+            R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --tlsv1.2 --data '@%s' >/dev/null 2>&1; rm '%s') &)",
             escaped_path,
             escaped_path);
         System::cmd_execute_clean(cmd_line);

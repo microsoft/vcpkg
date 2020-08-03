@@ -5,16 +5,16 @@
 
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.env.h>
 #include <vcpkg/help.h>
 
 namespace vcpkg::Commands::Env
 {
-    static constexpr StringLiteral OPTION_BIN = "--bin";
-    static constexpr StringLiteral OPTION_INCLUDE = "--include";
-    static constexpr StringLiteral OPTION_DEBUG_BIN = "--debug-bin";
-    static constexpr StringLiteral OPTION_TOOLS = "--tools";
-    static constexpr StringLiteral OPTION_PYTHON = "--python";
+    static constexpr StringLiteral OPTION_BIN = "bin";
+    static constexpr StringLiteral OPTION_INCLUDE = "include";
+    static constexpr StringLiteral OPTION_DEBUG_BIN = "debug-bin";
+    static constexpr StringLiteral OPTION_TOOLS = "tools";
+    static constexpr StringLiteral OPTION_PYTHON = "python";
 
     static constexpr std::array<CommandSwitch, 5> SWITCHES = {{
         {OPTION_BIN, "Add installed bin/ to PATH"},
@@ -25,7 +25,7 @@ namespace vcpkg::Commands::Env
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("env <optional command> --triplet x64-windows"),
+        create_example_string("env <optional command> --triplet x64-windows"),
         0,
         1,
         {SWITCHES, {}},
@@ -39,7 +39,7 @@ namespace vcpkg::Commands::Env
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 
@@ -98,5 +98,12 @@ namespace vcpkg::Commands::Env
         System::exit_interactive_subprocess();
 #endif
         Checks::exit_with_code(VCPKG_LINE_INFO, rc);
+    }
+
+    void EnvCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const
+    {
+        Env::perform_and_exit(args, paths, default_triplet);
     }
 }

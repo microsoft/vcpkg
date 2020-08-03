@@ -1,8 +1,7 @@
 #include <catch2/catch.hpp>
-#include <vcpkg-test/mockcmakevarprovider.h>
-#include <vcpkg-test/util.h>
 
 #include <vcpkg/base/graphs.h>
+
 #include <vcpkg/dependencies.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
@@ -11,6 +10,9 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
+
+#include <vcpkg-test/mockcmakevarprovider.h>
+#include <vcpkg-test/util.h>
 
 using namespace vcpkg;
 
@@ -37,7 +39,7 @@ static void features_check(Dependencies::InstallPlanAction& plan,
     for (auto&& feature_name : expected_features)
     {
         // TODO: see if this can be simplified
-        if (feature_name == "core" || feature_name == "")
+        if (feature_name == "core" || feature_name.empty())
         {
             REQUIRE((Util::find(feature_list, "core") != feature_list.end() ||
                      Util::find(feature_list, "") != feature_list.end()));
@@ -369,9 +371,8 @@ TEST_CASE ("basic feature test 7", "[plan]")
     remove_plan_check(plan.remove_actions.at(0), "x");
     remove_plan_check(plan.remove_actions.at(1), "b");
 
-    // TODO: order here may change but A < X, and B anywhere
-    features_check(plan.install_actions.at(0), "b", {"core", "b1"});
-    features_check(plan.install_actions.at(1), "a", {"core"});
+    features_check(plan.install_actions.at(0), "a", {"core"});
+    features_check(plan.install_actions.at(1), "b", {"core", "b1"});
     features_check(plan.install_actions.at(2), "x", {"core"});
 }
 
@@ -622,6 +623,34 @@ TEST_CASE ("do not install default features of existing dependency", "[plan]")
     // Expect "a" to get installed, but not require rebuilding "b"
     REQUIRE(install_plan.size() == 1);
     features_check(install_plan.install_actions.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
+}
+
+TEST_CASE ("install default features of existing dependency", "[plan]")
+{
+    // Add a port "a" which depends on the default features of "b"
+    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    spec_map.emplace("a", "b");
+    // "b" has a default feature
+    spec_map.emplace("b", "", {{"b1", ""}}, {"b1"});
+
+    std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+    // "b[core]" is already installed
+    status_paragraphs.push_back(make_status_pgh("b", "", "b1"));
+    status_paragraphs.back()->package.spec = PackageSpec("b", Triplet::X64_WINDOWS);
+
+    // Install "a" (without explicit feature specification)
+    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    PortFileProvider::MapPortFileProvider map_port{spec_map.map};
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = Dependencies::create_feature_install_plan(map_port,
+                                                                  var_provider,
+                                                                  {install_specs.value_or_exit(VCPKG_LINE_INFO)},
+                                                                  StatusParagraphs(std::move(status_paragraphs)));
+
+    // Expect "b" to be rebuilt
+    REQUIRE(install_plan.install_actions.size() == 2);
+    features_check(install_plan.install_actions.at(0), "b", {"core", "b1"}, Triplet::X64_WINDOWS);
 }
 
 TEST_CASE ("install default features of dependency test 3", "[plan]")

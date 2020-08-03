@@ -35,12 +35,12 @@ namespace vcpkg
         /// <param name="triplet">Triplet</param>
         /// <param name="feature">Feature name</param>
         /// <returns>Iterator for found spec</returns>
-        iterator find(const std::string& name, Triplet triplet, const std::string& feature = "");
-        const_iterator find(const std::string& name, Triplet triplet, const std::string& feature = "") const;
+        iterator find(const std::string& name, Triplet triplet, const std::string& feature = {});
+        const_iterator find(const std::string& name, Triplet triplet, const std::string& feature = {}) const;
 
         std::vector<std::unique_ptr<StatusParagraph>*> find_all(const std::string& name, Triplet triplet);
 
-        Optional<InstalledPackageView> find_all_installed(const PackageSpec& spec) const;
+        Optional<InstalledPackageView> get_installed_package_view(const PackageSpec& spec) const;
 
         /// <summary>Find the StatusParagraph for given spec if installed</summary>
         /// <param name="spec">Package specification to find the status for</param>

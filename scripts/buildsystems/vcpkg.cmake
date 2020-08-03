@@ -1,9 +1,51 @@
 # Mark variables as used so cmake doesn't complain about them
 mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 
-# VCPKG toolchain options. 
+# VCPKG toolchain options.
 option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging purposes." OFF)
 mark_as_advanced(VCPKG_VERBOSE)
+
+function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
+    set(_vcpkg_get_dir_candidate ${DIRECTORY})
+    while(IS_DIRECTORY ${_vcpkg_get_dir_candidate} AND NOT DEFINED _vcpkg_get_dir_out)
+        if(EXISTS ${_vcpkg_get_dir_candidate}/${FILENAME})
+            set(_vcpkg_get_dir_out ${_vcpkg_get_dir_candidate})
+        else()
+            get_filename_component(_vcpkg_get_dir_candidate_tmp ${_vcpkg_get_dir_candidate} DIRECTORY)
+            if(_vcpkg_get_dir_candidate STREQUAL _vcpkg_get_dir_candidate_tmp) # we've reached the root
+                set(_vcpkg_get_dir_out "${OUT}-NOTFOUND")
+            else()
+                set(_vcpkg_get_dir_candidate ${_vcpkg_get_dir_candidate_tmp})
+            endif()
+        endif()
+    endwhile()
+
+    set(${OUT} ${_vcpkg_get_dir_out} CACHE INTERNAL "_vcpkg_get_directory_name_of_file_above: ${OUT}")
+endfunction()
+
+_vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
+if(NOT DEFINED VCPKG_MANIFEST_MODE)
+    if(_VCPKG_MANIFEST_DIR)
+        set(VCPKG_MANIFEST_MODE ON)
+    else()
+        set(VCPKG_MANIFEST_MODE OFF)
+    endif()
+elseif(VCPKG_MANIFEST_MODE AND NOT _VCPKG_MANIFEST_DIR)
+    message(FATAL_ERROR
+        "vcpkg manifest mode was enabled, but we couldn't find a manifest file (vcpkg.json) "
+        "in any directories above ${CMAKE_CURRENT_SOURCE_DIR}. Please add a manifest, or "
+        "disable manifests by turning off VCPKG_MANIFEST_MODE.")
+endif()
+
+if(VCPKG_MANIFEST_MODE)
+    option(VCPKG_MANIFEST_INSTALL
+[[
+Install the dependencies listed in your manifest:
+    If this is off, you will have to manually install your dependencies.
+    See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md for more info.
+]]
+        ON)
+endif()
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
@@ -28,7 +70,7 @@ endif()
 
 #If CMake does not have a mapping for MinSizeRel and RelWithDebInfo in imported targets
 #it will map those configuration to the first valid configuration in CMAKE_CONFIGURATION_TYPES or the targets IMPORTED_CONFIGURATIONS.
-#In most cases this is the debug configuration which is wrong. 
+#In most cases this is the debug configuration which is wrong.
 if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
     set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;")
     if(VCPKG_VERBOSE)
@@ -76,8 +118,41 @@ else()
             set(_VCPKG_TARGET_TRIPLET_ARCH arm64)
         elseif(_VCPKG_CL MATCHES "bin/cl.exe$" OR _VCPKG_CL MATCHES "x86/cl.exe$")
             set(_VCPKG_TARGET_TRIPLET_ARCH x86)
-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_SYSTEM_NAME AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+            list(LENGTH CMAKE_OSX_ARCHITECTURES arch_count)
+            if(arch_count EQUAL 0)
+                message(WARNING "Unable to determine target architecture. "
+                                "Consider providing a value for the CMAKE_OSX_ARCHITECTURES cache variable. "
+                                "Continuing without vcpkg.")
+                set(VCPKG_TOOLCHAIN ON)
+                return()
+            else()
+                if(arch_count GREATER 1)
+                    message(WARNING "Detected more than one target architecture. Using the first one.")
+                endif()
+                list(GET CMAKE_OSX_ARCHITECTURES 0 target_arch)
+                if(target_arch STREQUAL arm64)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH arm64)
+                elseif(target_arch STREQUAL arm64s)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH arm64s)
+                elseif(target_arch STREQUAL armv7s)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH armv7s)
+                elseif(target_arch STREQUAL armv7)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH arm)
+                elseif(target_arch STREQUAL x86_64)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH x64)
+                elseif(target_arch STREQUAL i386)
+                    set(_VCPKG_TARGET_TRIPLET_ARCH x86)
+                else()
+                    message(WARNING "Unable to determine target architecture, continuing without vcpkg.")
+                    set(VCPKG_TOOLCHAIN ON)
+                    return()
+                endif()
+            endif()
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64")
             set(_VCPKG_TARGET_TRIPLET_ARCH x64)
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
+            set(_VCPKG_TARGET_TRIPLET_ARCH s390x)
         else()
             if( _CMAKE_IN_TRY_COMPILE )
                 message(STATUS "Unable to determine target architecture, continuing without vcpkg.")
@@ -96,6 +171,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HO
     set(_VCPKG_TARGET_TRIPLET_PLAT linux)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin"))
     set(_VCPKG_TARGET_TRIPLET_PLAT osx)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    set(_VCPKG_TARGET_TRIPLET_PLAT ios)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows"))
     set(_VCPKG_TARGET_TRIPLET_PLAT windows)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
@@ -111,17 +188,28 @@ if(NOT DEFINED _VCPKG_ROOT_DIR)
     while(IS_DIRECTORY ${_VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
         get_filename_component(_VCPKG_ROOT_DIR_TEMP ${_VCPKG_ROOT_DIR_CANDIDATE} DIRECTORY)
         if (_VCPKG_ROOT_DIR_TEMP STREQUAL _VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
-            message(FATAL_ERROR "Could not find .vcpkg-root")
         else()
             SET(_VCPKG_ROOT_DIR_CANDIDATE ${_VCPKG_ROOT_DIR_TEMP})
         endif()
     endwhile()
     set(_VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR_CANDIDATE} CACHE INTERNAL "Vcpkg root directory")
 endif()
-set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
 
-if(NOT EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" AND NOT _CMAKE_IN_TRY_COMPILE AND NOT VCPKG_SUPPRESS_INSTALLED_LIBRARIES_WARNING)
-    message(WARNING "There are no libraries installed for the Vcpkg triplet ${VCPKG_TARGET_TRIPLET}.")
+_vcpkg_get_directory_name_of_file_above(_VCPKG_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR} ".vcpkg-root")
+if(NOT _VCPKG_ROOT_DIR)
+    message(FATAL_ERROR "Could not find .vcpkg-root")
+endif()
+
+if (NOT DEFINED _VCPKG_INSTALLED_DIR)
+    if(_VCPKG_MANIFEST_DIR)
+        set(_VCPKG_INSTALLED_DIR ${CMAKE_BINARY_DIR}/vcpkg_installed)
+    else()
+        set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
+    endif()
+
+    set(_VCPKG_INSTALLED_DIR ${_VCPKG_INSTALLED_DIR}
+        CACHE PATH
+        "The directory which contains the installed libraries for each triplet")
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
@@ -145,6 +233,18 @@ else() #Release build: Put Release paths before Debug paths. Debug Paths are req
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug
     )
 endif()
+
+# If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
+# and ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug are searched, it is not sufficient to just add them to CMAKE_FIND_ROOT_PATH,
+# as CMAKE_FIND_ROOT_PATH specify "one or more directories to be prepended to all other search directories", so to make sure that
+# the libraries are searched as they are, it is necessary to add "/" to the CMAKE_PREFIX_PATH
+if(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE STREQUAL "ONLY" OR
+   CMAKE_FIND_ROOT_PATH_MODE_LIBRARY STREQUAL "ONLY" OR
+   CMAKE_FIND_ROOT_PATH_MODE_PACKAGE STREQUAL "ONLY")
+   list(APPEND CMAKE_PREFIX_PATH "/")
+endif()
+
+set(VCPKG_CMAKE_FIND_ROOT_PATH ${CMAKE_FIND_ROOT_PATH})
 
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
 set(_PROGRAMFILESX86 "PROGRAMFILES(x86)")
@@ -180,6 +280,63 @@ foreach(_VCPKG_TOOLS_DIR ${_VCPKG_TOOLS_DIRS})
         list(APPEND CMAKE_PROGRAM_PATH ${_VCPKG_TOOLS_DIR})
     endif()
 endforeach()
+
+
+# CMAKE_EXECUTABLE_SUFFIX is not yet defined
+if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    set(_VCPKG_EXECUTABLE "${_VCPKG_ROOT_DIR}/vcpkg.exe")
+    set(_VCPKG_BOOTSTRAP_SCRIPT "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg.bat")
+else()
+    set(_VCPKG_EXECUTABLE "${_VCPKG_ROOT_DIR}/vcpkg")
+    set(_VCPKG_BOOTSTRAP_SCRIPT "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg.sh")
+endif()
+
+if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
+    if(NOT EXISTS "${_VCPKG_EXECUTABLE}")
+        message(STATUS "Bootstrapping vcpkg before install")
+
+        execute_process(
+            COMMAND "${_VCPKG_BOOTSTRAP_SCRIPT}"
+            RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
+
+        if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
+            message(FATAL_ERROR "Bootstrapping vcpkg before install - failed")
+        endif()
+
+        message(STATUS "Bootstrapping vcpkg before install - done")
+    endif()
+
+    message(STATUS "Running vcpkg install")
+
+    set(_VCPKG_MANIFEST_FEATURES)
+    foreach(feature ${VCPKG_MANIFEST_FEATURES})
+        list(APPEND _VCPKG_MANIFEST_FEATURES "--x-feature=${feature}")
+    endforeach()
+
+    if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
+        set(_VCPKG_MANIFEST_NO_DEFAULT_FEATURES "--x-no-default-features")
+    endif()
+
+    execute_process(
+        COMMAND "${_VCPKG_EXECUTABLE}" install
+            --triplet "${VCPKG_TARGET_TRIPLET}"
+            --vcpkg-root "${_VCPKG_ROOT_DIR}"
+            "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
+            "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+            ${_VCPKG_MANIFEST_FEATURES}
+            ${_VCPKG_MANIFEST_NO_DEFAULT_FEATURES}
+        RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
+
+    if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
+        message(FATAL_ERROR "Running vcpkg install - failed")
+    endif()
+
+    message(STATUS "Running vcpkg install - done")
+
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+        "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
+        "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
+endif()
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 function(add_executable name)
@@ -235,7 +392,15 @@ if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
     set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
 endif()
 macro(${VCPKG_OVERRIDE_FIND_PACKAGE_NAME} name)
+    # Workaround to set the ROOT_PATH until upstream CMake stops overriding
+    # the ROOT_PATH at apple OS initialization phase.
+    # See https://gitlab.kitware.com/cmake/cmake/merge_requests/3273
+    if(CMAKE_SYSTEM_NAME STREQUAL iOS)
+        set(BACKUP_CMAKE_FIND_ROOT_PATH ${CMAKE_FIND_ROOT_PATH})
+        list(APPEND CMAKE_FIND_ROOT_PATH ${VCPKG_CMAKE_FIND_ROOT_PATH})
+    endif()
     string(TOLOWER "${name}" _vcpkg_lowercase_name)
+
     if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${_vcpkg_lowercase_name}/vcpkg-cmake-wrapper.cmake")
         set(ARGS "${ARGV}")
         include(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${_vcpkg_lowercase_name}/vcpkg-cmake-wrapper.cmake)
@@ -246,7 +411,11 @@ macro(${VCPKG_OVERRIDE_FIND_PACKAGE_NAME} name)
         unset(Boost_USE_STATIC_RUNTIME)
         set(Boost_NO_BOOST_CMAKE ON)
         unset(Boost_USE_STATIC_RUNTIME CACHE)
-        set(Boost_COMPILER "-vc140")
+        if("${CMAKE_VS_PLATFORM_TOOLSET}" STREQUAL "v120")
+            set(Boost_COMPILER "-vc120")
+        else()
+            set(Boost_COMPILER "-vc140")
+        endif()
         _find_package(${ARGV})
     elseif("${name}" STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
         function(_vcpkg_find_in_list)
@@ -285,6 +454,9 @@ macro(${VCPKG_OVERRIDE_FIND_PACKAGE_NAME} name)
     else()
         _find_package(${ARGV})
     endif()
+    if(CMAKE_SYSTEM_NAME STREQUAL iOS)
+        set(CMAKE_FIND_ROOT_PATH "${BACKUP_CMAKE_FIND_ROOT_PATH}")
+    endif()
 endmacro()
 
 set(VCPKG_TOOLCHAIN ON)
@@ -301,13 +473,15 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         file(TO_CMAKE_PATH "${_VCPKG_ROOT_DIR}" _root_dir)
         file(WRITE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/vcpkg.config.cmake"
             "set(VCPKG_TARGET_TRIPLET \"${VCPKG_TARGET_TRIPLET}\" CACHE STRING \"\")\n"
+            "set(VCPKG_TARGET_ARCHITECTURE \"${VCPKG_TARGET_ARCHITECTURE}\" CACHE STRING \"\")\n"
             "set(VCPKG_APPLOCAL_DEPS \"${VCPKG_APPLOCAL_DEPS}\" CACHE STRING \"\")\n"
             "set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE \"${_chainload_file}\" CACHE STRING \"\")\n"
             "set(_VCPKG_ROOT_DIR \"${_root_dir}\" CACHE STRING \"\")\n"
         )
     else()
-        list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES 
+        list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
             VCPKG_TARGET_TRIPLET
+            VCPKG_TARGET_ARCHITECTURE
             VCPKG_APPLOCAL_DEPS
             VCPKG_CHAINLOAD_TOOLCHAIN_FILE
             _VCPKG_ROOT_DIR

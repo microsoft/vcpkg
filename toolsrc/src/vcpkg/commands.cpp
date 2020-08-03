@@ -1,10 +1,32 @@
 #include "pch.h"
 
-#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/build.h>
+#include <vcpkg/commands.autocomplete.h>
+#include <vcpkg/commands.buildexternal.h>
+#include <vcpkg/commands.cache.h>
+#include <vcpkg/commands.ci.h>
+#include <vcpkg/commands.ciclean.h>
+#include <vcpkg/commands.contact.h>
+#include <vcpkg/commands.create.h>
+#include <vcpkg/commands.dependinfo.h>
+#include <vcpkg/commands.edit.h>
+#include <vcpkg/commands.env.h>
+#include <vcpkg/commands.fetch.h>
+#include <vcpkg/commands.format-manifest.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.hash.h>
+#include <vcpkg/commands.integrate.h>
+#include <vcpkg/commands.list.h>
+#include <vcpkg/commands.owns.h>
+#include <vcpkg/commands.porthistory.h>
+#include <vcpkg/commands.portsdiff.h>
+#include <vcpkg/commands.search.h>
+#include <vcpkg/commands.setinstalled.h>
+#include <vcpkg/commands.upgrade.h>
+#include <vcpkg/commands.version.h>
+#include <vcpkg/commands.xvsinstances.h>
 #include <vcpkg/export.h>
 #include <vcpkg/help.h>
 #include <vcpkg/install.h>
@@ -13,103 +35,85 @@
 
 namespace vcpkg::Commands
 {
-    Span<const PackageNameAndFunction<CommandTypeA>> get_available_commands_type_a()
+    Span<const PackageNameAndFunction<const BasicCommand*>> get_available_basic_commands()
     {
-        static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
-            {"install", &Install::perform_and_exit},
-            {"ci", &CI::perform_and_exit},
-            {"remove", &Remove::perform_and_exit},
-            {"upgrade", &Upgrade::perform_and_exit},
-            {"build", &Build::Command::perform_and_exit},
-            {"env", &Env::perform_and_exit},
-            {"build-external", &BuildExternal::perform_and_exit},
-            {"export", &Export::perform_and_exit},
-            {"depend-info", &DependInfo::perform_and_exit},
+        static const Version::VersionCommand version{};
+        static const Contact::ContactCommand contact{};
+        static std::vector<PackageNameAndFunction<const BasicCommand*>> t = {
+            {"version", &version},
+            {"contact", &contact},
         };
         return t;
     }
 
-    Span<const PackageNameAndFunction<CommandTypeB>> get_available_commands_type_b()
+    Span<const PackageNameAndFunction<const PathsCommand*>> get_available_paths_commands()
     {
-        static std::vector<PackageNameAndFunction<CommandTypeB>> t = {
-            {"/?", &Help::perform_and_exit},
-            {"help", &Help::perform_and_exit},
-            {"search", &Search::perform_and_exit},
-            {"list", &List::perform_and_exit},
-            {"integrate", &Integrate::perform_and_exit},
-            {"owns", &Owns::perform_and_exit},
-            {"update", &Update::perform_and_exit},
-            {"edit", &Edit::perform_and_exit},
-            {"create", &Create::perform_and_exit},
-            {"import", &Import::perform_and_exit},
-            {"cache", &Cache::perform_and_exit},
-            {"portsdiff", &PortsDiff::perform_and_exit},
-            {"autocomplete", &Autocomplete::perform_and_exit},
-            {"hash", &Hash::perform_and_exit},
-            {"fetch", &Fetch::perform_and_exit},
-            {"x-history", &PortHistory::perform_and_exit},
-            {"x-vsinstances", &X_VSInstances::perform_and_exit},
+        static const Help::HelpCommand help{};
+        static const Search::SearchCommand search{};
+        static const List::ListCommand list{};
+        static const Integrate::IntegrateCommand integrate{};
+        static const Owns::OwnsCommand owns{};
+        static const Update::UpdateCommand update{};
+        static const Edit::EditCommand edit{};
+        static const Create::CreateCommand create{};
+        static const Cache::CacheCommand cache{};
+        static const PortsDiff::PortsDiffCommand portsdiff{};
+        static const Autocomplete::AutocompleteCommand autocomplete{};
+        static const Hash::HashCommand hash{};
+        static const Fetch::FetchCommand fetch{};
+        static const CIClean::CICleanCommand ciclean{};
+        static const PortHistory::PortHistoryCommand porthistory{};
+        static const X_VSInstances::VSInstancesCommand vsinstances{};
+        static const FormatManifest::FormatManifestCommand format_manifest{};
+
+        static std::vector<PackageNameAndFunction<const PathsCommand*>> t = {
+            {"/?", &help},
+            {"help", &help},
+            {"search", &search},
+            {"list", &list},
+            {"integrate", &integrate},
+            {"owns", &owns},
+            {"update", &update},
+            {"edit", &edit},
+            {"create", &create},
+            {"cache", &cache},
+            {"portsdiff", &portsdiff},
+            {"autocomplete", &autocomplete},
+            {"hash", &hash},
+            {"fetch", &fetch},
+            {"x-ci-clean", &ciclean},
+            {"x-history", &porthistory},
+            {"x-vsinstances", &vsinstances},
+            {"x-format-manifest", &format_manifest},
         };
         return t;
     }
 
-    Span<const PackageNameAndFunction<CommandTypeC>> get_available_commands_type_c()
+    Span<const PackageNameAndFunction<const TripletCommand*>> get_available_triplet_commands()
     {
-        static std::vector<PackageNameAndFunction<CommandTypeC>> t = {
-            {"version", &Version::perform_and_exit},
-            {"contact", &Contact::perform_and_exit},
+        static const Install::InstallCommand install{};
+        static const SetInstalled::SetInstalledCommand set_installed{};
+        static const CI::CICommand ci{};
+        static const Remove::RemoveCommand remove{};
+        static const Upgrade::UpgradeCommand upgrade{};
+        static const Build::BuildCommand build{};
+        static const Env::EnvCommand env{};
+        static const BuildExternal::BuildExternalCommand build_external{};
+        static const Export::ExportCommand export_command{};
+        static const DependInfo::DependInfoCommand depend_info{};
+
+        static std::vector<PackageNameAndFunction<const TripletCommand*>> t = {
+            {"install", &install},
+            {"x-set-installed", &set_installed},
+            {"ci", &ci},
+            {"remove", &remove},
+            {"upgrade", &upgrade},
+            {"build", &build},
+            {"env", &env},
+            {"build-external", &build_external},
+            {"export", &export_command},
+            {"depend-info", &depend_info},
         };
         return t;
-    }
-}
-
-namespace vcpkg::Commands::Fetch
-{
-    const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("The argument should be tool name\n%s", Help::create_example_string("fetch cmake")),
-        1,
-        1,
-        {},
-        nullptr,
-    };
-
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
-    {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
-
-        const std::string tool = args.command_arguments[0];
-        const fs::path tool_path = paths.get_tool_exe(tool);
-        System::print2(tool_path.u8string(), '\n');
-        Checks::exit_success(VCPKG_LINE_INFO);
-    }
-}
-
-namespace vcpkg::Commands::Hash
-{
-    const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("The argument should be a file path\n%s",
-                        Help::create_example_string("hash boost_1_62_0.tar.bz2")),
-        1,
-        2,
-        {},
-        nullptr,
-    };
-
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
-    {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
-
-        const fs::path file_to_hash = args.command_arguments[0];
-
-        auto algorithm = vcpkg::Hash::Algorithm::Sha512;
-        if (args.command_arguments.size() == 2)
-        {
-            algorithm = vcpkg::Hash::algorithm_from_string(args.command_arguments[1]).value_or_exit(VCPKG_LINE_INFO);
-        }
-
-        const std::string hash =
-            vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, paths.get_filesystem(), file_to_hash, algorithm);
-        System::print2(hash, '\n');
-        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

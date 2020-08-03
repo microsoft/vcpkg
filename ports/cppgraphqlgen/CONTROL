@@ -1,5 +1,5 @@
 Source: cppgraphqlgen
-Version: 3.2.0
+Version: 3.2.2
 Build-Depends: boost-filesystem (!uwp&!windows), boost-program-options, pegtl, rapidjson
 Description: C++ GraphQL schema service generator
 Homepage: https://github.com/microsoft/cppgraphqlgen

@@ -7,10 +7,10 @@ namespace vcpkg
 {
     struct CStringView
     {
-        constexpr CStringView() noexcept : cstr(nullptr) {}
-        constexpr CStringView(const char* cstr) : cstr(cstr) {}
+        constexpr CStringView() noexcept : cstr(nullptr) { }
+        constexpr CStringView(const char* cstr) : cstr(cstr) { }
         constexpr CStringView(const CStringView&) = default;
-        CStringView(const std::string& str) : cstr(str.c_str()) {}
+        CStringView(const std::string& str) : cstr(str.c_str()) { }
 
         constexpr const char* c_str() const { return cstr; }
 

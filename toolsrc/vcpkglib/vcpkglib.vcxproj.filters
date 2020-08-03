@@ -48,6 +48,9 @@
     <ClCompile Include="..\src\vcpkg\commands.ci.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.ciclean.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.contact.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
@@ -66,10 +69,13 @@
     <ClCompile Include="..\src\vcpkg\commands.env.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\commands.exportifw.cpp">
+    <ClCompile Include="..\src\vcpkg\commands.fetch.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\commands.import.cpp">
+    <ClCompile Include="..\src\vcpkg\commands.format-manifest.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.hash.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.integrate.cpp">
@@ -87,6 +93,9 @@
     <ClCompile Include="..\src\vcpkg\commands.search.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.setinstalled.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.version.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
@@ -97,6 +106,9 @@
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\export.chocolatey.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\export.ifw.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\globalstate.cpp">
@@ -111,7 +123,7 @@
     <ClCompile Include="..\src\vcpkg\install.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\logicexpression.cpp">
+    <ClCompile Include="..\src\vcpkg\platform-expression.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\metrics.cpp">
@@ -124,9 +136,6 @@
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\paragraphs.cpp">
-      <Filter>Source Files\vcpkg</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkg\parse.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\postbuildlint.buildtype.cpp">
@@ -183,6 +192,9 @@
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\parse.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\base\strings.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
@@ -233,6 +245,12 @@
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\binarycaching.cpp">
       <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\json.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\unicode.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,6 +317,78 @@
     <ClInclude Include="..\include\vcpkg\commands.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.autocomplete.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.buildexternal.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.cache.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.ci.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.ciclean.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.contact.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.create.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.dependinfo.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.edit.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.env.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.fetch.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.format-manifest.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.hash.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.integrate.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.interface.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.list.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.owns.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.porthistory.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.portsdiff.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.search.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.setinstalled.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.upgrade.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.version.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\commands.xvsinstances.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\vcpkg\dependencies.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
@@ -329,7 +419,7 @@
     <ClInclude Include="..\include\vcpkg\paragraphs.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg\parse.h">
+    <ClInclude Include="..\include\vcpkg\base\parse.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\postbuildlint.h">
@@ -413,6 +503,9 @@
     <ClInclude Include="..\include\vcpkg\base\view.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\pragmas.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\vcpkg\base\zstringview.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
@@ -422,7 +515,7 @@
     <ClInclude Include="..\include\vcpkg\export.chocolatey.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg\logicexpression.h">
+    <ClInclude Include="..\include\vcpkg\platform-expression.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\paragraphparser.h">
@@ -431,14 +524,17 @@
     <ClInclude Include="..\include\vcpkg\portfileprovider.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg\pragmas.h">
-      <Filter>Header Files\vcpkg</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\vcpkg\textrowcol.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\binarycaching.h">
       <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\json.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\unicode.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

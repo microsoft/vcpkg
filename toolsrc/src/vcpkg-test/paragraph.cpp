@@ -1,32 +1,37 @@
 #include <catch2/catch.hpp>
-#include <vcpkg-test/util.h>
 
 #include <vcpkg/base/strings.h>
 
 #include <vcpkg/paragraphs.h>
 
+#include <vcpkg-test/util.h>
+
 namespace Strings = vcpkg::Strings;
 using vcpkg::Parse::Paragraph;
 
-auto test_parse_control_file(const std::vector<std::unordered_map<std::string, std::string>>& v)
+namespace
 {
-    std::vector<Paragraph> pghs;
-    for (auto&& p : v)
+    auto test_parse_control_file(const std::vector<std::unordered_map<std::string, std::string>>& v)
     {
-        pghs.emplace_back();
-        for (auto&& kv : p)
-            pghs.back().emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
+        std::vector<Paragraph> pghs;
+        for (auto&& p : v)
+        {
+            pghs.emplace_back();
+            for (auto&& kv : p)
+                pghs.back().emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
+        }
+        return vcpkg::SourceControlFile::parse_control_file("", std::move(pghs));
     }
-    return vcpkg::SourceControlFile::parse_control_file("", std::move(pghs));
-}
 
-auto test_make_binary_paragraph(const std::unordered_map<std::string, std::string>& v)
-{
-    Paragraph pgh;
-    for (auto&& kv : v)
-        pgh.emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
+    auto test_make_binary_paragraph(const std::unordered_map<std::string, std::string>& v)
+    {
+        Paragraph pgh;
+        for (auto&& kv : v)
+            pgh.emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
 
-    return vcpkg::BinaryParagraph(std::move(pgh));
+        return vcpkg::BinaryParagraph(std::move(pgh));
+    }
+
 }
 
 TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
@@ -41,9 +46,9 @@ TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
 
     REQUIRE(pgh.core_paragraph->name == "zlib");
     REQUIRE(pgh.core_paragraph->version == "1.2.8");
-    REQUIRE(pgh.core_paragraph->maintainer == "");
-    REQUIRE(pgh.core_paragraph->description == "");
-    REQUIRE(pgh.core_paragraph->depends.size() == 0);
+    REQUIRE(pgh.core_paragraph->maintainers.empty());
+    REQUIRE(pgh.core_paragraph->description.empty());
+    REQUIRE(pgh.core_paragraph->dependencies.size() == 0);
 }
 
 TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
@@ -61,15 +66,17 @@ TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
 
     REQUIRE(pgh.core_paragraph->name == "s");
     REQUIRE(pgh.core_paragraph->version == "v");
-    REQUIRE(pgh.core_paragraph->maintainer == "m");
-    REQUIRE(pgh.core_paragraph->description == "d");
-    REQUIRE(pgh.core_paragraph->depends.size() == 1);
-    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "bd");
+    REQUIRE(pgh.core_paragraph->maintainers.size() == 1);
+    REQUIRE(pgh.core_paragraph->maintainers[0] == "m");
+    REQUIRE(pgh.core_paragraph->description.size() == 1);
+    REQUIRE(pgh.core_paragraph->description[0] == "d");
+    REQUIRE(pgh.core_paragraph->dependencies.size() == 1);
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "bd");
     REQUIRE(pgh.core_paragraph->default_features.size() == 1);
     REQUIRE(pgh.core_paragraph->default_features[0] == "df");
 }
 
-TEST_CASE ("SourceParagraph two depends", "[paragraph]")
+TEST_CASE ("SourceParagraph two dependencies", "[paragraph]")
 {
     auto m_pgh = test_parse_control_file({{
         {"Source", "zlib"},
@@ -79,12 +86,13 @@ TEST_CASE ("SourceParagraph two depends", "[paragraph]")
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
-    REQUIRE(pgh.core_paragraph->depends.size() == 2);
-    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "z");
-    REQUIRE(pgh.core_paragraph->depends[1].depend.name == "openssl");
+    REQUIRE(pgh.core_paragraph->dependencies.size() == 2);
+    // should be ordered
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "openssl");
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "z");
 }
 
-TEST_CASE ("SourceParagraph three depends", "[paragraph]")
+TEST_CASE ("SourceParagraph three dependencies", "[paragraph]")
 {
     auto m_pgh = test_parse_control_file({{
         {"Source", "zlib"},
@@ -94,13 +102,14 @@ TEST_CASE ("SourceParagraph three depends", "[paragraph]")
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
-    REQUIRE(pgh.core_paragraph->depends.size() == 3);
-    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "z");
-    REQUIRE(pgh.core_paragraph->depends[1].depend.name == "openssl");
-    REQUIRE(pgh.core_paragraph->depends[2].depend.name == "xyz");
+    REQUIRE(pgh.core_paragraph->dependencies.size() == 3);
+    // should be ordered
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "openssl");
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "xyz");
+    REQUIRE(pgh.core_paragraph->dependencies[2].name == "z");
 }
 
-TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
+TEST_CASE ("SourceParagraph construct qualified dependencies", "[paragraph]")
 {
     auto m_pgh = test_parse_control_file({{
         {"Source", "zlib"},
@@ -112,13 +121,13 @@ TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
 
     REQUIRE(pgh.core_paragraph->name == "zlib");
     REQUIRE(pgh.core_paragraph->version == "1.2.8");
-    REQUIRE(pgh.core_paragraph->maintainer == "");
-    REQUIRE(pgh.core_paragraph->description == "");
-    REQUIRE(pgh.core_paragraph->depends.size() == 2);
-    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "liba");
-    REQUIRE(pgh.core_paragraph->depends[0].qualifier == "windows");
-    REQUIRE(pgh.core_paragraph->depends[1].depend.name == "libb");
-    REQUIRE(pgh.core_paragraph->depends[1].qualifier == "uwp");
+    REQUIRE(pgh.core_paragraph->maintainers.empty());
+    REQUIRE(pgh.core_paragraph->description.empty());
+    REQUIRE(pgh.core_paragraph->dependencies.size() == 2);
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "liba");
+    REQUIRE(pgh.core_paragraph->dependencies[0].platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", ""}}));
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "libb");
+    REQUIRE(pgh.core_paragraph->dependencies[1].platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore"}}));
 }
 
 TEST_CASE ("SourceParagraph default features", "[paragraph]")
@@ -146,10 +155,10 @@ TEST_CASE ("BinaryParagraph construct minimum", "[paragraph]")
 
     REQUIRE(pgh.spec.name() == "zlib");
     REQUIRE(pgh.version == "1.2.8");
-    REQUIRE(pgh.maintainer == "");
-    REQUIRE(pgh.description == "");
+    REQUIRE(pgh.maintainers.empty());
+    REQUIRE(pgh.description.empty());
     REQUIRE(pgh.spec.triplet().canonical_name() == "x86-windows");
-    REQUIRE(pgh.depends.size() == 0);
+    REQUIRE(pgh.dependencies.size() == 0);
 }
 
 TEST_CASE ("BinaryParagraph construct maximum", "[paragraph]")
@@ -166,13 +175,15 @@ TEST_CASE ("BinaryParagraph construct maximum", "[paragraph]")
 
     REQUIRE(pgh.spec.name() == "s");
     REQUIRE(pgh.version == "v");
-    REQUIRE(pgh.maintainer == "m");
-    REQUIRE(pgh.description == "d");
-    REQUIRE(pgh.depends.size() == 1);
-    REQUIRE(pgh.depends[0] == "bd");
+    REQUIRE(pgh.maintainers.size() == 1);
+    REQUIRE(pgh.maintainers[0] == "m");
+    REQUIRE(pgh.description.size() == 1);
+    REQUIRE(pgh.description[0] == "d");
+    REQUIRE(pgh.dependencies.size() == 1);
+    REQUIRE(pgh.dependencies[0] == "bd");
 }
 
-TEST_CASE ("BinaryParagraph three depends", "[paragraph]")
+TEST_CASE ("BinaryParagraph three dependencies", "[paragraph]")
 {
     auto pgh = test_make_binary_paragraph({
         {"Package", "zlib"},
@@ -182,10 +193,10 @@ TEST_CASE ("BinaryParagraph three depends", "[paragraph]")
         {"Depends", "a, b, c"},
     });
 
-    REQUIRE(pgh.depends.size() == 3);
-    REQUIRE(pgh.depends[0] == "a");
-    REQUIRE(pgh.depends[1] == "b");
-    REQUIRE(pgh.depends[2] == "c");
+    REQUIRE(pgh.dependencies.size() == 3);
+    REQUIRE(pgh.dependencies[0] == "a");
+    REQUIRE(pgh.dependencies[1] == "b");
+    REQUIRE(pgh.dependencies[2] == "c");
 }
 
 TEST_CASE ("BinaryParagraph abi", "[paragraph]")
@@ -198,7 +209,7 @@ TEST_CASE ("BinaryParagraph abi", "[paragraph]")
         {"Abi", "abcd123"},
     });
 
-    REQUIRE(pgh.depends.size() == 0);
+    REQUIRE(pgh.dependencies.size() == 0);
     REQUIRE(pgh.abi == "abcd123");
 }
 
@@ -212,7 +223,7 @@ TEST_CASE ("BinaryParagraph default features", "[paragraph]")
         {"Default-Features", "a1"},
     });
 
-    REQUIRE(pgh.depends.size() == 0);
+    REQUIRE(pgh.dependencies.size() == 0);
     REQUIRE(pgh.default_features.size() == 1);
     REQUIRE(pgh.default_features[0] == "a1");
 }
@@ -296,8 +307,8 @@ TEST_CASE ("parse paragraphs empty fields", "[paragraph]")
 
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0].size() == 2);
-    REQUIRE(pghs[0]["f1"].first == "");
-    REQUIRE(pghs[0]["f2"].first == "");
+    REQUIRE(pghs[0]["f1"].first.empty());
+    REQUIRE(pghs[0]["f2"].first.empty());
     REQUIRE(pghs[0].size() == 2);
 }
 
@@ -404,7 +415,7 @@ TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
     REQUIRE(pghs[0]["Version"].first == "1.2.8");
     REQUIRE(pghs[0]["Architecture"].first == "x86-windows");
     REQUIRE(pghs[0]["Multi-Arch"].first == "same");
-    REQUIRE(pghs[0]["Description"].first == "first line\n second line");
+    REQUIRE(pghs[0]["Description"].first == "first line\n    second line");
     REQUIRE(pghs[0]["Depends"].first == "dep");
     REQUIRE(pghs[0]["Type"].first == "Port");
 }
