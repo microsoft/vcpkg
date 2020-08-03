@@ -611,7 +611,7 @@ namespace vcpkg
         table.format(opt(TRIPLET_ARG, " ", "<t>"), "Specify the target architecture triplet. See 'vcpkg help triplet'");
         table.format("", "(default: " + format_environment_variable("VCPKG_DEFAULT_TRIPLET") + ')');
         table.format(opt(OVERLAY_PORTS_ARG, "=", "<path>"), "Specify directories to be used when searching for ports");
-        table.format("", "(default: " + format_environment_variable("VCPKG_OVERLAY_PORTS") + ')');
+        table.format("", "(also: " + format_environment_variable("VCPKG_OVERLAY_PORTS") + ')');
         table.format(opt(OVERLAY_TRIPLETS_ARG, "=", "<path>"), "Specify directories containing triplets files");
         table.format(opt(BINARY_SOURCES_ARG, "=", "<path>"),
                      "Add sources for binary caching. See 'vcpkg help binarycaching'");
