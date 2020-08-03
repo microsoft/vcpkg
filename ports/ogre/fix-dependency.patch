@@ -1,0 +1,45 @@
+diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
+index 959fdf5..dcd28bb 100644
+--- a/CMake/Dependencies.cmake
++++ b/CMake/Dependencies.cmake
+@@ -217,7 +217,7 @@ find_package(FreeImage)
+ macro_log_feature(FreeImage_FOUND "freeimage" "Support for commonly used graphics image formats" "http://freeimage.sourceforge.net" FALSE "" "")
+ 
+ # Find FreeType
+-find_package(Freetype)
++find_package(freetype CONFIG REQUIRED)
+ macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org" FALSE "" "")
+ 
+ # Find X11
+@@ -291,7 +291,7 @@ macro_log_feature(SWIG_FOUND "SWIG" "Language bindings (Python, Java, C#) for OG
+ # Find sdl2
+ if(NOT ANDROID AND NOT EMSCRIPTEN)
+   # find script does not work in cross compilation environment
+-  find_package(SDL2 QUIET)
++  find_package(SDL2 CONFIG REQUIRED)
+   macro_log_feature(SDL2_FOUND "SDL2" "Simple DirectMedia Library needed for input handling in samples" "https://www.libsdl.org/" FALSE "" "")
+   if(SDL2_FOUND AND NOT TARGET SDL2::SDL2)
+     add_library(SDL2::SDL2 INTERFACE IMPORTED)
+diff --git a/PlugIns/DotScene/CMakeLists.txt b/PlugIns/DotScene/CMakeLists.txt
+index fd285df..ab8e9c1 100644
+--- a/PlugIns/DotScene/CMakeLists.txt
++++ b/PlugIns/DotScene/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-find_package(pugixml QUIET)
++find_package(pugixml CONFIG REQUIRED)
+ 
+ file(GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
+ list(APPEND HEADER_FILES ${PROJECT_BINARY_DIR}/include/OgreDotScenePluginExports.h)
+diff --git a/Tools/XMLConverter/CMakeLists.txt b/Tools/XMLConverter/CMakeLists.txt
+index 8fe9683..2a516b2 100644
+--- a/Tools/XMLConverter/CMakeLists.txt
++++ b/Tools/XMLConverter/CMakeLists.txt
+@@ -22,7 +22,7 @@ set(SOURCE_FILES
+ )
+ 
+ # allow override by cmake
+-find_package(pugixml QUIET)
++find_package(pugixml CONFIG REQUIRED)
+ 
+ add_executable(OgreXMLConverter ${HEADER_FILES} ${SOURCE_FILES})
+ target_include_directories(OgreXMLConverter PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)

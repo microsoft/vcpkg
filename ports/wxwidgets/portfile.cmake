@@ -41,6 +41,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
@@ -60,13 +62,13 @@ if(DLLS)
     endforeach()
 endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
 endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
