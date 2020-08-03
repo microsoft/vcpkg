@@ -211,6 +211,8 @@ function(vcpkg_configure_cmake)
         endif()
     endif()
 
+    # make sure to escape multiple architectures in VCPKG_TARGET_ARCHITECTURE
+    string(REPLACE ";" "\\;" _VCPKG_TARGET_ARCHITECTURE "${VCPKG_TARGET_ARCHITECTURE}")
 
     list(APPEND _csc_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
@@ -250,7 +252,9 @@ function(vcpkg_configure_cmake)
     # Sets configuration variables for macOS builds
     foreach(config_var  INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED VCPKG_${config_var})
-            list(APPEND _csc_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
+            # support lists in these configuration vars
+            string(REPLACE ";" "\\;" _csc_VCPKG_CONFIG_VAR "${VCPKG_${config_var}}")
+            list(APPEND _csc_OPTIONS "-DCMAKE_${config_var}=${_csc_VCPKG_CONFIG_VAR}")
         endif()
     endforeach()
 
@@ -307,7 +311,7 @@ function(vcpkg_configure_cmake)
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
             vcpkg_execute_required_process(
-                COMMAND ${dbg_command}
+                COMMAND "${dbg_command}"
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
@@ -317,7 +321,7 @@ function(vcpkg_configure_cmake)
             message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
             vcpkg_execute_required_process(
-                COMMAND ${rel_command}
+                COMMAND "${rel_command}"
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
                 LOGNAME config-${TARGET_TRIPLET}-rel
             )
