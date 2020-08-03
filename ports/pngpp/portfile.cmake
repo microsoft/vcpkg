@@ -1,3 +1,4 @@
+# Header only library
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.savannah.nongnu.org/releases/pngpp/png++-0.2.10.tar.gz"
     FILENAME "png++-0.2.10.tar.gz"
