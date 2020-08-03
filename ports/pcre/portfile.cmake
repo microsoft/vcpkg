@@ -104,7 +104,7 @@ if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             "-lpcre32" "-lpcre32d"
         )
         vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc
-            "-lpcred" "-lpcrecppd"
+            "-lpcre -lpcrecpp" "-lpcred -lpcrecppd"
         )
         vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc
             "-lpcreposix" "-lpcreposixd"
