@@ -135,7 +135,6 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
 
     string(REPLACE "\\ " "##" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
     string(REPLACE "${CURRENT_INSTALLED_DIR}" "CURRENT_INSTALLED_DIR" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
-    string(REPLACE "${CURRENT_INSTALLED_DIR_LOWER}" "CURRENT_INSTALLED_DIR" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
     string(REGEX REPLACE "(^[\t ]*|[\t ]+)-L" ";" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
     debug_message("-L LIST TRANSFORMATION:'${_pkg_lib_paths_output}'")
     string(REGEX REPLACE "^[\t ]*;" "" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
@@ -151,12 +150,9 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     endforeach()
     debug_message("LIBS AFTER -L<path> REMOVAL:'${_pkg_libs_output}'")
 
-    string(TOLOWER "${CURRENT_INSTALLED_DIR}" CURRENT_INSTALLED_DIR_LOWER)
-    
     #Make the remaining libs a proper CMake List
     string(REPLACE "\\ " "##" _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
     string(REPLACE "${CURRENT_INSTALLED_DIR}" "CURRENT_INSTALLED_DIR" _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
-    string(REPLACE "${CURRENT_INSTALLED_DIR_LOWER}" "CURRENT_INSTALLED_DIR" _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
     string(REGEX REPLACE "(^[\t ]*|[\t ]+)-l" ";-l" _pkg_libs_output "${_pkg_libs_output}")
     string(REGEX REPLACE "[\t ]*(-pthreads?)" ";\\1" _pkg_libs_output "${_pkg_libs_output}") # handle pthread without -l here (makes a lot of problems otherwise)
     string(REGEX REPLACE "^[\t ]*;[\t ]*" "" _pkg_libs_output "${_pkg_libs_output}")
