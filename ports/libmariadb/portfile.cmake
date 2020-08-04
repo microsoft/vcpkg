@@ -17,14 +17,10 @@ vcpkg_from_github(
 			fix-InstallPath.patch
 )
 
-set(WITH_ZLIB OFF)
-if("zlib" IN_LIST FEATURES)
-    set(WITH_ZLIB ON)
-endif()
-set(WITH_SSL OFF)
-if("openssl" IN_LIST FEATURES)
-    set(WITH_SSL ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    zlib WITH_EXTERNAL_ZLIB
+    openssl WITH_SSL
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
