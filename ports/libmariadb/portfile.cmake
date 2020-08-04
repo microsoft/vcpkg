@@ -28,9 +28,7 @@ vcpkg_configure_cmake(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DWITH_UNITTEST=OFF
-        -DWITH_SSL=${WITH_SSL}
         -DWITH_CURL=OFF
-        -DWITH_EXTERNAL_ZLIB=${WITH_ZLIB}
 )
 
 vcpkg_install_cmake()
