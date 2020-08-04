@@ -4,6 +4,7 @@ function(install_qt)
     if(CMAKE_HOST_WIN32)
         vcpkg_find_acquire_program(JOM)
         set(INVOKE "${JOM}" /J ${VCPKG_CONCURRENCY})
+        set(INVOKE_SINGLE "${JOM}" /J 1)
     else()
         find_program(MAKE make)
         set(INVOKE "${MAKE}" -j${VCPKG_CONCURRENCY})
@@ -62,8 +63,9 @@ function(install_qt)
         endif()
 
         message(STATUS "Building ${_build_triplet}")
-        vcpkg_execute_required_process(
+        vcpkg_execute_build_process(
             COMMAND ${INVOKE}
+            NO_PARALLEL_COMMAND ${INVOKE_SINGLE}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
             LOGNAME build-${_build_triplet}
         )
