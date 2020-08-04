@@ -42,8 +42,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/shapelib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/shapelib/COPYING ${CURRENT_PACKAGES_DIR}/share/shapelib/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/shapelib)
 
