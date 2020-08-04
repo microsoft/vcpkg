@@ -6,8 +6,8 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/buildenvironment.h>
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/dependencies.h>
 
 using namespace vcpkg;
@@ -31,7 +31,7 @@ namespace vcpkg::CMakeVars
     {
         struct TripletCMakeVarProvider : Util::ResourceBase, CMakeVarProvider
         {
-            explicit TripletCMakeVarProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) {}
+            explicit TripletCMakeVarProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) { }
 
             void load_generic_triplet_vars(Triplet triplet) const override;
 
@@ -115,8 +115,7 @@ namespace vcpkg::CMakeVars
 
         fs::path path = paths.buildtrees / Strings::concat(tag_extract_id++, ".vcpkg_tags.cmake");
 
-        std::error_code ec;
-        fs.create_directories(paths.buildtrees, ec);
+        fs.create_directories(paths.buildtrees, ignore_errors);
         fs.write_contents(path, extraction_file, VCPKG_LINE_INFO);
 
         return path;

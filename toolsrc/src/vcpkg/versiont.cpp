@@ -1,19 +1,28 @@
 #include "pch.h"
 
 #include <vcpkg/base/strings.h>
+
 #include <vcpkg/versiont.h>
 
 namespace vcpkg
 {
-    VersionT::VersionT() noexcept : value("0.0.0") {}
-    VersionT::VersionT(std::string&& value) : value(std::move(value)) {}
-    VersionT::VersionT(const std::string& value) : value(value) {}
-    const std::string& VersionT::to_string() const { return value; }
-    bool operator==(const VersionT& left, const VersionT& right) { return left.to_string() == right.to_string(); }
-    bool operator!=(const VersionT& left, const VersionT& right) { return left.to_string() != right.to_string(); }
+    VersionT::VersionT() noexcept : value("0.0.0"), port_version(0) { }
+    VersionT::VersionT(std::string&& value, int port_version) : value(std::move(value)), port_version(port_version) { }
+    VersionT::VersionT(const std::string& value, int port_version) : value(value), port_version(port_version) { }
 
-    VersionDiff::VersionDiff() noexcept : left(), right() {}
-    VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) {}
+    std::string VersionT::to_string() const
+    {
+        return port_version == 0 ? value : Strings::format("%s#%d", value, port_version);
+    }
+
+    bool operator==(const VersionT& left, const VersionT& right)
+    {
+        return left.port_version == right.port_version && left.value == right.value;
+    }
+    bool operator!=(const VersionT& left, const VersionT& right) { return !(left == right); }
+
+    VersionDiff::VersionDiff() noexcept : left(), right() { }
+    VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) { }
 
     std::string VersionDiff::to_string() const
     {

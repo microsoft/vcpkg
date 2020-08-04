@@ -37,8 +37,11 @@ namespace vcpkg::Json
             ValueImpl(ValueKindConstant<VK::Integer> vk, int64_t i) : tag(vk), integer(i) { }
             ValueImpl(ValueKindConstant<VK::Number> vk, double d) : tag(vk), number(d) { }
             ValueImpl(ValueKindConstant<VK::String> vk, std::string&& s) : tag(vk), string(std::move(s)) { }
+            ValueImpl(ValueKindConstant<VK::String> vk, const std::string& s) : tag(vk), string(s) { }
             ValueImpl(ValueKindConstant<VK::Array> vk, Array&& arr) : tag(vk), array(std::move(arr)) { }
+            ValueImpl(ValueKindConstant<VK::Array> vk, const Array& arr) : tag(vk), array(arr) { }
             ValueImpl(ValueKindConstant<VK::Object> vk, Object&& obj) : tag(vk), object(std::move(obj)) { }
+            ValueImpl(ValueKindConstant<VK::Object> vk, const Object& obj) : tag(vk), object(obj) { }
 
             ValueImpl& operator=(ValueImpl&& other) noexcept
             {
@@ -144,47 +147,91 @@ namespace vcpkg::Json
         return underlying_->string;
     }
 
-    const Array& Value::array() const noexcept
+    const Array& Value::array() const& noexcept
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
         return underlying_->array;
     }
-    Array& Value::array() noexcept
+    Array& Value::array() & noexcept
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
         return underlying_->array;
     }
+    Array&& Value::array() && noexcept { return std::move(this->array()); }
 
-    const Object& Value::object() const noexcept
+    const Object& Value::object() const& noexcept
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
         return underlying_->object;
     }
-    Object& Value::object() noexcept
+    Object& Value::object() & noexcept
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
         return underlying_->object;
     }
+    Object&& Value::object() && noexcept { return std::move(this->object()); }
 
     Value::Value() noexcept = default;
     Value::Value(Value&&) noexcept = default;
     Value& Value::operator=(Value&&) noexcept = default;
-    Value::~Value() = default;
 
-    Value Value::clone() const noexcept
+    Value::Value(const Value& other)
     {
-        switch (kind())
+        switch (other.kind())
         {
-            case ValueKind::Null: return Value::null(nullptr);
-            case ValueKind::Boolean: return Value::boolean(boolean());
-            case ValueKind::Integer: return Value::integer(integer());
-            case ValueKind::Number: return Value::number(number());
-            case ValueKind::String: return Value::string(string());
-            case ValueKind::Array: return Value::array(array().clone());
-            case ValueKind::Object: return Value::object(object().clone());
-            default: Checks::exit_fail(VCPKG_LINE_INFO);
+            case ValueKind::Null: return; // default construct underlying_
+            case ValueKind::Boolean:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Boolean>(), other.underlying_->boolean));
+                break;
+            case ValueKind::Integer:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Integer>(), other.underlying_->integer));
+                break;
+            case ValueKind::Number:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Number>(), other.underlying_->number));
+                break;
+            case ValueKind::String:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::String>(), other.underlying_->string));
+                break;
+            case ValueKind::Array:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Array>(), other.underlying_->array));
+                break;
+            case ValueKind::Object:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Object>(), other.underlying_->object));
+                break;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
+
+    Value& Value::operator=(const Value& other)
+    {
+        switch (other.kind())
+        {
+            case ValueKind::Null: underlying_.reset(); break;
+            case ValueKind::Boolean:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Boolean>(), other.underlying_->boolean));
+                break;
+            case ValueKind::Integer:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Integer>(), other.underlying_->integer));
+                break;
+            case ValueKind::Number:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Number>(), other.underlying_->number));
+                break;
+            case ValueKind::String:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::String>(), other.underlying_->string));
+                break;
+            case ValueKind::Array:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Array>(), other.underlying_->array));
+                break;
+            case ValueKind::Object:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Object>(), other.underlying_->object));
+                break;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+
+        return *this;
+    }
+
+    Value::~Value() = default;
 
     Value Value::null(std::nullptr_t) noexcept { return Value(); }
     Value Value::boolean(bool b) noexcept
@@ -223,25 +270,43 @@ namespace vcpkg::Json
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Array>(), std::move(arr));
         return val;
     }
+    Value Value::array(const Array& arr) noexcept
+    {
+        Value val;
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Array>(), arr);
+        return val;
+    }
     Value Value::object(Object&& obj) noexcept
     {
         Value val;
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Object>(), std::move(obj));
         return val;
     }
-    // } struct Value
-    // struct Array {
-    Array Array::clone() const noexcept
+    Value Value::object(const Object& obj) noexcept
     {
-        Array arr;
-        arr.underlying_.reserve(size());
-        for (const auto& el : *this)
-        {
-            arr.underlying_.push_back(el.clone());
-        }
-        return arr;
+        Value val;
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Object>(), obj);
+        return val;
     }
 
+    bool operator==(const Value& lhs, const Value& rhs)
+    {
+        if (lhs.kind() != rhs.kind()) return false;
+
+        switch (lhs.kind())
+        {
+            case ValueKind::Null: return true;
+            case ValueKind::Boolean: return lhs.underlying_->boolean == rhs.underlying_->boolean;
+            case ValueKind::Integer: return lhs.underlying_->integer == rhs.underlying_->integer;
+            case ValueKind::Number: return lhs.underlying_->number == rhs.underlying_->number;
+            case ValueKind::String: return lhs.underlying_->string == rhs.underlying_->string;
+            case ValueKind::Array: return lhs.underlying_->string == rhs.underlying_->string;
+            case ValueKind::Object: return lhs.underlying_->string == rhs.underlying_->string;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+    // } struct Value
+    // struct Array {
     Value& Array::push_back(Value&& value)
     {
         underlying_.push_back(std::move(value));
@@ -263,6 +328,7 @@ namespace vcpkg::Json
     {
         return insert_before(it, Value::array(std::move(arr))).array();
     }
+    bool operator==(const Array& lhs, const Array& rhs) { return lhs.underlying_ == rhs.underlying_; }
     // } struct Array
     // struct Object {
     Value& Object::insert(std::string key, Value&& value)
@@ -271,14 +337,29 @@ namespace vcpkg::Json
         underlying_.push_back({std::move(key), std::move(value)});
         return underlying_.back().second;
     }
+    Value& Object::insert(std::string key, const Value& value)
+    {
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, !contains(key));
+        underlying_.push_back({std::move(key), value});
+        return underlying_.back().second;
+    }
     Array& Object::insert(std::string key, Array&& value)
     {
         return insert(std::move(key), Value::array(std::move(value))).array();
+    }
+    Array& Object::insert(std::string key, const Array& value)
+    {
+        return insert(std::move(key), Value::array(value)).array();
     }
     Object& Object::insert(std::string key, Object&& value)
     {
         return insert(std::move(key), Value::object(std::move(value))).object();
     }
+    Object& Object::insert(std::string key, const Object& value)
+    {
+        return insert(std::move(key), Value::object(value)).object();
+    }
+
     Value& Object::insert_or_replace(std::string key, Value&& value)
     {
         auto v = get(key);
@@ -293,13 +374,35 @@ namespace vcpkg::Json
             return underlying_.back().second;
         }
     }
+    Value& Object::insert_or_replace(std::string key, const Value& value)
+    {
+        auto v = get(key);
+        if (v)
+        {
+            *v = value;
+            return *v;
+        }
+        else
+        {
+            underlying_.push_back({std::move(key), std::move(value)});
+            return underlying_.back().second;
+        }
+    }
     Array& Object::insert_or_replace(std::string key, Array&& value)
     {
         return insert_or_replace(std::move(key), Value::array(std::move(value))).array();
     }
+    Array& Object::insert_or_replace(std::string key, const Array& value)
+    {
+        return insert_or_replace(std::move(key), Value::array(value)).array();
+    }
     Object& Object::insert_or_replace(std::string key, Object&& value)
     {
         return insert_or_replace(std::move(key), Value::object(std::move(value))).object();
+    }
+    Object& Object::insert_or_replace(std::string key, const Object& value)
+    {
+        return insert_or_replace(std::move(key), Value::object(value)).object();
     }
 
     auto Object::internal_find_key(StringView key) const noexcept -> underlying_t::const_iterator
@@ -348,16 +451,14 @@ namespace vcpkg::Json
         }
     }
 
-    Object Object::clone() const noexcept
+    void Object::sort_keys()
     {
-        Object obj;
-        obj.underlying_.reserve(size());
-        for (const auto& el : *this)
-        {
-            obj.insert(el.first.to_string(), el.second.clone());
-        }
-        return obj;
+        std::sort(underlying_.begin(), underlying_.end(), [](const value_type& lhs, const value_type& rhs) {
+            return lhs.first < rhs.first;
+        });
     }
+
+    bool operator==(const Object& lhs, const Object& rhs) { return lhs.underlying_ == rhs.underlying_; }
     // } struct Object
 
     // auto parse() {
@@ -409,7 +510,7 @@ namespace vcpkg::Json
                 }
                 else
                 {
-                    vcpkg::Checks::exit_fail(VCPKG_LINE_INFO);
+                    vcpkg::Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
 
@@ -446,14 +547,14 @@ namespace vcpkg::Json
 
                 switch (current)
                 {
-                    case '"': return '"';
-                    case '\\': return '\\';
-                    case '/': return '/';
-                    case 'b': return '\b';
-                    case 'f': return '\f';
-                    case 'n': return '\n';
-                    case 'r': return '\r';
-                    case 't': return '\t';
+                    case '"': next(); return '"';
+                    case '\\': next(); return '\\';
+                    case '/': next(); return '/';
+                    case 'b': next(); return '\b';
+                    case 'f': next(); return '\f';
+                    case 'n': next(); return '\n';
+                    case 'r': next(); return '\r';
+                    case 't': next(); return '\t';
                     case 'u':
                     {
                         char16_t code_unit = 0;
@@ -601,35 +702,39 @@ namespace vcpkg::Json
                     }
                 }
 
-#ifdef _MSC_VER
-#define SCANF sscanf_s
-#else
-#define SCANF sscanf
-#endif
-
-                // TODO: switch to `from_chars` once we are able to remove support for old compilers
                 if (floating)
                 {
-                    double res;
-                    if (SCANF(number_to_parse.c_str(), "%lf", &res) != 1)
+                    auto opt = Strings::strto<double>(number_to_parse);
+                    if (auto res = opt.get())
+                    {
+                        if (std::abs(*res) < INFINITY)
+                        {
+                            return Value::number(*res);
+                        }
+                        else
+                        {
+                            add_error(Strings::format("Floating point constant too big: %s", number_to_parse));
+                        }
+                    }
+                    else
                     {
                         add_error(Strings::format("Invalid floating point constant: %s", number_to_parse));
-                        return Value();
                     }
-                    return Value::number(res);
                 }
                 else
                 {
-                    int64_t res;
-                    if (SCANF(number_to_parse.c_str(), "%" SCNd64, &res) != 1)
+                    auto opt = Strings::strto<int64_t>(number_to_parse);
+                    if (auto res = opt.get())
+                    {
+                        return Value::integer(*res);
+                    }
+                    else
                     {
                         add_error(Strings::format("Invalid integer constant: %s", number_to_parse));
-                        return Value();
                     }
-                    return Value::integer(res);
                 }
 
-#undef SCANF
+                return Value();
             }
 
             Value parse_keyword() noexcept
@@ -651,7 +756,7 @@ namespace vcpkg::Json
                         rest = U"ull";
                         val = Value::null(nullptr);
                         break;
-                    default: vcpkg::Checks::exit_fail(VCPKG_LINE_INFO);
+                    default: vcpkg::Checks::unreachable(VCPKG_LINE_INFO);
                 }
 
                 for (const char32_t* rest_it = rest; *rest_it != '\0'; ++rest_it)
@@ -960,12 +1065,15 @@ namespace vcpkg::Json
                 for (auto code_point : Unicode::Utf8Decoder(sv.begin(), sv.end()))
                 {
                     // a. If C is listed in the "Code Point" column of Table 66, then
-                    const auto match = std::find_if(begin(escape_sequences), end(escape_sequences), [code_point](const std::pair<char32_t, const char*>& attempt) {
-                        return attempt.first == code_point;
-                    });
+                    const auto match = std::find_if(begin(escape_sequences),
+                                                    end(escape_sequences),
+                                                    [code_point](const std::pair<char32_t, const char*>& attempt) {
+                                                        return attempt.first == code_point;
+                                                    });
                     // i. Set product to the string-concatenation of product and the escape sequence for C as
                     // specified in the "Escape Sequence" column of the corresponding row.
-                    if (match != end(escape_sequences)) {
+                    if (match != end(escape_sequences))
+                    {
                         buffer.append(match->second);
                         continue;
                     }
@@ -1086,18 +1194,21 @@ namespace vcpkg::Json
     {
         std::string res;
         Stringifier{style, res}.stringify(value, 0);
+        res.push_back('\n');
         return res;
     }
     std::string stringify(const Object& obj, JsonStyle style)
     {
         std::string res;
         Stringifier{style, res}.stringify_object(obj, 0);
+        res.push_back('\n');
         return res;
     }
     std::string stringify(const Array& arr, JsonStyle style)
     {
         std::string res;
         Stringifier{style, res}.stringify_array(arr, 0);
+        res.push_back('\n');
         return res;
     }
     // } auto stringify()
