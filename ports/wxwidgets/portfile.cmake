@@ -4,9 +4,9 @@ vcpkg_from_github(
     REF v3.1.4
     SHA512 108e35220de10afbfc58762498ada9ece0b3166f56a6d11e11836d51bfbaed1de3033c32ed4109992da901fecddcf84ce8a1ba47303f728c159c638dac77d148
     HEAD_REF master
-	PATCHES
-		disable-platform-lib-dir.patch
-		fix-stl-build-vs2019-16.6.patch
+    PATCHES
+        disable-platform-lib-dir.patch
+        fix-stl-build-vs2019-16.6.patch
 )
 
 set(OPTIONS)
