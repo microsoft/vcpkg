@@ -1,18 +1,25 @@
 #include <catch2/catch.hpp>
-#include <vcpkg-test/mockcmakevarprovider.h>
-#include <vcpkg-test/util.h>
+
 #include <vcpkg/dependencies.h>
+#include <vcpkg/paragraphparser.h>
 #include <vcpkg/sourceparagraph.h>
 
+#include <vcpkg-test/mockcmakevarprovider.h>
+#include <vcpkg-test/util.h>
+
 using namespace vcpkg;
-using Parse::parse_comma_list;
+using namespace vcpkg::Parse;
 
 TEST_CASE ("parse depends", "[dependencies]")
 {
-    auto v = expand_qualified_dependencies(parse_comma_list("liba (windows)"));
+    auto w = parse_dependencies_list("liba (windows)");
+    REQUIRE(w);
+    auto& v = *w.get();
     REQUIRE(v.size() == 1);
-    REQUIRE(v.at(0).depend.name == "liba");
-    REQUIRE(v.at(0).qualifier == "windows");
+    REQUIRE(v.at(0).name == "liba");
+    REQUIRE(v.at(0).platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", ""}}));
+    REQUIRE(v.at(0).platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore"}}));
+    REQUIRE(!v.at(0).platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "Darwin"}}));
 }
 
 TEST_CASE ("filter depends", "[dependencies]")
@@ -23,7 +30,9 @@ TEST_CASE ("filter depends", "[dependencies]")
     const std::unordered_map<std::string, std::string> arm_uwp_cmake_vars{{"VCPKG_TARGET_ARCHITECTURE", "arm"},
                                                                           {"VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore"}};
 
-    auto deps = expand_qualified_dependencies(parse_comma_list("liba (windows), libb, libc (uwp)"));
+    auto deps_ = parse_dependencies_list("liba (!uwp), libb, libc (uwp)");
+    REQUIRE(deps_);
+    auto& deps = *deps_.get();
     auto v = filter_dependencies(deps, Triplet::X64_WINDOWS, x64_win_cmake_vars);
     REQUIRE(v.size() == 2);
     REQUIRE(v.at(0).package_spec.name() == "liba");
@@ -37,20 +46,23 @@ TEST_CASE ("filter depends", "[dependencies]")
 
 TEST_CASE ("parse feature depends", "[dependencies]")
 {
-    auto u = parse_comma_list("libwebp[anim, gif2webp, img2webp, info, mux, nearlossless, "
-                              "simd, cwebp, dwebp], libwebp[vwebp_sdl, extras] (!osx)");
-    REQUIRE(u.at(1) == "libwebp[vwebp_sdl, extras] (!osx)");
-    auto v = expand_qualified_dependencies(u);
+    auto u_ = parse_dependencies_list("libwebp[anim, gif2webp, img2webp, info, mux, nearlossless, "
+                                      "simd, cwebp, dwebp], libwebp[vwebp-sdl, extras] (!osx)");
+    REQUIRE(u_);
+    auto& v = *u_.get();
     REQUIRE(v.size() == 2);
     auto&& a0 = v.at(0);
-    REQUIRE(a0.depend.name == "libwebp");
-    REQUIRE(a0.depend.features.size() == 9);
-    REQUIRE(a0.qualifier.empty());
+    REQUIRE(a0.name == "libwebp");
+    REQUIRE(a0.features.size() == 9);
+    REQUIRE(a0.platform.is_empty());
 
     auto&& a1 = v.at(1);
-    REQUIRE(a1.depend.name == "libwebp");
-    REQUIRE(a1.depend.features.size() == 2);
-    REQUIRE(a1.qualifier == "!osx");
+    REQUIRE(a1.name == "libwebp");
+    REQUIRE(a1.features.size() == 2);
+    REQUIRE(!a1.platform.is_empty());
+    REQUIRE(a1.platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", ""}}));
+    REQUIRE(a1.platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "Linux"}}));
+    REQUIRE_FALSE(a1.platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "Darwin"}}));
 }
 
 TEST_CASE ("qualified dependency", "[dependencies]")
@@ -67,9 +79,7 @@ TEST_CASE ("qualified dependency", "[dependencies]")
     REQUIRE(plan.install_actions.size() == 2);
     REQUIRE(plan.install_actions.at(0).feature_list == std::vector<std::string>{"core"});
 
-    FullPackageSpec linspec_a{PackageSpec::from_name_and_triplet("a", Triplet::from_canonical_name("x64-linux"))
-                                  .value_or_exit(VCPKG_LINE_INFO),
-                              {}};
+    FullPackageSpec linspec_a{{"a", Triplet::from_canonical_name("x64-linux")}, {}};
     var_provider.dep_info_vars[linspec_a.package_spec].emplace("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
     auto plan2 = vcpkg::Dependencies::create_feature_install_plan(map_port, var_provider, {linspec_a}, {});
     REQUIRE(plan2.install_actions.size() == 2);

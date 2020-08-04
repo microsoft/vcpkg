@@ -6,7 +6,7 @@ namespace vcpkg::Test
 {
     struct MockCMakeVarProvider : CMakeVars::CMakeVarProvider
     {
-        void load_generic_triplet_vars(const Triplet& triplet) const override { generic_triplet_vars[triplet] = {}; }
+        void load_generic_triplet_vars(Triplet triplet) const override { generic_triplet_vars[triplet] = {}; }
 
         void load_dep_info_vars(Span<const PackageSpec> specs) const override
         {
@@ -23,7 +23,7 @@ namespace vcpkg::Test
         }
 
         Optional<const std::unordered_map<std::string, std::string>&> get_generic_triplet_vars(
-            const Triplet& triplet) const override;
+            Triplet triplet) const override;
 
         Optional<const std::unordered_map<std::string, std::string>&> get_dep_info_vars(
             const PackageSpec& spec) const override;

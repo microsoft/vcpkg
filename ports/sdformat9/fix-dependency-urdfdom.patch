@@ -1,0 +1,17 @@
+diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
+index 965f1ec..cf2acf4 100644
+--- a/cmake/SearchForStuff.cmake
++++ b/cmake/SearchForStuff.cmake
+@@ -53,10 +53,9 @@ if (NOT PKG_CONFIG_FOUND)
+ endif()
+ 
+ if (NOT DEFINED USE_INTERNAL_URDF OR NOT USE_INTERNAL_URDF)
+-  # check for urdfdom with pkg-config
+-  pkg_check_modules(URDF urdfdom>=1.0)
++  find_package(urdfdom CONFIG REQUIRED)
+ 
+-  if (NOT URDF_FOUND)
++  if (NOT urdfdom_FOUND)
+     if (NOT DEFINED USE_INTERNAL_URDF)
+       message(STATUS "Couldn't find urdfdom >= 1.0, using internal copy")
+       set(USE_INTERNAL_URDF true)

@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
+
 #include <vcpkg/paragraphparseresult.h>
 
 namespace vcpkg

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vcpkg/base/optional.h>
+#include <vcpkg/base/expected.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgpaths.h>
 
@@ -9,14 +10,14 @@ namespace vcpkg::PortFileProvider
 {
     struct PortFileProvider
     {
-        virtual Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const = 0;
+        virtual ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const = 0;
         virtual std::vector<const SourceControlFileLocation*> load_all_control_files() const = 0;
     };
 
     struct MapPortFileProvider : Util::ResourceBase, PortFileProvider
     {
         explicit MapPortFileProvider(const std::unordered_map<std::string, SourceControlFileLocation>& map);
-        Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
+        ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
         std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
 
     private:
@@ -26,12 +27,15 @@ namespace vcpkg::PortFileProvider
     struct PathsPortFileProvider : Util::ResourceBase, PortFileProvider
     {
         explicit PathsPortFileProvider(const vcpkg::VcpkgPaths& paths,
-                                       const std::vector<std::string>* ports_dirs_paths);
-        Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
+                                       const std::vector<std::string>& ports_dirs_paths);
+        ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
         std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
 
     private:
+        const SourceControlFileLocation* load_manifest_file() const;
+
         Files::Filesystem& filesystem;
+        fs::path manifest;
         std::vector<fs::path> ports_dirs;
         mutable std::unordered_map<std::string, SourceControlFileLocation> cache;
     };
