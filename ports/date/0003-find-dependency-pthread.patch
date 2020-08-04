@@ -1,0 +1,26 @@
+diff --git a/cmake/dateConfig.cmake b/cmake/dateConfig.cmake
+index 20f86e8..c6d0c5a 100644
+--- a/cmake/dateConfig.cmake
++++ b/cmake/dateConfig.cmake
+@@ -1,11 +1,15 @@
+ include( CMakeFindDependencyMacro )
+ include( "${CMAKE_CURRENT_LIST_DIR}/dateTargets.cmake" )
+-if( NOT MSVC AND TARGET date::tz )
+-    find_dependency( Threads REQUIRED)
+-    get_target_property( _tzill date::tz  INTERFACE_LINK_LIBRARIES )
+-    if( _tzill AND "${_tzill}" MATCHES "libcurl" )
+-        find_dependency( CURL )
+-    endif( )
++if( TARGET date::tz )
++    if (NOT MSVC)
++        find_dependency( Threads REQUIRED)
++        get_target_property( _tzill date::tz  INTERFACE_LINK_LIBRARIES )
++        if( _tzill AND "${_tzill}" MATCHES "libcurl" )
++            find_dependency( CURL )
++        endif( )
++    else()
++        find_dependency( Threads )
++    endif()
+ endif( )
+ 
+ 

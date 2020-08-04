@@ -14,6 +14,7 @@ vcpkg_from_github(
   PATCHES
     0001-fix-uwp.patch
     0002-fix-cmake-3.14.patch
+    0003-find-dependency-pthread.patch
 )
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
