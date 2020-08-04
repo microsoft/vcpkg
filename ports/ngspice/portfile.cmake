@@ -41,7 +41,6 @@ else()
     message(FATAL_ERROR "Sorry but ngspice only can be built in Windows")
 endif()
 
-
 # Unforunately install_msbuild isn't able to dual include directories that effectively layer
 file(GLOB NGSPICE_INCLUDES
     ${SOURCE_PATH}/visualc/src/include/ngspice/*
