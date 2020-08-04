@@ -12,7 +12,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         dont-build-docs.patch
         dont-build-astyle.patch
-        static-lib-prefix.patch
 )
 
 # NOTE: GEOS provides CMake as optional build configuration, it might not be actively
