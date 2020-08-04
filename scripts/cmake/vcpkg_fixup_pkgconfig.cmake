@@ -113,6 +113,8 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
+    # This does not correctly return -L paths with spaces. It only returns up to the first space on windows.
+    # Maybe running with native pkg-config on windows solves it ??? Otherwise try to quote all -L""
     execute_process(COMMAND "${pkg_cfg_cmd}" --print-errors --static --libs-only-L ${_package_name}
                     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                     RESULT_VARIABLE _pkg_error_var
