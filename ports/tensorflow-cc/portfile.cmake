@@ -44,6 +44,10 @@ if(CMAKE_HOST_WIN32)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
+
+    set(ENV{BAZEL_VS} $ENV{VSInstallDir})
+    set(ENV{BAZEL_VC} $ENV{VCInstallDir})
+    set(ENV{BAZEL_VC_FULL_VERSION} $ENV{VCToolsVersion})
 endif()
 
 # tensorflow has long file names, which will not work on windows
