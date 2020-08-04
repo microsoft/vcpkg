@@ -33,6 +33,7 @@
 ## - NINJA
 ## - NUGET
 ## - SCONS
+## - SWIG
 ## - YASM
 ##
 ## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
@@ -101,7 +102,7 @@ function(vcpkg_find_acquire_program VAR)
       set(URL "https://github.com/git-for-windows/git/releases/download/v2.26.2.windows.1/PortableGit-2.26.2-32-bit.7z.exe")
       set(ARCHIVE "PortableGit-2.26.2-32-bit.7z.exe")
       set(HASH d3cb60d62ca7b5d05ab7fbed0fa7567bec951984568a6c1646842a798c4aaff74bf534cf79414a6275c1927081a11b541d09931c017bf304579746e24fe57b36)
-      set(PATHS 
+      set(PATHS
         "${DOWNLOADS}/tools/${SUBDIR}/mingw32/bin"
         "${DOWNLOADS}/tools/git/${SUBDIR}/mingw32/bin")
     else()
@@ -190,8 +191,8 @@ function(vcpkg_find_acquire_program VAR)
     set(PROGNAME jom)
     set(SUBDIR "jom-1.1.3")
     set(PATHS ${DOWNLOADS}/tools/jom/${SUBDIR})
-    set(URL 
-      "http://download.qt.io/official_releases/jom/jom_1_1_3.zip" 
+    set(URL
+      "http://download.qt.io/official_releases/jom/jom_1_1_3.zip"
       "http://mirrors.ocf.berkeley.edu/qt/official_releases/jom/jom_1_1_3.zip"
     )
     set(ARCHIVE "jom_1_1_3.zip")
@@ -231,19 +232,23 @@ function(vcpkg_find_acquire_program VAR)
     set(NOEXTRACT ON)
     set(HASH 22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619)
   elseif(VAR MATCHES "MESON")
-    set(PROGNAME meson)
-    set(REQUIRED_INTERPRETER PYTHON3)
-    set(BREW_PACKAGE_NAME "meson")
-    set(APT_PACKAGE_NAME "meson")
-    if(CMAKE_HOST_WIN32)
-      set(SCRIPTNAME meson.py)
+    if(NOT CMAKE_HOST_APPLE)
+      set(PROGNAME meson)
+      set(REQUIRED_INTERPRETER PYTHON3)
+      set(APT_PACKAGE_NAME "meson")
+      if(CMAKE_HOST_WIN32)
+        set(SCRIPTNAME meson.py)
+      else()
+        set(SCRIPTNAME meson)
+      endif()
+      set(PATHS ${DOWNLOADS}/tools/meson/meson-0.54.2)
+      set(URL "https://github.com/mesonbuild/meson/archive/0.54.2.zip")
+      set(ARCHIVE "meson-0.54.2.zip")
+      set(HASH 8d19110bad3e6a223d1d169e833b746b884ece9cd23d2539ec02dccb5cd0c56542414b7afc0f7f2adcec9d957e4120d31f41734397aa0a7ee7f9c29ebdc9eb4c)
     else()
-      set(SCRIPTNAME meson)
+      set(PROGNAME meson)
+      set(BREW_PACKAGE_NAME "meson")
     endif()
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.54.2)
-    set(URL "https://github.com/mesonbuild/meson/archive/0.54.2.zip")
-    set(ARCHIVE "meson-0.54.2.zip")
-    set(HASH 8d19110bad3e6a223d1d169e833b746b884ece9cd23d2539ec02dccb5cd0c56542414b7afc0f7f2adcec9d957e4120d31f41734397aa0a7ee7f9c29ebdc9eb4c)
   elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
     if(CMAKE_HOST_WIN32)
       set(SOURCEFORGE_ARGS
@@ -305,7 +310,32 @@ function(vcpkg_find_acquire_program VAR)
     set(PATHS ${DOWNLOADS}/tools/scons)
     set(URL "https://sourceforge.net/projects/scons/files/scons-local-3.0.1.zip/download")
     set(ARCHIVE "scons-local-3.0.1.zip")
-    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727)
+    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727) 
+  elseif(VAR MATCHES "SWIG")
+    set(VERSION 4.0.2)
+    set(PROGNAME swig)
+    if(CMAKE_HOST_WIN32)
+        set(URL "https://sourceforge.net/projects/swig/files/swigwin/swigwin-${VERSION}/swigwin-${VERSION}.zip/download")
+        set(ARCHIVE "swigwin-${VERSION}.zip")
+        set(HASH b8f105f9b9db6acc1f6e3741990915b533cd1bc206eb9645fd6836457fd30789b7229d2e3219d8e35f2390605ade0fbca493ae162ec3b4bc4e428b57155db03d) 
+        set(SUBDIR "swigwin-${VERSION}")
+        set(PATHS "${DOWNLOADS}/tools/swig/${SUBDIR}/${SUBDIR}")
+    else()
+        #Not used
+        set(_vfa_SUPPORTED TRUE)
+        set(URL https://sourceforge.net/projects/swig/files/swig/swig-${VERSION}/swig-${VERSION}.tar.gz/download)
+        set(ARCHIVE "swig-${VERSION}.tar.gz")
+        set(HASH 05e7da70ce6d9a733b96c0bcfa3c1b82765bd859f48c74759bbf4bb1467acb1809caa310cba5e2b3280cd704fca249eaa0624821dffae1d2a75097c7f55d14ed) 
+        set(SUBDIR "swig-${VERSION}")
+        set(PATHS "${DOWNLOADS}/tools/swig/${SUBDIR}")
+    endif()
+    set(SOURCEFORGE_ARGS
+        REPO swig
+        FILENAME "${ARCHIVE}"
+        SHA512 "${HASH}"
+        NO_REMOVE_ONE_LEVEL
+        WORKING_DIRECTORY "${DOWNLOADS}/tools/swig"
+     )
   elseif(VAR MATCHES "DOXYGEN")
     set(PROGNAME doxygen)
     set(DOXYGEN_VERSION 1.8.17)
@@ -329,12 +359,12 @@ function(vcpkg_find_acquire_program VAR)
       set(HASH db4a583cf2996aeb29fd008261b12fe39a4a5faf0fbf96f7124e6d3ffeccf6d9655d391378e68dd0915bc91c9e146a51fd9661963743857ca25179547feceab1)
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
       set(_vfa_SUPPORTED ON)
-      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-darwin-x86_64") 
+      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-darwin-x86_64")
       set(ARCHIVE "bazel-${BAZEL_VERSION}-darwin-x86_64")
       set(NOEXTRACT ON)
       set(HASH 420a37081e6ee76441b0d92ff26d1715ce647737ce888877980d0665197b5a619d6afe6102f2e7edfb5062c9b40630a10b2539585e35479b780074ada978d23c)
     else()
-      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-windows-x86_64.zip") 
+      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-windows-x86_64.zip")
       set(ARCHIVE "bazel-${BAZEL_VERSION}-windows-x86_64.zip")
       set(HASH 6482f99a0896f55ef65739e7b53452fd9c0adf597b599d0022a5e0c5fa4374f4a958d46f98e8ba25af4b065adacc578bfedced483d8c169ea5cb1777a99eea53)
     endif()
