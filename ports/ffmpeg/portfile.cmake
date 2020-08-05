@@ -12,6 +12,7 @@ vcpkg_from_github(
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
         0008-Fix-wavpack-detection.patch
+        0009-Fix-fdk-detection.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
