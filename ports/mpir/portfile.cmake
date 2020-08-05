@@ -30,11 +30,17 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
     set(OPTIONS --disable-silent-rules --enable-gmpcompat --enable-cxx ${SHARED_STATIC})
 
-		string(APPEND VCPKG_C_FLAGS " -Wno-implicit-function-declaration")
-		string(APPEND VCPKG_CXX_FLAGS " -Wno-implicit-function-declaration")
+    string(APPEND VCPKG_C_FLAGS " -Wno-implicit-function-declaration")
+    string(APPEND VCPKG_CXX_FLAGS " -Wno-implicit-function-declaration")
+
+    # on Linux, autoconf is required; on macOS, it isn't
+    if(VCPKG_TARGET_IS_LINUX)
+        set(AUTOCONFIG "AUTOCONFIG")
+    endif()
     
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
+        ${AUTOCONFIG}
         OPTIONS ${OPTIONS}  
     )
     
