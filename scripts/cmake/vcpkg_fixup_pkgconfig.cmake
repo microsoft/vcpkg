@@ -30,7 +30,7 @@
 ## If the *.pc file contains flags in the lib field which are not libraries. These can be listed here
 ##
 ## ### SKIP_CHECK
-## Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases. 
+## Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases.
 ##
 ## ## Notes
 ## Still work in progress. If there are more cases which can be handled here feel free to add them
@@ -51,7 +51,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         set(_VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
         set(_VCPKG_PACKAGES_PKGCONF "${CURRENT_PACKAGES_DIR}")
     endif()
-    
+
     set(PATH_SUFFIX_DEBUG /debug)
     set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
     set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
@@ -88,7 +88,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
-    # Get all required libs. --static means we get all libraries required for static linkage 
+    # Get all required libs. --static means we get all libraries required for static linkage
     # which is the worst case and includes the case without --static
     # This retests already tested *.pc files since pkg-config will recursivly search for
     # required packages and add there link flags to the one being tested
@@ -259,8 +259,7 @@ function(vcpkg_fixup_pkgconfig)
     else()
         set(PKGCONFIG_STATIC --static)
     endif()
-    
-    message(STATUS "Fixing pkgconfig")
+
     if(_vfpkg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
@@ -288,11 +287,10 @@ function(vcpkg_fixup_pkgconfig)
         endif()
     endif()
 
-    #Absolute Unix like paths 
+    #Absolute Unix like paths
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
 
-    message(STATUS "Fixing pkgconfig - release")
     debug_message("Files: ${_vfpkg_RELEASE_FILES}")
     foreach(_file ${_vfpkg_RELEASE_FILES})
         message(STATUS "Checking file: ${_file}")
@@ -317,7 +315,6 @@ function(vcpkg_fixup_pkgconfig)
         endforeach()
     endif()
 
-    message(STATUS "Fixing pkgconfig - debug")
     debug_message("Files: ${_vfpkg_DEBUG_FILES}")
     foreach(_file ${_vfpkg_DEBUG_FILES})
         message(STATUS "Checking file: ${_file}")
@@ -338,7 +335,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
         string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
+        string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist.
         file(WRITE "${_file}" "${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
@@ -348,7 +345,6 @@ function(vcpkg_fixup_pkgconfig)
             vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "DEBUG" "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_IGNORE_FLAGS}")
         endforeach()
     endif()
-    message(STATUS "Fixing pkgconfig --- finished")
 
     set(VCPKG_FIXUP_PKGCONFIG_CALLED TRUE CACHE INTERNAL "See below" FORCE)
     # Variable to check if this function has been called!
