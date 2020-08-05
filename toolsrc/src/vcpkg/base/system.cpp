@@ -47,7 +47,7 @@ namespace vcpkg
 #else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
 #if defined(__x86_64__) || defined(_M_X64)
         return CPUArchitecture::X64;
-#elif defined(__x86__) || defined(_M_X86)
+#elif defined(__x86__) || defined(_M_X86) || defined(__i386__)
         return CPUArchitecture::X86;
 #elif defined(__arm__) || defined(_M_ARM)
         return CPUArchitecture::ARM;
