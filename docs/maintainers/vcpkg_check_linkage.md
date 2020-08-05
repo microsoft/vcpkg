@@ -28,7 +28,7 @@ This command will either alter the settings for `VCPKG_LIBRARY_LINKAGE` or fail,
 
 ## Examples
 
-* [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
+* [abseil](https://github.com/Microsoft/vcpkg/blob/master/ports/abseil/portfile.cmake)
 
 ## Source
 [scripts/cmake/vcpkg_check_linkage.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_check_linkage.cmake)
