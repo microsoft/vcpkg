@@ -13,6 +13,7 @@ vcpkg_from_github(
         0007-fix-lib-naming.patch
         0008-Fix-wavpack-detection.patch
         0009-Fix-fdk-detection.patch
+        0010-Fix-x264-detection.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
