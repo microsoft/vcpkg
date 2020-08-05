@@ -1,7 +1,5 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "This port is only for openssl on Unix-like systems")
+if (NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_fail_port_install(MESSAGE "${PORT} is only for openssl on Unix-like systems" ON_TARGET "UWP" "Windows")
 endif()
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
@@ -13,12 +11,12 @@ endif()
 
 vcpkg_find_acquire_program(PERL)
 
-set(OPENSSL_VERSION 1.1.1d)
+set(OPENSSL_VERSION 1.1.1g)
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7
+    SHA512 01e3d0b1bceeed8fb066f542ef5480862001556e0f612e017442330bbd7e5faee228b2de3513d7fc347446b7f217e27de1003dc9d7214d5833b97593f3ec25ab
 )
 
 vcpkg_extract_source_archive_ex(
@@ -28,9 +26,10 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(CMAKE_HOST_WIN32)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     set(MAKE ${MSYS_ROOT}/usr/bin/make.exe)
+    set(PERL ${MSYS_ROOT}/usr/bin/perl.exe)
 else()
     find_program(MAKE make)
     if(NOT MAKE)
@@ -59,10 +58,8 @@ foreach(HEADER ${HEADERS})
 endforeach()
 
 file(INSTALL ${RESOLVED_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/openssl)
-file(INSTALL ${MASTER_COPY_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl-unix RENAME copyright)
+file(INSTALL ${MASTER_COPY_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl)
 endif()
-
-vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)

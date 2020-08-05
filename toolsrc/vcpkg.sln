@@ -41,7 +41,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cmake", "cmake", "{A0122231
 		..\scripts\cmake\vcpkg_fixup_cmake_targets.cmake = ..\scripts\cmake\vcpkg_fixup_cmake_targets.cmake
 		..\scripts\cmake\vcpkg_from_bitbucket.cmake = ..\scripts\cmake\vcpkg_from_bitbucket.cmake
 		..\scripts\cmake\vcpkg_from_github.cmake = ..\scripts\cmake\vcpkg_from_github.cmake
-		..\scripts\cmake\vcpkg_get_program_files_32_bit.cmake = ..\scripts\cmake\vcpkg_get_program_files_32_bit.cmake
 		..\scripts\cmake\vcpkg_get_program_files_platform_bitness.cmake = ..\scripts\cmake\vcpkg_get_program_files_platform_bitness.cmake
 		..\scripts\cmake\vcpkg_get_windows_sdk.cmake = ..\scripts\cmake\vcpkg_get_windows_sdk.cmake
 		..\scripts\cmake\vcpkg_install_cmake.cmake = ..\scripts\cmake\vcpkg_install_cmake.cmake

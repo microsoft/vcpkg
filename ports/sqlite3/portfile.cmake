@@ -1,5 +1,5 @@
-set(SQLITE_VERSION 3320000)
-set(SQLITE_HASH cf176859dfe5b6b92f02c8408faf3389fba0bd441308dea058085e031c45ab28377ce5ae519c48efe0ae51a16d4242e8d00461229ed099ee5cc2741a0f32ecd4 )
+set(SQLITE_VERSION 3320300)
+set(SQLITE_HASH 850c1eed0cfaa016d3db9ef23101d64efeb11bde53848d99fea316e60660621d470dff7c2969e94625ce270ba28f74a55bb05ecb693d057d8bc6815fc6b78a90)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2020/sqlite-amalgamation-${SQLITE_VERSION}.zip"
@@ -30,7 +30,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
@@ -40,7 +40,7 @@ endif()
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/sqlite3-config.in.cmake
-    ${CURRENT_PACKAGES_DIR}/share/sqlite3/sqlite3-config.cmake
+    ${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-sqlite3-config.cmake
     @ONLY
 )
 

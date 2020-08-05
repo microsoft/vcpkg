@@ -3,6 +3,7 @@
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/parse.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphparser.h>
 
@@ -64,7 +65,8 @@ namespace vcpkg
     {
         return parse_qualified_specifier(spec_as_string)
             .then([&](ParsedQualifiedSpecifier&& p) -> ExpectedS<FullPackageSpec> {
-                if (p.qualifier) return "Error: qualifier not allowed in this context: " + spec_as_string + "\n";
+                if (p.platform)
+                    return "Error: platform specifier not allowed in this context: " + spec_as_string + "\n";
                 auto triplet = p.triplet ? Triplet::from_canonical_name(std::move(*p.triplet.get())) : default_triplet;
                 return FullPackageSpec({p.name, triplet}, p.features.value_or({}));
             });
@@ -91,13 +93,11 @@ namespace vcpkg
         return left.name() == right.name() && left.triplet() == right.triplet();
     }
 
-    bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
-
     ExpectedS<Features> Features::from_string(const std::string& name)
     {
         return parse_qualified_specifier(name).then([&](ParsedQualifiedSpecifier&& pqs) -> ExpectedS<Features> {
             if (pqs.triplet) return "Error: triplet not allowed in this context: " + name + "\n";
-            if (pqs.qualifier) return "Error: qualifier not allowed in this context: " + name + "\n";
+            if (pqs.platform) return "Error: platform specifier not allowed in this context: " + name + "\n";
             return Features{pqs.name, pqs.features.value_or({})};
         });
     }
@@ -107,8 +107,10 @@ namespace vcpkg
         return Parse::ParserBase::is_lower_alpha(ch) || Parse::ParserBase::is_ascii_digit(ch) || ch == '-';
     }
 
-    static bool is_feature_name_char(char32_t ch) {
-        // TODO: we do not intend underscores to be valid, however there is currently a feature using them (libwebp[vwebp_sdl]).
+    static bool is_feature_name_char(char32_t ch)
+    {
+        // TODO: we do not intend underscores to be valid, however there is currently a feature using them
+        // (libwebp[vwebp_sdl]).
         // TODO: we need to rename this feature, then remove underscores from this list.
         return is_package_name_char(ch) || ch == '_';
     }
@@ -127,11 +129,15 @@ namespace vcpkg
         using Parse::ParserBase;
         auto ret = parser.match_zero_or_more(is_feature_name_char).to_string();
         auto ch = parser.cur();
-        if (ParserBase::is_upper_alpha(ch) || ch == '_')
+
+        // ignores the feature name vwebp_sdl as a back-compat thing
+        const bool has_underscore = std::find(ret.begin(), ret.end(), '_') != ret.end() && ret != "vwebp_sdl";
+        if (has_underscore || ParserBase::is_upper_alpha(ch))
         {
             parser.add_error("invalid character in feature name (must be lowercase, digits, '-')");
             return nullopt;
         }
+
         if (ret.empty())
         {
             parser.add_error("expected feature name (must be lowercase, digits, '-')");
@@ -224,6 +230,7 @@ namespace vcpkg
         if (ch == '(')
         {
             auto loc = parser.cur_loc();
+            std::string platform_string;
             int depth = 1;
             while (depth > 0 && (ch = parser.next()) != 0)
             {
@@ -232,12 +239,20 @@ namespace vcpkg
             }
             if (depth > 0)
             {
-                parser.add_error("unmatched open braces in qualifier", loc);
+                parser.add_error("unmatched open braces in platform specifier", loc);
                 return nullopt;
             }
-            ret.qualifier = std::string(
-                (++loc.it).pointer_to_current(),
-                parser.it().pointer_to_current());
+            platform_string.append((++loc.it).pointer_to_current(), parser.it().pointer_to_current());
+            auto platform_opt = PlatformExpression::parse_platform_expression(
+                platform_string, PlatformExpression::MultipleBinaryOperators::Allow);
+            if (auto platform = platform_opt.get())
+            {
+                ret.platform = std::move(*platform);
+            }
+            else
+            {
+                parser.add_error(platform_opt.error(), loc);
+            }
             parser.next();
         }
         // This makes the behavior of the parser more consistent -- otherwise, it will skip tabs and spaces only if
@@ -245,4 +260,15 @@ namespace vcpkg
         parser.skip_tabs_spaces();
         return ret;
     }
+
+    bool operator==(const Dependency& lhs, const Dependency& rhs)
+    {
+        if (lhs.name != rhs.name) return false;
+        if (lhs.features != rhs.features) return false;
+        if (!structurally_equal(lhs.platform, rhs.platform)) return false;
+        if (lhs.extra_info != rhs.extra_info) return false;
+
+        return true;
+    }
+    bool operator!=(const Dependency& lhs, const Dependency& rhs);
 }
