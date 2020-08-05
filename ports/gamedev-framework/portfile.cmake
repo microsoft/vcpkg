@@ -27,7 +27,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gf)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gf TARGET_PATH share/gf)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
