@@ -15,6 +15,13 @@ else()
     set(BUILD_SHARED_LIBS OFF)
 endif()
 
+if(VCPKG_TARGET_IS_MINGW)
+    set(WITH_STACK_PROTECTOR OFF)
+    set(DISABLE_FORTIFYING "-D_FORTIFY_SOURCE=0")
+else()
+    set(WITH_STACK_PROTECTOR ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -23,7 +30,10 @@ vcpkg_configure_cmake(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_DOCS=OFF
         -DBUILD_TESTING=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS})
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+        -DWITH_STACK_PROTECTOR=${WITH_STACK_PROTECTOR}
+        -DCMAKE_C_FLAGS=${DISABLE_FORTIFYING}
+        -DCMAKE_CXX_FLAGS=${DISABLE_FORTIFYING})
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(
