@@ -1,6 +1,6 @@
 {
   "name": "behaviortree-cpp",
   "version-string": "3.5.1",
-  "homepage": "https://www.behaviortree.dev",
-  "description": "Behavior Trees Library in C++."
+  "description": "Behavior Trees Library in C++.",
+  "homepage": "https://www.behaviortree.dev"
 }
