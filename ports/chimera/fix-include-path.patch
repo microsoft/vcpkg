@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 59c6e6e..51e8498 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -559,7 +559,7 @@ SET(hs_HEADERS
+     src/hs_compile.h
+     src/hs_runtime.h
+ )
+-install(FILES ${hs_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/hs")
++install(FILES ${hs_HEADERS} DESTINATION include/hs)
+ 
+ set (hs_exec_common_SRCS
+     src/alloc.c
+diff --git a/chimera/CMakeLists.txt b/chimera/CMakeLists.txt
+index 1503dbe..b1a22c5 100644
+--- a/chimera/CMakeLists.txt
++++ b/chimera/CMakeLists.txt
+@@ -29,7 +29,7 @@ SET(chimera_HEADERS
+     ch_compile.h
+     ch_runtime.h
+ )
+-install(FILES ${chimera_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/hs")
++install(FILES ${chimera_HEADERS} DESTINATION include/hs)
+ 
+ SET(chimera_SRCS
+     ${chimera_HEADERS}

@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         fix-cmakelists.patch
         fix-unix-build.patch
+        fix-include-path.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
