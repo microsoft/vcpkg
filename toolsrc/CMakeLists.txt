@@ -45,8 +45,6 @@ file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
 
 file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
 
-include(cmake/vcxproj/generate.cmake)
-
 # ========================
 # === System detection ===
 # ========================
