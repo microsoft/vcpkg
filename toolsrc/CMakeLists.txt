@@ -100,7 +100,7 @@ if(MSVC)
     target_sources(vcpkglib PRIVATE src/pch.cpp)
     target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
 else()
-    target_compile_options(vcpkglib PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIRECTORY}/include/pch.h")
+    target_compile_options(vcpkglib PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h")
 endif()
 
 if (MINGW)
