@@ -9,17 +9,17 @@ vcpkg_from_github(
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DASMJIT_STATIC=1
-  )
+    set(ASMJIT_STATIC 1)
 else()
-  vcpkg_configure_cmake(
+    set(ASMJIT_STATIC 0)
+endif()
+
+vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-  )
-endif()
+    OPTIONS -DASMJIT_STATIC=${ASMJIT_STATIC}
+ )
+
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
