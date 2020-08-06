@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkgmetricsuploader", "vcp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BCE555DF-F471-4ACC-98E5-76CBE8E8F79E}"
 	ProjectSection(SolutionItems) = preProject
-		vcpkg.natvis = vcpkg.natvis
+		vcpkg.natvis = ..\vcpkg.natvis
 	EndProjectSection
 EndProject
 Global
@@ -46,14 +46,6 @@ Global
 		{7D6FDEEB-B299-4A23-85EE-F67C4DED47BE}.Release|x64.Build.0 = Release|x64
 		{7D6FDEEB-B299-4A23-85EE-F67C4DED47BE}.Release|x86.ActiveCfg = Release|Win32
 		{7D6FDEEB-B299-4A23-85EE-F67C4DED47BE}.Release|x86.Build.0 = Release|Win32
-		{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}.Debug|x64.ActiveCfg = Debug|x64
-		{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}.Debug|x64.Build.0 = Debug|x64
-		{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}.Debug|x86.ActiveCfg = Debug|Win32
-		{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}.Debug|x86.Build.0 = Debug|Win32
-		{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}.Release|x64.ActiveCfg = Release|x64
-		{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}.Release|x64.Build.0 = Release|x64
-		{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}.Release|x86.ActiveCfg = Release|Win32
-		{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
