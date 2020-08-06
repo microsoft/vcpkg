@@ -21,6 +21,7 @@ get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_PATH})
 
 vcpkg_configure_make(
+        COPY_SOURCE
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             --with-hwloc=internal
