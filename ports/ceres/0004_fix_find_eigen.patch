@@ -69,15 +69,6 @@ diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
 index c4ed71f..b3d6a17 100644
 --- a/cmake/CeresConfig.cmake.in
 +++ b/cmake/CeresConfig.cmake.in
-@@ -70,7 +70,7 @@
- # unsets all public (designed to be used externally) variables and reports
- # error message at priority depending upon [REQUIRED/QUIET/<NONE>] argument.
- macro(CERES_REPORT_NOT_FOUND REASON_MSG)
--  # FindPackage() only references Ceres_FOUND, and requires it to be
-+# FindPackage() only references Ceres_FOUND, and requires it to be
-   # explicitly set FALSE to denote not found (not merely undefined).
-   set(Ceres_FOUND FALSE)
-   set(CERES_FOUND FALSE)
 @@ -202,39 +202,39 @@ set(CERES_VERSION @CERES_VERSION@ )
  
  # Eigen.
