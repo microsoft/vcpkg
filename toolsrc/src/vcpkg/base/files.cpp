@@ -102,7 +102,7 @@ namespace vcpkg::Files
             return status_implementation(false, p, ec);
         }
 
-#if defined(_WIN32) && !((defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM)
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
         fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
         {
             ec.clear();
@@ -133,11 +133,11 @@ namespace vcpkg::Files
             CloseHandle(handle);
             return target;
         }
-#endif // ^^^ !defined(_WIN32) || ((defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM)
+#endif // ^^^ !defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
 
         void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
         {
-#if defined(_WIN32) && !((defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM)
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
             const auto target = read_symlink_implementation(oldpath, ec);
             if (ec) return;
 
@@ -155,10 +155,9 @@ namespace vcpkg::Files
             }
             ec.clear();
             return;
-#else  // ^^^ defined(_WIN32) && !((defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM) //
-       // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
+#else  // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
             return fs::stdfs::copy_symlink(oldpath, newpath, ec);
-#endif // ^^^ !defined(_WIN32) || ((defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM)
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
         }
 
         // does _not_ follow symlinks
@@ -705,14 +704,13 @@ namespace vcpkg::Files
                         }
 #endif // ^^^ !defined(_WIN32)
                     }
-#if (defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM
+#if !VCPKG_USE_STD_FILESYSTEM
                     else
                     {
                         fs::stdfs::remove(current_path, ec);
                         if (check_ec(ec, current_path, err)) return;
                     }
-#else // ^^^ (defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM // !((defined(_MSC_VER) && _MSC_VER >
-      // 1900) || VCPKG_USE_STD_FILESYSTEM) vvv
+#else // ^^^  !VCPKG_USE_STD_FILESYSTEM // VCPKG_USE_STD_FILESYSTEM vvv
 #if defined(_WIN32)
                     else if (path_type == fs::file_type::directory_symlink)
                     {
@@ -737,7 +735,7 @@ namespace vcpkg::Files
                         }
                     }
 #endif // ^^^ !defined(_WIN32)
-#endif // ^^^ !((defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM)
+#endif // ^^^ VCPKG_USE_STD_FILESYSTEM
 
                     check_ec(ec, current_path, err);
                 }
@@ -902,10 +900,9 @@ namespace vcpkg::Files
 
         virtual fs::path absolute(const fs::path& path, std::error_code& ec) const override
         {
-#if (defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM
+#if VCPKG_USE_STD_FILESYSTEM
             return fs::stdfs::absolute(path, ec);
-#else // ^^^ (defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM  / !((defined(_MSC_VER) && _MSC_VER >
-      // 1900) || VCPKG_USE_STD_FILESYSTEM)  vvv
+#else // ^^^ VCPKG_USE_STD_FILESYSTEM  /  !VCPKG_USE_STD_FILESYSTEM  vvv
 #if defined(_WIN32)
             // absolute was called system_complete in experimental filesystem
             return fs::stdfs::system_complete(path, ec);
@@ -921,7 +918,7 @@ namespace vcpkg::Files
                 return std::move(current_path) / path;
             }
 #endif // ^^^ !defined(_WIN32)
-#endif // ^^^ !((defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM)
+#endif // ^^^ !VCPKG_USE_STD_FILESYSTEM
         }
 
         virtual fs::path canonical(const fs::path& path, std::error_code& ec) const override
@@ -1130,10 +1127,9 @@ namespace vcpkg::Files
 
     fs::path combine(const fs::path& lhs, const fs::path& rhs)
     {
-#if (defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM
+#if VCPKG_USE_STD_FILESYSTEM
         return lhs / rhs;
-#else // ^^^ (defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM // !((defined(_MSC_VER) && _MSC_VER >
-      // 1900) || VCPKG_USE_STD_FILESYSTEM) vvv
+#else // ^^^ VCPKG_USE_STD_FILESYSTEM // !VCPKG_USE_STD_FILESYSTEM vvv
         if (rhs.is_absolute())
         {
             return rhs;

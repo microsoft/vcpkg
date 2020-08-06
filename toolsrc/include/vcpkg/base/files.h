@@ -2,8 +2,18 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/ignore_errors.h>
+#include <vcpkg/base/pragmas.h>
 
-#if (defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM
+#include <string.h>
+
+#if !defined(VCPKG_USE_STD_FILESYSTEM) && defined(_MSVC_STL_UPDATE)
+#if _MSVC_STL_UPDATE >= 201803
+// this is for bootstrapping
+#define VCPKG_USE_STD_FILESYSTEM 1
+#endif
+#endif
+
+#if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
 #else
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
@@ -12,7 +22,7 @@
 
 namespace fs
 {
-#if (defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM
+#if VCPKG_USE_STD_FILESYSTEM
     namespace stdfs = std::filesystem;
 #else
     namespace stdfs = std::experimental::filesystem;
