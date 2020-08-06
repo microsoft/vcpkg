@@ -23,6 +23,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# The include file must be patched after the build has completed, because the source files use the wrong subdirectory name!
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include/libu2f-server
+    PATCHES windows2.patch
+)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_copy_pdbs()
