@@ -3,5 +3,5 @@
   "version-string": "jun10",
   "homepage": "https://www.microsoft.com/en-us/download/details.aspx?id=6812",
   "description": "DirectX SDK",
-  "supports": "windows & !arm"
+  "supports": "windows & !arm & !uwp"
 }
