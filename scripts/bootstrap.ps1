@@ -356,7 +356,7 @@ if ($win64)
     }
 
     $platform = "x64"
-    $vcpkgReleaseDir = "$vcpkgBootstrapPath\windows-bootstrap\msbuild.x64.release"
+    $vcpkgReleaseDir = "$vcpkgBootstrapPath\msbuild.x64.release"
 }
 
 if ($architecture -like "*64*")
