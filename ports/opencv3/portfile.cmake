@@ -18,6 +18,7 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
+      0005-fix-vtk9.patch
       0009-fix-uwp.patch
 )
 

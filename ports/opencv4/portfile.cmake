@@ -19,6 +19,7 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
+      0005-fix-vtk9.patch
       0009-fix-uwp.patch
 )
 
@@ -129,6 +130,7 @@ if("contrib" IN_LIST FEATURES)
     HEAD_REF master
     PATCHES
       0005-add-missing-stdexcept-include.patch
+      0007-fix-vtk9-contrib.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
