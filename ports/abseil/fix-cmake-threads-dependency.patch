@@ -1,4 +1,4 @@
-diff --git a/CMake/abslConfig.cmake.in b/CMake/abslConfig.cmake.in.copy
+diff --git a/CMake/abslConfig.cmake.in b/CMake/abslConfig.cmake.in
 index 60847fa77..6d23f63d3 100644
 --- a/CMake/abslConfig.cmake.in
 +++ b/CMake/abslConfig.cmake.in
