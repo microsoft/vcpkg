@@ -129,6 +129,7 @@ if("contrib" IN_LIST FEATURES)
     HEAD_REF master
     PATCHES
       0005-add-missing-stdexcept-include.patch
+      0006-fixovisincludepath.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 

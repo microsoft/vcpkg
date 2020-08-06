@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9fddbe7..bc49132 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -332,15 +332,15 @@ cmake_dependent_option(OGRE_BUILD_COMPONENT_TERRAIN "Build Terrain component" TR
+ cmake_dependent_option(OGRE_BUILD_COMPONENT_VOLUME "Build Volume component" TRUE "" FALSE)
+ cmake_dependent_option(OGRE_BUILD_COMPONENT_PROPERTY "Build Property component" TRUE "" FALSE)
+ cmake_dependent_option(OGRE_BUILD_PLUGIN_CG "Build Cg plugin" TRUE "Cg_FOUND;NOT APPLE_IOS;NOT WINDOWS_STORE;NOT WINDOWS_PHONE" FALSE)
+-cmake_dependent_option(OGRE_BUILD_COMPONENT_OVERLAY "Build Overlay component" TRUE "FREETYPE_FOUND" FALSE)
++cmake_dependent_option(OGRE_BUILD_COMPONENT_OVERLAY "Build Overlay component" TRUE "FREETYPE_FOUND" TRUE)
+ 
+-cmake_dependent_option(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI "Include dear imgui in Overlays" TRUE "OGRE_BUILD_COMPONENT_OVERLAY" FALSE)
++cmake_dependent_option(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI "Include dear imgui in Overlays" TRUE "OGRE_BUILD_COMPONENT_OVERLAY" TRUE)
+ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/Components/Overlay/src/imgui")
+     set(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI FALSE CACHE BOOL "imgui not found" FORCE)
+ endif()
+ 
+ option(OGRE_BUILD_COMPONENT_HLMS "Build HLMS component" FALSE)
+-cmake_dependent_option(OGRE_BUILD_COMPONENT_BITES "Build OgreBites component" TRUE "OGRE_BUILD_COMPONENT_OVERLAY" FALSE)
++cmake_dependent_option(OGRE_BUILD_COMPONENT_BITES "Build OgreBites component" TRUE "OGRE_BUILD_COMPONENT_OVERLAY" TRUE)
+ cmake_dependent_option(OGRE_BUILD_COMPONENT_PYTHON "Build Python bindings" TRUE "NOT OGRE_STATIC" FALSE)
+ cmake_dependent_option(OGRE_BUILD_COMPONENT_JAVA "Build Java (JNI) bindings" TRUE "NOT OGRE_STATIC OR ANDROID" FALSE)
+ cmake_dependent_option(OGRE_BUILD_COMPONENT_CSHARP "Build Csharp bindings" TRUE "NOT OGRE_STATIC" FALSE)
+diff --git a/Components/Bites/CMakeLists.txt b/Components/Bites/CMakeLists.txt
+index 5d58a8d..6f3066a 100644
+--- a/Components/Bites/CMakeLists.txt
++++ b/Components/Bites/CMakeLists.txt
+@@ -130,9 +130,10 @@ if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
+ endif()
+ 
+ # setup target
++find_package(imgui CONFIG REQUIRED)
+ add_library(OgreBites ${OGRE_COMP_LIB_TYPE} ${HEADER_FILES} ${SOURCES})
+ set_target_properties(OgreBites PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
+-target_link_libraries(OgreBites PUBLIC OgreMain OgreOverlay PRIVATE ${DEPENDENCIES})
++target_link_libraries(OgreBites PUBLIC OgreMain OgreOverlay PRIVATE ${DEPENDENCIES} imgui::imgui)
+ if (OGRE_BUILD_COMPONENT_RTSHADERSYSTEM)
+   target_link_libraries(OgreBites PUBLIC OgreRTShaderSystem)
+ endif ()
+diff --git a/Components/Overlay/CMakeLists.txt b/Components/Overlay/CMakeLists.txt
+index d3e756e..bd05a71 100644
+--- a/Components/Overlay/CMakeLists.txt
++++ b/Components/Overlay/CMakeLists.txt
+@@ -28,7 +28,7 @@ endif()
+ # setup target
+ add_library(OgreOverlay ${OGRE_COMP_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES})
+ set_target_properties(OgreOverlay PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
+-target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE ${FREETYPE_LIBRARIES} ZLIB::ZLIB imgui::imgui)
++target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE freetype ZLIB::ZLIB imgui::imgui)
+ target_include_directories(OgreOverlay PUBLIC 
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+   $<INSTALL_INTERFACE:include/OGRE/Overlay>
