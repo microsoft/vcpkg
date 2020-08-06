@@ -24,7 +24,7 @@
 #include <chrono>
 #include <codecvt>
 
-#if VCPKG_USE_STD_FILESYSTEM
+#if (defined(_MSC_VER) && _MSC_VER > 1900) || VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
 #else
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
