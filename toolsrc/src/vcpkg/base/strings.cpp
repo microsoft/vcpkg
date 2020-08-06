@@ -182,6 +182,15 @@ std::vector<std::string> Strings::split(StringView s, const char delimiter)
     }
 }
 
+std::vector<std::string> Strings::split_paths(StringView s)
+{
+#if defined(_WIN32)
+    return Strings::split(std::move(s),';');
+#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv 
+    return Strings::split(std::move(s),':');
+#endif
+}
+
 const char* Strings::find_first_of(StringView input, StringView chars)
 {
     return std::find_first_of(input.begin(), input.end(), chars.begin(), chars.end());
