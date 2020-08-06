@@ -127,7 +127,7 @@ else()
     set(OPTIONS "${OPTIONS} --disable-bzlib")
 endif()
 
-set (ENABLE_AVRESAMPLE OFF)
+set(ENABLE_AVRESAMPLE OFF)
 if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
     set (ENABLE_AVRESAMPLE ON) #necessary for configuring FFMPEG CMake Module
