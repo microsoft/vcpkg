@@ -1,7 +1,7 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkg", "vcpkg\vcpkg.vcxproj", "{34671B80-54F9-46F5-8310-AC429C11D4FB}"
 EndProject
@@ -9,9 +9,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkglib", "vcpkglib\vcpkgl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkgmetricsuploader", "vcpkgmetricsuploader\vcpkgmetricsuploader.vcxproj", "{7D6FDEEB-B299-4A23-85EE-F67C4DED47BE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BCE555DF-F471-4ACC-98E5-76CBE8E8F79E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E4FAF582-0DB7-4CF5-BAE0-E2D38C48593B}"
 	ProjectSection(SolutionItems) = preProject
-		vcpkg.natvis = ..\vcpkg.natvis
+		..\vcpkg.natvis = ..\vcpkg.natvis
 	EndProjectSection
 EndProject
 Global
@@ -50,10 +50,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{A0122231-04D5-420B-81CA-7960946E5E65} = {F5893B21-EA71-4432-84D6-5FB0E0461A2A}
-	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DEDCC7AF-0FE6-4387-9FFE-495D6C1AEE1B}
+		SolutionGuid = {030760DE-1214-461B-B241-39608AD6FB66}
 	EndGlobalSection
 EndGlobal
