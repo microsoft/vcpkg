@@ -16,7 +16,6 @@
 #if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
 #else
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
 #endif
 
@@ -32,7 +31,20 @@ namespace fs
     using stdfs::directory_iterator;
     using stdfs::path;
     using stdfs::perms;
-    using stdfs::u8path;
+
+    path u8path(vcpkg::StringView s);
+    inline path u8path(const char* first, const char* last) { return u8path(vcpkg::StringView{first, last}); }
+    inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
+
+#if defined(_MSC_VER)
+    inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
+    {
+        return u8path(vcpkg::StringView{first.operator->(), last.operator->()});
+    }
+#endif
+
+    std::string u8string(const path& p);
+    std::string generic_u8string(const path& p);
 
 #if defined(_WIN32)
     enum class file_type

@@ -21,11 +21,11 @@ TEST_CASE ("build smoke test", "[commands-build]")
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_arg_sequence(std::begin(args_raw), std::end(args_raw));
     args.binary_caching = false;
     args.buildtrees_root_dir =
-        std::make_unique<std::string>((Test::base_temporary_directory() / fs::u8path("buildtrees")).u8string());
+        std::make_unique<std::string>(fs::u8string(Test::base_temporary_directory() / fs::u8path("buildtrees")));
     args.install_root_dir =
-        std::make_unique<std::string>((Test::base_temporary_directory() / fs::u8path("installed")).u8string());
+        std::make_unique<std::string>(fs::u8string(Test::base_temporary_directory() / fs::u8path("installed")));
     args.packages_root_dir =
-        std::make_unique<std::string>((Test::base_temporary_directory() / fs::u8path("packages")).u8string());
+        std::make_unique<std::string>(fs::u8string(Test::base_temporary_directory() / fs::u8path("packages")));
     VcpkgPaths paths(fs_wrapper, args);
     if (fs_wrapper.exists(paths.buildtrees)) fs_wrapper.remove_all_inside(paths.buildtrees, VCPKG_LINE_INFO);
     if (fs_wrapper.exists(paths.packages)) fs_wrapper.remove_all_inside(paths.packages, VCPKG_LINE_INFO);

@@ -70,11 +70,11 @@ namespace vcpkg
                            has_xml_version,
                            R"(Could not find <tools version="%s"> in %s)",
                            XML_VERSION,
-                           XML_PATH.u8string());
+                           fs::u8string(XML_PATH));
         Checks::check_exit(VCPKG_LINE_INFO,
                            XML_VERSION == match_xml_version[1],
                            "Expected %s version: [%s], but was [%s]. Please re-run bootstrap-vcpkg.",
-                           XML_PATH.u8string(),
+                           fs::u8string(XML_PATH),
                            XML_VERSION,
                            match_xml_version[1]);
 
@@ -84,7 +84,7 @@ namespace vcpkg
         if (!has_tool_entry)
         {
             return Strings::format(
-                "Could not find entry for tool %s in %s for os=%s", tool, XML_PATH.u8string(), OS_STRING);
+                "Could not find entry for tool %s in %s for os=%s", tool, fs::u8string(XML_PATH), OS_STRING);
         }
 
         const std::string tool_data =
@@ -189,7 +189,7 @@ namespace vcpkg
         if (!fs.exists(tool_data.download_path))
         {
             System::print2("Downloading ", tool_name, "...\n");
-            System::print2("  ", tool_data.url, " -> ", tool_data.download_path.u8string(), "\n");
+            System::print2("  ", tool_data.url, " -> ", fs::u8string(tool_data.download_path), "\n");
             Downloads::download_file(fs, tool_data.url, tool_data.download_path, tool_data.sha512);
         }
         else
@@ -212,7 +212,7 @@ namespace vcpkg
         Checks::check_exit(VCPKG_LINE_INFO,
                            fs.exists(tool_data.exe_path),
                            "Expected %s to exist after fetching",
-                           tool_data.exe_path.u8string());
+                           fs::u8string(tool_data.exe_path));
 
         return tool_data.exe_path;
     }
@@ -286,7 +286,7 @@ namespace vcpkg
         }
         virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            const std::string cmd = Strings::format(R"("%s" --version)", path_to_exe.u8string());
+            const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -312,7 +312,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
         virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            const std::string cmd = Strings::format(R"("%s" --version)", path_to_exe.u8string());
+            const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -384,7 +384,7 @@ Type 'NuGet help <command>' for help on a specific command.
 
         virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            const std::string cmd = Strings::format(R"("%s" --version)", path_to_exe.u8string());
+            const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -451,7 +451,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
 
         virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            const std::string cmd = Strings::format(R"("%s" --framework-version)", path_to_exe.u8string());
+            const std::string cmd = Strings::format(R"("%s" --framework-version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {

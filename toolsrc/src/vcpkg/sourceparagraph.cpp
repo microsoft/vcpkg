@@ -361,7 +361,7 @@ namespace vcpkg
 
     static ParseExpected<SourceParagraph> parse_source_paragraph(const fs::path& path_to_control, Paragraph&& fields)
     {
-        auto origin = path_to_control.u8string();
+        auto origin = fs::u8string(path_to_control);
 
         ParagraphParser parser(std::move(fields));
 
@@ -424,7 +424,7 @@ namespace vcpkg
 
     static ParseExpected<FeatureParagraph> parse_feature_paragraph(const fs::path& path_to_control, Paragraph&& fields)
     {
-        auto origin = path_to_control.u8string();
+        auto origin = fs::u8string(path_to_control);
         ParagraphParser parser(std::move(fields));
 
         auto fpgh = std::make_unique<FeatureParagraph>();
@@ -450,7 +450,7 @@ namespace vcpkg
         if (control_paragraphs.size() == 0)
         {
             auto ret = std::make_unique<Parse::ParseControlErrorInfo>();
-            ret->name = path_to_control.u8string();
+            ret->name = fs::u8string(path_to_control);
             return ret;
         }
 
@@ -965,7 +965,7 @@ namespace vcpkg
         } err = {};
         auto visit = Json::Reader{&err};
 
-        err.pcei.name = path_to_manifest.u8string();
+        err.pcei.name = fs::u8string(path_to_manifest);
         {
             auto extra_fields = invalid_json_fields(manifest, get_list_of_manifest_fields());
             if (!extra_fields.empty())

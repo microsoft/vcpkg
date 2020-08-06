@@ -125,7 +125,7 @@ namespace
         {
             // regular symlink
             auto base_link = base;
-            base_link.replace_filename(base.filename().u8string() + "-orig");
+            base_link.replace_filename(fs::u8string(base.filename()) + "-orig");
             fs.write_contents(base_link, "", ec);
             CHECK_EC_ON_FILE(base_link, ec);
             vcpkg::Test::create_symlink(base_link, base, ec);
