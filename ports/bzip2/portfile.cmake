@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(BZIP2_VERSION 1.0.6) # TODO: Update to 1.0.8
 vcpkg_download_distfile(ARCHIVE # TODO: switch to vcpkg_from_git with https://sourceware.org/git/?p=bzip2.git;a=summary
     URLS "https://github.com/past-due/bzip2-mirror/releases/download/v${BZIP2_VERSION}/bzip2-${BZIP2_VERSION}.tar.gz"
