@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF dev
 )
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
+if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
     message(FATAL_ERROR "Feature cuda and cuda-redist require x64 triplet.")
 endif()
 
