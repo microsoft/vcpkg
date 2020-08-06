@@ -130,7 +130,7 @@ endif()
 set(ENABLE_AVRESAMPLE OFF)
 if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
-    set (ENABLE_AVRESAMPLE ON) #necessary for configuring FFMPEG CMake Module
+    set(ENABLE_AVRESAMPLE ON) #necessary for configuring FFMPEG CMake Module
 endif()
 
 if (VCPKG_TARGET_IS_OSX)
