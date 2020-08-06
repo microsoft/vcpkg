@@ -39,7 +39,15 @@ namespace fs
 #if defined(_MSC_VER)
     inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
     {
-        return u8path(vcpkg::StringView{first.operator->(), last.operator->()});
+        if (first == last)
+        {
+            return path{};
+        }
+        else
+        {
+            auto firstp = &*first;
+            return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
+        }
     }
 #endif
 
