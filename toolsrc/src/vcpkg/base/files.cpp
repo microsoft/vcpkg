@@ -1075,7 +1075,6 @@ namespace vcpkg::Files
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
-
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
             auto paths = Strings::split_paths(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO));
 

@@ -185,9 +185,9 @@ std::vector<std::string> Strings::split(StringView s, const char delimiter)
 std::vector<std::string> Strings::split_paths(StringView s)
 {
 #if defined(_WIN32)
-    return Strings::split(std::move(s),';');
-#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv 
-    return Strings::split(std::move(s),':');
+    return Strings::split(std::move(s), ';');
+#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+    return Strings::split(std::move(s), ':');
 #endif
 }
 
