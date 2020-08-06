@@ -47,8 +47,8 @@ Total elapsed time: 12.04 s
 
 The package sqlite3:x86-windows provides CMake targets:
 
-    find_package(sqlite3 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE sqlite3)
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3))
 
 ```
 
@@ -118,11 +118,11 @@ Now let's make a simple CMake project with a main file.
 cmake_minimum_required(VERSION 3.0)
 project(test)
 
-find_package(sqlite3 CONFIG REQUIRED)
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
 add_executable(main main.cpp)
 
-target_link_libraries(main PRIVATE sqlite3)
+target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
 ```
 ```cpp
 // main.cpp
