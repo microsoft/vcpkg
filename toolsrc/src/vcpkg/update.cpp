@@ -87,4 +87,9 @@ namespace vcpkg::Update
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void UpdateCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Update::perform_and_exit(args, paths);
+    }
 }
