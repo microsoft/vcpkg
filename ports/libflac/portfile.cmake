@@ -17,7 +17,8 @@ endif()
 
 if(VCPKG_TARGET_IS_MINGW)
     set(WITH_STACK_PROTECTOR OFF)
-    set(DISABLE_FORTIFYING "-D_FORTIFY_SOURCE=0")
+    string(APPEND VCPKG_C_FLAGS "-D_FORTIFY_SOURCE=0")
+    string(APPEND VCPKG_CXX_FLAGS "-D_FORTIFY_SOURCE=0")
 else()
     set(WITH_STACK_PROTECTOR ON)
 endif()
@@ -31,9 +32,7 @@ vcpkg_configure_cmake(
         -DBUILD_DOCS=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-        -DWITH_STACK_PROTECTOR=${WITH_STACK_PROTECTOR}
-        -DCMAKE_C_FLAGS=${DISABLE_FORTIFYING}
-        -DCMAKE_CXX_FLAGS=${DISABLE_FORTIFYING})
+        -DWITH_STACK_PROTECTOR=${WITH_STACK_PROTECTOR})
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(
@@ -67,5 +66,4 @@ endif()
 
 # This license (BSD) is relevant only for library - if someone would want to install
 # FLAC cmd line tools as well additional license (GPL) should be included
-file(COPY ${SOURCE_PATH}/COPYING.Xiph DESTINATION ${CURRENT_PACKAGES_DIR}/share/libflac)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libflac/COPYING.Xiph ${CURRENT_PACKAGES_DIR}/share/libflac/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.Xiph DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
