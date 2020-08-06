@@ -1147,6 +1147,7 @@ networkdirect-sdk:x64-linux=fail
 networkdirect-sdk:x64-osx=fail
 networkdirect-sdk:x64-uwp=fail
 networkdirect-sdk:x86-windows=fail
+ngspice:x64-windows-static=fail
 nmslib:arm64-windows=fail
 nmslib:arm-uwp=fail
 nmslib:x64-uwp=fail
@@ -1458,9 +1459,6 @@ qt5-x11extras:x64-osx=fail
 qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
-# Broken by VS2019 16.6 and throws a ton of dialogs attempting to build
-# fixed by https://github.com/microsoft/vcpkg/pull/11596
-qt5-translations:x64-windows-static=skip
 quickfix:arm-uwp=fail
 quickfix:arm64-windows=fail
 quickfix:x64-uwp=fail
@@ -1832,9 +1830,6 @@ vxl:x64-windows        = skip
 vxl:x64-windows-static = skip
 vxl:x86-windows        = skip
 wampcc:arm64-windows=fail
-wavpack:arm64-windows=fail
-wavpack:x64-linux=fail
-wavpack:x64-osx=fail
 wepoll:arm-uwp=fail
 wepoll:x64-uwp=fail
 wepoll:x64-linux=fail

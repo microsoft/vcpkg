@@ -55,8 +55,8 @@ Total elapsed time: 44.82 s
 
 The package sqlite3:x64-linux-dynamic provides CMake targets:
 
-    find_package(sqlite3 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE sqlite3)
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
 ```
 
 Overlay triplets enables your custom triplet files when using `vcpkg install`, `vcpkg update`, `vcpkg upgrade`, and `vcpkg remove`.
@@ -115,8 +115,8 @@ Total elapsed time: 44.82 s
 
 The package sqlite3:x64-linux provides CMake targets:
 
-    find_package(sqlite3 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE sqlite3)
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
 ```
 
 Note that the default triplet is masked by your custom triplet:
