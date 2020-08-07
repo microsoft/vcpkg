@@ -159,7 +159,7 @@ namespace vcpkg::Files
             CloseHandle(handle);
             return target;
         }
-#endif // ^^^ !defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+#endif // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
 
         void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
         {
@@ -731,13 +731,13 @@ namespace vcpkg::Files
                         }
 #endif // ^^^ !defined(_WIN32)
                     }
-#if !VCPKG_USE_STD_FILESYSTEM
+#if VCPKG_USE_STD_FILESYSTEM
                     else
                     {
                         fs::stdfs::remove(current_path, ec);
                         if (check_ec(ec, current_path, err)) return;
                     }
-#else // ^^^  !VCPKG_USE_STD_FILESYSTEM // VCPKG_USE_STD_FILESYSTEM vvv
+#else // ^^^  VCPKG_USE_STD_FILESYSTEM // !VCPKG_USE_STD_FILESYSTEM vvv
 #if defined(_WIN32)
                     else if (path_type == fs::file_type::directory_symlink)
                     {
@@ -762,7 +762,7 @@ namespace vcpkg::Files
                         }
                     }
 #endif // ^^^ !defined(_WIN32)
-#endif // ^^^ VCPKG_USE_STD_FILESYSTEM
+#endif // ^^^ !VCPKG_USE_STD_FILESYSTEM
 
                     check_ec(ec, current_path, err);
                 }
