@@ -149,9 +149,9 @@ else()
 endif()
 
 if("nvcodec" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
+    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid")
 else()
-    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
+    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-nvdec  --disable-cuvid")
 endif()
 
 set(ENABLE_OPENCL OFF)
