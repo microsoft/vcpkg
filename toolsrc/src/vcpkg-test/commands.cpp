@@ -24,7 +24,7 @@ TEST_CASE ("get_available_basic_commands works", "[commands]")
 TEST_CASE ("get_available_paths_commands works", "[commands]")
 {
     auto commands_list = Commands::get_available_paths_commands();
-    CHECK(commands_list.size() == 18);
+    CHECK(commands_list.size() == 19);
 
     CHECK(Commands::find("/?", commands_list) != nullptr);
     CHECK(Commands::find("help", commands_list) != nullptr);
@@ -42,6 +42,7 @@ TEST_CASE ("get_available_paths_commands works", "[commands]")
     CHECK(Commands::find("fetch", commands_list) != nullptr);
     CHECK(Commands::find("x-ci-clean", commands_list) != nullptr);
     CHECK(Commands::find("x-history", commands_list) != nullptr);
+    CHECK(Commands::find("x-package-info", commands_list) != nullptr);
     CHECK(Commands::find("x-vsinstances", commands_list) != nullptr);
     CHECK(Commands::find("x-format-manifest", commands_list) != nullptr);
 
