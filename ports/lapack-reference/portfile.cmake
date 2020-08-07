@@ -17,6 +17,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(ENV{FFLAGS} "$ENV{FFLAGS} -fPIC")
 
 set(CBLAS OFF)
 if("cblas" IN_LIST FEATURES)
