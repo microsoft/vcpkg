@@ -12,7 +12,9 @@
 
 function(vcpkg_find_fortran additional_cmake_args_out)
     set(ARGS_OUT)
-    set(CMAKE_BINARY_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+    set(CMAKE_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
+    set(CMAKE_CURRENT_BINARY_DIR "${CMAKE_BINARY_DIR}")
+    set(CMAKE_PLATFORM_INFO_DIR "${CMAKE_BINARY_DIR}/Platform")
     include(CMakeDetermineFortranCompiler)
     if(NOT CMAKE_Fortran_COMPILER AND NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
     # This intentionally breaks users with a custom toolchain which do not have a Fortran compiler setup
