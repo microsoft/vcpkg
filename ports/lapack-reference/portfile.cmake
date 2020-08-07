@@ -17,7 +17,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(ENV{FFLAGS} "$ENV{FFLAGS} -fPIC")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(ENV{FFLAGS} "$ENV{FFLAGS} -fPIC")
+endif()
 
 set(CBLAS OFF)
 if("cblas" IN_LIST FEATURES)
