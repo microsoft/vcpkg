@@ -37,8 +37,8 @@ function(vcpkg_find_fortran additional_cmake_args_out)
             vcpkg_add_to_path("${MINGW_BIN}")
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake") # Switching to MinGW toolchain for Fortran
             list(APPEND ARGS_OUT -DCMAKE_GNUtoMS=ON
-                                 -DCMAKE_Fortran_COMPILER="${MINGW_BIN}/gfortran.exe"
-                                 -DCMAKE_Fortran_FLAGS_INIT=" -mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
+                                 "-DCMAKE_Fortran_COMPILER=${MINGW_BIN}/gfortran.exe"
+                                 "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
             set(VCPKG_USE_INTERNAL_Fortran TRUE PARENT_SCOPE)
             if(VCPKG_CRT_LINKAGE STREQUAL "static")
                 set(VCPKG_CRT_LINKAGE dynamic)
