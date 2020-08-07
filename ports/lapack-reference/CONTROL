@@ -8,7 +8,7 @@ Feature: cblas
 Description: Builds CBLAS
 
 Feature: noblas
-Build-Depends: openblas (!osx)
+Build-Depends: openblas
 Description: Use external optimized BLAS
 
 Feature: blas-select
