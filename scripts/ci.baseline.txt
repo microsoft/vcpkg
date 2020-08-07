@@ -1553,8 +1553,6 @@ sdl2-net:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/issues/10918
 seal:arm-uwp=fail
 seal:x64-uwp=fail
-secp256k1:x64-linux=fail
-secp256k1:x64-osx=fail
 sentencepiece:arm64-windows=fail
 sentencepiece:arm-uwp=fail
 sentencepiece:x64-uwp=fail
