@@ -870,8 +870,6 @@ libtins:arm-uwp=fail
 libtins:x64-uwp=fail
 libtomcrypt:arm64-windows=fail
 libtomcrypt:arm-uwp=fail
-libtorrent:arm-uwp=fail
-libtorrent:x64-uwp=fail
 libudis86:arm-uwp=fail
 libudis86:x64-linux=fail
 libudis86:x64-osx=fail
@@ -1416,7 +1414,7 @@ qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-activeqt:x64-linux=fail
 qt5-activeqt:x64-osx=fail
-# Skip deprecated Qt module 
+# Skip deprecated Qt module
 # (remnove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
 qt5-canvas3d:x64-osx=skip
