@@ -1,9 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO KDE/karchive
+    REPO KDE/kcompletion
     REF v5.64.0
-    SHA512 006cd9117eec02e1471b3b0082ee5f21161dc9c52855b6e4be7f3f3614bde9e22a3392f4a90be23654b648a003761bfa70a5497974577da43807eaf56fa126ba
+    SHA512 1d597bc0e82d1570b1ff7b254425ab18d4d505a0b7f475a43b51d70566b91e763b86675837421c3f09073544efa77e673e9d2cfef586c12684fc9fe7b0c6a0cc
     HEAD_REF master
+    # reported issue, just a manual workaround until the issue is fixed upstream
+    PATCHES 
+        "add-qdbus-to-required-libraries.patch"
 )
 
 vcpkg_configure_cmake(
@@ -14,14 +17,17 @@ vcpkg_configure_cmake(
         -DBUILD_MAN_DOCS=OFF
         -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
+        -DBUILD_DESIGNERPLUGIN=OFF
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Archive)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Completion)
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

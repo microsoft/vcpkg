@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO KDE/karchive
+    REPO KDE/kguiaddons
     REF v5.64.0
-    SHA512 006cd9117eec02e1471b3b0082ee5f21161dc9c52855b6e4be7f3f3614bde9e22a3392f4a90be23654b648a003761bfa70a5497974577da43807eaf56fa126ba
+    SHA512 98d07360f02b473997cdbf9e9b832ea8c4a459a73669eff1db5276dfbd63e9a9088e3c1ed99d70cc1433468e1efcbce43d22fefdf75a399f4812e0fc4a4f13b1
     HEAD_REF master
 )
 
@@ -17,11 +17,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Archive)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5GuiAddons)
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
