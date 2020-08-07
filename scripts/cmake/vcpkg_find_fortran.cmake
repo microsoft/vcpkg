@@ -35,11 +35,11 @@ function(vcpkg_find_fortran additional_cmake_args_out)
             vcpkg_acquire_msys(MSYS_ROOT "mingw-w64-${MSYS_TARGET}-gcc-fortran")
             set(MINGW_BIN "${MSYS_ROOT}/${MINGW_PATH}/bin")
             vcpkg_add_to_path("${MINGW_BIN}")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake") # Switching to MinGW toolchain for Fortran
             list(APPEND ARGS_OUT -DCMAKE_GNUtoMS=ON
                                  "-DCMAKE_Fortran_COMPILER=${MINGW_BIN}/gfortran.exe"
                                  "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
             set(VCPKG_USE_INTERNAL_Fortran TRUE PARENT_SCOPE)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake" PARENT_SCOPE) # Switching to MinGW toolchain for Fortran
             if(VCPKG_CRT_LINKAGE STREQUAL "static")
                 set(VCPKG_CRT_LINKAGE dynamic)
                 message(STATUS "VCPKG_CRT_LINKAGE linkage for ${PORT} using vcpkg's internal gfortran cannot be static due to linking against MinGW libraries. Forcing dynamic CRT linkage")
