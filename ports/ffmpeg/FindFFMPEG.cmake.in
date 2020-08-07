@@ -155,8 +155,8 @@ endif()
 
 if(@ENABLE_WAVPACK@)
   find_dependency(wavpack)
-  get_target_property(WAVPACK_LIBRARY_RELEASE Wavpack::wavpack IMPORTED_LOCATION_RELEASE)
-  get_target_property(WAVPACK_LIBRARY_DEBUG Wavpack::wavpack IMPORTED_LOCATION_DEBUG)
+  get_target_property(WAVPACK_LIBRARY_RELEASE WavPack::wavpack IMPORTED_LOCATION_RELEASE)
+  get_target_property(WAVPACK_LIBRARY_DEBUG WavPack::wavpack IMPORTED_LOCATION_DEBUG)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS "$<$<CONFIG:Debug>:${WAVPACK_LIBRARY_DEBUG}>$<$<CONFIG:Release>:${WAVPACK_LIBRARY_RELEASE}>")
 endif()
 
