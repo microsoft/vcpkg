@@ -2,5 +2,6 @@
   "name": "behaviortree-cpp",
   "version-string": "3.5.1",
   "description": "Behavior Trees Library in C++.",
-  "homepage": "https://www.behaviortree.dev"
+  "homepage": "https://www.behaviortree.dev",
+  "supports": "!uwp"
 }
