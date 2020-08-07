@@ -17,6 +17,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+
 set(CBLAS OFF)
 if("cblas" IN_LIST FEATURES)
     set(CBLAS ON)
@@ -36,7 +37,6 @@ if("noblas" IN_LIST FEATURES)
 endif()
 
 set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
-
 vcpkg_find_fortran(FORTRAN_CMAKE)
 if(VCPKG_USE_INTERNAL_Fortran)
     if(VCPKG_CRT_LINKAGE_BACKUP STREQUAL static) 
