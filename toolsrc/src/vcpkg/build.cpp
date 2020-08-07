@@ -333,8 +333,8 @@ namespace vcpkg::Build
                     powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);
             }
 
-            auto clean_env = System::get_modified_clean_environment(base_env.env_map,
-                                                                    fs::u8string(powershell_exe_path.parent_path()) + ";");
+            auto clean_env = System::get_modified_clean_environment(
+                base_env.env_map, fs::u8string(powershell_exe_path.parent_path()) + ";");
             if (build_env_cmd.empty())
                 return clean_env;
             else
