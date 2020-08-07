@@ -49,6 +49,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_configure_make(
         COPY_SOURCE
+        AUTOCONFIG
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS 
             --with-oracle-import=runtime
