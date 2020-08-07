@@ -210,7 +210,7 @@ add_library(cairo ${SOURCES})
 if (WITH_X11)
     target_compile_definitions(cairo PUBLIC -DCAIRO_HAS_XLIB_SURFACE=1)
 endif()
-
+target_include_directories(cairo PUBLIC ${FREETYPE_INCLUDE_DIRS})
 target_link_libraries(cairo PRIVATE ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
 
 if(WIN32)
