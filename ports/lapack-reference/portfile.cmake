@@ -7,13 +7,6 @@
 include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-if(CMAKE_HOST_WIN32 AND NOT VCPKG_USE_EXTERNAL_Fortran)
-    # Since we use MinGW Fortran here and would require ld otherwise for all dependent ports
-    set(VCPKG_CRT_LINKAGE dynamic) # Will always be dynamic no way to overwrite internal CRT linkage here
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-    #set(VCPKG_CRT_LINKAGE dynamic)
-endif()
-
 set(lapack_ver 3.8.0)
 
 vcpkg_from_github(
