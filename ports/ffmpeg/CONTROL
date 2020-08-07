@@ -1,6 +1,6 @@
 Source: ffmpeg
 Version: 4.2
-Port-Version: 16
+Port-Version: 17
 Build-Depends: zlib
 Homepage: https://ffmpeg.org
 Description: a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.
