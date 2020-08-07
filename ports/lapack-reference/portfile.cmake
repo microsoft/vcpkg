@@ -113,3 +113,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         endif()
     endif()
 endif()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
+endif()
