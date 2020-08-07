@@ -25,7 +25,7 @@ fs::path fs::u8path(vcpkg::StringView s)
 #if defined(_WIN32)
     return fs::path(vcpkg::Strings::to_utf16(s));
 #else
-    return fs::path(first, last);
+    return fs::path(s.begin(), s.end());
 #endif
 }
 
