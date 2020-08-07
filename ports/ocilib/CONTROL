@@ -1,5 +1,6 @@
 Source: ocilib
-Version: 4.6.4-1
+Version: 4.6.4
+Port-Version: 2
 Homepage: https://vrogier.github.io/ocilib/
 Description: OCILIB is an open source and cross platform Oracle Driver that delivers efficient access to Oracle databases.
 Supports: !(arm|uwp)
