@@ -34,7 +34,7 @@ std::string fs::u8string(const fs::path& p)
 #if defined(_WIN32)
     return vcpkg::Strings::to_utf8(p.native());
 #else
-    return p.string();
+    return p.native();
 #endif
 }
 std::string fs::generic_u8string(const fs::path& p)
@@ -42,7 +42,7 @@ std::string fs::generic_u8string(const fs::path& p)
 #if defined(_WIN32)
     return vcpkg::Strings::to_utf8(p.generic_wstring());
 #else
-    return p.string();
+    return p.generic_string();
 #endif
 }
 
