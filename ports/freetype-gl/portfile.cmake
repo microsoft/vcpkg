@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF a91a3dda326ceaf66b7279bf64ba07014d3f81b8
     SHA512 8e04573dfb400e14e2c1d3a2cd851a66f8218ccfdaa4f701ed9369d7f040d7028582e72af9b236af42d9d3c6c128014670e8ae0261c6f4770affd1aea1454b1e
     HEAD_REF master
+    PATCHES glew.patch
 )
 
 # make sure that no "internal" libraries are used by removing them

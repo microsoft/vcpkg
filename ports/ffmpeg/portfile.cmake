@@ -93,8 +93,10 @@ else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
 endif()
 
+set(ENABLE_AVRESAMPLE OFF)
 if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
+    set(ENABLE_AVRESAMPLE ON)
 endif()
 
 if("avisynthplus" IN_LIST FEATURES)
