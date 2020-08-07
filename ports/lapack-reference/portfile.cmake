@@ -104,6 +104,3 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libblas.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/blas.lib")
     endif()
 endif()
-
-#SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
