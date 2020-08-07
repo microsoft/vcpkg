@@ -1,4 +1,4 @@
-
+include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN_CMAKE)
 if(VCPKG_USE_INTERNAL_Fortran)
     set(VCPKG_CRT_LINKAGE dynamic) # Will always be dynamic no way to overwrite internal CRT linkage here
