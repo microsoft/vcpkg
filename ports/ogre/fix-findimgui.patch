@@ -33,3 +33,24 @@ index 1cea873..d3e756e 100644
    target_include_directories(OgreOverlay PUBLIC
      PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/imgui>"
      PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/imgui/misc/freetype>")
+--- a/Components/Bites/CMakeLists.txt
++++ n/Components/Bites/CMakeLists.txt
+@@ -125,6 +125,9 @@
+ endif()
+ 
+ if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
++  find_package(imgui CONFIG REQUIRED)
++  find_path(IMGUI_INCLUDE_DIR imgui.h)
++  list(APPEND DEPENDENCIES imgui::imgui)
+   list(APPEND SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreImGuiInputListener.cpp")
+ endif()
+@@ -143,7 +146,7 @@
+ 
+ if(OGRE_STATIC AND APPLE AND OGRE_BUILD_PLUGIN_CG)
+   # workaround so the Cg framework is found in the above condition
+-  target_include_directories(OgreBites PUBLIC ${Cg_INCLUDE_DIRS})
++  target_include_directories(OgreBites PUBLIC ${Cg_INCLUDE_DIRS} ${IMGUI_INCLUDE_DIR})
+ endif()
+ 
+ if(SDL2_FOUND)
