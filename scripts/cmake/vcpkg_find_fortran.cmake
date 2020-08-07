@@ -37,7 +37,7 @@ function(vcpkg_find_fortran additional_cmake_args_out)
             endif()
             vcpkg_acquire_msys(MSYS_ROOT "mingw-w64-${MSYS_TARGET}-gcc-fortran")
             set(MINGW_BIN "${MSYS_ROOT}/${MINGW_PATH}/bin")
-            vcpkg_add_to_path("${MINGW_BIN}")
+            vcpkg_add_to_path(PREPEND "${MINGW_BIN}")
             list(APPEND ARGS_OUT -DCMAKE_GNUtoMS=ON
                                  "-DCMAKE_Fortran_COMPILER=${MINGW_BIN}/gfortran.exe"
                                  "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
