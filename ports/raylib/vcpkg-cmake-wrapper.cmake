@@ -1,4 +1,3 @@
-include(FindPackageHandleStandardArgs)
 include(SelectLibraryConfigurations)
 
 find_path(RAYLIB_INCLUDE_DIR raylib.h)
