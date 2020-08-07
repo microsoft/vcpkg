@@ -12,5 +12,5 @@ Build-Depends: openblas (!osx)
 Description: Use external optimized BLAS
 
 Feature: blas-select
-Build-Depends: lapack-reference[core, noblas](!windows)
+Build-Depends: lapack-reference[core, noblas](!windows|(windows&!static))
 Description: Use external optimized BLAS
