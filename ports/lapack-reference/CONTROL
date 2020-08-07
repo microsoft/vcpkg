@@ -1,7 +1,7 @@
 Source: lapack-reference
 Version: 3.8.0
 Description: LAPACK — Linear Algebra PACKage http://www.netlib.org/lapack/
-Default-Features: noblas
+Default-Features: blas-select
 Build-Depends: vcpkg-gfortran (windows)
 
 Feature: cblas
@@ -9,4 +9,8 @@ Description: Builds CBLAS
 
 Feature: noblas
 Build-Depends: openblas (!osx)
+Description: Use external optimized BLAS
+
+Feature: blas-select
+Build-Depends: lapack-reference[core, noblas](!windows)
 Description: Use external optimized BLAS

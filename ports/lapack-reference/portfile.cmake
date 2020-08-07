@@ -24,16 +24,26 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(USE_OPTIMIZED_BLAS OFF)
-if("noblas" IN_LIST FEATURES)
-    set(USE_OPTIMIZED_BLAS ON)
-endif()
-
 set(CBLAS OFF)
 if("cblas" IN_LIST FEATURES)
     set(CBLAS ON)
 endif()
+
+set(USE_OPTIMIZED_BLAS OFF) 
+if("noblas" IN_LIST FEATURES)
+    set(USE_OPTIMIZED_BLAS ON)
+endif()
+
 vcpkg_find_fortran(FORTRAN_CMAKE)
+if(VCPKG_USE_INTERNAL_Fortran)
+    set(USE_OPTIMIZED_BLAS OFF) 
+    #Cannot use openblas from vcpkg if we are building with gfortran here. 
+    if("noblas" IN_LIST FEATURES)
+        message(FATAL_ERROR "Feature 'noblas' cannot be used without supplying an external fortran compiler")
+    endif()
+else()
+    set(USE_OPTIMIZED_BLAS ON)
+endif()
 vcpkg_configure_cmake(
         PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
@@ -45,6 +55,31 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
+
+set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
+if(EXISTS "${pcfile}")
+    file(READ "${pcfile}" _contents)
+    set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
+    file(WRITE "${pcfile}" "${_contents}")
+endif()
+set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc")
+if(EXISTS "${pcfile}")
+    file(READ "${pcfile}" _contents)
+    set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
+    file(WRITE "${pcfile}" "${_contents}")
+endif()
+set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc")
+if(EXISTS "${pcfile}")
+    file(READ "${pcfile}" _contents)
+    set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
+    file(WRITE "${pcfile}" "${_contents}")
+endif()
+set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc")
+if(EXISTS "${pcfile}")
+    file(READ "${pcfile}" _contents)
+    set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
+    file(WRITE "${pcfile}" "${_contents}")
+endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
@@ -60,6 +95,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/lapack.lib")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libblas.lib")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libblas.lib" "${CURRENT_PACKAGES_DIR}/lib/blas.lib")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libblas.lib")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libblas.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/blas.lib")
     endif()
 endif()
 
