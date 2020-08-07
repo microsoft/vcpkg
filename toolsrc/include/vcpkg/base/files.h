@@ -6,12 +6,9 @@
 
 #include <string.h>
 
-#if !defined(VCPKG_USE_STD_FILESYSTEM) && defined(_MSVC_STL_UPDATE)
-#if _MSVC_STL_UPDATE >= 201803
-// this is for bootstrapping
-#define VCPKG_USE_STD_FILESYSTEM 1
-#endif
-#endif
+#if !defined(VCPKG_USE_STD_FILESYSTEM)
+#error The build system must set VCPKG_USE_STD_FILESYSTEM.
+#endif // !defined(VCPKG_USE_STD_FILESYSTEM)
 
 #if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
