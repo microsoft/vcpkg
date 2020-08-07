@@ -4,7 +4,7 @@
     <PlatformToolset Condition="'$(PlatformToolset)'==''">$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>
   <Choose>
-    <When Condition="'$(PlatformToolset)' == 'v120'">
+    <When Condition="'$(PlatformToolset)' == 'v140'">
       <PropertyGroup>
           <VcpkgUseStdFilesystem>0</VcpkgUseStdFilesystem>
       </PropertyGroup>
