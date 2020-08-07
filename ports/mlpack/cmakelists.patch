@@ -16,8 +16,8 @@ index 26757a5..c200b40 100644
    endif ()
 + endif()
  
-+  find_package(clapack CONFIG REQUIRED)
-+  set(LAPACK_LIBRARIES lapack)
++  find_package(lapack CONFIG REQUIRED)
++  #set(LAPACK_LIBRARIES lapack)
 +  find_package(OpenBLAS CONFIG REQUIRED)
 +  set(BLAS_LIBRARIES OpenBLAS::OpenBLAS)
    # Piggyback LAPACK and BLAS linking into Armadillo link.
