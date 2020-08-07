@@ -40,6 +40,7 @@ function(vcpkg_find_fortran additional_cmake_args_out)
             vcpkg_add_to_path(PREPEND "${MINGW_BIN}")
             list(APPEND ARGS_OUT -DCMAKE_GNUtoMS=ON
                                  "-DCMAKE_Fortran_COMPILER=${MINGW_BIN}/gfortran.exe"
+                                 "-DCMAKE_C_COMPILER=${MINGW_BIN}/gcc.exe"
                                  "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
             set(VCPKG_USE_INTERNAL_Fortran TRUE PARENT_SCOPE)
             set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled PARENT_SCOPE)
