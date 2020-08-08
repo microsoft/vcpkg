@@ -82,10 +82,13 @@ find_package(Threads REQUIRED)
 target_link_libraries(vcpkglib PRIVATE Threads::Threads)
 
 if(VCPKG_REQUIRE_LINK_CXXFS)
-    target_link_libraries(vcpkglib
-        PRIVATE
-            $<$<STREQUAL:${VCPKG_STANDARD_LIBRARY},"libstdc++">:stdc++fs>
-            $<$<STREQUAL:${VCPKG_STANDARD_LIBRARY},"libc++">:c++fs>)
+    if(VCPKG_STANDARD_LIBRARY STREQUAL "libstdc++")
+        target_link_libraries(vcpkglib PRIVATE stdc++fs)
+    elseif(VCPKG_STANDARD_LIBRARY STREQUAL "libc++")
+        target_link_libraries(vcpkglib PRIVATE stdc++fs)
+    else()
+        message(FATAL_ERROR "Bug in build system -- VCPKG_REQUIRE_LINK_CXXFS, but unknown standard library ${VCPKG_STANDARD_LIBRARY}.")
+    endif()
 endif()
 
 if(MSVC)
