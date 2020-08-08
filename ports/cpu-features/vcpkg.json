@@ -8,6 +8,7 @@
       "description": "list_cpu_features command line tool"
     }
   ],
+  "supports": "!(arm|uwp)",
   "homepage": "https://github.com/google/cpu_features",
   "license": "Apache-2.0"
 }
