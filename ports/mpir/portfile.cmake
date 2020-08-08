@@ -1,5 +1,9 @@
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/include/gmpxx.h")
+    message(FATAL_ERROR "Can't build ${PORT} if gmp is installed. Please remove gmp, and try to install ${PORT} again if you need it.")
+endif()
+
 if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(FATAL_ERROR "${PORT} currently can only be built using the dynamic CRT when building DLLs")
 endif()
