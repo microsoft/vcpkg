@@ -93,4 +93,9 @@ namespace vcpkg::Commands::Version
                        "See LICENSE.txt for license information.\n");
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void VersionCommand::perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs) const
+    {
+        Version::perform_and_exit(args, fs);
+    }
 }

@@ -31,4 +31,9 @@ namespace vcpkg::Commands::Hash
         System::print2(hash, '\n');
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void HashCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Hash::perform_and_exit(args, paths);
+    }
 }
