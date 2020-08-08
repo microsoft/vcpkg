@@ -10,7 +10,6 @@ vcpkg_from_github(
         0005_remove_imp_suffix.patch
         0006_fix_tool_depends.patch
         0007_disable_tool_export_curl_target.patch
-        0008_fix_tools_path.patch
         0009_fix_openssl_config.patch
         0010_fix_othertests_cmake.patch
 )
@@ -78,7 +77,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if ("tool" IN_LIST FEATURES)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/curl)
+    vcpkg_copy_tools(TOOL_NAMES curl AUTO_CLEAN)
 endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
