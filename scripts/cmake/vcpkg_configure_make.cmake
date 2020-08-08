@@ -132,7 +132,7 @@ endmacro()
 
 macro(_vcpkg_restore_env_variable envvar)
     if(${envvar}_BACKUP)
-        set(ENV{${envvar}} ${${envvar}_BACKUP})
+        set(ENV{${envvar}} "${${envvar}_BACKUP}")
     else()
         unset(ENV{${envvar}})
     endif()
@@ -187,15 +187,17 @@ function(vcpkg_configure_make)
     # LDFLAGS -> pass -L flags
     # LIBS -> pass -l flags
 
-    set(INCLUDE_PATH_BACKUP "$ENV{INCLUDE_PATH}")
-    set(INCLUDE_BACKUP "$ENV{INCLUDE}")
+    #Used by gcc
     set(C_INCLUDE_PATH_BACKUP "$ENV{C_INCLUDE_PATH}")
     set(CPLUS_INCLUDE_PATH_BACKUP "$ENV{CPLUS_INCLUDE_PATH}")
-
-    _vcpkg_backup_env_variable(LD_LIBRARY_PATH) 
     _vcpkg_backup_env_variable(LIBRARY_PATH)
+    #Used by programms on linux
+    _vcpkg_backup_env_variable(LD_LIBRARY_PATH)
 
-    set(LIBPATH_BACKUP "$ENV{LIBPATH}")
+    #Used by CL
+    set(INCLUDE_BACKUP "$ENV{INCLUDE}")
+    _vcpkg_backup_env_variable(LIB)
+    _vcpkg_backup_env_variable(LIBPATH)
 
     if(${CURRENT_PACKAGES_DIR} MATCHES " " OR ${CURRENT_INSTALLED_DIR} MATCHES " ")
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
@@ -369,24 +371,25 @@ function(vcpkg_configure_make)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
     endif()
     
-    # Setup include environment
+    # Setup include environment (since these are buildtype independent restoring them is unnecessary)
+    # Used by CL 
     set(ENV{INCLUDE} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_BACKUP}")
-    set(ENV{INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_PATH_BACKUP}")
+    # Used by GCC
     set(ENV{C_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${C_INCLUDE_PATH_BACKUP}")
     set(ENV{CPLUS_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${CPLUS_INCLUDE_PATH_BACKUP}")
 
     # Setup global flags -> TODO: Further improve with toolchain file in mind!
-    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} -I${_VCPKG_INSTALLED}/include ${VCPKG_C_FLAGS}")
-    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} -I${_VCPKG_INSTALLED}/include ${VCPKG_CXX_FLAGS}")
+    set(CPP_FLAGS_GLOBAL "$ENV{CPPFLAGS} -I${_VCPKG_INSTALLED}/include")
+    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
+    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
     set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
     # Flags should be set in the toolchain instead (Setting this up correctly requires a function named vcpkg_determined_cmake_compiler_flags which can also be used to setup CC and CXX etc.)
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         string(APPEND C_FLAGS_GLOBAL " -fPIC")
         string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
     else()
-         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
-        string(APPEND C_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
-        string(APPEND CXX_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
+        # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
+        string(APPEND CPP_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
         if(VCPKG_TARGET_IS_UWP)
             # Be aware that configure thinks it is crosscompiling due to: 
             # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
@@ -486,10 +489,12 @@ function(vcpkg_configure_make)
         set(SHORT_NAME_${_VAR_SUFFIX} "dbg")
         list(APPEND _buildtypes ${_VAR_SUFFIX})
         if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
+            string(REGEX REPLACE "[ \t]+/" " -" CPPFLAGS_${_VAR_SUFFIX} "${CPP_FLAGS_GLOBAL}")
             string(REGEX REPLACE "[ \t]+/" " -" CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_C_FLAGS_${_VAR_SUFFIX}}")
             string(REGEX REPLACE "[ \t]+/" " -" CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_CXX_FLAGS_${_VAR_SUFFIX}}")
             string(REGEX REPLACE "[ \t]+/" " -" LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
         else()
+            set(CPPFLAGS_${_VAR_SUFFIX} "${CPP_FLAGS_GLOBAL}")
             set(CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
             set(CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
             set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/ -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
@@ -501,11 +506,13 @@ function(vcpkg_configure_make)
         set(PATH_SUFFIX_${_VAR_SUFFIX} "")
         set(SHORT_NAME_${_VAR_SUFFIX} "rel")
         list(APPEND _buildtypes ${_VAR_SUFFIX})
-        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
+        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain 
+            string(REGEX REPLACE "[ \t]+/" " -" CPPFLAGS_${_VAR_SUFFIX} "${CPP_FLAGS_GLOBAL}")
             string(REGEX REPLACE "[ \t]+/" " -" CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_C_FLAGS_${_VAR_SUFFIX}}")
             string(REGEX REPLACE "[ \t]+/" " -" CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_CXX_FLAGS_${_VAR_SUFFIX}}")
             string(REGEX REPLACE "[ \t]+/" " -" LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
         else()
+            set(CPPFLAGS_${_VAR_SUFFIX} "${CPP_FLAGS_GLOBAL}")
             set(CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
             set(CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
             set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/ -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
@@ -541,13 +548,15 @@ function(vcpkg_configure_make)
         endif()
 
         # Setup environment
+        set(ENV{CPPFLAGS} ${CPPFLAGS_${_buildtype}})
         set(ENV{CFLAGS} ${CFLAGS_${_buildtype}})
         set(ENV{CXXFLAGS} ${CXXFLAGS_${_buildtype}})
         set(ENV{LDFLAGS} ${LDFLAGS_${_buildtype}})
         set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}")
-        set(ENV{LIBPATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib${VCPKG_HOST_PATH_SEPARATOR}${LIBPATH_BACKUP}")
- 
-        set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
+
+        set(ENV{LIB} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LIB_PATHLIKE_CONCAT}")
+        set(ENV{LIBPATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LIBPATH_PATHLIKE_CONCAT}")
+        set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LIBRARY_PATH_PATHLIKE_CONCAT}")
         set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
 
         if (CMAKE_HOST_WIN32)   
@@ -604,13 +613,11 @@ function(vcpkg_configure_make)
         endif()
     endforeach()
 
-    set(ENV{INCLUDE} "${INCLUDE_BACKUP}")
-    set(ENV{INCLUDE_PATH} "${INCLUDE_PATH_BACKUP}")
-    set(ENV{C_INCLUDE_PATH} "${C_INCLUDE_PATH_BACKUP}")
-    set(ENV{CPLUS_INCLUDE_PATH} "${CPLUS_INCLUDE_PATH_BACKUP}")
+    _vcpkg_restore_env_variable(LIB)
+    _vcpkg_restore_env_variable(LIBPATH)
     _vcpkg_restore_env_variable(LIBRARY_PATH)
     _vcpkg_restore_env_variable(LD_LIBRARY_PATH)
-    set(ENV{LIBPATH} "${LIBPATH_BACKUP}")
+
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
 endfunction()
