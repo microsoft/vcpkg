@@ -77,7 +77,7 @@ int main() {}
             _VCPKG_STANDARD_LIBRARY_LIBCXX)
         check_cxx_source_compiles([[
 #include <ciso646>
-#if !defined(_MSVC_STL_VERSION)
+#if !defined(_MSVC_STL_VERSION) && !(defined(_MSC_VER) && _MSC_VER <= 1900)
 #error "not MSVC stl"
 #endif
 int main() {}
