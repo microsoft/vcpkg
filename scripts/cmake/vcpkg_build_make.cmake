@@ -86,6 +86,12 @@ function(vcpkg_build_make)
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
 
+    # Since includes are buildtype independent those are setup by vcpkg_configure_make
+    _vcpkg_backup_env_variable(LIB)
+    _vcpkg_backup_env_variable(LIBPATH)
+    _vcpkg_backup_env_variable(LIBRARY_PATH)
+    #_vcpkg_backup_env_variable(LD_LIBRARY_PATH)
+
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
             if(BUILDTYPE STREQUAL "debug")
@@ -95,6 +101,7 @@ function(vcpkg_build_make)
                 endif()
                 set(SHORT_BUILDTYPE "-dbg")
                 set(CMAKE_BUILDTYPE "DEBUG")
+                set(PATH_SUFFIX_${BUILDTYPE} "/debug")
             else()
                 # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                 if (_VCPKG_NO_DEBUG)
@@ -103,19 +110,21 @@ function(vcpkg_build_make)
                     set(SHORT_BUILDTYPE "-rel")
                 endif()
                 set(CMAKE_BUILDTYPE "RELEASE")
+                set(PATH_SUFFIX_release "")
             endif()
 
             set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
+            set(ENV{LIB} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/manual-link/${LIB_PATHLIKE_CONCAT}")
+            set(ENV{LIBPATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/manual-link/${LIBPATH_PATHLIKE_CONCAT}")
+            set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/manual-link/${LIBRARY_PATH_PATHLIKE_CONCAT}")
+            #set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
+
             if(_bc_ADD_BIN_TO_PATH)
                 set(_BACKUP_ENV_PATH "$ENV{PATH}")
-                if(BUILDTYPE STREQUAL "debug")
-                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
-                else()
-                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
-                endif()
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${BUILDTYPE}}/bin")
             endif()
 
             if(MAKE_BASH)
@@ -181,5 +190,8 @@ function(vcpkg_build_make)
         set(ENV{PATH} "${PATH_GLOBAL}")
     endif()
 
-
+    _vcpkg_restore_env_variable(LIB)
+    _vcpkg_restore_env_variable(LIBPATH)
+    _vcpkg_restore_env_variable(LIBRARY_PATH)
+    _vcpkg_restore_env_variable(LD_LIBRARY_PATH)
 endfunction()
