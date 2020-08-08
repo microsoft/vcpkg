@@ -58,11 +58,7 @@ function(vcpkg_fixup_cmake_targets)
         set(_vfct_TARGET_PATH share/${PORT})
     endif()
 
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(EXECUTABLE_SUFFIX "\\.exe")
-    else()
-        set(EXECUTABLE_SUFFIX)
-    endif()
+    string(REPLACE "." "\\." EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/${_vfct_TARGET_PATH})
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH})
@@ -185,7 +181,12 @@ function(vcpkg_fixup_cmake_targets)
                 "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
                 "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
                 _contents "${_contents}")
+            string(REGEX REPLACE
+                "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\.((\\\\|/)\\.\\.)*\" ABSOLUTE\\)"
+                "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
+                _contents "${_contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
         endif()
+
         #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
         #This happens if vcpkg built libraries are directly linked to a target instead of using
         #an imported target for it. We could add more logic here to identify defect target files.
@@ -200,7 +201,6 @@ function(vcpkg_fixup_cmake_targets)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
         file(WRITE ${MAIN_CMAKE} "${_contents}")
     endforeach()
-
 
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE REMAINING_FILES "${DEBUG_SHARE}/*")

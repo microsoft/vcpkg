@@ -18,9 +18,11 @@ jobs:
   - bash: |
       brew list autoconf || brew install autoconf
       brew list automake || brew install automake
+      brew list pkg-config || brew install pkg-config
       brew list libtool || brew install libtool
       brew list bison || brew install bison
       brew list gfortran || brew cask install gfortran
+      brew list yasm || brew install yasm
     displayName: 'Install brew dependencies'
   - bash: |
       sudo mkdir /Users/vagrant/Data/downloads || 0
@@ -41,11 +43,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -ArchivesRoot /Users/vagrant/Data/archives -WorkingRoot /Users/vagrant/Data -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -ArtifactsDirectory $(System.ArtifactsDirectory)'
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '$(System.ArtifactsDirectory)/xml-results/x64-osx.xml'
-    condition: always()
+      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -ArchivesRoot /Users/vagrant/Data/archives -WorkingRoot /Users/vagrant/Data -ArtifactsDirectory $(System.ArtifactsDirectory)'
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'
@@ -53,6 +51,18 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: x64-osx port build failure logs'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/failureLogs'
+      PathtoPublish: '$(System.ArtifactsDirectory)/failure-logs'
       ArtifactName: 'x64-osx port build failure logs'
     condition: failed()
+  - bash: |
+      python3 scripts/file_script.py /Users/vagrant/Data/installed/vcpkg/info/
+    displayName: 'Build a file list for all packages'
+    condition: always()
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: always()
+
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "x64-osx package file lists"

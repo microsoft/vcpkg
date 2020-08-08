@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vcpkg/base/expected.h>
+#include <vcpkg/base/json.h>
 #include <vcpkg/base/optional.h>
+
 #include <vcpkg/platform-expression.h>
 #include <vcpkg/triplet.h>
 
@@ -20,8 +22,10 @@ namespace vcpkg
     ///
     struct PackageSpec
     {
+        constexpr static StringLiteral MANIFEST_NAME = "default";
+
         PackageSpec() = default;
-        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) {}
+        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) { }
 
         static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, Triplet triplet);
 
@@ -54,7 +58,7 @@ namespace vcpkg
     ///
     struct FeatureSpec
     {
-        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) {}
+        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) { }
 
         const std::string& name() const { return m_spec.name(); }
         const std::string& feature() const { return m_feature; }
@@ -127,6 +131,11 @@ namespace vcpkg
         std::string name;
         std::vector<std::string> features;
         PlatformExpression::Expr platform;
+
+        Json::Object extra_info;
+
+        friend bool operator==(const Dependency& lhs, const Dependency& rhs);
+        friend bool operator!=(const Dependency& lhs, const Dependency& rhs) { return !(lhs == rhs); }
     };
 
     struct ParsedQualifiedSpecifier
@@ -143,7 +152,7 @@ namespace vcpkg
     Optional<ParsedQualifiedSpecifier> parse_qualified_specifier(Parse::ParserBase& parser);
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);
-    bool operator!=(const PackageSpec& left, const PackageSpec& right);
+    inline bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
 }
 
 namespace std

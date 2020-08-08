@@ -1,28 +1,30 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.search.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/versiont.h>
 
 using vcpkg::PortFileProvider::PathsPortFileProvider;
 
 namespace vcpkg::Commands::Search
 {
-    static constexpr StringLiteral OPTION_FULLDESC =
-        "--x-full-desc"; // TODO: This should find a better home, eventually
+    static constexpr StringLiteral OPTION_FULLDESC = "x-full-desc"; // TODO: This should find a better home, eventually
 
     static void do_print(const SourceParagraph& source_paragraph, bool full_desc)
     {
+        auto full_version = VersionT(source_paragraph.version, source_paragraph.port_version).to_string();
         if (full_desc)
         {
             System::printf("%-20s %-16s %s\n",
                            source_paragraph.name,
-                           source_paragraph.version,
+                           full_version,
                            Strings::join("\n    ", source_paragraph.description));
         }
         else
@@ -34,7 +36,7 @@ namespace vcpkg::Commands::Search
             }
             System::printf("%-20s %-16s %s\n",
                            vcpkg::shorten_text(source_paragraph.name, 20),
-                           vcpkg::shorten_text(source_paragraph.version, 16),
+                           vcpkg::shorten_text(full_version, 16),
                            vcpkg::shorten_text(description, 81));
         }
     }
@@ -141,5 +143,10 @@ namespace vcpkg::Commands::Search
             "    https://github.com/Microsoft/vcpkg/issues\n");
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void SearchCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Search::perform_and_exit(args, paths);
     }
 }

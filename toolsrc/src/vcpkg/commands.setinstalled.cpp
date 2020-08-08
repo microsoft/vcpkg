@@ -1,8 +1,9 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+
 #include <vcpkg/binarycaching.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.setinstalled.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
@@ -13,8 +14,8 @@
 
 namespace vcpkg::Commands::SetInstalled
 {
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
 
     static constexpr CommandSwitch INSTALL_SWITCHES[] = {
         {OPTION_DRY_RUN, "Do not actually build or install"},
@@ -38,21 +39,10 @@ namespace vcpkg::Commands::SetInstalled
                              const PortFileProvider::PathsPortFileProvider& provider,
                              IBinaryProvider& binary_provider,
                              const CMakeVars::CMakeVarProvider& cmake_vars,
-                             const std::vector<FullPackageSpec>& specs,
-                             const Build::BuildPackageOptions& install_plan_options,
+                             Dependencies::ActionPlan action_plan,
                              DryRun dry_run,
                              const Optional<fs::path>& maybe_pkgsconfig)
     {
-        // We have a set of user-requested specs.
-        // We need to know all the specs which are required to fulfill dependencies for those specs.
-        // Therefore, we see what we would install into an empty installed tree, so we can use the existing code.
-        auto action_plan = Dependencies::create_feature_install_plan(provider, cmake_vars, specs, {});
-
-        for (auto&& action : action_plan.install_actions)
-        {
-            action.build_options = install_plan_options;
-        }
-
         cmake_vars.load_tag_vars(action_plan, provider);
         Build::compute_all_abis(paths, action_plan, cmake_vars, {});
 
@@ -118,6 +108,7 @@ namespace vcpkg::Commands::SetInstalled
                                               paths,
                                               status_db,
                                               args.binary_caching_enabled() ? binary_provider : null_binary_provider(),
+                                              Build::null_build_logs_recorder(),
                                               cmake_vars);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
@@ -140,21 +131,9 @@ namespace vcpkg::Commands::SetInstalled
             Input::check_triplet(spec.package_spec.triplet(), paths);
         }
 
-        auto binary_provider =
-            create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+        auto binary_provider = create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
-
-        const Build::BuildPackageOptions install_plan_options = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
-            Build::CleanBuildtrees::YES,
-            Build::CleanPackages::YES,
-            Build::CleanDownloads::YES,
-            Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::NO,
-        };
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto cmake_vars = CMakeVars::make_triplet_cmake_var_provider(paths);
@@ -165,14 +144,31 @@ namespace vcpkg::Commands::SetInstalled
         {
             pkgsconfig = it_pkgsconfig->second;
         }
+
+        // We have a set of user-requested specs.
+        // We need to know all the specs which are required to fulfill dependencies for those specs.
+        // Therefore, we see what we would install into an empty installed tree, so we can use the existing code.
+        auto action_plan = Dependencies::create_feature_install_plan(provider, *cmake_vars, specs, {});
+
+        for (auto&& action : action_plan.install_actions)
+        {
+            action.build_options = Build::default_build_package_options;
+        }
+
         perform_and_exit_ex(args,
                             paths,
                             provider,
                             *binary_provider,
                             *cmake_vars,
-                            specs,
-                            install_plan_options,
+                            std::move(action_plan),
                             dry_run ? DryRun::Yes : DryRun::No,
                             pkgsconfig);
+    }
+
+    void SetInstalledCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                               const VcpkgPaths& paths,
+                                               Triplet default_triplet) const
+    {
+        SetInstalled::perform_and_exit(args, paths, default_triplet);
     }
 }

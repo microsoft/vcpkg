@@ -1,15 +1,15 @@
 #pragma once
 
-#include <vcpkg/binaryparagraph.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/tools.h>
-#include <vcpkg/vcpkgcmdarguments.h>
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
+
+#include <vcpkg/binaryparagraph.h>
+#include <vcpkg/packagespec.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
 {
@@ -75,12 +75,15 @@ namespace vcpkg
         ~VcpkgPaths();
 
         fs::path package_dir(const PackageSpec& spec) const;
+        fs::path build_dir(const PackageSpec& spec) const;
+        fs::path build_dir(const std::string& package_name) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
         bool is_valid_triplet(Triplet t) const;
         const std::vector<std::string> get_available_triplets_names() const;
         const std::vector<TripletFile>& get_available_triplets() const;
+        const std::map<std::string, std::string>& get_cmake_script_hashes() const;
         const fs::path get_triplet_file_path(Triplet triplet) const;
 
         fs::path original_cwd;

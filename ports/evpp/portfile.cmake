@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(EVPP_VERSION 0.7.0)
 
 vcpkg_from_github(
@@ -11,13 +9,16 @@ vcpkg_from_github(
     PATCHES
         fix-rapidjson-1-1.patch
         fix-linux-build.patch
+        fix-osx-build.patch
 )
+
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/rapidjson ${SOURCE_PATH}/3rdparty/concurrentqueue)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DEVPP_VCPKG_BUILD=ON
+    OPTIONS
+        -DEVPP_VCPKG_BUILD=ON
 )
 
 vcpkg_install_cmake()
