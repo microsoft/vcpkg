@@ -15,8 +15,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF 989f1dc66c7de53cb14d29eb051003eec0de798e
-        SHA512 876e846cdef699ee3635e5191a697c56c7c40b2110d2468cfbbe204cff59d42a0d930861fda7229dbba163a329de9d8f06276228bab516ef92c88feebfcfbc13
+        REF f464326f10cbba497b71c4aa263b6a22e1b375fe
+        SHA512 32dfb2ac697755af3646b07259298fc2f27007ab1a0a27da0be4f597c82dd2f8bbad6f07b4ed01dfbb62d86649d4be913c59e1e76b33efec112beaaba550d375
         HEAD_REF master
         PATCHES
             improve-external-deps.patch
@@ -25,6 +25,7 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    use-prov-client hsm_type_symm_key
     use-prov-client use_prov_client
 )
 
@@ -40,7 +41,6 @@ vcpkg_configure_cmake(
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
-        -Dhsm_type_symm_key=${use_prov_client}
 )
 
 vcpkg_install_cmake()

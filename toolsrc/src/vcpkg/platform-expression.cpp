@@ -7,6 +7,7 @@
 
 #include <vcpkg/platform-expression.h>
 
+#include <numeric>
 #include <string>
 #include <vector>
 
@@ -415,6 +416,28 @@ namespace vcpkg::PlatformExpression
         return Visitor{context, override_ctxt}.visit(*this->underlying_);
     }
 
+    int Expr::complexity() const
+    {
+        if (is_empty()) return 0;
+
+        struct Impl
+        {
+            int operator()(const std::unique_ptr<detail::ExprImpl>& expr) const { return (*this)(*expr); }
+            int operator()(const detail::ExprImpl& expr) const
+            {
+                if (expr.kind == ExprKind::identifier) return 1;
+
+                if (expr.kind == ExprKind::op_not) return 1 + (*this)(expr.exprs.at(0));
+
+                return 1 + std::accumulate(expr.exprs.begin(), expr.exprs.end(), 0, [](int acc, const auto& el) {
+                           return acc + Impl{}(el);
+                       });
+            }
+        };
+
+        return Impl{}(underlying_);
+    }
+
     ExpectedS<Expr> parse_platform_expression(StringView expression, MultipleBinaryOperators multiple_binary_operators)
     {
         auto parser = ExpressionParser(expression, multiple_binary_operators);
@@ -428,5 +451,101 @@ namespace vcpkg::PlatformExpression
         {
             return res;
         }
+    }
+
+    bool structurally_equal(const Expr& lhs, const Expr& rhs)
+    {
+        struct Impl
+        {
+            bool operator()(const std::unique_ptr<detail::ExprImpl>& lhs,
+                            const std::unique_ptr<detail::ExprImpl>& rhs) const
+            {
+                return (*this)(*lhs, *rhs);
+            }
+            bool operator()(const detail::ExprImpl& lhs, const detail::ExprImpl& rhs) const
+            {
+                if (lhs.kind != rhs.kind) return false;
+
+                if (lhs.kind == ExprKind::identifier)
+                {
+                    return lhs.identifier == rhs.identifier;
+                }
+                else
+                {
+                    const auto& exprs_l = lhs.exprs;
+                    const auto& exprs_r = rhs.exprs;
+                    return std::equal(exprs_l.begin(), exprs_l.end(), exprs_r.begin(), exprs_r.end(), *this);
+                }
+            }
+        };
+
+        if (lhs.is_empty())
+        {
+            return rhs.is_empty();
+        }
+        if (rhs.is_empty())
+        {
+            return false;
+        }
+        return Impl{}(lhs.underlying_, rhs.underlying_);
+    }
+
+    int compare(const Expr& lhs, const Expr& rhs)
+    {
+        auto lhs_platform_complexity = lhs.complexity();
+        auto rhs_platform_complexity = lhs.complexity();
+
+        if (lhs_platform_complexity < rhs_platform_complexity) return -1;
+        if (rhs_platform_complexity < lhs_platform_complexity) return 1;
+
+        auto lhs_platform = to_string(lhs);
+        auto rhs_platform = to_string(rhs);
+
+        if (lhs_platform.size() < rhs_platform.size()) return -1;
+        if (rhs_platform.size() < lhs_platform.size()) return 1;
+
+        auto platform_cmp = lhs_platform.compare(rhs_platform);
+        if (platform_cmp < 0) return -1;
+        if (platform_cmp > 0) return 1;
+
+        return 0;
+    }
+
+    std::string to_string(const Expr& expr)
+    {
+        struct Impl
+        {
+            std::string operator()(const std::unique_ptr<detail::ExprImpl>& expr) const
+            {
+                return (*this)(*expr, false);
+            }
+            std::string operator()(const detail::ExprImpl& expr, bool outer) const
+            {
+                const char* join = nullptr;
+                switch (expr.kind)
+                {
+                    case ExprKind::identifier: return expr.identifier;
+                    case ExprKind::op_and: join = " & "; break;
+                    case ExprKind::op_or: join = " | "; break;
+                    case ExprKind::op_not: return Strings::format("!%s", (*this)(expr.exprs.at(0)));
+                    default: Checks::unreachable(VCPKG_LINE_INFO);
+                }
+
+                if (outer)
+                {
+                    return Strings::join(join, expr.exprs, *this);
+                }
+                else
+                {
+                    return Strings::format("(%s)", Strings::join(join, expr.exprs, *this));
+                }
+            }
+        };
+
+        if (expr.is_empty())
+        {
+            return std::string{};
+        }
+        return Impl{}(*expr.underlying_, true);
     }
 }

@@ -1,0 +1,12 @@
+diff --git a/modules/cvv/src/util/observer_ptr.hpp b/modules/cvv/src/util/observer_ptr.hpp
+index fef3fea..68d1a80 100644
+--- a/modules/cvv/src/util/observer_ptr.hpp
++++ b/modules/cvv/src/util/observer_ptr.hpp
+@@ -11,6 +11,7 @@
+ #include <cstddef>   //size_t
+ #include <cstdint>   // [u]intXX_t
+ #include <algorithm> // since some people like to forget that one
++#include <stdexcept>
+ 
+ namespace cvv
+ {

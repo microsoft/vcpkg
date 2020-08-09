@@ -27,8 +27,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         hidpi SUPPORT_HIGH_DPI
-    INVERTED_FEATURES
-        non-audio USE_AUDIO
+        use-audio USE_AUDIO
 )
 
 vcpkg_configure_cmake(
@@ -70,8 +69,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-# Install usage
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
-
-# Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
