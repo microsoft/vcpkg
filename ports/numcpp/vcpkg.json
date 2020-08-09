@@ -16,7 +16,7 @@
       "name": "python",
       "description": "Interacting with python with pybind11 interface",
       "dependencies": [
-        "boost-endian",
+        "boost-python",
         "pybind11"
       ]
     }
