@@ -32,10 +32,7 @@ namespace vcpkg::PortFileProvider
         std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
 
     private:
-        const SourceControlFileLocation* load_manifest_file() const;
-
         Files::Filesystem& filesystem;
-        fs::path manifest;
         std::vector<fs::path> ports_dirs;
         mutable std::unordered_map<std::string, SourceControlFileLocation> cache;
     };
