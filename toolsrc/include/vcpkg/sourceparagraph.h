@@ -133,7 +133,6 @@ namespace vcpkg
         fs::path source_location;
     };
 
-    std::string get_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);
     void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);
     inline void print_error_message(const std::unique_ptr<Parse::ParseControlErrorInfo>& error_info_list)
     {
