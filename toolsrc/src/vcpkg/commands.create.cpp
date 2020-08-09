@@ -1,9 +1,11 @@
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/util.h>
 
 #include <vcpkg/buildenvironment.h>
 #include <vcpkg/commands.create.h>
 #include <vcpkg/help.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Commands::Create
 {

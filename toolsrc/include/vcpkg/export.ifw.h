@@ -1,10 +1,14 @@
 #pragma once
 
 #include <vcpkg/dependencies.h>
-#include <vcpkg/vcpkgpaths.h>
 
 #include <string>
 #include <vector>
+
+namespace vcpkg
+{
+    struct VcpkgPaths;
+}
 
 namespace vcpkg::Export::IFW
 {

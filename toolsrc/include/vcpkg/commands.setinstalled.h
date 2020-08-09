@@ -3,6 +3,7 @@
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.interface.h>
 #include <vcpkg/portfileprovider.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::SetInstalled
 {

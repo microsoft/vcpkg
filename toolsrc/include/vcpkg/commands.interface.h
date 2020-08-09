@@ -1,7 +1,16 @@
 #pragma once
 
-#include <vcpkg/vcpkgcmdarguments.h>
-#include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/triplet.h>
+
+namespace vcpkg
+{
+    struct VcpkgCmdArguments;
+    struct VcpkgPaths;
+    namespace Files
+    {
+        struct Filesystem;
+    }
+}
 
 namespace vcpkg::Commands
 {

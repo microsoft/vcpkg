@@ -3,11 +3,15 @@
 #include <vcpkg/base/optional.h>
 
 #include <vcpkg/portfileprovider.h>
-#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Dependencies
 {
     struct ActionPlan;
+}
+
+namespace vcpkg
+{
+    struct VcpkgPaths;
 }
 
 namespace vcpkg::CMakeVars
