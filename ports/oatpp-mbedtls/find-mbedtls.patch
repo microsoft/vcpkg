@@ -7,7 +7,7 @@ index 6b1e8c0..b0f08f8 100644
  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/module")
  
 -find_package(mbedtls 2.16.0 REQUIRED)
-+find_package(mbedTLS 2.16.0 REQUIRED)
++find_package(mbedtls 2.16.3 REQUIRED)
  
  message("MBEDTLS_INCLUDE_DIR=${MBEDTLS_INCLUDE_DIR}")
  message("MBEDTLS_TLS_LIBRARY=${MBEDTLS_TLS_LIBRARY}")
