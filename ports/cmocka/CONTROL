@@ -1,5 +1,0 @@
-Source: cmocka
-Version: 2020-01-19
-Port-Version: 3
-Description: An elegant unit testing framework for C with support for mock objects
-Homepage: https://cmocka.org/
