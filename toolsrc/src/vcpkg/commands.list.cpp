@@ -140,4 +140,9 @@ namespace vcpkg::Commands::List
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    void ListCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        List::perform_and_exit(args, paths);
+    }
 }

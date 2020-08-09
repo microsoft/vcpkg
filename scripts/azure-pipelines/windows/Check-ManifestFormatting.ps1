@@ -32,6 +32,12 @@ if (-not (Test-Path "$Root/vcpkg.exe"))
 }
 
 & "$Root/vcpkg.exe" 'x-format-manifest' '--all'
+if (-not $?)
+{
+    Write-Error "Failed formatting manifests; are they well-formed?"
+    throw
+}
+
 $changedFiles = & "$PSScriptRoot/Get-ChangedFiles.ps1" -Directory $portsTree
 if (-not $IgnoreErrors -and $null -ne $changedFiles)
 {

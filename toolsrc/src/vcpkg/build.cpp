@@ -188,6 +188,13 @@ namespace vcpkg::Build
                           Build::null_build_logs_recorder(),
                           paths);
     }
+
+    void BuildCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                        const VcpkgPaths& paths,
+                                        Triplet default_triplet) const
+    {
+        Build::Command::perform_and_exit(args, paths, default_triplet);
+    }
 }
 
 namespace vcpkg::Build
