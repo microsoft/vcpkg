@@ -133,6 +133,38 @@ if("avresample" IN_LIST FEATURES)
     set(ENABLE_AVRESAMPLE ON) #necessary for configuring FFMPEG CMake Module
 endif()
 
+if("avfilter" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avfilter")
+    set(ENABLE_AVFILTER ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-avfilter")
+    set(ENABLE_AVFILTER OFF)
+endif()
+
+if("avdevice" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avdevice")
+    set(ENABLE_AVDEVICE ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-avdevice")
+    set(ENABLE_AVDEVICE OFF)
+endif()
+
+if("swresample" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-swresample")
+    set(ENABLE_SWRESAMPLE ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-swresample")
+    set(ENABLE_SWRESAMPLE OFF)
+endif()
+
+if("swscale" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-swscale")
+    set(ENABLE_SWSCALE ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-swscale")
+    set(ENABLE_SWSCALE OFF)
+endif()
+
 if (VCPKG_TARGET_IS_OSX)
     set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
 endif()
