@@ -24,9 +24,6 @@
 ## The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
 ## be passed.
 ##
-## ### USE_MINGW_MAKE
-## Put mingw make instead of msys make
-##
 ## ## Notes:
 ## This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
 ## You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your CMake script supports the
@@ -62,14 +59,9 @@ function(vcpkg_build_make)
     set(INSTALL_OPTS )
     if (CMAKE_HOST_WIN32)
         set(PATH_GLOBAL "$ENV{PATH}")
-
         vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper")
         vcpkg_acquire_msys(MSYS_ROOT)
-        if(_bc_USE_MINGW_MAKE)
-            find_program(MAKE mingw32-make REQUIRED)
-        else()
-            find_program(MAKE make REQUIRED)
-        endif()
+        find_program(MAKE make REQUIRED)
         set(MAKE_COMMAND "${MAKE}")
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f Makefile ${_bc_BUILD_TARGET})
 

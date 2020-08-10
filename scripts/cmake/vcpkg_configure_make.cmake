@@ -7,7 +7,11 @@
 ## vcpkg_configure_make(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [AUTOCONFIG]
-##     [USE_MINGW_MAKE]
+##     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
+##     [NO_ADDITIONAL_PATHS]
+##     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
+##     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
+##     [ADD_BIN_TO_PATH]
 ##     [NO_DEBUG]
 ##     [SKIP_CONFIGURE]
 ##     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
@@ -30,9 +34,6 @@
 ## ### SKIP_CONFIGURE
 ## Skip configure process
 ##
-## ### USE_MINGW_MAKE
-## Put mingw make instead of msys make on path first.
-##
 ## ### BUILD_TRIPLET
 ## Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
 ##
@@ -44,6 +45,12 @@
 ##
 ## ### PRERUN_SHELL
 ## Script that needs to be called before configuration (do not use for batch files which simply call autoconf or configure)
+##
+## ### ADD_BIN_TO_PATH
+## Adds the appropriate Release and Debug `bin\` directories to the path during configure such that executables can run against the in-tree DLLs.
+##
+## ## DISABLE_VERBOSE_FLAGS
+## do not pass '--disable-silent-rules --verbose' to configure
 ##
 ## ### OPTIONS
 ## Additional options passed to configure during the configuration.
@@ -126,8 +133,15 @@ macro(_vcpkg_backup_env_variable envvar)
         set(${envvar}_BACKUP "$ENV{${envvar}}")
         set(${envvar}_PATHLIKE_CONCAT "${VCPKG_HOST_PATH_SEPARATOR}$ENV{${envvar}}")
     else()
+        set(${envvar}_BACKUP)
         set(${envvar}_PATHLIKE_CONCAT)
     endif()
+endmacro()
+
+macro(_vcpkg_backup_env_variables)
+    foreach(_var ${ARGN})
+        _vcpkg_backup_env_variable(${var})
+    endforeach()
 endmacro()
 
 macro(_vcpkg_restore_env_variable envvar)
@@ -138,10 +152,15 @@ macro(_vcpkg_restore_env_variable envvar)
     endif()
 endmacro()
 
+macro(_vcpkg_restore_env_variables)
+    foreach(_var ${ARGN})
+        _vcpkg_restore_env_variable(${var})
+    endforeach()
+endmacro()
 
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;USE_MINGW_MAKE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT"
         ${ARGN}
@@ -176,28 +195,18 @@ function(vcpkg_configure_make)
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
     set(FLAGPREFIXES CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y)
     foreach(_prefix IN LISTS FLAGPREFIXES)
-        if(DEFINED $ENV{${prefix}FLAGS})
-            set(${_prefix}_FLAGS_BACKUP "$ENV{${prefix}FLAGS}")
-        else()
-            set(${_prefix}_FLAGS_BACKUP)
-        endif()
+        _vcpkg_backup_env_variable(${prefix}FLAGS)
     endforeach()
 
     # FC fotran compiler | FF Fortran 77 compiler 
     # LDFLAGS -> pass -L flags
     # LIBS -> pass -l flags
 
-    #Used by gcc
-    set(C_INCLUDE_PATH_BACKUP "$ENV{C_INCLUDE_PATH}")
-    set(CPLUS_INCLUDE_PATH_BACKUP "$ENV{CPLUS_INCLUDE_PATH}")
-    _vcpkg_backup_env_variable(LIBRARY_PATH)
-    #Used by programms on linux
-    _vcpkg_backup_env_variable(LD_LIBRARY_PATH)
+    #Used by gcc/linux
+    _vcpkg_backup_env_variables(C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH)
 
-    #Used by CL
-    _vcpkg_backup_env_variable(INCLUDE)
-    _vcpkg_backup_env_variable(LIB)
-    _vcpkg_backup_env_variable(LIBPATH)
+    #Used by cl
+    _vcpkg_backup_env_variables(INCLUDE LIB LIBPATH)
 
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
 
@@ -216,13 +225,7 @@ function(vcpkg_configure_make)
                                           gettext 
                                           gettext-devel
                                           )
-        if(_csc_USE_MINGW_MAKE) # untested
-            list(APPEND MSYS_REQUIRE_PACKAGES mingw-w64-${BUILD_ARCH}-make) 
-            list(APPEND MSYS_REQUIRE_PACKAGES mingw-w64-${BUILD_ARCH}-pkg-config)
-            _vcpkg_determine_host_mingw(HOST_MINGW)
-        else()
-            list(APPEND MSYS_REQUIRE_PACKAGES make)
-        endif()
+        list(APPEND MSYS_REQUIRE_PACKAGES make)
         if (_csc_AUTOCONFIG)
             list(APPEND MSYS_REQUIRE_PACKAGES autoconf 
                                               autoconf-archive
@@ -249,9 +252,6 @@ function(vcpkg_configure_make)
             debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
         endif()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
-        if(_csc_USE_MINGW_MAKE)
-            vcpkg_add_to_path("${MSYS_ROOT}/${HOST_MINGW}/bin")
-        endif()
         vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 
         set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
@@ -560,7 +560,7 @@ function(vcpkg_configure_make)
         set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LIBRARY_PATH_PATHLIKE_CONCAT}")
         set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
 
-        if (CMAKE_HOST_WIN32)   
+        if (CMAKE_HOST_WIN32)
             set(command ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
         else()
             set(command /bin/bash "./${RELATIVE_BUILD_PATH}/configure" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
@@ -610,10 +610,7 @@ function(vcpkg_configure_make)
         _vcpkg_restore_env_variable(${prefix}FLAGS)
     endforeach()
 
-    _vcpkg_restore_env_variable(LIB)
-    _vcpkg_restore_env_variable(LIBPATH)
-    _vcpkg_restore_env_variable(LIBRARY_PATH)
-    _vcpkg_restore_env_variable(LD_LIBRARY_PATH)
+    _vcpkg_restore_env_variables(LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
