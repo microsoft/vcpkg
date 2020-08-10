@@ -167,7 +167,7 @@ function(vcpkg_configure_make)
     elseif(EXISTS "${SRC_DIR}/autogen.sh") # Run autogen
         set(REQUIRES_AUTOGEN TRUE)
     else()
-        message(FATAL_ERROR "Don't know what to do!")
+        message(FATAL_ERROR "Could not determine method to configure make")
     endif()
     
     debug_message("REQUIRES_AUTOGEN:${REQUIRES_AUTOGEN}")
@@ -195,11 +195,12 @@ function(vcpkg_configure_make)
     _vcpkg_backup_env_variable(LD_LIBRARY_PATH)
 
     #Used by CL
-    set(INCLUDE_BACKUP "$ENV{INCLUDE}")
+    _vcpkg_backup_env_variable(INCLUDE)
     _vcpkg_backup_env_variable(LIB)
     _vcpkg_backup_env_variable(LIBPATH)
 
-    if(${CURRENT_PACKAGES_DIR} MATCHES " " OR ${CURRENT_INSTALLED_DIR} MATCHES " ")
+    if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
+
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
     endif()
@@ -606,11 +607,7 @@ function(vcpkg_configure_make)
 
     # Restore environment
     foreach(_prefix IN LISTS FLAGPREFIXES)
-        if(${prefix}_FLAGS_BACKUP)
-            set(ENV{${prefix}FLAGS} ${${_prefix}_FLAGS_BACKUP})
-        else()
-            unset(ENV{${prefix}FLAGS})
-        endif()
+        _vcpkg_restore_env_variable(${prefix}FLAGS)
     endforeach()
 
     _vcpkg_restore_env_variable(LIB)
