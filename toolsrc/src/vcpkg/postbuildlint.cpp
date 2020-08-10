@@ -442,9 +442,7 @@ namespace vcpkg::PostBuildLint
                 }
                 else if (filename.find("config.cmake") != std::string::npos)
                 {
-                    cmakePrefix = filename.find("-") != std::string::npos
-                                      ? filename.substr(0, filename.find("config.cmake"))
-                                      : filename.substr(0, filename.find("-config.cmake"));
+                    cmakePrefix = filename.substr(0, filename.find("-config.cmake"));
                     catchedFile = cmakeFile;
                     break;
                 }
