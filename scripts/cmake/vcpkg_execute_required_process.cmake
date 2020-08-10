@@ -34,9 +34,7 @@
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 include(vcpkg_prettify_command)
 function(vcpkg_execute_required_process)
-    # cmake_parse_arguments ignores one level of escaping, so make that two levels of escaping
-    string(REPLACE "\\;" "\\\\;" _ver_ESCAPED_ARGN "${ARGN}")
-    cmake_parse_arguments(vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME" "COMMAND" "${_ver_ESCAPED_ARGN}")
+    cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME" "COMMAND")
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
 
