@@ -130,12 +130,13 @@ namespace vcpkg
         constexpr static StringLiteral TRIPLET_ENV = "VCPKG_DEFAULT_TRIPLET";
         constexpr static StringLiteral TRIPLET_ARG = "triplet";
         std::unique_ptr<std::string> triplet;
+        constexpr static StringLiteral OVERLAY_PORTS_ENV = "VCPKG_OVERLAY_PORTS";
         constexpr static StringLiteral OVERLAY_PORTS_ARG = "overlay-ports";
         std::vector<std::string> overlay_ports;
         constexpr static StringLiteral OVERLAY_TRIPLETS_ARG = "overlay-triplets";
         std::vector<std::string> overlay_triplets;
 
-        constexpr static StringLiteral BINARY_SOURCES_ARG = "x-binarysource";
+        constexpr static StringLiteral BINARY_SOURCES_ARG = "binarysource";
         std::vector<std::string> binary_sources;
 
         constexpr static StringLiteral DEBUG_SWITCH = "debug";
@@ -166,8 +167,8 @@ namespace vcpkg
         constexpr static StringLiteral MANIFEST_MODE_FEATURE = "manifests";
         Optional<bool> manifest_mode = nullopt;
 
-        bool binary_caching_enabled() const { return binary_caching.value_or(false); }
-        bool compiler_tracking_enabled() const { return compiler_tracking.value_or(false); }
+        bool binary_caching_enabled() const { return binary_caching.value_or(true); }
+        bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
 
         std::string command;
         std::vector<std::string> command_arguments;
@@ -182,6 +183,7 @@ namespace vcpkg
         void track_feature_flag_metrics() const;
 
     private:
-        std::unordered_map<std::string, Optional<std::vector<std::string>>> optional_command_arguments;
+        std::unordered_set<std::string> command_switches;
+        std::unordered_map<std::string, std::vector<std::string>> command_options;
     };
 }

@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6599e1d7d..c0bb2fad2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -894,13 +894,13 @@ if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL)
+   install(FILES libpng.3 libpngpf.3 DESTINATION ${PNG_MAN_DIR}/man3)
+   install(FILES png.5 DESTINATION ${PNG_MAN_DIR}/man5)
+   # Install pkg-config files
++  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpng.pc
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+   if(NOT CMAKE_HOST_WIN32 OR CYGWIN OR MINGW)
+-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpng.pc
+-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libpng-config
+-             DESTINATION bin)
++             DESTINATION tools/libpng)
+-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc
+-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}-config
+-             DESTINATION bin)
++             DESTINATION tools/libpng)
+   endif()

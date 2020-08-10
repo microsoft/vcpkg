@@ -28,8 +28,9 @@ function(vcpkg_build_qmake)
 
     function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
         message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
-        vcpkg_execute_required_process(
+        vcpkg_execute_build_process(
             COMMAND ${INVOKE} -j ${VCPKG_CONCURRENCY} ${TARGETS}
+            NO_PARALLEL_COMMAND ${INVOKE} -j 1 ${TARGETS}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
             LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
         )

@@ -4,7 +4,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.edit.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 
@@ -80,9 +80,9 @@ namespace
 
 namespace vcpkg::Commands::Edit
 {
-    static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
+    static constexpr StringLiteral OPTION_BUILDTREES = "buildtrees";
 
-    static constexpr StringLiteral OPTION_ALL = "--all";
+    static constexpr StringLiteral OPTION_ALL = "all";
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
@@ -266,5 +266,10 @@ namespace vcpkg::Commands::Edit
         }
 #endif
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
+    }
+
+    void EditCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Edit::perform_and_exit(args, paths);
     }
 }
