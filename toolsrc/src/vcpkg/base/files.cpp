@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
@@ -1068,7 +1066,7 @@ namespace vcpkg::Files
                 return res;
             }
 
-            System::printf("Waiting to take filesystem lock on %s...\n", fs::u8string(path));
+            Debug::print("Waiting to take filesystem lock on ", fs::u8string(path), "...\n");
             auto wait = std::chrono::milliseconds(100);
             // waits, at most, a second and a half.
             while (wait < std::chrono::milliseconds(1000))
