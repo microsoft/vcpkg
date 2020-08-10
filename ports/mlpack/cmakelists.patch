@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 26757a5..c200b40 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -288,6 +288,7 @@ endif()
+@@ -288,6 +282,7 @@ endif()
  # and find LAPACK and BLAS ourselves, using a slightly modified variant of the
  # script Armadillo uses to find these.
  if (WIN32)
@@ -17,9 +17,7 @@ index 26757a5..c200b40 100644
 + endif()
  
 +  find_package(LAPACK REQUIRED)
-+  #set(LAPACK_LIBRARIES lapack)
 +  find_package(BLAS REQUIRED)
-+  #set(BLAS_LIBRARIES BLAS::BLAS)
    # Piggyback LAPACK and BLAS linking into Armadillo link.
    set(ARMADILLO_LIBRARIES
 -      ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARY} ${LAPACK_LIBRARY})
@@ -28,10 +26,6 @@ index 26757a5..c200b40 100644
    # Ensure that the libraries are added to the MSVC IDE runtime path.
 -  get_filename_component(BLAS_DIR ${BLAS_LIBRARY} DIRECTORY)
 -  get_filename_component(LAPACK_DIR ${LAPACK_LIBRARY} DIRECTORY)
-+  #get_property(BLAS_DIR TARGET OpenBLAS::OpenBLAS PROPERTY IMPORTED_LOCATION_RELEASE)
-+  #get_filename_component(BLAS_DIR ${BLAS_DIR} DIRECTORY)
-+  #get_property(LAPACK_DIR TARGET lapack PROPERTY IMPORTED_LOCATION_RELEASE)
-+  #get_filename_component(LAPACK_DIR ${LAPACK_DIR} DIRECTORY)
  
    # Sometimes, especially with an OpenBLAS install via nuget, the DLLs are
    # actually in ../../bin/x64/.  Automatically add these.

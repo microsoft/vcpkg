@@ -28,7 +28,7 @@ set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 # for UWP version, must build non uwp first for helper
 # binaries.
-if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     message(STATUS "Building Windows helper files")
     set(TEMP_CMAKE_SYSTEM_NAME "${VCPKG_CMAKE_SYSTEM_NAME}")
     set(TEMP_CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}")
@@ -63,7 +63,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
             -DVS_WINRT_COMPONENT=TRUE
             "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
-elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
+elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
         PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
@@ -114,8 +114,7 @@ string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H 
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 
 # openblas is BSD
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DIR}/share/openblas/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindBLAS.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
