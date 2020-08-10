@@ -48,11 +48,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "qt"       WITH_QT
  "sfm"      BUILD_opencv_sfm
  "tiff"     WITH_TIFF
+ "vtk"      WITH_VTK
  "webp"     WITH_WEBP
  "world"    BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", "ipp", ovis", "tbb", and "vtk".
+# Cannot use vcpkg_check_features() for "dnn", "ipp", ovis", "tbb"
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
@@ -76,11 +77,6 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
-endif()
-
-set(WITH_VTK OFF)
-if("vtk" IN_LIST FEATURES)
-  set(WITH_VTK ON)
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -218,11 +214,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(WITH_TBB OFF)
   endif()
 
-  if (WITH_VTK)
-    message(WARNING "VTK is currently unsupported in this build configuration, turning it off")
-    set(WITH_VTK OFF)
-  endif()
-
   if (VCPKG_TARGET_IS_WINDOWS AND BUILD_opencv_ovis)
     message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
     set(BUILD_opencv_ovis OFF)
@@ -325,7 +316,6 @@ vcpkg_configure_cmake(
         -DWITH_PROTOBUF=ON
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_VTK=${WITH_VTK}
         -DWITH_OPENJPEG=OFF
         ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
         -DWITH_LAPACK=OFF
