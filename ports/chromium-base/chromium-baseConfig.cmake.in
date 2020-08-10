@@ -62,7 +62,7 @@ elseif(APPLE)
 endif()
 
 foreach(LIB_NAME ${LIBRARIES_})
-    find_library(_LIB NAMES ${LIB_NAME} ${LIB_NAME}.dll)
+    find_library(_LIB NAMES ${LIB_NAME} ${LIB_NAME}.dll PATH_SUFFIXES "chromium")
     target_link_libraries(chromium-base INTERFACE ${_LIB})
     unset(_LIB CACHE)
 endforeach()
