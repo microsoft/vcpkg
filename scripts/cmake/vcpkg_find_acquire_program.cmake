@@ -352,40 +352,32 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "PKGCONFIG")
     set(PROGNAME pkg-config)
     if(CMAKE_HOST_WIN32)
-      set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/0.26-1")
-      set(PKGCONFIG "${PROG_PATH_SUBDIR}/bin/pkg-config.exe")
+      set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/0.29.2-1")
+      set(PKGCONFIG "${PROG_PATH_SUBDIR}/mingw32/bin/pkg-config.exe")
       if(NOT EXISTS "${PKGCONFIG}")
         vcpkg_download_distfile(PKGCONFIG_ARCHIVE
-          URLS "http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/pkg-config_0.26-1_win32.zip"
-          SHA512 ca41f4fdbd0cf5372ef4f73c9caf67e895dc4bcd3640b5f578924cf3911a1bc35892205997752d76278125de0599d39f7a6900c28b686ec22adbf6159dc3d6a6
-          FILENAME pkg-config_0.26-1_win32.zip
+          URLS "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-0.29.2-1-any.pkg.tar.xz"
+          SHA512 3b1b706a24d9aef7bbdf3ce4427aaa813ba6fbd292ed9dda181b4300e117c3d59a159ddcca8b013fd01ce76da2d95d590314ff9628c0d68a6966bac4842540f0
+          FILENAME mingw-w64-i686-pkg-config-0.29.2-1-any.pkg.tar.xz
         )
-        vcpkg_download_distfile(GLIB_ARCHIVE
-          URLS "http://ftp.gnome.org/pub/gnome/binaries/win32/glib/2.28/glib_2.28.8-1_win32.zip"
-          SHA512 95e3ca984ad7a107529c1f3eee28cf5efdcf815bbc563b4df494533a3693063c98d6a079928a32a6bf033b376c738ae8793e57015733ffab0bd6498eb512633d
-          FILENAME glib_2.28.8-1_win32.zip
+        vcpkg_download_distfile(LIBWINPTHREAD_ARCHIVE
+          URLS "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-git-8.0.0.5906.c9a21571-1-any.pkg.tar.zst"
+          SHA512 2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
+          FILENAME mingw-w64-i686-libwinpthread-git-8.0.0.5906.c9a21571-1-any.pkg.tar.zst
         )
-        vcpkg_download_distfile(GETTEXT_ARCHIVE
-          URLS "http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip"
-          SHA512 b6fb8993f0dcf625c4a6c68c09840b5dcfb787f6ffa682657ec64035414f57f9fa546961aafd0019679a49f7bb02611240d91468e7866fe55f0be86861b44dfd
-          FILENAME gettext-runtime_0.18.1.1-2_win32.zip
-        )
-        file(MAKE_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/0.26-1)
+        file(REMOVE_RECURSE ${PROG_PATH_SUBDIR} ${PROG_PATH_SUBDIR}.tmp)
+        file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR}.tmp)
         vcpkg_execute_required_process(
           ALLOW_IN_DOWNLOAD_MODE
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${GLIB_ARCHIVE}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
-        )
-        vcpkg_execute_required_process(
-          ALLOW_IN_DOWNLOAD_MODE
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${GETTEXT_ARCHIVE}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+          COMMAND ${CMAKE_COMMAND} -E tar xzf ${LIBWINPTHREAD_ARCHIVE}
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}.tmp
         )
         vcpkg_execute_required_process(
           ALLOW_IN_DOWNLOAD_MODE
           COMMAND ${CMAKE_COMMAND} -E tar xzf ${PKGCONFIG_ARCHIVE}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}.tmp
         )
+        file(RENAME ${PROG_PATH_SUBDIR}.tmp ${PROG_PATH_SUBDIR})
       endif()
       set(${VAR} "${${VAR}}" PARENT_SCOPE)
       return()
