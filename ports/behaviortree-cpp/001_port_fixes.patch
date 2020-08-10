@@ -7,7 +7,7 @@ index 75dea11..4eea781 100644
  
  if(MSVC)
 -    target_compile_options(${BEHAVIOR_TREE_LIBRARY} PRIVATE /W4 /WX)
-+    target_compile_options(${BEHAVIOR_TREE_LIBRARY} PRIVATE /W4 /WX /wd4702)
++    target_compile_options(${BEHAVIOR_TREE_LIBRARY} PRIVATE /W4 /wd4702)
  else()
      target_compile_options(${BEHAVIOR_TREE_LIBRARY} PRIVATE
          -Wall -Wextra -Werror=return-type)
