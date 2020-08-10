@@ -80,7 +80,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
 
-    message(STATUS "Configure ${TARGET_TRIPLET}-rel with options ${CONFIGURE_OPTIONS}")
+    message(STATUS "Configure ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
         COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
