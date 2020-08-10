@@ -1,8 +1,13 @@
 Source: raylib
 Version: 3.0.0
+Port-Version: 3
 Description: A simple and easy-to-use library to enjoy videogames programming
 Homepage: https://github.com/raysan5/raylib
 Supports: !(arm|uwp)
+Default-Features: use-audio
 
-Feature: non-audio
-Description: Build raylib without audio module
+Feature: hidpi
+Description: Support high-DPI displays
+
+Feature: use-audio
+Description: Build raylib with audio module

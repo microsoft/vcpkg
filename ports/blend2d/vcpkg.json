@@ -1,0 +1,27 @@
+{
+  "name": "blend2d",
+  "version-string": "beta_2020-07-31",
+  "description": "Beta 2D Vector Graphics Powered by a JIT Compiler",
+  "homepage": "https://github.com/blend2d/blend2d",
+  "documentation": "https://blend2d.com/doc/index.html",
+  "supports": "!(arm | uwp)",
+  "default-features": [
+    "jit",
+    "logging",
+    "tls"
+  ],
+  "features": [
+    {
+      "name": "jit",
+      "description": "Default feature. Enables jit pipeline compilation. Not supported for ARM and UWP."
+    },
+    {
+      "name": "logging",
+      "description": "Default feature. Enables logging."
+    },
+    {
+      "name": "tls",
+      "description": "Default feature. Enables use of thread_local feature. Disable for platforms where thread local storage is expensive or not supported."
+    }
+  ]
+}

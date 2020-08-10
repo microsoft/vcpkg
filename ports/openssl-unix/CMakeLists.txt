@@ -15,6 +15,12 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(PLATFORM darwin64-x86_64-cc)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     set(PLATFORM BSD-generic64)
+elseif(MINGW)
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        set(PLATFORM mingw64)
+    else()
+        set(PLATFORM mingw)
+    endif()
 else()
     message(FATAL_ERROR "Unknown platform")
 endif()
@@ -76,10 +82,15 @@ if(BUILD_SHARED_LIBS)
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         set(LIB_EXT dylib)
         set(LIB_EXTS ${SHLIB_VERSION}.${LIB_EXT})
+    elseif(MINGW)
+        string(REPLACE "." "_" SHLIB_VERSION "${SHLIB_VERSION}")
+        set(BIN_EXT dll)
+        set(LIB_EXT dll.a)
     else()
         set(LIB_EXT so)
         set(LIB_EXTS ${LIB_EXT}.${SHLIB_VERSION})
     endif()
+    list(APPEND BIN_EXTS ${BIN_EXT})
     list(APPEND LIB_EXTS ${LIB_EXT})
 else()
     set(SHARED no-shared)
@@ -88,6 +99,14 @@ endif()
 foreach(lib ssl crypto)
     foreach(ext ${LIB_EXTS})
         list(APPEND INSTALL_LIBS "${BUILDDIR}/lib${lib}.${ext}")
+    endforeach()
+    foreach(ext ${BIN_EXTS})
+    # This might be wrong for targets which don't follow this naming scheme, but I'm not aware of any
+        if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+            list(APPEND INSTALL_BINS "${BUILDDIR}/lib${lib}-${SHLIB_VERSION}-x64.${ext}")
+        else()
+            list(APPEND INSTALL_BINS "${BUILDDIR}/lib${lib}-${SHLIB_VERSION}.${ext}")
+        endif()
     endforeach()
 endforeach()
 
@@ -118,6 +137,7 @@ add_custom_command(
         no-cast
         no-seed
         no-md2
+        no-tests
         ${PLATFORM}
         "--prefix=${CMAKE_INSTALL_PREFIX}"
         "--openssldir=/etc/ssl"
@@ -140,4 +160,8 @@ add_custom_target(build_libs ALL
 install(
     FILES ${INSTALL_LIBS}
     DESTINATION lib
+)
+install(
+    FILES ${INSTALL_BINS}
+    DESTINATION bin
 )

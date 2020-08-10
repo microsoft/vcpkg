@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-storage-cpp
-    REF v7.4.0
-    SHA512 e62abf6b7bfee391a2df5e1eae230f70f9d1514aeea1a80d98183ffc69e4386013b0ac82a11902e30d8e28ee0a23f8a7fe65da30b9a6b838f60c783d2cfd2324
+    REF v7.5.0
+    SHA512 83eabcaf2114c8af1cabbc96b6ef2b57c934a06f68e7a870adf336feaa19edd57aedaf8507d5c40500e46d4e77f5059f9286e319fe7cadeb9ffc8fa018fb030c
     HEAD_REF master
 )
 
