@@ -1,0 +1,94 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f69e907..22570b5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -124,7 +124,7 @@ option(BUILD_BENCHMARKS "Build benchmarks" ON)
+ option(BUILD_EXAMPLES "Build examples" ON)
+ option(BUILD_TESTS "Build tests" ON)
+ 
+-enable_testing()
++#enable_testing()
+ 
+ include(ExternalProject)
+ include(CTest)
+@@ -172,7 +172,9 @@ endif()
+ 
+ if("${BUILD_TYPE_LOWER}" MATCHES "debug")
+   message("debug mode was set")
++  if (NOT WIN32)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unreachable-code")
++  endif()
+ else()
+   message("release mode was set")
+ endif()
+@@ -181,18 +183,25 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+   set(TEST_CXX_FLAGS ${TEST_CXX_FLAGS} -Wno-inconsistent-missing-override)
+ endif()
+ 
+-find_library(DOUBLE-CONVERSION double-conversion)
++find_package(double-conversion CONFIG REQUIRED)
+ 
+ find_package(OpenSSL REQUIRED)
+ 
+-find_package(Gflags REQUIRED)
++find_package(gflags CONFIG REQUIRED)
+ 
+-# find glog::glog to satisfy the folly dep.
+-find_package(Glog REQUIRED)
++find_package(ZLIB REQUIRED)
+ 
+-find_package(fmt CONFIG REQUIRED)
++if (BUILD_SHARED_LIBS)
++    set(gflags gflags_shared)
++else()
++    set(gflags gflags_static)
++endif()
+ 
+-include_directories(SYSTEM ${OPENSSL_INCLUDE_DIR})
++# find glog::glog to satisfy the folly dep.
++find_package(folly CONFIG REQUIRED)
++#find_package(glog CONFIG REQUIRED)
++#
++#find_package(fmt CONFIG REQUIRED)
+ 
+ include_directories(SYSTEM ${GFLAGS_INCLUDE_DIR})
+ 
+@@ -327,7 +336,7 @@ target_compile_options(
+   ReactiveSocket
+   PRIVATE ${EXTRA_CXX_FLAGS})
+ 
+-enable_testing()
++#enable_testing()
+ 
+ install(TARGETS ReactiveSocket EXPORT rsocket-exports DESTINATION lib)
+ install(DIRECTORY rsocket DESTINATION include FILES_MATCHING PATTERN "*.h")
+@@ -470,7 +479,7 @@ if(BUILD_TESTS)
+     ${GMOCK_LIBS}  # This also needs the preceding `add_dependencies`
+     glog::glog
+     gflags
+-    ${DOUBLE-CONVERSION})
++    double-conversion::double-conversion)
+ 
+ # Download the latest TCK drivers JAR.
+   set(TCK_DRIVERS_JAR rsocket-tck-drivers-0.9.10.jar)
+diff --git a/yarpl/CMakeLists.txt b/yarpl/CMakeLists.txt
+index f4159b8..8c01ffb 100644
+--- a/yarpl/CMakeLists.txt
++++ b/yarpl/CMakeLists.txt
+@@ -53,8 +53,14 @@ endif()
+ # Using NDEBUG in Release builds.
+ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
+ 
+-find_package(Gflags REQUIRED)
+-find_package(Glog REQUIRED)
++find_package(gflags CONFIG REQUIRED)
++if (BUILD_SHARED_LIBS)
++    set(gflags gflags_shared)
++else()
++    set(gflags gflags_static)
++endif()
++
++find_package(glog CONFIG REQUIRED)
+ find_package(fmt CONFIG REQUIRED)
+ 
+ IF(NOT FOLLY_VERSION)

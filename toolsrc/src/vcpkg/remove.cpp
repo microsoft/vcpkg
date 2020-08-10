@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
@@ -183,11 +184,11 @@ namespace vcpkg::Remove
         }
     }
 
-    static constexpr StringLiteral OPTION_PURGE = "--purge";
-    static constexpr StringLiteral OPTION_NO_PURGE = "--no-purge";
-    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_OUTDATED = "--outdated";
+    static constexpr StringLiteral OPTION_PURGE = "purge";
+    static constexpr StringLiteral OPTION_NO_PURGE = "no-purge";
+    static constexpr StringLiteral OPTION_RECURSE = "recurse";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_OUTDATED = "outdated";
 
     static constexpr std::array<CommandSwitch, 5> SWITCHES = {{
         {OPTION_PURGE, "Remove the cached copy of the package (default)"},
@@ -215,6 +216,12 @@ namespace vcpkg::Remove
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
+        if (paths.manifest_mode_enabled())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "vcpkg remove does not support manifest mode. In order to remove dependencies, "
+                                      "you will need to edit your manifest (vcpkg.json).");
+        }
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         StatusParagraphs status_db = database_load_check(paths);
@@ -228,7 +235,7 @@ namespace vcpkg::Remove
             }
 
             // Load ports from ports dirs
-            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
 
             specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });
@@ -324,5 +331,12 @@ namespace vcpkg::Remove
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void RemoveCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                         const VcpkgPaths& paths,
+                                         Triplet default_triplet) const
+    {
+        Remove::perform_and_exit(args, paths, default_triplet);
     }
 }

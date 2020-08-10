@@ -1,6 +1,7 @@
 # Outputs to Cache: VCPKG_COMPILER
 function(vcpkg_detect_compiler)
     if(NOT DEFINED CACHE{VCPKG_COMPILER})
+        message(STATUS "Detecting the C++ compiler in use")
         if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
             if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
                 message(FATAL_ERROR [[
@@ -45,6 +46,7 @@ If you would like to try anyway, pass --allowAppleClang to bootstrap.sh.
         set(VCPKG_COMPILER ${COMPILER}
             CACHE STRING
             "The compiler in use; one of gcc, clang, msvc")
+        message(STATUS "Detecting the C++ compiler in use - ${VCPKG_COMPILER}")
     endif()
 endfunction()
 

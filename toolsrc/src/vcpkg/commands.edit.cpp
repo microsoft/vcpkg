@@ -1,12 +1,14 @@
 #include "pch.h"
 
-#include <limits.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.edit.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+
+#include <limits.h>
 
 #if defined(_WIN32)
 namespace
@@ -78,9 +80,9 @@ namespace
 
 namespace vcpkg::Commands::Edit
 {
-    static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
+    static constexpr StringLiteral OPTION_BUILDTREES = "buildtrees";
 
-    static constexpr StringLiteral OPTION_ALL = "--all";
+    static constexpr StringLiteral OPTION_ALL = "all";
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
@@ -115,7 +117,7 @@ namespace vcpkg::Commands::Edit
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
                 const auto portpath = paths.ports / port_name;
                 const auto portfile = portpath / "portfile.cmake";
-                const auto buildtrees_current_dir = paths.buildtrees / port_name;
+                const auto buildtrees_current_dir = paths.build_dir(port_name);
                 const auto pattern = port_name + "_";
 
                 std::string package_paths;
@@ -138,8 +140,7 @@ namespace vcpkg::Commands::Edit
         if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
         {
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
-                const auto buildtrees_current_dir = paths.buildtrees / port_name;
-                return Strings::format(R"###("%s")###", buildtrees_current_dir.u8string());
+                return Strings::format(R"###("%s")###", paths.build_dir(port_name).u8string());
             });
         }
 
@@ -265,5 +266,10 @@ namespace vcpkg::Commands::Edit
         }
 #endif
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
+    }
+
+    void EditCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Edit::perform_and_exit(args, paths);
     }
 }
