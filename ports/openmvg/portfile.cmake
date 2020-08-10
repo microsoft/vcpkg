@@ -71,21 +71,27 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/openMVG/cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test
                     ${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data
                     ${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/nonFree/sift/vl)
 
 if(OpenMVG_BUILD_SHARED)
-    # release
-    file(GLOB DLL_FILES  ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-    file(COPY ${DLL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE_RECURSE ${DLL_FILES})
-    # debug
-    file(GLOB DLL_FILES  ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-    file(COPY ${DLL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE_RECURSE ${DLL_FILES})
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        # release
+        file(GLOB DLL_FILES  ${CURRENT_PACKAGES_DIR}/lib/*.dll)
+        file(COPY ${DLL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(REMOVE_RECURSE ${DLL_FILES})
+    endif()
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        # debug
+        file(GLOB DLL_FILES  ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
+        file(COPY ${DLL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE_RECURSE ${DLL_FILES})
+    endif()
 endif()
 vcpkg_copy_pdbs()
 
