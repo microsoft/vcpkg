@@ -1041,7 +1041,7 @@ namespace vcpkg::Files
                 return res;
             }
 
-            System::printf("Waiting to take filesystem lock on %s...\n", path.u8string());
+            Debug::print("Waiting to take filesystem lock on ", path.u8string(), "...\n");
             auto wait = std::chrono::milliseconds(100);
             // waits, at most, a second and a half.
             while (wait < std::chrono::milliseconds(1000))

@@ -23,6 +23,9 @@ stages:
   displayName: Check the formatting of port manifests
   pool: $(windows-pool)
   dependsOn: []
+  variables:
+  - name: VCPKG_DOWNLOADS
+    value: D:\downloads
   jobs:
   - job:
     workspace:
@@ -32,7 +35,7 @@ stages:
       displayName: 'Check port manifest Formatting'
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
-        arguments: '-Root . -Downloads D:\Downloads'
+        arguments: '-Root .'
 - stage: run_port_ci
   displayName: 'Run the Port CI'
   dependsOn:
