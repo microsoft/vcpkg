@@ -1,4 +1,4 @@
 Source: fribidi
-Version: 1.0.9-1
+Version: 1.0.10
 Description: GNU FriBidi is an implementation of the Unicode Bidirectional Algorithm (bidi)
 Build-Depends: tool-meson
