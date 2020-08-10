@@ -10,7 +10,7 @@ index 26757a5..c200b40 100644
    find_library(LAPACK_LIBRARY
        NAMES lapack liblapack lapack_win32_MT lapack_win32
        PATHS "C:/Program Files/Armadillo"
-@@ -305,24 +306,31 @@ if (WIN32)
+@@ -305,24 +306,25 @@ if (WIN32)
    if (NOT BLAS_LIBRARY)
      message(FATAL_ERROR "Cannot find BLAS library (.lib)!")
    endif ()
