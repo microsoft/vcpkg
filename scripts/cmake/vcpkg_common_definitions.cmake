@@ -16,6 +16,7 @@
 ## VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX       import library suffix for target (same as CMAKE_IMPORT_LIBRARY_SUFFIX)
 ## VCPKG_FIND_LIBRARY_PREFIXES              target dependent prefixes used for find_library calls in portfiles
 ## VCPKG_FIND_LIBRARY_SUFFIXES              target dependent suffixes used for find_library calls in portfiles
+## VCPKG_SYSTEM_LIBRARIES                   list of libraries are provide by the toolchain and are not managed by vcpkg
 ## ```
 ##
 ## CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and CMAKE_IMPORT_LIBRARY_(PREFIX|SUFFIX) are defined for the target
@@ -31,6 +32,8 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     endif()
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(VCPKG_TARGET_IS_OSX 1)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    set(VCPKG_TARGET_IS_IOS 1)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(VCPKG_TARGET_IS_LINUX 1)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
@@ -111,3 +114,22 @@ set(CMAKE_IMPORT_LIBRARY_PREFIX "${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}")
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES "${VCPKG_FIND_LIBRARY_SUFFIXES}" CACHE INTERNAL "") # Required by find_library
 set(CMAKE_FIND_LIBRARY_PREFIXES "${VCPKG_FIND_LIBRARY_PREFIXES}" CACHE INTERNAL "") # Required by find_library
+
+# Append platform libraries to VCPKG_SYSTEM_LIBRARIES
+# The variable are just appended to permit to custom triplets define the variable
+
+# Platforms with libdl
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OSX)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES dl)
+endif()
+
+# Platforms with libm
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_FREEBSD)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES m)
+endif()
+
+# Windows system libs
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES wsock32)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES Ws2_32)
+endif()

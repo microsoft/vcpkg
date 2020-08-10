@@ -1,13 +1,14 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/parse.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/paragraphparseresult.h>
 #include <vcpkg/paragraphs.h>
-#include <vcpkg/parse.h>
 
 using namespace vcpkg::Parse;
 using namespace vcpkg;
@@ -67,11 +68,11 @@ namespace vcpkg::Paragraphs
         }
 
     public:
-        ExpectedS<std::vector<Paragraph>> get_paragraphs(CStringView text, CStringView origin)
+        PghParser(StringView text, StringView origin) : Parse::ParserBase(text, origin) { }
+
+        ExpectedS<std::vector<Paragraph>> get_paragraphs()
         {
             std::vector<Paragraph> paragraphs;
-
-            init(text, origin);
 
             skip_whitespace();
             while (!at_eof())
@@ -86,10 +87,9 @@ namespace vcpkg::Paragraphs
         }
     };
 
-    static ExpectedS<Paragraph> parse_single_paragraph(const std::string& str, const std::string& origin)
+    ExpectedS<Paragraph> parse_single_paragraph(const std::string& str, const std::string& origin)
     {
-        PghParser parser;
-        auto pghs = parser.get_paragraphs(str, origin);
+        auto pghs = PghParser(str, origin).get_paragraphs();
 
         if (auto p = pghs.get())
         {
@@ -126,20 +126,74 @@ namespace vcpkg::Paragraphs
 
     ExpectedS<std::vector<Paragraph>> parse_paragraphs(const std::string& str, const std::string& origin)
     {
-        PghParser parser;
-        return parser.get_paragraphs(str, origin);
+        return PghParser(str, origin).get_paragraphs();
+    }
+
+    bool is_port_directory(const Files::Filesystem& fs, const fs::path& path)
+    {
+        return fs.exists(path / fs::u8path("CONTROL")) || fs.exists(path / fs::u8path("vcpkg.json"));
+    }
+
+    ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
+                                                       const std::string& port_name,
+                                                       const fs::path& path_to_manifest,
+                                                       std::error_code& ec)
+    {
+        auto error_info = std::make_unique<ParseControlErrorInfo>();
+        auto res = Json::parse_file(fs, path_to_manifest, ec);
+        if (ec) return error_info;
+
+        if (auto val = res.get())
+        {
+            if (val->first.is_object())
+            {
+                return SourceControlFile::parse_manifest_file(path_to_manifest, val->first.object());
+            }
+            else
+            {
+                error_info->name = port_name;
+                error_info->error = "Manifest files must have a top-level object";
+                return error_info;
+            }
+        }
+        else
+        {
+            error_info->name = port_name;
+            error_info->error = res.error()->format();
+            return error_info;
+        }
     }
 
     ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
-        const auto path_to_control = path / "CONTROL";
+        const auto path_to_manifest = path / fs::u8path("vcpkg.json");
+        const auto path_to_control = path / fs::u8path("CONTROL");
+        if (fs.exists(path_to_manifest))
+        {
+            vcpkg::Checks::check_exit(VCPKG_LINE_INFO,
+                                      !fs.exists(path_to_control),
+                                      "Found both manifest and CONTROL file in port %s; please rename one or the other",
+                                      path.u8string());
+
+            std::error_code ec;
+            auto res = try_load_manifest(fs, path.filename().u8string(), path_to_manifest, ec);
+            if (ec)
+            {
+                auto error_info = std::make_unique<ParseControlErrorInfo>();
+                error_info->name = path.filename().u8string();
+                error_info->error = Strings::format(
+                    "Failed to load manifest file for port: %s\n", path_to_manifest.u8string(), ec.message());
+            }
+
+            return res;
+        }
         ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
         if (auto vector_pghs = pghs.get())
         {
             return SourceControlFile::parse_control_file(path_to_control, std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
-        error_info->name = path.filename().generic_u8string();
+        error_info->name = path.filename().u8string();
         error_info->error = pghs.error();
         return error_info;
     }

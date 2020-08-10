@@ -1,9 +1,11 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 81290b07376c5abb4988a492dda70913bb90133d
-  SHA512 094197cde851dfdd1e102a3ffaed34d67a789dd75dc288bde611144dc9aa484ca0b9e3468abc297d075d3753553f7f09a214be279af9e58ccb642aa757909f79
+  REF 320e6fd8d29f6f7825ef668f15f955f90131f782
+  SHA512 f95ac04c1c4e1b3f28aa835a64d969ffee064a3681a7966b255981722d562aa1eb91c30a378cad2f1bccd4581b74d8c2ec641c57763bc0fa97bfce8b1c222480
   HEAD_REF master
+  PATCHES
+      fix_shared_static.patch
 )
 
 # enable CUDA inside DARKNET
@@ -17,6 +19,9 @@ set(ENABLE_OPENCV OFF)
 if("opencv-base" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
 endif()
+if("opencv2-base" IN_LIST FEATURES)
+  set(ENABLE_OPENCV ON)
+endif()
 if("opencv3-base" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
 endif()
@@ -25,6 +30,9 @@ endif()
 # (note: this does not mean that DARKNET itself will have CUDA support since by design it is independent, to have it you must require both opencv-cuda and cuda features!)
 # DARKNET will be automatically able to distinguish an OpenCV that is built with or without CUDA support.
 if("opencv-cuda" IN_LIST FEATURES)
+  set(ENABLE_OPENCV ON)
+endif()
+if("opencv2-cuda" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
 endif()
 if("opencv3-cuda" IN_LIST FEATURES)
@@ -45,10 +53,30 @@ if ("cuda" IN_LIST FEATURES)
 endif()
 
 if("weights" IN_LIST FEATURES)
+  vcpkg_download_distfile(YOLOV4-TINY_WEIGHTS
+    URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights"
+    FILENAME "darknet-cache/yolov4-tiny.weights"
+    SHA512 804ca2ab8e3699d31c95bf773d22f901f186703487c7945f30dc2dbb808094793362cb6f5da5cd0b4b83f820c8565a3cba22fafa069ee6ca2a925677137d95f4
+  )
+  vcpkg_download_distfile(YOLOV4_WEIGHTS
+    URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights"
+    FILENAME "darknet-cache/yolov4.weights"
+    SHA512 77f779c58df67975b187cfead99c1e62d72c57e76c3715e35b97a1c7aba1c7b092be97ffb17907099543ac3957085a0fe9688df4a653ea62dfe8322afca53e40
+  )
+  vcpkg_download_distfile(YOLOV3-TINY-PRN_WEIGHTS
+    URLS "https://drive.google.com/u/0/uc?id=18yYZWyKbo4XSDVyztmsEcF9B_6bxrhUY&export=download"
+    FILENAME "darknet-cache/yolov3-tiny-prn.weights"
+    SHA512 0be26786103866868751bb8c5cc0b5147b3e8528d0cf5b387f5aefc72807fd7f1bf8049d5b0a47e9b4445d34e773ea8e3abc95330edb2a3ecd6103e158df2677
+  )
   vcpkg_download_distfile(YOLOV3_WEIGHTS
     URLS "https://pjreddie.com/media/files/yolov3.weights"
     FILENAME "darknet-cache/yolov3.weights"
     SHA512 293c70e404ff0250d7c04ca1e5e053fc21a78547e69b5b329d34f25981613e59b982d93fff2c352915ef7531d6c3b02a9b0b38346d05c51d6636878d8883f2c1
+  )
+  vcpkg_download_distfile(YOLOV3-OPENIMAGES_WEIGHTS
+    URLS "https://pjreddie.com/media/files/yolov3-openimages.weights"
+    FILENAME "darknet-cache/yolov3-openimages.weights"
+    SHA512 616e90057946c9588d045cff6ec36b63254660af4377201dc02642e798d62f392e8f3cdb5b10a1c4bcbe5c056e690275dca35b68db7fd802783a0c6bbd959ba8
   )
   vcpkg_download_distfile(YOLOV2_WEIGHTS
     URLS "https://pjreddie.com/media/files/yolov2.weights"
@@ -68,12 +96,22 @@ if("weights" IN_LIST FEATURES)
 endif()
 
 if("weights-train" IN_LIST FEATURES)
-  vcpkg_download_distfile(IMAGENET_CONV_WEIGHTS_V3
+  vcpkg_download_distfile(YOLOV4-TINY-CONV-29
+    URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.conv.29"
+    FILENAME "darknet-cache/yolov4-tiny.conv.29"
+    SHA512 318e47f4bdf43b7f4eff8f3669bc9ba66cd7bd8ffb31df5bc1978682c85fec8e63a8349958022fd933cc676cbf5241953f2181bf4d1789f7cf9d371e012e3e49
+  )
+  vcpkg_download_distfile(YOLOV4-CONV-137
+    URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.conv.137"
+    FILENAME "darknet-cache/yolov4.conv.137"
+    SHA512 d146a61762bf6ef91deb6c627ede475f63b3975fbeeb1ff5e0949470b29be8fc28ee81280041937e7ded49679276fbabacdb92d02fa246cc622853633fd3d992
+  )
+  vcpkg_download_distfile(DARKNET53-CONV-74
     URLS "https://pjreddie.com/media/files/darknet53.conv.74"
     FILENAME "darknet-cache/darknet53.conv.74"
     SHA512 8983e1c129e2d6e8e3da0cc0781ecb7a07813830ef5a87c24b53100df6a5f23db6c6e6a402aec78025a93fe060b75d1958f1b8f7439a04b54a3f19c81e2ae99b
   )
-  vcpkg_download_distfile(IMAGENET_CONV_WEIGHTS_V2
+  vcpkg_download_distfile(DARKNET19-448-CONV-23
     URLS "https://pjreddie.com/media/files/darknet19_448.conv.23"
     FILENAME "darknet-cache/darknet19_448.conv.23"
     SHA512 8016f5b7ddc15c5d7dad231592f5351eea65f608ebdb204f545034dde904e11962f693080dfeb5a4510e7b71bdda151a9121ba0f8a243018d680f01b1efdbd31
@@ -127,6 +165,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if("weights" IN_LIST FEATURES)
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4-tiny.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-tiny-prn.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-openimages.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov2.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-tiny.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
@@ -134,6 +176,8 @@ if("weights" IN_LIST FEATURES)
 endif()
 
 if("weights-train" IN_LIST FEATURES)
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4-tiny.conv.29 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov4.conv.137 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet53.conv.74 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet19_448.conv.23 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()

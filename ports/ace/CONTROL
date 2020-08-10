@@ -1,8 +1,7 @@
 Source: ace
-Version: 6.5.8
+Version: 6.5.10
 Homepage: https://www.dre.vanderbilt.edu/~schmidt/ACE.html
 Description: The ADAPTIVE Communication Environment
-Supports: !uwp
 
 Feature: wchar
 Description: Enable extra wide char functions in ACE
@@ -13,3 +12,10 @@ Build-Depends: openssl
 
 Feature: xml
 Description: Enable XML features in ACE
+
+Feature: zlib
+Build-Depends: zlib
+Description: Enable zlib support
+
+Feature: tao
+Description: The ACE ORB

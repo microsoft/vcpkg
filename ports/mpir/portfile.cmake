@@ -1,16 +1,16 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "MPIR currently can only be built for desktop")
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/include/gmpxx.h")
+    message(FATAL_ERROR "Can't build ${PORT} if gmp is installed. Please remove gmp, and try to install ${PORT} again if you need it.")
 endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT when building DLLs")
+    message(FATAL_ERROR "${PORT} currently can only be built using the dynamic CRT when building DLLs")
 endif()
 
 set(MPIR_VERSION 3.0.0)
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_download_distfile(
         ARCHIVE
         URLS "http://mpir.org/mpir-${MPIR_VERSION}.tar.bz2"
@@ -34,45 +34,30 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
 
     set(OPTIONS --disable-silent-rules --enable-gmpcompat --enable-cxx ${SHARED_STATIC})
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    set(ENV{CXXFLAGS} "${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG} -O0 -g")
-    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG} -O0 -g")
-    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/configure --prefix=${CURRENT_PACKAGES_DIR}/debug ${OPTIONS} --with-sysroot=${CURRENT_INSTALLED_DIR}/debug
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME configure-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND make -j install
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME install-${TARGET_TRIPLET}-dbg
-    )
+    string(APPEND VCPKG_C_FLAGS " -Wno-implicit-function-declaration")
+    string(APPEND VCPKG_CXX_FLAGS " -Wno-implicit-function-declaration")
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-    set(ENV{CXXFLAGS} "${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE} -O2")
-    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE} -O2")
-    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/configure --prefix=${CURRENT_PACKAGES_DIR} ${OPTIONS} --with-sysroot=${CURRENT_INSTALLED_DIR}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME configure-${TARGET_TRIPLET}-rel
+    # on Linux, autoconf is required; on macOS, it isn't
+    if(VCPKG_TARGET_IS_LINUX)
+        set(AUTOCONFIG "AUTOCONFIG")
+    endif()
+    
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        ${AUTOCONFIG}
+        OPTIONS ${OPTIONS}  
     )
-    message(STATUS "Building ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-        COMMAND make -j install
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME install-${TARGET_TRIPLET}-rel
-    )
+    
+    vcpkg_install_make()
+    
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    endif()
+    
+    configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
-    configure_file(${SOURCE_PATH}/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
-else()
+elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO wbhart/mpir
@@ -110,27 +95,59 @@ else()
         OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
         OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
     )
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        vcpkg_build_msbuild(
+            PROJECT_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/build.vc${MSVC_VERSION}/${DLL_OR_LIB}_mpir_cxx/${DLL_OR_LIB}_mpir_cxx.vcxproj
+            OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
+            OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
+        )
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(GLOB REL_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.lib)
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(GLOB DBG_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.lib)       
+        endif()
+    endif()
 
-    file(GLOB HEADERS
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmp.h
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmpxx.h
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.h
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.h
-    )
-    file(COPY ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-    file(GLOB REL_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.dll)
-    file(GLOB REL_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.lib)
-
-    file(GLOB DBG_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.dll)
-    file(GLOB DBG_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.lib)
-
-    file(COPY ${REL_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(COPY ${REL_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(COPY ${DBG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(COPY ${DBG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB HEADERS
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmp.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/gmpxx.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.h
+        )
+        file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+    
+        file(GLOB REL_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.dll)
+        file(GLOB REL_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.lib)
+        list(APPEND REL_LIBS  ${REL_LIBS_CXX})
+        
+        file(INSTALL ${REL_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${REL_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(GLOB HEADERS
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/gmp.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/gmpxx.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.h
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.h
+        )
+        file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+        
+        file(GLOB DBG_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.dll)
+        file(GLOB DBG_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.lib)
+        list(APPEND DBG_LIBS  ${DBG_LIBS_CXX})
+        
+        file(INSTALL ${DBG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(INSTALL ${DBG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+        
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+            file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        endif()
+    endif()
+    
     vcpkg_copy_pdbs()
 
-    configure_file(${SOURCE_PATH}/COPYING.lib ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
+    file(INSTALL ${SOURCE_PATH}/COPYING.lib DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endif()

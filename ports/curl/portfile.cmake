@@ -1,19 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_68_0
-    SHA512 d75ed39b121a5a04d5a4ba89779967a49e196a93325747b51399adf1afb5f5c13355d6dbe798b259d19245c83bb55f0b621b24b25d8f3ddb1914df30067b8737
+    REF 5a1fc8d33808d7b22f57bdf9403cda7ff07b0670 #curl-7_71_1
+    SHA512 a58d2f23c4fb82610b8d68181fd29a4007983f88950b3eb3362170f3187d86116628151c5e09c713f047aca77cad7b9900bb58e368bbddca31599b4fde0dfa22
     HEAD_REF master
     PATCHES
-        0001_cmake.patch
         0002_fix_uwp.patch
-        0003_fix_libraries.patch
         0004_nghttp2_staticlib.patch
         0005_remove_imp_suffix.patch
         0006_fix_tool_depends.patch
         0007_disable_tool_export_curl_target.patch
-        0008_fix_tools_path.patch
         0009_fix_openssl_config.patch
+        0010_fix_othertests_cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -79,7 +77,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if ("tool" IN_LIST FEATURES)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/curl)
+    vcpkg_copy_tools(TOOL_NAMES curl AUTO_CLEAN)
 endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
@@ -97,13 +95,17 @@ else()
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config "${CURL_CONFIG}")
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "#ifdef CURL_STATICLIB" "#if 1" CURL_H "${CURL_H}")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/curl/curl.h
+        "#ifdef CURL_STATICLIB"
+        "#if 1"
+    )
 else()
-    string(REPLACE "#ifdef CURL_STATICLIB" "#if 0" CURL_H "${CURL_H}")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/curl/curl.h
+        "#ifdef CURL_STATICLIB"
+        "#if 0"
+    )
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/curl/curl.h "${CURL_H}")
 
 file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

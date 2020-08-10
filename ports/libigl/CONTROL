@@ -1,8 +1,9 @@
 Source: libigl
-Version: 2.1.0-1
+Version: 2.2.0
 Homepage: https://github.com/libigl/libigl
 Description: libigl is a simple C++ geometry processing library. We have a wide functionality including construction of sparse discrete differential geometry operators and finite-elements matrices such as the cotangent Laplacian and diagonalized mass matrix, simple facet and edge-based topology data structures, mesh-viewing utilities for OpenGL and GLSL, and many core functions for matrix manipulation which make Eigen feel a lot more like MATLAB.
 Build-Depends: eigen3
+Supports: !(arm|uwp)
 
 Feature: embree
 Description: Build with embree
@@ -18,20 +19,8 @@ Build-Depends: glfw3
 
 Feature: imgui
 Description: Build with imgui
-Build-Depends: imgui[example]
-
-Feature: png
-Description: Build with libpng
-Build-Depends: libpng, stb
+Build-Depends: imgui[bindings]
 
 Feature: xml
 Description: Build with libxml
 Build-Depends: tinyxml2
-
-Feature: python
-Description: Build with python bind
-Build-Depends: pybind11
-
-Feature: test
-Description: Build test 
-Build-Depends: catch2

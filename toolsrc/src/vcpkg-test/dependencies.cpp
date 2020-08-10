@@ -1,9 +1,11 @@
 #include <catch2/catch.hpp>
-#include <vcpkg-test/mockcmakevarprovider.h>
-#include <vcpkg-test/util.h>
+
 #include <vcpkg/dependencies.h>
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/sourceparagraph.h>
+
+#include <vcpkg-test/mockcmakevarprovider.h>
+#include <vcpkg-test/util.h>
 
 using namespace vcpkg;
 using namespace vcpkg::Parse;
@@ -14,8 +16,10 @@ TEST_CASE ("parse depends", "[dependencies]")
     REQUIRE(w);
     auto& v = *w.get();
     REQUIRE(v.size() == 1);
-    REQUIRE(v.at(0).depend.name == "liba");
-    REQUIRE(v.at(0).qualifier == "windows");
+    REQUIRE(v.at(0).name == "liba");
+    REQUIRE(v.at(0).platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", ""}}));
+    REQUIRE(v.at(0).platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore"}}));
+    REQUIRE(!v.at(0).platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "Darwin"}}));
 }
 
 TEST_CASE ("filter depends", "[dependencies]")
@@ -48,14 +52,17 @@ TEST_CASE ("parse feature depends", "[dependencies]")
     auto& v = *u_.get();
     REQUIRE(v.size() == 2);
     auto&& a0 = v.at(0);
-    REQUIRE(a0.depend.name == "libwebp");
-    REQUIRE(a0.depend.features.size() == 9);
-    REQUIRE(a0.qualifier.empty());
+    REQUIRE(a0.name == "libwebp");
+    REQUIRE(a0.features.size() == 9);
+    REQUIRE(a0.platform.is_empty());
 
     auto&& a1 = v.at(1);
-    REQUIRE(a1.depend.name == "libwebp");
-    REQUIRE(a1.depend.features.size() == 2);
-    REQUIRE(a1.qualifier == "!osx");
+    REQUIRE(a1.name == "libwebp");
+    REQUIRE(a1.features.size() == 2);
+    REQUIRE(!a1.platform.is_empty());
+    REQUIRE(a1.platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", ""}}));
+    REQUIRE(a1.platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "Linux"}}));
+    REQUIRE_FALSE(a1.platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "Darwin"}}));
 }
 
 TEST_CASE ("qualified dependency", "[dependencies]")

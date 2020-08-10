@@ -1,5 +1,6 @@
 Source: libsndfile
-Version: 1.0.29-8
+Version: 1.0.29
+Port-Version: 10
 Description: Library to read, write and manipulate many soundfile types. Authored by Eric de Castro Lopo
 Homepage: https://github.com/erikd/libsndfile
 Default-Features: external-libs

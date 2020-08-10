@@ -2,10 +2,14 @@
 
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/pragmas.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>
-#include <vcpkg/pragmas.h>
+
+#include <errno.h>
+#include <inttypes.h>
+#include <limits.h>
 
 #include <vector>
 
@@ -47,6 +51,7 @@ namespace vcpkg::Strings::details
     }
     inline void append_internal(std::string& into, const char* v) { into.append(v); }
     inline void append_internal(std::string& into, const std::string& s) { into.append(s); }
+    inline void append_internal(std::string& into, StringView s) { into.append(s.begin(), s.end()); }
 
     template<class T, class = decltype(std::declval<const T&>().to_string(std::declval<std::string&>()))>
     void append_internal(std::string& into, const T& t)
@@ -59,6 +64,11 @@ namespace vcpkg::Strings::details
     {
         to_string(into, t);
     }
+
+    struct tolower_char
+    {
+        char operator()(char c) const { return (c < 'A' || c > 'Z') ? c : c - 'A' + 'a'; }
+    };
 }
 
 namespace vcpkg::Strings
@@ -116,6 +126,11 @@ namespace vcpkg::Strings
 
     bool case_insensitive_ascii_equals(StringView left, StringView right);
 
+    template<class It>
+    void ascii_to_lowercase(It first, It last)
+    {
+        std::transform(first, last, first, details::tolower_char{});
+    }
     std::string ascii_to_lowercase(std::string&& s);
 
     std::string ascii_to_uppercase(std::string&& s);
@@ -133,11 +148,11 @@ namespace vcpkg::Strings
         }
 
         std::string output;
-        output.append(transformer(*begin));
+        append(output, transformer(*begin));
         for (auto it = std::next(begin); it != end; ++it)
         {
             output.append(delimiter);
-            output.append(transformer(*it));
+            append(output, transformer(*it));
         }
 
         return output;
@@ -146,8 +161,8 @@ namespace vcpkg::Strings
     template<class Container, class Transformer>
     std::string join(const char* delimiter, const Container& v, Transformer transformer)
     {
-        const auto begin = v.begin();
-        const auto end = v.end();
+        const auto begin = std::begin(v);
+        const auto end = std::end(v);
 
         return join(delimiter, begin, end, transformer);
     }
@@ -162,7 +177,7 @@ namespace vcpkg::Strings
     template<class Container>
     std::string join(const char* delimiter, const Container& v)
     {
-        using Element = decltype(*v.begin());
+        using Element = decltype(*std::begin(v));
         return join(delimiter, v, [](const Element& x) -> const Element& { return x; });
     }
 
@@ -170,11 +185,13 @@ namespace vcpkg::Strings
 
     std::string trim(std::string&& s);
 
+    StringView trim(StringView sv);
+
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
 
-    std::vector<std::string> split(const std::string& s, const std::string& delimiter);
+    std::vector<std::string> split(StringView s, const char delimiter);
 
-    std::vector<std::string> split(const std::string& s, const std::string& delimiter, size_t max_count);
+    const char* find_first_of(StringView searched, StringView candidates);
 
     std::vector<StringView> find_all_enclosed(StringView input, StringView left_delim, StringView right_delim);
 
@@ -190,6 +207,77 @@ namespace vcpkg::Strings
         std::string ret;
         serialize(t, ret);
         return ret;
+    }
+
+    // Equivalent to one of the `::strto[T]` functions. Returns `nullopt` if there is an error.
+    template<class T>
+    Optional<T> strto(CStringView sv);
+
+    template<>
+    inline Optional<double> strto<double>(CStringView sv)
+    {
+        char* endptr = nullptr;
+        double res = strtod(sv.c_str(), &endptr);
+        if (endptr == sv.c_str())
+        {
+            // no digits
+            return nullopt;
+        }
+        // else, we may have HUGE_VAL but we expect the caller to deal with that
+        return res;
+    }
+
+    template<>
+    inline Optional<long> strto<long>(CStringView sv)
+    {
+        char* endptr = nullptr;
+        long res = strtol(sv.c_str(), &endptr, 10);
+        if (endptr == sv.c_str())
+        {
+            // no digits
+            return nullopt;
+        }
+        if (errno == ERANGE)
+        {
+            // out of bounds
+            return nullopt;
+        }
+
+        return res;
+    }
+
+    template<>
+    inline Optional<long long> strto<long long>(CStringView sv)
+    {
+        char* endptr = nullptr;
+        long long res = strtoll(sv.c_str(), &endptr, 10);
+        if (endptr == sv.c_str())
+        {
+            // no digits
+            return nullopt;
+        }
+        if (errno == ERANGE)
+        {
+            // out of bounds
+            return nullopt;
+        }
+
+        return res;
+    }
+
+    template<>
+    inline Optional<int> strto<int>(CStringView sv)
+    {
+        auto res = strto<long>(sv);
+        if (auto r = res.get())
+        {
+            if (*r < INT_MIN || *r > INT_MAX)
+            {
+                return nullopt;
+            }
+            return static_cast<int>(*r);
+        }
+        return nullopt;
     }
 
     const char* search(StringView haystack, StringView needle);

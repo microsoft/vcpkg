@@ -1,25 +1,25 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_ARCH "arm")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO asmjit/asmjit
-  REF 761130b1d8f32b5d3d612d285664fcfef5258149
-  SHA512 a86fd58ba0c8bc81ec575e86a9acdf4a11f2acc9c2facd2a0a8512cffa9ee6fc0bd877a1f33fb52f8f510eff1de654b45cd4f5f5a18c5252ecae22a92db6e93e
+  REF 8474400e82c3ea65bd828761539e5d9b25f6bd83
+  SHA512 435be4ed22abbbbcdea3869b31bc2fc27aae969775773c24155d7490bca9591f51613fa3319cce54200c6d18dbe73a6be2d5449c49afb46934d93760501e98f6
   HEAD_REF master
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DASMJIT_STATIC=1
-  )
+    set(ASMJIT_STATIC 1)
 else()
-  vcpkg_configure_cmake(
+    set(ASMJIT_STATIC 0)
+endif()
+
+vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-  )
-endif()
+    OPTIONS -DASMJIT_STATIC=${ASMJIT_STATIC}
+ )
+
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

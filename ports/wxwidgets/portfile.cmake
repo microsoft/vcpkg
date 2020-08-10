@@ -1,11 +1,12 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF v3.1.3
-    SHA512 4ecb5c2d13f9bda7aa3c12e887c351a0004509ec24bdd440542bec67e1b6dca20e7838a01236a71dd3cf2e1ba0653c40878047f406464cb2c9ee07c26d6f2599
+    REF v3.1.4
+    SHA512 108e35220de10afbfc58762498ada9ece0b3166f56a6d11e11836d51bfbaed1de3033c32ed4109992da901fecddcf84ce8a1ba47303f728c159c638dac77d148
     HEAD_REF master
-    PATCHES disable-platform-lib-dir.patch
+    PATCHES
+        disable-platform-lib-dir.patch
+        fix-stl-build-vs2019-16.6.patch
 )
 
 set(OPTIONS)
@@ -37,6 +38,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
@@ -56,14 +59,13 @@ if(DLLS)
     endforeach()
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/wxwidgets/licence.txt ${CURRENT_PACKAGES_DIR}/share/wxwidgets/copyright)
-
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
 endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

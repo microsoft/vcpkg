@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6ca0212..8c14d24 100644
+index a498118..161f0f3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -18,8 +18,6 @@ if (subproject)
@@ -8,9 +8,9 @@ index 6ca0212..8c14d24 100644
  
 -add_subdirectory(docs)
 -
- option(BUILD_TESTING "Build the testing tree." ON)
- if (BUILD_TESTING)
-     enable_testing()
+ function(find_catch2_from_source)
+     set(Catch2_FOUND Catch2-NOTFOUND PARENT_SCOPE)
+     set(catch_cmake_lists ${PROJECT_SOURCE_DIR}/external/Catch2/CMakeLists.txt)
 diff --git a/src/nuspell/CMakeLists.txt b/src/nuspell/CMakeLists.txt
 index 22894f6..d58ad43 100644
 --- a/src/nuspell/CMakeLists.txt

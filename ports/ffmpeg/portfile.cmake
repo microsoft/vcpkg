@@ -6,10 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
-        0002-detect-openssl.patch
         0003-fix-windowsinclude.patch
         0004-fix-debug-build.patch
         0005-fix-libvpx-linking.patch
+        0006-fix-StaticFeatures.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -127,8 +127,10 @@ else()
     set(OPTIONS "${OPTIONS} --disable-bzlib")
 endif()
 
+set(ENABLE_AVRESAMPLE OFF)
 if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
+    set(ENABLE_AVRESAMPLE ON) #necessary for configuring FFMPEG CMake Module
 endif()
 
 if (VCPKG_TARGET_IS_OSX)
@@ -139,6 +141,12 @@ if("nvcodec" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
 else()
     set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
+endif()
+
+if("avisynthplus" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avisynth")
+else()
+    set(OPTIONS "${OPTIONS} --disable-avisynth")
 endif()
 
 set(OPTIONS_CROSS "")
@@ -267,10 +275,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
     if(FILES_TO_REMOVE)
         if (EXE_FILES_REL)
-            file(INSTALL ${EXE_FILES_REL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+            file(INSTALL ${EXE_FILES_REL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
         endif()
         if (EXE_FILES_DBG)
-            file(INSTALL ${EXE_FILES_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
+            file(INSTALL ${EXE_FILES_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
+            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
         endif()
         file(REMOVE ${FILES_TO_REMOVE})
     endif()

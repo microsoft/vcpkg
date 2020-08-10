@@ -2,122 +2,248 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.debug.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/visualstudio.h>
 
-namespace vcpkg
+namespace
 {
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir,
-                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
-                                            const std::string& default_vs_path,
-                                            const std::vector<std::string>* triplets_dirs)
+    using namespace vcpkg;
+    fs::path process_input_directory_impl(
+        Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
-        auto& fs = Files::get_real_filesystem();
-        std::error_code ec;
-        const fs::path canonical_vcpkg_root_dir = fs.canonical(vcpkg_root_dir, ec);
-        if (ec)
+        if (option)
         {
-            return ec;
-        }
-
-        VcpkgPaths paths;
-        paths.root = canonical_vcpkg_root_dir;
-        paths.default_vs_path = default_vs_path;
-
-        if (paths.root.empty())
-        {
-            Metrics::g_metrics.lock()->track_property("error", "Invalid vcpkg root directory");
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid vcpkg root directory: %s", paths.root.string());
-        }
-
-        paths.packages = paths.root / "packages";
-        paths.buildtrees = paths.root / "buildtrees";
-
-        const auto overriddenDownloadsPath = System::get_environment_variable("VCPKG_DOWNLOADS");
-        if (auto odp = overriddenDownloadsPath.get())
-        {
-            auto asPath = fs::u8path(*odp);
-            if (!fs::is_directory(fs.status(VCPKG_LINE_INFO, asPath)))
-            {
-                Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_DOWNLOADS override directory.");
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO,
-                    "Invalid downloads override directory: %s; "
-                    "create that directory or unset VCPKG_DOWNLOADS to use the default downloads location.",
-                    asPath.u8string());
-            }
-
-            paths.downloads = fs::stdfs::canonical(std::move(asPath), ec);
-            if (ec)
-            {
-                return ec;
-            }
+            // input directories must exist, so we use canonical
+            return filesystem.canonical(li, fs::u8path(*option));
         }
         else
         {
-            paths.downloads = paths.root / "downloads";
+            return root / fs::u8path(name.begin(), name.end());
         }
-
-        paths.ports = paths.root / "ports";
-        paths.installed = paths.root / "installed";
-        paths.triplets = paths.root / "triplets";
-        paths.community_triplets = paths.triplets / "community";
-
-        if (auto scripts_dir = vcpkg_scripts_root_dir.get())
-        {
-            if (scripts_dir->empty() || !fs::stdfs::is_directory(*scripts_dir))
-            {
-                Metrics::g_metrics.lock()->track_property("error", "Invalid scripts override directory.");
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO,
-                    "Invalid scripts override directory: %s; "
-                    "create that directory or unset --x-scripts-root to use the default scripts location.",
-                    scripts_dir->u8string());
-            }
-
-            paths.scripts = *scripts_dir;
-        }
-        else
-        {
-            paths.scripts = paths.root / "scripts";
-        }
-
-        paths.tools = paths.downloads / "tools";
-        paths.buildsystems = paths.scripts / "buildsystems";
-        paths.buildsystems_msbuild_targets = paths.buildsystems / "msbuild" / "vcpkg.targets";
-
-        paths.vcpkg_dir = paths.installed / "vcpkg";
-        paths.vcpkg_dir_status_file = paths.vcpkg_dir / "status";
-        paths.vcpkg_dir_info = paths.vcpkg_dir / "info";
-        paths.vcpkg_dir_updates = paths.vcpkg_dir / "updates";
-
-        paths.ports_cmake = paths.scripts / "ports.cmake";
-
-        if (triplets_dirs)
-        {
-            for (auto&& triplets_dir : *triplets_dirs)
-            {
-                auto path = fs::u8path(triplets_dir);
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   paths.get_filesystem().exists(path),
-                                   "Error: Path does not exist '%s'",
-                                   triplets_dir);
-                paths.triplets_dirs.emplace_back(fs::stdfs::canonical(path));
-            }
-        }
-        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.triplets));
-        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.community_triplets));
-
-        return paths;
     }
 
-    fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / spec.dir(); }
+    fs::path process_input_directory(
+        Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
+    {
+        auto result = process_input_directory_impl(filesystem, root, option, name, li);
+        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
+        return result;
+    }
+
+    fs::path process_output_directory_impl(
+        Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
+    {
+        if (option)
+        {
+            // output directories might not exist, so we use merely absolute
+            return filesystem.absolute(li, fs::u8path(*option));
+        }
+        else
+        {
+            return root / fs::u8path(name.begin(), name.end());
+        }
+    }
+
+    fs::path process_output_directory(
+        Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
+    {
+        auto result = process_output_directory_impl(filesystem, root, option, name, li);
+        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
+        return result;
+    }
+
+    void uppercase_win32_drive_letter(fs::path& path)
+    {
+#if defined(_WIN32)
+        const auto& nativePath = path.native();
+        if (nativePath.size() > 2 && (nativePath[0] >= L'a' && nativePath[0] <= L'z') && nativePath[1] == L':')
+        {
+            auto uppercaseFirstLetter = std::move(path).native();
+            uppercaseFirstLetter[0] = nativePath[0] - L'a' + L'A';
+            path = uppercaseFirstLetter;
+        }
+#endif
+        (void)path;
+    }
+
+} // unnamed namespace
+
+namespace vcpkg
+{
+    namespace details
+    {
+        struct VcpkgPathsImpl
+        {
+            VcpkgPathsImpl(Files::Filesystem& fs, bool compiler_tracking)
+                : fs_ptr(&fs), m_tool_cache(get_tool_cache()), m_env_cache(compiler_tracking)
+            {
+            }
+
+            Lazy<std::vector<VcpkgPaths::TripletFile>> available_triplets;
+            Lazy<std::vector<Toolset>> toolsets;
+            Lazy<std::map<std::string, std::string>> cmake_script_hashes;
+
+            Files::Filesystem* fs_ptr;
+
+            fs::path default_vs_path;
+            std::vector<fs::path> triplets_dirs;
+
+            std::unique_ptr<ToolCache> m_tool_cache;
+            Cache<Triplet, fs::path> m_triplets_cache;
+            Build::EnvCache m_env_cache;
+
+            fs::SystemHandle file_lock_handle;
+        };
+    }
+
+    VcpkgPaths::VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args)
+        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.compiler_tracking_enabled()))
+    {
+        original_cwd = filesystem.current_path(VCPKG_LINE_INFO);
+        if (args.vcpkg_root_dir)
+        {
+            root = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.vcpkg_root_dir));
+        }
+        else
+        {
+            root = filesystem.find_file_recursively_up(original_cwd, ".vcpkg-root");
+            if (root.empty())
+            {
+                root = filesystem.find_file_recursively_up(
+                    filesystem.canonical(VCPKG_LINE_INFO, System::get_exe_path_of_current_process()), ".vcpkg-root");
+            }
+        }
+        uppercase_win32_drive_letter(root);
+        Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
+        Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
+
+        std::error_code ec;
+        bool manifest_mode_on = args.manifest_mode.value_or(args.manifest_root_dir != nullptr);
+        if (args.manifest_root_dir)
+        {
+            manifest_root_dir = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.manifest_root_dir));
+        }
+        else
+        {
+            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, "vcpkg.json");
+        }
+        uppercase_win32_drive_letter(manifest_root_dir);
+
+        if (!manifest_root_dir.empty() && manifest_mode_on)
+        {
+            Debug::print("Using manifest-root: ", manifest_root_dir.u8string(), '\n');
+
+            installed = process_output_directory(
+                filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
+            const auto vcpkg_lock = root / ".vcpkg-root";
+            if (args.wait_for_lock.value_or(false))
+            {
+                m_pimpl->file_lock_handle = filesystem.take_exclusive_file_lock(vcpkg_lock, ec);
+            }
+            else
+            {
+                m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
+            }
+            if (ec)
+            {
+                System::printf(
+                    System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
+                System::printf(System::Color::error, "    %s\n", ec.message());
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+        }
+        else
+        {
+            // we ignore the manifest root dir if the user requests -manifest
+            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value())
+            {
+                System::print2(System::Color::warning,
+                               "Warning: manifest-root detected at ",
+                               manifest_root_dir.generic_u8string(),
+                               ", but manifests are not enabled.\n");
+                System::printf(System::Color::warning,
+                               R"(If you wish to use manifest mode, you may do one of the following:
+    * Add the `%s` feature flag to the comma-separated environment
+      variable `%s`.
+    * Add the `%s` feature flag to the `--%s` option.
+    * Pass your manifest directory to the `--%s` option.
+If you wish to silence this error and use classic mode, you can:
+    * Add the `-%s` feature flag to `%s`.
+    * Add the `-%s` feature flag to `--%s`.
+)",
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ENV,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ARG,
+                               VcpkgCmdArguments::MANIFEST_ROOT_DIR_ARG,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ENV,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ARG);
+            }
+
+            manifest_root_dir.clear();
+            installed =
+                process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
+        }
+
+        buildtrees =
+            process_output_directory(filesystem, root, args.buildtrees_root_dir.get(), "buildtrees", VCPKG_LINE_INFO);
+        downloads =
+            process_output_directory(filesystem, root, args.downloads_root_dir.get(), "downloads", VCPKG_LINE_INFO);
+        packages =
+            process_output_directory(filesystem, root, args.packages_root_dir.get(), "packages", VCPKG_LINE_INFO);
+        ports = filesystem.canonical(VCPKG_LINE_INFO, root / fs::u8path("ports"));
+        scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
+        prefab = root / fs::u8path("prefab");
+
+        if (args.default_visual_studio_path)
+        {
+            m_pimpl->default_vs_path =
+                filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.default_visual_studio_path));
+        }
+
+        triplets = filesystem.canonical(VCPKG_LINE_INFO, root / fs::u8path("triplets"));
+        community_triplets = filesystem.canonical(VCPKG_LINE_INFO, triplets / fs::u8path("community"));
+
+        tools = downloads / fs::u8path("tools");
+        buildsystems = scripts / fs::u8path("buildsystems");
+        const auto msbuildDirectory = buildsystems / fs::u8path("msbuild");
+        buildsystems_msbuild_targets = msbuildDirectory / fs::u8path("vcpkg.targets");
+        buildsystems_msbuild_props = msbuildDirectory / fs::u8path("vcpkg.props");
+
+        vcpkg_dir = installed / fs::u8path("vcpkg");
+        vcpkg_dir_status_file = vcpkg_dir / fs::u8path("status");
+        vcpkg_dir_info = vcpkg_dir / fs::u8path("info");
+        vcpkg_dir_updates = vcpkg_dir / fs::u8path("updates");
+
+        ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
+
+        for (auto&& overlay_triplets_dir : args.overlay_triplets)
+        {
+            m_pimpl->triplets_dirs.emplace_back(
+                filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(overlay_triplets_dir)));
+        }
+        m_pimpl->triplets_dirs.emplace_back(triplets);
+        m_pimpl->triplets_dirs.emplace_back(community_triplets);
+    }
+
+    fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / fs::u8path(spec.dir()); }
+    fs::path VcpkgPaths::build_dir(const PackageSpec& spec) const { return this->buildtrees / fs::u8path(spec.name()); }
+    fs::path VcpkgPaths::build_dir(const std::string& package_name) const
+    {
+        return this->buildtrees / fs::u8path(package_name);
+    }
 
     fs::path VcpkgPaths::build_info_file_path(const PackageSpec& spec) const
     {
@@ -145,10 +271,10 @@ namespace vcpkg
 
     const std::vector<VcpkgPaths::TripletFile>& VcpkgPaths::get_available_triplets() const
     {
-        return this->available_triplets.get_lazy([this]() -> std::vector<TripletFile> {
+        return m_pimpl->available_triplets.get_lazy([this]() -> std::vector<TripletFile> {
             std::vector<TripletFile> output;
             Files::Filesystem& fs = this->get_filesystem();
-            for (auto&& triplets_dir : triplets_dirs)
+            for (auto&& triplets_dir : m_pimpl->triplets_dirs)
             {
                 for (auto&& path : fs.get_files_non_recursive(triplets_dir))
                 {
@@ -162,11 +288,31 @@ namespace vcpkg
         });
     }
 
+    const std::map<std::string, std::string>& VcpkgPaths::get_cmake_script_hashes() const
+    {
+        return m_pimpl->cmake_script_hashes.get_lazy([this]() -> std::map<std::string, std::string> {
+            auto& fs = this->get_filesystem();
+            std::map<std::string, std::string> helpers;
+            auto files = fs.get_files_non_recursive(this->scripts / fs::u8path("cmake"));
+            auto common_functions = fs::u8path("vcpkg_common_functions");
+            for (auto&& file : files)
+            {
+                auto stem = file.stem();
+                if (stem != common_functions)
+                {
+                    helpers.emplace(stem.u8string(),
+                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
+                }
+            }
+            return helpers;
+        });
+    }
+
     const fs::path VcpkgPaths::get_triplet_file_path(Triplet triplet) const
     {
-        return m_triplets_cache.get_lazy(
+        return m_pimpl->m_triplets_cache.get_lazy(
             triplet, [&]() -> auto {
-                for (const auto& triplet_dir : triplets_dirs)
+                for (const auto& triplet_dir : m_pimpl->triplets_dirs)
                 {
                     auto path = triplet_dir / (triplet.canonical_name() + ".cmake");
                     if (this->get_filesystem().exists(path))
@@ -182,29 +328,26 @@ namespace vcpkg
 
     const fs::path& VcpkgPaths::get_tool_exe(const std::string& tool) const
     {
-        if (!m_tool_cache) m_tool_cache = get_tool_cache();
-        return m_tool_cache->get_tool_path(*this, tool);
+        return m_pimpl->m_tool_cache->get_tool_path(*this, tool);
     }
     const std::string& VcpkgPaths::get_tool_version(const std::string& tool) const
     {
-        if (!m_tool_cache) m_tool_cache = get_tool_cache();
-        return m_tool_cache->get_tool_version(*this, tool);
+        return m_pimpl->m_tool_cache->get_tool_version(*this, tool);
     }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
-        if ((prebuildinfo.external_toolchain_file && !prebuildinfo.load_vcvars_env) ||
-            (!prebuildinfo.cmake_system_name.empty() && prebuildinfo.cmake_system_name != "WindowsStore"))
+        if (!prebuildinfo.using_vcvars())
         {
             static Toolset external_toolset = []() -> Toolset {
                 Toolset ret;
-                ret.dumpbin = "";
+                ret.dumpbin.clear();
                 ret.supported_architectures = {
                     ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()}};
-                ret.vcvarsall = "";
+                ret.vcvarsall.clear();
                 ret.vcvarsall_options = {};
                 ret.version = "external";
-                ret.visual_studio_root_path = "";
+                ret.visual_studio_root_path.clear();
                 return ret;
             }();
             return external_toolset;
@@ -213,15 +356,15 @@ namespace vcpkg
 #if !defined(_WIN32)
         Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot build windows triplets from non-windows.");
 #else
-        const std::vector<Toolset>& vs_toolsets =
-            this->toolsets.get_lazy([this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
+        const std::vector<Toolset>& vs_toolsets = m_pimpl->toolsets.get_lazy(
+            [this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
 
         std::vector<const Toolset*> candidates = Util::fmap(vs_toolsets, [](auto&& x) { return &x; });
         const auto tsv = prebuildinfo.platform_toolset.get();
         auto vsp = prebuildinfo.visual_studio_path.get();
-        if (!vsp && !default_vs_path.empty())
+        if (!vsp && !m_pimpl->default_vs_path.empty())
         {
-            vsp = &default_vs_path;
+            vsp = &m_pimpl->default_vs_path;
         }
 
         if (tsv && vsp)
@@ -262,5 +405,42 @@ namespace vcpkg
 #endif
     }
 
-    Files::Filesystem& VcpkgPaths::get_filesystem() const { return Files::get_real_filesystem(); }
+    const System::Environment& VcpkgPaths::get_action_env(const Build::AbiInfo& abi_info) const
+    {
+        return m_pimpl->m_env_cache.get_action_env(*this, abi_info);
+    }
+
+    const std::string& VcpkgPaths::get_triplet_info(const Build::AbiInfo& abi_info) const
+    {
+        return m_pimpl->m_env_cache.get_triplet_info(*this, abi_info);
+    }
+
+    Files::Filesystem& VcpkgPaths::get_filesystem() const { return *m_pimpl->fs_ptr; }
+
+    void VcpkgPaths::track_feature_flag_metrics() const
+    {
+        struct
+        {
+            StringView flag;
+            bool enabled;
+        } flags[] = {{VcpkgCmdArguments::MANIFEST_MODE_FEATURE, manifest_mode_enabled()}};
+
+        for (const auto& flag : flags)
+        {
+            Metrics::g_metrics.lock()->track_feature(flag.flag.to_string(), flag.enabled);
+        }
+    }
+
+    VcpkgPaths::~VcpkgPaths()
+    {
+        std::error_code ec;
+        if (m_pimpl->file_lock_handle.is_valid())
+        {
+            m_pimpl->fs_ptr->unlock_file_lock(m_pimpl->file_lock_handle, ec);
+            if (ec)
+            {
+                Debug::print("Failed to unlock filesystem lock: ", ec.message(), '\n');
+            }
+        }
+    }
 }

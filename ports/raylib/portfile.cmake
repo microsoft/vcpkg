@@ -16,8 +16,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF 6f3c99a295533e41de3049db5e683d15fd5c6e1a # 2.6.0
-    SHA512 358ebcffb7e11f319f82ecf791480eb23c40a53b764cad1d2109064bb06575c7af0325bf06ec86bbb2c43b70b12f52b5b6d1318d8857e07ff8e965a1dadbd8e2
+    REF 7ef114d1da2c34a70bba5442497103441647d8f3 # 3.0.0
+    SHA512 e15df6f0f95d9580d6211459815f174496b1385c9797a682d372a03b1175c9eb38e51b3b27077346d5e1a2d6ee2d5c636e03e8fd3ca9a73a7fa2a67afd255bd2
     HEAD_REF master
 )
 
@@ -25,8 +25,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    INVERTED_FEATURES
-    non-audio USE_AUDIO
+    use-audio USE_AUDIO
 )
 
 vcpkg_configure_cmake(
@@ -37,8 +36,8 @@ vcpkg_configure_cmake(
         -DBUILD_GAMES=OFF
         -DSHARED=${SHARED}
         -DSTATIC=${STATIC}
-        -DUSE_AUDIO=${USE_AUDIO}
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_ASAN=ON
         -DENABLE_UBSAN=ON
@@ -74,8 +73,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-# Install usage
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
-
-# Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

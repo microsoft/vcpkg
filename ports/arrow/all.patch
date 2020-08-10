@@ -1,8 +1,8 @@
 diff --git a/cpp/cmake_modules/BuildUtils.cmake b/cpp/cmake_modules/BuildUtils.cmake
-index f5f0ad7..3dca82e 100644
+index e4e13cb70..58ca626da 100644
 --- a/cpp/cmake_modules/BuildUtils.cmake
 +++ b/cpp/cmake_modules/BuildUtils.cmake
-@@ -305,7 +305,7 @@ function(ADD_ARROW_LIB LIB_NAME)
+@@ -335,7 +335,7 @@ function(ADD_ARROW_LIB LIB_NAME)
        target_include_directories(${LIB_NAME}_static PRIVATE ${ARG_PRIVATE_INCLUDES})
      endif()
  
@@ -11,8 +11,22 @@ index f5f0ad7..3dca82e 100644
        set(LIB_NAME_STATIC ${LIB_NAME}_static)
      else()
        set(LIB_NAME_STATIC ${LIB_NAME})
+diff --git a/cpp/cmake_modules/FindBrotli.cmake b/cpp/cmake_modules/FindBrotli.cmake
+index bf47915c4..053e605a0 100644
+--- a/cpp/cmake_modules/FindBrotli.cmake
++++ b/cpp/cmake_modules/FindBrotli.cmake
+@@ -64,8 +64,7 @@ if(BROTLI_ROOT)
+             PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES}
+             NO_DEFAULT_PATH)
+ else()
+-  pkg_check_modules(BROTLI_PC libbrotlicommon libbrotlienc libbrotlidec)
+-  if(BROTLI_PC_FOUND)
++  if(0) # Find via pkg_check_modules disabled as incompatible with vcpkg
+     set(BROTLI_INCLUDE_DIR "${BROTLI_PC_libbrotlicommon_INCLUDEDIR}")
+ 
+     # Some systems (e.g. Fedora) don't fill Brotli_LIBRARY_DIRS, so add the other dirs here.
 diff --git a/cpp/cmake_modules/FindLz4.cmake b/cpp/cmake_modules/FindLz4.cmake
-index 8410916..a196b25 100644
+index 841091643..a196b251d 100644
 --- a/cpp/cmake_modules/FindLz4.cmake
 +++ b/cpp/cmake_modules/FindLz4.cmake
 @@ -19,14 +19,16 @@ if(MSVC AND NOT DEFINED LZ4_MSVC_STATIC_LIB_SUFFIX)
@@ -53,10 +67,10 @@ index 8410916..a196b25 100644
        PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
      find_path(LZ4_INCLUDE_DIR NAMES lz4.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
 diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
-index f9d6296..82b8d22 100644
+index bb3eb5608..0b03d37d3 100644
 --- a/cpp/cmake_modules/FindThrift.cmake
 +++ b/cpp/cmake_modules/FindThrift.cmake
-@@ -54,6 +54,10 @@ if(MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
+@@ -43,6 +43,10 @@ if(MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
    set(THRIFT_MSVC_STATIC_LIB_SUFFIX md)
  endif()
  
@@ -67,7 +81,7 @@ index f9d6296..82b8d22 100644
  if(Thrift_ROOT)
    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
                 PATHS ${Thrift_ROOT}
-@@ -74,16 +78,14 @@ else()
+@@ -61,16 +65,14 @@ else()
  
      list(APPEND THRIFT_PC_LIBRARY_DIRS "${THRIFT_PC_LIBDIR}")
  
@@ -88,90 +102,105 @@ index f9d6296..82b8d22 100644
      find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h PATH_SUFFIXES "include")
      find_program(THRIFT_COMPILER thrift PATH_SUFFIXES "bin")
 diff --git a/cpp/cmake_modules/FindZSTD.cmake b/cpp/cmake_modules/FindZSTD.cmake
-index 8e47086..d7ce559 100644
+index 84d21d2b5..971a9dec3 100644
 --- a/cpp/cmake_modules/FindZSTD.cmake
 +++ b/cpp/cmake_modules/FindZSTD.cmake
-@@ -19,14 +19,18 @@ if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
-   set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
+@@ -24,11 +24,11 @@ if(ARROW_ZSTD_USE_SHARED)
+   list(APPEND ZSTD_LIB_NAMES
+               "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ else()
+-  if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+-    set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
++  if(MSVC AND CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++    set(ZSTD_MSVC_DEBUG_LIB_SUFFIX d)
+   endif()
+   set(ZSTD_STATIC_LIB_SUFFIX
+-      "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++      "${ZSTD_MSVC_DEBUG_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+   set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
+   set(ZSTD_LIB_NAMES "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}")
  endif()
+@@ -49,8 +49,8 @@ if(ZSTD_ROOT)
+
+ else()
+   # Second, find via pkg_check_modules
+-  pkg_check_modules(ZSTD_PC libzstd)
+-  if(ZSTD_PC_FOUND)
++  #pkg_check_modules(ZSTD_PC libzstd)
++  if(0) #(ZSTD_PC_FOUND)  # Disabled as sometimes incompatible with vcpkg on Linux and OSX
+     set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
+
+     list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
+diff --git a/cpp/cmake_modules/DefineOptions.cmake b/cpp/cmake_modules/DefineOptions.cmake
+index 3b229846c..da2c6d551 100644
+--- a/cpp/cmake_modules/DefineOptions.cmake
++++ b/cpp/cmake_modules/DefineOptions.cmake
+@@ -297,6 +297,9 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+   define_option(ARROW_PROTOBUF_USE_SHARED
+                 "Rely on Protocol Buffers shared libraries where relevant" ON)
  
--set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
-+if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+  set(ZSTD_LIB_NAME_DEBUG_SUFFIX d)
++  define_option(ARROW_UTF8PROC_USE_SHARED
++                "Rely on utf8proc shared libraries where relevant" ON)
++
+   define_option(ARROW_ZSTD_USE_SHARED "Rely on zstd shared libraries where relevant" ON)
+ 
+   define_option(ARROW_WITH_BACKTRACE "Build with backtrace support" ON)
+diff --git a/cpp/cmake_modules/Findutf8proc.cmake b/cpp/cmake_modules/Findutf8proc.cmake
+index ab9ae9f98..d3063827a 100644
+--- a/cpp/cmake_modules/Findutf8proc.cmake
++++ b/cpp/cmake_modules/Findutf8proc.cmake
+@@ -15,11 +15,28 @@
+ # specific language governing permissions and limitations
+ # under the License.
+ 
++if(ARROW_UTF8PROC_USE_SHARED)
++  set(UTF8PROC_LIB_NAMES)
++  if(CMAKE_IMPORT_LIBRARY_SUFFIX)
++    list(APPEND UTF8PROC_LIB_NAMES
++                "${CMAKE_IMPORT_LIBRARY_PREFIX}utf8proc${CMAKE_IMPORT_LIBRARY_SUFFIX}")
++  endif()
++  list(APPEND UTF8PROC_LIB_NAMES
++              "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}")
++else()
++  if(MSVC AND NOT DEFINED UTF8PROC_MSVC_STATIC_LIB_SUFFIX)
++    set(UTF8PROC_MSVC_STATIC_LIB_SUFFIX "_static")
++  endif()
++  set(UTF8PROC_STATIC_LIB_SUFFIX
++      "${UTF8PROC_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++  set(UTF8PROC_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}utf8proc${UTF8PROC_STATIC_LIB_SUFFIX})
++  set(UTF8PROC_LIB_NAMES "${UTF8PROC_STATIC_LIB_NAME}" "lib${UTF8PROC_STATIC_LIB_NAME}")
 +endif()
 +
-+set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
- set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
- 
- # First, find via if specified ZTD_ROOT
- if(ZSTD_ROOT)
-   message(STATUS "Using ZSTD_ROOT: ${ZSTD_ROOT}")
-   find_library(ZSTD_LIB
--               NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
-+               NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
-                      "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
-                PATHS ${ZSTD_ROOT}
-                PATH_SUFFIXES ${LIB_PATH_SUFFIXES}
-@@ -44,14 +48,14 @@ else()
-     set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
- 
-     list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
--    find_library(ZSTD_LIB zstd
-+    find_library(ZSTD_LIB zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}
-                  PATHS ${ZSTD_PC_LIBRARY_DIRS}
-                  NO_DEFAULT_PATH
-                  PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
-     # Third, check all other CMake paths
-   else()
-     find_library(ZSTD_LIB
--                 NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
-+                 NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
-                        "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
-                  PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
-     find_path(ZSTD_INCLUDE_DIR NAMES zstd.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
-diff --git a/cpp/cmake_modules/SetupCxxFlags.cmake b/cpp/cmake_modules/SetupCxxFlags.cmake
-index 75b33c2..80cac9a 100644
---- a/cpp/cmake_modules/SetupCxxFlags.cmake
-+++ b/cpp/cmake_modules/SetupCxxFlags.cmake
-@@ -128,7 +128,9 @@ macro(arrow_add_werror_if_debug)
-   if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
-     # Treat all compiler warnings as errors
-     if(MSVC)
--      set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
-+      if(MSVC_VERSION VERSION_LESS 1900)
-+        set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
-+      endif()
-     else()
-       set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} -Werror")
-     endif()
-diff --git a/cpp/src/arrow/stl.h b/cpp/src/arrow/stl.h
-index 7ae9eaf..b9efdcb 100644
---- a/cpp/src/arrow/stl.h
-+++ b/cpp/src/arrow/stl.h
-@@ -518,6 +518,9 @@ class allocator {
- 
-  private:
-   MemoryPool* pool_;
-+
-+  template <class U>
-+  friend class allocator;
- };
- 
- /// \brief A MemoryPool implementation delegating allocations to a STL allocator
-diff --git a/cpp/src/parquet/schema.h b/cpp/src/parquet/schema.h
-index 87db4de..095ef9a 100644
---- a/cpp/src/parquet/schema.h
-+++ b/cpp/src/parquet/schema.h
-@@ -460,7 +460,11 @@ class PARQUET_EXPORT SchemaDescriptor {
-   // -- -- b     |
-   // -- -- -- c  |
-   // -- -- -- -- d
--  std::unordered_map<int, const schema::NodePtr> leaf_to_base_;
-+#if _MSC_VER >= 1900
-+  std::unordered_map<int, schema::NodePtr> leaf_to_base_;
-+#else
-+   std::unordered_map<int, const schema::NodePtr> leaf_to_base_;
-+#endif
- 
-   // Mapping between ColumnPath DotString to the leaf index
-   std::unordered_multimap<std::string, int> leaf_to_idx_;
+ if(utf8proc_ROOT)
+   find_library(
+     UTF8PROC_LIB
+-    NAMES utf8proc
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES ${UTF8PROC_LIB_NAMES}
+     PATHS ${utf8proc_ROOT}
+     PATH_SUFFIXES ${LIB_PATH_SUFFIXES}
+     NO_DEFAULT_PATH)
+@@ -28,12 +45,10 @@ if(utf8proc_ROOT)
+             PATHS ${utf8proc_ROOT}
+             NO_DEFAULT_PATH
+             PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+-
+ else()
+   find_library(
+     UTF8PROC_LIB
+-    NAMES utf8proc
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES ${UTF8PROC_LIB_NAMES}
+     PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
+   find_path(UTF8PROC_INCLUDE_DIR NAMES utf8proc.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+ endif()
+@@ -47,5 +62,8 @@ if(UTF8PROC_FOUND OR utf8proc_FOUND)
+   set_target_properties(utf8proc::utf8proc
+                         PROPERTIES IMPORTED_LOCATION "${UTF8PROC_LIB}"
+                                    INTERFACE_INCLUDE_DIRECTORIES "${UTF8PROC_INCLUDE_DIR}")
++  if(NOT ARROW_UTF8PROC_USE_SHARED)
++    set_target_properties(utf8proc::utf8proc
++                          PROPERTIES INTERFACE_COMPILER_DEFINITIONS "UTF8PROC_STATIC")
++  endif()
+ endif()
+-

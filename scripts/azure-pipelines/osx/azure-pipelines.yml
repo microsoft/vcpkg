@@ -1,0 +1,68 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+jobs:
+- job: x64_osx
+  pool:
+    name: vcpkgAgentPool
+    demands: Agent.OS -equals Darwin
+  workspace:
+    clean: resources
+  timeoutInMinutes: 1440 # 1 day
+  steps:
+  - bash: |
+      df -h
+    displayName: 'Report on Disk Space'
+    condition: always()
+  - bash: |
+      brew list autoconf || brew install autoconf
+      brew list automake || brew install automake
+      brew list pkg-config || brew install pkg-config
+      brew list libtool || brew install libtool
+      brew list bison || brew install bison
+      brew list gfortran || brew cask install gfortran
+      brew list yasm || brew install yasm
+    displayName: 'Install brew dependencies'
+  - bash: |
+      sudo mkdir /Users/vagrant/Data/downloads || 0
+      sudo chmod 777 /Users/vagrant/Data/downloads || 0
+      exit 0
+    displayName: 'Create /Users/vagrant/Data/downloads'
+  - task: Bash@3
+    displayName: 'Build vcpkg'
+    inputs:
+      filePath: bootstrap-vcpkg.sh
+      arguments: '-buildTests'
+    env:
+      VCPKG_DOWNLOADS: '/Users/vagrant/Data/downloads'
+  - bash: toolsrc/build.rel/vcpkg-test
+    displayName: 'Run vcpkg tests'
+  - task: PowerShell@2
+    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -ArchivesRoot /Users/vagrant/Data/archives -WorkingRoot /Users/vagrant/Data -ArtifactsDirectory $(System.ArtifactsDirectory)'
+  - bash: |
+      df -h
+    displayName: 'Report on Disk Space After Build'
+    condition: always()
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: x64-osx port build failure logs'
+    inputs:
+      PathtoPublish: '$(System.ArtifactsDirectory)/failure-logs'
+      ArtifactName: 'x64-osx port build failure logs'
+    condition: failed()
+  - bash: |
+      python3 scripts/file_script.py /Users/vagrant/Data/installed/vcpkg/info/
+    displayName: 'Build a file list for all packages'
+    condition: always()
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload file lists for all packages'
+    condition: always()
+
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "x64-osx package file lists"

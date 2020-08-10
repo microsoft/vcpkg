@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.27.3
-    SHA512 0338eedcce40cd7359cc1b216eb3eeaaeb1f2b065d1bb03e72322978a7e40ef8ecc1ad39808bec8c0fd5bcaa91e91bbd6037e5a6611a979c9ab413eb159bb38b
+    REF 7d89dbb311f049b43bda7bbf6f7d7bf1b4c24419 #v1.29.1
+    SHA512 403fa5e3f012786bb17ca32c760b6dfb22c5a5cfb473ba7fad657e26ab3986eb0203f7cbb501a8647fd5ef2571e5f4ee08c2c97d1dfda18ec5ab6a92c9fc3263
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -15,6 +15,8 @@ vcpkg_from_github(
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
         00009-use-system-upb.patch
+        00010-add-feature-absl-sync.patch
+        00011-fix-csharp_plugin.patch
         snprintf.patch
 )
 
@@ -33,10 +35,14 @@ else()
     set(cares_CARES_PROVIDER "package")
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    absl-sync gRPC_ABSL_SYNC_ENABLE
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DgRPC_INSTALL=ON
         -DgRPC_BUILD_TESTS=OFF
         -DgRPC_STATIC_LINKING=${gRPC_STATIC_LINKING}
@@ -45,6 +51,7 @@ vcpkg_configure_cmake(
         -DgRPC_SSL_PROVIDER=package
         -DgRPC_PROTOBUF_PROVIDER=package
         -DgRPC_ABSL_PROVIDER=package
+        -DgRPC_UPB_PROVIDER=package
         -DgRPC_PROTOBUF_PACKAGE_TYPE=CONFIG
         -DgRPC_CARES_PROVIDER=${cares_CARES_PROVIDER}
         -DgRPC_GFLAGS_PROVIDER=none
@@ -53,13 +60,13 @@ vcpkg_configure_cmake(
         -DgRPC_INSTALL_BINDIR:STRING=tools/grpc
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
-        -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
+        -DgRPC_INSTALL_CMAKEDIR:STRING=share/gRPC
         -DgRPC_BUILD_CODEGEN=${gRPC_BUILD_CODEGEN}
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/gRPC TARGET_PATH share/gRPC)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
 

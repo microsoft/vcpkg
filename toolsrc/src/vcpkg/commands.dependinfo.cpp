@@ -3,12 +3,14 @@
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.dependinfo.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
+
 #include <vector>
 
 using vcpkg::Dependencies::ActionPlan;
@@ -19,11 +21,11 @@ namespace vcpkg::Commands::DependInfo
 {
     namespace
     {
-        constexpr StringLiteral OPTION_DOT = "--dot";
-        constexpr StringLiteral OPTION_DGML = "--dgml";
-        constexpr StringLiteral OPTION_SHOW_DEPTH = "--show-depth";
-        constexpr StringLiteral OPTION_MAX_RECURSE = "--max-recurse";
-        constexpr StringLiteral OPTION_SORT = "--sort";
+        constexpr StringLiteral OPTION_DOT = "dot";
+        constexpr StringLiteral OPTION_DGML = "dgml";
+        constexpr StringLiteral OPTION_SHOW_DEPTH = "show-depth";
+        constexpr StringLiteral OPTION_MAX_RECURSE = "max-recurse";
+        constexpr StringLiteral OPTION_SORT = "sort";
 
         constexpr int NO_RECURSE_LIMIT_VALUE = -1;
 
@@ -227,7 +229,7 @@ namespace vcpkg::Commands::DependInfo
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("depend-info sqlite3"),
+        create_example_string("depend-info sqlite3"),
         1,
         1,
         {DEPEND_SWITCHES, DEPEND_SETTINGS},
@@ -251,7 +253,7 @@ namespace vcpkg::Commands::DependInfo
             Input::check_triplet(spec.package_spec.triplet(), paths);
         }
 
-        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 
@@ -325,5 +327,12 @@ namespace vcpkg::Commands::DependInfo
             }
         }
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void DependInfoCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                             const VcpkgPaths& paths,
+                                             Triplet default_triplet) const
+    {
+        DependInfo::perform_and_exit(args, paths, default_triplet);
     }
 }

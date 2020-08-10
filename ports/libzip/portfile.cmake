@@ -1,39 +1,40 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nih-at/libzip
-    REF rel-1-5-2
-    SHA512 5ba765c5d4ab47dff24bfa5e73b798046126fcc88b29d5d9ce9d77d035499ae91d90cc526f1f73bbefa07b7b68ff6cf77e912e5793859f801caaf2061cb20aee
+    REF dcd9a0bfe1ac2893d7f62bafb19f0a4d7b08c0f7 #v1.7.1
+    SHA512 33ad594398f79544636464d6ae0892553a212dc833b508820f81f10823c3a5c4016288d05953176fb8d52919414edd28f26da6037b93129a58826abdcb501d18
     HEAD_REF master
-	PATCHES avoid_computation_on_void_pointer.patch
+    PATCHES fix-findpackage.patch
 )
 
-# AES encryption
-set(USE_OPENSSL OFF)
-if("openssl" IN_LIST FEATURES)
-    set(USE_OPENSSL ON)
-endif()
-
-set(USE_BZIP2 OFF)
-if("bzip2" IN_LIST FEATURES)
-    set(USE_BZIP2 ON)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    bzip2 ENABLE_BZIP2
+    liblzma ENABLE_LZMA
+    openssl ENABLE_OPENSSL
+    wincrypto ENABLE_WINDOWS_CRYPTO
+    commoncrypto ENABLE_COMMONCRYPTO
+    mbedtls ENABLE_MBEDTLS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DBUILD_DOC=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_REGRESS=OFF
         -DBUILD_TOOLS=OFF
-        # see https://github.com/nih-at/libzip/blob/rel-1-5-2/INSTALL.md
-        -DENABLE_OPENSSL=${USE_OPENSSL}
-        -DENABLE_BZIP2=${USE_BZIP2}
+        -DENABLE_GNUTLS=OFF
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/libzip)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+ 
 # Remove include directories from lib
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libzip ${CURRENT_PACKAGES_DIR}/debug/lib/libzip)
 

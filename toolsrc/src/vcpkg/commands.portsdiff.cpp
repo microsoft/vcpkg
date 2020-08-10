@@ -1,14 +1,14 @@
 #include "pch.h"
 
-#include <vcpkg/commands.h>
-#include <vcpkg/help.h>
-#include <vcpkg/paragraphs.h>
-#include <vcpkg/versiont.h>
-
 #include <vcpkg/base/sortedvector.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
+#include <vcpkg/commands.portsdiff.h>
+#include <vcpkg/help.h>
+#include <vcpkg/paragraphs.h>
+#include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::PortsDiff
 {
@@ -104,7 +104,10 @@ namespace vcpkg::Commands::PortsDiff
             Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
         std::map<std::string, VersionT> names_and_versions;
         for (auto&& port : all_ports)
-            names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
+        {
+            const auto& core_pgh = *port->core_paragraph;
+            names_and_versions.emplace(port->core_paragraph->name, VersionT(core_pgh.version, core_pgh.port_version));
+        }
         fs.remove_all(temp_checkout_path, VCPKG_LINE_INFO);
         return names_and_versions;
     }
@@ -121,7 +124,7 @@ namespace vcpkg::Commands::PortsDiff
 
     const CommandStructure COMMAND_STRUCTURE = {
         Strings::format("The argument should be a branch/tag/hash to checkout.\n%s",
-                        Help::create_example_string("portsdiff mybranchname")),
+                        create_example_string("portsdiff mybranchname")),
         1,
         2,
         {},
@@ -186,5 +189,10 @@ namespace vcpkg::Commands::PortsDiff
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void PortsDiffCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        PortsDiff::perform_and_exit(args, paths);
     }
 }
