@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
