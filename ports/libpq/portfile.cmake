@@ -42,7 +42,9 @@ set(PATCHES
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
-        patches/linux/configure.patch)
+        patches/linux/configure.patch
+        patches/windows/fix-tools.patch
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)

@@ -1,6 +1,6 @@
 Source: libpq
 Version: 12.2
-Port-Version: 6
+Port-Version: 7
 Build-Depends: libpq[bonjour] (osx)
 Supports: !uwp
 Homepage: https://www.postgresql.org/

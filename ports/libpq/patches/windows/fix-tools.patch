@@ -1,0 +1,52 @@
+diff --git a/src/backend/utils/adt/pg_locale.c b/src/backend/utils/adt/pg_locale.c
+index 2376bda..181e4bd 100644
+--- a/src/backend/utils/adt/pg_locale.c
++++ b/src/backend/utils/adt/pg_locale.c
+@@ -976,6 +976,8 @@ IsoLocaleName(const char *winlocname)
+ #if (_MSC_VER >= 1400)			/* VC8.0 or later */
+ 	static char iso_lc_messages[32];
+ 	_locale_t	loct = NULL;
++	size_t		rc;
++	char*		hyphen;
+ 
+ 	if (pg_strcasecmp("c", winlocname) == 0 ||
+ 		pg_strcasecmp("posix", winlocname) == 0)
+@@ -983,14 +985,27 @@ IsoLocaleName(const char *winlocname)
+ 		strcpy(iso_lc_messages, "C");
+ 		return iso_lc_messages;
+ 	}
++    
++#if _WIN32_WINNT >= 0x0600
++	WCHAR		wc_locale_name[LOCALE_NAME_MAX_LENGTH];
++	WCHAR		buffer[LOCALE_NAME_MAX_LENGTH];
++
++	memset(wc_locale_name, 0, sizeof(wc_locale_name));
++	memset(buffer, 0, sizeof(buffer));
++	MultiByteToWideChar(CP_ACP, 0, winlocname, -1, wc_locale_name,
++						LOCALE_NAME_MAX_LENGTH);
++	if ((GetLocaleInfoEx(wc_locale_name, LOCALE_SNAME,
++		(LPWSTR)&buffer, LOCALE_NAME_MAX_LENGTH)) > 0) {
++		rc = wchar2char(iso_lc_messages, buffer, sizeof(iso_lc_messages),
++						NULL);
++	}
++#else   	/* _WIN32_WINNT < 0x0600 */
++	_locale_t	loct = NULL;
+ 
+ 	loct = _create_locale(LC_CTYPE, winlocname);
+ 	if (loct != NULL)
+ 	{
+ #if (_MSC_VER >= 1700)			/* Visual Studio 2012 or later */
+-		size_t		rc;
+-		char	   *hyphen;
+-
+ 		/* Locale names use only ASCII, any conversion locale suffices. */
+ 		rc = wchar2char(iso_lc_messages, loct->locinfo->locale_name[LC_CTYPE],
+ 						sizeof(iso_lc_messages), NULL);
+@@ -1032,6 +1047,7 @@ IsoLocaleName(const char *winlocname)
+ #endif
+ 		return iso_lc_messages;
+ 	}
++#endif		/* _WIN32_WINNT >= 0x0600 */
+ 	return NULL;
+ #else
+ 	return NULL;				/* Not supported on this version of msvc/mingw */
