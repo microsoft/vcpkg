@@ -352,6 +352,7 @@ function(add_executable name)
                         -targetBinary $<TARGET_FILE:${name}>
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
+                    USES_TERMINAL
                 )
             elseif(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if (NOT MACOSX_BUNDLE_IDX EQUAL -1)
