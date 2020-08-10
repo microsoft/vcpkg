@@ -139,8 +139,8 @@ macro(_vcpkg_backup_env_variable envvar)
 endmacro()
 
 macro(_vcpkg_backup_env_variables)
-    foreach(_var ${ARGN})
-        _vcpkg_backup_env_variable(${var})
+    foreach(_var ${ARGV})
+        _vcpkg_backup_env_variable(${_var})
     endforeach()
 endmacro()
 
@@ -153,8 +153,8 @@ macro(_vcpkg_restore_env_variable envvar)
 endmacro()
 
 macro(_vcpkg_restore_env_variables)
-    foreach(_var ${ARGN})
-        _vcpkg_restore_env_variable(${var})
+    foreach(_var ${ARGV})
+        _vcpkg_restore_env_variable(${_var})
     endforeach()
 endmacro()
 
