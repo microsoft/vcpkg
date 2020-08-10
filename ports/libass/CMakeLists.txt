@@ -45,7 +45,7 @@ find_path(HARFBUZZ_INCLUDE_DIR
 find_path(DIRENT_INCLUDE_DIR
           NAMES dirent.h)
 
-find_library(FRIBIDI_LIBRARY NAMES fribidi)
+find_library(FRIBIDI_LIBRARY NAMES libfribidi fribidi)
 find_library(HARFBUZZ_LIBRARY NAMES harfbuzz)
 
 add_library(ass ${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/libass.def)
