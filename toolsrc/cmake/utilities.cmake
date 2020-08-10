@@ -105,7 +105,7 @@ endfunction()
 function(vcpkg_detect_std_filesystem)
     vcpkg_detect_standard_library()
 
-    if (NOT DEFINED CACHE{VCPKG_USE_STD_FILESYSTEM})
+    if(NOT DEFINED CACHE{VCPKG_USE_STD_FILESYSTEM})
         include(CheckCXXSourceCompiles)
 
         message(STATUS "Detecting how to use the C++ filesystem library")
@@ -130,7 +130,7 @@ int main() {}
 ]]
                 _VCPKG_USE_STD_FILESYSTEM)
             
-            if (_VCPKG_REQUIRE_LINK_CXXFS)
+            if(_VCPKG_REQUIRE_LINK_CXXFS)
                 set(_VCPKG_CXXFS_LIBRARY "stdc++fs")
             endif()
         elseif(VCPKG_STANDARD_LIBRARY STREQUAL "libc++")
@@ -147,7 +147,7 @@ int main() {}
 ]]
                     _VCPKG_REQUIRE_LINK_CXXFS)
 
-                if (_VCPKG_REQUIRE_LINK_CXXFS)
+                if(_VCPKG_REQUIRE_LINK_CXXFS)
                     set(_VCPKG_CXXFS_LIBRARY "c++fs")
                 endif()
             endif()
@@ -172,7 +172,7 @@ int main() {}
             FORCE)
         set(VCPKG_CXXFS_LIBRARY ${_VCPKG_CXXFS_LIBRARY}
             CACHE STRING
-            "Whether it's required to pass -l[std]c++fs in order to use <filesystem>"
+            "Library to link (if any) in order to use <filesystem>"
             FORCE)
 
         if(VCPKG_USE_STD_FILESYSTEM)
