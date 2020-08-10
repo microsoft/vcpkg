@@ -54,7 +54,7 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow TARGET_PATH share/Arrow)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
