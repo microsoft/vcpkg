@@ -185,6 +185,8 @@ namespace vcpkg::Strings
 
     std::string trim(std::string&& s);
 
+    StringView trim(StringView sv);
+
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
 
     std::vector<std::string> split(StringView s, const char delimiter);
