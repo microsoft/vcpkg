@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 83197af..34c0b84 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -232,7 +232,7 @@ else()
+     set(EXTRA_C_FLAGS "${OPT_C_FLAG} -std=c99 -Wall -Wextra -Wshadow -Wcast-qual -fno-strict-aliasing")
+     set(EXTRA_CXX_FLAGS "${OPT_CXX_FLAG} -std=c++11 -Wall -Wextra -Wshadow -Wswitch -Wreturn-type -Wcast-qual -Wno-deprecated -Wnon-virtual-dtor -fno-strict-aliasing")
+ 
+-    if (NOT RELEASE_BUILD)
++    if (NOT RELEASE_BUILD AND OFF)
+         # -Werror is most useful during development, don't potentially break
+         # release builds
+         set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Werror")

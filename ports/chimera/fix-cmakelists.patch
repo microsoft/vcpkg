@@ -2,7 +2,7 @@ diff --git a/chimera/CMakeLists.txt b/chimera/CMakeLists.txt
 index 1cd66a3..82b6468 100644
 --- a/chimera/CMakeLists.txt
 +++ b/chimera/CMakeLists.txt
-@@ -1,7 +1,24 @@
+@@ -1,7 +1,26 @@
  # Chimera lib
 +cmake_minimum_required (VERSION 2.8.11)
 +project (chimera C CXX)
@@ -12,6 +12,8 @@ index 1cd66a3..82b6468 100644
 +set (HS_MINOR_VERSION 3)
 +set (HS_PATCH_VERSION 0)
 +set (HS_VERSION ${HS_MAJOR_VERSION}.${HS_MINOR_VERSION}.${HS_PATCH_VERSION})
++
++set(CMAKE_CXX_STANDARD 11)
  
 +set(HS_INTERNAL_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/../src)
 +
