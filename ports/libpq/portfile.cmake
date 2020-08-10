@@ -67,7 +67,11 @@ vcpkg_extract_source_archive_ex(
 )
 unset(buildenv_contents)
 # Get paths to required programs
-foreach(program_name BISON FLEX PERL)
+set(REQUIRED_PROGRAMS PERL)
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND REQUIRED_PROGRAMS BISON FLEX)
+endif()
+foreach(program_name ${REQUIRED_PROGRAMS})
     # Need to rename win_bison and win_flex to just bison and flex
     vcpkg_find_acquire_program(${program_name})
     get_filename_component(${program_name}_EXE_PATH ${${program_name}} DIRECTORY)
