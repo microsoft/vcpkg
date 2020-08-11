@@ -16,8 +16,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-c-shared-utility
-        REF 48f7a556865731f0e96c47eb5e9537361f24647c
-        SHA512 c20074707e8601e090ee8daac1d96fdfb4f60ac60fd9c824dad81aa4c2f22b04733c82c01c1ae92110c26871b81674e8771d9ed65081f1c0c197a362275a28f1
+        REF 65c27eb4ab9a8bbe36b4d7c5a0e9ad305becb8b4
+        SHA512 48c65111b12e895f9c2087964d7291e6d1629242194fed9b33ead8ca438f16c803786cd55761eabdd12d47c9920542cff0e510bf16f16cac1d60049ba205df0e
         HEAD_REF master
         PATCHES 
             fix-utilityFunctions-conditions.patch
@@ -40,8 +40,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/azure_c_shared_uti
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(COPY ${SOURCE_PATH}/configs/azure_iot_build_rules.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility)
+file(COPY ${SOURCE_PATH}/configs/azure_iot_build_rules.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()

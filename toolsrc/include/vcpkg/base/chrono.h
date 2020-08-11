@@ -13,8 +13,8 @@ namespace vcpkg::Chrono
         using duration = std::chrono::high_resolution_clock::time_point::duration;
 
     public:
-        constexpr ElapsedTime() noexcept : m_duration() {}
-        constexpr ElapsedTime(duration d) noexcept : m_duration(d) {}
+        constexpr ElapsedTime() noexcept : m_duration() { }
+        constexpr ElapsedTime(duration d) noexcept : m_duration(d) { }
 
         template<class TimeUnit>
         TimeUnit as() const
@@ -34,7 +34,7 @@ namespace vcpkg::Chrono
     public:
         static ElapsedTimer create_started();
 
-        constexpr ElapsedTimer() noexcept : m_start_tick() {}
+        constexpr ElapsedTimer() noexcept : m_start_tick() { }
 
         ElapsedTime elapsed() const
         {
@@ -56,8 +56,8 @@ namespace vcpkg::Chrono
         static Optional<CTime> get_current_date_time();
         static Optional<CTime> parse(CStringView str);
 
-        constexpr CTime() noexcept : m_tm{} {}
-        explicit constexpr CTime(tm t) noexcept : m_tm{t} {}
+        constexpr CTime() noexcept : m_tm{} { }
+        explicit constexpr CTime(tm t) noexcept : m_tm{t} { }
 
         CTime add_hours(const int hours) const;
 

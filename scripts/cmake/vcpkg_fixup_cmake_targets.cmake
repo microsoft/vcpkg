@@ -6,7 +6,7 @@
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_fixup_cmake_targets([CONFIG_PATH <share/${PORT}>] [TARGET_PATH <share/${PORT}>])
+## vcpkg_fixup_cmake_targets([CONFIG_PATH <share/${PORT}>] [TARGET_PATH <share/${PORT}>] [DO_NOT_DELETE_PARENT_CONFIG_PATH])
 ## ```
 ##
 ## ## Parameters
@@ -21,6 +21,11 @@
 ## This needs to be specified if the port name differs from the `find_package()` name.
 ##
 ## Defaults to `share/${PORT}`.
+##
+## ### DO_NOT_DELETE_PARENT_CONFIG_PATH 
+## By default the parent directory of CONFIG_PATH is removed if it is named "cmake".
+## Passing this option disable such behavior, as it is convenient for ports that install
+## more than one CMake package configuration file.
 ##
 ## ## Notes
 ## Transform all `/debug/<CONFIG_PATH>/*targets-debug.cmake` files and move them to `/<TARGET_PATH>`.
@@ -38,7 +43,7 @@
 ## * [curl](https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake)
 ## * [nlohmann-json](https://github.com/Microsoft/vcpkg/blob/master/ports/nlohmann-json/portfile.cmake)
 function(vcpkg_fixup_cmake_targets)
-    cmake_parse_arguments(_vfct "" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
+    cmake_parse_arguments(_vfct "DO_NOT_DELETE_PARENT_CONFIG_PATH" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
 
     if(_vfct_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_cmake_targets was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
@@ -82,13 +87,13 @@ function(vcpkg_fixup_cmake_targets)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             get_filename_component(DEBUG_CONFIG_DIR_NAME ${DEBUG_CONFIG} NAME)
             string(TOLOWER "${DEBUG_CONFIG_DIR_NAME}" DEBUG_CONFIG_DIR_NAME)
-            if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake")
+            if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake" AND NOT _vfct_DO_NOT_DELETE_PARENT_CONFIG_PATH)
                 file(REMOVE_RECURSE ${DEBUG_CONFIG})
             else()
                 get_filename_component(DEBUG_CONFIG_PARENT_DIR ${DEBUG_CONFIG} DIRECTORY)
                 get_filename_component(DEBUG_CONFIG_DIR_NAME ${DEBUG_CONFIG_PARENT_DIR} NAME)
                 string(TOLOWER "${DEBUG_CONFIG_DIR_NAME}" DEBUG_CONFIG_DIR_NAME)
-                if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake")
+                if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake" AND NOT _vfct_DO_NOT_DELETE_PARENT_CONFIG_PATH)
                     file(REMOVE_RECURSE ${DEBUG_CONFIG_PARENT_DIR})
                 endif()
             endif()
@@ -96,13 +101,13 @@ function(vcpkg_fixup_cmake_targets)
 
         get_filename_component(RELEASE_CONFIG_DIR_NAME ${RELEASE_CONFIG} NAME)
         string(TOLOWER "${RELEASE_CONFIG_DIR_NAME}" RELEASE_CONFIG_DIR_NAME)
-        if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake")
+        if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake" AND NOT _vfct_DO_NOT_DELETE_PARENT_CONFIG_PATH)
             file(REMOVE_RECURSE ${RELEASE_CONFIG})
         else()
             get_filename_component(RELEASE_CONFIG_PARENT_DIR ${RELEASE_CONFIG} DIRECTORY)
             get_filename_component(RELEASE_CONFIG_DIR_NAME ${RELEASE_CONFIG_PARENT_DIR} NAME)
             string(TOLOWER "${RELEASE_CONFIG_DIR_NAME}" RELEASE_CONFIG_DIR_NAME)
-            if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake")
+            if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake" AND NOT _vfct_DO_NOT_DELETE_PARENT_CONFIG_PATH)
                 file(REMOVE_RECURSE ${RELEASE_CONFIG_PARENT_DIR})
             endif()
         endif()
@@ -165,6 +170,10 @@ function(vcpkg_fixup_cmake_targets)
             "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
             "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
             _contents "${_contents}")
+         string(REGEX REPLACE
+            "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\.((\\\\|/)\\.\\.)*\" ABSOLUTE\\)"
+            "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
+            _contents "${_contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
         #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
         string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
         file(WRITE ${MAIN_CMAKE} "${_contents}")

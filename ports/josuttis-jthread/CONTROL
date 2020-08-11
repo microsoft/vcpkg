@@ -1,0 +1,4 @@
+Source: josuttis-jthread
+Version: 2020-07-21
+Homepage: https://github.com/josuttis/jthread
+Description: C++ class for a joining and cooperative interruptible thread (std::jthread) with stop_token helper

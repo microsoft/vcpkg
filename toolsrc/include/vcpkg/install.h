@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/chrono.h>
+
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -86,9 +87,17 @@ namespace vcpkg::Install
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,
                            IBinaryProvider& binaryprovider,
+                           const Build::IBuildLogsRecorder& build_logs_recorder,
                            const CMakeVars::CMakeVarProvider& var_provider);
 
     extern const CommandStructure COMMAND_STRUCTURE;
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
+
+    struct InstallCommand : Commands::TripletCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const override;
+    };
 }

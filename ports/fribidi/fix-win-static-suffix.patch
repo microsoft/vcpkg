@@ -1,39 +1,25 @@
 diff --git a/lib/meson.build b/lib/meson.build
-index 573d47f..c9b249e 100644
+index aaf2aed..3fe8937 100644
 --- a/lib/meson.build
 +++ b/lib/meson.build
-@@ -71,14 +71,26 @@ fribidi_sources = [
+@@ -71,6 +71,10 @@ fribidi_sources = [
    'fribidi-shape.c',
  ]
  
--libfribidi = library('fribidi',
--  fribidi_sources, fribidi_unicode_version_h, fribidi_config_h,
--  generated_tab_include_files, config_h,
--  include_directories: incs,
--  c_args: ['-DHAVE_CONFIG_H'] + visibility_args,
--  version: libversion,
--  soversion: soversion,
--  install: true)
++libsuffix = []
 +if host_machine.system() == 'windows' and get_option('default_library') == 'static'
-+    libfribidi = library('fribidi',
-+    fribidi_sources, fribidi_unicode_version_h, fribidi_config_h,
-+    generated_tab_include_files, config_h,
-+    include_directories: incs,
-+    c_args: ['-DHAVE_CONFIG_H'] + visibility_args,
-+    version: libversion,
-+    soversion: soversion,
-+    install: true,
-+    name_suffix: 'lib')
-+else
-+    libfribidi = library('fribidi',
-+    fribidi_sources, fribidi_unicode_version_h, fribidi_config_h,
-+    generated_tab_include_files, config_h,
-+    include_directories: incs,
-+    c_args: ['-DHAVE_CONFIG_H'] + visibility_args,
-+    version: libversion,
-+    soversion: soversion,
-+    install: true)
++  libsuffix = 'lib'
 +endif
+ libfribidi = library('fribidi',
+   fribidi_sources, fribidi_unicode_version_h, fribidi_config_h,
+   generated_tab_include_files, config_h,
+@@ -78,7 +82,8 @@ libfribidi = library('fribidi',
+   c_args: ['-DHAVE_CONFIG_H', '-DFRIBIDI_BUILD'] + fribidi_static_cargs + visibility_args,
+   version: libversion,
+   soversion: soversion,
+-  install: true)
++  install: true,
++  name_suffix: libsuffix)
  
  libfribidi_dep = declare_dependency(link_with: libfribidi,
    include_directories: incs,

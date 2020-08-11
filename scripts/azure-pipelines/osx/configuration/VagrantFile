@@ -1,0 +1,136 @@
+require 'json'
+
+require "erb"
+include ERB::Util
+
+configuration = JSON.parse(File.read('./vagrant-configuration.json'))
+
+servers = configuration['machine_identifiers'].map do |id|
+  {
+    :hostname => "#{configuration['base_name']}-#{id}",
+    :box => 'ramsey/macos-catalina',
+    :ram => 12000,
+    :cpu => 5
+  }
+end
+
+brew_formulas = [
+  'autoconf',
+  'automake',
+  'libtool',
+  'bison' ]
+
+brew_cask_formulas = [
+  'powershell',
+  'gfortran' ]
+
+azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.171.1/vsts-agent-osx-x64-2.171.1.tar.gz'
+devops_url = 'https://dev.azure.com/vcpkg'
+agent_pool = 'vcpkgAgentPool'
+pat = configuration['pat']
+archives = configuration['archives']
+archives_url = "//#{archives['username']}:#{url_encode(archives['access_key'])}@#{archives['urn']}/#{archives['share']}"
+
+Vagrant.configure('2') do |config|
+  # give them extra time to boot up
+  config.vm.boot_timeout = 600
+
+  servers.each do |machine|
+    config.vm.define machine[:hostname] do |node|
+
+      node.vm.box = machine[:box]
+      node.vm.hostname = machine[:hostname]
+      node.vm.synced_folder '.', '/vagrant', disabled: true
+
+      diskname = "#{machine[:hostname]}-data.vmdk"
+
+      # I don't like this, but as far as I can tell, it's the only way
+      # to do this. When vagrant finishes the `disk` feature, switch
+      # over to that -- Nicole Mazzuca
+      if (not File.exists? diskname) then
+        system "VBoxManage createmedium --filename #{diskname} --size #{1024 * 220}"
+      end
+
+      node.vm.provider 'virtualbox' do |vb|
+        vb.memory = machine[:ram]
+        vb.cpus = machine[:cpu]
+        vb.customize ['modifyvm', :id, '--ioapic', 'on']
+        vb.customize ['storageattach', :id,
+          '--storagectl', 'SATA Controller',
+          '--port', '1', '--device', '0', '--type', 'hdd',
+          '--medium', "#{diskname}"
+        ]
+      end
+
+      node.vm.provision 'shell',
+        run: 'once',
+        name: 'Format and mount the data filesystem',
+        inline: 'diskutil partitionDisk /dev/disk0 1 GPT jhfs+ data 0',
+        privileged: true
+
+      node.vm.provision 'shell',
+        run: 'once',
+        name: 'Link the data filesystem to the home directory',
+        inline: "ln -s /Volumes/data ~/Data",
+        privileged: false
+
+      node.vm.provision 'shell',
+        run: 'once',
+        name: 'Download azure agent',
+        inline: "curl -s -o ~/Downloads/azure-agent.tar.gz #{azure_agent_url}",
+        privileged: false
+
+      node.vm.provision 'shell',
+        run: 'once',
+        name: 'Unpack azure agent',
+        inline: 'mkdir myagent; cd myagent; tar xf ~/Downloads/azure-agent.tar.gz',
+        privileged: false
+
+      node.vm.provision 'shell',
+        run: 'once',
+        name: 'Install brew and xcode command line tools',
+        inline: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"',
+        privileged: false
+
+      node.vm.provision 'shell',
+        run: 'once',
+        name: 'Install brew applications',
+        inline: "brew install #{brew_formulas.join(' ')} && brew cask install #{brew_cask_formulas.join(' ')}",
+        privileged: false
+
+      node.vm.provision 'shell',
+        run: 'once',
+        name: 'Create archives mountpoint',
+        inline: 'mkdir ~/Data/archives',
+        privileged: false
+
+      node.vm.provision "shell",
+        run: 'once',
+        name: 'Mount archives directory',
+        inline: "mount_smbfs -d 777 -f 777 #{archives_url} ~/Data/archives",
+        privileged: false
+
+      node.vm.provision 'shell',
+        run: 'once',
+        name: 'Add VM to azure agent pool',
+        inline: "cd ~/myagent;\
+          ./config.sh --unattended \
+            --url #{devops_url} \
+            --work ~/Data/work \
+            --auth pat --token #{pat} \
+            --pool #{agent_pool} \
+            --agent `hostname` \
+            --replace \
+            --acceptTeeEula",
+        privileged: false
+
+      # Start listening for jobs
+      node.vm.provision 'shell',
+        run: 'always',
+        name: 'Start running azure pipelines',
+        inline: 'cd /Users/vagrant/myagent;\
+          nohup ./run.sh&',
+        privileged: false
+    end
+  end
+end

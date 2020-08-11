@@ -1,11 +1,8 @@
-#include "pch.h"
-
-#include <vcpkg/base/hash.h>
-
 #include <vcpkg/base/checks.h>
-#include <vcpkg/base/uint128.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/uint128.h>
 #include <vcpkg/base/util.h>
 
 #if defined(_WIN32)
@@ -51,12 +48,14 @@ namespace vcpkg::Hash
         }
     }
 
-    template <class UIntTy>
-    auto top_bits(UIntTy x) -> std::enable_if_t<std::is_unsigned<UIntTy>::value, uchar> {
+    template<class UIntTy>
+    auto top_bits(UIntTy x) -> std::enable_if_t<std::is_unsigned<UIntTy>::value, uchar>
+    {
         return static_cast<uchar>(x >> ((sizeof(x) - 1) * 8));
     }
-    template <class UIntTy>
-    auto top_bits(UIntTy x) -> decltype(top_bits(x.top_64_bits())) {
+    template<class UIntTy>
+    auto top_bits(UIntTy x) -> decltype(top_bits(x.top_64_bits()))
+    {
         return top_bits(x.top_64_bits());
     }
 

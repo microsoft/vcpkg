@@ -23,6 +23,7 @@
 ## VCPKG_PATH_SUFFIX_<BUILDTYPE>            Path suffix used for buildtype (e.g. /debug)
 ## VCPKG_BUILD_TRIPLET_<BUILDTYPE>          Fullname of the buildtriplet e.g. ${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_<BUILDTYPE>}
 ## VCPKG_BUILDTREE_TRIPLET_DIR_<BUILDTYPE>  Path to current buildtype buildtree (e.g. CURRENT_BUILDTREES_DIR/TRIPLET-rel )
+## VCPKG_SYSTEM_LIBRARIES                   list of libraries are provide by the toolchain and are not managed by vcpkg
 ## ```
 ##
 ## CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and CMAKE_IMPORT_LIBRARY_(PREFIX|SUFFIX) are defined for the target
@@ -38,6 +39,8 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     endif()
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(VCPKG_TARGET_IS_OSX 1)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    set(VCPKG_TARGET_IS_IOS 1)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(VCPKG_TARGET_IS_LINUX 1)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
@@ -144,5 +147,24 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(VCPKG_BUILD_TRIPLET_${_buildname} "${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${_buildname}}")
     set(VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname} "${CURRENT_BUILDTREES_DIR}/${VCPKG_BUILD_TRIPLET_${_buildname}}")
     unset(_buildname)
+endif()
+
+# Append platform libraries to VCPKG_SYSTEM_LIBRARIES
+# The variable are just appended to permit to custom triplets define the variable
+
+# Platforms with libdl
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OSX)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES dl)
+endif()
+
+# Platforms with libm
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_FREEBSD)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES m)
+endif()
+
+# Windows system libs
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES wsock32)
+    list(APPEND VCPKG_SYSTEM_LIBRARIES Ws2_32)
 endif()
 

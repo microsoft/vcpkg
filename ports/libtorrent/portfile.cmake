@@ -39,8 +39,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF libtorrent_1_2_7
-    SHA512 8a6b0ab387e538351ad770ad189ceaa29f0c382b7152d65d3b40b4271716c8f1550c51189ac1e2550683b69f24abbd667d13a0197e7db2ac9ea06ffa37933495
+    REF libtorrent-1.2.8
+    SHA512 2a36412fb399f066de9768f4afd87ddbfc10fcd2a0b3a8be0a43bec6914497e71d9d4ffe4ff8ccc5544a048f799ccba6ce086ab6199f4dee66d1341f02d73f9a
     HEAD_REF RC_1_2
     PATCHES
         add-datetime-to-boost-libs.patch

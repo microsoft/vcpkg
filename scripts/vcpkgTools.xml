@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
 <tools version="2">
+    <tool name="python3" os="windows">
+        <version>3.8.3</version>
+        <exeRelativePath>python.exe</exeRelativePath>
+        <url>https://www.python.org/ftp/python/3.8.3/python-3.8.3-embed-win32.zip</url>
+        <sha512>8c9078f55b1b5d694e0e809eee6ccf8a6e15810dd4649e8ae1209bff30e102d49546ce970a5d519349ca7759d93146f459c316dc440737171f018600255dcd0a</sha512>
+        <archiveName>python-3.8.3-embed-win32.zip</archiveName>
+    </tool>
     <tool name="cmake" os="windows">
         <version>3.17.2</version>
         <exeRelativePath>cmake-3.17.2-win32-x86\bin\cmake.exe</exeRelativePath>
@@ -60,10 +67,22 @@
         <sha512>f477842d0cebefcd6bf9c6d536ab8ea20ec5b0aa967ee963ab6a101aeff9df8742ca600d35f39e2e7158d76d8231f1ed2bef6104dce84d2bf8d6b07d17d706a1</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>4.8.1</version>
+        <version>5.5.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v4.8.1/nuget.exe</url>
-        <sha512>42cb744338af8decc033a75bce5b4c4df28e102bafc45f9a8ba86d7bc010f5b43ebacae80d7b28c4f85ac900eefc2a349620ae65f27f6ca1c21c53b63b92924b</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
+        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+    </tool>
+    <tool name="nuget" os="linux">
+        <version>5.5.1</version>
+        <exeRelativePath>nuget.exe</exeRelativePath>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
+        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+    </tool>
+    <tool name="nuget" os="osx">
+        <version>5.5.1</version>
+        <exeRelativePath>nuget.exe</exeRelativePath>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
+        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
     </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>

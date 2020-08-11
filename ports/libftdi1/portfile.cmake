@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.4.tar.bz2"
     FILENAME "libftdi1-1.4.tar.bz2"
@@ -26,7 +24,6 @@ vcpkg_configure_cmake(
         -DEXAMPLES=OFF
         -DPYTHON_BINDINGS=OFF
         -DLINK_PYTHON_LIBRARY=OFF
-
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Confuse=ON
@@ -41,7 +38,10 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libftdi1 TARGET_PATH share/libft
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libftdi1)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libftdi1/LICENSE ${CURRENT_PACKAGES_DIR}/share/libftdi1/copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
