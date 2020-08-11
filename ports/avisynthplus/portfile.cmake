@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_LIBRARY_LINKAGE "static" ON_TARGET "UWP" "OSX" "Linux")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
