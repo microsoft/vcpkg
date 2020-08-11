@@ -17,16 +17,15 @@
 ## * [glib](https://github.com/Microsoft/vcpkg/blob/master/ports/glib/portfile.cmake)
 ## * [fltk](https://github.com/Microsoft/vcpkg/blob/master/ports/fltk/portfile.cmake)
 function(vcpkg_copy_tool_dependencies TOOL_DIR)
-    macro(search_for_dependencies PATH_TO_SEARCH)
-        file(GLOB TOOLS ${TOOL_DIR}/*.exe ${TOOL_DIR}/*.dll)
-        foreach(TOOL ${TOOLS})
-            execute_process(COMMAND powershell -noprofile -executionpolicy Bypass -nologo
-                -file ${SCRIPTS}/buildsystems/msbuild/applocal.ps1
-                -targetBinary ${TOOL}
-                -installedDir ${PATH_TO_SEARCH}
-                OUTPUT_VARIABLE OUT)
-        endforeach()
-    endmacro()
-    search_for_dependencies(${CURRENT_PACKAGES_DIR}/bin)
-    search_for_dependencies(${CURRENT_INSTALLED_DIR}/bin)
+    file(GLOB TOOLS ${TOOL_DIR}/*.exe ${TOOL_DIR}/*.dll)
+    if(TOOLS)
+        list(JOIN TOOLS "," TOOLS)
+        execute_process(
+            COMMAND powershell -noprofile -executionpolicy Bypass -nologo
+                -command ${SCRIPTS}/buildsystems/msbuild/applocal.ps1
+                -targetBinary "${TOOLS}"
+                -installedDir "\"${CURRENT_PACKAGES_DIR}/bin,${CURRENT_INSTALLED_DIR}/bin\"" -verbose
+            OUTPUT_VARIABLE OUT
+        )
+    endif()
 endfunction()

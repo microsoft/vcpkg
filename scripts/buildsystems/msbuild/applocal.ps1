@@ -1,7 +1,15 @@
 [cmdletbinding()]
-param([string]$targetBinary, [string]$installedDir, [string]$tlogFile, [string]$copiedFilesLog)
+param([string[]]$targetBinary, [string[]]$installedDir, [string]$tlogFile, [string]$copiedFilesLog)
 
+$installedDirs = $installedDir
+$targetBinaries = $targetBinary
+
+$dumpbinCache = @{}
+
+foreach ($targetBinary in $targetBinaries) {
+foreach ($installedDir in $installedDirs) {
 $g_searched = @{}
+
 # Note: installedDir is actually the bin\ directory.
 $g_install_root = Split-Path $installedDir -parent
 $g_is_debug = $g_install_root -match '(.*\\)?debug(\\)?$'
@@ -57,7 +65,12 @@ function resolve([string]$targetBinary) {
     }
     $targetBinaryDir = Split-Path $targetBinaryPath -parent
 
-    $a = $(dumpbin /DEPENDENTS $targetBinary | ? { $_ -match "^    [^ ].*\.dll" } | % { $_ -replace "^    ","" })
+    if ($dumpbinCache.ContainsKey($targetBinary)) {
+        $a = $dumpbinCache[$targetBinary]
+    } else {
+        $a = $(dumpbin /DEPENDENTS $targetBinary | ? { $_ -match "^    [^ ].*\.dll" } | % { $_ -replace "^    ","" })
+        $dumpbinCache.Set_Item($targetBinary, $a)
+    }
     $a | % {
         if ([string]::IsNullOrEmpty($_)) {
             return
@@ -115,3 +128,5 @@ if (Test-Path "$g_install_root\tools\azure-kinect-sensor-sdk\k4adeploy.ps1") {
 
 resolve($targetBinary)
 Write-Verbose $($g_searched | out-string)
+}
+}
