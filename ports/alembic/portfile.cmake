@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
+
 vcpkg_buildpath_length_warning(37)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)

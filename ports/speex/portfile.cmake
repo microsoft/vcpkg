@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -24,4 +24,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   file(WRITE "${CURRENT_PACKAGES_DIR}/include/speex/speex.h" "${_contents}")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/speex RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
