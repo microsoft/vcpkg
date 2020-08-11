@@ -151,6 +151,26 @@ function(vcpkg_install_msbuild)
         list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets /p:VcpkgApplocalDeps=false)
     endif()
 
+    function(fast_copy SRC DEST)
+        if(CMAKE_HOST_WIN32)
+            get_filename_component(F ${SRC} NAME)
+            file(TO_NATIVE_PATH "${SRC}" SRC)
+            file(TO_NATIVE_PATH "${DEST}/${F}" DEST)
+            file(MAKE_DIRECTORY "${DEST}")
+            _execute_process(
+                COMMAND xcopy /E /Q /B /J "${SRC}" "${DEST}"
+                RESULT_VARIABLE N
+                OUTPUT_VARIABLE OUT
+                ERROR_VARIABLE OUT
+            )
+            if(NOT N EQUAL 0)
+                message(FATAL_ERROR "xcopy /E /Q /B /J \"${SRC}\" \"${DEST}\" failed:\n${OUT}")
+            endif()
+        else()
+            file(COPY "${SRC}" DESTINATION "${DEST}")
+        endif()
+    endfunction()
+
     list(APPEND _csc_OPTIONS_RELEASE /p:Configuration=${_csc_RELEASE_CONFIGURATION})
     list(APPEND _csc_OPTIONS_DEBUG /p:Configuration=${_csc_DEBUG_CONFIGURATION})
     set(CL "$ENV{CL}")
@@ -160,7 +180,7 @@ function(vcpkg_install_msbuild)
         message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Release")
         file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        fast_copy("${_csc_SOURCE_PATH}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
         set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
         set(BASE_COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH} ${_csc_OPTIONS})
         vcpkg_execute_build_process(
@@ -188,7 +208,7 @@ function(vcpkg_install_msbuild)
         message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Debug")
         file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        fast_copy("${_csc_SOURCE_PATH}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${SOURCE_PATH_SUFFIX})
         set(BASE_COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH} ${_csc_OPTIONS})
         vcpkg_execute_build_process(
