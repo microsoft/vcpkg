@@ -17,14 +17,21 @@
 ## * [glib](https://github.com/Microsoft/vcpkg/blob/master/ports/glib/portfile.cmake)
 ## * [fltk](https://github.com/Microsoft/vcpkg/blob/master/ports/fltk/portfile.cmake)
 function(vcpkg_copy_tool_dependencies TOOL_DIR)
+    find_program(PS_EXE powershell PATHS ${DOWNLOADS}/tool)
+    if (PS_EXE-NOTFOUND)
+        message(FATAL_ERROR "Could not find powershell in vcpkg tools, please open an issue to report this.")
+    endif()
     macro(search_for_dependencies PATH_TO_SEARCH)
         file(GLOB TOOLS ${TOOL_DIR}/*.exe ${TOOL_DIR}/*.dll)
         foreach(TOOL ${TOOLS})
-            execute_process(COMMAND powershell -noprofile -executionpolicy Bypass -nologo
-                -file ${SCRIPTS}/buildsystems/msbuild/applocal.ps1
-                -targetBinary ${TOOL}
-                -installedDir ${PATH_TO_SEARCH}
-                OUTPUT_VARIABLE OUT)
+            vcpkg_execute_required_process(
+                COMMAND ${PS_EXE} -noprofile -executionpolicy Bypass -nologo
+                    -file ${SCRIPTS}/buildsystems/msbuild/applocal.ps1
+                    -targetBinary ${TOOL}
+                    -installedDir ${PATH_TO_SEARCH}
+                WORKING_DIRECTORY ${VCPKG_ROOT_DIR}
+                LOGNAME copy-tool-dependencies
+            )
         endforeach()
     endmacro()
     search_for_dependencies(${CURRENT_PACKAGES_DIR}/bin)
