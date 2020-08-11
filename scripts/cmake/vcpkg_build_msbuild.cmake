@@ -117,12 +117,13 @@ function(vcpkg_build_msbuild)
     list(APPEND _csc_OPTIONS_RELEASE /p:Configuration=${_csc_RELEASE_CONFIGURATION})
     list(APPEND _csc_OPTIONS_DEBUG /p:Configuration=${_csc_DEBUG_CONFIGURATION})
     set(BASE_COMMAND msbuild ${_csc_PROJECT_PATH} ${_csc_OPTIONS})
-    set(PARALLEL_OPT /p:CL_MPCount=${VCPKG_CONCURRENCY} /m)
+    set(CL "$ENV{CL}")
+    set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
         vcpkg_execute_build_process(
-            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE} ${PARALLEL_OPT}
+            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE} /m
             NO_PARALLEL_COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME build-${TARGET_TRIPLET}-rel
@@ -133,10 +134,11 @@ function(vcpkg_build_msbuild)
         message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         vcpkg_execute_build_process(
-            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG} ${PARALLEL_OPT}
+            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG} /m
             NO_PARALLEL_COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
     endif()
+    set(ENV{CL} "${CL}")
 endfunction()

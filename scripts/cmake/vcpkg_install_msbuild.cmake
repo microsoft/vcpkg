@@ -139,7 +139,6 @@ function(vcpkg_install_msbuild)
         /p:VcpkgTriplet=${TARGET_TRIPLET}
         "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
         /p:VcpkgManifestInstall=false
-        /m
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -152,6 +151,10 @@ function(vcpkg_install_msbuild)
         list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets /p:VcpkgApplocalDeps=false)
     endif()
 
+    list(APPEND _csc_OPTIONS_RELEASE /p:Configuration=${_csc_RELEASE_CONFIGURATION})
+    list(APPEND _csc_OPTIONS_DEBUG /p:Configuration=${_csc_DEBUG_CONFIGURATION})
+    set(CL "$ENV{CL}")
+    set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
     get_filename_component(SOURCE_PATH_SUFFIX "${_csc_SOURCE_PATH}" NAME)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Release")
@@ -159,11 +162,10 @@ function(vcpkg_install_msbuild)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
         file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
         set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
-        vcpkg_execute_required_process(
-            COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
-                /p:Configuration=${_csc_RELEASE_CONFIGURATION}
-                ${_csc_OPTIONS}
-                ${_csc_OPTIONS_RELEASE}
+        set(BASE_COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH} ${_csc_OPTIONS})
+        vcpkg_execute_build_process(
+            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE} /m
+            NO_PARALLEL_COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE}
             WORKING_DIRECTORY ${SOURCE_COPY_PATH}
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
@@ -188,11 +190,10 @@ function(vcpkg_install_msbuild)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${SOURCE_PATH_SUFFIX})
-        vcpkg_execute_required_process(
-            COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
-                /p:Configuration=${_csc_DEBUG_CONFIGURATION}
-                ${_csc_OPTIONS}
-                ${_csc_OPTIONS_DEBUG}
+        set(BASE_COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH} ${_csc_OPTIONS})
+        vcpkg_execute_build_process(
+            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG} /m
+            NO_PARALLEL_COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG}
             WORKING_DIRECTORY ${SOURCE_COPY_PATH}
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
@@ -205,6 +206,8 @@ function(vcpkg_install_msbuild)
             file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
         endif()
     endif()
+
+    set(ENV{CL} "${CL}")
 
     vcpkg_copy_pdbs()
 
