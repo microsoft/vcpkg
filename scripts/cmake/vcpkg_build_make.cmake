@@ -79,10 +79,7 @@ function(vcpkg_build_make)
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
-    _vcpkg_backup_env_variable(LIB)
-    _vcpkg_backup_env_variable(LIBPATH)
-    _vcpkg_backup_env_variable(LIBRARY_PATH)
-    #_vcpkg_backup_env_variable(LD_LIBRARY_PATH)
+    _vcpkg_backup_env_variables(LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
