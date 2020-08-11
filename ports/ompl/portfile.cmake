@@ -16,8 +16,6 @@ else()
     )
 endif()
 
-
-
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -29,7 +27,6 @@ file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
 string(REPLACE "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 REQUIRED CONFIG)" _contents "${_contents}")
 string(REPLACE "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)" _contents "${_contents}")
 file(WRITE ${SOURCE_PATH}/CMakeLists.txt "${_contents}")
-
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
