@@ -1,5 +1,5 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index 3483f9c..a30abb2 100644
+index 3483f9c..57e149b 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -100,7 +100,7 @@ endif()
@@ -7,7 +7,7 @@ index 3483f9c..a30abb2 100644
  
  # coordinate systems
 -if(VXL_BUILD_CORE_GEOMETRY AND VXL_BUILD_CORE_NUMERICS)
-+if(VXL_BUILD_CORE_GEOMETRY AND VXL_BUILD_CORE_NUMERICS AND BUILD_CORE_IMAGING)
++if(VXL_BUILD_CORE_GEOMETRY AND VXL_BUILD_CORE_NUMERICS AND VXL_BUILD_CORE_IMAGING)
    add_subdirectory(vcsl)
    add_subdirectory(vpgl)
  endif()
