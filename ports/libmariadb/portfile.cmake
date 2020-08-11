@@ -17,12 +17,17 @@ vcpkg_from_github(
 			fix-InstallPath.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    zlib WITH_EXTERNAL_ZLIB
+    openssl WITH_SSL
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DWITH_UNITTEST=OFF
-        -DWITH_SSL=OFF
         -DWITH_CURL=OFF
 )
 
