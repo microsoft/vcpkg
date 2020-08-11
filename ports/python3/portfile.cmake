@@ -56,6 +56,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	vcpkg_install_msbuild(
 		SOURCE_PATH ${SOURCE_PATH}
 		PROJECT_SUBPATH PCBuild/pythoncore.vcxproj
+		OPTIONS /p:KillPython=false
 	)
 
 	file(COPY
