@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/hash.h>
 
 #include <vcpkg/commands.hash.h>

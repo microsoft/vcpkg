@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/globalstate.h>
 
 namespace vcpkg
