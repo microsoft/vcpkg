@@ -20,6 +20,27 @@ include_directories(APPEND "${CMAKE_CURRENT_LIST_DIR}/src")
 
 file(GLOB SOURCES src/*.c src/eventing/*.c)
 
+set(USOCKETS_EXT_INCLUDE_DIR )
+set(USOCKETS_EXT_LIBS )
+
+if (CMAKE_USE_OPENSSL)
+    find_package(OpenSSL REQUIRED)
+    file(GLOB SSL_SOURCES src/crypto/*.c)
+    list(APPEND SOURCES ${SSL_SOURCES})
+    list(APPEND USOCKETS_EXT_LIBS OpenSSL::SSL OpenSSL::Crypto)
+endif()
+
+if (CMAKE_USE_EVENT)
+    file(GLOB SSL_SOURCES src/eventing/*.c)
+    list(APPEND SOURCES ${SSL_SOURCES})
+    list(APPEND USOCKETS_EXT_INCLUDE_DIR src/internal/eventing)
+endif()
+
+if (CMAKE_USE_NETWORK)
+    list(APPEND USOCKETS_EXT_INCLUDE_DIR src/internal/networking)
+    list(APPEND USOCKETS_EXT_LIBS Ws2_32)
+endif()
+
 add_library(uSockets ${SOURCES})
 
 if (${LIBUS_USE_LIBUV})
@@ -27,8 +48,8 @@ if (${LIBUS_USE_LIBUV})
 endif()
 
 target_compile_definitions(uSockets PRIVATE ${NOT_USE_OPENSSL} ${USE_OPENSSL})
-target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${LIBUV_INCLUDE_DIR} )
-target_link_libraries(uSockets PUBLIC ${OPENSSL_LIBRARIES} ${LIBUV_LIBRARY})
+target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${LIBUV_INCLUDE_DIR} ${USOCKETS_EXT_INCLUDE_DIR})
+target_link_libraries(uSockets PUBLIC ${OPENSSL_LIBRARIES} ${LIBUV_LIBRARY} ${USOCKETS_EXT_LIBS})
 
 install(TARGETS uSockets
     RUNTIME DESTINATION bin

@@ -3,7 +3,7 @@ project(sqlite3 C)
 
 include_directories(.)
 if(BUILD_SHARED_LIBS)
-    if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    if(UNIX)
         set(API "-DSQLITE_API=__attribute__((visibility(\"default\")))")
     elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(API "-DSQLITE_API=__declspec(dllexport)")
@@ -46,11 +46,11 @@ endif()
 
 install(
     TARGETS sqlite3
-    EXPORT sqlite3
+    EXPORT unofficial-sqlite3-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
 install(FILES sqlite3.h sqlite3ext.h DESTINATION include CONFIGURATIONS Release)
-install(EXPORT sqlite3 FILE sqlite3-targets.cmake DESTINATION share/sqlite3)
+install(EXPORT unofficial-sqlite3-targets NAMESPACE unofficial::sqlite3:: FILE unofficial-sqlite3-targets.cmake DESTINATION share/unofficial-sqlite3)

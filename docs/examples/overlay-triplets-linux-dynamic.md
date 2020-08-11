@@ -55,8 +55,8 @@ Total elapsed time: 44.82 s
 
 The package sqlite3:x64-linux-dynamic provides CMake targets:
 
-    find_package(sqlite3 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE sqlite3)
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
 ```
 
 Overlay triplets enables your custom triplet files when using `vcpkg install`, `vcpkg update`, `vcpkg upgrade`, and `vcpkg remove`.
@@ -71,7 +71,7 @@ When using the `--overlay-triplets` option, a message like the following lets yo
 
 As you may have noticed, the default triplets for Windows (`x86-windows` and `x64-windows`) install dynamic libraries, while a suffix (`-static`) is needed for static libraries. This is different with Linux and Mac OS where static libraries are built by `x64-linux` and `x64-osx`.
 
-Using `--overlay-ports` it is possible to override the default triplets to accomplish the same behavior on Linux:
+Using `--overlay-triplets` it is possible to override the default triplets to accomplish the same behavior on Linux:
 
 * `x64-linux`: Builds dynamic libraries,
 * `x64-linux-static`: Builds static libraries.
@@ -85,7 +85,7 @@ Using the custom triplet created in the previous example, rename `custom-triplet
 ~/git$ cp vcpkg/triplets/x64-linux.cmake custom-triplets/x64-linux-static.cmake
 ```
 
-### Step 2: Use `--overlay-ports` to override default triplets
+### Step 2: Use `--overlay-triplets` to override default triplets
 
 Use the `--overlay-triplets` option to include the triplets in the `custom-triplets` directory.
 
@@ -115,8 +115,8 @@ Total elapsed time: 44.82 s
 
 The package sqlite3:x64-linux provides CMake targets:
 
-    find_package(sqlite3 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE sqlite3)
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
 ```
 
 Note that the default triplet is masked by your custom triplet:

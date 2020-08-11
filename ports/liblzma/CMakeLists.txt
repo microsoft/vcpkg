@@ -130,8 +130,8 @@ add_library(LibLZMA
     src/liblzma/simple/x86.c
 )
 
-if(MSVC)
-    target_include_directories(LibLZMA PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/windows/vs2017>)
+if(WIN32)
+    target_include_directories(LibLZMA PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/windows/vs2019>)
 else()
     target_compile_definitions(LibLZMA PRIVATE -DHAVE_VISIBILITY=1)
 endif()
@@ -142,7 +142,7 @@ if(BUILD_SHARED_LIBS)
 else()
     target_compile_definitions(LibLZMA PUBLIC -DLZMA_API_STATIC)
 endif()
-target_compile_definitions(LibLZMA PUBLIC -DHAVE_CONFIG_H)
+target_compile_definitions(LibLZMA PRIVATE -DHAVE_CONFIG_H)
 
 target_include_directories(LibLZMA PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>

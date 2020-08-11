@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_buildpath_length_warning(37)
 
 set(OMPL_VERSION 1.4.2)
@@ -22,9 +20,16 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${OMPL_VERSION}
 )
+
+#Due to there are URL before the change text, using patch modify this change failed, so use the following command instead of patch.
+file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
+string(REPLACE "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 CONFIG REQUIRED)" _contents "${_contents}")
+file(WRITE ${SOURCE_PATH}/CMakeLists.txt "${_contents}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DOMPL_VERSIONED_INSTALL=OFF
         -DOMPL_REGISTRATION=OFF
@@ -58,8 +63,9 @@ if ("app" IN_LIST FEATURES)
     )
 endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ompl RENAME copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME ompl)
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,0 +1,7 @@
+{
+  "name": "argparse",
+  "version-string": "2.1",
+  "description": "Argument parser for modern C++",
+  "homepage": "https://github.com/p-ranav/argparse",
+  "license": "MIT"
+}

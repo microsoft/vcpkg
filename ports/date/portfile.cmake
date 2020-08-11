@@ -1,6 +1,4 @@
-include(vcpkg_common_functions)
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
   message(WARNING
     "You will need to also install https://raw.githubusercontent.com/unicode-org/cldr/master/common/supplemental/windowsZones.xml into your install location.\n"
     "See https://howardhinnant.github.io/date/tz.html"
@@ -10,23 +8,25 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO HowardHinnant/date
-  REF 44344000f0fa32e66787d6d2c9ff5ddfd3605df7
-  SHA512 1ec75a4b6310f735261c996c63df8176f0523d8f59a23edd49fd8efbdcbf1e78051ba2f36df0920f6f5e6bbc8f81ea4639f73e05bb1cb7f97a8e500bde667782
+  REF cac99da8dc88be719a728dc1b597b0ac307c1800 #3.0.0
+  SHA512 07bac40c9d92ed92f05ab71b07c203fc341cd35999f1eab16d584bf77ff69e2cdc106931b2faf0dcfc5a311ee55e8445a81fd97c62f4672957b6aac1b24a08fd
   HEAD_REF master
-  PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp.patch"
+  PATCHES
+    0001-fix-uwp.patch
+    0002-fix-cmake-3.14.patch
+    0003-find-dependency-pthread.patch
 )
-
-set(DATE_USE_SYSTEM_TZ_DB 1)
-if("remote-api" IN_LIST FEATURES)
-  set(DATE_USE_SYSTEM_TZ_DB 0)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+    remote-api USE_SYSTEM_TZ_DB
+)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
-    -DUSE_SYSTEM_TZ_DB=${DATE_USE_SYSTEM_TZ_DB}
-    -DENABLE_DATE_TESTING=OFF
+     ${FEATURE_OPTIONS}
+    -DBUILD_TZ_LIB=ON
 )
 
 vcpkg_install_cmake()
@@ -40,9 +40,5 @@ endif()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/date RENAME copyright)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/date)
 
-# Remove the wrapper when backwards compatibility with the unofficial::date::date and unofficial::date::tz
-# targets is no longer required.
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/date)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/date RENAME copyright)

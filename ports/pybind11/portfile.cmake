@@ -1,17 +1,14 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pybind/pybind11
-    REF e43e1cc01ae6d4e4e5ba10557a057d7f3d5ece0d
-    SHA512 546a0501c420cbbb21fb458192bae6c8d34bdd4bdbfe47fed22869e09429d6404b4e399e30c36c6d658bf8002339d051efde33685b03a00797b9cfe476cfb98e
+    REF 3b1dbebabc801c9cf6f0953a4c20b904d444f879 # v2.5.0
+    SHA512 1a75d29447dbba96eebf8ecdebad1be0dd5327c32f5122b0ece9d9ec22eae4feacd0efb3a5070b3a135a892b1682c7215b0c529b179493694df932945a379f4c
     HEAD_REF master
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-
 get_filename_component(PYPATH ${PYTHON3} PATH)
-set(ENV{PATH} "$ENV{PATH};${PYPATH}")
+vcpkg_add_to_path("${PYPATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -34,4 +31,4 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/)
 
 # copy license
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pybind11/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,11 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-checksums
-    REF v0.1.3
-    SHA512 79bf71a6c4c268b27efe8a6a3c4b90281da4ce7f6e4c1c62fce80b11a4756ecfd4dc2b19624ace3f54137113d0cb56a517de0b91dd6338ee8ca069756bca13f4
+    REF 519d6d9093819b6cf89ffff589a27ef8f83d0f65 # v0.1.5
+    SHA512 3079786d106b98ba3b8c254c26ec4d9accf5fba5bcc13aed30ffa897e17ea7d701e6b6e903b37534e32e1cf0cac3e9a6ff46e1340ed7c530c2fc6262b245e05c
     HEAD_REF master
+    PATCHES fix-cmake-target-path.patch
 )
 
 if (VCPKG_CRT_LINKAGE STREQUAL static)
@@ -32,9 +31,7 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aws-checksums RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(REMOVE_RECURSE
-	${CURRENT_PACKAGES_DIR}/debug/share
-)
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

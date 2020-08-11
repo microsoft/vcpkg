@@ -13,6 +13,8 @@
 
 toolsrc/out*
 toolsrc/CMakeSettings.json
+# fuzzing
+sync_dir*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -287,25 +289,25 @@ __pycache__/
 /packages/
 /scripts/buildsystems/tmp/
 /toolsrc/build.rel/
-/toolsrc/msbuild.x86.debug/
-/toolsrc/msbuild.x86.release/
-/toolsrc/msbuild.x64.debug/
-/toolsrc/msbuild.x64.release/
+/toolsrc/windows-bootstrap/msbuild.x86.debug/
+/toolsrc/windows-bootstrap/msbuild.x86.release/
+/toolsrc/windows-bootstrap/msbuild.x64.debug/
+/toolsrc/windows-bootstrap/msbuild.x64.release/
 #ignore custom triplets
 /triplets/*
 #add vcpkg-designed triplets back in
-!triplets/arm-uwp.cmake
-!triplets/arm-windows.cmake
-!triplets/x64-uwp.cmake
-!triplets/x64-windows.cmake
-!triplets/x64-windows-static.cmake
-!triplets/x86-uwp.cmake
-!triplets/x86-windows.cmake
-!triplets/x86-windows-static.cmake
-!triplets/arm64-uwp.cmake
-!triplets/arm64-windows.cmake
-!triplets/x64-linux.cmake
-!triplets/x64-osx.cmake
+!/triplets/arm-uwp.cmake
+!/triplets/arm64-windows.cmake
+!/triplets/x64-linux.cmake
+!/triplets/x64-osx.cmake
+!/triplets/x64-uwp.cmake
+!/triplets/x64-windows-static.cmake
+!/triplets/x64-windows.cmake
+!/triplets/x86-windows.cmake
+
+!/triplets/community
+!/triplets/community/**
+
 *.exe
 *.zip
 
@@ -313,3 +315,6 @@ __pycache__/
 # vcpkg - End
 ############################################################
 archives
+.DS_Store
+prefab/
+*.swp

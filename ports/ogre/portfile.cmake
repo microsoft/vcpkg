@@ -1,17 +1,21 @@
-include(vcpkg_common_functions)
+if (EXISTS "${CURRENT_INSTALLED_DIR}/Media/HLMS/Blendfunctions_piece_fs.glslt")
+    message(FATAL_ERROR "FATAL ERROR: ogre-next and ogre are incompatible.")
+endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
-    REF 8083067c1835147de5d82015347d95c710e36bc0
-    SHA512 0690aaff0bea74c38598894939396cab8077b84bda166deb4790fba87566114bc5267660e8efc4de9babeb1b8bddf73530e1a1dbbc63c7e24b14bc012b033bc8
+    REF 8ff1a4046716244fc4b3a3e44e5b6abeda755b0a #v1.12.7
+    SHA512 60c66118e35904cbabe881301f3e59026483507341450956f99b67220e1aaebd7035caac69c3e06cf45f08163254264da111b93d0c6b3402c3fba64858786b66
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
+        fix-dependency.patch
+        fix-findimgui.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
@@ -24,29 +28,12 @@ endif()
 
 # Configure features
 
-if("d3d9" IN_LIST FEATURES)
-    set(WITH_D3D9 ON)
-else()
-    set(WITH_D3D9 OFF)
-endif()
-
-if("java" IN_LIST FEATURES)
-    set(WITH_JAVA ON)
-else()
-    set(WITH_JAVA OFF)
-endif()
-
-if("python" IN_LIST FEATURES)
-    set(WITH_PYTHON ON)
-else()
-    set(WITH_PYTHON OFF)
-endif()
-
-if("csharp" IN_LIST FEATURES)
-    set(WITH_CSHARP ON)
-else()
-    set(WITH_CSHARP OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    d3d9   OGRE_BUILD_RENDERSYSTEM_D3D9
+    java   OGRE_BUILD_COMPONENT_JAVA
+    python OGRE_BUILD_COMPONENT_PYTHON
+    csharp OGRE_BUILD_COMPONENT_CSHARP
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -73,10 +60,7 @@ vcpkg_configure_cmake(
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
 # Optional stuff
-        -DOGRE_BUILD_COMPONENT_JAVA=${WITH_JAVA}
-        -DOGRE_BUILD_COMPONENT_PYTHON=${WITH_PYTHON}
-        -DOGRE_BUILD_COMPONENT_CSHARP=${WITH_CSHARP}
-        -DOGRE_BUILD_RENDERSYSTEM_D3D9=${WITH_D3D9}
+        ${FEATURE_OPTIONS}
 # vcpkg specific stuff
         -DOGRE_CMAKE_DIR=share/ogre
 )
@@ -105,7 +89,7 @@ endif()
 
 #Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
 #manual-link subfolder is here to the rescue!
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -132,6 +116,6 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
