@@ -1,14 +1,12 @@
 include(vcpkg_common_functions)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.lonesock.net/files/soil.zip"
-    FILENAME "soil-2008.07.07.zip"
-    SHA512 a575a84aa65b7556320779d635561341f5cf156418d0462473e5d1eb082829be3bcb30600b4887af75aeddd3715de16bdb3ca1668ebaa93eea62bacf22b79548
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO biotrump/SOIL
+     # repo from 2016; matches http://web.archive.org/web/20200104042737/http://www.lonesock.net/files/soil.zip (which is now down) via git diff -w
+    REF d8c9aa735c80f0de9f732235a910990b1838d010
+    SHA512 7c655195235e2a44a897e944dbc923411f117013623de6af8f4df6a189c3666cc0472dfc1d467af060fddb140b1ea0b68970f8cbec9a3d955df3a5b404795be6
+    HEAD_REF master
 )
 
 file(COPY
