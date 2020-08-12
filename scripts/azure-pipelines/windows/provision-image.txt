@@ -129,6 +129,8 @@ $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_ad
 
 $BinSkimUrl = 'https://www.nuget.org/api/v2/package/Microsoft.CodeAnalysis.BinSkim/1.6.0'
 
+$PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.0.3/PowerShell-7.0.3-win-x64.msi'
+
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
@@ -518,7 +520,7 @@ InstallWindowsWDK -Url $WindowsWDKUrl
 InstallLLVM -Url $LlvmUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
-InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
+InstallMSI -Url $PwshUrl -Name 'PowerShell Core'
 if ([string]::IsNullOrWhiteSpace($StorageAccountName)) {
   Write-Host 'No storage account name configured.'
 } else {
