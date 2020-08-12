@@ -188,7 +188,7 @@ function(vcpkg_build_nmake)
             if (BUILDTYPE STREQUAL "debug" AND _bn_PRERUN_SHELL_DEBUG)
                 message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
                 vcpkg_execute_required_process(
-                    COMMAND "${_bn_PRERUN_SHELL_DEBUG}"
+                    COMMAND ${_bn_PRERUN_SHELL_DEBUG}
                     WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
                     LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-dbg"
                 )
