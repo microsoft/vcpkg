@@ -7,7 +7,7 @@ Sets up a machine to be an image for a scale set.
 
 .DESCRIPTION
 provision-image.ps1 runs on an existing, freshly provisioned virtual machine,
-and sets that virtual machine up as a vcpkg build machine. After this is done,
+and sets up that virtual machine as a build machine. After this is done,
 (outside of this script), we take that machine and make it an image to be copied
 for setting up new VMs in the scale set.
 
@@ -60,10 +60,14 @@ Function Get-TempFilePath {
   return Join-Path $tempPath $tempName
 }
 
-if (-not [string]::IsNullOrEmpty($AdminUserPassword)) {
-  Write-Host "AdminUser password supplied; switching to AdminUser"
+$TranscriptPath = 'C:\provision-image-transcript.txt'
+
+if ([string]::IsNullOrEmpty($AdminUserPassword)) {
+  Start-Transcript -Path $TranscriptPath
+} else {
+  Write-Host 'AdminUser password supplied; switching to AdminUser.'
   $PsExecPath = Get-TempFilePath -Extension 'exe'
-  Write-Host "Downloading psexec to $PsExecPath"
+  Write-Host "Downloading psexec to: $PsExecPath"
   & curl.exe -L -o $PsExecPath -s -S https://live.sysinternals.com/PsExec64.exe
   $PsExecArgs = @(
     '-u',
@@ -89,8 +93,11 @@ if (-not [string]::IsNullOrEmpty($AdminUserPassword)) {
     $PsExecArgs += $StorageAccountKey
   }
 
-  Write-Host "Executing $PsExecPath " + @PsExecArgs
-  & $PsExecPath @PsExecArgs > C:\ProvisionLog.txt
+  Write-Host "Executing: $PsExecPath $PsExecArgs"
+
+  $proc = Start-Process -FilePath $PsExecPath -ArgumentList $PsExecArgs -Wait -PassThru
+  Write-Host 'Reading transcript...'
+  Get-Content -Path $TranscriptPath
   Write-Host 'Cleaning up...'
   Remove-Item $PsExecPath
   exit $proc.ExitCode
@@ -125,8 +132,6 @@ $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_ad
   'cudart_10.1 cufft_10.1 cufft_dev_10.1 curand_10.1 curand_dev_10.1 cusolver_10.1 cusolver_dev_10.1 cusparse_10.1 ' + `
   'cusparse_dev_10.1 nvgraph_10.1 nvgraph_dev_10.1 npp_10.1 npp_dev_10.1 nvrtc_10.1 nvrtc_dev_10.1 nvml_dev_10.1 ' + `
   'occupancy_calculator_10.1 fortran_examples_10.1'
-
-$BinSkimUrl = 'https://www.nuget.org/api/v2/package/Microsoft.CodeAnalysis.BinSkim/1.6.0'
 
 $PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.0.3/PowerShell-7.0.3-win-x64.msi'
 
@@ -192,7 +197,7 @@ Function InstallVisualStudio {
     Write-Host 'Downloading Visual Studio...'
     [string]$bootstrapperExe = Get-TempFilePath -Extension 'exe'
     curl.exe -L -o $bootstrapperExe -s -S $BootstrapperUrl
-    Write-Host "Installing Visual Studio..."
+    Write-Host 'Installing Visual Studio...'
     $args = @('/c', $bootstrapperExe, '--quiet', '--norestart', '--wait', '--nocache')
     foreach ($workload in $Workloads) {
       $args += '--add'
@@ -406,7 +411,7 @@ Installs NVIDIA's CUDA Toolkit.
 
 .DESCRIPTION
 InstallCuda installs the CUDA Toolkit with the features specified as a
-space separated list of strings in $Features.
+space-separated list of strings in $Features.
 
 .PARAMETER Url
 The URL of the CUDA installer.
@@ -452,6 +457,7 @@ if ($null -eq $av) {
   Write-Host 'AntiVirus not installed, skipping exclusions.'
 } else {
   Write-Host 'Configuring AntiVirus exclusions...'
+  Add-MpPreference -ExclusionPath C:\agent
   Add-MPPreference -ExclusionPath D:\
   Add-MPPreference -ExclusionProcess ninja.exe
   Add-MPPreference -ExclusionProcess clang-cl.exe
