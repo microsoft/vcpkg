@@ -1,12 +1,12 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(BOND_VER 9.0.0)
+set(BOND_VER 9.0.2)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
     REF  ${BOND_VER}
-    SHA512 b6bed9be8b5dd2a7d50c6bd275b94c62050b83717907522a07279cccc50e209306792c6f3c7f206afcb3226aed21b43b115b63dccc806eff5d9cd4e12b355461
+    SHA512 ece636bc06e7bac4208d373610e689f19b394cae4eaa869f32b098924a6e7034e4d804d4831d7f6fd2540a619daf77f4ab43c49aa442a9cd26161b0a8a2db000
     HEAD_REF master
     PATCHES fix-install-path.patch skip-grpc-compilation.patch
 )
@@ -15,7 +15,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(GBC_ARCHIVE
     URLS "https://github.com/microsoft/bond/releases/download/${BOND_VER}/gbc-${BOND_VER}-amd64.zip"
     FILENAME "gbc-${BOND_VER}-amd64.zip"
-    SHA512 f4480a3eb7adedfd3da554ef3cdc64b6e7da5c699bde0ccd86b2dd6a159ccacbb1df2b84b6bc80bc8475f30b904cba98085609e42aad929b2b23258eaff52048
+    SHA512 661d63a82284d3ecbc7b50d5f4972dadeb607f96612108a4a0887c6684a418e8b265516354504ca3440a182d1e31f2eb5861531133b455d8b6c01aec45ade5d3
     )
 
     # Clear the generator to prevent it from updating

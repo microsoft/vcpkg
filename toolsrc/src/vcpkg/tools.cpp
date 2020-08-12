@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/files.h>
@@ -83,8 +81,12 @@ namespace vcpkg
         const bool has_tool_entry = std::regex_search(XML.cbegin(), XML.cend(), match_tool_entry, tool_regex);
         if (!has_tool_entry)
         {
-            return Strings::format(
-                "Could not find entry for tool %s in %s for os=%s", tool, XML_PATH.u8string(), OS_STRING);
+            return Strings::format("Could not automatically acquire %s because there is no entry in %s for os=%s. You "
+                                   "may be able to install %s via your system package manager.",
+                                   tool,
+                                   XML_PATH.u8string(),
+                                   OS_STRING,
+                                   tool);
         }
 
         const std::string tool_data =
