@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/buildenvironment.h>
 
 namespace vcpkg

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.process.h>
 
 #include <vcpkg/archives.h>
