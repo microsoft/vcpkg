@@ -23,6 +23,7 @@ string(REGEX REPLACE ".+Version:[ ]*([\\.0-9]+).*" "\\1" BUILD_VERSION "${_conte
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DENABLE_MONGOC=OFF
         -DENABLE_BSON=ON

@@ -238,6 +238,7 @@ function(vcpkg_configure_cmake)
         "-DCMAKE_INSTALL_BINDIR:STRING=bin"
         "-D_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
         "-D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
+        "-DVCPKG_MANIFEST_INSTALL=OFF"
     )
 
     if(DEFINED ARCH)

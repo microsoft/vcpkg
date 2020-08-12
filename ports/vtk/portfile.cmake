@@ -16,8 +16,13 @@ if("qt" IN_LIST FEATURES)
         -DVTK_MODULE_ENABLE_VTK_RenderingQt=YES
         -DVTK_MODULE_ENABLE_VTK_ViewsQt=YES
     )
-endif()
 
+endif()
+if("atlmfc" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_GUISupportMFC=YES
+    )
+endif()
 if("vtkm" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKm=YES
@@ -31,20 +36,9 @@ if("python" IN_LIST FEATURES)
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
         -DPython3_FIND_REGISTRY=NEVER
-        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=TRUE
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
     )
 
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY:PATH=${CURRENT_INSTALLED_DIR}/lib/python38.lib"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.8")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython38.a"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.8")
-    elseif(VCPKG_TARGET_IS_OSX)
-        #Need Python3 information on OSX within VCPKG
-    endif()    
-    
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
@@ -62,6 +56,7 @@ if("paraview" IN_LIST FEATURES)
         -DVTK_MODULE_ENABLE_VTK_IOVPIC=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
+        -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
     )
     if("python" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS
@@ -74,6 +69,23 @@ if("mpi" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_GROUP_ENABLE_MPI=YES
     )
+endif()
+
+if("opengl" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_DomainsChemestryOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_ImagingOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_opengl=YES
+        )
+endif()
+
+if("cuda" IN_LIST FEATURES AND CMAKE_HOST_WIN32)
+    vcpkg_add_to_path("$ENV{CUDA_PATH}/bin")
 endif()
 
 if("all" IN_LIST FEATURES)
@@ -93,25 +105,27 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF ab278e87b181e3a02082bea7361fbaa3ddafb3ad # v9.0 
-    SHA512 50a324f55b58bc4415f972f711420e83b41a100b27729266db4541c24bc7d7bcd27d9158ce2588178b9b2e43c20b9695ffe382605f5cde331e8371e213655164
+    REF 96e6fa9b3ff245e4d51d49f23d40e9ad8774e85e # v9.0.1
+    SHA512 0efb1845053b6143e5ee7fa081b8be98f6825262c59051e88b2be02497e23362055067b2f811eff82e93eb194e5a9afd2a12e3878a252eb4011a5dab95127a6f
     HEAD_REF master
     PATCHES
-        FindLibHaru.patch
-        FindLZMA.patch
+        6811.patch
+        FindLZMA.patch    # Will be fixed in 9.1?
         FindLZ4.patch
         Findproj.patch
         vtkm.patch # To include an external VTKm build (v.1.5 required)
         pegtl.patch
-        ##pythonwrapper.patch # needs checking with paraview PR if still required
-        ##NoUndefDebug.patch # needs checking with paraview PR if still required
+        pythonwrapper.patch # Required by ParaView to Wrap required classes
+        NoUndefDebug.patch # Required to link against correct Python library depending on build type. 
+        python_debug.patch
+        fix-using-hdf5.patch
         # Last patch TODO: Patch out internal loguru
 )
 
 # =============================================================================
 #Overwrite outdated modules if they have not been patched:
-file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake")
-file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99")
+file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake") # will be backported from CMake in VTK in a future release
+file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 # =============================================================================
 
 # =============================================================================
@@ -131,6 +145,7 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
+        -DVTK_ENABLE_REMOTE_MODULES=OFF
         # VTK groups to enable
         -DVTK_GROUP_ENABLE_StandAlone=YES
         -DVTK_GROUP_ENABLE_Rendering=YES
@@ -140,7 +155,6 @@ vcpkg_configure_cmake(
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
-
         ${ADDITIONAL_OPTIONS}
 )
 
@@ -251,29 +265,37 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # =============================================================================
 # Handle copyright
-file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/vtk/copyright)
+file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/vtk")
 
 ## Files Modules needed by ParaView
 if("paraview" IN_LIST FEATURES)
-    set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType vtkSupportMacros vtkDirectories vtkVersion FindPythonModules)
+    set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType 
+                         vtkSupportMacros vtkDirectories vtkVersion FindPythonModules vtkModuleDebugging vtkExternalData)
     foreach(module ${VTK_CMAKE_NEEDED})
-        file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
+        file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
     endforeach()
-    file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
+        
+    ## Check List on UPDATE !!
+    file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
+
+    file(INSTALL "${SOURCE_PATH}/GUISupport/Qt/QVTKOpenGLWidget.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # Legacy header
     
-    #ParaView requires some internal headers
-    file(INSTALL ${SOURCE_PATH}/Rendering/Annotation/vtkScalarBarActorInternal.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
-    file(INSTALL ${SOURCE_PATH}/Filters/Statistics/vtkStatisticsAlgorithmPrivate.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
-    file(INSTALL ${SOURCE_PATH}/Rendering/OpenGL2/vtkCompositePolyDataMapper2Internal.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
+    file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRange.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRangeIterableTraits.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    file(INSTALL "${SOURCE_PATH}/Common/DataModel/vtkCompositeDataSetNodeReference.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    #ParaView requires some internal headers 
+    file(INSTALL "${SOURCE_PATH}/Rendering/Annotation/vtkScalarBarActorInternal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    file(INSTALL "${SOURCE_PATH}/Filters/Statistics/vtkStatisticsAlgorithmPrivate.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    file(INSTALL "${SOURCE_PATH}/Rendering/OpenGL2/vtkCompositePolyDataMapper2Internal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/static_python) #python headers
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/static_python DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
+    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python) #python headers
+        file(GLOB_RECURSE STATIC_PYTHON_FILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/*/static_python/*.h")
+        file(INSTALL ${STATIC_PYTHON_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
     endif()
 endif()
     
