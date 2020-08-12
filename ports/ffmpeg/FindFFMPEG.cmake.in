@@ -171,7 +171,7 @@ if (FFMPEG_libavutil_FOUND AND FFMPEG_libzlib_FOUND)
   list(REMOVE_DUPLICATES FFMPEG_INCLUDE_DIRS)
   list(REMOVE_DUPLICATES FFMPEG_LIBRARY_DIRS)
 
-  if(FFMPEG_libavdevice_FOUND)
+  if(FFMPEG_libavcodec_FOUND)
     set(FFMPEG_libavcodec_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
   endif()
   if(FFMPEG_libavdevice_FOUND)
