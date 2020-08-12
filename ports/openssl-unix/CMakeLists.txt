@@ -21,7 +21,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
         set(PLATFORM iossimulator-xcrun)
     else()
         message(FATAL_ERROR "Unknown iOS target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-    endif()    
+    endif()
+    # disable that makes linkage error (e.g. require stderr usage)
+    set(DISABLES "no-stdio no-ui no-asm")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(PLATFORM darwin64-x86_64-cc)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
@@ -129,6 +131,8 @@ else()
     set(PATH_VAR ":$ENV{PATH}")
 endif()
 
+
+
 add_custom_command(
     OUTPUT "${BUILDDIR}/Makefile"
     COMMAND ${ENV_COMMAND} CC=${CMAKE_C_COMPILER}
@@ -149,9 +153,7 @@ add_custom_command(
         no-seed
         no-md2
         no-tests
-        no-stdio
-        no-ui
-        no-asm
+        ${DISABLES}
         ${PLATFORM}
         "--prefix=${CMAKE_INSTALL_PREFIX}"
         "--openssldir=/etc/ssl"
