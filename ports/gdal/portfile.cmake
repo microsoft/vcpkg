@@ -264,7 +264,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} -f makefile.vc
-      "${NMAKE_OPTIONS_REL}"
+      ${NMAKE_OPTIONS_REL}
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME nmake-build-${TARGET_TRIPLET}-release
     )
@@ -279,7 +279,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} /G -f makefile.vc
-      "${NMAKE_OPTIONS_DBG}"
+      ${NMAKE_OPTIONS_DBG}
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME nmake-build-${TARGET_TRIPLET}-debug
     )
@@ -294,7 +294,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
   vcpkg_execute_required_process(
     COMMAND ${NMAKE} -f makefile.vc
-    "${NMAKE_OPTIONS_REL}"
+    ${NMAKE_OPTIONS_REL}
     "install"
     "devinstall"
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
