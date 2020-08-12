@@ -304,7 +304,8 @@ namespace vcpkg::Install
     using Build::BuildResult;
     using Build::ExtendedBuildResult;
 
-    static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+    static ExtendedBuildResult perform_install_plan_action(const VcpkgCmdArguments& args,
+                                                           const VcpkgPaths& paths,
                                                            InstallPlanAction& action,
                                                            StatusParagraphs& status_db,
                                                            IBinaryProvider& binaries_provider,
@@ -335,7 +336,7 @@ namespace vcpkg::Install
             else
                 System::printf("Building package %s...\n", display_name_with_features);
 
-            auto result = Build::build_package(paths, action, binaries_provider, build_logs_recorder, status_db);
+            auto result = Build::build_package(args, paths, action, binaries_provider, build_logs_recorder, status_db);
 
             if (BuildResult::DOWNLOADED == result.code)
             {
@@ -453,7 +454,8 @@ namespace vcpkg::Install
         TrackedPackageInstallGuard& operator=(const TrackedPackageInstallGuard&) = delete;
     };
 
-    InstallSummary perform(ActionPlan& action_plan,
+    InstallSummary perform(const VcpkgCmdArguments& args,
+                           ActionPlan& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,
@@ -475,7 +477,7 @@ namespace vcpkg::Install
         {
             results.emplace_back(action.spec, &action);
             results.back().build_result =
-                perform_install_plan_action(paths, action, status_db, binaryprovider, build_logs_recorder);
+                perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
         }
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
@@ -485,7 +487,7 @@ namespace vcpkg::Install
         for (auto&& action : action_plan.install_actions)
         {
             TrackedPackageInstallGuard this_install(package_count, results, action.spec);
-            auto result = perform_install_plan_action(paths, action, status_db, binaryprovider, build_logs_recorder);
+            auto result = perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
             if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
             {
                 System::print2(Build::create_user_troubleshooting_message(action.spec), '\n');
@@ -920,7 +922,8 @@ namespace vcpkg::Install
         }
 
         const InstallSummary summary =
-            perform(action_plan,
+            perform(args,
+                    action_plan,
                     keep_going,
                     paths,
                     status_db,

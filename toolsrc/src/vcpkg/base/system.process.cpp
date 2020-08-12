@@ -176,6 +176,7 @@ namespace vcpkg
         : CMakeVariable(varname, path.generic_u8string())
     {
     }
+    System::CMakeVariable::CMakeVariable(std::string var) : s(std::move(var)) { }
 
     std::string System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
                                              const fs::path& cmake_script,

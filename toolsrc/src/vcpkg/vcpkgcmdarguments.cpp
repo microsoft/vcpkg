@@ -298,6 +298,7 @@ namespace vcpkg
                     {OVERLAY_PORTS_ARG, &VcpkgCmdArguments::overlay_ports},
                     {OVERLAY_TRIPLETS_ARG, &VcpkgCmdArguments::overlay_triplets},
                     {BINARY_SOURCES_ARG, &VcpkgCmdArguments::binary_sources},
+                    {CMAKE_SCRIPT_ARG, &VcpkgCmdArguments::cmake_args},
                 };
 
             constexpr static std::pair<StringView, Optional<bool> VcpkgCmdArguments::*> switches[] = {
