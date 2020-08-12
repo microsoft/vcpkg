@@ -30,7 +30,7 @@
 ## If the *.pc file contains flags in the lib field which are not libraries. These can be listed here
 ##
 ## ### SKIP_CHECK
-## Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases.
+## Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases. 
 ##
 ## ## Notes
 ## Still work in progress. If there are more cases which can be handled here feel free to add them
@@ -51,7 +51,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         set(_VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
         set(_VCPKG_PACKAGES_PKGCONF "${CURRENT_PACKAGES_DIR}")
     endif()
-
+    
     set(PATH_SUFFIX_DEBUG /debug)
     set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
     set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
@@ -77,18 +77,18 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
                     ERROR_STRIP_TRAILING_WHITESPACE
                     )
     if(NOT _pkg_error_var EQUAL 0)
-        message(STATUS "pkg_cfg_cmd call with: ${pkg_cfg_cmd} --exists ${_package_name} failed")
-        message(STATUS "ENV{PKG_CONFIG_PATH}: $ENV{PKG_CONFIG_PATH}")
-        message(STATUS "pkg-config call failed with error code: ${_pkg_error_var}")
-        message(STATUS "pkg-config output: ${_pkg_output}")
-        message(FATAL_ERROR "pkg-config error output: ${_pkg_error_out}")
+        message(STATUS "pkg_cfg_cmd call with:${pkg_cfg_cmd} --exists ${_package_name} failed")
+        message(STATUS "ENV{PKG_CONFIG_PATH}:$ENV{PKG_CONFIG_PATH}")
+        message(STATUS "pkg-config call failed with error code:${_pkg_error_var}")
+        message(STATUS "pkg-config output:${_pkg_output}")
+        message(FATAL_ERROR "pkg-config error output:${_pkg_error_out}")
     else()
-        debug_message("pkg-config returned: ${_pkg_error_var}")
-        debug_message("pkg-config output: ${_pkg_output}")
-        debug_message("pkg-config error output: ${_pkg_error_out}")
+        debug_message("pkg-config returned:${_pkg_error_var}")
+        debug_message("pkg-config output:${_pkg_output}")
+        debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
-    # Get all required libs. --static means we get all libraries required for static linkage
+    # Get all required libs. --static means we get all libraries required for static linkage 
     # which is the worst case and includes the case without --static
     # This retests already tested *.pc files since pkg-config will recursivly search for
     # required packages and add there link flags to the one being tested
@@ -103,14 +103,14 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
                     ERROR_STRIP_TRAILING_WHITESPACE
                     )
     if(NOT _pkg_error_var EQUAL 0)
-        message(STATUS "pkg_cfg_cmd call with: ${pkg_cfg_cmd} --libs ${_package_name} failed")
-        message(STATUS "pkg-config call failed with error code: ${_pkg_error_var}")
-        message(STATUS "pkg-config output: ${_pkg_libs_output}")
-        message(FATAL_ERROR "pkg-config error output: ${_pkg_error_out}")
+        message(STATUS "pkg_cfg_cmd call with:${pkg_cfg_cmd} --libs ${_package_name} failed")
+        message(STATUS "pkg-config call failed with error code:${_pkg_error_var}")
+        message(STATUS "pkg-config output:${_pkg_libs_output}")
+        message(FATAL_ERROR "pkg-config error output:${_pkg_error_out}")
     else()
-        debug_message("pkg-config returned: ${_pkg_error_var}")
-        debug_message("pkg-config output: ${_pkg_libs_output}")
-        debug_message("pkg-config error output: ${_pkg_error_out}")
+        debug_message("pkg-config returned:${_pkg_error_var}")
+        debug_message("pkg-config output:${_pkg_libs_output}")
+        debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
     execute_process(COMMAND "${pkg_cfg_cmd}" --print-errors --static --libs-only-L ${_package_name}
@@ -123,14 +123,14 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
                     )
 
     if(NOT _pkg_error_var EQUAL 0)
-        message(STATUS "pkg_cfg_cmd call with: ${pkg_cfg_cmd} --libs-only-L ${_package_name} failed")
-        message(STATUS "pkg-config call failed with error code: ${_pkg_error_var}")
-        message(STATUS "pkg-config output: ${_pkg_lib_paths_output}")
-        message(FATAL_ERROR "pkg-config error output: ${_pkg_error_out}")
+        message(STATUS "pkg_cfg_cmd call with:${pkg_cfg_cmd} --libs-only-L ${_package_name} failed")
+        message(STATUS "pkg-config call failed with error code:${_pkg_error_var}")
+        message(STATUS "pkg-config output:${_pkg_lib_paths_output}")
+        message(FATAL_ERROR "pkg-config error output:${_pkg_error_out}")
     else()
-        debug_message("pkg-config returned: ${_pkg_error_var}")
-        debug_message("pkg-config output: ${_pkg_lib_paths_output}")
-        debug_message("pkg-config error output: ${_pkg_error_out}")
+        debug_message("pkg-config returned:${_pkg_error_var}")
+        debug_message("pkg-config output:${_pkg_lib_paths_output}")
+        debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
     string(REPLACE "\\ " "##" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
@@ -160,8 +160,8 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         string(REGEX REPLACE "(^|;)/([a-zA-Z])/" "\\1\\2:/" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
         string(REGEX REPLACE " /([a-zA-Z])/" ";\\1:/" _pkg_libs_output "${_pkg_libs_output}")
         string(REGEX REPLACE "-l/([a-zA-Z])/" "-l\\1:/" _pkg_libs_output "${_pkg_libs_output}")
-        debug_message("pkg-config output lib paths after replacement (cmake style): ${_pkg_lib_paths_output}")
-        debug_message("pkg-config output lib after replacement (cmake style): ${_pkg_libs_output}")
+        debug_message("pkg-config output lib paths after replacement (cmake style):${_pkg_lib_paths_output}")
+        debug_message("pkg-config output lib after replacement (cmake style):${_pkg_libs_output}")
     endif()
 
     if("${_config}" STREQUAL "DEBUG")
@@ -198,15 +198,15 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
 
     string(REGEX REPLACE ";?[\t ]*;[\t ]*" ";" _pkg_libs_output "${_pkg_libs_output}") # Double ;; and Whitespace before/after ; removal
 
-    debug_message("Library search paths: ${_pkg_lib_paths_output}")
-    debug_message("Libraries to search: ${_pkg_libs_output}")
+    debug_message("Library search paths:${_pkg_lib_paths_output}")
+    debug_message("Libraries to search:${_pkg_libs_output}")
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
     list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
     foreach(_lib IN LISTS _pkg_libs_output)
         if(EXISTS "${_lib}" OR "x${_lib}x" STREQUAL "xx" ) # eat; all ok _lib is a fullpath to a library or empty
             continue()
         elseif (_lib MATCHES "^-l(.+)$")
-            debug_message("Library match: CMAKE_MATCH_1: ${CMAKE_MATCH_1}")
+            debug_message("Library match: CMAKE_MATCH_1:${CMAKE_MATCH_1}")
             set(_libname "${CMAKE_MATCH_1}")
             if(EXISTS "${_libname}")
                 debug_message("${_libname} detected as an existing full path!")
@@ -235,7 +235,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
                 endif()
             endforeach()
             # Reaching here means error!
-            message(STATUS "CHECK_LIB_${_libname}_${_config}: ${CHECK_LIB_${_libname}_${_config}}")
+            message(STATUS "CHECK_LIB_${_libname}_${_config}:${CHECK_LIB_${_libname}_${_config}}")
             message(FATAL_ERROR "Library \"${_libname}\" was not found! If it is a system library use the SYSTEM_LIBRARIES parameter for the vcpkg_fixup_pkgconfig call! Otherwise, correct the *.pc file")
         else ()
             message(FATAL_ERROR "Unhandled string \"${_lib}\" was found! If it is a system library use the SYSTEM_LIBRARIES parameter for the vcpkg_fixup_pkgconfig call! Otherwise, correct the *.pc file or add the case to vcpkg_fixup_pkgconfig")
@@ -259,7 +259,8 @@ function(vcpkg_fixup_pkgconfig)
     else()
         set(PKGCONFIG_STATIC --static)
     endif()
-
+    
+    message(STATUS "Fixing pkgconfig")
     if(_vfpkg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
@@ -287,12 +288,14 @@ function(vcpkg_fixup_pkgconfig)
         endif()
     endif()
 
-    #Absolute Unix like paths
+    #Absolute Unix like paths 
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
 
+    message(STATUS "Fixing pkgconfig - release")
     debug_message("Files: ${_vfpkg_RELEASE_FILES}")
     foreach(_file ${_vfpkg_RELEASE_FILES})
+        message(STATUS "Checking file: ${_file}")
         get_filename_component(PKG_LIB_SEARCH_PATH "${_file}" DIRECTORY)
         file(RELATIVE_PATH RELATIVE_PC_PATH "${PKG_LIB_SEARCH_PATH}" "${CURRENT_PACKAGES_DIR}")
         string(REGEX REPLACE "/$" "" RELATIVE_PC_PATH "${RELATIVE_PC_PATH}")
@@ -314,8 +317,10 @@ function(vcpkg_fixup_pkgconfig)
         endforeach()
     endif()
 
+    message(STATUS "Fixing pkgconfig - debug")
     debug_message("Files: ${_vfpkg_DEBUG_FILES}")
     foreach(_file ${_vfpkg_DEBUG_FILES})
+        message(STATUS "Checking file: ${_file}")
         get_filename_component(PKG_LIB_SEARCH_PATH "${_file}" DIRECTORY)
         file(RELATIVE_PATH RELATIVE_PC_PATH "${PKG_LIB_SEARCH_PATH}" "${CURRENT_PACKAGES_DIR}/debug/")
         string(REGEX REPLACE "/$" "" RELATIVE_PC_PATH "${RELATIVE_PC_PATH}")
@@ -333,7 +338,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
         string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist.
+        string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
         file(WRITE "${_file}" "${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
@@ -343,6 +348,7 @@ function(vcpkg_fixup_pkgconfig)
             vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "DEBUG" "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_IGNORE_FLAGS}")
         endforeach()
     endif()
+    message(STATUS "Fixing pkgconfig --- finished")
 
     set(VCPKG_FIXUP_PKGCONFIG_CALLED TRUE CACHE INTERNAL "See below" FORCE)
     # Variable to check if this function has been called!
