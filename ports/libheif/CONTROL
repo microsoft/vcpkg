@@ -1,5 +1,6 @@
 Source: libheif
 Version: 1.7.0
+Port-Version: 1
 Homepage: http://www.libheif.org/
 Description: Open h.265 video codec implementation. 
 Build-Depends: x265, libde265
