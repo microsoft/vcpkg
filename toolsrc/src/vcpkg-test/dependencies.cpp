@@ -33,12 +33,12 @@ TEST_CASE ("filter depends", "[dependencies]")
     auto deps_ = parse_dependencies_list("liba (!uwp), libb, libc (uwp)");
     REQUIRE(deps_);
     auto& deps = *deps_.get();
-    auto v = filter_dependencies(deps, Triplet::X64_WINDOWS, x64_win_cmake_vars);
+    auto v = filter_dependencies(deps, Test::X64_WINDOWS, x64_win_cmake_vars);
     REQUIRE(v.size() == 2);
     REQUIRE(v.at(0).package_spec.name() == "liba");
     REQUIRE(v.at(1).package_spec.name() == "libb");
 
-    auto v2 = filter_dependencies(deps, Triplet::ARM_UWP, arm_uwp_cmake_vars);
+    auto v2 = filter_dependencies(deps, Test::ARM_UWP, arm_uwp_cmake_vars);
     REQUIRE(v.size() == 2);
     REQUIRE(v2.at(0).package_spec.name() == "libb");
     REQUIRE(v2.at(1).package_spec.name() == "libc");

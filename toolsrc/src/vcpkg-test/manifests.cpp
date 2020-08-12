@@ -5,6 +5,7 @@
 
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 #include <vcpkg-test/util.h>
 
