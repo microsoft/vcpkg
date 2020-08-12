@@ -27,10 +27,6 @@ namespace vcpkg::PortFileProvider
                                                  const std::vector<std::string>& ports_dirs_paths)
         : filesystem(paths.get_filesystem())
     {
-        if (paths.manifest_mode_enabled())
-        {
-            manifest = paths.manifest_root_dir / fs::u8path("vcpkg.json");
-        }
         auto& fs = paths.get_filesystem();
         for (auto&& overlay_path : ports_dirs_paths)
         {
@@ -62,56 +58,12 @@ namespace vcpkg::PortFileProvider
         ports_dirs.emplace_back(paths.ports);
     }
 
-    const SourceControlFileLocation* PathsPortFileProvider::load_manifest_file() const
-    {
-        if (!manifest.empty())
-        {
-            std::error_code ec;
-            auto maybe_scf = Paragraphs::try_load_manifest(filesystem, "manifest", manifest, ec);
-            if (ec)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Failed to read manifest file %s: %s", manifest.u8string(), ec.message());
-            }
-
-            if (auto scf = maybe_scf.get())
-            {
-                auto it = cache.emplace(std::piecewise_construct,
-                                        std::forward_as_tuple(PackageSpec::MANIFEST_NAME),
-                                        std::forward_as_tuple(std::move(*scf), manifest.parent_path()));
-                return &it.first->second;
-            }
-            else
-            {
-                vcpkg::print_error_message(maybe_scf.error());
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Error: Failed to load manifest file %s.", manifest.u8string());
-            }
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-
     ExpectedS<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
     {
         auto cache_it = cache.find(spec);
         if (cache_it != cache.end())
         {
             return cache_it->second;
-        }
-
-        if (spec == PackageSpec::MANIFEST_NAME)
-        {
-            if (auto p = load_manifest_file())
-            {
-                return *p;
-            }
-            else
-            {
-                Checks::unreachable(VCPKG_LINE_INFO);
-            }
         }
 
         for (auto&& ports_dir : ports_dirs)
@@ -176,11 +128,6 @@ namespace vcpkg::PortFileProvider
         // Reload cache with ports contained in all ports_dirs
         cache.clear();
         std::vector<const SourceControlFileLocation*> ret;
-
-        if (auto p = load_manifest_file())
-        {
-            ret.push_back(p);
-        }
 
         for (auto&& ports_dir : ports_dirs)
         {
