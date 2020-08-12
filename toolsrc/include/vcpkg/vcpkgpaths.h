@@ -4,11 +4,8 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
-
-#include <vcpkg/binaryparagraph.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
 {
@@ -44,6 +41,11 @@ namespace vcpkg
     {
         struct VcpkgPathsImpl;
     }
+
+    struct BinaryParagraph;
+    struct VcpkgCmdArguments;
+    struct PackageSpec;
+    struct Triplet;
 
     struct VcpkgPaths : Util::MoveOnlyBase
     {
