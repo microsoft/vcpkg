@@ -1,15 +1,12 @@
 set(HEALPIX_VER 3.50)
 set(HEALPIX_PACK_NAME  ${HEALPIX_VER}_2018Dec10)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://phoenixnap.dl.sourceforge.net/project/healpix/Healpix_${HEALPIX_VER}/Healpix_${HEALPIX_PACK_NAME}.tar.gz"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO healpix
+    REF Healpix_${HEALPIX_VER}
     FILENAME "Healpix_${HEALPIX_PACK_NAME}.tar.gz"
     SHA512 29fe680d757bd94651bf029654257cb67286643aad510df4c2f0b06245174411376ec1beca64feebfac14a6fc0194525170635842916d79dcaddeddd9ac6f6c7
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
 )
 
 vcpkg_configure_make(

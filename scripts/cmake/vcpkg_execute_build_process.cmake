@@ -61,8 +61,11 @@ function(vcpkg_execute_build_process)
            OR err_contents MATCHES "LINK : fatal error LNK1102:" OR err_contents MATCHES " fatal error C1060: "
            OR out_contents MATCHES "LINK : fatal error LNK1318: Unexpected PDB error; ACCESS_DENIED"
            OR out_contents MATCHES "LINK : fatal error LNK1104:"
-           OR out_contents MATCHES "LINK : fatal error LNK1201:")
+           OR out_contents MATCHES "LINK : fatal error LNK1201:"
             # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
+           OR out_contents MATCHES "Cannot create parent directory"
+            # Multiple threads using the same directory at the same time cause conflicts, will try again.
+           )
             message(STATUS "Restarting Build without parallelism because memory exceeded")
             set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out-1.log")
             set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err-1.log")

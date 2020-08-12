@@ -1,0 +1,20 @@
+diff --git a/drogon_ctl/CMakeLists.txt b/drogon_ctl/CMakeLists.txt
+index bbc01fe..99500f0 100755
+--- a/drogon_ctl/CMakeLists.txt
++++ b/drogon_ctl/CMakeLists.txt
+@@ -40,13 +40,13 @@ if(WIN32)
+   target_link_libraries(drogon_ctl PRIVATE ws2_32 Rpcrt4)
+ endif(WIN32)
+ message(STATUS "bin:" ${INSTALL_BIN_DIR})
+-install(TARGETS drogon_ctl RUNTIME DESTINATION ${INSTALL_BIN_DIR})
++install(TARGETS drogon_ctl RUNTIME DESTINATION tools/drogon)
+ if(WIN32)
+   set(CTL_FILE $<TARGET_FILE:drogon_ctl>)
+   add_custom_command(TARGET drogon_ctl POST_BUILD
+                      COMMAND ${CMAKE_COMMAND}
+                              -DCTL_FILE=${CTL_FILE}
+-                             -DINSTALL_BIN_DIR=${INSTALL_BIN_DIR}
++                             -DINSTALL_BIN_DIR=tools/drogon
+                              -P
+                              ${CMAKE_CURRENT_SOURCE_DIR}/CopyDlls.cmake)
+ else(WIN32)

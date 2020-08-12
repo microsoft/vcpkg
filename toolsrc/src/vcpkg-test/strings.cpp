@@ -3,9 +3,10 @@
 #include <vcpkg/base/strings.h>
 
 #include <stdint.h>
+
+#include <string>
 #include <utility>
 #include <vector>
-#include <string>
 
 TEST_CASE ("b32 encoding", "[strings]")
 {
@@ -40,4 +41,14 @@ TEST_CASE ("split by char", "[strings]")
     REQUIRE(split("hello world", ' ') == result_t{"hello", "world"});
     REQUIRE(split("    hello  world    ", ' ') == result_t{"hello", "world"});
     REQUIRE(split("no delimiters", ',') == result_t{"no delimiters"});
+}
+
+TEST_CASE ("find_first_of", "[strings]")
+{
+    using vcpkg::Strings::find_first_of;
+    REQUIRE(find_first_of("abcdefg", "hij") == std::string());
+    REQUIRE(find_first_of("abcdefg", "a") == std::string("abcdefg"));
+    REQUIRE(find_first_of("abcdefg", "g") == std::string("g"));
+    REQUIRE(find_first_of("abcdefg", "bg") == std::string("bcdefg"));
+    REQUIRE(find_first_of("abcdefg", "gb") == std::string("bcdefg"));
 }

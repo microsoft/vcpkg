@@ -1,14 +1,9 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
-    REF v0.27.2
-    SHA512 349063fd8ef6c44b5b2f3f68aad839271a9cb8ff206af237d28d9e9d05dcdf43b61f3232d4566780b2898d62c20134e8ea65d588a19a664c0224750e4ea1340d
+    REF 194bb65ac568a5435874c9d9d73b1c8a68e4edec #v0.27.3
+    SHA512 35a5a41e0a6cfe04d1ed005c8116ad4430516402b925db3d4f719e2385e2cfb09359eb7ab51853bc560138f221900778cd2e2d39f108c513b3e7d22dbb9bf503
     HEAD_REF master
-    PATCHES
-        iconv.patch
-        1059-Add-missing-library-link-on-Windows.patch # https://github.com/Exiv2/exiv2/pull/1059
 )
 
 if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND ("unicode" IN_LIST FEATURES))

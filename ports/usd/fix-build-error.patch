@@ -1,0 +1,13 @@
+diff --git a/pxr/usd/ar/packageUtils.cpp b/pxr/usd/ar/packageUtils.cpp
+index d497587..ed3df29 100644
+--- a/pxr/usd/ar/packageUtils.cpp
++++ b/pxr/usd/ar/packageUtils.cpp
+@@ -29,6 +29,8 @@
+ #include "pxr/base/tf/pathUtils.h"
+ #include "pxr/base/tf/stringUtils.h"
+ 
++#include <algorithm>
++
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+ namespace

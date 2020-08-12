@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO daniele77/cli
-    REF v1.1.1
-    SHA512 c5046450af8818e23fc5187e66a963cfa981042a99b66c52bfe6119bf126348cd38c50472bc267197e4175ee056f8cf639b09846675450d67c06c1c64f64acba 
+    REF v1.2.0
+    SHA512 ff548cbc1a77ded32f67d0ff4740d2abb31226cb6f0d9d431e1a35dcdfcaf68a2b9e16e926fc88f19aa17f5c6f5f8e2aead83ff65d7557c192bdd7d4ce2a2d3e 
     HEAD_REF master
 )
 

@@ -1,19 +1,18 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.integrate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/userconfig.h>
 
 namespace vcpkg::Commands::Integrate
 {
 #if defined(_WIN32)
-    static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
+    static std::string create_appdata_shortcut(const std::string& target_path) noexcept
     {
         return Strings::format(R"###(
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -34,6 +33,7 @@ namespace vcpkg::Commands::Integrate
   <PropertyGroup>
     <VCLibPackagePath Condition="'$(VCLibPackagePath)' == ''">$(LOCALAPPDATA)\vcpkg\vcpkg.user</VCLibPackagePath>
   </PropertyGroup>
+  <Import Condition="'$(VCLibPackagePath)' != '' and Exists('$(VCLibPackagePath).props')" Project="$(VCLibPackagePath).props" />
   <Import Condition="'$(VCLibPackagePath)' != '' and Exists('$(VCLibPackagePath).targets')" Project="$(VCLibPackagePath).targets" />
 </Project>
 )###";
@@ -154,9 +154,13 @@ namespace vcpkg::Commands::Integrate
 #if defined(_WIN32)
     static fs::path get_appdata_targets_path()
     {
-        static const fs::path LOCAL_APP_DATA =
-            fs::u8path(System::get_environment_variable("LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
-        return LOCAL_APP_DATA / fs::u8path("vcpkg/vcpkg.user.targets");
+        return System::get_appdata_local().value_or_exit(VCPKG_LINE_INFO) / fs::u8path("vcpkg/vcpkg.user.targets");
+    }
+#endif
+#if defined(_WIN32)
+    static fs::path get_appdata_props_path()
+    {
+        return System::get_appdata_local().value_or_exit(VCPKG_LINE_INFO) / fs::u8path("vcpkg/vcpkg.user.props");
     }
 #endif
 
@@ -248,7 +252,7 @@ namespace vcpkg::Commands::Integrate
 
             const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
             fs.write_contents(appdata_src_path,
-                              create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.u8string()),
+                              create_appdata_shortcut(paths.buildsystems_msbuild_targets.u8string()),
                               VCPKG_LINE_INFO);
             auto appdata_dst_path = get_appdata_targets_path();
 
@@ -261,6 +265,26 @@ namespace vcpkg::Commands::Integrate
                                appdata_src_path.u8string(),
                                " -> ",
                                appdata_dst_path.u8string(),
+                               "\n");
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            const fs::path appdata_src_path2 = tmp_dir / "vcpkg.user.props";
+            fs.write_contents(appdata_src_path2,
+                              create_appdata_shortcut(paths.buildsystems_msbuild_props.u8string()),
+                              VCPKG_LINE_INFO);
+            auto appdata_dst_path2 = get_appdata_props_path();
+
+            const auto rc2 =
+                fs.copy_file(appdata_src_path2, appdata_dst_path2, fs::copy_options::overwrite_existing, ec);
+
+            if (!rc2 || ec)
+            {
+                System::print2(System::Color::error,
+                               "Error: Failed to copy file: ",
+                               appdata_src_path2.u8string(),
+                               " -> ",
+                               appdata_dst_path2.u8string(),
                                "\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
@@ -303,6 +327,11 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
         const fs::path path = get_appdata_targets_path();
 
         was_deleted |= fs.remove(path, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %s", ec.message());
+
+        const fs::path path2 = get_appdata_props_path();
+
+        was_deleted |= fs.remove(path2, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %s", ec.message());
 #endif
 
@@ -527,5 +556,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 #endif
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
+    }
+
+    void IntegrateCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Integrate::perform_and_exit(args, paths);
     }
 }

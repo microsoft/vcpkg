@@ -47,7 +47,7 @@ namespace vcpkg
 
     struct InstalledPackageView
     {
-        InstalledPackageView() noexcept : core(nullptr) {}
+        InstalledPackageView() noexcept : core(nullptr) { }
 
         InstalledPackageView(const StatusParagraph* c, std::vector<const StatusParagraph*>&& fs)
             : core(c), features(std::move(fs))

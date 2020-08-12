@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule
+      Name="VcpkgOptions"
+      DisplayName="Vcpkg"
+      PageTemplate="generic"
+      Description="Vcpkg"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Vcpkg" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+  <BoolProperty Name="VcpkgEnabled"
+                DisplayName="Use Vcpkg"
+                Description="Use Vcpkg for includes and libraries."
+                Category="General"
+                Default="true">
+  </BoolProperty>
+  <BoolProperty Name="VcpkgEnableManifest"
+                DisplayName="Use Vcpkg Manifest"
+                Description="Use the vcpkg manifest file to define your dependencies."
+                Category="General"
+                Default="false">
+  </BoolProperty>
+  <BoolProperty Name="VcpkgManifestInstall"
+                DisplayName="Install vcpkg dependencies"
+                Description="Install dependencies from the vcpkg manifest."
+                Category="General"
+                Default="true">
+  </BoolProperty>
+  <BoolProperty Name="VcpkgUseStatic"
+                DisplayName="Use static libraries"
+                Description="Vcpkg can build static libraries (e.g. x64-windows-static). This options changes the default triplet to use these static libraries by appending -static to $(VcpkgTriplet). This will not be shown in the evaluation of the Triplet within the UI."
+                Category="General"
+                Default="false">
+  </BoolProperty>
+  <BoolProperty Name="VcpkgAutoLink"
+                DisplayName="Use AutoLink"
+                Description="Enables automatic linking with libraries build using Vcpkg. Does not work with lld-link.exe."
+                Category="General"
+                Default="true">
+  </BoolProperty>
+  <StringProperty Name="VcpkgTriplet"
+                  DisplayName="Triplet"
+                  Description="Specifies the triplet used by Vcpkg"
+                  Category="General"
+                  Subtype="Text">
+  </StringProperty>
+  <StringProperty Name="VcpkgRoot"
+                  DisplayName="Vcpkg Root"
+                  Description="Root path where Vcpkg is located. Be careful with changing this one. It is, for example, unable to update this property page from the new location without restarting visual studio."
+                  Category="General"
+                  Subtype="folder"
+                  Visible="false">
+  </StringProperty>
+  <StringProperty Name="VcpkgManifestRoot"
+                  DisplayName="Vcpkg Manifest Root"
+                  Description="The path to the directory which contains the manifest file, and the vcpkg_installed directory."
+                  Category="General"
+                  Subtype="folder"
+                  Visible="false">
+  </StringProperty>
+  <StringProperty Name="VcpkgCurrentInstalledDir"
+                  DisplayName="Package install directory"
+                  Description="Defines the direct path to the installed Vcpkg packages. Only change this if you know what you are doing!"
+                  Category="General"
+                  Subtype="folder"
+                  Visible="false">
+  </StringProperty>
+  <EnumProperty Name="VcpkgConfiguration" DisplayName="Vcpkg Configuration" Description="Specifies if release or debug libraries build with vcpkg should be used." Category="General">
+    <EnumValue Name="Release" Switch="Release" DisplayName="Release" Description="Uses release libraries">
+    </EnumValue>
+    <EnumValue Name="Debug" Switch="Debug" DisplayName="Debug" Description="Uses debug libraries">
+    </EnumValue>
+  </EnumProperty>
+</Rule>

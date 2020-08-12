@@ -180,7 +180,7 @@ function(vcpkg_configure_make)
             set(BUILD_TARGET "--build=${MSYS_HOST}-pc-mingw32 --target=arm-pc-mingw32 --host=i686-pc-mingw32")
         endif()
         
-        macro(_vcpkg_append_to_configure_enviromnent inoutstring var defaultval)
+        macro(_vcpkg_append_to_configure_environment inoutstring var defaultval)
             # Allows to overwrite settings in custom triplets via the enviromnent
             if(ENV{${var}})
                 string(APPEND ${inoutstring} " ${var}='$ENV{${var}}'")
@@ -190,16 +190,16 @@ function(vcpkg_configure_make)
         endmacro()
 
         set(CONFIGURE_ENV "")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CC "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CXX "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV LD "link.exe -verbose")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV AR "${MSYS_ROOT}/usr/share/automake-1.16/ar-lib lib.exe -verbose")
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV RANLIB ":") # Trick to ignore the RANLIB call
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV NM "dumpbin.exe -symbols -headers -all") 
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "${MSYS_ROOT}/usr/share/automake-1.16/compile cl.exe -nologo")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV LD "link.exe -verbose")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "${MSYS_ROOT}/usr/share/automake-1.16/ar-lib lib.exe -verbose")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV RANLIB ":") # Trick to ignore the RANLIB call
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "dumpbin.exe -symbols -headers -all") 
         # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
         # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
-        _vcpkg_append_to_configure_enviromnent(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
         
         # Other maybe interesting variables to control
         # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
@@ -227,8 +227,8 @@ function(vcpkg_configure_make)
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-                        
-    set(ENV{V} "1") #Enabel Verbose MODE
+
+    set(ENV{V} "1") #Enable Verbose MODE
 
     # Set configure paths
     set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}

@@ -1,0 +1,4 @@
+Source: lapack
+Version: 0
+Description: Metapackage for packages which provide LAPACK
+Build-Depends: clapack (!osx)
