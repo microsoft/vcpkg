@@ -1002,6 +1002,26 @@ namespace vcpkg::Json
         }
     }
 
+    std::pair<Value, JsonStyle> parse_file(vcpkg::LineInfo linfo,
+                                           const Files::Filesystem& fs,
+                                           const fs::path& path) noexcept
+    {
+        std::error_code ec;
+        auto ret = parse_file(fs, path, ec);
+        if (ec)
+        {
+            System::print2(System::Color::error, "Failed to read ", path.u8string(), ": ", ec.message(), "\n");
+            Checks::exit_fail(linfo);
+        }
+        else if (!ret)
+        {
+            System::print2(System::Color::error, "Failed to parse ", path.u8string(), ":\n");
+            System::print2(ret.error()->format());
+            Checks::exit_fail(linfo);
+        }
+        return ret.value_or_exit(linfo);
+    }
+
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
                                                                                       const fs::path& filepath) noexcept
     {

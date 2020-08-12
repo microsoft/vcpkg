@@ -781,7 +781,7 @@ namespace vcpkg::Install
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 
-        if (paths.manifest_mode_enabled())
+        if (auto manifest = paths.get_manifest().get())
         {
             Optional<fs::path> pkgsconfig;
             auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
@@ -790,18 +790,11 @@ namespace vcpkg::Install
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
 
-            std::error_code ec;
-            auto manifest_path = paths.manifest_root_dir / fs::u8path("vcpkg.json");
-            auto maybe_manifest_scf = Paragraphs::try_load_manifest(fs, "manifest", manifest_path, ec);
-            if (ec)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Failed to read manifest %s: %s", fs::u8string(manifest_path), ec.message());
-            }
-            else if (!maybe_manifest_scf)
+            auto maybe_manifest_scf = SourceControlFile::parse_manifest_file("manifest", *manifest);
+            if (!maybe_manifest_scf)
             {
                 print_error_message(maybe_manifest_scf.error());
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s.", fs::u8string(manifest_path));
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s/vcpkg.json.", fs::u8string(paths.manifest_root_dir));
             }
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 

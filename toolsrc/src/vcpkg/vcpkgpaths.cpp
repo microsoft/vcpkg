@@ -11,6 +11,7 @@
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/sourceparagraph.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -81,6 +82,75 @@ namespace
 
 namespace vcpkg
 {
+    static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, Optional<Json::Object>> load_manifest_and_config(
+        const Files::Filesystem& fs, const fs::path& manifest_dir)
+    {
+        std::error_code ec;
+        auto manifest_path = manifest_dir / fs::u8path("vcpkg.json");
+        auto manifest_opt = Json::parse_file(fs, manifest_path, ec);
+        if (ec)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to load manifest from directory %s: %s", manifest_dir.u8string(), ec.message());
+        }
+
+        if (!manifest_opt.has_value())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to parse manifest at %s: %s", manifest_path.u8string(), manifest_opt.error()->format());
+        }
+        auto manifest_value = std::move(manifest_opt).value_or_exit(VCPKG_LINE_INFO);
+
+        if (!manifest_value.first.is_object())
+        {
+            System::print2(System::Color::error,
+                           "Failed to parse manifest at ",
+                           manifest_path.u8string(),
+                           ": Manifest files must have a top-level object\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        std::pair<Json::Object, Json::JsonStyle> manifest = {std::move(manifest_value.first.object()), std::move(manifest_value.second)};
+
+        if (auto p_manifest_config = manifest.first.get("configuration"))
+        {
+            if (p_manifest_config->is_object())
+            {
+                return {std::move(manifest), std::move(p_manifest_config->object())};
+            }
+            else if (p_manifest_config->is_string())
+            {
+                auto config_name = fs::u8path("vcpkg-configuration.json");
+                auto config_relative_path = p_manifest_config->string();
+                auto config_path = manifest_dir / fs::u8path(config_relative_path.begin(), config_relative_path.end()) / config_name;
+                if (!fs.exists(config_path))
+                {
+                    System::printf(System::Color::error,
+                                   "Failed to find configuration file at %s\n",
+                                   config_path.u8string());
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+                auto parsed_config = Json::parse_file(VCPKG_LINE_INFO, fs, config_path);
+                if (!parsed_config.first.is_object())
+                {
+                    System::print2(System::Color::error,
+                                   "Failed to parse ",
+                                   config_path.u8string(),
+                                   ": configuration files must have a top-level object\n");
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+                return {std::move(manifest), std::move(parsed_config.first.object())};
+            }
+            else
+            {
+                System::print2(
+                    System::Color::error,
+                    "Failed to parse manifest at ",
+                    manifest_path.u8string(),
+                    ": Manifest configuration ($.configuration) must be a string or an object.\n");
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+        }
+        return {std::move(manifest), nullopt};
+    }
+
     namespace details
     {
         struct VcpkgPathsImpl
@@ -104,6 +174,9 @@ namespace vcpkg
             Build::EnvCache m_env_cache;
 
             fs::SystemHandle file_lock_handle;
+
+            Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
+            Optional<Json::Object> m_manifest_config;
         };
     }
 
@@ -136,7 +209,7 @@ namespace vcpkg
         }
         else
         {
-            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, "vcpkg.json");
+            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, fs::u8path("vcpkg.json"));
         }
         uppercase_win32_drive_letter(manifest_root_dir);
 
@@ -162,6 +235,10 @@ namespace vcpkg
                 System::printf(System::Color::error, "    %s\n", ec.message());
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
+
+            auto manifest_and_config = load_manifest_and_config(filesystem, manifest_root_dir);
+            m_pimpl->m_manifest_doc = std::move(manifest_and_config.first);
+            m_pimpl->m_manifest_config = std::move(manifest_and_config.second);
         }
         else
         {
@@ -335,6 +412,20 @@ If you wish to silence this error and use classic mode, you can:
     {
         return m_pimpl->m_tool_cache->get_tool_version(*this, tool);
     }
+
+    Optional<const Json::Object&> VcpkgPaths::get_manifest() const
+    {
+        if (auto p = m_pimpl->m_manifest_doc.get())
+        {
+            return p->first;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+
+    Optional<const Json::Object&> VcpkgPaths::get_manifest_config() const { return m_pimpl->m_manifest_config; }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {

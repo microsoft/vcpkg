@@ -424,6 +424,7 @@ namespace vcpkg::Json
         const Files::Filesystem&, const fs::path&, std::error_code& ec) noexcept;
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(
         StringView text, const fs::path& filepath = {}) noexcept;
+    std::pair<Value, JsonStyle> parse_file(vcpkg::LineInfo linfo, const Files::Filesystem&, const fs::path&) noexcept;
 
     std::string stringify(const Value&, JsonStyle style);
     std::string stringify(const Object&, JsonStyle style);

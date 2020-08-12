@@ -259,7 +259,7 @@ namespace vcpkg::Paragraphs
         return fs.exists(path / fs::u8path("CONTROL")) || fs.exists(path / fs::u8path("vcpkg.json"));
     }
 
-    ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
+    static ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
                                                        const std::string& port_name,
                                                        const fs::path& path_to_manifest,
                                                        std::error_code& ec)

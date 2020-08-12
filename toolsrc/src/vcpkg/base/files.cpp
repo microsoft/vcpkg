@@ -498,8 +498,7 @@ namespace vcpkg::Files
 
             return output;
         }
-        virtual fs::path find_file_recursively_up(const fs::path& starting_dir,
-                                                  const std::string& filename) const override
+        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const fs::path& filename) const override
         {
             fs::path current_dir = starting_dir;
             if (exists(VCPKG_LINE_INFO, current_dir / filename))

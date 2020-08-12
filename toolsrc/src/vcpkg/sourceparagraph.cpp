@@ -96,6 +96,7 @@ namespace vcpkg
         constexpr static StringLiteral FEATURES = "features";
         constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
         constexpr static StringLiteral SUPPORTS = "supports";
+        constexpr static StringLiteral CONFIGURATION = "configuration";
     }
 
     static Span<const StringView> get_list_of_valid_fields()
@@ -133,6 +134,7 @@ namespace vcpkg
             ManifestFields::FEATURES,
             ManifestFields::DEFAULT_FEATURES,
             ManifestFields::SUPPORTS,
+            ManifestFields::CONFIGURATION,
         };
 
         return valid_fields;

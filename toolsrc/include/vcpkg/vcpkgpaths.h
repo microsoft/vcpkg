@@ -44,6 +44,12 @@ namespace vcpkg
         struct VcpkgPathsImpl;
     }
 
+    namespace Json
+    {
+        struct Object;
+        struct JsonStyle;
+    }
+
     struct BinaryParagraph;
     struct VcpkgCmdArguments;
     struct PackageSpec;
@@ -102,6 +108,10 @@ namespace vcpkg
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
 
+        Optional<const Json::Object&> get_manifest() const;
+        Optional<const Json::JsonStyle&> get_manifest_style() const;
+        Optional<const Json::Object&> get_manifest_config() const;
+
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
         ///   Valid version strings are "v120", "v140", "v141", and "". Empty string gets the latest.
@@ -112,7 +122,7 @@ namespace vcpkg
 
         const System::Environment& get_action_env(const Build::AbiInfo& abi_info) const;
         const std::string& get_triplet_info(const Build::AbiInfo& abi_info) const;
-        bool manifest_mode_enabled() const { return !manifest_root_dir.empty(); }
+        bool manifest_mode_enabled() const { return get_manifest().has_value(); }
 
         void track_feature_flag_metrics() const;
 
