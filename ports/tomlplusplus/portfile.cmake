@@ -10,9 +10,10 @@ vcpkg_from_github(
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DGENERATE_CMAKE_CONFIG=enabled
-            -DBUILD_TESTS=disabled
-            -DBUILD_EXAMPLES=disabled
+    OPTIONS 
+        -DGENERATE_CMAKE_CONFIG=enabled
+        -DBUILD_TESTS=disabled
+        -DBUILD_EXAMPLES=disabled
 )
 
 vcpkg_install_meson()
