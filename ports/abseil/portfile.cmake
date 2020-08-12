@@ -2,18 +2,7 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-set(ABSEIL_PATCHES
-    fix-uwp-build.patch
-
-    # This patch is an upstream commit, the related PR: https://github.com/abseil/abseil-cpp/pull/637
-    fix-MSVCbuildfail.patch
-
-    # Remove this patch in next update, see https://github.com/google/cctz/pull/145
-    fix-arm-build.patch
-
-    # This patch is an upstream commit: https://github.com/abseil/abseil-cpp/commit/68494aae959dfbbf781cdf03a988d2f5fc7e4802
-    fix-cmake-threads-dependency.patch
-)
+set(ABSEIL_PATCHES fix-uwp-build.patch)
 
 if("cxx17" IN_LIST FEATURES)
     # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
@@ -29,8 +18,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 06f0e767d13d4d68071c4fc51e25724e0fc8bc74 #commit 2020-03-03
-    SHA512 f6e2302676ddae39d84d8ec92dbd13520ae214013b43455f14ced3ae6938b94cedb06cfc40eb1781dac48f02cd35ed80673ed2d871541ef4438c282a9a4133b9
+    REF 1b7e751e58ce7d40ac7d1ffd944a8e6928994dfa
+    SHA512 6fdeb49c0b9911e9fe0b7c1fa2f8b9ec5b943e5991f9b05497cc61d6f03a8b1447bc196f43d28d240123ad12b5f2e63a5ef39a760a29c3482798c8a061882643
     HEAD_REF master
     PATCHES ${ABSEIL_PATCHES}
 )
