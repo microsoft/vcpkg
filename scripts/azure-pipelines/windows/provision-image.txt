@@ -118,7 +118,6 @@ $WindowsSDKUrl = 'https://download.microsoft.com/download/1/c/3/1c3d5161-d9e9-4e
 $WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
 
 $MpiUrl = 'https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe'
-$LlvmUrl = 'https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe'
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
 $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_advisor_10.1 memcheck_10.1 ' + `
@@ -366,59 +365,6 @@ Function InstallWindowsWDK {
 
 <#
 .SYNOPSIS
-Installs LLVM.
-
-.DESCRIPTION
-InstallLLVM installs LLVM from the supplied URL.
-
-.PARAMETER Url
-The URL of the LLVM installer.
-#>
-Function InstallLLVM {
-  Param(
-    [String]$Url
-  )
-
-  try {
-    Write-Host 'Downloading LLVM...'
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $installerPath -s -S $Url
-    Write-Host 'Installing LLVM...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/S') -NoNewWindow -Wait -PassThru
-    PrintMsiExitCodeMessage $proc.ExitCode
-  }
-  catch {
-    Write-Error "Failed to install LLVM! $($_.Exception.Message)"
-    throw
-  }
-}
-
-<#
-.SYNOPSIS
-Installs LLVM.
-
-.DESCRIPTION
-InstallLLVM installs LLVM from the supplied URL.
-
-.PARAMETER Url
-The URL of the LLVM installer.
-#>
-Function InstallLLVM {
-  try {
-    Write-Host 'Downloading LLVM...'
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $installerPath -s -S $Url
-    Write-Host 'Installing LLVM...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/S') -NoNewWindow -Wait -PassThru
-    PrintMsiExitCodeMessage $proc.ExitCode
-  }
-  catch {
-    Write-Error "Failed to install LLVM! $($_.Exception.Message)"
-  }
-}
-
-<#
-.SYNOPSIS
 Installs MPI
 
 .DESCRIPTION
@@ -517,7 +463,6 @@ if ($null -eq $av) {
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallWindowsSDK -Url $WindowsSDKUrl
 InstallWindowsWDK -Url $WindowsWDKUrl
-InstallLLVM -Url $LlvmUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallMSI -Url $PwshUrl -Name 'PowerShell Core'
