@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  windows-pool: 'PrWin-2020-06-30'
-  linux-pool: 'PrLin-2020-06-30'
+  windows-pool: 'PrWin-2020-08-12'
+  linux-pool: 'PrLin-2020-08-12'
 
 stages:
 - stage: check_cxx_formatting
