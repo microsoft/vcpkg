@@ -59,6 +59,9 @@ if(DLLS)
     endforeach()
 endif()
 
+# do the copy pdbs now after the dlls got moved to the expected /bin folder above
+vcpkg_copy_pdbs()
+
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
 endif()
