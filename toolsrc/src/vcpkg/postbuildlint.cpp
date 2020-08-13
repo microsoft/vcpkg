@@ -418,6 +418,8 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_for_cmake_files(const Files::Filesystem& fs, const fs::path& share_dir)
     {
+        static StringLiteral UPPER_CONFIG = "Config.cmake";
+        static StringLiteral LOWER_CONFIG = "-config.cmake";
         std::vector<fs::path> shareFolders = fs.get_files_non_recursive(share_dir);
         for (const auto folder : shareFolders)
         {
@@ -427,38 +429,39 @@ namespace vcpkg::PostBuildLint
             }
 
             const auto files = fs.get_files_non_recursive(folder);
-            fs::path catchedFile;
-            std::string cmakePrefix;
-            for (const auto cmakeFile : files)
+            fs::path cmake_file;
+            std::string config_prefix;
+            for (const auto file_path : files)
             {
-                const std::string& filename = cmakeFile.filename().string();
-                if (filename.find("Config.cmake") != std::string::npos)
+                auto filename = file_path.filename().u8string();
+                if (Strings::ends_with(filename, UPPER_CONFIG))
                 {
-                    cmakePrefix = filename.substr(0, filename.find("Config.cmake"));
-                    catchedFile = cmakeFile;
+                    config_prefix = filename.substr(0, filename.find(UPPER_CONFIG));
+                    cmake_file = file_path;
                     break;
                 }
-                else if (filename.find("config.cmake") != std::string::npos)
+                else if (Strings::ends_with(filename, LOWER_CONFIG))
                 {
-                    cmakePrefix = filename.substr(0, filename.find("-config.cmake"));
-                    catchedFile = cmakeFile;
+                    config_prefix = filename.substr(0, filename.find(LOWER_CONFIG));
+                    cmake_file = file_path;
                     break;
                 }
             }
 
-            auto tmpPath = catchedFile.parent_path().filename();
-            auto cmakeName = catchedFile.filename().string();
-            if (!catchedFile.empty() && catchedFile.filename().string().find(
-                                            catchedFile.parent_path().filename().string()) == std::string::npos)
+            auto containing_directory = cmake_file.parent_path().filename().u8string();
+            if (!cmake_file.empty() && config_prefix != containing_directory)
             {
                 System::printf(System::Color::warning,
-                               "The following cmake file %s were found in %s and didn't match the folder name %s.\n",
-                               catchedFile.filename().string().c_str(),
-                               catchedFile.parent_path().string().c_str(),
-                               catchedFile.parent_path().filename().string().c_str());
+                               "The following cmake file %s was found in %s: the config prefix %s did not match the "
+                               "containing directory's name %s.\n",
+                               cmake_file.filename().string().c_str(),
+                               cmake_file.parent_path().string().c_str(),
+                               config_prefix.c_str(),
+                               cmake_file.parent_path().filename().string().c_str());
                 System::print2(System::Color::warning, "Please add the following code to portfile.cmake:\n");
-                System::printf(
-                    System::Color::warning, "    vcpkg_fixup_cmake_targets(... TARGET_PATH share/%s).\n", cmakePrefix);
+                System::printf(System::Color::warning,
+                               "    vcpkg_fixup_cmake_targets(... TARGET_PATH share/%s).\n",
+                               config_prefix);
                 return LintStatus::ERROR_DETECTED;
             }
         }
