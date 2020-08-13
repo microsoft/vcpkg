@@ -436,13 +436,13 @@ namespace vcpkg::PostBuildLint
                 auto filename = file_path.filename().u8string();
                 if (Strings::ends_with(filename, UPPER_CONFIG))
                 {
-                    config_prefix = filename.substr(0, filename.find(UPPER_CONFIG));
+                    config_prefix = filename.substr(0, filename.size() - UPPER_CONFIG.size());
                     cmake_file = file_path;
                     break;
                 }
                 else if (Strings::ends_with(filename, LOWER_CONFIG))
                 {
-                    config_prefix = filename.substr(0, filename.find(LOWER_CONFIG));
+                    config_prefix = filename.substr(0, filename.size() - LOWER_CONFIG.size());
                     cmake_file = file_path;
                     break;
                 }
