@@ -18,6 +18,22 @@
         }                                                                                                              \
     } while (0)
 
+namespace Catch
+{
+    template<>
+    struct StringMaker<vcpkg::FullPackageSpec>
+    {
+        static std::string convert(vcpkg::FullPackageSpec const& value)
+        {
+            return vcpkg::Strings::concat(value.package_spec.name(),
+                                          '[',
+                                          vcpkg::Strings::join(",", value.features),
+                                          "]:",
+                                          value.package_spec.triplet());
+        }
+    };
+}
+
 namespace vcpkg::Test
 {
     std::unique_ptr<SourceControlFile> make_control_file(
