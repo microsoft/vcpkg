@@ -767,24 +767,40 @@ namespace vcpkg::Install
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
 
-            std::vector<std::string> features;
-
-            if (Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
+            std::error_code ec;
+            auto manifest_path = paths.manifest_root_dir / fs::u8path("vcpkg.json");
+            auto maybe_manifest_scf = Paragraphs::try_load_manifest(fs, "manifest", manifest_path, ec);
+            if (ec)
             {
-                features.emplace_back("core");
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Failed to read manifest %s: %s", manifest_path.u8string(), ec.message());
             }
+            else if (!maybe_manifest_scf)
+            {
+                print_error_message(maybe_manifest_scf.error());
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s.", manifest_path.u8string());
+            }
+            auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 
+            std::vector<std::string> features;
             auto manifest_feature_it = options.multisettings.find(OPTION_MANIFEST_FEATURE);
             if (manifest_feature_it != options.multisettings.end())
             {
-                for (const auto& feature : manifest_feature_it->second)
-                {
-                    features.push_back(feature);
-                }
+                features.insert(features.end(), manifest_feature_it->second.begin(), manifest_feature_it->second.end());
             }
+            auto core_it = Util::find(features, "core");
+            if (core_it == features.end())
+            {
+                if (!Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
+                    features.push_back("default");
+            }
+            else
+            {
+                // remove "core" because resolve_deps_as_top_level uses default-inversion
+                features.erase(core_it);
+            }
+            auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
 
-            std::vector<FullPackageSpec> specs;
-            specs.emplace_back(PackageSpec{PackageSpec::MANIFEST_NAME, default_triplet}, std::move(features));
             auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
 
             for (InstallPlanAction& action : install_plan.install_actions)
