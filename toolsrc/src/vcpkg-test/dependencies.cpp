@@ -101,7 +101,7 @@ TEST_CASE ("resolve_deps_as_top_level", "[dependencies]")
     var_provider.dep_info_vars[{"a", t_linux}].emplace("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
     {
         auto deps = vcpkg::Dependencies::resolve_deps_as_top_level(
-            *spec_map.map.at("a").source_control_file, Triplet::X86_WINDOWS, {}, var_provider);
+            *spec_map.map.at("a").source_control_file, Test::X86_WINDOWS, {}, var_provider);
         REQUIRE(deps.size() == 1);
         REQUIRE(deps.at(0) == spec_b);
     }
@@ -114,7 +114,7 @@ TEST_CASE ("resolve_deps_as_top_level", "[dependencies]")
     {
         // without defaults
         auto deps = vcpkg::Dependencies::resolve_deps_as_top_level(
-            *spec_map.map.at("c").source_control_file, Triplet::X86_WINDOWS, {}, var_provider);
+            *spec_map.map.at("c").source_control_file, Test::X86_WINDOWS, {}, var_provider);
         REQUIRE(deps.size() == 1);
         REQUIRE(deps.at(0) == spec_b);
     }
@@ -122,21 +122,21 @@ TEST_CASE ("resolve_deps_as_top_level", "[dependencies]")
     {
         // with defaults of c (c1)
         auto deps = vcpkg::Dependencies::resolve_deps_as_top_level(
-            *spec_map.map.at("c").source_control_file, Triplet::X86_WINDOWS, {"default"}, var_provider);
+            *spec_map.map.at("c").source_control_file, Test::X86_WINDOWS, {"default"}, var_provider);
         REQUIRE(deps.size() == 1);
         REQUIRE(deps.at(0) == spec_b_with_b1);
     }
     {
         // with c1
         auto deps = vcpkg::Dependencies::resolve_deps_as_top_level(
-            *spec_map.map.at("c").source_control_file, Triplet::X86_WINDOWS, {"c1"}, var_provider);
+            *spec_map.map.at("c").source_control_file, Test::X86_WINDOWS, {"c1"}, var_provider);
         REQUIRE(deps.size() == 1);
         REQUIRE(deps.at(0) == spec_b_with_b1);
     }
     {
         // with c2 implying c1
         auto deps = vcpkg::Dependencies::resolve_deps_as_top_level(
-            *spec_map.map.at("c").source_control_file, Triplet::X86_WINDOWS, {"c2"}, var_provider);
+            *spec_map.map.at("c").source_control_file, Test::X86_WINDOWS, {"c2"}, var_provider);
         REQUIRE(deps.size() == 2);
         REQUIRE(deps.at(0) == spec_a);
         REQUIRE(deps.at(1) == spec_b_with_b1);
@@ -144,7 +144,7 @@ TEST_CASE ("resolve_deps_as_top_level", "[dependencies]")
     {
         // d -> c[core]
         auto deps = vcpkg::Dependencies::resolve_deps_as_top_level(
-            *spec_map.map.at("d").source_control_file, Triplet::X86_WINDOWS, {}, var_provider);
+            *spec_map.map.at("d").source_control_file, Test::X86_WINDOWS, {}, var_provider);
         REQUIRE(deps.size() == 1);
         REQUIRE(deps.at(0) == spec_c);
     }
