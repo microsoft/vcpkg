@@ -12,6 +12,7 @@ vcpkg_from_github(
         0007_disable_tool_export_curl_target.patch
         0009_fix_openssl_config.patch
         0010_fix_othertests_cmake.patch
+        0011_fix_static_build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
