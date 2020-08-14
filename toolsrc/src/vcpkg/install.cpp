@@ -487,7 +487,8 @@ namespace vcpkg::Install
         for (auto&& action : action_plan.install_actions)
         {
             TrackedPackageInstallGuard this_install(package_count, results, action.spec);
-            auto result = perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
+            auto result =
+                perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
             if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
             {
                 System::print2(Build::create_user_troubleshooting_message(action.spec), '\n');
