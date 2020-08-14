@@ -4,6 +4,7 @@
 
 #include <vcpkg/commands.porthistory.h>
 #include <vcpkg/help.h>
+#include <vcpkg/tools.h>
 
 namespace vcpkg::Commands::PortHistory
 {

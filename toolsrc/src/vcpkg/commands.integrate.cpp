@@ -7,6 +7,7 @@
 
 #include <vcpkg/commands.integrate.h>
 #include <vcpkg/metrics.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/userconfig.h>
 
 namespace vcpkg::Commands::Integrate

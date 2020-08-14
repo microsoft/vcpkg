@@ -5,11 +5,14 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/visualstudio.h>
 
