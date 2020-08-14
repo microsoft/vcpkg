@@ -1,17 +1,26 @@
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Pavel_Kisliak/BitSerializer
-	REF 0.9
-	SHA512 74515a1a8338935c52752200d96abc0c0ee2c2b0b42880b1d10c8f56b5f8eb30680bd96b64eb2b352764128ad6a1fcd59749f481883c48a06230d652bee05902
+    REF 0.10
+    SHA512 a8a5acf4f9cc83d3090a3b06efbca682f4e022b5206bc7859ba6738e4d49a7678aa55f431f1721d50b28d8bde126b672396baae27cbaa79f62e3dc237ae678e1
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "cpprestjson-archive"  BUILD_CPPRESTJSON_ARCHIVE
+    "rapidjson-archive"    BUILD_RAPIDJSON_ARCHIVE
+    "pugixml-archive"      BUILD_PUGIXML_ARCHIVE
+    "rapidyaml-archive"    BUILD_RAPIDYAML_ARCHIVE
+)
+
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/core
+    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/bitserializer/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/bitserializer)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 

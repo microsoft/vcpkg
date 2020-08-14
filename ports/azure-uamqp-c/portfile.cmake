@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if("public-preview" IN_LIST FEATURES)
@@ -14,8 +12,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uamqp-c
-        REF 142cfab9d66c6f81ea0cceb635f31e00cfa51c77
-        SHA512 80f95bc969c2e50124622561b5f939e981a8d317e3e9514e52ce020f0f20a125622bf914f16927edafc7ff3c878fb1d6a28f4f5e66bda52dcc8aa2dc34761f73
+        REF 9e851bd6db08d6d2d08d1ef469d1e6fc4795382d
+        SHA512 efe0b9ed8a949af67e958b1516f499f57a0838a847e92d6c932058e931d2536038e7d49d63597e21de0a6f2af22bc179a6d99c8b8077451f906118b0b65e1417
         HEAD_REF master
     )
 endif()
@@ -37,7 +35,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/uamqp)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-uamqp-c/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
 

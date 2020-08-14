@@ -17,4 +17,4 @@ ignition_modular_library(NAME msgs
                            "01-protobuf.patch")
 
 # Restore old path
-set(ENV{PATH} ${path_backup})
+set(ENV{PATH} "${path_backup}")

@@ -1,0 +1,202 @@
+From 590e32c60b1dfb32b34632f3d1b0b5cf7c8e4b84 Mon Sep 17 00:00:00 2001
+From: Maarten Bent <MaartenBent@users.noreply.github.com>
+Date: Sat, 1 Aug 2020 11:54:26 +0200
+Subject: [PATCH] Fix building with wxUSE_STL enabled in VS2019 16.6
+
+Exporting standard C++ library types is not allowed any more, see
+
+https://developercommunity.visualstudio.com/content/problem/1042081/142628801includexhash201332-error-c2338-this-funct.html
+
+so don't use DLL export declarations for wxHash{Map,Set} classes, which
+derive from std::{map,set}.
+
+Since the classes are header-only, this should have no direct
+consequences. Only classes that extend wxHashMap or wxHashSet, like
+wxImageHistogram, have to be made header only as well.
+
+Remove the wxLogError message in wxImageHistogram::FindFirstUnusedColour, so
+log.h and translation.h do not have to be included in the header.
+
+Closes https://github.com/wxWidgets/wxWidgets/pull/2009
+---
+ include/wx/hashmap.h |  9 ++++++---
+ include/wx/hashset.h |  6 ++++--
+ include/wx/image.h   | 42 ++++++++++++++++++++++++++++++++++++++----
+ src/common/image.cpp | 43 -------------------------------------------
+ 4 files changed, 48 insertions(+), 52 deletions(-)
+
+diff --git a/include/wx/hashmap.h b/include/wx/hashmap.h
+index df9092a3823..86700f40ca9 100644
+--- a/include/wx/hashmap.h
++++ b/include/wx/hashmap.h
+@@ -678,24 +678,27 @@ public: \
+ 
+ // and these do exactly the same thing but should be used inside the
+ // library
++// note: DECL is not used since the class is inline
+ #define WX_DECLARE_HASH_MAP_WITH_DECL( KEY_T, VALUE_T, HASH_T, KEY_EQ_T, CLASSNAME, DECL) \
+-    _WX_DECLARE_HASH_MAP( KEY_T, VALUE_T, HASH_T, KEY_EQ_T, CLASSNAME, DECL )
++    _WX_DECLARE_HASH_MAP( KEY_T, VALUE_T, HASH_T, KEY_EQ_T, CLASSNAME, class )
+ 
+ #define WX_DECLARE_EXPORTED_HASH_MAP( KEY_T, VALUE_T, HASH_T, KEY_EQ_T, CLASSNAME) \
+     WX_DECLARE_HASH_MAP_WITH_DECL( KEY_T, VALUE_T, HASH_T, KEY_EQ_T, \
+                                    CLASSNAME, class WXDLLIMPEXP_CORE )
+ 
++// note: DECL is not used since the class is inline
+ #define WX_DECLARE_STRING_HASH_MAP_WITH_DECL( VALUE_T, CLASSNAME, DECL ) \
+     _WX_DECLARE_HASH_MAP( wxString, VALUE_T, wxStringHash, wxStringEqual, \
+-                          CLASSNAME, DECL )
++                          CLASSNAME, class )
+ 
+ #define WX_DECLARE_EXPORTED_STRING_HASH_MAP( VALUE_T, CLASSNAME ) \
+     WX_DECLARE_STRING_HASH_MAP_WITH_DECL( VALUE_T, CLASSNAME, \
+                                           class WXDLLIMPEXP_CORE )
+ 
++// note: DECL is not used since the class is inline
+ #define WX_DECLARE_VOIDPTR_HASH_MAP_WITH_DECL( VALUE_T, CLASSNAME, DECL ) \
+     _WX_DECLARE_HASH_MAP( void*, VALUE_T, wxPointerHash, wxPointerEqual, \
+-                          CLASSNAME, DECL )
++                          CLASSNAME, class )
+ 
+ #define WX_DECLARE_EXPORTED_VOIDPTR_HASH_MAP( VALUE_T, CLASSNAME ) \
+     WX_DECLARE_VOIDPTR_HASH_MAP_WITH_DECL( VALUE_T, CLASSNAME, \
+diff --git a/include/wx/hashset.h b/include/wx/hashset.h
+index bb713b87f4f..311aeca9a6e 100644
+--- a/include/wx/hashset.h
++++ b/include/wx/hashset.h
+@@ -159,8 +159,9 @@ public:                                                                      \
+ 
+ // and these do exactly the same thing but should be used inside the
+ // library
++// note: DECL is not used since the class is inline
+ #define WX_DECLARE_HASH_SET_WITH_DECL( KEY_T, HASH_T, KEY_EQ_T, CLASSNAME, DECL) \
+-    _WX_DECLARE_HASH_SET( KEY_T, HASH_T, KEY_EQ_T, wxPTROP_NORMAL, CLASSNAME, DECL )
++    _WX_DECLARE_HASH_SET( KEY_T, HASH_T, KEY_EQ_T, wxPTROP_NORMAL, CLASSNAME, class )
+ 
+ #define WX_DECLARE_EXPORTED_HASH_SET( KEY_T, HASH_T, KEY_EQ_T, CLASSNAME) \
+     WX_DECLARE_HASH_SET_WITH_DECL( KEY_T, HASH_T, KEY_EQ_T, \
+@@ -173,8 +174,9 @@ public:                                                                      \
+ // common compilers (notably Sun CC).
+ #define WX_DECLARE_HASH_SET_PTR( KEY_T, HASH_T, KEY_EQ_T, CLASSNAME) \
+     _WX_DECLARE_HASH_SET( KEY_T, HASH_T, KEY_EQ_T, wxPTROP_NOP, CLASSNAME, class )
++// note: DECL is not used since the class is inline
+ #define WX_DECLARE_HASH_SET_WITH_DECL_PTR( KEY_T, HASH_T, KEY_EQ_T, CLASSNAME, DECL) \
+-    _WX_DECLARE_HASH_SET( KEY_T, HASH_T, KEY_EQ_T, wxPTROP_NOP, CLASSNAME, DECL )
++    _WX_DECLARE_HASH_SET( KEY_T, HASH_T, KEY_EQ_T, wxPTROP_NOP, CLASSNAME, class )
+ 
+ // delete all hash elements
+ //
+diff --git a/include/wx/image.h b/include/wx/image.h
+index f2b5866d2d7..d53ff0b1165 100644
+--- a/include/wx/image.h
++++ b/include/wx/image.h
+@@ -190,7 +190,7 @@ WX_DECLARE_EXPORTED_HASH_MAP(unsigned long, wxImageHistogramEntry,
+                              wxIntegerHash, wxIntegerEqual,
+                              wxImageHistogramBase);
+ 
+-class WXDLLIMPEXP_CORE wxImageHistogram : public wxImageHistogramBase
++class wxImageHistogram : public wxImageHistogramBase
+ {
+ public:
+     wxImageHistogram() : wxImageHistogramBase(256) { }
+@@ -211,9 +211,43 @@ class WXDLLIMPEXP_CORE wxImageHistogram : public wxImageHistogramBase
+     bool FindFirstUnusedColour(unsigned char *r,
+                                unsigned char *g,
+                                unsigned char *b,
+-                               unsigned char startR = 1,
+-                               unsigned char startG = 0,
+-                               unsigned char startB = 0 ) const;
++                               unsigned char r2 = 1,
++                               unsigned char g2 = 0,
++                               unsigned char b2 = 0 ) const
++    {
++        unsigned long key = MakeKey(r2, g2, b2);
++
++        while ( find(key) != end() )
++        {
++            // color already used
++            r2++;
++            if ( r2 >= 255 )
++            {
++                r2 = 0;
++                g2++;
++                if ( g2 >= 255 )
++                {
++                    g2 = 0;
++                    b2++;
++                    if ( b2 >= 255 )
++                    {
++                        return false;
++                    }
++                }
++            }
++
++            key = MakeKey(r2, g2, b2);
++        }
++
++        if ( r )
++            *r = r2;
++        if ( g )
++            *g = g2;
++        if ( b )
++            *b = b2;
++
++        return true;
++    }
+ };
+ 
+ //-----------------------------------------------------------------------------
+diff --git a/src/common/image.cpp b/src/common/image.cpp
+index 096f823f0c1..880c1c4ea74 100644
+--- a/src/common/image.cpp
++++ b/src/common/image.cpp
+@@ -3381,49 +3381,6 @@ wxImageHandler::GetResolutionFromOptions(const wxImage& image, int *x, int *y)
+ // image histogram stuff
+ // ----------------------------------------------------------------------------
+ 
+-bool
+-wxImageHistogram::FindFirstUnusedColour(unsigned char *r,
+-                                        unsigned char *g,
+-                                        unsigned char *b,
+-                                        unsigned char r2,
+-                                        unsigned char g2,
+-                                        unsigned char b2) const
+-{
+-    unsigned long key = MakeKey(r2, g2, b2);
+-
+-    while ( find(key) != end() )
+-    {
+-        // color already used
+-        r2++;
+-        if ( r2 >= 255 )
+-        {
+-            r2 = 0;
+-            g2++;
+-            if ( g2 >= 255 )
+-            {
+-                g2 = 0;
+-                b2++;
+-                if ( b2 >= 255 )
+-                {
+-                    wxLogError(_("No unused colour in image.") );
+-                    return false;
+-                }
+-            }
+-        }
+-
+-        key = MakeKey(r2, g2, b2);
+-    }
+-
+-    if ( r )
+-        *r = r2;
+-    if ( g )
+-        *g = g2;
+-    if ( b )
+-        *b = b2;
+-
+-    return true;
+-}
+-
+ bool
+ wxImage::FindFirstUnusedColour(unsigned char *r,
+                                unsigned char *g,

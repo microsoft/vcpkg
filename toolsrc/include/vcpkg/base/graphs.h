@@ -1,11 +1,11 @@
 #pragma once
 
+#include <vcpkg/base/checks.h>
+#include <vcpkg/base/system.print.h>
+
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-#include <vcpkg/base/checks.h>
-#include <vcpkg/base/system.print.h>
 
 namespace vcpkg::Graphs
 {
@@ -34,7 +34,7 @@ namespace vcpkg::Graphs
         virtual int random(int max_exclusive) = 0;
 
     protected:
-        ~Randomizer() {}
+        ~Randomizer() { }
     };
 
     namespace details

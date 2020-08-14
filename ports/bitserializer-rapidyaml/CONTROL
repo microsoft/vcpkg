@@ -1,6 +1,5 @@
 Source: bitserializer-rapidyaml
-Version: 0.9
-Build-Depends: bitserializer, ryml
-Description: C++ 17 library for serialization, module for support YAML (implementation based on the RapidYaml library)
-Homepage: https://bitbucket.org/Pavel_Kisliak/bitserializer
+Version: alias
+Build-Depends: bitserializer[rapidyaml-archive]
+Description: Deprecated alias for bitserializer-rapidyaml
 Supports: !(arm|arm64|osx)

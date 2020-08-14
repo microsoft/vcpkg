@@ -15,24 +15,11 @@ Then, uploads the logs from any unexpected failures.
 .PARAMETER logDir
 Directory of xml test logs to analyze.
 
-.PARAMETER failurelogDir
-Path to the failure logs that need to be published to azure for inspection.
-
-.PARAMETER outputDir
-Where to write out the results of the analysis.
-
 .PARAMETER allResults
 Include tests that have no change from the baseline in the output.
 
-.PARAMETER errorOnRegression
-Output an error on test regressions.
-This will give a clean message in the build pipeline.
-
-.PARAMETER noTable
-Don't create or upload the markdown table of results
-
-.PARAMETER triplets
-A list of triplets to analyze; defaults to all triplets.
+.PARAMETER triplet
+The triplet to analyze.
 
 .PARAMETER baselineFile
 The path to the ci.baseline.txt file in the vcpkg repository.
@@ -41,14 +28,9 @@ The path to the ci.baseline.txt file in the vcpkg repository.
 Param(
     [Parameter(Mandatory = $true)]
     [string]$logDir,
-    [Parameter(Mandatory = $true)]
-    [string]$failurelogDir,
-    [Parameter(Mandatory = $true)]
-    [string]$outputDir,
     [switch]$allResults,
-    [switch]$errorOnRegression,
-    [switch]$noTable,
-    [string[]]$triplets = @(),
+    [Parameter(Mandatory = $true)]
+    [string]$triplet,
     [Parameter(Mandatory = $true)]
     [string]$baselineFile
 )
@@ -59,25 +41,6 @@ if ( -not (Test-Path $logDir) ) {
     [System.Console]::Error.WriteLine("Log directory does not exist: $logDir")
     exit
 }
-if ( -not (Test-Path $outputDir) ) {
-    [System.Console]::Error.WriteLine("output directory does not exist: $outputDir")
-    exit
-}
-
-if ( $triplets.Count -eq 0 ) {
-    $triplets = @(
-        "x64-linux",
-        "x64-osx",
-        "arm-uwp",
-        "arm64-windows",
-        "x64-osx",
-        "x64-uwp",
-        "x64-windows-static",
-        "x64-windows",
-        "x86-windows"
-    )
-}
-
 
 <#
 .SYNOPSIS
@@ -402,260 +365,6 @@ function combine_results {
 
 <#
 .SYNOPSIS
-Takes the combined results object and writes it to an xml file.
-
-.DESCRIPTION
-write_xunit_results takes the results object from combine_results, and writes the
-results XML file to the correct location for the CI system to pick it up.
-
-.PARAMETER combined_results
-The results object from combine_results.
-#>
-function write_xunit_results {
-    [CmdletBinding()]
-    Param(
-        $combined_results
-    )
-    $allTests = $combined_results.allTests
-    $triplet = $combined_results.collectionName
-
-    $filePath = "$outputDir\$triplet.xml"
-    if (Test-Path $filePath) {
-        Write-Verbose "removing old file $filepath"
-        rm $filePath
-    }
-    Write-Verbose "output filename: $filepath"
-
-    $xmlWriter = New-Object System.Xml.XmlTextWriter($filePath, $Null)
-    $xmlWriter.Formatting = "Indented"
-    $xmlWriter.IndentChar = "`t"
-
-    $xmlWriter.WriteStartDocument()
-    $xmlWriter.WriteStartElement("assemblies")
-    $xmlWriter.WriteStartElement("assembly")
-    $xmlWriter.WriteAttributeString("name", $combined_results.assemblyName)
-    $xmlWriter.WriteAttributeString("run-date", $combined_results.assemblyStartDate)
-    $xmlWriter.WriteAttributeString("run-time", $combined_results.assemblyStartTime)
-    $xmlWriter.WriteAttributeString("time", $combined_results.assemblyTime)
-
-    $xmlWriter.WriteStartElement("collection")
-    $xmlWriter.WriteAttributeString("name", $triplet)
-    $xmlWriter.WriteAttributeString("time", $combined_results.collectionTime)
-
-    foreach ($testName in $allTests.Keys) {
-        $test = $allTests[$testName]
-
-        $xmlWriter.WriteStartElement("test")
-
-        $fullTestName = "$($testName):$triplet"
-        $xmlWriter.WriteAttributeString("name", $fullTestName)
-        $xmlWriter.WriteAttributeString("method", $fullTestName)
-        $xmlWriter.WriteAttributeString("time", $test.time)
-        $xmlWriter.WriteAttributeString("result", $test.result)
-
-        switch ($test.result) {
-            "Pass" { } # Do nothing
-            "Fail" {
-                $xmlWriter.WriteStartElement("failure")
-                $xmlWriter.WriteStartElement("message")
-                $xmlWriter.WriteCData($test.message)
-                $xmlWriter.WriteEndElement() #message
-                $xmlWriter.WriteEndElement() #failure
-            }
-            "Skip" {
-                $xmlWriter.WriteStartElement("reason")
-                $xmlWriter.WriteCData($test.message)
-                $xmlWriter.WriteEndElement() #reason
-            }
-        }
-
-        $xmlWriter.WriteEndElement() # test
-    }
-
-
-    $xmlWriter.WriteEndElement() # collection
-    $xmlWriter.WriteEndElement() # assembly
-    $xmlWriter.WriteEndElement() # assemblies
-    $xmlWriter.WriteEndDocument()
-    $xmlWriter.Flush()
-    $xmlWriter.Close()
-}
-
-<#
-.SYNOPSIS
-Saves the failure logs, and prints information to the screen for CI.
-
-.DESCRIPTION
-save_failure_logs takes the combined_results object, saves the failure
-logs to the correct location for the CI to pick them up, and writes pretty
-information to the screen for the CI logs, so that one knows what's wrong.
-
-.PARAMETER combined_results
-The results object from combine_results.
-#>
-function save_failure_logs {
-    [CmdletBinding()]
-    Param(
-        $combined_results
-    )
-    $triplet = $combined_results.collectionName
-    $allTests = $combined_results.allTests
-
-    # abi_tags of missing results (if any exist)
-    $missing_results = @()
-
-    foreach ($testName in $allTests.Keys) {
-        $test = $allTests[$testName]
-        if ($test.result -eq "Fail") {
-            $path_to_failure_Logs = Join-Path "$outputDir" "failureLogs"
-            if ( -not (Test-Path $path_to_failure_Logs)) {
-                mkdir $path_to_failure_Logs | Out-Null
-            }
-            $path_to_triplet_Logs = Join-Path $path_to_failure_Logs "$triplet"
-            if ( -not (Test-Path $path_to_triplet_Logs)) {
-                mkdir $path_to_triplet_Logs | Out-Null
-            }
-
-            $abi_tag = $test.abi_tag
-            $sourceDirectory = Join-Path "$failurelogDir" "$($abi_tag.substring(0,2))"
-            $sourceFilename = Join-Path $sourceDirectory "$abi_tag.zip"
-            Write-Verbose "searching for $sourceFilename"
-
-            if ( Test-Path $sourceFilename) {
-                Write-Verbose "found failure log file"
-
-                Write-Verbose "Uncompressing $sourceFilename to $outputDir\failureLogs\$triplet\"
-                Write-Host "Uncompressing $sourceFilename to $outputDir\failureLogs\$triplet\"
-
-                $destination = Join-Path (Join-Path "$outputDir" "failureLogs") "$triplet"
-
-                Expand-Archive -Path $sourceFilename -Destination $destination -Force
-            }
-            elseif ($test.currentState -eq "Pass") {
-                # The port is building, but is marked as expected to fail.  There are no failure logs.
-                # Write a log with instructions how to fix it.
-                Write-Verbose "The port is building but marked as expected to fail, adding readme.txt with fixit instructions"
-
-                $out_filename = Join-Path (Join-Path (Join-Path (Join-Path "$outputDir" "failureLogs") "$triplet") "$($test.name)") "readme.txt"
-
-                $message = "Congradulations! The port $($test.name) builds for $triplet!`n"
-                $message += "For the CI tests to recognize this, please update ci.baseline.txt in your PR.`n"
-                $message += "Remove the line that looks like this:`n"
-                $message += " $($test.name):$triplet=fail`n"
-                $message | Out-File $out_filename -Encoding ascii
-            }
-            else {
-                $missing_results += $test.abi_tag
-                Write-Verbose "Missing failure logs for $($test.name)"
-                Join-Path (Join-Path (Join-Path "$outputDir" "failureLogs") "$triplet" ) "$($test.name)" | % { mkdir $_ } | Out-Null
-            }
-
-
-
-            if ((Convert-Path "$outputDir\failureLogs\$triplet\$($test.name)" | Get-ChildItem).count -eq 0) {
-                Write-Verbose "The logs are empty, adding readme.txt"
-
-                $readme_path = Join-Path (Join-Path (Join-Path (Join-Path "$outputDir" "failureLogs") "$triplet") "$($test.name)") "readme.txt"
-
-                $message = "There are no build logs for $($test.name) build.`n"
-                $message += "This is usually because the build failed early and outside of a task that is logged.`n"
-                $message += "See the console output logs from vcpkg for more information on the failure.`n"
-                $message += "If the console output of the $($test.name) is missing you can trigger a rebuild`n"
-                $message += "in the test system by making any whitespace change to one of the files under`n"
-                $message += "the ports/$($test.name) directory or by asking a member of the vcpkg team to remove the`n"
-                $message += "tombstone for abi tag $abi_tag`n"
-                $message | Out-File $readme_path -Encoding ascii
-            }
-        }
-    }
-
-    if ($missing_results.count -ne 0) {
-        $missing_tag_filename = Join-Path (Join-Path (Join-Path "$outputDir" "failureLogs") "$triplet") "missing_abi_tags.txt"
-        $missing_results | Out-File -FilePath $missing_tag_filename -Encoding ascii
-    }
-    Write-Verbose "$triplet logs saved: $(Get-ChildItem $outputDir\failureLogs\$triplet\ -ErrorAction Ignore)"
-
-}
-
-<#
-.SYNOPSIS
-Writes a pretty summary table to the CI log.
-
-.DESCRIPTION
-Takes a hashtable which maps triplets to objects returned by the combine_results
-cmdlet, and a list of missing triplets, and prints a really pretty summary table
-to the CI logs.
-
-.PARAMETER complete_results
-A hashtable which maps triplets to combine_results objects.
-
-.PARAMETER missing_triplets
-A list of missing triplets.
-#>
-function write_summary_table {
-    [CmdletBinding()]
-    Param(
-        $complete_results,
-        $missing_triplets
-    )
-
-    $table = ""
-
-    foreach ($triplet in $complete_results.Keys) {
-        $triplet_results = $complete_results[$triplet]
-
-        if ($triplet_results.allTests.count -eq 0) {
-            $table += "$triplet CI build test results are clean`n`n"
-        }
-        else {
-            $portWidth = $triplet.length
-            #calculate the width of the first column
-            foreach ($testName in $triplet_results.allTests.Keys) {
-                $test = $triplet_results.allTests[$testName]
-                if ($portWidth -lt $test.name.length) {
-                    $portWidth = $test.name.length
-                }
-            }
-
-            # the header
-            $table += "|{0,-$portWidth}|result|features|notes`n" -f $triplet
-            $table += "|{0}|----|--------|-----`n" -f ("-" * $portWidth)
-
-            # add each port results
-            foreach ($testName in $triplet_results.allTests.Keys | Sort-Object) {
-                $test = $triplet_results.allTests[$testName]
-                $notes = ""
-                if ($test.result -eq 'Fail') {
-                    $notes = "**Regression**"
-                }
-                elseif ($test.result -eq 'Skip') {
-                    if ($test.currentResult -eq 'Fail') {
-                        $notes = "Previously skipped, not a regression"
-                    }
-                    else {
-                        $notes = "Missing port dependency"
-                    }
-                }
-                $notes = $test.message
-                $table += "|{0,-$portWidth}|{1,-4}|{2}|{3}`n" -f $test.name, $test.currentResult, $test.features, $notes
-            }
-            $table += "`n"
-        }
-        if ($triplet_results.ignored.Count -ne 0) {
-            $table += "The following build failures were ignored: $($triplet_results.ignored)`n"
-        }
-    }
-
-    # Add list of missing triplets to the table
-    foreach ($triplet in $missing_triplets.Keys) {
-        $table += "$triplet results are inconclusive because it is missing logs from test run`n`n"
-    }
-
-    $table
-}
-
-<#
-.SYNOPSIS
 Writes short errors to the CI logs.
 
 .DESCRIPTION
@@ -705,74 +414,27 @@ function write_errors_for_summary {
 
 
 $complete_results = @{ }
-$missing_triplets = @{ }
-foreach ( $triplet in $triplets) {
-    Write-Verbose "looking for $triplet logs"
+Write-Verbose "looking for $triplet logs"
 
-    # The standard name for logs is:
-    #   <triplet>.xml
-    # for example:
-    #   x64-linux.xml
+# The standard name for logs is:
+#   <triplet>.xml
+# for example:
+#   x64-linux.xml
 
-    $current_test_hash = build_test_results( Convert-Path "$logDir\$($triplet).xml" )
-    $baseline_results = build_baseline_results -baselineFile $baselineFile -triplet $triplet
+$current_test_hash = build_test_results( Convert-Path "$logDir\$($triplet).xml" )
+$baseline_results = build_baseline_results -baselineFile $baselineFile -triplet $triplet
 
-    if ($current_test_hash -eq $null) {
-        [System.Console]::Error.WriteLine("Missing $triplet test results in current test run")
-        $missing_triplets[$triplet] = "test"
-    }
-    else {
-        Write-Verbose "combining results..."
-        $complete_results[$triplet] = combine_results -baseline $baseline_results -current $current_test_hash
-    }
-}
-
-Write-Verbose "done analizing results"
-
-# If there is only one triplet, add the triplet name to the result table file
-if ($triplets.Count -eq 1) {
-    $result_table_name = $triplets[0]
+if ($current_test_hash -eq $null) {
+    [System.Console]::Error.WriteLine("Missing $triplet test results in current test run")
+    $missing_triplets[$triplet] = "test"
 }
 else {
-    $result_table_name = ""
+    Write-Verbose "combining results..."
+    $complete_results[$triplet] = combine_results -baseline $baseline_results -current $current_test_hash
 }
 
-if (-not $noTable) {
-    $table_path = Join-Path "$outputDir" "result_table$result_table_name.md"
-
-    write_summary_table -complete_results $complete_results -missing_triplets $missing_triplets | Out-File -FilePath $table_path -Encoding ascii
-
-    Write-Host ""
-    cat $table_path
-
-    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$result_table_name issue summary;]$table_path"
-}
-
-foreach ( $triplet in $complete_results.Keys) {
-    $combined_results = $complete_results[$triplet]
-    if ( $failurelogDir -ne "") {
-        save_failure_logs -combined_results $combined_results
-    }
-
-    write_xunit_results -combined_results $combined_results
-}
-
+Write-Verbose "done analyzing results"
 
 # emit error last.  Unlike the table output this is going to be seen in the "status" section of the pipeline
 # and needs to be formatted for a single line.
-if ($errorOnRegression) {
-    write_errors_for_summary -complete_results $complete_results
-
-    if ($missing_triplets.Count -ne 0) {
-        $regression_log_directory = Join-Path "$outputDir" "failureLogs"
-        if ( -not (Test-Path $regression_log_directory)) {
-            mkdir $regression_log_directory | Out-Null
-        }
-        $file_path = Join-Path $regression_log_directory "missing_test_results.txt"
-        $message = "Test logs are missing for the following triplets: $($hash.Keys | %{"$($_)($($hash[$_]))"})`n"
-        $message += "Without this information the we are unable to determine if the build has regressions. `n"
-        $message += "Missing test logs are sometimes the result of failures in the pipeline infrastructure. `n"
-        $message += "If you beleave this is the case please alert a member of the vcpkg team to investigate. `n"
-        $message | Out-File $file_path -Encoding ascii
-    }
-}
+write_errors_for_summary -complete_results $complete_results

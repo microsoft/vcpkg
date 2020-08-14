@@ -1,17 +1,14 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.2.1/freeglut-3.2.1.tar.gz"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO freeglut/freeglut
+    REF 3.2.1
     FILENAME "freeglut-3.2.1.tar.gz"
     SHA512 aced4bbcd36269ce6f4ee1982e0f9e3fffbf18c94f785d3215ac9f4809b992e166c7ada496ed6174e13d77c0f7ef3ca4c57d8a282e96cbbe6ff086339ade3b08
-)
-
-vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
-  PATCHES
-    use_targets_to_export_x11_dependency.patch
-    macOS_Xquartz.patch
-    gcc10.patch
-    fix-debug-macro.patch
+    PATCHES 
+        use_targets_to_export_x11_dependency.patch
+        macOS_Xquartz.patch
+        gcc10.patch
+        fix-debug-macro.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

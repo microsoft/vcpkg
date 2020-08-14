@@ -10,7 +10,18 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
 
     # If necessary, move the CMake config files
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake")
-        vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${CMAKE_PACKAGE_NAME}" TARGET_PATH "share/${CMAKE_PACKAGE_NAME}")
+        # Some ignition libraries install library subcomponents, that are effectively additional cmake packages
+        # with name ${CMAKE_PACKAGE_NAME}-${COMPONENT_NAME}, so it is needed to call vcpkg_fixup_cmake_targets for them as well
+        file(GLOB COMPONENTS_CMAKE_PACKAGE_NAMES
+             LIST_DIRECTORIES TRUE
+             RELATIVE "${CURRENT_PACKAGES_DIR}/lib/cmake/"
+             "${CURRENT_PACKAGES_DIR}/lib/cmake/*")
+
+        foreach(COMPONENT_CMAKE_PACKAGE_NAME IN LISTS COMPONENTS_CMAKE_PACKAGE_NAMES)
+            vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${COMPONENT_CMAKE_PACKAGE_NAME}"
+                                      TARGET_PATH "share/${COMPONENT_CMAKE_PACKAGE_NAME}"
+                                      DO_NOT_DELETE_PARENT_CONFIG_PATH)
+        endforeach()
 
         file(GLOB_RECURSE CMAKE_RELEASE_FILES
                           "${CURRENT_PACKAGES_DIR}/lib/cmake/${CMAKE_PACKAGE_NAME}/*")
@@ -19,14 +30,18 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
                   "${CURRENT_PACKAGES_DIR}/share/${CMAKE_PACKAGE_NAME}/")
     endif()
     
-    # Remove debug files
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
+    # Remove unused files files
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake
+                        ${CURRENT_PACKAGES_DIR}/debug/include
                         ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
                         ${CURRENT_PACKAGES_DIR}/debug/share)
     
     # Make pkg-config files relocatable
     if(NOT IML_DISABLE_PKGCONFIG_INSTALL)
-        vcpkg_fixup_pkgconfig()
+        if(VCPKG_TARGET_IS_LINUX)
+            set(SYSTEM_LIBRARIES SYSTEM_LIBRARIES pthread)
+        endif()
+        vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
     else()
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
                             ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)

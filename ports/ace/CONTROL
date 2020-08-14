@@ -1,5 +1,5 @@
 Source: ace
-Version: 6.5.9-4
+Version: 6.5.10
 Homepage: https://www.dre.vanderbilt.edu/~schmidt/ACE.html
 Description: The ADAPTIVE Communication Environment
 
@@ -12,3 +12,10 @@ Build-Depends: openssl
 
 Feature: xml
 Description: Enable XML features in ACE
+
+Feature: zlib
+Build-Depends: zlib
+Description: Enable zlib support
+
+Feature: tao
+Description: The ACE ORB

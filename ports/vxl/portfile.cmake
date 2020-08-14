@@ -1,7 +1,5 @@
-include(vcpkg_common_functions)
-
 set(BUILD_CORE_IMAGING OFF)
-if("core_imaging" IN_LIST FEATURES)
+if("core-imaging" IN_LIST FEATURES)
   set(BUILD_CORE_IMAGING ON)
   if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openjpeg.h")
     set(BUILD_CORE_IMAGING OFF)
