@@ -11,45 +11,57 @@ endif()
 
 #Based on https://github.com/winlibs/gettext
 
-set(GETTEXT_VERSION 0.19)
+set(GETTEXT_VERSION 0.21)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz"
     FILENAME "gettext-${GETTEXT_VERSION}.tar.gz"
-    SHA512 a5db035c582ff49d45ee6eab9466b2bef918e413a882019c204a9d8903cb3770ddfecd32c971ea7c7b037c7b69476cf7c56dcabc8b498b94ab99f132516c9922
+    SHA512 bbe590c5dd3580c75bf30ff768da99a88eb8d466ec1ac9eea20be4cab4357ecf72448e6b81b47425e39d50fa6320ba426632914d7898dfebb4f159abc39c31d1
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${GETTEXT_VERSION}
     PATCHES
-        0001-Fix-macro-definitions.patch
+        #0001-Fix-macro-definitions.patch
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
 )
+vcpkg_find_acquire_program(BISON)
+get_filename_component(BISON_PATH ${BISON} DIRECTORY)
+vcpkg_add_to_path(${BISON_PATH})
 
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-    ${CMAKE_CURRENT_LIST_DIR}/config.win32.h
-    ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
-    DESTINATION ${SOURCE_PATH}/gettext-runtime
-)
-file(REMOVE ${SOURCE_PATH}/gettext-runtime/intl/libgnuintl.h ${SOURCE_PATH}/gettext-runtime/config.h)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libgnuintl.win32.h DESTINATION ${SOURCE_PATH}/gettext-runtime/intl)
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/gettext-runtime
-    PREFER_NINJA
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
-)
-
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-gettext TARGET_PATH share/unofficial-gettext)
+if(VCPKG_TARGET_IS_WINDOWS)
+    # This is required. For some reason these do not get correctly identified for release builds. 
+    list(APPEND OPTIONS ac_cv_func_wcslen=yes
+                        ac_cv_func_memmove=yes)
+endif()
+vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should probably be renamed to gettext-runtime instead of only gettext
+                     DETERMINE_BUILD_TRIPLET
+                     USE_WRAPPERS
+                     ADD_BIN_TO_PATH    # So configure can check for working iconv
+                     OPTIONS --enable-relocatable
+                             --enable-c++
+                             --disable-java
+                             ${OPTIONS}
+                    )
+vcpkg_install_make()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gettext/COPYING ${CURRENT_PACKAGES_DIR}/share/gettext/copyright)
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+set(GNU_DLL_PATHS lib/ debug/lib/)
+set(GNU_DLL_NAME GNU.Gettext.dll)
+foreach(DLL_PATH IN LISTS GNU_DLL_PATHS)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/${DLL_PATH}${GNU_DLL_NAME}")
+       file(REMOVE "${CURRENT_PACKAGES_DIR}/${DLL_PATH}${GNU_DLL_NAME}")
+    endif()
+endforeach()
 
 vcpkg_copy_pdbs()
