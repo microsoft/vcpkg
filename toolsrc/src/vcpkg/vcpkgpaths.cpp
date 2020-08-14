@@ -302,6 +302,10 @@ If you wish to silence this error and use classic mode, you can:
                                     Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
                 }
             }
+            helpers["vcpkg_copy_tools"] += helpers["vcpkg_copy_tool_dependencies"];
+            helpers["vcpkg_build_qmake"] += helpers["vcpkg_find_acquire_program"];
+            helpers["vcpkg_configure_gn"] += helpers["vcpkg_find_acquire_program"];
+            helpers["vcpkg_configure_meson"] += helpers["vcpkg_find_acquire_program"];
             return helpers;
         });
     }
