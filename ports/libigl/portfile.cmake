@@ -8,7 +8,9 @@ vcpkg_from_github(
     REF  3cb4894eaf8ea4610467189ca292be349425d44b #2.2.0
     SHA512 339f96e36b6a99ae8301ec2e234e18cecba7b7c42289ed68a26c20b279dce3135405f9b49e292c321fba962d56c083ae61831057bec9a19ad1495e2afa379b8b
     HEAD_REF master
-    PATCHES fix-dependency.patch
+    PATCHES
+        fix-dependency.patch
+        fix-imgui-set-cond.patch
 )
 
 set(LIBIGL_BUILD_STATIC OFF)
