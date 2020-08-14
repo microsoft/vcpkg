@@ -222,7 +222,6 @@
     <ClInclude Include="..\..\include\vcpkg\metrics.h" />
     <ClInclude Include="..\..\include\vcpkg\packagespec.h" />
     <ClInclude Include="..\..\include\vcpkg\paragraphparser.h" />
-    <ClInclude Include="..\..\include\vcpkg\paragraphparseresult.h" />
     <ClInclude Include="..\..\include\vcpkg\paragraphs.h" />
     <ClInclude Include="..\..\include\vcpkg\portfileprovider.h" />
     <ClInclude Include="..\..\include\vcpkg\postbuildlint.h" />
@@ -308,7 +307,6 @@
     <ClCompile Include="..\..\src\vcpkg\platform-expression.cpp" />
     <ClCompile Include="..\..\src\vcpkg\metrics.cpp" />
     <ClCompile Include="..\..\src\vcpkg\packagespec.cpp" />
-    <ClCompile Include="..\..\src\vcpkg\paragraphparseresult.cpp" />
     <ClCompile Include="..\..\src\vcpkg\paragraphs.cpp" />
     <ClCompile Include="..\..\src\vcpkg\portfileprovider.cpp" />
     <ClCompile Include="..\..\src\vcpkg\postbuildlint.buildtype.cpp" />
