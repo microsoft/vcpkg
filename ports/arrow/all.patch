@@ -102,65 +102,105 @@ index bb3eb5608..0b03d37d3 100644
      find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h PATH_SUFFIXES "include")
      find_program(THRIFT_COMPILER thrift PATH_SUFFIXES "bin")
 diff --git a/cpp/cmake_modules/FindZSTD.cmake b/cpp/cmake_modules/FindZSTD.cmake
-index 8e47086e8..d87906a25 100644
+index 84d21d2b5..971a9dec3 100644
 --- a/cpp/cmake_modules/FindZSTD.cmake
 +++ b/cpp/cmake_modules/FindZSTD.cmake
-@@ -19,14 +19,18 @@ if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
-   set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
+@@ -24,11 +24,11 @@ if(ARROW_ZSTD_USE_SHARED)
+   list(APPEND ZSTD_LIB_NAMES
+               "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ else()
+-  if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+-    set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
++  if(MSVC AND CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++    set(ZSTD_MSVC_DEBUG_LIB_SUFFIX d)
+   endif()
+   set(ZSTD_STATIC_LIB_SUFFIX
+-      "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++      "${ZSTD_MSVC_DEBUG_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+   set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
+   set(ZSTD_LIB_NAMES "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}")
  endif()
- 
--set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
-+if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+  set(ZSTD_LIB_NAME_DEBUG_SUFFIX d)
-+endif()
-+
-+set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
- set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
- 
- # First, find via if specified ZTD_ROOT
- if(ZSTD_ROOT)
-   message(STATUS "Using ZSTD_ROOT: ${ZSTD_ROOT}")
-   find_library(ZSTD_LIB
--               NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
-+               NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
-                      "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
-                PATHS ${ZSTD_ROOT}
-                PATH_SUFFIXES ${LIB_PATH_SUFFIXES}
-@@ -39,19 +43,18 @@ if(ZSTD_ROOT)
- 
+@@ -49,8 +49,8 @@ if(ZSTD_ROOT)
+
  else()
    # Second, find via pkg_check_modules
 -  pkg_check_modules(ZSTD_PC libzstd)
 -  if(ZSTD_PC_FOUND)
-+  if(0) # Disabled as incompatible with vcpkg
++  #pkg_check_modules(ZSTD_PC libzstd)
++  if(0) #(ZSTD_PC_FOUND)  # Disabled as sometimes incompatible with vcpkg on Linux and OSX
      set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
- 
+
      list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
--    find_library(ZSTD_LIB zstd
-+    find_library(ZSTD_LIB zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}
-                  PATHS ${ZSTD_PC_LIBRARY_DIRS}
-                  NO_DEFAULT_PATH
-                  PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
-     # Third, check all other CMake paths
-   else()
-     find_library(ZSTD_LIB
--                 NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
-+                 NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
-                        "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
-                  PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
-     find_path(ZSTD_INCLUDE_DIR NAMES zstd.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
-diff --git a/cpp/cmake_modules/SetupCxxFlags.cmake b/cpp/cmake_modules/SetupCxxFlags.cmake
-index 6110a5aa5..3270d74a9 100644
---- a/cpp/cmake_modules/SetupCxxFlags.cmake
-+++ b/cpp/cmake_modules/SetupCxxFlags.cmake
-@@ -163,7 +163,9 @@ macro(arrow_add_werror_if_debug)
-   if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
-     # Treat all compiler warnings as errors
-     if(MSVC)
--      set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
-+      if(MSVC_VERSION VERSION_LESS 1900)
-+        set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} /WX")
-+      endif()
-     else()
-       set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} -Werror")
-     endif()
+diff --git a/cpp/cmake_modules/DefineOptions.cmake b/cpp/cmake_modules/DefineOptions.cmake
+index 3b229846c..da2c6d551 100644
+--- a/cpp/cmake_modules/DefineOptions.cmake
++++ b/cpp/cmake_modules/DefineOptions.cmake
+@@ -297,6 +297,9 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+   define_option(ARROW_PROTOBUF_USE_SHARED
+                 "Rely on Protocol Buffers shared libraries where relevant" ON)
+ 
++  define_option(ARROW_UTF8PROC_USE_SHARED
++                "Rely on utf8proc shared libraries where relevant" ON)
++
+   define_option(ARROW_ZSTD_USE_SHARED "Rely on zstd shared libraries where relevant" ON)
+ 
+   define_option(ARROW_WITH_BACKTRACE "Build with backtrace support" ON)
+diff --git a/cpp/cmake_modules/Findutf8proc.cmake b/cpp/cmake_modules/Findutf8proc.cmake
+index ab9ae9f98..d3063827a 100644
+--- a/cpp/cmake_modules/Findutf8proc.cmake
++++ b/cpp/cmake_modules/Findutf8proc.cmake
+@@ -15,11 +15,28 @@
+ # specific language governing permissions and limitations
+ # under the License.
+ 
++if(ARROW_UTF8PROC_USE_SHARED)
++  set(UTF8PROC_LIB_NAMES)
++  if(CMAKE_IMPORT_LIBRARY_SUFFIX)
++    list(APPEND UTF8PROC_LIB_NAMES
++                "${CMAKE_IMPORT_LIBRARY_PREFIX}utf8proc${CMAKE_IMPORT_LIBRARY_SUFFIX}")
++  endif()
++  list(APPEND UTF8PROC_LIB_NAMES
++              "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}")
++else()
++  if(MSVC AND NOT DEFINED UTF8PROC_MSVC_STATIC_LIB_SUFFIX)
++    set(UTF8PROC_MSVC_STATIC_LIB_SUFFIX "_static")
++  endif()
++  set(UTF8PROC_STATIC_LIB_SUFFIX
++      "${UTF8PROC_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++  set(UTF8PROC_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}utf8proc${UTF8PROC_STATIC_LIB_SUFFIX})
++  set(UTF8PROC_LIB_NAMES "${UTF8PROC_STATIC_LIB_NAME}" "lib${UTF8PROC_STATIC_LIB_NAME}")
++endif()
++
+ if(utf8proc_ROOT)
+   find_library(
+     UTF8PROC_LIB
+-    NAMES utf8proc
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES ${UTF8PROC_LIB_NAMES}
+     PATHS ${utf8proc_ROOT}
+     PATH_SUFFIXES ${LIB_PATH_SUFFIXES}
+     NO_DEFAULT_PATH)
+@@ -28,12 +45,10 @@ if(utf8proc_ROOT)
+             PATHS ${utf8proc_ROOT}
+             NO_DEFAULT_PATH
+             PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+-
+ else()
+   find_library(
+     UTF8PROC_LIB
+-    NAMES utf8proc
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}utf8proc${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES ${UTF8PROC_LIB_NAMES}
+     PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
+   find_path(UTF8PROC_INCLUDE_DIR NAMES utf8proc.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+ endif()
+@@ -47,5 +62,8 @@ if(UTF8PROC_FOUND OR utf8proc_FOUND)
+   set_target_properties(utf8proc::utf8proc
+                         PROPERTIES IMPORTED_LOCATION "${UTF8PROC_LIB}"
+                                    INTERFACE_INCLUDE_DIRECTORIES "${UTF8PROC_INCLUDE_DIR}")
++  if(NOT ARROW_UTF8PROC_USE_SHARED)
++    set_target_properties(utf8proc::utf8proc
++                          PROPERTIES INTERFACE_COMPILER_DEFINITIONS "UTF8PROC_STATIC")
++  endif()
+ endif()
+-

@@ -9,6 +9,12 @@ jobs:
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
+  variables:
+  - name: WORKING_ROOT
+    value: /mnt/vcpkg-ci
+  - name: VCPKG_DOWNLOADS
+    value: /mnt/vcpkg-ci/downloads
+
   steps:
   - bash: df -h
     displayName: 'Report on Disk Space'
@@ -19,17 +25,15 @@ jobs:
     displayName: 'Create /home/agent'
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
-      sudo mkdir /mnt/vcpkg-ci -m=777
-      sudo mkdir /mnt/vcpkg-ci/downloads -m=777
+      sudo mkdir ${{ variables.WORKING_ROOT }} -m=777
+      sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
       exit 0
-    displayName: 'Create /mnt/vcpkg-ci/downloads'
+    displayName: 'Create ${{ variables.VCPKG_DOWNLOADS }}'
   - task: Bash@3
     displayName: 'Build vcpkg'
     inputs:
       filePath: bootstrap-vcpkg.sh
       arguments: "-buildTests"
-    env:
-      VCPKG_DOWNLOADS: '/mnt/vcpkg-ci/downloads'
   - bash: toolsrc/build.rel/vcpkg-test
     displayName: 'Run vcpkg tests'
   - task: PowerShell@2
@@ -37,7 +41,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -ArchivesRoot /archives -WorkingRoot /mnt/vcpkg-ci -ArtifactsDirectory $(System.ArtifactsDirectory)'
+      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -ArchivesRoot /archives -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactsDirectory $(System.ArtifactsDirectory)'
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'

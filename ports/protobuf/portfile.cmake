@@ -12,7 +12,7 @@ vcpkg_from_github(
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(protobuf_BUILD_PROTOC_BINARIES OFF)
-elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME)
+elseif(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_MINGW AND NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP))
     set(protobuf_BUILD_PROTOC_BINARIES OFF)
 else()
     set(protobuf_BUILD_PROTOC_BINARIES ON)
@@ -90,8 +90,7 @@ protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(CMAKE_HOST_WIN32)
     if(protobuf_BUILD_PROTOC_BINARIES)
-        file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        vcpkg_copy_tools(TOOL_NAMES protoc)
     else()
         file(COPY ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
     endif()

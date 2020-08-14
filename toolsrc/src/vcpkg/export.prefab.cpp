@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.print.h>
@@ -11,6 +9,7 @@
 #include <vcpkg/export.h>
 #include <vcpkg/export.prefab.h>
 #include <vcpkg/install.h>
+#include <vcpkg/tools.h>
 
 namespace vcpkg::Export::Prefab
 {

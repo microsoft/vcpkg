@@ -276,7 +276,7 @@ function(vcpkg_fixup_pkgconfig)
     endif()
 
     if(NOT PKGCONFIG)
-        find_program(PKGCONFIG pkg-config PATHS "bin" "/usr/bin" "/usr/local/Cellar/pkg-config/0.29.2_3" REQUIRED)
+        find_program(PKGCONFIG pkg-config PATHS "bin" "/usr/bin" "/usr/local/bin")
         if(NOT PKGCONFIG AND CMAKE_HOST_WIN32)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
             find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
