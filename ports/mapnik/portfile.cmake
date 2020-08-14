@@ -39,7 +39,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     utils WITH_UTILS
 )
 
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
