@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simon987/mupdf
     REF  e8e4cd42074cfe7e399b029ce475eed8b6d46159# simon987/release
-    SHA512 13cfb7e4dbfd392c02cef89cc554810bf01689fe23713bba718fd21ea662d7615f0eeacbd0738b9ac6370428b3e1323f286d1f6cfc23f7e089e710d435e44af5
+    SHA512 ea196078bdc6fff0f83b66938c0713bac5c1b86c5cafbcce04af3c103c532667d312cdb7b16d210d46371894fca1ff88a7cc950148dba6315bb6f0faeb1e55ce
     HEAD_REF release
 )
 
