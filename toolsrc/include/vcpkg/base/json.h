@@ -227,13 +227,13 @@ namespace vcpkg::Json
         Value& operator[](StringView key) noexcept
         {
             auto res = this->get(key);
-            vcpkg::Checks::check_exit(VCPKG_LINE_INFO, res);
+            vcpkg::Checks::check_exit(VCPKG_LINE_INFO, res, "missing key: \"%s\"", key);
             return *res;
         }
         const Value& operator[](StringView key) const noexcept
         {
             auto res = this->get(key);
-            vcpkg::Checks::check_exit(VCPKG_LINE_INFO, res);
+            vcpkg::Checks::check_exit(VCPKG_LINE_INFO, res, "missing key: \"%s\"", key);
             return *res;
         }
 
