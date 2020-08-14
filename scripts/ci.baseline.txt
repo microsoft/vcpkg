@@ -232,6 +232,7 @@ coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
 collada-dom:x64-windows-static=fail
+constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
 coolprop:x64-linux=fail
 coolprop:x64-osx=fail

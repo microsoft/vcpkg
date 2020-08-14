@@ -163,7 +163,7 @@ namespace vcpkg
         else
         {
             // we ignore the manifest root dir if the user requests -manifest
-            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value())
+            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value() && !args.output_json())
             {
                 System::print2(System::Color::warning,
                                "Warning: manifest-root detected at ",

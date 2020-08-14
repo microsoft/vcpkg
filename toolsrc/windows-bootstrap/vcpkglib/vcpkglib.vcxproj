@@ -197,6 +197,7 @@
     <ClInclude Include="..\..\include\vcpkg\commands.fetch.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.format-manifest.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.hash.h" />
+    <ClInclude Include="..\..\include\vcpkg\commands.info.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.integrate.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.interface.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.list.h" />
@@ -284,6 +285,7 @@
     <ClCompile Include="..\..\src\vcpkg\commands.fetch.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.format-manifest.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.hash.cpp" />
+    <ClCompile Include="..\..\src\vcpkg\commands.info.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.integrate.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.list.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.owns.cpp" />
