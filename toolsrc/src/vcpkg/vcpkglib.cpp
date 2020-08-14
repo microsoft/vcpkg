@@ -172,7 +172,6 @@ namespace vcpkg
     {
         std::map<PackageSpec, InstalledPackageView> ipv_map;
 
-        std::vector<InstalledPackageView> installed_packages;
         for (auto&& pgh : status_db)
         {
             if (!pgh->is_installed()) continue;
