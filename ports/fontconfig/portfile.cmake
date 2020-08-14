@@ -9,12 +9,17 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
     PATCHES remove_tests.patch
             build.patch
+            build2.patch
 )
 
 vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(OPT_DBG "LIBS='-L${CURRENT_INSTALLED_DIR}/debug/lib -lintl'")
+    set(OPT_REL "LIBS='-L${CURRENT_INSTALLED_DIR}/lib -lintl'")
+endif()
 vcpkg_configure_make(
     AUTOCONFIG
     COPY_SOURCE
@@ -32,15 +37,17 @@ vcpkg_configure_make(
     OPTIONS_DEBUG
         "--with-expat-lib=${CURRENT_INSTALLED_DIR}/debug/lib"
         "--with-libiconv-lib=${CURRENT_INSTALLED_DIR}/debug/lib"
+        ${OPT_DBG}
     OPTIONS_RELEASE
         "--with-expat-lib=${CURRENT_INSTALLED_DIR}/lib"
         "--with-libiconv-lib=${CURRENT_INSTALLED_DIR}/lib"
+        ${OPT_REL}
     ADD_BIN_TO_PATH
 )
         # [AC_HELP_STRING([--enable-libxml2],
         # [Use libxml2 instead of Expat])])
 
-vcpkg_install_make()
+vcpkg_install_make(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES uuid)
 
