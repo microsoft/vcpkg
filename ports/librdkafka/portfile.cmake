@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF v1.4.4
-    SHA512 478d17f56efd39b312ea774695bc31d22a83aae3a94913fb0dd07e7f04f3f2a6e3f3610dc7501864dbacbcf4a3207603c6e1d5eebac4e5246ee868cde398021d
+    REF 39796d359898c07ea422849e6d7cd34cd13ec466 #v1.5.0
+    SHA512 96bc1e1063d4387483f955315a8523045a308aba5fc40197c805f14ceb12ff5241f98b6937c41ab84094fe39e034e8b11ba66dd4d69a758b6ecb20d56d78cbfe
     HEAD_REF master
     PATCHES
         fix-arm64.patch
@@ -78,6 +76,3 @@ configure_file(${SOURCE_PATH}/LICENSES.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}
 
 # Install usage
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME RdKafka)

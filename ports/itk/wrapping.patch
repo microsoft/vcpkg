@@ -1,0 +1,19 @@
+diff --git a/Wrapping/TypedefMacros.cmake b/Wrapping/TypedefMacros.cmake
+index e6f8d0bf3..6c000dba8 100644
+--- a/Wrapping/TypedefMacros.cmake	
++++ b/Wrapping/TypedefMacros.cmake
+@@ -57,13 +57,12 @@ macro(itk_wrap_module library_name)
+ 
+   # WRAPPER_LIBRARY_DEPENDS. List of names of other wrapper libraries that
+   # define symbols used by this wrapper library.
+   INTERSECTION(WRAPPER_LIBRARY_DEPENDS "${ITK_MODULE_${library_name}_DEPENDS}" "${WRAP_ITK_MODULES}")
+   # set(WRAPPER_LIBRARY_DEPENDS ${ITK_MODULE_${library_name}_DEPENDS})
+ 
+   # WRAPPER_LIBRARY_LINK_LIBRARIES. List of other libraries that should
+   # be linked to the wrapper library.
+-  set(WRAPPER_LIBRARY_LINK_LIBRARIES ${ITK_LIBRARIES} ${${itk-module}_LIBRARIES})
+-
++  set(WRAPPER_LIBRARY_LINK_LIBRARIES ${ITK_LIBRARIES} ${${library_name}_LIBRARIES})
+   # WRAPPER_SUBMODULE_ORDER. List of *.wrap submodules in the source dir
+   # that should be included/wrapped before the rest in the given order.
+   # Just the submodule group name is needed, not the full path or file name.

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
@@ -9,6 +7,7 @@
 
 #include <vcpkg/commands.integrate.h>
 #include <vcpkg/metrics.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/userconfig.h>
 
 namespace vcpkg::Commands::Integrate
