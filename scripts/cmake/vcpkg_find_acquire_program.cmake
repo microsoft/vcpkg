@@ -391,7 +391,7 @@ function(vcpkg_find_acquire_program VAR)
         string(STRIP "${${VAR}_VERSION_OUTPUT}" ${VAR}_VERSION_OUTPUT)
         #TODO: REGEX MATCH case for more complex cases!
         if(NOT ${VAR}_VERSION_OUTPUT VERSION_GREATER_EQUAL VERSION)
-            message(STATUS "Found ${PROGNAME}('${${VAR}_VERSION_OUTPUT}') but at least version ${VERSION} is required! Trying to use internal version if possible!")
+            message(STATUS "Found ${PROGNAME}('${${VAR}_VERSION_OUTPUT}') but at least version ${${VAR}_VERSION} is required! Trying to use internal version if possible!")
             set(${VAR} "${VAR}-NOTFOUND")
             set(${VAR} "${VAR}-NOTFOUND" CACHE INTERNAL "")
         else()
