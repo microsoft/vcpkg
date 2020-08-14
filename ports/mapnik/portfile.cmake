@@ -42,11 +42,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-  OPTIONS   
-      ${FEATURE_OPTIONS}
-    	-DMAPNIK_STATIC_LIB=${MAPNIK_STATIC_LIB}
-    	-DBOOST_PREFIX=${CURRENT_INSTALLED_DIR}/include
-    	-DFREE_TYPE_INCLUDE=${CURRENT_INSTALLED_DIR}/include/freetype2
+    OPTIONS   
+        ${FEATURE_OPTIONS}
+        -DMAPNIK_STATIC_LIB=${MAPNIK_STATIC_LIB}
+        -DBOOST_PREFIX=${CURRENT_INSTALLED_DIR}/include
+        -DFREE_TYPE_INCLUDE=${CURRENT_INSTALLED_DIR}/include/freetype2
 )
 
 vcpkg_install_cmake()
