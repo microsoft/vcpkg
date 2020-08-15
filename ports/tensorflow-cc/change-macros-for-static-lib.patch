@@ -5,7 +5,7 @@ diff --git a/tensorflow/core/platform/macros.h b/tensorflow/core/platform/macros
  #define TF_SCANF_ATTRIBUTE(string_index, first_to_check)
  #endif
  
--// Control visiblity outside .so
+-// Control visibility outside .so
 -#if defined(_WIN32)
 -#ifdef TF_COMPILE_LIBRARY
 -#define TF_EXPORT __declspec(dllexport)
@@ -23,7 +23,7 @@ diff --git a/tensorflow/core/platform/macros.h b/tensorflow/core/platform/macros
 diff --git a/tensorflow/c/c_api.h b/tensorflow/c/c_api.h
 --- a/tensorflow/c/c_api.h
 +++ b/tensorflow/c/c_api.h
-@@ -67,24 +67,7 @@
+@@ -70,24 +70,7 @@
  //   and the API just provides high level controls over the number of
  //   devices of each type.
  
@@ -31,7 +31,7 @@ diff --git a/tensorflow/c/c_api.h b/tensorflow/c/c_api.h
 -// .dylib, .dll).
 -// This duplicates the TF_EXPORT macro definition in
 -// tensorflow/core/platform/macros.h in order to keep this .h file independent
--// of any other includes.$a
+-// of any other includes.
 -#ifdef SWIG
  #define TF_CAPI_EXPORT
 -#else
@@ -78,12 +78,117 @@ diff --git a/tensorflow/c/c_api_experimental.h b/tensorflow/c/c_api_experimental
  #ifdef __cplusplus
  extern "C" {
 
+diff --git a/tensorflow/c/c_api_macros.h b/tensorflow/c/c_api_macros.h
+--- a/tensorflow/c/c_api_macros.h
++++ b/tensorflow/c/c_api_macros.h
+@@ -16,18 +16,6 @@
+ #ifndef TENSORFLOW_C_C_API_MACROS_H_
+ #define TENSORFLOW_C_C_API_MACROS_H_
+ 
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #endif  // TENSORFLOW_C_C_API_MACROS_H_
+
+diff --git a/tensorflow/c/kernels.h b/tensorflow/c/kernels.h
+--- a/tensorflow/c/kernels.h
++++ b/tensorflow/c/kernels.h
+@@ -21,24 +21,7 @@
+ #include "tensorflow/c/tf_datatype.h"
+ #include "tensorflow/c/tf_status.h"
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
 diff --git a/tensorflow/c/ops.h b/tensorflow/c/ops.h
 --- a/tensorflow/c/ops.h
 +++ b/tensorflow/c/ops.h
-@@ -75,19 +75,7 @@
+@@ -76,19 +76,7 @@
+ #include "tensorflow/c/tf_datatype.h"
+ #include "tensorflow/c/tf_status.h"
  
- #include "tensorflow/c/c_api.h"
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/tf_datatype.h b/tensorflow/c/tf_datatype.h
+--- a/tensorflow/c/tf_datatype.h
++++ b/tensorflow/c/tf_datatype.h
+@@ -18,24 +18,7 @@
+ 
+ #include <stddef.h>
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/tf_status.h b/tensorflow/c/tf_status.h
+--- a/tensorflow/c/tf_status.h
++++ b/tensorflow/c/tf_status.h
+@@ -16,19 +16,7 @@
+ #ifndef TENSORFLOW_C_TF_STATUS_H_
+ #define TENSORFLOW_C_TF_STATUS_H_
  
 -#ifdef SWIG
  #define TF_CAPI_EXPORT

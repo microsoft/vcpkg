@@ -8,8 +8,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
-		REF v1.14.0
-		SHA512 ac9ea5a2d1c761aaafbdc335259e29c128127b8d069ec5b206067935180490aa95e93c7e13de57f7f54ce4ba4f34a822face22b4a028f60185edb380e5cd4787
+		REF v2.3.0
+		SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
 		HEAD_REF master
 		PATCHES
 			file-exists.patch # required or otherwise it cant find python lib path on windows
@@ -20,8 +20,8 @@ else()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
-		REF v1.14.0
-		SHA512 ac9ea5a2d1c761aaafbdc335259e29c128127b8d069ec5b206067935180490aa95e93c7e13de57f7f54ce4ba4f34a822face22b4a028f60185edb380e5cd4787
+		REF v2.3.0
+		SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
 		HEAD_REF master
 		PATCHES
 			file-exists.patch # required or otherwise it cant find python lib path on windows
@@ -36,7 +36,16 @@ get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
 set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
 
-vcpkg_find_acquire_program(PYTHON3)
+if(CMAKE_HOST_WIN32)
+	# vcpkg_find_acquire_program not suitable on Windows because it only installs python embedded, but we need full python
+	find_package(Python3 COMPONENTS Interpreter)
+	if(NOT Python3_Interpreter_FOUND)
+		message(FATAL_ERROR "Python3 not found. Please install and add to PATH.")
+	endif()
+	set(PYTHON3 "${Python3_EXECUTABLE}")
+else()
+	vcpkg_find_acquire_program(PYTHON3)
+endif()
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
@@ -51,6 +60,7 @@ endfunction()
 
 if(CMAKE_HOST_WIN32)
 	vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git)
+	vcpkg_add_to_path(PREPEND ${MSYS_ROOT}/usr/bin)
 	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 	set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
 	set(ENV{BAZEL_VC} $ENV{VCInstallDir})
@@ -86,6 +96,8 @@ set(ENV{TF_CONFIGURE_IOS} 0)
 
 file(GLOB SOURCES ${SOURCE_PATH}/*)
 
+vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" LOGNAME prerequesits-${TARGET_TRIPLET})
+
 foreach(BUILD_TYPE dbg rel)
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
 	tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
@@ -97,6 +109,22 @@ foreach(BUILD_TYPE dbg rel)
 		WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 		LOGNAME config-${TARGET_TRIPLET}-${BUILD_TYPE}
 	)
+
+	if(DEFINED ENV{BAZEL_CUSTOM_CACERTS})
+		file(APPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/.bazelrc "startup --host_jvm_args=-Djavax.net.ssl.trustStore='$ENV{BAZEL_CUSTOM_CACERTS}'\n")
+		message(STATUS "Using custom CA certificate store at: $ENV{BAZEL_CUSTOM_CACERTS}")
+		if(DEFINED ENV{BAZEL_CUSTOM_CACERTS_PASSWORD})
+			file(APPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/.bazelrc "startup --host_jvm_args=-Djavax.net.ssl.trustStorePassword='$ENV{BAZEL_CUSTOM_CACERTS_PASSWORD}'\n")
+			message(STATUS "Using supplied custom CA certificate store password.")
+		endif()
+	else()
+		if(DEFINED ENV{HTTPS_PROXY})
+			message(STATUS "You are using HTTPS_PROXY. In case you encounter bazel certificate errors, you might want to set: BAZEL_CUSTOM_CACERTS=/path/to/trust.store (and optionally BAZEL_CUSTOM_CACERTS_PASSWORD), and to enable vcpkg to actually use it: VCPKG_KEEP_ENV_VARS=BAZEL_CUSTOM_CACERTS;BAZEL_CUSTOM_CACERTS_PASSWORD")
+			if(CMAKE_HOST_WIN32)
+				message(STATUS "(For BAZEL_CUSTOM_CACERTS please use forward slashes instead of backslashes on Windows systems.")
+			endif()
+		endif()
+	endif()
 
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
 	if(BUILD_TYPE STREQUAL dbg)
@@ -112,7 +140,7 @@ foreach(BUILD_TYPE dbg rel)
 	if(CMAKE_HOST_WIN32)
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -123,7 +151,7 @@ foreach(BUILD_TYPE dbg rel)
 				set(CRT_OPT "-MT")
 			endif()
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --copt=${CRT_OPT} --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --copt=${CRT_OPT} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -146,13 +174,13 @@ foreach(BUILD_TYPE dbg rel)
 	elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.dylib //tensorflow:install_headers
+				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.dylib //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.dylib //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.dylib //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -175,13 +203,13 @@ foreach(BUILD_TYPE dbg rel)
 	else()
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
+				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
