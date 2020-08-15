@@ -8,7 +8,7 @@ set(VCPKG_OUTPUT_FILE "${CMAKE_BINARY_DIR}/../detected_flags.cmake.${VCPKG_TARGE
 project(detect_compiler_flags LANGUAGES ${VCPKG_LANGUAGES})
 
 if(MSVC)
-    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_MSVC TRUE)\n"
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_MSVC TRUE)\n")
 endif()
 # other:
 # CMAKE_C_STANDARD
