@@ -33,6 +33,7 @@
 ## - NINJA
 ## - NUGET
 ## - SCONS
+## - SWIG
 ## - YASM
 ##
 ## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
@@ -309,7 +310,32 @@ function(vcpkg_find_acquire_program VAR)
     set(PATHS ${DOWNLOADS}/tools/scons)
     set(URL "https://sourceforge.net/projects/scons/files/scons-local-3.0.1.zip/download")
     set(ARCHIVE "scons-local-3.0.1.zip")
-    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727)
+    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727) 
+  elseif(VAR MATCHES "SWIG")
+    set(VERSION 4.0.2)
+    set(PROGNAME swig)
+    if(CMAKE_HOST_WIN32)
+        set(URL "https://sourceforge.net/projects/swig/files/swigwin/swigwin-${VERSION}/swigwin-${VERSION}.zip/download")
+        set(ARCHIVE "swigwin-${VERSION}.zip")
+        set(HASH b8f105f9b9db6acc1f6e3741990915b533cd1bc206eb9645fd6836457fd30789b7229d2e3219d8e35f2390605ade0fbca493ae162ec3b4bc4e428b57155db03d) 
+        set(SUBDIR "swigwin-${VERSION}")
+        set(PATHS "${DOWNLOADS}/tools/swig/${SUBDIR}/${SUBDIR}")
+    else()
+        #Not used
+        set(_vfa_SUPPORTED TRUE)
+        set(URL https://sourceforge.net/projects/swig/files/swig/swig-${VERSION}/swig-${VERSION}.tar.gz/download)
+        set(ARCHIVE "swig-${VERSION}.tar.gz")
+        set(HASH 05e7da70ce6d9a733b96c0bcfa3c1b82765bd859f48c74759bbf4bb1467acb1809caa310cba5e2b3280cd704fca249eaa0624821dffae1d2a75097c7f55d14ed) 
+        set(SUBDIR "swig-${VERSION}")
+        set(PATHS "${DOWNLOADS}/tools/swig/${SUBDIR}")
+    endif()
+    set(SOURCEFORGE_ARGS
+        REPO swig
+        FILENAME "${ARCHIVE}"
+        SHA512 "${HASH}"
+        NO_REMOVE_ONE_LEVEL
+        WORKING_DIRECTORY "${DOWNLOADS}/tools/swig"
+     )
   elseif(VAR MATCHES "DOXYGEN")
     set(PROGNAME doxygen)
     set(DOXYGEN_VERSION 1.8.17)

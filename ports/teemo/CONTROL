@@ -1,5 +1,5 @@
 Source: teemo
-Version: 1.3
-Build-Depends: curl[non-http], cpprestsdk
+Version: 2.1
+Build-Depends: curl[non-http]
 Description: C++ File Download Library, support Multithreading, Breakpoint Transmission, Speed Limit, Real-time Speed. 
 Homepage: https://github.com/winsoft666/teemo

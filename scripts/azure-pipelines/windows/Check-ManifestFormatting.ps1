@@ -3,8 +3,6 @@ Param(
     [Parameter(Mandatory=$True)]
     [string]$Root,
     [Parameter()]
-    [string]$DownloadsDirectory,
-    [Parameter()]
     [switch]$IgnoreErrors # allows one to just format
 )
 
@@ -14,11 +12,6 @@ if (-not (Test-Path "$Root/.vcpkg-root"))
 {
     Write-Error "The vcpkg root was not at $Root"
     throw
-}
-
-if (-not [string]::IsNullOrEmpty($DownloadsDirectory))
-{
-    $env:VCPKG_DOWNLOADS = $DownloadsDirectory
 }
 
 if (-not (Test-Path "$Root/vcpkg.exe"))
@@ -32,6 +25,12 @@ if (-not (Test-Path "$Root/vcpkg.exe"))
 }
 
 & "$Root/vcpkg.exe" 'x-format-manifest' '--all'
+if (-not $?)
+{
+    Write-Error "Failed formatting manifests; are they well-formed?"
+    throw
+}
+
 $changedFiles = & "$PSScriptRoot/Get-ChangedFiles.ps1" -Directory $portsTree
 if (-not $IgnoreErrors -and $null -ne $changedFiles)
 {
