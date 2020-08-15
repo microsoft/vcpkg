@@ -217,7 +217,7 @@ function(vcpkg_find_acquire_program VAR)
       set(ARCHIVE "ninja-mac-${NINJA_VERSION}.zip")
       set(URL "https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-mac.zip")
       set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-osx")
-      set(HASH 0) # TODO
+      set(HASH 619a1924067a0b30fc5f8887f868d3ee5481838d2f0f158d031f7614a2a10b95a73d4a56b658d5d560283ebf809e2e536b968c6c01ff0108075c3f393f5780ba)
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD")
       set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-freebsd")
     else()
