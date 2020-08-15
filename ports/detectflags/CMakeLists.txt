@@ -7,6 +7,9 @@ set(VCPKG_OUTPUT_FILE "${CMAKE_BINARY_DIR}/../detected_flags.cmake.${VCPKG_TARGE
 
 project(detect_compiler_flags LANGUAGES ${VCPKG_LANGUAGES})
 
+if(MSVC)
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_MSVC TRUE)\n"
+endif()
 # other:
 # CMAKE_C_STANDARD
 # CMAKE_CXX_STANDARD
@@ -55,6 +58,10 @@ endforeach()
         # string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${prop}_${config} ${${prop}_${config}})\n")
     # endforeach()
 # endforeach()
+set(ENV_VARIABLES PATH INCLUDE C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH )
+foreach(_env IN LISTS ENV_VARIABLES)
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} $ENV{${_env}})\n")
+endforeach()
 
 file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")
 
