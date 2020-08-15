@@ -390,7 +390,7 @@ function(vcpkg_find_acquire_program VAR)
   macro(do_version_check)
     if(VERSION_CMD)
         _execute_process(
-            COMMAND ${VAR} ${VERSION_CMD}
+            COMMAND ${${VAR}} ${VERSION_CMD}
             WORKING_DIRECTORY ${DOWNLOADS}
             OUTPUT_VARIABLE ${VAR}_VERSION_OUTPUT
         )
