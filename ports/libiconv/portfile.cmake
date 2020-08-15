@@ -1,7 +1,7 @@
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/unofficial-iconv)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-iconv-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-iconv)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/Iconv)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/Iconv)
     return()
 endif()
 
