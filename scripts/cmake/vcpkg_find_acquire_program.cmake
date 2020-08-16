@@ -254,21 +254,10 @@ function(vcpkg_find_acquire_program VAR)
       set(ARCHIVE "meson-0.54.2.zip")
       set(HASH 8d19110bad3e6a223d1d169e833b746b884ece9cd23d2539ec02dccb5cd0c56542414b7afc0f7f2adcec9d957e4120d31f41734397aa0a7ee7f9c29ebdc9eb4c)
     else()
-<<<<<<< HEAD
       set(PROGNAME meson)
       set(BREW_PACKAGE_NAME "meson")
     endif()
   elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
-=======
-      set(SCRIPTNAME meson.py meson)
-    endif()
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.54.2)
-    set(_vfa_SUPPORTED ON) # Just download meson from github. It is very likely that the system package manager has only an outdated version
-    set(URL "https://github.com/mesonbuild/meson/archive/0.54.2.zip")
-    set(ARCHIVE "meson-0.54.2.zip")
-    set(HASH 8d19110bad3e6a223d1d169e833b746b884ece9cd23d2539ec02dccb5cd0c56542414b7afc0f7f2adcec9d957e4120d31f41734397aa0a7ee7f9c29ebdc9eb4c)
-  elseif(VAR MATCHES "FLEX")
->>>>>>> origin/fix_script_details
     if(CMAKE_HOST_WIN32)
       set(SOURCEFORGE_ARGS
         REPO winflexbison
@@ -418,7 +407,6 @@ function(vcpkg_find_acquire_program VAR)
   
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
-<<<<<<< HEAD
       find_program(${VAR} ${PROGNAME} PATHS ${PATHS} NO_DEFAULT_PATH)
       if(NOT ${VAR})
         find_program(${VAR} ${PROGNAME})
@@ -429,10 +417,6 @@ function(vcpkg_find_acquire_program VAR)
             message(FATAL_ERROR "Unable to find ${PROGNAME} with min version of ${${VAR}_VERSION}")
         endif()
       endif()
-=======
-      find_program(${VAR} NAMES ${PROGNAME} PATHS ${PATHS} NO_DEFAULT_PATH)
-      find_program(${VAR} NAMES ${PROGNAME})
->>>>>>> origin/fix_script_details
     else()
       vcpkg_find_acquire_program(${REQUIRED_INTERPRETER})
       find_file(SCRIPT_${VAR} NAMES ${SCRIPTNAME} PATHS ${PATHS} NO_DEFAULT_PATH)
