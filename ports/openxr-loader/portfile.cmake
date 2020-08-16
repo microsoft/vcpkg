@@ -1,14 +1,26 @@
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
-# If you update the version, you MUST regenerate the OpenXR.hpp file and include it in the PR
-# See below where we copy the openxr.hpp from the ports directory to the installation directory
-# The openxr.hpp build process depends on the specific OpenXR version, but it hasn't yet be 
-# incorporated into the official build process, hence this bit of hackery
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK
-    REF 97cfe495bb7a3853266b646d1c79e169387f9c7a
-    SHA512 794c546d4b240e8f502caf0cf64174d7d72801999260bba9579d9ddd5f3815c3dd0b2da006a6e22164284670e603f4348d1ea2ff6e6852554b2ef1039114dee7
+    REF e3a4e41d61544d8e2eba73f00da99b6818ec472b
+    SHA512 26c6b547aa30d89895efcc835dddc3b58ab57f0e450a4ae82655a990a816dd57c70e43267a10da75b1c2bd160189942e443c8e27367d6648417d1c9c134e7694
+    HEAD_REF master
+)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SDK_SOURCE_PATH
+    REPO KhronosGroup/OpenXR-SDK-Source
+    REF 6dee6e228f47857adf5d7673eb90c64f04d33c60
+    SHA512 0c522eef95b4d8bdc8e4f1ca852cd9798ff2bca9ef8511446d9cdf80bc314b0da454ab5c203658bbe43d3e7ff3d757b9427c3f75829b2a022a25041d1a2d2b12
+    HEAD_REF master
+)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH HPP_SOURCE_PATH
+    REPO KhronosGroup/OpenXR-hpp
+    REF 097a7535563fc84bb7648ea9c5a4531a1e909458
+    SHA512 fe953405724e9c4a8218cd269a23317ebc8164330a519eb82de75e832bc05e2c51d24bca24e4ce13724bf275c33b26f6646e25f29eeffe6840ffc552f3351ad0
     HEAD_REF master
 )
 
@@ -39,11 +51,27 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/openxr.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/openxr)
+set(ENV{OPENXR_REPO} ${SDK_SOURCE_PATH})
+
+vcpkg_execute_required_process(
+    COMMAND ${PYTHON3} ${HPP_SOURCE_PATH}/scripts/hpp_genxr.py -registry ${SDK_SOURCE_PATH}/specification/registry/xr.xml -o ${CURRENT_PACKAGES_DIR}/include/openxr openxr.hpp
+    WORKING_DIRECTORY ${HPP_SOURCE_PATH}
+    LOGFILE openxrhpp
+)
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include/openxr
+    PATCHES
+        001-fix-array-decl.patch
+)
+
+# file(COPY ${CMAKE_CURRENT_LIST_DIR}/openxr.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/openxr)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 # No CMake files are contained in /share only docs
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
