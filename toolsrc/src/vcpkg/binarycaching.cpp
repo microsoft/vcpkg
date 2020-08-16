@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/parse.h>
@@ -11,6 +9,7 @@
 #include <vcpkg/binarycaching.private.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/tools.h>
 
 using namespace vcpkg;
 

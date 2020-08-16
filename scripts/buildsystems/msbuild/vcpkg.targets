@@ -91,8 +91,8 @@
   </Target>
 
   <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
-    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;" Importance="High" Condition="'$(VcpkgEnabled)' == 'true'"/>
-    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="High" Condition="'$(VcpkgEnabled)' != 'true'"/>
+    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
+    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
     <Message Text="Vcpkg is unable to link because we cannot decide between Release and Debug libraries. Please define the property VcpkgConfiguration to be 'Release' or 'Debug' (currently '$(VcpkgConfiguration)')."
              Importance="High" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgNormalizedConfiguration)' == ''"/>
   </Target>

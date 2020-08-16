@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3a5cfbc..9a3046e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,10 +52,9 @@ if (has_potentially_evaluated_expression)
+ endif()
+ 
+ if (UNIX)
+-  find_package(PkgConfig)
+-  pkg_check_modules(LIBDE265 libde265)
+-  pkg_check_modules(X265 x265)
+-  pkg_check_modules(AOM aom)
++  find_package(libde265)
++  find_package(x265)
++  find_package(aom)
+ endif()
+ 
+ # Create libheif pkgconfig file
