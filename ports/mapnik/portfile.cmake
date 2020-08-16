@@ -1,13 +1,27 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO mapnik/mapnik
-    REF v3.0.23
-    SHA512 004429defd3047601b63c28bedd57d701ff88cdfb910a9958f4a10a1ac032d4d13316372122aef06eda60f2e4f67600b8842577db455f8c970009a0e86c5c1cf
-    HEAD_REF master
-    PATCHES
-        0001-CMakeFiles.patch 
-        0002-sqlitepixelwidth.patch
-)
+find_program(GIT git)
+
+set(GIT_URL "https://github.com/am2222/mapnik-windows.git")
+set(GIT_REV "5ec01cfa138fd3402e5cbf7d19f6fdb26ee63946")
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT})
+
+
+if(NOT EXISTS "${SOURCE_PATH}/.git")
+	message(STATUS "Cloning and fetching submodules")
+	vcpkg_execute_required_process(
+	  COMMAND ${GIT} clone --recurse-submodules ${GIT_URL} ${SOURCE_PATH}
+	  WORKING_DIRECTORY ${SOURCE_PATH}
+	  LOGNAME clone
+	)
+
+	message(STATUS "Checkout revision ${GIT_REV}")
+	vcpkg_execute_required_process(
+	  COMMAND ${GIT} checkout ${GIT_REV}
+	  WORKING_DIRECTORY ${SOURCE_PATH}
+	  LOGNAME checkout
+	)
+endif()
+
 
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
