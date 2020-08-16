@@ -27,8 +27,6 @@ vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path(${PYTHON2_DIR})
 
-set(BOOST_ROOT ${CURRENT_INSTALLED_DIR})
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(MAPNIK_STATIC_LIB OFF)
 elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
