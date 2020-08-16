@@ -228,7 +228,7 @@ function(vcpkg_find_acquire_program VAR)
       set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-linux")
       set(HASH ffb179ab8ea315167fcc99a8f13286e1363590185b18cf819cc73e09f2a7553790e9dc45fd1ccd0bd1d2dbf543aee3f6c0951cf9ce453a7168ffd2ac873cdd29)
     endif()
-    set(NINJA_VERSION_CMD --version)
+    set(VERSION_CMD --version)
   elseif(VAR MATCHES "NUGET")
     set(PROGNAME nuget)
     set(SUBDIR "5.5.1")
@@ -251,7 +251,7 @@ function(vcpkg_find_acquire_program VAR)
     set(ARCHIVE "meson-${MESON_VERSION}.tar.gz")
     set(HASH 172b4de8c7474d709f172431b89bf2b2b1c2c38bc842039cccf6be075a45bd3509a1dab8512bc5b2ee025d65d8050d2f717dd15c1f9be17fca3b2e7da0d3e889)
     set(_vfa_SUPPORTED ON)
-    set(MESON_VERSION_CMD --version)
+    set(VERSION_CMD --version)
   elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
     if(CMAKE_HOST_WIN32)
       set(SOURCEFORGE_ARGS
@@ -383,9 +383,9 @@ function(vcpkg_find_acquire_program VAR)
   endif()
 
   macro(do_version_check)
-    if(${VAR}_VERSION_CMD)
+    if(VERSION_CMD)
         _execute_process(
-            COMMAND ${${VAR}} ${${VAR}_VERSION_CMD}
+            COMMAND ${${VAR}} ${VERSION_CMD}
             WORKING_DIRECTORY ${DOWNLOADS}
             OUTPUT_VARIABLE ${VAR}_VERSION_OUTPUT
         )

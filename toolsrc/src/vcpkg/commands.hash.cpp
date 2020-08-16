@@ -1,4 +1,5 @@
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.hash.h>
 

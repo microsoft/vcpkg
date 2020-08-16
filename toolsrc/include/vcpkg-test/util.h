@@ -64,6 +64,12 @@ namespace vcpkg::Test
                                                                     const char* depends = "",
                                                                     const char* triplet = "x86-windows");
 
+    extern const Triplet X86_WINDOWS;
+    extern const Triplet X64_WINDOWS;
+    extern const Triplet X86_UWP;
+    extern const Triplet ARM_UWP;
+    extern const Triplet X64_ANDROID;
+
     /// <summary>
     /// Map of source control files by their package name.
     /// </summary>
@@ -71,7 +77,7 @@ namespace vcpkg::Test
     {
         std::unordered_map<std::string, SourceControlFileLocation> map;
         Triplet triplet;
-        PackageSpecMap(Triplet t = Triplet::X86_WINDOWS) noexcept : triplet(t) { }
+        PackageSpecMap(Triplet t = X86_WINDOWS) noexcept : triplet(t) { }
 
         PackageSpec emplace(const char* name,
                             const char* depends = "",
