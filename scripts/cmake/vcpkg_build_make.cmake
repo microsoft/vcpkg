@@ -126,7 +126,7 @@ function(vcpkg_build_make)
 
             if(LINK_ENV_${_VAR_SUFFIX})
                 _vcpkg_backup_env_variables(_LINK_)
-                set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
+                set(ENV{_LINK_} "$ENV{_LINK_} ${LINK_ENV_${_VAR_SUFFIX}}")
             endif()
 
             if(_bc_ADD_BIN_TO_PATH)
