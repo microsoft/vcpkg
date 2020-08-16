@@ -172,7 +172,7 @@ function(generate_cross_file) #https://mesonbuild.com/Cross-compilation.html
     if(NOT BUILD_CPU_FAM STREQUAL HOST_CPU_FAM)
         set(_file "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}.log")
         set(VCPKG_MESON_CROSS_FILE "${_file}" PARENT_SCOPE)
-        file(WRITE "${_file}" "${NATIVE}")
+        file(WRITE "${_file}" "${CROSS}")
     endif()
 endfunction()
 
