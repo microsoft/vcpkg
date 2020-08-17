@@ -6,10 +6,6 @@
 
 namespace vcpkg::Commands
 {
-    struct BasicCommand;
-    struct PathsCommand;
-    struct TripletCommand;
-
     template<class T>
     struct PackageNameAndFunction
     {
