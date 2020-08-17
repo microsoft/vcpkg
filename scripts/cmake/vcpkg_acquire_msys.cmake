@@ -36,7 +36,8 @@
 ## * [libvpx](https://github.com/Microsoft/vcpkg/blob/master/ports/libvpx/portfile.cmake)
 
 function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
-  set(TOOLPATH ${DOWNLOADS}/tools/msys2)
+  set(TIMESTAMP 20200812)
+  set(TOOLPATH ${DOWNLOADS}/tools/msys2-${TIMESTAMP})
   cmake_parse_arguments(_am "" "" "PACKAGES" ${ARGN})
 
   if(NOT CMAKE_HOST_WIN32)
@@ -81,6 +82,19 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         SHA512 ${HASH}
     )
 
+    # download the new keyring, without it new packages and package updates
+    # might not install
+    vcpkg_download_distfile(KEYRING_PATH
+        URLS http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+        FILENAME msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+        SHA512 a5023fd17ccf6364bc6e27c5e63aea25f1fc264a5247cbae4008864c828c38c3e0b4de09ded650e28d2e24e319b5fcf7a9c0da0fa3a8ac81679470fc6bd120c9
+    )
+    vcpkg_download_distfile(KEYRING_SIG_PATH
+        URLS http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
+        FILENAME msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
+        SHA512 c326fefd13f58339afe0d0dc78306aa6ab27cafa8c4d792c2d34aa81fdd1f759d490990ab79daa9664a03a6dfa14ffd2b2ad828bf19a883410112d01f5ed6c4c
+    )
+
     file(REMOVE_RECURSE ${TOOLPATH}/${TOOLSUBPATH})
     file(MAKE_DIRECTORY ${TOOLPATH})
     _execute_process(
@@ -89,6 +103,19 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     )
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    # install the new keyring
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --verify ${KEYRING_SIG_PATH}"
+      WORKING_DIRECTORY ${TOOLPATH}
+      RESULT_VARIABLE _vam_error_code
+    )
+    if(_vam_error_code)
+      message(FATAL_ERROR "Cannot verify MSYS2 keyring.")
+    endif()
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -U ${KEYRING_PATH} --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}
     )
     # we have to kill all GnuPG daemons otherwise bash would potentially not be
@@ -119,7 +146,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   endif()
 
   if(_am_PACKAGES)
-    message(STATUS "Acquiring MSYS Packages...")
+    message(STATUS "Acquiring MSYS Packages from ${TOOLPATH}...")
     string(REPLACE ";" " " _am_PACKAGES "${_am_PACKAGES}")
 
     set(_ENV_ORIGINAL $ENV{PATH})

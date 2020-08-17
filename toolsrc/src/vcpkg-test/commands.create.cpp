@@ -2,7 +2,7 @@
 
 #include <vcpkg/base/files.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.create.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 

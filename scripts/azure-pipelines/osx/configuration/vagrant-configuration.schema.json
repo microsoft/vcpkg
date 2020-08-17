@@ -34,13 +34,13 @@
       "required": [
         "username",
         "access_key",
-        "url",
+        "urn",
         "share"
       ],
       "properties": {
         "username": { "type": "string" },
         "access_key": { "type": "string" },
-        "url": { "type": "string" },
+        "urn": { "type": "string" },
         "share": { "type": "string" }
       }
     }

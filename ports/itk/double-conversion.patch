@@ -1,0 +1,16 @@
+diff --git a/Modules/ThirdParty/DoubleConversion/CMakeLists.txt b/Modules/ThirdParty/DoubleConversion/CMakeLists.txt
+index 16c611fd3..13978724c 100644
+--- a/Modules/ThirdParty/DoubleConversion/CMakeLists.txt	
++++ b/Modules/ThirdParty/DoubleConversion/CMakeLists.txt
+@@ -9,7 +9,10 @@ mark_as_advanced(ITK_USE_SYSTEM_DOUBLECONVERSION)
+ if(ITK_USE_SYSTEM_DOUBLECONVERSION)
+   find_package(double-conversion REQUIRED)
+   get_target_property(ITKDoubleConversion_INCLUDE_DIRS double-conversion::double-conversion INTERFACE_INCLUDE_DIRECTORIES)
+-  get_target_property(ITKDoubleConversion_LIBRARIES double-conversion::double-conversion LOCATION)
++  get_target_property(ITKDoubleConversion_LIBRARY_RELEASE double-conversion::double-conversion LOCATION_RELEASE)
++  get_target_property(ITKDoubleConversion_LIBRARY_DEBUG double-conversion::double-conversion LOCATION_DEBUG)
++  include(SelectLibraryConfigurations)
++  select_library_configurations(ITKDoubleConversion)
+ else()
+   set(ITKDoubleConversion_INCLUDE_DIRS
+     ${ITKDoubleConversion_SOURCE_DIR}/src

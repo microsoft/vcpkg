@@ -19,7 +19,7 @@ The username for the archives share.
 .PARAMETER ArchivesAccessKey
 The access key for the archives share.
 
-.PARAMETER ArchivesUri
+.PARAMETER ArchivesUrn
 The URN of the archives share; looks like `foo.windows.core.net`.
 
 .PARAMETER ArchivesShare
@@ -105,7 +105,7 @@ $configuration = @{
     archives = @{
         username = $ArchivesUsername;
         access_key = $ArchivesAccessKey;
-        url = $ArchivesUri;
+        urn = $ArchivesUrn;
         share = $ArchivesShare;
     };
 }

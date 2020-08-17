@@ -1,8 +1,6 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.search.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -175,5 +173,10 @@ namespace vcpkg::Commands::Search
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void SearchCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Search::perform_and_exit(args, paths);
     }
 }

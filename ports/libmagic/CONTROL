@@ -1,4 +1,5 @@
 Source: libmagic
-Version: 5.37-1
+Version: 5.37
+Port-Version: 2
 Homepage: https://github.com/file/file
 Description: This library can be used to classify files according to magic number tests.

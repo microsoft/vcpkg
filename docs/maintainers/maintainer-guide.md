@@ -208,6 +208,34 @@ Note that if a library generates CMake integration files (`foo-config.cmake`), r
 
 Finally, DLL files on Windows should never be renamed post-build because it breaks the generated LIBs.
 
+## Code format
+
+### Vcpkg internal code
+
+We require the c/c++ code inside vcpkg to follow the clang-format, if you change them. Please perform the following steps after modification:
+
+- Use Visual Studio:
+1. Configure your [clang-format tools](https://devblogs.microsoft.com/cppblog/clangformat-support-in-visual-studio-2017-15-7-preview-1/).
+2. Open the modified file.
+3. Use shortcut keys Ctrl+K, Ctrl+D to format the current file.
+
+- Use tools:
+1. Install [llvm clang-format](https://releases.llvm.org/download.html#10.0.0)
+2. Run command:
+```cmd
+> LLVM_PATH/bin/clang-format.exe -style=file -i changed_file.cpp
+```
+
+### Manifest
+
+We require that the manifest file needs to be formatted, perform the following steps to solve this issue:
+
+1. Format all changed manifest files.
+```cmd
+> vcpkg x-format-manifest --all
+```
+2. Commit changes to your branch.
+
 ## Useful implementation notes
 
 ### Portfiles are run in Script Mode
