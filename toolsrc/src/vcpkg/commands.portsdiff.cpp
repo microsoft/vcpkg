@@ -6,6 +6,7 @@
 #include <vcpkg/commands.portsdiff.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::PortsDiff
