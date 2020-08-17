@@ -233,7 +233,7 @@ function(vcpkg_configure_make)
                                           gcc # gcc is required for windres to work
                                           )
         list(APPEND MSYS_REQUIRE_PACKAGES make)
-        if (_csc_AUTOCONFIG)
+        if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
             list(APPEND MSYS_REQUIRE_PACKAGES autoconf 
                                               autoconf-archive
                                               automake
