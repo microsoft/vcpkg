@@ -25,8 +25,9 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    INVERTED_FEATURES
-    non-audio USE_AUDIO
+    FEATURES
+        hidpi SUPPORT_HIGH_DPI
+        use-audio USE_AUDIO
 )
 
 vcpkg_configure_cmake(
@@ -37,8 +38,8 @@ vcpkg_configure_cmake(
         -DBUILD_GAMES=OFF
         -DSHARED=${SHARED}
         -DSTATIC=${STATIC}
-        -DUSE_AUDIO=${USE_AUDIO}
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_ASAN=ON
         -DENABLE_UBSAN=ON
@@ -55,12 +56,6 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
-configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake
-    @ONLY
-)
-
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
@@ -74,8 +69,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-# Install usage
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
-
-# Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

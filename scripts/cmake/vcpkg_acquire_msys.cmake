@@ -36,7 +36,8 @@
 ## * [libvpx](https://github.com/Microsoft/vcpkg/blob/master/ports/libvpx/portfile.cmake)
 
 function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
-  set(TOOLPATH ${DOWNLOADS}/tools/msys2)
+  set(TIMESTAMP 20200812)
+  set(TOOLPATH ${DOWNLOADS}/tools/msys2-${TIMESTAMP})
   cmake_parse_arguments(_am "" "" "PACKAGES" ${ARGN})
 
   if(NOT CMAKE_HOST_WIN32)
@@ -145,7 +146,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   endif()
 
   if(_am_PACKAGES)
-    message(STATUS "Acquiring MSYS Packages...")
+    message(STATUS "Acquiring MSYS Packages from ${TOOLPATH}...")
     string(REPLACE ";" " " _am_PACKAGES "${_am_PACKAGES}")
 
     set(_ENV_ORIGINAL $ENV{PATH})
