@@ -1,8 +1,9 @@
 {
   "name": "filament",
   "version-string": "1.8.0",
-  "homepage": "https://google.github.io/filament/",
   "description": "Filament is a real-time physically based rendering engine for Android, iOS, Windows, Linux, macOS and WASM/WebGL",
+  "homepage": "https://google.github.io/filament/",
+  "supports": "!linux",
   "dependencies": [
     "assimp",
     "benchmark",
@@ -16,6 +17,5 @@
     "stb",
     "tinyexr",
     "zlib"
-  ],
-  "supports": "!linux"
+  ]
 }

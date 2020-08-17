@@ -1,6 +1,6 @@
 {
   "name": "utf8",
   "version-string": "2.3.4",
-  "homepage": "http://utfcpp.sourceforge.net/",
-  "description": "A simple, portable and lightweight generic library for handling UTF-8 encoded strings."
+  "description": "A simple, portable and lightweight generic library for handling UTF-8 encoded strings.",
+  "homepage": "http://utfcpp.sourceforge.net/"
 }
