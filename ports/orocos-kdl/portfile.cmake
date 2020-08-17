@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orocos/orocos_kinematics_dynamics
@@ -19,6 +17,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/orocos_kdl/cmake TARGET_PATH share/orocos_kdl)
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/orocos_kdl/orocos_kdl-config.cmake _contents)
+string(REPLACE "\${CMAKE_CURRENT_LIST_DIR}/../../.." "\${CMAKE_CURRENT_LIST_DIR}/../.." _contents "${_contents}")
+string(REPLACE "\${_IMPORT_PREFIX}" "\${CMAKE_CURRENT_LIST_DIR}/../.." _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/orocos_kdl/orocos_kdl-config.cmake "${_contents}")
 
 file(REMOVE_RECURSE
   ${CURRENT_PACKAGES_DIR}/debug/include
