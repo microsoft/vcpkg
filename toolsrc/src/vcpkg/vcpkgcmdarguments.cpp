@@ -686,6 +686,10 @@ namespace vcpkg
                 download_mirror_url = std::make_unique<std::string>(*unpacked);
                 use_mirror = true;
             }
+            else
+            {
+                use_mirror = false;
+            }
         }
 
         const auto vcpkg_feature_flags_env = System::get_environment_variable(FEATURE_FLAGS_ENV);
