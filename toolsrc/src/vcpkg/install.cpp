@@ -796,12 +796,12 @@ namespace vcpkg::Install
             if (ec)
             {
                 Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Failed to read manifest %s: %s", manifest_path.u8string(), ec.message());
+                    VCPKG_LINE_INFO, "Failed to read manifest %s: %s", fs::u8string(manifest_path), ec.message());
             }
             else if (!maybe_manifest_scf)
             {
                 print_error_message(maybe_manifest_scf.error());
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s.", manifest_path.u8string());
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s.", fs::u8string(manifest_path));
             }
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 
