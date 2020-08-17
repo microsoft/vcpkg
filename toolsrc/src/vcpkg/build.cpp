@@ -88,7 +88,7 @@ namespace vcpkg::Build
     {
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
-        var_provider.load_dep_info_vars(std::array<PackageSpec, 1>{full_spec.package_spec});
+        var_provider.load_dep_info_vars({{full_spec.package_spec}});
 
         StatusParagraphs status_db = database_load_check(paths);
 
@@ -301,9 +301,9 @@ namespace vcpkg::Build
                                   }));
     }
 
+#if defined(_WIN32)
     const System::Environment& EnvCache::get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
-#if defined(_WIN32)
         std::string build_env_cmd =
             make_build_env_cmd(*abi_info.pre_build_info, abi_info.toolset.value_or_exit(VCPKG_LINE_INFO));
 
@@ -339,10 +339,13 @@ namespace vcpkg::Build
             else
                 return System::cmd_execute_modify_env(build_env_cmd, clean_env);
         });
-#else
-        return System::get_clean_environment();
-#endif
     }
+#else
+    const System::Environment& EnvCache::get_action_env(const VcpkgPaths&, const AbiInfo&)
+    {
+        return System::get_clean_environment();
+    }
+#endif
 
     static std::string load_compiler_hash(const VcpkgPaths& paths, const AbiInfo& abi_info);
 
@@ -523,7 +526,7 @@ namespace vcpkg::Build
         }
         Checks::check_exit(VCPKG_LINE_INFO,
                            !compiler_hash.empty(),
-                           "Error occured while detecting compiler information. Pass `--debug` for more information.");
+                           "Error occurred while detecting compiler information. Pass `--debug` for more information.");
 
         Debug::print("Detecting compiler hash for triplet ", triplet, ": ", compiler_hash, "\n");
         return compiler_hash;
