@@ -1,0 +1,25 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO p-ranav/structopt
+    REF v0.1.0
+    SHA512  9dd16d8ca948631faf19226502d43f44bc5f7653a9923190127df2ee00c82d0c5fae7ef52cd61288883a005679d2af81cc8243225b34b267af4be84d89958d4b
+    HEAD_REF master
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DSTRUCTOPT_SAMPLES=OFF
+        -DSTRUCTOPT_TESTS=OFF
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/structopt TARGET_PATH share/structopt)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.magic_enum DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE.visit_struct DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
