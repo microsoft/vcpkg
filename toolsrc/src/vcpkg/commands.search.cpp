@@ -80,7 +80,7 @@ namespace vcpkg::Commands::Search
 
     static constexpr std::array<CommandSwitch, 2> SEARCH_SWITCHES = {{
         {OPTION_FULLDESC, "Do not truncate long text"},
-        {OPTION_JSON, "List libraries in JSON format"},
+        {OPTION_JSON, "(experimental) List libraries in JSON format"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
