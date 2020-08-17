@@ -1,5 +1,5 @@
 Source: suitesparse
 Version: 5.8.0
-Build-Depends: clapack (!osx), metis
+Build-Depends: lapack, metis
 Homepage: http://suitesparse.com
 Description: algebra library
