@@ -153,6 +153,9 @@ namespace vcpkg
         constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
         Optional<bool> wait_for_lock = nullopt;
 
+        constexpr static StringLiteral JSON_SWITCH = "x-json";
+        Optional<bool> json = nullopt;
+
         // feature flags
         constexpr static StringLiteral FEATURE_FLAGS_ENV = "VCPKG_FEATURE_FLAGS";
         constexpr static StringLiteral FEATURE_FLAGS_ARG = "feature-flags";
@@ -169,6 +172,7 @@ namespace vcpkg
 
         bool binary_caching_enabled() const { return binary_caching.value_or(true); }
         bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
+        bool output_json() const { return json.value_or(false); }
 
         std::string command;
         std::vector<std::string> command_arguments;

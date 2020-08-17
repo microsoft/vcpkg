@@ -1,4 +1,5 @@
 #include <vcpkg/buildenvironment.h>
+#include <vcpkg/tools.h>
 
 namespace vcpkg
 {

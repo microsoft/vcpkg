@@ -22,8 +22,6 @@ namespace vcpkg
     ///
     struct PackageSpec
     {
-        constexpr static StringLiteral MANIFEST_NAME = "default";
-
         PackageSpec() = default;
         PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) { }
 
@@ -49,6 +47,9 @@ namespace vcpkg
         std::string m_name;
         Triplet m_triplet;
     };
+
+    bool operator==(const PackageSpec& left, const PackageSpec& right);
+    inline bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
 
     ///
     /// <summary>
@@ -111,6 +112,12 @@ namespace vcpkg
                                                   const std::vector<std::string>& all_features) const;
 
         static ExpectedS<FullPackageSpec> from_string(const std::string& spec_as_string, Triplet default_triplet);
+
+        bool operator==(const FullPackageSpec& o) const
+        {
+            return package_spec == o.package_spec && features == o.features;
+        }
+        bool operator!=(const FullPackageSpec& o) const { return !(*this == o); }
     };
 
     ///
@@ -150,9 +157,6 @@ namespace vcpkg
     Optional<std::string> parse_package_name(Parse::ParserBase& parser);
     ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(StringView input);
     Optional<ParsedQualifiedSpecifier> parse_qualified_specifier(Parse::ParserBase& parser);
-
-    bool operator==(const PackageSpec& left, const PackageSpec& right);
-    inline bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
 }
 
 namespace std

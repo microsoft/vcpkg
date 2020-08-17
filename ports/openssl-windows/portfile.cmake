@@ -18,8 +18,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -30,10 +30,10 @@ vcpkg_find_acquire_program(JOM)
 
 set(OPENSSL_SHARED no-shared)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(OPENSSL_SHARED shared)
+    set(OPENSSL_SHARED shared)
 endif()
 
-set(CONFIGURE_COMMAND ${PERL} Configure
+set(CONFIGURE_OPTIONS 
     enable-static-engine
     enable-capieng
     no-ssl2
@@ -41,6 +41,12 @@ set(CONFIGURE_COMMAND ${PERL} Configure
     -utf-8
     ${OPENSSL_SHARED}
 )
+
+if(DEFINED OPENSSL_USE_NOPINSHARED)
+    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-pinshared)
+endif()
+
+set(CONFIGURE_COMMAND ${PERL} Configure ${CONFIGURE_OPTIONS})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
@@ -168,13 +174,15 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
 endif()
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" _contents)
-string(REPLACE "<winsock.h>" "<winsock2.h>" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" "${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h"
+    "<winsock.h>"
+    "<winsock2.h>"
+)
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" _contents)
-string(REPLACE "#  include <windows.h>" "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" "${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
+    "#  include <windows.h>"
+    "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>"
+)
 
 vcpkg_copy_pdbs()
 
