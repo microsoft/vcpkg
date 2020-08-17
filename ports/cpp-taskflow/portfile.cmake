@@ -12,7 +12,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DTF_BUILD_EXAMPLES=OFF
-        -DTF_BUILD_TESTS=OFF
+        -DBUILD_TESTING=OFF
         -DTF_BUILD_BENCHMARKS=OFF
 )
 
