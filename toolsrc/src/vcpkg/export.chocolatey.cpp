@@ -5,6 +5,7 @@
 #include <vcpkg/export.chocolatey.h>
 #include <vcpkg/export.h>
 #include <vcpkg/install.h>
+#include <vcpkg/tools.h>
 
 namespace vcpkg::Export::Chocolatey
 {

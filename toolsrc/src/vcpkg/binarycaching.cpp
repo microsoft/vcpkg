@@ -9,6 +9,7 @@
 #include <vcpkg/binarycaching.private.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/tools.h>
 
 using namespace vcpkg;
 

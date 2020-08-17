@@ -2,6 +2,7 @@
 
 #include <vcpkg/archives.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/tools.h>
 
 namespace vcpkg::Archives
 {

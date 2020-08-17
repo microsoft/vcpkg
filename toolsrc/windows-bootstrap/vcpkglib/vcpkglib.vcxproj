@@ -196,6 +196,7 @@
     <ClInclude Include="..\..\include\vcpkg\commands.fetch.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.format-manifest.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.hash.h" />
+    <ClInclude Include="..\..\include\vcpkg\commands.info.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.integrate.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.interface.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.list.h" />
@@ -220,7 +221,6 @@
     <ClInclude Include="..\..\include\vcpkg\metrics.h" />
     <ClInclude Include="..\..\include\vcpkg\packagespec.h" />
     <ClInclude Include="..\..\include\vcpkg\paragraphparser.h" />
-    <ClInclude Include="..\..\include\vcpkg\paragraphparseresult.h" />
     <ClInclude Include="..\..\include\vcpkg\paragraphs.h" />
     <ClInclude Include="..\..\include\vcpkg\portfileprovider.h" />
     <ClInclude Include="..\..\include\vcpkg\postbuildlint.h" />
@@ -283,6 +283,7 @@
     <ClCompile Include="..\..\src\vcpkg\commands.fetch.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.format-manifest.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.hash.cpp" />
+    <ClCompile Include="..\..\src\vcpkg\commands.info.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.integrate.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.list.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.owns.cpp" />
@@ -305,7 +306,6 @@
     <ClCompile Include="..\..\src\vcpkg\platform-expression.cpp" />
     <ClCompile Include="..\..\src\vcpkg\metrics.cpp" />
     <ClCompile Include="..\..\src\vcpkg\packagespec.cpp" />
-    <ClCompile Include="..\..\src\vcpkg\paragraphparseresult.cpp" />
     <ClCompile Include="..\..\src\vcpkg\paragraphs.cpp" />
     <ClCompile Include="..\..\src\vcpkg\portfileprovider.cpp" />
     <ClCompile Include="..\..\src\vcpkg\postbuildlint.buildtype.cpp" />
