@@ -172,7 +172,12 @@ function(generate_cross_file) #https://mesonbuild.com/Cross-compilation.html
     string(APPEND CROSS "skip_sanity_check = true\n")
     string(APPEND CROSS "[host_machine]\n")
     string(APPEND CROSS "endian = 'little'\n")
-    string(APPEND CROSS "system = '${VCPKG_CMAKE_SYSTEM_NAME}'\n")
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+        set(MESON_SYSTEM_NAME "windows")
+    else()
+        string(TOLOWER "${VCPKG_CMAKE_SYSTEM_NAME}" MESON_SYSTEM_NAME)
+    endif()
+    string(APPEND CROSS "system = '${MESON_SYSTEM_NAME}'\n")
     string(APPEND CROSS "cpu_family = '${HOST_CPU_FAM}'\n")
     string(APPEND CROSS "cpu = '${HOST_CPU}'\n")
     
