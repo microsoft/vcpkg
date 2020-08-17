@@ -131,9 +131,11 @@ install(
 if(NOT IMGUI_SKIP_HEADERS)
     install(FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/imgui.h
-		${CMAKE_CURRENT_SOURCE_DIR}/imconfig.h
-		${CMAKE_CURRENT_SOURCE_DIR}/imgui_internal.h
-		${CMAKE_CURRENT_SOURCE_DIR}/imstb_textedit.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/imconfig.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/imgui_internal.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/imstb_textedit.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/imstb_rectpack.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/imstb_truetype.h
         ${CMAKE_CURRENT_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
         DESTINATION include
     )

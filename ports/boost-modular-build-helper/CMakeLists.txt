@@ -35,6 +35,12 @@ else()
     list(APPEND B2_OPTIONS address-model=32)
 endif()
 
+if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
+    list(APPEND B2_OPTIONS architecture=s390x)
+else()
+    list(APPEND B2_OPTIONS architecture=x86)
+endif()
+
 if(APPLE)
     list(APPEND B2_OPTIONS target-os=darwin toolset=clang)
 elseif(WIN32)
@@ -158,7 +164,6 @@ add_custom_target(boost ALL
         --hash
         -q
 
-        architecture=x86
         threading=multi
         debug-symbols=on
 

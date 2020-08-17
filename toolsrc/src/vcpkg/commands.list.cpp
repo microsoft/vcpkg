@@ -2,7 +2,7 @@
 
 #include <vcpkg/base/system.print.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.list.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/versiont.h>
@@ -139,5 +139,10 @@ namespace vcpkg::Commands::List
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void ListCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        List::perform_and_exit(args, paths);
     }
 }

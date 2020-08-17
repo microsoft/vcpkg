@@ -9,6 +9,12 @@ vcpkg_from_github(
         "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile2.patch"
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(BUILD_SHARED_LIBS ON)
+else()
+    set(BUILD_SHARED_LIBS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -16,7 +22,8 @@ vcpkg_configure_cmake(
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_DOCS=OFF
-        -DBUILD_TESTING=OFF)
+        -DBUILD_TESTING=OFF
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS})
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(
@@ -27,6 +34,26 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/FLAC/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 0"
+    )
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/FLAC++/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 0"
+    )
+else()
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/FLAC/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 1"
+    )
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/FLAC++/export.h
+        "#if defined(FLAC__NO_DLL)"
+        "#if 1"
+    )
+endif()
 
 # This license (BSD) is relevant only for library - if someone would want to install
 # FLAC cmd line tools as well additional license (GPL) should be included

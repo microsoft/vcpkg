@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/expected.h>
+#include <vcpkg/base/json.h>
 #include <vcpkg/base/optional.h>
 
 #include <vcpkg/platform-expression.h>
@@ -21,6 +22,8 @@ namespace vcpkg
     ///
     struct PackageSpec
     {
+        constexpr static StringLiteral MANIFEST_NAME = "default";
+
         PackageSpec() = default;
         PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) { }
 
@@ -128,6 +131,11 @@ namespace vcpkg
         std::string name;
         std::vector<std::string> features;
         PlatformExpression::Expr platform;
+
+        Json::Object extra_info;
+
+        friend bool operator==(const Dependency& lhs, const Dependency& rhs);
+        friend bool operator!=(const Dependency& lhs, const Dependency& rhs) { return !(lhs == rhs); }
     };
 
     struct ParsedQualifiedSpecifier
@@ -144,7 +152,7 @@ namespace vcpkg
     Optional<ParsedQualifiedSpecifier> parse_qualified_specifier(Parse::ParserBase& parser);
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);
-    bool operator!=(const PackageSpec& left, const PackageSpec& right);
+    inline bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
 }
 
 namespace std

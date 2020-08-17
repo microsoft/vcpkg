@@ -22,6 +22,7 @@ jobs:
       brew list libtool || brew install libtool
       brew list bison || brew install bison
       brew list gfortran || brew cask install gfortran
+      brew list yasm || brew install yasm
     displayName: 'Install brew dependencies'
   - bash: |
       sudo mkdir /Users/vagrant/Data/downloads || 0

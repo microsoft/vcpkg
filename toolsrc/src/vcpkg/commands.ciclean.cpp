@@ -4,7 +4,7 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.print.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.ciclean.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 using namespace vcpkg;
@@ -38,5 +38,10 @@ namespace vcpkg::Commands::CIClean
         clear_directory(fs, paths.packages);
         print2("Completed vcpkg CI clean\n");
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void CICleanCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        CIClean::perform_and_exit(args, paths);
     }
 }

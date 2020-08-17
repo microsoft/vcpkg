@@ -68,10 +68,10 @@ TEST_CASE ("manifest construct maximum", "[manifests]")
                 "name": "iroh",
                 "description": "zuko's uncle",
                 "dependencies": [
+                    "firebending",
                     {
                         "name": "tea"
                     },
-                    "firebending",
                     {
                         "name": "order.white-lotus",
                         "features": [ "the-ancient-ways" ],
@@ -105,17 +105,19 @@ TEST_CASE ("manifest construct maximum", "[manifests]")
     REQUIRE(pgh.feature_paragraphs[0]->description.size() == 1);
     REQUIRE(pgh.feature_paragraphs[0]->description[0] == "zuko's uncle");
     REQUIRE(pgh.feature_paragraphs[0]->dependencies.size() == 3);
-    REQUIRE(pgh.feature_paragraphs[0]->dependencies[0].name == "tea");
-    REQUIRE(pgh.feature_paragraphs[0]->dependencies[1].name == "firebending");
-    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].name == "order.white-lotus");
-    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].features.size() == 1);
-    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].features[0] == "the-ancient-ways");
-    REQUIRE_FALSE(pgh.feature_paragraphs[0]->dependencies[2].platform.evaluate(
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies[0].name == "firebending");
+
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies[1].name == "order.white-lotus");
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies[1].features.size() == 1);
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies[1].features[0] == "the-ancient-ways");
+    REQUIRE_FALSE(pgh.feature_paragraphs[0]->dependencies[1].platform.evaluate(
         {{"VCPKG_CMAKE_SYSTEM_NAME", ""}, {"VCPKG_TARGET_ARCHITECTURE", "arm"}}));
-    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].platform.evaluate(
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies[1].platform.evaluate(
         {{"VCPKG_CMAKE_SYSTEM_NAME", ""}, {"VCPKG_TARGET_ARCHITECTURE", "x86"}}));
-    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].platform.evaluate(
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies[1].platform.evaluate(
         {{"VCPKG_CMAKE_SYSTEM_NAME", "Linux"}, {"VCPKG_TARGET_ARCHITECTURE", "x86"}}));
+
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies[2].name == "tea");
 
     REQUIRE(pgh.feature_paragraphs[1]->name == "zuko");
     REQUIRE(pgh.feature_paragraphs[1]->description.size() == 2);
@@ -134,8 +136,8 @@ TEST_CASE ("SourceParagraph manifest two dependencies", "[manifests]")
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->dependencies.size() == 2);
-    REQUIRE(pgh.core_paragraph->dependencies[0].name == "z");
-    REQUIRE(pgh.core_paragraph->dependencies[1].name == "openssl");
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "openssl");
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "z");
 }
 
 TEST_CASE ("SourceParagraph manifest three dependencies", "[manifests]")
@@ -149,9 +151,10 @@ TEST_CASE ("SourceParagraph manifest three dependencies", "[manifests]")
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->dependencies.size() == 3);
-    REQUIRE(pgh.core_paragraph->dependencies[0].name == "z");
-    REQUIRE(pgh.core_paragraph->dependencies[1].name == "openssl");
-    REQUIRE(pgh.core_paragraph->dependencies[2].name == "xyz");
+    // should be ordered
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "openssl");
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "xyz");
+    REQUIRE(pgh.core_paragraph->dependencies[2].name == "z");
 }
 
 TEST_CASE ("SourceParagraph manifest construct qualified dependencies", "[manifests]")
@@ -238,4 +241,51 @@ TEST_CASE ("SourceParagraph manifest empty supports", "[manifests]")
     })json",
                                      true);
     REQUIRE_FALSE(m_pgh.has_value());
+}
+
+TEST_CASE ("Serialize all the ports", "[manifests]")
+{
+    std::vector<std::string> args_list = {"x-format-manifest"};
+    auto& fs = Files::get_real_filesystem();
+    auto args = VcpkgCmdArguments::create_from_arg_sequence(args_list.data(), args_list.data() + args_list.size());
+    auto paths = VcpkgPaths{fs, args};
+
+    std::vector<SourceControlFile> scfs;
+
+    for (auto dir : fs::directory_iterator(paths.ports))
+    {
+        const auto control = dir / fs::u8path("CONTROL");
+        const auto manifest = dir / fs::u8path("vcpkg.json");
+        if (fs.exists(control))
+        {
+            auto contents = fs.read_contents(control, VCPKG_LINE_INFO);
+            auto pghs = Paragraphs::parse_paragraphs(contents, control.u8string());
+            REQUIRE(pghs);
+
+            scfs.push_back(std::move(
+                *SourceControlFile::parse_control_file(control, std::move(pghs).value_or_exit(VCPKG_LINE_INFO))
+                     .value_or_exit(VCPKG_LINE_INFO)));
+        }
+        else if (fs.exists(manifest))
+        {
+            std::error_code ec;
+            auto contents = Json::parse_file(fs, manifest, ec);
+            REQUIRE_FALSE(ec);
+            REQUIRE(contents);
+
+            auto scf = SourceControlFile::parse_manifest_file(manifest,
+                                                              contents.value_or_exit(VCPKG_LINE_INFO).first.object());
+            REQUIRE(scf);
+
+            scfs.push_back(std::move(*scf.value_or_exit(VCPKG_LINE_INFO)));
+        }
+    }
+
+    for (auto& scf : scfs)
+    {
+        auto serialized = serialize_manifest(scf);
+        auto serialized_scf = SourceControlFile::parse_manifest_file({}, serialized).value_or_exit(VCPKG_LINE_INFO);
+
+        REQUIRE(*serialized_scf == scf);
+    }
 }

@@ -8,12 +8,12 @@
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.mirror.h>
+#include <vcpkg/commands.setinstalled.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
-#include <vcpkg/install.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
@@ -23,51 +23,6 @@ namespace vcpkg::Commands::Mirror
 {
     using namespace vcpkg;
     using namespace Dependencies;
-
-    enum class InstallResult
-    {
-        FILE_CONFLICTS,
-        SUCCESS,
-    };
-
-    struct InstallDir
-    {
-        static InstallDir from_destination_root(const fs::path& destination_root,
-                                                const std::string& destination_subdirectory,
-                                                const fs::path& listfile);
-
-    private:
-        fs::path m_destination;
-        std::string m_destination_subdirectory;
-        fs::path m_listfile;
-
-    public:
-        const fs::path& destination() const;
-        const std::string& destination_subdirectory() const;
-        const fs::path& listfile() const;
-    };
-
-    struct SpecSummary
-    {
-        SpecSummary(const PackageSpec& spec, const Dependencies::InstallPlanAction* action);
-
-        const BinaryParagraph* get_binary_paragraph() const;
-
-        PackageSpec spec;
-        Build::ExtendedBuildResult build_result;
-        vcpkg::Chrono::ElapsedTime timing;
-
-        const Dependencies::InstallPlanAction* action;
-    };
-
-    struct InstallSummary
-    {
-        std::vector<SpecSummary> results;
-        std::string total_elapsed_time;
-
-        void print() const;
-        std::string xunit_results() const;
-    };
 
     using file_pack = std::pair<std::string, std::string>;
 
@@ -88,6 +43,17 @@ namespace vcpkg::Commands::Mirror
 
     const fs::path& InstallDir::listfile() const { return this->m_listfile; }
 
+    void install_package_and_write_listfile(const VcpkgPaths& paths,
+                                            const PackageSpec& spec,
+                                            const InstallDir& destination_dir)
+    {
+        auto& fs = paths.get_filesystem();
+        auto source_dir = paths.package_dir(spec);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.u8string());
+        auto files = fs.get_files_recursive(source_dir);
+        install_files_and_write_listfile(fs, source_dir, files, destination_dir);
+    }
     void install_files_and_write_listfile(Files::Filesystem& fs,
                                           const fs::path& source_dir,
                                           const std::vector<fs::path>& files,
@@ -186,18 +152,6 @@ namespace vcpkg::Commands::Mirror
         std::sort(output.begin(), output.end());
 
         fs.write_lines(listfile, output, VCPKG_LINE_INFO);
-    }
-
-    void install_package_and_write_listfile(const VcpkgPaths& paths,
-                                            const PackageSpec& spec,
-                                            const InstallDir& destination_dir)
-    {
-        auto& fs = paths.get_filesystem();
-        auto source_dir = paths.package_dir(spec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.u8string());
-        auto files = fs.get_files_recursive(source_dir);
-        install_files_and_write_listfile(fs, source_dir, files, destination_dir);
     }
 
     static std::vector<file_pack> extract_files_in_triplet(
@@ -524,10 +478,6 @@ namespace vcpkg::Commands::Mirror
         {
             TrackedPackageInstallGuard this_install(package_count, results, action.spec);
             auto result = perform_install_plan_action(paths, action, status_db, binaryprovider, build_logs_recorder);
-            if (result.code != BuildResult::SUCCEEDED)
-            {
-                System::print2(Build::create_user_troubleshooting_message(action.spec), '\n');
-            }
 
             this_install.current_summary->action = &action;
             this_install.current_summary->build_result = std::move(result);
@@ -756,48 +706,33 @@ namespace vcpkg::Commands::Mirror
 
         if (paths.manifest_mode_enabled())
         {
-            std::error_code ec;
-            const auto path_to_manifest = paths.manifest_root_dir / "vcpkg.json";
-            auto res = Paragraphs::try_load_manifest(paths.get_filesystem(), "user manifest", path_to_manifest, ec);
-
-            if (ec)
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          "Failed to load manifest file (%s): %s\n",
-                                          path_to_manifest.u8string(),
-                                          ec.message());
-            }
-
-            std::vector<FullPackageSpec> specs;
-            if (auto val = res.get())
-            {
-                for (auto& dep : (*val)->core_paragraph->dependencies)
-                {
-                    specs.push_back(FullPackageSpec{
-                        {std::move(dep.name), default_triplet},
-                        std::move(dep.features),
-                    });
-                }
-            }
-            else
-            {
-                print_error_message(res.error());
-                Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-
             Optional<fs::path> pkgsconfig;
             auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
             if (it_pkgsconfig != options.settings.end())
             {
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
+
+            std::vector<std::string> features;
+            features.emplace_back("core");
+
+            std::vector<FullPackageSpec> specs;
+            specs.emplace_back(PackageSpec{PackageSpec::MANIFEST_NAME, default_triplet}, std::move(features));
+            auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
+
+            for (InstallPlanAction& action : install_plan.install_actions)
+            {
+                action.build_options = install_plan_options;
+                action.build_options.use_head_version = Build::UseHeadVersion::NO;
+                action.build_options.editable = Build::Editable::NO;
+            }
+
             Commands::SetInstalled::perform_and_exit_ex(args,
                                                         paths,
                                                         provider,
                                                         *binaryprovider,
                                                         var_provider,
-                                                        specs,
-                                                        install_plan_options,
+                                                        std::move(install_plan),
                                                         dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
                                                         pkgsconfig);
         }
@@ -948,6 +883,13 @@ namespace vcpkg::Commands::Mirror
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void MirrorCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                          const VcpkgPaths& paths,
+                                          Triplet default_triplet) const
+    {
+        Mirror::perform_and_exit(args, paths, default_triplet);
     }
 
     SpecSummary::SpecSummary(const PackageSpec& spec, const Dependencies::InstallPlanAction* action)

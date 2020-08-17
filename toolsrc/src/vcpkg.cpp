@@ -8,7 +8,9 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 
+#include <vcpkg/commands.contact.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
@@ -66,9 +68,9 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
         }
     };
 
-    if (const auto command_function = find_command(Commands::get_available_commands_type_c()))
+    if (const auto command_function = find_command(Commands::get_available_basic_commands()))
     {
-        return command_function->function(args, fs);
+        return command_function->function->perform_and_exit(args, fs);
     }
 
     const VcpkgPaths paths(fs, args);
@@ -102,17 +104,17 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
         }
     }
 
-    if (const auto command_function = find_command(Commands::get_available_commands_type_b()))
+    if (const auto command_function = find_command(Commands::get_available_paths_commands()))
     {
-        return command_function->function(args, paths);
+        return command_function->function->perform_and_exit(args, paths);
     }
 
     Triplet default_triplet = vcpkg::default_triplet(args);
     Input::check_triplet(default_triplet, paths);
 
-    if (const auto command_function = find_command(Commands::get_available_commands_type_a()))
+    if (const auto command_function = find_command(Commands::get_available_triplet_commands()))
     {
-        return command_function->function(args, paths, default_triplet);
+        return command_function->function->perform_and_exit(args, paths, default_triplet);
     }
 
     return invalid_command(args.command);

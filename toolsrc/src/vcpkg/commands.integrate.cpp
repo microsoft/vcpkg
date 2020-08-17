@@ -7,7 +7,7 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.integrate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/userconfig.h>
 
@@ -558,5 +558,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 #endif
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
+    }
+
+    void IntegrateCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Integrate::perform_and_exit(args, paths);
     }
 }

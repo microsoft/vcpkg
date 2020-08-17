@@ -141,7 +141,12 @@ namespace vcpkg::Files
             const auto target = read_symlink_implementation(oldpath, ec);
             if (ec) return;
 
-            const DWORD flags = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+            const DWORD flags =
+#if defined(SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)
+                SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+#else
+                0;
+#endif
             if (!CreateSymbolicLinkW(newpath.c_str(), target.c_str(), flags))
             {
                 const auto err = GetLastError();
