@@ -69,9 +69,10 @@ vcpkg_apply_patches(
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
-# No CMake files are contained in /share only docs
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
