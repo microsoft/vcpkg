@@ -3,8 +3,10 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.kitware.com/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cmake/cmake
-    REF 615129f3ebd308abeaaee7f5f0689e7fc4616c28
-    SHA512 5f02e05b7e6119c9c165c868d0679e0fbe5cc6b4f081a4e63a87d663c029bc378327ec042ae6bfd16bf48737bfaa5bae3be33a6dd33648e1f47cdc1a2370c366
+    REF
+        63a65baf4c343c73b2142078ef0045d3711dea1d
+    SHA512
+        7874b26adb739649ea3a8c2d8701b44ea348d5d6387e0e2a3dd87494dfeae62084593f88f46d53a161ac24c46a7712489621213b61315593df4dc2ccc728084b
     HEAD_REF master
 )
 
@@ -16,7 +18,7 @@ vcpkg_configure_cmake(
         #-DCMAKE_USE_SYSTEM_LIBRARIES=ON
         -DCMAKE_USE_SYSTEM_LIBARCHIVE=ON
         -DCMAKE_USE_SYSTEM_CURL=ON
-        -DCMAKE_USE_SYSTEM_EXPAT=ON
+        -DCMAKE_USE_SYSTEM_EXPAT=OFF # CMake is not compatible with expat 2.2.9
         -DCMAKE_USE_SYSTEM_ZLIB=ON
         -DCMAKE_USE_SYSTEM_BZIP2=ON
         -DCMAKE_USE_SYSTEM_ZSTD=ON
