@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B98C92B7-2874-4537-9D46-D14E5C237F04}</ProjectGuid>
     <RootNamespace>vcpkglib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
-    <PlatformToolset>v141</PlatformToolset>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -201,6 +201,7 @@
     <ClInclude Include="..\..\include\vcpkg\commands.integrate.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.interface.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.list.h" />
+    <ClInclude Include="..\..\include\vcpkg\commands.mirror.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.owns.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.porthistory.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.portsdiff.h" />
@@ -287,6 +288,7 @@
     <ClCompile Include="..\..\src\vcpkg\commands.info.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.integrate.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.list.cpp" />
+    <ClInclude Include="..\..\src\vcpkg\commands.mirror.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.owns.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.porthistory.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.portsdiff.cpp" />
