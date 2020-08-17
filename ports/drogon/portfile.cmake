@@ -5,9 +5,9 @@ vcpkg_from_github(
     SHA512 10da2765df24848964358ea3f6a8843664d142bfd1d276649438c5d79ad88f98467ac742d3ff23e9fda93b89ab9568b2ecea8c3ee4d527d0b6b4a5892025e24e
     HEAD_REF master
     PATCHES
-    vcpkg.patch
-    drogon_ctl_install.patch
-    pg.patch
+        vcpkg.patch
+        drogon_ctl_install.patch
+        pg.patch
 )
 
 vcpkg_configure_cmake(
@@ -20,7 +20,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Fix CMake files
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/drogon)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 # # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
