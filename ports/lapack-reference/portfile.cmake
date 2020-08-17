@@ -25,7 +25,7 @@ set(CBLAS OFF)
 if("cblas" IN_LIST FEATURES)
     set(CBLAS ON)
     if("noblas" IN_LIST FEATURES)
-        message(FATAL_ERROR "Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas!)
+        message(FATAL_ERROR "Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas!")
     endif()
 endif()
 
