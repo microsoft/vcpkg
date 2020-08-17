@@ -1,4 +1,6 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} is only for openssl on Unix-like systems" ON_TARGET "UWP" "Windows")
+if (NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_fail_port_install(MESSAGE "${PORT} is only for openssl on Unix-like systems" ON_TARGET "UWP" "Windows")
+endif()
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")

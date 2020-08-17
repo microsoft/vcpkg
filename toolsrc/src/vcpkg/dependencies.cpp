@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/strings.h>
@@ -594,6 +592,70 @@ namespace vcpkg::Dependencies
         m_graph->get(spec).request_type = RequestType::USER_REQUESTED;
     }
 
+    // `features` should have "default" instead of missing "core"
+    std::vector<FullPackageSpec> resolve_deps_as_top_level(const SourceControlFile& scf,
+                                                           Triplet triplet,
+                                                           std::vector<std::string> features,
+                                                           CMakeVars::CMakeVarProvider& var_provider)
+    {
+        PackageSpec spec{scf.core_paragraph->name, triplet};
+        std::map<std::string, std::vector<std::string>> specs_to_features;
+
+        Optional<const PlatformExpression::Context&> ctx_storage = var_provider.get_dep_info_vars(spec);
+        auto ctx = [&]() -> const PlatformExpression::Context& {
+            if (!ctx_storage)
+            {
+                var_provider.load_dep_info_vars({{spec}});
+                ctx_storage = var_provider.get_dep_info_vars(spec);
+            }
+            return ctx_storage.value_or_exit(VCPKG_LINE_INFO);
+        };
+
+        auto handle_deps = [&](View<Dependency> deps) {
+            for (auto&& dep : deps)
+            {
+                if (dep.platform.is_empty() || dep.platform.evaluate(ctx()))
+                {
+                    if (dep.name == spec.name())
+                        Util::Vectors::append(&features, dep.features);
+                    else
+                        Util::Vectors::append(&specs_to_features[dep.name], dep.features);
+                }
+            }
+        };
+
+        handle_deps(scf.core_paragraph->dependencies);
+        enum class State
+        {
+            NotVisited = 0,
+            Visited,
+        };
+        std::map<std::string, State> feature_state;
+        while (!features.empty())
+        {
+            auto feature = std::move(features.back());
+            features.pop_back();
+
+            if (feature_state[feature] == State::Visited) continue;
+            feature_state[feature] = State::Visited;
+            if (feature == "default")
+            {
+                Util::Vectors::append(&features, scf.core_paragraph->default_features);
+            }
+            else
+            {
+                auto it =
+                    Util::find_if(scf.feature_paragraphs, [&feature](const std::unique_ptr<FeatureParagraph>& ptr) {
+                        return ptr->name == feature;
+                    });
+                if (it != scf.feature_paragraphs.end()) handle_deps(it->get()->dependencies);
+            }
+        }
+        return Util::fmap(specs_to_features, [triplet](std::pair<const std::string, std::vector<std::string>>& p) {
+            return FullPackageSpec({p.first, triplet}, Util::sort_unique_erase(std::move(p.second)));
+        });
+    }
+
     ActionPlan create_feature_install_plan(const PortFileProvider::PortFileProvider& port_provider,
                                            const CMakeVars::CMakeVarProvider& var_provider,
                                            const std::vector<FullPackageSpec>& specs,
@@ -627,7 +689,9 @@ namespace vcpkg::Dependencies
         }
         pgraph.install(feature_specs);
 
-        return pgraph.serialize(options);
+        auto res = pgraph.serialize(options);
+
+        return res;
     }
 
     void PackageGraph::mark_for_reinstall(const PackageSpec& first_remove_spec,

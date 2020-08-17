@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fribidi/fribidi
-    REF abea9f626732a9b10499d76c1cd69ce5457950cc # v1.0.9
-    SHA512 5cb28f9e35d0df205c9fb88a56776d371fdd8bca12c211cec282334cfbf12a05e3324cd14a3ae71bcc06e15ce07b06cbe97eaafe1c7368e517a4ce5a4c3a2bcc
+    REF 5464c284034da9c058269377b7f5013bb089f553 # v1.0.10
+    SHA512 82e42b022f23d6ecebac5071f997c9f46db6aa41c36f87a7f1a28a79b4ccaada10d68b233bbf687c552fc94d91f4b47161e0ef4909fd1de0b483089f1d1377f9
     HEAD_REF master
     PATCHES fix-win-static-suffix.patch
 )
@@ -11,23 +11,22 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -Ddocs=false
+        -Dbin=false
+        -Dtests=false
         --backend=ninja
 )
 
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
-file(GLOB EXE_FILES
-    "${CURRENT_PACKAGES_DIR}/bin/*.exe"
-    "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe"
-)
-if (EXE_FILES)
-    file(REMOVE ${EXE_FILES})
+# Define static macro
+file(READ ${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h FRIBIDI_COMMON_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "#ifndef FRIBIDI_LIB_STATIC" "#if 0" FRIBIDI_COMMON_H "${FRIBIDI_COMMON_H}")
+else()
+    string(REPLACE "#ifndef FRIBIDI_LIB_STATIC" "#if 1" FRIBIDI_COMMON_H "${FRIBIDI_COMMON_H}")
 endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h "${FRIBIDI_COMMON_H}")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
