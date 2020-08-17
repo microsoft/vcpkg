@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 
@@ -310,6 +308,7 @@ namespace vcpkg
                 {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
                 {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
                 {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
+                {JSON_SWITCH, &VcpkgCmdArguments::json},
             };
 
             bool found = false;
@@ -606,12 +605,13 @@ namespace vcpkg
     void VcpkgCmdArguments::append_common_options(HelpTableFormatter& table)
     {
         static auto opt = [](StringView arg, StringView joiner, StringView value) {
-            return Strings::format("--%s%s%s", arg, joiner, value);
+            return Strings::concat("--", arg, joiner, value);
         };
 
         table.format(opt(TRIPLET_ARG, " ", "<t>"), "Specify the target architecture triplet. See 'vcpkg help triplet'");
         table.format("", "(default: " + format_environment_variable("VCPKG_DEFAULT_TRIPLET") + ')');
         table.format(opt(OVERLAY_PORTS_ARG, "=", "<path>"), "Specify directories to be used when searching for ports");
+        table.format("", "(also: " + format_environment_variable("VCPKG_OVERLAY_PORTS") + ')');
         table.format(opt(OVERLAY_TRIPLETS_ARG, "=", "<path>"), "Specify directories containing triplets files");
         table.format(opt(BINARY_SOURCES_ARG, "=", "<path>"),
                      "Add sources for binary caching. See 'vcpkg help binarycaching'");
@@ -624,6 +624,7 @@ namespace vcpkg
         table.format(opt(INSTALL_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the install root directory");
         table.format(opt(PACKAGES_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the packages root directory");
         table.format(opt(SCRIPTS_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the scripts root directory");
+        table.format(opt(JSON_SWITCH, "", ""), "(Experimental) Request JSON output");
     }
 
     void VcpkgCmdArguments::imbue_from_environment()
@@ -643,6 +644,19 @@ namespace vcpkg
             if (const auto unpacked = vcpkg_default_triplet_env.get())
             {
                 triplet = std::make_unique<std::string>(*unpacked);
+            }
+        }
+
+        {
+            const auto vcpkg_overlay_ports_env = System::get_environment_variable(OVERLAY_PORTS_ENV);
+            if (const auto unpacked = vcpkg_overlay_ports_env.get())
+            {
+#ifdef WIN32
+                auto overlays = Strings::split(*unpacked, ';');
+#else
+                auto overlays = Strings::split(*unpacked, ':');
+#endif
+                overlay_ports.insert(std::end(overlay_ports), std::begin(overlays), std::end(overlays));
             }
         }
 

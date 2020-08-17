@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
@@ -25,6 +23,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/postbuildlint.h>
 #include <vcpkg/statusparagraphs.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;

@@ -109,7 +109,9 @@ vcpkg_execute_required_process(
 	LOGNAME build-${TARGET_TRIPLET}
 )
 
-set(RELEASE_CONFIGURATION "release")
+if(NOT DEFINED RELEASE_CONFIGURATION)
+	set(RELEASE_CONFIGURATION "release")
+endif()
 set(DEBUG_CONFIGURATION "debug")
 
 vcpkg_build_msbuild(

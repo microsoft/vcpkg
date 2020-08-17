@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
@@ -7,11 +5,14 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/visualstudio.h>
 
@@ -165,7 +166,7 @@ namespace vcpkg
         else
         {
             // we ignore the manifest root dir if the user requests -manifest
-            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value())
+            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value() && !args.output_json())
             {
                 System::print2(System::Color::warning,
                                "Warning: manifest-root detected at ",
