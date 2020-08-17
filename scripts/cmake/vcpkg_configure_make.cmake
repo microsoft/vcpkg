@@ -169,10 +169,6 @@ function(vcpkg_configure_make)
     set(CMAKE_VARS_FILE "${CMAKE_VARS_FILE}" PARENT_SCOPE)
     debug_message("Including cmake vars from: ${CMAKE_VARS_FILE}")
     include("${CMAKE_VARS_FILE}")
-    if(VCPKG_TARGET_IS_WINDOWS)
-
-    endif()
-
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(_csc_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -418,7 +414,6 @@ function(vcpkg_configure_make)
     if(VCPKG_TARGET_IS_WINDOWS)
         _vcpkg_backup_env_variables(_CL_ _LINK_)
         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
-        #string(APPEND CPP_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
         if(VCPKG_TARGET_IS_UWP)
             # Be aware that configure thinks it is crosscompiling due to: 
             # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
