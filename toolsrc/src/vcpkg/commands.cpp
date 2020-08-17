@@ -105,19 +105,17 @@ namespace vcpkg::Commands
         static const DependInfo::DependInfoCommand depend_info{};
         static const Mirror::MirrorCommand mirror{};
 
-        static std::vector<PackageNameAndFunction<const TripletCommand*>> t = {
-            {"install", &install},
-            {"x-set-installed", &set_installed},
-            {"ci", &ci},
-            {"remove", &remove},
-            {"upgrade", &upgrade},
-            {"build", &build},
-            {"env", &env},
-            {"build-external", &build_external},
-            {"export", &export_command},
-            {"depend-info", &depend_info},
-            {"mirror", &mirror}
-        };
+        static std::vector<PackageNameAndFunction<const TripletCommand*>> t = {{"install", &install},
+                                                                               {"x-set-installed", &set_installed},
+                                                                               {"ci", &ci},
+                                                                               {"remove", &remove},
+                                                                               {"upgrade", &upgrade},
+                                                                               {"build", &build},
+                                                                               {"env", &env},
+                                                                               {"build-external", &build_external},
+                                                                               {"export", &export_command},
+                                                                               {"depend-info", &depend_info},
+                                                                               {"mirror", &mirror}};
         return t;
     }
 }
