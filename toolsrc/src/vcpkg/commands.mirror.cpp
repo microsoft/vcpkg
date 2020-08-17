@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
@@ -520,20 +518,34 @@ namespace vcpkg::Commands::Mirror
 
     static void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
     {
+        auto usage = get_cmake_usage(bpgh, paths);
+
+        if (!usage.message.empty())
+        {
+            System::print2(usage.message);
+        }
+    }
+
+    CMakeUsageInfo get_cmake_usage(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
+    {
         static const std::regex cmake_library_regex(R"(\badd_library\(([^\$\s\)]+)\s)",
                                                     std::regex_constants::ECMAScript);
+
+        CMakeUsageInfo ret;
 
         auto& fs = paths.get_filesystem();
 
         auto usage_file = paths.installed / bpgh.spec.triplet().canonical_name() / "share" / bpgh.spec.name() / "usage";
         if (fs.exists(usage_file))
         {
+            ret.usage_file = true;
             auto maybe_contents = fs.read_contents(usage_file);
             if (auto p_contents = maybe_contents.get())
             {
-                System::print2(*p_contents, '\n');
+                ret.message = std::move(*p_contents);
+                ret.message.push_back('\n');
             }
-            return;
+            return ret;
         }
 
         auto files = fs.read_lines(paths.listfile_path(bpgh));
@@ -598,6 +610,8 @@ namespace vcpkg::Commands::Mirror
                 }
             }
 
+            ret.header_only = is_header_only;
+
             if (library_targets.empty())
             {
                 if (is_header_only && !header_path.empty())
@@ -616,20 +630,21 @@ namespace vcpkg::Commands::Mirror
                         "The package ", bpgh.spec, " is header only and can be used from CMake via:\n\n");
                     Strings::append(msg, "    find_path(", name, "_INCLUDE_DIRS \"", header_path, "\")\n");
                     Strings::append(msg, "    target_include_directories(main PRIVATE ${", name, "_INCLUDE_DIRS})\n\n");
-                    System::print2(msg);
+
+                    ret.message = std::move(msg);
                 }
             }
             else
             {
-                System::print2("The package ", bpgh.spec, " provides CMake targets:\n\n");
+                auto msg = Strings::concat("The package ", bpgh.spec, " provides CMake targets:\n\n");
 
                 for (auto&& library_target_pair : library_targets)
                 {
                     auto config_it = config_files.find(library_target_pair.first);
                     if (config_it != config_files.end())
-                        System::printf("    find_package(%s CONFIG REQUIRED)\n", config_it->second);
+                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n ");
                     else
-                        System::printf("    find_package(%s CONFIG REQUIRED)\n", library_target_pair.first);
+                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n ");
 
                     std::sort(library_target_pair.second.begin(),
                               library_target_pair.second.end(),
@@ -641,22 +656,27 @@ namespace vcpkg::Commands::Mirror
 
                     if (library_target_pair.second.size() <= 4)
                     {
-                        System::printf("    target_link_libraries(main PRIVATE %s)\n\n",
-                                       Strings::join(" ", library_target_pair.second));
+                        Strings::append(msg,
+                                        "    target_link_libraries(main PRIVATE ",
+                                        Strings::join(" ", library_target_pair.second),
+                                        ")\n\n");
                     }
                     else
                     {
                         auto omitted = library_target_pair.second.size() - 4;
                         library_target_pair.second.erase(library_target_pair.second.begin() + 4,
                                                          library_target_pair.second.end());
-                        System::printf("    # Note: %zd target(s) were omitted.\n"
-                                       "    target_link_libraries(main PRIVATE %s)\n\n",
-                                       omitted,
-                                       Strings::join(" ", library_target_pair.second));
+                        msg += Strings::format("    # Note: %zd target(s) were omitted.\n"
+                                               "    target_link_libraries(main PRIVATE %s)\n\n",
+                                               omitted,
+                                               Strings::join(" ", library_target_pair.second));
                     }
                 }
+                ret.message = std::move(msg);
             }
+            ret.cmake_targets_map = std::move(library_targets);
         }
+        return ret;
     }
 
     ///
@@ -713,11 +733,26 @@ namespace vcpkg::Commands::Mirror
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
 
-            std::vector<std::string> features;
-            features.emplace_back("core");
+            std::error_code ec;
+            auto manifest_path = paths.manifest_root_dir / fs::u8path("vcpkg.json");
+            auto maybe_manifest_scf = Paragraphs::try_load_manifest(fs, "manifest", manifest_path, ec);
+            if (ec)
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Failed to read manifest %s: %s", manifest_path.u8string(), ec.message());
+            }
+            else if (!maybe_manifest_scf)
+            {
+                print_error_message(maybe_manifest_scf.error());
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s.", manifest_path.u8string());
+            }
+            auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 
-            std::vector<FullPackageSpec> specs;
-            specs.emplace_back(PackageSpec{PackageSpec::MANIFEST_NAME, default_triplet}, std::move(features));
+            std::vector<std::string> features;
+            auto core_it = Util::find(features, "core");
+            features.erase(core_it);
+            auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
+
             auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
 
             for (InstallPlanAction& action : install_plan.install_actions)
@@ -886,8 +921,8 @@ namespace vcpkg::Commands::Mirror
     }
 
     void MirrorCommand::perform_and_exit(const VcpkgCmdArguments& args,
-                                          const VcpkgPaths& paths,
-                                          Triplet default_triplet) const
+                                         const VcpkgPaths& paths,
+                                         Triplet default_triplet) const
     {
         Mirror::perform_and_exit(args, paths, default_triplet);
     }

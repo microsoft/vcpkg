@@ -254,6 +254,8 @@
     <ClCompile Include="..\..\src\vcpkg\base\chrono.cpp" />
     <ClCompile Include="..\..\src\vcpkg\base\cofffilereader.cpp" />
     <ClCompile Include="..\..\src\vcpkg\base\downloads.cpp" />
+    <ClCompile Include="..\..\src\vcpkg\base\downloads_ftp.cpp" />
+    <ClCompile Include="..\..\src\vcpkg\base\downloads_http.cpp" />
     <ClCompile Include="..\..\src\vcpkg\base\enums.cpp" />
     <ClCompile Include="..\..\src\vcpkg\base\files.cpp" />
     <ClCompile Include="..\..\src\vcpkg\base\hash.cpp" />
@@ -288,7 +290,7 @@
     <ClCompile Include="..\..\src\vcpkg\commands.info.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.integrate.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.list.cpp" />
-    <ClInclude Include="..\..\src\vcpkg\commands.mirror.cpp" />
+    <ClCompile Include="..\..\src\vcpkg\commands.mirror.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.owns.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.porthistory.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.portsdiff.cpp" />
