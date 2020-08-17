@@ -7,6 +7,8 @@
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 namespace vcpkg
 {
     struct ToolsetArchOption

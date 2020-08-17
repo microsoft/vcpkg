@@ -2,15 +2,10 @@
 
 #include <vcpkg/triplet.h>
 
-namespace vcpkg
-{
-    struct VcpkgCmdArguments;
-    struct VcpkgPaths;
-    namespace Files
-    {
-        struct Filesystem;
-    }
-}
+#include <vcpkg/base/files.h>
+
+#include <vcpkg/fwd/vcpkgpaths.h>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands
 {

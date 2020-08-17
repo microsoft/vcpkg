@@ -6,6 +6,7 @@
 #include <vcpkg/commands.contact.h>
 #include <vcpkg/help.h>
 #include <vcpkg/userconfig.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Contact
 {

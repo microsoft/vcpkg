@@ -5,6 +5,9 @@
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/stringliteral.h>
 
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
@@ -18,8 +21,6 @@ namespace vcpkg
         std::unordered_map<std::string, std::string> settings;
         std::unordered_map<std::string, std::vector<std::string>> multisettings;
     };
-
-    struct VcpkgPaths;
 
     struct CommandSwitch
     {

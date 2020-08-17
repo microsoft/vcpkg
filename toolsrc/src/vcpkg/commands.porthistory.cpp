@@ -6,6 +6,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::PortHistory
 {

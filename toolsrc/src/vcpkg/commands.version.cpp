@@ -4,6 +4,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 #define STRINGIFY(...) #__VA_ARGS__
 #define MACRO_TO_STRING(X) STRINGIFY(X)

@@ -5,6 +5,7 @@
 #include <vcpkg/commands.cache.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Cache
 {

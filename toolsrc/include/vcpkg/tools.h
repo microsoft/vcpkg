@@ -2,13 +2,13 @@
 
 #include <vcpkg/base/files.h>
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <string>
 #include <utility>
 
 namespace vcpkg
 {
-    struct VcpkgPaths;
-
     namespace Tools
     {
         static const std::string SEVEN_ZIP = "7zip";

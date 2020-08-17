@@ -4,6 +4,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/versiont.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::List
 {

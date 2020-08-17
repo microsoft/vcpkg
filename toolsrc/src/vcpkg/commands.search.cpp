@@ -8,6 +8,7 @@
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/versiont.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 using vcpkg::PortFileProvider::PathsPortFileProvider;
 

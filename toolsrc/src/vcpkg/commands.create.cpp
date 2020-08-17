@@ -6,6 +6,7 @@
 #include <vcpkg/commands.create.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Create
 {

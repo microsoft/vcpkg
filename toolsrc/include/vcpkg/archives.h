@@ -2,10 +2,7 @@
 
 #include <vcpkg/base/files.h>
 
-namespace vcpkg
-{
-    struct VcpkgPaths;
-}
+#include <vcpkg/fwd/vcpkgpaths.h>
 
 namespace vcpkg::Archives
 {

@@ -10,6 +10,7 @@
 #include <vcpkg/tools.h>
 #include <vcpkg/userconfig.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Integrate
 {

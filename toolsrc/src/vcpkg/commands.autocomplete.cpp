@@ -9,6 +9,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Autocomplete
 {
