@@ -37,6 +37,7 @@
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
     cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT;BUILD_TARGET" "" ${ARGN})
+    include("${CMAKE_VARS_FILE}")
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -106,10 +107,27 @@ function(vcpkg_build_make)
 
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
+            if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_STATIC_LINKERFLAGS_${CMAKE_BUILDTYPE}}")
+            else() # dynamic
+                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_SHARED_LINKERFLAGS_${CMAKE_BUILDTYPE}}")
+            endif()
+            if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_C_COMPILER MATCHES "cl.exe")
+                set(LDFLAGS_${CMAKE_BUILDTYPE} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/ -L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/")
+                set(LINK_ENV_${CMAKE_BUILDTYPE} "$ENV{_LINK_} ${LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+            else()
+                set(LDFLAGS_${CMAKE_BUILDTYPE} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/ -L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/ ${LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+            endif()
+        
             set(ENV{LIB} "${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/${LIB_PATHLIKE_CONCAT}")
             set(ENV{LIBPATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/${LIBPATH_PATHLIKE_CONCAT}")
             set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/${LIBRARY_PATH_PATHLIKE_CONCAT}")
             #set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
+
+            if(LINK_ENV_${_VAR_SUFFIX})
+                _vcpkg_backup_env_variables(_LINK_)
+                set(ENV{_LINK_} "$ENV{_LINK_} ${LINK_ENV_${_VAR_SUFFIX}}")
+            endif()
 
             if(_bc_ADD_BIN_TO_PATH)
                 set(_BACKUP_ENV_PATH "$ENV{PATH}")
@@ -126,7 +144,7 @@ function(vcpkg_build_make)
                     WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
-
+            _vcpkg_restore_env_variables(_LINK_)
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
             endif()
