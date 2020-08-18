@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.h>

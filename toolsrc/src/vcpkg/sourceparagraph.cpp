@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/span.h>
@@ -361,7 +359,7 @@ namespace vcpkg
 
     static ParseExpected<SourceParagraph> parse_source_paragraph(const fs::path& path_to_control, Paragraph&& fields)
     {
-        auto origin = path_to_control.u8string();
+        auto origin = fs::u8string(path_to_control);
 
         ParagraphParser parser(std::move(fields));
 
@@ -424,7 +422,7 @@ namespace vcpkg
 
     static ParseExpected<FeatureParagraph> parse_feature_paragraph(const fs::path& path_to_control, Paragraph&& fields)
     {
-        auto origin = path_to_control.u8string();
+        auto origin = fs::u8string(path_to_control);
         ParagraphParser parser(std::move(fields));
 
         auto fpgh = std::make_unique<FeatureParagraph>();
@@ -450,7 +448,7 @@ namespace vcpkg
         if (control_paragraphs.size() == 0)
         {
             auto ret = std::make_unique<Parse::ParseControlErrorInfo>();
-            ret->name = path_to_control.u8string();
+            ret->name = fs::u8string(path_to_control);
             return ret;
         }
 
@@ -839,7 +837,7 @@ namespace vcpkg
         constexpr static StringLiteral FEATURES = "features";
         constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
         constexpr static StringLiteral PLATFORM = "platform";
-        constexpr static StringView KNOWN_FIELDS[] = {NAME, FEATURES, DEFAULT_FEATURES, PLATFORM};
+        const static StringView KNOWN_FIELDS[4]; // not constexpr in MSVC 2015
 
         Optional<Dependency> visit_string(Json::Reader&, StringView, StringView sv)
         {
@@ -889,6 +887,7 @@ namespace vcpkg
             return dep;
         }
     };
+    const StringView DependencyField::KNOWN_FIELDS[] = {NAME, FEATURES, DEFAULT_FEATURES, PLATFORM};
 
     struct FeatureField : Json::VisitorCrtpBase<FeatureField>
     {
@@ -898,7 +897,7 @@ namespace vcpkg
         constexpr static StringLiteral NAME = "name";
         constexpr static StringLiteral DESCRIPTION = "description";
         constexpr static StringLiteral DEPENDENCIES = "dependencies";
-        constexpr static StringView KNOWN_FIELDS[] = {NAME, DESCRIPTION, DEPENDENCIES};
+        const static StringView KNOWN_FIELDS[3]; // Not constexpr in MSVC 2015
 
         Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r, StringView, const Json::Object& obj)
         {
@@ -930,6 +929,7 @@ namespace vcpkg
             return std::move(feature);
         }
     };
+    const StringView FeatureField::KNOWN_FIELDS[] = {NAME, DESCRIPTION, DEPENDENCIES};
 
     Parse::ParseExpected<SourceControlFile> SourceControlFile::parse_manifest_file(const fs::path& path_to_manifest,
                                                                                    const Json::Object& manifest)
@@ -965,7 +965,7 @@ namespace vcpkg
         } err = {};
         auto visit = Json::Reader{&err};
 
-        err.pcei.name = path_to_manifest.u8string();
+        err.pcei.name = fs::u8string(path_to_manifest);
         {
             auto extra_fields = invalid_json_fields(manifest, get_list_of_manifest_fields());
             if (!extra_fields.empty())
