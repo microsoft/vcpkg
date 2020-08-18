@@ -20,6 +20,7 @@ vcpkg_copy_tools(TOOL_NAMES fluidsynth AUTO_CLEAN)
 
 # Remove unnecessary files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
