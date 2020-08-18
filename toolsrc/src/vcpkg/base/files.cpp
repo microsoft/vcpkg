@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
@@ -20,6 +18,32 @@
 #include <copyfile.h>
 #endif // ^^^ defined(__APPLE__)
 
+fs::path fs::u8path(vcpkg::StringView s)
+{
+#if defined(_WIN32)
+    return fs::path(vcpkg::Strings::to_utf16(s));
+#else
+    return fs::path(s.begin(), s.end());
+#endif
+}
+
+std::string fs::u8string(const fs::path& p)
+{
+#if defined(_WIN32)
+    return vcpkg::Strings::to_utf8(p.native());
+#else
+    return p.native();
+#endif
+}
+std::string fs::generic_u8string(const fs::path& p)
+{
+#if defined(_WIN32)
+    return vcpkg::Strings::to_utf8(p.generic_wstring());
+#else
+    return p.generic_string();
+#endif
+}
+
 namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
@@ -34,6 +58,7 @@ namespace vcpkg::Files
             WIN32_FILE_ATTRIBUTE_DATA file_attributes;
             auto ft = file_type::unknown;
             auto permissions = perms::unknown;
+            ec.clear();
             if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
             {
                 const auto err = GetLastError();
@@ -101,6 +126,64 @@ namespace vcpkg::Files
             return status_implementation(false, p, ec);
         }
 
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+        fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
+        {
+            ec.clear();
+            auto handle = CreateFileW(oldpath.c_str(),
+                                      0, // open just the metadata
+                                      FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+                                      nullptr /* no security attributes */,
+                                      OPEN_EXISTING,
+                                      FILE_ATTRIBUTE_NORMAL,
+                                      nullptr /* no template file */);
+            if (handle == INVALID_HANDLE_VALUE)
+            {
+                ec.assign(GetLastError(), std::system_category());
+                return oldpath;
+            }
+            fs::path target;
+            const DWORD maxsize = 32768;
+            const std::unique_ptr<wchar_t[]> buffer(new wchar_t[maxsize]);
+            const auto rc = GetFinalPathNameByHandleW(handle, buffer.get(), maxsize, 0);
+            if (rc > 0 && rc < maxsize)
+            {
+                target = buffer.get();
+            }
+            else
+            {
+                ec.assign(GetLastError(), std::system_category());
+            }
+            CloseHandle(handle);
+            return target;
+        }
+#endif // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+
+        void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
+        {
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+            const auto target = read_symlink_implementation(oldpath, ec);
+            if (ec) return;
+
+            const DWORD flags =
+#if defined(SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)
+                SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+#else
+                0;
+#endif
+            if (!CreateSymbolicLinkW(newpath.c_str(), target.c_str(), flags))
+            {
+                const auto err = GetLastError();
+                ec.assign(err, std::system_category());
+                return;
+            }
+            ec.clear();
+            return;
+#else  // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
+            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
+        }
+
         // does _not_ follow symlinks
         void set_writeable(const fs::path& path, std::error_code& ec) noexcept
         {
@@ -148,13 +231,13 @@ namespace vcpkg::Files
             return std::move(*p);
         else
             Checks::exit_with_message(
-                linfo, "error reading file: %s: %s", path.u8string(), maybe_contents.error().message());
+                linfo, "error reading file: %s: %s", fs::u8string(path), maybe_contents.error().message());
     }
     void Filesystem::write_contents(const fs::path& path, const std::string& data, LineInfo linfo)
     {
         std::error_code ec;
         this->write_contents(path, data, ec);
-        if (ec) Checks::exit_with_message(linfo, "error writing file: %s: %s", path.u8string(), ec.message());
+        if (ec) Checks::exit_with_message(linfo, "error writing file: %s: %s", fs::u8string(path), ec.message());
     }
     void Filesystem::rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo)
     {
@@ -162,14 +245,14 @@ namespace vcpkg::Files
         this->rename(oldpath, newpath, ec);
         if (ec)
             Checks::exit_with_message(
-                linfo, "error renaming file: %s: %s: %s", oldpath.u8string(), newpath.u8string(), ec.message());
+                linfo, "error renaming file: %s: %s: %s", fs::u8string(oldpath), fs::u8string(newpath), ec.message());
     }
 
     bool Filesystem::remove(const fs::path& path, LineInfo linfo)
     {
         std::error_code ec;
         auto r = this->remove(path, ec);
-        if (ec) Checks::exit_with_message(linfo, "error removing file: %s: %s", path.u8string(), ec.message());
+        if (ec) Checks::exit_with_message(linfo, "error removing file: %s: %s", fs::u8string(path), ec.message());
         return r;
     }
 
@@ -188,7 +271,8 @@ namespace vcpkg::Files
     {
         std::error_code ec;
         auto result = this->exists(path, ec);
-        if (ec) Checks::exit_with_message(li, "error checking existence of file %s: %s", path.u8string(), ec.message());
+        if (ec)
+            Checks::exit_with_message(li, "error checking existence of file %s: %s", fs::u8string(path), ec.message());
         return result;
     }
 
@@ -210,7 +294,7 @@ namespace vcpkg::Files
         bool result = this->create_directory(path, ec);
         if (ec)
         {
-            vcpkg::Checks::exit_with_message(li, "error creating directory %s", path.u8string(), ec.message());
+            vcpkg::Checks::exit_with_message(li, "error creating directory %s", fs::u8string(path), ec.message());
         }
 
         return result;
@@ -228,7 +312,7 @@ namespace vcpkg::Files
         bool result = this->create_directories(path, ec);
         if (ec)
         {
-            vcpkg::Checks::exit_with_message(li, "error creating directories %s", path.u8string(), ec.message());
+            vcpkg::Checks::exit_with_message(li, "error creating directories %s", fs::u8string(path), ec.message());
         }
 
         return result;
@@ -240,7 +324,7 @@ namespace vcpkg::Files
         this->copy_file(oldpath, newpath, opts, ec);
         if (ec)
             vcpkg::Checks::exit_with_message(
-                li, "error copying file from %s to %s: %s", oldpath.u8string(), newpath.u8string(), ec.message());
+                li, "error copying file from %s to %s: %s", fs::u8string(oldpath), fs::u8string(newpath), ec.message());
     }
 
     fs::file_status Filesystem::status(vcpkg::LineInfo li, const fs::path& p) const noexcept
@@ -277,7 +361,7 @@ namespace vcpkg::Files
     {
         std::error_code ec;
         this->write_lines(path, lines, ec);
-        if (ec) Checks::exit_with_message(linfo, "error writing lines: %s: %s", path.u8string(), ec.message());
+        if (ec) Checks::exit_with_message(linfo, "error writing lines: %s: %s", fs::u8string(path), ec.message());
     }
 
     void Filesystem::remove_all(const fs::path& path, LineInfo li)
@@ -651,7 +735,7 @@ namespace vcpkg::Files
                         fs::stdfs::remove(current_path, ec);
                         if (check_ec(ec, current_path, err)) return;
                     }
-#else // ^^^ VCPKG_USE_STD_FILESYSTEM // !VCPKG_USE_STD_FILESYSTEM vvv
+#else // ^^^  VCPKG_USE_STD_FILESYSTEM // !VCPKG_USE_STD_FILESYSTEM vvv
 #if defined(_WIN32)
                     else if (path_type == fs::file_type::directory_symlink)
                     {
@@ -799,7 +883,7 @@ namespace vcpkg::Files
         }
         virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
-            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+            return Files::copy_symlink_implementation(oldpath, newpath, ec);
         }
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
@@ -843,7 +927,7 @@ namespace vcpkg::Files
         {
 #if VCPKG_USE_STD_FILESYSTEM
             return fs::stdfs::absolute(path, ec);
-#else // ^^^ VCPKG_USE_STD_FILESYSTEM  / !VCPKG_USE_STD_FILESYSTEM  vvv
+#else // ^^^ VCPKG_USE_STD_FILESYSTEM  /  !VCPKG_USE_STD_FILESYSTEM  vvv
 #if defined(_WIN32)
             // absolute was called system_complete in experimental filesystem
             return fs::stdfs::system_complete(path, ec);
@@ -960,7 +1044,7 @@ namespace vcpkg::Files
                 return res;
             }
 
-            System::printf("Waiting to take filesystem lock on %s...\n", path.u8string());
+            System::printf("Waiting to take filesystem lock on %s...\n", fs::u8string(path));
             const auto wait = std::chrono::milliseconds(1000);
             for (;;)
             {
@@ -982,7 +1066,7 @@ namespace vcpkg::Files
                 return res;
             }
 
-            System::printf("Waiting to take filesystem lock on %s...\n", path.u8string());
+            Debug::print("Waiting to take filesystem lock on ", fs::u8string(path), "...\n");
             auto wait = std::chrono::milliseconds(100);
             // waits, at most, a second and a half.
             while (wait < std::chrono::milliseconds(1000))
@@ -1035,7 +1119,7 @@ namespace vcpkg::Files
                     if (Util::find(ret, p) == ret.end() && this->exists(p, ec))
                     {
                         ret.push_back(p);
-                        Debug::print("Found path: ", p.u8string(), '\n');
+                        Debug::print("Found path: ", fs::u8string(p), '\n');
                     }
                 }
             }

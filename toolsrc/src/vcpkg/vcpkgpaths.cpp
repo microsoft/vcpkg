@@ -1,16 +1,18 @@
-#include "pch.h"
-
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/visualstudio.h>
 
@@ -35,7 +37,7 @@ namespace
         Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
         auto result = process_input_directory_impl(filesystem, root, option, name, li);
-        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
+        Debug::print("Using ", name, "-root: ", fs::u8string(result), '\n');
         return result;
     }
 
@@ -57,7 +59,7 @@ namespace
         Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
         auto result = process_output_directory_impl(filesystem, root, option, name, li);
-        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
+        Debug::print("Using ", name, "-root: ", fs::u8string(result), '\n');
         return result;
     }
 
@@ -90,6 +92,7 @@ namespace vcpkg
 
             Lazy<std::vector<VcpkgPaths::TripletFile>> available_triplets;
             Lazy<std::vector<Toolset>> toolsets;
+            Lazy<std::map<std::string, std::string>> cmake_script_hashes;
 
             Files::Filesystem* fs_ptr;
 
@@ -123,7 +126,7 @@ namespace vcpkg
         }
         uppercase_win32_drive_letter(root);
         Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
-        Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
+        Debug::print("Using vcpkg-root: ", fs::u8string(root), '\n');
 
         std::error_code ec;
         bool manifest_mode_on = args.manifest_mode.value_or(args.manifest_root_dir != nullptr);
@@ -139,7 +142,7 @@ namespace vcpkg
 
         if (!manifest_root_dir.empty() && manifest_mode_on)
         {
-            Debug::print("Using manifest-root: ", manifest_root_dir.u8string(), '\n');
+            Debug::print("Using manifest-root: ", fs::u8string(manifest_root_dir), '\n');
 
             installed = process_output_directory(
                 filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
@@ -155,7 +158,7 @@ namespace vcpkg
             if (ec)
             {
                 System::printf(
-                    System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
+                    System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));
                 System::printf(System::Color::error, "    %s\n", ec.message());
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
@@ -163,11 +166,11 @@ namespace vcpkg
         else
         {
             // we ignore the manifest root dir if the user requests -manifest
-            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value())
+            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value() && !args.output_json())
             {
                 System::print2(System::Color::warning,
                                "Warning: manifest-root detected at ",
-                               manifest_root_dir.generic_u8string(),
+                               fs::generic_u8string(manifest_root_dir),
                                ", but manifests are not enabled.\n");
                 System::printf(System::Color::warning,
                                R"(If you wish to use manifest mode, you may do one of the following:
@@ -278,11 +281,31 @@ If you wish to silence this error and use classic mode, you can:
                 {
                     if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, path)))
                     {
-                        output.emplace_back(TripletFile(path.stem().filename().u8string(), triplets_dir));
+                        output.emplace_back(TripletFile(fs::u8string(path.stem().filename()), triplets_dir));
                     }
                 }
             }
             return output;
+        });
+    }
+
+    const std::map<std::string, std::string>& VcpkgPaths::get_cmake_script_hashes() const
+    {
+        return m_pimpl->cmake_script_hashes.get_lazy([this]() -> std::map<std::string, std::string> {
+            auto& fs = this->get_filesystem();
+            std::map<std::string, std::string> helpers;
+            auto files = fs.get_files_non_recursive(this->scripts / fs::u8path("cmake"));
+            auto common_functions = fs::u8path("vcpkg_common_functions");
+            for (auto&& file : files)
+            {
+                auto stem = file.stem();
+                if (stem != common_functions)
+                {
+                    helpers.emplace(fs::u8string(stem),
+                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
+                }
+            }
+            return helpers;
         });
     }
 
@@ -352,7 +375,7 @@ If you wish to silence this error and use classic mode, you can:
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
                                "Could not find Visual Studio instance at %s with %s toolset.",
-                               vsp->u8string(),
+                               fs::u8string(*vsp),
                                *tsv);
 
             Checks::check_exit(VCPKG_LINE_INFO, candidates.size() == 1);

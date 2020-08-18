@@ -1,9 +1,7 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/binarycaching.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.setinstalled.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
@@ -14,8 +12,8 @@
 
 namespace vcpkg::Commands::SetInstalled
 {
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "--x-write-nuget-packages-config";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
 
     static constexpr CommandSwitch INSTALL_SWITCHES[] = {
         {OPTION_DRY_RUN, "Do not actually build or install"},
@@ -39,21 +37,10 @@ namespace vcpkg::Commands::SetInstalled
                              const PortFileProvider::PathsPortFileProvider& provider,
                              IBinaryProvider& binary_provider,
                              const CMakeVars::CMakeVarProvider& cmake_vars,
-                             const std::vector<FullPackageSpec>& specs,
-                             const Build::BuildPackageOptions& install_plan_options,
+                             Dependencies::ActionPlan action_plan,
                              DryRun dry_run,
                              const Optional<fs::path>& maybe_pkgsconfig)
     {
-        // We have a set of user-requested specs.
-        // We need to know all the specs which are required to fulfill dependencies for those specs.
-        // Therefore, we see what we would install into an empty installed tree, so we can use the existing code.
-        auto action_plan = Dependencies::create_feature_install_plan(provider, cmake_vars, specs, {});
-
-        for (auto&& action : action_plan.install_actions)
-        {
-            action.build_options = install_plan_options;
-        }
-
         cmake_vars.load_tag_vars(action_plan, provider);
         Build::compute_all_abis(paths, action_plan, cmake_vars, {});
 
@@ -106,7 +93,7 @@ namespace vcpkg::Commands::SetInstalled
             auto pkgsconfig_path = Files::combine(paths.original_cwd, *p_pkgsconfig);
             auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
             fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
-            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+            System::print2("Wrote NuGet packages config information to ", fs::u8string(pkgsconfig_path), "\n");
         }
 
         if (dry_run == DryRun::Yes)
@@ -155,14 +142,31 @@ namespace vcpkg::Commands::SetInstalled
         {
             pkgsconfig = it_pkgsconfig->second;
         }
+
+        // We have a set of user-requested specs.
+        // We need to know all the specs which are required to fulfill dependencies for those specs.
+        // Therefore, we see what we would install into an empty installed tree, so we can use the existing code.
+        auto action_plan = Dependencies::create_feature_install_plan(provider, *cmake_vars, specs, {});
+
+        for (auto&& action : action_plan.install_actions)
+        {
+            action.build_options = Build::default_build_package_options;
+        }
+
         perform_and_exit_ex(args,
                             paths,
                             provider,
                             *binary_provider,
                             *cmake_vars,
-                            specs,
-                            vcpkg::Build::default_build_package_options,
+                            std::move(action_plan),
                             dry_run ? DryRun::Yes : DryRun::No,
                             pkgsconfig);
+    }
+
+    void SetInstalledCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                               const VcpkgPaths& paths,
+                                               Triplet default_triplet) const
+    {
+        SetInstalled::perform_and_exit(args, paths, default_triplet);
     }
 }

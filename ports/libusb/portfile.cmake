@@ -1,8 +1,6 @@
-if (VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "Error: the port is unsupported on your platform. Please open an issue on github.com/Microsoft/vcpkg to request a fix")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
     message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoreconf libudev-dev")
 endif()
 
@@ -41,78 +39,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
       endif()
   endif()
 
+  # The README file in the archive is a symlink to README.md 
+  # which causes issues with the windows MSBUILD process
+  file(REMOVE ${SOURCE_PATH}/README)
+
   vcpkg_install_msbuild(
       SOURCE_PATH ${SOURCE_PATH}
       PROJECT_SUBPATH msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
       LICENSE_SUBPATH COPYING
   )
+  file(INSTALL ${SOURCE_PATH}/libusb/libusb.h  DESTINATION ${CURRENT_PACKAGES_DIR}/include/libusb-1.0)
 else()
-    set(BASH /bin/bash)
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        # Copy sources
-        message(STATUS "Copying source files...")
-        file(GLOB PORT_SOURCE_FILES ${SOURCE_PATH}/*)
-        foreach(SOURCE_FILE ${PORT_SOURCE_FILES})
-          file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        endforeach()
-        message(STATUS "Copying source files... done")
-        # Configure release
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./autogen.sh\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./configure --prefix=${CURRENT_PACKAGES_DIR}\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        # Copy sources
-        message(STATUS "Copying source files...")
-        file(GLOB PORT_SOURCE_FILES ${SOURCE_PATH}/*)
-        foreach(SOURCE_FILE ${PORT_SOURCE_FILES})
-          file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        endforeach()
-        message(STATUS "Copying source files... done")
-        # Configure debug
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./autogen.sh\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        execute_process(
-            COMMAND "${BASH} --noprofile --norc -c \"./configure --prefix=${CURRENT_PACKAGES_DIR}/debug\""
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-      # Build release
-      message(STATUS "Package ${TARGET_TRIPLET}-rel")
-      execute_process(
-          COMMAND "${BASH} --noprofile --norc -c \"make install\""
-          WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-      message(STATUS "Package ${TARGET_TRIPLET}-rel done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      # Build debug
-      message(STATUS "Package ${TARGET_TRIPLET}-dbg")
-      execute_process(
-          COMMAND "${BASH} --noprofile --norc -c \"make install\""
-          WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-      message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
-    endif()
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+    )
+    vcpkg_install_make()
 endif()
-
-file(INSTALL
-    ${SOURCE_PATH}/libusb/libusb.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/libusb-1.0
-)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

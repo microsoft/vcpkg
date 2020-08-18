@@ -161,6 +161,12 @@ namespace vcpkg::Dependencies
                                    const StatusParagraphs& status_db,
                                    const CreateInstallPlanOptions& options = {});
 
+    // `features` should have "default" instead of missing "core". This is only exposed for testing purposes.
+    std::vector<FullPackageSpec> resolve_deps_as_top_level(const SourceControlFile& scf,
+                                                           Triplet triplet,
+                                                           std::vector<std::string> features,
+                                                           CMakeVars::CMakeVarProvider& var_provider);
+
     void print_plan(const ActionPlan& action_plan,
                     const bool is_recursive = true,
                     const fs::path& default_ports_dir = {});

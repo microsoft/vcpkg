@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-feature-example.patch
         support-static-in-win.patch
         fix-timeval.patch
+        fix-pthread.h-not-found-on-windows.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

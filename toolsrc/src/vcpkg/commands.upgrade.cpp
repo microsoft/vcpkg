@@ -1,10 +1,8 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/binarycaching.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.upgrade.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -19,8 +17,8 @@ namespace vcpkg::Commands::Upgrade
     using Install::KeepGoing;
     using Install::to_keep_going;
 
-    static constexpr StringLiteral OPTION_NO_DRY_RUN = "--no-dry-run";
-    static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
+    static constexpr StringLiteral OPTION_NO_DRY_RUN = "no-dry-run";
+    static constexpr StringLiteral OPTION_KEEP_GOING = "keep-going";
 
     static constexpr std::array<CommandSwitch, 2> INSTALL_SWITCHES = {{
         {OPTION_NO_DRY_RUN, "Actually upgrade"},
@@ -191,5 +189,12 @@ namespace vcpkg::Commands::Upgrade
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void UpgradeCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                          const VcpkgPaths& paths,
+                                          Triplet default_triplet) const
+    {
+        Upgrade::perform_and_exit(args, paths, default_triplet);
     }
 }

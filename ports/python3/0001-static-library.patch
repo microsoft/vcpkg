@@ -1,5 +1,5 @@
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
-index b6b8d44586..35b329f307 100644
+index b6b8d445869bc..35b329f307c12 100644
 --- a/PC/pyconfig.h
 +++ b/PC/pyconfig.h
 @@ -257,6 +257,7 @@ typedef int pid_t;
@@ -23,7 +23,7 @@ index b6b8d44586..35b329f307 100644
  
  #if defined(MS_WIN64)
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index 0666b90f66..eb5ecffe71 100644
+index 0666b90f66cc9..ca83b82d8a0fe 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -73,7 +73,7 @@
@@ -35,7 +35,7 @@ index 0666b90f66..eb5ecffe71 100644
      <UseOfMfc>false</UseOfMfc>
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-@@ -102,7 +102,7 @@
+@@ -102,12 +102,24 @@
        <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
        <AdditionalIncludeDirectories>$(PySourcePath)Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <AdditionalIncludeDirectories Condition="$(IncludeExternals)">$(zlibDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -44,3 +44,20 @@ index 0666b90f66..eb5ecffe71 100644
        <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
      </ClCompile>
      <Link>
+       <AdditionalDependencies>version.lib;shlwapi.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGInstrument|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGUpdate|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MachineX86</TargetMachine>
++    </Lib>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClInclude Include="..\Include\abstract.h" />
