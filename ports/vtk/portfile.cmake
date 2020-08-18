@@ -71,6 +71,23 @@ if("mpi" IN_LIST FEATURES)
     )
 endif()
 
+if("opengl" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_DomainsChemestryOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_ImagingOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_opengl=YES
+        )
+endif()
+
+if("cuda" IN_LIST FEATURES AND CMAKE_HOST_WIN32)
+    vcpkg_add_to_path("$ENV{CUDA_PATH}/bin")
+endif()
+
 if("all" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
@@ -88,11 +105,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF ab278e87b181e3a02082bea7361fbaa3ddafb3ad # v9.0 
-    SHA512 50a324f55b58bc4415f972f711420e83b41a100b27729266db4541c24bc7d7bcd27d9158ce2588178b9b2e43c20b9695ffe382605f5cde331e8371e213655164
+    REF 96e6fa9b3ff245e4d51d49f23d40e9ad8774e85e # v9.0.1
+    SHA512 0efb1845053b6143e5ee7fa081b8be98f6825262c59051e88b2be02497e23362055067b2f811eff82e93eb194e5a9afd2a12e3878a252eb4011a5dab95127a6f
     HEAD_REF master
     PATCHES
-        6890.diff         # already merged upstream
+        6811.patch
         FindLZMA.patch    # Will be fixed in 9.1?
         FindLZ4.patch
         Findproj.patch
@@ -103,6 +120,7 @@ vcpkg_from_github(
         python_debug.patch
         fix-using-hdf5.patch
         # Last patch TODO: Patch out internal loguru
+        FindExpat.patch
 )
 
 # =============================================================================
@@ -128,6 +146,7 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
+        -DVTK_ENABLE_REMOTE_MODULES=OFF
         # VTK groups to enable
         -DVTK_GROUP_ENABLE_StandAlone=YES
         -DVTK_GROUP_ENABLE_Rendering=YES
@@ -247,8 +266,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # =============================================================================
 # Handle copyright
-file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/vtk/copyright)
+file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/vtk")
 

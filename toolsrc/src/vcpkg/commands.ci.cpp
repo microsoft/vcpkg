@@ -1,24 +1,72 @@
-#include "pch.h"
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.ci.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
-#include <vcpkg/logicexpression.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/platform-expression.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
+
+namespace
+{
+    using namespace vcpkg::Build;
+
+    const fs::path dot_log = fs::u8path(".log");
+    const fs::path readme_dot_log = fs::u8path("readme.log");
+
+    class CiBuildLogsRecorder final : public IBuildLogsRecorder
+    {
+        fs::path base_path;
+
+    public:
+        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) { }
+
+        virtual void record_build_result(const VcpkgPaths& paths,
+                                         const PackageSpec& spec,
+                                         BuildResult result) const override
+        {
+            if (result == BuildResult::SUCCEEDED)
+            {
+                return;
+            }
+
+            auto& filesystem = paths.get_filesystem();
+            const auto source_path = paths.build_dir(spec);
+            auto children = filesystem.get_files_non_recursive(source_path);
+            Util::erase_remove_if(children, [](const fs::path& p) { return p.extension() != dot_log; });
+            const auto target_path = base_path / fs::u8path(spec.name());
+            (void)filesystem.create_directory(target_path, VCPKG_LINE_INFO);
+            if (children.empty())
+            {
+                std::string message =
+                    "There are no build logs for " + spec.to_string() +
+                    " build.\n"
+                    "This is usually because the build failed early and outside of a task that is logged.\n"
+                    "See the console output logs from vcpkg for more information on the failure.\n";
+                filesystem.write_contents(target_path / readme_dot_log, message, VCPKG_LINE_INFO);
+            }
+            else
+            {
+                for (const fs::path& p : children)
+                {
+                    filesystem.copy_file(p, target_path / p.filename(), fs::copy_options::none, VCPKG_LINE_INFO);
+                }
+            }
+        }
+    };
+}
 
 namespace vcpkg::Commands::CI
 {
@@ -32,15 +80,16 @@ namespace vcpkg::Commands::CI
         Install::InstallSummary summary;
     };
 
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
-    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
-    static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_EXCLUDE = "exclude";
+    static constexpr StringLiteral OPTION_FAILURE_LOGS = "failure-logs";
+    static constexpr StringLiteral OPTION_XUNIT = "x-xunit";
+    static constexpr StringLiteral OPTION_RANDOMIZE = "x-randomize";
 
-    static constexpr std::array<CommandSetting, 2> CI_SETTINGS = {{
-        {OPTION_EXCLUDE, "Comma separated list of ports to skip"},
-        {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
-    }};
+    static constexpr std::array<CommandSetting, 3> CI_SETTINGS = {
+        {{OPTION_EXCLUDE, "Comma separated list of ports to skip"},
+         {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
+         {OPTION_FAILURE_LOGS, "Directory to which failure logs will be copied"}}};
 
     static constexpr std::array<CommandSwitch, 2> CI_SWITCHES = {{
         {OPTION_DRY_RUN, "Print out plan without execution"},
@@ -171,7 +220,7 @@ namespace vcpkg::Commands::CI
             }
 
             std::string traits_block;
-            if (test.abi_tag != "")
+            if (!test.abi_tag.empty())
             {
                 traits_block += Strings::format(R"(<trait name="abi_tag" value="%s" />)", test.abi_tag);
             }
@@ -226,26 +275,11 @@ namespace vcpkg::Commands::CI
                                       const InstallPlanAction* install_plan)
     {
         auto&& scfl = install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-        const std::string& supports_expression = scfl.source_control_file->core_paragraph->supports_expression;
-        if (supports_expression.empty())
-        {
-            return true; // default to 'supported'
-        }
+        const auto& supports_expression = scfl.source_control_file->core_paragraph->supports_expression;
+        PlatformExpression::Context context =
+            var_provider.get_tag_vars(install_plan->spec).value_or_exit(VCPKG_LINE_INFO);
 
-        ExpressionContext context = {var_provider.get_tag_vars(install_plan->spec).value_or_exit(VCPKG_LINE_INFO),
-                                     install_plan->spec.triplet().canonical_name()};
-        auto maybe_result = evaluate_expression(supports_expression, context);
-        if (auto b = maybe_result.get())
-            return *b;
-        else
-        {
-            System::print2(System::Color::error,
-                           "Error: while processing ",
-                           install_plan->spec.to_string(),
-                           "\n",
-                           maybe_result.error());
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
+        return supports_expression.evaluate(context);
     }
 
     static std::unique_ptr<UnknownCIPortsResults> find_unknown_ports_for_ci(
@@ -260,25 +294,14 @@ namespace vcpkg::Commands::CI
 
         std::set<PackageSpec> will_fail;
 
-        const Build::BuildPackageOptions build_options = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
-            Build::CleanBuildtrees::YES,
-            Build::CleanPackages::YES,
-            Build::CleanDownloads::NO,
-            Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::YES,
-        };
-
         std::vector<PackageSpec> packages_with_qualified_deps;
-        auto has_qualifier = [](Dependency const& dep) { return !dep.qualifier.empty(); };
+        auto has_qualifier = [](Dependency const& dep) { return !dep.platform.is_empty(); };
         for (auto&& spec : specs)
         {
             auto&& scfl = provider.get_control_file(spec.package_spec.name()).value_or_exit(VCPKG_LINE_INFO);
-            if (Util::any_of(scfl.source_control_file->core_paragraph->depends, has_qualifier) ||
+            if (Util::any_of(scfl.source_control_file->core_paragraph->dependencies, has_qualifier) ||
                 Util::any_of(scfl.source_control_file->feature_paragraphs,
-                             [&](auto&& pgh) { return Util::any_of(pgh->depends, has_qualifier); }))
+                             [&](auto&& pgh) { return Util::any_of(pgh->dependencies, has_qualifier); }))
             {
                 packages_with_qualified_deps.push_back(spec.package_spec);
             }
@@ -315,7 +338,7 @@ namespace vcpkg::Commands::CI
                     auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
                     emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
-                    p->build_options = build_options;
+                    p->build_options = vcpkg::Build::default_build_package_options;
                 }
 
                 auto precheck_result = binaryprovider.precheck(paths, action);
@@ -376,25 +399,21 @@ namespace vcpkg::Commands::CI
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
-        if (!args.binary_caching_enabled())
-        {
-            System::print2(System::Color::warning, "Warning: Running ci without binary caching!\n");
-        }
-
         std::unique_ptr<IBinaryProvider> binaryproviderStorage;
         if (args.binary_caching_enabled())
         {
             binaryproviderStorage =
-                create_binary_provider_from_configs(paths, args.binarysources).value_or_exit(VCPKG_LINE_INFO);
+                create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
         }
 
         IBinaryProvider& binaryprovider = binaryproviderStorage ? *binaryproviderStorage : null_binary_provider();
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
+        auto& settings = options.settings;
 
         std::set<std::string> exclusions_set;
-        auto it_exclusions = options.settings.find(OPTION_EXCLUDE);
-        if (it_exclusions != options.settings.end())
+        auto it_exclusions = settings.find(OPTION_EXCLUDE);
+        if (it_exclusions != settings.end())
         {
             auto exclusions = Strings::split(it_exclusions->second, ',');
             exclusions_set.insert(exclusions.begin(), exclusions.end());
@@ -410,23 +429,27 @@ namespace vcpkg::Commands::CI
             triplets.push_back(default_triplet);
         }
 
+        auto& filesystem = paths.get_filesystem();
+        Optional<CiBuildLogsRecorder> build_logs_recorder_storage;
+        {
+            auto it_failure_logs = settings.find(OPTION_FAILURE_LOGS);
+            if (it_failure_logs != settings.end())
+            {
+                auto raw_path = fs::u8path(it_failure_logs->second);
+                System::printf("Creating failure logs output directory %s\n", it_failure_logs->second);
+                filesystem.create_directories(raw_path, VCPKG_LINE_INFO);
+                build_logs_recorder_storage = filesystem.canonical(VCPKG_LINE_INFO, raw_path);
+            }
+        }
+
+        const IBuildLogsRecorder& build_logs_recorder =
+            build_logs_recorder_storage ? *(build_logs_recorder_storage.get()) : null_build_logs_recorder();
+
         StatusParagraphs status_db = database_load_check(paths);
 
-        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
-
-        const Build::BuildPackageOptions install_plan_options = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
-            Build::CleanBuildtrees::YES,
-            Build::CleanPackages::YES,
-            Build::CleanDownloads::NO,
-            Build::DownloadTool::BUILT_IN,
-            Build::FailOnTombstone::YES,
-            Build::PurgeDecompressFailure::YES,
-        };
 
         std::vector<std::map<PackageSpec, BuildResult>> all_known_results;
 
@@ -453,12 +476,8 @@ namespace vcpkg::Commands::CI
                 return FullPackageSpec{spec, std::move(default_features)};
             });
 
-            auto split_specs = find_unknown_ports_for_ci(paths,
-                                                         exclusions_set,
-                                                         provider,
-                                                         var_provider,
-                                                         all_default_full_specs,
-                                                         binaryprovider);
+            auto split_specs = find_unknown_ports_for_ci(
+                paths, exclusions_set, provider, var_provider, all_default_full_specs, binaryprovider);
             PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
 
             Dependencies::CreateInstallPlanOptions serialize_options;
@@ -491,7 +510,7 @@ namespace vcpkg::Commands::CI
                 }
                 else
                 {
-                    action.build_options = install_plan_options;
+                    action.build_options = vcpkg::Build::default_build_package_options;
                 }
             }
 
@@ -502,8 +521,13 @@ namespace vcpkg::Commands::CI
             else
             {
                 auto collection_timer = Chrono::ElapsedTimer::create_started();
-                auto summary = Install::perform(
-                    action_plan, Install::KeepGoing::YES, paths, status_db, binaryprovider, var_provider);
+                auto summary = Install::perform(action_plan,
+                                                Install::KeepGoing::YES,
+                                                paths,
+                                                status_db,
+                                                binaryprovider,
+                                                build_logs_recorder,
+                                                var_provider);
                 auto collection_time_elapsed = collection_timer.elapsed();
 
                 // Adding results for ports that were built or pulled from an archive
@@ -545,14 +569,19 @@ namespace vcpkg::Commands::CI
             result.summary.print();
         }
 
-        auto& settings = options.settings;
         auto it_xunit = settings.find(OPTION_XUNIT);
         if (it_xunit != settings.end())
         {
-            paths.get_filesystem().write_contents(
-                fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
+            filesystem.write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void CICommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                     const VcpkgPaths& paths,
+                                     Triplet default_triplet) const
+    {
+        CI::perform_and_exit(args, paths, default_triplet);
     }
 }

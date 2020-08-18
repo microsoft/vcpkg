@@ -1,16 +1,10 @@
-# vcpkg portfile.cmake for GDAL
-#
 # NOTE: update the version and checksum for new GDAL release
-include(vcpkg_common_functions)
-
 set(GDAL_VERSION_STR "2.4.1")
 set(GDAL_VERSION_PKG "241")
 set(GDAL_VERSION_LIB "204")
 set(GDAL_PACKAGE_SUM "edb9679ee6788334cf18971c803615ac9b1c72bc0c96af8fd4852cb7e8f58e9c4f3d9cb66406bc8654419612e1a7e9d0e62f361712215f4a50120f646bb0a738")
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM is currently not supported.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
@@ -54,7 +48,7 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
     )
 endforeach()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   # Check build system first
   find_program(NMAKE nmake REQUIRED)
 
@@ -86,12 +80,17 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
   endif()
-
+  
   # Setup expat libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" EXPAT_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/expat.lib" EXPAT_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib" EXPAT_LIBRARY_DBG)
-
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libexpatMD.lib" EXPAT_LIBRARY_REL)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libexpatdMD.lib" EXPAT_LIBRARY_DBG)
+  else()
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libexpat.lib" EXPAT_LIBRARY_REL)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libexpatd.lib" EXPAT_LIBRARY_DBG)
+  endif()
+  
   # Setup curl libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" CURL_INCLUDE_DIR)
   if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib")
@@ -423,4 +422,4 @@ else() # Other build system
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH_RELEASE}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/gdal/copyright COPYONLY)
+configure_file(${SOURCE_PATH_RELEASE}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

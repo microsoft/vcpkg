@@ -1,3 +1,4 @@
 Source: span-lite
-Version: 0.5.0
+Version: 0.7.0
 Description: A C++20-like span for C++98, C++11 and later in a single-file header-only library
+Homepage: https://github.com/martinmoene/span-lite

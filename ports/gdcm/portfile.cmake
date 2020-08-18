@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -10,6 +12,7 @@ vcpkg_from_github(
         use-openjpeg-config.patch
         fix-share-path.patch
         Fix-Cmake_DIR.patch
+        use-expat-config.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMake/FindOpenJPEG.cmake)
@@ -42,11 +45,11 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMTargets.cmake GDCM_TARGETS)
-string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
-               "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(OpenJPEG QUIET)" GDCM_TARGETS "${GDCM_TARGETS}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMTargets.cmake "${GDCM_TARGETS}")
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMTargets.cmake
+    "set(CMAKE_IMPORT_FILE_VERSION 1)"
+    "set(CMAKE_IMPORT_FILE_VERSION 1)
+    find_package(OpenJPEG QUIET)"
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

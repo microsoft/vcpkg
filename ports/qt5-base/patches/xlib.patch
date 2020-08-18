@@ -16,8 +16,8 @@ index 9a749516b..242f47504 100644
 @@ -590,6 +592,7 @@
              "headers": "xcb/xcb.h",
              "sources": [
-                 { "type": "pkgConfig", "args": "xcb >= 1.9" },
-+                { "type": "pkgConfig", "args": "xcb >= 1.9 --static" },
+                 { "type": "pkgConfig", "args": "xcb >= 1.11" },
++                { "type": "pkgConfig", "args": "xcb >= 1.11 --static" },
                  "-lxcb"
              ]
          },
@@ -32,8 +32,8 @@ index 9a749516b..242f47504 100644
 @@ -711,6 +715,7 @@
              "headers": "xcb/xkb.h",
              "sources": [
-                 { "type": "pkgConfig", "args": "xcb-xkb >= 1.10" },
-+                { "type": "pkgConfig", "args": "xcb-xkb >= 1.10 --static" },
+                 { "type": "pkgConfig", "args": "xcb-xkb" },
++                { "type": "pkgConfig", "args": "xcb-xkb --static" },
                  "-lxcb-xkb"
              ],
              "use": "xcb"

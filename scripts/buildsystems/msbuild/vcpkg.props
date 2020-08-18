@@ -25,11 +25,17 @@
     <VcpkgPlatformTarget Condition="'$(VcpkgPlatformTarget)' == ''">$(Platform)</VcpkgPlatformTarget>
   </PropertyGroup>
 
+  <!-- Manifest files -->
+  <PropertyGroup>
+    <VcpkgEnableManifest Condition="'$(VcpkgEnableManifest)' == ''">false</VcpkgEnableManifest>
+    <VcpkgManifestInstall Condition="'$(VcpkgManifestInstall)' == ''">true</VcpkgManifestInstall>
+    <VcpkgManifestRoot>$([MSbuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), vcpkg.json))</VcpkgManifestRoot>
+  </PropertyGroup>
+
   <!-- Set other defaults-->
   <PropertyGroup>
     <VcpkgUserTriplet Condition="'$(VcpkgUserTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)</VcpkgUserTriplet>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgUserTriplet)</VcpkgTriplet>
-    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$(VcpkgRoot)\installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDir>
     <VcpkgPageSchema>$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
-  </PropertyGroup> 
+  </PropertyGroup>
 </Project>

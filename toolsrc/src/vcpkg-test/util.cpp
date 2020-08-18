@@ -1,16 +1,17 @@
 #include <vcpkg/base/system_headers.h>
 
 #include <catch2/catch.hpp>
-#include <vcpkg-test/util.h>
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/statusparagraph.h>
+
+#include <vcpkg-test/util.h>
 
 // used to get the implementation specific compiler flags (i.e., __cpp_lib_filesystem)
 #include <ciso646>
-
 #include <iostream>
 #include <memory>
 
@@ -38,6 +39,12 @@
 
 namespace vcpkg::Test
 {
+    const Triplet X86_WINDOWS = Triplet::from_canonical_name("x86-windows");
+    const Triplet X64_WINDOWS = Triplet::from_canonical_name("x64-windows");
+    const Triplet X86_UWP = Triplet::from_canonical_name("x86-uwp");
+    const Triplet ARM_UWP = Triplet::from_canonical_name("arm-uwp");
+    const Triplet X64_ANDROID = Triplet::from_canonical_name("x64-android");
+
     std::unique_ptr<SourceControlFile> make_control_file(
         const char* name,
         const char* depends,
@@ -114,18 +121,20 @@ namespace vcpkg::Test
 #elif !defined(_WIN32) // FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_STD
         return AllowSymlinks::Yes;
 #else
-        constexpr static const wchar_t regkey[] =
-            LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)";
+        constexpr static const wchar_t regkey[] = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)";
         constexpr static const wchar_t regkey_member[] = LR"(AllowDevelopmentWithoutDevLicense)";
 
         DWORD data;
         DWORD dataSize = sizeof(data);
-        const auto status = RegGetValueW(
-            HKEY_LOCAL_MACHINE, regkey, regkey_member, RRF_RT_DWORD, nullptr, &data, &dataSize);
+        const auto status =
+            RegGetValueW(HKEY_LOCAL_MACHINE, regkey, regkey_member, RRF_RT_DWORD, nullptr, &data, &dataSize);
 
-        if (status == ERROR_SUCCESS && data == 1) {
+        if (status == ERROR_SUCCESS && data == 1)
+        {
             return AllowSymlinks::Yes;
-        } else {
+        }
+        else
+        {
             std::cout << "Symlinks are not allowed on this system\n";
             return AllowSymlinks::No;
         }
@@ -154,7 +163,6 @@ namespace vcpkg::Test
         return "/tmp/vcpkg-test";
 #endif
     }
-
 
     const fs::path& base_temporary_directory() noexcept
     {

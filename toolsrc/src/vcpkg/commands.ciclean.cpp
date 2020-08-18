@@ -1,25 +1,25 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.print.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.ciclean.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 using namespace vcpkg;
 
-namespace {
+namespace
+{
     void clear_directory(Files::Filesystem& fs, const fs::path& target)
     {
         using vcpkg::System::print2;
         if (fs.is_directory(target))
         {
-            print2("Clearing contents of ", target.u8string(), "\n");
+            print2("Clearing contents of ", fs::u8string(target), "\n");
             fs.remove_all_inside(target, VCPKG_LINE_INFO);
         }
         else
         {
-            print2("Skipping clearing contents of ", target.u8string(), " because it was not a directory\n");
+            print2("Skipping clearing contents of ", fs::u8string(target), " because it was not a directory\n");
         }
     }
 }
@@ -36,5 +36,10 @@ namespace vcpkg::Commands::CIClean
         clear_directory(fs, paths.packages);
         print2("Completed vcpkg CI clean\n");
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void CICleanCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        CIClean::perform_and_exit(args, paths);
     }
 }
