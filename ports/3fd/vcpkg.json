@@ -16,7 +16,7 @@
       "name": "poco",
       "platform": "windows"
     },
-    "rapidxml",
-    "sqlite3"
+    "sqlite3",
+    "rapidxml"
   ]
 }

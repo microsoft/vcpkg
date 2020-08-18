@@ -12,24 +12,15 @@ add_definitions(
 file(GLOB SOURCES src/secp256k1.c)
 add_library(secp256k1 ${SOURCES})
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-target_include_directories(secp256k1 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
-
-if(INSTALL_HEADERS)
-    file(GLOB HEADERS include/*.h)
-    install(FILES ${HEADERS} DESTINATION include)
-endif()
-
-install(TARGETS secp256k1 EXPORT unofficial-secp256k1-targets
+install(TARGETS secp256k1
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
 )
 
-install(
-    EXPORT unofficial-secp256k1-targets
-    FILE unofficial-secp256k1-targets.cmake
-    NAMESPACE unofficial::
-    DESTINATION share/unofficial-secp256k1
-)
+if(INSTALL_HEADERS)
+    file(GLOB HEADERS include/*.h)
+    install(FILES ${HEADERS} DESTINATION include)
+endif()

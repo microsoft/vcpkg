@@ -8,7 +8,6 @@ vcpkg_from_github(
 )
 
 vcpkg_configure_make(
-    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH libcrafter
     OPTIONS

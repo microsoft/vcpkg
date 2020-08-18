@@ -1,8 +1,10 @@
+#include "pch.h"
+
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
-#include <vcpkg/commands.dependinfo.h>
+#include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
@@ -325,12 +327,5 @@ namespace vcpkg::Commands::DependInfo
             }
         }
         Checks::exit_success(VCPKG_LINE_INFO);
-    }
-
-    void DependInfoCommand::perform_and_exit(const VcpkgCmdArguments& args,
-                                             const VcpkgPaths& paths,
-                                             Triplet default_triplet) const
-    {
-        DependInfo::perform_and_exit(args, paths, default_triplet);
     }
 }

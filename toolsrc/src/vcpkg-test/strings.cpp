@@ -8,10 +8,6 @@
 #include <utility>
 #include <vector>
 
-#if defined(_MSC_VER)
-#pragma warning(disable : 6237)
-#endif
-
 TEST_CASE ("b32 encoding", "[strings]")
 {
     using u64 = uint64_t;

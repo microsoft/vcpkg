@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1e608b3ec..5ff2c3c31 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -34,7 +34,8 @@
+ CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+ 
+ PROJECT ( field3d )
+-
++add_definitions(-UH5_USE_112_API_DEFAULT)
++add_definitions(-DH5_USE_110_API_DEFAULT)
+ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
+ 
+ FIND_PACKAGE (Doxygen)

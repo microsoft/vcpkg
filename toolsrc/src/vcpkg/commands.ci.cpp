@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
@@ -7,7 +9,7 @@
 
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
-#include <vcpkg/commands.ci.h>
+#include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -576,12 +578,5 @@ namespace vcpkg::Commands::CI
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
-    }
-
-    void CICommand::perform_and_exit(const VcpkgCmdArguments& args,
-                                     const VcpkgPaths& paths,
-                                     Triplet default_triplet) const
-    {
-        CI::perform_and_exit(args, paths, default_triplet);
     }
 }

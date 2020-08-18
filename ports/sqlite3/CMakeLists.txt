@@ -24,15 +24,6 @@ target_compile_definitions(
         -DSQLITE_ENABLE_UNLOCK_NOTIFY
         -DSQLITE_ENABLE_COLUMN_METADATA
 )
-
-if(WITH_GEOPOLY)
-    add_compile_definitions(SQLITE_ENABLE_GEOPOLY)
-endif()
-
-if(WITH_JSON1)
-    add_compile_definitions(SQLITE_ENABLE_JSON1)
-endif()
-
 target_include_directories(sqlite3 INTERFACE $<INSTALL_INTERFACE:include>)
 if(NOT WIN32)
     find_package(Threads REQUIRED)
@@ -55,11 +46,11 @@ endif()
 
 install(
     TARGETS sqlite3
-    EXPORT unofficial-sqlite3-targets
+    EXPORT sqlite3
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
 install(FILES sqlite3.h sqlite3ext.h DESTINATION include CONFIGURATIONS Release)
-install(EXPORT unofficial-sqlite3-targets NAMESPACE unofficial::sqlite3:: FILE unofficial-sqlite3-targets.cmake DESTINATION share/unofficial-sqlite3)
+install(EXPORT sqlite3 FILE sqlite3-targets.cmake DESTINATION share/sqlite3)

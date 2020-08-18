@@ -8,11 +8,13 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         find-zlib.patch
+        fix-build_error.patch
 )
 
 # Prefer installed config files
 file(REMOVE
     ${SOURCE_PATH}/fizz/cmake/FindGflags.cmake
+    ${SOURCE_PATH}/fizz/cmake/FindLibevent.cmake
     ${SOURCE_PATH}/fizz/cmake/FindGlog.cmake
 )
 

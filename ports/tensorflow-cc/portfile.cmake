@@ -47,7 +47,6 @@ if(CMAKE_HOST_WIN32)
 
     set(ENV{BAZEL_VS} $ENV{VSInstallDir})
     set(ENV{BAZEL_VC} $ENV{VCInstallDir})
-    set(ENV{BAZEL_VC_FULL_VERSION} $ENV{VCToolsVersion})
 endif()
 
 # tensorflow has long file names, which will not work on windows
@@ -80,7 +79,7 @@ set(ENV{TF_CONFIGURE_IOS} 0)
 message(STATUS "Configuring TensorFlow")
 
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+    COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     LOGNAME config-${TARGET_TRIPLET}-rel
 )

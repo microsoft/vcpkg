@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
@@ -139,12 +141,7 @@ namespace vcpkg::Files
             const auto target = read_symlink_implementation(oldpath, ec);
             if (ec) return;
 
-            const DWORD flags =
-#if defined(SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)
-                SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
-#else
-                0;
-#endif
+            const DWORD flags = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
             if (!CreateSymbolicLinkW(newpath.c_str(), target.c_str(), flags))
             {
                 const auto err = GetLastError();
@@ -1039,7 +1036,7 @@ namespace vcpkg::Files
                 return res;
             }
 
-            Debug::print("Waiting to take filesystem lock on ", path.u8string(), "...\n");
+            System::printf("Waiting to take filesystem lock on %s...\n", path.u8string());
             auto wait = std::chrono::milliseconds(100);
             // waits, at most, a second and a half.
             while (wait < std::chrono::milliseconds(1000))
