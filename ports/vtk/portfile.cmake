@@ -72,6 +72,12 @@ if("mpi" IN_LIST FEATURES)
     )
 endif()
 
+if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
+    )
+endif()
+
 if("opengl" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_DomainsChemestryOpenGL2=YES
