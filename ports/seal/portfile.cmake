@@ -25,12 +25,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    zlib SEAL_USE_ZLIB
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/native/src
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DALLOW_COMMAND_LINE_BUILD=ON
         -DSEAL_LIB_BUILD_TYPE=${SEAL_LIB_BUILD_TYPE}
+        -DSEAL_USE_MSGSL=OFF # issue https://github.com/microsoft/SEAL/issues/159
 )
 
 vcpkg_install_cmake()

@@ -15,7 +15,7 @@ vcpkg_from_github(
         use-vcpkg-libharu.patch
         # Add the support of arm64-windows
         arm64_pcre.patch
-        #fix_foundation_link.patch
+        use-vcpkg-expat.patch
 )
 
 # define Poco linkage type
@@ -143,8 +143,8 @@ elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/Poco")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
- 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -2,13 +2,13 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_fail_port_install(ON_ARCH "arm" "x86")
 
-set(PMDK_VERSION "1.7")
+set(PMDK_VERSION "1.8")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF bc5e309485df61c452d08367e4b13ba9dfed5071 #Commit id corresponding to the version 1.7
-    SHA512 15bee6a046746e4ab7e827bb36685bc5d9cdffdbc68ba86eb71e2c4bd84eb4fed4586c09174257bfd87ea178c8ee9865a8824842d7d1df67e0ae79ff80cf650e
+    REF 0245d75eaf0f6106c86a7926a45fdf2149e37eaa #Commit id corresponding to the version 1.8
+    SHA512 1628f1f6be9e70c28ed490cec2db27aa31a9c6d43e11755a4232686a8523df6dff768e75e64479e22aca52d72500e3a75b256e4ae4de1f518f33cc07c5c26d9b
     HEAD_REF master
     PATCHES
         remove-non-ascii-character.patch
@@ -17,7 +17,7 @@ vcpkg_from_github(
 # Build only the selected projects
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/src/PMDK.sln
-    TARGET "Solution Items\\libpmem,Solution Items\\libpmemlog,Solution Items\\libpmemblk,Solution Items\\libpmemobj,Solution Items\\libpmempool,Solution Items\\libvmem,Solution Items\\Tools\\pmempool"
+    TARGET "Solution Items\\libpmem,Solution Items\\libpmemlog,Solution Items\\libpmemblk,Solution Items\\libpmemobj,Solution Items\\libpmempool,Solution Items\\Tools\\pmempool"
     OPTIONS /p:SRCVERSION=${PMDK_VERSION}
 )
 

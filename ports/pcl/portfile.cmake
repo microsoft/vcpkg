@@ -10,8 +10,10 @@ vcpkg_from_github(
         use_flann_targets.patch
         boost-1.70.patch
         cuda_10_1.patch
-		# Patch for https://github.com/microsoft/vcpkg/issues/7660
-		use_target_link_libraries_in_pclconfig.patch
+        # Patch for https://github.com/microsoft/vcpkg/issues/7660
+        use_target_link_libraries_in_pclconfig.patch
+        fix-link-libpng.patch
+        boost-1.73.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
@@ -44,7 +46,7 @@ vcpkg_configure_cmake(
         -DWITH_LIBUSB=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_VTK=ON
+        -DWITH_VTK=OFF # disabled due to API changes in 9.0
         # FEATURES
         ${FEATURE_OPTIONS}
 )

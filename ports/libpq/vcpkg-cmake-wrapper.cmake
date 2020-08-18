@@ -6,3 +6,12 @@ PATHS
 NO_DEFAULT_PATH
 )
 _find_package(${ARGS})
+if(PostgreSQL_FOUND)
+    find_library(PostgreSQL_DL_LIBRARY NAMES dl)
+    if(PostgreSQL_DL_LIBRARY)
+        list(APPEND PostgreSQL_LIBRARIES "dl")
+        if(TARGET PostgreSQL::PostgreSQL)
+            set_property(TARGET PostgreSQL::PostgreSQL APPEND PROPERTY INTERFACE_LINK_LIBRARIES "dl")
+        endif()
+    endif()
+endif()

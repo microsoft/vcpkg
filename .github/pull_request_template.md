@@ -1,6 +1,6 @@
 **Describe the pull request**
 
-- What does your PR fix? Fixes issue #
+- What does your PR fix? Fixes #
 
 - Which triplets are supported/not supported? Have you updated the CI baseline?
 

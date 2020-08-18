@@ -1,0 +1,50 @@
+diff --git a/common/include/pcl/PCLPointCloud2.h b/common/include/pcl/PCLPointCloud2.h
+index 6a00c1f..5d4ac1c 100644
+--- a/common/include/pcl/PCLPointCloud2.h
++++ b/common/include/pcl/PCLPointCloud2.h
+@@ -8,7 +8,7 @@
+ #include <string>
+ #include <vector>
+ #include <ostream>
+-#include <boost/detail/endian.hpp>
++#include <boost/predef/other/endian.h>
+ 
+ // Include the correct Header path here
+ #include <pcl/PCLHeader.h>
+@@ -23,9 +23,9 @@ namespace pcl
+                      is_bigendian (false), point_step (0), row_step (0),
+                      data (), is_dense (false)
+     {
+-#if defined(BOOST_BIG_ENDIAN)
++#if BOOST_ENDIAN_BIG_BYTE
+       is_bigendian = true;
+-#elif defined(BOOST_LITTLE_ENDIAN)
++#elif BOOST_ENDIAN_LITTLE_BYTE
+       is_bigendian = false;
+ #else
+ #error "unable to determine system endianness"
+diff --git a/io/include/pcl/io/ply/byte_order.h b/io/include/pcl/io/ply/byte_order.h
+index 2af95d0..8328015 100644
+--- a/io/include/pcl/io/ply/byte_order.h
++++ b/io/include/pcl/io/ply/byte_order.h
+@@ -40,7 +40,7 @@
+ #ifndef PCL_IO_PLY_BYTE_ORDER_H
+ #define PCL_IO_PLY_BYTE_ORDER_H
+ 
+-#include <boost/detail/endian.hpp>
++#include <boost/predef/other/endian.h>
+ 
+ namespace pcl
+ {
+@@ -58,9 +58,9 @@ namespace pcl
+       {
+         little_endian_byte_order,
+         big_endian_byte_order,
+-#if defined(BOOST_BIG_ENDIAN)
++#if BOOST_ENDIAN_BIG_BYTE
+         host_byte_order = big_endian_byte_order,
+-#elif defined(BOOST_LITTLE_ENDIAN)
++#elif BOOST_ENDIAN_LITTLE_BYTE
+         host_byte_order = little_endian_byte_order,
+ #else
+ #error "unable to determine system endianness"

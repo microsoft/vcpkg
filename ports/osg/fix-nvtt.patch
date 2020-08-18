@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a991670..5b530c5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -759,7 +759,9 @@ ELSE()
+     FIND_PACKAGE(RSVG)
+     FIND_PACKAGE(GtkGl)
+     FIND_PACKAGE(DirectInput)
++    if (ENABLE_NVTT)
+     FIND_PACKAGE(NVTT)
++    endif()
+     IF (NOT WIN32)
+         FIND_PACKAGE(Asio)
+     ENDIF()

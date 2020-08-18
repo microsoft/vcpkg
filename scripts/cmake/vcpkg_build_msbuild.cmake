@@ -96,6 +96,7 @@ function(vcpkg_build_msbuild)
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
+        /p:VcpkgManifestInstall=false
         /m
     )
 
@@ -110,6 +111,7 @@ function(vcpkg_build_msbuild)
             APPEND _csc_OPTIONS
             /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
             "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+            "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
         )
     endif()
 

@@ -10,6 +10,7 @@ set(VCPKG_PLATFORM_TOOLSET external)
 set(B2_OPTIONS)
 
 if(DEFINED BOOST_CMAKE_FRAGMENT)
+    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
     include(${BOOST_CMAKE_FRAGMENT})
 endif()
 
@@ -32,6 +33,12 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     list(APPEND B2_OPTIONS address-model=64)
 else()
     list(APPEND B2_OPTIONS address-model=32)
+endif()
+
+if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
+    list(APPEND B2_OPTIONS architecture=s390x)
+else()
+    list(APPEND B2_OPTIONS architecture=x86)
 endif()
 
 if(APPLE)
@@ -82,11 +89,19 @@ if(NOT LDLAGS STREQUAL "")
 endif()
 
 #set(CXXFLAGS "${CXXFLAGS} <compileflags>-Wno-error=unused-command-line-argument")
-if(CMAKE_CXX_COMPILER_TARGET)
-    set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET} <compileflags>${CMAKE_CXX_COMPILER_TARGET}")
+if(CMAKE_CXX_COMPILER_TARGET AND CMAKE_CXX_COMPILE_OPTIONS_TARGET)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET}${CMAKE_CXX_COMPILER_TARGET}")
+    else()
+        set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET} <compileflags>${CMAKE_CXX_COMPILER_TARGET}")
+    endif()
 endif()
 if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
-    set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} <compileflags>${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
+    else()
+        set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} <compileflags>${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
+    endif()
 endif()
 if(CMAKE_SYSROOT AND CMAKE_CXX_COMPILE_OPTIONS_SYSROOT)
     set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}")
@@ -153,7 +168,6 @@ add_custom_target(boost ALL
         --hash
         -q
 
-        architecture=x86
         threading=multi
         debug-symbols=on
 

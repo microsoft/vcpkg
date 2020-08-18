@@ -1,11 +1,10 @@
-#include "pch.h"
-
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/buildenvironment.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/dependencies.h>
 
@@ -30,7 +29,7 @@ namespace vcpkg::CMakeVars
     {
         struct TripletCMakeVarProvider : Util::ResourceBase, CMakeVarProvider
         {
-            explicit TripletCMakeVarProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) {}
+            explicit TripletCMakeVarProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) { }
 
             void load_generic_triplet_vars(Triplet triplet) const override;
 
@@ -58,7 +57,6 @@ namespace vcpkg::CMakeVars
                                   std::vector<std::vector<std::pair<std::string, std::string>>>& vars) const;
 
             const VcpkgPaths& paths;
-            const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
             const fs::path get_tags_path = paths.scripts / "vcpkg_get_tags.cmake";
             const fs::path get_dep_info_path = paths.scripts / "vcpkg_get_dep_info.cmake";
             mutable std::unordered_map<PackageSpec, std::unordered_map<std::string, std::string>> dep_resolution_vars;
@@ -115,8 +113,7 @@ namespace vcpkg::CMakeVars
 
         fs::path path = paths.buildtrees / Strings::concat(tag_extract_id++, ".vcpkg_tags.cmake");
 
-        std::error_code ec;
-        fs.create_directories(paths.buildtrees, ec);
+        fs.create_directories(paths.buildtrees, ignore_errors);
         fs.write_contents(path, extraction_file, VCPKG_LINE_INFO);
 
         return path;
@@ -170,11 +167,11 @@ namespace vcpkg::CMakeVars
         static constexpr CStringView BLOCK_START_GUID = "c35112b6-d1ba-415b-aa5d-81de856ef8eb";
         static constexpr CStringView BLOCK_END_GUID = "e1e74b5c-18cb-4474-a6bd-5c1c8bc81f3f";
 
-        const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, script_path, {});
+        const auto cmd_launch_cmake = vcpkg::make_cmake_cmd(paths, script_path, {});
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
 
-        const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
+        const std::vector<std::string> lines = Strings::split(ec_data.output, '\n');
 
         const auto end = lines.cend();
 
@@ -192,7 +189,7 @@ namespace vcpkg::CMakeVars
                 {
                     const std::string& line = *block_start;
 
-                    std::vector<std::string> s = Strings::split(line, "=");
+                    std::vector<std::string> s = Strings::split(line, '=');
                     Checks::check_exit(VCPKG_LINE_INFO,
                                        s.size() == 1 || s.size() == 2,
                                        "Expected format is [VARIABLE_NAME=VARIABLE_VALUE], but was [%s]",

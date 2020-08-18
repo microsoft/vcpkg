@@ -7,11 +7,14 @@ if(UNIX)
   find_library(FONTCONFIG_LIB NAMES fontconfig)
 endif()
 
-if(@NANA_ENABLE_PNG@)
+option(NANA_ENABLE_PNG "Enable PNG support" @NANA_ENABLE_PNG@)
+option(NANA_ENABLE_JPEG "Enable JPEG support" @NANA_ENABLE_JPEG@)
+
+if(NANA_ENABLE_PNG)
   find_package(PNG REQUIRED)
 endif()
 
-if(@NANA_ENABLE_JPEG@)
+if(NANA_ENABLE_JPEG)
   find_package(JPEG REQUIRED)
 endif()
 
@@ -21,6 +24,6 @@ if(UNIX)
   target_link_libraries(unofficial::nana::nana INTERFACE ${FONTCONFIG_LIB} ${X11_LIBRARIES} ${X11_Xft_LIB})
 endif()
 
-if(@NANA_ENABLE_JPEG@)
+if(NANA_ENABLE_JPEG)
   target_link_libraries(unofficial::nana::nana INTERFACE ${JPEG_LIBRARIES})
 endif()

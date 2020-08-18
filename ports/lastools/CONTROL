@@ -1,5 +1,5 @@
 Source: lastools
-Version: 2019-07-10
+Version: 2020-05-09
 Homepage: https://github.com/LAStools/LAStools
 Description: LAStools: award-winning software for efficient LiDAR processing (with LASzip)
 Supports: !uwp

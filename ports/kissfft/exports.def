@@ -1,0 +1,6 @@
+EXPORTS 
+	kiss_fft_alloc
+	kiss_fft
+	kiss_fft_stride
+	kiss_fft_cleanup
+	kiss_fft_next_fast_size

@@ -1,0 +1,5 @@
+Source: xbyak
+Version: 5.93
+Description: Xbyak is a JIT assembler for x86(IA-32)/x64(AMD64, x86-64).
+Homepage: https://github.com/herumi/xbyak
+Supports: !(arm|uwp)

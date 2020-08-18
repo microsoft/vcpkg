@@ -1,18 +1,11 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/polyclipping/files/clipper_ver6.4.2.zip/download"
-    FILENAME "clipper_ver6.4.2.zip"
-    SHA512 ffc88818c44a38aa278d5010db6cfd505796f39664919f1e48c7fa9267563f62135868993e88f7246dcd688241d1172878e4a008a390648acb99738452e3e5dd
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO polyclipping
+    FILENAME "clipper_ver6.4.2.zip"
     NO_REMOVE_ONE_LEVEL
-    REF 6.4.2
+    SHA512 ffc88818c44a38aa278d5010db6cfd505796f39664919f1e48c7fa9267563f62135868993e88f7246dcd688241d1172878e4a008a390648acb99738452e3e5dd
 )
 
 vcpkg_configure_cmake(

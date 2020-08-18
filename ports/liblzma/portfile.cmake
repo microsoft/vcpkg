@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xz-mirror/xz
-    REF v5.2.4
-    SHA512 fce7dc65e77a9b89dbdd6192cb37efc39e3f2cf343f79b54d2dfcd845025dab0e1d5b0f59c264eab04e5cbaf914eeb4818d14cdaac3ae0c1c5de24418656a4b7
+    REF v5.2.5
+    SHA512 686f01cfe33e2194766a856c48668c661b25eee194a443524f87ce3f866e0eb54914075b4e00185921516c5211db8cd5d2658f4b91f4a3580508656f776f468e
     HEAD_REF master
     PATCHES
         enable-uwp-builds.patch
@@ -70,9 +68,13 @@ set(LZMA_FOUND TRUE CACHE BOOL \"\")
 set(LIBLZMA_FOUND TRUE CACHE BOOL \"\")
 ")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake "add_definitions(-DLZMA_API_STATIC)")
+file(READ ${CURRENT_PACKAGES_DIR}/include/lzma.h _contents)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "defined(LZMA_API_STATIC)" "1" _contents "${_contents}")
+else()
+    string(REPLACE "defined(LZMA_API_STATIC)" "0" _contents "${_contents}")
 endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/lzma.h "${_contents}")
 
 if (VCPKG_BUILD_TYPE STREQUAL debug)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include)
@@ -80,6 +82,14 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/lzma.h"
+        "if !defined(LZMA_API_STATIC)"
+        "if 0"
+    )
+endif()
 
-file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma RENAME copyright)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -36,7 +36,8 @@
 ## * [libvpx](https://github.com/Microsoft/vcpkg/blob/master/ports/libvpx/portfile.cmake)
 
 function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
-  set(TOOLPATH ${DOWNLOADS}/tools/msys2)
+  set(TIMESTAMP 20200812)
+  set(TOOLPATH ${DOWNLOADS}/tools/msys2-${TIMESTAMP})
   cmake_parse_arguments(_am "" "" "PACKAGES" ${ARGN})
 
   if(NOT CMAKE_HOST_WIN32)
@@ -53,18 +54,20 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   if(_vam_HOST_ARCHITECTURE STREQUAL "AMD64")
     set(TOOLSUBPATH msys64)
     set(URLS
-      "http://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20181211.tar.xz"
+      "https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20190524.tar.xz/download"
+      "http://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20190524.tar.xz"
     )
-    set(ARCHIVE "msys2-base-x86_64-20181211.tar.xz")
-    set(HASH 1efb9a7ff1daa2d3147ac0fda8e9a645696dbd19a33c986b844bc037d946dddb3353db5a52794ac668718812854400d918e4db13b4a2d0e6f5a9dfe716b48056)
+    set(ARCHIVE "msys2-base-x86_64-20190524.tar.xz")
+    set(HASH 50796072d01d30cc4a02df0f9dafb70e2584462e1341ef0eff94e2542d3f5173f20f81e8f743e9641b7528ea1492edff20ce83cb40c6e292904905abe2a91ccc)
     set(STAMP "initialized-msys2_64.stamp")
   else()
     set(TOOLSUBPATH msys32)
     set(URLS
-      "http://repo.msys2.org/distrib/i686/msys2-base-i686-20181211.tar.xz"
+      "https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20190524.tar.xz/download"
+      "http://repo.msys2.org/distrib/i686/msys2-base-i686-20190524.tar.xz"
     )
-    set(ARCHIVE "msys2-base-i686-20181211.tar.xz")
-    set(HASH a9b9680a511bb205b87811b303eb29d62e2fd851000304f8b087c5893a3891c2aa2d46217ae989e31b5d52a6ba34ac5e6a5e624d9c917df00a752ade4debc20f)
+    set(ARCHIVE "msys2-base-i686-20190524.tar.xz")
+    set(HASH b26d7d432e1eabe2138c4caac5f0a62670f9dab833b9e91ca94b9e13d29a763323b0d30160f09a381ac442b473482dac799be0fea5dd7b28ea2ddd3ba3cd3c25)
     set(STAMP "initialized-msys2_32.stamp")
   endif()
 
@@ -79,6 +82,19 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         SHA512 ${HASH}
     )
 
+    # download the new keyring, without it new packages and package updates
+    # might not install
+    vcpkg_download_distfile(KEYRING_PATH
+        URLS http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+        FILENAME msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+        SHA512 a5023fd17ccf6364bc6e27c5e63aea25f1fc264a5247cbae4008864c828c38c3e0b4de09ded650e28d2e24e319b5fcf7a9c0da0fa3a8ac81679470fc6bd120c9
+    )
+    vcpkg_download_distfile(KEYRING_SIG_PATH
+        URLS http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
+        FILENAME msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
+        SHA512 c326fefd13f58339afe0d0dc78306aa6ab27cafa8c4d792c2d34aa81fdd1f759d490990ab79daa9664a03a6dfa14ffd2b2ad828bf19a883410112d01f5ed6c4c
+    )
+
     file(REMOVE_RECURSE ${TOOLPATH}/${TOOLSUBPATH})
     file(MAKE_DIRECTORY ${TOOLPATH})
     _execute_process(
@@ -87,6 +103,38 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     )
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    # install the new keyring
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --verify ${KEYRING_SIG_PATH}"
+      WORKING_DIRECTORY ${TOOLPATH}
+      RESULT_VARIABLE _vam_error_code
+    )
+    if(_vam_error_code)
+      message(FATAL_ERROR "Cannot verify MSYS2 keyring.")
+    endif()
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -U ${KEYRING_PATH} --noconfirm"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    # we have to kill all GnuPG daemons otherwise bash would potentially not be
+    # able to start after the core system upgrade, additionally vcpkg would
+    # likely hang waiting for spawned processes to exit
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;gpgconf --homedir /etc/pacman.d/gnupg --kill all"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    # we need to update pacman before anything else due to pacman transitioning
+    # to using zstd packages, and our pacman is too old to support those
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy pacman --noconfirm"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    # dash relies on specific versions of the base packages, which prevents us
+    # from doing a proper update. However, we don't need it so we remove it
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Rc dash --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
@@ -98,29 +146,20 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   endif()
 
   if(_am_PACKAGES)
-    message(STATUS "Acquiring MSYS Packages...")
+    message(STATUS "Acquiring MSYS Packages from ${TOOLPATH}...")
     string(REPLACE ";" " " _am_PACKAGES "${_am_PACKAGES}")
 
     set(_ENV_ORIGINAL $ENV{PATH})
     set(ENV{PATH} ${PATH_TO_ROOT}/usr/bin)
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -Sy --noconfirm --needed ${_am_PACKAGES}"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -S --noconfirm --needed ${_am_PACKAGES}"
       WORKING_DIRECTORY ${TOOLPATH}
       LOGNAME msys-pacman-${TARGET_TRIPLET}
     )
     set(ENV{PATH} "${_ENV_ORIGINAL}")
 
     message(STATUS "Acquiring MSYS Packages... OK")
-  endif()
-
-  # Deal with a stale process created by MSYS
-  if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-      vcpkg_execute_required_process(
-          ALLOW_IN_DOWNLOAD_MODE
-          COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage gt 2"
-          WORKING_DIRECTORY ${SOURCE_PATH}
-      )
   endif()
 
   set(${PATH_TO_ROOT_OUT} ${PATH_TO_ROOT} PARENT_SCOPE)

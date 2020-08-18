@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
@@ -8,10 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
-        0002-detect-openssl.patch
         0003-fix-windowsinclude.patch
         0004-fix-debug-build.patch
         0005-fix-libvpx-linking.patch
+        0006-fix-StaticFeatures.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -129,8 +127,74 @@ else()
     set(OPTIONS "${OPTIONS} --disable-bzlib")
 endif()
 
+set(ENABLE_AVRESAMPLE OFF)
 if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
+    set(ENABLE_AVRESAMPLE ON) #necessary for configuring FFMPEG CMake Module
+endif()
+
+if("avcodec" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avcodec")
+    set(ENABLE_AVCODEC ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-avcodec")
+    set(ENABLE_AVCODEC OFF)
+endif()
+
+if("avdevice" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avdevice")
+    set(ENABLE_AVDEVICE ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-avdevice")
+    set(ENABLE_AVDEVICE OFF)
+endif()
+
+if("avformat" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avformat")
+    set(ENABLE_AVFORMAT ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-avformat")
+    set(ENABLE_AVFORMAT OFF)
+endif()
+
+if("avfilter" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avfilter")
+    set(ENABLE_AVFILTER ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-avfilter")
+    set(ENABLE_AVFILTER OFF)
+endif()
+
+if("swresample" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-swresample")
+    set(ENABLE_SWRESAMPLE ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-swresample")
+    set(ENABLE_SWRESAMPLE OFF)
+endif()
+
+if("swscale" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-swscale")
+    set(ENABLE_SWSCALE ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-swscale")
+    set(ENABLE_SWSCALE OFF)
+endif()
+
+if (VCPKG_TARGET_IS_OSX)
+    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
+endif()
+
+if("nvcodec" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
+else()
+    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
+endif()
+
+if("avisynthplus" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avisynth")
+else()
+    set(OPTIONS "${OPTIONS} --disable-avisynth")
 endif()
 
 set(OPTIONS_CROSS "")
@@ -148,7 +212,7 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
     set(OPTIONS "${OPTIONS} --disable-programs")
     set(OPTIONS "${OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
@@ -162,7 +226,7 @@ set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
-    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if (VCPKG_TARGET_IS_UWP)
         set(OPTIONS "${OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
     endif()
 endif()
@@ -179,6 +243,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
+set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 message(STATUS "Building Options: ${OPTIONS}")
 
@@ -237,7 +302,7 @@ endif()
 foreach(DEF_FILE ${DEF_FILES})
     get_filename_component(DEF_FILE_DIR "${DEF_FILE}" DIRECTORY)
     get_filename_component(DEF_FILE_NAME "${DEF_FILE}" NAME)
-    string(REGEX REPLACE "-[0-9]*\\.def" ".lib" OUT_FILE_NAME "${DEF_FILE_NAME}")
+    string(REGEX REPLACE "-[0-9]*\\.def" "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" OUT_FILE_NAME "${DEF_FILE_NAME}")
     file(TO_NATIVE_PATH "${DEF_FILE}" DEF_FILE_NATIVE)
     file(TO_NATIVE_PATH "${DEF_FILE_DIR}/${OUT_FILE_NAME}" OUT_FILE_NATIVE)
     message(STATUS "Generating ${OUT_FILE_NATIVE}")
@@ -248,15 +313,32 @@ foreach(DEF_FILE ${DEF_FILES})
     )
 endforeach()
 
-file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
-file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*.lib ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
-file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-set(FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES} ${EXE_FILES})
-list(LENGTH FILES_TO_REMOVE FILES_TO_REMOVE_LEN)
-if(FILES_TO_REMOVE_LEN GREATER 0)
-    file(REMOVE ${FILES_TO_REMOVE})
+# Handle tools
+if (VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
+    file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+    file(GLOB EXE_FILES_REL ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    file(GLOB EXE_FILES_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    set(FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES} ${EXE_FILES_REL} ${EXE_FILES_DBG})
+
+    if(FILES_TO_REMOVE)
+        if (EXE_FILES_REL)
+            file(INSTALL ${EXE_FILES_REL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        endif()
+        if (EXE_FILES_DBG)
+            file(INSTALL ${EXE_FILES_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
+            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
+        endif()
+        file(REMOVE ${FILES_TO_REMOVE})
+    endif()
 endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 vcpkg_copy_pdbs()
 
@@ -276,7 +358,7 @@ elseif(${LICENSE_STRING} STREQUAL "License: nonfree and unredistributable")
 else()
     message(FATAL_ERROR "Failed to identify license (${LICENSE_STRING})")
 endif()
-file(INSTALL ${SOURCE_PATH}/${LICENSE_FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake @ONLY)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/${LICENSE_FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
