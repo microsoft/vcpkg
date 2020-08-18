@@ -324,7 +324,7 @@ you may use a simple `vcpkg install --feature-flags=manifests`
 For more information, check out the [manifest][getting-started:manifest-spec]
 specification.
 
-[getting-started:using-a-package]: docs/examples/intalling-and-using-packages.md
+[getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools

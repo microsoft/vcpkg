@@ -1,9 +1,14 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/binarycaching.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.create.h>
+#include <vcpkg/commands.dependinfo.h>
+#include <vcpkg/commands.edit.h>
+#include <vcpkg/commands.env.h>
+#include <vcpkg/commands.integrate.h>
+#include <vcpkg/commands.list.h>
+#include <vcpkg/commands.owns.h>
+#include <vcpkg/commands.search.h>
 #include <vcpkg/export.h>
 #include <vcpkg/help.h>
 #include <vcpkg/install.h>
@@ -128,5 +133,10 @@ namespace vcpkg::Help
         System::print2(System::Color::error, "Error: unknown topic ", topic, '\n');
         help_topics(paths);
         Checks::exit_fail(VCPKG_LINE_INFO);
+    }
+
+    void HelpCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Help::perform_and_exit(args, paths);
     }
 }

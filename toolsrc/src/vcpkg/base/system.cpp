@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.debug.h>
@@ -19,6 +17,7 @@ namespace vcpkg
         if (Strings::case_insensitive_ascii_equals(arch, "amd64")) return CPUArchitecture::X64;
         if (Strings::case_insensitive_ascii_equals(arch, "arm")) return CPUArchitecture::ARM;
         if (Strings::case_insensitive_ascii_equals(arch, "arm64")) return CPUArchitecture::ARM64;
+        if (Strings::case_insensitive_ascii_equals(arch, "s390x")) return CPUArchitecture::S390X;
         return nullopt;
     }
 
@@ -30,6 +29,7 @@ namespace vcpkg
             case CPUArchitecture::X64: return "x64";
             case CPUArchitecture::ARM: return "arm";
             case CPUArchitecture::ARM64: return "arm64";
+            case CPUArchitecture::S390X: return "s390x";
             default: Checks::exit_with_message(VCPKG_LINE_INFO, "unexpected vcpkg::System::CPUArchitecture");
         }
     }
@@ -45,12 +45,14 @@ namespace vcpkg
 #else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
 #if defined(__x86_64__) || defined(_M_X64)
         return CPUArchitecture::X64;
-#elif defined(__x86__) || defined(_M_X86)
+#elif defined(__x86__) || defined(_M_X86) || defined(__i386__)
         return CPUArchitecture::X86;
 #elif defined(__arm__) || defined(_M_ARM)
         return CPUArchitecture::ARM;
 #elif defined(__aarch64__) || defined(_M_ARM64)
         return CPUArchitecture::ARM64;
+#elif defined(__s390x__)
+        return CPUArchitecture::S390X;
 #else // choose architecture
 #error "Unknown host architecture"
 #endif // choose architecture
