@@ -59,11 +59,11 @@ namespace vcpkg::Commands::Version
             {
                 if (maj1 != maj2 || min1 != min2 || rev1 != rev2)
                 {
-                    #ifdef _WIN32
-                        auto bootstrap = ".\\bootstrap-vcpkg.bat";
-                    #else
-                        auto bootstrap = ".\/bootstrap-vcpkg.sh";
-                    #endif
+#if defined(_WIN32)
+                    auto bootstrap = ".\\bootstrap-vcpkg.bat";
+#else
+                    auto bootstrap = ".\/bootstrap-vcpkg.sh";
+#endif
                     System::printf(System::Color::warning,
                                    "Warning: Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
                                    "%s to update.\n",

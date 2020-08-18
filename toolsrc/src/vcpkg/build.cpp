@@ -1086,11 +1086,11 @@ namespace vcpkg::Build
 
     std::string create_user_troubleshooting_message(const PackageSpec& spec)
     {
-        #ifdef _WIN32
-          auto vcpkg_update_cmd = ".\\vcpkg update";
-        #else
-          auto vcpkg_update_cmd = ".\/vcpkg update";
-        #endif
+#if defined(_WIN32)
+        auto vcpkg_update_cmd = ".\\vcpkg update";
+#else
+        auto vcpkg_update_cmd = ".\/vcpkg update";
+#endif
         return Strings::format("Please ensure you're using the latest portfiles with `%s`, then\n"
                                "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
                                "  Package: %s\n"

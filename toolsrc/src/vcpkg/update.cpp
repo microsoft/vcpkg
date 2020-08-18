@@ -75,11 +75,11 @@ namespace vcpkg::Update
                 System::printf("    %-32s %s\n", package.spec, package.version_diff.to_string());
             }
 
-            #ifdef _WIN32
-                auto vcpkg_upgrade_cmd = ".\\vcpkg upgrade";
-            #else
-                auto vcpkg_upgrade_cmd = ".\/vcpkg upgrade";
-            #endif
+#if defined(_WIN32)
+            auto vcpkg_upgrade_cmd = ".\\vcpkg upgrade";
+#else
+            auto vcpkg_upgrade_cmd = ".\/vcpkg upgrade";
+#endif
             System::print2("\n"
                            "To update these packages and all dependencies, run\n"
                            "  %s\n"

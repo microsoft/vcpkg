@@ -257,19 +257,18 @@ namespace vcpkg::Dependencies
             {
                 ExpectedS<const SourceControlFileLocation&> maybe_scfl =
                     m_port_provider.get_control_file(ipv.spec().name());
-                #ifdef _WIN32
-                    auto vcpkg_remove_cmd = ".\\vcpkg remove";
-                #else
-                    auto vcpkg_remove_cmd = ".\/vcpkg remove";
-                #endif
+#if defined(_WIN32)
+                auto vcpkg_remove_cmd = ".\\vcpkg remove";
+#else
+                auto vcpkg_remove_cmd = ".\/vcpkg remove";
+#endif
                 if (!maybe_scfl)
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO,
-                        "Error: while loading %s: %s.\nPlease run \"%s %s\" and re-attempt.",
-                        ipv.spec().to_string(),
-                        maybe_scfl.error(),
-                        vcpkg_remove_cmd,
-                        ipv.spec().to_string());
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: while loading %s: %s.\nPlease run \"%s %s\" and re-attempt.",
+                                              ipv.spec().to_string(),
+                                              maybe_scfl.error(),
+                                              vcpkg_remove_cmd,
+                                              ipv.spec().to_string());
 
                 return m_graph
                     .emplace(std::piecewise_construct,

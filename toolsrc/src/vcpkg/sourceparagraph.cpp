@@ -179,11 +179,11 @@ namespace vcpkg
             System::print2("And this is the list of valid fields for manifest files: \n\n    ",
                            Strings::join("\n    ", get_list_of_manifest_fields()),
                            "\n\n");
-            #ifdef _WIN32
-                auto bootstrap = ".\\bootstrap-vcpkg.bat";
-            #else
-                auto bootstrap = ".\/bootstrap-vcpkg.sh";
-            #endif
+#if defined(_WIN32)
+            auto bootstrap = ".\\bootstrap-vcpkg.bat";
+#else
+            auto bootstrap = ".\/bootstrap-vcpkg.sh";
+#endif
             System::print2("You may need to update the vcpkg binary; try running %s to update.\n\n", bootstrap);
         }
 
