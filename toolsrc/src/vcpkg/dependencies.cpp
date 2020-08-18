@@ -302,16 +302,16 @@ namespace vcpkg::Dependencies
                                         const fs::path& install_port_path,
                                         const fs::path& default_port_path)
     {
-        if (!default_port_path.empty() &&
-            !Strings::case_insensitive_ascii_starts_with(install_port_path.u8string(), default_port_path.u8string()))
+        if (!default_port_path.empty() && !Strings::case_insensitive_ascii_starts_with(fs::u8string(install_port_path),
+                                                                                       fs::u8string(default_port_path)))
         {
             const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
             switch (request_type)
             {
                 case RequestType::AUTO_SELECTED:
-                    return Strings::format("  * %s%s -- %s", s, from_head, install_port_path.u8string());
+                    return Strings::format("  * %s%s -- %s", s, from_head, fs::u8string(install_port_path));
                 case RequestType::USER_REQUESTED:
-                    return Strings::format("    %s%s -- %s", s, from_head, install_port_path.u8string());
+                    return Strings::format("    %s%s -- %s", s, from_head, fs::u8string(install_port_path));
                 default: Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
