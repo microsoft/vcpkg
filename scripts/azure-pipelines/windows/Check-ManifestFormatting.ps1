@@ -3,8 +3,6 @@ Param(
     [Parameter(Mandatory=$True)]
     [string]$Root,
     [Parameter()]
-    [string]$DownloadsDirectory,
-    [Parameter()]
     [switch]$IgnoreErrors # allows one to just format
 )
 
@@ -14,11 +12,6 @@ if (-not (Test-Path "$Root/.vcpkg-root"))
 {
     Write-Error "The vcpkg root was not at $Root"
     throw
-}
-
-if (-not [string]::IsNullOrEmpty($DownloadsDirectory))
-{
-    $env:VCPKG_DOWNLOADS = $DownloadsDirectory
 }
 
 if (-not (Test-Path "$Root/vcpkg.exe"))

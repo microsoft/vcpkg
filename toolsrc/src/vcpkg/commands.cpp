@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/build.h>
@@ -17,6 +15,7 @@
 #include <vcpkg/commands.format-manifest.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/commands.hash.h>
+#include <vcpkg/commands.info.h>
 #include <vcpkg/commands.integrate.h>
 #include <vcpkg/commands.list.h>
 #include <vcpkg/commands.owns.h>
@@ -51,6 +50,7 @@ namespace vcpkg::Commands
         static const Help::HelpCommand help{};
         static const Search::SearchCommand search{};
         static const List::ListCommand list{};
+        static const Info::InfoCommand info{};
         static const Integrate::IntegrateCommand integrate{};
         static const Owns::OwnsCommand owns{};
         static const Update::UpdateCommand update{};
@@ -82,6 +82,7 @@ namespace vcpkg::Commands
             {"hash", &hash},
             {"fetch", &fetch},
             {"x-ci-clean", &ciclean},
+            {"x-package-info", &info},
             {"x-history", &porthistory},
             {"x-vsinstances", &vsinstances},
             {"x-format-manifest", &format_manifest},
