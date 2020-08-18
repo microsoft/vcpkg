@@ -1,0 +1,10 @@
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
+foreach(PROG PERL NASM YASM GIT GN GO PYTHON3 PYTHON2 RUBY JOM 7Z NINJA NUGET MESON FLEX BISON GPERF GASPREPROCESSOR DARK SCONS SWIG DOXYGEN BAZEL ARIA2 PKGCONFIG)
+    vcpkg_find_acquire_program(${PROG})
+    foreach(SUBPROG IN LISTS ${PROG})
+        if(NOT EXISTS "${SUBPROG}")
+            message(FATAL_ERROR "Program ${SUBPROG} did not exist.")
+        endif()
+    endforeach()
+endforeach()
