@@ -1,6 +1,5 @@
-#include "pch.h"
-
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.hash.h>
 
@@ -30,5 +29,10 @@ namespace vcpkg::Commands::Hash
             vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, paths.get_filesystem(), file_to_hash, algorithm);
         System::print2(hash, '\n');
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void HashCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Hash::perform_and_exit(args, paths);
     }
 }

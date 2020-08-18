@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.owns.h>
@@ -39,5 +37,10 @@ namespace vcpkg::Commands::Owns
         const StatusParagraphs status_db = database_load_check(paths);
         search_file(paths, args.command_arguments[0], status_db);
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void OwnsCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Owns::perform_and_exit(args, paths);
     }
 }

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 
@@ -43,5 +41,10 @@ namespace vcpkg::Commands::Create
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         Checks::exit_with_code(VCPKG_LINE_INFO, perform(args, paths));
+    }
+
+    void CreateCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Create::perform_and_exit(args, paths);
     }
 }

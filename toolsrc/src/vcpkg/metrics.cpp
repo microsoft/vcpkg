@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
@@ -180,11 +178,11 @@ namespace vcpkg::Metrics
 
         std::string format_event_data_template() const
         {
-            auto props_plus_buildtimes = properties.clone();
+            auto props_plus_buildtimes = properties;
             if (buildtime_names.size() > 0)
             {
-                props_plus_buildtimes.insert("buildnames_1", Json::Value::array(buildtime_names.clone()));
-                props_plus_buildtimes.insert("buildtimes", Json::Value::array(buildtime_times.clone()));
+                props_plus_buildtimes.insert("buildnames_1", buildtime_names);
+                props_plus_buildtimes.insert("buildtimes", buildtime_times);
             }
 
             Json::Array arr = Json::Array();
@@ -233,9 +231,9 @@ namespace vcpkg::Metrics
 
                 base_data.insert("ver", Json::Value::integer(2));
                 base_data.insert("name", Json::Value::string("commandline_test7"));
-                base_data.insert("properties", Json::Value::object(std::move(props_plus_buildtimes)));
-                base_data.insert("measurements", Json::Value::object(measurements.clone()));
-                base_data.insert("feature-flags", Json::Value::object(feature_flags.clone()));
+                base_data.insert("properties", std::move(props_plus_buildtimes));
+                base_data.insert("measurements", measurements);
+                base_data.insert("feature-flags", feature_flags);
             }
 
             return Json::stringify(arr, vcpkg::Json::JsonStyle());

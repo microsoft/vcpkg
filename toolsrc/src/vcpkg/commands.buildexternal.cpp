@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
@@ -42,5 +40,12 @@ namespace vcpkg::Commands::BuildExternal
                                             args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
                                             Build::null_build_logs_recorder(),
                                             paths);
+    }
+
+    void BuildExternalCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                                const VcpkgPaths& paths,
+                                                Triplet default_triplet) const
+    {
+        BuildExternal::perform_and_exit(args, paths, default_triplet);
     }
 }

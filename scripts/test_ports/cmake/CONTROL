@@ -1,5 +1,5 @@
 Source: cmake
-Version: 3.17.2
+Version: 3.18.1
 Build-Depends: qt5-base, qt5-winextras (windows), bzip2, expat, jsoncpp, liblzma, zlib, zstd, libarchive, curl, libuv, nghttp2
 Homepage: https://cmake.org/
 Description: CMake is an open-source, cross-platform family of tools designed to build, test and package software. 

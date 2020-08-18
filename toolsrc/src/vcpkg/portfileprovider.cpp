@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.debug.h>
 
 #include <vcpkg/paragraphs.h>
@@ -88,7 +86,7 @@ namespace vcpkg::PortFileProvider
                 {
                     vcpkg::print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", spec, ports_dir.u8string());
+                        VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, ports_dir.u8string());
                 }
 
                 continue;
@@ -130,6 +128,7 @@ namespace vcpkg::PortFileProvider
         // Reload cache with ports contained in all ports_dirs
         cache.clear();
         std::vector<const SourceControlFileLocation*> ret;
+
         for (auto&& ports_dir : ports_dirs)
         {
             // Try loading individual port

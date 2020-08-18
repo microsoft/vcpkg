@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
 
@@ -98,5 +96,12 @@ namespace vcpkg::Commands::Env
         System::exit_interactive_subprocess();
 #endif
         Checks::exit_with_code(VCPKG_LINE_INFO, rc);
+    }
+
+    void EnvCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const
+    {
+        Env::perform_and_exit(args, paths, default_triplet);
     }
 }

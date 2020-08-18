@@ -11,10 +11,6 @@
 
 namespace vcpkg::Commands
 {
-    using CommandTypeA = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
-    using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-    using CommandTypeC = void (*)(const VcpkgCmdArguments& args, Files::Filesystem& fs);
-
     template<class T>
     struct PackageNameAndFunction
     {
@@ -22,12 +18,12 @@ namespace vcpkg::Commands
         T function;
     };
 
-    Span<const PackageNameAndFunction<CommandTypeA>> get_available_commands_type_a();
-    Span<const PackageNameAndFunction<CommandTypeB>> get_available_commands_type_b();
-    Span<const PackageNameAndFunction<CommandTypeC>> get_available_commands_type_c();
+    Span<const PackageNameAndFunction<const BasicCommand*>> get_available_basic_commands();
+    Span<const PackageNameAndFunction<const PathsCommand*>> get_available_paths_commands();
+    Span<const PackageNameAndFunction<const TripletCommand*>> get_available_triplet_commands();
 
     template<typename T>
-    T find(const std::string& command_name, const std::vector<PackageNameAndFunction<T>> available_commands)
+    T find(StringView command_name, Span<const PackageNameAndFunction<T>> available_commands)
     {
         for (const PackageNameAndFunction<T>& cmd : available_commands)
         {

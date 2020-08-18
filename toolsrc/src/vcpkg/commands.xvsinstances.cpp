@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.xvsinstances.h>
@@ -32,5 +30,10 @@ namespace vcpkg::Commands::X_VSInstances
         Util::unused(args, paths);
         Checks::exit_with_message(VCPKG_LINE_INFO, "This command is not supported on non-windows platforms.");
 #endif
+    }
+
+    void VSInstancesCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        X_VSInstances::perform_and_exit(args, paths);
     }
 }
