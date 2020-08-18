@@ -308,6 +308,7 @@ namespace vcpkg
                 {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
                 {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
                 {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
+                {VCPKG_EXPERIMENTAL_MIRROR_URL, &VcpkgCmdArguments::use_mirror},
                 {JSON_SWITCH, &VcpkgCmdArguments::json},
             };
 
