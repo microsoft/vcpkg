@@ -15,6 +15,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 			file-exists.patch # required or otherwise it cant find python lib path on windows
 			fix-build-error.patch # Fix namespace error
 			fix-dbg-build-errors.patch # Fix no return statement
+			fix-more-build-errors.patch # Fix no return statement
 	)
 else()
 	vcpkg_from_github(
@@ -27,6 +28,7 @@ else()
 			file-exists.patch # required or otherwise it cant find python lib path on windows
 			fix-build-error.patch # Fix namespace error
 			fix-dbg-build-errors.patch # Fix no return statement
+			fix-more-build-errors.patch # Fix no return statement
 			change-macros-for-static-lib.patch # there is no static build option - change macros via patch and link library manually at the end
 	)
 endif()
@@ -96,7 +98,7 @@ set(ENV{TF_CONFIGURE_IOS} 0)
 
 file(GLOB SOURCES ${SOURCE_PATH}/*)
 
-vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" LOGNAME prerequesits-${TARGET_TRIPLET})
+vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-${TARGET_TRIPLET})
 
 foreach(BUILD_TYPE dbg rel)
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
@@ -289,7 +291,7 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 endforeach()
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-genfiles/tensorflow/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow-external)
+file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow-external)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	message(STATUS "Warning: Static TensorFlow build contains several external dependancies that may cause linking conflicts (e.g. you cannot use openssl in your projects as TensorFlow contains boringssl and so on).")
@@ -300,3 +302,5 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAG
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/TensorflowCCConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/TensorflowCCConfig.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
+
+message(STATUS "You may want to delete ${CURRENT_BUILDTREES_DIR} and ${CURRENT_BUILDTREES_DIR}/../.bzl to free diskspace.")
