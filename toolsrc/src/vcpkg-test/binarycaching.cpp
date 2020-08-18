@@ -1,14 +1,17 @@
 #include <catch2/catch.hpp>
 
-#include <string>
-
 #include <vcpkg/base/files.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/binarycaching.private.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+
+#include <string>
+
+#include <vcpkg-test/util.h>
 
 using namespace vcpkg;
 
@@ -64,7 +67,7 @@ Build-Depends: bzip
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
 
-    Dependencies::InstallPlanAction ipa(PackageSpec{"zlib2", Triplet::X64_WINDOWS},
+    Dependencies::InstallPlanAction ipa(PackageSpec{"zlib2", Test::X64_WINDOWS},
                                         scfl,
                                         Dependencies::RequestType::USER_REQUESTED,
                                         {{"a", {}}, {"b", {}}});
@@ -176,7 +179,7 @@ Description: a spiffy compression library wrapper
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());
-    plan.install_actions[0].spec = PackageSpec("zlib", Triplet::X64_ANDROID);
+    plan.install_actions[0].spec = PackageSpec("zlib", Test::X64_ANDROID);
     plan.install_actions[0].source_control_file_location = scfl;
     plan.install_actions[0].abi_info = Build::AbiInfo{};
     plan.install_actions[0].abi_info.get()->package_abi = "packageabi";
@@ -199,7 +202,7 @@ Description: a spiffy compression library wrapper
     REQUIRE(maybe_scf2.has_value());
     SourceControlFileLocation scfl2{std::move(*maybe_scf2.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());
-    plan.install_actions[1].spec = PackageSpec("zlib2", Triplet::X64_ANDROID);
+    plan.install_actions[1].spec = PackageSpec("zlib2", Test::X64_ANDROID);
     plan.install_actions[1].source_control_file_location = scfl2;
     plan.install_actions[1].abi_info = Build::AbiInfo{};
     plan.install_actions[1].abi_info.get()->package_abi = "packageabi2";

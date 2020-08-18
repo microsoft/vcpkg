@@ -31,6 +31,7 @@ ForEachMacros: [TEST_CASE, SECTION]
 PenaltyReturnTypeOnItsOwnLine: 1000
 SpaceAfterTemplateKeyword: false
 SpaceBeforeCpp11BracedList: false
+DeriveLineEnding: false
 UseCRLF: false
 
 IncludeBlocks: Regroup
@@ -39,9 +40,9 @@ IncludeCategories:
     Priority: -1
   - Regex: '^<catch2/catch\.hpp>$'
     Priority: 1
-  - Regex: '^<vcpkg/base/*\.h>$'
+  - Regex: '^<vcpkg/base/.*\.h>$'
     Priority: 2
-  - Regex: '^<vcpkg/*\.h>$'
+  - Regex: '^<vcpkg/.*\.h>$'
     Priority: 3
   - Regex: '^<[a-z0-9_]*\.h>$'
     Priority: 4

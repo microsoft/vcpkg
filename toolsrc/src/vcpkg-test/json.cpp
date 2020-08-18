@@ -1,10 +1,11 @@
 #include <catch2/catch.hpp>
 
+#include <vcpkg/base/json.h>
+#include <vcpkg/base/unicode.h>
+
 #include <iostream>
 
 #include "math.h"
-#include <vcpkg/base/json.h>
-#include <vcpkg/base/unicode.h>
 
 // TODO: remove this once we switch to C++20 completely
 // This is the worst, but we also can't really deal with it any other way.
@@ -77,6 +78,49 @@ TEST_CASE ("JSON parse strings", "[json]")
     REQUIRE(res);
     REQUIRE(res.get()->first.is_string());
     REQUIRE(res.get()->first.string() == grin);
+}
+
+TEST_CASE ("JSON parse strings with escapes", "[json]")
+{
+    auto res = Json::parse(R"("\t")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\t");
+
+    res = Json::parse(R"("\\")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\\");
+
+    res = Json::parse(R"("\/")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "/");
+
+    res = Json::parse(R"("\b")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\b");
+
+    res = Json::parse(R"("\f")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\f");
+
+    res = Json::parse(R"("\n")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\n");
+
+    res = Json::parse(R"("\r")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\r");
+
+    res = Json::parse(R"("This is a \"test\", hopefully it worked")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == R"(This is a "test", hopefully it worked)");
 }
 
 TEST_CASE ("JSON parse integers", "[json]")

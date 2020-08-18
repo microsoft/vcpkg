@@ -21,6 +21,7 @@ vcpkg_from_github(
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
         fix-addbit.patch
+        folly_c3861.patch
 )
 
 file(COPY

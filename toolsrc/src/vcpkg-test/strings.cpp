@@ -1,12 +1,16 @@
 #include <catch2/catch.hpp>
 
+#include <vcpkg/base/strings.h>
+
 #include <stdint.h>
 
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <vcpkg/base/strings.h>
+#if defined(_MSC_VER)
+#pragma warning(disable : 6237)
+#endif
 
 TEST_CASE ("b32 encoding", "[strings]")
 {

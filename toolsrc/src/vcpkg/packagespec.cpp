@@ -1,8 +1,7 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/parse.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphparser.h>
 
@@ -91,8 +90,6 @@ namespace vcpkg
     {
         return left.name() == right.name() && left.triplet() == right.triplet();
     }
-
-    bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
 
     ExpectedS<Features> Features::from_string(const std::string& name)
     {
@@ -261,4 +258,15 @@ namespace vcpkg
         parser.skip_tabs_spaces();
         return ret;
     }
+
+    bool operator==(const Dependency& lhs, const Dependency& rhs)
+    {
+        if (lhs.name != rhs.name) return false;
+        if (lhs.features != rhs.features) return false;
+        if (!structurally_equal(lhs.platform, rhs.platform)) return false;
+        if (lhs.extra_info != rhs.extra_info) return false;
+
+        return true;
+    }
+    bool operator!=(const Dependency& lhs, const Dependency& rhs);
 }

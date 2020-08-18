@@ -2,7 +2,7 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 set(PBC_VERSION 0.5.14)
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(
         ARCHIVE
         URLS "https://crypto.stanford.edu/pbc/files/pbc-${PBC_VERSION}.tar.gz"
@@ -27,45 +27,16 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
     endif()
 
     set(OPTIONS ${SHARED_STATIC} LEX=${FLEX} YACC=${BISON}\ -y)
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/setup
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME setup-${TARGET_TRIPLET}
+
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+        COPY_SOURCE
+        OPTIONS
+            ${OPTIONS}
     )
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG} -O0 -g -I${SOURCE_PATH}/include")
-    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/configure --prefix=${CURRENT_PACKAGES_DIR}/debug ${OPTIONS} --with-sysroot=${CURRENT_INSTALLED_DIR}/debug
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME configure-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND make -j install
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME install-${TARGET_TRIPLET}-dbg
-    )
-
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE} -O3 -I${SOURCE_PATH}/include")
-    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/configure --prefix=${CURRENT_PACKAGES_DIR} ${OPTIONS} --with-sysroot=${CURRENT_INSTALLED_DIR}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME configure-${TARGET_TRIPLET}-rel
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-        COMMAND make -j install
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME install-${TARGET_TRIPLET}-rel
-    )
+    vcpkg_install_make()
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
     file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

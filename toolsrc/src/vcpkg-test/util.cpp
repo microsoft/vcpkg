@@ -2,11 +2,13 @@
 
 #include <catch2/catch.hpp>
 
-#include <vcpkg-test/util.h>
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/statusparagraph.h>
+
+#include <vcpkg-test/util.h>
 
 // used to get the implementation specific compiler flags (i.e., __cpp_lib_filesystem)
 #include <ciso646>
@@ -37,6 +39,12 @@
 
 namespace vcpkg::Test
 {
+    const Triplet X86_WINDOWS = Triplet::from_canonical_name("x86-windows");
+    const Triplet X64_WINDOWS = Triplet::from_canonical_name("x64-windows");
+    const Triplet X86_UWP = Triplet::from_canonical_name("x86-uwp");
+    const Triplet ARM_UWP = Triplet::from_canonical_name("arm-uwp");
+    const Triplet X64_ANDROID = Triplet::from_canonical_name("x64-android");
+
     std::unique_ptr<SourceControlFile> make_control_file(
         const char* name,
         const char* depends,

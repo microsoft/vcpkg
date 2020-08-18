@@ -1,12 +1,12 @@
 #pragma once
 
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/zstringview.h>
+
 #include <functional>
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-#include <vcpkg/base/files.h>
-#include <vcpkg/base/zstringview.h>
 
 namespace vcpkg::System
 {
@@ -25,8 +25,14 @@ namespace vcpkg::System
 
     struct CmdLineBuilder
     {
-        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(p.u8string()); }
+        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(fs::u8string(p)); }
         CmdLineBuilder& string_arg(StringView s);
+        CmdLineBuilder& ampersand()
+        {
+            buf.push_back('&');
+            buf.push_back('&');
+            return *this;
+        }
         std::string extract() noexcept { return std::move(buf); }
 
         operator ZStringView() const { return buf; }

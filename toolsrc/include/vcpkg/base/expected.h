@@ -1,9 +1,9 @@
 #pragma once
 
-#include <system_error>
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/stringliteral.h>
+
+#include <system_error>
 
 namespace vcpkg
 {

@@ -31,7 +31,7 @@ function Get-CommandExists
         [String]$Name
     )
 
-    $null -ne (Get-Command -Name $Command -ErrorAction SilentlyContinue)
+    $null -ne (Get-Command -Name $Name -ErrorAction SilentlyContinue)
 }
 
 <#
@@ -124,6 +124,7 @@ function Get-InstalledVirtualBoxExtensionPacks
     $currentString = ""
 
     $lines | ForEach-Object {
+        $Line = $_
         if ($Line[0] -eq ' ') {
             $currentString += "`n$($Line.Trim())"
         } else {

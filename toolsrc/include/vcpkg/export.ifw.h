@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgpaths.h>
+
+#include <string>
+#include <vector>
 
 namespace vcpkg::Export::IFW
 {

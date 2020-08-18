@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/optional.h>
+
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/vcpkgpaths.h>
 

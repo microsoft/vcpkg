@@ -49,11 +49,7 @@ find_path(FONTCONFIG_INCLUDE_DIR fontconfig/fontconfig.h)
 find_library(FONTCONFIG_LIBRARY fontconfig)
 
 # find freetype
-find_path(FREETYPE_INCLUDE_DIR ft2build.h)
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(FT_SUFFIX d)
-endif()
-find_library(FREETYPE_LIBRARY freetype${FT_SUFFIX})
+find_package(Freetype REQUIRED)
 
 # find harfbuzz
 find_path(HARFBUZZ_INCLUDE_DIR harfbuzz/hb.h)
@@ -65,7 +61,7 @@ if (APPLE)
 endif()
 
 set(FONT_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIR} ${FONTCONFIG_INCLUDE_DIR} ${HARFBUZZ_INCLUDE_DIR}/harfbuzz)
-set(FONT_LIBRARIES ${FREETYPE_LIBRARY} ${FONTCONFIG_LIBRARY} ${HARFBUZZ_LIBRARY})
+set(FONT_LIBRARIES Freetype::Freetype ${FONTCONFIG_LIBRARY} ${HARFBUZZ_LIBRARY})
 
 macro(pango_add_module MODULE_NAME)
     add_library(${MODULE_NAME} ${ARGN})

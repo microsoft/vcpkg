@@ -47,7 +47,9 @@ Specifies the target platform.
 Valid options include any CMake system name, such as:
 - Empty (Windows Desktop for legacy reasons)
 - `WindowsStore` (Universal Windows Platform)
+- `MinGW` (Minimalist GNU for Windows)
 - `Darwin` (Mac OSX)
+- `iOS` (iOS)
 - `Linux` (Linux)
 - `Emscripten` (WebAssembly)
 
@@ -127,7 +129,7 @@ Valid settings:
 * The Visual Studio 2015 platform toolset is `v140`.
 
 ### VCPKG_LOAD_VCVARS_ENV
-If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment. 
+If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment.
 Setting `VCPKG_LOAD_VCVARS_ENV` to (true|1|on) changes this behavior so that the Visual Studio environment is setup following the same rules as if `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` was not set.
 
 ## MacOS Variables

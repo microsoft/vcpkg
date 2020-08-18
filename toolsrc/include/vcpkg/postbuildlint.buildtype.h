@@ -1,10 +1,11 @@
 #pragma once
 
+#include <vcpkg/base/cstringview.h>
+
+#include <vcpkg/build.h>
+
 #include <array>
 #include <regex>
-
-#include <vcpkg/base/cstringview.h>
-#include <vcpkg/build.h>
 
 namespace vcpkg::PostBuildLint
 {

@@ -1,20 +1,22 @@
 #pragma once
 
-#include <array>
-#include <map>
-#include <set>
-#include <vector>
-
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/cmakevars.h>
+#include <vcpkg/commands.integrate.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/triplet.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
+
+#include <array>
+#include <map>
+#include <set>
+#include <vector>
 
 namespace vcpkg
 {
@@ -344,5 +346,12 @@ namespace vcpkg::Build
 #endif
 
         bool m_compiler_tracking;
+    };
+
+    struct BuildCommand : Commands::TripletCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const override;
     };
 }
