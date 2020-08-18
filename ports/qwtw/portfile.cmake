@@ -7,7 +7,6 @@ vcpkg_from_github(
    SHA512 de5abf26d0975b9f0ed88e10cd4d5b4d12e25cce8c87ab6a18d8e7064697de6fc8da83e118b5a4e2819c09e2dbbfd20daeecc6a42748c019c6699666276d075a
    HEAD_REF master
 )
-
  
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
