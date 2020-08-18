@@ -1,19 +1,102 @@
 Source: llvm
-Version: 8.0.0-5
+Version: 10.0.0-4
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
-Build-Depends: atlmfc (windows)
 Supports: !uwp
-Default-Features: utils
+Default-Features: tools, enable-rtti, disable-assertions, disable-abi-breaking-checks, clang, disable-clang-static-analyzer, lld
 
 Feature: tools
-Description: Generate build targets for the LLVM tools.
+Description: Build LLVM tools.
 
 Feature: utils
-Description: Generate build targets for the LLVM utils.
+Description: Build LLVM utils.
 
-Feature: example
-Description: Generate build targets for the LLVM examples
+Feature: target-all
+Description: Build with all backends.
 
-Feature: test
-Description: Generate build targets for the LLVM unit tests.
+Feature: target-aarch64
+Description: Build with AArch64 backend.
+
+Feature: target-amdgpu
+Description: Build with AMDGPU backend.
+
+Feature: target-arm
+Description: Build with ARM backend.
+
+Feature: target-bpf
+Description: Build with BPF backend.
+
+Feature: target-hexagon
+Description: Build with Hexagon backend.
+
+Feature: target-lanai
+Description: Build with Lanai backend.
+
+Feature: target-mips
+Description: Build with Mips backend.
+
+Feature: target-msp430
+Description: Build with MSP430 backend.
+
+Feature: target-nvptx
+Description: Build with NVPTX backend.
+
+Feature: target-powerpc
+Description: Build with PowerPC backend.
+
+Feature: target-riscv
+Description: Build with RISCV backend.
+
+Feature: target-sparc
+Description: Build with Sparc backend.
+
+Feature: target-systemz
+Description: Build with SystemZ backend.
+
+Feature: target-webassembly
+Description: Build with WebAssembly backend.
+
+Feature: target-x86
+Description: Build with X86 backend.
+
+Feature: target-xcore
+Description: Build with XCore backend.
+
+Feature: enable-rtti
+Description: Build LLVM with run-time type information.
+
+Feature: enable-assertions
+Description: Build LLVM with assertions.
+
+Feature: disable-assertions
+Description: Build LLVM without assertions.
+
+Feature: enable-abi-breaking-checks
+Description: Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_ON.
+
+Feature: disable-abi-breaking-checks
+Description: Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_OFF.
+
+Feature: clang
+Description: Build C Language Family Front-end.
+
+Feature: disable-clang-static-analyzer
+Description: Build without static analyzer.
+
+Feature: clang-tools-extra
+Description: Build Clang tools.
+
+Feature: compiler-rt
+Description: Build compiler's runtime libraries.
+
+Feature: lld
+Description: Build LLVM linker.
+
+Feature: openmp
+Description: Build LLVM OpenMP libraries.
+
+Feature: lldb
+Description: Build LLDB debugger.
+
+Feature: polly
+Description: Build polyhedral optimizations for LLVM.

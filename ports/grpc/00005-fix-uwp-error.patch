@@ -10,3 +10,16 @@ index c0e2164..331e54c 100644
    if (len <= sizeof(slice.data.inlined.bytes)) {
      slice.refcount = nullptr;
      slice.data.inlined.length = len;
+diff --git a/src/core/lib/surface/server.cc b/src/core/lib/surface/server.cc
+index 998eb6d..a6e26d3 100644
+--- a/src/core/lib/surface/server.cc
++++ b/src/core/lib/surface/server.cc
+@@ -1095,7 +1095,7 @@ grpc_call_error queue_call_request(grpc_server* server, size_t cq_idx,
+               GRPC_ERROR_CREATE_FROM_STATIC_STRING("Server Shutdown"));
+     return GRPC_CALL_OK;
+   }
+-  RequestMatcherInterface* rm;
++  RequestMatcherInterface* rm = nullptr;
+   switch (rc->type) {
+     case BATCH_CALL:
+       rm = server->unregistered_request_matcher;

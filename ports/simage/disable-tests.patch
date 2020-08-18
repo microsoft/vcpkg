@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 775037a..b82734a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -504,25 +511,25 @@ endforeach()
+ # Build tests
+ # ############################################################################
+ 
+-enable_testing()
+-
+-add_executable(loaders tests/loaders.c)
+-target_link_libraries(loaders simage)
+-target_compile_definitions(loaders PRIVATE _CRT_NONSTDC_NO_DEPRECATE _CRT_SECURE_NO_DEPRECATE _CRT_SECURE_NO_WARNINGS _USE_MATH_DEFINES)
+-if(UNIX)
+-  target_link_libraries(loaders m)
+-endif()
+-
+-add_test(
+-  loaders
+-  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/loaders
+-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.gif
+-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.jpg
+-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.png
+-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.rgb
+-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.tga
+-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.tif
+-)
++#enable_testing()
++
++#add_executable(loaders tests/loaders.c)
++#target_link_libraries(loaders simage)
++#target_compile_definitions(loaders PRIVATE _CRT_NONSTDC_NO_DEPRECATE _CRT_SECURE_NO_DEPRECATE _CRT_SECURE_NO_WARNINGS _USE_MATH_DEFINES)
++#if(UNIX)
++#  target_link_libraries(loaders m)
++#endif()
++
++#add_test(
++#  loaders
++#  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/loaders
++#  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.gif
++#  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.jpg
++#  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.png
++#  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.rgb
++#  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.tga
++#  ${CMAKE_CURRENT_SOURCE_DIR}/tests/img.tif
++#)
+ 
+ # Add a target to generate API documentation with Doxygen
+ if(SIMAGE_BUILD_DOCUMENTATION)

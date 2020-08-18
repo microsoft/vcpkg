@@ -22,13 +22,6 @@ Param(
 $StorageAccountName = $env:StorageAccountName
 $StorageAccountKey = $env:StorageAccountKey
 
-function Remove-DirectorySymlink {
-    Param([string]$Path)
-    if (Test-Path $Path) {
-        [System.IO.Directory]::Delete($Path)
-    }
-}
-
 Write-Host 'Setting up archives mount'
 if (-Not (Test-Path W:)) {
     net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
@@ -52,37 +45,3 @@ if( Test-Path D:\downloads\tools\msys2 )
     Write-Host "removing previously installed msys2"
     Remove-Item D:\downloads\tools\msys2 -Recurse -Force
 }
-
-Write-Host 'Setting up archives path...'
-if ([string]::IsNullOrWhiteSpace($ForceAllPortsToRebuildKey))
-{
-    $archivesPath = 'W:\'
-}
-else
-{
-    $archivesPath = "W:\force\$ForceAllPortsToRebuildKey"
-    if (-Not (Test-Path $fullPath)) {
-        Write-Host 'Creating $archivesPath'
-        mkdir $archivesPath
-    }
-}
-
-Write-Host "Linking archives => $archivesPath"
-Remove-DirectorySymlink archives
-cmd /c "mklink /D archives $archivesPath"
-
-Write-Host 'Linking installed => E:\installed'
-Remove-DirectorySymlink installed
-Remove-Item E:\installed -Recurse -Force -ErrorAction SilentlyContinue
-mkdir E:\installed
-cmd /c "mklink /D installed E:\installed"
-
-Write-Host 'Linking downloads => D:\downloads'
-Remove-DirectorySymlink downloads
-cmd /c "mklink /D downloads D:\downloads"
-
-Write-Host 'Cleaning buildtrees'
-Remove-Item buildtrees\* -Recurse -Force -errorAction silentlycontinue
-
-Write-Host 'Cleaning packages'
-Remove-Item packages\* -Recurse -Force -errorAction silentlycontinue

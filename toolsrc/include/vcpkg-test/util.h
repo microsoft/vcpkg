@@ -1,7 +1,10 @@
+#include <vcpkg/base/system_headers.h>
+
 #include <catch2/catch.hpp>
-#include <vcpkg/pragmas.h>
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/pragmas.h>
+
 #include <vcpkg/statusparagraph.h>
 
 #include <memory>
@@ -14,6 +17,22 @@
             FAIL(ec.message());                                                                                        \
         }                                                                                                              \
     } while (0)
+
+namespace Catch
+{
+    template<>
+    struct StringMaker<vcpkg::FullPackageSpec>
+    {
+        static std::string convert(vcpkg::FullPackageSpec const& value)
+        {
+            return vcpkg::Strings::concat(value.package_spec.name(),
+                                          '[',
+                                          vcpkg::Strings::join(",", value.features),
+                                          "]:",
+                                          value.package_spec.triplet());
+        }
+    };
+}
 
 namespace vcpkg::Test
 {
@@ -45,6 +64,12 @@ namespace vcpkg::Test
                                                                     const char* depends = "",
                                                                     const char* triplet = "x86-windows");
 
+    extern const Triplet X86_WINDOWS;
+    extern const Triplet X64_WINDOWS;
+    extern const Triplet X86_UWP;
+    extern const Triplet ARM_UWP;
+    extern const Triplet X64_ANDROID;
+
     /// <summary>
     /// Map of source control files by their package name.
     /// </summary>
@@ -52,7 +77,7 @@ namespace vcpkg::Test
     {
         std::unordered_map<std::string, SourceControlFileLocation> map;
         Triplet triplet;
-        PackageSpecMap(Triplet t = Triplet::X86_WINDOWS) noexcept : triplet(t) {}
+        PackageSpecMap(Triplet t = X86_WINDOWS) noexcept : triplet(t) { }
 
         PackageSpec emplace(const char* name,
                             const char* depends = "",
@@ -84,9 +109,9 @@ namespace vcpkg::Test
             Yes = true,
         } tag;
 
-        constexpr AllowSymlinks(Tag tag) noexcept : tag(tag) {}
+        constexpr AllowSymlinks(Tag tag) noexcept : tag(tag) { }
 
-        constexpr explicit AllowSymlinks(bool b) noexcept : tag(b ? Yes : No) {}
+        constexpr explicit AllowSymlinks(bool b) noexcept : tag(b ? Yes : No) { }
 
         constexpr operator bool() const noexcept { return tag == Yes; }
     };

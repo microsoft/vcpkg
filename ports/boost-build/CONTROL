@@ -1,4 +1,5 @@
 Source: boost-build
-Version: 1.72.0
+Version: 1.73.0
+Port-Version: 2
 Homepage: https://github.com/boostorg/build
 Description: Boost.Build

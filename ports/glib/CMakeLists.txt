@@ -73,7 +73,7 @@ else()
     set(ENV{PCRE_CFLAGS} "-I${PCRE_INCLUDE_DIR}")
     set(ENV{MSGFMT} "/bin/echo")
     set(ENV{GMSGFMT} "/bin/echo")
-    string(TOUPPER UPPER_CONFIG "${CMAKE_BUILD_TYPE}")
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" UPPER_CONFIG)
     set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
     set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
     if(BUILD_SHARED_LIBS)
@@ -360,3 +360,35 @@ message(STATUS "  " ${ICONV_LIBRARY})
 message(STATUS "  " ${CHARSET_LIBRARY})
 message(STATUS "  " ${FFI_LIBRARY})
 message(STATUS "  " ${LIBINTL_LIBRARY})
+
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/glib-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/glib-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gobject-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gobject-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gmodule-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gmodule-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gmodule-export-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gmodule-export-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gmodule-no-export-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gmodule-no-export-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gthread-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gthread-2.0.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gio-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gio-2.0.pc" @ONLY)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/glib-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gobject-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gmodule-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gmodule-export-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gmodule-no-export-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gthread-2.0.pc"
+            "${CMAKE_CURRENT_BINARY_DIR}/gio-2.0.pc"
+            DESTINATION lib/pkgconfig)
+
+if(WIN32)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gio-windows-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gio-windows-2.0.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gio-windows-2.0.pc"  DESTINATION lib/pkgconfig)
+endif()
+
+if(UNIX)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gio-unix-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gio-unix-2.0.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gio-unix-2.0.pc"  DESTINATION lib/pkgconfig)
+endif()

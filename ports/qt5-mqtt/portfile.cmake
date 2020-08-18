@@ -1,6 +1,8 @@
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 #qt_submodule_installation() No binary package for this port. 
-
+if(QT_UPDATE_VERSION)
+    set(QT_HASH_qt5-mqtt 1) # TO get an SHA512 error if the variable is set. 
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qt/qtmqtt

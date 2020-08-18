@@ -1,4 +1,4 @@
-#include <pch.h>
+#include <vcpkg/base/system.debug.h>
 
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/portfileprovider.h>
@@ -24,30 +24,35 @@ namespace vcpkg::PortFileProvider
     }
 
     PathsPortFileProvider::PathsPortFileProvider(const vcpkg::VcpkgPaths& paths,
-                                                 const std::vector<std::string>* ports_dirs_paths)
+                                                 const std::vector<std::string>& ports_dirs_paths)
         : filesystem(paths.get_filesystem())
     {
-        auto& fs = Files::get_real_filesystem();
-        if (ports_dirs_paths)
+        auto& fs = paths.get_filesystem();
+        for (auto&& overlay_path : ports_dirs_paths)
         {
-            for (auto&& overlay_path : *ports_dirs_paths)
+            if (!overlay_path.empty())
             {
-                if (!overlay_path.empty())
+                auto overlay = fs::u8path(overlay_path);
+                if (overlay.is_absolute())
                 {
-                    auto overlay = fs.canonical(VCPKG_LINE_INFO, fs::u8path(overlay_path));
-
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                                       filesystem.exists(overlay),
-                                       "Error: Path \"%s\" does not exist",
-                                       overlay.string());
-
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                                       fs::is_directory(fs.status(VCPKG_LINE_INFO, overlay)),
-                                       "Error: Path \"%s\" must be a directory",
-                                       overlay.string());
-
-                    ports_dirs.emplace_back(overlay);
+                    overlay = fs.canonical(VCPKG_LINE_INFO, overlay);
                 }
+                else
+                {
+                    overlay = fs.canonical(VCPKG_LINE_INFO, paths.original_cwd / overlay);
+                }
+
+                Debug::print("Using overlay: ", overlay.u8string(), "\n");
+
+                Checks::check_exit(
+                    VCPKG_LINE_INFO, filesystem.exists(overlay), "Error: Path \"%s\" does not exist", overlay.string());
+
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   fs::is_directory(fs.status(VCPKG_LINE_INFO, overlay)),
+                                   "Error: Path \"%s\" must be a directory",
+                                   overlay.string());
+
+                ports_dirs.emplace_back(overlay);
             }
         }
         ports_dirs.emplace_back(paths.ports);
@@ -64,7 +69,7 @@ namespace vcpkg::PortFileProvider
         for (auto&& ports_dir : ports_dirs)
         {
             // Try loading individual port
-            if (filesystem.exists(ports_dir / "CONTROL"))
+            if (Paragraphs::is_port_directory(filesystem, ports_dir))
             {
                 auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
                 if (auto scf = maybe_scf.get())
@@ -81,12 +86,16 @@ namespace vcpkg::PortFileProvider
                 {
                     vcpkg::print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", spec, ports_dir.u8string());
+                        VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, ports_dir.u8string());
                 }
+
+                continue;
             }
-            else if (filesystem.exists(ports_dir / spec / "CONTROL"))
+
+            auto ports_spec = ports_dir / spec;
+            if (Paragraphs::is_port_directory(filesystem, ports_spec))
             {
-                auto found_scf = Paragraphs::try_load_port(filesystem, ports_dir / spec);
+                auto found_scf = Paragraphs::try_load_port(filesystem, ports_spec);
                 if (auto scf = found_scf.get())
                 {
                     if (scf->get()->core_paragraph->name == spec)
@@ -119,10 +128,11 @@ namespace vcpkg::PortFileProvider
         // Reload cache with ports contained in all ports_dirs
         cache.clear();
         std::vector<const SourceControlFileLocation*> ret;
+
         for (auto&& ports_dir : ports_dirs)
         {
             // Try loading individual port
-            if (filesystem.exists(ports_dir / "CONTROL"))
+            if (Paragraphs::is_port_directory(filesystem, ports_dir))
             {
                 auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
                 if (auto scf = maybe_scf.get())

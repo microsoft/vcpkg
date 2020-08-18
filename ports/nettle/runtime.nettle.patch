@@ -1,0 +1,84 @@
+diff --git a/SMP/libnettle.vcxproj b/SMP/libnettle.vcxproj
+index 54f686af6..05b903ab9 100644
+--- a/SMP/libnettle.vcxproj	
++++ b/SMP/libnettle.vcxproj
+@@ -1206,6 +1206,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <MinimalRebuild>false</MinimalRebuild>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -1329,6 +1330,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -1710,6 +1712,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <MinimalRebuild>false</MinimalRebuild>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <OutputFile>$(OutDir)\bin\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -1838,6 +1841,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <OutputFile>$(OutDir)\bin\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -2229,6 +2233,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <ProgramDataBaseFileName>$(OutDir)\lib\x64\$(TargetName).pdb</ProgramDataBaseFileName>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -2358,6 +2363,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -3028,6 +3034,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -3161,6 +3168,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -3296,6 +3304,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -3433,6 +3442,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <CompileAsWinRT>false</CompileAsWinRT>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4267;4098;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>

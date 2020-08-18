@@ -1,0 +1,86 @@
+diff --git a/CMake/FindLZMA.cmake b/CMake/FindLZMA.cmake
+index 0c8c7943c..d60669484 100644
+--- a/CMake/FindLZMA.cmake
++++ b/CMake/FindLZMA.cmake
+@@ -1,9 +1,17 @@
+ find_path(LZMA_INCLUDE_DIR
+   NAMES lzma.h
+   DOC "lzma include directory")
+-find_library(LZMA_LIBRARY
++# Note LZMA_LIBRARY is set somewhere else. Maybe one of the configs/wrappers installed by VCPKG defines it. 
++# The original FindLZMA chokes on it since it contains optimized/debug keywords
++# VTK should probably switch to FindLibLZMA from CMake
++find_library(LZMA_LIBRARY_RELEASE
+   NAMES lzma
+   DOC "lzma library")
++find_library(LZMA_LIBRARY_DEBUG
++  NAMES lzmad lzma NAMES_PER_DIR
++  DOC "lzma library")
++ include(SelectLibraryConfigurations)
++ select_library_configurations( LZMA )
+ 
+ if (LZMA_INCLUDE_DIR)
+   file(STRINGS "${LZMA_INCLUDE_DIR}/lzma/version.h" _lzma_version_lines
+@@ -20,22 +26,50 @@ endif ()
+ 
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(LZMA
+-  REQUIRED_VARS LZMA_LIBRARY LZMA_INCLUDE_DIR
++  REQUIRED_VARS LZMA_LIBRARY LZMA_LIBRARY_RELEASE LZMA_LIBRARY_DEBUG LZMA_INCLUDE_DIR
+   VERSION_VAR LZMA_VERSION)
+ 
+ if (LZMA_FOUND)
+   set(LZMA_LIBRARIES "${LZMA_LIBRARY}")
+   set(LZMA_INCLUDE_DIRS "${LZMA_INCLUDE_DIR}")
+-
++  
+   if (NOT TARGET LZMA::LZMA)
+     include(vtkDetectLibraryType)
+-    vtk_detect_library_type(lzma_library_type
+-      PATH "${LZMA_LIBRARY}")
+-    add_library(LZMA::LZMA "${lzma_library_type}" IMPORTED)
+-    unset(lzma_library_type)
+-    set_target_properties(LZMA::LZMA PROPERTIES
+-      IMPORTED_LOCATION "${LZMA_LIBRARY}"
+-      IMPORTED_IMPLIB "${LZMA_LIBRARY}"
+-      INTERFACE_INCLUDE_DIRECTORIES "${LZMA_INCLUDE_DIR}")
+-  endif ()
++    if(LZMA_LIBRARY_RELEASE)
++      vtk_detect_library_type(lzma_library_type
++        PATH "${LZMA_LIBRARY_RELEASE}") 
++    elseif(LZMA_LIBRARY_DEBUG)
++        vtk_detect_library_type(lzma_library_type
++        PATH "${LZMA_LIBRARY_DEBUG}") 
++    else()
++        vtk_detect_library_type(lzma_library_type
++        PATH "${LZMA_LIBRARY}") 
++    endif()
++    
++      add_library(LZMA::LZMA "${lzma_library_type}" IMPORTED)
++      set_target_properties(LZMA::LZMA PROPERTIES
++        INTERFACE_INCLUDE_DIRECTORIES "${LZMA_INCLUDE_DIR}")
++    if(LZMA_LIBRARY_RELEASE)
++      set_target_properties(LZMA::LZMA PROPERTIES
++          IMPORTED_LOCATION_RELEASE "${LZMA_LIBRARY_RELEASE}"
++          IMPORTED_IMPLIB_RELEASE "${LZMA_LIBRARY_RELEASE}")
++    endif()
++    if(LZMA_LIBRARY_DEBUG)
++      set_target_properties(LZMA::LZMA PROPERTIES
++          IMPORTED_LOCATION_DEBUG "${LZMA_LIBRARY_DEBUG}"
++          IMPORTED_IMPLIB_DEBUG "${LZMA_LIBRARY_DEBUG}")
++    endif()
++  
++    # Guard against possible stupidity of depending projects reading only LOCATION without configuration
++    if(CMAKE_BUILD_TYPE MATCHES "Debug") 
++      set_target_properties(LZMA::LZMA PROPERTIES
++          IMPORTED_LOCATION "${LZMA_LIBRARY_DEBUG}"
++          IMPORTED_IMPLIB "${LZMA_LIBRARY_DEBUG}")
++    else()
++      set_target_properties(LZMA::LZMA PROPERTIES
++          IMPORTED_LOCATION "${LZMA_LIBRARY_RELEASE}"
++          IMPORTED_IMPLIB "${LZMA_LIBRARY_RELEASE}")
++    endif()
++  endif()
++  #set_target_properties(LZMA::LZMA PROPERTIES IMPORTED_GLOBAL TRUE)
+ endif ()
+ 

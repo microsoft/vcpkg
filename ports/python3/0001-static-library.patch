@@ -1,0 +1,63 @@
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index b6b8d445869bc..35b329f307c12 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -257,6 +257,7 @@ typedef int pid_t;
+ 
+ /* For Windows the Python core is in a DLL by default.  Test
+ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
++#define Py_NO_ENABLE_SHARED
+ #if !defined(MS_NO_COREDLL) && !defined(Py_NO_ENABLE_SHARED)
+ #       define Py_ENABLE_SHARED 1 /* standard symbol for shared library */
+ #       define MS_COREDLL       /* deprecated old symbol */
+@@ -282,6 +283,11 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
+ #                       endif /* _DEBUG */
+ #               endif /* _MSC_VER */
+ #       endif /* Py_BUILD_CORE */
++#else
++        /* So MSVC users need not specify the .lib file in their own config */
++#       pragma comment(lib, "version.lib")
++#       pragma comment(lib, "shlwapi.lib")
++#       pragma comment(lib, "ws2_32.lib")
+ #endif /* MS_COREDLL */
+ 
+ #if defined(MS_WIN64)
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index 0666b90f66cc9..ca83b82d8a0fe 100644
+--- a/PCbuild/pythoncore.vcxproj
++++ b/PCbuild/pythoncore.vcxproj
+@@ -73,7 +73,7 @@
+   <Import Project="python.props" />
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Label="Configuration">
+-    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseOfMfc>false</UseOfMfc>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+@@ -102,12 +102,24 @@
+       <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
+       <AdditionalIncludeDirectories>$(PySourcePath)Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <AdditionalIncludeDirectories Condition="$(IncludeExternals)">$(zlibDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+-      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;Py_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <AdditionalDependencies>version.lib;shlwapi.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGInstrument|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGUpdate|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MachineX86</TargetMachine>
++    </Lib>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClInclude Include="..\Include\abstract.h" />

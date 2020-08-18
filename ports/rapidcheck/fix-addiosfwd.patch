@@ -1,0 +1,12 @@
+diff --git a/include/rapidcheck/Random.h b/include/rapidcheck/Random.h
+index e510673..4b01f58 100644
+--- a/include/rapidcheck/Random.h
++++ b/include/rapidcheck/Random.h
+@@ -3,6 +3,7 @@
+ #include <cstdint>
+ #include <array>
+ #include <limits>
++#include <iosfwd>
+ 
+ namespace rc {
+ 
