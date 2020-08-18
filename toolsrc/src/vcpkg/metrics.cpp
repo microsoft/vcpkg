@@ -525,11 +525,11 @@ namespace vcpkg::Metrics
 
 #if defined(_WIN32)
         const std::string cmd_line = Strings::format("cmd /c \"start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"\"",
-                                                     temp_folder_path_exe.u8string(),
-                                                     vcpkg_metrics_txt_path.u8string());
+                                                     fs::u8string(temp_folder_path_exe),
+                                                     fs::u8string(vcpkg_metrics_txt_path));
         System::cmd_execute_no_wait(cmd_line);
 #else
-        auto escaped_path = Strings::escape_string(vcpkg_metrics_txt_path.u8string(), '\'', '\\');
+        auto escaped_path = Strings::escape_string(fs::u8string(vcpkg_metrics_txt_path), '\'', '\\');
         const std::string cmd_line = Strings::format(
             R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --tlsv1.2 --data '@%s' >/dev/null 2>&1; rm '%s') &)",
             escaped_path,

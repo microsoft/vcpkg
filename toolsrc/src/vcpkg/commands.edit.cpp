@@ -121,16 +121,16 @@ namespace vcpkg::Commands::Edit
                 std::string package_paths;
                 for (auto&& package : packages)
                 {
-                    if (Strings::case_insensitive_ascii_starts_with(package.filename().u8string(), pattern))
+                    if (Strings::case_insensitive_ascii_starts_with(fs::u8string(package.filename()), pattern))
                     {
-                        package_paths.append(Strings::format(" \"%s\"", package.u8string()));
+                        package_paths.append(Strings::format(" \"%s\"", fs::u8string(package)));
                     }
                 }
 
                 return Strings::format(R"###("%s" "%s" "%s"%s)###",
-                                       portpath.u8string(),
-                                       portfile.u8string(),
-                                       buildtrees_current_dir.u8string(),
+                                       fs::u8string(portpath),
+                                       fs::u8string(portfile),
+                                       fs::u8string(buildtrees_current_dir),
                                        package_paths);
             });
         }
@@ -138,14 +138,14 @@ namespace vcpkg::Commands::Edit
         if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
         {
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
-                return Strings::format(R"###("%s")###", paths.build_dir(port_name).u8string());
+                return Strings::format(R"###("%s")###", fs::u8string(paths.build_dir(port_name)));
             });
         }
 
         return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
             const auto portpath = paths.ports / port_name;
             const auto portfile = portpath / "portfile.cmake";
-            return Strings::format(R"###("%s" "%s")###", portpath.u8string(), portfile.u8string());
+            return Strings::format(R"###("%s" "%s")###", fs::u8string(portpath), fs::u8string(portfile));
         });
     }
 
@@ -252,9 +252,9 @@ namespace vcpkg::Commands::Edit
         const fs::path env_editor = *it;
         const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
         const auto args_as_string = Strings::join(" ", arguments);
-        const auto cmd_line = Strings::format(R"("%s" %s -n)", env_editor.u8string(), args_as_string);
+        const auto cmd_line = Strings::format(R"("%s" %s -n)", fs::u8string(env_editor), args_as_string);
 
-        auto editor_exe = env_editor.filename().u8string();
+        auto editor_exe = fs::u8string(env_editor.filename());
 
 #ifdef _WIN32
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
