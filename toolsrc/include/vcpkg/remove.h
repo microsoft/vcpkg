@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vcpkg/commands.interface.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Remove
 {
@@ -22,11 +23,4 @@ namespace vcpkg::Remove
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db);
-
-    struct RemoveCommand : Commands::TripletCommand
-    {
-        virtual void perform_and_exit(const VcpkgCmdArguments& args,
-                                      const VcpkgPaths& paths,
-                                      Triplet default_triplet) const override;
-    };
 }

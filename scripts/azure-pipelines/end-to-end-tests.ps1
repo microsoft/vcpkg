@@ -158,13 +158,8 @@ Require-FileNotExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 Require-FileNotExists "$buildtreesRoot/rapidjson/src"
 Require-FileExists "$TestingRoot/packages.config"
 
-if ($IsLinux -or $IsMacOS) {
-    mono $(./vcpkg fetch nuget) restore $TestingRoot/packages.config -OutputDirectory "$NuGetRoot2" -Source "$NuGetRoot"
-    Throw-IfFailed
-} else {
-    & $(./vcpkg fetch nuget) restore $TestingRoot/packages.config -OutputDirectory "$NuGetRoot2" -Source "$NuGetRoot"
-    Throw-IfFailed
-}
+& $(./vcpkg fetch nuget) restore $TestingRoot/packages.config -OutputDirectory "$NuGetRoot2" -Source "$NuGetRoot"
+Throw-IfFailed
 
 Remove-Item -Recurse -Force $NuGetRoot -ErrorAction SilentlyContinue
 mkdir $NuGetRoot
@@ -182,15 +177,3 @@ Require-FileExists "$buildtreesRoot/tinyxml/src"
 if ((Get-ChildItem $NuGetRoot -Filter '*.nupkg' | Measure-Object).Count -ne 1) {
     throw "In '$CurrentTest': did not create exactly 1 NuGet package"
 }
-
-# Test export
-$args = $commonArgs + @("export","rapidjson","tinyxml","--nuget","--nuget-id=vcpkg-export","--nuget-version=1.0.0","--output=vcpkg-export-output","--raw","--zip","--output-dir=$TestingRoot")
-$CurrentTest = "./vcpkg $($args -join ' ')"
-Write-Host $CurrentTest
-Require-FileNotExists "$TestingRoot/vcpkg-export-output"
-Require-FileNotExists "$TestingRoot/vcpkg-export.1.0.0.nupkg"
-Require-FileNotExists "$TestingRoot/vcpkg-export-output.zip"
-./vcpkg @args
-Require-FileExists "$TestingRoot/vcpkg-export-output"
-Require-FileExists "$TestingRoot/vcpkg-export.1.0.0.nupkg"
-Require-FileExists "$TestingRoot/vcpkg-export-output.zip"

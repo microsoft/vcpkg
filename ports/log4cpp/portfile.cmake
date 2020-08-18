@@ -1,4 +1,8 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
+include(vcpkg_common_functions)
+
+if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+    message(FATAL_ERROR "${PORT} does not currently support UWP.")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,7 +13,6 @@ vcpkg_from_github(
     PATCHES
         fix-install-targets.patch
         Fix-StaticSupport.patch
-        fix-includepath.patch
 )
 
 vcpkg_configure_cmake(
@@ -26,4 +29,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)

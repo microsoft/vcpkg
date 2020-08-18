@@ -14,7 +14,6 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 vcpkg_configure_make(
-    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${OPTIONS}
 )

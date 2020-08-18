@@ -12,41 +12,34 @@ vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
 vcpkg_add_to_path(${NASM_EXE_PATH})
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(ENABLE_STATIC_BUILD ON)
+    set(ENABLE_SHARED_BUILD OFF)
+else()
+    set(ENABLE_STATIC_BUILD OFF)
+    set(ENABLE_SHARED_BUILD ON)
+endif()
+
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_CRT_DLL)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DENABLE_SHARED=${ENABLE_SHARED}
-        -DENABLE_STATIC=${ENABLE_STATIC}
+        -DDENABLE_SHARED=${ENABLE_SHARED_BUILD}
+        -DENABLE_STATIC=${ENABLE_STATIC_BUILD}
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
 )
 
 vcpkg_install_cmake()
 
-# Rename libraries for static builds
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib")
-    endif()
-endif()
-
-# Remove extra debug files
+#remove extra debug files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-vcpkg_copy_tools(TOOL_NAMES cjpeg djpeg jpegtran AUTO_CLEAN)
-vcpkg_fixup_pkgconfig()
+vcpkg_copy_tools(${CURRENT_PACKAGES_DIR}/tools/mozjpeg)
 
-# Remove empty folders after static build
+#remove empty folders after static build
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)

@@ -25,7 +25,7 @@ and `Setup-VagrantMachines.ps1`, and make sure to push any changes!
 Before anything else, one must download `brew` and `powershell`.
 
 ```sh
-$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 $ brew cask install powershell
 ```
 

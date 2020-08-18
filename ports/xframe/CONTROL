@@ -1,5 +1,0 @@
-Source: xframe
-Version: 0.3.0
-Description: xframe is a dataframe for C++, based on xtensor and xtl.
-Homepage: https://github.com/xtensor-stack/xframe
-Build-Depends: xtensor, xtl

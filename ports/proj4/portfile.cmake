@@ -11,7 +11,6 @@ vcpkg_from_github(
         fix-win-output-name.patch
         fix-sqlite-dependency-export.patch
         fix-linux-build.patch
-        use-sqlite3-config.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

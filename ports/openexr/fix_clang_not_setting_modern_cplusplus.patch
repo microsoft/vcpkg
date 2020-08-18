@@ -1,0 +1,13 @@
+diff --git a/IlmBase/CMakeLists.txt b/IlmBase/CMakeLists.txt
+index e13c768..95942c8 100644
+--- a/IlmBase/CMakeLists.txt
++++ b/IlmBase/CMakeLists.txt
+@@ -110,7 +110,7 @@ ENDIF ()
+ 
+ IF (OPENEXR_FORCE_CXX03)
+   FILE ( APPEND  ${ILMBASE_TMP_CONFIG} "#define ILMBASE_FORCE_CXX03 1\n" )
+-ELSEIF (NOT WIN32)
++ELSEIF (NOT WIN32 AND NOT APPLE)
+   # really only care about c++11 right now for the threading bits, but this can be changed to 14
+   # when needed...
+   # Note that the __cplusplus check is not valid under MSVC

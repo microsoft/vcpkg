@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.h>

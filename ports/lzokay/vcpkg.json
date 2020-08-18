@@ -1,6 +1,0 @@
-{
-  "name": "lzokay",
-  "version-string": "2020-07-30",
-  "description": "lzokay – MIT licensed C++ implementation of LZO compression/decompression algorithm",
-  "homepage": "https://github.com/jackoalan/lzokay"
-}

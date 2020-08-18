@@ -11,10 +11,6 @@
 
 #include <string>
 
-#if defined(_MSC_VER)
-#pragma warning(disable : 6237)
-#endif
-
 using vcpkg::nullopt;
 using vcpkg::Optional;
 using vcpkg::StringView;

@@ -87,9 +87,8 @@ TEST_CASE ("SourceParagraph two dependencies", "[paragraph]")
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->dependencies.size() == 2);
-    // should be ordered
-    REQUIRE(pgh.core_paragraph->dependencies[0].name == "openssl");
-    REQUIRE(pgh.core_paragraph->dependencies[1].name == "z");
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "z");
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "openssl");
 }
 
 TEST_CASE ("SourceParagraph three dependencies", "[paragraph]")
@@ -103,10 +102,9 @@ TEST_CASE ("SourceParagraph three dependencies", "[paragraph]")
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->dependencies.size() == 3);
-    // should be ordered
-    REQUIRE(pgh.core_paragraph->dependencies[0].name == "openssl");
-    REQUIRE(pgh.core_paragraph->dependencies[1].name == "xyz");
-    REQUIRE(pgh.core_paragraph->dependencies[2].name == "z");
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "z");
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "openssl");
+    REQUIRE(pgh.core_paragraph->dependencies[2].name == "xyz");
 }
 
 TEST_CASE ("SourceParagraph construct qualified dependencies", "[paragraph]")
