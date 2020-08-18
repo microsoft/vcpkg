@@ -6,7 +6,7 @@ index ef95a6b..ad7c8d8 100644
  
  add_dependencies(decrepit global_target)
  
-+target_compile_options(decrepit PRIVATE /wx4065)
++target_compile_options(decrepit PRIVATE /wd4065)
 +
  target_link_libraries(decrepit crypto ssl)
  
