@@ -65,3 +65,5 @@ foreach(DLL_PATH IN LISTS GNU_DLL_PATHS)
 endforeach()
 
 vcpkg_copy_pdbs()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/intl)
