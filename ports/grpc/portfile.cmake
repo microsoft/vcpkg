@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF 7d89dbb311f049b43bda7bbf6f7d7bf1b4c24419 #v1.29.1
-    SHA512 403fa5e3f012786bb17ca32c760b6dfb22c5a5cfb473ba7fad657e26ab3986eb0203f7cbb501a8647fd5ef2571e5f4ee08c2c97d1dfda18ec5ab6a92c9fc3263
+    REF de6defa6fff08de20e36f9168f5b277e292daf46 #v1.30.2
+    SHA512 e77ba43fdce5c2257abb957908b94f3132b191d930c3c1ab1350bdf6d859aaf76f0afb067f4af6abb3c8428de20dd47596f316262eb5d8569ebb2ffa13b50054
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
