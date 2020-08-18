@@ -205,7 +205,7 @@ function(vcpkg_configure_make)
     debug_message("REQUIRES_AUTOCONFIG:${REQUIRES_AUTOCONFIG}")
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(FLAGPREFIXES CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y)
+    set(FLAGPREFIXES CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
     foreach(_prefix IN LISTS FLAGPREFIXES)
         _vcpkg_backup_env_variable(${prefix}FLAGS)
     endforeach()
@@ -234,7 +234,7 @@ function(vcpkg_configure_make)
                                           libtool 
                                           gettext 
                                           gettext-devel
-                                          gcc # gcc is required for windres to work
+                                          #gcc # gcc is required for windres to work
                                           )
         list(APPEND MSYS_REQUIRE_PACKAGES make)
         if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
@@ -298,6 +298,8 @@ function(vcpkg_configure_make)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile ${VCPKG_DETECTED_C_COMPILER} -E")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "compile ${VCPKG_DETECTED_C_COMPILER}")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "compile ${VCPKG_DETECTED_CXX_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV RC "windres-rc ${VCPKG_DETECTED_RC_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV WINDRES "windres-rc ${VCPKG_DETECTED_RC_COMPILER}")
             if(VCPKG_DETECTED_AR)
                 _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "${VCPKG_DETECTED_AR}")
             else()
@@ -604,6 +606,7 @@ function(vcpkg_configure_make)
         set(ENV{CPPFLAGS} ${CPPFLAGS_${_buildtype}})
         set(ENV{CFLAGS} ${CFLAGS_${_buildtype}})
         set(ENV{CXXFLAGS} ${CXXFLAGS_${_buildtype}})
+        set(ENV{RCFLAGS} ${VCPKG_DETECTED_COMBINED_RCFLAGS_${_buildtype}})
         set(ENV{LDFLAGS} ${LDFLAGS_${_buildtype}})
         if(LINK_ENV_${_VAR_SUFFIX})
             _vcpkg_backup_env_variables(_LINK_)
