@@ -5,6 +5,8 @@
 
 #include <inttypes.h>
 
+#include <regex>
+
 namespace vcpkg::Json
 {
     using VK = ValueKind;
@@ -984,6 +986,33 @@ namespace vcpkg::Json
         private:
             JsonStyle style_;
         };
+    }
+
+    bool IdentifierDeserializer::is_ident(StringView sv)
+    {
+        static const std::regex BASIC_IDENTIFIER = std::regex(R"([a-z0-9]+(-[a-z0-9]+)*)");
+
+        // we only check for lowercase in RESERVED since we already remove all
+        // strings with uppercase letters from the basic check
+        static const std::regex RESERVED = std::regex(R"(prn|aux|nul|con|(lpt|com)[1-9]|core|default)");
+
+        // back-compat
+        if (sv == "all_modules")
+        {
+            return true;
+        }
+
+        if (!std::regex_match(sv.begin(), sv.end(), BASIC_IDENTIFIER))
+        {
+            return false; // we're not even in the shape of an identifier
+        }
+
+        if (std::regex_match(sv.begin(), sv.end(), RESERVED))
+        {
+            return false; // we're a reserved identifier
+        }
+
+        return true;
     }
 
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse_file(const Files::Filesystem& fs,
