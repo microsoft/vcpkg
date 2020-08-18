@@ -38,6 +38,13 @@ Example: `D:\2017`
 
 This environment variable can be set to a triplet name which will be used for unqualified triplet references in command lines.
 
+#### VCPKG_OVERLAY_TRIPLETS
+
+This environment variable allows users to override triplets with alternate versions. List paths to overlays using 
+the platform dependent PATH seperator (Windows `;` | others `:`) 
+
+Example (Windows): `C:\custom-triplets\boost;C:\custom-triplets\sqlite3`
+
 #### VCPKG_OVERLAY_PORTS
 
 This environment variable allows users to override ports with alternate versions according to the
