@@ -20,13 +20,16 @@ vcpkg_extract_source_archive_ex(
         0002-Config-for-MSVC.patch
         0003-Add-export.patch
 )
-
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND OPTIONS gl_cv_double_slash_root=yes)
+endif()
 vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}
                      DETERMINE_BUILD_TRIPLET
                      USE_WRAPPERS
                      OPTIONS
                         --enable-relocatable
                         --enable-extra-encodings
+                        ${OPTIONS}
                     )
 vcpkg_install_make()
 
