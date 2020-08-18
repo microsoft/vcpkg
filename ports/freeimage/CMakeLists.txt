@@ -9,10 +9,6 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS "/wd4828 ${CMAKE_CXX_FLAGS}")
 endif()
 
-if(BUILD_SHARED_LIBS)
-  add_definitions("-DOPENEXR_DLL")
-endif()
-
 find_package(ZLIB     REQUIRED)
 find_package(PNG      REQUIRED)
 find_package(JPEG     REQUIRED)
@@ -100,7 +96,6 @@ target_include_directories(FreeImage PRIVATE ${REAL_SOURCE_DIR}
                                              ${WEBP_INCLUDE_DIRS}
                                              ${JXR_INCLUDE_DIRS}
                                              ${LibRaw_INCLUDE_DIRS}
-                                             ${OpenEXR_INCLUDE_DIRS}
                                              ${CMAKE_CURRENT_BINARY_DIR})
 
 
@@ -112,7 +107,7 @@ target_link_libraries(FreeImage ${ZLIB_LIBRARIES}
                                 ${WEBP_LIBRARIES}
                                 ${JXR_LIBRARIES}
                                 ${LibRaw_LIBRARIES}
-                                ${OpenEXR_LIBRARIES})
+                                OpenEXR::IlmImf)
 
 target_compile_definitions(FreeImage PRIVATE ${PNG_DEFINITIONS})
 

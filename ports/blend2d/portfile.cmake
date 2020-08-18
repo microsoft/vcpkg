@@ -1,10 +1,10 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_ARCH "wasm32" ON_TARGET "uwp")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO blend2d/blend2d
-  REF 841360f653d8f2a749e40d4e31807dfac3d6df29
-  SHA512 4ea11a2b74aa824a92cdb221ef6d019218379639b0cb005294e95f51f88955e7ec4aba2c837ea756b118ae10280679b9ec6c9345e3b25ba08d7b6f935a85cf2b
+  REF ee5c52aa5fcaaf9910dd2ef566a741d998bdfb98
+  SHA512 e33e9418be13d239feb2a88d52538e0a86b920b9bcb0473ac21b27fbd54f7c683e23c1f8a6dbcbcf24fdc85bfc1b5884ebea4a9a5e4ec1fcfbfaa006807e3d59
   HEAD_REF master
 )
 
@@ -21,8 +21,8 @@ if(NOT BLEND2D_BUILD_NO_JIT)
   vcpkg_from_github(
     OUT_SOURCE_PATH ASMJIT_SOURCE_PATH
     REPO asmjit/asmjit
-    REF 80645e66a8ae85749937bda3b329388c8a76ea4c
-    SHA512 8e7b0aed14e8ce05e6e6b2eed77be23a81b9548a146aef187ac6beced3bc2a6cba92835718adb901a1ab983fab32f3e9f18061b157b2276bb1451a71ca1195b8
+    REF 8474400e82c3ea65bd828761539e5d9b25f6bd83
+    SHA512 435be4ed22abbbbcdea3869b31bc2fc27aae969775773c24155d7490bca9591f51613fa3319cce54200c6d18dbe73a6be2d5449c49afb46934d93760501e98f6
     HEAD_REF master
   )
 
@@ -40,7 +40,6 @@ vcpkg_configure_cmake(
         -DBLEND2D_STATIC=${BLEND2D_STATIC}
         ${FEATURE_OPTIONS}
 )
-
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

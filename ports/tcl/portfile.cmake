@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcltk/tcl
-    REF 2abfa2c03ddc0419e6525f86c2c0323b2ba1932e
-    SHA512 d9bc83c389cf3b95ab64b75c57eb9a2b23b957503d2dadc2d3f6854e9e784d87d9b2059a82f35accb419693bfe675b523c4751af91efac700644e118ff689fd7)
+    REF 0fa6a4e5aad821a5c34fdfa070c37c3f1ffc8c8e
+    SHA512 9d7f35309fe8b1a7c116639aaea50cc01699787c7afb432389bee2b9ad56a67034c45d90c9585ef1ccf15bdabf0951cbef86257c0c6aedbd2591bbfae3e93b76)
 
 if (VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
@@ -92,13 +92,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     
 else()
+    file(REMOVE "${SOURCE_PATH}/unix/configure")
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
-        NO_DEBUG
         PROJECT_SUBPATH unix
     )
     
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

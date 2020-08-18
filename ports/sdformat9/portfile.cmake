@@ -6,8 +6,9 @@ vcpkg_from_github(
     REF sdformat9_9.2.0
     SHA512 6fc7d0ce46d9a7d1cae4fd905ebe6a07bb4ba98faa267be92a32b3409d6d82a99d5082485008a15484f7b5be2c347b5b24bc472fb1a4be5eb8b678b105cae6af
     HEAD_REF sdf9
-    # Backport of https://github.com/osrf/sdformat/pull/269
-    PATCHES respect-build-testing.patch
+    PATCHES
+        respect-build-testing.patch # Backport of https://github.com/osrf/sdformat/pull/269
+        fix-dependency-urdfdom.patch
 )
 
 # Ruby is required by the sdformat build process

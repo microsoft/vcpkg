@@ -13,14 +13,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(ICONV_PATCH "no_use_iconv.patch")
     endif()
 
-    # Ensure "OPENSSL_USE_STATIC_LIBS" is set to ON
-    # when statically linking against OpenSSL on Windows.
-    # Also ensure "static_runtime" will be used when statically linking against the runtime.
-    # Prevents OpenSSL crypt32.lib linking errors.
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
         set(_static_runtime ON)
-    elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        set(_OPENSSL_USE_STATIC_LIBS ON)
     endif()
 endif()
 
@@ -45,8 +39,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF d8be9312ec47c1c54849f846aa92530ec66266b9 # based on libtorrent-1.2.6 plus fixes from RC_1_2 branch
-    SHA512 b51593f090064da877a604c3bce5c3b8313aab8e7b3b14e33e5b3d9bbe9798f47948fecf5af390bba34750f13b3773a3b6a9ab04375961238d5056fe7a06c298
+    REF libtorrent-1.2.8
+    SHA512 2a36412fb399f066de9768f4afd87ddbfc10fcd2a0b3a8be0a43bec6914497e71d9d4ffe4ff8ccc5544a048f799ccba6ce086ab6199f4dee66d1341f02d73f9a
     HEAD_REF RC_1_2
     PATCHES
         add-datetime-to-boost-libs.patch
@@ -61,7 +55,6 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -Dboost-python-module-name=${_boost-python-module-name}
         -Dstatic_runtime=${_static_runtime}
-        -DOPENSSL_USE_STATIC_LIBS=${_OPENSSL_USE_STATIC_LIBS}
         -DPython3_USE_STATIC_LIBS=ON
 )
 

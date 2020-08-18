@@ -28,12 +28,14 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTS=OFF
+        -DDOWNLOAD_STB_IMAGE=OFF
+        -DDOWNLOAD_ENSMALLEN=OFF
+        -DBUILD_PYTHON_BINDINGS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if("tools" IN_LIST FEATURES)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
@@ -45,3 +47,5 @@ if("tools" IN_LIST FEATURES)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

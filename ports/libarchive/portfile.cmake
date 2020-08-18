@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-lz4.patch
         fix-zstd.patch
         fix-cpu-set.patch
+        disable-c4061.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

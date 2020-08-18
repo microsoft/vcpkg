@@ -34,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     libmodplug SDL_MIXER_ENABLE_MOD
     libvorbis SDL_MIXER_ENABLE_OGGVORBIS
     opusfile SDL_MIXER_ENABLE_OPUS
+    nativemidi SDL_MIXER_ENABLE_NATIVEMIDI
 )
 
 vcpkg_configure_cmake(
