@@ -1,0 +1,13 @@
+diff --git a/decrepit/CMakeLists.txt b/decrepit/CMakeLists.txt
+index ef95a6b..ad7c8d8 100644
+--- a/decrepit/CMakeLists.txt
++++ b/decrepit/CMakeLists.txt
+@@ -24,6 +24,8 @@ add_library(
+ 
+ add_dependencies(decrepit global_target)
+ 
++target_compile_options(decrepit PRIVATE /wd4065)
++
+ target_link_libraries(decrepit crypto ssl)
+ 
+ add_executable(
