@@ -13,6 +13,7 @@ vcpkg_from_sourceforge(
     PATCHES
         0001-unique_ptr.patch
         0002-HAVE_UNISTD_H.patch
+        freetype.patch
         ${ADDITIONAL_PATCH}
 )
 
