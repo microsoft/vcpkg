@@ -1,4 +1,5 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-message(STATUS "\nPlease using the following command when you need to remove all boost ports/components:\n\
+message(STATUS "\nPlease use the following command when you need to remove all boost ports/components:\n\
+
     \"./vcpkg remove boost-uninstall:${TARGET_TRIPLET} --recurse\"\n")
