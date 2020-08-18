@@ -66,9 +66,9 @@ vcpkg_apply_patches(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/${PORT})
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/OpenXR)
 else(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/${PORT})
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/openxr TARGET_PATH share/OpenXR)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
