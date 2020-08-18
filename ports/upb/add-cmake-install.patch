@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4dd6454..82b7dcb 100644
+index 4dd6454..eda6a72 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -8,7 +8,7 @@ else()
@@ -27,7 +27,7 @@ index 4dd6454..82b7dcb 100644
  add_library(upb_test
    tests/testmain.cc
    tests/test_util.h
-@@ -162,5 +164,27 @@ target_link_libraries(upb_test
+@@ -162,5 +164,28 @@ target_link_libraries(upb_test
    handlers
    port
    upb)
@@ -39,8 +39,9 @@ index 4dd6454..82b7dcb 100644
 +  DESTINATION include
 +  FILES_MATCHING
 +  PATTERN "*.h"
++  PATTERN "*.hpp"
 +  PATTERN "*.inc"
-+  PATTERN "*.int.h" EXCLUDE
++  PATTERN "*.int.h"
 +)
 +target_include_directories(upb PUBLIC $<INSTALL_INTERFACE:include>)
 +install(TARGETS
@@ -48,10 +49,10 @@ index 4dd6454..82b7dcb 100644
 +  upb_cc_bindings
 +  upb_json
 +  upb_pb
++  port
 +  table
 +  descriptor_upbproto
 +  handlers
-+  legacy_msg_reflection
 +  reflection
 +  EXPORT upb-config
 +)
