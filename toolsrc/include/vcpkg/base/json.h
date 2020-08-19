@@ -307,14 +307,9 @@ namespace vcpkg::Json
         }
         virtual Optional<Type> visit_number(Reader&, StringView, double) { return nullopt; }
         virtual Optional<Type> visit_string(Reader&, StringView, StringView) { return nullopt; }
-        virtual Optional<Type> visit_array(Reader&, StringView, const Array&)
-        {
-            return nullopt;
-        }
-        virtual Optional<Type> visit_object(Reader&, StringView, const Object&)
-        {
-            return nullopt;
-        }
+        virtual Optional<Type> visit_array(Reader&, StringView, const Array&) { return nullopt; }
+        virtual Optional<Type> visit_object(Reader&, StringView, const Object&) { return nullopt; }
+
     protected:
         IDeserializer() = default;
         IDeserializer(const IDeserializer&) = default;

@@ -9,6 +9,8 @@
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/fwd/registries.h>
+
 namespace vcpkg
 {
     struct ToolsetArchOption
@@ -54,6 +56,31 @@ namespace vcpkg
     struct VcpkgCmdArguments;
     struct PackageSpec;
     struct Triplet;
+
+    struct Registries
+    {
+        Registries();
+        Registries(Registries&&);
+        Registries& operator=(Registries&&);
+        ~Registries();
+
+        // finds the correct registry for the port name
+        // Returns the null pointer if there is no registry set up for that name
+        const Registry* registry_for_port(StringView port_name) const;
+
+        // TODO: figure out how to get this to return an error (or maybe it should be a warning?)
+        void add_registry(Registry&& r);
+        void set_default_registry(std::unique_ptr<RegistryImpl>&& r);
+        void set_default_registry(std::nullptr_t r);
+    private:
+        std::unique_ptr<RegistryImpl> default_registry;
+        std::vector<Registry> set;
+    };
+
+    struct Configuration
+    {
+        Registries registries;
+    };
 
     struct VcpkgPaths : Util::MoveOnlyBase
     {
@@ -110,7 +137,7 @@ namespace vcpkg
 
         Optional<const Json::Object&> get_manifest() const;
         Optional<const Json::JsonStyle&> get_manifest_style() const;
-        Optional<const Json::Object&> get_manifest_config() const;
+        Optional<const Configuration&> get_manifest_config() const;
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>

@@ -11,6 +11,7 @@
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -82,7 +83,11 @@ namespace
 
 namespace vcpkg
 {
-    static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, Optional<Json::Object>> load_manifest_and_config(
+    Registries::Registries(Registries&&) = default;
+    Registries& Registries::operator=(Registries&&) = default;
+    Registries::~Registries() = default;
+
+    static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, Optional<Configuration>> load_manifest_and_config(
         const Files::Filesystem& fs, const fs::path& manifest_dir)
     {
         std::error_code ec;
@@ -109,11 +114,13 @@ namespace vcpkg
         }
         std::pair<Json::Object, Json::JsonStyle> manifest = {std::move(manifest_value.first.object()), std::move(manifest_value.second)};
 
+        Optional<Json::Object> config;
+
         if (auto p_manifest_config = manifest.first.get("configuration"))
         {
             if (p_manifest_config->is_object())
             {
-                return {std::move(manifest), std::move(p_manifest_config->object())};
+                config = std::move(p_manifest_config->object());
             }
             else if (p_manifest_config->is_string())
             {
@@ -136,7 +143,7 @@ namespace vcpkg
                                    ": configuration files must have a top-level object\n");
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
-                return {std::move(manifest), std::move(parsed_config.first.object())};
+                config = std::move(parsed_config.first.object());
             }
             else
             {
@@ -148,7 +155,15 @@ namespace vcpkg
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }
-        return {std::move(manifest), nullopt};
+
+        if (auto c = config.get())
+        {
+            Checks::unreachable(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            return {std::move(manifest), nullopt};
+        }
     }
 
     namespace details
@@ -176,7 +191,7 @@ namespace vcpkg
             fs::SystemHandle file_lock_handle;
 
             Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
-            Optional<Json::Object> m_manifest_config;
+            Optional<Configuration> m_manifest_config;
         };
     }
 
@@ -425,7 +440,7 @@ If you wish to silence this error and use classic mode, you can:
         }
     }
 
-    Optional<const Json::Object&> VcpkgPaths::get_manifest_config() const { return m_pimpl->m_manifest_config; }
+    Optional<const Configuration&> VcpkgPaths::get_manifest_config() const { return m_pimpl->m_manifest_config; }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
