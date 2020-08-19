@@ -556,7 +556,7 @@ namespace vcpkg::PostBuildLint
             return LintStatus::ERROR_DETECTED;
         }
 #endif
-        Util::unused(expected_architecture, files);
+        (void)expected_architecture, (void)files;
         return LintStatus::SUCCESS;
     }
 

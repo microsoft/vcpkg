@@ -532,7 +532,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)(args.parse_arguments(COMMAND_STRUCTURE));
 
         if (args.command_arguments[0] == Subcommand::INSTALL)
         {

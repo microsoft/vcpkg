@@ -40,9 +40,9 @@ IncludeCategories:
     Priority: -1
   - Regex: '^<catch2/catch\.hpp>$'
     Priority: 1
-  - Regex: '^<vcpkg/base/.*\.h>$'
-    Priority: 2
   - Regex: '^<vcpkg/fwd/.*\.h>$'
+    Priority: 2
+  - Regex: '^<vcpkg/base/.*\.h>$'
     Priority: 3
   - Regex: '^<vcpkg/.*\.h>$'
     Priority: 4
