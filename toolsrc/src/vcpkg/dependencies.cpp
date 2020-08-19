@@ -263,12 +263,13 @@ namespace vcpkg::Dependencies
                 auto vcpkg_remove_cmd = ".\/vcpkg";
 #endif
                 if (!maybe_scfl)
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Error: while loading %s: %s.\nPlease run \"%s remove %s\" and re-attempt.",
-                                              ipv.spec().to_string(),
-                                              maybe_scfl.error(),
-                                              vcpkg_remove_cmd,
-                                              ipv.spec().to_string());
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO,
+                        "Error: while loading %s: %s.\nPlease run \"%s remove %s\" and re-attempt.",
+                        ipv.spec().to_string(),
+                        maybe_scfl.error(),
+                        vcpkg_remove_cmd,
+                        ipv.spec().to_string());
 
                 return m_graph
                     .emplace(std::piecewise_construct,
