@@ -145,9 +145,9 @@ function(vcpkg_build_make)
             else()
                 set(MAKE_CMD_LINE ${MAKE_COMMAND} ${MAKE_OPTS})
             endif()
-        foreach(_envar IN LISTS printvars)
-            message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
-        endforeach()
+            # foreach(_envar IN LISTS printvars)
+                # message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
+            # endforeach()
             vcpkg_execute_build_process(
                     COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
                     WORKING_DIRECTORY "${WORKING_DIRECTORY}"

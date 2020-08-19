@@ -330,8 +330,9 @@ function(vcpkg_configure_make)
             endif()
         endforeach()
         if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS) # without autotools we assume a custom configure script which correctly handles cl and lib. Otherwise the port needs to set CC|CXX|AR and probably CPP
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile ${VCPKG_DETECTED_C_COMPILER} -E")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile ${VCPKG_DETECTED_C_COMPILER} -EP")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "compile ${VCPKG_DETECTED_C_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC_FOR_BUILD "compile ${VCPKG_DETECTED_C_COMPILER}")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "compile ${VCPKG_DETECTED_CXX_COMPILER}")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV RC "windres-rc ${VCPKG_DETECTED_RC_COMPILER}")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV WINDRES "windres-rc ${VCPKG_DETECTED_RC_COMPILER}")
@@ -341,8 +342,9 @@ function(vcpkg_configure_make)
                 _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "ar-lib lib.exe -verbose")
             endif()
         else()
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "${VCPKG_DETECTED_C_COMPILER} -E")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "${VCPKG_DETECTED_C_COMPILER} -EP")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "${VCPKG_DETECTED_C_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC_FOR_BUILD "${VCPKG_DETECTED_C_COMPILER}")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "${VCPKG_DETECTED_CXX_COMPILER}")
             if(VCPKG_DETECTED_AR)
                 _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "${VCPKG_DETECTED_AR}")
@@ -381,7 +383,7 @@ function(vcpkg_configure_make)
         foreach(_env IN LISTS _csc_CONFIGURE_ENVIRONMENT_VARIABLES)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV ${_env} "${${_env}}")
         endforeach()
-        message(STATUS "CONFIGURE_ENV: ${CONFIGURE_ENV}")
+
         # Other maybe interesting variables to control
         # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
         # LINK This is the command used to actually link a C program.
@@ -392,9 +394,7 @@ function(vcpkg_configure_make)
         string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
-        string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF ${CURRENT_INSTALLED_DIR})
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
-        string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
+
         set(prefix_var "'\${prefix}'") # Windows needs extra quotes or else the variable gets expanded in the makefile!
         
         list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
@@ -489,10 +489,10 @@ function(vcpkg_configure_make)
     endif()
 
     vcpkg_find_acquire_program(PKGCONFIG)
-
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT PKGCONFIG STREQUAL "--static")
         set(PKGCONFIG "${PKGCONFIG} --static")
     endif()
+
     # Run autoconf if necessary
     set(_GENERATED_CONFIGURE FALSE)
     if (_csc_AUTOCONFIG OR REQUIRES_AUTOCONFIG)
@@ -615,9 +615,9 @@ function(vcpkg_configure_make)
             set(RELATIVE_BUILD_PATH .)
         endif()
 
+        # Setup PKG_CONFIG_PATH
         set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_buildtype}}/lib/pkgconfig")
         set(PKGCONFIG_INSTALLED_SHARE_DIR "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
-
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype} $ENV{PKG_CONFIG_PATH})
             set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
@@ -652,9 +652,9 @@ function(vcpkg_configure_make)
             vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_buildtype}}/bin")
         endif()
         debug_message("Configure command:'${command}'")
-        foreach(_envar IN LISTS printvars)
-            message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
-        endforeach()
+        # foreach(_envar IN LISTS printvars)
+            # message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
+        # endforeach()
         if (NOT _csc_SKIP_CONFIGURE)
             message(STATUS "Configuring ${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}")
             vcpkg_execute_required_process(
