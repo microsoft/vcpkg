@@ -161,9 +161,9 @@ function(vcpkg_build_make)
                     set(MAKE_CMD_LINE ${MAKE_COMMAND} ${INSTALL_OPTS})
                 endif()
                 set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-                foreach(_envar IN LISTS printvars)
-                    message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
-                endforeach()
+                # foreach(_envar IN LISTS printvars)
+                    # message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
+                # endforeach()
                 vcpkg_execute_build_process(
                     COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
                     WORKING_DIRECTORY "${WORKING_DIRECTORY}"
