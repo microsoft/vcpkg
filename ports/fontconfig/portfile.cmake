@@ -17,8 +17,7 @@ get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(OPT_DBG "LIBS='-L${CURRENT_INSTALLED_DIR}/debug/lib -lintl'")
-    set(OPT_REL "LIBS='-L${CURRENT_INSTALLED_DIR}/lib -lintl'")
+    set(ENV{LIBS} "-lintl")
 endif()
 vcpkg_configure_make(
     AUTOCONFIG
