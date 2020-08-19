@@ -21,7 +21,7 @@ namespace vcpkg::Commands::PortHistory
         const fs::path dot_git_dir = paths.root / ".git";
 
         const std::string full_cmd =
-            Strings::format(R"("%s" --git-dir="%s" %s)", git_exe.u8string(), dot_git_dir.u8string(), cmd);
+            Strings::format(R"("%s" --git-dir="%s" %s)", fs::u8string(git_exe), fs::u8string(dot_git_dir), cmd);
 
         auto output = System::cmd_execute_and_capture_output(full_cmd);
         Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to run command: %s", full_cmd);

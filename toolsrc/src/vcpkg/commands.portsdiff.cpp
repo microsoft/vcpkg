@@ -82,7 +82,7 @@ namespace vcpkg::Commands::PortsDiff
         auto& fs = paths.get_filesystem();
         const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
         const fs::path dot_git_dir = paths.root / ".git";
-        const std::string ports_dir_name_as_string = paths.ports.filename().u8string();
+        const std::string ports_dir_name_as_string = fs::u8string(paths.ports.filename());
         const fs::path temp_checkout_path =
             paths.root / Strings::format("%s-%s", ports_dir_name_as_string, git_commit_id);
         fs.create_directory(temp_checkout_path, ec);
@@ -90,14 +90,14 @@ namespace vcpkg::Commands::PortsDiff
             Strings::format(R"(.\%s)", ports_dir_name_as_string); // Must be relative to the root of the repository
 
         const std::string cmd = Strings::format(R"("%s" --git-dir="%s" --work-tree="%s" checkout %s -f -q -- %s %s)",
-                                                git_exe.u8string(),
-                                                dot_git_dir.u8string(),
-                                                temp_checkout_path.u8string(),
+                                                fs::u8string(git_exe),
+                                                fs::u8string(dot_git_dir),
+                                                fs::u8string(temp_checkout_path),
                                                 git_commit_id,
                                                 checkout_this_dir,
                                                 ".vcpkg-root");
         System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
-        System::cmd_execute_and_capture_output(Strings::format(R"("%s" reset)", git_exe.u8string()),
+        System::cmd_execute_and_capture_output(Strings::format(R"("%s" reset)", fs::u8string(git_exe)),
                                                System::get_clean_environment());
         const auto all_ports =
             Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
@@ -115,7 +115,7 @@ namespace vcpkg::Commands::PortsDiff
     {
         static const std::string VALID_COMMIT_OUTPUT = "commit\n";
 
-        const auto cmd = Strings::format(R"("%s" cat-file -t %s)", git_exe.u8string(), git_commit_id);
+        const auto cmd = Strings::format(R"("%s" cat-file -t %s)", fs::u8string(git_exe), git_commit_id);
         const System::ExitCodeAndOutput output = System::cmd_execute_and_capture_output(cmd);
         Checks::check_exit(
             VCPKG_LINE_INFO, output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", git_commit_id);

@@ -173,7 +173,7 @@ namespace vcpkg
     {
     }
     System::CMakeVariable::CMakeVariable(const StringView varname, const fs::path& path)
-        : CMakeVariable(varname, path.generic_u8string())
+        : CMakeVariable(varname, fs::generic_u8string(path))
     {
     }
 

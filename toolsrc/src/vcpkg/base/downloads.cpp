@@ -34,7 +34,7 @@ namespace vcpkg::Downloads
                            "   Expected hash : [ %s ]\n"
                            "     Actual hash : [ %s ]\n",
                            url,
-                           path.u8string(),
+                           fs::u8string(path),
                            sha512,
                            actual_hash);
     }
@@ -45,7 +45,7 @@ namespace vcpkg::Downloads
                        const fs::path& download_path,
                        const std::string& sha512)
     {
-        const std::string download_path_part = download_path.u8string() + ".part";
+        const std::string download_path_part = fs::u8string(download_path) + ".part";
         auto download_path_part_path = fs::u8path(download_path_part);
         std::error_code ec;
         fs.remove(download_path, ec);
