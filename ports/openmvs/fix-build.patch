@@ -242,7 +242,7 @@ index 96b8fe2..454e846 100644
  set(OpenMVS_LIBRARIES MVS)
  set(OpenMVS_BINARIES InterfaceVisualSFM DensifyPointCloud ReconstructMesh RefineMesh TextureMesh)
 diff --git a/build/Utils.cmake b/build/Utils.cmake
-index f41c9d8..b717a1f 100644
+index f41c9d8..31cd292 100644
 --- a/build/Utils.cmake
 +++ b/build/Utils.cmake
 @@ -160,7 +160,7 @@ macro(GetOperatingSystemArchitectureBitness)
@@ -309,15 +309,16 @@ index f41c9d8..b717a1f 100644
  	# Offer the user the choice of overriding the installation directories
 -	set(INSTALL_LIB_DIR "lib/${PROJECT_NAME}" CACHE PATH "Installation directory for libraries")
 -	set(INSTALL_BIN_DIR "bin/${PROJECT_NAME}" CACHE PATH "Installation directory for executables")
-+	set(INSTALL_LIB_DIR "lib" CACHE PATH "Installation directory for libraries")
-+	set(INSTALL_BIN_DIR "bin" CACHE PATH "Installation directory for executables")
- 	set(INSTALL_INCLUDE_DIR "include/${PROJECT_NAME}" CACHE PATH "Installation directory for header files")
+-	set(INSTALL_INCLUDE_DIR "include/${PROJECT_NAME}" CACHE PATH "Installation directory for header files")
 -	if(WIN32 AND NOT CYGWIN)
 -		set(DEF_INSTALL_CMAKE_DIR "CMake")
 -	else()
 -		set(DEF_INSTALL_CMAKE_DIR "lib/CMake/${PROJECT_NAME}")
 -	endif()
-+	set(DEF_INSTALL_CMAKE_DIR "share/${PROJECT_NAME}")
++	set(INSTALL_LIB_DIR "lib" CACHE PATH "Installation directory for libraries")
++	set(INSTALL_BIN_DIR "bin" CACHE PATH "Installation directory for executables")
++	set(INSTALL_INCLUDE_DIR "include/openmvs" CACHE PATH "Installation directory for header files")
++	set(DEF_INSTALL_CMAKE_DIR "share/openmvs")
  	set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
 -	 
 +
