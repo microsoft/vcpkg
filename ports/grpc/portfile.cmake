@@ -57,7 +57,7 @@ vcpkg_configure_cmake(
         -DgRPC_GFLAGS_PROVIDER=none
         -DgRPC_BENCHMARK_PROVIDER=none
         -DgRPC_INSTALL_CSHARP_EXT=OFF
-        -DgRPC_INSTALL_BINDIR:STRING=tools/grpc
+        -DgRPC_INSTALL_BINDIR:STRING=bin
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/gRPC
@@ -68,10 +68,21 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/gRPC TARGET_PATH share/gRPC)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
+if (gRPC_BUILD_CODEGEN)
+    vcpkg_copy_tools(
+        AUTO_CLEAN
+        TOOL_NAMES
+            grpc_php_plugin
+            grpc_python_plugin
+            grpc_node_plugin
+            grpc_objective_c_plugin
+            grpc_csharp_plugin
+            grpc_cpp_plugin
+            grpc_ruby_plugin
+    )
+endif()
 
 # Ignore the C# extension DLL in bin/
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
