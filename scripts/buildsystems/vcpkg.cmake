@@ -394,21 +394,46 @@ function(install)
 
     if(VCPKG_APPINSTALL_DEPS)
         if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-            cmake_parse_arguments(__VCPKG_INSTALL "" "DESTINATION" "TARGETS" ${ARGN})
-            if(__VCPKG_INSTALL_DESTINATION)
-                set(__VCPKG_INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/${__VCPKG_INSTALL_DESTINATION}")
-            else()
-                set(__VCPKG_INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-            endif()
+            if(${ARGV0} STREQUAL "TARGETS")
+                # Will contain the list of targets
+                set(__VCPKG_INSTALL_TARGETS "")
 
-            foreach(TARGET ${__VCPKG_INSTALL_TARGETS})
-                install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
-                    execute_process(COMMAND 
-                        powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                        -targetBinary ${__VCPKG_INSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>
-                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                        -OutVariable out)")
-            endforeach()
+                # Destination - [RUNTIME] DESTINATION argument overrides this
+                set(__VCPKG_INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+
+                # Parse arguments given to the install function to find targets and (runtime) destination
+                set(MODIFIER "") # Modifier for the command in the argument
+                set(LAST_COMMAND "") # Last command we found to process
+                foreach(ARG ${ARGN})
+                    if(${ARG} MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE")
+                        set(MODIFIER ${ARG})
+                        continue()
+                    endif()
+
+                    if(${ARG} MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP")
+                        set(LAST_COMMAND ${ARG})
+                        continue()
+                    endif()
+
+                    if("${LAST_COMMAND}" STREQUAL "TARGETS")
+                        list(APPEND __VCPKG_INSTALL_TARGETS "${ARG}")
+                    endif()
+
+                    if("${LAST_COMMAND}" STREQUAL "DESTINATION" AND ("${MODIFIER}" STREQUAL "" OR "${MODIFIER}" STREQUAL "RUNTIME"))
+                        set(__VCPKG_INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/${ARG}")
+                    endif()
+                endforeach()
+
+                foreach(TARGET ${__VCPKG_INSTALL_TARGETS})
+                    message("Found target: ${TARGET}")
+                    install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+                        execute_process(COMMAND 
+                            powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                            -targetBinary ${__VCPKG_INSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>
+                            -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                            -OutVariable out)")
+                endforeach()
+            endif()
         endif()
     endif()
 endfunction()
