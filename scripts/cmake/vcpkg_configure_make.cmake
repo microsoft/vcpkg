@@ -190,9 +190,11 @@ macro(extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
     string(REGEX REPLACE " +" " " CPPFLAGS_${_SUFFIX} "${CPPFLAGS_${_SUFFIX}}")
     string(REGEX REPLACE " +" " " CFLAGS_${_SUFFIX} "${CFLAGS_${_SUFFIX}}")
     string(REGEX REPLACE " +" " " CXXFLAGS_${_SUFFIX} "${CXXFLAGS_${_SUFFIX}}")
-    # libtool has problems dealing with this compiler flag so we remove it for now. Could be put into ENV{CL}
-    string(REGEX REPLACE "(-|/)(RTC[^ ]+)" "" CFLAGS_${_SUFFIX} "${CFLAGS_${_SUFFIX}}")
-    string(REGEX REPLACE "(-|/)(RTC[^ ]+)" "" CXXFLAGS_${_SUFFIX} "${CXXFLAGS_${_SUFFIX}}")
+    # libtool has and -R option so we need to guard against -RTC by using -Xcompiler
+    # while configuring there might be a lot of unknown compiler option warnings due to that
+    # just ignore them. 
+    string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CFLAGS_${_SUFFIX} "${CFLAGS_${_SUFFIX}}")
+    string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CXXFLAGS_${_SUFFIX} "${CXXFLAGS_${_SUFFIX}}")
     string(STRIP "${CPPFLAGS_${_SUFFIX}}" CPPFLAGS_${_SUFFIX})
     string(STRIP "${CFLAGS_${_SUFFIX}}" CFLAGS_${_SUFFIX})
     string(STRIP "${CXXFLAGS_${_SUFFIX}}" CXXFLAGS_${_SUFFIX})
