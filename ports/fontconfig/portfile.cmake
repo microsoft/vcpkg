@@ -16,9 +16,6 @@ vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{LIBS} "-lintl")
-endif()
 vcpkg_configure_make(
     AUTOCONFIG
     COPY_SOURCE
@@ -28,23 +25,16 @@ vcpkg_configure_make(
         ${OPTIONS}
         ac_cv_type_pid_t=yes
         --enable-iconv
-        #--enable-expat
-        "--with-expat=${CURRENT_INSTALLED_DIR}"
-        "--with-expat-includes=${CURRENT_INSTALLED_DIR}/include"
         "--with-libiconv=${CURRENT_INSTALLED_DIR}"
         "--with-libiconv-includes=${CURRENT_INSTALLED_DIR}/include"
     OPTIONS_DEBUG
-        "--with-expat-lib=${CURRENT_INSTALLED_DIR}/debug/lib"
         "--with-libiconv-lib=${CURRENT_INSTALLED_DIR}/debug/lib"
         ${OPT_DBG}
     OPTIONS_RELEASE
-        "--with-expat-lib=${CURRENT_INSTALLED_DIR}/lib"
         "--with-libiconv-lib=${CURRENT_INSTALLED_DIR}/lib"
         ${OPT_REL}
     ADD_BIN_TO_PATH
 )
-        # [AC_HELP_STRING([--enable-libxml2],
-        # [Use libxml2 instead of Expat])])
 
 vcpkg_install_make(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
