@@ -1,0 +1,28 @@
+diff --git a/expat/CMakeLists.txt b/expat/CMakeLists.txt
+index a67f081b1..cc220f2a1 100644
+--- a/expat/CMakeLists.txt
++++ b/expat/CMakeLists.txt
+@@ -294,7 +294,11 @@ expat_install(FILES lib/expat.h lib/expat_external.h DESTINATION ${CMAKE_INSTALL
+ #
+ # pkg-config file
+ #
+-if(NOT MSVC)
++if(1)
++    set(libname ${_EXPAT_TARGET})
++    if(MSVC AND CMAKE_BUILD_TYPE STREQUAL "Debug")
++        set(libname ${_EXPAT_TARGET}d)
++    endif()
+     set(prefix ${CMAKE_INSTALL_PREFIX})
+     set(exec_prefix "\${prefix}")
+     set(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
+diff --git a/expat/expat.pc.in b/expat/expat.pc.in
+index 5207e3e1b..8835d1385 100644
+--- a/expat/expat.pc.in
++++ b/expat/expat.pc.in
+@@ -7,5 +7,5 @@ Name: expat
+ Version: @PACKAGE_VERSION@
+ Description: expat XML parser
+ URL: http://www.libexpat.org
+-Libs: -L${libdir} -lexpat
++Libs: -L${libdir} -l@libname@
+ Cflags: -I${includedir}
