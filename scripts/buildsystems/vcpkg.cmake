@@ -388,6 +388,31 @@ function(add_library name)
     endif()
 endfunction()
 
+option(VCPKG_APPINSTALL_DEPS "Automatically copy dependencies into the install directory for executables and libraries." ON)
+function(install)
+    _install(${ARGV})
+
+    if(VCPKG_APPINSTALL_DEPS)
+        if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
+            cmake_parse_arguments(__VCPKG_INSTALL "" "DESTINATION" "TARGETS" ${ARGN})
+            if(__VCPKG_INSTALL_DESTINATION)
+                set(__VCPKG_INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/${__VCPKG_INSTALL_DESTINATION}")
+            else()
+                set(__VCPKG_INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+            endif()
+
+            foreach(TARGET ${__VCPKG_INSTALL_TARGETS})
+                install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+                    execute_process(COMMAND 
+                        powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                        -targetBinary ${__VCPKG_INSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>
+                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                        -OutVariable out)")
+            endforeach()
+        endif()
+    endif()
+endfunction()
+
 if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
     set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
 endif()
