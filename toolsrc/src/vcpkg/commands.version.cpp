@@ -3,6 +3,8 @@
 #include <vcpkg/commands.version.h>
 #include <vcpkg/help.h>
 #include <vcpkg/metrics.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 #define STRINGIFY(...) #__VA_ARGS__
 #define MACRO_TO_STRING(X) STRINGIFY(X)
@@ -82,7 +84,7 @@ namespace vcpkg::Commands::Version
 
     void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem&)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)(args.parse_arguments(COMMAND_STRUCTURE));
 
         System::print2("Vcpkg package management program version ",
                        version(),

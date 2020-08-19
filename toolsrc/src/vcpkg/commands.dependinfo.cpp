@@ -8,6 +8,7 @@
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 #include <vector>
 
