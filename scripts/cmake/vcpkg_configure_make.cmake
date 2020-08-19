@@ -258,7 +258,6 @@ function(vcpkg_configure_make)
     _vcpkg_backup_env_variables(INCLUDE LIB LIBPATH)
 
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
-
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
     endif()
@@ -474,10 +473,12 @@ function(vcpkg_configure_make)
             # is to use the CL and LINK environment variables !!!
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             string(REPLACE "\\" "/" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
-            set(ENV{_CL_} "$ENV{_CL_} /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
-            string(APPEND VCPKG_DETECTED_COMBINED_CXXFLAGS_RELEASE " -ZW:nostdlib")
-            string(APPEND VCPKG_DETECTED_COMBINED_CXXFLAGS_DEBUG " -ZW:nostdlib")
-            set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CXX_STANDARD_LIBRARIES} /MANIFEST /DYNAMICBASE /WINMD:NO /APPCONTAINER")
+            # Can somebody please check if CMake's compiler flags for UWP are correct?
+            #set(ENV{_CL_} "$ENV{_CL_} /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
+            #string(APPEND VCPKG_DETECTED_COMBINED_CXXFLAGS_RELEASE " -ZW:nostdlib")
+            #string(APPEND VCPKG_DETECTED_COMBINED_CXXFLAGS_DEBUG " -ZW:nostdlib")
+            #set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CXX_STANDARD_LIBRARIES} /MANIFEST /DYNAMICBASE /WINMD:NO /APPCONTAINER")
+            set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CXX_STANDARD_LIBRARIES}") 
         endif()
     endif()
 
