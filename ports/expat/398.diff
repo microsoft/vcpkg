@@ -1,0 +1,13 @@
+diff --git a/expat/lib/xmlparse.c b/expat/lib/xmlparse.c
+index 638ea528..849411ce 100644
+--- a/expat/lib/xmlparse.c
++++ b/expat/lib/xmlparse.c
+@@ -6506,7 +6506,7 @@ hashTableInit(HASH_TABLE *p, const XML_Memory_Handling_Suite *ms) {
+ static void FASTCALL
+ hashTableIterInit(HASH_TABLE_ITER *iter, const HASH_TABLE *table) {
+   iter->p = table->v;
+-  iter->end = iter->p + table->size;
++  iter->end = iter->p ? iter->p + table->size : NULL;
+ }
+ 
+ static NAMED *FASTCALL

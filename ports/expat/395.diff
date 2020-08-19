@@ -1,0 +1,33 @@
+diff --git a/expat/lib/xmlparse.c b/expat/lib/xmlparse.c
+index 8b8c6f07..638ea528 100644
+--- a/expat/lib/xmlparse.c
++++ b/expat/lib/xmlparse.c
+@@ -48,6 +48,17 @@
+ #include <stdio.h>  /* fprintf */
+ #include <stdlib.h> /* getenv, rand_s */
+ 
++#if defined(_WIN32) && defined(_MSC_VER) && (_MSC_VER < 1600)
++/* vs2008/9.0 and earlier lack stdint.h; _MSC_VER 1600 is vs2010/10.0 */
++#  if defined(_WIN64)
++typedef unsigned __int64 uintptr_t;
++#  else
++typedef unsigned __int32 uintptr_t;
++#  endif
++#else
++#  include <stdint.h> /* uintptr_t */
++#endif
++
+ #ifdef _WIN32
+ #  define getpid GetCurrentProcessId
+ #else
+@@ -121,9 +132,7 @@
+ #  define XmlGetInternalEncoding XmlGetUtf16InternalEncoding
+ #  define XmlGetInternalEncodingNS XmlGetUtf16InternalEncodingNS
+ #  define XmlEncode XmlUtf16Encode
+-/* Using pointer subtraction to convert to integer type. */
+-#  define MUST_CONVERT(enc, s)                                                 \
+-    (! (enc)->isUtf16 || (((char *)(s) - (char *)NULL) & 1))
++#  define MUST_CONVERT(enc, s) (! (enc)->isUtf16 || (((uintptr_t)(s)) & 1))
+ typedef unsigned short ICHAR;
+ #else
+ #  define XML_ENCODE_MAX XML_UTF8_ENCODE_MAX

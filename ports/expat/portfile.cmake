@@ -5,6 +5,10 @@ vcpkg_from_github(
     SHA512 18842d5c9ff89654c5beeb9daba7ff5a911da318d419735fb14a5acbe0d1b4ac07077822c70cfa5c845892bcec2d72f8f265b9a259fe459092864f4d1754f8dd
     HEAD_REF master
     PATCHES
+        395.diff
+        398.diff
+        #408.diff
+        412.diff
         fix-find-package-by-cmake.patch
         pkgconfig.patch
 )
