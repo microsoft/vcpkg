@@ -190,6 +190,9 @@ macro(extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
     string(REGEX REPLACE " +" " " CPPFLAGS_${_SUFFIX} "${CPPFLAGS_${_SUFFIX}}")
     string(REGEX REPLACE " +" " " CFLAGS_${_SUFFIX} "${CFLAGS_${_SUFFIX}}")
     string(REGEX REPLACE " +" " " CXXFLAGS_${_SUFFIX} "${CXXFLAGS_${_SUFFIX}}")
+    # libtool has problems dealing with this compiler flag so we remove it for now. Could be put into ENV{CL}
+    string(REGEX REPLACE "(-|/)(RTC[^ ]+)" "" CFLAGS_${_SUFFIX} "${CFLAGS_${_SUFFIX}}")
+    string(REGEX REPLACE "(-|/)(RTC[^ ]+)" "" CXXFLAGS_${_SUFFIX} "${CXXFLAGS_${_SUFFIX}}")
     string(STRIP "${CPPFLAGS_${_SUFFIX}}" CPPFLAGS_${_SUFFIX})
     string(STRIP "${CFLAGS_${_SUFFIX}}" CFLAGS_${_SUFFIX})
     string(STRIP "${CXXFLAGS_${_SUFFIX}}" CXXFLAGS_${_SUFFIX})
@@ -392,6 +395,9 @@ function(vcpkg_configure_make)
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
         string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
         set(prefix_var "'\${prefix}'") # Windows needs extra quotes or else the variable gets expanded in the makefile!
+        
+        list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
+                                 ac_cv_func_memmove=yes)
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
@@ -597,7 +603,6 @@ function(vcpkg_configure_make)
     endif()
 
     foreach(_buildtype IN LISTS _buildtypes)
-        
         foreach(ENV_VAR ${_csc_CONFIG_DEPENDENT_ENVIRONMENT})
             if(DEFINED ENV{${ENV_VAR}})
                 set(BACKUP_CONFIG_${ENV_VAR} "$ENV{${ENV_VAR}}")
