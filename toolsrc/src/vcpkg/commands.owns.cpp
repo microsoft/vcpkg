@@ -2,8 +2,8 @@
 
 #include <vcpkg/commands.owns.h>
 #include <vcpkg/help.h>
-#include <vcpkg/vcpkglib.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::Owns
 {

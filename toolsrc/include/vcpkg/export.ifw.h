@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vcpkg/dependencies.h>
-
 #include <vcpkg/fwd/vcpkgpaths.h>
+
+#include <vcpkg/dependencies.h>
 
 #include <string>
 #include <vector>

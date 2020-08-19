@@ -8,8 +8,8 @@
 #include <vcpkg/install.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/remove.h>
-#include <vcpkg/vcpkglib.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::SetInstalled
 {

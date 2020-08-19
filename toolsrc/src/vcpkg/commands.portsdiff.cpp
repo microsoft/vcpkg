@@ -7,8 +7,8 @@
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/tools.h>
-#include <vcpkg/versiont.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::PortsDiff
 {

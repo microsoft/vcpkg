@@ -2,8 +2,8 @@
 
 #include <vcpkg/commands.xvsinstances.h>
 #include <vcpkg/help.h>
-#include <vcpkg/visualstudio.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/visualstudio.h>
 
 namespace vcpkg::Commands::X_VSInstances
 {

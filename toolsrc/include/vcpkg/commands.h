@@ -1,8 +1,7 @@
 #pragma once
 
-#include <vcpkg/commands.interface.h>
-
 #include <vcpkg/build.h>
+#include <vcpkg/commands.interface.h>
 
 namespace vcpkg::Commands
 {

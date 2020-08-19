@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vcpkg/binaryparagraph.h>
-
 #include <vcpkg/fwd/vcpkgpaths.h>
+
+#include <vcpkg/binaryparagraph.h>
 
 #include <map>
 

@@ -1,12 +1,12 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/stringliteral.h>
-
-#include <vcpkg/fwd/vcpkgcmdarguments.h>
-#include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <memory>
 #include <unordered_map>

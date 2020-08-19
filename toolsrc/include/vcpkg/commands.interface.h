@@ -1,11 +1,11 @@
 #pragma once
 
-#include <vcpkg/triplet.h>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/files.h>
 
-#include <vcpkg/fwd/vcpkgpaths.h>
-#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/triplet.h>
 
 namespace vcpkg::Commands
 {
