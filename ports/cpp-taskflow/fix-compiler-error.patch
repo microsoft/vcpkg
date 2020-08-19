@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9beec93..7bb17de 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -346,6 +346,7 @@ add_test(tsq.8Thieves ${TF_UTEST_TSQ} -tc=TSQ.8Thieves)
+ add_executable(basics ${TF_UTEST_DIR}/basics.cpp)
+ target_link_libraries(basics ${PROJECT_NAME} Threads::Threads tf::default_settings)
+ target_include_directories(basics PRIVATE ${TF_3RD_PARTY_DIR}/doctest)
++target_compile_options(basics PRIVATE /bigobj)
+ set(TF_UTEST_BASICS ${TF_UTEST_DIR}/basics)
+ add_test(builder ${TF_UTEST_BASICS} -tc=Builder)
+ add_test(creation ${TF_UTEST_BASICS} -tc=Creation)

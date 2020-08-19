@@ -1,7 +1,3 @@
-if(MSVC)
-    add_compile_options(/bigobj)
-endif()
-
 # header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,6 +5,7 @@ vcpkg_from_github(
     REF v2.5.0
     SHA512 49f38a14a207db085a2e3581b3698cdb3be4fa65c11194db454bd2fb65da2d744347c6a10a7a903b04cc2dd5cac65ef389d400c66d2a23521c3bbe2283357890
     HEAD_REF master
+    PATCHES fix-compiler-error.patch
 )
 
 vcpkg_configure_cmake(
@@ -27,4 +24,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
