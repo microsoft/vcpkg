@@ -388,7 +388,7 @@ function(add_library name)
     endif()
 endfunction()
 
-option(VCPKG_APPINSTALL_DEPS "Automatically copy dependencies into the install directory for executables and libraries." ON)
+option(VCPKG_APPINSTALL_DEPS "Automatically copy dependencies into the install directory for executables and libraries." OFF)
 function(install)
     _install(${ARGV})
 
