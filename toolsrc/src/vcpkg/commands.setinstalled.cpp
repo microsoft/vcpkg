@@ -93,7 +93,7 @@ namespace vcpkg::Commands::SetInstalled
             auto pkgsconfig_path = Files::combine(paths.original_cwd, *p_pkgsconfig);
             auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
             fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
-            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+            System::print2("Wrote NuGet packages config information to ", fs::u8string(pkgsconfig_path), "\n");
         }
 
         if (dry_run == DryRun::Yes)
