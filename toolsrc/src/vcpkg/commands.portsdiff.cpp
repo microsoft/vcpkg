@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/sortedvector.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
@@ -8,6 +6,7 @@
 #include <vcpkg/commands.portsdiff.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::PortsDiff

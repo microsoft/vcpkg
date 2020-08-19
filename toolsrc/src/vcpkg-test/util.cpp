@@ -39,6 +39,12 @@
 
 namespace vcpkg::Test
 {
+    const Triplet X86_WINDOWS = Triplet::from_canonical_name("x86-windows");
+    const Triplet X64_WINDOWS = Triplet::from_canonical_name("x64-windows");
+    const Triplet X86_UWP = Triplet::from_canonical_name("x86-uwp");
+    const Triplet ARM_UWP = Triplet::from_canonical_name("arm-uwp");
+    const Triplet X64_ANDROID = Triplet::from_canonical_name("x64-android");
+
     std::unique_ptr<SourceControlFile> make_control_file(
         const char* name,
         const char* depends,
