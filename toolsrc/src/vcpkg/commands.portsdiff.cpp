@@ -7,6 +7,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::PortsDiff
@@ -132,7 +133,7 @@ namespace vcpkg::Commands::PortsDiff
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)(args.parse_arguments(COMMAND_STRUCTURE));
 
         const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
 
