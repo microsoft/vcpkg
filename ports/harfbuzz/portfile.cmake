@@ -6,16 +6,12 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0002-fix-uwp-build.patch
-        # This patch is required for propagating the full list of dependencies from glib
-        glib-cmake.patch
-        fix_include.patch
         icu.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     icu         icu
     graphite2   graphite
-    glib        glib
 )
 
 string(REPLACE "=ON" "=enabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
@@ -25,6 +21,7 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
         -Dfreetype=enabled
+        -Dglib=disabled
         -Dgobject=disabled
         -Dcairo=disabled
         -Dfontconfig=disabled
@@ -32,7 +29,6 @@ vcpkg_configure_meson(
         -Ddocs=disabled
         -Dtests=disabled
         -Dbenchmark=disabled
-        --backend=ninja
 )
 
 vcpkg_install_meson()

@@ -24,11 +24,6 @@ if ("icu" IN_LIST HARFBUZZ_FEATURES)
   target_link_libraries(harfbuzz INTERFACE ICU::uc)
 endif()
 
-if ("glib" IN_LIST HARFBUZZ_FEATURES)
-  find_package(unofficial-glib CONFIG REQUIRED)
-  target_link_libraries(harfbuzz INTERFACE unofficial::glib::glib)
-endif()
-
 foreach(LIB_NAME ${HARFBUZZ_LIBRARIES})
   find_library(_LIB ${LIB_NAME})
   target_link_libraries(harfbuzz INTERFACE ${_LIB})
