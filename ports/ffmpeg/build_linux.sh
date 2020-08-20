@@ -19,6 +19,6 @@ echo "=== CONFIGURING ==="
 chmod a+x "$PATH_TO_SRC_DIR/configure"
 "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" $4
 echo "=== BUILDING ==="
-make -j6
+make -j${VCPKG_CONCURRENCY}
 echo "=== INSTALLING ==="
 make install

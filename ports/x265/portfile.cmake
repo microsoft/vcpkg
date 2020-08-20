@@ -2,16 +2,16 @@ include(vcpkg_common_functions)
 
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO multicoreware/x265
+    REPO multicoreware/x265_git
     REF 3.2
-    SHA512 e98e26a9d3c2eb7f147ba052d9d8009e1c47e54905375b29e813f33ffddf8b7fac55ea455ae6d28ed1ade2d90f887c7cafe374873cd48b6c5e2560ddd21ccb84
+    SHA512 1c6dc000dd1ccc1846cd1d29e8f4ba3bfaa2c0579ab02be3b6a85f0aa3612a717850db5e55ef7a5ac78aaa730e1d20c34b03e40260a927edec72bd3146f12ff5
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch
 )
 
 set(ENABLE_ASSEMBLY OFF)
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(NASM)
     get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
     set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")

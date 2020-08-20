@@ -64,40 +64,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
-
-set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
-if(EXISTS "${pcfile}")
-    file(READ "${pcfile}" _contents)
-    set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
-    file(WRITE "${pcfile}" "${_contents}")
-endif()
-set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc")
-if(EXISTS "${pcfile}")
-    file(READ "${pcfile}" _contents)
-    set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
-    file(WRITE "${pcfile}" "${_contents}")
-endif()
-if(NOT USE_OPTIMIZED_BLAS)
-    set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc")
-    if(EXISTS "${pcfile}")
-        file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
-    endif()
-    set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc")
-    if(EXISTS "${pcfile}")
-        file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
-    endif()
-endif()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# remove debug includs
+# remove debug includes
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_TARGET_IS_WINDOWS)

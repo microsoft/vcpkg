@@ -19,6 +19,6 @@ cd "$PATH_TO_BUILD_DIR"
 echo "=== CONFIGURING ==="
 "$PATH_TO_SRC_DIR/configure" --toolchain=msvc "--prefix=$PATH_TO_PACKAGE_DIR" $4
 echo "=== BUILDING ==="
-make -j6
+make -j${VCPKG_CONCURRENCY}
 echo "=== INSTALLING ==="
 make install
