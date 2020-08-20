@@ -154,6 +154,7 @@ function Sanitize-Name {
   $result = $RawName.Replace('-', '').ToLowerInvariant()
   if ($result.Length -gt 24) {
     Write-Error 'Sanitized name for storage account $result was too long.'
+    throw
   }
 
   return $result

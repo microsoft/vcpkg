@@ -6,34 +6,19 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         enable-uwp-builds.patch
-        configure.cl.patch # Because CL is not C99 compatible
 )
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(EXISTS "${SOURCE_PATH}/m4/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        set(_file "${SOURCE_PATH}/m4/libtool")
-        file(READ "${_file}" _contents)
-        string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
-        file(WRITE "${_file}" "${_contents}")
-    endif()
-endif()
-vcpkg_configure_make(
-    AUTOCONF
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
-    --disable-xz
-    --disable-xzdec
-    --disable-lzmadec
-    --disable-lzmainfo
-    --disable-lzma-links
-    --disable-scripts
-    --disable-doc
-    --disable-nls
-)
-vcpkg_install_make()
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
-vcpkg_copy_pdbs()
 
-#Move this out of the portfile
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets()
+
 file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake
 "
 include(\${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
@@ -43,7 +28,7 @@ find_path(LibLZMA_INCLUDE_DIR
 )
 if(NOT LibLZMA_LIBRARY)
     find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma LZMA LibLZMA PATHS \${_IMPORT_PREFIX}/lib/)
-    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd lzma LZMA LibLZMA PATHS \${_IMPORT_PREFIX}/debug/lib/)
+    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd PATHS \${_IMPORT_PREFIX}/debug/lib/)
     select_library_configurations(LibLZMA)
 endif()
 set(LibLZMA_INCLUDE_DIRS \${LibLZMA_INCLUDE_DIR} CACHE PATH \"\")
@@ -83,31 +68,19 @@ set(LZMA_FOUND TRUE CACHE BOOL \"\")
 set(LIBLZMA_FOUND TRUE CACHE BOOL \"\")
 ")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake "add_definitions(-DLZMA_API_STATIC)") # should also be added to the lzma.h for correct VS integration 
-  #define LZMA_H
-  set(_file "${CURRENT_PACKAGES_DIR}/include/lzma.h")
-  file(READ "${_file}" _contents)
-  string(REPLACE "#define LZMA_H\n" "#define LZMA_H\n#define LZMA_API_STATIC" _contents "${_contents}")
-  file(WRITE "${_file}" "${_contents}")
+file(READ ${CURRENT_PACKAGES_DIR}/include/lzma.h _contents)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "defined(LZMA_API_STATIC)" "1" _contents "${_contents}")
+else()
+    string(REPLACE "defined(LZMA_API_STATIC)" "0" _contents "${_contents}")
 endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/lzma.h "${_contents}")
 
 if (VCPKG_BUILD_TYPE STREQUAL debug)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include)
 else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
-
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/locale/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
-
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(
@@ -116,3 +89,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         "if 0"
     )
 endif()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -14,7 +14,8 @@ vcpkg_from_github(
     REF 09edbe01d901c0f01e866aa08455c6d9ee6fd0ac # 1.5.4
     SHA512 cbe9fb1db2c03874c10632b572990e313d8ffdbbb1155b10e8d6f530c7c5117e7382f0c3777df91fe4ae201a6ff3ada98c793e8bcda017344885e5b7cee3ddcb
     HEAD_REF master
-    PATCHES ${PATCHES})
+    PATCHES ${PATCHES}
+            libepoxy-1.5.4_Add_call_convention_to_mock_function.patch)
 
 if (VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS -Denable-glx=no -Denable-egl=no)

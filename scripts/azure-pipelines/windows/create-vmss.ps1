@@ -18,11 +18,10 @@ or are running from Azure Cloud Shell.
 
 $Location = 'westus2'
 $Prefix = 'PrWin-' + (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_F16s_v2'
+$VMSize = 'Standard_D16a_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
 $WindowsServerSku = '2019-Datacenter'
-$InstalledDiskSizeInGB = 1024
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
@@ -160,7 +159,8 @@ Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 20
 
 ####################################################################################################
 Write-Progress `
-  -Activity 'Creating prototype VM' `
+  -Activity $ProgressActivity `
+  -Status 'Creating prototype VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 $NicName = $ResourceGroupName + 'NIC'
@@ -186,16 +186,6 @@ $VM = Set-AzVMSourceImage `
   -Skus $WindowsServerSku `
   -Version latest
 
-$InstallDiskName = $ProtoVMName + "InstallDisk"
-$VM = Add-AzVMDataDisk `
-  -Vm $VM `
-  -Name $InstallDiskName `
-  -Lun 0 `
-  -Caching ReadWrite `
-  -CreateOption Empty `
-  -DiskSizeInGB $InstalledDiskSizeInGB `
-  -StorageAccountType 'StandardSSD_LRS'
-
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
 New-AzVm `
   -ResourceGroupName $ResourceGroupName `
@@ -205,14 +195,14 @@ New-AzVm `
 ####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
-  -Status 'Running provisioning script provision-image.ps1 in VM' `
+  -Status 'Running provisioning script provision-image.txt (as a .ps1) in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 Invoke-AzVMRunCommand `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\provision-image.ps1" `
+  -ScriptPath "$PSScriptRoot\provision-image.txt" `
   -Parameter @{AdminUserPassword = $AdminPW; `
     StorageAccountName=$StorageAccountName; `
     StorageAccountKey=$StorageAccountKey;}
@@ -274,7 +264,6 @@ Write-Progress `
 
 Remove-AzVM -Id $VM.ID -Force
 Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $PrototypeOSDiskName -Force
-Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $InstallDiskName -Force
 
 ####################################################################################################
 Write-Progress `

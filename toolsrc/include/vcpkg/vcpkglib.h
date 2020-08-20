@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/sortedvector.h>
+
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgpaths.h>
 

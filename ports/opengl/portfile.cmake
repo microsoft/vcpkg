@@ -1,15 +1,14 @@
-if("windows" IN_LIST FEATURES) # Using WinSDK opengl
-    vcpkg_get_program_files_32_bit(PROGRAM_FILES_32_BIT)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     vcpkg_get_windows_sdk(WINDOWS_SDK)
 
     if (WINDOWS_SDK MATCHES "10.")
-        set(LIBGLFILEPATH  "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
-        set(LIBGLUFILEPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\GlU32.Lib")
-        set(HEADERSPATH    "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Include\\${WINDOWS_SDK}\\um")
+        set(LIBGLFILEPATH  "$ENV{WindowsSdkDir}Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
+        set(LIBGLUFILEPATH "$ENV{WindowsSdkDir}Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\GlU32.Lib")
+        set(HEADERSPATH    "$ENV{WindowsSdkDir}Include\\${WINDOWS_SDK}\\um")
     elseif(WINDOWS_SDK MATCHES "8.")
-        set(LIBGLFILEPATH  "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
-        set(LIBGLUFILEPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\GlU32.Lib")
-        set(HEADERSPATH    "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Include\\um")
+        set(LIBGLFILEPATH  "$ENV{WindowsSdkDir}Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
+        set(LIBGLUFILEPATH "$ENV{WindowsSdkDir}Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\GlU32.Lib")
+        set(HEADERSPATH    "$ENV{WindowsSdkDir}Include\\um")
     else()
         message(FATAL_ERROR "Portfile not yet configured for Windows SDK with version: ${WINDOWS_SDK}")
     endif()
@@ -26,16 +25,15 @@ if("windows" IN_LIST FEATURES) # Using WinSDK opengl
         ${CURRENT_PACKAGES_DIR}/include/gl
         ${CURRENT_PACKAGES_DIR}/share/opengl
     )
-    set(glversion 1.2)
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-        configure_file("${CURRENT_PORT_DIR}/gl.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gl.pc" @ONLY)
+        file(MAKE_DIRECTORY
+            ${CURRENT_PACKAGES_DIR}/lib
+        )
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-        configure_file("${CURRENT_PORT_DIR}/gl.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gl.pc" @ONLY)
+        file(MAKE_DIRECTORY
+            ${CURRENT_PACKAGES_DIR}/debug/lib
+        )
     endif()
 
     file(COPY
@@ -57,20 +55,6 @@ if("windows" IN_LIST FEATURES) # Using WinSDK opengl
     elseif(WINDOWS_SDK MATCHES "8.")
         file(WRITE ${CURRENT_PACKAGES_DIR}/share/opengl/copyright "See https://developer.microsoft.com/windows/downloads/windows-8-1-sdk for the Windows 8.1 SDK license")
     endif()
-else() # Using Mesa
-    if(VCPKG_TARGET_IS_WINDOWS)
-        set(glversion 4.6)
-        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
-            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-            configure_file("${CURRENT_PORT_DIR}/gl.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gl.pc" @ONLY)
-        endif()
-        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-            configure_file("${CURRENT_PORT_DIR}/gl.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gl.pc" @ONLY)
-        endif()
-    endif()
+else()
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 endif()
-vcpkg_fixup_pkgconfig()

@@ -1,136 +1,139 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a6a0f23..1c170da 100644
+index 5ec669e..f71a212 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1281,7 +1281,7 @@ target_link_libraries(alts_test_util
+@@ -81,6 +81,9 @@ set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
+ set(gRPC_PROTOBUF_PROVIDER "module" CACHE STRING "Provider of protobuf library")
+ set_property(CACHE gRPC_PROTOBUF_PROVIDER PROPERTY STRINGS "module" "package")
+ 
++set(gRPC_UPB_PROVIDER "module" CACHE STRING "Provider of upb library")
++set_property(CACHE gRPC_UPB_PROVIDER PROPERTY STRINGS "module" "package")
++
+ set(gRPC_PROTOBUF_PACKAGE_TYPE "" CACHE STRING "Algorithm for searching protobuf package")
+ set_property(CACHE gRPC_PROTOBUF_PACKAGE_TYPE PROPERTY STRINGS "CONFIG" "MODULE")
+ 
+@@ -1765,7 +1768,6 @@ target_link_libraries(grpc
    ${_gRPC_ALLTARGETS_LIBRARIES}
+   gpr
+   address_sorting
+-  upb
+   absl::optional
+   absl::strings
+   absl::inlined_vector
+@@ -1844,7 +1846,6 @@ target_link_libraries(grpc_csharp_ext
    grpc
    gpr
+   address_sorting
 -  upb
-+  ${_gRPC_UPB_LIBRARIES}
+ )
+ 
+ 
+@@ -2351,7 +2352,6 @@ target_link_libraries(grpc_unsecure
+   ${_gRPC_ALLTARGETS_LIBRARIES}
+   gpr
+   address_sorting
+-  upb
+   absl::optional
+   absl::strings
+   absl::inlined_vector
+@@ -2545,7 +2545,6 @@ target_link_libraries(grpc++
+   grpc
+   gpr
+   address_sorting
+-  upb
  )
  
  foreach(_hdr
-@@ -1917,7 +1917,7 @@ target_link_libraries(grpc
-   ${_gRPC_UPB_LIBRARIES}
-   ${_gRPC_ALLTARGETS_LIBRARIES}
-   gpr
--  upb
-+  ${_gRPC_UPB_LIBRARIES}
- )
- if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc "-framework CoreFoundation")
-@@ -2328,7 +2328,7 @@ target_link_libraries(grpc_cronet
-   ${_gRPC_UPB_LIBRARIES}
-   ${_gRPC_ALLTARGETS_LIBRARIES}
-   gpr
--  upb
-+  ${_gRPC_UPB_LIBRARIES}
- )
- if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc_cronet "-framework CoreFoundation")
-@@ -2670,7 +2670,7 @@ target_link_libraries(grpc_test_util
-   ${_gRPC_ALLTARGETS_LIBRARIES}
-   gpr
+@@ -2821,7 +2820,6 @@ target_link_libraries(grpc++_alts
    grpc
--  upb
-+  ${_gRPC_UPB_LIBRARIES}
- )
- if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc_test_util "-framework CoreFoundation")
-@@ -3013,7 +3013,7 @@ target_link_libraries(grpc_test_util_unsecure
-   ${_gRPC_ALLTARGETS_LIBRARIES}
    gpr
+   address_sorting
+-  upb
+ )
+ 
+ foreach(_hdr
+@@ -2889,7 +2887,6 @@ target_link_libraries(grpc++_error_details
+   grpc
+   gpr
+   address_sorting
+-  upb
+ )
+ 
+ foreach(_hdr
+@@ -2962,7 +2959,6 @@ target_link_libraries(grpc++_reflection
+   grpc
+   gpr
+   address_sorting
+-  upb
+ )
+ 
+ foreach(_hdr
+@@ -3239,7 +3235,6 @@ target_link_libraries(grpc++_unsecure
    grpc_unsecure
--  upb
-+  ${_gRPC_UPB_LIBRARIES}
- )
- if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc_test_util_unsecure "-framework CoreFoundation")
-@@ -3404,7 +3404,7 @@ target_link_libraries(grpc_unsecure
-   ${_gRPC_UPB_LIBRARIES}
-   ${_gRPC_ALLTARGETS_LIBRARIES}
    gpr
+   address_sorting
 -  upb
-+  ${_gRPC_UPB_LIBRARIES}
  )
- if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc_unsecure "-framework CoreFoundation")
-@@ -3743,7 +3743,7 @@ target_link_libraries(grpc++
-   ${_gRPC_ALLTARGETS_LIBRARIES}
+ 
+ foreach(_hdr
+@@ -3586,7 +3581,6 @@ target_link_libraries(grpcpp_channelz
    grpc
    gpr
+   address_sorting
 -  upb
-+  ${_gRPC_UPB_LIBRARIES}
  )
  
  foreach(_hdr
-@@ -4070,7 +4070,7 @@ target_link_libraries(grpc++_alts
-   ${_gRPC_ALLTARGETS_LIBRARIES}
-   grpc++
-   gpr
--  upb
-+  ${_gRPC_UPB_LIBRARIES}
- )
- 
- foreach(_hdr
-@@ -4876,7 +4876,7 @@ target_link_libraries(grpc++_unsecure
-   ${_gRPC_ALLTARGETS_LIBRARIES}
-   gpr
-   grpc_unsecure
--  upb
-+  ${_gRPC_UPB_LIBRARIES}
- )
- 
- foreach(_hdr
-@@ -5898,7 +5898,7 @@ target_link_libraries(grpc_csharp_ext
- 
+@@ -3613,6 +3607,7 @@ endif()
  
  endif()
--
-+if(0)
+ 
++if (gRPC_UPB_PROVIDER STREQUAL "module")
  add_library(upb
    third_party/upb/upb/decode.c
    third_party/upb/upb/encode.c
-@@ -5938,10 +5938,10 @@ target_include_directories(upb
- target_link_libraries(upb
-   ${_gRPC_ALLTARGETS_LIBRARIES}
- )
+@@ -3662,7 +3657,7 @@ if(gRPC_INSTALL)
+     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+   )
+ endif()
+-
 +endif()
  
  
--
--if(gRPC_INSTALL)
-+if(gRPC_INSTALL AND 0)
-   install(TARGETS upb EXPORT gRPCTargets
-     RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
-     LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
+ add_executable(check_epollexclusive
 diff --git a/cmake/gRPCConfig.cmake.in b/cmake/gRPCConfig.cmake.in
-index 5bfa73c..8a867df 100644
+index 5bfa73c..db0865e 100644
 --- a/cmake/gRPCConfig.cmake.in
 +++ b/cmake/gRPCConfig.cmake.in
 @@ -7,6 +7,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/modules)
  @_gRPC_FIND_SSL@
  @_gRPC_FIND_CARES@
  @_gRPC_FIND_ABSL@
-+find_package(upb CONFIG)
++@_gRPC_FIND_UPB@
  
  # Targets
  include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
 diff --git a/cmake/upb.cmake b/cmake/upb.cmake
-index 2c0ab84..746e067 100644
+index 2c0ab84..07dd613 100644
 --- a/cmake/upb.cmake
 +++ b/cmake/upb.cmake
-@@ -12,9 +12,9 @@
+@@ -12,9 +12,18 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
  
--set(UPB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/upb)
-+find_package(upb REQUIRED)
-+set(_gRPC_UPB_INCLUDE_DIR)
++set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated")
++if (gRPC_UPB_PROVIDER STREQUAL "module")
+ set(UPB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/upb)
  
--set(_gRPC_UPB_INCLUDE_DIR "${UPB_ROOT_DIR}")
- set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated")
+ set(_gRPC_UPB_INCLUDE_DIR "${UPB_ROOT_DIR}")
+-set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated")
  
--set(_gRPC_UPB_LIBRARIES upb)
-+set(_gRPC_UPB_LIBRARIES upb::upb)
+ set(_gRPC_UPB_LIBRARIES upb)
++
++elseif(gRPC_UPB_PROVIDER STREQUAL "package")
++    find_package(upb CONFIG REQUIRED)
++    set(_gRPC_UPB_LIBRARIES upb::upb)
++    set(_gRPC_UPB_INCLUDE_DIR)
++    set(upb ${_gRPC_UPB_LIBRARIES})
++    set(_gRPC_FIND_UPB "if(NOT upb_FOUND)\n  find_package(upb CONFIG REQUIRED)\nendif()")
++endif()

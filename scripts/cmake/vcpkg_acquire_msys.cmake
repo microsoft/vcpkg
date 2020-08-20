@@ -36,7 +36,8 @@
 ## * [libvpx](https://github.com/Microsoft/vcpkg/blob/master/ports/libvpx/portfile.cmake)
 
 function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
-  set(TOOLPATH ${DOWNLOADS}/tools/msys2)
+  set(TIMESTAMP 20200812)
+  set(TOOLPATH ${DOWNLOADS}/tools/msys2-${TIMESTAMP})
   cmake_parse_arguments(_am "" "" "PACKAGES" ${ARGN})
 
   if(NOT CMAKE_HOST_WIN32)
@@ -81,6 +82,19 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         SHA512 ${HASH}
     )
 
+    # download the new keyring, without it new packages and package updates
+    # might not install
+    vcpkg_download_distfile(KEYRING_PATH
+        URLS http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+        FILENAME msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+        SHA512 a5023fd17ccf6364bc6e27c5e63aea25f1fc264a5247cbae4008864c828c38c3e0b4de09ded650e28d2e24e319b5fcf7a9c0da0fa3a8ac81679470fc6bd120c9
+    )
+    vcpkg_download_distfile(KEYRING_SIG_PATH
+        URLS http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
+        FILENAME msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
+        SHA512 c326fefd13f58339afe0d0dc78306aa6ab27cafa8c4d792c2d34aa81fdd1f759d490990ab79daa9664a03a6dfa14ffd2b2ad828bf19a883410112d01f5ed6c4c
+    )
+
     file(REMOVE_RECURSE ${TOOLPATH}/${TOOLSUBPATH})
     file(MAKE_DIRECTORY ${TOOLPATH})
     _execute_process(
@@ -91,64 +105,38 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate"
       WORKING_DIRECTORY ${TOOLPATH}
     )
-
-    # workaround for https://github.com/msys2/MSYS2-packages/issues/1962
-    # update the package manager manually
-    if(_vam_HOST_ARCHITECTURE STREQUAL "AMD64")
-      set(ARCHIVE_LIBZSTD "libzstd-1.4.4-2-x86_64.pkg.tar.xz")
-      set(HASH_LIBZSTD 7f8d93f8340be8fc2ed9aa60b78bd5b05b954ca6f081d475ccd14dda088c5b1c992a4e7c0c0575877d021edf7f2f55545f21a77212cad244c78866b73f7d2a0c)
-      set(ARCHIVE_ZSTD "zstd-1.4.4-2-x86_64.pkg.tar.xz")
-      set(HASH_ZSTD 2be7e243d4e600d092aa6a630d24cfc536a6c06a4fa8e0909b0364569d2f938e24f220de1f52edbc36adc7c69ca23a2a730675f2da82c1530d3d91136089d3e2)
-      set(ARCHIVE_PACMAN "pacman-5.2.1-6-x86_64.pkg.tar.xz")
-      set(HASH_PACMAN d52a1352af7e4cd020fe4083390f48d1c1976a8c8dcb12611de9bbdd7dd07d71f2e32b107d4daef29ff09d8344f545aed239544824225e282f309438178e123e)
-      set(URL_ARCH x86_64)
-    else()
-      set(ARCHIVE_LIBZSTD "libzstd-1.4.4-2-i686.pkg.tar.xz")
-      set(HASH_LIBZSTD 5c8c3a259a3ede68a389a782ec6db76e942e90c8ee00b81417e09bb3d604564ce7a28c6d575be786a8cd2e931d2549fe9db7f238a9fbfff159542ec35d42774b)
-      set(ARCHIVE_ZSTD "zstd-1.4.4-2-i686.pkg.tar.xz")
-      set(HASH_ZSTD c806d78cfd5c9c4c37b82748b98397bb79413f8525fb6c7af35879b947afe3ea4d06e67902b6abe2386052352abe2db2f889f41b42a5c6913d723d0f316dcc41)
-      set(ARCHIVE_PACMAN "pacman-5.2.1-6-i686.pkg.tar.xz")
-      set(HASH_PACMAN 9f22bc4d2c62f6d823fd2b24ba872d37a6a69a87608f63f9217e8e5f1ce37331e0a795ed6ce7793615f0e240b3ab6359e45259f3a548bd357a27f7f5d0b0a5b4)
-      set(URL_ARCH i686)
+    # install the new keyring
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --verify ${KEYRING_SIG_PATH}"
+      WORKING_DIRECTORY ${TOOLPATH}
+      RESULT_VARIABLE _vam_error_code
+    )
+    if(_vam_error_code)
+      message(FATAL_ERROR "Cannot verify MSYS2 keyring.")
     endif()
-    vcpkg_download_distfile(ARCHIVE_LIBZSTD_PATH
-        URLS "https://sourceforge.net/projects/msys2/files/REPOS/MSYS2/${URL_ARCH}/${ARCHIVE_LIBZSTD}/download"
-             "http://repo.msys2.org/msys/${URL_ARCH}/${ARCHIVE_LIBZSTD}"
-        FILENAME ${ARCHIVE_LIBZSTD}
-        SHA512 ${HASH_LIBZSTD}
-    )
-    vcpkg_download_distfile(ARCHIVE_ZSTD_PATH
-        URLS "https://sourceforge.net/projects/msys2/files/REPOS/MSYS2/${URL_ARCH}/${ARCHIVE_ZSTD}/download"
-             "http://repo.msys2.org/msys/${URL_ARCH}/${ARCHIVE_ZSTD}"
-        FILENAME ${ARCHIVE_ZSTD}
-        SHA512 ${HASH_ZSTD}
-    )
-    vcpkg_download_distfile(ARCHIVE_PACMAN_PATH
-        URLS "https://sourceforge.net/projects/msys2/files/REPOS/MSYS2/${URL_ARCH}/${ARCHIVE_PACMAN}/download"
-             "http://repo.msys2.org/msys/${URL_ARCH}/${ARCHIVE_PACMAN}"
-        FILENAME ${ARCHIVE_PACMAN}
-        SHA512 ${HASH_PACMAN}
-    )
     _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman --noconfirm -U ${ARCHIVE_LIBZSTD_PATH}"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -U ${KEYRING_PATH} --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}
     )
-    _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman --noconfirm -U ${ARCHIVE_ZSTD_PATH}"
-      WORKING_DIRECTORY ${TOOLPATH}
-    )
-    _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman --noconfirm -U ${ARCHIVE_PACMAN_PATH}"
-      WORKING_DIRECTORY ${TOOLPATH}
-    )
-    # we have to kill all GnuPG daemons otherwise they will interfere with the
-    # subsequent package installs and updates
+    # we have to kill all GnuPG daemons otherwise bash would potentially not be
+    # able to start after the core system upgrade, additionally vcpkg would
+    # likely hang waiting for spawned processes to exit
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;gpgconf --homedir /etc/pacman.d/gnupg --kill all"
       WORKING_DIRECTORY ${TOOLPATH}
     )
-    # end workaround
-
+    # we need to update pacman before anything else due to pacman transitioning
+    # to using zstd packages, and our pacman is too old to support those
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy pacman --noconfirm"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
+    # dash relies on specific versions of the base packages, which prevents us
+    # from doing a proper update. However, we don't need it so we remove it
+    _execute_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Rc dash --noconfirm"
+      WORKING_DIRECTORY ${TOOLPATH}
+    )
     _execute_process(
       COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syu --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}
@@ -158,29 +146,20 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   endif()
 
   if(_am_PACKAGES)
-    message(STATUS "Acquiring MSYS Packages...")
+    message(STATUS "Acquiring MSYS Packages from ${TOOLPATH}...")
     string(REPLACE ";" " " _am_PACKAGES "${_am_PACKAGES}")
 
     set(_ENV_ORIGINAL $ENV{PATH})
     set(ENV{PATH} ${PATH_TO_ROOT}/usr/bin)
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -Sy --noconfirm --needed ${_am_PACKAGES}"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -S --noconfirm --needed ${_am_PACKAGES}"
       WORKING_DIRECTORY ${TOOLPATH}
       LOGNAME msys-pacman-${TARGET_TRIPLET}
     )
     set(ENV{PATH} "${_ENV_ORIGINAL}")
 
     message(STATUS "Acquiring MSYS Packages... OK")
-  endif()
-
-  # Deal with a stale process created by MSYS
-  if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-      vcpkg_execute_required_process(
-          ALLOW_IN_DOWNLOAD_MODE
-          COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage gt 2"
-          WORKING_DIRECTORY ${TOOLPATH}
-      )
   endif()
 
   set(${PATH_TO_ROOT_OUT} ${PATH_TO_ROOT} PARENT_SCOPE)

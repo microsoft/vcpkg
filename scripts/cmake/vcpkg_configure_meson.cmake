@@ -59,7 +59,7 @@ function(vcpkg_configure_meson)
     endif()
 
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-
+    
     string(APPEND MESON_COMMON_CFLAGS " ${CMAKE_C_FLAGS${MESON_CMAKE_FLAG_SUFFIX}}")
     string(APPEND MESON_COMMON_CXXFLAGS " ${CMAKE_CXX_FLAGS${MESON_CMAKE_FLAG_SUFFIX}}")
 
@@ -72,13 +72,15 @@ function(vcpkg_configure_meson)
     string(APPEND MESON_COMMON_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS${MESON_CMAKE_FLAG_SUFFIX}}")
     string(APPEND MESON_DEBUG_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS_DEBUG${MESON_CMAKE_FLAG_SUFFIX}}")
     string(APPEND MESON_RELEASE_LDFLAGS " ${CMAKE_SHARED_LINKER_FLAGS_RELEASE${MESON_CMAKE_FLAG_SUFFIX}}")
-
-    list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
-
-    if(VCPKG_MESON_CROSS_FILE)
-        list(APPEND _vcm_OPTIONS --cross "${VCPKG_MESON_CROSS_FILE}")
+    
+    # select meson cmd-line options
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND _vcm_OPTIONS "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/share']")
+    else()
+        list(APPEND _vcm_OPTIONS "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}']")
     endif()
-
+    list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
+    
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(APPEND _vcm_OPTIONS --default-library shared)
     else()
@@ -86,20 +88,11 @@ function(vcpkg_configure_meson)
     endif()
     
     list(APPEND _vcm_OPTIONS --libdir lib) # else meson install into an architecture describing folder
-    list(APPEND _vcm_OPTIONS_DEBUG -Ddebug=true --prefix ${CURRENT_PACKAGES_DIR}/debug --includedir ../include)
-    list(APPEND _vcm_OPTIONS_RELEASE -Ddebug=false --prefix  ${CURRENT_PACKAGES_DIR})
-
-    # select meson cmd-line options
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND _vcm_OPTIONS_DEBUG "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/share']")
-        list(APPEND _vcm_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}/share']")
-    else()
-        list(APPEND _vcm_OPTIONS_DEBUG "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}']")
-        list(APPEND _vcm_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug']")
-    endif()
-
+    list(APPEND _vcm_OPTIONS_DEBUG --prefix ${CURRENT_PACKAGES_DIR}/debug --includedir ../include)
+    list(APPEND _vcm_OPTIONS_RELEASE --prefix  ${CURRENT_PACKAGES_DIR})
+    
     vcpkg_find_acquire_program(MESON)
-
+    
     get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
     vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
 
@@ -107,36 +100,26 @@ function(vcpkg_configure_meson)
     get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
     vcpkg_add_to_path("${NINJA_PATH}")
 
-    if(NOT DEFINED ENV{PKG_CONFIG})
-        find_program(PKGCONFIG pkg-config)
-        if(NOT PKGCONFIG AND CMAKE_HOST_WIN32)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
-            vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-        endif()
-        find_program(PKGCONFIG pkg-config REQUIRED)
-        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-    else()
-        debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
-        set(PKGCONFIG $ENV{PKG_CONFIG})
-    endif()
+    vcpkg_find_acquire_program(PKGCONFIG)
+    get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
+    vcpkg_add_to_path("${PKGCONFIG_PATH}")
     set(PKGCONFIG_SHARE_DIR "${CURRENT_INSTALLED_DIR}/share/pkgconfig/")
-    if(WIN32)
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_SHARE_DIR "${PKGCONFIG_SHARE_DIR}")
-    endif()
     # configure debug
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")        
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-
-        set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/")
-        if(WIN32)
-            string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_INSTALLED_DIR "${PKGCONFIG_INSTALLED_DIR}")
+        
+        #setting up PKGCONFIG
+        if(NOT PKGCONFIG MATCHES "--define-variable=prefix")
+            set(PKGCONFIG_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${PKGCONFIG_PREFIX}")
         endif()
-        if(DEFINED ENV{PKG_CONFIG_PATH})
+        set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/")
+        if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}:$ENV{PKG_CONFIG_PATH}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}")
         endif()
 
         set(CFLAGS "-Dc_args=[${MESON_COMMON_CFLAGS} ${MESON_DEBUG_CFLAGS}]")
@@ -187,18 +170,18 @@ function(vcpkg_configure_meson)
     # configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)        
         #setting up PKGCONFIG
-
-        set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/")
-        if(WIN32)
-            string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_INSTALLED_DIR "${PKGCONFIG_INSTALLED_DIR}")
+        if(NOT PKGCONFIG MATCHES "--define-variable=prefix")
+            set(PKGCONFIG_PREFIX "${CURRENT_INSTALLED_DIR}")
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${PKGCONFIG_PREFIX}")
         endif()
-        if(DEFINED ENV{PKG_CONFIG_PATH})
+        set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/")
+        if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}:$ENV{PKG_CONFIG_PATH}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}")
         endif()
 
         # Normalize flags for meson (i.e. " /string /with /flags " -> ['/string', '/with', '/flags'])

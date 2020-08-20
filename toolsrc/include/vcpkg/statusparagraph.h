@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/binaryparagraph.h>
 
 #include <map>
@@ -47,7 +49,7 @@ namespace vcpkg
 
     struct InstalledPackageView
     {
-        InstalledPackageView() noexcept : core(nullptr) {}
+        InstalledPackageView() noexcept : core(nullptr) { }
 
         InstalledPackageView(const StatusParagraph* c, std::vector<const StatusParagraph*>&& fs)
             : core(c), features(std::move(fs))
@@ -61,4 +63,6 @@ namespace vcpkg
         const StatusParagraph* core;
         std::vector<const StatusParagraph*> features;
     };
+
+    Json::Value serialize_ipv(const InstalledPackageView& ipv, const VcpkgPaths& paths);
 }

@@ -15,6 +15,7 @@ subject to change without notice and should be considered highly unstable.
 Non-exhaustive list of off-by-default features:
 
 - `binarycaching`
+- `manifest`
 
 #### EDITOR
 
@@ -37,11 +38,19 @@ Example: `D:\2017`
 
 This environment variable can be set to a triplet name which will be used for unqualified triplet references in command lines.
 
+#### VCPKG_OVERLAY_PORTS
+
+This environment variable allows users to override ports with alternate versions according to the
+[ports overlay](../specifications/ports-overlay.md) specification. List paths to overlays using 
+the platform dependent PATH seperator (Windows `;` | others `:`) 
+
+Example (Windows): `C:\custom-ports\boost;C:\custom-ports\sqlite3`
+
 #### VCPKG_FORCE_SYSTEM_BINARIES
 
 This environment variable, if set, suppresses the downloading of CMake and Ninja and forces the use of the system binaries.
 
-### VCPKG_KEEP_ENV_VARS
+#### VCPKG_KEEP_ENV_VARS
 
 This environment variable can be set to a list of environment variables, separated by `;`, which will be propagated to
 the build environment.

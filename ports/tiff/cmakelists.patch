@@ -73,21 +73,6 @@ diff --git a/libtiff/CMakeLists.txt b/libtiff/CMakeLists.txt
 index 1cf1b75..4ee29f6 100644
 --- a/libtiff/CMakeLists.txt
 +++ b/libtiff/CMakeLists.txt
-@@ -104,11 +104,11 @@ set(tiffxx_HEADERS
- set(tiffxx_SOURCES
-   tif_stream.cxx)
- 
--if(WIN32_IO)
--  extra_dist(tif_unix.c)
-+if(USE_WIN32_FILEIO)
-+  extra_dist(tif_win32.c)
-   list(APPEND tiff_SOURCES tif_win32.c)
- else()
--  extra_dist(tif_win32.c)
-+  extra_dist(tif_unix.c)
-   list(APPEND tiff_SOURCES tif_unix.c)
- endif()
- 
 @@ -143,7 +143,7 @@ install(FILES ${tiff_HEADERS} ${nodist_tiff_HEADERS}
          DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
  

@@ -1,14 +1,13 @@
-#include "pch.h"
-
-#include <vcpkg/commands.h>
-#include <vcpkg/metrics.h>
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
+
+#include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
+#include <vcpkg/metrics.h>
 
 #if defined(_WIN32)
 #pragma comment(lib, "version")
@@ -30,6 +29,16 @@ namespace vcpkg::Metrics
         return "";
     }
 
+    struct append_hexits
+    {
+        constexpr static char hex[17] = "0123456789abcdef";
+        void operator()(std::string& res, std::uint8_t bits) const
+        {
+            res.push_back(hex[(bits >> 4) & 0x0F]);
+            res.push_back(hex[(bits >> 0) & 0x0F]);
+        }
+    };
+
     // note: this ignores the bits of these numbers that would be where format and variant go
     static std::string uuid_of_integers(uint64_t top, uint64_t bottom)
     {
@@ -40,11 +49,7 @@ namespace vcpkg::Metrics
         // uuid_field_size in hex characters, not bytes
         constexpr size_t uuid_size = 8 + 1 + 4 + 1 + 4 + 1 + 4 + 1 + 12;
 
-        constexpr static char hex[17] = "0123456789abcdef";
-        constexpr static auto write_byte = [](std::string& res, std::uint8_t bits) {
-            res.push_back(hex[(bits >> 4) & 0x0F]);
-            res.push_back(hex[(bits >> 0) & 0x0F]);
-        };
+        constexpr static append_hexits write_byte;
 
         // set the version bits to 4
         top &= 0xFFFF'FFFF'FFFF'0FFFULL;
@@ -149,6 +154,8 @@ namespace vcpkg::Metrics
         Json::Array buildtime_names;
         Json::Array buildtime_times;
 
+        Json::Object feature_flags;
+
         void track_property(const std::string& name, const std::string& value)
         {
             properties.insert_or_replace(name, Json::Value::string(value));
@@ -164,14 +171,18 @@ namespace vcpkg::Metrics
             buildtime_names.push_back(Json::Value::string(name));
             buildtime_times.push_back(Json::Value::number(value));
         }
+        void track_feature(const std::string& name, bool value)
+        {
+            feature_flags.insert(name, Json::Value::boolean(value));
+        }
 
         std::string format_event_data_template() const
         {
-            auto props_plus_buildtimes = properties.clone();
+            auto props_plus_buildtimes = properties;
             if (buildtime_names.size() > 0)
             {
-                props_plus_buildtimes.insert("buildnames_1", Json::Value::array(buildtime_names.clone()));
-                props_plus_buildtimes.insert("buildtimes", Json::Value::array(buildtime_times.clone()));
+                props_plus_buildtimes.insert("buildnames_1", buildtime_names);
+                props_plus_buildtimes.insert("buildtimes", buildtime_times);
             }
 
             Json::Array arr = Json::Array();
@@ -220,8 +231,9 @@ namespace vcpkg::Metrics
 
                 base_data.insert("ver", Json::Value::integer(2));
                 base_data.insert("name", Json::Value::string("commandline_test7"));
-                base_data.insert("properties", Json::Value::object(std::move(props_plus_buildtimes)));
-                base_data.insert("measurements", Json::Value::object(measurements.clone()));
+                base_data.insert("properties", std::move(props_plus_buildtimes));
+                base_data.insert("measurements", measurements);
+                base_data.insert("feature-flags", feature_flags);
             }
 
             return Json::stringify(arr, vcpkg::Json::JsonStyle());
@@ -352,6 +364,15 @@ namespace vcpkg::Metrics
         g_metricmessage.track_property(name, value);
     }
 
+    void Metrics::track_feature(const std::string& name, bool value)
+    {
+        if (!metrics_enabled())
+        {
+            return;
+        }
+        g_metricmessage.track_feature(name, value);
+    }
+
     void Metrics::upload(const std::string& payload)
     {
         if (!metrics_enabled())
@@ -360,7 +381,7 @@ namespace vcpkg::Metrics
         }
 
 #if !defined(_WIN32)
-        Util::unused(payload);
+        (void)(payload);
 #else
         HINTERNET connect = nullptr, request = nullptr;
         BOOL results = FALSE;
@@ -504,11 +525,11 @@ namespace vcpkg::Metrics
 
 #if defined(_WIN32)
         const std::string cmd_line = Strings::format("cmd /c \"start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"\"",
-                                                     temp_folder_path_exe.u8string(),
-                                                     vcpkg_metrics_txt_path.u8string());
+                                                     fs::u8string(temp_folder_path_exe),
+                                                     fs::u8string(vcpkg_metrics_txt_path));
         System::cmd_execute_no_wait(cmd_line);
 #else
-        auto escaped_path = Strings::escape_string(vcpkg_metrics_txt_path.u8string(), '\'', '\\');
+        auto escaped_path = Strings::escape_string(fs::u8string(vcpkg_metrics_txt_path), '\'', '\\');
         const std::string cmd_line = Strings::format(
             R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --tlsv1.2 --data '@%s' >/dev/null 2>&1; rm '%s') &)",
             escaped_path,

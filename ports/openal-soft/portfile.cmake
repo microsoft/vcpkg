@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         dont-export-symbols-in-static-build.patch
         fix-arm-builds.patch
+        fix-mingw-build.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -57,6 +58,7 @@ vcpkg_configure_cmake(
         -DALSOFT_REQUIRE_DSOUND=${ALSOFT_REQUIRE_WINDOWS}
         -DALSOFT_REQUIRE_MMDEVAPI=${ALSOFT_REQUIRE_WINDOWS}
         -DALSOFT_CPUEXT_NEON=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_WindowsSDK=ON
 )
 
 vcpkg_install_cmake()
