@@ -476,7 +476,7 @@ function(vcpkg_configure_make)
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             string(REPLACE "\\" "/" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
             # Can somebody please check if CMake's compiler flags for UWP are correct?
-            #set(ENV{_CL_} "$ENV{_CL_} /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
+            set(ENV{_CL_} "$ENV{_CL_} /D _UNICODE /D UNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
             #string(APPEND VCPKG_DETECTED_COMBINED_CXXFLAGS_RELEASE " -ZW:nostdlib")
             #string(APPEND VCPKG_DETECTED_COMBINED_CXXFLAGS_DEBUG " -ZW:nostdlib")
             #set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CXX_STANDARD_LIBRARIES} /MANIFEST /DYNAMICBASE /WINMD:NO ")
