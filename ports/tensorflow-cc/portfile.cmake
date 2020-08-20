@@ -70,7 +70,7 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 # tensorflow has long file names, which will not work on windows
-set(ENV{TEST_TMPDIR} ${CURRENT_BUILDTREES_DIR}/../.bzl)
+set(ENV{TEST_TMPDIR} ${BUILDTREES_DIR}/.bzl)
 
 set(ENV{USE_DEFAULT_PYTHON_LIB_PATH} 1)
 set(ENV{TF_NEED_KAFKA} 0)
@@ -131,7 +131,7 @@ foreach(BUILD_TYPE dbg rel)
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
 	if(BUILD_TYPE STREQUAL dbg)
 		if(CMAKE_HOST_WIN32)
-			set(BUILD_OPTS "--compilation_mode=fastbuild") # link with /DEBUG:FASTBUILD instead of /DEBUG:FULL to avoid .pdb >4GB error
+			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
 		else()
 			set(BUILD_OPTS "--compilation_mode=dbg")
 		endif()
@@ -153,7 +153,7 @@ foreach(BUILD_TYPE dbg rel)
 				set(CRT_OPT "-MT")
 			endif()
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --copt=${CRT_OPT} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link --copt=${CRT_OPT} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -182,7 +182,7 @@ foreach(BUILD_TYPE dbg rel)
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.dylib //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.dylib //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -211,7 +211,7 @@ foreach(BUILD_TYPE dbg rel)
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -247,7 +247,7 @@ foreach(BUILD_TYPE dbg rel)
 			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
 			if(BUILD_TYPE STREQUAL dbg)
 				file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.pdb DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/bin)
-				message(STATUS "Warning: debug information tensorflow_cc.pdb will be of limited use because only reduced set could be produced due to 4GB internal pdb limit")
+				message(STATUS "Warning: debug information tensorflow_cc.pdb will be of limited use because only a reduced set could be produced due to the 4GB internal PDB file limit even on x64.")
 			endif()
 		else()
 			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
@@ -303,4 +303,4 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAG
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/TensorflowCCConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/TensorflowCCConfig.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
 
-message(STATUS "You may want to delete ${CURRENT_BUILDTREES_DIR} and ${CURRENT_BUILDTREES_DIR}/../.bzl to free diskspace.")
+message(STATUS "You may want to delete ${CURRENT_BUILDTREES_DIR} and ${BUILDTREES_DIR}/.bzl to free diskspace.")
