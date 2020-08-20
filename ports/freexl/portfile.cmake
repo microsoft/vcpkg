@@ -64,6 +64,7 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/configure")
     vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG
         INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"

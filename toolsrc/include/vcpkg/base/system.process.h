@@ -25,7 +25,7 @@ namespace vcpkg::System
 
     struct CmdLineBuilder
     {
-        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(p.u8string()); }
+        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(fs::u8string(p)); }
         CmdLineBuilder& string_arg(StringView s);
         CmdLineBuilder& ampersand()
         {
