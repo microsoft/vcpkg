@@ -242,12 +242,6 @@ macro(FFMPEG_FIND_GENEX varname shortname headername)
   endif()
 endmacro(FFMPEG_FIND_GENEX)
 
-if(WIN32)
-  FFMPEG_FIND_GENEX(libzlib zlib       zlib.h)
-else()
-  FFMPEG_FIND_GENEX(libzlib z          zlib.h)
-endif()
-
 if(APPLE)
   find_library(VT_UNIT VideoToolbox)
   if (NOT VT_UNIT)
