@@ -1,7 +1,6 @@
 ## # vcpkg_get_cmake_vars
 ##
 ## Runs a cmake configure with a dummy project to extract certain cmake variables
-## This function is mostliy
 ##
 ## ## Usage
 ## ```cmake
