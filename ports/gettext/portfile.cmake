@@ -32,7 +32,12 @@ vcpkg_add_to_path(${BISON_PATH})
 if(VCPKG_TARGET_IS_WINDOWS)
     # This is required. For some reason these do not get correctly identified for release builds. 
     list(APPEND OPTIONS ac_cv_func_wcslen=yes
-                        ac_cv_func_memmove=yes)
+                        ac_cv_func_memmove=yes
+                        #The following are required for a full gettext built.
+                        # Left here for future reference. 
+                        gl_cv_func_printf_directive_n=no #segfaults otherwise with popup window
+                        ac_cv_func_memset=yes #not detected in release builds 
+                        )
 endif()
 vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should probably be renamed to gettext-runtime instead of only gettext
                      DETERMINE_BUILD_TRIPLET
