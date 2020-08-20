@@ -112,33 +112,37 @@ We do wish to continue using this file,
 and for simple cases one should be able to write everything they need into this file.
 Therefore, we will add a new section, `"configuration"`,
 which will be expanded in the future to contain other configuration and policies.
-This `"configuration"` property will be an object,
-and since this is the first RFC that adds anything to this field,
-as of now the only properties that can live in that object will be `"registries"` and `"default-registry"`.
-Additionally, we will allow the string value `"file"`,
-which makes vcpkg look for a `vcpkg-configuration.json` file up the directory tree,
-starting from the location of the `vcpkg.json` file.
-This `vcpkg-configuration.json` file should be an object with the same shape as the `"configuration"` property.
+This `"configuration"` property should either be a path, or a `<configuration>` object.
 
-The `"registries"` property should be an object, mapping `<identifier>`s to `<registry>` objects:
-*	`"scopes"`: An array of `<package-name>`s (also defined in the manifests RFC: period-separated `<identifier>`s)
-*	`"packages"`: An array of `<package-name>`s
-*	Then, a `<registry>` is either a `<registry.path>`:
-  *	`"path"`: A string denoting a path.
-    Can be either relative (will be considered relative to the file containing the configuration), or absolute.
-    Paths which are absolute without a drive on Windows will be considered to be
-    on the drive containing the configuration.
-*	Or, a `<registry.git>`:
-  *	`"git"`: A URI denoting a git repository
-  *	Optionally, `"ref"`: A git reference (a commit, a branch name, or a tag);
-    defaults to the default branch of the repository.
-* Or, a `<registry.none>`, which contains no more properties. `<identifier>`s may not map to a `<registry.none>`.
+A `<configuration>` is an object:
+* Optionally, `"default-registry"`: A `<registry-implementation>` or `null`
+* Optionally, `"registries"`: An array of `<registry>`s
 
-Additionally, the `"registries"` object may contain the property `"default"`, which must be a `<registry.none>`.
+Since this is the first RFC that adds anything to this field,
+as of now the only properties that can live in that object will be
+these.
 
-The `"default-registry"` property should be an `<identifier>`, the string `"default"`, or `null`.
-The `"packages"` and `"scopes"` fields of distinct registries must be disjoint.
-For example, a package which uses a different default registry, and a different registry for boost,
+A `<registry-implementation>` is an object matching one of the following:
+* `<registry-implementation.builtin>`:
+  * `"kind"`: The string `"builtin"`
+* `<registry-implementation.directory>`:
+  * `"kind"`: The string `"directory"`
+  * `"path"`: A path
+* `<registry-implementation.git>`:
+  * `"kind"`: The string `"git"`
+  * `"repository"`: A URI
+  * Optionally, `"path"`: An absolute path into the git repository
+  * Optionally, `"ref"`: A git reference
+
+A `<registry>` is a `<registry-implementation>` object, plus the following properties:
+* Optionally, `"scopes"`: An array of `<package-name>`s
+* Optionally, `"packages"`: An array of `<package-name>`s
+
+The `"packages"` and `"scopes"` fields of distinct registries must be disjoint,
+and each `<registry>` must have at least one of the `"scopes"` and `"packages"` property,
+since otherwise there's no point.
+
+As an example, a package which uses a different default registry, and a different registry for boost,
 might look like the following:
 
 ```json
@@ -150,22 +154,28 @@ might look like the following:
     "cppitertools"
   ],
   "configuration": {
-    "registries": {
-      "my-default": {
-        "git": "https://github.com/meow/vcpkg-ports"
-      },
-      "boostorg": {
-        "git": "https://github.com/boostorg/vcpkg-ports",
+    "default-registry": {
+      "kind": "directory",
+      "path": "vcpkg-ports"
+    },
+    "registries": [
+      {
+        "kind": "git",
+        "repository": "https://github.com/boostorg/vcpkg-ports",
         "ref": "v1.73.0",
         "scopes": [ "boost" ]
+      },
+      {
+        "kind": "builtin",
+        "packages": [ "cppitertools" ]
       }
-    ],
-    "default-registry": "my-default"
+    ]
   }
 }
 ```
 
-This will install `fmt` and `cppitertools` from `https://github.com/meow/vcpkg-ports`,
+This will install `fmt` from `<directory-of-vcpkg.json>/vcpkg-ports`,
+`cppitertools` from the registry that ships with vcpkg,
 and since `cppitertools` depends on `boost.optional`, and we have replaced where `boost.*` comes from,
 it will install `boost.optional` from `https://github.com/boostorg/vcpkg-ports`.
 
@@ -185,14 +195,25 @@ The registries RFC only supports this latter mode.
 The way that vcpkg will do this is by searching from the current working directory
 up towards the root for a file named `vcpkg.json`.
 It will then look inside that file for the `"configuration"` property.
-If that property is the literal string `"file"`, vcpkg will search
-starting from the directory holding `vcpkg.json` upwards towards the root for a file named
-`vcpkg-configuration.json`, which will then be treated as the configuration object.
-Otherwise, the value of that property will be treated as the configuration object.
-If the configuration object contains the `"default-registry"` field,
-it replaces the default registry, which defaults to `"default"`.
-If the configuration object contains the `"registries"` field,
-it replaces the registry set, which defaults to the empty array.
+If that property is an object, then that object will be the configuration object;
+otherwise, if that property is a path denoting a directory,
+vcpkg will use the top level JSON object from `vcpkg-configuration.json` in that directory
+as the configuration object. If the path is relative, it's treated as being relative to
+the directory containing `vcpkg.json`, so for example:
+
+```
+meow/
+  vcpkg.json
+  vcpkg-configuration.json
+  kitty/
+    vcpkg-configuration.json
+```
+
+If `vcpkg.json:configuration = "."`, then vcpkg will use `meow/vcpkg-configuration.json`
+as the configuration object. If `vcpkg.json:configuration = "kitty"`, then vcpkg will use
+`meow/kitty/vcpkg-configuration.json` as the configuration object. Additionally,
+`"default-registry"` defaults to `{ "kind": "builtin" }` and `"registries"` defaults to
+`[]`.
 
 The way that the registries actually work is as follows:
 only the top-level manifest actually makes changes to the configuration of the project,
@@ -214,4 +235,106 @@ and then run the following algorithm on each dependency:
 
 vcpkg will also rerun this algorithm whenever an install is run with different configuration.
 
-The special registry name `"default"` means the `ports` directory that is shipped with vcpkg.
+### How Registries are Layed Out
+
+There are three kinds of registries, but they only differ in how the registry gets onto one's filesystem.
+Once the registry is there, package lookup runs the same, with each kind having it's own way of defining its
+own root.
+
+In order to find a port `meow` in a registry with root `R`, vcpkg first sees if `R/meow` exists;
+if it does, then the port root is `R/meow`. Otherwise, see if `R/m-` exists; if it does,
+then the port root is `R/m-/meow`. (note: this algorithm may be extended further in the future).
+
+For example, given the following port root:
+
+```
+R/
+  abseil/...
+  b-/
+    boost/...
+    boost-build/...
+    banana/...
+  banana/...
+```
+
+The port root for `abseil` is `R/abseil`; the port root for `boost` is `R/b-/boost`;
+the port root for `banana` is `R/banana` (although this duplication is not recommended).
+
+The reason we are making this change to allow more levels in the ports tree is that ~1300
+ports are hard to look through in a tree view, and this allows us to see only the ports we're
+interested in. Additionally, no port name may end in a `-`, so this means that these port subdirectories
+will never intersect with actual ports. Additionally, since we use only ASCII for port names,
+we don't have to worry about graphemes vs. code units vs. code points -- in ASCII, they are equivalent.
+
+Let's now look at how different registry kinds work:
+
+#### `<registry.builtin>`
+
+For a `<registry.builtin>`, there is no configuration required.
+The registry root is simply `<vcpkg-root>/ports`.
+
+#### `<registry.directory>`
+
+For a `<registry.directory>`, it is again fairly simple.
+Given `$path` the value of the `"path"` property, the registry root is either:
+
+* If `$path` is absolute, then the registry root is `$path`.
+* If `$path` is drive-relative (only important on Windows), the registry root is
+  `(drive of vcpkg.json)/$path`
+* If `$path` is relative, the registry root is `(directory of vcpkg.json)/$path`
+
+Note that the path to vcpkg.json is _not_ canonicalized; it is used exactly as it is seen by vcpkg.
+
+#### `<registry.git>`
+
+This registry is the most complex. We would like to cache existing registries,
+but we don't want to ignore new updates to the registry.
+It is the opinion of the author that we want to find more updates than not,
+so we will update the registry whenever the `vcpkg.json` or `vcpkg-configuration.json`
+is modified. We will do so by keeping a sha512 of the `vcpkg.json` and `vcpkg-configuration.json`
+inside the `vcpkg-installed` directory.
+
+We will download the specific ref of the repository to a central location (and update as needed),
+and the root will be either: `<path to repository>`, if the `"path"` property is not defined,
+or else `<path to repository>/<path property>` if it is defined.
+The `"path"` property must be absolute, without a drive, and will be treated as relative to
+the path to the repository. For example:
+
+```json
+{
+  "kind": "git",
+  "repository": "https://github.com/microsoft/vcpkg",
+  "path": "/ports"
+}
+```
+
+is the correct way to refer to the registry built in to vcpkg, at the latest version.
+
+The following are all incorrect:
+
+```json
+{
+  "$reason": "path can't be drive-absolute",
+  "kind": "git",
+  "repository": "https://github.com/microsoft/vcpkg",
+  "path": "F:/ports"
+}
+```
+
+```json
+{
+  "$reason": "path can't be relative",
+  "kind": "git",
+  "repository": "https://github.com/microsoft/vcpkg",
+  "path": "ports"
+}
+```
+
+```json
+{
+  "$reason": "path _really_ can't be relative like that",
+  "kind": "git",
+  "repository": "https://github.com/microsoft/vcpkg",
+  "path": "../../meow/ports"
+}
+```
