@@ -6,6 +6,7 @@
 #include <vcpkg/base/system.process.h>
 
 #include <vcpkg/cmakevars.h>
+#include <vcpkg/commands.integrate.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/triplet.h>
@@ -345,5 +346,12 @@ namespace vcpkg::Build
 #endif
 
         bool m_compiler_tracking;
+    };
+
+    struct BuildCommand : Commands::TripletCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const override;
     };
 }
