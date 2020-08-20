@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 set(FONTCONFIG_VERSION 2.12.4)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.freedesktop.org/software/fontconfig/release/fontconfig-${FONTCONFIG_VERSION}.tar.gz"
@@ -32,16 +34,19 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     foreach(HEADER fcfreetype.h fontconfig.h)
-        file(READ ${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER} FC_HEADER)
-        if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-            string(REPLACE "#define FcPublic" "#define FcPublic __declspec(dllimport)" FC_HEADER "${FC_HEADER}")
+        if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+            vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER}
+               "#define FcPublic"
+               "#define FcPublic __declspec(dllimport)"
+            )
         else()
-            string(REPLACE "#define FcPublic" "#define FcPublic __attribute__((visibility(\"default\")))" FC_HEADER "${FC_HEADER}")
+            vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER}
+               "#define FcPublic"
+               "#define FcPublic __attribute__((visibility(\"default\")))"
+            )
         endif()
-        file(WRITE ${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER} "${FC_HEADER}")
     endforeach()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-#vcpkg_test_cmake(PACKAGE_NAME unofficial-fontconfig)
