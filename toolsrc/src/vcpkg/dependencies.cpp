@@ -257,13 +257,18 @@ namespace vcpkg::Dependencies
             {
                 ExpectedS<const SourceControlFileLocation&> maybe_scfl =
                     m_port_provider.get_control_file(ipv.spec().name());
-
+#if defined(_WIN32)
+                auto vcpkg_remove_cmd = ".\\vcpkg";
+#else
+                auto vcpkg_remove_cmd = ".\/vcpkg";
+#endif
                 if (!maybe_scfl)
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO,
-                        "Error: while loading %s: %s.\nPlease run \"vcpkg remove %s\" and re-attempt.",
+                        "Error: while loading %s: %s.\nPlease run \"%s remove %s\" and re-attempt.",
                         ipv.spec().to_string(),
                         maybe_scfl.error(),
+                        vcpkg_remove_cmd,
                         ipv.spec().to_string());
 
                 return m_graph

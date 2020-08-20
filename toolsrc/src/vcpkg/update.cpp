@@ -74,13 +74,21 @@ namespace vcpkg::Update
             {
                 System::printf("    %-32s %s\n", package.spec, package.version_diff.to_string());
             }
+
+#if defined(_WIN32)
+            auto vcpkg_cmd = ".\\vcpkg";
+#else
+            auto vcpkg_cmd = ".\/vcpkg";
+#endif
             System::print2("\n"
                            "To update these packages and all dependencies, run\n"
-                           "    .\\vcpkg upgrade\n"
+                           "    %s upgrade\n"
                            "\n"
                            "To only remove outdated packages, run\n"
-                           "    .\\vcpkg remove --outdated\n"
-                           "\n");
+                           "    %s remove --outdated\n"
+                           "\n",
+                           vcpkg_cmd,
+                           vcpkg_cmd);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
