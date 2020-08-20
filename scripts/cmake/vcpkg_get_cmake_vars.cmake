@@ -15,14 +15,14 @@
 ## Additional options to pass to the test configure call 
 ##
 ## ### OUTPUT_FILE
-## Variable to hold the 
+## Variable to return the path to the generated cmake file with the detected `CMAKE_` variables set as `VCKPG_DETECTED_`
 ##
 ## ## Notes
-## This command will either alter the settings for `VCPKG_LIBRARY_LINKAGE` or fail, depending on what was requested by the user versus what the library supports.
+## If possible avoid usage in portfiles. 
 ##
 ## ## Examples
 ##
-## * [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
+## * [vcpkg_configure_make](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_configure_make.cmake)
 
 function(vcpkg_get_cmake_vars)
     cmake_parse_arguments(PARSE_ARGV 0 _gcv "" "OUTPUT_FILE" "OPTIONS")
