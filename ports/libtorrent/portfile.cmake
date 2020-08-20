@@ -7,7 +7,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     if("iconv" IN_LIST FEATURES)
-        set(ICONV_PATCH "fix_find_iconv.patch")
     else()
         # prevent picking up libiconv if it happens to already be installed
         set(ICONV_PATCH "no_use_iconv.patch")
