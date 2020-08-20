@@ -6,7 +6,9 @@
 ## ```cmake
 ## vcpkg_configure_make(
 ##     SOURCE_PATH <${SOURCE_PATH}>
-##     [AUTOCONFIG]
+##     [AUTOCONFIG] 
+##     [USE_WRAPPERS]
+##     [DETERMINE_BUILD_TRIPLET]
 ##     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
 ##     [NO_ADDITIONAL_PATHS]
 ##     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
@@ -34,8 +36,14 @@
 ## ### SKIP_CONFIGURE
 ## Skip configure process
 ##
+## ### USE_WRAPPERS
+## Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
+##
 ## ### BUILD_TRIPLET
 ## Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
+##
+## ### DETERMINE_BUILD_TRIPLET
+## For ports having a configure script following the autotools rules 
 ##
 ## ### NO_ADDITIONAL_PATHS
 ## Don't pass any additional paths except for --prefix to the configure call
@@ -78,6 +86,8 @@
 ## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
+set(printvars PATH _LINK_ _CL_ CPPFLAGS CFLAGS CXXFLAGS LDFLAGS LIBS INCLUDE LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+
 macro(_vcpkg_determine_host_mingw out_var)
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
         set(HOST_ARCH $ENV{PROCESSOR_ARCHITEW6432})
@@ -158,13 +168,52 @@ macro(_vcpkg_restore_env_variables)
     endforeach()
 endmacro()
 
+macro(extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
+    string(REGEX MATCHALL "( |^)-D[^ ]+" CPPFLAGS_${_SUFFIX} "${VCPKG_DETECTED_COMBINED_CFLAGS_${_SUFFIX}}")
+    string(REGEX MATCHALL "( |^)-D[^ ]+" CXXPPFLAGS_${_SUFFIX} "${VCPKG_DETECTED_COMBINED_CXXFLAGS_${_SUFFIX}}")
+    list(JOIN CXXPPFLAGS_${_SUFFIX} "|" CXXREGEX)
+    if(CXXREGEX)
+        list(FILTER CPPFLAGS_${_SUFFIX} INCLUDE REGEX "(${CXXREGEX})")
+    else()
+        set(CPPFLAGS_${_SUFFIX})
+    endif()
+    list(JOIN CPPFLAGS_${_SUFFIX} "|" CPPREGEX)
+    list(JOIN CPPFLAGS_${_SUFFIX} " " CPPFLAGS_${_SUFFIX})
+    set(CPPFLAGS_${_SUFFIX} "${CPPFLAGS_${_SUFFIX}}")
+    if(CPPREGEX)
+        string(REGEX REPLACE "(${CPPREGEX})" "" CFLAGS_${_SUFFIX} "${VCPKG_DETECTED_COMBINED_CFLAGS_${_SUFFIX}}")
+        string(REGEX REPLACE "(${CPPREGEX})" "" CXXFLAGS_${_SUFFIX} "${VCPKG_DETECTED_COMBINED_CXXFLAGS_${_SUFFIX}}")
+    else()
+        set(CFLAGS_${_SUFFIX} "${VCPKG_DETECTED_COMBINED_CFLAGS_${_SUFFIX}}")
+        set(CXXFLAGS_${_SUFFIX} "${VCPKG_DETECTED_COMBINED_CXXFLAGS_${_SUFFIX}}")
+    endif()
+    string(REGEX REPLACE " +" " " CPPFLAGS_${_SUFFIX} "${CPPFLAGS_${_SUFFIX}}")
+    string(REGEX REPLACE " +" " " CFLAGS_${_SUFFIX} "${CFLAGS_${_SUFFIX}}")
+    string(REGEX REPLACE " +" " " CXXFLAGS_${_SUFFIX} "${CXXFLAGS_${_SUFFIX}}")
+    # libtool has and -R option so we need to guard against -RTC by using -Xcompiler
+    # while configuring there might be a lot of unknown compiler option warnings due to that
+    # just ignore them. 
+    string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CFLAGS_${_SUFFIX} "${CFLAGS_${_SUFFIX}}")
+    string(REGEX REPLACE "((-|/)RTC[^ ]+)" "-Xcompiler \\1" CXXFLAGS_${_SUFFIX} "${CXXFLAGS_${_SUFFIX}}")
+    string(STRIP "${CPPFLAGS_${_SUFFIX}}" CPPFLAGS_${_SUFFIX})
+    string(STRIP "${CFLAGS_${_SUFFIX}}" CFLAGS_${_SUFFIX})
+    string(STRIP "${CXXFLAGS_${_SUFFIX}}" CXXFLAGS_${_SUFFIX})
+    debug_message("CPPFLAGS_${_SUFFIX}: ${CPPFLAGS_${_SUFFIX}}")
+    debug_message("CFLAGS_${_SUFFIX}: ${CFLAGS_${_SUFFIX}}")
+    debug_message("CXXFLAGS_${_SUFFIX}: ${CXXFLAGS_${_SUFFIX}}")
+endmacro()
+
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT"
         ${ARGN}
     )
+    vcpkg_get_cmake_vars(OUTPUT_FILE CMAKE_VARS_FILE)
+    set(CMAKE_VARS_FILE "${CMAKE_VARS_FILE}" PARENT_SCOPE)
+    debug_message("Including cmake vars from: ${CMAKE_VARS_FILE}")
+    include("${CMAKE_VARS_FILE}")
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(_csc_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -193,7 +242,7 @@ function(vcpkg_configure_make)
     debug_message("REQUIRES_AUTOCONFIG:${REQUIRES_AUTOCONFIG}")
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(FLAGPREFIXES CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y)
+    set(FLAGPREFIXES CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
     foreach(_prefix IN LISTS FLAGPREFIXES)
         _vcpkg_backup_env_variable(${prefix}FLAGS)
     endforeach()
@@ -209,15 +258,12 @@ function(vcpkg_configure_make)
     _vcpkg_backup_env_variables(INCLUDE LIB LIBPATH)
 
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
-
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
     endif()
 
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
-        _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
-
         list(APPEND MSYS_REQUIRE_PACKAGES diffutils 
                                           pkg-config 
                                           binutils 
@@ -226,33 +272,35 @@ function(vcpkg_configure_make)
                                           gettext-devel
                                           )
         list(APPEND MSYS_REQUIRE_PACKAGES make)
-        if (_csc_AUTOCONFIG)
+        if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
             list(APPEND MSYS_REQUIRE_PACKAGES autoconf 
                                               autoconf-archive
                                               automake
                                               m4
                 )
+        endif()
+        if(_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
+            _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
+            _vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
             # --build: the machine you are building on
             # --host: the machine you are building for
             # --target: the machine that CC will produce binaries for
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
-            if(NOT _csc_BUILD_TRIPLET)
-                set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
-                                                                            # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
-                _vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
-                if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we do not need to specify the additional flags if we build nativly. 
-                    string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
-                endif()
-                if(VCPKG_TARGET_IS_UWP AND NOT _csc_BUILD_TRIPLET MATCHES "--host")
-                    # Needs to be different from --build to enable cross builds.
-                    string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-unknown-mingw32")
-                endif()
+            set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
+                                                                        # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+            if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we do not need to specify the additional flags if we build nativly. 
+                string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
-            debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
+            if(VCPKG_TARGET_IS_UWP AND NOT _csc_BUILD_TRIPLET MATCHES "--host")
+                # Needs to be different from --build to enable cross builds.
+                string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-unknown-mingw32")
+            endif()
         endif()
+        debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
         vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+
 
         set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
 
@@ -273,30 +321,71 @@ function(vcpkg_configure_make)
         endmacro()
 
         set(CONFIGURE_ENV "V=1")
-        if (_csc_AUTOCONFIG) # without autotools we assume a custom configure script which correctly handles cl and lib. Otherwise the port needs to set CC|CXX|AR and probably CPP
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile cl.exe -nologo -E")
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "compile cl.exe -nologo")
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "compile cl.exe -nologo")
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "ar-lib lib.exe -verbose")
-        else()
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "cl.exe -nologo -E")
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "cl.exe -nologo")
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "cl.exe -nologo")
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "lib.exe -verbose")
-        endif()
-        _vcpkg_append_to_configure_environment(CONFIGURE_ENV LD "link.exe -verbose")
-        _vcpkg_append_to_configure_environment(CONFIGURE_ENV RANLIB ":") # Trick to ignore the RANLIB call
-        #_vcpkg_append_to_configure_environment(CONFIGURE_ENV OBJDUMP ":") ' Objdump is required to make shared libraries. Otherwise define lt_cv_deplibs_check_method=pass_all
-        _vcpkg_append_to_configure_environment(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
-        _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP ":")   # If required set the ENV variable STRIP in the portfile correctly
-        _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "dumpbin.exe -symbols -headers")
-        # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
-        # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
-        _vcpkg_append_to_configure_environment(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
+        # Remove full filepaths due to spaces (compiler needs to be on path)
+        set(progs VCPKG_DETECTED_C_COMPILER VCPKG_DETECTED_CXX_COMPILER VCPKG_DETECTED_AR VCPKG_DETECTED_LINKER VCPKG_DETECTED_RANLIB VCPKG_DETECTED_OBJDUMP
+                  VCPKG_DETECTED_STRIP VCPKG_DETECTED_NM VCPKG_DETECTED_DLLTOOL VCPKG_DETECTED_RC_COMPILER)
+        foreach(prog IN LISTS progs)
+            if(${prog})
+                get_filename_component(${prog} "${${prog}}" NAME)
+            endif()
+        endforeach()
+        if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS) # without autotools we assume a custom configure script which correctly handles cl and lib. Otherwise the port needs to set CC|CXX|AR and probably CPP
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile ${VCPKG_DETECTED_C_COMPILER} -E")
 
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "compile ${VCPKG_DETECTED_C_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC_FOR_BUILD "compile ${VCPKG_DETECTED_C_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "compile ${VCPKG_DETECTED_CXX_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV RC "windres-rc ${VCPKG_DETECTED_RC_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV WINDRES "windres-rc ${VCPKG_DETECTED_RC_COMPILER}")
+            if(VCPKG_DETECTED_AR)
+                _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "${VCPKG_DETECTED_AR}")
+            else()
+                _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "ar-lib lib.exe -verbose")
+            endif()
+        else()
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "${VCPKG_DETECTED_C_COMPILER} -E")
+
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "${VCPKG_DETECTED_C_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC_FOR_BUILD "${VCPKG_DETECTED_C_COMPILER}")
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "${VCPKG_DETECTED_CXX_COMPILER}")
+            if(VCPKG_DETECTED_AR)
+                _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "${VCPKG_DETECTED_AR}")
+            else()
+                _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "lib.exe -verbose")
+            endif()
+        endif()
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV LD "${VCPKG_DETECTED_LINKER} -verbose")
+        if(VCPKG_DETECTED_RANLIB)
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV RANLIB "${VCPKG_DETECTED_RANLIB}") # Trick to ignore the RANLIB call
+        else()
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV RANLIB ":")
+        endif()
+        if(VCPKG_DETECTED_OBJDUMP) #Objdump is required to make shared libraries. Otherwise define lt_cv_deplibs_check_method=pass_all
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV OBJDUMP "${VCPKG_DETECTED_OBJDUMP}") # Trick to ignore the RANLIB call
+        endif()
+        if(VCPKG_DETECTED_STRIP) # If required set the ENV variable STRIP in the portfile correctly
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP "${VCPKG_DETECTED_STRIP}") 
+        else()
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP ":")
+        endif()
+        if(VCPKG_DETECTED_NM) # If required set the ENV variable NM in the portfile correctly
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "${VCPKG_DETECTED_NM}") 
+        else()
+            # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
+            # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "dumpbin.exe -symbols -headers")
+        endif()
+        if(VCPKG_DETECTED_DLLTOOL) # If required set the ENV variable DLLTOOL in the portfile correctly
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV DLLTOOL "${VCPKG_DETECTED_DLLTOOL}") 
+        else()
+            _vcpkg_append_to_configure_environment(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
+        endif()
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV AS ":")   # If required set the ENV variable CCAS in the portfile correctly
         foreach(_env IN LISTS _csc_CONFIGURE_ENVIRONMENT_VARIABLES)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV ${_env} "${${_env}}")
         endforeach()
+
         # Other maybe interesting variables to control
         # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
         # LINK This is the command used to actually link a C program.
@@ -307,10 +396,11 @@ function(vcpkg_configure_make)
         string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
-        string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF ${CURRENT_INSTALLED_DIR})
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
-        string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
+
         set(prefix_var "'\${prefix}'") # Windows needs extra quotes or else the variable gets expanded in the makefile!
+        
+        list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
+                                 ac_cv_func_memmove=yes)
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
@@ -361,12 +451,6 @@ function(vcpkg_configure_make)
     set(base_cmd)
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc --debug)
-        # Load toolchains
-        if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-        endif()
-        include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-        #Join the options list as a string with spaces between options
         list(JOIN _csc_OPTIONS " " _csc_OPTIONS)
         list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
@@ -379,18 +463,10 @@ function(vcpkg_configure_make)
     set(ENV{C_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${C_INCLUDE_PATH_BACKUP}")
     set(ENV{CPLUS_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${CPLUS_INCLUDE_PATH_BACKUP}")
 
-    # Setup global flags -> TODO: Further improve with toolchain file in mind!
-    set(CPP_FLAGS_GLOBAL "$ENV{CPPFLAGS} -I${_VCPKG_INSTALLED}/include")
-    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
-    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
-    set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
     # Flags should be set in the toolchain instead (Setting this up correctly requires a function named vcpkg_determined_cmake_compiler_flags which can also be used to setup CC and CXX etc.)
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        string(APPEND C_FLAGS_GLOBAL " -fPIC")
-        string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
-    else()
+    if(VCPKG_TARGET_IS_WINDOWS)
+        _vcpkg_backup_env_variables(_CL_ _LINK_)
         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
-        string(APPEND CPP_FLAGS_GLOBAL " /D_WIN32_WINNT=0x0601 /DWIN32_LEAN_AND_MEAN /DWIN32 /D_WINDOWS")
         if(VCPKG_TARGET_IS_UWP)
             # Be aware that configure thinks it is crosscompiling due to: 
             # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
@@ -399,24 +475,26 @@ function(vcpkg_configure_make)
             # is to use the CL and LINK environment variables !!!
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             string(REPLACE "\\" "/" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
-            set(ENV{_CL_} "$ENV{_CL_} /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
-            set(ENV{_LINK_} "$ENV{_LINK_} /MANIFEST /DYNAMICBASE WindowsApp.lib /WINMD:NO /APPCONTAINER")
-        endif()
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            set(ENV{_LINK_} "$ENV{_LINK_} -MACHINE:x64")
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            set(ENV{_LINK_} "$ENV{_LINK_} -MACHINE:x86")
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-            set(ENV{_LINK_} "$ENV{_LINK_} -MACHINE:ARM")
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-            set(ENV{_LINK_} "$ENV{_LINK_} -MACHINE:ARM64")
+            # Can somebody please check if CMake's compiler flags for UWP are correct?
+            #set(ENV{_CL_} "$ENV{_CL_} /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
+            #string(APPEND VCPKG_DETECTED_COMBINED_CXXFLAGS_RELEASE " -ZW:nostdlib")
+            #string(APPEND VCPKG_DETECTED_COMBINED_CXXFLAGS_DEBUG " -ZW:nostdlib")
+            #set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CXX_STANDARD_LIBRARIES} /MANIFEST /DYNAMICBASE /WINMD:NO ")
+            set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CXX_STANDARD_LIBRARIES} /APPCONTAINER") 
         endif()
     endif()
-    
+
+    if(DEFINED ENV{LIBS})
+        set(ENV{LIBS} "$ENV{LIBS} ${VCPKG_DETECTED_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CXX_STANDARD_LIBRARIES}")
+    else()
+        set(ENV{LIBS} "${VCPKG_DETECTED_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CXX_STANDARD_LIBRARIES}")
+    endif()
+
     vcpkg_find_acquire_program(PKGCONFIG)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT PKGCONFIG STREQUAL "--static")
         set(PKGCONFIG "${PKGCONFIG} --static")
     endif()
+
     # Run autoconf if necessary
     set(_GENERATED_CONFIGURE FALSE)
     if (_csc_AUTOCONFIG OR REQUIRES_AUTOCONFIG)
@@ -480,16 +558,21 @@ function(vcpkg_configure_make)
         set(PATH_SUFFIX_${_VAR_SUFFIX} "/debug")
         set(SHORT_NAME_${_VAR_SUFFIX} "dbg")
         list(APPEND _buildtypes ${_VAR_SUFFIX})
-        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain instead
-            string(REGEX REPLACE "[ \t]+/" " -" CPPFLAGS_${_VAR_SUFFIX} "${CPP_FLAGS_GLOBAL}")
-            string(REGEX REPLACE "[ \t]+/" " -" CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_C_FLAGS_${_VAR_SUFFIX}}")
-            string(REGEX REPLACE "[ \t]+/" " -" CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX}d /D_DEBUG /Ob0 /Od ${VCPKG_CXX_FLAGS_${_VAR_SUFFIX}}")
-            string(REGEX REPLACE "[ \t]+/" " -" LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            set(LINKER_FLAGS_${_VAR_SUFFIX} "${VCPKG_DETECTED_STATIC_LINKERFLAGS_${_VAR_SUFFIX}}")
+        else() # dynamic
+            set(LINKER_FLAGS_${_VAR_SUFFIX} "${VCPKG_DETECTED_SHARED_LINKERFLAGS_${_VAR_SUFFIX}}")
+        endif()
+        extract_cpp_flags_and_set_cflags_and_cxxflags(${_VAR_SUFFIX})
+        if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_C_COMPILER MATCHES "cl.exe")
+            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
+            if(DEFINED ENV{_LINK_})
+                set(LINK_ENV_${_VAR_SUFFIX} "$ENV{_LINK_} ${LINKER_FLAGS_${_VAR_SUFFIX}}")
+            else()
+                set(LINK_ENV_${_VAR_SUFFIX} "${LINKER_FLAGS_${_VAR_SUFFIX}}")
+            endif()
         else()
-            set(CPPFLAGS_${_VAR_SUFFIX} "${CPP_FLAGS_GLOBAL}")
-            set(CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
-            set(CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
-            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/ -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
+            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link ${LINKER_FLAGS_${_VAR_SUFFIX}}")
         endif()
         unset(_VAR_SUFFIX)
     endif()
@@ -498,16 +581,21 @@ function(vcpkg_configure_make)
         set(PATH_SUFFIX_${_VAR_SUFFIX} "")
         set(SHORT_NAME_${_VAR_SUFFIX} "rel")
         list(APPEND _buildtypes ${_VAR_SUFFIX})
-        if (CMAKE_HOST_WIN32) # Flags should be set in the toolchain 
-            string(REGEX REPLACE "[ \t]+/" " -" CPPFLAGS_${_VAR_SUFFIX} "${CPP_FLAGS_GLOBAL}")
-            string(REGEX REPLACE "[ \t]+/" " -" CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_C_FLAGS_${_VAR_SUFFIX}}")
-            string(REGEX REPLACE "[ \t]+/" " -" CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_CXX_FLAGS_${_VAR_SUFFIX}}")
-            string(REGEX REPLACE "[ \t]+/" " -" LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            set(LINKER_FLAGS_${_VAR_SUFFIX} "${VCPKG_DETECTED_STATIC_LINKERFLAGS_${_VAR_SUFFIX}}")
+        else() # dynamic
+            set(LINKER_FLAGS_${_VAR_SUFFIX} "${VCPKG_DETECTED_SHARED_LINKERFLAGS_${_VAR_SUFFIX}}")
+        endif()
+        extract_cpp_flags_and_set_cflags_and_cxxflags(${_VAR_SUFFIX})
+        if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_C_COMPILER MATCHES "cl.exe")
+            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
+            if(DEFINED ENV{_LINK_})
+                set(LINK_ENV_${_VAR_SUFFIX} "$ENV{_LINK_} ${LINKER_FLAGS_${_VAR_SUFFIX}}")
+            else()
+                set(LINK_ENV_${_VAR_SUFFIX} "${LINKER_FLAGS_${_VAR_SUFFIX}}")
+            endif()
         else()
-            set(CPPFLAGS_${_VAR_SUFFIX} "${CPP_FLAGS_GLOBAL}")
-            set(CFLAGS_${_VAR_SUFFIX} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
-            set(CXXFLAGS_${_VAR_SUFFIX} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
-            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/ -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link/ ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${_VAR_SUFFIX}}")
+            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/ -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link/ ${LINKER_FLAGS_${_VAR_SUFFIX}}")
         endif()
         unset(_VAR_SUFFIX)
     endif()
@@ -529,21 +617,26 @@ function(vcpkg_configure_make)
             set(RELATIVE_BUILD_PATH .)
         endif()
 
-        set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_buildtype}}/lib/pkgconfig")
-        set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
-
+        # Setup PKG_CONFIG_PATH
+        set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_buildtype}}/lib/pkgconfig")
+        set(PKGCONFIG_INSTALLED_SHARE_DIR "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
         if(ENV{PKG_CONFIG_PATH})
             set(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype} $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_INSTALLED_SHARE_DIR}:$ENV{PKG_CONFIG_PATH}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_INSTALLED_SHARE_DIR}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}")
         endif()
 
         # Setup environment
-        set(ENV{CPPFLAGS} ${CPPFLAGS_${_buildtype}})
-        set(ENV{CFLAGS} ${CFLAGS_${_buildtype}})
-        set(ENV{CXXFLAGS} ${CXXFLAGS_${_buildtype}})
-        set(ENV{LDFLAGS} ${LDFLAGS_${_buildtype}})
+        set(ENV{CPPFLAGS} "${CPPFLAGS_${_buildtype}}")
+        set(ENV{CFLAGS} "${CFLAGS_${_buildtype}}")
+        set(ENV{CXXFLAGS} "${CXXFLAGS_${_buildtype}}")
+        set(ENV{RCFLAGS} "${VCPKG_DETECTED_COMBINED_RCFLAGS_${_buildtype}}")
+        set(ENV{LDFLAGS} "${LDFLAGS_${_buildtype}}")
+        if(LINK_ENV_${_VAR_SUFFIX})
+            set(_LINK_CONFIG_BACKUP "$ENV{_LINK_}")
+            set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
+        endif()
         set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}")
 
         set(ENV{LIB} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LIB_PATHLIKE_CONCAT}")
@@ -561,6 +654,9 @@ function(vcpkg_configure_make)
             vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_buildtype}}/bin")
         endif()
         debug_message("Configure command:'${command}'")
+        # foreach(_envar IN LISTS printvars)
+            # message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
+        # endforeach()
         if (NOT _csc_SKIP_CONFIGURE)
             message(STATUS "Configuring ${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}")
             vcpkg_execute_required_process(
@@ -568,11 +664,13 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${TAR_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}
             )
-            if(EXISTS "${TAR_DIR}/libtool" AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-                set(_file "${TAR_DIR}/libtool")
-                file(READ "${_file}" _contents)
-                string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
-                file(WRITE "${_file}" "${_contents}")
+            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+                file(GLOB_RECURSE LIBTOOL_FILES "${TAR_DIR}*/libtool")
+                foreach(lt_file IN LISTS LIBTOOL_FILES)
+                    file(READ "${lt_file}" _contents)
+                    string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
+                    file(WRITE "${lt_file}" "${_contents}")
+                endforeach()
             endif()
         endif()
 
@@ -582,7 +680,12 @@ function(vcpkg_configure_make)
             unset(ENV{PKG_CONFIG_PATH})
         endif()
         unset(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype})
-
+        
+        if(_LINK_CONFIG_BACKUP)
+            set(ENV{_LINK_} "${_LINK_CONFIG_BACKUP}")
+            unset(_LINK_CONFIG_BACKUP)
+        endif()
+        
         if(_csc_ADD_BIN_TO_PATH)
             set(ENV{PATH} "${PATH_BACKUP}")
         endif()
@@ -598,7 +701,7 @@ function(vcpkg_configure_make)
 
     # Restore environment
     foreach(_prefix IN LISTS FLAGPREFIXES)
-        _vcpkg_restore_env_variable(${prefix}FLAGS)
+        _vcpkg_restore_env_variable(${_prefix}FLAGS)
     endforeach()
 
     _vcpkg_restore_env_variables(LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
