@@ -1086,12 +1086,18 @@ namespace vcpkg::Build
 
     std::string create_user_troubleshooting_message(const PackageSpec& spec)
     {
-        return Strings::format("Please ensure you're using the latest portfiles with `.\\vcpkg update`, then\n"
+#if defined(_WIN32)
+        auto vcpkg_update_cmd = ".\\vcpkg";
+#else
+        auto vcpkg_update_cmd = ".\/vcpkg";
+#endif
+        return Strings::format("Please ensure you're using the latest portfiles with `%s update`, then\n"
                                "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
                                "  Package: %s\n"
                                "  Vcpkg version: %s\n"
                                "\n"
                                "Additionally, attach any relevant sections from the log files above.",
+                               vcpkg_update_cmd,
                                spec,
                                Commands::Version::version());
     }
