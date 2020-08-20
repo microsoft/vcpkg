@@ -52,7 +52,7 @@ TEST_CASE ("get_available_paths_commands works", "[commands]")
 TEST_CASE ("get_available_commands_type_a works", "[commands]")
 {
     auto commands_list = Commands::get_available_triplet_commands();
-    CHECK(commands_list.size() == 10);
+    CHECK(commands_list.size() == 11);
 
     CHECK(Commands::find("install", commands_list) != nullptr);
     CHECK(Commands::find("x-set-installed", commands_list) != nullptr);
