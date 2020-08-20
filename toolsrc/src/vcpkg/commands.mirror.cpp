@@ -66,7 +66,8 @@ namespace vcpkg::Commands::Mirror
         const fs::path& listfile = destination_dir.listfile();
 
         fs.create_directories(destination, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", fs::u8string(destination));
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", fs::u8string(destination));
         const fs::path listfile_parent = listfile.parent_path();
         fs.create_directories(listfile_parent, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", fs::u8string(listfile));
