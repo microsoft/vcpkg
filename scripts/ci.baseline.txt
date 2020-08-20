@@ -423,7 +423,6 @@ flint:x64-linux=fail
 flint:x64-osx=fail
 fltk:arm-uwp=fail
 fltk:x64-uwp=fail
-fluidsynth:x64-linux=fail
 fluidsynth:x64-osx=fail
 fmem:arm-uwp=fail
 fmem:x64-uwp=fail
