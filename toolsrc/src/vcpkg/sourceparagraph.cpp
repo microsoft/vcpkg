@@ -855,7 +855,6 @@ namespace vcpkg
         }
     }
 
-
     Optional<const FeatureParagraph&> SourceControlFile::find_feature(const std::string& featurename) const
     {
         auto it = Util::find_if(feature_paragraphs,

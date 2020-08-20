@@ -57,6 +57,7 @@ namespace vcpkg
         virtual StringView type_name() const override;
         virtual Span<const StringView> valid_fields() const override;
 
+        virtual Optional<std::unique_ptr<RegistryImpl>> visit_null(Json::Reader&, StringView) override;
         virtual Optional<std::unique_ptr<RegistryImpl>> visit_object(Json::Reader&,
                                                                      StringView,
                                                                      const Json::Object&) override;

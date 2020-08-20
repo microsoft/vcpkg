@@ -329,6 +329,37 @@ namespace vcpkg::Json
         virtual ~ReaderError() = default;
     };
 
+    struct BasicReaderError : ReaderError
+    {
+        virtual void add_missing_field(std::string&& type, std::string&& key) override
+        {
+            missing_fields.emplace_back(std::move(type), std::move(key));
+        }
+        virtual void add_expected_type(std::string&& key, std::string&& expected_type) override
+        {
+            expected_types.emplace_back(std::move(key), std::move(expected_type));
+        }
+        virtual void add_extra_fields(std::string&& type, std::vector<std::string>&& fields) override
+        {
+            extra_fields.emplace_back(std::move(type), std::move(fields));
+        }
+        virtual void add_mutually_exclusive_fields(std::string&& type, std::vector<std::string>&& fields) override
+        {
+            mutually_exclusive_fields.emplace_back(std::move(type), std::move(fields));
+        }
+
+        bool has_error() const
+        {
+            return !missing_fields.empty() || !expected_types.empty() || !extra_fields.empty() ||
+                   !mutually_exclusive_fields.empty();
+        }
+
+        std::vector<std::pair<std::string, std::string>> missing_fields;
+        std::vector<std::pair<std::string, std::string>> expected_types;
+        std::vector<std::pair<std::string, std::vector<std::string>>> extra_fields;
+        std::vector<std::pair<std::string, std::vector<std::string>>> mutually_exclusive_fields;
+    };
+
     struct Reader
     {
         explicit Reader(ReaderError* err) : err(err) { }
@@ -408,6 +439,24 @@ namespace vcpkg::Json
             return res;
         }
 
+        // checks that an object doesn't contain any fields which both:
+        // * don't start with a `$`
+        // * are not in `valid_fields`
+        // if known_fields.empty(), then it's treated as if all field names are valid
+        void check_for_unexpected_fields(const Object& obj, Span<const StringView> valid_fields, StringView type_name)
+        {
+            if (valid_fields.size() == 0)
+            {
+                return;
+            }
+
+            auto extra_fields = invalid_json_fields(obj, valid_fields);
+            if (!extra_fields.empty())
+            {
+                error().add_extra_fields(type_name.to_string(), std::move(extra_fields));
+            }
+        }
+
     public:
         template<class Type>
         void required_object_field(
@@ -425,15 +474,16 @@ namespace vcpkg::Json
             required_object_field(type, obj, key, place, visitor);
         }
 
+        // returns whether key \in obj
         template<class Type>
-        void optional_object_field(const Object& obj, StringView key, Type& place, IDeserializer<Type>& visitor)
+        bool optional_object_field(const Object& obj, StringView key, Type& place, IDeserializer<Type>& visitor)
         {
-            internal_field(obj, key, place, visitor);
+            return internal_field(obj, key, place, visitor);
         }
         template<class Type>
-        void optional_object_field(const Object& obj, StringView key, Type& place, IDeserializer<Type>&& visitor)
+        bool optional_object_field(const Object& obj, StringView key, Type& place, IDeserializer<Type>&& visitor)
         {
-            optional_object_field(obj, key, place, visitor);
+            return optional_object_field(obj, key, place, visitor);
         }
 
         template<class Type>
@@ -491,28 +541,6 @@ namespace vcpkg::Json
         Optional<std::vector<Type>> array_elements(const Array& arr, StringView key, IDeserializer<Type>&& visitor)
         {
             return array_elements(arr, key, visitor);
-        }
-
-        // checks that an object doesn't contain any fields which both:
-        // * don't start with a `$`
-        // * are not in `valid_fields`
-        // if known_fields.empty(), then it's treated as if all field names are valid
-        // this is automatically called before `visit_object`, so you _should not call this_
-        // unless you have some sort of subtyping. (for example, something like:
-        //   <registry-impl> = { kind: "builtin" } | { kind: "directory", path: string }
-        // )
-        void check_for_unexpected_fields(const Object& obj, Span<const StringView> valid_fields, StringView type_name)
-        {
-            if (valid_fields.size() == 0)
-            {
-                return;
-            }
-
-            auto extra_fields = invalid_json_fields(obj, valid_fields);
-            if (!extra_fields.empty())
-            {
-                error().add_extra_fields(type_name.to_string(), std::move(extra_fields));
-            }
         }
     };
 

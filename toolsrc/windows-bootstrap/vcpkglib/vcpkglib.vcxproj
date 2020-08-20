@@ -225,6 +225,7 @@
     <ClInclude Include="..\..\include\vcpkg\portfileprovider.h" />
     <ClInclude Include="..\..\include\vcpkg\postbuildlint.h" />
     <ClInclude Include="..\..\include\vcpkg\postbuildlint.buildtype.h" />
+    <ClInclude Include="..\..\include\vcpkg\registries.h" />
     <ClInclude Include="..\..\include\vcpkg\remove.h" />
     <ClInclude Include="..\..\include\vcpkg\sourceparagraph.h" />
     <ClInclude Include="..\..\include\vcpkg\statusparagraph.h" />
@@ -310,6 +311,7 @@
     <ClCompile Include="..\..\src\vcpkg\portfileprovider.cpp" />
     <ClCompile Include="..\..\src\vcpkg\postbuildlint.buildtype.cpp" />
     <ClCompile Include="..\..\src\vcpkg\postbuildlint.cpp" />
+    <ClCompile Include="..\..\src\vcpkg\registries.cpp" />
     <ClCompile Include="..\..\src\vcpkg\remove.cpp" />
     <ClCompile Include="..\..\src\vcpkg\sourceparagraph.cpp" />
     <ClCompile Include="..\..\src\vcpkg\statusparagraph.cpp" />

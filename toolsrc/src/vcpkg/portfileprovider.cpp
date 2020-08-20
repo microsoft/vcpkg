@@ -122,33 +122,35 @@ namespace vcpkg::PortFileProvider
             }
         }
 
-        const RegistryImpl* registry = paths.get_configuration().registries.registry_for_port(spec);
-        auto registry_root = registry->get_registry_root(paths);
-        auto port_directory = registry_root / fs::u8path(spec);
-
-        if (fs.exists(port_directory))
+        if (auto registry = paths.get_configuration().registries.registry_for_port(spec))
         {
-            auto found_scf = Paragraphs::try_load_port(fs, port_directory);
-            if (auto scf = found_scf.get())
+            auto registry_root = registry->get_registry_root(paths);
+            auto port_directory = registry_root / fs::u8path(spec);
+
+            if (fs.exists(port_directory))
             {
-                if (scf->get()->core_paragraph->name == spec)
+                auto found_scf = Paragraphs::try_load_port(fs, port_directory);
+                if (auto scf = found_scf.get())
                 {
-                    auto it = cache.emplace(std::piecewise_construct,
-                                            std::forward_as_tuple(spec),
-                                            std::forward_as_tuple(std::move(*scf), std::move(port_directory)));
-                    return it.first->second;
+                    if (scf->get()->core_paragraph->name == spec)
+                    {
+                        auto it = cache.emplace(std::piecewise_construct,
+                                                std::forward_as_tuple(spec),
+                                                std::forward_as_tuple(std::move(*scf), std::move(port_directory)));
+                        return it.first->second;
+                    }
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                              fs::u8string(port_directory),
+                                              spec,
+                                              scf->get()->core_paragraph->name);
                 }
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                          fs::u8string(port_directory),
-                                          spec,
-                                          scf->get()->core_paragraph->name);
-            }
-            else
-            {
-                vcpkg::print_error_message(found_scf.error());
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(port_directory));
+                else
+                {
+                    vcpkg::print_error_message(found_scf.error());
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(port_directory));
+                }
             }
         }
 

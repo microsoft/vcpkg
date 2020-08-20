@@ -102,6 +102,11 @@ namespace vcpkg
         return default_registry();
     }
 
+    void Registries::add_registry(Registry&& r) { registries_.push_back(std::move(r)); }
+
+    void Registries::set_default_registry(std::unique_ptr<RegistryImpl>&& r) { default_registry_ = std::move(r); }
+    void Registries::set_default_registry(std::nullptr_t) { default_registry_.reset(); }
+
     // this is defined here so that we can see the definition of `Registry`
     Span<const Registry> Registries::registries() const { return registries_; }
 
@@ -111,7 +116,38 @@ namespace vcpkg
 
         constexpr static StringLiteral DEFAULT_REGISTRY = "default-registry";
         constexpr static StringLiteral REGISTRIES = "registries";
-        virtual Span<const StringView> valid_fields() const override;
+        virtual Span<const StringView> valid_fields() const override
+        {
+            constexpr static StringView t[] = {DEFAULT_REGISTRY, REGISTRIES};
+            return t;
+        }
+
+        virtual Optional<Configuration> visit_object(Json::Reader& r, StringView, const Json::Object& obj) override
+        {
+            Registries registries;
+
+            {
+                std::unique_ptr<RegistryImpl> default_registry;
+                if (r.optional_object_field(obj, DEFAULT_REGISTRY, default_registry, RegistryImplDeserializer{}))
+                {
+                    registries.set_default_registry(std::move(default_registry));
+                }
+            }
+
+            std::vector<Registry> regs;
+            r.optional_object_field(
+                obj,
+                REGISTRIES,
+                regs,
+                Json::ArrayDeserializer<RegistryDeserializer>{"an array of registries", Json::AllowEmpty::Yes});
+
+            for (Registry& r : regs)
+            {
+                registries.add_registry(std::move(r));
+            }
+
+            return Configuration{std::move(registries)};
+        }
     };
 
     static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, Configuration> load_manifest_and_config(
@@ -124,7 +160,7 @@ namespace vcpkg
         {
             Checks::exit_with_message(VCPKG_LINE_INFO,
                                       "Failed to load manifest from directory %s: %s",
-                                      manifest_dir.u8string(),
+                                      fs::u8string(manifest_dir),
                                       ec.message());
         }
 
@@ -132,7 +168,7 @@ namespace vcpkg
         {
             Checks::exit_with_message(VCPKG_LINE_INFO,
                                       "Failed to parse manifest at %s: %s",
-                                      manifest_path.u8string(),
+                                      fs::u8string(manifest_path),
                                       manifest_opt.error()->format());
         }
         auto manifest_value = std::move(manifest_opt).value_or_exit(VCPKG_LINE_INFO);
@@ -141,7 +177,7 @@ namespace vcpkg
         {
             System::print2(System::Color::error,
                            "Failed to parse manifest at ",
-                           manifest_path.u8string(),
+                           fs::u8string(manifest_path),
                            ": Manifest files must have a top-level object\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -165,7 +201,7 @@ namespace vcpkg
                 if (!fs.exists(config_path))
                 {
                     System::printf(
-                        System::Color::error, "Failed to find configuration file at %s\n", config_path.u8string());
+                        System::Color::error, "Failed to find configuration file at %s\n", fs::u8string(config_path));
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
                 auto parsed_config = Json::parse_file(VCPKG_LINE_INFO, fs, config_path);
@@ -173,7 +209,7 @@ namespace vcpkg
                 {
                     System::print2(System::Color::error,
                                    "Failed to parse ",
-                                   config_path.u8string(),
+                                   fs::u8string(config_path),
                                    ": configuration files must have a top-level object\n");
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
@@ -183,7 +219,7 @@ namespace vcpkg
             {
                 System::print2(System::Color::error,
                                "Failed to parse manifest at ",
-                               manifest_path.u8string(),
+                               fs::u8string(manifest_path),
                                ": Manifest configuration ($.configuration) must be a string or an object.\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
@@ -191,7 +227,47 @@ namespace vcpkg
 
         if (auto c = config.get())
         {
-            Checks::unreachable(VCPKG_LINE_INFO);
+            Json::BasicReaderError err;
+            Json::Reader reader{&err};
+
+            auto parsed_config_opt = reader.visit_value(*c, "$", ConfigurationDeserializer{});
+            if (err.has_error())
+            {
+                if (!err.missing_fields.empty())
+                {
+                    // this should never happen
+                    Checks::unreachable(VCPKG_LINE_INFO);
+                }
+                if (!err.expected_types.empty())
+                {
+                    System::print2(System::Color::error, "Error: Invalid types in configuration:\n");
+                    for (const auto& expected : err.expected_types)
+                    {
+                        System::printf(
+                            System::Color::error, "    %s was expected to be %s\n", expected.first, expected.second);
+                    }
+                }
+                if (!err.extra_fields.empty())
+                {
+                    System::print2(System::Color::error, "Error: Invalid fields in configuration:\n");
+                    for (const auto& extra : err.extra_fields)
+                    {
+                        System::printf(System::Color::error,
+                                       "    %s had invalid fields: %s\n",
+                                       extra.first,
+                                       Strings::join(", ", extra.second));
+                    }
+                }
+                if (!err.mutually_exclusive_fields.empty())
+                {
+                    // this should never happen
+                    Checks::unreachable(VCPKG_LINE_INFO);
+                }
+
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            return {std::move(manifest), std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO)};
         }
         else
         {
