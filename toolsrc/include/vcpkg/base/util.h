@@ -239,15 +239,4 @@ namespace vcpkg::Util
             return e == E::YES;
         }
     }
-
-    template<class... Ts>
-    void unused(const Ts&...)
-    {
-    }
-
-    template<class T>
-    T copy(const T& t)
-    {
-        return t;
-    }
 }

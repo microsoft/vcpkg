@@ -5,6 +5,7 @@
 #include <vcpkg/commands.edit.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 #include <limits.h>
 

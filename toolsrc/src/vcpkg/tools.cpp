@@ -138,7 +138,7 @@ namespace vcpkg
 
         virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
         {
-            Util::unused(out_candidate_paths);
+            (void)(out_candidate_paths);
         }
         virtual Optional<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const = 0;
     };
@@ -283,7 +283,7 @@ namespace vcpkg
                 out_candidate_paths.push_back(*pf / "CMake" / "bin" / "cmake.exe");
 #else
             // TODO: figure out if this should do anything on non-Windows
-            Util::unused(out_candidate_paths);
+            (void)(out_candidate_paths);
 #endif
         }
         virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
@@ -342,7 +342,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 #ifndef _WIN32
             cmd.path_arg(paths.get_tool_exe(Tools::MONO));
 #else
-            Util::unused(paths);
+            (void)(paths);
 #endif
             cmd.path_arg(path_to_exe);
             const auto rc = System::cmd_execute_and_capture_output(cmd.extract());
@@ -380,7 +380,7 @@ Type 'NuGet help <command>' for help on a specific command.
                 out_candidate_paths.push_back(*pf / "git" / "cmd" / "git.exe");
 #else
             // TODO: figure out if this should do anything on non-windows
-            Util::unused(out_candidate_paths);
+            (void)(out_candidate_paths);
 #endif
         }
 
@@ -441,7 +441,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
 
         virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
-            Util::unused(out_candidate_paths);
+            (void)(out_candidate_paths);
             // TODO: Uncomment later
             // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");
             // candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
