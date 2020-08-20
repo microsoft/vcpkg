@@ -2,7 +2,7 @@ set(GEOGRAM_VERSION 1.7.5)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://gforge.inria.fr/frs/download.php/file/38314/geogram_${GEOGRAM_VERSION}.tar.gz"
-    FILENAME "geogram_${GEOGRAM_VERSION}.tar.gz"
+    FILENAME "geogram_${GEOGRAM_VERSION}_47dcbb8.tar.gz"
     SHA512 47dcbb8a5c4e5f791feb8d9b209b04b575b0757e8b89de09c82ef2324a36d4056a1f3001537038c8a752045b0e6b6eedf5421ad49132214c0f60163ff095c36f
 )
 

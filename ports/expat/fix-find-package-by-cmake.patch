@@ -1,0 +1,40 @@
+diff --git a/expat/CMakeLists.txt b/expat/CMakeLists.txt
+index 2084424..f3b9207 100644
+--- a/expat/CMakeLists.txt
++++ b/expat/CMakeLists.txt
+@@ -269,6 +269,10 @@ if(EXPAT_WITH_LIBBSD)
+     target_link_libraries(${_EXPAT_TARGET} ${LIB_BSD})
+ endif()
+ 
++target_include_directories(${_EXPAT_TARGET} INTERFACE
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
++    $<INSTALL_INTERFACE:include>)
++
+ set(LIBCURRENT 7)    # sync
+ set(LIBREVISION 11)  # with
+ set(LIBAGE 6)        # configure.ac!
+@@ -490,7 +494,7 @@ configure_package_config_file(
+         cmake/expat-config.cmake.in
+         cmake/expat-config.cmake
+     INSTALL_DESTINATION
+-        ${CMAKE_INSTALL_LIBDIR}/cmake/expat-${PROJECT_VERSION}/
++        ${CMAKE_INSTALL_LIBDIR}/cmake/expat/
+ )
+ write_basic_package_version_file(
+     cmake/expat-config-version.cmake
+@@ -507,13 +511,13 @@ expat_install(
+         ${CMAKE_CURRENT_BINARY_DIR}/cmake/expat-config.cmake
+         ${CMAKE_CURRENT_BINARY_DIR}/cmake/expat-config-version.cmake
+     DESTINATION
+-        ${CMAKE_INSTALL_LIBDIR}/cmake/expat-${PROJECT_VERSION}/
++        ${CMAKE_INSTALL_LIBDIR}/cmake/expat/
+ )
+ expat_install(
+     EXPORT
+         expat
+     DESTINATION
+-        ${CMAKE_INSTALL_LIBDIR}/cmake/expat-${PROJECT_VERSION}/
++        ${CMAKE_INSTALL_LIBDIR}/cmake/expat/
+     NAMESPACE
+         expat::
+ )

@@ -232,7 +232,7 @@ namespace vcpkg::Paragraphs
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
         {
-            return parse_single_paragraph(*spgh, control_path.u8string());
+            return parse_single_paragraph(*spgh, fs::u8string(control_path));
         }
 
         return contents.error().message();
@@ -243,7 +243,7 @@ namespace vcpkg::Paragraphs
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
         {
-            return parse_paragraphs(*spgh, control_path.u8string());
+            return parse_paragraphs(*spgh, fs::u8string(control_path));
         }
 
         return contents.error().message();
@@ -298,16 +298,16 @@ namespace vcpkg::Paragraphs
             vcpkg::Checks::check_exit(VCPKG_LINE_INFO,
                                       !fs.exists(path_to_control),
                                       "Found both manifest and CONTROL file in port %s; please rename one or the other",
-                                      path.u8string());
+                                      fs::u8string(path));
 
             std::error_code ec;
-            auto res = try_load_manifest(fs, path.filename().u8string(), path_to_manifest, ec);
+            auto res = try_load_manifest(fs, fs::u8string(path.filename()), path_to_manifest, ec);
             if (ec)
             {
                 auto error_info = std::make_unique<ParseControlErrorInfo>();
-                error_info->name = path.filename().u8string();
+                error_info->name = fs::u8string(path.filename());
                 error_info->error = Strings::format(
-                    "Failed to load manifest file for port: %s\n", path_to_manifest.u8string(), ec.message());
+                    "Failed to load manifest file for port: %s\n", fs::u8string(path_to_manifest), ec.message());
             }
 
             return res;
@@ -318,7 +318,7 @@ namespace vcpkg::Paragraphs
             return SourceControlFile::parse_control_file(path_to_control, std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
-        error_info->name = path.filename().u8string();
+        error_info->name = fs::u8string(path.filename());
         error_info->error = pghs.error();
         return error_info;
     }

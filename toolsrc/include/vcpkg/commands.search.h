@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/commands.interface.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Search
 {
