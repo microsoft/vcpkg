@@ -15,6 +15,7 @@ vcpkg_configure_cmake(
         -DTF_BUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
         -DTF_BUILD_BENCHMARKS=OFF
+        -DCMAKE_CUDA_COMPILER=OFF
 )
 
 vcpkg_install_cmake()
