@@ -423,8 +423,11 @@ namespace vcpkg
             }
 
             r.required_object_field(type_name(), obj, NAME, dep.name, Json::PackageNameDeserializer{});
-            r.optional_object_field(
-                obj, FEATURES, dep.features, Json::ArrayDeserializer<Json::IdentifierDeserializer>{"an array of identifiers", Json::AllowEmpty::Yes});
+            r.optional_object_field(obj,
+                                    FEATURES,
+                                    dep.features,
+                                    Json::ArrayDeserializer<Json::IdentifierDeserializer>{"an array of identifiers",
+                                                                                          Json::AllowEmpty::Yes});
 
             bool default_features = true;
             r.optional_object_field(obj, DEFAULT_FEATURES, default_features, Json::BooleanDeserializer{});
@@ -453,7 +456,9 @@ namespace vcpkg
             return t;
         }
 
-        virtual Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r, StringView, const Json::Object& obj) override
+        virtual Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r,
+                                                                         StringView,
+                                                                         const Json::Object& obj) override
         {
             auto feature = std::make_unique<FeatureParagraph>();
 
@@ -467,10 +472,11 @@ namespace vcpkg
 
             r.required_object_field(type_name(), obj, NAME, feature->name, Json::IdentifierDeserializer{});
             r.required_object_field(type_name(), obj, DESCRIPTION, feature->description, Json::ParagraphDeserializer{});
-            r.optional_object_field(obj,
-                                    DEPENDENCIES,
-                                    feature->dependencies,
-                                    Json::ArrayDeserializer<DependencyDeserializer>{"an array of dependencies", Json::AllowEmpty::Yes});
+            r.optional_object_field(
+                obj,
+                DEPENDENCIES,
+                feature->dependencies,
+                Json::ArrayDeserializer<DependencyDeserializer>{"an array of dependencies", Json::AllowEmpty::Yes});
 
             return std::move(feature);
         }
@@ -495,11 +501,11 @@ namespace vcpkg
             "OR",
         };
         constexpr static StringView VALID_LICENSES[] =
-        #include "spdx-licenses.inc"
-        ;
+#include "spdx-licenses.inc"
+            ;
         constexpr static StringView VALID_EXCEPTIONS[] =
-        #include "spdx-licenses.inc"
-        ;
+#include "spdx-licenses.inc"
+            ;
 
         virtual Optional<std::string> visit_string(Json::Reader&, StringView, StringView sv) override
         {
@@ -659,7 +665,9 @@ namespace vcpkg
             return t;
         }
 
-        virtual Optional<std::unique_ptr<SourceControlFile>> visit_object(Json::Reader& r, StringView, const Json::Object& obj) override
+        virtual Optional<std::unique_ptr<SourceControlFile>> visit_object(Json::Reader& r,
+                                                                          StringView,
+                                                                          const Json::Object& obj) override
         {
             auto control_file = std::make_unique<SourceControlFile>();
             control_file->core_paragraph = std::make_unique<SourceParagraph>();
@@ -677,18 +685,18 @@ namespace vcpkg
 
             constexpr static StringView type_name = "vcpkg.json";
             r.required_object_field(type_name, obj, NAME, spgh->name, Json::IdentifierDeserializer{});
-            r.required_object_field(
-                type_name, obj, VERSION, spgh->version, Json::StringDeserializer{"a version"});
+            r.required_object_field(type_name, obj, VERSION, spgh->version, Json::StringDeserializer{"a version"});
             r.optional_object_field(obj, PORT_VERSION, spgh->port_version, Json::NaturalNumberDeserializer{});
             r.optional_object_field(obj, MAINTAINERS, spgh->maintainers, Json::ParagraphDeserializer{});
             r.optional_object_field(obj, DESCRIPTION, spgh->description, Json::ParagraphDeserializer{});
             r.optional_object_field(obj, HOMEPAGE, spgh->homepage, Json::StringDeserializer{"a url"});
             r.optional_object_field(obj, DOCUMENTATION, spgh->documentation, Json::StringDeserializer{"a url"});
             r.optional_object_field(obj, LICENSE, spgh->license, LicenseExpressionDeserializer{});
-            r.optional_object_field(obj,
-                                        DEPENDENCIES,
-                                        spgh->dependencies,
-                                        Json::ArrayDeserializer<DependencyDeserializer>{"an array of dependencies", Json::AllowEmpty::Yes});
+            r.optional_object_field(
+                obj,
+                DEPENDENCIES,
+                spgh->dependencies,
+                Json::ArrayDeserializer<DependencyDeserializer>{"an array of dependencies", Json::AllowEmpty::Yes});
 
             if (obj.contains(DEV_DEPENDENCIES))
             {
@@ -699,14 +707,16 @@ namespace vcpkg
             r.optional_object_field(obj, SUPPORTS, spgh->supports_expression, PlatformExprDeserializer{});
 
             r.optional_object_field(obj,
-                                        DEFAULT_FEATURES,
-                                        spgh->default_features,
-                                        Json::ArrayDeserializer<Json::IdentifierDeserializer>{"an array of identifiers", Json::AllowEmpty::Yes});
+                                    DEFAULT_FEATURES,
+                                    spgh->default_features,
+                                    Json::ArrayDeserializer<Json::IdentifierDeserializer>{"an array of identifiers",
+                                                                                          Json::AllowEmpty::Yes});
 
-            r.optional_object_field(obj,
-                                        FEATURES,
-                                        control_file->feature_paragraphs,
-                                        Json::ArrayDeserializer<FeatureDeserializer>{"an array of feature definitions", Json::AllowEmpty::Yes});
+            r.optional_object_field(
+                obj,
+                FEATURES,
+                control_file->feature_paragraphs,
+                Json::ArrayDeserializer<FeatureDeserializer>{"an array of feature definitions", Json::AllowEmpty::Yes});
 
             canonicalize(*control_file);
             return std::move(control_file);
@@ -975,7 +985,8 @@ namespace vcpkg
         serialize_optional_string(obj, ManifestDeserializer::HOMEPAGE, scf.core_paragraph->homepage);
         serialize_optional_string(obj, ManifestDeserializer::DOCUMENTATION, scf.core_paragraph->documentation);
         serialize_optional_string(obj, ManifestDeserializer::LICENSE, scf.core_paragraph->license);
-        serialize_optional_string(obj, ManifestDeserializer::SUPPORTS, to_string(scf.core_paragraph->supports_expression));
+        serialize_optional_string(
+            obj, ManifestDeserializer::SUPPORTS, to_string(scf.core_paragraph->supports_expression));
 
         if (!scf.core_paragraph->dependencies.empty() || debug)
         {

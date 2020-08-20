@@ -23,12 +23,12 @@ namespace vcpkg::Paragraphs
 
     struct LoadResults
     {
-        std::vector<std::unique_ptr<SourceControlFile>> paragraphs;
+        std::vector<SourceControlFileLocation> paragraphs;
         std::vector<std::unique_ptr<Parse::ParseControlErrorInfo>> errors;
     };
 
-    LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir);
+    LoadResults try_load_all_ports(const VcpkgPaths& paths);
 
-    std::vector<std::unique_ptr<SourceControlFile>> load_all_ports(const Files::Filesystem& fs,
-                                                                   const fs::path& ports_dir);
+    std::vector<SourceControlFileLocation> load_all_ports(const VcpkgPaths& paths);
+    std::vector<SourceControlFileLocation> load_overlay_ports(const VcpkgPaths& paths, const fs::path& dir);
 }

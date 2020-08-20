@@ -408,24 +408,6 @@ namespace vcpkg::Json
             return res;
         }
 
-        // checks that an object doesn't contain any fields which both:
-        // * don't start with a `$`
-        // * are not in `valid_fields`
-        // if known_fields.empty(), then it's treated as if all field names are valid
-        void check_for_unexpected_fields(const Object& obj, Span<const StringView> valid_fields, StringView type_name)
-        {
-            if (valid_fields.size() == 0)
-            {
-                return;
-            }
-
-            auto extra_fields = invalid_json_fields(obj, valid_fields);
-            if (!extra_fields.empty())
-            {
-                error().add_extra_fields(type_name.to_string(), std::move(extra_fields));
-            }
-        }
-
     public:
         template<class Type>
         void required_object_field(
@@ -509,6 +491,28 @@ namespace vcpkg::Json
         Optional<std::vector<Type>> array_elements(const Array& arr, StringView key, IDeserializer<Type>&& visitor)
         {
             return array_elements(arr, key, visitor);
+        }
+
+        // checks that an object doesn't contain any fields which both:
+        // * don't start with a `$`
+        // * are not in `valid_fields`
+        // if known_fields.empty(), then it's treated as if all field names are valid
+        // this is automatically called before `visit_object`, so you _should not call this_
+        // unless you have some sort of subtyping. (for example, something like:
+        //   <registry-impl> = { kind: "builtin" } | { kind: "directory", path: string }
+        // )
+        void check_for_unexpected_fields(const Object& obj, Span<const StringView> valid_fields, StringView type_name)
+        {
+            if (valid_fields.size() == 0)
+            {
+                return;
+            }
+
+            auto extra_fields = invalid_json_fields(obj, valid_fields);
+            if (!extra_fields.empty())
+            {
+                error().add_extra_fields(type_name.to_string(), std::move(extra_fields));
+            }
         }
     };
 

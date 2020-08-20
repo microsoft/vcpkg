@@ -83,11 +83,38 @@ namespace
 
 namespace vcpkg
 {
+    Registries::Registries() : default_registry_(Registry::builtin_registry()), registries_() { }
+
     Registries::Registries(Registries&&) = default;
     Registries& Registries::operator=(Registries&&) = default;
     Registries::~Registries() = default;
 
-    static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, Optional<Configuration>> load_manifest_and_config(
+    const RegistryImpl* Registries::registry_for_port(StringView name) const
+    {
+        for (const auto& registry : registries())
+        {
+            const auto& packages = registry.packages();
+            if (std::find(packages.begin(), packages.end(), name) != packages.end())
+            {
+                return &registry.implementation();
+            }
+        }
+        return default_registry();
+    }
+
+    // this is defined here so that we can see the definition of `Registry`
+    Span<const Registry> Registries::registries() const { return registries_; }
+
+    struct ConfigurationDeserializer final : Json::IDeserializer<Configuration>
+    {
+        virtual StringView type_name() const override { return "a configuration object"; }
+
+        constexpr static StringLiteral DEFAULT_REGISTRY = "default-registry";
+        constexpr static StringLiteral REGISTRIES = "registries";
+        virtual Span<const StringView> valid_fields() const override;
+    };
+
+    static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, Configuration> load_manifest_and_config(
         const Files::Filesystem& fs, const fs::path& manifest_dir)
     {
         std::error_code ec;
@@ -95,12 +122,18 @@ namespace vcpkg
         auto manifest_opt = Json::parse_file(fs, manifest_path, ec);
         if (ec)
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to load manifest from directory %s: %s", manifest_dir.u8string(), ec.message());
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Failed to load manifest from directory %s: %s",
+                                      manifest_dir.u8string(),
+                                      ec.message());
         }
 
         if (!manifest_opt.has_value())
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to parse manifest at %s: %s", manifest_path.u8string(), manifest_opt.error()->format());
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Failed to parse manifest at %s: %s",
+                                      manifest_path.u8string(),
+                                      manifest_opt.error()->format());
         }
         auto manifest_value = std::move(manifest_opt).value_or_exit(VCPKG_LINE_INFO);
 
@@ -112,7 +145,8 @@ namespace vcpkg
                            ": Manifest files must have a top-level object\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        std::pair<Json::Object, Json::JsonStyle> manifest = {std::move(manifest_value.first.object()), std::move(manifest_value.second)};
+        std::pair<Json::Object, Json::JsonStyle> manifest = {std::move(manifest_value.first.object()),
+                                                             std::move(manifest_value.second)};
 
         Optional<Json::Object> config;
 
@@ -126,12 +160,12 @@ namespace vcpkg
             {
                 auto config_name = fs::u8path("vcpkg-configuration.json");
                 auto config_relative_path = p_manifest_config->string();
-                auto config_path = manifest_dir / fs::u8path(config_relative_path.begin(), config_relative_path.end()) / config_name;
+                auto config_path =
+                    manifest_dir / fs::u8path(config_relative_path.begin(), config_relative_path.end()) / config_name;
                 if (!fs.exists(config_path))
                 {
-                    System::printf(System::Color::error,
-                                   "Failed to find configuration file at %s\n",
-                                   config_path.u8string());
+                    System::printf(
+                        System::Color::error, "Failed to find configuration file at %s\n", config_path.u8string());
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
                 auto parsed_config = Json::parse_file(VCPKG_LINE_INFO, fs, config_path);
@@ -147,11 +181,10 @@ namespace vcpkg
             }
             else
             {
-                System::print2(
-                    System::Color::error,
-                    "Failed to parse manifest at ",
-                    manifest_path.u8string(),
-                    ": Manifest configuration ($.configuration) must be a string or an object.\n");
+                System::print2(System::Color::error,
+                               "Failed to parse manifest at ",
+                               manifest_path.u8string(),
+                               ": Manifest configuration ($.configuration) must be a string or an object.\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }
@@ -162,7 +195,7 @@ namespace vcpkg
         }
         else
         {
-            return {std::move(manifest), nullopt};
+            return {std::move(manifest), Configuration{}};
         }
     }
 
@@ -191,7 +224,7 @@ namespace vcpkg
             fs::SystemHandle file_lock_handle;
 
             Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
-            Optional<Configuration> m_manifest_config;
+            Configuration m_manifest_config;
         };
     }
 
@@ -440,7 +473,7 @@ If you wish to silence this error and use classic mode, you can:
         }
     }
 
-    Optional<const Configuration&> VcpkgPaths::get_manifest_config() const { return m_pimpl->m_manifest_config; }
+    const Configuration& VcpkgPaths::get_configuration() const { return m_pimpl->m_manifest_config; }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcpkg/fwd/registries.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/cache.h>
@@ -8,8 +9,6 @@
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
-
-#include <vcpkg/fwd/registries.h>
 
 namespace vcpkg
 {
@@ -66,15 +65,20 @@ namespace vcpkg
 
         // finds the correct registry for the port name
         // Returns the null pointer if there is no registry set up for that name
-        const Registry* registry_for_port(StringView port_name) const;
+        const RegistryImpl* registry_for_port(StringView port_name) const;
+
+        Span<const Registry> registries() const;
+
+        const RegistryImpl* default_registry() const { return default_registry_.get(); }
 
         // TODO: figure out how to get this to return an error (or maybe it should be a warning?)
         void add_registry(Registry&& r);
         void set_default_registry(std::unique_ptr<RegistryImpl>&& r);
         void set_default_registry(std::nullptr_t r);
+
     private:
-        std::unique_ptr<RegistryImpl> default_registry;
-        std::vector<Registry> set;
+        std::unique_ptr<RegistryImpl> default_registry_;
+        std::vector<Registry> registries_;
     };
 
     struct Configuration
@@ -137,7 +141,7 @@ namespace vcpkg
 
         Optional<const Json::Object&> get_manifest() const;
         Optional<const Json::JsonStyle&> get_manifest_style() const;
-        Optional<const Configuration&> get_manifest_config() const;
+        const Configuration& get_configuration() const;
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
