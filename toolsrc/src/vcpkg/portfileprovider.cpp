@@ -27,10 +27,6 @@ namespace vcpkg::PortFileProvider
                                                  const std::vector<std::string>& ports_dirs_paths)
         : filesystem(paths.get_filesystem())
     {
-        if (paths.manifest_mode_enabled())
-        {
-            manifest = paths.manifest_root_dir / fs::u8path("vcpkg.json");
-        }
         auto& fs = paths.get_filesystem();
         for (auto&& overlay_path : ports_dirs_paths)
         {
@@ -46,7 +42,7 @@ namespace vcpkg::PortFileProvider
                     overlay = fs.canonical(VCPKG_LINE_INFO, paths.original_cwd / overlay);
                 }
 
-                Debug::print("Using overlay: ", overlay.u8string(), "\n");
+                Debug::print("Using overlay: ", fs::u8string(overlay), "\n");
 
                 Checks::check_exit(
                     VCPKG_LINE_INFO, filesystem.exists(overlay), "Error: Path \"%s\" does not exist", overlay.string());
@@ -62,56 +58,12 @@ namespace vcpkg::PortFileProvider
         ports_dirs.emplace_back(paths.ports);
     }
 
-    const SourceControlFileLocation* PathsPortFileProvider::load_manifest_file() const
-    {
-        if (!manifest.empty())
-        {
-            std::error_code ec;
-            auto maybe_scf = Paragraphs::try_load_manifest(filesystem, "manifest", manifest, ec);
-            if (ec)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Failed to read manifest file %s: %s", manifest.u8string(), ec.message());
-            }
-
-            if (auto scf = maybe_scf.get())
-            {
-                auto it = cache.emplace(std::piecewise_construct,
-                                        std::forward_as_tuple(PackageSpec::MANIFEST_NAME),
-                                        std::forward_as_tuple(std::move(*scf), manifest.parent_path()));
-                return &it.first->second;
-            }
-            else
-            {
-                vcpkg::print_error_message(maybe_scf.error());
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Error: Failed to load manifest file %s.", manifest.u8string());
-            }
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-
     ExpectedS<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
     {
         auto cache_it = cache.find(spec);
         if (cache_it != cache.end())
         {
             return cache_it->second;
-        }
-
-        if (spec == PackageSpec::MANIFEST_NAME)
-        {
-            if (auto p = load_manifest_file())
-            {
-                return *p;
-            }
-            else
-            {
-                Checks::unreachable(VCPKG_LINE_INFO);
-            }
         }
 
         for (auto&& ports_dir : ports_dirs)
@@ -134,7 +86,7 @@ namespace vcpkg::PortFileProvider
                 {
                     vcpkg::print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, ports_dir.u8string());
+                        VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(ports_dir));
                 }
 
                 continue;
@@ -155,7 +107,7 @@ namespace vcpkg::PortFileProvider
                     }
                     Checks::exit_with_message(VCPKG_LINE_INFO,
                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                              (ports_dir / spec).u8string(),
+                                              fs::u8string(ports_dir / spec),
                                               spec,
                                               scf->get()->core_paragraph->name);
                 }
@@ -163,7 +115,7 @@ namespace vcpkg::PortFileProvider
                 {
                     vcpkg::print_error_message(found_scf.error());
                     Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", spec, ports_dir.u8string());
+                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", spec, fs::u8string(ports_dir));
                 }
             }
         }
@@ -176,11 +128,6 @@ namespace vcpkg::PortFileProvider
         // Reload cache with ports contained in all ports_dirs
         cache.clear();
         std::vector<const SourceControlFileLocation*> ret;
-
-        if (auto p = load_manifest_file())
-        {
-            ret.push_back(p);
-        }
 
         for (auto&& ports_dir : ports_dirs)
         {
@@ -203,7 +150,7 @@ namespace vcpkg::PortFileProvider
                 {
                     vcpkg::print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", ports_dir.u8string());
+                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", fs::u8string(ports_dir));
                 }
                 continue;
             }

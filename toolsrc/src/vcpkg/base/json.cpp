@@ -141,30 +141,30 @@ namespace vcpkg::Json
     }
     StringView Value::string() const noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_string());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_string(), "json value is not string");
         return underlying_->string;
     }
 
     const Array& Value::array() const& noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array(), "json value is not array");
         return underlying_->array;
     }
     Array& Value::array() & noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array(), "json value is not array");
         return underlying_->array;
     }
     Array&& Value::array() && noexcept { return std::move(this->array()); }
 
     const Object& Value::object() const& noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object(), "json value is not object");
         return underlying_->object;
     }
     Object& Value::object() & noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object(), "json value is not object");
         return underlying_->object;
     }
     Object&& Value::object() && noexcept { return std::move(this->object()); }
@@ -1005,7 +1005,7 @@ namespace vcpkg::Json
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
                                                                                       const fs::path& filepath) noexcept
     {
-        return Parser::parse(json, filepath.generic_u8string());
+        return Parser::parse(json, fs::generic_u8string(filepath));
     }
     // } auto parse()
 
