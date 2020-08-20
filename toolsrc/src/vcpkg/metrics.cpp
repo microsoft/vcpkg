@@ -381,7 +381,7 @@ namespace vcpkg::Metrics
         }
 
 #if !defined(_WIN32)
-        Util::unused(payload);
+        (void)(payload);
 #else
         HINTERNET connect = nullptr, request = nullptr;
         BOOL results = FALSE;
