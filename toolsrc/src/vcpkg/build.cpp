@@ -473,7 +473,7 @@ namespace vcpkg::Build
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
         // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
-        vcpkg::Util::unused(paths.get_tool_exe(Tools::NINJA));
+        (void)(paths.get_tool_exe(Tools::NINJA));
 #endif
         std::vector<System::CMakeVariable> cmake_args{
             {"CURRENT_PORT_DIR", paths.scripts / "detect_compiler"},
@@ -539,7 +539,7 @@ namespace vcpkg::Build
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
         // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
-        vcpkg::Util::unused(paths.get_tool_exe(Tools::NINJA));
+        (void)(paths.get_tool_exe(Tools::NINJA));
 #endif
         auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
         auto& scf = *scfl.source_control_file;
@@ -1086,12 +1086,18 @@ namespace vcpkg::Build
 
     std::string create_user_troubleshooting_message(const PackageSpec& spec)
     {
-        return Strings::format("Please ensure you're using the latest portfiles with `.\\vcpkg update`, then\n"
+#if defined(_WIN32)
+        auto vcpkg_update_cmd = ".\\vcpkg";
+#else
+        auto vcpkg_update_cmd = ".\/vcpkg";
+#endif
+        return Strings::format("Please ensure you're using the latest portfiles with `%s update`, then\n"
                                "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
                                "  Package: %s\n"
                                "  Vcpkg version: %s\n"
                                "\n"
                                "Additionally, attach any relevant sections from the log files above.",
+                               vcpkg_update_cmd,
                                spec,
                                Commands::Version::version());
     }

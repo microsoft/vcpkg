@@ -4,7 +4,7 @@
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-set(MKL_REQUIRED_VERSION "20180000")
+set(MKL_REQUIRED_VERSION "20200000")
 
 set(ProgramFilesx86 "ProgramFiles(x86)")
 set(INTEL_ROOT $ENV{${ProgramFilesx86}}/IntelSWTools/compilers_and_libraries/windows)
