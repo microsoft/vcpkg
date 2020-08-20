@@ -2,7 +2,7 @@ diff --git a/build/cmake/lib/expat.cmake b/build/cmake/lib/expat.cmake
 index 1d2b79b..04bef93 100644
 --- a/build/cmake/lib/expat.cmake
 +++ b/build/cmake/lib/expat.cmake
-@@ -7,14 +7,9 @@
+@@ -7,14 +7,6 @@
  # Licence:     wxWindows licence
  #############################################################################
  
@@ -17,8 +17,5 @@ index 1d2b79b..04bef93 100644
 -elseif(wxUSE_EXPAT)
 -    find_package(EXPAT REQUIRED)
 +find_package(expat CONFIG REQUIRED)
-+if(WIN32 AND NOT MINGW)
-+    set(EXPAT_LIBRARIES expat::libexpat)
-+else()
-+    set(EXPAT_LIBRARIES expat::expat)
++set(EXPAT_LIBRARIES expat::expat)
  endif()
