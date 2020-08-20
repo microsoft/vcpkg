@@ -433,7 +433,7 @@ namespace vcpkg::PostBuildLint
             std::string config_prefix;
             for (const auto file_path : files)
             {
-                auto filename = file_path.filename().u8string();
+                auto filename = fs::u8string(file_path.filename());
                 if (Strings::ends_with(filename, UPPER_CONFIG))
                 {
                     config_prefix = filename.substr(0, filename.size() - UPPER_CONFIG.size());
@@ -448,7 +448,7 @@ namespace vcpkg::PostBuildLint
                 }
             }
 
-            auto containing_directory = cmake_file.parent_path().filename().u8string();
+            auto containing_directory = fs::u8string(cmake_file.parent_path().filename());
             if (!cmake_file.empty() && config_prefix != containing_directory)
             {
                 System::printf(System::Color::warning,
