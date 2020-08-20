@@ -33,11 +33,6 @@ file(COPY ${SOURCE_PATH}/LICENSE.md
 file(COPY ${SOURCE_PATH}/LICENSE.md
      DESTINATION ${CURRENT_PACKAGES_DIR}/share/openmama/copyright)
 
-# Clean up executables - they shouldn't be installed
-#file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-#file(GLOB DEBUG_EXES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-#file(REMOVE ${EXES} ${DEBUG_EXES})
-
 # Clean up LICENSE file - vcpkg doesn't expect it to be there
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE.MD ${CURRENT_PACKAGES_DIR}/debug/LICENSE.MD)
 
