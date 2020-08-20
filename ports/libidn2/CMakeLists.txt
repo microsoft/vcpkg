@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 project(libidn2 C)
 
-find_package(unofficial-iconv REQUIRED)
+find_package(Iconv REQUIRED)
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
@@ -91,7 +91,7 @@ set(GL_SRC gl/rawmemchr.c
 add_library(libidn2 ${LIB_SRC} ${UNISTR_SRC} ${GL_SRC})
 
 target_include_directories(libidn2 PRIVATE . ./unistring ./gl)
-target_link_libraries(libidn2 PRIVATE unofficial::iconv::libiconv unofficial::iconv::libcharset)
+target_link_libraries(libidn2 PRIVATE Iconv::Iconv)
 
 install(TARGETS libidn2
         RUNTIME DESTINATION bin

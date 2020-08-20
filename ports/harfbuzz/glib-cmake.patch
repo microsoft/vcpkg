@@ -16,7 +16,7 @@ index 9b21bef2c..ae741ef63 100644
 -
 -  include_directories(${GLIBCONFIG_INCLUDE_DIR} ${GLIB_INCLUDE_DIR})
 +  find_package(Threads REQUIRED)
-+  find_package(unofficial-iconv REQUIRED)
++  find_package(Iconv REQUIRED)
 +  find_package(unofficial-glib CONFIG REQUIRED)
 
    list(APPEND project_headers ${PROJECT_SOURCE_DIR}/src/hb-glib.h)
@@ -24,7 +24,7 @@ index 9b21bef2c..ae741ef63 100644
 -  list(APPEND THIRD_PARTY_LIBS ${GLIB_LIBRARIES})
 -
 -  mark_as_advanced(GLIB_LIBRARIES GLIBCONFIG_INCLUDE_DIR GLIB_INCLUDE_DIR)
-+  list(APPEND THIRD_PARTY_LIBS unofficial::glib::glib)
++  list(APPEND THIRD_PARTY_LIBS unofficial::glib::glib Iconv::Iconv)
  endif ()
 
  if (HB_HAVE_ICU)
