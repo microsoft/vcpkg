@@ -601,7 +601,7 @@ namespace vcpkg::Files
                                     std::error_code& ec) override
         {
             this->rename(oldpath, newpath, ec);
-            Util::unused(temp_suffix);
+            (void)(temp_suffix);
 #if !defined(_WIN32)
             if (ec)
             {
