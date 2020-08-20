@@ -3,6 +3,7 @@
 #include <vcpkg/archives.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/tools.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Archives
 {

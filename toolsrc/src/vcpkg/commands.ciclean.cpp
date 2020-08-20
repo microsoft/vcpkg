@@ -4,6 +4,7 @@
 
 #include <vcpkg/commands.ciclean.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 using namespace vcpkg;
 
