@@ -265,22 +265,15 @@ function(vcpkg_configure_meson)
     get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
     vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
 
-    if(NOT DEFINED ENV{PKG_CONFIG})
-        find_program(PKGCONFIG pkg-config)
-        if(NOT PKGCONFIG AND CMAKE_HOST_WIN32)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
-            vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-        endif()
-        find_program(PKGCONFIG pkg-config REQUIRED)
-    else()
-        debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
-        set(PKGCONFIG $ENV{PKG_CONFIG})
-    endif()
+    vcpkg_find_acquire_program(NINJA)
+    get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
+    vcpkg_add_to_path("${NINJA_PATH}")
+
+    vcpkg_find_acquire_program(PKGCONFIG)
+    get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
+    vcpkg_add_to_path("${PKGCONFIG_PATH}")
     set(PKGCONFIG_SHARE_DIR "${CURRENT_INSTALLED_DIR}/share/pkgconfig/")
-    if(WIN32) # Can be removed with a native pkg-config
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_SHARE_DIR "${PKGCONFIG_SHARE_DIR}")
-    endif()
-    
+
     set(buildtypes)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(BUILDNAME DEBUG)
@@ -294,20 +287,19 @@ function(vcpkg_configure_meson)
         set(PATH_SUFFIX_${BUILDNAME} "")
         set(SUFFIX_${BUILDNAME} "rel")
     endif()
-    # configure debug
+    
+    # configure build
     foreach(buildtype IN LISTS buildtypes)
         message(STATUS "Configuring ${TARGET_TRIPLET}-${SUFFIX_${buildtype}}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SUFFIX_${buildtype}}")
+        #setting up PKGCONFIG
         set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
-                set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/${PATH_SUFFIX_${buildtype}}lib/pkgconfig/")
-        if(WIN32) # Can be removed with a native pkg-config
-            string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" PKGCONFIG_INSTALLED_DIR "${PKGCONFIG_INSTALLED_DIR}")
-        endif()
-        if(DEFINED ENV{PKG_CONFIG_PATH})
-            set(BACKUP_ENV_PKG_CONFIG_PATH_${buildtype} $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}:$ENV{PKG_CONFIG_PATH}")
+        set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/${PATH_SUFFIX_${buildtype}}lib/pkgconfig/")
+        if(ENV{PKG_CONFIG_PATH})
+            set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_SHARE_DIR}")
+            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}")
         endif()
 
         vcpkg_execute_required_process(

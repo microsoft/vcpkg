@@ -20,7 +20,7 @@ namespace vcpkg::Downloads
         const auto dir = fs::path(target_file_path.c_str()).parent_path();
         std::error_code ec;
         fs.create_directories(dir, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directories %s", dir.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directories %s", fs::u8string(dir));
 
         FILE* f = nullptr;
         const errno_t err = fopen_s(&f, target_file_path.c_str(), "wb");
@@ -162,7 +162,7 @@ namespace vcpkg::Downloads
                            "   Expected hash : [ %s ]\n"
                            "     Actual hash : [ %s ]\n",
                            url,
-                           path.u8string(),
+                           fs::u8string(path),
                            sha512,
                            actual_hash);
     }
@@ -172,7 +172,7 @@ namespace vcpkg::Downloads
                        const fs::path& download_path,
                        const std::string& sha512)
     {
-        const std::string download_path_part = download_path.u8string() + ".part";
+        const std::string download_path_part = fs::u8string(download_path) + ".part";
         auto download_path_part_path = fs::u8path(download_path_part);
         std::error_code ec;
         fs.remove(download_path, ec);

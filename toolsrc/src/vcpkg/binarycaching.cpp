@@ -26,14 +26,16 @@ namespace
         std::error_code ec;
         fs.create_directories(pkg_path, ec);
         auto files = fs.get_files_non_recursive(pkg_path);
-        Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", pkg_path.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", fs::u8string(pkg_path));
 
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
-        auto cmd = Strings::format(
-            R"("%s" x "%s" -o"%s" -y)", seven_zip_exe.u8string(), archive_path.u8string(), pkg_path.u8string());
+        auto cmd = Strings::format(R"("%s" x "%s" -o"%s" -y)",
+                                   fs::u8string(seven_zip_exe),
+                                   fs::u8string(archive_path),
+                                   fs::u8string(pkg_path));
 #else
-        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string());
+        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", fs::u8string(archive_path), fs::u8string(pkg_path));
 #endif
         return System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
     }
@@ -47,17 +49,17 @@ namespace
 
         fs.remove(destination, ec);
         Checks::check_exit(
-            VCPKG_LINE_INFO, !fs.exists(destination), "Could not remove file: %s", destination.u8string());
+            VCPKG_LINE_INFO, !fs.exists(destination), "Could not remove file: %s", fs::u8string(destination));
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
         System::cmd_execute_and_capture_output(
             Strings::format(
-                R"("%s" a "%s" "%s\*")", seven_zip_exe.u8string(), destination.u8string(), source.u8string()),
+                R"("%s" a "%s" "%s\*")", fs::u8string(seven_zip_exe), fs::u8string(destination), fs::u8string(source)),
             System::get_clean_environment());
 #else
         System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
+            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
 #endif
     }
 
@@ -82,7 +84,7 @@ namespace
                 const fs::path archive_path = archives_root_dir / archive_subpath;
                 if (fs.exists(archive_path))
                 {
-                    System::print2("Using cached binary package: ", archive_path.u8string(), "\n");
+                    System::print2("Using cached binary package: ", fs::u8string(archive_path), "\n");
 
                     int archive_result = decompress_archive(paths, spec, archive_path).exit_code;
 
@@ -105,7 +107,7 @@ namespace
                     }
                 }
 
-                System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
+                System::printf("Could not locate cached archive: %s\n", fs::u8string(archive_path));
             }
 
             return RestoreResult::missing;
@@ -136,11 +138,11 @@ namespace
                 {
                     System::printf(System::Color::warning,
                                    "Failed to store binary cache %s: %s\n",
-                                   archive_path.u8string(),
+                                   fs::u8string(archive_path),
                                    ec.message());
                 }
                 else
-                    System::printf("Stored binary cache: %s\n", archive_path.u8string());
+                    System::printf("Stored binary cache: %s\n", fs::u8string(archive_path));
             }
             if (m_write_dirs.size() > 1) fs.remove(tmp_archive_path, ignore_errors);
         }
@@ -322,7 +324,7 @@ namespace
                         Checks::check_exit(VCPKG_LINE_INFO,
                                            !fs.exists(nupkg_path, ignore_errors),
                                            "Unable to remove nupkg after restoring: %s",
-                                           nupkg_path.u8string());
+                                           fs::u8string(nupkg_path));
                         m_restored.emplace(nuget_ref.first);
                         ++num_restored;
                         return true;
@@ -431,7 +433,7 @@ namespace
                     if (!m_interactive) cmd.string_arg("-NonInteractive");
 
                     System::print2(
-                        "Uploading binaries for ", spec, " using NuGet config ", write_cfg.u8string(), ".\n");
+                        "Uploading binaries for ", spec, " using NuGet config ", fs::u8string(write_cfg), ".\n");
 
                     auto rc = [&] {
                         if (Debug::g_debugging)
@@ -444,7 +446,7 @@ namespace
                     {
                         System::print2(System::Color::error,
                                        "Pushing NuGet with ",
-                                       write_cfg.u8string(),
+                                       fs::u8string(write_cfg),
                                        " failed. Use --debug for more information.\n");
                     }
                 }
@@ -668,15 +670,15 @@ namespace
                 const auto path = fs::u8path(*p_str);
                 const auto status = fs::stdfs::status(path);
                 if (!fs::stdfs::exists(status))
-                    return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + path.u8string(),
+                    return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + fs::u8string(path),
                             expected_right_tag};
                 if (!fs::stdfs::is_directory(status))
                     return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not a directory: " +
-                                path.u8string(),
+                                fs::u8string(path),
                             expected_right_tag};
                 if (!path.is_absolute())
                     return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not absolute: " +
-                                path.u8string(),
+                                fs::u8string(path),
                             expected_right_tag};
                 return ExpectedS<fs::path>(path);
             }
@@ -687,11 +689,11 @@ namespace
             }
             else
             {
-                return {"default path was not absolute: " + p.u8string(), expected_right_tag};
+                return {"default path was not absolute: " + fs::u8string(p), expected_right_tag};
             }
         });
         if (cachepath.has_value())
-            Debug::print("Default binary cache path is: ", cachepath.get()->u8string(), '\n');
+            Debug::print("Default binary cache path is: ", fs::u8string(*cachepath.get()), '\n');
         else
             Debug::print("No binary cache path. Reason: ", cachepath.error(), '\n');
         return cachepath;
@@ -1007,7 +1009,7 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     xml.close_tag("metadata").line_break();
     xml.open_tag("files");
     xml.start_complex_open_tag("file")
-        .text_attr("src", (paths.package_dir(spec) / fs::u8path("**")).u8string())
+        .text_attr("src", fs::u8string(paths.package_dir(spec) / fs::u8path("**")))
         .text_attr("target", "")
         .finish_self_closing_complex_tag();
     xml.close_tag("files").line_break();
@@ -1052,7 +1054,7 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
         auto p_preferred = *p;
         System::print2(
             "\nBased on your system settings, the default path to store binaries is\n    ",
-            p_preferred.make_preferred().u8string(),
+            fs::u8string(p_preferred.make_preferred()),
             "\n\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.");
     }
 }
