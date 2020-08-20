@@ -4,11 +4,7 @@
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/build.h>
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/packagespec.h>
-#include <vcpkg/portfileprovider.h>
-#include <vcpkg/statusparagraphs.h>
-#include <vcpkg/vcpkgpaths.h>
 
 #include <functional>
 #include <map>
@@ -17,6 +13,21 @@
 namespace vcpkg::Graphs
 {
     struct Randomizer;
+}
+
+namespace vcpkg::CMakeVars
+{
+    struct CMakeVarProvider;
+}
+
+namespace vcpkg::PortFileProvider
+{
+    struct PortFileProvider;
+}
+
+namespace vcpkg
+{
+    struct StatusParagraphs;
 }
 
 namespace vcpkg::Dependencies
