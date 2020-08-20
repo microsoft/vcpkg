@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         vcpkg.patch
-        drogon_ctl_install.patch
         pg.patch
 )
 
@@ -34,4 +33,5 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 # Copy pdb files
 vcpkg_copy_pdbs()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/drogon)
+vcpkg_copy_tools(TOOL_NAMES drogon_ctl
+                 AUTO_CLEAN)
