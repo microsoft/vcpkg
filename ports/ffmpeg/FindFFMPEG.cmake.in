@@ -205,7 +205,7 @@ set(_IMPORT_PREFIX)
 
 macro(FFMPEG_FIND_GENEX varname shortname headername)
   if(NOT FFMPEG_${varname}_INCLUDE_DIRS)
-    find_path(FFMPEG_${varname}_INCLUDE_DIRS NAMES lib${shortname}/${headername} ${headername} PATH_SUFFIXES ffmpeg)
+    find_path(FFMPEG_${varname}_INCLUDE_DIRS NAMES lib${shortname}/${headername} ${headername} PATHS ${_IMPORT_PREFIX}/include NO_DEFAULT_PATH)
   endif()
   if(NOT FFMPEG_${varname}_LIBRARY)
     find_library(FFMPEG_${varname}_LIBRARY_RELEASE NAMES ${shortname} PATHS ${_IMPORT_PREFIX}/lib/ NO_DEFAULT_PATH)
