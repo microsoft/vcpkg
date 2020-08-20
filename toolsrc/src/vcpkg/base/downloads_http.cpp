@@ -23,7 +23,7 @@ namespace vcpkg::Downloads
         const auto dir = fs::path(target_file_path.c_str()).parent_path();
         std::error_code ec;
         fs.create_directories(dir, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directories %s", dir.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directories %s", fs::u8string(dir));
 
         FILE* f = nullptr;
         const errno_t err = fopen_s(&f, target_file_path.c_str(), "wb");
