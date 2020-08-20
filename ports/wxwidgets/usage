@@ -1,0 +1,4 @@
+The package wxWidgets provides CMake targets:
+
+    find_package(wxWidgets REQUIRED COMPONENTS core base)
+    target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})

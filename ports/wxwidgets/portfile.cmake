@@ -74,4 +74,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_ROOT}/Modules/FindwxWidgets.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_ROOT}/Modules/FindPackageMessage.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
 file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
