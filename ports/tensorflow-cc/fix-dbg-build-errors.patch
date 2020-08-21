@@ -17,7 +17,7 @@ diff --git a/tensorflow/core/framework/device_base.cc b/tensorflow/core/framewor
  
  const DeviceAttributes& DeviceBase::attributes() const {
    LOG(FATAL) << "Device does not implement attributes()";
-+  return *((DeviceAttributes*)this); // nonsense that will crash if ever invoked -- just to make it compile
++  std::abort();
  }
  
  const string& DeviceBase::name() const {
