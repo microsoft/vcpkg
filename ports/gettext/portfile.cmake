@@ -17,6 +17,9 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "gettext-${GETTEXT_VERSION}.tar.gz"
     SHA512 bbe590c5dd3580c75bf30ff768da99a88eb8d466ec1ac9eea20be4cab4357ecf72448e6b81b47425e39d50fa6320ba426632914d7898dfebb4f159abc39c31d1
 )
+if(VCPKG_TARGET_IS_UWP)
+    set(PATCHES uwp_remove_localcharset.patch)
+endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -24,6 +27,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
+        ${PATCHES}
 )
 vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_PATH ${BISON} DIRECTORY)
@@ -48,7 +52,13 @@ vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should pr
                              --disable-java
                              ${OPTIONS}
                     )
-vcpkg_install_make()
+                    
+if(VCPKG_TARGET_IS_UWP)
+    vcpkg_install_make(WORKING_SUBDIR "/intl") # Could make a port intl or libintl or have features in Gettext
+else()
+    vcpkg_install_make()
+endif()
+
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)
