@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0002-link-glew.patch
-		0005-XML_file_path.patch
+        0005-XML_file_path.patch
         0006-GraphicsMagick.patch
 )
 
@@ -44,7 +44,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-		-DINSTALL_CONFIG_FILE_PATH="${DOWNLOADS}/wt"
+        -DINSTALL_CONFIG_FILE_PATH="${DOWNLOADS}/wt"
         -DSHARED_LIBS=${SHARED_LIBS}
         -DBOOST_DYNAMIC=${SHARED_LIBS}
         -DDISABLE_BOOST_AUTOLINK=ON
