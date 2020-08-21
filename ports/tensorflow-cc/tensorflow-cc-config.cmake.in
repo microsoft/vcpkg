@@ -1,0 +1,16 @@
+message(WARNING "Tensorflow has vendored dependencies. You may need to manually include files from tensorflow-external")
+
+add_library(tensorflow_cc::tensorflow_cc ${TF_LINKAGE_TYPE} IMPORTED)
+set_target_properties(tensorflow_cc::tensorflow_cc
+	PROPERTIES
+	IMPORTED_LOCATION "${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/lib/${TF_LIB_NAME}"
+	INTERFACE_INCLUDE_DIRECTORIES "${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/include/tensorflow-external"
+)
+add_library(tensorflow_cc::tensorflow_framework ${TF_LINKAGE_TYPE} IMPORTED)
+set_target_properties(tensorflow_cc::tensorflow_framework
+	PROPERTIES
+	IMPORTED_LOCATION "${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/lib/${TF_FRAMEWORK_NAME}"
+	INTERFACE_INCLUDE_DIRECTORIES "${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/include/tensorflow-external"
+)
+set(tensorflow_cc_FOUND TRUE)
+set(tensorflow_framework_FOUND TRUE)

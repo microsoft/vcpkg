@@ -4,34 +4,23 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
 	message(FATAL_ERROR "TensorFlow does not support 32bit systems.")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	vcpkg_from_github(
-		OUT_SOURCE_PATH SOURCE_PATH
-		REPO tensorflow/tensorflow
-		REF v2.3.0
-		SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
-		HEAD_REF master
-		PATCHES
-			file-exists.patch # required or otherwise it cant find python lib path on windows
-			fix-build-error.patch # Fix namespace error
-			fix-dbg-build-errors.patch # Fix no return statement
-			fix-more-build-errors.patch # Fix no return statement
-	)
-else()
-	vcpkg_from_github(
-		OUT_SOURCE_PATH SOURCE_PATH
-		REPO tensorflow/tensorflow
-		REF v2.3.0
-		SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
-		HEAD_REF master
-		PATCHES
-			file-exists.patch # required or otherwise it cant find python lib path on windows
-			fix-build-error.patch # Fix namespace error
-			fix-dbg-build-errors.patch # Fix no return statement
-			fix-more-build-errors.patch # Fix no return statement
-			change-macros-for-static-lib.patch # there is no static build option - change macros via patch and link library manually at the end
-	)
+set(STATIC_ONLY_PATCHES "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	set(STATIC_ONLY_PATCHES change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
 endif()
+vcpkg_from_github(
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO tensorflow/tensorflow
+	REF v2.3.0
+	SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
+	HEAD_REF master
+	PATCHES
+		file-exists.patch # required or otherwise it cant find python lib path on windows
+		fix-build-error.patch # Fix namespace error
+		fix-dbg-build-errors.patch # Fix no return statement
+		fix-more-build-errors.patch # Fix no return statement
+		${STATIC_ONLY_PATCHES}
+)
 
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
@@ -251,10 +240,12 @@ foreach(BUILD_TYPE dbg rel)
 			endif()
 		else()
 			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			set(TF_LIB_SUFFIXES "")
 			# library might have been split because no more than 4GB are supported even on x64 Windows
 			foreach(PART_NO RANGE 2 100)
 				if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib)
 					file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+					list(APPEND TF_LIB_SUFFIXES "-part${PART_NO}")
 				else()
 					if(BUILD_TYPE STREQUAL dbg)
 						break()
@@ -274,23 +265,40 @@ foreach(BUILD_TYPE dbg rel)
 		endif()
 	elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.1.14.0.dylib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.1.14.0.dylib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.2.3.0.dylib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.2.3.0.dylib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			set(TF_LIB_NAME libtensorflow_cc.2.3.0.dylib)
+			set(TF_FRAMEWORK_NAME libtensorflow_framework.2.3.0.dylib)
 		else()
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.1.14.0.a DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.1.14.0.a DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.2.3.0.a DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.2.3.0.a DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			set(TF_LIB_NAME libtensorflow_cc.2.3.0.a)
+			set(TF_FRAMEWORK_NAME libtensorflow_framework.2.3.0.dylib)
 		endif()
 	else()
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.so.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.so.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.so.2.3.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.so.2.3.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			set(TF_LIB_NAME libtensorflow_cc.so.2.3.0)
+			set(TF_FRAMEWORK_NAME libtensorflow_framework.so.2.3.0)
 		else()
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.a.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.a.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.a.2.3.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.a.2.3.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			set(TF_LIB_NAME libtensorflow_cc.a.2.3.0)
+			set(TF_FRAMEWORK_NAME libtensorflow_framework.so.2.3.0)
 		endif()
 	endif()
 endforeach()
 
+#file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/c_api.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c)
+#file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/eager/c_api.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c/eager)
+#file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/tf_attrtype.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c)
+#file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/tf_datatype.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c)
+#file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/tf_status.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c)
+#file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/tf_tensor.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c)
+#file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/c_api_experimental.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c)
+#file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/kernels.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c)
+#file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/ops.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c)
 file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow-external)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -300,7 +308,37 @@ endif()
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/copyright)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/TensorflowCCConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/TensorflowCCConfig.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
+if(CMAKE_HOST_WIN32)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+		file(COPY ${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-dll.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc)
+		file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/tensorflow-cc-config-windows-dll.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
+	else()
+		file(COPY ${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-lib.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc)
+		file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/tensorflow-cc-config-windows-lib.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
+		set(ALL_PARTS "tensorflow_cc::tensorflow_cc-part1")
+		foreach(part ${TF_LIB_SUFFIXES})
+			file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake "\
+add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)\
+set_target_properties(tensorflow_cc::tensorflow_cc${part}\
+	PROPERTIES\
+	IMPORTED_LOCATION \"${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\
+	INTERFACE_INCLUDE_DIRECTORIES \"${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/include/tensorflow-external\"\
+)\
+")
+			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")
+		endforeach()
+		file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake "\
+add_library(tensorflow_cc::tensorflow_cc INTERFACE IMPORTED)\
+set_property(TARGET tensorflow_cc::tensorflow_cc PROPERTY INTERFACE_LINK_LIBRARIES ${ALL_PARTS})\
+")
+	endif()
+else()
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+		set(TF_LINKAGE_TYPE SHARED)
+	else()
+		set(TF_LINKAGE_TYPE STATIC)
+	endif()
+	configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
+endif()
 
 message(STATUS "You may want to delete ${CURRENT_BUILDTREES_DIR} and ${BUILDTREES_DIR}/.bzl to free diskspace.")
