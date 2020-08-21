@@ -4,12 +4,21 @@ namespace
 {
     struct BuiltinRegistry final : vcpkg::RegistryImpl
     {
-        BuiltinRegistry() = default;
-        BuiltinRegistry(const BuiltinRegistry&) = default;
-        BuiltinRegistry& operator=(const BuiltinRegistry&) = default;
-
         virtual void update(vcpkg::VcpkgPaths&, std::error_code& ec) const override { ec.clear(); }
         virtual fs::path get_registry_root(const vcpkg::VcpkgPaths& paths) const override { return paths.ports; }
+    };
+
+    struct DirectoryRegistry final : vcpkg::RegistryImpl
+    {
+        virtual void update(vcpkg::VcpkgPaths&, std::error_code& ec) const override { ec.clear(); }
+        virtual fs::path get_registry_root(const vcpkg::VcpkgPaths& paths) const override
+        {
+            return vcpkg::Files::combine(paths.manifest_config_root_dir, path);
+        }
+
+        DirectoryRegistry(fs::path&& path_) : path(path_) { }
+
+        fs::path path;
     };
 }
 
@@ -46,11 +55,18 @@ namespace vcpkg
 
         if (kind == KIND_BUILTIN)
         {
+            if (obj.contains(PATH))
+            {
+                r.error().add_extra_fields(type_name().to_string(), {PATH});
+            }
             return static_cast<std::unique_ptr<RegistryImpl>>(std::make_unique<BuiltinRegistry>());
         }
         else if (kind == KIND_DIRECTORY)
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO, "not yet implemented");
+            fs::path path;
+            r.required_object_field(type_name(), obj, PATH, path, Json::PathDeserializer{});
+
+            return static_cast<std::unique_ptr<RegistryImpl>>(std::make_unique<DirectoryRegistry>(std::move(path)));
         }
         else
         {

@@ -141,17 +141,17 @@ namespace vcpkg
                 regs,
                 Json::ArrayDeserializer<RegistryDeserializer>{"an array of registries", Json::AllowEmpty::Yes});
 
-            for (Registry& r : regs)
+            for (Registry& reg : regs)
             {
-                registries.add_registry(std::move(r));
+                registries.add_registry(std::move(reg));
             }
 
             return Configuration{std::move(registries)};
         }
     };
 
-    static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, Configuration> load_manifest_and_config(
-        const Files::Filesystem& fs, const fs::path& manifest_dir)
+    static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, std::pair<fs::path, Configuration>>
+    load_manifest_and_config(const Files::Filesystem& fs, const fs::path& manifest_dir)
     {
         std::error_code ec;
         auto manifest_path = manifest_dir / fs::u8path("vcpkg.json");
@@ -184,20 +184,36 @@ namespace vcpkg
         std::pair<Json::Object, Json::JsonStyle> manifest = {std::move(manifest_value.first.object()),
                                                              std::move(manifest_value.second)};
 
-        Optional<Json::Object> config;
+        Optional<Json::Object> config_obj;
+        fs::path config_dir;
 
         if (auto p_manifest_config = manifest.first.get("configuration"))
         {
             if (p_manifest_config->is_object())
             {
-                config = std::move(p_manifest_config->object());
+                config_obj = std::move(p_manifest_config->object());
+                config_dir = manifest_dir;
             }
             else if (p_manifest_config->is_string())
             {
                 auto config_name = fs::u8path("vcpkg-configuration.json");
-                auto config_relative_path = p_manifest_config->string();
-                auto config_path =
-                    manifest_dir / fs::u8path(config_relative_path.begin(), config_relative_path.end()) / config_name;
+                auto config_relative_path = fs::u8path(p_manifest_config->string());
+                if (config_relative_path.empty())
+                {
+                    System::print2(System::Color::error, "Invalid path to vcpkg-configuration: must not be empty.\n");
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+
+                if (!config_relative_path.root_path().empty())
+                {
+                    System::printf(System::Color::error,
+                                   "Invalid path to vcpkg-configuration '%s': must not be absolute.\n",
+                                   p_manifest_config->string());
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+
+                config_dir = manifest_dir / config_relative_path;
+                auto config_path = config_dir / config_name;
                 if (!fs.exists(config_path))
                 {
                     System::printf(
@@ -213,7 +229,7 @@ namespace vcpkg
                                    ": configuration files must have a top-level object\n");
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
-                config = std::move(parsed_config.first.object());
+                config_obj = std::move(parsed_config.first.object());
             }
             else
             {
@@ -225,7 +241,7 @@ namespace vcpkg
             }
         }
 
-        if (auto c = config.get())
+        if (auto c = config_obj.get())
         {
             Json::BasicReaderError err;
             Json::Reader reader{&err};
@@ -235,8 +251,12 @@ namespace vcpkg
             {
                 if (!err.missing_fields.empty())
                 {
-                    // this should never happen
-                    Checks::unreachable(VCPKG_LINE_INFO);
+                    System::print2(System::Color::error, "Error: missing fields in configuration:\n");
+                    for (const auto& missing : err.missing_fields)
+                    {
+                        System::printf(
+                            System::Color::error, "    %s was expected to have: %s\n", missing.first, missing.second);
+                    }
                 }
                 if (!err.expected_types.empty())
                 {
@@ -267,11 +287,16 @@ namespace vcpkg
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
-            return {std::move(manifest), std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO)};
+            std::pair<fs::path, Configuration> config = {
+                std::move(config_dir),
+                std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO),
+            };
+
+            return {std::move(manifest), std::move(config)};
         }
         else
         {
-            return {std::move(manifest), Configuration{}};
+            return {std::move(manifest), std::pair<fs::path, Configuration>{}};
         }
     }
 
@@ -362,7 +387,8 @@ namespace vcpkg
 
             auto manifest_and_config = load_manifest_and_config(filesystem, manifest_root_dir);
             m_pimpl->m_manifest_doc = std::move(manifest_and_config.first);
-            m_pimpl->m_manifest_config = std::move(manifest_and_config.second);
+            manifest_config_root_dir = std::move(manifest_and_config.second.first);
+            m_pimpl->m_manifest_config = std::move(manifest_and_config.second.second);
         }
         else
         {

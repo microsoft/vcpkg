@@ -19,13 +19,6 @@ namespace vcpkg
         virtual fs::path get_registry_root(const VcpkgPaths& paths) const = 0;
 
         virtual ~RegistryImpl() = default;
-
-    protected:
-        RegistryImpl() = default;
-        RegistryImpl(const RegistryImpl&) = default;
-        RegistryImpl& operator=(const RegistryImpl&) = default;
-        RegistryImpl(RegistryImpl&&) = default;
-        RegistryImpl& operator=(RegistryImpl&&) = default;
     };
 
     struct Registry

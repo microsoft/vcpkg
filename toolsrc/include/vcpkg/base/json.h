@@ -547,11 +547,21 @@ namespace vcpkg::Json
     struct StringDeserializer final : IDeserializer<std::string>
     {
         virtual StringView type_name() const override { return type_name_; }
-        virtual Optional<std::string> visit_string(Reader&, StringView, StringView sv) override { return sv.to_string(); }
+        virtual Optional<std::string> visit_string(Reader&, StringView, StringView sv) override
+        {
+            return sv.to_string();
+        }
 
         explicit StringDeserializer(StringView type_name_) : type_name_(type_name_) { }
+
     private:
         StringView type_name_;
+    };
+
+    struct PathDeserializer final : IDeserializer<fs::path>
+    {
+        virtual StringView type_name() const override { return "a path"; }
+        virtual Optional<fs::path> visit_string(Reader&, StringView, StringView sv) override { return fs::u8path(sv); }
     };
 
     struct NaturalNumberDeserializer final : IDeserializer<int>

@@ -1158,6 +1158,10 @@ namespace vcpkg::Files
         {
             return rhs;
         }
+        else if (!rhs.root_directory().empty())
+        {
+            return lhs.root_name() / rhs;
+        }
         else
         {
             return lhs / rhs;
