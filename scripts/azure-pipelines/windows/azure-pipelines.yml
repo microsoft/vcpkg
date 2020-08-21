@@ -61,15 +61,14 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: ${{ parameters.triplet }} port build failure logs'
+    displayName: 'Publish Artifact: failure logs: ${{ parameters.triplet }}'
     inputs:
       PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
-      ArtifactName: '${{ parameters.triplet }} port build failure logs'
+      ArtifactName: 'failure logs: ${{ parameters.triplet }}'
     condition: failed()
   - task: PowerShell@2
     displayName: "Generating all packages files"
     condition: always()
-
     inputs:
       targetType: inline
       script: |
@@ -80,4 +79,4 @@ jobs:
     condition: always()
     inputs:
       PathtoPublish: scripts/list_files
-      ArtifactName: "${{ parameters.triplet }} package file lists"
+      ArtifactName: 'file lists: ${{ parameters.triplet }}'
