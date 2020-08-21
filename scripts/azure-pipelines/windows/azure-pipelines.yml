@@ -61,13 +61,13 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: failure logs: ${{ parameters.triplet }}'
+    displayName: 'Publish Artifact: failure logs for ${{ parameters.triplet }}'
     inputs:
       PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
-      ArtifactName: 'failure logs: ${{ parameters.triplet }}'
+      ArtifactName: 'failure logs for ${{ parameters.triplet }}'
     condition: failed()
   - task: PowerShell@2
-    displayName: "Generating all packages files"
+    displayName: 'Build a file list for all packages'
     condition: always()
     inputs:
       targetType: inline
@@ -75,8 +75,8 @@ jobs:
         ./vcpkg.exe fetch python3
         & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
   - task: PublishBuildArtifacts@1
-    displayName: 'Upload file lists for all packages'
+    displayName: 'Publish Artifact: file lists for ${{ parameters.triplet }}'
     condition: always()
     inputs:
       PathtoPublish: scripts/list_files
-      ArtifactName: 'file lists: ${{ parameters.triplet }}'
+      ArtifactName: 'file lists for ${{ parameters.triplet }}'
