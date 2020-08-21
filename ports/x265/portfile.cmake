@@ -34,11 +34,11 @@ vcpkg_copy_pdbs()
 # remove duplicated include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
-
-vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
 
 if(WIN32 AND (NOT MINGW))
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
