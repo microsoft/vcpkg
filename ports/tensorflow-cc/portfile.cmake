@@ -89,6 +89,7 @@ file(GLOB SOURCES ${SOURCE_PATH}/*)
 
 vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-${TARGET_TRIPLET})
 
+set(N_DBG_LIB_PARTS 0)
 foreach(BUILD_TYPE dbg rel)
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
 	tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
@@ -147,7 +148,7 @@ foreach(BUILD_TYPE dbg rel)
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_windows.py"
+				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_windows.py" "${N_DBG_LIB_PARTS}"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
 				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -245,21 +246,10 @@ foreach(BUILD_TYPE dbg rel)
 			foreach(PART_NO RANGE 2 100)
 				if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib)
 					file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+					set(N_DBG_LIB_PARTS ${PART_NO})
 					list(APPEND TF_LIB_SUFFIXES "-part${PART_NO}")
 				else()
-					if(BUILD_TYPE STREQUAL dbg)
-						break()
-					else()
-						# vcpkg postbuild checks require the same number of libs for debug and release => copy dummy libs in release case
-						# dummy libs must be empty so that no symbol redefinition conflicts occur
-						# empty handcrafted_dummy.lib built using reverse-engineered .lib format using ArHandler.cpp from 7zip sources
-						if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/tensorflow_cc-part${PART_NO}.lib)
-							# misuse configure_file to achieve atomic copy+rename to avoid anti-malware scanners blocking file after copy and making rename fail
-							configure_file(${CMAKE_CURRENT_LIST_DIR}/handcrafted_dummy.lib ${CURRENT_PACKAGES_DIR}/lib/tensorflow_cc-part${PART_NO}.lib COPYONLY)
-						else()
-							break()
-						endif()
-					endif()
+					break()
 				endif()
 			endforeach()
 		endif()
