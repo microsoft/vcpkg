@@ -188,9 +188,9 @@ namespace vcpkg
                 for (const auto& extra : err.extra_fields)
                 {
                     System::printf(System::Color::error,
-                                    "    %s had invalid fields: %s\n",
-                                    extra.first,
-                                    Strings::join(", ", extra.second));
+                                   "    %s had invalid fields: %s\n",
+                                   extra.first,
+                                   Strings::join(", ", extra.second));
                 }
             }
             if (!err.mutually_exclusive_fields.empty())
@@ -430,7 +430,7 @@ If you wish to silence this error and use classic mode, you can:
             manifest_root_dir.clear();
             installed =
                 process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
-            
+
             fs::path config_path = root / fs::u8path("vcpkg-configuration.json");
             if (filesystem.exists(config_path))
             {
@@ -438,7 +438,10 @@ If you wish to silence this error and use classic mode, you can:
                 auto config_object = Json::parse_file(filesystem, config_path, ec);
                 if (ec)
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to load configuration file %s: %s", fs::u8string(config_path), ec.message());
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Failed to load configuration file %s: %s",
+                                              fs::u8string(config_path),
+                                              ec.message());
                 }
 
                 if (auto c = config_object.get())
@@ -450,12 +453,18 @@ If you wish to silence this error and use classic mode, you can:
                     }
                     else
                     {
-                        Checks::exit_with_message(VCPKG_LINE_INFO, "Error: failed to parse configuration file %s: configuration must have top-level object.", fs::u8string(config_path));
+                        Checks::exit_with_message(
+                            VCPKG_LINE_INFO,
+                            "Error: failed to parse configuration file %s: configuration must have top-level object.",
+                            fs::u8string(config_path));
                     }
                 }
                 else
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO, "Error: failed to parse configuration file %s: %s", fs::u8string(config_path), config_object.error()->format());
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: failed to parse configuration file %s: %s",
+                                              fs::u8string(config_path),
+                                              config_object.error()->format());
                 }
             }
         }
