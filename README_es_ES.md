@@ -243,7 +243,7 @@ CMake Tools use automaticamente vcpkg para las librerias:
 Abra el editor de Ajustes de CMake, bajo la seccion `CMake toolchain file`,
 posteriormente agregue al path el archivo toolchain de vcpkg:
 
-```
+```sh
 [raiz de vcpkg]/scripts/buildsystems/vcpkg.cmake
 ```
 
@@ -254,7 +254,7 @@ Abra los ajustes de Toolchains
 y entre en la seccion de ajustes de CMake (Build, Execution, Deployment > CMake).
 Finalmente, en `CMake options`, agregue la linea siguiente:
 
-```
+```sh
 -DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
