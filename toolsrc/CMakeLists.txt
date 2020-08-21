@@ -157,10 +157,10 @@ if(CLANG_FORMAT)
     add_custom_target(format COMMAND ${CLANG_FORMAT} -i -verbose
         ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp
         ${VCPKGLIB_BASE_SOURCES}
-        ${VCPKGLIB_NON_PCH_SOURCES}
+        ${VCPKGLIB_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
         ${VCPKGLIB_BASE_INCLUDES}
-        ${VCPKGLIB_NON_PCH_INCLUDES}
+        ${VCPKGLIB_INCLUDES}
 
         ${VCPKG_SOURCES}
         ${VCPKGMETRICSUPLOADER_SOURCES}

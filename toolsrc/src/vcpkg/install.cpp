@@ -48,7 +48,7 @@ namespace vcpkg::Install
         auto& fs = paths.get_filesystem();
         auto source_dir = paths.package_dir(spec);
         Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.u8string());
+            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", fs::u8string(source_dir));
         auto files = fs.get_files_recursive(source_dir);
         install_files_and_write_listfile(fs, source_dir, files, destination_dir);
     }
@@ -60,16 +60,17 @@ namespace vcpkg::Install
         std::vector<std::string> output;
         std::error_code ec;
 
-        const size_t prefix_length = source_dir.generic_u8string().size();
+        const size_t prefix_length = fs::generic_u8string(source_dir).size();
         const fs::path& destination = destination_dir.destination();
         const std::string& destination_subdirectory = destination_dir.destination_subdirectory();
         const fs::path& listfile = destination_dir.listfile();
 
         fs.create_directories(destination, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.u8string());
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", fs::u8string(destination));
         const fs::path listfile_parent = listfile.parent_path();
         fs.create_directories(listfile_parent, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", fs::u8string(listfile));
 
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
         for (auto&& file : files)
@@ -77,11 +78,11 @@ namespace vcpkg::Install
             const auto status = fs.symlink_status(file, ec);
             if (ec)
             {
-                System::print2(System::Color::error, "failed: ", file.u8string(), ": ", ec.message(), "\n");
+                System::print2(System::Color::error, "failed: ", fs::u8string(file), ": ", ec.message(), "\n");
                 continue;
             }
 
-            const std::string filename = file.filename().generic_u8string();
+            const std::string filename = fs::generic_u8string(file.filename());
             if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "vcpkg.json") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
@@ -90,7 +91,7 @@ namespace vcpkg::Install
                 continue;
             }
 
-            const std::string suffix = file.generic_u8string().substr(prefix_length + 1);
+            const std::string suffix = fs::generic_u8string(file).substr(prefix_length + 1);
             const fs::path target = destination / suffix;
 
             switch (status.type())
@@ -100,7 +101,7 @@ namespace vcpkg::Install
                     fs.create_directory(target, ec);
                     if (ec)
                     {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                        System::printf(System::Color::error, "failed: %s: %s\n", fs::u8string(target), ec.message());
                     }
 
                     // Trailing backslash for directories
@@ -113,13 +114,13 @@ namespace vcpkg::Install
                     {
                         System::print2(System::Color::warning,
                                        "File ",
-                                       target.u8string(),
+                                       fs::u8string(target),
                                        " was already present and will be overwritten\n");
                     }
                     fs.copy_file(file, target, fs::copy_options::overwrite_existing, ec);
                     if (ec)
                     {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                        System::printf(System::Color::error, "failed: %s: %s\n", fs::u8string(target), ec.message());
                     }
                     output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
                     break;
@@ -130,19 +131,19 @@ namespace vcpkg::Install
                     {
                         System::print2(System::Color::warning,
                                        "File ",
-                                       target.u8string(),
+                                       fs::u8string(target),
                                        " was already present and will be overwritten\n");
                     }
                     fs.copy_symlink(file, target, ec);
                     if (ec)
                     {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                        System::printf(System::Color::error, "failed: %s: %s\n", fs::u8string(target), ec.message());
                     }
                     output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
                     break;
                 }
                 default:
-                    System::printf(System::Color::error, "failed: %s: cannot handle file type\n", file.u8string());
+                    System::printf(System::Color::error, "failed: %s: cannot handle file type\n", fs::u8string(file));
                     break;
             }
         }
@@ -619,7 +620,7 @@ namespace vcpkg::Install
                     // CMake file is inside the share folder
                     auto path = paths.installed / suffix;
                     auto maybe_contents = fs.read_contents(path);
-                    auto find_package_name = path.parent_path().filename().u8string();
+                    auto find_package_name = fs::u8string(path.parent_path().filename());
                     if (auto p_contents = maybe_contents.get())
                     {
                         std::sregex_iterator next(p_contents->begin(), p_contents->end(), cmake_library_regex);
@@ -635,7 +636,7 @@ namespace vcpkg::Install
                         }
                     }
 
-                    auto filename = fs::u8path(suffix).filename().u8string();
+                    auto filename = fs::u8string(fs::u8path(suffix).filename());
 
                     if (Strings::ends_with(filename, "Config.cmake"))
                     {
@@ -795,12 +796,12 @@ namespace vcpkg::Install
             if (ec)
             {
                 Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Failed to read manifest %s: %s", manifest_path.u8string(), ec.message());
+                    VCPKG_LINE_INFO, "Failed to read manifest %s: %s", fs::u8string(manifest_path), ec.message());
             }
             else if (!maybe_manifest_scf)
             {
                 print_error_message(maybe_manifest_scf.error());
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s.", manifest_path.u8string());
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s.", fs::u8string(manifest_path));
             }
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 
@@ -933,7 +934,7 @@ namespace vcpkg::Install
             auto pkgsconfig_path = Files::combine(paths.original_cwd, fs::u8path(it_pkgsconfig->second));
             auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
             fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
-            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+            System::print2("Wrote NuGet packages config information to ", fs::u8string(pkgsconfig_path), "\n");
         }
 
         if (dry_run)

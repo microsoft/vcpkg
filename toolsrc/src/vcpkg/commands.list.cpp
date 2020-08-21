@@ -2,6 +2,7 @@
 
 #include <vcpkg/commands.list.h>
 #include <vcpkg/help.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/versiont.h>
 
