@@ -59,7 +59,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-list(APPEND IGNORED_LIBRARIES Xau Xt SM ICE X11 xcb Xdmcp pthread)
+list(APPEND IGNORED_LIBRARIES Xau Xt xt SM ICE X11 xcb Xdmcp pthread)
 # xproto install a few .pc files with not yet available packages/libraries. 
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig/")
@@ -70,7 +70,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/")
     file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 endif()
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES ${IGNORED_LIBRARIES}) 
+vcpkg_fixup_pkgconfig(SKIP_CHECK SYSTEM_LIBRARIES ${IGNORED_LIBRARIES}) 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # # Handle copyright
