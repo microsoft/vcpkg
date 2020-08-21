@@ -64,7 +64,7 @@ namespace vcpkg::Commands::Version
 #if defined(_WIN32)
                     auto bootstrap = ".\\bootstrap-vcpkg.bat";
 #else
-                    auto bootstrap = ".\/bootstrap-vcpkg.sh";
+                    auto bootstrap = "./bootstrap-vcpkg.sh";
 #endif
                     System::printf(System::Color::warning,
                                    "Warning: Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
