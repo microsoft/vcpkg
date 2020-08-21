@@ -2,5 +2,5 @@
 
 namespace vcpkg
 {
-	struct StringView;
+    struct StringView;
 }

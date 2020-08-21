@@ -17,7 +17,7 @@ namespace vcpkg::Json
     struct Reader;
 
     // This is written all the way out so that one can include a subclass in a header
-    template <class Type>
+    template<class Type>
     struct IDeserializer
     {
         using type = Type;

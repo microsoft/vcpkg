@@ -2,6 +2,6 @@
 
 namespace vcpkg
 {
-	template <class T>
-	struct Optional;
+    template<class T>
+    struct Optional;
 }

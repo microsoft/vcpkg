@@ -2,6 +2,6 @@
 
 namespace vcpkg
 {
-	template <class T>
-	struct Span;
+    template<class T>
+    struct Span;
 }
