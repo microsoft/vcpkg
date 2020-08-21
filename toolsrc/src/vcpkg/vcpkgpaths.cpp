@@ -156,6 +156,55 @@ namespace vcpkg
         }
     };
 
+    static Configuration load_config(const Json::Object& obj)
+    {
+        Json::BasicReaderError err;
+        Json::Reader reader{&err};
+
+        auto parsed_config_opt = reader.visit_value(obj, "$", ConfigurationDeserializer{});
+        if (err.has_error())
+        {
+            if (!err.missing_fields.empty())
+            {
+                System::print2(System::Color::error, "Error: missing fields in configuration:\n");
+                for (const auto& missing : err.missing_fields)
+                {
+                    System::printf(
+                        System::Color::error, "    %s was expected to have: %s\n", missing.first, missing.second);
+                }
+            }
+            if (!err.expected_types.empty())
+            {
+                System::print2(System::Color::error, "Error: Invalid types in configuration:\n");
+                for (const auto& expected : err.expected_types)
+                {
+                    System::printf(
+                        System::Color::error, "    %s was expected to be %s\n", expected.first, expected.second);
+                }
+            }
+            if (!err.extra_fields.empty())
+            {
+                System::print2(System::Color::error, "Error: Invalid fields in configuration:\n");
+                for (const auto& extra : err.extra_fields)
+                {
+                    System::printf(System::Color::error,
+                                    "    %s had invalid fields: %s\n",
+                                    extra.first,
+                                    Strings::join(", ", extra.second));
+                }
+            }
+            if (!err.mutually_exclusive_fields.empty())
+            {
+                // this should never happen
+                Checks::unreachable(VCPKG_LINE_INFO);
+            }
+
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        return std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO);
+    }
+
     static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, std::pair<fs::path, Configuration>>
     load_manifest_and_config(const Files::Filesystem& fs, const fs::path& manifest_dir)
     {
@@ -249,55 +298,7 @@ namespace vcpkg
 
         if (auto c = config_obj.get())
         {
-            Json::BasicReaderError err;
-            Json::Reader reader{&err};
-
-            auto parsed_config_opt = reader.visit_value(*c, "$", ConfigurationDeserializer{});
-            if (err.has_error())
-            {
-                if (!err.missing_fields.empty())
-                {
-                    System::print2(System::Color::error, "Error: missing fields in configuration:\n");
-                    for (const auto& missing : err.missing_fields)
-                    {
-                        System::printf(
-                            System::Color::error, "    %s was expected to have: %s\n", missing.first, missing.second);
-                    }
-                }
-                if (!err.expected_types.empty())
-                {
-                    System::print2(System::Color::error, "Error: Invalid types in configuration:\n");
-                    for (const auto& expected : err.expected_types)
-                    {
-                        System::printf(
-                            System::Color::error, "    %s was expected to be %s\n", expected.first, expected.second);
-                    }
-                }
-                if (!err.extra_fields.empty())
-                {
-                    System::print2(System::Color::error, "Error: Invalid fields in configuration:\n");
-                    for (const auto& extra : err.extra_fields)
-                    {
-                        System::printf(System::Color::error,
-                                       "    %s had invalid fields: %s\n",
-                                       extra.first,
-                                       Strings::join(", ", extra.second));
-                    }
-                }
-                if (!err.mutually_exclusive_fields.empty())
-                {
-                    // this should never happen
-                    Checks::unreachable(VCPKG_LINE_INFO);
-                }
-
-                Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-
-            std::pair<fs::path, Configuration> config = {
-                std::move(config_dir),
-                std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO),
-            };
-
+            std::pair<fs::path, Configuration> config = {std::move(config_dir), load_config(*c)};
             return {std::move(manifest), std::move(config)};
         }
         else
@@ -331,7 +332,7 @@ namespace vcpkg
             fs::SystemHandle file_lock_handle;
 
             Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
-            Configuration m_manifest_config;
+            Configuration m_config;
         };
     }
 
@@ -393,8 +394,8 @@ namespace vcpkg
 
             auto manifest_and_config = load_manifest_and_config(filesystem, manifest_root_dir);
             m_pimpl->m_manifest_doc = std::move(manifest_and_config.first);
-            manifest_config_root_dir = std::move(manifest_and_config.second.first);
-            m_pimpl->m_manifest_config = std::move(manifest_and_config.second.second);
+            config_root_dir = std::move(manifest_and_config.second.first);
+            m_pimpl->m_config = std::move(manifest_and_config.second.second);
         }
         else
         {
@@ -429,6 +430,34 @@ If you wish to silence this error and use classic mode, you can:
             manifest_root_dir.clear();
             installed =
                 process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
+            
+            fs::path config_path = root / fs::u8path("vcpkg-configuration.json");
+            if (filesystem.exists(config_path))
+            {
+                std::error_code ec;
+                auto config_object = Json::parse_file(filesystem, config_path, ec);
+                if (ec)
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to load configuration file %s: %s", fs::u8string(config_path), ec.message());
+                }
+
+                if (auto c = config_object.get())
+                {
+                    if (c->first.is_object())
+                    {
+                        m_pimpl->m_config = load_config(c->first.object());
+                        config_root_dir = root;
+                    }
+                    else
+                    {
+                        Checks::exit_with_message(VCPKG_LINE_INFO, "Error: failed to parse configuration file %s: configuration must have top-level object.", fs::u8string(config_path));
+                    }
+                }
+                else
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO, "Error: failed to parse configuration file %s: %s", fs::u8string(config_path), config_object.error()->format());
+                }
+            }
         }
 
         buildtrees =
@@ -581,7 +610,7 @@ If you wish to silence this error and use classic mode, you can:
         }
     }
 
-    const Configuration& VcpkgPaths::get_configuration() const { return m_pimpl->m_manifest_config; }
+    const Configuration& VcpkgPaths::get_configuration() const { return m_pimpl->m_config; }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {

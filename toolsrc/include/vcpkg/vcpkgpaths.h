@@ -112,7 +112,7 @@ namespace vcpkg
         fs::path original_cwd;
         fs::path root;
         fs::path manifest_root_dir;
-        fs::path manifest_config_root_dir;
+        fs::path config_root_dir;
         fs::path buildtrees;
         fs::path downloads;
         fs::path packages;

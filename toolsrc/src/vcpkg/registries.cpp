@@ -15,7 +15,7 @@ namespace
         virtual void update(vcpkg::VcpkgPaths&, std::error_code& ec) const override { ec.clear(); }
         virtual fs::path get_registry_root(const vcpkg::VcpkgPaths& paths) const override
         {
-            return vcpkg::Files::combine(paths.manifest_config_root_dir, path);
+            return vcpkg::Files::combine(paths.config_root_dir, path);
         }
 
         DirectoryRegistry(fs::path&& path_) : path(path_) { }
