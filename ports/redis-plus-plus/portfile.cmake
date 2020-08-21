@@ -1,17 +1,19 @@
+#Blocked by ninja: error: build.ninja:348: multiple rules generate lib/redis++.lib [-w dupbuild=err]
 vcpkg_fail_port_install(ON_TARGET "Windows")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sewenew/redis-plus-plus
-    REF d35267580568517f09bdf70cb582e5284c25401a 
-    SHA512 f065b97d438772300e30485a7550bc0fff00005f1056cf9c23216ea388fa088303869ccf2eaa70ee8b06cc0fc2406c9c6faddd5ad08759ee2d0665ac91761914
+    REF b08b36a9a91de00636e583307610f49af7876f50 # 1.1.2
+    SHA512 6dcead9fca9e7082ace28dcd72a1b325e229297080eea3e5a28ef5e6b9e4a7d1bcb3568997a5e7a031d7937a025a017ed92d7869db5829ba6113783c84bc5a68
     HEAD_REF master
-    PATCHES disable-build-test.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJIA
+    PREFER_NINJA
+    OPTIONS
+        -DREDIS_PLUS_PLUS_BUILD_TEST=OFF
 )
 
 vcpkg_install_cmake()

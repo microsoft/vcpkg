@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e35082..d90c0c4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -482,7 +482,7 @@ CONFIGURE_PACKAGE_CONFIG_FILE("${PROJECT_NAME}.cmake.in" "${PROJECT_BINARY_DIR}/
+ IF(LIBZIP_DO_INSTALL)
+   INSTALL(EXPORT ${PROJECT_NAME}-targets
+     FILE ${PROJECT_NAME}-targets.cmake
+-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+     )
+ ENDIF()
+ 
+@@ -494,7 +494,7 @@ EXPORT(TARGETS zip
+ IF(LIBZIP_DO_INSTALL)
+   INSTALL(FILES ${PROJECT_BINARY_DIR}/zipconf.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+   INSTALL(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-version.cmake
+-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+     )
+ ENDIF()
+ 
+diff --git a/libzip.cmake.in b/libzip.cmake.in
+index 462439b..6caf754 100644
+--- a/libzip.cmake.in
++++ b/libzip.cmake.in
+@@ -1,7 +1,7 @@
+ @PACKAGE_INIT@
+ 
+ # Provide all our library targets to users.
+-include("@PACKAGE_CMAKE_INSTALL_LIBDIR@/cmake/libzip/libzip-targets.cmake")
++include("@PACKAGE_CMAKE_INSTALL_LIBDIR@/../share/libzip/libzip-targets.cmake")
+ 
+ get_filename_component(LIBZIP_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ set(LIBZIP_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
