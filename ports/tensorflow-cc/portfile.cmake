@@ -27,19 +27,26 @@ get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
 set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
 
-if(CMAKE_HOST_WIN32)
-	# vcpkg_find_acquire_program not suitable on Windows because it only installs python embedded, but we need full python
-	find_package(Python3 COMPONENTS Interpreter)
-	if(NOT Python3_Interpreter_FOUND)
-		message(FATAL_ERROR "Python3 not found. Please install and add to PATH.")
-	endif()
+find_package(Python3 COMPONENTS Interpreter)
+if(Python3_Interpreter_FOUND)
 	set(PYTHON3 "${Python3_EXECUTABLE}")
 else()
 	vcpkg_find_acquire_program(PYTHON3)
 endif()
+
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
+
+find_package(Python3 COMPONENTS Interpreter NumPy)
+if(NOT Python3_NumPy_FOUND)
+	set(PIP3 "${PYTHON3_DIR}/pip3")
+	vcpkg_execute_required_process(COMMAND ${PIP3} install -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
+	find_package(Python3 COMPONENTS NumPy)
+	if(NOT Python3_NumPy_FOUND)
+		message(FATAL_ERROR "Failed to install NumPy.")
+	endif()
+endif()
 
 function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	file(REMOVE_RECURSE ${PATH_TO_REMOVE})
@@ -51,7 +58,7 @@ endfunction()
 
 if(CMAKE_HOST_WIN32)
 	vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git)
-	vcpkg_add_to_path(PREPEND ${MSYS_ROOT}/usr/bin)
+	vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
 	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 	set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
 	set(ENV{BAZEL_VC} $ENV{VCInstallDir})
@@ -87,8 +94,6 @@ set(ENV{TF_CONFIGURE_IOS} 0)
 
 file(GLOB SOURCES ${SOURCE_PATH}/*)
 
-vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-${TARGET_TRIPLET})
-
 set(N_DBG_LIB_PARTS 0)
 foreach(BUILD_TYPE dbg rel)
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
@@ -120,7 +125,7 @@ foreach(BUILD_TYPE dbg rel)
 
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
 	if(BUILD_TYPE STREQUAL dbg)
-		if(CMAKE_HOST_WIN32)
+		if(VCPKG_TARGET_IS_WINDOWS)
 			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
 		else()
 			set(BUILD_OPTS "--compilation_mode=dbg")
@@ -129,7 +134,7 @@ foreach(BUILD_TYPE dbg rel)
 		set(BUILD_OPTS "--compilation_mode=opt")
 	endif()
 
-	if(CMAKE_HOST_WIN32)
+	if(VCPKG_TARGET_IS_WINDOWS)
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 			vcpkg_execute_build_process(
 				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
@@ -137,10 +142,12 @@ foreach(BUILD_TYPE dbg rel)
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
-			if(BUILD_TYPE STREQUAL dbg)
-				set(CRT_OPT "-MTd")
-			else()
-				set(CRT_OPT "-MT")
+			if(VCPKG_CRT_LINKAGE STREQUAL static)
+				if(BUILD_TYPE STREQUAL dbg)
+					set(CRT_OPT "-MTd")
+				else()
+					set(CRT_OPT "-MT")
+				endif()
 			endif()
 			vcpkg_execute_build_process(
 				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link --copt=${CRT_OPT} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
@@ -229,7 +236,7 @@ foreach(BUILD_TYPE dbg rel)
 		set(DIR_PREFIX "")
 	endif()
 
-	if(CMAKE_HOST_WIN32)
+	if(VCPKG_TARGET_IS_WINDOWS)
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.dll DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/bin)
 			# rename before copy because after copy the file might be locked by anti-malware scanners for some time so that renaming fails
@@ -289,7 +296,7 @@ endif()
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/copyright)
 
-if(CMAKE_HOST_WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		file(COPY ${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-dll.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc)
 		file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/tensorflow-cc-config-windows-dll.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
