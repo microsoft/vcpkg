@@ -1089,7 +1089,7 @@ namespace vcpkg::Build
 #if defined(_WIN32)
         auto vcpkg_update_cmd = ".\\vcpkg";
 #else
-        auto vcpkg_update_cmd = ".\/vcpkg";
+        auto vcpkg_update_cmd = "./vcpkg";
 #endif
         return Strings::format("Please ensure you're using the latest portfiles with `%s update`, then\n"
                                "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"

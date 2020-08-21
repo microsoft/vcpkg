@@ -260,7 +260,7 @@ namespace vcpkg::Dependencies
 #if defined(_WIN32)
                 auto vcpkg_remove_cmd = ".\\vcpkg";
 #else
-                auto vcpkg_remove_cmd = ".\/vcpkg";
+                auto vcpkg_remove_cmd = "./vcpkg";
 #endif
                 if (!maybe_scfl)
                     Checks::exit_with_message(
