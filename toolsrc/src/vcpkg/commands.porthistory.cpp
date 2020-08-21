@@ -5,6 +5,8 @@
 #include <vcpkg/commands.porthistory.h>
 #include <vcpkg/help.h>
 #include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Commands::PortHistory
 {
@@ -82,7 +84,7 @@ namespace vcpkg::Commands::PortHistory
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)(args.parse_arguments(COMMAND_STRUCTURE));
 
         std::string port_name = args.command_arguments.at(0);
         std::vector<PortControlVersion> versions = read_versions_from_log(paths, port_name);

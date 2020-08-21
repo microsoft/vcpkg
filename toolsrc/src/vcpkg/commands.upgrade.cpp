@@ -10,6 +10,7 @@
 #include <vcpkg/install.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/update.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::Upgrade

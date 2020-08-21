@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO multicoreware/x265_git
-    REF 3.2
-    SHA512 1c6dc000dd1ccc1846cd1d29e8f4ba3bfaa2c0579ab02be3b6a85f0aa3612a717850db5e55ef7a5ac78aaa730e1d20c34b03e40260a927edec72bd3146f12ff5
+    REPO videolan/x265
+    REF 07295ba7ab551bb9c1580fdaee3200f1b45711b7 #v3.4
+    SHA512 21a4ef8733a9011eec8b336106c835fbe04689e3a1b820acb11205e35d2baba8c786d9d8cf5f395e78277f921857e4eb8622cf2ef3597bce952d374f7fe9ec29
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch
@@ -36,19 +34,11 @@ vcpkg_copy_pdbs()
 # remove duplicated include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x265)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265 ${CURRENT_PACKAGES_DIR}/tools/x265/x265)
-elseif(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265.exe ${CURRENT_PACKAGES_DIR}/tools/x265/x265.exe)
-endif()
+vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/x265)
 
 if(WIN32 AND (NOT MINGW))
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -56,6 +46,7 @@ if(WIN32 AND (NOT MINGW))
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
     endif()
 endif()
+
 if(UNIX)
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES numa)
 else()
@@ -63,5 +54,4 @@ else()
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/x265)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/x265/COPYING ${CURRENT_PACKAGES_DIR}/share/x265/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
