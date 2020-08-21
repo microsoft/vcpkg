@@ -81,16 +81,18 @@ endfunction()
 
 function(generate_native_file_config _config) #https://mesonbuild.com/Native-environments.html
     
-    set(NATIVE_${_config} "[built-in options]\n") #https://mesonbuild.com/Builtin-options.html
+    set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
     string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_COMBINED_CFLAGS_${_config}}")
     list(TRANSFORM MESON_CFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CFLAGS_${_config} PREPEND "'")
     list(JOIN MESON_CFLAGS_${_config} ", " MESON_CFLAGS_${_config})
+    string(REPLACE "'', " "" MESON_CFLAGS_${_config} "${MESON_CFLAGS_${_config}}")
     string(APPEND NATIVE_${_config} "c_args = [${MESON_CFLAGS_${_config}}]\n")
     string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_COMBINED_CXXFLAGS_${_config}}")
     list(TRANSFORM MESON_CXXFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CXXFLAGS_${_config} PREPEND "'")
     list(JOIN MESON_CXXFLAGS_${_config} ", " MESON_CXXFLAGS_${_config})
+    string(REPLACE "'', " "" MESON_CXXFLAGS_${_config} "${MESON_CXXFLAGS_${_config}}")
     string(APPEND NATIVE_${_config} "cpp_args = [${MESON_CXXFLAGS_${_config}}]\n")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -102,6 +104,7 @@ function(generate_native_file_config _config) #https://mesonbuild.com/Native-env
     list(TRANSFORM LINKER_FLAGS_${_config} APPEND "'")
     list(TRANSFORM LINKER_FLAGS_${_config} PREPEND "'")
     list(JOIN LINKER_FLAGS_${_config} ", " LINKER_FLAGS_${_config})
+    string(REPLACE "'', " "" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
     string(APPEND NATIVE_${_config} "c_linker_args = [${LINKER_FLAGS_${_config}}]\n")
     string(APPEND NATIVE_${_config} "cpp_linker_args = [${LINKER_FLAGS_${_config}}]\n")
 
@@ -247,7 +250,7 @@ function(vcpkg_configure_meson)
         list(APPEND _vcm_OPTIONS --default-library static)
     endif()
     
-    list(APPEND _vcm_OPTIONS --libdir lib) # else meson install into an architecture describing folder
+    list(APPEND _vcm_OPTIONS --libdir lib -Db_vscrt=none) # else meson install into an architecture describing folder
     list(APPEND _vcm_OPTIONS_DEBUG -Ddebug=true --prefix ${CURRENT_PACKAGES_DIR}/debug --includedir ../include)
     list(APPEND _vcm_OPTIONS_RELEASE -Ddebug=false --prefix  ${CURRENT_PACKAGES_DIR})
 
