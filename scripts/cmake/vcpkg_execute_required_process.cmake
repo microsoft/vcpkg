@@ -38,7 +38,6 @@ function(vcpkg_execute_required_process)
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
 
-    set(execute_process_function execute_process)
     if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
         message(FATAL_ERROR 
 [[
@@ -47,7 +46,7 @@ Halting portfile execution.
 ]])
     endif()
 
-    _execute_process(
+    execute_process(
         COMMAND ${vcpkg_execute_required_process_COMMAND}
         OUTPUT_FILE ${LOG_OUT}
         ERROR_FILE ${LOG_ERR}
