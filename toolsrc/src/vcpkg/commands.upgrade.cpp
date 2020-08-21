@@ -87,30 +87,34 @@ namespace vcpkg::Commands::Upgrade
 
             for (auto&& spec : specs)
             {
+                bool skip_version_check = false;
                 auto it = status_db.find_installed(spec);
                 if (it == status_db.end())
                 {
                     not_installed.push_back(spec);
+                    skip_version_check = true;
                 }
 
                 auto maybe_scfl = provider.get_control_file(spec.name());
-                if (auto p_scfl = maybe_scfl.get())
+                if (!maybe_scfl.has_value())
                 {
-                    if (it != status_db.end())
-                    {
-                        if (p_scfl->source_control_file->core_paragraph->version != (*it)->package.version)
-                        {
-                            to_upgrade.push_back(spec);
-                        }
-                        else
-                        {
-                            up_to_date.push_back(spec);
-                        }
-                    }
+                    no_portfile.push_back(spec);
+                    skip_version_check = true;
+                }
+
+                if (skip_version_check) continue;
+
+                const auto& scfl = maybe_scfl.value_or_exit(VCPKG_LINE_INFO);
+                const auto& pgh = *scfl.source_control_file->core_paragraph;
+                auto scfl_version = VersionT(pgh.version, pgh.port_version);
+                auto it_version = VersionT((*it)->package.version, (*it)->package.port_version);
+                if (scfl_version != it_version)
+                {
+                    to_upgrade.push_back(spec);
                 }
                 else
                 {
-                    no_portfile.push_back(spec);
+                    up_to_date.push_back(spec);
                 }
             }
 
