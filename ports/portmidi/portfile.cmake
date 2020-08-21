@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "linux" "osx" ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "linux" "osx" "uwp" ON_ARCH "arm")
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
