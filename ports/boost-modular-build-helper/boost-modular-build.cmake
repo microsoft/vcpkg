@@ -4,7 +4,7 @@ function(boost_modular_build)
     if(NOT DEFINED _bm_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH is a required argument to boost_modular_build.")
     endif()
-    
+
     # Next CMake variables may be overridden in the file specified in ${_bm_BOOST_CMAKE_FRAGMENT}
     set(B2_OPTIONS)
     set(B2_OPTIONS_DBG)
@@ -21,7 +21,7 @@ function(boost_modular_build)
         set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x64-linux/tools/boost-build")
     elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
-    elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x")
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
     else()
         set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/tools/boost-build")
@@ -29,7 +29,7 @@ function(boost_modular_build)
 
     if(NOT EXISTS "${BOOST_BUILD_PATH}")
         if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-            message(FATAL_ERROR "The x64 boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:x64-linux`.") 
+            message(FATAL_ERROR "The x64 boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:x64-linux`.")
         else()
             message(FATAL_ERROR "The x86 boost-build tools must be installed to build for non-x86/x64 platforms. Please run `vcpkg install boost-build:x86-windows`.")
         endif()
@@ -81,15 +81,20 @@ function(boost_modular_build)
         file(WRITE ${_bm_SOURCE_PATH}/build/Jamfile.v2 "${_contents}")
     endif()
 
-    configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
     # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-config/checks")
     #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${_bm_SOURCE_PATH}/build/config")
     # endif()
     # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-predef/check")
     #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${_bm_SOURCE_PATH}/build/predef")
     # endif()
-
-    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    
+    function(unix_build BOOST_LIB_SUFFIX BUILD_TYPE BUILD_LIB_PATH)
+        message(STATUS "Building ${BUILD_TYPE}...")
+        set(BOOST_LIB_SUFFIX ${BOOST_LIB_SUFFIX})
+        set(VARIANT ${BUILD_TYPE})
+        set(BUILD_LIB_PATH ${BUILD_LIB_PATH})
+        configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+        
         set(configure_option)
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
@@ -107,6 +112,16 @@ function(boost_modular_build)
                 ${configure_option}
         )
         vcpkg_install_cmake()
+    endfunction()
+    
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            unix_build(${BOOST_LIB_RELEASE_SUFFIX} "release" "lib/")
+        endif()
+
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            unix_build(${BOOST_LIB_DEBUG_SUFFIX} "debug" "debug/lib/")
+        endif()
 
         if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
             message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
@@ -184,7 +199,7 @@ function(boost_modular_build)
          -sZSTD_BINARY=zstdd
          "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
- 
+
     set(B2_OPTIONS_REL
          -sZLIB_BINARY=zlib
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
@@ -252,6 +267,8 @@ function(boost_modular_build)
         list(APPEND B2_OPTIONS address-model=32 architecture=arm)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         list(APPEND B2_OPTIONS address-model=64 architecture=arm)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x")
+        list(APPEND B2_OPTIONS address-model=64 architecture=s390x)
     else()
         list(APPEND B2_OPTIONS address-model=32 architecture=x86)
     endif()
@@ -293,6 +310,10 @@ function(boost_modular_build)
     ######################
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${TARGET_TRIPLET}-rel")
+        set(BOOST_LIB_SUFFIX ${BOOST_LIB_RELEASE_SUFFIX})
+        set(VARIANT "release")
+        set(BUILD_LIB_PATH "lib/")
+        configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
         set(ENV{BOOST_BUILD_PATH} "${BOOST_BUILD_PATH}")
         vcpkg_execute_required_process(
             COMMAND "${B2_EXE}"
@@ -311,6 +332,10 @@ function(boost_modular_build)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+        set(BOOST_LIB_SUFFIX ${BOOST_LIB_DEBUG_SUFFIX})
+        set(VARIANT debug)
+        set(BUILD_LIB_PATH "debug/lib/")
+        configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
         set(ENV{BOOST_BUILD_PATH} "${BOOST_BUILD_PATH}")
         vcpkg_execute_required_process(
             COMMAND "${B2_EXE}"

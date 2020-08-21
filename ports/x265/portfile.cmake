@@ -50,6 +50,18 @@ endif()
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/x265)
 
+if(WIN32 AND (NOT MINGW))
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
+    endif()
+endif()
+if(UNIX)
+    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES numa)
+else()
+    vcpkg_fixup_pkgconfig()
+endif()
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/x265)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/x265/COPYING ${CURRENT_PACKAGES_DIR}/share/x265/copyright)

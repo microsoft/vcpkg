@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/util.h>
@@ -144,6 +142,13 @@ std::string Strings::trim(std::string&& s)
     s.erase(std::find_if_not(s.rbegin(), s.rend(), details::is_space).base(), s.end());
     s.erase(s.begin(), std::find_if_not(s.begin(), s.end(), details::is_space));
     return std::move(s);
+}
+
+StringView Strings::trim(StringView sv)
+{
+    auto last = std::find_if_not(sv.rbegin(), sv.rend(), details::is_space).base();
+    auto first = std::find_if_not(sv.begin(), sv.end(), details::is_space);
+    return StringView(first, last);
 }
 
 void Strings::trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings)
