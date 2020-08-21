@@ -34,19 +34,11 @@ vcpkg_copy_pdbs()
 # remove duplicated include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x265)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265 ${CURRENT_PACKAGES_DIR}/tools/x265/x265)
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265.exe ${CURRENT_PACKAGES_DIR}/tools/x265/x265.exe)
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/x265)
+vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
 
 if(WIN32 AND (NOT MINGW))
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -54,6 +46,7 @@ if(WIN32 AND (NOT MINGW))
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
     endif()
 endif()
+
 if(UNIX)
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES numa)
 else()
