@@ -112,7 +112,6 @@ bde:x64-uwp=fail
 bde:x64-windows=fail
 bde:x64-windows-static=fail
 bde:x86-windows=fail
-behaviortree-cpp:x64-osx=fail
 benchmark:arm64-windows=fail
 benchmark:arm-uwp=fail
 benchmark:x64-uwp=fail
