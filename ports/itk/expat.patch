@@ -23,7 +23,7 @@ diff --git a/Modules/ThirdParty/Expat/CMakeLists.txt b/Modules/ThirdParty/Expat/
 index f69709d..9b49323 100644
 --- a/Modules/ThirdParty/Expat/CMakeLists.txt
 +++ b/Modules/ThirdParty/Expat/CMakeLists.txt
-@@ -5,10 +5,8 @@ option(ITK_USE_SYSTEM_EXPAT "Use system-installed expat" ${ITK_USE_SYSTEM_LIBRAR
+@@ -5,10 +5,12 @@ option(ITK_USE_SYSTEM_EXPAT "Use system-installed expat" ${ITK_USE_SYSTEM_LIBRAR
  mark_as_advanced(ITK_USE_SYSTEM_EXPAT)
  
  if(ITK_USE_SYSTEM_EXPAT)
@@ -32,7 +32,11 @@ index f69709d..9b49323 100644
 -  set(ITKExpat_SYSTEM_INCLUDE_DIRS "${EXPAT_INCLUDE_DIR}")
 -  set(ITKExpat_LIBRARIES "${EXPAT_LIBRARY}")
 +  find_package(expat CONFIG REQUIRED)
-+  set(ITKExpat_LIBRARIES expat::expat)
++  if(WIN32 AND NOT MINGW)
++    set(ITKExpat_LIBRARIES expat::libexpat)
++  else()
++    set(ITKExpat_LIBRARIES expat::expat)
++  endif()
    set(ITKExpat_NO_SRC 1)
  else()
    set(ITKExpat_INCLUDE_DIRS

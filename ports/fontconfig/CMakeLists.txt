@@ -52,7 +52,11 @@ else()
     target_include_directories(fontconfig PRIVATE ${FC_INCLUDE_DIR}/unix)
 endif()
 
-target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype expat::expat)
+if(WIN32 AND NOT MINGW)
+    target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype expat::libexpat)
+else()
+    target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype expat::expat)
+endif()
 
 install(TARGETS fontconfig
     EXPORT fontconfig-targets
