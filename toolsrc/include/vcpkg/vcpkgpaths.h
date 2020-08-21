@@ -1,6 +1,9 @@
 #pragma once
 
+#include <vcpkg/base/fwd/json.h>
+
 #include <vcpkg/fwd/registries.h>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/cache.h>
@@ -45,23 +48,18 @@ namespace vcpkg
         struct VcpkgPathsImpl;
     }
 
-    namespace Json
-    {
-        struct Object;
-        struct JsonStyle;
-    }
-
     struct BinaryParagraph;
-    struct VcpkgCmdArguments;
     struct PackageSpec;
     struct Triplet;
 
-    struct Registries
+    struct RegistrySet
     {
-        Registries();
-        Registries(Registries&&);
-        Registries& operator=(Registries&&);
-        ~Registries();
+        RegistrySet();
+        RegistrySet(RegistrySet&&) noexcept;
+        RegistrySet& operator=(RegistrySet&&) noexcept;
+        ~RegistrySet();
+
+        friend void swap(RegistrySet& lhs, RegistrySet& rhs) noexcept;
 
         // finds the correct registry for the port name
         // Returns the null pointer if there is no registry set up for that name
@@ -83,7 +81,7 @@ namespace vcpkg
 
     struct Configuration
     {
-        Registries registries;
+        RegistrySet registries;
     };
 
     struct VcpkgPaths : Util::MoveOnlyBase

@@ -83,13 +83,19 @@ namespace
 
 namespace vcpkg
 {
-    Registries::Registries() : default_registry_(Registry::builtin_registry()), registries_() { }
+    RegistrySet::RegistrySet() : default_registry_(Registry::builtin_registry()), registries_() { }
 
-    Registries::Registries(Registries&&) = default;
-    Registries& Registries::operator=(Registries&&) = default;
-    Registries::~Registries() = default;
+    RegistrySet::RegistrySet(RegistrySet&&) noexcept = default;
+    RegistrySet& RegistrySet::operator=(RegistrySet&&) noexcept = default;
+    RegistrySet::~RegistrySet() = default;
 
-    const RegistryImpl* Registries::registry_for_port(StringView name) const
+    void swap(RegistrySet& lhs, RegistrySet& rhs) noexcept
+    {
+        swap(lhs.registries_, rhs.registries_);
+        swap(lhs.default_registry_, rhs.default_registry_);
+    }
+
+    const RegistryImpl* RegistrySet::registry_for_port(StringView name) const
     {
         for (const auto& registry : registries())
         {
@@ -102,13 +108,13 @@ namespace vcpkg
         return default_registry();
     }
 
-    void Registries::add_registry(Registry&& r) { registries_.push_back(std::move(r)); }
+    void RegistrySet::add_registry(Registry&& r) { registries_.push_back(std::move(r)); }
 
-    void Registries::set_default_registry(std::unique_ptr<RegistryImpl>&& r) { default_registry_ = std::move(r); }
-    void Registries::set_default_registry(std::nullptr_t) { default_registry_.reset(); }
+    void RegistrySet::set_default_registry(std::unique_ptr<RegistryImpl>&& r) { default_registry_ = std::move(r); }
+    void RegistrySet::set_default_registry(std::nullptr_t) { default_registry_.reset(); }
 
     // this is defined here so that we can see the definition of `Registry`
-    Span<const Registry> Registries::registries() const { return registries_; }
+    Span<const Registry> RegistrySet::registries() const { return registries_; }
 
     struct ConfigurationDeserializer final : Json::IDeserializer<Configuration>
     {
@@ -124,7 +130,7 @@ namespace vcpkg
 
         virtual Optional<Configuration> visit_object(Json::Reader& r, StringView, const Json::Object& obj) override
         {
-            Registries registries;
+            RegistrySet registries;
 
             {
                 std::unique_ptr<RegistryImpl> default_registry;

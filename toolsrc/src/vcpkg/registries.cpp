@@ -1,3 +1,5 @@
+#include <vcpkg/base/json.h>
+
 #include <vcpkg/registries.h>
 
 namespace

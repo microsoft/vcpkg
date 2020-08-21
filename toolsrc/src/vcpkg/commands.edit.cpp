@@ -87,9 +87,7 @@ namespace vcpkg::Commands::Edit
     {
         auto sources_and_errors = Paragraphs::try_load_all_ports(paths);
 
-        return Util::fmap(sources_and_errors.paragraphs, [](const SourceControlFileLocation& pgh) -> std::string {
-            return pgh.source_control_file->core_paragraph->name;
-        });
+        return Util::fmap(sources_and_errors.paragraphs, Paragraphs::name_of_paragraph);
     }
 
     static constexpr std::array<CommandSwitch, 2> EDIT_SWITCHES = {

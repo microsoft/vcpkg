@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/base/fwd/json.h>
+
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/parse.h>
@@ -64,10 +66,7 @@ namespace vcpkg::Json
         int indent = 2;
     };
 
-    struct Array;
-    struct Object;
-
-    enum class ValueKind
+    enum class ValueKind : int
     {
         Null,
         Boolean,
@@ -81,7 +80,6 @@ namespace vcpkg::Json
     namespace impl
     {
         struct ValueImpl;
-        struct SyntaxErrorImpl;
     }
 
     struct Value
@@ -289,35 +287,47 @@ namespace vcpkg::Json
         underlying_t underlying_;
     };
 
-    struct Reader;
+    template<class Type>
+    Span<const StringView> IDeserializer<Type>::valid_fields() const
+    {
+        return {};
+    }
 
     template<class Type>
-    struct IDeserializer
+    Optional<Type> IDeserializer<Type>::visit_null(Reader&, StringView)
     {
-        using type = Type;
-        virtual StringView type_name() const = 0;
-
-        virtual Span<const StringView> valid_fields() const { return {}; }
-
-        virtual Optional<Type> visit_null(Reader&, StringView) { return nullopt; }
-        virtual Optional<Type> visit_boolean(Reader&, StringView, bool) { return nullopt; }
-        virtual Optional<Type> visit_integer(Reader& r, StringView field_name, int64_t i)
-        {
-            return this->visit_number(r, field_name, static_cast<double>(i));
-        }
-        virtual Optional<Type> visit_number(Reader&, StringView, double) { return nullopt; }
-        virtual Optional<Type> visit_string(Reader&, StringView, StringView) { return nullopt; }
-        virtual Optional<Type> visit_array(Reader&, StringView, const Array&) { return nullopt; }
-        virtual Optional<Type> visit_object(Reader&, StringView, const Object&) { return nullopt; }
-
-    protected:
-        IDeserializer() = default;
-        IDeserializer(const IDeserializer&) = default;
-        IDeserializer& operator=(const IDeserializer&) = default;
-        IDeserializer(IDeserializer&&) = default;
-        IDeserializer& operator=(IDeserializer&&) = default;
-        virtual ~IDeserializer() = default;
-    };
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_boolean(Reader&, StringView, bool)
+    {
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_integer(Reader& r, StringView field_name, int64_t i)
+    {
+        return this->visit_number(r, field_name, static_cast<double>(i));
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_number(Reader&, StringView, double)
+    {
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_string(Reader&, StringView, StringView)
+    {
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_array(Reader&, StringView, const Array&)
+    {
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_object(Reader&, StringView, const Object&)
+    {
+        return nullopt;
+    }
 
     struct ReaderError
     {

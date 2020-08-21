@@ -27,6 +27,21 @@ namespace vcpkg::Paragraphs
         std::vector<std::unique_ptr<Parse::ParseControlErrorInfo>> errors;
     };
 
+    // this allows one to pass this around as an overload set to stuff like `Util::fmap`,
+    // as opposed to making it a function
+    constexpr struct
+    {
+        const std::string& operator()(const SourceControlFileLocation* loc) const
+        {
+            return (*this)(*loc->source_control_file);
+        }
+        const std::string& operator()(const SourceControlFileLocation& loc) const
+        {
+            return (*this)(*loc.source_control_file);
+        }
+        const std::string& operator()(const SourceControlFile& scf) const { return scf.core_paragraph->name; }
+    } name_of_paragraph;
+
     LoadResults try_load_all_ports(const VcpkgPaths& paths);
 
     std::vector<SourceControlFileLocation> load_all_ports(const VcpkgPaths& paths);

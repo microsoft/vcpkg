@@ -824,7 +824,6 @@ namespace vcpkg
             System::printf("You may need to update the vcpkg binary; try running %s to update.\n\n", bootstrap);
         }
 
-
         for (auto&& error_info : error_info_list)
         {
             if (!error_info->missing_fields.empty())

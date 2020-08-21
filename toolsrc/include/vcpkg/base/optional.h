@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/base/fwd/optional.h>
+
 #include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/pragmas.h>
 
@@ -165,8 +167,8 @@ namespace vcpkg
             };
         };
 
-        template<class T>
-        struct OptionalStorage<T&, true>
+        template<class T, bool B>
+        struct OptionalStorage<T&, B>
         {
             constexpr OptionalStorage() noexcept : m_t(nullptr) { }
             constexpr OptionalStorage(T& t) : m_t(&t) { }
@@ -180,8 +182,8 @@ namespace vcpkg
             T* m_t;
         };
 
-        template<class T>
-        struct OptionalStorage<const T&, true>
+        template<class T, bool B>
+        struct OptionalStorage<const T&, B>
         {
             constexpr OptionalStorage() noexcept : m_t(nullptr) { }
             constexpr OptionalStorage(const T& t) : m_t(&t) { }

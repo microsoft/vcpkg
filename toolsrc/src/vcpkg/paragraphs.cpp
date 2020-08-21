@@ -351,7 +351,7 @@ namespace vcpkg::Paragraphs
 
         std::vector<std::string> ports;
 
-        auto load_port_names = [&](const RegistryImpl& r, Span<const std::string> packages) {
+        auto load_port_names = [&fs, &ports, &paths](const RegistryImpl& r) {
             auto port_dirs = fs.get_files_non_recursive(r.get_registry_root(paths));
             Util::sort(port_dirs);
             Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
@@ -360,11 +360,7 @@ namespace vcpkg::Paragraphs
 
             for (auto&& path : port_dirs)
             {
-                auto port_name = fs::u8string(path.filename());
-                if (packages.size() == 0 || std::find(packages.begin(), packages.end(), port_name) != packages.end())
-                {
-                    ports.push_back(std::move(port_name));
-                }
+                ports.push_back(fs::u8string(path.filename()));
             }
         };
 
@@ -372,11 +368,11 @@ namespace vcpkg::Paragraphs
 
         for (const auto& registry : registries.registries())
         {
-            load_port_names(registry.implementation(), registry.packages());
+            load_port_names(registry.implementation());
         }
         if (auto registry = registries.default_registry())
         {
-            load_port_names(*registry, {});
+            load_port_names(*registry);
         }
 
         Util::sort_unique_erase(ports);

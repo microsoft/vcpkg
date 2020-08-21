@@ -4,5 +4,4 @@ namespace vcpkg
 {
     struct RegistryImpl;
     struct Registry;
-    struct RegistryImpl;
 }
