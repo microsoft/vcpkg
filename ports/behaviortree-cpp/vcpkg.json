@@ -3,7 +3,7 @@
   "version-string": "3.5.1",
   "description": "Behavior Trees Library in C++.",
   "homepage": "https://www.behaviortree.dev",
-  "supports": "!uwp&!osx",
+  "supports": "!uwp & !osx",
   "dependencies": [
     "boost-coroutine2"
   ]
