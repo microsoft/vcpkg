@@ -25,20 +25,20 @@ una vez instalado vcpkg puede ejecutar `vcpkg help` o
 - [Primeros pasos](#primeros-pasos)
   - [Inicio rapido: Windows](#inicio-rapido-windows)
   - [Inicio rapido: Unix](#inicio-rapido-unix)
-  - [Instalando herramientas de desarrollo en Linux](#installing-linux-developer-tools)
-  - [Instalando herramientas de desarrollo en macOS](#installing-macos-developer-tools)
-    - [Instalando GCC en MacOS previo a 10.15](#installing-gcc-for-macos-before-1015)
-  - [Usando vcpkg con CMake](#using-vcpkg-with-cmake)
-    - [Visual Studio Code con CMake Tools](#visual-studio-code-with-cmake-tools)
-    - [Vcpkg con proyectos de Visual Studio (CMake)](#vcpkg-with-visual-studio-cmake-projects)
-    - [Vcpkg con CLion](#vcpkg-with-clion)
-    - [Vcpkg como Submodulo](#vcpkg-as-a-submodule)
-  - [Inicio rapido: archivos de Manifiesto](#quick-start-manifests)
-- [Tab-Completado/Auto-Completado](#tab-completionauto-completion)
-- [Ejemplos](#examples)
-- [Contribuyendo](#contributing)
-- [Licencia](#license)
-- [Telemetria](#telemetry)
+  - [Instalando herramientas de desarrollo en Linux](#instalando-herramientas-de-desarrollo-en-Linux)
+  - [Instalando herramientas de desarrollo en macOS](#instalando-herramientas-de-desarrollo-en-macos)
+    - [Instalando GCC en MacOS previo a 10.15](#instalando-gcc-en-macos-previo-a-10.15)
+  - [Usando vcpkg con CMake](#usando-vcpkg-con-cmake)
+    - [Visual Studio Code con CMake Tools](#visual-studio-code-con-cmake-tools)
+    - [Vcpkg con proyectos de Visual Studio (CMake)](#vcpkg-con-proyectos-de-visual-studio\(CMake\))
+    - [Vcpkg con CLion](#vcpkg-con-clion)
+    - [Vcpkg como Submodulo](#vcpkg-como-submodulo)
+  - [Inicio rapido: archivos de Manifiesto](#inicio-rapido-manifiestos)
+- [Tab-Completado/Auto-Completado](#Completado-TabAuto-Completado)
+- [Ejemplos](#ejemplos)
+- [Contribuyendo](#contribuyendo)
+- [Licencia](#licencia)
+- [Telemetria](#telemetria)
 
 # Primeros pasos
 
@@ -51,7 +51,7 @@ puede [abrir un issue en el repo de GitHub][contributing:submit-issue]
 donde el equipo de vpkg y la comunidad pueden verlo, y potencialmente hacer un port a vcpkg.
 
 Despues de tener vcpkg instalado y funcionando,
-puede que desee añadir [completado con tab](#completado-con-tab) en su terminal.
+puede que desee añadir [completado con tab](#Completado-TabAuto-Completado) en su terminal.
 
 finalmente si esta interesado en el futuro de vcpkg,
 puede ver la guía de [archivos de manifiesto](#inicio-rapido-manifiesto)!
@@ -101,7 +101,7 @@ Todas las librerias estaran listas para ser incluidas y
 usadas en su proyecto sin configuracion adicional.
 
 Si esta usando CMake con Visual Studio,
-continue [aquí](#vcpkg-with-visual-studio-cmake-projects).
+continue [aquí](#vcpkg-con-proyectos-de-visual-studio\(CMake\)).
 
 Para utilizar vcpkg con CMake sin un IDE,
 puede utilizar el archivo toolchain:
@@ -112,7 +112,7 @@ puede utilizar el archivo toolchain:
 ```
 
 Con CMake, todavia necesitara `find_package` y la configuraciones adicionales de la libreria.
-Revise la [Seccion de Cmake](#using-vcpkg-with-cmake) para mas informacion,
+Revise la [Seccion de Cmake](#usando-vcpkg-con-cmake) para mas informacion,
 incluyendo el uso de CMake con un IDE.
 
 Para cualquier otra herramienta, incluyendo Visual Studio Code,
@@ -160,7 +160,7 @@ $ cmake --build [build directory]
 ```
 
 Con CMake, todavia necesitara `find_package` y la configuraciones adicionales de la libreria.
-Revise la [Seccion de Cmake](#using-vcpkg-with-cmake)
+Revise la [Seccion de Cmake](#usando-vcpkg-con-cmake)
 para mas informacion en como aprovechar mejor vcpkg con CMake,
 y CMake tools para VSCode.
 
@@ -219,7 +219,7 @@ luego, para obtener una version actualizada de gcc, ejecute el comando:
 $ brew install gcc
 ```
 
-Posteriormente podra compilar vcpkg junto con la [guia de inicio rapido](#quick-start-unix)
+Posteriormente podra compilar vcpkg junto con la [guia de inicio rapido](#inicio-rapido-unix)
 
 ## Usando vcpkg con CMake
 
@@ -287,8 +287,8 @@ Adicionalmente, es probablemente que se rompan comportamientos antes de estabili
 asi que esta advertido.
 Por favor [Abra un Problema][contributing:submit-issue] si encuentra algun error
 
-Primero, instale vcpkg normalmente para [Windows](#quick-start-windows) o
-[Unix](#quick-start-unix).
+Primero, instale vcpkg normalmente para [Windows](#inicio-rapido-windows) o
+[Unix](#inicio-rapido-unix).
 Puede que desee instalar vcpkg en un lugar centralizado,
 ya que el directorio existe localmente,
 y esta bien ejecutar multiples comandos desde el mismo directorio de vcpkg al mismo tiempo.
