@@ -324,7 +324,6 @@ puee usar un simple `vcpkg install --feature-flags=manifests`
 
 Para mas informacion, revise la especificacion de [manifiesto][getting-started:manifest-spec]
 
-
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
