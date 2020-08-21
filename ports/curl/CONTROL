@@ -27,9 +27,13 @@ Feature: openssl
 Build-Depends: openssl
 Description: SSL support (OpenSSL)
 
-Feature: winssl
-Description: SSL support (Secure Channel / "WinSSL")
+Feature: schannel
+Description: SSL support (Secure Channel)
 Build-Depends: curl[core,sspi]
+
+Feature: winssl
+Description: Legacy name for schannel
+Build-Depends: curl[schannel]
 
 Feature: mbedtls
 Build-Depends: mbedtls

@@ -17,9 +17,9 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
-# winssl will enable sspi, but sspi do not support uwp
-if(("winssl" IN_LIST FEATURES OR "sspi" IN_LIST FEATURES OR "tool" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
-    message(FATAL_ERROR "winssl,sspi,tool are not supported on non-Windows and uwp platforms")
+# schannel will enable sspi, but sspi do not support uwp
+if(("schannel" IN_LIST FEATURES OR "sspi" IN_LIST FEATURES OR "tool" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
+    message(FATAL_ERROR "schannel,sspi,tool are not supported on non-Windows and uwp platforms")
 endif()
 
 if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
@@ -29,15 +29,15 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
-    http2   USE_NGHTTP2
-    openssl CMAKE_USE_OPENSSL
-    mbedtls CMAKE_USE_MBEDTLS
-    ssh     CMAKE_USE_LIBSSH2
-    tool    BUILD_CURL_EXE
-    c-ares  ENABLE_ARES
-    sspi    CURL_WINDOWS_SSPI
-    brotli  CURL_BROTLI
-    winssl  CMAKE_USE_SCHANNEL
+    http2       USE_NGHTTP2
+    openssl     CMAKE_USE_OPENSSL
+    mbedtls     CMAKE_USE_MBEDTLS
+    ssh         CMAKE_USE_LIBSSH2
+    tool        BUILD_CURL_EXE
+    c-ares      ENABLE_ARES
+    sspi        CURL_WINDOWS_SSPI
+    brotli      CURL_BROTLI
+    schannel    CMAKE_USE_SCHANNEL
     sectransp   CMAKE_USE_SECTRANSP
     
     INVERTED_FEATURES
