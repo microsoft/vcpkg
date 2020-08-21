@@ -187,12 +187,15 @@ where you have a single installation directory per-system (although, for vcpkg,
 it's a single installation directory per vcpkg installation,
 and one can have as many vcpkg installations as one wants).
 This mode is the way people have used vcpkg for the past four years,
-but it is not the way we want future users to use vcpkg.
+but it is not the way we expect future users to use vcpkg.
 Recently, we have implemented a second mode – "manifest" mode – where a user writes this manifest,
 called vcpkg.json, and there are separate installation directories for each manifest or even each build.
-The registries RFC only supports this latter mode.
+The registries RFC supports both modes.
 
-The way that vcpkg will do this is by searching from the current working directory
+In classic mode, we attempt to find a file named `vcpkg-configuration.json` in the
+vcpkg root; if it exists, we will use that file as the configuration object.
+
+In manifest mode, vcpkg searched from the current working directory
 up towards the root for a file named `vcpkg.json`.
 It will then look inside that file for the `"configuration"` property.
 If that property is an object, then that object will be the configuration object;
