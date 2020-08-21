@@ -195,7 +195,7 @@ namespace vcpkg::Test
             ec.assign(errno, std::system_category());
         }
 #else
-        Util::unused(target, file, ec);
+        (void)(target, file, ec);
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }
@@ -217,7 +217,7 @@ namespace vcpkg::Test
 #elif FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_UNIX
         ::vcpkg::Test::create_symlink(target, file, ec);
 #else
-        Util::unused(target, file, ec);
+        (void)(target, file, ec);
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }

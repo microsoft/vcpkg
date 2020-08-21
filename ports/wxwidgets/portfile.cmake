@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
@@ -7,10 +9,11 @@ vcpkg_from_github(
     PATCHES
         disable-platform-lib-dir.patch
         fix-stl-build-vs2019-16.6.patch
+        fix-expat.patch
 )
 
 set(OPTIONS)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_OSX)
     set(OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
 endif()
 

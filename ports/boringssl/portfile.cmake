@@ -1,9 +1,7 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
-  message(WARNING "Can't build BoringSSL if OpenSSL is installed. Please remove OpenSSL, and try to install BoringSSL again if you need it. Build will continue since BoringSSL is a drop-in replacement for OpenSSL")
-  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-  return()
+  message(FATAL_ERROR "Can't build BoringSSL if OpenSSL is installed. Please remove OpenSSL, and try to install BoringSSL again if you need it. Build will continue since BoringSSL is a drop-in replacement for OpenSSL")
 endif()
 
 vcpkg_find_acquire_program(PERL)
@@ -30,6 +28,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     0001-vcpkg.patch
+    0002-disable-waring-4065.patch
 )
 
 vcpkg_configure_cmake(
