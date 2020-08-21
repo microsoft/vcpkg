@@ -7,7 +7,7 @@ index e580b1a..572ea06 100644
  # check for SSE flags
  include("${PCL_SOURCE_DIR}/cmake/pcl_find_sse.cmake")
 -if(PCL_ENABLE_SSE AND "${CMAKE_CXX_FLAGS}" STREQUAL "${CMAKE_CXX_FLAGS_DEFAULT}")
-+if(1)
++if(PCL_ENABLE_SSE)
    PCL_CHECK_FOR_SSE()
  endif()
  
