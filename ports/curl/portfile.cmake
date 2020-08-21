@@ -71,6 +71,7 @@ vcpkg_configure_cmake(
         -DCURL_STATICLIB=${CURL_STATICLIB}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DENABLE_DEBUG=ON
+        -DCURL_CA_FALLBACK=ON
 )
 
 vcpkg_install_cmake()
