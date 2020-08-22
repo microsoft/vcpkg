@@ -21,7 +21,7 @@ get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 
 if(CMAKE_HOST_WIN32)
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES make bash diffutils coreutils gawk sed grep)
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
 	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 	set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 else()

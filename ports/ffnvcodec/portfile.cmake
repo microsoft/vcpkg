@@ -14,7 +14,7 @@ vcpkg_from_github(
 # Windows
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make bash pkg-config sed coreutils)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make pkg-config)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
     message(STATUS "Building ${_csc_PROJECT_PATH} for Release")

@@ -209,7 +209,6 @@ function(vcpkg_configure_make)
     _vcpkg_backup_env_variables(INCLUDE LIB LIBPATH)
 
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
-
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
     endif()
@@ -218,21 +217,14 @@ function(vcpkg_configure_make)
     if (CMAKE_HOST_WIN32)
         _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
 
-        list(APPEND MSYS_REQUIRE_PACKAGES
-            diffutils
-            pkg-config
-            binutils
-            libtool
-            bash
-        )
-        list(APPEND MSYS_REQUIRE_PACKAGES make)
+        list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
+        # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
+        string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/share/automake-1.16;${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
+        set(ENV{PATH} "${NEWPATH}")
+        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
+
         if (_csc_AUTOCONFIG)
-            list(APPEND MSYS_REQUIRE_PACKAGES
-                autoconf
-                automake-wrapper
-                automake1.16
-                m4
-            )
             # --build: the machine you are building on
             # --host: the machine you are building for
             # --target: the machine that CC will produce binaries for
@@ -252,17 +244,6 @@ function(vcpkg_configure_make)
             endif()
             debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
         endif()
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
-        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-
-        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
-
-        # This is required because PATH contains sort and find from Windows but the MSYS versions are needed
-        # ${MSYS_ROOT}/urs/bin cannot be prepended to PATH due to other conflicts
-        # file(CREATE_LINK "${MSYS_ROOT}/usr/bin/sort.exe" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-make/sort.exe" COPY_ON_ERROR)
-        # file(CREATE_LINK "${MSYS_ROOT}/usr/bin/find.exe" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-make/find.exe" COPY_ON_ERROR)
-        # vcpkg_add_to_path(PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-make/make_wrapper") # Other required wrappers are also located there
-        vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/share/automake-1.16") # Required wrappers are located here (compile ar-lib)
 
         macro(_vcpkg_append_to_configure_environment inoutstring var defaultval)
             # Allows to overwrite settings in custom triplets via the environment
