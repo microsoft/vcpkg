@@ -7,9 +7,9 @@ Si nunca ha usado vcpkg antes,
 o si está intentando aprender a usar vcpkg, consulte nuestra sección
 [Primeros pasos](#primeros-pasos) para iniciar a usar vcpkg.
 
-Para una descripcion corta de comandos disponibles,
-una vez instalado vcpkg puede ejecutar `vcpkg help` o
-`vcpkg help [comando]` para una ayuda especifica de un comando.
+Para una descripción corta de los comandos disponibles,
+una vez instalado vcpkg puede ejecutar `vcpkg help`, o
+`vcpkg help [comando]` para obtener ayuda específica de un comando.
 
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), en el canal #vcpkg
