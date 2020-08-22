@@ -67,6 +67,7 @@ namespace vcpkg::Dependencies
 
         std::string displayname() const;
         const std::string& public_abi() const;
+        bool has_package_abi() const;
         const Build::PreBuildInfo& pre_build_info(LineInfo linfo) const;
 
         PackageSpec spec;

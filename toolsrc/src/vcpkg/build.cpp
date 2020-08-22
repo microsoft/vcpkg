@@ -871,6 +871,7 @@ namespace vcpkg::Build
         abi_tag_entries.emplace_back("features", Strings::join(";", sorted_feature_list));
 
         if (action.build_options.use_head_version == UseHeadVersion::YES) abi_tag_entries.emplace_back("head", "");
+        if (action.build_options.editable == Editable::YES) abi_tag_entries.emplace_back("editable", "");
 
         Util::sort(abi_tag_entries);
 
@@ -1019,7 +1020,7 @@ namespace vcpkg::Build
         std::error_code ec;
         const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
         const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
-        if (action.build_options.editable == Build::Editable::NO)
+        if (action.has_package_abi())
         {
             auto restore = binaries_provider.try_restore(paths, action);
             if (restore == RestoreResult::build_failed)
@@ -1044,7 +1045,7 @@ namespace vcpkg::Build
         fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", fs::u8string(abi_file_in_package));
 
-        if (action.build_options.editable == Build::Editable::NO && result.code == BuildResult::SUCCEEDED)
+        if (action.has_package_abi() && result.code == BuildResult::SUCCEEDED)
         {
             binaries_provider.push_success(paths, action);
         }
