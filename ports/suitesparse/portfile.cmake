@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF 71e330ca2bc0a2f12f416c461d23dbca21db4d8f
     SHA512 06c75927c924cfd5511b07504e826714f504586243d6f3449d67408a33f3ecea824a7f2de7a165171791b9bda4fc09c0d7093125970895c2ed8d4d37ca1d5a3d
     HEAD_REF master
-    PATCHES
-        linux_blas_no_underscore.patch
 )
 
 vcpkg_from_github(
