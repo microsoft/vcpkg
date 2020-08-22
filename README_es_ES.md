@@ -370,7 +370,7 @@ Vcpkg es un proyecto de codigo abierto, y esta construido con sus contribuciones
 Aqui hay unas de las maneras en las que puede contribuir:
 
 * [Creando Issues][contributing:submit-issue] en vcpkg o paquetes existentes
-* [Creando Corecciones y Nuevos Paquetes][contributing:submit-pr]
+* [Creando Correcciones y Nuevos Paquetes][contributing:submit-pr]
 
 Por favor visite nuestra [Guía de Contribucion](CONTRIBUTING.md) para mas detalles.
 
