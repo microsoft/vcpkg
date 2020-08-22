@@ -11,21 +11,50 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
-if ("pcre" IN_LIST FEATURES)
-    set(REGEX_BACKEND pcre)
-elseif ("pcre2" IN_LIST FEATURES)
-    set(REGEX_BACKEND pcre2)
-else()
-    set(REGEX_BACKEND builtin)
+if("winhttp" IN_LIST FEATURES AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
+    message(FATAL_ERROR "winhttp is not supported on non-Windows and uwp platforms")
 endif()
+
+if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
+    message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
+endif()
+
+if ("pcre2" IN_LIST FEATURES)
+    set(REGEX_BACKEND pcre2)
+elseif ("pcre" IN_LIST FEATURES)
+    set(REGEX_BACKEND pcre)
+else()
+    message(FATAL_ERROR "Must choose pcre or pcre2 regex backend")
+endif()
+
+if("openssl" IN_LIST FEATURES)
+    set(SSL_BACKEND "OpenSSL")
+elseif("winhttp" IN_LIST FEATURES)
+    set(SSL_BACKEND "WinHTTP")
+elseif("sectransp" IN_LIST FEATURES)
+    set(SSL_BACKEND "SecureTransport")
+elseif("mbedtls" IN_LIST FEATURES)
+    set(SSL_BACKEND "mbedTLS")
+else()
+    set(SSL_BACKEND OFF)
+endif()
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS GIT2_FEATURES
+    FEATURES
+        ssh USE_SSH
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_CLAR=OFF
+        -DUSE_HTTP_PARSER=system
+        -DUSE_HTTPS=${SSL_BACKEND}
         -DREGEX_BACKEND=${REGEX_BACKEND}
         -DSTATIC_CRT=${STATIC_CRT}
+        ${GIT2_FEATURES}
 )
 
 vcpkg_install_cmake()
