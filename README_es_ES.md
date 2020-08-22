@@ -107,8 +107,8 @@ Para utilizar vcpkg con CMake sin un IDE,
 puede utilizar el archivo toolchain:
 
 ```cmd
-> cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
-> cmake --build [build directory]
+> cmake -B [directorio de compilación] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake --build [directorio de compilación]
 ```
 
 Con CMake, todavia necesitara `find_package` y la configuraciones adicionales de la libreria.
@@ -155,8 +155,8 @@ $ ./vcpkg/vcpkg search [search term]
 Para usar vcpkg con CMake, tiene que usar el siguiente archivo toolchain:
 
 ```sh
-$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
-$ cmake --build [build directory]
+$ cmake -B [directorio de compilación] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake --build [directorio de compilación]
 ```
 
 Con CMake, todavia necesitara `find_package` y la configuraciones adicionales de la libreria.
