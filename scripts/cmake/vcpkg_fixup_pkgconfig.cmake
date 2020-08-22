@@ -37,6 +37,8 @@
 ##
 ## ## Examples
 ## Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files.
+
+include(vcpkg_escape_regex_control_characters)
 function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_libs _ignore_flags)
     # Setup pkg-config paths
     set(_VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
@@ -134,6 +136,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     foreach(_search_path IN LISTS _pkg_lib_paths_output)
         debug_message("REMOVING:'${_search_path}'")
         debug_message("FROM:'${_pkg_libs_output}'")
+        vcpkg_escape_regex_control_characters(_search_path "${_search_path}")
         string(REGEX REPLACE "(^[\t ]*|[\t ]+|;[\t ]*)-L${_search_path}([\t ]+|[\t ]*$)" ";" _pkg_libs_output "${_pkg_libs_output}") # Remove search paths from libs
     endforeach()
     debug_message("LIBS AFTER -L<path> REMOVAL:'${_pkg_libs_output}'")
@@ -254,14 +257,15 @@ function(vcpkg_fixup_pkgconfig)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
 
+    vcpkg_escape_regex_control_characters(_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
     if(NOT _vfpkg_RELEASE_FILES)
         file(GLOB_RECURSE _vfpkg_RELEASE_FILES "${CURRENT_PACKAGES_DIR}/**/*.pc")
-        list(FILTER _vfpkg_RELEASE_FILES EXCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
+        list(FILTER _vfpkg_RELEASE_FILES EXCLUDE REGEX "${_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR}/debug/")
     endif()
 
     if(NOT _vfpkg_DEBUG_FILES)
         file(GLOB_RECURSE _vfpkg_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/**/*.pc")
-        list(FILTER _vfpkg_DEBUG_FILES INCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
+        list(FILTER _vfpkg_DEBUG_FILES INCLUDE REGEX "${_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR}/debug/")
     endif()
 
     vcpkg_find_acquire_program(PKGCONFIG)
