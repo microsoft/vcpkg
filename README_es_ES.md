@@ -34,7 +34,7 @@ una vez instalado vcpkg puede ejecutar `vcpkg help`, o
     - [Vcpkg con CLion](#vcpkg-con-clion)
     - [Vcpkg como submódulo](#vcpkg-como-submodulo)
   + [Inicio rápido: archivos de Manifiesto](#inicio-rapido-manifiestos)
-* [Tab-Completado/Auto-Completado](#Completado-TabAuto-Completado)
+* [Tab-Completado/Autocompletado](#Completado-TabAutocompletado)
 * [Ejemplos](#ejemplos)
 * [Contribuyendo](#contribuyendo)
 * [Licencia](#licencia)
