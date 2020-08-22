@@ -169,7 +169,7 @@ Para cualquier otra herramienta, visite la [guía de integracion][getting-starte
 ### Instalando Herramientas de desarrollo en Linux
 
 Segun las distribuciones de Linux, hay diferentes paquetes
-que necesitara installar:
+que necesitara instalar:
 
 - Debian, Ubuntu, popOS, y otra distribucion basada en Debian:
 
