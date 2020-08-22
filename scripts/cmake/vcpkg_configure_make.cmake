@@ -338,7 +338,7 @@ function(vcpkg_configure_make)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV RC "windres-rc ${VCPKG_DETECTED_RC_COMPILER}")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV WINDRES "windres-rc ${VCPKG_DETECTED_RC_COMPILER}")
             if(VCPKG_DETECTED_AR)
-                _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "${VCPKG_DETECTED_AR}")
+                _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "ar-lib ${VCPKG_DETECTED_AR}")
             else()
                 _vcpkg_append_to_configure_environment(CONFIGURE_ENV AR "ar-lib lib.exe -verbose")
             endif()
@@ -367,6 +367,7 @@ function(vcpkg_configure_make)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP "${VCPKG_DETECTED_STRIP}") 
         else()
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP ":")
+            list(APPEND _csc_OPTIONS ac_cv_prog_ac_ct_STRIP=:)
         endif()
         if(VCPKG_DETECTED_NM) # If required set the ENV variable NM in the portfile correctly
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "${VCPKG_DETECTED_NM}") 
@@ -385,7 +386,7 @@ function(vcpkg_configure_make)
         foreach(_env IN LISTS _csc_CONFIGURE_ENVIRONMENT_VARIABLES)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV ${_env} "${${_env}}")
         endforeach()
-
+        debug_message("CONFIGURE_ENV: '${CONFIGURE_ENV}'")
         # Other maybe interesting variables to control
         # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
         # LINK This is the command used to actually link a C program.
