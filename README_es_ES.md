@@ -255,7 +255,7 @@ y entre en la seccion de ajustes de CMake (Build, Execution, Deployment > CMake)
 Finalmente, en `CMake options`, agregue la linea siguiente:
 
 ```sh
--DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+-DCMAKE_TOOLCHAIN_FILE=[raíz de vcpkg]/scripts/buildsystems/vcpkg.cmake
 ```
 
 Desafortunadamente, tendrá que hacerlo para cada perfil.
