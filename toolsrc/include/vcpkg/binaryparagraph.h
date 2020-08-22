@@ -39,7 +39,7 @@ namespace vcpkg
         std::vector<std::string> default_features;
         std::vector<std::string> dependencies;
         std::string abi;
-        Type type;
+        Type type = {Type::UNKNOWN};
     };
 
     bool operator==(const BinaryParagraph&, const BinaryParagraph&);

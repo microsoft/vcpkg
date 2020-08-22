@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.debug.h>
@@ -162,25 +160,6 @@ namespace vcpkg
         return s_home;
     }
 #else
-    static const ExpectedS<fs::path>& get_xdg_config_home() noexcept
-    {
-        static ExpectedS<fs::path> s_home = [] {
-            auto maybe_home = System::get_environment_variable("XDG_CONFIG_HOME");
-            if (auto p = maybe_home.get())
-            {
-                return ExpectedS<fs::path>(fs::u8path(*p));
-            }
-            else
-            {
-                return System::get_home_dir().map([](fs::path home) {
-                    home /= fs::u8path(".config");
-                    return home;
-                });
-            }
-        }();
-        return s_home;
-    }
-
     static const ExpectedS<fs::path>& get_xdg_cache_home() noexcept
     {
         static ExpectedS<fs::path> s_home = [] {

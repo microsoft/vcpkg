@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/util.h>
@@ -174,7 +172,6 @@ namespace vcpkg
     {
         std::map<PackageSpec, InstalledPackageView> ipv_map;
 
-        std::vector<InstalledPackageView> installed_packages;
         for (auto&& pgh : status_db)
         {
             if (!pgh->is_installed()) continue;

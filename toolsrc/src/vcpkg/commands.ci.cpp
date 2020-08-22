@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
@@ -17,6 +15,7 @@
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
