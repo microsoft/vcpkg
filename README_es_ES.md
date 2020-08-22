@@ -38,7 +38,7 @@ una vez instalado vcpkg puede ejecutar `vcpkg help`, o
 * [Ejemplos](#ejemplos)
 * [Contribuyendo](#contribuyendo)
 * [Licencia](#licencia)
-* [Telemetria](#telemetria)
+* [Telemetria](#telemetría)
 
 ## Primeros pasos
 
