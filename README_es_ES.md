@@ -21,7 +21,7 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
 ## Tabla de contenidos
 
 * [Vcpkg: General](#vcpkg-general)
-* [Table de contenidos](#tabla-de-contenidos)
+* [Tabla de contenidos](#tabla-de-contenidos)
 * [Primeros pasos](#primeros-pasos)
   + [Inicio rápido: Windows](#inicio-rapido-windows)
   + [Inicio rápido: Unix](#inicio-rapido-unix)
