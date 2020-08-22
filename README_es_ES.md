@@ -77,7 +77,7 @@ ya que de otra forma puede encontrarse problemas de ruta para algunos sistemas d
 > .\vcpkg\bootstrap-vcpkg.bat
 ```
 
-Para instalar las librerias para su proyecto, ejecure:
+Para instalar las librerias para su proyecto, ejecute:
 
 ```cmd
 > .\vcpkg\vcpkg install [paquetes a instalar]
