@@ -13,11 +13,17 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
         001_port_fixes.patch
+        002_required.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_UNIT_TESTS=OFF
+        -DBUILD_TOOLS=OFF
+        -DBUILD_SHARED_LIBS=OFF
 )
 
 vcpkg_install_cmake()
