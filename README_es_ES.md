@@ -320,7 +320,7 @@ o mediante la integracion de Visual Studio/MSBuild,
 este instalara las dependencias automaticamente,
 pero necesitara ajustar `VcpkgManifestEnabled` en `On` para MSBuild.
 Si desea instalar sus dependencias sin usar CMake o MSBuild,
-puee usar un simple `vcpkg install --feature-flags=manifests`
+puede usar un simple `vcpkg install --feature-flags=manifests`
 
 Para mas informacion, revise la especificacion de [manifiesto][getting-started:manifest-spec]
 
