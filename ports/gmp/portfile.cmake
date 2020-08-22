@@ -13,6 +13,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             vs.build.patch
             runtime.patch
             prefix.patch
+            adddef.patch
     )
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_DIR "${YASM}" DIRECTORY)

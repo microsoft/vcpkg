@@ -9,8 +9,10 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES gmpd.patch
+            dll.patch
 )
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES texinfo)
+file(REMOVE_RECURSE "${SOURCE_PATH}/m4")
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
