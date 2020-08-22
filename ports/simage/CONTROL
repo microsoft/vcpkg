@@ -1,0 +1,5 @@
+Source: simage
+Version: 1.8.0
+Description: Image file format library abstraction layer
+Build-Depends: giflib (linux|uwp), libjpeg-turbo (linux|uwp), libpng (linux|uwp), libsndfile (linux|uwp), tiff (linux|uwp), libvorbis (linux|uwp)
+Homepage: https://github.com/coin3d/simage

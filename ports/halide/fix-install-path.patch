@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4ba3843..6697118 100644
+index 577b61ed2..7c6dd8ac4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -450,7 +450,7 @@ install(FILES
+@@ -432,7 +432,7 @@ install(FILES
          DESTINATION include)
  
  install(DIRECTORY tutorial
@@ -11,22 +11,20 @@ index 4ba3843..6697118 100644
          FILES_MATCHING
          PATTERN "*.cpp"
          PATTERN "*.h"
-@@ -478,12 +478,12 @@ endforeach()
- # ---- README
- file(GLOB FILES "${HALIDE_BASE_DIR}/*.md")
- install(FILES ${FILES}
+@@ -463,10 +463,10 @@ install(FILES
+         README.md
+         README_rungen.md
+         README_webassembly.md
 -        DESTINATION .)
 +        DESTINATION share/halide)
  
  # ---- halide.cmake
- file(GLOB FILES "${HALIDE_BASE_DIR}/*.cmake")
- install(FILES ${FILES}
--        DESTINATION .)
-+        DESTINATION share/halide)
+-install(FILES halide.cmake DESTINATION .)
++install(FILES halide.cmake DESTINATION share/halide)
  
  # ---- halide_config
- file(GLOB FILES "${HALIDE_BASE_DIR}/tools/halide_config.*.tpl")
-@@ -492,7 +492,7 @@ foreach(F ${FILES})
+ file(GLOB FILES "${Halide_SOURCE_DIR}/tools/halide_config.*.tpl")
+@@ -475,7 +475,7 @@ foreach(F ${FILES})
    string(REGEX REPLACE "\\.tpl$" "" FNAME "${FNAME}")  # Strip .tpl extension
    configure_file("${F}" "${CMAKE_BINARY_DIR}/${FNAME}" @ONLY)
    install(FILES "${CMAKE_BINARY_DIR}/${FNAME}"

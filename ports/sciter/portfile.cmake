@@ -9,8 +9,8 @@ endif()
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION e0f293ebfb59b9fbef058626bcaeafc38dad5fb8)
-set(SCITER_SHA 30b163c478db0c749464de1f18ce249f90018490c737c3d740cebeab0963f5f76d04b907d6cd93952953a7a0ee139fc1ecfa28f6100ada210a6a9ff0e4ff12d5)
+set(SCITER_REVISION 63c9328e88c1877deea721cbe060b19c4fce7cb6)
+set(SCITER_SHA 151ae3f74980e76fa04e0d5ef54ed56efcee312b4654c906a04b017384073ddf9ae353c29d9f0a12f681fd83d42e57b9ed3b563c641979406ddad0b3cc26d49c)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -42,8 +42,7 @@ set(TOOL_PERMS FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ 
 
 # license
 file(COPY ${SOURCE_PATH}/logfile.htm DESTINATION ${SCITER_SHARE})
-file(COPY ${SOURCE_PATH}/license.htm DESTINATION ${SCITER_SHARE})
-file(RENAME ${SCITER_SHARE}/license.htm ${SCITER_SHARE}/copyright)
+file(INSTALL ${SOURCE_PATH}/license.htm DESTINATION ${SCITER_SHARE} RENAME copyright)
 
 # samples & widgets
 file(COPY ${SOURCE_PATH}/samples DESTINATION ${SCITER_SHARE})
@@ -59,6 +58,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux AND VCPKG_TARGET_ARCHITECTURE STREQUAL
     file(INSTALL ${SCITER_BIN}/usciter DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/inspector DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${SCITER_TOOLS})
+
+    if ("windowless" IN_LIST FEATURES)
+        set(SCITER_BIN ${SOURCE_PATH}/bin.lnx/x64lite)
+    endif()
 
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -93,10 +96,12 @@ else()
     file(INSTALL ${SCITER_BIN32}/inspector.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN32}/sciter.dll DESTINATION ${SCITER_TOOLS})
 
+    if ("windowless" IN_LIST FEATURES)
+        set(SCITER_BIN ${SOURCE_PATH}/bin.win/${SCITER_ARCH}lite)
+    endif()
+
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${SCITER_BIN}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 message(STATUS "Warning: Sciter requires manual deployment of the correct DLL files.")

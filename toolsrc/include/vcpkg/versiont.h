@@ -6,17 +6,18 @@ namespace vcpkg
     struct VersionT
     {
         VersionT() noexcept;
-        VersionT(std::string&& value);
-        VersionT(const std::string& value);
+        VersionT(std::string&& value, int port_version);
+        VersionT(const std::string& value, int port_version);
 
-        const std::string& to_string() const;
+        std::string to_string() const;
+
+        friend bool operator==(const VersionT& left, const VersionT& right);
+        friend bool operator!=(const VersionT& left, const VersionT& right);
 
     private:
         std::string value;
+        int port_version;
     };
-
-    bool operator==(const VersionT& left, const VersionT& right);
-    bool operator!=(const VersionT& left, const VersionT& right);
 
     struct VersionDiff
     {

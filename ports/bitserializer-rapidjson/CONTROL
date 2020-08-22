@@ -1,4 +1,4 @@
 Source: bitserializer-rapidjson
-Version: 0.8
-Build-Depends: bitserializer, rapidjson
-Description: This is an implementation of the BitSerializer archive for serialization JSON (based on the RapidJson library).
+Version: alias
+Build-Depends: bitserializer[rapidjson-archive]
+Description: Deprecated alias for bitserializer-rapidjson

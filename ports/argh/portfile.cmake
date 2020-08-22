@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF a1edee559757e076e570b8f6c2f555d8d00b373c
     SHA512 a100c7ff20ef9ed39d53efeac5507a6ed59fb99ccba36ac4b5f8f5aaac6782f8e951b2f26b9b50f6c6fdbc53b5bceaabbb9dd9b9539f968fc1037733342e17a6
     HEAD_REF master
+    PATCHES
+        remove_unnamespaced_license_file.patch # https://github.com/adishavit/argh/pull/51
 )
 
 vcpkg_configure_cmake(

@@ -131,12 +131,14 @@ function(vcpkg_install_msbuild)
 
     list(APPEND _csc_OPTIONS
         /t:${_csc_TARGET}
-        /p:UseEnv=True
         /p:Platform=${_csc_PLATFORM}
         /p:PlatformToolset=${_csc_PLATFORM_TOOLSET}
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
+        /p:VcpkgTriplet=${TARGET_TRIPLET}
+        "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
+        /p:VcpkgManifestInstall=false
         /m
     )
 

@@ -7,18 +7,30 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.in config.h)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
-# This is Windows-specific. Other acceptable values on different platforms should be
-#    macOS - CONFIG_CORETEXT
-#    linux - CONFIG_FONTCONFIG
-add_compile_definitions(CONFIG_DIRECTWRITE)
+if(WIN32)
+  add_compile_definitions(CONFIG_DIRECTWRITE)
+elseif(APPLE)
+  add_compile_definitions(CONFIG_CORETEXT)
+else()
+  add_compile_definitions(CONFIG_FONTCONFIG)
+endif()
+
 add_compile_definitions(CONFIG_FREETYPE)
 add_compile_definitions(CONFIG_FRIBIDI)
 add_compile_definitions(CONFIG_HARFBUZZ)
 
 file (GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/libass/*.c)
 
-list(FILTER SOURCES EXCLUDE REGEX ".*ass_coretext.c$")
-list(FILTER SOURCES EXCLUDE REGEX ".*ass_fontconfig.c$")
+if(WIN32)
+  list(FILTER SOURCES EXCLUDE REGEX ".*ass_coretext.c$")
+  list(FILTER SOURCES EXCLUDE REGEX ".*ass_fontconfig.c$")
+elseif(APPLE)
+  list(FILTER SOURCES EXCLUDE REGEX ".*ass_directwrite.c$")
+  list(FILTER SOURCES EXCLUDE REGEX ".*ass_fontconfig.c$")
+else()
+  list(FILTER SOURCES EXCLUDE REGEX ".*ass_coretext.c$")
+  list(FILTER SOURCES EXCLUDE REGEX ".*ass_directwrite.c$")
+endif()
 
 find_package(Freetype REQUIRED)
 
@@ -30,18 +42,24 @@ find_path(HARFBUZZ_INCLUDE_DIR
           NAMES hb.h
           PATH_SUFFIXES harfbuzz)
 
-find_library(FRIBIDI_LIBRARY NAMES fribidi)
+find_path(DIRENT_INCLUDE_DIR
+          NAMES dirent.h)
+
+find_library(FRIBIDI_LIBRARY NAMES libfribidi fribidi)
 find_library(HARFBUZZ_LIBRARY NAMES harfbuzz)
 
 add_library(ass ${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/libass.def)
 
-target_include_directories(ass PRIVATE 
-  ${FRIBIDI_INCLUDE_DIR} 
+target_include_directories(ass PRIVATE
+  ${FRIBIDI_INCLUDE_DIR}
   ${HARFBUZZ_INCLUDE_DIR})
-
-target_link_libraries(ass PRIVATE 
-  Freetype::Freetype 
-  ${FRIBIDI_LIBRARY} 
+if(DIRENT_INCLUDE_DIR)
+    target_include_directories(ass PRIVATE
+      ${DIRENT_INCLUDE_DIR})
+endif()
+target_link_libraries(ass PRIVATE
+  Freetype::Freetype
+  ${FRIBIDI_LIBRARY}
   ${HARFBUZZ_LIBRARY})
 
 install(TARGETS ass

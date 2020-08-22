@@ -1,16 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.11.4
-    SHA512 777bbb0e9e2375eaebe6b8c87abd660bac70ee469c9ad00dd25917b82d7fb5bbe33cf87f0d69c90e19d55c07a7285ec20974ba4768623ce9ccfadf147fd5e261
+    REF fde7cf7358ec7cd69e8db9be4f1fa6a5c431386a    #v3.13.0
+    SHA512 b458410311a0905048c86d70ded263ae0cbb6693fd42cba730d3a95c69ca533cf453eb15c5f8bf8b00003ddc63fe96b3c4242907e2d6b00d5bec5d37b2ae1c5e
     HEAD_REF master
     PATCHES
         fix-uwp.patch
+        fix-android-log.patch
+        fix-static-build.patch
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(protobuf_BUILD_PROTOC_BINARIES OFF)
-elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME)
+elseif(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_MINGW AND NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP))
     set(protobuf_BUILD_PROTOC_BINARIES OFF)
 else()
     set(protobuf_BUILD_PROTOC_BINARIES ON)
@@ -43,7 +45,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${VCPKG_BUILD_STATIC_CRT}
-        -Dprotobuf_WITH_ZLIB=${protobuf_WITH_ZLIB}
         -Dprotobuf_BUILD_TESTS=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
@@ -72,9 +73,10 @@ else()
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(READ ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake RELEASE_MODULE)
-    string(REPLACE "\${_IMPORT_PREFIX}/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}" RELEASE_MODULE "${RELEASE_MODULE}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake "${RELEASE_MODULE}")
+	vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake
+		"\${_IMPORT_PREFIX}/bin/protoc${EXECUTABLE_SUFFIX}"
+		"\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}"
+)
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -88,8 +90,7 @@ protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(CMAKE_HOST_WIN32)
     if(protobuf_BUILD_PROTOC_BINARIES)
-        file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        vcpkg_copy_tools(TOOL_NAMES protoc)
     else()
         file(COPY ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
     endif()
@@ -112,10 +113,23 @@ else()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(READ ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h _contents)
-    string(REPLACE "\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" "\#define PROTOBUF_USE_DLLS\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h "${_contents}")
+	vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h
+		"\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_"
+		"\#ifndef PROTOBUF_USE_DLLS\n\#define PROTOBUF_USE_DLLS\n\#endif // PROTOBUF_USE_DLLS\n\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_"
+)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 vcpkg_copy_pdbs()
+set(packages protobuf protobuf-lite)
+foreach(_package IN LISTS packages)
+    set(_file ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_package}.pc)
+    if(EXISTS "${_file}")
+        vcpkg_replace_string(${_file} "-l${_package}" "-l${_package}d")
+    endif()
+endforeach()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(SYSTEM_LIBRARIES SYSTEM_LIBRARIES pthread)
+endif()
+vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})

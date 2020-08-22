@@ -1,4 +1,6 @@
 Source: libyuv
-Version: fec9121-1
+Version: fec9121
+Port-Version: 3
+Homepage: https://chromium.googlesource.com/libyuv/libyuv
 Build-Depends: libjpeg-turbo
 Description: libyuv is an open source project that includes YUV scaling and conversion functionality.

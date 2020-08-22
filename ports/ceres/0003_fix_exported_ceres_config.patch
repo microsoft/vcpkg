@@ -1,8 +1,8 @@
 diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
-index d0380de..bf4c2eb 100644
+index d0380de..55760a8 100644
 --- a/cmake/CeresConfig.cmake.in
 +++ b/cmake/CeresConfig.cmake.in
-@@ -237,85 +237,8 @@ endif (EIGEN_FOUND)
+@@ -237,85 +237,13 @@ endif (EIGEN_FOUND)
  list(APPEND CERES_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
  
  # Glog.
@@ -40,7 +40,9 @@ index d0380de..bf4c2eb 100644
 -    get_filename_component(CERES_BUILD_GLOG_LIBRARY_DIR @GLOG_LIBRARY@ PATH)
 -    list(APPEND GLOG_LIBRARY_DIR_HINTS ${CERES_BUILD_GLOG_LIBRARY_DIR})
 -  endif()
--
++include (CMakeFindDependencyMacro)
++find_dependency (glog NO_MODULE)
+ 
 -  # Search quietly s/t we control the timing of the error message if not found.
 -  find_package(Glog QUIET)
 -  if (GLOG_FOUND)
@@ -85,8 +87,10 @@ index d0380de..bf4c2eb 100644
 -    list(APPEND CERES_INCLUDE_DIRS ${GFLAGS_INCLUDE_DIR_HINTS})
 -  endif()
 -endif (CERES_USES_MINIGLOG)
-+include (CMakeFindDependencyMacro)
-+find_dependency (glog NO_MODULE)
++#SuiteSparse
++if (@SUITESPARSE@)
++    find_dependency(suitesparse CONFIG REQUIRED)
++endif()
  
  # Import exported Ceres targets, if they have not already been imported.
  if (NOT TARGET ceres AND NOT Ceres_BINARY_DIR)

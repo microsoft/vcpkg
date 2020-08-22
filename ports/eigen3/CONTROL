@@ -1,4 +1,5 @@
 Source: eigen3
-Version: 3.3.7-4
+Version: 3.3.7
+Port-Version: 6
 Homepage: http://eigen.tuxfamily.org
 Description: C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.

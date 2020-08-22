@@ -10,8 +10,6 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
 
 file(COPY
     ${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h
@@ -32,6 +30,7 @@ vcpkg_configure_cmake(
         -DGLAD_REPRODUCIBLE=ON
         -DGLAD_SPEC="gl" # {gl,egl,glx,wgl}
         -DGLAD_PROFILE="compatibility" # {core,compatibility}
+        -DPYTHON_EXECUTABLE=${PYTHON3}
     OPTIONS_DEBUG
         -DGLAD_GENERATOR="c-debug"
 )
