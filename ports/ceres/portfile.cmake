@@ -6,10 +6,6 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(MSVC_USE_STATIC_CRT_VALUE ON)
 endif()
 
-if(VCPKG_TARGET_IS_LINUX)
-    set(ADDITIONAL_PATCH "0005_blas_linux_fix.patch")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ceres-solver/ceres-solver
@@ -21,7 +17,6 @@ vcpkg_from_github(
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
         0004_fix_find_eigen.patch
-        ${ADDITIONAL_PATCH}
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindCXSparse.cmake)
