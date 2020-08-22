@@ -149,7 +149,7 @@ $ ./vcpkg/vcpkg install [paquetes a instalar]
 Tambien puede buscar las librerias que necesita con el subcomando `search`:
 
 ```sh
-$ ./vcpkg/vcpkg search [search term]
+$ ./vcpkg/vcpkg search [termino de búsqueda]
 ```
 
 Para usar vcpkg con CMake, tiene que usar el siguiente archivo toolchain:
