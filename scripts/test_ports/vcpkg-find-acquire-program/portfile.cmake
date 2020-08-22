@@ -1,8 +1,7 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-# Only Windows
 if(CMAKE_HOST_WIN32)
-    foreach(PROG GO)
+    foreach(PROG GO JOM NASM PERL YASM GIT PYTHON3 PYTHON2 RUBY 7Z NUGET FLEX BISON GPERF GASPREPROCESSOR DARK SCONS SWIG DOXYGEN ARIA2 PKGCONFIG)
         vcpkg_find_acquire_program(${PROG})
         foreach(SUBPROG IN LISTS ${PROG})
             if(NOT EXISTS "${SUBPROG}")
@@ -12,20 +11,7 @@ if(CMAKE_HOST_WIN32)
     endforeach()
 endif()
 
-# Windows and Linux
-if(CMAKE_HOST_WIN32 OR CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
-    foreach(PROG NASM)
-        vcpkg_find_acquire_program(${PROG})
-        foreach(SUBPROG IN LISTS ${PROG})
-            if(NOT EXISTS "${SUBPROG}")
-                message(FATAL_ERROR "Program ${SUBPROG} did not exist.")
-            endif()
-        endforeach()
-    endforeach()
-endif()
-
-# All Platforms
-foreach(PROG PERL YASM GIT GN PYTHON3 PYTHON2 RUBY JOM 7Z NINJA NUGET MESON FLEX BISON GPERF GASPREPROCESSOR DARK SCONS SWIG DOXYGEN BAZEL ARIA2 PKGCONFIG)
+foreach(PROG GN NINJA MESON BAZEL)
     vcpkg_find_acquire_program(${PROG})
     foreach(SUBPROG IN LISTS ${PROG})
         if(NOT EXISTS "${SUBPROG}")
