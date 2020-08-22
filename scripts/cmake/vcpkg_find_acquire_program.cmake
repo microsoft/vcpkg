@@ -348,12 +348,15 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "DOXYGEN")
     set(PROGNAME doxygen)
     set(DOXYGEN_VERSION 1.8.17)
-    set(SUBDIR ${DOXYGEN_VERSION})
-    set(URL
-      "http://doxygen.nl/files/doxygen-${DOXYGEN_VERSION}.windows.bin.zip"
-      "https://sourceforge.net/projects/doxygen/files/rel-${DOXYGEN_VERSION}/doxygen-${DOXYGEN_VERSION}.windows.bin.zip")
-    set(ARCHIVE "doxygen-${DOXYGEN_VERSION}.windows.bin.zip")
-    set(HASH 6bac47ec552486783a70cc73b44cf86b4ceda12aba6b52835c2221712bd0a6c845cecec178c9ddaa88237f5a781f797add528f47e4ed017c7888eb1dd2bc0b4b)
+    set(SOURCEFORGE_ARGS
+        REPO doxygen
+        REF rel-${DOXYGEN_VERSION}
+        FILENAME "doxygen-${DOXYGEN_VERSION}.windows.bin.zip"
+        SHA512 6bac47ec552486783a70cc73b44cf86b4ceda12aba6b52835c2221712bd0a6c845cecec178c9ddaa88237f5a781f797add528f47e4ed017c7888eb1dd2bc0b4b
+        NO_REMOVE_ONE_LEVEL
+        WORKING_DIRECTORY "${DOWNLOADS}/tools/doxygen"
+     )
+    set(SUBDIR 6bac47ec55-25c819fd77)
   elseif(VAR MATCHES "BAZEL")
     set(PROGNAME bazel)
     set(BAZEL_VERSION 0.25.2)
