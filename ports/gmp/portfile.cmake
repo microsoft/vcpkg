@@ -81,6 +81,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     configure_file("${SOURCE_PATH}/gmp.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmp.pc" @ONLY)
     configure_file("${SOURCE_PATH}/gmpxx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmpxx.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gmp.h"
+                            "#if defined(DLL_EXPORT) && defined(NO_ASM)"
+                            "#if 1")
+    endif()
 else()
     vcpkg_download_distfile(
         ARCHIVE
