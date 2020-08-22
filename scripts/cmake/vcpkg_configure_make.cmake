@@ -487,7 +487,8 @@ function(vcpkg_configure_make)
     endif()
 
     macro(convert_to_list input output)
-        string(REGEX MATCHALL "(( +|$ *)[^ ]+)" ${output} "${${input}}")
+        string(REGEX MATCHALL "(( +|^ *)[^ ]+)" ${output} "${${input}}")
+
     endmacro()
     convert_to_list(VCPKG_DETECTED_C_STANDARD_LIBRARIES C_LIBS_LIST)
     convert_to_list(VCPKG_DETECTED_CXX_STANDARD_LIBRARIES CXX_LIBS_LIST)
