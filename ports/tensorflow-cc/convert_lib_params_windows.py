@@ -43,5 +43,5 @@ if file_no < required_number:  # vcpkg requires the same number of libs for rele
         f_out.writelines(lines[:-missing])
     for i in range(missing):
         with open("tensorflow_cc.lib-2.params-part%d" % (file_no + i + 1), "w") as f_out:
-            f_out.writeline(lines[0])
-            f_out.writeline(lines[-(missing - i)])
+            f_out.write(lines[0])
+            f_out.write(lines[-(missing - i)])
