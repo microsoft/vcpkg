@@ -1,7 +1,7 @@
 # Vcpkg
 
 Vcpkg ayuda a manejar librerías de C y C++ en Windows, Linux y MacOS.
-Este ecosistema se encuentra en constante evaluacion y apreciamos contribuciones nuevas!
+Esta herramienta y ecosistema se encuentran en constante evolución ¡Siempre apreciamos contribuciones nuevas!
 
 Si nunca ha usado vcpkg antes,
 o si esta intentando usar vcpkg puede ver nuestra guía en la seccion
