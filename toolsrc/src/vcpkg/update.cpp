@@ -78,7 +78,7 @@ namespace vcpkg::Update
 #if defined(_WIN32)
             auto vcpkg_cmd = ".\\vcpkg";
 #else
-            auto vcpkg_cmd = ".\/vcpkg";
+            auto vcpkg_cmd = "./vcpkg";
 #endif
             System::print2("\n"
                            "To update these packages and all dependencies, run\n"
