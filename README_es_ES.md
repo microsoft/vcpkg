@@ -297,7 +297,7 @@ Luego, se requiere activar la bandera de caracteristica `manifests` en vcpkg agr
 `manifests` a los valores separados por coma en la opcion `--feature-flags`,
 o agregandolo en los valores separados por coma en la variable de entorno `VCPKG_FEATURE_FLAGS`
 
-tambien puede ue desee agregar vcpkg al `PATH`.
+tambien puede que desee agregar vcpkg al `PATH`.
 
 Luego, todo lo que hay que hacer es crear un manifiesto;
 cree un archivo llamado `vcpkg.json`, y escriba lo siguiente:
