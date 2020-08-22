@@ -10,6 +10,15 @@ index 0dacbfef3e..310bf1de1b 100644
    if (len <= sizeof(slice.data.inlined.bytes)) {
      slice.refcount = nullptr;
      slice.data.inlined.length = len;
+@@ -253,7 +254,7 @@ grpc_slice grpc_slice_from_moved_string(grpc_core::UniquePtr<char> p) {
+ }
+ 
+ grpc_slice grpc_slice_from_cpp_string(std::string str) {
+-  grpc_slice slice;
++  grpc_slice slice = { 0 };
+   if (str.size() <= sizeof(slice.data.inlined.bytes)) {
+     slice.refcount = nullptr;
+     slice.data.inlined.length = str.size();
 diff --git a/src/core/lib/surface/server.cc b/src/core/lib/surface/server.cc
 index cab0cd56c4..2c88fd625b 100644
 --- a/src/core/lib/surface/server.cc
