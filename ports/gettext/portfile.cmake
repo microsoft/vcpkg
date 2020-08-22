@@ -47,9 +47,10 @@ vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should pr
                      DETERMINE_BUILD_TRIPLET
                      USE_WRAPPERS
                      ADD_BIN_TO_PATH    # So configure can check for working iconv
-                     OPTIONS --enable-relocatable
+                     OPTIONS --enable-relocatable #symbol duplication with glib-init.c?
                              --enable-c++
                              --disable-java
+                             
                              ${OPTIONS}
                     )
                     
@@ -80,3 +81,5 @@ endforeach()
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/intl)
+
+message(FATAL_ERROR "Get gettext logs from CI since it is not building a DLL")
