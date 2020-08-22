@@ -13,7 +13,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
         001_port_fixes.patch
-        002_required.patch
+        002_fix_dependencies.patch
 )
 
 vcpkg_configure_cmake(
