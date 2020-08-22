@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
@@ -18,8 +21,6 @@ namespace vcpkg
         std::unordered_map<std::string, std::string> settings;
         std::unordered_map<std::string, std::vector<std::string>> multisettings;
     };
-
-    struct VcpkgPaths;
 
     struct CommandSwitch
     {

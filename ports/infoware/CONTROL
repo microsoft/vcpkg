@@ -1,6 +1,6 @@
 Source: infoware
 Homepage: https://github.com/ThePhD/infoware
-Version: 0.5.4
+Version: 0.5.5
 Description: C++ Library for pulling system and hardware information, without hitting the command line.
 # Note that independent usage and testing may work, but it seems to fail in CI environments for potential cross-compilation,
 # and is thusly noted here to note break how vcpkg builds things!
