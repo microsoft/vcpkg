@@ -22,7 +22,7 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
 
 * [Vcpkg: General](#vcpkg-general)
 * [Tabla de contenidos](#tabla-de-contenidos)
-* [Primeros pasos](#primeros-pasos)
+* ["Primeros pasos"](#primeros-pasos)
   + [Inicio rápido: Windows](#inicio-rápido-windows)
   + [Inicio rápido: Unix](#inicio-rápido-unix)
   + [Instalando herramientas de desarrollo en Linux](#instalando-herramientas-de-desarrollo-en-Linux)
