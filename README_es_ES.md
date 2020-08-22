@@ -53,12 +53,12 @@ donde el equipo de vpkg y la comunidad pueden verlo, y potencialmente hacer un p
 Después de tener vcpkg instalado y funcionando,
 puede que desee añadir [completado con tab](#Completado-TabAuto-Completado) en su terminal.
 
-finalmente si esta interesado en el futuro de vcpkg,
+finalmente, si está interesado en el futuro de vcpkg,
 puede ver la guía de [archivos de manifiesto](#inicio-rapido-manifiesto)!
 esta es una caracteristica experimental y es probable que tenga errores,
 asi que pruebe y [abra todos los issues][contributing:submit-issue]!
 
-### Inicio Rapido: Windows
+### Inicio Rápido: Windows
 
 Prerrequisitos:
 
@@ -68,7 +68,7 @@ Prerrequisitos:
 
 Primero, descargue y compile vcpkg; puede ser instalado en cualquier lugar,
 pero generamente recomendamos usar vcpkg como submodulo para proyectos de CMake,
-y instalándolo globalmente para Proyectos de Visual Studio.
+e instalándolo globalmente para Proyectos de Visual Studio.
 recomendamos un lugar como `C:\src\vcpkg` o `C:\dev\vcpkg`,
 ya que de otra forma puede encontrarse problemas de ruta para algunos sistemas de port.
 
@@ -100,7 +100,7 @@ Despues de esto, puede crear un nuevo proyecto que no sea de CMake(MSBuild) o ab
 Todas las librerías estarán listas para ser incluidas y
 usadas en su proyecto sin configuración adicional.
 
-Si esta usando CMake con Visual Studio,
+Si está usando CMake con Visual Studio,
 continúe [aquí](#vcpkg-con-proyectos-de-visual-studio\(CMake\)).
 
 Para utilizar vcpkg con CMake sin un IDE,
@@ -111,7 +111,7 @@ puede utilizar el archivo toolchain:
 > cmake --build [directorio de compilación]
 ```
 
-Con CMake, todavia necesitara `find_package` y la configuraciones adicionales de la libreria.
+Con CMake, todavia necesitara `find_package` y las configuraciones adicionales de la librería.
 Revise la [Seccion de Cmake](#usando-vcpkg-con-cmake) para mas informacion,
 incluyendo el uso de CMake con un IDE.
 
@@ -120,15 +120,15 @@ reviste la [guía de integración][getting-started:integration].
 
 ### Inicio rápido: Unix
 
-Prerrequisitos for Linux:
+Prerrequisitos para Linux:
 
 - [Git][getting-started:git]
 - [g++][getting-started:linux-gcc] >= 6
 
-Pre-requisitos para macOS:
+Prerrequisitos para macOS:
 
 - [Herramientas de desarrollo de Apple][getting-started:macos-dev-tools]
-- En macOS 10.14 o inferior, tambien necesita:
+- En macOS 10.14 o inferior, también necesita:
   - [Homebrew][getting-started:macos-brew]
   - [g++][getting-started:macos-gcc] >= 6 de Homebrew
 
@@ -159,16 +159,16 @@ $ cmake -B [directorio de compilación] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcp
 $ cmake --build [directorio de compilación]
 ```
 
-Con CMake, todavia necesitara `find_package` y la configuraciones adicionales de la libreria.
-Revise la [Seccion de Cmake](#usando-vcpkg-con-cmake)
-para mas información en como aprovechar mejor vcpkg con CMake,
+Con CMake, todavia necesitara `find_package` y las configuraciones adicionales de la librería.
+Revise la [Sección de Cmake](#usando-vcpkg-con-cmake)
+para más información en cómo aprovechar mejor vcpkg con CMake,
 y CMake tools para VSCode.
 
 Para cualquier otra herramienta, visite la [guía de integracion][getting-started:integration].
 
 ### Instalando Herramientas de desarrollo en Linux
 
-Segun las distribuciones de Linux, hay diferentes paquetes
+Según las distribuciones de Linux, hay diferentes paquetes
 que necesitara instalar:
 
 - Debian, Ubuntu, popOS, y otra distribución basada en Debian:
@@ -188,7 +188,7 @@ $ scl enable devtoolset-7 bash
 
 Para cualquier otra distribucion, asegurese que dispone de g++ 6 o superior.
 Si desea añadir instrucción para una distro especifica,
-[cree un pull request][contributing:submit-pr]!
+[cree un pull request][contributing:submit-pr]
 
 ### Instalando Herramientas de desarrollo en macOS
 
@@ -223,7 +223,7 @@ Posteriormente podra compilar vcpkg junto con la [guia de inicio rapido](#inicio
 
 ### Usando vcpkg con CMake
 
-Si esta usando vcpkg con CMake, lo siguiente puede ayudar!
+¡Si está usando vcpkg con CMake, lo siguiente puede ayudar!
 
 #### Visual Studio Code con CMake Tools
 
@@ -244,7 +244,7 @@ Abra el editor de Ajustes de CMake, bajo la seccion `CMake toolchain file`,
 posteriormente agregue al path el archivo toolchain de vcpkg:
 
 ```sh
-[raiz de vcpkg]/scripts/buildsystems/vcpkg.cmake
+[raíz de vcpkg]/scripts/buildsystems/vcpkg.cmake
 ```
 
 #### Vcpkg con CLion
@@ -252,17 +252,17 @@ posteriormente agregue al path el archivo toolchain de vcpkg:
 Abra los ajustes de Toolchains
 (File > Settings en Windows y Linux, Clion > Preferences en macOS),
 y entre en la seccion de ajustes de CMake (Build, Execution, Deployment > CMake).
-Finalmente, en `CMake options`, agregue la linea siguiente:
+Finalmente, en `CMake options`, agregue la línea siguiente:
 
 ```sh
--DCMAKE_TOOLCHAIN_FILE=[raíz de vcpkg]/scripts/buildsystems/vcpkg.cmake
+-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 Desafortunadamente, tendrá que hacerlo para cada perfil.
 
-#### Vcpkg como Submodulo
+#### Vcpkg como Submódulo
 
-Cuando este usando vcpkg como un submodulo para su proyecto,
+Cuando este usando vcpkg como un submódulo para su proyecto,
 puede agregar lo siguiente as su CMakeLists,txt antes de la primera llamada a `project()`,
 en vez de pasar `CMAKE_TOOLCHAIN_FILE` a la invocación de CMake.
 
@@ -271,16 +271,16 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
   CACHE STRING "Vcpkg toolchain file")
 ```
 
-Esto permitira a las personas no usar vcpkg,
+Esto permitirá a las personas no usar vcpkg,
 indicando el `CMAKE_TOOLCHAIN_FILE` directamente,
-sin embargo hara el proceso de configuracion y compilacion mas sencillo.
+sin embargo, hara el proceso de configuracion y compilacion mas sencillo.
 
 ### Inicio rápido: Manifiestos
 
-Asi, que desea ver como sera el futuro de vcpkg!
+Así, que desea ver cómo será el futuro de vcpkg!
 realmente lo apreciamos. Sin embargo, primero una advertencia:
 el soporte de archivos de manifiesto aun esta en beta,
-aún así la mayoría debería funcionar,
+aun así la mayoría debería funcionar,
 pero no hay garantia de esto y es muy probable que encuentre uno o mas bugs
 mientras use vcpkg en este modo.
 Adicionalmente, es probablemente que se rompan comportamientos antes de estabilizarlo,
@@ -294,7 +294,7 @@ ya que el directorio existe localmente,
 y esta bien ejecutar multiples comandos desde el mismo directorio de vcpkg al mismo tiempo.
 
 Luego, se requiere activar la bandera de caracteristica `manifests` en vcpkg agregando
-`manifests` a los valores separados por coma en la opcion `--feature-flags`,
+`manifests` a los valores separados por coma en la opción `--feature-flags`,
 o agregandolo en los valores separados por coma en la variable de entorno `VCPKG_FEATURE_FLAGS`
 
 también puede que desee agregar vcpkg al `PATH`.
@@ -305,7 +305,7 @@ cree un archivo llamado `vcpkg.json`, y escriba lo siguiente:
 ```json
 {
   "name": "<nombre de su proyecto>",
-  "version-string": "<version de su proyecto>",
+  "version-string": "<versión de su proyecto>",
   "dependencies": [
     "abseil",
     "boost"
@@ -335,10 +335,10 @@ Para mas informacion, revise la especificacion de [manifiesto][getting-started:m
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
 [getting-started:manifest-spec]: docs/specifications/manifests.md
 
-## Completado-Tab/Auto-Completado
+## Completado-Tab/Autocompletado
 
 `vcpkg` soporta autocompletado para los comandos, nombres de paquetes,
-y opciones, tanto en powershell como en bash.
+y opciones, tanto en PowerShell como en bash.
 para activar el autocompletado en la terminal de eleccion ejecute:
 
 ```pwsh
