@@ -139,9 +139,12 @@ if(INSTALL_HEADERS_TOOLS)
 	endif()
 
 	target_link_libraries(xmlsec PRIVATE
-		${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec libxmlsec-openssl Iconv::Iconv
+		${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec libxmlsec-openssl
 	)
-
+    if(NOT Iconv_IS_BUILT_IN)
+        target_link_libraries(xmlsec PRIVATE Iconv::Iconv)
+    endif()
+    
 	target_compile_definitions(xmlsec PRIVATE
 		-DXMLSEC_CRYPTO_OPENSSL
 	)
