@@ -10,7 +10,6 @@ vcpkg_from_github(
 file(READ ${SOURCE_PATH}/tiny_gltf.h TINY_GLTF_H)
 string(REPLACE "#include \"json.hpp\""
                "#include <nlohmann/json.hpp>" TINY_GLTF_H "${TINY_GLTF_H}")
-
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/tiny_gltf.h "${TINY_GLTF_H}")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
