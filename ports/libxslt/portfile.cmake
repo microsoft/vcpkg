@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
@@ -14,7 +12,9 @@ vcpkg_from_github(
 if (VCPKG_TARGET_IS_WINDOWS)
     # Create some directories ourselves, because the makefile doesn't
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
     set(CONFIGURE_COMMAND_TEMPLATE
         cruntime=@CRUNTIME@
         debug=@DEBUGMODE@
@@ -103,6 +103,7 @@ else()
     )
     
     vcpkg_install_make()
+    #vcpkg_fixup_pkgconfig()?
     
     if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
         file(COPY ${CURRENT_PACKAGES_DIR}/bin/xslt-config DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
@@ -147,7 +148,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-vcpkg_copy_pdbs()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_copy_pdbs()
+endif()
 
 file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 

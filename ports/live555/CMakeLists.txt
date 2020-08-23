@@ -20,6 +20,8 @@ add_library(groupsock ${GROUPSOCK_SRCS})
 
 file(GLOB LIVEMEDIA_SRCS liveMedia/*.c liveMedia/*.cpp)
 add_library(liveMedia ${LIVEMEDIA_SRCS})
+find_package(OpenSSL REQUIRED)
+target_include_directories(liveMedia PRIVATE "${OPENSSL_INCLUDE_DIR}")
 
 file(GLOB USAGE_ENVIRONMENT_SRCS UsageEnvironment/*.c UsageEnvironment/*.cpp)
 add_library(UsageEnvironment ${USAGE_ENVIRONMENT_SRCS})

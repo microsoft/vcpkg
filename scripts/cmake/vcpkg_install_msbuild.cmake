@@ -113,6 +113,8 @@ function(vcpkg_install_msbuild)
             set(_csc_PLATFORM  Win32)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL ARM)
             set(_csc_PLATFORM  ARM)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+            set(_csc_PLATFORM  arm64)
         else()
             message(FATAL_ERROR "Unsupported target architecture")
         endif()
@@ -134,6 +136,9 @@ function(vcpkg_install_msbuild)
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
+        /p:VcpkgTriplet=${TARGET_TRIPLET}
+        "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
+        /p:VcpkgManifestInstall=false
         /m
     )
 

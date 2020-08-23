@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vcpkg/base/chrono.h>
+
+#include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -20,7 +22,7 @@ namespace vcpkg::Install
 
     struct SpecSummary
     {
-        SpecSummary(const PackageSpec& spec, const Dependencies::AnyAction* action);
+        SpecSummary(const PackageSpec& spec, const Dependencies::InstallPlanAction* action);
 
         const BinaryParagraph* get_binary_paragraph() const;
 
@@ -28,7 +30,7 @@ namespace vcpkg::Install
         Build::ExtendedBuildResult build_result;
         vcpkg::Chrono::ElapsedTime timing;
 
-        const Dependencies::AnyAction* action;
+        const Dependencies::InstallPlanAction* action;
     };
 
     struct InstallSummary
@@ -58,8 +60,9 @@ namespace vcpkg::Install
     };
 
     Build::ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                           const Dependencies::InstallPlanAction& action,
-                                                           StatusParagraphs& status_db);
+                                                           Dependencies::InstallPlanAction& action,
+                                                           StatusParagraphs& status_db,
+                                                           const CMakeVars::CMakeVarProvider& var_provider);
 
     enum class InstallResult
     {
@@ -69,17 +72,43 @@ namespace vcpkg::Install
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths);
 
-    void install_files_and_write_listfile(Files::Filesystem& fs, const fs::path& source_dir, const InstallDir& dirs);
+    void install_package_and_write_listfile(const VcpkgPaths& paths, const PackageSpec& spec, const InstallDir& dirs);
+
+    void install_files_and_write_listfile(Files::Filesystem& fs,
+                                          const fs::path& source_dir,
+                                          const std::vector<fs::path>& files,
+                                          const InstallDir& destination_dir);
+
     InstallResult install_package(const VcpkgPaths& paths,
                                   const BinaryControlFile& binary_paragraph,
                                   StatusParagraphs* status_db);
 
-    InstallSummary perform(const std::vector<Dependencies::AnyAction>& action_plan,
+    InstallSummary perform(Dependencies::ActionPlan& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
-                           StatusParagraphs& status_db);
+                           StatusParagraphs& status_db,
+                           IBinaryProvider& binaryprovider,
+                           const Build::IBuildLogsRecorder& build_logs_recorder,
+                           const CMakeVars::CMakeVarProvider& var_provider);
+
+    struct CMakeUsageInfo
+    {
+        std::string message;
+        bool usage_file = false;
+        Optional<bool> header_only;
+        std::map<std::string, std::vector<std::string>> cmake_targets_map;
+    };
+
+    CMakeUsageInfo get_cmake_usage(const BinaryParagraph& bpgh, const VcpkgPaths& paths);
 
     extern const CommandStructure COMMAND_STRUCTURE;
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
+
+    struct InstallCommand : Commands::TripletCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const override;
+    };
 }

@@ -1,184 +1,49 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6541f1b..058bf3b 100644
+index 6541f1b..e81bdce 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,6 +1,4 @@
- cmake_minimum_required(VERSION 2.8.5)
--project(libsoundio C)
--set(CMAKE_MODULE_PATH ${libsoundio_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
- 
- if(CMAKE_VERSION VERSION_LESS 3.0.0)
-     set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "library install dir (lib)")
-@@ -11,6 +9,11 @@ else()
-     cmake_policy(SET CMP0046 NEW)
-     include(GNUInstallDirs)
- endif()
+@@ -1,4 +1,5 @@
+-cmake_minimum_required(VERSION 2.8.5)
++cmake_minimum_required(VERSION 3.14)
 +cmake_policy(SET CMP0022 NEW)
-+
-+project(libsoundio C)
-+set(CMAKE_MODULE_PATH ${libsoundio_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
-+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+ project(libsoundio C)
+ set(CMAKE_MODULE_PATH ${libsoundio_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
  
- if(NOT CMAKE_BUILD_TYPE)
-     set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
-@@ -27,8 +30,7 @@ if(NOT SOUNDIO_STATIC_LIBNAME)
-     set(SOUNDIO_STATIC_LIBNAME soundio)
- endif()
- 
--option(BUILD_STATIC_LIBS "Build static libraries" ON)
--option(BUILD_DYNAMIC_LIBS "Build dynamic libraries" ON)
-+option(BUILD_SHARED_LIBS "Build dynamic libraries" ON)
- option(BUILD_EXAMPLE_PROGRAMS "Build example programs" ON)
- option(BUILD_TESTS "Build tests" ON)
- option(ENABLE_JACK "Enable JACK backend" ON)
-@@ -203,7 +205,7 @@ if(MSVC)
-     set(EXAMPLE_CFLAGS "/W4")
-     set(TEST_CFLAGS "${LIB_CFLAGS}")
-     set(TEST_LDFLAGS " ")
--    set(LIBM " ")
-+    set(LIBM "")
- else()
-     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Werror -pedantic")
-     set(LIB_CFLAGS "-std=c11 -fvisibility=hidden -Wall -Werror=strict-prototypes -Werror=old-style-definition -Werror=missing-prototypes -D_REENTRANT -D_POSIX_C_SOURCE=200809L -Wno-missing-braces")
-@@ -223,32 +225,33 @@ configure_file(
-     ${DOXYGEN_CONF_FILE}
- )
- 
--if(BUILD_DYNAMIC_LIBS)
--    add_library(libsoundio_shared SHARED ${LIBSOUNDIO_SOURCES})
--    set_target_properties(libsoundio_shared PROPERTIES
-+if(BUILD_SHARED_LIBS)
-+    add_library(libsoundio SHARED ${LIBSOUNDIO_SOURCES})
-+    set_target_properties(libsoundio PROPERTIES PUBLIC_HEADER "${LIBSOUNDIO_HEADERS}")
-+    set_target_properties(libsoundio PROPERTIES
-         OUTPUT_NAME soundio
-         SOVERSION ${LIBSOUNDIO_VERSION_MAJOR}
-         VERSION ${LIBSOUNDIO_VERSION}
-         COMPILE_FLAGS ${LIB_CFLAGS}
+@@ -233,7 +234,8 @@ if(BUILD_DYNAMIC_LIBS)
          LINKER_LANGUAGE C
      )
--    target_link_libraries(libsoundio_shared LINK_PUBLIC ${LIBSOUNDIO_LIBS})
+     target_link_libraries(libsoundio_shared LINK_PUBLIC ${LIBSOUNDIO_LIBS})
 -    install(TARGETS libsoundio_shared DESTINATION ${CMAKE_INSTALL_LIBDIR})
--endif()
--
--if(BUILD_STATIC_LIBS)
--    add_library(libsoundio_static STATIC ${LIBSOUNDIO_SOURCES})
--    set_target_properties(libsoundio_static PROPERTIES
--        OUTPUT_NAME ${SOUNDIO_STATIC_LIBNAME}
-+    target_link_libraries(libsoundio LINK_PUBLIC ${LIBSOUNDIO_LIBS})
-+    install(TARGETS libsoundio EXPORT libsoundio-export LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-+else()
-+    add_library(libsoundio STATIC ${LIBSOUNDIO_SOURCES})
-+    set_target_properties(libsoundio PROPERTIES PUBLIC_HEADER "${LIBSOUNDIO_HEADERS}")
-+    set_target_properties(libsoundio PROPERTIES
-+        OUTPUT_NAME soundio
++    target_include_directories(libsoundio_shared PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++    install(TARGETS libsoundio_shared EXPORT libsoundio-export)
+ endif()
+ 
+ if(BUILD_STATIC_LIBS)
+@@ -243,9 +245,26 @@ if(BUILD_STATIC_LIBS)
          COMPILE_FLAGS ${LIB_CFLAGS}
          LINKER_LANGUAGE C
      )
 -    install(TARGETS libsoundio_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+    target_link_libraries(libsoundio LINK_PUBLIC ${LIBSOUNDIO_LIBS})
-+    target_compile_definitions(libsoundio PUBLIC SOUNDIO_STATIC_LIBRARY)
-+    install(TARGETS libsoundio EXPORT libsoundio-export LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++    target_link_libraries(libsoundio_static PUBLIC ${LIBSOUNDIO_LIBS})
++    target_include_directories(libsoundio_static PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++    install(TARGETS libsoundio_static EXPORT libsoundio-export)
  endif()
  
--install(FILES
--    ${LIBSOUNDIO_HEADERS}
--    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/soundio")
-+add_library(libsoundio::libsoundio ALIAS libsoundio)
-+install(EXPORT libsoundio-export FILE libsoundio-config.cmake DESTINATION share/libsoundio/ NAMESPACE ${PROJECT_NAME}:: EXPORT_LINK_INTERFACE_LIBRARIES)
- 
- # Example Programs
- 
-@@ -257,44 +260,28 @@ if(BUILD_EXAMPLE_PROGRAMS)
-     set_target_properties(sio_sine PROPERTIES
-         LINKER_LANGUAGE C
-         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
--    if(BUILD_DYNAMIC_LIBS)
--        target_link_libraries(sio_sine libsoundio_shared ${LIBM})
--    else()
--        target_link_libraries(sio_sine libsoundio_static ${LIBSOUNDIO_LIBS} ${LIBM})
--    endif()
-+    target_link_libraries(sio_sine libsoundio::libsoundio ${LIBM})
-     install(TARGETS sio_sine DESTINATION ${CMAKE_INSTALL_BINDIR})
- 
-     add_executable(sio_list_devices example/sio_list_devices.c)
-     set_target_properties(sio_list_devices PROPERTIES
-         LINKER_LANGUAGE C
-         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
--    if(BUILD_DYNAMIC_LIBS)
--        target_link_libraries(sio_list_devices libsoundio_shared)
--    else()
--        target_link_libraries(sio_list_devices libsoundio_static ${LIBSOUNDIO_LIBS})
--    endif()
-+    target_link_libraries(sio_list_devices libsoundio::libsoundio)
-     install(TARGETS sio_list_devices DESTINATION ${CMAKE_INSTALL_BINDIR})
- 
-     add_executable(sio_microphone example/sio_microphone.c)
-     set_target_properties(sio_microphone PROPERTIES
-         LINKER_LANGUAGE C
-         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
--    if(BUILD_DYNAMIC_LIBS)
--        target_link_libraries(sio_microphone libsoundio_shared)
--    else()
--        target_link_libraries(sio_microphone libsoundio_static ${LIBSOUNDIO_LIBS})
--    endif()
-+    target_link_libraries(sio_microphone libsoundio::libsoundio)
-     install(TARGETS sio_microphone DESTINATION ${CMAKE_INSTALL_BINDIR})
- 
-     add_executable(sio_record example/sio_record.c)
-     set_target_properties(sio_record PROPERTIES
-         LINKER_LANGUAGE C
-         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
--    if(BUILD_DYNAMIC_LIBS)
--        target_link_libraries(sio_record libsoundio_shared)
--    else()
--        target_link_libraries(sio_record libsoundio_static ${LIBSOUNDIO_LIBS})
--    endif()
-+    target_link_libraries(sio_record libsoundio::libsoundio)
-     install(TARGETS sio_record DESTINATION ${CMAKE_INSTALL_BINDIR})
- endif()
- 
-@@ -308,7 +295,7 @@ if(BUILD_TESTS)
-     )
- 
-     add_executable(latency "${libsoundio_SOURCE_DIR}/test/latency.c" ${LIBSOUNDIO_SOURCES})
--    target_link_libraries(latency LINK_PUBLIC ${LIBSOUNDIO_LIBS} ${LIBM})
-+    target_link_libraries(latency LINK_PUBLIC libsoundio::libsoundio ${LIBM})
-     set_target_properties(latency PROPERTIES
-         LINKER_LANGUAGE C
-         COMPILE_FLAGS ${LIB_CFLAGS}
-@@ -318,31 +305,19 @@ if(BUILD_TESTS)
-     set_target_properties(underflow PROPERTIES
-         LINKER_LANGUAGE C
-         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
--    if(BUILD_DYNAMIC_LIBS)
--        target_link_libraries(underflow libsoundio_shared ${LIBM})
--    else()
--        target_link_libraries(underflow libsoundio_static ${LIBSOUNDIO_LIBS} ${LIBM})
--    endif()
-+    target_link_libraries(underflow libsoundio::libsoundio ${LIBM})
- 
-     add_executable(backend_disconnect_recover test/backend_disconnect_recover.c)
-     set_target_properties(backend_disconnect_recover PROPERTIES
-         LINKER_LANGUAGE C
-         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
--    if(BUILD_DYNAMIC_LIBS)
--        target_link_libraries(backend_disconnect_recover libsoundio_shared)
--    else()
--        target_link_libraries(backend_disconnect_recover libsoundio_static ${LIBSOUNDIO_LIBS})
--    endif()
-+    target_link_libraries(backend_disconnect_recover libsoundio::libsoundio)
- 
-     add_executable(overflow test/overflow.c)
-     set_target_properties(overflow PROPERTIES
-         LINKER_LANGUAGE C
-         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
--    if(BUILD_DYNAMIC_LIBS)
--        target_link_libraries(overflow libsoundio_shared)
--    else()
--        target_link_libraries(overflow libsoundio_static ${LIBSOUNDIO_LIBS})
--    endif()
-+    target_link_libraries(overflow libsoundio::libsoundio)
- 
- 
- 
++add_library(libsoundio INTERFACE)
++if(BUILD_DYNAMIC_LIBS)
++    target_link_libraries(libsoundio INTERFACE libsoundio_shared)
++else()
++    target_link_libraries(libsoundio INTERFACE libsoundio_static)
++endif()
++install(TARGETS libsoundio EXPORT libsoundio-export)
++install(
++    EXPORT libsoundio-export
++    FILE libsoundio-config.cmake
++    DESTINATION share/libsoundio/
++    NAMESPACE ${PROJECT_NAME}::
++    EXPORT_LINK_INTERFACE_LIBRARIES
++)
++
+ install(FILES
+     ${LIBSOUNDIO_HEADERS}
+     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/soundio")

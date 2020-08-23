@@ -1,8 +1,10 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/binaryparagraph.h>
 
-#include <unordered_map>
+#include <map>
 
 namespace vcpkg
 {
@@ -30,7 +32,7 @@ namespace vcpkg
     struct StatusParagraph
     {
         StatusParagraph() noexcept;
-        explicit StatusParagraph(Parse::RawParagraph&& fields);
+        explicit StatusParagraph(Parse::Paragraph&& fields);
 
         bool is_installed() const { return want == Want::INSTALL && state == InstallState::INSTALLED; }
 
@@ -47,7 +49,7 @@ namespace vcpkg
 
     struct InstalledPackageView
     {
-        InstalledPackageView() noexcept : core(nullptr) {}
+        InstalledPackageView() noexcept : core(nullptr) { }
 
         InstalledPackageView(const StatusParagraph* c, std::vector<const StatusParagraph*>&& fs)
             : core(c), features(std::move(fs))
@@ -56,8 +58,11 @@ namespace vcpkg
 
         const PackageSpec& spec() const { return core->package.spec; }
         std::vector<PackageSpec> dependencies() const;
+        std::map<std::string, std::vector<FeatureSpec>> feature_dependencies() const;
 
         const StatusParagraph* core;
         std::vector<const StatusParagraph*> features;
     };
+
+    Json::Value serialize_ipv(const InstalledPackageView& ipv, const VcpkgPaths& paths);
 }

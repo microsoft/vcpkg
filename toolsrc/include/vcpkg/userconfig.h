@@ -1,7 +1,8 @@
 #pragma once
 
-#include <string>
 #include <vcpkg/base/files.h>
+
+#include <string>
 
 namespace vcpkg
 {

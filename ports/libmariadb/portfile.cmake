@@ -8,8 +8,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MariaDB/mariadb-connector-c
-    REF v3.0.10
-    SHA512 43f89ead531d1b2f6ede943486bf39f606124762309c294b0f3e185937aef7439cb345103fc065e7940ed64c01ca1bf16940cd2fb0d80da60f39009c3b5a910b
+    REF 8e9c3116105d9a998a60991b7f4ba910d454d4b1 # v3.1.7
+    SHA512 b663effe7794d997c0589a9a20dab6b7359414612e60e3cb43e3fd0ddeae0391bcbc2d816cba4a7438602566ad6781cbf8e18b0062f1d37a2b2bd521af16033c
     HEAD_REF master
     PATCHES
             md.patch
@@ -17,12 +17,17 @@ vcpkg_from_github(
 			fix-InstallPath.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    zlib WITH_EXTERNAL_ZLIB
+    openssl WITH_SSL
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DWITH_UNITTEST=OFF
-        -DWITH_SSL=OFF
         -DWITH_CURL=OFF
 )
 

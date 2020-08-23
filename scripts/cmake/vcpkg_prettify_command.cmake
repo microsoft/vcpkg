@@ -4,7 +4,7 @@
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_prettify_command()
+## vcpkg_prettify_command(<INPUT_VAR> <OUTPUT_VAR>)
 ## ```
 ##
 ## ## Examples
@@ -16,10 +16,10 @@
 macro(vcpkg_prettify_command INPUT_VAR OUTPUT_VAR)
     set(${OUTPUT_VAR} "")
     foreach(v ${${INPUT_VAR}})
-        if(${v} MATCHES "( )")
-            list(APPEND ${OUTPUT_VAR} \"${v}\")
+        if(v MATCHES "( )")
+            list(APPEND ${OUTPUT_VAR} "\"${v}\"")
         else()
-            list(APPEND ${OUTPUT_VAR} ${v})
+            list(APPEND ${OUTPUT_VAR} "${v}")
         endif()
     endforeach()
     list(JOIN ${OUTPUT_VAR} " " ${OUTPUT_VAR})

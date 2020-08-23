@@ -1,0 +1,5 @@
+Source: opendnp3
+Version: 2.3.2
+Description: DNP3 (IEEE-1815) protocol stack. Modern C++ with bindings for .NET and Java.
+Homepage: https://github.com/dnp3/opendnp3/
+Build-Depends: asio, openssl

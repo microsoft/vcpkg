@@ -1,0 +1,38 @@
+diff --git a/cmake.config.h.in b/cmake.config.h.in
+index 1f4c505..fd763cc 100644
+--- a/cmake.config.h.in
++++ b/cmake.config.h.in
+@@ -112,6 +112,10 @@
+    you don't. */
+ #cmakedefine01 HAVE_DECL_POSIX_MEMALIGN
+
++/* Define to 1 if you have the declaration of `_aligned_malloc', and to 0 if you
++   don't. */
++#cmakedefine01 HAVE_DECL_ALIGNED_MALLOC
++
+ /* Define to 1 if you have the declaration of `sinl', and to 0 if you don't.
+    */
+ #cmakedefine01 HAVE_DECL_SINL
+@@ -184,6 +188,9 @@
+ /* Define to 1 if you have the `memalign' function. */
+ #cmakedefine HAVE_MEMALIGN 1
+
++/* Define to 1 if you have the `_aligned_malloc' function. */
++#cmakedefine HAVE_ALIGNED_MALLOC 1
++
+ /* Define to 1 if you have the `memmove' function. */
+ #cmakedefine HAVE_MEMMOVE 1
+
+diff --git a/kernel/kalloc.c b/kernel/kalloc.c
+index e42f6f3..ffc2257 100644
+--- a/kernel/kalloc.c
++++ b/kernel/kalloc.c
+@@ -103,7 +103,7 @@ void *X(kernel_malloc)(size_t n)
+ #    undef real_free
+ #    define real_free _mm_free
+
+-#  elif defined(_MSC_VER)
++#  elif defined(_MSC_VER) || defined (HAVE_ALIGNED_MALLOC)
+      /* MS Visual C++ 6.0 with a "Processor Pack" supports SIMD
+        and _aligned_malloc/free (uses malloc.h) */
+      p = (void *) _aligned_malloc(n, MIN_ALIGNMENT);

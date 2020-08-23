@@ -1,11 +1,14 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.autocomplete.h>
+#include <vcpkg/commands.edit.h>
+#include <vcpkg/commands.integrate.h>
+#include <vcpkg/commands.upgrade.h>
 #include <vcpkg/install.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::Autocomplete
@@ -30,7 +33,7 @@ namespace vcpkg::Commands::Autocomplete
     {
         Metrics::g_metrics.lock()->set_send_metrics(false);
         const std::string to_autocomplete = Strings::join(" ", args.command_arguments);
-        const std::vector<std::string> tokens = Strings::split(to_autocomplete, " ");
+        const std::vector<std::string> tokens = Strings::split(to_autocomplete, ' ');
 
         std::smatch match;
 
@@ -97,7 +100,7 @@ namespace vcpkg::Commands::Autocomplete
                 Checks::exit_success(VCPKG_LINE_INFO);
             }
 
-            std::vector<std::string> triplets = paths.get_available_triplets();
+            std::vector<std::string> triplets = paths.get_available_triplets_names();
             Util::erase_remove_if(triplets, [&](const std::string& s) {
                 return !Strings::case_insensitive_ascii_starts_with(s, triplet_prefix);
             });
@@ -137,11 +140,17 @@ namespace vcpkg::Commands::Autocomplete
                 const bool is_option = Strings::case_insensitive_ascii_starts_with(prefix, "-");
                 if (is_option)
                 {
-                    results = Util::fmap(command.structure.options.switches,
-                                         [](const CommandSwitch& s) -> std::string { return s.name.to_string(); });
+                    results = Util::fmap(command.structure.options.switches, [](const CommandSwitch& s) -> std::string {
+                        return Strings::format("--%s", s.name.to_string());
+                    });
 
-                    auto settings = Util::fmap(command.structure.options.settings, [](auto&& s) { return s.name; });
+                    auto settings = Util::fmap(command.structure.options.settings,
+                                               [](auto&& s) { return Strings::format("--%s", s.name); });
                     results.insert(results.end(), settings.begin(), settings.end());
+
+                    auto multisettings = Util::fmap(command.structure.options.multisettings,
+                                                    [](auto&& s) { return Strings::format("--%s", s.name); });
+                    results.insert(results.end(), multisettings.begin(), multisettings.end());
                 }
                 else
                 {
@@ -158,8 +167,8 @@ namespace vcpkg::Commands::Autocomplete
                 if (command.name == "install" && results.size() == 1 && !is_option)
                 {
                     const auto port_at_each_triplet =
-                        combine_port_with_triplets(results[0], paths.get_available_triplets());
-                    Util::Vectors::concatenate(&results, port_at_each_triplet);
+                        combine_port_with_triplets(results[0], paths.get_available_triplets_names());
+                    Util::Vectors::append(&results, port_at_each_triplet);
                 }
 
                 output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(results));
@@ -167,5 +176,10 @@ namespace vcpkg::Commands::Autocomplete
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void AutocompleteCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Autocomplete::perform_and_exit(args, paths);
     }
 }

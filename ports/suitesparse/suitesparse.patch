@@ -117,12 +117,14 @@ index c6e2834..5ef08a6 100644
  # Disable COMPLEX numbers: disable it by default, since it causes problems in some platforms.
  SET(HAVE_COMPLEX OFF CACHE BOOL "Enables building SuiteSparse with complex numbers (disabled by default to avoid problems in some platforms)")
 diff --git a/cmake/SuiteSparse-config-install.cmake.in b/cmake/SuiteSparse-config-install.cmake.in
-index cb1f51f..49387b8 100644
+index cb1f51f..12f654c 100644
 --- a/cmake/SuiteSparse-config-install.cmake.in
 +++ b/cmake/SuiteSparse-config-install.cmake.in
-@@ -4,13 +4,10 @@ get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_SELF_DIR}" PATH)
+@@ -2,15 +2,11 @@
+ get_filename_component(_SuiteSparse_SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_SELF_DIR}" PATH)
  get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_PREFIX}" PATH)
- get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_PREFIX}" PATH)
+-get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_PREFIX}" PATH)
  
 -find_package(LAPACK CONFIG)
 -if (NOT LAPACK_FOUND) # Load the LAPACK package with which we were built.
@@ -136,7 +138,7 @@ index cb1f51f..49387b8 100644
  
  # Report SuiteSparse header search locations.
  set(SuiteSparse_INCLUDE_DIRS ${_SuiteSparse_PREFIX}/include)
-@@ -31,6 +28,11 @@ set(SuiteSparse_LIBRARIES
+@@ -31,6 +27,10 @@ set(SuiteSparse_LIBRARIES
  	SuiteSparse::spqr
  	@SuiteSparse_EXPORTED_METIS_LIBS@
  )
@@ -147,4 +149,3 @@ index cb1f51f..49387b8 100644
 +
 +set(SUITESPARSE_FOUND TRUE)
 +set(SuiteSparse_FOUND TRUE)
-+

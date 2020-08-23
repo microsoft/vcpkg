@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO effolkronium/random
-    REF v1.3.0
-    SHA512 68bd42e696a784832376950df7df9ddc8fc52ad073f44eddc7bcc2547278096ad3ec6463ce3a0e2e60a223e0852e68be4c2e9bcec4b237b9017ac2b03d5be812
+    REF ead633a312d1a41baae72c22f0b2fd28b1853558 # v1.3.1
+    SHA512 598e6edfc124f4619ea37292ea01c67ce87181476957137175cf9e9ca3c9cf44dfde3c2cebc0e57b4c8497058a320f8ce535f66bad5f8db5ceacc0cedd40936e
     HEAD_REF master
 )
 

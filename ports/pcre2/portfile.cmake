@@ -1,20 +1,37 @@
-set(PCRE2_VERSION 10.30)
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.pcre.org/pub/pcre/pcre2-${PCRE2_VERSION}.zip" "https://sourceforge.net/projects/pcre/files/pcre2/${PCRE2_VERSION}/pcre2-${PCRE2_VERSION}.zip/download"
-    FILENAME "pcre2-${PCRE2_VERSION}.zip"
-    SHA512 03e570b946ac29498a114b27e715a0fcf25702bfc9623f9fc085ee8a3214ab3c303baccb9c0af55da6916e8ce40d931d97f1ee9628690563041a943f0aa2bc54)
-
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES fix-space.patch
-            fix-arm64-config.patch
-            fix-uwp.patch
+set(PCRE2_VERSION 10.35)
+set(EXPECTED_SHA bf1cb6ab8b1103f9503609783945b02cdc4294bb266643d0ba03656c941f07b6e183793f3bf513da950460e78cb9b429bff8ade27d8930339a63caed3a3236e3)
+set(PATCHES
+        pcre2-10.35_fix-space.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2588
+        pcre2-10.35_fix-uwp.patch
+        pcre2-10.35_fix_postfix_for_debug_Windows_builds.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2600
+        pcre2-10.35_add_check_for_Intel_CET.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2578
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://ftp.pcre.org/pub/pcre/pcre2-${PCRE2_VERSION}.zip"
+    FILENAME "pcre2-${PCRE2_VERSION}.zip"
+    SHA512 ${EXPECTED_SHA}
+    SILENT_EXIT
+)
+
+if (EXISTS "${ARCHIVE}")
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE ${ARCHIVE}
+        PATCHES ${PATCHES}
+    )
+else()
+    vcpkg_from_sourceforge(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO pcre/pcre2
+        REF ${PCRE2_VERSION}
+        FILENAME "pcre2-${PCRE2_VERSION}.zip"
+        SHA512 ${EXPECTED_SHA}
+        PATCHES ${PATCHES}
+    )
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(JIT OFF)
 else()
     set(JIT ON)
@@ -46,6 +63,9 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/pcre2.h "${PCRE2_H}")
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/pcre2posix.h)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/pcre2-posix.lib ${CURRENT_PACKAGES_DIR}/debug/lib/pcre2-posixd.lib)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/pcre2-posix.dll ${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-posixd.dll)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre2-posix.pc ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre2-posix.pc)
+
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
@@ -54,4 +74,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

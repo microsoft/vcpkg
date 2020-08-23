@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux platform" ON_TARGET "Windows")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libMesh/libmesh
@@ -8,9 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(OPTIONS --disable-qhull )
+endif()
+# There a lot of configure options in this port which are not yet correctly handled by VCPKG
+# To only mention two:
+#  --enable-vtk-required   Error if VTK is not detected by configure
+#  --enable-capnp-required Error if Cap'n Proto support is not detected by
+# but there are a lot more which need to be checked/fixed
+# So this port can only be considered a Work In Progress
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    OPTIONS ${OPTIONS}
 )
 
 vcpkg_install_make()

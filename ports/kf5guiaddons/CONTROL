@@ -1,0 +1,5 @@
+Source: kf5guiaddons
+Version: 5.64.0
+Homepage: https://api.kde.org/frameworks/kguiaddons/html/index.html
+Description: Addons to QtGui
+Build-Depends: ecm, qt5-winextras (windows), qt5-x11extras (linux), qt5-tools

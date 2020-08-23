@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 911ae5b..0e12b56 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -151,9 +151,6 @@ IF (MSVC)
+   #################################################################
+   # Set compile flags for debug build.
+   # This is added into CMAKE_C_FLAGS when CMAKE_BUILD_TYPE is "Debug"
+-  # Enable level 4 C4061: The enumerate has no associated handler in a switch
+-  #                       statement.
+-  SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /we4061")
+   # Enable level 4 C4254: A larger bit field was assigned to a smaller bit
+   #                       field.
+   SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /we4254")

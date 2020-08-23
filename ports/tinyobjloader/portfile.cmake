@@ -5,9 +5,13 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO syoyo/tinyobjloader
-    REF v1.0.7
-    SHA512 e88554ead20354da443489e1b6576b328e92b2e6665071df9b6473b38c34c036dbffb6655330e970c01ccf7f99bbd4f9f5418ce48a14239576ec5e0513256637
+    REF v2.0.0-rc2
+    SHA512 936f7897a87fe00d474231ad5f69816da127f14296c3591144c26c6058bd11ea1490c2db6b8c4a8adf629ae148423705d0c4020f4ed034921f0f2f711498f3bb
     HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    double     TINYOBJLOADER_USE_DOUBLE
 )
 
 vcpkg_configure_cmake(
@@ -15,6 +19,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DCMAKE_INSTALL_DOCDIR:STRING=share/tinyobjloader
+        # FEATURES
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

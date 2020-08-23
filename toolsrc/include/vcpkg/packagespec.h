@@ -1,20 +1,19 @@
 #pragma once
 
 #include <vcpkg/base/expected.h>
-#include <vcpkg/packagespecparseresult.h>
+#include <vcpkg/base/json.h>
+#include <vcpkg/base/optional.h>
+
+#include <vcpkg/platform-expression.h>
 #include <vcpkg/triplet.h>
+
+namespace vcpkg::Parse
+{
+    struct ParserBase;
+}
 
 namespace vcpkg
 {
-    struct ParsedSpecifier
-    {
-        std::string name;
-        std::vector<std::string> features;
-        std::string triplet;
-
-        static ExpectedT<ParsedSpecifier, PackageSpecParseResult> from_string(const std::string& input);
-    };
-
     ///
     /// <summary>
     /// Full specification of a package. Contains all information to reference
@@ -23,14 +22,14 @@ namespace vcpkg
     ///
     struct PackageSpec
     {
-        static ExpectedT<PackageSpec, PackageSpecParseResult> from_name_and_triplet(const std::string& name,
-                                                                                    const Triplet& triplet);
+        PackageSpec() = default;
+        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) { }
 
-        static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, const Triplet& triplet);
+        static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, Triplet triplet);
 
         const std::string& name() const;
 
-        const Triplet& triplet() const;
+        Triplet triplet() const;
 
         std::string dir() const;
 
@@ -49,6 +48,9 @@ namespace vcpkg
         Triplet m_triplet;
     };
 
+    bool operator==(const PackageSpec& left, const PackageSpec& right);
+    inline bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
+
     ///
     /// <summary>
     /// Full specification of a feature. Contains all information to reference
@@ -57,19 +59,16 @@ namespace vcpkg
     ///
     struct FeatureSpec
     {
-        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) {}
+        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) { }
 
         const std::string& name() const { return m_spec.name(); }
         const std::string& feature() const { return m_feature; }
-        const Triplet& triplet() const { return m_spec.triplet(); }
+        Triplet triplet() const { return m_spec.triplet(); }
 
         const PackageSpec& spec() const { return m_spec; }
 
         std::string to_string() const;
         void to_string(std::string& out) const;
-
-        static std::vector<FeatureSpec> from_strings_and_triplet(const std::vector<std::string>& depends,
-                                                                 const Triplet& t);
 
         bool operator<(const FeatureSpec& other) const
         {
@@ -103,10 +102,22 @@ namespace vcpkg
         PackageSpec package_spec;
         std::vector<std::string> features;
 
-        static std::vector<FeatureSpec> to_feature_specs(const std::vector<FullPackageSpec>& specs);
+        FullPackageSpec() = default;
+        explicit FullPackageSpec(PackageSpec spec, std::vector<std::string> features = {})
+            : package_spec(std::move(spec)), features(std::move(features))
+        {
+        }
 
-        static ExpectedT<FullPackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
-                                                                              const Triplet& default_triplet);
+        std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string>& default_features,
+                                                  const std::vector<std::string>& all_features) const;
+
+        static ExpectedS<FullPackageSpec> from_string(const std::string& spec_as_string, Triplet default_triplet);
+
+        bool operator==(const FullPackageSpec& o) const
+        {
+            return package_spec == o.package_spec && features == o.features;
+        }
+        bool operator!=(const FullPackageSpec& o) const { return !(*this == o); }
     };
 
     ///
@@ -119,11 +130,33 @@ namespace vcpkg
         std::string name;
         std::vector<std::string> features;
 
-        static ExpectedT<Features, PackageSpecParseResult> from_string(const std::string& input);
+        static ExpectedS<Features> from_string(const std::string& input);
     };
 
-    bool operator==(const PackageSpec& left, const PackageSpec& right);
-    bool operator!=(const PackageSpec& left, const PackageSpec& right);
+    struct Dependency
+    {
+        std::string name;
+        std::vector<std::string> features;
+        PlatformExpression::Expr platform;
+
+        Json::Object extra_info;
+
+        friend bool operator==(const Dependency& lhs, const Dependency& rhs);
+        friend bool operator!=(const Dependency& lhs, const Dependency& rhs) { return !(lhs == rhs); }
+    };
+
+    struct ParsedQualifiedSpecifier
+    {
+        std::string name;
+        Optional<std::vector<std::string>> features;
+        Optional<std::string> triplet;
+        Optional<PlatformExpression::Expr> platform;
+    };
+
+    Optional<std::string> parse_feature_name(Parse::ParserBase& parser);
+    Optional<std::string> parse_package_name(Parse::ParserBase& parser);
+    ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(StringView input);
+    Optional<ParsedQualifiedSpecifier> parse_qualified_specifier(Parse::ParserBase& parser);
 }
 
 namespace std
@@ -144,5 +177,22 @@ namespace std
     struct equal_to<vcpkg::PackageSpec>
     {
         bool operator()(const vcpkg::PackageSpec& left, const vcpkg::PackageSpec& right) const { return left == right; }
+    };
+
+    template<>
+    struct hash<vcpkg::FeatureSpec>
+    {
+        size_t operator()(const vcpkg::FeatureSpec& value) const
+        {
+            size_t hash = std::hash<vcpkg::PackageSpec>()(value.spec());
+            hash = hash * 31 + std::hash<std::string>()(value.feature());
+            return hash;
+        }
+    };
+
+    template<>
+    struct equal_to<vcpkg::FeatureSpec>
+    {
+        bool operator()(const vcpkg::FeatureSpec& left, const vcpkg::FeatureSpec& right) const { return left == right; }
     };
 }

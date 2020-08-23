@@ -1,10 +1,6 @@
-include(vcpkg_common_functions)
-
 set(X264_VERSION 157)
 
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "x264 only support windows.")
-endif()
+vcpkg_fail_port_install(ON_TARGET "OSX") 
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -16,9 +12,24 @@ vcpkg_from_github(
         "uwp-cflags.patch"
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    _vcpkg_determine_autotools_host_cpu(BUILD_ARCH)
+    _vcpkg_determine_autotools_target_cpu(HOST_ARCH)
+    list(APPEND OPTIONS --build=${BUILD_ARCH}-pc-mingw32)
+    list(APPEND OPTIONS --host=${HOST_ARCH}-pc-mingw32)
+endif()
+
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND OPTIONS --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
+    list(APPEND OPTIONS --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib)
+endif()
+
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
+    NO_ADDITIONAL_PATHS
     OPTIONS
+        ${OPTIONS}
         --enable-strip
         --disable-lavf
         --disable-swscale
@@ -28,25 +39,17 @@ vcpkg_configure_make(
         --disable-lsmash
         --disable-asm
         --enable-debug
+
 )
 
 vcpkg_install_make()
+vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x264)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x264.exe ${CURRENT_PACKAGES_DIR}/tools/x264/x264.exe)
-endif()
-
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/debug/bin/x264.exe
-    ${CURRENT_PACKAGES_DIR}/debug/include
-)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/lib/libx264.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/lib/x264.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/x264.lib)
 else()
     # force U_STATIC_IMPLEMENTATION macro
     file(READ ${CURRENT_PACKAGES_DIR}/include/x264.h HEADER_CONTENTS)
@@ -59,7 +62,8 @@ else()
     )
 endif()
 
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES -lpthread -lm -ldl)
+
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/x264)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/x264/COPYING ${CURRENT_PACKAGES_DIR}/share/x264/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -46,7 +46,9 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 include_directories(${CMAKE_BINARY_DIR})
 
 add_library(popt ${SOURCES})
-set_target_properties(popt PROPERTIES COMPILE_FLAGS "/wd4996")
+if (MSVC)
+    target_compile_options(popt PRIVATE /wd4996)
+endif()
 
 install(TARGETS popt
   RUNTIME DESTINATION bin

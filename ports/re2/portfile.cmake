@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/re2
-    REF 2019-09-01
-    SHA512 df446a7a00f3e8cd3f09c746ad41a6f58af3da88ab31cf8e2498d26e240bbe1f557f462fb6b10a818c3e00e02ec19dc60ce29eb6c4d61781aeb9b96b4c4e5af9
+    REF 2020-01-01
+    SHA512 ca9c5e3b63b55074ad1d74b73bcf115ae285b3b8989bb56de0bccdfd7b423df742cfd1d1b6eb963da6dc550b81f492eaef9a9c582e354906b8dd1b92fb451ed0
     HEAD_REF master
 )
 

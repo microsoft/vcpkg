@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3caa411..775ce02 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,7 +14,7 @@ add_library(cppitertools::cppitertools ALIAS cppitertools)
+
+ target_include_directories(cppitertools INTERFACE
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+-        $<INSTALL_INTERFACE:${cppitertools_INSTALL_CMAKE_DIR}/cppitertools>
++        $<INSTALL_INTERFACE:${cppitertools_INSTALL_INCLUDE_DIR}/cppitertools>
+         )
+
+
+@@ -37,5 +37,5 @@ install(EXPORT cppitertools-targets
+         DESTINATION ${cppitertools_INSTALL_CMAKE_DIR}/cppitertools
+         )
+
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cppitertools-config-version.cmake DESTINATION ${cppitertools_INSTALL_CMAKE_DIR})
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cppitertools-config-version.cmake DESTINATION ${cppitertools_INSTALL_CMAKE_DIR}/cppitertools)
+ install(DIRECTORY . DESTINATION ${cppitertools_INSTALL_INCLUDE_DIR}/cppitertools)

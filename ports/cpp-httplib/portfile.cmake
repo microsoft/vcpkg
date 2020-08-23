@@ -1,10 +1,9 @@
-include(vcpkg_common_functions)
-
+# Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yhirose/cpp-httplib
-    REF v0.2.5
-    SHA512 2b898acb0534517386d14ffa8c2d4640e27cdbbb7ed627a29c289a3012348950bbe1c64711315e8d8654688ab447735d73b9c03be39caaf10e783f612f65e31a
+    REF v0.7.0
+    SHA512 4ffbeb6672dec5f3704d6c3da09acf0e1984b5c7c68455f7fb030a7457bc64983665498015f2372d8a85da02be1750bab03dae956653297ac8efef67ff682854
     HEAD_REF master
 )
 
@@ -14,8 +13,4 @@ file(
 )
 
 # Handle copyright
-configure_file(
-    ${SOURCE_PATH}/LICENSE
-    ${CURRENT_PACKAGES_DIR}/share/cpp-httplib/copyright
-    COPYONLY
-)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

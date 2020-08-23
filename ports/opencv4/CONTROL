@@ -1,5 +1,5 @@
 Source: opencv4
-Version: 4.1.1-3
+Version: 4.3.0
 Build-Depends: protobuf, zlib
 Homepage: https://github.com/opencv/opencv
 Description: computer vision library
@@ -13,11 +13,11 @@ Build-Depends: ade
 Description: graph api
 
 Feature: contrib
-Build-Depends: hdf5 (!uwp)
+Build-Depends: hdf5 (!uwp), tesseract (!uwp)
 Description: opencv_contrib module
 
 Feature: cuda
-Build-Depends: opencv4[contrib], cuda
+Build-Depends: opencv4[contrib], cuda, cudnn
 Description: CUDA support for opencv
 
 Feature: dnn
@@ -34,6 +34,10 @@ Description: ffmpeg support for opencv
 Feature: gdcm
 Build-Depends: gdcm
 Description: GDCM support for opencv
+
+Feature: halide
+Build-Depends: halide, opencv4[core], opencv4[dnn]
+Description: Halide support for opencv
 
 Feature: ipp
 Description: Enable Intel Integrated Performance Primitives
@@ -66,7 +70,7 @@ Build-Depends: libpng
 Description: PNG support for opencv
 
 Feature: qt
-Build-Depends: qt5
+Build-Depends: qt5-base[core]
 Description: Qt GUI support for opencv
 
 Feature: sfm
@@ -88,10 +92,6 @@ Description: vtk support for opencv
 Feature: webp
 Build-Depends: libwebp
 Description: WebP support for opencv
-
-Feature: halide
-Build-Depends: halide, opencv4[core], opencv4[dnn]
-Description: Halide support for opencv
 
 Feature: world
 Description: Compile to a single package support for opencv

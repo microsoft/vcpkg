@@ -1,3 +1,4 @@
 Source: spirv-headers
-Version: 2019-05-05
+Version: 1.5.1
+Homepage: https://github.com/KhronosGroup/SPIRV-Headers
 Description: Machine-readable files for the SPIR-V Registry

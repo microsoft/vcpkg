@@ -198,6 +198,6 @@ if(NOT DISABLE_INSTALL_HEADERS)
     libSYS/include/FDK_audio.h
     libSYS/include/genericStds.h
     libSYS/include/machine_type.h
-    DESTINATION include
+    DESTINATION include/fdk-aac
   )
 endif()

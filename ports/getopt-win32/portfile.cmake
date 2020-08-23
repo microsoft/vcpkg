@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "getopt-win32 only supports building on Windows Desktop")
 endif()
@@ -22,3 +20,5 @@ vcpkg_install_msbuild(
 
 # Copy header
 file(COPY ${SOURCE_PATH}/getopt.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
+
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)

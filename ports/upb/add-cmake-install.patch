@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 836c5ff..6eb8bb5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,7 +8,7 @@ else()
+     cmake_policy(VERSION 3.12)
+ endif()
+ 
+-cmake_minimum_required (VERSION 3.0)
++cmake_minimum_required (VERSION 3.14)
+ cmake_policy(SET CMP0048 NEW)
+ 
+ project(upb)
+@@ -59,7 +59,7 @@ elseif(UNIX)
+ endif()
+ 
+ enable_testing()
+-
++add_library(descriptor_upbproto INTERFACE)
+ add_library(upb
+   upb/decode.c
+   upb/encode.c
+@@ -136,12 +136,35 @@ target_link_libraries(upb_cc_bindings INTERFACE
+   descriptor_upbproto
+   handlers
+   upb)
+-add_library(upb_test
++if(ENABLE_TESTING)
++add_executable(upb_test
+   tests/testmain.cc
+   tests/test_util.h
+   tests/upb_test.h)
+ target_link_libraries(upb_test
+   handlers
+   upb)
++endif()
+ 
+-
++install(
++  DIRECTORY upb
++  DESTINATION include
++  FILES_MATCHING
++  PATTERN "*.h"
++  PATTERN "*.inc"
++  PATTERN "*.int.h" EXCLUDE
++)
++target_include_directories(upb PUBLIC $<INSTALL_INTERFACE:include>)
++install(TARGETS
++  upb
++  upb_cc_bindings
++  upb_json
++  upb_pb
++  table
++  descriptor_upbproto
++  handlers
++  legacy_msg_reflection
++  reflection
++  EXPORT upb-config
++)
++install(EXPORT upb-config NAMESPACE upb:: DESTINATION share/upb)

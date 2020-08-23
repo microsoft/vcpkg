@@ -1,0 +1,68 @@
+diff --git a/SMP/libgmp.vcxproj b/SMP/libgmp.vcxproj
+index 3c774be11..e8919240b 100644
+--- a/SMP/libgmp.vcxproj	
++++ b/SMP/libgmp.vcxproj
+@@ -1846,6 +1846,7 @@ del /f /q $(OutDir)\licenses\gmp.txt
+       <MinimalRebuild>false</MinimalRebuild>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4101;4018;4307;4267;4334;4554;4267;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -1929,6 +1930,7 @@ del /f /q $(OutDir)\licenses\gmp.txt
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4101;4018;4307;4267;4334;4554;4267;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+       <SDLCheck>false</SDLCheck>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -2190,6 +2192,7 @@ del /f /q $(OutDir)\licenses\gmp.txt
+       <MinimalRebuild>false</MinimalRebuild>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4101;4018;4307;4267;4334;4554;4267;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <OutputFile>$(OutDir)\bin\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -2278,6 +2281,7 @@ del /f /q $(OutDir)\licenses\gmp.txt
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4101;4018;4307;4267;4334;4554;4267;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+       <SDLCheck>false</SDLCheck>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <OutputFile>$(OutDir)\bin\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -2549,6 +2553,7 @@ del /f /q $(OutDir)\licenses\gmp.txt
+       <ProgramDataBaseFileName>$(OutDir)\lib\x64\$(TargetName).pdb</ProgramDataBaseFileName>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4101;4018;4307;4267;4334;4554;4267;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -2638,6 +2643,7 @@ del /f /q $(OutDir)\licenses\gmp.txt
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4101;4018;4307;4267;4334;4554;4267;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+       <SDLCheck>false</SDLCheck>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Lib>
+       <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
+@@ -2916,6 +2922,7 @@ del /f /q $(OutDir)\licenses\gmp.txt
+       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4101;4018;4307;4267;4334;4554;4267;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -3011,6 +3018,7 @@ del /f /q $(OutDir)\licenses\gmp.txt
+       <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+       <DisableSpecificWarnings>4244;4146;4101;4018;4307;4267;4334;4554;4267;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+       <SDLCheck>false</SDLCheck>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>

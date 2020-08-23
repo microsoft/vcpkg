@@ -38,7 +38,7 @@ This is needed for libraries that set their own source code's character set.
 Specifies the precise generator to use.
 
 This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build.
-If used for this purpose, it should be set to "NMake Makefiles".
+If used for this purpose, it should be set to `"NMake Makefiles"`.
 
 ### OPTIONS
 Additional options passed to CMake during the configuration.
