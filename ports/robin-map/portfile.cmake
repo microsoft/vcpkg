@@ -10,6 +10,9 @@ vcpkg_from_github(
 
 file(COPY ${SOURCE_PATH}/include/tsl DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/Findrobin-map.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
 file(INSTALL
     ${SOURCE_PATH}/LICENSE
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/robin-map

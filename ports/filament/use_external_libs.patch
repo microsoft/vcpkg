@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3eef6ec..dc74d486 100644
+index 3eef6ec..e06dd52 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -33,6 +33,20 @@ endif()
+@@ -33,6 +33,21 @@ endif()
  # ==================================================================================================
  # Support for ccache
  # ==================================================================================================
@@ -20,10 +20,11 @@ index 3eef6ec..dc74d486 100644
 +find_package(Stb)
 +include_directories(${Stb_INCLUDE_DIR})
 +find_package(tinyexr)
++find_package(robin-map)
  find_program(CCACHE_PROGRAM ccache)
  if (CCACHE_PROGRAM)
      set(C_LAUNCHER   "${CCACHE_PROGRAM}")
-@@ -204,7 +218,7 @@ endif()
+@@ -204,7 +219,7 @@ endif()
  
  if (MSVC)
      set(CXX_STANDARD "/std:c++latest")
@@ -32,7 +33,7 @@ index 3eef6ec..dc74d486 100644
  else()
      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -fstrict-aliasing -Wno-unknown-pragmas -Wno-unused-function")
  endif()
-@@ -224,7 +238,7 @@ endif()
+@@ -224,7 +239,7 @@ endif()
  
  if (LINUX)
      option(USE_STATIC_LIBCXX "Link against the static runtime libraries." ON)
@@ -41,7 +42,7 @@ index 3eef6ec..dc74d486 100644
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
          link_libraries("-static-libgcc -static-libstdc++")
          link_libraries(libc++.a)
-@@ -296,10 +310,12 @@ endif()
+@@ -296,10 +311,12 @@ endif()
  # Linker flags
  # ==================================================================================================
  # Strip unused sections
@@ -54,7 +55,7 @@ index 3eef6ec..dc74d486 100644
  
  if (APPLE)
      set(GC_SECTIONS "-Wl,-dead_strip")
-@@ -402,7 +418,7 @@ if (NOT DIST_ARCH)
+@@ -402,7 +419,7 @@ if (NOT DIST_ARCH)
      set(DIST_ARCH x86_64)
  endif()
  if (NOT DIST_DIR)
@@ -63,7 +64,7 @@ index 3eef6ec..dc74d486 100644
  endif()
  
  # ==================================================================================================
-@@ -521,7 +537,6 @@ endfunction()
+@@ -521,7 +538,6 @@ endfunction()
  # ==================================================================================================
  
  # Common to all platforms
@@ -71,7 +72,7 @@ index 3eef6ec..dc74d486 100644
  add_subdirectory(${LIBRARIES}/camutils)
  add_subdirectory(${LIBRARIES}/filabridge)
  add_subdirectory(${LIBRARIES}/filaflat)
-@@ -536,21 +551,17 @@ add_subdirectory(${LIBRARIES}/utils)
+@@ -536,21 +552,17 @@ add_subdirectory(${LIBRARIES}/utils)
  add_subdirectory(${FILAMENT}/filament)
  add_subdirectory(${FILAMENT}/shaders)
  add_subdirectory(${EXTERNAL}/hat-trie/tnt)
@@ -95,7 +96,7 @@ index 3eef6ec..dc74d486 100644
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -578,8 +589,6 @@ if (WEBGL)
+@@ -578,8 +590,6 @@ if (WEBGL)
      if (FILAMENT_GENERATE_JS_DOCS)
          add_subdirectory(web/docs)
      endif()
@@ -104,7 +105,7 @@ index 3eef6ec..dc74d486 100644
  endif()
  
  if (IS_HOST_PLATFORM)
-@@ -596,12 +605,6 @@ if (IS_HOST_PLATFORM)
+@@ -596,12 +606,6 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${EXTERNAL}/astcenc/tnt)
      add_subdirectory(${EXTERNAL}/etc2comp)
