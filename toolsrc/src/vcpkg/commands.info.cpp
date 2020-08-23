@@ -9,6 +9,7 @@
 #include <vcpkg/install.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/statusparagraphs.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/versiont.h>
 

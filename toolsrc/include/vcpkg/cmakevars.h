@@ -1,9 +1,10 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/optional.h>
 
 #include <vcpkg/portfileprovider.h>
-#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Dependencies
 {

@@ -264,7 +264,7 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
         if (fs.exists(control))
         {
             auto contents = fs.read_contents(control, VCPKG_LINE_INFO);
-            auto pghs = Paragraphs::parse_paragraphs(contents, control.u8string());
+            auto pghs = Paragraphs::parse_paragraphs(contents, fs::u8string(control));
             REQUIRE(pghs);
 
             scfs.push_back(std::move(

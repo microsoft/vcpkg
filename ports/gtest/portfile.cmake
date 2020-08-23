@@ -26,7 +26,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GTest)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GTest TARGET_PATH share/GTest)
 
 file(
     INSTALL
