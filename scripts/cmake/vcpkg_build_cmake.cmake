@@ -101,6 +101,4 @@ function(vcpkg_build_cmake)
             endif()
         endif()
     endforeach()
-
-    vcpkg_copy_sourcelink_file()
 endfunction()

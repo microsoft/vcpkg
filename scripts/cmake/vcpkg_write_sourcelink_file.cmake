@@ -1,6 +1,6 @@
 ## # vcpkg_write_sourcelink_file
 ##
-## Write a Source Link file (if enabled).
+## Write a Source Link file (if enabled). Internal function not for direct use by ports.
 ##
 ## ## Usage:
 ## ```cmake
@@ -18,19 +18,15 @@
 ## Specified the permanent location of the corresponding sources.
 ##
 function(vcpkg_write_sourcelink_file)
-    set(oneValueArgs SOURCE_PATH SERVER_PATH)
-    set(multipleValuesArgs)
-    cmake_parse_arguments(_vwsf "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
+    cmake_parse_arguments(_vwsf "" "SOURCE_PATH;SERVER_PATH" "" ${ARGN})
 
-    if(NOT DEFINED _vwsf_SOURCE_PATH)
-        message(FATAL_ERROR "SOURCE_PATH must be specified.")
+    if(NOT DEFINED _vwsf_SOURCE_PATH OR NOT DEFINED _vwsf_SERVER_PATH)
+        message(FATAL_ERROR "SOURCE_PATH and SERVER_PATH must be specified.")
     endif()
 
     # Normalize and escape (for JSON) the source path.
     file(TO_NATIVE_PATH "${_vwsf_SOURCE_PATH}" SOURCELINK_SOURCE_PATH)
     string(REGEX REPLACE "\\\\" "\\\\\\\\" SOURCELINK_SOURCE_PATH "${SOURCELINK_SOURCE_PATH}")
 
-    file(WRITE  "${_CURRENT_SOURCELINK_FILE}" "{\"documents\":{\n")
-    file(APPEND "${_CURRENT_SOURCELINK_FILE}" "  \"${SOURCELINK_SOURCE_PATH}\": \"${_vwsf_SERVER_PATH}\"\n")
-    file(APPEND "${_CURRENT_SOURCELINK_FILE}" "}}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" "{\"documents\":{ \"${SOURCELINK_SOURCE_PATH}\": \"${_vwsf_SERVER_PATH}\" }}")
 endfunction()
