@@ -64,7 +64,7 @@ Prerrequisitos:
 
 - Windows 7 o superior
 - [Git][getting-started:git]
-- [Visual Studio][getting-started:visual-studio] 2015 Update 3 o superior con el paquete Ingles de Visual Studio.
+- [Visual Studio][getting-started:visual-studio] 2015 Update 3 o superior con el paquete Inglés de Visual Studio.
 
 Primero, descargue y compile vcpkg; puede ser instalado en cualquier lugar,
 pero generalmente recomendamos usar vcpkg como submódulo para proyectos de CMake,
