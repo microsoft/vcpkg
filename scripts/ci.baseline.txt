@@ -208,7 +208,7 @@ chmlib:x64-uwp=fail
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
-# clapack is replaced by lapack-reference. 
+# clapack is replaced by lapack-reference.
 clapack:x64-linux = skip
 clapack:x64-windows = skip
 clapack:x64-windows-static = skip
@@ -1374,8 +1374,9 @@ python3:x64-uwp=fail
 qca:x64-linux=fail
 qca:x64-osx=fail
 qca:x64-windows-static=fail
-qhull:x64-uwp=fail
 qhull:arm-uwp=fail
+qhull:x64-uwp=fail
+qhull:x64-windows-static=fail
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
