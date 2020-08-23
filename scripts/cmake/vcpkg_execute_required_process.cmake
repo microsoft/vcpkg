@@ -45,13 +45,21 @@ This command cannot be executed in Download Mode.
 Halting portfile execution.
 ]])
     endif()
-
-    execute_process(
-        COMMAND ${vcpkg_execute_required_process_COMMAND}
-        OUTPUT_FILE ${LOG_OUT}
-        ERROR_FILE ${LOG_ERR}
-        RESULT_VARIABLE error_code
-        WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY})
+    if(VCPKG_DOWNLOAD_MODE)
+        _execute_process(
+            COMMAND ${vcpkg_execute_required_process_COMMAND}
+            OUTPUT_FILE ${LOG_OUT}
+            ERROR_FILE ${LOG_ERR}
+            RESULT_VARIABLE error_code
+            WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY})
+    else()
+        execute_process(
+            COMMAND ${vcpkg_execute_required_process_COMMAND}
+            OUTPUT_FILE ${LOG_OUT}
+            ERROR_FILE ${LOG_ERR}
+            RESULT_VARIABLE error_code
+            WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY})
+    endif()
     if(error_code)
         set(LOGS)
         file(READ "${LOG_OUT}" out_contents)

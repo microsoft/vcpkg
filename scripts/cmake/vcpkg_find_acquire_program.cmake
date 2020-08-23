@@ -513,21 +513,42 @@ function(vcpkg_find_acquire_program VAR)
         if(ARCHIVE_EXTENSION STREQUAL ".msi")
           file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
           file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
-          _execute_process(
-            COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
-            WORKING_DIRECTORY ${DOWNLOADS}
-          )
+          if(VCPKG_DOWNLOAD_MODE)
+            _execute_process(
+              COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
+              WORKING_DIRECTORY ${DOWNLOADS}
+            )
+          else()
+            execute_process(
+              COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
+              WORKING_DIRECTORY ${DOWNLOADS}
+            )
+          endif()
         elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
           vcpkg_find_acquire_program(7Z)
-          _execute_process(
-            COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
-            WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
-          )
+          if(VCPKG_DOWNLOAD_MODE)
+            _execute_process(
+              COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
+              WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+            )
+          else()
+            execute_process(
+              COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
+              WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+            )
+          endif()
         else()
-          _execute_process(
-            COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
-            WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
-          )
+          if(VCPKG_DOWNLOAD_MODE)
+            _execute_process(
+              COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
+              WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+            )
+          else()
+            execute_process(
+              COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
+              WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+            )
+          endif()
         endif()
       endif()
     endif()
