@@ -1,0 +1,14 @@
+diff --git a/./broken_config.cmake.in b/./fixed_config.cmake.in
+index e64f8a20f..38c441451 100644
+--- a/polymorphic_value-config.cmake.in
++++ b/polymorphic_value-config.cmake.in
+@@ -1,5 +1,7 @@
+ @PACKAGE_INIT@
+ 
+-set_and_check(POLYMORPHIC_VALUE_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+ 
+-check_required_components(Foo)
++
++check_required_components(polymorphic_value)
++
++include(${CMAKE_CURRENT_LIST_DIR}/polymorphic_value-target.cmake)

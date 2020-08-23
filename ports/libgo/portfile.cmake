@@ -1,16 +1,13 @@
-include(vcpkg_common_functions)
-
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yyzybb537/libgo
-    REF v2.8
-    SHA512 44784de4aec36ea321195c11c99a73de4f6f51285febdf6980e8aaced1fdfc0a34c6b1a8acc8c6b424e747310a1d7fb1604f722084c28ab91f8ebee15667d59b
+    REF 5d4f36508e8eb2d5aa17cf37cd951dc91da23096 #v3.1
+    SHA512 0f281f58116148ba1dd3904febbc391d47190f8e148b70bed7c4b7e6cb3efa5e41e2b7be4832ceeb805996e085f4c2d89fd0cf3b0651e037b32758d6a441411b
     HEAD_REF master
-    PATCHES
-        cmake.patch
-        boost-168.patch
+    PATCHES cmake.patch
 )
 
 vcpkg_from_github(
@@ -28,36 +25,22 @@ file(RENAME ${XHOOK_SOURCE_PATH} ${SOURCE_PATH}/third_party/xhook)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DDISABLE_ADJUST_COMMAND_LINE_FLAGS=ON
-        -DDISABLE_DYNAMIC_LIB=ON
-        -DENABLE_BOOST_CONTEXT=ON
-        -DFORCE_UNIX_TARGETS=ON
-        -DDISABLE_SYSTEMWIDE=ON
 )
 
 vcpkg_install_cmake()
 
-# remove duplicated include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/disable_hook)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/disable_hook)
 
-file(GLOB REL_MAIN ${CURRENT_PACKAGES_DIR}/lib/libgo_main.lib ${CURRENT_PACKAGES_DIR}/lib/liblibgo_main.a)
-if(REL_MAIN)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    file(COPY ${REL_MAIN} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    file(REMOVE ${REL_MAIN})
-endif()
-
-file(GLOB DBG_MAIN ${CURRENT_PACKAGES_DIR}/debug/lib/libgo_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/liblibgo_main.a)
-if(DBG_MAIN)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(COPY ${DBG_MAIN} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(REMOVE ${DBG_MAIN})
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix/static_hook)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/windows)
+else()
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgo RENAME copyright)
-file(INSTALL ${CURRENT_PORT_DIR}/libgo-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgo)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${CURRENT_PORT_DIR}/libgo-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c0af720..774e2d8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -107,16 +107,8 @@ if( WIN32 )
+ 	set( LIB_PATH "lib" )
+ elseif( APPLE )
+ 	find_library( COREFOUNDATION_LIBRARY CoreFoundation )
+-	mark_as_advanced( COREFOUNDATION_LIBRARY )
+-
+-	add_library( CoreFoundation SHARED IMPORTED )
+-	set_target_properties(
+-		CoreFoundation PROPERTIES
+-			IMPORTED_LOCATION "${COREFOUNDATION_LIBRARY}"
+-			INTERFACE_INCLUDE_DIRECTORIES "/System/Library/Frameworks/CoreFoundation.framework/Headers"
+-	)
+-	
+-	target_link_libraries( ${TARGET} PUBLIC CoreFoundation )
++
++	target_link_libraries( ${TARGET} PUBLIC ${COREFOUNDATION_LIBRARY} )
+ 	set( SHARE_PATH "${CMAKE_INSTALL_PREFIX}/share/SFGUI" )
+ 	set( LIB_PATH "lib" )
+ elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux" )

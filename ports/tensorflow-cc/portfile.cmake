@@ -1,9 +1,7 @@
-include(vcpkg_common_functions)
-
 message(WARNING "This tensorflow port currently is experimental on Windows and Linux platforms.")
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-    message(FATAL_ERROR "TensorFlow does not support 32bit system.")
+    message(FATAL_ERROR "TensorFlow does not support 32bit systems.")
 endif()
 
 vcpkg_from_github(
@@ -49,6 +47,7 @@ if(CMAKE_HOST_WIN32)
 
     set(ENV{BAZEL_VS} $ENV{VSInstallDir})
     set(ENV{BAZEL_VC} $ENV{VCInstallDir})
+    set(ENV{BAZEL_VC_FULL_VERSION} $ENV{VCToolsVersion})
 endif()
 
 # tensorflow has long file names, which will not work on windows
@@ -76,11 +75,12 @@ set(ENV{TF_NCCL_VERSION} 2.3)
 set(ENV{NCCL_INSTALL_PATH} "")
 set(ENV{CC_OPT_FLAGS} "/arch:AVX")
 set(ENV{TF_NEED_CUDA} 0)
+set(ENV{TF_CONFIGURE_IOS} 0)
 
 message(STATUS "Configuring TensorFlow")
 
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py
+    COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     LOGNAME config-${TARGET_TRIPLET}-rel
 )

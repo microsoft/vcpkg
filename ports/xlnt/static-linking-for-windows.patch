@@ -1,0 +1,13 @@
+diff --git a/include/xlnt/xlnt.hpp b/include/xlnt/xlnt.hpp
+index 01fe4981..9cefa6e0 100644
+--- a/include/xlnt/xlnt.hpp
++++ b/include/xlnt/xlnt.hpp
+@@ -22,7 +22,7 @@
+ // @author: see AUTHORS file
+ 
+ #pragma once
+-
++#define XLNT_STATIC
+ #include <xlnt/xlnt_config.hpp>
+ 
+ // cell

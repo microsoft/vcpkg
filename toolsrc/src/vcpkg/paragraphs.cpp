@@ -1,224 +1,331 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/parse.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/paragraphparseresult.h>
+
+#include <vcpkg/binaryparagraph.h>
+#include <vcpkg/paragraphparser.h>
 #include <vcpkg/paragraphs.h>
 
 using namespace vcpkg::Parse;
+using namespace vcpkg;
+
+namespace vcpkg::Parse
+{
+    static Optional<std::pair<std::string, TextRowCol>> remove_field(Paragraph* fields, const std::string& fieldname)
+    {
+        auto it = fields->find(fieldname);
+        if (it == fields->end())
+        {
+            return nullopt;
+        }
+
+        auto value = std::move(it->second);
+        fields->erase(it);
+        return value;
+    }
+
+    void ParagraphParser::required_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
+    {
+        auto maybe_field = remove_field(&fields, fieldname);
+        if (const auto field = maybe_field.get())
+            out = std::move(*field);
+        else
+            missing_fields.push_back(fieldname);
+    }
+    void ParagraphParser::optional_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
+    {
+        auto maybe_field = remove_field(&fields, fieldname);
+        if (auto field = maybe_field.get()) out = std::move(*field);
+    }
+    void ParagraphParser::required_field(const std::string& fieldname, std::string& out)
+    {
+        TextRowCol ignore;
+        required_field(fieldname, {out, ignore});
+    }
+    std::string ParagraphParser::optional_field(const std::string& fieldname)
+    {
+        std::string out;
+        TextRowCol ignore;
+        optional_field(fieldname, {out, ignore});
+        return out;
+    }
+    std::string ParagraphParser::required_field(const std::string& fieldname)
+    {
+        std::string out;
+        TextRowCol ignore;
+        required_field(fieldname, {out, ignore});
+        return out;
+    }
+
+    std::unique_ptr<ParseControlErrorInfo> ParagraphParser::error_info(const std::string& name) const
+    {
+        if (!fields.empty() || !missing_fields.empty())
+        {
+            auto err = std::make_unique<ParseControlErrorInfo>();
+            err->name = name;
+            err->extra_fields["CONTROL"] = Util::extract_keys(fields);
+            err->missing_fields["CONTROL"] = std::move(missing_fields);
+            err->expected_types = std::move(expected_types);
+            return err;
+        }
+        return nullptr;
+    }
+
+    template<class T, class F>
+    static Optional<std::vector<T>> parse_list_until_eof(StringLiteral plural_item_name, Parse::ParserBase& parser, F f)
+    {
+        std::vector<T> ret;
+        parser.skip_whitespace();
+        if (parser.at_eof()) return std::vector<T>{};
+        do
+        {
+            auto item = f(parser);
+            if (!item) return nullopt;
+            ret.push_back(std::move(item).value_or_exit(VCPKG_LINE_INFO));
+            parser.skip_whitespace();
+            if (parser.at_eof()) return {std::move(ret)};
+            if (parser.cur() != ',')
+            {
+                parser.add_error(Strings::concat("expected ',' or end of text in ", plural_item_name, " list"));
+                return nullopt;
+            }
+            parser.next();
+            parser.skip_whitespace();
+        } while (true);
+    }
+
+    ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str,
+                                                                    StringView origin,
+                                                                    TextRowCol textrowcol)
+    {
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
+        auto opt = parse_list_until_eof<std::string>("default features", parser, &parse_feature_name);
+        if (!opt) return {parser.get_error()->format(), expected_right_tag};
+        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
+    }
+    ExpectedS<std::vector<ParsedQualifiedSpecifier>> parse_qualified_specifier_list(const std::string& str,
+                                                                                    StringView origin,
+                                                                                    TextRowCol textrowcol)
+    {
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
+        auto opt = parse_list_until_eof<ParsedQualifiedSpecifier>(
+            "dependencies", parser, [](ParserBase& parser) { return parse_qualified_specifier(parser); });
+        if (!opt) return {parser.get_error()->format(), expected_right_tag};
+
+        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
+    }
+    ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
+                                                               StringView origin,
+                                                               TextRowCol textrowcol)
+    {
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
+        auto opt = parse_list_until_eof<Dependency>("dependencies", parser, [](ParserBase& parser) {
+            auto loc = parser.cur_loc();
+            return parse_qualified_specifier(parser).then([&](ParsedQualifiedSpecifier&& pqs) -> Optional<Dependency> {
+                if (pqs.triplet)
+                {
+                    parser.add_error("triplet specifier not allowed in this context", loc);
+                    return nullopt;
+                }
+                return Dependency{pqs.name, pqs.features.value_or({}), pqs.platform.value_or({})};
+            });
+        });
+        if (!opt) return {parser.get_error()->format(), expected_right_tag};
+
+        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
+    }
+}
 
 namespace vcpkg::Paragraphs
 {
-    struct Parser
+    struct PghParser : private Parse::ParserBase
     {
-        Parser(const char* c, const char* e) : cur(c), end(e) {}
-
     private:
-        const char* cur;
-        const char* const end;
-
-        void peek(char& ch) const
-        {
-            if (cur == end)
-                ch = 0;
-            else
-                ch = *cur;
-        }
-
-        void next(char& ch)
-        {
-            if (cur == end)
-                ch = 0;
-            else
-            {
-                ++cur;
-                peek(ch);
-            }
-        }
-
-        void skip_comment(char& ch)
-        {
-            while (ch != '\r' && ch != '\n' && ch != '\0')
-                next(ch);
-            if (ch == '\r') next(ch);
-            if (ch == '\n') next(ch);
-        }
-
-        void skip_spaces(char& ch)
-        {
-            while (ch == ' ' || ch == '\t')
-                next(ch);
-        }
-
-        static bool is_alphanum(char ch)
-        {
-            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9');
-        }
-
-        static bool is_comment(char ch) { return (ch == '#'); }
-
-        static bool is_lineend(char ch) { return ch == '\r' || ch == '\n' || ch == 0; }
-
-        void get_fieldvalue(char& ch, std::string& fieldvalue)
+        void get_fieldvalue(std::string& fieldvalue)
         {
             fieldvalue.clear();
 
-            auto beginning_of_line = cur;
             do
             {
                 // scan to end of current line (it is part of the field value)
-                while (!is_lineend(ch))
-                    next(ch);
+                Strings::append(fieldvalue, match_until(is_lineend));
+                skip_newline();
 
-                fieldvalue.append(beginning_of_line, cur);
-
-                if (ch == '\r') next(ch);
-                if (ch == '\n') next(ch);
-
-                if (is_alphanum(ch) || is_comment(ch))
-                {
-                    // Line begins a new field.
-                    return;
-                }
-
-                beginning_of_line = cur;
-
-                // Line may continue the current field with data or terminate the paragraph,
-                // depending on first nonspace character.
-                skip_spaces(ch);
-
-                if (is_lineend(ch))
-                {
-                    // Line was whitespace or empty.
-                    // This terminates the field and the paragraph.
-                    // We leave the blank line's whitespace consumed, because it doesn't matter.
-                    return;
-                }
-
-                // First nonspace is not a newline. This continues the current field value.
-                // We forcibly convert all newlines into single '\n' for ease of text handling later on.
-                fieldvalue.push_back('\n');
+                if (cur() != ' ') return;
+                auto spacing = skip_tabs_spaces();
+                if (is_lineend(cur())) return add_error("unexpected end of line, to span a blank line use \"  .\"");
+                Strings::append(fieldvalue, "\n", spacing);
             } while (true);
         }
 
-        void get_fieldname(char& ch, std::string& fieldname)
+        void get_fieldname(std::string& fieldname)
         {
-            auto begin_fieldname = cur;
-            while (is_alphanum(ch) || ch == '-')
-                next(ch);
-            Checks::check_exit(VCPKG_LINE_INFO, ch == ':', "Expected ':'");
-            fieldname = std::string(begin_fieldname, cur);
-
-            // skip ': '
-            next(ch);
-            skip_spaces(ch);
+            fieldname = match_zero_or_more(is_alphanumdash).to_string();
+            if (fieldname.empty()) return add_error("expected fieldname");
         }
 
-        void get_paragraph(char& ch, RawParagraph& fields)
+        void get_paragraph(Paragraph& fields)
         {
             fields.clear();
             std::string fieldname;
             std::string fieldvalue;
             do
             {
-                if (is_comment(ch))
+                if (cur() == '#')
                 {
-                    skip_comment(ch);
+                    skip_line();
                     continue;
                 }
 
-                get_fieldname(ch, fieldname);
+                auto loc = cur_loc();
+                get_fieldname(fieldname);
+                if (cur() != ':') return add_error("expected ':' after field name");
+                if (Util::Sets::contains(fields, fieldname)) return add_error("duplicate field", loc);
+                next();
+                skip_tabs_spaces();
+                auto rowcol = cur_rowcol();
+                get_fieldvalue(fieldvalue);
 
-                auto it = fields.find(fieldname);
-                Checks::check_exit(VCPKG_LINE_INFO, it == fields.end(), "Duplicate field");
-
-                get_fieldvalue(ch, fieldvalue);
-
-                fields.emplace(fieldname, fieldvalue);
-            } while (!is_lineend(ch));
+                fields.emplace(fieldname, std::make_pair(fieldvalue, rowcol));
+            } while (!is_lineend(cur()));
         }
 
     public:
-        std::vector<RawParagraph> get_paragraphs()
+        PghParser(StringView text, StringView origin) : Parse::ParserBase(text, origin) { }
+
+        ExpectedS<std::vector<Paragraph>> get_paragraphs()
         {
-            std::vector<RawParagraph> paragraphs;
+            std::vector<Paragraph> paragraphs;
 
-            char ch;
-            peek(ch);
-
-            while (ch != 0)
+            skip_whitespace();
+            while (!at_eof())
             {
-                if (ch == '\n' || ch == '\r' || ch == ' ' || ch == '\t')
-                {
-                    next(ch);
-                    continue;
-                }
-
                 paragraphs.emplace_back();
-                get_paragraph(ch, paragraphs.back());
+                get_paragraph(paragraphs.back());
+                match_zero_or_more(is_lineend);
             }
+            if (get_error()) return get_error()->format();
 
             return paragraphs;
         }
     };
 
-    static Expected<RawParagraph> parse_single_paragraph(const std::string& str)
+    ExpectedS<Paragraph> parse_single_paragraph(const std::string& str, const std::string& origin)
     {
-        const std::vector<RawParagraph> p = Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+        auto pghs = PghParser(str, origin).get_paragraphs();
 
-        if (p.size() == 1)
+        if (auto p = pghs.get())
         {
-            return p.at(0);
+            if (p->size() != 1) return {"There should be exactly one paragraph", expected_right_tag};
+            return std::move(p->front());
         }
-
-        return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
+        else
+        {
+            return pghs.error();
+        }
     }
 
-    Expected<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
+    ExpectedS<Paragraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
         {
-            return parse_single_paragraph(*spgh);
+            return parse_single_paragraph(*spgh, fs::u8string(control_path));
         }
 
-        return contents.error();
+        return contents.error().message();
     }
 
-    Expected<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
+    ExpectedS<std::vector<Paragraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
         {
-            return parse_paragraphs(*spgh);
+            return parse_paragraphs(*spgh, fs::u8string(control_path));
         }
 
-        return contents.error();
+        return contents.error().message();
     }
 
-    Expected<std::vector<RawParagraph>> parse_paragraphs(const std::string& str)
+    ExpectedS<std::vector<Paragraph>> parse_paragraphs(const std::string& str, const std::string& origin)
     {
-        return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+        return PghParser(str, origin).get_paragraphs();
+    }
+
+    bool is_port_directory(const Files::Filesystem& fs, const fs::path& path)
+    {
+        return fs.exists(path / fs::u8path("CONTROL")) || fs.exists(path / fs::u8path("vcpkg.json"));
+    }
+
+    ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
+                                                       const std::string& port_name,
+                                                       const fs::path& path_to_manifest,
+                                                       std::error_code& ec)
+    {
+        auto error_info = std::make_unique<ParseControlErrorInfo>();
+        auto res = Json::parse_file(fs, path_to_manifest, ec);
+        if (ec) return error_info;
+
+        if (auto val = res.get())
+        {
+            if (val->first.is_object())
+            {
+                return SourceControlFile::parse_manifest_file(path_to_manifest, val->first.object());
+            }
+            else
+            {
+                error_info->name = port_name;
+                error_info->error = "Manifest files must have a top-level object";
+                return error_info;
+            }
+        }
+        else
+        {
+            error_info->name = port_name;
+            error_info->error = res.error()->format();
+            return error_info;
+        }
     }
 
     ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
-        Expected<std::vector<RawParagraph>> pghs = get_paragraphs(fs, path / "CONTROL");
+        const auto path_to_manifest = path / fs::u8path("vcpkg.json");
+        const auto path_to_control = path / fs::u8path("CONTROL");
+        if (fs.exists(path_to_manifest))
+        {
+            vcpkg::Checks::check_exit(VCPKG_LINE_INFO,
+                                      !fs.exists(path_to_control),
+                                      "Found both manifest and CONTROL file in port %s; please rename one or the other",
+                                      fs::u8string(path));
+
+            std::error_code ec;
+            auto res = try_load_manifest(fs, fs::u8string(path.filename()), path_to_manifest, ec);
+            if (ec)
+            {
+                auto error_info = std::make_unique<ParseControlErrorInfo>();
+                error_info->name = fs::u8string(path.filename());
+                error_info->error = Strings::format(
+                    "Failed to load manifest file for port: %s\n", fs::u8string(path_to_manifest), ec.message());
+            }
+
+            return res;
+        }
+        ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
         if (auto vector_pghs = pghs.get())
         {
-            return SourceControlFile::parse_control_file(std::move(*vector_pghs));
+            return SourceControlFile::parse_control_file(path_to_control, std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
-        error_info->name = path.filename().generic_u8string();
+        error_info->name = fs::u8string(path.filename());
         error_info->error = pghs.error();
         return error_info;
     }
 
-    Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
+    ExpectedS<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
-        Expected<std::vector<RawParagraph>> pghs =
+        ExpectedS<std::vector<Paragraph>> pghs =
             get_paragraphs(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
 
         if (auto p = pghs.get())

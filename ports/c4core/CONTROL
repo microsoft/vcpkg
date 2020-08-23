@@ -1,0 +1,5 @@
+Source: c4core
+Version: 2020-04-12
+Homepage: https://github.com/biojppm/c4core
+Description: Library of low-level C++ utilities 
+Supports: !(arm|arm64|osx)

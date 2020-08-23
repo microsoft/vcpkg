@@ -1,12 +1,10 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/magic_enum
-    REF v0.6.3
-    SHA512 ac5e1a08c491c380980b1ca928cd545f0f062818e5946904e6f17803f6e6578f4a7f882896b22681537ef7c559897b002aacc52f8fe35d22ea528d1b5e491e63
+    REF v0.6.6
+    SHA512 aeab69a87d0bcac93a987489a7bce9bd5971b7df1a5f83bfe9c58292dec736aa3b60a238c38d04080608199ea45c946da50b13934fb320e5f63e38b9185b526f
     HEAD_REF master
 )
 
@@ -20,12 +18,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/magic_enum)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/magic_enum TARGET_PATH share/magic_enum)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/magic-enum/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME magic-enum)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

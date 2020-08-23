@@ -34,11 +34,17 @@ file(GLOB SRCS "${PROJECT_SOURCE_DIR}/src/*.cxx")
 if(BUILD_SHARED_LIBS)
     set(TARGET libpqxx)
     set(SHARED_DEFINITION -DPQXX_SHARED)
-    list(APPEND SRCS "${PROJECT_SOURCE_DIR}/win32/libpqxx.cxx")
+    if(MSVC)
+        list(APPEND SRCS "${PROJECT_SOURCE_DIR}/win32/libpqxx.cxx")
+    endif()
 else()
     set(TARGET libpqxx_static)
     set(SHARED_DEFINITION "")
 endif()
+
+IF(UNIX)
+    set(TARGET pqxx_static)
+ENDIF()
 
 add_library(${TARGET} ${SRCS})
 target_compile_definitions(${TARGET} PRIVATE -DPQXX_INTERNAL -DNOMINMAX ${SHARED_DEFINITION})
@@ -63,6 +69,7 @@ install(DIRECTORY include/ DESTINATION include
     PATTERN "*.am" EXCLUDE
     PATTERN "*.in" EXCLUDE
     PATTERN "*.template" EXCLUDE
+    PATTERN "CMakeLists.txt" EXCLUDE
     )
 install(DIRECTORY ${CMAKE_BINARY_DIR}/pqxx/ DESTINATION include/pqxx
     CONFIGURATIONS Release

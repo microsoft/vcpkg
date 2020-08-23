@@ -1,0 +1,14 @@
+diff --git a/src/preflight.c b/src/preflight.c
+index aca193e..f012286 100644
+--- a/src/preflight.c
++++ b/src/preflight.c
+@@ -54,9 +54,6 @@
+ #include "log.h"
+ 
+ #ifdef HAVE_LIBIMOBILEDEVICE
+-enum connection_type {
+-	CONNECTION_USBMUXD = 1
+-};
+ 
+ struct idevice_private {
+ 	char *udid;

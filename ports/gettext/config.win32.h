@@ -275,7 +275,9 @@
 #define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the `mempcpy' function. */
-/* #undef HAVE_MEMPCPY */
+#ifdef __GNUC__
+#define HAVE_MEMPCPY 1
+#endif
 
 /* Define to 1 if you have a working `mmap' system call. */
 /* #undef HAVE_MMAP */

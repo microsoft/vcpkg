@@ -1,4 +1,5 @@
 Source: mozjpeg
-Version: 3.2-3
+Version: 2020-06-02-1
+Build-Depends: libpng
 Homepage: https://github.com/mozilla/mozjpeg
 Description: MozJPEG reduces file sizes of JPEG images while retaining quality and compatibility with the vast majority of the world's deployed decoders. It's compatible with libjpeg API and ABI, and can be used as a drop-in replacement for libjpeg.

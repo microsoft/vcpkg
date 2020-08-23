@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # nmap is a tools, so ignor POST_CHECK
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
@@ -48,29 +46,32 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
     
     # Install
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL Release)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Release)
         file(INSTALL ${SOURCE_PATH}/mswin32/Release/nmap.exe
                      ${SOURCE_PATH}/mswin32/Release/nmap.pdb
                      DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
     endif()
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL Debug)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
         file(INSTALL ${SOURCE_PATH}/mswin32/Debug/nmap.exe
                      ${SOURCE_PATH}/mswin32/Debug/nmap.pdb
                      DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
     endif()
 else()
+    set(ENV{LDFLAGS} "$ENV{LDFLAGS} -pthread")
     foreach(BUILD_TYPE rel dbg)
         file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
         # Since nmap makefile has strong relationshop with codes, copy codes to obj path
         vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
+
     endforeach()
     set(OPTIONS --without-nmap-update --with-openssl=${CURRENT_INSTALLED_DIR} --with-libssh2=${CURRENT_INSTALLED_DIR} --with-libz=${CURRENT_INSTALLED_DIR} --with-libpcre=${CURRENT_INSTALLED_DIR})
     message(STATUS "Building Options: ${OPTIONS}")
     
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL Release)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Release)
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
         set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/nmap-7.70)
+
         vcpkg_execute_required_process(
             COMMAND "./configure" ${OPTIONS}
             WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
@@ -88,9 +89,10 @@ else()
         file(INSTALL ${SOURCE_PATH_RELEASE}/nmap DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
     endif()
     
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL Debug)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
         set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/nmap-7.70)
+
         vcpkg_execute_required_process(
             COMMAND "./configure" ${OPTIONS}
             WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}

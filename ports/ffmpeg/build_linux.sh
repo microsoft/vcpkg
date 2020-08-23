@@ -16,6 +16,7 @@ PATH_TO_PACKAGE_DIR=$3
 
 cd "$PATH_TO_BUILD_DIR"
 echo "=== CONFIGURING ==="
+chmod a+x "$PATH_TO_SRC_DIR/configure"
 "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" $4
 echo "=== BUILDING ==="
 make -j6

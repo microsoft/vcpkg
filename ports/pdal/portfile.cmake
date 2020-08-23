@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(PDAL_VERSION_STR "1.7.1")
 
 vcpkg_download_distfile(ARCHIVE
@@ -16,6 +14,8 @@ vcpkg_extract_source_archive_ex(
         0002-no-source-dir-writes.patch
         0003-fix-copy-vendor.patch
         PDALConfig.patch
+        fix-dependency.patch
+        libpq.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
@@ -52,11 +52,6 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/pdal/cmake)
 vcpkg_copy_pdbs()
 
-# Install copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdal RENAME copyright
-)
-
 # Install PDAL executable
 file(GLOB _pdal_apps ${CURRENT_PACKAGES_DIR}/bin/*.exe)
 file(COPY ${_pdal_apps} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pdal)
@@ -81,3 +76,5 @@ else()
     file(GLOB _pdal_apps ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     file(REMOVE ${_pdal_apps})
 endif()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

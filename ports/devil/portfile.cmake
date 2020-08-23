@@ -12,7 +12,7 @@ vcpkg_from_github(
         0003_fix-openexr.patch
         enable-static.patch
 )
-
+file(REMOVE ${SOURCE_PATH}/DevIL/src-IL/cmake/FindOpenEXR.cmake)
 set(IL_NO_PNG 1)
 if("libpng" IN_LIST FEATURES)
     set(IL_NO_PNG 0)

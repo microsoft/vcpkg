@@ -20,13 +20,17 @@ function(vcpkg_configure_qmake)
      
     # Find qmake executable
     set(_triplet_hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5/bin)
-    find_program(QMAKE_COMMAND NAMES qmake PATHS ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/bin ${_triplet_hostbindir})
+    if(DEFINED VCPKG_QT_HOST_TOOLS_ROOT_DIR)
+        find_program(QMAKE_COMMAND NAMES qmake PATHS ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/bin ${_triplet_hostbindir} NO_DEFAULT_PATH)
+    else()
+        find_program(QMAKE_COMMAND NAMES qmake PATHS ${_triplet_hostbindir} NO_DEFAULT_PATH)
+    endif()
 
     if(NOT QMAKE_COMMAND)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
     endif()
 
-    if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND _csc_OPTIONS "CONFIG-=shared")
         list(APPEND _csc_OPTIONS "CONFIG*=static")
     else()
@@ -35,10 +39,10 @@ function(vcpkg_configure_qmake)
         list(APPEND _csc_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
     endif()
     
-    if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_CRT_LINKAGE} STREQUAL "static")
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
         list(APPEND _csc_OPTIONS "CONFIG*=static-runtime")
     endif()
-    
+
     # Cleanup build directories
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
@@ -55,9 +59,9 @@ function(vcpkg_configure_qmake)
             set(BUILD_OPT -- ${_csc_BUILD_OPTIONS} ${_csc_BUILD_OPTIONS_RELEASE})
         endif()
         vcpkg_execute_required_process(
-            COMMAND ${QMAKE_COMMAND} CONFIG-=debug CONFIG+=release 
-                    ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE} ${_csc_SOURCE_PATH} 
-                    -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf" 
+            COMMAND ${QMAKE_COMMAND} CONFIG-=debug CONFIG+=release
+                    ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE} ${_csc_SOURCE_PATH}
+                    -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf"
                     ${BUILD_OPT}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME config-${TARGET_TRIPLET}-rel
@@ -74,8 +78,8 @@ function(vcpkg_configure_qmake)
             set(BUILD_OPT -- ${_csc_BUILD_OPTIONS} ${_csc_BUILD_OPTIONS_DEBUG})
         endif()
         vcpkg_execute_required_process(
-            COMMAND ${QMAKE_COMMAND} CONFIG-=release CONFIG+=debug 
-                    ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG} ${_csc_SOURCE_PATH} 
+            COMMAND ${QMAKE_COMMAND} CONFIG-=release CONFIG+=debug
+                    ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG} ${_csc_SOURCE_PATH}
                     -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qt.conf"
                     ${BUILD_OPT}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg

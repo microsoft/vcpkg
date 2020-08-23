@@ -1,0 +1,12 @@
+diff --git a/libmodman/test/main.hpp b/libmodman/test/main.hpp
+index 90ca87f..f4f8844 100644
+--- a/libmodman/test/main.hpp
++++ b/libmodman/test/main.hpp
+@@ -20,6 +20,7 @@
+ #ifndef MAIN_HPP_
+ #define MAIN_HPP_
+ 
++#include <typeinfo>
+ #include "../module_manager.hpp"
+ 
+ using namespace std;

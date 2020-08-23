@@ -1,0 +1,49 @@
+diff --git a/proxygen/httpserver/CMakeLists.txt b/proxygen/httpserver/CMakeLists.txt
+index 40046e5..ab53b06 100644
+--- a/proxygen/httpserver/CMakeLists.txt
++++ b/proxygen/httpserver/CMakeLists.txt
+@@ -45,7 +45,7 @@ target_link_libraries(
+ install(
+     TARGETS proxygen_push
+     EXPORT proxygen-exports
+-    DESTINATION bin
++    DESTINATION tools
+ )
+ 
+ add_executable(proxygen_proxy
+@@ -66,7 +66,7 @@ target_link_libraries(
+ install(
+     TARGETS proxygen_proxy
+     EXPORT proxygen-exports
+-    DESTINATION bin
++    DESTINATION tools
+ )
+ 
+ add_executable(proxygen_static
+@@ -87,7 +87,7 @@ target_link_libraries(
+ install(
+     TARGETS proxygen_static
+     EXPORT proxygen-exports
+-    DESTINATION bin
++    DESTINATION tools
+ )
+ 
+ add_executable(proxygen_echo
+@@ -108,7 +108,7 @@ target_link_libraries(
+ install(
+     TARGETS proxygen_echo
+     EXPORT proxygen-exports
+-    DESTINATION bin
++    DESTINATION tools
+ )
+ 
+ if (BUILD_QUIC)
+@@ -140,7 +140,7 @@ if (BUILD_QUIC)
+   install(
+       TARGETS hq
+       EXPORT proxygen-exports
+-      DESTINATION bin
++      DESTINATION tools
+   )
+ endif()
+ 

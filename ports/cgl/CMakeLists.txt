@@ -23,24 +23,9 @@ foreach(p LIB BIN INCLUDE CMAKE)
   endif()
 endforeach()
 
-if(MSVC)
-  set(
-    CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} /bigobj /MP /wd4996 /wd4819 /wd4251 /wd4267 /wd4244 /wd4275"
-    )
-endif()
-
-if(APPLE)
-  set(
-    CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override -Wno-unused-command-line-argument -Wno-unused-result -Wno-exceptions"
-    )
-  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9"
-      CACHE STRING "Minimum OS X deployment version")
-endif()
-
 find_package(CoinUtils REQUIRED)
 find_package(Osi REQUIRED)
+find_package(Clp REQUIRED)
 
 file(GLOB CGL_SOURCES
           Cgl/src/CglConfig.h
@@ -100,13 +85,10 @@ target_include_directories(${PROJECT_NAME}
                            $<INSTALL_INTERFACE:${RELATIVE_INSTALL_INCLUDE_DIR}>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cgl/src/>)
 
-if(MSVC)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
-endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_CMATH)
 target_compile_definitions(${PROJECT_NAME} PUBLIC COIN_HAS_CLP)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Coin::CoinUtils Coin::Osi)
+target_link_libraries(${PROJECT_NAME} PRIVATE Coin::CoinUtils Coin::Osi Coin::Clp)
 
 install(DIRECTORY Cgl/src/
         DESTINATION ${INSTALL_INCLUDE_DIR}

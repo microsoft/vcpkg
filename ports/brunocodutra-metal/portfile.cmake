@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brunocodutra/metal
-    REF v2.0.1
-    SHA512 6aca54e2f2a6d99466d247dbd57706caef33d2399989c2eb14e99d1419922eff753acb53248f8684c1ed11bb87d79b2e850637190e8949f69e0f5ee7304281dc
+    REF 43256d2c7f5715d9dc029037bcd8512624ec7865 # v2.1.1
+    SHA512 fc69e60b9c21d0215ca2c9ec27ab65d59115397e1d27c90fcdc35ccf8675546b1fbc3be0e6b8f69cd8eb848bac348ca0fe116f50a36ce8d1cbff0d646c4f05cb
     HEAD_REF master
 )
 

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+
+  "type": "object",
+
+  "required": [
+    "pat",
+    "base_name",
+    "disk_size",
+    "machine_identifiers",
+    "archives"
+  ],
+
+  "properties": {
+    "pat": {
+      "type": "string"
+    },
+    "base_name": {
+      "type": "string"
+    },
+    "disk_size": {
+      "type": "integer"
+    },
+    "machine_identifiers": {
+      "type": "array",
+
+      "items": {
+        "type": "string",
+        "pattern": "[0-9]{2}"
+      }
+    },
+    "archives": {
+      "type": "object",
+      "required": [
+        "username",
+        "access_key",
+        "urn",
+        "share"
+      ],
+      "properties": {
+        "username": { "type": "string" },
+        "access_key": { "type": "string" },
+        "urn": { "type": "string" },
+        "share": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,6 +1,8 @@
-#include "pch.h"
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/util.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/binarycaching.h>
+#include <vcpkg/commands.upgrade.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -8,18 +10,16 @@
 #include <vcpkg/install.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/update.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
-
-#include <vcpkg/base/system.print.h>
-#include <vcpkg/base/util.h>
 
 namespace vcpkg::Commands::Upgrade
 {
     using Install::KeepGoing;
     using Install::to_keep_going;
 
-    static constexpr StringLiteral OPTION_NO_DRY_RUN = "--no-dry-run";
-    static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
+    static constexpr StringLiteral OPTION_NO_DRY_RUN = "no-dry-run";
+    static constexpr StringLiteral OPTION_KEEP_GOING = "keep-going";
 
     static constexpr std::array<CommandSwitch, 2> INSTALL_SWITCHES = {{
         {OPTION_NO_DRY_RUN, "Actually upgrade"},
@@ -27,25 +27,28 @@ namespace vcpkg::Commands::Upgrade
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("upgrade --no-dry-run"),
+        create_example_string("upgrade --no-dry-run"),
         0,
         SIZE_MAX,
         {INSTALL_SWITCHES, {}},
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         const bool no_dry_run = Util::Sets::contains(options.switches, OPTION_NO_DRY_RUN);
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
+        auto binaryprovider = create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+
         StatusParagraphs status_db = database_load_check(paths);
 
         // Load ports from ports dirs
-        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        Dependencies::PackageGraph graph(provider, status_db);
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
+        auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
+        auto& var_provider = *var_provider_storage;
 
         // input sanitization
         const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
@@ -57,6 +60,7 @@ namespace vcpkg::Commands::Upgrade
             Input::check_triplet(spec.triplet(), paths);
         }
 
+        Dependencies::ActionPlan action_plan;
         if (specs.empty())
         {
             // If no packages specified, upgrade all outdated packages.
@@ -68,8 +72,11 @@ namespace vcpkg::Commands::Upgrade
                 Checks::exit_success(VCPKG_LINE_INFO);
             }
 
-            for (auto&& outdated_package : outdated_packages)
-                graph.upgrade(outdated_package.spec);
+            action_plan = Dependencies::create_upgrade_plan(
+                provider,
+                var_provider,
+                Util::fmap(outdated_packages, [](const Update::OutdatedPackage& package) { return package.spec; }),
+                status_db);
         }
         else
         {
@@ -143,36 +150,18 @@ namespace vcpkg::Commands::Upgrade
 
             if (to_upgrade.empty()) Checks::exit_success(VCPKG_LINE_INFO);
 
-            for (auto&& spec : to_upgrade)
-                graph.upgrade(spec);
+            action_plan = Dependencies::create_upgrade_plan(provider, var_provider, to_upgrade, status_db);
         }
 
-        auto plan = graph.serialize();
-
-        Checks::check_exit(VCPKG_LINE_INFO, !plan.empty());
-
-        const Build::BuildPackageOptions install_plan_options = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
-            Build::CleanBuildtrees::NO,
-            Build::CleanPackages::NO,
-            Build::CleanDownloads::NO,
-            Build::DownloadTool::BUILT_IN,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
-            Build::FailOnTombstone::NO,
-        };
+        Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty());
 
         // Set build settings for all install actions
-        for (auto&& action : plan)
+        for (auto&& action : action_plan.install_actions)
         {
-            if (auto p_install = action.install_action.get())
-            {
-                p_install->build_options = install_plan_options;
-            }
+            action.build_options = vcpkg::Build::default_build_package_options;
         }
 
-        Dependencies::print_plan(plan, true, paths.ports);
+        Dependencies::print_plan(action_plan, true, paths.ports);
 
         if (!no_dry_run)
         {
@@ -182,7 +171,16 @@ namespace vcpkg::Commands::Upgrade
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        const Install::InstallSummary summary = Install::perform(plan, keep_going, paths, status_db);
+        var_provider.load_tag_vars(action_plan, provider);
+
+        const Install::InstallSummary summary =
+            Install::perform(action_plan,
+                             keep_going,
+                             paths,
+                             status_db,
+                             args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
+                             Build::null_build_logs_recorder(),
+                             var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 
@@ -192,5 +190,12 @@ namespace vcpkg::Commands::Upgrade
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void UpgradeCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                          const VcpkgPaths& paths,
+                                          Triplet default_triplet) const
+    {
+        Upgrade::perform_and_exit(args, paths, default_triplet);
     }
 }

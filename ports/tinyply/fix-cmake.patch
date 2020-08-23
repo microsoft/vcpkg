@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2bd9563..4d4d9fe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -50,6 +50,8 @@ set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
+ set(targets_export_name "${PROJECT_NAME}Targets")
+ set(namespace "")
+ 
++include(GNUInstallDirs)
++
+ write_basic_package_version_file(
+   "${version_config}"
+   VERSION ${PROJECT_VERSION}
+@@ -63,9 +65,10 @@ configure_package_config_file(
+ 
+ # Install
+ install(TARGETS tinyply EXPORT ${targets_export_name}
+-        RUNTIME DESTINATION bin
+-        ARCHIVE DESTINATION lib
+-        LIBRARY DESTINATION lib)
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ install(FILES source/tinyply.h
+         DESTINATION include)
+ 

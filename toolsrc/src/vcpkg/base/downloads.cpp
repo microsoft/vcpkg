@@ -1,14 +1,11 @@
-#include "pch.h"
-
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 #if defined(_WIN32)
 #include <VersionHelpers.h>
-#else
-#include <vcpkg/base/system.h>
 #endif
 
 namespace vcpkg::Downloads
@@ -23,7 +20,7 @@ namespace vcpkg::Downloads
         const auto dir = fs::path(target_file_path.c_str()).parent_path();
         std::error_code ec;
         fs.create_directories(dir, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directories %s", dir.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directories %s", fs::u8string(dir));
 
         FILE* f = nullptr;
         const errno_t err = fopen_s(&f, target_file_path.c_str(), "wb");
@@ -34,6 +31,7 @@ namespace vcpkg::Downloads
                            url_path,
                            target_file_path,
                            std::to_string(err));
+        ASSUME(f != nullptr);
 
         auto hSession = WinHttpOpen(L"vcpkg/1.0",
                                     IsWindows8Point1OrGreater() ? WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY
@@ -43,8 +41,22 @@ namespace vcpkg::Downloads
                                     0);
         Checks::check_exit(VCPKG_LINE_INFO, hSession, "WinHttpOpen() failed: %d", GetLastError());
 
+        // If the environment variable HTTPS_PROXY is set
+        // use that variable as proxy. This situation might exist when user is in a company network
+        // with restricted network/proxy settings
+        auto maybe_https_proxy_env = System::get_environment_variable("HTTPS_PROXY");
+        if (auto p_https_proxy = maybe_https_proxy_env.get())
+        {
+            std::wstring env_proxy_settings = Strings::to_utf16(*p_https_proxy);
+            WINHTTP_PROXY_INFO proxy;
+            proxy.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+            proxy.lpszProxy = env_proxy_settings.data();
+            proxy.lpszProxyBypass = nullptr;
+
+            WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxy, sizeof(proxy));
+        }
         // Win7 IE Proxy fallback
-        if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater())
+        else if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater())
         {
             // First check if any proxy has been found automatically
             WINHTTP_PROXY_INFO proxyInfo;
@@ -63,6 +75,9 @@ namespace vcpkg::Downloads
                     proxy.lpszProxy = ieProxy.lpszProxy;
                     proxy.lpszProxyBypass = ieProxy.lpszProxyBypass;
                     WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxy, sizeof(proxy));
+                    GlobalFree(ieProxy.lpszProxy);
+                    GlobalFree(ieProxy.lpszProxyBypass);
+                    GlobalFree(ieProxy.lpszAutoConfigUrl);
                 }
             }
         }
@@ -89,6 +104,7 @@ namespace vcpkg::Downloads
         // Send a request.
         auto bResults =
             WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
+
         Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpSendRequest() failed: %d", GetLastError());
 
         // End the request.
@@ -146,7 +162,7 @@ namespace vcpkg::Downloads
                            "   Expected hash : [ %s ]\n"
                            "     Actual hash : [ %s ]\n",
                            url,
-                           path.u8string(),
+                           fs::u8string(path),
                            sha512,
                            actual_hash);
     }
@@ -156,7 +172,7 @@ namespace vcpkg::Downloads
                        const fs::path& download_path,
                        const std::string& sha512)
     {
-        const std::string download_path_part = download_path.u8string() + ".part";
+        const std::string download_path_part = fs::u8string(download_path) + ".part";
         auto download_path_part_path = fs::u8path(download_path_part);
         std::error_code ec;
         fs.remove(download_path, ec);

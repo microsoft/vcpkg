@@ -1,26 +1,49 @@
-#.rst:
-# .. command:: vcpkg_fixup_cmake_targets
-#
-#  Transforms all /debug/share/<port>/*targets-debug.cmake files and move them to /share/<port>.
-#  Removes all /debug/share/<port>/*targets.cmake and /debug/share/<port>/*config.cmake
-#
-#  Transforms all references matching /bin/*.exe to /tools/<port>/*.exe on Windows
-#  Transforms all references matching /bin/* to /tools/<port>/* on other platforms
-#
-#  Fixes ${_IMPORT_PREFIX} in auto generated targets to be one folder deeper. 
-#  Replaces ${CURRENT_INSTALLED_DIR} with ${_IMPORT_PREFIX} in configs/targets.
-#
-#  ::
-#  vcpkg_fixup_cmake_targets([CONFIG_PATH <config_path>])
-#
-#  ``CONFIG_PATH``
-#    *.cmake files subdirectory (like "lib/cmake/${PORT}").
-# 
-#	Example usage:
-# 		vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/myPort")
-
+## # vcpkg_fixup_cmake_targets
+##
+## Merge release and debug CMake targets and configs to support multiconfig generators.
+##
+## Additionally corrects common issues with targets, such as absolute paths and incorrectly placed binaries.
+##
+## ## Usage
+## ```cmake
+## vcpkg_fixup_cmake_targets([CONFIG_PATH <share/${PORT}>] [TARGET_PATH <share/${PORT}>] [DO_NOT_DELETE_PARENT_CONFIG_PATH])
+## ```
+##
+## ## Parameters
+##
+## ### CONFIG_PATH
+## Subpath currently containing `*.cmake` files subdirectory (like `lib/cmake/${PORT}`). Should be relative to `${CURRENT_PACKAGES_DIR}`.
+##
+## Defaults to `share/${PORT}`.
+##
+## ### TARGET_PATH
+## Subpath to which the above `*.cmake` files should be moved. Should be relative to `${CURRENT_PACKAGES_DIR}`.
+## This needs to be specified if the port name differs from the `find_package()` name.
+##
+## Defaults to `share/${PORT}`.
+##
+## ### DO_NOT_DELETE_PARENT_CONFIG_PATH 
+## By default the parent directory of CONFIG_PATH is removed if it is named "cmake".
+## Passing this option disable such behavior, as it is convenient for ports that install
+## more than one CMake package configuration file.
+##
+## ## Notes
+## Transform all `/debug/<CONFIG_PATH>/*targets-debug.cmake` files and move them to `/<TARGET_PATH>`.
+## Removes all `/debug/<CONFIG_PATH>/*targets.cmake` and `/debug/<CONFIG_PATH>/*config.cmake`.
+##
+## Transform all references matching `/bin/*.exe` to `/tools/<port>/*.exe` on Windows.
+## Transform all references matching `/bin/*` to `/tools/<port>/*` on other platforms.
+##
+## Fix `${_IMPORT_PREFIX}` in auto generated targets to be one folder deeper.
+## Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targets.
+##
+## ## Examples
+##
+## * [concurrentqueue](https://github.com/Microsoft/vcpkg/blob/master/ports/concurrentqueue/portfile.cmake)
+## * [curl](https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake)
+## * [nlohmann-json](https://github.com/Microsoft/vcpkg/blob/master/ports/nlohmann-json/portfile.cmake)
 function(vcpkg_fixup_cmake_targets)
-    cmake_parse_arguments(_vfct "" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
+    cmake_parse_arguments(_vfct "DO_NOT_DELETE_PARENT_CONFIG_PATH" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
 
     if(_vfct_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_cmake_targets was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
@@ -30,12 +53,7 @@ function(vcpkg_fixup_cmake_targets)
         set(_vfct_TARGET_PATH share/${PORT})
     endif()
 
-
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(EXECUTABLE_SUFFIX "\\.exe")
-    else()
-        set(EXECUTABLE_SUFFIX)
-    endif()
+    string(REPLACE "." "\\." EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/${_vfct_TARGET_PATH})
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH})
@@ -49,7 +67,6 @@ function(vcpkg_fixup_cmake_targets)
 
         set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
         set(RELEASE_CONFIG ${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH})
-
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             if(NOT EXISTS ${DEBUG_CONFIG})
                 message(FATAL_ERROR "'${DEBUG_CONFIG}' does not exist.")
@@ -69,13 +86,13 @@ function(vcpkg_fixup_cmake_targets)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             get_filename_component(DEBUG_CONFIG_DIR_NAME ${DEBUG_CONFIG} NAME)
             string(TOLOWER "${DEBUG_CONFIG_DIR_NAME}" DEBUG_CONFIG_DIR_NAME)
-            if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake")
+            if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake" AND NOT _vfct_DO_NOT_DELETE_PARENT_CONFIG_PATH)
                 file(REMOVE_RECURSE ${DEBUG_CONFIG})
             else()
                 get_filename_component(DEBUG_CONFIG_PARENT_DIR ${DEBUG_CONFIG} DIRECTORY)
                 get_filename_component(DEBUG_CONFIG_DIR_NAME ${DEBUG_CONFIG_PARENT_DIR} NAME)
                 string(TOLOWER "${DEBUG_CONFIG_DIR_NAME}" DEBUG_CONFIG_DIR_NAME)
-                if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake")
+                if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake" AND NOT _vfct_DO_NOT_DELETE_PARENT_CONFIG_PATH)
                     file(REMOVE_RECURSE ${DEBUG_CONFIG_PARENT_DIR})
                 endif()
             endif()
@@ -83,13 +100,13 @@ function(vcpkg_fixup_cmake_targets)
 
         get_filename_component(RELEASE_CONFIG_DIR_NAME ${RELEASE_CONFIG} NAME)
         string(TOLOWER "${RELEASE_CONFIG_DIR_NAME}" RELEASE_CONFIG_DIR_NAME)
-        if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake")
+        if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake" AND NOT _vfct_DO_NOT_DELETE_PARENT_CONFIG_PATH)
             file(REMOVE_RECURSE ${RELEASE_CONFIG})
         else()
             get_filename_component(RELEASE_CONFIG_PARENT_DIR ${RELEASE_CONFIG} DIRECTORY)
             get_filename_component(RELEASE_CONFIG_DIR_NAME ${RELEASE_CONFIG_PARENT_DIR} NAME)
             string(TOLOWER "${RELEASE_CONFIG_DIR_NAME}" RELEASE_CONFIG_DIR_NAME)
-            if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake")
+            if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake" AND NOT _vfct_DO_NOT_DELETE_PARENT_CONFIG_PATH)
                 file(REMOVE_RECURSE ${RELEASE_CONFIG_PARENT_DIR})
             endif()
         endif()
@@ -152,6 +169,10 @@ function(vcpkg_fixup_cmake_targets)
             "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
             "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
             _contents "${_contents}")
+         string(REGEX REPLACE
+            "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\.((\\\\|/)\\.\\.)*\" ABSOLUTE\\)"
+            "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
+            _contents "${_contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
         #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
         string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
         file(WRITE ${MAIN_CMAKE} "${_contents}")
@@ -179,4 +200,4 @@ function(vcpkg_fixup_cmake_targets)
     endforeach()
 endfunction()
 
-
+ 
