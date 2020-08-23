@@ -157,7 +157,7 @@ function(vcpkg_install_msbuild)
             file(TO_NATIVE_PATH "${SRC}" SRC)
             file(TO_NATIVE_PATH "${DEST}/${F}" DEST)
             file(MAKE_DIRECTORY "${DEST}")
-            _execute_process(
+            execute_process(
                 COMMAND xcopy /E /Q /B /J "${SRC}" "${DEST}"
                 RESULT_VARIABLE N
                 OUTPUT_VARIABLE OUT
