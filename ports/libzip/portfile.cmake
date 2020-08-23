@@ -32,11 +32,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libzip)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+#vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES -lpthread -ldl)
 
-# Remove include directories from lib
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libzip ${CURRENT_PACKAGES_DIR}/debug/lib/libzip)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Remove debug include
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
