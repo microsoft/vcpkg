@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3eef6ec..3e9c3cd 100644
+index 3eef6ec..dc74d486 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -33,6 +33,20 @@ endif()
@@ -16,8 +16,8 @@ index 3eef6ec..3e9c3cd 100644
 +find_package(spirv_cross_msl)
 +find_package(SPIRV-Tools)
 +find_package(SPIRV-Tools-opt)
-+find_package(Stb)
 +find_package(benchmark)
++find_package(Stb)
 +include_directories(${Stb_INCLUDE_DIR})
 +find_package(tinyexr)
  find_program(CCACHE_PROGRAM ccache)
@@ -71,9 +71,11 @@ index 3eef6ec..3e9c3cd 100644
  add_subdirectory(${LIBRARIES}/camutils)
  add_subdirectory(${LIBRARIES}/filabridge)
  add_subdirectory(${LIBRARIES}/filaflat)
-@@ -538,19 +553,16 @@ add_subdirectory(${FILAMENT}/shaders)
+@@ -536,21 +551,17 @@ add_subdirectory(${LIBRARIES}/utils)
+ add_subdirectory(${FILAMENT}/filament)
+ add_subdirectory(${FILAMENT}/shaders)
  add_subdirectory(${EXTERNAL}/hat-trie/tnt)
- add_subdirectory(${EXTERNAL}/robin-map/tnt)
+-add_subdirectory(${EXTERNAL}/robin-map/tnt)
  add_subdirectory(${EXTERNAL}/smol-v/tnt)
 -add_subdirectory(${EXTERNAL}/benchmark/tnt)
  add_subdirectory(${EXTERNAL}/meshoptimizer)
@@ -93,7 +95,7 @@ index 3eef6ec..3e9c3cd 100644
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -578,8 +590,6 @@ if (WEBGL)
+@@ -578,8 +589,6 @@ if (WEBGL)
      if (FILAMENT_GENERATE_JS_DOCS)
          add_subdirectory(web/docs)
      endif()
@@ -102,7 +104,7 @@ index 3eef6ec..3e9c3cd 100644
  endif()
  
  if (IS_HOST_PLATFORM)
-@@ -596,12 +606,6 @@ if (IS_HOST_PLATFORM)
+@@ -596,12 +605,6 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${EXTERNAL}/astcenc/tnt)
      add_subdirectory(${EXTERNAL}/etc2comp)
@@ -640,7 +642,7 @@ index 9110f65..ba5214f 100644
      add_compiler_flag_if_supported("/wd4996")
      if(ENABLE_WERROR)
 diff --git a/third_party/getopt/CMakeLists.txt b/third_party/getopt/CMakeLists.txt
-index b8c4273..e55fa2e 100644
+index b96f789..a10acfd 100755
 --- a/third_party/getopt/CMakeLists.txt
 +++ b/third_party/getopt/CMakeLists.txt
 @@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
@@ -652,24 +654,16 @@ index b8c4273..e55fa2e 100644
  
  # ==================================================================================================
  # Sources and headers
-@@ -18,6 +18,7 @@ set(SRCS
- # Include and target definitions
- # ==================================================================================================
- include_directories(${PUBLIC_HDR_DIR})
-+message(STATUS "READY TO BUILD GETOPT")
- 
- add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS})
- target_include_directories (${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
 diff --git a/third_party/getopt/src/getopt_long.c b/third_party/getopt/src/getopt_long.c
-index fd67535..e473b2e 100644
+index 0f699ee..0e24109 100755
 --- a/third_party/getopt/src/getopt_long.c
 +++ b/third_party/getopt/src/getopt_long.c
-@@ -27,13 +27,12 @@
+@@ -27,13 +27,13 @@
   * POSSIBILITY OF SUCH DAMAGE.
   */
  
 -#include "getopt/getopt.h"
--
+ 
  #include <assert.h>
  #include <errno.h>
  #include <stdio.h>
@@ -679,7 +673,7 @@ index fd67535..e473b2e 100644
  
  extern int opterr;   /* if error message should be printed */
  extern int optind;   /* index into parent argv vector */
-@@ -228,4 +227,4 @@ int *index;
+@@ -228,4 +228,4 @@ int *index;
        *index = match;
    }
    return (retval);

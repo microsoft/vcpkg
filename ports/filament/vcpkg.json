@@ -11,6 +11,7 @@
     "gtest",
     "imgui",
     "libpng",
+    "robin-map",
     "sdl2",
     "spirv-cross",
     "spirv-tools",
