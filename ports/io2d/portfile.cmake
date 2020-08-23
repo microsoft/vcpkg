@@ -1,5 +1,8 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+# This port is simply broken. 
+# It uses raw find_library calls for most of its dependencies which in most cases will not find the correct library for debug builds
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cpp-io2d/P0267_RefImpl
