@@ -16,9 +16,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "openmp"   WITH_OPENMP
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-set(ENV{PYTHON} "${PYTHON3}")
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

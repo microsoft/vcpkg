@@ -212,7 +212,7 @@ index 09eef92..f8629e9 100644
 -    add_subdirectory(librealsense)
 -    Directories("${CMAKE_CURRENT_SOURCE_DIR}/librealsense" librealsense_INCLUDE_DIRS)
 -endif ()
-+message(STATUS "Using installed PYBIND11 v${pybind11_VERSION}")
++message(STATUS "Disabled PYBIND11")
  
  # tinyfiledialogs
 -if (BUILD_TINYFILEDIALOGS)
@@ -453,12 +453,11 @@ index 3e967fc..2ec6eb5 100644
      if (OPENMP_FOUND)
          message(STATUS "Using installed OpenMP ${OpenMP_VERSION}")
          set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-@@ -336,6 +336,24 @@ macro(ADD_SOURCE_GROUP MODULE_NAME)
+@@ -336,6 +336,23 @@ macro(ADD_SOURCE_GROUP MODULE_NAME)
      source_group("Source Files\\${MODULE_NAME}" FILES ${MODULE_SOURCE_FILES})
  endmacro(ADD_SOURCE_GROUP)
  
 +find_package(OpenGL REQUIRED)
-+find_package(pybind11 REQUIRED)
 +find_package(flann REQUIRED)
 +set(FLANN_FOUND TRUE)
 +find_package(Eigen3 REQUIRED)
