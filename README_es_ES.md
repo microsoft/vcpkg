@@ -53,7 +53,7 @@ donde el equipo de vcpkg y la comunidad pueden verlo, y potencialmente hacer un 
 Después de tener vcpkg instalado y funcionando,
 puede que desee añadir [completado con tab](#Completado-TabAuto-Completado) en su terminal.
 
-finalmente, si está interesado en el futuro de vcpkg,
+Finalmente, si está interesado en el futuro de vcpkg,
 puede ver la guía de [archivos de manifiesto](#inicio-rápido-manifiesto)!
 esta es una característica experimental y es probable que tenga errores,
 así que pruebe y [abra todos los issues][contributing:submit-issue]!
