@@ -78,8 +78,8 @@ function(vcpkg_find_acquire_program VAR)
     set(BREW_PACKAGE_NAME "nasm")
     set(APT_PACKAGE_NAME "nasm")
     set(URL
-      "http://www.nasm.us/pub/nasm/releasebuilds/${NASM_VERSION}/win32/nasm-${NASM_VERSION}-win32.zip"
-      "http://fossies.org/windows/misc/nasm-${NASM_VERSION}-win32.zip"
+      "https://www.nasm.us/pub/nasm/releasebuilds/${NASM_VERSION}/win32/nasm-${NASM_VERSION}-win32.zip"
+      "https://fossies.org/windows/misc/nasm-${NASM_VERSION}-win32.zip"
     )
     set(ARCHIVE "nasm-${NASM_VERSION}-win32.zip")
     set(HASH a0f16a9f3b668b086e3c4e23a33ff725998e120f2e3ccac8c28293fd4faeae6fc59398919e1b89eed7461685d2730de02f2eb83e321f73609f35bf6b17a23d1e)
@@ -194,8 +194,8 @@ function(vcpkg_find_acquire_program VAR)
     set(SUBDIR "jom-1.1.3")
     set(PATHS ${DOWNLOADS}/tools/jom/${SUBDIR})
     set(URL
-      "http://download.qt.io/official_releases/jom/jom_1_1_3.zip"
-      "http://mirrors.ocf.berkeley.edu/qt/official_releases/jom/jom_1_1_3.zip"
+      "https://download.qt.io/official_releases/jom/jom_1_1_3.zip"
+      "https://mirrors.ocf.berkeley.edu/qt/official_releases/jom/jom_1_1_3.zip"
     )
     set(ARCHIVE "jom_1_1_3.zip")
     set(HASH 5b158ead86be4eb3a6780928d9163f8562372f30bde051d8c281d81027b766119a6e9241166b91de0aa6146836cea77e5121290e62e31b7a959407840fc57b33)

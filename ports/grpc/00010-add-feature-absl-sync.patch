@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f2b1dd774a..e9adc1ae27 100644
+index 6baab5d37b..48bc6cf0de 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1797,6 +1797,8 @@ target_link_libraries(grpc
+@@ -1813,6 +1813,8 @@ target_link_libraries(grpc
    absl::optional
    absl::strings
    absl::inlined_vector
@@ -11,7 +11,7 @@ index f2b1dd774a..e9adc1ae27 100644
  )
  if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
    target_link_libraries(grpc "-framework CoreFoundation")
-@@ -2390,6 +2392,8 @@ target_link_libraries(grpc_unsecure
+@@ -2413,6 +2415,8 @@ target_link_libraries(grpc_unsecure
    absl::optional
    absl::strings
    absl::inlined_vector
