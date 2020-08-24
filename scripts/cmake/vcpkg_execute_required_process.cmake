@@ -8,6 +8,7 @@
 ##     COMMAND <${PERL}> [<arguments>...]
 ##     WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg>
 ##     LOGNAME <build-${TARGET_TRIPLET}-dbg>
+##     [TIMEOUT <seconds>]
 ## )
 ## ```
 ## ## Parameters
@@ -24,6 +25,9 @@
 ## ### LOGNAME
 ## The prefix to use for the log files.
 ##
+## ### TIMEOUT
+## Optional timeout after which to terminate the command.
+##
 ## This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
 ##
 ## ## Examples
@@ -39,7 +43,7 @@ function(vcpkg_execute_required_process)
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
 
     if(vcpkg_execute_required_process_TIMEOUT)
-      set(TIMEOUT_PARAM "TIMEOUT ${vcpkg_execute_required_process_TIMEOUT}")
+      set(TIMEOUT_PARAM "TIMEOUT;${vcpkg_execute_required_process_TIMEOUT}")
     else()
       set(TIMEOUT_PARAM "")
     endif()
