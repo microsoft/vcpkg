@@ -8,8 +8,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES gmpd.patch
-            dll.patch
+    PATCHES 
+        gmpd.patch
+        dll.patch
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES texinfo)
