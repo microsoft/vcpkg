@@ -107,7 +107,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     )
     # install the new keyring
     _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --verify ${KEYRING_SIG_PATH}"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --verify \"${KEYRING_SIG_PATH}\""
       WORKING_DIRECTORY ${TOOLPATH}
       RESULT_VARIABLE _vam_error_code
     )
@@ -115,7 +115,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       message(FATAL_ERROR "Cannot verify MSYS2 keyring.")
     endif()
     _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -U ${KEYRING_PATH} --noconfirm"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -U \"${KEYRING_PATH}\" --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}
     )
     # we have to kill all GnuPG daemons otherwise bash would potentially not be
