@@ -3,13 +3,13 @@
 # If this package is installed, we assume that CUDA is properly installed.
 
 #note: this port must be kept in sync with CUDNN port: every time one is upgraded, the other must be too
-set(CUDA_REQUIRED_VERSION "10.2.89")
+set(CUDA_REQUIRED_VERSION "11.0.3")
 
 # note: in order to keep CI happy, it is necessary to update also:
 # ${VCPKG_ROOT}/scripts/azure-pipelines/windows/provision-image.ps1
 # ${VCPKG_ROOT}/scripts/azure-pipelines/linux/provision-image.sh
 
-set(CUDA_PATHS 
+set(CUDA_PATHS
         ENV CUDA_PATH
         ENV CUDA_BIN_PATH
         ENV CUDA_PATH_V11_0
