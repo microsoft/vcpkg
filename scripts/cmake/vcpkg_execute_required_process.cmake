@@ -58,8 +58,8 @@ Halting portfile execution.
         OUTPUT_FILE ${LOG_OUT}
         ERROR_FILE ${LOG_ERR}
         RESULT_VARIABLE error_code
-        WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY})
-        ${TIMEOUT_PARAM}
+        WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY}
+        ${TIMEOUT_PARAM})
     if(error_code)
         set(LOGS)
         file(READ "${LOG_OUT}" out_contents)
