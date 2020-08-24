@@ -3,12 +3,11 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qhull/qhull
-    REF v8.0.0 # Qhull 2020.1
-    SHA512 b6ac17193b7c8a4ffb5f5a64cc057d1d5123f155f1c4fcd290fe1768356fef5c58d511707bba8c4814ca754bc6cdf5c370af23953d00c24a5ec28b8a1e489d31
+    REF e8bcf2fafd7938205e4e5b8b9b921cb7609ff394
+    SHA512 c7028a1d2d4d3b8c2d143610c75073c39ce404154d41e2da6e11484e9bcc517f7e770dbad9572c708d87cbd1a0462c915d1d5bdf95e2f0359e9839681334e7bd
     HEAD_REF master
     PATCHES
         mac-fix.patch
-        target-fix.patch
 )
 
 vcpkg_configure_cmake(
