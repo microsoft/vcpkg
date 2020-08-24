@@ -15,11 +15,11 @@ Build-Depends: opengl, glad
 
 Feature: glfw
 Description: Build with glfw
-Build-Depends: glfw3
+Build-Depends: libigl[opengl], glfw3
 
 Feature: imgui
 Description: Build with imgui
-Build-Depends: imgui[bindings]
+Build-Depends: libigl[glfw], imgui[glfw-binding, opengl3-glew-binding, libigl-imgui]
 
 Feature: xml
 Description: Build with libxml
