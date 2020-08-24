@@ -59,7 +59,7 @@ vcpkg_configure_cmake(
         OPTIONS
             "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
             "-DCBLAS=${CBLAS}"
-            "${FORTRAN_CMAKE}"
+            ${FORTRAN_CMAKE}
         )
 
 vcpkg_install_cmake()
