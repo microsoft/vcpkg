@@ -367,6 +367,7 @@ function(vcpkg_configure_make)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP "${VCPKG_DETECTED_STRIP}") 
         else()
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP ":")
+            list(APPEND _csc_OPTIONS ac_cv_prog_ac_ct_STRIP=:)
         endif()
         if(VCPKG_DETECTED_NM) # If required set the ENV variable NM in the portfile correctly
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "${VCPKG_DETECTED_NM}") 
@@ -385,7 +386,7 @@ function(vcpkg_configure_make)
         foreach(_env IN LISTS _csc_CONFIGURE_ENVIRONMENT_VARIABLES)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV ${_env} "${${_env}}")
         endforeach()
-
+        debug_message("CONFIGURE_ENV: '${CONFIGURE_ENV}'")
         # Other maybe interesting variables to control
         # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
         # LINK This is the command used to actually link a C program.
@@ -488,7 +489,6 @@ function(vcpkg_configure_make)
 
     macro(convert_to_list input output)
         string(REGEX MATCHALL "(( +|^ *)[^ ]+)" ${output} "${${input}}")
-
     endmacro()
     convert_to_list(VCPKG_DETECTED_C_STANDARD_LIBRARIES C_LIBS_LIST)
     convert_to_list(VCPKG_DETECTED_CXX_STANDARD_LIBRARIES CXX_LIBS_LIST)
@@ -497,6 +497,9 @@ function(vcpkg_configure_make)
     list(REMOVE_DUPLICATES ALL_LIBS_LIST)
     list(TRANSFORM ALL_LIBS_LIST STRIP)
     list(TRANSFORM ALL_LIBS_LIST REPLACE "(.lib|.a|.so)$" "")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
+    endif()
     list(JOIN ALL_LIBS_LIST " -l" ALL_LIBS_STRING)
 
     if(ALL_LIBS_STRING)
@@ -506,7 +509,7 @@ function(vcpkg_configure_make)
             set(ENV{LIBS} "-l${ALL_LIBS_STRING}")
         endif()
     endif()
-
+    debug_message(STATUS "ENV{LIBS}:$ENV{LIBS}")
     vcpkg_find_acquire_program(PKGCONFIG)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT PKGCONFIG STREQUAL "--static")
         set(PKGCONFIG "${PKGCONFIG} --static")
@@ -689,6 +692,8 @@ function(vcpkg_configure_make)
                     file(WRITE "${lt_file}" "${_contents}")
                 endforeach()
             endif()
+            
+            file(RENAME "${TAR_DIR}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}.log")
         endif()
 
         if(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype})

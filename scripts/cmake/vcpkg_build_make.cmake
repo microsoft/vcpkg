@@ -27,6 +27,9 @@
 ## ### DISABLE_PARALLEL
 ## The underlying buildsystem will be instructed to not parallelize
 ##
+## ### WORKING_SUBDIR
+## Additional subdir to invoke make in. Useful if only parts of a port should be built. 
+##
 ## ## Notes:
 ## This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
 ## You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your CMake script supports the
@@ -40,7 +43,7 @@
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
     include("${CMAKE_VARS_FILE}")
-    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET" "")
+    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;WORKING_SUBDIR" "")
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -108,7 +111,7 @@ function(vcpkg_build_make)
                 set(PATH_SUFFIX "")
             endif()
 
-            set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+            set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_bc_WORKING_SUBDIR}")
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
