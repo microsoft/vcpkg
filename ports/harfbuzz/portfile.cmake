@@ -14,6 +14,7 @@ vcpkg_from_github(
         0003-remove-broken-test.patch
         find-package-freetype-2.patch
         ${ADDITIONAL_GLIB_PATCH}
+        fix_include.patch
 )
 
 file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)

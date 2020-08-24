@@ -6,7 +6,7 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -DHAVE_CONF
 # find dependencies
 find_package(unofficial-iconv CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
-find_package(EXPAT REQUIRED)
+find_package(expat CONFIG REQUIRED)
 
 add_library(fontconfig
     src/fcatomic.c
@@ -52,7 +52,11 @@ else()
     target_include_directories(fontconfig PRIVATE ${FC_INCLUDE_DIR}/unix)
 endif()
 
-target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype EXPAT::EXPAT)
+if(WIN32 AND NOT MINGW)
+    target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype expat::libexpat)
+else()
+    target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype expat::expat)
+endif()
 
 install(TARGETS fontconfig
     EXPORT fontconfig-targets
@@ -89,7 +93,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-fontconfig-config.cmake "
 include(CMakeFindDependencyMacro)
 find_dependency(unofficial-iconv CONFIG)
 find_dependency(Freetype)
-find_dependency(EXPAT)
+find_dependency(expat CONFIG)
 
 include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-fontconfig-targets.cmake)
 ")

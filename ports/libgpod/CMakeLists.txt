@@ -4,7 +4,7 @@ project (libgpod C)
 
 option(WITH_INTERNAL_GCHECKSUM OFF)
 
-find_package(sqlite3 CONFIG REQUIRED)
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
 include(SelectLibraryConfigurations)
 find_path(glib_PATH glib.h PATHS include)
@@ -66,7 +66,7 @@ if (WITH_INTERNAL_GCHECKSUM)
 endif()
 target_compile_definitions(libgpod PRIVATE -DLIBGPOD_BLOB_DIR=\"${LIBGPOD_BLOB_DIR}\" -DGETTEXT_PACKAGE="libgpod")
 
-target_link_libraries(libgpod PRIVATE ${glib_LIBRARY} ${plist_LIBRARY} sqlite3)
+target_link_libraries(libgpod PRIVATE ${glib_LIBRARY} ${plist_LIBRARY} unofficial::sqlite3::sqlite3)
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/itdb.h DESTINATION include/libgpod/gpod)
 

@@ -3,12 +3,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.77
-    SHA512 d5ebf4bb5e1ce83b226f2e68b3afe0f0abaeb55245fedf754e5453afd8d1df4dac8b5c47fc284c2588b40d05a55fc191b5e55c7be279c5e5e23f7c5b70150546
+    REF v1.78
+    SHA512 2410df5b39d5ca14ea7181ef4f3b501ad8879e10895ed540f079f213dcc528b50e57cc16fce6f50a67e8a7be00b03c5833cabfd5db4ba210cafce6d95da389c6
     HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_OSX))
+    message(FATAL_ERROR "Feature metal-binding and osx-binding are only supported on osx.")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING

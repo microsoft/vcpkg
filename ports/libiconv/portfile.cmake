@@ -42,7 +42,7 @@ else()
         ENABLE_INSTALL
     )
 
-    vcpkg_fixup_pkgconfig_targets()
+    vcpkg_fixup_pkgconfig()
 
     file(GLOB_RECURSE TOOLS_EXES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
     file(INSTALL ${TOOLS_EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})

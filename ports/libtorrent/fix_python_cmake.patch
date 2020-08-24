@@ -1,5 +1,5 @@
 diff --git a/bindings/python/CMakeLists.txt b/bindings/python/CMakeLists.txt
-index 0b9b3ebe7..74e608901 100644
+index 53e09439f..de027f965 100644
 --- a/bindings/python/CMakeLists.txt
 +++ b/bindings/python/CMakeLists.txt
 @@ -1,7 +1,6 @@
@@ -26,7 +26,7 @@ index 0b9b3ebe7..74e608901 100644
  		list(APPEND _tmp 3.5 3.6 3.7 3.8)
  	endif()
  	set(${_ret} ${_tmp} PARENT_SCOPE)
-@@ -31,31 +27,26 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC" AND NOT skip-python-runtime-test)
+@@ -31,23 +27,22 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC" AND NOT skip-python-runtime-test)
  	_get_compatible_python_versions(Python_ADDITIONAL_VERSIONS)
  endif()
  
@@ -48,15 +48,15 @@ index 0b9b3ebe7..74e608901 100644
  
  if (NOT boost-python-module-name)
  	# use active python
--	if (PYTHON_VERSION_STRING VERSION_GREATER_EQUAL "3")
--		set(_boost-python-module-name "python${PYTHON_VERSION_MAJOR}")
--	else()
+ #	if (PYTHON_VERSION_STRING VERSION_GREATER_EQUAL "3")
+ #		set(_boost-python-module-name "python${PYTHON_VERSION_MAJOR}")
+ #	else()
 -		set(_boost-python-module-name "python") # to overwrite possible value from a previous run
--	endif()
-+	set(_boost-python-module-name "python${Python3_VERSION_MAJOR}")
++		set(_boost-python-module-name "python${Python3_VERSION_MAJOR}") # to overwrite possible value from a previous run
+ #	endif()
  endif()
  
- set(boost-python-module-name ${_boost-python-module-name} CACHE STRING "Boost:python module name, e.g. 'pythom-3.6'")
+@@ -55,7 +50,7 @@ set(boost-python-module-name ${_boost-python-module-name} CACHE STRING "Boost:py
  
  find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name})
  
@@ -65,7 +65,7 @@ index 0b9b3ebe7..74e608901 100644
  	src/module.cpp
  	src/sha1_hash.cpp
  	src/converters.cpp
-@@ -80,12 +71,12 @@ python_add_module(python-libtorrent
+@@ -80,12 +75,12 @@ python_add_module(python-libtorrent
  
  set_target_properties(python-libtorrent
  	PROPERTIES
@@ -80,7 +80,7 @@ index 0b9b3ebe7..74e608901 100644
  )
  
  string(TOUPPER "${boost-python-module-name}" boost_python_module_name_uppercase)
-@@ -96,7 +87,7 @@ target_link_libraries(python-libtorrent
+@@ -96,7 +91,7 @@ target_link_libraries(python-libtorrent
  		# Boost::python adds that but without a path to the library. Therefore we have to either
  		# provide the path (but, unfortunately, FindPythonLibs.cmake does not return the library dir),
  		# or give the full file name here (this FindPythonLibs.cmake provides to us).
@@ -89,7 +89,7 @@ index 0b9b3ebe7..74e608901 100644
  )
  
  # Bindings module uses deprecated libtorrent features, thus we disable these warnings
-@@ -108,7 +99,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+@@ -108,7 +103,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
  endif()
  
  execute_process(COMMAND
@@ -98,7 +98,7 @@ index 0b9b3ebe7..74e608901 100644
  print(';'.join(map(str, [
  	distutils.sysconfig.get_python_lib(plat_specific=True, prefix=''),
  	distutils.sysconfig.get_config_var('EXT_SUFFIX')
-@@ -119,13 +110,11 @@ list(GET _python_sysconfig_vars 0 PYTHON_SITE_PACKAGES)
+@@ -119,13 +114,11 @@ list(GET _python_sysconfig_vars 0 PYTHON_SITE_PACKAGES)
  list(GET _python_sysconfig_vars 1 PYTHON_EXT_SUFFIX)
  
  message(STATUS "Python site packages: ${PYTHON_SITE_PACKAGES}")
@@ -117,7 +117,7 @@ index 0b9b3ebe7..74e608901 100644
  
  set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.cmake.in")
  set(SETUP_PY    "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
-@@ -135,8 +124,8 @@ set(DEPS        python-libtorrent "${SETUP_PY}")
+@@ -135,8 +128,8 @@ set(DEPS        python-libtorrent "${SETUP_PY}")
  configure_file(${SETUP_PY_IN} ${SETUP_PY} @ONLY)
  
  add_custom_command(OUTPUT ${OUTPUT}

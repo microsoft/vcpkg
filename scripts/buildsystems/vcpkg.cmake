@@ -23,7 +23,13 @@ function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
     set(${OUT} ${_vcpkg_get_dir_out} CACHE INTERNAL "_vcpkg_get_directory_name_of_file_above: ${OUT}")
 endfunction()
 
-_vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
+if(NOT DEFINED VCPKG_MANIFEST_DIR)
+    if(EXISTS "${CMAKE_SOURCE_DIR}/vcpkg.json")
+        set(_VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
+    endif()
+else()
+    set(_VCPKG_MANIFEST_DIR ${VCPKG_MANIFEST_DIR})
+endif()
 if(NOT DEFINED VCPKG_MANIFEST_MODE)
     if(_VCPKG_MANIFEST_DIR)
         set(VCPKG_MANIFEST_MODE ON)
@@ -308,13 +314,23 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
 
     message(STATUS "Running vcpkg install")
 
+    set(_VCPKG_MANIFEST_FEATURES)
+    foreach(feature ${VCPKG_MANIFEST_FEATURES})
+        list(APPEND _VCPKG_MANIFEST_FEATURES "--x-feature=${feature}")
+    endforeach()
+
+    if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
+        set(_VCPKG_MANIFEST_NO_DEFAULT_FEATURES "--x-no-default-features")
+    endif()
+
     execute_process(
         COMMAND "${_VCPKG_EXECUTABLE}" install
-            --triplet ${VCPKG_TARGET_TRIPLET}
-            --vcpkg-root ${_VCPKG_ROOT_DIR}
-            --x-manifest-root=${_VCPKG_MANIFEST_DIR}
-            --x-install-root=${_VCPKG_INSTALLED_DIR}
-            --binarycaching
+            --triplet "${VCPKG_TARGET_TRIPLET}"
+            --vcpkg-root "${_VCPKG_ROOT_DIR}"
+            "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
+            "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+            ${_VCPKG_MANIFEST_FEATURES}
+            ${_VCPKG_MANIFEST_NO_DEFAULT_FEATURES}
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
 
     if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
@@ -401,7 +417,11 @@ macro(${VCPKG_OVERRIDE_FIND_PACKAGE_NAME} name)
         unset(Boost_USE_STATIC_RUNTIME)
         set(Boost_NO_BOOST_CMAKE ON)
         unset(Boost_USE_STATIC_RUNTIME CACHE)
-        set(Boost_COMPILER "-vc140")
+        if("${CMAKE_VS_PLATFORM_TOOLSET}" STREQUAL "v120")
+            set(Boost_COMPILER "-vc120")
+        else()
+            set(Boost_COMPILER "-vc140")
+        endif()
         _find_package(${ARGV})
     elseif("${name}" STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
         function(_vcpkg_find_in_list)

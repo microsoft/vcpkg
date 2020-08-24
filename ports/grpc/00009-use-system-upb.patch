@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ec669e..f71a212 100644
+index a337149f1f..6baab5d37b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -81,6 +81,9 @@ set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
+@@ -84,6 +84,9 @@ set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
  set(gRPC_PROTOBUF_PROVIDER "module" CACHE STRING "Provider of protobuf library")
  set_property(CACHE gRPC_PROTOBUF_PROVIDER PROPERTY STRINGS "module" "package")
  
@@ -12,7 +12,7 @@ index 5ec669e..f71a212 100644
  set(gRPC_PROTOBUF_PACKAGE_TYPE "" CACHE STRING "Algorithm for searching protobuf package")
  set_property(CACHE gRPC_PROTOBUF_PACKAGE_TYPE PROPERTY STRINGS "CONFIG" "MODULE")
  
-@@ -1765,7 +1768,6 @@ target_link_libraries(grpc
+@@ -1807,7 +1810,6 @@ target_link_libraries(grpc
    ${_gRPC_ALLTARGETS_LIBRARIES}
    gpr
    address_sorting
@@ -20,7 +20,7 @@ index 5ec669e..f71a212 100644
    absl::optional
    absl::strings
    absl::inlined_vector
-@@ -1844,7 +1846,6 @@ target_link_libraries(grpc_csharp_ext
+@@ -1887,7 +1889,6 @@ target_link_libraries(grpc_csharp_ext
    grpc
    gpr
    address_sorting
@@ -28,7 +28,7 @@ index 5ec669e..f71a212 100644
  )
  
  
-@@ -2351,7 +2352,6 @@ target_link_libraries(grpc_unsecure
+@@ -2409,7 +2410,6 @@ target_link_libraries(grpc_unsecure
    ${_gRPC_ALLTARGETS_LIBRARIES}
    gpr
    address_sorting
@@ -36,7 +36,7 @@ index 5ec669e..f71a212 100644
    absl::optional
    absl::strings
    absl::inlined_vector
-@@ -2545,7 +2545,6 @@ target_link_libraries(grpc++
+@@ -2606,7 +2606,6 @@ target_link_libraries(grpc++
    grpc
    gpr
    address_sorting
@@ -44,7 +44,7 @@ index 5ec669e..f71a212 100644
  )
  
  foreach(_hdr
-@@ -2821,7 +2820,6 @@ target_link_libraries(grpc++_alts
+@@ -2876,7 +2875,6 @@ target_link_libraries(grpc++_alts
    grpc
    gpr
    address_sorting
@@ -52,7 +52,7 @@ index 5ec669e..f71a212 100644
  )
  
  foreach(_hdr
-@@ -2889,7 +2887,6 @@ target_link_libraries(grpc++_error_details
+@@ -2945,7 +2943,6 @@ target_link_libraries(grpc++_error_details
    grpc
    gpr
    address_sorting
@@ -60,7 +60,7 @@ index 5ec669e..f71a212 100644
  )
  
  foreach(_hdr
-@@ -2962,7 +2959,6 @@ target_link_libraries(grpc++_reflection
+@@ -3019,7 +3016,6 @@ target_link_libraries(grpc++_reflection
    grpc
    gpr
    address_sorting
@@ -68,7 +68,7 @@ index 5ec669e..f71a212 100644
  )
  
  foreach(_hdr
-@@ -3239,7 +3235,6 @@ target_link_libraries(grpc++_unsecure
+@@ -3300,7 +3296,6 @@ target_link_libraries(grpc++_unsecure
    grpc_unsecure
    gpr
    address_sorting
@@ -76,7 +76,7 @@ index 5ec669e..f71a212 100644
  )
  
  foreach(_hdr
-@@ -3586,7 +3581,6 @@ target_link_libraries(grpcpp_channelz
+@@ -3642,7 +3637,6 @@ target_link_libraries(grpcpp_channelz
    grpc
    gpr
    address_sorting
@@ -84,7 +84,7 @@ index 5ec669e..f71a212 100644
  )
  
  foreach(_hdr
-@@ -3613,6 +3607,7 @@ endif()
+@@ -3669,6 +3663,7 @@ endif()
  
  endif()
  
@@ -92,7 +92,7 @@ index 5ec669e..f71a212 100644
  add_library(upb
    third_party/upb/upb/decode.c
    third_party/upb/upb/encode.c
-@@ -3662,7 +3657,7 @@ if(gRPC_INSTALL)
+@@ -3719,7 +3714,7 @@ if(gRPC_INSTALL)
      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
    )
  endif()
@@ -102,19 +102,19 @@ index 5ec669e..f71a212 100644
  
  add_executable(check_epollexclusive
 diff --git a/cmake/gRPCConfig.cmake.in b/cmake/gRPCConfig.cmake.in
-index 5bfa73c..db0865e 100644
+index 3623f4aa5e..df6ced560e 100644
 --- a/cmake/gRPCConfig.cmake.in
 +++ b/cmake/gRPCConfig.cmake.in
-@@ -7,6 +7,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/modules)
- @_gRPC_FIND_SSL@
+@@ -8,6 +8,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/modules)
  @_gRPC_FIND_CARES@
  @_gRPC_FIND_ABSL@
+ @_gRPC_FIND_RE2@
 +@_gRPC_FIND_UPB@
  
  # Targets
  include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
 diff --git a/cmake/upb.cmake b/cmake/upb.cmake
-index 2c0ab84..07dd613 100644
+index 2c0ab84e67..07dd613a78 100644
 --- a/cmake/upb.cmake
 +++ b/cmake/upb.cmake
 @@ -12,9 +12,18 @@
