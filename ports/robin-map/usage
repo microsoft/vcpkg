@@ -1,0 +1,4 @@
+The package robin-map comes with a CMake module:
+
+    find_package(robin-map)
+    target_link_libraries(main PRIVATE tsl)

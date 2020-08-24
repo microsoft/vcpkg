@@ -1,81 +1,5 @@
-diff --git a/src/irrTypes.h b/src/irrTypes.h
-index 923c698..97fa407 100644
 --- a/src/irrTypes.h
 +++ b/src/irrTypes.h
-@@ -10,15 +10,15 @@ namespace irr
- 
- //! 8 bit unsigned variable.
- /** This is a typedef for unsigned char, it ensures portability of the engine. */
--typedef unsigned char		u8; 
-+typedef unsigned char		u8;
- 
- //! 8 bit signed variable.
- /** This is a typedef for signed char, it ensures portability of the engine. */
--typedef signed char			s8; 
-+typedef signed char			s8;
- 
- //! 8 bit character variable.
- /** This is a typedef for char, it ensures portability of the engine. */
--typedef char				c8; 
-+typedef char				c8;
- 
- 
- 
-@@ -28,7 +28,7 @@ typedef unsigned short		u16;
- 
- //! 16 bit signed variable.
- /** This is a typedef for signed short, it ensures portability of the engine. */
--typedef signed short		s16; 
-+typedef signed short		s16;
- 
- 
- 
-@@ -38,38 +38,38 @@ typedef unsigned int		u32;
- 
- //! 32 bit signed variable.
- /** This is a typedef for signed int, it ensures portability of the engine. */
--typedef signed int			s32; 
-+typedef signed int			s32;
- 
- 
- 
- // 64 bit signed variable.
--// This is a typedef for __int64, it ensures portability of the engine. 
-+// This is a typedef for __int64, it ensures portability of the engine.
- // This type is currently not used by the engine and not supported by compilers
- // other than Microsoft Compilers, so it is outcommented.
--//typedef __int64				s64; 
-+//typedef __int64				s64;
- 
- 
- 
- //! 32 bit floating point variable.
- /** This is a typedef for float, it ensures portability of the engine. */
--typedef float				f32; 
-+typedef float				f32;
- 
- //! 64 bit floating point variable.
- /** This is a typedef for double, it ensures portability of the engine. */
--typedef double				f64; 
-+typedef double				f64;
- 
- 
- } // end namespace
- 
- 
- // define the wchar_t type if not already built in.
--#ifdef _MSC_VER 
-+#ifdef _MSC_VER
- #ifndef _WCHAR_T_DEFINED
- //! A 16 bit wide character type.
- /**
- 	Defines the wchar_t-type.
- 	In VS6, its not possible to tell
--	the standard compiler to treat wchar_t as a built-in type, and 
-+	the standard compiler to treat wchar_t as a built-in type, and
- 	sometimes we just don't want to include the huge stdlib.h or wchar.h,
- 	so we'll use this.
- */
 @@ -79,17 +79,13 @@ typedef unsigned short wchar_t;
  #endif // microsoft compiler
  
@@ -88,17 +12,9 @@ index 923c698..97fa407 100644
  
  //! Defines a small statement to work around a microsoft compiler bug.
  /** The microsft compiler 7.0 - 7.1 has a bug:
--When you call unmanaged code that returns a bool type value of false from managed code, 
--the return value may appear as true. See 
--http://support.microsoft.com/default.aspx?kbid=823071 for details. 
-+When you call unmanaged code that returns a bool type value of false from managed code,
-+the return value may appear as true. See
-+http://support.microsoft.com/default.aspx?kbid=823071 for details.
+ When you call unmanaged code that returns a bool type value of false from managed code, 
+ the return value may appear as true. See 
+ http://support.microsoft.com/default.aspx?kbid=823071 for details. 
  Compiler version defines: VC6.0 : 1200, VC7.0 : 1300, VC7.1 : 1310, VC8.0 : 1400*/
  #if defined(WIN32) && defined(_MSC_VER) && (_MSC_VER > 1299) && (_MSC_VER < 1400)
  #define _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX __asm mov eax,100
-@@ -98,4 +94,3 @@ Compiler version defines: VC6.0 : 1200, VC7.0 : 1300, VC7.1 : 1310, VC8.0 : 1400
- #endif // _IRR_MANAGED_MARSHALLING_BUGFIX
- 
- #endif // __IRR_TYPES_H_INCLUDED__
--

@@ -1,0 +1,4 @@
+The package filament comes with a CMake module:
+
+    find_package(filament)
+    target_link_libraries(main PRIVATE google::filament)
