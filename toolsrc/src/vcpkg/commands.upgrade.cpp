@@ -144,7 +144,8 @@ namespace vcpkg::Commands::Upgrade
 
             if (!no_control_file.empty())
             {
-                System::print2(System::Color::error, "The following packages do not have a valid CONTROL or vcpkg.json:\n");
+                System::print2(System::Color::error,
+                               "The following packages do not have a valid CONTROL or vcpkg.json:\n");
                 System::print2(Strings::join("",
                                              no_control_file,
                                              [](const PackageSpec& spec) { return "    " + spec.to_string() + "\n"; }),
