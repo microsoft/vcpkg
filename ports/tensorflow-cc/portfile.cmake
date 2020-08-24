@@ -50,7 +50,7 @@ else()
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip --user install -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy1-${TARGET_TRIPLET})
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy1-${TARGET_TRIPLET})
 endif()
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 
