@@ -1,6 +1,6 @@
 Source: wavpack
 Version: 5.2.0
-Port-Version: 1
+Port-Version: 3
 Homepage: https://github.com/dbry/WavPack
 Description: WavPack encode/decode library, command-line programs, and several plugins
 Supports: !(arm|arm64)

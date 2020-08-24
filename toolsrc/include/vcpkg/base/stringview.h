@@ -37,8 +37,8 @@ namespace vcpkg
         constexpr const char* begin() const { return m_ptr; }
         constexpr const char* end() const { return m_ptr + m_size; }
 
-        constexpr std::reverse_iterator<const char*> rbegin() const { return std::make_reverse_iterator(end()); }
-        constexpr std::reverse_iterator<const char*> rend() const { return std::make_reverse_iterator(begin()); }
+        std::reverse_iterator<const char*> rbegin() const { return std::make_reverse_iterator(end()); }
+        std::reverse_iterator<const char*> rend() const { return std::make_reverse_iterator(begin()); }
 
         constexpr const char* data() const { return m_ptr; }
         constexpr size_t size() const { return m_size; }
