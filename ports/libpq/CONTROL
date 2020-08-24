@@ -19,10 +19,6 @@ Feature: readline
 Build-Depends: readline
 Description: Use readline (else --without-readline)
 
-Feature: libedit
-Build-Depends: libedit
-Description: prefer libedit (--with-libedit-preferred)
-
 Feature: python
 Build-Depends: python3, libpq[core,client]
 Description: build the PL/Python server programming language (dynamic only?) (--with-python)
