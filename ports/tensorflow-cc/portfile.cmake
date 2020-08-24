@@ -27,26 +27,6 @@ get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
 set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
 
-find_package(Python3 COMPONENTS Interpreter)
-if(Python3_Interpreter_FOUND)
-	set(PYTHON3 "${Python3_EXECUTABLE}")
-else()
-	vcpkg_find_acquire_program(PYTHON3)
-endif()
-
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
-set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
-
-find_package(Python3 COMPONENTS Interpreter NumPy)
-if(NOT Python3_NumPy_FOUND)
-	vcpkg_execute_required_process(COMMAND pip3 install -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
-	find_package(Python3 COMPONENTS NumPy)
-	if(NOT Python3_NumPy_FOUND)
-		message(FATAL_ERROR "Failed to install NumPy.")
-	endif()
-endif()
-
 function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	file(REMOVE_RECURSE ${PATH_TO_REMOVE})
 	if(EXISTS "${PATH_TO_REMOVE}")
@@ -56,13 +36,26 @@ function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 endfunction()
 
 if(CMAKE_HOST_WIN32)
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git)
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git mingw-w64-x86_64-python-numpy)
 	vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
 	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+
 	set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
 	set(ENV{BAZEL_VC} $ENV{VCInstallDir})
 	set(ENV{BAZEL_VC_FULL_VERSION} $ENV{VCToolsVersion})
+
+	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3")
+else()
+	vcpkg_find_acquire_program(PYTHON3)
+	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
+
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip --user install -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy1-${TARGET_TRIPLET})
 endif()
+set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
+
+# check if numpy can be loaded
+vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy2-${TARGET_TRIPLET})
 
 # tensorflow has long file names, which will not work on windows
 set(ENV{TEST_TMPDIR} ${BUILDTREES_DIR}/.bzl)
