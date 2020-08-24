@@ -7,9 +7,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(READ ${SOURCE_PATH}/tiny_gltf.h TINY_GLTF_H)
-string(REPLACE "#include \"json.hpp\""
-               "#include <nlohmann/json.hpp>" TINY_GLTF_H "${TINY_GLTF_H}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/tiny_gltf.h "${TINY_GLTF_H}")
+vcpkg_replace_string(${SOURCE_PATH}/tiny_gltf.h "#include \"json.hpp\"" "#include <nlohmann/json.hpp>")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

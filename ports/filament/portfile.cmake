@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "Linux")   #filament is not compatible with GCC, only CLANG 6+ or MSVC 2019+
+vcpkg_fail_port_install(ON_ARCH "x86" ON_TARGET "Linux")   #filament is 64bit only and is not compatible with GCC, only CLANG 6+ or MSVC 2019+
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
