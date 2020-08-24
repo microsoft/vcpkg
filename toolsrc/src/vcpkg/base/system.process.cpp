@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.debug.h>
@@ -175,7 +173,7 @@ namespace vcpkg
     {
     }
     System::CMakeVariable::CMakeVariable(const StringView varname, const fs::path& path)
-        : CMakeVariable(varname, path.generic_u8string())
+        : CMakeVariable(varname, fs::generic_u8string(path))
     {
     }
 

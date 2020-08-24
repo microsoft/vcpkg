@@ -1,6 +1,7 @@
 Source: cudnn
 Version: 7.6.5-CUDA10.2
 Homepage: https://developer.nvidia.com/cudnn
+Port-Version: 1
 Description: NVIDIA's cuDNN deep neural network acceleration library
 Build-Depends: cuda
 Supports: (windows|linux)&x64
