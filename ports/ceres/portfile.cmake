@@ -25,7 +25,6 @@ file(REMOVE ${SOURCE_PATH}/cmake/FindGlog.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
 
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "suitesparse"       SUITESPARSE
     "cxsparse"          CXSPARSE
