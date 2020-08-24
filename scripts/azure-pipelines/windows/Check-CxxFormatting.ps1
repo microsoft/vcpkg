@@ -32,7 +32,7 @@ try
         $msg = @(
             "",
             "The formatting of the C++ files didn't match our expectation.",
-            "See https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#vcpkg-internal-code for solution."
+            "See github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#vcpkg-internal-code for solution."
         )
         $msg += "File list:"
         $msg += "    $changedFiles"
