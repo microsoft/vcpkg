@@ -297,19 +297,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
 		file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/tensorflow-cc-config-windows-lib.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
 		set(ALL_PARTS "tensorflow_cc::tensorflow_cc-part1")
 		foreach(part ${TF_LIB_SUFFIXES})
-			file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake "\
-add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)\
-set_target_properties(tensorflow_cc::tensorflow_cc${part}\
-	PROPERTIES\
-	IMPORTED_LOCATION \"${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\
-	INTERFACE_INCLUDE_DIRECTORIES \"${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/include/tensorflow-external\"\
-)\
+			file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake "\n\
+add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)\n\
+set_target_properties(tensorflow_cc::tensorflow_cc${part}\n\
+	PROPERTIES\n\
+	IMPORTED_LOCATION \"${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\n\
+	INTERFACE_INCLUDE_DIRECTORIES \"${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/include/tensorflow-external\"\n\
+)\n\
 ")
 			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")
 		endforeach()
-		file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake "\
-add_library(tensorflow_cc::tensorflow_cc INTERFACE IMPORTED)\
-set_property(TARGET tensorflow_cc::tensorflow_cc PROPERTY INTERFACE_LINK_LIBRARIES ${ALL_PARTS})\
+		file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake "\n\
+add_library(tensorflow_cc::tensorflow_cc INTERFACE IMPORTED)\n\
+set_property(TARGET tensorflow_cc::tensorflow_cc PROPERTY INTERFACE_LINK_LIBRARIES ${ALL_PARTS})\n\
 ")
 	endif()
 else()
