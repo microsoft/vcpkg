@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.0/sentry-native.zip"
     FILENAME "sentry-native.zip"
@@ -23,11 +21,12 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry-native/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/${PORT}/cmake)
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/sentry-native/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/crashpad_handler.exe ${CURRENT_PACKAGES_DIR}/tools/sentry-native/crashpad_handler.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/crashpad_handler.exe)
+vcpkg_copy_tools(
+    TOOL_NAMES crashpad_handler
+    AUTO_CLEAN
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -35,6 +34,6 @@ endif()
 
 file(
     INSTALL ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/sentry-native
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     RENAME copyright
 )
