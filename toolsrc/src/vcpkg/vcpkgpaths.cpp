@@ -111,6 +111,8 @@ namespace vcpkg
         : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.compiler_tracking_enabled()))
     {
         original_cwd = filesystem.current_path(VCPKG_LINE_INFO);
+        // This canonical call fixes up incorrect case which we have observed being allowed by PowerShell 5.x
+        original_cwd = filesystem.canonical(VCPKG_LINE_INFO, original_cwd);
         if (args.vcpkg_root_dir)
         {
             root = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.vcpkg_root_dir));
