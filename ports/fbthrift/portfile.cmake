@@ -42,27 +42,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test
 )
 
-# copy bin to tools
-file(GLOB COMPILER
-    "${CURRENT_PACKAGES_DIR}/bin/thrift1"
-    "${CURRENT_PACKAGES_DIR}/bin/thrift1.exe")
-if(COMPILER)
-    file(COPY ${COMPILER} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fbthrift)
-    file(REMOVE ${COMPILER})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/fbthrift)
-endif()
-file(GLOB COMPILERD
-    "${CURRENT_PACKAGES_DIR}/debug/bin/thrift1"
-    "${CURRENT_PACKAGES_DIR}/debug/bin/thrift1.exe")
-if(COMPILERD)
-    file(REMOVE ${COMPILERD})
-endif()
-# remove empty directories
-if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-
+vcpkg_copy_tools(TOOL_NAMES thrift1 AUTO_CLEAN)
 vcpkg_copy_pdbs()
 
 # Handle copyright
