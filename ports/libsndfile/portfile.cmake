@@ -13,11 +13,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_find_acquire_program(PYTHON3)
 endif()
 
-if("external-libs" IN_LIST FEATURES)
-    set(SNDFILE_WITH_EXTERNAL_LIBS ON)
-else()
-    set(SNDFILE_WITH_EXTERNAL_LIBS OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES external-libs ENABLE_EXTERNAL_LIBS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -29,9 +27,9 @@ vcpkg_configure_cmake(
         -DENABLE_BOW_DOCS=OFF
         -DBUILD_PROGRAMS=OFF
         -DENABLE_STATIC_RUNTIME=${CRT_LIB_STATIC}
-        -DENABLE_EXTERNAL_LIBS=${SNDFILE_WITH_EXTERNAL_LIBS}
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -DPYTHON_EXECUTABLE=${PYTHON3}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake() 
