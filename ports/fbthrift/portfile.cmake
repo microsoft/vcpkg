@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "osx")
+
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 
