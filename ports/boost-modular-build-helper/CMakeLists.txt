@@ -37,6 +37,8 @@ endif()
 
 if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
     list(APPEND B2_OPTIONS architecture=s390x)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+    list(APPEND B2_OPTIONS architecture=arm)
 else()
     list(APPEND B2_OPTIONS architecture=x86)
 endif()
