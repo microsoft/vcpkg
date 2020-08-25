@@ -111,7 +111,7 @@ function(vcpkg_build_nmake)
     set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     # Set make command and install command
-    set(MAKE "${NMAKE}" /NOLOGO /G /U)
+    set(MAKE ${NMAKE} /NOLOGO /G /U)
     set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME} all)
     set(INSTALL_OPTS_BASE install)
     # Add subpath to work directory
