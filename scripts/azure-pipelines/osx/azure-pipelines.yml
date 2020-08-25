@@ -23,7 +23,10 @@ jobs:
     condition: always()
   - bash: |
       brew list autoconf || brew install autoconf
+      brew list autoconf-archive || brew install autoconf-archive
       brew list automake || brew install automake
+      brew list gettext || brew install gettext
+
       brew list pkg-config || brew install pkg-config
       brew list libtool || brew install libtool
       brew list bison || brew install bison

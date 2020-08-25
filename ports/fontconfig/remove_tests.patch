@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index cc3024e68..e58f8688c 100644
+--- a/Makefile.am
++++ b/Makefile.am	
+@@ -24,7 +24,7 @@
+ SUBDIRS=fontconfig fc-case fc-lang src \
+ 	fc-cache fc-cat fc-conflist fc-list fc-match \
+ 	fc-pattern fc-query fc-scan fc-validate conf.d \
+-	its po po-conf test
++	its po po-conf
+ if ENABLE_DOCS
+ SUBDIRS += doc
+ endif
