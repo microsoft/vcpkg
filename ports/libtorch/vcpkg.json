@@ -1,0 +1,18 @@
+{
+    "name": "libtorch",
+    "version-string": "v1.6.0",
+    "port-version": 8,
+    "description": [
+        "An open source machine learning framework that accelerates the path from research prototyping to production deployment."
+    ],
+    "homepage": "https://pytorch.org/",
+    "dependencies": [
+    ],
+    "features": [
+        {
+            "name": "cuda",
+            "description": "Enable CUDA Support."
+        }
+    ]
+ }
+ 
