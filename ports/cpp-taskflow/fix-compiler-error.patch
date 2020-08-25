@@ -1,0 +1,377 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9beec931..47091080 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,7 @@ MESSAGE(STATUS "CMAKE_ROOT: " ${CMAKE_ROOT})
+ set(CMAKE_VERBOSE_MAKEFILE ON)
+ 
+ # Project name
+-project(Taskflow VERSION 2.4.0 LANGUAGES CXX)
++project(Cpp-Taskflow VERSION 2.5.0 LANGUAGES CXX)
+ 
+ # build options
+ option(TF_BUILD_BENCHMARKS "Enables build of benchmarks" OFF)
+@@ -26,7 +26,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.0")
+     message(STATUS "CMAKE_CXX_COMPILER_VERSION: ${CMAKE_CXX_COMPILER_VERSION}")
+     message(FATAL_ERROR "\nTaskflow requires clang++ at least v4.0")
+-  endif() 
++  endif()
+ ## AppleClang
+ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.0")
+@@ -36,7 +36,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+   if(NOT MSVC_VERSION GREATER_EQUAL 1914)
+     message(STATUS "CMAKE_CXX_COMPILER_VERSION: ${CMAKE_CXX_COMPILER_VERSION}")
+-    message(FATAL_ERROR "\nTaskflow requires MSVC++ at least v14.14") 
++    message(FATAL_ERROR "\nTaskflow requires MSVC++ at least v14.14")
+   endif()
+ else()
+   message(FATAL_ERROR "\n\
+@@ -64,15 +64,15 @@ set(TF_DEFAULT_BUILD_TYPE "Release")
+ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+   message(STATUS "Setting build type to '${TF_DEFAULT_BUILD_TYPE}'")
+   set(
+-    CMAKE_BUILD_TYPE "${TF_DEFAULT_BUILD_TYPE}" 
++    CMAKE_BUILD_TYPE "${TF_DEFAULT_BUILD_TYPE}"
+     CACHE
+-    STRING "Choose the type of build." 
++    STRING "Choose the type of build."
+     FORCE
+   )
+   # Set the possible values of build type for cmake-gui
+   set_property(
+-    CACHE 
+-    CMAKE_BUILD_TYPE 
++    CACHE
++    CMAKE_BUILD_TYPE
+     PROPERTY STRINGS
+     "Debug" "Release" "MinSizeRel" "RelWithDebInfo"
+   )
+@@ -89,7 +89,7 @@ target_compile_options(
+   $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Wextra -Wfatal-errors>
+   $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:Clang>>:-Wall -Wextra -Wfatal-errors>
+   $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:GNU>>:-Wall -Wextra -Wfatal-errors>
+-  $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:MSVC>>:/W3 /permissive->
++  $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:MSVC>>:/bigobj /W3 /permissive->
+   #$<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-Wall,-Wextra,-Wfatal-errors>
+   #$<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wfatal-errors>
+   #$<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wfatal-errors>
+@@ -110,15 +110,15 @@ endif(CMAKE_CUDA_COMPILER)
+ add_library(features_settings INTERFACE)
+ add_library(tf::features_settings ALIAS features_settings)
+ target_compile_definitions(
+-  features_settings 
+-  INTERFACE 
++  features_settings
++  INTERFACE
+   $<$<CXX_COMPILER_ID:MSVC>:_ENABLE_EXTENDED_ALIGNED_STORAGE>
+ )
+ 
+ # optimization
+ #
+ ##! Msvc flags info
+-# /Zi - Produces a program database (PDB) that contains type information 
++# /Zi - Produces a program database (PDB) that contains type information
+ #       and symbolic debugging information for use with the debugger.
+ # /FS - Allows multiple cl.exe processes to write to the same .pdb file
+ # /DEBUG - Enable debug during linking
+@@ -144,10 +144,10 @@ target_compile_definitions(
+ add_library(default_settings INTERFACE)
+ add_library(tf::default_settings ALIAS default_settings)
+ target_link_libraries(
+-  default_settings 
+-  INTERFACE 
+-  tf::error_settings 
+-  #tf::optimize_settings 
++  default_settings
++  INTERFACE
++  tf::error_settings
++  #tf::optimize_settings
+   tf::features_settings
+ )
+ 
+@@ -212,13 +212,15 @@ add_library(${PROJECT_NAME} INTERFACE)
+ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_14)
+ target_include_directories(${PROJECT_NAME} INTERFACE
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+-  $<INSTALL_INTERFACE:include/> 
++  $<INSTALL_INTERFACE:include/>
+ )
+ 
+ # -----------------------------------------------------------------------------
+-# Example program 
++# Example program
+ # -----------------------------------------------------------------------------
+ 
++if(BUILD_TEST)
++
+ message(STATUS "Building examples ...")
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TF_EXAMPLE_DIR})
+ 
+@@ -327,7 +329,7 @@ add_test(object_pool.14threads ${TF_UTEST_UTILITY} -tc=ObjectPool.14threads)
+ add_test(object_pool.15threads ${TF_UTEST_UTILITY} -tc=ObjectPool.15threads)
+ add_test(object_pool.16threads ${TF_UTEST_UTILITY} -tc=ObjectPool.16threads)
+ 
+-# unittest for WorkStealingQueue 
++# unittest for WorkStealingQueue
+ add_executable(tsq ${TF_UTEST_DIR}/tsq.cpp)
+ target_link_libraries(tsq ${PROJECT_NAME} Threads::Threads)
+ target_include_directories(tsq PRIVATE ${TF_3RD_PARTY_DIR}/doctest tf::default_settings)
+@@ -349,8 +351,8 @@ target_include_directories(basics PRIVATE ${TF_3RD_PARTY_DIR}/doctest)
+ set(TF_UTEST_BASICS ${TF_UTEST_DIR}/basics)
+ add_test(builder ${TF_UTEST_BASICS} -tc=Builder)
+ add_test(creation ${TF_UTEST_BASICS} -tc=Creation)
+-add_test(iterators ${TF_UTEST_BASICS} -tc=Iterators)       
+-add_test(std_function ${TF_UTEST_BASICS} -tc=STDFunction)       
++add_test(iterators ${TF_UTEST_BASICS} -tc=Iterators)
++add_test(std_function ${TF_UTEST_BASICS} -tc=STDFunction)
+ add_test(hash ${TF_UTEST_BASICS} -tc=Hash)
+ add_test(worker_id.1thread ${TF_UTEST_BASICS} -tc=WorkerID.1thread)
+ add_test(worker_id.2threads ${TF_UTEST_BASICS} -tc=WorkerID.2threads)
+@@ -617,13 +619,15 @@ add_test(cuda_kmeans.1000.16C16G ${TF_UTEST_CUDA_KMEANS} -tc=kmeans.1000.16C16G)
+ 
+ endif(CMAKE_CUDA_COMPILER)
+ 
++endif()
++
+ # -----------------------------------------------------------------------------
+ # Benchmarking (enabled by TF_BUILD_BENCHMARKS)
+ # -----------------------------------------------------------------------------
+ 
+ if(${TF_BUILD_BENCHMARKS})
+ 
+-# eigen package 
++# eigen package
+ if(NOT DEFINED EIGEN_ROOT)
+   set(EIGEN_ROOT ${PROJECT_SOURCE_DIR}/3rd-party/eigen-3.3.7)
+ endif()
+@@ -635,7 +639,7 @@ include(FindOpenMP)
+ if(NOT OpenMP_CXX_FOUND)
+   message(FATAL_ERROR "OpenMP not found")
+ endif()
+-  
++
+ message(STATUS "OpenMP_VERSION: ${OpenMP_VERSION}")
+ message(STATUS "OpenMP_CXX_FLAGS: ${OpenMP_CXX_FLAGS}")
+ message(STATUS "OpenMP_CXX_LIBRARIES: ${OpenMP_CXX_LIBRARIES}")
+@@ -656,7 +660,7 @@ find_package(TBB REQUIRED tbb_preview)
+ message(STATUS "benchmark 1: wavefront")
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TF_BENCHMARK_DIR}/wavefront)
+ add_executable(
+-  wavefront 
++  wavefront
+   ${TF_BENCHMARK_DIR}/wavefront/main.cpp
+   ${TF_BENCHMARK_DIR}/wavefront/omp.cpp
+   ${TF_BENCHMARK_DIR}/wavefront/tbb.cpp
+@@ -665,11 +669,11 @@ add_executable(
+ )
+ target_include_directories(wavefront PRIVATE ${PROJECT_SOURCE_DIR}/3rd-party/CLI11)
+ target_link_libraries(
+-  wavefront 
+-  ${PROJECT_NAME} 
+-  Threads::Threads 
+-  ${TBB_IMPORTED_TARGETS} 
+-  ${OpenMP_CXX_LIBRARIES} 
++  wavefront
++  ${PROJECT_NAME}
++  Threads::Threads
++  ${TBB_IMPORTED_TARGETS}
++  ${OpenMP_CXX_LIBRARIES}
+   tf::default_settings
+ )
+ set_target_properties(wavefront PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+@@ -678,7 +682,7 @@ set_target_properties(wavefront PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+ message(STATUS "benchmark 2: graph traversal")
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TF_BENCHMARK_DIR}/graph_traversal)
+ add_executable(
+-  graph_traversal 
++  graph_traversal
+   ${TF_BENCHMARK_DIR}/graph_traversal/main.cpp
+   ${TF_BENCHMARK_DIR}/graph_traversal/omp.cpp
+   ${TF_BENCHMARK_DIR}/graph_traversal/tbb.cpp
+@@ -687,11 +691,11 @@ add_executable(
+ )
+ target_include_directories(graph_traversal PRIVATE ${PROJECT_SOURCE_DIR}/3rd-party/CLI11)
+ target_link_libraries(
+-  graph_traversal 
+-  ${PROJECT_NAME} 
+-  Threads::Threads 
+-  ${TBB_IMPORTED_TARGETS} 
+-  ${OpenMP_CXX_LIBRARIES} 
++  graph_traversal
++  ${PROJECT_NAME}
++  Threads::Threads
++  ${TBB_IMPORTED_TARGETS}
++  ${OpenMP_CXX_LIBRARIES}
+   tf::default_settings
+ )
+ set_target_properties(graph_traversal PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+@@ -700,7 +704,7 @@ set_target_properties(graph_traversal PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAG
+ message(STATUS "benchmark 3: binary tree")
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TF_BENCHMARK_DIR}/binary_tree)
+ add_executable(
+-  binary_tree 
++  binary_tree
+   ${TF_BENCHMARK_DIR}/binary_tree/main.cpp
+   ${TF_BENCHMARK_DIR}/binary_tree/tbb.cpp
+   ${TF_BENCHMARK_DIR}/binary_tree/omp.cpp
+@@ -708,11 +712,11 @@ add_executable(
+ )
+ target_include_directories(binary_tree PRIVATE ${PROJECT_SOURCE_DIR}/3rd-party/CLI11)
+ target_link_libraries(
+-  binary_tree 
+-  ${PROJECT_NAME} 
+-  Threads::Threads 
+-  ${TBB_IMPORTED_TARGETS} 
+-  ${OpenMP_CXX_LIBRARIES} 
++  binary_tree
++  ${PROJECT_NAME}
++  Threads::Threads
++  ${TBB_IMPORTED_TARGETS}
++  ${OpenMP_CXX_LIBRARIES}
+   tf::default_settings
+ )
+ set_target_properties(binary_tree PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+@@ -729,11 +733,11 @@ add_executable(
+ )
+ target_include_directories(linear_chain PRIVATE ${PROJECT_SOURCE_DIR}/3rd-party/CLI11)
+ target_link_libraries(
+-  linear_chain 
+-  ${PROJECT_NAME} 
+-  Threads::Threads 
+-  ${TBB_IMPORTED_TARGETS} 
+-  ${OpenMP_CXX_LIBRARIES} 
++  linear_chain
++  ${PROJECT_NAME}
++  Threads::Threads
++  ${TBB_IMPORTED_TARGETS}
++  ${OpenMP_CXX_LIBRARIES}
+   tf::default_settings
+ )
+ set_target_properties(linear_chain PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+@@ -742,7 +746,7 @@ set_target_properties(linear_chain PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+ message(STATUS "benchmark 5: mnist")
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TF_BENCHMARK_DIR}/mnist)
+ add_executable(
+-  mnist 
++  mnist
+   ${TF_BENCHMARK_DIR}/mnist/main.cpp
+   ${TF_BENCHMARK_DIR}/mnist/omp.cpp
+   ${TF_BENCHMARK_DIR}/mnist/tbb.cpp
+@@ -751,12 +755,12 @@ add_executable(
+ )
+ target_include_directories(mnist PRIVATE ${PROJECT_SOURCE_DIR}/3rd-party/CLI11)
+ target_link_libraries(
+-  mnist 
+-  ${PROJECT_NAME} 
+-  Threads::Threads 
++  mnist
++  ${PROJECT_NAME}
++  Threads::Threads
+   ${TBB_IMPORTED_TARGETS}
+-  ${OpenMP_CXX_LIBRARIES} 
+-  stdc++fs 
++  ${OpenMP_CXX_LIBRARIES}
++  stdc++fs
+   tf::default_settings
+ )
+ set_target_properties(mnist PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+@@ -765,7 +769,7 @@ set_target_properties(mnist PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+ message(STATUS "benchmark 6: matrix multiplication")
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TF_BENCHMARK_DIR}/matrix_multiplication)
+ add_executable(
+-  matrix_multiplication 
++  matrix_multiplication
+   ${TF_BENCHMARK_DIR}/matrix_multiplication/main.cpp
+   ${TF_BENCHMARK_DIR}/matrix_multiplication/omp.cpp
+   ${TF_BENCHMARK_DIR}/matrix_multiplication/tbb.cpp
+@@ -773,11 +777,11 @@ add_executable(
+ )
+ target_include_directories(matrix_multiplication PRIVATE ${PROJECT_SOURCE_DIR}/3rd-party/CLI11)
+ target_link_libraries(
+-  matrix_multiplication 
+-  ${PROJECT_NAME} 
+-  Threads::Threads 
+-  ${TBB_IMPORTED_TARGETS} 
+-  ${OpenMP_CXX_LIBRARIES} 
++  matrix_multiplication
++  ${PROJECT_NAME}
++  Threads::Threads
++  ${TBB_IMPORTED_TARGETS}
++  ${OpenMP_CXX_LIBRARIES}
+   tf::default_settings
+ )
+ set_target_properties(matrix_multiplication PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+@@ -788,7 +792,7 @@ if(CMAKE_CUDA_COMPILER)
+ message(STATUS "cuda benchmark 1: heterogeneous traversal")
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TF_BENCHMARK_DIR}/hetero_traversal)
+ add_executable(
+-  hetero_traversal 
++  hetero_traversal
+   ${TF_BENCHMARK_DIR}/hetero_traversal/main.cu
+   ${TF_BENCHMARK_DIR}/hetero_traversal/taskflow.cu
+   ${TF_BENCHMARK_DIR}/hetero_traversal/tbb.cu
+@@ -796,11 +800,11 @@ add_executable(
+ )
+ target_include_directories(hetero_traversal PRIVATE ${PROJECT_SOURCE_DIR}/3rd-party/CLI11)
+ target_link_libraries(
+-  hetero_traversal 
+-  ${PROJECT_NAME} 
+-  Threads::Threads 
+-  ${TBB_IMPORTED_TARGETS} 
+-  ${OpenMP_CXX_LIBRARIES} 
++  hetero_traversal
++  ${PROJECT_NAME}
++  Threads::Threads
++  ${TBB_IMPORTED_TARGETS}
++  ${OpenMP_CXX_LIBRARIES}
+   tf::default_settings
+ )
+ set_target_properties(hetero_traversal PROPERTIES COMPILE_FLAGS "-Xcompiler ${OpenMP_CXX_FLAGS}")
+@@ -819,16 +823,16 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/taskflow DESTINATION ${TF_INC_INST
+ set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME ${PROJECT_NAME})
+ 
+ export(
+-  TARGETS ${PROJECT_NAME} 
+-  NAMESPACE ${PROJECT_NAME}:: 
++  TARGETS ${PROJECT_NAME}
++  NAMESPACE ${PROJECT_NAME}::
+   FILE ${PROJECT_NAME}Targets.cmake
+ )
+ export(PACKAGE ${PROJECT_NAME})
+ 
+ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets)
+ install(
+-  EXPORT ${PROJECT_NAME}Targets 
+-  NAMESPACE ${PROJECT_NAME}:: 
++  EXPORT ${PROJECT_NAME}Targets
++  NAMESPACE ${PROJECT_NAME}::
+   DESTINATION ${TF_LIB_INSTALL_DIR}/cmake
+ )
+ 
+@@ -836,20 +840,20 @@ install(
+ include(CMakePackageConfigHelpers)
+ 
+ configure_package_config_file(
+-  ${PROJECT_NAME}Config.cmake.in
++  TaskflowConfig.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+   INSTALL_DESTINATION ${TF_LIB_INSTALL_DIR}/cmake
+   PATH_VARS TF_INC_INSTALL_DIR
+ )
+ 
+ write_basic_package_version_file(
+-  ${PROJECT_NAME}ConfigVersion.cmake 
++  ${PROJECT_NAME}ConfigVersion.cmake
+   COMPATIBILITY SameMajorVersion
+ )
+ 
+ install(
+   FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+-  DESTINATION ${TF_LIB_INSTALL_DIR}/cmake 
++  DESTINATION ${TF_LIB_INSTALL_DIR}/cmake
+ )
+ 
