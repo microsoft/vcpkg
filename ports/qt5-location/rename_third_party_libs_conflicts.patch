@@ -1,0 +1,62 @@
+diff --git a/src/3rdparty/clip2tri/clip2tri.pro b/src/3rdparty/clip2tri/clip2tri.pro
+index 802c040..9746edb 100644
+--- a/src/3rdparty/clip2tri/clip2tri.pro
++++ b/src/3rdparty/clip2tri/clip2tri.pro
+@@ -18,5 +18,4 @@ gcc {
+ HEADERS += clip2tri.h
+ SOURCES += clip2tri.cpp
+ 
+-LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lpoly2tri$$qtPlatformTargetSuffix() -lclipper$$qtPlatformTargetSuffix()
+-
++LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lqtpoly2tri$$qtPlatformTargetSuffix() -lqtclipper$$qtPlatformTargetSuffix()
+diff --git a/src/3rdparty/clipper/clipper.pro b/src/3rdparty/clipper/clipper.pro
+index 874d55c..5abedf5 100644
+--- a/src/3rdparty/clipper/clipper.pro
++++ b/src/3rdparty/clipper/clipper.pro
+@@ -1,4 +1,4 @@
+-TARGET = clipper
++TARGET = qtclipper
+ 
+ CONFIG += staticlib exceptions warn_off optimize_full
+ 
+diff --git a/src/3rdparty/poly2tri/poly2tri.pro b/src/3rdparty/poly2tri/poly2tri.pro
+index 76f2779..a34696b 100644
+--- a/src/3rdparty/poly2tri/poly2tri.pro
++++ b/src/3rdparty/poly2tri/poly2tri.pro
+@@ -1,4 +1,4 @@
+-TARGET = poly2tri
++TARGET = qtpoly2tri
+ 
+ CONFIG += staticlib warn_off optimize_full
+ 
+diff --git a/src/location/declarativemaps/declarativemaps.pri b/src/location/declarativemaps/declarativemaps.pri
+index e2a922f..c3262c3 100644
+--- a/src/location/declarativemaps/declarativemaps.pri
++++ b/src/location/declarativemaps/declarativemaps.pri
+@@ -68,5 +68,4 @@ SOURCES += \
+         declarativemaps/qquickgeomapgesturearea.cpp
+ 
+ load(qt_build_paths)
+-LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lpoly2tri$$qtPlatformTargetSuffix() -lclip2tri$$qtPlatformTargetSuffix()
+-
++LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lqtpoly2tri$$qtPlatformTargetSuffix() -lclip2tri$$qtPlatformTargetSuffix()
+diff --git a/src/src.pro b/src/src.pro
+index 417e227..7e6a54f 100644
+--- a/src/src.pro
++++ b/src/src.pro
+@@ -5,11 +5,11 @@ include($$OUT_PWD/location/qtlocation-config.pri)
+ include($$OUT_PWD/positioning/qtpositioning-config.pri)
+ 
+ clip2tri.subdir = 3rdparty/clip2tri
+-poly2tri.subdir = 3rdparty/poly2tri
+-clipper.subdir = 3rdparty/clipper
++qtpoly2tri.subdir = 3rdparty/poly2tri
++qtclipper.subdir = 3rdparty/clipper
+ 
+-SUBDIRS += clip2tri clipper poly2tri
+-clip2tri.depends = clipper poly2tri
++SUBDIRS += clip2tri qtclipper qtpoly2tri
++clip2tri.depends = qtclipper qtpoly2tri
+ 
+ SUBDIRS += positioning
+ positioning.depends = clip2tri
