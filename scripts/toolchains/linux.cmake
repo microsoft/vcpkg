@@ -10,6 +10,26 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
    set(CMAKE_SYSTEM_PROCESSOR x86 CACHE STRING "")
    string(APPEND VCPKG_C_FLAGS " -m32")
    string(APPEND VCPKG_CXX_FLAGS " -m32")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(CMAKE_SYSTEM_PROCESSOR arm64 CACHE STRING "")
+    # Search and set aarch64 c compiler.
+    if(EXISTS "/usr/bin/aarch64-linux-gnu-gcc")
+        set(CMAKE_C_COMPILER "/usr/bin/aarch64-linux-gnu-gcc")
+    else()
+        # List all the aarch64 c compiler.
+        file(GLOB AARCH64_C_COMPILER_LIST LIST_DIRECTORIES false "/usr/bin" "aarch64*gcc-[1-9]*")
+        # Select the last listed compiler.
+        list(POP_BACK AARCH64_C_COMPILER_LIST CMAKE_C_COMPILER)
+    endif()
+    # Search and set aarch64 c++ compiler.
+    if(EXISTS "/usr/bin/aarch64-linux-gnu-g++")
+        set(CMAKE_CXX_COMPILER "/usr/bin/aarch64-linux-gnu-g++")
+    else()
+        # List all the aarch64 c compiler.
+        file(GLOB AARCH64_CXX_COMPILER_LIST LIST_DIRECTORIES false "/usr/bin" "aarch64*g++-[1-9]*")
+        # Select the last listed compiler.
+        list(POP_BACK AARCH64_CXX_COMPILER_LIST CMAKE_CXX_COMPILER)
+    endif()
 endif()
 
 get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
