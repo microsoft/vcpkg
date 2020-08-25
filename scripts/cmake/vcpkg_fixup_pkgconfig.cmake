@@ -125,9 +125,16 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
             # Ensure existance in current packages and installed
             find_library(CHECK_LIB_${LIBNAME}_${_config} NAMES "${LIBNAME}" PATHS ${SEARCH_PATHS} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
             if(NOT CHECK_LIB_${LIBNAME}_${_config})
-                message(FATAL_ERROR "CHECK_LIB_${LIBNAME}_${_config}=${CHECK_LIB_${LIBNAME}_${_config}}")
+                # Give time for filesystem to synchronize / antivirus to finish
+                execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 5)
+                find_library(CHECK_LIB_${LIBNAME}_${_config} NAMES "${LIBNAME}" PATHS ${SEARCH_PATHS} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
+                if(NOT CHECK_LIB_${LIBNAME}_${_config})
+                    message(FATAL_ERROR "find_library() failed with arguments:\n    find_library(CHECK_LIB_${LIBNAME}_${_config} NAMES \"${LIBNAME}\" PATHS ${SEARCH_PATHS} \"${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib\" NO_DEFAULT_PATH)")
+                else()
+                    debug_message("CHECK_LIB_${LIBNAME}_${_config}=${CHECK_LIB_${LIBNAME}_${_config}}")
+                endif()
             else()
-                debug_message(STATUS "CHECK_LIB_${LIBNAME}_${_config}=${CHECK_LIB_${LIBNAME}_${_config}}")
+                debug_message("CHECK_LIB_${LIBNAME}_${_config}=${CHECK_LIB_${LIBNAME}_${_config}}")
             endif()
         endif()
     endforeach()
