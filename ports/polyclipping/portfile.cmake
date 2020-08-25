@@ -13,12 +13,17 @@ vcpkg_from_sourceforge(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
+    OPTIONS
+         -DCMAKE_DEBUG_POSTFIX=d
 )
+
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/FindCLIPPER.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/clipper)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/clipper)
 
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

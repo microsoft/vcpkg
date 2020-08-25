@@ -11,3 +11,16 @@ index 3483f9c..57e149b 100644
    add_subdirectory(vcsl)
    add_subdirectory(vpgl)
  endif()
+diff --git a/core/vgl/vgl_clip.hxx b/core/vgl/vgl_clip.hxx
+index 9ff64f8..10c986a 100644
+--- a/core/vgl/vgl_clip.hxx
++++ b/core/vgl/vgl_clip.hxx
+@@ -144,7 +144,7 @@ namespace {
+ 
+ #elif HAS_CLIPPER
+ 
+-#include <clipper.hxx>
++#include <clipper.hpp>
+ 
+ namespace {
+   //: Creates a Clipper polygon from a vgl_polygon.

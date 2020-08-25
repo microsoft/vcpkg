@@ -1,7 +1,7 @@
 Source: vxl
 Version: 2.0.2
-Port-Version: 2
-Build-Depends: bzip2, expat, libgeotiff, libjpeg-turbo, libpng, shapelib, tiff, zlib
+Port-Version: 3
+Build-Depends: bzip2, expat, libgeotiff, libjpeg-turbo, libpng, polyclipping, shapelib, tiff, zlib
 Description: A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding.
 
 Feature: core-imaging

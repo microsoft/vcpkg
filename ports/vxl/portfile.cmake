@@ -30,8 +30,8 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DVXL_BUILD_CORE_IMAGING=${VXL_BUILD_CORE_IMAGING}
         -DVXL_FORCE_V3P_BZLIB2=OFF
-        -DVXL_USING_NATIVE_BZLIB2=TRUE # for disable build built-in bzip2 (v3p/bzlib/CMakeLists.txt#L10-L26)
-        -DVXL_FORCE_V3P_CLIPPER=ON # TODO : need add clipper port to turn off
+        -DVXL_USING_NATIVE_BZLIB2=TRUE # to disable building internal bzip2
+        -DVXL_FORCE_V3P_CLIPPER=OFF
         -DVXL_FORCE_V3P_DCMTK=OFF
         -DVXL_FORCE_V3P_GEOTIFF=OFF
         -DVXL_FORCE_V3P_J2K=OFF
