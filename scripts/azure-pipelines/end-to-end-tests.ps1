@@ -80,9 +80,9 @@ $CurrentTest = "zlib with spaces in path"
 Write-Host $CurrentTest
 ./vcpkg install zlib "--triplet" $Triplet `
     "--no-binarycaching" `
-    "--x-buildtrees-root=$TestingRoot/build trees" `
-    "--x-install-root=$TestingRoot/install ed" `
-    "--x-packages-root=$TestingRoot/packag es"
+    "--x-buildtrees-root=$TestingRoot/build Trees" `
+    "--x-install-root=$TestingRoot/instalL ed" `
+    "--x-packages-root=$TestingRoot/packaG es"
 Throw-IfFailed
 
 ##### Binary caching tests
