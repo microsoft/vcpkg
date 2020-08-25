@@ -74,6 +74,18 @@ function Throw-IfFailed {
     }
 }
 
+##### Test spaces in the path
+Refresh-TestRoot
+$CurrentTest = "zlib with spaces in path"
+Write-Host $CurrentTest
+./vcpkg install zlib "--triplet" $Triplet `
+    "--no-binarycaching" `
+    "--x-buildtrees-root=$TestingRoot/build Trees" `
+    "--x-install-root=$TestingRoot/instalL ed" `
+    "--x-packages-root=$TestingRoot/packaG es"
+Throw-IfFailed
+
+##### Binary caching tests
 if (-not $IsLinux -and -not $IsMacOS)
 {
     Refresh-TestRoot
