@@ -136,10 +136,7 @@ namespace vcpkg
         virtual const std::string& exe_stem() const = 0;
         virtual std::array<int, 3> default_min_version() const = 0;
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
-        {
-            (void)out_candidate_paths;
-        }
+        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const { (void)out_candidate_paths; }
         virtual Optional<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const = 0;
     };
 
