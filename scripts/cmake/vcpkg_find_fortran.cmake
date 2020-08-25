@@ -35,7 +35,7 @@ function(vcpkg_find_fortran additional_cmake_args_out)
             else()
                 message(FATAL_ERROR "Unknown architecture '${VCPKG_TARGET_ARCHITECTURE}' for MinGW Fortran build!")
             endif()
-            vcpkg_acquire_msys(MSYS_ROOT "mingw-w64-${MSYS_TARGET}-gcc-fortran")
+            vcpkg_acquire_msys(MSYS_ROOT PACKAGES "mingw-w64-${MSYS_TARGET}-gcc-fortran")
             set(MINGW_BIN "${MSYS_ROOT}/${MINGW_PATH}/bin")
             vcpkg_add_to_path(PREPEND "${MINGW_BIN}")
             list(APPEND ARGS_OUT -DCMAKE_GNUtoMS=ON

@@ -29,6 +29,8 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
         LOGNAME build-${TARGET_TRIPLET}
     )
+    
+    file(INSTALL ${SOURCE_PATH}/ffnvcodec.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 
 # Linux, etc.
 else()
@@ -46,8 +48,11 @@ else()
     # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where 
     # FFMpeg's call to pkgconfig expects to find it.
     file(INSTALL ${SOURCE_PATH}/ffnvcodec.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    file(INSTALL ${SOURCE_PATH}/ffnvcodec.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 endif()
 
 # Install the files to their default vcpkg locations
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 file(INSTALL ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+vcpkg_fixup_pkgconfig()

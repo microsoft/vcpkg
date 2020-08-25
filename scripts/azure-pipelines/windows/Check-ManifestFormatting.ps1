@@ -37,7 +37,7 @@ if (-not $IgnoreErrors -and $null -ne $changedFiles)
     $msg = @(
         "",
         "The formatting of the manifest files didn't match our expectation.",
-        "See https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#manifest for solution."
+        "See github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#manifest for solution."
     )
     $msg += ""
 

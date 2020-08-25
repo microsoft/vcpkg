@@ -24,6 +24,9 @@
 ## The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
 ## be passed.
 ##
+## ### DISABLE_PARALLEL
+## The underlying buildsystem will be instructed to not parallelize
+##
 ## ## Notes:
 ## This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
 ## You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your CMake script supports the
@@ -36,7 +39,7 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT;BUILD_TARGET" "" ${ARGN})
+    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -64,6 +67,7 @@ function(vcpkg_build_make)
         find_program(MAKE make REQUIRED)
         set(MAKE_COMMAND "${MAKE}")
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f Makefile ${_bc_BUILD_TARGET})
+        set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} -j 1 --trace -f Makefile ${_bc_BUILD_TARGET})
 
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
@@ -75,6 +79,7 @@ function(vcpkg_build_make)
         set(MAKE_COMMAND "${MAKE}")
         # Set make command and install command
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f Makefile ${_bc_BUILD_TARGET})
+        set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j 1 -f Makefile ${_bc_BUILD_TARGET})
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
 
@@ -118,14 +123,25 @@ function(vcpkg_build_make)
 
             if(MAKE_BASH)
                 set(MAKE_CMD_LINE "${MAKE_COMMAND} ${MAKE_OPTS}")
+                set(NO_PARALLEL_MAKE_CMD_LINE "${MAKE_COMMAND} ${NO_PARALLEL_MAKE_OPTS}")
             else()
                 set(MAKE_CMD_LINE ${MAKE_COMMAND} ${MAKE_OPTS})
+                set(NO_PARALLEL_MAKE_CMD_LINE ${MAKE_COMMAND} ${NO_PARALLEL_MAKE_OPTS})
             endif()
+            if (_bc_DISABLE_PARALLEL)
+                vcpkg_execute_build_process(
+                        COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
+                        WORKING_DIRECTORY "${WORKING_DIRECTORY}"
+                        LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                )
+            else()
             vcpkg_execute_build_process(
                     COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
+                    NO_PARALLEL_COMMAND ${MAKE_BASH} ${NO_PARALLEL_MAKE_CMD_LINE}
                     WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                )
+            )
+            endif()
 
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")

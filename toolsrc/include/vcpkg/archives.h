@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vcpkg/base/files.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
 
-#include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/base/files.h>
 
 namespace vcpkg::Archives
 {
