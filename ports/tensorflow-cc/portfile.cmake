@@ -4,6 +4,8 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
 	message(FATAL_ERROR "TensorFlow does not support 32bit systems.")
 endif()
 
+set(TF_VERSION 2.3.0)
+
 set(STATIC_ONLY_PATCHES "")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	set(STATIC_ONLY_PATCHES change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
@@ -11,7 +13,7 @@ endif()
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO tensorflow/tensorflow
-	REF v2.3.0
+	REF "v${TF_VERSION}"
 	SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
 	HEAD_REF master
 	PATCHES
@@ -50,12 +52,12 @@ else()
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy1-${TARGET_TRIPLET})
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
 endif()
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 
 # check if numpy can be loaded
-vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy2-${TARGET_TRIPLET})
+vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
 
 # tensorflow has long file names, which will not work on windows
 set(ENV{TEST_TMPDIR} ${BUILDTREES_DIR}/.bzl)
@@ -85,6 +87,34 @@ set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
 
 file(GLOB SOURCES ${SOURCE_PATH}/*)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+	set(BAZEL_LIB_NAME tensorflow_cc.dll)
+	set(SCRIPT_SUFFIX windows)
+	set(STATIC_LINK_CMD static_link.bat)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+	set(BAZEL_LIB_NAME libtensorflow_cc.dylib)
+	set(SCRIPT_SUFFIX macos)
+	set(STATIC_LINK_CMD sh static_link.sh)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+		set(TF_LIB_NAME "libtensorflow_cc.${TF_VERSION}.dylib")
+		set(TF_FRAMEWORK_NAME "libtensorflow_framework.${TF_VERSION}.dylib")
+	else()
+		set(TF_LIB_NAME "libtensorflow_cc.${TF_VERSION}.a")
+		set(TF_FRAMEWORK_NAME "libtensorflow_framework.${TF_VERSION}.a")
+	endif()
+else()
+	set(BAZEL_LIB_NAME libtensorflow_cc.so)
+	set(SCRIPT_SUFFIX linux)
+	set(STATIC_LINK_CMD sh static_link.sh)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+		set(TF_LIB_NAME "libtensorflow_cc.so.${TF_VERSION}")
+		set(TF_FRAMEWORK_NAME "libtensorflow_framework.so.${TF_VERSION}")
+	else()
+		set(TF_LIB_NAME "libtensorflow_cc.a.${TF_VERSION}")
+		set(TF_FRAMEWORK_NAME "libtensorflow_framework.a.${TF_VERSION}")
+	endif()
+endif()
 
 set(N_DBG_LIB_PARTS 0)
 foreach(BUILD_TYPE dbg rel)
@@ -126,14 +156,22 @@ foreach(BUILD_TYPE dbg rel)
 		set(BUILD_OPTS "--compilation_mode=opt")
 	endif()
 
-	if(VCPKG_TARGET_IS_WINDOWS)
-		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+		if(VCPKG_TARGET_IS_WINDOWS)
 			vcpkg_execute_build_process(
 				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
+			vcpkg_execute_build_process(
+				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
+				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
+			)
+		endif()
+	else()
+		if(VCPKG_TARGET_IS_WINDOWS)
 			if(VCPKG_CRT_LINKAGE STREQUAL static)
 				if(BUILD_TYPE STREQUAL dbg)
 					set(CRT_OPT "-MTd")
@@ -146,80 +184,28 @@ foreach(BUILD_TYPE dbg rel)
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
-			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_windows.py" "${N_DBG_LIB_PARTS}"
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_windows.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" # for some reason stdout of bazel ends up in stderr
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-			vcpkg_execute_build_process(
-				COMMAND static_link.bat
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME postbuild3-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-		endif()
-	elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
-		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.dylib //tensorflow:install_headers
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.dylib //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_macos.py"
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_macos.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" # for some reason stdout of bazel ends up in stderr
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-			vcpkg_execute_build_process(
-				COMMAND sh static_link.sh
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME postbuild3-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		endif()
-	else()
-		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-		else()
-			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_linux.py"
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_linux.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" # for some reason stdout of bazel ends up in stderr
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-			vcpkg_execute_build_process(
-				COMMAND sh static_link.sh
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME postbuild3-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-		endif()
+		vcpkg_execute_build_process(
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${SCRIPT_SUFFIX}.py" "${N_DBG_LIB_PARTS}"
+			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+			LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
+		)
+		vcpkg_execute_build_process(
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${SCRIPT_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" # for some reason stdout of bazel ends up in stderr
+			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
+			LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
+		)
+		vcpkg_execute_build_process(
+			COMMAND ${STATIC_LINK_CMD}
+			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
+			LOGNAME postbuild3-${TARGET_TRIPLET}-${BUILD_TYPE}
+		)
 	endif()
 
 	if(BUILD_TYPE STREQUAL dbg)
@@ -252,30 +238,9 @@ foreach(BUILD_TYPE dbg rel)
 				endif()
 			endforeach()
 		endif()
-	elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
-		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.2.3.0.dylib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.2.3.0.dylib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			set(TF_LIB_NAME libtensorflow_cc.2.3.0.dylib)
-			set(TF_FRAMEWORK_NAME libtensorflow_framework.2.3.0.dylib)
-		else()
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.2.3.0.a DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.2.3.0.a DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			set(TF_LIB_NAME libtensorflow_cc.2.3.0.a)
-			set(TF_FRAMEWORK_NAME libtensorflow_framework.2.3.0.dylib)
-		endif()
 	else()
-		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.so.2.3.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.so.2.3.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			set(TF_LIB_NAME libtensorflow_cc.so.2.3.0)
-			set(TF_FRAMEWORK_NAME libtensorflow_framework.so.2.3.0)
-		else()
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_cc.a.2.3.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/libtensorflow_framework.a.2.3.0 DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			set(TF_LIB_NAME libtensorflow_cc.a.2.3.0)
-			set(TF_FRAMEWORK_NAME libtensorflow_framework.so.2.3.0)
-		endif()
+		file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_LIB_NAME} DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+		file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_FRAMEWORK_NAME} DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
 	endif()
 endforeach()
 
