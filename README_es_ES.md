@@ -18,7 +18,7 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
 
 [![Estado de compilación](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
-## Tabla de contenidos
+## Tabla de contenido
 
 * [Vcpkg: General](#vcpkg-general)
 * [Tabla de contenidos](#tabla-de-contenidos)
