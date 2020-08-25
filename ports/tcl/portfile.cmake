@@ -71,7 +71,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         )
         file(REMOVE ${TOOL_EXES})
 
-        file(GLOB_RECURSE TOOL
+        file(GLOB_RECURSE TOOLS
                 ${CURRENT_PACKAGES_DIR}/lib/dde1.4/*
                 ${CURRENT_PACKAGES_DIR}/lib/nmake/*
                 ${CURRENT_PACKAGES_DIR}/lib/reg1.3/*
