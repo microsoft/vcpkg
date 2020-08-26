@@ -34,14 +34,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     #Setup YASM integration
     set(_file "${SOURCE_PATH}/SMP/libgmp.vcxproj")
     file(READ "${_file}" _contents)
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
+    string(REGEX REPLACE [[<Import Project="[^"]*yasm.props" />]]
                      "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
                     _contents "${_contents}")
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
+    string(REGEX REPLACE [[<Import Project="[^"]*yasm.targets" />]]
                      "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                     _contents "${_contents}")
-    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already replaced by another triplet
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
         STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
     else()
@@ -56,14 +55,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PROJECT_SUBPATH SMP/libgmp.sln
         PLATFORM ${TRIPLET_SYSTEM_ARCH}
         LICENSE_SUBPATH COPYING.LESSERv3
-        TARGET Rebuild
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
         SKIP_CLEAN
         OPTIONS /p:UseEnv=True
     )
-    get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
+    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
     set(PACKAGE_VERSION 6.2.0)
     set(PACKAGE_NAME gmp)
     set(prefix "${CURRENT_INSTALLED_DIR}")
