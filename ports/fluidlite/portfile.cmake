@@ -1,3 +1,7 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/fluidsynth/settings.h")
+  message(FATAL_ERROR "Can't build fluidlite if fluidsynth is installed. Please remove fluidsynth, and try to install fluidlite again if you need it.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO divideconcept/FluidLite
