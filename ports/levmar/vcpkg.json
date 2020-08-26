@@ -1,0 +1,6 @@
+{
+  "name": "levmar",
+  "version-string": "2.6",
+  "homepage": "http://users.ics.forth.gr/~lourakis/levmar/",
+  "description": "Levenberg-Marquardt nonlinear least squares optimization algorithm"
+}
