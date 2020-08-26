@@ -207,7 +207,7 @@ namespace
 
             for (auto&& action : plan.install_actions)
             {
-                if (action.build_options.editable == Build::Editable::YES) continue;
+                if (!action.has_package_abi()) continue;
 
                 auto& spec = action.spec;
                 fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
