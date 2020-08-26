@@ -28,6 +28,7 @@ jobs:
       brew list gfortran || brew cask install gfortran
       brew list mono || brew install mono
       brew list yasm || brew install yasm
+      brew list gettext || brew install gettext
     displayName: 'Install brew dependencies'
   - bash: |
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} || 0
