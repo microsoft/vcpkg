@@ -27,63 +27,44 @@ if(VCPKG_TARGET_IS_WINDOWS)
         string(APPEND CONFIGURATION_DEBUG WinRT)
     endif()
 
-    #Setup YASM integration 
-    set(_file "${SOURCE_PATH}/SMP/libnettle.vcxproj")
-    file(READ "${_file}" _contents)
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
-                    _contents "${_contents}")
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
-                    _contents "${_contents}")
-    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already replaced by another triplet
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
-        STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
-    else()
-        STRING(REPLACE ">MultiThreadedDebug<" ">MultiThreadedDebugDLL<" _contents "${_contents}")
-        STRING(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" _contents "${_contents}")
-    endif()
-    file(WRITE "${_file}" "${_contents}")
-    set(_file "${SOURCE_PATH}/SMP/libhogweed.vcxproj")
-    file(READ "${_file}" _contents)
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
-                    _contents "${_contents}")
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
-                    _contents "${_contents}")
-    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already replaced by another triplet
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
-        STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
-    else()
-        STRING(REPLACE ">MultiThreadedDebug<" ">MultiThreadedDebugDLL<" _contents "${_contents}")
-        STRING(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" _contents "${_contents}")
-    endif()
-    file(WRITE "${_file}" "${_contents}")
-    
+    #Setup YASM integration
+    foreach(_file "${SOURCE_PATH}/SMP/libnettle.vcxproj" "${SOURCE_PATH}/SMP/libhogweed.vcxproj")
+        file(READ "${_file}" _contents)
+        string(REGEX REPLACE [[<Import Project="[^"]*yasm.props" />]]
+                            "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
+                        _contents "${_contents}")
+        string(REGEX REPLACE [[<Import Project="[^"]*yasm.targets" />]]
+                            "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
+                        _contents "${_contents}")
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+            STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
+            STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
+        else()
+            STRING(REPLACE ">MultiThreadedDebug<" ">MultiThreadedDebugDLL<" _contents "${_contents}")
+            STRING(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" _contents "${_contents}")
+        endif()
+        file(WRITE "${_file}" "${_contents}")
+    endforeach()
+
     vcpkg_install_msbuild(
         USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH SMP/libnettle.sln
         PLATFORM ${TRIPLET_SYSTEM_ARCH}
         LICENSE_SUBPATH COPYING.LESSERv3
-        TARGET Rebuild
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
         SKIP_CLEAN
         OPTIONS /p:UseEnv=True
     )
 
-    get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
+    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
     set(PACKAGE_VERSION 3.5.1)
     set(prefix "${CURRENT_INSTALLED_DIR}")
     set(exec_prefix "\${prefix}")
     set(libdir "\${prefix}/lib")
     set(includedir "\${prefix}/include")
-    set(LIBS -lnettle -lgmp)
+    set(LIBS "-lnettle -lgmp")
     configure_file("${SOURCE_PATH}/nettle.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/nettle.pc" @ONLY)
     set(HOGWEED -lhogweed)
     set(LIBS -lnettle)
@@ -92,7 +73,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(exec_prefix "\${prefix}")
     set(libdir "\${prefix}/lib")
     set(includedir "\${prefix}/../include")
-    set(LIBS -lnettled -lgmpd)
+    set(LIBS "-lnettled -lgmpd")
     configure_file("${SOURCE_PATH}/nettle.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/nettle.pc" @ONLY)
     set(LIBS -lnettled)
     set(HOGWEED -lhogweedd)
