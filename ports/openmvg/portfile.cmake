@@ -3,6 +3,10 @@ vcpkg_buildpath_length_warning(37)
 #the port produces some empty dlls when building shared libraries, since some components do not export anything, breaking the internal build itself
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if("software" IN_LIST FEATURES AND VCPKG_CRT_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "OpenMVG software currently cannot be built with static CRT linking. Please open an issue if you require this feature.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openMVG/openMVG
