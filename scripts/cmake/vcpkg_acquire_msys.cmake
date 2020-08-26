@@ -281,24 +281,21 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   string(SHA512 TOTAL_HASH "${TOTAL_HASH}")
   string(SUBSTRING "${TOTAL_HASH}" 0 16 TOTAL_HASH)
   set(PATH_TO_ROOT ${DOWNLOADS}/tools/msys2/${TOTAL_HASH})
-  set(${PATH_TO_ROOT_OUT} ${PATH_TO_ROOT} PARENT_SCOPE)
-  if(EXISTS "${PATH_TO_ROOT}")
-    message(STATUS "Using msys root at ${DOWNLOADS}/tools/msys2/${TOTAL_HASH}")
-    return()
+  if(NOT EXISTS "${PATH_TO_ROOT}")
+    file(REMOVE_RECURSE ${PATH_TO_ROOT}.tmp)
+    file(MAKE_DIRECTORY ${PATH_TO_ROOT}.tmp/tmp)
+    set(I 0)
+    foreach(ARCHIVE IN LISTS ARCHIVES)
+      vcpkg_execute_required_process(
+        ALLOW_IN_DOWNLOAD_MODE
+        COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE}
+        LOGNAME msys-${TARGET_TRIPLET}-${I}
+        WORKING_DIRECTORY ${PATH_TO_ROOT}.tmp
+      )
+      math(EXPR I "${I} + 1")
+    endforeach()
+    file(RENAME ${PATH_TO_ROOT}.tmp ${PATH_TO_ROOT})
   endif()
-
-  file(REMOVE_RECURSE ${PATH_TO_ROOT}.tmp)
-  file(MAKE_DIRECTORY ${PATH_TO_ROOT}.tmp/tmp)
-  foreach(ARCHIVE IN LISTS ARCHIVES)
-    _execute_process(
-      COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE}
-      RESULT_VARIABLE err
-      WORKING_DIRECTORY ${PATH_TO_ROOT}.tmp
-    )
-    if(err)
-      message(FATAL_ERROR "Failure while unpacking ${ARCHIVE} for vcpkg_acquire_msys(PACKAGES ${_am_PACKAGES}).")
-    endif()
-  endforeach()
-  file(RENAME ${PATH_TO_ROOT}.tmp ${PATH_TO_ROOT})
   message(STATUS "Using msys root at ${DOWNLOADS}/tools/msys2/${TOTAL_HASH}")
+  set(${PATH_TO_ROOT_OUT} ${PATH_TO_ROOT} PARENT_SCOPE)
 endfunction()

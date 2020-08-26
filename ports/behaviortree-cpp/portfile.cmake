@@ -13,23 +13,22 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
         001_port_fixes.patch
+        002_fix_dependencies.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_ZMQ=1
-        -DBUILD_UNIT_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_ament_cmake=1
         -DCMAKE_DISABLE_FIND_PACKAGE_Curses=1
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_UNIT_TESTS=OFF
+        -DBUILD_TOOLS=OFF
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/BehaviorTreeV3/cmake TARGET_PATH share/behaviortreev3)
-
-vcpkg_copy_tools(TOOL_NAMES bt3_log_cat bt3_plugin_manifest AUTO_CLEAN)
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

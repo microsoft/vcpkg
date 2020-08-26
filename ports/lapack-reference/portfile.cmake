@@ -24,6 +24,9 @@ endif()
 set(CBLAS OFF)
 if("cblas" IN_LIST FEATURES)
     set(CBLAS ON)
+    if("noblas" IN_LIST FEATURES)
+        message(FATAL_ERROR "Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas!")
+    endif()
 endif()
 
 set(USE_OPTIMIZED_BLAS OFF) 
@@ -59,11 +62,52 @@ vcpkg_configure_cmake(
         OPTIONS
             "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
             "-DCBLAS=${CBLAS}"
-            "${FORTRAN_CMAKE}"
+            ${FORTRAN_CMAKE}
         )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
+
+set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
+if(EXISTS "${pcfile}")
+    file(READ "${pcfile}" _contents)
+    set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
+    file(WRITE "${pcfile}" "${_contents}")
+endif()
+set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc")
+if(EXISTS "${pcfile}")
+    file(READ "${pcfile}" _contents)
+    set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
+    file(WRITE "${pcfile}" "${_contents}")
+endif()
+if(NOT USE_OPTIMIZED_BLAS)
+    set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc")
+    if(EXISTS "${pcfile}")
+        file(READ "${pcfile}" _contents)
+        set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
+        file(WRITE "${pcfile}" "${_contents}")
+    endif()
+    set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc")
+    if(EXISTS "${pcfile}")
+        file(READ "${pcfile}" _contents)
+        set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
+        file(WRITE "${pcfile}" "${_contents}")
+    endif()
+endif()
+if("cblas" IN_LIST FEATURES)
+    set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cblas.pc")
+    if(EXISTS "${pcfile}")
+        file(READ "${pcfile}" _contents)
+        set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
+        file(WRITE "${pcfile}" "${_contents}")
+    endif()
+    set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cblas.pc")
+    if(EXISTS "${pcfile}")
+        file(READ "${pcfile}" _contents)
+        set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
+        file(WRITE "${pcfile}" "${_contents}")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
 
 # Handle copyright
