@@ -35,23 +35,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB EXE ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-    file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE ${EXE})
-
-    file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-    file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE ${DEBUG_EXE})
-
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake
-        "lib/pangolin.dll" "bin/pangolin.dll"
-    )
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake
-        "lib/pangolin.dll" "bin/pangolin.dll"
-    )
-endif()
-
 if(VCPKG_TARGET_IS_WINDOWS)
     # Copy missing header file
     file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/pangolin)
