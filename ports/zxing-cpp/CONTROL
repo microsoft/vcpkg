@@ -1,7 +1,9 @@
 Source: zxing-cpp
-Version: 3.3.3-7
+Version: 3.3.3
+Port-Version: 8
 Homepage: https://github.com/glassechidna/zxing-cpp
 Description: Barcode detection and decoding library.
+Build-Depends: bigint
 Default-Features: opencv, iconv
 
 Feature: opencv
