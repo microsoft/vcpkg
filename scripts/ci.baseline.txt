@@ -153,6 +153,11 @@ caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
 cairomm:x64-linux=fail
+# capnproto currently triggers an ICE
+capnproto:x86-windows=fail
+capnproto:x64-windows=fail
+capnproto:x64-windows-static=fail
+# capnproto doesn't support arm, arm64, or UWP
 capnproto:arm64-windows=fail
 capnproto:arm-uwp=fail
 capnproto:x64-uwp=fail
