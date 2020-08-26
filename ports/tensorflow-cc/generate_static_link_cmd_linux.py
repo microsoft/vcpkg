@@ -3,8 +3,8 @@ import sys
 
 with open(sys.argv[1], "r") as f_in:
     with open("static_link.sh", "w") as f_out:
-        p_linker1 = re.compile("^\\s*(.+)gcc.+-shared.+-o (bazel-out\\S+libtensorflow_cc\\.so\\.1\\.14\\.0).+(@bazel-out\\S+libtensorflow_cc\\.so\\.1\\.14\\.0-2\\.params).*")
-        p_linker2 = re.compile("^\\s*(.+)gcc.+-shared.+-o (bazel-out\\S+libtensorflow_framework\\.so\\.1\\.14\\.0).+(@bazel-out\\S+libtensorflow_framework\\.so\\.1\\.14\\.0-2\\.params).*")
+        p_linker1 = re.compile("^\\s*(.+)gcc.+-shared.+-o (bazel-out\\S+libtensorflow_cc\\.so\\.2\\.3\\.0).+(@bazel-out\\S+libtensorflow_cc\\.so\\.2\\.3\\.0-2\\.params).*")
+        p_linker2 = re.compile("^\\s*(.+)gcc.+-shared.+-o (bazel-out\\S+libtensorflow_framework\\.so\\.2\\.3\\.0).+(@bazel-out\\S+libtensorflow_framework\\.so\\.2\\.3\\.0-2\\.params).*")
         f_out.write("#!/bin/bash\n# note: ar/binutils version 2.27 required to support output files > 4GB\n")
         env = []
         found1 = False

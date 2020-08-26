@@ -1,6 +1,6 @@
 for sub in ("cc", "framework"):
-    with open("libtensorflow_" + sub + ".so.1.14.0-2.params", "r") as f_in:
-        with open("libtensorflow_" + sub + ".a.1.14.0-2.params", "w") as f_out:
+    with open("libtensorflow_" + sub + ".so.2.3.0-2.params", "r") as f_in:
+        with open("libtensorflow_" + sub + ".a.2.3.0-2.params", "w") as f_out:
             for line in f_in:
                 if line.startswith("-o "):
                     line = line.replace(".so", ".a")
