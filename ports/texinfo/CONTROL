@@ -1,0 +1,5 @@
+Source: texinfo
+Version: 6.7
+Homepage: https://www.gnu.org/software/texinfo/
+Description: Texinfo is the official documentation format of the GNU project.
+Supports: !(uwp|windows|osx)
