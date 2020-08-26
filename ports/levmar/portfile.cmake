@@ -1,6 +1,6 @@
 vcpkg_fail_port_install(MESSAGE "levmar currently only checked on Windows and static" 
 	ON_TARGET "OSX" "Linux" "UWP"
-	ON_LIBRARY_LINKAGE "static"
+	ON_LIBRARY_LINKAGE "dynamic"
 )
 
 vcpkg_download_distfile(ARCHIVE
