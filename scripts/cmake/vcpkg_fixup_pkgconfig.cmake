@@ -106,7 +106,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
     endif()
     set(SEARCH_PATHS)
-    string(REGEX MATCHALL "([^ \t\\\\]+|\\\\.)+" LIBS_ARGS "${_pkg_libs_output}")
+    string(REGEX MATCHALL "([^ \t\\\\]+|\\\\.)+|\"([^\"\\\\]+|\\\\.)+\"" LIBS_ARGS "${_pkg_libs_output}")
     foreach(LIBS_ARG IN LISTS LIBS_ARGS)
         string(REGEX REPLACE "\\\\(.)" "\\1" LIBS_ARG "${LIBS_ARG}")
         debug_message("pkg-config processing '${LIBS_ARG}'")
@@ -186,6 +186,9 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "${_VCPKG_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE " -L(\\\${[^}]*}[^ \n\t]*)" " -L\"\\1\"" _contents "${_contents}")
+        string(REGEX REPLACE " -I(\\\${[^}]*}[^ \n\t]*)" " -I\"\\1\"" _contents "${_contents}")
+        string(REGEX REPLACE " -l(\\\${[^}]*}[^ \n\t]*)" " -l\"\\1\"" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
     endforeach()
 
@@ -216,6 +219,9 @@ function(vcpkg_fixup_pkgconfig)
         string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
+        string(REGEX REPLACE " -L(\\\${[^}]*}[^ \n\t]*)" " -L\"\\1\"" _contents "${_contents}")
+        string(REGEX REPLACE " -I(\\\${[^}]*}[^ \n\t]*)" " -I\"\\1\"" _contents "${_contents}")
+        string(REGEX REPLACE " -l(\\\${[^}]*}[^ \n\t]*)" " -l\"\\1\"" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
     endforeach()
 
