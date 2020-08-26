@@ -3,27 +3,15 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrogier/ocilib
-    REF v4.6.4
-    SHA512 83f5614a23c8fb4ab02517dec95d8b490c5ef472302735d5cc4cf483cc51513cc81ae2e1b4618c7c73fb5b071efe422e463b46fa79492ccb4775b511a943295a
+    REF 46ea6532e9ae0cf43ecc11dc2ca6542238b3d34d      #v4.7.0
+    SHA512 35fc78ab807666f4c3713d2b2f1fb8c75391b33eca0d576c35f832a17492e5b9df2b71bebbf2ebc348259de3f5d7954b039f211aa5d01f91385943d1cdafc917
     HEAD_REF master
-    PATCHES
-        out_of_source_build_version_file_configure.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-        set(SOLUTION_TYPE vs2019)
-        set(OCILIB_ARCH_X86 x86)
-        set(OCILIB_ARCH_X64 x64)
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(SOLUTION_TYPE vs2017)
-        set(OCILIB_ARCH_X86 Win32)
-        set(OCILIB_ARCH_X64 Win64)
-    else()
-        set(SOLUTION_TYPE vs2015)
-        set(OCILIB_ARCH_X86 Win32)
-        set(OCILIB_ARCH_X64 Win64)
-    endif()
+    set(SOLUTION_TYPE vs2019)
+    set(OCILIB_ARCH_X86 x86)
+    set(OCILIB_ARCH_X64 x64)
     
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         set(PLATFORM ${OCILIB_ARCH_X86})
@@ -46,6 +34,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug)
     file(COPY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
 else()
     vcpkg_configure_make(
         COPY_SOURCE
