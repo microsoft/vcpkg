@@ -64,7 +64,7 @@ namespace vcpkg::Commands::Version
 #if defined(_WIN32)
                     auto bootstrap = ".\\bootstrap-vcpkg.bat";
 #else
-                    auto bootstrap = ".\/bootstrap-vcpkg.sh";
+                    auto bootstrap = "./bootstrap-vcpkg.sh";
 #endif
                     System::printf(System::Color::warning,
                                    "Warning: Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
@@ -90,8 +90,7 @@ namespace vcpkg::Commands::Version
 
     void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem&)
     {
-        (void)(args.parse_arguments(COMMAND_STRUCTURE));
-
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         System::print2("Vcpkg package management program version ",
                        version(),
                        "\n"
