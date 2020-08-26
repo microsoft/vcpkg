@@ -58,6 +58,10 @@ else()
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 
+	if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+		vcpkg_execute_required_process(COMMAND sudo apt-get -y install python3-pip WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME install-pip-${TARGET_TRIPLET})
+	endif()
+
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
 endif()
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
