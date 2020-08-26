@@ -422,6 +422,16 @@ flint:x64-osx=fail
 fltk:arm-uwp=fail
 fltk:x64-uwp=fail
 fluidsynth:x64-osx=fail
+# fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
+# fluidlite has no dependencies and thus is less likely to be broken by another package.
+fluidlite:arm-uwp=skip
+fluidlite:arm64-windows=skip
+fluidlite:x64-linux=skip
+fluidlite:x64-osx=skip
+fluidlite:x64-uwp=skip
+fluidlite:x64-windows-static=skip
+fluidlite:x64-windows=skip
+fluidlite:x86-windows=skip
 fmem:arm-uwp=fail
 fmem:x64-uwp=fail
 fmi4cpp:arm-uwp=fail
