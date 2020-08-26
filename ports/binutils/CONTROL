@@ -2,3 +2,4 @@ Source: binutils
 Version: 2.34
 Homepage: http://www.gnu.org/software/binutils/
 Description: The GNU Binutils are a collection of binary tools.
+Supports: !(uwp|windows|osx)

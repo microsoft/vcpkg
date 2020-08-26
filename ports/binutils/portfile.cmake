@@ -1,7 +1,5 @@
 vcpkg_fail_port_install(ON_TARGET "OSX" "Windows" "UWP")
 
-include(vcpkg_common_functions)
-
 set(TARGET_VERSION 2.34)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnu.org/gnu/binutils/binutils-${TARGET_VERSION}.tar.xz"
@@ -28,5 +26,4 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/binutils/copyright)
-
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
