@@ -1,27 +1,21 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO erikd/libsndfile
-    REF 6830c421899e32f8d413a903a21a9b6cf384d369
-    SHA512 b13c5d7bc27218eff8a8c4ce89a964b4920b1d3946e4843e60be965d77ec205845750a82bf654a7c2c772bf3a24f6ff5706881b24ff12115f2525c8134b6d0b9
+    REF v1.0.29
+    SHA512 ff19e8cea629af9dea51c79f3446f7a63520525c8578c56b8b4b7a6f0ce07d2458ca488f0be9daeaf9ea3a1124b1fa7cac9a3b313b1ae1f43c76de852a10eed5
     HEAD_REF master
-    PATCHES
-        uwp-createfile-getfilesize.patch
-        uwp-createfile-getfilesize-addendum.patch
-        fix-install-path.patch
+    PATCHES 0001-Improve-UWP-support.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" CRT_LIB_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
-option(BUILD_EXECUTABLES "Build sndfile tools and install to folder tools" OFF)
-
-if("external-libs" IN_LIST FEATURES)
-    set(SNDFILE_WITHOUT_EXTERNAL_LIBS OFF)
-else()
-    set(SNDFILE_WITHOUT_EXTERNAL_LIBS ON)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_find_acquire_program(PYTHON3)
 endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES external-libs ENABLE_EXTERNAL_LIBS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -31,49 +25,27 @@ vcpkg_configure_cmake(
         -DBUILD_REGTEST=OFF
         -DBUILD_TESTING=OFF
         -DENABLE_BOW_DOCS=OFF
+        -DBUILD_PROGRAMS=OFF
         -DENABLE_STATIC_RUNTIME=${CRT_LIB_STATIC}
-        -DBUILD_STATIC_LIBS=${BUILD_STATIC}
-        -DDISABLE_EXTERNAL_LIBS=${SNDFILE_WITHOUT_EXTERNAL_LIBS}
-    OPTIONS_RELEASE
-        -DBUILD_PROGRAMS=${BUILD_EXECUTABLES}
-    OPTIONS_DEBUG
-        -DBUILD_PROGRAMS=0
+        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
+        -DPYTHON_EXECUTABLE=${PYTHON3}
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_install_cmake() 
 
-# Fix applied for 6830c421899e32f8d413a903a21a9b6cf384d369
-file(READ "${CURRENT_PACKAGES_DIR}/share/libsndfile/LibSndFileTargets.cmake" _contents)
-string(REPLACE "INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/lib\"" "INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/include\"" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/libsndfile/LibSndFileTargets.cmake" "${_contents}")
+if(WIN32 AND (NOT MINGW) AND (NOT CYGWIN))
+    set(CONFIG_PATH cmake)
+else()
+    set(CONFIG_PATH lib/cmake/SndFile)
+endif()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH ${CONFIG_PATH} TARGET_PATH share/SndFile)
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
-
-if(CMAKE_HOST_WIN32)
-    set(EXECUTABLE_SUFFIX ".exe")
-    set(SHARED_LIB_SUFFIX ".dll")
-else()
-    set(EXECUTABLE_SUFFIX)
-    set(SHARED_LIB_SUFFIX)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/libsndfile-1${SHARED_LIB_SUFFIX})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/libnsdfile-1${SHARED_LIB_SUFFIX})
-endif()
-
-if(BUILD_EXECUTABLES)
-    file(GLOB TOOLS ${CURRENT_PACKAGES_DIR}/bin/*${EXECUTABLE_SUFFIX})
-    file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    file(REMOVE ${TOOLS})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-endif(BUILD_EXECUTABLES)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
