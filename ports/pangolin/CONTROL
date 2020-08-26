@@ -1,5 +1,5 @@
 Source: pangolin
-Version: 0.5
+Version: 0.5-1
 Port-Version: 9
 Build-Depends: eigen3, glew, libpng, libjpeg-turbo, ffmpeg
 Homepage: https://github.com/stevenlovegrove/Pangolin
