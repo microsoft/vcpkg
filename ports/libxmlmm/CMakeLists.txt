@@ -38,7 +38,7 @@ set(SOURCES_LIBXMLMM
 )
 
 add_library(libxmlmm ${SOURCES_LIBXMLMM})
-include_directories(${LIBXML2_INCLUDE_DIRS})
+include_directories(${LIBXML2_INCLUDE_DIR})
 target_link_libraries (libxmlmm ${LIBXML2_LIBRARIES})
 
 set_target_properties(libxmlmm PROPERTIES
