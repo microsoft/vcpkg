@@ -254,7 +254,7 @@ and go to the CMake settings (Build, Execution, Deployment > CMake).
 Finally, in `CMake options`, add the following line:
 
 ```
--DCMAKE_TOOLCHAIN_FILE=C:/Users/nimazzuc/src/vcpkg/scripts/buildsystems/vcpkg.cmake
+-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 Unfortunately, you'll have to add this to each profile.

@@ -260,7 +260,7 @@ namespace vcpkg::Dependencies
 #if defined(_WIN32)
                 auto vcpkg_remove_cmd = ".\\vcpkg";
 #else
-                auto vcpkg_remove_cmd = ".\/vcpkg";
+                auto vcpkg_remove_cmd = "./vcpkg";
 #endif
                 if (!maybe_scfl)
                     Checks::exit_with_message(
@@ -420,6 +420,11 @@ namespace vcpkg::Dependencies
             }
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
+    }
+    bool InstallPlanAction::has_package_abi() const
+    {
+        if (!abi_info) return false;
+        return !abi_info.get()->package_abi.empty();
     }
     const Build::PreBuildInfo& InstallPlanAction::pre_build_info(LineInfo linfo) const
     {
