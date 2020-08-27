@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.0/sentry-native.zip"
     FILENAME "sentry-native.zip"
