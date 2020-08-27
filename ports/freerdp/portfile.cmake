@@ -16,6 +16,9 @@ vcpkg_from_github(
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libxfixes-dev\n")
 endif()
+if (VCPKG_TARGET_IS_OSX)
+    set(FREERDP_WITH_CLIENT -DWITH_CLIENT=OFF)
+endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(FREERDP_CRT_LINKAGE -DMSVC_RUNTIME=static)
@@ -35,6 +38,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FREERDP_CRT_LINKAGE}
+        ${FREERDP_WITH_CLIENT}
         ${FEATURE_OPTIONS}
 )
 

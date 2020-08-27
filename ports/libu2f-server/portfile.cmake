@@ -23,6 +23,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# The include file must be patched after the build has completed, because the source files use the wrong subdirectory name!
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/libu2f-server/u2f-server.h
+    "#include <u2f-server/u2f-server-version.h>"
+    "#include <libu2f-server/u2f-server-version.h>"
+)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_copy_pdbs()

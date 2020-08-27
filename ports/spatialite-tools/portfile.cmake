@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 option(BUILD_DEBUG_TOOLS "Build debug version of tools" OFF)
 
 vcpkg_download_distfile(ARCHIVE
@@ -30,6 +28,8 @@ if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
     set(SPATIALITE_LIBS_DBG "${LDIR}/debug/lib/spatialite.lib")
     set(ICONV_LIBS_REL "${LDIR}/lib/libiconv.lib")
     set(ICONV_LIBS_DBG "${LDIR}/debug/lib/libiconv.lib")
+    set(EXPAT_LIBS_REL "${LDIR}/lib/libexpat.lib")
+    set(EXPAT_LIBS_DBG "${LDIR}/debug/lib/libexpatd.lib")  
 else()
     set(CL_FLAGS_DBG "/MTd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
     set(CL_FLAGS_REL "/MT /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
@@ -41,6 +41,8 @@ else()
     set(SPATIALITE_LIBS_DBG "${LDIR}/debug/lib/spatialite.lib ${LDIR}/debug/lib/freexl.lib")
     set(ICONV_LIBS_REL "${LDIR}/lib/libiconv.lib ${LDIR}/lib/libcharset.lib")
     set(ICONV_LIBS_DBG "${LDIR}/debug/lib/libiconv.lib ${LDIR}/debug/lib/libcharset.lib ")
+    set(EXPAT_LIBS_REL "${LDIR}/lib/libexpatMD.lib")
+    set(EXPAT_LIBS_DBG "${LDIR}/debug/lib/libexpatdMD.lib") 
 endif()
 
 set(LIBS_ALL_DBG
@@ -49,8 +51,8 @@ set(LIBS_ALL_DBG
     ${SPATIALITE_LIBS_DBG} \
     ${LIBXML2_LIBS_DBG} \
     ${GEOS_LIBS_DBG} \
+    ${EXPAT_LIBS_DBG} \
     ${LDIR}/debug/lib/readosm.lib \
-    ${LDIR}/debug/lib/expat.lib \
     ${LDIR}/debug/lib/zlibd.lib \
     ${LDIR}/debug/lib/proj_d.lib"
    )
@@ -60,8 +62,8 @@ set(LIBS_ALL_REL
     ${SPATIALITE_LIBS_REL} \
     ${LIBXML2_LIBS_REL} \
     ${GEOS_LIBS_REL} \
+    ${EXPAT_LIBS_REL} \
     ${LDIR}/lib/readosm.lib \
-    ${LDIR}/lib/expat.lib \
     ${LDIR}/lib/zlib.lib \
     ${LDIR}/lib/proj.lib"
    )

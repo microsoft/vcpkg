@@ -1,15 +1,15 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/parse.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/binarycaching.private.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/tools.h>
 
 using namespace vcpkg;
 
@@ -26,14 +26,16 @@ namespace
         std::error_code ec;
         fs.create_directories(pkg_path, ec);
         auto files = fs.get_files_non_recursive(pkg_path);
-        Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", pkg_path.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", fs::u8string(pkg_path));
 
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
-        auto cmd = Strings::format(
-            R"("%s" x "%s" -o"%s" -y)", seven_zip_exe.u8string(), archive_path.u8string(), pkg_path.u8string());
+        auto cmd = Strings::format(R"("%s" x "%s" -o"%s" -y)",
+                                   fs::u8string(seven_zip_exe),
+                                   fs::u8string(archive_path),
+                                   fs::u8string(pkg_path));
 #else
-        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string());
+        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", fs::u8string(archive_path), fs::u8string(pkg_path));
 #endif
         return System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
     }
@@ -47,17 +49,17 @@ namespace
 
         fs.remove(destination, ec);
         Checks::check_exit(
-            VCPKG_LINE_INFO, !fs.exists(destination), "Could not remove file: %s", destination.u8string());
+            VCPKG_LINE_INFO, !fs.exists(destination), "Could not remove file: %s", fs::u8string(destination));
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
         System::cmd_execute_and_capture_output(
             Strings::format(
-                R"("%s" a "%s" "%s\*")", seven_zip_exe.u8string(), destination.u8string(), source.u8string()),
+                R"("%s" a "%s" "%s\*")", fs::u8string(seven_zip_exe), fs::u8string(destination), fs::u8string(source)),
             System::get_clean_environment());
 #else
         System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
+            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
 #endif
     }
 
@@ -68,7 +70,7 @@ namespace
         {
         }
         ~ArchivesBinaryProvider() = default;
-        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override {}
+        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override { }
         RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
@@ -82,7 +84,7 @@ namespace
                 const fs::path archive_path = archives_root_dir / archive_subpath;
                 if (fs.exists(archive_path))
                 {
-                    System::print2("Using cached binary package: ", archive_path.u8string(), "\n");
+                    System::print2("Using cached binary package: ", fs::u8string(archive_path), "\n");
 
                     int archive_result = decompress_archive(paths, spec, archive_path).exit_code;
 
@@ -104,33 +106,10 @@ namespace
                         }
                     }
                 }
+
+                System::printf("Could not locate cached archive: %s\n", fs::u8string(archive_path));
             }
-            for (auto&& archives_root_dir : m_read_dirs)
-            {
-                const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
-                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
-                if (fs.exists(archive_tombstone_path))
-                {
-                    if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
-                    {
-                        System::print2("Found failure tombstone: ", archive_tombstone_path.u8string(), "\n");
-                        return RestoreResult::build_failed;
-                    }
-                    else
-                    {
-                        System::print2(System::Color::warning,
-                                       "Found failure tombstone: ",
-                                       archive_tombstone_path.u8string(),
-                                       "\n");
-                    }
-                }
-                else
-                {
-                    const fs::path archive_path = archives_root_dir / archive_subpath;
-                    System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
-                }
-            }
+
             return RestoreResult::missing;
         }
         void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
@@ -159,56 +138,15 @@ namespace
                 {
                     System::printf(System::Color::warning,
                                    "Failed to store binary cache %s: %s\n",
-                                   archive_path.u8string(),
+                                   fs::u8string(archive_path),
                                    ec.message());
                 }
                 else
-                    System::printf("Stored binary cache: %s\n", archive_path.u8string());
+                    System::printf("Stored binary cache: %s\n", fs::u8string(archive_path));
             }
             if (m_write_dirs.size() > 1) fs.remove(tmp_archive_path, ignore_errors);
         }
-        void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) override
-        {
-            if (m_write_dirs.empty()) return;
-            auto& fs = paths.get_filesystem();
-            std::error_code ec;
-            for (auto&& m_directory : m_write_dirs)
-            {
-                const fs::path& archives_root_dir = m_directory;
-                const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
-                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
-                if (!fs.exists(archive_tombstone_path))
-                {
-                    // Build failed, store all failure logs in the tombstone.
-                    const auto spec_name_path = fs::u8path(spec.name());
-                    const auto tmp_log_path = paths.buildtrees / spec_name_path / fs::u8path("tmp_failure_logs");
-                    const auto tmp_log_path_destination = tmp_log_path / spec_name_path;
-                    const auto tmp_failure_zip = paths.buildtrees / spec_name_path / fs::u8path("failure_logs.zip");
-                    fs.create_directories(tmp_log_path_destination, ignore_errors);
-
-                    for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
-                    {
-                        if (log_file.path().extension() == ".log")
-                        {
-                            fs.copy_file(log_file.path(),
-                                         tmp_log_path_destination / log_file.path().filename(),
-                                         fs::copy_options::none,
-                                         ec);
-                        }
-                    }
-
-                    compress_directory(paths, tmp_log_path, tmp_failure_zip);
-                    fs.create_directories(archive_tombstone_path.parent_path(), ignore_errors);
-                    fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
-
-                    // clean up temporary directory
-                    fs.remove_all(tmp_log_path, VCPKG_LINE_INFO);
-                }
-            }
-        }
-        RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action) override
+        RestoreResult precheck(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             const auto& abi_tag = action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi;
             auto& fs = paths.get_filesystem();
@@ -222,20 +160,6 @@ namespace
                 if (fs.exists(archive_path))
                 {
                     return RestoreResult::success;
-                }
-            }
-            for (auto&& archives_root_dir : m_read_dirs)
-            {
-                const std::string archive_name = abi_tag + ".zip";
-                const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / fs::u8path(archive_name);
-                const fs::path archive_tombstone_path = archives_root_dir / fs::u8path("fail") / archive_subpath;
-
-                if (fs.exists(archive_tombstone_path))
-                {
-                    if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
-                    {
-                        return RestoreResult::build_failed;
-                    }
                 }
             }
             return RestoreResult::missing;
@@ -276,7 +200,6 @@ namespace
         void prefetch(const VcpkgPaths& paths, const Dependencies::ActionPlan& plan) override
         {
             if (m_read_sources.empty() && m_read_configs.empty()) return;
-            if (plan.install_actions.empty()) return;
 
             auto& fs = paths.get_filesystem();
 
@@ -284,13 +207,17 @@ namespace
 
             for (auto&& action : plan.install_actions)
             {
+                if (!action.has_package_abi()) continue;
+
                 auto& spec = action.spec;
-                fs.remove_all_inside(paths.package_dir(spec), VCPKG_LINE_INFO);
+                fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
 
                 nuget_refs.emplace_back(spec, NugetReference(action));
             }
 
-            System::print2("Attempting to fetch ", plan.install_actions.size(), " packages from nuget.\n");
+            if (nuget_refs.empty()) return;
+
+            System::print2("Attempting to fetch ", nuget_refs.size(), " packages from nuget.\n");
 
             auto packages_config = paths.buildtrees / fs::u8path("packages.config");
 
@@ -317,6 +244,9 @@ namespace
             {
                 // First check using all sources
                 System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+                cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                 cmdline.path_arg(nuget_exe)
                     .string_arg("install")
                     .path_arg(packages_config)
@@ -340,6 +270,9 @@ namespace
             {
                 // Then check using each config
                 System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+                cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                 cmdline.path_arg(nuget_exe)
                     .string_arg("install")
                     .path_arg(packages_config)
@@ -391,7 +324,7 @@ namespace
                         Checks::check_exit(VCPKG_LINE_INFO,
                                            !fs.exists(nupkg_path, ignore_errors),
                                            "Unable to remove nupkg after restoring: %s",
-                                           nupkg_path.u8string());
+                                           fs::u8string(nupkg_path));
                         m_restored.emplace(nuget_ref.first);
                         ++num_restored;
                         return true;
@@ -424,6 +357,9 @@ namespace
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
             System::CmdLineBuilder cmdline;
+#ifndef _WIN32
+            cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
             cmdline.path_arg(nuget_exe)
                 .string_arg("pack")
                 .path_arg(nuspec_path)
@@ -450,6 +386,9 @@ namespace
                 for (auto&& write_src : m_write_sources)
                 {
                     System::CmdLineBuilder cmd;
+#ifndef _WIN32
+                    cmd.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
@@ -480,6 +419,9 @@ namespace
                 for (auto&& write_cfg : m_write_configs)
                 {
                     System::CmdLineBuilder cmd;
+#ifndef _WIN32
+                    cmd.path_arg(paths.get_tool_exe(Tools::MONO));
+#endif
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
@@ -491,7 +433,7 @@ namespace
                     if (!m_interactive) cmd.string_arg("-NonInteractive");
 
                     System::print2(
-                        "Uploading binaries for ", spec, " using NuGet config ", write_cfg.u8string(), ".\n");
+                        "Uploading binaries for ", spec, " using NuGet config ", fs::u8string(write_cfg), ".\n");
 
                     auto rc = [&] {
                         if (Debug::g_debugging)
@@ -504,14 +446,13 @@ namespace
                     {
                         System::print2(System::Color::error,
                                        "Pushing NuGet with ",
-                                       write_cfg.u8string(),
+                                       fs::u8string(write_cfg),
                                        " failed. Use --debug for more information.\n");
                     }
                 }
                 paths.get_filesystem().remove(nupkg_path, ignore_errors);
             }
         }
-        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override {}
         RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
@@ -564,15 +505,7 @@ namespace
                 provider->push_success(paths, action);
             }
         }
-        void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) override
-        {
-            for (auto&& provider : m_providers)
-            {
-                provider->push_failure(paths, abi_tag, spec);
-            }
-        }
-        RestoreResult precheck(const VcpkgPaths& paths,
-                               const Dependencies::InstallPlanAction& action) override
+        RestoreResult precheck(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
             for (auto&& provider : m_providers)
             {
@@ -594,13 +527,12 @@ namespace
 
     struct NullBinaryProvider : IBinaryProvider
     {
-        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override {}
+        void prefetch(const VcpkgPaths&, const Dependencies::ActionPlan&) override { }
         RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
         }
         void push_success(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override { }
-        void push_failure(const VcpkgPaths&, const std::string&, const PackageSpec&) override { }
         RestoreResult precheck(const VcpkgPaths&, const Dependencies::InstallPlanAction&) override
         {
             return RestoreResult::missing;
@@ -615,42 +547,57 @@ XmlSerializer& XmlSerializer::emit_declaration()
 }
 XmlSerializer& XmlSerializer::open_tag(StringLiteral sl)
 {
+    emit_pending_indent();
     Strings::append(buf, '<', sl, '>');
-    indent += 2;
+    m_indent += 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::start_complex_open_tag(StringLiteral sl)
 {
+    emit_pending_indent();
     Strings::append(buf, '<', sl);
-    indent += 2;
+    m_indent += 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::text_attr(StringLiteral name, StringView content)
 {
-    Strings::append(buf, ' ', name, "=\"");
+    if (m_pending_indent)
+    {
+        m_pending_indent = false;
+        buf.append(m_indent, ' ');
+    }
+    else
+    {
+        buf.push_back(' ');
+    }
+    Strings::append(buf, name, "=\"");
     text(content);
     Strings::append(buf, '"');
     return *this;
 }
 XmlSerializer& XmlSerializer::finish_complex_open_tag()
 {
+    emit_pending_indent();
     Strings::append(buf, '>');
     return *this;
 }
 XmlSerializer& XmlSerializer::finish_self_closing_complex_tag()
 {
+    emit_pending_indent();
     Strings::append(buf, "/>");
-    indent -= 2;
+    m_indent -= 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::close_tag(StringLiteral sl)
 {
+    m_indent -= 2;
+    emit_pending_indent();
     Strings::append(buf, "</", sl, '>');
-    indent -= 2;
     return *this;
 }
 XmlSerializer& XmlSerializer::text(StringView sv)
 {
+    emit_pending_indent();
     for (auto ch : sv)
     {
         if (ch == '&')
@@ -682,12 +629,21 @@ XmlSerializer& XmlSerializer::text(StringView sv)
 }
 XmlSerializer& XmlSerializer::simple_tag(StringLiteral tag, StringView content)
 {
-    return open_tag(tag).text(content).close_tag(tag);
+    return emit_pending_indent().open_tag(tag).text(content).close_tag(tag);
 }
 XmlSerializer& XmlSerializer::line_break()
 {
     buf.push_back('\n');
-    buf.append(indent, ' ');
+    m_pending_indent = true;
+    return *this;
+}
+XmlSerializer& XmlSerializer::emit_pending_indent()
+{
+    if (m_pending_indent)
+    {
+        m_pending_indent = false;
+        buf.append(m_indent, ' ');
+    }
     return *this;
 }
 
@@ -697,24 +653,52 @@ IBinaryProvider& vcpkg::null_binary_provider()
     return p;
 }
 
-ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(const VcpkgPaths& paths,
-                                                                                       View<std::string> args)
+ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(View<std::string> args)
 {
     std::string env_string = System::get_environment_variable("VCPKG_BINARY_SOURCES").value_or("");
 
-    // Preserve existing behavior until CI can be updated
-    // TODO: remove
-    if (args.size() == 0 && env_string.empty())
-    {
-        auto p = paths.root / fs::u8path("archives");
-        return {std::make_unique<ArchivesBinaryProvider>(std::vector<fs::path>{p}, std::vector<fs::path>{p})};
-    }
-
     return create_binary_provider_from_configs_pure(env_string, args);
 }
-ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs_pure(
-    const std::string& env_string, View<std::string> args)
+namespace
 {
+    const ExpectedS<fs::path>& default_cache_path()
+    {
+        static auto cachepath = System::get_platform_cache_home().then([](fs::path p) -> ExpectedS<fs::path> {
+            auto maybe_cachepath = System::get_environment_variable("VCPKG_DEFAULT_BINARY_CACHE");
+            if (auto p_str = maybe_cachepath.get())
+            {
+                const auto path = fs::u8path(*p_str);
+                const auto status = fs::stdfs::status(path);
+                if (!fs::stdfs::exists(status))
+                    return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + fs::u8string(path),
+                            expected_right_tag};
+                if (!fs::stdfs::is_directory(status))
+                    return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not a directory: " +
+                                fs::u8string(path),
+                            expected_right_tag};
+                if (!path.is_absolute())
+                    return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not absolute: " +
+                                fs::u8string(path),
+                            expected_right_tag};
+                return ExpectedS<fs::path>(path);
+            }
+            p /= fs::u8path("vcpkg/archives");
+            if (p.is_absolute())
+            {
+                return {std::move(p), expected_left_tag};
+            }
+            else
+            {
+                return {"default path was not absolute: " + fs::u8string(p), expected_right_tag};
+            }
+        });
+        if (cachepath.has_value())
+            Debug::print("Default binary cache path is: ", fs::u8string(*cachepath.get()), '\n');
+        else
+            Debug::print("No binary cache path. Reason: ", cachepath.error(), '\n');
+        return cachepath;
+    }
+
     struct State
     {
         bool m_cleared = false;
@@ -801,6 +785,41 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
             }
         }
 
+        template<class T>
+        void handle_readwrite(std::vector<T>& read,
+                              std::vector<T>& write,
+                              T&& t,
+                              const std::vector<std::pair<SourceLoc, std::string>>& segments,
+                              size_t segment_idx)
+        {
+            if (segment_idx >= segments.size())
+            {
+                read.push_back(std::move(t));
+                return;
+            }
+
+            auto& mode = segments[segment_idx].second;
+
+            if (mode == "read")
+            {
+                read.push_back(std::move(t));
+            }
+            else if (mode == "write")
+            {
+                write.push_back(std::move(t));
+            }
+            else if (mode == "readwrite")
+            {
+                read.push_back(t);
+                write.push_back(std::move(t));
+            }
+            else
+            {
+                return add_error("unexpected argument: expected 'read', readwrite', or 'write'",
+                                 segments[segment_idx].first);
+            }
+        }
+
         void handle_segments(std::vector<std::pair<SourceLoc, std::string>>&& segments)
         {
             if (segments.empty()) return;
@@ -825,37 +844,10 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                     return add_error("expected arguments: path arguments for binary config strings must be absolute",
                                      segments[1].first);
                 }
-
-                std::string mode;
-                switch (segments.size())
-                {
-                    case 2: mode = "read"; break;
-                    case 3: mode = segments[2].second; break;
-                    default:
-                        return add_error("unexpected arguments: binary config 'files' requires 1 or 2 arguments",
-                                         segments[3].first);
-                }
-
-                if (mode == "read")
-                {
-                    state->archives_to_read.push_back(std::move(p));
-                }
-                else if (mode == "write")
-                {
-                    state->archives_to_write.push_back(std::move(p));
-                }
-                else if (mode == "readwrite")
-                {
-                    state->archives_to_read.push_back(p);
-                    state->archives_to_write.push_back(std::move(p));
-                }
-                else
-                {
-                    Checks::check_exit(VCPKG_LINE_INFO, segments.size() > 2);
-                    return add_error("unexpected arguments: binary config 'files' can only accept"
-                                     " 'read', readwrite', or 'write' as a second argument",
-                                     segments[2].first);
-                }
+                handle_readwrite(state->archives_to_read, state->archives_to_write, std::move(p), segments, 2);
+                if (segments.size() > 3)
+                    return add_error("unexpected arguments: binary config 'files' requires 1 or 2 arguments",
+                                     segments[3].first);
             }
             else if (segments[0].second == "interactive")
             {
@@ -875,28 +867,10 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 if (!p.is_absolute())
                     return add_error("expected arguments: path arguments for binary config strings must be absolute",
                                      segments[1].first);
-
+                handle_readwrite(state->configs_to_read, state->configs_to_write, std::move(p), segments, 2);
                 if (segments.size() > 3)
-                {
-                    return add_error(
-                        "unexpected arguments: binary config 'nugetconfig' does not take more than 2 arguments",
-                        segments[3].first);
-                }
-                else if (segments.size() == 3)
-                {
-                    if (segments[2].second != "upload")
-                    {
-                        return add_error(
-                            "unexpected arguments: binary config 'nugetconfig' can only accept 'upload' as "
-                            "a second argument",
-                            segments[2].first);
-                    }
-                    else
-                    {
-                        state->configs_to_write.push_back(p);
-                    }
-                }
-                state->configs_to_read.push_back(std::move(p));
+                    return add_error("unexpected arguments: binary config 'nugetconfig' requires 1 or 2 arguments",
+                                     segments[3].first);
             }
             else if (segments[0].second == "nuget")
             {
@@ -907,25 +881,11 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                 auto&& p = segments[1].second;
                 if (p.empty())
                     return add_error("unexpected arguments: binary config 'nuget' requires non-empty source");
+
+                handle_readwrite(state->sources_to_read, state->sources_to_write, std::move(p), segments, 2);
                 if (segments.size() > 3)
-                {
-                    return add_error("unexpected arguments: binary config 'nuget' does not take more than 2 arguments",
+                    return add_error("unexpected arguments: binary config 'nuget' requires 1 or 2 arguments",
                                      segments[3].first);
-                }
-                else if (segments.size() == 3)
-                {
-                    if (segments[2].second != "upload")
-                    {
-                        return add_error("unexpected arguments: binary config 'nuget' can only accept 'upload' as "
-                                         "a second argument",
-                                         segments[2].first);
-                    }
-                    else
-                    {
-                        state->sources_to_write.push_back(p);
-                    }
-                }
-                state->sources_to_read.push_back(std::move(p));
             }
             else if (segments[0].second == "default")
             {
@@ -935,44 +895,11 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
                                      segments[0].first);
                 }
 
-                auto&& maybe_home = System::get_platform_cache_home();
+                const auto& maybe_home = default_cache_path();
                 if (!maybe_home.has_value()) return add_error(maybe_home.error(), segments[0].first);
 
-                auto p = *maybe_home.get();
-                p /= fs::u8path("vcpkg/archives");
-                if (!p.is_absolute())
-                {
-                    return add_error("default path was not absolute: " + p.u8string(), segments[0].first);
-                }
-
-                std::string mode;
-                switch (segments.size())
-                {
-                    case 1: mode = "read"; break;
-                    case 2: mode = segments[1].second; break;
-                    default: Checks::unreachable(VCPKG_LINE_INFO);
-                }
-
-                if (mode == "read")
-                {
-                    state->archives_to_read.push_back(std::move(p));
-                }
-                else if (mode == "write")
-                {
-                    state->archives_to_write.push_back(std::move(p));
-                }
-                else if (mode == "readwrite")
-                {
-                    state->archives_to_read.push_back(p);
-                    state->archives_to_write.push_back(std::move(p));
-                }
-                else
-                {
-                    Checks::check_exit(VCPKG_LINE_INFO, segments.size() > 1);
-                    return add_error("unexpected arguments: binary config 'default' can only accept"
-                                     " 'read', readwrite', or 'write' as a first argument",
-                                     segments[1].first);
-                }
+                handle_readwrite(
+                    state->archives_to_read, state->archives_to_write, fs::path(*maybe_home.get()), segments, 1);
             }
             else
             {
@@ -983,8 +910,15 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
             }
         }
     };
+}
 
+ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs_pure(
+    const std::string& env_string, View<std::string> args)
+{
     State s;
+
+    BinaryConfigParser default_parser("default,readwrite", "<defaults>", &s);
+    default_parser.parse();
 
     BinaryConfigParser env_parser(env_string, "VCPKG_BINARY_SOURCES", &s);
     env_parser.parse();
@@ -1048,7 +982,7 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     auto& version = scf.core_paragraph->version;
     std::string description =
         Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
-                        scf.core_paragraph->description,
+                        Strings::join("\n    ", scf.core_paragraph->description),
                         "\n\nVersion: ",
                         version,
                         "\nTriplet/Compiler hash: ",
@@ -1075,7 +1009,7 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     xml.close_tag("metadata").line_break();
     xml.open_tag("files");
     xml.start_complex_open_tag("file")
-        .text_attr("src", (paths.package_dir(spec) / fs::u8path("**")).u8string())
+        .text_attr("src", fs::u8string(paths.package_dir(spec) / fs::u8path("**")))
         .text_attr("target", "")
         .finish_self_closing_complex_tag();
     xml.close_tag("files").line_break();
@@ -1085,36 +1019,61 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
 
 void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
 {
-    System::print2(
-        System::Color::warning,
-        "** The following help documentation covers an experimental feature that will change at any time **\n\n");
-
     HelpTableFormatter tbl;
-    tbl.text(
-        "Vcpkg can cache compiled packages to accelerate restoration on a single machine or across the network."
-        " This functionality is currently disabled by default and must be enabled by either passing `--binarycaching` "
-        "to every vcpkg command line or setting the environment variable `VCPKG_FEATURE_FLAGS` to `binarycaching`.");
+    tbl.text("Vcpkg can cache compiled packages to accelerate restoration on a single machine or across the network."
+             " This functionality is currently enabled by default and can be disabled by either passing "
+             "`--no-binarycaching` to every vcpkg command line or setting the environment variable "
+             "`VCPKG_FEATURE_FLAGS` to `-binarycaching`.");
     tbl.blank();
     tbl.blank();
     tbl.text(
-        "Once caching is enabled, it can be further configured by either passing `--x-binarysource=<source>` options "
+        "Once caching is enabled, it can be further configured by either passing `--binarysource=<source>` options "
         "to every command line or setting the `VCPKG_BINARY_SOURCES` environment variable to a set of sources (Ex: "
         "\"<source>;<source>;...\"). Command line sources are interpreted after environment sources.");
     tbl.blank();
     tbl.blank();
     tbl.header("Valid source strings");
     tbl.format("clear", "Removes all previous sources");
-    tbl.format("default[,upload]", "Adds the default file-based source location (~/.vcpkg/archives).");
-    tbl.format("files,<path>[,upload]", "Adds a custom file-based source location.");
-    tbl.format("nuget,<uri>[,upload]",
+    tbl.format("default[,<rw>]", "Adds the default file-based location.");
+    tbl.format("files,<path>[,<rw>]", "Adds a custom file-based location.");
+    tbl.format("nuget,<uri>[,<rw>]",
                "Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI.");
-    tbl.format("nugetconfig,<path>[,upload]",
+    tbl.format("nugetconfig,<path>[,<rw>]",
                "Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This "
                "config should specify `defaultPushSource` for uploads.");
     tbl.format("interactive", "Enables interactive credential management for some source types");
     tbl.blank();
-    tbl.text("The `upload` optional parameter for certain source strings controls whether on-demand builds will be "
-             "uploaded to that remote.");
-
+    tbl.text("The `<rw>` optional parameter for certain strings controls whether they will be consulted for "
+             "downloading binaries and whether on-demand builds will be uploaded to that remote. It can be specified "
+             "as 'read', 'write', or 'readwrite'.");
+    tbl.blank();
     System::print2(tbl.m_str);
+    const auto& maybe_cachepath = default_cache_path();
+    if (auto p = maybe_cachepath.get())
+    {
+        auto p_preferred = *p;
+        System::print2(
+            "\nBased on your system settings, the default path to store binaries is\n    ",
+            fs::u8string(p_preferred.make_preferred()),
+            "\n\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.");
+    }
+}
+
+std::string vcpkg::generate_nuget_packages_config(const Dependencies::ActionPlan& action)
+{
+    auto refs = Util::fmap(action.install_actions,
+                           [&](const Dependencies::InstallPlanAction& ipa) { return NugetReference(ipa); });
+    XmlSerializer xml;
+    xml.emit_declaration().line_break();
+    xml.open_tag("packages").line_break();
+    for (auto&& ref : refs)
+    {
+        xml.start_complex_open_tag("package")
+            .text_attr("id", ref.id)
+            .text_attr("version", ref.version)
+            .finish_self_closing_complex_tag()
+            .line_break();
+    }
+    xml.close_tag("packages").line_break();
+    return std::move(xml.buf);
 }

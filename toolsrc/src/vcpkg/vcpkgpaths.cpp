@@ -1,15 +1,18 @@
-#include "pch.h"
-
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.process.h>
-#include <vcpkg/base/util.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
+
+#include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/visualstudio.h>
 
@@ -34,7 +37,7 @@ namespace
         Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
         auto result = process_input_directory_impl(filesystem, root, option, name, li);
-        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
+        Debug::print("Using ", name, "-root: ", fs::u8string(result), '\n');
         return result;
     }
 
@@ -56,8 +59,22 @@ namespace
         Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
         auto result = process_output_directory_impl(filesystem, root, option, name, li);
-        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
+        Debug::print("Using ", name, "-root: ", fs::u8string(result), '\n');
         return result;
+    }
+
+    void uppercase_win32_drive_letter(fs::path& path)
+    {
+#if defined(_WIN32)
+        const auto& nativePath = path.native();
+        if (nativePath.size() > 2 && (nativePath[0] >= L'a' && nativePath[0] <= L'z') && nativePath[1] == L':')
+        {
+            auto uppercaseFirstLetter = std::move(path).native();
+            uppercaseFirstLetter[0] = nativePath[0] - L'a' + L'A';
+            path = uppercaseFirstLetter;
+        }
+#endif
+        (void)path;
     }
 
 } // unnamed namespace
@@ -75,6 +92,7 @@ namespace vcpkg
 
             Lazy<std::vector<VcpkgPaths::TripletFile>> available_triplets;
             Lazy<std::vector<Toolset>> toolsets;
+            Lazy<std::map<std::string, std::string>> cmake_script_hashes;
 
             Files::Filesystem* fs_ptr;
 
@@ -84,10 +102,10 @@ namespace vcpkg
             std::unique_ptr<ToolCache> m_tool_cache;
             Cache<Triplet, fs::path> m_triplets_cache;
             Build::EnvCache m_env_cache;
+
+            fs::SystemHandle file_lock_handle;
         };
     }
-
-    VcpkgPaths::~VcpkgPaths() noexcept {}
 
     VcpkgPaths::VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args)
         : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.compiler_tracking_enabled()))
@@ -106,20 +124,79 @@ namespace vcpkg
                     filesystem.canonical(VCPKG_LINE_INFO, System::get_exe_path_of_current_process()), ".vcpkg-root");
             }
         }
-
-#if defined(_WIN32)
-        // fixup Windows drive letter to uppercase
-        const auto& nativeRoot = root.native();
-        if (nativeRoot.size() > 2 && (nativeRoot[0] >= L'a' && nativeRoot[0] <= L'z') && nativeRoot[1] == L':')
-        {
-            auto uppercaseFirstLetter = nativeRoot;
-            uppercaseFirstLetter[0] = nativeRoot[0] - L'a' + L'A';
-            root = uppercaseFirstLetter;
-        }
-#endif // defined(_WIN32)
-
+        uppercase_win32_drive_letter(root);
         Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
-        Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
+        Debug::print("Using vcpkg-root: ", fs::u8string(root), '\n');
+
+        std::error_code ec;
+        bool manifest_mode_on = args.manifest_mode.value_or(args.manifest_root_dir != nullptr);
+        if (args.manifest_root_dir)
+        {
+            manifest_root_dir = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.manifest_root_dir));
+        }
+        else
+        {
+            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, "vcpkg.json");
+        }
+        uppercase_win32_drive_letter(manifest_root_dir);
+
+        if (!manifest_root_dir.empty() && manifest_mode_on)
+        {
+            Debug::print("Using manifest-root: ", fs::u8string(manifest_root_dir), '\n');
+
+            installed = process_output_directory(
+                filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
+            const auto vcpkg_lock = root / ".vcpkg-root";
+            if (args.wait_for_lock.value_or(false))
+            {
+                m_pimpl->file_lock_handle = filesystem.take_exclusive_file_lock(vcpkg_lock, ec);
+            }
+            else
+            {
+                m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
+            }
+            if (ec)
+            {
+                System::printf(
+                    System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));
+                System::printf(System::Color::error, "    %s\n", ec.message());
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+        }
+        else
+        {
+            // we ignore the manifest root dir if the user requests -manifest
+            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value() && !args.output_json())
+            {
+                System::print2(System::Color::warning,
+                               "Warning: manifest-root detected at ",
+                               fs::generic_u8string(manifest_root_dir),
+                               ", but manifests are not enabled.\n");
+                System::printf(System::Color::warning,
+                               R"(If you wish to use manifest mode, you may do one of the following:
+    * Add the `%s` feature flag to the comma-separated environment
+      variable `%s`.
+    * Add the `%s` feature flag to the `--%s` option.
+    * Pass your manifest directory to the `--%s` option.
+If you wish to silence this error and use classic mode, you can:
+    * Add the `-%s` feature flag to `%s`.
+    * Add the `-%s` feature flag to `--%s`.
+)",
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ENV,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ARG,
+                               VcpkgCmdArguments::MANIFEST_ROOT_DIR_ARG,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ENV,
+                               VcpkgCmdArguments::MANIFEST_MODE_FEATURE,
+                               VcpkgCmdArguments::FEATURE_FLAGS_ARG);
+            }
+
+            manifest_root_dir.clear();
+            installed =
+                process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
+        }
 
         buildtrees =
             process_output_directory(filesystem, root, args.buildtrees_root_dir.get(), "buildtrees", VCPKG_LINE_INFO);
@@ -128,8 +205,6 @@ namespace vcpkg
         packages =
             process_output_directory(filesystem, root, args.packages_root_dir.get(), "packages", VCPKG_LINE_INFO);
         ports = filesystem.canonical(VCPKG_LINE_INFO, root / fs::u8path("ports"));
-        installed =
-            process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
         prefab = root / fs::u8path("prefab");
 
@@ -155,19 +230,21 @@ namespace vcpkg
 
         ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
 
-        if (args.overlay_triplets)
+        for (auto&& overlay_triplets_dir : args.overlay_triplets)
         {
-            for (auto&& overlay_triplets_dir : *args.overlay_triplets)
-            {
-                m_pimpl->triplets_dirs.emplace_back(
-                    filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(overlay_triplets_dir)));
-            }
+            m_pimpl->triplets_dirs.emplace_back(
+                filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(overlay_triplets_dir)));
         }
         m_pimpl->triplets_dirs.emplace_back(triplets);
         m_pimpl->triplets_dirs.emplace_back(community_triplets);
     }
 
-    fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / spec.dir(); }
+    fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / fs::u8path(spec.dir()); }
+    fs::path VcpkgPaths::build_dir(const PackageSpec& spec) const { return this->buildtrees / fs::u8path(spec.name()); }
+    fs::path VcpkgPaths::build_dir(const std::string& package_name) const
+    {
+        return this->buildtrees / fs::u8path(package_name);
+    }
 
     fs::path VcpkgPaths::build_info_file_path(const PackageSpec& spec) const
     {
@@ -204,11 +281,31 @@ namespace vcpkg
                 {
                     if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, path)))
                     {
-                        output.emplace_back(TripletFile(path.stem().filename().u8string(), triplets_dir));
+                        output.emplace_back(TripletFile(fs::u8string(path.stem().filename()), triplets_dir));
                     }
                 }
             }
             return output;
+        });
+    }
+
+    const std::map<std::string, std::string>& VcpkgPaths::get_cmake_script_hashes() const
+    {
+        return m_pimpl->cmake_script_hashes.get_lazy([this]() -> std::map<std::string, std::string> {
+            auto& fs = this->get_filesystem();
+            std::map<std::string, std::string> helpers;
+            auto files = fs.get_files_non_recursive(this->scripts / fs::u8path("cmake"));
+            auto common_functions = fs::u8path("vcpkg_common_functions");
+            for (auto&& file : files)
+            {
+                auto stem = file.stem();
+                if (stem != common_functions)
+                {
+                    helpers.emplace(fs::u8string(stem),
+                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
+                }
+            }
+            return helpers;
         });
     }
 
@@ -245,13 +342,13 @@ namespace vcpkg
         {
             static Toolset external_toolset = []() -> Toolset {
                 Toolset ret;
-                ret.dumpbin = "";
+                ret.dumpbin.clear();
                 ret.supported_architectures = {
                     ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()}};
-                ret.vcvarsall = "";
+                ret.vcvarsall.clear();
                 ret.vcvarsall_options = {};
                 ret.version = "external";
-                ret.visual_studio_root_path = "";
+                ret.visual_studio_root_path.clear();
                 return ret;
             }();
             return external_toolset;
@@ -278,7 +375,7 @@ namespace vcpkg
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
                                "Could not find Visual Studio instance at %s with %s toolset.",
-                               vsp->u8string(),
+                               fs::u8string(*vsp),
                                *tsv);
 
             Checks::check_exit(VCPKG_LINE_INFO, candidates.size() == 1);
@@ -320,4 +417,31 @@ namespace vcpkg
     }
 
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return *m_pimpl->fs_ptr; }
+
+    void VcpkgPaths::track_feature_flag_metrics() const
+    {
+        struct
+        {
+            StringView flag;
+            bool enabled;
+        } flags[] = {{VcpkgCmdArguments::MANIFEST_MODE_FEATURE, manifest_mode_enabled()}};
+
+        for (const auto& flag : flags)
+        {
+            Metrics::g_metrics.lock()->track_feature(flag.flag.to_string(), flag.enabled);
+        }
+    }
+
+    VcpkgPaths::~VcpkgPaths()
+    {
+        std::error_code ec;
+        if (m_pimpl->file_lock_handle.is_valid())
+        {
+            m_pimpl->fs_ptr->unlock_file_lock(m_pimpl->file_lock_handle, ec);
+            if (ec)
+            {
+                Debug::print("Failed to unlock filesystem lock: ", ec.message(), '\n');
+            }
+        }
+    }
 }

@@ -8,23 +8,25 @@ endif()
 
 if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-xcb-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-xcb-dev.")
+    message(WARNING "${PORT} for qt5-x11extras requires the following libraries from the system package manager:\n    libxkbcommon-x11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libxkbcommon-x11-dev.")
+    #
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-if("latest" IN_LIST FEATURES)
+if("latest" IN_LIST FEATURES) # latest = core currently
     set(QT_BUILD_LATEST ON)
     set(PATCHES 
-        patches/Qt5BasicConfig_latest.patch
-        patches/Qt5PluginTarget_latest.patch
+        patches/Qt5BasicConfig.patch
+        patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
         )
 else()
     set(PATCHES 
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
-        patches/prl_parser.patch # Modified backport of the prl parser from Qt5.14.1 without using QMAKE_PRL_LIBS_FOR_CMAKE
+        patches/create_cmake.patch
     )
 endif()
 
@@ -50,12 +52,14 @@ endif()
 
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
-                            patches/winmain_pro.patch   #Moves qtmain to manual-link
-                            patches/windows_prf.patch   #fixes the qtmain dependency due to the above move
-                            patches/qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
-                            patches/gui_configure.patch #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
-                            patches/icu.patch           #Help configure find static icu builds in vcpkg on windows
-                            patches/xlib.patch          #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+                            patches/winmain_pro.patch    #Moves qtmain to manual-link
+                            patches/windows_prf.patch    #fixes the qtmain dependency due to the above move
+                            patches/qt_app.patch         #Moves the target location of qt5 host apps to always install into the host dir. 
+                            patches/gui_configure.patch  #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
+                            patches/icu.patch            #Help configure find static icu builds in vcpkg on windows
+                            patches/xlib.patch           #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+                            patches/egl.patch            #Fix egl detection logic. 
+                            patches/8c44d70.diff         #Upstream fix for MSVC 16.6.2. static init of std::atomic. 
                             #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
                                                          #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
                                                          #the windows supplied gl.h header and the angle gl.h otherwise. 
@@ -126,6 +130,13 @@ find_library(HARFBUZZ_DEBUG NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/debug
 find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
 find_library(SQLITE_DEBUG NAMES sqlite3 sqlite3d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
+find_library(BROTLI_COMMON_RELEASE NAMES brotlicommon brotlicommon-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(BROTLI_COMMON_DEBUG NAMES brotlicommon brotlicommon-static brotlicommond brotlicommon-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(BROTLI_DEC_RELEASE NAMES brotlidec brotlidec-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(BROTLI_DEC_DEBUG NAMES brotlidec brotlidec-static brotlidecd brotlidec-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(BROTLI_ENC_RELEASE NAMES brotlienc brotlienc-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(BROTLI_ENC_DEBUG NAMES brotlienc brotlienc-static brotliencd brotlienc-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
 find_library(ICUUC_RELEASE NAMES icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ICUUC_DEBUG NAMES icuucd libicuucd icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(ICUTU_RELEASE NAMES icutu libicutu PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -162,8 +173,8 @@ find_library(SSL_DEBUG ssl ssleay32 ssld ssleay32d PATHS "${CURRENT_INSTALLED_DI
 find_library(EAY_RELEASE libeay32 crypto libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(EAY_DEBUG libeay32 crypto libcrypto libeay32d cryptod libcryptod PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE}")
-set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG}")
+set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE} ${BROTLI_ENC_RELEASE} ${BROTLI_DEC_RELEASE} ${BROTLI_COMMON_RELEASE}")
+set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG} ${BROTLI_ENC_DEBUG} ${BROTLI_DEC_DEBUG} ${BROTLI_COMMON_RELEASE}")
 
 # If HarfBuzz is built with GLib enabled, it must be statically link
 set(GLIB_LIB_VERSION 2.0)
@@ -182,7 +193,7 @@ set(RELEASE_OPTIONS
             "FREETYPE_LIBS=${FREETYPE_RELEASE_ALL}"
             "ICU_LIBS=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"            
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
             )
 set(DEBUG_OPTIONS
             "LIBJPEG_LIBS=${JPEG_DEBUG}"
@@ -219,7 +230,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
 elseif(VCPKG_TARGET_IS_LINUX)
-    list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -linuxfb) #-system-xcb
+    list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
     endif()
@@ -257,7 +268,7 @@ elseif(VCPKG_TARGET_IS_OSX)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         message(STATUS "Enviromnent OSX SDK Version: $ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET}")
         FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
-        string(REPLACE "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12" "QMAKE_MACOSX_DEPLOYMENT_TARGET = ${VCPKG_OSX_DEPLOYMENT_TARGET}" _tmp_contents ${_tmp_contents})
+        string(REPLACE "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.13" "QMAKE_MACOSX_DEPLOYMENT_TARGET = ${VCPKG_OSX_DEPLOYMENT_TARGET}" _tmp_contents ${_tmp_contents})
         FILE(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
     endif()
     #list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
