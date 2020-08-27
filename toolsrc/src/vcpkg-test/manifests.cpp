@@ -5,8 +5,13 @@
 
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 #include <vcpkg-test/util.h>
+
+#if defined(_MSC_VER)
+#pragma warning(disable : 6237)
+#endif
 
 using namespace vcpkg;
 using namespace vcpkg::Paragraphs;
@@ -248,7 +253,7 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
     std::vector<std::string> args_list = {"x-format-manifest"};
     auto& fs = Files::get_real_filesystem();
     auto args = VcpkgCmdArguments::create_from_arg_sequence(args_list.data(), args_list.data() + args_list.size());
-    auto paths = VcpkgPaths{fs, args};
+    VcpkgPaths paths{fs, args};
 
     std::vector<SourceControlFile> scfs;
 
@@ -259,7 +264,7 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
         if (fs.exists(control))
         {
             auto contents = fs.read_contents(control, VCPKG_LINE_INFO);
-            auto pghs = Paragraphs::parse_paragraphs(contents, control.u8string());
+            auto pghs = Paragraphs::parse_paragraphs(contents, fs::u8string(control));
             REQUIRE(pghs);
 
             scfs.push_back(std::move(

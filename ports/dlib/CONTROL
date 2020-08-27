@@ -1,5 +1,5 @@
 Source: dlib
-Version: 19.19
+Version: 19.21
 Port-Version: 2
 Build-Depends: libjpeg-turbo, libpng, openblas (!osx), lapack
 Homepage: https://github.com/davisking/dlib
