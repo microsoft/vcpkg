@@ -20,7 +20,7 @@ Build-Depends: libgit2[core,openssl], libssh2
 Description: SSH support via libssh2
 
 Feature: ssl
-Build-Depends: libgit2[core,openssl] (!windows&!uwp&!osx), libgit2[core,winhttp] (windows&uwp), libgit2[core,sectransp] (osx)
+Build-Depends: libgit2[core,openssl] (!windows&!osx), libgit2[core,winhttp] (windows), libgit2[core,sectransp] (osx)
 Description: Default SSL backend
 
 # SSL backends

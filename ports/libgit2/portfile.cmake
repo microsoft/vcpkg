@@ -11,32 +11,47 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
-if("winhttp" IN_LIST FEATURES AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
-    message(FATAL_ERROR "winhttp is not supported on non-Windows and uwp platforms")
-endif()
+set(REGEX_BACKEND OFF)
+set(USE_HTTPS OFF)
 
-if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
-    message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
-endif()
+function(set_regex_backend VALUE)
+    if(REGEX_BACKEND)
+        message(FATAL_ERROR "Only one regex backend (pcre,pcre2) is allowed")
+    endif()
+    set(REGEX_BACKEND ${VALUE} PARENT_SCOPE)
+endfunction()
 
-if ("pcre2" IN_LIST FEATURES)
-    set(REGEX_BACKEND pcre2)
-elseif ("pcre" IN_LIST FEATURES)
-    set(REGEX_BACKEND pcre)
-else()
+function(set_tls_backend VALUE)
+    if(USE_HTTPS)
+        message(FATAL_ERROR "Only one TLS backend (openssl,winhttp,sectransp,mbedtls) is allowed")
+    endif()
+    set(USE_HTTPS ${VALUE} PARENT_SCOPE)
+endfunction()
+
+foreach(GIT2_FEATURE ${FEATURES})
+    if(GIT2_FEATURE STREQUAL "pcre")
+        set_regex_backend("pcre")
+    elseif(GIT2_FEATURE STREQUAL "pcre2")
+        set_regex_backend("pcre2")
+    elseif(GIT2_FEATURE STREQUAL "openssl")
+        set_tls_backend("OpenSSL")
+    elseif(GIT2_FEATURE STREQUAL "winhttp")
+        if(NOT VCPKG_TARGET_IS_WINDOWS)
+            message(FATAL_ERROR "winhttp is not supported on non-Windows and uwp platforms")
+        endif()
+        set_tls_backend("WinHTTP")
+    elseif(GIT2_FEATURE STREQUAL "sectransp")
+        if(NOT VCPKG_TARGET_IS_OSX)
+            message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
+        endif()
+        set_tls_backend("SecureTransport")
+    elseif(GIT2_FEATURE STREQUAL "mbedtls")
+        set_tls_backend("mbedTLS")
+    endif()
+endforeach()
+
+if(NOT REGEX_BACKEND)
     message(FATAL_ERROR "Must choose pcre or pcre2 regex backend")
-endif()
-
-if("openssl" IN_LIST FEATURES)
-    set(SSL_BACKEND "OpenSSL")
-elseif("winhttp" IN_LIST FEATURES)
-    set(SSL_BACKEND "WinHTTP")
-elseif("sectransp" IN_LIST FEATURES)
-    set(SSL_BACKEND "SecureTransport")
-elseif("mbedtls" IN_LIST FEATURES)
-    set(SSL_BACKEND "mbedTLS")
-else()
-    set(SSL_BACKEND OFF)
 endif()
 
 vcpkg_check_features(
@@ -51,7 +66,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_CLAR=OFF
         -DUSE_HTTP_PARSER=system
-        -DUSE_HTTPS=${SSL_BACKEND}
+        -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
         -DSTATIC_CRT=${STATIC_CRT}
         ${GIT2_FEATURES}
