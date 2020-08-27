@@ -19,16 +19,16 @@ vcpkg_configure_cmake(
 	PREFER_NINJA
 	DISABLE_PARALLEL_CONFIGURE
 	OPTIONS
-		-DHAVE_LAPACK=OFF
-		-DHAVE_PLASMA=OFF
-		-DBUILD_DEMO=OFF
+	    -DHAVE_LAPACK=OFF
+	    -DHAVE_PLASMA=OFF
+	    -DBUILD_DEMO=OFF
 )
 
 vcpkg_install_cmake()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/levmar RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 # Handle duplicated debug includes
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 # Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME levmar)
+# vcpkg_test_cmake(PACKAGE_NAME levmar)
