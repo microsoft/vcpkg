@@ -1,5 +1,6 @@
 Source: llvm
-Version: 10.0.0-4
+Version: 10.0.0
+Port-Version: 5
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Supports: !uwp

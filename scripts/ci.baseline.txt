@@ -143,8 +143,6 @@ bond:x64-uwp=fail
 botan:arm64-windows=fail
 botan:arm-uwp=fail
 botan:x64-uwp=fail
-box2d:x64-uwp=fail
-box2d:arm-uwp=fail
 breakpad:arm64-windows=fail
 bullet3:arm64-windows=fail
 bullet3:arm-uwp=fail
@@ -155,6 +153,11 @@ caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
 cairomm:x64-linux=fail
+# capnproto currently triggers an ICE
+capnproto:x86-windows=fail
+capnproto:x64-windows=fail
+capnproto:x64-windows-static=fail
+# capnproto doesn't support arm, arm64, or UWP
 capnproto:arm64-windows=fail
 capnproto:arm-uwp=fail
 capnproto:x64-uwp=fail
@@ -210,6 +213,7 @@ civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
 # clapack is replaced by lapack-reference. 
 clapack:x64-linux = skip
+clapack:x64-osx = skip
 clapack:x64-windows = skip
 clapack:x64-windows-static = skip
 clapack:x86-windows = skip
@@ -424,6 +428,16 @@ flint:x64-osx=fail
 fltk:arm-uwp=fail
 fltk:x64-uwp=fail
 fluidsynth:x64-osx=fail
+# fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
+# fluidlite has no dependencies and thus is less likely to be broken by another package.
+fluidlite:arm-uwp=skip
+fluidlite:arm64-windows=skip
+fluidlite:x64-linux=skip
+fluidlite:x64-osx=skip
+fluidlite:x64-uwp=skip
+fluidlite:x64-windows-static=skip
+fluidlite:x64-windows=skip
+fluidlite:x86-windows=skip
 fmem:arm-uwp=fail
 fmem:x64-uwp=fail
 fmi4cpp:arm-uwp=fail
@@ -508,6 +522,8 @@ gmmlib:x64-uwp=fail
 gmmlib:x64-windows=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x86-windows=fail
+# VS 2019 16.7 broke gmp UWP https://github.com/microsoft/vcpkg/issues/13172
+gmp:x64-uwp=fail
 google-cloud-cpp:arm64-windows=fail
 google-cloud-cpp:arm-uwp=fail
 google-cloud-cpp:x64-uwp=fail
@@ -1172,6 +1188,17 @@ ogre-next:x86-windows        = skip
 ois:arm64-windows=fail
 ois:arm-uwp=fail
 ois:x64-uwp=fail
+# ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
+# does not resolve the issue
+# src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
+# -L/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib   -L/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib
+# -Wl,-rpath,/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib:/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib::::::::::::::::::::::::::::::::::::::::::::::::
+# -lode  /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_serialization.a 
+# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_filesystem.a 
+# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_system.a  -lpthread && :
+# /usr/bin/ld: cannot find -lode
+ompl:x64-osx=fail
+ompl:x64-linux=fail
 open62541:arm-uwp=fail
 open62541:x64-uwp=fail
 openal-soft:arm-uwp=fail
