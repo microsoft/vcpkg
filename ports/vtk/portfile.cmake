@@ -311,6 +311,7 @@ else()
 endif()
 endforeach()
 
+# see upstream issue https://gitlab.kitware.com/vtk/vtk/-/issues/17977
 file(READ ${CURRENT_PACKAGES_DIR}/share/vtk/VTK-vtk-module-find-packages.cmake VTK_FIND_MODULES)
 string(REPLACE "pugixml_vtk_module_mangle" "pugixml" VTK_FIND_MODULES "${VTK_FIND_MODULES}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTK-vtk-module-find-packages.cmake "${VTK_FIND_MODULES}")
