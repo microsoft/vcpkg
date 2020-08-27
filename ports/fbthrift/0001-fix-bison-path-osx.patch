@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 688e15871b..f6f24177f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -102,6 +102,9 @@ option(thriftpy3
+ 
+ # Find required dependencies for thrift/compiler
+ if(compiler_only OR build_all)
++  if(APPLE)
++    set(BISON_EXECUTABLE "/usr/local/opt/bison/bin/bison" CACHE PATH "Bison executable")
++  endif()
+   find_package(BISON 3.0.4 REQUIRED)
+   find_package(FLEX REQUIRED)
+   include_directories(
