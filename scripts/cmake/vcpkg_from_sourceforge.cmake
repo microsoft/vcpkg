@@ -179,7 +179,7 @@ function(vcpkg_from_sourceforge)
     message(STATUS "Trying auto-select mirror...")
     vcpkg_download_distfile(ARCHIVE
         URLS "${DOWNLOAD_URL}"
-        SHA512 0
+        SKIP_SHA512
         FILENAME "${_vdus_FILENAME}"
         SILENT_EXIT
     )
@@ -196,7 +196,7 @@ function(vcpkg_from_sourceforge)
             message(STATUS "Trying mirror ${SOURCEFORGE_MIRROR}...")
             vcpkg_download_distfile(ARCHIVE
                 URLS "${DOWNLOAD_URL}"
-                SHA512 0
+                SKIP_SHA512
                 FILENAME "${_vdus_FILENAME}"
                 SILENT_EXIT
             )
