@@ -23,7 +23,6 @@ vcpkg_from_github(
     HEAD_REF master
 	PATCHES
 		openssl-version-override.patch
-        fix-arm.patch
 )
 
 vcpkg_configure_cmake(
