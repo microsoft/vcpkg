@@ -13,6 +13,9 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DSENTRY_BUILD_TESTS=OFF
+        -DSENTRY_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_install_cmake()
@@ -21,12 +24,14 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/${PORT}/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry-native/cmake)
 
-vcpkg_copy_tools(
-    TOOL_NAMES crashpad_handler
-    AUTO_CLEAN
-)
+if (WIN32)
+    vcpkg_copy_tools(
+        TOOL_NAMES crashpad_handler
+        AUTO_CLEAN
+    )
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
