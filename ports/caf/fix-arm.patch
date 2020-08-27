@@ -1,19 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index da58790..d79a1ae 100644
+index 41a7ffd2..0a2b303b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -99,11 +99,13 @@ endfunction(pretty_yes)
- 
- add_executable(caf-generate-enum-strings cmake/caf-generate-enum-strings.cpp)
- 
+@@ -97,6 +97,7 @@ endfunction(pretty_yes)
+ add_executable(caf-generate-enum-strings
+                EXCLUDE_FROM_ALL
+                cmake/caf-generate-enum-strings.cpp)
 +install(TARGETS caf-generate-enum-strings DESTINATION tools)
-+
- function(enum_to_string relative_input_file relative_output_file)
-   set(input "${CMAKE_CURRENT_SOURCE_DIR}/${relative_input_file}")
-   set(output "${CMAKE_CURRENT_BINARY_DIR}/${relative_output_file}")
+ 
+ add_custom_target(consistency-check)
+ 
+@@ -111,7 +112,7 @@ function(add_enum_consistency_check hpp_file cpp_file)
+   get_filename_component(output_dir "${output}" DIRECTORY)
+   file(MAKE_DIRECTORY "${output_dir}")
    add_custom_command(OUTPUT "${output}"
 -                     COMMAND caf-generate-enum-strings "${input}" "${output}"
 +                     COMMAND ${CAF_TOOL_PATH}caf-generate-enum-strings "${input}" "${output}"
                       DEPENDS caf-generate-enum-strings "${input}")
- endfunction()
- 
+   get_filename_component(target_name "${input}" NAME_WE)
+   add_custom_target("${target_name}"
