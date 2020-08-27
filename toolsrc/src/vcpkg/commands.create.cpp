@@ -20,7 +20,7 @@ namespace vcpkg::Commands::Create
 
     int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        (void)(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         const std::string port_name = args.command_arguments.at(0);
         const std::string url = args.command_arguments.at(1);
 

@@ -421,6 +421,11 @@ namespace vcpkg::Dependencies
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
+    bool InstallPlanAction::has_package_abi() const
+    {
+        if (!abi_info) return false;
+        return !abi_info.get()->package_abi.empty();
+    }
     const Build::PreBuildInfo& InstallPlanAction::pre_build_info(LineInfo linfo) const
     {
         return *abi_info.value_or_exit(linfo).pre_build_info.get();
