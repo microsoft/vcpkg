@@ -3,13 +3,12 @@
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.h>
 
-#include <vcpkg/vcpkgcmdarguments.h>
-
 #include <string>
 
 namespace vcpkg
 {
     struct TripletInstance;
+    struct VcpkgCmdArguments;
 
     struct Triplet
     {
@@ -17,20 +16,6 @@ namespace vcpkg
         constexpr Triplet() noexcept : m_instance(&DEFAULT_INSTANCE) { }
 
         static Triplet from_canonical_name(std::string&& triplet_as_string);
-
-        static const Triplet X86_WINDOWS;
-        static const Triplet X64_WINDOWS;
-        static const Triplet ARM_WINDOWS;
-        static const Triplet ARM64_WINDOWS;
-        static const Triplet X86_UWP;
-        static const Triplet X64_UWP;
-        static const Triplet ARM_UWP;
-        static const Triplet ARM64_UWP;
-
-        static const Triplet ARM_ANDROID;
-        static const Triplet ARM64_ANDROID;
-        static const Triplet X86_ANDROID;
-        static const Triplet X64_ANDROID;
 
         const std::string& canonical_name() const;
         const std::string& to_string() const;

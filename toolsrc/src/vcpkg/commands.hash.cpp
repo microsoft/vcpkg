@@ -1,8 +1,10 @@
-#include "pch.h"
-
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/util.h>
 
 #include <vcpkg/commands.hash.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Commands::Hash
 {
@@ -16,7 +18,7 @@ namespace vcpkg::Commands::Hash
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
 
         const fs::path file_to_hash = args.command_arguments[0];
 

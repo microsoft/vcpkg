@@ -239,7 +239,7 @@ $ brew install gcc
 最后在 `CMake options` 中添加以下行:
 
 ```
--DCMAKE_TOOLCHAIN_FILE=C:/Users/nimazzuc/src/vcpkg/scripts/buildsystems/vcpkg.cmake
+-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 遗憾的是， 您必须手动将此选项加入每个项目配置文件中。
