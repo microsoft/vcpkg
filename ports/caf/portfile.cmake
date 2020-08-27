@@ -18,7 +18,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF f7d4fc7ac679e18ba385f64434f8015c3cea9cb5 # 0.17.3
+    REF f7d4fc7ac679e18ba385f64434f8015c3cea9cb5 # 0.17.6
     SHA512 8b4719c26dfad68eed6f2528263702e42f9865bb7a9f2d40909dc6c3fc20bb7259fe44a5f89390ba714c7f9359db2d171ff44685641962c24a70f4e2aa3f3f65
     HEAD_REF master
 	PATCHES
