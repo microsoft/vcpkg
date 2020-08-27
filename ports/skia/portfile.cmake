@@ -163,6 +163,11 @@ if(CMAKE_HOST_WIN32)
 
 endif()
 
+vcpkg_apply_patches(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PATCHES add-missing-tuple.patch
+)
+
 vcpkg_configure_gn(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
