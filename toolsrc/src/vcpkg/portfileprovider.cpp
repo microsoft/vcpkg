@@ -42,7 +42,7 @@ namespace vcpkg::PortFileProvider
                     overlay = fs.canonical(VCPKG_LINE_INFO, paths.original_cwd / overlay);
                 }
 
-                Debug::print("Using overlay: ", overlay.u8string(), "\n");
+                Debug::print("Using overlay: ", fs::u8string(overlay), "\n");
 
                 Checks::check_exit(
                     VCPKG_LINE_INFO, filesystem.exists(overlay), "Error: Path \"%s\" does not exist", overlay.string());
@@ -86,7 +86,7 @@ namespace vcpkg::PortFileProvider
                 {
                     vcpkg::print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, ports_dir.u8string());
+                        VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(ports_dir));
                 }
 
                 continue;
@@ -107,7 +107,7 @@ namespace vcpkg::PortFileProvider
                     }
                     Checks::exit_with_message(VCPKG_LINE_INFO,
                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                              (ports_dir / spec).u8string(),
+                                              fs::u8string(ports_dir / spec),
                                               spec,
                                               scf->get()->core_paragraph->name);
                 }
@@ -115,7 +115,7 @@ namespace vcpkg::PortFileProvider
                 {
                     vcpkg::print_error_message(found_scf.error());
                     Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", spec, ports_dir.u8string());
+                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", spec, fs::u8string(ports_dir));
                 }
             }
         }
@@ -150,7 +150,7 @@ namespace vcpkg::PortFileProvider
                 {
                     vcpkg::print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", ports_dir.u8string());
+                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", fs::u8string(ports_dir));
                 }
                 continue;
             }

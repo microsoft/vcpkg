@@ -179,8 +179,12 @@ namespace vcpkg
             System::print2("And this is the list of valid fields for manifest files: \n\n    ",
                            Strings::join("\n    ", get_list_of_manifest_fields()),
                            "\n\n");
-            System::print2("You may need to update the vcpkg binary; try running bootstrap-vcpkg.bat or "
-                           "bootstrap-vcpkg.sh to update.\n\n");
+#if defined(_WIN32)
+            auto bootstrap = ".\\bootstrap-vcpkg.bat";
+#else
+            auto bootstrap = "./bootstrap-vcpkg.sh";
+#endif
+            System::print2("You may need to update the vcpkg binary; try running %s to update.\n\n", bootstrap);
         }
 
         for (auto&& error_info : error_info_list)
@@ -359,7 +363,7 @@ namespace vcpkg
 
     static ParseExpected<SourceParagraph> parse_source_paragraph(const fs::path& path_to_control, Paragraph&& fields)
     {
-        auto origin = path_to_control.u8string();
+        auto origin = fs::u8string(path_to_control);
 
         ParagraphParser parser(std::move(fields));
 
@@ -422,7 +426,7 @@ namespace vcpkg
 
     static ParseExpected<FeatureParagraph> parse_feature_paragraph(const fs::path& path_to_control, Paragraph&& fields)
     {
-        auto origin = path_to_control.u8string();
+        auto origin = fs::u8string(path_to_control);
         ParagraphParser parser(std::move(fields));
 
         auto fpgh = std::make_unique<FeatureParagraph>();
@@ -448,7 +452,7 @@ namespace vcpkg
         if (control_paragraphs.size() == 0)
         {
             auto ret = std::make_unique<Parse::ParseControlErrorInfo>();
-            ret->name = path_to_control.u8string();
+            ret->name = fs::u8string(path_to_control);
             return ret;
         }
 
@@ -965,7 +969,7 @@ namespace vcpkg
         } err = {};
         auto visit = Json::Reader{&err};
 
-        err.pcei.name = path_to_manifest.u8string();
+        err.pcei.name = fs::u8string(path_to_manifest);
         {
             auto extra_fields = invalid_json_fields(manifest, get_list_of_manifest_fields());
             if (!extra_fields.empty())

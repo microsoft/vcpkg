@@ -3,11 +3,10 @@ vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID" ON_ARCH "arm" "x
 vcpkg_from_github(
    OUT_SOURCE_PATH SOURCE_PATH
    REPO ig-or/qwtw
-   REF 54bedcce743991f2f274bebda0ee399683a9e9bb
-   SHA512 defd7f199c8bf490f5ac69deade4a4a45581c0fa5b79cf2aa1fbec8c46bbbe1d9c9cf0f7ba383e8e92f5e6145b42a837b7dc555017893797f72dab1ce490e57a
+   REF 7d6e7c95437cbc7d5d123fc1ccf0d6a3c4e419e6 # v3.1.0
+   SHA512 de5abf26d0975b9f0ed88e10cd4d5b4d12e25cce8c87ab6a18d8e7064697de6fc8da83e118b5a4e2819c09e2dbbfd20daeecc6a42748c019c6699666276d075a
    HEAD_REF master
 )
-
  
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
