@@ -15,6 +15,7 @@
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
