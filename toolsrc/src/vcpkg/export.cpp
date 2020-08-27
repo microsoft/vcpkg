@@ -54,9 +54,9 @@ namespace vcpkg::Export
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@RAW_EXPORTED_DIR@", raw_exported_dir);
         nuspec_file_content = Strings::replace_all(
-            std::move(nuspec_file_content), "@TARGETS_REDIRECT_PATH@", targets_redirect_path.u8string());
+            std::move(nuspec_file_content), "@TARGETS_REDIRECT_PATH@", fs::u8string(targets_redirect_path));
         nuspec_file_content = Strings::replace_all(
-            std::move(nuspec_file_content), "@PROPS_REDIRECT_PATH@", props_redirect_path.u8string());
+            std::move(nuspec_file_content), "@PROPS_REDIRECT_PATH@", fs::u8string(props_redirect_path));
         return nuspec_file_content;
     }
 
@@ -206,7 +206,7 @@ namespace vcpkg::Export
     {
         const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
 
-        const std::string exported_dir_filename = raw_exported_dir.filename().u8string();
+        const std::string exported_dir_filename = fs::u8string(raw_exported_dir.filename());
         const std::string exported_archive_filename =
             Strings::format("%s.%s", exported_dir_filename, format.extension());
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
@@ -556,7 +556,7 @@ namespace vcpkg::Export
             System::printf(System::Color::success,
                            R"(Files exported at: "%s")"
                            "\n",
-                           raw_exported_dir_path.u8string());
+                           fs::u8string(raw_exported_dir_path));
             print_next_step_info(raw_exported_dir_path);
         }
 
@@ -568,7 +568,7 @@ namespace vcpkg::Export
             const std::string nuget_version = opts.maybe_nuget_version.value_or("1.0.0");
             const fs::path output_path =
                 do_nuget_export(paths, nuget_id, nuget_version, raw_exported_dir_path, opts.output_dir);
-            System::print2(System::Color::success, "NuGet package exported at: ", output_path.u8string(), "\n");
+            System::print2(System::Color::success, "NuGet package exported at: ", fs::u8string(output_path), "\n");
 
             System::printf(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
@@ -576,7 +576,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 )"
                            "\n\n",
                            nuget_id,
-                           output_path.parent_path().u8string());
+                           fs::u8string(output_path.parent_path()));
         }
 
         if (opts.zip)
@@ -584,7 +584,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             System::print2("Creating zip archive...\n");
             const fs::path output_path =
                 do_archive_export(paths, raw_exported_dir_path, opts.output_dir, ArchiveFormatC::ZIP);
-            System::print2(System::Color::success, "Zip archive exported at: ", output_path.u8string(), "\n");
+            System::print2(System::Color::success, "Zip archive exported at: ", fs::u8string(output_path), "\n");
             print_next_step_info("[...]");
         }
 
@@ -593,7 +593,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             System::print2("Creating 7zip archive...\n");
             const fs::path output_path =
                 do_archive_export(paths, raw_exported_dir_path, opts.output_dir, ArchiveFormatC::SEVEN_ZIP);
-            System::print2(System::Color::success, "7zip archive exported at: ", output_path.u8string(), "\n");
+            System::print2(System::Color::success, "7zip archive exported at: ", fs::u8string(output_path), "\n");
             print_next_step_info("[...]");
         }
 

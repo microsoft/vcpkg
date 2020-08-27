@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/files.h>
 
 #include <string>
@@ -7,8 +9,6 @@
 
 namespace vcpkg
 {
-    struct VcpkgPaths;
-
     namespace Tools
     {
         static const std::string SEVEN_ZIP = "7zip";

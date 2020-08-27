@@ -1,19 +1,20 @@
 vcpkg_buildpath_length_warning(37)
 
-set(OMPL_VERSION 1.4.2)
-set(OMPL_DISTNAME "ompl")
-set(OMPL_CHECKSUM "1dc477ee471c0570fd94838b072105960e09186f29634e2f61d885153df36532ab40e30912b534c61f222c09dad63fc6097d324b53c265f9284f20c585d3095c")
+set(OMPL_VERSION 1.5.0)
 
 if("app" IN_LIST FEATURES)
-    set(OMPL_DISTNAME "omplapp")
-    set(OMPL_CHECKSUM "04812a659fd81c2c541907911cbf4e5987be034546e8e48ed3d11b2b2f9ad3f7931f15d30a32ce3b64deb66b13875970797ac5072e92bfa0841e8d27d85fcb18")
+    vcpkg_download_distfile(ARCHIVE
+        URLS "https://github.com/ompl/omplapp/releases/download/1.5.0/omplapp-1.5.0-Source.tar.gz"
+        FILENAME "omplapp-${OMPL_VERSION}.tar.gz"
+        SHA512 ad221b67146915cb63be6731ca2fa7d827d85b7fd175d87ee64c799311dfe4878935881b1ae6447357fdd178f70c9aa01b178e857261a8d8769affa1e58ed72b
+    )
+else()
+    vcpkg_download_distfile(ARCHIVE
+        URLS "https://github.com/ompl/ompl/archive/1.5.0.tar.gz"
+        FILENAME "ompl-${OMPL_VERSION}.tar.gz"
+        SHA512 a300682fa0af40768c93e44b819c677b6121812e4f968ad89b5ae4044f3171a7febca63fa5645f2ad0f99ec3dfb3b02fe8c7443c4e389bf19a4a4bc9c7a5d013
+    )
 endif()
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://bitbucket.org/ompl/ompl/downloads/${OMPL_DISTNAME}-${OMPL_VERSION}-Source.tar.gz"
-    FILENAME "${OMPL_DISTNAME}-${OMPL_VERSION}.tar.gz"
-    SHA512 ${OMPL_CHECKSUM}
-)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -21,9 +22,10 @@ vcpkg_extract_source_archive_ex(
     REF ${OMPL_VERSION}
 )
 
-#Due to there are URL before the change text, using patch modify this change failed, so use the following command instead of patch.
+# Based on selected features different files get downloaded, so use the following command instead of patch.
 file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
-string(REPLACE "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 CONFIG REQUIRED)" _contents "${_contents}")
+string(REPLACE "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 REQUIRED CONFIG)" _contents "${_contents}")
+string(REPLACE "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)" _contents "${_contents}")
 file(WRITE ${SOURCE_PATH}/CMakeLists.txt "${_contents}")
 
 vcpkg_configure_cmake(
@@ -58,6 +60,7 @@ if ("app" IN_LIST FEATURES)
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/debug/bin
+        ${CURRENT_PACKAGES_DIR}/include/omplapp/CMakeFiles
         ${CURRENT_PACKAGES_DIR}/share/ompl/resources
         ${CURRENT_PACKAGES_DIR}/share/ompl/webapp
     )
