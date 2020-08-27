@@ -208,6 +208,7 @@ civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
 # clapack is replaced by lapack-reference. 
 clapack:x64-linux = skip
+clapack:x64-osx = skip
 clapack:x64-windows = skip
 clapack:x64-windows-static = skip
 clapack:x86-windows = skip
