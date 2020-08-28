@@ -211,7 +211,7 @@ chmlib:x64-uwp=fail
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
-# clapack is replaced by lapack-reference. 
+# clapack is replaced by lapack-reference.
 clapack:x64-linux = skip
 clapack:x64-osx = skip
 clapack:x64-windows = skip
@@ -1250,7 +1250,6 @@ openmpi:x64-uwp=fail
 openmpi:x64-windows=fail
 openmpi:x64-windows-static=fail
 openmpi:x86-windows=fail
-openmvs:x64-linux=fail
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
 openscap:x64-linux=fail

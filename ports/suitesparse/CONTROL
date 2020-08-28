@@ -1,10 +1,5 @@
 Source: suitesparse
-Version: 5.4.0
-Port-Version: 7
-Build-Depends: lapack
-Homepage: http://faculty.cse.tamu.edu/davis/SuiteSparse
+Version: 5.8.0
+Build-Depends: lapack, metis
+Homepage: http://suitesparse.com
 Description: algebra library
-
-Feature: metis
-Build-Depends: metis
-Description: Use metis in SuiteSparse
