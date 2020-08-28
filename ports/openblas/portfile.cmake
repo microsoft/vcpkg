@@ -58,7 +58,7 @@ if(VCPKG_TARGET_IS_UWP)
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS 
+        OPTIONS
             ${COMMON_OPTIONS}
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
             -DVS_WINRT_COMPONENT=TRUE
@@ -114,12 +114,8 @@ file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
 string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 
-# openblas is BSD
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindBLAS.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
-
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
