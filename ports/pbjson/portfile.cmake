@@ -12,5 +12,6 @@ vcpkg_from_github(
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pbjson)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/pbjson/LICENSE ${CURRENT_PACKAGES_DIR}/share/pbjson/copyright)
 
-file(GLOB HEADER_FILES ${SOURCE_PATH}/pbjson/include/*.h)
+file(GLOB HEADER_FILES ${SOURCE_PATH}/src/*.h)
+
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/pbjson)
