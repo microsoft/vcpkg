@@ -5,7 +5,7 @@ diff --git a/tensorflow/core/platform/path.cc b/tensorflow/core/platform/path.cc
    }
    LOG(FATAL) << "No temp directory found.";
  #endif
-+  return "";
++  std::abort();
  }
  
  bool GetTestUndeclaredOutputsDir(string* dir) {
@@ -22,7 +22,7 @@ diff --git a/tensorflow/core/framework/device_base.cc b/tensorflow/core/framewor
  
  const string& DeviceBase::name() const {
    LOG(FATAL) << "Device does not implement name()";
-+  return "";
++  std::abort();
  }
  
  void DeviceBase::set_eigen_cpu_device(Eigen::ThreadPoolDevice* d) {
