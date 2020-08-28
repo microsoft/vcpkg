@@ -136,7 +136,6 @@ endif()
 vcpkg_install_gn(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ${TARGETS}
-    PATH_SUFFIX "chromium"
 )
 
 # Install includes

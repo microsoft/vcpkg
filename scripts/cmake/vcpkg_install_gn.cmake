@@ -6,7 +6,6 @@
 ## ```cmake
 ## vcpkg_install_gn(
 ##      SOURCE_PATH <SOURCE_PATH>
-##      [PATH_SUFFIX <PATH_SUFFIX>]
 ##      [TARGETS <target>...]
 ## )
 ## ```
@@ -15,25 +14,16 @@
 ## ### SOURCE_PATH
 ## The path to the source directory
 ## 
-## ### PATH_SUFFIX
-## Subdirectory suffix to be added to the bin, lib and tool directories.
-##
 ## ### TARGETS
 ## Only install the specified targets.
 ##
 ## Note: includes must be handled separately
 
 function(vcpkg_install_gn)
-    cmake_parse_arguments(_vig "" "SOURCE_PATH;PATH_SUFFIX" "TARGETS" ${ARGN})
+    cmake_parse_arguments(_vig "" "SOURCE_PATH" "TARGETS" ${ARGN})
     
     if(NOT DEFINED _vig_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")
-    endif()
-
-    if(NOT DEFINED _vig_PATH_SUFFIX)
-        set(_vig_PATH_SUFFIX "")
-    else()
-        set(_vig_PATH_SUFFIX "/${_vig_PATH_SUFFIX}")
     endif()
 
     vcpkg_build_ninja(TARGETS ${_vig_TARGETS})
@@ -85,11 +75,11 @@ function(vcpkg_install_gn)
                     endif()
                     
                     if(TARGET_TYPE STREQUAL "executable")
-                        file(INSTALL "${OUTPUT}" DESTINATION "${INSTALL_DIR}/tools${_vig_PATH_SUFFIX}")
+                        file(INSTALL "${OUTPUT}" DESTINATION "${INSTALL_DIR}/tools")
                     elseif("${OUTPUT}" MATCHES "(\\.dll|\\.pdb)$")
-                        file(INSTALL "${OUTPUT}" DESTINATION "${INSTALL_DIR}/bin${_vig_PATH_SUFFIX}")
+                        file(INSTALL "${OUTPUT}" DESTINATION "${INSTALL_DIR}/bin")
                     else()
-                        file(INSTALL "${OUTPUT}" DESTINATION "${INSTALL_DIR}/lib${_vig_PATH_SUFFIX}")
+                        file(INSTALL "${OUTPUT}" DESTINATION "${INSTALL_DIR}/lib")
                     endif()
                 endforeach()
             endforeach()
