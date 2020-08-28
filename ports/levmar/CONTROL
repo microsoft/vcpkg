@@ -1,0 +1,5 @@
+Source: levmar
+Version: 2.6
+Homepage: http://users.ics.forth.gr/~lourakis/levmar/
+Description: Levenberg-Marquardt nonlinear least squares optimization algorithm
+Supports: !(uwp | osx | linux)
