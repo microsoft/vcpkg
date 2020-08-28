@@ -1,0 +1,4 @@
+Source: pbjson
+Version: 1.0
+Description: A fast C++ serialization and de-serialization of Google's protobuf Messages into/from JSON format
+HOMEPAGE: https://github.com/yinqiwen/pbjson 
