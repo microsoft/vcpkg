@@ -4,6 +4,10 @@
 # USE_OPTIMIZED_LAPACK (Probably not what we want. Does a find_package(LAPACK): probably for LAPACKE only builds _> own port?)
 # LAPACKE Builds LAPACKE
 # LAPACKE_WITH_TMG Build LAPACKE with tmglib routines
+if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/lapack.lib")
+    message(FATAL_ERROR "Can't build ${PORT} if clapack is installed. Please remove clapack, and try to install ${PORT} again if you need it.")
+endif()
+
 include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 

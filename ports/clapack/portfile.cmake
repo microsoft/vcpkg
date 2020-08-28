@@ -1,3 +1,7 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/lapack.lib")
+    message(FATAL_ERROR "Can't build ${PORT} if lapack-reference is installed. Please remove lapack-reference, and try to install ${PORT} again if you need it.")
+endif()
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
