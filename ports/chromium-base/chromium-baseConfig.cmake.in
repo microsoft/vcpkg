@@ -16,7 +16,7 @@ endif()
 add_library(chromium-base INTERFACE IMPORTED GLOBAL)
 add_library(chromium-base::chromium-base ALIAS chromium-base)
 
-set(LIBRARIES_ base base_static dynamic_annotations double_conversion)
+set(LIBRARIES_ chromium_base chromium_base_static dynamic_annotations double_conversion)
 
 if(WIN32)
     list(APPEND LIBRARIES_
