@@ -1,7 +1,7 @@
 {
-    "name": "knet",
-    "version-string": "1.0.1",
-    "homepage": "https://github.com/kibaamor/knet",
-    "description": "A cross platform lock-free and timer-supported C++11 network library.",
-    "license": "MIT"
+  "name": "knet",
+  "version-string": "1.0.1",
+  "description": "A cross platform lock-free and timer-supported C++11 network library.",
+  "homepage": "https://github.com/kibaamor/knet",
+  "license": "MIT"
 }
