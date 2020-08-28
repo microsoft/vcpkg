@@ -473,7 +473,7 @@ namespace vcpkg::Build
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
         // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
-        vcpkg::Util::unused(paths.get_tool_exe(Tools::NINJA));
+        (void)(paths.get_tool_exe(Tools::NINJA));
 #endif
         std::vector<System::CMakeVariable> cmake_args{
             {"CURRENT_PORT_DIR", paths.scripts / "detect_compiler"},
@@ -539,7 +539,7 @@ namespace vcpkg::Build
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
         // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
-        vcpkg::Util::unused(paths.get_tool_exe(Tools::NINJA));
+        (void)(paths.get_tool_exe(Tools::NINJA));
 #endif
         auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
         auto& scf = *scfl.source_control_file;
@@ -871,6 +871,7 @@ namespace vcpkg::Build
         abi_tag_entries.emplace_back("features", Strings::join(";", sorted_feature_list));
 
         if (action.build_options.use_head_version == UseHeadVersion::YES) abi_tag_entries.emplace_back("head", "");
+        if (action.build_options.editable == Editable::YES) abi_tag_entries.emplace_back("editable", "");
 
         Util::sort(abi_tag_entries);
 
@@ -1019,7 +1020,7 @@ namespace vcpkg::Build
         std::error_code ec;
         const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
         const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
-        if (action.build_options.editable == Build::Editable::NO)
+        if (action.has_package_abi())
         {
             auto restore = binaries_provider.try_restore(paths, action);
             if (restore == RestoreResult::build_failed)
@@ -1044,7 +1045,7 @@ namespace vcpkg::Build
         fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", fs::u8string(abi_file_in_package));
 
-        if (action.build_options.editable == Build::Editable::NO && result.code == BuildResult::SUCCEEDED)
+        if (action.has_package_abi() && result.code == BuildResult::SUCCEEDED)
         {
             binaries_provider.push_success(paths, action);
         }
@@ -1086,12 +1087,18 @@ namespace vcpkg::Build
 
     std::string create_user_troubleshooting_message(const PackageSpec& spec)
     {
-        return Strings::format("Please ensure you're using the latest portfiles with `.\\vcpkg update`, then\n"
+#if defined(_WIN32)
+        auto vcpkg_update_cmd = ".\\vcpkg";
+#else
+        auto vcpkg_update_cmd = "./vcpkg";
+#endif
+        return Strings::format("Please ensure you're using the latest portfiles with `%s update`, then\n"
                                "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
                                "  Package: %s\n"
                                "  Vcpkg version: %s\n"
                                "\n"
                                "Additionally, attach any relevant sections from the log files above.",
+                               vcpkg_update_cmd,
                                spec,
                                Commands::Version::version());
     }

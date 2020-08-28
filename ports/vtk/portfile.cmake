@@ -120,7 +120,7 @@ vcpkg_from_github(
         python_debug.patch
         fix-using-hdf5.patch
         # Last patch TODO: Patch out internal loguru
-        FindExpat.patch
+        FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
 )
 
 # =============================================================================

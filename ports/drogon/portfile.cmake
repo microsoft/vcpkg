@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.0.0-beta20
-    SHA512 10da2765df24848964358ea3f6a8843664d142bfd1d276649438c5d79ad88f98467ac742d3ff23e9fda93b89ab9568b2ecea8c3ee4d527d0b6b4a5892025e24e
+    REF v1.0.0-beta21
+    SHA512 bacd3c0d20c9d5eb22e6c872c8bea6865a6beb93d83165e117b11a30b7fffd65de48838b599cda81043e7ae1394a9d13390910baa4b84d8cfad3050f152a4c36
     HEAD_REF master
     PATCHES
         vcpkg.patch
-        drogon_ctl_install.patch
         pg.patch
 )
 
@@ -20,8 +19,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Fix CMake files
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Drogon)
+# Copy drogon_ctl
+vcpkg_copy_tools(TOOL_NAMES drogon_ctl
+                 AUTO_CLEAN)
 # # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
@@ -34,4 +35,3 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 # Copy pdb files
 vcpkg_copy_pdbs()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/drogon)

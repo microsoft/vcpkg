@@ -1,10 +1,12 @@
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
 
 #include <vcpkg/commands.contact.h>
 #include <vcpkg/help.h>
 #include <vcpkg/userconfig.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Contact
 {
