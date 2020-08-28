@@ -1,6 +1,5 @@
 #header-only library
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yinqiwen/pbjson
@@ -9,8 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pbjson)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pbjson/LICENSE ${CURRENT_PACKAGES_DIR}/share/pbjson/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(GLOB HEADER_FILES ${SOURCE_PATH}/src/*.h)
 
