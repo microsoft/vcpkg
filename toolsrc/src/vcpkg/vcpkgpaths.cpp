@@ -434,7 +434,6 @@ If you wish to silence this error and use classic mode, you can:
             fs::path config_path = root / fs::u8path("vcpkg-configuration.json");
             if (filesystem.exists(config_path))
             {
-                std::error_code ec;
                 auto config_object = Json::parse_file(filesystem, config_path, ec);
                 if (ec)
                 {
