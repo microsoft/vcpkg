@@ -36,6 +36,8 @@
 ##
 ## * [fdlibm](https://github.com/Microsoft/vcpkg/blob/master/ports/fdlibm/portfile.cmake)
 
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_from_git)
   set(oneValueArgs OUT_SOURCE_PATH URL REF)
   set(multipleValuesArgs PATCHES)

@@ -61,6 +61,9 @@
 ## * [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
 ## * [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
 ##
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_from_gitlab)
     set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF)
     set(multipleValuesArgs PATCHES)

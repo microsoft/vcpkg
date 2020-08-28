@@ -29,6 +29,9 @@
 ##
 ## * [libbson](https://github.com/Microsoft/vcpkg/blob/master/ports/libbson/portfile.cmake)
 ## * [gdal](https://github.com/Microsoft/vcpkg/blob/master/ports/gdal/portfile.cmake)
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_apply_patches)
     cmake_parse_arguments(_ap "QUIET" "SOURCE_PATH" "PATCHES" ${ARGN})
 
