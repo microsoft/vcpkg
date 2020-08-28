@@ -8,19 +8,46 @@ vcpkg_from_github(
         fix-uwp.patch
         fix-android-log.patch
         fix-static-build.patch
+        fix-crosscompile-rc-build.patch
 )
 
-if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+
+if(CMAKE_HOST_WIN32)
+  set(HOST_PROTOBUF_TRIPLET "x86-windows")
+  if(NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(protobuf_BUILD_PROTOC_BINARIES OFF)
-elseif(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_MINGW AND NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP))
+  elseif(NOT VCPKG_TARGET_IS_MINGW AND NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP))
     set(protobuf_BUILD_PROTOC_BINARIES OFF)
-else()
+  else()
     set(protobuf_BUILD_PROTOC_BINARIES ON)
+  endif()
+
+elseif(CMAKE_HOST_APPLE)
+  set(HOST_PROTOBUF_TRIPLET "x64-osx-dynamic")
+  if(NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+    set(protobuf_BUILD_PROTOC_BINARIES OFF)
+  elseif(NOT VCPKG_TARGET_IS_OSX)
+    set(protobuf_BUILD_PROTOC_BINARIES OFF)
+  else()
+    set(protobuf_BUILD_PROTOC_BINARIES ON)
+  endif()
+
+elseif(CMAKE_HOST_UNIX)
+  set(HOST_PROTOBUF_TRIPLET "x64-linux")
+  if(NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+    set(protobuf_BUILD_PROTOC_BINARIES OFF)
+  elseif(NOT VCPKG_TARGET_IS_LINUX)
+    set(protobuf_BUILD_PROTOC_BINARIES OFF)
+  else()
+    set(protobuf_BUILD_PROTOC_BINARIES ON)
+  endif()
+
 endif()
 
-if(NOT protobuf_BUILD_PROTOC_BINARIES AND NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/protobuf)
-    message(FATAL_ERROR "Cross-targetting protobuf requires the x86-windows protoc to be available. Please install protobuf:x86-windows first.")
+if(HOST_PROTOBUF_TRIPLET AND NOT protobuf_BUILD_PROTOC_BINARIES AND NOT EXISTS ${CURRENT_INSTALLED_DIR}/../${HOST_PROTOBUF_TRIPLET}/tools/protobuf)
+  message(FATAL_ERROR "Cross-targetting protobuf requires the ${HOST_PROTOBUF_TRIPLET} protoc to be available. Please install protobuf:${HOST_PROTOBUF_TRIPLET} first.")
 endif()
+
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
@@ -88,13 +115,21 @@ endif()
 
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(CMAKE_HOST_WIN32)
-    if(protobuf_BUILD_PROTOC_BINARIES)
-        vcpkg_copy_tools(TOOL_NAMES protoc)
-    else()
-        file(COPY ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    endif()
+if(protobuf_BUILD_PROTOC_BINARIES)
+  file(GLOB EXECUTABLES ${CURRENT_PACKAGES_DIR}/bin/protoc*)
+  foreach(E IN LISTS EXECUTABLES)
+    file(INSTALL ${E} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
+         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
+  endforeach()
+else()
+  file(GLOB EXECUTABLES ${CURRENT_INSTALLED_DIR}/../${HOST_PROTOBUF_TRIPLET}/tools/${PORT}/protoc*)
+  foreach(E IN LISTS EXECUTABLES)
+    file(INSTALL ${E} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/
+         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
+  endforeach()
+endif()
 
+if(CMAKE_HOST_WIN32)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
         protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -103,11 +138,6 @@ if(CMAKE_HOST_WIN32)
         protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
     endif()
 else()
-    file(GLOB EXECUTABLES ${CURRENT_PACKAGES_DIR}/bin/protoc*)
-    foreach(E IN LISTS EXECUTABLES)
-        file(INSTALL ${E} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
-                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
-    endforeach()
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
 endif()
