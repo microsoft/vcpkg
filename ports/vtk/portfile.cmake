@@ -68,6 +68,13 @@ endif()
 if("mpi" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_GROUP_ENABLE_MPI=YES
+        -DVTK_USE_MPI=YES
+    )
+endif()
+
+if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
     )
 endif()
 
