@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF de6defa6fff08de20e36f9168f5b277e292daf46 #v1.30.2
-    SHA512 e77ba43fdce5c2257abb957908b94f3132b191d930c3c1ab1350bdf6d859aaf76f0afb067f4af6abb3c8428de20dd47596f316262eb5d8569ebb2ffa13b50054
+    REF 7d7e4567625db7cfebf8969a225948097a3f9f89 #v1.31.1
+    SHA512 a348b8779f533c53b99c052264e0a008121087267bcf836fb2310819ab384effdc0996df031f407ee4bf8bb0cb37a81e061e65ab24ab7011ce6400de3808f5a4
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -52,6 +52,7 @@ vcpkg_configure_cmake(
         -DgRPC_PROTOBUF_PROVIDER=package
         -DgRPC_ABSL_PROVIDER=package
         -DgRPC_UPB_PROVIDER=package
+        -DgRPC_RE2_PROVIDER=package
         -DgRPC_PROTOBUF_PACKAGE_TYPE=CONFIG
         -DgRPC_CARES_PROVIDER=${cares_CARES_PROVIDER}
         -DgRPC_GFLAGS_PROVIDER=none

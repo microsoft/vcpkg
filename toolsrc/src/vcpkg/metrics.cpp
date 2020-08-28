@@ -380,9 +380,7 @@ namespace vcpkg::Metrics
             return;
         }
 
-#if !defined(_WIN32)
-        (void)(payload);
-#else
+#if defined(_WIN32)
         HINTERNET connect = nullptr, request = nullptr;
         BOOL results = FALSE;
 
@@ -464,13 +462,15 @@ namespace vcpkg::Metrics
             __debugbreak();
             auto err = GetLastError();
             std::cerr << "[DEBUG] failed to connect to server: " << err << "\n";
-#endif
+#endif // NDEBUG
         }
 
         if (request) WinHttpCloseHandle(request);
         if (connect) WinHttpCloseHandle(connect);
         if (session) WinHttpCloseHandle(session);
-#endif
+#else  // ^^^ _WIN32 // !_WIN32 vvv
+        (void)payload;
+#endif // ^^^ !_WIN32
     }
 
     void Metrics::flush(Files::Filesystem& fs)
