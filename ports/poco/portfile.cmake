@@ -16,7 +16,6 @@ vcpkg_from_github(
         # Add the support of arm64-windows
         arm64_pcre.patch
         fix_foundation_link.patch
-        use-vcpkg-expat.patch
 )
 
 # define Poco linkage type
