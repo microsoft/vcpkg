@@ -1,16 +1,9 @@
-set(BZIP2_VERSION 1.0.6) # TODO: Update to 1.0.8
-vcpkg_download_distfile(ARCHIVE # TODO: switch to vcpkg_from_git with https://sourceware.org/git/?p=bzip2.git;a=summary
-    URLS "https://github.com/past-due/bzip2-mirror/releases/download/v${BZIP2_VERSION}/bzip2-${BZIP2_VERSION}.tar.gz"
-    FILENAME "bzip2-${BZIP2_VERSION}.tar.gz"
-    SHA512 00ace5438cfa0c577e5f578d8a808613187eff5217c35164ffe044fbafdfec9e98f4192c02a7d67e01e5a5ccced630583ad1003c37697219b0f147343a3fdd12)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${BZIP2_VERSION}
+    URL https://sourceware.org/git/bzip2.git
+    REF 75a94bea3918e612b879d6a11ca64b8689526147
     PATCHES
         fix-import-export-macros.patch
-        fix-windows-include.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
