@@ -6,7 +6,6 @@
 # LAPACKE_WITH_TMG Build LAPACKE with tmglib routines
 if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/lapack.lib")
     message(FATAL_ERROR "Can't build ${PORT} if clapack is installed. Please remove clapack:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
-
 endif()
 
 include(vcpkg_find_fortran)
