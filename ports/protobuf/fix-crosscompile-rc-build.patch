@@ -1,0 +1,39 @@
+diff --git a/cmake/protoc.cmake b/cmake/protoc.cmake
+index be47c54..8b1bd97 100644
+--- a/cmake/protoc.cmake
++++ b/cmake/protoc.cmake
+@@ -2,7 +2,7 @@
+   ${protobuf_source_dir}/src/google/protobuf/compiler/main.cc
+ )
+ 
+-if (MSVC)
++if (CMAKE_HOST_WIN32 AND MSVC)
+ set(protoc_rc_files
+   ${CMAKE_CURRENT_BINARY_DIR}/version.rc
+ )
+diff --git a/cmake/libprotobuf.cmake b/cmake/libprotobuf.cmake
+index be47c54..8b1bd97 100644
+--- a/cmake/libprotobuf.cmake
++++ b/cmake/libprotobuf.cmake
+@@ -106,7 +106,7 @@
+   ${protobuf_source_dir}/src/google/protobuf/wrappers.pb.h
+ )
+ 
+-if (MSVC)
++if (CMAKE_HOST_WIN32 AND MSVC)
+ set(libprotobuf_rc_files
+   ${CMAKE_CURRENT_BINARY_DIR}/version.rc
+ )
+diff --git a/cmake/libprotobuf-lite.cmake b/cmake/libprotobuf-lite.cmake
+index be47c54..8b1bd97 100644
+--- a/cmake/libprotobuf-lite.cmake
++++ b/cmake/libprotobuf-lite.cmake
+@@ -55,7 +55,7 @@
+   ${protobuf_source_dir}/src/google/protobuf/wire_format_lite.h
+ )
+ 
+-if (MSVC)
++if (CMAKE_HOST_WIN32 AND MSVC)
+ set(libprotobuf_lite_rc_files
+   ${CMAKE_CURRENT_BINARY_DIR}/version.rc
+ )
