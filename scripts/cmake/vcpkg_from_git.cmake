@@ -78,7 +78,7 @@ function(vcpkg_from_git)
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-fetch-${TARGET_TRIPLET}
     )
-    _execute_process(
+    vcpkg_execute_in_download_mode(
       COMMAND ${GIT} rev-parse FETCH_HEAD
       OUTPUT_VARIABLE REV_PARSE_HEAD
       ERROR_VARIABLE REV_PARSE_HEAD
