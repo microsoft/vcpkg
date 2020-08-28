@@ -54,6 +54,9 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}")
     endif()
 
+    # Explicitly ignore well-known system libs
+    list(APPEND _system_libs stdc++ gcc gcc_s rt m dl)
+
     # First make sure everything is ok with the package and its deps
     get_filename_component(_package_name "${_file}" NAME_WLE)
     debug_message("Checking package (${_config}): ${_package_name}")
