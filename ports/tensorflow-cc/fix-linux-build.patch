@@ -27,111 +27,38 @@ diff --git a/third_party/aws/aws-checksums.bazel b/third_party/aws/aws-checksums
 +    }),
  )
 
-diff --git a/tensorflow/core/kernels/data/experimental/io_ops.h b/tensorflow/core/kernels/data/experimental/io_ops.h
---- a/tensorflow/core/kernels/data/experimental/io_ops.h
-+++ b/tensorflow/core/kernels/data/experimental/io_ops.h
-@@ -26,23 +26,28 @@
+diff --git a/tensorflow/core/kernels/data/experimental/io_ops.cc b/tensorflow/core/kernels/data/experimental/io_ops.cc
+--- a/tensorflow/core/kernels/data/experimental/io_ops.cc
++++ b/tensorflow/core/kernels/data/experimental/io_ops.cc
+@@ -28,6 +28,12 @@
  namespace data {
  namespace experimental {
 
-+constexpr const char* const kCompression = "compression";
-+constexpr const char* const kPath = "path";
-+constexpr const char* const kShardFunc = "shard_func";
-+constexpr const char* const kShardFuncOtherArgs = "shard_func_other_args";
-+constexpr const char* const kUseShardFunc = "use_shard_func";
-+constexpr const char* const kDatasetType = "Load";
-+constexpr const char* const kOutputTypes = "output_types";
-+constexpr const char* const kOutputShapes = "output_shapes";
-+constexpr const char* const kReaderFunc = "reader_func";
-+constexpr const char* const kReaderFuncOtherArgs = "reader_func_other_args";
-+constexpr const char* const kReaderFuncTarguments = "Treader_func_args";
++/*static*/ constexpr const char* const LoadDatasetOp::kCompression;
++/*static*/ constexpr const char* const LoadDatasetOp::kReaderFunc;
++/*static*/ constexpr const char* const LoadDatasetOp::kReaderFuncTarguments;
 +
-+constexpr const int kFileFormatVersion = 2;
++/*static*/ constexpr const int SaveDatasetOp::kFileFormatVersion;
 +
- // An operation that can save a dataset to one or more files.
- class SaveDatasetOp : public HybridAsyncOpKernel {
-  public:
--  static constexpr const char* const kCompression = "compression";
--  static constexpr const char* const kPath = "path";
--  static constexpr const char* const kShardFunc = "shard_func";
--  static constexpr const char* const kShardFuncOtherArgs =
--      "shard_func_other_args";
--  static constexpr const char* const kUseShardFunc = "use_shard_func";
--
-   explicit SaveDatasetOp(OpKernelConstruction* ctx);
+ SaveDatasetOp::SaveDatasetOp(OpKernelConstruction* ctx)
+     : HybridAsyncOpKernel(ctx, "tf_data_save_dataset") {
+   OP_REQUIRES_OK(ctx, ctx->GetAttr(kCompression, &compression_));
 
-   Status DoCompute(OpKernelContext* ctx) override;
-
-  private:
--  static constexpr const int kFileFormatVersion = 2;
--
-   Status ConsumeElement();
-
-   Status GetShardIndex(IteratorContext* ctx,
-@@ -65,17 +70,6 @@
- // An operation that can load a dataset from one or more files.
- class LoadDatasetOp : public DatasetOpKernel {
-  public:
--  static constexpr const char* const kCompression = "compression";
--  static constexpr const char* const kDatasetType = "Load";
--  static constexpr const char* const kOutputTypes = "output_types";
--  static constexpr const char* const kOutputShapes = "output_shapes";
--  static constexpr const char* const kPath = "path";
--  static constexpr const char* const kReaderFunc = "reader_func";
--  static constexpr const char* const kReaderFuncOtherArgs =
--      "reader_func_other_args";
--  static constexpr const char* const kReaderFuncTarguments =
--      "Treader_func_args";
--
-   explicit LoadDatasetOp(OpKernelConstruction* ctx);
-
-   void MakeDataset(OpKernelContext* ctx, DatasetBase** output) override;
-
-diff --git a/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.h b/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.h
---- a/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.h
-+++ b/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.h
-@@ -38,22 +38,21 @@
+diff --git a/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.cc b/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.cc
+--- a/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.cc
++++ b/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.cc
+@@ -63,6 +63,14 @@
  namespace data {
  namespace experimental {
 
-+constexpr const char* const kDatasetType = "Snapshot";
-+constexpr const char* const kOutputTypes = "output_types";
-+constexpr const char* const kOutputShapes = "output_shapes";
-+constexpr const char* const kCompression = "compression";
-+constexpr const char* const kReaderFunc = "reader_func";
-+constexpr const char* const kShardFunc = "shard_func";
-+constexpr const char* const kReaderFuncOtherArgs = "reader_func_other_args";
-+constexpr const char* const kShardFuncOtherArgs = "shard_func_other_args";
-+constexpr const char* const kReaderFuncTarguments = "Treader_func_args";
-+constexpr const char* const kShardFuncTarguments = "Tshard_func_args";
++/*static*/ constexpr const char* const SnapshotDatasetV2Op::kCompression;
++/*static*/ constexpr const char* const SnapshotDatasetV2Op::kReaderFunc;
++/*static*/ constexpr const char* const SnapshotDatasetV2Op::kShardFunc;
++/*static*/ constexpr const char* const SnapshotDatasetV2Op::kReaderFuncTarguments;
++/*static*/ constexpr const char* const SnapshotDatasetV2Op::kShardFuncTarguments;
 +
-+constexpr const int kFileFormatVersion = 2;
++/*static*/ constexpr const int SnapshotDatasetV2Op::kFileFormatVersion;
 +
- class SnapshotDatasetV2Op : public UnaryDatasetOpKernel {
-  public:
--  static constexpr const char* const kDatasetType = "Snapshot";
--  static constexpr const char* const kOutputTypes = "output_types";
--  static constexpr const char* const kOutputShapes = "output_shapes";
--  static constexpr const char* const kCompression = "compression";
--  static constexpr const char* const kReaderFunc = "reader_func";
--  static constexpr const char* const kShardFunc = "shard_func";
--  static constexpr const char* const kReaderFuncOtherArgs =
--      "reader_func_other_args";
--  static constexpr const char* const kShardFuncOtherArgs =
--      "shard_func_other_args";
--  static constexpr const char* const kReaderFuncTarguments =
--      "Treader_func_args";
--  static constexpr const char* const kShardFuncTarguments = "Tshard_func_args";
--
-   explicit SnapshotDatasetV2Op(OpKernelConstruction* ctx);
+ // ==== Snapshot Implementation ====
 
-  protected:
-@@ -61,8 +60,6 @@
-                    DatasetBase** output) override;
-
-  private:
--  static constexpr const int kFileFormatVersion = 2;
--
-   class Dataset;
-
-   const int graph_def_version_;
+ /* The current snapshot on-disk layout is as follows:
