@@ -1,0 +1,4 @@
+Source: knet
+Version: 1.0.0
+Description: A cross platform lock-free and timer-supported C++11 network library.
+Homepage: https://github.com/kibaamor/knet
