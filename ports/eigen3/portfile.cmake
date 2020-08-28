@@ -25,16 +25,9 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
-
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/eigen3/Eigen3Targets.cmake
-    "set(_IMPORT_PREFIX " "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}/../..\" ABSOLUTE) #"
-)
-
+vcpkg_fixup_cmake_targets()
 vcpkg_fixup_pkgconfig()
 
-file(GLOB INCLUDES ${CURRENT_PACKAGES_DIR}/include/eigen3/*)
-file(COPY ${INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/COPYING.README DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
