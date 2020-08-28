@@ -1,5 +1,5 @@
 if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/lapack.lib")
-    message(FATAL_ERROR "Can't build ${PORT} if lapack-reference is installed. Please remove lapack-reference, and try to install ${PORT} again if you need it.")
+    message(FATAL_ERROR "Can't build ${PORT} if lapack-reference is installed. Please remove lapack-reference:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
