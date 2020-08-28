@@ -43,7 +43,7 @@ function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 endfunction()
 
 if(CMAKE_HOST_WIN32)
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git mingw-w64-x86_64-python-numpy)
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git mingw-w64-x86_64-python-numpy TIMEOUT 1800)
 	vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
 	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
