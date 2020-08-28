@@ -10,6 +10,6 @@ vcpkg_from_github(
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-file(GLOB HEADER_FILES ${SOURCE_PATH}/src/*.h)
+file(GLOB HEADER_FILES ${SOURCE_PATH}/src/*.h  ${SOURCE_PATH}/src/*.hpp)
 
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/pbjson)
