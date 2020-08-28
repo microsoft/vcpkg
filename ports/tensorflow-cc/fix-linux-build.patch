@@ -1,0 +1,84 @@
+diff --git a/third_party/aws/aws-checksums.bazel b/third_party/aws/aws-checksums.bazel
+--- a/third_party/aws/aws-checksums.bazel
++++ b/third_party/aws/aws-checksums.bazel
+@@ -7,6 +7,13 @@
+ 
+ exports_files(["LICENSE"])
+ 
++load("@bazel_skylib//lib:selects.bzl", "selects")
++
++selects.config_setting_group(
++    name = "is_linux_debug",
++    match_all = ["@org_tensorflow//tensorflow:linux_x86_64", "@org_tensorflow//tensorflow:debug"],
++)
++
+ cc_library(
+     name = "aws-checksums",
+     srcs = select({
+@@ -27,4 +34,10 @@
+     deps = [
+         "@aws-c-common",
+     ],
++    defines = select({
++        ":is_linux_debug": [
++            "DEBUG_BUILD"
++        ],
++        "//conditions:default": [],
++    }),
+ )
+
+diff --git a/tensorflow/core/kernels/data/experimental/io_ops.cc b/tensorflow/core/kernels/data/experimental/io_ops.cc
+--- a/tensorflow/core/kernels/data/experimental/io_ops.cc
++++ b/tensorflow/core/kernels/data/experimental/io_ops.cc
+@@ -113,7 +113,7 @@
+           snapshot_util::ShardDirectory(run_dir, shard_index);
+       auto writer_thread = std::make_unique<snapshot_util::AsyncWriter>(
+           ctx->env(), shard_index, snapshot_shard_directory,
+-          /*checkpoint_id=*/0, compression_, kFileFormatVersion,
++          /*checkpoint_id=*/0, compression_, SaveDatasetOp::kFileFormatVersion,
+           dataset->output_dtypes(), [&mu, &status](Status s) {
+             mutex_lock l(mu);
+             status.Update(s);
+@@ -234,9 +234,9 @@
+     TF_RETURN_IF_ERROR(b->AddDataset(
+         this, {std::make_pair(0, path_node)},         // Single tensor inputs.
+         {std::make_pair(1, reader_func_other_args)},  // Tensor list inputs.
+-        {std::make_pair(kCompression, compression_attr),
+-         std::make_pair(kReaderFunc, reader_func_attr),
+-         std::make_pair(kReaderFuncTarguments,
++        {std::make_pair(LoadDatasetOp::kCompression, compression_attr),
++         std::make_pair(LoadDatasetOp::kReaderFunc, reader_func_attr),
++         std::make_pair(LoadDatasetOp::kReaderFuncTarguments,
+                         reader_func_arguments_types_attr)},  // Attrs
+         output));
+     return Status::OK();
+
+diff --git a/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.cc b/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.cc
+--- a/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.cc
++++ b/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.cc
+@@ -364,11 +364,11 @@
+       {std::make_pair(2, reader_func_other_args),
+        std::make_pair(3, shard_func_other_args)},
+       /*attrs=*/
+-      {{kCompression, compression_attr},
+-       {kReaderFunc, reader_func_attr},
+-       {kShardFunc, shard_func_attr},
+-       {kReaderFuncTarguments, reader_func_arguments_types_attr},
+-       {kShardFuncTarguments, shard_func_arguments_types_attr}},
++      {{SnapshotDatasetV2Op::kCompression, compression_attr},
++       {SnapshotDatasetV2Op::kReaderFunc, reader_func_attr},
++       {SnapshotDatasetV2Op::kShardFunc, shard_func_attr},
++       {SnapshotDatasetV2Op::kReaderFuncTarguments, reader_func_arguments_types_attr},
++       {SnapshotDatasetV2Op::kShardFuncTarguments, shard_func_arguments_types_attr}},
+       output);
+ }
+ 
+@@ -687,7 +687,7 @@
+           snapshot_util::ShardDirectory(run_dir_, shard_index);
+       auto writer = std::make_unique<snapshot_util::AsyncWriter>(
+           ctx->env(), shard_index, snapshot_shard_directory,
+-          current_checkpoint_id_, dataset()->compression_, kFileFormatVersion,
++          current_checkpoint_id_, dataset()->compression_, SnapshotDatasetV2Op::kFileFormatVersion,
+           dataset()->output_dtypes(), [this](Status s) {
+             if (!s.ok()) {
+               mutex_lock l(mu_);

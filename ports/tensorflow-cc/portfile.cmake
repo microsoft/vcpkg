@@ -7,8 +7,12 @@ endif()
 set(TF_VERSION 2.3.0)
 
 set(STATIC_ONLY_PATCHES "")
+set(LINUX_ONLY_PATCHES "")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	set(STATIC_ONLY_PATCHES change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
+endif()
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+	set(LINUX_ONLY_PATCHES fix-linux-build.patch)
 endif()
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
@@ -22,6 +26,7 @@ vcpkg_from_github(
 		fix-dbg-build-errors.patch # Fix no return statement
 		fix-more-build-errors.patch # Fix no return statement
 		${STATIC_ONLY_PATCHES}
+		${LINUX_ONLY_PATCHES}
 )
 
 vcpkg_find_acquire_program(BAZEL)
