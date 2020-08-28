@@ -1,5 +1,4 @@
 Source: bzip2
-Version: 1.0.6
-Port-Version: 7
+Version: 1.0.8
 Homepage: http://www.bzip.org/
 Description: High-quality data compressor.

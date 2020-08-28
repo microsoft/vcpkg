@@ -182,7 +182,7 @@ namespace vcpkg
 #if defined(_WIN32)
             auto bootstrap = ".\\bootstrap-vcpkg.bat";
 #else
-            auto bootstrap = ".\/bootstrap-vcpkg.sh";
+            auto bootstrap = "./bootstrap-vcpkg.sh";
 #endif
             System::print2("You may need to update the vcpkg binary; try running %s to update.\n\n", bootstrap);
         }

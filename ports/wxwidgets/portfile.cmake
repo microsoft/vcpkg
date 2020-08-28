@@ -9,7 +9,6 @@ vcpkg_from_github(
     PATCHES
         disable-platform-lib-dir.patch
         fix-stl-build-vs2019-16.6.patch
-        fix-expat.patch
 )
 
 set(OPTIONS)
