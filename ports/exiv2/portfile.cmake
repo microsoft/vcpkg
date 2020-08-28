@@ -17,6 +17,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     unicode EXIV2_ENABLE_WIN_UNICODE
     xmp     EXIV2_ENABLE_XMP
+    video   EXIV2_ENABLE_VIDEO
 )
 
 if("unicode" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
