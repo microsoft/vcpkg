@@ -4,7 +4,7 @@
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_acquire_msys(<MSYS_ROOT_VAR> [PACKAGES <package>...])
+## vcpkg_acquire_msys(<MSYS_ROOT_VAR> [PACKAGES <package>...] [TIMEOUT <seconds>])
 ## ```
 ##
 ## ## Parameters
@@ -13,6 +13,9 @@
 ##
 ## ### PACKAGES
 ## A list of packages to acquire in msys.
+##
+## ### TIMEOUT
+## Optional timeout to override the default (10 min.) after which installation of PACKAGES is terminated.
 ##
 ## To ensure a package is available: `vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)`
 ##
@@ -38,7 +41,13 @@
 function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   set(TIMESTAMP 20200812)
   set(TOOLPATH ${DOWNLOADS}/tools/msys2-${TIMESTAMP})
-  cmake_parse_arguments(_am "" "" "PACKAGES" ${ARGN})
+  cmake_parse_arguments(_am "" "TIMEOUT" "PACKAGES" ${ARGN})
+
+  if(_am_TIMEOUT)
+    set(TIMEOUT_PACKAGES "TIMEOUT;${_am_TIMEOUT}")
+  else()
+    set(TIMEOUT_PACKAGES "TIMEOUT;600")
+  endif()
 
   if(NOT CMAKE_HOST_WIN32)
     message(FATAL_ERROR "vcpkg_acquire_msys() can only be used on Windows hosts")
@@ -128,8 +137,9 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     # we need to update pacman before anything else due to pacman transitioning
     # to using zstd packages, and our pacman is too old to support those
     _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy pacman --noconfirm"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Sy pacman --noconfirm --disable-download-timeout"
       WORKING_DIRECTORY ${TOOLPATH}
+      TIMEOUT 600
     )
     # dash relies on specific versions of the base packages, which prevents us
     # from doing a proper update. However, we don't need it so we remove it
@@ -138,8 +148,9 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       WORKING_DIRECTORY ${TOOLPATH}
     )
     _execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syu --noconfirm"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syu --noconfirm --disable-download-timeout"
       WORKING_DIRECTORY ${TOOLPATH}
+      TIMEOUT 600
     )
     file(WRITE "${TOOLPATH}/${STAMP}" "0")
     message(STATUS "Acquiring MSYS2... OK")
@@ -153,9 +164,10 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     set(ENV{PATH} ${PATH_TO_ROOT}/usr/bin)
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -S --noconfirm --needed ${_am_PACKAGES}"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -S --noconfirm --disable-download-timeout --needed ${_am_PACKAGES}"
       WORKING_DIRECTORY ${TOOLPATH}
       LOGNAME msys-pacman-${TARGET_TRIPLET}
+      ${TIMEOUT_PACKAGES}
     )
     set(ENV{PATH} "${_ENV_ORIGINAL}")
 
