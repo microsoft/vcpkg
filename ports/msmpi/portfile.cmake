@@ -22,12 +22,11 @@ vcpkg_from_github(
         # mpif.h uses invalid BOZ integer constants, which will not be accepted without `-fallow-invalid-boz`
         # by gfortran >= 10.0, so we convert them to regular integer constants.
         fix-invalid-boz-literals.patch
-)
 
-# Replace CBT project by packages.config
-# See https://github.com/CommonBuildToolset/CBT.Modules/issues/292
-file(REMOVE "${SOURCE_PATH}/.build/Local/CBTModules/CBTModules.proj")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/packages.config" DESTINATION "${SOURCE_PATH}/.build/Local/CBTModules/")
+        # Replace CBT project by packages.config
+        # See https://github.com/CommonBuildToolset/CBT.Modules/issues/292
+        fix-nuget-restore.patch
+)
 
 # Acquire gfortran
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")

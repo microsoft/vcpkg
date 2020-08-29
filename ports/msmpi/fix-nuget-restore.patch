@@ -1,0 +1,80 @@
+diff --git a/.build/Local/CBTModules/CBTModules.proj b/.build/Local/CBTModules/CBTModules.proj
+deleted file mode 100644
+index 8a8d130..0000000
+--- a/.build/Local/CBTModules/CBTModules.proj
++++ /dev/null
+@@ -1,60 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<Project Sdk="Microsoft.NET.Sdk">
+-  <PropertyGroup>
+-    <TargetFramework>net46</TargetFramework>
+-  </PropertyGroup>
+-<!--
+-    *******************************************************************************************************************
+-    This file contains the CBT modules that you want to use.  Modules are standard NuGet packages that apply to the
+-    whole project tree rather than on a per-project basis.  Modules provide extensions to your build in a centralized
+-    way and act as a replacement of having to check-in all of the build logic.
+-    
+-    Modules include build extensions such as:
+-    
+-      1. Analyzing source code and/or build output
+-      2. Assembly versioning
+-      3. Policy enforcement
+-      4. Strong-name signing of build output
+-    
+-    To find more modules, use "NuGet.exe list CBT.*" or browse a list at http://commonbuildtoolset.github.io
+-    *******************************************************************************************************************
+-  -->
+-
+-  <ItemGroup>
+-  <!--
+-    *******************************************************************************************************************
+-    CBT.Traversal module provides the build logic to have a dirs.proj which defines the projects you want built in a
+-    hosted build environment.  Use this module if you want more control over your official build output and are willing
+-    to move away from Visual Studio solution files.
+-    *******************************************************************************************************************
+-  -->
+-    <PackageReference Include="CBT.Traversal" Version="2.0.53" />
+-
+-  <!--
+-    *******************************************************************************************************************
+-    CBT.NuGet module provides NuGet package restore from the command-line prior to build.  This allows users to not
+-    have to restore before building a project tree.  This is mostly useful for hosted builds which run from a command-
+-    line environment rather than Visual Studio.
+-    *******************************************************************************************************************
+-  -->
+-    <PackageReference Include="CBT.NuGet" Version="2.2.2" />
+-
+-  <!--
+-    *******************************************************************************************************************
+-    CBT.DotNetFx provides the .NET Framework reference assemblies so that users do not have to have them installed to
+-    build your projects.  When using this module, be sure to include ALL of the versions of the target frameworks that
+-    your projects use.  For example, if your projects target .NET 4.5 and .NET 4.6, you'll need to include both of the
+-    corresponding modules.
+-
+-    By default build packages are disabled when added to the cbtmodules project.
+-    To use any build package globally it must be enabled for the code base.
+-    Do this by setting Enable#NuGetPackageID# where the . is replaced with _.
+-    Example add this property to your Directory.Build.props for the CBT.DotNetFx-net46 package.
+-    <EnableCBT_DotNetFx-net46>true</EnableCBT_DotNetFx-net46>
+-    *******************************************************************************************************************
+-  -->
+-    <PackageReference Include="CBT.DotNetFx-net46" Version="1.0.0-beta01" />
+-
+-
+-  </ItemGroup>
+-</Project>
+\ No newline at end of file
+diff --git a/.build/Local/CBTModules/packages.config b/.build/Local/CBTModules/packages.config
+new file mode 100644
+index 0000000..80dbe71
+--- /dev/null
++++ b/.build/Local/CBTModules/packages.config
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<packages>
++  <package id="CBT.Traversal" version="2.0.53" targetFramework="net46" />
++  <package id="CBT.NuGet" version="2.2.2" targetFramework="net46" />
++  <package id="CBT.DotNetFx-net46" version="1.0.0-beta01" targetFramework="net46" />
++</packages>
+\ No newline at end of file
