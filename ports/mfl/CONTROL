@@ -1,0 +1,4 @@
+Source: mfl
+Version: 0.0.1
+Description: Computes the layout information for mathematical formulas provided in TeX-like syntax.
+Build-Depends: range-v3, fmt, cairo, harfbuzz, freetype
