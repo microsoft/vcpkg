@@ -26,6 +26,10 @@ vcpkg_from_github(
         # Replace CBT project by packages.config
         # See https://github.com/CommonBuildToolset/CBT.Modules/issues/292
         fix-nuget-restore.patch
+
+        # Replace usage of the `MessageCompile` target by a custom build step.
+        # This removes the dependency to the Windows Driver Kit
+        no-wdk.patch
 )
 
 # Acquire gfortran
@@ -48,43 +52,6 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_PATH})
 
-# Force a NuGet restore
-message(STATUS "Performing nuget restore")
-vcpkg_execute_required_process(
-    COMMAND msbuild "/t:Clean" "/restore" # We use the "Clean" target to make sure nothing gets build here
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nuget-restore
-)
-
-# Build driver projects by devenv instead of msbuild in advance.
-# This makes sure that the message compiler (mc.exe) tasks get executed correctly
-if(TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(MSBUILD_PLATFORM "Win32")
-else ()
-    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
-endif()
-
-set(CONFIGURATIONS)
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    list(APPEND CONFIGURATIONS Release)
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    list(APPEND CONFIGURATIONS Debug)
-endif()
-
-set(DRIVER_PROJECTS traceManifest msmpiLaunchSvcMc)
-
-foreach(PROJECT IN LISTS DRIVER_PROJECTS)
-    foreach(CONFIGURATION IN LISTS CONFIGURATIONS)
-        message(STATUS "Building ${PROJECT} for ${CONFIGURATION}")
-        vcpkg_execute_required_process(
-            COMMAND devenv "./src/msmpi.sln" /Build "${CONFIGURATION}|${MSBUILD_PLATFORM}" /Project "${PROJECT}"
-            WORKING_DIRECTORY ${SOURCE_PATH}
-            LOGNAME build-driver-project-${PROJECT}-${CONFIGURATION}-${TARGET_TRIPLET}
-        )
-    endforeach()
-endforeach()
-
 # Build the project
 list(GET CONFIGURATIONS 0 HEADER_CONFIGURATION)
 vcpkg_install_msbuild(
@@ -96,6 +63,12 @@ vcpkg_install_msbuild(
     OPTIONS
       "/p:GFORTRAN_BIN=${MINGW_BIN}"
 )
+
+if(TRIPLET_SYSTEM_ARCH MATCHES "x86")
+    set(MSBUILD_PLATFORM "Win32")
+else ()
+    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
+endif()
 
 # The headers to install are located in the build directories
 get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)

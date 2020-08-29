@@ -1,0 +1,59 @@
+diff --git a/src/launchSvc/msmpiLaunchSvcMc.vcxproj b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
+index 2a6952b..e901dcc 100644
+--- a/src/launchSvc/msmpiLaunchSvcMc.vcxproj
++++ b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
+@@ -11,16 +11,13 @@
+   <PropertyGroup Label="Configuration">
+     <ConfigurationType>None</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+-    <PlatformToolset>WindowsUserModeDriver10.0</PlatformToolset>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ItemGroup>
+-    <MessageCompile Include="launchsvcmsg.mc">
+-      <GeneratedHeaderPath>true</GeneratedHeaderPath>
+-      <HeaderFilePath>$(SrcRoot)\launchsvc\$(O)</HeaderFilePath>
+-      <GeneratedRCAndMessagesPath>true</GeneratedRCAndMessagesPath>
+-      <RCFilePath>$(SrcRoot)\launchsvc\$(O)</RCFilePath>
+-    </MessageCompile>
++    <CustomBuild Include="launchsvcmsg.mc">
++      <Command>mc.exe -h $(SrcRoot)\launchsvc\$(O) -r $(SrcRoot)\launchsvc\$(O) launchsvcmsg.mc</Command>
++      <Outputs>$(SrcRoot)\launchsvc\$(O)\launchsvcmsg.h;$(SrcRoot)\launchsvc\$(O)\launchsvcmsg.rc</Outputs>
++    </CustomBuild>
+   </ItemGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+ </Project>
+\ No newline at end of file
+diff --git a/src/mpi/common/traceManifest.vcxproj b/src/mpi/common/traceManifest.vcxproj
+index f80e80b..736ef65 100644
+--- a/src/mpi/common/traceManifest.vcxproj
++++ b/src/mpi/common/traceManifest.vcxproj
+@@ -8,23 +8,16 @@
+   <PropertyGroup Label="Configuration">
+     <UseDebugLibraries>false</UseDebugLibraries>
+     <ConfigurationType>None</ConfigurationType>
+-    <PlatformToolset>WindowsUserModeDriver10.0</PlatformToolset>
+     <IntDirSharingDetected>None</IntDirSharingDetected>
+   </PropertyGroup>
+ 
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+ 
+   <ItemGroup>
+-    <MessageCompile Include="$(MPI_SRC_ROOT)\common\mpitrace.man">
+-      <GeneratedHeaderPath>true</GeneratedHeaderPath>
+-      <HeaderFilePath>$(MPI_SRC_ROOT)\common\$(O)</HeaderFilePath>
+-      <GeneratedRCAndMessagesPath>true</GeneratedRCAndMessagesPath>
+-      <RCFilePath>$(MPI_SRC_ROOT)\common\$(O)</RCFilePath>
+-      <GeneratedFilesBaseName>MpiTraceEvents</GeneratedFilesBaseName>
+-      <GenerateUserModeLoggingMacros>true</GenerateUserModeLoggingMacros>
+-      <PrefixMacroName>Trace</PrefixMacroName>
+-      <RemoveCharsFromSymbolName>EVENT_</RemoveCharsFromSymbolName>
+-    </MessageCompile>
++    <CustomBuild Include="$(MPI_SRC_ROOT)\common\mpitrace.man">
++      <Command>mc.exe -um -p Trace -P EVENT_ -h $(MPI_SRC_ROOT)\common\$(O) -r $(MPI_SRC_ROOT)\common\$(O) -z MpiTraceEvents $(MPI_SRC_ROOT)\common\mpitrace.man</Command>
++      <Outputs>$(MPI_SRC_ROOT)\common\$(O)\MpiTraceEvents.h;$(MPI_SRC_ROOT)\common\$(O)\MpiTraceEvents.rc</Outputs>
++    </CustomBuild>
+   </ItemGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+ </Project>
+\ No newline at end of file
