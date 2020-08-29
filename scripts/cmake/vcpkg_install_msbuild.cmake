@@ -9,6 +9,7 @@
 ##     PROJECT_SUBPATH <port.sln>
 ##     [INCLUDES_SUBPATH <include>]
 ##     [LICENSE_SUBPATH <LICENSE>]
+##     [OUTPUT_SUBPATH <Output>]
 ##     [RELEASE_CONFIGURATION <Release>]
 ##     [DEBUG_CONFIGURATION <Debug>]
 ##     [TARGET <Build>]
@@ -43,6 +44,11 @@
 ##
 ## ### INCLUDES_SUBPATH
 ## The subpath to the includes directory relative to `SOURCE_PATH`.
+##
+## This parameter should be a directory and should not end in a trailing slash.
+##
+## ### BINARIES_SUBPATH
+## The subpath to the binaries directory relative to `SOURCE_PATH`.
 ##
 ## This parameter should be a directory and should not end in a trailing slash.
 ##
@@ -95,7 +101,7 @@ function(vcpkg_install_msbuild)
     cmake_parse_arguments(
         _csc
         "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN"
-        "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
+        "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;BINARIES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
         ${ARGN}
     )
@@ -167,9 +173,13 @@ function(vcpkg_install_msbuild)
             WORKING_DIRECTORY ${SOURCE_COPY_PATH}
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
-        file(GLOB_RECURSE LIBS ${SOURCE_COPY_PATH}/*.lib)
-        file(GLOB_RECURSE DLLS ${SOURCE_COPY_PATH}/*.dll)
-        file(GLOB_RECURSE EXES ${SOURCE_COPY_PATH}/*.exe)
+        set(BINARIES_PATH ${SOURCE_COPY_PATH})
+        if(DEFINED _csc_BINARIES_SUBPATH)
+            set(BINARIES_PATH ${BINARIES_PATH}/${_csc_BINARIES_SUBPATH})
+        endif()
+        file(GLOB_RECURSE LIBS ${BINARIES_PATH}/*.lib)
+        file(GLOB_RECURSE DLLS ${BINARIES_PATH}/*.dll)
+        file(GLOB_RECURSE EXES ${BINARIES_PATH}/*.exe)
         if(LIBS)
             file(COPY ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
         endif()
@@ -196,8 +206,12 @@ function(vcpkg_install_msbuild)
             WORKING_DIRECTORY ${SOURCE_COPY_PATH}
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
-        file(GLOB_RECURSE LIBS ${SOURCE_COPY_PATH}/*.lib)
-        file(GLOB_RECURSE DLLS ${SOURCE_COPY_PATH}/*.dll)
+        set(BINARIES_PATH ${SOURCE_COPY_PATH})
+        if(DEFINED _csc_BINARIES_SUBPATH)
+            set(BINARIES_PATH ${BINARIES_PATH}/${_csc_BINARIES_SUBPATH})
+        endif()
+        file(GLOB_RECURSE LIBS ${BINARIES_PATH}/*.lib)
+        file(GLOB_RECURSE DLLS ${BINARIES_PATH}/*.dll)
         if(LIBS)
             file(COPY ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
         endif()
