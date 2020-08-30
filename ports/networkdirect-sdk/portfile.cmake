@@ -5,7 +5,7 @@ if (VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "networkDirect-sdk only supports windows")
 endif()
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     message(FATAL_ERROR "networkDirect-sdk only supports x64 and x86")
 endif()
 
