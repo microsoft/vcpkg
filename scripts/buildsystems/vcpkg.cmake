@@ -428,7 +428,7 @@ function(install)
                     _install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
                         execute_process(COMMAND 
                             powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                            -targetBinary ${__VCPKG_INSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>
+                            -targetBinary \"${__VCPKG_INSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
                             -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
                             -OutVariable out)")
                 endforeach()
