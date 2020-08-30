@@ -3,7 +3,7 @@ import sys
 
 with open(sys.argv[1], "r") as f_in:
     with open("static_link.sh", "w") as f_out:
-        p_cd = re.compile("^\\((cd .*) && \\$")
+        p_cd = re.compile("^\\((cd .*) && \\\\$")
         p_linker1 = re.compile("^\\s*(.+)gcc.+(@bazel-out\\S+libtensorflow_cc\\.so\\.2\\.3\\.0-2\\.params).*")
         p_linker2 = re.compile("^\\s*(.+)gcc.+(@bazel-out\\S+libtensorflow_framework\\.so\\.2\\.3\\.0-2\\.params).*")
         f_out.write("#!/bin/bash\n# note: ar/binutils version 2.27 required to support output files > 4GB\n")
@@ -26,7 +26,7 @@ with open(sys.argv[1], "r") as f_in:
                     found1 = True
                     if found2:
                         break
-                elif m2:
+                elif m2 and not found2:
                     m = p_cd.match(env)
                     f_out.write(m.group(1) + "\n")
                     tokens = line.split()
