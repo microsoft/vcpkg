@@ -425,7 +425,7 @@ function(install)
                 endforeach()
 
                 foreach(TARGET ${__VCPKG_INSTALL_TARGETS})
-                    install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+                    _install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
                         execute_process(COMMAND 
                             powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
                             -targetBinary ${__VCPKG_INSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>
