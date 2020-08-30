@@ -1,0 +1,44 @@
+diff --git a/src/mpi/msmpi/channels/mpichannels.vcxproj b/src/mpi/msmpi/channels/mpichannels.vcxproj
+index 2093a96..094500c 100644
+--- a/src/mpi/msmpi/channels/mpichannels.vcxproj
++++ b/src/mpi/msmpi/channels/mpichannels.vcxproj
+@@ -65,10 +65,6 @@
+ 
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+ 
+-  <ItemGroup>
+-    <PackageReference Include="NetworkDirect" Version="2.0.1" />
+-  </ItemGroup>
+-
+   <ItemGroup>
+     <ProjectReference Include="$(MPI_SRC_ROOT)\common\traceManifest.vcxproj">
+     </ProjectReference>
+diff --git a/src/mpi/msmpi/dll/msmpi.vcxproj b/src/mpi/msmpi/dll/msmpi.vcxproj
+index 255b9f5..e2a6455 100644
+--- a/src/mpi/msmpi/dll/msmpi.vcxproj
++++ b/src/mpi/msmpi/dll/msmpi.vcxproj
+@@ -119,9 +119,5 @@ if not %rc%==1 exit %rce% else exit 0</Command>
+     <ClCompile Include=".\main.cpp" />
+   </ItemGroup>
+ 
+-  <ItemGroup>
+-    <PackageReference Include="NetworkDirect" Version="2.0.1" />
+-  </ItemGroup>
+-
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+ </Project>
+diff --git a/src/mpi/msmpi/mpid/mpid.vcxproj b/src/mpi/msmpi/mpid/mpid.vcxproj
+index de9cebf..ac83ff3 100644
+--- a/src/mpi/msmpi/mpid/mpid.vcxproj
++++ b/src/mpi/msmpi/mpid/mpid.vcxproj
+@@ -95,10 +95,6 @@
+ 
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+ 
+-  <ItemGroup>
+-    <PackageReference Include="NetworkDirect" Version="2.0.1" />
+-  </ItemGroup>
+-
+   <ItemGroup>
+     <ProjectReference Include="$(MPI_SRC_ROOT)\common\traceManifest.vcxproj">
+     </ProjectReference>

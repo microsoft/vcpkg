@@ -38,6 +38,10 @@ vcpkg_from_github(
         # The easiest workaround seemed to simply disable the linker to generate
         # the safe exception handler tables.
         disable-x86-safeseh.patch
+
+        # Remove the NetworkDirect NuGet dependency because we want to use the library provided by vcpkg.
+        # It will be picked up because of USE_VCPKG_INTEGRATION used below.
+        networkdirect-no-nuget.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
@@ -79,6 +83,7 @@ vcpkg_install_msbuild(
     LICENSE_SUBPATH LICENSE.txt
     SKIP_CLEAN
     PLATFORM ${VCPKG_TARGET_ARCHITECTURE}
+    USE_VCPKG_INTEGRATION
     OPTIONS
       "/p:GFORTRAN_BIN=${MINGW_BIN}"
 )
