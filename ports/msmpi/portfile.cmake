@@ -38,6 +38,16 @@ vcpkg_from_github(
         disable-x86-safeseh.patch
 )
 
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(PROPERTY_FILE_PATHS "${SOURCE_PATH}/Directory.Build.props" "${SOURCE_PATH}/src/mpi.props" )
+    foreach(PROPERTY_FILE_PATH IN LISTS PROPERTY_FILE_PATHS)
+        file(READ ${PROPERTY_FILE_PATH} _contents)
+        string(REPLACE "<ConfigurationType>MultiThreaded</ConfigurationType>" "<ConfigurationType>MultiThreadedDLL</ConfigurationType>" _contents "${_contents}")
+        string(REPLACE "<ConfigurationType>MultiThreadedDebug</ConfigurationType>" "<ConfigurationType>MultiThreadedDebugDLL</ConfigurationType>" _contents "${_contents}")
+        file(WRITE ${PROPERTY_FILE_PATH} "${_contents}")
+    endforeach()
+endif()
+
 # Acquire gfortran
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(MINGW_PATH mingw32)
