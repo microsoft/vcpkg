@@ -7,18 +7,18 @@ with open(sys.argv[1], "r") as f_in:
         p_linker1 = re.compile("^.*cc_wrapper.sh.+-shared.+-o (bazel-out\\S+libtensorflow_cc\\.2\\.3\\.0\\.dylib)")
         p_linker2 = re.compile("^.*cc_wrapper.sh.+-shared.+-o (bazel-out\\S+libtensorflow_framework\\.2\\.3\\.0\\.dylib)")
         f_out.write("#!/bin/bash\n# note: ar/binutils version 2.27 required to support output files > 4GB\n")
-        env = None
+        env = []
         found1 = False
         found2 = False
         for line in f_in:
             if line.startswith("(cd"):
                 # new command, reset
-                env = line
+                env = [line]
             else:
                 m1 = p_linker1.match(line)
                 m2 = p_linker2.match(line)
                 if m1:
-                    m = p_cd.match(env)
+                    m = p_cd.match(env[0])
                     f_out.write(m.group(1) + "\n")
                     tokens = line.split()
                     parts = [t[16:] for t in tokens if t.startswith("-Wl,-force_load,")]
@@ -27,8 +27,8 @@ with open(sys.argv[1], "r") as f_in:
                     found1 = True
                     if found2:
                         break
-                elif m2 and not found2:
-                    m = p_cd.match(env)
+                elif m2 and len(env) > 4:
+                    m = p_cd.match(env[0])
                     f_out.write(m.group(1) + "\n")
                     tokens = line.split()
                     parts = [t[16:] for t in tokens if t.startswith("-Wl,-force_load,")]
