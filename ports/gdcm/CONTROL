@@ -1,6 +1,6 @@
 Source: gdcm
 Version: 3.0.5
-Port-Version: 1
+Port-Version: 2
 Homepage: https://github.com/malaterre/GDCM
 Description: Grassroots DICOM library
 Build-Depends: zlib, expat, openjpeg
