@@ -312,7 +312,24 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
         message(STATUS "Bootstrapping vcpkg before install - done")
     endif()
 
+    set(VCPKG_OVERLAY_PORTS "" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode")
+    mark_as_advanced(VCPKG_OVERLAY_PORTS)
+    set(VCPKG_OVERLAY_TRIPLETS "" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode")
+    mark_as_advanced(VCPKG_OVERLAY_TRIPLETS)
+
     message(STATUS "Running vcpkg install")
+
+    set(_VCPKG_ADDITIONAL_MANIFEST_PARAMS)
+    if(VCPKG_OVERLAY_PORTS)
+        foreach(_overlay_port IN LISTS VCPKG_OVERLAY_PORTS)
+            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-ports=${_overlay_port}")
+        endforeach()
+    endif()
+    if(VCPKG_OVERLAY_TRIPLETS)
+        foreach(_overlay_triplet IN LISTS VCPKG_OVERLAY_TRIPLETS)
+            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-triplets=${_overlay_triplet}")
+        endforeach()
+    endif()
 
     set(_VCPKG_MANIFEST_FEATURES)
     foreach(feature ${VCPKG_MANIFEST_FEATURES})
@@ -331,6 +348,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             "--x-install-root=${_VCPKG_INSTALLED_DIR}"
             ${_VCPKG_MANIFEST_FEATURES}
             ${_VCPKG_MANIFEST_NO_DEFAULT_FEATURES}
+            ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
 
     if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
