@@ -339,6 +339,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
 endif()
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
+option(VCPKG_APPLOCAL_DEPS_THREADSAFE "Make sure only one script executes in parallel. Usefull if you have multiple targets building into the same directory." OFF)
 function(add_executable name)
     _add_executable(${ARGV})
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
@@ -347,12 +348,16 @@ function(add_executable name)
     if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
         if(VCPKG_APPLOCAL_DEPS)
             if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
+                set(EXTRA_OPTIONS "")
+                if(VCPKG_APPLOCAL_DEPS_THREADSAFE)
+                    set(EXTRA_OPTIONS USES_TERMINAL)
+                endif()
                 add_custom_command(TARGET ${name} POST_BUILD
                     COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                         -targetBinary $<TARGET_FILE:${name}>
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
-                    USES_TERMINAL
+                    ${EXTRA_OPTIONS}
                 )
             elseif(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if (NOT MACOSX_BUNDLE_IDX EQUAL -1)
