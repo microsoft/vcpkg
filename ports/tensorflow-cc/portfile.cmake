@@ -206,16 +206,13 @@ foreach(BUILD_TYPE dbg rel)
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		endif()
-		vcpkg_execute_build_process(
-			COMMAND ls -l
-			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-			LOGNAME postbuild-debug-${TARGET_TRIPLET}-${BUILD_TYPE}
-		)
-		vcpkg_execute_build_process(
-			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${SCRIPT_SUFFIX}.py" "${N_DBG_LIB_PARTS}"
-			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-			LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-		)
+		if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+			vcpkg_execute_build_process(
+				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${SCRIPT_SUFFIX}.py" "${N_DBG_LIB_PARTS}"
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
+			)
+		endif()
 		vcpkg_execute_build_process(
 			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${SCRIPT_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" # for some reason stdout of bazel ends up in stderr
 			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
