@@ -4,7 +4,7 @@ endif()
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO openexr/openexr
+  REPO AcademySoftwareFoundation/openexr
   REF ed64d5467dee9763f28baf300f7699e6288b9f5f
   SHA512 549d37ed1ef4d1ff7e732d583f7213ee15c7f92625aea9fd65345e4c5b854902c02e5940d0692b1af5ae0a02abf46aaefea2662db2389d1b2fb4264a373baac2
   HEAD_REF master
