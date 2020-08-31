@@ -92,27 +92,16 @@ and every project that uses that registry requires only a few lines of JSON.
 
 ## Specification
 
-As background, let us look at our current project layout.
-We currently have one file which a person using vcpkg to manage their dependencies must write the manifest,
-or vcpkg.json. It contains the name of the project, the version of the project,
-and the project's dependencies and feature list. An example file might look like:
+We will be adding a new file that vcpkg understands - `vcpkg-configuration.json`.
+The way that vcpkg will find this file is different depending on what mode vcpkg is in:
+in classic mode, vcpkg finds this file alongside the vcpkg binary, in the root directory.
+In manifest mode, vcpkg finds this file alongside the manifest. For the initial implementation,
+this is all vcpkg will look for; however, in the future, vcpkg will walk the tree and include
+configuration all along the way: this allows for overriding defaults.
+The specific algorithm for applying this is not yet defined, since currently only one
+`vcpkg-configuration.json` is allowed.
 
-```json
-{
-  "name": "example",
-  "version-string": "1.3.2",
-  "dependencies": [
-    "fmt",
-    "cppitertools"
-  ]
-}
-```
-
-We do wish to continue using this file,
-and for simple cases one should be able to write everything they need into this file.
-Therefore, we will add a new section, `"configuration"`,
-which will be expanded in the future to contain other configuration and policies.
-This `"configuration"` property should either be a path, or a `<configuration>` object.
+The only thing allowed in a `vcpkg-configuration.json` is a `<configuration>` object.
 
 A `<configuration>` is an object:
 * Optionally, `"default-registry"`: A `<registry-implementation>` or `null`
@@ -147,80 +136,33 @@ might look like the following:
 
 ```json
 {
-  "name": "example",
-  "version-string": "1.3.2",
-  "dependencies": [
-    "fmt",
-    "cppitertools"
-  ],
-  "configuration": {
-    "default-registry": {
-      "kind": "directory",
-      "path": "vcpkg-ports"
+  "default-registry": {
+    "kind": "directory",
+    "path": "vcpkg-ports"
+  },
+  "registries": [
+    {
+      "kind": "git",
+      "repository": "https://github.com/boostorg/vcpkg-ports",
+      "ref": "v1.73.0",
+      "scopes": [ "boost" ]
     },
-    "registries": [
-      {
-        "kind": "git",
-        "repository": "https://github.com/boostorg/vcpkg-ports",
-        "ref": "v1.73.0",
-        "scopes": [ "boost" ]
-      },
-      {
-        "kind": "builtin",
-        "packages": [ "cppitertools" ]
-      }
-    ]
-  }
+    {
+      "kind": "builtin",
+      "packages": [ "cppitertools" ]
+    }
+  ]
 }
 ```
 
 This will install `fmt` from `<directory-of-vcpkg.json>/vcpkg-ports`,
 `cppitertools` from the registry that ships with vcpkg,
-and since `cppitertools` depends on `boost.optional`, and we have replaced where `boost.*` comes from,
-it will install `boost.optional` from `https://github.com/boostorg/vcpkg-ports`.
+and any `boost` dependencies from `https://github.com/boostorg/vcpkg-ports`.
+Notably, this does not replace behavior up the tree -- only the `vcpkg-configuration.json`s
+for the current invocation do anything.
 
 ### Behavior
 
-As background, it is important to understand that the current vcpkg has two "modes" of behavior –
-classic mode, and manifest mode. Classic mode is closest to tools like apt or brew,
-where you have a single installation directory per-system (although, for vcpkg,
-it's a single installation directory per vcpkg installation,
-and one can have as many vcpkg installations as one wants).
-This mode is the way people have used vcpkg for the past four years,
-but it is not the way we expect future users to use vcpkg.
-Recently, we have implemented a second mode – "manifest" mode – where a user writes this manifest,
-called vcpkg.json, and there are separate installation directories for each manifest or even each build.
-The registries RFC supports both modes.
-
-In classic mode, we attempt to find a file named `vcpkg-configuration.json` in the
-vcpkg root; if it exists, we will use that file as the configuration object.
-
-In manifest mode, vcpkg searched from the current working directory
-up towards the root for a file named `vcpkg.json`.
-It will then look inside that file for the `"configuration"` property.
-If that property is an object, then that object will be the configuration object;
-otherwise, if that property is a path denoting a directory,
-vcpkg will use the top level JSON object from `vcpkg-configuration.json` in that directory
-as the configuration object. If the path is relative, it's treated as being relative to
-the directory containing `vcpkg.json`, so for example:
-
-```
-meow/
-  vcpkg.json
-  vcpkg-configuration.json
-  kitty/
-    vcpkg-configuration.json
-```
-
-If `vcpkg.json:configuration = "."`, then vcpkg will use `meow/vcpkg-configuration.json`
-as the configuration object. If `vcpkg.json:configuration = "kitty"`, then vcpkg will use
-`meow/kitty/vcpkg-configuration.json` as the configuration object. Additionally,
-`"default-registry"` defaults to `{ "kind": "builtin" }` and `"registries"` defaults to
-`[]`.
-
-The way that the registries actually work is as follows:
-only the top-level manifest actually makes changes to the configuration of the project,
-so configuration objects from dependencies will not modify which registries you use.
 When a vcpkg command requires the installation of dependencies,
 it will generate the initial list of dependencies from the package,
 and then run the following algorithm on each dependency:
