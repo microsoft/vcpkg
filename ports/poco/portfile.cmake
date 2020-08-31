@@ -15,7 +15,6 @@ vcpkg_from_github(
         use-vcpkg-libharu.patch
         # Add the support of arm64-windows
         arm64_pcre.patch
-        use-vcpkg-expat.patch
 )
 
 # define Poco linkage type
