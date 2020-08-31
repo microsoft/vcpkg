@@ -1,4 +1,5 @@
 # Vcpkg: Overview
+
 [中文总览](README_zh_CN.md)
 [Español](README_es_ES.md)
 
@@ -17,7 +18,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 * Docs: [Documentation](docs/index.md)
 
 [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
-
 
 # Table of Contents
 
@@ -353,7 +353,6 @@ $ ./vcpkg integrate bash
 ```
 
 depending on the shell you use, then restart your console.
-
 
 # Examples
 
