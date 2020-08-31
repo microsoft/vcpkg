@@ -376,7 +376,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
 find_dependency(protobuf CONFIG)
-if(Protobuf_FOUND)
+if(protobuf_FOUND)
   if(TARGET protobuf::libprotobuf)
     add_library (libprotobuf INTERFACE IMPORTED)
     set_target_properties(libprotobuf PROPERTIES
