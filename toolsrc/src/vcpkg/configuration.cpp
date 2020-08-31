@@ -48,10 +48,10 @@ namespace vcpkg
 
         if (registries_feature_flags_warning && !print_json)
         {
-            System::printf(
-                System::Color::warning,
-                "Warning: configuration specified the \"registries\" or \"default-registries\" field, but the %s feature flag was not enabled.\n",
-                VcpkgCmdArguments::REGISTRIES_FEATURE);
+            System::printf(System::Color::warning,
+                           "Warning: configuration specified the \"registries\" or \"default-registries\" field, but "
+                           "the %s feature flag was not enabled.\n",
+                           VcpkgCmdArguments::REGISTRIES_FEATURE);
         }
 
         return Configuration{std::move(registries)};
