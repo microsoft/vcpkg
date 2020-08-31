@@ -1151,9 +1151,19 @@ namespace vcpkg::Files
 
     fs::path combine(const fs::path& lhs, const fs::path& rhs)
     {
-#if VCPKG_USE_STD_FILESYSTEM || !defined(_MSC_VER)
+#if VCPKG_USE_STD_FILESYSTEM
         return lhs / rhs;
-#else // ^^^ VCPKG_USE_STD_FILESYSTEM || !windows // !VCPKG_USE_STD_FILESYSTEM && windows vvv
+#else // ^^^ std::filesystem // std::experimental::filesystem vvv
+#if !defined(_WIN32)
+        if (rhs.is_absolute())
+        {
+            return rhs;
+        }
+        else
+        {
+            return lhs / rhs;
+        }
+#else  // ^^^ unix // windows vvv
         auto rhs_root_directory = rhs.root_directory();
         auto rhs_root_name = rhs.root_name();
 
@@ -1183,6 +1193,7 @@ namespace vcpkg::Files
             // rhs.absolute()
             return rhs;
         }
-#endif
+#endif // ^^^ windows
+#endif // ^^^ std::experimental::filesystem
     }
 }
