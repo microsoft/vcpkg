@@ -17,7 +17,6 @@ namespace
     struct ToWrite
     {
         SourceControlFile scf;
-        Optional<Json::Value> config;
         fs::path file_to_write;
         fs::path original_path;
         std::string original_source;
@@ -53,15 +52,8 @@ namespace
             return nullopt;
         }
 
-        Optional<Json::Value> config;
-        if (auto conf = parsed_json_obj.get("configuration"))
-        {
-            config = std::move(*conf);
-        }
-
         return ToWrite{
             std::move(*scf.value_or_exit(VCPKG_LINE_INFO)),
-            std::move(config),
             manifest_path,
             manifest_path,
             std::move(contents),
@@ -99,7 +91,6 @@ namespace
 
         return ToWrite{
             std::move(*scf_res.value_or_exit(VCPKG_LINE_INFO)),
-            nullopt,
             manifest_path,
             control_path,
             std::move(contents),
@@ -161,12 +152,6 @@ Please open an issue at https://github.com/microsoft/vcpkg, with the following o
                 Json::stringify(res, {}),
                 Json::stringify(serialize_debug_manifest(data.scf), {}),
                 Json::stringify(serialize_debug_manifest(*check_scf), {}));
-        }
-
-        if (auto conf = data.config.get())
-        {
-            // note: we don't yet canonicalize config
-            res.insert("configuration", std::move(*conf));
         }
 
         // the manifest scf is correct

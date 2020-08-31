@@ -640,7 +640,6 @@ namespace vcpkg
         constexpr static StringLiteral FEATURES = "features";
         constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
         constexpr static StringLiteral SUPPORTS = "supports";
-        constexpr static StringLiteral CONFIGURATION = "configuration";
 
         virtual Span<const StringView> valid_fields() const override
         {
@@ -659,7 +658,6 @@ namespace vcpkg
                 FEATURES,
                 DEFAULT_FEATURES,
                 SUPPORTS,
-                CONFIGURATION,
             };
 
             return t;

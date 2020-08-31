@@ -84,52 +84,13 @@ namespace
 
 namespace vcpkg
 {
-    struct ConfigurationDeserializer final : Json::IDeserializer<Configuration>
-    {
-        virtual StringView type_name() const override { return "a configuration object"; }
-
-        constexpr static StringLiteral DEFAULT_REGISTRY = "default-registry";
-        constexpr static StringLiteral REGISTRIES = "registries";
-        virtual Span<const StringView> valid_fields() const override
-        {
-            constexpr static StringView t[] = {DEFAULT_REGISTRY, REGISTRIES};
-            return t;
-        }
-
-        virtual Optional<Configuration> visit_object(Json::Reader& r, StringView, const Json::Object& obj) override
-        {
-            RegistrySet registries;
-
-            {
-                std::unique_ptr<RegistryImpl> default_registry;
-                if (r.optional_object_field(obj, DEFAULT_REGISTRY, default_registry, RegistryImplDeserializer{}))
-                {
-                    registries.set_default_registry(std::move(default_registry));
-                }
-            }
-
-            std::vector<Registry> regs;
-            r.optional_object_field(
-                obj,
-                REGISTRIES,
-                regs,
-                Json::ArrayDeserializer<RegistryDeserializer>{"an array of registries", Json::AllowEmpty::Yes});
-
-            for (Registry& reg : regs)
-            {
-                registries.add_registry(std::move(reg));
-            }
-
-            return Configuration{std::move(registries)};
-        }
-    };
-
-    static Configuration load_config(const Json::Object& obj)
+    static Configuration deserialize_configuration(const Json::Object& obj, const VcpkgCmdArguments& args)
     {
         Json::BasicReaderError err;
         Json::Reader reader{&err};
+        auto deserializer = ConfigurationDeserializer(args);
 
-        auto parsed_config_opt = reader.visit_value(obj, "$", ConfigurationDeserializer{});
+        auto parsed_config_opt = reader.visit_value(obj, "$", deserializer);
         if (err.has_error())
         {
             if (!err.missing_fields.empty())
@@ -175,12 +136,12 @@ namespace vcpkg
 
     struct ManifestAndConfig
     {
-        std::pair<Json::Object, Json::JsonStyle> manifest_and_style;
         fs::path config_directory;
         Configuration config;
     };
 
-    static ManifestAndConfig load_manifest_and_config(const Files::Filesystem& fs, const fs::path& manifest_dir)
+    static std::pair<Json::Object, Json::JsonStyle> load_manifest(const Files::Filesystem& fs,
+                                                                  const fs::path& manifest_dir)
     {
         std::error_code ec;
         auto manifest_path = manifest_dir / fs::u8path("vcpkg.json");
@@ -210,74 +171,52 @@ namespace vcpkg
                            ": Manifest files must have a top-level object\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        std::pair<Json::Object, Json::JsonStyle> manifest = {std::move(manifest_value.first.object()),
-                                                             std::move(manifest_value.second)};
+        return {std::move(manifest_value.first.object()), std::move(manifest_value.second)};
+    }
 
-        Optional<Json::Object> config_obj;
+    struct ConfigAndPath
+    {
+        fs::path config_directory;
+        Configuration config;
+    };
+
+    // doesn't yet implement searching upwards for configurations, nor inheritance of configurations
+    static ConfigAndPath load_configuration(const Files::Filesystem& fs,
+                                            const VcpkgCmdArguments& args,
+                                            const fs::path& vcpkg_root,
+                                            const fs::path& manifest_dir)
+    {
         fs::path config_dir;
 
-        if (auto p_manifest_config = manifest.first.get("configuration"))
+        if (!manifest_dir.empty())
         {
-            if (p_manifest_config->is_object())
-            {
-                config_obj = std::move(p_manifest_config->object());
-                config_dir = manifest_dir;
-            }
-            else if (p_manifest_config->is_string())
-            {
-                auto config_name = fs::u8path("vcpkg-configuration.json");
-                auto config_relative_path = fs::u8path(p_manifest_config->string());
-                if (config_relative_path.empty())
-                {
-                    System::print2(System::Color::error, "Invalid path to vcpkg-configuration: must not be empty.\n");
-                    Checks::exit_fail(VCPKG_LINE_INFO);
-                }
-
-                if (!config_relative_path.root_path().empty())
-                {
-                    System::printf(System::Color::error,
-                                   "Invalid path to vcpkg-configuration '%s': must not be absolute.\n",
-                                   p_manifest_config->string());
-                    Checks::exit_fail(VCPKG_LINE_INFO);
-                }
-
-                config_dir = manifest_dir / config_relative_path;
-                auto config_path = config_dir / config_name;
-                if (!fs.exists(config_path))
-                {
-                    System::printf(
-                        System::Color::error, "Failed to find configuration file at %s\n", fs::u8string(config_path));
-                    Checks::exit_fail(VCPKG_LINE_INFO);
-                }
-                auto parsed_config = Json::parse_file(VCPKG_LINE_INFO, fs, config_path);
-                if (!parsed_config.first.is_object())
-                {
-                    System::print2(System::Color::error,
-                                   "Failed to parse ",
-                                   fs::u8string(config_path),
-                                   ": configuration files must have a top-level object\n");
-                    Checks::exit_fail(VCPKG_LINE_INFO);
-                }
-                config_obj = std::move(parsed_config.first.object());
-            }
-            else
-            {
-                System::print2(System::Color::error,
-                               "Failed to parse manifest at ",
-                               fs::u8string(manifest_path),
-                               ": Manifest configuration ($.configuration) must be a string or an object.\n");
-                Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-        }
-
-        if (auto c = config_obj.get())
-        {
-            return {std::move(manifest), std::move(config_dir), load_config(*c)};
+            // manifest mode
+            config_dir = manifest_dir;
         }
         else
         {
-            return {std::move(manifest), {}, {}};
+            // classic mode
+            config_dir = vcpkg_root;
         }
+
+        auto path_to_config = config_dir / fs::u8path("vcpkg-configuration.json");
+        if (!fs.exists(path_to_config))
+        {
+            return {};
+        }
+
+        auto parsed_config = Json::parse_file(VCPKG_LINE_INFO, fs, path_to_config);
+        if (!parsed_config.first.is_object())
+        {
+            System::print2(System::Color::error,
+                           "Failed to parse ",
+                           fs::u8string(path_to_config),
+                           ": configuration files must have a top-level object\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        auto config_obj = std::move(parsed_config.first.object());
+
+        return {std::move(config_dir), deserialize_configuration(config_obj, args)};
     }
 
     namespace details
@@ -365,10 +304,7 @@ namespace vcpkg
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
-            auto manifest_and_config = load_manifest_and_config(filesystem, manifest_root_dir);
-            m_pimpl->m_manifest_doc = std::move(manifest_and_config.manifest_and_style);
-            config_root_dir = std::move(manifest_and_config.config_directory);
-            m_pimpl->m_config = std::move(manifest_and_config.config);
+            m_pimpl->m_manifest_doc = load_manifest(filesystem, manifest_root_dir);
         }
         else
         {
@@ -403,43 +339,12 @@ If you wish to silence this error and use classic mode, you can:
             manifest_root_dir.clear();
             installed =
                 process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
-
-            fs::path config_path = root / fs::u8path("vcpkg-configuration.json");
-            if (filesystem.exists(config_path))
-            {
-                auto config_object = Json::parse_file(filesystem, config_path, ec);
-                if (ec)
-                {
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Failed to load configuration file %s: %s",
-                                              fs::u8string(config_path),
-                                              ec.message());
-                }
-
-                if (auto c = config_object.get())
-                {
-                    if (c->first.is_object())
-                    {
-                        m_pimpl->m_config = load_config(c->first.object());
-                        config_root_dir = root;
-                    }
-                    else
-                    {
-                        Checks::exit_with_message(
-                            VCPKG_LINE_INFO,
-                            "Error: failed to parse configuration file %s: configuration must have top-level object.",
-                            fs::u8string(config_path));
-                    }
-                }
-                else
-                {
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Error: failed to parse configuration file %s: %s",
-                                              fs::u8string(config_path),
-                                              config_object.error()->format());
-                }
-            }
         }
+
+        auto config_file = load_configuration(filesystem, args, root, manifest_root_dir);
+
+        config_root_dir = std::move(config_file.config_directory);
+        m_pimpl->m_config = std::move(config_file.config);
 
         buildtrees =
             process_output_directory(filesystem, root, args.buildtrees_root_dir.get(), "buildtrees", VCPKG_LINE_INFO);

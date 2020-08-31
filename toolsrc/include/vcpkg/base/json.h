@@ -526,6 +526,7 @@ namespace vcpkg::Json
         template<class Type>
         Optional<Type> visit_value(const Object& value, StringView key, IDeserializer<Type>& visitor)
         {
+            check_for_unexpected_fields(value, visitor.valid_fields(), visitor.type_name());
             return visitor.visit_object(*this, key, value);
         }
         template<class Type>
