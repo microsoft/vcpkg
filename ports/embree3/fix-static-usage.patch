@@ -1,0 +1,21 @@
+diff --git a/common/cmake/embree-config.cmake b/common/cmake/embree-config.cmake
+index 14ce929..7e2e8f5 100644
+--- a/common/cmake/embree-config.cmake
++++ b/common/cmake/embree-config.cmake
+@@ -50,6 +50,16 @@ IF (EMBREE_STATIC_LIB)
+   INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/simd-targets.cmake")
+   INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/lexers-targets.cmake")
+   INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/tasking-targets.cmake")
++  
++  IF(EMBREE_ISA_SSE42)
++    INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/embree_sse42-targets.cmake")
++  ENDIF()
++  IF(EMBREE_ISA_AVX)
++      INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/embree_avx-targets.cmake")
++  ENDIF()
++  IF(EMBREE_ISA_AVX2)
++      INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/embree_avx2-targets.cmake")
++  ENDIF()
+ ENDIF()
+ 
+ INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/embree-targets.cmake")
