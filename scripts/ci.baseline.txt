@@ -1096,6 +1096,7 @@ msmpi:arm-uwp=fail
 msmpi:x64-linux=fail
 msmpi:x64-osx=fail
 msmpi:x64-uwp=fail
+msmpi:x64-windows-static=fail
 munit:arm-uwp=fail
 munit:arm64-windows=fail
 munit:x64-uwp=fail
