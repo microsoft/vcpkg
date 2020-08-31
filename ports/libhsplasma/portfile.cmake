@@ -8,9 +8,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(net IN_LIST FEATURES)
-    set(HSPLASMA_NET ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    net HSPLASMA_NET
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
