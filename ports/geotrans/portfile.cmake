@@ -4,11 +4,10 @@ message(WARNING "Download ${PORT} may take a few minutes, It depends on your net
 
 # We specify the Linux URL, but the only difference between the Windows/Linux packages are the included libraries
 # which we re-build anyway.  There is no source only package provided or it would be preferred (and smaller).
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://ftp.nga.mil/pub2/gandg/website/wgs84/apps/geotrans/current-version/sw/dev_version/linux_dev.tgz"
-    FILENAME "geotrans-3.8.tgz"
-    SHA512 a2261b5439d21781d1f57c9231805841d0eedd2298ede984321a9326c855568d44412f164ca3f0bd2dfdfe9c7503cf1c55575a178e9da163b49b0852673c201c
+    URLS "ftp://ftp.nga.mil/pub2/gandg/website/wgs84/apps/geotrans/current-version/sw/master_version/master.tgz"
+    FILENAME "geotrans-3.8-master.tgz"
+    SHA512 359704ee9700762111006d126872feab9f644af0cebd433a657473347ea48f4eb172681f5f564fbca171bbf58fe0e8fb0829597403958770b7d22ad380afeac3
 )
 
 vcpkg_extract_source_archive_ex(
