@@ -45,9 +45,9 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     set(_VCPKG_PACKAGES_PKGCONF "${CURRENT_PACKAGES_DIR}")
     
     set(PATH_SUFFIX_DEBUG /debug)
-    set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
+    set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig" "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_config}}/lib/manual-link/pkgconfig")
     set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
-    set(PKGCONFIG_PACKAGES_DIR "${_VCPKG_PACKAGES_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
+    set(PKGCONFIG_PACKAGES_DIR "${_VCPKG_PACKAGES_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig" "${_VCPKG_PACKAGES_PKGCONF}${PATH_SUFFIX_${_config}}/lib/manual-link/pkgconfig")
     set(PKGCONFIG_PACKAGES_SHARE_DIR "${_VCPKG_PACKAGES_PKGCONF}/share/pkgconfig")
 
     if(ENV{PKG_CONFIG_PATH})
