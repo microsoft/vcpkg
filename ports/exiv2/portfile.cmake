@@ -1,22 +1,18 @@
 #https://github.com/Exiv2/exiv2/issues/1063
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-if("xmp" IN_LIST FEATURES)
-    set(EXPAT_PATCH ${CMAKE_CURRENT_LIST_DIR}/expat.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
     REF 194bb65ac568a5435874c9d9d73b1c8a68e4edec #v0.27.3
     SHA512 35a5a41e0a6cfe04d1ed005c8116ad4430516402b925db3d4f719e2385e2cfb09359eb7ab51853bc560138f221900778cd2e2d39f108c513b3e7d22dbb9bf503
     HEAD_REF master
-    PATCHES ${EXPAT_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     unicode EXIV2_ENABLE_WIN_UNICODE
     xmp     EXIV2_ENABLE_XMP
+    video   EXIV2_ENABLE_VIDEO
 )
 
 if("unicode" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)

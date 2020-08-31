@@ -54,6 +54,9 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}")
     endif()
 
+    # Explicitly ignore well-known system libs
+    list(APPEND _system_libs stdc++ gcc gcc_s rt m dl)
+
     # First make sure everything is ok with the package and its deps
     get_filename_component(_package_name "${_file}" NAME_WLE)
     debug_message("Checking package (${_config}): ${_package_name}")
@@ -108,8 +111,12 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     set(SEARCH_PATHS)
     string(REGEX MATCHALL "([^ \t\\\\]+|\\\\.)+" LIBS_ARGS "${_pkg_libs_output}")
     foreach(LIBS_ARG IN LISTS LIBS_ARGS)
-        string(REGEX REPLACE "\\\\(.)" "\\1" LIBS_ARG "${LIBS_ARG}")
-        debug_message("pkg-config processing '${LIBS_ARG}'")
+        debug_message("pkg-config handling token '${LIBS_ARG}'")
+        if(CMAKE_HOST_WIN32)
+            # pkg-config has a bug on windows that results in double-escaping of the pc relative path
+            string(REPLACE "\\\\\\ " "\\ " LIBS_ARG "${LIBS_ARG}")
+        endif()
+        string(REPLACE "\\ " " " LIBS_ARG "${LIBS_ARG}")
         if(LIBS_ARG MATCHES "^-L(.*)")
             list(APPEND SEARCH_PATHS "${CMAKE_MATCH_1}")
         elseif(LIBS_ARG MATCHES "^-l(.*)")
@@ -123,16 +130,9 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
             endif()
             set(LIBNAME "${CMAKE_MATCH_1}")
             # Ensure existance in current packages and installed
-            find_library(CHECK_LIB_${LIBNAME}_${_config} NAMES "${LIBNAME}" PATHS ${SEARCH_PATHS} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
-            if(NOT CHECK_LIB_${LIBNAME}_${_config})
-                # Give time for filesystem to synchronize / antivirus to finish
-                execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 5)
-                find_library(CHECK_LIB_${LIBNAME}_${_config} NAMES "${LIBNAME}" PATHS ${SEARCH_PATHS} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
-                if(NOT CHECK_LIB_${LIBNAME}_${_config})
-                    message(FATAL_ERROR "find_library() failed with arguments:\n    find_library(CHECK_LIB_${LIBNAME}_${_config} NAMES \"${LIBNAME}\" PATHS ${SEARCH_PATHS} \"${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib\" NO_DEFAULT_PATH)")
-                else()
-                    debug_message("CHECK_LIB_${LIBNAME}_${_config}=${CHECK_LIB_${LIBNAME}_${_config}}")
-                endif()
+            find_library("CHECK_LIB_${LIBNAME}_${_config}" NAMES "${LIBNAME}" PATHS ${SEARCH_PATHS} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
+            if("${CHECK_LIB_${LIBNAME}_${_config}}" MATCHES "-NOTFOUND\$")
+                message(FATAL_ERROR "find_library() failed with result: ${CHECK_LIB_${LIBNAME}_${_config}}\n    find_library(CHECK_LIB_${LIBNAME}_${_config} NAMES \"${LIBNAME}\" PATHS ${SEARCH_PATHS} \"${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib\" NO_DEFAULT_PATH)")
             else()
                 debug_message("CHECK_LIB_${LIBNAME}_${_config}=${CHECK_LIB_${LIBNAME}_${_config}}")
             endif()
@@ -191,8 +191,11 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
-        string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "^prefix[ \t]*=[ \t]*(\")?(\\\\)?\\\${prefix}(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "[\n]prefix[ \t]*=[ \t]*(\")?(\\\\)?\\\${prefix}(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE " -L(\\\${[^}]*}[^ \n\t]*)" " -L\"\\1\"" _contents "${_contents}")
+        string(REGEX REPLACE " -I(\\\${[^}]*}[^ \n\t]*)" " -I\"\\1\"" _contents "${_contents}")
+        string(REGEX REPLACE " -l(\\\${[^}]*}[^ \n\t]*)" " -l\"\\1\"" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
     endforeach()
 
@@ -220,9 +223,12 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "debug/share" "../share" _contents "${_contents}")
         string(REPLACE "\${prefix}/share" "\${prefix}/../share" _contents "${_contents}")
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
-        string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "^prefix[ \t]*=[ \t]*(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "[\n]prefix[ \t]*=[ \t]*(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
+        string(REGEX REPLACE " -L(\\\${[^}]*}[^ \n\t]*)" " -L\"\\1\"" _contents "${_contents}")
+        string(REGEX REPLACE " -I(\\\${[^}]*}[^ \n\t]*)" " -I\"\\1\"" _contents "${_contents}")
+        string(REGEX REPLACE " -l(\\\${[^}]*}[^ \n\t]*)" " -l\"\\1\"" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
     endforeach()
 

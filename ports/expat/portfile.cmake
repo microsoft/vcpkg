@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF c092d40c300c6d219cb3b111932a824022265370 #Head from 20.08.2020
+    REF c092d40c300c6d219cb3b111932a824022265370 #Head from commit 2020-08-18
     SHA512 5a5d41b500f5602a32aea8f4e15593e639206bb3f97553497e80b2975360cac88ac90386f5efc11728614f24bbb620fb908a3c8ca71c9e7b312f6157b2477afe
     HEAD_REF master
     PATCHES
-        fix-find-package-by-cmake.patch # This patch seems unnecessary
         pkgconfig.patch
 )
 
@@ -27,7 +26,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/expat)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/expat-2.2.9)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
