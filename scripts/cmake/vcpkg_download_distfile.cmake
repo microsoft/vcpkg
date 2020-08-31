@@ -50,6 +50,7 @@ function(vcpkg_download_distfile VAR)
     set(options SKIP_SHA512 SILENT_EXIT)
     set(oneValueArgs FILENAME SHA512)
     set(multipleValuesArgs URLS HEADERS)
+    set(ARIA2_TIMEOUT_DEFAULT 120)
     cmake_parse_arguments(vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
     if(NOT DEFINED vcpkg_download_distfile_URLS)
@@ -124,6 +125,8 @@ function(vcpkg_download_distfile VAR)
                 COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
                 -o temp/${vcpkg_download_distfile_FILENAME}
                 -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
+                --connect-timeout ${ARIA2_TIMEOUT_DEFAULT}
+                -t ${ARIA2_TIMEOUT_DEFAULT}
                 ${request_headers}
                 OUTPUT_FILE download-${vcpkg_download_distfile_FILENAME}-out.log
                 ERROR_FILE download-${vcpkg_download_distfile_FILENAME}-err.log
