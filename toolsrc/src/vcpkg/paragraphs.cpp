@@ -5,6 +5,7 @@
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/binaryparagraph.h>
+#include <vcpkg/configuration.h>
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/registries.h>
@@ -344,6 +345,25 @@ namespace vcpkg::Paragraphs
         return pghs.error();
     }
 
+    static void load_port_names_from_root(std::vector<std::string>& ports,
+                                          const VcpkgPaths& paths,
+                                          const fs::path& registry_root)
+    {
+        const auto& fs = paths.get_filesystem();
+        auto port_dirs = fs.get_files_non_recursive(registry_root);
+        Util::sort(port_dirs);
+
+        // TODO: search in `b-` for ports starting with `b`
+        Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
+            return fs.is_regular_file(port_dir_entry) && port_dir_entry.filename() == ".DS_Store";
+        });
+
+        for (auto&& path : port_dirs)
+        {
+            ports.push_back(fs::u8string(path.filename()));
+        }
+    }
+
     LoadResults try_load_all_ports(const VcpkgPaths& paths)
     {
         LoadResults ret;
@@ -351,28 +371,15 @@ namespace vcpkg::Paragraphs
 
         std::vector<std::string> ports;
 
-        auto load_port_names = [&fs, &ports, &paths](const RegistryImpl& r) {
-            auto port_dirs = fs.get_files_non_recursive(r.get_registry_root(paths));
-            Util::sort(port_dirs);
-            Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
-                return fs.is_regular_file(port_dir_entry) && port_dir_entry.filename() == ".DS_Store";
-            });
-
-            for (auto&& path : port_dirs)
-            {
-                ports.push_back(fs::u8string(path.filename()));
-            }
-        };
-
-        const auto& registries = paths.get_configuration().registries;
+        const auto& registries = paths.get_configuration().registry_set;
 
         for (const auto& registry : registries.registries())
         {
-            load_port_names(registry.implementation());
+            load_port_names_from_root(ports, paths, registry.implementation().get_registry_root(paths));
         }
         if (auto registry = registries.default_registry())
         {
-            load_port_names(*registry);
+            load_port_names_from_root(ports, paths, registry->get_registry_root(paths));
         }
 
         Util::sort_unique_erase(ports);
@@ -382,13 +389,24 @@ namespace vcpkg::Paragraphs
             auto impl = registries.registry_for_port(port_name);
             if (!impl)
             {
-                // registry for port must be broken
-                Checks::unreachable(VCPKG_LINE_INFO);
+                // this is a port for which no registry is set
+                // this can happen when there's no default registry,
+                // and a registry has a port definition which it doesn't own the name of.
+                continue;
             }
 
             auto root = impl->get_registry_root(paths);
 
             auto port_path = root / fs::u8path(port_name);
+
+            if (!fs.exists(port_path))
+            {
+                // the registry that owns the name of this port does not actually contain the port
+                // this can happen if R1 contains the port definition for <abc>, but doesn't
+                // declare it owns <abc>.
+                continue;
+            }
+
             auto maybe_spgh = try_load_port(fs, port_path);
             if (const auto spgh = maybe_spgh.get())
             {
@@ -435,19 +453,18 @@ namespace vcpkg::Paragraphs
     {
         LoadResults ret;
 
-        const auto& fs = paths.get_filesystem();
-        auto port_dirs = fs.get_files_non_recursive(directory);
-        Util::sort(port_dirs);
-        Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
-            return fs.is_regular_file(port_dir_entry) && port_dir_entry.filename() == ".DS_Store";
-        });
+        std::vector<std::string> port_names;
+        load_port_names_from_root(port_names, paths, directory);
 
-        for (const auto& path : port_dirs)
+        const auto& fs = paths.get_filesystem();
+
+        for (const auto& name : port_names)
         {
+            auto path = directory / fs::u8path(name);
             auto maybe_spgh = try_load_port(fs, path);
             if (const auto spgh = maybe_spgh.get())
             {
-                ret.paragraphs.emplace_back(std::move(*spgh), path);
+                ret.paragraphs.emplace_back(std::move(*spgh), std::move(path));
             }
             else
             {

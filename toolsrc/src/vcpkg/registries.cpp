@@ -107,4 +107,24 @@ namespace vcpkg
 
         return Registry{std::move(packages), std::move(impl).value_or_exit(VCPKG_LINE_INFO)};
     }
+
+    RegistrySet::RegistrySet() : default_registry_(Registry::builtin_registry()), registries_() { }
+
+    const RegistryImpl* RegistrySet::registry_for_port(StringView name) const
+    {
+        for (const auto& registry : registries())
+        {
+            const auto& packages = registry.packages();
+            if (std::find(packages.begin(), packages.end(), name) != packages.end())
+            {
+                return &registry.implementation();
+            }
+        }
+        return default_registry();
+    }
+
+    void RegistrySet::add_registry(Registry&& r) { registries_.push_back(std::move(r)); }
+
+    void RegistrySet::set_default_registry(std::unique_ptr<RegistryImpl>&& r) { default_registry_ = std::move(r); }
+    void RegistrySet::set_default_registry(std::nullptr_t) { default_registry_.reset(); }
 }

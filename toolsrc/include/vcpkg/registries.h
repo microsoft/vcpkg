@@ -67,4 +67,39 @@ namespace vcpkg
 
         virtual Optional<Registry> visit_object(Json::Reader&, StringView, const Json::Object&) override;
     };
+
+    // this type implements the registry fall back logic from the registries RFC:
+    // A port name maps to one of the non-default registries if that registry declares
+    // that it is the registry for that port name, else it maps to the default registry
+    // if that registry exists; else, there is no registry for a port.
+    // The way one sets this up is via the `"registries"` and `"default_registry"`
+    // configuration settings.
+    struct RegistrySet
+    {
+        RegistrySet();
+
+        friend void swap(RegistrySet& lhs, RegistrySet& rhs) noexcept
+        {
+            swap(lhs.registries_, rhs.registries_);
+            swap(lhs.default_registry_, rhs.default_registry_);
+        }
+
+        // finds the correct registry for the port name
+        // Returns the null pointer if there is no registry set up for that name
+        const RegistryImpl* registry_for_port(StringView port_name) const;
+
+        Span<const Registry> registries() const { return registries_; }
+
+        const RegistryImpl* default_registry() const { return default_registry_.get(); }
+
+        // TODO: figure out how to get this to return an error (or maybe it should be a warning?)
+        void add_registry(Registry&& r);
+        void set_default_registry(std::unique_ptr<RegistryImpl>&& r);
+        void set_default_registry(std::nullptr_t r);
+
+    private:
+        std::unique_ptr<RegistryImpl> default_registry_;
+        std::vector<Registry> registries_;
+    };
+
 }

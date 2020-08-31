@@ -1,5 +1,6 @@
 #include <vcpkg/base/system.debug.h>
 
+#include <vcpkg/configuration.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/registries.h>
@@ -122,7 +123,7 @@ namespace vcpkg::PortFileProvider
             }
         }
 
-        if (auto registry = paths.get_configuration().registries.registry_for_port(spec))
+        if (auto registry = paths.get_configuration().registry_set.registry_for_port(spec))
         {
             auto registry_root = registry->get_registry_root(paths);
             auto port_directory = registry_root / fs::u8path(spec);

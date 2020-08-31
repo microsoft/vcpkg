@@ -8,6 +8,7 @@
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/configuration.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
@@ -83,39 +84,6 @@ namespace
 
 namespace vcpkg
 {
-    RegistrySet::RegistrySet() : default_registry_(Registry::builtin_registry()), registries_() { }
-
-    RegistrySet::RegistrySet(RegistrySet&&) noexcept = default;
-    RegistrySet& RegistrySet::operator=(RegistrySet&&) noexcept = default;
-    RegistrySet::~RegistrySet() = default;
-
-    void swap(RegistrySet& lhs, RegistrySet& rhs) noexcept
-    {
-        swap(lhs.registries_, rhs.registries_);
-        swap(lhs.default_registry_, rhs.default_registry_);
-    }
-
-    const RegistryImpl* RegistrySet::registry_for_port(StringView name) const
-    {
-        for (const auto& registry : registries())
-        {
-            const auto& packages = registry.packages();
-            if (std::find(packages.begin(), packages.end(), name) != packages.end())
-            {
-                return &registry.implementation();
-            }
-        }
-        return default_registry();
-    }
-
-    void RegistrySet::add_registry(Registry&& r) { registries_.push_back(std::move(r)); }
-
-    void RegistrySet::set_default_registry(std::unique_ptr<RegistryImpl>&& r) { default_registry_ = std::move(r); }
-    void RegistrySet::set_default_registry(std::nullptr_t) { default_registry_.reset(); }
-
-    // this is defined here so that we can see the definition of `Registry`
-    Span<const Registry> RegistrySet::registries() const { return registries_; }
-
     struct ConfigurationDeserializer final : Json::IDeserializer<Configuration>
     {
         virtual StringView type_name() const override { return "a configuration object"; }
@@ -205,8 +173,14 @@ namespace vcpkg
         return std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO);
     }
 
-    static std::pair<Optional<std::pair<Json::Object, Json::JsonStyle>>, std::pair<fs::path, Configuration>>
-    load_manifest_and_config(const Files::Filesystem& fs, const fs::path& manifest_dir)
+    struct ManifestAndConfig
+    {
+        std::pair<Json::Object, Json::JsonStyle> manifest_and_style;
+        fs::path config_directory;
+        Configuration config;
+    };
+
+    static ManifestAndConfig load_manifest_and_config(const Files::Filesystem& fs, const fs::path& manifest_dir)
     {
         std::error_code ec;
         auto manifest_path = manifest_dir / fs::u8path("vcpkg.json");
@@ -298,12 +272,11 @@ namespace vcpkg
 
         if (auto c = config_obj.get())
         {
-            std::pair<fs::path, Configuration> config = {std::move(config_dir), load_config(*c)};
-            return {std::move(manifest), std::move(config)};
+            return {std::move(manifest), std::move(config_dir), load_config(*c)};
         }
         else
         {
-            return {std::move(manifest), std::pair<fs::path, Configuration>{}};
+            return {std::move(manifest), {}, {}};
         }
     }
 
@@ -393,9 +366,9 @@ namespace vcpkg
             }
 
             auto manifest_and_config = load_manifest_and_config(filesystem, manifest_root_dir);
-            m_pimpl->m_manifest_doc = std::move(manifest_and_config.first);
-            config_root_dir = std::move(manifest_and_config.second.first);
-            m_pimpl->m_config = std::move(manifest_and_config.second.second);
+            m_pimpl->m_manifest_doc = std::move(manifest_and_config.manifest_and_style);
+            config_root_dir = std::move(manifest_and_config.config_directory);
+            m_pimpl->m_config = std::move(manifest_and_config.config);
         }
         else
         {
