@@ -33,3 +33,5 @@ with open(sys.argv[1], "r") as f_in:
                     found2 = True
                     if found1:
                         break
+                else:
+                    env.append(line)
