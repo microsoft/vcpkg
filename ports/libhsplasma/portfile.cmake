@@ -16,6 +16,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DENABLE_NET=${HSPLASMA_NET}
         -DENABLE_PHYSX=OFF
         -DENABLE_PYTHON=OFF
