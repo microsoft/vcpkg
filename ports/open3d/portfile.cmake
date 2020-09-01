@@ -12,15 +12,11 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_WINDOWS_RUNTIME)
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "openmp"   WITH_OPENMP
-)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        ${FEATURE_OPTIONS}
+        -DWITH_OPENMP=OFF
         -DVCPKG_CURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}/tools
         -DBUILD_CPP_EXAMPLES=OFF
         -DBUILD_UNIT_TESTS=OFF

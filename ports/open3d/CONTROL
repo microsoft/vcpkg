@@ -3,6 +3,3 @@ Version: 0.10.0
 Homepage: www.open3d.org
 Description: Open3D is an open-source library that supports rapid development of software that deals with 3D data
 Build-Depends: dirent, flann, eigen3, glew, glfw3, jsoncpp, libpng, libjpeg-turbo, opengl, fmt, imgui, pybind11, tinyfiledialogs, tinyobjloader, tinygltf, gtest, qhull, poissonrecon, rply, filament
-
-Feature: openmp
-Description: OpenMP support for Open3D
