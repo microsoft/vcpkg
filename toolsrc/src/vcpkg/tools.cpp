@@ -100,7 +100,8 @@ namespace vcpkg
             StringView::find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
 
         std::string url;
-        if (paths.vcpkg_use_mirror)
+
+        if (!paths.vcpkg_mirror_url.empty())
         {
             url = "ftp://";
             url += paths.vcpkg_mirror_url;
@@ -205,8 +206,7 @@ namespace vcpkg
         {
             System::print2("Downloading ", tool_name, "...\n");
             System::print2("  ", tool_data.url, " -> ", fs::u8string(tool_data.download_path), "\n");
-            Downloads::download_file(
-                fs, tool_data.url, tool_data.download_path, tool_data.sha512);
+            Downloads::download_file(fs, tool_data.url, tool_data.download_path, tool_data.sha512);
         }
         else
         {

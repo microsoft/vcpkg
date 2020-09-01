@@ -70,7 +70,7 @@ function(vcpkg_download_distfile VAR)
         endif()
     endif()
     
-    if (ENV{VCPKG_EXPERIMENTAL_MIRROR_URL})
+    if (NOT ENV{VCPKG_EXPERIMENTAL_MIRROR_URL} STREQUAL "")
         message(STATUS "Use vcpkg mirror $ENV{VCPKG_EXPERIMENTAL_MIRROR_URL}")
         set(vcpkg_download_distfile_URLS "ftp://$ENV{VCPKG_EXPERIMENTAL_MIRROR_URL}/${vcpkg_download_distfile_SHA512}")
     endif()
