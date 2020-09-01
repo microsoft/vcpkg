@@ -34,13 +34,10 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(ENV{VCPKG_CONCURRENCY} ${VCPKG_CONCURRENCY})
-
 set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${YASM_EXE_PATH}")
+set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug --enable-runtime-cpudetect")
 
-if(WIN32)
-    set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
-
+if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         vcpkg_acquire_msys(MSYS_ROOT
             DIRECT_PACKAGES
@@ -62,10 +59,10 @@ if(WIN32)
         vcpkg_acquire_msys(MSYS_ROOT)
     endif()
 
-    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(SHELL ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(OPTIONS "--toolchain=msvc ${OPTIONS}")
 else()
-    set(BASH /bin/bash)
-    set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build_linux.sh)
+    set(SHELL /bin/sh)
 endif()
 
 set(ENV{${INCLUDE_VAR}} "${CURRENT_INSTALLED_DIR}/include${VCPKG_HOST_PATH_SEPARATOR}$ENV{${INCLUDE_VAR}}")
@@ -73,9 +70,6 @@ set(ENV{${INCLUDE_VAR}} "${CURRENT_INSTALLED_DIR}/include${VCPKG_HOST_PATH_SEPAR
 set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-
-set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug")
-set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
 
 if("nonfree" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-nonfree")
@@ -405,13 +399,16 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
     message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+
+    set(BUILD_DIR         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    set(CONFIGURE_OPTIONS "${OPTIONS} ${OPTIONS_RELEASE}")
+    set(INST_PREFIX       "${CURRENT_PACKAGES_DIR}")
+
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
+
     vcpkg_execute_required_process(
-        COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
-            "${SOURCE_PATH}" # SOURCE DIR
-            "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
-            "${OPTIONS} ${OPTIONS_RELEASE}"
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        COMMAND ${SHELL} ./build.sh
+        WORKING_DIRECTORY ${BUILD_DIR}
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
 endif()
@@ -425,13 +422,16 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
     message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+
+    set(BUILD_DIR         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    set(CONFIGURE_OPTIONS "${OPTIONS} ${OPTIONS_DEBUG}")
+    set(INST_PREFIX       "${CURRENT_PACKAGES_DIR}/debug")
+
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
+
     vcpkg_execute_required_process(
-        COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
-            "${SOURCE_PATH}" # SOURCE DIR
-            "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
-            "${OPTIONS} ${OPTIONS_DEBUG}"
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+        COMMAND ${SHELL} ./build.sh
+        WORKING_DIRECTORY ${BUILD_DIR}
         LOGNAME build-${TARGET_TRIPLET}-dbg
     )
 endif()
