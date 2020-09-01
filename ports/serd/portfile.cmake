@@ -7,7 +7,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
 )
 
-file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -21,7 +21,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 file(
     INSTALL "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/serd"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" 
     RENAME copyright
 )
 
