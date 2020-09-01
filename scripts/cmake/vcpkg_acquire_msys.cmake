@@ -54,8 +54,6 @@
 ## * [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
 ## * [libvpx](https://github.com/Microsoft/vcpkg/blob/master/ports/libvpx/portfile.cmake)
 
-include(vcpkg_execute_in_download_mode)
-
 function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   cmake_parse_arguments(_am "NO_DEFAULT_PACKAGES" "" "PACKAGES;DIRECT_PACKAGES" ${ARGN})
 
