@@ -21,8 +21,6 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 file(
     INSTALL "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" 
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )
-
-vcpkg_test_cmake(PACKAGE_NAME serd)
