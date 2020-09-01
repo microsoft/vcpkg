@@ -1,5 +1,5 @@
 vcpkg_fail_port_install(MESSAGE "levmar currently only checked on Windows" 
-	ON_TARGET "OSX" "Linux" "UWP"
+    ON_TARGET "OSX" "Linux" "UWP"
 )
 
 vcpkg_download_distfile(ARCHIVE
@@ -16,19 +16,18 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
-	DISABLE_PARALLEL_CONFIGURE
-	OPTIONS
-	    -DHAVE_LAPACK=OFF
-	    -DHAVE_PLASMA=OFF
-	    -DBUILD_DEMO=OFF
+    PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DHAVE_LAPACK=OFF
+        -DHAVE_PLASMA=OFF
+        -DBUILD_DEMO=OFF
 )
 
 vcpkg_install_cmake()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
 # Handle duplicated debug includes
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME levmar)
