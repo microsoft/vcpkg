@@ -1,21 +1,12 @@
-#include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
-#include <vcpkg/base/system.print.h>
-#include <vcpkg/base/util.h>
 
 #include <vcpkg/binarycaching.h>
-#include <vcpkg/build.h>
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.mirror.h>
 #include <vcpkg/commands.setinstalled.h>
-#include <vcpkg/dependencies.h>
-#include <vcpkg/globalstate.h>
-#include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
-#include <vcpkg/remove.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::Mirror
