@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4047714..6282693 100644
+index 4047714..e4e149c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -62,6 +62,11 @@ if(_OSX_)
@@ -7,8 +7,8 @@ index 4047714..6282693 100644
  endif()
  
 +if (NOT BUILD_EXTERN_GLEW)
-+    find_package(glew CONFIG REQUIRED)
-+    link_libraries(GLEW::glew)
++    find_package(GLEW REQUIRED)
++    link_libraries(GLEW::GLEW)
 +endif()
 +
  # Overide with cmake -DCMAKE_BUILD_TYPE=Debug {dir}
