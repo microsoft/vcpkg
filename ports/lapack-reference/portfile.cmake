@@ -113,12 +113,11 @@ if("cblas" IN_LIST FEATURES)
     endif()
 endif()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# remove debug includs
+# remove debug includes
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_TARGET_IS_WINDOWS)
