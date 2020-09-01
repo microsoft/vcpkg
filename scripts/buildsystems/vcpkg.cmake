@@ -25,7 +25,7 @@ endfunction()
 
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
     if(EXISTS "${CMAKE_SOURCE_DIR}/vcpkg.json")
-        set(_VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}/vcpkg.json")
+        set(_VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
     endif()
 else()
     set(_VCPKG_MANIFEST_DIR ${VCPKG_MANIFEST_DIR})

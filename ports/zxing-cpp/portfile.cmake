@@ -9,9 +9,12 @@ vcpkg_from_github(
     PATCHES
       0001-opencv4-compat.patch
       0002-improve-features.patch
+      0003-fix-dependency-bigint.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindModules/FindIconv.cmake)
+# Depends on port bigint
+file(REMOVE_RECURSE ${SOURCE_PATH}/core/src/bigint)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
