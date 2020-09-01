@@ -115,7 +115,7 @@ namespace vcpkg::Commands
                                                                                {"build-external", &build_external},
                                                                                {"export", &export_command},
                                                                                {"depend-info", &depend_info},
-                                                                               {"mirror", &mirror}};
+                                                                               {"x-mirror", &mirror}};
         return t;
     }
 }

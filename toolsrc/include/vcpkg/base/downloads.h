@@ -4,12 +4,12 @@
 
 namespace vcpkg::Downloads
 {
-    extern void winhttp_download_file(Files::Filesystem& fs,
+    void winhttp_download_file(Files::Filesystem& fs,
                                       ZStringView target_file_path,
                                       StringView hostname,
                                       StringView url_path);
 
-    extern void ftp_download_file(Files::Filesystem& fs,
+    void ftp_download_file(Files::Filesystem& fs,
                                   ZStringView target_file_path,
                                   StringView hostname,
                                   StringView url_path);
@@ -21,7 +21,6 @@ namespace vcpkg::Downloads
 
     void download_file(Files::Filesystem& fs,
                        const std::string& url,
-                       const bool use_mirror,
                        const fs::path& download_path,
                        const std::string& sha512);
 }

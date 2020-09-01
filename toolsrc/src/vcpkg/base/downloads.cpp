@@ -41,7 +41,6 @@ namespace vcpkg::Downloads
 
     void download_file(vcpkg::Files::Filesystem& fs,
                        const std::string& url,
-                       const bool use_mirror,
                        const fs::path& download_path,
                        const std::string& sha512)
     {
@@ -51,12 +50,12 @@ namespace vcpkg::Downloads
         fs.remove(download_path, ec);
         fs.remove(download_path_part_path, ec);
 #if defined(_WIN32)
-        auto url_no_proto = url.substr(use_mirror ? 6 : 8); // drop ftp:// or https://
+        auto url_no_proto = url.substr(Strings::starts_with(url, "ftp") ? 6 : 8); // drop ftp:// or https://
         auto path_begin = Util::find(url_no_proto, '/');
         std::string hostname(url_no_proto.begin(), path_begin);
         std::string path(path_begin, url_no_proto.end());
 
-        if (use_mirror)
+        if (Strings::starts_with(url, "ftp"))
             ftp_download_file(fs, download_path_part, hostname, path);
         else
             winhttp_download_file(fs, download_path_part, hostname, path);

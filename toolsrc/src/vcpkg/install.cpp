@@ -429,30 +429,20 @@ namespace vcpkg::Install
         }
     }
 
-    struct TrackedPackageInstallGuard
+    TrackedPackageInstallGuard::TrackedPackageInstallGuard(const size_t package_count,
+                                                           std::vector<SpecSummary>& results,
+                                                           const PackageSpec& spec)
     {
-        SpecSummary* current_summary = nullptr;
-        Chrono::ElapsedTimer build_timer = Chrono::ElapsedTimer::create_started();
+        results.emplace_back(spec, nullptr);
+        current_summary = &results.back();
+        System::printf("Starting package %zd/%zd: %s\n", results.size(), package_count, spec.to_string());
+    }
 
-        TrackedPackageInstallGuard(const size_t package_count,
-                                   std::vector<SpecSummary>& results,
-                                   const PackageSpec& spec)
-        {
-            results.emplace_back(spec, nullptr);
-            current_summary = &results.back();
-            System::printf("Starting package %zd/%zd: %s\n", results.size(), package_count, spec.to_string());
-        }
-
-        ~TrackedPackageInstallGuard()
-        {
-            current_summary->timing = build_timer.elapsed();
-            System::printf(
-                "Elapsed time for package %s: %s\n", current_summary->spec.to_string(), current_summary->timing);
-        }
-
-        TrackedPackageInstallGuard(const TrackedPackageInstallGuard&) = delete;
-        TrackedPackageInstallGuard& operator=(const TrackedPackageInstallGuard&) = delete;
-    };
+    TrackedPackageInstallGuard::~TrackedPackageInstallGuard()
+    {
+        current_summary->timing = build_timer.elapsed();
+        System::printf("Elapsed time for package %s: %s\n", current_summary->spec.to_string(), current_summary->timing);
+    }
 
     InstallSummary perform(ActionPlan& action_plan,
                            const KeepGoing keep_going,
@@ -573,7 +563,7 @@ namespace vcpkg::Install
         nullptr,
     };
 
-    static void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
+    void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
     {
         auto usage = get_cmake_usage(bpgh, paths);
 

@@ -33,6 +33,21 @@ namespace vcpkg::Install
         const Dependencies::InstallPlanAction* action;
     };
 
+    struct TrackedPackageInstallGuard
+    {
+        SpecSummary* current_summary = nullptr;
+        Chrono::ElapsedTimer build_timer = Chrono::ElapsedTimer::create_started();
+
+        TrackedPackageInstallGuard(const size_t package_count,
+                                   std::vector<SpecSummary>& results,
+                                   const PackageSpec& spec);
+
+        ~TrackedPackageInstallGuard();
+
+        TrackedPackageInstallGuard(const TrackedPackageInstallGuard&) = delete;
+        TrackedPackageInstallGuard& operator=(const TrackedPackageInstallGuard&) = delete;
+    };
+
     struct InstallSummary
     {
         std::vector<SpecSummary> results;
@@ -100,6 +115,8 @@ namespace vcpkg::Install
     };
 
     CMakeUsageInfo get_cmake_usage(const BinaryParagraph& bpgh, const VcpkgPaths& paths);
+
+    void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths);
 
     extern const CommandStructure COMMAND_STRUCTURE;
 
