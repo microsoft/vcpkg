@@ -6,29 +6,6 @@ endif()
 
 set(TF_VERSION 2.3.0)
 
-set(STATIC_ONLY_PATCHES "")
-set(LINUX_ONLY_PATCHES "")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	set(STATIC_ONLY_PATCHES change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
-endif()
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
-	set(LINUX_ONLY_PATCHES fix-linux-build.patch)
-endif()
-vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO tensorflow/tensorflow
-	REF "v${TF_VERSION}"
-	SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
-	HEAD_REF master
-	PATCHES
-		file-exists.patch # required or otherwise it cant find python lib path on windows
-		fix-build-error.patch # Fix namespace error
-		fix-dbg-build-errors.patch # Fix no return statement
-		fix-more-build-errors.patch # Fix no return statement
-		${STATIC_ONLY_PATCHES}
-		${LINUX_ONLY_PATCHES}
-)
-
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
@@ -47,7 +24,7 @@ get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${GIT_DIR})
 
 if(CMAKE_HOST_WIN32)
-  vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
 	vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
 	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
@@ -78,11 +55,6 @@ set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 # check if numpy can be loaded
 vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
 
-# we currently only support the release version
-tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-
 # tensorflow has long file names, which will not work on windows
 set(ENV{TEST_TMPDIR} ${BUILDTREES_DIR}/.bzl)
 
@@ -109,8 +81,6 @@ set(ENV{NCCL_INSTALL_PATH} "")
 set(ENV{CC_OPT_FLAGS} "/arch:AVX")
 set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
-
-file(GLOB SOURCES ${SOURCE_PATH}/*)
 
 if(VCPKG_TARGET_IS_WINDOWS)
 	set(BAZEL_LIB_NAME tensorflow_cc.dll)
@@ -142,10 +112,33 @@ endif()
 
 set(N_DBG_LIB_PARTS 0)
 foreach(BUILD_TYPE dbg rel)
+	set(STATIC_ONLY_PATCHES "")
+	set(LINUX_ONLY_PATCHES "")
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+		set(STATIC_ONLY_PATCHES change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
+	endif()
+	if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+		set(LINUX_ONLY_PATCHES fix-linux-build.patch)
+	endif()
+	vcpkg_from_github(
+		OUT_SOURCE_PATH SOURCE_PATH
+		REPO tensorflow/tensorflow
+		REF "v${TF_VERSION}"
+		SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
+		HEAD_REF master
+		PATCHES
+			file-exists.patch # required or otherwise it cant find python lib path on windows
+			fix-build-error.patch # Fix namespace error
+			fix-dbg-build-errors.patch # Fix no return statement
+			fix-more-build-errors.patch # Fix no return statement
+			${STATIC_ONLY_PATCHES}
+			${LINUX_ONLY_PATCHES}
+	)
+
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
 	tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
-	file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
-	file(COPY ${SOURCES} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
+	file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
+	set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}")
 
 	vcpkg_execute_required_process(
 		COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
