@@ -18,12 +18,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF b05a4b7b2a6f59b0508db84ea68e5ada2224f904 # 0.17.3
-    SHA512 02b1598f5090674bc2ce4fdbcd70a4669c8c0710e98d910dbd77338c088cc87db4e0eeb3dd89100772ff4f74bdf09a7f70b8975d79c816e422dc34a356f8ba4e
+    REF f7d4fc7ac679e18ba385f64434f8015c3cea9cb5 # 0.17.6
+    SHA512 8b4719c26dfad68eed6f2528263702e42f9865bb7a9f2d40909dc6c3fc20bb7259fe44a5f89390ba714c7f9359db2d171ff44685641962c24a70f4e2aa3f3f65
     HEAD_REF master
 	PATCHES
 		openssl-version-override.patch
-        fix-arm.patch
 )
 
 vcpkg_configure_cmake(

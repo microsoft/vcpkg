@@ -42,8 +42,12 @@ function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	endif()
 endfunction()
 
+vcpkg_find_acquire_program(GIT)
+get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
+vcpkg_add_to_path(PREPEND ${GIT_DIR})
+
 if(CMAKE_HOST_WIN32)
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git mingw-w64-x86_64-python-numpy TIMEOUT 1800)
+  vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
 	vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
 	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
@@ -73,6 +77,11 @@ set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 
 # check if numpy can be loaded
 vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
+
+# we currently only support the release version
+tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
 # tensorflow has long file names, which will not work on windows
 set(ENV{TEST_TMPDIR} ${BUILDTREES_DIR}/.bzl)

@@ -973,9 +973,27 @@ std::string vcpkg::reformat_version(const std::string& version, const std::strin
     return Strings::concat("0.0.0-", abi_tag);
 }
 
+details::NuGetRepoInfo details::get_nuget_repo_info_from_env()
+{
+    auto vcpkg_nuget_repository = System::get_environment_variable("VCPKG_NUGET_REPOSITORY");
+    if (auto p = vcpkg_nuget_repository.get())
+    {
+        return {std::move(*p)};
+    }
+    auto gh_repo = System::get_environment_variable("GITHUB_REPOSITORY").value_or("");
+    if (gh_repo.empty()) return {};
+    auto gh_server = System::get_environment_variable("GITHUB_SERVER_URL").value_or("");
+    if (gh_server.empty()) return {};
+
+    return {Strings::concat(gh_server, '/', gh_repo, ".git"),
+            System::get_environment_variable("GITHUB_REF").value_or(""),
+            System::get_environment_variable("GITHUB_SHA").value_or("")};
+}
+
 std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
                                    const Dependencies::InstallPlanAction& action,
-                                   const vcpkg::NugetReference& ref)
+                                   const vcpkg::NugetReference& ref,
+                                   details::NuGetRepoInfo rinfo)
 {
     auto& spec = action.spec;
     auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
@@ -1006,6 +1024,13 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     xml.open_tag("packageTypes");
     xml.start_complex_open_tag("packageType").text_attr("name", "vcpkg").finish_self_closing_complex_tag();
     xml.close_tag("packageTypes").line_break();
+    if (!rinfo.repo.empty())
+    {
+        xml.start_complex_open_tag("repository").text_attr("type", "git").text_attr("url", rinfo.repo);
+        if (!rinfo.branch.empty()) xml.text_attr("branch", rinfo.branch);
+        if (!rinfo.commit.empty()) xml.text_attr("commit", rinfo.commit);
+        xml.finish_self_closing_complex_tag().line_break();
+    }
     xml.close_tag("metadata").line_break();
     xml.open_tag("files");
     xml.start_complex_open_tag("file")
@@ -1046,6 +1071,18 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
     tbl.text("The `<rw>` optional parameter for certain strings controls whether they will be consulted for "
              "downloading binaries and whether on-demand builds will be uploaded to that remote. It can be specified "
              "as 'read', 'write', or 'readwrite'.");
+    tbl.blank();
+    tbl.text("The `nuget` and `nugetconfig` source providers additionally respect certain environment variables while "
+             "generating nuget packages. The `metadata.repository` field will be optionally generated like:\n"
+             "\n"
+             "    <repository type=\"git\" url=\"$VCPKG_NUGET_REPOSITORY\"/>\n"
+             "or\n"
+             "    <repository type=\"git\"\n"
+             "                url=\"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git\"\n"
+             "                branch=\"${GITHUB_REF}\"\n"
+             "                commit=\"${GITHUB_SHA}\"/>\n"
+             "\n"
+             "if the appropriate environment variables are defined and non-empty.\n");
     tbl.blank();
     System::print2(tbl.m_str);
     const auto& maybe_cachepath = default_cache_path();
