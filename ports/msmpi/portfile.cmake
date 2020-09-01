@@ -17,10 +17,6 @@ vcpkg_from_github(
         # of them directly.
         fix-external-symbols.patch
 
-        # Disable building with CFG enabled to make it usable from gfortran.
-        # See https://github.com/microsoft/Microsoft-MPI/issues/7
-        disable-control-flow-guard.patch
-
         # mpif.h uses invalid BOZ integer constants, which will not be accepted without `-fallow-invalid-boz`
         # by gfortran >= 10.0, so we convert them to regular integer constants.
         fix-invalid-boz-literals.patch
