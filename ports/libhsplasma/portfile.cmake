@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    net HSPLASMA_NET
+    net ENABLE_NET
 )
 
 vcpkg_configure_cmake(
@@ -17,7 +17,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DENABLE_NET=${HSPLASMA_NET}
         -DENABLE_PHYSX=OFF
         -DENABLE_PYTHON=OFF
         -DENABLE_TOOLS=OFF
@@ -28,9 +27,9 @@ vcpkg_fixup_cmake_targets(
     CONFIG_PATH share/cmake/HSPlasma
     TARGET_PATH share/HSPlasma
 )
+
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
-
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
