@@ -1,20 +1,20 @@
 vcpkg (2020.06.15 - 2020.7.31)
 ---
-#### Total port count: 
-#### Total port count per triplet (tested): 
+#### Total port count: 1429
+#### Total port count per triplet (tested):
 |triplet|ports available|
 |---|---|
-|**x64-windows**|NUM|
-|x86-windows|NUM|
-|x64-windows-static|NUM|
-|**x64-osx**|NUM|
-|**x64-linux**|NUM|
-|arm64-windows|NUM|
-|x64-uwp|NUM|
-|arm-uwp|NUM|
+|**x64-windows**|1304|
+|x86-windows|1284|
+|x64-windows-static|1213|
+|**x64-osx**|1139|
+|**x64-linux**|1210|
+|arm64-windows|928|
+|x64-uwp|700|
+|arm-uwp|669|
 
 #### The following commands and options have been updated:
-- `x-package-info` ***[NEW COMMAND]***: Allows viewing of port information in a specified format
+- `x-package-info` ***[NEW COMMAND]***: Allows viewing of port information in a requested format (currently json)
     - [(#12845)](https://github.com/microsoft/vcpkg/pull/12845) [vcpkg] Lift `--x-json` to a global option, implement experimental `x-package-info` command (by @ras0219)
 - `--editable` ***[NEW OPTION]***: Suppress binary caching and source re-extraction for packages listed on the command line
     - [(#12200)](https://github.com/microsoft/vcpkg/pull/12200) [vcpkg] Implement --editable (by @ras0219)
@@ -22,12 +22,12 @@ vcpkg (2020.06.15 - 2020.7.31)
 - `--x-binarysource=` ***[NEW OPTION]***: Experimental: Support NuGet servers for retrieving and uploading of binary packages during builds
     - [(#12058)](https://github.com/microsoft/vcpkg/pull/12058) [vcpkg] Implementation of --x-binarysource=nuget (and friends) (by @ras0219)
 - `install`
-    - `--x-write-nuget-packages-config` ***[NEW OPTION]***: Experimental: Writes out a NuGet packages config-formatted file for use with external binary caching
+    - `--x-write-nuget-packages-config` ***[NEW OPTION]***: Experimental: Write out a NuGet packages config-formatted file for use with external binary caching
         - [(#12138)](https://github.com/microsoft/vcpkg/pull/12138) [vcpkg] Implement --x-write-nuget-packages-config= setting for `install` and `x-set-installed` (by @ras0219)
 - `x-set-installed`
     - `--dry-run` ***[NEW OPTION]***: Perform a dry run by not actually building or installing
         - [(#12132)](https://github.com/microsoft/vcpkg/pull/12132) [vcpkg-x-set-installed] Implement --dry-run (by @ras0219)
-- `--x-json`: Lift to global option
+- `--x-json`: Lift this option to the global scope to request json output from compatible commands (see `x-package-info`)
     - [(#12845)](https://github.com/microsoft/vcpkg/pull/12845) [vcpkg] Lift `--x-json` to a global option, implement experimental `x-package-info` command (by @ras0219)
 
 #### The following documentation has been updated:
@@ -83,14 +83,14 @@ vcpkg (2020.06.15 - 2020.7.31)
     - [(#12516)](https://github.com/microsoft/vcpkg/pull/12516) [sqlite3] Namespaced targets with unofficial:: (by @PhoebeHui)
 
 #### The following *remarkable* changes have been made to vcpkg's infrastructure:
-- Port Manifest: Allow projects to state their dependencies in a declarative format
+- Port Manifest: New feature to allow projects to state their dependencies in a declarative format
     - [(#11757)](https://github.com/microsoft/vcpkg/pull/11757) [vcpkg manifest] Manifest Implementation (by @strega-nil)
     - [(#12227)](https://github.com/microsoft/vcpkg/pull/12227) [vcpkg manifests] fix some issues (by @strega-nil)
     - [(#12549)](https://github.com/microsoft/vcpkg/pull/12549) [vcpkg manifest] add feature support (by @strega-nil)
-- New maintainer `vcpkg_from_sourceforge` helper function to retrieve sources from SourceForge
+- `vcpkg_from_sourceforge`: New maintainer helper function to retrieve sources from SourceForge
     - [(#11899)](https://github.com/microsoft/vcpkg/pull/11899) [vcpkg] Add vcpkg_from_sourceforge (1/2) (by @JackBoosY)
     - [(#12018)](https://github.com/microsoft/vcpkg/pull/12018) [vcpkg_from_sourceforge] Add retry mirror function (2/2) (by @JackBoosY)
-- New environment variable to allow users to override ports with alternate versions
+- `VCPKG_OVERLAY_PORTS`: New environment variable to allow users to override ports with alternate versions
     - [(#12640)](https://github.com/microsoft/vcpkg/pull/12640) [vcpkg] add environment variable VCPKG_OVERLAY_PORTS (by @Neumann-A)
 
 #### The following *additional* changes have been made to vcpkg's infrastructure:
