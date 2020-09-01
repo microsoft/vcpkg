@@ -129,6 +129,8 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
                 continue()
             endif()
             set(LIBNAME "${CMAKE_MATCH_1}")
+            string(REPLACE "+" "p" LIBNAME "${LIBNAME}")
+            string(REPLACE "-" "_" LIBNAME "${LIBNAME}")
             # Ensure existance in current packages and installed
             find_library("CHECK_LIB_${LIBNAME}_${_config}" NAMES "${LIBNAME}" PATHS ${SEARCH_PATHS} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
             if("${CHECK_LIB_${LIBNAME}_${_config}}" MATCHES "-NOTFOUND\$")
