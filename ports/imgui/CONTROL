@@ -73,3 +73,6 @@ Build-Depends: freetype
 
 Feature: libigl-imgui
 Description: Install the libigl-imgui headers
+
+Feature: wchar32
+Description: Use WCHAR32 instead of WCHAR16
