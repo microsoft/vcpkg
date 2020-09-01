@@ -220,6 +220,7 @@ clapack:x64-uwp=skip
 clapack:x64-windows-static=skip
 clapack:x64-windows=skip
 clapack:x86-windows=skip
+clblas:arm64-windows=fail
 clblast:x64-linux=fail
 clblast:x64-windows-static=fail
 clockutils:x64-linux=fail
