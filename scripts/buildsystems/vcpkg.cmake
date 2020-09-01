@@ -344,59 +344,64 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
         "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
 endif()
 
+set(_VCPKG_SOURCELINK_RSP "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.rsp" CACHE INTERNAL "")
+
 function(vcpkg_add_sourcelink_link_options target)
     if(NOT _CMAKE_IN_TRY_COMPILE AND
-        MSVC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.15.26726.0")
+        MSVC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.15.26726.0" AND
+        CMAKE_VERSION VERSION_GREATER_EQUAL 3.13.5)
         # Support added in Visual Studio 2017 Version 15.8.
 
-        if(CMAKE_GENERATOR MATCHES "Visual Studio")
-            set(PASS_SOURCELINK_DIRECTLY 1)
-        else()
-            # Due to cmd.exe command line length limitations (encountered by e.g. Ninja), /sourcelink
-            # parameters are passed indirectly through a response file.
-            set(PASS_SOURCE_LINK_DIRECTLY 0)
-
-            set(SOURCELINK_RSP "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.rsp")
-            set(SOURCELINK_RSP_TMP "${SOURCELINK_RSP}.tmp")
-
-            file(WRITE "${SOURCELINK_RSP_TMP}" "")
-        endif()
-
-        if(VCPKG_SOURCELINK_FILE)
-            if(PASS_SOURCELINK_DIRECTLY)
-                set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " /sourcelink:\"${VCPKG_SOURCELINK_FILE}\" ")
+        if(NOT DEFINED _VCPKG_SOURCELINK_LINK_OPTS)
+            if(CMAKE_GENERATOR MATCHES "Visual Studio")
+                set(PASS_SOURCELINK_DIRECTLY 1)
             else()
-                file(APPEND "${SOURCELINK_RSP_TMP}" "/sourcelink:\"${VCPKG_SOURCELINK_FILE}\"\n")
+                # Due to cmd.exe command line length limitations (encountered by e.g. Ninja), /sourcelink
+                # parameters are passed indirectly through a response file.
+                set(PASS_SOURCE_LINK_DIRECTLY 0)
+
+                set(SOURCELINK_RSP_TMP "${_VCPKG_SOURCELINK_RSP}.tmp")
+
+                file(WRITE "${SOURCELINK_RSP_TMP}" "")
             endif()
-        endif()
-        file(GLOB SOURCELINK_FILES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
-        if(SOURCELINK_FILES)
-            foreach(SOURCELINK_FILE ${SOURCELINK_FILES})
+
+            if(VCPKG_SOURCELINK_FILE)
                 if(PASS_SOURCELINK_DIRECTLY)
-                    set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " /sourcelink:\"${SOURCELINK_FILE}\" ")
+                    list(APPEND _VCPKG_SOURCELINK_LINK_OPTS "/sourcelink:\"${VCPKG_SOURCELINK_FILE}\"")
                 else()
-                    file(APPEND "${SOURCELINK_RSP_TMP}" "/sourcelink:\"${SOURCELINK_FILE}\"\n")
+                    file(APPEND "${SOURCELINK_RSP_TMP}" "/sourcelink:\"${VCPKG_SOURCELINK_FILE}\"\n")
                 endif()
-            endforeach()
+            endif()
+            file(GLOB SOURCELINK_FILES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
+            if(SOURCELINK_FILES)
+                foreach(SOURCELINK_FILE ${SOURCELINK_FILES})
+                    if(PASS_SOURCELINK_DIRECTLY)
+                        list(APPEND _VCPKG_SOURCELINK_LINK_OPTS "/sourcelink:\"${SOURCELINK_FILE}\"")
+                    else()
+                        file(APPEND "${SOURCELINK_RSP_TMP}" "/sourcelink:\"${SOURCELINK_FILE}\"\n")
+                    endif()
+                endforeach()
+            endif()
+
+            if(NOT PASS_SOURCELINK_DIRECTLY)
+                if(NOT EXISTS "${_VCPKG_SOURCELINK_RSP}")
+                    set(SOURCELINK_RSP_HASH "0")
+                else()
+                    file(MD5 "${SOURCELINK_RSP}" SOURCELINK_RSP_HASH)
+                endif()
+                file(MD5 "${SOURCELINK_RSP_TMP}" SOURCELINK_RSP_TMP_HASH)
+
+                if(NOT SOURCELINK_RSP_HASH STREQUAL SOURCELINK_RSP_TMP_HASH)
+                    file(RENAME "${SOURCELINK_RSP_TMP}" "${_VCPKG_SOURCELINK_RSP}")
+                else()
+                    file(REMOVE "${SOURCELINK_RSP_TMP}")
+                endif()
+                list(APPEND _VCPKG_SOURCELINK_LINK_OPTS "@\"${_VCPKG_SOURCELINK_RSP}\"")
+            endif()
+            set(_VCPKG_SOURCELINK_LINK_OPTS "${_VCPKG_SOURCELINK_LINK_OPTS}" CACHE INTERNAL "Link options to enable sourcelink from Vcpkg")
         endif()
-
-        if(NOT PASS_SOURCELINK_DIRECTLY)
-
-            if(NOT EXISTS "${SOURCELINK_RSP}")
-                set(SOURCELINK_RSP_HASH "0")
-            else()
-                file(MD5 "${SOURCELINK_RSP}" SOURCELINK_RSP_HASH)
-            endif()
-            file(MD5 "${SOURCELINK_RSP_TMP}" SOURCELINK_RSP_TMP_HASH)
-
-            if(NOT SOURCELINK_RSP_HASH STREQUAL SOURCELINK_RSP_TMP_HASH)
-                file(RENAME "${SOURCELINK_RSP_TMP}" "${SOURCELINK_RSP}")
-            else()
-                file(REMOVE "${SOURCELINK_RSP_TMP}")
-            endif()
-
-            file(RELATIVE_PATH SOURCELINK_RSP_REL_PATH "${CMAKE_BINARY_DIR}" "${SOURCELINK_RSP}")
-            set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " @\"${SOURCELINK_RSP_REL_PATH}\" ")
+        if(_VCPKG_SOURCELINK_LINK_OPTS)
+            set_property(TARGET ${target} APPEND PROPERTY LINK_OPTIONS "${_VCPKG_SOURCELINK_LINK_OPTS}")
         endif()
     endif()
 endfunction()

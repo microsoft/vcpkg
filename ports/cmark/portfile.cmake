@@ -9,7 +9,6 @@ vcpkg_from_github(
     SHA512 06eb110cfd90c9e980c022b7588e28864d15a4da5d07d61ad4b27c6de47367492b9e58e9434e62b07517aa6dc484f17af13916808be3188f38c37d20cbf33112
     HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/cmakelists-append_string.patch"
         "${CMAKE_CURRENT_LIST_DIR}/rename-shared-lib.patch"
 )
 
