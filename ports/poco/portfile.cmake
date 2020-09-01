@@ -15,7 +15,12 @@ vcpkg_from_github(
         use-vcpkg-libharu.patch
         # Add the support of arm64-windows
         arm64_pcre.patch
+        fix_expat_sqlite3.patch
 )
+
+file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")
+file(REMOVE("${SOURCE_PATH}/cmake/V39/FindEXPAT.cmake")
+file(REMOVE("${SOURCE_PATH}/cmake/V313/FindSQLite3.cmake")
 
 # define Poco linkage type
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
@@ -50,9 +55,7 @@ vcpkg_configure_cmake(
         # Define linking feature
         -DPOCO_STATIC=${POCO_STATIC}
         -DPOCO_MT=${POCO_MT}
-        # Set to OFF|ON (default is OFF) to control build of POCO tests
         -DENABLE_TESTS=OFF
-        # Set to OFF|ON (default is OFF) to control build of POCO samples
         -DENABLE_SAMPLES=OFF
         # Allow enabling and disabling components
         # POCO_ENABLE_SQL_ODBC, POCO_ENABLE_SQL_MYSQL and POCO_ENABLE_SQL_POSTGRESQL are
@@ -81,7 +84,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
 
 # Copy additional include files not part of any libraries
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL")
@@ -142,7 +144,6 @@ elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/Poco")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()

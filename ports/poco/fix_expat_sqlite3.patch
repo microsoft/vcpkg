@@ -1,0 +1,54 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b664afd..453b716 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -460,10 +460,10 @@ install(
+ if(POCO_UNBUNDLED)
+ 	install(FILES cmake/FindPCRE.cmake
+ 			DESTINATION "${PocoConfigPackageLocation}")
+-	install(FILES cmake/V39/FindEXPAT.cmake
+-			DESTINATION "${PocoConfigPackageLocation}/V39")
+-	install(FILES cmake/V313/FindSQLite3.cmake
+-			DESTINATION "${PocoConfigPackageLocation}/V313")
++	# install(FILES cmake/V39/FindEXPAT.cmake
++			# DESTINATION "${PocoConfigPackageLocation}/V39")
++	# install(FILES cmake/V313/FindSQLite3.cmake
++			# DESTINATION "${PocoConfigPackageLocation}/V313")
+ endif()
+ 
+ message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
+diff --git a/Data/SQLite/CMakeLists.txt b/Data/SQLite/CMakeLists.txt
+index b52e2c5..0dcfae2 100644
+--- a/Data/SQLite/CMakeLists.txt
++++ b/Data/SQLite/CMakeLists.txt
+@@ -7,7 +7,7 @@ file(GLOB_RECURSE HDRS_G "include/*.h")
+ POCO_HEADERS_AUTO(SQLITE_SRCS ${HDRS_G})
+ 
+ if(POCO_UNBUNDLED)
+-	find_package(SQLite3 REQUIRED)
++	find_package(unofficial-sqlite3 CONFIG REQUIRED)
+ else()
+ 	# sqlite3
+ 	POCO_SOURCES(SQLITE_SRCS sqlite3
+@@ -43,7 +43,7 @@ target_include_directories(DataSQLite
+ )
+ 
+ if(POCO_UNBUNDLED)
+-		target_link_libraries(DataSQLite PUBLIC SQLite::SQLite3)
++		target_link_libraries(DataSQLite PUBLIC unofficial::sqlite3::sqlite3)
+ 	target_compile_definitions(DataSQLite PUBLIC
+ 		POCO_UNBUNDLED
+ 		SQLITE_THREADSAFE=1
+diff --git a/XML/CMakeLists.txt b/XML/CMakeLists.txt
+index 4fbf06f..aa85297 100644
+--- a/XML/CMakeLists.txt
++++ b/XML/CMakeLists.txt
+@@ -20,7 +20,7 @@ endif()
+ # If POCO_UNBUNDLED is enabled we try to find the required packages
+ # The configuration will fail if the packages are not found
+ if(POCO_UNBUNDLED)
+-	find_package(EXPAT REQUIRED)
++	find_package(expat CONFIG REQUIRED)
+ else()
+ 	POCO_SOURCES(SRCS expat
+ 		src/xmlparse.cpp
