@@ -400,13 +400,24 @@ function(vcpkg_find_acquire_program VAR)
       set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${VERSION}")
       set(PKGCONFIG "${PROG_PATH_SUBDIR}/mingw32/bin/pkg-config.exe")
       if(NOT EXISTS "${PKGCONFIG}")
+        set(URL_PREFIX https://)
         vcpkg_download_distfile(PKGCONFIG_ARCHIVE
-          URLS "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz"
+          URLS "${URL_PREFIX}repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz"
           SHA512 3b1b706a24d9aef7bbdf3ce4427aaa813ba6fbd292ed9dda181b4300e117c3d59a159ddcca8b013fd01ce76da2d95d590314ff9628c0d68a6966bac4842540f0
           FILENAME mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz
+          SILENT_EXIT
         )
+        if (NOT download_success)
+            message(WARNING "Unable to download using SSL, switch to http")
+            set(URL_PREFIX http://)
+            vcpkg_download_distfile(PKGCONFIG_ARCHIVE
+            URLS "${URL_PREFIX}repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz"
+            SHA512 3b1b706a24d9aef7bbdf3ce4427aaa813ba6fbd292ed9dda181b4300e117c3d59a159ddcca8b013fd01ce76da2d95d590314ff9628c0d68a6966bac4842540f0
+            FILENAME mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz
+            )
+        endif()
         vcpkg_download_distfile(LIBWINPTHREAD_ARCHIVE
-          URLS "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst"
+          URLS "${URL_PREFIX}repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst"
           SHA512 2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
           FILENAME mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst
         )
