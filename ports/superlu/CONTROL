@@ -1,6 +1,6 @@
 Source: superlu
 Version: 2020-01-07
-Port-Verison: 1
+Port-Version: 2
 Build-Depends: openblas
 Description: Supernodal sparse direct solver.
 Homepage: https://github.com/xiaoyeli/superlu
