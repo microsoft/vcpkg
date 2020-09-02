@@ -267,9 +267,16 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
             auto pghs = Paragraphs::parse_paragraphs(contents, fs::u8string(control));
             REQUIRE(pghs);
 
-            scfs.push_back(std::move(
-                *SourceControlFile::parse_control_file(control, std::move(pghs).value_or_exit(VCPKG_LINE_INFO))
-                     .value_or_exit(VCPKG_LINE_INFO)));
+            auto control_file =
+                SourceControlFile::parse_control_file(control, std::move(pghs).value_or_exit(VCPKG_LINE_INFO));
+
+            if (!control_file.has_value())
+            {
+                System::printf(System::Color::error, "Error: failed to parse control file: %s\n", control);
+                REQUIRE(false);
+            }
+
+            scfs.push_back(std::move(*control_file.value_or_exit(VCPKG_LINE_INFO)));
         }
         else if (fs.exists(manifest))
         {
