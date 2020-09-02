@@ -274,14 +274,14 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAG
 
 if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		file(COPY ${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-dll.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc)
-		file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/tensorflow-cc-config-windows-dll.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
+		file(COPY ${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-dll.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
+		file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config-windows-dll.cmake ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
 	else()
-		file(COPY ${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-lib.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc)
-		file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/tensorflow-cc-config-windows-lib.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
+		file(COPY ${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-lib.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
+		file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config-windows-lib.cmake ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
 		set(ALL_PARTS "tensorflow_cc::tensorflow_cc-part1")
 		foreach(part ${TF_LIB_SUFFIXES})
-			file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake "\n\
+			file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "\n\
 add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)\n\
 set_target_properties(tensorflow_cc::tensorflow_cc${part}\n\
 	PROPERTIES\n\
@@ -291,7 +291,7 @@ set_target_properties(tensorflow_cc::tensorflow_cc${part}\n\
 ")
 			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")
 		endforeach()
-		file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake "\n\
+		file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "\n\
 add_library(tensorflow_cc::tensorflow_cc INTERFACE IMPORTED)\n\
 set_property(TARGET tensorflow_cc::tensorflow_cc PROPERTY INTERFACE_LINK_LIBRARIES ${ALL_PARTS})\n\
 ")
@@ -302,7 +302,7 @@ else()
 	else()
 		set(TF_LINKAGE_TYPE STATIC)
 	endif()
-	configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
+	configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
 endif()
 
 message(STATUS "You may want to delete ${CURRENT_BUILDTREES_DIR} and ${BUILDTREES_DIR}/.bzl to free diskspace.")
