@@ -230,8 +230,7 @@ If you wish to silence this error and use classic mode, you can:
 
         ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
 
-        if (args.download_mirror_url)
-            vcpkg_mirror_url = *args.download_mirror_url.get();
+        if (args.download_mirror_url) vcpkg_mirror_url = *args.download_mirror_url.get();
 
         for (auto&& overlay_triplets_dir : args.overlay_triplets)
         {
