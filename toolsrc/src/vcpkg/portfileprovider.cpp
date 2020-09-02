@@ -190,25 +190,25 @@ namespace vcpkg::PortFileProvider
             }
 
             // Try loading all ports inside ports_dir
-            auto found_scf = Paragraphs::load_overlay_ports(paths, ports_dir);
-            for (auto&& scf : found_scf)
+            auto found_scfls = Paragraphs::load_overlay_ports(paths, ports_dir);
+            for (auto&& scfl : found_scfls)
             {
-                auto port_name = scf.source_control_file->core_paragraph->name;
+                auto port_name = scfl.source_control_file->core_paragraph->name;
                 if (cache.find(port_name) == cache.end())
                 {
-                    auto it = cache.emplace(std::move(port_name), std::move(scf));
+                    auto it = cache.emplace(std::move(port_name), std::move(scfl));
                     ret.emplace_back(&it.first->second);
                 }
             }
         }
 
-        auto all_ports = Paragraphs::load_all_ports(paths);
-        for (auto&& scf : all_ports)
+        auto all_ports = Paragraphs::load_all_registry_ports(paths);
+        for (auto&& scfl : all_ports)
         {
-            auto port_name = scf.source_control_file->core_paragraph->name;
+            auto port_name = scfl.source_control_file->core_paragraph->name;
             if (cache.find(port_name) == cache.end())
             {
-                auto it = cache.emplace(port_name, std::move(scf));
+                auto it = cache.emplace(port_name, std::move(scfl));
                 ret.emplace_back(&it.first->second);
             }
         }

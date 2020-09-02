@@ -40,10 +40,10 @@ namespace vcpkg::Paragraphs
             return (*this)(*loc.source_control_file);
         }
         const std::string& operator()(const SourceControlFile& scf) const { return scf.core_paragraph->name; }
-    } name_of_paragraph;
+    } get_name_of_control_file;
 
-    LoadResults try_load_all_ports(const VcpkgPaths& paths);
+    LoadResults try_load_all_registry_ports(const VcpkgPaths& paths);
 
-    std::vector<SourceControlFileLocation> load_all_ports(const VcpkgPaths& paths);
+    std::vector<SourceControlFileLocation> load_all_registry_ports(const VcpkgPaths& paths);
     std::vector<SourceControlFileLocation> load_overlay_ports(const VcpkgPaths& paths, const fs::path& dir);
 }

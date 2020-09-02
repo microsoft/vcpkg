@@ -551,9 +551,9 @@ namespace vcpkg::Install
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
     {
-        auto sources_and_errors = Paragraphs::try_load_all_ports(paths);
+        auto sources_and_errors = Paragraphs::try_load_all_registry_ports(paths);
 
-        return Util::fmap(sources_and_errors.paragraphs, Paragraphs::name_of_paragraph);
+        return Util::fmap(sources_and_errors.paragraphs, Paragraphs::get_name_of_control_file);
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -794,7 +794,7 @@ namespace vcpkg::Install
             {
                 print_error_message(maybe_manifest_scf.error());
                 Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Failed to read manifest %s/vcpkg.json.", fs::u8string(paths.manifest_root_dir));
+                    VCPKG_LINE_INFO, "Failed to parse manifest %s/vcpkg.json.", fs::u8string(paths.manifest_root_dir));
             }
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 

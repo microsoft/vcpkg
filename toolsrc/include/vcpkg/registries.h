@@ -16,7 +16,6 @@ namespace vcpkg
 {
     struct RegistryImpl
     {
-        virtual void update(VcpkgPaths& paths, std::error_code& ec) const = 0;
         virtual fs::path get_registry_root(const VcpkgPaths& paths) const = 0;
 
         virtual ~RegistryImpl() = default;
@@ -59,7 +58,6 @@ namespace vcpkg
 
     struct RegistryDeserializer final : Json::IDeserializer<Registry>
     {
-        // constexpr static StringLiteral SCOPES = "scopes";
         constexpr static StringLiteral PACKAGES = "packages";
 
         virtual StringView type_name() const override;
@@ -73,16 +71,10 @@ namespace vcpkg
     // that it is the registry for that port name, else it maps to the default registry
     // if that registry exists; else, there is no registry for a port.
     // The way one sets this up is via the `"registries"` and `"default_registry"`
-    // configuration settings.
+    // configuration fields.
     struct RegistrySet
     {
         RegistrySet();
-
-        friend void swap(RegistrySet& lhs, RegistrySet& rhs) noexcept
-        {
-            swap(lhs.registries_, rhs.registries_);
-            swap(lhs.default_registry_, rhs.default_registry_);
-        }
 
         // finds the correct registry for the port name
         // Returns the null pointer if there is no registry set up for that name

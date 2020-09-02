@@ -388,7 +388,7 @@ namespace vcpkg
 
         virtual Span<const StringView> valid_fields() const override
         {
-            const static StringView t[] = {
+            static const StringView t[] = {
                 NAME,
                 FEATURES,
                 DEFAULT_FEATURES,
@@ -452,7 +452,7 @@ namespace vcpkg
 
         virtual Span<const StringView> valid_fields() const override
         {
-            const static StringView t[] = {NAME, DESCRIPTION, DEPENDENCIES};
+            static const StringView t[] = {NAME, DESCRIPTION, DEPENDENCIES};
             return t;
         }
 
@@ -643,7 +643,7 @@ namespace vcpkg
 
         virtual Span<const StringView> valid_fields() const override
         {
-            const static StringView t[] = {
+            static const StringView t[] = {
                 NAME,
                 VERSION,
 

@@ -6,13 +6,11 @@ namespace
 {
     struct BuiltinRegistry final : vcpkg::RegistryImpl
     {
-        virtual void update(vcpkg::VcpkgPaths&, std::error_code& ec) const override { ec.clear(); }
         virtual fs::path get_registry_root(const vcpkg::VcpkgPaths& paths) const override { return paths.ports; }
     };
 
     struct DirectoryRegistry final : vcpkg::RegistryImpl
     {
-        virtual void update(vcpkg::VcpkgPaths&, std::error_code& ec) const override { ec.clear(); }
         virtual fs::path get_registry_root(const vcpkg::VcpkgPaths& paths) const override
         {
             return vcpkg::Files::combine(paths.config_root_dir, path);

@@ -364,7 +364,7 @@ namespace vcpkg::Paragraphs
         }
     }
 
-    LoadResults try_load_all_ports(const VcpkgPaths& paths)
+    LoadResults try_load_all_registry_ports(const VcpkgPaths& paths)
     {
         LoadResults ret;
         const auto& fs = paths.get_filesystem();
@@ -442,9 +442,9 @@ namespace vcpkg::Paragraphs
         }
     }
 
-    std::vector<SourceControlFileLocation> load_all_ports(const VcpkgPaths& paths)
+    std::vector<SourceControlFileLocation> load_all_registry_ports(const VcpkgPaths& paths)
     {
-        auto results = try_load_all_ports(paths);
+        auto results = try_load_all_registry_ports(paths);
         load_results_print_error(results);
         return std::move(results.paragraphs);
     }
