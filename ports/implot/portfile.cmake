@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO epezent/implot
-    REF v0.4
-    SHA512 ab54a97fcfcdc21c47d56e7e9ba1fbd05ae0f9e8f9bf0bd742e9daa6231931ac0c3a7cb0a1637b254df531b2611b27a301cc9f51d6caa950e20d05ab5fc31247
+    REF v0.5
+    SHA512 5aef338844fb4f443539345d61df00ab3fdb2d569493478e3d3496319d379cb20b3d090604c44d2a1d9fb236ea9aea5bdb4cd41d3f4085891564ce055996778c
     HEAD_REF master
 )
 
