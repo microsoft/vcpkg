@@ -1,0 +1,20 @@
+{
+  "name": "dartsim",
+  "version-string": "9.4.0",
+  "description": "Dynamic Animation and Robotics Toolkit",
+  "homepage": "https://dartsim.github.io/",
+  "dependencies": [
+    "assimp",
+    "boost-filesystem",
+    "boost-regex",
+    "boost-system",
+    "bullet3",
+    "ccd",
+    "eigen3",
+    "fcl",
+    "octomap",
+    "ode",
+    "tinyxml2",
+    "urdfdom"
+  ]
+}
