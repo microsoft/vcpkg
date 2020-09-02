@@ -4,6 +4,10 @@
 # USE_OPTIMIZED_LAPACK (Probably not what we want. Does a find_package(LAPACK): probably for LAPACKE only builds _> own port?)
 # LAPACKE Builds LAPACKE
 # LAPACKE_WITH_TMG Build LAPACKE with tmglib routines
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/clapack/copyright")
+    message(FATAL_ERROR "Can't build ${PORT} if clapack is installed. Please remove clapack:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+
 include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
@@ -24,6 +28,9 @@ endif()
 set(CBLAS OFF)
 if("cblas" IN_LIST FEATURES)
     set(CBLAS ON)
+    if("noblas" IN_LIST FEATURES)
+        message(FATAL_ERROR "Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas!")
+    endif()
 endif()
 
 set(USE_OPTIMIZED_BLAS OFF) 
@@ -59,7 +66,7 @@ vcpkg_configure_cmake(
         OPTIONS
             "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
             "-DCBLAS=${CBLAS}"
-            "${FORTRAN_CMAKE}"
+            ${FORTRAN_CMAKE}
         )
 
 vcpkg_install_cmake()
@@ -91,13 +98,26 @@ if(NOT USE_OPTIMIZED_BLAS)
         file(WRITE "${pcfile}" "${_contents}")
     endif()
 endif()
+if("cblas" IN_LIST FEATURES)
+    set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cblas.pc")
+    if(EXISTS "${pcfile}")
+        file(READ "${pcfile}" _contents)
+        set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
+        file(WRITE "${pcfile}" "${_contents}")
+    endif()
+    set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cblas.pc")
+    if(EXISTS "${pcfile}")
+        file(READ "${pcfile}" _contents)
+        set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
+        file(WRITE "${pcfile}" "${_contents}")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# remove debug includs
+# remove debug includes
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_TARGET_IS_WINDOWS)
