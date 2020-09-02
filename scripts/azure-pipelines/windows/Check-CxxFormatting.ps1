@@ -9,8 +9,12 @@ Param(
 $clangFormat = 'C:\Program Files\LLVM\bin\clang-format.exe'
 if (-not (Test-Path $clangFormat))
 {
-    Write-Error "clang-format not found; is it installed in the CI machines?"
-    throw
+    $clangFormat = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\Llvm\x64\bin\clang-format.exe'
+    if (-not (Test-Path $clangFormat))
+    {
+        Write-Error 'clang-format not found; is it installed in the CI machines?'
+        throw
+    }
 }
 
 $toolsrc = Get-Item "$Root/toolsrc"
@@ -32,7 +36,7 @@ try
         $msg = @(
             "",
             "The formatting of the C++ files didn't match our expectation.",
-            "See https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#vcpkg-internal-code for solution."
+            "See github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#vcpkg-internal-code for solution."
         )
         $msg += "File list:"
         $msg += "    $changedFiles"
