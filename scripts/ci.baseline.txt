@@ -1499,6 +1499,15 @@ reproc:arm-uwp=fail
 reproc:x64-uwp=fail
 restbed:arm-uwp=fail
 restbed:x64-uwp=fail
+# file conflicts with msgpack
+rest-rpc:x86-windows=skip
+rest-rpc:x64-windows=skip
+rest-rpc:x64-windows-static=skip
+rest-rpc:x64-uwp=skip
+rest-rpc:arm-uwp=skip
+rest-rpc:arm64-windows=skip
+rest-rpc:x64-linux=skip
+rest-rpc:x64-osx=skip
 rhash:arm64-windows=fail
 rhash:arm-uwp=fail
 rhash:x64-uwp=fail
