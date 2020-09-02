@@ -34,9 +34,15 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/assimp)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Assimp)
 # The pkgconfig files have hardcoded library names that do not match cmake's output
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+file(READ ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake _contents)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake "${_contents}
+add_library (assimp::assimp INTERFACE IMPORTED)
+set_target_properties(assimp::assimp PROPERTIES INTERFACE_LINK_LIBRARIES Assimp::assimp)
+set(ASSIMP_LIBRARIES Assimp::assimp)
+")
 
 vcpkg_copy_pdbs()
 
