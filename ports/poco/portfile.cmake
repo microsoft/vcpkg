@@ -19,8 +19,8 @@ vcpkg_from_github(
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")
-file(REMOVE("${SOURCE_PATH}/cmake/V39/FindEXPAT.cmake")
-file(REMOVE("${SOURCE_PATH}/cmake/V313/FindSQLite3.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/V39/FindEXPAT.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/V313/FindSQLite3.cmake")
 
 # define Poco linkage type
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
