@@ -5,8 +5,6 @@ vcpkg_from_github(
     SHA512 4c53a24a2ab9c57f4bf94e233da65cbb144c101b7d8d422d7e687d6c90ce0b53cb7bcfae63205ff30cade0fd07319e44a32035c1b15637ea2958986efc4ad5df
     HEAD_REF master
     PATCHES
-        # Find pcre in debug
-        find_pcre.patch
         # Add include path to public interface for static build
         include_pcre.patch
         # Fix embedded copy of pcre in static linking mode
@@ -15,12 +13,13 @@ vcpkg_from_github(
         use-vcpkg-libharu.patch
         # Add the support of arm64-windows
         arm64_pcre.patch
-        fix_expat_sqlite3.patch
+        fix_dependency.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")
 file(REMOVE "${SOURCE_PATH}/cmake/V39/FindEXPAT.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/V313/FindSQLite3.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindPCRE.cmake")
 
 # define Poco linkage type
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)

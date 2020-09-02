@@ -1,22 +1,23 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b664afd..453b716 100644
+index b664afd..0d4670e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -460,10 +460,10 @@ install(
- if(POCO_UNBUNDLED)
- 	install(FILES cmake/FindPCRE.cmake
- 			DESTINATION "${PocoConfigPackageLocation}")
+@@ -457,15 +457,6 @@ install(
+ 		Devel
+ )
+ 
+-if(POCO_UNBUNDLED)
+-	install(FILES cmake/FindPCRE.cmake
+-			DESTINATION "${PocoConfigPackageLocation}")
 -	install(FILES cmake/V39/FindEXPAT.cmake
 -			DESTINATION "${PocoConfigPackageLocation}/V39")
 -	install(FILES cmake/V313/FindSQLite3.cmake
 -			DESTINATION "${PocoConfigPackageLocation}/V313")
-+	# install(FILES cmake/V39/FindEXPAT.cmake
-+			# DESTINATION "${PocoConfigPackageLocation}/V39")
-+	# install(FILES cmake/V313/FindSQLite3.cmake
-+			# DESTINATION "${PocoConfigPackageLocation}/V313")
- endif()
- 
+-endif()
+-
  message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
+ message(STATUS "${PROJECT_NAME} package version: ${PROJECT_VERSION}")
+ if(BUILD_SHARED_LIBS)
 diff --git a/Data/SQLite/CMakeLists.txt b/Data/SQLite/CMakeLists.txt
 index b52e2c5..0dcfae2 100644
 --- a/Data/SQLite/CMakeLists.txt
@@ -61,3 +62,21 @@ index 4fbf06f..793285a 100644
  	target_compile_definitions(XML PUBLIC POCO_UNBUNDLED)
  else()
  	if(WIN32)
+diff --git a/cmake/PocoConfig.cmake.in b/cmake/PocoConfig.cmake.in
+index 173eacd..589fdb6 100644
+--- a/cmake/PocoConfig.cmake.in
++++ b/cmake/PocoConfig.cmake.in
+@@ -8,6 +8,13 @@ if (NOT Poco_FIND_COMPONENTS)
+     return()
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(ZLIB REQUIRED)
++find_dependency(PCRE REQUIRED)
++if(Poco_FIND_REQUIRED_XML)
++    find_dependency(EXPAT REQUIRED)
++endif()
++
+ set(_Poco_FIND_PARTS_REQUIRED)
+ if (Poco_FIND_REQUIRED)
+     set(_Poco_FIND_PARTS_REQUIRED REQUIRED)
