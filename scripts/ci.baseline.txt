@@ -359,6 +359,15 @@ g3log:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
+<<<<<<< HEAD
+=======
+gamenetworkingsockets:arm64-windows=fail
+gamenetworkingsockets:arm-uwp=fail
+gamenetworkingsockets:x64-uwp=fail
+gamenetworkingsockets:x64-windows-static=fail
+gamma:x64-linux=fail
+gamma:x64-osx=fail
+>>>>>>> 0a6f2c30a... Added GameNetworkingSockets port
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
