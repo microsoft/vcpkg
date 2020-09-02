@@ -1,4 +1,4 @@
-vcpkg (2020.06.15 - 2020.7.31)
+vcpkg (2020.06.16 - 2020.7.31)
 ---
 #### Total port count: 1429
 #### Total port count per triplet (tested):
