@@ -272,21 +272,26 @@ endif()
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/copyright)
 
+if(VCPKG_MANIFEST_MODE)
+	set(INSTALL_PREFIX ${CMAKE_BINARY_DIR}/vcpkg_installed)
+else()
+	set(INSTALL_PREFIX ${VCPKG_INSTALLATION_ROOT}/installed)
+endif()
 if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		file(COPY ${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-dll.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
-		file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config-windows-dll.cmake ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
+		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-dll.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
 	else()
-		file(COPY ${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-lib.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
-		file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config-windows-lib.cmake ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
+		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-lib.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
 		set(ALL_PARTS "tensorflow_cc::tensorflow_cc-part1")
 		foreach(part ${TF_LIB_SUFFIXES})
 			file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "\n\
 add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)\n\
 set_target_properties(tensorflow_cc::tensorflow_cc${part}\n\
 	PROPERTIES\n\
-	IMPORTED_LOCATION \"${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\n\
-	INTERFACE_INCLUDE_DIRECTORIES \"${VCPKG_INSTALLATION_ROOT}/installed/${TARGET_TRIPLET}/include/tensorflow-external\"\n\
+	IMPORTED_LOCATION \"${INSTALL_PREFIX}/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\n\
+	INTERFACE_INCLUDE_DIRECTORIES\n\
+		\"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external\"\n\
+		\"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external\src\"\n\
 )\n\
 ")
 			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")

@@ -1,0 +1,12 @@
+message(WARNING "Tensorflow has vendored dependencies. You may need to manually include files from tensorflow-external")
+
+add_library(tensorflow_cc::tensorflow_cc SHARED IMPORTED)
+set_target_properties(tensorflow_cc::tensorflow_cc
+	PROPERTIES
+	IMPORTED_LOCATION "${INSTALL_PREFIX}/${TARGET_TRIPLET}/bin/tensorflow.dll"
+	IMPORTED_IMPLIB "${INSTALL_PREFIX}/${TARGET_TRIPLET}/bin/tensorflow.lib"
+	INTERFACE_INCLUDE_DIRECTORIES
+		"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external"
+		"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external/src"
+)
+set(tensorflow_cc_FOUND TRUE)
