@@ -11,7 +11,6 @@ vcpkg_from_git(
 # in a sibling folder of the portaudio source in vcpkg/buildtrees/portaudio/src
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
     	-DPA_USE_DS=ON
         -DPA_USE_WASAPI=ON
