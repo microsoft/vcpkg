@@ -5,14 +5,14 @@
 namespace vcpkg::Downloads
 {
     void winhttp_download_file(Files::Filesystem& fs,
-                                      ZStringView target_file_path,
-                                      StringView hostname,
-                                      StringView url_path);
+                               ZStringView target_file_path,
+                               StringView hostname,
+                               StringView url_path);
 
     void ftp_download_file(Files::Filesystem& fs,
-                                  ZStringView target_file_path,
-                                  StringView hostname,
-                                  StringView url_path);
+                           ZStringView target_file_path,
+                           StringView hostname,
+                           StringView url_path);
 
     void verify_downloaded_file_hash(const Files::Filesystem& fs,
                                      const std::string& url,
