@@ -571,9 +571,6 @@ libhsplasma:x64-windows-static=fail
 hwloc:arm64-windows=fail
 hwloc:arm-uwp=fail
 hwloc:x64-uwp=fail
-# hypre has a conflict with 'superlu' port
-hypre:x64-linux=skip
-hypre:x64-osx=skip
 icu:arm64-windows=fail
 icu:arm-uwp=fail
 icu:x64-uwp=fail
@@ -1667,26 +1664,6 @@ stxxl:x64-uwp=fail
 sundials:arm64-windows=fail
 sundials:x64-windows=fail
 sundials:x86-windows=fail
-# Conflicts between ports:
-#The following files are already installed in C:/agent/_work/1/s/installed/x64-windows-static
-# and are in conflict with superlu:x64-windows-static
-#
-#Installed by hypre:x64-windows-static
-#    include/slu_Cnames.h
-#    include/slu_cdefs.h
-#    include/slu_dcomplex.h
-#    include/slu_ddefs.h
-#    include/slu_scomplex.h
-#    include/slu_sdefs.h
-#    include/slu_util.h
-#    include/slu_zdefs.h
-#    include/supermatrix.h
-superlu:arm-uwp=skip
-superlu:arm-windows=skip
-superlu:arm64-windows=skip
-superlu:x64-uwp=skip
-superlu:x64-windows-static=skip
-superlu:x64-windows=skip
 systemc:arm64-windows=fail
 systemc:arm-uwp=fail
 systemc:x64-uwp=fail
