@@ -1,7 +1,7 @@
 find_program(GIT git)
 
 set(GIT_URL "https://github.com/am2222/mapnik-windows.git")
-set(GIT_REV "5ec01cfa138fd3402e5cbf7d19f6fdb26ee63946")
+set(GIT_REV "cfa268fa6ab438568b9b5320f6fce4317f0e3d8e")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT})
 
