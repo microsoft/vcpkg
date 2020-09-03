@@ -15,6 +15,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
   	  RocksDB.patch
+      fix-build-with-geos-3-8.patch # Remove this patch after https://github.com/gwaldron/osgearth/pull/1497 merge
 )
 
 vcpkg_configure_cmake(
