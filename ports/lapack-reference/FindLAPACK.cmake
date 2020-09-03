@@ -482,7 +482,7 @@ if(BLAS_FOUND)
         LAPACK
         cheev
         ""
-        "lapack;-lm;-lgfortran"
+        "lapack;m;gfortran"
         ""
         ""
         ""
