@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 
 set(TRIANGLE_VERSION 1.6)
 
