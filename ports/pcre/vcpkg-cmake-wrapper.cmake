@@ -1,4 +1,6 @@
+include(FindPackageHandleStandardArgs)
 include(SelectLibraryConfigurations)
+
 
 find_path(PCRE_INCLUDE_DIR pcre.h)
 find_library(PCRE_LIBRARY_DEBUG NAMES pcred NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
