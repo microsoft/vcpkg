@@ -2,11 +2,17 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/ignore_errors.h>
+#include <vcpkg/base/pragmas.h>
+
+#include <string.h>
+
+#if !defined(VCPKG_USE_STD_FILESYSTEM)
+#error The build system must set VCPKG_USE_STD_FILESYSTEM.
+#endif // !defined(VCPKG_USE_STD_FILESYSTEM)
 
 #if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
 #else
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
 #endif
 
@@ -22,7 +28,28 @@ namespace fs
     using stdfs::directory_iterator;
     using stdfs::path;
     using stdfs::perms;
-    using stdfs::u8path;
+
+    path u8path(vcpkg::StringView s);
+    inline path u8path(const char* first, const char* last) { return u8path(vcpkg::StringView{first, last}); }
+    inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
+
+#if defined(_MSC_VER)
+    inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
+    {
+        if (first == last)
+        {
+            return path{};
+        }
+        else
+        {
+            auto firstp = &*first;
+            return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
+        }
+    }
+#endif
+
+    std::string u8string(const path& p);
+    std::string generic_u8string(const path& p);
 
 #if defined(_WIN32)
     enum class file_type
@@ -130,7 +157,7 @@ namespace vcpkg::Files
         /// <summary>Read text lines from a file</summary>
         /// <remarks>Lines will have up to one trailing carriage-return character stripped (CRLF)</remarks>
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;
-        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename) const = 0;
+        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const fs::path& filename) const = 0;
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const = 0;
         virtual std::vector<fs::path> get_files_non_recursive(const fs::path& dir) const = 0;
         void write_lines(const fs::path& file_path, const std::vector<std::string>& lines, LineInfo linfo);

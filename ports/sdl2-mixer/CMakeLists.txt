@@ -91,7 +91,7 @@ add_library(SDL2_mixer
     music_wav.c
     version.rc)
 
-if(WIN32 OR APPLE)
+if((WIN32 OR APPLE) AND SDL_MIXER_ENABLE_NATIVEMIDI)
     list(APPEND SDL_MIXER_DEFINES MUSIC_MID_NATIVE)
     target_sources(SDL2_mixer PRIVATE music_nativemidi.c native_midi/native_midi_common.c)
     target_link_libraries(SDL2_mixer ${SDL_MIXER_LIBRARIES})

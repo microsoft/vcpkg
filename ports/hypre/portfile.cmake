@@ -1,20 +1,13 @@
-include(vcpkg_common_functions)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/download/hypre-2.11.2.tar.gz"
-    FILENAME "hypre-2.11.2.tar.gz"
-    SHA512 a06321028121e5420fa944ce4fae5f9b96e6021ec2802e68ec3c349f19a20543ed7eff774a4735666c5807ce124eb571b3f86757c67e91faa1c683c3f657469f
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES
-        fix-root-cmakelists.patch
-        fix-macro-to-template.patch
-        fix-blas-vs14-math.patch
-        fix-lapack-vs14-math.patch
-        fix-export-global-data-symbols.patch
+    REPO hypre-space/hypre
+    REF v2.19.0
+    SHA512 999979bc2e7d32aef7c084fc8508fb818e6f904db0ee3ebf6b8e8132f290201c407aaba0aa89e7bf09e7264f4e99caf04f3147458847de816fc8ffc81dbee2df
+    HEAD_REF master
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -28,6 +21,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${OPTIONS}
+        -DHYPRE_ENABLE_HYPRE_BLAS=OFF
+        -DHYPRE_ENABLE_HYPRE_LAPACK=OFF
     OPTIONS_RELEASE
         -DHYPRE_BUILD_TYPE=Release
         -DHYPRE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
@@ -39,7 +34,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/HYPRE)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/hypre/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

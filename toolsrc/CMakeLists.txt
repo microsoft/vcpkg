@@ -27,125 +27,63 @@ if(DEFINE_DISABLE_METRICS)
     set(VCPKG_DISABLE_METRICS ${DEFINE_DISABLE_METRICS} CACHE BOOL "Option for disabling metrics" FORCE)
 endif()
 
+# =============
+# === Files ===
+# =============
+
+file(GLOB VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
+file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
+file(GLOB VCPKGLIB_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h include/vcpkg/fwd/*.h)
+file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h include/vcpkg/base/fwd/*.h)
+
+set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
+
+set(VCPKGMETRICSUPLOADER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkgmetricsuploader.cpp)
+
+file(GLOB VCPKG_TEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
+file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
+
+file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
+
+# ========================
+# === System detection ===
+# ========================
+
 vcpkg_detect_compiler()
 vcpkg_detect_standard_library()
 vcpkg_detect_std_filesystem()
 
-# ======================
-# === Compiler Flags ===
-# ======================
-
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
-
 if(MSVC)
-    # either MSVC, or clang-cl
-    add_compile_options(-FC)
-
-    if (MSVC_VERSION GREATER 1900)
-        # Visual Studio 2017 or later
-        add_compile_options(-permissive- -utf-8)
-    endif()
-
-    if(VCPKG_DEVELOPMENT_WARNINGS)
-        string(REGEX REPLACE "[-/]W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-
-        add_compile_options(-W4)
-        if(VCPKG_COMPILER STREQUAL "clang")
-            add_compile_options(-Wmissing-prototypes -Wno-missing-field-initializers)
-        else()
-            add_compile_options(-analyze)
-        endif()
-    endif()
-
-    if(VCPKG_WARNINGS_AS_ERRORS)
-        add_compile_options(-WX)
-    endif()
-else()
-    if(VCPKG_DEVELOPMENT_WARNINGS)
-        add_compile_options(-Wall -Wextra -Wpedantic -Wno-unknown-pragmas -Wno-missing-field-initializers -Wno-redundant-move)
-
-        # GCC and clang have different names for the same warning
-        if(VCPKG_COMPILER STREQUAL "gcc")
-            add_compile_options(-Wmissing-declarations)
-        elseif(VCPKG_COMPILER STREQUAL "clang")
-            add_compile_options(-Wmissing-prototypes)
-        endif()
-    endif()
-
-    if(VCPKG_WARNINGS_AS_ERRORS)
-        add_compile_options(-Werror)
-    endif()
+    string(REGEX REPLACE "[-/]W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()
-
-# ========================
-# === System Libraries ===
-# ========================
-
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-link_libraries(Threads::Threads)
-
-add_compile_definitions(VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
-if(VCPKG_REQUIRE_LINK_CXXFS)
-    if(VCPKG_STANDARD_LIBRARY STREQUAL "libstdc++")
-        link_libraries(stdc++fs)
-    elseif(VCPKG_STANDARD_LIBRARY STREQUAL "libc++")
-        link_libraries(c++fs)
-    endif()
-endif()
-
-if (MINGW)
-    add_compile_definitions(
-        UNICODE
-        _WIN32_WINNT=0x0601
-        WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY=4
-        __fastfail=exit)
-    link_libraries(winhttp bcrypt version ole32 uuid)
-endif()
-
 
 # ===============
 # === Targets ===
 # ===============
 
-add_compile_definitions(VCPKG_DISABLE_METRICS=$<BOOL:${VCPKG_DISABLE_METRICS}>)
-include_directories(include)
-file(GLOB_RECURSE VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
-add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
+# === Target: vcpkglib ===
 
-add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
-if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
-    add_executable(vcpkgmetricsuploader WIN32 src/vcpkgmetricsuploader.cpp $<TARGET_OBJECTS:vcpkglib>)
+add_library(vcpkglib
+    ${VCPKGLIB_BASE_SOURCES}
+    ${VCPKGLIB_SOURCES}
+    ${VCPKGLIB_BASE_INCLUDES}
+    ${VCPKGLIB_INCLUDES})
+target_include_directories(vcpkglib PUBLIC include)
+
+vcpkg_target_add_warning_options(vcpkglib)
+target_compile_definitions(vcpkglib PUBLIC
+    VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(vcpkglib PRIVATE Threads::Threads)
+
+if(VCPKG_CXXFS_LIBRARY)
+    target_link_libraries(vcpkglib PRIVATE ${VCPKG_CXXFS_LIBRARY})
 endif()
-
-if (BUILD_TESTING)
-    file(GLOB_RECURSE VCPKGTEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
-
-    enable_testing()
-    add_executable(vcpkg-test ${VCPKGTEST_SOURCES} $<TARGET_OBJECTS:vcpkglib>)
-    add_test(NAME default COMMAND vcpkg-test --order rand --rng-seed time)
-
-    if (VCPKG_BUILD_BENCHMARKING)
-        target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
-    endif()
-endif()
-
-if(VCPKG_BUILD_FUZZING)
-    file(GLOB_RECURSE VCPKGFUZZ_SOURCES src/vcpkg-fuzz/*.cpp)
-    add_executable(vcpkg-fuzz ${VCPKGFUZZ_SOURCES} $<TARGET_OBJECTS:vcpkglib>)
-endif()
-
-find_program(CLANG_FORMAT clang-format)
-if(CLANG_FORMAT)
-    file(GLOB_RECURSE VCPKG_FORMAT_SOURCES CONFIGURE_DEPENDS src/*.cpp include/pch.h include/vcpkg/*.h include/vcpkg-test/*.h)
-    add_custom_target(format COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FORMAT_SOURCES})
-endif()
-
-# ===========
-# === PCH ===
-# ===========
 
 if(MSVC)
     get_target_property(_srcs vcpkglib SOURCES)
@@ -158,4 +96,78 @@ if(MSVC)
     set_source_files_properties(src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
     target_sources(vcpkglib PRIVATE src/pch.cpp)
     target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
+else()
+    target_compile_options(vcpkglib PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h")
+endif()
+
+if (MINGW)
+    target_compile_definitions(vcpkglib
+        PUBLIC
+            UNICODE
+            _WIN32_WINNT=0x0601
+            WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY=4
+            __fastfail=exit)
+    target_link_libraries(vcpkglib PUBLIC winhttp bcrypt version ole32 uuid)
+endif()
+
+# === Target: vcpkg ===
+
+add_executable(vcpkg ${VCPKG_SOURCES})
+target_link_libraries(vcpkg PRIVATE vcpkglib)
+vcpkg_target_add_warning_options(vcpkg)
+
+# === Target: vcpkgmetricsuploader ===
+
+if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
+    add_executable(vcpkgmetricsuploader WIN32 ${VCPKGMETRICSUPLOADER_SOURCES})
+    target_link_libraries(vcpkgmetricsuploader PRIVATE vcpkglib)
+    vcpkg_target_add_warning_options(vcpkgmetricsuploader)
+endif()
+
+# === Target: vcpkg-test ===
+
+if (BUILD_TESTING)
+    enable_testing()
+
+    add_executable(vcpkg-test
+        ${VCPKG_TEST_SOURCES}
+        ${VCPKG_TEST_INCLUDES})
+    target_link_libraries(vcpkg-test PRIVATE vcpkglib)
+    vcpkg_target_add_warning_options(vcpkg-test)
+
+    add_test(NAME default COMMAND vcpkg-test --order rand --rng-seed time)
+
+    if (VCPKG_BUILD_BENCHMARKING)
+        target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
+    endif()
+endif()
+
+# === Target: vcpkg-fuzz ===
+
+if(VCPKG_BUILD_FUZZING)
+    add_executable(vcpkg-fuzz ${VCPKG_FUZZ_SOURCES})
+    target_link_libraries(vcpkg-fuzz PRIVATE vcpkglib)
+    vcpkg_target_add_warning_options(vcpkg-fuzz)
+endif()
+
+# === Target: format ===
+
+find_program(CLANG_FORMAT clang-format)
+if(CLANG_FORMAT)
+    # doing all of these formats in one line has a tendency to overflow the command line length
+    add_custom_target(format
+        COMMAND ${CLANG_FORMAT} -i -verbose ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_BASE_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_BASE_INCLUDES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_INCLUDES}
+
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGMETRICSUPLOADER_SOURCES}
+
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_INCLUDES}
+
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FUZZ_SOURCES})
 endif()

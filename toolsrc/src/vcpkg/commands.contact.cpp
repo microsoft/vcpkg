@@ -1,12 +1,12 @@
-#include "pch.h"
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
 
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.contact.h>
 #include <vcpkg/help.h>
 #include <vcpkg/userconfig.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Contact
 {
@@ -57,5 +57,10 @@ namespace vcpkg::Commands::Contact
             System::print2("Send an email to ", email(), " with any feedback.\n");
         }
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void ContactCommand::perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs) const
+    {
+        Contact::perform_and_exit(args, fs);
     }
 }

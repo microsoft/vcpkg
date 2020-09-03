@@ -91,9 +91,22 @@ function(vcpkg_from_gitlab)
         set(VCPKG_USE_HEAD_VERSION OFF)
     endif()
 
-    string(REGEX REPLACE ".*/" "" REPO_NAME ${_vdud_REPO})
-    string(REGEX REPLACE "/.*" "" ORG_NAME ${_vdud_REPO})
-
+    string(REPLACE "/" ";" GITLAB_REPO_LINK ${_vdud_REPO})
+    
+    list(LENGTH GITLAB_REPO_LINK len)
+    if(${len} EQUAL "2")
+		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
+		list(GET GITLAB_REPO_LINK 1 REPO_NAME)
+		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME})
+	endif()
+	
+	if(${len} EQUAL "3")
+		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
+		list(GET GITLAB_REPO_LINK 1 GROUP_NAME)
+		list(GET GITLAB_REPO_LINK 2 REPO_NAME)
+		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${GROUP_NAME}/${REPO_NAME})
+	endif()
+    
     # Handle --no-head scenarios
     if(NOT VCPKG_USE_HEAD_VERSION)
         if(NOT _vdud_REF)
@@ -103,7 +116,7 @@ function(vcpkg_from_gitlab)
         string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
 
         vcpkg_download_distfile(ARCHIVE
-            URLS "${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME}/-/archive/${_vdud_REF}/${REPO_NAME}-${_vdud_REF}.tar.gz"
+            URLS "${GITLAB_LINK}/-/archive/${_vdud_REF}/${REPO_NAME}-${_vdud_REF}.tar.gz"
             SHA512 "${_vdud_SHA512}"
             FILENAME "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}.tar.gz"
         )
@@ -120,7 +133,7 @@ function(vcpkg_from_gitlab)
     endif()
 
     # The following is for --head scenarios
-    set(URL "${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME}/-/archive/${_vdud_HEAD_REF}/${_vdud_HEAD_REF}.tar.gz")
+    set(URL "${GITLAB_LINK}/-/archive/${_vdud_HEAD_REF}/${_vdud_HEAD_REF}.tar.gz")
     string(REPLACE "/" "-" SANITIZED_HEAD_REF "${_vdud_HEAD_REF}")
     set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_HEAD_REF}.tar.gz")
     set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
@@ -151,7 +164,7 @@ function(vcpkg_from_gitlab)
 
     # There are issues with the Gitlab API project paths being URL-escaped, so we use git here to get the head revision
     _execute_process(COMMAND ${GIT} ls-remote
-        "${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME}.git" "${_vdud_HEAD_REF}"
+        "${GITLAB_LINK}.git" "${_vdud_HEAD_REF}"
         RESULT_VARIABLE _git_result
         OUTPUT_VARIABLE _git_output
     )

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/parse.h>
 #include <vcpkg/base/system.debug.h>
@@ -7,11 +5,140 @@
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/binaryparagraph.h>
-#include <vcpkg/paragraphparseresult.h>
+#include <vcpkg/configuration.h>
+#include <vcpkg/paragraphparser.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/registries.h>
 
 using namespace vcpkg::Parse;
 using namespace vcpkg;
+
+namespace vcpkg::Parse
+{
+    static Optional<std::pair<std::string, TextRowCol>> remove_field(Paragraph* fields, const std::string& fieldname)
+    {
+        auto it = fields->find(fieldname);
+        if (it == fields->end())
+        {
+            return nullopt;
+        }
+
+        auto value = std::move(it->second);
+        fields->erase(it);
+        return value;
+    }
+
+    void ParagraphParser::required_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
+    {
+        auto maybe_field = remove_field(&fields, fieldname);
+        if (const auto field = maybe_field.get())
+            out = std::move(*field);
+        else
+            missing_fields.push_back(fieldname);
+    }
+    void ParagraphParser::optional_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
+    {
+        auto maybe_field = remove_field(&fields, fieldname);
+        if (auto field = maybe_field.get()) out = std::move(*field);
+    }
+    void ParagraphParser::required_field(const std::string& fieldname, std::string& out)
+    {
+        TextRowCol ignore;
+        required_field(fieldname, {out, ignore});
+    }
+    std::string ParagraphParser::optional_field(const std::string& fieldname)
+    {
+        std::string out;
+        TextRowCol ignore;
+        optional_field(fieldname, {out, ignore});
+        return out;
+    }
+    std::string ParagraphParser::required_field(const std::string& fieldname)
+    {
+        std::string out;
+        TextRowCol ignore;
+        required_field(fieldname, {out, ignore});
+        return out;
+    }
+
+    std::unique_ptr<ParseControlErrorInfo> ParagraphParser::error_info(const std::string& name) const
+    {
+        if (!fields.empty() || !missing_fields.empty())
+        {
+            auto err = std::make_unique<ParseControlErrorInfo>();
+            err->name = name;
+            err->extra_fields["CONTROL"] = Util::extract_keys(fields);
+            err->missing_fields["CONTROL"] = std::move(missing_fields);
+            err->expected_types = std::move(expected_types);
+            return err;
+        }
+        return nullptr;
+    }
+
+    template<class T, class F>
+    static Optional<std::vector<T>> parse_list_until_eof(StringLiteral plural_item_name, Parse::ParserBase& parser, F f)
+    {
+        std::vector<T> ret;
+        parser.skip_whitespace();
+        if (parser.at_eof()) return std::vector<T>{};
+        do
+        {
+            auto item = f(parser);
+            if (!item) return nullopt;
+            ret.push_back(std::move(item).value_or_exit(VCPKG_LINE_INFO));
+            parser.skip_whitespace();
+            if (parser.at_eof()) return {std::move(ret)};
+            if (parser.cur() != ',')
+            {
+                parser.add_error(Strings::concat("expected ',' or end of text in ", plural_item_name, " list"));
+                return nullopt;
+            }
+            parser.next();
+            parser.skip_whitespace();
+        } while (true);
+    }
+
+    ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str,
+                                                                    StringView origin,
+                                                                    TextRowCol textrowcol)
+    {
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
+        auto opt = parse_list_until_eof<std::string>("default features", parser, &parse_feature_name);
+        if (!opt) return {parser.get_error()->format(), expected_right_tag};
+        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
+    }
+    ExpectedS<std::vector<ParsedQualifiedSpecifier>> parse_qualified_specifier_list(const std::string& str,
+                                                                                    StringView origin,
+                                                                                    TextRowCol textrowcol)
+    {
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
+        auto opt = parse_list_until_eof<ParsedQualifiedSpecifier>(
+            "dependencies", parser, [](ParserBase& parser) { return parse_qualified_specifier(parser); });
+        if (!opt) return {parser.get_error()->format(), expected_right_tag};
+
+        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
+    }
+    ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
+                                                               StringView origin,
+                                                               TextRowCol textrowcol)
+    {
+        auto parser = Parse::ParserBase(str, origin, textrowcol);
+        auto opt = parse_list_until_eof<Dependency>("dependencies", parser, [](ParserBase& parser) {
+            auto loc = parser.cur_loc();
+            return parse_qualified_specifier(parser).then([&](ParsedQualifiedSpecifier&& pqs) -> Optional<Dependency> {
+                if (pqs.triplet)
+                {
+                    parser.add_error("triplet specifier not allowed in this context", loc);
+                    return nullopt;
+                }
+                return Dependency{pqs.name, pqs.features.value_or({}), pqs.platform.value_or({})};
+            });
+        });
+        if (!opt) return {parser.get_error()->format(), expected_right_tag};
+
+        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
+    }
+}
 
 namespace vcpkg::Paragraphs
 {
@@ -93,7 +220,7 @@ namespace vcpkg::Paragraphs
 
         if (auto p = pghs.get())
         {
-            if (p->size() != 1) return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH).message();
+            if (p->size() != 1) return {"There should be exactly one paragraph", expected_right_tag};
             return std::move(p->front());
         }
         else
@@ -107,7 +234,7 @@ namespace vcpkg::Paragraphs
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
         {
-            return parse_single_paragraph(*spgh, control_path.u8string());
+            return parse_single_paragraph(*spgh, fs::u8string(control_path));
         }
 
         return contents.error().message();
@@ -118,7 +245,7 @@ namespace vcpkg::Paragraphs
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
         {
-            return parse_paragraphs(*spgh, control_path.u8string());
+            return parse_paragraphs(*spgh, fs::u8string(control_path));
         }
 
         return contents.error().message();
@@ -134,10 +261,10 @@ namespace vcpkg::Paragraphs
         return fs.exists(path / fs::u8path("CONTROL")) || fs.exists(path / fs::u8path("vcpkg.json"));
     }
 
-    ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
-                                                       const std::string& port_name,
-                                                       const fs::path& path_to_manifest,
-                                                       std::error_code& ec)
+    static ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
+                                                              const std::string& port_name,
+                                                              const fs::path& path_to_manifest,
+                                                              std::error_code& ec)
     {
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         auto res = Json::parse_file(fs, path_to_manifest, ec);
@@ -173,16 +300,16 @@ namespace vcpkg::Paragraphs
             vcpkg::Checks::check_exit(VCPKG_LINE_INFO,
                                       !fs.exists(path_to_control),
                                       "Found both manifest and CONTROL file in port %s; please rename one or the other",
-                                      path.u8string());
+                                      fs::u8string(path));
 
             std::error_code ec;
-            auto res = try_load_manifest(fs, path.filename().u8string(), path_to_manifest, ec);
+            auto res = try_load_manifest(fs, fs::u8string(path.filename()), path_to_manifest, ec);
             if (ec)
             {
                 auto error_info = std::make_unique<ParseControlErrorInfo>();
-                error_info->name = path.filename().u8string();
+                error_info->name = fs::u8string(path.filename());
                 error_info->error = Strings::format(
-                    "Failed to load manifest file for port: %s\n", path_to_manifest.u8string(), ec.message());
+                    "Failed to load manifest file for port: %s\n", fs::u8string(path_to_manifest), ec.message());
             }
 
             return res;
@@ -193,7 +320,7 @@ namespace vcpkg::Paragraphs
             return SourceControlFile::parse_control_file(path_to_control, std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
-        error_info->name = path.filename().u8string();
+        error_info->name = fs::u8string(path.filename());
         error_info->error = pghs.error();
         return error_info;
     }
@@ -218,34 +345,84 @@ namespace vcpkg::Paragraphs
         return pghs.error();
     }
 
-    LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
+    static void load_port_names_from_root(std::vector<std::string>& ports,
+                                          const VcpkgPaths& paths,
+                                          const fs::path& registry_root)
     {
-        LoadResults ret;
-        auto port_dirs = fs.get_files_non_recursive(ports_dir);
+        const auto& fs = paths.get_filesystem();
+        auto port_dirs = fs.get_files_non_recursive(registry_root);
         Util::sort(port_dirs);
+
+        // TODO: search in `b-` for ports starting with `b`
         Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
             return fs.is_regular_file(port_dir_entry) && port_dir_entry.filename() == ".DS_Store";
         });
 
         for (auto&& path : port_dirs)
         {
-            auto maybe_spgh = try_load_port(fs, path);
+            ports.push_back(fs::u8string(path.filename()));
+        }
+    }
+
+    LoadResults try_load_all_registry_ports(const VcpkgPaths& paths)
+    {
+        LoadResults ret;
+        const auto& fs = paths.get_filesystem();
+
+        std::vector<std::string> ports;
+
+        const auto& registries = paths.get_configuration().registry_set;
+
+        for (const auto& registry : registries.registries())
+        {
+            load_port_names_from_root(ports, paths, registry.implementation().get_registry_root(paths));
+        }
+        if (auto registry = registries.default_registry())
+        {
+            load_port_names_from_root(ports, paths, registry->get_registry_root(paths));
+        }
+
+        Util::sort_unique_erase(ports);
+
+        for (const auto& port_name : ports)
+        {
+            auto impl = registries.registry_for_port(port_name);
+            if (!impl)
+            {
+                // this is a port for which no registry is set
+                // this can happen when there's no default registry,
+                // and a registry has a port definition which it doesn't own the name of.
+                continue;
+            }
+
+            auto root = impl->get_registry_root(paths);
+
+            auto port_path = root / fs::u8path(port_name);
+
+            if (!fs.exists(port_path))
+            {
+                // the registry that owns the name of this port does not actually contain the port
+                // this can happen if R1 contains the port definition for <abc>, but doesn't
+                // declare it owns <abc>.
+                continue;
+            }
+
+            auto maybe_spgh = try_load_port(fs, port_path);
             if (const auto spgh = maybe_spgh.get())
             {
-                ret.paragraphs.emplace_back(std::move(*spgh));
+                ret.paragraphs.emplace_back(std::move(*spgh), std::move(port_path));
             }
             else
             {
                 ret.errors.emplace_back(std::move(maybe_spgh).error());
             }
         }
+
         return ret;
     }
 
-    std::vector<std::unique_ptr<SourceControlFile>> load_all_ports(const Files::Filesystem& fs,
-                                                                   const fs::path& ports_dir)
+    static void load_results_print_error(const LoadResults& results)
     {
-        auto results = try_load_all_ports(fs, ports_dir);
         if (!results.errors.empty())
         {
             if (Debug::g_debugging)
@@ -263,6 +440,39 @@ namespace vcpkg::Paragraphs
                                "Use '--debug' to get more information about the parse failures.\n\n");
             }
         }
+    }
+
+    std::vector<SourceControlFileLocation> load_all_registry_ports(const VcpkgPaths& paths)
+    {
+        auto results = try_load_all_registry_ports(paths);
+        load_results_print_error(results);
         return std::move(results.paragraphs);
+    }
+
+    std::vector<SourceControlFileLocation> load_overlay_ports(const VcpkgPaths& paths, const fs::path& directory)
+    {
+        LoadResults ret;
+
+        std::vector<std::string> port_names;
+        load_port_names_from_root(port_names, paths, directory);
+
+        const auto& fs = paths.get_filesystem();
+
+        for (const auto& name : port_names)
+        {
+            auto path = directory / fs::u8path(name);
+            auto maybe_spgh = try_load_port(fs, path);
+            if (const auto spgh = maybe_spgh.get())
+            {
+                ret.paragraphs.emplace_back(std::move(*spgh), std::move(path));
+            }
+            else
+            {
+                ret.errors.emplace_back(std::move(maybe_spgh).error());
+            }
+        }
+
+        load_results_print_error(ret);
+        return std::move(ret.paragraphs);
     }
 }
