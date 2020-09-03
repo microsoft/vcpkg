@@ -17,11 +17,9 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 )
 
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
 vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL "${SOURCE_PATH}/triangle.h" DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
