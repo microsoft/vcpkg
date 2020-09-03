@@ -237,7 +237,7 @@ function(vcpkg_configure_make)
     else()
         message(FATAL_ERROR "Could not determine method to configure make")
     endif()
-    
+
     debug_message("REQUIRES_AUTOGEN:${REQUIRES_AUTOGEN}")
     debug_message("REQUIRES_AUTOCONFIG:${REQUIRES_AUTOCONFIG}")
     # Backup environment variables
@@ -264,21 +264,13 @@ function(vcpkg_configure_make)
 
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
-        list(APPEND MSYS_REQUIRE_PACKAGES diffutils 
-                                          pkg-config 
-                                          binutils 
-                                          libtool 
-                                          gettext 
-                                          gettext-devel
-                                          )
-        list(APPEND MSYS_REQUIRE_PACKAGES make)
-        if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
-            list(APPEND MSYS_REQUIRE_PACKAGES autoconf 
-                                              autoconf-archive
-                                              automake
-                                              m4
-                )
-        endif()
+        list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
+        # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
+        string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/share/automake-1.16;${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
+        set(ENV{PATH} "${NEWPATH}")
+        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
+
         if(_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
             _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
             _vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
@@ -298,16 +290,6 @@ function(vcpkg_configure_make)
             endif()
         endif()
         debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
-        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-
-
-        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
-
-        # This is required because PATH contains sort and find from Windows but the MSYS versions are needed
-        # ${MSYS_ROOT}/urs/bin cannot be prepended to PATH due to other conflicts
-        file(CREATE_LINK "${MSYS_ROOT}/usr/bin/sort.exe" "${SCRIPTS}/buildsystems/make_wrapper/sort.exe" COPY_ON_ERROR)
-        file(CREATE_LINK "${MSYS_ROOT}/usr/bin/find.exe" "${SCRIPTS}/buildsystems/make_wrapper/find.exe" COPY_ON_ERROR)
         vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
         vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/share/automake-1.16") # Required wrappers are located here (compile ar-lib)
 
@@ -518,17 +500,9 @@ function(vcpkg_configure_make)
     # Run autoconf if necessary
     set(_GENERATED_CONFIGURE FALSE)
     if (_csc_AUTOCONFIG OR REQUIRES_AUTOCONFIG)
-        find_program(AUTORECONF autoreconf REQUIRED)
+        find_program(AUTORECONF autoreconf)
         if(NOT AUTORECONF)
-            message(STATUS "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
-        endif()
-        find_program(LIBTOOL libtool REQUIRED)
-        if(NOT LIBTOOL)
-            message(STATUS "${PORT} requires libtool from the system package manager (example: \"sudo apt-get install libtool libtool-bin\")")
-        endif()
-        find_program(AUTOPOINT autopoint REQUIRED)
-        if(NOT AUTOPOINT)
-            message(STATUS "${PORT} requires autopoint from the system package manager (example: \"sudo apt-get install autopoint\")")
+            message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
         endif()
         message(STATUS "Generating configure for ${TARGET_TRIPLET}")
         if (CMAKE_HOST_WIN32)
@@ -539,7 +513,7 @@ function(vcpkg_configure_make)
             )
         else()
             vcpkg_execute_required_process(
-                COMMAND autoreconf -vfi
+                COMMAND ${AUTORECONF} -vfi
                 WORKING_DIRECTORY "${SRC_DIR}"
                 LOGNAME autoconf-${TARGET_TRIPLET}
             )

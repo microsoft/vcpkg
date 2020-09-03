@@ -11,6 +11,19 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Android" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     else()
         set(PLATFORM linux-generic32)
     endif()
+elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+        set(PLATFORM ios64-xcrun)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+        set(PLATFORM ios-xcrun)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" OR
+           VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+        set(PLATFORM iossimulator-xcrun)
+    else()
+        message(FATAL_ERROR "Unknown iOS target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+    endif()
+    # disable that makes linkage error (e.g. require stderr usage)
+    list(APPEND DISABLES no-stdio no-ui no-asm)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(PLATFORM darwin64-x86_64-cc)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
@@ -79,7 +92,7 @@ if(BUILD_SHARED_LIBS)
         REGEX "^#[\t ]*define[\t ]+SHLIB_VERSION_NUMBER[\t ]+\".*\".*")
     string(REGEX REPLACE "^.*SHLIB_VERSION_NUMBER[\t ]+\"([^\"]*)\".*$" "\\1"
         SHLIB_VERSION "${SHLIB_VERSION}")
-    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS")
         set(LIB_EXT dylib)
         set(LIB_EXTS ${SHLIB_VERSION}.${LIB_EXT})
     elseif(MINGW)
@@ -118,6 +131,8 @@ else()
     set(PATH_VAR ":$ENV{PATH}")
 endif()
 
+
+
 add_custom_command(
     OUTPUT "${BUILDDIR}/Makefile"
     COMMAND ${ENV_COMMAND} CC=${CMAKE_C_COMPILER}
@@ -138,6 +153,7 @@ add_custom_command(
         no-seed
         no-md2
         no-tests
+        ${DISABLES}
         ${PLATFORM}
         "--prefix=${CMAKE_INSTALL_PREFIX}"
         "--openssldir=/etc/ssl"
