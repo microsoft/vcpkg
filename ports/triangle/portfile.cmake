@@ -29,5 +29,6 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 
 file(INSTALL ${SOURCE_PATH}/README DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
