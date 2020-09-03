@@ -1,0 +1,4 @@
+Source: libigl-triangle
+Version: 1.6
+Port-Version: 1
+Description: A Two-Dimensional Quality Mesh Generator and Delaunay Triangulator. Port from Jonathan Shewchuk's code which adds 64-bit support and the ability to build as library.
