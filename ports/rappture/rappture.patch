@@ -1,0 +1,674 @@
+diff --git a/src/core/RpBuffer.cc b/src/core/RpBuffer.cc
+index 6d439fe..ec45405 100644
+--- a/src/core/RpBuffer.cc
++++ b/src/core/RpBuffer.cc
+@@ -16,7 +16,6 @@
+ #include <stdio.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
+ #include <fstream>
+ #include <zlib.h>
+ #include "b64/encode.h"
+@@ -24,6 +23,11 @@
+ #include "RpBuffer.h"
+ #include "RpEncode.h"
+ 
++#if defined(_MSC_VER)
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#endif
++
+ namespace Rappture {
+ 
+ /**
+@@ -109,6 +113,9 @@ Buffer::operator+=(const Buffer& b)
+ Buffer::~Buffer()
+ {}
+ 
++#ifndef _WIN32
++#   define _fileno fileno
++#endif
+ 
+ bool
+ Buffer::load (Outcome &status, const char *path)
+@@ -123,7 +130,7 @@ Buffer::load (Outcome &status, const char *path)
+     }
+ 
+     struct stat stat;
+-    if (fstat(fileno(f), &stat) < 0) {
++    if (fstat(_fileno(f), &stat) < 0) {
+         status.addError("can't stat \"%s\": %s", path, strerror(errno));
+         return false;
+     }
+diff --git a/src/core/RpDXWriter.cc b/src/core/RpDXWriter.cc
+index e4748b3..8990c0f 100644
+--- a/src/core/RpDXWriter.cc
++++ b/src/core/RpDXWriter.cc
+@@ -18,6 +18,12 @@
+ #include <cfloat>
+ #include <RpDXWriter.h>
+ #include <assert.h>
++
++#if defined(_MSC_VER)
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#endif
++
+ using namespace Rappture;
+ 
+ DXWriter::DXWriter() :
+diff --git a/src/core/RpLibrary.cc b/src/core/RpLibrary.cc
+index 2b9a540..4da787b 100644
+--- a/src/core/RpLibrary.cc
++++ b/src/core/RpLibrary.cc
+@@ -11,7 +11,6 @@
+  * ======================================================================
+  */
+ 
+-#include "config.h"
+ #include "scew/scew.h"
+ #include "scew_extras.h"
+ #include "RpLibrary.h"
+diff --git a/src/core/RpLibrary.h b/src/core/RpLibrary.h
+index b071d46..e34c5d6 100644
+--- a/src/core/RpLibrary.h
++++ b/src/core/RpLibrary.h
+@@ -14,6 +14,18 @@
+ #ifndef _RpLIBRARY_H
+ #define _RpLIBRARY_H
+ 
++#ifdef _WIN32
++#   if defined(BUILD_SHARED_LIBS) /* build dll */
++#       define RAPPTURE_API __declspec(dllexport)
++#   elif !defined(BUILD_SHARED_LIBS) /* use dll */
++#       define RAPPTURE_API __declspec(dllimport)
++#   else /* static library */
++#       define RAPPTURE_API
++#   endif
++#else
++#   define RAPPTURE_API
++#endif
++
+ enum RP_LIBRARY_CONSTS {
+     RPLIB_OVERWRITE     = 0,
+     RPLIB_APPEND        = 1,
+@@ -40,7 +52,7 @@ typedef struct _scew_element scew_element;
+ #define CREATE_PATH 1
+ #define NO_CREATE_PATH 0
+ 
+-class RpLibrary
++RAPPTURE_API class RpLibrary
+ {
+     public:
+ 
+diff --git a/src/core/RpLibraryCInterface.h b/src/core/RpLibraryCInterface.h
+index f552c8d..fd3b9ce 100644
+--- a/src/core/RpLibraryCInterface.h
++++ b/src/core/RpLibraryCInterface.h
+@@ -17,6 +17,18 @@
+ 
+ #include "RpBufferCInterface.h"
+ 
++#ifdef _WIN32
++#   if defined(BUILD_SHARED_LIBS) /* build dll */
++#       define RAPPTURE_API __declspec(dllexport)
++#   elif !defined(BUILD_SHARED_LIBS) /* use dll */
++#       define RAPPTURE_API __declspec(dllimport)
++#   else /* static library */
++#       define RAPPTURE_API
++#   endif
++#else
++#   define RAPPTURE_API
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif // ifdef __cplusplus
+@@ -24,65 +36,65 @@ extern "C" {
+ typedef struct RpLibrary RpLibrary;
+ 
+ // lib definition functions
+-RpLibrary* rpLibrary  (const char* path);
+-int rpFreeLibrary     (RpLibrary** lib);
++RAPPTURE_API RpLibrary* rpLibrary  (const char* path);
++RAPPTURE_API int rpFreeLibrary     (RpLibrary** lib);
+ 
+ // RpLibrary member functions
+-RpLibrary* rpElement  (RpLibrary* lib, const char* path);
+-RpLibrary* rpElementAsObject (RpLibrary* lib, const char* path);
+-int rpElementAsType   (RpLibrary* lib, const char* path, const char** retCStr);
+-int rpElementAsComp   (RpLibrary* lib, const char* path, const char** retCStr);
+-int rpElementAsId     (RpLibrary* lib, const char* path, const char** retCStr);
++RAPPTURE_API RpLibrary* rpElement  (RpLibrary* lib, const char* path);
++RAPPTURE_API RpLibrary* rpElementAsObject (RpLibrary* lib, const char* path);
++RAPPTURE_API int rpElementAsType   (RpLibrary* lib, const char* path, const char** retCStr);
++RAPPTURE_API int rpElementAsComp   (RpLibrary* lib, const char* path, const char** retCStr);
++RAPPTURE_API int rpElementAsId     (RpLibrary* lib, const char* path, const char** retCStr);
+ 
+-RpLibrary* rpChildren (RpLibrary* lib,
++RAPPTURE_API RpLibrary* rpChildren (RpLibrary* lib,
+                             const char* path,
+                             RpLibrary* childEle  );
+-RpLibrary* rpChildrenByType  (RpLibrary* lib,
++RAPPTURE_API RpLibrary* rpChildrenByType  (RpLibrary* lib,
+                             const char* path,
+                             RpLibrary* childEle,
+                             const char* type     );
+ 
+-int rpGet             (RpLibrary* lib, const char* path, const char** retCStr);
+-int rpGetString       (RpLibrary* lib, const char* path, const char** retCStr);
+-int rpGetDouble       (RpLibrary* lib, const char* path, double* retDVal);
++RAPPTURE_API int rpGet             (RpLibrary* lib, const char* path, const char** retCStr);
++RAPPTURE_API int rpGetString       (RpLibrary* lib, const char* path, const char** retCStr);
++RAPPTURE_API int rpGetDouble       (RpLibrary* lib, const char* path, double* retDVal);
+ 
+-int rpGetData         (RpLibrary* lib, const char* path, RapptureBuffer* retBuf);
++RAPPTURE_API int rpGetData         (RpLibrary* lib, const char* path, RapptureBuffer* retBuf);
+ 
+-int rpPut             (RpLibrary* lib,
++RAPPTURE_API int rpPut             (RpLibrary* lib,
+                             const char* path,
+                             const char* value,
+                             const char* id,
+                             unsigned int append         );
+ 
+-int rpPutString       (RpLibrary* lib,
++RAPPTURE_API int rpPutString       (RpLibrary* lib,
+                             const char* path,
+                             const char* value,
+                             unsigned int append         );
+ 
+-int rpPutDouble       (RpLibrary* lib,
++RAPPTURE_API int rpPutDouble       (RpLibrary* lib,
+                             const char* path,
+                             double value,
+                             unsigned int append         );
+ 
+-int rpPutData         (RpLibrary* lib,
++RAPPTURE_API int rpPutData         (RpLibrary* lib,
+                             const char* path,
+                             const char* bytes,
+                             int nBytes,
+                             unsigned int append         );
+ 
+-int rpPutFile         (RpLibrary* lib,
++RAPPTURE_API int rpPutFile         (RpLibrary* lib,
+                             const char* path,
+                             const char* fileName,
+                             unsigned int binary,
+                             unsigned int append         );
+ 
+-int rpXml             (RpLibrary* lib, const char** retCStr);
++RAPPTURE_API int rpXml             (RpLibrary* lib, const char** retCStr);
+ 
+-int rpNodeComp        (RpLibrary* node, const char** retCStr);
+-int rpNodeType        (RpLibrary* node, const char** retCStr);
+-int rpNodeId          (RpLibrary* node, const char** retCStr);
++RAPPTURE_API int rpNodeComp        (RpLibrary* node, const char** retCStr);
++RAPPTURE_API int rpNodeType        (RpLibrary* node, const char** retCStr);
++RAPPTURE_API int rpNodeId          (RpLibrary* node, const char** retCStr);
+ 
+-int rpResult          (RpLibrary* lib);
++RAPPTURE_API int rpResult          (RpLibrary* lib);
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/src/core/RpLibraryFInterface.h b/src/core/RpLibraryFInterface.h
+index 4ad4ed2..480df8b 100644
+--- a/src/core/RpLibraryFInterface.h
++++ b/src/core/RpLibraryFInterface.h
+@@ -14,6 +14,18 @@
+ #ifndef _RAPPTURE_LIBRARY_F_H
+ #define _RAPPTURE_LIBRARY_F_H
+ 
++#ifdef _WIN32
++#   if defined(BUILD_SHARED_LIBS) /* build dll */
++#       define RAPPTURE_API __declspec(dllexport)
++#   elif !defined(BUILD_SHARED_LIBS) /* use dll */
++#       define RAPPTURE_API __declspec(dllimport)
++#   else /* static library */
++#       define RAPPTURE_API
++#   endif
++#else
++#   define RAPPTURE_API
++#endif
++
+ #ifdef __cplusplus
+     #include "RpLibrary.h"
+     #include <string.h>
+@@ -24,71 +36,71 @@
+     extern "C" {
+ #endif // ifdef __cplusplus
+ 
+-int rp_lib ( const char* filePath, int filePath_len );
++RAPPTURE_API int rp_lib ( const char* filePath, int filePath_len );
+ 
+-void rp_lib_element_comp (  int* handle,
++RAPPTURE_API void rp_lib_element_comp (  int* handle,
+                             char* path,
+                             char* retText,
+                             int path_len,
+                             int retText_len );
+ 
+-void rp_lib_element_id (    int* handle,
++RAPPTURE_API void rp_lib_element_id (    int* handle,
+                             char* path,
+                             char* retText,
+                             int path_len,
+                             int retText_len );
+ 
+-void rp_lib_element_type (  int* handle,
++RAPPTURE_API void rp_lib_element_type (  int* handle,
+                             char* path,
+                             char* retText,
+                             int path_len,
+                             int retText_len );
+ 
+-int rp_lib_element_obj (    int* handle,
++RAPPTURE_API int rp_lib_element_obj (    int* handle,
+                             char* path,
+                             int path_len );
+ 
+-int rp_lib_children (       int* handle, /* integer handle of library */
++RAPPTURE_API int rp_lib_children (       int* handle, /* integer handle of library */
+                             char* path, /* search path of the xml */
+                             int* childHandle, /*int handle of last returned child*/
+                             int path_len  /*length of the search path buffer*/
+                     );
+ 
+-void rp_lib_get (           int* handle,
++RAPPTURE_API void rp_lib_get (           int* handle,
+                             char* path,
+                             char* retText,
+                             int path_len,
+                             int retText_len );
+ 
+-void rp_lib_get_str (       int* handle,
++RAPPTURE_API void rp_lib_get_str (       int* handle,
+                             char* path,
+                             char* retText,
+                             int path_len,
+                             int retText_len );
+ 
+-double rp_lib_get_double (  int* handle,
++RAPPTURE_API double rp_lib_get_double (  int* handle,
+                             char* path,
+                             int path_len);
+ 
+-int rp_lib_get_integer (    int* handle,
++RAPPTURE_API int rp_lib_get_integer (    int* handle,
+                             char* path,
+                             int path_len);
+ 
+-int rp_lib_get_boolean (    int* handle,
++RAPPTURE_API int rp_lib_get_boolean (    int* handle,
+                             char* path,
+                             int path_len);
+ 
+-extern int rp_lib_get_file(int* handle, char* path, char* fileName, 
++RAPPTURE_API extern int rp_lib_get_file(int* handle, char* path, char* fileName, 
+ 	int path_len, int fileName_len);
+ 
+-void rp_lib_put_str (       int* handle,
++RAPPTURE_API void rp_lib_put_str (       int* handle,
+                             char* path,
+                             char* value,
+                             int* append,
+                             int path_len,
+                             int value_len );
+ 
+-void rp_lib_put_id_str (    int* handle,
++RAPPTURE_API void rp_lib_put_id_str (    int* handle,
+                             char* path,
+                             char* value,
+                             char* id,
+@@ -97,7 +109,7 @@ void rp_lib_put_id_str (    int* handle,
+                             int value_len,
+                             int id_len );
+ 
+-void rp_lib_put_data (      int* handle,
++RAPPTURE_API void rp_lib_put_data (      int* handle,
+                             char* path,
+                             char* bytes,
+                             int* nbytes,
+@@ -105,7 +117,7 @@ void rp_lib_put_data (      int* handle,
+                             int path_len,
+                             int bytes_len );
+ 
+-void rp_lib_put_file (      int* handle,
++RAPPTURE_API void rp_lib_put_file (      int* handle,
+                             char* path,
+                             char* fileName,
+                             int* compress,
+@@ -117,7 +129,7 @@ void rp_lib_put_file (      int* handle,
+  * rp_lib_put_obj still needs to be written
+  * keep function declaration around
+ */
+-void rp_lib_put_obj (       int* handle,
++RAPPTURE_API void rp_lib_put_obj (       int* handle,
+                             char* path,
+                             int* valHandle,
+                             int* append,
+@@ -149,27 +161,27 @@ int rp_lib_remove (         int* handle,
+ int rp_lib_xml_len(         int* handle);
+ */
+ 
+-void rp_lib_xml(            int* handle,
++RAPPTURE_API void rp_lib_xml(            int* handle,
+                             char* retText,
+                             int retText_len);
+ 
+-int rp_lib_write_xml(       int* handle,
++RAPPTURE_API int rp_lib_write_xml(       int* handle,
+                             char* outFile,
+                             int outFile_len);
+ 
+-void rp_lib_node_comp (     int* handle,
++RAPPTURE_API void rp_lib_node_comp (     int* handle,
+                             char* retText,
+                             int retText_len);
+ 
+-void rp_lib_node_type (     int* handle,
++RAPPTURE_API void rp_lib_node_type (     int* handle,
+                             char* retText,
+                             int retText_len);
+ 
+-void rp_lib_node_id (       int* handle,
++RAPPTURE_API void rp_lib_node_id (       int* handle,
+                             char* retText,
+                             int retText_len);
+ 
+-void rp_result(             int* handle );
++RAPPTURE_API void rp_result(             int* handle );
+ 
+ /**********************************************************/
+ 
+diff --git a/src/core/RpUnits.h b/src/core/RpUnits.h
+index a640205..f07e483 100644
+--- a/src/core/RpUnits.h
++++ b/src/core/RpUnits.h
+@@ -16,6 +16,18 @@
+ #ifndef _RpUNITS_H
+ #define _RpUNITS_H
+ 
++#ifdef _WIN32
++#   if defined(BUILD_SHARED_LIBS) /* build dll */
++#       define RAPPTURE_API __declspec(dllexport)
++#   elif !defined(BUILD_SHARED_LIBS) /* use dll */
++#       define RAPPTURE_API __declspec(dllimport)
++#   else /* static library */
++#       define RAPPTURE_API
++#   endif
++#else
++#   define RAPPTURE_API
++#endif
++
+ enum RP_UNITS_CONSTS {
+     RPUNITS_UNITS_OFF           = 0,
+     RPUNITS_UNITS_ON            = 1,
+@@ -368,7 +380,7 @@ class RpUnitsListEntry
+         const RpUnits* prefix;
+ };
+ 
+-class RpUnits
++RAPPTURE_API class RpUnits
+ {
+     /*
+      * helpful units site
+diff --git a/src/core/RpUnitsCInterface.h b/src/core/RpUnitsCInterface.h
+index a30a7c4..f82e293 100644
+--- a/src/core/RpUnitsCInterface.h
++++ b/src/core/RpUnitsCInterface.h
+@@ -14,6 +14,18 @@
+ #ifndef _RpUNITS_C_H
+ #define _RpUNITS_C_H
+ 
++#ifdef _WIN32
++#   if defined(BUILD_SHARED_LIBS) /* build dll */
++#       define RAPPTURE_API __declspec(dllexport)
++#   elif !defined(BUILD_SHARED_LIBS) /* use dll */
++#       define RAPPTURE_API __declspec(dllimport)
++#   else /* static library */
++#       define RAPPTURE_API
++#   endif
++#else
++#   define RAPPTURE_API
++#endif
++
+ #ifdef __cplusplus
+     extern "C" {
+ #endif // ifdef __cplusplus
+@@ -21,54 +33,54 @@
+     typedef struct RpUnits RpUnits;
+ 
+     // unit definition functions
+-    const RpUnits* rpDefineUnit  ( const char* unitSymbol,
++    RAPPTURE_API const RpUnits* rpDefineUnit  ( const char* unitSymbol,
+                                    const RpUnits* basis );
+ 
+     // conversion definition functions
+-    const RpUnits* rpDefineConv  ( const RpUnits* fromUnit,
++    RAPPTURE_API const RpUnits* rpDefineConv  ( const RpUnits* fromUnit,
+                                    const RpUnits* toUnit,
+                                    double (*convForwFxnPtr)(double),
+                                    double (*convBackFxnPtr)(double)    );
+ 
+     // unit attribute access functions
+-    const char* rpGetUnits       ( const RpUnits* unit );
++    RAPPTURE_API const char* rpGetUnits       ( const RpUnits* unit );
+ 
+-    const char* rpGetUnitsName   ( const RpUnits* unit );
++    RAPPTURE_API const char* rpGetUnitsName   ( const RpUnits* unit );
+ 
+-    double rpGetExponent         ( const RpUnits* unit );
++    RAPPTURE_API double rpGetExponent         ( const RpUnits* unit );
+ 
+-    const RpUnits* rpGetBasis    ( const RpUnits* unit);
++    RAPPTURE_API const RpUnits* rpGetBasis    ( const RpUnits* unit);
+ 
+-    const RpUnits* rpFind        ( const char* unitSymbol);
++    RAPPTURE_API const RpUnits* rpFind        ( const char* unitSymbol);
+ 
+     // convert functions
+ 
+-    const char* rpConvert        ( const char* fromVal,
++    RAPPTURE_API const char* rpConvert        ( const char* fromVal,
+                                    const char* toUnitsName,
+                                    int showUnits,
+                                    int* result );
+ 
+-    const char* rpConvertStr     ( const char* fromVal,
++    RAPPTURE_API const char* rpConvertStr     ( const char* fromVal,
+                                    const char* toUnitsName,
+                                    int showUnits,
+                                    int* result );
+ 
+-    const char* rpConvert_ObjStr ( const RpUnits* fromUnits,
++    RAPPTURE_API const char* rpConvert_ObjStr ( const RpUnits* fromUnits,
+                                    const RpUnits* toUnits,
+                                    double val,
+                                    int showUnits,
+                                    int* result );
+ 
+-    double rpConvertDbl          ( const char* fromVal,
++    RAPPTURE_API double rpConvertDbl          ( const char* fromVal,
+                                    const char* toUnitsName,
+                                    int* result );
+ 
+-    double rpConvert_ObjDbl      ( const RpUnits* fromUnits,
++    RAPPTURE_API double rpConvert_ObjDbl      ( const RpUnits* fromUnits,
+                                    const RpUnits* toUnits,
+                                    double val,
+                                    int* result );
+ 
+-    int rpAddPresets ( const char* presetName );
++    RAPPTURE_API int rpAddPresets ( const char* presetName );
+ 
+ #ifdef __cplusplus
+     }
+diff --git a/src/core/RpUnitsFInterface.h b/src/core/RpUnitsFInterface.h
+index 15e9869..87a987e 100644
+--- a/src/core/RpUnitsFInterface.h
++++ b/src/core/RpUnitsFInterface.h
+@@ -14,6 +14,18 @@
+ #ifndef _RpUNITS_F_H
+ #define _RpUNITS_F_H
+ 
++#ifdef _WIN32
++#   if defined(BUILD_SHARED_LIBS) /* build dll */
++#       define RAPPTURE_API __declspec(dllexport)
++#   elif !defined(BUILD_SHARED_LIBS) /* use dll */
++#       define RAPPTURE_API __declspec(dllimport)
++#   else /* static library */
++#       define RAPPTURE_API
++#   endif
++#else
++#   define RAPPTURE_API
++#endif
++
+ #ifdef __cplusplus
+     #include "RpFortranCommon.h"
+     #include "RpUnitsFStubs.h"
+@@ -21,25 +33,25 @@
+     extern "C" {
+ #endif
+ 
+-int rp_define_unit(char* unitName, int* basisName, int unitName_len);
++RAPPTURE_API int rp_define_unit(char* unitName, int* basisName, int unitName_len);
+ 
+-int rp_find(char* searchName, int searchName_len);
++RAPPTURE_API int rp_find(char* searchName, int searchName_len);
+ 
+-int rp_get_units(int* unitRefVal, char* retText, int retText_len);
++RAPPTURE_API int rp_get_units(int* unitRefVal, char* retText, int retText_len);
+ 
+-int rp_get_units_name(int* unitRefVal, char* retText, int retText_len);
++RAPPTURE_API int rp_get_units_name(int* unitRefVal, char* retText, int retText_len);
+ 
+-int rp_get_exponent(int* unitRefVal, double* retExponent);
++RAPPTURE_API int rp_get_exponent(int* unitRefVal, double* retExponent);
+ 
+-int rp_get_basis(int* unitRefVal);
++RAPPTURE_API int rp_get_basis(int* unitRefVal);
+ 
+-int rp_units_convert_dbl (  char* fromVal,
++RAPPTURE_API int rp_units_convert_dbl (  char* fromVal,
+                             char* toUnitsName,
+                             double* convResult,
+                             int fromVal_len,
+                             int toUnitsName_len );
+ 
+-int rp_units_convert_str (  char* fromVal,
++RAPPTURE_API int rp_units_convert_str (  char* fromVal,
+                             char* toUnitsName,
+                             char* retText,
+                             int fromVal_len,
+diff --git a/src/core/RpUtils.h b/src/core/RpUtils.h
+index e73efae..ad5fd54 100644
+--- a/src/core/RpUtils.h
++++ b/src/core/RpUtils.h
+@@ -14,6 +14,18 @@
+ #ifndef RAPPTURE_UTILS_H
+ #define RAPPTURE_UTILS_H
+ 
++#ifdef _WIN32
++#   if defined(BUILD_SHARED_LIBS) /* build dll */
++#       define RAPPTURE_API __declspec(dllexport)
++#   elif !defined(BUILD_SHARED_LIBS) /* use dll */
++#       define RAPPTURE_API __declspec(dllimport)
++#   else /* static library */
++#       define RAPPTURE_API
++#   endif
++#else
++#   define RAPPTURE_API
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ namespace Rappture {
+@@ -21,7 +33,7 @@ namespace Rappture {
+ #endif // ifdef __cplusplus
+ 
+ 
+-int progress(int percent, const char* text);
++RAPPTURE_API int progress(int percent, const char* text);
+ 
+ 
+ #ifdef __cplusplus
+diff --git a/src/core/RpUtilsCInterface.h b/src/core/RpUtilsCInterface.h
+index fba0761..06fb15a 100644
+--- a/src/core/RpUtilsCInterface.h
++++ b/src/core/RpUtilsCInterface.h
+@@ -15,11 +15,23 @@
+ #ifndef _RAPPTURE_UTILS_C_H
+ #define _RAPPTURE_UTILS_C_H
+ 
++#ifdef _WIN32
++#   if defined(BUILD_SHARED_LIBS) /* build dll */
++#       define RAPPTURE_API __declspec(dllexport)
++#   elif !defined(BUILD_SHARED_LIBS) /* use dll */
++#       define RAPPTURE_API __declspec(dllimport)
++#   else /* static library */
++#       define RAPPTURE_API
++#   endif
++#else
++#   define RAPPTURE_API
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif // ifdef __cplusplus
+ 
+-int rpUtilsProgress (int percent, const char* text);
++RAPPTURE_API int rpUtilsProgress (int percent, const char* text);
+ 
+ 
+ #ifdef __cplusplus
+diff --git a/src/core/RpUtilsFInterface.h b/src/core/RpUtilsFInterface.h
+index 6ceb3a9..74b1b3b 100644
+--- a/src/core/RpUtilsFInterface.h
++++ b/src/core/RpUtilsFInterface.h
+@@ -14,12 +14,24 @@
+ #ifndef _RAPPTURE_UTILS_F_H
+ #define _RAPPTURE_UTILS_F_H
+ 
++#ifdef _WIN32
++#   if defined(BUILD_SHARED_LIBS) /* build dll */
++#       define RAPPTURE_API __declspec(dllexport)
++#   elif !defined(BUILD_SHARED_LIBS) /* use dll */
++#       define RAPPTURE_API __declspec(dllimport)
++#   else /* static library */
++#       define RAPPTURE_API
++#   endif
++#else
++#   define RAPPTURE_API
++#endif
++
+ #ifdef __cplusplus
+     #include "RpUtilsFStubs.h"
+     extern "C" {
+ #endif // ifdef __cplusplus
+ 
+-int rp_utils_progress ( int* percent, char* text, int text_len );
++RAPPTURE_API int rp_utils_progress ( int* percent, char* text, int text_len );
+ 
+ 
+ /**********************************************************/
+diff --git a/src/core/scew/scew.h b/src/core/scew/scew.h
+index 9741ed5..e335c2d 100644
+--- a/src/core/scew/scew.h
++++ b/src/core/scew/scew.h
+@@ -61,12 +61,6 @@
+ #  define SCEW_LIB_D
+ # endif /* _DEBUG */
+ 
+-# if defined(SCEW_LIB_U) || defined(SCEW_LIB_S) || defined(SCEW_LIB_D)
+-# pragma comment( lib, "scew_" SCEW_LIB_U SCEW_LIB_S SCEW_LIB_D ".lib" )
+-# else
+-# pragma comment( lib, "scew.lib" )
+-# endif
+-
+ #endif /* _WIN32 */
+ 
+ #endif /* SCEW_H_ALEIX0211250134 */
