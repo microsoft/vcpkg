@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO githubuser0xFFFF/Qt-Advanced-Docking-System
-    REF 661d0c4356ab61d155b53718aa1bf6bab86dad13
-    SHA512 3504d91b63cc68abbc56e935f22dda2e5b667400501b547a159e3e43d5862c2cff5739423606732361b331b00596202a19a67c3273948cccfbdb8593970cb840
+    REF 6846c9614602f21c51057a32d759a51eba1fc4d9
+    SHA512 35d27002a678a2117fdd9e46e0cc94b9d8435f9b43149fb7a3b6f6389e04b1e7f3a94b64e3077d8f80c408f861e335d9f5d4facda08b47d25b60bf6ba7ceda01
     HEAD_REF master
     PATCHES
+        hardcode_version.patch
         config_changes.patch
-        skip_license_install.patch
 )
 
 vcpkg_configure_cmake(
@@ -21,5 +21,5 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 file(INSTALL ${SOURCE_PATH}/gnu-lgpl-v2.1.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/license)
-vcpkg_fixup_cmake_targets()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
