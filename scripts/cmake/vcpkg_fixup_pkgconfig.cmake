@@ -199,7 +199,7 @@ function(vcpkg_fixup_pkgconfig)
             string(REGEX REPLACE "^prefix[\t ]*=[^\n]*" "" _contents "${_contents}")
             string(REGEX REPLACE "[\n]prefix[\t ]*=[^\n]*" "" _contents "${_contents}")
             if(CONFIG STREQUAL "DEBUG")
-                string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}")
+                string(REPLACE "}/debug/" "}/" _contents "${_contents}")
                 # Prefix points at the debug subfolder
                 string(REPLACE "\${prefix}/include" "\${prefix}/../include" _contents "${_contents}")
                 string(REPLACE "\${prefix}/share" "\${prefix}/../share" _contents "${_contents}")
