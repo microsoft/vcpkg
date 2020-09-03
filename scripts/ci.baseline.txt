@@ -48,8 +48,6 @@ akali:arm-uwp=fail
 akali:arm64-windows=fail
 alac:arm-uwp=fail
 alac:x64-uwp=fail
-alembic:x64-osx=fail
-alembic:x64-windows-static=fail
 aliyun-oss-c-sdk:x64-linux=fail
 aliyun-oss-c-sdk:x64-osx=fail
 ampl-mp:arm64-windows=fail
@@ -78,13 +76,10 @@ asyncplusplus:arm-uwp=fail
 asyncplusplus:x64-uwp=fail
 atk:x64-osx=fail
 atk:arm64-windows=fail
-atkmm:x64-linux=fail
 atlmfc:x64-linux=fail
 atlmfc:x64-osx=fail
 aubio:x64-linux=fail
 aubio:x64-osx=fail
-avisynthplus:x64-linux=fail
-avisynthplus:x64-windows-static=fail
 avro-c:arm-uwp=fail
 avro-c:x64-osx=fail
 avro-c:x64-uwp=fail
@@ -571,9 +566,6 @@ libhsplasma:x64-windows-static=fail
 hwloc:arm64-windows=fail
 hwloc:arm-uwp=fail
 hwloc:x64-uwp=fail
-# hypre has a conflict with 'superlu' port
-hypre:x64-linux=skip
-hypre:x64-osx=skip
 icu:arm64-windows=fail
 icu:arm-uwp=fail
 icu:x64-uwp=fail
@@ -1499,6 +1491,15 @@ reproc:arm-uwp=fail
 reproc:x64-uwp=fail
 restbed:arm-uwp=fail
 restbed:x64-uwp=fail
+# file conflicts with msgpack
+rest-rpc:x86-windows=skip
+rest-rpc:x64-windows=skip
+rest-rpc:x64-windows-static=skip
+rest-rpc:x64-uwp=skip
+rest-rpc:arm-uwp=skip
+rest-rpc:arm64-windows=skip
+rest-rpc:x64-linux=skip
+rest-rpc:x64-osx=skip
 rhash:arm64-windows=fail
 rhash:arm-uwp=fail
 rhash:x64-uwp=fail
@@ -1644,8 +1645,6 @@ spdk-isal:x64-uwp=fail
 spdk-isal:x64-windows=fail
 spdk-isal:x64-windows-static=fail
 spdk-isal:x86-windows=fail
-speex:x64-linux=fail
-speex:x64-osx=fail
 speexdsp:x64-linux=fail
 speexdsp:x64-osx=fail
 spirv-tools:arm-uwp=fail
@@ -1658,26 +1657,6 @@ stxxl:x64-uwp=fail
 sundials:arm64-windows=fail
 sundials:x64-windows=fail
 sundials:x86-windows=fail
-# Conflicts between ports:
-#The following files are already installed in C:/agent/_work/1/s/installed/x64-windows-static
-# and are in conflict with superlu:x64-windows-static
-#
-#Installed by hypre:x64-windows-static
-#    include/slu_Cnames.h
-#    include/slu_cdefs.h
-#    include/slu_dcomplex.h
-#    include/slu_ddefs.h
-#    include/slu_scomplex.h
-#    include/slu_sdefs.h
-#    include/slu_util.h
-#    include/slu_zdefs.h
-#    include/supermatrix.h
-superlu:arm-uwp=skip
-superlu:arm-windows=skip
-superlu:arm64-windows=skip
-superlu:x64-uwp=skip
-superlu:x64-windows-static=skip
-superlu:x64-windows=skip
 systemc:arm64-windows=fail
 systemc:arm-uwp=fail
 systemc:x64-uwp=fail
