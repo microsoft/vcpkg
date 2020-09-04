@@ -1,0 +1,2 @@
+Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e.,
+      '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'
