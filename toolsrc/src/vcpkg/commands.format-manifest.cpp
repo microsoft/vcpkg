@@ -8,6 +8,7 @@
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace
 {
@@ -41,7 +42,9 @@ namespace
             return nullopt;
         }
 
-        auto scf = SourceControlFile::parse_manifest_file(manifest_path, parsed_json.object());
+        auto parsed_json_obj = parsed_json.object();
+
+        auto scf = SourceControlFile::parse_manifest_file(manifest_path, parsed_json_obj);
         if (!scf.has_value())
         {
             System::printf(System::Color::error, "Failed to parse manifest file: %s\n", path_string);

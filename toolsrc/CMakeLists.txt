@@ -33,8 +33,8 @@ endif()
 
 file(GLOB VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
-file(GLOB VCPKGLIB_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h)
-file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h)
+file(GLOB VCPKGLIB_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h include/vcpkg/fwd/*.h)
+file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h include/vcpkg/base/fwd/*.h)
 
 set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
 
@@ -154,19 +154,20 @@ endif()
 
 find_program(CLANG_FORMAT clang-format)
 if(CLANG_FORMAT)
-    add_custom_target(format COMMAND ${CLANG_FORMAT} -i -verbose
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp
-        ${VCPKGLIB_BASE_SOURCES}
-        ${VCPKGLIB_SOURCES}
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
-        ${VCPKGLIB_BASE_INCLUDES}
-        ${VCPKGLIB_INCLUDES}
+    # doing all of these formats in one line has a tendency to overflow the command line length
+    add_custom_target(format
+        COMMAND ${CLANG_FORMAT} -i -verbose ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_BASE_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_BASE_INCLUDES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_INCLUDES}
 
-        ${VCPKG_SOURCES}
-        ${VCPKGMETRICSUPLOADER_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGMETRICSUPLOADER_SOURCES}
 
-        ${VCPKG_TEST_SOURCES}
-        ${VCPKG_TEST_INCLUDES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_INCLUDES}
 
-        ${VCPKG_FUZZ_SOURCES})
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FUZZ_SOURCES})
 endif()
