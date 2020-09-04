@@ -23,11 +23,8 @@ set_target_properties(serd PROPERTIES
     C_STANDARD_REQUIRED ON
 )
 
-target_compile_definitions(serd PRIVATE SERD_INTERNAL)
+target_compile_definitions(serd PRIVATE SERD_INTERNAL _CRT_SECURE_NO_WARNINGS)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    target_compile_definitions(serd PRIVATE _CRT_SECURE_NO_WARNINGS)
-endif()
 
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(serd PUBLIC SERD_SHARED)
