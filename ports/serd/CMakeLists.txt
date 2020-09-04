@@ -25,7 +25,6 @@ set_target_properties(serd PROPERTIES
 
 target_compile_definitions(serd PRIVATE SERD_INTERNAL _CRT_SECURE_NO_WARNINGS)
 
-
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(serd PUBLIC SERD_SHARED)
 endif()
@@ -40,4 +39,8 @@ if(NOT DISABLE_INSTALL_HEADERS)
     install(DIRECTORY serd DESTINATION include)
 endif()
 
-install(EXPORT serd-config DESTINATION "${CMAKE_INSTALL_PREFIX}/share/serd")
+install(
+    EXPORT serd-config
+    NAMESPACE serd::
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/serd"
+)
