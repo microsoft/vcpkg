@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.assembla.com/portaudio.git
