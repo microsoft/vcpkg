@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 303f905e4..6bdbc5ac4 100644
+index 9efd451fb..d85b31fd4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -603,24 +603,19 @@ target_optional_compile_definitions(torrent-rasterbar PUBLIC FEATURE NAME mutabl
+@@ -643,24 +643,19 @@ target_optional_compile_definitions(torrent-rasterbar PUBLIC FEATURE NAME mutabl
  target_optional_compile_definitions(torrent-rasterbar PUBLIC FEATURE NAME streaming DEFAULT ON
  	DESCRIPTION "Enables support for piece deadline" DISABLED TORRENT_DISABLE_STREAMING)
  
