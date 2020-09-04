@@ -84,7 +84,9 @@ namespace
 
 namespace vcpkg
 {
-    static Configuration deserialize_configuration(const Json::Object& obj, const VcpkgCmdArguments& args)
+    static Configuration deserialize_configuration(const Json::Object& obj,
+                                                   const VcpkgCmdArguments& args,
+                                                   const fs::path& filepath)
     {
         Json::BasicReaderError err;
         Json::Reader reader{&err};
@@ -128,6 +130,8 @@ namespace vcpkg
                 Checks::unreachable(VCPKG_LINE_INFO);
             }
 
+            System::print2("See https://github.com/Microsoft/vcpkg/tree/master/docs/specifications/registries.md for "
+                           "more information.\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
@@ -216,7 +220,7 @@ namespace vcpkg
         }
         auto config_obj = std::move(parsed_config.first.object());
 
-        return {std::move(config_dir), deserialize_configuration(config_obj, args)};
+        return {std::move(config_dir), deserialize_configuration(config_obj, args, path_to_config)};
     }
 
     namespace details
@@ -244,6 +248,7 @@ namespace vcpkg
             fs::SystemHandle file_lock_handle;
 
             Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
+            fs::path m_manifest_path;
             Configuration m_config;
         };
     }
@@ -305,6 +310,7 @@ namespace vcpkg
             }
 
             m_pimpl->m_manifest_doc = load_manifest(filesystem, manifest_root_dir);
+            m_pimpl->m_manifest_path = manifest_root_dir / fs::u8path("vcpkg.json");
         }
         else
         {
@@ -489,6 +495,17 @@ If you wish to silence this error and use classic mode, you can:
         if (auto p = m_pimpl->m_manifest_doc.get())
         {
             return p->first;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+    Optional<const fs::path&> VcpkgPaths::get_manifest_path() const
+    {
+        if (m_pimpl->m_manifest_doc)
+        {
+            return m_pimpl->m_manifest_path;
         }
         else
         {
