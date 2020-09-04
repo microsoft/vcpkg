@@ -88,47 +88,15 @@ namespace vcpkg
                                                    const VcpkgCmdArguments& args,
                                                    const fs::path& filepath)
     {
-        Json::BasicReaderError err;
-        Json::Reader reader{&err};
+        Json::Reader reader;
         auto deserializer = ConfigurationDeserializer(args);
 
-        auto parsed_config_opt = reader.visit_value(obj, "$", deserializer);
-        if (err.has_error())
+        auto parsed_config_opt = reader.visit_value(obj, deserializer);
+        if (!reader.errors().empty())
         {
-            if (!err.missing_fields.empty())
-            {
-                System::print2(System::Color::error, "Error: missing fields in configuration:\n");
-                for (const auto& missing : err.missing_fields)
-                {
-                    System::printf(
-                        System::Color::error, "    %s was expected to have: %s\n", missing.first, missing.second);
-                }
-            }
-            if (!err.expected_types.empty())
-            {
-                System::print2(System::Color::error, "Error: Invalid types in configuration:\n");
-                for (const auto& expected : err.expected_types)
-                {
-                    System::printf(
-                        System::Color::error, "    %s was expected to be %s\n", expected.first, expected.second);
-                }
-            }
-            if (!err.extra_fields.empty())
-            {
-                System::print2(System::Color::error, "Error: Invalid fields in configuration:\n");
-                for (const auto& extra : err.extra_fields)
-                {
-                    System::printf(System::Color::error,
-                                   "    %s had invalid fields: %s\n",
-                                   extra.first,
-                                   Strings::join(", ", extra.second));
-                }
-            }
-            if (!err.mutually_exclusive_fields.empty())
-            {
-                // this should never happen
-                Checks::unreachable(VCPKG_LINE_INFO);
-            }
+            System::print2(System::Color::error, "Errors occurred while parsing ", filepath.u8string(), "\n");
+            for (auto&& msg : reader.errors())
+                System::print2("    ", msg, '\n');
 
             System::print2("See https://github.com/Microsoft/vcpkg/tree/master/docs/specifications/registries.md for "
                            "more information.\n");
@@ -161,7 +129,7 @@ namespace vcpkg
         if (!manifest_opt.has_value())
         {
             Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Failed to parse manifest at %s: %s",
+                                      "Failed to parse manifest at %s:\n%s",
                                       fs::u8string(manifest_path),
                                       manifest_opt.error()->format());
         }

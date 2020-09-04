@@ -1258,4 +1258,57 @@ namespace vcpkg::Json
     }
     // } auto stringify()
 
+    static std::vector<std::string> invalid_json_fields(const Json::Object& obj,
+                                                        Span<const StringView> known_fields) noexcept
+    {
+        const auto field_is_unknown = [known_fields](StringView sv) {
+            // allow directives
+            if (sv.size() != 0 && *sv.begin() == '$')
+            {
+                return false;
+            }
+            return std::find(known_fields.begin(), known_fields.end(), sv) == known_fields.end();
+        };
+
+        std::vector<std::string> res;
+        for (const auto& kv : obj)
+        {
+            if (field_is_unknown(kv.first))
+            {
+                res.push_back(kv.first.to_string());
+            }
+        }
+
+        return res;
+    }
+
+    void Reader::check_for_unexpected_fields(const Object& obj,
+                                             Span<const StringView> valid_fields,
+                                             StringView type_name)
+    {
+        if (valid_fields.size() == 0)
+        {
+            return;
+        }
+
+        auto extra_fields = invalid_json_fields(obj, valid_fields);
+        if (!extra_fields.empty())
+        {
+            add_extra_fields_error(type_name.to_string(), std::move(extra_fields));
+        }
+    }
+
+    std::string Reader::path() const noexcept
+    {
+        std::string p("$");
+        for (auto&& s : m_path)
+        {
+            if (s.index < 0)
+                Strings::append(p, '.', s.field);
+            else
+                Strings::append(p, '[', s.index, ']');
+        }
+        return p;
+    }
+
 }
