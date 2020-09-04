@@ -1,9 +1,5 @@
 #pragma once
 
-#include <vcpkg/base/span.h>
+#include <vcpkg/base/fwd/view.h>
 
-namespace vcpkg
-{
-    template<class T>
-    using View = Span<const T>;
-}
+#include <vcpkg/base/span.h>

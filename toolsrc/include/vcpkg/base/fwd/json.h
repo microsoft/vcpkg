@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vcpkg/base/fwd/optional.h>
-#include <vcpkg/base/fwd/span.h>
 #include <vcpkg/base/fwd/stringview.h>
+#include <vcpkg/base/fwd/view.h>
 
 namespace vcpkg::Json
 {
@@ -12,8 +12,6 @@ namespace vcpkg::Json
     struct Object;
     struct Array;
 
-    struct ReaderError;
-    struct BasicReaderError;
     struct Reader;
 
     // This is written all the way out so that one can include a subclass in a header
@@ -23,8 +21,12 @@ namespace vcpkg::Json
         using type = Type;
         virtual StringView type_name() const = 0;
 
-        virtual Span<const StringView> valid_fields() const;
+    private:
+        friend struct Reader;
+        Optional<Type> visit(Reader&, const Value&);
+        Optional<Type> visit(Reader&, const Object&);
 
+    protected:
         virtual Optional<Type> visit_null(Reader&);
         virtual Optional<Type> visit_boolean(Reader&, bool);
         virtual Optional<Type> visit_integer(Reader& r, int64_t i);
@@ -32,8 +34,8 @@ namespace vcpkg::Json
         virtual Optional<Type> visit_string(Reader&, StringView);
         virtual Optional<Type> visit_array(Reader&, const Array&);
         virtual Optional<Type> visit_object(Reader&, const Object&);
+        virtual View<StringView> valid_fields() const;
 
-    protected:
         IDeserializer() = default;
         IDeserializer(const IDeserializer&) = default;
         IDeserializer& operator=(const IDeserializer&) = default;

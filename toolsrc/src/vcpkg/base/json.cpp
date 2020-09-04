@@ -1,5 +1,6 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/json.h>
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/unicode.h>
 
@@ -986,6 +987,14 @@ namespace vcpkg::Json
         };
     }
 
+    NaturalNumberDeserializer NaturalNumberDeserializer::instance;
+    BooleanDeserializer BooleanDeserializer::instance;
+    ParagraphDeserializer ParagraphDeserializer::instance;
+    IdentifierDeserializer IdentifierDeserializer::instance;
+    IdentifierArrayDeserializer IdentifierArrayDeserializer::instance;
+    PackageNameDeserializer PackageNameDeserializer::instance;
+    PathDeserializer PathDeserializer::instance;
+
     bool IdentifierDeserializer::is_ident(StringView sv)
     {
         static const std::regex BASIC_IDENTIFIER = std::regex(R"([a-z0-9]+(-[a-z0-9]+)*)");
@@ -1282,6 +1291,21 @@ namespace vcpkg::Json
         return res;
     }
 
+    void Reader::add_missing_field_error(StringView type, StringView key, StringView key_type)
+    {
+        m_errors.push_back(
+            Strings::concat(path(), " (", type, "): ", "missing required field '", key, "' (", key_type, ")"));
+    }
+    void Reader::add_expected_type_error(StringView expected_type)
+    {
+        m_errors.push_back(Strings::concat(path(), ": mismatched type: expected ", expected_type));
+    }
+    void Reader::add_extra_fields_error(StringView type, std::vector<std::string>&& fields)
+    {
+        for (auto&& field : fields)
+            m_errors.push_back(Strings::concat(path(), " (", type, "): ", "unexpected field '", field, '\''));
+    }
+
     void Reader::check_for_unexpected_fields(const Object& obj,
                                              Span<const StringView> valid_fields,
                                              StringView type_name)
@@ -1311,4 +1335,57 @@ namespace vcpkg::Json
         return p;
     }
 
+    Optional<std::vector<std::string>> ParagraphDeserializer::visit_string(Reader&, StringView sv)
+    {
+        std::vector<std::string> out;
+        out.push_back(sv.to_string());
+        return out;
+    }
+
+    Optional<std::vector<std::string>> ParagraphDeserializer::visit_array(Reader& r, const Array& arr)
+    {
+        static StringDeserializer d{"a string"};
+        return r.array_elements(arr, d);
+    }
+
+    Optional<std::string> IdentifierDeserializer::visit_string(Json::Reader& r, StringView sv)
+    {
+        if (!is_ident(sv))
+        {
+            r.add_generic_error(type_name(), "must be lowercase alphanumeric+hyphens and not reserved");
+        }
+        return sv.to_string();
+    }
+
+    Optional<std::vector<std::string>> IdentifierArrayDeserializer::visit_array(Reader& r, const Array& arr)
+    {
+        return r.array_elements(arr, IdentifierDeserializer::instance);
+    }
+
+    bool PackageNameDeserializer::is_package_name(StringView sv)
+    {
+        if (sv.size() == 0)
+        {
+            return false;
+        }
+
+        for (const auto& ident : Strings::split(sv, '.'))
+        {
+            if (!IdentifierDeserializer::is_ident(ident))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    Optional<std::string> PackageNameDeserializer::visit_string(Json::Reader&, StringView sv)
+    {
+        if (!is_package_name(sv))
+        {
+            return nullopt;
+        }
+        return sv.to_string();
+    }
 }

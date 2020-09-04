@@ -29,7 +29,7 @@ namespace vcpkg
         Registry(std::vector<std::string>&&, std::nullptr_t) = delete;
 
         // always ordered lexicographically
-        Span<const std::string> packages() const { return packages_; }
+        View<std::string> packages() const { return packages_; }
         const RegistryImpl& implementation() const { return *implementation_; }
 
         static std::unique_ptr<RegistryImpl> builtin_registry();
@@ -48,10 +48,12 @@ namespace vcpkg
         constexpr static StringLiteral KIND_DIRECTORY = "directory";
 
         virtual StringView type_name() const override;
-        virtual Span<const StringView> valid_fields() const override;
+        virtual View<StringView> valid_fields() const override;
 
         virtual Optional<std::unique_ptr<RegistryImpl>> visit_null(Json::Reader&) override;
         virtual Optional<std::unique_ptr<RegistryImpl>> visit_object(Json::Reader&, const Json::Object&) override;
+
+        static RegistryImplDeserializer instance;
     };
 
     struct RegistryDeserializer final : Json::IDeserializer<Registry>
@@ -59,7 +61,7 @@ namespace vcpkg
         constexpr static StringLiteral PACKAGES = "packages";
 
         virtual StringView type_name() const override;
-        virtual Span<const StringView> valid_fields() const override;
+        virtual View<StringView> valid_fields() const override;
 
         virtual Optional<Registry> visit_object(Json::Reader&, const Json::Object&) override;
     };
@@ -78,7 +80,7 @@ namespace vcpkg
         // Returns the null pointer if there is no registry set up for that name
         const RegistryImpl* registry_for_port(StringView port_name) const;
 
-        Span<const Registry> registries() const { return registries_; }
+        View<Registry> registries() const { return registries_; }
 
         const RegistryImpl* default_registry() const { return default_registry_.get(); }
 
