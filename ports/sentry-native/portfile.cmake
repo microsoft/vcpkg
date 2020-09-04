@@ -10,8 +10,14 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
-    PATCHES fix-static-assert.patch
 )
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(SENTRY_NATIVE_C_STANDARD 99)
+else()
+    set(SENTRY_NATIVE_C_STANDARD 11)
+endif()
+
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -19,6 +25,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
+        -DCMAKE_C_STANDARD=${SENTRY_NATIVE_C_STANDARD}
 )
 
 vcpkg_install_cmake()
