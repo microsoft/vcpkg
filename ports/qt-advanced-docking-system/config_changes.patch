@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 0bd721d..2595af8 100644
+index 0bd721d..4848c5f 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -52,7 +52,7 @@ if (UNIX)
@@ -11,36 +11,3 @@ index 0bd721d..2595af8 100644
      add_library(qtadvanceddocking STATIC ${ads_SRCS} ${ads_HEADERS})
      target_compile_definitions(qtadvanceddocking PUBLIC ADS_STATIC)
  else()
-@@ -70,7 +70,6 @@ set_target_properties(qtadvanceddocking PROPERTIES
-     CXX_STANDARD_REQUIRED ON
-     CXX_EXTENSIONS OFF
-     VERSION ${VERSION_SHORT}
--    EXPORT_NAME "qtadvanceddocking"
-     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
-     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
-     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/bin"
-@@ -92,20 +91,16 @@ install(FILES
-     COMPONENT license
- )
- install(TARGETS qtadvanceddocking
--    EXPORT adsTargets
-+    EXPORT qt-advanced-docking-systemConfig
-     RUNTIME DESTINATION bin
-     LIBRARY DESTINATION lib
-     ARCHIVE DESTINATION lib
-     INCLUDES DESTINATION include
- )
- 
--install(EXPORT adsTargets
--    FILE adsTargets.cmake
--    NAMESPACE ads::
--    DESTINATION lib/cmake/qtadvanceddocking
--)
--install(FILES qtadvanceddockingConfig.cmake "${CMAKE_CURRENT_BINARY_DIR}/qtadvanceddockingConfigVersion.cmake"
--    DESTINATION lib/cmake/qtadvanceddocking
-+install(EXPORT qt-advanced-docking-systemConfig 
-+    NAMESPACE qt-advanced-docking-system:: 
-+    DESTINATION share/qt-advanced-docking-system
- )
- 
- target_include_directories(qtadvanceddocking PUBLIC

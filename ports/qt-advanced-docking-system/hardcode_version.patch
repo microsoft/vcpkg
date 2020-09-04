@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 94fdb8d..0455d0a 100644
+index 94fdb8d..6febea2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,14 +1,10 @@
+@@ -1,11 +1,7 @@
  cmake_minimum_required(VERSION 3.5)
  set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 -include(GetGitRevisionDescription)
@@ -15,8 +15,4 @@ index 94fdb8d..0455d0a 100644
 +set(VERSION_SHORT "3.6.1")
  project(QtADS LANGUAGES CXX VERSION ${VERSION_SHORT})
  option(BUILD_STATIC "Build the static library" OFF)
--option(BUILD_EXAMPLES "Build the examples" ON)
-+option(BUILD_EXAMPLES "Build the examples" OFF)
- if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
-     set(ads_PlatformDir "x86")
- else()
+ option(BUILD_EXAMPLES "Build the examples" ON)
