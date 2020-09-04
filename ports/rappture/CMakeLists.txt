@@ -78,23 +78,33 @@ set(HEADERS
 
 )
 
-add_definitions("-DRAPPTURE_VERSION=1.9")
-add_definitions("-DSVN_VERSION=6713")
-add_definitions("-D_USE_MATH_DEFINES")
+add_library(rappture ${SRC_RAPPTURE_CORE} ${HEADERS})
 
-add_library(rappture ${SRC_RAPPTURE_CORE})
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/core/)
+target_include_directories(rappture PUBLIC 
+                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/core/> 
+                            $<INSTALL_INTERFACE:include>
+)
 
 find_package(expat CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 
-target_link_libraries(rappture PRIVATE expat::expat ZLIB::ZLIB)
+target_compile_definitions(rappture PUBLIC 
+                            -D_CRT_SECURE_NO_WARNINGS 
+                            -DRAPPTURE_VERSION=1.9 
+                            -DSVN_VERSION=6713 
+                            -D_USE_MATH_DEFINES
+)
 
-install(TARGETS rappture
+target_link_libraries(rappture PRIVATE 
+                        expat::expat 
+                        ZLIB::ZLIB
+)
+
+install(TARGETS rappture EXPORT rappture
             RUNTIME DESTINATION bin
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib
         )
 
 install(FILES ${HEADERS} DESTINATION include/rappture)
+install(EXPORT rappture NAMESPACE rappture:: DESTINATION share/rappture)
