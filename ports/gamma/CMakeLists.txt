@@ -4,7 +4,7 @@ project (gamma)
 
 # dependent on libsndfile and portaudio
 find_path(LIBSNDFILE_H sndfile.h)
-find_library(LIBSNDFILE_LIB NAMES libsndfile-1 libsndfile)
+find_library(LIBSNDFILE_LIB NAMES libsndfile-1 libsndfile sndfile)
 find_path(PORTAUDIO_H portaudio.h)
 find_library(PORTAUDIO_LIB NAMES portaudio)
 
