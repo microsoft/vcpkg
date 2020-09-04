@@ -1,4 +1,4 @@
 Source: lapack
-Version: 4
+Version: 3
 Description: Metapackage for packages which provide LAPACK
 Build-Depends: clapack(arm&windows), lapack-reference(!arm|!windows)
