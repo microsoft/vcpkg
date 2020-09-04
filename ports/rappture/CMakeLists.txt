@@ -100,11 +100,11 @@ target_link_libraries(rappture PRIVATE
                         ZLIB::ZLIB
 )
 
-install(TARGETS rappture EXPORT rappture
+install(TARGETS rappture EXPORT rappture-config
             RUNTIME DESTINATION bin
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib
         )
 
 install(FILES ${HEADERS} DESTINATION include/rappture)
-install(EXPORT rappture NAMESPACE unofficial::rappture:: DESTINATION share/rappture)
+install(EXPORT rappture-config NAMESPACE unofficial::rappture:: DESTINATION share/rappture)
