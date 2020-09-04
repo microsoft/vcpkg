@@ -94,7 +94,7 @@ namespace vcpkg
         auto parsed_config_opt = reader.visit_value(obj, deserializer);
         if (!reader.errors().empty())
         {
-            System::print2(System::Color::error, "Errors occurred while parsing ", filepath.u8string(), "\n");
+            System::print2(System::Color::error, "Errors occurred while parsing ", fs::u8string(filepath), "\n");
             for (auto&& msg : reader.errors())
                 System::print2("    ", msg, '\n');
 
