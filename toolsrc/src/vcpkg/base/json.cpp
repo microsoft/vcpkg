@@ -253,15 +253,15 @@ namespace vcpkg::Json
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Number>(), d);
         return val;
     }
-    Value Value::string(StringView sv) noexcept
+    Value Value::string(std::string s) noexcept
     {
-        if (!Unicode::utf8_is_valid_string(sv.begin(), sv.end()))
+        if (!Unicode::utf8_is_valid_string(s.data(), s.data() + s.size()))
         {
-            Debug::print("Invalid string: ", sv, '\n');
-            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid utf8 passed to Value::string(StringView)");
+            Debug::print("Invalid string: ", s, '\n');
+            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid utf8 passed to Value::string(std::string)");
         }
         Value val;
-        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::String>(), sv.to_string());
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::String>(), std::move(s));
         return val;
     }
     Value Value::array(Array&& arr) noexcept
@@ -488,10 +488,6 @@ namespace vcpkg::Json
             static bool is_number_start(char32_t code_point) noexcept
             {
                 return code_point == '-' || is_digit(code_point);
-            }
-            static bool is_keyword_start(char32_t code_point) noexcept
-            {
-                return code_point == 'f' || code_point == 'n' || code_point == 't';
             }
 
             static unsigned char from_hex_digit(char32_t code_point) noexcept
@@ -807,6 +803,7 @@ namespace vcpkg::Json
                     }
                     else if (current == ',')
                     {
+                        auto comma_loc = cur_loc();
                         next();
                         skip_whitespace();
                         current = cur();
@@ -817,7 +814,7 @@ namespace vcpkg::Json
                         }
                         if (current == ']')
                         {
-                            add_error("Trailing comma in array");
+                            add_error("Trailing comma in array", comma_loc);
                             return Value::array(std::move(arr));
                         }
                     }
@@ -903,6 +900,7 @@ namespace vcpkg::Json
                     }
                     else if (current == ',')
                     {
+                        auto comma_loc = cur_loc();
                         next();
                         skip_whitespace();
                         current = cur();
@@ -913,7 +911,7 @@ namespace vcpkg::Json
                         }
                         else if (current == '}')
                         {
-                            add_error("Trailing comma in an object");
+                            add_error("Trailing comma in an object", comma_loc);
                             return Value();
                         }
                     }

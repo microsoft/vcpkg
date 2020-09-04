@@ -28,8 +28,8 @@ static std::string mystringify(const Value& val) { return Json::stringify(val, J
 
 TEST_CASE ("JSON stringify weird strings", "[json]")
 {
-    vcpkg::StringView str = U8_STR("😀 😁 😂 🤣 😃 😄 😅 😆 😉");
-    REQUIRE(mystringify(Value::string(str)) == ('"' + str.to_string() + "\"\n"));
+    std::string str = U8_STR("😀 😁 😂 🤣 😃 😄 😅 😆 😉");
+    REQUIRE(mystringify(Value::string(str)) == ('"' + str + "\"\n"));
     REQUIRE(mystringify(Value::string("\xED\xA0\x80")) == "\"\\ud800\"\n"); // unpaired surrogate
 }
 

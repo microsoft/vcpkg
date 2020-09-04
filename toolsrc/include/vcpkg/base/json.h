@@ -120,7 +120,7 @@ namespace vcpkg::Json
         static Value boolean(bool) noexcept;
         static Value integer(int64_t i) noexcept;
         static Value number(double d) noexcept;
-        static Value string(StringView) noexcept;
+        static Value string(std::string s) noexcept;
         static Value array(Array&&) noexcept;
         static Value array(const Array&) noexcept;
         static Value object(Object&&) noexcept;
