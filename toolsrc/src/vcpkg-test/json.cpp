@@ -228,3 +228,14 @@ TEST_CASE ("JSON parse full file", "[json]")
     }
     REQUIRE(res);
 }
+
+TEST_CASE ("JSON track newlines", "[json]")
+{
+    auto res = Json::parse("{\n,", fs::u8path("filename"));
+    REQUIRE(!res);
+    REQUIRE(res.error()->format() ==
+            R"(Error: filename:2:1: Unexpected character; expected property name
+   on expression: ,
+                  ^
+)");
+}
