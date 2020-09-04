@@ -107,4 +107,4 @@ install(TARGETS rappture EXPORT rappture
         )
 
 install(FILES ${HEADERS} DESTINATION include/rappture)
-install(EXPORT rappture NAMESPACE rappture:: DESTINATION share/rappture)
+install(EXPORT rappture NAMESPACE unofficial::rappture:: DESTINATION share/rappture)

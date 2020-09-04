@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://nanohub.org/app/site/downloads/rappture/rappture-src-20130903.tar.gz"
     FILENAME "rappture-src-20130903.tar.gz"
@@ -19,6 +21,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
 
