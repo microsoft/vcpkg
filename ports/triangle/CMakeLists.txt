@@ -13,6 +13,10 @@ if(WIN32)
    target_compile_definitions(triangle PRIVATE -DNO_TIMER)
 endif()
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    target_link_libraries(triangle m)
+endif()
+
 target_include_directories(triangleLib PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
 )
