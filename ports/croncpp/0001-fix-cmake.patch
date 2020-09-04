@@ -1,16 +1,16 @@
-From 175693bf924979ea3f7065c1bc4f2676e9590c4c Mon Sep 17 00:00:00 2001
+From 30db118abd484c59efada27d9d6956b5f68bcee6 Mon Sep 17 00:00:00 2001
 From: Robert Kesterson <robert.d.kesterson@leidos.com>
 Date: Fri, 4 Sep 2020 16:31:55 +0000
-Subject: [PATCH] cp
+Subject: [PATCH] vcpkg
 
 ---
- CMakeLists.txt      | 51 +++++++++++++++++++++++++++++++++++++++++++--
+ CMakeLists.txt      | 47 +++++++++++++++++++++++++++++++++++++++++++--
  croncppConfig.cmake |  1 +
- 2 files changed, 50 insertions(+), 2 deletions(-)
+ 2 files changed, 46 insertions(+), 2 deletions(-)
  create mode 100644 croncppConfig.cmake
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9114b39..1d58640 100644
+index 9114b39..8d46e6b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,5 +1,5 @@
@@ -20,7 +20,7 @@ index 9114b39..1d58640 100644
  
  if(WIN32)
     message(status "Setting MSVC flags")
-@@ -24,4 +24,51 @@ if(BUILD_TESTS)
+@@ -24,4 +24,47 @@ if(BUILD_TESTS)
  endif()
  
  add_subdirectory(benchmark)
@@ -61,11 +61,7 @@ index 9114b39..1d58640 100644
 +        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/croncpp )
 +endif ()
 +
-+if( WIN32 AND NOT CYGWIN)
-+    set( CONFIG_LOC CMake )
-+else( )
-+    set( CONFIG_LOC "share/croncpp" )
-+endif( )
++set( CONFIG_LOC "share/croncpp" )
 +
 +install( EXPORT croncppConfig
 +  FILE croncppTargets.cmake
