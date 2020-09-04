@@ -1,13 +1,14 @@
 diff --git a/octomap/src/CMakeLists.txt b/octomap/src/CMakeLists.txt
-index 9ac6dcb..526ad76 100644
+index 45b384f..ab1b6b1 100644
 --- a/octomap/src/CMakeLists.txt
 +++ b/octomap/src/CMakeLists.txt
-@@ -8,16 +8,14 @@ SET (octomap_SRCS
+@@ -8,17 +8,16 @@ SET (octomap_SRCS
    OcTreeNode.cpp
    OcTreeStamped.cpp
    ColorOcTree.cpp
 -  )
 +)
++
  
 -# dynamic and static libs, see CMake FAQ:
 -ADD_LIBRARY( octomap SHARED ${octomap_SRCS})
@@ -20,10 +21,12 @@ index 9ac6dcb..526ad76 100644
  )
 -ADD_LIBRARY( octomap-static STATIC ${octomap_SRCS})
 -SET_TARGET_PROPERTIES(octomap-static PROPERTIES OUTPUT_NAME "octomap") 
+-add_dependencies(octomap-static octomath-static)
++
  
  TARGET_LINK_LIBRARIES(octomap octomath)
  
-@@ -25,7 +23,7 @@ if(NOT EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/octomap")
+@@ -26,7 +25,7 @@ if(NOT EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/octomap")
    file(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/octomap")
  endif()
  
@@ -32,25 +35,20 @@ index 9ac6dcb..526ad76 100644
    APPEND FILE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/octomap/octomap-targets.cmake")
  
  ADD_SUBDIRECTORY( testing )
-@@ -66,7 +64,7 @@ TARGET_LINK_LIBRARIES(intersection_example octomap)
+@@ -67,7 +66,7 @@ TARGET_LINK_LIBRARIES(intersection_example octomap)
  ADD_EXECUTABLE(octree2pointcloud octree2pointcloud.cpp)
  TARGET_LINK_LIBRARIES(octree2pointcloud octomap)
  
 -install(TARGETS octomap octomap-static
 +install(TARGETS octomap
    EXPORT octomap-targets
-   INCLUDES DESTINATION include
+   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
    ${INSTALL_TARGETS_DEFAULT_ARGS}
-@@ -84,4 +82,3 @@ install(TARGETS
- 	compare_octrees
- 	${INSTALL_TARGETS_DEFAULT_ARGS}
- )
--
 diff --git a/octomap/src/math/CMakeLists.txt b/octomap/src/math/CMakeLists.txt
-index 22127ad..cd256c7 100644
+index 3b47ec4..6a75170 100644
 --- a/octomap/src/math/CMakeLists.txt
 +++ b/octomap/src/math/CMakeLists.txt
-@@ -5,26 +5,22 @@ SET (octomath_SRCS
+@@ -5,24 +5,22 @@ SET (octomath_SRCS
   )
  
  
@@ -60,10 +58,8 @@ index 22127ad..cd256c7 100644
  SET_TARGET_PROPERTIES( octomath PROPERTIES
    VERSION ${OCTOMAP_VERSION}
    SOVERSION ${OCTOMAP_SOVERSION}
-   INSTALL_NAME_DIR ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}   # this seems to be necessary for MacOS X
  )
--# INSTALL_NAME_DIR seems to be necessary for MacOS X
--
+ 
 -ADD_LIBRARY( octomath-static STATIC ${octomath_SRCS})
 -SET_TARGET_PROPERTIES(octomath-static PROPERTIES OUTPUT_NAME "octomath")
  
@@ -78,5 +74,5 @@ index 22127ad..cd256c7 100644
 -install(TARGETS octomath octomath-static
 +install(TARGETS octomath
    EXPORT octomap-targets
-   INCLUDES DESTINATION include
+   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
    ${INSTALL_TARGETS_DEFAULT_ARGS}
