@@ -87,7 +87,13 @@ namespace vcpkg
 #elif defined(__FreeBSD__)
                 return Triplet::from_canonical_name("x64-freebsd");
 #elif defined(__GLIBC__)
+#if defined(__aarch64__)
+                return Triplet::from_canonical_name("arm64-linux");
+#elif defined(__arm__)
+                return Triplet::from_canonical_name("arm-linux");
+#else
                 return Triplet::from_canonical_name("x64-linux");
+#endif
 #else
                 return Triplet::from_canonical_name("x64-linux-musl");
 #endif

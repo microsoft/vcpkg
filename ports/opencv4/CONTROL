@@ -1,5 +1,6 @@
 Source: opencv4
 Version: 4.3.0
+Port-Version: 1
 Build-Depends: protobuf, zlib
 Homepage: https://github.com/opencv/opencv
 Description: computer vision library
@@ -17,7 +18,7 @@ Build-Depends: hdf5 (!uwp), tesseract (!uwp)
 Description: opencv_contrib module
 
 Feature: cuda
-Build-Depends: opencv4[contrib], cuda, cudnn
+Build-Depends: opencv4[core,contrib], cuda, cudnn
 Description: CUDA support for opencv
 
 Feature: dnn
@@ -62,7 +63,7 @@ Feature: openmp
 Description: Enable openmp support for opencv
 
 Feature: ovis
-Build-Depends: opencv4[contrib], ogre
+Build-Depends: opencv4[core,contrib], ogre
 Description: opencv_ovis module
 
 Feature: png
@@ -74,7 +75,7 @@ Build-Depends: qt5-base[core]
 Description: Qt GUI support for opencv
 
 Feature: sfm
-Build-Depends: opencv4[contrib], eigen3, glog, gflags, ceres
+Build-Depends: opencv4[core,contrib], opencv4[core,eigen], glog, gflags, ceres
 Description: opencv_sfm module
 
 Feature: tbb
