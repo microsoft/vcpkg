@@ -169,8 +169,6 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/share
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
     ${CURRENT_PACKAGES_DIR}/lib/icu
     ${CURRENT_PACKAGES_DIR}/debug/lib/icud)
 
@@ -203,6 +201,15 @@ else()
                 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d.lib)
             endif()
         endforeach()
+
+        file(GLOB_RECURSE pkg_files LIST_DIRECTORIES false ${CURRENT_PACKAGES_DIR}/*.pc)
+        message(STATUS "${pkg_files}")
+        foreach(pkg_file IN LISTS pkg_files)
+            message(STATUS "${pkg_file}")
+            file(READ ${pkg_file} PKG_FILE)
+            string(REGEX REPLACE "-ls([^ \\t\\n]+)" "-l\\1" PKG_FILE "${PKG_FILE}" )
+            file(WRITE ${pkg_file} "${PKG_FILE}")
+        endforeach()        
     endif()
 
     # force U_STATIC_IMPLEMENTATION macro
@@ -226,6 +233,7 @@ endif()
 # Generates warnings about missing pdbs for icudt.dll
 # This is expected because ICU database contains no executable code
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread m)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
