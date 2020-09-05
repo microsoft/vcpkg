@@ -12,12 +12,25 @@ vcpkg_extract_source_archive_ex(
     NO_REMOVE_ONE_LEVEL
 )
 
+if (NOT DEFINED SENTRY_BACKEND)
+    if(MSVC AND CMAKE_GENERATOR_TOOLSET MATCHES "_xp$")
+        set(SENTRY_BACKEND "breakpad")
+    elseif(APPLE OR WIN32)
+        set(SENTRY_BACKEND "crashpad")
+    elseif(LINUX)
+        set(SENTRY_BACKEND "breakpad")
+    else()
+        set(SENTRY_BACKEND "inproc")
+    endif()
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
+        -DSENTRY_BACKEND=${SENTRY_BACKEND}
 )
 
 vcpkg_install_cmake()
@@ -28,7 +41,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry-native/cmake)
 
-if (WIN32)
+if (WIN32 AND SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(
         TOOL_NAMES crashpad_handler
         AUTO_CLEAN
