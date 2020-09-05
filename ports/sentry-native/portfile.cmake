@@ -24,12 +24,20 @@ if (NOT DEFINED SENTRY_BACKEND)
     endif()
 endif()
 
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(SENTRY_NATIVE_C_STANDARD 99)
+else()
+    set(SENTRY_NATIVE_C_STANDARD 11)
+endif()
+
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
+        -DCMAKE_C_STANDARD=${SENTRY_NATIVE_C_STANDARD}
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
 )
 
@@ -39,7 +47,7 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry-native/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry)
 
 if (WIN32 AND SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(
