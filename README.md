@@ -1,4 +1,5 @@
 # Vcpkg: Overview
+
 [中文总览](README_zh_CN.md)
 
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS.
@@ -16,7 +17,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 * Docs: [Documentation](docs/index.md)
 
 [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
-
 
 # Table of Contents
 
@@ -254,7 +254,7 @@ and go to the CMake settings (Build, Execution, Deployment > CMake).
 Finally, in `CMake options`, add the following line:
 
 ```
--DCMAKE_TOOLCHAIN_FILE=C:/Users/nimazzuc/src/vcpkg/scripts/buildsystems/vcpkg.cmake
+-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
 Unfortunately, you'll have to add this to each profile.
@@ -352,7 +352,6 @@ $ ./vcpkg integrate bash
 ```
 
 depending on the shell you use, then restart your console.
-
 
 # Examples
 

@@ -1,5 +1,6 @@
 Source: harfbuzz
 Version: 2.6.6
+Port-Version: 1
 Description: HarfBuzz OpenType text shaping engine
 Homepage: https://github.com/behdad/harfbuzz
 Build-Depends: freetype[core], ragel, gettext (osx)

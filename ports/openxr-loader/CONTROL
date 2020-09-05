@@ -1,5 +1,5 @@
 Source: openxr-loader
-Version: 1.0.3.0
+Version: 1.0.11
 Description: Khronos API for abstracting VR/MR/AR hardware
 Supports: !(arm|uwp)
 
