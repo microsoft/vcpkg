@@ -21,7 +21,7 @@
 
 #include <cassert>
 #include <fstream>
-#include <memory>
+   #include <memory>
 #include <random>
 
 #if defined(_WIN32)
