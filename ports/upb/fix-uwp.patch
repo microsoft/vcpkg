@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 577000a..759e35b 100644
+index eda6a72..386966f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -58,6 +58,10 @@ elseif(UNIX)
@@ -11,5 +11,18 @@ index 577000a..759e35b 100644
 +endif()
 +
  enable_testing()
- add_library(descriptor_upbproto INTERFACE)
- add_library(upb
+ 
+ add_library(port
+diff --git a/upb/json_decode.c b/upb/json_decode.c
+index 953d238..5185ffd 100644
+--- a/upb/json_decode.c
++++ b/upb/json_decode.c
+@@ -1138,7 +1138,7 @@ static void jsondec_struct(jsondec *d, upb_msg *msg, const upb_msgdef *m) {
+ static void jsondec_wellknownvalue(jsondec *d, upb_msg *msg,
+                                    const upb_msgdef *m) {
+   upb_msgval val;
+-  const upb_fielddef *f;
++  const upb_fielddef *f = NULL;
+   upb_msg *submsg;
+ 
+   switch (jsondec_peek(d)) {

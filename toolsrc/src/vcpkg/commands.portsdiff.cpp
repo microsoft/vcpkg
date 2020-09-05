@@ -100,13 +100,13 @@ namespace vcpkg::Commands::PortsDiff
         System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
         System::cmd_execute_and_capture_output(Strings::format(R"("%s" reset)", fs::u8string(git_exe)),
                                                System::get_clean_environment());
-        const auto all_ports =
-            Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
+        const auto ports_at_commit =
+            Paragraphs::load_overlay_ports(paths, temp_checkout_path / ports_dir_name_as_string);
         std::map<std::string, VersionT> names_and_versions;
-        for (auto&& port : all_ports)
+        for (auto&& port : ports_at_commit)
         {
-            const auto& core_pgh = *port->core_paragraph;
-            names_and_versions.emplace(port->core_paragraph->name, VersionT(core_pgh.version, core_pgh.port_version));
+            const auto& core_pgh = *port.source_control_file->core_paragraph;
+            names_and_versions.emplace(core_pgh.name, VersionT(core_pgh.version, core_pgh.port_version));
         }
         fs.remove_all(temp_checkout_path, VCPKG_LINE_INFO);
         return names_and_versions;
@@ -133,8 +133,7 @@ namespace vcpkg::Commands::PortsDiff
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        (void)(args.parse_arguments(COMMAND_STRUCTURE));
-
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
 
         const std::string git_commit_id_for_previous_snapshot = args.command_arguments.at(0);

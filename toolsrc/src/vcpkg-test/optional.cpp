@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/util.h>
 
 #include <vector>
 
@@ -27,9 +28,39 @@ TEST_CASE ("equal", "[optional]")
     CHECK(Optional<int>{42} == Optional<int>{42});
 }
 
+TEST_CASE ("ref conversion", "[optional]")
+{
+    using vcpkg::Optional;
+
+    Optional<int> i_empty;
+    Optional<int> i_1 = 1;
+    const Optional<int> ci_1 = 1;
+
+    Optional<int&> ref_empty = i_empty;
+    Optional<const int&> cref_empty = i_empty;
+
+    Optional<int&> ref_1 = i_1;
+    Optional<const int&> cref_1 = ci_1;
+
+    REQUIRE(ref_empty.has_value() == false);
+    REQUIRE(cref_empty.has_value() == false);
+
+    REQUIRE(ref_1.get() == i_1.get());
+    REQUIRE(cref_1.get() == ci_1.get());
+
+    ref_empty = i_1;
+    cref_empty = ci_1;
+    REQUIRE(ref_empty.get() == i_1.get());
+    REQUIRE(cref_empty.get() == ci_1.get());
+
+    const int x = 5;
+    cref_1 = x;
+    REQUIRE(cref_1.get() == &x);
+}
+
 TEST_CASE ("common_projection", "[optional]")
 {
-    using vcpkg::common_projection;
+    using vcpkg::Util::common_projection;
     std::vector<int> input;
     CHECK(!common_projection(input, identity_projection{}).has_value());
     input.push_back(42);
