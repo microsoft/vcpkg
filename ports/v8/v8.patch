@@ -1,0 +1,89 @@
+diff --git a/src/compiler/node-cache.h b/src/compiler/node-cache.h
+index 935e5778e3..d5dae22512 100644
+--- a/src/compiler/node-cache.h
++++ b/src/compiler/node-cache.h
+@@ -29,7 +29,7 @@ class Node;
+ // nodes such as constants, parameters, etc.
+ template <typename Key, typename Hash = base::hash<Key>,
+           typename Pred = std::equal_to<Key> >
+-class EXPORT_TEMPLATE_DECLARE(V8_EXPORT_PRIVATE) NodeCache final {
++class V8_EXPORT_PRIVATE NodeCache final {
+  public:
+   explicit NodeCache(Zone* zone) : map_(zone) {}
+   ~NodeCache() = default;
+diff --git a/src/objects/feedback-vector.cc b/src/objects/feedback-vector.cc
+index 929b312f22..7beff3395d 100644
+--- a/src/objects/feedback-vector.cc
++++ b/src/objects/feedback-vector.cc
+@@ -114,9 +114,9 @@ Handle<FeedbackMetadata> FeedbackMetadata::New(LocalIsolate* isolate,
+   return metadata;
+ }
+
+-template Handle<FeedbackMetadata> FeedbackMetadata::New(
++template V8_EXPORT Handle<FeedbackMetadata> FeedbackMetadata::New(
+     Isolate* isolate, const FeedbackVectorSpec* spec);
+-template Handle<FeedbackMetadata> FeedbackMetadata::New(
++template V8_EXPORT Handle<FeedbackMetadata> FeedbackMetadata::New(
+     OffThreadIsolate* isolate, const FeedbackVectorSpec* spec);
+
+ bool FeedbackMetadata::SpecDiffersFrom(
+diff --git a/src/objects/ordered-hash-table.h b/src/objects/ordered-hash-table.h
+index b587960432..e80b5757e4 100644
+--- a/src/objects/ordered-hash-table.h
++++ b/src/objects/ordered-hash-table.h
+@@ -7,7 +7,11 @@
+
+ #include "src/base/export-template.h"
+ #include "src/common/globals.h"
++#if defined(_M_IX86) && defined(_MSC_VER)
++#include "src/objects/fixed-array-inl.h"
++#else
+ #include "src/objects/fixed-array.h"
++#endif
+ #include "src/objects/js-objects.h"
+ #include "src/objects/smi.h"
+ #include "src/roots/roots.h"
+diff --git a/src/snapshot/serializer-common.cc b/src/snapshot/serializer-common.cc
+index 9218d4eaa9..7b226de2f9 100644
+--- a/src/snapshot/serializer-common.cc
++++ b/src/snapshot/serializer-common.cc
+@@ -8,7 +8,7 @@
+ #include "src/objects/foreign-inl.h"
+ #include "src/objects/objects-inl.h"
+ #include "src/objects/slots.h"
+-#include "third_party/zlib/zlib.h"
++#include "zlib.h"
+
+ namespace v8 {
+ namespace internal {
+diff --git a/test/cctest/BUILD.gn b/test/cctest/BUILD.gn
+index 89fe36f65b..588950228b 100644
+--- a/test/cctest/BUILD.gn
++++ b/test/cctest/BUILD.gn
+@@ -421,6 +421,9 @@ v8_source_set("cctest_sources") {
+     # C4309: 'static_cast': truncation of constant value
+     cflags += [ "/wd4309" ]
+
++    # Buffer overrun warning... intended?
++    cflags += [ "/wd4789" ]
++
+     # MSVS wants this for gay-{precision,shortest}.cc.
+     cflags += [ "/bigobj" ]
+
+diff --git a/tools/v8windbg/BUILD.gn b/tools/v8windbg/BUILD.gn
+index 10d06a127f..a269b81136 100644
+--- a/tools/v8windbg/BUILD.gn
++++ b/tools/v8windbg/BUILD.gn
+@@ -8,6 +8,12 @@ config("v8windbg_config") {
+   # Required for successful compilation of SDK header file DbgModel.h.
+   cflags_cc = [ "/Zc:twoPhase-" ]
+
++  if(is_win && !is_clang){
++    # Avoid "The contents of <optional> are available only with C++17 or later."
++    # warning from MSVC
++    cflags_cc += [ "/std:c++latest" ]
++  }
++
+   include_dirs = [ "../.." ]
+ }
+

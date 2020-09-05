@@ -5,6 +5,8 @@ mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging purposes." OFF)
 mark_as_advanced(VCPKG_VERBOSE)
 
+include(CMakeDependentOption)
+
 function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
     set(_vcpkg_get_dir_candidate ${DIRECTORY})
     while(IS_DIRECTORY ${_vcpkg_get_dir_candidate} AND NOT DEFINED _vcpkg_get_dir_out)
@@ -23,7 +25,13 @@ function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
     set(${OUT} ${_vcpkg_get_dir_out} CACHE INTERNAL "_vcpkg_get_directory_name_of_file_above: ${OUT}")
 endfunction()
 
-_vcpkg_get_directory_name_of_file_above(_VCPKG_MANIFEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} "vcpkg.json")
+if(NOT DEFINED VCPKG_MANIFEST_DIR)
+    if(EXISTS "${CMAKE_SOURCE_DIR}/vcpkg.json")
+        set(_VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
+    endif()
+else()
+    set(_VCPKG_MANIFEST_DIR ${VCPKG_MANIFEST_DIR})
+endif()
 if(NOT DEFINED VCPKG_MANIFEST_MODE)
     if(_VCPKG_MANIFEST_DIR)
         set(VCPKG_MANIFEST_MODE ON)
@@ -37,15 +45,26 @@ elseif(VCPKG_MANIFEST_MODE AND NOT _VCPKG_MANIFEST_DIR)
         "disable manifests by turning off VCPKG_MANIFEST_MODE.")
 endif()
 
-if(VCPKG_MANIFEST_MODE)
-    option(VCPKG_MANIFEST_INSTALL
-[[
+if(NOT DEFINED _INTERNAL_CHECK_VCPKG_MANIFEST_MODE)
+    set(_INTERNAL_CHECK_VCPKG_MANIFEST_MODE "${VCPKG_MANIFEST_MODE}"
+        CACHE INTERNAL "Making sure VCPKG_MANIFEST_MODE doesn't change")
+endif()
+
+if(NOT VCPKG_MANIFEST_MODE STREQUAL _INTERNAL_CHECK_VCPKG_MANIFEST_MODE)
+    message(FATAL_ERROR [[
+vcpkg manifest mode was enabled for a build directory where it was initially disabled.
+This is not supported. Please delete the build directory and reconfigure.
+]])
+endif()
+
+CMAKE_DEPENDENT_OPTION(VCPKG_MANIFEST_INSTALL [[
 Install the dependencies listed in your manifest:
     If this is off, you will have to manually install your dependencies.
     See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md for more info.
 ]]
-        ON)
-endif()
+    ON
+    "VCPKG_MANIFEST_MODE"
+    OFF)
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
@@ -151,6 +170,8 @@ else()
             endif()
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64")
             set(_VCPKG_TARGET_TRIPLET_ARCH x64)
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
+            set(_VCPKG_TARGET_TRIPLET_ARCH s390x)
         else()
             if( _CMAKE_IN_TRY_COMPILE )
                 message(STATUS "Unable to determine target architecture, continuing without vcpkg.")
@@ -306,13 +327,23 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
 
     message(STATUS "Running vcpkg install")
 
+    set(_VCPKG_MANIFEST_FEATURES)
+    foreach(feature ${VCPKG_MANIFEST_FEATURES})
+        list(APPEND _VCPKG_MANIFEST_FEATURES "--x-feature=${feature}")
+    endforeach()
+
+    if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
+        set(_VCPKG_MANIFEST_NO_DEFAULT_FEATURES "--x-no-default-features")
+    endif()
+
     execute_process(
         COMMAND "${_VCPKG_EXECUTABLE}" install
-            --triplet ${VCPKG_TARGET_TRIPLET}
-            --vcpkg-root ${_VCPKG_ROOT_DIR}
-            --x-manifest-root=${_VCPKG_MANIFEST_DIR}
-            --x-install-root=${_VCPKG_INSTALLED_DIR}
-            --binarycaching
+            --triplet "${VCPKG_TARGET_TRIPLET}"
+            --vcpkg-root "${_VCPKG_ROOT_DIR}"
+            "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
+            "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+            ${_VCPKG_MANIFEST_FEATURES}
+            ${_VCPKG_MANIFEST_NO_DEFAULT_FEATURES}
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
 
     if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)

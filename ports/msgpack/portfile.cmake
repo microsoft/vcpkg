@@ -1,4 +1,7 @@
-include(vcpkg_common_functions)
+if (EXISTS ${CURRENT_INSTALLED_DIR}/include/msgpack/pack.h)
+    message(FATAL_ERROR "Cannot install ${PORT} when rest-rpc is already installed, please remove rest-rpc using \"./vcpkg remove rest-rpc:${TARGET_TRIPLET}\"")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO msgpack/msgpack-c
