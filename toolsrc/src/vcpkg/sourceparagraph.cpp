@@ -442,6 +442,11 @@ namespace vcpkg
         }
     };
 
+    constexpr StringLiteral DependencyDeserializer::NAME;
+    constexpr StringLiteral DependencyDeserializer::FEATURES;
+    constexpr StringLiteral DependencyDeserializer::DEFAULT_FEATURES;
+    constexpr StringLiteral DependencyDeserializer::PLATFORM;
+
     struct FeatureDeserializer : Json::IDeserializer<std::unique_ptr<FeatureParagraph>>
     {
         virtual StringView type_name() const override { return "a feature"; }
@@ -481,6 +486,10 @@ namespace vcpkg
             return std::move(feature);
         }
     };
+
+    constexpr StringLiteral FeatureDeserializer::NAME;
+    constexpr StringLiteral FeatureDeserializer::DESCRIPTION;
+    constexpr StringLiteral FeatureDeserializer::DEPENDENCIES;
 
     // We "parse" this so that we can add actual license parsing at some point in the future
     // without breaking anyone
@@ -622,6 +631,10 @@ namespace vcpkg
         }
     };
 
+    constexpr StringView LicenseExpressionDeserializer::EXPRESSION_WORDS[];
+    constexpr StringView LicenseExpressionDeserializer::VALID_LICENSES[];
+    constexpr StringView LicenseExpressionDeserializer::VALID_EXCEPTIONS[];
+
     struct ManifestDeserializer : Json::IDeserializer<std::unique_ptr<SourceControlFile>>
     {
         virtual StringView type_name() const override { return "a manifest"; }
@@ -720,6 +733,21 @@ namespace vcpkg
             return std::move(control_file);
         }
     };
+
+    constexpr StringLiteral ManifestDeserializer::NAME;
+    constexpr StringLiteral ManifestDeserializer::VERSION;
+
+    constexpr StringLiteral ManifestDeserializer::PORT_VERSION;
+    constexpr StringLiteral ManifestDeserializer::MAINTAINERS;
+    constexpr StringLiteral ManifestDeserializer::DESCRIPTION;
+    constexpr StringLiteral ManifestDeserializer::HOMEPAGE;
+    constexpr StringLiteral ManifestDeserializer::DOCUMENTATION;
+    constexpr StringLiteral ManifestDeserializer::LICENSE;
+    constexpr StringLiteral ManifestDeserializer::DEPENDENCIES;
+    constexpr StringLiteral ManifestDeserializer::DEV_DEPENDENCIES;
+    constexpr StringLiteral ManifestDeserializer::FEATURES;
+    constexpr StringLiteral ManifestDeserializer::DEFAULT_FEATURES;
+    constexpr StringLiteral ManifestDeserializer::SUPPORTS;
 
     Parse::ParseExpected<SourceControlFile> SourceControlFile::parse_manifest_file(const fs::path& path_to_manifest,
                                                                                    const Json::Object& manifest)
