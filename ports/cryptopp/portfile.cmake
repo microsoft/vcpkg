@@ -24,6 +24,22 @@ vcpkg_from_github(
 file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+if("pem-pack" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH PEM_PACK_SOURCE_PATH
+        REPO noloader/cryptopp-pem
+        REF 095f08ff2ef9bca7b81036a59f2395e4f08ce2e8
+        SHA512 49912758a635faca1f49665ac9552b20576b46e0283aaabc19bb012bdc80586106452018e5088b9b46967717982ca6022ca968edc4cac96a7506d2b1a3e4bf13
+        HEAD_REF master
+    )
+
+    file(GLOB PEM_PACK_FILES
+        ${PEM_PACK_SOURCE_PATH}/*.h
+        ${PEM_PACK_SOURCE_PATH}/*.cpp
+    )
+    file(COPY ${PEM_PACK_FILES} DESTINATION ${SOURCE_PATH})
+endif()
+
 # disable assembly on OSX and ARM Windows to fix broken build
 if (VCPKG_TARGET_IS_OSX)
     set(CRYPTOPP_DISABLE_ASM "ON")

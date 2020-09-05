@@ -1,15 +1,11 @@
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/qwt/files/qwt/6.1.3/qwt-6.1.3.zip"
-    FILENAME "qwt-6.1.3.zip"
-    SHA512 8f249e23d50f71d14fca37776ea40d8d6931db14d9602e03a343bfb7a9bf55502202103135b77f583c3890a7924220e8a142a01c448dbde311860d89a3b10fc8
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
+    REPO qwt/qwt
+    REF 6.1.4
+    FILENAME "qwt-6.1.4.zip"
+    SHA512 711256ec4d1d54d201650e9c63b584b17a61dbedde5a581e0b6227fdbee149cdbe2a889aa58f67777125b6471fc1fe248992ec845eb6481a2dfc2c4276701d7f
     PATCHES fix-dynamic-static.patch
+            build.patch
 )
 
 vcpkg_configure_qmake(
@@ -32,8 +28,7 @@ endif()
 
 #Install the header files
 file(GLOB HEADER_FILES ${SOURCE_PATH}/src/*.h)
-file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/qwt)
+file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/qwt)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/qwt/COPYING ${CURRENT_PACKAGES_DIR}/share/qwt/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

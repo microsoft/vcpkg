@@ -76,6 +76,13 @@ else()
 
     vcpkg_install_make()
 
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/apr-1.pc
+        "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
+    )
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/lib/pkgconfig/apr-1.pc
+        "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
+    )
+    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread rt dl uuid crypt)
 endif()
 
 # Handle copyright

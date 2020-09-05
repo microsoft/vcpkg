@@ -6,14 +6,6 @@ while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
     vcpkgRootDir="$(dirname "$vcpkgRootDir")"
 done
 
-# Enable using this entry point on windows from git bash by redirecting to the .bat file.
-unixName=$(uname -s | sed 's/MINGW.*_NT.*/MINGW_NT/')
-if [ "$unixName" = "MINGW_NT" ]; then
-  vcpkgRootDir=$(cygpath -aw "$vcpkgRootDir")
-  cmd "/C $vcpkgRootDir\\bootstrap-vcpkg.bat" || exit 1
-  exit 0
-fi
-
 # Argument parsing
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
@@ -43,6 +35,20 @@ do
         exit 1
     fi
 done
+
+# Enable using this entry point on windows from git bash by redirecting to the .bat file.
+unixName=$(uname -s | sed 's/MINGW.*_NT.*/MINGW_NT/')
+if [ "$unixName" = "MINGW_NT" ]; then
+    if [ "$vcpkgDisableMetrics" = "ON" ]; then
+        args="-disableMetrics"
+    else
+        args=""
+    fi
+
+    vcpkgRootDir=$(cygpath -aw "$vcpkgRootDir")
+    cmd "/C $vcpkgRootDir\\bootstrap-vcpkg.bat $args" || exit 1
+    exit 0
+fi
 
 if [ -z ${VCPKG_DOWNLOADS+x} ]; then
     downloadsDir="$vcpkgRootDir/downloads"
@@ -250,9 +256,15 @@ rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 
 if ! [ "$vcpkgDisableMetrics" = "ON" ]; then
-    echo "Telemetry"
-    echo "---------"
-    echo "vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running bootstrap-vcpkg.sh with -disableMetrics"
-    echo "Read more about vcpkg telemetry at docs/about/privacy.md"
-    echo ""
+    cat <<EOF
+Telemetry
+---------
+vcpkg collects usage data in order to help us improve your experience.
+The data collected by Microsoft is anonymous.
+You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
+passing --disable-metrics to vcpkg on the command line,
+or by setting the VCPKG_DISABLE_METRICS environment variable.
+
+Read more about vcpkg telemetry at docs/about/privacy.md
+EOF
 fi

@@ -1,9 +1,10 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.version.h>
 #include <vcpkg/help.h>
 #include <vcpkg/metrics.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 #define STRINGIFY(...) #__VA_ARGS__
 #define MACRO_TO_STRING(X) STRINGIFY(X)
@@ -32,7 +33,7 @@ namespace vcpkg::Commands::Version
 #ifndef NDEBUG
             + std::string("-debug")
 #endif
-            + std::string(Metrics::get_compiled_metrics_enabled() ? "" : "-external");
+            ;
         return S_VERSION;
     }
 
@@ -60,36 +61,46 @@ namespace vcpkg::Commands::Version
             {
                 if (maj1 != maj2 || min1 != min2 || rev1 != rev2)
                 {
+#if defined(_WIN32)
+                    auto bootstrap = ".\\bootstrap-vcpkg.bat";
+#else
+                    auto bootstrap = "./bootstrap-vcpkg.sh";
+#endif
                     System::printf(System::Color::warning,
                                    "Warning: Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
-                                   ".\\bootstrap-vcpkg.bat to update.\n",
+                                   "%s to update.\n",
                                    maj2,
                                    min2,
                                    rev2,
                                    maj1,
                                    min1,
-                                   rev1);
+                                   rev1,
+                                   bootstrap);
                 }
             }
         }
     }
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("version"),
+        create_example_string("version"),
         0,
         0,
         {},
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args)
+    void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem&)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
-
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         System::print2("Vcpkg package management program version ",
                        version(),
                        "\n"
                        "\n"
                        "See LICENSE.txt for license information.\n");
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void VersionCommand::perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs) const
+    {
+        Version::perform_and_exit(args, fs);
     }
 }

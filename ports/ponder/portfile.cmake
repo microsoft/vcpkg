@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO billyquith/ponder
@@ -8,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no-install-unused.patch
+        github-121.patch
 )
 
 vcpkg_configure_cmake(

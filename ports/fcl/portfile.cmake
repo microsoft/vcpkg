@@ -14,12 +14,19 @@ else()
     set(FCL_STATIC_LIBRARY OFF)
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(FCL_USE_X64_SSE ON)
+else()
+    set(FCL_USE_X64_SSE OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DFCL_STATIC_LIBRARY=${FCL_STATIC_LIBRARY}
         -DFCL_BUILD_TESTS=OFF
+        -DFCL_USE_X64_SSE=${FCL_USE_X64_SSE}
 )
 
 vcpkg_install_cmake()

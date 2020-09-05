@@ -1,4 +1,3 @@
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://archive.apache.org/dist/apr/apr-util-1.6.1.tar.bz2"
     FILENAME "apr-util-1.6.1.tar.bz2"
@@ -7,7 +6,6 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE ${ARCHIVE}
@@ -46,7 +44,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/apu.h "${APU_H}")
 
 else(VCPKG_TARGET_IS_WINDOWS)
-
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE ${ARCHIVE} 
@@ -70,7 +67,7 @@ else(VCPKG_TARGET_IS_WINDOWS)
         NO_DEBUG
         OPTIONS 
             "--prefix=${CURRENT_INSTALLED_DIR}"
-            "--with-apr=${CURRENT_INSTALLED_DIR}"
+            "--with-apr=${CURRENT_INSTALLED_DIR}/tools/apr"
             "--with-openssl=${CURRENT_INSTALLED_DIR}"
             "-with-expat=${CURRENT_INSTALLED_DIR}"
             "${CONFIGURE_PARAMETER_1}"

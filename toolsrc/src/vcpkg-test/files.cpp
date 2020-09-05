@@ -1,13 +1,13 @@
 #include <catch2/catch.hpp>
-#include <vcpkg-test/util.h>
 
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/strings.h>
 
 #include <iostream>
 #include <random>
-
 #include <vector>
+
+#include <vcpkg-test/util.h>
 
 using vcpkg::Test::AllowSymlinks;
 using vcpkg::Test::base_temporary_directory;
@@ -38,21 +38,21 @@ namespace
     struct MaxDepth
     {
         std::uint64_t i;
-        explicit MaxDepth(std::uint64_t i) : i(i) {}
+        explicit MaxDepth(std::uint64_t i) : i(i) { }
         operator uint64_t() const { return i; }
     };
 
     struct Width
     {
         std::uint64_t i;
-        explicit Width(std::uint64_t i) : i(i) {}
+        explicit Width(std::uint64_t i) : i(i) { }
         operator uint64_t() const { return i; }
     };
 
     struct CurrentDepth
     {
         std::uint64_t i;
-        explicit CurrentDepth(std::uint64_t i) : i(i) {}
+        explicit CurrentDepth(std::uint64_t i) : i(i) { }
         operator uint64_t() const { return i; }
         CurrentDepth incremented() const { return CurrentDepth{i + 1}; }
     };
@@ -125,7 +125,7 @@ namespace
         {
             // regular symlink
             auto base_link = base;
-            base_link.replace_filename(base.filename().u8string() + "-orig");
+            base_link.replace_filename(fs::u8string(base.filename()) + "-orig");
             fs.write_contents(base_link, "", ec);
             CHECK_EC_ON_FILE(base_link, ec);
             vcpkg::Test::create_symlink(base_link, base, ec);
@@ -153,6 +153,25 @@ namespace
 
         return fs;
     }
+}
+
+TEST_CASE ("fs::combine works correctly", "[filesystem][files]")
+{
+    using namespace fs;
+    using namespace vcpkg::Files;
+    CHECK(combine(u8path("/a/b"), u8path("c/d")) == u8path("/a/b/c/d"));
+    CHECK(combine(u8path("a/b"), u8path("c/d")) == u8path("a/b/c/d"));
+    CHECK(combine(u8path("/a/b"), u8path("/c/d")) == u8path("/c/d"));
+
+#if defined(_WIN32)
+    CHECK(combine(u8path("C:/a/b"), u8path("c/d")) == u8path("C:/a/b/c/d"));
+    CHECK(combine(u8path("C:a/b"), u8path("c/d")) == u8path("C:a/b/c/d"));
+    CHECK(combine(u8path("C:a/b"), u8path("/c/d")) == u8path("C:/c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("/c/d")) == u8path("C:/c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("D:/c/d")) == u8path("D:/c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("D:c/d")) == u8path("D:c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("C:c/d")) == u8path("C:/a/b/c/d"));
+#endif
 }
 
 TEST_CASE ("remove all", "[files]")

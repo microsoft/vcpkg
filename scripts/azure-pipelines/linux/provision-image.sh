@@ -5,12 +5,45 @@
 
 sudo apt -y update
 sudo apt -y dist-upgrade
-# Install common build dependencies and partitioning tools
-sudo apt -y install at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils build-essential g++ zip libx11-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config
-# Required by qt5-x11extras
-sudo apt -y install libxkbcommon-dev libxkbcommon-x11-dev
-# Required by libhdfs3
-sudo apt -y install libkrb5-dev
+# Install common build dependencies
+APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
+  build-essential g++ gfortran zip libx11-dev libxkbcommon-x11-dev libxi-dev \
+  libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev \
+  libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml \
+  flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
+  xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config"
+
+# Additionally required by qt5-base
+APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
+  libxcb1-dev libx11-xcb-dev libxcb-glx0-dev"
+
+# Additionally required by qt5-base for qt5-x11extras
+APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
+  libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev \
+  libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
+  libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
+
+# Additionally required by libhdfs3
+APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
+
+# Additionally required by mesa
+APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
+
+# Additionally required by some packages to install additional python packages
+APT_PACKAGES="$APT_PACKAGES python3-pip"
+
+# Additionally required/installed by Azure DevOps Scale Set Agents
+APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu60"
+
+sudo apt -y install $APT_PACKAGES
+
+# Delete /etc/debian_version to prevent Azure Pipelines Scale Set Agents from
+# removing some of the above
+sudo apt-mark hold libcurl4
+sudo apt-mark hold liblttng-ust0
+sudo apt-mark hold libkrb5-3
+sudo apt-mark hold zlib1g
+sudo apt-mark hold libicu60
 
 # Install newer version of nasm than the apt package, required by intel-ipsec
 mkdir /tmp/nasm
@@ -34,7 +67,6 @@ sudo dpkg -i nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
 sudo apt -y update
 sudo apt install -y --no-install-recommends cuda-compiler-10-2 cuda-libraries-dev-10-2 cuda-driver-dev-10-2 cuda-cudart-dev-10-2 libcublas10 cuda-curand-dev-10-2
 sudo apt install -y --no-install-recommends libcudnn7-dev
-sudo ln -s /usr/local/cuda-10.1/lib64/stubs/libcuda.so /usr/local/cuda-10.1/lib64/stubs/libcuda.so.1
 
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
@@ -42,6 +74,11 @@ sudo dpkg -i packages-microsoft-prod.deb
 sudo apt update
 sudo add-apt-repository universe
 sudo apt install -y powershell
+
+if [ -z "$StorageAccountName" ]; then
+echo "No storage account supplied, skipping."
+else
+echo "Mapping storage account"
 
 # Write SMB credentials
 sudo mkdir /etc/smbcredentials
@@ -53,19 +90,4 @@ sudo chmod 600 $smbCredentialFile
 # Mount the archives SMB share to /archives
 sudo mkdir /archives -m=777
 echo "//$StorageAccountName.file.core.windows.net/archives /archives cifs nofail,vers=3.0,credentials=$smbCredentialFile,serverino,dir_mode=0777,file_mode=0777 0 0" | sudo tee -a /etc/fstab
-
-# Create 'home' directory for haskell stack bits that want this
-sudo mkdir -p /home/root -m=777
-
-# Delete /etc/debian_version to prevent Azure Pipelines Scale Set Agents from removing some of the above
-sudo rm /etc/debian_version
-
-# Install dependencies that the Azure Pipelines agent will want later to make launching VMs faster
-# https://docs.microsoft.com/en-us/dotnet/core/install/dependencies?tabs=netcore31&pivots=os-linux
-# (we assume libssl1.0.0 or equivalent is already installed to not accidentially change SSL certs)
-apt install -y liblttng-ust0 libkrb5-3 zlib1g libicu60
-
-# Create work trees for the Azure Pipelines agent so that it puts its work tree into temporary storage.
-sudo chmod 777 /mnt
-sudo mkdir /agent -m=777
-sudo ln -s /mnt /agent/_work
+fi

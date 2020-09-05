@@ -13,13 +13,14 @@ The first paragraph in a `CONTROL` file is the Source paragraph.  It must have a
 ### Examples:
 ```no-highlight
 Source: ace
-Version: 6.5.5-1
+Version: 6.5.5
 Description: The ADAPTIVE Communication Environment
 ```
 
 ```no-highlight
 Source: vtk
-Version: 8.2.0-2
+Version: 8.2.0
+Port-Version: 2
 Description: Software system for 3D computer graphics, image processing, and visualization
 Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora, atlmfc (windows), eigen3, double-conversion, pugixml, libharu, sqlite3, netcdf-c
 ```
@@ -39,7 +40,7 @@ Package collections to check for conflicts:
 + [Packages search](https://pkgs.org/)
 
 #### Version
-The port version.
+The library version.
 
 This field is an alphanumeric string that may also contain `.`, `_`, or `-`. No attempt at ordering versions is made; all versions are treated as bit strings and are only evaluated for equality.
 
@@ -47,7 +48,6 @@ For tagged-release ports, we follow the following convention:
 
 1. If the port follows a scheme like `va.b.c`, we remove the leading `v`. In this case, it becomes `a.b.c`.
 2. If the port includes its own name in the version like `curl-7_65_1`, we remove the leading name: `7_65_1`
-3. If the port has been modified, we append a `-N` to distinguish the versions: `1.2.1-4`
 
 For rolling-release ports, we use the date that the _commit was accessed by you_, formatted as `YYYY-MM-DD`. Stated another way: if someone had a time machine and went to that date, they would see this commit as the latest master.
 
@@ -56,11 +56,17 @@ For example, given:
 2. The current version string is `2019-02-14-1`
 3. Today's date is 2019-06-01.
 
-Then if you update the source version today, you should give it version `2019-06-01`. If you need to make a change which doesn't adjust the source version, you should give it version `2019-02-14-2`.
+Then if you update the source version today, you should give it version `2019-06-01`.
+
+#### Port-Version
+The version of the port.
+
+This field is a non-negative integer. It allows one to version the port file separately from the version of the underlying library; if you make a change to a port, without changing the underlying version of the library, you should increment this field by one (starting at `0`, which is equivalent to no `Port-Version` field). When the version of the underlying library is upgraded, this field should be set back to `0` (i.e., delete the `Port-Version` field).
 
 ##### Examples:
 ```no-highlight
-Version: 1.0.5-2
+Version: 1.0.5
+Port-Version: 2
 ```
 ```no-highlight
 Version: 2019-03-21
@@ -77,7 +83,7 @@ Description: C++ header-only JSON library
 ```
 ```no-highlight
 Description: Mosquitto is an open source message broker that implements the MQ Telemetry Transport protocol versions 3.1 and 3.1.1.
-  MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it suitable for "machine 
+  MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it suitable for "machine
   to machine" messaging such as with low power sensors or mobile devices such as phones, embedded computers or microcontrollers like the Arduino.
 ````
 
@@ -138,6 +144,8 @@ The predefined expressions are computed from standard triplet settings:
 - `osx` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Darwin"`
 - `android` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Android"`
 - `static` - `VCPKG_LIBRARY_LINKAGE` == `"static"`
+- `wasm32` - `VCPKG_TARGET_ARCHITECTURE` == `"wasm32"`
+- `emscripten` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Emscripten"`
 
 These predefined expressions can be overridden in the triplet file via the [`VCPKG_DEP_INFO_OVERRIDE_VARS`](../users/triplets.md) option.
 
@@ -171,7 +179,7 @@ Build-Depends: qt5
 
 Feature: mpi
 Description: MPI functionality for VTK
-Build-Depends: msmpi, hdf5[parallel]
+Build-Depends: mpi, hdf5[parallel]
 
 Feature: python
 Description: Python functionality for VTK

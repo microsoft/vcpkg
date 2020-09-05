@@ -7,9 +7,6 @@ Configure configure for Debug and Release builds of a project.
 vcpkg_configure_make(
     SOURCE_PATH <${SOURCE_PATH}>
     [AUTOCONFIG]
-    [DISABLE_AUTO_HOST]
-    [DISABLE_AUTO_DST]
-    [GENERATOR]
     [NO_DEBUG]
     [SKIP_CONFIGURE]
     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
@@ -28,10 +25,6 @@ By convention, this is usually set in the portfile as the variable `SOURCE_PATH`
 ### PROJECT_SUBPATH
 Specifies the directory containing the ``configure`/`configure.ac`.
 By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-Should use `GENERATOR NMake` first.
-
-### NO_DEBUG
-This port doesn't support debug mode.
 
 ### SKIP_CONFIGURE
 Skip configure process
@@ -39,21 +32,8 @@ Skip configure process
 ### AUTOCONFIG
 Need to use autoconfig to generate configure file.
 
-### DISABLE_AUTO_HOST
-Don't set host automatically, the default value is `i686`.
-If use this option, you will need to set host manually.
-
-### DISABLE_AUTO_DST
-Don't set installation path automatically, the default value is `${CURRENT_PACKAGES_DIR}` and `${CURRENT_PACKAGES_DIR}/debug`
-If use this option, you will need to set dst path manually.
-
-### GENERATOR
-Specifies the precise generator to use.
-NMake: nmake(windows) make(unix)
-MAKE: make(windows) make(unix)
-
 ### PRERUN_SHELL
-Script that needs to be called before configuration
+Script that needs to be called before configuration (do not use for batch files which simply call autoconf or configure)
 
 ### OPTIONS
 Additional options passed to configure during the configuration.

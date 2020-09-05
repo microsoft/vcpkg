@@ -15,6 +15,7 @@ vcpkg_from_github(
         disable_test_and_example.patch
         fix-dependency-libbson.patch
         fix-dependency-mongocdriver.patch
+        github-654.patch
 )
 
 if ("mnmlstc" IN_LIST FEATURES)
