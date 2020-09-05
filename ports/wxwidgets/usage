@@ -1,0 +1,5 @@
+The package wxwidgets provides CMake integration:
+
+    find_package(wxWidgets REQUIRED)
+    target_link_libraries(foo PRIVATE ${wxWidgets_LIBRARIES})
+    target_include_directories(foo PRIVATE ${wxWidgets_INCLUDE_DIRS})
