@@ -698,9 +698,9 @@ namespace vcpkg::Install
                 {
                     auto config_it = config_files.find(library_target_pair.first);
                     if (config_it != config_files.end())
-                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n ");
+                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n");
                     else
-                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n ");
+                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n");
 
                     std::sort(library_target_pair.second.begin(),
                               library_target_pair.second.end(),
