@@ -49,6 +49,7 @@ namespace vcpkg
             {VcpkgCmdArguments::BINARY_CACHING_FEATURE, args.binary_caching},
             {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, args.manifest_mode},
             {VcpkgCmdArguments::COMPILER_TRACKING_FEATURE, args.compiler_tracking},
+            {VcpkgCmdArguments::REGISTRIES_FEATURE, args.registries_feature},
         };
 
         for (const auto& desc : flag_descriptions)
@@ -730,6 +731,7 @@ namespace vcpkg
             {BINARY_CACHING_FEATURE, binary_caching},
             {MANIFEST_MODE_FEATURE, manifest_mode},
             {COMPILER_TRACKING_FEATURE, compiler_tracking},
+            {REGISTRIES_FEATURE, registries_feature},
         };
 
         for (const auto& flag : flags)
@@ -754,6 +756,7 @@ namespace vcpkg
         } flags[] = {
             {BINARY_CACHING_FEATURE, binary_caching_enabled()},
             {COMPILER_TRACKING_FEATURE, compiler_tracking_enabled()},
+            {REGISTRIES_FEATURE, registries_enabled()},
         };
 
         for (const auto& flag : flags)
@@ -853,4 +856,46 @@ namespace vcpkg
         }
         m_str.append(line_start, best_break);
     }
+
+    // out-of-line definitions since C++14 doesn't allow inline constexpr static variables
+    constexpr StringLiteral VcpkgCmdArguments::VCPKG_ROOT_DIR_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::VCPKG_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::MANIFEST_ROOT_DIR_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::BUILDTREES_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::DOWNLOADS_ROOT_DIR_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::DOWNLOADS_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::INSTALL_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::PACKAGES_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::SCRIPTS_ROOT_DIR_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::DEFAULT_VISUAL_STUDIO_PATH_ENV;
+
+    constexpr StringLiteral VcpkgCmdArguments::TRIPLET_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::TRIPLET_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::BINARY_SOURCES_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::DEBUG_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::SEND_METRICS_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::DISABLE_METRICS_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::DISABLE_METRICS_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::PRINT_METRICS_SWITCH;
+
+    constexpr StringLiteral VcpkgCmdArguments::WAIT_FOR_LOCK_SWITCH;
+
+    constexpr StringLiteral VcpkgCmdArguments::JSON_SWITCH;
+
+    constexpr StringLiteral VcpkgCmdArguments::FEATURE_FLAGS_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::FEATURE_FLAGS_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::FEATURE_PACKAGES_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::BINARY_CACHING_FEATURE;
+    constexpr StringLiteral VcpkgCmdArguments::BINARY_CACHING_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::COMPILER_TRACKING_FEATURE;
+    constexpr StringLiteral VcpkgCmdArguments::MANIFEST_MODE_FEATURE;
+    constexpr StringLiteral VcpkgCmdArguments::REGISTRIES_FEATURE;
 }

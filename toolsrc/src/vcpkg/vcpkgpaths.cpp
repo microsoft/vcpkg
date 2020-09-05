@@ -8,9 +8,12 @@
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/configuration.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/registries.h>
+#include <vcpkg/sourceparagraph.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -81,6 +84,141 @@ namespace
 
 namespace vcpkg
 {
+    static Configuration deserialize_configuration(const Json::Object& obj, const VcpkgCmdArguments& args)
+    {
+        Json::BasicReaderError err;
+        Json::Reader reader{&err};
+        auto deserializer = ConfigurationDeserializer(args);
+
+        auto parsed_config_opt = reader.visit_value(obj, "$", deserializer);
+        if (err.has_error())
+        {
+            if (!err.missing_fields.empty())
+            {
+                System::print2(System::Color::error, "Error: missing fields in configuration:\n");
+                for (const auto& missing : err.missing_fields)
+                {
+                    System::printf(
+                        System::Color::error, "    %s was expected to have: %s\n", missing.first, missing.second);
+                }
+            }
+            if (!err.expected_types.empty())
+            {
+                System::print2(System::Color::error, "Error: Invalid types in configuration:\n");
+                for (const auto& expected : err.expected_types)
+                {
+                    System::printf(
+                        System::Color::error, "    %s was expected to be %s\n", expected.first, expected.second);
+                }
+            }
+            if (!err.extra_fields.empty())
+            {
+                System::print2(System::Color::error, "Error: Invalid fields in configuration:\n");
+                for (const auto& extra : err.extra_fields)
+                {
+                    System::printf(System::Color::error,
+                                   "    %s had invalid fields: %s\n",
+                                   extra.first,
+                                   Strings::join(", ", extra.second));
+                }
+            }
+            if (!err.mutually_exclusive_fields.empty())
+            {
+                // this should never happen
+                Checks::unreachable(VCPKG_LINE_INFO);
+            }
+
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        return std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO);
+    }
+
+    struct ManifestAndConfig
+    {
+        fs::path config_directory;
+        Configuration config;
+    };
+
+    static std::pair<Json::Object, Json::JsonStyle> load_manifest(const Files::Filesystem& fs,
+                                                                  const fs::path& manifest_dir)
+    {
+        std::error_code ec;
+        auto manifest_path = manifest_dir / fs::u8path("vcpkg.json");
+        auto manifest_opt = Json::parse_file(fs, manifest_path, ec);
+        if (ec)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Failed to load manifest from directory %s: %s",
+                                      fs::u8string(manifest_dir),
+                                      ec.message());
+        }
+
+        if (!manifest_opt.has_value())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Failed to parse manifest at %s: %s",
+                                      fs::u8string(manifest_path),
+                                      manifest_opt.error()->format());
+        }
+        auto manifest_value = std::move(manifest_opt).value_or_exit(VCPKG_LINE_INFO);
+
+        if (!manifest_value.first.is_object())
+        {
+            System::print2(System::Color::error,
+                           "Failed to parse manifest at ",
+                           fs::u8string(manifest_path),
+                           ": Manifest files must have a top-level object\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        return {std::move(manifest_value.first.object()), std::move(manifest_value.second)};
+    }
+
+    struct ConfigAndPath
+    {
+        fs::path config_directory;
+        Configuration config;
+    };
+
+    // doesn't yet implement searching upwards for configurations, nor inheritance of configurations
+    static ConfigAndPath load_configuration(const Files::Filesystem& fs,
+                                            const VcpkgCmdArguments& args,
+                                            const fs::path& vcpkg_root,
+                                            const fs::path& manifest_dir)
+    {
+        fs::path config_dir;
+
+        if (!manifest_dir.empty())
+        {
+            // manifest mode
+            config_dir = manifest_dir;
+        }
+        else
+        {
+            // classic mode
+            config_dir = vcpkg_root;
+        }
+
+        auto path_to_config = config_dir / fs::u8path("vcpkg-configuration.json");
+        if (!fs.exists(path_to_config))
+        {
+            return {};
+        }
+
+        auto parsed_config = Json::parse_file(VCPKG_LINE_INFO, fs, path_to_config);
+        if (!parsed_config.first.is_object())
+        {
+            System::print2(System::Color::error,
+                           "Failed to parse ",
+                           fs::u8string(path_to_config),
+                           ": configuration files must have a top-level object\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        auto config_obj = std::move(parsed_config.first.object());
+
+        return {std::move(config_dir), deserialize_configuration(config_obj, args)};
+    }
+
     namespace details
     {
         struct VcpkgPathsImpl
@@ -104,6 +242,9 @@ namespace vcpkg
             Build::EnvCache m_env_cache;
 
             fs::SystemHandle file_lock_handle;
+
+            Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
+            Configuration m_config;
         };
     }
 
@@ -136,7 +277,7 @@ namespace vcpkg
         }
         else
         {
-            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, "vcpkg.json");
+            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, fs::u8path("vcpkg.json"));
         }
         uppercase_win32_drive_letter(manifest_root_dir);
 
@@ -162,6 +303,8 @@ namespace vcpkg
                 System::printf(System::Color::error, "    %s\n", ec.message());
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
+
+            m_pimpl->m_manifest_doc = load_manifest(filesystem, manifest_root_dir);
         }
         else
         {
@@ -197,6 +340,11 @@ If you wish to silence this error and use classic mode, you can:
             installed =
                 process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
         }
+
+        auto config_file = load_configuration(filesystem, args, root, manifest_root_dir);
+
+        config_root_dir = std::move(config_file.config_directory);
+        m_pimpl->m_config = std::move(config_file.config);
 
         buildtrees =
             process_output_directory(filesystem, root, args.buildtrees_root_dir.get(), "buildtrees", VCPKG_LINE_INFO);
@@ -335,6 +483,20 @@ If you wish to silence this error and use classic mode, you can:
     {
         return m_pimpl->m_tool_cache->get_tool_version(*this, tool);
     }
+
+    Optional<const Json::Object&> VcpkgPaths::get_manifest() const
+    {
+        if (auto p = m_pimpl->m_manifest_doc.get())
+        {
+            return p->first;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+
+    const Configuration& VcpkgPaths::get_configuration() const { return m_pimpl->m_config; }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {

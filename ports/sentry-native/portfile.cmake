@@ -12,12 +12,20 @@ vcpkg_extract_source_archive_ex(
     NO_REMOVE_ONE_LEVEL
 )
 
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(SENTRY_NATIVE_C_STANDARD 99)
+else()
+    set(SENTRY_NATIVE_C_STANDARD 11)
+endif()
+
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
+        -DCMAKE_C_STANDARD=${SENTRY_NATIVE_C_STANDARD}
 )
 
 vcpkg_install_cmake()
@@ -26,7 +34,7 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry-native/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry)
 
 if (WIN32)
     vcpkg_copy_tools(
