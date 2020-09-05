@@ -287,8 +287,8 @@ namespace vcpkg::Json
         underlying_t underlying_;
     };
 
-    VCPKG_MSVC_WARNING(push);
-    VCPKG_MSVC_WARNING(disable : 4505);
+    VCPKG_MSVC_WARNING(push)
+    VCPKG_MSVC_WARNING(disable : 4505)
 
     template<class Type>
     Span<const StringView> IDeserializer<Type>::valid_fields() const
@@ -332,7 +332,7 @@ namespace vcpkg::Json
         return nullopt;
     }
 
-    VCPKG_MSVC_WARNING(pop);
+    VCPKG_MSVC_WARNING(pop)
 
     struct ReaderError
     {
