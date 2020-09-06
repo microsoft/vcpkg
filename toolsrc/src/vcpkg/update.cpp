@@ -80,7 +80,7 @@ namespace vcpkg::Update
 #else
             auto vcpkg_cmd = "./vcpkg";
 #endif
-            System::print2("\n"
+            System::printf("\n"
                            "To update these packages and all dependencies, run\n"
                            "    %s upgrade\n"
                            "\n"
