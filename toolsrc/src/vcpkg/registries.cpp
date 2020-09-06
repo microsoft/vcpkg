@@ -1,7 +1,9 @@
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/jsonreader.h>
 
+#include <vcpkg/configurationparser.h>
 #include <vcpkg/registries.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace
 {

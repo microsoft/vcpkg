@@ -2,6 +2,7 @@
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/configuration.h>
+#include <vcpkg/configurationparser.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
