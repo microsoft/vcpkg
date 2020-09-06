@@ -94,6 +94,13 @@ namespace vcpkg::Strings
         return ret;
     }
 
+    template<class... Args>
+    [[nodiscard]] std::string concat(std::string&& first, const Args&... args)
+    {
+        append(first, args...);
+        return std::move(first);
+    }
+
     template<class... Args, class = void>
     std::string concat_or_view(const Args&... args)
     {
@@ -286,4 +293,6 @@ namespace vcpkg::Strings
 
     // base 32 encoding, following IETC RFC 4648
     std::string b32_encode(std::uint64_t x) noexcept;
+
+    size_t byte_edit_distance(StringView a, StringView b);
 }

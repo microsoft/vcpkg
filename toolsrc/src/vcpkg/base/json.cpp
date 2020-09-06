@@ -1300,10 +1300,17 @@ namespace vcpkg::Json
     {
         m_errors.push_back(Strings::concat(path(), ": mismatched type: expected ", expected_type));
     }
-    void Reader::add_extra_fields_error(StringView type, std::vector<std::string>&& fields)
+    void Reader::add_extra_field_error(StringView type, StringView field, StringView suggestion)
     {
-        for (auto&& field : fields)
+        if (suggestion.size() > 0)
+        {
+            m_errors.push_back(Strings::concat(
+                path(), " (", type, "): ", "unexpected field '", field, "\', did you mean \'", suggestion, "\'?"));
+        }
+        else
+        {
             m_errors.push_back(Strings::concat(path(), " (", type, "): ", "unexpected field '", field, '\''));
+        }
     }
 
     void Reader::check_for_unexpected_fields(const Object& obj,
@@ -1316,9 +1323,20 @@ namespace vcpkg::Json
         }
 
         auto extra_fields = invalid_json_fields(obj, valid_fields);
-        if (!extra_fields.empty())
+        for (auto&& f : extra_fields)
         {
-            add_extra_fields_error(type_name.to_string(), std::move(extra_fields));
+            size_t best_index = 0;
+            auto best_value = Strings::byte_edit_distance(f, valid_fields[0]);
+            for (size_t i = 1; i < valid_fields.size(); ++i)
+            {
+                auto v = Strings::byte_edit_distance(f, valid_fields[i]);
+                if (v < best_value)
+                {
+                    best_value = v;
+                    best_index = i;
+                }
+            }
+            add_extra_field_error(type_name.to_string(), f, valid_fields[best_index]);
         }
     }
 

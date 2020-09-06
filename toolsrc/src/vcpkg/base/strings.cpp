@@ -258,6 +258,43 @@ bool Strings::contains(StringView haystack, StringView needle)
     return Strings::search(haystack, needle) != haystack.end();
 }
 
+size_t Strings::byte_edit_distance(StringView a, StringView b)
+{
+    static constexpr size_t max_string_size = 100;
+    // For large strings, give up early to avoid performance problems
+    if (a.size() > max_string_size || b.size() > max_string_size)
+    {
+        if (a == b)
+            return 0;
+        else
+            return std::max(a.size(), b.size());
+    }
+    if (a.size() == 0 || b.size() == 0) return std::max(a.size(), b.size());
+
+    auto pa = a.data();
+    auto pb = b.data();
+    auto sa = a.size();
+    auto sb = b.size();
+
+    // Levenshtein distance
+    char d[max_string_size];
+    d[0] = pa[0] != pb[0];
+    for (int i = 1; i < sa; ++i)
+        d[i] = static_cast<char>(std::min(d[i - 1] + 1, i + (pa[i] != pb[0])));
+
+    for (int j = 1; j < sb; ++j)
+    {
+        char diag = d[0];
+        d[0] = static_cast<char>(std::min(d[0] + 1, j + (pa[0] != pb[j])));
+        for (int i = 1; i < sa; ++i)
+        {
+            auto subst_or_add = std::min(d[i - 1] + 1, diag + (pa[i] != pb[j]));
+            d[i] = static_cast<char>(std::min((diag = d[i]) + 1, subst_or_add));
+        }
+    }
+    return d[sa - 1];
+}
+
 namespace vcpkg::Strings
 {
     namespace

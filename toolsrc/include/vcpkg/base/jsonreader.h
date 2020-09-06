@@ -16,7 +16,7 @@ namespace vcpkg::Json
 
         void add_missing_field_error(StringView type, StringView key, StringView key_type);
         void add_expected_type_error(StringView expected_type);
-        void add_extra_fields_error(StringView type, std::vector<std::string>&& fields);
+        void add_extra_field_error(StringView type, StringView fields, StringView suggestion = {});
         template<class... Args>
         void add_generic_error(StringView type, Args&&... args)
         {

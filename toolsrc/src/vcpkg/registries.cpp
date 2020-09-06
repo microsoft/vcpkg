@@ -61,7 +61,7 @@ namespace vcpkg
         {
             if (obj.contains(PATH))
             {
-                r.add_extra_fields_error("a builtin registry", {PATH});
+                r.add_extra_field_error("a builtin registry", PATH);
             }
             return static_cast<std::unique_ptr<RegistryImpl>>(std::make_unique<BuiltinRegistry>());
         }
