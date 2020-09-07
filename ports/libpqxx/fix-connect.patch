@@ -1,0 +1,12 @@
+diff --git a/src/connection.cxx b/src/connection.cxx
+index 32bddb3..52a7832 100644
+--- a/src/connection.cxx
++++ b/src/connection.cxx
+@@ -61,7 +61,6 @@ extern "C"
+ }
+ 
+ #include "pqxx/binarystring"
+-#include "pqxx/config-internal-libpq.h"
+ #include "pqxx/nontransaction"
+ #include "pqxx/notification"
+ #include "pqxx/pipeline"
