@@ -34,6 +34,11 @@ namespace vcpkg
 
     StringView RegistryImplDeserializer::type_name() const { return "a registry"; }
 
+    constexpr StringLiteral RegistryImplDeserializer::KIND;
+    constexpr StringLiteral RegistryImplDeserializer::PATH;
+    constexpr StringLiteral RegistryImplDeserializer::KIND_BUILTIN;
+    constexpr StringLiteral RegistryImplDeserializer::KIND_DIRECTORY;
+
     Span<const StringView> RegistryImplDeserializer::valid_fields() const
     {
         static const StringView t[] = {KIND, PATH};
@@ -75,6 +80,8 @@ namespace vcpkg
     }
 
     StringView RegistryDeserializer::type_name() const { return "a registry"; }
+
+    constexpr StringLiteral RegistryDeserializer::PACKAGES;
 
     Span<const StringView> RegistryDeserializer::valid_fields() const
     {
