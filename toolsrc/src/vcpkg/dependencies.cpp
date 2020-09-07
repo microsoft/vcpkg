@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/strings.h>
@@ -49,8 +47,8 @@ namespace vcpkg::Dependencies
         /// </summary>
         struct Cluster : Util::MoveOnlyBase
         {
-            Cluster(const InstalledPackageView& ipv, const SourceControlFileLocation& scfl)
-                : m_spec(ipv.spec()), m_scfl(scfl), m_installed(ipv)
+            Cluster(const InstalledPackageView& ipv, ExpectedS<const SourceControlFileLocation&>&& scfl)
+                : m_spec(ipv.spec()), m_scfl(std::move(scfl)), m_installed(ipv)
             {
             }
 
@@ -91,7 +89,7 @@ namespace vcpkg::Dependencies
                     if (!info.defaults_requested)
                     {
                         info.defaults_requested = true;
-                        for (auto&& f : m_scfl.source_control_file->core_paragraph->default_features)
+                        for (auto&& f : get_scfl_or_exit().source_control_file->core_paragraph->default_features)
                             out_new_dependencies.emplace_back(m_spec, f);
                     }
                     return;
@@ -104,7 +102,8 @@ namespace vcpkg::Dependencies
                 }
                 auto maybe_vars = var_provider.get_dep_info_vars(m_spec);
                 const std::vector<Dependency>* qualified_deps =
-                    &m_scfl.source_control_file->find_dependencies_for_feature(feature).value_or_exit(VCPKG_LINE_INFO);
+                    &get_scfl_or_exit().source_control_file->find_dependencies_for_feature(feature).value_or_exit(
+                        VCPKG_LINE_INFO);
 
                 std::vector<FeatureSpec> dep_list;
                 if (auto vars = maybe_vars.get())
@@ -162,13 +161,13 @@ namespace vcpkg::Dependencies
 
                 if (defaults_requested)
                 {
-                    for (auto&& def_feature : m_scfl.source_control_file->core_paragraph->default_features)
+                    for (auto&& def_feature : get_scfl_or_exit().source_control_file->core_paragraph->default_features)
                         out_reinstall_requirements.emplace_back(m_spec, def_feature);
                 }
                 else if (request_type != RequestType::USER_REQUESTED)
                 {
                     // If the user did not explicitly request this installation, we need to add all new default features
-                    auto&& new_defaults = m_scfl.source_control_file->core_paragraph->default_features;
+                    auto&& new_defaults = get_scfl_or_exit().source_control_file->core_paragraph->default_features;
                     std::set<std::string> defaults_set{new_defaults.begin(), new_defaults.end()};
 
                     // Install only features that were not previously available
@@ -189,8 +188,26 @@ namespace vcpkg::Dependencies
                 }
             }
 
+            const SourceControlFileLocation& get_scfl_or_exit() const
+            {
+#if defined(_WIN32)
+                static auto vcpkg_remove_cmd = ".\\vcpkg";
+#else
+                static auto vcpkg_remove_cmd = "./vcpkg";
+#endif
+                if (!m_scfl)
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO,
+                        "Error: while loading control file for %s: %s.\nPlease run \"%s remove %s\" and re-attempt.",
+                        m_spec,
+                        m_scfl.error(),
+                        vcpkg_remove_cmd,
+                        m_spec);
+                return *m_scfl.get();
+            }
+
             PackageSpec m_spec;
-            const SourceControlFileLocation& m_scfl;
+            ExpectedS<const SourceControlFileLocation&> m_scfl;
 
             Optional<ClusterInstalled> m_installed;
             Optional<ClusterInstallInfo> m_install_info;
@@ -260,18 +277,10 @@ namespace vcpkg::Dependencies
                 ExpectedS<const SourceControlFileLocation&> maybe_scfl =
                     m_port_provider.get_control_file(ipv.spec().name());
 
-                if (!maybe_scfl)
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO,
-                        "Error: while loading %s: %s.\nPlease run \"vcpkg remove %s\" and re-attempt.",
-                        ipv.spec().to_string(),
-                        maybe_scfl.error(),
-                        ipv.spec().to_string());
-
                 return m_graph
                     .emplace(std::piecewise_construct,
                              std::forward_as_tuple(ipv.spec()),
-                             std::forward_as_tuple(ipv, *maybe_scfl.get()))
+                             std::forward_as_tuple(ipv, std::move(maybe_scfl)))
                     .first->second;
             }
 
@@ -304,16 +313,16 @@ namespace vcpkg::Dependencies
                                         const fs::path& install_port_path,
                                         const fs::path& default_port_path)
     {
-        if (!default_port_path.empty() &&
-            !Strings::case_insensitive_ascii_starts_with(install_port_path.u8string(), default_port_path.u8string()))
+        if (!default_port_path.empty() && !Strings::case_insensitive_ascii_starts_with(fs::u8string(install_port_path),
+                                                                                       fs::u8string(default_port_path)))
         {
             const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
             switch (request_type)
             {
                 case RequestType::AUTO_SELECTED:
-                    return Strings::format("  * %s%s -- %s", s, from_head, install_port_path.u8string());
+                    return Strings::format("  * %s%s -- %s", s, from_head, fs::u8string(install_port_path));
                 case RequestType::USER_REQUESTED:
-                    return Strings::format("    %s%s -- %s", s, from_head, install_port_path.u8string());
+                    return Strings::format("    %s%s -- %s", s, from_head, fs::u8string(install_port_path));
                 default: Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
@@ -417,6 +426,11 @@ namespace vcpkg::Dependencies
             }
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
+    }
+    bool InstallPlanAction::has_package_abi() const
+    {
+        if (!abi_info) return false;
+        return !abi_info.get()->package_abi.empty();
     }
     const Build::PreBuildInfo& InstallPlanAction::pre_build_info(LineInfo linfo) const
     {
@@ -594,6 +608,70 @@ namespace vcpkg::Dependencies
         m_graph->get(spec).request_type = RequestType::USER_REQUESTED;
     }
 
+    // `features` should have "default" instead of missing "core"
+    std::vector<FullPackageSpec> resolve_deps_as_top_level(const SourceControlFile& scf,
+                                                           Triplet triplet,
+                                                           std::vector<std::string> features,
+                                                           CMakeVars::CMakeVarProvider& var_provider)
+    {
+        PackageSpec spec{scf.core_paragraph->name, triplet};
+        std::map<std::string, std::vector<std::string>> specs_to_features;
+
+        Optional<const PlatformExpression::Context&> ctx_storage = var_provider.get_dep_info_vars(spec);
+        auto ctx = [&]() -> const PlatformExpression::Context& {
+            if (!ctx_storage)
+            {
+                var_provider.load_dep_info_vars({{spec}});
+                ctx_storage = var_provider.get_dep_info_vars(spec);
+            }
+            return ctx_storage.value_or_exit(VCPKG_LINE_INFO);
+        };
+
+        auto handle_deps = [&](View<Dependency> deps) {
+            for (auto&& dep : deps)
+            {
+                if (dep.platform.is_empty() || dep.platform.evaluate(ctx()))
+                {
+                    if (dep.name == spec.name())
+                        Util::Vectors::append(&features, dep.features);
+                    else
+                        Util::Vectors::append(&specs_to_features[dep.name], dep.features);
+                }
+            }
+        };
+
+        handle_deps(scf.core_paragraph->dependencies);
+        enum class State
+        {
+            NotVisited = 0,
+            Visited,
+        };
+        std::map<std::string, State> feature_state;
+        while (!features.empty())
+        {
+            auto feature = std::move(features.back());
+            features.pop_back();
+
+            if (feature_state[feature] == State::Visited) continue;
+            feature_state[feature] = State::Visited;
+            if (feature == "default")
+            {
+                Util::Vectors::append(&features, scf.core_paragraph->default_features);
+            }
+            else
+            {
+                auto it =
+                    Util::find_if(scf.feature_paragraphs, [&feature](const std::unique_ptr<FeatureParagraph>& ptr) {
+                        return ptr->name == feature;
+                    });
+                if (it != scf.feature_paragraphs.end()) handle_deps(it->get()->dependencies);
+            }
+        }
+        return Util::fmap(specs_to_features, [triplet](std::pair<const std::string, std::vector<std::string>>& p) {
+            return FullPackageSpec({p.first, triplet}, Util::sort_unique_erase(std::move(p.second)));
+        });
+    }
+
     ActionPlan create_feature_install_plan(const PortFileProvider::PortFileProvider& port_provider,
                                            const CMakeVars::CMakeVarProvider& var_provider,
                                            const std::vector<FullPackageSpec>& specs,
@@ -628,16 +706,6 @@ namespace vcpkg::Dependencies
         pgraph.install(feature_specs);
 
         auto res = pgraph.serialize(options);
-
-        const auto is_manifest_spec = [](const auto& action) {
-            return action.spec.name() == PackageSpec::MANIFEST_NAME;
-        };
-
-        Util::erase_remove_if(res.install_actions, is_manifest_spec);
-
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !std::any_of(res.remove_actions.begin(), res.remove_actions.end(), is_manifest_spec),
-                           "\"default\" should never be installed");
 
         return res;
     }
@@ -696,14 +764,15 @@ namespace vcpkg::Dependencies
                     const std::vector<Dependency>* paragraph_depends = nullptr;
                     if (spec.feature() == "core")
                     {
-                        paragraph_depends = &clust.m_scfl.source_control_file->core_paragraph->dependencies;
+                        paragraph_depends = &clust.get_scfl_or_exit().source_control_file->core_paragraph->dependencies;
                     }
                     else if (spec.feature() == "default")
                     {
                     }
                     else
                     {
-                        auto maybe_paragraph = clust.m_scfl.source_control_file->find_feature(spec.feature());
+                        auto maybe_paragraph =
+                            clust.get_scfl_or_exit().source_control_file->find_feature(spec.feature());
                         Checks::check_exit(VCPKG_LINE_INFO,
                                            maybe_paragraph.has_value(),
                                            "Package %s does not have a %s feature",
@@ -879,8 +948,6 @@ namespace vcpkg::Dependencies
             // If a cluster only has an installed object and is marked as user requested we should still report it.
             if (auto info_ptr = p_cluster->m_install_info.get())
             {
-                auto&& scfl = p_cluster->m_scfl;
-
                 std::map<std::string, std::vector<FeatureSpec>> computed_edges;
                 for (auto&& kv : info_ptr->build_edges)
                 {
@@ -895,7 +962,8 @@ namespace vcpkg::Dependencies
                         auto&& dep_clust = m_graph->get(fspec.spec());
                         const auto& default_features = [&] {
                             if (dep_clust.m_install_info.has_value())
-                                return dep_clust.m_scfl.source_control_file->core_paragraph->default_features;
+                                return dep_clust.get_scfl_or_exit()
+                                    .source_control_file->core_paragraph->default_features;
                             if (auto p = dep_clust.m_installed.get()) return p->ipv.core->package.default_features;
                             Checks::unreachable(VCPKG_LINE_INFO);
                         }();
@@ -904,14 +972,15 @@ namespace vcpkg::Dependencies
                     }
                     computed_edges[kv.first].assign(fspecs.begin(), fspecs.end());
                 }
-
-                plan.install_actions.emplace_back(
-                    p_cluster->m_spec, scfl, p_cluster->request_type, std::move(computed_edges));
+                plan.install_actions.emplace_back(p_cluster->m_spec,
+                                                  p_cluster->get_scfl_or_exit(),
+                                                  p_cluster->request_type,
+                                                  std::move(computed_edges));
             }
             else if (p_cluster->request_type == RequestType::USER_REQUESTED && p_cluster->m_installed.has_value())
             {
                 auto&& installed = p_cluster->m_installed.value_or_exit(VCPKG_LINE_INFO);
-                plan.already_installed.emplace_back(Util::copy(installed.ipv), p_cluster->request_type);
+                plan.already_installed.emplace_back(InstalledPackageView(installed.ipv), p_cluster->request_type);
             }
         }
 

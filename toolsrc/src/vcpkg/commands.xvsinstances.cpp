@@ -1,9 +1,8 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.xvsinstances.h>
 #include <vcpkg/help.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/visualstudio.h>
 
 namespace vcpkg::Commands::X_VSInstances
@@ -29,7 +28,8 @@ namespace vcpkg::Commands::X_VSInstances
 
         Checks::exit_success(VCPKG_LINE_INFO);
 #else
-        Util::unused(args, paths);
+        (void)args;
+        (void)paths;
         Checks::exit_with_message(VCPKG_LINE_INFO, "This command is not supported on non-windows platforms.");
 #endif
     }

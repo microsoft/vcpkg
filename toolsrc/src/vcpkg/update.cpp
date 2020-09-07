@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.h>
@@ -55,7 +53,7 @@ namespace vcpkg::Update
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         System::print2("Using local portfile versions. To update the local portfiles, use `git pull`.\n");
 
         const StatusParagraphs status_db = database_load_check(paths);
@@ -76,13 +74,21 @@ namespace vcpkg::Update
             {
                 System::printf("    %-32s %s\n", package.spec, package.version_diff.to_string());
             }
-            System::print2("\n"
+
+#if defined(_WIN32)
+            auto vcpkg_cmd = ".\\vcpkg";
+#else
+            auto vcpkg_cmd = "./vcpkg";
+#endif
+            System::printf("\n"
                            "To update these packages and all dependencies, run\n"
-                           "    .\\vcpkg upgrade\n"
+                           "    %s upgrade\n"
                            "\n"
                            "To only remove outdated packages, run\n"
-                           "    .\\vcpkg remove --outdated\n"
-                           "\n");
+                           "    %s remove --outdated\n"
+                           "\n",
+                           vcpkg_cmd,
+                           vcpkg_cmd);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

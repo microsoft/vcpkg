@@ -1,11 +1,11 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/unicode.h>
 
 #include <inttypes.h>
+
+#include <regex>
 
 namespace vcpkg::Json
 {
@@ -143,30 +143,30 @@ namespace vcpkg::Json
     }
     StringView Value::string() const noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_string());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_string(), "json value is not string");
         return underlying_->string;
     }
 
     const Array& Value::array() const& noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array(), "json value is not array");
         return underlying_->array;
     }
     Array& Value::array() & noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array(), "json value is not array");
         return underlying_->array;
     }
     Array&& Value::array() && noexcept { return std::move(this->array()); }
 
     const Object& Value::object() const& noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object(), "json value is not object");
         return underlying_->object;
     }
     Object& Value::object() & noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object(), "json value is not object");
         return underlying_->object;
     }
     Object&& Value::object() && noexcept { return std::move(this->object()); }
@@ -988,6 +988,33 @@ namespace vcpkg::Json
         };
     }
 
+    bool IdentifierDeserializer::is_ident(StringView sv)
+    {
+        static const std::regex BASIC_IDENTIFIER = std::regex(R"([a-z0-9]+(-[a-z0-9]+)*)");
+
+        // we only check for lowercase in RESERVED since we already remove all
+        // strings with uppercase letters from the basic check
+        static const std::regex RESERVED = std::regex(R"(prn|aux|nul|con|(lpt|com)[1-9]|core|default)");
+
+        // back-compat
+        if (sv == "all_modules")
+        {
+            return true;
+        }
+
+        if (!std::regex_match(sv.begin(), sv.end(), BASIC_IDENTIFIER))
+        {
+            return false; // we're not even in the shape of an identifier
+        }
+
+        if (std::regex_match(sv.begin(), sv.end(), RESERVED))
+        {
+            return false; // we're a reserved identifier
+        }
+
+        return true;
+    }
+
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse_file(const Files::Filesystem& fs,
                                                                                            const fs::path& path,
                                                                                            std::error_code& ec) noexcept
@@ -1004,10 +1031,30 @@ namespace vcpkg::Json
         }
     }
 
+    std::pair<Value, JsonStyle> parse_file(vcpkg::LineInfo linfo,
+                                           const Files::Filesystem& fs,
+                                           const fs::path& path) noexcept
+    {
+        std::error_code ec;
+        auto ret = parse_file(fs, path, ec);
+        if (ec)
+        {
+            System::print2(System::Color::error, "Failed to read ", fs::u8string(path), ": ", ec.message(), "\n");
+            Checks::exit_fail(linfo);
+        }
+        else if (!ret)
+        {
+            System::print2(System::Color::error, "Failed to parse ", fs::u8string(path), ":\n");
+            System::print2(ret.error()->format());
+            Checks::exit_fail(linfo);
+        }
+        return ret.value_or_exit(linfo);
+    }
+
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
                                                                                       const fs::path& filepath) noexcept
     {
-        return Parser::parse(json, filepath.generic_u8string());
+        return Parser::parse(json, fs::generic_u8string(filepath));
     }
     // } auto parse()
 

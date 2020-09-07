@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
@@ -25,6 +23,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/postbuildlint.h>
 #include <vcpkg/statusparagraphs.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
@@ -89,7 +88,7 @@ namespace vcpkg::Build
     {
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
-        var_provider.load_dep_info_vars(std::array<PackageSpec, 1>{full_spec.package_spec});
+        var_provider.load_dep_info_vars({{full_spec.package_spec}});
 
         StatusParagraphs status_db = database_load_check(paths);
 
@@ -302,9 +301,9 @@ namespace vcpkg::Build
                                   }));
     }
 
+#if defined(_WIN32)
     const System::Environment& EnvCache::get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
-#if defined(_WIN32)
         std::string build_env_cmd =
             make_build_env_cmd(*abi_info.pre_build_info, abi_info.toolset.value_or_exit(VCPKG_LINE_INFO));
 
@@ -333,17 +332,20 @@ namespace vcpkg::Build
                     powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);
             }
 
-            auto clean_env = System::get_modified_clean_environment(base_env.env_map,
-                                                                    powershell_exe_path.parent_path().u8string() + ";");
+            auto clean_env = System::get_modified_clean_environment(
+                base_env.env_map, fs::u8string(powershell_exe_path.parent_path()) + ";");
             if (build_env_cmd.empty())
                 return clean_env;
             else
                 return System::cmd_execute_modify_env(build_env_cmd, clean_env);
         });
-#else
-        return System::get_clean_environment();
-#endif
     }
+#else
+    const System::Environment& EnvCache::get_action_env(const VcpkgPaths&, const AbiInfo&)
+    {
+        return System::get_clean_environment();
+    }
+#endif
 
     static std::string load_compiler_hash(const VcpkgPaths& paths, const AbiInfo& abi_info);
 
@@ -388,7 +390,7 @@ namespace vcpkg::Build
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
         return Strings::format(R"(cmd /c ""%s" %s %s %s %s 2>&1 <NUL")",
-                               toolset.vcvarsall.u8string(),
+                               fs::u8string(toolset.vcvarsall),
                                Strings::join(" ", toolset.vcvarsall_options),
                                arch,
                                target,
@@ -450,7 +452,7 @@ namespace vcpkg::Build
                               std::initializer_list<System::CMakeVariable>{
                                   {"CMD", "BUILD"},
                                   {"TARGET_TRIPLET", triplet.canonical_name()},
-                                  {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
+                                  {"TARGET_TRIPLET_FILE", fs::u8string(paths.get_triplet_file_path(triplet))},
                                   {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                                   {"DOWNLOADS", paths.downloads},
                                   {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
@@ -471,7 +473,7 @@ namespace vcpkg::Build
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
         // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
-        vcpkg::Util::unused(paths.get_tool_exe(Tools::NINJA));
+        (void)(paths.get_tool_exe(Tools::NINJA));
 #endif
         std::vector<System::CMakeVariable> cmake_args{
             {"CURRENT_PORT_DIR", paths.scripts / "detect_compiler"},
@@ -491,12 +493,12 @@ namespace vcpkg::Build
             Checks::check_exit(VCPKG_LINE_INFO,
                                !err.value(),
                                "Failed to create directory '%s', code: %d",
-                               buildpath.u8string(),
+                               fs::u8string(buildpath),
                                err.value());
         }
         auto stdoutlog = buildpath / ("stdout-" + triplet.canonical_name() + ".log");
         std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
-        Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", stdoutlog.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", fs::u8string(stdoutlog));
         std::string compiler_hash;
         System::cmd_execute_and_stream_lines(
             command,
@@ -509,7 +511,7 @@ namespace vcpkg::Build
                 Debug::print(s, '\n');
                 out_file.write(s.data(), s.size()).put('\n');
                 Checks::check_exit(
-                    VCPKG_LINE_INFO, out_file, "Error occurred while writing '%s'", stdoutlog.u8string());
+                    VCPKG_LINE_INFO, out_file, "Error occurred while writing '%s'", fs::u8string(stdoutlog));
             },
             env);
         out_file.close();
@@ -524,7 +526,7 @@ namespace vcpkg::Build
         }
         Checks::check_exit(VCPKG_LINE_INFO,
                            !compiler_hash.empty(),
-                           "Error occured while detecting compiler information. Pass `--debug` for more information.");
+                           "Error occurred while detecting compiler information. Pass `--debug` for more information.");
 
         Debug::print("Detecting compiler hash for triplet ", triplet, ": ", compiler_hash, "\n");
         return compiler_hash;
@@ -537,7 +539,7 @@ namespace vcpkg::Build
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
         // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
-        vcpkg::Util::unused(paths.get_tool_exe(Tools::NINJA));
+        (void)(paths.get_tool_exe(Tools::NINJA));
 #endif
         auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
         auto& scf = *scfl.source_control_file;
@@ -580,7 +582,7 @@ namespace vcpkg::Build
 
             if (fs.is_regular_file(port_config_path))
             {
-                port_configs.emplace_back(port_config_path.u8string());
+                port_configs.emplace_back(fs::u8string(port_config_path));
             }
         }
 
@@ -649,22 +651,22 @@ namespace vcpkg::Build
         auto&& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
 
         Triplet triplet = action.spec.triplet();
-        const auto& triplet_file_path = paths.get_triplet_file_path(triplet).u8string();
+        const auto& triplet_file_path = fs::u8string(paths.get_triplet_file_path(triplet));
 
-        if (Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.community_triplets.u8string()))
+        if (Strings::case_insensitive_ascii_starts_with(triplet_file_path, fs::u8string(paths.community_triplets)))
         {
             System::printf(vcpkg::System::Color::warning,
                            "-- Using community triplet %s. This triplet configuration is not guaranteed to succeed.\n",
                            triplet.canonical_name());
             System::printf("-- [COMMUNITY] Loading triplet configuration from: %s\n", triplet_file_path);
         }
-        else if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.triplets.u8string()))
+        else if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, fs::u8string(paths.triplets)))
         {
             System::printf("-- [OVERLAY] Loading triplet configuration from: %s\n", triplet_file_path);
         }
 
-        auto u8portdir = scfl.source_location.u8string();
-        if (!Strings::case_insensitive_ascii_starts_with(u8portdir, paths.ports.u8string()))
+        auto u8portdir = fs::u8string(scfl.source_location);
+        if (!Strings::case_insensitive_ascii_starts_with(u8portdir, fs::u8string(paths.ports)))
         {
             System::printf("-- Installing port from location: %s\n", u8portdir);
         }
@@ -683,19 +685,19 @@ namespace vcpkg::Build
             Checks::check_exit(VCPKG_LINE_INFO,
                                !err.value(),
                                "Failed to create directory '%s', code: %d",
-                               buildpath.u8string(),
+                               fs::u8string(buildpath),
                                err.value());
         }
         auto stdoutlog = buildpath / ("stdout-" + action.spec.triplet().canonical_name() + ".log");
         std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
-        Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", stdoutlog.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", fs::u8string(stdoutlog));
         const int return_code = System::cmd_execute_and_stream_data(
             command,
             [&](StringView sv) {
                 System::print2(sv);
                 out_file.write(sv.data(), sv.size());
                 Checks::check_exit(
-                    VCPKG_LINE_INFO, out_file, "Error occurred while writing '%s'", stdoutlog.u8string());
+                    VCPKG_LINE_INFO, out_file, "Error occurred while writing '%s'", fs::u8string(stdoutlog));
             },
             env);
         out_file.close();
@@ -834,7 +836,7 @@ namespace vcpkg::Build
             if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, port_file)))
             {
                 abi_tag_entries.emplace_back(
-                    port_file.path().filename().u8string(),
+                    fs::u8string(port_file.path().filename()),
                     vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, fs, port_file, Hash::Algorithm::Sha1));
 
                 ++port_file_count;
@@ -869,6 +871,7 @@ namespace vcpkg::Build
         abi_tag_entries.emplace_back("features", Strings::join(";", sorted_feature_list));
 
         if (action.build_options.use_head_version == UseHeadVersion::YES) abi_tag_entries.emplace_back("head", "");
+        if (action.build_options.editable == Editable::YES) abi_tag_entries.emplace_back("editable", "");
 
         Util::sort(abi_tag_entries);
 
@@ -1017,7 +1020,7 @@ namespace vcpkg::Build
         std::error_code ec;
         const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
         const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
-        if (action.build_options.editable == Build::Editable::NO)
+        if (action.has_package_abi())
         {
             auto restore = binaries_provider.try_restore(paths, action);
             if (restore == RestoreResult::build_failed)
@@ -1040,9 +1043,9 @@ namespace vcpkg::Build
 
         fs.create_directories(abi_package_dir, ec);
         fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", fs::u8string(abi_file_in_package));
 
-        if (action.build_options.editable == Build::Editable::NO && result.code == BuildResult::SUCCEEDED)
+        if (action.has_package_abi() && result.code == BuildResult::SUCCEEDED)
         {
             binaries_provider.push_success(paths, action);
         }
@@ -1084,12 +1087,18 @@ namespace vcpkg::Build
 
     std::string create_user_troubleshooting_message(const PackageSpec& spec)
     {
-        return Strings::format("Please ensure you're using the latest portfiles with `.\\vcpkg update`, then\n"
+#if defined(_WIN32)
+        auto vcpkg_update_cmd = ".\\vcpkg";
+#else
+        auto vcpkg_update_cmd = "./vcpkg";
+#endif
+        return Strings::format("Please ensure you're using the latest portfiles with `%s update`, then\n"
                                "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
                                "  Package: %s\n"
                                "  Vcpkg version: %s\n"
                                "\n"
                                "Additionally, attach any relevant sections from the log files above.",
+                               vcpkg_update_cmd,
                                spec,
                                Commands::Version::version());
     }
