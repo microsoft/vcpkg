@@ -38,6 +38,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	zlib	protobuf_WITH_ZLIB
 )
 
+if (VCPKG_DOWNLOAD_MODE)
+    # download PKGCONFIG in download mode which is used in `vcpkg_fixup_pkgconfig()` at the end of this script.
+    # download it here because `vcpkg_configure_cmake()` halts execution in download mode when running configure process.
+    vcpkg_find_acquire_program(PKGCONFIG)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
