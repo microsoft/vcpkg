@@ -490,6 +490,18 @@ namespace vcpkg
     constexpr StringLiteral FeatureDeserializer::DESCRIPTION;
     constexpr StringLiteral FeatureDeserializer::DEPENDENCIES;
 
+    static constexpr StringView EXPRESSION_WORDS[] = {
+        "WITH",
+        "AND",
+        "OR",
+    };
+    static constexpr StringView VALID_LICENSES[] =
+#include "spdx-licenses.inc"
+        ;
+    static constexpr StringView VALID_EXCEPTIONS[] =
+#include "spdx-licenses.inc"
+        ;
+
     // We "parse" this so that we can add actual license parsing at some point in the future
     // without breaking anyone
     struct LicenseExpressionDeserializer : Json::IDeserializer<std::string>
@@ -502,18 +514,6 @@ namespace vcpkg
             ExpectContinue,
             ExpectException,
         };
-
-        constexpr static StringView EXPRESSION_WORDS[] = {
-            "WITH",
-            "AND",
-            "OR",
-        };
-        constexpr static StringView VALID_LICENSES[] =
-#include "spdx-licenses.inc"
-            ;
-        constexpr static StringView VALID_EXCEPTIONS[] =
-#include "spdx-licenses.inc"
-            ;
 
         virtual Optional<std::string> visit_string(Json::Reader&, StringView sv) override
         {
@@ -629,10 +629,6 @@ namespace vcpkg
             }
         }
     };
-
-    constexpr StringView LicenseExpressionDeserializer::EXPRESSION_WORDS[];
-    constexpr StringView LicenseExpressionDeserializer::VALID_LICENSES[];
-    constexpr StringView LicenseExpressionDeserializer::VALID_EXCEPTIONS[];
 
     struct ManifestDeserializer : Json::IDeserializer<std::unique_ptr<SourceControlFile>>
     {
