@@ -243,7 +243,6 @@ cppmicroservices:arm-uwp=fail
 cppmicroservices:x64-uwp=fail
 cpp-netlib:arm-uwp=fail
 cpp-netlib:x64-uwp=fail
-cpp-taskflow:x64-osx=fail
 cppcoro:x64-linux=fail
 cppcoro:arm-uwp=fail
 cppcoro:x64-uwp=fail
