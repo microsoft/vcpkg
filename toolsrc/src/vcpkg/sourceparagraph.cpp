@@ -361,7 +361,7 @@ namespace vcpkg
     {
         virtual StringView type_name() const override { return "a platform expression"; }
 
-        virtual Optional<PlatformExpression::Expr> visit_string(Json::Reader&, StringView, StringView sv) override
+        virtual Optional<PlatformExpression::Expr> visit_string(Json::Reader&, StringView sv) override
         {
             auto opt =
                 PlatformExpression::parse_platform_expression(sv, PlatformExpression::MultipleBinaryOperators::Deny);
@@ -398,7 +398,7 @@ namespace vcpkg
             return t;
         }
 
-        virtual Optional<Dependency> visit_string(Json::Reader&, StringView, StringView sv) override
+        virtual Optional<Dependency> visit_string(Json::Reader&, StringView sv) override
         {
             if (!Json::PackageNameDeserializer::is_package_name(sv))
             {
@@ -410,7 +410,7 @@ namespace vcpkg
             return dep;
         }
 
-        virtual Optional<Dependency> visit_object(Json::Reader& r, StringView, const Json::Object& obj) override
+        virtual Optional<Dependency> visit_object(Json::Reader& r, const Json::Object& obj) override
         {
             Dependency dep;
 
@@ -462,7 +462,6 @@ namespace vcpkg
         }
 
         virtual Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r,
-                                                                         StringView,
                                                                          const Json::Object& obj) override
         {
             auto feature = std::make_unique<FeatureParagraph>();
@@ -516,7 +515,7 @@ namespace vcpkg
 #include "spdx-licenses.inc"
             ;
 
-        virtual Optional<std::string> visit_string(Json::Reader&, StringView, StringView sv) override
+        virtual Optional<std::string> visit_string(Json::Reader&, StringView sv) override
         {
             Mode mode = Mode::ExpectExpression;
             size_t open_parens = 0;
@@ -677,7 +676,6 @@ namespace vcpkg
         }
 
         virtual Optional<std::unique_ptr<SourceControlFile>> visit_object(Json::Reader& r,
-                                                                          StringView,
                                                                           const Json::Object& obj) override
         {
             auto control_file = std::make_unique<SourceControlFile>();
@@ -752,44 +750,16 @@ namespace vcpkg
     Parse::ParseExpected<SourceControlFile> SourceControlFile::parse_manifest_file(const fs::path& path_to_manifest,
                                                                                    const Json::Object& manifest)
     {
-        struct JsonErr final : Json::ReaderError
+        Json::Reader reader;
+
+        auto res = reader.visit_value(manifest, ManifestDeserializer{});
+
+        if (!reader.errors().empty())
         {
-            ParseControlErrorInfo pcei;
-
-            void add_missing_field(std::string&& type, std::string&& key) override
-            {
-                pcei.missing_fields[std::move(type)].push_back(std::move(key));
-            }
-            void add_expected_type(std::string&& key, std::string&& expected_type) override
-            {
-                pcei.expected_types.emplace(std::move(key), std::move(expected_type));
-            }
-            void add_extra_fields(std::string&& type, std::vector<std::string>&& fields) override
-            {
-                if (!fields.empty())
-                {
-                    auto& fields_for_type = pcei.extra_fields[std::move(type)];
-                    fields_for_type.insert(fields_for_type.end(), fields.begin(), fields.end());
-                }
-            }
-            void add_mutually_exclusive_fields(std::string&& type, std::vector<std::string>&& fields) override
-            {
-                if (!fields.empty())
-                {
-                    auto& fields_for_type = pcei.mutually_exclusive_fields[std::move(type)];
-                    fields_for_type.insert(fields_for_type.end(), fields.begin(), fields.end());
-                }
-            }
-        } err = {};
-        auto visit = Json::Reader{&err};
-
-        err.pcei.name = fs::u8string(path_to_manifest);
-
-        auto res = visit.visit_value(manifest, "$", ManifestDeserializer{});
-
-        if (err.pcei.has_error())
-        {
-            return std::make_unique<ParseControlErrorInfo>(std::move(err.pcei));
+            auto err = std::make_unique<ParseControlErrorInfo>();
+            err->name = fs::u8string(path_to_manifest);
+            err->other_errors = std::move(reader.errors());
+            return std::move(err);
         }
         else if (auto p = res.get())
         {
@@ -812,6 +782,13 @@ namespace vcpkg
             {
                 System::print2(
                     System::Color::error, "Error: while loading ", error_info->name, ":\n", error_info->error, '\n');
+            }
+
+            if (!error_info->other_errors.empty())
+            {
+                System::print2(System::Color::error, "Errors occurred while parsing ", error_info->name, "\n");
+                for (auto&& msg : error_info->other_errors)
+                    System::print2("    ", msg, '\n');
             }
         }
 
@@ -838,9 +815,6 @@ namespace vcpkg
         {
             System::print2("This is the list of valid fields for CONTROL files (case-sensitive): \n\n    ",
                            Strings::join("\n    ", get_list_of_valid_fields()),
-                           "\n\n");
-            System::print2("And this is the list of valid fields for manifest files: \n\n    ",
-                           Strings::join("\n    ", ManifestDeserializer{}.valid_fields()),
                            "\n\n");
 #if defined(_WIN32)
             auto bootstrap = ".\\bootstrap-vcpkg.bat";
