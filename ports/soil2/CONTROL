@@ -1,3 +1,5 @@
 Source: soil2
-Version: release-1.11-1
+Version: release-1.11
+Port-Version: 2
 Description: Simple OpenGL Image Library 2
+Supports: !uwp

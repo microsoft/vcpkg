@@ -1,3 +1,5 @@
 Source: numactl
 Version: 2.0.12
+Port-Version: 1
 Description: NUMA support for Linux
+Supports: linux

@@ -1,3 +1,5 @@
 Source: libplist
 Version: 1.2.185
+Port-Version: 1
 Description: A library to handle Apple Property List format in binary or XML 
+Supports: !(windows&static)

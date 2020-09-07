@@ -1,7 +1,9 @@
 Source: soci
-Version: 4.0.0-1
+Version: 4.0.0
+Port-Version: 2
 Homepage: https://github.com/SOCI/soci
 Description: SOCI database access library
+Supports: !uwp
 
 Feature: boost
 Build-Depends: boost-date-time, boost-fusion, boost-optional, boost-preprocessor, boost-tuple

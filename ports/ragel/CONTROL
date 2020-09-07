@@ -1,4 +1,6 @@
 Source: ragel
-Version: 6.10-3
+Version: 6.10
+Port-Version: 4
 Homepage: https://www.colm.net/files/ragel
 Description: Ragel State Machine Compiler
+Supports: !uwp

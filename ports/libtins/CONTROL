@@ -1,4 +1,6 @@
 Source: libtins
 Version: 4.2
+Port-Version: 1
 Description: High-level, multiplatform C++ network packet sniffing and crafting library
 Build-Depends: winpcap (windows), boost-icl, boost-any
+Supports: !uwp

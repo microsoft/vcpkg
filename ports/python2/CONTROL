@@ -1,3 +1,5 @@
 Source: python2
-Version: 2.7.15-2
+Version: 2.7.15
+Port-Version: 3
 Description: The Python programming language as an embeddable library
+Supports: windows & !(arm|uwp)

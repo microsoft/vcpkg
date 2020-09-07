@@ -1,8 +1,9 @@
 Source: hiredis
 Version: 2019-11-2
-Port-Version: 2
+Port-Version: 3
 Homepage: https://github.com/redis/hiredis
 Description: Hiredis is a minimalistic C client library for the Redis database.
+Supports: !uwp
 
 Feature: ssl
 Description: Build hiredis_ssl for SSL support

@@ -1,3 +1,5 @@
 Source: liblsl
-Version: 1.13.0-b11-1
+Version: 1.13.0-b11
+Port-Version: 2
 Description: C++ lsl library for multi-modal time-synched data transmission over the local network
+Supports: windows & !(arm|uwp)

@@ -1,5 +1,7 @@
 Source: spirv-tools
-Version: 2020.1-1
+Version: 2020.1
+Port-Version: 2
 Homepage: https://github.com/KhronosGroup/SPIRV-Tools
 Description: API and commands for processing SPIR-V modules
 Build-Depends: spirv-headers
+Supports: !uwp

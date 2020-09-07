@@ -1,8 +1,10 @@
 Source: rocksdb
-Version: 6.6.4-1
+Version: 6.6.4
+Port-Version: 2
 Homepage: https://github.com/facebook/rocksdb
 Description: A library that provides an embeddable, persistent key-value store for fast storage
 Default-Features: zlib
+Supports: !uwp
 
 Feature: lz4
 Build-Depends: lz4

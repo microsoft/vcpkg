@@ -1,4 +1,6 @@
 Source: spaceland
-Version: 7.8.2-4
+Version: 7.8.2
+Port-Version: 5
 Description: Spaceland Lib (sl) is a suite for geometric computation, specifically adapted to OpenGL.
 Build-Depends: zlib
+Supports: !(arm|uwp)

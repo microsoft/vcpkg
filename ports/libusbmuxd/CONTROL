@@ -1,5 +1,6 @@
 Source: libusbmuxd
-Version: 1.2.185-1
+Version: 1.2.185
+Port-Version: 2
 Description: A client library to multiplex connections from and to iOS devices
 Build-Depends: libplist
-Supports: !(uwp|linux|osx)
+Supports: windows & !uwp

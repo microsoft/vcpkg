@@ -1,3 +1,5 @@
 Source: libdshowcapture
-Version: 0.6.0-1
+Version: 0.6.0
+Port-Version: 2
 Description: Free and Open Source C++11 Library for capturing DirectShow video/audio devices on windows.
+Supports: windows & !uwp

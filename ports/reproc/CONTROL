@@ -1,4 +1,6 @@
 Source: reproc
 Version: 12.0.0
+Port-Version: 1
 Description: Cross-platform (C99/C++11) process library
 Homepage: https://github.com/DaanDeMeyer/reproc
+Supports: !uwp

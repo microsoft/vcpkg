@@ -1,5 +1,6 @@
 Source: libsoundio
-Version: 2.0.0-3
+Version: 2.0.0
+Port-Version: 4
 Description: libsoundio is C library providing cross-platform audio input and output.
 Homepage: http://libsound.io/
-Supports: !uwp
+Supports: !(arm|uwp)

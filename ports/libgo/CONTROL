@@ -1,5 +1,6 @@
 Source: libgo
-Version: 3.1-1
+Version: 3.1
+Port-Version: 2
 Homepage: https://github.com/yyzybb537/libgo
 Description: The best stackful coroutine by c++11.
-Supports: !(arm|uwp)
+Supports: !(arm|uwp) & !(windows&!static)

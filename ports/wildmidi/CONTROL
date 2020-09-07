@@ -1,4 +1,6 @@
 Source: wildmidi
-Version: 0.4.3-1
+Version: 0.4.3
+Port-Version: 2
 Homepage: https://github.com/Mindwerks/wildmidi
 Description: MIDI software synthesizer library.
+Supports: !osx

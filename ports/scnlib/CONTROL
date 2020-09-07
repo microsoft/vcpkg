@@ -1,4 +1,6 @@
 Source: scnlib
-Version:  0.3
+Version: 0.3
+Port-Version: 1
 Description: scnlib is a modern C++ library for replacing scanf and std::istream
 Homepage: https://scnlib.dev/
+Supports: !uwp

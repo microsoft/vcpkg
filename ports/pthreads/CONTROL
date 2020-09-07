@@ -1,5 +1,6 @@
 Source: pthreads
-Version: 3.0.0-6
+Version: 3.0.0
+Port-Version: 7
 Homepage: https://sourceware.org/pub/pthreads-win32/
 Description: pthreads for windows
-Supports: !(uwp|arm|arm64)
+Supports: !(uwp|arm)

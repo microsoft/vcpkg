@@ -1,4 +1,6 @@
 Source: libpff
-Version: 2018-07-14-1
+Version: 2018-07-14
+Port-Version: 2
 Build-Depends: zlib
 Description: Library and tools to access the Personal Folder File (PFF) and the Offline Folder File (OFF) format.
+Supports: windows & !(uwp|static)

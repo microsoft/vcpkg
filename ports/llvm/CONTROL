@@ -1,9 +1,9 @@
 Source: llvm
 Version: 10.0.0
-Port-Version: 5
+Port-Version: 6
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
-Supports: !uwp
+Supports: !(arm|uwp)
 Default-Features: tools, enable-rtti, disable-assertions, disable-abi-breaking-checks, clang, disable-clang-static-analyzer, lld
 
 Feature: tools

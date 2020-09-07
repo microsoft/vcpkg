@@ -1,4 +1,6 @@
 Source: cello
 Version: 2019-07-23
+Port-Version: 1
 Description: Higher level programming in C
 Homepage: http://libcello.org/
+Supports: !uwp

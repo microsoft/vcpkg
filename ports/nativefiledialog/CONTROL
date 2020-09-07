@@ -1,5 +1,6 @@
 Source: nativefiledialog
 Version: 2019-08-28
+Port-Version: 1
 Description: A tiny, neat C library that portably invokes native file open and save dialogs
 Homepage: https://github.com/mlabbe/nativefiledialog
 Supports: !uwp

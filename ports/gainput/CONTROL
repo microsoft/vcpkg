@@ -1,4 +1,6 @@
 Source: gainput
-Version: 1.0.0-3
+Version: 1.0.0
+Port-Version: 4
 Homepage: https://github.com/jkuhlmann/gainput
 Description: Gainput is a multiplatform C++ input library, supporting mouse, keyboard and controllers
+Supports: !(linux|uwp)

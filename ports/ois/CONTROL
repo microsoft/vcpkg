@@ -1,4 +1,6 @@
 Source: ois
-Version: 1.5-1
+Version: 1.5
+Port-Version: 2
 Description: Cross Platform Object Oriented Input Lib System. Meant to be very robust and compatiable with many systems and operating systems.
 Homepage: https://wgois.github.io/OIS/
+Supports: !(arm|uwp)

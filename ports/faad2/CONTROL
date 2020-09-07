@@ -1,8 +1,9 @@
 Source: faad2
 Version: 2.9.1
-Port-Version: 2
+Port-Version: 3
 Homepage: https://sourceforge.net/projects/faac/
 Description: Freeware Advanced Audio (AAC) Decoder
+Supports: windows
 
 Feature: build-decoder
 Description: Build the embedded decoder executable

@@ -1,4 +1,6 @@
 Source: unittest-cpp
-Version: 2.0.0-1
+Version: 2.0.0
+Port-Version: 2
 Homepage: https://github.com/unittest-cpp/unittest-cpp
 Description: A lightweight unit testing framework for C++
+Supports: !(arm|uwp)

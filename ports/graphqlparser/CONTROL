@@ -1,3 +1,5 @@
 Source: graphqlparser
-Version: 0.7.0-1
+Version: 0.7.0
+Port-Version: 2
 Description: A GraphQL query parser in C++ with C and C++ APIs
+Supports: !uwp

@@ -1,4 +1,6 @@
 Source: milerius-sfml-imgui
-Version: 1.1-2
+Version: 1.1
+Port-Version: 3
 Description: imgui dll for sfml usage
 Build-Depends: sfml, imgui
+Supports: !osx & !(windows&static)

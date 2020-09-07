@@ -1,6 +1,7 @@
 Source: nanodbc
 Version: 2.12.4
-Port-Version: 9
+Port-Version: 10
 Homepage: https://github.com/lexicalunit/nanodbc
 Description: A small C++ wrapper for the native C ODBC API.
 Build-Depends: unixodbc(!windows)
+Supports: windows&!uwp

@@ -1,4 +1,6 @@
 Source: libdisasm
-Version: 0.23-7
+Version: 0.23
+Port-Version: 8
 Homepage: https://sourceforge.net/projects/bastard
 Description: x86 Disassembler Library.
+Supports: !uwp

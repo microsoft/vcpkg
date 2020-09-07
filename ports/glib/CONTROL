@@ -1,9 +1,10 @@
 Source: glib
-Version: 2.52.3-14-7
+Version: 2.52.3-14
+Port-Version: 8
 Homepage: https://developer.gnome.org/glib/
 Description: Portable, general-purpose utility library.
 Build-Depends: zlib, pcre, libffi, gettext, libiconv
-Supports: !uwp
+Supports: !(uwp|static|osx)
 
 Feature: selinux
 Description: Build with selinux support.

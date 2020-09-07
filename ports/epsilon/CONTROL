@@ -1,5 +1,7 @@
 Source: epsilon
-Version: 0.9.2-4
+Version: 0.9.2
+Port-Version: 5
 Homepage: https://sourceforge.net/projects/epsilon-project/
 Description: EPSILON is an Open Source wavelet image compressor, that is aimed on parallel and robust image processing.
 Build-Depends: libpopt
+Supports: windows & !(uwp|static)

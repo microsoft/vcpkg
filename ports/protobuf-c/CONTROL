@@ -1,8 +1,10 @@
 Source: protobuf-c
-Version: 1.3.2-2
+Version: 1.3.2
+Port-Version: 3
 Homepage: https://github.com/protobuf-c/protobuf-c
 Description: This is protobuf-c, a C implementation of the Google Protocol Buffers data serialization format.
 Build-Depends: protobuf
+Supports: !windows
 
 Feature: tools
 Description: build tools.

@@ -1,3 +1,5 @@
 Source: openmesh
 Version: 8.1
+Port-Version: 1
 Description: A generic and efficient polygon mesh data structure
+Supports: !(arm|uwp)

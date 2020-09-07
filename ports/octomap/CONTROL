@@ -1,4 +1,6 @@
 Source: octomap
-Version: 2017-03-11-8
+Version: 2017-03-11
+Port-Version: 9
 Homepage: https://octomap.github.io/
 Description: An Efficient Probabilistic 3D Mapping Framework Based on Octrees
+Supports: !uwp

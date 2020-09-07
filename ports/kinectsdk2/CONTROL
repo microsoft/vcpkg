@@ -1,4 +1,5 @@
 Source: kinectsdk2
-Version: 2.0-2
+Version: 2.0
+Port-Version: 3
 Description: Kinect for Windows SDK for Kinect v2 sensor.
-Supports: !arm
+Supports: windows & !arm

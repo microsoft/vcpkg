@@ -1,4 +1,5 @@
 Source: ampl-mp
-Version: 2019-03-21-1
+Version: 2019-03-21
+Port-Version: 2
 Description: An open-source library for mathematical programming
-Supports: !uwp
+Supports: !uwp&!arm

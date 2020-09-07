@@ -1,5 +1,6 @@
 Source: getopt-win32
 Version: 0.1
+Port-Version: 1
 Description: An implementation of getopt.
 Homepage: https://github.com/libimobiledevice-win32
-Supports: windows
+Supports: windows & !(arm|uwp|static)

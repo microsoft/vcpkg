@@ -1,4 +1,5 @@
 Source: x-plane
-Version: 3.0.1-1
+Version: 3.0.1
+Port-Version: 2
 Description: The X-Plane Plugin SDK.
-Supports: !x86
+Supports: !(linux|x86|arm)

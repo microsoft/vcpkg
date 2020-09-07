@@ -1,4 +1,6 @@
 Source: shapelib
 Version: 1.5.0
+Port-Version: 1
 Homepage: https://download.osgeo.org/shapelib
 Description: Shapefile C Library is simple C API for reading and writing ESRI Shapefiles
+Supports: !uwp

@@ -1,3 +1,5 @@
 Source: mhook
-Version: 2.5.1-1
+Version: 2.5.1
+Port-Version: 2
 Description: A Windows API hooking library.
+Supports: windows & !(arm|uwp)

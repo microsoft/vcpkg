@@ -1,3 +1,5 @@
 Source: yajl
-Version: 2.1.0-1
+Version: 2.1.0
+Port-Version: 2
 Description: Yet Another JSON Library
+Supports: !uwp

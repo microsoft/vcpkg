@@ -1,3 +1,5 @@
 Source: winsock2
-Version: 0.0-2
+Version: 0.0
+Port-Version: 3
 Description: Windows Sockets.
+Supports: windows

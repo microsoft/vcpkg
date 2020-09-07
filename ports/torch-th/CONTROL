@@ -1,4 +1,6 @@
 Source: torch-th
-Version: 2019-04-19-2
+Version: 2019-04-19
+Port-Version: 3
 Homepage: https://github.com/torch/torch7
 Description: Torch's TH library
+Supports: !(arm|uwp) & !(windows&static)

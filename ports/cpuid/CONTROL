@@ -1,5 +1,6 @@
 Source: cpuid
-Version: 0.4.1-1
+Version: 0.4.1
+Port-Version: 2
 Homepage: https://github.com/anrieff/libcpuid
 Description: Provides CPU identification for the x86 (and x86_64)
-Supports: x86 | x64
+Supports: !(arm|uwp)
