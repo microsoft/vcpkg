@@ -20,16 +20,16 @@ index 8c76d0a..6fb5409 100644
  This module will set the following variables in your project:
  
 -MBEDTLS_FOUND
-+mbedTLS_FOUND
-     System has the mbedTLS library. If no components are requested it only requires the crypto library.
++mbedtls_FOUND
+     System has the mbedtls library. If no components are requested it only requires the crypto library.
  MBEDTLS_INCLUDE_DIR
-     The mbedTLS include directory.
-@@ -189,7 +189,7 @@ find_package_handle_standard_args(mbedTLS
+     The mbedtls include directory.
+@@ -189,7 +189,7 @@ find_package_handle_standard_args(mbedtls
          )
  
- # mbedTLS Found
+ # mbedtls Found
 -if(MBEDTLS_FOUND)
-+if(mbedTLS_FOUND)
++if(mbedtls_FOUND)
  
      # Set mbedtls::Crypto
      if(NOT TARGET mbedtls::Crypto AND EXISTS "${MBEDTLS_CRYPTO_LIBRARY}")
@@ -38,4 +38,4 @@ index 8c76d0a..6fb5409 100644
      endif() # mbedtls::TLS
  
 -endif(MBEDTLS_FOUND)
-+endif(mbedTLS_FOUND)
++endif(mbedtls_FOUND)
