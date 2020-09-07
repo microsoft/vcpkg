@@ -498,8 +498,7 @@ namespace vcpkg::Files
 
             return output;
         }
-        virtual fs::path find_file_recursively_up(const fs::path& starting_dir,
-                                                  const std::string& filename) const override
+        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const fs::path& filename) const override
         {
             fs::path current_dir = starting_dir;
             if (exists(VCPKG_LINE_INFO, current_dir / filename))
@@ -1154,7 +1153,8 @@ namespace vcpkg::Files
     {
 #if VCPKG_USE_STD_FILESYSTEM
         return lhs / rhs;
-#else // ^^^ VCPKG_USE_STD_FILESYSTEM // !VCPKG_USE_STD_FILESYSTEM vvv
+#else // ^^^ std::filesystem // std::experimental::filesystem vvv
+#if !defined(_WIN32)
         if (rhs.is_absolute())
         {
             return rhs;
@@ -1163,6 +1163,37 @@ namespace vcpkg::Files
         {
             return lhs / rhs;
         }
-#endif
+#else  // ^^^ unix // windows vvv
+        auto rhs_root_directory = rhs.root_directory();
+        auto rhs_root_name = rhs.root_name();
+
+        if (rhs_root_directory.empty() && rhs_root_name.empty())
+        {
+            return lhs / rhs;
+        }
+        else if (rhs_root_directory.empty())
+        {
+            // !rhs_root_name.empty()
+            if (rhs_root_name == lhs.root_name())
+            {
+                return lhs / rhs.relative_path();
+            }
+            else
+            {
+                return rhs;
+            }
+        }
+        else if (rhs_root_name.empty())
+        {
+            // !rhs_root_directory.empty()
+            return lhs.root_name() / rhs;
+        }
+        else
+        {
+            // rhs.absolute()
+            return rhs;
+        }
+#endif // ^^^ windows
+#endif // ^^^ std::experimental::filesystem
     }
 }

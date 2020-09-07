@@ -157,7 +157,7 @@ namespace vcpkg::Files
         /// <summary>Read text lines from a file</summary>
         /// <remarks>Lines will have up to one trailing carriage-return character stripped (CRLF)</remarks>
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;
-        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename) const = 0;
+        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const fs::path& filename) const = 0;
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const = 0;
         virtual std::vector<fs::path> get_files_non_recursive(const fs::path& dir) const = 0;
         void write_lines(const fs::path& file_path, const std::vector<std::string>& lines, LineInfo linfo);
