@@ -11,7 +11,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
     REF ef631e0933390ca33b727392392efea2400e60a6     #version 3.0
-    SHA512 d1d59ae65cb4ef8a71e01b42411029e61bef20e2fd6d95b81c091d7d32b8c30f96d3156d7fd28e177ca83fd74ed113b9e31bf5ef360757524beb7cec7ced4996
+    SHA512 df17c12ef0f9833c3a601aac7ffe8a6600a06d85865300a282aba6aacec6edd4d14ace86ae11b68c45dbbef3851436eff30b3fd7eee8696e8752cd22886c092b
     HEAD_REF master
     PATCHES 
   	  RocksDB.patch
