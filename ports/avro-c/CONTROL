@@ -4,4 +4,4 @@ Port-Version: 2
 Homepage: https://github.com/apache/avro
 Description: Apache Avro is a data serialization system
 Build-Depends: jansson, liblzma, zlib, snappy
-Supports: !(uwp|osx|(arm&uwp))
+Supports: !(uwp|osx)
