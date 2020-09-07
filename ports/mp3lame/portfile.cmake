@@ -35,7 +35,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     foreach(vcxproj ${vcxprojs})
         file(READ "${SOURCE_PATH}/vc_solution/${vcxproj}" vcxproj_con)
         
-        if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        if(NOT VCPKG_CRT_LINKAGE STREQUAL dynamic)
             string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_con "${vcxproj_con}")
         endif()
 
