@@ -4,7 +4,7 @@
   "port-version": 2,
   "description": "C++ 20 Coroutines helper/example library",
   "homepage": "https://github.com/luncliff/coroutine",
-  "supports": "!(uwp|linux)",
+  "supports": "!(uwp | linux)",
   "dependencies": [
     "ms-gsl"
   ]
