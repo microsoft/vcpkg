@@ -34,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
     freetype                    IMGUI_FREETYPE
+    wchar32                     IMGUI_USE_WCHAR32
 )
 
 if ("libigl-imgui" IN_LIST FEATURES)
