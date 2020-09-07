@@ -57,6 +57,9 @@ namespace vcpkg
         return Configuration{std::move(registries)};
     }
 
+    constexpr StringLiteral ConfigurationDeserializer::DEFAULT_REGISTRY;
+    constexpr StringLiteral ConfigurationDeserializer::REGISTRIES;
+
     ConfigurationDeserializer::ConfigurationDeserializer(const VcpkgCmdArguments& args)
     {
         registries_enabled = args.registries_enabled();
