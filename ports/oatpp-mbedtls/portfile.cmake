@@ -8,7 +8,7 @@ vcpkg_from_github(
     REF 847b9562ddcd40f1d2b340177028b3519fb1f58a # 1.1.0
     SHA512 70559a33fb7a827714c353b158af8ef90fc5cd792e7f59bcf833ebd203874370e6f8f5b7a531497ea44d406cc515c42bfbef8d4f98e5e8074a141ba2ba78890b
     HEAD_REF master
-    PATCHES mbedtls-case.patch
+    PATCHES mbedtls-case.patch debugFindmbedtls.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

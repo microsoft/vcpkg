@@ -1,0 +1,130 @@
+diff --git a/cmake/module/Findmbedtls.cmake b/cmake/module/Findmbedtls.cmake
+index 3ecd81811..06fc02dfd 100755
+--- a/cmake/module/Findmbedtls.cmake
++++ b/cmake/module/Findmbedtls.cmake
+@@ -104,6 +104,7 @@ find_path(MBEDTLS_INCLUDE_DIR
+         PATH_SUFFIXES
+         include
+         )
++message(STATUS "Findmbedtls: MBEDTLS_INCLUDE_DIR=${MBEDTLS_INCLUDE_DIR}")
+ 
+ # Find Crypto Library
+ find_library(MBEDTLS_CRYPTO_LIBRARY
+@@ -115,6 +116,7 @@ find_library(MBEDTLS_CRYPTO_LIBRARY
+         PATH_SUFFIXES
+         lib
+         )
++message(STATUS "Findmbedtls: MBEDTLS_CRYPTO_LIBRARY=${MBEDTLS_CRYPTO_LIBRARY}")
+ 
+ # Find x509 Library
+ find_library(MBEDTLS_X509_LIBRARY
+@@ -126,6 +128,7 @@ find_library(MBEDTLS_X509_LIBRARY
+         PATH_SUFFIXES
+         lib
+         )
++message(STATUS "Findmbedtls: MBEDTLS_X509_LIBRARY=${MBEDTLS_X509_LIBRARY}")
+ 
+ # Find SSL Library
+ find_library(MBEDTLS_SSL_LIBRARY
+@@ -137,6 +140,7 @@ find_library(MBEDTLS_SSL_LIBRARY
+         PATH_SUFFIXES
+         lib
+         )
++message(STATUS "Findmbedtls: MBEDTLS_SSL_LIBRARY=${MBEDTLS_SSL_LIBRARY}")
+ 
+ # Find TLS Library
+ find_library(MBEDTLS_TLS_LIBRARY
+@@ -148,6 +152,7 @@ find_library(MBEDTLS_TLS_LIBRARY
+         PATH_SUFFIXES
+         lib
+         )
++message(STATUS "Findmbedtls: MBEDTLS_TLS_LIBRARY=${MBEDTLS_TLS_LIBRARY}")
+ 
+ # Set Libraries
+ set(MBEDTLS_LIBRARIES ${MBEDTLS_CRYPTO_LIBRARY} ${MBEDTLS_X509_LIBRARY} ${MBEDTLS_SSL_LIBRARY} ${MBEDTLS_TLS_LIBRARY})
+@@ -173,6 +178,7 @@ if(MBEDTLS_INCLUDE_DIR AND EXISTS "${MBEDTLS_INCLUDE_DIR}/mbedtls/version.h")
+     set(MBEDTLS_VERSION "${MBEDTLS_VERSION_MAJOR}.${MBEDTLS_VERSION_MINOR}.${MBEDTLS_VERSION_REVISION}")
+ 
+ endif()
++message(STATUS "Findmbedtls: MBEDTLS_VERSION=${MBEDTLS_VERSION}")
+ 
+ # Set Find Package Arguments
+ find_package_handle_standard_args(mbedtls
+@@ -187,6 +193,7 @@ find_package_handle_standard_args(mbedtls
+         FAIL_MESSAGE
+         "Could NOT find mbedtls, try setting the path to mbedtls using the MBEDTLS_ROOT_DIR environment variable"
+         )
++message(STATUS "Findmbedtls: mbedtls_FOUND=${mbedtls_FOUND}")
+ 
+ # mbedtls Found
+ if(mbedtls_FOUND)
+@@ -194,6 +201,7 @@ if(mbedtls_FOUND)
+     # Set mbedtls::Crypto
+     if(NOT TARGET mbedtls::Crypto AND EXISTS "${MBEDTLS_CRYPTO_LIBRARY}")
+ 
++        message(STATUS "Findmbedtls: add_library(mbedtls::Crypto UNKNOWN IMPORTED)")
+         # Add Library
+         add_library(mbedtls::Crypto UNKNOWN IMPORTED)
+ 
+@@ -206,11 +214,16 @@ if(mbedtls_FOUND)
+                 IMPORTED_LOCATION "${MBEDTLS_CRYPTO_LIBRARY}"
+         )
+ 
++    else() 
++        if(NOT EXISTS "${MBEDTLS_CRYPTO_LIBRARY}")
++            message(STATUS "Findmbedtls: no  \"${MBEDTLS_CRYPTO_LIBRARY}\", cannot add  mbedtls::Crypto")
++        endif()
+     endif() # mbedtls::Crypto
+ 
+     # Set mbedtls::X509
+     if(NOT TARGET mbedtls::X509 AND EXISTS "${MBEDTLS_X509_LIBRARY}")
+ 
++        message(STATUS "Findmbedtls: add_library(mbedtls::X509 UNKNOWN IMPORTED)")
+         # Add Library
+         add_library(mbedtls::X509 UNKNOWN IMPORTED)
+ 
+@@ -223,11 +236,16 @@ if(mbedtls_FOUND)
+                 IMPORTED_LOCATION "${MBEDTLS_X509_LIBRARY}"
+         )
+ 
++    else() 
++        if(NOT EXISTS "${MBEDTLS_X509_LIBRARY}")
++            message(STATUS "Findmbedtls: no  \"${MBEDTLS_X509_LIBRARY}\", cannot add  mbedtls::X509")
++        endif()
+     endif() # mbedtls::X509
+ 
+     # Set mbedtls::SSL
+     if(NOT TARGET mbedtls::SSL AND EXISTS "${MBEDTLS_SSL_LIBRARY}")
+ 
++        message(STATUS "Findmbedtls: add_library(mbedtls::SSL UNKNOWN IMPORTED)")
+         # Add Library
+         add_library(mbedtls::SSL UNKNOWN IMPORTED)
+ 
+@@ -240,11 +258,16 @@ if(mbedtls_FOUND)
+                 IMPORTED_LOCATION "${MBEDTLS_SSL_LIBRARY}"
+                 INTERFACE_LINK_LIBRARIES mbedtls::Crypto
+         )
++    else() 
++        if(NOT EXISTS "${MBEDTLS_SSL_LIBRARY}")
++            message(STATUS "Findmbedtls: no  \"${MBEDTLS_SSL_LIBRARY}\", cannot add  mbedtls::SSL")
++        endif()
+ 
+     endif() # mbedtls::SSL
+ 
+     # Set mbedtls::TLS
+     if(NOT TARGET mbedtls::TLS AND EXISTS "${MBEDTLS_TLS_LIBRARY}")
++        message(STATUS "Findmbedtls: add_library(mbedtls::TLS UNKNOWN IMPORTED)")
+         add_library(mbedtls::TLS UNKNOWN IMPORTED)
+         set_target_properties(
+                 mbedtls::TLS
+@@ -255,6 +278,10 @@ if(mbedtls_FOUND)
+                 INTERFACE_LINK_LIBRARIES mbedtls::SSL
+         )
+ 
++    else() 
++        if(NOT EXISTS "${MBEDTLS_TLS_LIBRARY}")
++            message(STATUS "Findmbedtls: no  \"${MBEDTLS_TLS_LIBRARY}\", cannot add  mbedtls::TLS")
++        endif()
+     endif() # mbedtls::TLS
+ 
+ endif(mbedtls_FOUND)
