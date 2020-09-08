@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 18c9a4bb1812d7ab59e86d3eef5f62aa760c8f78eac81086bd3b25f7e2d359f2fba71b0298cf91ecb31dbe13846f2e5ce75133b0db534020102b788dd1c1a1da
     PATCHES
         cmake.patch
+        config.patch
 )
 
 vcpkg_configure_cmake(
