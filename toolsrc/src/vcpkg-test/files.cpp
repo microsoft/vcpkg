@@ -125,7 +125,7 @@ namespace
         {
             // regular symlink
             auto base_link = base;
-            base_link.replace_filename(base.filename().u8string() + "-orig");
+            base_link.replace_filename(fs::u8string(base.filename()) + "-orig");
             fs.write_contents(base_link, "", ec);
             CHECK_EC_ON_FILE(base_link, ec);
             vcpkg::Test::create_symlink(base_link, base, ec);
@@ -153,6 +153,25 @@ namespace
 
         return fs;
     }
+}
+
+TEST_CASE ("fs::combine works correctly", "[filesystem][files]")
+{
+    using namespace fs;
+    using namespace vcpkg::Files;
+    CHECK(combine(u8path("/a/b"), u8path("c/d")) == u8path("/a/b/c/d"));
+    CHECK(combine(u8path("a/b"), u8path("c/d")) == u8path("a/b/c/d"));
+    CHECK(combine(u8path("/a/b"), u8path("/c/d")) == u8path("/c/d"));
+
+#if defined(_WIN32)
+    CHECK(combine(u8path("C:/a/b"), u8path("c/d")) == u8path("C:/a/b/c/d"));
+    CHECK(combine(u8path("C:a/b"), u8path("c/d")) == u8path("C:a/b/c/d"));
+    CHECK(combine(u8path("C:a/b"), u8path("/c/d")) == u8path("C:/c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("/c/d")) == u8path("C:/c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("D:/c/d")) == u8path("D:/c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("D:c/d")) == u8path("D:c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("C:c/d")) == u8path("C:/a/b/c/d"));
+#endif
 }
 
 TEST_CASE ("remove all", "[files]")

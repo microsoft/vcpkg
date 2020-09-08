@@ -11,7 +11,21 @@
 
 #include <string>
 
+#include <vcpkg-test/util.h>
+
 using namespace vcpkg;
+
+#define REQUIRE_EQUAL_TEXT(lhs, rhs)                                                                                   \
+    {                                                                                                                  \
+        auto lhs_lines = Strings::split((lhs), '\n');                                                                  \
+        auto rhs_lines = Strings::split((rhs), '\n');                                                                  \
+        for (size_t i = 0; i < lhs_lines.size() && i < rhs_lines.size(); ++i)                                          \
+        {                                                                                                              \
+            INFO("on line: " << i);                                                                                    \
+            REQUIRE(lhs_lines[i] == rhs_lines[i]);                                                                     \
+        }                                                                                                              \
+        REQUIRE(lhs_lines.size() == rhs_lines.size());                                                                 \
+    }
 
 TEST_CASE ("reformat_version semver-ish", "[reformat_version]")
 {
@@ -65,7 +79,7 @@ Build-Depends: bzip
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
 
-    Dependencies::InstallPlanAction ipa(PackageSpec{"zlib2", Triplet::X64_WINDOWS},
+    Dependencies::InstallPlanAction ipa(PackageSpec{"zlib2", Test::X64_WINDOWS},
                                         scfl,
                                         Dependencies::RequestType::USER_REQUESTED,
                                         {{"a", {}}, {"b", {}}});
@@ -79,13 +93,14 @@ Build-Depends: bzip
 
     REQUIRE(ref.nupkg_filename() == "zlib2_x64-windows.1.5.0-packageabi.nupkg");
 
-    auto nuspec = generate_nuspec(paths, ipa, ref);
+    {
+        auto nuspec = generate_nuspec(paths, ipa, ref, {});
 #ifdef _WIN32
 #define PKGPATH "C:\\zlib2_x64-windows\\**"
 #else
 #define PKGPATH "/zlib2_x64-windows/**"
 #endif
-    std::string expected = R"(<package>
+        std::string expected = R"(<package>
   <metadata>
     <id>zlib2_x64-windows</id>
     <version>1.5.0-packageabi</version>
@@ -104,14 +119,67 @@ Dependencies:
   <files><file src=")" PKGPATH R"(" target=""/></files>
 </package>
 )";
-    auto expected_lines = Strings::split(expected, '\n');
-    auto nuspec_lines = Strings::split(nuspec, '\n');
-    for (size_t i = 0; i < expected_lines.size() && i < nuspec_lines.size(); ++i)
-    {
-        INFO("on line: " << i);
-        REQUIRE(nuspec_lines[i] == expected_lines[i]);
+        REQUIRE_EQUAL_TEXT(nuspec, expected);
     }
-    REQUIRE(nuspec_lines.size() == expected_lines.size());
+
+    {
+        auto nuspec = generate_nuspec(paths, ipa, ref, {"urlvalue"});
+#ifdef _WIN32
+#define PKGPATH "C:\\zlib2_x64-windows\\**"
+#else
+#define PKGPATH "/zlib2_x64-windows/**"
+#endif
+        std::string expected = R"(<package>
+  <metadata>
+    <id>zlib2_x64-windows</id>
+    <version>1.5.0-packageabi</version>
+    <authors>vcpkg</authors>
+    <description>NOT FOR DIRECT USE. Automatically generated cache package.
+
+a spiffy compression library wrapper
+
+Version: 1.5
+Triplet/Compiler hash: tripletabi
+Features: a, b
+Dependencies:
+</description>
+    <packageTypes><packageType name="vcpkg"/></packageTypes>
+    <repository type="git" url="urlvalue"/>
+  </metadata>
+  <files><file src=")" PKGPATH R"(" target=""/></files>
+</package>
+)";
+        REQUIRE_EQUAL_TEXT(nuspec, expected);
+    }
+    {
+        auto nuspec = generate_nuspec(paths, ipa, ref, {"urlvalue", "branchvalue", "commitvalue"});
+#ifdef _WIN32
+#define PKGPATH "C:\\zlib2_x64-windows\\**"
+#else
+#define PKGPATH "/zlib2_x64-windows/**"
+#endif
+        std::string expected = R"(<package>
+  <metadata>
+    <id>zlib2_x64-windows</id>
+    <version>1.5.0-packageabi</version>
+    <authors>vcpkg</authors>
+    <description>NOT FOR DIRECT USE. Automatically generated cache package.
+
+a spiffy compression library wrapper
+
+Version: 1.5
+Triplet/Compiler hash: tripletabi
+Features: a, b
+Dependencies:
+</description>
+    <packageTypes><packageType name="vcpkg"/></packageTypes>
+    <repository type="git" url="urlvalue" branch="branchvalue" commit="commitvalue"/>
+  </metadata>
+  <files><file src=")" PKGPATH R"(" target=""/></files>
+</package>
+)";
+        REQUIRE_EQUAL_TEXT(nuspec, expected);
+    }
 }
 
 TEST_CASE ("XmlSerializer", "[XmlSerializer]")
@@ -177,7 +245,7 @@ Description: a spiffy compression library wrapper
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());
-    plan.install_actions[0].spec = PackageSpec("zlib", Triplet::X64_ANDROID);
+    plan.install_actions[0].spec = PackageSpec("zlib", Test::X64_ANDROID);
     plan.install_actions[0].source_control_file_location = scfl;
     plan.install_actions[0].abi_info = Build::AbiInfo{};
     plan.install_actions[0].abi_info.get()->package_abi = "packageabi";
@@ -200,7 +268,7 @@ Description: a spiffy compression library wrapper
     REQUIRE(maybe_scf2.has_value());
     SourceControlFileLocation scfl2{std::move(*maybe_scf2.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());
-    plan.install_actions[1].spec = PackageSpec("zlib2", Triplet::X64_ANDROID);
+    plan.install_actions[1].spec = PackageSpec("zlib2", Test::X64_ANDROID);
     plan.install_actions[1].source_control_file_location = scfl2;
     plan.install_actions[1].abi_info = Build::AbiInfo{};
     plan.install_actions[1].abi_info.get()->package_abi = "packageabi2";

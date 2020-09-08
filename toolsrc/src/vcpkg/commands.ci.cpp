@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
@@ -9,17 +7,17 @@
 
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.ci.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/paragraphs.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
-
-#include <algorithm>
 
 using namespace vcpkg;
 
@@ -385,7 +383,6 @@ namespace vcpkg::Commands::CI
                 }
                 else
                 {
-                    // include_all_supported_features_for_triplet(var_provider, p);
                     ret->unknown.emplace_back(p->spec, p->feature_list);
                     b_will_build = true;
                 }
@@ -461,9 +458,7 @@ namespace vcpkg::Commands::CI
         XunitTestResults xunitTestResults;
 
         std::vector<std::string> all_ports =
-            Util::fmap(provider.load_all_control_files(), [](const SourceControlFileLocation*& scfl) -> std::string {
-                return scfl->source_control_file.get()->core_paragraph->name;
-            });
+            Util::fmap(provider.load_all_control_files(), Paragraphs::get_name_of_control_file);
         std::vector<TripletAndSummary> results;
         auto timer = Chrono::ElapsedTimer::create_started();
         for (Triplet triplet : triplets)
@@ -505,7 +500,7 @@ namespace vcpkg::Commands::CI
             }
 
             auto action_plan = Dependencies::create_feature_install_plan(
-                new_default_provider, var_provider, split_specs->unknown, status_db, serialize_options, true);
+                new_default_provider, var_provider, split_specs->unknown, status_db, serialize_options);
 
             for (auto&& action : action_plan.install_actions)
             {
@@ -581,5 +576,12 @@ namespace vcpkg::Commands::CI
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void CICommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                     const VcpkgPaths& paths,
+                                     Triplet default_triplet) const
+    {
+        CI::perform_and_exit(args, paths, default_triplet);
     }
 }

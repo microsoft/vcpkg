@@ -29,6 +29,8 @@
 ## Disables running the CMake configure step in parallel.
 ## This is needed for libraries which write back into their source directory during configure.
 ##
+## This also disables CMAKE_DISABLE_SOURCE_CHANGES.
+##
 ## ### NO_CHARSET_FLAG
 ## Disables passing `utf-8` as the default character set to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`.
 ##
@@ -59,11 +61,11 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_configure_cmake)
-    cmake_parse_arguments(_csc
+    # parse parameters such that semicolons in arguments to OPTIONS don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _csc
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
-        ${ARGN}
     )
 
     if(NOT VCPKG_PLATFORM_TOOLSET)
@@ -148,7 +150,7 @@ function(vcpkg_configure_cmake)
     endif()
 
     # If we use Ninja, make sure it's on PATH
-    if(GENERATOR STREQUAL "Ninja")
+    if(GENERATOR STREQUAL "Ninja" AND NOT DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
         vcpkg_add_to_path("${NINJA_PATH}")
@@ -233,6 +235,8 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_C_FLAGS_DEBUG=${VCPKG_C_FLAGS_DEBUG}"
         "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
         "-DVCPKG_LINKER_FLAGS=${VCPKG_LINKER_FLAGS}"
+        "-DVCPKG_LINKER_FLAGS_RELEASE=${VCPKG_LINKER_FLAGS_RELEASE}"
+        "-DVCPKG_LINKER_FLAGS_DEBUG=${VCPKG_LINKER_FLAGS_DEBUG}"
         "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
         "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
         "-DCMAKE_INSTALL_BINDIR:STRING=bin"
@@ -266,6 +270,7 @@ function(vcpkg_configure_cmake)
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
 
     if(NINJA_HOST AND CMAKE_HOST_WIN32 AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
+        list(APPEND _csc_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)

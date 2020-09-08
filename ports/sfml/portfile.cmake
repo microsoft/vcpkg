@@ -5,6 +5,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     SHA512 7aed2fc29d1da98e6c4d598d5c86cf536cb4eb5c2079cdc23bb8e502288833c052579dadbe0ce13ad6461792d959bf6d9660229f54c54cf90a541c88c6b03d59
     PATCHES
         use-system-freetype.patch
+        stb_include.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/extlibs)
@@ -32,9 +33,11 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SFML)
 vcpkg_copy_pdbs()
 
+FILE(READ ${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake SFML_CONFIG)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    FILE(READ ${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake SFML_CONFIG)
     FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake "set(SFML_STATIC_LIBRARIES true)\ninclude(CMakeFindDependencyMacro)\nfind_dependency(Freetype)\n${SFML_CONFIG}")
+else()
+    FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake "set(SFML_STATIC_LIBRARIES false)\n${SFML_CONFIG}")
 endif()
 
 # move sfml-main to manual link dir
