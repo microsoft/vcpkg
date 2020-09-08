@@ -5,9 +5,7 @@
 
 namespace vcpkg
 {
-    Optional<Configuration> ConfigurationDeserializer::visit_object(Json::Reader& r,
-                                                                    StringView,
-                                                                    const Json::Object& obj)
+    Optional<Configuration> ConfigurationDeserializer::visit_object(Json::Reader& r, const Json::Object& obj)
     {
         RegistrySet registries;
 
