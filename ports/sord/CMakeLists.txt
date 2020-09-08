@@ -11,7 +11,7 @@ add_library(sord
 file(WRITE "${CMAKE_BINARY_DIR}/sord_config.h" "")
 
 target_include_directories(sord
-    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}"
+    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}"
 )
 
 target_link_libraries(sord PUBLIC serd::serd)
