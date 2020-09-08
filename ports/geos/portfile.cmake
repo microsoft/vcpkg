@@ -1,4 +1,4 @@
-set(GEOS_VERSION 3.8.1)
+set(GEOS_VERSION 3.8.1-1)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2"
