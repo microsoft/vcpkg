@@ -7,13 +7,14 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SEAL_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SEAL_BUILD_STATIC)
 
+
 if (SEAL_BUILD_STATIC)
-    set(SEAL_LIB_BUILD_TYPE "Static_PIC")
-endif ()
+    set(BUILD_SHARED_LIBS OFF)
+endif()
 
 if (SEAL_BUILD_DYNAMIC)
-    set(SEAL_LIB_BUILD_TYPE "Shared")
-endif ()
+    set(BUILD_SHARED_LIBS ON)
+endif()
 
 string(TOUPPER ${PORT} PORT_UPPER)
 
@@ -30,11 +31,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/native/src
+    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DALLOW_COMMAND_LINE_BUILD=ON
-        -DSEAL_LIB_BUILD_TYPE=${SEAL_LIB_BUILD_TYPE}
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DSEAL_USE_MSGSL=OFF # issue https://github.com/microsoft/SEAL/issues/159
 )
 
