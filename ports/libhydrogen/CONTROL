@@ -1,6 +1,5 @@
 Source: libhydrogen
 Version: 2019-08-11
-Port-Version: 1
 Description: A lightweight, secure, easy-to-use crypto library suitable for constrained environments
 Homepage: https://github.com/jedisct1/libhydrogen
 Supports: !(arm&windows)

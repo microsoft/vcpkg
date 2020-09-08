@@ -1,6 +1,5 @@
 Source: bitserializer
 Version: 0.10
-Port-Version: 1
 Description: Core part of C++ 17 library for serialization to JSON, XML, YAML
 Homepage: https://bitbucket.org/Pavel_Kisliak/bitserializer
 Default-Features: cpprestjson-archive, rapidjson-archive, pugixml-archive

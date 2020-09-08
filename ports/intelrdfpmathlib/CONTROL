@@ -1,5 +1,4 @@
 Source: intelrdfpmathlib
-Version: 20U2
-Port-Version: 2
+Version: 20U2-1
 Description: Intel(R) Decimal Floating-Point Math Library
 Supports: !(linux|uwp)

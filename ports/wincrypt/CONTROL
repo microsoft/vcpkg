@@ -1,5 +1,4 @@
 Source: wincrypt
-Version: 0.0
-Port-Version: 3
+Version: 0.0-2
 Description: Windows Cryptography.
 Supports: windows

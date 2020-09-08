@@ -1,6 +1,5 @@
 Source: readline
 Version: 0
-Port-Version: 1
 Description: GNU readline and history libraries
 Build-Depends: readline-win32 (windows)
 Supports: !uwp

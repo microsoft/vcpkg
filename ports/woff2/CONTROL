@@ -1,6 +1,5 @@
 Source: woff2
 Version: 1.0.2
-Port-Version: 1
 Build-Depends: brotli
 Description: font compression reference code
 Supports: windows&!static

@@ -1,7 +1,6 @@
 Source: marble
 Version: 19.08.2
-Port-Version: 1
 Homepage: https://marble.kde.org
 Description: Marble KDE library
-Build-Depends: qt5-base, qt5-svg, qt5-quickcontrols, qt5-webchannel
 Supports: windows & x64 & !static
+Build-Depends: qt5-base, qt5-svg, qt5-quickcontrols, qt5-webchannel

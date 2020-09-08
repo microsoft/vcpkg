@@ -1,5 +1,4 @@
 Source: plib
-Version: 1.8.5
-Port-Version: 5
+Version: 1.8.5-4
 Description: A suite of portable game libraries
 Supports: !(osx|uwp)

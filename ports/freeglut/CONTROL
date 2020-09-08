@@ -1,6 +1,5 @@
 Source: freeglut
-Version: 3.2.1
-Port-Version: 5
+Version: 3.2.1-4
 Homepage: https://sourceforge.net/projects/freeglut/
 Description: Open source implementation of GLUT with source and binary backwards compatibility.
 Supports: !(osx|arm|uwp)

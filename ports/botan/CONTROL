@@ -1,6 +1,5 @@
 Source: botan
-Version: 2.12.1
-Port-Version: 2
+Version: 2.12.1-1
 Homepage: https://botan.randombit.net
 Description: A cryptography library written in C++11
 Supports: !(arm|uwp)

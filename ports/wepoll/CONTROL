@@ -1,6 +1,5 @@
 Source: wepoll
 Version: 1.5.5
-Port-Version: 1
 Description: Fast epoll for windows
 Homepage: https://github.com/piscisaureus/wepoll
 Supports: windows&!uwp

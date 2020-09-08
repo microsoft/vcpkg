@@ -1,5 +1,4 @@
 Source: gherkin-c
-Version: 2019-10-07
-Port-Version: 2
+Version: 2019-10-07-1
 Description: Gherkin parser/compiler in C 
 Supports: windows

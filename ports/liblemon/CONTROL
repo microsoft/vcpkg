@@ -1,6 +1,5 @@
 Source: liblemon
-Version: 2019-06-13
-Port-Version: 2
+Version: 2019-06-13-1
 Homepage: https://lemon.cs.elte.hu/trac/lemon
 Description: Library for Efficient Modeling and Optimization in Networks
 Supports: !uwp

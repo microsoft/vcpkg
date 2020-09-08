@@ -1,5 +1,5 @@
 Source: 7zip
 Version: 19.00
-Port-Version: 2
+Port-Version: 1
 Supports: windows&!(arm|uwp)
 Description: Library for archiving file with a high compression ratio.

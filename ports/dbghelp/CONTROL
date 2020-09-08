@@ -1,5 +1,4 @@
 Source: dbghelp
 Version: 0.0
-Port-Version: 1
 Description: Windows Debug Help Library
 Supports: windows

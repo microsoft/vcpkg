@@ -1,6 +1,5 @@
 Source: librdkafka
 Version: 1.5.0
-Port-Version: 1
 Description: The Apache Kafka C/C++ library
 Homepage: https://github.com/edenhill/librdkafka
 Supports: !uwp

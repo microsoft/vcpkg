@@ -1,6 +1,5 @@
 Source: libmodman
-Version: 2.0.1
-Port-Version: 3
+Version: 2.0.1-2
 Homepage: https://code.google.com/p/libmodman
 Description: a simple library for managing modules
 Supports: !uwp & !(windows&static)

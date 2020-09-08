@@ -1,5 +1,4 @@
 Source: cmark
 Version: 0.29.0
-Port-Version: 1
 Description: CommonMark parsing and rendering library
 Supports: !(windows&static)

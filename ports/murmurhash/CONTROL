@@ -1,6 +1,5 @@
 Source: murmurhash
-Version: 2016-01-09
-Port-Version: 4
+Version: 2016-01-09-3
 Homepage: https://github.com/aappleby/smhasher
 Description: MurmurHash a family of hash functions.
 Supports: !(arm|uwp)

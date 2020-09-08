@@ -1,5 +1,4 @@
 Source: easyloggingpp
-Version: 9.96.7
-Port-Version: 2
+Version: 9.96.7-1
 Description: Easylogging++ is a single header efficient logging library for C++ applications.
 Supports: !uwp

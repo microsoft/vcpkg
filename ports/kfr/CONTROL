@@ -1,6 +1,5 @@
 Source: kfr
 Version: 2020-06-15
-Port-Version: 1
 Description: Fast, modern C++ DSP framework
 Homepage: https://www.kfr.dev/
 Supports: !(arm|linux)

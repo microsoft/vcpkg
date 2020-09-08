@@ -1,5 +1,4 @@
 Source: intel-ipsec
-Version: 0.52
-Port-Version: 2
+Version: 0.52-1
 Description: Intel(R) Multi-Buffer Crypto for IPsec Library
 Supports: linux

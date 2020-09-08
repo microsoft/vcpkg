@@ -1,5 +1,4 @@
 Source: sentencepiece
-Version: 0.1.82
-Port-Version: 1
+Version: v0.1.82
 Description: SentencePiece is an unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation systems where the vocabulary size is predetermined prior to the neural model training
 Supports: osx|linux|(windows&static)

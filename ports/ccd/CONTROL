@@ -1,6 +1,5 @@
 Source: ccd
-Version: 2.1
-Port-Version: 5
+Version: 2.1-4
 Homepage: https://github.com/danfis/libccd
 Description: Library for collision detection between two convex shapes
 Supports: !uwp

@@ -1,5 +1,4 @@
 Source: libbf
-Version: 1.0.0
-Port-Version: 2
+Version: 1.0.0-1
 Description: Bloom filters for C++11.
 Supports: !windows
