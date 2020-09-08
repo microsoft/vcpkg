@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsigcplusplus/libsigcplusplus
-    REF v3.0.3
-    SHA512 4ba1eeb1296ea8b3e911a7c6ce66c402f877485fd3da1ff1c2e6cfe89a986788cb9bcc9ff8d8ef57dc6dbaa046d7a18d30f6b32a0235fe66fb7afae4ec12e13e
+    REF 7e20b36bddab74faed39aa3768d07fd372fce596
+    SHA512 6220a3974ee90afb5028a5b60ffcbff353fffbbfcf1570d8db05b6d91604324a73badcb17c73c852d6c5265e2b31e1c2de1b3ea20c0e60ecdb17ce90c9ca40bd
     HEAD_REF master
 )
 
