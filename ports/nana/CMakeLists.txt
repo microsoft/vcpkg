@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
-project(nana VERSION 1.5.5 LANGUAGES CXX)
+project(nana VERSION 1.7.2 LANGUAGES CXX)
 
 option(NANA_ENABLE_PNG "Enable PNG support" OFF)
 option(NANA_ENABLE_JPEG "Enable JPEG support" OFF)
@@ -26,7 +26,7 @@ target_include_directories(nana PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_features(nana PUBLIC cxx_std_14)
+target_compile_features(nana PUBLIC cxx_std_17)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   target_link_libraries(nana PUBLIC c++experimental)

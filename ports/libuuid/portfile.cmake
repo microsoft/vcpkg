@@ -1,18 +1,12 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platform" ON_TARGET "Windows")
 
-if (NOT ((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux") OR (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")))
-    message(FATAL_ERROR "libuuid currently only supports unix platforms.")
-endif()
+set(LIBUUID_VERSION 1.0.3)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://sourceforge.net/projects/libuuid/files/libuuid-1.0.3.tar.gz"
-    FILENAME libuuid-1.0.3.tar.gz
-    SHA512 77488caccc66503f6f2ded7bdfc4d3bc2c20b24a8dc95b2051633c695e99ec27876ffbafe38269b939826e1fdb06eea328f07b796c9e0aaca12331a787175507
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO libuuid
+    FILENAME "libuuid-${LIBUUID_VERSION}.tar.gz"
+    SHA512 77488caccc66503f6f2ded7bdfc4d3bc2c20b24a8dc95b2051633c695e99ec27876ffbafe38269b939826e1fdb06eea328f07b796c9e0aaca12331a787175507
 )
 
 file(COPY
@@ -28,8 +22,17 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+set(prefix ${CURRENT_INSTALLED_DIR})
+set(exec_prefix \$\{prefix\})
+set(libdir \$\{exec_prefix\}/lib)
+set(includedir \$\{prefix\}/include)
+configure_file(${SOURCE_PATH}/uuid.pc.in ${SOURCE_PATH}/uuid.pc @ONLY)
+file(INSTALL ${SOURCE_PATH}/uuid.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+file(INSTALL ${SOURCE_PATH}/uuid.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+vcpkg_fixup_pkgconfig()
+
 file(INSTALL
     ${SOURCE_PATH}/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/libuuid RENAME copyright)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

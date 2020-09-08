@@ -18,13 +18,13 @@ endmacro()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
-    # the configuration header depends on zlib, nls, ldap, uuid, xml, xlst,gss,openssl,icu
-    feature_unsupported(readline bonjour libedit kerberos bsd systemd llvm pam)
-    feature_not_implemented_yet(perl uuid)
+    # the configuration header depends on zlib, nls, uuid, xml, xlst,gss,openssl,icu
+    feature_unsupported(readline bonjour libedit systemd llvm)
+    feature_not_implemented_yet(uuid)
 elseif(VCPKG_TARGET_IS_OSX)
-    feature_not_implemented_yet(readline libedit kerberos bsd systemd llvm pam perl python tcl uuid)
+    feature_not_implemented_yet(readline libedit systemd llvm python tcl uuid)
 else()
-    feature_not_implemented_yet(readline bonjour libedit kerberos bsd systemd llvm pam perl python tcl uuid)
+    feature_not_implemented_yet(readline bonjour libedit systemd llvm python tcl uuid)
 endif()
 
 ## Download and extract sources
@@ -67,7 +67,11 @@ vcpkg_extract_source_archive_ex(
 )
 unset(buildenv_contents)
 # Get paths to required programs
-foreach(program_name BISON FLEX PERL)
+set(REQUIRED_PROGRAMS PERL)
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND REQUIRED_PROGRAMS BISON FLEX)
+endif()
+foreach(program_name ${REQUIRED_PROGRAMS})
     # Need to rename win_bison and win_flex to just bison and flex
     vcpkg_find_acquire_program(${program_name})
     get_filename_component(${program_name}_EXE_PATH ${${program_name}} DIRECTORY)
@@ -111,7 +115,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             file(COPY ${SOURCE_FILE} DESTINATION "${BUILDPATH_${_buildtype}}")
         endforeach()
         message(STATUS "Copying libpq source files... done")
-        
+
         vcpkg_apply_patches(
             SOURCE_PATH "${BUILDPATH_${_buildtype}}"
             PATCHES patches/windows/Solution_${_buildtype}.patch
@@ -119,23 +123,23 @@ if(VCPKG_TARGET_IS_WINDOWS)
         )
         message(STATUS "Patches applied!")
         file(COPY "${CURRENT_PORT_DIR}/config.pl" DESTINATION "${BUILDPATH_${_buildtype}}/src/tools/msvc")
-        
+
         set(MSPROJ_PERL "${BUILDPATH_${_buildtype}}/src/tools/msvc/MSBuildProject.pm")
         file(READ "${MSPROJ_PERL}" _contents)
         string(REPLACE "perl" "\"${PERL}\"" _contents "${_contents}")
         file(WRITE "${MSPROJ_PERL}" "${_contents}")
-        
+
         set(CONFIG_FILE "${BUILDPATH_${_buildtype}}/src/tools/msvc/config.pl")
         file(READ "${CONFIG_FILE}" _contents)
-        
-        ##	ldap      => undef,    # --with-ldap                            ##done
+
+        ##	ldap      => undef,    # --with-ldap
         ##	extraver  => undef,    # --with-extra-version=<string>
         ##	gss       => undef,    # --with-gssapi=<path>
         ##	icu       => undef,    # --with-icu=<path>                      ##done
         ##	nls       => undef,    # --enable-nls=<path>                    ##done
         ##	tap_tests => undef,    # --enable-tap-tests
         ##	tcl       => undef,    # --with-tcl=<path>                      #done
-        ##	perl      => undef,    # --with-perl                            # requires a patch to the lib path and a port for it
+        ##	perl      => undef,    # --with-perl
         ##	python    => undef,    # --with-python=<path>                   ##done
         ##	openssl   => undef,    # --with-openssl=<path>                  ##done
         ##	uuid      => undef,    # --with-ossp-uuid
@@ -143,12 +147,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ##	xslt      => undef,    # --with-libxslt=<path>                  ##done
         ##	iconv     => undef,    # (not in configure, path to iconv)      ##done (needed by xml)
         ##	zlib      => undef     # --with-zlib=<path>                     ##done
-        
+
         ## Setup external dependencies
-        ##"-DFEATURES=core;openssl;zlib" "-DALL_FEATURES=openssl;zlib;readline;libedit;perl;python;tcl;nls;kerberos;systemd;ldap;bsd;pam;llvm;icu;bonjour;uuid;xml;xslt;"
-        if("${FEATURES}" MATCHES "ldap")
-            string(REPLACE "ldap      => undef" "ldap      => 1" _contents "${_contents}")
-        endif()
+        ##"-DFEATURES=core;openssl;zlib" "-DALL_FEATURES=openssl;zlib;readline;libedit;python;tcl;nls;systemd;llvm;icu;bonjour;uuid;xml;xslt;"
         if("${FEATURES}" MATCHES "icu")
            string(REPLACE "icu       => undef" "icu      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
@@ -183,7 +184,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         if("${FEATURES}" MATCHES "zlib")
            string(REPLACE "zlib      => undef" "zlib      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
-        
+
         file(WRITE "${CONFIG_FILE}" "${_contents}")
         file(WRITE "${BUILDPATH_${_buildtype}}/src/tools/msvc/buildenv.pl" "${buildenv_contents}")
         vcpkg_get_windows_sdk(VCPKG_TARGET_PLATFORM_VERSION)
@@ -193,7 +194,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
             /p:WindowsTargetPlatformVersion=${VCPKG_TARGET_PLATFORM_VERSION}
             /m
             /p:ForceImportBeforeCppTargets=\"${SCRIPTS}/buildsystems/msbuild/vcpkg.targets\"
-            /p:VcpkgTriplet=${TARGET_TRIPLET}"
+            /p:VcpkgTriplet=${TARGET_TRIPLET}
+            /p:VcpkgCurrentInstalledDir=\"${CURRENT_INSTALLED_DIR}\""
             )
         if(HAS_TOOLS)
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
@@ -241,7 +243,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
-    
+
     if(NOT HAS_TOOLS)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
     else()
@@ -290,7 +292,7 @@ endif()
 #vcpkg_copy_pdbs()
 
 #if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.lib")
-    #RENAME debug library due to CMake. In general that is a bad idea but it will have consquences for the generated cmake targets 
+    #RENAME debug library due to CMake. In general that is a bad idea but it will have consquences for the generated cmake targets
     # of other ports if not renamed. Maybe a vcpkg_cmake_wrapper is required here to correct the target information if the rename is removed?
 #    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/libpqd.lib")
 #endif()

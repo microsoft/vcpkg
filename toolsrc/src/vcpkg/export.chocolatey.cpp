@@ -1,11 +1,11 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/export.chocolatey.h>
 #include <vcpkg/export.h>
 #include <vcpkg/install.h>
+#include <vcpkg/tools.h>
 
 namespace vcpkg::Export::Chocolatey
 {
@@ -19,7 +19,7 @@ namespace vcpkg::Export::Chocolatey
         static constexpr auto CONTENT_TEMPLATE = R"(<dependency id="@PACKAGE_ID@" version="[@PACKAGE_VERSION@]" />)";
 
         std::string nuspec_dependencies;
-        for (const std::string& depend : binary_paragraph.depends)
+        for (const std::string& depend : binary_paragraph.dependencies)
         {
             auto found = packages_version.find(depend);
             if (found == packages_version.end())
@@ -68,8 +68,8 @@ namespace vcpkg::Export::Chocolatey
             Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_VERSION@", package_version->second);
         nuspec_file_content = Strings::replace_all(
             std::move(nuspec_file_content), "@PACKAGE_MAINTAINER@", chocolatey_options.maybe_maintainer.value_or(""));
-        nuspec_file_content =
-            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_DESCRIPTION@", binary_paragraph.description);
+        nuspec_file_content = Strings::replace_all(
+            std::move(nuspec_file_content), "@PACKAGE_DESCRIPTION@", Strings::join("\n", binary_paragraph.description));
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@EXPORTED_ROOT_DIR@", exported_root_dir);
         nuspec_file_content = Strings::replace_all(std::move(nuspec_file_content),
@@ -113,7 +113,7 @@ Get-Content $whereToInstallCache | Foreach-Object {
 }
 
 $installedDir = Join-Path $whereToInstall 'installed'
-Get-Content $listFile | Foreach-Object { 
+Get-Content $listFile | Foreach-Object {
     $fileToRemove = Join-Path $installedDir $_
     if (Test-Path $fileToRemove -PathType Leaf) {
         Remove-Item $fileToRemove
@@ -200,7 +200,7 @@ if (Test-Path $installedDir)
                 action.spec.triplet().to_string(),
                 per_package_dir_path / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
-            Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
+            Install::install_package_and_write_listfile(paths, action.spec, dirs);
 
             const std::string nuspec_file_content = create_nuspec_file_contents(
                 per_package_dir_path.string(), binary_paragraph, packages_version, chocolatey_options);
@@ -219,9 +219,9 @@ if (Test-Path $installedDir)
             fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content, VCPKG_LINE_INFO);
 
             const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)",
-                                                  nuget_exe.u8string(),
-                                                  exported_dir_path.u8string(),
-                                                  nuspec_file_path.u8string());
+                                                  fs::u8string(nuget_exe),
+                                                  fs::u8string(exported_dir_path),
+                                                  fs::u8string(nuspec_file_path));
 
             const int exit_code =
                 System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;

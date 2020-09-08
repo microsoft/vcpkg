@@ -1,8 +1,8 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.owns.h>
 #include <vcpkg/help.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::Owns
@@ -24,8 +24,7 @@ namespace vcpkg::Commands::Owns
         }
     }
     const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("The argument should be a pattern to search for. %s",
-                        Help::create_example_string("owns zlib.dll")),
+        Strings::format("The argument should be a pattern to search for. %s", create_example_string("owns zlib.dll")),
         1,
         1,
         {},
@@ -34,10 +33,15 @@ namespace vcpkg::Commands::Owns
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
 
         const StatusParagraphs status_db = database_load_check(paths);
         search_file(paths, args.command_arguments[0], status_db);
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void OwnsCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Owns::perform_and_exit(args, paths);
     }
 }
