@@ -32,6 +32,10 @@ namespace vcpkg::Json
         std::vector<std::string> m_errors;
         struct Path
         {
+            constexpr Path() = default;
+            constexpr Path(int64_t i) : index(i) { }
+            constexpr Path(StringView f) : field(f) { }
+
             int64_t index = -1;
             StringView field;
         };
@@ -47,7 +51,7 @@ namespace vcpkg::Json
                 return false;
             }
 
-            m_path.push_back({-1, key});
+            m_path.push_back(key);
             auto opt = visitor.visit(*this, *value);
 
             if (auto p_opt = opt.get())
