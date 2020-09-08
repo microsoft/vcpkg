@@ -11,6 +11,7 @@ vcpkg_from_github(
         boost-1.70.patch
         fix-link-libpng.patch
         remove-broken-targets.patch
+        fix-check-sse.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
@@ -34,6 +35,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda        BUILD_GPU
     tools       BUILD_tools
     opengl      WITH_OPENGL
+    vtk         WITH_VTK
 )
 
 vcpkg_configure_cmake(
@@ -51,7 +53,6 @@ vcpkg_configure_cmake(
         -DWITH_LIBUSB=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_VTK=OFF # disabled due to API changes in 9.0
         # FEATURES
         ${FEATURE_OPTIONS}
 )

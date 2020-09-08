@@ -48,8 +48,6 @@ akali:arm-uwp=fail
 akali:arm64-windows=fail
 alac:arm-uwp=fail
 alac:x64-uwp=fail
-alembic:x64-osx=fail
-alembic:x64-windows-static=fail
 aliyun-oss-c-sdk:x64-linux=fail
 aliyun-oss-c-sdk:x64-osx=fail
 ampl-mp:arm64-windows=fail
@@ -78,13 +76,10 @@ asyncplusplus:arm-uwp=fail
 asyncplusplus:x64-uwp=fail
 atk:x64-osx=fail
 atk:arm64-windows=fail
-atkmm:x64-linux=fail
 atlmfc:x64-linux=fail
 atlmfc:x64-osx=fail
 aubio:x64-linux=fail
 aubio:x64-osx=fail
-avisynthplus:x64-linux=fail
-avisynthplus:x64-windows-static=fail
 avro-c:arm-uwp=fail
 avro-c:x64-osx=fail
 avro-c:x64-uwp=fail
@@ -125,9 +120,6 @@ bitserializer-rapidyaml:x64-osx=skip
 bitserializer:arm-uwp=skip
 bitserializer:arm64-windows=skip
 bitserializer:x64-osx=skip
-blaze:x64-windows=fail
-blaze:x64-windows-static=fail
-blaze:x86-windows=fail
 blend2d:arm64-windows=fail
 blend2d:arm-uwp=fail
 blend2d:x64-uwp=fail
@@ -143,8 +135,6 @@ bond:x64-uwp=fail
 botan:arm64-windows=fail
 botan:arm-uwp=fail
 botan:x64-uwp=fail
-box2d:x64-uwp=fail
-box2d:arm-uwp=fail
 breakpad:arm64-windows=fail
 bullet3:arm64-windows=fail
 bullet3:arm-uwp=fail
@@ -155,6 +145,11 @@ caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
 cairomm:x64-linux=fail
+# capnproto currently triggers an ICE
+capnproto:x86-windows=fail
+capnproto:x64-windows=fail
+capnproto:x64-windows-static=fail
+# capnproto doesn't support arm, arm64, or UWP
 capnproto:arm64-windows=fail
 capnproto:arm-uwp=fail
 capnproto:x64-uwp=fail
@@ -205,15 +200,11 @@ chipmunk:x64-osx=fail
 chipmunk:x64-uwp=fail
 chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
+# Chromium Base requires a recent version of Clang to be installed.
+chromium-base:x64-linux=skip
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
-# clapack is replaced by lapack-reference. 
-clapack:x64-linux = skip
-clapack:x64-windows = skip
-clapack:x64-windows-static = skip
-clapack:x86-windows = skip
-clapack:x64-uwp=fail
 clblas:arm64-windows=fail
 clblast:x64-linux=fail
 clblast:x64-windows-static=fail
@@ -252,7 +243,6 @@ cppmicroservices:arm-uwp=fail
 cppmicroservices:x64-uwp=fail
 cpp-netlib:arm-uwp=fail
 cpp-netlib:x64-uwp=fail
-cpp-taskflow:x64-osx=fail
 cppcoro:x64-linux=fail
 cppcoro:arm-uwp=fail
 cppcoro:x64-uwp=fail
@@ -270,8 +260,6 @@ crashpad:x86-windows=fail
 crfsuite:arm-uwp=fail
 crfsuite:x64-uwp=fail
 crossguid:x64-osx=fail
-cspice:arm-uwp=fail
-cspice:x64-uwp=fail
 ctemplate:arm64-windows=fail
 ctemplate:arm-uwp=fail
 ctemplate:x64-linux=fail
@@ -423,8 +411,17 @@ flint:x64-linux=fail
 flint:x64-osx=fail
 fltk:arm-uwp=fail
 fltk:x64-uwp=fail
-fluidsynth:x64-linux=fail
 fluidsynth:x64-osx=fail
+# fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
+# fluidlite has no dependencies and thus is less likely to be broken by another package.
+fluidlite:arm-uwp=skip
+fluidlite:arm64-windows=skip
+fluidlite:x64-linux=skip
+fluidlite:x64-osx=skip
+fluidlite:x64-uwp=skip
+fluidlite:x64-windows-static=skip
+fluidlite:x64-windows=skip
+fluidlite:x86-windows=skip
 fmem:arm-uwp=fail
 fmem:x64-uwp=fail
 fmi4cpp:arm-uwp=fail
@@ -509,6 +506,8 @@ gmmlib:x64-uwp=fail
 gmmlib:x64-windows=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x86-windows=fail
+# VS 2019 16.7 broke gmp UWP https://github.com/microsoft/vcpkg/issues/13172
+gmp:x64-uwp=fail
 google-cloud-cpp:arm64-windows=fail
 google-cloud-cpp:arm-uwp=fail
 google-cloud-cpp:x64-uwp=fail
@@ -552,12 +551,10 @@ hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
 hpx:x64-linux=fail
+libhsplasma:x64-windows-static=fail
 hwloc:arm64-windows=fail
 hwloc:arm-uwp=fail
 hwloc:x64-uwp=fail
-# hypre has a conflict with 'superlu' port
-hypre:x64-linux=skip
-hypre:x64-osx=skip
 icu:arm64-windows=fail
 icu:arm-uwp=fail
 icu:x64-uwp=fail
@@ -1173,6 +1170,17 @@ ogre-next:x86-windows        = skip
 ois:arm64-windows=fail
 ois:arm-uwp=fail
 ois:x64-uwp=fail
+# ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
+# does not resolve the issue
+# src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
+# -L/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib   -L/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib
+# -Wl,-rpath,/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib:/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib::::::::::::::::::::::::::::::::::::::::::::::::
+# -lode  /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_serialization.a 
+# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_filesystem.a 
+# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_system.a  -lpthread && :
+# /usr/bin/ld: cannot find -lode
+ompl:x64-osx=fail
+ompl:x64-linux=fail
 open62541:arm-uwp=fail
 open62541:x64-uwp=fail
 openal-soft:arm-uwp=fail
@@ -1215,10 +1223,6 @@ openexr:arm-uwp=fail
 openexr:x64-uwp=fail
 opengl:arm64-windows=fail
 opengl:arm-uwp=fail
-openmama:x64-windows=fail
-openmama:x86-windows=fail
-openmama:x64-linux=fail
-openmama:x64-osx=fail
 openmesh:arm64-windows=fail
 openmesh:arm-uwp=fail
 openmesh:x64-uwp=fail
@@ -1228,7 +1232,6 @@ openmpi:x64-uwp=fail
 openmpi:x64-windows=fail
 openmpi:x64-windows-static=fail
 openmpi:x86-windows=fail
-openmvs:x64-linux=fail
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
 openscap:x64-linux=fail
@@ -1347,10 +1350,6 @@ portaudio:x64-uwp=fail
 portaudio:x64-windows-static=fail
 portaudio:x64-windows=fail
 portaudio:x86-windows=fail
-portmidi:arm-uwp=fail
-portmidi:x64-linux=fail
-portmidi:x64-osx=fail
-portmidi:x64-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
 proj4:arm64-windows=fail
@@ -1481,6 +1480,15 @@ reproc:arm-uwp=fail
 reproc:x64-uwp=fail
 restbed:arm-uwp=fail
 restbed:x64-uwp=fail
+# file conflicts with msgpack
+rest-rpc:x86-windows=skip
+rest-rpc:x64-windows=skip
+rest-rpc:x64-windows-static=skip
+rest-rpc:x64-uwp=skip
+rest-rpc:arm-uwp=skip
+rest-rpc:arm64-windows=skip
+rest-rpc:x64-linux=skip
+rest-rpc:x64-osx=skip
 rhash:arm64-windows=fail
 rhash:arm-uwp=fail
 rhash:x64-uwp=fail
@@ -1594,7 +1602,6 @@ soil:x64-linux=skip
 soil:x64-osx=skip
 soil2:arm-uwp=fail
 soil2:x64-uwp=fail
-sophus:x64-linux=fail
 soqt:arm64-windows=fail
 soqt:arm-uwp=fail
 soqt:x64-uwp=fail
@@ -1626,8 +1633,6 @@ spdk-isal:x64-uwp=fail
 spdk-isal:x64-windows=fail
 spdk-isal:x64-windows-static=fail
 spdk-isal:x86-windows=fail
-speex:x64-linux=fail
-speex:x64-osx=fail
 speexdsp:x64-linux=fail
 speexdsp:x64-osx=fail
 spirv-tools:arm-uwp=fail
@@ -1640,26 +1645,6 @@ stxxl:x64-uwp=fail
 sundials:arm64-windows=fail
 sundials:x64-windows=fail
 sundials:x86-windows=fail
-# Conflicts between ports:
-#The following files are already installed in C:/agent/_work/1/s/installed/x64-windows-static
-# and are in conflict with superlu:x64-windows-static
-#
-#Installed by hypre:x64-windows-static
-#    include/slu_Cnames.h
-#    include/slu_cdefs.h
-#    include/slu_dcomplex.h
-#    include/slu_ddefs.h
-#    include/slu_scomplex.h
-#    include/slu_sdefs.h
-#    include/slu_util.h
-#    include/slu_zdefs.h
-#    include/supermatrix.h
-superlu:arm-uwp=skip
-superlu:arm-windows=skip
-superlu:arm64-windows=skip
-superlu:x64-uwp=skip
-superlu:x64-windows-static=skip
-superlu:x64-windows=skip
 systemc:arm64-windows=fail
 systemc:arm-uwp=fail
 systemc:x64-uwp=fail
@@ -1669,7 +1654,6 @@ tbb:x64-uwp=fail
 tcl:arm-uwp=fail
 tcl:arm64-windows=fail
 tcl:x64-uwp=fail
-tcl:x64-linux=fail
 tcl:x64-osx=fail
 teemo:x64-uwp=fail
 teemo:arm-uwp=fail
@@ -1776,6 +1760,10 @@ uvatlas:arm-uwp=fail
 uvatlas:x64-linux=fail
 uvatlas:x64-osx=fail
 uvatlas:x64-windows-static=fail
+v8:arm64-windows=fail
+v8:arm-uwp=fail
+v8:x64-osx=fail
+v8:x64-uwp=fail
 vectorclass:arm64-windows=fail
 vectorclass:arm-uwp=fail
 vlpp:x64-osx=fail
@@ -1901,3 +1889,13 @@ ctp:x64-windows-static=skip
 ctp:x86-windows=skip
 protozero:arm-uwp=fail
 protozero:x64-uwp=fail
+
+# clapack is replaced by lapack-reference on the platforms lapack-reference supports
+clapack:x64-linux=skip
+clapack:x64-osx=skip
+clapack:x64-windows-static=skip
+clapack:x64-windows=skip
+clapack:x86-windows=skip
+clapack:x64-uwp=skip
+lapack-reference:arm64-windows=skip
+lapack-reference:arm-uwp=skip
