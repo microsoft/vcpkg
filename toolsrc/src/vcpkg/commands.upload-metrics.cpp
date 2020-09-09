@@ -1,8 +1,8 @@
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 
-#include <vcpkg/metrics.h>
 #include <vcpkg/commands.upload-metrics.h>
+#include <vcpkg/metrics.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 using namespace vcpkg;
