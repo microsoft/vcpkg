@@ -1,6 +1,6 @@
 {
   "name": "d3dx12",
-  "version-string": "2020-09-05",
+  "version-string": "may2020",
   "description": "The D3D12 Helper Library",
   "homepage": "https://github.com/microsoft/DirectX-Graphics-Samples/tree/master/Libraries/D3DX12"
 }
