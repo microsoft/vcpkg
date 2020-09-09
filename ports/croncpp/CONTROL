@@ -1,5 +1,5 @@
 Source: croncpp
-Version: 1.0.0
+Version: 2020-09-04
 Port-Version: 1
 Homepage: https://github.com/mariusbancila/croncpp
 Description: croncpp is a C++17 header-only cross-platform library for handling CRON expressions.
