@@ -469,11 +469,11 @@ namespace vcpkg
         constexpr static StringLiteral NAME = "name";
         constexpr static StringLiteral DESCRIPTION = "description";
         constexpr static StringLiteral DEPENDENCIES = "dependencies";
-        constexpr static StringLiteral SUPPORTS = "support";
+        constexpr static StringLiteral SUPPORTS = "supports";
 
         virtual Span<const StringView> valid_fields() const override
         {
-            static const StringView t[] = {NAME, DESCRIPTION, DEPENDENCIES};
+            static const StringView t[] = {NAME, DESCRIPTION, DEPENDENCIES, SUPPORTS};
             return t;
         }
 
