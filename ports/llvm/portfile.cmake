@@ -12,6 +12,7 @@ vcpkg_from_github(
         0001-allow-to-use-commas.patch
         0002-fix-install-paths.patch
         0003-fix-vs2019-v16.6.patch
+        0004-fix-dr-1734.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

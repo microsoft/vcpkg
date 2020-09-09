@@ -28,7 +28,7 @@ using Test::PackageSpecMap;
 static void features_check(Dependencies::InstallPlanAction& plan,
                            std::string pkg_name,
                            std::vector<std::string> expected_features,
-                           Triplet triplet = Triplet::X86_WINDOWS)
+                           Triplet triplet = Test::X86_WINDOWS)
 {
     const auto& feature_list = plan.feature_list;
 
@@ -54,7 +54,7 @@ static void features_check(Dependencies::InstallPlanAction& plan,
 /// </summary>
 static void remove_plan_check(Dependencies::RemovePlanAction& plan,
                               std::string pkg_name,
-                              Triplet triplet = Triplet::X86_WINDOWS)
+                              Triplet triplet = Test::X86_WINDOWS)
 {
     REQUIRE(plan.spec.triplet().to_string() == triplet.to_string());
     REQUIRE(pkg_name == plan.spec.name());
@@ -381,14 +381,14 @@ TEST_CASE ("basic feature test 8", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a"));
     status_paragraphs.push_back(make_status_pgh("a"));
-    status_paragraphs.back()->package.spec = PackageSpec("a", Triplet::X64_WINDOWS);
+    status_paragraphs.back()->package.spec = PackageSpec("a", Test::X64_WINDOWS);
 
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "b", {{"a1", ""}}), {"core"}};
     auto spec_b_64 = FullPackageSpec{spec_map.emplace("b")};
     auto spec_c_64 = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
-    spec_map.triplet = Triplet::X86_WINDOWS;
+    spec_map.triplet = Test::X86_WINDOWS;
     auto spec_a_86 = FullPackageSpec{spec_map.emplace("a", "b", {{"a1", ""}}), {"core"}};
     auto spec_b_86 = FullPackageSpec{spec_map.emplace("b")};
     auto spec_c_86 = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
@@ -401,14 +401,14 @@ TEST_CASE ("basic feature test 8", "[plan]")
                                                           {spec_c_64, spec_a_86, spec_a_64, spec_c_86},
                                                           StatusParagraphs(std::move(status_paragraphs)));
 
-    remove_plan_check(plan.remove_actions.at(0), "a", Triplet::X64_WINDOWS);
+    remove_plan_check(plan.remove_actions.at(0), "a", Test::X64_WINDOWS);
     remove_plan_check(plan.remove_actions.at(1), "a");
     auto& install_plan = plan.install_actions;
-    features_check(install_plan.at(0), "b", {"core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.at(1), "a", {"a1", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.at(0), "b", {"core"}, Test::X64_WINDOWS);
+    features_check(install_plan.at(1), "a", {"a1", "core"}, Test::X64_WINDOWS);
     features_check(install_plan.at(2), "b", {"core"});
     features_check(install_plan.at(3), "a", {"a1", "core"});
-    features_check(install_plan.at(4), "c", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.at(4), "c", {"core"}, Test::X64_WINDOWS);
     features_check(install_plan.at(5), "c", {"core"});
 }
 
@@ -416,10 +416,10 @@ TEST_CASE ("install all features test", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "", {{"0", ""}, {"1", ""}}), {"core"}};
 
-    auto install_specs = FullPackageSpec::from_string("a[*]", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a[*]", Test::X64_WINDOWS);
     REQUIRE(install_specs.has_value());
     if (!install_specs.has_value()) return;
 
@@ -432,7 +432,7 @@ TEST_CASE ("install all features test", "[plan]")
                                                                   StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 1);
-    features_check(install_plan.install_actions.at(0), "a", {"0", "1", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "a", {"0", "1", "core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("install default features test 1", "[plan]")
@@ -440,11 +440,11 @@ TEST_CASE ("install default features test 1", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
     // Add a port "a" with default features "1" and features "0" and "1".
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "", {{"0", ""}, {"1", ""}}, {"1"});
 
     // Install "a" (without explicit feature specification)
-    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
@@ -456,23 +456,23 @@ TEST_CASE ("install default features test 1", "[plan]")
 
     // Expect the default feature "1" to be installed, but not "0"
     REQUIRE(install_plan.size() == 1);
-    features_check(install_plan.install_actions.at(0), "a", {"1", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "a", {"1", "core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("install default features test 2", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a"));
-    status_paragraphs.back()->package.spec = PackageSpec("a", Triplet::X64_WINDOWS);
+    status_paragraphs.back()->package.spec = PackageSpec("a", Test::X64_WINDOWS);
 
     // Add a port "a" of which "core" is already installed, but we will
     // install the default features "explicitly"
     // "a" has two features, of which "a1" is default.
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "", {{"a0", ""}, {"a1", ""}}, {"a1"});
 
     // Install "a" (without explicit feature specification)
-    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
@@ -485,8 +485,8 @@ TEST_CASE ("install default features test 2", "[plan]")
     // Expect "a" to get removed for rebuild and then installed with default
     // features.
     REQUIRE(install_plan.size() == 2);
-    remove_plan_check(install_plan.remove_actions.at(0), "a", Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(0), "a", {"a1", "core"}, Triplet::X64_WINDOWS);
+    remove_plan_check(install_plan.remove_actions.at(0), "a", Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "a", {"a1", "core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("install default features test 3", "[plan]")
@@ -494,11 +494,11 @@ TEST_CASE ("install default features test 3", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
     // "a" has two features, of which "a1" is default.
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "", {{"a0", ""}, {"a1", ""}}, {"a1"});
 
     // Explicitly install "a" without default features
-    auto install_specs = FullPackageSpec::from_string("a[core]", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a[core]", Test::X64_WINDOWS);
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
@@ -510,7 +510,7 @@ TEST_CASE ("install default features test 3", "[plan]")
 
     // Expect the default feature not to get installed.
     REQUIRE(install_plan.size() == 1);
-    features_check(install_plan.install_actions.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "a", {"core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("install default features of dependency test 1", "[plan]")
@@ -518,13 +518,13 @@ TEST_CASE ("install default features of dependency test 1", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
     // Add a port "a" which depends on the core of "b"
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "b[core]");
     // "b" has two features, of which "b1" is default.
     spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
 
     // Install "a" (without explicit feature specification)
-    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
 
@@ -536,8 +536,8 @@ TEST_CASE ("install default features of dependency test 1", "[plan]")
     // Expect "a" to get installed and defaults of "b" through the dependency,
     // as no explicit features of "b" are installed by the user.
     REQUIRE(install_plan.size() == 2);
-    features_check(install_plan.install_actions.at(0), "b", {"b1", "core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(1), "a", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "b", {"b1", "core"}, Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "a", {"core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("do not install default features of dependency test 1", "[plan]")
@@ -545,14 +545,14 @@ TEST_CASE ("do not install default features of dependency test 1", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
     // Add a port "a" which depends on the core of "b"
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "b[core]");
     // "b" has two features, of which "b1" is default.
     spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
 
     // Install "a" (without explicit feature specification)
-    auto spec_a = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
-    auto spec_b = FullPackageSpec::from_string("b[core]", Triplet::X64_WINDOWS);
+    auto spec_a = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
+    auto spec_b = FullPackageSpec::from_string("b[core]", Test::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
 
@@ -565,8 +565,8 @@ TEST_CASE ("do not install default features of dependency test 1", "[plan]")
     // Expect "a" to get installed and defaults of "b" through the dependency,
     // as no explicit features of "b" are installed by the user.
     REQUIRE(install_plan.size() == 2);
-    features_check(install_plan.install_actions.at(0), "b", {"core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(1), "a", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "b", {"core"}, Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "a", {"core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("install default features of dependency test 2", "[plan]")
@@ -574,14 +574,14 @@ TEST_CASE ("install default features of dependency test 2", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
     // Add a port "a" which depends on the default features of "b"
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "b");
     // "b" has two features, of which "b1" is default.
     spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
 
     // Install "a" (without explicit feature specification)
-    auto spec_a = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
-    auto spec_b = FullPackageSpec::from_string("b[core]", Triplet::X64_WINDOWS);
+    auto spec_a = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
+    auto spec_b = FullPackageSpec::from_string("b[core]", Test::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
 
@@ -593,14 +593,14 @@ TEST_CASE ("install default features of dependency test 2", "[plan]")
 
     // Expect "a" to get installed and defaults of "b" through the dependency
     REQUIRE(install_plan.size() == 2);
-    features_check(install_plan.install_actions.at(0), "b", {"b1", "core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(1), "a", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "b", {"b1", "core"}, Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "a", {"core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("do not install default features of existing dependency", "[plan]")
 {
     // Add a port "a" which depends on the core of "b"
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "b[core]");
     // "b" has two features, of which "b1" is default.
     spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
@@ -608,10 +608,10 @@ TEST_CASE ("do not install default features of existing dependency", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     // "b[core]" is already installed
     status_paragraphs.push_back(make_status_pgh("b"));
-    status_paragraphs.back()->package.spec = PackageSpec("b", Triplet::X64_WINDOWS);
+    status_paragraphs.back()->package.spec = PackageSpec("b", Test::X64_WINDOWS);
 
     // Install "a" (without explicit feature specification)
-    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
 
@@ -622,13 +622,13 @@ TEST_CASE ("do not install default features of existing dependency", "[plan]")
 
     // Expect "a" to get installed, but not require rebuilding "b"
     REQUIRE(install_plan.size() == 1);
-    features_check(install_plan.install_actions.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "a", {"core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("install default features of existing dependency", "[plan]")
 {
     // Add a port "a" which depends on the default features of "b"
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "b");
     // "b" has a default feature
     spec_map.emplace("b", "", {{"b1", ""}}, {"b1"});
@@ -636,10 +636,10 @@ TEST_CASE ("install default features of existing dependency", "[plan]")
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     // "b[core]" is already installed
     status_paragraphs.push_back(make_status_pgh("b", "", "b1"));
-    status_paragraphs.back()->package.spec = PackageSpec("b", Triplet::X64_WINDOWS);
+    status_paragraphs.back()->package.spec = PackageSpec("b", Test::X64_WINDOWS);
 
     // Install "a" (without explicit feature specification)
-    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
 
@@ -650,24 +650,24 @@ TEST_CASE ("install default features of existing dependency", "[plan]")
 
     // Expect "b" to be rebuilt
     REQUIRE(install_plan.install_actions.size() == 2);
-    features_check(install_plan.install_actions.at(0), "b", {"core", "b1"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "b", {"core", "b1"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("install default features of dependency test 3", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("b"));
-    status_paragraphs.back()->package.spec = PackageSpec("b", Triplet::X64_WINDOWS);
+    status_paragraphs.back()->package.spec = PackageSpec("b", Test::X64_WINDOWS);
 
     // Add a port "a" which depends on the core of "b", which was already
     // installed explicitly
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "b[core]");
     // "b" has two features, of which "b1" is default.
     spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
 
     // Install "a" (without explicit feature specification)
-    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
 
@@ -679,7 +679,7 @@ TEST_CASE ("install default features of dependency test 3", "[plan]")
     // Expect "a" to get installed, not the defaults of "b", as the required
     // dependencies are already there, installed explicitly by the user.
     REQUIRE(install_plan.size() == 1);
-    features_check(install_plan.install_actions.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "a", {"core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("install plan action dependencies", "[plan]")
@@ -688,13 +688,13 @@ TEST_CASE ("install plan action dependencies", "[plan]")
 
     // Add a port "a" which depends on the core of "b", which was already
     // installed explicitly
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     auto spec_c = spec_map.emplace("c");
     auto spec_b = spec_map.emplace("b", "c");
     spec_map.emplace("a", "b");
 
     // Install "a" (without explicit feature specification)
-    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
 
@@ -704,13 +704,13 @@ TEST_CASE ("install plan action dependencies", "[plan]")
                                                                   StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 3);
-    features_check(install_plan.install_actions.at(0), "c", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "c", {"core"}, Test::X64_WINDOWS);
 
     // TODO: Figure out what to do with these tests
-    features_check(install_plan.install_actions.at(1), "b", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "b", {"core"}, Test::X64_WINDOWS);
     // REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_c});
 
-    features_check(install_plan.install_actions.at(2), "a", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(2), "a", {"core"}, Test::X64_WINDOWS);
     // REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_b});
 }
 
@@ -720,13 +720,13 @@ TEST_CASE ("install plan action dependencies 2", "[plan]")
 
     // Add a port "a" which depends on the core of "b", which was already
     // installed explicitly
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     auto spec_c = spec_map.emplace("c");
     auto spec_b = spec_map.emplace("b", "c");
     spec_map.emplace("a", "c, b");
 
     // Install "a" (without explicit feature specification)
-    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
 
@@ -736,12 +736,12 @@ TEST_CASE ("install plan action dependencies 2", "[plan]")
                                                                   StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 3);
-    features_check(install_plan.install_actions.at(0), "c", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "c", {"core"}, Test::X64_WINDOWS);
 
-    features_check(install_plan.install_actions.at(1), "b", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "b", {"core"}, Test::X64_WINDOWS);
     // REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_c});
 
-    features_check(install_plan.install_actions.at(2), "a", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(2), "a", {"core"}, Test::X64_WINDOWS);
     // REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_b,
     // spec_c});
 }
@@ -752,11 +752,11 @@ TEST_CASE ("install plan action dependencies 3", "[plan]")
 
     // Add a port "a" which depends on the core of "b", which was already
     // installed explicitly
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     spec_map.emplace("a", "", {{"0", ""}, {"1", "a[0]"}}, {"1"});
 
     // Install "a" (without explicit feature specification)
-    auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a", Test::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;
 
@@ -766,7 +766,7 @@ TEST_CASE ("install plan action dependencies 3", "[plan]")
                                                                   StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 1);
-    features_check(install_plan.install_actions.at(0), "a", {"1", "0", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "a", {"1", "0", "core"}, Test::X64_WINDOWS);
     // REQUIRE(install_plan.at(0).install_action.get()->computed_dependencies == std::vector<PackageSpec>{});
 }
 
@@ -827,7 +827,7 @@ TEST_CASE ("upgrade with default features 2", "[plan]")
 
     StatusParagraphs status_db(std::move(pghs));
 
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     auto spec_a = spec_map.emplace("a", "b[core]");
     auto spec_b = spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b0", "b1"});
 
@@ -837,10 +837,10 @@ TEST_CASE ("upgrade with default features 2", "[plan]")
 
     // The upgrade should install the new default feature b1 but not b0
     REQUIRE(plan.size() == 4);
-    remove_plan_check(plan.remove_actions.at(0), "a", Triplet::X64_WINDOWS);
-    remove_plan_check(plan.remove_actions.at(1), "b", Triplet::X64_WINDOWS);
-    features_check(plan.install_actions.at(0), "b", {"core", "b1"}, Triplet::X64_WINDOWS);
-    features_check(plan.install_actions.at(1), "a", {"core"}, Triplet::X64_WINDOWS);
+    remove_plan_check(plan.remove_actions.at(0), "a", Test::X64_WINDOWS);
+    remove_plan_check(plan.remove_actions.at(1), "b", Test::X64_WINDOWS);
+    features_check(plan.install_actions.at(0), "b", {"core", "b1"}, Test::X64_WINDOWS);
+    features_check(plan.install_actions.at(1), "a", {"core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("upgrade with default features 3", "[plan]")
@@ -852,7 +852,7 @@ TEST_CASE ("upgrade with default features 3", "[plan]")
 
     StatusParagraphs status_db(std::move(pghs));
 
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     auto spec_a = spec_map.emplace("a", "b[core]");
     spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b0"});
 
@@ -862,9 +862,9 @@ TEST_CASE ("upgrade with default features 3", "[plan]")
 
     // The upgrade should install the default feature
     REQUIRE(plan.size() == 3);
-    remove_plan_check(plan.remove_actions.at(0), "a", Triplet::X64_WINDOWS);
-    features_check(plan.install_actions.at(0), "b", {"b0", "core"}, Triplet::X64_WINDOWS);
-    features_check(plan.install_actions.at(1), "a", {"core"}, Triplet::X64_WINDOWS);
+    remove_plan_check(plan.remove_actions.at(0), "a", Test::X64_WINDOWS);
+    features_check(plan.install_actions.at(0), "b", {"b0", "core"}, Test::X64_WINDOWS);
+    features_check(plan.install_actions.at(1), "a", {"core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("upgrade with new default feature", "[plan]")
@@ -883,20 +883,20 @@ TEST_CASE ("upgrade with new default feature", "[plan]")
 
     // The upgrade should install the new default feature but not the old default feature 0
     REQUIRE(plan.size() == 2);
-    remove_plan_check(plan.remove_actions.at(0), "a", Triplet::X86_WINDOWS);
-    features_check(plan.install_actions.at(0), "a", {"core", "1"}, Triplet::X86_WINDOWS);
+    remove_plan_check(plan.remove_actions.at(0), "a", Test::X86_WINDOWS);
+    features_check(plan.install_actions.at(0), "a", {"core", "1"}, Test::X86_WINDOWS);
 }
 
 TEST_CASE ("transitive features test", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "b", {{"0", "b[0]"}}), {"core"}};
     auto spec_b_64 = FullPackageSpec{spec_map.emplace("b", "c", {{"0", "c[0]"}}), {"core"}};
     auto spec_c_64 = FullPackageSpec{spec_map.emplace("c", "", {{"0", ""}}), {"core"}};
 
-    auto install_specs = FullPackageSpec::from_string("a[*]", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a[*]", Test::X64_WINDOWS);
     REQUIRE(install_specs.has_value());
     if (!install_specs.has_value()) return;
 
@@ -908,21 +908,21 @@ TEST_CASE ("transitive features test", "[plan]")
                                                                   StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 3);
-    features_check(install_plan.install_actions.at(0), "c", {"0", "core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(1), "b", {"0", "core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(2), "a", {"0", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "c", {"0", "core"}, Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "b", {"0", "core"}, Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(2), "a", {"0", "core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("no transitive features test", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "b", {{"0", ""}}), {"core"}};
     auto spec_b_64 = FullPackageSpec{spec_map.emplace("b", "c", {{"0", ""}}), {"core"}};
     auto spec_c_64 = FullPackageSpec{spec_map.emplace("c", "", {{"0", ""}}), {"core"}};
 
-    auto install_specs = FullPackageSpec::from_string("a[*]", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a[*]", Test::X64_WINDOWS);
     REQUIRE(install_specs.has_value());
     if (!install_specs.has_value()) return;
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
@@ -933,21 +933,21 @@ TEST_CASE ("no transitive features test", "[plan]")
                                                                   StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 3);
-    features_check(install_plan.install_actions.at(0), "c", {"core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(1), "b", {"core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(2), "a", {"0", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "c", {"core"}, Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "b", {"core"}, Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(2), "a", {"0", "core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("only transitive features test", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
-    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    PackageSpecMap spec_map(Test::X64_WINDOWS);
     auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "", {{"0", "b[0]"}}), {"core"}};
     auto spec_b_64 = FullPackageSpec{spec_map.emplace("b", "", {{"0", "c[0]"}}), {"core"}};
     auto spec_c_64 = FullPackageSpec{spec_map.emplace("c", "", {{"0", ""}}), {"core"}};
 
-    auto install_specs = FullPackageSpec::from_string("a[*]", Triplet::X64_WINDOWS);
+    auto install_specs = FullPackageSpec::from_string("a[*]", Test::X64_WINDOWS);
     REQUIRE(install_specs.has_value());
     if (!install_specs.has_value()) return;
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
@@ -958,9 +958,9 @@ TEST_CASE ("only transitive features test", "[plan]")
                                                                   StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 3);
-    features_check(install_plan.install_actions.at(0), "c", {"0", "core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(1), "b", {"0", "core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.install_actions.at(2), "a", {"0", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(0), "c", {"0", "core"}, Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "b", {"0", "core"}, Test::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(2), "a", {"0", "core"}, Test::X64_WINDOWS);
 }
 
 TEST_CASE ("basic remove scheme", "[plan]")
@@ -969,7 +969,7 @@ TEST_CASE ("basic remove scheme", "[plan]")
     pghs.push_back(make_status_pgh("a"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan({{"a", Triplet::X86_WINDOWS}}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"a", Test::X86_WINDOWS}}, status_db);
 
     REQUIRE(remove_plan.size() == 1);
     REQUIRE(remove_plan.at(0).spec.name() == "a");
@@ -982,7 +982,7 @@ TEST_CASE ("recurse remove scheme", "[plan]")
     pghs.push_back(make_status_pgh("b", "a"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan({{"a", Triplet::X86_WINDOWS}}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"a", Test::X86_WINDOWS}}, status_db);
 
     REQUIRE(remove_plan.size() == 2);
     REQUIRE(remove_plan.at(0).spec.name() == "b");
@@ -997,7 +997,7 @@ TEST_CASE ("features depend remove scheme", "[plan]")
     pghs.push_back(make_status_feature_pgh("b", "0", "a"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan({{"a", Triplet::X86_WINDOWS}}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"a", Test::X86_WINDOWS}}, status_db);
 
     REQUIRE(remove_plan.size() == 2);
     REQUIRE(remove_plan.at(0).spec.name() == "b");
@@ -1013,7 +1013,7 @@ TEST_CASE ("features depend remove scheme once removed", "[plan]")
     pghs.push_back(make_status_feature_pgh("opencv", "vtk", "vtk"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan({{"expat", Triplet::X86_WINDOWS}}, status_db);
+    auto remove_plan = Dependencies::create_remove_plan({{"expat", Test::X86_WINDOWS}}, status_db);
 
     REQUIRE(remove_plan.size() == 3);
     REQUIRE(remove_plan.at(0).spec.name() == "opencv");

@@ -1,33 +1,21 @@
 #pragma once
 
+#include <vcpkg/base/fwd/json.h>
+
+#include <vcpkg/fwd/configuration.h>
+#include <vcpkg/fwd/registries.h>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
-
-#include <vcpkg/binaryparagraph.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/tools.h>
-#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
 {
-    namespace Tools
-    {
-        static const std::string SEVEN_ZIP = "7zip";
-        static const std::string SEVEN_ZIP_ALT = "7z";
-        static const std::string MAVEN = "mvn";
-        static const std::string CMAKE = "cmake";
-        static const std::string GIT = "git";
-        static const std::string MONO = "mono";
-        static const std::string NINJA = "ninja";
-        static const std::string NUGET = "nuget";
-        static const std::string IFW_INSTALLER_BASE = "ifw_installerbase";
-        static const std::string IFW_BINARYCREATOR = "ifw_binarycreator";
-        static const std::string IFW_REPOGEN = "ifw_repogen";
-    }
-
     struct ToolsetArchOption
     {
         CStringView name;
@@ -61,6 +49,10 @@ namespace vcpkg
         struct VcpkgPathsImpl;
     }
 
+    struct BinaryParagraph;
+    struct PackageSpec;
+    struct Triplet;
+
     struct VcpkgPaths : Util::MoveOnlyBase
     {
         struct TripletFile
@@ -89,6 +81,7 @@ namespace vcpkg
         fs::path original_cwd;
         fs::path root;
         fs::path manifest_root_dir;
+        fs::path config_root_dir;
         fs::path buildtrees;
         fs::path downloads;
         fs::path packages;
@@ -114,6 +107,10 @@ namespace vcpkg
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
 
+        Optional<const Json::Object&> get_manifest() const;
+        Optional<const fs::path&> get_manifest_path() const;
+        const Configuration& get_configuration() const;
+
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
         ///   Valid version strings are "v120", "v140", "v141", and "". Empty string gets the latest.
@@ -124,7 +121,7 @@ namespace vcpkg
 
         const System::Environment& get_action_env(const Build::AbiInfo& abi_info) const;
         const std::string& get_triplet_info(const Build::AbiInfo& abi_info) const;
-        bool manifest_mode_enabled() const { return !manifest_root_dir.empty(); }
+        bool manifest_mode_enabled() const { return get_manifest().has_value(); }
 
         void track_feature_flag_metrics() const;
 

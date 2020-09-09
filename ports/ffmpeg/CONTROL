@@ -1,11 +1,10 @@
 Source: ffmpeg
 Version: 4.2
-Port-Version: 17
-Build-Depends: zlib
+Port-Version: 23
 Homepage: https://ffmpeg.org
 Description: a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.
   FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations.
-Default-Features: avresample
+Default-Features: avresample, avcodec, avformat, avdevice, avfilter, postproc, swresample, swscale
 
 Feature: ffmpeg
 Description: build the ffmpeg.exe application
@@ -14,34 +13,35 @@ Feature: ffserver
 Description: ffserver appplication support in ffmpeg
 
 Feature: ffplay
+Build-Depends: ffmpeg[sdl2]
 Description: ffplay appplication support in ffmpeg
 
 Feature: ffprobe
 Description: ffprobe appplication support in ffmpeg
 
-Feature: openssl
-Build-Depends: openssl, ffmpeg[nonfree]
-Description: openssl support in ffmpeg
+Feature: avcodec
+Description: Codec support in ffmpeg
 
-Feature: lzma
-Build-Depends: liblzma
-Description: lzma support in ffmpeg
+Feature: avformat
+Description: Format support in ffmpeg
 
-Feature: bzip2
-Build-Depends: bzip2
-Description: bzip2 support in ffmpeg
+Feature: avdevice
+Description: Device support in ffmpeg
 
-Feature: vpx
-Build-Depends: libvpx
-Description: WebM VP8/VP9 support in ffmpeg
+Feature: avfilter
+Description: Filter support in ffmpeg
 
-Feature: x264
-Build-Depends: x264, ffmpeg[gpl]
-Description: x264 support in ffmpeg
+Feature: postproc
+Description: Postproc support in ffmpeg
 
-Feature: opencl
-Build-Depends: opencl
-Description: opencl support in ffmpeg
+Feature: swresample
+Description: Swresample support in ffmpeg
+
+Feature: swscale
+Description: Swscale support in ffmpeg
+
+Feature: avresample
+Description: Libav audio resampling library support in ffmpeg
 
 Feature: nonfree
 Description: allow nonfree and unredistributable libraries
@@ -52,13 +52,86 @@ Description: allow GPL licensed libraries
 Feature: version3
 Description: upgrade (L)GPL to version 3
 
-Feature: avresample
-Description: Libav audio resampling library support in ffmpeg
-
-Feature: nvcodec
-Build-Depends: ffnvcodec, cuda
-Description: Hardware accelerated codecs
-
 Feature: avisynthplus
 Build-Depends: avisynthplus, ffmpeg[gpl]
 Description: avisynthplus support in ffmpeg
+
+Feature: bzip2
+Build-Depends: bzip2
+Description: bzip2 support in ffmpeg
+
+Feature: iconv
+Build-Depends: libiconv
+Description: iconv support in ffmpeg
+
+Feature: fdk-aac
+Build-Depends: fdk-aac, ffmpeg[nonfree]
+Description: AAC de/encoding via libfdk-aac support in ffmpeg
+
+Feature: lzma
+Build-Depends: liblzma
+Description: lzma support in ffmpeg
+
+Feature: mp3lame
+Build-Depends: mp3lame
+Description: MP3 encoding via libmp3lame support in ffmpeg
+
+Feature: nvcodec
+Build-Depends: ffnvcodec
+Description: Hardware accelerated codecs
+
+Feature: opencl
+Build-Depends: opencl
+Description: OpenCL processing support in ffmpeg
+
+Feature: openssl
+Build-Depends: openssl, ffmpeg[nonfree]
+Description: openssl support in ffmpeg
+
+Feature: opus
+Build-Depends: opus
+Description: Opus de/encoding via libopus support in ffmpeg
+
+Feature: sdl2
+Build-Depends: sdl2
+Description: sdl2 support in ffmpeg
+
+Feature: snappy
+Build-Depends: snappy
+Description: Snappy compression, needed for hap encoding support in ffmpeg
+
+Feature: soxr
+Build-Depends: soxr
+Description: libsoxr resampling support in ffmpeg
+
+Feature: speex
+Build-Depends: speex
+Description: Speex de/encoding via libspeex support in ffmpeg
+
+Feature: theora
+Build-Depends: libtheora
+Description: Theora encoding via libtheora support in ffmpeg
+
+Feature: vorbis
+Build-Depends: libvorbis
+Description: Vorbis en/decoding via libvorbis support in ffmpeg
+
+Feature: vpx
+Build-Depends: libvpx
+Description: VP8 and VP9 de/encoding via libvpx support in ffmpeg
+
+Feature: wavpack
+Build-Depends: wavpack
+Description: wavpack encoding via libwavpack support in ffmpeg
+
+Feature: x264
+Build-Depends: x264, ffmpeg[gpl]
+Description: H.264 encoding via x264 support in ffmpeg
+
+Feature: x265
+Build-Depends: x265, ffmpeg[gpl]
+Description: HEVC encoding via x265 support in ffmpeg
+
+Feature: zlib
+Build-Depends: zlib
+Description: zlib support in ffmpeg
