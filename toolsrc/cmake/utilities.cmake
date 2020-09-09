@@ -129,7 +129,7 @@ int main() {}
 int main() {}
 ]]
                 _VCPKG_USE_STD_FILESYSTEM)
-            
+
             if(_VCPKG_REQUIRE_LINK_CXXFS)
                 set(_VCPKG_CXXFS_LIBRARY "stdc++fs")
             endif()

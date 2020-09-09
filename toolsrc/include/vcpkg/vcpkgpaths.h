@@ -108,7 +108,7 @@ namespace vcpkg
         const std::string& get_tool_version(const std::string& tool) const;
 
         Optional<const Json::Object&> get_manifest() const;
-        Optional<const Json::JsonStyle&> get_manifest_style() const;
+        Optional<const fs::path&> get_manifest_path() const;
         const Configuration& get_configuration() const;
 
         /// <summary>Retrieve a toolset matching a VS version</summary>

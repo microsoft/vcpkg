@@ -698,9 +698,9 @@ namespace vcpkg::Install
                 {
                     auto config_it = config_files.find(library_target_pair.first);
                     if (config_it != config_files.end())
-                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n ");
+                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n");
                     else
-                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n ");
+                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n");
 
                     std::sort(library_target_pair.second.begin(),
                               library_target_pair.second.end(),
@@ -788,13 +788,15 @@ namespace vcpkg::Install
             {
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
-
-            auto maybe_manifest_scf = SourceControlFile::parse_manifest_file("manifest", *manifest);
+            auto manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
+            auto maybe_manifest_scf = SourceControlFile::parse_manifest_file(manifest_path, *manifest);
             if (!maybe_manifest_scf)
             {
                 print_error_message(maybe_manifest_scf.error());
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Failed to parse manifest %s/vcpkg.json.", fs::u8string(paths.manifest_root_dir));
+                System::print2(
+                    "See https://github.com/Microsoft/vcpkg/tree/master/docs/specifications/manifests.md for "
+                    "more information.\n");
+                Checks::exit_fail(VCPKG_LINE_INFO);
             }
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 

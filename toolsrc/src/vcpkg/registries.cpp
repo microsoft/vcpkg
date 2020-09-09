@@ -34,19 +34,20 @@ namespace vcpkg
 
     StringView RegistryImplDeserializer::type_name() const { return "a registry"; }
 
+    constexpr StringLiteral RegistryImplDeserializer::KIND;
+    constexpr StringLiteral RegistryImplDeserializer::PATH;
+    constexpr StringLiteral RegistryImplDeserializer::KIND_BUILTIN;
+    constexpr StringLiteral RegistryImplDeserializer::KIND_DIRECTORY;
+
     Span<const StringView> RegistryImplDeserializer::valid_fields() const
     {
         static const StringView t[] = {KIND, PATH};
         return t;
     }
 
-    Optional<std::unique_ptr<RegistryImpl>> RegistryImplDeserializer::visit_null(Json::Reader&, StringView)
-    {
-        return nullptr;
-    }
+    Optional<std::unique_ptr<RegistryImpl>> RegistryImplDeserializer::visit_null(Json::Reader&) { return nullptr; }
 
     Optional<std::unique_ptr<RegistryImpl>> RegistryImplDeserializer::visit_object(Json::Reader& r,
-                                                                                   StringView,
                                                                                    const Json::Object& obj)
     {
         std::string kind;
@@ -57,14 +58,14 @@ namespace vcpkg
         {
             if (obj.contains(PATH))
             {
-                r.error().add_extra_fields(type_name().to_string(), {PATH});
+                r.add_extra_fields_error("a builtin registry", {PATH});
             }
             return static_cast<std::unique_ptr<RegistryImpl>>(std::make_unique<BuiltinRegistry>());
         }
         else if (kind == KIND_DIRECTORY)
         {
             fs::path path;
-            r.required_object_field(type_name(), obj, PATH, path, Json::PathDeserializer{});
+            r.required_object_field("a directory registry", obj, PATH, path, Json::PathDeserializer{});
 
             return static_cast<std::unique_ptr<RegistryImpl>>(std::make_unique<DirectoryRegistry>(std::move(path)));
         }
@@ -76,6 +77,8 @@ namespace vcpkg
 
     StringView RegistryDeserializer::type_name() const { return "a registry"; }
 
+    constexpr StringLiteral RegistryDeserializer::PACKAGES;
+
     Span<const StringView> RegistryDeserializer::valid_fields() const
     {
         static const StringView t[] = {
@@ -86,9 +89,9 @@ namespace vcpkg
         return t;
     }
 
-    Optional<Registry> RegistryDeserializer::visit_object(Json::Reader& r, StringView key, const Json::Object& obj)
+    Optional<Registry> RegistryDeserializer::visit_object(Json::Reader& r, const Json::Object& obj)
     {
-        auto impl = RegistryImplDeserializer{}.visit_object(r, key, obj);
+        auto impl = RegistryImplDeserializer{}.visit_object(r, obj);
 
         if (!impl.has_value())
         {
