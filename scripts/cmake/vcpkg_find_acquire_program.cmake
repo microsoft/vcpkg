@@ -44,6 +44,9 @@
 ## * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_find_acquire_program VAR)
   set(EXPANDED_VAR ${${VAR}})
   if(EXPANDED_VAR)
@@ -563,18 +566,18 @@ function(vcpkg_find_acquire_program VAR)
         if(ARCHIVE_EXTENSION STREQUAL ".msi")
           file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
           file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
-          _execute_process(
+          vcpkg_execute_in_download_mode(
             COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
             WORKING_DIRECTORY ${DOWNLOADS}
           )
         elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
           vcpkg_find_acquire_program(7Z)
-          _execute_process(
+          vcpkg_execute_in_download_mode(
             COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
             WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
           )
         else()
-          _execute_process(
+          vcpkg_execute_in_download_mode(
             COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
             WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
           )
