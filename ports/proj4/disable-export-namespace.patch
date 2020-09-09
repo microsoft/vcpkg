@@ -1,28 +1,32 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 61c69f7..777b5d8 100644
+index c790fa4..4665672 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -28,7 +28,3 @@ install(FILES
- install(EXPORT targets
-   FILE ${PROJECT_NAME_LOWER}-targets.cmake
-   DESTINATION "${CMAKECONFIGDIR}")
--install(EXPORT targets
--  NAMESPACE ${PROJECT_NAME}::
--  FILE ${PROJECT_NAME_LOWER}-namespace-targets.cmake
--  DESTINATION "${CMAKECONFIGDIR}")
+@@ -116,10 +116,6 @@ foreach (PROJECT_VARIANT_NAME ${PROJECT_NAME} ${PROJECT_LEGACY_NAME})
+     RENAME "${PROJECT_VARIANT_LOWER}-config-version.cmake")
+   # Make information about the cmake targets (the library and the tools)
+   # available.
+-  install(EXPORT targets
+-    NAMESPACE ${PROJECT_NAME}::
+-    FILE ${PROJECT_NAME_LOWER}-targets.cmake
+-    DESTINATION "${CMAKECONFIGSUBDIR}")
+   install(EXPORT targets
+     NAMESPACE ${PROJECT_LEGACY_NAME}::
+     FILE ${PROJECT_LEGACY_LOWER}-targets.cmake
 diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
-index c62ecb4..9a52b3b 100644
+index 23f997a..b0567d8 100644
 --- a/cmake/project-config.cmake.in
 +++ b/cmake/project-config.cmake.in
-@@ -20,10 +20,9 @@ set (@PROJECT_NAME@_INCLUDE_DIRS "${_ROOT}/@INCLUDEDIR@")
- set (@PROJECT_NAME@_LIBRARY_DIRS "${_ROOT}/@LIBDIR@")
- set (@PROJECT_NAME@_BINARY_DIRS "${_ROOT}/@BINDIR@")
+@@ -15,10 +15,10 @@ set (@PROJECT_VARIANT_NAME@_INCLUDE_DIRS "${_ROOT}/@INCLUDEDIR@")
+ set (@PROJECT_VARIANT_NAME@_LIBRARY_DIRS "${_ROOT}/@LIBDIR@")
+ set (@PROJECT_VARIANT_NAME@_BINARY_DIRS "${_ROOT}/@BINDIR@")
  
--set (@PROJECT_NAME@_LIBRARIES @PROJECT_NAME@::proj)
-+set (@PROJECT_NAME@_LIBRARIES proj)
+-set (@PROJECT_VARIANT_NAME@_LIBRARIES @PROJECT_VARIANT_NAME@::proj)
++set (@PROJECT_VARIANT_NAME@_LIBRARIES proj)
  # Read in the exported definition of the library
  include ("${_DIR}/@PROJECT_NAME_LOWER@-targets.cmake")
--include ("${_DIR}/@PROJECT_NAME_LOWER@-namespace-targets.cmake")
+-include ("${_DIR}/@PROJECT_LEGACY_LOWER@-targets.cmake")
++include ("${_DIR}/@PROJECT_LEGACY_LOWER@-namespace-targets.cmake")
  
  unset (_ROOT)
  unset (_DIR)

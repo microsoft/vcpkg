@@ -1,17 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 6.3.1
-    SHA512 ec5a2b61b12d3d3ec2456b9e742cf7be98767889c4759334e60276f609054fa8eb59f13f07af38e69e9ee7b6f2b9542e2d5d7806726ce5616062af4de626c6fa
+    REF 94cfdfec9d51f0befb5c8fc5184329a3d7331333     #v7.1.1
+    SHA512 969dfe9dfa7ec6a2106c314c1fdbc13671977098e5ea6a9c48804743b4d1f5c9e765e96e8fe7e0880208124d1855c54928abdcdb1e032097f21ab753fcf30ab6
     HEAD_REF master
     PATCHES
-        fix-sqlite3-bin.patch
         disable-export-namespace.patch
         disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
         fix-sqlite-dependency-export.patch
         fix-linux-build.patch
         use-sqlite3-config.patch
+		fix-lib_proj.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -64,9 +64,15 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    vcpkg_copy_tools(TOOL_NAMES projsync AUTO_CLEAN)
+endif()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proj4)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/projsync_d.exe)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

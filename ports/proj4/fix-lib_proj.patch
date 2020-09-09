@@ -1,0 +1,29 @@
+diff --git a/src/lib_proj.cmake b/src/lib_proj.cmake
+index 136e440..384d9c8 100644
+--- a/src/lib_proj.cmake
++++ b/src/lib_proj.cmake
+@@ -396,7 +396,7 @@ if(UNIX)
+   endif()
+   find_library(DL_LIB dl)
+   if(M_LIB)
+-    target_link_libraries(${PROJ_CORE_TARGET} -ldl)
++    target_link_libraries(${PROJ_CORE_TARGET} PRIVATE -ldl)
+   endif()
+ endif()
+ if(USE_THREAD AND Threads_FOUND AND CMAKE_USE_PTHREADS_INIT)
+@@ -409,13 +409,13 @@ target_link_libraries(${PROJ_CORE_TARGET} PRIVATE ${SQLITE3_LIBRARY})
+ if(TIFF_ENABLED)
+   target_compile_definitions(${PROJ_CORE_TARGET} PRIVATE -DTIFF_ENABLED)
+   target_include_directories(${PROJ_CORE_TARGET} PRIVATE ${TIFF_INCLUDE_DIR})
+-  target_link_libraries(${PROJ_CORE_TARGET} ${TIFF_LIBRARY})
++  target_link_libraries(${PROJ_CORE_TARGET} PRIVATE ${TIFF_LIBRARY})
+ endif()
+ 
+ if(CURL_ENABLED)
+   target_compile_definitions(${PROJ_CORE_TARGET} PRIVATE -DCURL_ENABLED)
+   target_include_directories(${PROJ_CORE_TARGET} PRIVATE ${CURL_INCLUDE_DIR})
+-  target_link_libraries(${PROJ_CORE_TARGET} ${CURL_LIBRARY})
++  target_link_libraries(${PROJ_CORE_TARGET} PRIVATE ${CURL_LIBRARY})
+ endif()
+ 
+ if(MSVC AND BUILD_SHARED_LIBS)

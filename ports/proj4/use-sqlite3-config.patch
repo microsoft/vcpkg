@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c617912..bed0428 100644
+index dfccde1..4102e47 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -122,7 +122,23 @@ if(NOT EXE_SQLITE3)
+@@ -129,7 +129,23 @@ if(NOT EXE_SQLITE3)
    message(SEND_ERROR "sqlite3 binary not found!")
  endif()
  
@@ -28,27 +28,27 @@ index c617912..bed0428 100644
    message(SEND_ERROR "sqlite3 dependency not found!")
  endif()
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 92197c8..ab65de7 100644
+index c790fa4..6e6e6f5 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -25,6 +25,10 @@ else ()
- endif ()
- 
- string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
-+set(FIND_DEPENDENCY_SQLITE3 "")
-+if(NOT BUILD_LIBPROJ_SHARED)
+@@ -102,6 +102,10 @@ foreach (PROJECT_VARIANT_NAME ${PROJECT_NAME} ${PROJECT_LEGACY_NAME})
+   # be relocated.)
+   file (RELATIVE_PATH PROJECT_ROOT_DIR
+     ${CMAKE_INSTALL_PREFIX}/${CMAKECONFIGSUBDIR} ${CMAKE_INSTALL_PREFIX})
++  set(FIND_DEPENDENCY_SQLITE3 "")
++  if(NOT BUILD_LIBPROJ_SHARED)
 +	set(FIND_DEPENDENCY_SQLITE3 "find_package(unofficial-sqlite3 CONFIG REQUIRED)")
-+endif()
- configure_file(project-config.cmake.in project-config.cmake @ONLY)
- configure_file(project-config-version.cmake.in
-   project-config-version.cmake @ONLY)
++  endif()	
+   configure_file (project-config.cmake.in
+     project-${PROJECT_VARIANT_LOWER}-config.cmake @ONLY)
+   configure_file (project-config-version.cmake.in
 diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
-index 9a52b3b..295d95d 100644
+index 23f997a..fcace40 100644
 --- a/cmake/project-config.cmake.in
 +++ b/cmake/project-config.cmake.in
-@@ -13,6 +13,8 @@ message (STATUS "Reading ${CMAKE_CURRENT_LIST_FILE}")
- message (STATUS
-   "@PROJECT_NAME@ configuration, version ${@PROJECT_NAME@_VERSION}")
+@@ -8,6 +8,8 @@
+ #  @PROJECT_VARIANT_NAME@_BINARY_DIRS = /usr/local/bin
+ #  @PROJECT_VARIANT_NAME@_VERSION = 4.9.1 (for example)
  
 +@FIND_DEPENDENCY_SQLITE3@
 +

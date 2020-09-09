@@ -1,13 +1,17 @@
 diff --git a/src/lib_proj.cmake b/src/lib_proj.cmake
-index cf7533b..236581f 100644
+index 3d41fe9..6632e68 100644
 --- a/src/lib_proj.cmake
 +++ b/src/lib_proj.cmake
-@@ -431,11 +431,11 @@ set(PROJ_LIBRARIES ${PROJ_LIBRARIES} PARENT_SCOPE)
+@@ -392,7 +392,7 @@ set(PROJ_LIBRARIES ${PROJ_LIBRARIES} PARENT_SCOPE)
  if(UNIX)
    find_library(M_LIB m)
    if(M_LIB)
 -    target_link_libraries(${PROJ_CORE_TARGET} -lm)
 +    target_link_libraries(${PROJ_CORE_TARGET} PRIVATE -lm)
+   endif()
+   find_library(DL_LIB dl)
+   if(M_LIB)
+@@ -400,7 +400,7 @@ if(UNIX)
    endif()
  endif()
  if(USE_THREAD AND Threads_FOUND AND CMAKE_USE_PTHREADS_INIT)
@@ -15,4 +19,4 @@ index cf7533b..236581f 100644
 +  target_link_libraries(${PROJ_CORE_TARGET} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
  endif()
  
- include_directories(${SQLITE3_INCLUDE_DIR})
+ target_include_directories(${PROJ_CORE_TARGET} PRIVATE ${SQLITE3_INCLUDE_DIR})
