@@ -288,6 +288,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "${_VCPKG_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REGEX REPLACE "^prefix[\t ]*=[^\n]*" "" _contents "${_contents}")
         string(REGEX REPLACE "[\n]prefix[\t ]*=[^\n]*" "" _contents "${_contents}")
+        string(REGEX REPLACE "[ \t\r\n]+(-l)?([^- \t\r\n][A-Za-z0-9_-]+)(\\.dll\\.a|\\.a|\\.lib|\\.so)" " -l\\2" _contents "${_contents}")
         file(WRITE "${_file}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}\n${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
@@ -318,7 +319,8 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
         string(REGEX REPLACE "^prefix[\t ]*=[^\n]*" "" _contents "${_contents}") # make pc file relocatable
         string(REGEX REPLACE "[\n]prefix[\t ]*=[^\n]*" "" _contents "${_contents}") # make pc file relocatable
-        string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
+        string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist.
+        string(REGEX REPLACE "[ \t\r\n]+(-l)?([^- \t\r\n][A-Za-z0-9_-]+)(\\.dll\\.a|\\.a|\\.lib|\\.so)" " -l\\2" _contents "${_contents}")
         file(WRITE "${_file}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}\n${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
