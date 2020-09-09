@@ -11,6 +11,7 @@ vcpkg_from_github(
   PATCHES
     0001_use_math_defines.patch
     0002_fix_exports.patch
+    0003_import_prefix.patch
 )
 
 vcpkg_configure_cmake(
@@ -28,10 +29,6 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/urdfdom)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom)
 endif()
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/urdfdom/urdfdom-config.cmake _contents)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${CMAKE_CURRENT_LIST_DIR}/../.." _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/urdfdom/urdfdom-config.cmake "${_contents}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
