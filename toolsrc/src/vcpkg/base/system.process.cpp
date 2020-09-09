@@ -469,6 +469,8 @@ namespace vcpkg
         STARTUPINFOW startup_info;
         memset(&startup_info, 0, sizeof(STARTUPINFOW));
         startup_info.cb = sizeof(STARTUPINFOW);
+        startup_info.dwFlags = STARTF_USESHOWWINDOW;
+        startup_info.wShowWindow = SW_HIDE;
 
         return windows_create_process(cmd_line, env, dwCreationFlags, startup_info);
     }
@@ -547,7 +549,7 @@ namespace vcpkg
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto process_info = windows_create_process(cmd_line, {}, DETACHED_PROCESS | CREATE_BREAKAWAY_FROM_JOB);
+        auto process_info = windows_create_process(cmd_line, {}, CREATE_NEW_CONSOLE | CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB);
         if (!process_info.get())
         {
             Debug::print("cmd_execute_no_wait() failed with error code ", process_info.error(), "\n");

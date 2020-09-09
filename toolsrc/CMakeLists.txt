@@ -32,13 +32,15 @@ endif()
 # =============
 
 file(GLOB VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
+if (VCPKG_DISABLE_METRICS OR NOT WIN32)
+    list(REMOVE_ITEM VCPKGLIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/commands.upload-metrics.cpp)
+endif()
+
 file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
 file(GLOB VCPKGLIB_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h include/vcpkg/fwd/*.h)
 file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h include/vcpkg/base/fwd/*.h)
 
 set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
-
-set(VCPKGMETRICSUPLOADER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkgmetricsuploader.cpp)
 
 file(GLOB VCPKG_TEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
 file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
@@ -116,14 +118,6 @@ add_executable(vcpkg ${VCPKG_SOURCES})
 target_link_libraries(vcpkg PRIVATE vcpkglib)
 vcpkg_target_add_warning_options(vcpkg)
 
-# === Target: vcpkgmetricsuploader ===
-
-if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
-    add_executable(vcpkgmetricsuploader WIN32 ${VCPKGMETRICSUPLOADER_SOURCES})
-    target_link_libraries(vcpkgmetricsuploader PRIVATE vcpkglib)
-    vcpkg_target_add_warning_options(vcpkgmetricsuploader)
-endif()
-
 # === Target: vcpkg-test ===
 
 if (BUILD_TESTING)
@@ -164,7 +158,6 @@ if(CLANG_FORMAT)
         COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_INCLUDES}
 
         COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_SOURCES}
-        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGMETRICSUPLOADER_SOURCES}
 
         COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_SOURCES}
         COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_INCLUDES}
