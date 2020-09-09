@@ -6,6 +6,7 @@
 
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace vcpkg
 {
@@ -22,6 +23,18 @@ namespace vcpkg
         static const std::string IFW_INSTALLER_BASE = "ifw_installerbase";
         static const std::string IFW_BINARYCREATOR = "ifw_binarycreator";
         static const std::string IFW_REPOGEN = "ifw_repogen";
+
+        static const std::vector tool_list{SEVEN_ZIP,
+                                           SEVEN_ZIP_ALT,
+                                           MAVEN,
+                                           CMAKE,
+                                           GIT,
+                                           MONO,
+                                           NINJA,
+                                           NUGET,
+                                           IFW_INSTALLER_BASE,
+                                           IFW_BINARYCREATOR,
+                                           IFW_REPOGEN};
     }
 
     struct ToolCache
