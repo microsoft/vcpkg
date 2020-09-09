@@ -21,16 +21,6 @@ namespace vcpkg::Commands::Fetch
         (void)args.parse_arguments(COMMAND_STRUCTURE);
         const std::string tool = args.command_arguments[0];
 
-        for (auto&& e : Tools::tool_list)
-        {
-            if (tool == e)
-            {
-                const fs::path tool_path = paths.get_tool_exe(tool);
-                System::print2(fs::u8string(tool_path), '\n');
-                Checks::exit_success(VCPKG_LINE_INFO);
-            }
-        }
-
         if (tool == "update")
         {
             const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
@@ -59,7 +49,10 @@ namespace vcpkg::Commands::Fetch
 
             Checks::exit_success(VCPKG_LINE_INFO);
         }
-        Checks::exit_fail(VCPKG_LINE_INFO);
+
+        const fs::path tool_path = paths.get_tool_exe(tool);
+        System::print2(fs::u8string(tool_path), '\n');
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 
     void FetchCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
