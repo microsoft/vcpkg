@@ -2,6 +2,7 @@
 
 #include <vcpkg/commands.contact.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.upload-metrics.h>
 #include <vcpkg/commands.version.h>
 
 using namespace vcpkg;
@@ -10,12 +11,20 @@ TEST_CASE ("test commands are constructible", "[commands]")
 {
     Commands::Contact::ContactCommand contact{};
     Commands::Version::VersionCommand version{};
+#if !VCPKG_DISABLE_METRICS && defined(_WIN32)
+    Commands::UploadMetrics::UploadMetricsCommand upload_metrics{};
+#endif // !VCPKG_DISABLE_METRICS && defined(_WIN32)
 }
 
 TEST_CASE ("get_available_basic_commands works", "[commands]")
 {
     auto commands_list = Commands::get_available_basic_commands();
+#if !VCPKG_DISABLE_METRICS && defined(_WIN32)
+    CHECK(commands_list.size() == 3);
+    CHECK(Commands::find("x-upload-metrics", commands_list) != nullptr);
+#else  // ^^^ !VCPKG_DISABLE_METRICS && defined(_WIN32) // VCPKG_DISABLE_METRICS || !defined(_WIN32) vvv
     CHECK(commands_list.size() == 2);
+#endif // ^^^ VCPKG_DISABLE_METRICS || !defined(_WIN32)
     CHECK(Commands::find("version", commands_list) != nullptr);
     CHECK(Commands::find("contact", commands_list) != nullptr);
     CHECK(Commands::find("aang", commands_list) == nullptr);
