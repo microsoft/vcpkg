@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 22f0207..3229ae0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -102,10 +102,20 @@ ELSE ()
+ ENDIF (OSGEARTH_USE_GLES)
+ 
+ FIND_PACKAGE(CURL)
+-FIND_PACKAGE(GDAL)
++if(BUILD_WITH_GDAL)
++FIND_PACKAGE(GDAL REQUIRED)
++endif()
+ FIND_PACKAGE(GEOS)
+ FIND_PACKAGE(Sqlite3)
+-FIND_PACKAGE(Draco)
++if(BUILD_WITH_DRACO)
++find_path(DRACO_INCLUDE_DIRS draco/core/draco_version.h)
++find_library(DRACO_LIBRARY NAMES draco dracodec dracoenc libdraco libdracodec libdracoenc)
++set(draco_INCLUDE_DIRS ${DRACO_INCLUDE_DIRS})
++set(draco_LIBRARIES ${DRACO_LIBRARY})
++if(DRACO_LIBRARY)
++set(draco_FOUND 1)
++endif()
++endif()
+ FIND_PACKAGE(BASISU)
+ FIND_PACKAGE(Tracy)
+ FIND_PACKAGE(GLEW)
+@@ -117,6 +127,8 @@ ENDIF(SQLITE3_FOUND)
+ 
+ IF(draco_FOUND)
+     ADD_DEFINITIONS(-DOSGEARTH_HAVE_DRACO)
++ELSE()
++    message(FATAL_ERROR "draco cannot be found")
+ ENDIF(draco_FOUND)
+ 
+ IF(GDAL_FOUND)
+@@ -125,6 +137,8 @@ IF(GDAL_FOUND)
+   ELSE()
+     message(FATAL_ERROR "GDAL ${GDAL_VERSION} is unsupported at this time. Please use GDAL 2.X" )
+   ENDIF()
++ELSE()
++  message(FATAL_ERROR "GDAL cannot be found")
+ ENDIF(GDAL_FOUND)
+ 
+ OPTION(ENABLE_PROFILING "Build with support for Tracy profiler" OFF)

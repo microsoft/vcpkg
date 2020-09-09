@@ -15,11 +15,18 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
   	  RocksDB.patch
+      fix-feature.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    gdal  BUILD_WITH_GDAL
+    draco BUILD_WITH_DRACO
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -57,7 +64,6 @@ file(COPY ${OSGDB_DEBUG_PLUGINS} DESTINATION ${OSGEARTH_DEBUG_TOOL_PLUGIN_PATH})
 
 file(REMOVE_RECURSE ${OSGEARTH_DEBUG_TOOLS})
 file(REMOVE_RECURSE ${OSGDB_DEBUG_PLUGINS})
-
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
