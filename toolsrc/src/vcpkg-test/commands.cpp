@@ -15,7 +15,7 @@ namespace
     void check_all_commands(const CommandListT& actual_commands, const char* (&expected_commands)[ExpectedCount])
     {
         CHECK(actual_commands.size() == ExpectedCount); // makes sure this test is updated if we add a command
-        for (StringView expected_command : expected_commands)
+        for (const char* expected_command : expected_commands)
         {
             CHECK(Commands::find(expected_command, actual_commands) != nullptr);
         }
