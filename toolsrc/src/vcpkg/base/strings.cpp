@@ -273,8 +273,8 @@ size_t Strings::byte_edit_distance(StringView a, StringView b)
 
     auto pa = a.data();
     auto pb = b.data();
-    auto sa = a.size();
-    auto sb = b.size();
+    int sa = static_cast<int>(a.size());
+    int sb = static_cast<int>(b.size());
 
     // Levenshtein distance
     char d[max_string_size];
