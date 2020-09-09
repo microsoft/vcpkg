@@ -17,6 +17,7 @@ vcpkg_configure_cmake(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DPAGMO_WITH_EIGEN3=ON
+        -DPAGMO_BUILD_STATIC_LIBRARY=${PAGMO_BUILD_STATIC_LIBRARY}
 )
 
 vcpkg_install_cmake()
