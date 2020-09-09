@@ -17,7 +17,7 @@ namespace
         CHECK(actual_commands.size() == ExpectedCount); // makes sure this test is updated if we add a command
         for (const char* expected_command : expected_commands)
         {
-            CHECK(Commands::find(expected_command, actual_commands) != nullptr);
+            CHECK(Commands::find(StringView{expected_command, strlen(expected_command)}, actual_commands) != nullptr);
         }
 
         CHECK(Commands::find("x-never-will-exist", actual_commands) == nullptr);
