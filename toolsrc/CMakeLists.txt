@@ -32,10 +32,6 @@ endif()
 # =============
 
 file(GLOB VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
-if (VCPKG_DISABLE_METRICS OR NOT WIN32)
-    list(REMOVE_ITEM VCPKGLIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/commands.upload-metrics.cpp)
-endif()
-
 file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
 file(GLOB VCPKGLIB_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h include/vcpkg/fwd/*.h)
 file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h include/vcpkg/base/fwd/*.h)

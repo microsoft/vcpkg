@@ -1,15 +1,13 @@
+#include <vcpkg/commands.upload-metrics.h>
+
+#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 
-#include <vcpkg/commands.upload-metrics.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 using namespace vcpkg;
-
-#if VCPKG_DISABLE_METRICS
-#error Attempt to build commands.upload-metrics.cpp when metrics are disabled.
-#endif // VCPKG_DISABLE_METRICS
 
 namespace vcpkg::Commands::UploadMetrics
 {
@@ -28,3 +26,4 @@ namespace vcpkg::Commands::UploadMetrics
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
+#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
