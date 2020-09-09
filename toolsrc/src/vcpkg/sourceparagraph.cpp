@@ -362,7 +362,7 @@ namespace vcpkg
     {
         virtual StringView type_name() const override { return "a platform expression"; }
 
-        virtual Optional<PlatformExpression::Expr> visit_string(Json::Reader&, StringView sv) override
+        virtual Optional<PlatformExpression::Expr> visit_string(Json::Reader& r, StringView sv) override
         {
             auto opt =
                 PlatformExpression::parse_platform_expression(sv, PlatformExpression::MultipleBinaryOperators::Deny);
@@ -372,8 +372,8 @@ namespace vcpkg
             }
             else
             {
-                Debug::print("Failed to parse platform expression: ", opt.error(), "\n");
-                return nullopt;
+                r.add_generic_error(type_name(), opt.error());
+                return PlatformExpression::Expr::Empty();
             }
         }
 

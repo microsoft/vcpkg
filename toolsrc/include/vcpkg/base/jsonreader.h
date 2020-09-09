@@ -58,6 +58,10 @@ namespace vcpkg::Json
             {
                 place = std::move(*p_opt);
             }
+            else
+            {
+                add_expected_type_error(visitor.type_name());
+            }
             m_path.pop_back();
             return true;
         }
