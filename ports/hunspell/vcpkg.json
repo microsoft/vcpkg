@@ -2,8 +2,8 @@
   "name": "hunspell",
   "version-string": "1.7.0",
   "port-version": 3,
-  "homepage": "https://github.com/hunspell/hunspell",
   "description": "The most popular spellchecking library.",
+  "homepage": "https://github.com/hunspell/hunspell",
   "features": [
     {
       "name": "tools",
