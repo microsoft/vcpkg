@@ -514,7 +514,7 @@ namespace vcpkg::Metrics
         const std::string cmd_line = Strings::format("\"%s\" x-upload-metrics \"%s\"\"",
                                                      fs::u8string(temp_folder_path_exe),
                                                      fs::u8string(vcpkg_metrics_txt_path));
-        System::cmd_execute_no_wait(cmd_line);
+        System::cmd_execute_background(cmd_line);
 #else
         auto escaped_path = Strings::escape_string(fs::u8string(vcpkg_metrics_txt_path), '\'', '\\');
         const std::string cmd_line = Strings::format(
