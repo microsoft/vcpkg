@@ -1,0 +1,59 @@
+# This script is used internally to produce signed vcpkg builds.
+# It uses machines / tasks that are not exposed here on GitHub, as
+# the hardware on which we allow signing is restricted.
+
+trigger: none
+
+variables:
+  TeamName: vcpkg
+jobs:
+  - job: windows
+    displayName: "Windows"
+    pool:
+      name: 'VSEng-MicroBuildVS2019'
+      demands:
+        - CMAKE
+    steps:
+    - task: PoliCheck@1
+      inputs:
+        inputType: 'Basic'
+        targetType: 'F'
+        targetArgument: '$(Build.SourcesDirectory)'
+        result: 'PoliCheck.xml'
+    - task: CmdLine@2
+      displayName: "Build vcpkg with CMake"
+      inputs:
+        failOnStderr: true
+        script: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x86
+          cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=OFF -B "$(Build.StagingDirectory)" -S toolsrc
+          ninja.exe -C "$(Build.StagingDirectory)"
+    - task: MicroBuildSigningPlugin@2
+      inputs:
+        signType: 'test'
+        feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
+    - task: NuGetToolInstaller@1
+      inputs:
+        versionSpec: 5.7
+    - task: NuGetCommand@2
+      inputs:
+        command: 'restore'
+        restoreSolution: 'scripts/azure-pipelines/windows/signing.signproj'
+        feedsToUse: 'config'
+        restoreDirectory: '$(Build.SourcesDirectory)\scripts\azure-pipelines\packages'
+    - task: MSBuild@1
+      inputs:
+        solution: 'scripts\azure-pipelines\windows\signing.signproj'
+        msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory)\ /p:IntermediateOutputPath=$(Build.StagingDirectory)\'
+    - task: BinSkim@3
+      inputs:
+        InputType: 'CommandLine'
+        arguments: 'analyze "$(Build.StagingDirectory)\vcpkg.exe"'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\vcpkg.exe'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+    - task: MicroBuildCleanup@1
+      condition: succeededOrFailed()
+      displayName: MicroBuild Cleanup
