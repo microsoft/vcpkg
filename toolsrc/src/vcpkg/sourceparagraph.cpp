@@ -506,6 +506,7 @@ namespace vcpkg
     constexpr StringLiteral FeatureDeserializer::NAME;
     constexpr StringLiteral FeatureDeserializer::DESCRIPTION;
     constexpr StringLiteral FeatureDeserializer::DEPENDENCIES;
+    constexpr StringLiteral FeatureDeserializer::SUPPORTS;
 
     static constexpr StringView EXPRESSION_WORDS[] = {
         "WITH",
@@ -1029,6 +1030,7 @@ namespace vcpkg
 
                 feature_obj.insert(FeatureDeserializer::NAME, Json::Value::string(feature->name));
                 serialize_paragraph(feature_obj, FeatureDeserializer::DESCRIPTION, feature->description, true);
+                serialize_optional_string(feature_obj, FeatureDeserializer::SUPPORTS, to_string(feature->supports_expression));
 
                 if (!feature->dependencies.empty() || debug)
                 {
