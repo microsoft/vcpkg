@@ -15,8 +15,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# # Moves all .cmake files from /debug/share/croncpp/ to /share/croncpp/
-# # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
 #vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/croncpp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
