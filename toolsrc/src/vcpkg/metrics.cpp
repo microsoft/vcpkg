@@ -38,6 +38,7 @@ namespace vcpkg::Metrics
             res.push_back(hex[(bits >> 0) & 0x0F]);
         }
     };
+    constexpr char append_hexits::hex[17];
 
     // note: this ignores the bits of these numbers that would be where format and variant go
     static std::string uuid_of_integers(uint64_t top, uint64_t bottom)

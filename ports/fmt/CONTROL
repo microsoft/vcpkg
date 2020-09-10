@@ -1,4 +1,5 @@
 Source: fmt
 Version: 7.0.3
+Port-Version: 2
 Homepage: https://github.com/fmtlib/fmt
 Description: Formatting library for C++. It can be used as a safe alternative to printf or as a fast alternative to IOStreams.
