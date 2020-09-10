@@ -1,4 +1,4 @@
-macro(find_dependency)
+macro(find_dependency_win)
   # Setup proj4 libraries + include path
   set(PROJ_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
   set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")

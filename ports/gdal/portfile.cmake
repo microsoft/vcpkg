@@ -1,4 +1,5 @@
-include(${CMAKE_CURRENT_LIST_DIR}/dependency.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake)
+#include(${CMAKE_CURRENT_LIST_DIR}/dependency_unix.cmake)
 
 vcpkg_fail_port_install(ON_ARCH "arm")
 
@@ -30,7 +31,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
   set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
   set(NATIVE_HTML_DIR "${CURRENT_PACKAGES_DIR}/share/gdal/html")
 
-  find_dependency()
+  find_dependency_win()
 
   if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
       list(APPEND NMAKE_OPTIONS MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR})
@@ -132,48 +133,49 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
   endif()
 
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    list(APPEND GDAL_EXES
+        gdal_contour
+        gdal_grid
+        gdal_rasterize
+        gdal_translate
+        gdal_viewshed
+        gdaladdo
+        gdalbuildvrt
+        gdaldem
+        gdalenhance
+        gdalinfo
+        gdallocationinfo
+        gdalmanage
+        gdalmdiminfo
+        gdalmdimtranslate
+        gdalserver
+        gdalsrsinfo
+        gdaltindex
+        gdaltransform
+        gdalwarp
+        gnmanalyse
+        gnmmanage
+        nearblack
+        ogr2ogr
+        ogrinfo
+        ogrlineref
+        ogrtindex
+        testepsg
+    )
+    vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
+  else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
   endif()
-  #
-  #  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  #    file(COPY gdal.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-  #  endif()
-  #
-  #  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  #    file(COPY gdal.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-  #    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
-  #  endif()
-  #
-  #else()
-  #
-  #  set(GDAL_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/gdal)
-  #  file(MAKE_DIRECTORY ${GDAL_TOOL_PATH})
-  #
-  #  file(GLOB GDAL_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-  #  file(COPY ${GDAL_TOOLS} DESTINATION ${GDAL_TOOL_PATH})
-  #  file(REMOVE_RECURSE ${GDAL_TOOLS})
-  #
-  #  file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
-  #
-  #  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  #    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
-  #  endif()
-  #  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  #    file(COPY gdal${GDAL_VERSION_LIB}.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-  #    file(COPY gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-  #    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
-  #  endif()
-  #endif()
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/share/gdal/html)
 
-  # Copy over PDBs
   vcpkg_copy_pdbs()
   
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb)
   endif()
 
-elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+else()
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         set(BUILD_DYNAMIC yes)
         set(BUILD_STATIC no)
@@ -182,96 +184,26 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
         set(BUILD_STATIC yes)
     endif()
     
+    set(CONF_OPTS --enable-shared=${BUILD_DYNAMIC} --enable-static=${BUILD_STATIC})
+    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR})
+    
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
         COPY_SOURCE
-        OPTIONS
-            --enable-shared=${BUILD_DYNAMIC}
-            --enable-static=${BUILD_STATIC}
+        OPTIONS ${CONF_OPTS}
         OPTIONS_DEBUG
             --enable-debug
             #--with-boost-lib-path=${CURRENT_INSTALLED_DIR}/debug/lib
         OPTIONS_RELEASE
             #--with-boost-lib-path=${CURRENT_INSTALLED_DIR}/lib
     )
-
-  #if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  #  ################
-  #  # Release build
-  #  ################
-  #  message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-  #  set(OUT_PATH_RELEASE ${SOURCE_PATH}/../../make-build-${TARGET_TRIPLET}-release)
-  #  file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
-  #  vcpkg_execute_required_process(
-  #    COMMAND "${SOURCE_PATH}/configure" --prefix=${OUT_PATH_RELEASE}
-  #    WORKING_DIRECTORY ${SOURCE_PATH}
-  #    LOGNAME config-${TARGET_TRIPLET}-rel
-  #  )
-  #
-  #  message(STATUS "Building ${TARGET_TRIPLET}-rel")
-  #  vcpkg_execute_build_process(
-  #    COMMAND make -j ${VCPKG_CONCURRENCY}
-  #    NO_PARALLEL_COMMAND make
-  #    WORKING_DIRECTORY ${SOURCE_PATH}
-  #    LOGNAME make-build-${TARGET_TRIPLET}-release
-  #  )
-  #
-  #  message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-  #  vcpkg_execute_required_process(
-  #    COMMAND make install
-  #    WORKING_DIRECTORY ${SOURCE_PATH}
-  #    LOGNAME make-install-${TARGET_TRIPLET}-release
-  #  )
-  #
-  #  file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/gdalplugins)
-  #  file(COPY ${OUT_PATH_RELEASE}/lib/pkgconfig DESTINATION ${OUT_PATH_RELEASE}/share/gdal)
-  #  file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/pkgconfig)
-  #  file(COPY ${OUT_PATH_RELEASE}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
-  #  file(COPY ${OUT_PATH_RELEASE}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-  #  file(COPY ${OUT_PATH_RELEASE}/share DESTINATION ${CURRENT_PACKAGES_DIR})
-  #  message(STATUS "Installing ${TARGET_TRIPLET}-rel done")
-  #endif()
-  #
-  #if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  #  ################
-  #  # Debug build
-  #  ################
-  #  message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-  #  set(OUT_PATH_DEBUG ${SOURCE_PATH}/../../make-build-${TARGET_TRIPLET}-debug)
-  #  file(MAKE_DIRECTORY ${OUT_PATH_DEBUG})
-  #  vcpkg_execute_required_process(
-  #    COMMAND "${SOURCE_PATH}/configure" --prefix=${OUT_PATH_DEBUG}
-  #    WORKING_DIRECTORY ${SOURCE_PATH}
-  #    LOGNAME config-${TARGET_TRIPLET}-debug
-  #  )
-  #
-  #  message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-  #  vcpkg_execute_build_process(
-  #    COMMAND make -j ${VCPKG_CONCURRENCY}
-  #    NO_PARALLEL_COMMAND make
-  #    WORKING_DIRECTORY ${SOURCE_PATH}
-  #    LOGNAME make-build-${TARGET_TRIPLET}-debug
-  #  )
-  #
-  #  message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
-  #  vcpkg_execute_required_process(
-  #    COMMAND make -j install
-  #    WORKING_DIRECTORY ${SOURCE_PATH}
-  #    LOGNAME make-install-${TARGET_TRIPLET}-debug
-  #  )
-  #
-  #  file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/gdalplugins)
-  #  file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/pkgconfig)
-  #  file(COPY ${OUT_PATH_DEBUG}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
-  #  message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
-  #endif()
-else() # Other build system
-  message(FATAL_ERROR "Unsupport build system.")
+    
+    vcpkg_install_make(MAKEFILE GNUmakefile)
 endif()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
