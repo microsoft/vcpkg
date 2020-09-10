@@ -3,18 +3,17 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qhull/qhull
-    REF v7.3.2 # Qhull 2019.1
-    SHA512 aea2c70179de10f648aba960129a3b9a3fe309a0eb085bdb86f697e3d4b214570c241e88d4f0b4d2974137759ee7086452d0a3957c4b2a256708402fb3c9eb3d
+    REF v8.0.0 # Qhull 2020.1
+    SHA512 b6ac17193b7c8a4ffb5f5a64cc057d1d5123f155f1c4fcd290fe1768356fef5c58d511707bba8c4814ca754bc6cdf5c370af23953d00c24a5ec28b8a1e489d31
     HEAD_REF master
     PATCHES
-        uwp.patch
         mac-fix.patch
 )
-if(${TARGET_TRIPLET} STREQUAL "x64-windows-static") 
+if(${TARGET_TRIPLET} STREQUAL "x64-windows-static")
 # workaround for visual studio toolset regression LNK1201 (remove if solved)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+    OPTIONS
         -DINCLUDE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/include
         -DMAN_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/doc/qhull
         -DDOC_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/doc/qhull
@@ -27,7 +26,7 @@ else()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DINCLUDE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/include
         -DMAN_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/doc/qhull
         -DDOC_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/doc/qhull
@@ -40,7 +39,7 @@ endif()
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qhull) 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qhull)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(GLOB_RECURSE HTMFILES ${CURRENT_PACKAGES_DIR}/include/*.htm)

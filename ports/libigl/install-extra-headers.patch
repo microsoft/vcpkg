@@ -1,0 +1,35 @@
+diff --git a/cmake/libigl.cmake b/cmake/libigl.cmake
+index a33cefa..991cf0d 100644
+--- a/cmake/libigl.cmake
++++ b/cmake/libigl.cmake
+@@ -561,6 +561,30 @@ export(
+ install_dir_files(core)
+ install_dir_files(copyleft)
+ 
++if (LIBIGL_WITH_EMBREE)
++    install_dir_files(embree)
++endif()
++
++if (LIBIGL_WITH_OPENGL OR LIBIGL_WITH_OPENGL_GLFW OR LIBIGL_WITH_OPENGL_GLFW_IMGUI)
++    install_dir_files(opengl)
++endif()
++
++if (LIBIGL_WITH_PNG)
++    install_dir_files(png)
++endif()
++
++if (LIBIGL_WITH_PREDICATES)
++    install_dir_files(predicates)
++endif()
++
++if (LIBIGL_WITH_TRIANGLE)
++    install_dir_files(triangle)
++endif()
++
++if (LIBIGL_WITH_XML)
++    install_dir_files(xml)
++endif()
++
+ # Write package configuration file
+ configure_package_config_file(
+   ${CMAKE_CURRENT_LIST_DIR}/libigl-config.cmake.in

@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF cce09646b566c61c2debff58a70da780b8457883
-    SHA512 3eef6844269ecb9c3b7c848013539529e6ef2d298b6ca6c3c939a2a2e39da98db36bd66eea8893224bc4318edc073639136fbca71b2b0bec65216562e8188749
+    REF fc6563f5130d8a7ee1fc27c0e55baef35119f26c   #v3.4.3
+    SHA512 54ca4f3cc3b38dcf6588b2369ce43109c4a57a04061348ab8bf046c5c13ace0c4f42c9f3961288542cb5fe12c05359d572b39fe7cec32a10151dbac78e8a3707
     HEAD_REF master
     PATCHES
         fix-buildsystem.patch
@@ -12,7 +12,7 @@ vcpkg_from_github(
         fix-lz4.patch
         fix-zstd.patch
         fix-cpu-set.patch
-        disable-c4061.patch
+        disable-warnings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

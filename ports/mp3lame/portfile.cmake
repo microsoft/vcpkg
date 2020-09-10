@@ -1,17 +1,11 @@
-include(vcpkg_common_functions)
-
 set(VERSION 3.100)
 
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://downloads.sourceforge.net/project/lame/lame/${VERSION}/lame-${VERSION}.tar.gz"
-    FILENAME "lame-3.100.tar.gz"
-    SHA512 0844b9eadb4aacf8000444621451277de365041cc1d97b7f7a589da0b7a23899310afd4e4d81114b9912aa97832621d20588034715573d417b2923948c08634b
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE_FILE}
+    REPO lame/lame
     REF ${VERSION}
+    FILENAME "lame-${VERSION}.tar.gz"
+    SHA512 0844b9eadb4aacf8000444621451277de365041cc1d97b7f7a589da0b7a23899310afd4e4d81114b9912aa97832621d20588034715573d417b2923948c08634b
     PATCHES 00001-msvc-upgrade-solution-up-to-vc11.patch
 )
 
@@ -41,7 +35,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     foreach(vcxproj ${vcxprojs})
         file(READ "${SOURCE_PATH}/vc_solution/${vcxproj}" vcxproj_con)
         
-        if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        if(NOT VCPKG_CRT_LINKAGE STREQUAL dynamic)
             string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_con "${vcxproj_con}")
         endif()
 
@@ -147,6 +141,6 @@ else()
 endif()
 
 file(COPY ${SOURCE_PATH}/include/lame.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/lame)
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/mp3lame/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in ${CURRENT_PACKAGES_DIR}/share/mp3lame/mp3lame-config.cmake @ONLY)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/mp3lame)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

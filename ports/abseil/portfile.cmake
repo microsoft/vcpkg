@@ -7,9 +7,12 @@ set(ABSEIL_PATCHES
 
     # This patch is an upstream commit, the related PR: https://github.com/abseil/abseil-cpp/pull/637
     fix-MSVCbuildfail.patch
-    
+
     # Remove this patch in next update, see https://github.com/google/cctz/pull/145
     fix-arm-build.patch
+
+    # This patch is an upstream commit: https://github.com/abseil/abseil-cpp/commit/68494aae959dfbbf781cdf03a988d2f5fc7e4802
+    fix-cmake-threads-dependency.patch
 )
 
 if("cxx17" IN_LIST FEATURES)
@@ -52,6 +55,19 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/include/absl/copts
                     ${CURRENT_PACKAGES_DIR}/include/absl/strings/testdata
-                    ${CURRENT_PACKAGES_DIR}/include/absl/time/internal/cctz/testdata)
+                    ${CURRENT_PACKAGES_DIR}/include/absl/time/internal/cctz/testdata
+)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/absl/base/config.h
+        "#elif defined(ABSL_CONSUME_DLL)" "#elif 1"
+    )
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/absl/base/internal/thread_identity.h
+        "&& !defined(ABSL_CONSUME_DLL)" "&& 0"
+    )
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/absl/container/internal/hashtablez_sampler.h
+        "!defined(ABSL_CONSUME_DLL)" "0"
+    )
+endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

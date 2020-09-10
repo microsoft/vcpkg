@@ -34,12 +34,6 @@ rather than JSON5 or JSON with comments because JSON is the everywhere-supported
 standard. That is not necessarily true of JSON with comments. Additionally, if one needs
 to write a comment, they can do so via `"$reason"` or `"$comment"` fields.
 
-### Why are `<platform-specification>`s so verbose?
-
-In the initial implementation, we didn't want to do more parsing than is strictly necessary,
-especially parsing languages which aren't defined anywhere. We may add a shorter way of
-defining platform specifications in the future (more similar to those in control files).
-
 ## Specification
 
 A manifest file shall have the name `vcpkg.json`, and shall be in the root directory of a package.
@@ -54,26 +48,28 @@ to specify the shape of a value. Note that any object may contain any directives
 a field key that starts with a `$`; these directive shall be ignored by `vcpkg`. Common
 directives may include `"$schema"`, `"$comment"`, `"$reason"`.
 
-A manifest must be a top-level object, and must have at least the following properties:
+A manifest must be a top-level object, and must have at least:
 
 * `"name"`: a `<package-name>`
-* `"version"`: A `string`. This will be defined further later.
-  * [Semver](https://semver.org) is recommended but not required.
+* One (and only one) of the following version fields:
+  * `"version-string"`: A `string`. Has no semantic meaning.
+    Equivalent to `CONTROL`'s `Version:` field.
+  * Other version fields will be defined by the Versions RFC
 
 The simplest vcpkg.json looks like this:
 
 ```json
 {
   "name": "mypackage",
-  "version": "0.1.0-dev"
+  "version-string": "0.1.0-dev"
 }
 ```
 
 Additionally, it may contain the following properties:
 * `"port-version"`: A non-negative integer. If this field doesn't exist, it's assumed to be `0`.
   * Note that this is a change from existing CONTROL files, where versions were a part of the version string
-* `"authors"`: An array of `string`s which contain the authors of a package
-  * `"authors": [ "Nicole Mazzuca <nicole@example.com>", "שלום עליכם <shalom@example.com>" ]`
+* `"maintainers"`: An array of `string`s which contain the authors of a package
+  * `"maintainers": [ "Nicole Mazzuca <nicole@example.com>", "שלום עליכם <shalom@example.com>" ]`
 * `"description"`: A string or array of strings containing the description of a package
   * `"description": "mypackage is a package of mine"`
 * `"homepage"`: A url which points to the homepage of a package
@@ -86,8 +82,8 @@ Additionally, it may contain the following properties:
 * `"dev-dependencies"`: An array of `<dependency>`s which are required only for developers (testing and the like)
 * `"features"`: An array of `<feature>`s that the package supports
 * `"default-features"`: An array of `<identifier>`s that correspond to features, which will be used by default.
-* `"supports"`: A `<platform-specification>`
-  * `"supports": { "and": [ "win", { "not": "arm" } ] }`
+* `"supports"`: A `<platform-expression>`
+  * `"supports": "windows & !arm"`
 
 Any properties which are not listed, and which do not start with a `$`,
 will be warned against and are reserved for future use.
@@ -105,7 +101,7 @@ Build-Depends: glib, gettext, cairo, fontconfig, freetype, harfbuzz[glib] (!(win
 ```json
 {
   "name": "pango",
-  "version": "1.40.11",
+  "version-string": "1.40.11",
   "port-version": 6,
   "homepage": "https://ftp.gnome.org/pub/GNOME/sources/pango/",
   "description": "Text and font handling library.",
@@ -118,22 +114,15 @@ Build-Depends: glib, gettext, cairo, fontconfig, freetype, harfbuzz[glib] (!(win
     {
       "name": "harfbuzz",
       "features": [ "glib" ],
-      "platform": {
-        "and": [
-          { "not": { "and": [ "windows", "static" ] } },
-          { "not": "osx" }
-        ]
-      }
+      "platform": "!(windows & static) & !osx"
     }
   ]
 }
 ```
 
-You may notice that the platform specification is fairly wordy. See [reasoning](#why-are-platform-specifications-so-verbose) for why.
-
 ## Behavior of the Tool
 
-There will be two "modes" for vcpkg from this point forward: "classic", and "modern".
+There will be two "modes" for vcpkg from this point forward: "classic", and "manifest".
 The former will act exactly like the existing vcpkg workflow, so as to avoid breaking
 anyone. The latter will be the mode only when the user either:
 
@@ -146,11 +135,10 @@ anyone. The latter will be the mode only when the user either:
     * The environment variable `VCPKG_FEATURE_FLAGS`
     * The option `--feature-flags`
       * (e.g., `--feature-flags=binarycaching,manifests`)
+    * If someone wants to use classic mode and silence the warning, they can add the
+      `-manifests` feature flag to disable the mode.
 
-Additionally, we'll add the `--x-classic-mode` flag to allow someone to force classic
-mode.
-
-When in "modern" mode, the `installed` directory will be changed to
+When in "manifest" mode, the `installed` directory will be changed to
 `<manifest-root>/vcpkg_installed` (name up for bikeshedding).
 The following commands will change behavior:
 
@@ -158,49 +146,38 @@ The following commands will change behavior:
   the manifest file, and will remove any dependencies
   which are no longer in the dependency tree implied by the manifest file.
 * `vcpkg install` with port arguments will give an error.
-* `vcpkg x-clean` will be added, and will delete your `vcpkg_installed` directory.
 
-The following commands will not work in modern mode, at least initially:
+The following commands will not work in manifest mode, at least initially:
 
 * `vcpkg x-set-installed`: `vcpkg install` serves the same function
 * `vcpkg remove`
 * `vcpkg export`
-* `vcpkg import`
-* `vcpkg create`
 
-We may add these features back for modern mode once we understand how best to
+We may add these features back for manifest mode once we understand how best to
 implement them.
 
 ### Behavior of the Toolchain
 
-Mostly, the toolchain file stays the same; however, we shall add one public cache variable:
+Mostly, the toolchain file stays the same; however, we shall add
+two public options:
 
 ```cmake
-VCPKG_MANIFEST_ROOT:PATH=<path to the directory containing the vcpkg.json file>
+VCPKG_MANIFEST_MODE:BOOL=<we found a manifest>
+VCPKG_MANIFEST_INSTALL:BOOL=ON
 ```
 
-and one function:
+The first option either explicitly turns on, or off, manifest mode;
+otherwise, we default to looking for a manifest file in the directory
+tree upwards from the source directory.
 
-```cmake
-vcpkg_acquire_dependencies(
-  [TRIPLET <triplet>]
-  [MANIFEST <path to manifest>]
-  [INSTALL_DIRECTORY <install directory>])
-```
+The `VCPKG_MANIFEST_INSTALL` option tells the toolchain whether to
+install the packages or not -- if you wish to install the manifest
+dependencies manually, you can set this to off, and we also turn it
+off for packages installed by vcpkg.
 
-which installs the dependencies required by the manifest file.
-
-The default for `TRIPLET` is `VCPKG_TARGET_TRIPLET`
-(which is the default triplet for the configured system).
-For example, on x64 Windows, it defaults to `x64-windows`.
-
-The default for `INSTALL_DIRECTORY` is `${CMAKE_BINARY_DIR}/vcpkg_installed`.
-
-Additionally, in the course of implementation, we would like to
-look at adding the following function, but may not be able to:
-
-It is almost certain that one should guard any use of this function
-by `if(EXISTS CACHE{VCPKG_MANIFEST_FILE})`.
+Additionally, if `-manifests` is set in the feature flags environment
+variable, we turn off manifest mode in the toolchain, and we act like
+the classic toolchain.
 
 ### Example - CMake Integration
 
@@ -232,7 +209,7 @@ Therefore, in `vcpkg.json`, we'll need to depend on `fmt`:
 ```json
 {
   "name": "example",
-  "version": "0.0.1",
+  "version-string": "0.0.1",
   "dependencies": [
     "fmt"
   ]
@@ -245,11 +222,6 @@ Then, let's write our `CMakeLists.txt`:
 cmake_minimum_required(VERSION 3.14)
 
 project(example CXX)
-
-if(EXISTS CACHE{VCPKG_MANIFEST_FILE})
-  vcpkg_acquire_dependencies()
-endif()
-
 
 add_executable(example src/main.cxx)
 
@@ -285,7 +257,9 @@ Hello, world!
   * Does not have multiple consecutive hyphens
   * Does not begin nor end with a hyphen
   * Is not a Windows filesystem reserved name
-  * Is not a vcpkg reserved name: "default".
+  * Is not a vcpkg reserved name: "default" or "core".
+  * In other words, it must follow the regex `[a-z0-9]+(-[a-z0-9]+)*`, and must not be any of:
+    * `{ prn, aux, nul, con, lpt[1-9], com[1-9], core, default }`
 * `<package-name>`: A `string` consisting of a non-zero number of `<identifier>`s, separated by `.`.
   * `a.b.c` is valid
   * `a` is valid
@@ -296,15 +270,29 @@ Hello, world!
     * `"name"`: A `<package-name>`
     * Optionally, `"features"`: an array of `<identifier>`s corresponding to features in the package.
     * Optionally, `"default-features"`: a `boolean`. If this is false, then don't use the default features of the package; equivalent to core in existing CONTROL files. If this is true, do the default thing of including the default features.
-    * Optionally, `"platform"`: a `<platform-specification>`
+    * Optionally, `"platform"`: a `<platform-expression>`
   * `<dependency.port>`: No extra fields are required.
-* `<license-string>`: An SPDX license expression at version 3.8.
-* `<platform-specification>`: A specification of a set of platforms; used in platform-specific dependencies and supports fields. One of:
-  * `<platform-specification.exact>`: A string denoting a triplet tag like “windows”, “osx”, etc.
-  * `<platform-specification.not>`: An object containing a member with key "not" and value `<platform-specification>`.
-  * `<platform-specification.and>`: An object containing a member with key "and" and value array of `<platform-specification>`s.
-  * `<platform-specification.or>`: An object containing a member with key "or" and value array of `<platform-specification>`s.
+* `<license-string>`: An SPDX license expression at version 3.9.
+* `<platform-expression>`: A specification of a set of platforms; used in platform-specific dependencies and supports fields. A string that is parsed as follows:
+  * `<platform-expression>`:
+    * `<platform-expression.not>`
+    * `<platform-expression.and>`
+    * `<platform-expression.or>`
+  * `<platform-expression.simple>`:
+    * `( <platform-expression> )`
+    * `<platform-expression.identifier>`
+  * `<platform-expression.identifier>`:
+    * regex: `/^[a-z0-9]+$/`
+  * `<platform-expression.not>`:
+    * `<platform-expression.simple>`
+    * `! <platform-expression.simple>`
+  * `<platform-expression.and>`
+    * `<platform-expression.not>`
+    * `<platform-expression.and> & <platform-expression.not>`
+  * `<platform-expression.or>`
+    * `<platform-expression.not>`
+    * `<platform-expression.or> | <platform-expression.not>`
 * `<feature>`: An object containing the following:
   * `"name"`: An `<identifier>`, the name of the feature
-  * `"description"`: A `string`, the description of the feature
+  * `"description"`: A `string` or array of `string`s, the description of the feature
   * Optionally, `"dependencies"`: An array of `<dependency>`s, the dependencies used by this feature

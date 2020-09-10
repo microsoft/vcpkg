@@ -38,12 +38,54 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-    file(GLOB MLPACK_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-    file(COPY ${MLPACK_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    file(REMOVE ${MLPACK_TOOLS})
-    file(GLOB MLPACK_TOOLS_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    file(REMOVE ${MLPACK_TOOLS_DEBUG})
+    vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
+        mlpack_adaboost
+        mlpack_approx_kfn
+        mlpack_cf
+        mlpack_dbscan
+        mlpack_decision_stump
+        mlpack_decision_tree
+        mlpack_det
+        mlpack_emst
+        mlpack_fastmks
+        mlpack_gmm_generate
+        mlpack_gmm_probability
+        mlpack_gmm_train
+        mlpack_hmm_generate
+        mlpack_hmm_loglik
+        mlpack_hmm_train
+        mlpack_hmm_viterbi
+        mlpack_hoeffding_tree
+        mlpack_kde
+        mlpack_kernel_pca
+        mlpack_kfn
+        mlpack_kmeans
+        mlpack_knn
+        mlpack_krann
+        mlpack_lars
+        mlpack_linear_regression
+        mlpack_linear_svm
+        mlpack_lmnn
+        mlpack_local_coordinate_coding
+        mlpack_logistic_regression
+        mlpack_lsh
+        mlpack_mean_shift
+        mlpack_nbc
+        mlpack_nca
+        mlpack_nmf
+        mlpack_pca
+        mlpack_perceptron
+        mlpack_preprocess_binarize
+        mlpack_preprocess_describe
+        mlpack_preprocess_imputer
+        mlpack_preprocess_scale
+        mlpack_preprocess_split
+        mlpack_radical
+        mlpack_random_forest
+        mlpack_range_search
+        mlpack_softmax_regression
+        mlpack_sparse_coding
+    )
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

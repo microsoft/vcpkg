@@ -1,16 +1,10 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "DirectXTK12 only supports dynamic CRT linkage")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
-    REF dec2019
-    SHA512 2144c7a51ea73efea5ad4db3b0b92bfc5a2ca57c38e7f6702ce82a09049266a3aaad4500856a964c4069aa711973d3a10cb3b133397ec93bda3a4a0328b9d81c
+    REF aug2020
+    SHA512 ad462fd36175a11f5825a3d49c2363ed37a15f3e849e95694bef1d7f40fb6b1c6c579565884eb1d099efaabd91c0d9222c335d92bfba5b83a363cb9934ef503f
     HEAD_REF master
 )
 
@@ -38,6 +32,7 @@ endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
+    PLATFORM ${TRIPLET_SYSTEM_ARCH}
 )
 
 file(INSTALL

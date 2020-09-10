@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 42e490a..ec9e4d1 100644
+index 5a13333..5a7ece0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -348,6 +348,7 @@ if(CMAKE_USE_SECTRANSP)
+@@ -361,6 +361,7 @@ if(CMAKE_USE_SECTRANSP)
    list(APPEND CURL_LIBS "${COREFOUNDATION_FRAMEWORK}" "${SECURITY_FRAMEWORK}")
  endif()
  

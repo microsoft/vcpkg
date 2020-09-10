@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VERSION "10.0.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -14,6 +12,7 @@ vcpkg_from_github(
         0001-allow-to-use-commas.patch
         0002-fix-install-paths.patch
         0003-fix-vs2019-v16.6.patch
+        0004-fix-dr-1734.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -197,8 +196,10 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
+if("clang" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
+endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(GLOB_RECURSE _llvm_release_targets
@@ -252,7 +253,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 if("clang" IN_LIST FEATURES)
     file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
 endif()

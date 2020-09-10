@@ -1,0 +1,13 @@
+{
+  "name": "gmp",
+  "version-string": "6.2.0",
+  "port-version": 3,
+  "description": "The GNU Multiple Precision Arithmetic Library",
+  "homepage": "https://gmplib.org",
+  "dependencies": [
+    {
+      "name": "vs-yasm",
+      "platform": "windows"
+    }
+  ]
+}
