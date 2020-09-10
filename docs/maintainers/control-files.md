@@ -1,5 +1,8 @@
 # CONTROL files
 
+Control files have been deprecated in favor of [manifest files](manifest-files.md);
+however, they will still exist in the codebase and be supported for quite some time.
+
 The `CONTROL` file contains metadata about the port.  The syntax is based on [the Debian `control` format][debian] although we only support the subset of fields documented here.
 
 Field names are case-sensitive and start the line without leading whitespace.  Paragraphs are separated by one or more empty lines.
