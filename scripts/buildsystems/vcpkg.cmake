@@ -353,7 +353,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
     endforeach()
 
     if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
-        set(_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
+        list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
     endif()
 
     execute_process(
