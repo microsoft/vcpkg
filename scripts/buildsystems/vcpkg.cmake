@@ -348,13 +348,12 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
         endforeach()
     endif()
 
-    set(_VCPKG_MANIFEST_FEATURES)
     foreach(feature ${VCPKG_MANIFEST_FEATURES})
-        list(APPEND _VCPKG_MANIFEST_FEATURES "--x-feature=${feature}")
+        list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-feature=${feature}")
     endforeach()
 
     if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
-        set(_VCPKG_MANIFEST_NO_DEFAULT_FEATURES "--x-no-default-features")
+        set(_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
     endif()
 
     execute_process(
@@ -363,8 +362,6 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             --vcpkg-root "${_VCPKG_ROOT_DIR}"
             "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
             "--x-install-root=${_VCPKG_INSTALLED_DIR}"
-            ${_VCPKG_MANIFEST_FEATURES}
-            ${_VCPKG_MANIFEST_NO_DEFAULT_FEATURES}
             ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
 
