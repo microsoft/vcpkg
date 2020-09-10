@@ -1,0 +1,12 @@
+diff --git a/ogr/ogrlinestring.cpp b/ogr/ogrlinestring.cpp
+index 1e16d9f..cf7ced1 100644
+--- a/ogr/ogrlinestring.cpp
++++ b/ogr/ogrlinestring.cpp
+@@ -35,6 +35,7 @@
+ #include <cstdlib>
+ #include <algorithm>
+ #include <limits>
++#include <cmath>
+ 
+ CPL_CVSID("$Id: ogrlinestring.cpp ad9178b63f501e9840d86a3220c9e5100c6e3fa2 2019-10-21 13:19:06 +0200 Even Rouault $")
+ 
