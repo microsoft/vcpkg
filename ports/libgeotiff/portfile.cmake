@@ -1,19 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/libgeotiff
-    REF 8b1a8f52bc909f86e04ceadd699db102208074a2 #v1.6.0
+    REF  8b1a8f52bc909f86e04ceadd699db102208074a2 #v1.6.0
     SHA512 41715d6a416307a93b2f95874c00ed27c3a0450d70311e77ed45f7ff477bd85f4a69b549bde01dfb9412a62a482467222fc8ed398478e2829e4d112012aab852
     HEAD_REF master
     PATCHES
         cmakelists.patch
         geotiff-config.patch
+        fix-proj4.patch
 )
 
+set(SOURCE_PATH ${SOURCE_PATH}/libgeotiff)
+
 # Delete FindPROJ4.cmake
-file(REMOVE ${SOURCE_PATH}/libgeotiff/cmake/FindPROJ4.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindPROJ4.cmake)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/libgeotiff
+    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DWITH_TIFF=1
@@ -55,6 +58,6 @@ file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-depends-debug.cmake D
 file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-depends.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL ${SOURCE_PATH}/libgeotiff/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)
