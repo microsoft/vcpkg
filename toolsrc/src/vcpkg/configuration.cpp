@@ -2,7 +2,7 @@
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/configuration.h>
-#include <vcpkg/configurationparser.h>
+#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
@@ -28,10 +28,10 @@ namespace vcpkg
             }
         }
 
-        static Json::ArrayDeserializer<RegistryDeserializer> arr_reg_d{"an array of registries"};
+        static Json::ArrayDeserializer<RegistryDeserializer> array_of_registries{"an array of registries"};
 
         std::vector<Registry> regs;
-        r.optional_object_field(obj, REGISTRIES, regs, arr_reg_d);
+        r.optional_object_field(obj, REGISTRIES, regs, array_of_registries);
 
         if (!regs.empty() && !registries_enabled)
         {

@@ -732,8 +732,9 @@ namespace vcpkg
             r.optional_object_field(
                 obj, DEFAULT_FEATURES, spgh->default_features, Json::IdentifierArrayDeserializer::instance);
 
-            static Json::ArrayDeserializer<FeatureDeserializer> arr_feature_d{"an array of feature definitions"};
-            r.optional_object_field(obj, FEATURES, control_file->feature_paragraphs, arr_feature_d);
+            static Json::ArrayDeserializer<FeatureDeserializer> features_deserializer{
+                "an array of feature definitions"};
+            r.optional_object_field(obj, FEATURES, control_file->feature_paragraphs, features_deserializer);
 
             canonicalize(*control_file);
             return std::move(control_file);

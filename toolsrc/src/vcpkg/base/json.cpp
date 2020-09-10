@@ -1325,18 +1325,18 @@ namespace vcpkg::Json
         auto extra_fields = invalid_json_fields(obj, valid_fields);
         for (auto&& f : extra_fields)
         {
-            size_t best_index = 0;
-            auto best_value = Strings::byte_edit_distance(f, valid_fields[0]);
-            for (size_t i = 1; i < valid_fields.size(); ++i)
+            auto best_it = valid_fields.begin();
+            auto best_value = Strings::byte_edit_distance(f, *best_it);
+            for (auto i = best_it + 1; i != valid_fields.end(); ++i)
             {
-                auto v = Strings::byte_edit_distance(f, valid_fields[i]);
+                auto v = Strings::byte_edit_distance(f, *i);
                 if (v < best_value)
                 {
                     best_value = v;
-                    best_index = i;
+                    best_it = i;
                 }
             }
-            add_extra_field_error(type_name.to_string(), f, valid_fields[best_index]);
+            add_extra_field_error(type_name.to_string(), f, *best_it);
         }
     }
 

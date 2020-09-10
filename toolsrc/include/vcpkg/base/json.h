@@ -184,6 +184,7 @@ namespace vcpkg::Json
     private:
         underlying_t underlying_;
     };
+
     struct Object
     {
     private:
@@ -296,5 +297,4 @@ namespace vcpkg::Json
     std::string stringify(const Value&, JsonStyle style);
     std::string stringify(const Object&, JsonStyle style);
     std::string stringify(const Array&, JsonStyle style);
-
 }

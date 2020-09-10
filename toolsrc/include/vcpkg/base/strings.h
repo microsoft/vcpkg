@@ -294,5 +294,7 @@ namespace vcpkg::Strings
     // base 32 encoding, following IETC RFC 4648
     std::string b32_encode(std::uint64_t x) noexcept;
 
+    // Implements https://en.wikipedia.org/wiki/Levenshtein_distance with a "give-up" clause for large strings
+    // Guarantees 0 for equal strings and nonzero for inequal strings.
     size_t byte_edit_distance(StringView a, StringView b);
 }

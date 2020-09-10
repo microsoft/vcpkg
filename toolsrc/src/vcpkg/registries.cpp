@@ -1,7 +1,7 @@
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/jsonreader.h>
 
-#include <vcpkg/configurationparser.h>
+#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/registries.h>
 #include <vcpkg/vcpkgpaths.h>
 
@@ -53,9 +53,9 @@ namespace vcpkg
     Optional<std::unique_ptr<RegistryImpl>> RegistryImplDeserializer::visit_object(Json::Reader& r,
                                                                                    const Json::Object& obj)
     {
-        static Json::StringDeserializer kind_des{"a registry implementation kind"};
+        static Json::StringDeserializer kind_deserializer{"a registry implementation kind"};
         std::string kind;
-        r.required_object_field(type_name(), obj, KIND, kind, kind_des);
+        r.required_object_field(type_name(), obj, KIND, kind, kind_deserializer);
 
         if (kind == KIND_BUILTIN)
         {
@@ -102,10 +102,11 @@ namespace vcpkg
             return nullopt;
         }
 
-        static Json::ArrayDeserializer<Json::PackageNameDeserializer> arr_reg_d{"an array of package names"};
+        static Json::ArrayDeserializer<Json::PackageNameDeserializer> package_names_deserializer{
+            "an array of package names"};
 
         std::vector<std::string> packages;
-        r.required_object_field(type_name(), obj, PACKAGES, packages, arr_reg_d);
+        r.required_object_field(type_name(), obj, PACKAGES, packages, package_names_deserializer);
 
         return Registry{std::move(packages), std::move(impl).value_or_exit(VCPKG_LINE_INFO)};
     }
