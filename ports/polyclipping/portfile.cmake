@@ -13,8 +13,6 @@ vcpkg_from_sourceforge(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
-    OPTIONS
-         -DCMAKE_DEBUG_POSTFIX=d
 )
 
 

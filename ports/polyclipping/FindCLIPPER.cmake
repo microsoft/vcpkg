@@ -28,8 +28,8 @@ if(NOT CLIPPER_INCLUDE_DIR)
 endif()
 
 if(NOT CLIPPER_LIBRARY)
-  find_library(CLIPPER_LIBRARY_RELEASE NAMES polyclipping)
-  find_library(CLIPPER_LIBRARY_DEBUG NAMES polyclippingd)
+  find_library(CLIPPER_LIBRARY_RELEASE NAMES polyclipping PATHS "${CMAKE_CURRENT_LIST_DIR}/../../lib" NO_DEFAULT_PATH)
+  find_library(CLIPPER_LIBRARY_DEBUG NAMES polyclipping PATHS "${CMAKE_CURRENT_LIST_DIR}/../../debug/lib" NO_DEFAULT_PATH)
   select_library_configurations(CLIPPER)
 endif()
 
