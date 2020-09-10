@@ -27,7 +27,6 @@ endif()
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    COPY_SOURCE
     NO_ADDITIONAL_PATHS
     OPTIONS
         ${OPTIONS}
