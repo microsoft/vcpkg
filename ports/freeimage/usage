@@ -1,5 +1,0 @@
-The package freeimage provides CMake targets:
-
-    find_package(freeimage REQUIRED)
-    target_include_directories(main PRIVATE ${FREEIMAGE_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${FREEIMAGE_LIBRARIES})
