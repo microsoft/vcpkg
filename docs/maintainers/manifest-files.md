@@ -229,7 +229,7 @@ and warns users in advance that a given install tree is not expected to succeed.
 Therefore, this field should be used optimistically;
 in cases where a port is expected to succeed 10% of the time, it should still be marked "supported".
 
-The grammar for the platform expression, in [EBNF], is as follows:
+The grammar for this top-level platform expression, in [EBNF], is as follows:
 
 ```ebnf
 whitespace-character =
@@ -237,7 +237,7 @@ whitespace-character =
 | ? U+000A "LINE FEED" ?
 | ? U+000D "CARRIAGE RETURN" ?
 | ? U+0020 "SPACE" ? ;
-whitespace = { whitespace-character } ;
+optional-whitespace = { whitespace-character } ;
 
 lowercase-alpha =
 | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
@@ -250,26 +250,28 @@ identifier-character =
 | digit ;
 
 platform-expression =
-| whitespace, platform-expression-not, whitespace
-| whitespace, platform-expression-and, whitespace
-| whitesapce, platform-expression-or, whitespace ;
+| platform-expression-not
+| platform-expression-and
+| platform-expression-or ;
+
+platform-expression-identifier = 
+| identifier-character, { identifier-character }, optional-whitespace ;
 
 platform-expression-simple =
 | platform-expression-identifier
-| "(", whitespace, platform-expression, whitespace, ")" ;
-
-platform-expression-identifier = 
-| identifier-character, { identifier-character } ;
+| "(", optional-whitespace, platform-expression, ")", optional-whitespace ;
 
 platform-expression-not =
 | platform-expression-simple
-| "!", whitespace, platform-expression-simple ;
+| "!", optional-whitespace, platform-expression-simple ;
 
 platform-expression-and =
-| platform-expression-not, { whitespace, "&", whitespace, platform-expression-not } ;
+| platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
 
 platform-expression-or =
-| platform-expression-not, { whitespace, "|", whitespace, platform-expression-not } ;
+| platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
+
+top-level-platform-expression = optional-whitespace, platform-expression ;
 ```
 
 Basically, there are four kinds of expressions -- identifiers, negations, ands, and ors.
