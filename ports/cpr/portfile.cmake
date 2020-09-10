@@ -1,16 +1,15 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO whoshuu/cpr
-    REF 1.3.0
-    SHA512 fd08f8a592a5e1fb8dc93158a4850b81575983c08527fb415f65bd9284f93c804c8680d16c548744583cd26b9353a7d4838269cfc59ccb6003da8941f620c273
+    REF 5e87cb5f45ac99858f0286dc1c35a6cd27c3bcb9 #v1.5.1
+    SHA512 1ea6295b5568d8d5d099cb1d89d19b3cae873bd869f64be4495be301561c91893f3c1c375823ce18419c780cda52aab79520293ff63ee529ded5431ec511ce5c
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
         002_cpr_fixcase.patch
+		fix-install-directory.patch
 )
 
 vcpkg_configure_cmake(
@@ -25,7 +24,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cprConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/lib/cmake/cpr)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cprConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cpr)
 
 vcpkg_copy_pdbs()
@@ -33,5 +32,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpr)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cpr/LICENSE ${CURRENT_PACKAGES_DIR}/share/cpr/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
