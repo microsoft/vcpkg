@@ -245,6 +245,18 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_MANIFEST_INSTALL=OFF"
     )
 
+    if(DEFINED CMAKE_SYSTEM_PROCESSOR)
+        list(APPEND _csc_OPTIONS
+		"-DCMAKE_SYSTEM_PROCESSOR=${CMAKE_SYSTEM_PROCESSOR}"
+        )
+    endif()
+
+    if(DEFINED CMAKE_HOST_SYSTEM_PROCESSOR)
+        list(APPEND _csc_OPTIONS
+                "-DCMAKE_HOST_SYSTEM_PROCESSOR=${CMAKE_HOST_SYSTEM_PROCESSOR}"
+	)
+    endif()
+
     if(DEFINED ARCH)
         list(APPEND _csc_OPTIONS
             "-A${ARCH}"
