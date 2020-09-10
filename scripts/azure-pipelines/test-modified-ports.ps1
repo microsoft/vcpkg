@@ -52,7 +52,8 @@ $commonArgs = @(
     '--binarycaching',
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
-    "--x-packages-root=$packagesRoot"
+    "--x-packages-root=$packagesRoot",
+    "--overlay-ports=scripts/test_ports"
 )
 
 $binaryCachingMode = 'readwrite'

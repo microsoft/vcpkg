@@ -1,6 +1,6 @@
-#include "pch.h"
-
 #include <vcpkg/buildenvironment.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg
 {

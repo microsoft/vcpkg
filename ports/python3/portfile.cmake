@@ -161,17 +161,16 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		)
 
 		message(STATUS "Installing ${TARGET_TRIPLET}-rel lib files...")
-		file(GLOB LIBS
+		file(GLOB PY_LIBS
 			${OUT_PATH_RELEASE}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/*)
-		file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}/Lib
+		file(INSTALL ${PY_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}/Lib
 			PATTERN "*.pyc" EXCLUDE
 			PATTERN "*__pycache__*" EXCLUDE
 		)
 
 		message(STATUS "Installing ${TARGET_TRIPLET}-rel share files...")
-		file(GLOB LIBS
-			${OUT_PATH_RELEASE}/lib/pkgconfig/*)
-		file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}
+		file(GLOB PKGCFG ${OUT_PATH_RELEASE}/lib/pkgconfig/*)
+		file(INSTALL ${PKGCFG} DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}
 			PATTERN "*.pyc" EXCLUDE
 			PATTERN "*__pycache__*" EXCLUDE
 		)
@@ -179,6 +178,9 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		message(STATUS "Installing ${TARGET_TRIPLET}-rel Python library files...")
 		file(GLOB LIBS
 			${OUT_PATH_RELEASE}/lib/libpython${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.*)
+        if (NOT LIBS)
+            file(GLOB LIBS ${OUT_PATH_RELEASE}/lib64/*)
+        endif()
 		file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 			PATTERN "*.pyc" EXCLUDE
 			PATTERN "*__pycache__*" EXCLUDE
@@ -233,6 +235,10 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		message(STATUS "Installing ${TARGET_TRIPLET}-dbg Python library files...")
 		file(GLOB LIBS
 			${OUT_PATH_DEBUG}/lib/libpython${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}d.*)
+        if (NOT LIBS)
+            file(GLOB LIBS
+                ${OUT_PATH_DEBUG}/lib64/*)
+        endif()
 		file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 			PATTERN "*.pyc" EXCLUDE
 			PATTERN "*__pycache__*" EXCLUDE

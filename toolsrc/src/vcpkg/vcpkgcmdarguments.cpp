@@ -1,9 +1,8 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.integrate.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -50,6 +49,7 @@ namespace vcpkg
             {VcpkgCmdArguments::BINARY_CACHING_FEATURE, args.binary_caching},
             {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, args.manifest_mode},
             {VcpkgCmdArguments::COMPILER_TRACKING_FEATURE, args.compiler_tracking},
+            {VcpkgCmdArguments::REGISTRIES_FEATURE, args.registries_feature},
         };
 
         for (const auto& desc : flag_descriptions)
@@ -309,6 +309,7 @@ namespace vcpkg
                 {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
                 {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
                 {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
+                {JSON_SWITCH, &VcpkgCmdArguments::json},
             };
 
             bool found = false;
@@ -605,12 +606,13 @@ namespace vcpkg
     void VcpkgCmdArguments::append_common_options(HelpTableFormatter& table)
     {
         static auto opt = [](StringView arg, StringView joiner, StringView value) {
-            return Strings::format("--%s%s%s", arg, joiner, value);
+            return Strings::concat("--", arg, joiner, value);
         };
 
         table.format(opt(TRIPLET_ARG, " ", "<t>"), "Specify the target architecture triplet. See 'vcpkg help triplet'");
         table.format("", "(default: " + format_environment_variable("VCPKG_DEFAULT_TRIPLET") + ')');
         table.format(opt(OVERLAY_PORTS_ARG, "=", "<path>"), "Specify directories to be used when searching for ports");
+        table.format("", "(also: " + format_environment_variable("VCPKG_OVERLAY_PORTS") + ')');
         table.format(opt(OVERLAY_TRIPLETS_ARG, "=", "<path>"), "Specify directories containing triplets files");
         table.format(opt(BINARY_SOURCES_ARG, "=", "<path>"),
                      "Add sources for binary caching. See 'vcpkg help binarycaching'");
@@ -623,6 +625,7 @@ namespace vcpkg
         table.format(opt(INSTALL_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the install root directory");
         table.format(opt(PACKAGES_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the packages root directory");
         table.format(opt(SCRIPTS_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the scripts root directory");
+        table.format(opt(JSON_SWITCH, "", ""), "(Experimental) Request JSON output");
     }
 
     void VcpkgCmdArguments::imbue_from_environment()
@@ -642,6 +645,19 @@ namespace vcpkg
             if (const auto unpacked = vcpkg_default_triplet_env.get())
             {
                 triplet = std::make_unique<std::string>(*unpacked);
+            }
+        }
+
+        {
+            const auto vcpkg_overlay_ports_env = System::get_environment_variable(OVERLAY_PORTS_ENV);
+            if (const auto unpacked = vcpkg_overlay_ports_env.get())
+            {
+#ifdef WIN32
+                auto overlays = Strings::split(*unpacked, ';');
+#else
+                auto overlays = Strings::split(*unpacked, ':');
+#endif
+                overlay_ports.insert(std::end(overlay_ports), std::begin(overlays), std::end(overlays));
             }
         }
 
@@ -715,6 +731,7 @@ namespace vcpkg
             {BINARY_CACHING_FEATURE, binary_caching},
             {MANIFEST_MODE_FEATURE, manifest_mode},
             {COMPILER_TRACKING_FEATURE, compiler_tracking},
+            {REGISTRIES_FEATURE, registries_feature},
         };
 
         for (const auto& flag : flags)
@@ -739,6 +756,7 @@ namespace vcpkg
         } flags[] = {
             {BINARY_CACHING_FEATURE, binary_caching_enabled()},
             {COMPILER_TRACKING_FEATURE, compiler_tracking_enabled()},
+            {REGISTRIES_FEATURE, registries_enabled()},
         };
 
         for (const auto& flag : flags)
@@ -838,4 +856,46 @@ namespace vcpkg
         }
         m_str.append(line_start, best_break);
     }
+
+    // out-of-line definitions since C++14 doesn't allow inline constexpr static variables
+    constexpr StringLiteral VcpkgCmdArguments::VCPKG_ROOT_DIR_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::VCPKG_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::MANIFEST_ROOT_DIR_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::BUILDTREES_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::DOWNLOADS_ROOT_DIR_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::DOWNLOADS_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::INSTALL_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::PACKAGES_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::SCRIPTS_ROOT_DIR_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::DEFAULT_VISUAL_STUDIO_PATH_ENV;
+
+    constexpr StringLiteral VcpkgCmdArguments::TRIPLET_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::TRIPLET_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::BINARY_SOURCES_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::DEBUG_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::SEND_METRICS_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::DISABLE_METRICS_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::DISABLE_METRICS_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::PRINT_METRICS_SWITCH;
+
+    constexpr StringLiteral VcpkgCmdArguments::WAIT_FOR_LOCK_SWITCH;
+
+    constexpr StringLiteral VcpkgCmdArguments::JSON_SWITCH;
+
+    constexpr StringLiteral VcpkgCmdArguments::FEATURE_FLAGS_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::FEATURE_FLAGS_ARG;
+
+    constexpr StringLiteral VcpkgCmdArguments::FEATURE_PACKAGES_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::BINARY_CACHING_FEATURE;
+    constexpr StringLiteral VcpkgCmdArguments::BINARY_CACHING_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::COMPILER_TRACKING_FEATURE;
+    constexpr StringLiteral VcpkgCmdArguments::MANIFEST_MODE_FEATURE;
+    constexpr StringLiteral VcpkgCmdArguments::REGISTRIES_FEATURE;
 }

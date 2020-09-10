@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
@@ -7,11 +5,17 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/configuration.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/registries.h>
+#include <vcpkg/sourceparagraph.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/visualstudio.h>
 
@@ -36,7 +40,7 @@ namespace
         Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
         auto result = process_input_directory_impl(filesystem, root, option, name, li);
-        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
+        Debug::print("Using ", name, "-root: ", fs::u8string(result), '\n');
         return result;
     }
 
@@ -58,7 +62,7 @@ namespace
         Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
         auto result = process_output_directory_impl(filesystem, root, option, name, li);
-        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
+        Debug::print("Using ", name, "-root: ", fs::u8string(result), '\n');
         return result;
     }
 
@@ -80,6 +84,113 @@ namespace
 
 namespace vcpkg
 {
+    static Configuration deserialize_configuration(const Json::Object& obj,
+                                                   const VcpkgCmdArguments& args,
+                                                   const fs::path& filepath)
+    {
+        Json::Reader reader;
+        auto deserializer = ConfigurationDeserializer(args);
+
+        auto parsed_config_opt = reader.visit_value(obj, deserializer);
+        if (!reader.errors().empty())
+        {
+            System::print2(System::Color::error, "Errors occurred while parsing ", fs::u8string(filepath), "\n");
+            for (auto&& msg : reader.errors())
+                System::print2("    ", msg, '\n');
+
+            System::print2("See https://github.com/Microsoft/vcpkg/tree/master/docs/specifications/registries.md for "
+                           "more information.\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        return std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO);
+    }
+
+    struct ManifestAndConfig
+    {
+        fs::path config_directory;
+        Configuration config;
+    };
+
+    static std::pair<Json::Object, Json::JsonStyle> load_manifest(const Files::Filesystem& fs,
+                                                                  const fs::path& manifest_dir)
+    {
+        std::error_code ec;
+        auto manifest_path = manifest_dir / fs::u8path("vcpkg.json");
+        auto manifest_opt = Json::parse_file(fs, manifest_path, ec);
+        if (ec)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Failed to load manifest from directory %s: %s",
+                                      fs::u8string(manifest_dir),
+                                      ec.message());
+        }
+
+        if (!manifest_opt.has_value())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Failed to parse manifest at %s:\n%s",
+                                      fs::u8string(manifest_path),
+                                      manifest_opt.error()->format());
+        }
+        auto manifest_value = std::move(manifest_opt).value_or_exit(VCPKG_LINE_INFO);
+
+        if (!manifest_value.first.is_object())
+        {
+            System::print2(System::Color::error,
+                           "Failed to parse manifest at ",
+                           fs::u8string(manifest_path),
+                           ": Manifest files must have a top-level object\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        return {std::move(manifest_value.first.object()), std::move(manifest_value.second)};
+    }
+
+    struct ConfigAndPath
+    {
+        fs::path config_directory;
+        Configuration config;
+    };
+
+    // doesn't yet implement searching upwards for configurations, nor inheritance of configurations
+    static ConfigAndPath load_configuration(const Files::Filesystem& fs,
+                                            const VcpkgCmdArguments& args,
+                                            const fs::path& vcpkg_root,
+                                            const fs::path& manifest_dir)
+    {
+        fs::path config_dir;
+
+        if (!manifest_dir.empty())
+        {
+            // manifest mode
+            config_dir = manifest_dir;
+        }
+        else
+        {
+            // classic mode
+            config_dir = vcpkg_root;
+        }
+
+        auto path_to_config = config_dir / fs::u8path("vcpkg-configuration.json");
+        if (!fs.exists(path_to_config))
+        {
+            return {};
+        }
+
+        auto parsed_config = Json::parse_file(VCPKG_LINE_INFO, fs, path_to_config);
+        if (!parsed_config.first.is_object())
+        {
+            System::print2(System::Color::error,
+                           "Failed to parse ",
+                           fs::u8string(path_to_config),
+                           ": configuration files must have a top-level object\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        auto config_obj = std::move(parsed_config.first.object());
+
+        return {std::move(config_dir), deserialize_configuration(config_obj, args, path_to_config)};
+    }
+
     namespace details
     {
         struct VcpkgPathsImpl
@@ -103,6 +214,10 @@ namespace vcpkg
             Build::EnvCache m_env_cache;
 
             fs::SystemHandle file_lock_handle;
+
+            Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
+            fs::path m_manifest_path;
+            Configuration m_config;
         };
     }
 
@@ -125,7 +240,7 @@ namespace vcpkg
         }
         uppercase_win32_drive_letter(root);
         Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
-        Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
+        Debug::print("Using vcpkg-root: ", fs::u8string(root), '\n');
 
         std::error_code ec;
         bool manifest_mode_on = args.manifest_mode.value_or(args.manifest_root_dir != nullptr);
@@ -135,13 +250,13 @@ namespace vcpkg
         }
         else
         {
-            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, "vcpkg.json");
+            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, fs::u8path("vcpkg.json"));
         }
         uppercase_win32_drive_letter(manifest_root_dir);
 
         if (!manifest_root_dir.empty() && manifest_mode_on)
         {
-            Debug::print("Using manifest-root: ", manifest_root_dir.u8string(), '\n');
+            Debug::print("Using manifest-root: ", fs::u8string(manifest_root_dir), '\n');
 
             installed = process_output_directory(
                 filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
@@ -157,19 +272,22 @@ namespace vcpkg
             if (ec)
             {
                 System::printf(
-                    System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
+                    System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));
                 System::printf(System::Color::error, "    %s\n", ec.message());
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
+
+            m_pimpl->m_manifest_doc = load_manifest(filesystem, manifest_root_dir);
+            m_pimpl->m_manifest_path = manifest_root_dir / fs::u8path("vcpkg.json");
         }
         else
         {
             // we ignore the manifest root dir if the user requests -manifest
-            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value())
+            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value() && !args.output_json())
             {
                 System::print2(System::Color::warning,
                                "Warning: manifest-root detected at ",
-                               manifest_root_dir.generic_u8string(),
+                               fs::generic_u8string(manifest_root_dir),
                                ", but manifests are not enabled.\n");
                 System::printf(System::Color::warning,
                                R"(If you wish to use manifest mode, you may do one of the following:
@@ -196,6 +314,11 @@ If you wish to silence this error and use classic mode, you can:
             installed =
                 process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
         }
+
+        auto config_file = load_configuration(filesystem, args, root, manifest_root_dir);
+
+        config_root_dir = std::move(config_file.config_directory);
+        m_pimpl->m_config = std::move(config_file.config);
 
         buildtrees =
             process_output_directory(filesystem, root, args.buildtrees_root_dir.get(), "buildtrees", VCPKG_LINE_INFO);
@@ -280,7 +403,7 @@ If you wish to silence this error and use classic mode, you can:
                 {
                     if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, path)))
                     {
-                        output.emplace_back(TripletFile(path.stem().filename().u8string(), triplets_dir));
+                        output.emplace_back(TripletFile(fs::u8string(path.stem().filename()), triplets_dir));
                     }
                 }
             }
@@ -300,7 +423,7 @@ If you wish to silence this error and use classic mode, you can:
                 auto stem = file.stem();
                 if (stem != common_functions)
                 {
-                    helpers.emplace(stem.u8string(),
+                    helpers.emplace(fs::u8string(stem),
                                     Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
                 }
             }
@@ -334,6 +457,31 @@ If you wish to silence this error and use classic mode, you can:
     {
         return m_pimpl->m_tool_cache->get_tool_version(*this, tool);
     }
+
+    Optional<const Json::Object&> VcpkgPaths::get_manifest() const
+    {
+        if (auto p = m_pimpl->m_manifest_doc.get())
+        {
+            return p->first;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+    Optional<const fs::path&> VcpkgPaths::get_manifest_path() const
+    {
+        if (m_pimpl->m_manifest_doc)
+        {
+            return m_pimpl->m_manifest_path;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+
+    const Configuration& VcpkgPaths::get_configuration() const { return m_pimpl->m_config; }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
@@ -374,7 +522,7 @@ If you wish to silence this error and use classic mode, you can:
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
                                "Could not find Visual Studio instance at %s with %s toolset.",
-                               vsp->u8string(),
+                               fs::u8string(*vsp),
                                *tsv);
 
             Checks::check_exit(VCPKG_LINE_INFO, candidates.size() == 1);

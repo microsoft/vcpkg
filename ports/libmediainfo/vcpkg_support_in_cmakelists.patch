@@ -2,16 +2,6 @@ diff --git a/Project/CMake/CMakeLists.txt b/Project/CMake/CMakeLists.txt
 index 47c4ed13..f13ff531 100644
 --- a/Project/CMake/CMakeLists.txt
 +++ b/Project/CMake/CMakeLists.txt
-@@ -1,7 +1,7 @@
--project(MediaInfoLib)
--
- cmake_minimum_required(VERSION 2.8.11)
- 
-+project(MediaInfoLib)
-+
- set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
- 
- set(MediaInfoLib_MAJOR_VERSION 20)
 @@ -88,7 +88,7 @@ endif()
  find_package(TinyXML)
  

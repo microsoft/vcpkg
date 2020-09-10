@@ -1,5 +1,5 @@
 diff --git a/src/core/lib/transport/transport.cc b/src/core/lib/transport/transport.cc
-index 6adcd8d..20745df 100644
+index 99a32980aa..f55db67113 100644
 --- a/src/core/lib/transport/transport.cc
 +++ b/src/core/lib/transport/transport.cc
 @@ -97,6 +97,8 @@ void grpc_stream_ref_init(grpc_stream_refcount* refcount, int /*initial_refs*/,

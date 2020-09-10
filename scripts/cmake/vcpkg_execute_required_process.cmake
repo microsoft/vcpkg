@@ -8,6 +8,7 @@
 ##     COMMAND <${PERL}> [<arguments>...]
 ##     WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg>
 ##     LOGNAME <build-${TARGET_TRIPLET}-dbg>
+##     [TIMEOUT <seconds>]
 ## )
 ## ```
 ## ## Parameters
@@ -24,6 +25,9 @@
 ## ### LOGNAME
 ## The prefix to use for the log files.
 ##
+## ### TIMEOUT
+## Optional timeout after which to terminate the command.
+##
 ## This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
 ##
 ## ## Examples
@@ -32,13 +36,21 @@
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 ## * [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+
 include(vcpkg_prettify_command)
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_execute_required_process)
-    cmake_parse_arguments(vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
+    cmake_parse_arguments(vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME;TIMEOUT" "COMMAND" ${ARGN})
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
 
-    set(execute_process_function execute_process)
+    if(vcpkg_execute_required_process_TIMEOUT)
+      set(TIMEOUT_PARAM "TIMEOUT;${vcpkg_execute_required_process_TIMEOUT}")
+    else()
+      set(TIMEOUT_PARAM "")
+    endif()
+
     if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
         message(FATAL_ERROR 
 [[
@@ -47,12 +59,13 @@ Halting portfile execution.
 ]])
     endif()
 
-    _execute_process(
+    vcpkg_execute_in_download_mode(
         COMMAND ${vcpkg_execute_required_process_COMMAND}
         OUTPUT_FILE ${LOG_OUT}
         ERROR_FILE ${LOG_ERR}
         RESULT_VARIABLE error_code
-        WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY})
+        WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY}
+        ${TIMEOUT_PARAM})
     if(error_code)
         set(LOGS)
         file(READ "${LOG_OUT}" out_contents)
