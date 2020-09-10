@@ -25,13 +25,13 @@ namespace vcpkg::Json
 
         virtual Span<const StringView> valid_fields() const;
 
-        virtual Optional<Type> visit_null(Reader&, StringView);
-        virtual Optional<Type> visit_boolean(Reader&, StringView, bool);
-        virtual Optional<Type> visit_integer(Reader& r, StringView field_name, int64_t i);
-        virtual Optional<Type> visit_number(Reader&, StringView, double);
-        virtual Optional<Type> visit_string(Reader&, StringView, StringView);
-        virtual Optional<Type> visit_array(Reader&, StringView, const Array&);
-        virtual Optional<Type> visit_object(Reader&, StringView, const Object&);
+        virtual Optional<Type> visit_null(Reader&);
+        virtual Optional<Type> visit_boolean(Reader&, bool);
+        virtual Optional<Type> visit_integer(Reader& r, int64_t i);
+        virtual Optional<Type> visit_number(Reader&, double);
+        virtual Optional<Type> visit_string(Reader&, StringView);
+        virtual Optional<Type> visit_array(Reader&, const Array&);
+        virtual Optional<Type> visit_object(Reader&, const Object&);
 
     protected:
         IDeserializer() = default;
