@@ -6,10 +6,12 @@ steps:
   - task: PowerShell@2
     displayName: 'Print URI to stdout for Azure debuggers'
     inputs:
+      targetType: inline
       script: |
         Write-Host 'See https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#vcpkg-internal-code for solution.'
   - task: PowerShell@2
     displayName: 'Print URI to stderr for Azure debuggers'
     inputs:
+      targetType: inline
       script: |
         Write-Error 'See https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#vcpkg-internal-code for solution.'
