@@ -1,17 +1,8 @@
-From 9397ed51eddf43481d5710eb80441ce4a64356ea Mon Sep 17 00:00:00 2001
-From: Julian Scholle <julian.scholle@iff.fraunhofer.de>
-Date: Fri, 11 Oct 2019 16:46:06 +0200
-Subject: [PATCH] test
-
----
- CMakeLists.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 13da432..911ae5b 100644
+index b2634da..e43b041 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -588,7 +588,10 @@ IF(ENABLE_ZSTD)
+@@ -605,7 +605,10 @@ IF(ENABLE_ZSTD)
    ENDIF (ZSTD_INCLUDE_DIR)
  
    FIND_PATH(ZSTD_INCLUDE_DIR zstd.h)
@@ -23,6 +14,3 @@ index 13da432..911ae5b 100644
    INCLUDE(FindPackageHandleStandardArgs)
    FIND_PACKAGE_HANDLE_STANDARD_ARGS(ZSTD DEFAULT_MSG ZSTD_LIBRARY ZSTD_INCLUDE_DIR)
  ELSE(ENABLE_ZSTD)
--- 
-2.16.1.windows.1
-

@@ -11,7 +11,7 @@ find_package(harfbuzz CONFIG REQUIRED)
 find_path(HARFBUZZ_INCLUDE_DIRS
           NAMES hb.h
           PATH_SUFFIXES harfbuzz)
-find_path(FREETYPE_ADDITIONAL_INCLUDE_DIRS NAMES ft2build.h)
+find_path(FREETYPE_ADDITIONAL_INCLUDE_DIRS NAMES ft2build.h PATH_SUFFIXES freetype2)
 
 configure_file(src/raqm-version.h.in src/raqm-version.h)
 

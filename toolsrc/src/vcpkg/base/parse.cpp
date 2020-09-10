@@ -1,11 +1,6 @@
-#include "pch.h"
-
 #include <vcpkg/base/parse.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
-
-#include <vcpkg/packagespec.h>
-#include <vcpkg/paragraphparser.h>
 
 #include <utility>
 
@@ -71,10 +66,15 @@ namespace vcpkg::Parse
         {
             return Unicode::end_of_file;
         }
+        auto ch = *m_it;
         // See https://www.gnu.org/prep/standards/standards.html#Errors
-        advance_rowcol(*m_it, m_row, m_column);
+        advance_rowcol(ch, m_row, m_column);
 
         ++m_it;
+        if (ch == '\n')
+        {
+            m_start_of_line = m_it;
+        }
         if (m_it != m_it.end() && Unicode::utf16_is_surrogate_code_point(*m_it))
         {
             m_it = m_it.end();
@@ -105,129 +105,5 @@ namespace vcpkg::Parse
 
         // Avoid error loops by skipping to the end
         skip_to_eof();
-    }
-
-    static Optional<std::pair<std::string, TextRowCol>> remove_field(Paragraph* fields, const std::string& fieldname)
-    {
-        auto it = fields->find(fieldname);
-        if (it == fields->end())
-        {
-            return nullopt;
-        }
-
-        auto value = std::move(it->second);
-        fields->erase(it);
-        return value;
-    }
-
-    void ParagraphParser::required_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
-    {
-        auto maybe_field = remove_field(&fields, fieldname);
-        if (const auto field = maybe_field.get())
-            out = std::move(*field);
-        else
-            missing_fields.push_back(fieldname);
-    }
-    void ParagraphParser::optional_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
-    {
-        auto maybe_field = remove_field(&fields, fieldname);
-        if (auto field = maybe_field.get()) out = std::move(*field);
-    }
-    void ParagraphParser::required_field(const std::string& fieldname, std::string& out)
-    {
-        TextRowCol ignore;
-        required_field(fieldname, {out, ignore});
-    }
-    std::string ParagraphParser::optional_field(const std::string& fieldname)
-    {
-        std::string out;
-        TextRowCol ignore;
-        optional_field(fieldname, {out, ignore});
-        return out;
-    }
-    std::string ParagraphParser::required_field(const std::string& fieldname)
-    {
-        std::string out;
-        TextRowCol ignore;
-        required_field(fieldname, {out, ignore});
-        return out;
-    }
-
-    std::unique_ptr<ParseControlErrorInfo> ParagraphParser::error_info(const std::string& name) const
-    {
-        if (!fields.empty() || !missing_fields.empty())
-        {
-            auto err = std::make_unique<ParseControlErrorInfo>();
-            err->name = name;
-            err->extra_fields["CONTROL"] = Util::extract_keys(fields);
-            err->missing_fields["CONTROL"] = std::move(missing_fields);
-            err->expected_types = std::move(expected_types);
-            return err;
-        }
-        return nullptr;
-    }
-
-    template<class T, class F>
-    static Optional<std::vector<T>> parse_list_until_eof(StringLiteral plural_item_name, Parse::ParserBase& parser, F f)
-    {
-        std::vector<T> ret;
-        parser.skip_whitespace();
-        if (parser.at_eof()) return std::vector<T>{};
-        do
-        {
-            auto item = f(parser);
-            if (!item) return nullopt;
-            ret.push_back(std::move(item).value_or_exit(VCPKG_LINE_INFO));
-            parser.skip_whitespace();
-            if (parser.at_eof()) return {std::move(ret)};
-            if (parser.cur() != ',')
-            {
-                parser.add_error(Strings::concat("expected ',' or end of text in ", plural_item_name, " list"));
-                return nullopt;
-            }
-            parser.next();
-            parser.skip_whitespace();
-        } while (true);
-    }
-
-    ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str,
-                                                                    StringView origin,
-                                                                    TextRowCol textrowcol)
-    {
-        auto parser = Parse::ParserBase(str, origin, textrowcol);
-        auto opt = parse_list_until_eof<std::string>("default features", parser, &parse_feature_name);
-        if (!opt) return {parser.get_error()->format(), expected_right_tag};
-        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
-    }
-    ExpectedS<std::vector<ParsedQualifiedSpecifier>> parse_qualified_specifier_list(const std::string& str,
-                                                                                    StringView origin,
-                                                                                    TextRowCol textrowcol)
-    {
-        auto parser = Parse::ParserBase(str, origin, textrowcol);
-        auto opt = parse_list_until_eof<ParsedQualifiedSpecifier>(
-            "dependencies", parser, [](ParserBase& parser) { return parse_qualified_specifier(parser); });
-        if (!opt) return {parser.get_error()->format(), expected_right_tag};
-
-        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
-    }
-    ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
-                                                               StringView origin,
-                                                               TextRowCol textrowcol)
-    {
-        auto parser = Parse::ParserBase(str, origin, textrowcol);
-        auto opt = parse_list_until_eof<Dependency>("dependencies", parser, [](ParserBase& parser) {
-            auto loc = parser.cur_loc();
-            return parse_qualified_specifier(parser).then([&](ParsedQualifiedSpecifier&& pqs) -> Optional<Dependency> {
-                if (pqs.triplet)
-                {
-                    parser.add_error("triplet specifier not allowed in this context", loc);
-                    return nullopt;
-                }
-                return Dependency{pqs.name, pqs.features.value_or({}), pqs.platform.value_or({})};
-            });
-        });
-        if (!opt) return {parser.get_error()->format(), expected_right_tag};
-
-        return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
     }
 }

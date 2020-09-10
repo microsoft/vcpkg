@@ -1,16 +1,20 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index f731632..226f408 100644
+index 356bb73..b4c43d7 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -368,10 +368,23 @@ endif ( MACOSX_FRAMEWORK )
- # ******* Auto Generated Lookup Tables ******
- 
- include(ExternalProject)
+@@ -410,14 +410,23 @@ set (GENTAB_BDIR ${CMAKE_CURRENT_BINARY_DIR}/gentables)
+ # To fix cross-compiling fluidsynth from Win32 to ARM (using vcpkg), we need to pass the current generator
+ # on to the external project, otherwise (for some unknown reason) the target compiler will be used rather
+ # than the host compiler.
 -ExternalProject_Add(gentables
 -    DOWNLOAD_COMMAND ""
--    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/gentables
--    BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/gentables
--    INSTALL_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/gentables/make_tables.exe "${CMAKE_BINARY_DIR}/"
+-    SOURCE_DIR ${GENTAB_SDIR}
+-    BINARY_DIR ${GENTAB_BDIR}
+-    CONFIGURE_COMMAND
+-        "${CMAKE_COMMAND}" -DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE} -G "${CMAKE_GENERATOR}" -B "${GENTAB_BDIR}" "${GENTAB_SDIR}"
+-    BUILD_COMMAND
+-        "${CMAKE_COMMAND}" --build "${GENTAB_BDIR}"
+-    INSTALL_COMMAND ${GENTAB_BDIR}/make_tables.exe "${CMAKE_BINARY_DIR}/"
 -)
 +if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
 +  ExternalProject_Add(gentables
