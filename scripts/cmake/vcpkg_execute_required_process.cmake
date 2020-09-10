@@ -36,7 +36,10 @@
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 ## * [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+
 include(vcpkg_prettify_command)
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME;TIMEOUT" "COMMAND" ${ARGN})
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
@@ -48,7 +51,6 @@ function(vcpkg_execute_required_process)
       set(TIMEOUT_PARAM "")
     endif()
 
-    set(execute_process_function execute_process)
     if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
         message(FATAL_ERROR 
 [[
@@ -57,7 +59,7 @@ Halting portfile execution.
 ]])
     endif()
 
-    _execute_process(
+    vcpkg_execute_in_download_mode(
         COMMAND ${vcpkg_execute_required_process_COMMAND}
         OUTPUT_FILE ${LOG_OUT}
         ERROR_FILE ${LOG_ERR}

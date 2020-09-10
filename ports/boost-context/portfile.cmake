@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF boost-1.73.0
     SHA512 cb460e9d7f5b2782164e49820b097402f6a443718d689b2f793f5ab7030012a80418dfc51154f299c9f987d6864d87f7536476ffa97da1089bf6b70f2990ebea
     HEAD_REF master
+    PATCHES
+        fix_exports_for_32bit_GNU_asm_for_windows.patch
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
