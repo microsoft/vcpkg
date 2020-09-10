@@ -28,6 +28,9 @@
 ##
 ## If this doesn't match the downloaded version, the build will be terminated with a message describing the mismatch.
 ##
+## ### QUIET
+## Suppress output on cache hit
+##
 ## ### SKIP_SHA512
 ## Skip SHA512 hash check for file.
 ##
@@ -46,8 +49,11 @@
 ## * [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
 ## * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
 ## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_download_distfile VAR)
-    set(options SKIP_SHA512 SILENT_EXIT)
+    set(options SKIP_SHA512 SILENT_EXIT QUIET)
     set(oneValueArgs FILENAME SHA512)
     set(multipleValuesArgs URLS HEADERS)
     cmake_parse_arguments(vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
@@ -103,7 +109,9 @@ function(vcpkg_download_distfile VAR)
     endfunction()
 
     if(EXISTS "${downloaded_file_path}")
-        message(STATUS "Using cached ${downloaded_file_path}")
+        if(NOT vcpkg_download_distfile_QUIET)
+            message(STATUS "Using cached ${downloaded_file_path}")
+        endif()
         test_hash("${downloaded_file_path}" "cached file" "Please delete the file and retry if this file should be downloaded again.")
     else()
         if(_VCPKG_NO_DOWNLOADS)
@@ -120,7 +128,7 @@ function(vcpkg_download_distfile VAR)
                     list(APPEND request_headers "--header=${header}")
                 endforeach()
             endif()
-            _execute_process(
+            vcpkg_execute_in_download_mode(
                 COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
                 -o temp/${vcpkg_download_distfile_FILENAME}
                 -l download-${vcpkg_download_distfile_FILENAME}-detailed.log

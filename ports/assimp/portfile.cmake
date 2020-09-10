@@ -23,15 +23,10 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/utf8cpp)
 #file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/Open3DGC)      #TODO
 #file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/openddlparser) #TODO
 
-
 set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(VCPKG_BUILD_SHARED_LIBS ON)
-else()
-  set(VCPKG_BUILD_SHARED_LIBS OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ASSIMP_BUILD_SHARED_LIBS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -39,7 +34,7 @@ vcpkg_configure_cmake(
     OPTIONS -DASSIMP_BUILD_TESTS=OFF
             -DASSIMP_BUILD_ASSIMP_VIEW=OFF
             -DASSIMP_BUILD_ZLIB=OFF
-            -DASSIMP_BUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
+            -DASSIMP_BUILD_SHARED_LIBS=${ASSIMP_BUILD_SHARED_LIBS}
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
             -DASSIMP_INSTALL_PDB=OFF
             -DSYSTEM_IRRXML=ON
@@ -51,16 +46,15 @@ vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake ASSIMP_CONFIG)
-string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
-               "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(irrXML QUIET)
-find_package(polyclipping QUIET)
-find_package(minizip QUIET)
-find_package(kubazip QUIET)
-find_package(poly2tri QUIET)" ASSIMP_CONFIG "${ASSIMP_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake "${ASSIMP_CONFIG}")
-
-
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake "
+include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+find_dependency(irrXML CONFIG)
+find_dependency(polyclipping CONFIG)
+find_dependency(minizip CONFIG)
+find_dependency(kubazip CONFIG)
+find_dependency(poly2tri CONFIG)
+${ASSIMP_CONFIG}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

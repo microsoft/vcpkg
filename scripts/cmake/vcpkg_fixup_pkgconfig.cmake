@@ -265,7 +265,6 @@ function(vcpkg_fixup_pkgconfig)
 
     if(NOT _vfpkg_DEBUG_FILES)
         file(GLOB_RECURSE _vfpkg_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/**/*.pc")
-        list(FILTER _vfpkg_DEBUG_FILES INCLUDE REGEX "${_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR}/debug/")
     endif()
 
     vcpkg_find_acquire_program(PKGCONFIG)
@@ -287,9 +286,9 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
-        string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        file(WRITE "${_file}" "${_contents}")
+        string(REGEX REPLACE "^prefix[\t ]*=[^\n]*" "" _contents "${_contents}")
+        string(REGEX REPLACE "[\n]prefix[\t ]*=[^\n]*" "" _contents "${_contents}")
+        file(WRITE "${_file}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}\n${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
 
@@ -317,10 +316,10 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "debug/share" "../share" _contents "${_contents}")
         string(REPLACE "\${prefix}/share" "\${prefix}/../share" _contents "${_contents}")
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
-        string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "^prefix[\t ]*=[^\n]*" "" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "[\n]prefix[\t ]*=[^\n]*" "" _contents "${_contents}") # make pc file relocatable
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
-        file(WRITE "${_file}" "${_contents}")
+        file(WRITE "${_file}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}\n${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
 

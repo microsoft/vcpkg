@@ -8,10 +8,10 @@ index dcafb64..4b131cc 100644
  
 +find_package(Stb REQUIRED)
 +include_directories(${Stb_INCLUDE_DIR})
-+find_package(irrXML REQUIRED)
++find_package(irrXML CONFIG REQUIRED)
 +find_path(UTF8_INCLUDE_DIRS "utf8.h")
 +include_directories(${UTF8_INCLUDE_DIRS})
-+find_package(RapidJSON)
++find_package(RapidJSON CONFIG REQUIRED)
 +include_directories(${RAPIDJSON_INCLUDE_DIRS})
 +find_path(UNZIP_INCLUDE_DIRS "minizip/unzip.h")
 +include_directories(${UNZIP_INCLUDE_DIRS}/minizip)
