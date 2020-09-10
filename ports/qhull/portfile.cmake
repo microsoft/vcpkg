@@ -1,33 +1,48 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qhull/qhull
-    REF f7aff465101711ae4cee3f501a528d6d53e75185 #2020.2 Prerelease (8.0.1 + PR#76)
-    SHA512 51e3fbf05c8d65b4c0bd9b5c88745abccd6a1fadd685b13b2cb9fd7e0c13c10d75ee7e79adf99567a31172839e90f7886fb0fea860df311546c168bc1f1582d5
+    REF 613debeaea72ee66626dace9ba1a2eff11b5d37d
+    SHA512 5b8ff9665ba73621a9859a6e86717b980b67f8d79d6c78cbf5672bce66aed671f7d64fcbec457bca79eef2e17e105f136017afdf442bb430b9f4a059d7cb93c3
     HEAD_REF master
-    PATCHES
-        mac-fix.patch
+    PATCHES include-qhullcpp-shared.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DINCLUDE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/include
-        -DMAN_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/doc/qhull
-        -DDOC_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/doc/qhull
-    OPTIONS_RELEASE
-        -DLIB_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib
-    OPTIONS_DEBUG
-        -DLIB_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/lib
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qhull)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/share/man
+    ${CURRENT_PACKAGES_DIR}/share/doc
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share/man
+    ${CURRENT_PACKAGES_DIR}/debug/share/doc
+)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qhull)
+file(REMOVE
+    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic.pc
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_d.pc
+)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE
+        ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhull_r.pc
+        ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhull_rd.pc
+    )
+else()
+    file(REMOVE
+        ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic_r.pc
+        ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_rd.pc
+    )
+endif()
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(TOOL_NAMES
     qconvex
