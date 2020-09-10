@@ -225,6 +225,8 @@ else()
     set(LIBVPX_CONFIG_DEBUG OFF)
 endif()
 
+vcpkg_fixup_pkgconfig()
+
 configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake @ONLY)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
