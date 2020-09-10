@@ -7,6 +7,7 @@
 ## vcpkg_build_nmake(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [NO_DEBUG]
+##     [INSTALL_COMMAND]
 ##     [PROJECT_SUBPATH <${SUBPATH}>]
 ##     [PROJECT_NAME <${MAKEFILE_NAME}>]
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
@@ -32,6 +33,9 @@
 ##
 ## ### NO_DEBUG
 ## This port doesn't support debug mode.
+##
+## ### INSTALL_COMMAND
+## Use custom install command
 ##
 ## ### ENABLE_INSTALL
 ## Install binaries after build.
@@ -74,7 +78,7 @@ function(vcpkg_build_nmake)
     cmake_parse_arguments(_bn
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
         "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE;INSTALL_COMMAND"
         ${ARGN}
     )
     
@@ -112,7 +116,12 @@ function(vcpkg_build_nmake)
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     # Set make command and install command
     set(MAKE ${NMAKE} /NOLOGO /G /U)
-    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME} all)
+    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME})
+    if (_bn_INSTALL_COMMAND)
+        set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} ${_bn_INSTALL_COMMAND})
+    else()
+        set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} all)
+    endif()
     set(INSTALL_OPTS_BASE install)
     # Add subpath to work directory
     if (_bn_PROJECT_SUBPATH)
