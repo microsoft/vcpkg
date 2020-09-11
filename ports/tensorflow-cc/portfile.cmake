@@ -37,18 +37,18 @@ if(CMAKE_HOST_WIN32)
 		message(FATAL_ERROR "Can't find python 3. Please install and re-run vcpkg.")
 	endif()
 	set(PYTHON3 "${Python3_EXECUTABLE}")
+	# end workaround
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
 	vcpkg_find_acquire_program(PYTHON3)
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 
-	#if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
-	#	vcpkg_execute_required_process(COMMAND sudo apt-get -y install python3-pip WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME install-pip-${TARGET_TRIPLET})
-	#endif()
-
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 endif()
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
+set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
 
 # check if numpy can be loaded
 vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
@@ -141,7 +141,6 @@ foreach(BUILD_TYPE dbg rel)
 		SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
 		HEAD_REF master
 		PATCHES
-			file-exists.patch # required or otherwise it cant find python lib path on windows
 			fix-build-error.patch # Fix namespace error
 			fix-dbg-build-errors.patch # Fix no return statement
 			fix-more-build-errors.patch # Fix no return statement
