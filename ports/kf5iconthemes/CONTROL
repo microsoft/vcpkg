@@ -1,0 +1,5 @@
+Source: kf5iconthemes
+Version: 5.73.0
+Homepage: https://api.kde.org/frameworks/kiconthemes/html/index.html
+Description: Icon GUI utilities
+Build-Depends: ecm, qt5-base, qt5-tools, qt5-svg, kf5archive, kf5i18n, kf5coreaddons, kf5guiaddons, kf5configwidgets, kf5widgetsaddons, kf5itemviews

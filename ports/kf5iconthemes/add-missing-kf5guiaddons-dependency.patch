@@ -1,0 +1,12 @@
+ --git a/CMakeLists.txt b/CMakeLists.txt
+index 34642613ae2dc692769f36c9f578eaa280d3545a..7fa4be6afd7bdce728731000c570e8cac1a78c29 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,6 +51,7 @@ find_package(KF5CoreAddons ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5ConfigWidgets ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5WidgetsAddons ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5ItemViews ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5GuiAddons ${KF5_DEP_VERSION} REQUIRED)
+ 
+ remove_definitions(-DQT_NO_CAST_FROM_ASCII)
+ remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
