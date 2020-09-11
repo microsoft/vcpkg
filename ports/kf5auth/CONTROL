@@ -1,0 +1,5 @@
+Source: kf5auth
+Version: 5.73.0
+Homepage: https://api.kde.org/frameworks/kauth/html/index.html
+Description: Execute actions as privileged user
+Build-Depends: ecm, qt5-base, qt5-tools, kf5coreaddons
