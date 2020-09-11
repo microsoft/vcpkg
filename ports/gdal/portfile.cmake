@@ -194,12 +194,15 @@ else()
         OPTIONS ${CONF_OPTS}
         OPTIONS_DEBUG
             --enable-debug
-            #--with-boost-lib-path=${CURRENT_INSTALLED_DIR}/debug/lib
-        OPTIONS_RELEASE
-            #--with-boost-lib-path=${CURRENT_INSTALLED_DIR}/lib
     )
     
     vcpkg_install_make(MAKEFILE GNUmakefile)
+    
+    file(REMOVE_RECURSE
+         ${CURRENT_PACKAGES_DIR}/lib/gdalplugins
+         ${CURRENT_PACKAGES_DIR}/debug/lib/gdalplugins
+         ${CURRENT_PACKAGES_DIR}/debug/share
+    )
 endif()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
