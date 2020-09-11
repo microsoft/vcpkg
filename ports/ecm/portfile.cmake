@@ -21,7 +21,7 @@ vcpkg_install_cmake()
 # Remove debug files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
-file(COPY ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/ecm)
+file(COPY ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING-CMAKE-SCRIPTS DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
