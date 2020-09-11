@@ -1,0 +1,14 @@
+{
+  "name": "cpu-features",
+  "version-string": "0.4.1",
+  "description": "A cross-platform C library to retrieve CPU features (such as available instructions) at runtime",
+  "homepage": "https://github.com/google/cpu_features",
+  "license": "Apache-2.0",
+  "supports": "!(arm | uwp)",
+  "features": [
+    {
+      "name": "tools",
+      "description": "list_cpu_features command line tool"
+    }
+  ]
+}

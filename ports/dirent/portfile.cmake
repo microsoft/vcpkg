@@ -3,7 +3,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     return()
 endif()
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tronkko/dirent
@@ -14,3 +13,5 @@ vcpkg_from_github(
 file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/dirent RENAME copyright)
 vcpkg_copy_pdbs()
+
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)

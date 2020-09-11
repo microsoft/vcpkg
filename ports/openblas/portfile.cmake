@@ -1,15 +1,15 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v0.3.6
-    SHA512 1ad980176a51f70d8b0b2d158da8c01f30f77b7cf385b24a6340d3c5feb1513bd04b9390487d05cc9557db7dc5f7c135b1688dec9f17ebef35dba884ef7ddee9
+    REF v0.3.9
+    SHA512 e34da25b3aaf959ec12826ac68c81e739e453d44f2dba28b15e57d7a827edc4d5f42988e9b6d98ac07999940be7b5876246cb3a980e590ae87f77f4c2f12f40a
     HEAD_REF develop
     PATCHES
         uwp.patch
         fix-space-path.patch
         fix-redefinition-function.patch
+        github_2481.patch
+        fix-pkg-config.patch
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -21,13 +21,15 @@ set(SED_EXE_PATH "${GIT_EXE_PATH}/../usr/bin")
 # openblas require perl to generate .def for exports
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
+set(PATH_BACKUP "$ENV{PATH}")
+vcpkg_add_to_path("${PERL_EXE_PATH}")
+vcpkg_add_to_path("${SED_EXE_PATH}")
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 # for UWP version, must build non uwp first for helper
 # binaries.
-if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     message(STATUS "Building Windows helper files")
     set(TEMP_CMAKE_SYSTEM_NAME "${VCPKG_CMAKE_SYSTEM_NAME}")
     set(TEMP_CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}")
@@ -45,7 +47,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     # add just built path to environment for gen_config_h.exe,
     # getarch.exe and getarch_2nd.exe
-    set(ENV{PATH} "$ENV{PATH};${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    vcpkg_add_to_path("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
     # restore target build information
     set(VCPKG_CMAKE_SYSTEM_NAME "${TEMP_CMAKE_SYSTEM_NAME}")
@@ -56,13 +58,13 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS 
+        OPTIONS
             ${COMMON_OPTIONS}
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
             -DVS_WINRT_COMPONENT=TRUE
             "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
-elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
+elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
         PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
@@ -84,6 +86,23 @@ endif()
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
+set(ENV{PATH} "${PATH_BACKUP}")
+
+set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc")
+if(EXISTS "${pcfile}")
+    file(READ "${pcfile}" _contents)
+    set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
+    file(WRITE "${pcfile}" "${_contents}")
+    #file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
+endif()
+set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc")
+if(EXISTS "${pcfile}")
+    file(READ "${pcfile}" _contents)
+    set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
+    file(WRITE "${pcfile}" "${_contents}")
+    #file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
+endif()
+vcpkg_fixup_pkgconfig()
 #maybe we need also to write a wrapper inside share/blas to search implicitly for openblas, whenever we feel it's ready for its own -config.cmake file
 
 # openblas do not make the config file , so I manually made this
@@ -95,13 +114,8 @@ file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
 string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 
-# openblas is BSD
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DIR}/share/openblas/copyright)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindBLAS.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
-
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

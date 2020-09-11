@@ -6,11 +6,10 @@ vcpkg_from_github(
     REF de6c39e3040c987323b8ed078c36442f4fb681b3
     SHA512 a24523186d59de5c0895791c639c62573eaacf1d3843d3bf81eba848b4a33a9a8d17f9b6f791202dac77692bf147e25b3650989731d5ddb7a22e7d023b66885e
     HEAD_REF master
+    PATCHES encoding.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
 
 file(COPY
     ${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h
@@ -31,6 +30,7 @@ vcpkg_configure_cmake(
         -DGLAD_REPRODUCIBLE=ON
         -DGLAD_SPEC="gl" # {gl,egl,glx,wgl}
         -DGLAD_PROFILE="compatibility" # {core,compatibility}
+        -DPYTHON_EXECUTABLE=${PYTHON3}
     OPTIONS_DEBUG
         -DGLAD_GENERATOR="c-debug"
 )

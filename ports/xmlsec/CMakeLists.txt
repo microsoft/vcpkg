@@ -105,10 +105,13 @@ else()
 endif()
 
 install(TARGETS libxmlsec libxmlsec-openssl
+    EXPORT xmlsecExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
+install(EXPORT xmlsecExport FILE xmlsec-config.cmake DESTINATION share/xmlsec)
 
 if(INSTALL_HEADERS_TOOLS)
 	file(GLOB PUBLIC_HEADERS

@@ -1,3 +1,9 @@
 Source: civetweb
-Version: 2019-07-05
+Version: 1.12
+Homepage: https://github.com/civetweb/civetweb
 Description: Easy to use, powerful, C/C++ embeddable web server.
+Supports: !uwp
+
+Feature: ssl
+Build-Depends: openssl
+Description: Enable SSL support

@@ -1,0 +1,25 @@
+diff --git a/libcfile/libcfile_file.c b/libcfile/libcfile_file.c
+index 13eab02..690cc04 100644
+--- a/libcfile/libcfile_file.c
++++ b/libcfile/libcfile_file.c
+@@ -56,7 +56,7 @@
+ #elif defined( HAVE_CYGWIN_FS_H )
+ #include <cygwin/fs.h>
+
+-#elif defined( HAVE_LINUX_FS_H )
++#elif defined( __linux__ ) && defined( HAVE_LINUX_FS_H )
+ /* Required for Linux platforms that use a sizeof( u64 )
+  * in linux/fs.h but have no typedef of it
+  */
+@@ -4603,6 +4603,11 @@ ssize_t libcfile_file_io_control_read_with_error_code(
+ #error Missing file IO control with data function
+ #endif
+
++// Force disable on Darwin, it can be erroneously defined
++#if defined ( __APPLE__ )
++#undef HAVE_POSIX_FADVISE
++#endif
++
+ /* On some versions of Linux the FADVISE definions seem to be missing from fcntl.h
+  */
+ #if defined( HAVE_POSIX_FADVISE ) && !defined( WINAPI )

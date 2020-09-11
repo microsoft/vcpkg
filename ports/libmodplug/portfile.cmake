@@ -11,6 +11,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
         PATCHES
             "001-automagically-define-modplug-static.patch"
             "002-detect_sinf.patch"
+            "003-use-static-cast-for-ctype.patch"
     )
 else()
     vcpkg_from_github(ARCHIVE
@@ -20,6 +21,7 @@ else()
         SHA512 c43bb3190b62c3a4e3636bba121b5593bbf8e6577ca9f2aa04d90b03730ea7fb590e640cdadeb565758b92e81187bc456e693fe37f1f4deace9b9f37556e3ba1
         PATCHES
             "002-detect_sinf.patch"
+            "003-use-static-cast-for-ctype.patch"
     )
 endif()
 
@@ -29,11 +31,16 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_MINGW)
+        set(BIN_NAME libmodplug.dll)
+    else()
+        set(BIN_NAME modplug.dll)
+    endif()
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/modplug.dll ${CURRENT_PACKAGES_DIR}/bin/modplug.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/bin/${BIN_NAME})
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/modplug.dll ${CURRENT_PACKAGES_DIR}/debug/bin/modplug.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/debug/bin/${BIN_NAME})
     vcpkg_copy_pdbs()
 endif()
 

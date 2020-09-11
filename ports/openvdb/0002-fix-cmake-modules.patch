@@ -1,17 +1,16 @@
 diff --git a/cmake/FindBlosc.cmake b/cmake/FindBlosc.cmake
-index ae84240..5630b6b 100644
+index 3ead1b3..0522e4a 100644
 --- a/cmake/FindBlosc.cmake
 +++ b/cmake/FindBlosc.cmake
-@@ -86,7 +86,7 @@ may be provided to tell this module where to look.
-   Paths appended to all include and lib searches.
+@@ -75,6 +75,7 @@ if(POLICY CMP0074)
+   cmake_policy(SET CMP0074 NEW)
+ endif()
  
- #]=======================================================================]
--
-+if (0)
++if(0)
  mark_as_advanced(
    Blosc_INCLUDE_DIR
    Blosc_LIBRARY
-@@ -211,3 +211,30 @@ if(Blosc_FOUND)
+@@ -206,3 +207,30 @@ if(Blosc_FOUND)
  elseif(Blosc_FIND_REQUIRED)
    message(FATAL_ERROR "Unable to find Blosc")
  endif()
@@ -44,19 +43,18 @@ index ae84240..5630b6b 100644
 +endif()
 \ No newline at end of file
 diff --git a/cmake/FindIlmBase.cmake b/cmake/FindIlmBase.cmake
-index c58083e..438fc83 100644
+index 00a6d30..10322fd 100644
 --- a/cmake/FindIlmBase.cmake
 +++ b/cmake/FindIlmBase.cmake
-@@ -100,7 +100,7 @@ may be provided to tell this module where to look.
-   Paths appended to all include and lib searches.
+@@ -84,6 +84,7 @@ may be provided to tell this module where to look.
  
- #]=======================================================================]
--
-+if (0)
- # Support new if() IN_LIST operator
- if(POLICY CMP0057)
-   cmake_policy(SET CMP0057 NEW)
-@@ -330,3 +330,144 @@ if(IlmBase_FOUND)
+ cmake_minimum_required(VERSION 3.3)
+ 
++if(0)
+ # Monitoring <PackageName>_ROOT variables
+ if(POLICY CMP0074)
+   cmake_policy(SET CMP0074 NEW)
+@@ -320,3 +321,144 @@ if(IlmBase_FOUND)
  elseif(IlmBase_FIND_REQUIRED)
    message(FATAL_ERROR "Unable to find IlmBase")
  endif()
@@ -79,17 +77,17 @@ index c58083e..438fc83 100644
 +  STRING ( STRIP "${_ilmbase_version_minor_unstrip}" ILMBASE_VERSION_MINOR )
 +
 +  IF ( ILMBASE_NAMESPACE_VERSIONING )
-+	SET ( IEX_LIBRARY_NAME       Iex-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}       )
-+	SET ( IEXMATH_LIBRARY_NAME   IexMath-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}   )
-+	SET ( ILMTHREAD_LIBRARY_NAME IlmThread-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR} )
-+	SET ( IMATH_LIBRARY_NAME     Imath-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}     )
-+	SET ( HALF_LIBRARY_NAME      Half-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}      )
++    SET ( IEX_LIBRARY_NAME       Iex-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}       )
++    SET ( IEXMATH_LIBRARY_NAME   IexMath-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}   )
++    SET ( ILMTHREAD_LIBRARY_NAME IlmThread-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR} )
++    SET ( IMATH_LIBRARY_NAME     Imath-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}     )
++    SET ( HALF_LIBRARY_NAME      Half-${ILMBASE_VERSION_MAJOR}_${ILMBASE_VERSION_MINOR}      )
 +  ELSE ( ILMBASE_NAMESPACE_VERSIONING )
-+	SET ( IEX_LIBRARY_NAME       Iex       )
-+	SET ( IEXMATH_LIBRARY_NAME   IexMath   )
-+	SET ( ILMTHREAD_LIBRARY_NAME IlmThread )
-+	SET ( IMATH_LIBRARY_NAME     Imath     )
-+	SET ( HALF_LIBRARY_NAME      Half      )
++    SET ( IEX_LIBRARY_NAME       Iex       )
++    SET ( IEXMATH_LIBRARY_NAME   IexMath   )
++    SET ( ILMTHREAD_LIBRARY_NAME IlmThread )
++    SET ( IMATH_LIBRARY_NAME     Imath     )
++    SET ( HALF_LIBRARY_NAME      Half      )
 +  ENDIF ( ILMBASE_NAMESPACE_VERSIONING )
 +
 +  SET ( ILMBASE_INCLUDE_DIRS
@@ -118,21 +116,21 @@ index c58083e..438fc83 100644
 +    ELSE (APPLE)
 +      SET ( CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 +      FIND_LIBRARY ( Ilmbase_HALF_LIBRARY Half PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
-+		)
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
 +      FIND_LIBRARY ( Ilmbase_IEX_LIBRARY Iex PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
-+		)
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
 +      FIND_LIBRARY ( Ilmbase_ILMTHREAD_LIBRARY IlmThread PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
-+		)
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
 +      FIND_LIBRARY ( Ilmbase_IMATH_LIBRARY Imath PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
-+		)
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
++        )
 +    ENDIF (APPLE)
 +  ELSE (Ilmbase_USE_STATIC_LIBS)
 +    IF (APPLE)
@@ -152,45 +150,45 @@ index c58083e..438fc83 100644
 +      # Load library
 +      SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dll")
 +      FIND_LIBRARY ( Ilmbase_HALF_DLL ${HALF_LIBRARY_NAME} PATHS ${ILMBASE_LOCATION}/bin
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +      FIND_LIBRARY ( Ilmbase_IEX_DLL ${IEX_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +      FIND_LIBRARY ( Ilmbase_IEXMATH_DLL ${IEXMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +      FIND_LIBRARY ( Ilmbase_ILMTHREAD_DLL ${ILMTHREAD_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +      FIND_LIBRARY ( Ilmbase_IMATH_DLL ${IMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +    ELSE (APPLE)
 +      FIND_LIBRARY ( Ilmbase_HALF_LIBRARY ${HALF_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +      FIND_LIBRARY ( Ilmbase_IEX_LIBRARY ${IEX_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +      FIND_LIBRARY ( Ilmbase_IEXMATH_LIBRARY ${IEXMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +      FIND_LIBRARY ( Ilmbase_ILMTHREAD_LIBRARY ${ILMTHREAD_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +      FIND_LIBRARY ( Ilmbase_IMATH_LIBRARY ${IMATH_LIBRARY_NAME} PATHS ${ILMBASE_LIBRARYDIR}
-+		NO_DEFAULT_PATH
-+		NO_SYSTEM_ENVIRONMENT_PATH
++        NO_DEFAULT_PATH
++        NO_SYSTEM_ENVIRONMENT_PATH
 +        )
 +    ENDIF (APPLE)
 +  ENDIF ()
@@ -203,19 +201,18 @@ index c58083e..438fc83 100644
 +endif()
 \ No newline at end of file
 diff --git a/cmake/FindOpenEXR.cmake b/cmake/FindOpenEXR.cmake
-index 98bd53d..c3b449e 100644
+index 3d243d0..a3340da 100644
 --- a/cmake/FindOpenEXR.cmake
 +++ b/cmake/FindOpenEXR.cmake
-@@ -96,7 +96,7 @@ may be provided to tell this module where to look.
-   Paths appended to all include and lib searches.
+@@ -80,6 +80,7 @@ may be provided to tell this module where to look.
  
- #]=======================================================================]
--
-+if (0)
- # Support new if() IN_LIST operator
- if(POLICY CMP0057)
-   cmake_policy(SET CMP0057 NEW)
-@@ -322,3 +322,92 @@ if(OpenEXR_FOUND)
+ cmake_minimum_required(VERSION 3.3)
+ 
++if(0)
+ # Monitoring <PackageName>_ROOT variables
+ if(POLICY CMP0074)
+   cmake_policy(SET CMP0074 NEW)
+@@ -312,3 +313,92 @@ if(OpenEXR_FOUND)
  elseif(OpenEXR_FIND_REQUIRED)
    message(FATAL_ERROR "Unable to find OpenEXR")
  endif()

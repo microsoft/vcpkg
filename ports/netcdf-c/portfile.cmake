@@ -8,6 +8,8 @@ vcpkg_from_github(
         no-install-deps.patch
         config-pkg-location.patch
         use_targets.patch
+        mpi.patch
+        fix-dependency-libmath.patch
 )
 
 #Remove outdated find modules

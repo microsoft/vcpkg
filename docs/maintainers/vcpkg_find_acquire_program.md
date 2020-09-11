@@ -14,20 +14,27 @@ This variable specifies both the program to be acquired as well as the out param
 The current list of programs includes:
 
 - 7Z
+- ARIA2 (Downloader)
 - BISON
+- CLANG
+- DARK
+- DOXYGEN
 - FLEX
 - GASPREPROCESSOR
+- GPERF
 - PERL
 - PYTHON2
 - PYTHON3
+- GIT
+- GN
 - GO
 - JOM
 - MESON
 - NASM
 - NINJA
 - NUGET
+- SCONS
 - YASM
-- ARIA2 (Downloader)
 
 Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LASzip/LASzip
-    REF 3.4.1
-    SHA512 875303d4672c61778694b8a969cc1e4239564f2fa81b35cba472f7eb28c71ca9bf052ca633dcdc8cbfb486a6c6849caed9833669fd1ba0aa5ee0065e7e2013f1
+    REF 1ab671e42ff1f086e29d5b7e300a5026e7b8d69b # 3.4.3
+    SHA512 7ec20d6999b16e6a74a64d1dc3e9f1b1b4510acd306d30ccae34a543ca0dc52e1d1d989279fafdda321616ba1e0ceb59a093d8c61ba5a586b760efa0d00a0184
     HEAD_REF master
 )
 

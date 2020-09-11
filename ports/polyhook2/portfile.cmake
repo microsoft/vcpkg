@@ -3,31 +3,42 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "Linux" "OSX" "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevemk14ebr/PolyHook_2_0
-    REF  00709c8621af8a6f9e91200088178e6d9f751097
-    SHA512 c6fe9ef9e21de440556cbeb8269e13ef0daafcbc760b04a06e1689d181b6a097c4de9a0f364f7e10f8b0b2f3e419e0ede62aaf4a2a9b16eb2fb57d24eb1b9b5c
+    REF  b3c0baf639614c4b4ca56e5df2e9da688986917b
+    SHA512 a1fb531fcbd7d6ac084efc7a67b7a1d9e661f0e770df02db7458a311c54ca1a1f11b8be0ae438a40259603414bfb2e64bab69d45754bc910363daa912e995550
     HEAD_REF master
-    PATCHES 
-        fix-build-error.patch
-        fix-build-tests-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tool BUILD_TOOLS
+    capstone  POLYHOOK_DISASM_CAPSTONE
+    zydis     POLYHOOK_DISASM_ZYDIS
+    exception POLYHOOK_FEATURE_EXCEPTION
+    detours   POLYHOOK_FEATURE_DETOURS
+    inlinentd POLYHOOK_FEATURE_INLINENTD
+    pe        POLYHOOK_FEATURE_PE
+    virtuals  POLYHOOK_FEATURE_VIRTUALS
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(BUILD_STATIC ON)
+    set(BUILD_SHARED_LIB OFF)
 else()
-    set(BUILD_STATIC OFF)
+    set(BUILD_SHARED_LIB ON)
+endif()
+
+if (VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(BUILD_STATIC_RUNTIME ON)
+else()
+    set(BUILD_STATIC_RUNTIME OFF)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA  
     OPTIONS ${FEATURE_OPTIONS}
-      -DFEATURE_INLINENTD=OFF
-      -DBUILD_DLL=ON
-      -DBUILD_STATIC=${BUILD_STATIC}
+      -DPOLYHOOK_BUILD_SHARED_LIB=${BUILD_SHARED_LIB}
+      -DPOLYHOOK_BUILD_STATIC_RUNTIME=${BUILD_STATIC_RUNTIME}
+      -DPOLYHOOK_USE_EXTERNAL_ASMJIT=ON
+      -DPOLYHOOK_USE_EXTERNAL_CAPSTONE=ON
+      -DPOLYHOOK_USE_EXTERNAL_ZYDIS=ON
 )
 
 vcpkg_install_cmake()
@@ -35,10 +46,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)    
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/PolyHook_2 TARGET_PATH share/PolyHook_2)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

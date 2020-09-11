@@ -3,7 +3,7 @@
 ### Bootstrap with `create`
 First, locate a globally accessible archive of the library's sources. Zip, gzip, and bzip are all supported. Strongly prefer official sources or mirrors over unofficial mirrors.
 
-*Looking at zlib's website, the URL http://zlib.net/zlib1211.zip looks appropriate.*
+*Looking at zlib's website, the URL http://zlib.net/zlib-1.2.11.tar.gz looks appropriate.*
 
 Second, determine a suitable package name. This should be ASCII, lowercase, and recognizable to someone who knows the library's "human name". If the library is already packaged in another package manager, prefer that name.
 
@@ -16,7 +16,7 @@ Finally, if the server's name for the archive is not very descriptive (such as d
 All this information can then be passed into the `create` command, which will download the sources and bootstrap the packaging process inside `ports\<packagename>`.
 
 ```no-highlight
-PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.11.tar.gz zlib-1.2.11.zip
+PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.11.tar.gz zlib1211.tar.gz
 -- Generated portfile: D:/src/vcpkg/ports/zlib2/portfile.cmake
 ```
 
@@ -34,25 +34,21 @@ Description: A Massively Spiffy Yet Delicately Unobtrusive Compression Library
 The generated `portfile.cmake` will need some editing to correctly package most libraries in the wild, however we can start by trying out the build.
 
 ```no-highlight
-PS D:\src\vcpkg> .\vcpkg build zlib2
--- CURRENT_INSTALLED_DIR=D:/src/vcpkg/installed/x86-windows
--- DOWNLOADS=D:/src/vcpkg/downloads
--- CURRENT_PACKAGES_DIR=D:/src/vcpkg/packages/zlib2_x86-windows
--- CURRENT_BUILDTREES_DIR=D:/src/vcpkg/buildtrees/zlib2
--- CURRENT_PORT_DIR=D:/src/vcpkg/ports/zlib2/.
--- Using cached D:/src/vcpkg/downloads/zlib-1.2.11.tar.gz
--- Testing integrity of cached file...
--- Testing integrity of cached file... OK
--- Extracting source D:/src/vcpkg/downloads/zlib-1.2.11.tar.gz
--- Extracting done
--- Configuring x86-windows-rel
--- Configuring x86-windows-rel done
--- Configuring x86-windows-dbg
--- Configuring x86-windows-dbg done
--- Build x86-windows-rel
--- Build x86-windows-rel done
--- Build x86-windows-dbg
--- Build x86-windows-dbg done
+PS D:\src\vcpkg> .\vcpkg install zlib2
+Computing installation plan...
+The following packages will be built and installed:
+    zlib2[core]:x64-uwp
+Starting package 1/1: zlib2:x64-uwp
+Building package zlib2[core]:x64-uwp...
+-- Using cached C:/src/vcpkg/downloads/zlib1211.tar.gz
+-- Cleaning sources at C:/src/vcpkg/buildtrees/zlib2/src/1.2.11-deec42f53b.clean. Pass --editable to vcpkg to reuse sources.
+-- Extracting source C:/src/vcpkg/downloads/zlib1211.tar.gz
+-- Applying patch cmake_dont_build_more_than_needed.patch
+-- Using source at C:/src/vcpkg/buildtrees/zlib2/src/1.2.11-deec42f53b.clean
+-- Configuring x64-uwp
+-- Building x64-uwp-dbg
+-- Building x64-uwp-rel
+-- Installing: C:/src/vcpkg/packages/zlib2_x64-uwp/share/zlib2/copyright
 -- Performing post-build validation
 Include files should not be duplicated into the /debug/include directory. If this cannot be disabled in the project cmake, use
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

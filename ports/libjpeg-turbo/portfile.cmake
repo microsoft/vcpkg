@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
-    REF 2.0.3
-    SHA512 745cc3d50b43dd84721bc3c341d561ffd7f54eda5bbe2d56cad62f4b51ea76da3b18aba9ca694a9db79379aba7a9971cb146387979e96ca6ece950871276cf2f
+    REF ae87a958613b69628b92088b313ded0d4f59a716 # 2.0.5
+    SHA512 25e8857a3542cc74c48775959f11811529fe6a853990cb285f91a6218c1cde5dd1e58043208e81709fb7a71c376396b2de1f20b53b2c5b8595ca097fa02992fd
     HEAD_REF master
     PATCHES
         add-options-for-exes-docs-headers.patch
@@ -66,7 +64,7 @@ endif()
 
 file(COPY
     ${SOURCE_PATH}/LICENSE.md
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -85,4 +83,3 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo/LICENSE.md ${CURRENT_PAC
 
 vcpkg_copy_pdbs()
 
-vcpkg_test_cmake(PACKAGE_NAME JPEG MODULE)

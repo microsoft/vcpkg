@@ -1,30 +1,37 @@
 # vcpkg_fail_port_install
 
-Fails the current portfile with a (default) error message
+Checks common requirements and fails the current portfile with a (default) error message
 
 ## Usage
 ```cmake
-vcpkg_fail_port_install([MESSAGE <message>] 	[ON_TARGET <target1> [<target2> ...]]
+vcpkg_fail_port_install(
+    [ALWAYS]
+    [MESSAGE <"Reason for failure">]
+    [ON_TARGET <Windows> [<OSX> ...]]
+    [ON_ARCH <x64> [<arm> ...]]
+    [ON_CRT_LINKAGE <static> [<dynamic> ...]])
+    [ON_LIBRARY_LINKAGE <static> [<dynamic> ...]]
+)
 ```
 
 ## Parameters
 ### MESSAGE
-Additional failure message. If non is given a default message will be displayed depending on the failure condition
+Additional failure message. If none is given, a default message will be displayed depending on the failure condition.
 
 ### ALWAYS
-will always fail early
+Will always fail early
 
 ### ON_TARGET
-targets for which the build should fail early. Valid targets are <target> from VCPKG_IS_TARGET_<target> (see vcpkg_common_definitions.cmake)
+Targets for which the build should fail early. Valid targets are `<target>` from `VCPKG_IS_TARGET_<target>` (see `vcpkg_common_definitions.cmake`).
 
 ### ON_ARCH
-architecture for which the build should fail early. 
+Architecture for which the build should fail early.
 
 ### ON_CRT_LINKAGE
 CRT linkage for which the build should fail early.
 
 ### ON_LIBRARY_LINKAGE
-library linkage for which the build should fail early.
+Library linkage for which the build should fail early.
 
 ## Examples
 

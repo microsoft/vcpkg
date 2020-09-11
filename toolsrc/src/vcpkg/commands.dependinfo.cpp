@@ -1,30 +1,30 @@
-#include "pch.h"
-
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.dependinfo.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+
 #include <vector>
 
-using vcpkg::Dependencies::AnyAction;
-using vcpkg::Dependencies::create_feature_install_plan;
+using vcpkg::Dependencies::ActionPlan;
 using vcpkg::Dependencies::InstallPlanAction;
-using vcpkg::Dependencies::PathsPortFileProvider;
+using vcpkg::PortFileProvider::PathsPortFileProvider;
 
 namespace vcpkg::Commands::DependInfo
 {
     namespace
     {
-        constexpr StringLiteral OPTION_DOT = "--dot";
-        constexpr StringLiteral OPTION_DGML = "--dgml";
-        constexpr StringLiteral OPTION_SHOW_DEPTH = "--show-depth";
-        constexpr StringLiteral OPTION_MAX_RECURSE = "--max-recurse";
-        constexpr StringLiteral OPTION_SORT = "--sort";
+        constexpr StringLiteral OPTION_DOT = "dot";
+        constexpr StringLiteral OPTION_DGML = "dgml";
+        constexpr StringLiteral OPTION_SHOW_DEPTH = "show-depth";
+        constexpr StringLiteral OPTION_MAX_RECURSE = "max-recurse";
+        constexpr StringLiteral OPTION_SORT = "sort";
 
         constexpr int NO_RECURSE_LIMIT_VALUE = -1;
 
@@ -44,7 +44,7 @@ namespace vcpkg::Commands::DependInfo
         {
             std::string package;
             int depth;
-            std::set<std::string> features;
+            std::unordered_set<std::string> features;
             std::vector<std::string> dependencies;
         };
 
@@ -205,9 +205,10 @@ namespace vcpkg::Commands::DependInfo
                 const InstallPlanAction& install_action = *pia;
 
                 const std::vector<std::string> dependencies = Util::fmap(
-                    install_action.computed_dependencies, [](const PackageSpec& spec) { return spec.name(); });
+                    install_action.package_dependencies, [](const PackageSpec& spec) { return spec.name(); });
 
-                std::set<std::string> features{install_action.feature_list};
+                std::unordered_set<std::string> features{install_action.feature_list.begin(),
+                                                         install_action.feature_list.end()};
                 features.erase("core");
 
                 std::string port_name = install_action.spec.name();
@@ -227,14 +228,14 @@ namespace vcpkg::Commands::DependInfo
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("depend-info sqlite3"),
+        create_example_string("depend-info sqlite3"),
         1,
         1,
         {DEPEND_SWITCHES, DEPEND_SETTINGS},
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const int max_depth = get_max_depth(options);
@@ -251,20 +252,20 @@ namespace vcpkg::Commands::DependInfo
             Input::check_triplet(spec.package_spec.triplet(), paths);
         }
 
-        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PathsPortFileProvider provider(paths, args.overlay_ports);
+        auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
+        auto& var_provider = *var_provider_storage;
 
         // By passing an empty status_db, we should get a plan containing all dependencies.
         // All actions in the plan should be install actions, as there's no installed packages to remove.
         StatusParagraphs status_db;
-        std::vector<AnyAction> action_plan =
-            create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
-        std::vector<const InstallPlanAction*> install_actions = Util::fmap(action_plan, [&](const AnyAction& action) {
-            if (auto install_action = action.install_action.get())
-            {
-                return install_action;
-            }
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Only install actions should exist in the plan");
-        });
+        auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, action_plan.remove_actions.empty(), "Only install actions should exist in the plan");
+        std::vector<const InstallPlanAction*> install_actions =
+            Util::fmap(action_plan.already_installed, [&](const auto& action) { return &action; });
+        for (auto&& action : action_plan.install_actions)
+            install_actions.push_back(&action);
 
         std::vector<PackageDependInfo> depend_info = extract_depend_info(install_actions, max_depth);
 
@@ -325,5 +326,12 @@ namespace vcpkg::Commands::DependInfo
             }
         }
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void DependInfoCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                             const VcpkgPaths& paths,
+                                             Triplet default_triplet) const
+    {
+        DependInfo::perform_and_exit(args, paths, default_triplet);
     }
 }
