@@ -1,0 +1,30 @@
+diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
+index edf77e6..aba4913 100644
+--- a/cpr/CMakeLists.txt
++++ b/cpr/CMakeLists.txt
+@@ -13,7 +13,6 @@ add_library(${CPR_LIBRARIES}
+   session.cpp
+   timeout.cpp
+   util.cpp
+-  ssl_options.cpp
+ )
+ 
+ target_link_libraries( ${CPR_LIBRARIES}
+@@ -49,5 +48,5 @@ install(
+ )
+ 
+ if (NOT DISABLE_INSTALL_HEADERS)
+-  install(DIRECTORY ${CPR_INCLUDE_DIRS}/cpr DESTINATION include)
++  install(DIRECTORY DESTINATION include)
+ endif()
+\ No newline at end of file
+diff --git a/cpr/error.cpp b/cpr/error.cpp
+index 860cf8d..7117f26 100644
+--- a/cpr/error.cpp
++++ b/cpr/error.cpp
+@@ -63,3 +63,4 @@ ErrorCode Error::getErrorCodeForCurlError(std::int32_t curl_code) {
+ }
+ 
+ } // namespace cpr
++#endif
+\ No newline at end of file
