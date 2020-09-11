@@ -2,4 +2,4 @@ Source: kf5service
 Version: 5.73.0
 Homepage: https://api.kde.org/frameworks/kservice/html/index.html
 Description: Plugin framework for desktop services
-Build-Depends: ecm, qt5-base, qt5-tools, kf5config, kf5coreaddons, kf5dbusaddons, kf5i18n
+Build-Depends: ecm, qt5-base, qt5-tools, kf5config, kf5coreaddons, kf5dbusaddons, kf5i18n, kf5windowsystem
