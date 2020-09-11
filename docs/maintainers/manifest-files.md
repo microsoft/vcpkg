@@ -206,11 +206,11 @@ and are specified in the `"platform"` field.
 
 ### `"features"`
 
-Multiple optional features can be specified in manifest files, in the `"features"` array field.
-Each feature must have a `"name"` and `"description"` field.
-Optionally, a feature can also have a `"dependencies"` field.
+Multiple optional features can be specified in manifest files, in the `"features"` object field.
+This field is a map from the feature name, to the feature's information.
+Each one must have a `"description"` field, and may also optionally have a `"dependencies"` field.
 
-A feature's `"name"` must be an identifier -
+A feature's name must be an identifier -
 in other words, lowercase alphabetic characters, digits, and hyphens,
 neither starting nor ending with a hyphen.
 
@@ -254,9 +254,8 @@ On installation the dependencies from all selected features are combined to prod
     "tiff",
     "zlib"
   ],
-  "features": [
-    {
-      "name": "mpi",
+  "features": {
+    "mpi": {
       "description": "MPI functionality for VTK",
       "dependencies": [
         {
@@ -268,23 +267,20 @@ On installation the dependencies from all selected features are combined to prod
         "mpi"
       ]
     },
-    {
-      "name": "openvr",
+    "openvr": {
       "description": "OpenVR functionality for VTK",
       "dependencies": [
         "openvr",
         "sdl2"
       ]
     },
-    {
-      "name": "python",
+    "python": {
       "description": "Python functionality for VTK",
       "dependencies": [
         "python3"
       ]
     },
-    {
-      "name": "qt",
+    "qt": {
       "description": "Qt functionality for VTK",
       "dependencies": [
         "qt5"
@@ -304,19 +300,17 @@ An array of feature names that the library uses by default, if nothing else is s
   "default-features": [
     "kinesis"
   ],
-  "features": [
-    {
-      "name": "dynamodb",
+  "features": {
+    "dynamodb": {
       "description": "Build dynamodb support",
       "dependencies": [
         "dynamodb"
       ]
     },
-    {
-      "name": "kinesis",
+    "kinesis": {
       "description": "build kinesis support"
     }
-  ]
+  }
 }
 ```
 

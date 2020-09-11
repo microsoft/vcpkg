@@ -220,10 +220,10 @@ namespace vcpkg::PlatformExpression
 
             // platform-expression-and =
             // | platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
-            // 
+            //
             // platform-expression-or =
             // | platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
-            // 
+            //
             // already taken care of by the caller: platform-expression-not
             // so we start at either "&" or "|"
             template<char oper, char other>
