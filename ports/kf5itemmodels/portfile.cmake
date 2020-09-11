@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kitemmodels
-    REF v5.64.0
-    SHA512 c29911b5ff521a8d1dae9b72250be59267da7bf059aeb1efec6a7361204957c12a1ae95fd34a00067b277ce3a61d88930326501c361341a316d6c0afb109b7ed
+    REF v5.73.0
+    SHA512 4fc8bf6cfdd33e7225b47b1bab46918c7dabdc2abd193e9e071b71298a4b015e7b4a831ca244597867ad7571322b6a157e37e9fbd7448ad1fe1761505e0aa3ed
 )
 
 vcpkg_configure_cmake(

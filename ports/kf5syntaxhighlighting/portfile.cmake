@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/syntax-highlighting
-    REF v5.64.0
-    SHA512 b33a136fad0e55054660c34328a208a19834c1adc9cdb9e8f334e9224492f2894bbcb355e61c8f6da6301363a11f832fa7e38cff293be249876048dd34c39476
+    REF v5.73.0
+    SHA512 184aac6f29be8b2c0c5a309a00bb00197c9f3f5971e7f7bbc9e128274d3659bb58825e4d43229712f3616e4cfd43289a38960b2e64d7e6edaad05489c80d7c65
     HEAD_REF master
 )
 
@@ -23,12 +23,10 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5SyntaxHighlighting)
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/kf5syntaxhighlighting RENAME copyright)
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kate-syntax-highlighter.exe)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5syntaxhighlighting)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kate-syntax-highlighter.exe
-            ${CURRENT_PACKAGES_DIR}/tools/kf5syntaxhighlighting/kate-syntax-highlighter.exe)
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5syntaxhighlighting)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()

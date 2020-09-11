@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kitemviews
-    REF v5.64.0
-    SHA512 c40d1dee94badac2e58098138522d72be00082ac9ce70e8f5690b5bd5ae0705fa79a7edc3af391230a86d08a4a8b7dac1c28f148758f7ee8c09195a178e35bcb
+    REF v5.73.0
+    SHA512 4cb29b243cf28ae96c8cc22675b0f0f8c00503a75ef531a7611af6d249fe338767d5cbd380af3b9c127e38003720df3b9affee9dcf86041ea5a86b7765252969
 )
 
 vcpkg_configure_cmake(
