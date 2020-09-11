@@ -707,17 +707,17 @@ namespace vcpkg
                 }
             }
 
-            static Json::StringDeserializer version_d{"a version"};
-            static Json::StringDeserializer url_d{"a url"};
+            static Json::StringDeserializer version_deserializer{"a version"};
+            static Json::StringDeserializer url_deserializer{"a url"};
 
             constexpr static StringView type_name = "vcpkg.json";
             r.required_object_field(type_name, obj, NAME, spgh->name, Json::IdentifierDeserializer::instance);
-            r.required_object_field(type_name, obj, VERSION, spgh->version, version_d);
+            r.required_object_field(type_name, obj, VERSION, spgh->version, version_deserializer);
             r.optional_object_field(obj, PORT_VERSION, spgh->port_version, Json::NaturalNumberDeserializer::instance);
             r.optional_object_field(obj, MAINTAINERS, spgh->maintainers, Json::ParagraphDeserializer::instance);
             r.optional_object_field(obj, DESCRIPTION, spgh->description, Json::ParagraphDeserializer::instance);
-            r.optional_object_field(obj, HOMEPAGE, spgh->homepage, url_d);
-            r.optional_object_field(obj, DOCUMENTATION, spgh->documentation, url_d);
+            r.optional_object_field(obj, HOMEPAGE, spgh->homepage, url_deserializer);
+            r.optional_object_field(obj, DOCUMENTATION, spgh->documentation, url_deserializer);
             r.optional_object_field(obj, LICENSE, spgh->license, LicenseExpressionDeserializer::instance);
             r.optional_object_field(obj, DEPENDENCIES, spgh->dependencies, DependencyArrayDeserializer::instance);
 
