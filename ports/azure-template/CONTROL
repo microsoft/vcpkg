@@ -1,0 +1,4 @@
+Source: azure-template
+Version: %VERSION%
+Homepage: https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/template/azure-template
+Description: Azure C++ SDK Template
