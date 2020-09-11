@@ -47,7 +47,7 @@ set(QT_HASH_qt5-androidextras       2da8a8e46c1d33926c0ee57061b1aef07182cb7c4b1b
 #set(QT_HASH_qt5-canvas3d            0) deprectaed
 set(QT_HASH_qt5-translations        8e9fe7614c9aa9c557db1bfd6a0ceae90b45e5d28e0cd715fd4ad962b9fbfa722549d6c2a13d82deebd7d3fab7e68cc7affd207beb75629de0d01a5522035581)
 set(QT_HASH_qt5-serialbus           cd7e0d721aa46a59239f44c6b0122509aba2237e0e62ea5399b4d4924601a9def989dd8b5d17fdcc46b41491d582d82b46c7efdfb9277ac1f06da7f1e2a1a859)
-set(QT_HASH_qt5-webengine           0)
+set(QT_HASH_qt5-webengine           651520fcf89681b06c57f1992223f06ecbe3750a88ffae7a94a339503957e09d327ee1ae7e4bce88bfb09131b3b9c9abfc44f7bccb9c50d286181eaf306991a4)
 set(QT_HASH_qt5-webglplugin         e1feae14ba911f635ee5b45569e7f8dc8db4fdf1ca0d583f84d10de89976b7728285edbf050273293327c0f8afaf0fec8dff8370e1bf6771d47ae611be8a0224)
 set(QT_HASH_qt5-wayland             d6619f35b3ab163372a0d49a2221c487d5936b6d9ebeb92a7fd41521c424d550eea7c5c584e07f15bde1ec5ece1bd5774845eb9956ce793e546197ffdb28d594)
 
