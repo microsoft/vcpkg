@@ -5,7 +5,6 @@ vcpkg_from_github(
     REF v2.6.0
     SHA512 43b023c7d744ae1e0baf6f504f32da481e950ec5cc34fe5511e4bbb8905203e4726917ee103b1c02544a75c6216c2ca481034be810b61a35511a3d7a2b278133
     HEAD_REF master
-    PATCHES fix-compiler-error.patch
 )
 
 vcpkg_configure_cmake(
@@ -22,7 +21,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/taskflow)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
