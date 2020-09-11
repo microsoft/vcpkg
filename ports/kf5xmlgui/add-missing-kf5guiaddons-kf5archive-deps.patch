@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a56be7f9a20a9ebe8239e6cee2d1aefdd833ece4..58b404a6e20fbe1a741859b63bc74ee98153fd7f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,6 +54,8 @@ find_package(KF5I18n ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5IconThemes ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5WidgetsAddons ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5WindowSystem ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5GuiAddons ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5Archive ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5Attica ${KF5_DEP_VERSION})
+ set_package_properties(KF5Attica PROPERTIES DESCRIPTION "A Qt library that implements the Open Collaboration Services API"
+                        PURPOSE "Support for Get Hot New Stuff in KXMLGUI"
