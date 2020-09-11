@@ -1,0 +1,5 @@
+Source: kf5jobwidgets
+Version: 5.73.0
+Homepage: https://api.kde.org/frameworks/kjobwidgets/html/index.html
+Description: Widgets for showing progress of asynchronous jobs
+Build-Depends: ecm, qt5-base, qt5-tools, kf5coreaddons, kf5widgetsaddons
