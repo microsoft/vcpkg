@@ -6,3 +6,9 @@ Description: SQLite is a software library that implements a self-contained, serv
 
 Feature: tool
 Description: sqlite3 executable
+
+Feature: geopoly
+Description: enable geopoly functionality for sqlite3
+
+Feature: json1
+Description: enable JSON functionality for sqlite3

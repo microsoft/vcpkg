@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
@@ -50,7 +48,7 @@ namespace vcpkg::Install
         auto& fs = paths.get_filesystem();
         auto source_dir = paths.package_dir(spec);
         Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.u8string());
+            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", fs::u8string(source_dir));
         auto files = fs.get_files_recursive(source_dir);
         install_files_and_write_listfile(fs, source_dir, files, destination_dir);
     }
@@ -62,16 +60,17 @@ namespace vcpkg::Install
         std::vector<std::string> output;
         std::error_code ec;
 
-        const size_t prefix_length = source_dir.generic_u8string().size();
+        const size_t prefix_length = fs::generic_u8string(source_dir).size();
         const fs::path& destination = destination_dir.destination();
         const std::string& destination_subdirectory = destination_dir.destination_subdirectory();
         const fs::path& listfile = destination_dir.listfile();
 
         fs.create_directories(destination, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.u8string());
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", fs::u8string(destination));
         const fs::path listfile_parent = listfile.parent_path();
         fs.create_directories(listfile_parent, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", fs::u8string(listfile));
 
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
         for (auto&& file : files)
@@ -79,11 +78,11 @@ namespace vcpkg::Install
             const auto status = fs.symlink_status(file, ec);
             if (ec)
             {
-                System::print2(System::Color::error, "failed: ", file.u8string(), ": ", ec.message(), "\n");
+                System::print2(System::Color::error, "failed: ", fs::u8string(file), ": ", ec.message(), "\n");
                 continue;
             }
 
-            const std::string filename = file.filename().generic_u8string();
+            const std::string filename = fs::generic_u8string(file.filename());
             if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "vcpkg.json") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
@@ -92,7 +91,7 @@ namespace vcpkg::Install
                 continue;
             }
 
-            const std::string suffix = file.generic_u8string().substr(prefix_length + 1);
+            const std::string suffix = fs::generic_u8string(file).substr(prefix_length + 1);
             const fs::path target = destination / suffix;
 
             switch (status.type())
@@ -102,7 +101,7 @@ namespace vcpkg::Install
                     fs.create_directory(target, ec);
                     if (ec)
                     {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                        System::printf(System::Color::error, "failed: %s: %s\n", fs::u8string(target), ec.message());
                     }
 
                     // Trailing backslash for directories
@@ -115,13 +114,13 @@ namespace vcpkg::Install
                     {
                         System::print2(System::Color::warning,
                                        "File ",
-                                       target.u8string(),
+                                       fs::u8string(target),
                                        " was already present and will be overwritten\n");
                     }
                     fs.copy_file(file, target, fs::copy_options::overwrite_existing, ec);
                     if (ec)
                     {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                        System::printf(System::Color::error, "failed: %s: %s\n", fs::u8string(target), ec.message());
                     }
                     output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
                     break;
@@ -132,19 +131,19 @@ namespace vcpkg::Install
                     {
                         System::print2(System::Color::warning,
                                        "File ",
-                                       target.u8string(),
+                                       fs::u8string(target),
                                        " was already present and will be overwritten\n");
                     }
                     fs.copy_symlink(file, target, ec);
                     if (ec)
                     {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                        System::printf(System::Color::error, "failed: %s: %s\n", fs::u8string(target), ec.message());
                     }
                     output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
                     break;
                 }
                 default:
-                    System::printf(System::Color::error, "failed: %s: cannot handle file type\n", file.u8string());
+                    System::printf(System::Color::error, "failed: %s: cannot handle file type\n", fs::u8string(file));
                     break;
             }
         }
@@ -552,10 +551,9 @@ namespace vcpkg::Install
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
     {
-        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+        auto sources_and_errors = Paragraphs::try_load_all_registry_ports(paths);
 
-        return Util::fmap(sources_and_errors.paragraphs,
-                          [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
+        return Util::fmap(sources_and_errors.paragraphs, Paragraphs::get_name_of_control_file);
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -576,20 +574,34 @@ namespace vcpkg::Install
 
     static void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
     {
+        auto usage = get_cmake_usage(bpgh, paths);
+
+        if (!usage.message.empty())
+        {
+            System::print2(usage.message);
+        }
+    }
+
+    CMakeUsageInfo get_cmake_usage(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
+    {
         static const std::regex cmake_library_regex(R"(\badd_library\(([^\$\s\)]+)\s)",
                                                     std::regex_constants::ECMAScript);
+
+        CMakeUsageInfo ret;
 
         auto& fs = paths.get_filesystem();
 
         auto usage_file = paths.installed / bpgh.spec.triplet().canonical_name() / "share" / bpgh.spec.name() / "usage";
         if (fs.exists(usage_file))
         {
+            ret.usage_file = true;
             auto maybe_contents = fs.read_contents(usage_file);
             if (auto p_contents = maybe_contents.get())
             {
-                System::print2(*p_contents, '\n');
+                ret.message = std::move(*p_contents);
+                ret.message.push_back('\n');
             }
-            return;
+            return ret;
         }
 
         auto files = fs.read_lines(paths.listfile_path(bpgh));
@@ -607,7 +619,7 @@ namespace vcpkg::Install
                     // CMake file is inside the share folder
                     auto path = paths.installed / suffix;
                     auto maybe_contents = fs.read_contents(path);
-                    auto find_package_name = path.parent_path().filename().u8string();
+                    auto find_package_name = fs::u8string(path.parent_path().filename());
                     if (auto p_contents = maybe_contents.get())
                     {
                         std::sregex_iterator next(p_contents->begin(), p_contents->end(), cmake_library_regex);
@@ -623,7 +635,7 @@ namespace vcpkg::Install
                         }
                     }
 
-                    auto filename = fs::u8path(suffix).filename().u8string();
+                    auto filename = fs::u8string(fs::u8path(suffix).filename());
 
                     if (Strings::ends_with(filename, "Config.cmake"))
                     {
@@ -654,6 +666,8 @@ namespace vcpkg::Install
                 }
             }
 
+            ret.header_only = is_header_only;
+
             if (library_targets.empty())
             {
                 if (is_header_only && !header_path.empty())
@@ -672,20 +686,21 @@ namespace vcpkg::Install
                         "The package ", bpgh.spec, " is header only and can be used from CMake via:\n\n");
                     Strings::append(msg, "    find_path(", name, "_INCLUDE_DIRS \"", header_path, "\")\n");
                     Strings::append(msg, "    target_include_directories(main PRIVATE ${", name, "_INCLUDE_DIRS})\n\n");
-                    System::print2(msg);
+
+                    ret.message = std::move(msg);
                 }
             }
             else
             {
-                System::print2("The package ", bpgh.spec, " provides CMake targets:\n\n");
+                auto msg = Strings::concat("The package ", bpgh.spec, " provides CMake targets:\n\n");
 
                 for (auto&& library_target_pair : library_targets)
                 {
                     auto config_it = config_files.find(library_target_pair.first);
                     if (config_it != config_files.end())
-                        System::printf("    find_package(%s CONFIG REQUIRED)\n", config_it->second);
+                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n");
                     else
-                        System::printf("    find_package(%s CONFIG REQUIRED)\n", library_target_pair.first);
+                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n");
 
                     std::sort(library_target_pair.second.begin(),
                               library_target_pair.second.end(),
@@ -697,22 +712,27 @@ namespace vcpkg::Install
 
                     if (library_target_pair.second.size() <= 4)
                     {
-                        System::printf("    target_link_libraries(main PRIVATE %s)\n\n",
-                                       Strings::join(" ", library_target_pair.second));
+                        Strings::append(msg,
+                                        "    target_link_libraries(main PRIVATE ",
+                                        Strings::join(" ", library_target_pair.second),
+                                        ")\n\n");
                     }
                     else
                     {
                         auto omitted = library_target_pair.second.size() - 4;
                         library_target_pair.second.erase(library_target_pair.second.begin() + 4,
                                                          library_target_pair.second.end());
-                        System::printf("    # Note: %zd target(s) were omitted.\n"
-                                       "    target_link_libraries(main PRIVATE %s)\n\n",
-                                       omitted,
-                                       Strings::join(" ", library_target_pair.second));
+                        msg += Strings::format("    # Note: %zd target(s) were omitted.\n"
+                                               "    target_link_libraries(main PRIVATE %s)\n\n",
+                                               omitted,
+                                               Strings::join(" ", library_target_pair.second));
                     }
                 }
+                ret.message = std::move(msg);
             }
+            ret.cmake_targets_map = std::move(library_targets);
         }
+        return ret;
     }
 
     ///
@@ -760,7 +780,7 @@ namespace vcpkg::Install
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 
-        if (paths.manifest_mode_enabled())
+        if (auto manifest = paths.get_manifest().get())
         {
             Optional<fs::path> pkgsconfig;
             auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
@@ -768,25 +788,37 @@ namespace vcpkg::Install
             {
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
+            auto manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
+            auto maybe_manifest_scf = SourceControlFile::parse_manifest_file(manifest_path, *manifest);
+            if (!maybe_manifest_scf)
+            {
+                print_error_message(maybe_manifest_scf.error());
+                System::print2(
+                    "See https://github.com/Microsoft/vcpkg/tree/master/docs/specifications/manifests.md for "
+                    "more information.\n");
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+            auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 
             std::vector<std::string> features;
-
-            if (Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
-            {
-                features.emplace_back("core");
-            }
-
             auto manifest_feature_it = options.multisettings.find(OPTION_MANIFEST_FEATURE);
             if (manifest_feature_it != options.multisettings.end())
             {
-                for (const auto& feature : manifest_feature_it->second)
-                {
-                    features.push_back(feature);
-                }
+                features.insert(features.end(), manifest_feature_it->second.begin(), manifest_feature_it->second.end());
             }
+            auto core_it = Util::find(features, "core");
+            if (core_it == features.end())
+            {
+                if (!Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
+                    features.push_back("default");
+            }
+            else
+            {
+                // remove "core" because resolve_deps_as_top_level uses default-inversion
+                features.erase(core_it);
+            }
+            auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
 
-            std::vector<FullPackageSpec> specs;
-            specs.emplace_back(PackageSpec{PackageSpec::MANIFEST_NAME, default_triplet}, std::move(features));
             auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
 
             for (InstallPlanAction& action : install_plan.install_actions)
@@ -897,7 +929,7 @@ namespace vcpkg::Install
             auto pkgsconfig_path = Files::combine(paths.original_cwd, fs::u8path(it_pkgsconfig->second));
             auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
             fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
-            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+            System::print2("Wrote NuGet packages config information to ", fs::u8string(pkgsconfig_path), "\n");
         }
 
         if (dry_run)

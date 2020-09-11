@@ -77,7 +77,9 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
     paths.track_feature_flag_metrics();
 
     fs.current_path(paths.root, VCPKG_LINE_INFO);
-    if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
+    if ((args.command == "install" || args.command == "remove" || args.command == "export" ||
+         args.command == "update") &&
+        !args.output_json())
     {
         Commands::Version::warn_if_vcpkg_version_mismatch(paths);
         std::string surveydate = *GlobalState::g_surveydate.lock();
@@ -232,6 +234,16 @@ int main(const int argc, const char* const* const argv)
     System::register_console_ctrl_handler();
 
     load_config(fs);
+
+#if (defined(__aarch64__) || defined(__arm__) || defined(__s390x__) || defined(_M_ARM) || defined(_M_ARM64)) &&        \
+    !defined(_WIN32)
+    if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+    {
+        Checks::exit_with_message(
+            VCPKG_LINE_INFO,
+            "Environment variable VCPKG_FORCE_SYSTEM_BINARIES must be set on arm and s390x platforms.");
+    }
+#endif
 
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
     args.imbue_from_environment();

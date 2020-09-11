@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
@@ -40,6 +38,7 @@ namespace vcpkg::Metrics
             res.push_back(hex[(bits >> 0) & 0x0F]);
         }
     };
+    constexpr char append_hexits::hex[17];
 
     // note: this ignores the bits of these numbers that would be where format and variant go
     static std::string uuid_of_integers(uint64_t top, uint64_t bottom)
@@ -382,9 +381,7 @@ namespace vcpkg::Metrics
             return;
         }
 
-#if !defined(_WIN32)
-        Util::unused(payload);
-#else
+#if defined(_WIN32)
         HINTERNET connect = nullptr, request = nullptr;
         BOOL results = FALSE;
 
@@ -466,13 +463,15 @@ namespace vcpkg::Metrics
             __debugbreak();
             auto err = GetLastError();
             std::cerr << "[DEBUG] failed to connect to server: " << err << "\n";
-#endif
+#endif // NDEBUG
         }
 
         if (request) WinHttpCloseHandle(request);
         if (connect) WinHttpCloseHandle(connect);
         if (session) WinHttpCloseHandle(session);
-#endif
+#else  // ^^^ _WIN32 // !_WIN32 vvv
+        (void)payload;
+#endif // ^^^ !_WIN32
     }
 
     void Metrics::flush(Files::Filesystem& fs)
@@ -527,11 +526,11 @@ namespace vcpkg::Metrics
 
 #if defined(_WIN32)
         const std::string cmd_line = Strings::format("cmd /c \"start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"\"",
-                                                     temp_folder_path_exe.u8string(),
-                                                     vcpkg_metrics_txt_path.u8string());
+                                                     fs::u8string(temp_folder_path_exe),
+                                                     fs::u8string(vcpkg_metrics_txt_path));
         System::cmd_execute_no_wait(cmd_line);
 #else
-        auto escaped_path = Strings::escape_string(vcpkg_metrics_txt_path.u8string(), '\'', '\\');
+        auto escaped_path = Strings::escape_string(fs::u8string(vcpkg_metrics_txt_path), '\'', '\\');
         const std::string cmd_line = Strings::format(
             R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --tlsv1.2 --data '@%s' >/dev/null 2>&1; rm '%s') &)",
             escaped_path,

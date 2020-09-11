@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B98C92B7-2874-4537-9D46-D14E5C237F04}</ProjectGuid>
     <RootNamespace>vcpkglib</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\vcpkg.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -83,6 +82,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -97,6 +97,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -113,6 +114,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -132,6 +134,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -193,6 +196,7 @@
     <ClInclude Include="..\..\include\vcpkg\commands.fetch.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.format-manifest.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.hash.h" />
+    <ClInclude Include="..\..\include\vcpkg\commands.info.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.integrate.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.interface.h" />
     <ClInclude Include="..\..\include\vcpkg\commands.list.h" />
@@ -217,11 +221,11 @@
     <ClInclude Include="..\..\include\vcpkg\metrics.h" />
     <ClInclude Include="..\..\include\vcpkg\packagespec.h" />
     <ClInclude Include="..\..\include\vcpkg\paragraphparser.h" />
-    <ClInclude Include="..\..\include\vcpkg\paragraphparseresult.h" />
     <ClInclude Include="..\..\include\vcpkg\paragraphs.h" />
     <ClInclude Include="..\..\include\vcpkg\portfileprovider.h" />
     <ClInclude Include="..\..\include\vcpkg\postbuildlint.h" />
     <ClInclude Include="..\..\include\vcpkg\postbuildlint.buildtype.h" />
+    <ClInclude Include="..\..\include\vcpkg\registries.h" />
     <ClInclude Include="..\..\include\vcpkg\remove.h" />
     <ClInclude Include="..\..\include\vcpkg\sourceparagraph.h" />
     <ClInclude Include="..\..\include\vcpkg\statusparagraph.h" />
@@ -280,6 +284,7 @@
     <ClCompile Include="..\..\src\vcpkg\commands.fetch.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.format-manifest.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.hash.cpp" />
+    <ClCompile Include="..\..\src\vcpkg\commands.info.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.integrate.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.list.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.owns.cpp" />
@@ -290,6 +295,7 @@
     <ClCompile Include="..\..\src\vcpkg\commands.upgrade.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.version.cpp" />
     <ClCompile Include="..\..\src\vcpkg\commands.xvsinstances.cpp" />
+    <ClCompile Include="..\..\src\vcpkg\configuration.cpp" />
     <ClCompile Include="..\..\src\vcpkg\dependencies.cpp" />
     <ClCompile Include="..\..\src\vcpkg\export.cpp" />
     <ClCompile Include="..\..\src\vcpkg\export.chocolatey.cpp" />
@@ -302,11 +308,11 @@
     <ClCompile Include="..\..\src\vcpkg\platform-expression.cpp" />
     <ClCompile Include="..\..\src\vcpkg\metrics.cpp" />
     <ClCompile Include="..\..\src\vcpkg\packagespec.cpp" />
-    <ClCompile Include="..\..\src\vcpkg\paragraphparseresult.cpp" />
     <ClCompile Include="..\..\src\vcpkg\paragraphs.cpp" />
     <ClCompile Include="..\..\src\vcpkg\portfileprovider.cpp" />
     <ClCompile Include="..\..\src\vcpkg\postbuildlint.buildtype.cpp" />
     <ClCompile Include="..\..\src\vcpkg\postbuildlint.cpp" />
+    <ClCompile Include="..\..\src\vcpkg\registries.cpp" />
     <ClCompile Include="..\..\src\vcpkg\remove.cpp" />
     <ClCompile Include="..\..\src\vcpkg\sourceparagraph.cpp" />
     <ClCompile Include="..\..\src\vcpkg\statusparagraph.cpp" />

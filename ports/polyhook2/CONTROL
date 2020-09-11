@@ -1,5 +1,5 @@
 Source: polyhook2
-Version: 2020-08-04
+Version: 2020-08-29
 Homepage: https://github.com/stevemk14ebr/PolyHook_2_0
 Description: C++17, x86/x64 Hooking Libary v2.0
 Supports: !(arm|uwp|linux|osx)

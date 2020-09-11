@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
@@ -10,7 +12,7 @@ vcpkg_from_github(
 )
 
 set(OPTIONS)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_OSX)
     set(OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
 endif()
 
@@ -58,6 +60,9 @@ if(DLLS)
         file(RENAME ${DLL} ${CURRENT_PACKAGES_DIR}/debug/bin/${N})
     endforeach()
 endif()
+
+# do the copy pdbs now after the dlls got moved to the expected /bin folder above
+vcpkg_copy_pdbs()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)

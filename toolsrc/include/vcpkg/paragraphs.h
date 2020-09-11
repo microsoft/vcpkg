@@ -17,23 +17,33 @@ namespace vcpkg::Paragraphs
 
     bool is_port_directory(const Files::Filesystem& fs, const fs::path& path);
 
-    Parse::ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
-                                                              const std::string& port_name,
-                                                              const fs::path& path_to_manifest,
-                                                              std::error_code& ec);
-
     Parse::ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path);
 
     ExpectedS<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec);
 
     struct LoadResults
     {
-        std::vector<std::unique_ptr<SourceControlFile>> paragraphs;
+        std::vector<SourceControlFileLocation> paragraphs;
         std::vector<std::unique_ptr<Parse::ParseControlErrorInfo>> errors;
     };
 
-    LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir);
+    // this allows one to pass this around as an overload set to stuff like `Util::fmap`,
+    // as opposed to making it a function
+    constexpr struct
+    {
+        const std::string& operator()(const SourceControlFileLocation* loc) const
+        {
+            return (*this)(*loc->source_control_file);
+        }
+        const std::string& operator()(const SourceControlFileLocation& loc) const
+        {
+            return (*this)(*loc.source_control_file);
+        }
+        const std::string& operator()(const SourceControlFile& scf) const { return scf.core_paragraph->name; }
+    } get_name_of_control_file;
 
-    std::vector<std::unique_ptr<SourceControlFile>> load_all_ports(const Files::Filesystem& fs,
-                                                                   const fs::path& ports_dir);
+    LoadResults try_load_all_registry_ports(const VcpkgPaths& paths);
+
+    std::vector<SourceControlFileLocation> load_all_registry_ports(const VcpkgPaths& paths);
+    std::vector<SourceControlFileLocation> load_overlay_ports(const VcpkgPaths& paths, const fs::path& dir);
 }

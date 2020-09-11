@@ -1,17 +1,14 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.list.h>
 #include <vcpkg/help.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::List
 {
     static constexpr StringLiteral OPTION_FULLDESC = "x-full-desc"; // TODO: This should find a better home, eventually
-
-    static constexpr StringLiteral OPTION_JSON = "--x-json";
 
     static void do_print_json(std::vector<const vcpkg::StatusParagraph*> installed_packages)
     {
@@ -75,9 +72,8 @@ namespace vcpkg::Commands::List
         }
     }
 
-    static constexpr std::array<CommandSwitch, 2> LIST_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 1> LIST_SWITCHES = {{
         {OPTION_FULLDESC, "Do not truncate long text"},
-        {OPTION_JSON, "List libraries in JSON format"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -115,7 +111,6 @@ namespace vcpkg::Commands::List
                   });
 
         const auto enable_fulldesc = Util::Sets::contains(options.switches, OPTION_FULLDESC.to_string());
-        const auto enable_json = Util::Sets::contains(options.switches, OPTION_JSON.to_string());
 
         if (!args.command_arguments.empty())
         {
@@ -126,7 +121,7 @@ namespace vcpkg::Commands::List
             installed_packages = pghs;
         }
 
-        if (enable_json)
+        if (args.output_json())
         {
             do_print_json(installed_packages);
         }
