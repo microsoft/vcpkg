@@ -1,2 +1,3 @@
 Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e.,
-      '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'
+      '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread' on Linux and
+      '-ltensorflow_cc -ltensorflow_framework -lstdc++ -framework CoreFoundation' on macOS

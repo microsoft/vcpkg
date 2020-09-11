@@ -285,16 +285,18 @@ file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/i
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	message(STATUS "Warning: Static TensorFlow build contains several external dependancies that may cause linking conflicts (e.g. you cannot use openssl in your projects as TensorFlow contains boringssl and so on).")
 	if(NOT VCPKG_TARGET_IS_WINDOWS)
-		message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'")
+		if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow_cc -ltensorflow_framework -lstdc++ -framework CoreFoundation'")
+		else()
+			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'")
+		endif()
+
+		file(COPY ${CMAKE_CURRENT_LIST_DIR}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
 	endif()
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/copyright)
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-	file(COPY ${CMAKE_CURRENT_LIST_DIR}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow)
-endif()
 
 if(VCPKG_MANIFEST_MODE)
 	set(INSTALL_PREFIX ${CMAKE_BINARY_DIR}/vcpkg_installed)

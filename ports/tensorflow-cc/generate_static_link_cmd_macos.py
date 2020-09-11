@@ -27,7 +27,7 @@ with open(sys.argv[1], "r") as f_in:
                     found1 = True
                     if found2:
                         break
-                elif m2 and len(env) > 5:
+                elif m2 and len(env) > 6:
                     m = p_cd.match(env[0])
                     f_out.write(m.group(1) + "\n")
                     tokens = line.split()
