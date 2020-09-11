@@ -1,10 +1,8 @@
-vcpkg_fail_port_install(ON_TARGET "osx" "uwp" "windows")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcrash
-    REF v5.64.0
-    SHA512 28749b220002fef756dbd8436cf684b7e3eb1d72ae00ae8b1bfded5c4a446683dc925a3be9beb55ad0872e71d3c23411d32b4fab935909816efa339cedaeda3d
+    REF v5.73.0
+    SHA512 50df67c405a26f52825aa35d859495c7d424c513b08278f484d942d39c5ca6efe02cc51ebbfa89f29695aa973198fa7e4064f0fe28b684634d892c41d79df965
     HEAD_REF master
     PATCHES
         add_x11extras.patch

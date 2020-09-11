@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kholidays
-    REF v5.64.0
-    SHA512 a4d9a88bb12b89c636ac63d848505c7895c672ef0e540e7fa45de22fb085048fa5f76729be60fceafbe63ab4b325251fdc65f36b58ab6d9bae7f50678578d4c8
+    REF v5.73.0
+    SHA512 ba0ea9c199c2fd033b76edf8438189d4ae40994645bdca790f8ad92aa3dfdca5116a13ee801a601c8fc518440e0b5b264af5b17474ae3b2447c3e03c16fa983e
     HEAD_REF master
 )
 
@@ -19,10 +19,10 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Holidays)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/qml ${CURRENT_PACKAGES_DIR}/debug/qml )
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/qml ${CURRENT_PACKAGES_DIR}/qml )
 
