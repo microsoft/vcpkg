@@ -22,17 +22,17 @@ with open(sys.argv[1], "r") as f_in:
                     f_out.write(m.group(1) + "\n")
                     tokens = line.split()
                     parts = [t[16:] for t in tokens if t.startswith("-Wl,-force_load,")]
-                    line = "ar -rcs " + m1.group(1).replace(".dylib", ".a")  + " " + " ".join(parts)
+                    line = "libtool -static -o " + m1.group(1).replace(".dylib", ".a")  + " " + " ".join(parts)
                     f_out.write(line + "\n")
                     found1 = True
                     if found2:
                         break
-                elif m2 and len(env) > 4:
+                elif m2 and len(env) > 5:
                     m = p_cd.match(env[0])
                     f_out.write(m.group(1) + "\n")
                     tokens = line.split()
                     parts = [t[16:] for t in tokens if t.startswith("-Wl,-force_load,")]
-                    line = "ar -rcs " + m2.group(1).replace(".dylib", ".a")  + " " + " ".join(parts)
+                    line = "libtool -static -o " + m2.group(1).replace(".dylib", ".a")  + " " + " ".join(parts)
                     f_out.write(line + "\n")
                     found2 = True
                     if found1:
