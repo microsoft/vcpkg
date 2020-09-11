@@ -59,7 +59,6 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/icu.patch            #Help configure find static icu builds in vcpkg on windows
                             patches/xlib.patch           #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
                             patches/egl.patch            #Fix egl detection logic. 
-                            patches/8c44d70.diff         #Upstream fix for MSVC 16.6.2. static init of std::atomic. 
                             #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
                                                          #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
                                                          #the windows supplied gl.h header and the angle gl.h otherwise. 
