@@ -15,4 +15,39 @@ The support for these manifests is still unstable for now,
 but you _can_ use it from the CMake integration, and that should be mostly stable.
 That's the recommended way to use this new mode.
 
-Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project.
+Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project,
+or else in this document, we have basic information on [Writing a Manifest](#writing-a-manifest),
+the [vcpkg Command Line Interface](#command-line-interface),
+and a little more information on [CMake](#cmake-integration) and
+[MSBuild or VS](#msbuild-vs-integration) integration.
+
+## Writing a Manifest
+
+### `"name"`
+
+### Version fields
+
+### `"dependencies"`
+
+### `"features"` and `"default-features"`
+
+### `"supports"`
+
+## Command Line Interface
+
+### `vcpkg install`
+
+> feature flag
+
+#### Installation directory
+
+## CMake Integration
+
+### Toolchain File
+
+## MSBuild/VS Integration
+
+### `vcpkg integrate install`
+
+### Settings
+

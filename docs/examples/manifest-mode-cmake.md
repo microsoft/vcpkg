@@ -10,9 +10,9 @@ Let's create the following file layout:
 
 ```no-highlight
 fibo/
-	src/
-		main.cxx
-	CMakeLists.txt
+  src/
+    main.cxx
+  CMakeLists.txt
 ```
 
 And we wish to use [fmt](https://github.com/fmtlib/fmt), [range-v3](https://github.com/ericniebler/range-v3),
@@ -51,26 +51,26 @@ int fib(int x) {
   int a = 0, b = 1;
 
   for (int it : view::repeat(0) | view::take(x)) {
-		(void)it;
-		int tmp = a;
-		a += b;
-		b = tmp;
+    (void)it;
+    int tmp = a;
+    a += b;
+    b = tmp;
   }
 
   return a;
 }
 
 int main(int argc, char** argv) {
-	cxxopts::Options options("fibo", "Print the fibonacci sequence up to a value 'n'");
-	options.add_options()
-		("n,value", "The value to print to", cxxopts::value<int>()->default_value("10"));
+  cxxopts::Options options("fibo", "Print the fibonacci sequence up to a value 'n'");
+    options.add_options()
+      ("n,value", "The value to print to", cxxopts::value<int>()->default_value("10"));
 
-	auto result = options.parse(argc, argv);
-	auto n = result["value"].as<int>();
+  auto result = options.parse(argc, argv);
+  auto n = result["value"].as<int>();
 
-	for (int x : view::iota(1) | view::take(n)) {
-		fmt::print("fib({}) = {}\n", x, fib(x));
-	}
+  for (int x : view::iota(1) | view::take(n)) {
+    fmt::print("fib({}) = {}\n", x, fib(x));
+  }
 }
 ```
 
@@ -126,13 +126,13 @@ We now wish to use manifest mode, so all of our dependencies are managed for us!
 
 ```json
 {
-	"name": "fibo",
-	"version-string": "0.1.0",
-	"dependencies": [
-		"cxxopts",
-		"fmt",
-		"range-v3"
-	]
+  "name": "fibo",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "cxxopts",
+    "fmt",
+    "range-v3"
+  ]
 }
 ```
 

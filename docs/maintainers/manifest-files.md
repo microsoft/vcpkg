@@ -204,17 +204,118 @@ and are specified in the `"platform"` field.
 }
 ```
 
+### `"features"`
+
+Multiple optional features can be specified in manifest files, in the `"features"` array field.
+Each feature must have a `"name"` and `"description"` field.
+Optionally, a feature can also have a `"dependencies"` field.
+
+A feature's `"name"` must be an identifier -
+in other words, lowercase alphabetic characters, digits, and hyphens,
+neither starting nor ending with a hyphen.
+
+A feature's `"description"` is a description of the feature,
+and is the same kind of thing as the port `"description"` field.
+
+A feature's `"dependencies"` field contains the list of extra dependencies required to build and use this feature;
+this field isn't required if the feature doesn't require any extra dependencies.
+On installation the dependencies from all selected features are combined to produce the full dependency list for the build.
+
+#### Example:
+
+```json
+{
+  "name": "vtk",
+  "version-string": "8.2.0",
+  "port-version": 2,
+  "description": "Software system for 3D computer graphics, image processing, and visualization",
+  "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows"
+    },
+    "double-conversion",
+    "eigen3",
+    "expat",
+    "freetype",
+    "glew",
+    "hdf5",
+    "jsoncpp",
+    "libharu",
+    "libjpeg-turbo",
+    "libpng",
+    "libtheora",
+    "libxml2",
+    "lz4",
+    "netcdf-c",
+    "proj4",
+    "pugixml",
+    "sqlite3",
+    "tiff",
+    "zlib"
+  ],
+  "features": [
+    {
+      "name": "mpi",
+      "description": "MPI functionality for VTK",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "features": [
+            "parallel"
+          ]
+        },
+        "mpi"
+      ]
+    },
+    {
+      "name": "openvr",
+      "description": "OpenVR functionality for VTK",
+      "dependencies": [
+        "openvr",
+        "sdl2"
+      ]
+    },
+    {
+      "name": "python",
+      "description": "Python functionality for VTK",
+      "dependencies": [
+        "python3"
+      ]
+    },
+    {
+      "name": "qt",
+      "description": "Qt functionality for VTK",
+      "dependencies": [
+        "qt5"
+      ]
+    }
+  ]
+}
+```
+
 ### `"default-features"`
 
-An array of feature names that are default for the library.
+An array of feature names that the library uses by default, if nothing else is specified.
 
 #### Example:
 ```json
 {
   "default-features": [
-    "dynamodb",
-    "kinesis",
-    "s3"
+    "kinesis"
+  ],
+  "features": [
+    {
+      "name": "dynamodb",
+      "description": "Build dynamodb support",
+      "dependencies": [
+        "dynamodb"
+      ]
+    },
+    {
+      "name": "kinesis",
+      "description": "build kinesis support"
+    }
   ]
 }
 ```
@@ -311,92 +412,3 @@ This field is optional and defaults to true.
 ```
 
 This means "doesn't support uwp, nor arm32 (but does support arm64)".
-
-### `"features"`
-
-Multiple optional features can be specified in manifest files, in the `"features"` array field.
-Each feature must have a `"name"` and `"description"` field.
-Optionally, a feature can also have a `"dependencies"` field.
-
-A feature's `"name"` must be an identifier -
-in other words, lowercase alphabetic characters, digits, and hyphens,
-neither starting nor ending with a hyphen.
-
-A feature's `"description"` is a description of the feature,
-and is the same kind of thing as the port `"description"` field.
-
-A feature's `"dependencies"` field contains the list of extra dependencies required to build and use this feature.
-On installation the dependencies from all selected features are combined to produce the full dependency list for the build.
-
-#### Example:
-
-```json
-{
-  "name": "vtk",
-  "version-string": "8.2.0",
-  "port-version": 2,
-  "description": "Software system for 3D computer graphics, image processing, and visualization",
-  "dependencies": [
-    {
-      "name": "atlmfc",
-      "platform": "windows"
-    },
-    "double-conversion",
-    "eigen3",
-    "expat",
-    "freetype",
-    "glew",
-    "hdf5",
-    "jsoncpp",
-    "libharu",
-    "libjpeg-turbo",
-    "libpng",
-    "libtheora",
-    "libxml2",
-    "lz4",
-    "netcdf-c",
-    "proj4",
-    "pugixml",
-    "sqlite3",
-    "tiff",
-    "zlib"
-  ],
-  "features": [
-    {
-      "name": "mpi",
-      "description": "MPI functionality for VTK",
-      "dependencies": [
-        {
-          "name": "hdf5",
-          "features": [
-            "parallel"
-          ]
-        },
-        "mpi"
-      ]
-    },
-    {
-      "name": "openvr",
-      "description": "OpenVR functionality for VTK",
-      "dependencies": [
-        "openvr",
-        "sdl2"
-      ]
-    },
-    {
-      "name": "python",
-      "description": "Python functionality for VTK",
-      "dependencies": [
-        "python3"
-      ]
-    },
-    {
-      "name": "qt",
-      "description": "Qt functionality for VTK",
-      "dependencies": [
-        "qt5"
-      ]
-    }
-  ]
-}
-```
