@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bd73f1a..bfb8a7e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,6 +54,7 @@ if (NOT ANDROID)
+   find_package(KF5DBusAddons ${KF5_DEP_VERSION} CONFIG REQUIRED)
+ endif()
+ find_package(KF5I18n ${KF5_DEP_VERSION} CONFIG REQUIRED)
++find_package(KF5WindowSystem ${KF5_DEP_VERSION} CONFIG REQUIRED)
+ find_package(KF5DocTools ${KF5_DEP_VERSION} CONFIG)
+ 
+ find_package(FLEX REQUIRED)
