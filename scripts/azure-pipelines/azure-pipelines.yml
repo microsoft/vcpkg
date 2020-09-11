@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  windows-pool: 'PrWin-2020-06-30'
-  linux-pool: 'PrLin-2020-06-30'
+  windows-pool: 'PrWin-2020-08-12'
+  linux-pool: 'PrLin-2020-08-12'
 
 stages:
 - stage: check_cxx_formatting
@@ -19,10 +19,14 @@ stages:
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
         arguments: '-Root .'
+        pwsh: true
 - stage: check_manifest_formatting
   displayName: Check the formatting of port manifests
   pool: $(windows-pool)
   dependsOn: []
+  variables:
+  - name: VCPKG_DOWNLOADS
+    value: D:\downloads
   jobs:
   - job:
     workspace:
@@ -32,7 +36,8 @@ stages:
       displayName: 'Check port manifest Formatting'
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
-        arguments: '-Root . -Downloads D:\Downloads'
+        arguments: '-Root .'
+        pwsh: true
 - stage: run_port_ci
   displayName: 'Run the Port CI'
   dependsOn:

@@ -38,6 +38,11 @@ endif()
 
 if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn.h CUDNN_HEADER_CONTENTS)
+  if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn_version.h")
+    file(READ "${CUDNN_INCLUDE_DIR}/cudnn_version.h" CUDNN_VERSION_H_CONTENTS)
+    string(APPEND CUDNN_HEADER_CONTENTS "${CUDNN_VERSION_H_CONTENTS}")
+    unset(CUDNN_VERSION_H_CONTENTS)
+  endif()
     string(REGEX MATCH "define CUDNN_MAJOR * +([0-9]+)"
                  CUDNN_VERSION_MAJOR "${CUDNN_HEADER_CONTENTS}")
     string(REGEX REPLACE "define CUDNN_MAJOR * +([0-9]+)" "\\1"

@@ -1,3 +1,7 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/lapack-reference/copyright")
+    message(FATAL_ERROR "Can't build ${PORT} if lapack-reference is installed. Please remove lapack-reference:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
@@ -11,7 +15,7 @@ vcpkg_extract_source_archive_ex(
   ARCHIVE ${ARCHIVE}
   PATCHES
       remove_internal_blas.patch
-	  fix-ConfigFile.patch
+      fix-ConfigFile.patch
       fix-install.patch
       support-uwp.patch
 )
@@ -37,11 +41,10 @@ vcpkg_copy_pdbs()
 #TODO: fix the official exported targets, since they are broken (luckily it seems that no-one uses them for now)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/clapack)
 
-#we install a cmake wrapper since the official FindLAPACK module in cmake does find clapack easily, unfortunately...
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+# Install clapack wrappers.
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

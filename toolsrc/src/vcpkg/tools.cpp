@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/files.h>
@@ -70,11 +68,11 @@ namespace vcpkg
                            has_xml_version,
                            R"(Could not find <tools version="%s"> in %s)",
                            XML_VERSION,
-                           XML_PATH.u8string());
+                           fs::u8string(XML_PATH));
         Checks::check_exit(VCPKG_LINE_INFO,
                            XML_VERSION == match_xml_version[1],
                            "Expected %s version: [%s], but was [%s]. Please re-run bootstrap-vcpkg.",
-                           XML_PATH.u8string(),
+                           fs::u8string(XML_PATH),
                            XML_VERSION,
                            match_xml_version[1]);
 
@@ -83,8 +81,12 @@ namespace vcpkg
         const bool has_tool_entry = std::regex_search(XML.cbegin(), XML.cend(), match_tool_entry, tool_regex);
         if (!has_tool_entry)
         {
-            return Strings::format(
-                "Could not find entry for tool %s in %s for os=%s", tool, XML_PATH.u8string(), OS_STRING);
+            return Strings::format("Could not automatically acquire %s because there is no entry in %s for os=%s. You "
+                                   "may be able to install %s via your system package manager.",
+                                   tool,
+                                   fs::u8string(XML_PATH),
+                                   OS_STRING,
+                                   tool);
         }
 
         const std::string tool_data =
@@ -134,10 +136,7 @@ namespace vcpkg
         virtual const std::string& exe_stem() const = 0;
         virtual std::array<int, 3> default_min_version() const = 0;
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
-        {
-            Util::unused(out_candidate_paths);
-        }
+        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const { (void)out_candidate_paths; }
         virtual Optional<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const = 0;
     };
 
@@ -189,7 +188,7 @@ namespace vcpkg
         if (!fs.exists(tool_data.download_path))
         {
             System::print2("Downloading ", tool_name, "...\n");
-            System::print2("  ", tool_data.url, " -> ", tool_data.download_path.u8string(), "\n");
+            System::print2("  ", tool_data.url, " -> ", fs::u8string(tool_data.download_path), "\n");
             Downloads::download_file(fs, tool_data.url, tool_data.download_path, tool_data.sha512);
         }
         else
@@ -212,7 +211,7 @@ namespace vcpkg
         Checks::check_exit(VCPKG_LINE_INFO,
                            fs.exists(tool_data.exe_path),
                            "Expected %s to exist after fetching",
-                           tool_data.exe_path.u8string());
+                           fs::u8string(tool_data.exe_path));
 
         return tool_data.exe_path;
     }
@@ -281,12 +280,12 @@ namespace vcpkg
                 out_candidate_paths.push_back(*pf / "CMake" / "bin" / "cmake.exe");
 #else
             // TODO: figure out if this should do anything on non-Windows
-            Util::unused(out_candidate_paths);
+            (void)out_candidate_paths;
 #endif
         }
         virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            const std::string cmd = Strings::format(R"("%s" --version)", path_to_exe.u8string());
+            const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -312,7 +311,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
         virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            const std::string cmd = Strings::format(R"("%s" --version)", path_to_exe.u8string());
+            const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -340,7 +339,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 #ifndef _WIN32
             cmd.path_arg(paths.get_tool_exe(Tools::MONO));
 #else
-            Util::unused(paths);
+            (void)paths;
 #endif
             cmd.path_arg(path_to_exe);
             const auto rc = System::cmd_execute_and_capture_output(cmd.extract());
@@ -378,13 +377,13 @@ Type 'NuGet help <command>' for help on a specific command.
                 out_candidate_paths.push_back(*pf / "git" / "cmd" / "git.exe");
 #else
             // TODO: figure out if this should do anything on non-windows
-            Util::unused(out_candidate_paths);
+            (void)out_candidate_paths;
 #endif
         }
 
         virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            const std::string cmd = Strings::format(R"("%s" --version)", path_to_exe.u8string());
+            const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -439,7 +438,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
 
         virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
-            Util::unused(out_candidate_paths);
+            (void)out_candidate_paths;
             // TODO: Uncomment later
             // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");
             // candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
@@ -451,7 +450,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
 
         virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            const std::string cmd = Strings::format(R"("%s" --framework-version)", path_to_exe.u8string());
+            const std::string cmd = Strings::format(R"("%s" --framework-version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {

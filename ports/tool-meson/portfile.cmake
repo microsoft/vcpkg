@@ -3,3 +3,5 @@
 # Currently is used in ports that call vcpkg_find_acquire_program(MESON) in order to force rebuilds.
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+vcpkg_find_acquire_program(MESON)
+message(STATUS "Using meson: ${MESON}")
