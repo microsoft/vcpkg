@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v5.73.0
     SHA512 bf43c8848a9f4e698b90e45e399a34486a54f7cca1423eb6a3c57f82ae811afb078aaf06ce606f9b698f6622740b6a7ecca646560a8e54a5718f7108ca92620c
     HEAD_REF master
+    PATCHES 
+        "add-missing-kf5guiaddons-dependency.patch"
 )
 
 vcpkg_configure_cmake(
