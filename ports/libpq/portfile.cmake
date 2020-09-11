@@ -1,7 +1,3 @@
-if (EXISTS "${CURRENT_INSTALLED_DIR}/include/decimal.h")
-    message(FATAL_ERROR "FATAL ERROR: libpq and decimal-for-cpp are incompatible. Please remove decimal-for-cpp and rebuild libpq.")
-endif()
-
 set(PORT_VERSION 12.2)
 
 macro(feature_unsupported)
