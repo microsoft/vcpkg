@@ -259,7 +259,8 @@ namespace vcpkg::Commands::Edit
 #ifdef _WIN32
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
-            System::cmd_execute_no_wait(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
+            // note that we are invoking cmd silently but Code.exe is relaunched from there
+            System::cmd_execute_background(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif
