@@ -5,6 +5,7 @@
   "homepage": "https://dartsim.github.io/",
   "dependencies": [
     "assimp",
+    "boost-algorithm",
     "boost-filesystem",
     "boost-regex",
     "boost-system",
