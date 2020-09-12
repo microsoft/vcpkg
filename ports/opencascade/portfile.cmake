@@ -9,15 +9,15 @@ vcpkg_from_github(
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(LIBRARY_TYPE "Shared")
+    set(LIBRARY_TYPE "Shared")
 else()
-  set(LIBRARY_TYPE "Static")
+    set(LIBRARY_TYPE "Static")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-	"freeimage"  USE_FREEIMAGE
-	"gl2ps"      USE_GL2PS
-	"tbb"      	 USE_TBB
+    "freeimage"  USE_FREEIMAGE
+    "gl2ps"      USE_GL2PS
+    "tbb"      	 USE_TBB
 )
 
 
@@ -29,12 +29,12 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_LIBRARY_TYPE=${LIBRARY_TYPE}
-		-DBUILD_MODULE_Draw=OFF
-		-DINSTALL_DIR_LAYOUT=Unix
-		-DBUILD_SAMPLES_MFC=OFF
-		-DBUILD_SAMPLES_QT=OFF
-		-DBUILD_DOC_Overview=OFF
-		## Options from vcpkg_check_features()
+        -DBUILD_MODULE_Draw=OFF
+        -DINSTALL_DIR_LAYOUT=Unix
+        -DBUILD_SAMPLES_MFC=OFF
+        -DBUILD_SAMPLES_QT=OFF
+        -DBUILD_DOC_Overview=OFF
+        ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
 )
 
@@ -58,8 +58,8 @@ file(REMOVE_RECURSE ${BATS})
 # move cmake files into the share folder
 file(GLOB CMAKES ${CURRENT_PACKAGES_DIR}/lib/cmake/opencascade/*.cmake)
 foreach(CM ${CMAKES})
-	get_filename_component(N "${CM}" NAME)
-	file(RENAME ${CM} ${CURRENT_PACKAGES_DIR}/share/${PORT}/${N})
+    get_filename_component(N "${CM}" NAME)
+    file(RENAME ${CM} ${CURRENT_PACKAGES_DIR}/share/${PORT}/${N})
 endforeach()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 
