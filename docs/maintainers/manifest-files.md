@@ -286,7 +286,7 @@ On installation the dependencies from all selected features are combined to prod
         "qt5"
       ]
     }
-  ]
+  }
 }
 ```
 
