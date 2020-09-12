@@ -20,6 +20,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "tbb"        USE_TBB
 )
 
+# VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
+
 
 # We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
 # And pre-built ActiveTCL binaries are behind a marketing wall :(
