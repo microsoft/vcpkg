@@ -14,9 +14,16 @@ else()
   set(LIBRARY_TYPE "Static")
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	"freeimage"  USE_FREEIMAGE
+	"gl2ps"      USE_GL2PS
+	"tbb"      	 USE_TBB
+)
+
+
 # We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
 # And pre-built ActiveTCL binaries are behind a marketing wall :(
-# We use the Unix install layout for Windows as matches vcpkg
+# We use the Unix install layout for Windows as it matches vcpkg
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -27,6 +34,8 @@ vcpkg_configure_cmake(
 		-DBUILD_SAMPLES_MFC=OFF
 		-DBUILD_SAMPLES_QT=OFF
 		-DBUILD_DOC_Overview=OFF
+		## Options from vcpkg_check_features()
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
