@@ -125,7 +125,7 @@ endif()
 if(@ENABLE_THEORA@)
   find_library(THEORA_LIBRARY_RELEASE NAMES theora PATHS ${_IMPORT_PREFIX}/lib/ NO_DEFAULT_PATH)
   find_library(THEORA_LIBRARY_DEBUG NAMES theora PATHS ${_IMPORT_PREFIX}/debug/lib/ NO_DEFAULT_PATH)
-  select_library_configurations(SPEEX)
+  select_library_configurations(THEORA)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS "$<$<CONFIG:Debug>:${THEORA_LIBRARY_DEBUG}>$<$<CONFIG:Release>:${THEORA_LIBRARY_RELEASE}>")
 endif()
 
