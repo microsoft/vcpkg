@@ -17,7 +17,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "freeimage"  USE_FREEIMAGE
     "gl2ps"      USE_GL2PS
-    "tbb"      	 USE_TBB
+    "tbb"        USE_TBB
 )
 
 
