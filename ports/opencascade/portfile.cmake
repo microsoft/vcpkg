@@ -16,6 +16,7 @@ endif()
 
 # We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
 # And pre-built ActiveTCL binaries are behind a marketing wall :(
+# We use the Unix install layout for Windows as matches vcpkg
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
