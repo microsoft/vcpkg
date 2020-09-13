@@ -1888,6 +1888,7 @@ ctp:x64-windows=skip
 ctp:x64-windows-static=skip
 ctp:x86-windows=skip
 protozero:x64-uwp=fail
+protozero:arm-uwp=fail
 
 # clapack is replaced by lapack-reference on the platforms lapack-reference supports
 clapack:x64-linux=skip
