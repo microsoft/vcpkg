@@ -11,7 +11,7 @@ The manifest file (called `vcpkg.json`) is a json file describing the package's 
 }
 ```
 
-You can format the manifest file to our specifications with `vcpkg x-format-manifest ports/libogg/vcpkg.json`.
+You can format the manifest file to our specifications with `vcpkg format-manifest ports/libogg/vcpkg.json`.
 
 ### Create the portfile
 `portfile.cmake` describes how to build and install the package. First we download the project from Github with [`vcpkg_from_github`](../maintainers/vcpkg_from_github.md):

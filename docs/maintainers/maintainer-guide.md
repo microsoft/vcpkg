@@ -131,7 +131,7 @@ Conflicting libs are typically by design and not considered a defect.  Because s
 ## Manifests and CONTROL files
 
 When adding a new port or modifying an existing port, switch to the new manifest syntax for defining a port.
-You may do so easily by running the `vcpkg x-format-manifest` command, which will convert existing CONTROL
+You may do so easily by running the `vcpkg format-manifest` command, which will convert existing CONTROL
 files into manifest files. Do not convert CONTROL files that have not been modified.
 
 ## Versioning
@@ -237,7 +237,7 @@ We require the C++ code inside vcpkg to follow the clang-format, if you change t
 We require that the manifest file be formatted. Use the following command to format all manifest files:
 
 ```cmd
-> vcpkg x-format-manifest --all
+> vcpkg format-manifest --all
 ```
 
 ## Useful implementation notes

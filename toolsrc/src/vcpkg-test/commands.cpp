@@ -40,11 +40,11 @@ TEST_CASE ("get_available_paths_commands works", "[commands]")
     CHECK(Commands::find("autocomplete", commands_list) != nullptr);
     CHECK(Commands::find("hash", commands_list) != nullptr);
     CHECK(Commands::find("fetch", commands_list) != nullptr);
+    CHECK(Commands::find("format-manifest", commands_list) != nullptr);
     CHECK(Commands::find("x-ci-clean", commands_list) != nullptr);
     CHECK(Commands::find("x-history", commands_list) != nullptr);
     CHECK(Commands::find("x-package-info", commands_list) != nullptr);
     CHECK(Commands::find("x-vsinstances", commands_list) != nullptr);
-    CHECK(Commands::find("x-format-manifest", commands_list) != nullptr);
 
     CHECK(Commands::find("korra", commands_list) == nullptr);
 }
