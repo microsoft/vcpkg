@@ -1,10 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8c66d85..b9d9499 100644
+index 8c66d85..f2d89cb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -19,6 +19,7 @@ include(KDECMakeSettings)
+@@ -17,8 +17,9 @@ include(KDEInstallDirs)
+ include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
+ include(KDECMakeSettings)
  
- if (NOT APPLE)
+-if (NOT APPLE)
++if (LINUX)
      find_package(X11)
 +    find_package(X11Extras)
  endif()
