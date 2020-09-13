@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1e4e867..2863214 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,6 +63,8 @@ find_package(KF5I18n ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5Service ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5DocTools ${KF5_DEP_VERSION})
+ find_package(KF5Solid ${KF5_DEP_VERSION} REQUIRED) # for kio_trash
++find_package(KF5GuiAddons ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5XmlGui ${KF5_DEP_VERSION} REQUIRED)
+ 
+ if (NOT KIOCORE_ONLY)
+ find_package(KF5Bookmarks ${KF5_DEP_VERSION} REQUIRED)
