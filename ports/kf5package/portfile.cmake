@@ -17,13 +17,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KPackage)
-
-configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/vcp kg-cmake-wrapper.cmake
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}
-    @ONLY
-)
-
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
