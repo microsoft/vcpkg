@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c40b0f2..1219074 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,6 +49,13 @@ find_package(KF5Codecs ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5ConfigWidgets ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5WidgetsAddons ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5XmlGui ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5ItemViews ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5I18n ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5GuiAddons ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5IconThemes ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5WindowSystem ${KF5_DEP_VERSION} REQUIRED)
++find_package(KF5Archive ${KF5_DEP_VERSION} REQUIRED)
++
+ 
+ if (IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/po")
+     ecm_install_po_files_as_qm(po)
