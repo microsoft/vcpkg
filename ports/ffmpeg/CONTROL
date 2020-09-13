@@ -22,9 +22,11 @@ Feature: avcodec
 Description: Codec support in ffmpeg
 
 Feature: avformat
+Build-Depends: ffmpeg[core,avcodec]
 Description: Format support in ffmpeg
 
 Feature: avdevice
+Build-Depends: ffmpeg[core,avcodec,avformat]
 Description: Device support in ffmpeg
 
 Feature: avfilter
