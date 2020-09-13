@@ -1,12 +1,41 @@
- triangle.c | 273 +++++++++++++++++++++++++++++++------------------------------
- triangle.h |  35 +++++---
- 2 files changed, 160 insertions(+), 148 deletions(-)
+ triangle.c | 116 ++++++++++++++++++++++++++-----------------------------------
+ triangle.h |  29 +++++++++-------
+ 2 files changed, 66 insertions(+), 79 deletions(-)
 
 diff --git a/triangle.c b/triangle.c
-index f7a5700..d2bdfac 100644
+index f7a5700..084902e 100644
 --- a/triangle.c
 +++ b/triangle.c
-@@ -308,12 +308,6 @@
+@@ -194,27 +194,8 @@
+ /*                                                                           */
+ /*****************************************************************************/
+ 
+-/* For single precision (which will save some memory and reduce paging),     */
+-/*   define the symbol SINGLE by using the -DSINGLE compiler switch or by    */
+-/*   writing "#define SINGLE" below.                                         */
+-/*                                                                           */
+-/* For double precision (which will allow you to refine meshes to a smaller  */
+-/*   edge length), leave SINGLE undefined.                                   */
+-/*                                                                           */
+-/* Double precision uses more memory, but improves the resolution of the     */
+-/*   meshes you can generate with Triangle.  It also reduces the likelihood  */
+-/*   of a floating exception due to overflow.  Finally, it is much faster    */
+-/*   than single precision on 64-bit architectures like the DEC Alpha.  I    */
+-/*   recommend double precision unless you want to generate a mesh for which */
+-/*   you do not have enough memory.                                          */
+-
+-/* #define SINGLE */
+-
+-#ifdef SINGLE
+-#define REAL float
+-#else /* not SINGLE */
+ #define REAL double
+-#endif /* not SINGLE */
++#define VOID void
+ 
+ /* If yours is not a Unix system, define the NO_TIMER compiler switch to     */
+ /*   remove the Unix-specific timing code.                                   */
+@@ -308,12 +289,6 @@
  #define DEADVERTEX -32768
  #define UNDEADVERTEX -32767
  
@@ -19,7 +48,7 @@ index f7a5700..d2bdfac 100644
  /* Two constants for algorithms based on random sampling.  Both constants    */
  /*   have been chosen empirically to optimize their respective algorithms.   */
  
-@@ -340,6 +334,7 @@
+@@ -340,6 +315,7 @@
  
  #define ONETHIRD 0.333333333333333333333333333333333333333333333333333333333333
  
@@ -27,33 +56,7 @@ index f7a5700..d2bdfac 100644
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
-@@ -579,7 +574,7 @@ struct flipstacker {
- 
- struct event {
-   REAL xkey, ykey;                              /* Coordinates of the event. */
--  VOID *eventptr;      /* Can be a vertex or the location of a circle event. */
-+  void *eventptr;      /* Can be a vertex or the location of a circle event. */
-   int heapposition;              /* Marks this event's position in the heap. */
- };
- 
-@@ -624,11 +619,11 @@ struct splaynode {
- /*   number of records kept on deaditemstack.                                */
- 
- struct memorypool {
--  VOID **firstblock, **nowblock;
--  VOID *nextitem;
--  VOID *deaditemstack;
--  VOID **pathblock;
--  VOID *pathitem;
-+  void **firstblock, **nowblock;
-+  void *nextitem;
-+  void *deaditemstack;
-+  void **pathblock;
-+  void *pathitem;
-   int alignbytes;
-   int itembytes;
-   int itemsperblock;
-@@ -938,16 +933,16 @@ int minus1mod3[3] = {2, 0, 1};
+@@ -938,16 +914,16 @@ int minus1mod3[3] = {2, 0, 1};
  /*   extracted from the two least significant bits of the pointer.           */
  
  #define decode(ptr, otri)                                                     \
@@ -73,7 +76,7 @@ index f7a5700..d2bdfac 100644
  
  /* The following handle manipulation primitives are all described by Guibas  */
  /*   and Stolfi.  However, Guibas and Stolfi use an edge-based data          */
-@@ -1111,16 +1106,16 @@ int minus1mod3[3] = {2, 0, 1};
+@@ -1111,16 +1087,16 @@ int minus1mod3[3] = {2, 0, 1};
  
  #define infect(otri)                                                          \
    (otri).tri[6] = (triangle)                                                  \
@@ -93,7 +96,7 @@ index f7a5700..d2bdfac 100644
  
  /* Check or set a triangle's attributes.                                     */
  
-@@ -1158,16 +1153,16 @@ int minus1mod3[3] = {2, 0, 1};
+@@ -1158,16 +1134,16 @@ int minus1mod3[3] = {2, 0, 1};
  /*   are masked out to produce the real pointer.                             */
  
  #define sdecode(sptr, osub)                                                   \
@@ -113,62 +116,7 @@ index f7a5700..d2bdfac 100644
  
  /* ssym() toggles the orientation of a subsegment.                           */
  
-@@ -1419,17 +1414,17 @@ int status;
- }
- 
- #ifdef ANSI_DECLARATORS
--VOID *trimalloc(int size)
-+void *trimalloc(int size)
- #else /* not ANSI_DECLARATORS */
--VOID *trimalloc(size)
-+void *trimalloc(size)
- int size;
- #endif /* not ANSI_DECLARATORS */
- 
- {
--  VOID *memptr;
-+  void *memptr;
- 
--  memptr = (VOID *) malloc((unsigned int) size);
--  if (memptr == (VOID *) NULL) {
-+  memptr = (void *) malloc((unsigned int) size);
-+  if (memptr == (void *) NULL) {
-     printf("Error:  Out of memory.\n");
-     triexit(1);
-   }
-@@ -1437,10 +1432,10 @@ int size;
- }
- 
- #ifdef ANSI_DECLARATORS
--void trifree(VOID *memptr)
-+void trifree(void *memptr)
- #else /* not ANSI_DECLARATORS */
- void trifree(memptr)
--VOID *memptr;
-+void *memptr;
- #endif /* not ANSI_DECLARATORS */
- 
- {
-@@ -3857,12 +3852,12 @@ struct memorypool *pool;
- #endif /* not ANSI_DECLARATORS */
- 
- {
--  pool->firstblock = (VOID **) NULL;
--  pool->nowblock = (VOID **) NULL;
--  pool->nextitem = (VOID *) NULL;
--  pool->deaditemstack = (VOID *) NULL;
--  pool->pathblock = (VOID **) NULL;
--  pool->pathitem = (VOID *) NULL;
-+  pool->firstblock = (void **) NULL;
-+  pool->nowblock = (void **) NULL;
-+  pool->nextitem = (void *) NULL;
-+  pool->deaditemstack = (void *) NULL;
-+  pool->pathblock = (void **) NULL;
-+  pool->pathitem = (void *) NULL;
-   pool->alignbytes = 0;
-   pool->itembytes = 0;
-   pool->itemsperblock = 0;
-@@ -3891,23 +3886,23 @@ struct memorypool *pool;
+@@ -3891,7 +3867,7 @@ struct memorypool *pool;
  #endif /* not ANSI_DECLARATORS */
  
  {
@@ -177,166 +125,46 @@ index f7a5700..d2bdfac 100644
  
    pool->items = 0;
    pool->maxitems = 0;
- 
+@@ -3899,11 +3875,11 @@ struct memorypool *pool;
    /* Set the currently active block. */
    pool->nowblock = pool->firstblock;
--  /* Find the first item in the pool.  Increment by the size of (VOID *). */
+   /* Find the first item in the pool.  Increment by the size of (VOID *). */
 -  alignptr = (unsigned long) (pool->nowblock + 1);
-+  /* Find the first item in the pool.  Increment by the size of (void *). */
 +  alignptr = (uintptr_t) (pool->nowblock + 1);
    /* Align the item on an `alignbytes'-byte boundary. */
--  pool->nextitem = (VOID *)
+   pool->nextitem = (VOID *)
 -    (alignptr + (unsigned long) pool->alignbytes -
 -     (alignptr % (unsigned long) pool->alignbytes));
-+  pool->nextitem = (void *)
 +    (alignptr + (uintptr_t) pool->alignbytes -
 +     (alignptr % (uintptr_t) pool->alignbytes));
    /* There are lots of unallocated items left in this block. */
    pool->unallocateditems = pool->itemsfirstblock;
    /* The stack of deallocated items is empty. */
--  pool->deaditemstack = (VOID *) NULL;
-+  pool->deaditemstack = (void *) NULL;
- }
- 
- /*****************************************************************************/
-@@ -3944,12 +3939,12 @@ int alignment;
+@@ -4008,7 +3984,7 @@ struct memorypool *pool;
  {
-   /* Find the proper alignment, which must be at least as large as:   */
-   /*   - The parameter `alignment'.                                   */
--  /*   - sizeof(VOID *), so the stack of dead items can be maintained */
-+  /*   - sizeof(void *), so the stack of dead items can be maintained */
-   /*       without unaligned accesses.                                */
--  if (alignment > sizeof(VOID *)) {
-+  if (alignment > sizeof(void *)) {
-     pool->alignbytes = alignment;
-   } else {
--    pool->alignbytes = sizeof(VOID *);
-+    pool->alignbytes = sizeof(void *);
-   }
-   pool->itembytes = ((bytecount - 1) / pool->alignbytes + 1) *
-                     pool->alignbytes;
-@@ -3963,11 +3958,11 @@ int alignment;
-   /* Allocate a block of items.  Space for `itemsfirstblock' items and one  */
-   /*   pointer (to point to the next block) are allocated, as well as space */
-   /*   to ensure alignment of the items.                                    */
--  pool->firstblock = (VOID **)
--    trimalloc(pool->itemsfirstblock * pool->itembytes + (int) sizeof(VOID *) +
-+  pool->firstblock = (void **)
-+    trimalloc(pool->itemsfirstblock * pool->itembytes + (int) sizeof(void *) +
-               pool->alignbytes);
-   /* Set the next block pointer to NULL. */
--  *(pool->firstblock) = (VOID *) NULL;
-+  *(pool->firstblock) = (void *) NULL;
-   poolrestart(pool);
- }
- 
-@@ -3985,9 +3980,9 @@ struct memorypool *pool;
- #endif /* not ANSI_DECLARATORS */
- 
- {
--  while (pool->firstblock != (VOID **) NULL) {
--    pool->nowblock = (VOID **) *(pool->firstblock);
--    trifree((VOID *) pool->firstblock);
-+  while (pool->firstblock != (void **) NULL) {
-+    pool->nowblock = (void **) *(pool->firstblock);
-+    trifree((void *) pool->firstblock);
-     pool->firstblock = pool->nowblock;
-   }
- }
-@@ -3999,45 +3994,45 @@ struct memorypool *pool;
- /*****************************************************************************/
- 
- #ifdef ANSI_DECLARATORS
--VOID *poolalloc(struct memorypool *pool)
-+void *poolalloc(struct memorypool *pool)
- #else /* not ANSI_DECLARATORS */
--VOID *poolalloc(pool)
-+void *poolalloc(pool)
- struct memorypool *pool;
- #endif /* not ANSI_DECLARATORS */
- 
- {
--  VOID *newitem;
--  VOID **newblock;
+   VOID *newitem;
+   VOID **newblock;
 -  unsigned long alignptr;
-+  void *newitem;
-+  void **newblock;
 +  uintptr_t alignptr = 0;
  
    /* First check the linked list of dead items.  If the list is not   */
    /*   empty, allocate an item from the list rather than a fresh one. */
--  if (pool->deaditemstack != (VOID *) NULL) {
-+  if (pool->deaditemstack != (void *) NULL) {
-     newitem = pool->deaditemstack;               /* Take first item in list. */
--    pool->deaditemstack = * (VOID **) pool->deaditemstack;
-+    pool->deaditemstack = * (void **) pool->deaditemstack;
-   } else {
-     /* Check if there are any free items left in the current block. */
-     if (pool->unallocateditems == 0) {
-       /* Check if another block must be allocated. */
--      if (*(pool->nowblock) == (VOID *) NULL) {
-+      if (*(pool->nowblock) == (void *) NULL) {
-         /* Allocate a new block of items, pointed to by the previous block. */
--        newblock = (VOID **) trimalloc(pool->itemsperblock * pool->itembytes +
--                                       (int) sizeof(VOID *) +
-+        newblock = (void **) trimalloc(pool->itemsperblock * pool->itembytes +
-+                                       (int) sizeof(void *) +
-                                        pool->alignbytes);
--        *(pool->nowblock) = (VOID *) newblock;
-+        *(pool->nowblock) = (void *) newblock;
-         /* The next block pointer is NULL. */
--        *newblock = (VOID *) NULL;
-+        *newblock = (void *) NULL;
-       }
- 
-       /* Move to the new block. */
--      pool->nowblock = (VOID **) *(pool->nowblock);
-+      pool->nowblock = (void **) *(pool->nowblock);
+@@ -4033,11 +4009,11 @@ struct memorypool *pool;
+       pool->nowblock = (VOID **) *(pool->nowblock);
        /* Find the first item in the block.    */
--      /*   Increment by the size of (VOID *). */
+       /*   Increment by the size of (VOID *). */
 -      alignptr = (unsigned long) (pool->nowblock + 1);
-+      /*   Increment by the size of (void *). */
 +      alignptr = (uintptr_t) (pool->nowblock + 1);
        /* Align the item on an `alignbytes'-byte boundary. */
--      pool->nextitem = (VOID *)
+       pool->nextitem = (VOID *)
 -        (alignptr + (unsigned long) pool->alignbytes -
 -         (alignptr % (unsigned long) pool->alignbytes));
-+      pool->nextitem = (void *)
 +        (alignptr + (uintptr_t) pool->alignbytes -
 +         (alignptr % (uintptr_t) pool->alignbytes));
        /* There are lots of unallocated items left in this block. */
        pool->unallocateditems = pool->itemsperblock;
      }
-@@ -4045,7 +4040,7 @@ struct memorypool *pool;
-     /* Allocate a new item. */
-     newitem = pool->nextitem;
-     /* Advance `nextitem' pointer to next free item in block. */
--    pool->nextitem = (VOID *) ((char *) pool->nextitem + pool->itembytes);
-+    pool->nextitem = (void *) ((char *) pool->nextitem + pool->itembytes);
-     pool->unallocateditems--;
-     pool->maxitems++;
-   }
-@@ -4062,16 +4057,16 @@ struct memorypool *pool;
- /*****************************************************************************/
- 
- #ifdef ANSI_DECLARATORS
--void pooldealloc(struct memorypool *pool, VOID *dyingitem)
-+void pooldealloc(struct memorypool *pool, void *dyingitem)
- #else /* not ANSI_DECLARATORS */
- void pooldealloc(pool, dyingitem)
- struct memorypool *pool;
--VOID *dyingitem;
-+void *dyingitem;
- #endif /* not ANSI_DECLARATORS */
- 
- {
-   /* Push freshly killed item onto stack. */
--  *((VOID **) dyingitem) = pool->deaditemstack;
-+  *((void **) dyingitem) = pool->deaditemstack;
-   pool->deaditemstack = dyingitem;
-   pool->items--;
- }
-@@ -4092,16 +4087,16 @@ struct memorypool *pool;
+@@ -4092,16 +4068,16 @@ struct memorypool *pool;
  #endif /* not ANSI_DECLARATORS */
  
  {
@@ -345,72 +173,43 @@ index f7a5700..d2bdfac 100644
  
    /* Begin the traversal in the first block. */
    pool->pathblock = pool->firstblock;
--  /* Find the first item in the block.  Increment by the size of (VOID *). */
+   /* Find the first item in the block.  Increment by the size of (VOID *). */
 -  alignptr = (unsigned long) (pool->pathblock + 1);
-+  /* Find the first item in the block.  Increment by the size of (void *). */
 +  alignptr = (uintptr_t) (pool->pathblock + 1);
    /* Align with item on an `alignbytes'-byte boundary. */
--  pool->pathitem = (VOID *)
+   pool->pathitem = (VOID *)
 -    (alignptr + (unsigned long) pool->alignbytes -
 -     (alignptr % (unsigned long) pool->alignbytes));
-+  pool->pathitem = (void *)
 +    (alignptr + (uintptr_t) pool->alignbytes -
 +     (alignptr % (uintptr_t) pool->alignbytes));
    /* Set the number of items left in the current block. */
    pool->pathitemsleft = pool->itemsfirstblock;
  }
-@@ -4121,38 +4116,38 @@ struct memorypool *pool;
- /*****************************************************************************/
- 
- #ifdef ANSI_DECLARATORS
--VOID *traverse(struct memorypool *pool)
-+void *traverse(struct memorypool *pool)
- #else /* not ANSI_DECLARATORS */
--VOID *traverse(pool)
-+void *traverse(pool)
- struct memorypool *pool;
- #endif /* not ANSI_DECLARATORS */
+@@ -4129,7 +4105,7 @@ struct memorypool *pool;
  
  {
--  VOID *newitem;
+   VOID *newitem;
 -  unsigned long alignptr;
-+  void *newitem;
 +  uintptr_t alignptr = 0;
  
    /* Stop upon exhausting the list of items. */
    if (pool->pathitem == pool->nextitem) {
--    return (VOID *) NULL;
-+    return (void *) NULL;
-   }
- 
-   /* Check whether any untraversed items remain in the current block. */
-   if (pool->pathitemsleft == 0) {
+@@ -4141,11 +4117,11 @@ struct memorypool *pool;
      /* Find the next block. */
--    pool->pathblock = (VOID **) *(pool->pathblock);
--    /* Find the first item in the block.  Increment by the size of (VOID *). */
+     pool->pathblock = (VOID **) *(pool->pathblock);
+     /* Find the first item in the block.  Increment by the size of (VOID *). */
 -    alignptr = (unsigned long) (pool->pathblock + 1);
-+    pool->pathblock = (void **) *(pool->pathblock);
-+    /* Find the first item in the block.  Increment by the size of (void *). */
 +    alignptr = (uintptr_t) (pool->pathblock + 1);
      /* Align with item on an `alignbytes'-byte boundary. */
--    pool->pathitem = (VOID *)
+     pool->pathitem = (VOID *)
 -      (alignptr + (unsigned long) pool->alignbytes -
 -       (alignptr % (unsigned long) pool->alignbytes));
-+    pool->pathitem = (void *)
 +      (alignptr + (uintptr_t) pool->alignbytes -
 +       (alignptr % (uintptr_t) pool->alignbytes));
      /* Set the number of items left in the current block. */
      pool->pathitemsleft = pool->itemsperblock;
    }
- 
-   newitem = pool->pathitem;
-   /* Find the next item in the block. */
--  pool->pathitem = (VOID *) ((char *) pool->pathitem + pool->itembytes);
-+  pool->pathitem = (void *) ((char *) pool->pathitem + pool->itembytes);
-   pool->pathitemsleft--;
-   return newitem;
- }
-@@ -4197,16 +4192,16 @@ int subsegbytes;
+@@ -4197,16 +4173,16 @@ int subsegbytes;
  #endif /* not ANSI_DECLARATORS */
  
  {
@@ -431,7 +230,7 @@ index f7a5700..d2bdfac 100644
    /* Initialize the three adjoining triangles to be "outer space."  These  */
    /*   will eventually be changed by various bonding operations, but their */
    /*   values don't really matter, as long as they can legally be          */
-@@ -4226,10 +4221,10 @@ int subsegbytes;
+@@ -4226,10 +4202,10 @@ int subsegbytes;
      m->dummysubbase = (subseg *) trimalloc(subsegbytes +
                                             m->subsegs.alignbytes);
      /* Align `dummysub' on a `subsegs.alignbytes'-byte boundary. */
@@ -445,66 +244,16 @@ index f7a5700..d2bdfac 100644
      /* Initialize the two adjoining subsegments to be the omnipresent      */
      /*   subsegment.  These will eventually be changed by various bonding  */
      /*   operations, but their values don't really matter, as long as they */
-@@ -4387,7 +4382,7 @@ triangle *dyingtriangle;
-   /* Mark the triangle as dead.  This makes it possible to detect dead */
-   /*   triangles when traversing the list of all triangles.            */
-   killtri(dyingtriangle);
--  pooldealloc(&m->triangles, (VOID *) dyingtriangle);
-+  pooldealloc(&m->triangles, (void *) dyingtriangle);
- }
- 
- /*****************************************************************************/
-@@ -4433,7 +4428,7 @@ subseg *dyingsubseg;
-   /* Mark the subsegment as dead.  This makes it possible to detect dead */
-   /*   subsegments when traversing the list of all subsegments.          */
-   killsubseg(dyingsubseg);
--  pooldealloc(&m->subsegs, (VOID *) dyingsubseg);
-+  pooldealloc(&m->subsegs, (void *) dyingsubseg);
- }
- 
- /*****************************************************************************/
-@@ -4479,7 +4474,7 @@ vertex dyingvertex;
-   /* Mark the vertex as dead.  This makes it possible to detect dead */
-   /*   vertices when traversing the list of all vertices.            */
-   setvertextype(dyingvertex, DEADVERTEX);
--  pooldealloc(&m->vertices, (VOID *) dyingvertex);
-+  pooldealloc(&m->vertices, (void *) dyingvertex);
- }
- 
- /*****************************************************************************/
-@@ -4528,7 +4523,7 @@ struct badsubseg *dyingseg;
-   /* Set subsegment's origin to NULL.  This makes it possible to detect dead */
-   /*   badsubsegs when traversing the list of all badsubsegs             .   */
-   dyingseg->subsegorg = (vertex) NULL;
--  pooldealloc(&m->badsubsegs, (VOID *) dyingseg);
-+  pooldealloc(&m->badsubsegs, (void *) dyingseg);
- }
- 
- #endif /* not CDT_ONLY */
-@@ -4584,9 +4579,9 @@ int number;
- #endif /* not ANSI_DECLARATORS */
- 
+@@ -4586,7 +4562,7 @@ int number;
  {
--  VOID **getblock;
-+  void **getblock;
+   VOID **getblock;
    char *foundvertex;
 -  unsigned long alignptr;
 +  uintptr_t alignptr = 0;
    int current;
  
    getblock = m->vertices.firstblock;
-@@ -4594,18 +4589,18 @@ int number;
- 
-   /* Find the right block. */
-   if (current + m->vertices.itemsfirstblock <= number) {
--    getblock = (VOID **) *getblock;
-+    getblock = (void **) *getblock;
-     current += m->vertices.itemsfirstblock;
-     while (current + m->vertices.itemsperblock <= number) {
--      getblock = (VOID **) *getblock;
-+      getblock = (void **) *getblock;
-       current += m->vertices.itemsperblock;
-     }
+@@ -4603,9 +4579,9 @@ int number;
    }
  
    /* Now find the right vertex. */
@@ -517,20 +266,7 @@ index f7a5700..d2bdfac 100644
    return (vertex) (foundvertex + m->vertices.itembytes * (number - current));
  }
  
-@@ -4625,10 +4620,10 @@ struct behavior *b;
- 
- {
-   pooldeinit(&m->triangles);
--  trifree((VOID *) m->dummytribase);
-+  trifree((void *) m->dummytribase);
-   if (b->usesegments) {
-     pooldeinit(&m->subsegs);
--    trifree((VOID *) m->dummysubbase);
-+    trifree((void *) m->dummysubbase);
-   }
-   pooldeinit(&m->vertices);
- #ifndef CDT_ONLY
-@@ -4883,6 +4878,7 @@ struct osub *newsubseg;
+@@ -4883,6 +4859,7 @@ struct osub *newsubseg;
  /*                                                                           */
  /*****************************************************************************/
  
@@ -538,7 +274,7 @@ index f7a5700..d2bdfac 100644
  void exactinit()
  {
    REAL half;
-@@ -4956,6 +4952,7 @@ void exactinit()
+@@ -4956,6 +4933,7 @@ void exactinit()
  /*                                                                           */
  /*****************************************************************************/
  
@@ -546,7 +282,7 @@ index f7a5700..d2bdfac 100644
  #ifdef ANSI_DECLARATORS
  int fast_expansion_sum_zeroelim(int elen, REAL *e, int flen, REAL *f, REAL *h)
  #else /* not ANSI_DECLARATORS */
-@@ -5050,6 +5047,7 @@ REAL *h;
+@@ -5050,6 +5028,7 @@ REAL *h;
  /*                                                                           */
  /*****************************************************************************/
  
@@ -554,7 +290,7 @@ index f7a5700..d2bdfac 100644
  #ifdef ANSI_DECLARATORS
  int scale_expansion_zeroelim(int elen, REAL *e, REAL b, REAL *h)
  #else /* not ANSI_DECLARATORS */
-@@ -5106,6 +5104,7 @@ REAL *h;
+@@ -5106,6 +5085,7 @@ REAL *h;
  /*                                                                           */
  /*****************************************************************************/
  
@@ -562,7 +298,7 @@ index f7a5700..d2bdfac 100644
  #ifdef ANSI_DECLARATORS
  REAL estimate(int elen, REAL *e)
  #else /* not ANSI_DECLARATORS */
-@@ -5303,6 +5302,7 @@ vertex pc;
+@@ -5303,6 +5283,7 @@ vertex pc;
  /*                                                                           */
  /*****************************************************************************/
  
@@ -570,7 +306,7 @@ index f7a5700..d2bdfac 100644
  #ifdef ANSI_DECLARATORS
  REAL incircleadapt(vertex pa, vertex pb, vertex pc, vertex pd, REAL permanent)
  #else /* not ANSI_DECLARATORS */
-@@ -5882,6 +5882,7 @@ REAL permanent;
+@@ -5882,6 +5863,7 @@ REAL permanent;
    return finnow[finlength - 1];
  }
  
@@ -578,7 +314,7 @@ index f7a5700..d2bdfac 100644
  #ifdef ANSI_DECLARATORS
  REAL incircle(struct mesh *m, struct behavior *b,
                vertex pa, vertex pb, vertex pc, vertex pd)
-@@ -5964,6 +5965,7 @@ vertex pd;
+@@ -5964,6 +5946,7 @@ vertex pd;
  /*                                                                           */
  /*****************************************************************************/
  
@@ -586,7 +322,7 @@ index f7a5700..d2bdfac 100644
  #ifdef ANSI_DECLARATORS
  REAL orient3dadapt(vertex pa, vertex pb, vertex pc, vertex pd,
                     REAL aheight, REAL bheight, REAL cheight, REAL dheight,
-@@ -6389,6 +6391,7 @@ REAL permanent;
+@@ -6389,6 +6372,7 @@ REAL permanent;
    return finnow[finlength - 1];
  }
  
@@ -594,12 +330,7 @@ index f7a5700..d2bdfac 100644
  #ifdef ANSI_DECLARATORS
  REAL orient3d(struct mesh *m, struct behavior *b,
                vertex pa, vertex pb, vertex pc, vertex pd,
-@@ -7645,11 +7648,11 @@ struct otri *searchtri;
- #endif /* not ANSI_DECLARATORS */
- 
- {
--  VOID **sampleblock;
-+  void **sampleblock;
+@@ -7649,7 +7633,7 @@ struct otri *searchtri;
    char *firsttri;
    struct otri sampletri;
    vertex torg, tdest;
@@ -608,7 +339,7 @@ index f7a5700..d2bdfac 100644
    REAL searchdist, dist;
    REAL ahead;
    long samplesperblock, totalsamplesleft, samplesleft;
-@@ -7721,11 +7724,11 @@ struct otri *searchtri;
+@@ -7721,11 +7705,11 @@ struct otri *searchtri;
        population = totalpopulation;
      }
      /* Find a pointer to the first triangle in the block. */
@@ -623,181 +354,14 @@ index f7a5700..d2bdfac 100644
  
      /* Choose `samplesleft' randomly sampled triangles in this block. */
      do {
-@@ -7751,7 +7754,7 @@ struct otri *searchtri;
-     } while ((samplesleft > 0) && (totalsamplesleft > 0));
- 
-     if (totalsamplesleft > 0) {
--      sampleblock = (VOID **) *sampleblock;
-+      sampleblock = (void **) *sampleblock;
-       samplesleft = samplesperblock;
-       totalpopulation -= population;
-       population = TRIPERBLOCK;
-@@ -10029,7 +10032,7 @@ struct behavior *b;
- 
-   /* Form the Delaunay triangulation. */
-   divconqrecurse(m, b, sortarray, i, 0, &hullleft, &hullright);
--  trifree((VOID *) sortarray);
-+  trifree((void *) sortarray);
- 
-   return removeghosts(m, b, &hullleft);
- }
-@@ -10200,9 +10203,9 @@ struct behavior *b;
-   }
-   triangledealloc(m, finaledge.tri);
- 
--  trifree((VOID *) m->infvertex1);  /* Deallocate the bounding box vertices. */
--  trifree((VOID *) m->infvertex2);
--  trifree((VOID *) m->infvertex3);
-+  trifree((void *) m->infvertex1);  /* Deallocate the bounding box vertices. */
-+  trifree((void *) m->infvertex2);
-+  trifree((void *) m->infvertex3);
- 
-   return hullsize;
- }
-@@ -10432,14 +10435,14 @@ struct event **freeevents;
-   traversalinit(&m->vertices);
-   for (i = 0; i < m->invertices; i++) {
-     thisvertex = vertextraverse(m);
--    (*events)[i].eventptr = (VOID *) thisvertex;
-+    (*events)[i].eventptr = (void *) thisvertex;
-     (*events)[i].xkey = thisvertex[0];
-     (*events)[i].ykey = thisvertex[1];
-     eventheapinsert(*eventheap, i, *events + i);
-   }
-   *freeevents = (struct event *) NULL;
-   for (i = maxevents - 1; i >= m->invertices; i--) {
--    (*events)[i].eventptr = (VOID *) *freeevents;
-+    (*events)[i].eventptr = (void *) *freeevents;
-     *freeevents = *events + i;
-   }
- }
-@@ -10541,7 +10544,7 @@ int *heapsize;
-   if (eventvertex != (vertex) NULL) {
-     deadevent = (struct event *) eventvertex;
-     eventnum = deadevent->heapposition;
--    deadevent->eventptr = (VOID *) *freeevents;
-+    deadevent->eventptr = (void *) *freeevents;
-     *freeevents = deadevent;
-     eventheapdelete(eventheap, *heapsize, eventnum);
-     (*heapsize)--;
-@@ -10643,7 +10646,7 @@ struct otri *searchtri;
-     lefttree = splay(m, splaytree->lchild, searchpoint, searchtri);
-     righttree = splay(m, splaytree->rchild, searchpoint, searchtri);
- 
--    pooldealloc(&m->splaynodes, (VOID *) splaytree);
-+    pooldealloc(&m->splaynodes, (void *) splaytree);
-     if (lefttree == (struct splaynode *) NULL) {
-       return righttree;
-     } else if (righttree == (struct splaynode *) NULL) {
-@@ -10836,7 +10839,7 @@ struct behavior *b;
-   lprevself(righttri);
-   bond(lefttri, righttri);
-   firstvertex = (vertex) eventheap[0]->eventptr;
--  eventheap[0]->eventptr = (VOID *) freeevents;
-+  eventheap[0]->eventptr = (void *) freeevents;
-   freeevents = eventheap[0];
-   eventheapdelete(eventheap, heapsize, 0);
-   heapsize--;
-@@ -10846,7 +10849,7 @@ struct behavior *b;
-       triexit(1);
-     }
-     secondvertex = (vertex) eventheap[0]->eventptr;
--    eventheap[0]->eventptr = (VOID *) freeevents;
-+    eventheap[0]->eventptr = (void *) freeevents;
-     freeevents = eventheap[0];
-     eventheapdelete(eventheap, heapsize, 0);
-     heapsize--;
-@@ -10954,7 +10957,7 @@ struct behavior *b;
-         }
-       }
-     }
--    nextevent->eventptr = (VOID *) freeevents;
-+    nextevent->eventptr = (void *) freeevents;
-     freeevents = nextevent;
- 
-     if (check4events) {
-@@ -10968,7 +10971,7 @@ struct behavior *b;
-         newevent->xkey = m->xminextreme;
-         newevent->ykey = circletop(m, leftvertex, midvertex, rightvertex,
-                                    lefttest);
--        newevent->eventptr = (VOID *) encode(lefttri);
-+        newevent->eventptr = (void *) encode(lefttri);
-         eventheapinsert(eventheap, heapsize, newevent);
-         heapsize++;
-         setorg(lefttri, newevent);
-@@ -10983,7 +10986,7 @@ struct behavior *b;
-         newevent->xkey = m->xminextreme;
-         newevent->ykey = circletop(m, leftvertex, midvertex, rightvertex,
-                                    righttest);
--        newevent->eventptr = (VOID *) encode(farrighttri);
-+        newevent->eventptr = (void *) encode(farrighttri);
-         eventheapinsert(eventheap, heapsize, newevent);
-         heapsize++;
-         setorg(farrighttri, newevent);
-@@ -11558,7 +11561,7 @@ FILE *polyfile;
-     }
-   }
- 
--  trifree((VOID *) vertexarray);
-+  trifree((void *) vertexarray);
-   return hullsize;
- }
- 
-@@ -13150,7 +13153,7 @@ int regions;
-     pooldeinit(&m->viri);
-   }
-   if (regions > 0) {
--    trifree((VOID *) regiontris);
-+    trifree((void *) regiontris);
-   }
- }
- 
-@@ -13671,7 +13674,7 @@ struct behavior *b;
-         splitencsegs(m, b, 1);
-       } else {
-         /* Return the bad triangle to the pool. */
--        pooldealloc(&m->badtriangles, (VOID *) badtri);
-+        pooldealloc(&m->badtriangles, (void *) badtri);
-       }
-     }
-   }
-@@ -13733,7 +13736,7 @@ struct behavior *b;
-   /*   order elements.  This ensures that the primary nodes (at the     */
-   /*   corners of elements) will occur earlier in the output files, and */
-   /*   have lower indices, than the extra nodes.                        */
--  m->vertices.deaditemstack = (VOID *) NULL;
-+  m->vertices.deaditemstack = (void *) NULL;
- 
-   traversalinit(&m->triangles);
-   triangleloop.tri = triangletraverse(m);
-@@ -15944,11 +15947,11 @@ char **argv;
- #ifndef TRILIBRARY
- #ifndef CDT_ONLY
-   if (m.regions > 0) {
--    trifree((VOID *) regionarray);
-+    trifree((void *) regionarray);
-   }
- #endif /* not CDT_ONLY */
-   if (m.holes > 0) {
--    trifree((VOID *) holearray);
-+    trifree((void *) holearray);
-   }
-   if (b.geomview) {
-     writeoff(&m, &b, b.offfilename, argc, argv);
 diff --git a/triangle.h b/triangle.h
-index 9df1f39..526fedd 100644
+index 9df1f39..8d9c754 100644
 --- a/triangle.h
 +++ b/triangle.h
-@@ -248,16 +248,26 @@
+@@ -248,16 +248,20 @@
  /*                                                                           */
  /*****************************************************************************/
  
-+#ifdef SINGLE
-+#define TRIANGLE_REAL float
-+#else /* not SINGLE */
-+#define TRIANGLE_REAL double
-+#endif /* not SINGLE */
-+
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
@@ -805,8 +369,8 @@ index 9df1f39..526fedd 100644
  struct triangulateio {
 -  REAL *pointlist;                                               /* In / out */
 -  REAL *pointattributelist;                                      /* In / out */
-+  TRIANGLE_REAL *pointlist;                                      /* In / out */
-+  TRIANGLE_REAL *pointattributelist;                             /* In / out */
++  double *pointlist;                                             /* In / out */
++  double *pointattributelist;                                    /* In / out */
    int *pointmarkerlist;                                          /* In / out */
    int numberofpoints;                                            /* In / out */
    int numberofpointattributes;                                   /* In / out */
@@ -814,27 +378,27 @@ index 9df1f39..526fedd 100644
    int *trianglelist;                                             /* In / out */
 -  REAL *triangleattributelist;                                   /* In / out */
 -  REAL *trianglearealist;                                         /* In only */
-+  TRIANGLE_REAL *triangleattributelist;                          /* In / out */
-+  TRIANGLE_REAL *trianglearealist;                               /* In only */
++  double *triangleattributelist;                                 /* In / out */
++  double *trianglearealist;                                      /* In only */
    int *neighborlist;                                             /* Out only */
    int numberoftriangles;                                         /* In / out */
    int numberofcorners;                                           /* In / out */
-@@ -267,23 +277,22 @@ struct triangulateio {
+@@ -267,23 +271,22 @@ struct triangulateio {
    int *segmentmarkerlist;                                        /* In / out */
    int numberofsegments;                                          /* In / out */
  
 -  REAL *holelist;                        /* In / pointer to array copied out */
-+  TRIANGLE_REAL *holelist;               /* In / pointer to array copied out */
++  double *holelist;                      /* In / pointer to array copied out */
    int numberofholes;                                      /* In / copied out */
  
 -  REAL *regionlist;                      /* In / pointer to array copied out */
-+  TRIANGLE_REAL *regionlist;             /* In / pointer to array copied out */
++  double *regionlist;                    /* In / pointer to array copied out */
    int numberofregions;                                    /* In / copied out */
  
    int *edgelist;                                                 /* Out only */
    int *edgemarkerlist;            /* Not used with Voronoi diagram; out only */
 -  REAL *normlist;                /* Used only with Voronoi diagram; out only */
-+  TRIANGLE_REAL* normlist;        /* Used only with Voronoi diagram; out only */
++  double *normlist;              /* Used only with Voronoi diagram; out only */
    int numberofedges;                                             /* Out only */
  };
  
