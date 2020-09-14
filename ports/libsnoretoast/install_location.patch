@@ -1,0 +1,12 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index eef57f7..740c168 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -21,6 +21,6 @@ target_link_libraries(snoretoast PRIVATE SnoreToast::LibSnoreToast snoreretoasts
+ target_compile_definitions(snoretoast PRIVATE UNICODE _UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)
+ add_executable(SnoreToast::SnoreToast ALIAS snoretoast)
+ 
+-install(TARGETS snoretoast SnoreToastActions EXPORT LibSnoreToastConfig RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
++install(TARGETS snoretoast SnoreToastActions EXPORT LibSnoreToastConfig RUNTIME DESTINATION tools LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+ install(FILES snoretoastactions.h ${CMAKE_CURRENT_BINARY_DIR}/config.h DESTINATION include/snoretoast)
+ install(EXPORT LibSnoreToastConfig DESTINATION lib/cmake/libsnoretoast NAMESPACE SnoreToast::)
