@@ -1,4 +1,5 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,12 +8,6 @@ vcpkg_from_github(
     SHA512 595ad7226b9365c1a7670b77001f71787a5d8aaa4a93a4a4d8eb938564670d79ae5a247ae7cc770b5da53c9a9f2e4166ba6e5ae104c1f2debad19ec2187f4a56
     HEAD_REF master
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(LIBRARY_TYPE "Shared")
-else()
-    set(LIBRARY_TYPE "Static")
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "freeimage"  USE_FREEIMAGE
@@ -30,7 +25,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_LIBRARY_TYPE=${LIBRARY_TYPE}
+        -DBUILD_LIBRARY_TYPE="Shared"
         -DBUILD_MODULE_Draw=OFF
         -DINSTALL_DIR_LAYOUT=Unix
         -DBUILD_SAMPLES_MFC=OFF
