@@ -8,6 +8,7 @@ vcpkg_from_github(
         cmakelists.patch
         geotiff-config.patch
         fix-proj4.patch
+        fix-staticbuild.patch
 )
 
 set(SOURCE_PATH ${SOURCE_PATH}/libgeotiff)
