@@ -50,10 +50,8 @@ namespace vcpkg
         virtual StringView type_name() const override;
         virtual Span<const StringView> valid_fields() const override;
 
-        virtual Optional<std::unique_ptr<RegistryImpl>> visit_null(Json::Reader&, StringView) override;
-        virtual Optional<std::unique_ptr<RegistryImpl>> visit_object(Json::Reader&,
-                                                                     StringView,
-                                                                     const Json::Object&) override;
+        virtual Optional<std::unique_ptr<RegistryImpl>> visit_null(Json::Reader&) override;
+        virtual Optional<std::unique_ptr<RegistryImpl>> visit_object(Json::Reader&, const Json::Object&) override;
     };
 
     struct RegistryDeserializer final : Json::IDeserializer<Registry>
@@ -63,7 +61,7 @@ namespace vcpkg
         virtual StringView type_name() const override;
         virtual Span<const StringView> valid_fields() const override;
 
-        virtual Optional<Registry> visit_object(Json::Reader&, StringView, const Json::Object&) override;
+        virtual Optional<Registry> visit_object(Json::Reader&, const Json::Object&) override;
     };
 
     // this type implements the registry fall back logic from the registries RFC:

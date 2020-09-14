@@ -84,50 +84,22 @@ namespace
 
 namespace vcpkg
 {
-    static Configuration deserialize_configuration(const Json::Object& obj, const VcpkgCmdArguments& args)
+    static Configuration deserialize_configuration(const Json::Object& obj,
+                                                   const VcpkgCmdArguments& args,
+                                                   const fs::path& filepath)
     {
-        Json::BasicReaderError err;
-        Json::Reader reader{&err};
+        Json::Reader reader;
         auto deserializer = ConfigurationDeserializer(args);
 
-        auto parsed_config_opt = reader.visit_value(obj, "$", deserializer);
-        if (err.has_error())
+        auto parsed_config_opt = reader.visit_value(obj, deserializer);
+        if (!reader.errors().empty())
         {
-            if (!err.missing_fields.empty())
-            {
-                System::print2(System::Color::error, "Error: missing fields in configuration:\n");
-                for (const auto& missing : err.missing_fields)
-                {
-                    System::printf(
-                        System::Color::error, "    %s was expected to have: %s\n", missing.first, missing.second);
-                }
-            }
-            if (!err.expected_types.empty())
-            {
-                System::print2(System::Color::error, "Error: Invalid types in configuration:\n");
-                for (const auto& expected : err.expected_types)
-                {
-                    System::printf(
-                        System::Color::error, "    %s was expected to be %s\n", expected.first, expected.second);
-                }
-            }
-            if (!err.extra_fields.empty())
-            {
-                System::print2(System::Color::error, "Error: Invalid fields in configuration:\n");
-                for (const auto& extra : err.extra_fields)
-                {
-                    System::printf(System::Color::error,
-                                   "    %s had invalid fields: %s\n",
-                                   extra.first,
-                                   Strings::join(", ", extra.second));
-                }
-            }
-            if (!err.mutually_exclusive_fields.empty())
-            {
-                // this should never happen
-                Checks::unreachable(VCPKG_LINE_INFO);
-            }
+            System::print2(System::Color::error, "Errors occurred while parsing ", fs::u8string(filepath), "\n");
+            for (auto&& msg : reader.errors())
+                System::print2("    ", msg, '\n');
 
+            System::print2("See https://github.com/Microsoft/vcpkg/tree/master/docs/specifications/registries.md for "
+                           "more information.\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
@@ -157,7 +129,7 @@ namespace vcpkg
         if (!manifest_opt.has_value())
         {
             Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Failed to parse manifest at %s: %s",
+                                      "Failed to parse manifest at %s:\n%s",
                                       fs::u8string(manifest_path),
                                       manifest_opt.error()->format());
         }
@@ -216,7 +188,7 @@ namespace vcpkg
         }
         auto config_obj = std::move(parsed_config.first.object());
 
-        return {std::move(config_dir), deserialize_configuration(config_obj, args)};
+        return {std::move(config_dir), deserialize_configuration(config_obj, args, path_to_config)};
     }
 
     namespace details
@@ -244,6 +216,7 @@ namespace vcpkg
             fs::SystemHandle file_lock_handle;
 
             Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
+            fs::path m_manifest_path;
             Configuration m_config;
         };
     }
@@ -305,6 +278,7 @@ namespace vcpkg
             }
 
             m_pimpl->m_manifest_doc = load_manifest(filesystem, manifest_root_dir);
+            m_pimpl->m_manifest_path = manifest_root_dir / fs::u8path("vcpkg.json");
         }
         else
         {
@@ -489,6 +463,17 @@ If you wish to silence this error and use classic mode, you can:
         if (auto p = m_pimpl->m_manifest_doc.get())
         {
             return p->first;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+    Optional<const fs::path&> VcpkgPaths::get_manifest_path() const
+    {
+        if (m_pimpl->m_manifest_doc)
+        {
+            return m_pimpl->m_manifest_path;
         }
         else
         {
