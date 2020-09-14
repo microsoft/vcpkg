@@ -1662,7 +1662,6 @@ teemo:x64-osx=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
 tensorflow-cc:arm64-windows=fail
-tensorflow-cc:x86-windows=fail
 tensorflow-cc:x64-windows=fail
 tensorflow-cc:x64-windows-static=fail
 tesseract:x64-windows=fail
