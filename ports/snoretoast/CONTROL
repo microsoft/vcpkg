@@ -1,0 +1,5 @@
+Source: snoretoast
+Version: 0.7.0
+Homepage: https://invent.kde.org/libraries/snoretoast
+Description: A command line application capable of creating Windows Toast notifications on Windows 8 or later.
+Supports: windows
