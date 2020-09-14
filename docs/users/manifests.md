@@ -2,24 +2,33 @@
 
 vcpkg has two modes of operation - classic mode and manifest mode.
 
-Classic mode is the original mode that vcpkg had, and it acts a lot like brew,
-or apt. Unlike these package management tools, however,
-vcpkg installs the packages into the vcpkg installation directory,
-as opposed to a global install.
+In classic mode, vcpkg produces an "installed" tree,
+whose contents are changed by explicit calls to `vcpkg install` or `vcpkg remove`.
+The installed tree is intended for consumption by any number of projects:
+for example, installing a bunch of libraries and then using those libraries from Visual Studio,
+without additional configuration.
+Because the installed tree is not associated with an individual project,
+it's similar to tools like `brew` or `apt`,
+except that the installed tree is vcpkg-installation-local,
+rather than global to a system or user.
 
-Manifest mode is the new mode that vcpkg can run in;
-it acts more like modern language package managers like cargo or npm.
-In other words, you have a manifest file where you write your project's dependencies,
-and vcpkg installs the dependencies into the project's directory.
-The support for these manifests is still in beta for now,
-but you _can_ use it from the CMake integration, and that should be stable.
-That's the recommended way to use this new mode.
+In manifest mode, an installed tree is associated with a particular project rather than the vcpkg installation.
+The set of installed ports is controlled by editing the project's "manifest file",
+and the installed tree is placed in the project directory or build directory.
+This mode acts more similarly to language package managers like Cargo, or npm. 
+We recommend using this manifest mode whenever possible,
+because it allows one to encode a project's dependencies explicitly in a project file,
+rather than in the documentation, making your project much easier to consume.
 
-Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project,
-or else in this document, we have basic information on [Writing a Manifest](#writing-a-manifest),
+Manifest mode is in beta, but one can use it from the CMake integration,
+which will be stable when used via things like `find_package`.
+This is the recommended way to use manifest mode.
+
+In this document, we have basic information on [Writing a Manifest](#writing-a-manifest),
 the [vcpkg Command Line Interface](#command-line-interface),
-and a little more information on [CMake](#cmake-integration) and
-[MSBuild or VS](#msbuild-vs-integration) integration.
+and a little more information on [CMake](#cmake-integration) integration.
+
+Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project using CMake and manifest mode.
 
 ## Writing a Manifest
 
@@ -116,7 +125,7 @@ and on Linux on x64, would be written `(windows & arm64) | (linux & x64)`.
 
 The common identifiers are:
 
-- The operating system: `windows`, `uwp`, `linux`, `osx` (includes macOS 11), `android`, `emscripten`
+- The operating system: `windows`, `uwp`, `linux`, `osx` (includes macOS), `android`, `emscripten`
 - The architecture: `x86`, `x64`, `wasm32`, `arm64`, `arm` (includes both arm32 and arm64 due to backwards compatibility)
 
 although one can define their own.

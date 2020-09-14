@@ -157,12 +157,12 @@ The URL of the homepage for the library where a user is able to find additional 
 
 An array of ports the library has a dependency on.
 
-Vcpkg does not distinguish between build-only dependencies and runtime dependencies.
+vcpkg does not distinguish between build-only dependencies and runtime dependencies.
 The complete list of dependencies needed to successfully use the library should be specified.
 
-*For example: websocketpp is a header only library, and thus does not require any dependencies at install time.*
-*However, downstream users need boost and openssl to make use of the library.*
-*Therefore, websocketpp lists boost and openssl as dependencies*
+For example: websocketpp is a header only library, and thus does not require any dependencies at install time.
+However, downstream users need boost and openssl to make use of the library.
+Therefore, websocketpp lists boost and openssl as dependencies.
 
 Each dependency may be either an identifier, or an object.
 For many dependencies, just listing the name of the library should be fine;

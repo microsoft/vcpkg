@@ -2,7 +2,8 @@
 ### Create the manifest file
 The manifest file (called `vcpkg.json`) is a json file describing the package's metadata.
 
-*For libogg, we'll create the file `ports/libogg/vcpkg.json` with the following contents:*
+For libogg, we'll create the file `ports/libogg/vcpkg.json` with the following content:
+
 ```json
 {
   "name": "libogg",
