@@ -1,6 +1,4 @@
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-	message(FATAL_ERROR "TensorFlow does not support 32bit systems.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "x86")
 
 set(TF_VERSION 2.3.0)
 
