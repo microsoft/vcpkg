@@ -180,20 +180,26 @@ foreach(BUILD_TYPE dbg rel)
 		else()
 			set(BUILD_OPTS "--compilation_mode=dbg")
 		endif()
+
+		set(COPT "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
+		set(CXXOPT "${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
 	else()
 		set(BUILD_OPTS "--compilation_mode=opt")
+
+		set(COPT "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
+		set(CXXOPT "${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
 	endif()
 
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} --copt='${COPT}' --cxxopt='${CXXOPT}' --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --copt='${COPT}' --cxxopt='${CXXOPT}' --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -202,19 +208,19 @@ foreach(BUILD_TYPE dbg rel)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			if(VCPKG_CRT_LINKAGE STREQUAL static)
 				if(BUILD_TYPE STREQUAL dbg)
-					set(CRT_OPT "-MTd")
+					set(COPT "-MTd ${COPT}")
 				else()
-					set(CRT_OPT "-MT")
+					set(COPT "-MT ${COPT}")
 				endif()
 			endif()
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link --copt=${CRT_OPT} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link --copt='${COPT}' --cxxopt='${CXXOPT}' --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --copt='${COPT}' --cxxopt='${CXXOPT}' --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
