@@ -16,7 +16,7 @@ Finally, if the server's name for the archive is not very descriptive (such as d
 All this information can then be passed into the `create` command, which will download the sources and bootstrap the packaging process inside `ports/<packagename>`.
 
 ```no-highlight
-PS D:\src\vcpkg> ./vcpkg create zlib2 http://zlib.net/zlib-1.2.11.tar.gz zlib1211.tar.gz
+PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.11.tar.gz zlib1211.tar.gz
 -- Generated portfile: D:/src/vcpkg/ports/zlib2/portfile.cmake
 ```
 
@@ -36,7 +36,7 @@ In addition to the generated `ports/<package>/portfile.cmake`, we also need a `p
 The generated `portfile.cmake` will need some editing to correctly package most libraries in the wild, however we can start by trying out the build.
 
 ```no-highlight
-PS D:\src\vcpkg> ./vcpkg install zlib2
+PS D:\src\vcpkg> .\vcpkg install zlib2
 Computing installation plan...
 The following packages will be built and installed:
     zlib2[core]:x64-uwp

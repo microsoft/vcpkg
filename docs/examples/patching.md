@@ -157,18 +157,21 @@ vcpkg_configure_cmake(
 
 ### Verification
 
-To be completely sure this works from scratch, we can reinstall from scratch using `x-set-installed`:
+To be completely sure this works from scratch, we need to remove the package and rebuild it:
 
 ```no-highlight
-PS D:\src\vcpkg> ./vcpkg x-set-installed libpng:x64-uwp
-Detecting compiler hash for triplet x64-uwp...
-The following packages will be rebuilt:
+PS D:\src\vcpkg> vcpkg remove libpng:x64-uwp
+Package libpng:x64-uwp was successfully removed
+```
+
+Now we try a fresh, from scratch install.
+
+```no-highlight
+PS D:\src\vcpkg> vcpkg install libpng:x64-uwp
+Computing installation plan...
+The following packages will be built and installed:
     libpng[core]:x64-uwp
-Starting package 1/2: libpng:x64-uwp
-Removing package libpng:x64-uwp...
-Removing package libpng:x64-uwp... done
-Elapsed time for package libpng:x64-uwp: 13.11 ms
-Starting package 2/2: libpng:x64-uwp
+Starting package 1/1: libpng:x64-uwp
 Building package libpng[core]:x64-uwp...
 Could not locate cached archive: C:\Users\me\AppData\Local\vcpkg/archives\f4\f44b54f818f78b9a4ccd34b3666f566f94286850.zip
 -- Using cached D:/src/vcpkg/downloads/glennrp-libpng-v1.6.37.tar.gz

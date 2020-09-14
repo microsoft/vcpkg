@@ -105,15 +105,11 @@ These can be installed on Ubuntu systems via sudo apt install autoconf libtool"
 
 </details>
 
-<details id=c000013>
-<summary><a href="#c000013">c000013</a>: Manifest files are used instead of the deprecated CONTROL files</summary>
+<details id="c000013">
+<summary><a href="#c000013">c000013</a>: Manifest files are used instead of CONTROL files</summary>
 
-Many existing ports use the deprecated CONTROL file syntax; while this syntax will be supported for some time to come, whenever changes are made to existing ports, we require that those ports use the new manifest files, also known as `vcpkg.json`. However, existing ports that are not changed _should not_ be moved over to the new manifest file format.
+Many existing ports use the CONTROL file syntax; while this syntax will be supported for some time to come,
+new ports should not use these. Any newly added port _must_ use the manifest files.
 
-It is very easy to convert the existing CONTROL files to manifest files via the `format-manifest` command.
-
-```cmd
-> vcpkg format-manifest ./ports/libfoo/CONTROL
-```
-
-This command will delete `ports/libfoo/CONTROL`, and in its place create `ports/libfoo/vcpkg.json`.
+We also recommend, when significant modifications are made to ports, that one switches to manifest files;
+however, this is not required. You may find `vcpkg format-manifest` useful.
