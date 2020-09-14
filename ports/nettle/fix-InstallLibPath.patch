@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index 3547cae..58716c6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -384,7 +384,7 @@ if test "x$ABI" != xstandard ; then
+ 	libdir='${exec_prefix}/lib32'
+ 	;;
+       *:irix*:64)
+-	libdir='${exec_prefix}/lib64'
++	libdir='${exec_prefix}/lib'
+ 	;;
+       *)
+         AC_MSG_WARN([Don't know where to install $ABI-bit libraries on this system.]); dnl '
