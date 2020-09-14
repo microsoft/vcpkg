@@ -14,6 +14,8 @@ vcpkg_configure_cmake(
         -DBUILD_MAN_DOCS=OFF
         -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_PLUGINDIR=plugins
+        -DKDE_INSTALL_DATAROOTDIR=data
 )
 
 vcpkg_install_cmake()
