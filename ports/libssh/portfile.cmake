@@ -14,9 +14,9 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-                     FEATURES
-                         mbedtls WITH_MBEDTLS
-                         zlib WITH_ZLIB
+    FEATURES
+    mbedtls WITH_MBEDTLS
+    zlib    WITH_ZLIB
 )
 
 vcpkg_configure_cmake(
@@ -36,16 +36,19 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-    file(READ ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h _contents)
-    string(REPLACE "#ifdef LIBSSH_STATIC" "#if 1" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h "${_contents}")
+    vcpkg_replace_string(
+	    ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h 
+	    "#ifdef LIBSSH_STATIC"
+		"#if 1"
+	)	
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/libssh-config.cmake _contents)
-    string(REPLACE ".dll" ".lib" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/libssh-config.cmake "${_contents}")
+    vcpkg_replace_string(
+	    ${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake
+	    ".dll"
+	    ".lib"
+	)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
