@@ -28,6 +28,10 @@ Specifies the Makefile as a relative path from the root of the sources passed to
 The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
 be passed.
 
+### INSTALL_TARGET
+The target passed to the make build command (`./make <target>`) if `ENABLE_INSTALL` is used. If not specified,
+the 'install' target will be passed.
+
 ### DISABLE_PARALLEL
 The underlying buildsystem will be instructed to not parallelize
 
