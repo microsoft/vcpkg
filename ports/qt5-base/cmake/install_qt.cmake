@@ -1,38 +1,13 @@
 include(qt_fix_makefile_install)
 
 function(install_qt)
-    cmake_parse_arguments(_bc "DISABLE_PARALLEL" "" "" ${ARGN})
-
-    if (_bc_DISABLE_PARALLEL)
-        set(NUMBER_OF_PROCESSORS "1")
-    else()
-        if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-            set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-        elseif(VCPKG_TARGET_IS_OSX)
-            execute_process(
-                COMMAND sysctl -n hw.ncpu
-                OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-            )
-            string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-            string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-        else()
-            execute_process(
-                COMMAND nproc
-                OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-            )
-            string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-            string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-        endif()
-    endif()
-
-    message(STATUS "NUMBER_OF_PROCESSORS is ${NUMBER_OF_PROCESSORS}")
-
     if(CMAKE_HOST_WIN32)
         vcpkg_find_acquire_program(JOM)
-        set(INVOKE "${JOM}" /J ${NUMBER_OF_PROCESSORS})
+        set(INVOKE "${JOM}" /J ${VCPKG_CONCURRENCY})
+        set(INVOKE_SINGLE "${JOM}" /J 1)
     else()
         find_program(MAKE make)
-        set(INVOKE "${MAKE}" -j${NUMBER_OF_PROCESSORS})
+        set(INVOKE "${MAKE}" -j${VCPKG_CONCURRENCY})
         set(INVOKE_SINGLE "${MAKE}" -j1)
     endif()
     vcpkg_find_acquire_program(PYTHON3)
@@ -71,10 +46,10 @@ function(install_qt)
         set(_build_type_${_buildname} "release")
     endif()
     unset(_buildname)
-    
+
     foreach(_buildname ${BUILDTYPES})
         set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
-        
+
         vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin")
 
         if(VCPKG_TARGET_IS_OSX)
@@ -86,14 +61,15 @@ function(install_qt)
                 LOGNAME cleaning-1-${_build_triplet}
             )
         endif()
-        
+
         message(STATUS "Building ${_build_triplet}")
-        vcpkg_execute_required_process(
+        vcpkg_execute_build_process(
             COMMAND ${INVOKE}
+            NO_PARALLEL_COMMAND ${INVOKE_SINGLE}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
             LOGNAME build-${_build_triplet}
         )
-        
+
         if(VCPKG_TARGET_IS_OSX)
            # For some reason there will be an error on MacOSX without this clean!
             message(STATUS "Cleaning after build before install ${_build_triplet}")
@@ -103,7 +79,7 @@ function(install_qt)
                 LOGNAME cleaning-2-${_build_triplet}
             )
         endif()
-        
+
         message(STATUS "Fixing makefile installation path ${_build_triplet}")
         qt_fix_makefile_install("${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         message(STATUS "Installing ${_build_triplet}")
@@ -115,7 +91,4 @@ function(install_qt)
         message(STATUS "Package ${_build_triplet} done")
         set(ENV{PATH} "${_path}")
     endforeach()
-    
-
-    
 endfunction()

@@ -1,0 +1,23 @@
+From 21f6c4b5a972683f7228e5ad446bc940947c2d2b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=D9=85=D9=87=D8=AF=D9=8A=20=D8=B4=D9=8A=D9=86=D9=88=D9=86?=
+ =?UTF-8?q?=20=28Mehdi=20Chinoune=29?= <chinoune.mehdi@gmail.com>
+Date: Mon, 2 Mar 2020 17:22:28 +0100
+Subject: [PATCH] fixes #2480
+
+---
+ cmake/cc.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/cc.cmake b/cmake/cc.cmake
+index 22217575c..d5551147c 100644
+--- a/cmake/cc.cmake
++++ b/cmake/cc.cmake
+@@ -99,7 +99,7 @@ endif ()
+ if (${CORE} STREQUAL "SKYLAKEX")
+   if (NOT DYNAMIC_ARCH)
+     if (NOT NO_AVX512)
+-      set (CCOMMON_OPT = "${CCOMMON_OPT} -march=skylake-avx512")
++      set (CCOMMON_OPT "${CCOMMON_OPT} -march=skylake-avx512")
+     endif ()
+   endif ()
+ endif ()

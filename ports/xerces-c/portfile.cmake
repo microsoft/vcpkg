@@ -1,20 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xerces-c
-    REF v3.2.2
-    SHA512 e4b2d3499fb4d1d1bcaf991ee858f352112683084b9cc7855c0e52e7fc8cc982a8e3cd548fa30718af6a6dee40e460d82ffcd3480a50f7e7516b462b2c2080c6
+    REF v3.2.3
+    SHA512 aaafe2de4ea156d94e71e3631c79bd66660badf17bf2a19587a0ca34011f70bd1584a0beef909409a3ff05eecea9d37ffee6dbb267625f59217fd86705d2cd28
     HEAD_REF master
     PATCHES
         disable-tests.patch
         remove-dll-export-macro.patch
-        no-symlinks-in-static-build.patch
 )
 
 set(DISABLE_ICU ON)
 if("icu" IN_LIST FEATURES)
     set(DISABLE_ICU OFF)
 endif()
-if ("xmlch_wchar" IN_LIST FEATURES)
+if ("xmlch-wchar" IN_LIST FEATURES)
     set(XMLCHTYPE -Dxmlch-type=wchar_t)
 endif()
 

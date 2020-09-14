@@ -1,0 +1,4 @@
+Source: bitserializer-pugixml
+Version: alias
+Build-Depends: bitserializer[pugixml-archive]
+Description: Deprecated alias for bitserializer-pugixml

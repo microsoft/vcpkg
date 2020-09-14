@@ -1,5 +1,5 @@
 Source: xerces-c
-Version: 3.2.2-13
+Version: 3.2.3-1
 Homepage: https://github.com/apache/xerces-c
 Description: Xerces-C++ is a XML parser, for parsing, generating, manipulating, and validating XML documents using the DOM, SAX, and SAX2 APIs.
 
@@ -7,6 +7,6 @@ Feature: icu
 Description: ICU support
 Build-Depends: icu
 
-Feature: xmlch_wchar
+Feature: xmlch-wchar
 Description: XMLCh type uses wchar_t
 

@@ -1,0 +1,12 @@
+The package discord-game-sdk does not provides CMake integration:
+
+    find_library(GAME_SDK discord_game_sdk)
+    target_link_libraries(<my_target> PRIVATE ${GAME_SDK})
+
+    find_path(GAME_SDK_INCLUDE discord-game-sdk/discord.h)
+    target_include_directories(<my_target> PRIVATE ${GAME_SDK_INCLUDE})
+
+The C++ SDK source code is compiled in a static library:
+
+    find_library(CPP_GAME_SDK discord_game_sdk_cpp)
+    target_link_libraries(<my_target> PRIVATE ${CPP_GAME_SDK})

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vcpkg/base/chrono.h>
+
+#include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -70,7 +72,13 @@ namespace vcpkg::Install
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths);
 
-    void install_files_and_write_listfile(Files::Filesystem& fs, const fs::path& source_dir, const InstallDir& dirs);
+    void install_package_and_write_listfile(const VcpkgPaths& paths, const PackageSpec& spec, const InstallDir& dirs);
+
+    void install_files_and_write_listfile(Files::Filesystem& fs,
+                                          const fs::path& source_dir,
+                                          const std::vector<fs::path>& files,
+                                          const InstallDir& destination_dir);
+
     InstallResult install_package(const VcpkgPaths& paths,
                                   const BinaryControlFile& binary_paragraph,
                                   StatusParagraphs* status_db);
@@ -79,9 +87,28 @@ namespace vcpkg::Install
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,
+                           IBinaryProvider& binaryprovider,
+                           const Build::IBuildLogsRecorder& build_logs_recorder,
                            const CMakeVars::CMakeVarProvider& var_provider);
+
+    struct CMakeUsageInfo
+    {
+        std::string message;
+        bool usage_file = false;
+        Optional<bool> header_only;
+        std::map<std::string, std::vector<std::string>> cmake_targets_map;
+    };
+
+    CMakeUsageInfo get_cmake_usage(const BinaryParagraph& bpgh, const VcpkgPaths& paths);
 
     extern const CommandStructure COMMAND_STRUCTURE;
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
+
+    struct InstallCommand : Commands::TripletCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const override;
+    };
 }

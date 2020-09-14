@@ -1,0 +1,13 @@
+diff --git a/libcpuid/CMakeLists.txt b/libcpuid/CMakeLists.txt
+index 96533ac..d71953f 100644
+--- a/libcpuid/CMakeLists.txt
++++ b/libcpuid/CMakeLists.txt
+@@ -75,7 +75,7 @@ install(TARGETS cpuid
+         LIBRARY DESTINATION "lib"
+         ARCHIVE DESTINATION "lib"
+         RUNTIME DESTINATION "bin"
+-        INCLUDES DESTINATION "include")
++        PUBLIC_HEADER DESTINATION "include")
+ 
+ install(FILES "${project_config}" "${version_config}"
+         DESTINATION "${config_install_dir}"

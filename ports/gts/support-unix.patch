@@ -1,0 +1,190 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c35100c..f458c35 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
+ add_executable(predicates_init src/predicates_init.c)
+ 
+ execute_process(
+-  COMMAND predicates_init.exe
++  COMMAND predicates_init
+   OUTPUT_FILE predicates_init.h
+   OUTPUT_VARIABLE OUTVAR)
+ 
+@@ -12,6 +12,31 @@ MESSAGE("${OUTVAR}")
+ set(kit gts)
+ project(${kit})
+ 
++if (NOT WIN32)
++  set(CPP_HAS_WARNING 1)
++  set(HAVE_DLFCN_H 1)
++  set(HAVE_FLOATINGPOINT_H 1)
++  set(HAVE_FPU_CONTROL_H 1)
++  set(HAVE_GETOPT_H 1)
++  set(HAVE_GETOPT_LONG 1)
++  set(HAVE_INTTYPES_H 1)
++  set(HAVE_MEMORY_H 1)
++  set(HAVE_STDINT_H 1)
++  set(HAVE_STDLIB_H 1)
++  set(HAVE_STRINGS_H 1)
++  set(HAVE_STRING_H 1)
++  set(HAVE_SYS_STAT_H 1)
++  set(HAVE_SYS_TYPES_H 1)
++  set(HAVE_UNISTD_H 1)
++  set(PACKAGE_BUGREPORT 0)
++  set(PACKAGE_NAME "gts")
++  set(PACKAGE_STRING "0.7.6")
++  set(PACKAGE_TARNAME "gts")
++  set(PACKAGE_URL "")
++  set(PACKAGE_VERSION "0.7.6")
++  set(STDC_HEADERS)
++endif()
++
+ set(srcs
+   src/bbtree.c
+   src/boolean.c
+@@ -49,7 +74,11 @@ set(srcs
+   src/vopt.c
+   )
+ 
++if (WIN32)
+ configure_file(src/config.h.win32 config.h)
++else()
++configure_file(config.h.in config.h @ONLY)
++endif()
+ 
+ SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+ include_directories(
+@@ -74,7 +103,9 @@ find_path(glib_CONFIG_H NAMES glibconfig.h
+ get_filename_component(glibconfig_INCLUDE_DIR ${glib_CONFIG_H} DIRECTORY)
+ include_directories(${glib_INCLUDE_DIR} ${glib_CONFIG_H})
+ 
++if (NOT WIN32 AND BUILD_SHARED_LIBS)
+ add_definitions(/DGTS_COMPILATION)
++endif()
+ 
+ add_library(${kit} SHARED ${srcs})
+ target_link_libraries(${kit} ${glib_LIBRARY})
+diff --git a/config.h.in b/config.h.in
+index ad95945..fe6c945 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -1,89 +1,89 @@
+ /* config.h.in.  Generated from configure.ac by autoheader.  */
+ 
+ /* Define if C preprocessor supports warning directive. */
+-#undef CPP_HAS_WARNING
++#cmakedefine CPP_HAS_WARNING @CPP_HAS_WARNING@
+ 
+ /* Binary age */
+-#undef GTS_BINARY_AGE
++#define GTS_BINARY_AGE 0
+ 
+ /* Interface age */
+-#undef GTS_INTERFACE_AGE
++#define GTS_INTERFACE_AGE 0
+ 
+ /* Major version */
+-#undef GTS_MAJOR_VERSION
++#define GTS_MAJOR_VERSION 0
+ 
+ /* Micro version */
+-#undef GTS_MICRO_VERSION
++#define GTS_MICRO_VERSION 0
+ 
+ /* Minor version */
+-#undef GTS_MINOR_VERSION
++#define GTS_MINOR_VERSION 6
+ 
+ /* Define to 1 if you have the <dlfcn.h> header file. */
+-#undef HAVE_DLFCN_H
++#cmakedefine HAVE_DLFCN_H @HAVE_DLFCN_H@
+ 
+ /* Define to 1 if you have the <floatingpoint.h> header file. */
+-#undef HAVE_FLOATINGPOINT_H
++#cmakedefine HAVE_FLOATINGPOINT_H @HAVE_FLOATINGPOINT_H@
+ 
+ /* Define to 1 if you have the <fpu_control.h> header file. */
+-#undef HAVE_FPU_CONTROL_H
++#cmakedefine HAVE_FPU_CONTROL_H @HAVE_FPU_CONTROL_H@
+ 
+ /* Define to 1 if you have the <getopt.h> header file. */
+-#undef HAVE_GETOPT_H
++#cmakedefine HAVE_GETOPT_H @HAVE_GETOPT_H@
+ 
+ /* Define to 1 if you have the `getopt_long' function. */
+-#undef HAVE_GETOPT_LONG
++#cmakedefine HAVE_GETOPT_LONG @HAVE_GETOPT_LONG@
+ 
+ /* Define to 1 if you have the <inttypes.h> header file. */
+-#undef HAVE_INTTYPES_H
++#cmakedefine HAVE_INTTYPES_H @HAVE_INTTYPES_H@
+ 
+ /* Define to 1 if you have the <memory.h> header file. */
+-#undef HAVE_MEMORY_H
++#cmakedefine HAVE_MEMORY_H @HAVE_MEMORY_H@
+ 
+ /* Define to 1 if you have the <stdint.h> header file. */
+-#undef HAVE_STDINT_H
++#cmakedefine HAVE_STDINT_H @HAVE_STDINT_H@
+ 
+ /* Define to 1 if you have the <stdlib.h> header file. */
+-#undef HAVE_STDLIB_H
++#cmakedefine HAVE_STDLIB_H @HAVE_STDLIB_H@
+ 
+ /* Define to 1 if you have the <strings.h> header file. */
+-#undef HAVE_STRINGS_H
++#cmakedefine HAVE_STRINGS_H @HAVE_STRINGS_H@
+ 
+ /* Define to 1 if you have the <string.h> header file. */
+-#undef HAVE_STRING_H
++#cmakedefine HAVE_STRING_H @HAVE_STRING_H@
+ 
+ /* Define to 1 if you have the <sys/stat.h> header file. */
+-#undef HAVE_SYS_STAT_H
++#cmakedefine HAVE_SYS_STAT_H @HAVE_SYS_STAT_H@
+ 
+ /* Define to 1 if you have the <sys/types.h> header file. */
+-#undef HAVE_SYS_TYPES_H
++#cmakedefine HAVE_SYS_TYPES_H @HAVE_SYS_TYPES_H@
+ 
+ /* Define to 1 if you have the <unistd.h> header file. */
+-#undef HAVE_UNISTD_H
++#cmakedefine HAVE_UNISTD_H @HAVE_UNISTD_H@
+ 
+ /* Define to the sub-directory in which libtool stores uninstalled libraries.
+    */
+-#undef LT_OBJDIR
++#cmakedefine LT_OBJDIR @LT_OBJDIR@
+ 
+ /* Define if netpbm include files are in netpbm/. */
+-#undef NETPBM_INCLUDE
++#cmakedefine NETPBM_INCLUDE @NETPBM_INCLUDE@
+ 
+ /* Define to the address where bug reports for this package should be sent. */
+-#undef PACKAGE_BUGREPORT
++#cmakedefine PACKAGE_BUGREPORT @PACKAGE_BUGREPORT@
+ 
+ /* Define to the full name of this package. */
+-#undef PACKAGE_NAME
++#cmakedefine PACKAGE_NAME @PACKAGE_NAME@
+ 
+ /* Define to the full name and version of this package. */
+-#undef PACKAGE_STRING
++#cmakedefine PACKAGE_STRING @PACKAGE_STRING@
+ 
+ /* Define to the one symbol short name of this package. */
+-#undef PACKAGE_TARNAME
++#cmakedefine PACKAGE_TARNAME @PACKAGE_TARNAME@
+ 
+ /* Define to the home page for this package. */
+-#undef PACKAGE_URL
++#cmakedefine PACKAGE_URL @PACKAGE_URL@
+ 
+ /* Define to the version of this package. */
+-#undef PACKAGE_VERSION
++#cmakedefine PACKAGE_VERSION @PACKAGE_VERSION@
+ 
+ /* Define to 1 if you have the ANSI C header files. */
+-#undef STDC_HEADERS
++#cmakedefine STDC_HEADERS @STDC_HEADERS@

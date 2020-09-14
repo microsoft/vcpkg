@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/base/optional.h>
+
 #include <algorithm>
 #include <functional>
 #include <map>
@@ -21,6 +23,11 @@ namespace vcpkg::Util
         void append(std::vector<T>* augend, const Container& addend)
         {
             augend->insert(augend->end(), addend.begin(), addend.end());
+        }
+        template<class Vec, class Key>
+        bool contains(const Vec& container, const Key& item)
+        {
+            return std::find(container.begin(), container.end(), item) != container.end();
         }
     }
 
@@ -44,8 +51,24 @@ namespace vcpkg::Util
         }
     }
 
+    template<class Range, class Pred, class E = ElementT<Range>>
+    std::vector<E> filter(const Range& xs, Pred&& f)
+    {
+        std::vector<E> ret;
+
+        for (auto&& x : xs)
+        {
+            if (f(x)) ret.push_back(x);
+        }
+
+        return ret;
+    }
+
     template<class Range, class Func>
-    using FmapOut = std::remove_reference_t<decltype(std::declval<Func&>()(*std::declval<Range>().begin()))>;
+    using FmapRefOut = decltype(std::declval<Func&>()(*std::declval<Range>().begin()));
+
+    template<class Range, class Func>
+    using FmapOut = std::decay_t<FmapRefOut<Range, Func>>;
 
     template<class Range, class Func, class Out = FmapOut<Range, Func>>
     std::vector<Out> fmap(Range&& xs, Func&& f)
@@ -57,6 +80,28 @@ namespace vcpkg::Util
             ret.push_back(f(x));
 
         return ret;
+    }
+
+    template<class Range, class Proj, class Out = FmapRefOut<Range, Proj>>
+    Optional<Out> common_projection(Range&& input, Proj&& proj)
+    {
+        const auto last = input.end();
+        auto first = input.begin();
+        if (first == last)
+        {
+            return nullopt;
+        }
+
+        Out prototype = proj(*first);
+        while (++first != last)
+        {
+            if (prototype != proj(*first))
+            {
+                return nullopt;
+            }
+        }
+
+        return prototype;
     }
 
     template<class Cont, class Func>
@@ -200,7 +245,7 @@ namespace vcpkg::Util
 
         T* get() { return &m_ptr; }
 
-        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) {}
+        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) { }
 
     private:
         std::unique_lock<std::mutex> m_lock;
@@ -220,16 +265,5 @@ namespace vcpkg::Util
         {
             return e == E::YES;
         }
-    }
-
-    template<class... Ts>
-    void unused(const Ts&...)
-    {
-    }
-
-    template<class T>
-    T copy(const T& t)
-    {
-        return t;
     }
 }

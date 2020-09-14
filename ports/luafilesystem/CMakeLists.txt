@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(luafilesystem)
 
-if(NOT WIN32)
-    message(FATAL_ERROR "Written for windows only")
-endif()
-
 find_path(LUA_INCLUDE_DIR lua.h PATH_SUFFIXES lua)
 find_library(LUA_LIBRARY lua)
 set(LFS_INCLUDES ${LUA_INCLUDE_DIR})

@@ -1,15 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF 9f99fa9a509555f85bffc15ce27531aaa6db6f7e#v2.30.0
-    SHA512 72d9e0b48a6cd0b056b6d039487431d0097e5151930a2dbb072d09a13fccee1f166ca339fe7f0ab4aae1edc5669de5e8336f0b6d87d1c4ea01ec0c5d4032c728
+    REF 0adceb9dc6fce63c348346e1aef1b63c052a1db9 #v2.38.1
+    SHA512 bbbbf1afd4227d7cd46cb47c5cd71bc430c439ee1d8a54b3d1732017e2d34d9d696ced12c4d2449ce153b3deed422f6b3d2f561b44ca373ec9c69d5d3a766090
     HEAD_REF master
     PATCHES
         fix_openni2.patch
         fix-dependency-glfw3.patch
 )
 
+file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tm2   BUILD_WITH_TM2
+)
 
 set(BUILD_TOOLS OFF)
 if("tools" IN_LIST FEATURES)
@@ -24,9 +29,8 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DENFORCE_METADATA=ON
-        -DBUILD_WITH_TM2=OFF
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_WITH_STATIC_CRT=${BUILD_CRT_LINKAGE}
@@ -45,7 +49,6 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/realsense2)
 
 vcpkg_copy_pdbs()
-
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -74,10 +77,11 @@ if(BUILD_TOOLS)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/realsense2-gl.pdb)
 endif()
 
-
 if(BUILD_OPENNI2_BINDINGS)
-  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_out/rs2driver* 
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers)
+    file(GLOB RS2DRIVER ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_out/rs2driver*)
+    if(RS2DRIVER)
+        file(COPY ${RS2DRIVER} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers)
+    endif()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

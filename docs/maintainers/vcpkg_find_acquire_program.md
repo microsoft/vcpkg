@@ -16,6 +16,7 @@ The current list of programs includes:
 - 7Z
 - ARIA2 (Downloader)
 - BISON
+- CLANG
 - DARK
 - DOXYGEN
 - FLEX
@@ -25,6 +26,7 @@ The current list of programs includes:
 - PYTHON2
 - PYTHON3
 - GIT
+- GN
 - GO
 - JOM
 - MESON

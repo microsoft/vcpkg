@@ -1,7 +1,7 @@
 find_path(ZSTD_INCLUDE_DIR zstd.h)
 
-find_library(ZSTD_LIBRARY_DEBUG NAMES zstd)
-find_library(ZSTD_LIBRARY_RELEASE NAMES zstd)
+find_library(ZSTD_LIBRARY_DEBUG NAMES zstdd zstd_staticd)
+find_library(ZSTD_LIBRARY_RELEASE NAMES zstd zstd_static)
 
 include(SelectLibraryConfigurations)
 select_library_configurations(ZSTD)
