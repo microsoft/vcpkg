@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/build.h>
@@ -17,6 +15,7 @@
 #include <vcpkg/commands.format-manifest.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/commands.hash.h>
+#include <vcpkg/commands.info.h>
 #include <vcpkg/commands.integrate.h>
 #include <vcpkg/commands.list.h>
 #include <vcpkg/commands.owns.h>
@@ -25,6 +24,7 @@
 #include <vcpkg/commands.search.h>
 #include <vcpkg/commands.setinstalled.h>
 #include <vcpkg/commands.upgrade.h>
+#include <vcpkg/commands.upload-metrics.h>
 #include <vcpkg/commands.version.h>
 #include <vcpkg/commands.xvsinstances.h>
 #include <vcpkg/export.h>
@@ -39,9 +39,16 @@ namespace vcpkg::Commands
     {
         static const Version::VersionCommand version{};
         static const Contact::ContactCommand contact{};
+#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+        static const UploadMetrics::UploadMetricsCommand upload_metrics{};
+#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+
         static std::vector<PackageNameAndFunction<const BasicCommand*>> t = {
             {"version", &version},
             {"contact", &contact},
+#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+            {"x-upload-metrics", &upload_metrics},
+#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
         };
         return t;
     }
@@ -51,6 +58,7 @@ namespace vcpkg::Commands
         static const Help::HelpCommand help{};
         static const Search::SearchCommand search{};
         static const List::ListCommand list{};
+        static const Info::InfoCommand info{};
         static const Integrate::IntegrateCommand integrate{};
         static const Owns::OwnsCommand owns{};
         static const Update::UpdateCommand update{};
@@ -82,6 +90,7 @@ namespace vcpkg::Commands
             {"hash", &hash},
             {"fetch", &fetch},
             {"x-ci-clean", &ciclean},
+            {"x-package-info", &info},
             {"x-history", &porthistory},
             {"x-vsinstances", &vsinstances},
             {"x-format-manifest", &format_manifest},

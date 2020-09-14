@@ -63,8 +63,10 @@ function(vcpkg_execute_build_process)
            OR out_contents MATCHES "LINK : fatal error LNK1104:"
            OR out_contents MATCHES "LINK : fatal error LNK1201:"
             # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
-           OR out_contents MATCHES "Cannot create parent directory"
+           OR err_contents MATCHES "Cannot create parent directory" OR err_contents MATCHES "Cannot write file"
             # Multiple threads using the same directory at the same time cause conflicts, will try again.
+           OR err_contents MATCHES "Can't open"
+            # Multiple threads caused the wrong order of creating folders and creating files in folders
            )
             message(STATUS "Restarting Build without parallelism because memory exceeded")
             set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out-1.log")

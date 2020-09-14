@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/base/fwd/json.h>
+
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/parse.h>
@@ -64,10 +66,7 @@ namespace vcpkg::Json
         int indent = 2;
     };
 
-    struct Array;
-    struct Object;
-
-    enum class ValueKind
+    enum class ValueKind : int
     {
         Null,
         Boolean,
@@ -81,7 +80,6 @@ namespace vcpkg::Json
     namespace impl
     {
         struct ValueImpl;
-        struct SyntaxErrorImpl;
     }
 
     struct Value
@@ -122,7 +120,7 @@ namespace vcpkg::Json
         static Value boolean(bool) noexcept;
         static Value integer(int64_t i) noexcept;
         static Value number(double d) noexcept;
-        static Value string(StringView) noexcept;
+        static Value string(std::string s) noexcept;
         static Value array(Array&&) noexcept;
         static Value array(const Array&) noexcept;
         static Value object(Object&&) noexcept;
@@ -227,13 +225,13 @@ namespace vcpkg::Json
         Value& operator[](StringView key) noexcept
         {
             auto res = this->get(key);
-            vcpkg::Checks::check_exit(VCPKG_LINE_INFO, res);
+            vcpkg::Checks::check_exit(VCPKG_LINE_INFO, res, "missing key: \"%s\"", key);
             return *res;
         }
         const Value& operator[](StringView key) const noexcept
         {
             auto res = this->get(key);
-            vcpkg::Checks::check_exit(VCPKG_LINE_INFO, res);
+            vcpkg::Checks::check_exit(VCPKG_LINE_INFO, res, "missing key: \"%s\"", key);
             return *res;
         }
 
@@ -289,49 +287,113 @@ namespace vcpkg::Json
         underlying_t underlying_;
     };
 
-    struct ReaderError
-    {
-        virtual void add_missing_field(std::string&& type, std::string&& key) = 0;
-        virtual void add_expected_type(std::string&& key, std::string&& expected_type) = 0;
-        virtual void add_extra_fields(std::string&& type, std::vector<std::string>&& fields) = 0;
-        virtual void add_mutually_exclusive_fields(std::string&& type, std::vector<std::string>&& fields) = 0;
+    VCPKG_MSVC_WARNING(push)
+    VCPKG_MSVC_WARNING(disable : 4505)
 
-        virtual ~ReaderError() = default;
-    };
+    template<class Type>
+    Span<const StringView> IDeserializer<Type>::valid_fields() const
+    {
+        return {};
+    }
+
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_null(Reader&)
+    {
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_boolean(Reader&, bool)
+    {
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_integer(Reader& r, int64_t i)
+    {
+        return this->visit_number(r, static_cast<double>(i));
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_number(Reader&, double)
+    {
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_string(Reader&, StringView)
+    {
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_array(Reader&, const Array&)
+    {
+        return nullopt;
+    }
+    template<class Type>
+    Optional<Type> IDeserializer<Type>::visit_object(Reader&, const Object&)
+    {
+        return nullopt;
+    }
+
+    VCPKG_MSVC_WARNING(pop)
 
     struct Reader
     {
-        explicit Reader(ReaderError* err) : err(err) { }
+        const std::vector<std::string>& errors() const { return m_errors; }
+        std::vector<std::string>& errors() { return m_errors; }
 
-        ReaderError& error() const { return *err; }
+        void add_missing_field_error(StringView type, StringView key, StringView key_type)
+        {
+            m_errors.push_back(
+                Strings::concat(path(), " (", type, "): ", "missing required field '", key, "' (", key_type, ")"));
+        }
+        void add_expected_type_error(StringView expected_type)
+        {
+            m_errors.push_back(Strings::concat(path(), ": mismatched type: expected ", expected_type));
+        }
+        void add_extra_fields_error(StringView type, std::vector<std::string>&& fields)
+        {
+            for (auto&& field : fields)
+                m_errors.push_back(Strings::concat(path(), " (", type, "): ", "unexpected field '", field, '\''));
+        }
+
+        std::string path() const noexcept;
 
     private:
-        ReaderError* err;
+        std::vector<std::string> m_errors;
+        struct Path
+        {
+            constexpr Path() = default;
+            constexpr Path(int64_t i) : index(i) { }
+            constexpr Path(StringView f) : field(f) { }
 
-        template<class Visitor>
-        using VisitorType = typename std::remove_reference_t<Visitor>::type;
+            int64_t index = -1;
+            StringView field;
+        };
+        std::vector<Path> m_path;
 
-        template<class Visitor>
-        Optional<VisitorType<Visitor>> internal_visit(const Value& value, StringView key, Visitor& visitor)
+        template<class Type>
+        Optional<Type> internal_visit(const Value& value, IDeserializer<Type>& visitor)
         {
             switch (value.kind())
             {
-                using VK = Json::ValueKind;
-                case VK::Null: return visitor.visit_null(*this, key);
-                case VK::Boolean: return visitor.visit_boolean(*this, key, value.boolean());
-                case VK::Integer: return visitor.visit_integer(*this, key, value.integer());
-                case VK::Number: return visitor.visit_number(*this, key, value.number());
-                case VK::String: return visitor.visit_string(*this, key, value.string());
-                case VK::Array: return visitor.visit_array(*this, key, value.array());
-                case VK::Object: return visitor.visit_object(*this, key, value.object());
+                case ValueKind::Null: return visitor.visit_null(*this);
+                case ValueKind::Boolean: return visitor.visit_boolean(*this, value.boolean());
+                case ValueKind::Integer: return visitor.visit_integer(*this, value.integer());
+                case ValueKind::Number: return visitor.visit_number(*this, value.number());
+                case ValueKind::String: return visitor.visit_string(*this, value.string());
+                case ValueKind::Array: return visitor.visit_array(*this, value.array());
+                case ValueKind::Object:
+                {
+                    const auto& obj = value.object();
+                    check_for_unexpected_fields(obj, visitor.valid_fields(), visitor.type_name());
+                    return visitor.visit_object(*this, obj);
+                }
             }
 
-            vcpkg::Checks::exit_fail(VCPKG_LINE_INFO);
+            vcpkg::Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         // returns whether the field was found, not whether it was valid
-        template<class Visitor>
-        bool internal_field(const Object& obj, StringView key, VisitorType<Visitor>& place, Visitor& visitor)
+        template<class Type>
+        bool internal_field(const Object& obj, StringView key, Type& place, IDeserializer<Type>& visitor)
         {
             auto value = obj.get(key);
             if (!value)
@@ -339,7 +401,8 @@ namespace vcpkg::Json
                 return false;
             }
 
-            Optional<VisitorType<Visitor>> opt = internal_visit(*value, key, visitor);
+            m_path.push_back(key);
+            Optional<Type> opt = internal_visit(*value, visitor);
 
             if (auto val = opt.get())
             {
@@ -347,83 +410,249 @@ namespace vcpkg::Json
             }
             else
             {
-                err->add_expected_type(key.to_string(), visitor.type_name().to_string());
+                add_expected_type_error(visitor.type_name().to_string());
             }
-
+            m_path.pop_back();
             return true;
         }
 
+        // checks that an object doesn't contain any fields which both:
+        // * don't start with a `$`
+        // * are not in `valid_fields`
+        // if known_fields.empty(), then it's treated as if all field names are valid
+        void check_for_unexpected_fields(const Object& obj, Span<const StringView> valid_fields, StringView type_name);
+
     public:
-        template<class Visitor>
+        template<class Type, class Deserializer>
         void required_object_field(
-            StringView type, const Object& obj, StringView key, VisitorType<Visitor>& place, Visitor&& visitor)
+            StringView type, const Object& obj, StringView key, Type& place, Deserializer&& visitor)
         {
             if (!internal_field(obj, key, place, visitor))
             {
-                err->add_missing_field(type.to_string(), key.to_string());
+                this->add_missing_field_error(type, key, visitor.type_name());
             }
         }
 
-        template<class Visitor>
-        void optional_object_field(const Object& obj, StringView key, VisitorType<Visitor>& place, Visitor&& visitor)
+        // returns whether key \in obj
+        template<class Type, class Deserializer>
+        bool optional_object_field(const Object& obj, StringView key, Type& place, Deserializer&& visitor)
         {
-            internal_field(obj, key, place, visitor);
+            return internal_field(obj, key, place, visitor);
         }
 
-        template<class Visitor>
-        Optional<std::vector<VisitorType<Visitor>>> array_elements(const Array& arr, StringView key, Visitor&& visitor)
+        template<class Type>
+        Optional<Type> visit_value(const Value& value, IDeserializer<Type>& visitor)
         {
-            std::vector<VisitorType<Visitor>> result;
-            for (const auto& el : arr)
+            return internal_visit(value, visitor);
+        }
+        template<class Type>
+        Optional<Type> visit_value(const Value& value, IDeserializer<Type>&& visitor)
+        {
+            return visit_value(value, visitor);
+        }
+
+        template<class Type>
+        Optional<Type> visit_value(const Array& value, IDeserializer<Type>& visitor)
+        {
+            return visitor.visit_array(*this, value);
+        }
+        template<class Type>
+        Optional<Type> visit_value(const Array& value, IDeserializer<Type>&& visitor)
+        {
+            return visit_value(value, visitor);
+        }
+
+        template<class Type>
+        Optional<Type> visit_value(const Object& value, IDeserializer<Type>& visitor)
+        {
+            check_for_unexpected_fields(value, visitor.valid_fields(), visitor.type_name());
+            return visitor.visit_object(*this, value);
+        }
+        template<class Type>
+        Optional<Type> visit_value(const Object& value, IDeserializer<Type>&& visitor)
+        {
+            return visit_value(value, visitor);
+        }
+
+        template<class Type>
+        Optional<std::vector<Type>> array_elements(const Array& arr, IDeserializer<Type>& visitor)
+        {
+            std::vector<Type> result;
+            m_path.emplace_back();
+            for (size_t i = 0; i < arr.size(); ++i)
             {
-                auto opt = internal_visit(el, key, visitor);
+                m_path.back().index = static_cast<int64_t>(i);
+                auto opt = internal_visit(arr[i], visitor);
                 if (auto p = opt.get())
                 {
                     result.push_back(std::move(*p));
                 }
                 else
                 {
-                    return nullopt;
+                    this->add_expected_type_error(visitor.type_name());
+                    for (++i; i < arr.size(); ++i)
+                    {
+                        m_path.back().index = static_cast<int64_t>(i);
+                        auto opt2 = internal_visit(arr[i], visitor);
+                        if (!opt2) this->add_expected_type_error(visitor.type_name());
+                    }
                 }
             }
+            m_path.pop_back();
             return std::move(result);
+        }
+        template<class Type>
+        Optional<std::vector<Type>> array_elements(const Array& arr, IDeserializer<Type>&& visitor)
+        {
+            return array_elements(arr, visitor);
         }
     };
 
-    // Warning: NEVER use this type except as a CRTP base
-    template<class Underlying>
-    struct VisitorCrtpBase
+    struct StringDeserializer final : IDeserializer<std::string>
     {
-        // the following function must be defined by the Underlying class
-        // const char* type_name();
+        virtual StringView type_name() const override { return type_name_; }
+        virtual Optional<std::string> visit_string(Reader&, StringView sv) override { return sv.to_string(); }
 
-        // We do this auto dance since function bodies are checked _after_ typedefs in the superclass,
-        // but function declarations are checked beforehand. Therefore, we can get C++ to use this typedef
-        // only once the function bodies are checked by returning `auto` and specifying the
-        // return type in the function body.
-        auto visit_null(Reader&, StringView) { return Optional<typename Underlying::type>(nullopt); }
-        auto visit_boolean(Reader&, StringView, bool) { return Optional<typename Underlying::type>(nullopt); }
-        auto visit_integer(Reader& r, StringView field_name, int64_t i)
+        explicit StringDeserializer(StringView type_name_) : type_name_(type_name_) { }
+
+    private:
+        StringView type_name_;
+    };
+
+    struct PathDeserializer final : IDeserializer<fs::path>
+    {
+        virtual StringView type_name() const override { return "a path"; }
+        virtual Optional<fs::path> visit_string(Reader&, StringView sv) override { return fs::u8path(sv); }
+    };
+
+    struct NaturalNumberDeserializer final : IDeserializer<int>
+    {
+        virtual StringView type_name() const override { return "a natural number"; }
+
+        virtual Optional<int> visit_integer(Reader&, int64_t value) override
         {
-            return static_cast<Underlying&>(*this).visit_number(r, field_name, static_cast<double>(i));
+            if (value > std::numeric_limits<int>::max() || value < 0)
+            {
+                return nullopt;
+            }
+            return static_cast<int>(value);
         }
-        auto visit_number(Reader&, StringView, double) { return Optional<typename Underlying::type>(nullopt); }
-        auto visit_string(Reader&, StringView, StringView) { return Optional<typename Underlying::type>(nullopt); }
-        auto visit_array(Reader&, StringView, const Json::Array&)
+    };
+
+    struct BooleanDeserializer final : IDeserializer<bool>
+    {
+        virtual StringView type_name() const override { return "a boolean"; }
+
+        virtual Optional<bool> visit_boolean(Reader&, bool b) override { return b; }
+    };
+
+    enum class AllowEmpty : bool
+    {
+        No,
+        Yes,
+    };
+
+    template<class Underlying>
+    struct ArrayDeserializer final : IDeserializer<std::vector<typename Underlying::type>>
+    {
+        using typename IDeserializer<std::vector<typename Underlying::type>>::type;
+
+        virtual StringView type_name() const override { return type_name_; }
+
+        ArrayDeserializer(StringView type_name_, AllowEmpty allow_empty, Underlying&& t = {})
+            : type_name_(type_name_), underlying_visitor_(static_cast<Underlying&&>(t)), allow_empty_(allow_empty)
         {
-            return Optional<typename Underlying::type>(nullopt);
         }
-        auto visit_object(Reader&, StringView, const Json::Object&)
+
+        virtual Optional<type> visit_array(Reader& r, const Array& arr) override
         {
-            return Optional<typename Underlying::type>(nullopt);
+            if (allow_empty_ == AllowEmpty::No && arr.size() == 0)
+            {
+                return nullopt;
+            }
+            return r.array_elements(arr, underlying_visitor_);
         }
-        // we can't make the SMFs protected because of an issue with /permissive mode
+
+    private:
+        StringView type_name_;
+        Underlying underlying_visitor_;
+        AllowEmpty allow_empty_;
+    };
+
+    struct ParagraphDeserializer final : IDeserializer<std::vector<std::string>>
+    {
+        virtual StringView type_name() const override { return "a string or array of strings"; }
+
+        virtual Optional<std::vector<std::string>> visit_string(Reader&, StringView sv) override
+        {
+            std::vector<std::string> out;
+            out.push_back(sv.to_string());
+            return out;
+        }
+
+        virtual Optional<std::vector<std::string>> visit_array(Reader& r, const Array& arr) override
+        {
+            return r.array_elements(arr, StringDeserializer{"a string"});
+        }
+    };
+
+    struct IdentifierDeserializer final : Json::IDeserializer<std::string>
+    {
+        virtual StringView type_name() const override { return "an identifier"; }
+
+        // [a-z0-9]+(-[a-z0-9]+)*, plus not any of {prn, aux, nul, con, lpt[1-9], com[1-9], core, default}
+        static bool is_ident(StringView sv);
+
+        virtual Optional<std::string> visit_string(Json::Reader&, StringView sv) override
+        {
+            if (is_ident(sv))
+            {
+                return sv.to_string();
+            }
+            else
+            {
+                return nullopt;
+            }
+        }
+    };
+
+    struct PackageNameDeserializer final : Json::IDeserializer<std::string>
+    {
+        virtual StringView type_name() const override { return "a package name"; }
+
+        static bool is_package_name(StringView sv)
+        {
+            if (sv.size() == 0)
+            {
+                return false;
+            }
+
+            for (const auto& ident : Strings::split(sv, '.'))
+            {
+                if (!IdentifierDeserializer::is_ident(ident))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        virtual Optional<std::string> visit_string(Json::Reader&, StringView sv) override
+        {
+            if (!is_package_name(sv))
+            {
+                return nullopt;
+            }
+            return sv.to_string();
+        }
     };
 
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse_file(
         const Files::Filesystem&, const fs::path&, std::error_code& ec) noexcept;
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(
         StringView text, const fs::path& filepath = {}) noexcept;
+    std::pair<Value, JsonStyle> parse_file(vcpkg::LineInfo linfo, const Files::Filesystem&, const fs::path&) noexcept;
 
     std::string stringify(const Value&, JsonStyle style);
     std::string stringify(const Object&, JsonStyle style);

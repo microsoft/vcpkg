@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-1.0.0
-    SHA512 cfbe22a7987658cce15f83c3be50435567f2b8156fa50007ae103418b969c6075dbf2858c25787a40feb391e84075905dd045300beb7fcedf4344823f8c4be20
+    REF apache-arrow-1.0.1
+    SHA512 46fedecaf7fa0ff0d8b4ac5f3d7bcbcb75ce4f65d272f775dedd61f091f975cf03fc55e91e46021df9872a82712ca9c9e4eb35414cf46c0f49a26f7a5a3dd50c
     HEAD_REF master
     PATCHES
         all.patch

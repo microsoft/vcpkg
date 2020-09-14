@@ -78,6 +78,15 @@ This option also has forms for configuration-specific and C flags:
 - `VCPKG_C_FLAGS_DEBUG`
 - `VCPKG_C_FLAGS_RELEASE`
 
+### VCPKG_LINKER_FLAGS
+Sets additional linker flags to be used while building dynamic libraries and
+executables in the absence of `VCPKG_CHAINLOAD_TOOLCHAIN_FILE`.
+
+This option also has forms for configuration-specific flags:
+- `VCPKG_LINKER_FLAGS`
+- `VCPKG_LINKER_FLAGS_DEBUG`
+- `VCPKG_LINKER_FLAGS_RELEASE`
+
 <a name="VCPKG_DEP_INFO_OVERRIDE_VARS"></a>
 ### VCPKG_DEP_INFO_OVERRIDE_VARS
 Replaces the default computed list of triplet "Supports" terms.
