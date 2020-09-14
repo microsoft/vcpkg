@@ -42,3 +42,7 @@ if(DLLS)
         file(RENAME ${DLL} ${CURRENT_PACKAGES_DIR}/debug/bin/${N})
     endforeach()
 endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
