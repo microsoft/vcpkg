@@ -74,7 +74,7 @@ foreach(DEPENDENCY zlib freetype harfbuzz-ng libjpeg libpng double-conversion sq
         file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
     endif()
 endforeach()
-file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
+#file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
 
 #########################
 ## Setup Configure options

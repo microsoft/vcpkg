@@ -84,6 +84,8 @@ function(vcpkg_configure_qmake)
             LOGNAME config-${TARGET_TRIPLET}-rel
         )
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+        file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-rel.log")
+        file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-rel.log")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -116,6 +118,8 @@ function(vcpkg_configure_qmake)
             LOGNAME config-${TARGET_TRIPLET}-dbg
         )
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+        file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-dbg.log")
+        file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-dbg.log")
     endif()
 
 endfunction()
