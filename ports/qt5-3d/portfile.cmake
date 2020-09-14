@@ -1,6 +1,6 @@
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
-#set(OPTIONS -system-assimp)
+set(OPTIONS -system-assimp)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCVER vc140 vc141 vc142 )
@@ -30,9 +30,15 @@ find_library(POLYCLIPPING_DBG NAMES polyclipping polyclippingd PATHS "${CURRENT_
 find_library(POLY2TRI_REL NAMES poly2tri PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
 find_library(POLY2TRI_DBG NAMES poly2tri poly2trid PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 # poly2tri
+find_library(BZ2_REL bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(BZ2_DBG bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+if(BZ2_REL)
+    string(APPEND MINIZIP_REL " ${BZ2_REL}")
+endif()
+if(BZ2_DBG)
+    string(APPEND MINIZIP_DBG " ${BZ2_DBG}")
+endif()
 set(OPT_REL "ASSIMP_LIBS=${ASSIMP_REL} ${POLYCLIPPING_REL} ${POLY2TRI_REL} ${IRRXML_REL} ${KUBAZIP_REL} ${MINIZIP_REL} ${ZLIB_REL}")
 set(OPT_DBG "ASSIMP_LIBS=${ASSIMP_DBG} ${POLYCLIPPING_DBG} ${POLY2TRI_DBG} ${IRRXML_DBG} ${KUBAZIP_DBG} ${MINIZIP_DBG} ${ZLIB_DBG}")
 
 qt_submodule_installation(BUILD_OPTIONS ${OPTIONS} BUILD_OPTIONS_RELEASE ${OPT_REL} BUILD_OPTIONS_DEBUG ${OPT_DBG})
-
-message(FATAL_ERROR "JUst error to get logs")
