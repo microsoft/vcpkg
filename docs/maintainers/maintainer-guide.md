@@ -130,7 +130,8 @@ Conflicting libs are typically by design and not considered a defect.  Because s
 
 ## Manifests and CONTROL files
 
-When adding a new port or modifying an existing port, switch to the new manifest syntax for defining a port.
+When adding a new port, use the new manifest syntax for defining a port;
+you may also change over to manifests when modifying an existing port.
 You may do so easily by running the `vcpkg format-manifest` command, which will convert existing CONTROL
 files into manifest files. Do not convert CONTROL files that have not been modified.
 

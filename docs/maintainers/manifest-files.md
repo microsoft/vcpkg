@@ -146,6 +146,18 @@ one string per line.
 
 The URL of the homepage for the library where a user is able to find additional documentation or the original source code.
 
+### `"documentation"`
+
+The URL where a user would be able to find official documentation for the library. Optional.
+
+### `"maintainers"`
+
+A list of strings that define the set of maintainers of a package.
+It's recommended that these take the form of `Givenname Surname <email>`,
+but this field is not checked for consistency.
+
+Optional.
+
 #### Example:
 ```json
 {

@@ -19,7 +19,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 ### Maintainer help
 
-- [Control files](maintainers/control-files.md) - these have been deprecated in favor of manifest files.
+- [Control files](maintainers/control-files.md) - in general, one should use manifest files instead
 - [Manifest files](maintainers/manifest-files.md)
 - [Portfile functions](maintainers/portfile-functions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)

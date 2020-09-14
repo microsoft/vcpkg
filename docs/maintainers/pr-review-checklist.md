@@ -106,7 +106,7 @@ These can be installed on Ubuntu systems via sudo apt install autoconf libtool"
 </details>
 
 <details id="c000013">
-<summary><a href="#c000013">c000013</a>: Manifest files are used instead of CONTROL files</summary>
+<summary><a href="#c000013">c000013</a>: Manifest files are used instead of CONTROL files for new ports</summary>
 
 Many existing ports use the CONTROL file syntax; while this syntax will be supported for some time to come,
 new ports should not use these. Any newly added port _must_ use the manifest files.

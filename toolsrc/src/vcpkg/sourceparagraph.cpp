@@ -551,7 +551,7 @@ namespace vcpkg
                     extra_fields.push_back(pr.first.to_string());
                     continue;
                 }
-                deserializer.name = pr.first.to_string();
+                deserializer.name.assign(pr.first.begin(), pr.first.end());
                 auto field = r.visit_map_field(pr.first, pr.second, deserializer);
                 if (auto p = field.get())
                 {

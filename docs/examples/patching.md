@@ -198,6 +198,11 @@ Installing package libpng[core]:x64-uwp... done
 Elapsed time for package libpng:x64-uwp: 11.94 s
 
 Total elapsed time: 11.95 s
+
+The package libpng:x64-uwp provides CMake targets:
+
+    find_package(libpng CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE png)
 ```
 
 Finally, to fully commit and publish the changes, we need to bump the port version in `vcpkg.json`,
