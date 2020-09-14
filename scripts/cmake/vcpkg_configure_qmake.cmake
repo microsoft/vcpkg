@@ -51,7 +51,7 @@ function(vcpkg_configure_qmake)
     endif()
 
     vcpkg_find_acquire_program(PKGCONFIG)
-    set(ENV{PKG_CONFIG_EXECUTABLE} "${PKGCONFIG}")
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
     vcpkg_add_to_path("${PKGCONFIG_PATH}")
 

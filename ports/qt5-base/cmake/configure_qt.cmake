@@ -54,19 +54,19 @@ function(configure_qt)
         list(APPEND BUILDTYPES ${_buildname})
         set(_short_name_${_buildname} "dbg")
         set(_path_suffix_${_buildname} "/debug")
-        set(_build_type_${_buildname} "debug")        
+        set(_build_type_${_buildname} "debug")
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
         set(_buildname "RELEASE")
         list(APPEND BUILDTYPES ${_buildname})
         set(_short_name_${_buildname} "rel")
         set(_path_suffix_${_buildname} "")
-        set(_build_type_${_buildname} "release")        
+        set(_build_type_${_buildname} "release")
     endif()
     unset(_buildname)
 
     vcpkg_find_acquire_program(PKGCONFIG)
-    set(ENV{PKG_CONFIG_EXECUTABLE} "${PKGCONFIG}")
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
     vcpkg_add_to_path("${PKGCONFIG_PATH}")
     
@@ -90,7 +90,7 @@ function(configure_qt)
         # makefiles will be fixed to install into CURRENT_PACKAGES_DIR in install_qt
         set(BUILD_OPTIONS ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildname}}
                 -prefix ${CURRENT_INSTALLED_DIR}
-                -extprefix ${CURRENT_INSTALLED_DIR}
+                #-extprefix ${CURRENT_INSTALLED_DIR}
                 ${EXT_BIN_DIR}
                 -hostprefix ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 #-hostprefix ${CURRENT_INSTALLED_DIR}/tools/qt5
@@ -110,10 +110,10 @@ function(configure_qt)
                 -I ${CURRENT_INSTALLED_DIR}/include
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib 
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link
-                -xplatform ${_csc_TARGET_PLATFORM}
+                -platform ${_csc_TARGET_PLATFORM}
             )
         
-        if(DEFINED _csc_HOST_TOOLS_ROOT) #use qmake          
+        if(DEFINED _csc_HOST_TOOLS_ROOT) #use qmake
             if(WIN32)
                 set(INVOKE_OPTIONS "QMAKE_CXX.QMAKE_MSC_VER=1911" "QMAKE_MSC_VER=1911")
             endif()
