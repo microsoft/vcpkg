@@ -16,26 +16,47 @@ vcpkg_extract_source_archive_ex(
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
 )
-
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-    ${CMAKE_CURRENT_LIST_DIR}/config.win32.h
-    ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
-    DESTINATION ${SOURCE_PATH}/gettext-runtime
-)
-file(REMOVE ${SOURCE_PATH}/gettext-runtime/intl/libgnuintl.h ${SOURCE_PATH}/gettext-runtime/config.h)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libgnuintl.win32.h DESTINATION ${SOURCE_PATH}/gettext-runtime/intl)
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/gettext-runtime
-    PREFER_NINJA
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
-)
-
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-gettext TARGET_PATH share/unofficial-gettext)
+if (VCPKG_TARGET_IS_WINDOWS)
+    file(COPY
+        ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
+        ${CMAKE_CURRENT_LIST_DIR}/config.win32.h
+        ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
+        DESTINATION ${SOURCE_PATH}/gettext-runtime
+    )
+    file(REMOVE ${SOURCE_PATH}/gettext-runtime/intl/libgnuintl.h ${SOURCE_PATH}/gettext-runtime/config.h)
+    
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/libgnuintl.win32.h DESTINATION ${SOURCE_PATH}/gettext-runtime/intl)
+    
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}/gettext-runtime
+        PREFER_NINJA
+        OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
+    )
+    
+    vcpkg_install_cmake()
+    
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-gettext TARGET_PATH share/unofficial-gettext)
+else()
+    set(GETTEXT_OPTS --disable-java --disable-native-java)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(GETTEXT_OPTS ${GETTEXT_OPTS} --enable-shared)
+    else()
+        set(GETTEXT_OPTS ${GETTEXT_OPTS} --enable-static)
+    endif()
+    
+    get_filename_component(INSTALLED_PATH "${CURRENT_INSTALLED_DIR}" PATH)
+    
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        #COPY_SOURCE
+        OPTIONS
+            ${GETTEXT_OPTS}
+            --with-libiconv-prefix=${INSTALLED_PATH}
+            --with-libxml2-prefix=${INSTALLED_PATH}
+    )
+    
+    vcpkg_install_make()
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
