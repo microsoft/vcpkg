@@ -26,6 +26,8 @@ if(CMAKE_HOST_WIN32)
     vcpkg_add_to_path(${GETTEXT_PATH})
 endif()
 
+vcpkg_find_acquire_program(PYTHON3)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -35,6 +37,7 @@ vcpkg_configure_cmake(
         -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
+        -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_install_cmake()
