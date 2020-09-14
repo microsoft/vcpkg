@@ -1092,8 +1092,10 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
         System::print2(
             "\nBased on your system settings, the default path to store binaries is\n    ",
             fs::u8string(p_preferred.make_preferred()),
-            "\n\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.");
+            "\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.\n");
     }
+    System::print2("\nExtended documentation is available at "
+                   "https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md \n");
 }
 
 std::string vcpkg::generate_nuget_packages_config(const Dependencies::ActionPlan& action)
