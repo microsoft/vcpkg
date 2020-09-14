@@ -1,0 +1,48 @@
+From eaf5d60b5de65f8d1f8f32535cd2e42da3115f00 Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Sun, 13 Sep 2020 19:38:30 -0400
+Subject: [PATCH 7/7] Disable static PYD loading
+
+Loading shared *.pyd extensions with a static python on Windows crashes
+the interpreter. Don't do that.
+
+diff --git a/Python/dynload_win.c b/Python/dynload_win.c
+index 6deba1134e..b8771ca0ff 100644
+--- a/Python/dynload_win.c
++++ b/Python/dynload_win.c
+@@ -201,11 +201,13 @@ dl_funcptr _PyImport_FindSharedFuncptrWindows(const char *prefix,
+            to avoid DLL preloading attacks and enable use of the
+            AddDllDirectory function. We add SEARCH_DLL_LOAD_DIR to
+            ensure DLLs adjacent to the PYD are preferred. */
++#if defined(Py_ENABLE_SHARED)
+         Py_BEGIN_ALLOW_THREADS
+         hDLL = LoadLibraryExW(wpathname, NULL,
+                               LOAD_LIBRARY_SEARCH_DEFAULT_DIRS |
+                               LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR);
+         Py_END_ALLOW_THREADS
++#endif
+ #if HAVE_SXS
+         _Py_DeactivateActCtx(cookie);
+ #endif
+@@ -217,6 +219,7 @@ dl_funcptr _PyImport_FindSharedFuncptrWindows(const char *prefix,
+             PyObject *message;
+             unsigned int errorCode;
+ 
++#if defined(Py_ENABLE_SHARED)
+             /* Get an error string from Win32 error code */
+             wchar_t theInfo[256]; /* Pointer to error text
+                                   from system */
+@@ -259,6 +262,10 @@ dl_funcptr _PyImport_FindSharedFuncptrWindows(const char *prefix,
+                         theInfo,
+                         theLength));
+             }
++#else
++            message = PyUnicode_FromFormat("DLL load failed while importing %s: shared module loading "
++                                           "is not supported in static builds", shortname);
++#endif
+             if (message != NULL) {
+                 PyObject *shortname_obj = PyUnicode_FromString(shortname);
+                 PyErr_SetImportError(message, shortname_obj, pathname);
+-- 
+2.28.0.windows.1
+

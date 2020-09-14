@@ -1,5 +1,11 @@
+From 79ec7506399bc3846bb0631827e3880f5468e507 Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Sun, 13 Sep 2020 21:33:33 -0400
+Subject: [PATCH 1/7] Static library
+
+
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
-index b6b8d445869bc..35b329f307c12 100644
+index b6b8d44586..35b329f307 100644
 --- a/PC/pyconfig.h
 +++ b/PC/pyconfig.h
 @@ -257,6 +257,7 @@ typedef int pid_t;
@@ -23,7 +29,7 @@ index b6b8d445869bc..35b329f307c12 100644
  
  #if defined(MS_WIN64)
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index 0666b90f66cc9..ca83b82d8a0fe 100644
+index 0666b90f66..ca83b82d8a 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -73,7 +73,7 @@
@@ -61,3 +67,6 @@ index 0666b90f66cc9..ca83b82d8a0fe 100644
    </ItemDefinitionGroup>
    <ItemGroup>
      <ClInclude Include="..\Include\abstract.h" />
+-- 
+2.28.0.windows.1
+

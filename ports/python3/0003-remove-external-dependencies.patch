@@ -1,0 +1,84 @@
+From d69746248f01a3eca82f441e789279e9d0acaf08 Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Wed, 9 Sep 2020 15:24:38 -0400
+Subject: [PATCH 3/7] Remove external dependencies
+
+The externally fetched libraries may cause linker errors resulting from
+duplicate symbols in downstream projects.
+
+diff --git a/PCbuild/_bz2.vcxproj b/PCbuild/_bz2.vcxproj
+index 3fe95fbf83..6b12e8818e 100644
+--- a/PCbuild/_bz2.vcxproj
++++ b/PCbuild/_bz2.vcxproj
+@@ -101,6 +101,8 @@
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_bz2module.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="$(bz2Dir)\blocksort.c" />
+     <ClCompile Include="$(bz2Dir)\bzlib.c" />
+     <ClCompile Include="$(bz2Dir)\compress.c" />
+@@ -109,7 +111,7 @@
+     <ClCompile Include="$(bz2Dir)\huffman.c" />
+     <ClCompile Include="$(bz2Dir)\randtable.c" />
+   </ItemGroup>
+-  <ItemGroup>
++  <ItemGroup Condition="false">
+     <ClInclude Include="$(bz2Dir)\bzlib.h" />
+     <ClInclude Include="$(bz2Dir)\bzlib_private.h" />
+   </ItemGroup>
+diff --git a/PCbuild/_lzma.vcxproj b/PCbuild/_lzma.vcxproj
+index fe076a6fc5..70cc61dd95 100644
+--- a/PCbuild/_lzma.vcxproj
++++ b/PCbuild/_lzma.vcxproj
+@@ -94,10 +94,9 @@
+   <ItemDefinitionGroup>
+     <ClCompile>
+       <AdditionalIncludeDirectories>$(lzmaDir)src/liblzma/api;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+-      <PreprocessorDefinitions>WIN32;_FILE_OFFSET_BITS=64;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;LZMA_API_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>WIN32;_FILE_OFFSET_BITS=64;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+-      <AdditionalDependencies>$(OutDir)liblzma$(PyDebugExt).lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+@@ -111,7 +110,7 @@
+       <Project>{cf7ac3d1-e2df-41d2-bea6-1e2556cdea26}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+-    <ProjectReference Include="liblzma.vcxproj">
++    <ProjectReference Condition="false" Include="liblzma.vcxproj">
+       <Project>{12728250-16eC-4dc6-94d7-e21dd88947f8}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+diff --git a/PCbuild/_sqlite3.vcxproj b/PCbuild/_sqlite3.vcxproj
+index 7e0062692b..6fb3279a20 100644
+--- a/PCbuild/_sqlite3.vcxproj
++++ b/PCbuild/_sqlite3.vcxproj
+@@ -127,7 +127,7 @@
+       <Project>{cf7ac3d1-e2df-41d2-bea6-1e2556cdea26}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+-    <ProjectReference Include="sqlite3.vcxproj">
++    <ProjectReference Condition="false" Include="sqlite3.vcxproj">
+       <Project>{a1a295e5-463c-437f-81ca-1f32367685da}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+diff --git a/PCbuild/_ssl.vcxproj b/PCbuild/_ssl.vcxproj
+index 4907f49b66..4dffa202b7 100644
+--- a/PCbuild/_ssl.vcxproj
++++ b/PCbuild/_ssl.vcxproj
+@@ -99,7 +99,7 @@
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_ssl.c" />
+-    <ClCompile Include="$(opensslIncludeDir)\applink.c">
++    <ClCompile Condition="false" Include="$(opensslIncludeDir)\applink.c">
+       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;$(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+   </ItemGroup>
+-- 
+2.28.0.windows.1
+

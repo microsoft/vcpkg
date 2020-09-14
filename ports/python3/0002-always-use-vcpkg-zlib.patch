@@ -1,0 +1,36 @@
+From 175b0e8c0d5d4ba1da3d9313a0208c8b814792f0 Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Wed, 9 Sep 2020 15:20:36 -0400
+Subject: [PATCH 2/7] Always use vcpkg zlib
+
+Building without zlib is not a supported configuration, per the warning
+messages.
+
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index ca83b82d8a..708226e4a1 100644
+--- a/PCbuild/pythoncore.vcxproj
++++ b/PCbuild/pythoncore.vcxproj
+@@ -478,8 +478,10 @@
+     <ClCompile Include="..\Python\thread.c" />
+     <ClCompile Include="..\Python\traceback.c" />
+   </ItemGroup>
+-  <ItemGroup Condition="$(IncludeExternals)">
++  <ItemGroup>
+     <ClCompile Include="..\Modules\zlibmodule.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="$(zlibDir)\adler32.c" />
+     <ClCompile Include="$(zlibDir)\compress.c" />
+     <ClCompile Include="$(zlibDir)\crc32.c" />
+@@ -527,7 +529,7 @@
+   <Target Name="_WarnAboutToolset" BeforeTargets="PrepareForBuild" Condition="$(PlatformToolset) != 'v140' and $(PlatformToolset) != 'v141' and $(PlatformToolset) != 'v142'">
+     <Warning Text="Toolset $(PlatformToolset) is not used for official builds. Your build may have errors or incompatibilities." />
+   </Target>
+-  <Target Name="_WarnAboutZlib" BeforeTargets="PrepareForBuild" Condition="!$(IncludeExternals)">
++  <Target Name="_WarnAboutZlib" BeforeTargets="PrepareForBuild" Condition="false">
+     <Warning Text="Not including zlib is not a supported configuration." />
+   </Target>
+ 
+-- 
+2.28.0.windows.1
+

@@ -1,0 +1,35 @@
+From 4d698284921b48b963caa26a352ef414f36f36d4 Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Fri, 11 Sep 2020 12:35:36 -0400
+Subject: [PATCH 6/7] fix duplicate symbols
+
+
+diff --git a/Modules/_winapi.c b/Modules/_winapi.c
+index 647075cdb1..4e1ab786a1 100644
+--- a/Modules/_winapi.c
++++ b/Modules/_winapi.c
+@@ -304,7 +304,7 @@ static PyMemberDef overlapped_members[] = {
+     {NULL}
+ };
+ 
+-PyTypeObject OverlappedType = {
++static PyTypeObject OverlappedType = {
+     PyVarObject_HEAD_INIT(NULL, 0)
+     /* tp_name           */ "_winapi.Overlapped",
+     /* tp_basicsize      */ sizeof(OverlappedObject),
+diff --git a/Modules/overlapped.c b/Modules/overlapped.c
+index 52ed0bc284..0101af17c8 100644
+--- a/Modules/overlapped.c
++++ b/Modules/overlapped.c
+@@ -1760,7 +1760,7 @@ static PyGetSetDef Overlapped_getsets[] = {
+     {NULL},
+ };
+ 
+-PyTypeObject OverlappedType = {
++static PyTypeObject OverlappedType = {
+     PyVarObject_HEAD_INIT(NULL, 0)
+     /* tp_name           */ "_overlapped.Overlapped",
+     /* tp_basicsize      */ sizeof(OverlappedObject),
+-- 
+2.28.0.windows.1
+
