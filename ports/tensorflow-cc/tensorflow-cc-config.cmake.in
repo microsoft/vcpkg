@@ -4,17 +4,13 @@ add_library(tensorflow_cc::tensorflow_cc ${TF_LINKAGE_TYPE} IMPORTED)
 set_target_properties(tensorflow_cc::tensorflow_cc
 	PROPERTIES
 	IMPORTED_LOCATION "${INSTALL_PREFIX}/${TARGET_TRIPLET}/lib/${TF_LIB_NAME}"
-	INTERFACE_INCLUDE_DIRECTORIES
-		"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external"
-		"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external/src"
+	INTERFACE_INCLUDE_DIRECTORIES "${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external;${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external/src"
 )
 add_library(tensorflow_cc::tensorflow_framework ${TF_LINKAGE_TYPE} IMPORTED)
 set_target_properties(tensorflow_cc::tensorflow_framework
 	PROPERTIES
 	IMPORTED_LOCATION "${INSTALL_PREFIX}/${TARGET_TRIPLET}/lib/${TF_FRAMEWORK_NAME}"
-	INTERFACE_INCLUDE_DIRECTORIES
-		"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external"
-		"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external/src"
+	INTERFACE_INCLUDE_DIRECTORIES "${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external;${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external/src"
 )
 set(tensorflow_cc_FOUND TRUE)
 set(tensorflow_framework_FOUND TRUE)

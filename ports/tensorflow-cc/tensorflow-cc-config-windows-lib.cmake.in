@@ -6,7 +6,5 @@ add_library(tensorflow_cc::tensorflow_cc-part1 STATIC IMPORTED)
 set_target_properties(tensorflow_cc::tensorflow_cc-part1
 	PROPERTIES
 	IMPORTED_LOCATION "${INSTALL_PREFIX}/${TARGET_TRIPLET}/lib/tensorflow.lib"
-	INTERFACE_INCLUDE_DIRECTORIES
-		"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external"
-		"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external/src"
+	INTERFACE_INCLUDE_DIRECTORIES "${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external;${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external/src"
 )

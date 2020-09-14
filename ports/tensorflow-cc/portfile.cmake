@@ -299,7 +299,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAG
 if(VCPKG_MANIFEST_MODE)
 	set(INSTALL_PREFIX ${CMAKE_BINARY_DIR}/vcpkg_installed)
 else()
-	set(INSTALL_PREFIX ${VCPKG_INSTALLATION_ROOT}/installed)
+	set(INSTALL_PREFIX ${VCPKG_ROOT_DIR}/installed)
 endif()
 if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -313,9 +313,7 @@ add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)\n\
 set_target_properties(tensorflow_cc::tensorflow_cc${part}\n\
 	PROPERTIES\n\
 	IMPORTED_LOCATION \"${INSTALL_PREFIX}/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\n\
-	INTERFACE_INCLUDE_DIRECTORIES\n\
-		\"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external\"\n\
-		\"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external\src\"\n\
+	INTERFACE_INCLUDE_DIRECTORIES \"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external;${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external/src\"\n\
 )\n\
 ")
 			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")
