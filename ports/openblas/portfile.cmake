@@ -83,7 +83,7 @@ else()
 endif()
 
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(DISABLE_PARALLEL)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
 #maybe we need also to write a wrapper inside share/blas to search implicitly for openblas, whenever we feel it's ready for its own -config.cmake file
 

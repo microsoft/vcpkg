@@ -1,72 +1,49 @@
 Source: libsbml
 Version: 5.18.0
-Description: A free, open-source programming library to help you read, write, manipulate, translate, and validate SBML files and data streams
-Build-Depends: zlib, libxml2, bzip2, libiconv, expat
-Port-Version: 1
+Description: A library for reading / writing SBML files
+Default-Features: expat, comp, fbc, groups, layout, render
+Build-Depends: libsbml[expat], libsbml[libxml2]
 
+Feature: check
+Description: Unit testing of libSBMLs implementation
+Build-Depends: check
 
-Feature: ENABLE_L3V2EXTENDEDMATH ON
-Description: ENABLE_L3V2EXTENDEDMATH
+Feature: bzip2
+Description: bz2 compression support for libsbml
+Build-Depends: bzip2
 
-Feature: ENABLE_LAYOUT ON
-Description: ENABLE_LAYOUT
+Feature: zlib
+Description: gzip compression support for libsbml
+Build-Depends: zlib
 
-Feature: WITH_BZIP2 ON
-Description: WITH_BZIP2
+Feature: expat
+Description: libsbml using expat parser
+Build-Depends: expat
 
-Feature: WITH_CHECK OFF
-Description: WITH_CHECK
+Feature: libxml2
+Description: libsbml using libxml2 parser
+Build-Depends: libxml2
 
-Feature: WITH_CPP_NAMESPACE ON
-Description: WITH_CPP_NAMESPACE
+Feature: comp
+Description: support for Hierarchical Model Composition
 
-Feature: WITH_CSHARP PFF
-Description: WITH_CSHARP
+Feature: fbc
+Description: support for Flux Balance Constrant Modeling
 
-Feature: WITH_EXAMPLES OFF
-Description: WITH_EXAMPLES
+Feature: groups
+Description: support for Groups
 
-Feature: WITH_EXPAT OFF
-Description: WITH_EXPAT
+Feature: layout
+Description: support for Pathway Layouts
 
-Feature: WITH_JAVA OFF
-Description: WITH_JAVA
+Feature: multi
+Description: support for Multistate Modeling
 
-Feature: WITH_JAVASCRIPT OFF
-Description: WITH_JAVASCRIPT
+Feature: qual
+Description: support for Qualitative Modeling 
 
-Feature: WITH_LIBXML ON
-Description: WITH_LIBXML
+Feature: render
+Description: support for Rendering information
 
-Feature: WITH_MATLAB OFF
-Description: WITH_MATLAB
-
-Feature: WITH_OCTAVE OFF
-Description: WITH_OCTAVE
-
-Feature: WITH_PERL OFF
-Description: WITH_PERL
-
-Feature: WITH_PHP OFF
-Description: WITH_PHP
-
-Feature: WITH_PYTHON OFF
-Description: WITH_PYTHON
-
-Feature: WITH_R OFF
-Description: WITH_R
-
-Feature: WITH_STATIC_RUNTIME OFF
-Description: WITH_STATIC_RUNTIME
-
-Feature: WITH_XERCES OFF
-Description: WITH_XERCES
-
-Feature: WITH_SWIG OFF
-Description: WITH_SWIG
-
-Feature: WITH_XERCES OFF
-Description: WITH_XERCES
-
-Feature: WITH_ZLIB ON
-Description: WITH_ZLIB
+Feature: namespace
+Description: Build with the WITH_CPP_NAMESPACE option set to on
