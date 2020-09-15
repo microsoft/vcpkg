@@ -1,4 +1,3 @@
-
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre-targets.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre16-targets.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre32-targets.cmake")
@@ -18,6 +17,3 @@ set(PCRE16_LIBRARIES ${PCRE16_LIBRARY})
 set(PCRE32_LIBRARIES ${PCRE32_LIBRARY})
 set(PCRECPP_LIBRARIES ${PCRECPP_LIBRARY})
 set(PCREPOSIX_LIBRARIES ${PCREPOSIX_LIBRARY})
-
-
-
