@@ -13,10 +13,26 @@ vcpkg_configure_cmake(
             -DBUILD_MAN_DOCS=OFF
             -DBUILD_QTHELP_DOCS=OFF
             -DBUILD_TESTING=OFF
+            -DKDE_INSTALL_PLUGINDIR=plugins
+            -DKDE_INSTALL_DATAROOTDIR=data
+            -DKDE_INSTALL_QTPLUGINDIR=plugins
 )
 
+vcpkg_add_to_path(${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
+vcpkg_add_to_path(${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
+
 vcpkg_install_cmake()
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet)
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX})
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Sonnet)
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5sonnet)
+file(APPEND ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
+
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -27,5 +43,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX})
 
 file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
