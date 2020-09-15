@@ -96,5 +96,5 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSD
 
 vcpkg_fixup_pkgconfig(
     IGNORE_FLAGS "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/lib/pkgconfig/../../lib" "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/../../lib" "-Wl,--enable-new-dtags" "-Wl,--no-undefined" "-Wl,-undefined,error" "-Wl,-compatibility_version,${DYLIB_COMPATIBILITY_VERSION}" "-Wl,-current_version,${DYLIB_CURRENT_VERSION}" "-Wl,-weak_framework,Metal" "-Wl,-weak_framework,QuartzCore"
-    SYSTEM_LIBRARIES dbus-1
+    SYSTEM_LIBRARIES dbus-1 glib-2.0 gobject-2.0 gio-2.0 ibus-1.0
 )
