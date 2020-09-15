@@ -1,0 +1,16 @@
+The package pcre provides CMake targets:
+
+    find_package(unofficial-pcre CONFIG REQUIRED)
+    target_include_directories(main PRIVATE ${PCRE_INCLUDE_DIR})
+    target_link_libraries(main PRIVATE ${PCRE_LIBRARY})
+
+
+Using pcre16:
+    target_link_libraries(main PRIVATE ${PCRE16_LIBRARY})
+Using pcre32:
+    target_link_libraries(main PRIVATE ${PCRE32_LIBRARY})
+Using pcrecpp 
+    target_link_libraries(main PRIVATE ${PCRECPP_LIBRARY})
+Using pcreposix   
+    target_link_libraries(main PRIVATE ${PCREPOSIX_LIBRARY})
+    
