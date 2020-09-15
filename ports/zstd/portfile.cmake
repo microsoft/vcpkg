@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
-    REF b706286adbba780006a47ef92df0ad7a785666b6 # v1.4.5
-    SHA512 1be43e8cc1dad9dd59036f86a7dd579b8fcbf16b3ebae62f38aa0397f45ab0eab2e97e924cede40428fa9125a2e5e567694bb04a0c9ec0c4275a79cd2ef8eb11
+    REF 10f0e6993f9d2f682da6d04aa2385b7d53cbb4ee # v1.4.4
+    SHA512 869eb031d2f8cfd9d93502835a373f6f2ec39dc1f41dd5fd0463d3d442c153915987d00bc862ae66bded5c5697e1803a1e68491803bd1a7b358397e6eba58f64
     HEAD_REF dev
     PATCHES
       0001-export-zstd-config.patch

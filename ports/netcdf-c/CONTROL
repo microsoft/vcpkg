@@ -1,5 +1,5 @@
 Source: netcdf-c
-Version: 4.7.4
+Version: 4.7.3
 Port-Version: 4
 Build-Depends: hdf5, curl
 Homepage: https://github.com/Unidata/netcdf-c

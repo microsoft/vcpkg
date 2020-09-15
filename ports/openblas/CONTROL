@@ -1,5 +1,5 @@
 Source: openblas
-Version: 0.3.10
+Version: 0.3.9
 Port-Version: 3
 Homepage: https://github.com/xianyi/OpenBLAS
 Build-Depends: pthread (linux&osx)
