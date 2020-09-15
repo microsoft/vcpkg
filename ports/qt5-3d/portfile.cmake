@@ -1,6 +1,6 @@
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
-set(OPTIONS -system-assimp)
+#set(OPTIONS -system-assimp)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCVER vc140 vc141 vc142 )
@@ -42,3 +42,4 @@ set(OPT_REL "ASSIMP_LIBS=${ASSIMP_REL} ${POLYCLIPPING_REL} ${POLY2TRI_REL} ${IRR
 set(OPT_DBG "ASSIMP_LIBS=${ASSIMP_DBG} ${POLYCLIPPING_DBG} ${POLY2TRI_DBG} ${IRRXML_DBG} ${KUBAZIP_DBG} ${MINIZIP_DBG} ${ZLIB_DBG}")
 
 qt_submodule_installation(BUILD_OPTIONS ${OPTIONS} BUILD_OPTIONS_RELEASE ${OPT_REL} BUILD_OPTIONS_DEBUG ${OPT_DBG})
+message(FATAL_ERROR "Just for CI")
