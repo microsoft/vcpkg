@@ -1,6 +1,6 @@
-# Binarycaching
+# Binary Caching
 
-Binary caching is Vcpkg's method for reusing package builds between projects and between machines. Think of it as a "package restore accelerator" that gives you the same results as though you built from source. Each build is packaged independently, so changing one library only requires rebuilding consuming libraries.
+Binary caching is vcpkg's method for reusing package builds between projects and between machines. Think of it as a "package restore accelerator" that gives you the same results as though you built from source. Each build is packaged independently, so changing one library only requires rebuilding consuming libraries.
 
 If your CI provider offers a native "caching" function, we recommend using both methods for the most performant results.
 
@@ -12,12 +12,12 @@ If your CI system of choice is not listed, we welcome PRs to add them!
 
 ### GitHub Packages
 
-To use Vcpkg with GitHub Packages, we recommend using the `NuGet` backend.
+To use vcpkg with GitHub Packages, we recommend using the `NuGet` backend.
 
 ```yaml
 # actions.yaml
 #
-# In this example, Vcpkg has been added as a submodule (`git submodule add https://github.com/Microsoft/vcpkg`).
+# In this example, vcpkg has been added as a submodule (`git submodule add https://github.com/Microsoft/vcpkg`).
 env:
   VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
 
@@ -61,7 +61,7 @@ More information about GitHub Packages' NuGet support is available on [GitHub Do
 
 ### Azure DevOps Artifacts
 
-To use Vcpkg with Azure DevOps Artifacts, we recommend using the `NuGet` backend.
+To use vcpkg with Azure DevOps Artifacts, we recommend using the `NuGet` backend.
 
 First, you need to ensure Artifacts has been enabled on your DevOps instance; this can be done by an Administrator through `Project Settings > General > Overview > Azure DevOps Services > Artifacts`.
 
@@ -105,7 +105,7 @@ By default, zip-based archives will be cached at the first valid location of:
 | `files,<path>[,<rw>]`       | Adds a custom file-based location
 | `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
 | `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter <br>of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
-| `interactive`               | Enables interactive credential management for NuGet (also requires `--debug` on the command line)
+| `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
 
 The `<rw>` optional parameter for certain sources controls whether they will be consulted for
 downloading binaries (`read`), whether on-demand builds will be uploaded to that remote (`write`), or both (`readwrite`).

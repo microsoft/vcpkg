@@ -667,7 +667,8 @@ namespace
             auto maybe_cachepath = System::get_environment_variable("VCPKG_DEFAULT_BINARY_CACHE");
             if (auto p_str = maybe_cachepath.get())
             {
-                const auto path = fs::u8path(*p_str);
+                auto path = fs::u8path(*p_str);
+                path.make_preferred();
                 const auto status = fs::stdfs::status(path);
                 if (!fs::stdfs::exists(status))
                     return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + fs::u8string(path),
@@ -680,9 +681,10 @@ namespace
                     return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not absolute: " +
                                 fs::u8string(path),
                             expected_right_tag};
-                return ExpectedS<fs::path>(path);
+                return {std::move(path), expected_left_tag};
             }
             p /= fs::u8path("vcpkg/archives");
+            p.make_preferred();
             if (p.is_absolute())
             {
                 return {std::move(p), expected_left_tag};
@@ -1088,10 +1090,9 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
     const auto& maybe_cachepath = default_cache_path();
     if (auto p = maybe_cachepath.get())
     {
-        auto p_preferred = *p;
         System::print2(
             "\nBased on your system settings, the default path to store binaries is\n    ",
-            fs::u8string(p_preferred.make_preferred()),
+            fs::u8string(*p),
             "\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.\n");
     }
     System::print2("\nExtended documentation is available at "
