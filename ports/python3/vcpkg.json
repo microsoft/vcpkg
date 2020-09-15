@@ -10,8 +10,16 @@
             "platform": "!(windows & static)"
         },
         {
+            "name": "gettext",
+            "platform": "!(windows | uwp)"
+        },
+        {
             "name": "libffi",
             "platform": "!(windows & static)"
+        },
+        {
+            "name": "libiconv",
+            "platform": "osx"
         },
         {
             "name": "liblzma",

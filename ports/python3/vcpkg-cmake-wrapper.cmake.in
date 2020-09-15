@@ -1,0 +1,101 @@
+if(@PythonFinder_NEW_FINDER@)
+    set(@PythonFinder_PREFIX@_FIND_REGISTRY "NEVER")
+    set(@PythonFinder_PREFIX@_ROOT_DIR "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3")
+endif()
+
+if(@PythonFinder_INTERP@)
+    find_program(@PythonFinder_PREFIX@_EXECUTABLE
+        NAMES "python" "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
+        PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3"
+        NO_DEFAULT_PATH
+    )
+endif()
+
+if(@PythonFinder_LIBS@)
+    set(@PythonFinder_PREFIX@_INCLUDE_DIR "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@")
+
+    find_library(@PythonFinder_PREFIX@_LIBRARY_RELEASE
+        NAMES
+            "python@PYTHON_VERSION_MAJOR@@PYTHON_VERSION_MINOR@"
+            "libpython@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
+        PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib"
+        NO_DEFAULT_PATH
+    )
+    find_library(@PythonFinder_PREFIX@_LIBRARY_DEBUG
+        NAMES
+            "python@PYTHON_VERSION_MAJOR@@PYTHON_VERSION_MINOR@_d"
+            "libpython@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@d"
+        PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib"
+        NO_DEFAULT_PATH
+    )
+
+    if(@PythonFinder_NEW_FINDER@)
+        # Don't set the public facing hint or the finder will be unable to detect the debug library.
+        set(_@PythonFinder_PREFIX@_LIBRARY_DEBUG ${@PythonFinder_PREFIX@_LIBRARY_DEBUG} CACHE INTERNAL "")
+        set(_@PythonFinder_PREFIX@_LIBRARY_RELEASE ${@PythonFinder_PREFIX@_LIBRARY_RELEASE} CACHE INTERNAL "")
+        unset(@PythonFinder_PREFIX@_LIBRARY_RELEASE CACHE)
+        unset(@PythonFinder_PREFIX@_LIBRARY_DEBUG CACHE)
+    endif()
+endif()
+
+_find_package(${ARGS})
+
+if(@PythonFinder_NEW_FINDER@)
+    unset(@PythonFinder_PREFIX@_EXECUTABLE CACHE)
+endif()
+
+if(@PythonFinder_LIBS@)
+    if(WIN32)
+        find_package(ZLIB)
+        list(APPEND @PythonFinder_PREFIX@_LIBRARY ${ZLIB_LIBRARY})
+        list(APPEND @PythonFinder_PREFIX@_LIBRARIES ${ZLIB_LIBRARIES})
+
+        if(@PythonFinder_NEW_FINDER@)
+            if(TARGET @PythonFinder_PREFIX@::Python)
+                set_property(TARGET @PythonFinder_PREFIX@::Python APPEND PROPERTY INTERFACE_LINK_LIBRARIES ZLIB::ZLIB)
+            endif()
+            if(TARGET @PythonFinder_PREFIX@::Module)
+                set_property(TARGET @PythonFinder_PREFIX@::Module APPEND PROPERTY INTERFACE_LINK_LIBRARIES ZLIB::ZLIB)
+            endif()
+        endif()
+    else()
+        if(@PythonFinder_NEW_FINDER@)
+            find_package(unofficial-gettext)
+            if(TARGET @PythonFinder_PREFIX@::Python)
+                set_property(TARGET @PythonFinder_PREFIX@::Python APPEND PROPERTY INTERFACE_LINK_LIBRARIES unofficial::gettext::libintl)
+            endif()
+            if(TARGET @PythonFinder_PREFIX@::Module)
+                set_property(TARGET @PythonFinder_PREFIX@::Module APPEND PROPERTY INTERFACE_LINK_LIBRARIES unofficial::gettext::libintl)
+            endif()
+        endif()
+
+        find_package(Intl)
+        find_package(Threads)
+        list(APPEND @PythonFinder_PREFIX@_LIBRARY ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS} ${Intl_LIBRARIES} util)
+        list(APPEND @PythonFinder_PREFIX@_LIBRARIES ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS} ${Intl_LIBRARIES} util)
+    endif()
+
+    # No libintl in the standard library - so we must link libintl and libiconv from vcpkg, also remove
+    # unscoped -lintl which gives downstream users heartburn.
+    if(APPLE)
+        find_package(Iconv)
+        if(@PythonFinder_NEW_FINDER@)
+            if(TARGET @PythonFinder_PREFIX@::Python)
+                get_target_property(_WORKING_LIBS @PythonFinder_PREFIX@::Python INTERFACE_LINK_LIBRARIES)
+                list(REMOVE_ITEM _WORKING_LIBS "-liconv" "-lintl")
+                list(APPEND _WORKING_LIBS Iconv::Iconv)
+                set_property(TARGET @PythonFinder_PREFIX@::Python PROPERTY INTERFACE_LINK_LIBRARIES ${_WORKING_LIBS})
+            endif()
+            if(TARGET @PythonFinder_PREFIX@::Module)
+                get_target_property(_WORKING_LIBS @PythonFinder_PREFIX@::Module INTERFACE_LINK_LIBRARIES)
+                list(REMOVE_ITEM _WORKING_LIBS "-liconv" "-lintl")
+                list(APPEND _WORKING_LIBS Iconv::Iconv)
+                set_property(TARGET @PythonFinder_PREFIX@::Module PROPERTY INTERFACE_LINK_LIBRARIES ${_WORKING_LIBS})
+            endif()
+            unset(_WORKING_LIBS)
+        endif()
+
+        list(APPEND @PythonFinder_PREFIX@_LIBRARY "-framework CoreFoundation" ${Iconv_LIBRARY})
+        list(APPEND @PythonFinder_PREFIX@_LIBRARIES "-framework CoreFoundation" ${Iconv_LIBRARIES})
+    endif()
+endif()
