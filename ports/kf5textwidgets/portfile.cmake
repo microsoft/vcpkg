@@ -8,6 +8,10 @@ vcpkg_from_github(
         "add-missing-dependencies.patch"
 )
 
+vcpkg_find_acquire_program(GETTEXT_MSGMERGE)
+get_filename_component(GETTEXT_MSGMERGE_EXE_PATH ${GETTEXT_MSGMERGE} DIRECTORY)
+vcpkg_add_to_path(${GETTEXT_MSGMERGE_EXE_PATH})
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -15,6 +19,8 @@ vcpkg_configure_cmake(
             -DBUILD_MAN_DOCS=OFF
             -DBUILD_QTHELP_DOCS=OFF
             -DBUILD_TESTING=OFF
+            -DKDE_INSTALL_QTPLUGINDIR=plugins
+            -DKDE_INSTALL_DATAROOTDIR=data
 )
 
 vcpkg_install_cmake()
