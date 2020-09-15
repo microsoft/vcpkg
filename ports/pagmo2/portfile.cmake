@@ -27,9 +27,5 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/pagmo)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING.lgpl3 DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
