@@ -1,6 +1,6 @@
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
-#set(OPTIONS -system-assimp)
+set(OPTIONS -system-assimp)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCVER vc140 vc141 vc142 )
@@ -13,9 +13,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
             list(APPEND REL_NAMES assimp-${_ver}-${_crt})
         endforeach()
     endforeach()
-    find_library(ASSIMP_REL NAMES assimp ${REL_NAMES} PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
-    find_library(ASSIMP_DBG NAMES assimp assimpd ${DBG_NAMES} PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 endif()
+
+find_library(ASSIMP_REL NAMES assimp ${REL_NAMES} PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(ASSIMP_DBG NAMES assimp assimpd ${DBG_NAMES} PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 find_library(MINIZIP_REL NAMES minizip PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
 find_library(MINIZIP_DBG NAMES minizip minizipd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
