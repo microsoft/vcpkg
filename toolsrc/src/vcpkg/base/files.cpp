@@ -5,18 +5,86 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
-#if !defined(_WIN32)
+#if defined(_WIN32)
+#include <Windows.h>
+#else // ^^^ _WIN32 // !_WIN32 vvv
 #include <fcntl.h>
 
 #include <sys/file.h>
 #include <sys/stat.h>
-#endif
+#endif // _WIN32
 
 #if defined(__linux__)
 #include <sys/sendfile.h>
 #elif defined(__APPLE__)
 #include <copyfile.h>
 #endif // ^^^ defined(__APPLE__)
+
+#include <algorithm>
+#include <string>
+
+namespace
+{
+    struct IsSlash
+    {
+        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
+    };
+
+    constexpr IsSlash is_slash;
+
+    template<size_t N>
+    bool wide_starts_with(const std::wstring& haystack, const wchar_t (&needle)[N]) noexcept
+    {
+        const size_t without_null = N - 1;
+        return haystack.size() >= without_null && std::equal(needle, needle + without_null, haystack.begin());
+    }
+
+    bool starts_with_drive_letter(std::wstring::const_iterator first, const std::wstring::const_iterator last) noexcept
+    {
+        if (last - first < 2)
+        {
+            return false;
+        }
+
+        if (!(first[0] >= L'a' && first[0] <= L'z') && !(first[0] >= L'A' && first[0] <= L'Z'))
+        {
+            return false;
+        }
+
+        if (first[1] != L':')
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    struct FindFirstOp
+    {
+        HANDLE h_find = INVALID_HANDLE_VALUE;
+        WIN32_FIND_DATAW find_data;
+
+        unsigned long find_first(const wchar_t* const path) noexcept
+        {
+            assert(h_find == INVALID_HANDLE_VALUE);
+            h_find = FindFirstFileW(path, &find_data);
+            if (h_find == INVALID_HANDLE_VALUE)
+            {
+                return GetLastError();
+            }
+
+            return 0;
+        }
+
+        ~FindFirstOp()
+        {
+            if (h_find != INVALID_HANDLE_VALUE)
+            {
+                (void)FindClose(h_find);
+            }
+        }
+    };
+} // unnamed namespace
 
 fs::path fs::u8path(vcpkg::StringView s)
 {
@@ -1197,4 +1265,105 @@ namespace vcpkg::Files
 #endif // ^^^ windows
 #endif // ^^^ std::experimental::filesystem
     }
+
+#ifdef _WIN32
+    fs::path win32_fix_path_case(const fs::path& source)
+    {
+        const std::wstring& native = source.native();
+        if (native.empty())
+        {
+            return fs::path{};
+        }
+
+        if (wide_starts_with(native, L"\\\\?\\") || wide_starts_with(native, L"\\??\\") ||
+            wide_starts_with(native, L"\\\\.\\"))
+        {
+            // no support to attempt to fix paths in the NT, \\GLOBAL??, or device namespaces at this time
+            return source;
+        }
+
+        const auto last = native.end();
+        auto first = native.begin();
+        auto is_wildcard = [](wchar_t c) { return c == L'?' || c == L'*'; };
+        if (std::any_of(first, last, is_wildcard))
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Attempt to fix case of a path containing wildcards: %s", fs::u8string(source));
+        }
+
+        std::wstring in_progress;
+        if (last - first >= 3 && is_slash(first[0]) && is_slash(first[1]) && !is_slash(first[2]))
+        {
+            // path with UNC prefix \\server\share; this will be rejected by FindFirstFile so we skip over that
+            in_progress.push_back(L'\\');
+            in_progress.push_back(L'\\');
+            first += 2;
+            auto next_slash = std::find_if(first, last, is_slash);
+            in_progress.append(first, next_slash);
+            in_progress.push_back(L'\\');
+            first = std::find_if_not(next_slash, last, is_slash);
+            next_slash = std::find_if(first, last, is_slash);
+            in_progress.append(first, next_slash);
+            first = std::find_if_not(next_slash, last, is_slash);
+            if (first != next_slash)
+            {
+                in_progress.push_back(L'\\');
+            }
+        }
+        else if (last - first >= 1 && is_slash(first[0]))
+        {
+            // root relative path
+            in_progress.push_back(L'\\');
+            first = std::find_if_not(first, last, is_slash);
+        }
+        else if (starts_with_drive_letter(first, last))
+        {
+            // path with drive letter root
+            auto letter = first[0];
+            if (letter >= L'a' && letter <= L'z')
+            {
+                letter = letter - L'a' + L'A';
+            }
+
+            in_progress.push_back(letter);
+            in_progress.push_back(L':');
+            first += 2;
+            if (first != last && is_slash(*first))
+            {
+                // absolute path
+                in_progress.push_back(L'\\');
+                first = std::find_if_not(first, last, is_slash);
+            }
+        }
+
+        assert(!fs::path(first, last).has_root_path());
+
+        while (first != last)
+        {
+            auto next_slash = std::find_if(first, last, is_slash);
+            auto original_size = in_progress.size();
+            in_progress.append(first, next_slash);
+            FindFirstOp this_find;
+            unsigned long last_error = this_find.find_first(in_progress.c_str());
+            if (last_error == 0)
+            {
+                in_progress.resize(original_size);
+                in_progress.append(this_find.find_data.cFileName);
+            }
+            else
+            {
+                // we might not have access to this intermediate part of the path;
+                // just guess that the case of that element is correct and move on
+            }
+
+            first = std::find_if_not(next_slash, last, is_slash);
+            if (first != next_slash)
+            {
+                in_progress.push_back(L'\\');
+            }
+        }
+
+        return fs::path(std::move(in_progress));
+    }
+#endif // _WIN32
 }
