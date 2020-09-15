@@ -4,9 +4,8 @@ vcpkg_from_github(
     REF 7e20b36bddab74faed39aa3768d07fd372fce596
     SHA512 6220a3974ee90afb5028a5b60ffcbff353fffbbfcf1570d8db05b6d91604324a73badcb17c73c852d6c5265e2b31e1c2de1b3ea20c0e60ecdb17ce90c9ca40bd
     HEAD_REF master
+    PATCHES disable_examples_and_tests.patch
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
