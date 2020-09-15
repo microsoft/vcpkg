@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <string>
 
+#if defined(_WIN32)
 namespace
 {
     struct IsSlash
@@ -85,6 +86,7 @@ namespace
         }
     };
 } // unnamed namespace
+#endif // _WIN32
 
 fs::path fs::u8path(vcpkg::StringView s)
 {
