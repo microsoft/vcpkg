@@ -8,6 +8,10 @@ vcpkg_from_github(
         "add-missing-kf5guiaddons-kf5archive-deps.patch"
 )
 
+vcpkg_find_acquire_program(GETTEXT_MSGMERGE)
+get_filename_component(GETTEXT_MSGMERGE_EXE_PATH ${GETTEXT_MSGMERGE} DIRECTORY)
+vcpkg_add_to_path(${GETTEXT_MSGMERGE_EXE_PATH})
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -17,6 +21,7 @@ vcpkg_configure_cmake(
         -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
         -DFORCE_DISABLE_KGLOBALACCEL=ON
+        -DKDE_INSTALL_QTPLUGINDIR=plugins
 )
 
 vcpkg_install_cmake()
@@ -26,6 +31,8 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/ksendbugmail.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/ksendbugmail.exe")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
