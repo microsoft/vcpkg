@@ -21,7 +21,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/utf8cpp)
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/utf8cpp)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/utf8cpp)
+endif()
 
 # Header only
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
