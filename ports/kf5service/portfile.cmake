@@ -14,12 +14,15 @@ endif()
 
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
+vcpkg_find_acquire_program(GETTEXT_MSGMERGE)
 
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+get_filename_component(GETTEXT_MSGMERGE_EXE_PATH ${GETTEXT_MSGMERGE} DIRECTORY)
 
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
+vcpkg_add_to_path(${GETTEXT_MSGMERGE_EXE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -37,7 +40,9 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Service)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/kbuildsycoca5.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/kbuildsycoca5.exe")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
