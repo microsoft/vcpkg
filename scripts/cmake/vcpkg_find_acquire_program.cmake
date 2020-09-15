@@ -21,6 +21,7 @@
 ## - DOXYGEN
 ## - FLEX
 ## - GASPREPROCESSOR
+## - GETTEXT_MSGMERGE
 ## - GPERF
 ## - PERL
 ## - PYTHON2
@@ -326,6 +327,15 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://sourceforge.net/projects/gnuwin32/files/gperf/${GPERF_VERSION}/gperf-${GPERF_VERSION}-bin.zip/download")
     set(ARCHIVE "gperf-${GPERF_VERSION}-bin.zip")
     set(HASH 3f2d3418304390ecd729b85f65240a9e4d204b218345f82ea466ca3d7467789f43d0d2129fcffc18eaad3513f49963e79775b10cc223979540fa2e502fe7d4d9)
+  elseif(VAR MATCHES "GETTEXT_MSGMERGE")
+    set(PROGNAME msgmerge)
+    set(GETTEXT_MSGMERGE_VERSION 0.21)
+    set(PATHS ${DOWNLOADS}/tools/msgmerge/bin)
+    set(URL "https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.21-v1.16/gettext0.21-iconv1.16-static-32.zip")
+    set(ARCHIVE "gettext0.21-iconv1.16-static-32.zip")
+    set(HASH d079d212f4dc13073ce2704f183f96b35e294e458772c37587a9c4450efceedc1188b05229c55d221b60bc5f464786a9c75d2b3abd8cf45f5e48806c45740aba)
+    set(BREW_PACKAGE_NAME "gettext")
+    set(APT_PACKAGE_NAME "gettext")
   elseif(VAR MATCHES "GASPREPROCESSOR")
     set(NOEXTRACT true)
     set(PROGNAME gas-preprocessor)
