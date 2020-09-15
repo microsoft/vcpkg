@@ -1,0 +1,5 @@
+Source: phonon4qt5
+Version: 4.11.1
+Homepage: https://invent.kde.org/libraries/phonon
+Description: Multi-platform sound framework for application developers
+Build-Depends: qt5-base, ecm
