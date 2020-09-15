@@ -1,8 +1,8 @@
-diff --git "a/gettext-runtime/intl/loadmsgcat.c" "b/gettext-runtime/intl/loadmsgcat.c"
-index 63351523..c078de3f 100644
+diff --git a/gettext-runtime/intl/loadmsgcat.c b/gettext-runtime/intl/loadmsgcat.c
+index 016fe57..030b861 100644
 --- a/gettext-runtime/intl/loadmsgcat.c
 +++ b/gettext-runtime/intl/loadmsgcat.c
-@@ -477,6 +477,55 @@ char *alloca ();
+@@ -388,6 +388,55 @@ char *alloca ();
  # define munmap(addr, len)	__munmap (addr, len)
  #endif
  

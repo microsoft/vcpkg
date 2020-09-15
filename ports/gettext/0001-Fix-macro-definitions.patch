@@ -1,10 +1,10 @@
 diff --git a/gettext-runtime/intl/xsize.h b/gettext-runtime/intl/xsize.h
-index c256665..7400ea1 100644
+index 9b9840f..0724131 100644
 --- a/gettext-runtime/intl/xsize.h
 +++ b/gettext-runtime/intl/xsize.h
-@@ -27,6 +27,12 @@
- # include <stdint.h>
- #endif
+@@ -30,6 +30,12 @@
+ /* Get ATTRIBUTE_PURE.  */
+ #include "attribute.h"
  
 +#if defined _WIN32
 +# define _GL_INLINE_HEADER_BEGIN
