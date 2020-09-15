@@ -23,10 +23,12 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Package)
 vcpkg_copy_pdbs()
 
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5package)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/kpackagetool5${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kpackagetool5${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/kf5package/kpackagetool5${VCPKG_HOST_EXECUTABLE_SUFFIX})
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/kpackagetool5.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/kpackagetool5.exe")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
