@@ -16,6 +16,7 @@
 ## - 7Z
 ## - ARIA2 (Downloader)
 ## - BISON
+## - CLANG
 ## - DARK
 ## - DOXYGEN
 ## - FLEX
@@ -43,6 +44,9 @@
 ## * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_find_acquire_program VAR)
   set(EXPANDED_VAR ${${VAR}})
   if(EXPANDED_VAR)
@@ -242,7 +246,7 @@ function(vcpkg_find_acquire_program VAR)
     set(NOEXTRACT ON)
     set(HASH 22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619)
   elseif(VAR MATCHES "MESON")
-    set(MESON_VERSION 0.55.1)
+    set(MESON_VERSION 0.55.3)
     set(PROGNAME meson)
     set(REQUIRED_INTERPRETER PYTHON3)
     set(APT_PACKAGE_NAME "meson")
@@ -251,7 +255,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PATHS ${DOWNLOADS}/tools/meson/meson-${MESON_VERSION})
     set(URL "https://github.com/mesonbuild/meson/releases/download/${MESON_VERSION}/meson-${MESON_VERSION}.tar.gz")
     set(ARCHIVE "meson-${MESON_VERSION}.tar.gz")
-    set(HASH 172b4de8c7474d709f172431b89bf2b2b1c2c38bc842039cccf6be075a45bd3509a1dab8512bc5b2ee025d65d8050d2f717dd15c1f9be17fca3b2e7da0d3e889)
+    set(HASH afb0bb25b367e681131d920995124df4b06f6d144ae1a95ebec27be13e06fefbd95840e0287cd1d84bdbb8d9c115b589a833d847c60926f55e0f15749cf66bae)
     set(_vfa_SUPPORTED ON)
     set(VERSION_CMD --version)
   elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
@@ -284,6 +288,37 @@ function(vcpkg_find_acquire_program VAR)
         set(PATHS /usr/local/opt/bison/bin)
       endif()
     endif()
+  elseif(VAR MATCHES "CLANG")
+    set(PROGNAME clang)
+    set(SUBDIR "clang-10.0.0")
+    if(CMAKE_HOST_WIN32)
+      set(PATHS 
+        # Support LLVM in Visual Studio 2019
+        "$ENV{LLVMInstallDir}/x64/bin"
+        "$ENV{LLVMInstallDir}/bin"
+        "$ENV{VCINSTALLDIR}/Tools/Llvm/x64/bin"
+        "$ENV{VCINSTALLDIR}/Tools/Llvm/bin"
+        "${DOWNLOADS}/tools/${SUBDIR}-windows/bin"
+        "${DOWNLOADS}/tools/clang/${SUBDIR}/bin")
+
+      if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
+        set(HOST_ARCH_ $ENV{PROCESSOR_ARCHITEW6432})
+      else()
+        set(HOST_ARCH_ $ENV{PROCESSOR_ARCHITECTURE})
+      endif()
+      
+      if(HOST_ARCH_ MATCHES "64")
+        set(URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe")
+        set(ARCHIVE "LLVM-10.0.0-win64.7z.exe")
+        set(HASH 3603a4be3548dabc7dda94f3ed4384daf8a94337e44ee62c0d54776c79f802b0cb98fc106e902409942e841c39bc672cc6d61153737ad1cc386b609ef25db71c)
+      else()
+        set(URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win32.exe")
+        set(ARCHIVE "LLVM-10.0.0-win32.7z.exe")
+        set(HASH 8494922b744ca0dc8d075a1d3a35a0db5a9287544afd5c4984fa328bc26f291209f6030175896b4895019126f5832045e06d8ad48072b549916df29a2228348b)
+      endif()
+    endif()
+    set(BREW_PACKAGE_NAME "llvm")
+    set(APT_PACKAGE_NAME "clang")
   elseif(VAR MATCHES "GPERF")
     set(PROGNAME gperf)
     set(GPERF_VERSION 3.0.1)
@@ -531,18 +566,18 @@ function(vcpkg_find_acquire_program VAR)
         if(ARCHIVE_EXTENSION STREQUAL ".msi")
           file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
           file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
-          _execute_process(
+          vcpkg_execute_in_download_mode(
             COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
             WORKING_DIRECTORY ${DOWNLOADS}
           )
         elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
           vcpkg_find_acquire_program(7Z)
-          _execute_process(
+          vcpkg_execute_in_download_mode(
             COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
             WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
           )
         else()
-          _execute_process(
+          vcpkg_execute_in_download_mode(
             COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
             WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
           )
