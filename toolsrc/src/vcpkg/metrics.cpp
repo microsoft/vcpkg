@@ -491,44 +491,31 @@ namespace vcpkg::Metrics
 
         const fs::path temp_folder_path = fs::path(temp_folder) / "vcpkg";
         const fs::path temp_folder_path_exe =
-            temp_folder_path / Strings::format("vcpkgmetricsuploader-%s.exe", Commands::Version::base_version());
+            temp_folder_path / Strings::format("vcpkg-%s.exe", Commands::Version::base_version());
 #endif
 
-#if defined(_WIN32)
-
-        const fs::path exe_path = [&fs]() -> fs::path {
-            auto vcpkgdir = System::get_exe_path_of_current_process().parent_path();
-            auto path = vcpkgdir / "vcpkgmetricsuploader.exe";
-            if (fs.exists(path)) return path;
-
-            path = vcpkgdir / "scripts" / "vcpkgmetricsuploader.exe";
-            if (fs.exists(path)) return path;
-
-            return "";
-        }();
-
         std::error_code ec;
+#if defined(_WIN32)
         fs.create_directories(temp_folder_path, ec);
         if (ec) return;
-        fs.copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
+        fs.copy_file(
+            System::get_exe_path_of_current_process(), temp_folder_path_exe, fs::copy_options::skip_existing, ec);
         if (ec) return;
 #else
         if (!fs.exists("/tmp")) return;
         const fs::path temp_folder_path = "/tmp/vcpkg";
-        std::error_code ec;
-        fs.create_directory(temp_folder_path, ec);
-        // ignore error
-        ec.clear();
+        fs.create_directory(temp_folder_path, ignore_errors);
 #endif
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
         fs.write_contents(vcpkg_metrics_txt_path, payload, ec);
         if (ec) return;
 
 #if defined(_WIN32)
-        const std::string cmd_line = Strings::format("cmd /c \"start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"\"",
-                                                     fs::u8string(temp_folder_path_exe),
-                                                     fs::u8string(vcpkg_metrics_txt_path));
-        System::cmd_execute_no_wait(cmd_line);
+        System::CmdLineBuilder builder;
+        builder.path_arg(temp_folder_path_exe);
+        builder.string_arg("x-upload-metrics");
+        builder.path_arg(vcpkg_metrics_txt_path);
+        System::cmd_execute_background(builder.extract());
 #else
         auto escaped_path = Strings::escape_string(fs::u8string(vcpkg_metrics_txt_path), '\'', '\\');
         const std::string cmd_line = Strings::format(
