@@ -1,9 +1,56 @@
 diff --git a/configure.ac b/configure.ac
-index 3547cae..58716c6 100644
+index 3547cae..f6e6a8e 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -384,7 +384,7 @@ if test "x$ABI" != xstandard ; then
- 	libdir='${exec_prefix}/lib32'
+@@ -310,9 +310,9 @@ case "$host_cpu" in
+ #error 64-bit x86
+ #endif
+     ], [], [
+-      ABI=32
++      ABI=
+     ], [
+-      ABI=64
++      ABI=
+     ])
+     ;;
+   *sparc*)
+@@ -321,9 +321,9 @@ case "$host_cpu" in
+ #error 64-bit sparc
+ #endif
+     ], [], [
+-      ABI=32
++      ABI=
+     ], [
+-      ABI=64
++      ABI=
+     ])
+     ;;
+   *mips*)
+@@ -332,9 +332,9 @@ case "$host_cpu" in
+ #error 64-bit mips
+ #endif
+     ], [], [
+-      ABI=32
++      ABI=
+     ], [
+-      ABI=64
++      ABI=
+     ])
+     ;;
+ esac
+@@ -375,16 +375,16 @@ if test "x$ABI" != xstandard ; then
+       # and 64-bit in lib. Don't know about "kfreebsd", does
+       # it follow the Linux fhs conventions?
+       *:freebsd*:32)
+-	libdir='${exec_prefix}/lib32'
++	libdir='${exec_prefix}/lib'
+ 	;;
+       *:freebsd*:64)
+ 	libdir='${exec_prefix}/lib'
+ 	;;
+       *:irix*:32)
+-	libdir='${exec_prefix}/lib32'
++	libdir='${exec_prefix}/lib'
  	;;
        *:irix*:64)
 -	libdir='${exec_prefix}/lib64'
