@@ -2,4 +2,4 @@ Source: kf5notifications
 Version: 5.73.0
 Homepage: https://api.kde.org/frameworks/knotifications/html/index.html
 Description: Desktop notifications
-Build-Depends: ecm, qt5-base, qt5-tools, qt5-x11extras (linux), qt5-macextras (osx), kf5coreaddons, kf5config
+Build-Depends: ecm, qt5-base, qt5-tools, qt5-x11extras (linux), qt5-macextras (osx), kf5coreaddons, kf5config, libsnoretoast (windows), phonon4qt5
