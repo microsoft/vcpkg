@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cameron314/concurrentqueue
-    REF 79cec4c3bf1ca23ea4a03adfcd3c2c3659684dd2 # v1.0.1
-    SHA512 04f4d378cfc3d90772144e89c0ec6b310354befb3f2068bf8b16f5f672604436149fef04035435f2067f606241cb726702941cf17b0305aa5cf32bd51b5c3bbd
+    REF 9cfda6cc61065d016ae3f51f486ce0fae563ea87 # 1.0.2
+    SHA512 1029840d78fb54401d12fbd94fa50b1f5460a61dac606781100a7018c35da3ffd3141f89141d0d7c61d82ca50e02d63e84ae9108d82e5ad43993fe4959fc50d9
     HEAD_REF master
 )
 

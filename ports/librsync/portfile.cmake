@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO librsync/librsync
-    REF v2.0.2
-    SHA512 5d2bc1d62b37e9ed7416203615d0a0e3c05c4c884b5da63eda10dd5c985845b500331bce226e4d45676729382c85b41528282e25d491afda31ba434ac0fefad7
+    REF 27f738650c20fef1285f11d85a34e5094a71c06f # v2.3.1
+    SHA512 5f94d62568e70073943b331e4d8bf75cca719dd1550d70dde7534503fbdd6b8f4d54e292c18734beb8c349d5ebca52dc3226b12b53d18b8b7306f0a7f936133c
     HEAD_REF master
     PATCHES
         001-enable-static-libs.patch

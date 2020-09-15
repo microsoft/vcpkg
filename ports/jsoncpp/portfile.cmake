@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-source-parsers/jsoncpp
-    REF 1.9.2
-    SHA512 7c7188199d62ae040d458d507ba62f0370c53f39c580760ee5485cae5c08e5ced0c9aea7c14f54dfd041999a7291e4d0f67f8ccd8b1030622c85590774688640
+    REF 6aba23f4a8628d599a9ef7fa4811c4ff6e4070e2 # 1.9.3
+    SHA512 f056110b22b7899a9e2cce1c1bdce13eb54750fe9308331bb7edb0f3f21373f285fcb304d66ddf0d48c80b70c68d8122221208b54ad0666816afae750a614e08
     HEAD_REF master
     PATCHES
         allow-disable-examples.patch

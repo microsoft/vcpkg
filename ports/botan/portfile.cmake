@@ -3,8 +3,8 @@ set(BOTAN_VERSION 2.12.1)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF 1a6ad661ce64287ccbe26460ccc3aa4247d86ba8 # 2.12.1
-    SHA512 7a774f325c85761e2d076847f1fc8bc67592d696c4ebde839928591f7c85352e2df6032c122bdcc603adf84d76f5a1897c7118aa3859d38f79e474f27bc3b588
+    REF 3ed6eaa3c1236aed844f5475e2df8b89b3286ac4 # 2.15.0
+    SHA512 a5c76e22f1ad8455ed5dab7c1dff2dd21e8a6e720e024144fe117982fd3b8815e8200844f6fd3abf8326fa4b18d2598c724f7ad5752c517d4b8fab83fb1b5907
     HEAD_REF master
     PATCHES
         fix-generate-build-path.patch

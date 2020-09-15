@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO log4cplus/log4cplus
-    REF REL_2_0_4
-    SHA512 194e37b8de7be377dabe911d1cec831de41f5ce14dd617b5333739a7ab8dbc3061aa24351abe811588db507aa1563a637023b26684fb21bbfc88d24b4e4ce062
+    REF 9d00f7d10f2507f68f9ab5fea8b842735d9c6cfe # REL_2_0_5
+    SHA512 b64a1d3a60584b2ba3a58470a0b0ec4c22eb0c054c0ef8ef3808fcba5604860fbd5b2d96148939ea15d3bf2ff1e40e684710dc81b57b73232851a486251f648d
     HEAD_REF master
     PATCHES fix-usage-error.patch
 )

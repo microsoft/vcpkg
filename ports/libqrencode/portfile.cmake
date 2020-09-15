@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fukuchi/libqrencode
-    REF v4.0.2
-    SHA512 847e32bd13358319f3beabde103b5335a6e11c3f9275425b74e89a00b0ee4d67af8a428f12acc8b80a0419382480e5aeb02e58602a69ee750c21b28f357af6bc
+    REF 0f6149e41533a34029e72ff9234a18e0f22ab992 # v4.1.0
+    SHA512 7aa215d1a9b06df19bcc0178d241af285d5215f6df994f9e2cf64cde716c7451252380a17e60ef27899bf9039e91306c8eb1948b40ede188d49a25555a94c22a
     HEAD_REF master
     PATCHES
         fix-found-wingetopt.patch
