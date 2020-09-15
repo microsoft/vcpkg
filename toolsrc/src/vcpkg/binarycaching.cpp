@@ -9,6 +9,7 @@
 #include <vcpkg/binarycaching.private.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/metrics.h>
 #include <vcpkg/tools.h>
 
 using namespace vcpkg;
@@ -667,6 +668,7 @@ namespace
             auto maybe_cachepath = System::get_environment_variable("VCPKG_DEFAULT_BINARY_CACHE");
             if (auto p_str = maybe_cachepath.get())
             {
+                Metrics::g_metrics.lock()->track_property("VCPKG_DEFAULT_BINARY_CACHE", "defined");
                 const auto path = fs::u8path(*p_str);
                 const auto status = fs::stdfs::status(path);
                 if (!fs::stdfs::exists(status))
@@ -915,6 +917,12 @@ namespace
 ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs_pure(
     const std::string& env_string, View<std::string> args)
 {
+    {
+        auto metrics = Metrics::g_metrics.lock();
+        if (!env_string.empty()) metrics->track_property("VCPKG_BINARY_SOURCES", "defined");
+        if (args.size() != 0) metrics->track_property("binarycaching-source", "defined");
+    }
+
     State s;
 
     BinaryConfigParser default_parser("default,readwrite", "<defaults>", &s);
@@ -930,17 +938,22 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
         if (auto err = arg_parser.get_error()) return err->format();
     }
 
+    if (s.m_cleared) Metrics::g_metrics.lock()->track_property("binarycaching-clear", "defined");
+
     std::vector<std::unique_ptr<IBinaryProvider>> providers;
     if (!s.archives_to_read.empty() || !s.archives_to_write.empty())
         providers.push_back(
             std::make_unique<ArchivesBinaryProvider>(std::move(s.archives_to_read), std::move(s.archives_to_write)));
     if (!s.sources_to_read.empty() || !s.sources_to_write.empty() || !s.configs_to_read.empty() ||
         !s.configs_to_write.empty())
+    {
+        Metrics::g_metrics.lock()->track_property("binarycaching-nuget", "defined");
         providers.push_back(std::make_unique<NugetBinaryProvider>(std::move(s.sources_to_read),
                                                                   std::move(s.sources_to_write),
                                                                   std::move(s.configs_to_read),
                                                                   std::move(s.configs_to_write),
                                                                   s.interactive));
+    }
 
     return {std::make_unique<MergeBinaryProviders>(std::move(providers))};
 }
@@ -978,12 +991,15 @@ details::NuGetRepoInfo details::get_nuget_repo_info_from_env()
     auto vcpkg_nuget_repository = System::get_environment_variable("VCPKG_NUGET_REPOSITORY");
     if (auto p = vcpkg_nuget_repository.get())
     {
+        Metrics::g_metrics.lock()->track_property("VCPKG_NUGET_REPOSITORY", "defined");
         return {std::move(*p)};
     }
     auto gh_repo = System::get_environment_variable("GITHUB_REPOSITORY").value_or("");
     if (gh_repo.empty()) return {};
     auto gh_server = System::get_environment_variable("GITHUB_SERVER_URL").value_or("");
     if (gh_server.empty()) return {};
+
+    Metrics::g_metrics.lock()->track_property("GITHUB_REPOSITORY", "defined");
 
     return {Strings::concat(gh_server, '/', gh_repo, ".git"),
             System::get_environment_variable("GITHUB_REF").value_or(""),
