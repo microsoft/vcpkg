@@ -1,44 +1,20 @@
 diff --git a/configure.ac b/configure.ac
-index 3547cae..f6e6a8e 100644
+index 3547cae..e13a5bf 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -310,9 +310,9 @@ case "$host_cpu" in
- #error 64-bit x86
- #endif
-     ], [], [
--      ABI=32
-+      ABI=
-     ], [
--      ABI=64
-+      ABI=
-     ])
-     ;;
-   *sparc*)
-@@ -321,9 +321,9 @@ case "$host_cpu" in
- #error 64-bit sparc
- #endif
-     ], [], [
--      ABI=32
-+      ABI=
-     ], [
--      ABI=64
-+      ABI=
-     ])
-     ;;
-   *mips*)
-@@ -332,9 +332,9 @@ case "$host_cpu" in
- #error 64-bit mips
- #endif
-     ], [], [
--      ABI=32
-+      ABI=
-     ], [
--      ABI=64
-+      ABI=
-     ])
-     ;;
- esac
-@@ -375,16 +375,16 @@ if test "x$ABI" != xstandard ; then
+@@ -366,25 +366,25 @@ if test "x$ABI" != xstandard ; then
+ 	else
+ 	  # The dash builtin pwd tries to be "helpful" and remember
+ 	  # symlink names. Use -P option, and hope it's portable enough.
+-	  test -d /usr/lib${ABI} \
+-	    && (cd /usr/lib${ABI} && pwd -P | grep >/dev/null "/lib${ABI}"'$') \
+-	    && libdir='${exec_prefix}/'"lib${ABI}"
++	  test -d /usr/lib \
++	    && (cd /usr/lib && pwd -P | grep >/dev/null "/lib"'$') \
++	    && libdir='${exec_prefix}/'"lib"
+ 	fi
+ 	;;
+       # On freebsd, it seems 32-bit libraries are in lib32,
        # and 64-bit in lib. Don't know about "kfreebsd", does
        # it follow the Linux fhs conventions?
        *:freebsd*:32)
