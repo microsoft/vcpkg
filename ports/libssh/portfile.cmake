@@ -39,7 +39,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(
 	    ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h 
 	    "#ifdef LIBSSH_STATIC"
-		"#if 1"
+	    "#if 1"
 	)	
 endif()
 
