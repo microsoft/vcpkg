@@ -34,6 +34,8 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/solid-hardware5.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/solid-hardware5.exe")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
