@@ -39,7 +39,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     brotli      CURL_BROTLI
     schannel    CMAKE_USE_SCHANNEL
     sectransp   CMAKE_USE_SECTRANSP
-    
+    disable-ldap  DISABLE_LDAP
+
     INVERTED_FEATURES
     non-http HTTP_ONLY
 )
@@ -47,6 +48,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 set(SECTRANSP_OPTIONS)
 if("sectransp" IN_LIST FEATURES)
     set(SECTRANSP_OPTIONS -DCURL_CA_PATH=none)
+endif()
+
+if (DISABLE_LDAP)
+    set(LDAP_OPTION -DUSE_WIN32_LDAP=OFF)
 endif()
 
 # UWP targets
@@ -66,6 +71,7 @@ vcpkg_configure_cmake(
     OPTIONS ${FEATURE_OPTIONS}
         ${UWP_OPTIONS}
         ${SECTRANSP_OPTIONS}
+        ${LDAP_OPTION}
         -DBUILD_TESTING=OFF
         -DENABLE_MANUAL=OFF
         -DCURL_STATICLIB=${CURL_STATICLIB}

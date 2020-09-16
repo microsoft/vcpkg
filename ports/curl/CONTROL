@@ -47,7 +47,10 @@ Build-Depends: c-ares
 Description: c-ares support
 
 Feature: sspi
-Description: SSPI support 
+Description: SSPI support
 
 Feature: brotli
 Description: brotli support (brotli)
+
+Feature: disable-ldap
+Description: disable win32 ldap support
