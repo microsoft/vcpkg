@@ -16,6 +16,7 @@ vcpkg_from_github(
         0010-Fix-x264-detection.patch
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
+        0013-Fix-x264-lib-name.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
