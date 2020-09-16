@@ -9,8 +9,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO capnproto/capnproto
-    REF 57a4ca5af5a7f55b768a9d9d6655250bffb1257f # v0.8.0
-    SHA512 6550356a40a13d41fbeef3887027de1134c4bc37e4d79435e67da1f65665f3856f7cd663be392135cf4a08fffcfd4e171614026c20bfc5727adfd624b2d33e35
+    REF v0.7.0
+    SHA512 a3ea278ded6a866759c0517d16b99bd38ffea1c163ce63a3604b752d8bdaafbc38a600de94afe12db35e7f7f06e29cc94c911dc2e0ecec6fe1185452df2a2bd3
     HEAD_REF master
 	PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-capnpc-extension-handling-on-Windows.patch"
 )

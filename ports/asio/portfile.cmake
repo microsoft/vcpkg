@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chriskohlhoff/asio
-    REF be7badc31abcc395cf868de6a1e240c2350bdbf2 # asio-1-18-0
-    SHA512 a43d9ced5a7539e191e1b9be1f8be3b6573f8b12ac01cfe6f0cd8f1d887667971e1cf5fd3a632f972fa656442239547cf0f705d4b5c439b2b256dd5c5c5adc1e
+    REF asio-1-12-2
+    SHA512 7c2e213ff154bb2e5776b37906d437a62206f973316c94706e6d42e3c2f0866e7d97f3e40225ab5f28bf2c4a33fa0b38a4b75421aef86ddf9f2da0811caa2d00
     HEAD_REF master
 )
 
