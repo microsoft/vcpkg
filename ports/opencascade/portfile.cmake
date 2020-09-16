@@ -52,12 +52,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(GLOB BATS ${CURRENT_PACKAGES_DIR}/bin/*.bat)
 file(REMOVE_RECURSE ${BATS})
 
-# move cmake files into the share folder
-file(GLOB CMAKES ${CURRENT_PACKAGES_DIR}/lib/cmake/opencascade/*.cmake)
-foreach(CM ${CMAKES})
-    get_filename_component(N "${CM}" NAME)
-    file(RENAME ${CM} ${CURRENT_PACKAGES_DIR}/share/${PORT}/${N})
-endforeach()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 
 file(INSTALL ${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
