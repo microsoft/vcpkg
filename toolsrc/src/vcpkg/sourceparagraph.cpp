@@ -523,6 +523,7 @@ namespace vcpkg
                 FeatureDeserializer::NAME,
                 FeatureDeserializer::DESCRIPTION,
                 FeatureDeserializer::DEPENDENCIES,
+                FeatureDeserializer::SUPPORTS,
             };
             return t;
         }
