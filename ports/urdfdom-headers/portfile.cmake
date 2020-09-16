@@ -1,11 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/urdfdom_headers
     REF a15d906ff16a7fcbf037687b9c63b946c0cc04a1 # 1.0.5
     SHA512 794acd3b077a1d8fa27d0a698cecbce42f3a7b30f867e79b9897b0d97dcd9e80d2cf3b0c75ee34f628f73afb871c439fffe4a1d7ed85c7fac6553fb1e5b56c36
     HEAD_REF master
+    PATCHES fix-include-path.patch
   )
 
 vcpkg_configure_cmake(
@@ -30,4 +29,4 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
