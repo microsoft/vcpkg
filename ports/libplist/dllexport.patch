@@ -1,18 +1,18 @@
 diff --git a/include/plist/plist.h b/include/plist/plist.h
-index 2863c74..9cdb219 100644
+index 9f0d3a6..b70890b 100644
 --- a/include/plist/plist.h
 +++ b/include/plist/plist.h
-@@ -42,7 +42,7 @@ extern "C"
+@@ -44,7 +44,7 @@ extern "C"
  #include <stdint.h>
  #endif
  
 -#ifdef _MSC_VER 
-+#if defined(_MSC_VER) && defined(LIBPLIST_EXPORTS)
++#if defined(_MSC_VER) && defined(LIBPLIST_EXPORTS) 
  #define PLIST_API_MSC __declspec( dllexport ) 
  #else  
  #define PLIST_API_MSC 
 diff --git a/src/plist.h b/src/plist.h
-index 1e5d0d1..6690343 100644
+index 1e5d0d1..96c7042 100644
 --- a/src/plist.h
 +++ b/src/plist.h
 @@ -39,10 +39,7 @@
@@ -23,7 +23,7 @@ index 1e5d0d1..6690343 100644
 -  #define PLIST_API __declspec( dllexport )
 -#else
 -#ifdef WIN32
-+#if (defined(_MSC_VER) || defined(WIN32)) && defined(LIBPLIST_EXPORTS)
++# if (defined(_MSC_VER) || defined(WIN32)) && defined(LIBPLIST_EXPORTS)
    #define PLIST_API __declspec( dllexport )
  #else
    #ifdef HAVE_FVISIBILITY
