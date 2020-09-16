@@ -20,8 +20,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
-    REF 6c5486c227413adb26258ddaa733dd5ed3ce5430 # v2.3.1
-    SHA512 aaa94862d796c207a2f71096bc93e93a0ca8753a63de15e7569ea4f3bc8d4e0bb5d6d140a40283ef9be42d3825639ccc4c63181ed793239e70ec18aac83a687f
+    REF v2.2.1
+    SHA512 6b10f9bbf9ebf136655d1c6464f3849c8581b3cd5ef07b0697ddd5f32611dce301af5148e8e6fe91e763301e68994957a62a278334ee7a78559101f411f27d49
     PATCHES
             0001-fix-path-for-vcpkg.patch
             0002-fix-build-error.patch
