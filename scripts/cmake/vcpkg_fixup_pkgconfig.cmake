@@ -47,7 +47,11 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     set(PKGCONFIG_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
     set(PKGCONFIG_PACKAGES_SHARE_DIR "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
-    set(BACKUP_ENV_PKG_CONFIG_PATH "$ENV{PKG_CONFIG_PATH}")
+    if(DEFINED ENV{PKG_CONFIG_PATH})
+        set(BACKUP_ENV_PKG_CONFIG_PATH "$ENV{PKG_CONFIG_PATH}")
+    else()
+        unset(BACKUP_ENV_PKG_CONFIG_PATH)
+    endif()
     if(ENV{PKG_CONFIG_PATH})
         set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
     else()
@@ -80,13 +84,10 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
-    # Get all required libs. --static means we get all libraries required for static linkage 
-    # which is the worst case and includes the case without --static
-    # This retests already tested *.pc files since pkg-config will recursivly search for
-    # required packages and add there link flags to the one being tested
-    # as such NOT_STATIC_PKGCONFIG might be used to deactivate the --static arg to pkg-config
-
-    execute_process(COMMAND "${pkg_cfg_cmd}" --print-errors ${PKGCONFIG_STATIC} --libs ${_package_name}
+    # The main vcpkg_fixup_pkgconfig ensures that any XYZ.private fields are appropriately fused
+    # into the XYZ field, based on VCPKG_LIBRARY_LINKAGE. We then do _not_ pass `--static` to avoid
+    # recursing into system libraries which might have wildly variable dependencies.
+    execute_process(COMMAND "${pkg_cfg_cmd}" --print-errors --libs ${_package_name}
                     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                     RESULT_VARIABLE _pkg_error_var
                     OUTPUT_VARIABLE _pkg_libs_output
@@ -139,11 +140,13 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         endif()
     endforeach()
 
-    set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH}")
+    if(DEFINED BACKUP_ENV_PKG_CONFIG_PATH)
+        set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH}")
+    endif()
 endfunction()
 
 function(vcpkg_fixup_pkgconfig)
-    cmake_parse_arguments(_vfpkg "SKIP_CHECK;NOT_STATIC_PKGCONFIG" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS" ${ARGN})
+    cmake_parse_arguments(_vfpkg "SKIP_CHECK" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS" ${ARGN})
 
     # Note about SYSTEM_PACKAGES: pkg-config requires all packages mentioned in pc files to exists. Otherwise pkg-config will fail to find the pkg.
     # As such naming any SYSTEM_PACKAGES is damned to fail which is why it is not mentioned in the docs at the beginning.
@@ -151,12 +154,6 @@ function(vcpkg_fixup_pkgconfig)
         list(APPEND _vfpkg_SYSTEM_LIBRARIES ${VCPKG_SYSTEM_LIBRARIES})
     endif()
 
-    if(_vfpkg_NOT_STATIC_PKGCONFIG)
-        set(PKGCONFIG_STATIC)
-    else()
-        set(PKGCONFIG_STATIC --static)
-    endif()
-    
     if(_vfpkg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
@@ -207,6 +204,27 @@ function(vcpkg_fixup_pkgconfig)
             string(REGEX REPLACE " -L(\\\${[^}]*}[^ \n\t]*)" " -L\"\\1\"" _contents "${_contents}")
             string(REGEX REPLACE " -I(\\\${[^}]*}[^ \n\t]*)" " -I\"\\1\"" _contents "${_contents}")
             string(REGEX REPLACE " -l(\\\${[^}]*}[^ \n\t]*)" " -l\"\\1\"" _contents "${_contents}")
+            # This section fuses XYZ.private and XYZ according to VCPKG_LIBRARY_LINKAGE
+            #
+            # Pkgconfig searches Requires.private transitively for Cflags in the dynamic case,
+            # which prevents us from removing it.
+            #
+            # Once this transformation is complete, users of vcpkg should never need to pass
+            # --static.
+            if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+                # Libs comes before Libs.private
+                string(REGEX REPLACE "(^|\n)(Libs: [^\n]*)(.*)\nLibs.private:( [^\n]*)" "\\1\\2\\4\\3" _contents "${_contents}")
+                # Libs.private comes before Libs
+                string(REGEX REPLACE "(^|\n)Libs.private:( [^\n]*)(.*\nLibs: [^\n]*)" "\\3\\2" _contents "${_contents}")
+                # Only Libs.private
+                string(REGEX REPLACE "(^|\n)Libs.private: " "\\1Libs: " _contents "${_contents}")
+                # Requires comes before Requires.private
+                string(REGEX REPLACE "(^|\n)(Requires: [^\n]*)(.*)\nRequires.private:( [^\n]*)" "\\1\\2\\4\\3" _contents "${_contents}")
+                # Requires.private comes before Requires
+                string(REGEX REPLACE "(^|\n)Requires.private:( [^\n]*)(.*\nRequires: [^\n]*)" "\\3\\2" _contents "${_contents}")
+                # Only Requires.private
+                string(REGEX REPLACE "(^|\n)Requires.private: " "\\1Requires: " _contents "${_contents}")
+            endif()
             file(WRITE "${_file}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}\n${_contents}")
             unset(PKG_LIB_SEARCH_PATH)
         endforeach()
