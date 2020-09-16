@@ -475,6 +475,20 @@ namespace vcpkg::Json
         }
 
         template<class Type>
+        Optional<Type> visit_map_field(StringView key, const Value& value, IDeserializer<Type>& visitor)
+        {
+            m_path.push_back(key);
+            auto res = internal_visit(value, visitor);
+            m_path.pop_back();
+            return std::move(res);
+        }
+        template<class Type>
+        Optional<Type> visit_map_field(StringView key, const Value& value, IDeserializer<Type>&& visitor)
+        {
+            return visit_map_field(key, value, visitor);
+        }
+
+        template<class Type>
         Optional<std::vector<Type>> array_elements(const Array& arr, IDeserializer<Type>& visitor)
         {
             std::vector<Type> result;
