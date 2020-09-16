@@ -1,0 +1,173 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 92404c5..c1f47d6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -85,9 +85,6 @@ endfunction()
+ # Always build position-independent-code
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+-# Don't make the install target depend on the all target.
+-set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
+-
+ # In Debug mode, enable extra compiler flags.
+ if(NOT MSVC AND SEAL_DEBUG)
+   seal_enable_cxx_compiler_flag_if_supported("-Wall")
+@@ -253,7 +250,7 @@ set(SEAL_USE_MSGSL_OPTION_STR "Use Microsoft GSL")
+ option(SEAL_USE_MSGSL ${SEAL_USE_MSGSL_OPTION_STR} ON)
+ 
+ # Download and configure
+-if(SEAL_USE_MSGSL AND NOT MSVC)
++if(SEAL_USE_MSGSL)
+     message(STATUS "Setting up MSGSL ...")
+     if(NOT CMAKE_TOOLCHAIN_FILE)
+         execute_process(
+@@ -280,7 +277,7 @@ if(SEAL_USE_MSGSL AND NOT MSVC)
+ endif()
+ 
+ # Build
+-if(SEAL_USE_MSGSL AND NOT MSVC)
++if(SEAL_USE_MSGSL)
+     execute_process(
+         COMMAND ${CMAKE_COMMAND} --build .
+         OUTPUT_QUIET
+@@ -296,7 +293,7 @@ if(SEAL_USE_MSGSL AND NOT MSVC)
+ endif()
+ 
+ # Set up the targets
+-if(SEAL_USE_MSGSL AND NOT MSVC)
++if(SEAL_USE_MSGSL)
+     add_subdirectory(
+         ${SEAL_THIRDPARTY_DIR}/msgsl/src
+         EXCLUDE_FROM_ALL)
+@@ -308,12 +305,12 @@ set(SEAL_USE_ZLIB_OPTION_STR "Use ZLIB for compressed serialization")
+ option(SEAL_USE_ZLIB ${SEAL_USE_ZLIB_OPTION_STR} ON)
+ 
+ # ZLIB has no VERSION given to project(), needs to suppress CMP0048 warning
+-if(SEAL_USE_ZLIB AND NOT MSVC)
++if(SEAL_USE_ZLIB)
+     set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS TRUE CACHE INTERNAL "Suppress CMP0048 warning" FORCE)
+ endif()
+ 
+ # Download and configure
+-if(SEAL_USE_ZLIB AND NOT MSVC)
++if(SEAL_USE_ZLIB)
+     message(STATUS "Setting up ZLIB ...")
+     if(NOT CMAKE_TOOLCHAIN_FILE)
+         execute_process(
+@@ -351,7 +348,7 @@ if(SEAL_USE_ZLIB AND NOT MSVC)
+ endif()
+ 
+ # Build
+-if(SEAL_USE_ZLIB AND NOT MSVC)
++if(SEAL_USE_ZLIB)
+     execute_process(COMMAND ${CMAKE_COMMAND} --build .
+         OUTPUT_QUIET
+         RESULT_VARIABLE result
+@@ -362,7 +359,7 @@ if(SEAL_USE_ZLIB AND NOT MSVC)
+ endif()
+ 
+ # Set up the targets
+-if(SEAL_USE_ZLIB AND NOT MSVC)
++if(SEAL_USE_ZLIB)
+     add_subdirectory(
+         ${SEAL_THIRDPARTY_DIR}/zlib/src
+         EXCLUDE_FROM_ALL)
+@@ -380,7 +377,7 @@ endif()
+ # https://github.com/google/googletest/blob/release-1.10.0/googletest/README.md.
+ 
+ # Download and configure
+-if(SEAL_BUILD_TESTS AND NOT MSVC)
++if(SEAL_BUILD_TESTS)
+     message(STATUS "Setting up Google Test ...")
+     execute_process(
+         COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+@@ -397,7 +394,7 @@ if(SEAL_BUILD_TESTS AND NOT MSVC)
+ endif()
+ 
+ # Build
+-if(SEAL_BUILD_TESTS AND NOT MSVC)
++if(SEAL_BUILD_TESTS)
+     execute_process(COMMAND ${CMAKE_COMMAND} --build .
+         OUTPUT_QUIET
+         RESULT_VARIABLE result
+@@ -408,7 +405,7 @@ if(SEAL_BUILD_TESTS AND NOT MSVC)
+ endif()
+ 
+ # Set up the targets
+-if(SEAL_BUILD_TESTS AND NOT MSVC)
++if(SEAL_BUILD_TESTS)
+     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+     add_subdirectory(
+         ${SEAL_THIRDPARTY_DIR}/googletest/src
+@@ -651,11 +648,11 @@ add_subdirectory(native/src/seal)
+ seal_set_language(seal_obj)
+ seal_set_include_directories(seal_obj)
+ 
+-if(SEAL_USE_MSGSL AND NOT MSVC)
++if(SEAL_USE_MSGSL)
+     target_link_libraries(seal_obj PRIVATE GSL)
+ endif()
+ 
+-if(SEAL_USE_ZLIB AND NOT MSVC)
++if(SEAL_USE_ZLIB)
+     target_link_libraries(seal_obj PRIVATE zlibstatic)
+ endif()
+ 
+@@ -669,7 +666,7 @@ seal_link_threads(seal)
+ seal_install_target(seal SEALTargets)
+ 
+ # Conditionally add MSGSL include directory to build interface
+-if(SEAL_USE_MSGSL AND NOT MSVC)
++if(SEAL_USE_MSGSL)
+     target_include_directories(seal PUBLIC $<BUILD_INTERFACE:${MSGSL_INCLUDE_DIR}>)
+ endif()
+ 
+@@ -684,11 +681,11 @@ if(BUILD_SHARED_LIBS)
+     seal_link_threads(seal_shared)
+ 
+     # Conditionally add MSGSL include directory to build interface
+-    if(SEAL_USE_MSGSL AND NOT MSVC)
++    if(SEAL_USE_MSGSL)
+         target_include_directories(seal_shared PUBLIC $<BUILD_INTERFACE:${MSGSL_INCLUDE_DIR}>)
+     endif()
+ 
+-    if(SEAL_USE_ZLIB AND NOT MSVC)
++    if(SEAL_USE_ZLIB)
+         # In the shared build we link zlibstatic into the shared library
+         target_link_libraries(seal_shared PRIVATE zlibstatic)
+     endif()
+@@ -775,7 +772,7 @@ export(
+     FILE ${SEAL_TARGETS_FILENAME})
+ 
+ # In UNIX-like platforms install MSGSL header files
+-if(SEAL_USE_MSGSL AND NOT MSVC)
++if(SEAL_USE_MSGSL)
+     install(
+         DIRECTORY
+             ${MSGSL_INCLUDE_DIR}/gsl
+diff --git a/thirdparty/msgsl/CMakeLists.txt b/thirdparty/msgsl/CMakeLists.txt
+index 0310c14..6e667d8 100644
+--- a/thirdparty/msgsl/CMakeLists.txt
++++ b/thirdparty/msgsl/CMakeLists.txt
+@@ -27,6 +27,8 @@ ExternalProject_Add(EP_MSGSL
+     GIT_TAG             v${PROJECT_VERSION}
+     GIT_CONFIG          advice.detachedHead=false
+     CMAKE_ARGS          ${MSGSL_CMAKE_ARGS}
++    CONFIGURE_COMMAND   ""
++    BUILD_COMMAND       ""
+     INSTALL_COMMAND     ""
+     TEST_COMMAND        ""
+ )
+diff --git a/thirdparty/zlib/CMakeLists.txt b/thirdparty/zlib/CMakeLists.txt
+index afed55d..cce09ae 100644
+--- a/thirdparty/zlib/CMakeLists.txt
++++ b/thirdparty/zlib/CMakeLists.txt
+@@ -27,6 +27,8 @@ ExternalProject_Add(EP_ZLIB
+     GIT_TAG             v${PROJECT_VERSION}
+     GIT_CONFIG          advice.detachedHead=false
+     CMAKE_ARGS          ${ZLIB_CMAKE_ARGS}
++    CONFIGURE_COMMAND   ""
++    BUILD_COMMAND       ""
+     INSTALL_COMMAND     ""
+     TEST_COMMAND        ""
+ )
