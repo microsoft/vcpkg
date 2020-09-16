@@ -31,12 +31,9 @@ if("vtkm" IN_LIST FEATURES)
 endif()
 
 if("python" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
-        -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
     )
 
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages

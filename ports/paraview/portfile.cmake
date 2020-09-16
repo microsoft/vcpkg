@@ -55,15 +55,6 @@ vcpkg_from_gitlab(
 file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBridge)
 file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting)
 
-if("python" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
-        )
-    #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja

@@ -1,6 +1,6 @@
 Source: paraview
 Version: 5.8.0
-Port-Version: 3
+Port-Version: 4
 Homepage: https://www.paraview.org/
 Description: VTK-based Data Analysis and Visualization Application
 Build-Depends: vtk[core,paraview], protobuf, cgns, boost-core, boost-format, boost-algorithm
@@ -11,7 +11,7 @@ Build-Depends: vtk[core,vtkm]
 
 Feature: python
 Description: enables the build of python wrappers
-Build-Depends: vtk[core,python]
+Build-Depends: python3, vtk[core,python]
 
 Feature: cuda
 Description: enables cuda within paraview
