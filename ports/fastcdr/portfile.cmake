@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-CDR
-    REF v1.0.11
-    SHA512 04b84437ffad6425ba7f934adb9ae6a88e710e50ca9259ae0ecdb9dbfcdbd59944fd21e85e81ba4d341df1ee2c76fa7040ab902b869ef3185cacee6e866f5e80
+    REF 065d49248bd4afbae670836ee1f1c718b9760dde # v1.0.15
+    SHA512 1e011f1848abace94299368a5150f9f7513a676ccdc2b2247cebcb098f7b397e9bd20f5663bc35ea9921b1c91654af39e19b867b73c38bdc5612e0e2b926743a
     HEAD_REF master
     PATCHES install-cmake.patch
 )
@@ -19,7 +17,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/fastcdr/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fastcdr TARGET_PATH share/fastcdr)
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/fastcdr/fastcdr-config.cmake" _contents)
 string(REPLACE "include(\${fastcdr_LIB_DIR}/fastcdr/cmake/fastcdr-targets.cmake)" "include(\${CMAKE_CURRENT_LIST_DIR}/fastcdr-targets.cmake)" _contents "${_contents}")
@@ -39,6 +37,4 @@ else()
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/fastcdr/config.h "${FASTCDR_H}")
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/license DESTINATION ${CURRENT_PACKAGES_DIR}/share/fastcdr)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/fastcdr/license ${CURRENT_PACKAGES_DIR}/share/fastcdr/copyright)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/fastcdr/license DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
