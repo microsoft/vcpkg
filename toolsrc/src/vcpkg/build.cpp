@@ -813,7 +813,7 @@ namespace vcpkg::Build
 
     struct AbiTagAndFile
     {
-        const std::string& triplet_abi;
+        const std::string* triplet_abi;
         std::string tag;
         fs::path tag_file;
     };
@@ -926,7 +926,7 @@ namespace vcpkg::Build
             const auto abi_file_path = current_build_tree / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
             fs.write_contents(abi_file_path, full_abi_info, VCPKG_LINE_INFO);
 
-            return AbiTagAndFile{triplet_abi,
+            return AbiTagAndFile{&triplet_abi,
                                  Hash::get_file_hash(VCPKG_LINE_INFO, fs, abi_file_path, Hash::Algorithm::Sha1),
                                  abi_file_path};
         }
@@ -990,7 +990,7 @@ namespace vcpkg::Build
             auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, dependency_abis);
             if (auto p = maybe_abi_tag_and_file.get())
             {
-                abi_info.triplet_abi = p->triplet_abi;
+                abi_info.triplet_abi = *p->triplet_abi;
                 abi_info.package_abi = std::move(p->tag);
                 abi_info.abi_tag_file = std::move(p->tag_file);
             }
