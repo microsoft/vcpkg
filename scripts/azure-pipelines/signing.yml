@@ -53,8 +53,15 @@ jobs:
         InputType: 'CommandLine'
         arguments: 'analyze "$(Build.StagingDirectory)\vcpkg.exe"'
     - task: PublishBuildArtifacts@1
+      displayName: 'Publish vcpkg.exe'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)\vcpkg.exe'
+        ArtifactName: 'Windows'
+        publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish vcpkg.pdb'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\vcpkg.pdb'
         ArtifactName: 'Windows'
         publishLocation: 'Container'
     - task: MicroBuildCleanup@1
