@@ -10,7 +10,7 @@ string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/osg/" "" OSG_PLUGINS_SUBDIR "${OS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF ef631e0933390ca33b727392392efea2400e60a6     #version 3.0
+    REF dc73ac92b19fff1427414cfb981b6018c0ed88a1     #version 3.0
     SHA512 df17c12ef0f9833c3a601aac7ffe8a6600a06d85865300a282aba6aacec6edd4d14ace86ae11b68c45dbbef3851436eff30b3fd7eee8696e8752cd22886c092b
     HEAD_REF master
     PATCHES 
