@@ -16,6 +16,7 @@ set(PATCHES
     0005-only-build-required-projects.patch
     0006-fix-duplicate-symbols.patch
     0007-disable-static-PYD-loading.patch
+    0008-always-use-vcpkg-expat.patch
 )
 
 vcpkg_from_github(
@@ -40,6 +41,8 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         find_library(BZ2_DEBUG NAMES bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_RELEASE NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_DEBUG NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(EXPAT_RELEASE NAMES libexpat PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(EXPAT_DEBUG NAMES libexpat libexpatd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(FFI_RELEASE NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(FFI_DEBUG NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -140,7 +143,12 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
 
     vcpkg_clean_msbuild()
 else()
-    set(OPTIONS "--with-openssl=${CURRENT_INSTALLED_DIR}" "--with-ensurepip" [[--with-suffix=""]])
+    set(OPTIONS
+        "--with-openssl=${CURRENT_INSTALLED_DIR}"
+        "--with-ensurepip"
+        [[--with-suffix=""]]
+        "--with-system-expat"
+    )
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()

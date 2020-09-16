@@ -1,7 +1,7 @@
 From 79ec7506399bc3846bb0631827e3880f5468e507 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Sun, 13 Sep 2020 21:33:33 -0400
-Subject: [PATCH 1/7] Static library
+Subject: [PATCH 1/8] Static library
 
 
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h

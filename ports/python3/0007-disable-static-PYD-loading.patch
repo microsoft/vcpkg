@@ -1,7 +1,7 @@
 From eaf5d60b5de65f8d1f8f32535cd2e42da3115f00 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Sun, 13 Sep 2020 19:38:30 -0400
-Subject: [PATCH 7/7] Disable static PYD loading
+Subject: [PATCH 7/8] Disable static PYD loading
 
 Loading shared *.pyd extensions with a static python on Windows crashes
 the interpreter. Don't do that.

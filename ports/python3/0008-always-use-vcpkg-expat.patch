@@ -1,0 +1,37 @@
+From 0fb7abf948c0c6157a49126c90ef661ef59cd11f Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Wed, 16 Sep 2020 16:48:38 -0400
+Subject: [PATCH 8/8] Always use vcpkg expat
+
+The vendored expat library causes errors when building the port on
+x86-windows after the expat port has been built.
+
+diff --git a/PCbuild/pyexpat.vcxproj b/PCbuild/pyexpat.vcxproj
+index b2d9f5d57d..4efb826a05 100644
+--- a/PCbuild/pyexpat.vcxproj
++++ b/PCbuild/pyexpat.vcxproj
+@@ -89,17 +89,19 @@
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <ItemDefinitionGroup>
+-    <ClCompile>
++    <ClCompile Condition="false">
+       <AdditionalIncludeDirectories>$(PySourcePath)Modules\expat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PYEXPAT_EXPORTS;HAVE_EXPAT_H;XML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+   </ItemDefinitionGroup>
+-  <ItemGroup>
++  <ItemGroup Condition="false">
+     <ClInclude Include="..\Modules\expat\xmlrole.h" />
+     <ClInclude Include="..\Modules\expat\xmltok.h" />
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\pyexpat.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="..\Modules\expat\xmlparse.c" />
+     <ClCompile Include="..\Modules\expat\xmlrole.c" />
+     <ClCompile Include="..\Modules\expat\xmltok.c" />
+-- 
+2.28.0.windows.1
+

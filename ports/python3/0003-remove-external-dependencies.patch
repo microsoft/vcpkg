@@ -1,7 +1,7 @@
 From d69746248f01a3eca82f441e789279e9d0acaf08 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 15:24:38 -0400
-Subject: [PATCH 3/7] Remove external dependencies
+Subject: [PATCH 3/8] Remove external dependencies
 
 The externally fetched libraries may cause linker errors resulting from
 duplicate symbols in downstream projects.

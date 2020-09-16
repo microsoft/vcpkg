@@ -9,6 +9,7 @@
       "name": "bzip2",
       "platform": "!(windows & static)"
     },
+    "expat",
     {
       "name": "gettext",
       "platform": "!(windows | uwp)"

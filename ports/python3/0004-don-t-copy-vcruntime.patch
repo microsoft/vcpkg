@@ -1,7 +1,7 @@
 From 04b72da23e00abb1a5ff02aa5b0cb54576d45051 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 16:12:49 -0400
-Subject: [PATCH 4/7] Don't copy vcruntime
+Subject: [PATCH 4/8] Don't copy vcruntime
 
 VCRUNTIME140.dll should not be redistributed, ever.
 

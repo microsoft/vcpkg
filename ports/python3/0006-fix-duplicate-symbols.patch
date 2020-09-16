@@ -1,7 +1,7 @@
 From 4d698284921b48b963caa26a352ef414f36f36d4 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Fri, 11 Sep 2020 12:35:36 -0400
-Subject: [PATCH 6/7] fix duplicate symbols
+Subject: [PATCH 6/8] fix duplicate symbols
 
 
 diff --git a/Modules/_winapi.c b/Modules/_winapi.c
