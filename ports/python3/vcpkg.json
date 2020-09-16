@@ -1,7 +1,6 @@
 {
     "name": "python3",
-    "version-string": "3.8.3",
-    "port-version": 2,
+    "version-string": "3.8.5",
     "homepage": "https://github.com/python/cpython",
     "description": "The Python programming language",
     "dependencies": [
