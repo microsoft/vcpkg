@@ -20,6 +20,8 @@ vcpkg_from_github(
         reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
+        fix-addbit.patch
+        folly_c3861.patch
 )
 
 file(COPY
@@ -87,6 +89,8 @@ FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake
 "include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(glog CONFIG)
+find_dependency(gflags CONFIG REQUIRED)
+find_dependency(ZLIB)
 ${_contents}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

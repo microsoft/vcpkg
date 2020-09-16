@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.debug.h>
@@ -15,7 +13,7 @@ namespace vcpkg
         g_shutdown_handler = func;
     }
 
-    void Checks::final_cleanup_and_exit(const int exit_code)
+    [[noreturn]] void Checks::final_cleanup_and_exit(const int exit_code)
     {
         static std::atomic<bool> have_entered{false};
         if (have_entered.exchange(true))
@@ -37,7 +35,7 @@ namespace vcpkg
         std::exit(exit_code);
     }
 
-    void Checks::unreachable(const LineInfo& line_info)
+    [[noreturn]] void Checks::unreachable(const LineInfo& line_info)
     {
         System::print2(System::Color::error, "Error: Unreachable code was reached\n");
         System::print2(System::Color::error, line_info, '\n'); // Always print line_info here
@@ -48,13 +46,13 @@ namespace vcpkg
 #endif
     }
 
-    void Checks::exit_with_code(const LineInfo& line_info, const int exit_code)
+    [[noreturn]] void Checks::exit_with_code(const LineInfo& line_info, const int exit_code)
     {
         Debug::print(System::Color::error, line_info, '\n');
         final_cleanup_and_exit(exit_code);
     }
 
-    void Checks::exit_with_message(const LineInfo& line_info, StringView error_message)
+    [[noreturn]] void Checks::exit_with_message(const LineInfo& line_info, StringView error_message)
     {
         System::print2(System::Color::error, error_message, '\n');
         exit_fail(line_info);

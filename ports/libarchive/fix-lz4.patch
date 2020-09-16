@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 80871bc9..2a16dc70 100644
+index b2634da..3b6da5d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -517,7 +517,10 @@ IF(ENABLE_LZ4)
+@@ -574,7 +574,10 @@ IF(ENABLE_LZ4)
    ENDIF (LZ4_INCLUDE_DIR)
  
    FIND_PATH(LZ4_INCLUDE_DIR lz4.h)

@@ -1,0 +1,26 @@
+diff --git a/examples/img2avi.c b/examples/img2avi.c
+index 7a5ca96..d0ee057 100644
+--- a/examples/img2avi.c
++++ b/examples/img2avi.c
+@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
+   int first;
+   int width;
+   int height;
+-  s_movie * movie;
++  s_movie * movie = NULL;
+   s_params * params;
+   s_image *image;
+   char formatbuf[20];
+diff --git a/mpeg2enc/putvlc.c b/mpeg2enc/putvlc.c
+index 6a84fbd..b373fea 100644
+--- a/mpeg2enc/putvlc.c
++++ b/mpeg2enc/putvlc.c
+@@ -103,7 +103,7 @@ void
+ simpeg_encode_putAC(simpeg_encode_context * context,int run, int signed_level, int vlcformat)
+ {
+   int level, len;
+-  VLCtable *ptab;
++  VLCtable *ptab = NULL;
+ 
+   level = (signed_level<0) ? -signed_level : signed_level; /* abs(signed_level) */
+ 

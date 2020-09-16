@@ -1,19 +1,14 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "linux" "osx" "uwp" ON_ARCH "arm")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/portmedia/portmidi/217/portmidi-src-217.zip"
-    FILENAME "portmidi-src-217.zip"
-    SHA512 d08d4d57429d26d292b5fe6868b7c7a32f2f1d2428f6695cd403a697e2d91629bd4380242ab2720e8f21c895bb75cb56b709fb663a20e8e623120e50bfc5d90b
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO portmedia
+    FILENAME "portmedia-code-r234.zip"
+    SHA512 cbc332d89bc465450b38245a83cc300dfd2e1e6de7c62284edf754ff4d8a9aa3dc49a395dcee535ed9688befb019186fa87fd6d8a3698898c2acbf3e6b7a0794
 )
+
+# Alter path to main portmidi root
+set(SOURCE_PATH "${SOURCE_PATH}/portmidi/trunk")
 
 # Mark portmidi-static as static, disable pmjni library depending on the Java SDK
 

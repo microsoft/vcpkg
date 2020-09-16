@@ -29,7 +29,7 @@ Community Triplets are enabled by default, when using a community triplet a mess
 ### VCPKG_TARGET_ARCHITECTURE
 Specifies the target machine architecture.
 
-Valid options are `x86`, `x64`, `arm`, and `arm64`.
+Valid options are `x86`, `x64`, `arm`, `arm64` and `wasm32`.
 
 ### VCPKG_CRT_LINKAGE
 Specifies the desired CRT linkage (for MSVC).
@@ -47,8 +47,11 @@ Specifies the target platform.
 Valid options include any CMake system name, such as:
 - Empty (Windows Desktop for legacy reasons)
 - `WindowsStore` (Universal Windows Platform)
+- `MinGW` (Minimalist GNU for Windows)
 - `Darwin` (Mac OSX)
+- `iOS` (iOS)
 - `Linux` (Linux)
+- `Emscripten` (WebAssembly)
 
 ### VCPKG_CMAKE_SYSTEM_VERSION
 Specifies the target platform system version.
@@ -75,13 +78,22 @@ This option also has forms for configuration-specific and C flags:
 - `VCPKG_C_FLAGS_DEBUG`
 - `VCPKG_C_FLAGS_RELEASE`
 
+### VCPKG_LINKER_FLAGS
+Sets additional linker flags to be used while building dynamic libraries and
+executables in the absence of `VCPKG_CHAINLOAD_TOOLCHAIN_FILE`.
+
+This option also has forms for configuration-specific flags:
+- `VCPKG_LINKER_FLAGS`
+- `VCPKG_LINKER_FLAGS_DEBUG`
+- `VCPKG_LINKER_FLAGS_RELEASE`
+
 <a name="VCPKG_DEP_INFO_OVERRIDE_VARS"></a>
 ### VCPKG_DEP_INFO_OVERRIDE_VARS
 Replaces the default computed list of triplet "Supports" terms.
 
 This option (if set) will override the default set of terms used for qualified dependency resolution and "Supports" field evaluation.
 
-See the [`Supports`](../maintainers/control-files.md#Supports) control file field documentation for more details.
+See the [`"supports"`](../maintainers/manifest-files.md#supports) manifest file field documentation for more details.
 
 > Implementers' Note: this list is extracted via the `vcpkg_get_dep_info` mechanism.
 
@@ -125,6 +137,10 @@ Valid settings:
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.
 
+### VCPKG_LOAD_VCVARS_ENV
+If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment.
+Setting `VCPKG_LOAD_VCVARS_ENV` to (true|1|on) changes this behavior so that the Visual Studio environment is setup following the same rules as if `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` was not set.
+
 ## MacOS Variables
 
 ### VCPKG_INSTALL_NAME_DIR
@@ -135,6 +151,10 @@ Sets the minimum macOS version for compiled binaries. This also changes what ver
 
 ### VCPKG_OSX_SYSROOT
 Set the name or path of the macOS platform SDK that will be used by CMake. See the CMake documentation for [CMAKE_OSX_SYSROOT](https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_SYSROOT.html) for more information.
+
+
+### VCPKG_OSX_ARCHITECTURES
+Set the macOS / iOS target architecture which will be used by CMake. See the CMake documentation for [CMAKE_OSX_ARCHITECTURES](https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_ARCHITECTURES.html) for more information.
 
 ## Per-port customization
 The CMake Macro `PORT` will be set when interpreting the triplet file and can be used to change settings (such as `VCPKG_LIBRARY_LINKAGE`) on a per-port basis.
@@ -158,3 +178,6 @@ The default triplet when running any vcpkg command is `%VCPKG_DEFAULT_TRIPLET%` 
 - OSX: `x64-osx`
 
 We recommend using a systematic naming scheme when creating new triplets. The Android toolchain naming scheme is a good source of inspiration: https://developer.android.com/ndk/guides/standalone_toolchain.html.
+
+## Android triplets
+See [android.md](android.md)

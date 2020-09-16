@@ -1,18 +1,15 @@
-include(vcpkg_common_functions)
-
 vcpkg_buildpath_length_warning(37)
+vcpkg_fail_port_install(ON_TARGET "uwp" "osx")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO apache/avro
-  REF release-1.8.2
-  SHA512 a48cc353aadd45ad2c8593bf89ec3f1ddb0fcd364b79dd002a60a54d49cab714b46eee8bd6dc47b13588b9eead49c754dfe05f6aff735752fca8d2cd35ae8649
+  REF release-1.9.2
+  SHA512 6a6980901eea964c050eb3d61fadf28712e2f02c36985bf8e5176b668bba48985f6a666554a1964435448de29b18d790ab86b787d0288a22fd9cba00746a7846
   HEAD_REF master
   PATCHES
-        avro.patch
-        avro-pr-217.patch
-        fix-build-error.patch # Since jansson updated, use jansson::jansson instead of the macro ${JANSSON_LIBRARIES}
-        snappy.patch # https://github.com/apache/avro/pull/793
+        avro.patch          # Private vcpkg build fixes
+        snappy-pr-793.patch # Snappy build fixes for Windows (PR-793)
 )
 
 vcpkg_configure_cmake(
@@ -29,5 +26,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(COPY ${SOURCE_PATH}/lang/c/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/avro-c)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/avro-c/LICENSE ${CURRENT_PACKAGES_DIR}/share/avro-c/copyright)
+file(INSTALL ${SOURCE_PATH}/lang/c/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

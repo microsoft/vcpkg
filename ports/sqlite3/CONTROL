@@ -1,7 +1,13 @@
 Source: sqlite3
-Version: 3.31.1
+Version: 3.33.0
 Homepage: https://sqlite.org/
 Description: SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.
 
 Feature: tool
 Description: sqlite3 executable
+
+Feature: geopoly
+Description: enable geopoly functionality for sqlite3
+
+Feature: json1
+Description: enable JSON functionality for sqlite3

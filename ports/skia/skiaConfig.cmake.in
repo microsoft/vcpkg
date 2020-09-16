@@ -1,4 +1,5 @@
-add_library(skia::skia SHARED IMPORTED)
+add_library(skia INTERFACE)
+add_library(skia::skia ALIAS skia)
 set(SKIA_DEP_DBG @SKIA_DEP_DBG@)
 set(SKIA_DEP_REL @SKIA_DEP_REL@)
 
@@ -17,62 +18,68 @@ if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
 
-if(WIN32)
-    if(SKIA_LIBRARY_IMPLIB_DBG)
-        set_property(TARGET skia::skia PROPERTY
-            IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/${SKIA_LIBRARY_IMPLIB_DBG}"
-        )
-        set_property(TARGET skia::skia PROPERTY
-            IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/${SKIA_LIBRARY_NAME_DBG}"
-        )
-    else()
-        set_property(TARGET skia::skia PROPERTY
-            IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/${SKIA_LIBRARY_NAME_DBG}"
-        )
-    endif()
+find_library(SKIA_LIB NAMES skia skia.dll)
+target_link_libraries(skia INTERFACE "${SKIA_LIB}")
 
-    if(SKIA_LIBRARY_IMPLIB_REL)
-        set_property(TARGET skia::skia PROPERTY
-            IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/${SKIA_LIBRARY_IMPLIB_REL}"
-        )
-        set_property(TARGET skia::skia PROPERTY
-            IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/${SKIA_LIBRARY_NAME_REL}"
-        )
-    else()
-        set_property(TARGET skia::skia PROPERTY
-            IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/${SKIA_LIBRARY_NAME_REL}"
-        )
-    endif()
-else()
-    set_property(TARGET skia::skia PROPERTY
-        IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/${SKIA_LIBRARY_NAME_DBG}"
-    )
-    set_property(TARGET skia::skia PROPERTY
-        IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/${SKIA_LIBRARY_NAME_REL}"
-    )
-endif()
+function(set_dependencies CONFIG LIBRARIES)
+    foreach(LIB ${LIBRARIES})
+        if(LIB MATCHES "^/")
+            if(WIN32)
+                string(SUBSTRING "${LIB}" 1 -1 LIB)
+            endif()
+            target_link_libraries(skia INTERFACE 
+                "$<$<CONFIG:${CONFIG}>:${LIB}>")
+        else()
+            string(REGEX REPLACE "\\.framework" "" LIB ${LIB})
+            string(REGEX REPLACE "[^a-zA-Z]" "_" LIB_NAME ${LIB})
+            string(TOUPPER ${LIB_NAME} LIB_NAME)
+            set(LIB_NAME SKIA_${LIB_NAME}_LIBRARY)
+            find_library(${LIB_NAME} ${LIB})
+            target_link_libraries(skia INTERFACE 
+                "$<$<CONFIG:${CONFIG}>:${${LIB_NAME}}>")
+        endif()
+    endforeach()
+endfunction()
 
-foreach(LIB ${SKIA_DEP_DBG})
-    string(REGEX REPLACE "\\.framework" "" LIB ${LIB})
-    string(REGEX REPLACE "[^a-zA-Z]" "_" LIB_NAME ${LIB})
-    string(TOUPPER ${LIB_NAME} LIB_NAME)
-    set(LIB_NAME SKIA_${LIB_NAME}_LIBRARY)
-    find_library(${LIB_NAME} ${LIB})
-    set_property(TARGET skia::skia
-            APPEND PROPERTY INTERFACE_LINK_LIBRARIES
-            "$<$<CONFIG:Debug>:${${LIB_NAME}}>")
-endforeach()
+set_dependencies(Debug "${SKIA_DEP_DBG}")
+set_dependencies(Release "${SKIA_DEP_REL}")
 
-foreach(LIB ${SKIA_DEP_REL})
-    string(REGEX REPLACE "\\.framework" "" LIB ${LIB})
-    string(REGEX REPLACE "[^a-zA-Z]" "_" LIB_NAME ${LIB})
-    string(TOUPPER ${LIB_NAME} LIB_NAME)
-    set(LIB_NAME SKIA_${LIB_NAME}_LIBRARY)
-    find_library(${LIB_NAME} ${LIB})
-    set_property(TARGET skia::skia
-            APPEND PROPERTY INTERFACE_LINK_LIBRARIES
-            "$<$<CONFIG:Release>:${${LIB_NAME}}>")
-endforeach()
+set(SKIA_DEFINITIONS_DBG
+        _CRT_SECURE_NO_WARNINGS
+        _HAS_EXCEPTIONS=0
+        WIN32_LEAN_AND_MEAN
+        NOMINMAX
+        SK_GL
+        SK_ENABLE_DUMP_GPU
+        SK_SUPPORT_PDF
+        SK_HAS_JPEG_LIBRARY
+        SK_USE_LIBGIFCODEC
+        SK_HAS_HEIF_LIBRARY
+        SK_HAS_PNG_LIBRARY
+        SK_ENABLE_SKSL_INTERPRETER
+        SK_HAS_WEBP_LIBRARY
+        SK_XML
+        SKIA_DLL
+        SK_SUPPORT_ATLAS_TEXT=1)
 
-target_include_directories(skia::skia INTERFACE ${_IMPORT_PREFIX}/include)
-target_compile_definitions(skia::skia INTERFACE ${SKIA_PUBLIC_DEFINITIONS})
+set(SKIA_DEFINITIONS_REL
+        _CRT_SECURE_NO_WARNINGS
+        _HAS_EXCEPTIONS=0
+        WIN32_LEAN_AND_MEAN
+        NOMINMAX
+        NDEBUG
+        SK_GL
+        SK_SUPPORT_PDF
+        SK_HAS_JPEG_LIBRARY
+        SK_USE_LIBGIFCODEC
+        SK_HAS_PNG_LIBRARY
+        SK_HAS_WEBP_LIBRARY
+        SK_XML
+        SKIA_DLL)
+
+target_compile_definitions(skia INTERFACE
+        $<$<CONFIG:Debug>:${SKIA_DEFINITIONS_DBG}>
+        $<$<CONFIG:Release>:${SKIA_DEFINITIONS_REL}>)
+
+target_include_directories(skia INTERFACE ${_IMPORT_PREFIX}/include)
+target_compile_definitions(skia INTERFACE ${SKIA_PUBLIC_DEFINITIONS})

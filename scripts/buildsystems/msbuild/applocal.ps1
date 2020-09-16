@@ -78,6 +78,7 @@ function resolve([string]$targetBinary) {
                     deployPluginsIfMagnum $targetBinaryDir "$g_install_root\bin\magnum" "$_"
                 }
             }
+            if (Test-Path function:\deployAzureKinectSensorSDK) { deployAzureKinectSensorSDK $targetBinaryDir "$g_install_root" "$_" }
             resolve "$baseTargetBinaryDir\$_"
         } elseif (Test-Path "$targetBinaryDir\$_") {
             Write-Verbose "  ${_}: $_ not found in vcpkg; locally deployed"
@@ -105,6 +106,11 @@ if (Test-Path "$g_install_root\bin\magnum\magnumdeploy.ps1") {
     . "$g_install_root\bin\magnum\magnumdeploy.ps1"
 } elseif (Test-Path "$g_install_root\bin\magnum-d\magnumdeploy.ps1") {
     . "$g_install_root\bin\magnum-d\magnumdeploy.ps1"
+}
+
+# Note: This is a hack to make Azure Kinect Sensor SDK work.
+if (Test-Path "$g_install_root\tools\azure-kinect-sensor-sdk\k4adeploy.ps1") {
+    . "$g_install_root\tools\azure-kinect-sensor-sdk\k4adeploy.ps1"
 }
 
 resolve($targetBinary)

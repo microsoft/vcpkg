@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeOpcUa/freeopcua
@@ -14,6 +12,7 @@ vcpkg_from_github(
         serverObj.patch
         include_asio_first.patch
         boost-1.70.patch
+        fix-std-headers.patch
 )
 
 vcpkg_configure_cmake(

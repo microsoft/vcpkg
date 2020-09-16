@@ -47,19 +47,10 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(tools IN_LIST FEATURES)
-    foreach(cpuinfo_tool cache-info cpuid-dump cpu-info isa-info)
-        file(COPY
-            ${CURRENT_PACKAGES_DIR}/bin/${cpuinfo_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
-        )
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    endforeach()
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    else()
-        # TODO: Fix it once this lib supports dynamic building.
-    endif()
+    vcpkg_copy_tools(
+        TOOL_NAMES cache-info cpuid-dump cpu-info isa-info
+        AUTO_CLEAN
+    )
 endif()
 
 # Handle copyright

@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5b7d37359..9ab8954b6 100644
+index eebda35e9..c00e6b702 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -445,7 +445,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
- include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/third-party/gtest-1.7.0/fused-src)
- find_package(Threads REQUIRED)
- 
--add_subdirectory(third-party/gtest-1.7.0/fused-src/gtest)
-+#add_subdirectory(third-party/gtest-1.7.0/fused-src/gtest)
- 
- # Main library source code
- 
+@@ -888,7 +888,7 @@ option(WITH_TESTS "build with tests" ON)
+ # For test libraries, utilities, and exes that are build iff WITH_TESTS=ON and
+ # in Debug mode. Add test only code that is not #ifdefed for Release here.
+ if(WITH_TESTS AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+-  add_subdirectory(third-party/gtest-1.8.1/fused-src/gtest)
++  #add_subdirectory(third-party/gtest-1.8.1/fused-src/gtest)
+   set(TESTS
+         cache/cache_test.cc
+         cache/lru_cache_test.cc

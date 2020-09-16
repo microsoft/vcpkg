@@ -1,25 +1,28 @@
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ctabin/libzippp
-    REF be75a3413b648a3264e94a2c1921c83081dec1e0
-    SHA512 86c6040bbaea0817486218e96c4d230a328e3560ada41861fbd18d78faa085b158199318d633085e616509084082bf29d6f97afdd2d2dfbc6b843dfbf6a20c85
-    HEAD_REF master
+    REF fb07ca80ebda0576366619b87364b4b3a94426df
+    SHA512 c75518d0dba43ca5ae617569c0e3105af4f903a1226bdae100ee0770b4745ce4c889d29788bd2d75e7c8b556a5c339c0610170a620081d67a86cf6639e9e7fb2
+    HEAD_REF libzippp-v3.1-1.6.1 
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_TESTS=OFF
+        -DLIBZIPPP_BUILD_TESTS=OFF
     OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
+        -DLIBZIPPP_INSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/libzippp")
+if(WIN32)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake/libzippp")
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/libzippp")
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
