@@ -1,8 +1,8 @@
 diff --git a/channels/urbdrc/client/libusb/libusb_udevice.c b/channels/urbdrc/client/libusb/libusb_udevice.c
-index 94117bc..218a56f 100644
+index 214cb7a..56c986c 100644
 --- a/channels/urbdrc/client/libusb/libusb_udevice.c
 +++ b/channels/urbdrc/client/libusb/libusb_udevice.c
-@@ -168,7 +168,7 @@ static void async_transfer_user_data_free(ASYNC_TRANSFER_USER_DATA* user_data)
+@@ -184,7 +184,7 @@ static void async_transfer_user_data_free(ASYNC_TRANSFER_USER_DATA* user_data)
  	}
  }
  
@@ -11,7 +11,7 @@ index 94117bc..218a56f 100644
  {
  	ASYNC_TRANSFER_USER_DATA* user_data = (ASYNC_TRANSFER_USER_DATA*)transfer->user_data;
  #if defined(HAVE_STREAM_ID_API)
-@@ -269,7 +269,7 @@ static const LIBUSB_ENDPOINT_DESCEIPTOR* func_get_ep_desc(LIBUSB_CONFIG_DESCRIPT
+@@ -285,7 +285,7 @@ static const LIBUSB_ENDPOINT_DESCEIPTOR* func_get_ep_desc(LIBUSB_CONFIG_DESCRIPT
  	return NULL;
  }
  
@@ -21,7 +21,7 @@ index 94117bc..218a56f 100644
  	ASYNC_TRANSFER_USER_DATA* user_data;
  	uint32_t streamID;
 diff --git a/channels/urbdrc/client/libusb/libusb_udevman.c b/channels/urbdrc/client/libusb/libusb_udevman.c
-index 973d9c1..1d1548b 100644
+index 2eebc1a..399ecbb 100644
 --- a/channels/urbdrc/client/libusb/libusb_udevman.c
 +++ b/channels/urbdrc/client/libusb/libusb_udevman.c
 @@ -550,7 +550,7 @@ static BOOL device_is_filtered(struct libusb_device* dev,
