@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "UWP")
+
 set(RHASH_XVERSION 1.4.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
