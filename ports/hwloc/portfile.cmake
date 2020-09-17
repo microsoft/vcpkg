@@ -32,6 +32,9 @@ else()
     vcpkg_configure_make(
             SOURCE_PATH ${SOURCE_PATH}
             AUTOCONFIG
+            OPTIONS
+                --disable-libxml2
+                --disable-opencl
     )
     
     vcpkg_install_make()
