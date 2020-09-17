@@ -21,7 +21,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5NewStuff DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5NewStuffCore TARGET_PATH share/KF5NewStuffCore)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5NewStuffCore TARGET_PATH share/kf5newstuffcore)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
