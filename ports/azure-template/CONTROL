@@ -1,0 +1,5 @@
+Source: azure-template
+Version: 1.0.0-beta.7
+Homepage: https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/template/azure-template
+Description: Azure C++ SDK Template
+
