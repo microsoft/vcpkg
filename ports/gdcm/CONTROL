@@ -1,6 +1,5 @@
 Source: gdcm
 Version: 3.0.7
-Port-Version: 2
 Homepage: https://github.com/malaterre/GDCM
 Description: Grassroots DICOM library
 Build-Depends: zlib, expat, openjpeg
