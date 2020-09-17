@@ -360,8 +360,8 @@ namespace vcpkg::Build
             tcfile, [&]() { return Hash::get_file_hash(VCPKG_LINE_INFO, fs, tcfile, Hash::Algorithm::Sha1); });
 
         auto&& triplet_entry = m_triplet_cache.get_lazy(triplet_file_path, [&]() -> TripletMapEntry {
-            return TripletMapEntry{ Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, Hash::Algorithm::Sha1) };
-            });
+            return TripletMapEntry{Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, Hash::Algorithm::Sha1)};
+        });
 
         return triplet_entry.compiler_info.get_lazy(toolchain_hash, [&]() -> CompilerInfo {
             if (m_compiler_tracking)
@@ -372,9 +372,9 @@ namespace vcpkg::Build
             {
                 return CompilerInfo{};
             }
-            });
+        });
     }
-    
+
     const std::string& EnvCache::get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
         const auto& fs = paths.get_filesystem();
@@ -401,7 +401,7 @@ namespace vcpkg::Build
                     {
                         return CompilerInfo{};
                     }
-                    });
+                });
                 return Strings::concat(triplet_entry.hash, '-', toolchain_hash, '-', compiler_info.hash);
             }
             else

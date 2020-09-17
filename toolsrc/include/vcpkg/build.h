@@ -304,7 +304,7 @@ namespace vcpkg::Build
         std::string tag;
         fs::path tag_file;
     };
-    
+
     struct CompilerInfo
     {
         std::string id;
