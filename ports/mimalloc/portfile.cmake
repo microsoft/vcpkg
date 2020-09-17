@@ -16,9 +16,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     override    MI_OVERRIDE
 )
 
-SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -59,14 +56,11 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/lib/${lib_install_dir}
     ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/lib/${lib_install_dir}
-	${CURRENT_PACKAGES_DIR}/debug/lib
-	${CURRENT_PACKAGES_DIR}/lib
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE 
+    file(REMOVE_RECURSE 
 		${CURRENT_PACKAGES_DIR}/bin 
 		${CURRENT_PACKAGES_DIR}/debug/bin
-		${CURRENT_PACKAGES_DIR}/debug
 )
 endif()
 

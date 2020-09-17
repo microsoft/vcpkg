@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 37616eb..c444a36 100644
+index 37616eb..eb5aedd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -251,11 +251,26 @@ if(MI_BUILD_SHARED)
+@@ -251,13 +251,28 @@ if(MI_BUILD_SHARED)
    )
    if(WIN32)
      # On windows copy the mimalloc redirection dll too.
@@ -28,8 +28,20 @@ index 37616eb..c444a36 100644
 +  endif()	  
 +endif()
  
-   install(TARGETS mimalloc EXPORT mimalloc DESTINATION ${mi_install_dir} LIBRARY)
+-  install(TARGETS mimalloc EXPORT mimalloc DESTINATION ${mi_install_dir} LIBRARY)
++  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION lib RUNTIME DESTINATION bin LIBRARY DESTINATION lib NAMELINK_SKIP DESTINATION ${mi_install_dir} LIBRARY)
    install(EXPORT mimalloc DESTINATION ${mi_install_dir}/cmake)
+ endif()
+ 
+@@ -281,7 +296,7 @@ if (MI_BUILD_STATIC)
+     set_target_properties(mimalloc-static PROPERTIES OUTPUT_NAME ${mi_basename})
+   endif()
+ 
+-  install(TARGETS mimalloc-static EXPORT mimalloc DESTINATION ${mi_install_dir})
++  install(TARGETS mimalloc-static EXPORT mimalloc DESTINATION lib DESTINATION ${mi_install_dir})
+ endif()
+ 
+ # install include files
 @@ -315,9 +330,6 @@ if (MI_BUILD_OBJECT)
  
    # the FILES expression can also be: $<TARGET_OBJECTS:mimalloc-obj>
