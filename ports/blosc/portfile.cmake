@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc
-    REF 9fae1c9acb659159321aca69aefcdbce663e2374 # v1.18.1
-    SHA512 6cc77832100041aca8f320e44aa803adc0d3344b52742b995a3155b953e5d149534de65c8244d964448150b73715a81f54285d7d01f1b45d7b10fe07f5bdb141
+    REF a44e961498cdca2eb893fa897cd15dd007fad496 # v1.20.1
+    SHA512 588fddbfe6e72aad857ca0845aa4a0f72513cabe89d6989699ee2d7c74e72d0afdab5ad26dd94a508208c99afbdb47f791572b7adcf369b7a62f3aa5fba0bdd5
     HEAD_REF master
     PATCHES
       0001-find-deps.patch
