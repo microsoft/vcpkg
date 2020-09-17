@@ -15,6 +15,9 @@
     "pat": {
       "type": "string"
     },
+    "agent_pool": {
+      "type": "string"
+    },
     "base_name": {
       "type": "string"
     },

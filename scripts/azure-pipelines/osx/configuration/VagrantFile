@@ -17,8 +17,11 @@ end
 brew_formulas = [
   'autoconf',
   'automake',
+  'bison',
   'libtool',
-  'bison' ]
+  'mono',
+  'pkg-config',
+  'yasm' ]
 
 brew_cask_formulas = [
   'powershell',
@@ -26,7 +29,7 @@ brew_cask_formulas = [
 
 azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.171.1/vsts-agent-osx-x64-2.171.1.tar.gz'
 devops_url = 'https://dev.azure.com/vcpkg'
-agent_pool = 'vcpkgAgentPool'
+agent_pool = configuration['agent_pool']
 pat = configuration['pat']
 archives = configuration['archives']
 archives_url = "//#{archives['username']}:#{url_encode(archives['access_key'])}@#{archives['urn']}/#{archives['share']}"

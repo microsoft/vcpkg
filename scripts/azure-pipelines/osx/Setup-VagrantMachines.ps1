@@ -13,6 +13,9 @@ configuration JSON file into ~/vagrant/vcpkg-eg-mac.
 .PARAMETER Pat
 The personal access token which has Read & Manage permissions on the ADO pool.
 
+.PARAMETER AgentPool
+The agent pool to add the machine to.
+
 .PARAMETER ArchivesUsername
 The username for the archives share.
 
@@ -48,6 +51,9 @@ None
 Param(
     [Parameter(Mandatory=$True)]
     [String]$Pat,
+
+    [Parameter(Mandatory=$True)]
+    [String]$AgentPool,
 
     [Parameter(Mandatory=$True)]
     [String]$ArchivesUsername,
@@ -99,6 +105,7 @@ Copy-Item `
 
 $configuration = @{
     pat = $Pat;
+    agent_pool = $AgentPool;
     base_name = $BaseName;
     machine_identifiers = $MachineIdentifiers;
     disk_size = $DiskSize;
