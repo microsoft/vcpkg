@@ -73,7 +73,7 @@
 function(vcpkg_build_nmake)
     cmake_parse_arguments(_bn
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
-        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
+        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
         ${ARGN}
     )
@@ -86,10 +86,6 @@ function(vcpkg_build_nmake)
         message(FATAL_ERROR "Detected debug configuration is equal to release configuration, please use NO_DEBUG for vcpkg_build_nmake/vcpkg_install_nmake")
     endif()
 
-    if(NOT _bn_LOGFILE_ROOT)
-        set(_bn_LOGFILE_ROOT "build")
-    endif()
-    
     if (NOT _bn_PROJECT_NAME)
         set(MAKEFILE_NAME makefile.vc)
     else()
@@ -112,7 +108,12 @@ function(vcpkg_build_nmake)
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     # Set make command and install command
     set(MAKE ${NMAKE} /NOLOGO /G /U)
-    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME} all)
+    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME})
+	if (DEFINED _bn_TARGET)
+		set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} ${_bn_TARGET})
+	else()
+		set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} all)
+	endif()
     set(INSTALL_OPTS_BASE install)
     # Add subpath to work directory
     if (_bn_PROJECT_SUBPATH)
@@ -135,7 +136,6 @@ function(vcpkg_build_nmake)
                 set(MAKE_OPTS ${MAKE_OPTS_BASE})
                 if (_bn_ENABLE_INSTALL)
                     set(INSTALL_OPTS ${INSTALL_OPTS_BASE} INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug)
-                    set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
                 endif()
                 set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_DEBUG})
                 
@@ -155,7 +155,6 @@ function(vcpkg_build_nmake)
                 set(MAKE_OPTS ${MAKE_OPTS_BASE})
                 if (_bn_ENABLE_INSTALL)
                     set(INSTALL_OPTS ${INSTALL_OPTS_BASE} INSTALLDIR=${CURRENT_PACKAGES_DIR})
-                    set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
                 endif()
                 set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_RELEASE})
                 
@@ -202,17 +201,21 @@ function(vcpkg_build_nmake)
                 )
             endif()
 
-            if (NOT _bn_ENABLE_INSTALL)
-                message(STATUS "Building ${CURRENT_TRIPLET_NAME}")
-            else()
-                message(STATUS "Building and installing ${CURRENT_TRIPLET_NAME}")
-            endif()
-
+            message(STATUS "Building ${CURRENT_TRIPLET_NAME}")
             vcpkg_execute_build_process(
                 COMMAND ${MAKE} ${MAKE_OPTS}
                 WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
-                LOGNAME "${_bn_LOGFILE_ROOT}-${CURRENT_TRIPLET_NAME}"
+                LOGNAME "build-${CURRENT_TRIPLET_NAME}"
             )
+
+            if (_bn_ENABLE_INSTALL)
+                message(STATUS "Installing ${CURRENT_TRIPLET_NAME}")
+				vcpkg_execute_build_process(
+					COMMAND ${MAKE} ${MAKE_OPTS} ${INSTALL_OPTS}
+					WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
+					LOGNAME "install-${CURRENT_TRIPLET_NAME}"
+				)
+            endif()
 
             if(_bn_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
