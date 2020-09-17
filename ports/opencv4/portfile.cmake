@@ -276,6 +276,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        --trace-expand
         -DOPENCV_CUDA_FORCE_BUILTIN_CMAKE_MODULE=ON  #to use custom module with fixes for CUDA 11 compat, waiting for CMake support
         ###### ocv_options
         -DOpenCV_INSTALL_BINARIES_PREFIX=
