@@ -18,20 +18,20 @@ vcpkg_configure_cmake(
             -DKDE_INSTALL_QTPLUGINDIR=plugins
 )
 
-vcpkg_add_to_path(${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-vcpkg_add_to_path(${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
+vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/debug/bin)
+vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/bin)
 
 vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX})
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Sonnet)
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5sonnet)
-file(APPEND ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(APPEND ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
 
 vcpkg_copy_pdbs()
 
