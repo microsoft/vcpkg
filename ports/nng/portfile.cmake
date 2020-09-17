@@ -14,7 +14,7 @@ vcpkg_check_features(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    #PREFER_NINJA
+    PREFER_NINJA
     OPTIONS
         -DNNG_TESTS=OFF
         -DNNG_ENABLE_NNGCAT=OFF
