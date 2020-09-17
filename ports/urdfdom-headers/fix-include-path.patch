@@ -1,13 +1,15 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 800aeed..43ab9a6 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -28,7 +28,7 @@ if(WIN32 AND NOT CYGWIN)
- else()
-   set(CMAKE_CONFIG_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake)
+diff --git a/cmake/urdfdom_headers-config.cmake.in b/cmake/urdfdom_headers-config.cmake.in
+index 4686d39..026b65e 100644
+--- a/cmake/urdfdom_headers-config.cmake.in
++++ b/cmake/urdfdom_headers-config.cmake.in
+@@ -3,8 +3,8 @@ if (@PACKAGE_NAME@_CONFIG_INCLUDED)
  endif()
--string(REGEX REPLACE "[^/]+" ".." RELATIVE_PATH_CMAKE_DIR_TO_PREFIX "${CMAKE_CONFIG_INSTALL_DIR}")
-+string(REGEX REPLACE "[^/]+" "../.." RELATIVE_PATH_CMAKE_DIR_TO_PREFIX "${CMAKE_CONFIG_INSTALL_DIR}")
+ set(@PACKAGE_NAME@_CONFIG_INCLUDED TRUE)
  
- set(PACKAGE_NAME ${PROJECT_NAME})
- set(cmake_conf_file "${PROJECT_NAME}-config.cmake")
+-set(@PACKAGE_NAME@_INCLUDE_DIRS "${@PROJECT_NAME@_DIR}/@RELATIVE_PATH_CMAKE_DIR_TO_PREFIX@/include")
++set(@PACKAGE_NAME@_INCLUDE_DIRS "../../include")
+ 
+-include("${@PACKAGE_NAME@_DIR}/@PACKAGE_NAME@Export.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/@PACKAGE_NAME@Export.cmake")
+ 
+ list(APPEND @PACKAGE_NAME@_TARGETS @PACKAGE_NAME@::@PACKAGE_NAME@)
