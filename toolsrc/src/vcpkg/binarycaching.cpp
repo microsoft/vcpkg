@@ -1016,11 +1016,20 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     auto& spec = action.spec;
     auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
     auto& version = scf.core_paragraph->version;
+    auto& compiler_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO).compiler_info.value_or_exit(VCPKG_LINE_INFO);
     std::string description =
         Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
                         Strings::join("\n    ", scf.core_paragraph->description),
                         "\n\nVersion: ",
                         version,
+                        "\nTriplet: ",
+                        action.abi_info.value_or_exit(VCPKG_LINE_INFO).pre_build_info->triplet.to_string(),
+                        "\nTarget architecture: ",
+                        action.abi_info.value_or_exit(VCPKG_LINE_INFO).pre_build_info->target_architecture,
+                        "\nCompiler id: ",
+                        compiler_info.id,
+                        "\nCompiler version: ",
+                        compiler_info.version,
                         "\nTriplet/Compiler hash: ",
                         action.abi_info.value_or_exit(VCPKG_LINE_INFO).triplet_abi.value_or_exit(VCPKG_LINE_INFO),
                         "\nFeatures:",
