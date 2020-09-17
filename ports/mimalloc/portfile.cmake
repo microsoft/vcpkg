@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF 82684042be1be44d34caecc915fb51755278d843 # v1.6.1
-    SHA512 82477501a5fafa4df22c911039b74943275d0932404526692419b5c49d6ccfdd95c1c5a3689211db5cc2a845af039fda4892262b538ac7cdfb5bb35787dd355c
+    REF a9686d6ecf00e4467e772f7c0b4ef76a15f325f6 # v1.6.4
+    SHA512 a1bda1b31d1bb3a4680fec91f180a988cf5ff486dcb8848fefd9245907f7986e4c4f10ce33133a3d796a7409ba38328bd156c47eba4f19368a2226a43b1ad298
     HEAD_REF master
     PATCHES
         fix-cmake.patch
@@ -15,6 +15,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     secure      MI_SECURE
     override    MI_OVERRIDE
 )
+
+SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -38,6 +41,7 @@ file(GLOB lib_directories RELATIVE ${CURRENT_PACKAGES_DIR}/lib "${CURRENT_PACKAG
 list(GET lib_directories 0 lib_install_dir)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/${lib_install_dir}/cmake)
 
+
 vcpkg_replace_string(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/mimalloc.cmake
     "lib/${lib_install_dir}/"
@@ -55,7 +59,16 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/lib/${lib_install_dir}
     ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/lib/${lib_install_dir}
+	${CURRENT_PACKAGES_DIR}/debug/lib
+	${CURRENT_PACKAGES_DIR}/lib
 )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE 
+		${CURRENT_PACKAGES_DIR}/bin 
+		${CURRENT_PACKAGES_DIR}/debug/bin
+		${CURRENT_PACKAGES_DIR}/debug
+)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(
