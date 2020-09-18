@@ -1,16 +1,17 @@
 #pragma once
 
+#include <vcpkg/base/cstringview.h>
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/optional.h>
+#include <vcpkg/base/system.process.h>
+
 #include <vcpkg/cmakevars.h>
+#include <vcpkg/commands.integrate.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/triplet.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
-
-#include <vcpkg/base/cstringview.h>
-#include <vcpkg/base/files.h>
-#include <vcpkg/base/optional.h>
-#include <vcpkg/base/system.process.h>
 
 #include <array>
 #include <map>
@@ -35,14 +36,43 @@ namespace vcpkg::System
 
 namespace vcpkg::Build
 {
+    enum class BuildResult
+    {
+        NULLVALUE = 0,
+        SUCCEEDED,
+        BUILD_FAILED,
+        POST_BUILD_CHECKS_FAILED,
+        FILE_CONFLICTS,
+        CASCADED_DUE_TO_MISSING_DEPENDENCIES,
+        EXCLUDED,
+        DOWNLOADED
+    };
+
+    struct IBuildLogsRecorder
+    {
+        virtual void record_build_result(const VcpkgPaths& paths,
+                                         const PackageSpec& spec,
+                                         BuildResult result) const = 0;
+    };
+
+    const IBuildLogsRecorder& null_build_logs_recorder() noexcept;
+
     namespace Command
     {
+        int perform_ex(const FullPackageSpec& full_spec,
+                       const SourceControlFileLocation& scfl,
+                       const PortFileProvider::PathsPortFileProvider& provider,
+                       IBinaryProvider& binaryprovider,
+                       const IBuildLogsRecorder& build_logs_recorder,
+                       const VcpkgPaths& paths);
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
                                  IBinaryProvider& binaryprovider,
+                                 const IBuildLogsRecorder& build_logs_recorder,
                                  const VcpkgPaths& paths);
 
+        int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 
@@ -94,14 +124,13 @@ namespace vcpkg::Build
         ARIA2,
     };
     const std::string& to_string(DownloadTool tool);
-
-    enum class FailOnTombstone
+    enum class PurgeDecompressFailure
     {
         NO = 0,
         YES
     };
 
-    enum class PurgeDecompressFailure
+    enum class Editable
     {
         NO = 0,
         YES
@@ -116,20 +145,20 @@ namespace vcpkg::Build
         CleanPackages clean_packages;
         CleanDownloads clean_downloads;
         DownloadTool download_tool;
-        FailOnTombstone fail_on_tombstone;
         PurgeDecompressFailure purge_decompress_failure;
+        Editable editable;
     };
 
-    enum class BuildResult
-    {
-        NULLVALUE = 0,
-        SUCCEEDED,
-        BUILD_FAILED,
-        POST_BUILD_CHECKS_FAILED,
-        FILE_CONFLICTS,
-        CASCADED_DUE_TO_MISSING_DEPENDENCIES,
-        EXCLUDED,
-        DOWNLOADED
+    static constexpr BuildPackageOptions default_build_package_options{
+        Build::UseHeadVersion::NO,
+        Build::AllowDownloads::YES,
+        Build::OnlyDownloads::NO,
+        Build::CleanBuildtrees::YES,
+        Build::CleanPackages::YES,
+        Build::CleanDownloads::NO,
+        Build::DownloadTool::BUILT_IN,
+        Build::PurgeDecompressFailure::YES,
+        Build::Editable::NO,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
@@ -188,6 +217,7 @@ namespace vcpkg::Build
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
                                       IBinaryProvider& binaries_provider,
+                                      const IBuildLogsRecorder& build_logs_recorder,
                                       const StatusParagraphs& status_db);
 
     enum class BuildPolicy
@@ -222,7 +252,7 @@ namespace vcpkg::Build
     struct BuildPolicies
     {
         BuildPolicies() = default;
-        BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) {}
+        BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) { }
 
         bool is_enabled(BuildPolicy policy) const
         {
@@ -261,7 +291,7 @@ namespace vcpkg::Build
         std::string value;
 
         AbiEntry() = default;
-        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) {}
+        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) { }
 
         bool operator<(const AbiEntry& other) const
         {
@@ -278,7 +308,8 @@ namespace vcpkg::Build
     struct AbiInfo
     {
         std::unique_ptr<PreBuildInfo> pre_build_info;
-        const Toolset* toolset;
+        Optional<const Toolset&> toolset;
+        Optional<const std::string&> triplet_abi;
         std::string package_abi;
         Optional<fs::path> abi_tag_file;
     };
@@ -290,7 +321,7 @@ namespace vcpkg::Build
 
     struct EnvCache
     {
-        explicit EnvCache(bool compiler_tracking) : m_compiler_tracking(compiler_tracking) {}
+        explicit EnvCache(bool compiler_tracking) : m_compiler_tracking(compiler_tracking) { }
 
         const System::Environment& get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info);
         const std::string& get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info);
@@ -315,5 +346,12 @@ namespace vcpkg::Build
 #endif
 
         bool m_compiler_tracking;
+    };
+
+    struct BuildCommand : Commands::TripletCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const override;
     };
 }

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "type": "object",
+  "definitions": {
+    "sha256": {
+      "type": "string",
+      "pattern": "[A-Z0-9]{64}"
+    }
+  },
+  "required": [
+    "Applications",
+    "VBoxExtensions"
+  ],
+  "properties": {
+    "Applications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "TestCommand": {
+            "type": "string"
+          },
+          "DmgUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "Sha256": {
+            "$ref": "#/definitions/sha256"
+          },
+          "InstallerPath": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "VBoxExtensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "FullName": {
+            "type": "string"
+          },
+          "Url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "Sha256": {
+            "$ref": "#/definitions/sha256"
+          }
+        }
+      }
+    }
+  }
+}

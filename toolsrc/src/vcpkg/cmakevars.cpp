@@ -1,13 +1,11 @@
-#include "pch.h"
-
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/buildenvironment.h>
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/dependencies.h>
 
 using namespace vcpkg;
@@ -31,7 +29,7 @@ namespace vcpkg::CMakeVars
     {
         struct TripletCMakeVarProvider : Util::ResourceBase, CMakeVarProvider
         {
-            explicit TripletCMakeVarProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) {}
+            explicit TripletCMakeVarProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) { }
 
             void load_generic_triplet_vars(Triplet triplet) const override;
 
@@ -78,7 +76,7 @@ namespace vcpkg::CMakeVars
         Files::Filesystem& fs = paths.get_filesystem();
         static int tag_extract_id = 0;
 
-        std::string extraction_file("include(\"" + get_tags_path.generic_u8string() + "\")\n\n");
+        std::string extraction_file("include(\"" + fs::generic_u8string(get_tags_path) + "\")\n\n");
 
         std::map<Triplet, int> emitted_triplets;
         int emitted_triplet_id = 0;
@@ -126,7 +124,7 @@ namespace vcpkg::CMakeVars
         static int dep_info_id = 0;
         Files::Filesystem& fs = paths.get_filesystem();
 
-        std::string extraction_file("include(\"" + get_dep_info_path.generic_u8string() + "\")\n\n");
+        std::string extraction_file("include(\"" + fs::generic_u8string(get_dep_info_path) + "\")\n\n");
 
         std::map<Triplet, int> emitted_triplets;
         int emitted_triplet_id = 0;
@@ -260,7 +258,7 @@ namespace vcpkg::CMakeVars
         {
             auto& scfl = port_provider.get_control_file(spec.package_spec.name()).value_or_exit(VCPKG_LINE_INFO);
             const fs::path override_path = scfl.source_location / "vcpkg-abi-settings.cmake";
-            spec_abi_settings.emplace_back(&spec, override_path.generic_u8string());
+            spec_abi_settings.emplace_back(&spec, fs::generic_u8string(override_path));
         }
 
         std::vector<std::vector<std::pair<std::string, std::string>>> vars(spec_abi_settings.size());

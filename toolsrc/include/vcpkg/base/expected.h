@@ -4,13 +4,14 @@
 #include <vcpkg/base/stringliteral.h>
 
 #include <system_error>
+#include <type_traits>
 
 namespace vcpkg
 {
     template<class Err>
     struct ErrorHolder
     {
-        ErrorHolder() : m_is_error(false), m_err{} {}
+        ErrorHolder() : m_is_error(false), m_err{} { }
         template<class U>
         ErrorHolder(U&& err) : m_is_error(true), m_err(std::forward<U>(err))
         {
@@ -31,7 +32,7 @@ namespace vcpkg
     template<>
     struct ErrorHolder<std::string>
     {
-        ErrorHolder() : m_is_error(false) {}
+        ErrorHolder() : m_is_error(false) { }
         template<class U>
         ErrorHolder(U&& err) : m_is_error(true), m_err(std::forward<U>(err))
         {
@@ -53,7 +54,7 @@ namespace vcpkg
     struct ErrorHolder<std::error_code>
     {
         ErrorHolder() = default;
-        ErrorHolder(const std::error_code& err) : m_err(err) {}
+        ErrorHolder(const std::error_code& err) : m_err(err) { }
 
         bool has_error() const { return bool(m_err); }
 
@@ -79,8 +80,8 @@ namespace vcpkg
     struct ExpectedHolder
     {
         ExpectedHolder() = default;
-        ExpectedHolder(const T& t) : t(t) {}
-        ExpectedHolder(T&& t) : t(std::move(t)) {}
+        ExpectedHolder(const T& t) : t(t) { }
+        ExpectedHolder(T&& t) : t(std::move(t)) { }
         using pointer = T*;
         using const_pointer = const T*;
         T* get() { return &t; }
@@ -90,8 +91,8 @@ namespace vcpkg
     template<class T>
     struct ExpectedHolder<T&>
     {
-        ExpectedHolder(T& t) : t(&t) {}
-        ExpectedHolder() : t(nullptr) {}
+        ExpectedHolder(T& t) : t(&t) { }
+        ExpectedHolder() : t(nullptr) { }
         using pointer = T*;
         using const_pointer = T*;
         T* get() { return t; }
@@ -107,11 +108,11 @@ namespace vcpkg
 
         // Constructors are intentionally implicit
 
-        ExpectedT(const S& s, ExpectedRightTag = {}) : m_s(s) {}
-        ExpectedT(S&& s, ExpectedRightTag = {}) : m_s(std::move(s)) {}
+        ExpectedT(const S& s, ExpectedRightTag = {}) : m_s(s) { }
+        ExpectedT(S&& s, ExpectedRightTag = {}) : m_s(std::move(s)) { }
 
-        ExpectedT(const T& t, ExpectedLeftTag = {}) : m_t(t) {}
-        template<class = std::enable_if<!std::is_reference_v<T>>>
+        ExpectedT(const T& t, ExpectedLeftTag = {}) : m_t(t) { }
+        template<class = std::enable_if<!std::is_reference<T>::value>>
         ExpectedT(T&& t, ExpectedLeftTag = {}) : m_t(std::move(t))
         {
         }
@@ -213,7 +214,7 @@ namespace vcpkg
             }
             else
             {
-                return U{std::move(error()), expected_right_tag};
+                return U{std::move(*this).error(), expected_right_tag};
             }
         }
 

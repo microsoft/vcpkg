@@ -2,11 +2,17 @@
 
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/ignore_errors.h>
+#include <vcpkg/base/pragmas.h>
+
+#include <string.h>
+
+#if !defined(VCPKG_USE_STD_FILESYSTEM)
+#error The build system must set VCPKG_USE_STD_FILESYSTEM.
+#endif // !defined(VCPKG_USE_STD_FILESYSTEM)
 
 #if VCPKG_USE_STD_FILESYSTEM
 #include <filesystem>
 #else
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
 #endif
 
@@ -22,7 +28,28 @@ namespace fs
     using stdfs::directory_iterator;
     using stdfs::path;
     using stdfs::perms;
-    using stdfs::u8path;
+
+    path u8path(vcpkg::StringView s);
+    inline path u8path(const char* first, const char* last) { return u8path(vcpkg::StringView{first, last}); }
+    inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
+
+#if defined(_MSC_VER)
+    inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
+    {
+        if (first == last)
+        {
+            return path{};
+        }
+        else
+        {
+            auto firstp = &*first;
+            return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
+        }
+    }
+#endif
+
+    std::string u8string(const path& p);
+    std::string generic_u8string(const path& p);
 
 #if defined(_WIN32)
     enum class file_type
@@ -59,6 +86,14 @@ namespace fs
         perms m_permissions;
     };
 
+    struct SystemHandle
+    {
+        using type = intptr_t; // HANDLE
+        type system_handle = -1;
+
+        bool is_valid() const { return system_handle != -1; }
+    };
+
 #else
 
     using stdfs::file_type;
@@ -69,6 +104,14 @@ namespace fs
         using stdfs::file_status::file_status;
         using stdfs::file_status::permissions;
         using stdfs::file_status::type;
+    };
+
+    struct SystemHandle
+    {
+        using type = int; // file descriptor
+        type system_handle = -1;
+
+        bool is_valid() const { return system_handle != -1; }
     };
 
 #endif
@@ -114,7 +157,7 @@ namespace vcpkg::Files
         /// <summary>Read text lines from a file</summary>
         /// <remarks>Lines will have up to one trailing carriage-return character stripped (CRLF)</remarks>
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;
-        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename) const = 0;
+        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const fs::path& filename) const = 0;
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const = 0;
         virtual std::vector<fs::path> get_files_non_recursive(const fs::path& dir) const = 0;
         void write_lines(const fs::path& file_path, const std::vector<std::string>& lines, LineInfo linfo);
@@ -147,13 +190,16 @@ namespace vcpkg::Files
         virtual bool is_empty(const fs::path& path) const = 0;
         virtual bool create_directory(const fs::path& path, std::error_code& ec) = 0;
         bool create_directory(const fs::path& path, ignore_errors_t);
+        bool create_directory(const fs::path& path, LineInfo li);
         virtual bool create_directories(const fs::path& path, std::error_code& ec) = 0;
         bool create_directories(const fs::path& path, ignore_errors_t);
+        bool create_directories(const fs::path& path, LineInfo);
         virtual void copy(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts) = 0;
         virtual bool copy_file(const fs::path& oldpath,
                                const fs::path& newpath,
                                fs::copy_options opts,
                                std::error_code& ec) = 0;
+        void copy_file(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts, LineInfo li);
         virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) = 0;
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const = 0;
         virtual fs::file_status symlink_status(const fs::path& path, std::error_code& ec) const = 0;
@@ -171,6 +217,12 @@ namespace vcpkg::Files
         virtual void current_path(const fs::path& path, std::error_code&) = 0;
         void current_path(const fs::path& path, LineInfo li);
 
+        // waits forever for the file lock
+        virtual fs::SystemHandle take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;
+        // waits, at most, 1.5 seconds, for the file lock
+        virtual fs::SystemHandle try_take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;
+        virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code&) = 0;
+
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
     };
 
@@ -181,4 +233,8 @@ namespace vcpkg::Files
     bool has_invalid_chars_for_filesystem(const std::string& s);
 
     void print_paths(const std::vector<fs::path>& paths);
+
+    /// Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
+    /// This function exists as a workaround for TS implementations.
+    fs::path combine(const fs::path& lhs, const fs::path& rhs);
 }

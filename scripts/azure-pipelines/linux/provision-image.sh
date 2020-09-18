@@ -20,13 +20,17 @@ APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
 # Additionally required by qt5-base for qt5-x11extras
 APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
   libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev \
-  libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev"
+  libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
+  libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
 
 # Additionally required by libhdfs3
 APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
 
 # Additionally required by mesa
-APT_PACKAGES="$APT_PACKAGES python3-setuptools"
+APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
+
+# Additionally required by some packages to install additional python packages
+APT_PACKAGES="$APT_PACKAGES python3-pip"
 
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu60"

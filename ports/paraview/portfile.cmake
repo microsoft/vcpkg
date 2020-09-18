@@ -6,6 +6,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "mpi"          PARAVIEW_USE_MPI             #untested
     "vtkm"         PARAVIEW_USE_VTKM
     "python"       PARAVIEW_USE_PYTHON
+    "tools"        PARAVIEW_BUILD_TOOLS
 )
 
 vcpkg_from_github(
@@ -18,10 +19,9 @@ vcpkg_from_github(
         paraview_build.patch
         remove_duplicates.patch # Missed something in the above patch
         cgns.patch
-        qt_plugin.patch # Remove with Qt version > 5.14 
-        qt_static_plugins.patch # Remove with Qt version > 5.14 
         python_include.patch
         python_wrapper.patch
+        add-tools-option.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -61,7 +61,6 @@ if("python" IN_LIST FEATURES)
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
         )
-  
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
@@ -75,15 +74,15 @@ vcpkg_configure_cmake(
         -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
         -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION:BOOL=OFF
         -DPARAVIEW_USE_QTHELP:BOOL=OFF
-        
+
         #A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
-    
+
         # Workarounds for CMake issues
         -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
         -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
         ${ADDITIONAL_OPTIONS}
-       
+
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
 )
 if(CMAKE_HOST_UNIX)
@@ -113,7 +112,7 @@ set(TOOLS   paraview
             smTestDriver
             vtkProcessXML
             vtkWrapClientServer)
-            
+
 foreach(tool ${TOOLS})
     # Remove debug tools
     set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
