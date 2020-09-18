@@ -10,6 +10,7 @@ vcpkg_from_github(
         openssl_threads.patch
         fix-include-path.patch
         fix-libusb.patch
+        fix-undefined-symbol.patch #https://github.com/FreeRDP/FreeRDP/issues/6236
 )
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)

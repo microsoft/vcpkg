@@ -1,0 +1,13 @@
+diff --git a/winpr/libwinpr/library/library.c b/winpr/libwinpr/library/library.c
+index f44a96d..8d33227 100644
+--- a/winpr/libwinpr/library/library.c
++++ b/winpr/libwinpr/library/library.c
+@@ -125,7 +125,7 @@ HMODULE LoadLibraryA(LPCSTR lpLibFileName)
+ 	return hModule;
+ #else
+ 	HMODULE library;
+-	library = dlopen(lpLibFileName, RTLD_LOCAL | RTLD_LAZY);
++	library = dlopen(lpLibFileName, RTLD_GLOBAL | RTLD_LAZY);
+ 
+ 	if (!library)
+ 	{

@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 907984c7e036ddaa90e7cbfabb9af4f6fd3520820b9a8732b304f2213030f7d67cef89ad87d50e028a51bff06f68ff359345ad6894850e299b2fca343d7c0c3e
     HEAD_REF master
     PATCHES
-      0003-dependencies-from-vcpkg.patch
-      0005-disable-tzdata.patch
+        0003-dependencies-from-vcpkg.patch
+        0005-disable-tzdata.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
@@ -58,7 +58,6 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

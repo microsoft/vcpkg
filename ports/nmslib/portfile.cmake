@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -8,10 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-headers.patch
-)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    extra WITH_EXTRAS
 )
 
 # TODO: check SSE and AVX avability and set corresponding tags
