@@ -1699,13 +1699,6 @@ tinyutf8:arm64-windows=fail
 tinyutf8:arm-uwp=fail
 tinyutf8:x64-uwp=fail
 
-#Flaky on windows only due to error PRI210: 0x80070020 - File move failed
-tmx:arm64-windows      = skip
-tmx:arm-uwp            = skip
-tmx:x64-uwp            = skip
-tmx:x64-windows        = skip
-tmx:x64-windows-static = skip
-tmx:x86-windows        = skip
 tmxlite:arm-uwp=fail
 tmxlite:x64-uwp=fail
 tmxparser:arm64-windows=fail
