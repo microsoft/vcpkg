@@ -34,7 +34,8 @@ vcpkg_configure_cmake(
         -DSEAL_BUILD_EXAMPLES=OFF 
         -DSEAL_BUILD_TESTS=OFF 
         -DSEAL_BUILD_SEAL_C=OFF
-        -DSEAL_USE_MSGSL=ON -DSEAL_USE_ZLIB=ON
+        -DSEAL_USE_MSGSL=ON 
+        -DSEAL_USE_ZLIB=ON
 )
 
 vcpkg_install_cmake()
