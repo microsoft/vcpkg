@@ -4,6 +4,7 @@ set(PATCHES
         pcre2-10.35_fix-space.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2588
         pcre2-10.35_fix-uwp.patch
         pcre2-10.35_fix_postfix_for_debug_Windows_builds.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2600
+        pcre2-10.35_add_check_for_Intel_CET.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2578
 )
 
 vcpkg_download_distfile(ARCHIVE

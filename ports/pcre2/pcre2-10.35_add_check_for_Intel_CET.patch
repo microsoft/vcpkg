@@ -1,0 +1,26 @@
+--- a/CMakeLists.txt	2020-05-09 16:43:10.000000000 +0200
++++ b/CMakeLists.txt	2020-07-09 19:33:12.725648600 +0200
+@@ -146,6 +146,23 @@
+ )
+ set(CMAKE_REQUIRED_FLAGS ${ORIG_CMAKE_REQUIRED_FLAGS})
+ 
++# Check whether Intel CET is enabled, and if so, adjust compiler flags. This
++# code was written by PH, trying to imitate the logic from the autotools 
++# configuration.
++
++CHECK_C_SOURCE_COMPILES(
++  "#ifndef __CET__
++   #error CET is not enabled
++   #endif
++   int main() { return 0; }"
++  INTEL_CET_ENABLED
++)
++
++IF (INTEL_CET_ENABLED)
++  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mshstk")
++ENDIF(INTEL_CET_ENABLED)
++
++
+ # User-configurable options
+ #
+ # Note: CMakeSetup displays these in alphabetical order, regardless of

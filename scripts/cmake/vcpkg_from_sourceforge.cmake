@@ -42,6 +42,11 @@
 ## ### SHA512
 ## The SHA512 hash that should match the archive.
 ##
+## ### WORKING_DIRECTORY
+## If specified, the archive will be extracted into the working directory instead of `${CURRENT_BUILDTREES_DIR}/src/`.
+##
+## Note that the archive will still be extracted into a subfolder underneath that directory (`${WORKING_DIRECTORY}/${REF}-${HASH}/`).
+##
 ## ### PATCHES
 ## A list of patches to be applied to the extracted sources.
 ##
@@ -60,8 +65,36 @@
 ## * [tinyfiledialogs](https://github.com/Microsoft/vcpkg/blob/master/ports/tinyfiledialogs/portfile.cmake)
 
 function(vcpkg_from_sourceforge)
+    macro(check_file_content)
+        if (EXISTS ${ARCHIVE})
+            file(SIZE ${ARCHIVE} DOWNLOAD_FILE_SIZE)
+            if (DOWNLOAD_FILE_SIZE LESS_EQUAL 1024)
+                file(READ ${ARCHIVE} _FILE_CONTENT_)
+                string(FIND "${_FILE_CONTENT_}" "the Sourceforge site is currently in Disaster Recovery mode." OUT_CONTENT)
+                message("OUT_CONTENT: ${OUT_CONTENT}")
+                if (OUT_CONTENT EQUAL -1)
+                    set(download_success 1)
+                else()
+                    file(REMOVE ${ARCHIVE})
+                endif()
+            endif()
+        endif()
+    endmacro()
+    
+    macro(check_file_sha512)
+        file(SHA512 ${ARCHIVE} FILE_HASH)
+        if(NOT FILE_HASH STREQUAL _vdus_SHA512)
+            message(FATAL_ERROR
+                "\nFile does not have expected hash:\n"
+                "        File path: [ ${ARCHIVE} ]\n"
+                "    Expected hash: [ ${_vdus_SHA512} ]\n"
+                "      Actual hash: [ ${FILE_HASH} ]\n"
+                "${CUSTOM_ERROR_ADVICE}\n")
+        endif()
+    endmacro()
+    
     set(booleanValueArgs DISABLE_SSL NO_REMOVE_ONE_LEVEL)
-    set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 FILENAME)
+    set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 FILENAME WORKING_DIRECTORY)
     set(multipleValuesArgs PATCHES)
     cmake_parse_arguments(_vdus "${booleanValueArgs}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
@@ -75,6 +108,12 @@ function(vcpkg_from_sourceforge)
 
     if(NOT DEFINED _vdus_REPO)
         message(FATAL_ERROR "The sourceforge repository must be specified.")
+    endif()
+
+    if(DEFINED _vdus_WORKING_DIRECTORY)
+        set(WORKING_DIRECTORY WORKING_DIRECTORY "${_vdus_WORKING_DIRECTORY}")
+    else()
+        set(WORKING_DIRECTORY)
     endif()
 
     if (_vdus_DISABLE_SSL)
@@ -140,13 +179,15 @@ function(vcpkg_from_sourceforge)
     message(STATUS "Trying auto-select mirror...")
     vcpkg_download_distfile(ARCHIVE
         URLS "${DOWNLOAD_URL}"
-        SHA512 "${_vdus_SHA512}"
+        SKIP_SHA512
         FILENAME "${_vdus_FILENAME}"
         SILENT_EXIT
     )
-    
-    if (EXISTS ${ARCHIVE})
-        set(download_success 1)
+    check_file_content()
+    if (download_success)
+        check_file_sha512()
+    else()
+        message(STATUS "The default mirror is in Disaster Recovery mode, trying other mirrors...")
     endif()
     
     if (NOT download_success EQUAL 1)
@@ -155,13 +196,19 @@ function(vcpkg_from_sourceforge)
             message(STATUS "Trying mirror ${SOURCEFORGE_MIRROR}...")
             vcpkg_download_distfile(ARCHIVE
                 URLS "${DOWNLOAD_URL}"
-                SHA512 "${_vdus_SHA512}"
+                SKIP_SHA512
                 FILENAME "${_vdus_FILENAME}"
                 SILENT_EXIT
             )
             
             if (EXISTS ${ARCHIVE})
                 set(download_success 1)
+                check_file_content()
+                if (download_success)
+                    check_file_sha512()
+                else()
+                    message(STATUS "Mirror ${SOURCEFORGE_MIRROR} is in Disaster Recovery mode, trying other mirrors...")
+                endif()
                 break()
             endif()
         endforeach()
@@ -181,6 +228,7 @@ function(vcpkg_from_sourceforge)
         ARCHIVE "${ARCHIVE}"
         REF "${SANITIZED_REF}"
         ${NO_REMOVE_ONE_LEVEL}
+        ${WORKING_DIRECTORY}
         PATCHES ${_vdus_PATCHES}
     )
 

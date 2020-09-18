@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-
 #include <vcpkg/base/lineinfo.h>
+
+#include <string>
 
 namespace vcpkg::Enums
 {

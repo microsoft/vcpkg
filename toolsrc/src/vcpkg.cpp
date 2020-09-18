@@ -1,10 +1,5 @@
 #include <vcpkg/base/system_headers.h>
 
-#include <cassert>
-#include <fstream>
-#include <memory>
-#include <random>
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/pragmas.h>
@@ -12,7 +7,10 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+
+#include <vcpkg/commands.contact.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
@@ -20,6 +18,11 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/userconfig.h>
 #include <vcpkg/vcpkglib.h>
+
+#include <cassert>
+#include <fstream>
+#include <memory>
+#include <random>
 
 #if defined(_WIN32)
 #pragma comment(lib, "ole32")
@@ -65,16 +68,18 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
         }
     };
 
-    if (const auto command_function = find_command(Commands::get_available_commands_type_c()))
+    if (const auto command_function = find_command(Commands::get_available_basic_commands()))
     {
-        return command_function->function(args, fs);
+        return command_function->function->perform_and_exit(args, fs);
     }
 
     const VcpkgPaths paths(fs, args);
     paths.track_feature_flag_metrics();
 
     fs.current_path(paths.root, VCPKG_LINE_INFO);
-    if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
+    if ((args.command == "install" || args.command == "remove" || args.command == "export" ||
+         args.command == "update") &&
+        !args.output_json())
     {
         Commands::Version::warn_if_vcpkg_version_mismatch(paths);
         std::string surveydate = *GlobalState::g_surveydate.lock();
@@ -101,17 +106,17 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
         }
     }
 
-    if (const auto command_function = find_command(Commands::get_available_commands_type_b()))
+    if (const auto command_function = find_command(Commands::get_available_paths_commands()))
     {
-        return command_function->function(args, paths);
+        return command_function->function->perform_and_exit(args, paths);
     }
 
     Triplet default_triplet = vcpkg::default_triplet(args);
     Input::check_triplet(default_triplet, paths);
 
-    if (const auto command_function = find_command(Commands::get_available_commands_type_a()))
+    if (const auto command_function = find_command(Commands::get_available_triplet_commands()))
     {
-        return command_function->function(args, paths, default_triplet);
+        return command_function->function->perform_and_exit(args, paths, default_triplet);
     }
 
     return invalid_command(args.command);
@@ -230,6 +235,16 @@ int main(const int argc, const char* const* const argv)
 
     load_config(fs);
 
+#if (defined(__aarch64__) || defined(__arm__) || defined(__s390x__) || defined(_M_ARM) || defined(_M_ARM64)) &&        \
+    !defined(_WIN32)
+    if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+    {
+        Checks::exit_with_message(
+            VCPKG_LINE_INFO,
+            "Environment variable VCPKG_FORCE_SYSTEM_BINARIES must be set on arm and s390x platforms.");
+    }
+#endif
+
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
     args.imbue_from_environment();
     args.check_feature_flag_consistency();
@@ -250,6 +265,7 @@ int main(const int argc, const char* const* const argv)
                        "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
     }
 
+    args.debug_print_feature_flags();
     args.track_feature_flag_metrics();
 
     if (Debug::g_debugging)

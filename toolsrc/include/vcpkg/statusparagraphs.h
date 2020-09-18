@@ -1,8 +1,8 @@
 #pragma once
+#include <vcpkg/statusparagraph.h>
+
 #include <iterator>
 #include <memory>
-
-#include <vcpkg/statusparagraph.h>
 
 namespace vcpkg
 {

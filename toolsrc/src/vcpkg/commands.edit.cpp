@@ -1,13 +1,13 @@
-#include "pch.h"
-
-#include <limits.h>
-
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.edit.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+
+#include <limits.h>
 
 #if defined(_WIN32)
 namespace
@@ -79,16 +79,15 @@ namespace
 
 namespace vcpkg::Commands::Edit
 {
-    static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
+    static constexpr StringLiteral OPTION_BUILDTREES = "buildtrees";
 
-    static constexpr StringLiteral OPTION_ALL = "--all";
+    static constexpr StringLiteral OPTION_ALL = "all";
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
-        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+        auto sources_and_errors = Paragraphs::try_load_all_registry_ports(paths);
 
-        return Util::fmap(sources_and_errors.paragraphs,
-                          [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
+        return Util::fmap(sources_and_errors.paragraphs, Paragraphs::get_name_of_control_file);
     }
 
     static constexpr std::array<CommandSwitch, 2> EDIT_SWITCHES = {
@@ -122,16 +121,16 @@ namespace vcpkg::Commands::Edit
                 std::string package_paths;
                 for (auto&& package : packages)
                 {
-                    if (Strings::case_insensitive_ascii_starts_with(package.filename().u8string(), pattern))
+                    if (Strings::case_insensitive_ascii_starts_with(fs::u8string(package.filename()), pattern))
                     {
-                        package_paths.append(Strings::format(" \"%s\"", package.u8string()));
+                        package_paths.append(Strings::format(" \"%s\"", fs::u8string(package)));
                     }
                 }
 
                 return Strings::format(R"###("%s" "%s" "%s"%s)###",
-                                       portpath.u8string(),
-                                       portfile.u8string(),
-                                       buildtrees_current_dir.u8string(),
+                                       fs::u8string(portpath),
+                                       fs::u8string(portfile),
+                                       fs::u8string(buildtrees_current_dir),
                                        package_paths);
             });
         }
@@ -139,14 +138,14 @@ namespace vcpkg::Commands::Edit
         if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
         {
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
-                return Strings::format(R"###("%s")###", paths.build_dir(port_name).u8string());
+                return Strings::format(R"###("%s")###", fs::u8string(paths.build_dir(port_name)));
             });
         }
 
         return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
             const auto portpath = paths.ports / port_name;
             const auto portfile = portpath / "portfile.cmake";
-            return Strings::format(R"###("%s" "%s")###", portpath.u8string(), portfile.u8string());
+            return Strings::format(R"###("%s" "%s")###", fs::u8string(portpath), fs::u8string(portfile));
         });
     }
 
@@ -253,17 +252,23 @@ namespace vcpkg::Commands::Edit
         const fs::path env_editor = *it;
         const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
         const auto args_as_string = Strings::join(" ", arguments);
-        const auto cmd_line = Strings::format(R"("%s" %s -n)", env_editor.u8string(), args_as_string);
+        const auto cmd_line = Strings::format(R"("%s" %s -n)", fs::u8string(env_editor), args_as_string);
 
-        auto editor_exe = env_editor.filename().u8string();
+        auto editor_exe = fs::u8string(env_editor.filename());
 
 #ifdef _WIN32
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
-            System::cmd_execute_no_wait(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
+            // note that we are invoking cmd silently but Code.exe is relaunched from there
+            System::cmd_execute_background(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
+    }
+
+    void EditCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Edit::perform_and_exit(args, paths);
     }
 }

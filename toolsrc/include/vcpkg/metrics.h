@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/util.h>
+
+#include <string>
 
 namespace vcpkg::Metrics
 {

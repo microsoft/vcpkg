@@ -1,11 +1,11 @@
 #pragma once
 
+#include <vcpkg/base/checks.h>
+#include <vcpkg/base/system.print.h>
+
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-#include <vcpkg/base/checks.h>
-#include <vcpkg/base/system.print.h>
 
 namespace vcpkg::Graphs
 {

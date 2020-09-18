@@ -1,10 +1,12 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/commands.porthistory.h>
 #include <vcpkg/help.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Commands::PortHistory
 {
@@ -21,7 +23,7 @@ namespace vcpkg::Commands::PortHistory
         const fs::path dot_git_dir = paths.root / ".git";
 
         const std::string full_cmd =
-            Strings::format(R"("%s" --git-dir="%s" %s)", git_exe.u8string(), dot_git_dir.u8string(), cmd);
+            Strings::format(R"("%s" --git-dir="%s" %s)", fs::u8string(git_exe), fs::u8string(dot_git_dir), cmd);
 
         auto output = System::cmd_execute_and_capture_output(full_cmd);
         Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to run command: %s", full_cmd);
@@ -35,8 +37,14 @@ namespace vcpkg::Commands::PortHistory
         const std::string cmd = Strings::format(R"(show %s:ports/%s/CONTROL)", commit_id, port_name);
         auto output = run_git_command(paths, cmd);
 
-        const auto version = Strings::find_at_most_one_enclosed(output.output, "Version: ", "\n");
+        const auto version = Strings::find_at_most_one_enclosed(output.output, "\nVersion: ", "\n");
+        const auto port_version = Strings::find_at_most_one_enclosed(output.output, "\nPort-Version: ", "\n");
         Checks::check_exit(VCPKG_LINE_INFO, version.has_value(), "CONTROL file does not have a 'Version' field");
+        if (auto pv = port_version.get())
+        {
+            return Strings::format("%s#%s", version.get()->to_string(), pv->to_string());
+        }
+
         return version.get()->to_string();
     }
 
@@ -76,8 +84,7 @@ namespace vcpkg::Commands::PortHistory
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
-
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         std::string port_name = args.command_arguments.at(0);
         std::vector<PortControlVersion> versions = read_versions_from_log(paths, port_name);
         System::print2("             version          date    vcpkg commit\n");
@@ -86,5 +93,10 @@ namespace vcpkg::Commands::PortHistory
             System::printf("%20.20s    %s    %s\n", version.version, version.date, version.commit_id);
         }
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void PortHistoryCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        PortHistory::perform_and_exit(args, paths);
     }
 }

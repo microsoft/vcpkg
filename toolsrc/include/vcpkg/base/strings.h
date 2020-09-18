@@ -1,17 +1,17 @@
 #pragma once
 
-#include <errno.h>
-#include <inttypes.h>
-#include <limits.h>
-
-#include <vector>
-
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/pragmas.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>
+
+#include <errno.h>
+#include <inttypes.h>
+#include <limits.h>
+
+#include <vector>
 
 namespace vcpkg::Strings::details
 {
@@ -184,6 +184,8 @@ namespace vcpkg::Strings
     std::string replace_all(std::string&& s, const std::string& search, StringView rep);
 
     std::string trim(std::string&& s);
+
+    StringView trim(StringView sv);
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
 

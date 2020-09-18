@@ -1,5 +1,6 @@
 Source: poco
-Version: 1.9.2-2
+Version: 1.9.2
+Port-Version: 4
 Build-Depends: expat, libpq, pcre, sqlite3, zlib, libpng
 Description: Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.
 Homepage: https://github.com/pocoproject/poco
