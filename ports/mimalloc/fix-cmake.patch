@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 37616eb..eb5aedd 100644
+index 37616eb..c44a659 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -251,13 +251,28 @@ if(MI_BUILD_SHARED)
    )
    if(WIN32)
      # On windows copy the mimalloc redirection dll too.
-+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)	
++  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
      target_link_libraries(mimalloc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bin/mimalloc-redirect.lib)
      add_custom_command(TARGET mimalloc POST_BUILD
        COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_SOURCE_DIR}/bin/mimalloc-redirect.dll" $<TARGET_FILE_DIR:mimalloc>
@@ -29,7 +29,7 @@ index 37616eb..eb5aedd 100644
 +endif()
  
 -  install(TARGETS mimalloc EXPORT mimalloc DESTINATION ${mi_install_dir} LIBRARY)
-+  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION lib RUNTIME DESTINATION bin LIBRARY DESTINATION lib NAMELINK_SKIP DESTINATION ${mi_install_dir} LIBRARY)
++  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION lib RUNTIME DESTINATION bin LIBRARY DESTINATION lib NAMELINK_SKIP)
    install(EXPORT mimalloc DESTINATION ${mi_install_dir}/cmake)
  endif()
  
@@ -38,7 +38,7 @@ index 37616eb..eb5aedd 100644
    endif()
  
 -  install(TARGETS mimalloc-static EXPORT mimalloc DESTINATION ${mi_install_dir})
-+  install(TARGETS mimalloc-static EXPORT mimalloc DESTINATION lib DESTINATION ${mi_install_dir})
++  install(TARGETS mimalloc-static EXPORT mimalloc DESTINATION lib)
  endif()
  
  # install include files

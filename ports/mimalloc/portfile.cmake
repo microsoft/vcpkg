@@ -16,6 +16,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     override    MI_OVERRIDE
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MI_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MI_BUILD_SHARED)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -28,6 +31,9 @@ vcpkg_configure_cmake(
         -DMI_USE_CXX=OFF
         -DMI_BUILD_TESTS=OFF
         ${FEATURE_OPTIONS}
+	OPTIONS
+	    -DKEYSTONE_BUILD_STATIC=${MI_BUILD_STATIC}
+        -DKEYSTONE_BUILD_SHARED=${MI_BUILD_SHARED}
 )
 
 vcpkg_install_cmake()
