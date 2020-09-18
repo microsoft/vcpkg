@@ -31,15 +31,9 @@ vcpkg_configure_cmake(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
          ${FEATURE_OPTIONS}
-        -DIL_NO_PNG=${IL_NO_PNG}
-        -DIL_NO_TIF=${IL_NO_TIF}
-        -DIL_NO_JPG=${IL_NO_JPG}
-        -DIL_NO_EXR=${IL_NO_EXR}
-        -DIL_NO_JP2=${IL_NO_JP2}
-        -DIL_NO_MNG=${IL_NO_MNG}
-        -DIL_NO_LCMS=${IL_NO_LCMS}
-        -DIL_USE_DXTC_NVIDIA=${IL_USE_DXTC_NVIDIA}
-        -DIL_USE_DXTC_SQUISH=${IL_USE_DXTC_SQUISH}
+        -DIL_NO_MNG=ON
+        -DIL_USE_DXTC_NVIDIA=OFF
+        -DIL_USE_DXTC_SQUISH=OFF
 )
 
 vcpkg_install_cmake()
