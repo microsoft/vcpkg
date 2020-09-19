@@ -105,17 +105,20 @@ if (-not $IsMacOS) {
     throw 'This script should only be run on a macOS host'
 }
 
-if (Test-Path '~/vagrant') {
+if (Test-Path '~/vagrant/vcpkg-eg-mac') {
     if ($Force) {
         Write-Host 'Deleting existing directories'
-        Remove-Item -Recurse -Force -Path '~/vagrant' | Out-Null
+        Remove-Item -Recurse -Force -Path '~/vagrant/vcpkg-eg-mac' | Out-Null
     } else {
-        throw '~/vagrant already exists; try re-running with -Force'
+        throw '~/vagrant/vcpkg-eg-mac already exists; try re-running with -Force'
     }
 }
 
 Write-Host 'Creating new directories'
-New-Item -ItemType 'Directory' -Path '~/vagrant' | Out-Null
+if (-not (Test-Path -Path '~/vagrant'))
+{
+	New-Item -ItemType 'Directory' -Path '~/vagrant' | Out-Null
+}
 New-Item -ItemType 'Directory' -Path '~/vagrant/vcpkg-eg-mac' | Out-Null
 
 Copy-Item `
