@@ -1,0 +1,5 @@
+Source: libalkimia
+Version: 8.0.3
+Homepage: https://community.kde.org/Alkimia/libalkimia
+Description: Common functionality for finance applications.
+Build-Depends: ecm, qt5-base, qt5-tools, kf5config, kf5coreaddons, kf5completion, kf5i18n, kf5newstuff, kf5iconthemes, kf5textwidgets, kf5xmlgui, kf5kio, gmp
