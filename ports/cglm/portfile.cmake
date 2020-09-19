@@ -9,9 +9,9 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-	OPTIONS 
-		-DCGLM_SHARED=OFF
-		-DCGLM_STATIC=ON 
+    OPTIONS 
+        -DCGLM_SHARED=OFF
+        -DCGLM_STATIC=ON 
     #  -DCGLM_USE_C99=ON
     #  -DCGLM_USE_TEST=OFF
 )
