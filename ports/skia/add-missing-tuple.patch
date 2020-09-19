@@ -1,0 +1,12 @@
+diff --git a/include/private/SkPathRef.h b/include/private/SkPathRef.h
+index 7afe4f9..502f83e 100644
+--- a/include/private/SkPathRef.h
++++ b/include/private/SkPathRef.h
+@@ -21,6 +21,7 @@
+ 
+ #include <atomic>
+ #include <limits>
++#include <tuple>
+ 
+ class SkRBuffer;
+ class SkWBuffer;

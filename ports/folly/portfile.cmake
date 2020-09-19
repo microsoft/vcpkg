@@ -90,6 +90,7 @@ FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake
 find_dependency(Threads)
 find_dependency(glog CONFIG)
 find_dependency(gflags CONFIG REQUIRED)
+find_dependency(ZLIB)
 ${_contents}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
