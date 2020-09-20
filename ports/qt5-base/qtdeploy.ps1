@@ -49,10 +49,10 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
             deployBinary "$targetBinaryDir" "$binDir" "libcrypto-1_1-x64.dll"
             deployBinary "$targetBinaryDir" "$binDir" "libssl-1_1-x64.dll"
         }
-        if (Test-Path "$binDir\libcrypto-1_1-x86.dll")
+        if (Test-Path "$binDir\libcrypto-1_1.dll")
         {
-            deployBinary "$targetBinaryDir" "$binDir" "libcrypto-1_1-x86.dll"
-            deployBinary "$targetBinaryDir" "$binDir" "libssl-1_1-x86.dll"
+            deployBinary "$targetBinaryDir" "$binDir" "libcrypto-1_1.dll"
+            deployBinary "$targetBinaryDir" "$binDir" "libssl-1_1.dll"
         }
     } elseif ($targetBinaryName -match "Qt5Sqld?.dll") {
         deployPlugins "sqldrivers"
