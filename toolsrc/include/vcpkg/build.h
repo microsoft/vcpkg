@@ -5,7 +5,6 @@
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.process.h>
 
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.integrate.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
@@ -23,10 +22,20 @@ namespace vcpkg
     struct IBinaryProvider;
 }
 
+namespace vcpkg::CMakeVars
+{
+    struct CMakeVarProvider;
+}
+
 namespace vcpkg::Dependencies
 {
     struct InstallPlanAction;
     struct ActionPlan;
+}
+
+namespace vcpkg::PortFileProvider
+{
+    struct PathsPortFileProvider;
 }
 
 namespace vcpkg::System
