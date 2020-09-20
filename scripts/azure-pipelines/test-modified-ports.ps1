@@ -70,7 +70,7 @@ else {
     $binaryCachingMode = 'write'
 }
 
-$commonArgs += @("--x-binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
+#$commonArgs += @("--x-binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
 
 if ($Triplet -eq 'x64-linux') {
     $env:HOME = '/home/agent'
