@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/view.h>
 
 namespace vcpkg::Downloads
 {
@@ -13,4 +14,8 @@ namespace vcpkg::Downloads
                        const std::string& url,
                        const fs::path& download_path,
                        const std::string& sha512);
+
+    std::vector<int> download_files(Files::Filesystem& fs, View<std::pair<std::string, fs::path>> url_pairs);
+    int put_file(const Files::Filesystem&, StringView url, const fs::path& file);
+    std::vector<int> url_heads(View<std::string> urls);
 }
