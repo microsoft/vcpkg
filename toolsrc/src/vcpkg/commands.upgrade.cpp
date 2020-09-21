@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
@@ -12,6 +10,7 @@
 #include <vcpkg/install.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/update.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::Upgrade
@@ -82,41 +81,46 @@ namespace vcpkg::Commands::Upgrade
         else
         {
             std::vector<PackageSpec> not_installed;
-            std::vector<PackageSpec> no_portfile;
+            std::vector<PackageSpec> no_control_file;
             std::vector<PackageSpec> to_upgrade;
             std::vector<PackageSpec> up_to_date;
 
             for (auto&& spec : specs)
             {
-                auto it = status_db.find_installed(spec);
-                if (it == status_db.end())
+                bool skip_version_check = false;
+                auto installed_status = status_db.find_installed(spec);
+                if (installed_status == status_db.end())
                 {
                     not_installed.push_back(spec);
+                    skip_version_check = true;
                 }
 
-                auto maybe_scfl = provider.get_control_file(spec.name());
-                if (auto p_scfl = maybe_scfl.get())
+                auto maybe_control_file = provider.get_control_file(spec.name());
+                if (!maybe_control_file.has_value())
                 {
-                    if (it != status_db.end())
-                    {
-                        if (p_scfl->source_control_file->core_paragraph->version != (*it)->package.version)
-                        {
-                            to_upgrade.push_back(spec);
-                        }
-                        else
-                        {
-                            up_to_date.push_back(spec);
-                        }
-                    }
+                    no_control_file.push_back(spec);
+                    skip_version_check = true;
+                }
+
+                if (skip_version_check) continue;
+
+                const auto& control_file = maybe_control_file.value_or_exit(VCPKG_LINE_INFO);
+                const auto& control_paragraph = *control_file.source_control_file->core_paragraph;
+                auto control_version = VersionT(control_paragraph.version, control_paragraph.port_version);
+                const auto& installed_paragraph = (*installed_status)->package;
+                auto installed_version = VersionT(installed_paragraph.version, installed_paragraph.port_version);
+                if (control_version == installed_version)
+                {
+                    up_to_date.push_back(spec);
                 }
                 else
                 {
-                    no_portfile.push_back(spec);
+                    to_upgrade.push_back(spec);
                 }
             }
 
             Util::sort(not_installed);
-            Util::sort(no_portfile);
+            Util::sort(no_control_file);
             Util::sort(up_to_date);
             Util::sort(to_upgrade);
 
@@ -138,16 +142,17 @@ namespace vcpkg::Commands::Upgrade
                                '\n');
             }
 
-            if (!no_portfile.empty())
+            if (!no_control_file.empty())
             {
-                System::print2(System::Color::error, "The following packages do not have a valid portfile:\n");
+                System::print2(System::Color::error,
+                               "The following packages do not have a valid CONTROL or vcpkg.json:\n");
                 System::print2(Strings::join("",
-                                             no_portfile,
+                                             no_control_file,
                                              [](const PackageSpec& spec) { return "    " + spec.to_string() + "\n"; }),
                                '\n');
             }
 
-            Checks::check_exit(VCPKG_LINE_INFO, not_installed.empty() && no_portfile.empty());
+            Checks::check_exit(VCPKG_LINE_INFO, not_installed.empty() && no_control_file.empty());
 
             if (to_upgrade.empty()) Checks::exit_success(VCPKG_LINE_INFO);
 

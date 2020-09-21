@@ -3,9 +3,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BlueBrain/HighFive
-    REF b9b25da543145166b01bcca01c3cbedfcbd06307 # v2.1.1
-    SHA512 f1de563bf811c285447fdf8e88e4861f1ac0e10bf830cedec587b7a85dcfb2fc9b038dd1f71cbbbf4774c517b5097f3c4afad5048b6a3dfd21f8f0e23ab67ec1
+    REF v2.2.2
+    SHA512 7e562951b18425f1bfc96c30d0e47b6d218830417a732856a27943cd7ee6feab54d833b94aa303c40ca5038ac1aaf0eadd8c61800ffe82b6da46a465b21b1fc4
     HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+     tests     HIGHFIVE_UNIT_TESTS
+     boost     HIGHFIVE_USE_BOOST
 )
 
 if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
@@ -16,14 +21,22 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DHIGHFIVE_UNIT_TESTS=OFF
+        ${FEATURE_OPTIONS}
         -DHIGHFIVE_EXAMPLES=OFF
-        -DUSE_BOOST=OFF
         -DHIGH_FIVE_DOCUMENTATION=OFF
         -DHDF5_USE_STATIC_LIBRARIES=${HDF5_USE_STATIC_LIBRARIES}
 )
 
 vcpkg_install_cmake()
+if("tests" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES 
+            tests_high_five_base
+            tests_high_five_easy
+            tests_high_five_multi_dims
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/tests/unit" # Tools are not installed so release version tools are manually copied
+    )
+endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/HighFive/CMake)
 

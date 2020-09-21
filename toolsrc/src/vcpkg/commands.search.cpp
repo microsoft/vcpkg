@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.search.h>
@@ -8,6 +6,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/versiont.h>
 
@@ -16,7 +15,27 @@ using vcpkg::PortFileProvider::PathsPortFileProvider;
 namespace vcpkg::Commands::Search
 {
     static constexpr StringLiteral OPTION_FULLDESC = "x-full-desc"; // TODO: This should find a better home, eventually
+    static constexpr StringLiteral OPTION_JSON = "x-json";
 
+    static void do_print_json(std::vector<const vcpkg::SourceControlFile*> source_control_files)
+    {
+        Json::Object obj;
+        for (const SourceControlFile* scf : source_control_files)
+        {
+            auto& source_paragraph = scf->core_paragraph;
+            Json::Object& library_obj = obj.insert(source_paragraph->name, Json::Object());
+            library_obj.insert("package_name", Json::Value::string(source_paragraph->name));
+            library_obj.insert("version", Json::Value::string(source_paragraph->version));
+            library_obj.insert("port_version", Json::Value::integer(source_paragraph->port_version));
+            Json::Array& desc = library_obj.insert("description", Json::Array());
+            for (const auto& line : source_paragraph->description)
+            {
+                desc.push_back(Json::Value::string(line));
+            }
+        }
+
+        System::print2(Json::stringify(obj, Json::JsonStyle{}));
+    }
     static void do_print(const SourceParagraph& source_paragraph, bool full_desc)
     {
         auto full_version = VersionT(source_paragraph.version, source_paragraph.port_version).to_string();
@@ -60,8 +79,9 @@ namespace vcpkg::Commands::Search
         }
     }
 
-    static constexpr std::array<CommandSwitch, 1> SEARCH_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 2> SEARCH_SWITCHES = {{
         {OPTION_FULLDESC, "Do not truncate long text"},
+        {OPTION_JSON, "(experimental) List libraries in JSON format"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -78,6 +98,7 @@ namespace vcpkg::Commands::Search
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const bool full_description = Util::Sets::contains(options.switches, OPTION_FULLDESC);
+        const bool enable_json = Util::Sets::contains(options.switches, OPTION_JSON);
 
         PathsPortFileProvider provider(paths, args.overlay_ports);
         auto source_paragraphs =
@@ -86,12 +107,19 @@ namespace vcpkg::Commands::Search
 
         if (args.command_arguments.empty())
         {
-            for (const auto& source_control_file : source_paragraphs)
+            if (enable_json)
             {
-                do_print(*source_control_file->core_paragraph, full_description);
-                for (auto&& feature_paragraph : source_control_file->feature_paragraphs)
+                do_print_json(source_paragraphs);
+            }
+            else
+            {
+                for (const auto& source_control_file : source_paragraphs)
                 {
-                    do_print(source_control_file->core_paragraph->name, *feature_paragraph, full_description);
+                    do_print(*source_control_file->core_paragraph, full_description);
+                    for (auto&& feature_paragraph : source_control_file->feature_paragraphs)
+                    {
+                        do_print(source_control_file->core_paragraph->name, *feature_paragraph, full_description);
+                    }
                 }
             }
         }
@@ -138,9 +166,12 @@ namespace vcpkg::Commands::Search
             }
         }
 
-        System::print2(
-            "\nIf your library is not listed, please open an issue at and/or consider making a pull request:\n"
-            "    https://github.com/Microsoft/vcpkg/issues\n");
+        if (!enable_json)
+        {
+            System::print2(
+                "\nIf your library is not listed, please open an issue at and/or consider making a pull request:\n"
+                "    https://github.com/Microsoft/vcpkg/issues\n");
+        }
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }

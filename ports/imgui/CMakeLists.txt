@@ -22,6 +22,13 @@ target_sources(
 		${CMAKE_CURRENT_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
 )
 
+
+if(IMGUI_USE_WCHAR32)
+	FILE(READ ${CMAKE_CURRENT_SOURCE_DIR}/imconfig.h IMCONFIG)
+	STRING(REGEX REPLACE "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32" IMCONFIG "${IMCONFIG}")
+	FILE(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/imconfig.h "${IMCONFIG}")
+endif()
+
 if(IMGUI_BUILD_ALLEGRO5_BINDING)
 	find_path(ALLEGRO5_INCLUDE_DIRS allegro5/allegro.h)
 	target_include_directories(${PROJECT_NAME} PRIVATE ${ALLEGRO5_INCLUDE_DIRS})
@@ -172,7 +179,7 @@ if(NOT IMGUI_SKIP_HEADERS)
 		file(GLOB MARMALADE_BINDING_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_marmalade.*)
 		install(FILES ${MARMALADE_BINDING_SRCS} DESTINATION include/bindings)
 	endif()
-	
+
 	if(IMGUI_BUILD_METAL_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_metal.h DESTINATION include)
 	endif()

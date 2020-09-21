@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
@@ -16,7 +14,9 @@
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/paragraphs.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
@@ -458,9 +458,7 @@ namespace vcpkg::Commands::CI
         XunitTestResults xunitTestResults;
 
         std::vector<std::string> all_ports =
-            Util::fmap(provider.load_all_control_files(), [](const SourceControlFileLocation*& scfl) -> std::string {
-                return scfl->source_control_file.get()->core_paragraph->name;
-            });
+            Util::fmap(provider.load_all_control_files(), Paragraphs::get_name_of_control_file);
         std::vector<TripletAndSummary> results;
         auto timer = Chrono::ElapsedTimer::create_started();
         for (Triplet triplet : triplets)

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
@@ -9,7 +7,10 @@
 
 #include <vcpkg/commands.integrate.h>
 #include <vcpkg/metrics.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/userconfig.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Commands::Integrate
 {
@@ -76,7 +77,7 @@ namespace vcpkg::Commands::Integrate
 #if defined(_WIN32)
     static std::string get_nuget_id(const fs::path& vcpkg_root_dir)
     {
-        std::string dir_id = vcpkg_root_dir.generic_u8string();
+        std::string dir_id = fs::generic_u8string(vcpkg_root_dir);
         std::replace(dir_id.begin(), dir_id.end(), '/', '.');
         dir_id.erase(1, 1); // Erasing the ":"
 
@@ -254,7 +255,7 @@ namespace vcpkg::Commands::Integrate
 
             const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
             fs.write_contents(appdata_src_path,
-                              create_appdata_shortcut(paths.buildsystems_msbuild_targets.u8string()),
+                              create_appdata_shortcut(fs::u8string(paths.buildsystems_msbuild_targets)),
                               VCPKG_LINE_INFO);
             auto appdata_dst_path = get_appdata_targets_path();
 
@@ -264,16 +265,16 @@ namespace vcpkg::Commands::Integrate
             {
                 System::print2(System::Color::error,
                                "Error: Failed to copy file: ",
-                               appdata_src_path.u8string(),
+                               fs::u8string(appdata_src_path),
                                " -> ",
-                               appdata_dst_path.u8string(),
+                               fs::u8string(appdata_dst_path),
                                "\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
             const fs::path appdata_src_path2 = tmp_dir / "vcpkg.user.props";
             fs.write_contents(appdata_src_path2,
-                              create_appdata_shortcut(paths.buildsystems_msbuild_props.u8string()),
+                              create_appdata_shortcut(fs::u8string(paths.buildsystems_msbuild_props)),
                               VCPKG_LINE_INFO);
             auto appdata_dst_path2 = get_appdata_props_path();
 
@@ -284,9 +285,9 @@ namespace vcpkg::Commands::Integrate
             {
                 System::print2(System::Color::error,
                                "Error: Failed to copy file: ",
-                               appdata_src_path2.u8string(),
+                               fs::u8string(appdata_src_path2),
                                " -> ",
-                               appdata_dst_path2.u8string(),
+                               fs::u8string(appdata_dst_path2),
                                "\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
@@ -295,7 +296,7 @@ namespace vcpkg::Commands::Integrate
 
         const auto pathtxt = get_path_txt_path();
         std::error_code ec;
-        fs.write_contents(pathtxt, paths.root.generic_u8string(), VCPKG_LINE_INFO);
+        fs.write_contents(pathtxt, fs::generic_u8string(paths.root), VCPKG_LINE_INFO);
 
         System::print2(System::Color::success, "Applied user-wide integration for this vcpkg root.\n");
         const fs::path cmake_toolchain = paths.buildsystems / "vcpkg.cmake";
@@ -308,13 +309,13 @@ Installing new libraries will make them instantly available.
 
 CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
 )",
-            cmake_toolchain.generic_u8string());
+            fs::generic_u8string(cmake_toolchain));
 #else
         System::printf(
             R"(
 CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
 )",
-            cmake_toolchain.generic_u8string());
+            fs::generic_u8string(cmake_toolchain));
 #endif
 
         Checks::exit_success(VCPKG_LINE_INFO);
@@ -379,9 +380,9 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
 
         // Using all forward slashes for the command line
         const std::string cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s")",
-                                                     nuget_exe.u8string(),
-                                                     buildsystems_dir.u8string(),
-                                                     nuspec_file_path.u8string());
+                                                     fs::u8string(nuget_exe),
+                                                     fs::u8string(buildsystems_dir),
+                                                     fs::u8string(nuspec_file_path));
 
         const int exit_code =
             System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
@@ -389,9 +390,9 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
         const fs::path nuget_package = buildsystems_dir / Strings::format("%s.%s.nupkg", nuget_id, nupkg_version);
         Checks::check_exit(
             VCPKG_LINE_INFO, exit_code == 0 && fs.exists(nuget_package), "Error: NuGet package creation failed");
-        System::print2(System::Color::success, "Created nupkg: ", nuget_package.u8string(), '\n');
+        System::print2(System::Color::success, "Created nupkg: ", fs::u8string(nuget_package), '\n');
 
-        auto source_path = buildsystems_dir.u8string();
+        auto source_path = fs::u8string(buildsystems_dir);
         source_path = Strings::replace_all(std::move(source_path), "`", "``");
 
         System::printf(R"(
@@ -413,8 +414,9 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         const fs::path script_path = paths.scripts / "addPoshVcpkgToPowershellProfile.ps1";
 
         const auto& ps = paths.get_tool_exe("powershell-core");
-        const std::string cmd = Strings::format(
-            R"("%s" -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' }")", ps.u8string(), script_path.u8string());
+        const std::string cmd = Strings::format(R"("%s" -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' }")",
+                                                fs::u8string(ps),
+                                                fs::u8string(script_path));
         const int rc = System::cmd_execute(cmd);
         if (rc)
         {
@@ -423,7 +425,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
                            "Could not run:\n"
                            "    '%s'\n",
                            TITLE,
-                           script_path.generic_u8string());
+                           fs::generic_u8string(script_path));
 
             {
                 auto locked_metrics = Metrics::g_metrics.lock();
@@ -445,7 +447,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         Expected<std::vector<std::string>> maybe_bashrc_content = fs.read_lines(bashrc_path);
         Checks::check_exit(
-            VCPKG_LINE_INFO, maybe_bashrc_content.has_value(), "Unable to read %s", bashrc_path.u8string());
+            VCPKG_LINE_INFO, maybe_bashrc_content.has_value(), "Unable to read %s", fs::u8string(bashrc_path));
 
         std::vector<std::string> bashrc_content = maybe_bashrc_content.value_or_exit(VCPKG_LINE_INFO);
 
@@ -465,13 +467,13 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
                            "The following entries were found:\n"
                            "    %s\n"
                            "Please make sure you have started a new bash shell for the changes to take effect.\n",
-                           bashrc_path.u8string(),
+                           fs::u8string(bashrc_path),
                            Strings::join("\n    ", matches));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        System::printf("Adding vcpkg completion entry to %s\n", bashrc_path.u8string());
-        bashrc_content.push_back(Strings::format("source %s", completion_script_path.u8string()));
+        System::printf("Adding vcpkg completion entry to %s\n", fs::u8string(bashrc_path));
+        bashrc_content.push_back(Strings::format("source %s", fs::u8string(completion_script_path)));
         fs.write_contents(bashrc_path, Strings::join("\n", bashrc_content) + '\n', VCPKG_LINE_INFO);
         Checks::exit_success(VCPKG_LINE_INFO);
     }
@@ -531,7 +533,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
 
         if (args.command_arguments[0] == Subcommand::INSTALL)
         {
