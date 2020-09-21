@@ -1,0 +1,20 @@
+{
+  "name": "matplotplusplus",
+  "version-string": "1.0.1",
+  "description": "A C++ graphics library for data visualization",
+  "homepage": "https://alandefreitas.github.io/matplotplusplus/",
+  "license": "MIT",
+  "dependencies": [
+    "cimg"
+  ],
+  "features": {
+    "opengl": {
+      "description": "OpenGL backend for Matplot++",
+      "dependencies": [
+        "glad",
+        "glfw3",
+        "opengl"
+      ]
+    }
+  }
+}
