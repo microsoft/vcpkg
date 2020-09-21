@@ -1,6 +1,6 @@
 {
   "name": "dartsim",
-  "version-string": "9.4.0",
+  "version-string": "6.9.4",
   "description": "Dynamic Animation and Robotics Toolkit",
   "homepage": "https://dartsim.github.io/",
   "dependencies": [
