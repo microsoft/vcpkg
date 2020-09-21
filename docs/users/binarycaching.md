@@ -14,6 +14,10 @@ If your CI system of choice is not listed, we welcome PRs to add them!
 
 To use vcpkg with GitHub Packages, we recommend using the `NuGet` backend.
 
+>**NOTE 2020-09-21**: GitHub's hosted agents come with an older, pre-installed copy of vcpkg on the path that does not support the latest binary caching. This means that direct calls to `bootstrap-vcpkg` or `vcpkg` without a path prefix may call an unintended vcpkg instance. We recommend taking the following two steps to avoid issues if you want to use your own copy of vcpkg:
+> 1. Run the equivalent of `rm -rf "$VCPKG_INSTALLATION_ROOT"` using `shell: 'bash'`
+> 2. Always call `vcpkg` and `bootstrap-vcpkg` with a path prefix, such as `./vcpkg`, `vcpkg/vcpkg`, `.\bootstrap-vcpkg.bat`, etc
+
 ```yaml
 # actions.yaml
 #
