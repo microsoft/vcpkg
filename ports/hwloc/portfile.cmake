@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -30,11 +30,11 @@ else()
     message(WARNING "${PORT} currently requires the following tool from the system package manager:\n    libtool")
 
     vcpkg_configure_make(
-            SOURCE_PATH ${SOURCE_PATH}
-            AUTOCONFIG
-            OPTIONS
-                --disable-libxml2
-                --disable-opencl
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+        OPTIONS
+            --disable-libxml2
+            --disable-opencl
     )
     
     vcpkg_install_make()

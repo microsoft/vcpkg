@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -18,8 +20,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Remove duplicate headers
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/README.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/jack2 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/README.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

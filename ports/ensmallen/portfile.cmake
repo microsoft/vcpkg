@@ -10,7 +10,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-      -DBUILD_TESTS=OFF
+        -DBUILD_TESTS=OFF
 )
 vcpkg_install_cmake()
 
@@ -20,5 +20,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-
