@@ -1,17 +1,27 @@
 diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
-index 959fdf5..dcd28bb 100644
+index 959fdf5..c971ec8 100644
 --- a/CMake/Dependencies.cmake
 +++ b/CMake/Dependencies.cmake
-@@ -217,7 +217,7 @@ find_package(FreeImage)
+@@ -214,10 +214,17 @@ endif ()
+ 
+ # Find FreeImage
+ find_package(FreeImage)
++set(FreeImage_FOUND ON)
++find_library(FreeImage_LIBRARIES freeimage)
++find_path(FreeImage_INCLUDE_DIRS freeimage)
++
  macro_log_feature(FreeImage_FOUND "freeimage" "Support for commonly used graphics image formats" "http://freeimage.sourceforge.net" FALSE "" "")
  
  # Find FreeType
 -find_package(Freetype)
 +find_package(freetype CONFIG REQUIRED)
++set(FREETYPE_FOUND ON)
++find_library(FREETYPE_LIBRARIES freetype)
++find_path(FREETYPE_INCLUDE_DIRS freetype) 
  macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org" FALSE "" "")
  
  # Find X11
-@@ -291,7 +291,7 @@ macro_log_feature(SWIG_FOUND "SWIG" "Language bindings (Python, Java, C#) for OG
+@@ -291,7 +298,7 @@ macro_log_feature(SWIG_FOUND "SWIG" "Language bindings (Python, Java, C#) for OG
  # Find sdl2
  if(NOT ANDROID AND NOT EMSCRIPTEN)
    # find script does not work in cross compilation environment
