@@ -9,6 +9,10 @@ Feature: al-info
 Description: magnum-al-info utility
 Build-Depends: magnum[audio]
 
+Feature: angle
+Description: use GLES3 on desktop with ANGLE
+Build-Depends: angle
+
 Feature: anyimageimporter
 Description: AnyImageImporter plugin
 Build-Depends: magnum[trade]

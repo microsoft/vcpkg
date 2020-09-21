@@ -64,6 +64,11 @@ endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS ${_COMPONENTS})
 
+if("angle" IN_LIST FEATURES)
+    set(GLES_OPTION "-DTARGET_GLES=ON")
+    set(GLES2_OPTION "-DTARGET_GLES2=OFF")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
@@ -73,6 +78,8 @@ vcpkg_configure_cmake(
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
+        ${GLES_OPTION}
+        ${GLES2_OPTION}
 )
 
 vcpkg_install_cmake()
