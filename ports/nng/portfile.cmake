@@ -17,7 +17,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DNNG_TESTS=OFF
-        -DNNG_ENABLE_NNGCAT=OFF
         ${FEATURE_OPTIONS}
 )
 
