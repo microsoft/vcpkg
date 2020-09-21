@@ -232,7 +232,7 @@ TEST_CASE ("win32_fix_path_case", "[files]")
     CHECK(win32_fix_path_case(L"sub/dir/") == L"SuB\\Dir\\");
     CHECK(win32_fix_path_case(L"sub/dir/ectory") == L"SuB\\Dir\\Ectory");
     CHECK(win32_fix_path_case(L"sub/dir/ectory/") == L"SuB\\Dir\\Ectory\\");
-    fs.remove_all("SuB/Dir/Ectory", VCPKG_LINE_INFO);
+    fs.remove_all("SuB", VCPKG_LINE_INFO);
 
     CHECK(win32_fix_path_case(L"//nonexistent_server\\nonexistent_share\\") ==
           L"\\\\nonexistent_server\\nonexistent_share\\");
@@ -240,6 +240,8 @@ TEST_CASE ("win32_fix_path_case", "[files]")
           L"\\\\nonexistent_server\\nonexistent_share\\");
     CHECK(win32_fix_path_case(L"\\\\nonexistent_server\\nonexistent_share") ==
           L"\\\\nonexistent_server\\nonexistent_share");
+
+    CHECK(win32_fix_path_case(L"///three_slashes_not_a_server\\subdir\\") == L"\\three_slashes_not_a_server\\subdir\\");
 
     CHECK(win32_fix_path_case(L"\\??\\c:\\WiNdOws") == L"\\??\\c:\\WiNdOws");
     CHECK(win32_fix_path_case(L"\\\\?\\c:\\WiNdOws") == L"\\\\?\\c:\\WiNdOws");

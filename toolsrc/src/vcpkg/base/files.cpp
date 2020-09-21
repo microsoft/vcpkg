@@ -74,8 +74,12 @@ namespace
                 return GetLastError();
             }
 
-            return 0;
+            return ERROR_SUCCESS;
         }
+
+        FindFirstOp() = default;
+        FindFirstOp(const FindFirstOp&) = delete;
+        FindFirstOp& operator=(const FindFirstOp&) = delete;
 
         ~FindFirstOp()
         {
@@ -1294,6 +1298,7 @@ namespace vcpkg::Files
         }
 
         std::wstring in_progress;
+        in_progress.reserve(native.size());
         if (last - first >= 3 && is_slash(first[0]) && is_slash(first[1]) && !is_slash(first[2]))
         {
             // path with UNC prefix \\server\share; this will be rejected by FindFirstFile so we skip over that
@@ -1347,7 +1352,7 @@ namespace vcpkg::Files
             in_progress.append(first, next_slash);
             FindFirstOp this_find;
             unsigned long last_error = this_find.find_first(in_progress.c_str());
-            if (last_error == 0)
+            if (last_error == ERROR_SUCCESS)
             {
                 in_progress.resize(original_size);
                 in_progress.append(this_find.find_data.cFileName);
