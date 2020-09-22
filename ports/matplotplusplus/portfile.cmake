@@ -1,6 +1,6 @@
-message(STATUS " ${PORT} currently requires Gnuplot 5.2.6+.
-    For Windows users, you should go to http://www.gnuplot.info/download.html and get a pre-built binary installer.
-    For Linux and MacOS users, you may install it from the system package manager.
+message(STATUS " ${PORT}'s gnuplot backend currently requires Gnuplot 5.2.6+.
+    Windows users may get a pre-built binary installer from http://www.gnuplot.info/download.html.
+    Linux and MacOS users may install it from the system package manager.
     Please visit https://alandefreitas.github.io/matplotplusplus/ for more information."
 )
 
