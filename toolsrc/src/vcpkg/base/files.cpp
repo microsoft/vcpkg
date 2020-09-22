@@ -6,7 +6,7 @@
 #include <vcpkg/base/util.h>
 
 #if defined(_WIN32)
-#include <Windows.h>
+#include <vcpkg/base/system_headers.h>
 #else // ^^^ _WIN32 // !_WIN32 vvv
 #include <fcntl.h>
 
