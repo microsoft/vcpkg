@@ -18,12 +18,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     virtuals  POLYHOOK_FEATURE_VIRTUALS
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(BUILD_SHARED_LIB OFF)
-else()
-    set(BUILD_SHARED_LIB ON)
-endif()
-
 if (VCPKG_CRT_LINKAGE STREQUAL "static")
     set(BUILD_STATIC_RUNTIME ON)
 else()
