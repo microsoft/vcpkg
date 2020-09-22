@@ -28,5 +28,3 @@ vcpkg_install_msbuild(
   LICENSE_SUBPATH License.txt
   ALLOW_ROOT_INCLUDES
 )
-
-vcpkg_copy_pdbs()
