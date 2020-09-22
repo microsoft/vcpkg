@@ -513,8 +513,9 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
     static constexpr StringLiteral OPTION_MANIFEST_NO_DEFAULT_FEATURES = "x-no-default-features";
     static constexpr StringLiteral OPTION_MANIFEST_FEATURE = "x-feature";
+    static constexpr StringLiteral OPTION_PROHIBIT_BACKCOMPAT_FEATURES = "x-prohibit-backcompat-features";
 
-    static constexpr std::array<CommandSwitch, 9> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 10> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
@@ -522,9 +523,13 @@ namespace vcpkg::Install
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
+
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
+        {OPTION_PROHIBIT_BACKCOMPAT_FEATURES,
+         "(experimental) Fail install if a package attempts to use a deprecated feature"},
     }};
+
     static constexpr std::array<CommandSwitch, 10> MANIFEST_INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
@@ -758,6 +763,8 @@ namespace vcpkg::Install
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going =
             to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) || only_downloads);
+        const bool prohibit_backcompat_features =
+            Util::Sets::contains(options.switches, (OPTION_PROHIBIT_BACKCOMPAT_FEATURES));
 
         auto& fs = paths.get_filesystem();
 
@@ -774,6 +781,7 @@ namespace vcpkg::Install
             download_tool,
             Build::PurgeDecompressFailure::NO,
             Util::Enum::to_enum<Build::Editable>(is_editable),
+            prohibit_backcompat_features ? Build::BackcompatFeatures::PROHIBIT : Build::BackcompatFeatures::ALLOW,
         };
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);

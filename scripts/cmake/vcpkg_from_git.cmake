@@ -62,6 +62,12 @@ function(vcpkg_from_git)
     message(FATAL_ERROR "The git ref must be specified.")
   endif()
 
+  if(NOT DEFINED _vdud_SHA512)
+    message("${_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "Calling vcpkg_from_git() without a SHA512 argument is deprecated. Please add
+    SHA512 0
+to the call to determine the correct actual hash.")
+  endif()
+
   # using .tar.gz instead of .zip because the hash of the latter is affected by timezone.
   string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
   set(TEMP_ARCHIVE "${DOWNLOADS}/temp/${PORT}-${SANITIZED_REF}-git.tar.gz")
@@ -73,15 +79,11 @@ function(vcpkg_from_git)
       return()
     endif()
 
-    file(SHA512 ${FILE_PATH} ACTUAL_HASH)
-
     if(NOT DEFINED _vdud_SHA512)
-      message(WARNING "Calling vcpkg_from_git() without a SHA512 argument is deprecated. Please add
-    SHA512 ${ACTUAL_HASH}
-to the call.")
       return()
     endif()
 
+    file(SHA512 ${FILE_PATH} ACTUAL_HASH)
     if(NOT ACTUAL_HASH STREQUAL _vdud_SHA512)
       message(FATAL_ERROR
           "\nFile does not have expected hash:\n"

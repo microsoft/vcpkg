@@ -6,6 +6,13 @@ macro(debug_message)
     endif()
 endmacro()
 
+option(_VCPKG_PROHIBIT_BACKCOMPAT_FEATURES "Controls whether use of a backcompat only support feature fails the build.")
+if (_VCPKG_PROHIBIT_BACKCOMPAT_FEATURES)
+    set(_VCPKG_BACKCOMPAT_MESSAGE_LEVEL "FATAL_ERROR")
+else()
+    set(_VCPKG_BACKCOMPAT_MESSAGE_LEVEL "WARNING")
+endif()
+
 if((NOT DEFINED VCPKG_ROOT_DIR)
     OR (NOT DEFINED DOWNLOADS)
     OR (NOT DEFINED _VCPKG_INSTALLED_DIR)

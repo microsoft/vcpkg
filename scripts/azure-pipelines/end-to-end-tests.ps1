@@ -36,12 +36,14 @@ $packagesRoot = Join-Path $TestingRoot 'packages'
 $NuGetRoot = Join-Path $TestingRoot 'nuget'
 $NuGetRoot2 = Join-Path $TestingRoot 'nuget2'
 $ArchiveRoot = Join-Path $TestingRoot 'archives'
+$E2ePortsRoot = Join-Path $WorkingRoot 'scripts/e2e_ports'
 $commonArgs = @(
     "--triplet",
     $Triplet,
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
-    "--x-packages-root=$packagesRoot"
+    "--x-packages-root=$packagesRoot",
+    "--overlay-ports=$E2ePortsRoot"
 )
 $CurrentTest = 'unassigned'
 
@@ -188,6 +190,31 @@ Require-FileNotExists "$buildtreesRoot/rapidjson/src"
 Require-FileExists "$buildtreesRoot/tinyxml/src"
 if ((Get-ChildItem $NuGetRoot -Filter '*.nupkg' | Measure-Object).Count -ne 1) {
     throw "In '$CurrentTest': did not create exactly 1 NuGet package"
+}
+
+# Test that prohibiting backcompat features actually prohibits
+$backcompatFeaturePorts = @('vcpkg-uses-git-without-sha')
+foreach ($backcompatFeaturePort in $backcompatFeaturePorts) {
+    $succeedArgs = $commonArgs + @('install',$backcompatFeaturePort,'--no-binarycaching')
+    $failArgs = $succeedArgs + @('--x-prohibit-backcompat-features')
+    $CurrentTest = "Should fail: ./vcpkg $($failArgs -join ' ')"
+    Write-Host $CurrentTest
+    ./vcpkg @failArgs
+    if ($LastExitCode -ne 0) {
+        Write-Host "... failed (this is good!)"
+    } else {
+        throw $CurrentTest
+    }
+
+    # Install failed when prohibiting backcompat features, so it should succeed if we allow them
+    $CurrentTest = "Should succeeed: ./vcpkg $($succeedArgs -join ' ')"
+    Write-Host $CurrentTest
+    ./vcpkg @succeedArgs
+    if ($LastExitCode -ne 0) {
+        throw $CurrentTest
+    } else {
+        Write-Host "... succeeded."
+    }
 }
 
 # Test export
