@@ -53,9 +53,15 @@ if (VCPKG_TARGET_IS_WINDOWS)
 		message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 	endif()
 
+	vcpkg_execute_build_process( 
+		COMMAND ${SOURCE_PATH}/PCBuild/get_externals.bat 
+		WORKING_DIRECTORY ${SOURCE_PATH}/PCBuild 
+	   )
+
 	vcpkg_build_msbuild(
 		PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythoncore.vcxproj
-		PLATFORM ${BUILD_ARCH})
+		PLATFORM ${BUILD_ARCH}
+		)
 
 	file(INSTALL
 			"${SOURCE_PATH}/Include/"
@@ -91,6 +97,138 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	endif()
 	# Handle copyright
 	file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR} RENAME copyright)
+	
+	
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/python.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythonw.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+
+	# All the "stock" and important IO modules
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_asyncio.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_bz2.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+
+	#TBD: Integrate ffi later
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_ctypes.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_decimal.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_elementtree.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+	
+	# wants openssl
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_hashlib.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_lzma.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_msi.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_multiprocessing.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_overlapped.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+	
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_sqlite3.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+	
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_ssl.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_socket.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_queue.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+	
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_tkinter.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/pyexpat.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/select.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/unicodedata.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	vcpkg_build_msbuild(
+		PROJECT_PATH ${SOURCE_PATH}/PCBuild/winsound.vcxproj
+		PLATFORM ${BUILD_ARCH}
+		)
+		
+	file(GLOB DLLS 
+		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/*.pyd"
+		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/lib*.dll"	#libcrypto,libffi,libssl expected
+		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/sqlite*.dll"	
+		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/tcl*.dll"
+		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/tk*.dll"
+		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/vcruntime*.dll"
+	)
+	file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3/DLLs)
+	file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}/DLLs)
+	
+	file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python.exe" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3)
+	file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/pythonw.exe" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3)
+	file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3)
+
+
+	file(INSTALL
+			"${SOURCE_PATH}/Lib"
+		DESTINATION
+			"${CURRENT_PACKAGES_DIR}/tools/python3"
+	)
 
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
