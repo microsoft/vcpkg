@@ -36,14 +36,13 @@ $packagesRoot = Join-Path $TestingRoot 'packages'
 $NuGetRoot = Join-Path $TestingRoot 'nuget'
 $NuGetRoot2 = Join-Path $TestingRoot 'nuget2'
 $ArchiveRoot = Join-Path $TestingRoot 'archives'
-$E2ePortsRoot = Join-Path $WorkingRoot 'scripts/e2e_ports'
 $commonArgs = @(
     "--triplet",
     $Triplet,
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
-    "--overlay-ports=$E2ePortsRoot"
+    "--overlay-ports=scripts/e2e_ports"
 )
 
 function Refresh-TestRoot {
