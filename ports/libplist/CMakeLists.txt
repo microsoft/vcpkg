@@ -22,23 +22,12 @@ install(
     LIBRARY DESTINATION lib
 )
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/libplist++-2.0.pc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/libplist++-2.0.pc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/libplist.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/libplist.pc
     @ONLY
 )
-
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/libplist-2.0.pc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/libplist-2.0.pc
-    @ONLY
-)
-
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/libplist-2.0.pc
-    DESTINATION lib/pkgconfig) 
-
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/libplist++-2.0.pc
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/libplist.pc
     DESTINATION lib/pkgconfig)
 
 install(FILES ${PLIST_HEADER} DESTINATION include/plist)

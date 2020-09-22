@@ -1,8 +1,8 @@
 diff --git a/include/plist/plist.h b/include/plist/plist.h
-index 9f0d3a6..b70890b 100644
+index 2863c74..9cdb219 100644
 --- a/include/plist/plist.h
 +++ b/include/plist/plist.h
-@@ -44,7 +44,7 @@ extern "C"
+@@ -42,7 +42,7 @@ extern "C"
  #include <stdint.h>
  #endif
  
@@ -12,7 +12,7 @@ index 9f0d3a6..b70890b 100644
  #else  
  #define PLIST_API_MSC 
 diff --git a/src/plist.h b/src/plist.h
-index 1e5d0d1..96c7042 100644
+index 1e5d0d1..6690343 100644
 --- a/src/plist.h
 +++ b/src/plist.h
 @@ -39,10 +39,7 @@
