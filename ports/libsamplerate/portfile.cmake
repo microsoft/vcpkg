@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.mega-nerd.com/SRC/libsamplerate-0.1.9.tar.gz"
     FILENAME "libsamplerate-0.1.9.tar.gz"

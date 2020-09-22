@@ -2,8 +2,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP build is not supported.")
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -36,6 +34,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/capnproto)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/capnproto/LICENSE ${CURRENT_PACKAGES_DIR}/share/capnproto/copyright)
-
-# Disabled for now, see #5630 and #5635
-# vcpkg_test_cmake(PACKAGE_NAME CapnProto)

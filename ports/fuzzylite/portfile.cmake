@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(SCONS)
 

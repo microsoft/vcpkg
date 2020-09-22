@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
   URLS "https://web.archive.org/web/20060620024518/http://modp.com:80/release/base64/modp-base64-v2.0.0.tar.bz2"
   FILENAME "modp-base64-v2.0.0.tar.bz2"

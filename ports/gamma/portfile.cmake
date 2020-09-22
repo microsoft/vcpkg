@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(GAMMA_RELEASE_TAG "cc442ad0c5da369966cd937a96925c7b9a04e9e5")

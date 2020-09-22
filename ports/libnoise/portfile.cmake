@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set( LIBNOISE_VERSION "1.0.0" )
 set( LIBNOISE_COMMIT "d7e68784a2b24c632868506780eba336ede74ecd" )
 
@@ -24,6 +22,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/libnoise)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libnoise/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/libnoise/copyright)
-
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME libnoise)

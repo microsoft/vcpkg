@@ -5,8 +5,6 @@
 #   Updated certstore. See certstore.pem in the output dirs
 #
 
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_find_acquire_program(PERL)

@@ -1,5 +1,3 @@
-INCLUDE(vcpkg_common_functions)
-
 IF (NOT VCPKG_CMAKE_SYSTEM_NAME OR NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     MESSAGE(FATAL_ERROR "Intel spdk currently only supports Linux/BSD platforms")
 ENDIF ()

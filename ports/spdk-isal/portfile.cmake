@@ -1,5 +1,3 @@
-INCLUDE(vcpkg_common_functions)
-
 IF (NOT VCPKG_CMAKE_SYSTEM_NAME)
     SET(EXEC_ENV "Windows")
 ELSE ()

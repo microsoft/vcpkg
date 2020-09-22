@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(PORT_COMMIT 882aec454b2bc3d5323b8691736ff09c288f4ed6)
 
 vcpkg_from_github(

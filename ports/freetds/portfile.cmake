@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.freetds.org/files/stable/freetds-1.1.17.tar.bz2"
     FILENAME "freetds-1.1.17.tar.bz2"

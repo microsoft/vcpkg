@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL WindowsStore)
   message(FATAL_ERROR "Windowstore not supported")
 endif()

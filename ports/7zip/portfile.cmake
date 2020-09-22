@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(7ZIP_VERSION 19.00)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.7-zip.org/a/7z1900-src.7z"
@@ -30,5 +28,3 @@ file(
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/7zip
     RENAME copyright
 )
-
-vcpkg_test_cmake(PACKAGE_NAME 7zip)

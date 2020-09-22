@@ -2,8 +2,6 @@ if (VCPKG_TARGET_TRIPLET STREQUAL "x64-uwp" OR VCPKG_TARGET_TRIPLET STREQUAL "ar
     message(FATAL_ERROR "mecab does not support on this platform")
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO taku910/mecab

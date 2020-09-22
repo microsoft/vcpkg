@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # Don't change to vcpkg_from_github! The sources in the git repository (archives) are missing some files that are distributed inside releases.
 # More info: https://github.com/nigels-com/glew/issues/31 and https://github.com/nigels-com/glew/issues/13
 vcpkg_download_distfile(ARCHIVE

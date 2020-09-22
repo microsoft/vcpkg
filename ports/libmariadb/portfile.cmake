@@ -3,8 +3,6 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MariaDB/mariadb-connector-c

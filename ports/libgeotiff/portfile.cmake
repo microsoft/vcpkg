@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(LIBGEOTIFF_VERSION 1.4.2)
 
 vcpkg_download_distfile(ARCHIVE

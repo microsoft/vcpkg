@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --library-type=static)
 

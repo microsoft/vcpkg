@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
     message(FATAL_ERROR "libP7 does not support ARM")
 endif()
