@@ -176,6 +176,7 @@ foreach(BUILD_TYPE dbg rel)
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
 	set(COPTS "")
 	set(CXXOPTS "")
+	set(LINKOPTS "")
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
@@ -193,6 +194,11 @@ foreach(BUILD_TYPE dbg rel)
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_DEBUG)
 			list(APPEND CXXOPTS "--copt=${OPT}")
 		endforeach()
+		separate_arguments(VCPKG_LINKER_FLAGS)
+		separate_arguments(VCPKG_LINKER_FLAGS_DEBUG)
+		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_DEBUG)
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
+		endforeach()
 	else()
 		set(BUILD_OPTS "--compilation_mode=opt")
 
@@ -206,20 +212,26 @@ foreach(BUILD_TYPE dbg rel)
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_RELEASE)
 			list(APPEND CXXOPTS "--copt=${OPT}")
 		endforeach()
+		separate_arguments(VCPKG_LINKER_FLAGS)
+		separate_arguments(VCPKG_LINKER_FLAGS_RELEASE)
+		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE)
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
+		endforeach()
 	endif()
 
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			list(JOIN COPTS " " COPTS)
 			list(JOIN CXXOPTS " " CXXOPTS)
+			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -235,14 +247,15 @@ foreach(BUILD_TYPE dbg rel)
 			endif()
 			list(JOIN COPTS " " COPTS)
 			list(JOIN CXXOPTS " " CXXOPTS)
+			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
