@@ -1,5 +1,5 @@
 Source: sentry-native
-Version: 0.4.1
+Version: 0.4.2
 Port-Version: 2
 Homepage: https://sentry.io/
 Description: Sentry SDK for C, C++ and native applications.
