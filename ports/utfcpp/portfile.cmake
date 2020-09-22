@@ -8,7 +8,6 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    sample UTF8_SAMPLES
     test UTF8_TESTS
 )
 
@@ -17,6 +16,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DUTF8_INSTALL=ON
+        -DUTF8_SAMPLES=OFF
 )
 
 vcpkg_install_cmake()
