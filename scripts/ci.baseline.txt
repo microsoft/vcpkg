@@ -1516,7 +1516,6 @@ scintilla:arm-uwp=fail
 scintilla:x64-linux=fail
 scintilla:x64-osx=fail
 scintilla:x64-uwp=fail
-scintilla:x64-windows-static=fail
 sciter:arm64-windows=fail
 sciter:arm-uwp=fail
 sciter:x64-uwp=fail
