@@ -1,13 +1,15 @@
 diff --git a/build/cmake/lib/CMakeLists.txt b/build/cmake/lib/CMakeLists.txt
-index 7adca875..8835d1c6 100644
+index 666da60..134006e 100644
 --- a/build/cmake/lib/CMakeLists.txt
 +++ b/build/cmake/lib/CMakeLists.txt
-@@ -78,20 +78,20 @@ endif ()
- 
+@@ -79,22 +79,22 @@ endif ()
  # Split project to static and shared libraries build
+ set(library_targets)
  if (ZSTD_BUILD_SHARED)
 -    add_library(libzstd_shared SHARED ${Sources} ${Headers} ${PlatformDependResources})
+-    list(APPEND library_targets libzstd_shared)
 +    add_library(libzstd SHARED ${Sources} ${Headers} ${PlatformDependResources})
++    list(APPEND library_targets libzstd)
      if (ZSTD_MULTITHREAD_SUPPORT)
 -        set_property(TARGET libzstd_shared APPEND PROPERTY COMPILE_DEFINITIONS "ZSTD_MULTITHREAD")
 +        set_property(TARGET libzstd APPEND PROPERTY COMPILE_DEFINITIONS "ZSTD_MULTITHREAD")
@@ -19,7 +21,9 @@ index 7adca875..8835d1c6 100644
  endif ()
  if (ZSTD_BUILD_STATIC)
 -    add_library(libzstd_static STATIC ${Sources} ${Headers})
+-    list(APPEND library_targets libzstd_static)
 +    add_library(libzstd STATIC ${Sources} ${Headers})
++    list(APPEND library_targets libzstd)
      if (ZSTD_MULTITHREAD_SUPPORT)
 -        set_property(TARGET libzstd_static APPEND PROPERTY COMPILE_DEFINITIONS "ZSTD_MULTITHREAD")
 +        set_property(TARGET libzstd APPEND PROPERTY COMPILE_DEFINITIONS "ZSTD_MULTITHREAD")
@@ -29,7 +33,7 @@ index 7adca875..8835d1c6 100644
          endif ()
      endif ()
  endif ()
-@@ -99,16 +99,16 @@ endif ()
+@@ -102,16 +102,16 @@ endif ()
  # Add specific compile definitions for MSVC project
  if (MSVC)
      if (ZSTD_BUILD_SHARED)
@@ -49,7 +53,7 @@ index 7adca875..8835d1c6 100644
  else ()
      set(STATIC_LIBRARY_BASE_NAME zstd)
  endif ()
-@@ -116,7 +116,7 @@ endif ()
+@@ -119,7 +119,7 @@ endif ()
  # Define static and shared library names
  if (ZSTD_BUILD_SHARED)
      set_target_properties(
@@ -58,36 +62,19 @@ index 7adca875..8835d1c6 100644
              PROPERTIES
              OUTPUT_NAME zstd
              VERSION ${zstd_VERSION_MAJOR}.${zstd_VERSION_MINOR}.${zstd_VERSION_PATCH}
-@@ -125,7 +125,7 @@ endif ()
+@@ -128,7 +128,7 @@ endif ()
  
  if (ZSTD_BUILD_STATIC)
      set_target_properties(
 -            libzstd_static
 +            libzstd
              PROPERTIES
+             POSITION_INDEPENDENT_CODE On
              OUTPUT_NAME ${STATIC_LIBRARY_BASE_NAME})
- endif ()
-@@ -154,12 +154,14 @@ install(FILES
-     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
- 
- if (ZSTD_BUILD_SHARED)
--    install(TARGETS libzstd_shared RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-+    install(TARGETS libzstd EXPORT zstd-config
-+                                   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-                                    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-                                    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
- endif()
- if (ZSTD_BUILD_STATIC)
--    install(TARGETS libzstd_static ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-+    install(TARGETS libzstd EXPORT zstd-config
-+                                   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
- endif ()
- 
- # uninstall target
-@@ -172,3 +174,6 @@ if (NOT TARGET uninstall)
+@@ -175,3 +175,6 @@ if (NOT TARGET uninstall)
      add_custom_target(uninstall
              COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
  endif ()
 +
 +target_include_directories(libzstd PUBLIC $<INSTALL_INTERFACE:include>)
-+install(EXPORT zstd-config DESTINATION share/cmake/zstd)
++
