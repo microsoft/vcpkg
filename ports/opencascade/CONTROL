@@ -8,10 +8,6 @@ Feature: freeimage
 Build-Depends: freeimage
 Description: Enable optional usage of freeimage
 
-Feature: gl2ps
-Build-Depends: gl2ps
-Description: Enable optional usage of gl2ps
-
 Feature: tbb
 Build-Depends: tbb
 Description: Enable optional usage of tbb
