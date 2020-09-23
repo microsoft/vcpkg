@@ -282,7 +282,7 @@ but it will make the configure-build step slightly easier.
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifest-files.md
+[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # Tab-Completion/Auto-Completion
 
