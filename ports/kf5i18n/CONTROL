@@ -1,5 +1,6 @@
 Source: kf5i18n
 Version: 5.64.0
+Port-Version: 1
 Homepage: https://api.kde.org/frameworks/ki18n/html/index.html
 Description: Advanced internationalization framework
 Build-Depends: ecm, qt5-declarative, qt5-tools, gettext
