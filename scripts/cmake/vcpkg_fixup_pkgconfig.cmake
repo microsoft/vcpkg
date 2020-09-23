@@ -125,7 +125,8 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
 
-    string(REPLACE "\\ " "##" _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
+    string(REPLACE "\\ " "\ " _pkg_lib_paths_output "${_pkg_lib_paths_output}") # Whitespace path protection
+    string(REPLACE "\\ " "\ " _pkg_libs_output "${_pkg_libs_output}") # Whitespace path protection
     string(REGEX REPLACE "(^[\t ]*|[\t ]+)-L" ";" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
     debug_message("-L LIST TRANSFORMATION:'${_pkg_lib_paths_output}'")
     string(REGEX REPLACE "^[\t ]*;" "" _pkg_lib_paths_output "${_pkg_lib_paths_output}")
@@ -191,8 +192,8 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
 
     string(REGEX REPLACE ";?[\t ]*;[\t ]*" ";" _pkg_libs_output "${_pkg_libs_output}") # Double ;; and Whitespace before/after ; removal
 
-    debug_message("Library search paths:${_pkg_lib_paths_output}")
-    debug_message("Libraries to search:${_pkg_libs_output}")
+    debug_message("Library search paths:'${_pkg_lib_paths_output}'")
+    debug_message("Libraries to search:'${_pkg_libs_output}'")
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
     list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
     foreach(_lib IN LISTS _pkg_libs_output)
@@ -206,7 +207,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
                 continue() # fullpath in -l argument and exists; all ok
             endif()
             debug_message("CHECK_LIB_${_libname}_${_config} before: ${CHECK_LIB_${_libname}_${_config}}")
-            find_library(CHECK_LIB_${_libname}_${_config} NAMES ${_libname} PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
+            find_library(CHECK_LIB_${_libname}_${_config} NAMES ${_libname} PATHS "${_pkg_lib_paths_output}" "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
             debug_message("CHECK_LIB_${_libname}_${_config} after: ${CHECK_LIB_${_libname}_${_config}}")
             if(CHECK_LIB_${_libname}_${_config})
                 unset(CHECK_LIB_${_libname}_${_config} CACHE) # need to unset or else other configurations will not check correctly
@@ -220,7 +221,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
                 debug_message("Search name: '${search_name}'")
                 debug_message("CHECK_LIB_${search_name}_${_config} before: ${CHECK_LIB_${search_name}_${_config}}")
                 debug_message("Search paths:'${_pkg_lib_paths_output}' '${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib'")
-                find_library(CHECK_LIB_${search_name}_${_config} NAMES ${search_name} PATHS ${_pkg_lib_paths_output} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
+                find_library(CHECK_LIB_${search_name}_${_config} NAMES ${search_name} PATHS "${_pkg_lib_paths_output}" "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
                 debug_message("CHECK_LIB_${search_name}_${_config} after: ${CHECK_LIB_${search_name}_${_config}}")
                 if(CHECK_LIB_${search_name}_${_config})
                     message(FATAL_ERROR "Found ${CHECK_LIB_${search_name}_${_config}} with additional '${_lib_suffix}' suffix! Please correct the *.pc file!")
