@@ -1,0 +1,13 @@
+diff --git a/extern/CMP_Core/source/cmp_math_func.h b/extern/CMP_Core/source/cmp_math_func.h
+index c2f8908..2965f8c 100644
+--- a/extern/CMP_Core/source/cmp_math_func.h
++++ b/extern/CMP_Core/source/cmp_math_func.h
+@@ -31,7 +31,7 @@
+ //============================================================================
+ // Core API which have have GPU equivalents, defined here for HPC_CPU usage
+ //============================================================================
+-
++#include <math.h>
+ #include <algorithm>
+ using namespace std;
+ 
