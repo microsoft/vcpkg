@@ -6,11 +6,11 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/USD
-    REF be1a80f8cb91133ac75e1fc2a2e1832cd10d91c8 # v20.02
-    SHA512 12c7cf7e5320b168ddde870b1a68b482515b33bd29206c4f6cbb248b9071b866c47353bf496890e01950abb5f725157eca576f9dc403e15020474f9a653b43fe
+    REF 71b4baace2044ea4400ba802e91667f9ebe342f0 # v20.08
+    SHA512 0f23b84d314d88d3524f22ebc344e2b506cb7e8ac064726df432a968a4bae0fd2249e968bd10845de9067290eaaa3f8c9e2a483551ffc06b826f3eba816061a9
     HEAD_REF master
     PATCHES
-        fix-build-error.patch
+        fix_build-location.patch
 )
 
 vcpkg_find_acquire_program(PYTHON2)
@@ -56,4 +56,22 @@ file(GLOB DEBUG_DLL ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
 foreach(CURRENT_FROM ${RELEASE_DLL} ${DEBUG_DLL})
     string(REPLACE "/lib/" "/bin/" CURRENT_TO ${CURRENT_FROM})
     file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
+endforeach()
+
+function(file_replace_regex filename match_string replace_string)
+    file(READ ${filename} _contents)
+    string(REGEX REPLACE "${match_string}" "${replace_string}" _contents "${_contents}")
+    file(WRITE ${filename} "${_contents}")
+endfunction()
+
+# fix dll path for cmake
+file_replace_regex(${CURRENT_PACKAGES_DIR}/share/usd/pxrConfig.cmake "/cmake/pxrTargets.cmake" "/pxrTargets.cmake")
+file_replace_regex(${CURRENT_PACKAGES_DIR}/share/usd/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
+file_replace_regex(${CURRENT_PACKAGES_DIR}/share/usd/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
+
+# fix plugInfo.json for runtime
+file(GLOB_RECURSE PLUGINFO_FILES ${CURRENT_PACKAGES_DIR}/lib/usd/*/resources/plugInfo.json)
+file(GLOB_RECURSE PLUGINFO_FILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/usd/*/resources/plugInfo.json)
+foreach(PLUGINFO ${PLUGINFO_FILES} ${PLUGINFO_FILES_DEBUG})
+    file_replace_regex(${PLUGINFO} [=["LibraryPath": "../../([a-zA-Z0-9_]+).dll"]=] [=["LibraryPath": "../../../bin/\1.dll"]=])
 endforeach()
