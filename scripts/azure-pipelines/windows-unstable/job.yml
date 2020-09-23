@@ -1,0 +1,51 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+jobs:
+- job: ${{ parameters.jobName }}
+  pool:
+    name: ${{ parameters.poolName }}
+  workspace:
+    clean: resources
+  timeoutInMinutes: 1440 # 1 day
+  variables:
+  - name: WORKING_ROOT
+    value: D:\
+  - name: VCPKG_DOWNLOADS
+    value: D:\downloads
+
+  steps:
+  - task: PowerShell@2
+    displayName: 'Initialize Environment'
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
+      pwsh: true
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
+      pwsh: true
+  # Note: D: is the Azure machines' temporary disk.
+  - script: .\bootstrap-vcpkg.bat
+    displayName: 'Build vcpkg'
+  - task: PowerShell@2
+    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactsDirectory $(System.ArtifactsDirectory)'
+      pwsh: true
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space After Build'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: failure logs for ${{ parameters.triplet }}'
+    inputs:
+      PathtoPublish: '$(System.ArtifactsDirectory)\failure-logs'
+      ArtifactName: 'failure logs for ${{ parameters.triplet }}'
+    condition: failed()

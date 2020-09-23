@@ -1,0 +1,30 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+variables:
+  unstable-pool: 'VcpkgUnstable-2020-09-01'
+
+jobs:
+- template: job.yml
+  parameters:
+    triplet: x86-windows
+    jobName: x86_windows
+    poolName: $(unstable-pool)
+
+- template: job.yml
+  parameters:
+    triplet: x64-windows
+    jobName: x64_windows
+    poolName: $(unstable-pool)
+
+- template: job.yml
+  parameters:
+    triplet: x64-windows-static
+    jobName: x64_windows_static
+    poolName: $(unstable-pool)
+
+- template: job.yml
+  parameters:
+    triplet: x64-uwp
+    jobName: x64_uwp
+    poolName: $(unstable-pool)
