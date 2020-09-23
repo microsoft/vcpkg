@@ -42,7 +42,7 @@ steps:
     shell: 'bash'
     # Replace <OWNER> with your organization name
     run: >
-      ${{ matrix.mono }} `vcpkg/vcpkg fetch nuget | tail -n 1`
+      ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1`
       sources add
       -source "https://nuget.pkg.github.com/<OWNER>/index.json"
       -storepasswordincleartext
@@ -54,7 +54,7 @@ steps:
   - name: 'vcpkg package restore'
     shell: 'bash'
     run: >
-      vcpkg/vcpkg install sqlite3 cpprestsdk --triplet ${{ matrix.triplet }}
+      ./vcpkg/vcpkg install sqlite3 cpprestsdk --triplet ${{ matrix.triplet }}
 ```
 
 If you're using [manifests](../specifications/manifests.md), you can omit the `vcpkg package restore` step: it will be run automatically as part of your build.
