@@ -1,0 +1,17 @@
+{
+    "name": "kenlm",
+    "version-string": "689a25aae9171b3ea46bd80d4189f540f35f1a02",
+    "description": "KenLM: Faster and Smaller Language Model Queries",
+    "port-version": 1,
+    "dependencies": [
+        "boost-system",
+        "boost-thread",
+        "boost-test",
+        "boost-interprocess",
+        "boost-program-options",
+        "boost-ptr-container",
+        "zlib",
+        "bzip2",
+        "liblzma"
+    ]
+}
