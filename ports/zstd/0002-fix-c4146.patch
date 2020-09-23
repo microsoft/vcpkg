@@ -1,12 +1,14 @@
 diff --git a/build/cmake/CMakeLists.txt b/build/cmake/CMakeLists.txt
-index 9b5d7ef..5d57a5c 100644
+index 9b5d7ef..585ce62 100644
 --- a/build/cmake/CMakeLists.txt
 +++ b/build/cmake/CMakeLists.txt
-@@ -23,6 +23,8 @@ else()
+@@ -23,6 +23,10 @@ else()
  endif()
  cmake_policy(VERSION ${ZSTD_CMAKE_POLICY_VERSION})
  
-+add_compile_options(/wd4146)
++if(WIN32)
++  add_compile_options(/wd4146)
++endif()
 +
  set(CMAKE_BUILD_WITH_INSTALL_RPATH on)
  
