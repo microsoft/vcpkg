@@ -7,8 +7,6 @@
 ## vcpkg_fixup_pkgconfig(
 ##     [RELEASE_FILES <PATHS>...]
 ##     [DEBUG_FILES <PATHS>...]
-##     [SYSTEM_LIBRARIES <NAMES>...]
-##     [IGNORE_FLAGS <FLAGS>]
 ##     [SKIP_CHECK]
 ## )
 ## ```
@@ -22,15 +20,8 @@
 ## Specifies a list of files to apply the fixes for debug paths.
 ## Defaults to every *.pc file in the folder ${CURRENT_PACKAGES_DIR}/debug/
 ##
-## ### SYSTEM_LIBRARIES
-## If the *.pc file contains system libraries outside vcpkg these need to be listed here.
-## VCPKG checks every -l flag for the existence of the required library within vcpkg.
-##
-## ### IGNORE_FLAGS
-## If the *.pc file contains flags in the lib field which are not libraries. These can be listed here
-##
 ## ### SKIP_CHECK
-## Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases. 
+## Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases.
 ##
 ## ## Notes
 ## Still work in progress. If there are more cases which can be handled here feel free to add them
@@ -38,8 +29,7 @@
 ## ## Examples
 ## Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files.
 
-include(vcpkg_escape_regex_control_characters)
-function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_libs _ignore_flags)
+function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config)
     set(PATH_SUFFIX_DEBUG /debug)
     set(PATH_SUFFIX_RELEASE)
     set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
@@ -57,9 +47,6 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     else()
         set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}")
     endif()
-
-    # Explicitly ignore well-known system libs
-    list(APPEND _system_libs stdc++ gcc gcc_s rt m dl)
 
     # First make sure everything is ok with the package and its deps
     get_filename_component(_package_name "${_file}" NAME_WLE)
@@ -83,63 +70,6 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
         debug_message("pkg-config output:${_pkg_output}")
         debug_message("pkg-config error output:${_pkg_error_out}")
     endif()
-
-    # The main vcpkg_fixup_pkgconfig ensures that any XYZ.private fields are appropriately fused
-    # into the XYZ field, based on VCPKG_LIBRARY_LINKAGE. We then do _not_ pass `--static` to avoid
-    # recursing into system libraries which might have wildly variable dependencies.
-    execute_process(COMMAND "${pkg_cfg_cmd}" --print-errors --libs ${_package_name}
-                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-                    RESULT_VARIABLE _pkg_error_var
-                    OUTPUT_VARIABLE _pkg_libs_output
-                    ERROR_VARIABLE  _pkg_error_out
-                    OUTPUT_STRIP_TRAILING_WHITESPACE
-                    ERROR_STRIP_TRAILING_WHITESPACE
-                    )
-    if(NOT _pkg_error_var EQUAL 0)
-        message(STATUS "pkg_cfg_cmd call with:${pkg_cfg_cmd} --libs ${_package_name} failed")
-        message(STATUS "pkg-config call failed with error code:${_pkg_error_var}")
-        message(STATUS "pkg-config output:${_pkg_libs_output}")
-        message(FATAL_ERROR "pkg-config error output:${_pkg_error_out}")
-    else()
-        debug_message("pkg-config returned:${_pkg_error_var}")
-        debug_message("pkg-config output:${_pkg_libs_output}")
-        debug_message("pkg-config error output:${_pkg_error_out}")
-    endif()
-
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
-    endif()
-    set(SEARCH_PATHS)
-    string(REGEX MATCHALL "([^ \t\\\\]+|\\\\.)+" LIBS_ARGS "${_pkg_libs_output}")
-    foreach(LIBS_ARG IN LISTS LIBS_ARGS)
-        debug_message("pkg-config handling token '${LIBS_ARG}'")
-        if(CMAKE_HOST_WIN32)
-            # pkg-config has a bug on windows that results in double-escaping of the pc relative path
-            string(REPLACE "\\\\\\ " "\\ " LIBS_ARG "${LIBS_ARG}")
-        endif()
-        string(REPLACE "\\ " " " LIBS_ARG "${LIBS_ARG}")
-        if(LIBS_ARG MATCHES "^-L(.*)")
-            list(APPEND SEARCH_PATHS "${CMAKE_MATCH_1}")
-        elseif(LIBS_ARG MATCHES "^-l(.*)")
-            # Absolute paths
-            if(IS_ABSOLUTE "${CMAKE_MATCH_1}" AND EXISTS "${CMAKE_MATCH_1}")
-                continue()
-            endif()
-            # Explicitly allowed by system libs list
-            if("${CMAKE_MATCH_1}" IN_LIST _system_libs)
-                continue()
-            endif()
-            set(LIBNAME "${CMAKE_MATCH_1}")
-            # Ensure existance in current packages and installed
-            find_library("CHECK_LIB_${LIBNAME}_${_config}" NAMES "${LIBNAME}" PATHS ${SEARCH_PATHS} "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib" NO_DEFAULT_PATH)
-            if("${CHECK_LIB_${LIBNAME}_${_config}}" MATCHES "-NOTFOUND\$")
-                message(FATAL_ERROR "find_library() failed with result: ${CHECK_LIB_${LIBNAME}_${_config}}\n    find_library(CHECK_LIB_${LIBNAME}_${_config} NAMES \"${LIBNAME}\" PATHS ${SEARCH_PATHS} \"${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib\" NO_DEFAULT_PATH)")
-            else()
-                debug_message("CHECK_LIB_${LIBNAME}_${_config}=${CHECK_LIB_${LIBNAME}_${_config}}")
-            endif()
-        endif()
-    endforeach()
-
     if(DEFINED BACKUP_ENV_PKG_CONFIG_PATH)
         set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH}")
     endif()
@@ -148,24 +78,20 @@ endfunction()
 function(vcpkg_fixup_pkgconfig)
     cmake_parse_arguments(_vfpkg "SKIP_CHECK" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS" ${ARGN})
 
-    # Note about SYSTEM_PACKAGES: pkg-config requires all packages mentioned in pc files to exists. Otherwise pkg-config will fail to find the pkg.
-    # As such naming any SYSTEM_PACKAGES is damned to fail which is why it is not mentioned in the docs at the beginning.
-    if(VCPKG_SYSTEM_LIBRARIES)
-        list(APPEND _vfpkg_SYSTEM_LIBRARIES ${VCPKG_SYSTEM_LIBRARIES})
-    endif()
-
     if(_vfpkg_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
+        message(FATAL_ERROR "vcpkg_fixup_pkgconfig() was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_escape_regex_control_characters(_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
-    if(NOT _vfpkg_RELEASE_FILES)
+    if((DEFINED _vfpkg_RELEASE_FILES AND NOT DEFINED _vfpkg_DEBUG_FILES) OR (NOT DEFINED _vfpkg_RELEASE_FILES AND DEFINED _vfpkg_DEBUG_FILES))
+        message(FATAL_ERROR "vcpkg_fixup_pkgconfig() requires both or neither of DEBUG_FILES and RELEASE_FILES")
+    endif()
+
+    if(NOT DEFINED _vfpkg_RELEASE_FILES)
         file(GLOB_RECURSE _vfpkg_RELEASE_FILES "${CURRENT_PACKAGES_DIR}/**/*.pc")
-        list(FILTER _vfpkg_RELEASE_FILES EXCLUDE REGEX "${_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR}/debug/")
-    endif()
-
-    if(NOT _vfpkg_DEBUG_FILES)
         file(GLOB_RECURSE _vfpkg_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/**/*.pc")
+        if(_vfpkg_DEBUG_FILES)
+            list(REMOVE_ITEM _vfpkg_RELEASE_FILES ${_vfpkg_DEBUG_FILES})
+        endif()
     endif()
 
     vcpkg_find_acquire_program(PKGCONFIG)
@@ -177,6 +103,12 @@ function(vcpkg_fixup_pkgconfig)
 
     foreach(CONFIG RELEASE DEBUG)
         debug_message("${CONFIG} Files: ${_vfpkg_${CONFIG}_FILES}")
+        if(VCPKG_BUILD_TYPE STREQUAL "debug" AND CONFIG STREQUAL "RELEASE")
+            continue()
+        endif()
+        if(VCPKG_BUILD_TYPE STREQUAL "release" AND CONFIG STREQUAL "DEBUG")
+            continue()
+        endif()
         foreach(_file ${_vfpkg_${CONFIG}_FILES})
             message(STATUS "Fixing pkgconfig file: ${_file}")
             get_filename_component(PKG_LIB_SEARCH_PATH "${_file}" DIRECTORY)
@@ -231,7 +163,7 @@ function(vcpkg_fixup_pkgconfig)
 
         if(NOT _vfpkg_SKIP_CHECK) # The check can only run after all files have been corrected!
             foreach(_file ${_vfpkg_${CONFIG}_FILES})
-                vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "${CONFIG}" "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_IGNORE_FLAGS}")
+                vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "${CONFIG}")
             endforeach()
         endif()
     endforeach()
