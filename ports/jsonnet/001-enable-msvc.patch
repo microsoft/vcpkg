@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0418d4a..ac8f0f2 100644
+index 385ea82..ebd12b6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,6 +2,8 @@
@@ -11,22 +11,23 @@ index 0418d4a..ac8f0f2 100644
  include(ExternalProject)
  include(GNUInstallDirs)
  
-@@ -89,6 +91,7 @@ else()
- endif()
+@@ -33,6 +35,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${GLOBAL_OUTPUT_PATH})
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${GLOBAL_OUTPUT_PATH})
  
  # Compiler flags.
 +if (0)
  if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" OR
          ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
      set(OPT "-O3")
-@@ -98,6 +101,7 @@ else()
+@@ -42,7 +45,7 @@ else()
      # TODO: Windows support.
      message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER_ID} not supported")
  endif()
+-
 +endif()
+ set(CMAKE_CXX_STANDARD 11)
  
- # Look for libraries in global output path.
- link_directories(${GLOBAL_OUTPUT_PATH})
+ 
 diff --git a/cmd/CMakeLists.txt b/cmd/CMakeLists.txt
 index c032f02..d80d2a0 100644
 --- a/cmd/CMakeLists.txt
@@ -39,7 +40,7 @@ index c032f02..d80d2a0 100644
 +	install(TARGETS jsonnetfmt DESTINATION tools/jsonnet)
  endif()
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index 60fdcb1..82fb7c2 100644
+index d277872..bbf67f7 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -28,7 +28,7 @@ set(LIBJSONNET_SOURCE
@@ -61,14 +62,14 @@ index 60fdcb1..82fb7c2 100644
  
  if (BUILD_STATIC_LIBS)
 diff --git a/stdlib/CMakeLists.txt b/stdlib/CMakeLists.txt
-index a481d9f..0dc3ab6 100644
+index a481d9f..2f58d2f 100644
 --- a/stdlib/CMakeLists.txt
 +++ b/stdlib/CMakeLists.txt
 @@ -2,6 +2,7 @@
  
  add_executable(to_c_array to_c_array.cpp)
  
-+if (0)
++if(0)
  # Custom command that will only build stdlib when it changes.
  add_custom_command(
  	OUTPUT ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h

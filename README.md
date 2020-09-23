@@ -274,56 +274,6 @@ This will still allow people to not use vcpkg,
 by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
 
-## Quick Start: Manifests
-
-So, you want to look at what the future of vcpkg is going to be like!
-We really appreciate it 😄. First, though, a warning:
-manifest support in vcpkg is still in beta! Mostly, it should just work,
-but there are no guarantees and it's likely you'll hit at least a bug or two
-while you're using vcpkg in this mode. Additionally,
-we will likely break behavior before stabilizing, so be forewarned.
-Please [open issues][contributing:submit-issue] if you hit any bugs!
-
-First, install vcpkg as normal for [Windows](#quick-start-windows) or
-[Unix](#quick-start-unix).
-You may wish to install vcpkg in a central place,
-as the installed directory exists locally,
-and it's fine to run multiple vcpkg commands from the same
-vcpkg directory at the same time.
-
-Then, we must turn on the `manifests` vcpkg feature flag by adding
-`manifests` to the comma-separated `--feature-flags` option,
-or by adding it to the comma-separated `VCPKG_FEATURE_FLAGS`
-environment variable.
-
-You may also want to add vcpkg to the `PATH`.
-
-Then, all one has to do is create a manifest;
-create a file called `vcpkg.json`, and type the following:
-
-```json
-{
-  "name": "<name of your project>",
-  "version-string": "<version of your project>",
-  "dependencies": [
-    "abseil",
-    "boost"
-  ]
-}
-```
-
-The libraries will be installed into the `vcpkg_installed`
-directory, in the same directory as your `vcpkg.json`.
-If you can use the regular CMake toolchain,
-or the Visual Studio/MSBuild integration,
-it will install the dependencies automatically,
-although you will need to set `VcpkgManifestEnabled` to `On` for MSBuild.
-If you wish to install your dependencies without using either CMake or MSBuild,
-you may use a simple `vcpkg install --feature-flags=manifests`
-
-For more information, check out the [manifest][getting-started:manifest-spec]
-specification.
-
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
@@ -333,7 +283,6 @@ specification.
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # Tab-Completion/Auto-Completion
 
