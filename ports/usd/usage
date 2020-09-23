@@ -1,0 +1,5 @@
+The package usd:x64-windows provides CMake targets:
+
+    find_package(pxr CONFIG REQUIRED)
+    # Note: 22 target(s) were omitted.
+    target_link_libraries(main PRIVATE ar gf js tf)

@@ -58,6 +58,8 @@ foreach(CURRENT_FROM ${RELEASE_DLL} ${DEBUG_DLL})
     file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
 endforeach()
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
 function(file_replace_regex filename match_string replace_string)
     file(READ ${filename} _contents)
     string(REGEX REPLACE "${match_string}" "${replace_string}" _contents "${_contents}")
