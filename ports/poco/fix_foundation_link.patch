@@ -1,8 +1,8 @@
-diff --git a/Foundation/src/Environment_WIN32U.cpp b/Foundation/src/Environment_WIN32U.cpp
-index 624ff83..3394379 100644
---- a/Foundation/src/Environment_WIN32U.cpp
-+++ b/Foundation/src/Environment_WIN32U.cpp
-@@ -24,6 +24,7 @@
+diff --git a/Foundation/src/Environment_WIN32.cpp b/Foundation/src/Environment_WIN32.cpp
+index 62845fa..edcf6fe 100644
+--- a/Foundation/src/Environment_WIN32.cpp
++++ b/Foundation/src/Environment_WIN32.cpp
+@@ -22,6 +22,7 @@
  #include <ws2ipdef.h>
  #include <iphlpapi.h>
  
