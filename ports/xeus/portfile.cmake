@@ -5,7 +5,8 @@ vcpkg_from_github(
     SHA512 877ca45bf649b567a9921d3e8f0adb0299dbe956978bd6e217d0c06617cf3466d08d90d607fd33e129089472e1a96ecec78b1fc21346bc13ba268168a5a6b068
     HEAD_REF master
     PATCHES
-        Fix-Compile-nlohmann-json.patch
+		Fix-Compile-nlohmann-json.patch
+		Fix-static-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
@@ -42,6 +43,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         "#ifdef XEUS_STATIC_LIB"
         "#if 1 // #ifdef XEUS_STATIC_LIB"
     )
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 # Handle copyright

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d02b5d6..7329d31 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -244,7 +244,8 @@ macro(xeus_create_target target_name linkage output_name)
+         PUBLIC xtl
+     )
+ 
+-    target_link_libraries(${target_name} PUBLIC OpenSSL::Crypto)
++    target_link_libraries(OpenSSL::Crypto INTERFACE crypt32)
++	target_link_libraries(${target_name} PUBLIC OpenSSL::Crypto)
+ 
+     if (NOT MSVC)
+         if (APPLE)
