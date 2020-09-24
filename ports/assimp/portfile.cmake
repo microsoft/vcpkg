@@ -49,7 +49,7 @@ file(READ ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake ASSIMP_CONFIG)
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake "
 include(CMakeFindDependencyMacro)
 find_dependency(ZLIB)
-find_dependency(irrXML CONFIG)
+find_dependency(irrlicht CONFIG)
 find_dependency(polyclipping CONFIG)
 find_dependency(minizip CONFIG)
 find_dependency(kubazip CONFIG)
