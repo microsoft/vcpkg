@@ -21,6 +21,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DNO_DX=ON
+        -DNO_CUDA=ON
         -DNO_EXAMPLES=ON
         -DNO_TUTORIALS=ON
         -DNO_REGRESSION=ON
