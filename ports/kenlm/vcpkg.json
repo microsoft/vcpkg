@@ -17,10 +17,5 @@
     },
     "liblzma",
     "zlib"
-  ],
-  "features": {
-    "test": {
-      "description": "Compile tests"
-    }
-  }
+  ]
 }

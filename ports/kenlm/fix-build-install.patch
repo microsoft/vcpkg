@@ -66,7 +66,7 @@ index f6ea116..26a7ad0 100644
 -if(EIGEN3_FOUND)
 -  if (3.1.0 VERSION_LESS ${EIGEN3_VERSION})
 +if(Eigen3_FOUND)
-+  if (0)
++  if (1)
      include_directories(${EIGEN3_INCLUDE_DIR})
  
      set(KENLM_INTERPOLATE_SOURCE
