@@ -1,6 +1,6 @@
 {
   "name": "kenlm",
-  "version-string": "689a25aae9171b3ea46bd80d4189f540f35f1a02",
+  "version-string": "20200924",
   "description": "KenLM: Faster and Smaller Language Model Queries",
   "supports": "!(arm64 & windows)",
   "dependencies": [
