@@ -93,7 +93,7 @@ namespace vcpkg::Commands
             {"x-package-info", &info},
             {"x-history", &porthistory},
             {"x-vsinstances", &vsinstances},
-            {"x-format-manifest", &format_manifest},
+            {"format-manifest", &format_manifest},
         };
         return t;
     }
