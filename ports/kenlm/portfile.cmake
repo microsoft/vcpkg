@@ -12,22 +12,6 @@ vcpkg_configure_cmake(
 )
 vcpkg_build_cmake(ADD_BIN_TO_PATH)
 
-# Headers
-file(
-    INSTALL ${SOURCE_PATH}/util
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    FILES_MATCHING
-    PATTERN "*.hh"
-    PATTERN "*.h"
-)
-file(
-    INSTALL ${SOURCE_PATH}/lm
-   DESTINATION ${CURRENT_PACKAGES_DIR}/include
-   FILES_MATCHING
-   PATTERN "*.hh"
-    PATTERN "*.h"
-    PATTERN "*test_data*" EXCLUDE
-)
 # Copyright and License
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME license)
