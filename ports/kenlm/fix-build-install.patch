@@ -55,21 +55,22 @@ index 069c6aa..395815b 100644
  
  AddExes(EXES ${EXE_LIST}
 diff --git a/lm/interpolate/CMakeLists.txt b/lm/interpolate/CMakeLists.txt
-index f6ea116..06dd43a 100644
+index f6ea116..26a7ad0 100644
 --- a/lm/interpolate/CMakeLists.txt
 +++ b/lm/interpolate/CMakeLists.txt
-@@ -1,7 +1,7 @@
+@@ -1,7 +1,8 @@
 -find_package(Eigen3)
++if (UNIX)
 +find_package(Eigen3 CONFIG REQUIRED)
  
 -if(EIGEN3_FOUND)
 -  if (3.1.0 VERSION_LESS ${EIGEN3_VERSION})
-+if(Eigen3_FOUND AND UNIX)
++if(Eigen3_FOUND)
 +  if (0)
      include_directories(${EIGEN3_INCLUDE_DIR})
  
      set(KENLM_INTERPOLATE_SOURCE
-@@ -26,7 +26,7 @@ if(EIGEN3_FOUND)
+@@ -26,7 +27,7 @@ if(EIGEN3_FOUND)
      endif()
  
      add_library(kenlm_interpolate ${KENLM_INTERPOLATE_SOURCE})
@@ -78,7 +79,7 @@ index f6ea116..06dd43a 100644
  
      set(KENLM_INTERPOLATE_EXES
          interpolate
-@@ -34,6 +34,15 @@ if(EIGEN3_FOUND)
+@@ -34,6 +35,15 @@ if(EIGEN3_FOUND)
  		
      set(KENLM_INTERPOLATE_LIBS
          kenlm_interpolate)
@@ -94,6 +95,13 @@ index f6ea116..06dd43a 100644
  
      AddExes(EXES ${KENLM_INTERPOLATE_EXES}
              LIBRARIES ${KENLM_INTERPOLATE_LIBS})
+@@ -57,3 +67,6 @@ else()
+       "(cd $HOME; wget -O - https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.bz2 |tar xj)\n"
+       "rm CMakeCache.txt\n")
+ endif()
++else()
++  message(STATUS "interpolation only support UNIX.")
++endif()
 diff --git a/util/CMakeLists.txt b/util/CMakeLists.txt
 index 3f28c92..97d5448 100644
 --- a/util/CMakeLists.txt
