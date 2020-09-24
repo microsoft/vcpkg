@@ -1,3 +1,4 @@
 Source: binn
 Version: 2.0
+Port-Version: 1
 Description: Binn is a binary data serialization format designed to be compact, fast and easy to use.
