@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF 085713d4d301aeb58e7d14f44cfac6ce35fe2e77 # 0.60
     SHA512 835536482def61c9978cda58507a7f5983b99765f69e7865cf5597b06075dc3e7ad4a3be0b2de2e44e4a4c3a6998115bf567ff586fb656cf5d95a0a7465fb2fe
     HEAD_REF master
-    PATCHES ddl2cpp_path.patch
+    PATCHES
+        ddl2cpp_path.patch
+        fix-dependency.patch
 )
 
 # Use sqlpp11's own build process, skipping tests
