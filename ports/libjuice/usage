@@ -1,0 +1,4 @@
+The package libjuice is compatible with built-in CMake targets:
+
+    find_package(libjuice CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE LibJuice::juice)

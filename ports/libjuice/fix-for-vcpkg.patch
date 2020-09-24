@@ -1,0 +1,102 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7e059c1..1aad4f4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,7 +38,11 @@ set(LIBJUICE_SOURCES
+ )
+ 
+ set(LIBJUICE_HEADERS
+-	${CMAKE_CURRENT_SOURCE_DIR}/include/juice.h
++	${CMAKE_CURRENT_SOURCE_DIR}/include/juice/juice.h
++)
++
++set(LIBJUICE_PRIVATE_HEADERS
++	${CMAKE_CURRENT_SOURCE_DIR}/src/socket.h
+ )
+ 
+ set(TESTS_SOURCES
+@@ -56,75 +60,53 @@ find_package(Threads REQUIRED)
+ add_library(juice SHARED ${LIBJUICE_SOURCES})
+ set_target_properties(juice PROPERTIES VERSION ${PROJECT_VERSION})
+ 
+-target_include_directories(juice PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
++#target_include_directories(juice PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
++target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+ target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/juice)
+ target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+ target_link_libraries(juice PUBLIC Threads::Threads)
+ 
+-add_library(juice-static STATIC EXCLUDE_FROM_ALL ${LIBJUICE_SOURCES})
+-set_target_properties(juice-static PROPERTIES VERSION ${PROJECT_VERSION})
+-
+-target_include_directories(juice-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+-target_include_directories(juice-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/juice)
+-target_include_directories(juice-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+-target_link_libraries(juice-static PUBLIC Threads::Threads)
+-
+ if(WIN32)
+ 	target_link_libraries(juice PRIVATE wsock32 ws2_32) # winsock2
+-	target_link_libraries(juice-static PRIVATE wsock32 ws2_32) # winsock2
+ endif()
+ 
+ if (USE_NETTLE)
+ 	find_package(Nettle REQUIRED)
+     target_compile_definitions(juice PRIVATE USE_NETTLE=1)
+     target_link_libraries(juice PRIVATE Nettle::Nettle)
+-    target_compile_definitions(juice-static PRIVATE USE_NETTLE=1)
+-    target_link_libraries(juice-static PRIVATE Nettle::Nettle)
+ else()
+     find_package(OpenSSL REQUIRED)
+     target_compile_definitions(juice PRIVATE USE_NETTLE=0)
+     target_link_libraries(juice PRIVATE OpenSSL::SSL)
+-    target_compile_definitions(juice-static PRIVATE USE_NETTLE=0)
+-    target_link_libraries(juice-static PRIVATE OpenSSL::SSL)
+ endif()
+ 
+ if (NO_ATOMICS)
+ 	target_compile_definitions(juice PRIVATE NO_ATOMICS)
+-	target_compile_definitions(juice-static PRIVATE NO_ATOMICS)
+ endif()
+ 
+ if(APPLE)
+ 	# This seems to be necessary on MacOS
+ 	target_include_directories(juice PRIVATE /usr/local/include)
+-	target_include_directories(juice-static PRIVATE /usr/local/include)
+ endif()
+ 
+-add_library(LibJuice::LibJuice ALIAS juice)
+-add_library(LibJuice::LibJuiceStatic ALIAS juice-static)
+-
+-install(TARGETS juice LIBRARY DESTINATION lib)
++install(TARGETS juice EXPORT libjuice-config LIBRARY DESTINATION lib)
+ install(FILES ${LIBJUICE_HEADERS} DESTINATION include/juice)
++install(FILES ${LIBJUICE_PRIVATE_HEADERS} DESTINATION include/juice/src)
+ 
+ if(NOT MSVC)
+ 	target_compile_options(juice PRIVATE -Wall -Wextra)
+-	target_compile_options(juice-static PRIVATE -Wall -Wextra)
+ endif()
+ 
+ if(WARNINGS_AS_ERRORS)
+ 	if(MSVC)
+ 		target_compile_options(juice PRIVATE /WX)
+-		target_compile_options(juice-static PRIVATE /WX)
+ 	else()
+ 		target_compile_options(juice PRIVATE -Werror)
+-		target_compile_options(juice-static PRIVATE -Werror)
+ 	endif()
+ endif()
+ 
+-# Main Test
+-add_executable(juice-tests ${TESTS_SOURCES})
+-target_include_directories(juice-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+-target_include_directories(juice-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/juice)
+-set_target_properties(juice-tests PROPERTIES VERSION ${PROJECT_VERSION})
+-set_target_properties(juice-tests PROPERTIES OUTPUT_NAME tests)
+-target_link_libraries(juice-tests juice)
+-
++install(
++  EXPORT libjuice-config
++  NAMESPACE LibJuice::
++  DESTINATION share/cmake/libjuice
++)
