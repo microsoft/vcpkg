@@ -266,10 +266,6 @@ function(vcpkg_configure_make)
     if (CMAKE_HOST_WIN32)
         list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
-        # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
-        string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/share/automake-1.16;${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
-        set(ENV{PATH} "${NEWPATH}")
-        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
 
         if(_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
             _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
@@ -288,10 +284,19 @@ function(vcpkg_configure_make)
                 # Needs to be different from --build to enable cross builds.
                 string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-unknown-mingw32")
             endif()
+            debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
         endif()
-        debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
-        vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
-        vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/share/automake-1.16") # Required wrappers are located here (compile ar-lib)
+
+        set(APPEND_ENV)
+        if(_csc_AUTOCONFIG)
+            set(APPEND_ENV ";${MSYS_ROOT}/usr/share/automake-1.16")
+        endif()
+        string(APPEND APPEND_ENV ";${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+        # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
+        string(REPLACE ";$ENV{SystemRoot}\\System32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
+        string(REPLACE ";$ENV{SystemRoot}\\system32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
+        set(ENV{PATH} "${NEWPATH}")
+        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
 
         macro(_vcpkg_append_to_configure_environment inoutstring var defaultval)
             # Allows to overwrite settings in custom triplets via the environment
