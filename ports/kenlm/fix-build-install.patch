@@ -1,0 +1,94 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ecd6032..78d1f8b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+ # Compile all libraries into lib/
+ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+ 
+-if (NOT CMAKE_BUILD_TYPE)
++if (0)
+   set(CMAKE_BUILD_TYPE Release)
+ endif()
+ 
+diff --git a/lm/CMakeLists.txt b/lm/CMakeLists.txt
+index 069c6aa..635f521 100644
+--- a/lm/CMakeLists.txt
++++ b/lm/CMakeLists.txt
+@@ -37,6 +37,15 @@ target_link_libraries(kenlm kenlm_util ${Boost_LIBRARIES} Threads::Threads)
+ set(KENLM_MAX_ORDER 6 CACHE STRING "Maximum supported ngram order")
+ target_compile_definitions(kenlm PUBLIC -DKENLM_MAX_ORDER=${KENLM_MAX_ORDER})
+ 
++install(TARGETS kenlm
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
++
++file(GLOB SRC_HEADERS ${CMAKE_CURRENT_LIST_DIR}/*.h ${CMAKE_CURRENT_LIST_DIR}/*.hh)
++install(FILES ${SRC_HEADERS} DESTINATION include/kenlm)
++
+ # This directory has children that need to be processed
+ add_subdirectory(builder)
+ add_subdirectory(filter)
+@@ -44,12 +53,14 @@ add_subdirectory(interpolate)
+ 
+ # Explicitly list the executable files to be compiled
+ set(EXE_LIST
+-  query
+   fragment
+-  build_binary
+   kenlm_benchmark
+ )
+ 
++if (UNIX)
++    list(APPEND EXE_LIST query build_binary)
++endif()
++
+ set(LM_LIBS kenlm kenlm_util ${Boost_LIBRARIES} Threads::Threads)
+ 
+ AddExes(EXES ${EXE_LIST}
+diff --git a/lm/interpolate/CMakeLists.txt b/lm/interpolate/CMakeLists.txt
+index f6ea116..b0568c2 100644
+--- a/lm/interpolate/CMakeLists.txt
++++ b/lm/interpolate/CMakeLists.txt
+@@ -34,6 +34,15 @@ if(EIGEN3_FOUND)
+ 		
+     set(KENLM_INTERPOLATE_LIBS
+         kenlm_interpolate)
++        
++    install(TARGETS kenlm_interpolate
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib
++    )
++    
++    file(GLOB PY_HEADERS ${CMAKE_CURRENT_LIST_DIR}/*.h ${CMAKE_CURRENT_LIST_DIR}/*.hh)
++    install(FILES ${PY_HEADERS} DESTINATION include/kenlm/interpolate)
+ 
+     AddExes(EXES ${KENLM_INTERPOLATE_EXES}
+             LIBRARIES ${KENLM_INTERPOLATE_LIBS})
+diff --git a/util/CMakeLists.txt b/util/CMakeLists.txt
+index 3f28c92..2636442 100644
+--- a/util/CMakeLists.txt
++++ b/util/CMakeLists.txt
+@@ -66,8 +66,19 @@ add_library(kenlm_util ${KENLM_UTIL_DOUBLECONVERSION_SOURCE} ${KENLM_UTIL_STREAM
+ set_target_properties(kenlm_util PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ target_link_libraries(kenlm_util ${Boost_LIBRARIES} ${READ_COMPRESSED_LIBS} Threads::Threads ${RT})
+ 
++if (UNIX)
+ AddExes(EXES probing_hash_table_benchmark
+         LIBRARIES kenlm_util ${Boost_LIBRARIES} Threads::Threads)
++endif()
++
++install(TARGETS kenlm_util
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
++
++file(GLOB UTILS_HEADER ${CMAKE_CURRENT_LIST_DIR}/*.h ${CMAKE_CURRENT_LIST_DIR}/*.hh)
++install(FILES ${UTILS_HEADER} DESTINATION include/kenlm/utils)
+ 
+ # Only compile and run unit tests if tests should be run
+ if(BUILD_TESTING)
