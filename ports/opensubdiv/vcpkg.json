@@ -1,7 +1,6 @@
 {
   "name": "opensubdiv",
   "version-string": "3.4.3",
-  "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv",
   "description": "An Open-Source subdivision surface library.",
-  "dependencies": []
+  "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv"
 }
