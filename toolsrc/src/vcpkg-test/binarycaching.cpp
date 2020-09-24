@@ -116,8 +116,8 @@ a spiffy compression library wrapper
 
 Version: 1.5
 Triplet: x64-windows
-Compiler id: compilerid
-Compiler version: compilerversion
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
@@ -148,8 +148,8 @@ a spiffy compression library wrapper
 
 Version: 1.5
 Triplet: x64-windows
-Compiler id: compilerid
-Compiler version: compilerversion
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
@@ -180,8 +180,8 @@ a spiffy compression library wrapper
 
 Version: 1.5
 Triplet: x64-windows
-Compiler id: compilerid
-Compiler version: compilerversion
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
