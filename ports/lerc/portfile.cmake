@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         "install_lib_to_archive_path.patch"
         "enable_static_build.patch"
+        "create_package.patch"
 )
 
 vcpkg_configure_cmake(
