@@ -6,9 +6,11 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/USD
-    REF 71b4baace2044ea4400ba802e91667f9ebe342f0 # v20.08
-    SHA512 0f23b84d314d88d3524f22ebc344e2b506cb7e8ac064726df432a968a4bae0fd2249e968bd10845de9067290eaaa3f8c9e2a483551ffc06b826f3eba816061a9
+    REF be1a80f8cb91133ac75e1fc2a2e1832cd10d91c8 # v20.02
+    SHA512 12c7cf7e5320b168ddde870b1a68b482515b33bd29206c4f6cbb248b9071b866c47353bf496890e01950abb5f725157eca576f9dc403e15020474f9a653b43fe
     HEAD_REF master
+    PATCHES
+        fix-build-error.patch
 )
 
 vcpkg_find_acquire_program(PYTHON2)
@@ -44,7 +46,9 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(
+    COPY ${SOURCE_PATH}/LICENSE.txt
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/usd/copyright)
 
 # Move all dlls to bin
 file(GLOB RELEASE_DLL ${CURRENT_PACKAGES_DIR}/lib/*.dll)
