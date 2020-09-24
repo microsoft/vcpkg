@@ -91,9 +91,9 @@ namespace vcpkg::CMakeVars
                             "if(VCPKG_TRIPLET_ID EQUAL ",
                             p.second,
                             ")\n",
-                            "include(",
+                            "include(\"",
                             paths.get_triplet_file_path(p.first).generic_string(),
-                            ")\n",
+                            "\")\n",
                             "\nendif()\n");
         }
         Strings::append(extraction_file, "endmacro()\n");
