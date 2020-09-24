@@ -18,8 +18,8 @@ vcpkg_from_github(
     PATCHES
         missing-include-atomic.patch
         reorder-glog-gflags.patch
-        # disable-non-underscore-posix-names.patch
-        # boost-1.70.patch
+        disable-non-underscore-posix-names.patch
+        boost-1.70.patch
 
 )
 
