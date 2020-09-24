@@ -180,6 +180,10 @@ function(vcpkg_install_msbuild)
             file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
             vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
         endif()
+
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+            vcpkg_copy_pdbs(BUILD_TYPE release)
+        endif()            
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -204,9 +208,15 @@ function(vcpkg_install_msbuild)
         if(DLLS)
             file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
         endif()
+
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+            vcpkg_copy_pdbs(BUILD_TYPE debug)
+        endif()       
     endif()
 
-    vcpkg_copy_pdbs()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        vcpkg_copy_pdbs()
+    endif()
 
     if(NOT _csc_SKIP_CLEAN)
         vcpkg_clean_msbuild()
