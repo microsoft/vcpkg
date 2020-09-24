@@ -1,5 +1,5 @@
-# # Specifies if the port install should fail immediately given a condition
-# vcpkg_fail_port_install(MESSAGE "opensubdiv currently only supports Linux and Mac platforms" ON_TARGET "Windows")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "linux" "osx" "uwp")
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
