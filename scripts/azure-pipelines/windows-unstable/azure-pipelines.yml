@@ -3,6 +3,8 @@
 #
 variables:
   unstable-pool: 'VcpkgUnstable-2020-09-01'
+  MSVCBranchName: 'master'
+  DropBuildNumber: ''
 
 jobs:
 - template: job.yml

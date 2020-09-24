@@ -16,6 +16,46 @@ jobs:
     value: D:\downloads
 
   steps:
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download DropBuildNumber if not specified'
+    inputs:
+      buildType: specific
+      project: '0bdbc590-a062-4c3f-b0f6-9383f67865ee'
+      pipeline: 8136
+      buildVersionToDownload: latestFromBranch
+      branchName: 'refs/heads/$(MSVCBranchName)'
+      artifactName: BuildNumber
+      downloadPath: 'D:\msvc-drops'
+    condition: eq(variables['DropBuildNumber'], '')
+  - task: PowerShell@2
+    displayName: 'Set DropBuildNumber if not specified'
+    inputs:
+      targetType: inline
+      script: |
+        $DropBuildNumber = Get-Content -Path D:\msvc-drops\BuildNumber\Build.BuildNumber.txt
+        Write-Host "##vso[task.setvariable variable=DropBuildNumber]$DropBuildNumber"
+        Write-Host "Build Number set to: $DropBuildNumber"
+      pwsh: true
+    condition: eq(variables['DropBuildNumber'], '')
+  - task: ms-vscs-artifact.build-tasks.artifactDropDownloadTask-1.artifactDropDownloadTask@0
+    displayName: 'Download msvc x86 ret'
+    inputs:
+      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+      buildNumber: 'msvc/builds/$(DropBuildNumber)/x86ret'
+      destinationPath: 'D:\msvc-drops\$(DropBuildNumber)\binaries.x86ret'
+  - task: ms-vscs-artifact.build-tasks.artifactDropDownloadTask-1.artifactDropDownloadTask@0
+    displayName: 'Download msvc amd64 ret'
+    inputs:
+      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+      buildNumber: 'msvc/builds/$(DropBuildNumber)/amd64ret'
+      destinationPath: 'D:\msvc-drops\$(DropBuildNumber)\binaries.amd64ret'
+  - task: PowerShell@2
+    displayName: 'Rearrange MSVC Drop Layout'
+    inputs:
+      targetType: filePath
+      filePath: 'scripts/azure-pipelines/windows-unstable/rearrange-msvc-drop-layout.ps1'
+      arguments: '-DropRoot "D:\msvc-drops\$(DropBuildNumber)" -BuildType ret'
+      pwsh: true
   - task: PowerShell@2
     displayName: 'Initialize Environment'
     inputs:
@@ -27,7 +67,6 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
       pwsh: true
-  # Note: D: is the Azure machines' temporary disk.
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Build vcpkg'
   - task: PowerShell@2
