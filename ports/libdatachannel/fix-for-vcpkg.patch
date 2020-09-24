@@ -1,0 +1,161 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f690573..0b95045 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -104,61 +104,33 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+ find_package(Threads REQUIRED)
+ 
+ set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
+-add_subdirectory(deps/plog)
+ 
+-option(sctp_build_programs 0)
+-add_subdirectory(deps/usrsctp EXCLUDE_FROM_ALL)
+-if (MSYS OR MINGW)
+-	target_compile_definitions(usrsctp PUBLIC -DSCTP_STDINT_INCLUDE=<stdint.h>)
+-	target_compile_definitions(usrsctp-static PUBLIC -DSCTP_STDINT_INCLUDE=<stdint.h>)
+-endif()
+-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+-    target_compile_options(usrsctp PRIVATE -Wno-error=format-truncation)
+-	target_compile_options(usrsctp-static PRIVATE -Wno-error=format-truncation)
+-endif()
+-add_library(Usrsctp::Usrsctp ALIAS usrsctp)
+-add_library(Usrsctp::UsrsctpStatic ALIAS usrsctp-static)
++
++find_package(libjuice CONFIG REQUIRED)
+ 
+ if (NO_WEBSOCKET)
+ 	add_library(datachannel SHARED
+ 		${LIBDATACHANNEL_SOURCES})
+-	add_library(datachannel-static STATIC EXCLUDE_FROM_ALL
+-		${LIBDATACHANNEL_SOURCES})
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_WEBSOCKET=0)
+-	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_WEBSOCKET=0)
+ else()
+ 	add_library(datachannel SHARED
+ 		${LIBDATACHANNEL_SOURCES}
+ 		${LIBDATACHANNEL_WEBSOCKET_SOURCES})
+-	add_library(datachannel-static STATIC EXCLUDE_FROM_ALL
+-		${LIBDATACHANNEL_SOURCES}
+-		${LIBDATACHANNEL_WEBSOCKET_SOURCES})
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_WEBSOCKET=1)
+-	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_WEBSOCKET=1)
+ endif()
+ 
+ set_target_properties(datachannel PROPERTIES
+ 	VERSION ${PROJECT_VERSION}
+ 	CXX_STANDARD 17)
+-set_target_properties(datachannel-static PROPERTIES
+-	VERSION ${PROJECT_VERSION}
+-	CXX_STANDARD 17)
+ 
+-target_include_directories(datachannel PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
++target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+ target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
+ target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+-target_link_libraries(datachannel PUBLIC Threads::Threads plog::plog)
+-target_link_libraries(datachannel PRIVATE Usrsctp::UsrsctpStatic)
+-
+-target_include_directories(datachannel-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+-target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
+-target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+-target_link_libraries(datachannel-static PUBLIC Threads::Threads plog::plog)
+-target_link_libraries(datachannel-static PRIVATE Usrsctp::UsrsctpStatic)
++target_link_libraries(datachannel PUBLIC Threads::Threads)
++target_link_libraries(datachannel PRIVATE usrsctp)
+ 
+ if(WIN32)
+ 	target_link_libraries(datachannel PRIVATE wsock32 ws2_32) # winsock2
+-	target_link_libraries(datachannel-static PRIVATE wsock32 ws2_32) # winsock2
+ endif()
+ 
+ find_package(SRTP)
+@@ -172,13 +144,10 @@ if(SRTP_FOUND)
+ 	endif()
+ 	message(STATUS "LibSRTP found, compiling with media transport")
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_MEDIA=1)
+-	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_MEDIA=1)
+ 	target_link_libraries(datachannel PRIVATE SRTP::SRTP)
+-	target_link_libraries(datachannel-static PRIVATE SRTP::SRTP)
+ else()
+ 	message(STATUS "LibSRTP NOT found, compiling WITHOUT media transport")
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_MEDIA=0)
+-	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_MEDIA=0)
+ endif()
+ 
+ if (USE_GNUTLS)
+@@ -192,49 +161,37 @@ if (USE_GNUTLS)
+ 			IMPORTED_LOCATION "${GNUTLS_LIBRARIES}")
+ 	endif()
+ 	target_compile_definitions(datachannel PRIVATE USE_GNUTLS=1)
+-	target_compile_definitions(datachannel-static PRIVATE USE_GNUTLS=1)
+ 	target_link_libraries(datachannel PRIVATE GnuTLS::GnuTLS)
+-	target_link_libraries(datachannel-static PRIVATE GnuTLS::GnuTLS)
+ else()
+ 	find_package(OpenSSL REQUIRED)
+ 	target_compile_definitions(datachannel PRIVATE USE_GNUTLS=0)
+-	target_compile_definitions(datachannel-static PRIVATE USE_GNUTLS=0)
+ 	target_link_libraries(datachannel PRIVATE OpenSSL::SSL)
+-	target_link_libraries(datachannel-static PRIVATE OpenSSL::SSL)
+ endif()
+ 
+ if (USE_NICE OR NOT USE_JUICE)
+ 	find_package(LibNice REQUIRED)
+ 	target_compile_definitions(datachannel PRIVATE USE_NICE=1)
+-	target_compile_definitions(datachannel-static PRIVATE USE_NICE=1)
+ 	target_link_libraries(datachannel PRIVATE LibNice::LibNice)
+-	target_link_libraries(datachannel-static PRIVATE LibNice::LibNice)
+ else()
+-	add_subdirectory(deps/libjuice EXCLUDE_FROM_ALL)
++	#add_subdirectory(deps/libjuice EXCLUDE_FROM_ALL)
+ 	target_compile_definitions(datachannel PRIVATE USE_NICE=0)
+-	target_compile_definitions(datachannel-static PRIVATE USE_NICE=0)
+-	target_link_libraries(datachannel PRIVATE LibJuice::LibJuiceStatic)
+-	target_link_libraries(datachannel-static PRIVATE LibJuice::LibJuiceStatic)
++	target_link_libraries(datachannel PRIVATE LibJuice::juice)
+ endif()
+ 
+ add_library(LibDataChannel::LibDataChannel ALIAS datachannel)
+-add_library(LibDataChannel::LibDataChannelStatic ALIAS datachannel-static)
+ 
+-install(TARGETS datachannel LIBRARY DESTINATION lib)
++install(TARGETS datachannel EXPORT libdatachannel-config LIBRARY DESTINATION lib)
+ install(FILES ${LIBDATACHANNEL_HEADERS} DESTINATION include/rtc)
+ 
+ if(NOT MSVC)
+ 	target_compile_options(datachannel PRIVATE -Wall -Wextra)
+-	target_compile_options(datachannel-static PRIVATE -Wall -Wextra)
+ endif()
+ 
+ if(WARNINGS_AS_ERRORS)
+ 	if(MSVC)
+ 		target_compile_options(datachannel PRIVATE /WX)
+-		target_compile_options(datachannel-static PRIVATE /WX)
+ 	else()
+ 		target_compile_options(datachannel PRIVATE -Werror)
+-		target_compile_options(datachannel-static PRIVATE -Werror)
+ 	endif()
+ endif()
+ 
+@@ -277,3 +234,9 @@ if(NOT NO_EXAMPLES)
+ 	add_subdirectory(examples/copy-paste-capi)
+ endif()
+ 
++
++install(
++  EXPORT libdatachannel-config
++  NAMESPACE LibDatachannel::
++  DESTINATION share/cmake/libdatachannel
++)
+diff --git a/src/tcptransport.hpp b/src/tcptransport.hpp
+index 1447835..1c92686 100644
+--- a/src/tcptransport.hpp
++++ b/src/tcptransport.hpp
+@@ -29,7 +29,7 @@
+ #include <thread>
+ 
+ // Use the socket defines from libjuice
+-#include "../deps/libjuice/src/socket.h"
++#include <juice/src/socket.h>
+ 
+ namespace rtc {
+ 
