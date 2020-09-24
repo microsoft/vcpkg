@@ -25,4 +25,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/yaml TARGET_PATH share/yaml)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/config.h ${CURRENT_PACKAGES_DIR}/debug/share)
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/License ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
