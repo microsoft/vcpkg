@@ -1,13 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO erikd/libsndfile
-    REF v1.0.29
-    SHA512 ff19e8cea629af9dea51c79f3446f7a63520525c8578c56b8b4b7a6f0ce07d2458ca488f0be9daeaf9ea3a1124b1fa7cac9a3b313b1ae1f43c76de852a10eed5
+    REF v1.0.30
+    SHA512 2714dfbe923450a1f6f6d2a53ae0e88163170a5e0ce436bee27c1c41fc9b5526d6bc38e58918132248a9044f5b05fa29cd483c06c75ed67e6d83c961e30aaac9
     HEAD_REF master
-    PATCHES 0001-Improve-UWP-support.patch
 )
-
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" CRT_LIB_STATIC)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_find_acquire_program(PYTHON3)
@@ -26,7 +23,6 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DENABLE_BOW_DOCS=OFF
         -DBUILD_PROGRAMS=OFF
-        -DENABLE_STATIC_RUNTIME=${CRT_LIB_STATIC}
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -DPYTHON_EXECUTABLE=${PYTHON3}
         ${FEATURE_OPTIONS}
@@ -41,6 +37,7 @@ else()
 endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH ${CONFIG_PATH} TARGET_PATH share/SndFile)
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 vcpkg_copy_pdbs()
 
