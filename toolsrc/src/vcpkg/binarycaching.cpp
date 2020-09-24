@@ -1016,7 +1016,8 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     auto& spec = action.spec;
     auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
     auto& version = scf.core_paragraph->version;
-    auto& compiler_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO).compiler_info.value_or_exit(VCPKG_LINE_INFO);
+    const auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
+    const auto& compiler_info = abi_info.compiler_info.value_or_exit(VCPKG_LINE_INFO);
     std::string description =
         Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
                         Strings::join("\n    ", scf.core_paragraph->description),
@@ -1024,12 +1025,12 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
                         version,
                         "\nTriplet: ",
                         spec.triplet().to_string(),
-                        "\nCompiler id: ",
+                        "\nCXX Compiler id: ",
                         compiler_info.id,
-                        "\nCompiler version: ",
+                        "\nCXX Compiler version: ",
                         compiler_info.version,
                         "\nTriplet/Compiler hash: ",
-                        action.abi_info.value_or_exit(VCPKG_LINE_INFO).triplet_abi.value_or_exit(VCPKG_LINE_INFO),
+                        abi_info.triplet_abi.value_or_exit(VCPKG_LINE_INFO),
                         "\nFeatures:",
                         Strings::join(",", action.feature_list, [](const std::string& s) { return " " + s; }),
                         "\nDependencies:\n");
