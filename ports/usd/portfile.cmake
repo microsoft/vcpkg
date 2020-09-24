@@ -17,6 +17,8 @@ vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
 
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindTBB.cmake)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -29,6 +31,9 @@ vcpkg_configure_cmake(
         -DPXR_BUILD_TESTS:BOOL=OFF
         -DPXR_BUILD_USD_IMAGING:BOOL=OFF
         -DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF
+        -DPXR_BUILD_EXAMPLES:BOOL=OFF
+        -DPXR_BUILD_TUTORIALS:BOOL=OFF
+        -DPXR_BUILD_USD_TOOLS:BOOL=OFF
 )
 
 vcpkg_install_cmake()
