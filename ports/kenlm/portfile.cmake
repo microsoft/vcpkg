@@ -10,7 +10,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 )
-vcpkg_build_cmake(ADD_BIN_TO_PATH)
+vcpkg_install_cmake()
 
 # Copyright and License
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
