@@ -121,3 +121,14 @@ $ vagrant package
 This will create a `package.box`, which is the box file for the base VM.
 Then, you can `vagrant box add <package.box> --name <name for the box>`,
 and you'll have the base vcpkg box added for purposes of `Setup-VagrantMachines.ps1`!
+
+Once you've created the base box, if you're making it the new base box for the CI,
+upload it to the `vcpkgvagrant` storage account, to the `vagrant-boxes` share.
+Then, add the metadata about the box (the name and version) to the JSON file there.
+Once you've done that, add the software versions below.
+
+### VM Software Versions
+
+* 2020-09-17:
+  * macOS: 10.15.6
+  * Xcode CLTs: 12

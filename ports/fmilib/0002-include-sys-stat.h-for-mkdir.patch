@@ -11,23 +11,10 @@ diff --git a/ThirdParty/Minizip/minizip/miniunz.c b/ThirdParty/Minizip/minizip/m
 index 2264705..e0167d5 100644
 --- a/ThirdParty/Minizip/minizip/miniunz.c
 +++ b/ThirdParty/Minizip/minizip/miniunz.c
-@@ -53,6 +53,7 @@
+@@ -53,5 +53,6 @@
  #else
  # include <unistd.h>
  # include <utime.h>
 +# include <sys/stat.h>
  #endif
  
- 
-@@ -141,7 +142,7 @@ int mymkdir(dirname)
-     ret = mkdir (dirname,0775);
- #elif __APPLE__
-     ret = mkdir (dirname,0775);
--#else
-+#else
- #error Unknown platform
- #endif
-     return ret;
--- 
-2.24.3 (Apple Git-128)
-
