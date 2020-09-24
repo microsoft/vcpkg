@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES fix-build-install.patch
 )
 
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindEigen3.cmake)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     test COMPILE_TESTS

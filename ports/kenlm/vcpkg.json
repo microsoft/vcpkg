@@ -2,6 +2,7 @@
   "name": "kenlm",
   "version-string": "689a25aae9171b3ea46bd80d4189f540f35f1a02",
   "description": "KenLM: Faster and Smaller Language Model Queries",
+  "supports": "!(arm64 & windows)",
   "dependencies": [
     "boost-interprocess",
     "boost-program-options",
@@ -10,6 +11,10 @@
     "boost-test",
     "boost-thread",
     "bzip2",
+    {
+      "name": "eigen3",
+      "platform": "!windows"
+    },
     "liblzma",
     "zlib"
   ],
