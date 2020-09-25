@@ -32,7 +32,7 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
     - [Visual Studio Code con CMake Tools](#visual-studio-code-con-cmake-tools)
     - [Vcpkg con proyectos de Visual Studio (CMake)](#vcpkg-con-proyectos-de-visual-studio\(CMake\))
     - [Vcpkg con CLion](#vcpkg-con-clion)
-    - [Vcpkg como submódulo](#vcpkg-como-submodulo)
+    - [Vcpkg como submódulo](#vcpkg-como-submódulo)
   + [Inicio rápido: archivos de Manifiesto](#inicio-rápido-manifiestos)
 * [Tab-Completado/Autocompletado](#Completado-TabAutocompletado)
 * [Ejemplos](#ejemplos)
