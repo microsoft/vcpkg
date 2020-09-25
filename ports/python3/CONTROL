@@ -7,3 +7,6 @@ Build-Depends: libffi, openssl, zlib (!uwp&!windows)
 
 Feature: enable-shared
 Description: Build shared libraries in addition to static ones built by default
+
+Feature: tools
+Description: Build python executable

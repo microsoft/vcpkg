@@ -53,6 +53,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 		message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 	endif()
 
+	# Fetch the external dependencies it needs to build with the modules
 	vcpkg_execute_build_process( 
 		COMMAND ${SOURCE_PATH}/PCBuild/get_externals.bat 
 		WORKING_DIRECTORY ${SOURCE_PATH}/PCBuild 
@@ -60,52 +61,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
 	vcpkg_build_msbuild(
 		PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythoncore.vcxproj
-		PLATFORM ${BUILD_ARCH}
-		)
-
-	file(INSTALL
-			"${SOURCE_PATH}/Include/"
-			"${SOURCE_PATH}/PC/pyconfig.h"
-		DESTINATION "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
-		FILES_MATCHING PATTERN *.h
-	)
-	file(INSTALL
-			"${SOURCE_PATH}/Lib"
-		DESTINATION
-			"${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}"
-	)
-	file(INSTALL
-			"${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.lib"
-		DESTINATION
-			"${CURRENT_PACKAGES_DIR}/lib"
-	)
-
-	if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-		file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.lib" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-	endif()
-
-	if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll" DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-		if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-			file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.dll" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-		endif()
-	endif()
-
-	if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-		vcpkg_copy_pdbs()
-	endif()
-	# Handle copyright
-	file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR} RENAME copyright)
-	
-	
-	vcpkg_build_msbuild(
-		PROJECT_PATH ${SOURCE_PATH}/PCBuild/python.vcxproj
-		PLATFORM ${BUILD_ARCH}
-		)
-		
-	vcpkg_build_msbuild(
-		PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythonw.vcxproj
 		PLATFORM ${BUILD_ARCH}
 		)
 
@@ -120,7 +75,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
 		PLATFORM ${BUILD_ARCH}
 		)
 
-	#TBD: Integrate ffi later
 	vcpkg_build_msbuild(
 		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_ctypes.vcxproj
 		PLATFORM ${BUILD_ARCH}
@@ -135,8 +89,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_elementtree.vcxproj
 		PLATFORM ${BUILD_ARCH}
 		)
-	
-	# wants openssl
+
 	vcpkg_build_msbuild(
 		PROJECT_PATH ${SOURCE_PATH}/PCBuild/_hashlib.vcxproj
 		PLATFORM ${BUILD_ARCH}
@@ -207,7 +160,19 @@ if (VCPKG_TARGET_IS_WINDOWS)
 		PROJECT_PATH ${SOURCE_PATH}/PCBuild/winsound.vcxproj
 		PLATFORM ${BUILD_ARCH}
 		)
-		
+
+	if("tools" IN_LIST FEATURES)
+		vcpkg_build_msbuild(
+			PROJECT_PATH ${SOURCE_PATH}/PCBuild/python.vcxproj
+			PLATFORM ${BUILD_ARCH}
+			)
+			
+		vcpkg_build_msbuild(
+			PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythonw.vcxproj
+			PLATFORM ${BUILD_ARCH}
+			)
+	endif()
+
 	file(GLOB DLLS 
 		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/*.pyd"
 		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/lib*.dll"	#libcrypto,libffi,libssl expected
@@ -216,19 +181,56 @@ if (VCPKG_TARGET_IS_WINDOWS)
 		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/tk*.dll"
 		"${SOURCE_PATH}/PCBuild/${OUT_DIR}/vcruntime*.dll"
 	)
-	file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3/DLLs)
+	
 	file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}/DLLs)
 	
-	file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python.exe" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3)
-	file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/pythonw.exe" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3)
-	file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3)
+	if("tools" IN_LIST FEATURES)
+		file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3/DLLs)
+		file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python.exe" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3)
+		file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/pythonw.exe" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3)
+		file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python3)
 
-
+		file(INSTALL
+				"${SOURCE_PATH}/Lib"
+			DESTINATION
+				"${CURRENT_PACKAGES_DIR}/tools/python3"
+		)
+	endif()
+	
+	file(INSTALL
+			"${SOURCE_PATH}/Include/"
+			"${SOURCE_PATH}/PC/pyconfig.h"
+		DESTINATION "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
+		FILES_MATCHING PATTERN *.h
+	)
 	file(INSTALL
 			"${SOURCE_PATH}/Lib"
 		DESTINATION
-			"${CURRENT_PACKAGES_DIR}/tools/python3"
+			"${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}"
 	)
+	file(INSTALL
+			"${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.lib"
+		DESTINATION
+			"${CURRENT_PACKAGES_DIR}/lib"
+	)
+
+	if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+		file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.lib" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+	endif()
+
+	if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+		file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll" DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+
+		if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+			file(INSTALL "${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.dll" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+		endif()
+	endif()
+
+	if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+		vcpkg_copy_pdbs()
+	endif()
+	# Handle copyright
+	file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR} RENAME copyright)
 
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
