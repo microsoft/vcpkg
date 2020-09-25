@@ -40,11 +40,12 @@ The versioning scheme used by the package. VCPKG splits versions into four diffe
 
     _Note: some packages that follow semver-like convetions are not actually semver compliant, for examples: `openssl`, and for that reason are more suited to use the arbitrary string versioning scheme._
 
-* **`date`**: Accepts version strings that can be parsed to a date  following the ISO-8601 format `"YYYY-MM-DD"`. Packages that use this scheme can be sorted which allows VCPKG to apply minimum version requirement constraints on them.
+* **`date`**: Accepts version strings that can be parsed to a date following the ISO-8601 format `"YYYY-MM-DD"`. Packages that use this scheme can be sorted which allows VCPKG to apply minimum version requirement constraints on them.
+
 
 * **`commit`**: Accepts version strings that represent commit IDs under versioning control systems. These are usually hash strings that are not sortable, and as such, VCPKG can only apply direct version requirements on them.
 
-* **`string`**: Accepts an arbitrary string as the versioning string. The versioning string may not contain escaped characters nor any of the following characters: `@`, `:`, `. VCPKG can only apply direct version requirements on packages using this versioning scheme.
+* **`string`**: Accepts an arbitrary string as the versioning string. The versioning string may not contain escaped characters nor any of the following characters: `@`, `:`, `` ` ``. VCPKG can only apply direct version requirements on packages using this versioning scheme.
 
 **`version`**
 The version must match the version of the package being installed. VCPKG validates that the string follows the format specified in the `version-scheme` field and reports an error if the version string is not valid.
@@ -399,7 +400,8 @@ Resulting in the temporary lists:
 
 The last step is merging both lists, for which we follow these rules: 
 
-* If a package appears only in one list, we add the version of that package to the final list. 
+* If a package appears only in one list, add the version of that package to the final list. 
+
 * If a package appears on both lists AND the DRL version is greater than or equal to the MRL version, take the DRL version. 
 * If a package appears on both lists AND the DRL version is lower than the MRL version, fail the build and report the conflict. 
 
