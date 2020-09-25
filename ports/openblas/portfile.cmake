@@ -84,7 +84,7 @@ else()
 endif()
 
 
-vcpkg_install_cmake(DISABLE_PARALLEL)
+vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
 set(ENV{PATH} "${PATH_BACKUP}")
 
