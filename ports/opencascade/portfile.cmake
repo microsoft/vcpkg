@@ -17,6 +17,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
 
 
+if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+	# Turn off the "improved inline analyzer" that stalls on x86 release builds using MSVC 16.7
+    string(APPEND VCPKG_C_FLAGS "/d2DeepThoughtInliner-")
+    string(APPEND VCPKG_CXX_FLAGS "/d2DeepThoughtInliner-")
+endif()
+
 # We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
 # And pre-built ActiveTCL binaries are behind a marketing wall :(
 # We use the Unix install layout for Windows as it matches vcpkg
