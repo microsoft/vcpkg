@@ -30,7 +30,6 @@ vcpkg_configure_cmake(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
          ${FEATURE_OPTIONS}
-        -DIL_NO_PNG=${IL_NO_PNG}
         -DIL_NO_TIF=${IL_NO_TIF}
         -DIL_NO_JPG=${IL_NO_JPG}
         -DIL_NO_EXR=${IL_NO_EXR}
