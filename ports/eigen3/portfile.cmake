@@ -28,6 +28,8 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
 vcpkg_fixup_pkgconfig()
 
+file(GLOB INCLUDES ${CURRENT_PACKAGES_DIR}/include/eigen3/*)
+file(COPY ${INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/COPYING.README DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
