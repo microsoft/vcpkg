@@ -47,16 +47,16 @@ o [macOS y Linux](#inicio-rápido-unix) dependiendo del SO que use.
 
 Para más información, ver [Instalando y Usando Paquetes][getting-started:using-a-package].
 Si una librería que necesita no está presente en el catálogo de vcpkg,
-puede [abrir un issue en el repo de GitHub][contributing:submit-issue] 
+puede [abrir una incidiencia en el repositorio de GitHub][contributing:submit-issue] 
 donde el equipo de vcpkg y la comunidad pueden verlo, y potencialmente hacer un port a vcpkg.
 
 Después de tener vcpkg instalado y funcionando,
 puede que desee añadir [completado con tab](#Completado-TabAuto-Completado) en su terminal.
 
 Finalmente, si está interesado en el futuro de vcpkg,
-puede ver la guía de [archivos de manifiesto](#inicio-rápido-manifiesto)!
+puede ver la guía de [archivos de manifiesto][getting-started:manifest-spec]!
 esta es una característica experimental y es probable que tenga errores,
-así que pruebe y [abra todos los issues][contributing:submit-issue]!
+así que pruebe y [abra todos las incidencias][contributing:submit-issue]!
 
 ### Inicio Rápido: Windows
 
@@ -369,7 +369,7 @@ Ver un [video de demostración](https://www.youtube.com/watch?v=y41WFKbQFTw) de 
 Vcpkg es un proyecto de código abierto, y está construido con sus contribuciones.
 Aquí hay unas de las maneras en las que puede contribuir:
 
-* [Creando Issues][contributing:submit-issue] en vcpkg o paquetes existentes
+* [Creando Incidiencias][contributing:submit-issue] en vcpkg o paquetes existentes
 * [Creando Correcciones y Nuevos Paquetes][contributing:submit-pr]
 
 Por favor visite nuestra [Guía de Contribución](CONTRIBUTING.md) para más detalles.
