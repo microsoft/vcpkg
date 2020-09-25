@@ -1,5 +1,4 @@
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "linux" "osx" "uwp")
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -15,6 +14,11 @@ vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
 
+if (VCPKG_CRT_LINKAGE STREQUAL static)
+    set(STATIC_CRT_LNK ON)
+else()
+    set(STATIC_CRT_LNK OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -26,6 +30,7 @@ vcpkg_configure_cmake(
         -DNO_TUTORIALS=ON
         -DNO_REGRESSION=ON
         -DNO_TESTS=ON
+        -DMSVC_STATIC_CRT=${STATIC_CRT_LNK}
 )
 
 vcpkg_install_cmake()
