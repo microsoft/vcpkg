@@ -17,7 +17,7 @@ vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
 
-IF (WIN32)
+IF (VCPKG_TARGET_IS_WINDOWS)
 ELSE()
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindTBB.cmake)
 ENDIF()
