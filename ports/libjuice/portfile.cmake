@@ -20,13 +20,6 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(FILE "${SOURCE_PATH}/CMakeLists.txt")
-    file(READ ${FILE} _contents)
-    string(REPLACE "add_library(juice SHARED" "add_library(juice STATIC" _contents "${_contents}")
-    file(WRITE ${FILE} "${_contents}")
-endif()
-
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
