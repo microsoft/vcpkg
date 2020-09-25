@@ -1,7 +1,14 @@
 Source: libjuice
 Version: 0.4.6
-Port-Version: 1
-Build-Depends: openssl
 Homepage: https://github.com/paullouisageneau/libjuice
 Description: The library is a simplified implementation of the Interactive Connectivity Establishment (ICE) protocol in C for POSIX platforms (including Linux and Apple macOS) and Microsoft Windows.
-Default-Features:
+Default-Features: openssl
+
+Feature: openssl
+Build-Depends: openssl
+Description: Use openssl for HMAC computation
+
+Feature: nettle
+Build-Depends: nettle
+Description: Use nettle for HMAC computation instead of OpenSSL
+

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e059c1..1aad4f4 100644
+index 7e059c1..2a082eb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -38,7 +38,11 @@ set(LIBJUICE_SOURCES
@@ -7,20 +7,27 @@ index 7e059c1..1aad4f4 100644
  
  set(LIBJUICE_HEADERS
 -	${CMAKE_CURRENT_SOURCE_DIR}/include/juice.h
-+	${CMAKE_CURRENT_SOURCE_DIR}/include/juice/juice.h
++   ${CMAKE_CURRENT_SOURCE_DIR}/include/juice/juice.h
 +)
 +
 +set(LIBJUICE_PRIVATE_HEADERS
-+	${CMAKE_CURRENT_SOURCE_DIR}/src/socket.h
++   ${CMAKE_CURRENT_SOURCE_DIR}/src/socket.h
  )
  
  set(TESTS_SOURCES
-@@ -56,75 +60,53 @@ find_package(Threads REQUIRED)
- add_library(juice SHARED ${LIBJUICE_SOURCES})
+@@ -53,78 +57,63 @@ set(TESTS_SOURCES
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ find_package(Threads REQUIRED)
+ 
+-add_library(juice SHARED ${LIBJUICE_SOURCES})
++if(BUILD_SHARED_LIBS)
++  add_library(juice SHARED ${LIBJUICE_SOURCES})
++else()
++  add_library(juice STATIC ${LIBJUICE_SOURCES})
++endif()
  set_target_properties(juice PROPERTIES VERSION ${PROJECT_VERSION})
  
 -target_include_directories(juice PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-+#target_include_directories(juice PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 +target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
  target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/juice)
  target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -68,7 +75,11 @@ index 7e059c1..1aad4f4 100644
 -add_library(LibJuice::LibJuiceStatic ALIAS juice-static)
 -
 -install(TARGETS juice LIBRARY DESTINATION lib)
-+install(TARGETS juice EXPORT libjuice-config LIBRARY DESTINATION lib)
++install(TARGETS juice EXPORT libjuice-config
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
  install(FILES ${LIBJUICE_HEADERS} DESTINATION include/juice)
 +install(FILES ${LIBJUICE_PRIVATE_HEADERS} DESTINATION include/juice/src)
  
