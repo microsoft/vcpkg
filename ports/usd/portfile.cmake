@@ -46,7 +46,7 @@ file(
         "${CURRENT_PACKAGES_DIR}/pxrConfig.cmake"
         "${CURRENT_PACKAGES_DIR}/cmake/pxrConfig.cmake")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH ${CURRENT_PACKAGES_DIR}/share/pxr)
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/pxr)
 
 vcpkg_copy_pdbs()
 
@@ -73,9 +73,9 @@ function(file_replace_regex filename match_string replace_string)
 endfunction()
 
 # fix dll path for cmake
-file_replace_regex(${CURRENT_PACKAGES_DIR}/share/usd/pxrConfig.cmake "/cmake/pxrTargets.cmake" "/pxrTargets.cmake")
-file_replace_regex(${CURRENT_PACKAGES_DIR}/share/usd/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
-file_replace_regex(${CURRENT_PACKAGES_DIR}/share/usd/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
+file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrConfig.cmake "/cmake/pxrTargets.cmake" "/pxrTargets.cmake")
+file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
+file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
 
 # fix plugInfo.json for runtime
 file(GLOB_RECURSE PLUGINFO_FILES ${CURRENT_PACKAGES_DIR}/lib/usd/*/resources/plugInfo.json)
