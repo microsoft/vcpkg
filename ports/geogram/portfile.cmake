@@ -1,4 +1,5 @@
 set(GEOGRAM_VERSION 1.7.5)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://gforge.inria.fr/frs/download.php/file/38314/geogram_${GEOGRAM_VERSION}.tar.gz"
