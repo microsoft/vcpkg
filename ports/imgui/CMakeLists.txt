@@ -149,30 +149,37 @@ if(NOT IMGUI_SKIP_HEADERS)
 
 	if(IMGUI_BUILD_ALLEGRO5_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_allegro5.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_allegro5.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_DX9_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_dx9.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_dx9.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_DX10_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_dx10.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_dx10.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_DX11_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_dx11.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_dx11.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_DX12_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_dx12.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_dx12.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_GLFW_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_glfw.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_glfw.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_GLUT_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_glut.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_glut.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_COPY_MARMALADE_BINDING)
@@ -186,10 +193,12 @@ if(NOT IMGUI_SKIP_HEADERS)
 
 	if(IMGUI_BUILD_OPENGL2_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_opengl2.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_opengl2.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_OPENGL3_GLEW_BINDING OR IMGUI_BUILD_OPENGL3_GLAD_BINDING OR IMGUI_BUILD_OPENGL3_GL3W_BINDING OR IMGUI_BUILD_OPENGL3_GLBINDING_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_opengl3.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_opengl3.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_OSX_BINDING)
@@ -198,14 +207,17 @@ if(NOT IMGUI_SKIP_HEADERS)
 
 	if(IMGUI_BUILD_SDL2_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_sdl.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_sdl.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_VULKAN_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_vulkan.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_vulkan.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_BUILD_WIN32_BINDING)
 		install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_win32.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/examples/imgui_impl_win32.cpp DESTINATION include)
 	endif()
 
 	if(IMGUI_FREETYPE)

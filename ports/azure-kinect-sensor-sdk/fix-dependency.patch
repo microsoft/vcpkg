@@ -1,13 +1,13 @@
 diff --git a/tools/k4aviewer/CMakeLists.txt b/tools/k4aviewer/CMakeLists.txt
-index 6ab38d9..e0c5bad 100644
+index 6ab38d9..f31f570 100644
 --- a/tools/k4aviewer/CMakeLists.txt
 +++ b/tools/k4aviewer/CMakeLists.txt
 @@ -35,6 +35,8 @@ set(SOURCE_FILES
      k4awindowset.cpp
      perfcounter.cpp
      ${CMAKE_CURRENT_BINARY_DIR}/version.rc
-+    ${IMGUI_EXTERNAL_PATH}/imgui_impl_glfw.cpp
-+    ${IMGUI_EXTERNAL_PATH}/imgui_impl_opengl3.cpp
++    ${IMGUI_EXTERNAL_PATH}/../imgui_impl_glfw.cpp
++    ${IMGUI_EXTERNAL_PATH}/../imgui_impl_opengl3.cpp
  )
  
  # Include ${CMAKE_CURRENT_BINARY_DIR}/version.rc in the target's sources
@@ -28,18 +28,16 @@ index 6ab38d9..e0c5bad 100644
  )
  
  # On Windows, we need to call into setupapi to get USB container ID information
-diff --git a/tools/k4aviewer/k4aimgui_all.h b/tools/k4aviewer/k4aimgui_all.h
-index e40ccfb..756fb09 100644
---- a/tools/k4aviewer/k4aimgui_all.h
-+++ b/tools/k4aviewer/k4aimgui_all.h
-@@ -34,8 +34,8 @@
- #include <GL/gl3w.h>
- #include <GLFW/glfw3.h>
- #include <imgui.h>
--#include <imgui_impl_glfw.h>
--#include <imgui_impl_opengl3.h>
-+#include <bindings/imgui_impl_glfw.h>
-+#include <bindings/imgui_impl_opengl3.h>
+diff --git a/tools/k4aviewer/k4asoundio_util.h b/tools/k4aviewer/k4asoundio_util.h
+index c9c2718..011a76e 100644
+--- a/tools/k4aviewer/k4asoundio_util.h
++++ b/tools/k4aviewer/k4asoundio_util.h
+@@ -16,7 +16,7 @@
+ // This disables that behavior.
+ //
+ #define NOMINMAX
+-#include <soundio.h>
++#include <soundio/soundio.h>
  
- // For disabling buttons, which has not yet been promoted to the public API
+ // Project headers
  //

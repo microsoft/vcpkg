@@ -8,7 +8,7 @@ vcpkg_from_github(
     PATCHES
         fix-builds.patch
         disable-c4275.patch
-        fix-dependency-imgui.patch
+        fix-dependency.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
