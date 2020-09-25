@@ -28,7 +28,7 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
   + [Instalando herramientas de desarrollo en Linux](#instalando-herramientas-de-desarrollo-en-Linux)
   + [Instalando herramientas de desarrollo en macOS](#instalando-herramientas-de-desarrollo-en-macos)
     - [Instalando GCC en MacOS previo a 10.15](#instalando-gcc-en-macos-previo-a-10.15)
-  + [Usando vcpkg con CMake](#usando-vcpkg-con-cmake)
+  + [Usando Vcpkg con CMake](#usando-vcpkg-con-cmake)
     - [Visual Studio Code con CMake Tools](#visual-studio-code-con-cmake-tools)
     - [Vcpkg con proyectos de Visual Studio (CMake)](#vcpkg-con-proyectos-de-visual-studio\(CMake\))
     - [Vcpkg con CLion](#vcpkg-con-clion)
@@ -47,16 +47,16 @@ o [macOS y Linux](#inicio-rápido-unix) dependiendo del SO que use.
 
 Para más información, ver [Instalando y Usando Paquetes][getting-started:using-a-package].
 Si una librería que necesita no está presente en el catálogo de vcpkg,
-puede [abrir una incidiencia en el repositorio de GitHub][contributing:submit-issue] 
+puede [abrir una incidencia en el repositorio de GitHub][contributing:submit-issue] 
 donde el equipo de vcpkg y la comunidad pueden verlo, y potencialmente hacer un port a vcpkg.
 
-Después de tener vcpkg instalado y funcionando,
+Después de tener Vcpkg instalado y funcionando,
 puede que desee añadir [completado con tab](#Completado-TabAuto-Completado) en su terminal.
 
-Finalmente, si está interesado en el futuro de vcpkg,
+Finalmente, si está interesado en el futuro de Vcpkg,
 puede ver la guía de [archivos de manifiesto][getting-started:manifest-spec]!
 esta es una característica experimental y es probable que tenga errores,
-así que pruebe y [abra todos las incidencias][contributing:submit-issue]!
+así que se recomienda revisar y [crear incidencias][contributing:submit-issue]!
 
 ### Inicio Rápido: Windows
 
@@ -103,8 +103,8 @@ usadas en su proyecto sin configuración adicional.
 Si está usando CMake con Visual Studio,
 continúe [aquí](#vcpkg-con-proyectos-de-visual-studio\(CMake\)).
 
-Para utilizar vcpkg con CMake sin un IDE,
-puede utilizar el archivo toolchain:
+Para utilizar Vcpkg con CMake sin un IDE,
+puede utilizar el archivo de herramientas incluido:
 
 ```cmd
 > cmake -B [directorio de compilación] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
@@ -160,8 +160,8 @@ $ cmake --build [directorio de compilación]
 ```
 
 Con CMake, todavía necesitara `find_package` y las configuraciones adicionales de la librería.
-Revise la [Sección de Cmake](#usando-vcpkg-con-cmake)
-para más información en cómo aprovechar mejor vcpkg con CMake,
+Revise la [Sección de CMake](#usando-vcpkg-con-cmake)
+para más información en cómo aprovechar mejor Vcpkg con CMake,
 y CMake tools para VSCode.
 
 Para cualquier otra herramienta, visite la [guía de integración][getting-started:integration].
@@ -172,7 +172,7 @@ Según las distribuciones de Linux, hay diferentes paquetes
 que necesitará instalar:
 
 - Debian, Ubuntu, popOS, y otra distribución basada en Debian:
- 
+
 ```sh
 $ sudo apt-get update
 $ sudo apt-get install build-essential tar curl zip unzip
@@ -221,14 +221,14 @@ $ brew install gcc
 
 Posteriormente podrá compilar vcpkg junto con la [guía de inicio rápido](#inicio-rápido-unix)
 
-### Usando vcpkg con CMake
+### Usando Vcpkg con CMake
 
-¡Si está usando vcpkg con CMake, lo siguiente puede ayudar!
+¡Si está usando Vcpkg con CMake, lo siguiente puede ayudar!
 
 #### Visual Studio Code con CMake Tools
 
 Agregando lo siguiente al espacio de trabajo `settings.json` permitirá que
-CMake Tools use automáticamente vcpkg para las librerías:
+CMake Tools use automáticamente Vcpkg para las librerías:
 
 ```json
 {
@@ -241,7 +241,7 @@ CMake Tools use automáticamente vcpkg para las librerías:
 #### Vcpkg con proyectos de Visual Studio(CMake)
 
 Abra el editor de Ajustes de CMake, bajo la sección `CMake toolchain file`,
-posteriormente agregue al path el archivo toolchain de vcpkg:
+posteriormente agregue al path el archivo de cadena de herramientas de Vcpkg:
 
 ```sh
 [raíz de vcpkg]/scripts/buildsystems/vcpkg.cmake
@@ -249,7 +249,7 @@ posteriormente agregue al path el archivo toolchain de vcpkg:
 
 #### Vcpkg con CLion
 
-Abra los ajustes de Toolchains
+Abra los ajustes de Cadena de Herramientas (Toolchains)
 (File > Settings en Windows y Linux, Clion > Preferences en macOS),
 y entre en la sección de ajustes de CMake (Build, Execution, Deployment > CMake).
 Finalmente, en `CMake options`, agregue la línea siguiente:
@@ -262,7 +262,7 @@ Desafortunadamente, tendrá que hacerlo para cada perfil.
 
 #### Vcpkg como Submódulo
 
-Cuando este usando vcpkg como un submódulo para su proyecto,
+Cuando este usando Vcpkg como un submódulo para su proyecto,
 puede agregar lo siguiente as su CMakeLists,txt antes de la primera llamada a `project()`,
 en vez de pasar `CMAKE_TOOLCHAIN_FILE` a la invocación de CMake.
 
@@ -271,33 +271,33 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
   CACHE STRING "Vcpkg toolchain file")
 ```
 
-Esto permitirá a las personas no usar vcpkg,
+Esto permitirá a las personas no usar Vcpkg,
 indicando el `CMAKE_TOOLCHAIN_FILE` directamente,
 sin embargo, hará el proceso de configuración y compilación más sencillo.
 
 ### Inicio rápido: Manifiestos
 
-Así que desea ver cómo será el futuro de vcpkg!
+Así que desea ver cómo será el futuro de Vcpkg!
 realmente lo apreciamos. Sin embargo, primero una advertencia:
 el soporte de archivos de manifiesto aún está en beta,
 aun así la mayoría debería funcionar,
 pero no hay garantía de esto y es muy probable que encuentre uno o más bugs
-mientras use vcpkg en este modo.
+mientras use Vcpkg en este modo.
 Adicionalmente, es probablemente que se rompan comportamientos antes de que se pueda considerar estable,
 así que está advertido.
 Por favor [Abra un Problema][contributing:submit-issue] si encuentra algún error
 
 Primero, instale vcpkg normalmente para [Windows](#inicio-rápido-windows) o
 [Unix](#inicio-rápido-unix).
-Puede que desee instalar vcpkg en un lugar centralizado,
+Puede que desee instalar Vcpkg en un lugar centralizado,
 ya que el directorio existe localmente,
 y está bien ejecutar múltiples comandos desde el mismo directorio de vcpkg al mismo tiempo.
 
 Luego, se requiere activar la bandera de característica `manifests` en vcpkg agregando
 `manifests` a los valores separados por coma en la opción `--feature-flags`,
-o agregándolo en los valores separados por coma en la variable de entorno `VCPKG_FEATURE_FLAGS`
+o agregándole en los valores separados por coma en la variable de entorno `VCPKG_FEATURE_FLAGS`
 
-también puede que desee agregar vcpkg al `PATH`.
+también puede que desee agregar Vcpkg al `PATH`.
 
 Luego, todo lo que hay que hacer es crear un manifiesto;
 cree un archivo llamado `vcpkg.json`, y escriba lo siguiente:
@@ -369,7 +369,7 @@ Ver un [video de demostración](https://www.youtube.com/watch?v=y41WFKbQFTw) de 
 Vcpkg es un proyecto de código abierto, y está construido con sus contribuciones.
 Aquí hay unas de las maneras en las que puede contribuir:
 
-* [Creando Incidiencias][contributing:submit-issue] en vcpkg o paquetes existentes
+* [Creando Incidencias][contributing:submit-issue] en vcpkg o paquetes existentes
 * [Creando Correcciones y Nuevos Paquetes][contributing:submit-pr]
 
 Por favor visite nuestra [Guía de Contribución](CONTRIBUTING.md) para más detalles.
