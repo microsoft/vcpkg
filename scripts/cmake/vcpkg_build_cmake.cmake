@@ -41,6 +41,11 @@ function(vcpkg_build_cmake)
 
     if(_VCPKG_CMAKE_GENERATOR MATCHES "Ninja")
         set(BUILD_ARGS "-v") # verbose output
+        if (VCPKG_MAX_CONCURRENCY)
+            set(PARALLEL_ARG "-j${VCPKG_MAX_CONCURRENCY}")
+        else()
+            set(PARALLEL_ARG "-j${VCPKG_CONCURRENCY}")
+        endif()
         set(NO_PARALLEL_ARG "-j1")
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "Visual Studio")
         set(BUILD_ARGS
