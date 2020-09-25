@@ -13,13 +13,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     no-ws NO_WEBSOCKET
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(FILE "${SOURCE_PATH}/CMakeLists.txt")
-    file(READ ${FILE} _contents)
-    string(REPLACE "add_library(datachannel SHARED" "add_library(datachannel STATIC" _contents "${_contents}")
-    file(WRITE ${FILE} "${_contents}")
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -37,4 +30,3 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libdatachannel)
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

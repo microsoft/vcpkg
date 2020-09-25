@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f690573..0b95045 100644
+index f690573..01f53f1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -104,61 +104,33 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+@@ -104,61 +104,43 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
  find_package(Threads REQUIRED)
  
  set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
@@ -20,23 +20,30 @@ index f690573..0b95045 100644
 -endif()
 -add_library(Usrsctp::Usrsctp ALIAS usrsctp)
 -add_library(Usrsctp::UsrsctpStatic ALIAS usrsctp-static)
-+
 +find_package(libjuice CONFIG REQUIRED)
  
  if (NO_WEBSOCKET)
++  if(BUILD_SHARED_LIBS)
  	add_library(datachannel SHARED
  		${LIBDATACHANNEL_SOURCES})
 -	add_library(datachannel-static STATIC EXCLUDE_FROM_ALL
--		${LIBDATACHANNEL_SOURCES})
++  else()
++	add_library(datachannel STATIC
+ 		${LIBDATACHANNEL_SOURCES})
++  endif()
  	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_WEBSOCKET=0)
 -	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_WEBSOCKET=0)
  else()
++  if(BUILD_SHARED_LIBS)
  	add_library(datachannel SHARED
  		${LIBDATACHANNEL_SOURCES}
  		${LIBDATACHANNEL_WEBSOCKET_SOURCES})
 -	add_library(datachannel-static STATIC EXCLUDE_FROM_ALL
--		${LIBDATACHANNEL_SOURCES}
--		${LIBDATACHANNEL_WEBSOCKET_SOURCES})
++  else()
++	add_library(datachannel STATIC
+ 		${LIBDATACHANNEL_SOURCES}
+ 		${LIBDATACHANNEL_WEBSOCKET_SOURCES})
++  endif()
  	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_WEBSOCKET=1)
 -	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_WEBSOCKET=1)
  endif()
@@ -69,7 +76,7 @@ index f690573..0b95045 100644
  endif()
  
  find_package(SRTP)
-@@ -172,13 +144,10 @@ if(SRTP_FOUND)
+@@ -172,13 +154,10 @@ if(SRTP_FOUND)
  	endif()
  	message(STATUS "LibSRTP found, compiling with media transport")
  	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_MEDIA=1)
@@ -83,7 +90,7 @@ index f690573..0b95045 100644
  endif()
  
  if (USE_GNUTLS)
-@@ -192,49 +161,37 @@ if (USE_GNUTLS)
+@@ -192,49 +171,38 @@ if (USE_GNUTLS)
  			IMPORTED_LOCATION "${GNUTLS_LIBRARIES}")
  	endif()
  	target_compile_definitions(datachannel PRIVATE USE_GNUTLS=1)
@@ -106,7 +113,6 @@ index f690573..0b95045 100644
 -	target_link_libraries(datachannel-static PRIVATE LibNice::LibNice)
  else()
 -	add_subdirectory(deps/libjuice EXCLUDE_FROM_ALL)
-+	#add_subdirectory(deps/libjuice EXCLUDE_FROM_ALL)
  	target_compile_definitions(datachannel PRIVATE USE_NICE=0)
 -	target_compile_definitions(datachannel-static PRIVATE USE_NICE=0)
 -	target_link_libraries(datachannel PRIVATE LibJuice::LibJuiceStatic)
@@ -114,11 +120,15 @@ index f690573..0b95045 100644
 +	target_link_libraries(datachannel PRIVATE LibJuice::juice)
  endif()
  
- add_library(LibDataChannel::LibDataChannel ALIAS datachannel)
+-add_library(LibDataChannel::LibDataChannel ALIAS datachannel)
 -add_library(LibDataChannel::LibDataChannelStatic ALIAS datachannel-static)
- 
+-
 -install(TARGETS datachannel LIBRARY DESTINATION lib)
-+install(TARGETS datachannel EXPORT libdatachannel-config LIBRARY DESTINATION lib)
++install(TARGETS datachannel EXPORT libdatachannel-config
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
  install(FILES ${LIBDATACHANNEL_HEADERS} DESTINATION include/rtc)
  
  if(NOT MSVC)
@@ -136,11 +146,36 @@ index f690573..0b95045 100644
  	endif()
  endif()
  
-@@ -277,3 +234,9 @@ if(NOT NO_EXAMPLES)
+@@ -246,11 +214,7 @@ if(NOT NO_TESTS)
+ 		CXX_STANDARD 17)
+ 	set_target_properties(datachannel-tests PROPERTIES OUTPUT_NAME tests)
+ 	target_include_directories(datachannel-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+-	if(WIN32)
+-		target_link_libraries(datachannel-tests datachannel-static) # DLL exports only the C API
+-	else()
+-		target_link_libraries(datachannel-tests datachannel)
+-	endif()
++	target_link_libraries(datachannel-tests datachannel)
+ 
+ 	# Benchmark
+ 	add_executable(datachannel-benchmark test/benchmark.cpp)
+@@ -260,11 +224,7 @@ if(NOT NO_TESTS)
+ 	set_target_properties(datachannel-benchmark PROPERTIES OUTPUT_NAME benchmark)
+ 	target_compile_definitions(datachannel-benchmark PRIVATE BENCHMARK_MAIN=1)
+ 	target_include_directories(datachannel-benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+-	if(WIN32)
+-		target_link_libraries(datachannel-benchmark datachannel-static) # DLL exports only the C API
+-	else()
+-		target_link_libraries(datachannel-benchmark datachannel)
+-	endif()
++	target_link_libraries(datachannel-benchmark datachannel)
+ endif()
+ 
+ # Examples
+@@ -277,3 +237,8 @@ if(NOT NO_EXAMPLES)
  	add_subdirectory(examples/copy-paste-capi)
  endif()
  
-+
 +install(
 +  EXPORT libdatachannel-config
 +  NAMESPACE LibDatachannel::
