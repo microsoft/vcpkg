@@ -46,7 +46,7 @@ file(
         "${CURRENT_PACKAGES_DIR}/pxrConfig.cmake"
         "${CURRENT_PACKAGES_DIR}/cmake/pxrConfig.cmake")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH ${CURRENT_PACKAGES_DIR}/share/pxr)
 
 vcpkg_copy_pdbs()
 
@@ -65,8 +65,6 @@ foreach(CURRENT_FROM ${RELEASE_DLL} ${DEBUG_DLL})
     string(REPLACE "/lib/" "/bin/" CURRENT_TO ${CURRENT_FROM})
     file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
 endforeach()
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 function(file_replace_regex filename match_string replace_string)
     file(READ ${filename} _contents)
