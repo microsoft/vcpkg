@@ -5,22 +5,22 @@ Some of the terms used in this document have similar meaning when discussed by t
 
 **Library**: A piece of software (source code, binary files, documentation, license, etc.) that is intended to be reused by other software.
 
-**Package**: A package can contain a library, collection of libraries, build scripts, software tools, or other components necessary for their use. The goal of VCPKG is to facilitate the installation of these packages in the user's environment.
+**Package**: A package can contain a library, collection of libraries, build scripts, software tools, or other components necessary for their use. The goal of vcpkg is to facilitate the installation of these packages in the user's environment.
 
-**Port**: A VCPKG specific term, a port contains:
+**Port**: A vcpkg specific term, a port contains:
 
 * Metadata about a package: package version, supported features, dependencies, etc.
 * Instructions to acquire, build if necessary, and install the package.
 
 ## 2 Specifying package versions
-Through the years, C++ software authors have adopted multiple versioning schemes and practices that sometimes conflict between each other. On VCPKG, the most recurrent versioning schemes found are:
+Through the years, C++ software authors have adopted multiple versioning schemes and practices that sometimes conflict between each other. On vcpkg, the most recurrent versioning schemes found are:
 
 * [Semantic Versioning](https://semver.org/)
 * Date
 * Repository commit
 * Arbitrary string
 
-For VCPKG to achieve wide adoption and interoperability with existing projects, it is important that we respect the versioning schemes used by each of the packages contained in our ports library.
+For vcpkg to achieve wide adoption and interoperability with existing projects, it is important that we respect the versioning schemes used by each of the packages contained in our ports library.
 
 Currently, package versions are defined in the Version field of a port's `CONTROL` file. Moving on, we plan to phase out `CONTROL` files in favor of manifest files.
 
@@ -28,50 +28,122 @@ This document describes:
 
 * How to define a package's version, versioning scheme and port revision.
 * How to define version requirements for a package's dependencies.
-* How VCPKG resolves version requirements.
+* How vcpkg resolves version requirements.
 
 ### 2.1 Manifest files
 Package versioning information is specified using the following fields:
 
-**`version-scheme`** 
-The versioning scheme used by the package. VCPKG splits versions into four different kinds: `semver`, `date`, `commit`, and `string`. VCPKG uses the field to validate format constraints and determine which version matching operations are supported by the package.
+**`version`**  
+Accepts version strings that follow a relaxed semver-like scheme. For example: OpenSSL uses version number `1.1.1` as the base for its latest LTS series and appends a single letter to indicate an update (`1.1.1a`, `1.1.1b`, `1.1.1h`).
 
-* **`semver`**: Accepts version strings that follow semantic versioning conventions. Packages that use this scheme can be sorted which allows VCPKG to apply minimum version requirement constraints on them.
+_Sorting behavior_: Strings are compared section by section and sorted lexicographically.  
 
-    _Note: some packages that follow semver-like convetions are not actually semver compliant, for examples: `openssl`, and for that reason are more suited to use the arbitrary string versioning scheme._
+E.g.: 
+`0` < `1.2` < `1.2.3` < `1.2.4` < `1.2.4a` < `2` < `four` < `three`. 
 
-* **`date`**: Accepts version strings that can be parsed to a date following the ISO-8601 format `"YYYY-MM-DD"`. Packages that use this scheme can be sorted which allows VCPKG to apply minimum version requirement constraints on them.
+**`version-semver`**  
+Accepts version strings that follow semantic versioning conventions. 
 
+_Sorting behavior_: Strings are sorted following the rules described in the [semantic versioning specification](https://semver.org).
 
-* **`commit`**: Accepts version strings that represent commit IDs under versioning control systems. These are usually hash strings that are not sortable, and as such, VCPKG can only apply direct version requirements on them.
+E.g.:
+`1.0.0-alpha` < `1.0.0-beta` < `1.0.0` < `1.0.1` < `1.1.0`.
 
-* **`string`**: Accepts an arbitrary string as the versioning string. The versioning string may not contain escaped characters nor any of the following characters: `@`, `:`, `` ` ``. VCPKG can only apply direct version requirements on packages using this versioning scheme.
+**`version-date`**  
+Accepts version strings that can be parsed to a date following the ISO-8601 format `"YYYY-MM-DD"`. A disambiguator is allowed by adding a dot (`.`) followed by the disambiguation tag. E.g.: `2020-01-01.morning`, `2020-01-01.evening`.
 
-**`version`**
-The version must match the version of the package being installed. VCPKG validates that the string follows the format specified in the `version-scheme` field and reports an error if the version string is not valid.
+_Sorting behavior_: Strings are sorted only by their date part, disambiguator tags are ignored.
 
-**`port-version`**
-Historically, VCPKG port version numbers were added as a suffix to the version string in `CONTROL` files. This practice must now be disallowed, and port versions should be instead specified by this field.  Port versions deal with VCPKG specific changes and do not change the version of the package being installed. 
+`2020-01-01` < `2020-01-02` < `2020-02-01`
 
-Port version values should start at 0 for the original version, increase by 1 each time a new port version is published, and reset each time the "version" or "version-scheme" fields are changed.
+(Disambiguators are only considered for exact version matching and are disallowed for minimum version matching).
 
-When resolving package versions only the latest port version is considered, it is a responsibility of the port owner to ensure that no bugs or regressions are introduced when updating the port.
+**`version-string`**  
+Accepts an arbitrary string as the versioning string. 
+
+E.g.: `a`, `12abc45`
+
+_Sorting behavior_: No sorting is attempted, only exact version requirement is possible.
+
+**`port-version`**  
+An integer value that increases each time a vcpkg-specific change is made to the port. 
+
+The rules for port versions are:
+* Start at 0 for the original version of the port,  
+* increase by 1 each time a vcpkg-specific change is made to the port that does not increase the version of the package, 
+* and reset to 0 each time the version of the package is updated.
 
 ### 2.1.1 Manifest file example
 
 ```json
 {
-    "name": "opencv",
-    "version": "4.1.1",
-    "version-scheme": "semver",
-    "port-revision": 5
+    "name": "openssl",
+    "version": "1.1.1h",
+    "port-version": 0
+}
+```
+
+```json
+{
+    "name": "bzip2",
+    "version-semver": "1.0.8",
+    "port-version": 0
+}
+```
+
+```json
+{
+    "name": "abseil",
+    "version-date": "2020-03-03",
+    "port-version": 8
+}
+```
+
+```json
+{
+    "name": "d3dx12",
+    "version-string": "may2020",
+    "port-version": 0
 }
 ```
 
 ## 3 Specifying dependency versions
 
 ### 3.1 Manifest files
-A version requirement can be expressed by using the `"version"` and `"minimum-version"` fields on each dependency. Both are explained in more detail in the [Version Requirements] section.
+Manifest files help users specify complex versioned dependency graphs in a declarative manner. 
+
+In this document we make a distinction between a top-level manifest and the manifest files used for package declarations. The top-level manifest file, simply referes to the highest manifest in the hierarchy.
+
+There are two mechanisms to control which versions of your packages are installed: version requirements and registry baselines.
+
+#### Version Requirements
+Specifying a version requirement is the most direct way to control which version of a package is installed, in vcpkg two types of version requirements are available:
+
+* Exact version requirement (`version=`)
+* Minimum version requirement (`version>=`)
+
+Both are explained in more detail in the [Version Requirements](#5-version-requirements) section.
+
+#### Registry baselines
+A baseline is the mechanism used to set the version of packages that do not have any version requirement imposed on them, either directly in the top-level manifest or transitively by another package in the build graph. 
+
+Simply put, a baseline is a pointer to a specific revision of a registry (a commit ID, a tag, etc.). Vcpkg uses the baseline to fill in the versions of packages that don't have any requirements set.
+
+Setting a baseline is optional, when a baseline is not explicitly set, vcpkg uses the latest revision of the registry.
+
+```json
+{
+    "$question": "Can the ref field be used instead?",
+    "registries": [
+      {
+        "kind": "git",
+        "repository": "https://github.com/my-org/vcpkg-ports",
+        "baseline": "my-project-baseline",
+        "scopes": [ "myorg" ]
+      }
+    ]
+}
+```
 
 ## 4 CLI changes
 
@@ -103,9 +175,9 @@ zlib        1.2.8       A compression library
 ## 5 Version requirements
 
 ### 5.1 Semver version matching
-When using semantic versioning is sometimes convenient to shorten the version string when the least significative parts are not relevant. For example, if when talking about a package only the MAJOR and MINOR versions are important, it is convenient to say `2.2` instead of `2.2.0`, `2.2.1`, `2.2.1`, and so on.
+When using semantic versioning is sometimes convenient to shorten the version string when the least significative parts are not relevant. For example, when talking about a package where only the MAJOR and MINOR versions are important, it is convenient to say `2.2` instead of `2.2.0`, `2.2.1`, `2.2.1`, and so on.
 
-In VCPKG, when resolving version requirements, the specificity of the version string is important.
+In vcpkg, when resolving version requirements, the specificity of the version string is important.
 
 Truncated parts of a SemVer string are considered as if they were filled with zeroes, e.g.:
 
@@ -117,7 +189,7 @@ By not specifying a version requirement, the user implies that the version to in
 
 Example: A project depends on package `meow` but doesn't specify a version requirement.
 
-* If no version requirements for `meow` are added by a dependency when constructing the build list, the latest version of `meow` is installed.
+* If no version requirements for `meow` are added by a dependency when constructing the build list, the _baseline version_ of `meow` is installed.
 * If version requirements for `meow` are added by a dependency when constructing the build list:
   * And there are no conflicts, the oldest version of `meow` that satisfies all the requirements is installed.
   * And there are conflict, the build fails and the conflicts are reported.
@@ -128,57 +200,74 @@ Project manifest
 ```json
 {
     "name": "project",
-    "version": "1.0.0", 
-    "version-scheme": "semver",
+    "version-semver": "1.0.0", 
     "dependencies": [ "zlib", "rapidjson" ]
 }
 ```
 
-## 5.3 Direct version requirements
-The simplest form of versioning. Direct version requirements resolve to an exact version of a package.  
-Accomplished by using the `"version"` field in the `"dependencies"` list.
+## 5.3 Exact version requirements
+The simplest form of versioning. Exact version requirements resolve to an exact version of a package.  
+Accomplished by using the `"version="` field in the `"dependencies"` list.
 
 #### 5.3.1 Example
 
 ```json
 {
-    "name": "project", 
-    "version": "1.0.0",
-    "version-scheme": "semver",
-    "dependencies": [
-        { "name": "zlib", "version": "1.2.11" },
-        { "name": "rapidjson", "version": "2020-02-08", "version-scheme": "date" }]
+  "name": "project", 
+  "version-semver": "1.0.0",
+  "dependencies": [
+    { "name": "zlib", "version=": "1.2.11" },
+    { "name": "rapidjson", "version=": "2020-02-08.nightly" }
+  ]
 }
 ```
-
-If omitted, `"version-scheme"` defaults to "semver". In the example, `"version-scheme": "date` is required, otherwise an error would be reported as `"2020-02-08"` is not a valid semver string.
 
 ## 5.4 Minimum version requirement
 A minimum version requirement puts a lower boundary on the versions that can be used to satisfy a dependency. This means that any version that is newer than the requirement is valid (including major version changes).
 
-VCPKG will use the "oldest" version available that can satisfy all the version requirements in the build graph.
+Vcpkg will use the oldest version available that can satisfy all the version requirements in the build graph.
 
 Using a minimum version approach has the following advantages:
 
   * Is predictable and easy to understand.
-  * Avoids having to solve version SAT.
-  * Avoids unnecesary upgrades when new versions are released.  
+  * User controls when upgrades happen, as in, no upgrades are performed automatically when a new version is released.
+  * Avoids having to solve version SAT.  
   
-  _Note: Unexpected downgrades are still possible if a lower version is retro-actively released or added to the package repository. To overcome the issue, the use of Lockfiles is necessary._
+  _Note: Unexpected downgrades are still possible if a lower version is retro-actively released and added to the package registries. To overcome the issue, the use of Lockfiles is necessary._
 
-Minimum version requirements are expressed by using a "minimum-version" property in the dependencies list. It is not allowed to use the "version" and "minimum-version" properties on the same dependency.
+Minimum version requirements are expressed by using a "version>=" property in the dependencies list. It is not allowed to use "version=" and "version>=" on the same dependency.
 
-Minimum version requirements can only be used on packages using `semver` or `date` versioning schemes. 
+Minimum version requirements can only be used on packages using the `version`, `version-semver` and `version-date` schemes. 
 
 ### 5.4.1 Example
 
 ```json
 {
-    "name": "project",
-    "version": "1.0.0",
-    "dependencies": [
-        { "name": "zlib", "minimum-version": "1.2" },
-        { "name": "rapidjson", "minimum-version": "2020-02-01", "version-scheme": "date"}]
+  "name": "project",
+  "version-semver": "1.0.0",
+  "dependencies": [
+    { "name": "zlib", "version>=": "1.2" },
+    { "name": "rapidjson", "version>=": "2020-02-01" }
+  ]
+}
+```
+
+## 5.5 Port versions
+To be consistent with the minimum version approach, vcpkg uses the lowest available port version that matches the package version. There are many scenarios where a higher port version is desirable, e.g.: support for new platforms, fixing installation issues, among others.
+
+As part of the dependency object a `port-version` can be specified. An error will be emitted if a non-existent `port-version` for the given package version is requested. 
+
+It is recommended to use `port-version` in combination with `version=` requirements. As `port-version` is reset to 0 each time the package version changes, using minimum requirements can result in errors with higher values. 
+
+### 5.5.1 Port versions example
+```json
+{
+  "name": "project",
+  "version-semver": "1.0.0",
+  "dependencies": [
+    { "name": "zlib", "version>=": "1.2" },
+    { "name": "rapidjson", "version=": "2020-02-01", "port-version": 2 }
+  ]
 }
 ```
 
@@ -196,8 +285,8 @@ Consider the following manifest files:
     "name": "project",
     "version": "1.0",
     "dependencies": [
-        { "name": "A", "version": "1.0" },
-        { "name": "B", "version": "1.0" }]
+        { "name": "A", "version=": "1.0" },
+        { "name": "B", "version=": "1.0" }]
 }
 ```
 
@@ -206,7 +295,7 @@ Consider the following manifest files:
 {
     "name": "A",
     "version": "1.0.0",
-    "dependencies": [{ "name": "C", "version": "1.1" }]
+    "dependencies": [{ "name": "C", "version=": "1.1" }]
 }
 ```
 
@@ -215,7 +304,7 @@ Consider the following manifest files:
 {
     "name": "B",
     "version": "1.0.0",
-    "dependencies": [{ "name": "C", "version": "1.2" }]
+    "dependencies": [{ "name": "C", "version=": "1.2" }]
 }
 ```
 
@@ -234,19 +323,22 @@ The example in 6.1.1 can be solved by overriding the requirements of package `C`
 
 ```json
 {
-    "name": "project",
-    "version": "1.0",
-    "dependencies": [
-        { "name": "A", "version": "1.0" },
-        { "name": "B", "version": "1.0" }],
-    "overrides": [{ "name": "C", "minimum-version": "1.2" }]
+  "name": "project",
+  "version": "1.0",
+  "dependencies": [
+    { "name": "A", "version=": "1.0" },
+    { "name": "B", "version=": "1.0" }
+  ],
+  "overrides": [
+    { "name": "C", "version>=": "1.2" }
+  ]
 }
 ```
 
 The override is equivalent to changing the version requirements for `C` on both `A`'s manifest and `B`'s manifest to:
 
 ```json
-{ "name": "C", "minimum-version": "1.2" }
+{ "name": "C", "version>=": "1.2" }
 ``` 
 
 ### 6.2 Problem: block major version upgrades
@@ -258,7 +350,7 @@ Under Semantic Versioning, major version changes introduce breaking changes to p
 ### 6.2.1 Solution: exclusion lists (WIP)
 Exclusion lists have the following properties:
 
-* Accept `"greater"`, `"greater-or-equal"`, and `"not"` exclusions.
+* Accept `"version>"`, `"version>="`, and `"version="` exclusions.
 * Exclusions are un-conditional. I.e.: not in the form of "If `A:1.x` then not `B:1.Y`" or similar.
 * Defined in their own section in the manifest.
 * Exclusions that are not in the top-level manifest are ignored.
@@ -266,7 +358,7 @@ Exclusion lists have the following properties:
 An exclusion takes a package version out of the candidate list when resolving version requirements. Effectively, is the same as if the versions in the exclusion list did not exist.
 
 #### 6.2.1.1 Example
-Consider that the following package and their versions exist:
+Consider that the following packages with these versions exist:
 
 * `A: [1.0, 1.1, 2.0]`
 * `B: [1.0.0, 2.0.0, 2.1.0, 2.1.1, 2.2.0]`
@@ -277,20 +369,27 @@ And the following manifest file
 
 ```json
 {
-    "name": "project",
-    "dependencies": [
-        { "name": "A", "minimum-version": "1.0" },
-        { "name": "B", "minimum-version": "2.0" },
-        { "name": "C", "minimum-version": "3.0" }
-    ],
-    "exclude": [
-        { "name": "A", "greater-or-equal": "2.0" },
-        { "name": "B", "not": "2.0" },
-        { "name": "B", "not": "2.1.0" },
-        { "name": "B", "not": "2.1.1" }
-    ]
+  "name": "project",
+  "dependencies": [
+    { "name": "A", "version>=": "1.0" },
+    { "name": "B", "version>=": "2.0" },
+    { "name": "C", "version>=": "3.0" }
+  ],
+  "exclude": [
+    { "name": "A", "version>=": "2.0" },
+    { "name": "B", "version=": "2.0" },
+    { "name": "B", "version=": "2.1.0" },
+    { "name": "B", "version=": "2.1.1" }
+  ]
 }
 ```
+
+Using the exlusions effectively reduces the candidate set to:
+
+* `A: [1.0, 1.1]`
+* `B: [1.0.0, 2.2.0]`
+* `C: [1.0, 1.1, 2.0, 2.1, 3.0]`
+* `C:3.0 depends on A:>=2.0`
 
 Without exclusions this would resolve in:
 
@@ -300,37 +399,32 @@ Without exclusions this would resolve in:
 
 With exclusions the outcome is:
 
-* `A: error` (blocks unexpected upgrade resulting in an error)
+* `A: error` (C:3.0 requires A>=2.0, which does not exist)
 * `B: 2.2.0`
 * `C: 3.0`
 
 ### 6.2.1.2 Wildcard character
-A wildcard character `*` can be used in `not` exclusions for convenience. 
+A wildcard character `*` can be used in `version=` exclusions for convenience. 
 
-The wildcard character `*` can only appear at the end of a version string, replacing the digits that would go into that part of the semver string. E.g.: the version strings `2.*` and `2.0.*` are valid, while `2.*.1` and `2.1.1*` are invalid.
+The wildcard character `*` can only appear at the end of a version string, replacing the digits that would go into that part of the semver string.  
 
-The exclusion in example 6.2.1.1:
+E.g.: 
+* `2.*` and `2.0.*` are valid, 
+* `2.*.1` and `2.1.1*` are invalid.
 
-```json
-        { "name": "B", "not": "2.1.0" },
-        { "name": "B", "not": "2.1.1" }
-```
-
-could be merged into:
+The exclusion in the previous example can be reduced to:
 
 ```json
-        { "name": "B", "not": "2.1.*" }
+  { "name": "B", "not": "2.1.*" }
 ```
-
-which would exclude all versions that begin with `"2.1"`.
 
 ## 7 Algorithm
-The implementation is based on the algorithm proposed in https://research.swtch.com/vgo-mvs with some modifications to adapt it to VCPKG version requirements.
+The implementation is based on the algorithm proposed in https://research.swtch.com/vgo-mvs with some modifications to adapt it to vcpkg version requirements.
 
 To explain the algorithm we will use the following graph to represent the dependencies of a project.
 
-* Blue arrows represent `minimum-version` requirements.
-* Green arrows represent exact `version` requirements.
+* Blue arrows represent minimum version requirements.
+* Green arrows represent exact version requirements.
 
 ![example package graph image](res/example-package-graph.png)
 
@@ -338,13 +432,13 @@ Also consider the following manifest file for the project:
 
 ```json
 {
-    "name": "project",
-    "version": "1.0", 
-    "dependencies": [
-        { "name": "A", "minimum-version": "1.0" },
-        { "name": "B", "minimum-version": "2.0" },
-        { "name": "C", "minimum-version": "3.0" }
-    ]
+  "name": "project",
+  "version": "1.0", 
+  "dependencies": [
+    { "name": "A", "version>=": "1.0" },
+    { "name": "B", "version>=": "2.0" },
+    { "name": "C", "version>=": "3.0" }
+  ]
 }
 ```
 
@@ -352,13 +446,15 @@ The original algorithm constructs a build list from the dependencies following t
 
 > Construct the rough build list for M by starting from an empty list, adding M, and then appending the build list for each of M's requirements. Simplify the rough build list to produce the final build list, by keeping only the newest version of any listed module.
 
-In VCPKG's case, keeping only the newest versions can result in the violation of direct version requirements. The solution is to create two build lists, one for minimum version requirements (MVR) and one for direct version requirements (DVR). The solutions from these build lists are merged and then either a valid build list is created or a conflict is reported.
+In vcpkg's case, keeping only the newest versions can result in the violation of exact version requirements. 
 
-To create the MVR list, follow the steps in the original algorithm, keeping only the greatest version of each package on the list.
+The solution is to create two build lists, one for minimum requirements and one for exact requirements. The contents of both build lists are merged and then either a valid build list is created or a conflict is reported.
 
-To create the DVR list, keep each version of a package that is required, if a package appears more than once in the list, report a conflict.
+To create the minimum versions list, follow the steps in the original algorithm, keeping only the greatest version of each package on the list.
 
-In our example, to construct a build list for Project we start with its direct requirements, selecting the minimal version that satisfies each requirement. 
+To create the exact versions list, keep each version of a package that is required, if a package appears more than once in the list, report a conflict.
+
+In our example, to construct a build list for the project we start with its direct requirements, selecting the minimal version that satisfies each requirement. 
 
 * `A >= 1.0` resolves to package `A:1.0`
 * `B >= 2.0` resolves to package `B:2.0`. 
@@ -366,45 +462,46 @@ In our example, to construct a build list for Project we start with its direct r
 
 Resulting in: 
 
-* MVR list `[ A:1.0, B:2.0, C:3.0 ]` 
-* DVR list `[]`. 
+* Minimum versions `[ A:1.0, B:2.0, C:3.0 ]` 
+* Exact versions `[]`. 
 
 After that we recursively resolve downstream requirements for the packages added to the lists.  
 
-From `A:1.0` 
+From `A:1.0` (top-level requirement)
 
 * `C >= 1.0` resolves to package `C:1.0` 
 
-From `B:2.0` 
+From `B:2.0` (top-level requirement)
 
-* `C:4.0` (direct version requirement) 
-* `D:1.0` (direct version requirement) 
+* `C = 4.0` resolves to package `C:4.0`
+* `D = 1.0` resolves to package `D:1.0`
 
-From `C:3.0` 
+From `C:3.0` (top-level requirement)
 
-* `E>=1.1` resolves to package `E:1.1` 
+* `E >= 1.1` resolves to package `E:1.1` 
 
-From `C:4.0` 
+From `C:4.0` (added by `B:2.0`)
 
 * `E>=1.2` resolves to package `E:1.2` 
 
-Resulting in the temporary lists: 
+Resulting in the following lists: 
 
-* MRV list `[ A:1.0, B:2.0, C:1.0, C:3.0, E:1.1, E:1.2]`
-* DRV list `[ C:4.0, D:1.0 ]` 
+* Minimum versions `[ A:1.0, B:2.0, C:1.0, C:3.0, E:1.1, E:1.2 ]`
+* Exact versions `[ C:4.0, D:1.0 ]` 
 
- The lists are then validated resulting in the final temporary lists: 
+Following the original algorithm, we take only the greatest versions of packages in the minimum versions list.
 
-* MRV list `[ A:1.0, B:2.0, C:3.0, E:1.2 ]` (only latest version of each package)
-* DRV list `[ C:4.0, D: 1.0 ]` (no conflicts)
+* Minimum versions  `[ A:1.0, B:2.0, C:3.0, E:1.2 ]` (after redux)
+* Exact versions `[ C:4.0, D:1.0 ]`
 
 The last step is merging both lists, for which we follow these rules: 
 
 * If a package appears only in one list, add the version of that package to the final list. 
 
-* If a package appears on both lists AND the DRL version is greater than or equal to the MRL version, take the DRL version. 
-* If a package appears on both lists AND the DRL version is lower than the MRL version, fail the build and report the conflict. 
+* If a package appears on both lists AND the exact version is greater than or equal to the minimum version, take the exact version.
+
+* If a package appears on both lists AND the exact version is lower than the minimum version, fail the build and report the conflict. 
 
 The result of merging both lists in the example results in the final requirement list `[A:1.0, B:2.0, C:4.0, D:1.0, E:1.2]`. 
 
-After obtaining a valid build list, VCPKG will record the selected versions for each package in a **lockfile**. On future runs, if no changes to the version requirements have been made, VCPKG will use the versions in the lockfile to avoid running the algorithm. 
+After obtaining a valid build list, vcpkg will record the selected versions for each package in a **lockfile**. On future runs, if no changes to the version requirements have been made, vcpkg will use the versions in the lockfile to avoid running the algorithm. 
