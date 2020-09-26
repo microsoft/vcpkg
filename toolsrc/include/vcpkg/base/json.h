@@ -480,7 +480,7 @@ namespace vcpkg::Json
             m_path.push_back(key);
             auto res = internal_visit(value, visitor);
             m_path.pop_back();
-            return std::move(res);
+            return res;
         }
         template<class Type>
         Optional<Type> visit_map_field(StringView key, const Value& value, IDeserializer<Type>&& visitor)

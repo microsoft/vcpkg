@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcpkg/fwd/portfileprovider.h>
 #include <vcpkg/fwd/vcpkgcmdarguments.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
@@ -10,11 +11,6 @@
 namespace vcpkg
 {
     struct StatusParagraphs;
-}
-
-namespace vcpkg::PortFileProvider
-{
-    struct PortFileProvider;
 }
 
 namespace vcpkg::Update

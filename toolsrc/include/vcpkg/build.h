@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vcpkg/fwd/cmakevars.h>
+#include <vcpkg/fwd/dependencies.h>
+#include <vcpkg/fwd/portfileprovider.h>
+
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
@@ -20,22 +24,6 @@
 namespace vcpkg
 {
     struct IBinaryProvider;
-}
-
-namespace vcpkg::CMakeVars
-{
-    struct CMakeVarProvider;
-}
-
-namespace vcpkg::Dependencies
-{
-    struct InstallPlanAction;
-    struct ActionPlan;
-}
-
-namespace vcpkg::PortFileProvider
-{
-    struct PathsPortFileProvider;
 }
 
 namespace vcpkg::System

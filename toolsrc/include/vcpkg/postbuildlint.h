@@ -1,14 +1,9 @@
 #pragma once
 
+#include <vcpkg/fwd/build.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/files.h>
-
-namespace vcpkg::Build
-{
-    struct BuildInfo;
-    struct PreBuildInfo;
-}
 
 namespace vcpkg
 {
