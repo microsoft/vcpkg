@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO taku910/mecab
-	REF master
-	SHA512 2a7f1d159ddca846357b5bcab2d2b5de2e6a27dca4301cdd1cc52c155c352f9c7030b77d1187afe9c0a7f1b131a1acdcc40ee81ce7ba5c0fa6b2325c56676353
+	REF 3a07c4eefaffb4e7a0690a7f4e5e0263d3ddb8a3
+	SHA512 d3288cca7207daf66df4349819b64fc9cc069c775512cf0607ca855e9e5512509c36b0e2bb0e955478acae13ff0c35df7442f18a8458fab0ed664d62854c0b25
 	HEAD_REF master
 	PATCHES
 		fix_wpath_unsigned.patch

@@ -79,6 +79,16 @@ vcpkgCheckRepoTool()
     fi
 }
 
+vcpkgCheckBuildTool()
+{
+    __tool=$1
+    if ! command -v "$__tool" >/dev/null 2>&1 ; then
+	echo "Could not find $__tool. Please install it (and other dependencies) with:"
+	echo "sudo apt-get install cmake ninja-build"
+	exit 1
+    fi
+}
+
 vcpkgCheckEqualFileHash()
 {
     url=$1; filePath=$2; expectedHash=$3
@@ -226,10 +236,18 @@ selectCXX()
 
 # Preparation
 UNAME="$(uname)"
+ARCH="$(uname -m)"
+
+# Force using system utilities for building vcpkg if host arch is arm, arm64, or s390x.
+if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" ]; then
+    vcpkgUseSystem=true
+fi
 
 if $vcpkgUseSystem; then
     cmakeExe="cmake"
     ninjaExe="ninja"
+    vcpkgCheckBuildTool "$cmakeExe"
+    vcpkgCheckBuildTool "$ninjaExe"
 else
     fetchTool "cmake" "$UNAME" cmakeExe || exit 1
     fetchTool "ninja" "$UNAME" ninjaExe || exit 1

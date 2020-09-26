@@ -1,16 +1,17 @@
 #pragma once
 
+#include <vcpkg/base/cstringview.h>
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/optional.h>
+#include <vcpkg/base/system.process.h>
+
 #include <vcpkg/cmakevars.h>
+#include <vcpkg/commands.integrate.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/triplet.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
-
-#include <vcpkg/base/cstringview.h>
-#include <vcpkg/base/files.h>
-#include <vcpkg/base/optional.h>
-#include <vcpkg/base/system.process.h>
 
 #include <array>
 #include <map>
@@ -129,6 +130,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class Editable
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -139,6 +146,7 @@ namespace vcpkg::Build
         CleanDownloads clean_downloads;
         DownloadTool download_tool;
         PurgeDecompressFailure purge_decompress_failure;
+        Editable editable;
     };
 
     static constexpr BuildPackageOptions default_build_package_options{
@@ -150,6 +158,7 @@ namespace vcpkg::Build
         Build::CleanDownloads::NO,
         Build::DownloadTool::BUILT_IN,
         Build::PurgeDecompressFailure::YES,
+        Build::Editable::NO,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
@@ -337,5 +346,12 @@ namespace vcpkg::Build
 #endif
 
         bool m_compiler_tracking;
+    };
+
+    struct BuildCommand : Commands::TripletCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const override;
     };
 }

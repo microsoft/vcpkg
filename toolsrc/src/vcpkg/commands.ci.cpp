@@ -1,21 +1,22 @@
-#include "pch.h"
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/commands.ci.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
-#include <vcpkg/platform-expression.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/paragraphs.h>
+#include <vcpkg/platform-expression.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
@@ -32,7 +33,7 @@ namespace
         fs::path base_path;
 
     public:
-        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) {}
+        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) { }
 
         virtual void record_build_result(const VcpkgPaths& paths,
                                          const PackageSpec& spec,
@@ -81,11 +82,11 @@ namespace vcpkg::Commands::CI
         Install::InstallSummary summary;
     };
 
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
-    static constexpr StringLiteral OPTION_FAILURE_LOGS = "--failure-logs";
-    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
-    static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_EXCLUDE = "exclude";
+    static constexpr StringLiteral OPTION_FAILURE_LOGS = "failure-logs";
+    static constexpr StringLiteral OPTION_XUNIT = "x-xunit";
+    static constexpr StringLiteral OPTION_RANDOMIZE = "x-randomize";
 
     static constexpr std::array<CommandSetting, 3> CI_SETTINGS = {
         {{OPTION_EXCLUDE, "Comma separated list of ports to skip"},
@@ -404,7 +405,7 @@ namespace vcpkg::Commands::CI
         if (args.binary_caching_enabled())
         {
             binaryproviderStorage =
-                create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+                create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
         }
 
         IBinaryProvider& binaryprovider = binaryproviderStorage ? *binaryproviderStorage : null_binary_provider();
@@ -457,9 +458,7 @@ namespace vcpkg::Commands::CI
         XunitTestResults xunitTestResults;
 
         std::vector<std::string> all_ports =
-            Util::fmap(provider.load_all_control_files(), [](const SourceControlFileLocation*& scfl) -> std::string {
-                return scfl->source_control_file.get()->core_paragraph->name;
-            });
+            Util::fmap(provider.load_all_control_files(), Paragraphs::get_name_of_control_file);
         std::vector<TripletAndSummary> results;
         auto timer = Chrono::ElapsedTimer::create_started();
         for (Triplet triplet : triplets)
@@ -577,5 +576,12 @@ namespace vcpkg::Commands::CI
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void CICommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                     const VcpkgPaths& paths,
+                                     Triplet default_triplet) const
+    {
+        CI::perform_and_exit(args, paths, default_triplet);
     }
 }

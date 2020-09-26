@@ -30,10 +30,10 @@ vcpkg_from_github(
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCUDA.cmake DESTINATION ${SOURCE_PATH}/cmake/)  #contains fixes for CUDA 11 compat, remove when CMake has support for it
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"     WITH_CUDA
- "cuda"     WITH_CUBLAS
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
  "jasper"   WITH_JASPER
@@ -105,6 +105,7 @@ vcpkg_configure_cmake(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENMP=OFF
         -DWITH_ZLIB=ON
+        -DWITH_CUBLAS=OFF   # newer libcublas cannot be found by the old cuda cmake script in opencv2, requires a fix
 )
 
 vcpkg_install_cmake()
@@ -115,7 +116,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
+find_package(CUDA QUIET)
+find_package(Threads QUIET)
 find_package(PNG QUIET)
+find_package(OpenEXR QUIET)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
 find_package(TIFF QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
