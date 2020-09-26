@@ -15,7 +15,7 @@ The location where the binary caching archives are stored. Shared across runs of
 .PARAMETER WorkingRoot
 The location used as scratch space for 'installed', 'packages', and 'buildtrees' vcpkg directories.
 
-.PARAMETER ArtifactsDirectory
+.PARAMETER ArtifactStagingDirectory
 The Azure Pipelines artifacts directory. If not supplied, defaults to the current directory.
 
 .PARAMETER BuildReason
@@ -35,7 +35,7 @@ Param(
     [ValidateNotNullOrEmpty()]
     $WorkingRoot,
     [ValidateNotNullOrEmpty()]
-    $ArtifactsDirectory = '.',
+    $ArtifactStagingDirectory = '.',
     $BuildReason = $null
 )
 
@@ -83,11 +83,11 @@ else {
     $executableExtension = '.exe'
 }
 
-$xmlResults = Join-Path $ArtifactsDirectory 'xml-results'
+$xmlResults = Join-Path $ArtifactStagingDirectory 'xml-results'
 mkdir $xmlResults
 $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
-$failureLogs = Join-Path $ArtifactsDirectory 'failure-logs'
+$failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
