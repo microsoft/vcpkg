@@ -51,23 +51,27 @@ namespace
         Checks::check_exit(VCPKG_LINE_INFO, created_last, "unable to clear path: %s", fs::u8string(dir));
     }
 
+    static System::ExitCodeAndOutput decompress_archive(const VcpkgPaths& paths,
+                                                        const fs::path& dst,
+                                                        const fs::path& archive_path)
+    {
+#if defined(_WIN32)
+        auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
+        auto cmd = Strings::format(
+            R"("%s" x "%s" -o"%s" -y)", fs::u8string(seven_zip_exe), fs::u8string(archive_path), fs::u8string(dst));
+#else
+        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", fs::u8string(archive_path), fs::u8string(dst));
+#endif
+        return System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
+    }
+
     static System::ExitCodeAndOutput clean_decompress_archive(const VcpkgPaths& paths,
                                                               const PackageSpec& spec,
                                                               const fs::path& archive_path)
     {
         auto pkg_path = paths.package_dir(spec);
         clean_prepare_dir(paths.get_filesystem(), pkg_path);
-
-#if defined(_WIN32)
-        auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
-        auto cmd = Strings::format(R"("%s" x "%s" -o"%s" -y)",
-                                   fs::u8string(seven_zip_exe),
-                                   fs::u8string(archive_path),
-                                   fs::u8string(pkg_path));
-#else
-        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", fs::u8string(archive_path), fs::u8string(pkg_path));
-#endif
-        return System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
+        return decompress_archive(paths, pkg_path, archive_path);
     }
 
     // Compress the source directory into the destination file.
@@ -260,8 +264,7 @@ namespace
 
                     specs.push_back(action->spec);
                     auto pkgdir = paths.package_dir(action->spec);
-                    fs.remove_all(pkgdir, VCPKG_LINE_INFO);
-                    fs.create_directories(pkgdir, VCPKG_LINE_INFO);
+                    clean_prepare_dir(fs, pkgdir);
                     pkgdir /= fs::u8path(Strings::concat(*abi.get(), ".zip"));
                     url_paths.emplace_back(Strings::replace_all(std::string(url_template), "<SHA>", *abi.get()),
                                            pkgdir);
@@ -276,7 +279,8 @@ namespace
                 {
                     if (codes[i] == 200)
                     {
-                        int archive_result = clean_decompress_archive(paths, specs[i], url_paths[i].second).exit_code;
+                        int archive_result =
+                            decompress_archive(paths, paths.package_dir(specs[i]), url_paths[i].second).exit_code;
                         if (archive_result == 0)
                         {
                             // decompression success
@@ -290,12 +294,11 @@ namespace
                         }
                     }
                 }
+
+                Util::erase_remove_if(actions, [this](const Dependencies::InstallPlanAction* action) {
+                    return Util::Sets::contains(m_restored, action->spec);
+                });
             }
-
-            Util::erase_remove_if(actions, [this](const Dependencies::InstallPlanAction* action) {
-                return Util::Sets::contains(m_restored, action->spec);
-            });
-
             System::print2(
                 "Restored ", num_restored, " packages from HTTP servers. Use --debug for more information.\n");
         }
