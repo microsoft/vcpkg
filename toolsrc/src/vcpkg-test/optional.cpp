@@ -58,6 +58,16 @@ TEST_CASE ("ref conversion", "[optional]")
     REQUIRE(cref_1.get() == &x);
 }
 
+TEST_CASE ("value conversion", "[optional]")
+{
+    using vcpkg::Optional;
+
+    Optional<long> j = 1;
+    Optional<int> i = j;
+    Optional<const char*> cstr = "hello, world!";
+    Optional<std::string> cppstr = cstr;
+}
+
 TEST_CASE ("common_projection", "[optional]")
 {
     using vcpkg::Util::common_projection;
