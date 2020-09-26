@@ -330,7 +330,7 @@ namespace vcpkg::Commands::CI
 
         {
             vcpkg::System::BufferedPrint stdout_print;
-            auto precheck_results = binaryprovider.precheck(paths, action_plan.install_actions);
+            auto precheck_results = binary_provider_precheck(paths, action_plan, binaryprovider);
 
             for (auto&& action : action_plan.install_actions)
             {

@@ -15,6 +15,8 @@ jobs:
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
   - group: azblob-test-sas-group
+  - name: BINARY_SOURCE_STUB
+    value: "x-azblob,$(azblob-root-url),$(azblob-test-sas)"
 
   steps:
   - task: PowerShell@2
@@ -58,10 +60,8 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -BinarySourceStub $(BINARY_SOURCE_STUB) -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
       pwsh: true
-    env:
-      VCPKG_BINARY_SOURCES: "clear;x-azblob,$(azblob-root-url),$(azblob-test-sas),readwrite"
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'
     condition: always()

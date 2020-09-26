@@ -127,8 +127,8 @@ namespace vcpkg::Downloads
             }
 
             // Use Windows 10 defaults on Windows 7
-            DWORD secure_protocols(WINHTTP_FLAG_SECURE_PROTOCOL_SSL3 | WINHTTP_FLAG_SECURE_PROTOCOL_TLS1 |
-                                   WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_1 | WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2);
+            DWORD secure_protocols(WINHTTP_FLAG_SECURE_PROTOCOL_TLS1 | WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_1 |
+                                   WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2);
             WinHttpSetOption(
                 m_hSession.get(), WINHTTP_OPTION_SECURE_PROTOCOLS, &secure_protocols, sizeof(secure_protocols));
         }
@@ -235,22 +235,6 @@ namespace vcpkg::Downloads
     {
         static constexpr size_t batch_size = 100;
 
-        // Checks::check_exit(VCPKG_LINE_INFO, Strings::starts_with(url, "https://"));
-        // auto url_no_proto = url.substr(8); // drop https://
-        // auto path_begin = Util::find(url_no_proto, '/');
-        // std::string hostname(url_no_proto.begin(), path_begin);
-        // std::string path(path_begin, url_no_proto.end());
-
-        // static WinHttpSession s_session;
-        // static Util::LockGuarded<Cache<std::string, WinHttpConnection>> s_conn_map;
-        // const auto& conn = [&hostname]() -> const WinHttpConnection& {
-        //    auto l = s_conn_map.lock();
-        //    return l->get_lazy(hostname,
-        //                       [&hostname] { return WinHttpConnection(s_session.m_hSession.get(), hostname); });
-        //}();
-        // WinHttpRequest req(conn.m_hConnect.get(), path);
-        // req.forall_data([&](Span<char> span) { System::print2(StringView(span.data(), span.size())); });
-
         std::vector<int> ret;
 
         size_t i = 0;
@@ -308,16 +292,11 @@ namespace vcpkg::Downloads
         static constexpr StringLiteral guid_marker = "9a1db05f-a65d-419b-aa72-037fb4d0672e";
 
         System::CmdLineBuilder cmd;
-        cmd.string_arg("curl")
-            .string_arg("-X")
-            .string_arg("PUT")
-            .string_arg("-w")
-            .string_arg(Strings::concat("\\n", guid_marker, "%{http_code}"))
-            .string_arg(url)
-            .string_arg("-T")
-            .path_arg(file)
-            .string_arg("-H")
-            .string_arg("x-ms-blob-type: BlockBlob");
+        cmd.string_arg("curl").string_arg("-X").string_arg("PUT");
+        cmd.string_arg("-w").string_arg(Strings::concat("\\n", guid_marker, "%{http_code}"));
+        cmd.string_arg(url);
+        cmd.string_arg("-T").path_arg(file);
+        cmd.string_arg("-H").string_arg("x-ms-blob-type: BlockBlob");
         int code = 0;
         auto res = System::cmd_execute_and_stream_lines(cmd, [&code](const std::string& line) {
             if (Strings::starts_with(line, guid_marker))

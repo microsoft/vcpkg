@@ -10,7 +10,10 @@ Runs the 'Test Modified Ports' part of the vcpkg CI system for all platforms.
 The triplet to test.
 
 .PARAMETER ArchivesRoot
-The location where the binary caching archives are stored. Shared across runs of this script.
+Equivalent to '-BinarySourceStub "files,$ArchivesRoot"'
+
+.PARAMETER BinarySourceStub
+The type and parameters of the binary source. Shared across runs of this script. Example: "files,W:\"
 
 .PARAMETER WorkingRoot
 The location used as scratch space for 'installed', 'packages', and 'buildtrees' vcpkg directories.
@@ -28,9 +31,12 @@ Param(
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     [string]$Triplet,
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $true, ParameterSetName='ArchivesRoot')]
     [ValidateNotNullOrEmpty()]
     $ArchivesRoot,
+    [Parameter(Mandatory = $true, ParameterSetName='BinarySourceStub')]
+    [ValidateNotNullOrEmpty()]
+    $BinarySourceStub,
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     $WorkingRoot,
@@ -69,8 +75,10 @@ else {
     Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
     $binaryCachingMode = 'write'
 }
-
-#$commonArgs += @("--x-binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
+if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
+    $BinarySourceStub = "files,$ArchivesRoot"
+}
+$commonArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
 
 if ($Triplet -eq 'x64-linux') {
     $env:HOME = '/home/agent'
