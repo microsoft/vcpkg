@@ -47,9 +47,20 @@ vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x264.pc")
+    if(EXISTS "${pcfile}")
+        vcpkg_replace_string("${pcfile}" "-lx264" "-llibx264")
+    endif()
+    set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x264.pc")
+    if(EXISTS "${pcfile}")
+        vcpkg_replace_string("${pcfile}" "-lx264" "-llibx264")
+    endif()
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/lib/x264.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/x264.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/lib/libx264.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.lib)
 else()
     # force U_STATIC_IMPLEMENTATION macro
     file(READ ${CURRENT_PACKAGES_DIR}/include/x264.h HEADER_CONTENTS)

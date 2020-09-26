@@ -1,6 +1,7 @@
-# Vcpkg 总览
+# Vcpkg: 总览
 
-## 概要
+[English Overview](README.md)
+
 Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 这个工具和生态链正在不断发展，我们一直期待您的贡献！
 
@@ -17,8 +18,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 
 # 目录
 
-- [Vcpkg 总览](#vcpkg-总览)
-  - [概要](#概要)
+- [Vcpkg: 总览](#vcpkg-总览)
 - [目录](#目录)
 - [入门](#入门)
   - [快速开始: Windows](#快速开始-windows)
@@ -31,7 +31,6 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
     - [Visual Studio CMake 工程中使用 vcpkg](#visual-studio-cmake-工程中使用-vcpkg)
     - [CLion 中使用 vcpkg](#clion-中使用-vcpkg)
     - [将 vcpkg 作为一个子模块](#将-vcpkg-作为一个子模块)
-  - [快速开始: 清单](#快速开始-清单)
 - [Tab补全/自动补全](#tab补全自动补全)
   - [示例](#示例)
   - [贡献者](#贡献者)
@@ -53,7 +52,7 @@ vcpkg团队和贡献者可以看到它的地方，
 安装并运行vcpkg后，
 您可能希望将 [TAB补全](#tab补全自动补全) 添加到您的Shell中。
 
-最后，如果您对vcpkg的未来感兴趣，请查看 [清单](#快速开始-清单)！
+最后，如果您对vcpkg的未来感兴趣，请查看 [清单][getting-started:manifest-spec]！
 这是一项实验性功能，可能会出现错误。
 因此，请尝试一下并[打开所有问题][contributing:submit-issue]!
 
@@ -91,14 +90,14 @@ vcpkg团队和贡献者可以看到它的地方，
 > .\vcpkg\vcpkg integrate install
 ```
 
-在此之后， 您可以创建一个非cmake项目 (或打开已有的项目)。
+在此之后，您可以创建一个非cmake项目 (或打开已有的项目)。
 在您的项目中，所有已安装的库均可立即使用 `#include` 包含您需使用的库的头文件并无需添加额外配置。
 
 若您在 Visual Studio 中使用cmake工程，请查阅[这里](#visual-studio-cmake-工程中使用-vcpkg)。
 
-为了在IDE以外在cmake中使用vcpkg， 您需要使用以下工具链文件:
+为了在IDE以外在cmake中使用vcpkg，您需要使用以下工具链文件:
 
-```
+```cmd
 > cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
 > cmake --build [build directory]
 ```
@@ -140,11 +139,11 @@ $ ./vcpkg/vcpkg install [packages to install]
 $ ./vcpkg/vcpkg search [search term]
 ```
 
-为了在cmake中使用vcpkg， 您需要使用以下工具链文件:
+为了在cmake中使用vcpkg，您需要使用以下工具链文件:
 
-```
-> cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
-> cmake --build [build directory]
+```sh
+$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake --build [build directory]
 ```
 
 在cmake中，您仍需通过 `find_package` 来使用第三方库。
@@ -158,7 +157,7 @@ $ ./vcpkg/vcpkg search [search term]
 
 在Linux的不同发行版中，您需要安装不同的工具包:
 
-- Debian， Ubuntu， popOS， 或其他基于 Debian 的发行版:
+- Debian，Ubuntu，popOS或其他基于 Debian 的发行版:
 
 ```sh
 $ sudo apt-get update
@@ -174,7 +173,7 @@ $ scl enable devtoolset-7 bash
 ```
 
 对于其他的发行版，请确保已安装 g++ 6 或更新的版本。
-若您希望添加特定发行版的说明， [请提交一个 PR][contributing:submit-pr]!
+若您希望添加特定发行版的说明，[请提交一个 PR][contributing:submit-pr]!
 
 ## 安装 macOS Developer Tools
 
@@ -192,7 +191,7 @@ $ xcode-select --install
 ### 在 macOS 10.15 之前版本中安装 GCC
 
 此条只在您的macOS版本低于 10.15 时是必须的。
-安装homebrew应当很轻松， 请查阅 <brew.sh> 以获取更多信息。
+安装homebrew应当很轻松，请查阅 <brew.sh> 以获取更多信息。
 为了更简便，请使用以下命令:
 
 ```sh
@@ -209,7 +208,7 @@ $ brew install gcc
 
 ## 在 CMake 中使用 vcpkg
 
-若您希望在CMake中使用vcpkg， 以下内容可能帮助您：
+若您希望在CMake中使用vcpkg，以下内容可能帮助您：
 
 ### Visual Studio Code 中的 CMake Tools
 
@@ -234,15 +233,15 @@ $ brew install gcc
 ### CLion 中使用 vcpkg
 
 打开 Toolchains 设置
-(File > Settings on Windows and Linux， CLion > Preferences on macOS)，
-并打开 CMake 设置 (Build， Execution， Deployment > CMake)。
+(File > Settings on Windows and Linux, CLion > Preferences on macOS)，
+并打开 CMake 设置 (Build, Execution, Deployment > CMake)。
 最后在 `CMake options` 中添加以下行:
 
 ```
 -DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
-遗憾的是， 您必须手动将此选项加入每个项目配置文件中。
+遗憾的是，您必须手动将此选项加入每个项目配置文件中。
 
 ### 将 vcpkg 作为一个子模块
 
@@ -257,43 +256,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 
 使用此种方式可无需设置 `CMAKE_TOOLCHAIN_FILE` 即可使用vcpkg，且更容易完成配置工作。
 
-## 快速开始: 清单
-
-如果您期待vcpkg在未来会更好，我们真的很感激😄。
-但是，首先要警告：vcpkg中的清单支持仍处于beta中！
-通常，vcpkg可以正常工作，但您很可能会在使用时遇到至少一个或两个错误。
-另外，我们可能会在稳定之前更改vcpkg的各个功能，请提前知悉。
-如果您遇到任何错误，请[提交一个issue][contributing:submit-issue]！
-
-首先，在 [Windows](#快速开始-windows) 或 [Unix](#快速开始-unix) 正常安装vcpkg。
-您可能希望将vcpkg安装在常用的位置，由于安装的目录位于本地，并且可以从同一vcpkg目录中同时运行多个vcpkg命令。
-
-然后，您必须通过将 `manifests` 添加到以逗号分隔的 `--feature-flags` 选项中来打开 `manifests` vcpkg功能标记，
-或将其添加到以逗号分隔的 `VCPKG_FEATURE_FLAGS` 环境变量中。
-
-您也可能希望添加vcpkg路径至环境变量 `PATH` 中。
-这时，我们要做的就是创建清单。
-创建一个名为 `vcpkg.json` 的文件，然后添加以下内容：
-
-```json
-{
-  "name": "<name of your project>",
-  "version-string": "<version of your project>",
-  "dependencies": [
-    "abseil",
-    "boost"
-  ]
-}
-```
-
-您所安装的库将生成在 `vcpkg_installed` 文件夹中，并与您的 `vcpkg.json` 所在的文件夹相同。
-如果您可以使用常规的 CMake toolchain 或 Visual Studio / MSBuild 集成，
-它将自动安装依赖项，您需要将MSBuild的 `VcpkgManifestEnabled` 设置为 `On`。
-如果您希望不使用 CMake 或 MSBuild 来安装依赖项，您可以使用命令 `vcpkg install --feature-flags = manifests` 。
-
-请查阅 [清单][getting-started:manifest-spec] 获取更多信息。
-
-[getting-started:using-a-package]: docs/examples/intalling-and-using-packages.md
+[getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
@@ -315,7 +278,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 
 或
 
-```
+```sh
 $ ./vcpkg integrate bash
 ```
 

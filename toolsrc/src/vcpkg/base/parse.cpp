@@ -66,10 +66,15 @@ namespace vcpkg::Parse
         {
             return Unicode::end_of_file;
         }
+        auto ch = *m_it;
         // See https://www.gnu.org/prep/standards/standards.html#Errors
-        advance_rowcol(*m_it, m_row, m_column);
+        advance_rowcol(ch, m_row, m_column);
 
         ++m_it;
+        if (ch == '\n')
+        {
+            m_start_of_line = m_it;
+        }
         if (m_it != m_it.end() && Unicode::utf16_is_surrogate_code_point(*m_it))
         {
             m_it = m_it.end();

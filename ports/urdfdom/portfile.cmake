@@ -11,6 +11,7 @@ vcpkg_from_github(
   PATCHES
     0001_use_math_defines.patch
     0002_fix_exports.patch
+    0003_import_prefix.patch
 )
 
 vcpkg_configure_cmake(

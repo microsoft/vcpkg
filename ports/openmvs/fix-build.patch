@@ -1,5 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7966ed5..4e0f673 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -63,7 +63,7 @@ INCLUDE_DIRECTORIES("${OpenMVS_SOURCE_DIR}")
@@ -132,8 +130,6 @@ index f4914bf..23d03e6 100644
              ["Incremental reconstruction",   # 3
               os.path.join(OPENMVG_BIN, "openMVG_main_IncrementalSfM"),
               ["-i", "%matches_dir%/sfm_data.json", "-m", "%matches_dir%", "-o", "%reconstruction_dir%"]],
-diff --git a/apps/Viewer/CMakeLists.txt b/apps/Viewer/CMakeLists.txt
-index c519040..934cd50 100644
 --- a/apps/Viewer/CMakeLists.txt
 +++ b/apps/Viewer/CMakeLists.txt
 @@ -16,18 +16,6 @@ else()
@@ -163,11 +159,9 @@ index c519040..934cd50 100644
  
  # List sources files
  FILE(GLOB PCH_C "Common.cpp")
-diff --git a/build/OpenMVSConfig.cmake.in b/build/OpenMVSConfig.cmake.in
-index 96b8fe2..454e846 100644
 --- a/build/OpenMVSConfig.cmake.in
 +++ b/build/OpenMVSConfig.cmake.in
-@@ -3,16 +3,70 @@
+@@ -3,16 +3,71 @@
  #  OpenMVS_INCLUDE_DIRS - include directories for OpenMVS
  #  OpenMVS_LIBRARIES    - libraries to link against
  #  OpenMVS_BINARIES     - the binaries
@@ -217,6 +211,7 @@ index 96b8fe2..454e846 100644
 +include_directories(${Boost_INCLUDE_DIRS})
 +find_dependency(Eigen3)
 +add_definitions(${EIGEN3_DEFINITIONS} -D_USE_EIGEN)
++include_directories(${EIGEN3_INCLUDE_DIRS})
 +find_dependency(OpenCV)
 +add_definitions(${OpenCV_DEFINITIONS})
 +find_dependency(CGAL)
@@ -241,8 +236,6 @@ index 96b8fe2..454e846 100644
  # These are IMPORTED targets created by OpenMVSTargets.cmake
  set(OpenMVS_LIBRARIES MVS)
  set(OpenMVS_BINARIES InterfaceVisualSFM DensifyPointCloud ReconstructMesh RefineMesh TextureMesh)
-diff --git a/build/Utils.cmake b/build/Utils.cmake
-index f41c9d8..31cd292 100644
 --- a/build/Utils.cmake
 +++ b/build/Utils.cmake
 @@ -160,7 +160,7 @@ macro(GetOperatingSystemArchitectureBitness)
@@ -325,8 +318,6 @@ index f41c9d8..31cd292 100644
  	# Make relative paths absolute (needed later on)
  	foreach(p LIB BIN INCLUDE CMAKE)
  		set(var INSTALL_${p}_DIR)
-diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
-index 2e6c1a4..6e1fa95 100644
 --- a/libs/Common/CMakeLists.txt
 +++ b/libs/Common/CMakeLists.txt
 @@ -18,6 +18,7 @@ set_target_pch(Common Common.h)
@@ -337,8 +328,6 @@ index 2e6c1a4..6e1fa95 100644
  
  # Install
  SET_TARGET_PROPERTIES(Common PROPERTIES
-diff --git a/libs/IO/CMakeLists.txt b/libs/IO/CMakeLists.txt
-index a354376..4fd478c 100644
 --- a/libs/IO/CMakeLists.txt
 +++ b/libs/IO/CMakeLists.txt
 @@ -43,7 +43,8 @@ cxx_library_with_type_no_pch(IO "Libs" "STATIC" "${cxx_default}"
@@ -351,8 +340,6 @@ index a354376..4fd478c 100644
  
  # Install
  SET_TARGET_PROPERTIES(IO PROPERTIES
-diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
-index 14be620..867cfd5 100644
 --- a/libs/MVS/CMakeLists.txt
 +++ b/libs/MVS/CMakeLists.txt
 @@ -1,12 +1,12 @@
@@ -394,8 +381,6 @@ index 14be620..867cfd5 100644
  
  # Install
  SET_TARGET_PROPERTIES(MVS PROPERTIES
-diff --git a/libs/Math/CMakeLists.txt b/libs/Math/CMakeLists.txt
-index d592bd0..f1fe4c6 100644
 --- a/libs/Math/CMakeLists.txt
 +++ b/libs/Math/CMakeLists.txt
 @@ -35,6 +35,7 @@ set_target_pch(Math Common.h)
