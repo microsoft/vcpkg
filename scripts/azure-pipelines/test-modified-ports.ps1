@@ -75,7 +75,7 @@ else {
     Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
     $binaryCachingMode = 'write'
 }
-if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
+if (![string]::IsNullOrWhiteSpace($ArchivesRoot)) {
     $BinarySourceStub = "files,$ArchivesRoot"
 }
 $commonArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
