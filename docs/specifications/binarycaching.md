@@ -1,4 +1,6 @@
-# Binary Caching v1.1 
+# Binary Caching v1.1 (Jul 14, 2020)
+
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
 
 ## Motivation
 

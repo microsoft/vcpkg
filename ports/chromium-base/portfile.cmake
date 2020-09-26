@@ -68,7 +68,8 @@ file(COPY "${RES}/test_fonts" DESTINATION "${SOURCE_PATH}/third_party")
 set(OPTIONS "\
     use_custom_libcxx=false \
     clang_use_chrome_plugins=false \
-    forbid_non_component_debug_builds=false")
+    forbid_non_component_debug_builds=false \
+    treat_warnings_as_errors=false")
 set(DEFINITIONS "")
 
 if(WIN32)
@@ -76,7 +77,7 @@ if(WIN32)
     # https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk
     SET(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
     set(ENV{DEPOT_TOOLS_WIN_TOOLCHAIN} 0)
-    set(OPTIONS "${OPTIONS} treat_warnings_as_errors=false use_lld=false")
+    set(OPTIONS "${OPTIONS} use_lld=false")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux)
