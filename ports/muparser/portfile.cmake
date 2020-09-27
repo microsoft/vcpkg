@@ -13,7 +13,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS 
         -DENABLE_SAMPLES=OFF
-        -DUSE_PKGCONFIG=OFF
         -DENABLE_OPENMP=OFF
     OPTIONS_DEBUG 
         -DDISABLE_INSTALL_HEADERS=ON
