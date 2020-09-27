@@ -3,18 +3,27 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kpu/kenlm
-    REF 689a25aae9171b3ea46bd80d4189f540f35f1a02
-    SHA512 a1d3521b3458c791eb1242451b4eaafda870f68b5baeb359549eba10ed69ca417eeaaac95fd0d48350852661af7688c6b640361e9f70af57ae24d261c4ac0b85
+    REF a900efaee160c80dc19ec065f603d7f1d28196ed
+    SHA512 8c2b86670df0266d1dc411dfda7ce568a27461c889fb4bbdb6b9d11fc42a62ef3e7e61d464ef4015dd04355fca1cc44ed4d0d589bf789a5e8320b9126d35fb9f
     HEAD_REF master
     PATCHES fix-build-install.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindEigen3.cmake)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    interpolate ENABLE_INTERPOLATE
+)
+
+if ("interpolate" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature interpolate only support unix.")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DFORCE_STATIC=OFF #already handled by vcpkg
         -DENABLE_PYTHON=OFF # kenlm.lib(bhiksha.cc.obj) : fatal error LNK1000: Internal error during IMAGE::Pass2
         -DCOMPILE_TESTS=OFF

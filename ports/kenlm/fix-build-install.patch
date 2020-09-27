@@ -1,27 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ecd6032..78d1f8b 100644
+index ecd6032..623b74f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -43,7 +43,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
- # Compile all libraries into lib/
- set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.1)
+ project(kenlm)
  
--if (NOT CMAKE_BUILD_TYPE)
-+if (0)
-   set(CMAKE_BUILD_TYPE Release)
- endif()
- 
+ option(FORCE_STATIC "Build static executables" OFF)
++option(ENABLE_INTERPOLATE "Build interpolation program" OFF)
+ if (FORCE_STATIC)
+   #presumably overkill, is there a better way?
+   #http://cmake.3232098.n2.nabble.com/Howto-compile-static-executable-td5580269.html
 diff --git a/lm/CMakeLists.txt b/lm/CMakeLists.txt
-index 069c6aa..395815b 100644
+index e82cdc8..395815b 100644
 --- a/lm/CMakeLists.txt
 +++ b/lm/CMakeLists.txt
-@@ -32,11 +32,20 @@ add_subdirectory(common)
- 
- add_library(kenlm ${KENLM_LM_SOURCE} ${KENLM_LM_COMMON_SOURCE})
- set_target_properties(kenlm PROPERTIES POSITION_INDEPENDENT_CODE ON)
--target_link_libraries(kenlm kenlm_util ${Boost_LIBRARIES} Threads::Threads)
-+target_link_libraries(kenlm PUBLIC kenlm_util ${Boost_LIBRARIES} Threads::Threads)
- 
+@@ -37,6 +37,15 @@ target_link_libraries(kenlm PUBLIC kenlm_util ${Boost_LIBRARIES} Threads::Thread
  set(KENLM_MAX_ORDER 6 CACHE STRING "Maximum supported ngram order")
  target_compile_definitions(kenlm PUBLIC -DKENLM_MAX_ORDER=${KENLM_MAX_ORDER})
  
@@ -55,13 +48,13 @@ index 069c6aa..395815b 100644
  
  AddExes(EXES ${EXE_LIST}
 diff --git a/lm/interpolate/CMakeLists.txt b/lm/interpolate/CMakeLists.txt
-index f6ea116..26a7ad0 100644
+index 91867e2..4fb17ff 100644
 --- a/lm/interpolate/CMakeLists.txt
 +++ b/lm/interpolate/CMakeLists.txt
 @@ -1,7 +1,8 @@
 -find_package(Eigen3)
-+if (UNIX)
-+find_package(Eigen3 CONFIG REQUIRED)
++if (ENABLE_INTERPOLATE)
++find_package(Eigen3 3.1.0 CONFIG REQUIRED)
  
 -if(EIGEN3_FOUND)
 -  if (3.1.0 VERSION_LESS ${EIGEN3_VERSION})
@@ -74,7 +67,7 @@ index f6ea116..26a7ad0 100644
      endif()
  
      add_library(kenlm_interpolate ${KENLM_INTERPOLATE_SOURCE})
--    target_link_libraries(kenlm_interpolate kenlm)
+-    target_link_libraries(kenlm_interpolate PUBLIC kenlm)
 +    target_link_libraries(kenlm_interpolate PUBLIC kenlm Eigen3::Eigen)
  
      set(KENLM_INTERPOLATE_EXES
@@ -95,23 +88,19 @@ index f6ea116..26a7ad0 100644
  
      AddExes(EXES ${KENLM_INTERPOLATE_EXES}
              LIBRARIES ${KENLM_INTERPOLATE_LIBS})
-@@ -57,3 +67,6 @@ else()
+@@ -57,3 +67,4 @@ else()
        "(cd $HOME; wget -O - https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.bz2 |tar xj)\n"
        "rm CMakeCache.txt\n")
  endif()
-+else()
-+  message(STATUS "interpolation only support UNIX.")
 +endif()
+\ No newline at end of file
 diff --git a/util/CMakeLists.txt b/util/CMakeLists.txt
-index 3f28c92..97d5448 100644
+index 87f189d..97d5448 100644
 --- a/util/CMakeLists.txt
 +++ b/util/CMakeLists.txt
-@@ -64,10 +64,21 @@ endif()
- # Group these objects together for later use.
- add_library(kenlm_util ${KENLM_UTIL_DOUBLECONVERSION_SOURCE} ${KENLM_UTIL_STREAM_SOURCE} ${KENLM_UTIL_SOURCE})
+@@ -66,8 +66,19 @@ add_library(kenlm_util ${KENLM_UTIL_DOUBLECONVERSION_SOURCE} ${KENLM_UTIL_STREAM
  set_target_properties(kenlm_util PROPERTIES POSITION_INDEPENDENT_CODE ON)
--target_link_libraries(kenlm_util ${Boost_LIBRARIES} ${READ_COMPRESSED_LIBS} Threads::Threads ${RT})
-+target_link_libraries(kenlm_util PUBLIC ${Boost_LIBRARIES} ${READ_COMPRESSED_LIBS} Threads::Threads ${RT})
+ target_link_libraries(kenlm_util PUBLIC ${Boost_LIBRARIES} ${READ_COMPRESSED_LIBS} Threads::Threads ${RT})
  
 +if (UNIX)
  AddExes(EXES probing_hash_table_benchmark

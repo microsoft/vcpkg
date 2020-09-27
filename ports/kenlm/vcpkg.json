@@ -17,5 +17,16 @@
     },
     "liblzma",
     "zlib"
-  ]
+  ],
+  "features": {
+    "interpolate": {
+      "description": "Build interpolation program",
+      "dependencies": [
+        {
+          "name": "eigen3",
+          "platform": "!windows"
+        }
+      ]
+    }
+  }
 }
