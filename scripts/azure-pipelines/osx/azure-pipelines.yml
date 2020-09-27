@@ -5,8 +5,7 @@
 jobs:
 - job: x64_osx
   pool:
-    name: vcpkgAgentPool
-    demands: Agent.OS -equals Darwin
+    name: ${{ parameters.poolName }}
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
@@ -19,16 +18,6 @@ jobs:
   steps:
   - bash: df -h
     displayName: 'Report on Disk Space'
-  - bash: |
-      brew list autoconf || brew install autoconf
-      brew list automake || brew install automake
-      brew list pkg-config || brew install pkg-config
-      brew list libtool || brew install libtool
-      brew list bison || brew install bison
-      brew list gfortran || brew cask install gfortran
-      brew list mono || brew install mono
-      brew list yasm || brew install yasm
-    displayName: 'Install brew dependencies'
   - bash: |
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} || 0
       sudo chmod 777 ${{ variables.VCPKG_DOWNLOADS }} || 0
