@@ -349,6 +349,8 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
   if (NOT MAKE)
       message(FATAL_ERROR "MAKE not found")
   endif()
+  
+  set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
 
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     ################
