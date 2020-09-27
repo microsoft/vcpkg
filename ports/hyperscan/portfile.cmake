@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF v${HYPERSCAN_VERSION}
     SHA512 e6ac2aef1f3efa1535c00d73fa590ea62fff4686c4ad3ee023d2e72c51896ca4616ec1b85d7c6f88ac7b42d92c3557b9c4bb3b51cfb796e20a79d53b28e53b6c
     HEAD_REF master
+    PATCHES
+        0001-remove-Werror.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
