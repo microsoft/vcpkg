@@ -13,7 +13,7 @@
 ## ```
 ##
 ## ## Parameters:
-## ### SOURCE_PATH
+## ### SOURCE_PATH (required)
 ## The path to the GN project.
 ##
 ## ### OPTIONS
