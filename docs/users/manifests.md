@@ -225,7 +225,7 @@ although `vcpkg search` is still useful.
 Since manifest mode is still in beta, you'll need to pass a feature flag: `manifests`.
 There are a few ways to pass this feature flag:
 
-* `--feature-flag` option: On any vcpkg command, you can pass `--feature-flag=manifests`
+* `--feature-flags` option: On any vcpkg command, you can pass `--feature-flags=manifests`
 * `VCPKG_FEATURE_FLAGS` environment variable: one can set the environment variable `VCPKG_FEATURE_FLAGS` to
   `manifests`.
 
