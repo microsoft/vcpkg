@@ -46,7 +46,20 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# These targets are provided for backwards compatibility with previous vcpkg versions
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-gettext TARGET_PATH share/unofficial-gettext)
+file(GLOB DEBUG_LIBS LIST_DIRECTORIES false RELATIVE "${CURRENT_PACKAGES_DIR}" ${CURRENT_PACKAGES_DIR}/debug/lib/*)
+file(GLOB RELEASE_LIBS LIST_DIRECTORIES false RELATIVE "${CURRENT_PACKAGES_DIR}" ${CURRENT_PACKAGES_DIR}/lib/*)
+set(Intl_LIBRARY)
+foreach(RELEASE_LIB IN LISTS RELEASE_LIBS)
+    list(APPEND Intl_LIBRARY optimized "\${CMAKE_CURRENT_LIST_DIR}/../../${RELEASE_LIB}")
+endforeach()
+foreach(DEBUG_LIB IN LISTS DEBUG_LIBS)
+    list(APPEND Intl_LIBRARY debug "\${CMAKE_CURRENT_LIST_DIR}/../../${DEBUG_LIB}")
+endforeach()
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/gettext/usage @ONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/intl/vcpkg-cmake-wrapper.cmake COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/Intl-config.cmake ${CURRENT_PACKAGES_DIR}/share/intl/Intl-config.cmake @ONLY)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)

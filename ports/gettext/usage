@@ -1,0 +1,5 @@
+The package gettext:@TARGET_TRIPLET@ is compatible with built-in CMake targets:
+
+    find_package(Intl REQUIRED)
+    target_link_libraries(main PRIVATE ${Intl_LIBRARIES})
+    target_include_directories(main PRIVATE ${Intl_INCLUDE_DIRS})

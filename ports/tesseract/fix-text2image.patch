@@ -21,7 +21,7 @@ index 8fd96a9..186341e 100644
  if (CPPAN_BUILD)
  target_link_libraries       (unicharset_training common_training pvt.cppan.demo.unicode.icu.i18n)
  elseif (SW_BUILD)
-@@ -253,16 +256,27 @@ if (NOT CPPAN_BUILD AND NOT SW_BUILD)
+@@ -253,16 +256,26 @@ if (NOT CPPAN_BUILD AND NOT SW_BUILD)
  find_package(PkgConfig)
  endif()
  
@@ -35,7 +35,6 @@ index 8fd96a9..186341e 100644
 -pkg_check_modules(FontConfig REQUIRED fontconfig)
 +find_package(unofficial-cairo CONFIG REQUIRED)
 +find_package(unofficial-glib CONFIG REQUIRED)
-+find_package(unofficial-gettext CONFIG REQUIRED)
 +find_package(unofficial-fontconfig CONFIG REQUIRED)
 +find_package(Freetype REQUIRED)
 +if(UNIX OR BUILD_SHARED_LIBS)
@@ -57,7 +56,7 @@ index 8fd96a9..186341e 100644
  set(text2image_src
      text2image.cpp
      boxchar.cpp
-@@ -285,16 +299,34 @@ set(text2image_src
+@@ -285,16 +298,32 @@ set(text2image_src
  
  add_executable              (text2image ${text2image_src})
  target_link_libraries       (text2image unicharset_training)
@@ -76,7 +75,6 @@ index 8fd96a9..186341e 100644
 +    Freetype::Freetype
 +    unofficial::glib::gio unofficial::glib::glib unofficial::glib::gmodule unofficial::glib::gobject
 +    unofficial::cairo::cairo unofficial::cairo::cairo-gobject
-+    unofficial::gettext::libintl
 +    unofficial::fontconfig::fontconfig
 +)
 +else()
@@ -89,13 +87,12 @@ index 8fd96a9..186341e 100644
 +    Freetype::Freetype
 +    unofficial::glib::gio unofficial::glib::glib unofficial::glib::gmodule unofficial::glib::gobject
 +    unofficial::cairo::cairo unofficial::cairo::cairo-gobject
-+    unofficial::gettext::libintl
 +    unofficial::fontconfig::fontconfig
 + )
  endif()
  if (CPPAN_BUILD)
  target_link_libraries       (text2image pvt.cppan.demo.gnome.pango.pangocairo)
-@@ -302,7 +334,6 @@ endif()
+@@ -302,7 +331,6 @@ endif()
  project_group               (text2image "Training Tools")
  install                     (TARGETS text2image RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
  

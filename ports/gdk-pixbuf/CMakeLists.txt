@@ -12,9 +12,8 @@ find_package(PNG REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
 find_path(GLIB_INCLUDE_DIR glib.h)
 
-find_package(unofficial-gettext CONFIG REQUIRED)
-find_path(LIBINTL_INCLUDE_DIR libintl.h)
-    
+find_package(Intl REQUIRED)
+
 if(WIN32)
     configure_file(${CMAKE_SOURCE_DIR}/config.h.win32 ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
 else()
@@ -62,16 +61,18 @@ if(WIN32)
 endif()
 add_library(gdk-pixbuf ${SOURCES})
 
-target_include_directories(gdk-pixbuf PRIVATE 
-    ${GLIB_INCLUDE_DIR} 
+target_include_directories(gdk-pixbuf PRIVATE
+    ${GLIB_INCLUDE_DIR}
+    ${Intl_INCLUDE_DIRS}
     ${PNG_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
-    ${LIBINTL_INCLUDE_DIR})
+)
 
 set(LIBS 
-    unofficial::glib::gio unofficial::glib::glib unofficial::glib::gmodule unofficial::glib::gobject unofficial::gettext::libintl
-    ${ZLIB_LIBRARIES} 
-    ${PNG_LIBRARIES} 
+    unofficial::glib::gio unofficial::glib::glib unofficial::glib::gmodule unofficial::glib::gobject
+    ${Intl_LIBRARIES}
+    ${ZLIB_LIBRARIES}
+    ${PNG_LIBRARIES}
 )
 if(WIN32)
     list(APPEND LIBS Gdiplus ole32)

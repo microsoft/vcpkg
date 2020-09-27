@@ -42,14 +42,7 @@ find_library(GLIB_GOBJECT_LIBRARY gobject-${GLIB_LIB_VERSION})
 find_library(GLIB_GMODULE_LIBRARY gmodule-${GLIB_LIB_VERSION})
 set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GOBJECT_LIBRARY} ${GLIB_GMODULE_LIBRARY})
 
-if (WIN32 OR APPLE)
-    find_path(LIBINTL_INCLUDE_DIR libintl.h)
-    find_library(LIBINTL_LIBRARY NAMES libintl intl)
-else()
-    find_package(Intl REQUIRED)
-    set(LIBINTL_INCLUDE_DIR ${Intl_INCLUDE_DIRS})
-    set(LIBINTL_LIBRARY ${Intl_LIBRARIES})
-endif()
+find_package(Intl REQUIRED)
 
 set(ATK_SOURCES
     atk/atkaction.c
@@ -88,8 +81,8 @@ set(ATK_SOURCES
 
 add_library(atk ${ATK_SOURCES})
 target_compile_definitions(atk PRIVATE ATK_COMPILATION ${ATK_EXPORT_MACRO} G_DISABLE_SINGLE_INCLUDES ATK_LOCALEDIR="/dummy/share/locale")
-target_link_libraries(atk ${LIBINTL_LIBRARY} ${GLIB_LIBRARIES})
-target_include_directories(atk PRIVATE ${GLIB_INCLUDE_DIR} ${LIBINTL_INCLUDE_DIR})
+target_link_libraries(atk ${GLIB_LIBRARIES} ${Intl_LIBRARIES})
+target_include_directories(atk PRIVATE ${GLIB_INCLUDE_DIR} ${Intl_INCLUDE_DIRS})
 
 set_target_properties(atk PROPERTIES 
     OUTPUT_NAME atk-${ATK_DLL_SUFFIX}
