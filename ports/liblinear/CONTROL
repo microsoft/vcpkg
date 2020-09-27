@@ -1,3 +1,5 @@
 Source: liblinear
-Version: 230
+Version: 241
+Homepage: https://github.com/cjlin1/liblinear
 Description: A Library for Large Linear Classification
+Supports: !uwp
