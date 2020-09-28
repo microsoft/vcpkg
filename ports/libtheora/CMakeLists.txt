@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(theora LANGUAGES C)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
-FIND_PACKAGE(OGG REQUIRED)
+FIND_PACKAGE(Ogg REQUIRED)
 
 file(GLOB HEADERS
   "include/theora/codec.h"
@@ -12,7 +12,7 @@ file(GLOB HEADERS
 )
 
 include_directories("include")
-include_directories(${OGG_INCLUDE_DIR})
+include_directories(${Ogg_INCLUDE_DIR})
 
 set(LIBTHEORA_COMMON
   "lib/apiwrapper.c"
@@ -75,13 +75,13 @@ add_library(theora-enc OBJECT ${LIBTHEORA_ENC} ${HEADERS})
 add_library(theora-dec OBJECT ${LIBTHEORA_DEC} ${HEADERS})
 
 add_library(theora $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> $<TARGET_OBJECTS:theora-dec> "libtheora.def")
-target_link_libraries(theora ${OGG_LIBRARY})
+target_link_libraries(theora ${Ogg_LIBRARY})
 
 add_library(theoraenc $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> "win32/xmingw32/libtheoraenc-all.def")
-target_link_libraries(theoraenc ${OGG_LIBRARY})
+target_link_libraries(theoraenc ${Ogg_LIBRARY})
 
 add_library(theoradec $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-dec> "win32/xmingw32/libtheoradec-all.def")
-target_link_libraries(theoradec ${OGG_LIBRARY})
+target_link_libraries(theoradec ${Ogg_LIBRARY})
 
 install(FILES ${HEADERS} DESTINATION include/theora)
 
