@@ -7,7 +7,9 @@ vcpkg_from_github(
     REF v1.2.11
     SHA512 104c62ed1228b5f1199bc037081861576900eb0697a226cafa62a35c4c890b5cb46622e399f9aad82ee5dfb475bae26ae75e2bd6da3d261361b1c8b996970faf
     HEAD_REF master
-    PATCHES minizip.patch # enable decrypt support for password-encrypted ZIP files
+    PATCHES
+        0001-remove-ifndef-NOUNCRYPT.patch
+        0002-add-declaration-for-mkdir.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -18,13 +20,13 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/minizipConfig.cmake.in  ${SOURCE_PATH}/
 configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt  ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
 
 vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-        OPTIONS
-            ${FEATURE_OPTIONS}
-        OPTIONS_DEBUG
-            -DDISABLE_INSTALL_HEADERS=ON
-            -DDISABLE_INSTALL_TOOLS=ON
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DDISABLE_INSTALL_HEADERS=ON
+        -DDISABLE_INSTALL_TOOLS=ON
 )
 
 vcpkg_install_cmake()
