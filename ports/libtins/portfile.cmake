@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mfontanini/libtins
-    REF v4.2
-    SHA512 46d07712604c780e418135c996f195046fd85a9e1411962c9bcee3c8d0fc64f494aa50164236ffd1e77ff8a398e9617bbf040b3e01a5771c5621c0faa1ce312f
+    REF v4.3
+    SHA512 29d606004fe9a440c9a53eede42fd5c6dbd049677d2cca2c5cfd26311ee2ca4c64ca3e665fbc81efd5bfab5577a5181ed0754c617e139317d9ae0cabba05aff7
     HEAD_REF master
 )
 
@@ -21,6 +21,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DLIBTINS_BUILD_SHARED=${LIBTINS_BUILD_SHARED}
         -DLIBTINS_ENABLE_PCAP=${ENABLE_PCAP}
+        -DLIBTINS_ENABLE_CXX11=1
 )
 
 vcpkg_install_cmake()

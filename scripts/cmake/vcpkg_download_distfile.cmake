@@ -49,11 +49,14 @@
 ## * [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
 ## * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
 ## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_download_distfile VAR)
     set(options SKIP_SHA512 SILENT_EXIT QUIET)
     set(oneValueArgs FILENAME SHA512)
     set(multipleValuesArgs URLS HEADERS)
-    cmake_parse_arguments(vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
+    cmake_parse_arguments(PARSE_ARGV 1 vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}")
 
     if(NOT DEFINED vcpkg_download_distfile_URLS)
         message(FATAL_ERROR "vcpkg_download_distfile requires a URLS argument.")
@@ -125,7 +128,7 @@ function(vcpkg_download_distfile VAR)
                     list(APPEND request_headers "--header=${header}")
                 endforeach()
             endif()
-            _execute_process(
+            vcpkg_execute_in_download_mode(
                 COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
                 -o temp/${vcpkg_download_distfile_FILENAME}
                 -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
@@ -161,7 +164,7 @@ function(vcpkg_download_distfile VAR)
                         list(APPEND request_headers HTTPHEADER ${header})
                     endforeach()
                 endif()
-                file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status ${request_headers})
+                file(DOWNLOAD "${url}" "${download_file_path_part}" STATUS download_status ${request_headers})
                 list(GET download_status 0 status_code)
                 if (NOT "${status_code}" STREQUAL "0")
                     message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")

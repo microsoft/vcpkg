@@ -1,11 +1,9 @@
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qwt/qwt
-    REF 6.1.4
-    FILENAME "qwt-6.1.4.zip"
-    SHA512 711256ec4d1d54d201650e9c63b584b17a61dbedde5a581e0b6227fdbee149cdbe2a889aa58f67777125b6471fc1fe248992ec845eb6481a2dfc2c4276701d7f
-    PATCHES fix-dynamic-static.patch
-            build.patch
+    REF 6.1.5
+    FILENAME "qwt-6.1.5.zip"
+    SHA512 249634d2032ccc8083e26f1d151b301d6ccfcc3140a2c2c469d77d3d8973bc296872a1cff96e002944c40fa558a9896ca2a0f1a0531169c3c8d0fe2240610266
 )
 
 vcpkg_configure_qmake(
@@ -24,6 +22,10 @@ else ()
         RELEASE_TARGETS sub-src-all-ordered
         DEBUG_TARGETS sub-src-all-ordered
     )
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 #Install the header files
