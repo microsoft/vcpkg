@@ -27,7 +27,11 @@ configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copy
 vcpkg_copy_pdbs()
 
 if(WIN32 AND (NOT MINGW))
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vorbis.pc" "-lm" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vorbis.pc" "-lm" "")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vorbis.pc" "-lm" "")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vorbis.pc" "-lm" "")
+    endif()
 endif()
 vcpkg_fixup_pkgconfig()
