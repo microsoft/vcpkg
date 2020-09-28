@@ -16,7 +16,6 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/similarity_search
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
