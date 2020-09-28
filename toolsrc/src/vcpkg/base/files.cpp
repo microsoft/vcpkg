@@ -1174,13 +1174,8 @@ namespace vcpkg::Files
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
-#if defined(_WIN32)
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
-            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ';');
-#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
-            static constexpr StringLiteral EXTS[] = {""};
-            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ':');
-#endif // ^^^ !defined(_WIN32)
+            auto paths = Strings::split_paths(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO));
 
             std::vector<fs::path> ret;
             std::error_code ec;
