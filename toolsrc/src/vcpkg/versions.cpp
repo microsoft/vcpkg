@@ -151,14 +151,17 @@ const ComputedVersions Versions::compute_required_versions(const std::vector<Ver
 }
 
 static System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths,
+                                                 const fs::path& dot_git_directory,
                                                  const fs::path& working_directory,
                                                  const std::string& cmd)
 {
     const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
-    const fs::path dot_git_dir = working_directory / ".git";
 
-    const std::string full_cmd =
-        Strings::format(R"("%s" --work-tree="%s" %s)", fs::u8string(git_exe), fs::u8string(working_directory), cmd);
+    const std::string full_cmd = Strings::format(R"("%s" --git-dir="%s" --work-tree="%s" %s)",
+                                                 fs::u8string(git_exe),
+                                                 fs::u8string(dot_git_directory),
+                                                 fs::u8string(working_directory),
+                                                 cmd);
 
     auto output = System::cmd_execute_and_capture_output(full_cmd);
     return output;
@@ -203,23 +206,20 @@ void Versions::fetch_port_versions(const VcpkgPaths& paths,
                                    const ComputedVersions& versions,
                                    const std::string& baseline)
 {
-    (void)baseline;
-    (void)versions;
-
     Checks::check_exit(VCPKG_LINE_INFO, versions.conflicts.empty(), "There are conflicts in the computed versions.");
 
     auto& fs = paths.get_filesystem();
-    const auto working_dir = paths.root / "vcpkg-temp";
+    const auto working_dir = paths.buildtrees / "versioning_tmp";
+    const auto no_checkout_dir = paths.root / "versioning_tmp";
 
     if (fs.exists(working_dir))
     {
         fs.remove_all(working_dir, VCPKG_LINE_INFO);
     }
 
-    auto output = run_git_command(paths, working_dir, "clone https://github.com/microsoft/vcpkg vcpkg-temp");
+    auto output = run_git_command(
+        paths, no_checkout_dir, working_dir, "clone --no-checkout https://github.com/microsoft/vcpkg versioning_tmp");
     Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to clone temporary vcpkg instance");
-
-    fs.remove_all(working_dir / "ports", VCPKG_LINE_INFO);
 
     for (auto&& versioned_package : versions.computed_versions)
     {
@@ -228,14 +228,19 @@ void Versions::fetch_port_versions(const VcpkgPaths& paths,
 
         auto port_path = working_dir / "ports" / versioned_package.package_name;
         auto cmd = Strings::format("checkout %s -- ./ports/%s", commit_id, versioned_package.package_name);
-        run_git_command(paths, working_dir, cmd);
+        run_git_command(paths, no_checkout_dir, working_dir, cmd);
     }
 
     for (auto&& baseline_package : versions.baseline_packages)
     {
         auto port_path = working_dir / "ports" / baseline_package;
         auto cmd = Strings::format("checkout %s -- ./ports/%s", baseline, baseline_package);
-        run_git_command(paths, working_dir, cmd);
+        run_git_command(paths, no_checkout_dir, working_dir, cmd);
+    }
+
+    if (fs.exists(no_checkout_dir))
+    {
+        fs.remove_all(no_checkout_dir, VCPKG_LINE_INFO);
     }
 
     Checks::exit_success(VCPKG_LINE_INFO);
