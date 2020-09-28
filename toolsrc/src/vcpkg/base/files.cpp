@@ -1177,7 +1177,7 @@ namespace vcpkg::Files
 #if defined(_WIN32)
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
 #else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
-            static constexpr StringLiteral EXTS[] = {};
+            static constexpr StringLiteral EXTS[] = {""};
 #endif // ^^^!defined(_WIN32)
             auto paths = Strings::split_paths(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO));
 
