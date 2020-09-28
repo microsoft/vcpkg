@@ -15,6 +15,18 @@
 
 using namespace vcpkg;
 
+#define REQUIRE_EQUAL_TEXT(lhs, rhs)                                                                                   \
+    {                                                                                                                  \
+        auto lhs_lines = Strings::split((lhs), '\n');                                                                  \
+        auto rhs_lines = Strings::split((rhs), '\n');                                                                  \
+        for (size_t i = 0; i < lhs_lines.size() && i < rhs_lines.size(); ++i)                                          \
+        {                                                                                                              \
+            INFO("on line: " << i);                                                                                    \
+            REQUIRE(lhs_lines[i] == rhs_lines[i]);                                                                     \
+        }                                                                                                              \
+        REQUIRE(lhs_lines.size() == rhs_lines.size());                                                                 \
+    }
+
 TEST_CASE ("reformat_version semver-ish", "[reformat_version]")
 {
     REQUIRE(reformat_version("0.0.0", "abitag") == "0.0.0-abitag");
@@ -76,18 +88,24 @@ Build-Depends: bzip
     ipa.abi_info.get()->package_abi = "packageabi";
     std::string tripletabi("tripletabi");
     ipa.abi_info.get()->triplet_abi = tripletabi;
+    Build::CompilerInfo compiler_info;
+    compiler_info.hash = "compilerhash";
+    compiler_info.id = "compilerid";
+    compiler_info.version = "compilerversion";
+    ipa.abi_info.get()->compiler_info = compiler_info;
 
     NugetReference ref(ipa);
 
     REQUIRE(ref.nupkg_filename() == "zlib2_x64-windows.1.5.0-packageabi.nupkg");
 
-    auto nuspec = generate_nuspec(paths, ipa, ref);
+    {
+        auto nuspec = generate_nuspec(paths, ipa, ref, {});
 #ifdef _WIN32
 #define PKGPATH "C:\\zlib2_x64-windows\\**"
 #else
 #define PKGPATH "/zlib2_x64-windows/**"
 #endif
-    std::string expected = R"(<package>
+        std::string expected = R"(<package>
   <metadata>
     <id>zlib2_x64-windows</id>
     <version>1.5.0-packageabi</version>
@@ -97,6 +115,9 @@ Build-Depends: bzip
 a spiffy compression library wrapper
 
 Version: 1.5
+Triplet: x64-windows
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
@@ -106,14 +127,73 @@ Dependencies:
   <files><file src=")" PKGPATH R"(" target=""/></files>
 </package>
 )";
-    auto expected_lines = Strings::split(expected, '\n');
-    auto nuspec_lines = Strings::split(nuspec, '\n');
-    for (size_t i = 0; i < expected_lines.size() && i < nuspec_lines.size(); ++i)
-    {
-        INFO("on line: " << i);
-        REQUIRE(nuspec_lines[i] == expected_lines[i]);
+        REQUIRE_EQUAL_TEXT(nuspec, expected);
     }
-    REQUIRE(nuspec_lines.size() == expected_lines.size());
+
+    {
+        auto nuspec = generate_nuspec(paths, ipa, ref, {"urlvalue"});
+#ifdef _WIN32
+#define PKGPATH "C:\\zlib2_x64-windows\\**"
+#else
+#define PKGPATH "/zlib2_x64-windows/**"
+#endif
+        std::string expected = R"(<package>
+  <metadata>
+    <id>zlib2_x64-windows</id>
+    <version>1.5.0-packageabi</version>
+    <authors>vcpkg</authors>
+    <description>NOT FOR DIRECT USE. Automatically generated cache package.
+
+a spiffy compression library wrapper
+
+Version: 1.5
+Triplet: x64-windows
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
+Triplet/Compiler hash: tripletabi
+Features: a, b
+Dependencies:
+</description>
+    <packageTypes><packageType name="vcpkg"/></packageTypes>
+    <repository type="git" url="urlvalue"/>
+  </metadata>
+  <files><file src=")" PKGPATH R"(" target=""/></files>
+</package>
+)";
+        REQUIRE_EQUAL_TEXT(nuspec, expected);
+    }
+    {
+        auto nuspec = generate_nuspec(paths, ipa, ref, {"urlvalue", "branchvalue", "commitvalue"});
+#ifdef _WIN32
+#define PKGPATH "C:\\zlib2_x64-windows\\**"
+#else
+#define PKGPATH "/zlib2_x64-windows/**"
+#endif
+        std::string expected = R"(<package>
+  <metadata>
+    <id>zlib2_x64-windows</id>
+    <version>1.5.0-packageabi</version>
+    <authors>vcpkg</authors>
+    <description>NOT FOR DIRECT USE. Automatically generated cache package.
+
+a spiffy compression library wrapper
+
+Version: 1.5
+Triplet: x64-windows
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
+Triplet/Compiler hash: tripletabi
+Features: a, b
+Dependencies:
+</description>
+    <packageTypes><packageType name="vcpkg"/></packageTypes>
+    <repository type="git" url="urlvalue" branch="branchvalue" commit="commitvalue"/>
+  </metadata>
+  <files><file src=")" PKGPATH R"(" target=""/></files>
+</package>
+)";
+        REQUIRE_EQUAL_TEXT(nuspec, expected);
+    }
 }
 
 TEST_CASE ("XmlSerializer", "[XmlSerializer]")

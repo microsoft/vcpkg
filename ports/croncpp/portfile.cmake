@@ -1,0 +1,26 @@
+
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO mariusbancila/croncpp
+  REF 11cce4666a06c40346c7ba380ddd90c53806809d #master on 9/4/2020 
+  SHA512 8f4d892ce90d8eca3711b21728bb599bf64857b20c0b143c5277687d0b6e5d5b8bf3e6dc7f9e8d028ba4e5ee711a5a9e750bcc2f771177d2f659c0c19e12207a
+  HEAD_REF master
+  PATCHES 0001-fix-cmake.patch
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+# # Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/croncpp RENAME copyright)
+
+# # Post-build test for cmake libraries
+vcpkg_test_cmake(PACKAGE_NAME croncpp)
