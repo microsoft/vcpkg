@@ -1,0 +1,11 @@
+diff --git a/proxygen/httpclient/samples/curl/CMakeLists.txt b/proxygen/httpclient/samples/curl/CMakeLists.txt
+index e7b6012..70e4caf 100644
+--- a/proxygen/httpclient/samples/curl/CMakeLists.txt
++++ b/proxygen/httpclient/samples/curl/CMakeLists.txt
+@@ -29,5 +29,5 @@ target_compile_options(
+ install(
+     TARGETS proxygen_curl
+     EXPORT proxygen-exports
+-    DESTINATION bin
++    DESTINATION tools
+ )
