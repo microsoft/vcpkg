@@ -14,11 +14,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-# Legacy, remove at release of v2.13
-		-DNANODBC_EXAMPLES=OFF
-		-DNANODBC_TEST=OFF
-		-DNANODBC_USE_UNICODE=ON
-# /Legacy
         -DNANODBC_DISABLE_EXAMPLES=ON
         -DNANODBC_DISABLE_TESTS=ON
         -DNANODBC_ENABLE_UNICODE=OFF
@@ -27,8 +22,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
