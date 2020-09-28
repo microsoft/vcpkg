@@ -75,18 +75,34 @@ add_library(theora-enc OBJECT ${LIBTHEORA_ENC} ${HEADERS})
 add_library(theora-dec OBJECT ${LIBTHEORA_DEC} ${HEADERS})
 
 add_library(theora $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> $<TARGET_OBJECTS:theora-dec> "libtheora.def")
-target_link_libraries(theora ${Ogg_LIBRARY})
+target_link_libraries(theora Ogg::ogg)
 
 add_library(theoraenc $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> "win32/xmingw32/libtheoraenc-all.def")
-target_link_libraries(theoraenc ${Ogg_LIBRARY})
+target_link_libraries(theoraenc Ogg::ogg)
 
 add_library(theoradec $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-dec> "win32/xmingw32/libtheoradec-all.def")
-target_link_libraries(theoradec ${Ogg_LIBRARY})
+target_link_libraries(theoradec Ogg::ogg)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(unofficial-theora-config.cmake.in unofficial-theora-config.cmake
+  INSTALL_DESTINATION "lib/unofficial-theora")
 
 install(FILES ${HEADERS} DESTINATION include/theora)
 
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-theora-config.cmake"
+  DESTINATION "lib/unofficial-theora"
+)
+
 install(TARGETS theora theoraenc theoradec
+  EXPORT unofficial-theora-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION bin
   ARCHIVE DESTINATION lib
+)
+
+install(EXPORT unofficial-theora-targets
+  NAMESPACE unofficial::theora::
+  DESTINATION "lib/unofficial-theora"
 )
