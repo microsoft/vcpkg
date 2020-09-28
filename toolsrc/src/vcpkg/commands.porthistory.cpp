@@ -93,8 +93,8 @@ namespace vcpkg::Commands::PortHistory
             }
             else
             {
-                std::string version = version_string;
-                std::string port_version = "0";
+                std::string clean_version = version_string;
+                std::string clean_port_version = "0";
 
                 const auto index = version_string.find_last_of('-');
                 if (index != std::string::npos)
@@ -102,12 +102,13 @@ namespace vcpkg::Commands::PortHistory
                     // Very lazy check to keep date versions untouched
                     if (!vcpkg::Versions::VersionString::is_date(version_string))
                     {
-                        port_version = version_string.substr(index + 1);
-                        version.resize(index);
+                        clean_port_version = version_string.substr(index + 1);
+                        clean_version.resize(index);
                     }
                 }
 
-                return HistoryVersion{port_name, commit_id, commit_date, version_string, version, port_version};
+                return HistoryVersion{
+                    port_name, commit_id, commit_date, version_string, clean_version, clean_port_version};
             }
         }
 
@@ -118,21 +119,21 @@ namespace vcpkg::Commands::PortHistory
         {
             // Do we have a manifest file?
             const std::string manifest_cmd = Strings::format(R"(show %s:ports/%s/vcpkg.json)", commit_id, port_name);
-            auto output = run_git_command(paths, manifest_cmd);
-            if (output.exit_code == 0)
+            auto manifest_output = run_git_command(paths, manifest_cmd);
+            if (manifest_output.exit_code == 0)
             {
-                return parse_version_from_manifest(output.output, port_name, commit_id, commit_date);
+                return parse_version_from_manifest(manifest_output.output, port_name, commit_id, commit_date);
             }
             else
             {
                 const std::string cmd = Strings::format(R"(show %s:ports/%s/CONTROL)", commit_id, port_name);
-                auto output = run_git_command(paths, cmd);
+                auto control_output = run_git_command(paths, cmd);
                 Checks::check_exit(VCPKG_LINE_INFO,
-                                   output.exit_code == 0,
+                                   control_output.exit_code == 0,
                                    "Failed to find manifest or CONTROL file for port %s at %s",
                                    port_name,
                                    commit_id);
-                return parse_version_from_control(output.output, port_name, commit_id, commit_date);
+                return parse_version_from_control(control_output.output, port_name, commit_id, commit_date);
             }
         }
 

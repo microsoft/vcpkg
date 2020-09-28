@@ -1,8 +1,13 @@
+#include <vcpkg/base/json.h>
 #include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/versions.h>
 
+using namespace vcpkg;
 using namespace vcpkg::Versions;
 
 bool VersionString::is_date(const std::string& version_string)
@@ -52,7 +57,7 @@ const std::string VersionRequirement::to_string() const
     return vcpkg::Strings::format("%s (%s %s)", package_name, requirement_operator, version.to_string());
 }
 
-const ComputedVersions vcpkg::Versions::compute_required_versions(const std::vector<VersionRequirement>& requirements)
+const ComputedVersions Versions::compute_required_versions(const std::vector<VersionRequirement>& requirements)
 {
     // This implementation is incomplete, as it assumes we have a flattened/final list of requirements.
     // It is missing the recursive step of adding new requirements for each requested dependency.
@@ -60,8 +65,6 @@ const ComputedVersions vcpkg::Versions::compute_required_versions(const std::vec
     // It should be good enough to implement versioning for "only top-level manifest version requirements".
     //
     // To do it correctly, the code that computes the dependency graph needs to include version information.
-    using namespace vcpkg::Versions;
-
     std::set<std::string> package_names;
     std::set<VersionConflict> conflicts;
     std::map<std::string, VersionRequirement> fixed_versions;
@@ -149,60 +152,101 @@ const ComputedVersions vcpkg::Versions::compute_required_versions(const std::vec
     return ComputedVersions{computed_versions, baseline_packages, conflicts};
 }
 
-void vcpkg::Versions::test_algorithm()
+static System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths,
+                                                 const fs::path& working_directory,
+                                                 const std::string& cmd)
 {
-    // Used for debugging, this should be moved to a test.
-    std::vector<VersionRequirement> data{// Conflict a=2.0.0 and a=3.0.0 and between a=2.0.0 and a>=4.0.0
-                                         VersionRequirement(RequirementType::Exact, "a", "2", "0", "0"),
-                                         VersionRequirement(RequirementType::Exact, "a", "3", "0", "0"),
-                                         VersionRequirement(RequirementType::Minimum, "a", "1", "0", "0"),
-                                         VersionRequirement(RequirementType::Minimum, "a", "4", "0", "0"),
+    const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
+    const fs::path dot_git_dir = working_directory / ".git";
 
-                                         // Use b=2.0.0
-                                         VersionRequirement(RequirementType::Exact, "b", "2", "0", "0"),
-                                         VersionRequirement(RequirementType::Minimum, "b", "1", "0", "0"),
-                                         VersionRequirement(RequirementType::None, "b", "0", "0", "0"),
+    const std::string full_cmd =
+        Strings::format(R"("%s" --work-tree="%s" %s)", fs::u8string(git_exe), fs::u8string(working_directory), cmd);
 
-                                         // Use c>=4.0.0
-                                         VersionRequirement(RequirementType::Minimum, "c", "1", "0", "0"),
-                                         VersionRequirement(RequirementType::Minimum, "c", "2", "0", "0"),
-                                         VersionRequirement(RequirementType::Minimum, "c", "3", "0", "0"),
-                                         VersionRequirement(RequirementType::Minimum, "c", "4", "0", "0"),
-                                         VersionRequirement(RequirementType::None, "c", "0", "0", "0"),
+    auto output = System::cmd_execute_and_capture_output(full_cmd);
+    return output;
+}
 
-                                         // Use x=25.0.0
-                                         VersionRequirement(RequirementType::Exact, "x", "25", "0", "0"),
-                                         VersionRequirement(RequirementType::None, "x", "0", "0", "0"),
+const std::string get_version_commit_id(const std::string& package_name,
+                                        const std::string& requested_version,
+                                        const VcpkgPaths& paths)
+{
+    const auto database_filename = Strings::format("%s.db.json", package_name);
+    const auto database_file_path = paths.scripts / "port_versions_db" / database_filename;
+    Checks::check_exit(VCPKG_LINE_INFO,
+                       paths.get_filesystem().exists(database_file_path),
+                       "Version database file does not exist for package %s",
+                       package_name);
 
-                                         // Use y=26.0.0
-                                         VersionRequirement(RequirementType::Exact, "y", "26", "0", "0"),
-                                         VersionRequirement(RequirementType::Exact, "y", "26", "0", "0"),
-                                         VersionRequirement(RequirementType::None, "y", "0", "0", "0"),
+    auto pair = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), database_file_path);
+    Checks::check_exit(VCPKG_LINE_INFO, pair.first.is_object(), "Failed to parse %", database_filename);
 
-                                         // Basesline
-                                         VersionRequirement(RequirementType::None, "m", "0", "0", "0"),
-                                         VersionRequirement(RequirementType::None, "n", "0", "0", "0"),
-                                         VersionRequirement(RequirementType::None, "o", "0", "0", "0")};
+    auto& db_object = pair.first.object();
 
-    auto output = vcpkg::Versions::compute_required_versions(data);
+    auto maybe_versions = db_object.get("versions");
+    Checks::check_exit(VCPKG_LINE_INFO,
+                       maybe_versions && maybe_versions->is_array(),
+                       "Database file %s contains no versions",
+                       database_filename);
 
-    vcpkg::System::print2("Solved dependencies:\n");
-    for (auto&& version : output.computed_versions)
+    auto& versions = maybe_versions->array();
+    for (auto&& version : versions)
     {
-        vcpkg::System::printf("%s\n", version.to_string());
+        auto version_string = version.object().get("version_string")->string().to_string();
+        if (version_string == requested_version)
+        {
+            return version.object().get("commit_id")->string().to_string();
+        }
     }
 
-    vcpkg::System::print2("\nUse baseline versions:\n");
-    for (auto&& package : output.baseline_packages)
+    Checks::exit_with_message(VCPKG_LINE_INFO, "Couldn't find version '%s' of %s", requested_version, package_name);
+}
+
+void Versions::fetch_port_versions(const VcpkgPaths& paths,
+                                   const ComputedVersions& versions,
+                                   const std::string& baseline)
+{
+    (void)baseline;
+    (void)versions;
+
+    Checks::check_exit(VCPKG_LINE_INFO, versions.conflicts.empty(), "There are conflicts in the computed versions.");
+
+    auto& fs = paths.get_filesystem();
+    const auto working_dir = paths.root / "vcpkg-temp";
+
+    if (fs.exists(working_dir))
     {
-        vcpkg::System::printf("%s\n", package);
+        fs.remove_all(working_dir, VCPKG_LINE_INFO);
     }
 
-    vcpkg::System::print2("\nConflicts:\n");
-    for (auto&& conflict : output.conflicts)
+    auto output = run_git_command(paths, working_dir, "clone https://github.com/microsoft/vcpkg vcpkg-temp");
+    Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to clone temporary vcpkg instance");
+
+    fs.remove_all(working_dir / "ports", VCPKG_LINE_INFO);
+
+    for (auto&& versioned_package : versions.computed_versions)
     {
-        vcpkg::System::printf("Between %s and %s\n", conflict.a, conflict.b);
+        auto commit_id =
+            get_version_commit_id(versioned_package.package_name, versioned_package.version.to_string(), paths);
+
+        auto port_path = working_dir / "ports" / versioned_package.package_name;
+        auto cmd = Strings::format("checkout %s -- ./ports/%s", commit_id, versioned_package.package_name);
+        run_git_command(paths, working_dir, cmd);
     }
 
-    vcpkg::Checks::exit_success(VCPKG_LINE_INFO);
+    for (auto&& baseline_package : versions.baseline_packages)
+    {
+        auto port_path = working_dir / "ports" / baseline_package;
+        auto cmd = Strings::format("checkout %s -- ./ports/%s", baseline, baseline_package);
+        run_git_command(paths, working_dir, cmd);
+    }
+
+    Checks::exit_success(VCPKG_LINE_INFO);
+}
+
+void Versions::test_fetch(const VcpkgPaths& paths)
+{
+    std::vector<VersionRequirement> reqs{VersionRequirement(RequirementType::None, "rapidjson", "0", "0", "0"),
+                                         VersionRequirement(RequirementType::Exact, "cpprestsdk", "2", "10", "16"),
+                                         VersionRequirement(RequirementType::Minimum, "zlib", "1", "2", "8")};
+    fetch_port_versions(paths, compute_required_versions(reqs), "e86ff2cc54bda9e9ee322ab69141e7113d5c40a9");
 }

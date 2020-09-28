@@ -5,6 +5,11 @@
 #include <tuple>
 #include <vector>
 
+namespace vcpkg
+{
+    struct VcpkgPaths;
+}
+
 namespace vcpkg::Versions
 {
     namespace VersionString
@@ -110,5 +115,9 @@ namespace vcpkg::Versions
 
     const ComputedVersions compute_required_versions(const std::vector<VersionRequirement>& requirements);
 
-    void test_algorithm();
+    void fetch_port_versions(const vcpkg::VcpkgPaths& paths,
+                             const ComputedVersions& versions,
+                             const std::string& baseline);
+
+    void test_fetch(const vcpkg::VcpkgPaths& paths);
 }
