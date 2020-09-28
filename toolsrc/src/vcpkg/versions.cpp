@@ -217,8 +217,11 @@ void Versions::fetch_port_versions(const VcpkgPaths& paths,
         fs.remove_all(working_dir, VCPKG_LINE_INFO);
     }
 
-    auto output = run_git_command(
-        paths, no_checkout_dir, working_dir, "clone --no-checkout https://github.com/microsoft/vcpkg versioning_tmp");
+    auto output =
+        run_git_command(paths,
+                        no_checkout_dir,
+                        working_dir,
+                        Strings::format("clone --no-checkout --local \"%s\" versioning_tmp", fs::u8string(paths.root)));
     Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to clone temporary vcpkg instance");
 
     for (auto&& versioned_package : versions.computed_versions)
