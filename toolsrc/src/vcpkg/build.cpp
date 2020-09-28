@@ -347,7 +347,33 @@ namespace vcpkg::Build
     }
 #endif
 
-    static std::string load_compiler_hash(const VcpkgPaths& paths, const AbiInfo& abi_info);
+    static CompilerInfo load_compiler_info(const VcpkgPaths& paths, const AbiInfo& abi_info);
+
+    const CompilerInfo& EnvCache::get_compiler_info(const VcpkgPaths& paths, const AbiInfo& abi_info)
+    {
+        const auto& fs = paths.get_filesystem();
+        Checks::check_exit(VCPKG_LINE_INFO, abi_info.pre_build_info != nullptr);
+        const fs::path triplet_file_path = paths.get_triplet_file_path(abi_info.pre_build_info->triplet);
+
+        auto tcfile = abi_info.pre_build_info->toolchain_file();
+        auto&& toolchain_hash = m_toolchain_cache.get_lazy(
+            tcfile, [&]() { return Hash::get_file_hash(VCPKG_LINE_INFO, fs, tcfile, Hash::Algorithm::Sha1); });
+
+        auto&& triplet_entry = m_triplet_cache.get_lazy(triplet_file_path, [&]() -> TripletMapEntry {
+            return TripletMapEntry{Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, Hash::Algorithm::Sha1)};
+        });
+
+        return triplet_entry.compiler_info.get_lazy(toolchain_hash, [&]() -> CompilerInfo {
+            if (m_compiler_tracking)
+            {
+                return load_compiler_info(paths, abi_info);
+            }
+            else
+            {
+                return CompilerInfo{};
+            }
+        });
+    }
 
     const std::string& EnvCache::get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
@@ -366,8 +392,17 @@ namespace vcpkg::Build
         return triplet_entry.compiler_hashes.get_lazy(toolchain_hash, [&]() -> std::string {
             if (m_compiler_tracking)
             {
-                auto compiler_hash = load_compiler_hash(paths, abi_info);
-                return Strings::concat(triplet_entry.hash, '-', toolchain_hash, '-', compiler_hash);
+                auto& compiler_info = triplet_entry.compiler_info.get_lazy(toolchain_hash, [&]() -> CompilerInfo {
+                    if (m_compiler_tracking)
+                    {
+                        return load_compiler_info(paths, abi_info);
+                    }
+                    else
+                    {
+                        return CompilerInfo{};
+                    }
+                });
+                return Strings::concat(triplet_entry.hash, '-', toolchain_hash, '-', compiler_info.hash);
             }
             else
             {
@@ -464,7 +499,7 @@ namespace vcpkg::Build
         }
     }
 
-    static std::string load_compiler_hash(const VcpkgPaths& paths, const AbiInfo& abi_info)
+    static CompilerInfo load_compiler_info(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
         auto triplet = abi_info.pre_build_info->triplet;
         System::print2("Detecting compiler hash for triplet ", triplet, "...\n");
@@ -499,14 +534,24 @@ namespace vcpkg::Build
         auto stdoutlog = buildpath / ("stdout-" + triplet.canonical_name() + ".log");
         std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
         Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", fs::u8string(stdoutlog));
-        std::string compiler_hash;
+        CompilerInfo compiler_info;
         System::cmd_execute_and_stream_lines(
             command,
             [&](const std::string& s) {
-                static const StringLiteral s_marker = "#COMPILER_HASH#";
-                if (Strings::starts_with(s, s_marker))
+                static const StringLiteral s_hash_marker = "#COMPILER_HASH#";
+                if (Strings::starts_with(s, s_hash_marker))
                 {
-                    compiler_hash = s.data() + s_marker.size();
+                    compiler_info.hash = s.data() + s_hash_marker.size();
+                }
+                static const StringLiteral s_version_marker = "#COMPILER_CXX_VERSION#";
+                if (Strings::starts_with(s, s_version_marker))
+                {
+                    compiler_info.version = s.data() + s_version_marker.size();
+                }
+                static const StringLiteral s_id_marker = "#COMPILER_CXX_ID#";
+                if (Strings::starts_with(s, s_id_marker))
+                {
+                    compiler_info.id = s.data() + s_id_marker.size();
                 }
                 Debug::print(s, '\n');
                 out_file.write(s.data(), s.size()).put('\n');
@@ -516,7 +561,7 @@ namespace vcpkg::Build
             env);
         out_file.close();
 
-        if (compiler_hash.empty())
+        if (compiler_info.hash.empty())
         {
             Debug::print("Compiler information tracking can be disabled by passing --",
                          VcpkgCmdArguments::FEATURE_FLAGS_ARG,
@@ -525,11 +570,11 @@ namespace vcpkg::Build
                          "\n");
         }
         Checks::check_exit(VCPKG_LINE_INFO,
-                           !compiler_hash.empty(),
+                           !compiler_info.hash.empty(),
                            "Error occurred while detecting compiler information. Pass `--debug` for more information.");
 
-        Debug::print("Detecting compiler hash for triplet ", triplet, ": ", compiler_hash, "\n");
-        return compiler_hash;
+        Debug::print("Detecting compiler hash for triplet ", triplet, ": ", compiler_info.hash, "\n");
+        return compiler_info;
     }
 
     static std::vector<System::CMakeVariable> get_cmake_build_args(const VcpkgPaths& paths,
@@ -957,6 +1002,7 @@ namespace vcpkg::Build
             abi_info.pre_build_info = std::make_unique<PreBuildInfo>(
                 paths, action.spec.triplet(), var_provider.get_tag_vars(action.spec).value_or_exit(VCPKG_LINE_INFO));
             abi_info.toolset = paths.get_toolset(*abi_info.pre_build_info);
+            abi_info.compiler_info = paths.get_compiler_info(abi_info);
             abi_info.triplet_abi = paths.get_triplet_info(abi_info);
 
             auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, dependency_abis);
