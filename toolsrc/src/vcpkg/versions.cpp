@@ -10,7 +10,7 @@
 using namespace vcpkg;
 using namespace vcpkg::Versions;
 
-bool VersionString::is_date(const std::string& version_string)
+bool vcpkg::Versions::is_date(const std::string& version_string)
 {
     // The date regex is not complete, it matches strings that look like dates,
     // e.g.: 2020-99-99.
@@ -23,7 +23,7 @@ bool VersionString::is_date(const std::string& version_string)
     return std::regex_match(version_string, re);
 }
 
-bool VersionString::is_semver(const std::string& version_string)
+bool vcpkg::Versions::is_semver(const std::string& version_string)
 {
     // This is the "official" SemVer regex, taken from:
     // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
@@ -33,24 +33,22 @@ bool VersionString::is_semver(const std::string& version_string)
     return std::regex_match(version_string, re);
 }
 
-bool VersionString::is_semver_relaxed(const std::string& version_string)
+bool vcpkg::Versions::is_semver_relaxed(const std::string& version_string)
 {
     std::regex re("^(?:[0-9a-zA-Z]+)(?:[\\.|-][0-9a-zA-Z]+)*$");
     return std::regex_match(version_string, re);
 }
 
-bool VersionString::is_valid_string(const std::string& version_string) { return !version_string.empty(); }
-
-const std::string Version::to_string() const { return vcpkg::Strings::format("%s.%s.%s", major, minor, update); }
+bool vcpkg::Versions::is_valid_string(const std::string& version_string) { return !version_string.empty(); }
 
 const std::string VersionRequirement::to_string() const
 {
     std::string requirement_operator = "?=";
-    if (type == RequirementType::Exact)
+    if (type == VersionRequirement::Type::Exact)
     {
         requirement_operator = "==";
     }
-    else if (type == RequirementType::Minimum)
+    else if (type == VersionRequirement::Type::Minimum)
     {
         requirement_operator = ">=";
     }
@@ -74,7 +72,7 @@ const ComputedVersions Versions::compute_required_versions(const std::vector<Ver
     {
         package_names.insert(requirement.package_name);
 
-        if (requirement.type == RequirementType::Exact)
+        if (requirement.type == VersionRequirement::Type::Exact)
         {
             auto conflict = fixed_versions.find(requirement.package_name);
             if (conflict == fixed_versions.end())
@@ -89,7 +87,7 @@ const ComputedVersions Versions::compute_required_versions(const std::vector<Ver
                 conflicts.emplace(new_conflict);
             }
         }
-        else if (requirement.type == RequirementType::Minimum)
+        else if (requirement.type == VersionRequirement::Type::Minimum)
         {
             // Find previous requirements
             auto conflict = minimum_versions.find(requirement.package_name);
@@ -245,8 +243,21 @@ void Versions::fetch_port_versions(const VcpkgPaths& paths,
 
 void Versions::test_fetch(const VcpkgPaths& paths)
 {
-    std::vector<VersionRequirement> reqs{VersionRequirement(RequirementType::None, "rapidjson", "0", "0", "0"),
-                                         VersionRequirement(RequirementType::Exact, "cpprestsdk", "2", "10", "16"),
-                                         VersionRequirement(RequirementType::Minimum, "zlib", "1", "2", "8")};
+    std::vector<VersionRequirement> reqs{VersionRequirement(VersionRequirement::Type::None, "rapidjson", "0.0.0"),
+                                         VersionRequirement(VersionRequirement::Type::Exact, "cpprestsdk", "2.10.16"),
+                                         VersionRequirement(VersionRequirement::Type::Minimum, "zlib", "1.2.8"),
+                                         VersionRequirement(VersionRequirement::Type::Minimum, "zlib", "1.2.0"),
+                                         VersionRequirement(VersionRequirement::Type::Minimum, "zlib", "1.0.0")};
     fetch_port_versions(paths, compute_required_versions(reqs), "e86ff2cc54bda9e9ee322ab69141e7113d5c40a9");
+}
+
+VersionRelaxed::VersionRelaxed(const std::string& version_string) : version(version_string), port_version(0)
+{
+    sections = Strings::split(version_string, '.');
+}
+
+VersionRelaxed::VersionRelaxed(const std::string& version_string, int port_version)
+    : version(version_string), port_version(port_version)
+{
+    sections = Strings::split(version_string, '.');
 }

@@ -1,88 +1,103 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <set>
 #include <string>
 #include <tuple>
 #include <vector>
 
-namespace vcpkg
-{
-    struct VcpkgPaths;
-}
-
 namespace vcpkg::Versions
 {
-    namespace VersionString
-    {
-        bool is_date(const std::string& version_string);
-        bool is_semver(const std::string& version_string);
-        bool is_semver_relaxed(const std::string& version_string);
-        bool is_valid_string(const std::string& version_string);
-    }
+    bool is_date(const std::string& version_string);
+    bool is_semver(const std::string& version_string);
+    bool is_semver_relaxed(const std::string& version_string);
+    bool is_valid_string(const std::string& version_string);
 
     struct Version
     {
-        std::string major;
-        std::string minor;
-        std::string update;
-
-        Version() : major("0"), minor("0"), update("0") { }
-        Version(std::string major, std::string minor, std::string update) : major(major), minor(minor), update(update)
-        {
-        }
-
-        const std::string to_string() const;
-
-        friend bool operator<(const Version& lhs, const Version& rhs)
-        {
-            return std::tie(lhs.major, lhs.minor, lhs.update) < std::tie(rhs.major, rhs.minor, rhs.update);
-        }
-
-        friend bool operator<=(const Version& lhs, const Version& rhs)
-        {
-            return std::tie(lhs.major, lhs.minor, lhs.update) <= std::tie(rhs.major, rhs.minor, rhs.update);
-        }
-
-        friend bool operator>(const Version& lhs, const Version& rhs)
-        {
-            return std::tie(lhs.major, lhs.minor, lhs.update) > std::tie(rhs.major, rhs.minor, rhs.update);
-        }
-
-        friend bool operator>=(const Version& lhs, const Version& rhs)
-        {
-            return std::tie(lhs.major, lhs.minor, lhs.update) >= std::tie(rhs.major, rhs.minor, rhs.update);
-        }
-
-        friend bool operator==(const Version& lhs, const Version& rhs)
-        {
-            return std::tie(lhs.major, lhs.minor, lhs.update) == std::tie(rhs.major, rhs.minor, rhs.update);
-        }
-
-        friend bool operator!=(const Version& lhs, const Version& rhs) { return !(lhs == rhs); }
+        virtual const std::string to_string() const = 0;
     };
 
-    enum class RequirementType
+    struct VersionString : Version
     {
-        None,
-        Baseline,
-        Exact,
-        Minimum
+        std::string version;
+        int port_version;
+
+        explicit VersionString(const std::string& version_string) : version(version_string), port_version(0) { }
+        VersionString(const std::string& version_string, int port_version)
+            : version(version_string), port_version(port_version)
+        {
+        }
+
+        const std::string to_string() const override { return version; }
+
+        friend bool operator<(const VersionString& lhs, const VersionString& rhs) { return lhs < rhs; }
+        friend bool operator<=(const VersionString& lhs, const VersionString& rhs) { return lhs <= rhs; }
+        friend bool operator>(const VersionString& lhs, const VersionString& rhs) { return lhs > rhs; }
+        friend bool operator>=(const VersionString& lhs, const VersionString& rhs) { return lhs >= rhs; }
+        friend bool operator==(const VersionString& lhs, const VersionString& rhs) { return lhs == rhs; }
+        friend bool operator!=(const VersionString& lhs, const VersionString& rhs) { return lhs != rhs; }
+    };
+
+    struct VersionRelaxed : Version
+    {
+        std::string version;
+        int port_version;
+        std::vector<std::string> sections;
+
+        explicit VersionRelaxed(const std::string& version_string);
+        VersionRelaxed(const std::string& version_string, int port_version);
+
+        const std::string to_string() const override { return version; }
+
+        friend bool operator<(const VersionRelaxed& lhs, const VersionRelaxed& rhs)
+        {
+            return lhs.sections < rhs.sections;
+        }
+        friend bool operator<=(const VersionRelaxed& lhs, const VersionRelaxed& rhs)
+        {
+            return lhs.sections <= rhs.sections;
+        }
+        friend bool operator>(const VersionRelaxed& lhs, const VersionRelaxed& rhs)
+        {
+            return lhs.sections > rhs.sections;
+        }
+        friend bool operator>=(const VersionRelaxed& lhs, const VersionRelaxed& rhs)
+        {
+            return lhs.sections >= rhs.sections;
+        }
+        friend bool operator==(const VersionRelaxed& lhs, const VersionRelaxed& rhs)
+        {
+            return lhs.sections == rhs.sections;
+        }
+        friend bool operator!=(const VersionRelaxed& lhs, const VersionRelaxed& rhs)
+        {
+            return lhs.sections != rhs.sections;
+        }
     };
 
     struct VersionRequirement
     {
-        RequirementType type;
-        std::string package_name;
-        Version version;
+        enum class Type
+        {
+            None,
+            Baseline,
+            Exact,
+            Minimum
+        };
 
-        VersionRequirement() : type(RequirementType::None), package_name(), version() { }
-        VersionRequirement(RequirementType type, std::string package_name, Version version)
+        Type type;
+        std::string package_name;
+        VersionRelaxed version;
+
+        VersionRequirement() : type(Type::None), package_name(), version("") { }
+        VersionRequirement(Type type, std::string package_name, VersionRelaxed version)
             : type(type), package_name(package_name), version(version)
         {
         }
-        VersionRequirement(
-            RequirementType type, std::string package_name, std::string major, std::string minor, std::string update)
-            : type(type), package_name(package_name), version(major, minor, update)
+        VersionRequirement(Type type, std::string package_name, std::string version_string)
+            : type(type), package_name(package_name), version(version_string)
         {
         }
 
