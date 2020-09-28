@@ -81,9 +81,9 @@ stages:
   #     jobName: arm_uwp
   #     poolName: $(windows-pool)
 
-  # - template: osx/azure-pipelines.yml
-  #   parameters:
-  #     poolName: $(osx-pool)
+  - template: osx/azure-pipelines.yml
+    parameters:
+      poolName: $(osx-pool)
 
   # - template: linux/azure-pipelines.yml
   #   parameters:
