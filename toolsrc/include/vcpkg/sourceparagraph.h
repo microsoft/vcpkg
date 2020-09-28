@@ -55,6 +55,9 @@ namespace vcpkg
     {
         std::string name;
         std::string version;
+        std::string version_relaxed;
+        std::string version_semver;
+        std::string version_date;
         int port_version = 0;
         std::vector<std::string> description;
         std::vector<std::string> maintainers;

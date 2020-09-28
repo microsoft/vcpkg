@@ -713,6 +713,12 @@ namespace vcpkg
         virtual StringView type_name() const override { return "a manifest"; }
 
         constexpr static StringLiteral NAME = "name";
+
+        // Default is a relaxed semver-like version
+        constexpr static StringLiteral VERSION_RELAXED = "version";
+        constexpr static StringLiteral VERSION_SEMVER = "version-semver";
+        constexpr static StringLiteral VERSION_DATE = "version-date";
+        // Legacy version string, accepts arbitrary string values.
         constexpr static StringLiteral VERSION = "version-string";
 
         constexpr static StringLiteral PORT_VERSION = "port-version";
@@ -732,7 +738,9 @@ namespace vcpkg
             static const StringView t[] = {
                 NAME,
                 VERSION,
-
+                VERSION_RELAXED,
+                VERSION_SEMVER,
+                VERSION_DATE,
                 PORT_VERSION,
                 MAINTAINERS,
                 DESCRIPTION,
@@ -768,7 +776,12 @@ namespace vcpkg
 
             constexpr static StringView type_name = "vcpkg.json";
             r.required_object_field(type_name, obj, NAME, spgh->name, Json::IdentifierDeserializer{});
-            r.required_object_field(type_name, obj, VERSION, spgh->version, Json::StringDeserializer{"a version"});
+
+            r.required_object_field(type_name, obj, VERSION, spgh->version, Json::StringDeserializer{"an arbitrary version string"});
+            r.optional_object_field(obj, VERSION_RELAXED, spgh->version_relaxed, Json::StringDeserializer{"a relaxed semver-like version string"});
+            r.optional_object_field(obj, VERSION_SEMVER, spgh->version_semver, Json::StringDeserializer{"a semver compliant version string"});
+            r.optional_object_field(obj, VERSION_DATE, spgh->version_date, Json::StringDeserializer{"a date used as a version string"});
+
             r.optional_object_field(obj, PORT_VERSION, spgh->port_version, Json::NaturalNumberDeserializer{});
             r.optional_object_field(obj, MAINTAINERS, spgh->maintainers, Json::ParagraphDeserializer{});
             r.optional_object_field(obj, DESCRIPTION, spgh->description, Json::ParagraphDeserializer{});

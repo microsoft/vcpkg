@@ -172,11 +172,14 @@ namespace vcpkg
         Optional<bool> manifest_mode = nullopt;
         constexpr static StringLiteral REGISTRIES_FEATURE = "registries";
         Optional<bool> registries_feature = nullopt;
+        constexpr static StringLiteral VERSIONS_FEATURE = "versions";
+        Optional<bool> versions_feature = nullopt;
 
         bool binary_caching_enabled() const { return binary_caching.value_or(true); }
         bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
         bool registries_enabled() const { return registries_feature.value_or(false); }
         bool output_json() const { return json.value_or(false); }
+        bool versions_enabled() const { return versions_feature.value_or(false); }
 
         std::string command;
         std::vector<std::string> command_arguments;
