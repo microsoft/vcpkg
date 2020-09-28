@@ -9,18 +9,18 @@ Runs the 'Test Modified Ports' part of the vcpkg CI system for all platforms.
 .PARAMETER Triplet
 The triplet to test.
 
+.PARAMETER WorkingRoot
+The location used as scratch space for 'installed', 'packages', and 'buildtrees' vcpkg directories.
+
+.PARAMETER ArtifactStagingDirectory
+The Azure Pipelines artifacts directory. If not supplied, defaults to the current directory.
+
 .PARAMETER ArchivesRoot
 Equivalent to '-BinarySourceStub "files,$ArchivesRoot"'
 
 .PARAMETER BinarySourceStub
 The type and parameters of the binary source. Shared across runs of this script. If
 this parameter is not set, binary caching will not be used. Example: "files,W:\"
-
-.PARAMETER WorkingRoot
-The location used as scratch space for 'installed', 'packages', and 'buildtrees' vcpkg directories.
-
-.PARAMETER ArtifactStagingDirectory
-The Azure Pipelines artifacts directory. If not supplied, defaults to the current directory.
 
 .PARAMETER BuildReason
 The reason Azure Pipelines is running this script (controls in which mode Binary Caching is used).
@@ -33,15 +33,15 @@ Param(
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     [string]$Triplet,
-    [Parameter(ParameterSetName='ArchivesRoot')]
-    $ArchivesRoot = $null,
-    [Parameter(ParameterSetName='BinarySourceStub')]
-    $BinarySourceStub = $null,
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     $WorkingRoot,
     [ValidateNotNullOrEmpty()]
     $ArtifactStagingDirectory = '.',
+    [Parameter(ParameterSetName='ArchivesRoot')]
+    $ArchivesRoot = $null,
+    [Parameter(ParameterSetName='BinarySourceStub')]
+    $BinarySourceStub = $null,
     $BuildReason = $null
 )
 
@@ -84,10 +84,12 @@ if ($usingBinaryCaching) {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
         $binaryCachingMode = 'write'
     }
-    if (![string]::IsNullOrWhiteSpace($ArchivesRoot)) {
-        $BinarySourceStub = "files,$ArchivesRoot"
+    if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
+        $commonArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
     }
-    $commonArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
+    else {
+        $commonArgs += @("--binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
+    }
 }
 
 if ($Triplet -eq 'x64-linux') {

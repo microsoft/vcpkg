@@ -345,7 +345,7 @@ namespace vcpkg::Commands::CI
                     p->build_options = vcpkg::Build::default_build_package_options;
                 }
 
-                auto precheck_result = precheck_results[&action];
+                auto precheck_result = precheck_results.at(&action);
                 bool b_will_build = false;
 
                 std::string state;
