@@ -555,6 +555,11 @@ If you wish to silence this error and use classic mode, you can:
         return m_pimpl->m_env_cache.get_triplet_info(*this, abi_info);
     }
 
+    const Build::CompilerInfo& VcpkgPaths::get_compiler_info(const Build::AbiInfo& abi_info) const
+    {
+        return m_pimpl->m_env_cache.get_compiler_info(*this, abi_info);
+    }
+
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return *m_pimpl->fs_ptr; }
 
     void VcpkgPaths::track_feature_flag_metrics() const
