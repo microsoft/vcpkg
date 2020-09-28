@@ -76,24 +76,7 @@ namespace vcpkg::PlatformExpression
         Allow,
     };
 
-    // platform expression parses the following :
-    // <platform-expression>:
-    //     <platform-expression.not>
-    //     <platform-expression.and>
-    //     <platform-expression.or>
-    // <platform-expression.simple>:
-    //     ( <platform-expression> )
-    //     <platform-expression.identifier>
-    // <platform-expression.identifier>:
-    //     A lowercase alpha-numeric string
-    // <platform-expression.not>:
-    //     <platform-expression.simple>
-    //     ! <platform-expression.simple>
-    // <platform-expression.and>
-    //     <platform-expression.not>
-    //     <platform-expression.and> & <platform-expression.not>
-    // <platform-expression.or>
-    //     <platform-expression.not>
-    //     <platform-expression.or> | <platform-expression.not>
+    // platform expression parses a platform expression; the EBNF of such is defined in
+    // /docs/maintainers/manifest-files.md#supports
     ExpectedS<Expr> parse_platform_expression(StringView expression, MultipleBinaryOperators multiple_binary_operators);
 }

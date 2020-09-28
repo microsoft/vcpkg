@@ -379,7 +379,7 @@ $arguments = (
 "/verbosity:minimal",
 "/m",
 "/nologo",
-"`"$vcpkgBootstrapPath\dirs.proj`"") -join " "
+"`"$vcpkgBootstrapPath\vcpkg.vcxproj`"") -join " "
 
 function vcpkgInvokeCommandClean()
 {
@@ -431,10 +431,5 @@ Read more about vcpkg telemetry at docs/about/privacy.md
 Write-Verbose "Placing vcpkg.exe in the correct location"
 
 Copy-Item "$vcpkgReleaseDir\vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
-
-if (-not $disableMetrics)
-{
-    Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe"
-}
 
 Remove-Item "$vcpkgReleaseDir" -Force -Recurse -ErrorAction SilentlyContinue

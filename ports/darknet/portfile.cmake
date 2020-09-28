@@ -1,11 +1,11 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 320e6fd8d29f6f7825ef668f15f955f90131f782
-  SHA512 f95ac04c1c4e1b3f28aa835a64d969ffee064a3681a7966b255981722d562aa1eb91c30a378cad2f1bccd4581b74d8c2ec641c57763bc0fa97bfce8b1c222480
+  REF ecad770071eb776208a46977347e6d2410d4f50e
+  SHA512 1de0dc3f4842c68f5c12addf100996f7176ffb50dcd89a0b57446ba996d9199e31531f64c32eedbc2ea6a449459573811444dd35f1a50ece3880f58717c795ab
   HEAD_REF master
   PATCHES
-      fix_shared_static.patch
+    0001-rename-_castu32_f32-to-gemm_castu32_f32.patch
 )
 
 # enable CUDA inside DARKNET

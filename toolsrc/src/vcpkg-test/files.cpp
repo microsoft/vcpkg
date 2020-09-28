@@ -155,6 +155,25 @@ namespace
     }
 }
 
+TEST_CASE ("fs::combine works correctly", "[filesystem][files]")
+{
+    using namespace fs;
+    using namespace vcpkg::Files;
+    CHECK(combine(u8path("/a/b"), u8path("c/d")) == u8path("/a/b/c/d"));
+    CHECK(combine(u8path("a/b"), u8path("c/d")) == u8path("a/b/c/d"));
+    CHECK(combine(u8path("/a/b"), u8path("/c/d")) == u8path("/c/d"));
+
+#if defined(_WIN32)
+    CHECK(combine(u8path("C:/a/b"), u8path("c/d")) == u8path("C:/a/b/c/d"));
+    CHECK(combine(u8path("C:a/b"), u8path("c/d")) == u8path("C:a/b/c/d"));
+    CHECK(combine(u8path("C:a/b"), u8path("/c/d")) == u8path("C:/c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("/c/d")) == u8path("C:/c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("D:/c/d")) == u8path("D:/c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("D:c/d")) == u8path("D:c/d"));
+    CHECK(combine(u8path("C:/a/b"), u8path("C:c/d")) == u8path("C:/a/b/c/d"));
+#endif
+}
+
 TEST_CASE ("remove all", "[files]")
 {
     auto urbg = get_urbg(0);
@@ -174,6 +193,62 @@ TEST_CASE ("remove all", "[files]")
     REQUIRE_FALSE(fs.exists(temp_dir, ec));
     CHECK_EC_ON_FILE(temp_dir, ec);
 }
+
+#if defined(_WIN32)
+TEST_CASE ("win32_fix_path_case", "[files]")
+{
+    using vcpkg::Files::win32_fix_path_case;
+
+    // This test assumes that the Windows directory is C:\Windows
+
+    CHECK(win32_fix_path_case(L"") == L"");
+
+    CHECK(win32_fix_path_case(L"C:") == L"C:");
+    CHECK(win32_fix_path_case(L"c:") == L"C:");
+    CHECK(win32_fix_path_case(L"C:/") == L"C:\\");
+    CHECK(win32_fix_path_case(L"C:\\") == L"C:\\");
+    CHECK(win32_fix_path_case(L"c:\\") == L"C:\\");
+    CHECK(win32_fix_path_case(L"C:\\WiNdOws") == L"C:\\Windows");
+    CHECK(win32_fix_path_case(L"c:\\WiNdOws\\") == L"C:\\Windows\\");
+    CHECK(win32_fix_path_case(L"C://///////WiNdOws") == L"C:\\Windows");
+    CHECK(win32_fix_path_case(L"c:\\/\\/WiNdOws\\/") == L"C:\\Windows\\");
+
+    auto& fs = vcpkg::Files::get_real_filesystem();
+    auto original_cwd = fs.current_path(VCPKG_LINE_INFO);
+    fs.current_path(L"C:\\", VCPKG_LINE_INFO);
+    CHECK(win32_fix_path_case(L"\\") == L"\\");
+    CHECK(win32_fix_path_case(L"\\/\\WiNdOws") == L"\\Windows");
+    CHECK(win32_fix_path_case(L"\\WiNdOws") == L"\\Windows");
+    CHECK(win32_fix_path_case(L"\\WiNdOws") == L"\\Windows");
+    CHECK(win32_fix_path_case(L"c:WiNdOws") == L"C:Windows");
+    CHECK(win32_fix_path_case(L"c:WiNdOws/system32") == L"C:Windows\\System32");
+    fs.current_path(original_cwd, VCPKG_LINE_INFO);
+
+    fs.create_directories("SuB/Dir/Ectory", VCPKG_LINE_INFO);
+    CHECK(win32_fix_path_case(L"sub") == L"SuB");
+    CHECK(win32_fix_path_case(L"SUB") == L"SuB");
+    CHECK(win32_fix_path_case(L"sub/") == L"SuB\\");
+    CHECK(win32_fix_path_case(L"sub/dir") == L"SuB\\Dir");
+    CHECK(win32_fix_path_case(L"sub/dir/") == L"SuB\\Dir\\");
+    CHECK(win32_fix_path_case(L"sub/dir/ectory") == L"SuB\\Dir\\Ectory");
+    CHECK(win32_fix_path_case(L"sub/dir/ectory/") == L"SuB\\Dir\\Ectory\\");
+    fs.remove_all("SuB", VCPKG_LINE_INFO);
+
+    CHECK(win32_fix_path_case(L"//nonexistent_server\\nonexistent_share\\") ==
+          L"\\\\nonexistent_server\\nonexistent_share\\");
+    CHECK(win32_fix_path_case(L"\\\\nonexistent_server\\nonexistent_share\\") ==
+          L"\\\\nonexistent_server\\nonexistent_share\\");
+    CHECK(win32_fix_path_case(L"\\\\nonexistent_server\\nonexistent_share") ==
+          L"\\\\nonexistent_server\\nonexistent_share");
+
+    CHECK(win32_fix_path_case(L"///three_slashes_not_a_server\\subdir\\") == L"\\three_slashes_not_a_server\\subdir\\");
+
+    CHECK(win32_fix_path_case(L"\\??\\c:\\WiNdOws") == L"\\??\\c:\\WiNdOws");
+    CHECK(win32_fix_path_case(L"\\\\?\\c:\\WiNdOws") == L"\\\\?\\c:\\WiNdOws");
+    CHECK(win32_fix_path_case(L"\\\\.\\c:\\WiNdOws") == L"\\\\.\\c:\\WiNdOws");
+    CHECK(win32_fix_path_case(L"c:\\/\\/Nonexistent\\/path/here") == L"C:\\Nonexistent\\path\\here");
+}
+#endif // _WIN32
 
 #if defined(CATCH_CONFIG_ENABLE_BENCHMARKING)
 TEST_CASE ("remove all -- benchmarks", "[files][!benchmark]")

@@ -16,6 +16,7 @@
 ## - 7Z
 ## - ARIA2 (Downloader)
 ## - BISON
+## - CLANG
 ## - DARK
 ## - DOXYGEN
 ## - FLEX
@@ -43,6 +44,9 @@
 ## * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_find_acquire_program VAR)
   set(EXPANDED_VAR ${${VAR}})
   if(EXPANDED_VAR)
@@ -207,19 +211,19 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH f73b04e2d9f29d4393fde572dcf3c3f0f6fa27e747e5df292294ab7536ae24c239bf917689d71eb10cc49f6b9a4ace26d7c122ee887d93cc935f268c404e9067)
   elseif(VAR MATCHES "NINJA")
     set(PROGNAME ninja)
-    set(NINJA_VERSION 1.10.0)
+    set(NINJA_VERSION 1.10.1)
     set(_vfa_SUPPORTED ON)
     if(CMAKE_HOST_WIN32)
       set(ARCHIVE "ninja-win-${NINJA_VERSION}.zip")
       set(SUBDIR "${NINJA_VERSION}-windows")
       set(URL "https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-win.zip")
-      set(HASH a196e243c53daa1df9d287af658d6d38d6b830b614f2d5704e8c88ffc61f179a533ae71cdb6d0d383d1559d65dacccbaaab270fb2a33aa211e5dba42ff046f97)
+      set(HASH 0120054f0fea6eea4035866201f69fba1c039f681f680cfcbbefcaee97419815d092a6e2f3823ea6c3928ad296395f36029e337127ee977270000b35df5f9c40)
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
       set(ARCHIVE "ninja-mac-${NINJA_VERSION}.zip")
       set(URL "https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-mac.zip")
       set(SUBDIR "${NINJA_VERSION}-osx")
       set(PATHS "${DOWNLOADS}/tools/ninja-${NINJA_VERSION}-osx")
-      set(HASH 619a1924067a0b30fc5f8887f868d3ee5481838d2f0f158d031f7614a2a10b95a73d4a56b658d5d560283ebf809e2e536b968c6c01ff0108075c3f393f5780ba)
+      set(HASH 99f5ccca2461a4d340f4528a8eef6d81180757da78313f1f9412ed13a7bbaf6df537a342536fd053db00524bcb734d205af5f6fde419a1eb2e6f77ee8b7860fe)
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD")
       set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-freebsd")
       set(_vfa_SUPPORTED OFF)
@@ -228,7 +232,7 @@ function(vcpkg_find_acquire_program VAR)
       set(URL "https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-linux.zip")
       set(SUBDIR "${NINJA_VERSION}-linux")
       set(PATHS "${DOWNLOADS}/tools/ninja-${NINJA_VERSION}-linux")
-      set(HASH ffb179ab8ea315167fcc99a8f13286e1363590185b18cf819cc73e09f2a7553790e9dc45fd1ccd0bd1d2dbf543aee3f6c0951cf9ce453a7168ffd2ac873cdd29)
+      set(HASH 9820c76fde6fac398743766e7ea0fe8a7d6e4191a77512a2d2f51c2ddcc947fcd91ac08522742281a285418c114e760b0158a968305f8dc854bb9693883b7f1e)
     endif()
     set(VERSION_CMD --version)
   elseif(VAR MATCHES "NUGET")
@@ -242,7 +246,7 @@ function(vcpkg_find_acquire_program VAR)
     set(NOEXTRACT ON)
     set(HASH 22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619)
   elseif(VAR MATCHES "MESON")
-    set(MESON_VERSION 0.55.1)
+    set(MESON_VERSION 0.55.3)
     set(PROGNAME meson)
     set(REQUIRED_INTERPRETER PYTHON3)
     set(APT_PACKAGE_NAME "meson")
@@ -251,7 +255,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PATHS ${DOWNLOADS}/tools/meson/meson-${MESON_VERSION})
     set(URL "https://github.com/mesonbuild/meson/releases/download/${MESON_VERSION}/meson-${MESON_VERSION}.tar.gz")
     set(ARCHIVE "meson-${MESON_VERSION}.tar.gz")
-    set(HASH 172b4de8c7474d709f172431b89bf2b2b1c2c38bc842039cccf6be075a45bd3509a1dab8512bc5b2ee025d65d8050d2f717dd15c1f9be17fca3b2e7da0d3e889)
+    set(HASH afb0bb25b367e681131d920995124df4b06f6d144ae1a95ebec27be13e06fefbd95840e0287cd1d84bdbb8d9c115b589a833d847c60926f55e0f15749cf66bae)
     set(_vfa_SUPPORTED ON)
     set(VERSION_CMD --version)
   elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
@@ -284,6 +288,37 @@ function(vcpkg_find_acquire_program VAR)
         set(PATHS /usr/local/opt/bison/bin)
       endif()
     endif()
+  elseif(VAR MATCHES "CLANG")
+    set(PROGNAME clang)
+    set(SUBDIR "clang-10.0.0")
+    if(CMAKE_HOST_WIN32)
+      set(PATHS 
+        # Support LLVM in Visual Studio 2019
+        "$ENV{LLVMInstallDir}/x64/bin"
+        "$ENV{LLVMInstallDir}/bin"
+        "$ENV{VCINSTALLDIR}/Tools/Llvm/x64/bin"
+        "$ENV{VCINSTALLDIR}/Tools/Llvm/bin"
+        "${DOWNLOADS}/tools/${SUBDIR}-windows/bin"
+        "${DOWNLOADS}/tools/clang/${SUBDIR}/bin")
+
+      if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
+        set(HOST_ARCH_ $ENV{PROCESSOR_ARCHITEW6432})
+      else()
+        set(HOST_ARCH_ $ENV{PROCESSOR_ARCHITECTURE})
+      endif()
+      
+      if(HOST_ARCH_ MATCHES "64")
+        set(URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe")
+        set(ARCHIVE "LLVM-10.0.0-win64.7z.exe")
+        set(HASH 3603a4be3548dabc7dda94f3ed4384daf8a94337e44ee62c0d54776c79f802b0cb98fc106e902409942e841c39bc672cc6d61153737ad1cc386b609ef25db71c)
+      else()
+        set(URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win32.exe")
+        set(ARCHIVE "LLVM-10.0.0-win32.7z.exe")
+        set(HASH 8494922b744ca0dc8d075a1d3a35a0db5a9287544afd5c4984fa328bc26f291209f6030175896b4895019126f5832045e06d8ad48072b549916df29a2228348b)
+      endif()
+    endif()
+    set(BREW_PACKAGE_NAME "llvm")
+    set(APT_PACKAGE_NAME "clang")
   elseif(VAR MATCHES "GPERF")
     set(PROGNAME gperf)
     set(GPERF_VERSION 3.0.1)
@@ -531,18 +566,18 @@ function(vcpkg_find_acquire_program VAR)
         if(ARCHIVE_EXTENSION STREQUAL ".msi")
           file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
           file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
-          _execute_process(
+          vcpkg_execute_in_download_mode(
             COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
             WORKING_DIRECTORY ${DOWNLOADS}
           )
         elseif("${ARCHIVE_PATH}" MATCHES ".7z.exe$")
           vcpkg_find_acquire_program(7Z)
-          _execute_process(
+          vcpkg_execute_in_download_mode(
             COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${PROG_PATH_SUBDIR}" -y -bso0 -bsp0
             WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
           )
         else()
-          _execute_process(
+          vcpkg_execute_in_download_mode(
             COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
             WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
           )

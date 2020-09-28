@@ -48,8 +48,6 @@ akali:arm-uwp=fail
 akali:arm64-windows=fail
 alac:arm-uwp=fail
 alac:x64-uwp=fail
-alembic:x64-osx=fail
-alembic:x64-windows-static=fail
 aliyun-oss-c-sdk:x64-linux=fail
 aliyun-oss-c-sdk:x64-osx=fail
 ampl-mp:arm64-windows=fail
@@ -78,13 +76,10 @@ asyncplusplus:arm-uwp=fail
 asyncplusplus:x64-uwp=fail
 atk:x64-osx=fail
 atk:arm64-windows=fail
-atkmm:x64-linux=fail
 atlmfc:x64-linux=fail
 atlmfc:x64-osx=fail
 aubio:x64-linux=fail
 aubio:x64-osx=fail
-avisynthplus:x64-linux=fail
-avisynthplus:x64-windows-static=fail
 avro-c:arm-uwp=fail
 avro-c:x64-osx=fail
 avro-c:x64-uwp=fail
@@ -125,9 +120,6 @@ bitserializer-rapidyaml:x64-osx=skip
 bitserializer:arm-uwp=skip
 bitserializer:arm64-windows=skip
 bitserializer:x64-osx=skip
-blaze:x64-windows=fail
-blaze:x64-windows-static=fail
-blaze:x86-windows=fail
 blend2d:arm64-windows=fail
 blend2d:arm-uwp=fail
 blend2d:x64-uwp=fail
@@ -208,16 +200,11 @@ chipmunk:x64-osx=fail
 chipmunk:x64-uwp=fail
 chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
+# Chromium Base requires a recent version of Clang to be installed.
+chromium-base:x64-linux=skip
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
-# clapack is replaced by lapack-reference.
-clapack:x64-linux = skip
-clapack:x64-osx = skip
-clapack:x64-windows = skip
-clapack:x64-windows-static = skip
-clapack:x86-windows = skip
-clapack:x64-uwp=fail
 clblas:arm64-windows=fail
 clblast:x64-linux=fail
 clblast:x64-windows-static=fail
@@ -256,7 +243,6 @@ cppmicroservices:arm-uwp=fail
 cppmicroservices:x64-uwp=fail
 cpp-netlib:arm-uwp=fail
 cpp-netlib:x64-uwp=fail
-cpp-taskflow:x64-osx=fail
 cppcoro:x64-linux=fail
 cppcoro:arm-uwp=fail
 cppcoro:x64-uwp=fail
@@ -565,12 +551,10 @@ hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
 hpx:x64-linux=fail
+libhsplasma:x64-windows-static=fail
 hwloc:arm64-windows=fail
 hwloc:arm-uwp=fail
 hwloc:x64-uwp=fail
-# hypre has a conflict with 'superlu' port
-hypre:x64-linux=skip
-hypre:x64-osx=skip
 icu:arm64-windows=fail
 icu:arm-uwp=fail
 icu:x64-uwp=fail
@@ -724,15 +708,11 @@ libhdfs3:x64-linux=fail
 libhydrogen:arm64-windows=fail
 libics:arm-uwp=fail
 libics:x64-uwp=fail
-libidn2:x64-linux=fail
-libidn2:x64-osx=fail
 libigl:arm64-windows=fail
 libigl:arm-uwp=fail
 libigl:x64-uwp=fail
 liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
-liblinear:arm-uwp=fail
-liblinear:x64-uwp=fail
 liblo:arm-uwp=fail
 liblo:x64-linux=fail
 liblo:x64-osx=fail
@@ -850,8 +830,6 @@ libressl:x64-uwp            = skip
 libressl:x64-windows        = skip
 libressl:x64-windows-static = skip
 libressl:x86-windows        = skip
-librsync:arm-uwp=fail
-librsync:x64-uwp=fail
 libsamplerate:arm64-windows=fail
 libsamplerate:arm-uwp=fail
 libsamplerate:x64-osx=fail
@@ -1010,9 +988,6 @@ mhook:x64-osx=fail
 mhook:x64-uwp=fail
 milerius-sfml-imgui:x64-osx=fail
 milerius-sfml-imgui:x64-windows-static=fail
-mimalloc:arm64-windows=fail
-mimalloc:arm-uwp=fail
-mimalloc:x64-uwp=fail
 minhook:arm64-windows=fail
 minhook:arm-uwp=fail
 minhook:x64-linux=fail
@@ -1496,6 +1471,15 @@ reproc:arm-uwp=fail
 reproc:x64-uwp=fail
 restbed:arm-uwp=fail
 restbed:x64-uwp=fail
+# file conflicts with msgpack
+rest-rpc:x86-windows=skip
+rest-rpc:x64-windows=skip
+rest-rpc:x64-windows-static=skip
+rest-rpc:x64-uwp=skip
+rest-rpc:arm-uwp=skip
+rest-rpc:arm64-windows=skip
+rest-rpc:x64-linux=skip
+rest-rpc:x64-osx=skip
 rhash:arm64-windows=fail
 rhash:arm-uwp=fail
 rhash:x64-uwp=fail
@@ -1523,11 +1507,6 @@ ryu:x64-uwp=fail
 ryu:x64-windows-static=fail
 ryu:x86-windows=fail
 ryu::arm64-windows=fail
-scintilla:arm-uwp=fail
-scintilla:x64-linux=fail
-scintilla:x64-osx=fail
-scintilla:x64-uwp=fail
-scintilla:x64-windows-static=fail
 sciter:arm64-windows=fail
 sciter:arm-uwp=fail
 sciter:x64-uwp=fail
@@ -1609,7 +1588,6 @@ soil:x64-linux=skip
 soil:x64-osx=skip
 soil2:arm-uwp=fail
 soil2:x64-uwp=fail
-sophus:x64-linux=fail
 soqt:arm64-windows=fail
 soqt:arm-uwp=fail
 soqt:x64-uwp=fail
@@ -1641,8 +1619,6 @@ spdk-isal:x64-uwp=fail
 spdk-isal:x64-windows=fail
 spdk-isal:x64-windows-static=fail
 spdk-isal:x86-windows=fail
-speex:x64-linux=fail
-speex:x64-osx=fail
 speexdsp:x64-linux=fail
 speexdsp:x64-osx=fail
 spirv-tools:arm-uwp=fail
@@ -1655,26 +1631,6 @@ stxxl:x64-uwp=fail
 sundials:arm64-windows=fail
 sundials:x64-windows=fail
 sundials:x86-windows=fail
-# Conflicts between ports:
-#The following files are already installed in C:/agent/_work/1/s/installed/x64-windows-static
-# and are in conflict with superlu:x64-windows-static
-#
-#Installed by hypre:x64-windows-static
-#    include/slu_Cnames.h
-#    include/slu_cdefs.h
-#    include/slu_dcomplex.h
-#    include/slu_ddefs.h
-#    include/slu_scomplex.h
-#    include/slu_sdefs.h
-#    include/slu_util.h
-#    include/slu_zdefs.h
-#    include/supermatrix.h
-superlu:arm-uwp=skip
-superlu:arm-windows=skip
-superlu:arm64-windows=skip
-superlu:x64-uwp=skip
-superlu:x64-windows-static=skip
-superlu:x64-windows=skip
 systemc:arm64-windows=fail
 systemc:arm-uwp=fail
 systemc:x64-uwp=fail
@@ -1684,7 +1640,6 @@ tbb:x64-uwp=fail
 tcl:arm-uwp=fail
 tcl:arm64-windows=fail
 tcl:x64-uwp=fail
-tcl:x64-linux=fail
 tcl:x64-osx=fail
 teemo:x64-uwp=fail
 teemo:arm-uwp=fail
@@ -1730,13 +1685,6 @@ tinyutf8:arm64-windows=fail
 tinyutf8:arm-uwp=fail
 tinyutf8:x64-uwp=fail
 
-#Flaky on windows only due to error PRI210: 0x80070020 - File move failed
-tmx:arm64-windows      = skip
-tmx:arm-uwp            = skip
-tmx:x64-uwp            = skip
-tmx:x64-windows        = skip
-tmx:x64-windows-static = skip
-tmx:x86-windows        = skip
 tmxlite:arm-uwp=fail
 tmxlite:x64-uwp=fail
 tmxparser:arm64-windows=fail
@@ -1851,9 +1799,6 @@ x264:arm64-windows=fail
 x264:arm-uwp=fail
 x264:x64-uwp=fail
 x264:x64-osx=fail
-x264:x86-windows=fail
-x264:x64-windows=fail
-x264:x64-windows-static=fail
 x265:arm64-windows=fail
 x265:arm-uwp=fail
 x265:x64-uwp=fail
@@ -1920,3 +1865,13 @@ ctp:x64-windows-static=skip
 ctp:x86-windows=skip
 protozero:arm-uwp=fail
 protozero:x64-uwp=fail
+
+# clapack is replaced by lapack-reference on the platforms lapack-reference supports
+clapack:x64-linux=skip
+clapack:x64-osx=skip
+clapack:x64-windows-static=skip
+clapack:x64-windows=skip
+clapack:x86-windows=skip
+clapack:x64-uwp=skip
+lapack-reference:arm64-windows=skip
+lapack-reference:arm-uwp=skip
