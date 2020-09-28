@@ -5,7 +5,7 @@
 jobs:
 - job: ${{ parameters.jobName }}
   pool:
-    name: ${{ parameters.poolName }}
+    name: variables['unstable-pool']
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
