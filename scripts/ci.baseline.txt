@@ -885,6 +885,13 @@ libuv:arm-uwp=fail
 libuv:x64-uwp=fail
 libvmdk:arm-uwp=fail
 libvmdk:x64-uwp=fail
+#Skip detection to avoid upstream remove older releases
+libvmdk:x86-windows=skip
+libvmdk:x64-windows=skip
+libvmdk:x64-windows-static=skip
+libvmdk:arm64=skip
+libvmdk:x64-linux=skip
+libvmdk:x64-osx=skip
 libwandio:x86-windows=fail
 libwandio:x64-windows=fail
 libwandio:x64-windows-static=fail
