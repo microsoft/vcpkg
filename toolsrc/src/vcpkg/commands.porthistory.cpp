@@ -16,10 +16,8 @@ namespace vcpkg::Commands::PortHistory
     {
         constexpr StringLiteral OPTION_JSON = "json";
 
-        constexpr std::array<CommandSwitch, 1> HISTORY_SWITCHES
-        {
-            {{OPTION_JSON, "Outputs version history in JSON format"}}
-        };
+        constexpr std::array<CommandSwitch, 1> HISTORY_SWITCHES{
+            {{OPTION_JSON, "Outputs version history in JSON format"}}};
 
         struct HistoryVersion
         {
@@ -180,7 +178,7 @@ namespace vcpkg::Commands::PortHistory
 
         std::string port_name = args.command_arguments.at(0);
         std::vector<HistoryVersion> versions = read_versions_from_log(paths, port_name);
-        
+
         if (Util::Sets::contains(options.switches, OPTION_JSON))
         {
             Json::Array versions_json;
@@ -194,7 +192,7 @@ namespace vcpkg::Commands::PortHistory
                 object.insert("port_version", Json::Value::string(version.port_version));
                 versions_json.push_back(std::move(object));
             }
-            
+
             Json::Object root;
             root.insert("port", Json::Value::string(port_name));
             root.insert("versions", versions_json);

@@ -777,10 +777,18 @@ namespace vcpkg
             constexpr static StringView type_name = "vcpkg.json";
             r.required_object_field(type_name, obj, NAME, spgh->name, Json::IdentifierDeserializer{});
 
-            r.required_object_field(type_name, obj, VERSION, spgh->version, Json::StringDeserializer{"an arbitrary version string"});
-            r.optional_object_field(obj, VERSION_RELAXED, spgh->version_relaxed, Json::StringDeserializer{"a relaxed semver-like version string"});
-            r.optional_object_field(obj, VERSION_SEMVER, spgh->version_semver, Json::StringDeserializer{"a semver compliant version string"});
-            r.optional_object_field(obj, VERSION_DATE, spgh->version_date, Json::StringDeserializer{"a date used as a version string"});
+            r.required_object_field(
+                type_name, obj, VERSION, spgh->version, Json::StringDeserializer{"an arbitrary version string"});
+            r.optional_object_field(obj,
+                                    VERSION_RELAXED,
+                                    spgh->version_relaxed,
+                                    Json::StringDeserializer{"a relaxed semver-like version string"});
+            r.optional_object_field(obj,
+                                    VERSION_SEMVER,
+                                    spgh->version_semver,
+                                    Json::StringDeserializer{"a semver compliant version string"});
+            r.optional_object_field(
+                obj, VERSION_DATE, spgh->version_date, Json::StringDeserializer{"a date used as a version string"});
 
             r.optional_object_field(obj, PORT_VERSION, spgh->port_version, Json::NaturalNumberDeserializer{});
             r.optional_object_field(obj, MAINTAINERS, spgh->maintainers, Json::ParagraphDeserializer{});

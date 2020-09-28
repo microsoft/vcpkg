@@ -34,10 +34,7 @@ bool VersionString::is_semver_relaxed(const std::string& version_string)
     return std::regex_match(version_string, re);
 }
 
-bool VersionString::is_valid_string(const std::string& version_string)
-{
-    return !version_string.empty();
-}
+bool VersionString::is_valid_string(const std::string& version_string) { return !version_string.empty(); }
 
 const std::string Version::to_string() const { return vcpkg::Strings::format("%s.%s.%s", major, minor, update); }
 
@@ -60,7 +57,7 @@ const ComputedVersions vcpkg::Versions::compute_required_versions(const std::vec
     // This implementation is incomplete, as it assumes we have a flattened/final list of requirements.
     // It is missing the recursive step of adding new requirements for each requested dependency.
     //
-    // It should be good enough to implement versioning for "only top-level manifest version requirements". 
+    // It should be good enough to implement versioning for "only top-level manifest version requirements".
     //
     // To do it correctly, the code that computes the dependency graph needs to include version information.
     using namespace vcpkg::Versions;

@@ -45,13 +45,11 @@ namespace vcpkg
             Optional<bool>& local_option;
         };
 
-        const FeatureFlag flag_descriptions[] = {
-            {VcpkgCmdArguments::BINARY_CACHING_FEATURE, args.binary_caching},
-            {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, args.manifest_mode},
-            {VcpkgCmdArguments::COMPILER_TRACKING_FEATURE, args.compiler_tracking},
-            {VcpkgCmdArguments::REGISTRIES_FEATURE, args.registries_feature},
-            {VcpkgCmdArguments::VERSIONS_FEATURE, args.versions_feature}
-        };
+        const FeatureFlag flag_descriptions[] = {{VcpkgCmdArguments::BINARY_CACHING_FEATURE, args.binary_caching},
+                                                 {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, args.manifest_mode},
+                                                 {VcpkgCmdArguments::COMPILER_TRACKING_FEATURE, args.compiler_tracking},
+                                                 {VcpkgCmdArguments::REGISTRIES_FEATURE, args.registries_feature},
+                                                 {VcpkgCmdArguments::VERSIONS_FEATURE, args.versions_feature}};
 
         for (const auto& desc : flag_descriptions)
         {
@@ -728,13 +726,11 @@ namespace vcpkg
         {
             StringView name;
             Optional<bool> flag;
-        } flags[] = {
-            {BINARY_CACHING_FEATURE, binary_caching},
-            {MANIFEST_MODE_FEATURE, manifest_mode},
-            {COMPILER_TRACKING_FEATURE, compiler_tracking},
-            {REGISTRIES_FEATURE, registries_feature},
-            {VERSIONS_FEATURE, versions_feature}
-        };
+        } flags[] = {{BINARY_CACHING_FEATURE, binary_caching},
+                     {MANIFEST_MODE_FEATURE, manifest_mode},
+                     {COMPILER_TRACKING_FEATURE, compiler_tracking},
+                     {REGISTRIES_FEATURE, registries_feature},
+                     {VERSIONS_FEATURE, versions_feature}};
 
         for (const auto& flag : flags)
         {
@@ -755,12 +751,10 @@ namespace vcpkg
         {
             StringView flag;
             bool enabled;
-        } flags[] = {
-            {BINARY_CACHING_FEATURE, binary_caching_enabled()},
-            {COMPILER_TRACKING_FEATURE, compiler_tracking_enabled()},
-            {REGISTRIES_FEATURE, registries_enabled()},
-            {VERSIONS_FEATURE, versions_enabled()}
-        };
+        } flags[] = {{BINARY_CACHING_FEATURE, binary_caching_enabled()},
+                     {COMPILER_TRACKING_FEATURE, compiler_tracking_enabled()},
+                     {REGISTRIES_FEATURE, registries_enabled()},
+                     {VERSIONS_FEATURE, versions_enabled()}};
 
         for (const auto& flag : flags)
         {

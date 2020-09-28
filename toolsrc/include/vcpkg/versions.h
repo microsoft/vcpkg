@@ -28,8 +28,6 @@ namespace vcpkg::Versions
 
         const std::string to_string() const;
 
-        
-
         friend bool operator<(const Version& lhs, const Version& rhs)
         {
             return std::tie(lhs.major, lhs.minor, lhs.update) < std::tie(rhs.major, rhs.minor, rhs.update);
