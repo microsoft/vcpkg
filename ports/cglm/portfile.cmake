@@ -25,7 +25,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cglm")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cglm")
 configure_file(${CMAKE_CURRENT_LIST_DIR}/cglm-config.cmake  ${CURRENT_PACKAGES_DIR}/share/cglm COPYONLY)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
