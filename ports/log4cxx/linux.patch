@@ -9,6 +9,8 @@ index a204ece..24a7565 100644
 -      set(APR_SYSTEM_LIBS  ws2_32  mswsock  rpcrt4)
 +      if(WIN32)
 +        set(APR_SYSTEM_LIBS  ws2_32  mswsock  rpcrt4)
++      else()
++        set(APR_SYSTEM_LIBS  pthread)
 +      endif()
        set(APR_COMPILE_DEFINITIONS APR_DECLARE_STATIC)
        find_library(APR_LIBRARIES NAMES apr-1)
