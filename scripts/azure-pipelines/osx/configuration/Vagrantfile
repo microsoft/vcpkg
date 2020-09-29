@@ -32,7 +32,9 @@ devops_url = configuration['devops_url']
 agent_pool = configuration['agent_pool']
 pat = configuration['pat']
 archives = configuration['archives']
-archives_url = "//#{archives['username']}:#{url_encode(archives['access_key'])}@#{archives['urn']}/#{archives['share']}"
+archives_username = archives['username']
+archives_urn = archives['urn']
+archives_path = archives['path']
 
 Vagrant.configure('2') do |config|
   # give them extra time to boot up
@@ -102,7 +104,7 @@ Vagrant.configure('2') do |config|
   config.vm.provision "shell",
     run: 'once',
     name: 'Mount archives directory',
-    inline: "mount_smbfs -d 777 -f 777 #{archives_url} ~/Data/archives",
+    inline: "sshfs #{archives_username}@#{archives_urn}:#{archives_path} ~/Data/archives",
     privileged: false
 
   config.vm.provision 'shell',
