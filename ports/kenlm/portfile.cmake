@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kpu/kenlm
-    REF a900efaee160c80dc19ec065f603d7f1d28196ed
-    SHA512 8c2b86670df0266d1dc411dfda7ce568a27461c889fb4bbdb6b9d11fc42a62ef3e7e61d464ef4015dd04355fca1cc44ed4d0d589bf789a5e8320b9126d35fb9f
+    REF ac454207c69f293315ae9be3aff2238fc8c999a0
+    SHA512 96f35c46237870ce71c04e20783b4d410e7dfec6eb10673e29aa9ba27f95c5ad77aafd443a1583cd7b757a8c360fc16f236ef8ecf965f317c24c8f3b45547722
     HEAD_REF master
     PATCHES fix-build-install.patch
 )
