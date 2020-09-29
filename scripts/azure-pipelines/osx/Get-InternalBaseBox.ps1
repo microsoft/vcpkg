@@ -26,13 +26,17 @@ if (-not $IsMacOS) {
     throw 'This script should only be run on a macOS host'
 }
 
-umount '/Users/vcpkg/vagrant/share'
-if (-not $?) {
-    Write-Error "umount failed with return code $LASTEXITCODE."
-    throw
+$mountPoint = '/Users/vcpkg/vagrant/share'
+
+if (mount | grep "on $mountPoint (") {
+    umount $mountPoint
+    if (-not $?) {
+        Write-Error "umount $mountPoint failed with return code $LASTEXITCODE."
+        throw
+    }
 }
 
-sshfs "fileshare@${FileshareMachine}:/Users/fileshare/share" '/Users/vcpkg/vagrant/share'
+sshfs "fileshare@${FileshareMachine}:/Users/fileshare/share" $mountPoint
 if ($LASTEXITCODE -eq 1) {
     Write-Error 'sshfs returned 1.
 This means that the osxfuse kernel extension was not allowed to load.
@@ -51,5 +55,5 @@ if (-not [String]::IsNullOrEmpty($BoxVersion)) {
     $versionArgs = @()
 }
 
-vagrant box add '/Users/vcpkg/vagrant/share/vagrant-boxes/macos-ci.json' @versionArgs
+vagrant box add "$mountPoint/vagrant-boxes/macos-ci.json" @versionArgs
 
