@@ -24,16 +24,18 @@ namespace vcpkg::Commands::PortHistory
             std::string port_version;
         };
 
-        static System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths, const std::string& cmd)
+        static const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths, const std::string& cmd)
         {
             const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
             const fs::path dot_git_dir = paths.root / ".git";
 
-            const std::string full_cmd =
-                Strings::format(R"("%s" --git-dir="%s" %s)", fs::u8string(git_exe), fs::u8string(dot_git_dir), cmd);
+            // git.exe --git-dir="{git_dir_path}" {cmd}
+            System::CmdLineBuilder builder;
+            builder.path_arg(git_exe);
+            builder.string_arg(Strings::format("--git-dir=%s", fs::u8string(dot_git_dir)));
+            const auto full_cmd = Strings::concat(builder.extract(), " ", cmd);
 
-            auto output = System::cmd_execute_and_capture_output(full_cmd);
-            return output;
+            return System::cmd_execute_and_capture_output(full_cmd);
         }
 
         static Json::Object parse_json_object(StringView sv)
@@ -134,9 +136,15 @@ namespace vcpkg::Commands::PortHistory
 
         static std::vector<HistoryVersion> read_versions_from_log(const VcpkgPaths& paths, const std::string& port_name)
         {
-            const std::string cmd =
-                Strings::format(R"(log --format="%%H %%cd" --date=short --left-only -- ports/%s/.)", port_name);
-            auto output = run_git_command(paths, cmd);
+            // log --format="%H %cd" --date=short --left-only -- ports/{port_name}/.
+            System::CmdLineBuilder builder;
+            builder.string_arg("log");
+            builder.string_arg("--format=%H %cd");
+            builder.string_arg("--date=short");
+            builder.string_arg("--left-only");
+            builder.string_arg("--"); // Begin pathspec
+            builder.string_arg(Strings::format("ports/%s/.", port_name));
+            const auto output = run_git_command(paths, builder.extract());
 
             auto commits = Util::fmap(
                 Strings::split(output.output, '\n'), [](const std::string& line) -> auto {
