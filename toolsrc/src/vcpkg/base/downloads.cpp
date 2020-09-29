@@ -15,9 +15,9 @@
 namespace vcpkg::Downloads
 {
 #if defined(_WIN32)
-    struct WinHttpCloseHandleWrapper
+    struct WinHttpHandleDeleter
     {
-        void operator()(HINTERNET h) { WinHttpCloseHandle(h); }
+        void operator()(HINTERNET h) const { WinHttpCloseHandle(h); }
     };
 
     struct WinHttpRequest
@@ -85,7 +85,7 @@ namespace vcpkg::Downloads
             return 1;
         }
 
-        std::unique_ptr<void, WinHttpCloseHandleWrapper> m_hRequest;
+        std::unique_ptr<void, WinHttpHandleDeleter> m_hRequest;
     };
 
     struct WinHttpSession
@@ -153,7 +153,7 @@ namespace vcpkg::Downloads
             return ret;
         }
 
-        std::unique_ptr<void, WinHttpCloseHandleWrapper> m_hSession;
+        std::unique_ptr<void, WinHttpHandleDeleter> m_hSession;
     };
 
     struct WinHttpConnection
@@ -168,7 +168,7 @@ namespace vcpkg::Downloads
             return ret;
         }
 
-        std::unique_ptr<void, WinHttpCloseHandleWrapper> m_hConnect;
+        std::unique_ptr<void, WinHttpHandleDeleter> m_hConnect;
     };
 #endif
 

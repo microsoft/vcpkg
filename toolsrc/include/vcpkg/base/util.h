@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <functional>
 #include <map>
-#include <mutex>
 #include <type_traits>
 #include <unordered_map>
 #include <utility>

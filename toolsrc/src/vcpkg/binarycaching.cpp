@@ -55,12 +55,16 @@ namespace
                                                         const fs::path& dst,
                                                         const fs::path& archive_path)
     {
+        System::CmdLineBuilder cmd;
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
-        auto cmd = Strings::format(
-            R"("%s" x "%s" -o"%s" -y)", fs::u8string(seven_zip_exe), fs::u8string(archive_path), fs::u8string(dst));
+        cmd.path_arg(seven_zip_exe)
+            .string_arg("x")
+            .path_arg(archive_path)
+            .string_arg("-o" + fs::u8string(dst))
+            .string_arg("-y");
 #else
-        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", fs::u8string(archive_path), fs::u8string(dst));
+        cmd.string_arg("unzip").string_arg("-qq").path_arg(archive_path).string_arg("-d" + fs::u8string(dst));
 #endif
         return System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
     }
@@ -97,7 +101,7 @@ namespace
 #endif
     }
 
-    struct ArchivesBinaryProvider : NullBinaryProvider
+    struct ArchivesBinaryProvider : IBinaryProvider
     {
         ArchivesBinaryProvider(std::vector<fs::path>&& read_dirs,
                                std::vector<fs::path>&& write_dirs,

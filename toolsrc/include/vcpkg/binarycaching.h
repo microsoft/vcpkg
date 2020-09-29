@@ -6,7 +6,7 @@
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkgpaths.h>
 
-#include <set>
+#include <unordered_map>
 
 namespace vcpkg::Dependencies
 {

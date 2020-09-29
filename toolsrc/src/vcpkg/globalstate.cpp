@@ -1,3 +1,5 @@
+#include <vcpkg/base/lockguarded.h>
+
 #include <vcpkg/globalstate.h>
 
 namespace vcpkg

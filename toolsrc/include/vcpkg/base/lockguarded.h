@@ -1,12 +1,11 @@
 #pragma once
 
+#include <vcpkg/base/fwd/lockguarded.h>
+
 #include <mutex>
 
 namespace vcpkg::Util
 {
-    template<class T>
-    struct LockGuardPtr;
-
     template<class T>
     struct LockGuarded
     {
