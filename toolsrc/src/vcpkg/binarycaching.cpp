@@ -1303,6 +1303,9 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
     tbl.format("nugetconfig,<path>[,<rw>]",
                "Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This "
                "config should specify `defaultPushSource` for uploads.");
+    tbl.format("x-azblob,<url>,<sas>[,<rw>]",
+               "**Experimental: will change or be removed without warning** Adds an Azure Blob Storage source. Uses "
+               "Shared Access Signature validation. URL should include the container path.");
     tbl.format("interactive", "Enables interactive credential management for some source types");
     tbl.blank();
     tbl.text("The `<rw>` optional parameter for certain strings controls whether they will be consulted for "
