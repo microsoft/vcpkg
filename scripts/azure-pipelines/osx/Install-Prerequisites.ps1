@@ -55,13 +55,17 @@ $Installables.Applications | ForEach-Object {
 }
 
 $Installables.Brew | ForEach-Object {
-    switch ($_.Kind) {
-        $null { brew install $_.Name }
-        'cask' { brew cask install $_.Name }
-        default {
-            Write-Error "Invalid kind: $($_.Kind). Expected either empty, or 'cask'."
-        }
-    }
+    $installable = $_
+    if ($null -eq (Get-Member -InputObject $installable -Name 'Kind')) {
+        brew install $installable.Name
+    } else {
+        switch ($installable.Kind) {
+            'cask' { brew cask install $installable.Name }
+            default {
+                Write-Error "Invalid kind: $_. Expected either empty, or 'cask'."
+            }
+         }
+     }
 }
 
 # Install plugins
