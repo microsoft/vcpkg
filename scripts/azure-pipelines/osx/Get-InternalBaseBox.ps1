@@ -15,8 +15,8 @@ The version of the base box to import; this should be a date, i.e. 2020-09-17
 Param(
     [Parameter(Mandatory=$True)]
     [String]$StorageAccountAccessKey,
-		[Parameter(Mandatory=$True)]
-		[String]$BaseBoxVersion
+    [Parameter(Mandatory=$True)]
+    [String]$BaseBoxVersion
 )
 
 Set-StrictMode -Version 2
