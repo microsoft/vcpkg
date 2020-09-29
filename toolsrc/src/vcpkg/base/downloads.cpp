@@ -172,6 +172,21 @@ namespace vcpkg::Downloads
     };
 #endif
 
+    Optional<details::SplitURIView> details::split_uri_view(StringView uri)
+    {
+        auto sep = std::find(uri.begin(), uri.end(), ':');
+        if (sep == uri.end()) return nullopt;
+
+        StringView scheme(uri.begin(), sep);
+        if (Strings::starts_with({sep + 1, uri.end()}, "//"))
+        {
+            auto path_start = std::find(sep + 3, uri.end(), '/');
+            return details::SplitURIView{scheme, StringView{sep + 1, path_start}, {path_start, uri.end()}};
+        }
+        // no authority
+        return details::SplitURIView{scheme, {}, {sep + 1, uri.end()}};
+    }
+
     void verify_downloaded_file_hash(const Files::Filesystem& fs,
                                      const std::string& url,
                                      const fs::path& path,
@@ -342,19 +357,19 @@ namespace vcpkg::Downloads
         /// </summary>
         static bool download_winhttp(Files::Filesystem& fs,
                                      const fs::path& download_path_part_path,
+                                     details::SplitURIView split_uri,
                                      const std::string& url,
                                      std::string& errors)
         {
-            std::string url_no_proto;
+            // `download_winhttp` does not support user or port syntax in authorities
+            auto hostname = split_uri.authority.value_or_exit(VCPKG_LINE_INFO).substr(2);
             INTERNET_PORT port;
-            if (Strings::starts_with(url, "https://"))
+            if (split_uri.scheme == "https")
             {
-                url_no_proto = url.substr(8);
                 port = INTERNET_DEFAULT_HTTPS_PORT;
             }
-            else if (Strings::starts_with(url, "http://"))
+            else if (split_uri.scheme == "http")
             {
-                url_no_proto = url.substr(7);
                 port = INTERNET_DEFAULT_HTTP_PORT;
             }
             else
@@ -368,10 +383,6 @@ namespace vcpkg::Downloads
 
             WriteFlushFile f(download_path_part_path);
 
-            auto path_begin = Util::find(url_no_proto, '/');
-            std::string hostname(url_no_proto.begin(), path_begin);
-            std::string path(path_begin, url_no_proto.end());
-
             Debug::print("Downloading ", url, "\n");
             static auto s = WinHttpSession::make().value_or_exit(VCPKG_LINE_INFO);
             auto conn = WinHttpConnection::make(s.m_hSession.get(), hostname, port);
@@ -380,7 +391,7 @@ namespace vcpkg::Downloads
                 Strings::append(errors, url, ": ", conn.error(), '\n');
                 return false;
             }
-            auto req = WinHttpRequest::make(conn.get()->m_hConnect.get(), path);
+            auto req = WinHttpRequest::make(conn.get()->m_hConnect.get(), split_uri.path_query_fragment);
             if (!req)
             {
                 Strings::append(errors, url, ": ", req.error(), '\n');
@@ -414,16 +425,14 @@ namespace vcpkg::Downloads
         for (const std::string& url : urls)
         {
 #if defined(_WIN32)
-            if (Strings::starts_with(url, "https://") || Strings::starts_with(url, "http://"))
+            auto split_uri = details::split_uri_view(url).value_or_exit(VCPKG_LINE_INFO);
+            auto authority = split_uri.authority.value_or_exit(VCPKG_LINE_INFO).substr(2);
+            if (split_uri.scheme == "https" || split_uri.scheme == "http")
             {
-                StringView without_proto(url);
-                without_proto = url[4] == 's' ? without_proto.substr(8) : without_proto.substr(7);
-                // This dereference is safe because url is a `std::string` and guaranteed to have a trailing \0
-                char ch = *Strings::find_first_of(without_proto, ":/@");
                 // This check causes complex URLs (non-default port, embedded basic auth) to be passed down to curl.exe
-                if (ch == '\0' || ch == '/')
+                if (Strings::find_first_of(authority, ":@") == authority.end())
                 {
-                    if (download_winhttp(fs, download_path_part_path, url, errors))
+                    if (download_winhttp(fs, download_path_part_path, split_uri, url, errors))
                     {
                         verify_downloaded_file_hash(fs, url, download_path_part_path, sha512);
                         fs.rename(download_path_part_path, download_path, VCPKG_LINE_INFO);

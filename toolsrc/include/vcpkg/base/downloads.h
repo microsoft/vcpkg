@@ -1,10 +1,24 @@
 #pragma once
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/optional.h>
 #include <vcpkg/base/view.h>
 
 namespace vcpkg::Downloads
 {
+    namespace details
+    {
+        struct SplitURIView
+        {
+            StringView scheme;
+            Optional<StringView> authority;
+            StringView path_query_fragment;
+        };
+
+        // e.g. {"https","//example.org", "/index.html"}
+        Optional<SplitURIView> split_uri_view(StringView uri);
+    }
+
     void verify_downloaded_file_hash(const Files::Filesystem& fs,
                                      const std::string& url,
                                      const fs::path& path,
