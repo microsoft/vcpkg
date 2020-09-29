@@ -11,6 +11,7 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
     PATCHES
         expat.patch
+        linux.patch
 )
 
 vcpkg_configure_cmake(
