@@ -11,8 +11,6 @@ file(GLOB HEADERS
   "include/theora/theoraenc.h"
 )
 
-include_directories("include")
-
 set(LIBTHEORA_COMMON
   "lib/apiwrapper.c"
   "lib/bitpack.c"
@@ -71,19 +69,25 @@ endif()
 
 add_library(theora-common OBJECT ${LIBTHEORA_COMMON} ${HEADERS})
 target_link_libraries(theora-common PUBLIC Ogg::ogg)
+target_include_directories(theora-common PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 add_library(theora-enc OBJECT ${LIBTHEORA_ENC} ${HEADERS})
 target_link_libraries(theora-enc PUBLIC Ogg::ogg)
+target_include_directories(theora-enc PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 add_library(theora-dec OBJECT ${LIBTHEORA_DEC} ${HEADERS})
 target_link_libraries(theora-dec PUBLIC Ogg::ogg)
+target_include_directories(theora-dec PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
 add_library(theora $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> $<TARGET_OBJECTS:theora-dec> "libtheora.def")
 target_link_libraries(theora PUBLIC Ogg::ogg)
+target_include_directories(theora PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
 add_library(theoraenc $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> "win32/xmingw32/libtheoraenc-all.def")
 target_link_libraries(theoraenc PUBLIC Ogg::ogg)
+target_include_directories(theoraenc PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
 add_library(theoradec $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-dec> "win32/xmingw32/libtheoradec-all.def")
 target_link_libraries(theoradec PUBLIC Ogg::ogg)
+target_include_directories(theoradec PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
 include(CMakePackageConfigHelpers)
 
