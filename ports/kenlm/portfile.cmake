@@ -32,7 +32,10 @@ vcpkg_install_cmake()
 
 set(KENLM_TOOLS count_ngrams filter fragment kenlm_benchmark lmplz phrase_table_vocab)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND KENLM_TOOLS probing_hash_table_benchmark query build_binary interpolate streaming_example)
+    list(APPEND KENLM_TOOLS probing_hash_table_benchmark query build_binary streaming_example)
+    if ("interpolate" IN_LIST FEATURES)
+        list(APPEND KENLM_TOOLS interpolate)
+    endif()
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${KENLM_TOOLS} AUTO_CLEAN)
 
