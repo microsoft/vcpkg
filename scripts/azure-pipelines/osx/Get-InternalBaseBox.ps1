@@ -42,9 +42,11 @@ if ($LASTEXITCODE -eq 1) {
 This means that the osxfuse kernel extension was not allowed to load.
 Please open System Preferences > Security & Privacy > General,
 and allow the kernel extension to load.
-Then, rerun this script.'
+Then, rerun this script.
+
+If you''ve already done this, you probably need to add your ssh keys to the fileshare machine.'
     throw
-} else if (-not $?) {
+} elseif (-not $?) {
     Write-Error "sshfs failed with return code $LASTEXITCODE."
     throw
 }
@@ -55,5 +57,5 @@ if (-not [String]::IsNullOrEmpty($BoxVersion)) {
     $versionArgs = @()
 }
 
-vagrant box add "$mountPoint/vagrant-boxes/macos-ci.json" @versionArgs
+vagrant box add "$mountPoint/vcpkg-boxes/macos-ci.json" @versionArgs
 
