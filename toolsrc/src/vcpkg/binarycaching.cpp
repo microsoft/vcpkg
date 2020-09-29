@@ -814,12 +814,6 @@ IBinaryProvider& vcpkg::null_binary_provider()
     return p;
 }
 
-ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(View<std::string> args)
-{
-    std::string env_string = System::get_environment_variable("VCPKG_BINARY_SOURCES").value_or("");
-
-    return create_binary_provider_from_configs_pure(env_string, args);
-}
 namespace
 {
     const ExpectedS<fs::path>& default_cache_path()
@@ -856,10 +850,6 @@ namespace
                 return {"default path was not absolute: " + fs::u8string(p), expected_right_tag};
             }
         });
-        if (cachepath.has_value())
-            Debug::print("Default binary cache path is: ", fs::u8string(*cachepath.get()), '\n');
-        else
-            Debug::print("No binary cache path. Reason: ", cachepath.error(), '\n');
         return cachepath;
     }
 
@@ -1115,6 +1105,21 @@ namespace
     };
 }
 
+ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs(View<std::string> args)
+{
+    std::string env_string = System::get_environment_variable("VCPKG_BINARY_SOURCES").value_or("");
+    if (Debug::g_debugging)
+    {
+        const auto& cachepath = default_cache_path();
+        if (cachepath.has_value())
+            Debug::print("Default binary cache path is: ", fs::u8string(*cachepath.get()), '\n');
+        else
+            Debug::print("No binary cache path. Reason: ", cachepath.error(), '\n');
+    }
+
+    return create_binary_provider_from_configs_pure(env_string, args);
+}
+
 ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs_pure(
     const std::string& env_string, View<std::string> args)
 {
@@ -1149,6 +1154,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
     }
     if (!s.url_templates_to_get.empty())
     {
+        Metrics::g_metrics.lock()->track_property("binarycaching-url-get", "defined");
         providers.push_back(std::make_unique<HttpGetBinaryProvider>(std::move(s.url_templates_to_get)));
     }
     if (!s.sources_to_read.empty() || !s.sources_to_write.empty() || !s.configs_to_read.empty() ||
