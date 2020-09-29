@@ -162,3 +162,26 @@ Once you've done that, add the software versions below.
 * 2020-09-28:
   * macOS: 10.15.6
   * Xcode CLTs: 12
+
+### (Internal) Accessing the macOS fileshare
+
+The fileshare is located on `vcpkgmm-01`, under the `fileshare` user, in the `share` directory.
+In order to get `sshfs` working on the physical machine,
+you'll need to do the same thing one needs to do for building the base box:
+
+```sh
+$ brew cask install osxfuse && brew install sshfs
+$ sudo shutdown -r now
+```
+
+Then, once you've ssh'd back in:
+
+```sh
+$ mkdir vagrant/share
+$ sshfs fileshare@<vcpkgmm-01 URN>:/Users/fileshare/share vagrant/share
+```
+
+If you get an error, that means that gatekeeper has prevented the kernel extension from loading,
+so you'll need to access the GUI of the machine, go to System Preferences,
+Security & Privacy, General, unlock the settings, and allow apps from the osxfuse developer to run.
+Then, you'll be able to add the fileshare as an sshfs.
