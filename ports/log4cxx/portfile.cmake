@@ -8,6 +8,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    REF ${VERSION}
+    PATCHES
+        expat.patch
 )
 
 vcpkg_configure_cmake(
@@ -20,11 +23,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/log4cxx)
 
 vcpkg_copy_pdbs()
 
