@@ -12,7 +12,6 @@ file(GLOB HEADERS
 )
 
 include_directories("include")
-include_directories(${Ogg_INCLUDE_DIR})
 
 set(LIBTHEORA_COMMON
   "lib/apiwrapper.c"
@@ -71,17 +70,20 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 add_library(theora-common OBJECT ${LIBTHEORA_COMMON} ${HEADERS})
+target_link_libraries(theora-common PUBLIC Ogg::ogg)
 add_library(theora-enc OBJECT ${LIBTHEORA_ENC} ${HEADERS})
+target_link_libraries(theora-enc PUBLIC Ogg::ogg)
 add_library(theora-dec OBJECT ${LIBTHEORA_DEC} ${HEADERS})
+target_link_libraries(theora-dec PUBLIC Ogg::ogg)
 
 add_library(theora $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> $<TARGET_OBJECTS:theora-dec> "libtheora.def")
-target_link_libraries(theora Ogg::ogg)
+target_link_libraries(theora PUBLIC Ogg::ogg)
 
 add_library(theoraenc $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> "win32/xmingw32/libtheoraenc-all.def")
-target_link_libraries(theoraenc Ogg::ogg)
+target_link_libraries(theoraenc PUBLIC Ogg::ogg)
 
 add_library(theoradec $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-dec> "win32/xmingw32/libtheoradec-all.def")
-target_link_libraries(theoradec Ogg::ogg)
+target_link_libraries(theoradec PUBLIC Ogg::ogg)
 
 include(CMakePackageConfigHelpers)
 
