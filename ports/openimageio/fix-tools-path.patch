@@ -1,8 +1,8 @@
 diff --git a/src/cmake/oiio_macros.cmake b/src/cmake/oiio_macros.cmake
-index 9e54f67..d9c9437 100644
+index 623eefa..8705e96 100644
 --- a/src/cmake/oiio_macros.cmake
 +++ b/src/cmake/oiio_macros.cmake
-@@ -142,7 +142,7 @@ macro (fancy_add_executable)
+@@ -127,7 +127,7 @@ macro (fancy_add_executable)
              target_link_libraries (${_target_NAME} PRIVATE ${_target_LINK_LIBRARIES})
          endif ()
          set_target_properties (${_target_NAME} PROPERTIES FOLDER "Tools")
