@@ -5,18 +5,19 @@
 .SYNOPSIS
 Installs the base box at the specified version from the share.
 
-.PARAMETER StorageAccountAccessKey
-An access key for the storage account.
+.PARAMETER FileshareMachine
+The machine which is acting as a fileshare
 
-.PARAMETER BaseBoxVersion
-The version of the base box to import; this should be a date, i.e. 2020-09-17
+.PARAMETER BoxVersion
+The version of the box to add. Defaults to latest if nothing is passed.
 #>
-[CmdletBinding(PositionalBinding=$False)]
+[CmdletBinding()]
 Param(
     [Parameter(Mandatory=$True)]
-    [String]$StorageAccountAccessKey,
-    [Parameter(Mandatory=$True)]
-    [String]$BaseBoxVersion
+    [String]$FileshareMachine,
+
+    [Parameter()]
+    [String]$BoxVersion
 )
 
 Set-StrictMode -Version 2
@@ -25,8 +26,30 @@ if (-not $IsMacOS) {
     throw 'This script should only be run on a macOS host'
 }
 
-$encodedAccessKey = [System.Web.HttpUtility]::UrlEncode($StorageAccountAccessKey)
+umount '/Users/vcpkg/vagrant/share'
+if (-not $?) {
+    Write-Error "umount failed with return code $LASTEXITCODE."
+    throw
+}
 
-# TODO: finish this, once I have access to a mac again
-# mount_smbfs
-# vagrant box add
+sshfs "fileshare@${FileshareMachine}:/Users/fileshare/share" '/Users/vcpkg/vagrant/share'
+if ($LASTEXITCODE -eq 1) {
+    Write-Error 'sshfs returned 1.
+This means that the osxfuse kernel extension was not allowed to load.
+Please open System Preferences > Security & Privacy > General,
+and allow the kernel extension to load.
+Then, rerun this script.'
+    throw
+} else if (-not $?) {
+    Write-Error "sshfs failed with return code $LASTEXITCODE."
+    throw
+}
+
+if (-not [String]::IsNullOrEmpty($BoxVersion)) {
+    $versionArgs = @("--box-version", $BoxVersion)
+} else {
+    $versionArgs = @()
+}
+
+vagrant box add '/Users/vcpkg/vagrant/share/vagrant-boxes/macos-ci.json' @versionArgs
+

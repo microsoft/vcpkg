@@ -54,6 +54,16 @@ $Installables.Applications | ForEach-Object {
     hdiutil detach /Volumes/setup-installer
 }
 
+$Installables.Brew | ForEach-Object {
+    switch ($_.Kind) {
+        $null { brew install $_.Name }
+        'cask' { brew cask install $_.Name }
+        default {
+            Write-Error "Invalid kind: $($_.Kind). Expected either empty, or 'cask'."
+        }
+    }
+}
+
 # Install plugins
 $installedExtensionPacks = Get-InstalledVirtualBoxExtensionPacks
 

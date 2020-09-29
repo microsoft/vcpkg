@@ -85,7 +85,7 @@ Param(
     [String]$ArchivesPath,
 
     [Parameter(Mandatory=$False)]
-    [String]$ArchivesUsername = 'fileshare',
+    [String]$ArchivesUsername = 'archivesshare',
 
     [Parameter()]
     [String]$BaseName = 'vcpkg-eg-mac',
