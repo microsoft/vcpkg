@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12.4)
 project(test)
 find_package(jsoncpp CONFIG REQUIRED)
 add_library(my_lib my_lib.cpp)

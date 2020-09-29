@@ -21,7 +21,7 @@ and [cxxopts](https://github.com/jarro2783/cxxopts).
 Let's write our `CMakeLists.txt` first:
 
 ```cmake
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.12.4)
 
 project(fibo CXX)
 

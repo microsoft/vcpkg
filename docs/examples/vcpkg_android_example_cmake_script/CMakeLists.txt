@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12.4)
 
 # if -DVCPKG_TARGET_ANDROID=ON is specified when invoking cmake, load cmake/vcpkg_android.cmake
 # !!! Important: place this line before calling project() !!!
