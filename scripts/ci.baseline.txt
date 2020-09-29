@@ -809,6 +809,7 @@ libpq:x64-uwp=fail
 libqcow:arm-uwp=fail
 libqcow:x64-uwp=fail
 libqcow:x64-windows-static=fail
+libqcow:x64-osx=fail
 libraqm:x64-windows-static=fail
 librdkafka:arm-uwp=fail
 librdkafka:x64-uwp=fail
