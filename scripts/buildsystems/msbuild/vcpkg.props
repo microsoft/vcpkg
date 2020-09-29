@@ -1,4 +1,5 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Do not define derived properties here. This file may be imported once and some of the properties below may be overridden afterwards -->
 
   <!-- Set default OS Target-->
   <PropertyGroup Condition="'$(VcpkgOSTarget)' == ''">
@@ -16,28 +17,18 @@
     <VcpkgPropsImported>true</VcpkgPropsImported>
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
     <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
-
-    <!-- Triplet defining platform, OS, and linkage -->
     <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
-    <VcpkgLinkage Condition="'$(VcpkgUseStatic)' == 'true'">-static</VcpkgLinkage>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(VcpkgLinkage)</VcpkgTriplet>
+    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), '..\..\..'))</VcpkgRoot>
 
     <VcpkgAutoLink Condition="'$(VcpkgAutoLink)' == ''">true</VcpkgAutoLink>
     <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!).
     Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
     <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true'">false</VcpkgAutoLink>
 
-    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgRoot>
-    <VcpkgRoot Condition="!$(VcpkgRoot.EndsWith('\'))">$(VcpkgRoot)\</VcpkgRoot>
-
-    <!-- Overwrite VcpkgPageSchema with a non-existing path to disable the VcPkg property sheet in your projects -->
-    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$(VcpkgRoot)scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
-
     <!-- Manifest files -->
     <VcpkgEnableManifest Condition="'$(VcpkgEnableManifest)' == ''">false</VcpkgEnableManifest>
     <VcpkgManifestInstall Condition="'$(VcpkgManifestInstall)' == ''">true</VcpkgManifestInstall>
     <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' != ''">$([MSbuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), vcpkg.json))"</VcpkgManifestRoot>
-    <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' != '' and !$(VcpkgManifestRoot.EndsWith('\'))">$(VcpkgManifestRoot)\</VcpkgManifestRoot>
   </PropertyGroup>
 
 </Project>

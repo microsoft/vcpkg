@@ -3,23 +3,32 @@
   <!-- Import default properties if not done yet. This does not overwrite any previously defined properties. -->
   <Import Condition="'$(VcpkgPropsImported)' != 'true'" Project="vcpkg.props" />
 
-  <!-- Import property page 'Vcpkg' -->
-  <ItemGroup Condition="'$(VcpkgPageSchema)' != '' and exists('$(VcpkgPageSchema)')">
-    <PropertyPageSchema Include="$(VcpkgPageSchema)">
-      <Context>Project</Context>
-    </PropertyPageSchema>
-  </ItemGroup>
-
+  <!-- Define properties derived from those defined in vcpkg.props, in the project file or specified on the command line. -->
   <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
-    <VcpkgInstalledDir>$(VcpkgRoot)installed\</VcpkgInstalledDir>
-    <VcpkgInstalledDir Condition="'$(VcpkgEnableManifest)' == 'true'">$(VcpkgManifestRoot)\vcpkg_installed\</VcpkgInstalledDir>
-    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$(VcpkgInstalledDir)$(VcpkgTriplet)</VcpkgCurrentInstalledDir>
+    <!-- Triplet defining platform, OS, and linkage -->
+    <VcpkgLinkage />
+    <VcpkgLinkage Condition="'$(VcpkgUseStatic)' == 'true'">-static</VcpkgLinkage>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(VcpkgLinkage)</VcpkgTriplet>
+
+    <!-- Note: Overwrite VcpkgPageSchema with a non-existing path to disable the VcPkg property sheet in your projects -->
+    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$([System.IO.Path]::Combine($(VcpkgRoot), 'scripts\buildsystems\msbuild\vcpkg-general.xml'))</VcpkgPageSchema>
+
+    <VcpkgInstalledDir>$([System.IO.Path]::Combine($(VcpkgRoot), 'installed'))</VcpkgInstalledDir>
+    <VcpkgInstalledDir Condition="'$(VcpkgEnableManifest)' == 'true'">$([System.IO.Path]::Combine($(VcpkgManifestRoot), 'vcpkg_installed'))</VcpkgInstalledDir>
+    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$([System.IO.Path]::Combine($(VcpkgInstalledDir), $(VcpkgTriplet)))</VcpkgCurrentInstalledDir>
     <VcpkgCurrentInstalledDir Condition="!$(VcpkgCurrentInstalledDir.EndsWith('\'))">$(VcpkgCurrentInstalledDir)\</VcpkgCurrentInstalledDir>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
     <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
   </PropertyGroup>
+
+  <!-- Import property page 'Vcpkg' -->
+  <ItemGroup Condition="'$(VcpkgPageSchema)' != '' and exists('$(VcpkgPageSchema)')">
+    <PropertyPageSchema Include="$(VcpkgPageSchema)">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
 
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <Link>
@@ -53,7 +62,7 @@
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'">
     <Message Text="Installing vcpkg dependencies" Importance="High" />
-    <Exec Command="%22$(VcpkgRoot)vcpkg.exe%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22"
+    <Exec Command="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22"
           StandardOutputImportance="High" />
   </Target>
 
