@@ -806,10 +806,16 @@ libpng-apng:x64-windows-static = skip
 libpng-apng:x86-windows        = skip
 libpq:arm-uwp=fail
 libpq:x64-uwp=fail
-libqcow:arm-uwp=fail
-libqcow:x64-uwp=fail
-libqcow:x64-windows-static=fail
-libqcow:x64-osx=fail
+# The developer of libqcow does not offer stable release archives
+libqcow:arm-uwp=skip
+libqcow:x64-uwp=skip
+libqcow:x64-windows-static=skip
+libqcow:x64-osx=skip
+libqcow:x64-windows=skip
+libqcow:x64-linux=skip
+libqcow:x86-windows=skip
+libqcow:arm64-windows=skip
+
 libraqm:x64-windows-static=fail
 librdkafka:arm-uwp=fail
 librdkafka:x64-uwp=fail
