@@ -5,8 +5,8 @@
   "homepage": "https://github.com/facebookresearch/faiss",
   "license": "MIT",
   "dependencies": [
-    "openblas",
-    "lapack"
+    "lapack",
+    "openblas"
   ],
   "features": {
     "gpu": {
