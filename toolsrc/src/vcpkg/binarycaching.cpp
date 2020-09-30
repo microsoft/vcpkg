@@ -254,7 +254,7 @@ namespace
         {
             auto& fs = paths.get_filesystem();
 
-            size_t num_restored = 0;
+            const size_t current_restored = m_restored.size();
 
             for (auto&& url_template : m_url_templates)
             {
@@ -289,7 +289,6 @@ namespace
                         {
                             // decompression success
                             fs.remove(url_paths[i].second, VCPKG_LINE_INFO);
-                            num_restored++;
                             m_restored.insert(specs[i]);
                         }
                         else
@@ -303,8 +302,9 @@ namespace
                     return Util::Sets::contains(m_restored, action->spec);
                 });
             }
-            System::print2(
-                "Restored ", num_restored, " packages from HTTP servers. Use --debug for more information.\n");
+            System::print2("Restored ",
+                           m_restored.size() - current_restored,
+                           " packages from HTTP servers. Use --debug for more information.\n");
         }
         RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction& action) override
         {
@@ -472,7 +472,7 @@ namespace
                 cmdlines.push_back(cmdline.extract());
             }
 
-            size_t num_restored = 0;
+            const size_t current_restored = m_restored.size();
 
             for (const auto& cmdline : cmdlines)
             {
@@ -505,7 +505,6 @@ namespace
                                            "Unable to remove nupkg after restoring: %s",
                                            fs::u8string(nupkg_path));
                         m_restored.emplace(nuget_ref.first);
-                        ++num_restored;
                         return true;
                     }
                     else
@@ -519,7 +518,9 @@ namespace
                 return Util::Sets::contains(m_restored, action->spec);
             });
 
-            System::print2("Restored ", num_restored, " packages from NuGet. Use --debug for more information.\n");
+            System::print2("Restored ",
+                           m_restored.size() - current_restored,
+                           " packages from NuGet. Use --debug for more information.\n");
         }
         RestoreResult try_restore(const VcpkgPaths&, const Dependencies::InstallPlanAction& action) override
         {
