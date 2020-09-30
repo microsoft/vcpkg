@@ -150,20 +150,20 @@ const ComputedVersions Versions::compute_required_versions(const std::vector<Ver
     return ComputedVersions{computed_versions, baseline_packages, conflicts};
 }
 
-static System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths,
-                                                 const fs::path& dot_git_directory,
-                                                 const fs::path& working_directory,
-                                                 const std::string& cmd)
+const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths,
+                                                const fs::path& dot_git_directory,
+                                                const fs::path& working_directory,
+                                                const std::string& cmd)
 {
     const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
 
-    const std::string full_cmd = Strings::format(R"("%s" --git-dir="%s" --work-tree="%s" %s)",
-                                                 fs::u8string(git_exe),
-                                                 fs::u8string(dot_git_directory),
-                                                 fs::u8string(working_directory),
-                                                 cmd);
+    System::CmdLineBuilder builder;
+    builder.path_arg(git_exe)
+        .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_directory)))
+        .string_arg(Strings::concat("--work-tree=", fs::u8string(working_directory)));
+    const std::string full_cmd = Strings::concat(builder.extract(), " ", cmd);
 
-    auto output = System::cmd_execute_and_capture_output(full_cmd);
+    const auto output = System::cmd_execute_and_capture_output(full_cmd);
     return output;
 }
 
@@ -210,40 +210,54 @@ void Versions::fetch_port_versions(const VcpkgPaths& paths,
 
     auto& fs = paths.get_filesystem();
     const auto working_dir = paths.buildtrees / "versioning_tmp";
-    const auto no_checkout_dir = paths.root / "versioning_tmp";
+    const auto dot_git_dir = paths.root / "versioning_tmp";
 
     if (fs.exists(working_dir))
     {
         fs.remove_all(working_dir, VCPKG_LINE_INFO);
     }
 
-    auto output =
-        run_git_command(paths,
-                        no_checkout_dir,
-                        working_dir,
-                        Strings::format("clone --no-checkout --local \"%s\" versioning_tmp", fs::u8string(paths.root)));
+    System::CmdLineBuilder builder;
+    // git clone --no-checkout --local {vcpkg_root} versioning_tmp
+    builder.string_arg("clone")
+        .string_arg("--no-checkout")
+        .string_arg("--local")
+        .path_arg(paths.root)
+        .string_arg("versioning_tmp");
+    const auto output = run_git_command(paths, dot_git_dir, working_dir, builder.extract());
     Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to clone temporary vcpkg instance");
+
+    auto checkout_port = [&paths, &dot_git_dir, &working_dir](const std::string& port_name,
+                                                              const std::string& commit_id) {
+        // git checkout {commit_id} -- ./ports/{port_name}
+        System::CmdLineBuilder builder;
+        builder.string_arg("checkout")
+            .string_arg(commit_id)
+            .string_arg("--")
+            .string_arg(Strings::concat("./ports/", port_name));
+
+        const auto git_cmd = builder.extract();
+        const auto checkout_output = run_git_command(paths, dot_git_dir, working_dir, git_cmd);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout % at commit %d", port_name, commit_id);
+    };
 
     for (auto&& versioned_package : versions.computed_versions)
     {
-        auto commit_id =
+        const auto commit_id =
             get_version_commit_id(versioned_package.package_name, versioned_package.version.to_string(), paths);
 
-        auto port_path = working_dir / "ports" / versioned_package.package_name;
-        auto cmd = Strings::format("checkout %s -- ./ports/%s", commit_id, versioned_package.package_name);
-        run_git_command(paths, no_checkout_dir, working_dir, cmd);
+        checkout_port(versioned_package.package_name, commit_id);
     }
 
     for (auto&& baseline_package : versions.baseline_packages)
     {
-        auto port_path = working_dir / "ports" / baseline_package;
-        auto cmd = Strings::format("checkout %s -- ./ports/%s", baseline, baseline_package);
-        run_git_command(paths, no_checkout_dir, working_dir, cmd);
+        checkout_port(baseline_package, baseline);
     }
 
-    if (fs.exists(no_checkout_dir))
+    if (fs.exists(dot_git_dir))
     {
-        fs.remove_all(no_checkout_dir, VCPKG_LINE_INFO);
+        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
     }
 
     Checks::exit_success(VCPKG_LINE_INFO);
