@@ -1,5 +1,4 @@
 Source: libideviceactivation
 Version: 1.2.235
-Port-Version: 1
 Description: A library to handle the activation process of iOS devices
 Build-Depends: libimobiledevice, libxml2, curl, libplist
