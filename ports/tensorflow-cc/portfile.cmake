@@ -174,26 +174,64 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
+	set(COPTS "")
+	set(CXXOPTS "")
+	set(LINKOPTS "")
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
 		else()
 			set(BUILD_OPTS "--compilation_mode=dbg")
 		endif()
+
+		separate_arguments(VCPKG_C_FLAGS)
+		separate_arguments(VCPKG_C_FLAGS_DEBUG)
+		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_DEBUG)
+			list(APPEND COPTS "--copt=${OPT}")
+		endforeach()
+		separate_arguments(VCPKG_CXX_FLAGS)
+		separate_arguments(VCPKG_CXX_FLAGS_DEBUG)
+		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_DEBUG)
+			list(APPEND CXXOPTS "--copt=${OPT}")
+		endforeach()
+		separate_arguments(VCPKG_LINKER_FLAGS)
+		separate_arguments(VCPKG_LINKER_FLAGS_DEBUG)
+		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_DEBUG)
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
+		endforeach()
 	else()
 		set(BUILD_OPTS "--compilation_mode=opt")
+
+		separate_arguments(VCPKG_C_FLAGS)
+		separate_arguments(VCPKG_C_FLAGS_RELEASE)
+		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_RELEASE)
+			list(APPEND COPTS "--copt=${OPT}")
+		endforeach()
+		separate_arguments(VCPKG_CXX_FLAGS)
+		separate_arguments(VCPKG_CXX_FLAGS_RELEASE)
+		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_RELEASE)
+			list(APPEND CXXOPTS "--copt=${OPT}")
+		endforeach()
+		separate_arguments(VCPKG_LINKER_FLAGS)
+		separate_arguments(VCPKG_LINKER_FLAGS_RELEASE)
+		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE)
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
+		endforeach()
 	endif()
 
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		if(VCPKG_TARGET_IS_WINDOWS)
+			list(JOIN COPTS " " COPTS)
+			list(JOIN CXXOPTS " " CXXOPTS)
+			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -202,19 +240,22 @@ foreach(BUILD_TYPE dbg rel)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			if(VCPKG_CRT_LINKAGE STREQUAL static)
 				if(BUILD_TYPE STREQUAL dbg)
-					set(CRT_OPT "-MTd")
+					list(APPEND COPTS "--copt=-MTd")
 				else()
-					set(CRT_OPT "-MT")
+					list(APPEND COPTS "--copt=-MT")
 				endif()
 			endif()
+			list(JOIN COPTS " " COPTS)
+			list(JOIN CXXOPTS " " CXXOPTS)
+			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link --copt=${CRT_OPT} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
