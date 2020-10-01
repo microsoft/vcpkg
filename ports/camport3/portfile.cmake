@@ -1,4 +1,4 @@
-
+vcpkg_fail_port_install(ON_TARGET "osx" )
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO percipioxyz/camport3
@@ -15,7 +15,7 @@ file(COPY
     ${SOURCE_PATH}/include/TyIsp.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
         file(COPY
@@ -39,7 +39,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         )
     endif()
 
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+elseif(VCPKG_TARGET_IS_LINUX)
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
         file(COPY
@@ -55,8 +55,6 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
         )
     endif()
 
-else()
-    message(FATAL_ERROR "Unsupported OS")
 endif()
 
 file(INSTALL
