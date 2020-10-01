@@ -389,50 +389,20 @@ function(add_library name)
 endfunction()
 
 option(VCPKG_APPINSTALL_DEPS "Automatically copy dependencies into the install directory for executables and libraries." OFF)
-function(install)
-    _install(${ARGV})
-
+function(x_vcpkg_install_local_dependencies)
     if(VCPKG_APPINSTALL_DEPS)
         if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-            if(${ARGV0} STREQUAL "TARGETS")
-                # Will contain the list of targets
-                set(__VCPKG_INSTALL_TARGETS "")
+            # Parse command line
+            cmake_parse_arguments(__VCPKG_APPINSTALL "" "DESTINATION" "TARGETS" ${ARGN})
 
-                # Destination - [RUNTIME] DESTINATION argument overrides this
-                set(__VCPKG_INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-
-                # Parse arguments given to the install function to find targets and (runtime) destination
-                set(MODIFIER "") # Modifier for the command in the argument
-                set(LAST_COMMAND "") # Last command we found to process
-                foreach(ARG ${ARGN})
-                    if(${ARG} MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE")
-                        set(MODIFIER ${ARG})
-                        continue()
-                    endif()
-
-                    if(${ARG} MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP")
-                        set(LAST_COMMAND ${ARG})
-                        continue()
-                    endif()
-
-                    if("${LAST_COMMAND}" STREQUAL "TARGETS")
-                        list(APPEND __VCPKG_INSTALL_TARGETS "${ARG}")
-                    endif()
-
-                    if("${LAST_COMMAND}" STREQUAL "DESTINATION" AND ("${MODIFIER}" STREQUAL "" OR "${MODIFIER}" STREQUAL "RUNTIME"))
-                        set(__VCPKG_INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/${ARG}")
-                    endif()
-                endforeach()
-
-                foreach(TARGET ${__VCPKG_INSTALL_TARGETS})
-                    _install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
-                        execute_process(COMMAND 
-                            powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                            -targetBinary \"${__VCPKG_INSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
-                            -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                            -OutVariable out)")
-                endforeach()
-            endif()
+            foreach(TARGET ${__VCPKG_APPINSTALL_TARGETS})
+                _install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+                    execute_process(COMMAND 
+                        powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                        -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                        -OutVariable out)")
+            endforeach()
         endif()
     endif()
 endfunction()
