@@ -319,7 +319,7 @@ See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
 Vcpkg is an open source project, and is thus built with your contributions.
 Here are some ways you can contribute:
 
-* [Submit Issues][contributing:submit-issue] in vcpkg or existing packages
+* [Submit Issues][contributing:submit-issue] in vcpkg or existing packages.
 * [Submit Fixes and New Packages][contributing:submit-pr]
 
 Please refer to our [Contributing Guide](CONTRIBUTING.md) for more details.
@@ -347,3 +347,5 @@ passing --disable-metrics to vcpkg on the command line,
 or by setting the VCPKG_DISABLE_METRICS environment variable.
 
 Read more about vcpkg telemetry at docs/about/privacy.md
+
+Best Regards
