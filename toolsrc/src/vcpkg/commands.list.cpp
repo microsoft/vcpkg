@@ -2,6 +2,7 @@
 
 #include <vcpkg/commands.list.h>
 #include <vcpkg/help.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/versiont.h>
 
@@ -94,7 +95,10 @@ namespace vcpkg::Commands::List
 
         if (installed_ipv.empty())
         {
-            System::print2("No packages are installed. Did you mean `search`?\n");
+            if (args.output_json())
+                System::print2(Json::stringify(Json::Object(), {}));
+            else
+                System::print2("No packages are installed. Did you mean `search`?\n");
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 

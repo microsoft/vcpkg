@@ -9,6 +9,7 @@
 #include <vcpkg/binarycaching.private.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/metrics.h>
 #include <vcpkg/tools.h>
 
 using namespace vcpkg;
@@ -26,14 +27,16 @@ namespace
         std::error_code ec;
         fs.create_directories(pkg_path, ec);
         auto files = fs.get_files_non_recursive(pkg_path);
-        Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", pkg_path.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", fs::u8string(pkg_path));
 
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
-        auto cmd = Strings::format(
-            R"("%s" x "%s" -o"%s" -y)", seven_zip_exe.u8string(), archive_path.u8string(), pkg_path.u8string());
+        auto cmd = Strings::format(R"("%s" x "%s" -o"%s" -y)",
+                                   fs::u8string(seven_zip_exe),
+                                   fs::u8string(archive_path),
+                                   fs::u8string(pkg_path));
 #else
-        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string());
+        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", fs::u8string(archive_path), fs::u8string(pkg_path));
 #endif
         return System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
     }
@@ -47,17 +50,17 @@ namespace
 
         fs.remove(destination, ec);
         Checks::check_exit(
-            VCPKG_LINE_INFO, !fs.exists(destination), "Could not remove file: %s", destination.u8string());
+            VCPKG_LINE_INFO, !fs.exists(destination), "Could not remove file: %s", fs::u8string(destination));
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
         System::cmd_execute_and_capture_output(
             Strings::format(
-                R"("%s" a "%s" "%s\*")", seven_zip_exe.u8string(), destination.u8string(), source.u8string()),
+                R"("%s" a "%s" "%s\*")", fs::u8string(seven_zip_exe), fs::u8string(destination), fs::u8string(source)),
             System::get_clean_environment());
 #else
         System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
+            Strings::format(R"(cd '%s' && zip --quiet -y -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
 #endif
     }
 
@@ -82,7 +85,7 @@ namespace
                 const fs::path archive_path = archives_root_dir / archive_subpath;
                 if (fs.exists(archive_path))
                 {
-                    System::print2("Using cached binary package: ", archive_path.u8string(), "\n");
+                    System::print2("Using cached binary package: ", fs::u8string(archive_path), "\n");
 
                     int archive_result = decompress_archive(paths, spec, archive_path).exit_code;
 
@@ -105,7 +108,7 @@ namespace
                     }
                 }
 
-                System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
+                System::printf("Could not locate cached archive: %s\n", fs::u8string(archive_path));
             }
 
             return RestoreResult::missing;
@@ -136,11 +139,11 @@ namespace
                 {
                     System::printf(System::Color::warning,
                                    "Failed to store binary cache %s: %s\n",
-                                   archive_path.u8string(),
+                                   fs::u8string(archive_path),
                                    ec.message());
                 }
                 else
-                    System::printf("Stored binary cache: %s\n", archive_path.u8string());
+                    System::printf("Stored binary cache: %s\n", fs::u8string(archive_path));
             }
             if (m_write_dirs.size() > 1) fs.remove(tmp_archive_path, ignore_errors);
         }
@@ -205,7 +208,7 @@ namespace
 
             for (auto&& action : plan.install_actions)
             {
-                if (action.build_options.editable == Build::Editable::YES) continue;
+                if (!action.has_package_abi()) continue;
 
                 auto& spec = action.spec;
                 fs.remove_all(paths.package_dir(spec), VCPKG_LINE_INFO);
@@ -322,7 +325,7 @@ namespace
                         Checks::check_exit(VCPKG_LINE_INFO,
                                            !fs.exists(nupkg_path, ignore_errors),
                                            "Unable to remove nupkg after restoring: %s",
-                                           nupkg_path.u8string());
+                                           fs::u8string(nupkg_path));
                         m_restored.emplace(nuget_ref.first);
                         ++num_restored;
                         return true;
@@ -431,7 +434,7 @@ namespace
                     if (!m_interactive) cmd.string_arg("-NonInteractive");
 
                     System::print2(
-                        "Uploading binaries for ", spec, " using NuGet config ", write_cfg.u8string(), ".\n");
+                        "Uploading binaries for ", spec, " using NuGet config ", fs::u8string(write_cfg), ".\n");
 
                     auto rc = [&] {
                         if (Debug::g_debugging)
@@ -444,7 +447,7 @@ namespace
                     {
                         System::print2(System::Color::error,
                                        "Pushing NuGet with ",
-                                       write_cfg.u8string(),
+                                       fs::u8string(write_cfg),
                                        " failed. Use --debug for more information.\n");
                     }
                 }
@@ -665,33 +668,36 @@ namespace
             auto maybe_cachepath = System::get_environment_variable("VCPKG_DEFAULT_BINARY_CACHE");
             if (auto p_str = maybe_cachepath.get())
             {
-                const auto path = fs::u8path(*p_str);
+                Metrics::g_metrics.lock()->track_property("VCPKG_DEFAULT_BINARY_CACHE", "defined");
+                auto path = fs::u8path(*p_str);
+                path.make_preferred();
                 const auto status = fs::stdfs::status(path);
                 if (!fs::stdfs::exists(status))
-                    return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + path.u8string(),
+                    return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + fs::u8string(path),
                             expected_right_tag};
                 if (!fs::stdfs::is_directory(status))
                     return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not a directory: " +
-                                path.u8string(),
+                                fs::u8string(path),
                             expected_right_tag};
                 if (!path.is_absolute())
                     return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not absolute: " +
-                                path.u8string(),
+                                fs::u8string(path),
                             expected_right_tag};
-                return ExpectedS<fs::path>(path);
+                return {std::move(path), expected_left_tag};
             }
             p /= fs::u8path("vcpkg/archives");
+            p.make_preferred();
             if (p.is_absolute())
             {
                 return {std::move(p), expected_left_tag};
             }
             else
             {
-                return {"default path was not absolute: " + p.u8string(), expected_right_tag};
+                return {"default path was not absolute: " + fs::u8string(p), expected_right_tag};
             }
         });
         if (cachepath.has_value())
-            Debug::print("Default binary cache path is: ", cachepath.get()->u8string(), '\n');
+            Debug::print("Default binary cache path is: ", fs::u8string(*cachepath.get()), '\n');
         else
             Debug::print("No binary cache path. Reason: ", cachepath.error(), '\n');
         return cachepath;
@@ -913,6 +919,12 @@ namespace
 ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_configs_pure(
     const std::string& env_string, View<std::string> args)
 {
+    {
+        auto metrics = Metrics::g_metrics.lock();
+        if (!env_string.empty()) metrics->track_property("VCPKG_BINARY_SOURCES", "defined");
+        if (args.size() != 0) metrics->track_property("binarycaching-source", "defined");
+    }
+
     State s;
 
     BinaryConfigParser default_parser("default,readwrite", "<defaults>", &s);
@@ -928,17 +940,22 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
         if (auto err = arg_parser.get_error()) return err->format();
     }
 
+    if (s.m_cleared) Metrics::g_metrics.lock()->track_property("binarycaching-clear", "defined");
+
     std::vector<std::unique_ptr<IBinaryProvider>> providers;
     if (!s.archives_to_read.empty() || !s.archives_to_write.empty())
         providers.push_back(
             std::make_unique<ArchivesBinaryProvider>(std::move(s.archives_to_read), std::move(s.archives_to_write)));
     if (!s.sources_to_read.empty() || !s.sources_to_write.empty() || !s.configs_to_read.empty() ||
         !s.configs_to_write.empty())
+    {
+        Metrics::g_metrics.lock()->track_property("binarycaching-nuget", "defined");
         providers.push_back(std::make_unique<NugetBinaryProvider>(std::move(s.sources_to_read),
                                                                   std::move(s.sources_to_write),
                                                                   std::move(s.configs_to_read),
                                                                   std::move(s.configs_to_write),
                                                                   s.interactive));
+    }
 
     return {std::make_unique<MergeBinaryProviders>(std::move(providers))};
 }
@@ -971,20 +988,49 @@ std::string vcpkg::reformat_version(const std::string& version, const std::strin
     return Strings::concat("0.0.0-", abi_tag);
 }
 
+details::NuGetRepoInfo details::get_nuget_repo_info_from_env()
+{
+    auto vcpkg_nuget_repository = System::get_environment_variable("VCPKG_NUGET_REPOSITORY");
+    if (auto p = vcpkg_nuget_repository.get())
+    {
+        Metrics::g_metrics.lock()->track_property("VCPKG_NUGET_REPOSITORY", "defined");
+        return {std::move(*p)};
+    }
+    auto gh_repo = System::get_environment_variable("GITHUB_REPOSITORY").value_or("");
+    if (gh_repo.empty()) return {};
+    auto gh_server = System::get_environment_variable("GITHUB_SERVER_URL").value_or("");
+    if (gh_server.empty()) return {};
+
+    Metrics::g_metrics.lock()->track_property("GITHUB_REPOSITORY", "defined");
+
+    return {Strings::concat(gh_server, '/', gh_repo, ".git"),
+            System::get_environment_variable("GITHUB_REF").value_or(""),
+            System::get_environment_variable("GITHUB_SHA").value_or("")};
+}
+
 std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
                                    const Dependencies::InstallPlanAction& action,
-                                   const vcpkg::NugetReference& ref)
+                                   const vcpkg::NugetReference& ref,
+                                   details::NuGetRepoInfo rinfo)
 {
     auto& spec = action.spec;
     auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
     auto& version = scf.core_paragraph->version;
+    const auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
+    const auto& compiler_info = abi_info.compiler_info.value_or_exit(VCPKG_LINE_INFO);
     std::string description =
         Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
                         Strings::join("\n    ", scf.core_paragraph->description),
                         "\n\nVersion: ",
                         version,
+                        "\nTriplet: ",
+                        spec.triplet().to_string(),
+                        "\nCXX Compiler id: ",
+                        compiler_info.id,
+                        "\nCXX Compiler version: ",
+                        compiler_info.version,
                         "\nTriplet/Compiler hash: ",
-                        action.abi_info.value_or_exit(VCPKG_LINE_INFO).triplet_abi.value_or_exit(VCPKG_LINE_INFO),
+                        abi_info.triplet_abi.value_or_exit(VCPKG_LINE_INFO),
                         "\nFeatures:",
                         Strings::join(",", action.feature_list, [](const std::string& s) { return " " + s; }),
                         "\nDependencies:\n");
@@ -1004,10 +1050,17 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     xml.open_tag("packageTypes");
     xml.start_complex_open_tag("packageType").text_attr("name", "vcpkg").finish_self_closing_complex_tag();
     xml.close_tag("packageTypes").line_break();
+    if (!rinfo.repo.empty())
+    {
+        xml.start_complex_open_tag("repository").text_attr("type", "git").text_attr("url", rinfo.repo);
+        if (!rinfo.branch.empty()) xml.text_attr("branch", rinfo.branch);
+        if (!rinfo.commit.empty()) xml.text_attr("commit", rinfo.commit);
+        xml.finish_self_closing_complex_tag().line_break();
+    }
     xml.close_tag("metadata").line_break();
     xml.open_tag("files");
     xml.start_complex_open_tag("file")
-        .text_attr("src", (paths.package_dir(spec) / fs::u8path("**")).u8string())
+        .text_attr("src", fs::u8string(paths.package_dir(spec) / fs::u8path("**")))
         .text_attr("target", "")
         .finish_self_closing_complex_tag();
     xml.close_tag("files").line_break();
@@ -1045,16 +1098,29 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
              "downloading binaries and whether on-demand builds will be uploaded to that remote. It can be specified "
              "as 'read', 'write', or 'readwrite'.");
     tbl.blank();
+    tbl.text("The `nuget` and `nugetconfig` source providers additionally respect certain environment variables while "
+             "generating nuget packages. The `metadata.repository` field will be optionally generated like:\n"
+             "\n"
+             "    <repository type=\"git\" url=\"$VCPKG_NUGET_REPOSITORY\"/>\n"
+             "or\n"
+             "    <repository type=\"git\"\n"
+             "                url=\"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git\"\n"
+             "                branch=\"${GITHUB_REF}\"\n"
+             "                commit=\"${GITHUB_SHA}\"/>\n"
+             "\n"
+             "if the appropriate environment variables are defined and non-empty.\n");
+    tbl.blank();
     System::print2(tbl.m_str);
     const auto& maybe_cachepath = default_cache_path();
     if (auto p = maybe_cachepath.get())
     {
-        auto p_preferred = *p;
         System::print2(
             "\nBased on your system settings, the default path to store binaries is\n    ",
-            p_preferred.make_preferred().u8string(),
-            "\n\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.");
+            fs::u8string(*p),
+            "\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.\n");
     }
+    System::print2("\nExtended documentation is available at "
+                   "https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md \n");
 }
 
 std::string vcpkg::generate_nuget_packages_config(const Dependencies::ActionPlan& action)

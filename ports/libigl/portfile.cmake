@@ -8,7 +8,10 @@ vcpkg_from_github(
     REF  3cb4894eaf8ea4610467189ca292be349425d44b #2.2.0
     SHA512 339f96e36b6a99ae8301ec2e234e18cecba7b7c42289ed68a26c20b279dce3135405f9b49e292c321fba962d56c083ae61831057bec9a19ad1495e2afa379b8b
     HEAD_REF master
-    PATCHES fix-dependency.patch
+    PATCHES
+        fix-dependency.patch
+        fix-imgui-set-cond.patch
+        install-extra-headers.patch
 )
 
 set(LIBIGL_BUILD_STATIC OFF)
@@ -16,9 +19,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(LIBIGL_BUILD_STATIC ON)
 endif()
 
-if ("imgui" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if ("imgui" IN_LIST FEATURES AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # Remove this after add port libigl-imgui
-    message(FATAL_ERROR "Feature imgui does not support static build currentlly")
+    message(FATAL_ERROR "Feature imgui does not support non-static build currently")
 endif()
 
 if ("test" IN_LIST FEATURES AND NOT EXISTS ${SOURCE_PATH}/tests/data)

@@ -250,7 +250,7 @@ TEST_CASE ("SourceParagraph manifest empty supports", "[manifests]")
 
 TEST_CASE ("Serialize all the ports", "[manifests]")
 {
-    std::vector<std::string> args_list = {"x-format-manifest"};
+    std::vector<std::string> args_list = {"format-manifest"};
     auto& fs = Files::get_real_filesystem();
     auto args = VcpkgCmdArguments::create_from_arg_sequence(args_list.data(), args_list.data() + args_list.size());
     VcpkgPaths paths{fs, args};
@@ -264,7 +264,7 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
         if (fs.exists(control))
         {
             auto contents = fs.read_contents(control, VCPKG_LINE_INFO);
-            auto pghs = Paragraphs::parse_paragraphs(contents, control.u8string());
+            auto pghs = Paragraphs::parse_paragraphs(contents, fs::u8string(control));
             REQUIRE(pghs);
 
             scfs.push_back(std::move(
