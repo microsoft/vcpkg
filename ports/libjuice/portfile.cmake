@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libjuice
-    REF v0.4.6
-    SHA512 621756116f36a0506fa2755d8baf4df2908a1b2955fe8fab60d5c2f58a5b98389dd5518acc4ab9b998b6f7c1499a19796ddf11eda320473b2c81f69353b05a8f
+    REF v0.5.2
+    SHA512 c96bf8d26a8f760ed0593d0e150a6dc410490daf8bab6c1f0abcce6082fbd71886ff6f966dc7031c1cb9c83ebd6e9dd5de9f61492f4265410a50465924b37027
     HEAD_REF master
     PATCHES
         fix-for-vcpkg.patch
@@ -18,6 +18,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DNO_TESTS=ON
 )
 
 vcpkg_install_cmake()
