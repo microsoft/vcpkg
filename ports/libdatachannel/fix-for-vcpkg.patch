@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f690573..01f53f1 100644
+index 415f79d..698c88f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -104,61 +104,43 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+@@ -104,61 +104,45 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
  find_package(Threads REQUIRED)
  
  set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
@@ -21,6 +21,7 @@ index f690573..01f53f1 100644
 -add_library(Usrsctp::Usrsctp ALIAS usrsctp)
 -add_library(Usrsctp::UsrsctpStatic ALIAS usrsctp-static)
 +find_package(libjuice CONFIG REQUIRED)
++find_path(PLOG_INCLUDE_DIRS "plog/Appenders/AndroidAppender.h")
  
  if (NO_WEBSOCKET)
 +  if(BUILD_SHARED_LIBS)
@@ -67,6 +68,7 @@ index f690573..01f53f1 100644
 -target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 -target_link_libraries(datachannel-static PUBLIC Threads::Threads plog::plog)
 -target_link_libraries(datachannel-static PRIVATE Usrsctp::UsrsctpStatic)
++target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
 +target_link_libraries(datachannel PUBLIC Threads::Threads)
 +target_link_libraries(datachannel PRIVATE usrsctp)
  
@@ -76,7 +78,7 @@ index f690573..01f53f1 100644
  endif()
  
  find_package(SRTP)
-@@ -172,13 +154,10 @@ if(SRTP_FOUND)
+@@ -172,13 +156,10 @@ if(SRTP_FOUND)
  	endif()
  	message(STATUS "LibSRTP found, compiling with media transport")
  	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_MEDIA=1)
@@ -90,7 +92,7 @@ index f690573..01f53f1 100644
  endif()
  
  if (USE_GNUTLS)
-@@ -192,49 +171,38 @@ if (USE_GNUTLS)
+@@ -192,49 +173,38 @@ if (USE_GNUTLS)
  			IMPORTED_LOCATION "${GNUTLS_LIBRARIES}")
  	endif()
  	target_compile_definitions(datachannel PRIVATE USE_GNUTLS=1)
@@ -146,7 +148,7 @@ index f690573..01f53f1 100644
  	endif()
  endif()
  
-@@ -246,11 +214,7 @@ if(NOT NO_TESTS)
+@@ -246,11 +216,7 @@ if(NOT NO_TESTS)
  		CXX_STANDARD 17)
  	set_target_properties(datachannel-tests PROPERTIES OUTPUT_NAME tests)
  	target_include_directories(datachannel-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -159,7 +161,7 @@ index f690573..01f53f1 100644
  
  	# Benchmark
  	add_executable(datachannel-benchmark test/benchmark.cpp)
-@@ -260,11 +224,7 @@ if(NOT NO_TESTS)
+@@ -260,11 +226,7 @@ if(NOT NO_TESTS)
  	set_target_properties(datachannel-benchmark PROPERTIES OUTPUT_NAME benchmark)
  	target_compile_definitions(datachannel-benchmark PRIVATE BENCHMARK_MAIN=1)
  	target_include_directories(datachannel-benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -172,7 +174,7 @@ index f690573..01f53f1 100644
  endif()
  
  # Examples
-@@ -277,3 +237,8 @@ if(NOT NO_EXAMPLES)
+@@ -277,3 +239,8 @@ if(NOT NO_EXAMPLES)
  	add_subdirectory(examples/copy-paste-capi)
  endif()
  
