@@ -1,8 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index be72a2a..faae908 100644
+index be72a2a..9221da9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -54,67 +54,55 @@ set(TESTS_SOURCES
+@@ -41,6 +41,9 @@ set(LIBJUICE_SOURCES
+ set(LIBJUICE_HEADERS
+ 	${CMAKE_CURRENT_SOURCE_DIR}/include/juice/juice.h
+ )
++set(LIBJUICE_PRIVATE_HEADERS
++	${CMAKE_CURRENT_SOURCE_DIR}/src/socket.h
++)
+ 
+ set(TESTS_SOURCES
+     ${CMAKE_CURRENT_SOURCE_DIR}/test/main.c
+@@ -54,67 +57,56 @@ set(TESTS_SOURCES
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
@@ -65,6 +75,7 @@ index be72a2a..faae908 100644
 +  ARCHIVE DESTINATION lib
 +)
  install(FILES ${LIBJUICE_HEADERS} DESTINATION include/juice)
++install(FILES ${LIBJUICE_PRIVATE_HEADERS} DESTINATION include/juice/src)
  
  if(NOT MSVC)
  	target_compile_options(juice PRIVATE -Wall -Wextra)
@@ -81,7 +92,7 @@ index be72a2a..faae908 100644
  	endif()
  endif()
  
-@@ -128,3 +116,8 @@ if(NOT NO_TESTS)
+@@ -128,3 +120,8 @@ if(NOT NO_TESTS)
  	target_link_libraries(juice-tests juice)
  endif()
  
