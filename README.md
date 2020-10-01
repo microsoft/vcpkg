@@ -6,7 +6,7 @@
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS.
 This tool and ecosystem are constantly evolving, and we always appreciate contributions!
 
-If you've never used vcpkg before, or if you're trying to figure out how to use vcpkg,
+If you've never used vcpkg before, or if you're new to vcpkg,
 check out our [Getting Started](#getting-started) section for how to start using vcpkg.
 
 For short description of available commands, once you've installed vcpkg,
