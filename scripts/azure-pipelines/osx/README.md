@@ -91,10 +91,10 @@ this is where you determine what version of macOS is installed.
 
 ```
 > sudo macinbox \
-	--box-format virtualbox \
-	--name macos-ci-base \
-	--installer <path to macOS installer> \
-	--no-gui
+  --box-format virtualbox \
+  --name macos-ci-base \
+  --installer <path to macOS installer> \
+  --no-gui
 ```
 
 Once you've done that, create a Vagrantfile that looks like the following:
@@ -102,7 +102,8 @@ Once you've done that, create a Vagrantfile that looks like the following:
 ```rb
 Vagrant.configure('2') do |config|
   config.vm.box = 'macos-ci-base'
-	config.vm.boot_timeout = 600
+  config.vm.boot_timeout = 600
+  config.vm.synced_folder ".", "/vagrant", disabled: true
 end
 ```
 
@@ -114,7 +115,36 @@ $ vagrant scp <path to Command Line Tools for Xcode installer> :clt.dmg
 $ vagrant ssh -c 'hdiutil attach clt.dmg -mountpoint /Volumes/setup-installer'
 $ vagrant ssh -c 'sudo installer -pkg "/Volumes/setup-installer/Command Line Tools.pkg" -target /'
 $ vagrant ssh -c 'hdiutil detach /Volumes/setup-installer'
+$ vagrant ssh -c 'rm clt.dmg'
 $ vagrant ssh -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
+$ vagrant ssh -c 'brew cask install osxfuse && brew install sshfs'
+$ vagrant scp <path to ssh key for fileshare> :.ssh/id_rsa
+$ vagrant scp <path to ssh public key for fileshare> :.ssh/id_rsa.pub
+$ vagrant reload
+```
+
+We also now need to make sure that osxfuse is set up correctly;
+macOS requires the user to accept that this signed binary is "okay to be loaded" by the kernel.
+We can get `sshfs` to try to start the `osxfuse` kernel module by attempting to start it:
+
+```sh
+$ vagrant ssh -c 'mkdir testmnt && sshfs <fileshare ssh>:/Users/fileshare/share testmnt'
+```
+
+Then, you'll need to open the VM in VirtualBox, go to System Preferences,
+go to Security & Privacy, General, unlock the settings,
+and allow apps from the osxfuse developer to run.
+
+Then, retry the above, and see if it works:
+
+```sh
+$ vagrant ssh -c 'sshfs <fileshare ssh>:/Users/fileshare/share testmnt'
+```
+
+if that works, you can now package the box:
+
+```sh
+$ vagrant ssh -c 'umount testmnt && rmdir testmnt'
 $ vagrant package
 ```
 
@@ -123,12 +153,35 @@ Then, you can `vagrant box add <package.box> --name <name for the box>`,
 and you'll have the base vcpkg box added for purposes of `Setup-VagrantMachines.ps1`!
 
 Once you've created the base box, if you're making it the new base box for the CI,
-upload it to the `vcpkgvagrant` storage account, to the `vagrant-boxes` share.
+upload it to the fileshare, under `share/vcpkg-boxes`.
 Then, add the metadata about the box (the name and version) to the JSON file there.
 Once you've done that, add the software versions below.
 
 ### VM Software Versions
 
-* 2020-09-17:
+* 2020-09-28:
   * macOS: 10.15.6
   * Xcode CLTs: 12
+
+### (Internal) Accessing the macOS fileshare
+
+The fileshare is located on `vcpkgmm-01`, under the `fileshare` user, in the `share` directory.
+In order to get `sshfs` working on the physical machine,
+you'll need to do the same thing one needs to do for building the base box:
+
+```sh
+$ brew cask install osxfuse && brew install sshfs
+$ sudo shutdown -r now
+```
+
+Then, once you've ssh'd back in:
+
+```sh
+$ mkdir vagrant/share
+$ sshfs fileshare@<vcpkgmm-01 URN>:/Users/fileshare/share vagrant/share
+```
+
+If you get an error, that means that gatekeeper has prevented the kernel extension from loading,
+so you'll need to access the GUI of the machine, go to System Preferences,
+Security & Privacy, General, unlock the settings, and allow apps from the osxfuse developer to run.
+Then, you'll be able to add the fileshare as an sshfs.
