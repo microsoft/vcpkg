@@ -10,6 +10,8 @@ vcpkg_from_github(
         internalMBP_symbols.patch
         msvc_142_bug_workaround.patch
         vs16_3_typeinfo_header_fix.patch
+        disable_warnings_are_errors.patch
+        fix_discarded_qualifiers.patch
 )
 
 if(NOT DEFINED RELEASE_CONFIGURATION)
