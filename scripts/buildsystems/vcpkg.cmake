@@ -388,9 +388,9 @@ function(add_library name)
     endif()
 endfunction()
 
-option(VCPKG_APPINSTALL_DEPS "Automatically copy dependencies into the install directory for executables and libraries." OFF)
+option(x_VCPKG_APPINSTALL_DEPS "Automatically copy dependencies into the install directory for executables and libraries." OFF)
 function(x_vcpkg_install_local_dependencies)
-    if(VCPKG_APPINSTALL_DEPS)
+    if(x_VCPKG_APPINSTALL_DEPS)
         if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
             # Parse command line
             cmake_parse_arguments(__VCPKG_APPINSTALL "" "DESTINATION" "TARGETS" ${ARGN})
