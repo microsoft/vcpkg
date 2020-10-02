@@ -43,7 +43,7 @@
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
     include("${CMAKE_VARS_FILE}")
-    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;WORKING_SUBDIR" "")
+    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH" "")
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -128,7 +128,7 @@ function(vcpkg_build_make)
                 set(LDFLAGS_${CMAKE_BUILDTYPE} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link ${LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             endif()
             
-                    # Setup environment
+            # Setup environment
             set(ENV{CPPFLAGS} "${CPPFLAGS_${CMAKE_BUILDTYPE}}")
             set(ENV{CFLAGS} "${CFLAGS_${CMAKE_BUILDTYPE}}")
             set(ENV{CXXFLAGS} "${CXXFLAGS_${CMAKE_BUILDTYPE}}")
@@ -157,10 +157,6 @@ function(vcpkg_build_make)
                 set(NO_PARALLEL_MAKE_CMD_LINE ${MAKE_COMMAND} ${NO_PARALLEL_MAKE_OPTS})
             endif()
 
-            # foreach(_envar IN LISTS printvars)
-                # message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
-            # endforeach()
-
             if (_bc_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
                         COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
@@ -183,9 +179,6 @@ function(vcpkg_build_make)
                 else()
                     set(MAKE_CMD_LINE ${MAKE_COMMAND} ${INSTALL_OPTS})
                 endif()
-                # foreach(_envar IN LISTS printvars)
-                    # message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
-                # endforeach()
                 vcpkg_execute_build_process(
                     COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
                     WORKING_DIRECTORY "${WORKING_DIRECTORY}"

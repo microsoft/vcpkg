@@ -1,5 +1,6 @@
 ## # vcpkg_get_cmake_vars
 ##
+## **Only for internal use in vcpkg helpers. Behavior and arguments will change without notice.**
 ## Runs a cmake configure with a dummy project to extract certain cmake variables
 ##
 ## ## Usage
