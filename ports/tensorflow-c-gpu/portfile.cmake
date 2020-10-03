@@ -1,6 +1,6 @@
 # # Specifies if the port install should fail immediately given a condition
-vcpkg_fail_port_install(MESSAGE "tensorflowcapigpu currently only supports Windows platforms" ON_TARGET "Linux")
-vcpkg_fail_port_install(MESSAGE "tensorflowcapigpu currently only supports Windows platforms" ON_TARGET "Mac")
+vcpkg_fail_port_install(MESSAGE "tensorflow-c-gpu currently only supports Windows platforms" ON_TARGET "UWP" "LINUX" "ANDROID" "FREEBSD" "OSX")
+vcpkg_fail_port_install(MESSAGE "tensorflow-c-gpu currently only supports x64 architecture" ON_ARCH "x86" "ARM")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-windows-x86_64-2.3.0.zip"
@@ -27,16 +27,14 @@ file(COPY
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "x64")
-    file(COPY ${SOURCE_PATH}/lib/tensorflow.lib 
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(COPY ${SOURCE_PATH}/lib/tensorflow.lib 
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(COPY ${SOURCE_PATH}/lib/tensorflow.dll 
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(COPY ${SOURCE_PATH}/lib/tensorflow.dll 
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+file(COPY ${SOURCE_PATH}/lib/tensorflow.lib 
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(COPY ${SOURCE_PATH}/lib/tensorflow.lib 
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(COPY ${SOURCE_PATH}/lib/tensorflow.dll 
+    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+file(COPY ${SOURCE_PATH}/lib/tensorflow.dll 
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 # # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
