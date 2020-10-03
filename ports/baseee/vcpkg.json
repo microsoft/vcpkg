@@ -3,5 +3,6 @@
   "version-string": "0.1.0",
   "description": "A modern c++ Cross-platform Lib",
   "homepage": "github.com/chhdao/baseee",
-  "license": "MIT"
+  "license": "MIT",
+  "supports": "!x86 & !(arm & !arm64)"
 }
