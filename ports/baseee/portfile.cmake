@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chhdao/baseee
-    REF e75c89b3d6dd964b6d78f478178195edc596279e
-    SHA512 2f5a27d8e396b60ee45d26f40c3587504905b0ce4ff4ce845f72fe5702a96bb55d8bfa4b16c9825769cbc74f0126987732e62c00c05c18728366b8e41835d657
+    REF 857f322dbce21b427392cbd477583fb6b32e968d
+    SHA512 6a74181d48d8b04d6e6e14eee93a3ad5e6781f6dab1e8b1b260235e99fc9131420d7807f5f742977f1bcee80aaf6b1f598ece269472b29ab0c36dd50c6111a61
     HEAD_REF master
 )
 
@@ -14,6 +14,8 @@ vcpkg_configure_cmake(
 )
                
 vcpkg_install_cmake()
+
+vcpkg_copy_pdbs()
 
 # Add License
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/baseee/copyright)
