@@ -12,11 +12,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/baseee
     PREFER_NINJA 
 )
-
-#If DEBUG ,Baseee won't Install
-if(CMAKE_BUILD_TYPE STREQUAL Release)                 
+               
 vcpkg_install_cmake()
-endig()
 
 # Add License
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/baseee/copyright)
