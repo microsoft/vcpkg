@@ -2,5 +2,6 @@
   "name": "tensorflow-c-gpu",
   "version-string": "2.3.0",
   "description": "tensorflow C-API (GPU)",
-  "homepage": "https://www.tensorflow.org/install/lang_c"
+  "homepage": "https://www.tensorflow.org/install/lang_c",
+  "supports": "windows & x64"
 }
