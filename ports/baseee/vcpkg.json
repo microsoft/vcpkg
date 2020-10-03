@@ -1,9 +1,7 @@
 {
   "name": "baseee",
   "version-string": "0.1.0",
-  "homepage": "github.com/chhdao/baseee",
   "description": "A modern c++ Cross-platform Lib",
-  "dependencies": [],
-  "license": "MIT",
-  "default-features": []
+  "homepage": "github.com/chhdao/baseee",
+  "license": "MIT"
 }
