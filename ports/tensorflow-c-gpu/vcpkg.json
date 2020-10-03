@@ -1,0 +1,6 @@
+{
+  "name": "tensorflow-c-gpu",
+  "version-string": "2.3.0",
+  "homepage": "https://www.tensorflow.org/install/lang_c",
+  "description": "tensorflow C-API (GPU)"
+}
