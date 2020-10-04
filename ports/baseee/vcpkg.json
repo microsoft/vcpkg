@@ -4,5 +4,5 @@
   "description": "A modern c++ Cross-platform Lib",
   "homepage": "github.com/chhdao/baseee",
   "license": "MIT",
-  "supports": "!x86 & !(arm & !arm64)"
+  "supports": "!(x86 | arm)"
 }
