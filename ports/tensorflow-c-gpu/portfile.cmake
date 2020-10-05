@@ -1,6 +1,9 @@
 # # Specifies if the port install should fail immediately given a condition
 vcpkg_fail_port_install(MESSAGE "tensorflow-c-gpu currently only supports Windows platforms" ON_TARGET "UWP" "LINUX" "ANDROID" "FREEBSD" "OSX")
-vcpkg_fail_port_install(MESSAGE "tensorflow-c-gpu currently only supports x64 architecture" ON_ARCH "x86" "ARM")
+vcpkg_fail_port_install(MESSAGE "tensorflow-c-gpu currently only supports x64 architecture" ON_ARCH "x86" "arm" "arm64")
+vcpkg_fail_port_install(MESSAGE "tensorflow-c-gpu currently does not support static libraries" ON_LIBRARY_LINKAGE "static")
+
+set(VERSION 2.3.0)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-windows-x86_64-2.3.0.zip"
@@ -12,6 +15,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
+    REF ${VERSION}
 )
 
 file(MAKE_DIRECTORY
@@ -24,7 +28,7 @@ file(MAKE_DIRECTORY
 
 file(COPY 
         ${SOURCE_PATH}/include 
-        DESTINATION ${CURRENT_PACKAGES_DIR}/include
+        DESTINATION ${CURRENT_PACKAGES_DIR}
     )
 
 file(COPY ${SOURCE_PATH}/lib/tensorflow.lib 
