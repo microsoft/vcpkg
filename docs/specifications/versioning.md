@@ -133,7 +133,6 @@ Setting a baseline is optional, when a baseline is not explicitly set, vcpkg use
 
 ```json
 {
-    "$question": "Can the ref field be used instead?",
     "registries": [
       {
         "kind": "git",
@@ -184,26 +183,38 @@ Truncated parts of a SemVer string are considered as if they were filled with ze
 * `2` is interpreted as `2.0.0`
 * `2.1` is interpreted as `2.1.0`.
 
-### 5.2 No requirements
-By not specifying a version requirement, the user implies that the version to install is unimportant. This results in different versions getting installed depending on the circumstances (the composition of the build graph).
+### 5.2 Baseline requirements
+When a dependency declaration lacks any version requirement vcpkg will use the package registry's baseline to fill in the missing information. 
 
-Example: A project depends on package `meow` but doesn't specify a version requirement.
+Before version resolution ocurrs, vcpkg will look for the current version of each package in the baseline and treat packages with no requirements as if they had declared a minimum version on it. 
 
-* If no version requirements for `meow` are added by a dependency when constructing the build list, the _baseline version_ of `meow` is installed.
-* If version requirements for `meow` are added by a dependency when constructing the build list:
-  * And there are no conflicts, the oldest version of `meow` that satisfies all the requirements is installed.
-  * And there are conflict, the build fails and the conflicts are reported.
+If the baseline versioning scheme does not support minimum version requirements, vcpkg will instead add an exact version requirement.
 
 #### 5.2.1 Example
 
-Project manifest
+`project/vcpkg-config.json`
+```json
+{
+    "registries": [
+      {
+        "kind": "builtin",
+        "baseline": "acd2f59e931172f46706ef8ac2fc9b21f71fba85",
+      }
+    ]
+}
+```
+
+`project/vcpkg.json`
 ```json
 {
     "name": "project",
     "version-semver": "1.0.0", 
-    "dependencies": [ "zlib", "rapidjson" ]
+    "dependencies": [ "zlib", {"name": "rapidjson", "version=": "2020-02-08"}]
 }
 ```
+
+In the above example, vcpkg will find the version of `zlib` that exists in baseline commit `acd2f59` to be `1.2.11`.
+During the version resolution step, vcpkg will treat `zlib` as if it had a minimum version requirement on `1.2.11`.
 
 ## 5.3 Exact version requirements
 The simplest form of versioning. Exact version requirements resolve to an exact version of a package.  
