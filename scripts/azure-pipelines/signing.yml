@@ -1,0 +1,109 @@
+# This script is used internally to produce signed vcpkg builds.
+# It uses machines / tasks that are not exposed here on GitHub, as
+# the hardware on which we allow signing is restricted.
+
+trigger: none
+
+variables:
+  TeamName: vcpkg
+jobs:
+  - job: windows
+    displayName: "Windows"
+    dependsOn:
+    pool:
+      name: 'VSEng-MicroBuildVS2019'
+      demands:
+        - CMAKE
+    steps:
+    - task: PoliCheck@1
+      inputs:
+        inputType: 'Basic'
+        targetType: 'F'
+        targetArgument: '$(Build.SourcesDirectory)'
+        result: 'PoliCheck.xml'
+    - task: CmdLine@2
+      displayName: "Build vcpkg with CMake"
+      inputs:
+        failOnStderr: true
+        script: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x86
+          cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=OFF -B "$(Build.StagingDirectory)" -S toolsrc
+          ninja.exe -C "$(Build.StagingDirectory)"
+    - task: MicroBuildSigningPlugin@2
+      inputs:
+        signType: 'real'
+        feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
+    - task: NuGetToolInstaller@1
+      inputs:
+        versionSpec: 5.7
+    - task: NuGetCommand@2
+      displayName: 'NuGet Restore MicroBuild Signing Extension'
+      inputs:
+        command: 'restore'
+        restoreSolution: 'scripts/azure-pipelines/windows/signing.signproj'
+        feedsToUse: 'config'
+        restoreDirectory: '$(Build.SourcesDirectory)\scripts\azure-pipelines\packages'
+    - task: MSBuild@1
+      displayName: 'Sign vcpkg.exe'
+      inputs:
+        solution: 'scripts\azure-pipelines\windows\signing.signproj'
+        msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory)\ /p:IntermediateOutputPath=$(Build.StagingDirectory)\'
+    - task: BinSkim@3
+      inputs:
+        InputType: 'CommandLine'
+        arguments: 'analyze "$(Build.StagingDirectory)\vcpkg.exe"'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish vcpkg.exe'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\vcpkg.exe'
+        ArtifactName: 'Windows'
+        publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish vcpkg.pdb'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\vcpkg.pdb'
+        ArtifactName: 'Windows'
+        publishLocation: 'Container'
+    - task: MicroBuildCleanup@1
+      condition: succeededOrFailed()
+      displayName: MicroBuild Cleanup
+  - job: macos_build
+    displayName: 'MacOS Build'
+    pool:
+      vmImage: macOS-10.15
+    steps:
+    - task: CmdLine@2
+      displayName: "Build vcpkg with CMake"
+      inputs:
+        failOnStderr: true
+        script: |
+          cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=OFF -B "$(Build.StagingDirectory)" -S toolsrc
+          make -j 8 -C "$(Build.StagingDirectory)"
+          zip "$(Build.StagingDirectory)/vcpkg.zip" "$(Build.StagingDirectory)/vcpkg"
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Unsigned MacOS Binary"
+      inputs:
+        PathtoPublish: '$(Build.StagingDirectory)/vcpkg.zip'
+        ArtifactName: 'staging'
+        publishLocation: 'Container'
+  - job: macos_sign
+    displayName: 'MacOS Sign'
+    dependsOn: macos_build
+    pool:
+      name: VSEng-MicroBuildVS2019
+    steps:
+      - checkout: none
+      - task: DownloadBuildArtifacts@0
+        displayName: 'Download Unsigned Binary'
+        inputs:
+          artifactName: staging
+      - task: ms-vseng.MicroBuildTasks.7973a23b-33e3-4b00-a7d9-c06d90f8297f.MicroBuildSignMacFiles@1
+        displayName: 'Sign Mac Files'
+        inputs:
+          SigningTarget: '$(Build.ArtifactStagingDirectory)\staging\vcpkg.zip'
+          SigningCert: 8003
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Signed Binary'
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)\staging\vcpkg.zip'
+          ArtifactName: 'MacOS'

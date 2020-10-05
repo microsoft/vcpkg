@@ -1,0 +1,4 @@
+Source: lerc
+Version: 2.2
+Homepage: https://github.com/Esri/lerc
+Description: An open-source image or raster format which supports rapid encoding and decoding for any pixel type

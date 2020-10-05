@@ -614,6 +614,7 @@ namespace vcpkg
         table.format(opt(OVERLAY_PORTS_ARG, "=", "<path>"), "Specify directories to be used when searching for ports");
         table.format("", "(also: " + format_environment_variable("VCPKG_OVERLAY_PORTS") + ')');
         table.format(opt(OVERLAY_TRIPLETS_ARG, "=", "<path>"), "Specify directories containing triplets files");
+        table.format("", "(also: " + format_environment_variable("VCPKG_OVERLAY_TRIPLETS") + ')');
         table.format(opt(BINARY_SOURCES_ARG, "=", "<path>"),
                      "Add sources for binary caching. See 'vcpkg help binarycaching'");
         table.format(opt(DOWNLOADS_ROOT_DIR_ARG, "=", "<path>"), "Specify the downloads root directory");
@@ -652,12 +653,17 @@ namespace vcpkg
             const auto vcpkg_overlay_ports_env = System::get_environment_variable(OVERLAY_PORTS_ENV);
             if (const auto unpacked = vcpkg_overlay_ports_env.get())
             {
-#ifdef WIN32
-                auto overlays = Strings::split(*unpacked, ';');
-#else
-                auto overlays = Strings::split(*unpacked, ':');
-#endif
+                auto overlays = Strings::split_paths(*unpacked);
                 overlay_ports.insert(std::end(overlay_ports), std::begin(overlays), std::end(overlays));
+            }
+        }
+
+        {
+            const auto vcpkg_overlay_triplets_env = System::get_environment_variable(OVERLAY_TRIPLETS_ENV);
+            if (const auto unpacked = vcpkg_overlay_triplets_env.get())
+            {
+                auto triplets = Strings::split_paths(*unpacked);
+                overlay_triplets.insert(std::end(overlay_triplets), std::begin(triplets), std::end(triplets));
             }
         }
 
