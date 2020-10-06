@@ -29,7 +29,7 @@ namespace vcpkg
             return t;
         }
 
-        virtual Optional<Configuration> visit_object(Json::Reader& r, StringView, const Json::Object& obj) override;
+        virtual Optional<Configuration> visit_object(Json::Reader& r, const Json::Object& obj) override;
 
         ConfigurationDeserializer(const VcpkgCmdArguments& args);
 
