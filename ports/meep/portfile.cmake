@@ -1,3 +1,5 @@
+#set(PORT_DEBUG TRUE)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NanoComp/meep
@@ -27,6 +29,8 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+
+#vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 # remove debug include folder
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include/)
