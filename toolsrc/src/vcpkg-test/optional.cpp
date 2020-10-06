@@ -66,6 +66,17 @@ TEST_CASE ("value conversion", "[optional]")
     Optional<int> i = j;
     Optional<const char*> cstr = "hello, world!";
     Optional<std::string> cppstr = cstr;
+
+    std::vector<int> v{1, 2, 3};
+    Optional<std::vector<int>&> o_v(v);
+    REQUIRE(o_v.has_value());
+    REQUIRE(o_v.get()->size() == 3);
+    Optional<std::vector<int>> o_w(std::move(o_v));
+    REQUIRE(o_w.has_value());
+    REQUIRE(o_w.get()->size() == 3);
+    // Moving from Optional<&> should not move the underlying object
+    REQUIRE(o_v.has_value());
+    REQUIRE(o_v.get()->size() == 3);
 }
 
 TEST_CASE ("common_projection", "[optional]")
