@@ -1,6 +1,6 @@
 Source: freetype
 Version: 2.10.2
-Port-Version: 3
+Port-Version: 4
 Build-Depends: zlib, brotli
 Homepage: https://www.freetype.org/
 Description: A library to render fonts.

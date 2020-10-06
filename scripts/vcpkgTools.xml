@@ -106,25 +106,25 @@
         <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
     </tool>
     <tool name="ninja" os="windows">
-        <version>1.10.0</version>
+        <version>1.10.1</version>
         <exeRelativePath>ninja.exe</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip</url>
-        <sha512>a196e243c53daa1df9d287af658d6d38d6b830b614f2d5704e8c88ffc61f179a533ae71cdb6d0d383d1559d65dacccbaaab270fb2a33aa211e5dba42ff046f97</sha512>
-        <archiveName>ninja-win-1.10.0.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip</url>
+        <sha512>0120054f0fea6eea4035866201f69fba1c039f681f680cfcbbefcaee97419815d092a6e2f3823ea6c3928ad296395f36029e337127ee977270000b35df5f9c40</sha512>
+        <archiveName>ninja-win-1.10.1.zip</archiveName>
     </tool>
     <tool name="ninja" os="linux">
-        <version>1.10.0</version>
+        <version>1.10.1</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-linux.zip</url>
-        <sha512>ffb179ab8ea315167fcc99a8f13286e1363590185b18cf819cc73e09f2a7553790e9dc45fd1ccd0bd1d2dbf543aee3f6c0951cf9ce453a7168ffd2ac873cdd29</sha512>
-        <archiveName>ninja-linux-1.10.0.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-linux.zip</url>
+        <sha512>9820c76fde6fac398743766e7ea0fe8a7d6e4191a77512a2d2f51c2ddcc947fcd91ac08522742281a285418c114e760b0158a968305f8dc854bb9693883b7f1e</sha512>
+        <archiveName>ninja-linux-1.10.1.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
-        <version>1.10.0</version>
+        <version>1.10.1</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-mac.zip</url>
-        <sha512>619a1924067a0b30fc5f8887f868d3ee5481838d2f0f158d031f7614a2a10b95a73d4a56b658d5d560283ebf809e2e536b968c6c01ff0108075c3f393f5780ba</sha512>
-        <archiveName>ninja-mac-1.10.0.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-mac.zip</url>
+        <sha512>99f5ccca2461a4d340f4528a8eef6d81180757da78313f1f9412ed13a7bbaf6df537a342536fd053db00524bcb734d205af5f6fde419a1eb2e6f77ee8b7860fe</sha512>
+        <archiveName>ninja-mac-1.10.1.zip</archiveName>
     </tool>
     <tool name="ninja" os="freebsd">
         <version>1.8.2</version>
@@ -134,10 +134,10 @@
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>6.2.1</version>
+        <version>7.0.3</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v6.2.1/PowerShell-6.2.1-win-x86.zip</url>
-        <sha512>ab1effc926b000a6adc12198a1886514ec203621a53b0cd7ec1cd9a8225dccda7e857feaabcfba4004bea73129b986abaad777c4573f44e0af70411226ce08b0</sha512>
-        <archiveName>PowerShell-6.2.1-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.0.3/PowerShell-7.0.3-win-x86.zip</url>
+        <sha512>2e410fc5e429fc6ad478976eff3efcffe9d53a0620c7c31c2b8bfe1f0976cade74632fc202bf58959cec111f03b824ba42ad4d74c8a66d67ec21bbfe9b9c626d</sha512>
+        <archiveName>PowerShell-7.0.3-win-x86.zip</archiveName>
     </tool>
 </tools>

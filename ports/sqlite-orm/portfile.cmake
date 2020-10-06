@@ -1,5 +1,15 @@
 # header-only library
 
+set(FEATURE_PATCHES)
+
+if(test IN_LIST FEATURES)
+    list(APPEND FEATURE_PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-test-feature.patch)
+endif()
+
+if(example IN_LIST FEATURES)
+    list(APPEND FEATURE_PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-example-feature.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fnc12/sqlite_orm
@@ -7,17 +17,21 @@ vcpkg_from_github(
     SHA512 faeeef88aef11e89e9565850c23087925fb4d75ef48a16434055f18831db8e230d044c81574d840dacca406d7095cb83a113afc326996e289ab11a02d8caa2f4
     HEAD_REF master
     PATCHES 
-        fix-includes-not-found.patch
-        disable-examples.patch
+        fix-build-error.patch
+        fix-usage.patch
+        ${FEATURE_PATCHES}
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    test SqliteOrm_BuildTests
+    example BUILD_EXAMPLES
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DSQLITE_ORM_ENABLE_CXX_17=OFF
-        -DSqliteOrm_BuildTests=OFF
-        -DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()

@@ -134,6 +134,7 @@ namespace vcpkg
         constexpr static StringLiteral OVERLAY_PORTS_ENV = "VCPKG_OVERLAY_PORTS";
         constexpr static StringLiteral OVERLAY_PORTS_ARG = "overlay-ports";
         std::vector<std::string> overlay_ports;
+        constexpr static StringLiteral OVERLAY_TRIPLETS_ENV = "VCPKG_OVERLAY_TRIPLETS";
         constexpr static StringLiteral OVERLAY_TRIPLETS_ARG = "overlay-triplets";
         std::vector<std::string> overlay_triplets;
 
@@ -170,9 +171,12 @@ namespace vcpkg
         Optional<bool> compiler_tracking = nullopt;
         constexpr static StringLiteral MANIFEST_MODE_FEATURE = "manifests";
         Optional<bool> manifest_mode = nullopt;
+        constexpr static StringLiteral REGISTRIES_FEATURE = "registries";
+        Optional<bool> registries_feature = nullopt;
 
         bool binary_caching_enabled() const { return binary_caching.value_or(true); }
         bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
+        bool registries_enabled() const { return registries_feature.value_or(false); }
         bool output_json() const { return json.value_or(false); }
 
         std::string command;

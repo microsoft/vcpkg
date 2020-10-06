@@ -17,12 +17,19 @@ vcpkg_extract_source_archive_ex(
 # NOTE: GEOS provides CMake as optional build configuration, it might not be actively
 # maintained, so CMake build issues may happen between releases.
 
+if(VCPKG_TARGET_IS_MINGW)
+    set(_CMAKE_EXTRA_OPTIONS "-DDISABLE_GEOS_INLINE=ON")
+else()
+    set(_CMAKE_EXTRA_OPTIONS "")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DCMAKE_DEBUG_POSTFIX=d
         -DBUILD_TESTING=OFF
+        ${_CMAKE_EXTRA_OPTIONS}
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GEOS)
