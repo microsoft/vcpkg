@@ -1,0 +1,10 @@
+{
+  "name": "ashes",
+  "version-string": "0.1.0",
+  "homepage": "https://github.com/DragonJoker/Ashes",
+  "description": "Drop-in replacement to Vulkan's shared library, allowing the use of OpenGL or Direct3D11 in addition to Vulkan.",
+  "dependencies": [
+    "spirv-cross",
+    "opengl"
+  ]
+}
