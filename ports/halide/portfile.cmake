@@ -1,5 +1,10 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+# Halide distributes some loadable modules that belong in lib on all platforms.
+# CMake defaults module DLLs into the lib folder, which is incompatible with
+# vcpkg’s current policy. This sidesteps that issue, a bit bluntly.
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
@@ -62,18 +67,3 @@ file(GLOB readmes "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.md")
 file(REMOVE ${readmes})
 
 configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-## Fixup loadable plugins to live in bin. CMake puts MODULE libraries in lib, even on Windows.
-
-foreach(prefix IN ITEMS "" "/debug")
-    file(GLOB plugins "${CURRENT_PACKAGES_DIR}${prefix}/lib/*.dll" "${CURRENT_PACKAGES_DIR}${prefix}/lib/*.so")
-    file(INSTALL ${plugins} DESTINATION "${CURRENT_PACKAGES_DIR}${prefix}/bin")
-    file(REMOVE ${plugins})
-endforeach()
-
-file(GLOB scripts "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
-foreach(script IN LISTS scripts)
-    file(READ ${script} contents)
-    string(REGEX REPLACE "lib/([^.]+\\.(dll|so))" "bin/\\1" contents "${contents}")
-    file(WRITE ${script} "${contents}")
-endforeach()
