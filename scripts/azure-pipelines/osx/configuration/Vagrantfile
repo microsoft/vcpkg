@@ -3,7 +3,7 @@ require 'json'
 require "erb"
 include ERB::Util
 
-configuration = JSON.parse(File.read('./vagrant-configuration.json'))
+configuration = JSON.parse(File.read("#{__dir__}/vagrant-configuration.json"))
 
 server = {
   :hostname => configuration['machine_name'],
