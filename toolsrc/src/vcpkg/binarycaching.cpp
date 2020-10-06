@@ -60,7 +60,7 @@ namespace
             System::get_clean_environment());
 #else
         System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
+            Strings::format(R"(cd '%s' && zip --quiet -y -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
 #endif
     }
 
@@ -1016,13 +1016,21 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     auto& spec = action.spec;
     auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
     auto& version = scf.core_paragraph->version;
+    const auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
+    const auto& compiler_info = abi_info.compiler_info.value_or_exit(VCPKG_LINE_INFO);
     std::string description =
         Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
                         Strings::join("\n    ", scf.core_paragraph->description),
                         "\n\nVersion: ",
                         version,
+                        "\nTriplet: ",
+                        spec.triplet().to_string(),
+                        "\nCXX Compiler id: ",
+                        compiler_info.id,
+                        "\nCXX Compiler version: ",
+                        compiler_info.version,
                         "\nTriplet/Compiler hash: ",
-                        action.abi_info.value_or_exit(VCPKG_LINE_INFO).triplet_abi.value_or_exit(VCPKG_LINE_INFO),
+                        abi_info.triplet_abi.value_or_exit(VCPKG_LINE_INFO),
                         "\nFeatures:",
                         Strings::join(",", action.feature_list, [](const std::string& s) { return " " + s; }),
                         "\nDependencies:\n");
