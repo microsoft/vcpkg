@@ -12,6 +12,9 @@ if(CMAKE_HOST_WIN32)
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 endif()
 
+include(vcpkg_find_fortran)
+vcpkg_find_fortran(FORTRAN_CMAKE)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/NanoComp/meep/releases/download/v1.15.0/meep-1.15.0.tar.gz"
     FILENAME "meep-1.15.0.tar.gz"
@@ -24,6 +27,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --without-python
