@@ -37,15 +37,13 @@
       "type": "object",
       "required": [
         "username",
-        "access_key",
         "urn",
-        "share"
+        "path"
       ],
       "properties": {
         "username": { "type": "string" },
-        "access_key": { "type": "string" },
         "urn": { "type": "string" },
-        "share": { "type": "string" }
+        "path": { "type": "string" }
       }
     }
   }
