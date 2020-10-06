@@ -1052,9 +1052,7 @@ monkeys-audio:x64-uwp=fail
 monkeys-audio:x64-windows-static=fail
 moos-core:arm-uwp=fail
 moos-core:x64-uwp=fail
-moos-core:x64-windows=fail
 moos-core:x64-windows-static=fail
-moos-core:x86-windows=fail
 moos-essential:arm64-windows=fail
 moos-essential:x64-windows=fail
 moos-essential:x86-windows=fail
@@ -1178,8 +1176,8 @@ ois:x64-uwp=fail
 # src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
 # -L/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib   -L/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib
 # -Wl,-rpath,/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib:/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib::::::::::::::::::::::::::::::::::::::::::::::::
-# -lode  /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_serialization.a 
-# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_filesystem.a 
+# -lode  /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_serialization.a
+# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_filesystem.a
 # /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_system.a  -lpthread && :
 # /usr/bin/ld: cannot find -lode
 ompl:x64-osx=fail
@@ -1691,10 +1689,6 @@ tinyfiledialogs:arm-uwp=fail
 tinyfiledialogs:x64-uwp=fail
 tiny-process-library:arm-uwp=fail
 tiny-process-library:x64-uwp=fail
-tinyutf8:arm64-windows=fail
-tinyutf8:arm-uwp=fail
-tinyutf8:x64-uwp=fail
-
 tmxlite:arm-uwp=fail
 tmxlite:x64-uwp=fail
 tmxparser:arm64-windows=fail
