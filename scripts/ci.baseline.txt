@@ -1503,6 +1503,7 @@ rapidstring:x86-windows=fail
 raylib:arm64-windows=fail
 raylib:arm-uwp=fail
 raylib:x64-uwp=fail
+rbdl:x64-uwp=fail
 readline:arm-uwp=fail
 readline:x64-uwp=fail
 readline-win32:arm-uwp=fail
