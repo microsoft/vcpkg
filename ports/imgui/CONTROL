@@ -76,3 +76,6 @@ Description: Install the libigl-imgui headers
 
 Feature: wchar32
 Description: Use WCHAR32 instead of WCHAR16
+
+Feature: docking
+Description: Use docking branch of dear imgui
