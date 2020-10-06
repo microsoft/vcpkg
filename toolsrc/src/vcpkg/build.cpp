@@ -319,6 +319,17 @@ namespace vcpkg::Build
                     env[env_var] = env_val.value_or_exit(VCPKG_LINE_INFO);
                 }
             }
+            static constexpr StringLiteral s_extra_vars[] = {
+                "VCPKG_COMMAND",
+                "VCPKG_FORCE_SYSTEM_BINARIES",
+                VcpkgCmdArguments::RECURSIVE_DATA_ENV,
+            };
+
+            for (auto var : s_extra_vars)
+            {
+                auto val = System::get_environment_variable(var);
+                if (auto p_val = val.get()) env.emplace(var, *p_val);
+            }
 
             return {env};
         });

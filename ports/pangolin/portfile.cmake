@@ -50,7 +50,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake
         "lib/pangolin.dll" "bin/pangolin.dll"
     )
-    
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
     # Copy missing header file
     file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/pangolin)
 endif()
