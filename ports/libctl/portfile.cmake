@@ -12,6 +12,7 @@ This can be installed on Ubuntu systems via sudo apt install guile-2.2-dev")
 
 #if(CMAKE_HOST_WIN32)
 #	vcpkg_acquire_msys(MSYS_ROOT PACKAGES autoconf)
+#   vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 #endif()
 
 vcpkg_download_distfile(ARCHIVE

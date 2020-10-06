@@ -6,9 +6,11 @@
 #    HEAD_REF master
 #)
 
-#if(CMAKE_HOST_WIN32)
+if(CMAKE_HOST_WIN32)
 #	vcpkg_acquire_msys(MSYS_ROOT PACKAGES autoconf)
-#endif()
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+endif()
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/NanoComp/meep/releases/download/v1.15.0/meep-1.15.0.tar.gz"
