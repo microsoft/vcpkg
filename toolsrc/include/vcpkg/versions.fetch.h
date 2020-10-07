@@ -1,8 +1,18 @@
+#pragma once
+
 #include <vcpkg/fwd/vcpkgpaths.h>
 
 namespace vcpkg::Versions
 {
     struct Version;
+
+    namespace Git
+    {
+        const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths,
+                                                        const fs::path& dot_git_directory,
+                                                        const fs::path& working_directory,
+                                                        const std::string& cmd);
+    }
 
     void fetch_port_commit_id(const vcpkg::VcpkgPaths& paths,
                               const std::string& port_name,

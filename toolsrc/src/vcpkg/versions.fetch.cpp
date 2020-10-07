@@ -10,25 +10,25 @@
 using namespace vcpkg;
 using namespace vcpkg::Versions;
 
+const System::ExitCodeAndOutput Git::run_git_command(const VcpkgPaths& paths,
+                                                     const fs::path& dot_git_directory,
+                                                     const fs::path& working_directory,
+                                                     const std::string& cmd)
+{
+    const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
+
+    System::CmdLineBuilder builder;
+    builder.path_arg(git_exe)
+        .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_directory)))
+        .string_arg(Strings::concat("--work-tree=", fs::u8string(working_directory)));
+    const std::string full_cmd = Strings::concat(builder.extract(), " ", cmd);
+
+    const auto output = System::cmd_execute_and_capture_output(full_cmd);
+    return output;
+}
+
 namespace
 {
-    const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths,
-                                                    const fs::path& dot_git_directory,
-                                                    const fs::path& working_directory,
-                                                    const std::string& cmd)
-    {
-        const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
-
-        System::CmdLineBuilder builder;
-        builder.path_arg(git_exe)
-            .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_directory)))
-            .string_arg(Strings::concat("--work-tree=", fs::u8string(working_directory)));
-        const std::string full_cmd = Strings::concat(builder.extract(), " ", cmd);
-
-        const auto output = System::cmd_execute_and_capture_output(full_cmd);
-        return output;
-    }
-
     const std::string get_version_commit_id(const std::string& package_name,
                                             const std::string& requested_version,
                                             const VcpkgPaths& paths)
@@ -80,7 +80,7 @@ void Versions::fetch_port_commit_id(const VcpkgPaths& paths, const std::string& 
             .string_arg("--local")
             .path_arg(paths.root)
             .string_arg("versioning_tmp");
-        const auto output = run_git_command(paths, dot_git_dir, working_dir, clone_cmd_builder.extract());
+        const auto output = Git::run_git_command(paths, dot_git_dir, working_dir, clone_cmd_builder.extract());
         Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to clone temporary vcpkg instance");
     }
 
@@ -91,7 +91,7 @@ void Versions::fetch_port_commit_id(const VcpkgPaths& paths, const std::string& 
         .string_arg("--")
         .string_arg(Strings::concat("./ports/", port_name));
     const auto git_cmd = checkout_cmd_builder.extract();
-    const auto checkout_output = run_git_command(paths, dot_git_dir, working_dir, git_cmd);
+    const auto checkout_output = Git::run_git_command(paths, dot_git_dir, working_dir, git_cmd);
     Checks::check_exit(
         VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout % at commit %d", port_name, commit_id);
 }

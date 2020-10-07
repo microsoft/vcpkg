@@ -8,6 +8,7 @@
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/versions.fetch.h>
 #include <vcpkg/versions.h>
 
 namespace vcpkg::Commands::PortHistory
@@ -22,23 +23,18 @@ namespace vcpkg::Commands::PortHistory
             std::string version_string;
             std::string version;
             std::string port_version;
+            Versions::Scheme scheme;
         };
 
-        static const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths, const std::string& cmd)
+        const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths, const std::string& cmd)
         {
-            const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
+            const fs::path& work_dir = paths.root;
             const fs::path dot_git_dir = paths.root / ".git";
 
-            // git.exe --git-dir="{git_dir_path}" {cmd}
-            System::CmdLineBuilder builder;
-            builder.path_arg(git_exe);
-            builder.string_arg(Strings::format("--git-dir=%s", fs::u8string(dot_git_dir)));
-            const auto full_cmd = Strings::concat(builder.extract(), " ", cmd);
-
-            return System::cmd_execute_and_capture_output(full_cmd);
+            return vcpkg::Versions::Git::run_git_command(paths, dot_git_dir, work_dir, cmd);
         }
 
-        static Json::Object parse_json_object(StringView sv)
+        Json::Object parse_json_object(StringView sv)
         {
             auto json = Json::parse(sv);
             if (auto r = json.get())
@@ -51,42 +47,71 @@ namespace vcpkg::Commands::PortHistory
             }
         }
 
-        static HistoryVersion parse_version_from_manifest(const std::string& text,
-                                                          const std::string& port_name,
-                                                          const std::string& commit_id,
-                                                          const std::string& commit_date)
+        const Versions::Scheme guess_version_scheme(const std::string& version_string)
+        {
+            if (Versions::Version::is_date(version_string))
+            {
+                return Versions::Scheme::Date;
+            }
+
+            if (Versions::Version::is_semver(version_string) || Versions::Version::is_semver_relaxed(version_string))
+            {
+                return Versions::Scheme::Relaxed;
+            }
+
+            return Versions::Scheme::String;
+        }
+
+        HistoryVersion parse_version_from_manifest(const std::string& text,
+                                                   const std::string& port_name,
+                                                   const std::string& commit_id,
+                                                   const std::string& commit_date)
         {
             auto object = parse_json_object(text);
 
             auto maybe_version = object.get("version-string");
             auto maybe_port_version = object.get("port-version");
 
-            auto version = maybe_version ? maybe_version->string().to_string() : "0.0.0";
-            auto port_version = maybe_port_version ? maybe_port_version->integer() : 0;
+            auto version =
+                maybe_version && maybe_port_version->is_string() ? maybe_version->string().to_string() : "0.0.0";
+            auto port_version =
+                maybe_port_version && maybe_port_version->is_integer() ? maybe_port_version->integer() : 0;
 
-            return HistoryVersion{port_name, commit_id, commit_date, version, version, std::to_string(port_version)};
+            return HistoryVersion{port_name,
+                                  commit_id,
+                                  commit_date,
+                                  version,
+                                  version,
+                                  std::to_string(port_version),
+                                  guess_version_scheme(version)};
         }
 
-        static HistoryVersion parse_version_from_control(const std::string& text,
-                                                         const std::string& port_name,
-                                                         const std::string& commit_id,
-                                                         const std::string& commit_date)
+        HistoryVersion parse_version_from_control(const std::string& text,
+                                                  const std::string& port_name,
+                                                  const std::string& commit_id,
+                                                  const std::string& commit_date)
         {
-            const auto version = Strings::find_at_most_one_enclosed(text, "\nVersion: ", "\n");
-            const auto port_version = Strings::find_at_most_one_enclosed(text, "\nPort-Version: ", "\n");
-            Checks::check_exit(VCPKG_LINE_INFO, version.has_value(), "CONTROL file does not have a 'Version' field");
-            auto version_string = version.get()->to_string();
+            auto version_tags = Strings::find_all_enclosed(text, "\nVersion: ", "\n");
 
-            // Remove trailing \r that sometimes finds its way into CONTROL files
-            if (!version_string.empty() && version_string.at(version_string.size() - 1) == '\r')
-            {
-                version_string.pop_back();
-            }
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !version_tags.empty(),
+                               "Missing \"Version\" field in port %s at %s",
+                               port_name,
+                               commit_id);
 
-            if (auto pv = port_version.get())
+            auto version_string = Strings::trim(version_tags.front()).to_string();
+            auto maybe_port_version = Strings::find_at_most_one_enclosed(text, "\nPort-Version: ", "\n");
+
+            if (auto pv = maybe_port_version.get())
             {
                 // We assume CONTROL files using the port_version field have a clean version_string
-                return HistoryVersion{port_name, commit_id, "", version_string, version_string, pv->to_string()};
+                return HistoryVersion{port_name,
+                                      commit_id,
+                                      "",
+                                      version_string,
+                                      version_string,
+                                      Strings::trim(pv->to_string()),
+                                      guess_version_scheme(version_string)};
             }
             else
             {
@@ -97,22 +122,27 @@ namespace vcpkg::Commands::PortHistory
                 if (index != std::string::npos)
                 {
                     // Very lazy check to keep date versions untouched
-                    if (!vcpkg::Versions::is_date(version_string))
+                    if (!Versions::Version::is_date(version_string))
                     {
                         clean_port_version = version_string.substr(index + 1);
                         clean_version.resize(index);
                     }
                 }
 
-                return HistoryVersion{
-                    port_name, commit_id, commit_date, version_string, clean_version, clean_port_version};
+                return HistoryVersion{port_name,
+                                      commit_id,
+                                      commit_date,
+                                      version_string,
+                                      clean_version,
+                                      clean_port_version,
+                                      guess_version_scheme(clean_version)};
             }
         }
 
-        static HistoryVersion get_version_from_commit(const VcpkgPaths& paths,
-                                                      const std::string& commit_id,
-                                                      const std::string& commit_date,
-                                                      const std::string& port_name)
+        vcpkg::Optional<HistoryVersion> get_version_from_commit(const VcpkgPaths& paths,
+                                                                const std::string& commit_id,
+                                                                const std::string& commit_date,
+                                                                const std::string& port_name)
         {
             // Do we have a manifest file?
             const std::string manifest_cmd = Strings::format(R"(show %s:ports/%s/vcpkg.json)", commit_id, port_name);
@@ -121,20 +151,18 @@ namespace vcpkg::Commands::PortHistory
             {
                 return parse_version_from_manifest(manifest_output.output, port_name, commit_id, commit_date);
             }
-            else
+
+            const std::string cmd = Strings::format(R"(show %s:ports/%s/CONTROL)", commit_id, port_name);
+            auto control_output = run_git_command(paths, cmd);
+
+            if (control_output.exit_code != 0)
             {
-                const std::string cmd = Strings::format(R"(show %s:ports/%s/CONTROL)", commit_id, port_name);
-                auto control_output = run_git_command(paths, cmd);
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   control_output.exit_code == 0,
-                                   "Failed to find manifest or CONTROL file for port %s at %s",
-                                   port_name,
-                                   commit_id);
-                return parse_version_from_control(control_output.output, port_name, commit_id, commit_date);
+                return nullopt;
             }
+            return parse_version_from_control(control_output.output, port_name, commit_id, commit_date);
         }
 
-        static std::vector<HistoryVersion> read_versions_from_log(const VcpkgPaths& paths, const std::string& port_name)
+        std::vector<HistoryVersion> read_versions_from_log(const VcpkgPaths& paths, const std::string& port_name)
         {
             // log --format="%H %cd" --date=short --left-only -- ports/{port_name}/.
             System::CmdLineBuilder builder;
@@ -156,12 +184,16 @@ namespace vcpkg::Commands::PortHistory
             std::string last_version;
             for (auto&& commit_date_pair : commits)
             {
-                auto&& version =
+                auto maybe_version =
                     get_version_from_commit(paths, commit_date_pair.first, commit_date_pair.second, port_name);
-                if (last_version != version.version_string)
+                if (maybe_version.has_value())
                 {
-                    last_version = version.version_string;
-                    ret.emplace_back(version);
+                    const auto version = maybe_version.value_or_exit(VCPKG_LINE_INFO);
+                    if (last_version != version.version_string)
+                    {
+                        last_version = version.version_string;
+                        ret.emplace_back(version);
+                    }
                 }
             }
             return ret;
@@ -194,6 +226,16 @@ namespace vcpkg::Commands::PortHistory
                 object.insert("version_string", Json::Value::string(version.version_string));
                 object.insert("version", Json::Value::string(version.version));
                 object.insert("port_version", Json::Value::string(version.port_version));
+                switch (version.scheme)
+                {
+                    case Versions::Scheme::Semver: // falls through
+                    case Versions::Scheme::Relaxed:
+                        object.insert("version_scheme", Json::Value::string("relaxed"));
+                        break;
+                    case Versions::Scheme::Date: object.insert("version_scheme", Json::Value::string("date")); break;
+                    case Versions::Scheme::String: // falls through
+                    default: object.insert("version_scheme", Json::Value::string("string")); break;
+                }
                 versions_json.push_back(std::move(object));
             }
 

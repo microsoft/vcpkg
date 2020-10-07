@@ -34,7 +34,7 @@ bool Version::is_semver(const std::string& version_string)
 
 bool Version::is_semver_relaxed(const std::string& version_string)
 {
-    std::regex re("^(?:[0-9a-zA-Z]+)(?:[\\.|-][0-9a-zA-Z]+)*$");
+    std::regex re("^(?:[0-9a-zA-Z]+)\\.(?:[0-9a-zA-Z]+)\\.(?:[0-9a-zA-Z]+)(?:[\\.|-|\\+][0-9a-zA-Z]+)*$");
     return std::regex_match(version_string, re);
 }
 

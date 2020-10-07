@@ -15,7 +15,7 @@ def generate_port_versions_db(dir_path):
             print('Processed {} out of {}'.format(counter, len(port_names)))
         if not os.path.exists(output_filepath):            
             try:
-                output = subprocess.run(args=['../vcpkg.exe', 'x-history', port_name, '--json'], capture_output=True)
+                output = subprocess.run(args=['../vcpkg.exe', 'x-history', port_name, '--x-json'], capture_output=True)
                 try:
                     versions_object = json.loads(output.stdout)
                     with open(output_filepath, 'w') as output_file:
@@ -36,4 +36,4 @@ def main(dir_path):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main('port_versions_db')
