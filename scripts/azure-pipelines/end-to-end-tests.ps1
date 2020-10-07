@@ -245,3 +245,6 @@ $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Write-Host $CurrentTest
 ./vcpkg @testArgs
 Throw-IfNotFailed
+
+Write-Host 'All tests passed.'
+return 0 # Ensure Pipelines thinks we passed if we got here.
