@@ -113,7 +113,7 @@ Refresh-TestRoot
 $testArgs = $commonArgs + @("install", "rapidjson", "--binarycaching", "--x-binarysource=clear;files,$ArchiveRoot,write;nuget,$NuGetRoot,readwrite")
 $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfFailed
 
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
@@ -122,7 +122,7 @@ Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 $testArgs = $commonArgs + @("remove", "rapidjson")
 $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfFailed
 
 Require-FileNotExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
@@ -133,7 +133,7 @@ $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Remove-Item -Recurse -Force $installRoot
 Remove-Item -Recurse -Force $buildtreesRoot
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfFailed
 
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
@@ -141,12 +141,12 @@ Require-FileNotExists "$buildtreesRoot/rapidjson/src"
 Require-FileExists "$buildtreesRoot/detect_compiler"
 
 # Test --no-binarycaching
-$args = $commonArgs + @("install","rapidjson","--no-binarycaching","--x-binarysource=clear;files,$ArchiveRoot,read")
-$CurrentTest = "./vcpkg $($args -join ' ')"
+$testArgs = $commonArgs + @("install","rapidjson","--no-binarycaching","--x-binarysource=clear;files,$ArchiveRoot,read")
+$CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Remove-Item -Recurse -Force $installRoot
 Remove-Item -Recurse -Force $buildtreesRoot
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfFailed
 
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
@@ -154,12 +154,12 @@ Require-FileExists "$buildtreesRoot/rapidjson/src"
 Require-FileExists "$buildtreesRoot/detect_compiler"
 
 # Test --editable
-$args = $commonArgs + @("install","rapidjson","--editable","--x-binarysource=clear;files,$ArchiveRoot,read")
-$CurrentTest = "./vcpkg $($args -join ' ')"
+$testArgs = $commonArgs + @("install","rapidjson","--editable","--x-binarysource=clear;files,$ArchiveRoot,read")
+$CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Remove-Item -Recurse -Force $installRoot
 Remove-Item -Recurse -Force $buildtreesRoot
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfFailed
 
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
@@ -172,7 +172,7 @@ $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Remove-Item -Recurse -Force $installRoot
 Remove-Item -Recurse -Force $buildtreesRoot
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfFailed
 
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
@@ -183,7 +183,7 @@ $testArgs = $commonArgs + @("install", "rapidjson", "--dry-run", "--x-write-nuge
 $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Remove-Item -Recurse -Force $installRoot -ErrorAction SilentlyContinue
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfFailed
 Require-FileNotExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 Require-FileNotExists "$buildtreesRoot/rapidjson/src"
@@ -204,7 +204,7 @@ mkdir $NuGetRoot
 $testArgs = $commonArgs + @("install", "rapidjson", "tinyxml", "--binarycaching", "--x-binarysource=clear;nuget,$NuGetRoot2;nuget,$NuGetRoot,write")
 $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfFailed
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 Require-FileExists "$installRoot/$Triplet/include/tinyxml.h"
@@ -222,7 +222,7 @@ Write-Host $CurrentTest
 Require-FileNotExists "$TestingRoot/vcpkg-export-output"
 Require-FileNotExists "$TestingRoot/vcpkg-export.1.0.0.nupkg"
 Require-FileNotExists "$TestingRoot/vcpkg-export-output.zip"
-./vcpkg @args
+./vcpkg @testArgs
 Require-FileExists "$TestingRoot/vcpkg-export-output"
 Require-FileExists "$TestingRoot/vcpkg-export.1.0.0.nupkg"
 Require-FileExists "$TestingRoot/vcpkg-export-output.zip"
@@ -231,17 +231,17 @@ Require-FileExists "$TestingRoot/vcpkg-export-output.zip"
 $testArgs = $commonArgs + @("install", "zlib", "--vcpkg-rootttttt", "C:\")
 $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfNotFailed
 
 $testArgs = $commonArgs + @("install", "zlib", "--vcpkg-rootttttt=C:\")
 $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfNotFailed
 
 $testArgs = $commonArgs + @("install", "zlib", "--fast") # NB: --fast is not a switch
 $CurrentTest = "./vcpkg $($testArgs -join ' ')"
 Write-Host $CurrentTest
-./vcpkg @args
+./vcpkg @testArgs
 Throw-IfNotFailed
