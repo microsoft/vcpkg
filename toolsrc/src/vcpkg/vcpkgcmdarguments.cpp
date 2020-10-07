@@ -152,12 +152,15 @@ namespace vcpkg
         return VcpkgCmdArguments::create_from_arg_sequence(v.data(), v.data() + v.size());
     }
 
-    // returns the number of consumed arguments:
-    // 0: parse unsuccessful
-    // 1: parse successful and option was consumed
-    // 2: parse successful and both option and lookahead were consumed
+    enum class TryParseArgumentResult
+    {
+        NotFound,
+        Found,
+        FoundAndConsumedLookahead
+    };
+
     template<class T, class F>
-    static size_t try_parse_argument_as_option(
+    static TryParseArgumentResult try_parse_argument_as_option(
         StringView arg, Optional<StringView> lookahead, StringView option, T& place, F parser)
     {
         if (Strings::starts_with(arg, "x-") && !Strings::starts_with(option, "x-"))
@@ -172,7 +175,7 @@ namespace vcpkg
                 if (auto next = lookahead.get())
                 {
                     parser(*next, option, place);
-                    return 2;
+                    return TryParseArgumentResult::FoundAndConsumedLookahead;
                 }
 
                 System::print2(System::Color::error, "Error: expected value after ", option, '\n');
@@ -184,11 +187,11 @@ namespace vcpkg
             if (arg.byte_at_index(option.size()) == '=')
             {
                 parser(arg.substr(option.size() + 1), option, place);
-                return 1;
+                return TryParseArgumentResult::Found;
             }
         }
 
-        return 0;
+        return TryParseArgumentResult::NotFound;
     }
 
     static bool equals_modulo_experimental(StringView arg, StringView option)
@@ -292,13 +295,9 @@ namespace vcpkg
             };
 
             Optional<StringView> lookahead;
+            if (it + 1 != arg_last)
             {
-                auto next = it;
-                ++next;
-                if (next != arg_last)
-                {
-                    lookahead = *next;
-                }
+                lookahead = it[1];
             }
 
             bool found = false;
@@ -306,9 +305,9 @@ namespace vcpkg
             {
                 switch (try_parse_argument_as_option(arg, lookahead, pr.first, args.*pr.second, parse_cojoined_value))
                 {
-                    case 2: ++it; // fallthrough
-                    case 1: found = true; break;
-                    case 0: break;
+                    case TryParseArgumentResult::FoundAndConsumedLookahead: ++it; [[fallthrough]];
+                    case TryParseArgumentResult::Found: found = true; break;
+                    case TryParseArgumentResult::NotFound: break;
                     default: Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
@@ -319,9 +318,9 @@ namespace vcpkg
                 switch (
                     try_parse_argument_as_option(arg, lookahead, pr.first, args.*pr.second, parse_cojoined_multivalue))
                 {
-                    case 2: ++it; // fallthrough
-                    case 1: found = true; break;
-                    case 0: break;
+                    case TryParseArgumentResult::FoundAndConsumedLookahead: ++it; [[fallthrough]];
+                    case TryParseArgumentResult::Found: found = true; break;
+                    case TryParseArgumentResult::NotFound: break;
                     default: Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
@@ -330,9 +329,9 @@ namespace vcpkg
             switch (try_parse_argument_as_option(
                 arg, lookahead, FEATURE_FLAGS_ARG, feature_flags, parse_cojoined_list_multivalue))
             {
-                case 2: ++it; // fallthrough
-                case 1: continue;
-                case 0: break;
+                case TryParseArgumentResult::FoundAndConsumedLookahead: ++it; [[fallthrough]];
+                case TryParseArgumentResult::Found: found = true; break;
+                case TryParseArgumentResult::NotFound: break;
                 default: Checks::unreachable(VCPKG_LINE_INFO);
             }
 
