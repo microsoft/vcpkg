@@ -124,7 +124,7 @@ Throw-IfFailed
 Require-FileNotExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 
 # Test restoring from files archive
-$args = $commonArgs + @("install","rapidjson","--binarycaching","--x-binarysource=clear;files,$ArchiveRoot,read")
+$args = $commonArgs + @("install","rapidjson","--x-binarysource=clear;files,$ArchiveRoot,read")
 $CurrentTest = "./vcpkg $($args -join ' ')"
 Remove-Item -Recurse -Force $installRoot
 Remove-Item -Recurse -Force $buildtreesRoot
@@ -134,6 +134,33 @@ Throw-IfFailed
 
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 Require-FileNotExists "$buildtreesRoot/rapidjson/src"
+Require-FileExists "$buildtreesRoot/detect_compiler"
+
+# Test --no-binarycaching
+$args = $commonArgs + @("install","rapidjson","--no-binarycaching","--x-binarysource=clear;files,$ArchiveRoot,read")
+$CurrentTest = "./vcpkg $($args -join ' ')"
+Remove-Item -Recurse -Force $installRoot
+Remove-Item -Recurse -Force $buildtreesRoot
+Write-Host $CurrentTest
+./vcpkg @args
+Throw-IfFailed
+
+Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
+Require-FileExists "$buildtreesRoot/rapidjson/src"
+Require-FileExists "$buildtreesRoot/detect_compiler"
+
+# Test --editable
+$args = $commonArgs + @("install","rapidjson","--editable","--x-binarysource=clear;files,$ArchiveRoot,read")
+$CurrentTest = "./vcpkg $($args -join ' ')"
+Remove-Item -Recurse -Force $installRoot
+Remove-Item -Recurse -Force $buildtreesRoot
+Write-Host $CurrentTest
+./vcpkg @args
+Throw-IfFailed
+
+Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
+Require-FileExists "$buildtreesRoot/rapidjson/src"
+Require-FileNotExists "$buildtreesRoot/detect_compiler"
 
 # Test restoring from nuget
 $args = $commonArgs + @("install","rapidjson","--binarycaching","--x-binarysource=clear;nuget,$NuGetRoot")

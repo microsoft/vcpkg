@@ -99,7 +99,7 @@
 
   <Target Name="VcpkgInstallManifestDependencies" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'" BeforeTargets="ClCompile">
     <Message Text="Installing vcpkg dependencies" Importance="High" />
-    <Exec Command="%22$(VcpkgRoot)vcpkg.exe%22 install --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 --binarycaching" StandardOutputImportance="High" />
+    <Exec Command="%22$(VcpkgRoot)vcpkg.exe%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22" StandardOutputImportance="High" />
   </Target>
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgApplocalDeps)' == 'true'">
