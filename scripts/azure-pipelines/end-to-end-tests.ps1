@@ -74,7 +74,7 @@ function Throw-IfFailed {
     }
 }
 function Throw-IfNotFailed {
-    if ($LASTEXITCODE -ne 0) {
+    if ($LASTEXITCODE -eq 0) {
         throw "'$CurrentTest' had a step with an unexpectedly zero exit code"
     }
 }
