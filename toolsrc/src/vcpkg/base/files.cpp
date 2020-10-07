@@ -27,10 +27,7 @@ namespace
 {
     struct IsSlash
     {
-        bool operator()(const wchar_t c) const noexcept
-        {
-            return c == L'/' || c == L'\\';
-        }
+        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
     };
 
     constexpr IsSlash is_slash;
