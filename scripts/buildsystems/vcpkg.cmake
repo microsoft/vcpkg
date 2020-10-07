@@ -363,7 +363,10 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
             "--x-install-root=${_VCPKG_INSTALLED_DIR}"
             ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
-        RESULT_VARIABLE _VCPKG_INSTALL_RESULT)
+        OUTPUT_FILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install-out.log"
+        ERROR_FILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install-err.log"
+        RESULT_VARIABLE _VCPKG_INSTALL_RESULT
+    )
 
     if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
         message(FATAL_ERROR "Running vcpkg install - failed")

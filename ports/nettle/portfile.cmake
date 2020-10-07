@@ -106,7 +106,7 @@ else()
         REF  ee5d62898cf070f08beedc410a8d7c418588bd95 #v3.5.1 
         SHA512 881912548f4abb21460f44334de11439749c8a055830849a8beb4332071d11d9196d9eecaeba5bf822819d242356083fba91eb8719a64f90e41766826e6d75e1
         HEAD_REF master # branch name
-        #PATCHES example.patch #patch name
+        PATCHES fix-InstallLibPath.patch
     )
 
     vcpkg_configure_make(

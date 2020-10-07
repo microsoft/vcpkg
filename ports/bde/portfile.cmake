@@ -56,8 +56,10 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 else()
     message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_WINDOWS)
     set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --msvc-runtime-type=static)
+else()
+    set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
 endif()
 
 # Configure debug
