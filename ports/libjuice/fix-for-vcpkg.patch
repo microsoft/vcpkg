@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index be72a2a..9221da9 100644
+index be72a2a..299fee5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -41,6 +41,9 @@ set(LIBJUICE_SOURCES
@@ -7,67 +7,28 @@ index be72a2a..9221da9 100644
  	${CMAKE_CURRENT_SOURCE_DIR}/include/juice/juice.h
  )
 +set(LIBJUICE_PRIVATE_HEADERS
-+	${CMAKE_CURRENT_SOURCE_DIR}/src/socket.h
++   ${CMAKE_CURRENT_SOURCE_DIR}/src/socket.h
 +)
  
  set(TESTS_SOURCES
      ${CMAKE_CURRENT_SOURCE_DIR}/test/main.c
-@@ -54,67 +57,56 @@ set(TESTS_SOURCES
+@@ -54,10 +57,10 @@ set(TESTS_SOURCES
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
 -add_library(juice SHARED ${LIBJUICE_SOURCES})
-+if(BUILD_SHARED_LIBS)
-+  add_library(juice SHARED ${LIBJUICE_SOURCES})
-+else()
-+  add_library(juice STATIC ${LIBJUICE_SOURCES})
-+endif()
++add_library(juice ${LIBJUICE_SOURCES})
  set_target_properties(juice PROPERTIES VERSION ${PROJECT_VERSION})
  
 -target_include_directories(juice PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-+target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
++target_include_directories(juice PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
  target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/juice)
  target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
  target_link_libraries(juice PUBLIC Threads::Threads)
+@@ -100,8 +103,13 @@ endif()
+ add_library(LibJuice::LibJuice ALIAS juice)
+ add_library(LibJuice::LibJuiceStatic ALIAS juice-static)
  
--add_library(juice-static STATIC EXCLUDE_FROM_ALL ${LIBJUICE_SOURCES})
--set_target_properties(juice-static PROPERTIES VERSION ${PROJECT_VERSION})
--
--target_include_directories(juice-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
--target_include_directories(juice-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/juice)
--target_include_directories(juice-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
--target_link_libraries(juice-static PUBLIC Threads::Threads)
--
- if(WIN32)
- 	target_link_libraries(juice PRIVATE wsock32 ws2_32) # winsock2
--	target_link_libraries(juice-static PRIVATE wsock32 ws2_32) # winsock2
- endif()
- 
- if (USE_NETTLE)
- 	find_package(Nettle REQUIRED)
-     target_compile_definitions(juice PRIVATE USE_NETTLE=1)
-     target_link_libraries(juice PRIVATE Nettle::Nettle)
--    target_compile_definitions(juice-static PRIVATE USE_NETTLE=1)
--    target_link_libraries(juice-static PRIVATE Nettle::Nettle)
- else()
-     target_compile_definitions(juice PRIVATE USE_NETTLE=0)
--    target_compile_definitions(juice-static PRIVATE USE_NETTLE=0)
- endif()
- 
- if (NO_ATOMICS)
- 	target_compile_definitions(juice PRIVATE NO_ATOMICS)
--	target_compile_definitions(juice-static PRIVATE NO_ATOMICS)
- endif()
- 
- if(APPLE)
- 	# This seems to be necessary on MacOS
- 	target_include_directories(juice PRIVATE /usr/local/include)
--	target_include_directories(juice-static PRIVATE /usr/local/include)
- endif()
- 
--add_library(LibJuice::LibJuice ALIAS juice)
--add_library(LibJuice::LibJuiceStatic ALIAS juice-static)
--
 -install(TARGETS juice LIBRARY DESTINATION lib)
 +install(TARGETS juice EXPORT libjuice-config
 +  RUNTIME DESTINATION bin
@@ -79,20 +40,7 @@ index be72a2a..9221da9 100644
  
  if(NOT MSVC)
  	target_compile_options(juice PRIVATE -Wall -Wextra)
--	target_compile_options(juice-static PRIVATE -Wall -Wextra)
- endif()
- 
- if(WARNINGS_AS_ERRORS)
- 	if(MSVC)
- 		target_compile_options(juice PRIVATE /WX)
--		target_compile_options(juice-static PRIVATE /WX)
- 	else()
- 		target_compile_options(juice PRIVATE -Werror)
--		target_compile_options(juice-static PRIVATE -Werror)
- 	endif()
- endif()
- 
-@@ -128,3 +120,8 @@ if(NOT NO_TESTS)
+@@ -128,3 +136,8 @@ if(NOT NO_TESTS)
  	target_link_libraries(juice-tests juice)
  endif()
  
