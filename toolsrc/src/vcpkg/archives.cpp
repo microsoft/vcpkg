@@ -99,7 +99,6 @@ namespace vcpkg::Archives
 
         for (int i = 0; i < 5 && ec; i++)
         {
-            i++;
             using namespace std::chrono_literals;
             std::this_thread::sleep_for(i * 100ms);
             fs.rename(to_path_partial, to_path, ec);
