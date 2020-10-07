@@ -299,12 +299,6 @@ namespace vcpkg::Build
         }
     };
 
-    struct AbiTagAndFile
-    {
-        std::string tag;
-        fs::path tag_file;
-    };
-
     struct CompilerInfo
     {
         std::string id;

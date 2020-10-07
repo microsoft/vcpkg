@@ -629,8 +629,26 @@ namespace vcpkg
         table.format(opt(JSON_SWITCH, "", ""), "(Experimental) Request JSON output");
     }
 
+    static void from_env(ZStringView var, std::unique_ptr<std::string>& dst)
+    {
+        if (dst) return;
+
+        auto maybe_val = System::get_environment_variable(var);
+        if (auto val = maybe_val.get())
+        {
+            dst = std::make_unique<std::string>(std::move(*val));
+        }
+    }
+
     void VcpkgCmdArguments::imbue_from_environment()
     {
+        static bool s_reentrancy_guard = false;
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !s_reentrancy_guard,
+                           "VcpkgCmdArguments::imbue_from_environment() modifies global state and thus may only be "
+                           "called once per process.");
+        s_reentrancy_guard = true;
+
         if (!disable_metrics)
         {
             const auto vcpkg_disable_metrics_env = System::get_environment_variable(DISABLE_METRICS_ENV);
@@ -640,14 +658,10 @@ namespace vcpkg
             }
         }
 
-        if (!triplet)
-        {
-            const auto vcpkg_default_triplet_env = System::get_environment_variable(TRIPLET_ENV);
-            if (const auto unpacked = vcpkg_default_triplet_env.get())
-            {
-                triplet = std::make_unique<std::string>(*unpacked);
-            }
-        }
+        from_env(TRIPLET_ENV, triplet);
+        from_env(VCPKG_ROOT_DIR_ENV, vcpkg_root_dir);
+        from_env(DOWNLOADS_ROOT_DIR_ENV, downloads_root_dir);
+        from_env(DEFAULT_VISUAL_STUDIO_PATH_ENV, default_visual_studio_path);
 
         {
             const auto vcpkg_overlay_ports_env = System::get_environment_variable(OVERLAY_PORTS_ENV);
@@ -657,7 +671,6 @@ namespace vcpkg
                 overlay_ports.insert(std::end(overlay_ports), std::begin(overlays), std::end(overlays));
             }
         }
-
         {
             const auto vcpkg_overlay_triplets_env = System::get_environment_variable(OVERLAY_TRIPLETS_ENV);
             if (const auto unpacked = vcpkg_overlay_triplets_env.get())
@@ -666,37 +679,53 @@ namespace vcpkg
                 overlay_triplets.insert(std::end(overlay_triplets), std::begin(triplets), std::end(triplets));
             }
         }
-
-        if (!vcpkg_root_dir)
         {
-            const auto vcpkg_root_env = System::get_environment_variable(VCPKG_ROOT_DIR_ENV);
-            if (const auto unpacked = vcpkg_root_env.get())
+            const auto vcpkg_feature_flags_env = System::get_environment_variable(FEATURE_FLAGS_ENV);
+            if (const auto v = vcpkg_feature_flags_env.get())
             {
-                vcpkg_root_dir = std::make_unique<std::string>(*unpacked);
+                auto flags = Strings::split(*v, ',');
+                parse_feature_flags(flags, *this);
             }
         }
 
-        if (!downloads_root_dir)
         {
-            const auto vcpkg_downloads_env = vcpkg::System::get_environment_variable(DOWNLOADS_ROOT_DIR_ENV);
-            if (const auto unpacked = vcpkg_downloads_env.get())
+            auto maybe_vcpkg_recursive_data = System::get_environment_variable(RECURSIVE_DATA_ENV);
+            if (auto vcpkg_recursive_data = maybe_vcpkg_recursive_data.get())
             {
-                downloads_root_dir = std::make_unique<std::string>(*unpacked);
+                m_is_recursive_invocation = true;
+
+                auto rec_doc = Json::parse(*vcpkg_recursive_data).value_or_exit(VCPKG_LINE_INFO).first;
+                const auto& obj = rec_doc.object();
+
+                if (auto entry = obj.get(DOWNLOADS_ROOT_DIR_ENV))
+                {
+                    downloads_root_dir = std::make_unique<std::string>(entry->string().to_string());
+                }
+
+                if (obj.get(DISABLE_METRICS_ENV))
+                {
+                    disable_metrics = true;
+                }
+
+                // Setting the recursive data to 'poison' prevents more than one level of recursion because
+                // Json::parse() will fail.
+                System::set_environment_variable(RECURSIVE_DATA_ENV, "poison");
             }
-        }
-
-        const auto vcpkg_feature_flags_env = System::get_environment_variable(FEATURE_FLAGS_ENV);
-        if (const auto v = vcpkg_feature_flags_env.get())
-        {
-            auto flags = Strings::split(*v, ',');
-            parse_feature_flags(flags, *this);
-        }
-
-        {
-            const auto vcpkg_visual_studio_path_env = System::get_environment_variable(DEFAULT_VISUAL_STUDIO_PATH_ENV);
-            if (const auto unpacked = vcpkg_visual_studio_path_env.get())
+            else
             {
-                default_visual_studio_path = std::make_unique<std::string>(*unpacked);
+                Json::Object obj;
+                if (downloads_root_dir)
+                {
+                    obj.insert(DOWNLOADS_ROOT_DIR_ENV, Json::Value::string(*downloads_root_dir.get()));
+                }
+
+                if (disable_metrics)
+                {
+                    obj.insert(DISABLE_METRICS_ENV, Json::Value::boolean(true));
+                }
+
+                System::set_environment_variable(RECURSIVE_DATA_ENV,
+                                                 Json::stringify(obj, Json::JsonStyle::with_spaces(0)));
             }
         }
     }
@@ -904,4 +933,6 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::COMPILER_TRACKING_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::MANIFEST_MODE_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::REGISTRIES_FEATURE;
+
+    constexpr StringLiteral VcpkgCmdArguments::RECURSIVE_DATA_ENV;
 }
