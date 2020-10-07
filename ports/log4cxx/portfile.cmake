@@ -19,6 +19,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DLOG4CXX_INSTALL_PDB=OFF # Installing pdbs failed on debug static. So, disable it and let vcpkg_copy_pdbs() do it
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
