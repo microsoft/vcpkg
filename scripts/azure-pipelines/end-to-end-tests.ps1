@@ -211,5 +211,4 @@ Throw-IfNotFailed
 Run-Vcpkg -TestArgs ($commonArgs + @("install", "zlib", "--fast")) # NB: --fast is not a switch
 Throw-IfNotFailed
 
-Write-Host 'All tests passed.'
-return 0 # Ensure Pipelines thinks we passed if we got here.
+$LASTEXITCODE = 0
