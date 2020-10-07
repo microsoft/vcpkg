@@ -23,16 +23,26 @@
 #include <algorithm>
 #include <string>
 
-#if defined(_WIN32)
 namespace
 {
     struct IsSlash
     {
-        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
+        bool operator()(const wchar_t c) const noexcept
+        {
+            return c == L'/'
+#if defined(_WIN32)
+                   || c == L'\\'
+#endif // _WIN32
+                ;
+        }
     };
 
     constexpr IsSlash is_slash;
+} // unnamed namespace
 
+#if defined(_WIN32)
+namespace
+{
     template<size_t N>
     bool wide_starts_with(const std::wstring& haystack, const wchar_t (&needle)[N]) noexcept
     {
