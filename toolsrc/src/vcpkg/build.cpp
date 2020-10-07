@@ -319,6 +319,17 @@ namespace vcpkg::Build
                     env[env_var] = env_val.value_or_exit(VCPKG_LINE_INFO);
                 }
             }
+            static constexpr StringLiteral s_extra_vars[] = {
+                "VCPKG_COMMAND",
+                "VCPKG_FORCE_SYSTEM_BINARIES",
+                VcpkgCmdArguments::RECURSIVE_DATA_ENV,
+            };
+
+            for (auto var : s_extra_vars)
+            {
+                auto val = System::get_environment_variable(var);
+                if (auto p_val = val.get()) env.emplace(var, *p_val);
+            }
 
             return {env};
         });
@@ -839,8 +850,6 @@ namespace vcpkg::Build
 
     static void abi_entries_from_abi_info(const AbiInfo& abi_info, std::vector<AbiEntry>& abi_tag_entries)
     {
-        abi_tag_entries.emplace_back("triplet", abi_info.triplet_abi.value_or_exit(VCPKG_LINE_INFO));
-
         const auto& pre_build_info = *abi_info.pre_build_info;
         if (pre_build_info.public_abi_override)
         {
@@ -858,6 +867,13 @@ namespace vcpkg::Build
         }
     }
 
+    struct AbiTagAndFile
+    {
+        const std::string* triplet_abi;
+        std::string tag;
+        fs::path tag_file;
+    };
+
     static Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
                                                    const Dependencies::InstallPlanAction& action,
                                                    Span<const AbiEntry> dependency_abis)
@@ -865,9 +881,35 @@ namespace vcpkg::Build
         auto& fs = paths.get_filesystem();
         Triplet triplet = action.spec.triplet();
 
+        if (action.build_options.use_head_version == UseHeadVersion::YES)
+        {
+            Debug::print("Binary caching for package ", action.spec, " is disabled due to --head\n");
+            return nullopt;
+        }
+        if (action.build_options.editable == Editable::YES)
+        {
+            Debug::print("Binary caching for package ", action.spec, " is disabled due to --editable\n");
+            return nullopt;
+        }
+        for (auto&& dep_abi : dependency_abis)
+        {
+            if (dep_abi.value.empty())
+            {
+                Debug::print("Binary caching for package ",
+                             action.spec,
+                             " is disabled due to missing abi info for ",
+                             dep_abi.key,
+                             '\n');
+                return nullopt;
+            }
+        }
+
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
-        abi_entries_from_abi_info(action.abi_info.value_or_exit(VCPKG_LINE_INFO), abi_tag_entries);
+        const auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
+        const auto& triplet_abi = paths.get_triplet_info(abi_info);
+        abi_tag_entries.emplace_back("triplet", triplet_abi);
+        abi_entries_from_abi_info(abi_info, abi_tag_entries);
 
         // If there is an unusually large number of files in the port then
         // something suspicious is going on.  Rather than hash all of them
@@ -915,9 +957,6 @@ namespace vcpkg::Build
         Util::sort(sorted_feature_list);
         abi_tag_entries.emplace_back("features", Strings::join(";", sorted_feature_list));
 
-        if (action.build_options.use_head_version == UseHeadVersion::YES) abi_tag_entries.emplace_back("head", "");
-        if (action.build_options.editable == Editable::YES) abi_tag_entries.emplace_back("editable", "");
-
         Util::sort(abi_tag_entries);
 
         const std::string full_abi_info =
@@ -943,7 +982,8 @@ namespace vcpkg::Build
             const auto abi_file_path = current_build_tree / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
             fs.write_contents(abi_file_path, full_abi_info, VCPKG_LINE_INFO);
 
-            return AbiTagAndFile{Hash::get_file_hash(VCPKG_LINE_INFO, fs, abi_file_path, Hash::Algorithm::Sha1),
+            return AbiTagAndFile{&triplet_abi,
+                                 Hash::get_file_hash(VCPKG_LINE_INFO, fs, abi_file_path, Hash::Algorithm::Sha1),
                                  abi_file_path};
         }
 
@@ -1002,12 +1042,12 @@ namespace vcpkg::Build
             abi_info.pre_build_info = std::make_unique<PreBuildInfo>(
                 paths, action.spec.triplet(), var_provider.get_tag_vars(action.spec).value_or_exit(VCPKG_LINE_INFO));
             abi_info.toolset = paths.get_toolset(*abi_info.pre_build_info);
-            abi_info.compiler_info = paths.get_compiler_info(abi_info);
-            abi_info.triplet_abi = paths.get_triplet_info(abi_info);
 
             auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, dependency_abis);
             if (auto p = maybe_abi_tag_and_file.get())
             {
+                abi_info.compiler_info = paths.get_compiler_info(abi_info);
+                abi_info.triplet_abi = *p->triplet_abi;
                 abi_info.package_abi = std::move(p->tag);
                 abi_info.abi_tag_file = std::move(p->tag_file);
             }
