@@ -29,11 +29,7 @@ namespace
     {
         bool operator()(const wchar_t c) const noexcept
         {
-            return c == L'/'
-#if defined(_WIN32)
-                   || c == L'\\'
-#endif // _WIN32
-                ;
+            return c == L'/' || c == L'\\';
         }
     };
 
