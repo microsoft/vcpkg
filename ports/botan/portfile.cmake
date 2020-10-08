@@ -75,6 +75,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             --link-method=copy)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
+        list(APPEND configure_arguments --amalgamation)
     endif()
 
     vcpkg_execute_required_process(
