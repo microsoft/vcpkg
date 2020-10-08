@@ -495,7 +495,7 @@ endif()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_pkgconfig(IGNORE_FLAGS "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/lib/pkgconfig/../../lib" "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/../../lib" "-Wl,--no-undefined" "-Wl,--enable-new-dtags")
+vcpkg_fixup_pkgconfig(IGNORE_FLAGS "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/lib/pkgconfig/../../lib" "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/../../lib" "-Wl,--no-undefined" "-Wl,--enable-new-dtags" "-framework AudioToolbox" "-framework VideoToolbox" "-framework CoreFoundation" "-framework CoreMedia" "-framework CoreVideo" "-framework CoreServices" "-framework Foundation" "-framework AVFoundation" "-framework CoreGraphics" "-framework OpenGL" "-framework CoreImage" "-framework AppKit")
 
 # Handle copyright
 file(STRINGS ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)
