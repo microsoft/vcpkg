@@ -29,6 +29,9 @@ if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --disable-asm)
 endif()
 
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND OPTIONS --enable-pic)
+endif()
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
