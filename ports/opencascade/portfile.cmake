@@ -7,6 +7,7 @@ vcpkg_from_github(
     REF V7_4_0
     SHA512 595ad7226b9365c1a7670b77001f71787a5d8aaa4a93a4a4d8eb938564670d79ae5a247ae7cc770b5da53c9a9f2e4166ba6e5ae104c1f2debad19ec2187f4a56
     HEAD_REF master
+	PATCHES fix-msvc-32bit-builds.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,12 +17,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
 
-
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-	# Turn off the "improved inline analyzer" that stalls on x86 release builds using MSVC 16.7
-    string(APPEND VCPKG_C_FLAGS "/d2DeepThoughtInliner-")
-    string(APPEND VCPKG_CXX_FLAGS "/d2DeepThoughtInliner-")
-endif()
 
 # We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
 # And pre-built ActiveTCL binaries are behind a marketing wall :(
