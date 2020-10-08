@@ -220,10 +220,7 @@ function(vcpkg_configure_make)
         list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
         # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
-        string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/share/automake-1.16;${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
-        set(ENV{PATH} "${NEWPATH}")
-        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
-
+        set(APPEND_ENV)
         if (_csc_AUTOCONFIG)
             # --build: the machine you are building on
             # --host: the machine you are building for
@@ -243,7 +240,13 @@ function(vcpkg_configure_make)
                 endif()
             endif()
             debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
+            set(APPEND_ENV ";${MSYS_ROOT}/usr/share/automake-1.16")
         endif()
+
+        string(REPLACE ";$ENV{SystemRoot}\\System32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
+        string(REPLACE ";$ENV{SystemRoot}\\system32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
+        set(ENV{PATH} "${NEWPATH}")
+        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
 
         macro(_vcpkg_append_to_configure_environment inoutstring var defaultval)
             # Allows to overwrite settings in custom triplets via the environment

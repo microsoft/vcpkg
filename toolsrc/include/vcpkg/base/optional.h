@@ -29,6 +29,24 @@ namespace vcpkg
             constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() { }
             constexpr OptionalStorage(const T& t) : m_is_present(true), m_t(t) { }
             constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) { }
+            template<class U, class = std::enable_if_t<!std::is_reference<U>::value>>
+            constexpr explicit OptionalStorage(Optional<U>&& t) : m_is_present(false), m_inactive()
+            {
+                if (auto p = t.get())
+                {
+                    m_is_present = true;
+                    new (&m_t) T(std::move(*p));
+                }
+            }
+            template<class U>
+            constexpr explicit OptionalStorage(const Optional<U>& t) : m_is_present(false), m_inactive()
+            {
+                if (auto p = t.get())
+                {
+                    m_is_present = true;
+                    new (&m_t) T(*p);
+                }
+            }
 
             ~OptionalStorage() noexcept
             {
