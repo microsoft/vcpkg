@@ -102,9 +102,7 @@ namespace vcpkg::Archives
             using namespace std::chrono_literals;
             std::this_thread::sleep_for(i * 1s);
             fs.rename(to_path_partial, to_path, ec);
-            System::printf("fs.rename(%s, %s)\n",
-                           fs::u8string(to_path_partial),
-                           fs::u8string(to_path));
+            System::printf("fs.rename(%s, %s)\n", fs::u8string(to_path_partial), fs::u8string(to_path));
         }
 
         Checks::check_exit(VCPKG_LINE_INFO,
