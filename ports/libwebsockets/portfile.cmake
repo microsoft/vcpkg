@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF 64232ddc4cf67ccc75683a42a322e596b3611069 # v4.1.2
-    SHA512 199f25b969860a436cee5d1dd210ccde0ad7aaf4836c24aa4a5d0252bb13a61b12d96529e6ebf45dc78f4ec9ade11a324a0f2de51991e9e66045b57348ce6eec
+    REF e400b3bf5540ace538b684dd54450ecee3fc53c9 # v4.1.2
+    SHA512 f64fd4331aa71827745c1864131651bf757d5053cc7d3645063dfa64d7b437ac2b79e183f7b93d67ca61f371f31b37e5f4ebeafc5d0058f79d0fe95f8aafee87
     HEAD_REF master
     PATCHES
         CMakeLists.patch
