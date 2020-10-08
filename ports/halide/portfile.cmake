@@ -67,3 +67,4 @@ file(GLOB readmes "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.md")
 file(REMOVE ${readmes})
 
 configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)
