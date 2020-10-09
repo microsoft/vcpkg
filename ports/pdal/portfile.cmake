@@ -1,34 +1,29 @@
-set(PDAL_VERSION_STR "1.7.1")
+set(PDAL_VERSION_STR "2.2.0")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/pdal/PDAL-${PDAL_VERSION_STR}-src.tar.gz"
+    URLS "https://github.com/PDAL/PDAL/releases/download/${PDAL_VERSION_STR}/PDAL-${PDAL_VERSION_STR}-src.tar.gz"
     FILENAME "PDAL-${PDAL_VERSION_STR}-src.tar.gz"
-    SHA512 e3e63bb05930c1a28c4f46c7edfaa8e9ea20484f1888d845b660a29a76f1dd1daea3db30a98607be0c2eeb86930ec8bfd0965d5d7d84b07a4fe4cb4512da9b09
+    SHA512 c54770973de714473bf6cfe6a69e2c880d516abcf71cce755495304093acb41471b4264cb84f11973a482f3de80a8922d7d8b54994fb91c6b012a6894a8bdac5
 )
 
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
-        0001-win32_compiler_options.cmake.patch
-        0002-no-source-dir-writes.patch
-        0003-fix-copy-vendor.patch
-        PDALConfig.patch
-        fix-dependency.patch
-        libpq.patch
+        # 0001-win32_compiler_options.cmake.patch
+        # 0002-no-source-dir-writes.patch
+        # 0003-fix-copy-vendor.patch
+        # PDALConfig.patch
+        # fix-dependency.patch
+        # libpq.patch
+        reimplement-patch-172-in-220.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
+file(REMOVE "${SOURCE_PATH}/pdal/gitsha.h")
 
 # Deploy custom CMake modules to enforce expected dependencies look-up
-foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF FindCurl)  # Outdated; Supplied by CMake
+foreach(_module IN ITEMS FindGDAL FindGeoTIFF FindCurl)  # Outdated; Supplied by CMake
     file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
-endforeach()
-foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules.
-    file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/${_module}.cmake
-        DESTINATION ${SOURCE_PATH}/cmake/modules/
-    )
 endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

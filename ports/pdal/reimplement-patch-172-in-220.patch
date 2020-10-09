@@ -1,0 +1,327 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1496d7f..61a18be 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -185,7 +185,6 @@ if (WITH_TESTS)
+     add_subdirectory(test)
+ endif()
+ add_subdirectory(dimbuilder)
+-add_subdirectory(vendor/pdalboost)
+ add_subdirectory(vendor/arbiter)
+ add_subdirectory(vendor/kazhdan)
+ add_subdirectory(pdal/util)
+@@ -209,6 +208,7 @@ file(GLOB BASE_SRCS
+     ${PDAL_IO_DIR}/*.cpp
+     ${PDAL_KERNELS_DIR}/*.cpp
+     ${PDAL_SRC_DIR}/*.cpp
++    ${PROJECT_BINARY_DIR}/pdal/gitsha.cpp
+     ${PDAL_SRC_DIR}/compression/*.cpp)
+ file(GLOB_RECURSE PRIVATE_SRCS
+     ${PDAL_FILTERS_DIR}/private/*.cpp
+@@ -374,6 +374,31 @@ install(FILES ${DIMENSION_OUTFILE} ${pdal_features_hpp}
+   DESTINATION include/pdal
+ )
+ 
++# Install vendor headers
++install(DIRECTORY ${PDAL_VENDOR_ARBITER_DIR}
++    DESTINATION include/pdal/vendor
++    FILES_MATCHING PATTERN "*.hpp"
++    PATTERN "private" EXCLUDE
++)
++
++install(DIRECTORY ${PDAL_VENDOR_NLOHMANN_DIR}
++    DESTINATION include/pdal/vendor
++    FILES_MATCHING PATTERN "*.hpp"
++    PATTERN "private" EXCLUDE
++)
++
++install(DIRECTORY ${PDAL_VENDOR_KAZHDAN_DIR}
++    DESTINATION include/pdal/vendor
++    FILES_MATCHING PATTERN "*.h"
++    PATTERN "private" EXCLUDE
++)
++
++install(DIRECTORY ${PDAL_VENDOR_NANOFLANN_DIR}
++    DESTINATION include/pdal/vendor
++    FILES_MATCHING PATTERN "*.hpp"
++    PATTERN "private" EXCLUDE
++)
++
+ #
+ # CPACK
+ #
+@@ -383,7 +408,7 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+ 
+ export(
+     TARGETS
+-        ${PDAL_BASE_LIB_NAME} ${PDAL_UTIL_LIB_NAME}
++        ${PDAL_BASE_LIB_NAME} ${PDAL_ARBITER_LIB_NAME} ${PDAL_KAZHDAN_LIB_NAME} ${PDAL_UTIL_LIB_NAME}
+     FILE
+         "${PDAL_BINARY_DIR}/PDALTargets.cmake")
+ 
+diff --git a/PDALConfig.cmake.in b/PDALConfig.cmake.in
+index af3ae2f..2413e54 100644
+--- a/PDALConfig.cmake.in
++++ b/PDALConfig.cmake.in
+@@ -7,6 +7,10 @@ set(PDAL_VERSION_PATCH @PDAL_VERSION_PATCH@)
+ set_and_check(PDAL_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+ set_and_check(PDAL_LIBRARY_DIRS "@PACKAGE_LIB_INSTALL_DIR@")
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(GeoTIFF)
++find_dependency(CURL)
++find_dependency(Boost COMPONENTS system filesystem)
+ include("${CMAKE_CURRENT_LIST_DIR}/PDALTargets.cmake")
+ 
+ #
+diff --git a/cmake/directories.cmake b/cmake/directories.cmake
+index f079ec7..4872b97 100644
+--- a/cmake/directories.cmake
++++ b/cmake/directories.cmake
+@@ -11,4 +11,7 @@ set(PDAL_KERNELS_DIR ${ROOT_DIR}/kernels)
+ set(PDAL_FILTERS_DIR ${ROOT_DIR}/filters)
+ set(PDAL_IO_DIR ${ROOT_DIR}/io)
+ set(PDAL_VENDOR_DIR ${ROOT_DIR}/vendor)
+-
++set(PDAL_VENDOR_ARBITER_DIR ${PDAL_VENDOR_DIR}/arbiter)
++set(PDAL_VENDOR_NLOHMANN_DIR ${PDAL_VENDOR_DIR}/nlohmann)
++set(PDAL_VENDOR_KAZHDAN_DIR ${PDAL_VENDOR_DIR}/kazhdan)
++set(PDAL_VENDOR_NANOFLANN_DIR ${PDAL_VENDOR_DIR}/nanoflann)
+\ No newline at end of file
+diff --git a/cmake/modules/FindPostgreSQL.cmake b/cmake/modules/FindPostgreSQL.cmake
+index 8178418..1b91471 100644
+--- a/cmake/modules/FindPostgreSQL.cmake
++++ b/cmake/modules/FindPostgreSQL.cmake
+@@ -25,8 +25,8 @@ if(PG_CONFIG)
+     ARGS "--version"
+     OUTPUT_VARIABLE PG_CONFIG_VERSION)
+ 
+-  if(${PG_CONFIG_VERSION} MATCHES "^[A-Za-z]+[ ](.*)$")
+-    string(REGEX REPLACE "^[A-Za-z]+[ ](.*)$" "\\1" POSTGRESQL_VERSION "${PG_CONFIG_VERSION}")
++  if(${PG_CONFIG_VERSION} MATCHES "^[A-Za-z][ ](.*)$")
++    string(REGEX REPLACE "^[A-Za-z][ ](.*)$" "\\1" POSTGRESQL_VERSION "${PG_CONFIG_VERSION}")
+   endif()
+ 
+   exec_program(${PG_CONFIG}
+@@ -80,4 +80,11 @@ find_package_handle_standard_args(PostgreSQL
+   POSTGRESQL_LIBRARIES
+   POSTGRESQL_VERSION)
+ 
++include (CMakeFindDependencyMacro)
++find_package(OpenSSL REQUIRED)
++set(POSTGRESQL_LIBRARIES ${POSTGRESQL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
++if (WIN32)
++    set(POSTGRESQL_LIBRARIES ${POSTGRESQL_LIBRARIES} Secur32)
++endif()
++
+ mark_as_advanced(POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES)
+diff --git a/cmake/postgres.cmake b/cmake/postgres.cmake
+index 0dad710..662820c 100644
+--- a/cmake/postgres.cmake
++++ b/cmake/postgres.cmake
+@@ -7,3 +7,27 @@ find_package(PostgreSQL REQUIRED)
+ mark_as_advanced(CLEAR POSTGRESQL_INCLUDE_DIR)
+ mark_as_advanced(CLEAR POSTGRESQL_LIBRARIES)
+ include_directories(${POSTGRESQL_INCLUDE_DIR})
++
++include(SelectLibraryConfigurations)
++
++find_library(PostgreSQLCommon_LIBRARY_DEBUG
++    NAMES libpgcommond pgcommond pgcommon libpgcommon
++    NAMES_PER_DIR
++)
++find_library(PostgreSQLCommon_LIBRARY_RELEASE
++    NAMES pgcommon libpgcommon
++    NAMES_PER_DIR
++)
++select_library_configurations(PostgreSQLCommon)
++
++find_library(PostgreSQLPort_LIBRARY_DEBUG
++    NAMES pgportd libpgportd  pgport libpgport
++    NAMES_PER_DIR
++)
++find_library(PostgreSQLPort_LIBRARY_RELEASE
++    NAMES pgport libpgport
++    NAMES_PER_DIR
++)
++select_library_configurations(PostgreSQLPort)
++
++list(APPEND POSTGRESQL_LIBRARIES ${PostgreSQLPort_LIBRARIES} ${PostgreSQLCommon_LIBRARIES})
+\ No newline at end of file
+diff --git a/pdal/util/CMakeLists.txt b/pdal/util/CMakeLists.txt
+index db42c7f..4988900 100644
+--- a/pdal/util/CMakeLists.txt
++++ b/pdal/util/CMakeLists.txt
+@@ -9,6 +9,8 @@ endif()
+ include(${PDAL_CMAKE_DIR}/execinfo.cmake)
+ include(${PDAL_CMAKE_DIR}/unwind.cmake)
+ 
++find_package(Boost COMPONENTS system filesystem REQUIRED)
++
+ if(LIBUNWIND_FOUND)
+     set(BACKTRACE_SOURCE BacktraceUnwind.cpp)
+     set(BACKTRACE_LIBRARIES ${LIBUNWIND_LIBRARIES})
+@@ -30,15 +32,15 @@ set(PDAL_UTIL_SOURCES
+     "${PDAL_UTIL_DIR}/private/${BACKTRACE_SOURCE}"
+ )
+ 
+-PDAL_ADD_FREE_LIBRARY(${PDAL_UTIL_LIB_NAME} SHARED ${PDAL_UTIL_SOURCES})
++PDAL_ADD_FREE_LIBRARY(${PDAL_UTIL_LIB_NAME} ${PDAL_UTIL_SOURCES})
+ target_link_libraries(${PDAL_UTIL_LIB_NAME}
+     PRIVATE
+         ${BACKTRACE_LIBRARIES}
+-        ${PDAL_BOOST_LIB_NAME}
+         ${CMAKE_DL_LIBS}
++    PUBLIC
++        Boost::system
++        Boost::filesystem
+ )
+-target_include_directories(${PDAL_UTIL_LIB_NAME} PRIVATE
+-    ${PDAL_VENDOR_DIR}/pdalboost)
+ 
+ set_target_properties(${PDAL_UTIL_LIB_NAME} PROPERTIES
+     VERSION "${PDAL_BUILD_VERSION}"
+diff --git a/pdal/util/FileUtils.cpp b/pdal/util/FileUtils.cpp
+index 883cb06..4bd2623 100644
+--- a/pdal/util/FileUtils.cpp
++++ b/pdal/util/FileUtils.cpp
+@@ -151,25 +151,25 @@ std::ostream *createFile(std::string const& name, bool asBinary)
+ bool directoryExists(const std::string& dirname)
+ {
+     //ABELL - Seems we should be calling is_directory
+-    return pdalboost::filesystem::exists(toNative(dirname));
++    return boost::filesystem::exists(toNative(dirname));
+ }
+ 
+ 
+ bool createDirectory(const std::string& dirname)
+ {
+-    return pdalboost::filesystem::create_directory(toNative(dirname));
++    return boost::filesystem::create_directory(toNative(dirname));
+ }
+ 
+ 
+ bool createDirectories(const std::string& dirname)
+ {
+-    return pdalboost::filesystem::create_directories(toNative(dirname));
++    return boost::filesystem::create_directories(toNative(dirname));
+ }
+ 
+ 
+ void deleteDirectory(const std::string& dirname)
+ {
+-    pdalboost::filesystem::remove_all(toNative(dirname));
++    boost::filesystem::remove_all(toNative(dirname));
+ }
+ 
+ 
+@@ -179,15 +179,15 @@ std::vector<std::string> directoryList(const std::string& dir)
+ 
+     try
+     {
+-        pdalboost::filesystem::directory_iterator it(dir);
+-        pdalboost::filesystem::directory_iterator end;
++        boost::filesystem::directory_iterator it(dir);
++        boost::filesystem::directory_iterator end;
+         while (it != end)
+         {
+             files.push_back(it->path().string());
+             it++;
+         }
+     }
+-    catch (pdalboost::filesystem::filesystem_error&)
++    catch (boost::filesystem::filesystem_error&)
+     {
+         files.clear();
+     }
+@@ -227,13 +227,13 @@ void closeFile(std::istream* in)
+ 
+ bool deleteFile(const std::string& file)
+ {
+-    return pdalboost::filesystem::remove(toNative(file));
++    return boost::filesystem::remove(toNative(file));
+ }
+ 
+ 
+ void renameFile(const std::string& dest, const std::string& src)
+ {
+-    pdalboost::filesystem::rename(toNative(src), toNative(dest));
++    boost::filesystem::rename(toNative(src), toNative(dest));
+ }
+ 
+ 
+@@ -244,9 +244,9 @@ bool fileExists(const std::string& name)
+ 
+     try
+     {
+-        return pdalboost::filesystem::exists(toNative(name));
++        return boost::filesystem::exists(toNative(name));
+     }
+-    catch (pdalboost::filesystem::filesystem_error&)
++    catch (boost::filesystem::filesystem_error&)
+     {
+     }
+     return false;
+@@ -255,7 +255,7 @@ bool fileExists(const std::string& name)
+ 
+ uintmax_t fileSize(const std::string& file)
+ {
+-    return pdalboost::filesystem::file_size(toNative(file));
++    return boost::filesystem::file_size(toNative(file));
+ }
+ 
+ 
+@@ -276,7 +276,7 @@ std::string readFileIntoString(const std::string& filename)
+ 
+ std::string getcwd()
+ {
+-    const pdalboost::filesystem::path p = pdalboost::filesystem::current_path();
++    const boost::filesystem::path p = boost::filesystem::current_path();
+     return addTrailingSlash(p.string());
+ }
+ 
+@@ -306,7 +306,7 @@ std::string toCanonicalPath(std::string filename)
+ // otherwise, make it absolute (relative to current working dir) and return that
+ std::string toAbsolutePath(const std::string& filename)
+ {
+-    return pdalboost::filesystem::absolute(toNative(filename)).string();
++    return boost::filesystem::absolute(toNative(filename)).string();
+ }
+ 
+ 
+@@ -318,7 +318,7 @@ std::string toAbsolutePath(const std::string& filename)
+ std::string toAbsolutePath(const std::string& filename, const std::string base)
+ {
+     const std::string newbase = toAbsolutePath(base);
+-    return pdalboost::filesystem::absolute(toNative(filename),
++    return boost::filesystem::absolute(toNative(filename),
+         toNative(newbase)).string();
+ }
+ 
+@@ -341,8 +341,8 @@ std::string getFilename(const std::string& path)
+ // Get the directory part of a filename.
+ std::string getDirectory(const std::string& path)
+ {
+-    const pdalboost::filesystem::path dir =
+-         pdalboost::filesystem::path(toNative(path)).parent_path();
++    const boost::filesystem::path dir =
++         boost::filesystem::path(toNative(path)).parent_path();
+     return addTrailingSlash(dir.string());
+ }
+ 
+@@ -363,13 +363,13 @@ std::string stem(const std::string& path)
+ // Determine if the path represents a directory.
+ bool isDirectory(const std::string& path)
+ {
+-    return pdalboost::filesystem::is_directory(toNative(path));
++    return boost::filesystem::is_directory(toNative(path));
+ }
+ 
+ // Determine if the path is an absolute path
+ bool isAbsolutePath(const std::string& path)
+ {
+-    return pdalboost::filesystem::path(toNative(path)).is_absolute();
++    return boost::filesystem::path(toNative(path)).is_absolute();
+ }
+ 
+ 
