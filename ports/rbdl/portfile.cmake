@@ -6,21 +6,13 @@ else()
     set(RBDL_STATIC OFF)
 endif()
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/rbdl/rbdl/archive/v2.6.0.tar.gz"
-    FILENAME "rbdl260.tar.gz"
-    SHA512 7b5fd03c0090277f295a28a1ff0542cd8cff76dda4379b3edc61ca3d868bf77d8b4882f81865fdffd0cf756c613fe55238b29a83bc163fc32aa94aa9d5781480
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(ARCHIVE
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
-    REF ${VERSION}
-    # (Optional) Read the docs for how to generate patches at:
-    # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
-    PATCHES
-        001_x64_number_of_sections_exceeded_in_object_file_patch.diff
+    REPO rbdl/rbdl
+    REF v2.6.0
+    SHA512 7b5fd03c0090277f295a28a1ff0542cd8cff76dda4379b3edc61ca3d868bf77d8b4882f81865fdffd0cf756c613fe55238b29a83bc163fc32aa94aa9d5781480
+    HEAD_REF master
+    PATCHES 001_x64_number_of_sections_exceeded_in_object_file_patch.diff
 )
 
 # # NOT READY YET, ONLY CORE --> TO-DO
