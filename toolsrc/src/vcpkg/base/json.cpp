@@ -1293,8 +1293,7 @@ namespace vcpkg::Json
 
     void Reader::add_missing_field_error(StringView type, StringView key, StringView key_type)
     {
-        m_errors.push_back(
-            Strings::concat(path(), " (", type, "): ", "missing required field '", key, "' (", key_type, ")"));
+        add_generic_error(type, "missing required field '", key, "' (", key_type, ")");
     }
     void Reader::add_expected_type_error(StringView expected_type)
     {
@@ -1304,12 +1303,11 @@ namespace vcpkg::Json
     {
         if (suggestion.size() > 0)
         {
-            m_errors.push_back(Strings::concat(
-                path(), " (", type, "): ", "unexpected field '", field, "\', did you mean \'", suggestion, "\'?"));
+            add_generic_error(type, "unexpected field '", field, "\', did you mean \'", suggestion, "\'?");
         }
         else
         {
-            m_errors.push_back(Strings::concat(path(), " (", type, "): ", "unexpected field '", field, '\''));
+            add_generic_error(type, "unexpected field '", field, '\'');
         }
     }
 
