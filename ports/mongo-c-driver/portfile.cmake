@@ -28,7 +28,7 @@ else()
     set(ENABLE_SSL "OPENSSL")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+if(VCPKG_TARGET_IS_ANDROID)
     set(ENABLE_SRV OFF)
     set(ENABLE_SHM_COUNTERS OFF)
 else()
