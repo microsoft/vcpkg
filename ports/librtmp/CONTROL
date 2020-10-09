@@ -1,5 +1,6 @@
 Source: librtmp
-Version: 2019-11-11_1
+Version: 2019-11-11
+Port-Version: 2
 Build-Depends: zlib, openssl
 Homepage: https://rtmpdump.mplayerhq.hu
 Description: RTMPDump Real-Time Messaging Protocol API

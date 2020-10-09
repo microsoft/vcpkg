@@ -8,6 +8,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH <SOURCE_PATH>
     URL <https://android.googlesource.com/platform/external/fdlibm>
     REF <59f7335e4d...>
+    SHA512 <abc123fed...>
     [PATCHES <patch1.patch> <patch2.patch>...]
 )
 ```
@@ -24,13 +25,18 @@ The url of the git repository.
 ### REF
 The git sha of the commit to download.
 
+### SHA512
+The SHA512 hash of the intermediate archive tarball.
+
+This helper will use `git archive` to convert the given commit into a simple flat archive;
+
 ### PATCHES
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
 
 ## Notes:
-`OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
+`OUT_SOURCE_PATH`, `REF`, `SHA512`, and `URL` must be specified.
 
 ## Examples:
 

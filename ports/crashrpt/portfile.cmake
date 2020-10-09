@@ -12,6 +12,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.code.sf.net/p/crashrpt/code
     REF 4616504670be5a425a525376648d912a72ce18f2
+    SHA512 1fe1b27b8e839be382ed0af3448c9cdddb49b67030020fb1a0c25d14957b26d5384fa8d5c1e97f8c2966defb386642b9098eb344d2bfacd969b8601895f164eb
     PATCHES
         001-add-install-target-and-find-deps.patch
 )

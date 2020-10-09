@@ -1331,13 +1331,6 @@ pmdk:x86-windows=fail
 pngwriter:arm-uwp=fail
 pngwriter:x64-uwp=fail
 portable-snippets:arm-uwp=fail
-# Portaudio was broken by Ninja 1.9.0 https://github.com/ninja-build/ninja/pull/1406
-portaudio:arm-uwp=fail
-portaudio:arm64-windows=fail
-portaudio:x64-uwp=fail
-portaudio:x64-windows-static=fail
-portaudio:x64-windows=fail
-portaudio:x86-windows=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
 proj4:arm64-windows=fail

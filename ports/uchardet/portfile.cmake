@@ -2,6 +2,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://gitlab.freedesktop.org/uchardet/uchardet
     REF 8681fc060ea07f646434cd2d324e4a5aa7c495c4
+    SHA512 611de937f7f5542979e0c95f23a7e641db533613a1df71b059cadacd517197c9428d53f6b0aedc3d07b44e290b05b73152c35d535c85f6b3a3b0d358d5c18bc2
 )
 
 vcpkg_check_features(
@@ -29,22 +30,11 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
 vcpkg_copy_pdbs()
 
-if(tool IN_LIST FEATURES)
-    file(COPY
-        ${CURRENT_PACKAGES_DIR}/bin/uchardet${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
-    )
 
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/uchardet${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+if("tool" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES uchardet AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE

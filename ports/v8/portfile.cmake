@@ -22,7 +22,28 @@ if(WIN32)
   vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 endif()
 
-set(VCPKG_KEEP_ENV_VARS PATH;DEPOT_TOOLS_WIN_TOOLCHAIN)
+function(checkout_in_path PATH URL REF SHA512)
+    if(EXISTS "${PATH}")
+        file(GLOB FILES "${PATH}")
+        list(LENGTH FILES COUNT)
+        if(COUNT GREATER 0)
+            return()
+        endif()
+        file(REMOVE_RECURSE "${PATH}")
+    endif()
+
+    vcpkg_from_git(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        URL "${URL}"
+        REF "${REF}"
+        SHA512 "${SHA512}"
+        PATCHES "${ARGN}"
+    )
+    get_filename_component(PATH_DIR ${PATH} DIRECTORY)
+    file(MAKE_DIRECTORY "${PATH_DIR}")
+    file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
+    file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
+endfunction()
 
 function(v8_fetch)
   set(oneValueArgs DESTINATION URL REF SOURCE)
@@ -72,47 +93,50 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/v8/v8.git
     REF 90904eb48b16b32f7edbf1f8a92ece561d05e738
+    SHA512 3e506ee73bab6d21c8004c97a350a6bc9c685bd8f0e3ee937962767af1b3f3bb7cf6effa937618ca9033bf23e366691a7b97ff7f37c9b8e0e962b93a999cf156
     PATCHES ${CURRENT_PORT_DIR}/v8.patch ${CURRENT_PORT_DIR}/3f8dc4b.patch
 )
 
-message(STATUS "Fetching submodules")
-v8_fetch(
-        DESTINATION build
-        URL https://chromium.googlesource.com/chromium/src/build.git
-        REF 26e9d485d01d6e0eb9dadd21df767a63494c8fea
-        SOURCE ${SOURCE_PATH}
-        PATCHES ${CURRENT_PORT_DIR}/build.patch)
-v8_fetch(
-        DESTINATION third_party/zlib
-        URL https://chromium.googlesource.com/chromium/src/third_party/zlib.git
-        REF 156be8c52f80cde343088b4a69a80579101b6e67
-        SOURCE ${SOURCE_PATH})
-v8_fetch(
-        DESTINATION base/trace_event/common
-        URL https://chromium.googlesource.com/chromium/src/base/trace_event/common.git
-        REF dab187b372fc17e51f5b9fad8201813d0aed5129
-        SOURCE ${SOURCE_PATH})
-v8_fetch(
-        DESTINATION third_party/googletest/src
-        URL https://chromium.googlesource.com/external/github.com/google/googletest.git
-        REF 10b1902d893ea8cc43c69541d70868f91af3646b
-        SOURCE ${SOURCE_PATH})
-v8_fetch(
-        DESTINATION third_party/jinja2
-        URL https://chromium.googlesource.com/chromium/src/third_party/jinja2.git
-        REF b41863e42637544c2941b574c7877d3e1f663e25
-        SOURCE ${SOURCE_PATH})
-v8_fetch(
-        DESTINATION third_party/markupsafe
-        URL https://chromium.googlesource.com/chromium/src/third_party/markupsafe.git
-        REF 8f45f5cfa0009d2a70589bcda0349b8cb2b72783
-        SOURCE ${SOURCE_PATH})
-
-vcpkg_execute_required_process(
-        COMMAND ${PYTHON2} build/util/lastchange.py -o build/util/LASTCHANGE
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME build-${TARGET_TRIPLET}
+checkout_in_path(
+  "${SOURCE_PATH}/build"
+  "https://chromium.googlesource.com/chromium/src/build.git"
+  "26e9d485d01d6e0eb9dadd21df767a63494c8fea"
+  "8e7593cbc0b02fb29ebc435504c2231d4ea2feb2549369e4066e5e7015e5a4568da098c096a6251bb42d6ad1f6ff785e9fa65239f4ebc53bc69fc25321441338"
+  "build.patch"
 )
+checkout_in_path(
+    ${SOURCE_PATH}/third_party/zlib
+    https://chromium.googlesource.com/chromium/src/third_party/zlib.git
+    156be8c52f80cde343088b4a69a80579101b6e67
+    34ec2f1fd12b9fa729f39857af7719d4813bd492eee494744dd63e1209ba7c3c54819f0c17d727fe190ade888362b6c737ff26b9aed6d11333e20f85c51f9658
+)
+checkout_in_path(
+    ${SOURCE_PATH}/base/trace_event/common
+    https://chromium.googlesource.com/chromium/src/base/trace_event/common.git
+    dab187b372fc17e51f5b9fad8201813d0aed5129
+    17e761223152176eff23684b15c1708e13603418c0ae95cd0cbff902d149e9643e3c3692f368b061fa9d68036250c20433862302c276472c632bb8a5cb866aee
+)
+checkout_in_path(
+    ${SOURCE_PATH}/third_party/googletest/src
+    https://chromium.googlesource.com/external/github.com/google/googletest.git
+    10b1902d893ea8cc43c69541d70868f91af3646b
+    28dab959ed95ff53948e8aec64aed3248394bec89a78fc096d1f3898af57f140995ddaf0a01ea0510cc99be6c6401f29481b5f29af5103c655a4e7430ab061bb
+)
+checkout_in_path(
+    ${SOURCE_PATH}/third_party/jinja2
+    https://chromium.googlesource.com/chromium/src/third_party/jinja2.git
+    b41863e42637544c2941b574c7877d3e1f663e25
+    d9997654756c1bae53cd60d8275b9333ed759f8f820e09e8d2632d7c0f96cfa02ca8a32b3a545ea660ee0083127fca0ceb2698c87e2d2f1dbdb7001517f473e2
+)
+checkout_in_path(
+    ${SOURCE_PATH}/third_party/markupsafe
+    https://chromium.googlesource.com/chromium/src/third_party/markupsafe.git
+    8f45f5cfa0009d2a70589bcda0349b8cb2b72783
+    9bc7bcf5b25ef5e793e5cebdf132dd0e6a1e8ac54c7401d8b821ddbe533babbf19d719636b7f74abb30a7a9f94e7d5680b4490f7ec84ca54f6e3d67327362ceb
+)
+
+file(WRITE "${SOURCE_PATH}/build/util/LASTCHANGE" "LASTCHANGE=0")
+file(WRITE "${SOURCE_PATH}/build/util/LASTCHANGE.committime" "0")
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/icu")
 configure_file(${CURRENT_PORT_DIR}/zlib.gn ${SOURCE_PATH}/third_party/zlib/BUILD.gn COPYONLY)
@@ -140,16 +164,12 @@ else()
     set(targets :v8_monolith)
 endif()
 
-message(STATUS "Generating v8 build files. Please wait...")
-
 vcpkg_configure_gn(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS "is_component_build=${is_component_build} target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" v8_monolithic=${v8_monolithic} v8_use_external_startup_data=${v8_use_external_startup_data} use_sysroot=false is_clang=false use_custom_libcxx=false v8_enable_verify_heap=false icu_use_data_file=false" 
     OPTIONS_DEBUG "is_debug=true enable_iterator_debugging=true pkg_config_libdir=\"${UNIX_CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig\""
     OPTIONS_RELEASE "is_debug=false enable_iterator_debugging=false pkg_config_libdir=\"${UNIX_CURRENT_INSTALLED_DIR}/lib/pkgconfig\""
 )
-
-message(STATUS "Building v8. Please wait...")
 
 vcpkg_install_gn(
     SOURCE_PATH ${SOURCE_PATH}

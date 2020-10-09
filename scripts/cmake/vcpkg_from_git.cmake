@@ -8,6 +8,7 @@
 ##     OUT_SOURCE_PATH <SOURCE_PATH>
 ##     URL <https://android.googlesource.com/platform/external/fdlibm>
 ##     REF <59f7335e4d...>
+##     SHA512 <abc123fed...>
 ##     [PATCHES <patch1.patch> <patch2.patch>...]
 ## )
 ## ```
@@ -24,13 +25,18 @@
 ## ### REF
 ## The git sha of the commit to download.
 ##
+## ### SHA512
+## The SHA512 hash of the intermediate archive tarball.
+##
+## This helper will use `git archive` to convert the given commit into a simple flat archive;
+##
 ## ### PATCHES
 ## A list of patches to be applied to the extracted sources.
 ##
 ## Relative paths are based on the port directory.
 ##
 ## ## Notes:
-## `OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
+## `OUT_SOURCE_PATH`, `REF`, `SHA512`, and `URL` must be specified.
 ##
 ## ## Examples:
 ##
@@ -39,7 +45,7 @@
 include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_from_git)
-  set(oneValueArgs OUT_SOURCE_PATH URL REF)
+  set(oneValueArgs OUT_SOURCE_PATH URL SHA512 REF)
   set(multipleValuesArgs PATCHES)
   cmake_parse_arguments(_vdud "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
@@ -57,27 +63,51 @@ function(vcpkg_from_git)
 
   # using .tar.gz instead of .zip because the hash of the latter is affected by timezone.
   string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
-  set(TEMP_ARCHIVE "${DOWNLOADS}/temp/${PORT}-${SANITIZED_REF}.tar.gz")
-  set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}.tar.gz")
-  set(TEMP_SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${SANITIZED_REF}")
+  set(TEMP_ARCHIVE "${DOWNLOADS}/temp/${PORT}-${SANITIZED_REF}-git.tar.gz")
+  set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}-git.tar.gz")
+
+  function(test_hash FILE_PATH)
+    if(_VCPKG_INTERNAL_NO_HASH_CHECK)
+      # When using the internal hash skip, do not output an explicit message.
+      return()
+    endif()
+
+    file(SHA512 ${FILE_PATH} FILE_HASH)
+
+    if(NOT DEFINED _vdud_SHA512)
+      message(WARNING "Calling vcpkg_from_git() without a SHA512 argument is deprecated. Please add
+    SHA512 ${FILE_HASH}
+to the call.")
+      return()
+    endif()
+
+    if(NOT FILE_HASH STREQUAL _vdud_SHA512)
+      message(FATAL_ERROR
+          "\nFile does not have expected hash:\n"
+          "        File path: [ ${FILE_PATH} ]\n"
+          "    Expected hash: [ ${_vdud_SHA512} ]\n"
+          "      Actual hash: [ ${FILE_HASH} ]\n")
+    endif()
+  endfunction()
 
   if(NOT EXISTS "${ARCHIVE}")
     if(_VCPKG_NO_DOWNLOADS)
         message(FATAL_ERROR "Downloads are disabled, but '${ARCHIVE}' does not exist.")
     endif()
     message(STATUS "Fetching ${_vdud_URL}...")
+    file(REMOVE_RECURSE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}")
     find_program(GIT NAMES git git.cmd)
     # Note: git init is safe to run multiple times
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${GIT} init git-tmp
+      COMMAND ${GIT} init ${PORT}-${SANITIZED_REF}
       WORKING_DIRECTORY ${DOWNLOADS}
       LOGNAME git-init-${TARGET_TRIPLET}
     )
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_REF} --depth 1 -n
-      WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
+      WORKING_DIRECTORY ${DOWNLOADS}/${PORT}-${SANITIZED_REF}
       LOGNAME git-fetch-${TARGET_TRIPLET}
     )
     vcpkg_execute_in_download_mode(
@@ -85,7 +115,7 @@ function(vcpkg_from_git)
       OUTPUT_VARIABLE REV_PARSE_HEAD
       ERROR_VARIABLE REV_PARSE_HEAD
       RESULT_VARIABLE error_code
-      WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
+      WORKING_DIRECTORY ${DOWNLOADS}/${PORT}-${SANITIZED_REF}
     )
     if(error_code)
         message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
@@ -98,16 +128,20 @@ function(vcpkg_from_git)
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${GIT} archive FETCH_HEAD -o "${TEMP_ARCHIVE}"
-      WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
+      COMMAND ${GIT} archive "${REV_PARSE_HEAD}" -o "${TEMP_ARCHIVE}"
+      WORKING_DIRECTORY ${DOWNLOADS}/${PORT}-${SANITIZED_REF}
       LOGNAME git-archive
     )
+    test_hash("${TEMP_ARCHIVE}")
+
+    file(REMOVE_RECURSE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}")
 
     get_filename_component(downloaded_file_dir "${ARCHIVE}" DIRECTORY)
     file(MAKE_DIRECTORY "${downloaded_file_dir}")
     file(RENAME "${TEMP_ARCHIVE}" "${ARCHIVE}")
   else()
     message(STATUS "Using cached ${ARCHIVE}")
+    test_hash("${ARCHIVE}")
   endif()
 
   vcpkg_extract_source_archive_ex(

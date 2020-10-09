@@ -6,10 +6,11 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
     REF fb0b35fed5580d49392df7ce9374551b348fffbf
+    SHA512 fc9f164fb208c00ac91ee2d77485456c47194da01b0c9c669c99a3098419d966590813c926c1234a492d770df59a27f41ab599e6c7ebd6433c01c752b43d7aa8
     PATCHES add-missing-tuple.patch
 )
 
-function(checkout_in_path PATH URL REF)
+function(checkout_in_path PATH URL REF SHA512)
     if(EXISTS "${PATH}")
         return()
     endif()
@@ -18,6 +19,7 @@ function(checkout_in_path PATH URL REF)
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
+        SHA512 "${SHA512}"
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
@@ -30,18 +32,22 @@ file(MAKE_DIRECTORY "${EXTERNALS}")
 checkout_in_path("${EXTERNALS}/sfntly"
     "https://github.com/googlefonts/sfntly"
     "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
+    "355745828472ea79588618d13327616ac3b0d25b129273bafe8b84ee62b27e64403d280880f1878e6cf82652274cce17b41f052ff439b57cf13e7a59689480ae"
 )
 checkout_in_path("${EXTERNALS}/dng_sdk"
     "https://android.googlesource.com/platform/external/dng_sdk"
     "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
+    "dfa1324060515df1bf527a68cdc8fd8c9864380550e76e1a09056f6b949c303b4457f106a78e0cedf2a7141a7c8e7fa359c01f8f66dc7716e4d2fb14bf3aecdf"
 )
 checkout_in_path("${EXTERNALS}/libgifcodec"
     "https://skia.googlesource.com/libgifcodec"
     "d06d2a6d42baf6c0c91cacc28df2542a911d05fe"
+    "94a83dcaf58917c456121f201d70e2697748d56467af98f8fdd3b87f0533a65adee8500ded5d3a0ac183825204f02321569eafb44b484f329213b853fbf03930"
 )
 checkout_in_path("${EXTERNALS}/piex"
     "https://android.googlesource.com/platform/external/piex"
     "bb217acdca1cc0c16b704669dd6f91a1b509c406"
+    "13b21b94462ce753b846a5cb052e2a8812d5aefe04be29f3019cc73331c28c23b239b92bbd0678e0e3fb0547497512bd5ae7c823ffaa41d8fa5fb71821e5f7e3"
 )
 
 # turn a CMake list into a GN list of quoted items

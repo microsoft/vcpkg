@@ -4,6 +4,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/libyuv/libyuv
     REF fec9121b676eccd9acea2460aec7d6ae219701b9
+    SHA512 a6abfc9032e066b6cd2616e05bbf40d75c80c9576c40f18a92d1e3fb40ea435785e9a88c6753e49d05f6c27cc5337da9c919c1a9a8cd25bde9eed05049401c25
     PATCHES
         fix_cmakelists.patch
         fix-build-type.patch

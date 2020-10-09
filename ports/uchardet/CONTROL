@@ -1,5 +1,6 @@
 Source: uchardet
 Version: 2020-04-26
+Port-Version: 1
 Description: An encoding detector library ported from Mozilla
 Homepage: https://cgit.freedesktop.org/uchardet/uchardet/
 

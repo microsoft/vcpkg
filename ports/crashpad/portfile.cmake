@@ -8,9 +8,10 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
     REF 9a31d3f8e9815774026a753a1ff6155347cd549f
+    SHA512 d774c3c16c94ac3b57e8f7cce8fa5d49e0ae07d0375f6d702de3c1d4ed4894e3624550f2b9a7dcebdff4ac1a0683b90953be7f5713a49d68c0b48b5f818a2bcc
 )
 
-function(checkout_in_path PATH URL REF)
+function(checkout_in_path PATH URL REF SHA512)
     if(EXISTS "${PATH}")
         return()
     endif()
@@ -19,6 +20,7 @@ function(checkout_in_path PATH URL REF)
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
+        SHA512 "${SHA512}"
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
@@ -29,6 +31,7 @@ checkout_in_path(
     "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     "https://chromium.googlesource.com/chromium/mini_chromium"
     "c426ff98e1d9e9d59777fe8b883a5c0ceeca9ca3"
+    "69249e85cdb467b9d20265916f632b4f0b655f3a30cd718a4ecf49e577ff5ed3ce7875eb1f8c1969a812b6c7b4693770f94cda1e8e2874f783a238bee629eb4a"
 )
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
