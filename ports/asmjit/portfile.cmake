@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO asmjit/asmjit
-  REF 8474400e82c3ea65bd828761539e5d9b25f6bd83
-  SHA512 435be4ed22abbbbcdea3869b31bc2fc27aae969775773c24155d7490bca9591f51613fa3319cce54200c6d18dbe73a6be2d5449c49afb46934d93760501e98f6
+  REF 5bc166efdb419f88bd5b5774c62cfc4d08a0bfa4 # accessed on 2020-09-14
+  SHA512 6e31617e62dccbec5fa4d8aeacb1076167f870578a0dd2915403d414f8fcaab16692968287f912dc41a2ec7d10a343d5b687144f04d2ec7adb2880044752543c
   HEAD_REF master
 )
 
@@ -23,6 +23,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/asmjit)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

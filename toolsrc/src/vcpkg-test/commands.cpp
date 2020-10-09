@@ -55,11 +55,11 @@ TEST_CASE ("get_available_paths_commands works", "[commands]")
         "autocomplete",
         "hash",
         "fetch",
+        "format-manifest",
         "x-ci-clean",
         "x-history",
         "x-package-info",
         "x-vsinstances",
-        "x-format-manifest",
         });
 }
 
