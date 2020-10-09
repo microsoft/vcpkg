@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.8)
-project(imgui CXX)
+project(imgui-docking CXX)
 
 set(CMAKE_DEBUG_POSTFIX d)
 
 add_library(${PROJECT_NAME} "")
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_library(imgui::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(
 	${PROJECT_NAME}
 	PUBLIC

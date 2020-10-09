@@ -3,10 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.78
-    SHA512 2410df5b39d5ca14ea7181ef4f3b501ad8879e10895ed540f079f213dcc528b50e57cc16fce6f50a67e8a7be00b03c5833cabfd5db4ba210cafce6d95da389c6
-    HEAD_REF master
-)
+    REF 958e58b06b35ca845a2e8f5bd6032debd3cec0c0
+    SHA512 44c111d242a675ad12a33f26b0883a96bb728e65313ba19ce2c71f2a59a705693952ee2d1ae81ae7fd4ae21724f69b1fef5080ac73f0826aef5cf759ee0af0b5
+    HEAD_REF docking)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
