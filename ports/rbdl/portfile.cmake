@@ -15,15 +15,6 @@ vcpkg_from_github(ARCHIVE
     PATCHES 001_x64_number_of_sections_exceeded_in_object_file_patch.diff
 )
 
-# # NOT READY YET, ONLY CORE --> TO-DO
-# # Check if one or more features are a part of a package installation.
-# # See /docs/maintainers/vcpkg_check_features.md for more details
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
-#     tbb   WITH_TBB
-#   INVERTED_FEATURES
-#     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
-# )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
