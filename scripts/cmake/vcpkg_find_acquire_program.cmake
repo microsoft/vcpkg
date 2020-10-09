@@ -211,19 +211,19 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH f73b04e2d9f29d4393fde572dcf3c3f0f6fa27e747e5df292294ab7536ae24c239bf917689d71eb10cc49f6b9a4ace26d7c122ee887d93cc935f268c404e9067)
   elseif(VAR MATCHES "NINJA")
     set(PROGNAME ninja)
-    set(NINJA_VERSION 1.10.0)
+    set(NINJA_VERSION 1.10.1)
     set(_vfa_SUPPORTED ON)
     if(CMAKE_HOST_WIN32)
       set(ARCHIVE "ninja-win-${NINJA_VERSION}.zip")
       set(SUBDIR "${NINJA_VERSION}-windows")
       set(URL "https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-win.zip")
-      set(HASH a196e243c53daa1df9d287af658d6d38d6b830b614f2d5704e8c88ffc61f179a533ae71cdb6d0d383d1559d65dacccbaaab270fb2a33aa211e5dba42ff046f97)
+      set(HASH 0120054f0fea6eea4035866201f69fba1c039f681f680cfcbbefcaee97419815d092a6e2f3823ea6c3928ad296395f36029e337127ee977270000b35df5f9c40)
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
       set(ARCHIVE "ninja-mac-${NINJA_VERSION}.zip")
       set(URL "https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-mac.zip")
       set(SUBDIR "${NINJA_VERSION}-osx")
       set(PATHS "${DOWNLOADS}/tools/ninja-${NINJA_VERSION}-osx")
-      set(HASH 619a1924067a0b30fc5f8887f868d3ee5481838d2f0f158d031f7614a2a10b95a73d4a56b658d5d560283ebf809e2e536b968c6c01ff0108075c3f393f5780ba)
+      set(HASH 99f5ccca2461a4d340f4528a8eef6d81180757da78313f1f9412ed13a7bbaf6df537a342536fd053db00524bcb734d205af5f6fde419a1eb2e6f77ee8b7860fe)
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD")
       set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-freebsd")
       set(_vfa_SUPPORTED OFF)
@@ -232,7 +232,7 @@ function(vcpkg_find_acquire_program VAR)
       set(URL "https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-linux.zip")
       set(SUBDIR "${NINJA_VERSION}-linux")
       set(PATHS "${DOWNLOADS}/tools/ninja-${NINJA_VERSION}-linux")
-      set(HASH ffb179ab8ea315167fcc99a8f13286e1363590185b18cf819cc73e09f2a7553790e9dc45fd1ccd0bd1d2dbf543aee3f6c0951cf9ce453a7168ffd2ac873cdd29)
+      set(HASH 9820c76fde6fac398743766e7ea0fe8a7d6e4191a77512a2d2f51c2ddcc947fcd91ac08522742281a285418c114e760b0158a968305f8dc854bb9693883b7f1e)
     endif()
     set(VERSION_CMD --version)
   elseif(VAR MATCHES "NUGET")
@@ -425,41 +425,25 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH 2a5480d503ac6e8203040c7e516a3395028520da05d0ebf3a2d56d5d24ba5d17630e8f318dd4e3cc2094cc4668b90108fb58e8b986b1ffebd429995058063c27)
   elseif(VAR MATCHES "PKGCONFIG")
     set(PROGNAME pkg-config)
-    set(VERSION 0.29.2-1)
-    set(LIBWINPTHREAD_VERSION git-8.0.0.5906.c9a21571-1)
     if(ENV{PKG_CONFIG})
       debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
       set(PKGCONFIG $ENV{PKG_CONFIG} PARENT_SCOPE)
       return()
     elseif(CMAKE_HOST_WIN32)
-      set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${VERSION}")
-      set(PKGCONFIG "${PROG_PATH_SUBDIR}/mingw32/bin/pkg-config.exe")
       if(NOT EXISTS "${PKGCONFIG}")
-        vcpkg_download_distfile(PKGCONFIG_ARCHIVE
-          URLS "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz"
-          SHA512 3b1b706a24d9aef7bbdf3ce4427aaa813ba6fbd292ed9dda181b4300e117c3d59a159ddcca8b013fd01ce76da2d95d590314ff9628c0d68a6966bac4842540f0
-          FILENAME mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz
+        set(VERSION 0.29.2-1)
+        set(LIBWINPTHREAD_VERSION git-8.0.0.5906.c9a21571-1)
+        vcpkg_acquire_msys(
+          PKGCONFIG_ROOT
+          NO_DEFAULT_PACKAGES
+          DIRECT_PACKAGES
+            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz"
+            3b1b706a24d9aef7bbdf3ce4427aaa813ba6fbd292ed9dda181b4300e117c3d59a159ddcca8b013fd01ce76da2d95d590314ff9628c0d68a6966bac4842540f0
+            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst"
+            2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
         )
-        vcpkg_download_distfile(LIBWINPTHREAD_ARCHIVE
-          URLS "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst"
-          SHA512 2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
-          FILENAME mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst
-        )
-        file(REMOVE_RECURSE ${PROG_PATH_SUBDIR} ${PROG_PATH_SUBDIR}.tmp)
-        file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR}.tmp)
-        vcpkg_execute_required_process(
-          ALLOW_IN_DOWNLOAD_MODE
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${LIBWINPTHREAD_ARCHIVE}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}.tmp
-        )
-        vcpkg_execute_required_process(
-          ALLOW_IN_DOWNLOAD_MODE
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${PKGCONFIG_ARCHIVE}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}.tmp
-        )
-        file(RENAME ${PROG_PATH_SUBDIR}.tmp ${PROG_PATH_SUBDIR})
       endif()
-      set(${VAR} "${${VAR}}" PARENT_SCOPE)
+      set(${VAR} "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" PARENT_SCOPE)
       return()
     else()
       set(BREW_PACKAGE_NAME pkg-config)
