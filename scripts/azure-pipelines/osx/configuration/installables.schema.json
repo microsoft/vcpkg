@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$schema": "https://json-schema.org/draft-07/schema",
   "type": "object",
   "definitions": {
     "sha256": {
@@ -9,6 +9,7 @@
   },
   "required": [
     "Applications",
+    "Brew",
     "VBoxExtensions"
   ],
   "properties": {
@@ -32,6 +33,22 @@
           },
           "InstallerPath": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "Brew": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [ "Name" ],
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Kind": {
+            "type": "string",
+            "enum": [ "cask" ]
           }
         }
       }
