@@ -49,6 +49,3 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
-
-# # Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME rbdl MODULE)
