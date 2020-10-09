@@ -4,6 +4,7 @@
 variables:
   windows-pool: 'PrWin-2020-08-12'
   linux-pool: 'PrLin-2020-08-12'
+  osx-pool: 'PrOsx-2020-09-28'
 
 stages:
 - stage: check_cxx_formatting
@@ -81,6 +82,8 @@ stages:
       poolName: $(windows-pool)
 
   - template: osx/azure-pipelines.yml
+    parameters:
+      poolName: $(osx-pool)
 
   - template: linux/azure-pipelines.yml
     parameters:

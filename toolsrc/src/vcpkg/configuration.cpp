@@ -5,9 +5,7 @@
 
 namespace vcpkg
 {
-    Optional<Configuration> ConfigurationDeserializer::visit_object(Json::Reader& r,
-                                                                    StringView,
-                                                                    const Json::Object& obj)
+    Optional<Configuration> ConfigurationDeserializer::visit_object(Json::Reader& r, const Json::Object& obj)
     {
         RegistrySet registries;
 
@@ -56,6 +54,9 @@ namespace vcpkg
 
         return Configuration{std::move(registries)};
     }
+
+    constexpr StringLiteral ConfigurationDeserializer::DEFAULT_REGISTRY;
+    constexpr StringLiteral ConfigurationDeserializer::REGISTRIES;
 
     ConfigurationDeserializer::ConfigurationDeserializer(const VcpkgCmdArguments& args)
     {
