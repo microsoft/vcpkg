@@ -24,6 +24,7 @@ elseif (UNIX)
     elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
         target_compile_options(cspice PUBLIC -m32 -ansi -fPIC) 
     endif()
+    target_compile_options(cspice PRIVATE -Wno-error=implicit-function-declaration)
 endif ()
 
 if (NOT _SKIP_HEADERS)

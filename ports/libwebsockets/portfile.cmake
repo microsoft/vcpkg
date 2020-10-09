@@ -3,11 +3,12 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF 6eb39388f43f6e2a27f0efcbf8cb2391e38824e9 # v4.0.1
-    SHA512 2317ab66cd642280dc5cc7c47b8efa562731cc5b4a4eda83f34b6a7b60f02df6444a818c36e84f5cf118c79d6d62a9aa2e486d18f434199abd9812e7b88941e4
+    REF 64232ddc4cf67ccc75683a42a322e596b3611069 # v4.1.2
+    SHA512 199f25b969860a436cee5d1dd210ccde0ad7aaf4836c24aa4a5d0252bb13a61b12d96529e6ebf45dc78f4ec9ade11a324a0f2de51991e9e66045b57348ce6eec
     HEAD_REF master
     PATCHES
         CMakeLists.patch
+        fix-build-error.patch   
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)
@@ -148,7 +149,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libwebsockets)
@@ -157,9 +158,9 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/libwebsockets-test-server)
-file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsConfig.cmake LIBWEBSOCKETSCONFIG_CMAKE)
+file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/libwebsockets-config.cmake LIBWEBSOCKETSCONFIG_CMAKE)
 string(REPLACE "/../include" "/../../include" LIBWEBSOCKETSCONFIG_CMAKE "${LIBWEBSOCKETSCONFIG_CMAKE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsConfig.cmake "${LIBWEBSOCKETSCONFIG_CMAKE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/libwebsockets-config.cmake "${LIBWEBSOCKETSCONFIG_CMAKE}")
 file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake LIBWEBSOCKETSTARGETSDEBUG_CMAKE)
 string(REPLACE "websockets_static.lib" "websockets.lib" LIBWEBSOCKETSTARGETSDEBUG_CMAKE "${LIBWEBSOCKETSTARGETSDEBUG_CMAKE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake "${LIBWEBSOCKETSTARGETSDEBUG_CMAKE}")
