@@ -73,31 +73,6 @@ namespace vcpkg::Json
         };
         std::vector<Path> m_path;
 
-        // returns whether the field was found, not whether it was valid
-        template<class Type>
-        bool internal_field(const Object& obj, StringView key, Type& place, IDeserializer<Type>& visitor)
-        {
-            auto value = obj.get(key);
-            if (!value)
-            {
-                return false;
-            }
-
-            m_path.push_back(key);
-            auto opt = visitor.visit(*this, *value);
-
-            if (auto p_opt = opt.get())
-            {
-                place = std::move(*p_opt);
-            }
-            else
-            {
-                add_expected_type_error(visitor.type_name());
-            }
-            m_path.pop_back();
-            return true;
-        }
-
         // checks that an object doesn't contain any fields which both:
         // * don't start with a `$`
         // * are not in `valid_fields`
@@ -109,17 +84,47 @@ namespace vcpkg::Json
         void required_object_field(
             StringView type, const Object& obj, StringView key, Type& place, IDeserializer<Type>& visitor)
         {
-            if (!internal_field(obj, key, place, visitor))
+            if (auto value = obj.get(key))
+            {
+                visit_in_key(*value, key, place, visitor);
+            }
+            else
             {
                 this->add_missing_field_error(type, key, visitor.type_name());
             }
+        }
+
+        // value should be the value at key of the currently visited object
+        template<class Type>
+        void visit_in_key(const Value& value, StringView key, Type& place, IDeserializer<Type>& visitor)
+        {
+            m_path.push_back(key);
+            auto opt = visitor.visit(*this, value);
+
+            if (auto p_opt = opt.get())
+            {
+                place = std::move(*p_opt);
+            }
+            else
+            {
+                add_expected_type_error(visitor.type_name());
+            }
+            m_path.pop_back();
         }
 
         // returns whether key \in obj
         template<class Type>
         bool optional_object_field(const Object& obj, StringView key, Type& place, IDeserializer<Type>& visitor)
         {
-            return internal_field(obj, key, place, visitor);
+            if (auto value = obj.get(key))
+            {
+                visit_in_key(*value, key, place, visitor);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         template<class Type>
@@ -176,12 +181,7 @@ namespace vcpkg::Json
             case ValueKind::Number: return visit_number(r, value.number());
             case ValueKind::String: return visit_string(r, value.string());
             case ValueKind::Array: return visit_array(r, value.array());
-            case ValueKind::Object:
-            {
-                const auto& obj = value.object();
-                r.check_for_unexpected_fields(obj, valid_fields(), type_name());
-                return visit_object(r, obj);
-            }
+            case ValueKind::Object: return visit(r, value.object()); // Call `visit` to get unexpected fields checking
             default: vcpkg::Checks::unreachable(VCPKG_LINE_INFO);
         }
     }

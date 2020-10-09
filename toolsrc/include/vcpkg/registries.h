@@ -2,6 +2,8 @@
 
 #include <vcpkg/fwd/vcpkgpaths.h>
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>
