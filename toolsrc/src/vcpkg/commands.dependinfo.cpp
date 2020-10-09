@@ -2,6 +2,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.dependinfo.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
