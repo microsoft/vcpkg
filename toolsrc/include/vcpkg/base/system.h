@@ -8,6 +8,7 @@
 namespace vcpkg::System
 {
     Optional<std::string> get_environment_variable(ZStringView varname) noexcept;
+    void set_environment_variable(ZStringView varname, Optional<ZStringView> value) noexcept;
 
     const ExpectedS<fs::path>& get_home_dir() noexcept;
 
