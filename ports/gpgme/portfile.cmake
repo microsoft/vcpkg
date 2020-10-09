@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF gpgme-1.14.0
     SHA512 b4608fd1d9a4122d8886917274e323afc9a30494c13a3dea51e17e9779f925bf8d67e584434d6a13018f274a6cbcf0a5e36f2fea794a065906bbb556b765398e
     HEAD_REF master
+    PATCHES
+       disable-docs.patch
 )
 
 list(REMOVE_ITEM FEATURES core)
