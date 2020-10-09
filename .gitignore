@@ -30,6 +30,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+# VS Code build
+toolsrc/build
 # Ignore the executable
 /vcpkg
 /vcpkg.exe
