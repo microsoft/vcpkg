@@ -28,7 +28,8 @@
 ## ### SHA512
 ## The SHA512 hash of the intermediate archive tarball.
 ##
-## This helper will use `git archive` to convert the given commit into a simple flat archive;
+## This helper uses `git archive` to convert the given commit into a flat
+## .tar.gz archive; this is the hash of that archive.
 ##
 ## ### PATCHES
 ## A list of patches to be applied to the extracted sources.
@@ -72,21 +73,21 @@ function(vcpkg_from_git)
       return()
     endif()
 
-    file(SHA512 ${FILE_PATH} FILE_HASH)
+    file(SHA512 ${FILE_PATH} ACTUAL_HASH)
 
     if(NOT DEFINED _vdud_SHA512)
       message(WARNING "Calling vcpkg_from_git() without a SHA512 argument is deprecated. Please add
-    SHA512 ${FILE_HASH}
+    SHA512 ${ACTUAL_HASH}
 to the call.")
       return()
     endif()
 
-    if(NOT FILE_HASH STREQUAL _vdud_SHA512)
+    if(NOT ACTUAL_HASH STREQUAL _vdud_SHA512)
       message(FATAL_ERROR
           "\nFile does not have expected hash:\n"
           "        File path: [ ${FILE_PATH} ]\n"
           "    Expected hash: [ ${_vdud_SHA512} ]\n"
-          "      Actual hash: [ ${FILE_HASH} ]\n")
+          "      Actual hash: [ ${ACTUAL_HASH} ]\n")
     endif()
   endfunction()
 

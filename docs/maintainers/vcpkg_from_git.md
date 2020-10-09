@@ -28,7 +28,8 @@ The git sha of the commit to download.
 ### SHA512
 The SHA512 hash of the intermediate archive tarball.
 
-This helper will use `git archive` to convert the given commit into a simple flat archive;
+This helper uses `git archive` to convert the given commit into a flat
+.tar.gz archive; this is the hash of that archive.
 
 ### PATCHES
 A list of patches to be applied to the extracted sources.
