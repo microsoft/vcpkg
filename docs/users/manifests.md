@@ -37,7 +37,7 @@ A manifest is a JSON-formatted file named `vcpkg.json` which lies at the root of
 It contains all the information a person needs to know to get dependencies for your project,
 as well as all the metadata about your project that a person who depends on you might be interested in.
 
-Manifests are strict JSON files that can't contain C++-style comments (`//`) nor trailing commas, however
+Manifests follow strict JSON: they can't contain C++-style comments (`//`) nor trailing commas. However
 you can use field names that start with `$` to write your comments in any object that has a well-defined set of keys.
 These comment fields are not allowed in any objects which permit user-defined keys (such as `"features"`).
 
