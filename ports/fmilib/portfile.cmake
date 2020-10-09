@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
         0001-remove-install-prefix.patch
+        0002-include-sys-stat.h-for-mkdir.patch
 )
 
 # Note that if you have configured and built both static and shared library on Windows
