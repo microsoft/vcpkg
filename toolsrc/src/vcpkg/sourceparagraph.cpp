@@ -546,7 +546,7 @@ namespace vcpkg
 
     struct FeaturesFieldDeserializer : Json::IDeserializer<std::vector<std::unique_ptr<FeatureParagraph>>>
     {
-        virtual StringView type_name() const override { return "a features field"; }
+        virtual StringView type_name() const override { return "a set of features"; }
 
         virtual Span<const StringView> valid_fields() const override { return {}; }
 
@@ -566,7 +566,10 @@ namespace vcpkg
             {
                 if (!Json::IdentifierDeserializer::is_ident(pr.first))
                 {
-                    extra_fields.push_back(pr.first.to_string());
+                    r.add_generic_error(type_name(),
+                                        "unexpected field '",
+                                        pr.first,
+                                        "': must be lowercase alphanumeric+hyphens and not reserved");
                     continue;
                 }
                 std::unique_ptr<FeatureParagraph> v;
@@ -576,11 +579,6 @@ namespace vcpkg
                     v->name = pr.first.to_string();
                     res.push_back(std::move(v));
                 }
-            }
-
-            for (auto&& field : extra_fields)
-            {
-                r.add_extra_field_error(type_name(), field);
             }
 
             return std::move(res);
