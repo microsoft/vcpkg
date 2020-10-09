@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 55f068b..7123174 100644
+index d178ac0..bbf36ac 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -133,15 +133,17 @@ if(CLANG)
- 	endif()
+@@ -143,14 +143,17 @@ else()
+ 	message(STATUS "clang not found")
  endif()
  
--if(BUILD_TESTS OR BUILD_EXAMPLES)
+-if(BUILD_TESTS OR BUILD_EXAMPLES OR BUILD_BENCHMARKS)
 -	if(PKG_CONFIG_FOUND)
 -		pkg_check_modules(LIBPMEMOBJ REQUIRED libpmemobj>=${LIBPMEMOBJ_REQUIRED_VERSION})
 -		pkg_check_modules(LIBPMEM REQUIRED libpmem>=${LIBPMEM_REQUIRED_VERSION})
@@ -23,13 +23,13 @@ index 55f068b..7123174 100644
 +	find_package(LIBPMEM REQUIRED ${LIBPMEM_REQUIRED_VERSION})
 +endif()
 +endif()
- 
++ 
 +if(BUILD_TESTS OR BUILD_EXAMPLES)
+ 
  	if (LIBPMEMOBJ_VERSION AND LIBPMEMOBJ_VERSION MATCHES "[0-9]+[.][0-9]+.*")
  		string(REGEX REPLACE "\\+git.*" "" LIBPMEMOBJ_VERSION_SHORT ${LIBPMEMOBJ_VERSION})
- 		string(REGEX REPLACE "-rc.*" "" LIBPMEMOBJ_VERSION_SHORT ${LIBPMEMOBJ_VERSION_SHORT})
 diff --git a/benchmarks/CMakeLists.txt b/benchmarks/CMakeLists.txt
-index a390731..e4764d3 100644
+index bb29b8d..839a77f 100644
 --- a/benchmarks/CMakeLists.txt
 +++ b/benchmarks/CMakeLists.txt
 @@ -27,6 +27,12 @@ function(add_benchmark name)
