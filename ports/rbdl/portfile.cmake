@@ -1,5 +1,3 @@
-set(VERSION 2.6.0)
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(RBDL_STATIC ON)
 else()
