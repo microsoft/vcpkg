@@ -7,16 +7,13 @@ vcpkg_from_github(
     PATCHES fix-test.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    test UTF8_TESTS
-)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
         -DUTF8_INSTALL=ON
         -DUTF8_SAMPLES=OFF
+        -DUTF8_TESTS=OFF
 )
 
 vcpkg_install_cmake()
