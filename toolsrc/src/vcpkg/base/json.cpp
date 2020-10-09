@@ -1313,9 +1313,7 @@ namespace vcpkg::Json
         }
     }
 
-    void Reader::check_for_unexpected_fields(const Object& obj,
-                                             Span<const StringView> valid_fields,
-                                             StringView type_name)
+    void Reader::check_for_unexpected_fields(const Object& obj, View<StringView> valid_fields, StringView type_name)
     {
         if (valid_fields.size() == 0)
         {
