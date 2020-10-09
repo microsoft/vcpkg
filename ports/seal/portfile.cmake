@@ -1,51 +1,43 @@
-set(SEAL_VERSION_MAJOR 3)
-set(SEAL_VERSION_MINOR 4)
-set(SEAL_VERSION_MICRO 5)
-
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SEAL_BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SEAL_BUILD_STATIC)
-
-if (SEAL_BUILD_STATIC)
-    set(SEAL_LIB_BUILD_TYPE "Static_PIC")
-endif ()
-
-if (SEAL_BUILD_DYNAMIC)
-    set(SEAL_LIB_BUILD_TYPE "Shared")
-endif ()
-
-string(TOUPPER ${PORT} PORT_UPPER)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
-    REF 9fc376c19488be2bfd213780ee06789754f4b2c2
-    SHA512 198f75371c7b0b88066495a40c687c32725a033fd1b3e3dadde3165da8546d44e9eaa9355366dd5527058ae2171175f757f69189cf7f5255f51eba14c6f38b78
+    REF e3ad13edf7e5b4dc8a59fd2cd6235ad9d7428cab
+    SHA512 9d52a51bd1d3141e45fd1f92134433a9eb7458e125140501952535c67ea49e0c66ccd4a80f7473c31db1963afcd7e690c716ea32d195cb07ba6fa60847168a91
     HEAD_REF master
+    PATCHES no-source-writes.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    zlib SEAL_USE_ZLIB
-)
+if("zlib" IN_LIST FEATURES)
+    message("SEAL currently does not support non-vendored zlib -- ignoring feature 'zlib'")
+endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/native/src
+    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
         -DALLOW_COMMAND_LINE_BUILD=ON
-        -DSEAL_LIB_BUILD_TYPE=${SEAL_LIB_BUILD_TYPE}
-        -DSEAL_USE_MSGSL=OFF # issue https://github.com/microsoft/SEAL/issues/159
+        -DSEAL_BUILD_EXAMPLES=OFF 
+        -DSEAL_BUILD_TESTS=OFF 
+        -DSEAL_BUILD_SEAL_C=OFF
+        -DSEAL_USE_MSGSL=OFF
+        -DSEAL_USE_ZLIB=OFF
 )
 
+vcpkg_build_cmake(TARGET seal LOGFILE_ROOT build)
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT_UPPER}-${SEAL_VERSION_MAJOR}.${SEAL_VERSION_MINOR})
+file(GLOB CONFIG_PATH RELATIVE "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/lib/cmake/SEAL-*")
+if(NOT CONFIG_PATH)
+    message(FATAL_ERROR "Could not find installed cmake config files.")
+endif()
 
-file(REMOVE_RECURSE 
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "${CONFIG_PATH}")
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
