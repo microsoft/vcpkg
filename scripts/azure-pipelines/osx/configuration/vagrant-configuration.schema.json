@@ -15,33 +15,35 @@
     "pat": {
       "type": "string"
     },
-    "base_name": {
+    "agent_pool": {
+      "type": "string"
+    },
+    "devops_url": {
+      "type": "string"
+    },
+    "machine_name": {
+      "type": "string"
+    },
+    "box_name": {
+      "type": "string"
+    },
+    "box_version": {
       "type": "string"
     },
     "disk_size": {
       "type": "integer"
     },
-    "machine_identifiers": {
-      "type": "array",
-
-      "items": {
-        "type": "string",
-        "pattern": "[0-9]{2}"
-      }
-    },
     "archives": {
       "type": "object",
       "required": [
         "username",
-        "access_key",
         "urn",
-        "share"
+        "path"
       ],
       "properties": {
         "username": { "type": "string" },
-        "access_key": { "type": "string" },
         "urn": { "type": "string" },
-        "share": { "type": "string" }
+        "path": { "type": "string" }
       }
     }
   }

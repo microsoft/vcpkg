@@ -258,23 +258,6 @@ namespace vcpkg::Metrics
 #endif
         ;
 
-    // for child vcpkg processes, we also want to disable metrics
-    static void set_vcpkg_disable_metrics_environment_variable(bool disabled)
-    {
-#if defined(_WIN32)
-        SetEnvironmentVariableW(L"VCPKG_DISABLE_METRICS", disabled ? L"1" : nullptr);
-#else
-        if (disabled)
-        {
-            setenv("VCPKG_DISABLE_METRICS", "1", true);
-        }
-        else
-        {
-            unsetenv("VCPKG_DISABLE_METRICS");
-        }
-#endif
-    }
-
     std::string get_MAC_user()
     {
 #if defined(_WIN32)
@@ -323,11 +306,7 @@ namespace vcpkg::Metrics
 
     void Metrics::set_print_metrics(bool should_print_metrics) { g_should_print_metrics = should_print_metrics; }
 
-    void Metrics::set_disabled(bool disabled)
-    {
-        set_vcpkg_disable_metrics_environment_variable(disabled);
-        g_metrics_disabled = disabled;
-    }
+    void Metrics::set_disabled(bool disabled) { g_metrics_disabled = disabled; }
 
     bool Metrics::metrics_enabled()
     {
