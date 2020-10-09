@@ -43,7 +43,7 @@ file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/share/rbdl)
 vcpkg_fixup_cmake_targets()
 
 # # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/rbdl RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # # Remove duplicated include directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
