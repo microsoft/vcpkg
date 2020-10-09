@@ -1,7 +1,10 @@
 #pragma once
 
+#include <vcpkg/fwd/dependencies.h>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/commands.interface.h>
-#include <vcpkg/dependencies.h>
 
 namespace vcpkg::Remove
 {
