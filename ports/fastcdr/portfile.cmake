@@ -18,7 +18,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fastcdr TARGET_PATH share/fastcdr)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fastcdr)
 
 vcpkg_copy_pdbs()
 
