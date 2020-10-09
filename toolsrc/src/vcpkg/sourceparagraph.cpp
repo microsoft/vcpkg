@@ -527,14 +527,13 @@ namespace vcpkg
         virtual Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r,
                                                                          const Json::Object& obj) override
         {
+            std::string name;
+            r.required_object_field(
+                type_name(), obj, FeatureDeserializer::NAME, name, Json::IdentifierDeserializer::instance);
             auto opt = FeatureDeserializer::instance.visit_object(r, obj);
             if (auto p = opt.get())
             {
-                r.required_object_field(type_name(),
-                                        obj,
-                                        FeatureDeserializer::NAME,
-                                        p->get()->name,
-                                        Json::IdentifierDeserializer::instance);
+                p->get()->name = std::move(name);
             }
             return opt;
         }
