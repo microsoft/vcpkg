@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "linux" "osx")
+
 set(7ZIP_VERSION 19.00)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.7-zip.org/a/7z1900-src.7z"
@@ -25,6 +27,6 @@ vcpkg_copy_pdbs()
 
 file(
     INSTALL ${CMAKE_CURRENT_LIST_DIR}/License.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/7zip
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     RENAME copyright
 )
