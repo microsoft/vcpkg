@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-Dont-export-vorbisenc-functions.patch
+        0002-Fixup-pkgconfig-libs.patch
 )
 
 vcpkg_configure_cmake(
@@ -26,8 +27,4 @@ configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copy
 
 vcpkg_copy_pdbs()
 
-if(WIN32 AND (NOT MINGW))
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vorbis.pc" "-lm" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vorbis.pc" "-lm" "")
-endif()
 vcpkg_fixup_pkgconfig()
