@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF libassuan-2.5.3
     SHA512 5ec896eca6d9d7bec83aa400c8e2dc6f2b09c013050efb2125e2f2a4bd00f179723254483637ca4b7bc30bba951fc985e7ba7db98081606bb106caa7a2622dbe
     HEAD_REF master
+    PATCHES
+        fix-pkgconfig.patch
 )
 
 vcpkg_configure_make(
@@ -16,7 +18,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-#vcpkg_fixup_pkgconfig() 
+vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
