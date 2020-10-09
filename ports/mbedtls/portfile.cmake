@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 set(VCPKG_LIBRARY_LINKAGE static)
 
 vcpkg_from_github(
