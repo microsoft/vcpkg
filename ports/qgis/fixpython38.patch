@@ -1,0 +1,13 @@
+diff --git "a/python/core/auto_generated/auth/qgsauthmanager.sip.in" "b/python/core/auto_generated/auth/qgsauthmanager.sip.in"
+index 16d2d73fc..6b265d683 100644
+--- "a/python/core/auto_generated/auth/qgsauthmanager.sip.in"
++++ "b/python/core/auto_generated/auth/qgsauthmanager.sip.in"
+@@ -818,7 +818,7 @@ Clear an authentication config from its associated authentication method cache
+   protected:
+ 
+ 
+-
++    explicit QgsAuthManager();
+ };
+ 
+ /************************************************************************
