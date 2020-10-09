@@ -6,4 +6,3 @@ Description: The library is a simplified implementation of the Interactive Conne
 Feature: nettle
 Build-Depends: nettle
 Description: Use nettle for HMAC computation instead of the Builtin
-
