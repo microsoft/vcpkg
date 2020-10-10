@@ -6,7 +6,7 @@ Build-Depends: expat, hdf5, libxml2, libzip, zlib, libspatialindex, libspatialit
 Default-Features: bindings, 3d, quick
 
 Feature: server
-Description: Determines whether QGIS server should be built
+Description: Determines whether QGIS server should be built.
 Build-Depends: fastcgi
 
 Feature: bindings
@@ -25,7 +25,7 @@ Feature: pip-mirrors
 Description: Use aliyun proxy to speed up pypi downloads in China
 
 Feature: sip5
-Description: Use sip5 build qgis
+Description: Use sip5 build qgis for 3.16 version
 
 Feature: debug-tools
 Description: Install debug tools for qgis

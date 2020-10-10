@@ -42,7 +42,7 @@ try
         if (Test-Path "$outputDir\$_"){
             $baseTargetBinaryDir = $outputDir
         } else {
-            Write-Error "  $outputDir: not found"
+            Write-Error "  ${outputDir} not found"
             return
         }
     }
