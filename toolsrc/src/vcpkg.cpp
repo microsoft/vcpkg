@@ -17,6 +17,7 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/userconfig.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 #include <cassert>
@@ -200,6 +201,7 @@ int main(const int argc, const char* const* const argv)
 
     System::initialize_global_job_object();
 #endif
+    System::set_environment_variable("VCPKG_COMMAND", fs::generic_u8string(System::get_exe_path_of_current_process()));
 
     Checks::register_global_shutdown_handler([]() {
         const auto elapsed_us_inner = GlobalState::timer.lock()->microseconds();
