@@ -28,7 +28,7 @@ Pour une description des commandes disponibles, quand vous avez installé vcpkg,
   - [Installer les pré requis pour linux](#installation-des-pré-requis-linux)
   - [Installer les pré requis pour macOS](#installation-des-pré-requis-macos) 
     - [Installer GCC pour macOS avant 10.15](#installer-gcc-pour-macos-avant-10.15)
-    - [Utiliser vcpkg avec CMake](#utiliser+vcpkg-avec-cmake) 
+    - [Utiliser vcpkg avec CMake](#utiliser-vcpkg-avec-cmake) 
       - [Visual Studio Code avec CMake Tools](#visual-studio-code-avec-cmake-tools)
       - [Vcpkg avec Visual Studio pour un projet CMake](#vcpkg-avec-visual-studio-un-projet-cmake)
       - [Vcpkg avec CLion](#vcpkg-avec-clion)
@@ -173,3 +173,33 @@ $ scl enable devtoolset-7 bash
 Pour les autres distributions, installez au minimum g++ 6.
 Si vous voulez ajouter des intrustructions spécifiques pour votre distro, [faites du PR][contribuer:faire-une-pr]!
 
+## Installation des pré requis macOS
+
+Pour macOS 1.15, la seule chose dont vous avez besoin est lancer cette commande:
+
+```sh
+$ xcode-select --install
+```
+
+En suite suivez les instructions qui vont s'afficher
+
+Pour macOS 10.14 et les versions précédentes, vous aurez besoin d'installer g++ avec homebrew.
+Svuiez les instructions dans la section suivante.
+
+### Installer GCC pour macOS en desosus de 10.15
+
+cette partie est seulement nécessaire if vous avez une version de macOS en dessous de 10.15.
+
+Installer homebrew devrait être très simple pour plus d'informations allez sur  <brew.sh>, mais la seule commande dont vous avez besoin est:
+
+```sh
+$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+```
+
+Ensuite, installer gcc avec cette commande:
+
+```sh
+$ brew install gcc
+```
+
+Ensuite suivez l'[introduction Unix](#Introduction-aux-Systèmes-Unix)
