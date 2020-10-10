@@ -1,8 +1,8 @@
 diff --git a/src/cmake/compiler.cmake b/src/cmake/compiler.cmake
-index 1468be3..ed4167a 100644
+index 12a8e81..15fe688 100644
 --- a/src/cmake/compiler.cmake
 +++ b/src/cmake/compiler.cmake
-@@ -482,7 +482,7 @@ set (EXTRA_DSO_LINK_ARGS "" CACHE STRING "Extra command line definitions when bu
+@@ -505,7 +505,7 @@ endif ()
  #
  option (BUILD_SHARED_LIBS "Build shared libraries (set to OFF to build static libs)" ON)
  if (NOT BUILD_SHARED_LIBS)

@@ -1,0 +1,17 @@
+diff --git a/src/webp.imageio/CMakeLists.txt b/src/webp.imageio/CMakeLists.txt
+index 9e01bd7..f9bce69 100644
+--- a/src/webp.imageio/CMakeLists.txt
++++ b/src/webp.imageio/CMakeLists.txt
+@@ -2,9 +2,10 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ # https://github.com/OpenImageIO/oiio/blob/master/LICENSE.md
+ 
+-if (Webp_FOUND)
++if (WEBP_FOUND)
+     add_oiio_plugin (webpinput.cpp webpoutput.cpp
+-                     LINK_LIBRARIES Webp::Webp
++                     INCLUDE_DIRS ${WEBP_INCLUDE_DIR}
++                     LINK_LIBRARIES ${WEBP_LIBRARY}
+                      DEFINITIONS "-DUSE_WEBP=1")
+ else ()
+     message (STATUS "WebP plugin will not be built")

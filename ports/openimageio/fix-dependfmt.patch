@@ -1,8 +1,8 @@
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 4f1dfaf..1a17d1e 100644
+index 1240f22..b7772e1 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -385,5 +385,7 @@ macro (find_or_download_fmt)
+@@ -387,5 +387,7 @@ macro (find_or_download_fmt)
      checked_find_package (fmt REQUIRED)
  endmacro()
  
