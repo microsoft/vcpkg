@@ -113,7 +113,8 @@ else()
         set(OPTIONS --disable-static)
 
     else()
-        set(OPTIONS --disable-static)
+        set(OPTIONS --disable-shared)
+
     endif()
 
     vcpkg_configure_make(
@@ -137,4 +138,3 @@ else()
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 endif()
-
