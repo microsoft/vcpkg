@@ -113,7 +113,6 @@ else()
         set(OPTIONS --disable-static)
     else()
         set(OPTIONS --disable-shared)
-
     endif()
 
     vcpkg_configure_make(
