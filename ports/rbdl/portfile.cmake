@@ -23,16 +23,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/rbdl.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-        endif()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/rbdl.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-        endif()
-    endif()
-endif()
+# if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    # if(VCPKG_TARGET_IS_WINDOWS)
+        # if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            # file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/rbdl.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        # endif()
+        # if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            # file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/rbdl.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        # endif()
+    # endif()
+# endif()
 
 # # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
