@@ -3,10 +3,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kpu/kenlm
-    REF ac454207c69f293315ae9be3aff2238fc8c999a0
-    SHA512 96f35c46237870ce71c04e20783b4d410e7dfec6eb10673e29aa9ba27f95c5ad77aafd443a1583cd7b757a8c360fc16f236ef8ecf965f317c24c8f3b45547722
+    REF 1f054617eca14eae921e987b4b4eeb2b1d91de6b
+    SHA512 c18f9c22fbbb1f54ebe9c3b771fb2d7c09d502141d1b3645cff9db44cc51b3c976311ff0db79b60f410622579d043f185c56a4c7386e1b0ba8708e433238968b
     HEAD_REF master
-    PATCHES fix-build-install.patch
+    PATCHES fix-boost.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindEigen3.cmake)
@@ -30,9 +30,9 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 
-set(KENLM_TOOLS count_ngrams filter fragment kenlm_benchmark lmplz phrase_table_vocab)
+set(KENLM_TOOLS count_ngrams filter fragment kenlm_benchmark lmplz phrase_table_vocab query build_binary)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND KENLM_TOOLS probing_hash_table_benchmark query build_binary streaming_example)
+    list(APPEND KENLM_TOOLS probing_hash_table_benchmark streaming_example)
     if ("interpolate" IN_LIST FEATURES)
         list(APPEND KENLM_TOOLS interpolate)
     endif()
