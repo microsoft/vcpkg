@@ -110,7 +110,8 @@ else()
     )
     
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        set(OPTIONS --disable-shared)
+        set(OPTIONS --disable-static)
+
     else()
         set(OPTIONS --disable-static)
     endif()
@@ -136,5 +137,4 @@ else()
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 endif()
-
 
