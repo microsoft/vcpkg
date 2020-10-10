@@ -32,7 +32,7 @@ Pour une description des commandes disponibles, quand vous avez installé vcpkg,
       - [Visual Studio Code avec CMake Tools](#visual-studio-code-avec-cmake-tools)
       - [Vcpkg avec Visual Studio pour un projet CMake](#vcpkg-avec-visual-studio-un-projet-cmake)
       - [Vcpkg avec CLion](#vcpkg-avec-clion)
-      - [Vcpkg en tant que sous module](Vcpkg en-tant-que-sous-module)
+      - [Vcpkg en tant que sous module](#vcpkg-en-tant-que-sous-module)
     - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
     - [Exemples](#exemples)
     - [Contribuer](#contribuer)
@@ -43,20 +43,20 @@ Pour une description des commandes disponibles, quand vous avez installé vcpkg,
 
 Premièrement, suivez le guide d'introduction [Windows](#Introduction:-Windows), où [macOS et Linux](#Unix), en fonction de vos besoins.
 
-Pour plus d'information, regardez [Installer et utiliser des paquets](installer-et-utiliser-des-paquets).  
+Pour plus d'information, regardez [utiliser des paquets][introduction:utiliser-un-paquet].  
 Si la bibliothèque dont vous avez besoin n'est pas présente dans la liste, vous pouvez [ouvrir une issue sur le repo github](contribuer:faire-une-issue) où l'équipe de vcpkg et la communauté peut le voir, et possiblmeent ajouter le port de vcpkg.
  
 Après avoir installé et lancé vcpkg you pourriez voilà ajouter [l'auto completion](auto-completion) à votre shell.
 
-Si vous êtes intéressé sur le future de vcpkg, regardez le guide du [manifeste](introduction:spec-manifeste) 
+Si vous êtes intéressé sur le future de vcpkg, regardez le guide du [manifeste][introduction:manifest-spec]
 C'est une fonctionnalité experimentale et possiblement bugé.
 donc essayez d'[ouvrir des issues](contribuer:envoyer-une-issue)
 
 # Introduction: Windows
 Pré-requis:
   - Windows 7 ou plus
-  - [Git](introduction-:-git)
-  + [Visual Studio](introduction-:-visual-studio)  2015 mise à jour 3 où plus récente avec le pack de langue Anglais
+  - [Git][introduction:git]
+  + [Visual Studio][introduction:visualstudio]  2015 mise à jour 3 où plus récente avec le pack de langue Anglais
 
   Premièrement, téléchargez et lancer le fichier bootstrap-vcpkg; il peut être installé n'importe où mais il est recommandé d'utiliser vcpkg pour des projets CMake, Nous recommendont ces chemins `C:\src\vcpkg` ou `C:\dev\vcpkg`, sinon vous pouriez avoir des problèmes de chemin pour certaines compilations.
 
@@ -90,7 +90,7 @@ Après ça, vous pourrez l'utiliser dans des projets sans utiliser CMake
 
 toutes les biblothèques installés sont directement prête à être `#include` et utilisé sans aucune configuration particulières.
 
-If ou utilisez CMake avec Visual Studio continuez [ici](#vcpkg-avec-cmake-et-visual-studio)
+Si ou utilisez CMake avec Visual Studio continuez [ici](#vcpkg-avec-cmake-et-visual-studio)
 
 Pour utiliser vcpkg en dehors d'un IDE, vous pouvez utiliser le fichier de toolchain
 
@@ -103,20 +103,20 @@ avec CMake, vous devrez utiliser `find_package` et `target_libraries` pour compi
 
 regardez la [section CMake](#utiliser-vcpkg-avec-cmake) pour plus d'information ansi qu'utiliser CMake avec un IDE
 
-Pour les autres éditeurs y compris Visual Studio Code regardez le [guide](#introduction:integration)
+Pour les autres éditeurs y compris Visual Studio Code regardez le [guide](introduction:integration)
 
 
 ## Introduction aux Systèmes Unix
 
 pré-requis pour Linux:
-- [Git][introduction-à-git:git]
-- [g++][introduction-à-gcc:linux-gcc] >= 6
+- [Git][introduction:git]
+- [g++][introduction:linux-gcc] >= 6
 
 pré-requis pour macOS:
 - [Apple avec XCode][introduction:-macOS]
 - Pour macOS 10.14 et en dessous, vous aurez besoin de:
-  - [Homebrew][macOS-avec-brew]
-  - [g++][macOS-avec-gcc] >= 6
+  - [Homebrew][introduction:macos-brew]
+  - [g++][introduction:macos-gcc] >= 6
 
 Premièrement clonez et lancer le bootstrap vcpkg; ça peut être installé n'importe ou mais il est recommandé de l'utiliser comme un sous module pour CMake
 
@@ -149,7 +149,7 @@ avec CMake, vous devrez utiliser `find_package` et `target_libraries` pour compi
 
 regardez la [section CMake](#utiliser-vcpkg-avec-cmake) pour plus d'information ansi qu'utiliser CMake avec un IDE
 
-Pour les autres éditeurs y compris Visual Studio Code regardez le [guide](#introduction:integration).
+Pour les autres éditeurs y compris Visual Studio Code regardez le [guide][introduction:integration].
 
 ## Installation des pré requis linux
 
@@ -203,3 +203,60 @@ $ brew install gcc
 ```
 
 Ensuite suivez l'[introduction Unix](#Introduction-aux-Systèmes-Unix)
+
+## Utiliser vcpkg avec CMake
+
+Si vous utilisez avec cmake la suite pourrait vous aider
+
+## Visual Studio Code avec CMake tools
+
+```json
+{
+  "cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "[vcpkg root]/scripts/buildsystems/vcpkg.cmake"
+  }
+}
+```
+### vcpkg avec visual studio un projet cmake
+
+ouvrez les paramètres CMake, et ajouter le chemin ci-dessous à `CMake toolchain file`
+
+```
+[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+```
+
+### Vcpkg avec CLion
+
+ouvrez les paramètres de Toolchains 
+(File > Settings on windows et linux, CLion > Preference pour macOS ensuite allez dans CMake ).
+Dans Cmake options, ajouter la ligne suivante:
+
+
+```
+-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
+```
+
+Vous devrez le refaire pour chaque projet
+
+
+### Vcpkg en tant que sous module
+
+quand vous utilisez vcpkg comme un sous module de votre projet, vous pouvez l'ajouter au CMakeLists.txt avant le premier appel de `project()`, au lieu d'utiliser `CMAKE_TOOLCHAIN_FILE` dans les paramètres d'appel de cmake
+
+```cmake
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+  CACHE STRING "Vcpkg toolchain file")
+```
+
+Cela n'empêche pas d'utiliser `CMAKE_TOOLCHAIN_FILE` directement par la commande cmake mais ça permet de simplifier la configuration.
+
+[introduction:utiliser-un-paquet]: docs/examples/installing-and-using-packages.md
+[introduction:integration]: docs/users/integration.md
+[introduction:git]: https://git-scm.com/downloads
+[introduction:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
+[introduction:linux-gcc]: #installing-linux-developer-tools
+[introduction:macos-dev-tools]: #installing-macos-developer-tools
+[introduction:macos-brew]: #installing-gcc-on-macos
+[introduction:macos-gcc]: #installing-gcc-on-macos
+[introduction:visual-studio]: https://visualstudio.microsoft.com/
+[introduction:manifest-spec]: docs/specifications/manifests.md
