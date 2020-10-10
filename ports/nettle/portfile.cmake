@@ -111,7 +111,6 @@ else()
     
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         set(OPTIONS --disable-static)
-
     else()
         set(OPTIONS --disable-shared)
 
