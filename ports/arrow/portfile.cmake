@@ -44,6 +44,7 @@ vcpkg_configure_cmake(
         -DARROW_WITH_BROTLI=ON
         -DARROW_WITH_UTF8PROC=ON
         -DPARQUET_REQUIRE_ENCRYPTION=ON
+        -DBUILD_WARNING_LEVEL=PRODUCTION
 )
 
 vcpkg_install_cmake()

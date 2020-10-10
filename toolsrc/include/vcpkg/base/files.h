@@ -237,4 +237,8 @@ namespace vcpkg::Files
     /// Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
     /// This function exists as a workaround for TS implementations.
     fs::path combine(const fs::path& lhs, const fs::path& rhs);
+
+#if defined(_WIN32)
+    fs::path win32_fix_path_case(const fs::path& source);
+#endif // _WIN32
 }
