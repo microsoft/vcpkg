@@ -66,6 +66,34 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     list(APPEND PACKAGES bash coreutils sed grep gawk diffutils make pkg-config)
   endif()
 
+  macro(msys_package_download URL SHA FILENAME)
+    set(URLS "${URL}")
+    # Mirror list from https://github.com/msys2/MSYS2-packages/blob/master/pacman-mirrors/mirrorlist.msys
+    # Sourceforge is not used because it does not keep older package versions
+    set(MIRRORS
+      "https://www2.futureware.at/~nickoe/msys2-mirror/"
+      "https://mirror.yandex.ru/mirrors/msys2/"
+      "https://mirrors.tuna.tsinghua.edu.cn/msys2/"
+      "https://mirrors.ustc.edu.cn/msys2/"
+      "https://mirror.bit.edu.cn/msys2/"
+      "https://mirror.selfnet.de/msys2/"
+      "https://mirrors.sjtug.sjtu.edu.cn/msys2/"
+    )
+
+    foreach(MIRROR IN LISTS MIRRORS)
+      string(REPLACE "https://repo.msys2.org/" "${MIRROR}" MIRROR_URL "${URL}")
+      list(APPEND URLS "${MIRROR_URL}")
+    endforeach()
+    vcpkg_download_distfile(MSYS_ARCHIVE
+      URLS ${URLS}
+      SHA512 "${SHA}"
+      FILENAME "msys-${FILENAME}"
+      QUIET
+    )
+    string(APPEND TOTAL_HASH "${SHA}")
+    list(APPEND ARCHIVES "${MSYS_ARCHIVE}")
+  endmacro()
+
   macro(msys_package)
     cmake_parse_arguments(p "ZST;ANY" "URL;NAME;SHA512;VERSION;REPO" "DEPS" ${ARGN})
     if(p_URL AND NOT p_NAME)
@@ -94,14 +122,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     if("${p_NAME}" IN_LIST PACKAGES)
       list(REMOVE_ITEM PACKAGES "${p_NAME}")
       list(APPEND PACKAGES ${p_DEPS})
-      vcpkg_download_distfile(MSYS_ARCHIVE
-        URLS "${p_URL}"
-        SHA512 "${p_SHA512}"
-        FILENAME "msys-${FILENAME}"
-        QUIET
-      )
-      string(APPEND TOTAL_HASH "${p_SHA512}")
-      list(APPEND ARCHIVES "${MSYS_ARCHIVE}")
+      msys_package_download("${p_URL}" "${p_SHA512}" "${FILENAME}")
     endif()
   endmacro()
 
@@ -111,14 +132,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       set(N "${P}")
     else()
       get_filename_component(FILENAME "${N}" NAME)
-      vcpkg_download_distfile(MSYS_ARCHIVE
-        URLS "${N}"
-        SHA512 "${P}"
-        FILENAME "msys-${FILENAME}"
-        QUIET
-      )
-      string(APPEND TOTAL_HASH "${P}")
-      list(APPEND ARCHIVES "${MSYS_ARCHIVE}")
+      msys_package_download("${N}" "${P}" "${FILENAME}")
       unset(N)
     endif()
   endforeach()
