@@ -1,9 +1,9 @@
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.0/sentry-native.zip"
-    FILENAME "sentry-native.zip"
-    SHA512 1ad5e3eb18a85e7fc4e2015c3ba30840173ead19f988f3b85af9081166a889cf0d9f80946f6d8e92a44f58fbe0b86211faa1f1966496c57afd1261637e9b377c
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.2/sentry-native.zip"
+    FILENAME "sentry-native-0.4.2.zip"
+    SHA512 6353642ceba97b44466ee4854c44cd3649ddb3d1087ff6321848d502fd5dba809778f2f2495134cf0e7a00221e73f40cc2158e46b1604ff6e78403b852f601c5
 )
 
 vcpkg_extract_source_archive_ex(
@@ -24,20 +24,12 @@ if (NOT DEFINED SENTRY_BACKEND)
     endif()
 endif()
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(SENTRY_NATIVE_C_STANDARD 99)
-else()
-    set(SENTRY_NATIVE_C_STANDARD 11)
-endif()
-
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
-        -DCMAKE_C_STANDARD=${SENTRY_NATIVE_C_STANDARD}
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
 )
 
