@@ -151,3 +151,25 @@ regardez la [section CMake](#utiliser-vcpkg-avec-cmake) pour plus d'information 
 
 Pour les autres éditeurs y compris Visual Studio Code regardez le [guide](#introduction:integration).
 
+## Installation des pré requis linux
+
+Pour les différentes distros linux, les noms des paquets sont différents vous aurez besoin de ces paquets pour l'installation:
+
+- Debian, Ubuntu, popOS, et les autres bases debian:
+
+```sh
+$ sudo apt-get update
+$ sudo apt-get install build-essential tar curl zip unzip
+```
+
+- CentOS
+
+```sh
+$ sudo yum install centos-release-scl
+$ sudo yum install devtoolset-7
+$ scl enable devtoolset-7 bash
+```
+
+Pour les autres distributions, installez au minimum g++ 6.
+Si vous voulez ajouter des intrustructions spécifiques pour votre distro, [faites du PR][contribuer:faire-une-pr]!
+
