@@ -1,0 +1,7 @@
+{
+  "name": "unqlite",
+  "version-string": "1.1.9",
+  "description": "An embedded NoSQL, transactional database engine",
+  "homepage": "https://unqlite.org/",
+  "license": "BSD-2-Clause"
+}

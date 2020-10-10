@@ -56,6 +56,8 @@ vcpkg_from_github(
     REF e6e30ab9c7a61c171cf68d2e7f5c0ce28e2a4eae
     SHA512 f3563c0a4c094d3795d8386ec0db41189d350ab8136d80ae5de611ee3db87fbb0ab851bad2b33e111eddf135add5dbfef77d96979473ca5a23c036608d443378
     HEAD_REF master
+    PATCHES
+        0001-include-unistd-for-gete-ug-id.patch
 )
 
 vcpkg_configure_cmake(

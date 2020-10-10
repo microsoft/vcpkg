@@ -5,8 +5,10 @@
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/binaryparagraph.h>
+#include <vcpkg/configuration.h>
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/registries.h>
 
 using namespace vcpkg::Parse;
 using namespace vcpkg;
@@ -259,10 +261,10 @@ namespace vcpkg::Paragraphs
         return fs.exists(path / fs::u8path("CONTROL")) || fs.exists(path / fs::u8path("vcpkg.json"));
     }
 
-    ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
-                                                       const std::string& port_name,
-                                                       const fs::path& path_to_manifest,
-                                                       std::error_code& ec)
+    static ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
+                                                              const std::string& port_name,
+                                                              const fs::path& path_to_manifest,
+                                                              std::error_code& ec)
     {
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         auto res = Json::parse_file(fs, path_to_manifest, ec);
@@ -343,34 +345,83 @@ namespace vcpkg::Paragraphs
         return pghs.error();
     }
 
-    LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
+    static void load_port_names_from_root(std::vector<std::string>& ports,
+                                          const VcpkgPaths& paths,
+                                          const fs::path& registry_root)
     {
-        LoadResults ret;
-        auto port_dirs = fs.get_files_non_recursive(ports_dir);
+        const auto& fs = paths.get_filesystem();
+        auto port_dirs = fs.get_files_non_recursive(registry_root);
         Util::sort(port_dirs);
-        Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
-            return fs.is_regular_file(port_dir_entry) && port_dir_entry.filename() == ".DS_Store";
-        });
+
+        // TODO: search in `b-` for ports starting with `b`
+        Util::erase_remove_if(port_dirs,
+                              [&](auto&& port_dir_entry) { return port_dir_entry.filename() == ".DS_Store"; });
 
         for (auto&& path : port_dirs)
         {
-            auto maybe_spgh = try_load_port(fs, path);
+            ports.push_back(fs::u8string(path.filename()));
+        }
+    }
+
+    LoadResults try_load_all_registry_ports(const VcpkgPaths& paths)
+    {
+        LoadResults ret;
+        const auto& fs = paths.get_filesystem();
+
+        std::vector<std::string> ports;
+
+        const auto& registries = paths.get_configuration().registry_set;
+
+        for (const auto& registry : registries.registries())
+        {
+            load_port_names_from_root(ports, paths, registry.implementation().get_registry_root(paths));
+        }
+        if (auto registry = registries.default_registry())
+        {
+            load_port_names_from_root(ports, paths, registry->get_registry_root(paths));
+        }
+
+        Util::sort_unique_erase(ports);
+
+        for (const auto& port_name : ports)
+        {
+            auto impl = registries.registry_for_port(port_name);
+            if (!impl)
+            {
+                // this is a port for which no registry is set
+                // this can happen when there's no default registry,
+                // and a registry has a port definition which it doesn't own the name of.
+                continue;
+            }
+
+            auto root = impl->get_registry_root(paths);
+
+            auto port_path = root / fs::u8path(port_name);
+
+            if (!fs.exists(port_path))
+            {
+                // the registry that owns the name of this port does not actually contain the port
+                // this can happen if R1 contains the port definition for <abc>, but doesn't
+                // declare it owns <abc>.
+                continue;
+            }
+
+            auto maybe_spgh = try_load_port(fs, port_path);
             if (const auto spgh = maybe_spgh.get())
             {
-                ret.paragraphs.emplace_back(std::move(*spgh));
+                ret.paragraphs.emplace_back(std::move(*spgh), std::move(port_path));
             }
             else
             {
                 ret.errors.emplace_back(std::move(maybe_spgh).error());
             }
         }
+
         return ret;
     }
 
-    std::vector<std::unique_ptr<SourceControlFile>> load_all_ports(const Files::Filesystem& fs,
-                                                                   const fs::path& ports_dir)
+    static void load_results_print_error(const LoadResults& results)
     {
-        auto results = try_load_all_ports(fs, ports_dir);
         if (!results.errors.empty())
         {
             if (Debug::g_debugging)
@@ -388,6 +439,39 @@ namespace vcpkg::Paragraphs
                                "Use '--debug' to get more information about the parse failures.\n\n");
             }
         }
+    }
+
+    std::vector<SourceControlFileLocation> load_all_registry_ports(const VcpkgPaths& paths)
+    {
+        auto results = try_load_all_registry_ports(paths);
+        load_results_print_error(results);
         return std::move(results.paragraphs);
+    }
+
+    std::vector<SourceControlFileLocation> load_overlay_ports(const VcpkgPaths& paths, const fs::path& directory)
+    {
+        LoadResults ret;
+
+        std::vector<std::string> port_names;
+        load_port_names_from_root(port_names, paths, directory);
+
+        const auto& fs = paths.get_filesystem();
+
+        for (const auto& name : port_names)
+        {
+            auto path = directory / fs::u8path(name);
+            auto maybe_spgh = try_load_port(fs, path);
+            if (const auto spgh = maybe_spgh.get())
+            {
+                ret.paragraphs.emplace_back(std::move(*spgh), std::move(path));
+            }
+            else
+            {
+                ret.errors.emplace_back(std::move(maybe_spgh).error());
+            }
+        }
+
+        load_results_print_error(ret);
+        return std::move(ret.paragraphs);
     }
 }

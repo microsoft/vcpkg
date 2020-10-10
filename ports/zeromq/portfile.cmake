@@ -19,6 +19,11 @@ vcpkg_check_features(
         websockets-sha1 DISABLE_WS
 )
 
+set(PLATFORM_OPTIONS)
+if(VCPKG_TARGET_IS_MINGW)
+    set(PLATFORM_OPTIONS "-DCMAKE_SYSTEM_VERSION=6.0")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -31,6 +36,7 @@ vcpkg_configure_cmake(
         -DWITH_DOCS=OFF
         -DWITH_NSS=OFF
         ${FEATURE_OPTIONS}
+        ${PLATFORM_OPTIONS}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
 )

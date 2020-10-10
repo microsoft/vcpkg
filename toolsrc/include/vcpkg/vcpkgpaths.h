@@ -1,5 +1,10 @@
 #pragma once
 
+#include <vcpkg/base/fwd/json.h>
+
+#include <vcpkg/fwd/configuration.h>
+#include <vcpkg/fwd/registries.h>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/cache.h>
@@ -32,6 +37,7 @@ namespace vcpkg
     {
         struct PreBuildInfo;
         struct AbiInfo;
+        struct CompilerInfo;
     }
 
     namespace System
@@ -45,7 +51,6 @@ namespace vcpkg
     }
 
     struct BinaryParagraph;
-    struct VcpkgCmdArguments;
     struct PackageSpec;
     struct Triplet;
 
@@ -77,6 +82,7 @@ namespace vcpkg
         fs::path original_cwd;
         fs::path root;
         fs::path manifest_root_dir;
+        fs::path config_root_dir;
         fs::path buildtrees;
         fs::path downloads;
         fs::path packages;
@@ -102,6 +108,10 @@ namespace vcpkg
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
 
+        Optional<const Json::Object&> get_manifest() const;
+        Optional<const fs::path&> get_manifest_path() const;
+        const Configuration& get_configuration() const;
+
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
         ///   Valid version strings are "v120", "v140", "v141", and "". Empty string gets the latest.
@@ -112,7 +122,8 @@ namespace vcpkg
 
         const System::Environment& get_action_env(const Build::AbiInfo& abi_info) const;
         const std::string& get_triplet_info(const Build::AbiInfo& abi_info) const;
-        bool manifest_mode_enabled() const { return !manifest_root_dir.empty(); }
+        const Build::CompilerInfo& get_compiler_info(const Build::AbiInfo& abi_info) const;
+        bool manifest_mode_enabled() const { return get_manifest().has_value(); }
 
         void track_feature_flag_metrics() const;
 

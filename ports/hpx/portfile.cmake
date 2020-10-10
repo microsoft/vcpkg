@@ -4,11 +4,9 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
-    REF 1.4.1
-    SHA512 f110d5e5c10ec396f6e762568c9ecd5b767cb6efe91168b5caa8fe1e07bb5870cd13b3392fa4e008a2cc0e044b02084a35b0866e943d9b9c7435599c131f1582
+    REF 1.5.1
+    SHA512 ab2603adca8780808b62b55f57a03bf8491b805665831c1c484eeba8e7b306bb3269884c8940ad2fc4c5b0d679c54b1e33bc077cdb7ea6d1cb9a715ff70b9842
     HEAD_REF stable
-    PATCHES
-        boost-1.73.patch
 )
 
 vcpkg_configure_cmake(
