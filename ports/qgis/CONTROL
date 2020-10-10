@@ -1,9 +1,9 @@
 Source: qgis
-Version: final-3_14_16
+Version: 3.14.16
 Homepage: https://qgis.org
 Description:  QGIS is a free, open source, cross platform (lin/win/mac) geographical information system (GIS) 
 Build-Depends: expat, hdf5, libxml2, libzip, zlib, libspatialindex, libspatialite, glib, gdal, opencl, exiv2, gsl, libpq, protobuf, proj4, geos, qt5-base, qt5-svg, qt5-location, qt5-tools, qt5-macextras (osx), qt5-winextras (windows), qwt, qca, qscintilla, qtkeychain
-Default-Features: bindings, 3d, quick, pip-mirrors
+Default-Features: bindings, 3d, quick
 
 Feature: server
 Description: Determines whether QGIS server should be built
@@ -26,3 +26,9 @@ Description: Use aliyun proxy to speed up pypi downloads in China
 
 Feature: sip5
 Description: Use sip5 build qgis
+
+Feature: debug-tools
+Description: Install debug tools for qgis
+
+Feature: ltr
+Description: The long-term repositories for qgis

@@ -1,0 +1,90 @@
+diff --git "a/src/quickgui/CMakeLists.txt" "b/src/quickgui/CMakeLists.txt"
+index b7a4530b3..01c86683f 100644
+--- "a/src/quickgui/CMakeLists.txt"
++++ "b/src/quickgui/CMakeLists.txt"
+@@ -86,11 +86,7 @@ INCLUDE_DIRECTORIES(SYSTEM
+   ${QTKEYCHAIN_INCLUDE_DIR}
+ )
+ 
+-ADD_DEFINITIONS(-DCORE_EXPORT=)
+-
+-
+ SET(QGIS_QUICK_GUI_IMAGE_RCCS ./images/images.qrc)
+-QT5_ADD_RESOURCES(QGIS_QUICK_GUI_IMAGE_RCC_SRCS ${QGIS_QUICK_GUI_IMAGE_RCCS})
+ 
+ ############################################################
+ # qgis_quick shared library
+@@ -102,7 +98,7 @@ ELSE(MSVC)
+ ENDIF(MSVC)
+ 
+ ADD_LIBRARY(qgis_quick ${LIBRARY_TYPE}
+-    ${QGIS_QUICK_GUI_IMAGE_RCC_SRCS}
++    ${QGIS_QUICK_GUI_IMAGE_RCCS}
+     ${QGIS_QUICK_GUI_SRC}
+     ${QGIS_QUICK_GUI_MOC_HDRS}
+     ${QGIS_QUICK_GUI_MOC_SRCS}
+-
+-
+
+diff --git "a/src/quickgui/plugin/CMakeLists.txt" "b/src/quickgui/plugin/CMakeLists.txt"
+index d4a8b7c54..c5abf247c 100644
+--- "a/src/quickgui/plugin/CMakeLists.txt"
++++ "b/src/quickgui/plugin/CMakeLists.txt"
+@@ -29,7 +29,8 @@ SET(QGIS_QUICK_PLUGIN_RESOURCES
+ )
+ 
+ IF (IOS)
+-  SET(QGIS_QUICK_PLUGIN_RESOURCES ${QGIS_QUICK_PLUGIN_RESOURCES} ios/qmldir ios/qgsquick.qrc )
++  SET(QGIS_QUICK_PLUGIN_RESOURCES ${QGIS_QUICK_PLUGIN_RESOURCES} ios/qmldir )
++  SET(QGIS_QUICK_PLUGIN_QRC ios/qgsquick.qrc)
+ ELSE (IOS)
+   SET(QGIS_QUICK_PLUGIN_RESOURCES ${QGIS_QUICK_PLUGIN_RESOURCES} qmldir)
+ ENDIF (IOS)
+@@ -74,8 +75,6 @@ INCLUDE_DIRECTORIES(SYSTEM
+   ${QTKEYCHAIN_INCLUDE_DIR}
+ )
+ 
+-ADD_DEFINITIONS(-DCORE_EXPORT=)
+-
+ ############################################################
+ # qgis_quick_plugin module (QML) library
+ 
+@@ -96,10 +95,16 @@ ADD_LIBRARY(qgis_quick_plugin ${LIBRARY_TYPE}
+ )
+ TARGET_LINK_LIBRARIES(qgis_quick_plugin qgis_quick)
+ SET_TARGET_PROPERTIES(qgis_quick_plugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${QGIS_QUICK_PLUGIN_RUNTIME_DIR})
+-TARGET_COMPILE_DEFINITIONS(qgis_quick_plugin PRIVATE "-DQUICK_EXPORT=" "-DQT_NO_FOREACH")
++TARGET_COMPILE_DEFINITIONS(qgis_quick_plugin PRIVATE "-DQT_NO_FOREACH")
+ 
+ # Copy qml files to output directory, we need qml files in the same directory as the plugin shared library
+-FOREACH(qmlfile ${QGIS_QUICK_PLUGIN_RESOURCES})
++  ADD_CUSTOM_COMMAND(TARGET qgis_quick_plugin
++    PRE_BUILD
++  COMMAND ${CMAKE_COMMAND} -E make_directory ${QGIS_QUICK_PLUGIN_RUNTIME_DIR}
++  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
++)
++
++FOREACH(qmlfile ${QGIS_QUICK_PLUGIN_RESOURCES} ${QGIS_QUICK_PLUGIN_QRC})
+   ADD_CUSTOM_COMMAND(TARGET qgis_quick_plugin
+     PRE_BUILD
+     COMMAND ${CMAKE_COMMAND} -E copy ${qmlfile} ${QGIS_QUICK_PLUGIN_RUNTIME_DIR}
+@@ -124,8 +129,7 @@ IF(QMLPLUGINDUMP_FOUND)
+       COMMAND ${CMAKE_COMMAND} -E make_directory ${QGIS_QUICK_TYPEINFO_GENERATE_DIR}
+       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/qmldir ${QGIS_QUICK_TYPEINFO_GENERATE_DIR}
+       COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:qgis_quick_plugin> ${QGIS_QUICK_TYPEINFO_GENERATE_DIR}
+-      COMMAND ${QMLPLUGINDUMP_EXECUTABLE}
+-      ARGS QgsQuick ${QGIS_QUICK_VERSION} . -noinstantiate --output ${QGIS_QUICK_PLUGIN_TYPEINFO}
++      COMMAND ${CMAKE_COMMAND} -E env "PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR};$ENV{PATH}" ${QMLPLUGINDUMP_EXECUTABLE} QgsQuick ${QGIS_QUICK_VERSION} . -noinstantiate --output ${QGIS_QUICK_PLUGIN_TYPEINFO}
+       WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+       COMMENT "Generating qgsquick.qmltypes with qmlplugindump"
+       POST_BUILD
+@@ -139,6 +143,6 @@ INSTALL(TARGETS qgis_quick_plugin
+   LIBRARY DESTINATION ${QUICK_PLUGIN_INSTALL_DIR}
+   ARCHIVE DESTINATION ${QUICK_PLUGIN_INSTALL_DIR}
+ )
+-INSTALL(FILES ${QGIS_QUICK_PLUGIN_RESOURCES} ${QGIS_QUICK_PLUGIN_TYPEINFO}
++INSTALL(FILES ${QGIS_QUICK_PLUGIN_RESOURCES} ${QGIS_QUICK_PLUGIN_TYPEINFO} ${QGIS_QUICK_PLUGIN_QRC}
+   DESTINATION ${QUICK_PLUGIN_INSTALL_DIR}
+ )
+-
+-

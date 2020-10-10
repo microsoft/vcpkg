@@ -3,12 +3,19 @@ set(QSCINTILLA_VERSION 2.11.4)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+if("ltr" IN_LIST FEATURES)
+    set(QGIS_REF final-3_10_10)
+    set(QGIS_SHA512 3b45498af9915491553963f16786f0fb7a6491d564415685a78241324dcff84cbc7bbe9acad1a9bf8fde444a7f09e87b372d60441bf850f35d729adf2e2f8af3)
+elseif()
+    set(QGIS_REF final-3_14_16)
+    set(QGIS_SHA512 fbb853582a44980a1a3a5c5d1a5e2c7b59d2c12a37b37ad1ed32daa44c75a64196763f948fa6915247e98ddebf5d9ed0bc083599a2dee25299e8accc3037ed07)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qgis/QGIS
-    REF final-3_14_16
-    #REF 21415938c24bf8e94bae23078f61c389d1824ee5
-    SHA512   fbb853582a44980a1a3a5c5d1a5e2c7b59d2c12a37b37ad1ed32daa44c75a64196763f948fa6915247e98ddebf5d9ed0bc083599a2dee25299e8accc3037ed07
+    REF ${QGIS_REF}
+    SHA512   ${QGIS_SHA512}
     HEAD_REF master
     PATCHES
         # Make qgis support python's debug library
@@ -54,8 +61,7 @@ else()
 endif()
 
 if("quick" IN_LIST FEATURES)
-    list(APPEND QGIS_OPTIONS_DEBUG -DWITH_QUICK:BOOL=OFF)
-    list(APPEND QGIS_OPTIONS_RELEASE -DWITH_QUICK:BOOL=ON)
+    list(APPEND QGIS_OPTIONS -DWITH_QUICK:BOOL=ON)
 else()
     list(APPEND QGIS_OPTIONS -DWITH_QUICK:BOOL=OFF)
 endif()
@@ -79,16 +85,28 @@ macro(FIND_LIB_OPTIONS basename relname debname suffix libsuffix)
 endmacro()
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    if("quick" IN_LIST FEATURES)
+        vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/bin)
+        vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/debug/bin)
+        if("ltr" IN_LIST FEATURES)
+            vcpkg_apply_patches(
+                    SOURCE_PATH ${SOURCE_PATH}
+                    PATCHES "${CMAKE_CURRENT_LIST_DIR}/qgsquick-ltr.patch"
+                    QUIET
+                )
+        elseif()
+            vcpkg_apply_patches(
+                    SOURCE_PATH ${SOURCE_PATH}
+                    PATCHES "${CMAKE_CURRENT_LIST_DIR}/qgsquick.patch"
+                    QUIET
+                )
+        endif()
+    endif()
+
     ##############################################################################
     #Install pip
     if(NOT EXISTS "${PYTHON3_PATH}/Scripts/pip.exe")
         MESSAGE(STATUS  "Install pip for Python Begin ...")
-        vcpkg_execute_required_process(
-            COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_CURRENT_LIST_DIR}/enableInstallPIP.py "${PYTHON3_PATH}"
-            WORKING_DIRECTORY ${PYTHON3_PATH}
-            LOGNAME pip
-        )
-
         vcpkg_download_distfile(
             GET_PIP_PATH
             URLS https://bootstrap.pypa.io/3.4/get-pip.py
@@ -265,6 +283,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND QGIS_OPTIONS -DQT_LRELEASE_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/qt5-tools/bin/lrelease.exe)
 
     if("quick" IN_LIST FEATURES)
+        list(APPEND QGIS_OPTIONS_DEBUG -DQMLPLUGINDUMP_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/qt5/debug/bin/qmlplugindump.exe)
         list(APPEND QGIS_OPTIONS_RELEASE -DQMLPLUGINDUMP_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/qt5-declarative/bin/qmlplugindump.exe)
     endif()
 
@@ -353,8 +372,8 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
     FIND_LIB_OPTIONS(PYTHON python3.8m python3.8dm LIBRARY ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
     FIND_LIB_OPTIONS(QTKEYCHAIN qt5keychain qt5keychaind LIBRARY  ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
     if("server" IN_LIST FEATURES)
-        #FIND_LIB_OPTIONS(FCGI fcgi fcgi LIBRARY ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-        #list(APPEND QGIS_OPTIONS -DFCGI_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/fastcgi")
+        FIND_LIB_OPTIONS(FCGI fcgi fcgi LIBRARY ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+        list(APPEND QGIS_OPTIONS -DFCGI_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/fastcgi")
     endif()
 
     FIND_LIB_OPTIONS(SPATIALINDEX spatialindex spatialindexd LIBRARY ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
@@ -384,10 +403,12 @@ function(copy_path basepath)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/${basepath}/)
     endif()
 
-    file(GLOB ${basepath}_DEBUG_PATH ${CURRENT_PACKAGES_DIR}/debug/${basepath}/*)
-    if( ${basepath}_DEBUG_PATH )
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/${basepath})
-        file(COPY ${${basepath}_DEBUG_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/${basepath})
+    if("debug-tools" IN_LIST FEATURES)
+        file(GLOB ${basepath}_DEBUG_PATH ${CURRENT_PACKAGES_DIR}/debug/${basepath}/*)
+        if( ${basepath}_DEBUG_PATH )
+            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/${basepath})
+            file(COPY ${${basepath}_DEBUG_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/${basepath})
+        endif()
     endif()
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/${basepath}/")
@@ -416,11 +437,17 @@ endif()
 
 file(GLOB QGIS_TOOL_PATH_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 if(QGIS_TOOL_PATH_DEBUG)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin)
-    file(COPY ${QGIS_TOOL_PATH_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin)
-    file(REMOVE_RECURSE ${QGIS_TOOL_PATH_DEBUG})
-    file(GLOB QGIS_TOOL_PATH_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/* )
-    file(COPY ${QGIS_TOOL_PATH_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin)
+    if("debug-tools" IN_LIST FEATURES)
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin)
+        file(COPY ${QGIS_TOOL_PATH_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin)
+        file(REMOVE_RECURSE ${QGIS_TOOL_PATH_DEBUG})
+        file(GLOB QGIS_TOOL_PATH_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/* )
+        file(COPY ${QGIS_TOOL_PATH_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin)
+    elseif()
+        file(REMOVE_RECURSE ${QGIS_TOOL_PATH_DEBUG})
+        file(GLOB QGIS_TOOL_PATH_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/* )
+        file(REMOVE_RECURSE ${QGIS_TOOL_PATH_DEBUG})
+    endif()
 endif()
 
 copy_path(doc)
@@ -442,15 +469,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # Extend vcpkg_copy_tool_dependencies to support the export of dll and exe dependencies in different directories to the same directory,
     # and support the copy of debug dependencies
     function(vcpkg_copy_tool_dependencies_ex TOOL_DIR OUTPUT_DIR SEARCH_DIR)
+        find_program(PS_EXE powershell PATHS ${DOWNLOADS}/tool)
+        if (PS_EXE-NOTFOUND)
+            message(FATAL_ERROR "Could not find powershell in vcpkg tools, please open an issue to report this.")
+        endif()
         macro(search_for_dependencies PATH_TO_SEARCH)
             file(GLOB TOOLS ${TOOL_DIR}/*.exe ${TOOL_DIR}/*.dll)
             foreach(TOOL ${TOOLS})
-                execute_process(COMMAND powershell -noprofile -executionpolicy Bypass -nologo
-                    -file ${CMAKE_CURRENT_LIST_DIR}/applocal.ps1
-                    -targetBinary ${TOOL}
-                    -installedDir ${PATH_TO_SEARCH}
-                    -outputDir    ${OUTPUT_DIR}
-                    OUTPUT_VARIABLE OUT)
+                vcpkg_execute_required_process(
+                    COMMAND ${PS_EXE} -noprofile -executionpolicy Bypass -nologo
+                        -file ${CMAKE_CURRENT_LIST_DIR}/applocal.ps1
+                        -targetBinary ${TOOL}
+                        -installedDir ${PATH_TO_SEARCH}
+                        -outputDir    ${OUTPUT_DIR}
+                    WORKING_DIRECTORY ${VCPKG_ROOT_DIR}
+                    LOGNAME copy-tool-dependencies
+                )
             endforeach()
         endmacro()
         search_for_dependencies(${CURRENT_PACKAGES_DIR}/${SEARCH_DIR})
@@ -459,11 +493,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_copy_tool_dependencies_ex(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin bin)
     vcpkg_copy_tool_dependencies_ex(${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin bin)
-    vcpkg_copy_tool_dependencies_ex(${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin debug/bin)
-    vcpkg_copy_tool_dependencies_ex(${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/plugins ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin debug/bin)
+    if("debug-tools" IN_LIST FEATURES)
+        vcpkg_copy_tool_dependencies_ex(${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin debug/bin)
+        vcpkg_copy_tool_dependencies_ex(${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/plugins ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin debug/bin)
+    endif()
     if("server" IN_LIST FEATURES)
         vcpkg_copy_tool_dependencies_ex(${CURRENT_PACKAGES_DIR}/tools/${PORT}/server ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin bin)
-        vcpkg_copy_tool_dependencies_ex(${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/server ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin debug/bin)
+        if("debug-tools" IN_LIST FEATURES)
+            vcpkg_copy_tool_dependencies_ex(${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/server ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin debug/bin)
+        endif()
     endif()
 endif()
 

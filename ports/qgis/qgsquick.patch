@@ -1,0 +1,27 @@
+diff --git "a/src/quickgui/plugin/CMakeLists.txt" "b/src/quickgui/plugin/CMakeLists.txt"
+index 80ebd4696..3790b6a67 100644
+--- "a/src/quickgui/plugin/CMakeLists.txt"
++++ "b/src/quickgui/plugin/CMakeLists.txt"
+@@ -98,6 +98,12 @@ SET_TARGET_PROPERTIES(qgis_quick_plugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${QG
+ TARGET_COMPILE_DEFINITIONS(qgis_quick_plugin PRIVATE "-DQT_NO_FOREACH")
+ 
+ # Copy qml files to output directory, we need qml files in the same directory as the plugin shared library
++ADD_CUSTOM_COMMAND(TARGET qgis_quick_plugin
++  PRE_BUILD
++  COMMAND ${CMAKE_COMMAND} -E make_directory ${QGIS_QUICK_PLUGIN_RUNTIME_DIR}
++  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
++)
++
+ FOREACH(qmlfile ${QGIS_QUICK_PLUGIN_RESOURCES} ${QGIS_QUICK_PLUGIN_QRC})
+   ADD_CUSTOM_COMMAND(TARGET qgis_quick_plugin
+     PRE_BUILD
+@@ -123,8 +129,7 @@ IF(QMLPLUGINDUMP_FOUND)
+       COMMAND ${CMAKE_COMMAND} -E make_directory ${QGIS_QUICK_TYPEINFO_GENERATE_DIR}
+       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/qmldir ${QGIS_QUICK_TYPEINFO_GENERATE_DIR}
+       COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:qgis_quick_plugin> ${QGIS_QUICK_TYPEINFO_GENERATE_DIR}
+-      COMMAND ${QMLPLUGINDUMP_EXECUTABLE}
+-      ARGS QgsQuick ${QGIS_QUICK_VERSION} . -noinstantiate --output ${QGIS_QUICK_PLUGIN_TYPEINFO}
++      COMMAND ${CMAKE_COMMAND} -E env "PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR};$ENV{PATH}" ${QMLPLUGINDUMP_EXECUTABLE} QgsQuick ${QGIS_QUICK_VERSION} . -noinstantiate --output ${QGIS_QUICK_PLUGIN_TYPEINFO}
+       WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+       COMMENT "Generating qgsquick.qmltypes with qmlplugindump"
+       POST_BUILD
