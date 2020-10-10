@@ -7,8 +7,6 @@
 
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_EXE_PATH})
@@ -20,12 +18,18 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
-    REF v2.2.1
-    SHA512 6b10f9bbf9ebf136655d1c6464f3849c8581b3cd5ef07b0697ddd5f32611dce301af5148e8e6fe91e763301e68994957a62a278334ee7a78559101f411f27d49
+    REF v2.3.1
+    SHA512 e04a44fb395e24fd009bb6b005282880bef84ca492b5e15903f9ce3e5e3f93beae3a386a1a381507ed5b0c6550e64c6bf434328f9d965fa7f7d638c3e5d5948b
     PATCHES
             0001-fix-path-for-vcpkg.patch
             0002-fix-build-error.patch
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_SHARED_LIBS ON)
+else()
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
+endif()
 
 # According to:
 #   https://www.openssl.org/docs/faq.html#USER16
@@ -50,6 +54,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DBUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
         -DUSE_RELATIVE_PATHS=ON
         -DQT4_BUILD=OFF
         -DBUILD_TESTS=OFF
