@@ -6,7 +6,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 if("ltr" IN_LIST FEATURES)
     set(QGIS_REF final-3_10_10)
     set(QGIS_SHA512 3b45498af9915491553963f16786f0fb7a6491d564415685a78241324dcff84cbc7bbe9acad1a9bf8fde444a7f09e87b372d60441bf850f35d729adf2e2f8af3)
-elseif()
+else()
     set(QGIS_REF final-3_14_16)
     set(QGIS_SHA512 fbb853582a44980a1a3a5c5d1a5e2c7b59d2c12a37b37ad1ed32daa44c75a64196763f948fa6915247e98ddebf5d9ed0bc083599a2dee25299e8accc3037ed07)
 endif()
@@ -94,7 +94,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
                     PATCHES "${CMAKE_CURRENT_LIST_DIR}/qgsquick-ltr.patch"
                     QUIET
                 )
-        elseif()
+        else()
             vcpkg_apply_patches(
                     SOURCE_PATH ${SOURCE_PATH}
                     PATCHES "${CMAKE_CURRENT_LIST_DIR}/qgsquick.patch"
@@ -443,7 +443,7 @@ if(QGIS_TOOL_PATH_DEBUG)
         file(REMOVE_RECURSE ${QGIS_TOOL_PATH_DEBUG})
         file(GLOB QGIS_TOOL_PATH_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/* )
         file(COPY ${QGIS_TOOL_PATH_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/bin)
-    elseif()
+    else()
         file(REMOVE_RECURSE ${QGIS_TOOL_PATH_DEBUG})
         file(GLOB QGIS_TOOL_PATH_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/* )
         file(REMOVE_RECURSE ${QGIS_TOOL_PATH_DEBUG})
