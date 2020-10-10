@@ -1,15 +1,11 @@
 #pragma once
 
+#include <vcpkg/fwd/dependencies.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/optional.h>
 
 #include <vcpkg/portfileprovider.h>
-
-namespace vcpkg::Dependencies
-{
-    struct ActionPlan;
-}
 
 namespace vcpkg::CMakeVars
 {
