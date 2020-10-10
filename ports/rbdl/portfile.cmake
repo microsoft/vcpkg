@@ -37,8 +37,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 
-# # Moves all .cmake files from /debug/share/rbdl/ to /share/rbdl/
-# # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
 vcpkg_fixup_cmake_targets()
 
 # # Handle copyright
