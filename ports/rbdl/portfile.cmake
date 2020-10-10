@@ -10,9 +10,7 @@ vcpkg_from_github(ARCHIVE
     REF v2.6.0
     SHA512 7b5fd03c0090277f295a28a1ff0542cd8cff76dda4379b3edc61ca3d868bf77d8b4882f81865fdffd0cf756c613fe55238b29a83bc163fc32aa94aa9d5781480
     HEAD_REF master
-    PATCHES
-        001_x64_number_of_sections_exceeded_in_object_file_patch.diff
-        002_runtime_destination_for_not_static_build.diff
+    PATCHES 001_x64_number_of_sections_exceeded_in_object_file_patch.diff
 )
 
 
