@@ -108,12 +108,19 @@ else()
         HEAD_REF master # branch name
         PATCHES fix-InstallLibPath.patch
     )
+    
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(OPTIONS --disable-shared)
+    else()
+        set(OPTIONS --disable-static)
+    endif()
 
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
         OPTIONS
             --disable-documentation
+            --disable-openssl
             ${OPTIONS}
     )
 
