@@ -4,3 +4,4 @@ Port-Version: 0
 Homepage: https://github.com/rbdl/rbdl
 Description: Rigid Body Dynamics Library
 Build-Depends: eigen3
+Suppports: !arm & !uwp & !linux & !osx
