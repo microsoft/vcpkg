@@ -4,7 +4,7 @@ set(LIBPNG_VER 1.6.37)
 set(LIBPNG_APNG_OPTION )
 if ("apng" IN_LIST FEATURES)
     # Get (g)awk installed
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk NO_DEFAULT_PACKAGES)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk)
     set(AWK_EXE_PATH "${MSYS_ROOT}/usr/bin")
     vcpkg_add_to_path("${AWK_EXE_PATH}")
     
