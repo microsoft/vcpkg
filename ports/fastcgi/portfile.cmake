@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(FASTCGI_VERSION_STR "fc8c6547ae38faf9926205a23075c47fbd4370c8")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/FastCGI-Archives/fcgi2/archive/${FASTCGI_VERSION_STR}.tar.gz"
