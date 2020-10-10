@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "linux" "osx")
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(RBDL_STATIC ON)
 else()
