@@ -3,5 +3,5 @@
   "version-string": "2.3.0",
   "description": "tensorflow C-API (GPU)",
   "homepage": "https://www.tensorflow.org/install/lang_c",
-  "supports": "windows & !x86 & !uwp & !static & !arm"
+  "supports": "windows & !uwp & !static & !arm"
 }
