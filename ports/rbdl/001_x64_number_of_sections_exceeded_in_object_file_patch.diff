@@ -6,7 +6,9 @@ index b2db532da..42c004380 100644
  	src/Kinematics.cc
  	)
  
++if(MSVC)
 +set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
++endif()
 +
  IF (MSVC AND NOT RBDL_BUILD_STATIC)	
    MESSAGE (FATAL_ERROR, "Compiling RBDL as a DLL currently not supported. Please enable RBDL_BUILD_STATIC.")
