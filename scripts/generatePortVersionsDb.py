@@ -47,7 +47,7 @@ def generate_port_versions_db(ports_path, db_path, revision):
                 print("Failed to run {}".format(err.cmd)) 
 
         # This should be replaced by a progress bar
-        if counter == (total_count - 1) or (counter > 0 and counter % 100 == 0):
+        if (counter == (total_count - 1)) or (counter > 0 and counter % 100 == 0):
             elapsed_time = time.time() - start_time
             print('Processed {} out of {}. Elapsed time: {:.2f} seconds'.format(counter, total_count, elapsed_time))
     

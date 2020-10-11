@@ -221,21 +221,20 @@ namespace vcpkg::Commands::PortHistory
             for (auto&& version : versions)
             {
                 Json::Object object;
-                object.insert("commit_id", Json::Value::string(version.commit_id));
-                object.insert("commit_date", Json::Value::string(version.commit_date));
-                object.insert("version_string", Json::Value::string(version.version_string));
-                object.insert("version", Json::Value::string(version.version));
-                object.insert("port_version", Json::Value::string(version.port_version));
+                object.insert("commit-id", Json::Value::string(version.commit_id));
                 switch (version.scheme)
                 {
                     case Versions::Scheme::Semver: // falls through
                     case Versions::Scheme::Relaxed:
-                        object.insert("version_scheme", Json::Value::string("relaxed"));
+                        object.insert("version", Json::Value::string(version.version));
                         break;
-                    case Versions::Scheme::Date: object.insert("version_scheme", Json::Value::string("date")); break;
+                    case Versions::Scheme::Date:
+                        object.insert("version-date", Json::Value::string(version.version));
+                        break;
                     case Versions::Scheme::String: // falls through
-                    default: object.insert("version_scheme", Json::Value::string("string")); break;
+                    default: object.insert("version-string", Json::Value::string(version.version)); break;
                 }
+                object.insert("port-version", Json::Value::string(version.port_version));
                 versions_json.push_back(std::move(object));
             }
 
