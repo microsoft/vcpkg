@@ -60,12 +60,19 @@ vcpkg_from_github(
         0001-include-unistd-for-gete-ug-id.patch
 )
 
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+  set(USE_DYNAMIC_VCXX_RUNTIME OFF)
+else()
+  set(USE_DYNAMIC_VCXX_RUNTIME ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DOPENCL_ICD_LOADER_HEADERS_DIR=${CURRENT_PACKAGES_DIR}/include
         -DOPENCL_ICD_LOADER_REQUIRE_WDK=${WITH_WDK}
+        -DUSE_DYNAMIC_VCXX_RUNTIME=${USE_DYNAMIC_VCXX_RUNTIME}
 )
 
 vcpkg_build_cmake(TARGET OpenCL)
