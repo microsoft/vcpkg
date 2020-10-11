@@ -146,7 +146,7 @@ Avec CMake, vous devrez utiliser `find_package` notamment, et autres, pour compi
 
 Regardez la [section CMake](#utiliser-vcpkg-avec-cmake) pour plus d'information, notamment utiliser CMake avec un IDE.
 
-Pour les autres éditeurs y compris Visual Studio Code regardez le [guide][getting-started:integration].
+Pour les autres éditeurs, y compris Visual Studio Code regardez le [guide d'intégration][getting-started:integration].
 
 ## Installation des prérequis linux
 
@@ -257,8 +257,8 @@ Cela permettra toujours aux gens de ne pas utiliser vcpkg, en passant directemen
 
 # Tab-complétion/Auto-complétion
 
-`vcpkg` supporte l'auto-completion des commandes, nom de paquets, et options dans powershell et bash.
-pour activer la tab-completion dans le shell de votre choix:
+`vcpkg` supporte l'auto-complétion des commandes, nom de paquets, et options dans powershell et bash.
+Pour activer la tab-complétion dans le shell de votre choix :
 
 ```pwsh
 > .\vcpkg integrate powershell
@@ -270,17 +270,17 @@ ou
 $ ./vcpkg integrate bash
 ```
 
-suivant le shell qui est utiliser, redémarrer la console
+selon le shell que vous utilisez, puis redémarrez la console.
 
 # Exemples
 
-regarde la [documentation](doc/index.md) pour des instructions plus spécifiques ainsi que [l'installation et l'utilisation des paquets](docs/examples/installing-and-using-packages.md)
-[ajouter un paquet depuis un fichier zip](docs/examples/packaging-zipfiles.md),
-et [ajouter un nouveau paquet depuis un repo GitHub](docs/examples/packaging-github-repos.md).
+Regardez la [documentation](doc/index.md) pour des instructions plus spécifiques ainsi que [l'installation et l'utilisation des paquets](docs/examples/installing-and-using-packages.md),
+[ajouter un nouveau paquet depuis un fichier zip](docs/examples/packaging-zipfiles.md),
+et [ajouter un nouveau paquet depuis un dépôt GitHub](docs/examples/packaging-github-repos.md).
 
-La documentation est aussi disponible en ligne sur ReadTheDocs: <https://vcpkg.readthedocs.io/>!
+La documentation est aussi disponible en ligne sur ReadTheDocs : <https://vcpkg.readthedocs.io/> !
 
-regarde une démo de 4 minutes en anglais [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
+Voir une [démo vidéo]((https://www.youtube.com/watch?v=y41WFKbQFTw) de 4 minutes en anglais.
 
 # Contribuer
 
