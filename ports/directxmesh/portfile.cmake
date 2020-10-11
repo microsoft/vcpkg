@@ -8,10 +8,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    INVERTED_FEATURES win7 BUILD_DX12
-)
+if("dx12" IN_LIST FEATURES OR VCPKG_TARGET_IS_UWP OR TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
+    set(FEATURE_OPTIONS -DBUILD_DX12=ON)
+else()
+    set(FEATURE_OPTIONS -DBUILD_DX12=OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

@@ -4,5 +4,5 @@ Port-Version: 2
 Homepage: https://walbourn.github.io/directxmesh
 Description: DirectXMesh geometry processing library
 
-Feature: win7
-Description: Build without DirectX12 to support Windows 7 Service Pack 1 or later
+Feature: dx12
+Description: Build with DirectX12 support for Windows 10
