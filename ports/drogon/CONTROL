@@ -1,5 +1,5 @@
 Source: drogon
-Version: v1.0.0-beta21
+Version: 1.0.0
 Homepage: https://github.com/an-tao/drogon
 Description:Drogon: A C++14/17 based HTTP web application framework running on Linux/macOS/Unix/Windows
 Build-Depends: trantor, zlib, jsoncpp, libmariadb, libpq, sqlite3, brotli, libuuid (!windows)

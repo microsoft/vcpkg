@@ -1,7 +1,9 @@
 #include <vcpkg/base/system.debug.h>
 
+#include <vcpkg/configuration.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/portfileprovider.h>
+#include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
 
 namespace vcpkg::PortFileProvider
@@ -23,12 +25,12 @@ namespace vcpkg::PortFileProvider
         return Util::fmap(ports, [](auto&& kvpair) -> const SourceControlFileLocation* { return &kvpair.second; });
     }
 
-    PathsPortFileProvider::PathsPortFileProvider(const vcpkg::VcpkgPaths& paths,
-                                                 const std::vector<std::string>& ports_dirs_paths)
-        : filesystem(paths.get_filesystem())
+    PathsPortFileProvider::PathsPortFileProvider(const vcpkg::VcpkgPaths& paths_,
+                                                 const std::vector<std::string>& overlay_ports_)
+        : paths(paths_)
     {
         auto& fs = paths.get_filesystem();
-        for (auto&& overlay_path : ports_dirs_paths)
+        for (auto&& overlay_path : overlay_ports_)
         {
             if (!overlay_path.empty())
             {
@@ -45,17 +47,16 @@ namespace vcpkg::PortFileProvider
                 Debug::print("Using overlay: ", fs::u8string(overlay), "\n");
 
                 Checks::check_exit(
-                    VCPKG_LINE_INFO, filesystem.exists(overlay), "Error: Path \"%s\" does not exist", overlay.string());
+                    VCPKG_LINE_INFO, fs.exists(overlay), "Error: Path \"%s\" does not exist", fs::u8string(overlay));
 
                 Checks::check_exit(VCPKG_LINE_INFO,
                                    fs::is_directory(fs.status(VCPKG_LINE_INFO, overlay)),
                                    "Error: Path \"%s\" must be a directory",
                                    overlay.string());
 
-                ports_dirs.emplace_back(overlay);
+                overlay_ports.emplace_back(overlay);
             }
         }
-        ports_dirs.emplace_back(paths.ports);
     }
 
     ExpectedS<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
@@ -66,12 +67,14 @@ namespace vcpkg::PortFileProvider
             return cache_it->second;
         }
 
-        for (auto&& ports_dir : ports_dirs)
+        const auto& fs = paths.get_filesystem();
+
+        for (auto&& ports_dir : overlay_ports)
         {
             // Try loading individual port
-            if (Paragraphs::is_port_directory(filesystem, ports_dir))
+            if (Paragraphs::is_port_directory(fs, ports_dir))
             {
-                auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
+                auto maybe_scf = Paragraphs::try_load_port(fs, ports_dir);
                 if (auto scf = maybe_scf.get())
                 {
                     if (scf->get()->core_paragraph->name == spec)
@@ -92,22 +95,22 @@ namespace vcpkg::PortFileProvider
                 continue;
             }
 
-            auto ports_spec = ports_dir / spec;
-            if (Paragraphs::is_port_directory(filesystem, ports_spec))
+            auto ports_spec = ports_dir / fs::u8path(spec);
+            if (Paragraphs::is_port_directory(fs, ports_spec))
             {
-                auto found_scf = Paragraphs::try_load_port(filesystem, ports_spec);
+                auto found_scf = Paragraphs::try_load_port(fs, ports_spec);
                 if (auto scf = found_scf.get())
                 {
                     if (scf->get()->core_paragraph->name == spec)
                     {
                         auto it = cache.emplace(std::piecewise_construct,
-                                                std::forward_as_tuple(spec),
-                                                std::forward_as_tuple(std::move(*scf), ports_dir / spec));
+                                                std::forward_as_tuple(std::move(spec)),
+                                                std::forward_as_tuple(std::move(*scf), std::move(ports_spec)));
                         return it.first->second;
                     }
                     Checks::exit_with_message(VCPKG_LINE_INFO,
                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                              fs::u8string(ports_dir / spec),
+                                              fs::u8string(ports_spec),
                                               spec,
                                               scf->get()->core_paragraph->name);
                 }
@@ -115,7 +118,39 @@ namespace vcpkg::PortFileProvider
                 {
                     vcpkg::print_error_message(found_scf.error());
                     Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", spec, fs::u8string(ports_dir));
+                        VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(ports_dir));
+                }
+            }
+        }
+
+        if (auto registry = paths.get_configuration().registry_set.registry_for_port(spec))
+        {
+            auto registry_root = registry->get_registry_root(paths);
+            auto port_directory = registry_root / fs::u8path(spec);
+
+            if (fs.exists(port_directory))
+            {
+                auto found_scf = Paragraphs::try_load_port(fs, port_directory);
+                if (auto scf = found_scf.get())
+                {
+                    if (scf->get()->core_paragraph->name == spec)
+                    {
+                        auto it = cache.emplace(std::piecewise_construct,
+                                                std::forward_as_tuple(spec),
+                                                std::forward_as_tuple(std::move(*scf), std::move(port_directory)));
+                        return it.first->second;
+                    }
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                              fs::u8string(port_directory),
+                                              spec,
+                                              scf->get()->core_paragraph->name);
+                }
+                else
+                {
+                    vcpkg::print_error_message(found_scf.error());
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(port_directory));
                 }
             }
         }
@@ -129,20 +164,19 @@ namespace vcpkg::PortFileProvider
         cache.clear();
         std::vector<const SourceControlFileLocation*> ret;
 
-        for (auto&& ports_dir : ports_dirs)
+        for (const fs::path& ports_dir : overlay_ports)
         {
             // Try loading individual port
-            if (Paragraphs::is_port_directory(filesystem, ports_dir))
+            if (Paragraphs::is_port_directory(paths.get_filesystem(), ports_dir))
             {
-                auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
+                auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(), ports_dir);
                 if (auto scf = maybe_scf.get())
                 {
                     auto port_name = scf->get()->core_paragraph->name;
                     if (cache.find(port_name) == cache.end())
                     {
-                        auto it = cache.emplace(std::piecewise_construct,
-                                                std::forward_as_tuple(port_name),
-                                                std::forward_as_tuple(std::move(*scf), ports_dir));
+                        auto scfl = SourceControlFileLocation{std::move(*scf), ports_dir};
+                        auto it = cache.emplace(std::move(port_name), std::move(scfl));
                         ret.emplace_back(&it.first->second);
                     }
                 }
@@ -156,19 +190,29 @@ namespace vcpkg::PortFileProvider
             }
 
             // Try loading all ports inside ports_dir
-            auto found_scf = Paragraphs::load_all_ports(filesystem, ports_dir);
-            for (auto&& scf : found_scf)
+            auto found_scfls = Paragraphs::load_overlay_ports(paths, ports_dir);
+            for (auto&& scfl : found_scfls)
             {
-                auto port_name = scf->core_paragraph->name;
+                auto port_name = scfl.source_control_file->core_paragraph->name;
                 if (cache.find(port_name) == cache.end())
                 {
-                    auto it = cache.emplace(std::piecewise_construct,
-                                            std::forward_as_tuple(port_name),
-                                            std::forward_as_tuple(std::move(scf), ports_dir / port_name));
+                    auto it = cache.emplace(std::move(port_name), std::move(scfl));
                     ret.emplace_back(&it.first->second);
                 }
             }
         }
+
+        auto all_ports = Paragraphs::load_all_registry_ports(paths);
+        for (auto&& scfl : all_ports)
+        {
+            auto port_name = scfl.source_control_file->core_paragraph->name;
+            if (cache.find(port_name) == cache.end())
+            {
+                auto it = cache.emplace(port_name, std::move(scfl));
+                ret.emplace_back(&it.first->second);
+            }
+        }
+
         return ret;
     }
 }
