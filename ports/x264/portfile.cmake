@@ -12,6 +12,10 @@ vcpkg_from_github(
         "uwp-cflags.patch"
 )
 
+vcpkg_find_acquire_program(NASM)
+get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+
 if(VCPKG_TARGET_IS_WINDOWS)
     _vcpkg_determine_autotools_host_cpu(BUILD_ARCH)
     _vcpkg_determine_autotools_target_cpu(HOST_ARCH)
@@ -22,8 +26,12 @@ endif()
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
     list(APPEND OPTIONS --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib)
+    list(APPEND OPTIONS --disable-asm)
 endif()
 
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND OPTIONS --enable-pic)
+endif()
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
@@ -37,7 +45,6 @@ vcpkg_configure_make(
         --disable-ffms
         --disable-gpac
         --disable-lsmash
-        --disable-asm
         --enable-debug
 
 )
