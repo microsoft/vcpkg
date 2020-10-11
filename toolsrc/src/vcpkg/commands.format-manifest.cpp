@@ -8,6 +8,7 @@
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace
 {
@@ -41,7 +42,9 @@ namespace
             return nullopt;
         }
 
-        auto scf = SourceControlFile::parse_manifest_file(manifest_path, parsed_json.object());
+        auto parsed_json_obj = parsed_json.object();
+
+        auto scf = SourceControlFile::parse_manifest_file(manifest_path, parsed_json_obj);
         if (!scf.has_value())
         {
             System::printf(System::Color::error, "Failed to parse manifest file: %s\n", path_string);
@@ -182,7 +185,7 @@ namespace vcpkg::Commands::FormatManifest
     };
 
     const CommandStructure COMMAND_STRUCTURE = {
-        create_example_string(R"###(x-format-manifest --all)###"),
+        create_example_string(R"###(format-manifest --all)###"),
         0,
         SIZE_MAX,
         {FORMAT_SWITCHES, {}, {}},
@@ -201,7 +204,7 @@ namespace vcpkg::Commands::FormatManifest
 
         if (!format_all && convert_control)
         {
-            System::print2(System::Color::warning, R"(x-format-manifest was passed '--convert-control' without '--all'.
+            System::print2(System::Color::warning, R"(format-manifest was passed '--convert-control' without '--all'.
     This doesn't do anything:
     we will automatically convert all control files passed explicitly.)");
         }

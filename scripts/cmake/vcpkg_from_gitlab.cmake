@@ -61,6 +61,9 @@
 ## * [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
 ## * [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
 ##
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_from_gitlab)
     set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF)
     set(multipleValuesArgs PATCHES)
@@ -163,7 +166,7 @@ function(vcpkg_from_gitlab)
     endif()
 
     # There are issues with the Gitlab API project paths being URL-escaped, so we use git here to get the head revision
-    _execute_process(COMMAND ${GIT} ls-remote
+    vcpkg_execute_in_download_mode(COMMAND ${GIT} ls-remote
         "${GITLAB_LINK}.git" "${_vdud_HEAD_REF}"
         RESULT_VARIABLE _git_result
         OUTPUT_VARIABLE _git_output

@@ -66,6 +66,34 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     list(APPEND PACKAGES bash coreutils sed grep gawk diffutils make pkg-config)
   endif()
 
+  macro(msys_package_download URL SHA FILENAME)
+    set(URLS "${URL}")
+    # Mirror list from https://github.com/msys2/MSYS2-packages/blob/master/pacman-mirrors/mirrorlist.msys
+    # Sourceforge is not used because it does not keep older package versions
+    set(MIRRORS
+      "https://www2.futureware.at/~nickoe/msys2-mirror/"
+      "https://mirror.yandex.ru/mirrors/msys2/"
+      "https://mirrors.tuna.tsinghua.edu.cn/msys2/"
+      "https://mirrors.ustc.edu.cn/msys2/"
+      "https://mirror.bit.edu.cn/msys2/"
+      "https://mirror.selfnet.de/msys2/"
+      "https://mirrors.sjtug.sjtu.edu.cn/msys2/"
+    )
+
+    foreach(MIRROR IN LISTS MIRRORS)
+      string(REPLACE "https://repo.msys2.org/" "${MIRROR}" MIRROR_URL "${URL}")
+      list(APPEND URLS "${MIRROR_URL}")
+    endforeach()
+    vcpkg_download_distfile(MSYS_ARCHIVE
+      URLS ${URLS}
+      SHA512 "${SHA}"
+      FILENAME "msys-${FILENAME}"
+      QUIET
+    )
+    string(APPEND TOTAL_HASH "${SHA}")
+    list(APPEND ARCHIVES "${MSYS_ARCHIVE}")
+  endmacro()
+
   macro(msys_package)
     cmake_parse_arguments(p "ZST;ANY" "URL;NAME;SHA512;VERSION;REPO" "DEPS" ${ARGN})
     if(p_URL AND NOT p_NAME)
@@ -94,14 +122,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     if("${p_NAME}" IN_LIST PACKAGES)
       list(REMOVE_ITEM PACKAGES "${p_NAME}")
       list(APPEND PACKAGES ${p_DEPS})
-      vcpkg_download_distfile(MSYS_ARCHIVE
-        URLS "${p_URL}"
-        SHA512 "${p_SHA512}"
-        FILENAME "msys-${FILENAME}"
-        QUIET
-      )
-      string(APPEND TOTAL_HASH "${p_SHA512}")
-      list(APPEND ARCHIVES "${MSYS_ARCHIVE}")
+      msys_package_download("${p_URL}" "${p_SHA512}" "${FILENAME}")
     endif()
   endmacro()
 
@@ -111,14 +132,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       set(N "${P}")
     else()
       get_filename_component(FILENAME "${N}" NAME)
-      vcpkg_download_distfile(MSYS_ARCHIVE
-        URLS "${N}"
-        SHA512 "${P}"
-        FILENAME "msys-${FILENAME}"
-        QUIET
-      )
-      string(APPEND TOTAL_HASH "${P}")
-      list(APPEND ARCHIVES "${MSYS_ARCHIVE}")
+      msys_package_download("${N}" "${P}" "${FILENAME}")
       unset(N)
     endif()
   endforeach()
@@ -253,6 +267,21 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     URL "https://repo.msys2.org/msys/x86_64/make-4.3-1-x86_64.pkg.tar.xz"
     SHA512 7306dec7859edc27d70a24ab4b396728481484a426c5aa2f7e9fed2635b3b25548b05b7d37a161a86a8edaa5922948bee8c99b1e8a078606e69ca48a433fe321
     DEPS libintl msys2-runtime
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/gettext-0.19.8.1-1-x86_64.pkg.tar.xz"
+    SHA512 c8c42d084c297746548963f7ec7a7df46241886f3e637e779811ee4a8fee6058f892082bb2658f6777cbffba2de4bcdfd68e846ba63c6a6552c9efb0c8c1de50
+    DEPS libintl libgettextpo libasprintf
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libgettextpo-0.19.8.1-1-x86_64.pkg.tar.xz"
+    SHA512 480b782a79b0ce71ed9939ae3a6821fc2f5a63358733965c62cee027d0e6c88e255df1d62379ee47f5a7f8ffe163e554e318dba22c67dc67469b10aa3248edf7
+    DEPS gcc-libs
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libasprintf-0.19.8.1-1-x86_64.pkg.tar.xz"
+    SHA512 a2e8027b9bbee20f8cf60851130ca2af436641b1fb66054f8deba118da7ebecb1cd188224dcf08e4c5b7cde85b412efab058afef2358e843c9de8eb128ca448c
+    DEPS gcc-libs
   )
   msys_package(
     URL "https://repo.msys2.org/msys/x86_64/libintl-0.19.8.1-1-x86_64.pkg.tar.xz"
