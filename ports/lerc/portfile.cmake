@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         "install_lib_to_archive_path.patch"
         "enable_static_build.patch"
+        "create_package.patch"
 )
 
 vcpkg_configure_cmake(
@@ -15,6 +16,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

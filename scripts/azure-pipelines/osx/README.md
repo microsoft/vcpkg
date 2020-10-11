@@ -17,7 +17,7 @@ $ cd ~/vagrant/vcpkg-eg-mac
 $ vagrant up
 ```
 
-Any modifications to the machines should be made in `configuration/VagrantFile`
+Any modifications to the machines should be made in `configuration/Vagrantfile`
 and `Setup-VagrantMachines.ps1`, and make sure to push any changes!
 
 ## Setting up a new macOS machine
@@ -35,20 +35,41 @@ Then, we need to download the `vcpkg` repository:
 $ git clone https://github.com/microsoft/vcpkg
 ```
 
-And now all we need to do is set it up! Replace `XX` with the number of
-the virtual machine. Generally, that should be the same as the number
-for the physical machine; i.e., vcpkgmm-04 will have vcpkg-eg-mac-04.
+Then, we need to mint an SSH key:
 
+```sh
+$ ssh-keygen
+$ cat .ssh/id_rsa.pub
+```
+
+Add that SSH key to `authorized_keys` on the file share machine with the base box.
+
+Next, install prerequisites and grab the current base box with:
 ```sh
 $ cd vcpkg/scripts/azure-pipelines/osx
 $ ./Install-Prerequisites.ps1 -Force
+$ ./Get-InternalBaseBox.ps1 -FileshareMachine vcpkgmm-01.guest.corp.microsoft.com
+```
+
+Getting the base box will fail due to missing kernel modules for sshfs and VirtualBox. Log in to the
+machine, open System Preferences > Security & Privacy > General, and allow the kernel extensions for
+VirtualBox and sshfs to load. Then, again:
+
+```sh
+$ ./Get-InternalBaseBox.ps1 -FileshareMachine vcpkgmm-01.guest.corp.microsoft.com
+```
+
+Replace `XX` with the number of
+the virtual machine. Generally, that should be the same as the number
+for the physical machine; i.e., vcpkgmm-04 would use 04.
+
+```sh
   # NOTE: you may get an error about CoreCLR; see the following paragraph if you do
-$ ./Setup-VagrantMachines.ps1 XX \
-  -Pat '<get this from azure>' \
-  -ArchivesUsername '<get this from the archives share>' \
-  -ArchivesAccessKey '<get this from the archives share>' \
-  -ArchivesUrn '<something>.file.core.windows.net' \
-  -ArchivesShare 'archives'
+$ ./Setup-VagrantMachines.ps1 \
+  -MachineId XX \
+  -DevopsPat '<get this from azure devops; it needs agent pool read and manage access>' \
+  -Date <this is the date of the pool; 2020-09-28 at time of writing> \
+  -ArchivesMachine 'vcpkgmm-01.guest.corp.microsoft.com'
 $ cd ~/vagrant/vcpkg-eg-mac
 $ vagrant up
 ```
@@ -65,8 +86,7 @@ You have to reboot the machine; run
 $ sudo shutdown -r now
 ```
 
-and wait for the machine to start back up. Then, start again from
-`Install-Prerequisites.ps1`.
+and wait for the machine to start back up. Then, start again from where the error was emitted.
 
 ## Creating a new Vagrant box
 
@@ -117,13 +137,14 @@ $ vagrant ssh -c 'sudo installer -pkg "/Volumes/setup-installer/Command Line Too
 $ vagrant ssh -c 'hdiutil detach /Volumes/setup-installer'
 $ vagrant ssh -c 'rm clt.dmg'
 $ vagrant ssh -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
+$ vagrant ssh -c 'ssh-keygen -t rsa -b 4096 -c "Fileshare Key: <date>" -N "" -f "~/.ssh/id_rsa"'
+$ vagrant ssh -c 'cat ~/.ssh/id_rsa.pub'
 $ vagrant ssh -c 'brew cask install osxfuse && brew install sshfs'
-$ vagrant scp <path to ssh key for fileshare> :.ssh/id_rsa
-$ vagrant scp <path to ssh public key for fileshare> :.ssh/id_rsa.pub
 $ vagrant reload
 ```
 
-We also now need to make sure that osxfuse is set up correctly;
+After this, you should add the printed ssh public key to the archives share's `.ssh/authorized_keys` file.
+Then, we also now need to make sure that osxfuse is set up correctly;
 macOS requires the user to accept that this signed binary is "okay to be loaded" by the kernel.
 We can get `sshfs` to try to start the `osxfuse` kernel module by attempting to start it:
 
@@ -133,7 +154,7 @@ $ vagrant ssh -c 'mkdir testmnt && sshfs <fileshare ssh>:/Users/fileshare/share 
 
 Then, you'll need to open the VM in VirtualBox, go to System Preferences,
 go to Security & Privacy, General, unlock the settings,
-and allow apps from the osxfuse developer to run.
+and allow system extensions from the osxfuse developer to run.
 
 Then, retry the above, and see if it works:
 
@@ -155,7 +176,7 @@ and you'll have the base vcpkg box added for purposes of `Setup-VagrantMachines.
 Once you've created the base box, if you're making it the new base box for the CI,
 upload it to the fileshare, under `share/vcpkg-boxes`.
 Then, add the metadata about the box (the name and version) to the JSON file there.
-Once you've done that, add the software versions below.
+Once you've done that, add the software versions under [VM Software Versions](#vm-software-versions).
 
 ### VM Software Versions
 
@@ -167,21 +188,24 @@ Once you've done that, add the software versions below.
 
 The fileshare is located on `vcpkgmm-01`, under the `fileshare` user, in the `share` directory.
 In order to get `sshfs` working on the physical machine,
-you'll need to do the same thing one needs to do for building the base box:
-
-```sh
-$ brew cask install osxfuse && brew install sshfs
-$ sudo shutdown -r now
-```
-
-Then, once you've ssh'd back in:
+you'll need to do the same thing one needs to do for building the base box.
+You can run `Install-Prerequisites.ps1` to grab the right software, then either:
 
 ```sh
 $ mkdir vagrant/share
 $ sshfs fileshare@<vcpkgmm-01 URN>:/Users/fileshare/share vagrant/share
 ```
 
+or you can just run
+
+```sh
+$ ./Get-InternalBaseBox.ps1
+```
+
+which will do the thing automatically.
+
 If you get an error, that means that gatekeeper has prevented the kernel extension from loading,
 so you'll need to access the GUI of the machine, go to System Preferences,
-Security & Privacy, General, unlock the settings, and allow apps from the osxfuse developer to run.
+Security & Privacy, General, unlock the settings,
+and allow system extensions from the osxfuse developer to run.
 Then, you'll be able to add the fileshare as an sshfs.
