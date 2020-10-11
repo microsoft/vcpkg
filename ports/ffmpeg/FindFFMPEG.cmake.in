@@ -136,7 +136,7 @@ if(@ENABLE_SOXR@)
 endif()
 
 if(@ENABLE_SPEEX@)
-  select_library_configurations_from_names(BASENAME SPEEX NAMES speex libspeex)
+  select_library_configurations_from_names(BASENAME SPEEX NAMES_RELEASE libspeex NAMES_DEBUG libspeexd)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${SPEEX_LIBRARIES})
 endif()
 
