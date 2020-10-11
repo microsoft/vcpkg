@@ -89,74 +89,19 @@ index 0cfd4db..7a6e70c 100644
  
  #include "DirectXTexEXR.h"
  
-@@ -38,38 +38,38 @@ using namespace DirectX;
+@@ -38,6 +38,7 @@
  using PackedVector::XMHALF4;
  
  // Comment out this first anonymous namespace if you add the include of DirectXTexP.h above
--namespace
--{
--    struct handle_closer { void operator()(HANDLE h) { assert(h != INVALID_HANDLE_VALUE); if (h) CloseHandle(h); } };
--
--    using ScopedHandle = std::unique_ptr<void, handle_closer>;
--
--    inline HANDLE safe_handle(HANDLE h) { return (h == INVALID_HANDLE_VALUE) ? nullptr : h; }
--
--    class auto_delete_file
--    {
--    public:
--        auto_delete_file(HANDLE hFile) : m_handle(hFile) {}
--
--        auto_delete_file(const auto_delete_file&) = delete;
--        auto_delete_file& operator=(const auto_delete_file&) = delete;
--
--        ~auto_delete_file()
--        {
--            if (m_handle)
--            {
--                FILE_DISPOSITION_INFO info = {};
--                info.DeleteFile = TRUE;
--                (void)SetFileInformationByHandle(m_handle, FileDispositionInfo, &info, sizeof(info));
--            }
--        }
--
--        void clear() { m_handle = nullptr; }
--
--    private:
--        HANDLE m_handle;
--    };
--}
-+// namespace
-+// {
-+//     struct handle_closer { void operator()(HANDLE h) { assert(h != INVALID_HANDLE_VALUE); if (h) CloseHandle(h); } };
-+
-+//     using ScopedHandle = std::unique_ptr<void, handle_closer>;
-+
-+//     inline HANDLE safe_handle(HANDLE h) { return (h == INVALID_HANDLE_VALUE) ? nullptr : h; }
-+
-+//     class auto_delete_file
-+//     {
-+//     public:
-+//         auto_delete_file(HANDLE hFile) : m_handle(hFile) {}
-+
-+//         auto_delete_file(const auto_delete_file&) = delete;
-+//         auto_delete_file& operator=(const auto_delete_file&) = delete;
-+
-+//         ~auto_delete_file()
-+//         {
-+//             if (m_handle)
-+//             {
-+//                 FILE_DISPOSITION_INFO info = {};
-+//                 info.DeleteFile = TRUE;
-+//                 (void)SetFileInformationByHandle(m_handle, FileDispositionInfo, &info, sizeof(info));
-+//             }
-+//         }
-+
-+//         void clear() { m_handle = nullptr; }
-+
-+//     private:
-+//         HANDLE m_handle;
-+//     };
-+// }
++#if 0
+ namespace
+ {
+     struct handle_closer { void operator()(HANDLE h) { assert(h != INVALID_HANDLE_VALUE); if (h) CloseHandle(h); } };
+@@ -70,6 +76,7 @@
+         HANDLE m_handle;
+     };
+ }
++#endif
  
  namespace
  {
