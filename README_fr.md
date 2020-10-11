@@ -33,7 +33,7 @@ Pour une description des commandes disponibles, quand vous avez installé vcpkg,
       - [Vcpkg avec Visual Studio pour un projet CMake](#vcpkg-avec-visual-studio-un-projet-cmake)
       - [Vcpkg avec CLion](#vcpkg-avec-clion)
       - [Vcpkg en tant que sous module](#vcpkg-en-tant-que-sous-module)
-    - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
+    - [Tab-Completion/Auto-Completion](#tab-complétionauto-complétion)
     - [Exemples](#exemples)
     - [Contribuer](#contribuer)
     - [Licence](#licence)
