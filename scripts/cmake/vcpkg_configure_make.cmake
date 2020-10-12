@@ -7,6 +7,7 @@
 ## vcpkg_configure_make(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [AUTOCONFIG]
+##     [USE_WRAPPERS]
 ##     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
 ##     [NO_ADDITIONAL_PATHS]
 ##     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
@@ -33,6 +34,9 @@
 ##
 ## ### SKIP_CONFIGURE
 ## Skip configure process
+##
+## ### USE_WRAPPERS
+## Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
 ##
 ## ### BUILD_TRIPLET
 ## Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
@@ -258,7 +262,7 @@ function(vcpkg_configure_make)
         endmacro()
 
         set(CONFIGURE_ENV "V=1")
-        if (_csc_AUTOCONFIG) # without autotools we assume a custom configure script which correctly handles cl and lib. Otherwise the port needs to set CC|CXX|AR and probably CPP
+        if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile cl.exe -nologo -E")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "compile cl.exe -nologo")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "compile cl.exe -nologo")
