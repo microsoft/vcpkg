@@ -1,7 +1,7 @@
 Source: dlib
-Version: 19.19
-Port-Version: 2
-Build-Depends: libjpeg-turbo, libpng, openblas (!osx), lapack
+Version: 19.21
+Port-Version: 4
+Build-Depends: libjpeg-turbo, libpng, openblas, lapack
 Homepage: https://github.com/davisking/dlib
 Description: Modern C++ toolkit containing machine learning algorithms and tools for creating complex software in C++
 Default-Features: fftw3, sqlite3

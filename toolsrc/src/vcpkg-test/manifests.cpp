@@ -250,7 +250,7 @@ TEST_CASE ("SourceParagraph manifest empty supports", "[manifests]")
 
 TEST_CASE ("Serialize all the ports", "[manifests]")
 {
-    std::vector<std::string> args_list = {"x-format-manifest"};
+    std::vector<std::string> args_list = {"format-manifest"};
     auto& fs = Files::get_real_filesystem();
     auto args = VcpkgCmdArguments::create_from_arg_sequence(args_list.data(), args_list.data() + args_list.size());
     VcpkgPaths paths{fs, args};

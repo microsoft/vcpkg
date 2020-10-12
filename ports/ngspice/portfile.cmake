@@ -2,6 +2,9 @@ vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "arm" "arm64")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+# ngspice produces self-contained DLLs
+set(VCPKG_CRT_LINKAGE static)
+
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngspice/ng-spice-rework
@@ -27,13 +30,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE ${SOURCE_PATH}/man)
     file(REMOVE_RECURSE ${SOURCE_PATH}/tests)
 
-    # We use build_msbuild because install_msbuild is incompatible due to SPICE using .lib for the last 47 years....
     vcpkg_install_msbuild(
-        USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
         INCLUDES_SUBPATH /src/include
         LICENSE_SUBPATH COPYING
-        PLATFORM ${TRIPLET_SYSTEM_ARCH}    # install_msbuild swaps x86 for win32(bad) if we dont force our own setting
+        # install_msbuild swaps x86 for win32(bad) if we dont force our own setting
+        PLATFORM ${TRIPLET_SYSTEM_ARCH}
         PROJECT_SUBPATH visualc/sharedspice.sln
         TARGET Build
     )

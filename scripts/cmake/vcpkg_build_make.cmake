@@ -70,7 +70,8 @@ function(vcpkg_build_make)
         set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} -j 1 --trace -f Makefile ${_bc_BUILD_TARGET})
 
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
+        # Don't know why '/cygdrive' is suddenly a requirement here. (at least for x264)
+        string(REGEX REPLACE "([a-zA-Z]):/" "/cygdrive/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f Makefile install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
@@ -80,7 +81,7 @@ function(vcpkg_build_make)
         # Set make command and install command
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f Makefile ${_bc_BUILD_TARGET})
         set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j 1 -f Makefile ${_bc_BUILD_TARGET})
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} install DESTDIR=${CURRENT_PACKAGES_DIR})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} -f Makefile install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make

@@ -28,6 +28,9 @@
 ##
 ## If this doesn't match the downloaded version, the build will be terminated with a message describing the mismatch.
 ##
+## ### QUIET
+## Suppress output on cache hit
+##
 ## ### SKIP_SHA512
 ## Skip SHA512 hash check for file.
 ##
@@ -46,11 +49,14 @@
 ## * [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
 ## * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
 ## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_download_distfile VAR)
-    set(options SKIP_SHA512 SILENT_EXIT)
+    set(options SKIP_SHA512 SILENT_EXIT QUIET)
     set(oneValueArgs FILENAME SHA512)
     set(multipleValuesArgs URLS HEADERS)
-    cmake_parse_arguments(vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
+    cmake_parse_arguments(PARSE_ARGV 1 vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}")
 
     if(NOT DEFINED vcpkg_download_distfile_URLS)
         message(FATAL_ERROR "vcpkg_download_distfile requires a URLS argument.")
@@ -59,9 +65,6 @@ function(vcpkg_download_distfile VAR)
         message(FATAL_ERROR "vcpkg_download_distfile requires a FILENAME argument.")
     endif()
     if(NOT _VCPKG_INTERNAL_NO_HASH_CHECK)
-        if(vcpkg_download_distfile_SKIP_SHA512 AND NOT VCPKG_USE_HEAD_VERSION)
-            message(FATAL_ERROR "vcpkg_download_distfile only allows SKIP_SHA512 when building with --head")
-        endif()
         if(NOT vcpkg_download_distfile_SKIP_SHA512 AND NOT DEFINED vcpkg_download_distfile_SHA512)
             message(FATAL_ERROR "vcpkg_download_distfile requires a SHA512 argument. If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         endif()
@@ -106,7 +109,9 @@ function(vcpkg_download_distfile VAR)
     endfunction()
 
     if(EXISTS "${downloaded_file_path}")
-        message(STATUS "Using cached ${downloaded_file_path}")
+        if(NOT vcpkg_download_distfile_QUIET)
+            message(STATUS "Using cached ${downloaded_file_path}")
+        endif()
         test_hash("${downloaded_file_path}" "cached file" "Please delete the file and retry if this file should be downloaded again.")
     else()
         if(_VCPKG_NO_DOWNLOADS)
@@ -123,7 +128,7 @@ function(vcpkg_download_distfile VAR)
                     list(APPEND request_headers "--header=${header}")
                 endforeach()
             endif()
-            _execute_process(
+            vcpkg_execute_in_download_mode(
                 COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
                 -o temp/${vcpkg_download_distfile_FILENAME}
                 -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
@@ -159,7 +164,7 @@ function(vcpkg_download_distfile VAR)
                         list(APPEND request_headers HTTPHEADER ${header})
                     endforeach()
                 endif()
-                file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status ${request_headers})
+                file(DOWNLOAD "${url}" "${download_file_path_part}" STATUS download_status ${request_headers})
                 list(GET download_status 0 status_code)
                 if (NOT "${status_code}" STREQUAL "0")
                     message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")

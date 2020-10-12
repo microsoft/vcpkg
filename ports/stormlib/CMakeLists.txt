@@ -268,6 +268,12 @@ if(WIN32)
 	target_compile_definitions(stormlib PRIVATE  UNICODE _UNICODE)
 endif()
 
+if(NOT MSVC)
+  # don't error on implicit declarations, which are invalid in C99 but commonly used
+  target_compile_options(stormlib PRIVATE -Wno-error=implicit-function-declaration)
+endif()
+
+
 set_target_properties(stormlib PROPERTIES PUBLIC_HEADER "src/StormLib.h;src/StormPort.h")
 
 install(TARGETS stormlib EXPORT stormlibConfig

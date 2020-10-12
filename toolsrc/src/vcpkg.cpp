@@ -17,6 +17,7 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/userconfig.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 #include <cassert>
@@ -200,6 +201,7 @@ int main(const int argc, const char* const* const argv)
 
     System::initialize_global_job_object();
 #endif
+    System::set_environment_variable("VCPKG_COMMAND", fs::generic_u8string(System::get_exe_path_of_current_process()));
 
     Checks::register_global_shutdown_handler([]() {
         const auto elapsed_us_inner = GlobalState::timer.lock()->microseconds();
@@ -234,6 +236,16 @@ int main(const int argc, const char* const* const argv)
     System::register_console_ctrl_handler();
 
     load_config(fs);
+
+#if (defined(__aarch64__) || defined(__arm__) || defined(__s390x__) || defined(_M_ARM) || defined(_M_ARM64)) &&        \
+    !defined(_WIN32)
+    if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+    {
+        Checks::exit_with_message(
+            VCPKG_LINE_INFO,
+            "Environment variable VCPKG_FORCE_SYSTEM_BINARIES must be set on arm and s390x platforms.");
+    }
+#endif
 
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
     args.imbue_from_environment();

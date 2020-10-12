@@ -1,6 +1,6 @@
 Source: google-cloud-cpp
-Version: 1.16.0
-Build-Depends: abseil, grpc, curl[ssl], crc32c
+Version: 1.19.0
+Build-Depends: abseil, grpc, curl[ssl], crc32c, nlohmann-json
 Description: C++ Client Libraries for Google Cloud Platform APIs.
 Homepage: https://github.com/googleapis/google-cloud-cpp
 Supports: !uwp
