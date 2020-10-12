@@ -62,11 +62,10 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 
 function(vcpkg_install_nmake)
-    cmake_parse_arguments(_in
+    cmake_parse_arguments(PARSE_ARGV 0 _in
         "NO_DEBUG"
         "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
-        ${ARGN}
     )
     
     if (NOT CMAKE_HOST_WIN32)

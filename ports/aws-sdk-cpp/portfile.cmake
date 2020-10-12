@@ -23,7 +23,7 @@ vcpkg_configure_cmake(
         -DENABLE_TESTING=OFF
         -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
-        -DBUILD_ONLY=${BUILD_ONLY}
+        "-DBUILD_ONLY=${BUILD_ONLY}"
         -DBUILD_DEPS=OFF
 )
 

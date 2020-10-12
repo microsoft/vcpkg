@@ -71,11 +71,10 @@
 ## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 function(vcpkg_build_nmake)
-    cmake_parse_arguments(_bn
+    cmake_parse_arguments(PARSE_ARGV 0 _bn
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
         "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
-        ${ARGN}
     )
     
     if (NOT CMAKE_HOST_WIN32)
@@ -188,7 +187,7 @@ function(vcpkg_build_nmake)
             if (BUILDTYPE STREQUAL "debug" AND _bn_PRERUN_SHELL_DEBUG)
                 message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
                 vcpkg_execute_required_process(
-                    COMMAND "${_bn_PRERUN_SHELL_DEBUG}"
+                    COMMAND ${_bn_PRERUN_SHELL_DEBUG}
                     WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
                     LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-dbg"
                 )
