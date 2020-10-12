@@ -107,3 +107,21 @@ TEST_CASE ("VcpkgCmdArguments from argument sequence with valued options", "[arg
         REQUIRE(v.command_arguments.size() == 0);
     }
 }
+
+TEST_CASE ("vcpkg_root parse with arg separator", "[arguments]")
+{
+    std::vector<std::string> t = {"--vcpkg-root", "C:\\vcpkg"};
+    auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
+    auto& vcpkg_root_dir = v.vcpkg_root_dir;
+    REQUIRE(vcpkg_root_dir);
+    REQUIRE(*vcpkg_root_dir == "C:\\vcpkg");
+}
+
+TEST_CASE ("vcpkg_root parse with equal separator", "[arguments]")
+{
+    std::vector<std::string> t = {"--vcpkg-root=C:\\vcpkg"};
+    auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
+    auto& vcpkg_root_dir = v.vcpkg_root_dir;
+    REQUIRE(vcpkg_root_dir);
+    REQUIRE(*vcpkg_root_dir == "C:\\vcpkg");
+}
