@@ -312,6 +312,8 @@ vcpkg_configure_cmake(
         -DBUILD_TBB=OFF
         -DBUILD_IPP_IW=OFF
         -DBUILD_ITT=OFF
+        ###### Disable build 3rd party components
+        -DBUILD_PROTOBUF=OFF
         ###### OpenCV Build components
         -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_java=OFF
