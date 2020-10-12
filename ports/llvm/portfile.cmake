@@ -1,18 +1,18 @@
-set(VERSION "10.0.0")
+set(LLVM_VERSION "11.0.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
-    REF llvmorg-10.0.0
-    SHA512 baa182d62fef1851836013ae8a1a00861ea89769778d67fb97b407a9de664e6c85da2af9c5b3f75d2bf34ff6b00004e531ca7e4b3115a26c0e61c575cf2303a0
+    REF llvmorg-${LLVM_VERSION}
+    SHA512 b6d38871ccce0e086e27d35e42887618d68e57d8274735c59e3eabc42dee352412489296293f8d5169fe0044936345915ee7da61ebdc64ec10f7737f6ecd90f2
     HEAD_REF master
     PATCHES
-        0001-allow-to-use-commas.patch
         0002-fix-install-paths.patch
-        0003-fix-vs2019-v16.6.patch
+        0003-fix-openmp-debug.patch
         0004-fix-dr-1734.patch
+        0005-workaround-msvc-bug.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,6 +21,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     utils LLVM_BUILD_UTILS
     utils LLVM_INCLUDE_UTILS
     enable-rtti LLVM_ENABLE_RTTI
+)
+
+# LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
+# LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
+# See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
+# and thread "[llvm-dev] Longstanding failing tests - clang-tidy, MachO, Polly" on llvm-dev Jan 21-23 2020.
+list(APPEND FEATURE_OPTIONS
+    -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
 )
 
 # By default assertions are enabled for Debug configuration only.
@@ -61,12 +69,6 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
             -DCLANG_ENABLE_STATIC_ANALYZER=OFF
         )
     endif()
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND FEATURE_OPTIONS
-            # Disable dl library on Windows
-            -DDL_LIBRARY_PATH:FILEPATH=
-        )
-    endif()
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
@@ -74,19 +76,30 @@ endif()
 if("compiler-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "compiler-rt")
 endif()
+if("flang" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_PROJECTS "flang")
+endif()
 if("lld" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lld")
+endif()
+if("lldb" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_PROJECTS "lldb")
+endif()
+if("mlir" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_PROJECTS "mlir")
 endif()
 if("openmp" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
     # Perl is required for the OpenMP run-time
     vcpkg_find_acquire_program(PERL)
     list(APPEND FEATURE_OPTIONS
-        -DPERL_EXECUTABLE=${PERL}
+        "-DPERL_EXECUTABLE=${PERL}"
     )
-endif()
-if("lldb" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_PROJECTS "lldb")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        list(APPEND FEATURE_OPTIONS
+            -DLIBOMP_DEFAULT_LIB_NAME=libompd
+        )
+    endif()
 endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
@@ -104,6 +117,9 @@ else()
     endif()
     if("target-arm" IN_LIST FEATURES)
         list(APPEND LLVM_TARGETS_TO_BUILD "ARM")
+    endif()
+    if("target-avr" IN_LIST FEATURES)
+        list(APPEND LLVM_TARGETS_TO_BUILD "AVR")
     endif()
     if("target-bpf" IN_LIST FEATURES)
         list(APPEND LLVM_TARGETS_TO_BUILD "BPF")
@@ -159,12 +175,9 @@ if("${LLVM_TARGETS_TO_BUILD}" STREQUAL "")
     endif()
 endif()
 
-# Use comma-separated string instead of semicolon-separated string.
-# See https://github.com/microsoft/vcpkg/issues/4320
-string(REPLACE ";" "," LLVM_ENABLE_PROJECTS "${LLVM_ENABLE_PROJECTS}")
-string(REPLACE ";" "," LLVM_TARGETS_TO_BUILD "${LLVM_TARGETS_TO_BUILD}")
-
 vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
+vcpkg_add_to_path(${PYTHON3_DIR})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/llvm
@@ -175,19 +188,14 @@ vcpkg_configure_cmake(
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_BUILD_TESTS=OFF
-        # Disable optional dependencies to libxml2 and zlib
+        # Disable optional dependencies to libxml2 and zlib.
         -DLLVM_ENABLE_LIBXML2=OFF
         -DLLVM_ENABLE_ZLIB=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
-        # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
-        # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
-        # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
-        -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
-        -DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}
-        -DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}
-        -DPACKAGE_VERSION=${VERSION}
-        -DPYTHON_EXECUTABLE=${PYTHON3}
+        "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
+        "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
+        -DPACKAGE_VERSION=${LLVM_VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         -DLLVM_PARALLEL_LINK_JOBS=1
         # Disable build LLVM-C.dll (Windows only) due to doesn't compile with CMAKE_DEBUG_POSTFIX
