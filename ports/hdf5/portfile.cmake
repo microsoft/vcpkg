@@ -4,11 +4,11 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO  HDFGroup/hdf5 
+    REPO  HDFGroup/hdf5
     REF hdf5-1_12_0
     SHA512 d84df1ea72dc6fa038440a370e1b1ff523364474e7f214b967edc26d3191b2ef4fe1d9273c4a086a5945f1ad1ab6aa8dbcda495898e7967b2b73fd93dd5071e0
     HEAD_REF develop
-    PATCHES 
+    PATCHES
        hdf5_config.patch
        szip.patch
 )
@@ -65,6 +65,54 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5-1.12.0.pc
+    "-lhdf5"
+    "-lhdf5_debug"
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl-1.12.0.pc
+    "-lhdf5_hl"
+    "-lhdf5_hl_debug"
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5-1.12.0.pc
+    "prefix=${CURRENT_PACKAGES_DIR}/debug"
+    "prefix=${CURRENT_INSTALLED_DIR}/debug"
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl-1.12.0.pc
+    "prefix=${CURRENT_PACKAGES_DIR}/debug"
+    "prefix=${CURRENT_INSTALLED_DIR}/debug"
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5-1.12.0.pc
+    "prefix=\${pcfiledir}/../.."
+    "prefix=${CURRENT_INSTALLED_DIR}"
+)
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5-1.12.0.pc
+    "prefix=${CURRENT_PACKAGES_DIR}"
+    "prefix=${CURRENT_INSTALLED_DIR}"
+)
+
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_hl-1.12.0.pc
+    "prefix=\${pcfiledir}/../.."
+    "prefix=${CURRENT_INSTALLED_DIR}/"
+)
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_hl-1.12.0.pc
+    "prefix=${CURRENT_PACKAGES_DIR}"
+    "prefix=${CURRENT_INSTALLED_DIR}"
+)
+
+vcpkg_fixup_pkgconfig(SKIP_CHECK SYSTEM_LIBRARIES m dl)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
@@ -79,7 +127,7 @@ if(FEATURES MATCHES "tools")
     else()
         set(TOOL_SUFFIXES "-static${VCPKG_TARGET_EXECUTABLE_SUFFIX};${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     endif()
-    
+
     foreach(tool IN LISTS TOOLS)
         foreach(suffix IN LISTS TOOL_SUFFIXES)
             if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${suffix}")
