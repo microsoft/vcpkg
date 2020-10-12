@@ -248,6 +248,17 @@ TEST_CASE ("SourceParagraph manifest empty supports", "[manifests]")
     REQUIRE_FALSE(m_pgh.has_value());
 }
 
+TEST_CASE ("SourceParagraph manifest non-string supports", "[manifests]")
+{
+    auto m_pgh = test_parse_manifest(R"json({
+        "name": "a",
+        "version-string": "1.0",
+        "supports": true
+    })json",
+                                     true);
+    REQUIRE_FALSE(m_pgh.has_value());
+}
+
 TEST_CASE ("Serialize all the ports", "[manifests]")
 {
     std::vector<std::string> args_list = {"format-manifest"};
