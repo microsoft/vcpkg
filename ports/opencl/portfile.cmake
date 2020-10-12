@@ -60,11 +60,7 @@ vcpkg_from_github(
         0001-include-unistd-for-gete-ug-id.patch
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-  set(USE_DYNAMIC_VCXX_RUNTIME OFF)
-else()
-  set(USE_DYNAMIC_VCXX_RUNTIME ON)
-endif()
+string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} dynamic USE_DYNAMIC_VCXX_RUNTIME)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
