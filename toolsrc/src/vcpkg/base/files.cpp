@@ -26,13 +26,6 @@
 #if defined(_WIN32)
 namespace
 {
-    struct IsSlash
-    {
-        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
-    };
-
-    constexpr IsSlash is_slash;
-
     template<size_t N>
     bool wide_starts_with(const std::wstring& haystack, const wchar_t (&needle)[N]) noexcept
     {
@@ -1274,6 +1267,7 @@ namespace vcpkg::Files
 #ifdef _WIN32
     fs::path win32_fix_path_case(const fs::path& source)
     {
+        using fs::is_slash;
         const std::wstring& native = source.native();
         if (native.empty())
         {
