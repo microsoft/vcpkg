@@ -15,6 +15,7 @@ vcpkg_check_features(
     wincrypto ENABLE_WINDOWS_CRYPTO
     commoncrypto ENABLE_COMMONCRYPTO
     mbedtls ENABLE_MBEDTLS
+    zstd ENABLE_ZSTD 
 )
 
 vcpkg_configure_cmake(

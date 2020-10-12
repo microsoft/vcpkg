@@ -30,3 +30,7 @@ Description: AES( encryption) support using Apple's Common Crypto API
 Feature: mbedtls
 Build-Depends: mbedtls
 Description: AES (encryption) support using mbedtls
+
+Feature: zstd
+Build-Depends: zstd
+Description: Zstandard - Fast real-time compression algorithm
