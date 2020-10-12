@@ -4,9 +4,6 @@
 #   Output directories according to vcpkg
 #   Updated certstore. See certstore.pem in the output dirs
 #
-
-include(vcpkg_common_functions)
-
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_EXE_PATH})
