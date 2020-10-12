@@ -2,7 +2,7 @@ Source: halide
 Version: 10.0.0
 Homepage: https://github.com/halide/Halide
 Description: Halide is a programming language designed to make it easier to write high-performance image and array processing code on modern machines.
-Supports: !uwp && !emscripten
+Supports: !uwp
 Default-Features: jit
 Build-Depends: llvm[enable-rtti,tools,clang]
 
