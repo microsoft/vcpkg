@@ -18,8 +18,8 @@ vcpkg_from_github(
     REF v2.3.1
     SHA512 e04a44fb395e24fd009bb6b005282880bef84ca492b5e15903f9ce3e5e3f93beae3a386a1a381507ed5b0c6550e64c6bf434328f9d965fa7f7d638c3e5d5948b
     PATCHES
-            0001-fix-path-for-vcpkg.patch
-            0002-fix-build-error.patch
+        0001-fix-path-for-vcpkg.patch
+        0002-fix-build-error.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
