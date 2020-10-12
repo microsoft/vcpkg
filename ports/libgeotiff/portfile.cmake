@@ -29,35 +29,17 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
+vcpkg_copy_tools(TOOL_NAMES applygeo geotifcp listgeo makegeo AUTO_CLEAN)
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    file(GLOB GEOTIFF_UTILS ${CURRENT_PACKAGES_DIR}/bin/*)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(GLOB GEOTIFF_UTILS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-    file(GLOB GEOTIFF_UTILS_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    file(REMOVE ${GEOTIFF_UTILS_DEBUG})
-endif()
-
-file(COPY ${GEOTIFF_UTILS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/libgeotiff)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/libgeotiff)
-file(REMOVE ${GEOTIFF_UTILS})
+vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF TARGET_PATH share/GeoTIFF)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/GeoTIFF/geotiff-config.cmake "if (GeoTIFF_USE_STATIC_LIBS)" "if (1)")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF)
-
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-config-version.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-depends-release.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-depends-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/share/${PORT}/geotiff-depends.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/doc ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
