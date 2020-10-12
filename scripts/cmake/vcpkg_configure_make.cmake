@@ -351,10 +351,6 @@ function(vcpkg_configure_make)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
         endif()
         include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-        #Join the options list as a string with spaces between options
-        list(JOIN _csc_OPTIONS " " _csc_OPTIONS)
-        list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
-        list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
     endif()
     
     # Setup include environment (since these are buildtype independent restoring them is unnecessary)
