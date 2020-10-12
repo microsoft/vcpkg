@@ -36,7 +36,7 @@ $packagesRoot = Join-Path $TestingRoot 'packages'
 $NuGetRoot = Join-Path $TestingRoot 'nuget'
 $NuGetRoot2 = Join-Path $TestingRoot 'nuget2'
 $ArchiveRoot = Join-Path $TestingRoot 'archives'
-$E2ePortsRoot = Join-Path $WorkingRoot 'scripts/e2e_ports'
+$E2ePortsRoot = Join-Path $PSScriptRoot '../e2e_ports'
 $commonArgs = @(
     "--triplet",
     $Triplet,
