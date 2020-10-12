@@ -388,22 +388,23 @@ function(add_library name)
     endif()
 endfunction()
 
-option(x_VCPKG_APPINSTALL_DEPS "Automatically copy dependencies into the install directory for executables and libraries." OFF)
+# This is an experimental function to enable applocal install of dependencies as part of the `make install` process
+# Arguments:
+#   TARGETS - a list of installed targets to have dependencies copied for
+#   DESTINATION - the runtime directory for those targets (usually `bin`)
 function(x_vcpkg_install_local_dependencies)
-    if(x_VCPKG_APPINSTALL_DEPS)
-        if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-            # Parse command line
-            cmake_parse_arguments(__VCPKG_APPINSTALL "" "DESTINATION" "TARGETS" ${ARGN})
+    if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
+        # Parse command line
+        cmake_parse_arguments(__VCPKG_APPINSTALL "" "DESTINATION" "TARGETS" ${ARGN})
 
-            foreach(TARGET ${__VCPKG_APPINSTALL_TARGETS})
-                _install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
-                    execute_process(COMMAND 
-                        powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                        -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
-                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                        -OutVariable out)")
-            endforeach()
-        endif()
+        foreach(TARGET ${__VCPKG_APPINSTALL_TARGETS})
+            _install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+                execute_process(COMMAND 
+                    powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                    -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                    -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                    -OutVariable out)")
+        endforeach()
     endif()
 endfunction()
 
