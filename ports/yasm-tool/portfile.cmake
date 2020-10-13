@@ -10,7 +10,7 @@ else()
 endif()
 
 if(NOT yasm_DO_BUILD AND NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/yasm-tool)
-    message(FATAL_ERROR "Cross-targetting ports requiring yasm (e.g. gmp, nettle) require the x86-windows yasm-tool to be available. Please install yaml-tool:x86-windows first.")
+    message(FATAL_ERROR "Cross-targetting ports requiring yasm (e.g. gmp, nettle) require the x86-windows yasm-tool to be available. Please install yasm-tool:x86-windows first.")
 endif()
 
 set(EXECUTABLES yasm.exe yasm.dll yasmstd.dll)
