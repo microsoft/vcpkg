@@ -1,5 +1,6 @@
 vcpkg_fail_port_install(MESSAGE "The yasm-tool port currently only supports Windows" ON_TARGET "Linux" "OSX")
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_LIBRARY_LINKAGE dynamic)
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(yasm_DO_BUILD OFF)
