@@ -19,6 +19,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DBUILD_SHARED_LIBS=${EZC3D_SHARED}
+        -DBUILD_EXAMPLE=OFF
 )
 
 vcpkg_install_cmake()
