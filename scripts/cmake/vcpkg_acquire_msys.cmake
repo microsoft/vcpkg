@@ -142,17 +142,24 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 
   # To add new entries, use https://packages.msys2.org/package/$PACKAGE?repo=msys
   msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libguile-2.2.7-1-x86_64.pkg.tar.xz"
+    SHA512 b87838f8b98e9e70faf9e8f01c69d78797b75d431abff411ed5d66280e9eec4c3cb7deaf9825cdcb2e8dfa9b8c68ebfc282cc8db08634f3ecbc65be7675547f8
+    DEPS ncurses gmp libffi libltdl libunistring libgc
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libunistring-0.9.10-1-x86_64.pkg.tar.xz"
+    SHA512 ef45eb3698cfde4daf7732fe8523db7bccdb56ec450e25ca38b0afa14a858cd5f0108b86ddbf59f5d39b099f7b9c8a983d48d13b94f485d21822c96f010fec11
+    DEPS libiconv msys2-runtime
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libgc-8.0.4-1-x86_64.pkg.tar.zst"
+    SHA512 75200df9602eddb3a38ebba00f46d1c40352dac9f4cdf773759bd21ce6bd1f076dfe9d056e28af556268743c223fd6e67b5c63819aca6463bb0be3a38cc432fe
+    DEPS gcc-libs
+  )
+  msys_package(
     URL "https://repo.msys2.org/msys/x86_64/unzip-6.0-2-x86_64.pkg.tar.xz"
     SHA512 b8a1e0ce6deff26939cb46267f80ada0a623b7d782e80873cea3d388b4dc3a1053b14d7565b31f70bc904bf66f66ab58ccc1cd6bfa677065de1f279dd331afb9
     DEPS libbz2
-  )
-  msys_package(
-    URL "https://repo.msys2.org/msys/x86_64/libbz2-1.0.8-2-x86_64.pkg.tar.xz"
-    SHA512 d128bd1792d0f5750e6a63a24db86a791e7ee457db8c0bef68d217099be4a6eef27c85caf6ad09b0bcd5b3cdac6fc0a2b9842cc58d381a4035505906cc4803ec
-  )
-  msys_package(
-    URL "https://repo.msys2.org/msys/x86_64/patch-2.7.6-1-x86_64.pkg.tar.xz"
-    SHA512 04d06b9d5479f129f56e8290e0afe25217ffa457ec7bed3e576df08d4a85effd80d6e0ad82bd7541043100799b608a64da3c8f535f8ea173d326da6194902e8c
   )
   msys_package(
     URL "https://repo.msys2.org/msys/x86_64/gzip-1.10-1-x86_64.pkg.tar.xz"
@@ -301,6 +308,30 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   msys_package(
     URL "https://repo.msys2.org/msys/x86_64/msys2-runtime-3.1.6-3-x86_64.pkg.tar.xz"
     SHA512 f094a7f4926195ef7ba015f0c5c56587b1faa94d85530f07aaaa5557a1494c3bd75257d4687c8401cbf1328d23e5586a92b05f0a872caebb1a7e941a07829776
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libbz2-1.0.8-2-x86_64.pkg.tar.xz"
+    SHA512 d128bd1792d0f5750e6a63a24db86a791e7ee457db8c0bef68d217099be4a6eef27c85caf6ad09b0bcd5b3cdac6fc0a2b9842cc58d381a4035505906cc4803ec
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/patch-2.7.6-1-x86_64.pkg.tar.xz"
+    SHA512 04d06b9d5479f129f56e8290e0afe25217ffa457ec7bed3e576df08d4a85effd80d6e0ad82bd7541043100799b608a64da3c8f535f8ea173d326da6194902e8c
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/gmp-6.2.0-1-x86_64.pkg.tar.xz"
+    SHA512 1389a443e775bb255d905665dd577bef7ed71d51a8c24d118097f8119c08c4dfe67505e88ddd1e9a3764dd1d50ed8b84fa34abefa797d257e90586f0cbf54de8
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libffi-3.3-1-x86_64.pkg.tar.xz"
+    SHA512 b7b4c4392d05b069fff60d596825c23bd3a062247cdc5982eed930fe134453741be992c23fa8380a687b2b61e961a14f8833a337e654a8965206aa3db966bbb3
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libltdl-2.4.6-9-x86_64.pkg.tar.xz"
+    SHA512 dcc8e917b87dd004457ebdb6874f4d58abf107107573997e885fb4d3ea7ca1d614558bd22c3e7d22bfd1013f7da0a4547c03ba8a4da265684445ba4cd7663145
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libatomic_ops-7.6.10-1-any.pkg.tar.xz"
+    SHA512 a2b8fa809a2b175abb87b405db5600573b18d104e6cbafa19988705965cd9702aff713379ec352c7bb4da1a6c106d52e7a0406217ee0107b22e8fd6d3bd5d007
   )
 
   if(PACKAGES)

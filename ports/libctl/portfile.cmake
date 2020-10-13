@@ -15,6 +15,7 @@ vcpkg_from_github(
 if(CMAKE_HOST_WIN32)
 	vcpkg_acquire_msys(MSYS_ROOT PACKAGES autoconf)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES libguile)
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 endif()
 
