@@ -46,6 +46,10 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    amalgamation BOTAN_AMALGAMATION
+)
+
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
     if(BOTAN_BUILD_TYPE STREQUAL "dbg")
@@ -75,6 +79,10 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             --link-method=copy)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
+    endif()
+
+    if("-DBOTAN_AMALGAMATION=ON" IN_LIST FEATURE_OPTIONS)
+        list(APPEND configure_arguments --amalgamation)
     endif()
 
     vcpkg_execute_required_process(
