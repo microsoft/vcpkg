@@ -17,6 +17,10 @@ set(EXECUTABLES yasm.exe yasm.dll yasmstd.dll)
 set(LICENSES Artistic.txt BSD.txt GNU_GPL-2.0 GNU_LGPL-2.0)
 
 if (yasm_DO_BUILD)
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON3_DIR}")
+
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO yasm/yasm
