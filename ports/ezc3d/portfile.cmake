@@ -24,7 +24,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake")
+if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/ezc3d/cmake")
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake")
+endif()
 
 # # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
