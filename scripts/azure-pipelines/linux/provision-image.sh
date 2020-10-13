@@ -29,6 +29,9 @@ APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
 # Additionally required by mesa
 APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
 
+# Additionally required by libctl
+APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
+
 # Additionally required by some packages to install additional python packages
 APT_PACKAGES="$APT_PACKAGES python3-pip"
 
