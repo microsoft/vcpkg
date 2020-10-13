@@ -289,7 +289,6 @@ namespace vcpkg
             L"USERDOMAIN_ROAMINGPROFILE",
             L"USERNAME",
             L"USERPROFILE",
-            L"VCPKG_DISABLE_METRICS",
             L"windir",
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"http_proxy",
