@@ -9,6 +9,8 @@ vcpkg_from_github(
     REF 73d4d5e8d6d449fc8663765a42aa8aeeee844489 # v1.5.2
     SHA512 b87a7c207eb85187165df8ff99ab1bbf5d38fc2a6d839e267a71987951c94e33b55fd7fbee6f2b59202b0379a7e9705b73b193edaea0b9c742eddf3fcbe5f48e
     HEAD_REF master
+    PATCHES
+        0001-Add-MSVC-ARM64-support.patch # https://github.com/google/benchmark/pull/1052
 )
 
 vcpkg_configure_cmake(
