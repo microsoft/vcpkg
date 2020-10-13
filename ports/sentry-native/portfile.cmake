@@ -24,12 +24,6 @@ if (NOT DEFINED SENTRY_BACKEND)
     endif()
 endif()
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(SENTRY_NATIVE_C_STANDARD 99) # Workaround MSVC 19.27 advertising -std:c11 but not implementing _Static_assert
-else()
-    set(SENTRY_NATIVE_C_STANDARD 11)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
