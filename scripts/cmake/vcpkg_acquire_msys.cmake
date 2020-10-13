@@ -55,7 +55,8 @@
 ## * [libvpx](https://github.com/Microsoft/vcpkg/blob/master/ports/libvpx/portfile.cmake)
 
 function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
-  cmake_parse_arguments(_am "NO_DEFAULT_PACKAGES" "" "PACKAGES;DIRECT_PACKAGES" ${ARGN})
+  # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+  cmake_parse_arguments(PARSE_ARGV 0 _am "NO_DEFAULT_PACKAGES" "" "PACKAGES;DIRECT_PACKAGES")
 
   set(TOTAL_HASH 0)
   set(ARCHIVES)
