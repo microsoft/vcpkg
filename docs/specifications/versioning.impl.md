@@ -49,6 +49,7 @@ The following is an example of the output of the current database files generato
             "port-version": "1"
         }
     ]
+}
 ```
 
 ## Git manipulation
