@@ -8,14 +8,22 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+include(vcpkg_find_fortran)
+vcpkg_find_fortran(FORTRAN_CMAKE)
+
 if(CMAKE_HOST_WIN32)
 	vcpkg_acquire_msys(MSYS_ROOT PACKAGES autoconf)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+    #set(ENV{CC} "gcc")
+    #set(ENV{CXX} "g++")
+    set(ENV{FC} "gfortran")
+    message(STATUS "Switching to MinGW toolchain, including ${SCRIPTS}/toolchains/mingw.cmake")
+    include("${SCRIPTS}/toolchains/mingw.cmake")
+    #set(ENV{CFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_C_FLAGS}")
+    #set(ENV{CXXFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_CXX_FLAGS}")
+    set(ENV{FFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
 endif()
-
-include(vcpkg_find_fortran)
-vcpkg_find_fortran(FORTRAN_CMAKE)
 
 vcpkg_configure_make(
     AUTOCONFIG
