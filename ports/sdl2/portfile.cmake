@@ -92,7 +92,9 @@ file(STRINGS "${SOURCE_PATH}/CMakeLists.txt" DYLIB_CURRENT_VERSION REGEX ${DYLIB
 string(REGEX REPLACE ${DYLIB_COMPATIBILITY_VERSION_REGEX} "\\1" DYLIB_COMPATIBILITY_VERSION "${DYLIB_COMPATIBILITY_VERSION}")
 string(REGEX REPLACE ${DYLIB_CURRENT_VERSION_REGEX} "\\1" DYLIB_CURRENT_VERSION "${DYLIB_CURRENT_VERSION}")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2" "-lSDL2d")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2" "-lSDL2d")
+endif()
 
 vcpkg_fixup_pkgconfig(
     IGNORE_FLAGS "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/lib/pkgconfig/../../lib" "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/../../lib" "-Wl,--enable-new-dtags" "-Wl,--no-undefined" "-Wl,-undefined,error" "-Wl,-compatibility_version,${DYLIB_COMPATIBILITY_VERSION}" "-Wl,-current_version,${DYLIB_CURRENT_VERSION}" "-Wl,-weak_framework,Metal" "-Wl,-weak_framework,QuartzCore"

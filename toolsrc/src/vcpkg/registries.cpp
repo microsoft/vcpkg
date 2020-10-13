@@ -1,6 +1,7 @@
 #include <vcpkg/base/json.h>
 
 #include <vcpkg/registries.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace
 {
