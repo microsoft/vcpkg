@@ -10,7 +10,7 @@ else()
     set(yasm_DO_BUILD ON)
 endif()
 
-if(NOT yasm_DO_BUILD AND NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/yasm-tool)
+if(NOT yasm_DO_BUILD AND NOT EXISTS "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/yasm-tool")
     message(FATAL_ERROR "Cross-targetting ports requiring yasm (e.g. gmp, nettle) require the x86-windows yasm-tool to be available. Please install yasm-tool:x86-windows first.")
 endif()
 
@@ -50,7 +50,7 @@ else()
 endif()
 
 foreach(EXECUTABLE IN LISTS EXECUTABLES)
-    file(COPY "${EXECUTABLES_ROOT}/${EXECUTABLE}" DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    file(COPY "${EXECUTABLES_ROOT}/${EXECUTABLE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endforeach()
 
 foreach(LICENSE IN LISTS LICENSES)

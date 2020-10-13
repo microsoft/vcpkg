@@ -11,7 +11,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
                 runtime.hogweed.patch
     )
 
-    set(YASM "${CURRENT_INSTALLED_DIR}/tools/yasm.exe")
+    set(YASM "${CURRENT_INSTALLED_DIR}/tools/yasm-tool/yasm.exe")
     file(TO_NATIVE_PATH "${YASM}" YASM)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -108,7 +108,7 @@ else()
         HEAD_REF master # branch name
         PATCHES fix-InstallLibPath.patch
     )
-    
+
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         set(OPTIONS --disable-static)
     else()
