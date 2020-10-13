@@ -38,9 +38,6 @@
 3fd:x86-windows=fail
 activemq-cpp:x64-linux=fail
 activemq-cpp:x64-osx=fail
-akali:x64-uwp=fail
-akali:arm-uwp=fail
-akali:arm64-windows=fail
 alac:arm-uwp=fail
 alac:x64-uwp=fail
 aliyun-oss-c-sdk:x64-linux=fail
