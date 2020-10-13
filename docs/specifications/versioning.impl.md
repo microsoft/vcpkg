@@ -51,8 +51,6 @@ The following is an example of the output of the current database files generato
     ]
 ```
 
----
-
 ## Git manipulation
 An important part of both versioning and registries is how to deal with Git repository manipulation. For the sake of abstraction a common API is proposed.
 
@@ -62,13 +60,10 @@ Performs a `git checkout` of a subpath inside the repository at the specified co
 ### `VcpkgPaths::checkout_object(repository, object) -> fs::Path`
 Performs a `git checkout` of a Git tree object. Returns the local path where the files have been checked out. An `object` is a hash of a specific subpath in the Git repository, each time the contents of a folder inside a Git repository change a new hash is calculated and added to the repository history. In this manner is possible to restore the contents of a folder given its Git tree hash.
 
----
-
 ## Versioned portfile provider
 A new type of portfile provider that accepts a port name and version information.
 
 Unlike other portfile providers that use the `ports/` folder as their data store. This portfile provider queries the port versions database to know how to fetch ports at specific versions and also to retrieve a list of available versions of ports. 
-
 
 The following interface is provided:
 
@@ -89,15 +84,10 @@ _The versioned portfile provider does not attempt any kind of version resolution
 ### `.get_available_versions(port_name)`
 Queries the database to find all available version of a port. This method should be called by the versioned dependency resolver in order find out suitable versions to resolve dependency constraints.
 
----
 
 ## Baseline provider
 
----
-
 ## Versioned dependency resolution
-
----
 
 ## Lock files
 
