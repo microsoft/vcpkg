@@ -4,6 +4,7 @@ Homepage: https://gnupg.org/software/gpgme/index.html
 Description: A library designed to make access to GnuPG easier for applications
 Build-Depends: libgpg-error, libassuan
 Default-Features: cpp
+Supports: linux|osx
 
 Feature: cpp
 Description: C++ bindings
