@@ -1,8 +1,8 @@
-set(FT_VERSION 2.10.2)
+set(FT_VERSION 2.10.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.xz" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.xz"
     FILENAME "freetype-${FT_VERSION}.tar.xz"
-    SHA512 cf45089bd8893d7de2cdcb59d91bbb300e13dd0f0a9ef80ed697464ba7aeaf46a5a81b82b59638e6b21691754d8f300f23e1f0d11683604541d77f0f581affaa
+    SHA512 3f9d1a44cdae51ec4b13116aba5af1730e6be46132ddd9e49486e8d681b61756baa9897daaf0f06e79f00f2db0e57e0fa66d27f44d65735da1167d5b3c170373
 )
 
 vcpkg_extract_source_archive_ex(
@@ -12,7 +12,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0001-Fix-install-command.patch
         0003-Fix-UWP.patch
-        pkgconfig.patch
         brotli-static.patch
 )
 
