@@ -2,7 +2,7 @@ vcpkg_fail_port_install(MESSAGE "The yasm-tool port currently only supports Wind
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_LIBRARY_LINKAGE dynamic)
 
-if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(yasm_DO_BUILD OFF)
 elseif(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_MINGW AND NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP))
     set(yasm_DO_BUILD OFF)
@@ -11,7 +11,7 @@ else()
 endif()
 
 if(NOT yasm_DO_BUILD AND NOT EXISTS "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/yasm-tool")
-    message(FATAL_ERROR "Cross-targetting ports requiring yasm (e.g. gmp, nettle) require the x86-windows yasm-tool to be available. Please install yasm-tool:x86-windows first.")
+    message(FATAL_ERROR "Cross-targetting and x64 ports requiring yasm (e.g. gmp, nettle) require the x86-windows yasm-tool to be available. Please install yasm-tool:x86-windows first.")
 endif()
 
 set(EXECUTABLES yasm.exe yasm.dll yasmstd.dll)
