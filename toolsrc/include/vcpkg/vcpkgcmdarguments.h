@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
@@ -18,8 +21,6 @@ namespace vcpkg
         std::unordered_map<std::string, std::string> settings;
         std::unordered_map<std::string, std::vector<std::string>> multisettings;
     };
-
-    struct VcpkgPaths;
 
     struct CommandSwitch
     {
@@ -133,6 +134,7 @@ namespace vcpkg
         constexpr static StringLiteral OVERLAY_PORTS_ENV = "VCPKG_OVERLAY_PORTS";
         constexpr static StringLiteral OVERLAY_PORTS_ARG = "overlay-ports";
         std::vector<std::string> overlay_ports;
+        constexpr static StringLiteral OVERLAY_TRIPLETS_ENV = "VCPKG_OVERLAY_TRIPLETS";
         constexpr static StringLiteral OVERLAY_TRIPLETS_ARG = "overlay-triplets";
         std::vector<std::string> overlay_triplets;
 
@@ -153,6 +155,9 @@ namespace vcpkg
         constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
         Optional<bool> wait_for_lock = nullopt;
 
+        constexpr static StringLiteral JSON_SWITCH = "x-json";
+        Optional<bool> json = nullopt;
+
         // feature flags
         constexpr static StringLiteral FEATURE_FLAGS_ENV = "VCPKG_FEATURE_FLAGS";
         constexpr static StringLiteral FEATURE_FLAGS_ARG = "feature-flags";
@@ -166,9 +171,16 @@ namespace vcpkg
         Optional<bool> compiler_tracking = nullopt;
         constexpr static StringLiteral MANIFEST_MODE_FEATURE = "manifests";
         Optional<bool> manifest_mode = nullopt;
+        constexpr static StringLiteral REGISTRIES_FEATURE = "registries";
+        Optional<bool> registries_feature = nullopt;
+
+        constexpr static StringLiteral RECURSIVE_DATA_ENV = "VCPKG_X_RECURSIVE_DATA";
 
         bool binary_caching_enabled() const { return binary_caching.value_or(true); }
         bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
+        bool registries_enabled() const { return registries_feature.value_or(false); }
+        bool output_json() const { return json.value_or(false); }
+        bool is_recursive_invocation() const { return m_is_recursive_invocation; }
 
         std::string command;
         std::vector<std::string> command_arguments;
@@ -183,6 +195,7 @@ namespace vcpkg
         void track_feature_flag_metrics() const;
 
     private:
+        bool m_is_recursive_invocation = false;
         std::unordered_set<std::string> command_switches;
         std::unordered_map<std::string, std::vector<std::string>> command_options;
     };

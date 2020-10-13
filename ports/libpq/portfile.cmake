@@ -252,6 +252,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
 else()
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/Makefile DESTINATION ${SOURCE_PATH})
+
     if("${FEATURES}" MATCHES "openssl")
         list(APPEND BUILD_OPTS --with-openssl)
     endif()
@@ -274,11 +276,13 @@ else()
             --enable-debug
     )
 
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+      set(ENV{LIBPQ_LIBRARY_TYPE} shared)
+    else()
+      set(ENV{LIBPQ_LIBRARY_TYPE} static)
+    endif()
     vcpkg_install_make()
 
-    # instead?
-    #    make -C src/include install
-    #    make -C src/interfaces install
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jarro2783/cxxopts
-    REF v2.2.0
-    SHA512 9f5182b3a86b3d47d1ce5e1e222ab596fce59d3b2dcc0ab2c3802338d5e0f3e6556f2a5ff2accb32cae7e2db41ac5a361c93bf0256f9e44c316eaa4b47c19efa
+    REF 302302b30839505703d37fb82f536c53cf9172fa # v2.2.1
+    SHA512 ba4fe586772979929e090310557b1cba66c7350593ae170e3c7bd6577cf147b20dbe3ba834f2ed6e1044a1b38d5166bfd0491ab573df68e678ff2dc792a3c442
     HEAD_REF master
     PATCHES
     fix-uwp-error.patch
