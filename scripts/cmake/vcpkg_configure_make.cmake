@@ -7,6 +7,7 @@
 ## vcpkg_configure_make(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [AUTOCONFIG]
+##     [USE_WRAPPERS]
 ##     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
 ##     [NO_ADDITIONAL_PATHS]
 ##     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
@@ -33,6 +34,9 @@
 ##
 ## ### SKIP_CONFIGURE
 ## Skip configure process
+##
+## ### USE_WRAPPERS
+## Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
 ##
 ## ### BUILD_TRIPLET
 ## Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
@@ -220,7 +224,6 @@ function(vcpkg_configure_make)
         list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
         # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
-        set(APPEND_ENV)
         if (_csc_AUTOCONFIG)
             # --build: the machine you are building on
             # --host: the machine you are building for
@@ -240,9 +243,11 @@ function(vcpkg_configure_make)
                 endif()
             endif()
             debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
+        endif()
+        set(APPEND_ENV)
+        if(_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
             set(APPEND_ENV ";${MSYS_ROOT}/usr/share/automake-1.16")
         endif()
-
         string(REPLACE ";$ENV{SystemRoot}\\System32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
         string(REPLACE ";$ENV{SystemRoot}\\system32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
         set(ENV{PATH} "${NEWPATH}")
@@ -258,7 +263,7 @@ function(vcpkg_configure_make)
         endmacro()
 
         set(CONFIGURE_ENV "V=1")
-        if (_csc_AUTOCONFIG) # without autotools we assume a custom configure script which correctly handles cl and lib. Otherwise the port needs to set CC|CXX|AR and probably CPP
+        if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile cl.exe -nologo -E")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "compile cl.exe -nologo")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "compile cl.exe -nologo")
