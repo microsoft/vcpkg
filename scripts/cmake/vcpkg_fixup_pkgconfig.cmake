@@ -37,20 +37,12 @@
 ##
 ## ## Examples
 ## Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files.
+
+include(vcpkg_escape_regex_control_characters)
 function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_libs _ignore_flags)
     # Setup pkg-config paths
-    if(CMAKE_HOST_WIN32)
-        # Those replacements are probably only necessary since we use pkg-config from msys
-        string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF "${_VCPKG_INSTALLED_PKGCONF}")
-        string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF "${_VCPKG_INSTALLED_PKGCONF}")
-        string(REPLACE " " "\ " _VCPKG_PACKAGES_PKGCONF "${CURRENT_PACKAGES_DIR}")
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGES_PKGCONF "${_VCPKG_PACKAGES_PKGCONF}")
-        string(REPLACE "\\" "/" _VCPKG_PACKAGES_PKGCONF "${_VCPKG_PACKAGES_PKGCONF}")
-    else()
-        set(_VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
-        set(_VCPKG_PACKAGES_PKGCONF "${CURRENT_PACKAGES_DIR}")
-    endif()
+    set(_VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
+    set(_VCPKG_PACKAGES_PKGCONF "${CURRENT_PACKAGES_DIR}")
     
     set(PATH_SUFFIX_DEBUG /debug)
     set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
@@ -60,9 +52,9 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
 
     if(ENV{PKG_CONFIG_PATH})
         set(BACKUP_ENV_PKG_CONFIG_PATH_${_config} $ENV{PKG_CONFIG_PATH})
-        set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_INSTALLED_SHARE_DIR}:${PKGCONFIG_PACKAGES_DIR}:${PKGCONFIG_PACKAGES_SHARE_DIR}:$ENV{PKG_CONFIG_PATH}")
+        set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
     else()
-        set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}:${PKGCONFIG_INSTALLED_SHARE_DIR}:${PKGCONFIG_PACKAGES_DIR}:${PKGCONFIG_PACKAGES_SHARE_DIR}")
+        set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}")
     endif()
 
     # First make sure everything is ok with the package and its deps
@@ -144,6 +136,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     foreach(_search_path IN LISTS _pkg_lib_paths_output)
         debug_message("REMOVING:'${_search_path}'")
         debug_message("FROM:'${_pkg_libs_output}'")
+        vcpkg_escape_regex_control_characters(_search_path "${_search_path}")
         string(REGEX REPLACE "(^[\t ]*|[\t ]+|;[\t ]*)-L${_search_path}([\t ]+|[\t ]*$)" ";" _pkg_libs_output "${_pkg_libs_output}") # Remove search paths from libs
     endforeach()
     debug_message("LIBS AFTER -L<path> REMOVAL:'${_pkg_libs_output}'")
@@ -260,42 +253,30 @@ function(vcpkg_fixup_pkgconfig)
         set(PKGCONFIG_STATIC --static)
     endif()
     
-    message(STATUS "Fixing pkgconfig")
     if(_vfpkg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
 
+    vcpkg_escape_regex_control_characters(_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
     if(NOT _vfpkg_RELEASE_FILES)
         file(GLOB_RECURSE _vfpkg_RELEASE_FILES "${CURRENT_PACKAGES_DIR}/**/*.pc")
-        list(FILTER _vfpkg_RELEASE_FILES EXCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
+        list(FILTER _vfpkg_RELEASE_FILES EXCLUDE REGEX "${_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR}/debug/")
     endif()
 
     if(NOT _vfpkg_DEBUG_FILES)
         file(GLOB_RECURSE _vfpkg_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/**/*.pc")
-        list(FILTER _vfpkg_DEBUG_FILES INCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
     endif()
 
-    if(NOT PKGCONFIG)
-        find_program(PKGCONFIG pkg-config PATHS "bin" "/usr/bin" "/usr/local/bin")
-        if(NOT PKGCONFIG AND CMAKE_HOST_WIN32)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
-            find_program(PKGCONFIG pkg-config PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
-        endif()
-        debug_message("Using pkg-config from: ${PKGCONFIG}")
-        if(NOT PKGCONFIG AND NOT _vfpkg_SKIP_CHECK)
-            message(WARNING "Unable to find pkg-config to validate *.pc files. Skipping checkes!")
-            set(_vfpkg_SKIP_CHECK TRUE)
-        endif()
-    endif()
+    vcpkg_find_acquire_program(PKGCONFIG)
+    debug_message("Using pkg-config from: ${PKGCONFIG}")
 
     #Absolute Unix like paths 
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
 
-    message(STATUS "Fixing pkgconfig - release")
-    debug_message("Files: ${_vfpkg_RELEASE_FILES}")
+    debug_message("Release Files: ${_vfpkg_RELEASE_FILES}")
     foreach(_file ${_vfpkg_RELEASE_FILES})
-        message(STATUS "Checking file: ${_file}")
+        message(STATUS "Fixing pkgconfig file: ${_file}")
         get_filename_component(PKG_LIB_SEARCH_PATH "${_file}" DIRECTORY)
         file(RELATIVE_PATH RELATIVE_PC_PATH "${PKG_LIB_SEARCH_PATH}" "${CURRENT_PACKAGES_DIR}")
         string(REGEX REPLACE "/$" "" RELATIVE_PC_PATH "${RELATIVE_PC_PATH}")
@@ -305,9 +286,9 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${_VCPKG_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
-        string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        file(WRITE "${_file}" "${_contents}")
+        string(REGEX REPLACE "^prefix[\t ]*=[^\n]*" "" _contents "${_contents}")
+        string(REGEX REPLACE "[\n]prefix[\t ]*=[^\n]*" "" _contents "${_contents}")
+        file(WRITE "${_file}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}\n${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
 
@@ -317,10 +298,9 @@ function(vcpkg_fixup_pkgconfig)
         endforeach()
     endif()
 
-    message(STATUS "Fixing pkgconfig - debug")
-    debug_message("Files: ${_vfpkg_DEBUG_FILES}")
+    debug_message("Debug Files: ${_vfpkg_DEBUG_FILES}")
     foreach(_file ${_vfpkg_DEBUG_FILES})
-        message(STATUS "Checking file: ${_file}")
+        message(STATUS "Fixing pkgconfig file: ${_file}")
         get_filename_component(PKG_LIB_SEARCH_PATH "${_file}" DIRECTORY)
         file(RELATIVE_PATH RELATIVE_PC_PATH "${PKG_LIB_SEARCH_PATH}" "${CURRENT_PACKAGES_DIR}/debug/")
         string(REGEX REPLACE "/$" "" RELATIVE_PC_PATH "${RELATIVE_PC_PATH}")
@@ -336,10 +316,10 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "debug/share" "../share" _contents "${_contents}")
         string(REPLACE "\${prefix}/share" "\${prefix}/../share" _contents "${_contents}")
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
-        string(REGEX REPLACE "^prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
-        string(REGEX REPLACE "[\n]prefix=(\")?(\\\\)?\\\${prefix}(/debug)?(\")?" "\nprefix=\${pcfiledir}/${RELATIVE_PC_PATH}" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "^prefix[\t ]*=[^\n]*" "" _contents "${_contents}") # make pc file relocatable
+        string(REGEX REPLACE "[\n]prefix[\t ]*=[^\n]*" "" _contents "${_contents}") # make pc file relocatable
         string(REPLACE "\${prefix}/debug" "\${prefix}" _contents "${_contents}") # replace remaining debug paths if they exist. 
-        file(WRITE "${_file}" "${_contents}")
+        file(WRITE "${_file}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}\n${_contents}")
         unset(PKG_LIB_SEARCH_PATH)
     endforeach()
 
@@ -348,7 +328,7 @@ function(vcpkg_fixup_pkgconfig)
             vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "DEBUG" "${_vfpkg_SYSTEM_LIBRARIES}" "${_vfpkg_IGNORE_FLAGS}")
         endforeach()
     endif()
-    message(STATUS "Fixing pkgconfig --- finished")
+    debug_message("Fixing pkgconfig --- finished")
 
     set(VCPKG_FIXUP_PKGCONFIG_CALLED TRUE CACHE INTERNAL "See below" FORCE)
     # Variable to check if this function has been called!

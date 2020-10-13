@@ -1,11 +1,12 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/util.h>
 
 #include <vcpkg/buildenvironment.h>
 #include <vcpkg/commands.create.h>
 #include <vcpkg/help.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Commands::Create
 {
@@ -19,7 +20,7 @@ namespace vcpkg::Commands::Create
 
     int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         const std::string port_name = args.command_arguments.at(0);
         const std::string url = args.command_arguments.at(1);
 

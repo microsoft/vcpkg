@@ -1,11 +1,12 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/commands.porthistory.h>
 #include <vcpkg/help.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Commands::PortHistory
 {
@@ -22,7 +23,7 @@ namespace vcpkg::Commands::PortHistory
         const fs::path dot_git_dir = paths.root / ".git";
 
         const std::string full_cmd =
-            Strings::format(R"("%s" --git-dir="%s" %s)", git_exe.u8string(), dot_git_dir.u8string(), cmd);
+            Strings::format(R"("%s" --git-dir="%s" %s)", fs::u8string(git_exe), fs::u8string(dot_git_dir), cmd);
 
         auto output = System::cmd_execute_and_capture_output(full_cmd);
         Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to run command: %s", full_cmd);
@@ -83,8 +84,7 @@ namespace vcpkg::Commands::PortHistory
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
-
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         std::string port_name = args.command_arguments.at(0);
         std::vector<PortControlVersion> versions = read_versions_from_log(paths, port_name);
         System::print2("             version          date    vcpkg commit\n");
