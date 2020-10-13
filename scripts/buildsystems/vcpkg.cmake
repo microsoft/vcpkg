@@ -104,6 +104,14 @@ if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
 endif()
 
 if(VCPKG_TARGET_TRIPLET)
+    # This is required since a user might do: 'set(VCPKG_TARGET_TRIPLET somevalue)' [no CACHE] before the first project() call
+    # Latter within the toolchain file we do: 'set(VCPKG_TARGET_TRIPLET somevalue CACHE STRING "")' which
+    # will otherwise override the user setting of VCPKG_TARGET_TRIPLET in the current scope of the toolchain since the CACHE value 
+    # did not exist previously. Since the value is newly created CMake will use the CACHE value within this scope since it is the more 
+    # recently created value in directory scope. This 'strange' behaviour only happens on the very first configure call since subsequent
+    # configure call will see the user value as the more recent value. The same logic must be applied to all cache values within this file!
+    # The FORCE keyword is required to ALWAYS lift the user provided/previously set value into a CACHE value. 
+    set(VCPKG_TARGET_TRIPLET ${VCPKG_TARGET_TRIPLET} CACHE STRING "Vcpkg target triplet (ex. x86-windows)" FORCE)
 elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Ww][Ii][Nn]32$")
     set(_VCPKG_TARGET_TRIPLET_ARCH x86)
 elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Xx]64$")
@@ -315,11 +323,14 @@ else()
 endif()
 
 if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
+    set(VCPKG_BOOTSTRAP_OPTIONS "${VCPKG_BOOTSTRAP_OPTIONS}" CACHE STRING "Additional options to bootstrap vcpkg" FORCE)
+    mark_as_advanced(VCPKG_BOOTSTRAP_OPTIONS)
+
     if(NOT EXISTS "${_VCPKG_EXECUTABLE}")
         message(STATUS "Bootstrapping vcpkg before install")
 
         execute_process(
-            COMMAND "${_VCPKG_BOOTSTRAP_SCRIPT}"
+            COMMAND "${_VCPKG_BOOTSTRAP_SCRIPT}" ${VCPKG_BOOTSTRAP_OPTIONS}
             RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
 
         if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
@@ -329,10 +340,12 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
         message(STATUS "Bootstrapping vcpkg before install - done")
     endif()
 
-    set(VCPKG_OVERLAY_PORTS "" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode")
+    set(VCPKG_OVERLAY_PORTS "${VCPKG_OVERLAY_PORTS}" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode" FORCE)
     mark_as_advanced(VCPKG_OVERLAY_PORTS)
-    set(VCPKG_OVERLAY_TRIPLETS "" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode")
+    set(VCPKG_OVERLAY_TRIPLETS "${VCPKG_OVERLAY_TRIPLETS}" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode" FORCE)
     mark_as_advanced(VCPKG_OVERLAY_TRIPLETS)
+    set(VCPKG_INSTALL_OPTIONS "${VCPKG_INSTALL_OPTIONS}" CACHE STRING "Additional install options to pass to vcpkg" FORCE)
+    mark_as_advanced(VCPKG_INSTALL_OPTIONS)
 
     message(STATUS "Running vcpkg install")
 
@@ -363,6 +376,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
             "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
             "--x-install-root=${_VCPKG_INSTALLED_DIR}"
             ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
+            ${VCPKG_INSTALL_OPTIONS}
         OUTPUT_FILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install-out.log"
         ERROR_FILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install-err.log"
         RESULT_VARIABLE _VCPKG_INSTALL_RESULT

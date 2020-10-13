@@ -17,6 +17,7 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/userconfig.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 #include <cassert>
