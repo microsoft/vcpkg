@@ -1,0 +1,15 @@
+diff --git a/src/nvtt/CMakeLists.txt b/src/nvtt/CMakeLists.txt
+index 9688c9c..a196f64 100644
+--- a/src/nvtt/CMakeLists.txt
++++ b/src/nvtt/CMakeLists.txt
+@@ -53,6 +53,10 @@ ELSE(NVTT_SHARED)
+     ADD_LIBRARY(nvtt ${NVTT_SRCS})
+ ENDIF(NVTT_SHARED)
+ 
++if(APPLE)
++    add_compile_options(nvtt -mbmi2 -mfma)
++endif()
++
+ TARGET_LINK_LIBRARIES(nvtt ${LIBS} nvcore nvimage nvthread nvsquish bc6h bc7 nvmath rg_etc1)
+ 
+ INSTALL(TARGETS nvtt 
