@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "osx")
 
 set(LIBP7_VERSION 4.4)
 set(LIBP7_HASH 500fefdf6fb01999ddb2accc8309cf8749fb7a65abb98faaf6d71a5ae3da4eac8c00c083905b01f7f6cc973387b605f2c4db0bb007562f76b7ad43b6abe2b91f)

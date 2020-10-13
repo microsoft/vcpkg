@@ -3,4 +3,4 @@ Version: 4.4
 Port-Version: 5
 Homepage: https://baical.net/
 Description: P7 is a library for high-speed sending telemetry & trace data from application
-Supports: !(arm|uwp)
+Supports: !(arm|uwp|osx)
