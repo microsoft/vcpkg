@@ -111,3 +111,14 @@ endif()
 
 file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+if(${VCPKG_CMAKE_SYSTEM_NAME} STREQUAL "Linux"
+        AND ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic"
+        AND ${VCPKG_CRT_LINKAGE} STREQUAL "dynamic") # when building on Linux dynamic...
+    # we expect the following directories to be empty
+    if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
+    if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    endif()
+endif()
