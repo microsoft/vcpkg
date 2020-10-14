@@ -1,8 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(EZC3D_SHARED OFF)
-else()
-    set(EZC3D_SHARED ON)
-endif()
 
 vcpkg_from_github(ARCHIVE
     OUT_SOURCE_PATH SOURCE_PATH
