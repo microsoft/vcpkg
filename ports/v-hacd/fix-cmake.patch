@@ -21,7 +21,7 @@ diff --git a/src/VHACD_Lib/CMakeLists.txt b/src/VHACD_Lib/CMakeLists.txt
 index 46fc1b1..2260fdc 100644
 --- a/src/VHACD_Lib/CMakeLists.txt
 +++ b/src/VHACD_Lib/CMakeLists.txt
-@@ -1,34 +1,36 @@
+@@ -1,77 +1,79 @@
 +cmake_minimum_required(VERSION 3.10.0)
 +
  project(VHACD_LIB CXX C)
@@ -65,13 +65,23 @@ index 46fc1b1..2260fdc 100644
  
 -
  target_include_directories(vhacd PUBLIC
-+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public/>)
++        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public/>
++        $<INSTALL_INTERFACE:include>)
 +
 +target_include_directories(vhacd PRIVATE
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc/>
-   $<INSTALL_INTERFACE:include/>  # <prefix>/include/mylib
+-  $<INSTALL_INTERFACE:include/>  # <prefix>/include/mylib
    )
-@@ -43,32 +45,32 @@ install(FILES ${PROJECT_INL_FILES} DESTINATION include)
+ 
+ 
+ message("[VHACD] \t -> CMAKE_INSTALL_PREFIX " ${CMAKE_INSTALL_PREFIX})
+ install(TARGETS vhacd EXPORT vhacd-targets DESTINATION lib)
+-install(FILES ${PROJECT_INC_FILES} DESTINATION include)
+-install(FILES ${PROJECT_INL_FILES} DESTINATION include)
++install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/public/VHACD.h DESTINATION ${CMAKE_INSTALL_PREFIX}/include/)
++
+ 
+ 
  set(VHACD_LIB_VERSION 3.2.0)
  include(CMakePackageConfigHelpers)
  write_basic_package_version_file(
@@ -112,6 +122,10 @@ index 46fc1b1..2260fdc 100644
    DESTINATION
      ${ConfigPackageLocation}
    COMPONENT
+     Devel
+ )
+ 
+ 
 diff --git a/src/VHACD_Lib/cmake/vhacd-config.cmake b/src/VHACD_Lib/cmake/vhacd-config.cmake
 index 8fc5c58..7677f58 100644
 --- a/src/VHACD_Lib/cmake/vhacd-config.cmake

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/base/fwd/span.h>
+
 #include <array>
 #include <cstddef>
 #include <initializer_list>

@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fc068fc84..1bc0f342c 100644
+index 97ba2f9..fc36185 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -930,6 +930,7 @@ if(OPENSSL_FOUND)
+@@ -907,6 +907,7 @@ if(OPENSSL_FOUND)
  	add_definitions("-DWITH_OPENSSL")
  	message(STATUS "Using OpenSSL Version: ${OPENSSL_VERSION}")
  	include_directories(${OPENSSL_INCLUDE_DIR})
-+	list(APPEND OPENSSL_LIBRARIES Threads::Threads)
++    list(APPEND OPENSSL_LIBRARIES Threads::Threads)
  endif()
  
  if(MBEDTLS_FOUND)
