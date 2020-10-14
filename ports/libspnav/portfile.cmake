@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "windows" "uwp" "osx")
 
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
@@ -23,29 +23,27 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-if (VCPKG_TARGET_IS_LINUX)
-	macro(CLEANUP WHERE)
-		set(WORKDIR ${CURRENT_PACKAGES_DIR}/${WHERE})
-		if ("${WHERE}" STREQUAL debug)
-			file(REMOVE_RECURSE ${WORKDIR}/include)
-		endif ()
+macro(CLEANUP WHERE)
+	set(WORKDIR ${CURRENT_PACKAGES_DIR}/${WHERE})
+	if ("${WHERE}" STREQUAL "debug")
+		file(REMOVE_RECURSE ${WORKDIR}/include)
+	endif ()
+	file(REMOVE ${WORKDIR}/lib/libspnav.so)
+	file(REMOVE ${WORKDIR}/lib/libspnav.so.)
+	file(RENAME ${WORKDIR}/lib/libspnav.so.. ${WORKDIR}/lib/libspnav.so)
+	if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 		file(REMOVE ${WORKDIR}/lib/libspnav.so)
-		file(REMOVE ${WORKDIR}/lib/libspnav.so.)
-		file(RENAME ${WORKDIR}/lib/libspnav.so.. ${WORKDIR}/lib/libspnav.so)
-		if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-			file(REMOVE ${WORKDIR}/lib/libspnav.so)
-		else ()
-			file(REMOVE ${WORKDIR}/lib/libspnav.a)
-		endif ()
-	endmacro()
-
-	if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-		cleanup("")
+	else ()
+		file(REMOVE ${WORKDIR}/lib/libspnav.a)
 	endif ()
+endmacro()
 
-	if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-		cleanup("debug")
-	endif ()
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+	cleanup("")
+endif ()
+
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+	cleanup("debug")
 endif ()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/libspnav)
