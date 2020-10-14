@@ -14,6 +14,8 @@ vcpkg_from_github(
 include(${CURRENT_INSTALLED_DIR}/share/vcpkg_find_cuda/vcpkg_find_cuda.cmake)
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
 
+message(STATUS "CUDA_TOOLKIT_ROOT ${CUDA_TOOLKIT_ROOT}")
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     apps       PopSift_BUILD_EXAMPLES
 )
@@ -21,7 +23,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS} -DCUDA_TOOLKIT_ROOT=${CUDA_TOOLKIT_ROOT}
+    OPTIONS ${FEATURE_OPTIONS} -DCUDA_TOOLKIT_ROOT_DIR=${CUDA_TOOLKIT_ROOT}
 )
 
 vcpkg_install_cmake()
