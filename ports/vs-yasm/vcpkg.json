@@ -4,8 +4,5 @@
   "port-version": 1,
   "description": "Provides Visual Studio integration for the YASM assembler.",
   "homepage": "https://github.com/ShiftMediaProject/VSYASM",
-  "supports": "windows & !arm",
-  "dependencies": [
-    "yasm-tool"
-  ]
+  "supports": "windows & !arm"
 }

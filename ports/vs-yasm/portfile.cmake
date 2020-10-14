@@ -14,5 +14,4 @@ foreach(_file ${_files})
     file(INSTALL "${SOURCE_PATH}/${_file}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endforeach()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/yasm-workaround.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

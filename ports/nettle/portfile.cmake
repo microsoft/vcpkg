@@ -11,7 +11,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
                 runtime.hogweed.patch
     )
 
-    set(YASM "${CURRENT_INSTALLED_DIR}/tools/yasm-tool/yasm.exe")
+    include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
+    yasm_tool_helper(OUT_VAR YASM)
     file(TO_NATIVE_PATH "${YASM}" YASM)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
