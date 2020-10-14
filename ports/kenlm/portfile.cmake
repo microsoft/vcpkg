@@ -16,7 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if ("interpolate" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "Feature interpolate only support unix.")
+    message(FATAL_ERROR "The interpolate feature does not support Windows.")
 endif()
 
 vcpkg_configure_cmake(
