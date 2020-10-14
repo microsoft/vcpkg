@@ -4,5 +4,5 @@
   "port-version": 1,
   "description": "Core part of the Chakra Javascript engine",
   "homepage": "https://github.com/Microsoft/ChakraCore",
-  "supports": "windows & !uwp"
+  "supports": "windows & !uwp & !static"
 }

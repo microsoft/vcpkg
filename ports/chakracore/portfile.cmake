@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET osx linux uwp)
+vcpkg_fail_port_install(ON_TARGET osx linux uwp ON_CRT_LINKAGE static ON_LIBRARY_LINKAGE static)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
