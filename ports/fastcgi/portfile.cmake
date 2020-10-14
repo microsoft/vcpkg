@@ -78,42 +78,15 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   # Check build system first
-  find_program(AUTOMAKE automake)
-  if (NOT AUTOMAKE)
-      if(VCPKG_TARGET_IS_OSX)
-          message(STATUS "brew install gettext automake")
-          vcpkg_execute_required_process(
-            COMMAND brew install gettext automake
-            WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-            LOGNAME config-${TARGET_TRIPLET}-rel
-          )
-      else()
-          message(STATUS "sudo apt-get install gettext automake")
-          vcpkg_execute_required_process(
-            COMMAND sudo apt-get install -y gettext automake
-            WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-            LOGNAME config-${TARGET_TRIPLET}-rel
-          )
-      endif()
-  endif()
-  
   if(VCPKG_TARGET_IS_OSX)
-      message(STATUS "brew install libtool")
-      vcpkg_execute_required_process(
-        COMMAND brew install libtool
-        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        LOGNAME config-${TARGET_TRIPLET}-rel
-      )
+      message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed with brew install gettext automake libtool")
   else()
+      message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed with apt-get install gettext automake libtool libtool-bin")
+  endif()
+
+  find_program(AUTOMAKE automake)
+  if(VCPKG_TARGET_IS_LINUX)
       find_program(LIBTOOL libtool)
-      if (NOT LIBTOOL)
-          message(STATUS "sudo apt-get install libtool libtool-bin")
-          vcpkg_execute_required_process(
-            COMMAND sudo apt-get install -y libtool libtool-bin
-            WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-            LOGNAME config-${TARGET_TRIPLET}-rel
-          )
-      endif()
   endif()
   
   find_program(MAKE make)
@@ -194,4 +167,4 @@ else() # Other build system
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH_RELEASE}/LICENSE.TERMS ${CURRENT_PACKAGES_DIR}/share/fastcgi/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH_RELEASE}/LICENSE.TERMS DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
