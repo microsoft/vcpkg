@@ -38,9 +38,6 @@
 3fd:x86-windows=fail
 activemq-cpp:x64-linux=fail
 activemq-cpp:x64-osx=fail
-akali:x64-uwp=fail
-akali:arm-uwp=fail
-akali:arm64-windows=fail
 alac:arm-uwp=fail
 alac:x64-uwp=fail
 aliyun-oss-c-sdk:x64-linux=fail
@@ -526,6 +523,9 @@ h3:arm64-windows=fail
 h3:arm-uwp=fail
 h3:x64-uwp=fail
 halide:x64-windows-static=fail
+# Halide depends on LLVM, which is mis-compiled by MSVC in x86-windows-dbg.
+# See https://developercommunity.visualstudio.com/content/problem/1179643/msvc-copies-overaligned-non-trivially-copyable-par.html
+halide:x86-windows=skip
 hdf5:arm64-windows=fail
 hdf5:arm-uwp=fail
 hdf5:x64-uwp=fail
@@ -1356,9 +1356,6 @@ python2:x64-uwp=fail
 python3:arm64-windows=fail
 python3:arm-uwp=fail
 python3:x64-uwp=fail
-qca:x64-linux=fail
-qca:x64-osx=fail
-qca:x64-windows-static=fail
 qhull:x64-uwp=fail
 qhull:arm-uwp=fail
 qpid-proton:arm-uwp=fail
