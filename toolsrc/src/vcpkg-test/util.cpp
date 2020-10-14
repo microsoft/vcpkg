@@ -108,8 +108,9 @@ namespace vcpkg::Test
 
     PackageSpec PackageSpecMap::emplace(vcpkg::SourceControlFileLocation&& scfl)
     {
-        map.emplace(scfl.source_control_file->core_paragraph->name, std::move(scfl));
-        return {scfl.source_control_file->core_paragraph->name, triplet};
+        const auto& name = scfl.source_control_file->core_paragraph->name;
+        map.emplace(name, std::move(scfl));
+        return {name, triplet};
     }
 
     static AllowSymlinks internal_can_create_symlinks() noexcept
