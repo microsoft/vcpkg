@@ -36,11 +36,7 @@ add_library(plist ${PLIST_SRC} ${PLIST_HEADER} ${LIBCNARY_SRC} ${LIBCNARY_HEADER
 target_include_directories(plist PRIVATE src include libcnary/include)
 set_target_properties(plist PROPERTIES OUTPUT_NAME plist-2.0)
 
-if (WIN32)
-    add_library(plist++ STATIC ${PLISTPP_SRC} ${PLIST_HEADER} ${LIBCNARY_SRC} ${LIBCNARY_HEADER})
-else()
-    add_library(plist++ ${PLISTPP_SRC} ${PLIST_HEADER} ${LIBCNARY_SRC} ${LIBCNARY_HEADER})
-endif()
+add_library(plist++ STATIC ${PLISTPP_SRC} ${PLIST_HEADER} ${LIBCNARY_SRC} ${LIBCNARY_HEADER})
 set_target_properties(plist++ PROPERTIES OUTPUT_NAME plist++-2.0)
 target_include_directories(plist++ PRIVATE src include libcnary/include)
 
